@@ -1,118 +1,121 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23333EACE;
-	Sat, 19 Apr 2025 15:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016BC78F30;
+	Sat, 19 Apr 2025 15:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745077541; cv=none; b=cBeWvqXmnpz1xmahZQp46Gb7mF20LaPj7NOgS41RkvhyyUHdWOI8XP0X+aqvomwOQ4ru8iTT+OGm+cPQc7WQ1xLXSUz6NQmUHWJrBeFmyxmOFcFmBHv9J5SwQuT41pibhzIGAEVyhl1vvO0Dn02WhP/0Z9uKlg3jNqXCspLlsrE=
+	t=1745077731; cv=none; b=pYypIdzcWpWk4GoFR8hylRhS6MlILSiOPsnrZyyrauFxXsof2rPHdfGHwy8ieQXv6ZYNvIhZF2stZ6nsFaiV3VVqjOQxZq/QROKkt7/Tmv15maLp2vowmIVkTU7A9nNnZPD2lBlijL/PUBdCrMAHBx4WahqxM+1aiwFR79IF1U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745077541; c=relaxed/simple;
-	bh=p4g6OQ7r1ZEv3fDDupqkq/9/Gtf5y2BLkX7cFlXr1rw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=E2ORKpmMziDJYi6rvD37noFRmaMQZH6CSubdXTsrjUu0cTZD7/fb5AoVI0qvlAiT//tE4bu+aS8N6bVbeK1Fwcyf5XnZccITid44EfsycyNN+pTzqDD+FBEGzySgAK/2qVBhFGF1U9ls/tpJkJVSEo/T5rrWBnk5RuM0vC5v8xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwBVz1tY; arc=none smtp.client-ip=209.85.215.178
+	s=arc-20240116; t=1745077731; c=relaxed/simple;
+	bh=nVreUzZT/ZCyCOUBM2MnNq8SkTx4mGUDQJ6XZoobqpg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XgriS9+0g/RCetKCcnAIAFPSvrDxzphCCM1+Gm4fgFhnT2UkhcQ8Q1qzHuHvZtd52krzJfyrX2R6OYDV0bmut41N4ODm6Et2uYF3ldr2Brr4sK7LDZUau4PT1eLDcAxpB54TrYCMKt1z5EW66eP0HfD3HPKmbm3q6gIOsn9SaYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UK8ivAr1; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwBVz1tY"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so1834849a12.3;
-        Sat, 19 Apr 2025 08:45:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK8ivAr1"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7370a2d1981so2250482b3a.2;
+        Sat, 19 Apr 2025 08:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745077539; x=1745682339; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=thLDpOKToi4TFh2IfpxB3qZ+YESrtDY0C44gYg2NAPc=;
-        b=mwBVz1tYwxYipV9o80PTYyMZUFTzrf9//GC6u47Tw7ueDc6uVhALxZG0WLHFa5AR1g
-         /7zccZoOlzl+pWNEhFNxDGYTUpNXU3VvCcgP+L6egJYslYnO4WCs+FArnYiKhj7PJydK
-         Aav86tev/ZZlDpvfrM+5I3SdCsByy5Mm42+VwD2aU0Pcq72xOtQgTkRGZ8bpz0Ym5KQ/
-         acE8pOQsXvXtUz8S15JLFh5W0kGEfRY1VXH643uHxg5uqTEAzb6gWNVf4JRjIRQde5Up
-         m+Lamh99dfoHvq14QMqGwCFhneWmkTCNVf6qktuwHL0lg+JvnY6YKK/W7zKGg4N1aPoD
-         FQig==
+        d=gmail.com; s=20230601; t=1745077729; x=1745682529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lN/OhSLKgem6xUfA74KqwNX7jjY+v/yYMY/uZ9dnJks=;
+        b=UK8ivAr1OIW9RvN2EXbJ54ti26pVetYNr7V0hln8F1s+F/sWThnw0EuK2BQ0eXVBet
+         eAJ0MA7cruvai5aMi352Gqhkha0teEHbeMxByRnWuBUenJO02s/ivy0l17klMncdn+rs
+         eIU/ck4F3It2Zl2uKLN7SePmTlEaOObQxwSzMLtlBllQecI5iPPbgfStQ6dgBOUhr8qI
+         wiriYlP5JJ2eH1HatCXLaNlueXuVfzpABpyePXinZ5a5lG+Kx0L4hPW2q6xFEDHEiieF
+         AgEpCFiPSwi8G2GpOKIurhYACdrC+i/YvT7eGSEOR70fXKDs0p+vajZll8BAttLGRKxE
+         RLsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745077539; x=1745682339;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745077729; x=1745682529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=thLDpOKToi4TFh2IfpxB3qZ+YESrtDY0C44gYg2NAPc=;
-        b=sJxq5gGkMsDEdXxqv9SDbi/iiQ9kcbbsVTC1i7wdGxGuUqnQb5bDwddK0HnVG2J6tw
-         86G3pcPfG/xMl/WjfZSvUZyeLLL8DgzGnnUf4Zpg1m1pAnggIdo0IEFAp8/CLNuV1P6w
-         5qrKs1CAMyLopywB+fgtReaLiqklwOLED9sNoAGDZCnQ7DrUb8e5S5b18o5c2hpJKiSi
-         Som7hnAb2SFz3ZvwZs3tZ/4uFSIi60opwcal9wcQaQVxGrNk/MEWeVVpe7ExqWKxJS/2
-         lRPVAnKtUBUjxugVbBAV5gu1reV/1BpNqacwR4Ei5lCRtJ0a4sqtoSInAlF1HMX+nCe1
-         t6zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRdrct45LGU7h/c4JdlPJkdl7HNwxPfAzLjNXcRsmMFV4E4P0sjDubV5j0sAoe3rhG5AdBgg2U/QQP77A=@vger.kernel.org, AJvYcCWWte8J3rEQlJo6xNbD94FeE/RAgtyIyzVgfqxgvvgCwtD7FuxEyi5NxFodWWVALaSe2n//u9+J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm9aD0OkE4D3HPeeKkfGLxKcqmh2o2i3YybMMrqKItHX/tYo1J
-	krIvy55B0oRvBZ9+ECQtymyC1xHaeMYTV7r69lsg0dFq7uamM+/ldjOcrA==
-X-Gm-Gg: ASbGnctLak7jPkexcN+h+tenb0FTrk2uvYyfmBDALjq9/UL7QEzK314Qwaw/e0vU7sO
-	zMUfWxIZnTQJrLY52F/mnqZR5KYjXsaddgosyqxy2Owjr4FhBOygLS5poffc3pl9ODiPBjDbZHg
-	dpKygr715uNpDd77Hh6zPm8NQIVVrqEZwKm2cFurCUn4CtaxUCSuBplY5UaSR7Q1MdV4cf6QQAd
-	YVRyc9MZ6/MUrttNHJD+s8oEsEer7m4Wd3sdlSHJo0FLjjX/7yx2sw82zAWP9Rx0QR3B/JluCMQ
-	zW5OEE8gbX1LASlCkWR11XX5Gm5AtAobrC8PuwjV
-X-Google-Smtp-Source: AGHT+IGLLhGvL7K1dc2pynaHr7ypdLJ4zwH5sP8adXJEdhhC1bemDxhqTCeZvkSdihWS04yYywjNXA==
-X-Received: by 2002:a17:902:f70b:b0:21f:136a:a374 with SMTP id d9443c01a7336-22c53625f2bmr96668925ad.43.1745077539161;
-        Sat, 19 Apr 2025 08:45:39 -0700 (PDT)
-Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdac20sm35277475ad.2.2025.04.19.08.45.36
+        bh=lN/OhSLKgem6xUfA74KqwNX7jjY+v/yYMY/uZ9dnJks=;
+        b=E14sbWBu4K5zUyW4L4qdmtj2h0hyD/zYvw9NIIqqtHUyTHnICX40V3LUjJVj4BbT22
+         xPNV0i9mV6R/8dhnjuaHvoIs1kyE65KDpMJ1o1G1+SJbBgqExNB2yqsvKhWYRPdaQ9U0
+         n9grEUX+7Xllr/hZh8xbSRbWIIwiMRw+VyqyGSsnzJJASr9at569kyW6mApOCFoql3ar
+         aXDaTvKCvNAHdt1tMvbNXE+c1W9FnOY0PGasrdnqp1r/Zj7f8k94O6CI+foe2xoWIDMQ
+         UPZGgVQwK7jIYP57gAZAQeRFWDq3MLZKciZ+DnM2UzZpCrdJ9JAQLD4itNZy1pCIVv7u
+         zjZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsHh6fsB+dgLj5nnB1BBH0Wp5pBfCfBBPRJLHWqnb4UL5hjTbvdwX29/U5BsVRGvoRNRcql3Iz4gpw4sw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgmuFWQagi3s9WDQHj3HIZYcHCeLM6RJ3O2f0QvqaJusWqwjJQ
+	4AOKAYLvai8IrxSf+KvSV2M6k0jyfY6yG8zEWsvOjrXdU7+Xa3jUrMogfuDm
+X-Gm-Gg: ASbGncugldbtJMqP/NR7ZP/AAAzqmHILxqrwxrhTK5pXp80PFmBNysKSabiwRZbddEE
+	Mi6AP+uQ0brAEwo3Qk7VCwwKCbG0AOVJDlIUD30FM3k2nI7/46FQLl5b/5m05dLsxTlpnyS9JK8
+	XUhsYcGh5cpc16rNV0RiaNUGlnomMDgj+2kr4z94coJoDy7NPqU3qbuUHJr0kl2Wc7D7Mbdfe58
+	pKFPV2CVqFKjAmtmypp2U636/ZTgfKLVc/iomAkRrCJiTS80rJLoAlSJhWVJ6XYkuL3pbCQdfkg
+	n/UMSIn2rHBfG+HZr9YOnOqOOSSlESzNaUBR
+X-Google-Smtp-Source: AGHT+IG3bWPll+jBQM73z1sLmhDzeJ8FQuuTzTHYN7HBwqeA9z385xk8JgiFB60CbXyw+wSoTFHihw==
+X-Received: by 2002:a05:6a00:3911:b0:736:491b:536d with SMTP id d2e1a72fcca58-73dc1610c96mr9449435b3a.20.1745077729098;
+        Sat, 19 Apr 2025 08:48:49 -0700 (PDT)
+Received: from valdaarhun.. ([2401:4900:1c45:45a3:affe:4635:b6b6:1a76])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaad42fsm3430658b3a.121.2025.04.19.08.48.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 08:45:38 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Sat, 19 Apr 2025 12:45:29 -0300
-Subject: [PATCH] platform/x86: alienware-wmi-wmax: Add support for
- Alienware m15 R7
+        Sat, 19 Apr 2025 08:48:48 -0700 (PDT)
+From: Sahil Siddiq <sahilcdq0@gmail.com>
+To: jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi,
+	shorne@gmail.com
+Cc: linux-openrisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sahil Siddiq <sahilcdq0@gmail.com>
+Subject: [PATCH v6 0/3] openrisc: Add cacheinfo support and introduce new utility functions
+Date: Sat, 19 Apr 2025 21:18:16 +0530
+Message-ID: <20250419154819.85063-1-sahilcdq0@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250419-m15-r7-v1-1-18c6eaa27e25@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABjFA2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0ML3VxDU90ic10zw5Q0g0RjC4vk1FQloOKCotS0zAqwQdGxtbUA3rE
- N+1gAAAA=
-X-Change-ID: 20250418-m15-r7-61df0a388cee
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Romain THERY <romain.thery@ik.me>, Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Extend thermal control support to Alienware m15 R7.
+Hi,
 
-Cc: stable@vger.kernel.org
-Tested-by: Romain THERY <romain.thery@ik.me>
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The main purpose of this series is to expose CPU cache attributes for
+OpenRISC in sysfs using the cacheinfo API. The core implementation
+to achieve this is in patch #3. Patch #1 and #2 add certain enhancements
+to simplify the implementation of cacheinfo support.
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 3f9e1e986ecf0a906ca16b85fd60e675f1885171..08b82c151e07103885dbe3354542f18776fe0b2e 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -69,6 +69,14 @@ static const struct dmi_system_id awcc_dmi_table[] __initconst = {
- 		},
- 		.driver_data = &generic_quirks,
- 	},
-+	{
-+		.ident = "Alienware m15 R7",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Alienware m15 R7"),
-+		},
-+		.driver_data = &generic_quirks,
-+	},
- 	{
- 		.ident = "Alienware m16 R1",
- 		.matches = {
+The difference between this patch series and the previous version [1] is
+minor. The email address used in 'From' and 'signed-off-by' are now the
+same so checkpatch does not throw a FROM_SIGN_OFF_MISMATCH warning.
 
----
-base-commit: 4a8e04e2bdcb98d513e97b039899bda03b07bcf2
-change-id: 20250418-m15-r7-61df0a388cee
+The patch also addresses a build warning that was caught by the kernel
+test robot [2] and addressed in a standalone patch earlier [3].
 
-Best regards,
+Thanks,
+Sahil
+
+[1] https://lore.kernel.org/openrisc/564042d9-0645-4a0d-aac8-383b0c699b49@gmail.com/T/#m67aed7737e79675352815470cd1e3b9ed6814b05
+[2] https://lore.kernel.org/openrisc/20250323195544.152948-1-sahilcdq@proton.me/T/#md4b867e8d721f8894368ddc209875e262c1e2b60
+[3] https://lore.kernel.org/openrisc/aAMwri9RK2oNuC_p@antec/T/#mc42cafae92957171cef94065f25257e5bed37ed6
+
+Sahil Siddiq (3):
+  openrisc: Refactor struct cpuinfo_or1k to reduce duplication
+  openrisc: Introduce new utility functions to flush and invalidate
+    caches
+  openrisc: Add cacheinfo support
+
+ arch/openrisc/include/asm/cacheflush.h |  17 ++++
+ arch/openrisc/include/asm/cpuinfo.h    |  24 ++++--
+ arch/openrisc/kernel/Makefile          |   2 +-
+ arch/openrisc/kernel/cacheinfo.c       | 104 +++++++++++++++++++++++++
+ arch/openrisc/kernel/dma.c             |  18 +----
+ arch/openrisc/kernel/setup.c           |  45 +----------
+ arch/openrisc/mm/cache.c               |  56 ++++++++++---
+ arch/openrisc/mm/init.c                |   5 +-
+ 8 files changed, 196 insertions(+), 75 deletions(-)
+ create mode 100644 arch/openrisc/kernel/cacheinfo.c
+
+
+base-commit: 183601b78a9b1c3da2b59f2bee915f97ba745c0b
+prerequisite-patch-id: 3ec7c4c93dc2780c9978de0775bf46ae43c00b83
+prerequisite-patch-id: 0b455477c75ef34d81032b9419d8ad3d5e74043d
 -- 
- ~ Kurt
+2.48.1
 
