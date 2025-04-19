@@ -1,115 +1,116 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867381C3F0C;
-	Sat, 19 Apr 2025 13:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 364AD1C3F0C;
+	Sat, 19 Apr 2025 13:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745068413; cv=none; b=AgxJhSfNUHjgKzY+KiwZIfupCBtkrW9Qbz5e6TvB3+uKnImOSx98iH+Wfsc4F+eK8Nl2ji6/n0aBnSL7uu08cv4ZH1UGbFHBAAaTMxR9QMsWfUoK0xXNP014mnFHq1YtzePo9CU1u1xi5wThfLLKtPVRMw/FDWIyy+jRrMNVBfM=
+	t=1745068484; cv=none; b=RSOl095NOKBGX6KVsz9/Jjao6FDcypQBxha5Feuq7nExROBpLEhKe8HrRoCdXpVltDTjmRCiFZGAKOlRc8cD59lhF3j1PXmBGvijl0zqROz/kuw9KIobEdnrWlI+tc9/Ngkuxbk7h7jkWWL/dwGAslvhSmgQQ3moY4Bnp3JJIaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745068413; c=relaxed/simple;
-	bh=tuDFBHWxPx3EkLh0gLTcA0QzK/y7dpVMNz99kPwyUWk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JNH9uzLGvfwTfJlRa2NeLf34/sITiJdd/6H0sX4K86P3MYpfMcUo+xy3iSSNCt61KkFDij886FIle2cERZjDUGSOXE8mz+dexFfMPF5NDEjUrkILDPU5tXgW2pdw9ESWunsOTAKEx6ZdqCg1ToQKQ1nizfMf+NAgvA0Y73Bbj3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UDQSpBv5; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745068484; c=relaxed/simple;
+	bh=sl5+eqOtpT0QSyZE8wpHEfq1xzNkUpXKTL5LEleiIdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TNkatOc9aMdS4BGzZID90rQClDH8wvlD5p2MaH9su66QGzQfzQ14PoTUxKZJ22EzIZJmpeZ8CzD9JD9RLsStW0ZVgPnUzpexsUCEK5f1V4fhSdDd11mfiud00zTHBdktdbc1JvBAapA6YKlan165obazKrjom4wTC4v5Xyq+7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=kgcfLObo; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDQSpBv5"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-225477548e1so26542095ad.0;
-        Sat, 19 Apr 2025 06:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745068412; x=1745673212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SxRJBQp+/o/jC677CucO0qPNfksZQQtd1FtjH+R8IFU=;
-        b=UDQSpBv5t/vPIBRtMstdPxjY/6GRukUX4V16JtuF6X5YjW8cuDyIg86LA7UShM0JZ4
-         1+YKpV/dRPoZDCadWJlgHYiYNICB8eb92kD46/nT8qsG4ST+Jg3ONK+v3urxAYJR6Q2u
-         vUMzJrbzatxElKLVCcHarZayTCXjjO/yas5e43x7qAksiJjnop0eZV4MKdYhscrO3ITg
-         iJOLxAs7siUEBLO6jDubYc7JGtZQ87WZ9EBPSop8HI9STAkLYUYsE0yK9PjEAyVIyQlD
-         0nu7MmpWXoGXdMlBzK5EtmUG5zlSt/PszJsc60wTB2DYW4xDuXLXjDKjOaCOZOtWq70n
-         VEtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745068412; x=1745673212;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SxRJBQp+/o/jC677CucO0qPNfksZQQtd1FtjH+R8IFU=;
-        b=LpQNLr8Fx9J+Hy4icPma9WfxlDjwfR/5/W9X2GpyllItHHeQ6ISLB3Q+YRdWqVbASK
-         lZ9LRu/z/usjsGojCBHt/HuZlW0doa7bfckrsOTGjT1V9P4TGW3OjVIy4NX2vmVFBFOI
-         28iUIn6Rq1gBU4lpgEqQ3/M0UUIzWigdfiF3zzJ6whLHdojqvxRIJGHQKKRqaBj7Toys
-         4eGnm8YWznIlV8KlJs1rpX5v5N/g7XVAj3IwCqO2Ht8CBsAukjSjae17hbZRPjkPGI2D
-         2shXfTYK+zFOVtWemZcCnKKNIifSoz2/JFzV0aH0noy6TvxvdPtd6jNBbRt3+lNeRQL3
-         5X0g==
-X-Forwarded-Encrypted: i=1; AJvYcCURdBdCDafVyJZD1OK5Bu4SIcYatdaFO5pY8yGx9o+AmQHsZsAlqt5HGbhHr7omkgE55J2UwugZH2O04A==@vger.kernel.org, AJvYcCUyGGlWBC+A/t0HFsus1XLsnSu8595YeNaxcTf761IXuGjV7GwKBJiVN4+y7V5YtHGpUToFujZb20ot60Cj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKNHl8PxHPsOfbqpKpWZzuSLt/ojPMjhjxDRbA7D4FkjEGyxRA
-	08lrLLA0AkJNYCtObaYGuTUZj49wIUjwqatfoz1WEe+982OAIhQu
-X-Gm-Gg: ASbGncvQqWdXGG+m/buYoqMOK8AeH+wriTrJ2+btJVvBM/sFQocAA37JYHN+/FbMUh6
-	cPy+d7CS+QnI9HFgZD7Qv1kucps0Ib787EtDGX/SMrAhIVYlcYvSo3lUsrUMnSvVfc8O0Jvl03j
-	3SdFvAOVBeByyMrrI1HpjnT/S+FHQlmdJicZCUEoY7aWpHZIBjGJo+/ItzO4khVqXx7c/XDinDc
-	i86SGyJgwZktZ6GOb/w1Le5APjiDpqyE8dfKME3sECLSrgc1Sg1eM4VFae/bp4YM5Il+yeaUq97
-	gEygQJQbQuTZdRHqdniEtL+veabXflUsJVJhLDAMasTIObEPFCdp9JAAA9ATB3j9fdvKy2Hdm1g
-	=
-X-Google-Smtp-Source: AGHT+IHDihZqqRqFeHMyIOVZFs/uwOGi0O2bdn1FPZFo/3A7mt1ETIE3WFULowboo0fTFrs3tg1O1w==
-X-Received: by 2002:a17:902:f54f:b0:224:1781:a950 with SMTP id d9443c01a7336-22c5357eda2mr86812665ad.14.1745068411649;
-        Sat, 19 Apr 2025 06:13:31 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:218:8190:588e:b51d:c905:529b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa59a97sm3360161b3a.94.2025.04.19.06.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 06:13:31 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: dmitry.torokhov@gmail.com
-Cc: yujiaoliang@vivo.com,
-	jkeeping@inmusicbrands.com,
-	oliver.graute@kococonnector.com,
-	viro@zeniv.linux.org.uk,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] input: ili210x: Fix uninitialized symbols in ili251x_firmware_to_buffer
-Date: Sat, 19 Apr 2025 18:43:15 +0530
-Message-Id: <20250419131315.24897-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kgcfLObo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=bys+Y6TeZSzdEO+EMla5C2QbVwHWwodrEcI4+JxHHsA=;
+	b=kgcfLObo4NickwUWJeZGiomwGqaCh6xwrZ3fJq6RFftvEznObOP7v6hdShdKjR
+	sjgVovhmBpdLuwgGNIJELBzLHdZpRQDw0LjQpaBWl8UrgYiaa+yFXp/xRUco1Hmu
+	NkQBn2pB22KPWU+EbfGVGgp8vLOR1PV6Jeqaz1bNCqJ1w=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wB3jt2doQNopvW0Aw--.64843S2;
+	Sat, 19 Apr 2025 21:14:06 +0800 (CST)
+Message-ID: <a890091b-b28b-4122-a7ae-bbb8d750cd7d@163.com>
+Date: Sat, 19 Apr 2025 21:14:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND] PCI: cadence: Fix runtime atomic count underflow.
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250301124418.291980-1-18255117159@163.com>
+ <shhqkx5vt5dwbw452yf5cq6gubgcrqpzw6xatyo2m7laogg7gv@xpnspwe5x7ds>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <shhqkx5vt5dwbw452yf5cq6gubgcrqpzw6xatyo2m7laogg7gv@xpnspwe5x7ds>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wB3jt2doQNopvW0Aw--.64843S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr1xtFyDKFWDKr4kAF4fXwb_yoW8CF43pF
+	WDWayxCa10q3y2vFZ2v3WUXFyayasxJ348Jw4vg3W8uF13Cw12qFsrKFyYqFyDKr4qgr12
+	qw1qqasxCF4YyFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UKNtsUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwo0o2gDoOEXxAAAs-
 
-Fix Smatch-detected issue:
 
-drivers/input/touchscreen/ili210x.c:621 ili251x_firmware_to_buffer()
-error: uninitialized symbol 'fw_addr'.
-drivers/input/touchscreen/ili210x.c:621 ili251x_firmware_to_buffer()
-error: uninitialized symbol 'fw_len'.
 
-Initialize 'fw_addr' and 'fw_len' to 0 in ili251x_firmware_to_buffer()
-to avoid uninitialized use warnings reported by smatch.
+On 2025/4/19 18:05, Manivannan Sadhasivam wrote:
+> On Sat, Mar 01, 2025 at 08:44:18PM +0800, Hans Zhang wrote:
+>> From: "Hans Zhang" <18255117159@163.com>
+>>
+>> If the pci_host_probe fails to be executed and run one time
+>> pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
+>> cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
+>> "runtime PM usage count underflow!".
+>>
+> 
+> Please reword the description as:
+> 
+> "If the call to pci_host_probe() in cdns_pcie_host_setup() fails, PM runtime
+> count is decremented in the error path using pm_runtime_put_sync(). But the
+> runtime count is not incremented by this driver, but only by the callers
+> (cdns_plat_pcie_probe/j721e_pcie_probe). And the callers also decrement the
+> runtime PM count in their error path. So this leads to the below warning from
+> the PM core:
+> 
+> runtime PM usage count underflow!
+> 
+> So fix it by getting rid of pm_runtime_put_sync() in the error path and directly
+> return the errno."
+> 
 
-Although the while loop ensures both variables are always assigned before
-use, initializing them silences false positives.
+Hi Mani,
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
- drivers/input/touchscreen/ili210x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you very much for your reply and suggestions.
 
-diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-index fa38d70aded7..10b52d87c41a 100644
---- a/drivers/input/touchscreen/ili210x.c
-+++ b/drivers/input/touchscreen/ili210x.c
-@@ -586,8 +586,8 @@ static const u8 *ili251x_firmware_to_buffer(const struct firmware *fw,
- 					    u16 *ac_end, u16 *df_end)
- {
- 	const struct ihex_binrec *rec;
--	u32 fw_addr, fw_last_addr = 0;
--	u16 fw_len;
-+	u32 fw_addr = 0, fw_last_addr = 0;
-+	u16 fw_len = 0;
- 
- 	/*
- 	 * The firmware ihex blob can never be bigger than 64 kiB, so make this
--- 
-2.34.1
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+> 
+> Fixes tag?
+
+Will add.
+
+> 
+>> ---
+>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 8af95e9da7ce..fe0b8d76005e 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   
+>>   	return 0;
+>>   
+>> - err_init:
+>> -	pm_runtime_put_sync(dev);
+>> -
+>> +err_init:
+>>   	return ret;
+> 
+> You can now directly do 'return ret' instead of using label.
+
+Will change.
+
+Best regards,
+Hans
 
