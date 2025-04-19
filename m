@@ -1,87 +1,78 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301051754B;
-	Sat, 19 Apr 2025 17:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC0B19066D;
+	Sat, 19 Apr 2025 17:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745083808; cv=none; b=uF4WtCp3GFAL9a0LF8zJfS5A6HShkLXDoavZ8oO/lUn9jXyHJWQdQLa9Yt2NDb/OrcYYHgS4GV+f+uWhnUEIjdKPPdsSUIxN7qHiLWPlJYrxsU1GdOqeSZHA1k0y0vipBHVzcEr5rkB1OBTfhzvrYZM5zRboDVDjlv5PxiZ1hxo=
+	t=1745083938; cv=none; b=pCbHX8x65qfTkLRNNDH8Xz4UX5BISXP5xG5OHN0U4V/tglRP2IZnUUaUJckaHTrBdikXvCIbzXux/C5vTHV0rJtCa327RVY4SwPUbEixi2R80RD0kmYNOmPXc/q6Cce52UvuM8xIuQyd37TjJ32Z50kRb0khSxGj64Dgmx4cUOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745083808; c=relaxed/simple;
-	bh=U6a1wXpun/HJSo+wW8DR+dOHz6jdl4cyLokR8MMuadk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7rO4eTfiKCiqx4Rme3NSO7RdARmJqd9HOpeUHo5QKdeqqkaz0vcOrpyo+HcWjkuTrHMwUpx9STyrGwl/7w8eE0EF7o/QEDePzjdgOztBB9JBNeeFiO02JsWvFUhwoBEXCVJZh3AzUwlpwQVGqtdKZUV1o4qRLebWmMV+HJ5s0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRhDMsLl; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745083938; c=relaxed/simple;
+	bh=F5gr2eFei0vNBUOugpBm7WEsuy7mqr3bMIQ8rcDq4fY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dpjgeRfmK6iR5395DzD9kZXUaDVyGfvbMl5Rt29BXBCo6tOnTUx/vd1wkCNLTb1drhN+B//O9ID03xXEK8XrmiyjouzP73GcBwmforri7c581fUhYByVDJFjltDjU5h8jG37pg3baIK6buTpkJ972kqyFFqMxneCtnT54G6GtfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/YLZndg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRhDMsLl"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736a72220edso2725447b3a.3;
-        Sat, 19 Apr 2025 10:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745083806; x=1745688606; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nUYxhkgZxR+3mLbUfk63itZQJ8nDNbnX+29tHtzt5qo=;
-        b=NRhDMsLl2G12a11CBMc4kthaQS8uPURpVOA+sDu1kDHbUZdJbM4ZF2PjWqs1bJFrNg
-         2Dq61XVUiu5ioMFvr6O11ca7M9ElcQjTuqNItWMOn0NVY+VOyue6mB5UtPmLlz8bh5zD
-         ipmbgbE0xFn0nrNQnfcZbuZw0N427rBOBybkna9MsrnZ6qM7msALzbGS/cAAxObAxidL
-         MWbBNfOxWCeH9r06VZg4mut1ovQXnEUWJWb/Fx6khLOhUt8zaMDQzPQ7PqJ9lKVk6rO9
-         ScYLfwuJaPOpHWEWTPm7e52rMePUCi0jnq4uPA9mD4nvFLiN6elaQk2zTYDULCWQwxMQ
-         7N2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745083806; x=1745688606;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nUYxhkgZxR+3mLbUfk63itZQJ8nDNbnX+29tHtzt5qo=;
-        b=sbiDT6Xe+2O6276p04TH91DlR5ZDYKs/l3X7u3ViK6iC+PUXFf3dkvRdLSLR/WYsFC
-         mz5ud0PFc4kuV6N1xnzttX9mkGjxg1qeUBXp9fmamrlI0NU2wKJgx/QlcOm+u0pc9Wb2
-         JiFNBlQAm2ofJWla/2G0JZgxiXd3vzlgUTjAyKPMHUOL78bllaKuDv0ws7cRDiL6s4Sc
-         2Xv+NGtE3XpIYwHUpcgXaGWYtWcG4DRNgBm3ayfqNDRmV6rHpQZG/9RONLp1gZQCY4hd
-         OZn/KIUWXaaktZWVSJO7J5kRCsE8xe/ScCRX6L/NH3XaUM4ijiYWo/vdEivxm2WLq+j1
-         z08w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMwJm6Pn+yR2AlXV+32Gl2TMc54JElK7GbjUAhXKw5wSNuGQ6K5xoGgpA8mXHWGTNy5biDDqHnYXA=@vger.kernel.org, AJvYcCW3T7Ksfw7YpEqyqTHJjKXHf6KAUNJZ4ZiPLJNjWpxT79Yoyd/wbLihu79AUKWGgTRx7HL0rLgG0EP/x3eh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPnwHNlmMDi4T52lT7uOuyMxGQAqqXm9YYkgkQOL9DoD5DQDNb
-	azewYIuUV6FKuNOUpVlJHMXxHkdmsPR4GnuSmcWFKAMTFWzTxZoR
-X-Gm-Gg: ASbGncuxCdka+1H26Af9fOS+tLT6On52sTdaBAjhKLT5C4jbm6vZZdLsVUsxND3UjGf
-	lsBsWWWFnEsrEHcWpp+S2Cvnb/cstryLjlP7Qp59u44MmjuFEBHet5xFxVQ5vHIP+C4OxTxN8sH
-	jDhlvkSSeaiMeZ7veWuk3hlj37QK7TAZhyCVn3+XtOWafWp0QdBdb38zGsw1nbQZHRc3Yt2qdgZ
-	+Av4FtuYsVSxLk/CnpAvPbGlX84oPkpd/6y62wawc5YJYRukmQvcSRr7yd/0MTGOPzf9BIuWuoi
-	lO2P4m6pNWg6SHL0lvhWMVql8r5/dWHRS3V+1r0CFlWNi0Q=
-X-Google-Smtp-Source: AGHT+IEYs0SsZrKjQ3EyxwmjfmzQx6Yk2n8zsra3Z/o5jNp9N6ENiepCtoZecYh2GvEgRlL1Y20k+Q==
-X-Received: by 2002:a05:6a21:900e:b0:1f5:a577:dd10 with SMTP id adf61e73a8af0-203cbd24088mr10858917637.36.1745083806348;
-        Sat, 19 Apr 2025 10:30:06 -0700 (PDT)
-Received: from localhost ([2804:30c:90e:1e00:5265:5254:2e32:7e5])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b0db107f513sm2447197a12.0.2025.04.19.10.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 10:30:05 -0700 (PDT)
-Date: Sat, 19 Apr 2025 14:31:17 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
-Message-ID: <aAPd5XxfNEzaWdr2@debian-BULLSEYE-live-builder-AMD64>
-References: <20250419144520.815198-1-gshahrouzi@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/YLZndg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32DD0C4CEE7;
+	Sat, 19 Apr 2025 17:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745083937;
+	bh=F5gr2eFei0vNBUOugpBm7WEsuy7mqr3bMIQ8rcDq4fY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=T/YLZndgjxDHQvH+uySfN4z+DaieqKlIAFL7M5Mb+feOpYg4KpXmZlLkrjHZa2MPH
+	 YPZlDQlnrndOR/px64/baotp3mn15j/qOawmfQ+zn7ikdinlSdkoxvgnzII7ta5bmU
+	 6ekBIo+Aek4OVqQ2ZBUMBLrW+W69TBmg5ufRXKoDepGE49E8LKLMTZr5Os6/9luC2V
+	 qEauvlFd2F9dmbVEQa2yGFuSTadxQR3GppC7GRWzSp22ePI2J3/uPK+qdHybIYkqUT
+	 X2r3/aucP2yu8f0/7hEP6rViOZcYvFHwZj9QGbmRO2btp3L1BeKGvGGxols36vozvp
+	 0uxFrxK1Cx2rw==
+From: cel@kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <linux-nfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL] First set of NFSD fixes for v6.15
+Date: Sat, 19 Apr 2025 13:32:16 -0400
+Message-ID: <20250419173216.7115-1-cel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419144520.815198-1-gshahrouzi@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 04/19, Gabriel Shahrouzi wrote:
-> The inclinometer channels were previously defined with 14 realbits.
-> However, the ADIS16201 datasheet states the resolution for these output
-> channels is 12 bits (Page 14, text description; Page 15, table 7).
-> 
-> Correct the realbits value to 12 to accurately reflect the hardware.
-> 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+The following changes since commit 26a80762153ba0dc98258b5e6d2e9741178c5114:
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+  NFSD: Add a Kconfig setting to enable delegated timestamps (2025-03-14 10:49:47 -0400)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.15-1
+
+for you to fetch changes up to a1d14d931bf700c1025db8c46d6731aa5cf440f9:
+
+  nfsd: decrease sc_count directly if fail to queue dl_recall (2025-04-13 16:39:42 -0400)
+
+----------------------------------------------------------------
+nfsd-6.15 fixes:
+
+- v6.15 libcrc clean-up makes invalid configurations possible
+- Fix a potential deadlock introduced during the v6.15 merge window
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      nfs: add missing selections of CONFIG_CRC32
+
+Li Lingfeng (1):
+      nfsd: decrease sc_count directly if fail to queue dl_recall
+
+ fs/Kconfig           | 1 +
+ fs/nfs/Kconfig       | 2 +-
+ fs/nfs/internal.h    | 7 -------
+ fs/nfs/nfs4session.h | 4 ----
+ fs/nfsd/Kconfig      | 1 +
+ fs/nfsd/nfs4state.c  | 2 +-
+ fs/nfsd/nfsfh.h      | 7 -------
+ include/linux/nfs.h  | 7 -------
+ 8 files changed, 4 insertions(+), 27 deletions(-)
