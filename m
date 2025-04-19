@@ -1,98 +1,120 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5114013C3F2;
-	Sat, 19 Apr 2025 18:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30C64690;
+	Sat, 19 Apr 2025 18:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745086209; cv=none; b=BMpDiyh2prxOVzMWuU0ZgC+psYNM/1cjm1LH3xJf3m9hjTk8NRMCZtf4oH1gFyisDUCRIwUr1ew5eUYybJNe19vKgOim7bQ/lIoAZ8nMuyx6gyRugchYhYVWYxAtmzsmo03aOQoINWxGmeJHxo+sCuE2IcrTKicvvnW9iWOKfDg=
+	t=1745086396; cv=none; b=bM+jHyv/I7OwWNNv5ODB444HFOPvNGdie7yXAgwyfMN2OlKLG2NNnV8O6ixxipsx2ctlH7Suwz9sxRXuzHADsZ1YPBGCU5gkvh+WncwzRLAJ8KC3mqkrB6MGXCd3tlKuVe/ZBpQIYVwVAdvsgBAJSubROgPN4jL+iF5K0m+DE9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745086209; c=relaxed/simple;
-	bh=/IuFW5aK4FfMSf52f3qJzkXebXja+M+kxr/aRzHxdQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mclO6I6geNhwoDaiDfehVLces4yi30yqkhroq18Ng304itOo47iOBMr8uZR2XxQjueRAS0WbiqBIB5vYX8lwuYvHH0LrxncGji3PUFT0VgrUpdK11ywd6NxXF+VDeiPzoI1s/9LgQopmwOsOCEzkx+AUhdZN3Q/XM7RAmGpRM5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YhqxFwNb; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745086396; c=relaxed/simple;
+	bh=GdnvWDBNR2gOB+LenT8RHWopVk2MCmbNJTEOMWfKmjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IkzdAk7qFcmCKkZPKcC5tDCL4exr8qneOC+ZcDe5OcgeUXcAwxbA8st5i8/S5/cHj6XUWNy8C2O3ndRoYXz6xqd3Ozc5a+YTbadgifhRJjBHT1b5PtJ6qE6bQh0IEviUJtuxMWbjrCa65k8SquUf/H4GFiqAkHE+cTRPNnn9wts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rmg/pM0F; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YhqxFwNb"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53JIA2NU1243663
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 19 Apr 2025 13:10:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745086202;
-	bh=VY17ZoztUK1pT2AXyZLmBdvwKx3peOWAZrkwlCco0uU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=YhqxFwNbNXQkPfqJXbR4q6CJmrabNNr657kRZobA205KRF53mUgOHFlecDuzOO44+
-	 Cq3wEZ6d9yxKeHo2ndqHRdrTTzNd8uQk6hsuW0IObJQLwJGsscghRLJnFEh/4BngRM
-	 E6hL/ifdchctkF92VCqwzxSKTJ4OyiwpE3r+pIGw=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53JIA2Ac003447
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 19 Apr 2025 13:10:02 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
- Apr 2025 13:10:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 19 Apr 2025 13:10:01 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53JI9uIZ071610;
-	Sat, 19 Apr 2025 13:09:57 -0500
-Message-ID: <f9cb52e2-d211-47b1-9536-3aa81db916c7@ti.com>
-Date: Sat, 19 Apr 2025 23:39:55 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rmg/pM0F"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af28bc68846so2384719a12.1;
+        Sat, 19 Apr 2025 11:13:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745086394; x=1745691194; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TNRnOiyXacyKehrBjfG/SIyIph4B3poZy/96JlS18Fw=;
+        b=Rmg/pM0FVZ6BE0J/kfw//FmCaPIOcrZwlvbtBwyPx0Z8zKdm512jA0R64gtVhlIIV3
+         9VZZP19+Qoaev7EQma/gMnGsXm13nz1gLXgFlkf5N2uO98+jnXbXk1BW1MBEPh/f1dOb
+         I34Mh3N4ya2Qf7hEiuPJbplK4TJC0brTBzTcZD8KMcXXx2TE0x+8PHd7uqXjphpY8Z/F
+         hMedWh1iL/nodVUQmEMcM1zRK5u45QxuVjIAeZlXfi5cnkDzF3gbGVyns0sJtoN+GmOA
+         Hsr622fzEGoijfUU8ReiVKGvPwdpK5GB+v/lIlrXBzudMbk7Nrj1vydaIXsBWot+jgG7
+         zyMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745086394; x=1745691194;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TNRnOiyXacyKehrBjfG/SIyIph4B3poZy/96JlS18Fw=;
+        b=M0IKE3BfmAO7za9ctbQqFt8Q/PsQhJpn1bUu+gyuabugzCt+sFl+qvRujgy1i0OaLK
+         8OneJ2Oy3LrAR79Q1AdSdchYlAqZGhhDGNtPe6x+bEGvV0VZXlSyqRmLbEmz5rsPunkE
+         8NH+XnFOjZSVQxiJ/t9I8nPmE45LjPifp/INW7cB7PngXb9LrdsMFf1KFLFLCUapbGf4
+         1xdyf16XyjCHpuDM39aDz0zbMcMHYvTleTtdGfpaq7CywHMJ0/Lt5rvaJ8VcUHN3QsMi
+         VGsytPD/8cMFWR4cbqgB/tf+Ht9Ib3ilcb/0xi/wBSmfoOOqsmjZ1mnOO7tgi/ny3nff
+         jrfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Hmaq93DYK5A8rujhm459td5SnpgHExhZYFBaxFD2YMqPpPenW0ju4gdaj97PkIAFJwMmqE/FDAc=@vger.kernel.org, AJvYcCX69sB1QfaJqceKOqyJkeaMmqF2LDKaLI8DkCGM4Ks3Wm6YP3/5SX6OjlLbsrQSKdR1wQ3xXIGcjMpXcp1/@vger.kernel.org, AJvYcCXW6BG/6Pl+6h4xJ0LIrA9sK8Wqd/lsMtVGnSp/bKAX5W8E+XIXXdLVk6drrrwUXCho0py83okG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIUntERsHEMZfMW0XIgttMmL8clB5NeSDWy4kqTl0R5arGUJlX
+	vb4h4XHguwFvtnhk3k/I7hnyPQIBH2wkS6SMEeus5hMwoE631j6SRAoDY5TUbNU=
+X-Gm-Gg: ASbGnctAz8ZmlZqlvc8jOnGnGKqXAVtmFd4ka+cuuVq5IrCf3TLdw7Y65dQt9sun0jX
+	1rOuRHYT1NzXdNIFJlrS9WgXYXOElghUv/jVClQmnu4nIBV4w5lZ2aC0DHL7/2JFch8nMQ5Y730
+	IRQUoKlikHMESwA72r9X5v/b0FAbV0lx4wEqQKwqyzxvAFvmH3HcuVGxP/8FnxF6Uv/3XfewPW8
+	3/So0gnCgqRinuebMJ8P2ipLcMrZEsG6hhDV4z6jI7sdMoUZcO3Oa1oAd6g7l+CGealKMd4ItM6
+	SmEOZ1kOssL9lUD47e38OWHlBPNhh9Adh4Cvzjh+y4+7Qw4=
+X-Google-Smtp-Source: AGHT+IF0skBMQ1kT+xLk+++XTW5TiYx+jOnZJc1EJcM6tPtPprZSLzpSuU4H8FPoV2YJAsHrhEPaxA==
+X-Received: by 2002:a17:902:d58c:b0:220:c813:dfcc with SMTP id d9443c01a7336-22c536075cdmr122327445ad.40.1745086393993;
+        Sat, 19 Apr 2025 11:13:13 -0700 (PDT)
+Received: from localhost ([2804:30c:90e:1e00:5265:5254:2e32:7e5])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50ed0ee3sm36362525ad.206.2025.04.19.11.13.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 11:13:13 -0700 (PDT)
+Date: Sat, 19 Apr 2025 15:14:24 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: himanshujha199640@gmail.com, jic23@kernel.org, lars@metafoo.de,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] iio: adis16201: Correct accelerometer scale factor
+Message-ID: <aAPoAESnjjyNsHI2@debian-BULLSEYE-live-builder-AMD64>
+References: <20250419125413.679290-1-gshahrouzi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] arm64: dts: ti: k3-j721e: add ranges for PCIe0 DAT1
- and PCIe1 DAT1
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <u-kumar1@ti.com>
-References: <20250417120407.2646929-1-s-vadapalli@ti.com>
- <20250417120407.2646929-4-s-vadapalli@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250417120407.2646929-4-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250419125413.679290-1-gshahrouzi@gmail.com>
 
+LGTM. Minor comments inline.
 
-On 4/17/2025 5:34 PM, Siddharth Vadapalli wrote:
-> The PCIe0 DAT1 and PCIe1 DAT1 are 4 GB address regions in the 64-bit
-> address space of the respective PCIe Controllers. Hence, update the
-> ranges to include them.
->
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On 04/19, Gabriel Shahrouzi wrote:
+> The IIO_CHAN_INFO_SCALE previously reported for accelerometer channels
+> used 0.4624 mg/LSB. This value matches the datasheet specification for
+> the offset calibration registers (X/YACCL_OFFS_REG, pg 18).
+> 
+> However, the scale should reflect the sensor output data registers
+> (X/YACCL_OUT, pg 15, Tables 7 & 8), which use 0.4625 mg/LSB. This is
+> also consistent with the typical sensitivity in Table 1 (1 / 2.162 ≈
+> 0.4625).
+> 
+> Fixes: 57f9386405a2 ("Staging: iio: accel: adis16201: Add comments about units in read_raw()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 > ---
->   arch/arm64/boot/dts/ti/k3-j721e.dtsi | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> index a7f2f52f42f7..4f5d277c97a4 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> @@ -126,6 +126,8 @@ cbass_main: bus@100000 {
->   			 <0x00 0x10000000 0x00 0x10000000 0x00 0x10000000>, /* PCIe DAT */
->   			 <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71 */
->   			 <0x00 0x6f000000 0x00 0x6f000000 0x00 0x00310000>, /* A72 PERIPHBASE */
-> +			 <0x40 0x00000000 0x40 0x00000000 0x00 0x08000000>, /* PCIe0 DAT1 */
-> +			 <0x41 0x00000000 0x41 0x00000000 0x00 0x08000000>, /* PCIe1 DAT1 */
 
-Do you want to map whole 4GB or just 128M ?
+>  drivers/iio/accel/adis16201.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+> index 8601b9a8b8e75..982b33f6eccac 100644
+> --- a/drivers/iio/accel/adis16201.c
+> +++ b/drivers/iio/accel/adis16201.c
+> @@ -133,7 +133,7 @@ static int adis16201_read_raw(struct iio_dev *indio_dev,
+>  			 * 1 LSB represents 0.244 mg.
+Maybe also update the comment?
 
+>  			 */
+>  			*val = 0;
+> -			*val2 = IIO_G_TO_M_S_2(462400);
+> +			*val2 = IIO_G_TO_M_S_2(462500);
+If we do the math with more decimal digitis we have 1 / 2.162 == 0.46253469010176
+Would it make sense to do 
+			*val2 = IIO_G_TO_M_S_2(462535);
+?
 
->   			 <0x44 0x00000000 0x44 0x00000000 0x00 0x08000000>, /* PCIe2 DAT */
->   			 <0x44 0x10000000 0x44 0x10000000 0x00 0x08000000>, /* PCIe3 DAT */
->   			 <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
+>  			return IIO_VAL_INT_PLUS_NANO;
+>  		case IIO_INCLI:
+>  			*val = 0;
