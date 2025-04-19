@@ -1,147 +1,149 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FDA154BF5
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 06:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABA313BC3F;
+	Sat, 19 Apr 2025 06:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745045190; cv=none; b=MaDLoBYKc+VUtYWigofD/znr/5XXjjr0gLZ2Qj2L6xhS43zvx0MepkTdQvqHTXwjNLxn5MVuJuNl3WxChVO+gdrAn1tEWRQp0J8XOKdTRr14DpP9PFWZslSvn7qxO7xnmM1Z0fmyVrFxVyCiyxn6xQFHz3LJnFR4aCg4AzADwKQ=
+	t=1745045415; cv=none; b=YMRc7J0LzLv7qhx5kJ1Zkg68mkgQDT2YOd/Xtu2WfO8lqHODQfFUDUhafLGy/c78uLTKQS18S+PM34rvoZKUkRLB1UvFVY7e/JHuxZjo1b6HV28Dc1J7ej34dFZ5uBqHeN2pC+1H4X/eQbG4ne1GmVsjv656AdN1qVvhDfFXrdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745045190; c=relaxed/simple;
-	bh=iDl5B1v5FJYHXZlOgXY0HpWkdqy9oyaPAFwJEp09aoY=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=K0JUdou5t0Yb6jORFvHr/bEG8lmypYLoYXIB3X+aHYhgJ77PEznPuLyn1WdCG1PmM2KgHBske1nltplhG8gldkXFWhPacrUxzhFGLXRhUyi90QGgUCXHaIvUqco6w9ukZt8JuyVrYtse1E09eCqhluSSr9pkxtnY/rwLxf+L3q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QLEo5SIX; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QLEo5SIX"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72c47631b4cso1620191a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745045188; x=1745649988; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AgGfe7pfQEKHXwAsiL/+C2u2L63eEHqUtK4c7n9+Ets=;
-        b=QLEo5SIXilCoCEovGqSowkRjVYFT17/zNnr+HXZx+YsaTcXUqxWg7ZiAc3hICTJ6dJ
-         3XHSf1+kK9YJUjUpuF7gy7BDQ+SGyZKcDoogpJODgQqUFuFskjsW0SyW8p6tfylrKJc1
-         0oRPGacydthekoRnAmnzZ017bk6Z7nv7uQ0j4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745045188; x=1745649988;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AgGfe7pfQEKHXwAsiL/+C2u2L63eEHqUtK4c7n9+Ets=;
-        b=e4VRuicbHMbqRy1i6lL1yeFPbYKZ7OIYiM3BaTwv8VIDDsBPg19EkXGT4QnIKTokTe
-         j6cJdxOtvbWG2u7rMRU3cO052TbfvAlanZx2+trzk/IIIhkpMEiruhE47wF8N3Tj+qY5
-         vEXgqcic2+392Ury88ORx+Y3sdAq5GpcL3l3R8WT5YBv0xftd4AhdXdTUMpY9et8FKBg
-         hfqahiUGah/26RakQSbd/RgGxG/N7SS8zOe0YTtOTwrlaGEHA5SlOc+UD3JTGWKblSEl
-         j3f9cBw4VjMcRzGgSTeXxmMJuBQvVbADc5kVYkdZ9SIL9+Y9dVL8pt1Bdp/7bsxmuPuf
-         9/jg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3atWMvfqHNBy7qwJFLCJmgEj8U+uH2E1a8uCdO0bwqF59Gqp7VR4dep8CtRd6ZGwyqCBm+hdeGro4NLQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS3FvXuN8lMP/HxOVpELqoI2kwnODKdO29mgEfW9+mz2vKDLBg
-	pXpbqalMA1IUIoPXfSncTJeDnc8+Krq4Enfs6u47pLZ/R05gENE53rheRNJlYg==
-X-Gm-Gg: ASbGncvMUXg1FSRpZ3fQIL0m+1ScSPMTsJePG9XE+V+EemyNzjwEkwsKfRH433Gf0IC
-	jGyd8FlJ5A0WVJ9HCPTuvvOlWtDiMHPE7XcG7TZcAb0mtPEPRHEfiLtiL8BDgA4UK79eFhKZ3mY
-	6xbHr+YupmUhxoioFZMfmpcJdGfSKzFaIyVg3VPpvCNsJTvd5eCKzqJa+CziQWOJKt9kKR9o97H
-	IFoOPCA2jfZroWK4bPN4x+AeXy4pkf0Gy9U+KVnoL629MTs+L8Y0SLywoqhvAIVAO5cm5Yabwnv
-	PGPdBIYwuWMsLTMcjj4amtwkeAZuPNXylxu6CUNXPX16YIabT76FtC/RvOO8mpvPrqOVnuYtesT
-	AJXc=
-X-Google-Smtp-Source: AGHT+IEGUlFLW66ijvjDAdwIEjVLrDZHsPSRPo1a//tFPGyZK0o6IG8RL1FLXXN9Ju9SX94gEV6kLg==
-X-Received: by 2002:a05:6830:6687:b0:72a:1d2a:4acf with SMTP id 46e09a7af769-730062fbcc4mr2693431a34.17.1745045187657;
-        Fri, 18 Apr 2025 23:46:27 -0700 (PDT)
-Received: from [192.168.178.39] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7300478ed86sm621952a34.11.2025.04.18.23.46.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 23:46:26 -0700 (PDT)
-From: Arend Van Spriel <arend.vanspriel@broadcom.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, <kvalo@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <linux-kernel@vger.kernel.org>
-Date: Sat, 19 Apr 2025 08:46:20 +0200
-Message-ID: <1964ccc4e60.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <20250415122001.3325-1-vulab@iscas.ac.cn>
-References: <20250415122001.3325-1-vulab@iscas.ac.cn>
-User-Agent: AquaMail/1.54.1 (build: 105401536)
-Subject: Re: [PATCH v4] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
+	s=arc-20240116; t=1745045415; c=relaxed/simple;
+	bh=dYEjEpLVejSQy9WYT1mG6oXtegcyLyJSKbMY9fG2hwg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Aak6ffXEo0zwBRbS6qS+QNUFn+WuwsuSxHI5Qv3s//5+575HAu4aMmUNMjgPnr5WlC1LDgcXQvxKQX1FDm/qdMsWxvbLIxNdoQQW+qATfvnnmS/0suuxH2l/BzwEi11yESCTMxLlWrEr84lvYPIhUaTXbGsmjY8DtDgE2KAfDGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZfhxR4s9YzHrDM;
+	Sat, 19 Apr 2025 14:46:35 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 707E9140259;
+	Sat, 19 Apr 2025 14:50:03 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 19 Apr
+ 2025 14:50:02 +0800
+Message-ID: <616a1273-9f5a-41a5-9761-d50eba37148a@huawei.com>
+Date: Sat, 19 Apr 2025 14:50:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/8] Add functions for getting and setting registers
+ related to autonomous selection in cppc_acpi
+To: <rafael@kernel.org>, <lenb@kernel.org>, <robert.moore@intel.com>,
+	<viresh.kumar@linaro.org>, <mario.limonciello@amd.com>,
+	<gautham.shenoy@amd.com>, <ray.huang@amd.com>, <perry.yuan@amd.com>,
+	<pierre.gondois@arm.com>, <sumitg@nvidia.com>
+CC: <acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
+	<cenxinghai@h-partners.com>, <hepeng68@huawei.com>
+References: <20250411093855.982491-1-zhenglifeng1@huawei.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <20250411093855.982491-1-zhenglifeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On April 15, 2025 2:21:37 PM Wentao Liang <vulab@iscas.ac.cn> wrote:
+Gentle ping.
 
-> In brcmf_usb_dl_cmd(), the error logging is not enough to describe
-> the error state. And some caller of the brcmf_usb_dl_cmd() does not
-> handle its error. An error log in brcmf_usb_dl_cmd() is needed to
-> prevent silent failure.
->
-> Add error handling in brcmf_usb_dl_cmd() to log the command id and
-> error code in the brcmf_usb_dl_cmd() fails. In this way, every
-> invocation of the function logs a message upon failure.
->
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+On 2025/4/11 17:38, Lifeng Zheng wrote:
+
+> The patch series is organized in two parts:
+> 
+>  - patch 1-6 refactor out the general CPPC register get and set functions
+>    in cppc_acpi.c
+> 
+>  - patches 7-8 add functions for getting and setting values of auto_sel,
+>    energy_perf and auto_act_window in cppc_acpi.c
+> 
+> Changelog:
+> 
+> v7:
+> 
+>  - Fix some typos
+>  - Add check of null pointer in cppc_get_reg_val(),
+>    cppc_get_auto_act_window() and cppc_get_auto_sel()
+>  - Replace ternary operator with logical expression in cppc_get_reg_val()
+> 
+> v6:
+> 
+>  - Remove the last patch, will resent it in the future after reaching an
+>    agreement with Sumit
+>  - split patch 3 into 2 smaller patches
+>  - Remove the printing of reg_idx in cppc_get_reg_val() and
+>    cppc_set_reg_val()
+>  - Change the logic for determing whether a register is supported in
+>    cppc_get_reg_val() and cppc_set_reg_val()
+> 
+> v5:
+> 
+>  - add more explanation to the commit logs and comments
+>  - change REG_OPTIONAL from bin to hex
+>  - split patch 2 into 3 smaller patches
+>  - remove CPPC_REG_VAL_READ() and CPPC_REG_VAL_WRITE() macros
+>  - move the modification part in patch 5 into a separate patch
+>  - rename the sysfs file from "energy_perf" to
+>    energy_performance_preference_val
+> 
+> v4:
+> 
+>  - add REG_OPTIONAL and IS_OPTIONAL_CPC_REG to judge if a cpc register is
+>    an optional one
+>  - check whether the register is optional before CPC_SUPPORTED check in
+>    cppc_get_reg_val() and cppc_set_reg_val()
+>  - check the register's type in cppc_set_reg_val()
+>  - add macros to generally implement registers getting and setting
+>    functions
+>  - move some logic codes from cppc_cpufreq.c to cppc_acpi.c
+>  - replace cppc_get_auto_sel_caps() by cppc_get_auto_sel()
+> 
+> v3:
+> 
+>  - change cppc_get_reg() and cppc_set_reg() name to cppc_get_reg_val() and
+>    cppc_set_reg_val()
+>  - extract cppc_get_reg_val_in_pcc() and cppc_set_reg_val_in_pcc()
+>  - return the result of cpc_read() in cppc_get_reg_val()
+>  - add pr_debug() in cppc_get_reg_val_in_pcc() when pcc_ss_id < 0
+>  - rename 'cpunum' to 'cpu' in cppc_get_reg_val()
+>  - move some macros from drivers/cpufreq/cppc_cpufreq.c to
+>    include/acpi/cppc_acpi.h with a CPPC_XXX prefix
+> 
+> v2:
+> 
+>  - fix some incorrect placeholder
+>  - change kstrtoul to kstrtobool in store_auto_select
+> 
 > ---
-> v4: Fix spelling problem.
-> v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
-> v2: Remove redundant bailing out code.
->
-> .../wireless/broadcom/brcm80211/brcmfmac/usb.c   | 16 ++++++++++++----
-> 1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c 
-> b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> index d06c724f63d9..a11a6d9f3c2b 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-> @@ -744,12 +744,16 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info 
-> *devinfo, u8 cmd,
-> char *tmpbuf;
-> u16 size;
->
-> - if ((!devinfo) || (devinfo->ctl_urb == NULL))
-> - return -EINVAL;
-> + if (!devinfo || !devinfo->ctl_urb) {
-> + ret = -EINVAL;
-> + goto err;
-> + }
->
-> tmpbuf = kmalloc(buflen, GFP_ATOMIC);
-> - if (!tmpbuf)
-> - return -ENOMEM;
-> + if (!tmpbuf) {
-> + ret = -ENOMEM;
-> + goto err;
-> + }
->
-> size = buflen;
-> devinfo->ctl_urb->transfer_buffer_length = size;
-> @@ -783,6 +787,10 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info 
-> *devinfo, u8 cmd,
-> finalize:
-
-The finalize label is used for failure path as well. So I suggest to get 
-rid of it requiring modified patch like:
-
-- finalize:
-        kfree(tmpbuf);
--       return ret;
-+.     return 0;
-+
-+ err:
-
-+      brcmf_err("dl cmd %u failed: err=%d\n", cmd, ret);
-+      kfree(tmpbuf);
-+      return ret;
-}
-
-Obviously this means tmpbuf should be NULL initialized.
-
-Regards,
-Arend
-
+> Discussions of previous versions:
+> v1: https://lore.kernel.org/all/20241114084816.1128647-1-zhenglifeng1@huawei.com/
+> v2: https://lore.kernel.org/all/20241122062051.3658577-1-zhenglifeng1@huawei.com/
+> v3: https://lore.kernel.org/all/20241216091603.1247644-1-zhenglifeng1@huawei.com/
+> v4: https://lore.kernel.org/all/20250113122104.3870673-1-zhenglifeng1@huawei.com/
+> v5: https://lore.kernel.org/all/20250206131428.3261578-1-zhenglifeng1@huawei.com/
+> v6: https://lore.kernel.org/all/20250409065703.1461867-1-zhenglifeng1@huawei.com/
+> 
+> Lifeng Zheng (8):
+>   ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge if a cpc_reg is
+>     optional
+>   ACPI: CPPC: Optimize cppc_get_perf()
+>   ACPI: CPPC: Rename cppc_get_perf() to cppc_get_reg_val()
+>   ACPI: CPPC: Extract cppc_get_reg_val_in_pcc()
+>   ACPI: CPPC: Add cppc_set_reg_val()
+>   ACPI: CPPC: Refactor register value get and set ABIs
+>   ACPI: CPPC: Modify cppc_get_auto_sel_caps() to cppc_get_auto_sel()
+>   ACPI: CPPC: Add three functions related to autonomous selection
+> 
+>  drivers/acpi/cppc_acpi.c     | 313 +++++++++++++++++++++--------------
+>  drivers/cpufreq/amd-pstate.c |   3 +-
+>  include/acpi/cppc_acpi.h     |  30 +++-
+>  3 files changed, 219 insertions(+), 127 deletions(-)
+> 
 
