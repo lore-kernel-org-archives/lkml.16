@@ -1,62 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50219343B
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655EF86338;
+	Sat, 19 Apr 2025 15:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745076128; cv=none; b=j8BhY84kf3Ks+fE6s8XXRovTT6SNnIVLHYhrQb7hk2uVAjqdDA/gl2MYIQj+xucn3vOw0eYR5dGA9LtiL20O1QXa5EXGFgAUEeWYrv5qz6FXeD0OTMgWcUTi+DxEb3p6xCg+h3S78NfegkK0372nJcqCAUA8MEzSE2MINQAfWMk=
+	t=1745076220; cv=none; b=ErXZu2mtgojqMjjNjbO4xWZY3Whx1g/4dPi28khgGCjWVngf1tZBXxvZWtXSIoVyqZXSEiXpeDGBnhk2mTqZmpPekcXIX6efPAM6UTS3hotWvGgFuQf4eQJY7/J2u8ljr69bn+mG/WbaOVwY8leefh0r8mtz1JZdXTOi6wgH6QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745076128; c=relaxed/simple;
-	bh=MogfJOt1bBZYoqAVNlvVZWq0v58Entr788DqatBCldg=;
+	s=arc-20240116; t=1745076220; c=relaxed/simple;
+	bh=jKx3xVhsHVOtER/pLqrjsPM2BE1BLfp7Mcm2zgmDd1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8u4lsfoYg/a7NNYGDF0gk3cRr9HtWGKA44iWXpGAUI+ON6usuHaLo1+OaK0QaKpnSkKGQM/aOW+OcpML1ZvW3jIwtvf0WpmI9+WzNNGCBAGs3pyA8NvdxJwTf/VuJNZQPA9OhSlYhutmG78kzfooWlqJfJ5Q1MS7e3BrNK7DNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9Oj2r3q; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=g4SKKcES5xEvTeQBpgg5dBou8QeEvYEphfSkgrBYxPuiQEZtwqejfnCs3SevQ+VQyjODQdjF6Kgg/HevOzgphDcYpI9GzsFq+r0O9VFJhgsF6wm0XJ7QUq+8uNJxB11QAp1aVk3ra5DVavOXLHMjEMro98gTkAs3sClayC2wMg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hrEnSkui; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9Oj2r3q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hrEnSkui"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745076126; x=1776612126;
+  t=1745076220; x=1776612220;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=MogfJOt1bBZYoqAVNlvVZWq0v58Entr788DqatBCldg=;
-  b=m9Oj2r3qSdjmfldaTVxnY3hL75rQg3vTfFnrRFhB08uRc678k4LImf4K
-   ko6GdY4MxPcA/KiVkb8giFX/fUvU3TWRNf2eg3I3cg0PlBsblzzFnT2Rs
-   PhWjnP2PcHsqle3Oq3748f+BvEvyOR4rbKeMlj9JAq/3dj+xRANCbEFsy
-   GvQ33sZljn3ujWh6c5oZln3WQT9z4pCuNOljAq6FS0SH+JUAkDJDGU2Hz
-   TAwLwxHLoBMURGn490dx5XFxARu3RamIX4zDEfvIhwGJUg3xNwsO2DXaG
-   Go2rVmqo/LBB9RDOo1BC68b1f/SSDC8MDQBPQhzqpHulXh6Og1PxI5tWP
+  bh=jKx3xVhsHVOtER/pLqrjsPM2BE1BLfp7Mcm2zgmDd1c=;
+  b=hrEnSkuilUw13tQHADD8YYj2AdaaW21M0/Gh8vUS6qQCrHbbaCFTMHiJ
+   VpNSOXF2VccDaeClmUwVDbG+fcOcBDrOXFIvnyMdeUE65OZroMfGRlG9Q
+   jAdfe0AZqkLmkT25Hdvc4tfAWswSy6v4cG7DjjtPmKNi4+TpwUeav/TKU
+   1IiDut6Gw47/ZHvz5ozIf4R+nQXaypwpbEXK8nCwvbhceg3q7s6VFR0CH
+   FNRubIzbck6lkUmdGNSYTywxuS3C6+IFDNK/HqqUi337mA71n1FisdDXv
+   GzXLIRGNQcFTMxZ7505y1L9mI9Olb0RnRk/KmZY6PjxMdWrEgcn4MXgrS
    w==;
-X-CSE-ConnectionGUID: PxwpclEKQBSJBNcnOuuY6w==
-X-CSE-MsgGUID: eACzxnGwR2urIcZlcijmVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806293"
+X-CSE-ConnectionGUID: P2PVXL+yR16JkjO42O8NYw==
+X-CSE-MsgGUID: AlE8zcwwS8WT3ztoJNBdSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46597031"
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="46806293"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:22:06 -0700
-X-CSE-ConnectionGUID: hsGIN0NdTA+QtNop4+8mzQ==
-X-CSE-MsgGUID: 8S430m31SpWuVhW510ILfg==
+   d="scan'208";a="46597031"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:23:39 -0700
+X-CSE-ConnectionGUID: qoW8PW5/ShazG6pX3wtPpg==
+X-CSE-MsgGUID: qkcI1+AkQMCWDZtIWUrO0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="154516484"
+   d="scan'208";a="136165710"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:22:03 -0700
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:23:33 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u6A12-0000000Dql6-3Ok8;
-	Sat, 19 Apr 2025 18:22:00 +0300
-Date: Sat, 19 Apr 2025 18:22:00 +0300
+	id 1u6A2U-0000000Dqmi-077r;
+	Sat, 19 Apr 2025 18:23:30 +0300
+Date: Sat, 19 Apr 2025 18:23:29 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: xiaopeitux@foxmail.com
-Cc: linux-kernel@vger.kernel.org, f.fangjian@huawei.com, robh@kernel.org,
-	john.g.garry@oracle.com, xuwei5@hisilicon.com,
-	Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH 1/2] bus: hisi_lpc: remove unused head file in hisi_lpc.c
-Message-ID: <aAO_mIY99CMH4o8d@smile.fi.intel.com>
-References: <cover.1744964101.git.xiaopei01@kylinos.cn>
- <tencent_8024B8D7E209E31C8E2B5AC411B70C551106@qq.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Eason Yang <j2anfernee@gmail.com>, lars@metafoo.de, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, dlechner@baylibre.com,
+	nuno.sa@analog.com, javier.carrasco.cruz@gmail.com,
+	gstols@baylibre.com, alisadariana@gmail.com, tgamblin@baylibre.com,
+	olivier.moysan@foss.st.com, antoniu.miclaus@analog.com,
+	eblanc@baylibre.com, joao.goncalves@toradex.com,
+	tobias.sperling@softing.com, marcelo.schmitt@analog.com,
+	angelogioacchino.delregno@collabora.com,
+	thomas.bonnefille@bootlin.com, herve.codina@bootlin.com,
+	chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
+	yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <aAO_8d7j-KgxbmKU@smile.fi.intel.com>
+References: <20250416081734.563111-1-j2anfernee@gmail.com>
+ <20250416081734.563111-3-j2anfernee@gmail.com>
+ <20250418171326.07634113@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,16 +75,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_8024B8D7E209E31C8E2B5AC411B70C551106@qq.com>
+In-Reply-To: <20250418171326.07634113@jic23-huawei>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 18, 2025 at 04:51:23PM +0800, xiaopeitux@foxmail.com wrote:
-> From: Pei Xiao <xiaopei01@kylinos.cn>
-> 
-> linux/console.h,linux/io.h,linux/pci.h,linux/slab.h
-> are not used, this patch removes it.
+On Fri, Apr 18, 2025 at 05:13:26PM +0100, Jonathan Cameron wrote:
+> On Wed, 16 Apr 2025 16:17:34 +0800
+> Eason Yang <j2anfernee@gmail.com> wrote:
 
-Definitely you haven't tested this...
+...
+
+> > +	struct device *dev = chip->dev;
+> > +	__le16 data = cpu_to_le16(NCT7201_REG_CHANNEL_ENABLE_MASK);
+> 
+> Assign this value down near where it is used. That will generally help
+> readability.
+
+Actually it is a good, but not a main reason, the problem with this style is
+long-term maintenance when some code may appear in between and become so long
+that one can screw up this assignment at some point.
 
 -- 
 With Best Regards,
