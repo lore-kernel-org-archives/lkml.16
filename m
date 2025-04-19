@@ -1,343 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AE63594F
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745039681; cv=fail; b=VZtxzlhwONaABpmT4yRlYR4que3dzazi0lgjh3MABHwXqm+qY0WAhAFaSdRySsOzce+9ASSygi8B+PM58i988xxb+hGrRTyY/Waaq2mf/e6dEQLIqO5fUzHEeRZ5w2c5XC7Yv16U/vQFjZ52FON1FFNrDkfmLbZoAaaSvCp5i0Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745039681; c=relaxed/simple;
-	bh=fY+6cYDrOGt1EoXi2VRUIzoMQVYoNvIYSJUb8gUDuAg=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=g4ZTvOyUm691ErrPXU0viwao0UP0qyjC6QFl7yScmlAaY3VRcqliR/3FR1BWH+WrP4NGPezyUqUm05/Y8Ag54pz1gzwH38HHk4kyJW5d8XpcxaSVAyiyLl7Cf3z8oOC1vZ656PwCFBMFIojZs6yGM6n/iNbtZCePaqzjc8ns70g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TIzpQndM; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8745FB95
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745039979; cv=none; b=tJea0N/u2+CGxhvlO006KRRh1XQ5XGmhA8938i6igvsPbNdQ9LufbGqcjGWcSTkQncY0Y3qn0blr91Bd93LR1RWjUnaWJ1wAQL4/wA+CGxsmkOWnEFTGWvO1xh9PqkSudCzBkUPKsL72HTeHKGJva+pqe9MHT1Y/3gADkSeopPQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745039979; c=relaxed/simple;
+	bh=pCUtwHwlvnjyljIuUeik7MfYiHlj0LKv8lBuxtYIixw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pnei5eQv1femZIk2Ii08bz9a/bFP5nk32KMwLvzzHJgJnj6IfulSEVTkPlCEQ2tHw2vJTcJ71p0fFxG34MEgr6fp7yrkLWVuOUP6F7nWGzCwkdygxVRUQMqop1Jf2S1fJapvnowfDI4tCOctcTvQ0mYa6zY6qkiVGT49FKA1M7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GTE0abRs; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TIzpQndM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745039680; x=1776575680;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=fY+6cYDrOGt1EoXi2VRUIzoMQVYoNvIYSJUb8gUDuAg=;
-  b=TIzpQndMkgz446mv9S4tY+2b/yFF87puPlvuLC6Aey4psN4bvV5pGf2W
-   tJoOoE2s3QY5ROvNpapdn7Wnh6cezSJg9aqNHD0WJGpsmOaAgQ5neU8AE
-   ClbF+e3d2fqEFVj1/IcXXWUwXk9Zm83p7fp/udslCXxLU/e9Z4ktkk4Cy
-   V6IapCzl3pIBgdVOfDBOOvV/nDPOvz3d4DzHMIcVyIL9IQDLKJ/Ne9jvM
-   TzEXySPOsPVxjNjdW7YbGu3301BbcMbI7w/Fn0xqVX6ekIaxDwrVIoUI2
-   oHnUUvXp70jdnlq6JLrsgmnEm8f//u6T6/Qfjs8X7Avs84oEfVesQDvG8
-   w==;
-X-CSE-ConnectionGUID: 9mgAQARAT0mBUOVOqPWQGQ==
-X-CSE-MsgGUID: nz7hGgNXS06aQDliyAZWJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="64198225"
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="64198225"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:14:39 -0700
-X-CSE-ConnectionGUID: AAwKokBwRIGYjdcAnUerKQ==
-X-CSE-MsgGUID: pbvXCnnvQq2ThKZxAy4Wxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="162230793"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:14:39 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 18 Apr 2025 22:14:38 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:14:38 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 18 Apr 2025 22:14:37 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C2bEg/VFGFPu9O2D1leEfgQiHMF0ghvOBUbFgbQxZIlJCQMpOOU1iP+ZoNak9JigFS0biGxnLkNt6y4HYbLo35LSXr3zRnNIdM6Jcy0yTbKUvHKArhmEQDbx9Qbl5utKFtnCxoWMhzMCwsuaRI8LUGUtRQEti6f+p4bkd14hC+NwVqxtHIhsEVRdtJIM19eUKoqawfWB9RT/qJrzftzTA1ZrZr5xwuG2gGY/e04LlsxE0JQEmUkoauOlVxifXtXUWpv6jPl2V3oUOoscXXFWiQri7glXNktiisYZtxjIMcJDL6awbwkYrCrfunYdjTTrCnFjvROFPgNYKBJ9YRcUgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jQVmvwKVB2gbSa00YP/w1b+n0Utb1bAOkH2Ftn+kWV8=;
- b=Zc5lFw8lMtB9ujfe51WOz9blQ0DE67CToUstjTGCQn+e6Y3FevJiWnr8H0ykSErIdYfvGI0qbk39HqBu4/9Pkg314dkf2iWrqRT/R0SizpNoKwyAEi8UIiwojSYHPSRuFyFTvCSNyO11MfKlqMQ6i6VpF8Sq/ZR5Ip7GYH0noaj8wOgMduBWVHQbuJn48JZkk0lIZPOSOa4u+3kHhSp6FvB9KlYyI797QuWJDhBLXyYkOO7fqfqNZjKMkyVzGlQq7eh/BGuqqMUQ7K1kOKiBBTTiz/ymi3usy3XXAejKE6Qa9WCZ5HcW6glSceqq5DoTZdNGduC6i3HrBhOWI/34kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH7PR11MB7003.namprd11.prod.outlook.com (2603:10b6:510:20a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
- 2025 05:14:35 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
- 05:14:34 +0000
-Message-ID: <fba9db1e-4840-432e-87ff-12819381ff41@intel.com>
-Date: Fri, 18 Apr 2025 22:14:33 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 19/26] x86/resctrl: Sanity check telemetry RMID values
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-References: <20250407234032.241215-1-tony.luck@intel.com>
- <20250407234032.241215-20-tony.luck@intel.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20250407234032.241215-20-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0033.namprd03.prod.outlook.com
- (2603:10b6:303:8e::8) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GTE0abRs"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53J2BtXj028112
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=UScITCwY8q7fw1TPqgcbJg
+	0jdZe8aQUjHNEHKoH7YL0=; b=GTE0abRsWrbLESwb7FdLhiyO7b/SQdACI17oOp
+	g2q74twwISlX1J5x0Pn5o/MRJRgigthpsb4GEqs30uzIG7OgF7j1QGAK8RTcaaBY
+	xjwLbPRsK2fugvAnkDcGYgGalBYEZjvGGSHQwiqHY61wT3H+FAtkOIdZnQNPQA9F
+	kdRNirUq9lfhgkYxL7vUzwny5sJT/NBwS/Ve7r6AUD4U6I9zOwtMiz6GJ7kYn5Qy
+	qrkxOcHziqiY1S01JI5dmgouU2V5lnwtLbPdyJmEF43eT0ZUue+ht3DpChZrEvnh
+	rsGt/85iEULD3bydgbOInb8p/ALXiXQCuz21AHlr4tRs3Emg==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642u985q7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:19:36 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-739525d4d7bso1883816b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:19:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745039975; x=1745644775;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UScITCwY8q7fw1TPqgcbJg0jdZe8aQUjHNEHKoH7YL0=;
+        b=FQc3uAsRwmANxdCU9pfjWSknhnUCOGJfgCqDecMgGANbLM/lGLbKZPDNpSVZB9+CQ2
+         iUv+N5uNx2mKE4HS/84KveV2TTXsArPtzOHWZEJmKLChVfLEeE60JoboxyWXfH4Lgx/4
+         EkEiA+BgOyt9gqzR/KFrdkdhDusaAt15DHo//agxpNKj+oR7BwOq2Z7JVFYSObRH/Uwy
+         oAZyMJs40pWqn3AA5eD/dq7uVpT4B+ZUYNBYfHzl5YMZCOC0/YoWzWijshe7rNA52Tii
+         CEZmDmhWQHPzAAkvYdv9z79NN77LDm8iB8fEBSqTvydxmustAMaR4+Qjlllpg8ZZ+EiF
+         PTdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMzQ8D4GyRjIGZpCcBUz/wSR0mJ/O7qxyFRL5NRrUUMRzgYDT+RqyGaH7aeBHjWl8eekrYC4jZjuEuYmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Yr6PdJ6Fu6vzrxNJNjsXy8kAUNbTXjUTHYUSToxWopwtzdp4
+	9UkkvnhMoB5gw34WGjJTk56q+iGV8Oqy0A7V9AkwazwED3DFzGHYWmZSMToKeg32FviaYXk69qH
+	u2mESpbYcfJVFTSThApUCrhD/FjwA6EZrQ17dvueqy64AKS3g0XLzDXVDiIdyktc=
+X-Gm-Gg: ASbGncu3XJnoBvo3Uzrj/Cl+KlyrA2tmck0TbGLBnjUfwLL2f4rZUmrS54mhFS6m3HT
+	uWdEYkzedLlMmFznlL+ZTmr1c+2duzrUSfGV7fz75IhWrBjylTlnQL1QGSZgqBSHfx+PLxsUvQ7
+	SvS8tG2tA6wyiyrzcuoZMnGPWBqkxOTMnEJWE/bVwBl2bBSxKtwU16lzSDBMpUh7aKr7JsZ9Pod
+	FkZx+Y7P/yUJCXfbkv9doB3IBUm0gbAN3sh8IPjFUl+daparGLkuVAMxPecrJcmOYfQomh3poqI
+	dcAwt4jFg38+jEv04NoZRedTomArQyHfzHbUqN7OjYF2Cqc=
+X-Received: by 2002:a05:6a00:4644:b0:736:57cb:f2b6 with SMTP id d2e1a72fcca58-73dc14c6df1mr6097976b3a.12.1745039974891;
+        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH66xcAKN95mphAQHDv11KnhM7xlAiSAVOGHacJB6UPS1F/NYc/9azleyBWV36SJKszclH1AA==
+X-Received: by 2002:a05:6a00:4644:b0:736:57cb:f2b6 with SMTP id d2e1a72fcca58-73dc14c6df1mr6097953b3a.12.1745039974426;
+        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaac258sm2607932b3a.144.2025.04.18.22.19.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 22:19:34 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH v3 0/3] PCI: qcom: Move PERST# GPIO & phy retrieval from
+ controller to PCIe bridge node
+Date: Sat, 19 Apr 2025 10:49:23 +0530
+Message-Id: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB7003:EE_
-X-MS-Office365-Filtering-Correlation-Id: b94eb918-d612-443a-69a9-08dd7f0112eb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NWd3dVF6c0JKcTlXejVjbnR2UG1rbExoMjhNeGphZnlwSWlRMzVZYU12WGNP?=
- =?utf-8?B?czIvZlFNczBIU0c2WklrNVZYV2w5aTVFSUpYakV3ZFBiK1BrTmtidjVHa2VQ?=
- =?utf-8?B?anpCdDVjZ0ZwY014VGFUK2c5NHB1WVhNZlVxMFB1YjZES1dPVGtXcWZWTkQz?=
- =?utf-8?B?WGFhbnQ0V1QveTZVaVEzb2ppak91SGVkdWJSZGdpR0p6bW1aeHJHMndOd1JV?=
- =?utf-8?B?QUJVbkM4c2Z3NC92UlRIZEZ4TERXYTJHcmtKQzRpVHlPVHlOSDlTTWQzajBx?=
- =?utf-8?B?ajJJM21FRVBqMDBobDQ5TnkzYVdaUEJJb3J5U29ob2dGd1JjWjJpZWlVSWdI?=
- =?utf-8?B?S25HVHBlWUNTRERzMWpNNE9QdmhLL2loeisxenlZUTRDazhsNDEwRGdINmht?=
- =?utf-8?B?VlpZS1pUbk4wYVJBWHBzUmc5Q1hNTWUyMHlIZzg3WkFZcmxCOGdvbWVoU1Jm?=
- =?utf-8?B?Nk0xZDJQVXRZb0ZOOExWWGgrZ1IwYWU0SklVVDB5QXd1K3VRMW56ZGQwYUxr?=
- =?utf-8?B?MDZvdm5zVHhjYjloZVJTK0hWeGwyMEdXQVJNM28vZXFHdjFNMG9uVnRzc1FU?=
- =?utf-8?B?cHpFcU52Z0xZTGFxbE9GRkNwMnVLSmNPWXM4c3JoQ2dYS3dud3JFOG1HZTBo?=
- =?utf-8?B?ZjF4SFVuY21MRjUxWGhLdUlLc3EvaWd0ZUNsSWd6L1Y5Q2JCckFqTWROaVdk?=
- =?utf-8?B?TzhBSG9SM1hmaVA1Y0VvRzVMMWtENFVSRUZHNW5HaklncmMzR3g2MTdEYkdN?=
- =?utf-8?B?TThCV3hVQ3ZrUXpKSmlIeTVqNmxkRmtqaStuUVMvMDBNeGhaMnliSTlBWGNC?=
- =?utf-8?B?T0FMcDVkTml6YWhCb2JZUFpVSVRGSUhVeG1PUHFVNS9pdjdCRnFPakRSMlpx?=
- =?utf-8?B?b2NoNnhvMHhZdTlCdHIwdWJnazhSUUhFNEdKdGRDNk9SZDVoU2VFQm9EUmd4?=
- =?utf-8?B?LzVOeFlDMkFPN01xNjF2SkNUYXBFNVRyeDI1SDdTUVdSRjIxamR3U2NoSGRU?=
- =?utf-8?B?K0ZINnRYbmtTS0J1VEhlMFMybU5CWlBqdmFaaGhLNWNPVWd3NlBESmNyMGpo?=
- =?utf-8?B?aU44ODdzS0NzQ0ZQK3dvZTJ3K2s0cnVPTkpaSXNvUUI2ZDRUOFEyS0dxSS9Y?=
- =?utf-8?B?bG9UOXlEcGNpN3M1cFhYNWpoeFNDK1hYeUtEYXAvWjFGTVlrdjlZZEt0NWZk?=
- =?utf-8?B?dmVzYnN5VG9VQ3pFYlNXYmVjbktENk1nTWFGaVdGTld6UnVWc0M0MTc4Q29V?=
- =?utf-8?B?WlgrcWxLUmpaTVR4eE9xQk5EZ1VFYWxzbHkwbjFOOW91eHNOdGRLc0hVTldB?=
- =?utf-8?B?RTllUmNKSmozd2huOWZoY0RucmV4TjF4TnlWL3V3UlNNcjZxcGIyRm9jSXZ5?=
- =?utf-8?B?Z3hJNWgrY3ZCMEp0RytOS052MkpzbmtjVXpzd1NVQ1Zwblh3YmdZRlphSTVN?=
- =?utf-8?B?czZjZnBaMkVxUE9BcHhnVGl6bFVPMXpDUXBDWXVSS2VwY1Azbm4xWHpOWUdn?=
- =?utf-8?B?MDBDWFFwKytaL2dDUGFPWmNINGVKNWljRW1JSFFib1ZlYS80aGcwRStuN3Fq?=
- =?utf-8?B?MFJnU3d1U2I2MU5GZUhXNjcvY2xMYWJ3Nk1JUlhleVkxME01dlBFNXdLV0g4?=
- =?utf-8?B?R0VWK3lRUlBTRlBLUHNUUGRHa055bjNBTXlzK2xtSlIvYU1mM3FKaEE5cU1m?=
- =?utf-8?B?bnlQVUYwWFJiT0pmNE96dU9GRkVaWlZtbEJDMnZGb2NoaFVPU1hrOE0xRUxE?=
- =?utf-8?B?cUwwSHFwYnRncEdmT0p5b1ZOV3FGYkRRRlY3UkZ2d2tiZjdKKzNkVlA3UGdq?=
- =?utf-8?B?QnRhTG02OHZxNGw3RmY0NzdiYW1Nb1FIWEVWOWo2WGtpQVowUTdsUGxrajVW?=
- =?utf-8?B?bm1PbFYxblV4MktydjJxQURGU1o0ZU9qSVVUQ3dXYUNqdWtwZkxKRGl6ZW1M?=
- =?utf-8?Q?B7CpneHf4JY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dkVnejZFMFR4cnR5WVgxVGtURnhCQXR2eG0rU0RmRTlmNjdNK1RTcjBkV2VT?=
- =?utf-8?B?K3dDMHBXa3VOd29MMlJhblJKT3VjNzF2T2ptZEVmRG4vVy9OaVlLNjlGMUl1?=
- =?utf-8?B?N3Q5MGNQdE8yVGhxaXBmZmpHSTJiajJVMWRCSzZqaTYyTDNJWmJhY2xrSFZm?=
- =?utf-8?B?NHd5aW5NYlFmVng4TTZDTFVDeTFncUhlVkVScTRKNEtUbyszeEFSNGgwZ3pT?=
- =?utf-8?B?eTJDL1JDL2U1dytzSFEyRk9TUU9Oc3BFV0cvMlBKa2VaRHdScnlYbG0xSGk3?=
- =?utf-8?B?SFBtTHRQYzVwOXpBNXN5dGZpZ0NyNzA2ejRmM2t5bDB3b21lblFIdE8ybm90?=
- =?utf-8?B?SFJ3dFpLRXdhbjZjWjBsTmNKajhtSlIxcHB1TjZLamJxT3NiNWM2WWxmdnFQ?=
- =?utf-8?B?OHhwQm96bllzSkRWbG5pVms3WkxvdXFkVTZZZ2dyNjdMc0tmOHlPdVJpQ1dQ?=
- =?utf-8?B?TGZuMGFTcEo1SWkrbVMwMFVOTStGRmZTdXpjRk1kaDlLVlpudEh5RzJURU1a?=
- =?utf-8?B?bm9nckhUMXF2eXpGQmRwRnN1ZFhpcUF5WWFmOC80UFMwZlpOeFBZWUgrcFkw?=
- =?utf-8?B?elRoaVUxYkJVQVBMUG9YV0FDbHJabnV5Umg4WWJLSFFwSHFxWS9zajRWL0cx?=
- =?utf-8?B?TVhJdkpIMzNKc3A4K3cwa1d2U1VQM0NnS1F5K1lvKzY1VHkyMTVxNUZtemFy?=
- =?utf-8?B?SlRvVVR2MXcxK1kwcHFvNUhTY1JGR3ZGdlpXTmtOckpYcEUrSFlQdkNPYmdn?=
- =?utf-8?B?NHJGQy9aczBxM29hMC9uWXZkT3l4NlN5MVhuclF6K0dWS2tvakVSSUN0dGli?=
- =?utf-8?B?aURmN0RkUFZZcisyWG9naFZrWU9WTXgzMlpwUzc2M1ViODNwa0FzbnV6YzlL?=
- =?utf-8?B?NEIvYnBGYk5LVzFjVitoaWRteHBpWDB5N0tUV2JaMEtJejFkLzkza2ZkeUsy?=
- =?utf-8?B?TFJEanVvK2U0S2FVZFIyaHNockxyMEx1cGt4VTJLM2NjSU9FYm03eDZySW1j?=
- =?utf-8?B?RWplUXpVUlM5d0NFVlJRZEw4bzZpUXkvNGw0WHdrQjFiVzcvejZ2SEVtdmVK?=
- =?utf-8?B?OUJBK2lteno3SitXQzhZaWpoa0dGWlMvUWk4d0xzSnprK3lTdm9DSHdYaVRM?=
- =?utf-8?B?MFByUkRrZ1B1ZjYxazF2WGdzN1djSTBlOTZySzNnSktHUTNOSm1SSjNWM1Zz?=
- =?utf-8?B?WXREYUFvMitjMjV4QW42Q3UwcW5ibHBIZGU1OTl4TTFRQm92V1lWUlB2MG1Z?=
- =?utf-8?B?M0IxWmlVOHZwNWpSd0JORHl6ZmdUUlNScE9qYm1JTkFNbnRvSUJqckM1S1ds?=
- =?utf-8?B?enIweVpKY2loWGFPZ09yTDJUckN1QkRuSUpGeFVtbGQ4eDZHNE9aalVJa3RX?=
- =?utf-8?B?clczQ0xzeW4xNm4wS1pncW91aEdhMm9oZEwyWmpVU3NvUjZGU0hMWmwwRTli?=
- =?utf-8?B?d3JkbEpuUTczN1oxZWhHRnl1UXlqZHZPN2U5T0lnNUJpakUxKzBvamZ3Rkd4?=
- =?utf-8?B?V2FPN2tFdUx4dlI0SGhLU0tKc1hiK0ZUSklnVVBrZmpRU2dUeHc0K0ZjYWI1?=
- =?utf-8?B?QUVQdW04N3F3cXRtYnd4bmdVWWg2bzNlSWNhNDZST01LWUY2Wkt4b0F6Wkt3?=
- =?utf-8?B?bVRCbm43RmJOd1g3cHJDUk1iOW8yUXJ4WmRxV0Fsa3lrVVlJSFZoMlRZcnpR?=
- =?utf-8?B?THRBc0VQVkJleWdTWFZVTTF5RTlZNHh5NmlQTStxMHYzRnBvdkt0a3g5SUdz?=
- =?utf-8?B?dXNFV0d5bXc1TU1FS2I1TTNIbWFpNW5VbHFGa3FKUTFRdXZnZWpuc216Vnlo?=
- =?utf-8?B?QzUzZjZIYk1qVEcvMTlEbnhuYTltRGxOSXM4R2lISTgraW9LcllhVjlSVlZh?=
- =?utf-8?B?OWRaV1ZnbmFuaHArOGs1T2JnQmd3SFpDcDVJVlcxclRaakRnNFNYZVlGdFRD?=
- =?utf-8?B?eXFKTEdGcGNDTFJxY2tsRi9tRkxVV0FIanhsZWNBS21hUGNwWjU1S0dWNHRt?=
- =?utf-8?B?WFhoYkx0d0xJZFo5VW13MGhPRnhUenN4dEhtNnk4eWs3Wm9YVEE2U0MzMmZD?=
- =?utf-8?B?Z3NzKzN4VStKSjRnUUZCTWFQNlpYZE5Ha1I5dTdLSEE3R2xjM0tRa2hvSzBw?=
- =?utf-8?B?QWZDdDU3ZUU1cUoxU25VK3ZyTjlab1d1U0s4QkFncE1tMTNxU0RreCtSL2tV?=
- =?utf-8?B?OEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b94eb918-d612-443a-69a9-08dd7f0112eb
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:14:34.7101
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qMGC9Z4o0EJTrw/WKje2P7NHktePfMo8qsV9BufCGB9/Tmzg7Asd49vj8USvyT3xzk9St88ShNO8HHMONhxBerE6OeWzA4qTzCv950EzsR0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7003
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAFsyA2gC/32OywrCMBBFf0WyNpJMJ4+68j/ERWynGtC2JrUop
+ f9uWhQFxc3AHe453IFFCp4iWy8GFqj30Td1CtlywYqjqw/EfZkyAwFKSCF5SyF2vNhbq/bKaQk
+ 5S902UOVvs2e7S/noY9eE+6zt5fR9GfTT0EsuuECriTLCQmSbJsbV5epORXM+r9KZvDOUgfiEK
+ ukUVNIqo+EfBJ8QKcLSGXQg8BuaJvfwnokSXzAk2OaAxqAujVI/4HEcH1QILcNIAQAA
+X-Change-ID: 20250101-perst-cb885b5a6129
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745039969; l=2918;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=pCUtwHwlvnjyljIuUeik7MfYiHlj0LKv8lBuxtYIixw=;
+ b=FVlBfcuxXKadBTxEhw/sqeWxx18IjUBlLboG70dBiZdUp22v8tesnyNEy5oDCiyRbTpGe0ERd
+ Fnvw9kWRB39BiKi+mMqGOZkWQUonJP7J/QAiQQf+1LRN5xCDDBiD6df
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Authority-Analysis: v=2.4 cv=TYaWtQQh c=1 sm=1 tr=0 ts=68033268 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=l8mvWsQ0dvX29tmygDoA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-ORIG-GUID: APadoQbMQyoc4SkYX1muLFtMcBfdJfVo
+X-Proofpoint-GUID: APadoQbMQyoc4SkYX1muLFtMcBfdJfVo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-19_01,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=842 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504190040
 
-Hi Tony,
+The main intention of this series is to move wake# to the root port node.
+After this series we will come up with a patch which registers for wake IRQ
+from the pcieport driver. The wake IRQ is needed for the endpoint to wakeup
+the host from D3cold. The driver change for wake IRQ is posted here[1].
 
-On 4/7/25 4:40 PM, Tony Luck wrote:
-> There are three values of interest:
-> 1) The number of RMIDs supported by the CPU core. This is enumerated by
->    CPUID leaf 0xF. Linux saves the value in boot_cpu_data.x86_cache_max_rmid.
-> 2) The number of counter registers in each telemetry region. This is
->    described in the XML file for the region. Linux hard codes it into
->    the struct telem_entry..num_rmids field.
+There are many places we agreed to move the wake and perst gpio's
+and phy etc to the pcie root port node instead of bridge node[2] as the
+these properties are root port specific and does not belongs to
+bridge node.
 
-Syntax telem_entry::num_rmids can be used for a member.
+So move the phy, phy-names, wake-gpio's in the root port.
+There is already reset-gpio defined for PERST# in pci-bus-common.yaml,
+start using that property instead of perst-gpio.
 
-> 3) The maximum number of RMIDs that can be tracked simultaneously for
->    a telemetry region. This is provided in the structures received from
->    the intel_pmt_get_regions_by_feature() calls.
+For backward compatibility, don't remove any existing properties in the
+bridge node.
 
-Is (2) and (3) not required to be the same? If not, how does resctrl know
-which counter/RMID is being tracked?
+There are some other properties like num-lanes, max-link-speed which
+needs to be moved to the root port nodes, but in this series we are
+excluding them for now as this requires more changes in dwc layer and
+can complicate the things.
 
-> 
-> Print appropriate warnings if these values do not match.
+Once this series gets merged all other platforms also will be updated
+to use this new way.
 
-As mentioned in cover letter I do not think that just printing a warning
-is sufficient. It really becomes a trial-and-error guessing game for user
-space to know which monitor group supports telemetry events.
+Note:- The driver change needs to be merged first before dts changes.
+Krzysztof Wilczyński or Mani can you provide the immutable branch with
+these PCIe changes.
 
-> 
-> TODO: Need a better UI. The number of implemented counters can be
-> different per telemetry region.
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/intel_aet.c | 31 +++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> index 67a1245858dc..0bcbac326bee 100644
-> --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/cpu.h>
->  #include <linux/cleanup.h>
-> +#include <linux/minmax.h>
+[1] https://lore.kernel.org/all/20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com/ 
+[2] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
 
-Please sort includes alphabetically.
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+Changes in v3:
+- Make old properties as deprecated, update commit message (Dmitry)
+- Add helper functions wherever both multiport and legacy methods are used. (Mani)
+- Link to v2: https://lore.kernel.org/r/20250414-perst-v2-0-89247746d755@oss.qualcomm.com
 
->  #include "fake_intel_aet_features.h"
->  #include <linux/intel_vsec.h>
->  #include <linux/resctrl.h>
-> @@ -51,6 +52,7 @@ struct pmt_event {
->   * @last_overflow_tstamp_off:	Offset of overflow timestamp
->   * @last_update_tstamp_off:	Offset of last update timestamp
->   * @active:			Marks this group as active on this system
-> + * @rmid_warned:		Set to stop multiple rmid sanity warnings
+Changes in v2:
+- Remove phy-names property and change the driver, dtsi accordingly (Rob)
+- Link to v1: https://lore.kernel.org/r/20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com
 
-rmid -> RMID. 
+---
+Krishna Chaitanya Chundru (3):
+      dt-bindings: PCI: qcom: Move phy, wake & reset gpio's to root port
+      PCI: qcom: Add support for multi-root port
+      arm64: qcom: sc7280: Move phy, perst to root port node
 
-I find the description unclear on how to interact with this member. How about
-something like:
-	True if user space have been warned about number of RMIDs used by
-	different resources not matching.
+ .../devicetree/bindings/pci/qcom,pcie-common.yaml  |  36 ++++-
+ .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  16 +-
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       |   5 +-
+ arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi     |   5 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi           |   5 +-
+ arch/arm64/boot/dts/qcom/sc7280.dtsi               |   6 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             | 169 +++++++++++++++++----
+ 7 files changed, 202 insertions(+), 40 deletions(-)
+---
+base-commit: cfb2e2c57aef75a414c0f18445c7441df5bc13be
+change-id: 20250101-perst-cb885b5a6129
 
->   * @num_events:			Size of @evts array
->   * @evts:			Telemetry events in this group
->   */
-> @@ -63,6 +65,7 @@ struct telem_entry {
->  	int	last_overflow_tstamp_off;
->  	int	last_update_tstamp_off;
->  	bool	active;
-> +	bool	rmid_warned;
->  	int	num_events;
->  	struct pmt_event evts[];
->  };
-> @@ -84,6 +87,33 @@ static struct telem_entry *telem_entry[] = {
->  	NULL
->  };
->  
-> +static void rmid_sanity_check(struct telemetry_region *tr, struct telem_entry *tentry)
-> +{
-> +	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_PERF_PKG].r_resctrl;
-> +	int system_rmids = boot_cpu_data.x86_cache_max_rmid + 1;
+Best regards,
+-- 
+Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-It is not clear what "system_rmids" should represent here. Is it, as changelog states,
-maximum supported by CPU core, or is it maximum supported by L3 resource, which is the
-maximum number of monitor groups that can be created.
-
-We see in rdt_get_mon_l3_config() that:
-	r->num_rmid = (boot_cpu_data.x86_cache_max_rmid + 1) / snc_nodes_per_l3_cache;
-
-This makes me wonder how this feature behaves on SNC systems?
-
-> +
-> +	if (tentry->rmid_warned)
-> +		return;
-> +
-> +	if (tentry->num_rmids != system_rmids) {
-> +		pr_info("Telemetry region %s has %d RMIDs system supports %d\n",
-
-Is pr_info() intended to be pr_warn()?
-The message self could do with a comma?
-
-> +			tentry->name, tentry->num_rmids, system_rmids);
-> +		tentry->rmid_warned = true;
-> +	}
-
-Could you please add comments about consequences of when this is encountered?
-
-> +
-> +	if (tr->num_rmids < tentry->num_rmids) {
-> +		pr_info("Telemetry region %s only supports %d simultaneous RMIDS\n",
-> +			tentry->name, tr->num_rmids);
-> +		tentry->rmid_warned = true;
-> +	}
-
-I am still trying to get used to all the data structures. From what I can tell, the
-offset of counter is obtained from struct telem_entry. If struct telem_entry thus
-thinks there are more RMIDs than what the region supports, would this not cause
-memory reads to exceed what region supports?
-
-Could you please add comments about consequences of when this is encountered?
-
-> +
-> +	/* info/PKG_PERF_MON/num_rmids reports number of guaranteed counters */
-> +	if (!r->num_rmid)
-> +		r->num_rmid = tr->num_rmids;
-> +	else
-> +		r->num_rmid = min((u32)r->num_rmid, tr->num_rmids);
-> +}
-
-As I mentioned in response to previous version it may be possible to move
-resctrl_mon_resource_init() to rdt_get_tree() to be done after these RMID
-counts are discovered. When doing so it is possible to size the available
-RMIDs used on system to be supported by all resources.
-
-> +
->  /*
->   * Scan a feature group looking for guids recognized
->   * and update the per-package counts of known groups.
-> @@ -109,6 +139,7 @@ static bool count_events(struct pkg_info *pkg, int max_pkgs, struct pmt_feature_
->  					pr_warn_once("MMIO region for guid 0x%x too small\n", tr->guid);
->  					continue;
->  				}
-> +				rmid_sanity_check(tr, *tentry);
->  				found = true;
->  				(*tentry)->active = true;
->  				pkg[tr->plat_info.package_id].count++;
-
-Reinette
