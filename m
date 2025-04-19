@@ -1,114 +1,106 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994A92EAF7
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 01:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AEFCA4B;
+	Sat, 19 Apr 2025 01:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745026805; cv=none; b=dD1/5Q+8KDjYfBlycXacJ0TOddpp+oLiOuW4EE6/6+tkGLuD0MYJoj64reoyMEccu6s6YYFV1YTp8IkUkbb9JM7+AM1tJ63K/WpdgOFkmEETVqzU2GCxJC5Ky18Qj81gCw+qborzgpdSoImQXvIC9psGSrzVjpSIeXbWr4yWXvs=
+	t=1745026852; cv=none; b=gKUDC7I/RZ+L7sjJMNFKvhm6lOvLah7phSEd2qtn7oXamn8WtFd1VYX5NO1HSZ8c919qIZB4djRGTYfCWJvpXNV5hcoWbxvKLhFsJhYM2grnM/QpmYl0VrMDYljcAJPH/vF+iPLe0ul1L0x4F1MTiFyKWjKJf6K7JCZvlWjBw3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745026805; c=relaxed/simple;
-	bh=pjbMhsnDJiDcVlV597R8ezaeAn0+5HjfbvSJN3qfqHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p1PY76BD16JYHijiQdQJMyRgjPZkJrz9Ybzwhv2en/fpu0pCM8qvwUOqldsxNWV+RZf963ReGc4ICsHki6zNv2AafQVrKFtwB3/GdtQKnunnX6lW9fhnRzD99z9nFKt5rgQfbvV/sm/vkcUkW6M95Ufyit9OvvVgeg+IZbbd/lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=2j0VD+IN; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1745026852; c=relaxed/simple;
+	bh=pjmjbnuHCGXcTmwjQDGvwIwGoXjYnd5M/pEz2042/3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bytFJdXCpa4Y8Tex421qsXVly/QoMvvNqnTy+1tlrTtbsUMR9FZZcT2zjYqicUlDR2nMAojQU+dk1Ymi8Td5jV0Oc4/o8hcw58n7mhf0OxFuMlGFrBipri7xtrdm0fAz5wPg2OfU+/8xy3g2fSPfm7ZYu9Pb6xU+Sr2jZWA3VTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Et9WFvbH; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="2j0VD+IN"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id 5toyuK7IXMETl5xBauwtp1; Sat, 19 Apr 2025 01:40:02 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 5xBZuVx6zh9Zx5xBZuBuYv; Sat, 19 Apr 2025 01:40:01 +0000
-X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=6802fef1
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ro7idKd4BtU0TkVne+lQsWOXuLWCVS++vWMksVF03wM=; b=2j0VD+INL1NyVHzSis8KGNfWPO
-	2bKAGPku7RTp+imMTcT6ZfB3u5f+OGmDS2OHlRXoG9rzm8KsFykKgRDHuWsgh7DK6AuwG7l6eSq18
-	SpRoR2jyiemh0mWZ0nw/pDHx4P9HrGeGFon9jxwCI12shtPZD4YuLAgqQKGm+rx7zge0SIYdGc/h6
-	+VKx/aoZUOxv3pPyHc4tjHGAxJEYgdeNnYh8yhMzd8WmPO3ULUu6hMrlS/3FmT/C9LfO3iLxlkkRb
-	/tlevdTPkF/F01TT+9ftfGHJ9RUMbLFd8KwWN98TaVUZxPYAcgX5hyx5Pm9YtjLQ/yqIwCmU/N99j
-	JKvw+whA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:48400 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u5xBX-000000009TE-1MI8;
-	Fri, 18 Apr 2025 19:39:59 -0600
-Message-ID: <031e3650-08bf-4c06-b1e6-2551c095c89b@w6rz.net>
-Date: Fri, 18 Apr 2025 18:39:55 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Et9WFvbH"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2254e0b4b79so34971565ad.2;
+        Fri, 18 Apr 2025 18:40:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745026850; x=1745631650; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LcP2crrAxzsTAHpans5Y/31i3MwD9oax0PB59MLhmDc=;
+        b=Et9WFvbHEGX/r5ynXXd1WW3lNT/yezDJLVqKt0L/5A9buv41o+oFtpXQTKkSglIEzT
+         JL6Oij03Eg0OpwKcDtYXr/xQ6JJwdPaNZr0tygid14p/YCF/JPaWs5M+DQaPHd3noBSw
+         hapL+fn99T59gHhAqBwQjVZgByVt5GakE6OqWDpJjNrXyZAVKm4zOZZIULUE0FRuolpZ
+         CtvpIKA7XXL3XoO55GNvpQbF8oihzde2G1wEgPt3TJ+T7kQfEw7FsxlOcQqo/kGm+6C8
+         0mUHBn45CRygvwddw8GRU5XSS102b7EbXH2DWPl9wLezP1fNEWhnn7s9oRAbqK07/WJf
+         uhEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745026850; x=1745631650;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LcP2crrAxzsTAHpans5Y/31i3MwD9oax0PB59MLhmDc=;
+        b=WR09CDjBFJanakmPWoqob8uOw+xg7tfjnXl6qpk2uBFSlIxcJf2bI+PWeemiRQtRV5
+         wMJSCqgqtk/EDqRtUS99uS1IHCPMSrV+gXXDQZecW4rIBo0TG/WE3XQT4FqJWWDD3AyV
+         xUh/TY1KrvHEFsf5sUC6XeGtF0JU+EwfAsGrV9T8QrR4BjZM2Q+wQcXjbUIT5XUSNJvQ
+         Dp5FiMB4ynYFS7sAzVAHAIlYpn3OACo4V03EMou6U2eWmM4nsniFQkYGe2tGDGpiB4le
+         SwvlU/yaupkx0V+FUG/l/MEYS1g2ud81tcvHTCHj5eAoxCDLybCPnYRotEbb5/5PTjVa
+         wUGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPtg4ouQG2f9xNbPk4EIoIok0NHbnBIFX8HLitgEO2MHPx1CZK45y59wcAcEmgQivC4ThTAv0mxpL0bw==@vger.kernel.org, AJvYcCX8uF5MGwb2zz+g42R7jphcLoZpbhJvJtDHotY1iWOmow8azI0kjkb04cSimyOiWxxu3D9QlPrlGUXBLHF4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN806G9brUlIScSRo70jUFBsTijemNm1WDbQeNZB7V8eveU0SE
+	Lh1CfR9fQoP8BzkgqBjXN4zLz4JBQv4GNwcBnxOtj0kP3WlQYR+F
+X-Gm-Gg: ASbGncvmkCc3KPix7uxI7zi4L1YMcM9J4z/rgzlL/TSWnmv9PcLR9Tk7oELSmw+K8ml
+	8zG5pTkZlnbUWf1AmG6qTnY6NKmTawtZllXBxQWDgxETLENVuBlsH7uLMLbKChz6yaQ5R7obkdO
+	yM43KQXU3ZpEouB2zZeGMCcTg1rvY5/aNMkiNfOrLWkRaooUIaRW1/Thq93fOR3V/B3bAxC3yH+
+	sbsoWRxpY56EDH1JoUQBTQpGciFS5y2wiDMf1AX4Fg++kYqxSSiQwkRtAK+qLSX6wGz6UFrTBCk
+	Jwt5kJY0/EPGIoQ2+neTbNSg7Euiac3krJOMYk3M/ytgmF56Nr3c
+X-Google-Smtp-Source: AGHT+IEg9vtNGvw5hfb05C+bnyid1iZ28Ruoq6Njs1i+cMgE2hFbQWHSaFMZxcy/UtoQKD+eoazinw==
+X-Received: by 2002:a17:902:d4cd:b0:223:2aab:4626 with SMTP id d9443c01a7336-22c53567019mr64151345ad.11.1745026850171;
+        Fri, 18 Apr 2025 18:40:50 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:eaea:89f0:c84d:941a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4bc9sm23411195ad.128.2025.04.18.18.40.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 18:40:49 -0700 (PDT)
+Date: Fri, 18 Apr 2025 18:40:46 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: javier.carrasco.cruz@gmail.com, wens@csie.org, 
+	u.kleine-koenig@baylibre.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	davem@nuts.ninka.net, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	guanwentao@uniontech.com
+Subject: Re: [PATCH] Input: sparcspkr - Avoid unannotated fall-through
+Message-ID: <6ac4jviwn7k7thbdgstnmz6ntjm7gjyafb322n32ukqnkl6uzp@mod6fkc5sicz>
+References: <6730E40353C76908+20250415052439.155051-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/392] 6.12.24-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250418110359.237869758@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250418110359.237869758@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u5xBX-000000009TE-1MI8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:48400
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHPeqqtDNkJ85jvM2wBbQB3PoqCswEMttfhalmAVzOAYsHVza3btZI/07EVm1a2V9D7+VzbTofKP/u3FBUAkSsXUSuvjaL4DBazDGf2ciaeMg9+UAbqN
- txJqtKzc5q5qlNwyOzEzHr9Mg4Iwdm2zXdoYTwN+7ZVLelZyITaJihd7tqqo+3WysaghkchpzY4iaKLoSjG8xXfwCAwKgjNczig=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6730E40353C76908+20250415052439.155051-1-wangyuli@uniontech.com>
 
-On 4/18/25 04:05, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.24 release.
-> There are 392 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 20 Apr 2025 11:02:42 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.24-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Apr 15, 2025 at 01:24:39PM +0800, WangYuli wrote:
+> 1. Fix follow warnings with clang-21:
+>   drivers/input/misc/sparcspkr.c:78:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>      78 |                 case SND_TONE: break;
+>         |                 ^
+>   drivers/input/misc/sparcspkr.c:78:3: note: insert 'break;' to avoid fall-through
+>      78 |                 case SND_TONE: break;
+>         |                 ^
+>         |                 break;
+>   drivers/input/misc/sparcspkr.c:113:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+>     113 |                 case SND_TONE: break;
+>         |                 ^
+>   drivers/input/misc/sparcspkr.c:113:3: note: insert 'break;' to avoid fall-through
+>     113 |                 case SND_TONE: break;
+>         |                 ^
+>         |                 break;
+>   2 warnings generated.
+> 2. Reformat this code block to enhance readability.
+> 
+> Fixes: 215ea853a9 ("[INPUT]: Add EBUS/ISA speaker input driver for Sparc.")  #In history tree
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Thank you for the patch. There is actually no bug, so I dropped the
+"Fixes" tag, but otherwise everything looks good and I applied it.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Thanks.
 
+-- 
+Dmitry
