@@ -1,110 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103E42AE96;
-	Sat, 19 Apr 2025 09:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20A118A6A7;
+	Sat, 19 Apr 2025 09:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745055288; cv=none; b=nzbHYCKvXuxFwkQlMJ9c9KRb2P48eNPsJbcKOK6ta4v83z/Im8AsQ2Ue8yezdJx4WlMkzK4/LpLwEbBL6ngy9LOlJxsVKOgID96uXh9oatWc+rUPx9ZVQl7Ylxsy+WJ3RtidezWgmCJBDnLNaEwuZbqJAxrWIVQXVrZ0qF7rp/U=
+	t=1745055305; cv=none; b=oizJ+nQyUnjqDven+NifbErX39rcldR+Fr0wnxZGW6bBh78F1HyHlXQ/kpWNM9KI46yvlZ4+D9vbMaGqUgc9V1Upc1QRPgqLZN+UY/SAEi5kD3CMtwTCPmVvqQwPn/1pH0j3cHNOWOxYlbk3Yxep8sOHKH7I/IxJKsyTuqty0ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745055288; c=relaxed/simple;
-	bh=1B1NECF7Um9EjeZ8aeb8TdCHxRkrxV8x+Cv1DGD1UOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cp69+ukKZGIOm5ps+U05xyOs09YYT7lyk8bTso6TJWzaaAWzyS63j5Fw+kC0pbJrJw8u9Qkg1IYTtV+DOU9PD1YPYtT7dqvbtuz8zBSxX+m/lQo9yO+hGKighlfMhgdxVYp1v5xXRKjvyUcMwDSDJAhgWCEjsrcM5xU/l5WkO3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Er7D1Ge/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745055305; c=relaxed/simple;
+	bh=WolXuewx7OlA5cu8AF4VVhCTZxn5SojxszGM0R0x200=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mabsmheDKMo0ElHakIZAvC3gCVUtwXrapuMIyLUOnTDCkyLUR1nhH9HiOa2xmIs4+hGtOzdZ3bv+VXpAtyjjbwku0Cad9KjeUs1zWmnjy92EevWb1/4pG50/0AVfOjFVEtI7MJWjjugkQCG3XsXKzFyg7nt0j4Afu/+dmIXxdj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WU8mhadh; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Er7D1Ge/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282DBC4CEE7;
-	Sat, 19 Apr 2025 09:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745055287;
-	bh=1B1NECF7Um9EjeZ8aeb8TdCHxRkrxV8x+Cv1DGD1UOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Er7D1Ge/22AHl2WX242AHUdEKGv9wqDttuSxbwP27l00DXsV+z+ZwKqTMULb45cjq
-	 DSWoIgFQWxpKyKZ6vgF4danEo8TycLfePJK7i7ML+Bd043nvZnMOV4Q6aXx4thdbHT
-	 btgJNDI5NoVHPRM4q3GPGywyRfBYV6lC12F/iNPxgctFB3jMlrmyF8a45wW1a9P4xY
-	 A3CJIXHOSid84dDRUlcflOi4PvFMMrXVIpyMgqdVfwcCzue3fD4njXDtMur4gf8swU
-	 x56ZKzmP49PJP4TNXB8T/NbFdQJmq7MA4z0yIBEbA84Z9mVvRhJhgLAXmbICaYbUf6
-	 4F52q7GlrQbaA==
-Date: Sat, 19 Apr 2025 11:34:42 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: kernel test robot <lkp@intel.com>
-Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
-Message-ID: <ypoik2o7aedsdmzslodhkpngwxu3qlufdo465rjhbdmmrzu6ux@fkd2ibcjdii2>
-References: <JFG83gowJu7PQG7cgkRFCITghKWsYeEpl0cJ6taDtZfbh4UFDCne2aW3fz7CzitHRGYciMHb7iO-Qewa_wteRw==@protonmail.internalid>
- <202504181233.F7D9Atra-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WU8mhadh"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53J9Yw8m474476
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 19 Apr 2025 04:34:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745055298;
+	bh=gft5NuX6qVKgd8gTmf59OKqmKGXTRiwgf8HWTh+DF7E=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=WU8mhadhngmBa/ah+C0F72oEmz78Ms2gn+eanhVvPcR7ZOEnNWmG4iR28aVcX2dXV
+	 2AX40nlSeWZpui7cVZjUDOeTu3NeMtupeU+WwgKhVyGIRRvXnRYCqKtxcgs6WlJPpq
+	 Fdm5arMpuSnKko7k63wAfw0f0MihaK2U6ViXMW7k=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53J9YwXf087851
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 19 Apr 2025 04:34:58 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
+ Apr 2025 04:34:58 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 19 Apr 2025 04:34:57 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53J9Ys4F081127;
+	Sat, 19 Apr 2025 04:34:55 -0500
+Message-ID: <4144abf5-82aa-49db-82d7-c1429c12292e@ti.com>
+Date: Sat, 19 Apr 2025 15:04:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202504181233.F7D9Atra-lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] arm64: dts: ti: k3-am68-sk: Enable DSI on
+ DisplayPort-0
+To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>
+References: <20250411105155.303657-1-j-choudhary@ti.com>
+ <20250411105155.303657-8-j-choudhary@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250411105155.303657-8-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 18, 2025 at 12:23:44PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-> commit: 845abeb1f06a8a44e21314460eeb14cddfca52cc xfs: add tunable threshold parameter for triggering zone GC
-> date:   4 days ago
-> config: i386-buildonly-randconfig-004-20250418 (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250418/202504181233.F7D9Atra-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ld: fs/xfs/xfs_zone_gc.o: in function `xfs_zoned_need_gc':
-> >> fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divmoddi4'
-> >> ld: fs/xfs/xfs_zone_gc.c:186: undefined reference to `__divdi3'
 
-I don't think there is anything xfs can do here, this likely
-requires to be fixed on math.h and make mult_frac be properly built
-on i386. I'm testing a patch here and will submit it at least to start
-a discussion.
+On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
+> Enable DSI support for AM68-SK platform.
+>
+> Add DT node for DSI2eDP bridge. The DSI to eDP bridge is sn65dsi86
+> on the board.
+>
+> Add the endpoint nodes to describe connection from:
+> DSS => DSI => SN65DSI86 bridge => DisplayPort-0
+>
+> Set status for all required nodes for DisplayPort-0 as 'okay'.
+>
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>   .../boot/dts/ti/k3-am68-sk-base-board.dts     | 96 +++++++++++++++++++
+>   1 file changed, 96 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> index 11522b36e0ce..df54de2d8236 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dts
+> @@ -124,6 +124,35 @@ transceiver4: can-phy3 {
+>   		max-bitrate = <5000000>;
+>   	};
+>   
+> +	edp0_refclk: clock-edp0-refclk {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <19200000>;
+> +	};
 
-> 
-> 
-> vim +186 fs/xfs/xfs_zone_gc.c
-> 
->    162
->    163	/*
->    164	 * We aim to keep enough zones free in stock to fully use the open zone limit
->    165	 * for data placement purposes. Additionally, the m_zonegc_low_space tunable
->    166	 * can be set to make sure a fraction of the unused blocks are available for
->    167	 * writing.
->    168	 */
->    169	bool
->    170	xfs_zoned_need_gc(
->    171		struct xfs_mount	*mp)
->    172	{
->    173		s64			available, free;
->    174
->    175		if (!xfs_group_marked(mp, XG_TYPE_RTG, XFS_RTG_RECLAIMABLE))
->    176			return false;
->    177
->    178		available = xfs_estimate_freecounter(mp, XC_FREE_RTAVAILABLE);
->    179
->    180		if (available <
->    181		    mp->m_groups[XG_TYPE_RTG].blocks *
->    182		    (mp->m_max_open_zones - XFS_OPEN_GC_ZONES))
->    183			return true;
->    184
->    185		free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
->  > 186		if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
->    187			return true;
->    188
->    189		return false;
->    190	}
->    191
-> 
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+I assume on this board and through out series, display is DP not eDP.
+
+do you see possibility to change wording from eDP to DP
+
+
+> +
+> +	dp0_pwr_3v3: fixedregulator-dp0-pwr {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "dp0-pwr";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;     /*P0 - DP0_3V3 _EN */
+> +		enable-active-high;
+> +		regulator-always-on;
+> +	};
+> +
+> [..]
