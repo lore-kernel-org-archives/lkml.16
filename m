@@ -1,186 +1,245 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010007.outbound.protection.outlook.com [52.103.68.7])
+Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD10D3398A;
-	Sat, 19 Apr 2025 01:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745025205; cv=fail; b=dG5oByf9i9QB8/iXbr3rXHuSSDakVvTD1tGQ+nMHviHTQl8uNO+2HzP4FvB48Y+CLQX1lFz7uoDUwvWXYSB4Ht7tIiqR1mZ7LM09bYdm5vJEI7fCbd+qwNggCiFSCKmVL46e+MiwQ1YK2NyJ+pql/ztEv+MmGa4Wl0hFGeKElME=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745025205; c=relaxed/simple;
-	bh=J7W0cAhYOL7URNz1rjCZmxah6MggovUYf+cdNgvsCfk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Z+9EUcSTyemlOuV/ucgNY4Q1UzdpLf+e0rzkDmbK+wxxUcNaCsAqAw8UDGEmAzyFPs3Y6M9NhrIe7cINbMKyOEwL1EJLVCF/te7lD03OYBV+kL7PPjvRMSePum1DFQgf3rIImSrQOYK+xlIxybqRp0eLjDrlY5qV81ZpkXyjikU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DDN7kzsq; arc=fail smtp.client-ip=52.103.68.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DDN7kzsq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i9oGrScYJKUX88VE+67nfv11dqlfgy4UxPycoV9Z0ei/dzSXCEiDcuDhBQPT6m4NlKB+vSGcHCOHhz3cBiTiyj7FMMtpmbEGCb9vRM5SpVYZl0BgkxYFdVQF/wSgVQ76eTl8LTVMqmwBA9Gf3qdSUjfTNJPsBHwdYlK4IM0R8QrdI10uUGX1qa/zS2w8ycNAAfFplc53tahLrwqKdyFl1e21G50ug4RqlmERLULxv2cWCzM7ewcBK5K/RS7/g4aqSRCkHKKeiKzo7qwypdsSDr6ph/gtych+HwYzZI+eesAe1zPZL6VkVa5OMA06BNvcMX3CzRxIOXFEflCKiQKeug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6RjYxmDXk+a1tCjaHKNET6TWW4L3IM5aayNkGl1IF1A=;
- b=p9+UpNSt+wSOhTFZdEsFMzKyf2teFltjG0LVIAZEt3jeaxkXS2sjq/TYkcLGBt++Ua+znRzs+KLJv0gT4XcM9CG6ZiVVfKfMA+ApLFbqDVracJjX6dSWAm6+1tfEIRCvOcAslFz5FAiRRW994wkoxG5qPC4Z6c1Hdkhli5wDp/RayYM1MSoLfPEQZQFDWwDTzlN6Jdp/pxFRwMbCO0ji3Y4pTdjYuSAT04Uc2mOLbmJiTGh1l6WPtIsMsUfqn2g+yRAQ7msa/RQKZY2Hj9Oa2sMbUVHun93QxM2B2PS6mfWaicaX+Y26DP3R9Ogv+WRDEXwLZFz5j1L6sc2X/DEqAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6RjYxmDXk+a1tCjaHKNET6TWW4L3IM5aayNkGl1IF1A=;
- b=DDN7kzsquM676sXkEjWAEEucNIXekny2BmoJd3zBMfTCANlYi4je0qbbOdZyWBRacYIxRQjv9S57p1zf3BW5Gjg/fAS0kGELP4K9u9pdQ7iq0yYwJt0q+xUy3+oh3BhAbHXOV2SyfpNUeXHxpZzoSOb7tnTjcX0Pfy2TJe9yb/9Cm1mNjctnCRbXNQ8pecqAo/Q9YRYrOz/nupyuuAQjn+B5QIu5Cu/JhJAntn0AutUSeqhGEU64wQLQXlyQ30odBF3s0a0Wv0zXPxna1O398m9ItSKJh8b3qc4p+py7T9IgivDJdyJKM+StUdFnRryHDUXUK+55P3Vdw9jOE/vTfg==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by PN1P287MB3593.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:255::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.31; Sat, 19 Apr
- 2025 01:13:15 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8655.025; Sat, 19 Apr 2025
- 01:13:15 +0000
-Message-ID:
- <MA0P287MB2262745872348EACA7E3DDEFFEBE2@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Sat, 19 Apr 2025 09:13:11 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: sophgo: add pwm controller for
- SG2044
-To: Longbin Li <looong.bin@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250418022948.22853-1-looong.bin@gmail.com>
- <20250418022948.22853-2-looong.bin@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250418022948.22853-2-looong.bin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0075.apcprd02.prod.outlook.com
- (2603:1096:4:90::15) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <b6b460f8-03a8-440a-9b99-609a6a42e786@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BD2944F;
+	Sat, 19 Apr 2025 01:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745025261; cv=none; b=bO0z/ADk1+ibpgftdVUqO64/3xjs5WYCRSycbHnOGerXSF3X1SBv3dtC7Qiv9Gf+nQ249k8oDDNz0AGIpNhQf5sxYWjXEb2fcQVRiljaqkz0xJfOanUxQo7Xd471uifLNepLZXOerVgJKhADvMX4YzAhUdF/i8W7mtx1/lssuyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745025261; c=relaxed/simple;
+	bh=sWdM+T3rOkkP+yaS0doaDa67ymsymtWqfImCD2HOA1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aKb2ziXphr2ISoZVVQb5zRvipVdOKHu4IvOuwSTIo3kubfaBlhz5tr9CKHCorMINLLFTJOgmc6r7YVfVi8ZD2nndUhV2TANwAxSvR/hThfS0s2+gErUNrz7e8ImUr7aPtf7WP5PZ72f+aQlqkWOrMX6UU7DjztxOWmDq+fx2PxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp01.aussiebb.com.au (Postfix) with ESMTP id F2D34100724;
+	Sat, 19 Apr 2025 11:14:09 +1000 (AEST)
+X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
+Received: from smtp01.aussiebb.com.au ([127.0.0.1])
+	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id LlThB9oCYBYS; Sat, 19 Apr 2025 11:14:09 +1000 (AEST)
+Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
+	id F15BB100767; Sat, 19 Apr 2025 11:14:07 +1000 (AEST)
+X-Spam-Level: 
+Received: from [192.168.0.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ian146@aussiebb.com.au)
+	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 51D8D1003AF;
+	Sat, 19 Apr 2025 11:14:03 +1000 (AEST)
+Message-ID: <709ac1f0-b3da-4813-ad88-78944d5a8e2d@themaw.net>
+Date: Sat, 19 Apr 2025 09:14:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN1P287MB3593:EE_
-X-MS-Office365-Filtering-Correlation-Id: 74365edb-c9cb-4390-1460-08dd7edf5c6c
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|461199028|19110799003|8060799006|15080799006|7092599003|6090799003|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bFduTG8vSFpVUHYyR3owRnZGbHNiaG5PUkpJL1RqUVpXZWlybjVEZjQ3b21q?=
- =?utf-8?B?dTV0aVZwYjRLbEE3VHZyYXUvdXJaRDJNdU44TEFsZHFTQ0Uva3JHRG4wdmhi?=
- =?utf-8?B?d1VFcVpiNG95aW01b0JpZDkyK3RjTFNqZGNtK3ErdUVBeGxWUmNXcTBoQ2w1?=
- =?utf-8?B?N0pvaHMwT0dZNXNDbDNJbUJWWWJzVmpvNU9ZSHJIZ0NJakEvTnhiNDJZeWts?=
- =?utf-8?B?KzZkVE5ubExUdzFIbnYyUzJyZmMyTVB6WVJuK0k4RzhSNXRvMnhCRUl6eFlK?=
- =?utf-8?B?WU83d0ZzTmVNc2RYUC9xV1RnRWEwdWxtVEpKdldlRmxSSXJ4TkREYURzWlAr?=
- =?utf-8?B?UWFyeG5iYWcvaWYxYXRLb0JnUUd2WGU2QnVIVm8rbUJUNjkvd2JIQ1loNUVm?=
- =?utf-8?B?VWMzTnRzWHQ0UU16UG53cnNNaGZvN0FBQjliaEJadmlGVGpzQnZnZDE2a0dy?=
- =?utf-8?B?ZVkxUWZiemhEbERqYzJ1allITi9RV3BUcG1xZnFabE42YkZRdnlVbjdaUmpJ?=
- =?utf-8?B?R3BkcEVkRUZ6WHBmdFhpU0hQaXBORnNPT2F5WmhhNGIzOUZyVEMwcHhzQ1pV?=
- =?utf-8?B?ZGhlL1pyT09wV0J3ZzF3c2ZCb3R4d0dHTGttSHhLK3lqQWpoeFR0L3g0QVZl?=
- =?utf-8?B?ZTZEM1JwWWxSNXMzV2F5SEdPRlVCN3BYRlhuRFMrRnBsaHl3U3haNXlRQ3JQ?=
- =?utf-8?B?eWxpWVE5bExsMkFjcEErUUQzd3orZ1FtYVZ4RURjQzZnV0JqUGlsRXZkYXpw?=
- =?utf-8?B?TFlSMCt4Q3VRaEh2WEt1WVZva1hNcmNQcEFvVG9JcUtwb20xZkl5aFZjTkg3?=
- =?utf-8?B?K05NVlNpb3lKSzdTM04zOTZkM2FqSXFrNzlYSTlaWjdSRGF6SEVYZHN5QUFC?=
- =?utf-8?B?aS9NeldOem4rb1dxMFNVUUNUQlVzWjFlZVN1RUZITWRmOUFJN1ViT3k0WmVR?=
- =?utf-8?B?b0EvbFU4YzN2NWhlamtMeVRXb1hhNGdPUC9DUWhVanRsVVYxZWFHdjVCSGY1?=
- =?utf-8?B?TGFSODFINFNUbjJZdDBsYXNlRXgyWXN4cVhISHg1SFJlaHhpeWFsQ1VrTFRs?=
- =?utf-8?B?K2FHazlIZm5oL21GbHpjOXFtUUVUNnF2VEhYQkxPd3pPT0JwTXdlS0pkSzlE?=
- =?utf-8?B?dzFkUUdxWVhMYWdlaXgrUG9pSVYrSHZJU05KeHVEMGdJbTBEV1c4TllyZUYw?=
- =?utf-8?B?ZnFmbFdrWHpHZGV2TkRJTlg4WXdoVEJLMHB3ZG1ZSW9ManU4YjdibWdoWDhO?=
- =?utf-8?B?YmhHT1dCRFJ3eUg0c1dpUnFqLythdnRJY1lDSTV4bFd0OTZidjczMkw3RFhy?=
- =?utf-8?B?MTV2aXVtTDUxWkRVRjNBejhHSFNjbXhzSWkvUHViOVZvckdaUHE2VEkzTGM4?=
- =?utf-8?B?QzU3c0I2SzBUd2NicXZnc3RGYk9hY2xqRjlsT0ZFeXNKaHpPc29CL0RNSHZX?=
- =?utf-8?B?V3BvZUszbFl1dmhzQnN2SmcyMDVpU1BOUEZSSVkwQ3NwUXozeEQ4ZEhndkhI?=
- =?utf-8?B?MEJHWFg3cUJDRERleFVIQWZPVTA4R1oranhmMld2RkJZYnBTVm8yOXA5cDBh?=
- =?utf-8?B?akZUQT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bjA3dHNabDFhNVJDeVJHSGd4VENhYWY2dThuTHR1OUtzWENiWGVTRnc4TERW?=
- =?utf-8?B?V3FNL3d2M050UjhoTjNjcHhaTVM4L3NkRHdNVG8ydTdIalhYbzhWaU45VlE0?=
- =?utf-8?B?MXNSVGF3Q3hQQ015QTJrRWVtK1dpc3ZyYXhRamlaUTNMTDhwYkk3di80SGw1?=
- =?utf-8?B?YjBMaTFTWlNOM0oySXlrUmNNUHBkR01CbkVHNWt3MnBoUTlTaGZDRUc0RjUx?=
- =?utf-8?B?RjBZb2o4ZDFYZW0zdnpXZDRDUENHV1YvYWZidW5OMkxwSVY1Z1RoNjlVMHk1?=
- =?utf-8?B?NWpiY0duck56Y0tYWkFWbm9qbFUvcm9XYVJRNnJDdVY2aUcwd1NGL2Q5a2dL?=
- =?utf-8?B?NDdac05nd3hmekRmVUlEVkg4OGt2bEJsT2RONEMzRmZ5cUwzdTBYUXN3VmtF?=
- =?utf-8?B?eHE0eDlYMWJhTTB3K3c1dmxGcmhiWDg1U1k2RmgvWVJBSFVJeWg2dGl2ZHJ4?=
- =?utf-8?B?NUNOM2RZUDB4Z09XOW5BbU9LYUZuWTRNTVVSdXplUG94b2dXTy9Ia0VBbFRy?=
- =?utf-8?B?Y3FKU3lub1d5QytoeERtSStQSG51TW9qaWVZU2NVUUJMVVc4ZFd0WXkzM0hX?=
- =?utf-8?B?eE9mRldlWjFuQWZxUXd5NDlVTm1GYzhEWEdYMEVrZWxOSTVzWm9PQnFDRlZs?=
- =?utf-8?B?TjlBUWcybEFNUXV0ZnVDQVdsWm84eFFJQUp5MWFHOWJlSEdHaHFNdzU1eVls?=
- =?utf-8?B?dHdFbXVHQU1mM3d5YWRMZ3BpNy9HOUtjNzVRajRRMTlqNDN1d21FU1JqUGdo?=
- =?utf-8?B?UzRPdGV3ejJkRGQyOG84eTl2TTJ0YVZOYjlmVlZLcHpLTElnWC9PaVNCZWFW?=
- =?utf-8?B?cGxDbEdyVG50c0tSRmY3VTRyOExPb3krMmJjK2lFOWdSemJWeTIwY3lqYzE3?=
- =?utf-8?B?YzNPa3ZGeE1WcW1jZURWRVE1UTBXdjc5My9YL3cyVmxTdVE5dEc0Snh0RFgw?=
- =?utf-8?B?WHI3Mk95NzZDVUxUM2ZvQUcyRThNS3NkNk1ScHAzSFgxaXZETmo4MEt1NGtQ?=
- =?utf-8?B?WVVibFFWRFp0cU1tNnp4Uy8rb1RjcGx2SEZIcENKZjJUbFBwS1FYeUk5OFMx?=
- =?utf-8?B?R29VTGxFaWxmdTF1bHpTRjg3NHhRQWk2RmJLRUlueTF4S3dDTGdac3NMUnNX?=
- =?utf-8?B?VDZtclhBWDhNNVU1dWg5R0ZtR1M2akN2VVdWWmlONlZ5c1RYMFRkODdWQmNO?=
- =?utf-8?B?bFk0Ykp4UTQ5S0l0MlFGS3RHTDBzM216NHE3RGZsaTFtbW5rS1pod2srdUFI?=
- =?utf-8?B?YVByUVJoSWhrSnRTSGVZbnFUYktZUWtzWko4WmpnVS8yTG9tQVBldytmYjc0?=
- =?utf-8?B?aDVLWmJ6RUkvMG1RdmZ6NmxIMjQyeUtCbjJvT2JDRjBtTjVXUTEyYkR1aDcz?=
- =?utf-8?B?VXRwdUdhWWFqdW0zaG9LeXpJK29NbnEvamhkenhyS2puNkFycSt6a2J4L01F?=
- =?utf-8?B?bkxtZzhrcDZVZGlPalo0Nll0MkluakRHNjlVZTZYZ0NjVDNFYVJMU1RMNUsx?=
- =?utf-8?B?TTVTT1ZReExsZmpFLy8yY0lJQm0zUndMQW81V201b3lXSHVGdjlDS2pYb1Ez?=
- =?utf-8?B?bFh1emE4cWQ5aTFkVVVRaDB3Zm5UWnQ3MW4yc0lKRVNZYThSak05a3ZTalVo?=
- =?utf-8?B?ZjhEc3JnNzB5S0xtV01LZ2R5ZGNyMFBKSjAzOExyZTVtcGhaZ3dQdUx0aWVj?=
- =?utf-8?B?QVhBR1lzMXVqQmZ3T0FpQ1Y3b1EraWpNLzhERnFFenhRL2N3bjUzWDN2djNF?=
- =?utf-8?Q?w3TmFGZq9x2KNyTncz90p4r3SZLg6dKb8KmiQqO?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74365edb-c9cb-4390-1460-08dd7edf5c6c
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 01:13:15.2374
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1P287MB3593
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+To: Christian Brauner <brauner@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Eric Chanudet <echanude@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>,
+ Aishwarya.TCV@arm.com
+References: <20250408210350.749901-12-echanude@redhat.com>
+ <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
+ <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
+ <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
+ <20250417-abartig-abfuhr-40e558b85f97@brauner>
+ <20250417-outen-dreihundert-7a772f78f685@brauner>
+ <7980515f-2c5f-4279-bb41-7a3b336a4e26@themaw.net>
+ <20250418-bekunden-virusinfektion-3ec992b21bfb@brauner>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+Autocrypt: addr=raven@themaw.net; keydata=
+ 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
+In-Reply-To: <20250418-bekunden-virusinfektion-3ec992b21bfb@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-On 2025/4/18 10:29, Longbin Li wrote:
-> Add compatible string for PWM controller on SG2044.
+On 18/4/25 16:59, Christian Brauner wrote:
+> On Fri, Apr 18, 2025 at 08:31:03AM +0800, Ian Kent wrote:
+>> On 17/4/25 23:12, Christian Brauner wrote:
+>>> On Thu, Apr 17, 2025 at 01:31:40PM +0200, Christian Brauner wrote:
+>>>> On Thu, Apr 17, 2025 at 06:17:01PM +0800, Ian Kent wrote:
+>>>>> On 17/4/25 17:01, Christian Brauner wrote:
+>>>>>> On Wed, Apr 16, 2025 at 11:11:51PM +0100, Mark Brown wrote:
+>>>>>>> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
+>>>>>>>> Defer releasing the detached file-system when calling namespace_unlock()
+>>>>>>>> during a lazy umount to return faster.
+>>>>>>>>
+>>>>>>>> When requesting MNT_DETACH, the caller does not expect the file-system
+>>>>>>>> to be shut down upon returning from the syscall. Calling
+>>>>>>>> synchronize_rcu_expedited() has a significant cost on RT kernel that
+>>>>>>>> defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
+>>>>>>>> mount in a separate list and put it on a workqueue to run post RCU
+>>>>>>>> grace-period.
+>>>>>>> For the past couple of days we've been seeing failures in a bunch of LTP
+>>>>>>> filesystem related tests on various arm64 systems.  The failures are
+>>>>>>> mostly (I think all) in the form:
+>>>>>>>
+>>>>>>> 20101 10:12:40.378045  tst_test.c:1833: TINFO: === Testing on vfat ===
+>>>>>>> 20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
+>>>>>>> 20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or resource busy
+>>>>>>> 20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit code 1
+>>>>>>>
+>>>>>>> ie, a failure to stand up the test environment on the loopback device
+>>>>>>> all happening immediately after some other filesystem related test which
+>>>>>>> also used the loop device.  A bisect points to commit a6c7a78f1b6b97
+>>>>>>> which is this, which does look rather relevant.  LTP is obviously being
+>>>>>>> very much an edge case here.
+>>>>>> Hah, here's something I didn't consider and that I should've caught.
+>>>>>>
+>>>>>> Look, on current mainline no matter if MNT_DETACH/UMOUNT_SYNC or
+>>>>>> non-MNT_DETACH/UMOUNT_SYNC. The mntput() calls after the
+>>>>>> synchronize_rcu_expedited() calls will end up in task_work():
+>>>>>>
+>>>>>>            if (likely(!(mnt->mnt.mnt_flags & MNT_INTERNAL))) {
+>>>>>>                    struct task_struct *task = current;
+>>>>>>                    if (likely(!(task->flags & PF_KTHREAD))) {
+>>>>>>                            init_task_work(&mnt->mnt_rcu, __cleanup_mnt);
+>>>>>>                            if (!task_work_add(task, &mnt->mnt_rcu, TWA_RESUME))
+>>>>>>                                    return;
+>>>>>>                    }
+>>>>>>                    if (llist_add(&mnt->mnt_llist, &delayed_mntput_list))
+>>>>>>                            schedule_delayed_work(&delayed_mntput_work, 1);
+>>>>>>                    return;
+>>>>>>            }
+>>>>>>
+>>>>>> because all of those mntput()s are done from the task's contect.
+>>>>>>
+>>>>>> IOW, if userspace does umount(MNT_DETACH) and the task has returned to
+>>>>>> userspace it is guaranteed that all calls to cleanup_mnt() are done.
+>>>>>>
+>>>>>> With your change that simply isn't true anymore. The call to
+>>>>>> queue_rcu_work() will offload those mntput() to be done from a kthread.
+>>>>>> That in turn means all those mntputs end up on the delayed_mntput_work()
+>>>>>> queue. So the mounts aren't cleaned up by the time the task returns to
+>>>>>> userspace.
+>>>>>>
+>>>>>> And that's likely problematic even for the explicit MNT_DETACH use-case
+>>>>>> because it means EBUSY errors are a lot more likely to be seen by
+>>>>>> concurrent mounters especially for loop devices.
+>>>>>>
+>>>>>> And fwiw, this is exactly what I pointed out in a prior posting to this
+>>>>>> patch series.
+>>>>> And I didn't understand what you said then but this problem is more
+>>>>>
+>>>>> understandable to me now.
+>>> I mean I'm saying it could be problematic for the MNT_DETACH case. I'm
+>>> not sure how likely it is. If some process P1 does MNT_DETACH on a loop
+>>> device and then another process P2 wants to use that loop device and
+>>> sess EBUSY then we don't care. That can already happen. But even in this
+>>> case I'm not sure if there aren't subtle ways where this will bite us.
+>>>
+>>> But there's two other problems:
+>>>
+>>> (1) The real issue is with the same process P1 doing stupid stuff that
+>>>       just happened to work. For example if there's code out there that
+>>>       does a MNT_DETACH on a filesystem that uses a loop device
+>>>       immediately followed by the desire to reuse the loop device:
+>>>
+>>>       It doesn't matter whether such code must in theory already be
+>>>       prepared to handle the case of seeing EBUSY after the MNT_DETACH. If
+>>>       this currently just happens to work because we guarantee that the
+>>>       last mntput() and cleanup_mnt() will have been done when the caller
+>>>       returns to userspace it's a uapi break plain and simple.
+>>>
+>>>       This implicit guarantee isn't there anymore after your patch because
+>>>       the final mntput() from is done from the system_unbound_wq which has
+>>>       the consequence that the cleanup_mnt() is done from the
+>>>       delayed_mntput_work workqeueue. And that leads to problem number
+>>>       (2).
+>> This is a bit puzzling to me.
+>>
+>>
+>> All the mounts in the tree should be unhashed before any of these mntput()
+>>
+>> calls so I didn't think it would be found. I'll need to look at the loop
+>>
+>> device case to work out how it's finding (or holing onto) the stale mount
+>>
+>> and concluding it's busy.
+> Say you do:
 >
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> ---
->   Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+> mount(/dev/loop0 /mnt);
 >
-> diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> index bbb6326d47d7..e0e91aa237ec 100644
-> --- a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> @@ -17,7 +17,9 @@ allOf:
+> Unmounting that thing with or without MNT_DETACH will have the following
+> effect (if no path lookup happens and it isn't kept busy otherwise):
 >
->   properties:
->     compatible:
-> -    const: sophgo,sg2042-pwm
-> +    enum:
-> +      - sophgo,sg2042-pwm
-> +      - sophgo,sg2044-pwm
+> After the task returns the loop device will be free again because
+> deactivate_super() will have been called and the loop device is
+> release when the relevant filesystems release the claim on the block
+> device.
 >
->     reg:
->       maxItems: 1
-> --
-> 2.49.0
+> IOW, if the task that just returned wanted to reuse the same loop device
+> right after the umount() returned for another image file it could. It
+> would succeed with or without MNT_DETACH. Because the task_work means
+> that cleanup_mnt() will have been called when the task returns to
+> userspace.
+>
+> But when we start offloading this to a workqueue that "guarantee" isn't
+> there anymore specifically for MNT_DETACH. If the system is mighty busy
+> the system_unbound_wq that does the mntput() and the delayed_mntput_work
+> workqueue that would ultimately do the cleanup_mnt() and thus
+> deactivate_super() to release the loop device could be run way way after
+> the task has returned to userspace. Thus, the task could prepare a new
+> image file and whatever and then try to use the same loop device and it
+> would fail because the workqueue hasn't gotten around to the item yet.
+> And it would be pretty opaque to the caller. I have no idea how likely
+> that is to become a problem. I'm just saying that is a not so subtle
+> change in behavior that might be noticable.
 
-Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+Right, thanks for the effort to clear that up for me.
 
-Thanks,
-
-Chen
-
+Ian
 
