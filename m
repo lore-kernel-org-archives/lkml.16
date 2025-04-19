@@ -1,105 +1,206 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11021085.outbound.protection.outlook.com [40.93.194.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9201B0F20;
-	Sat, 19 Apr 2025 21:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745099114; cv=none; b=NloY9ctX7Gh9XPluC74emHvvYbhCxlmPjZmu/3dQlwBc3uyJpFKOMQC9I76XKEycrzAIlxa5zu1eH/Qm3BezqUglrfEC+8q2BzwCRKSiJGEAB/6Cnom+xqFG1f+kBlXIGjX4lf02g+7KvD/XUNaQcbWa2jJRxsI+A3T+J8LoMGI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745099114; c=relaxed/simple;
-	bh=INlnN5WJZfb9/Dkj+fX69QLzu8VLQMwo3bg9bkWj6ho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ou3IQp6uyoe03W+uVM96tGgnQNuSTnwkHZebVf29moNq1ze9CUik4n2Hn6BfAQ+eNY5/bE9Z3YdU9IKXVDUar5qTTiJXYR5UcKG+w2wPiyfBNmUpKAuibjyytX+RcVNP5yJCUi5J2wkXMoFbiRdtbY6lwgiypZDxJjaAQqHFxnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVpF5eMB; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F335A199E89;
+	Sat, 19 Apr 2025 22:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745101369; cv=fail; b=amC43KhzoCz33+En4qixJzTZ9GUiMj6Q9wcaKq7s3lVYPsa4d3LWet/slKOYMt5hpIY/Zi6akkhmcBvlVWyvsJ8kYfMCd3dEd4IRuucJ4SFXqh5ktduyF9p6jqIU35O/XcznSa7m41oLKNwwc36msZwm7qwk199RvlGszwHDxg4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745101369; c=relaxed/simple;
+	bh=oK74OyxMtpDEYEKyStE2ozEak5K1UHR9/bfNUU5BjdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gq5Z7685oxUWUK5dKMKcDTiOOm99L24Umk+RQNP+ddU4/vL0b7QRD8AnTLlzdJfTYugr1p/5Ng2pvD9O5VOzi6ZhUSjtQqUyGdCpz7IlhOutdoMLAV+Yfy+81zgnZf71XiDR/58h5xmyz3wpB6bfj6aLcPLtUk51JkDYYxcSmlA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com; spf=pass smtp.mailfrom=labundy.com; dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b=Fk3FujNI; arc=fail smtp.client-ip=40.93.194.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=labundy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=labundy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVpF5eMB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22409077c06so40084815ad.1;
-        Sat, 19 Apr 2025 14:45:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="Fk3FujNI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x/vyGFwbyHMD7/cgCUH8CeVVtgUHCwZ0UjWwRHbzH3frNMvkHgnjMAcfSzbIJ+kSqTVDe3LsVkUpTnqZZYxwOquTzSEygcF2wYKEXumVRjlbovtsIxHIaajxWcojz8Ct6U9Kbo0YFeyWuXyhUjc1k30FGwlUb6UV5NRJyoI34Uq13Lb7/Pz/cQUZkW2yb+X5pRIzCtFdEtYZdH5Ime0RCkWxtDrNOxbRBqBV2G0yWCpFXAL30A/hy9DrdH0AD6NNUz6XO2pI3sEP4Rty+b1mD4uxJ0mPPUAvqkzQh/E9kLlPFKkjGxht9vDfJB/P0K6ajyFtCQkclek1iFW5Xp3Kkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YxZ81tInjf+3AOzriV4/ir5vlvx9biD9AQ8GQHEUm/Q=;
+ b=UibO2kb10ryIj9K/WxIC/qbfQEWmVlo+iLscbTkEY6K40QGsGdh4S4JWm9S6LbCtEYH1j3ZR0QtJpP5kQNqsFeDz2Ue0RpHVg8qMHFjqew4PubstMKkBsXk/lk9HoiyNfkoaR5sJ+IoeVPNTHL5sFStGp4Zvo1CzZOCwhtmMe75hYB+o47VA2+JzAXOtQawsDDODIhztb2pDgdVrk03truTjA5JUH92Bzgg607aNttfyVjnOBjMgRGa4dPSjdQnwCntCDkeYwU44zbGmhgBrbbVDRpcs4Xdw8CSF2g8Hb+p766xawIUR3mtgNVTRZkWFGPGBLuwbheCpHv4uHmUm7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745099112; x=1745703912; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O6dedMB2aZL7JuxKdXCBVhen/b9c/wwkdTjJKn9OdME=;
-        b=YVpF5eMBmafko/HehqkqQSwGbZ756rnF2me5Hw3jVp5B9g3S29w656OkQlH6zh7KjT
-         7gVRwGDFXgNUH4FHswoAy840dsqCblJWJF3q8u0/I6Bl8W0kMqdqRnCi1rD72umuyZaq
-         48ApuuqkLwWmlmwuBFz3anF+JjOh+8kWjjh54ug0qSUw5tzReV3Wf4zEuCgMtWgD+xQC
-         AsyG4s6t0DEJ8Wwe9a6Cv47QobVaG1bRFEhxcjT94uhqjUiPiZFfIAyNkXp5su7onuwV
-         /OUIy7kgyxThCrxzUZcZQxtN91ZPLE/hmphXemoEnLia2bYtb4wPENEn76i7AqzBdinF
-         3WiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745099112; x=1745703912;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O6dedMB2aZL7JuxKdXCBVhen/b9c/wwkdTjJKn9OdME=;
-        b=DHhedLRh823zO1Kbw/Ql/6wqO0DI3+QT+mF3T2rp8VrvxbBjwGOA8tcoGjvg56rSZ3
-         6VnfeCTYUOIfAR6PFdth5FDa5uY5GJFmxCv5mbcW5fwW9ga535buQVJrpBFSctkowuCN
-         WQB3Fc3xR1GhAvIS1YwrF0t4NR3rAxL86Jr+L9gq0Fkld7u8QdwxO+CCHtuh8Yg+7iXs
-         TJwH4GQ52bW1zqoLZ1jmFETwW73AxEmMqKcUgpSSfF/rbrT+DTZ5W2WeScSgvRRxR8MI
-         GDYHh603hxGNrLEOZzyOIrhuVtZ8u2dIhOPGAa9TU1gI5Y5n/LfYvDouLqMkqMVKdrz4
-         UxIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAa/nTvXkIPcZ4sCuGl2NQn2KEO/nrMKm3GgiKYefrP3Lxix0XtSU/gasTWxgowR1vCp+zsRKJmPk=@vger.kernel.org, AJvYcCW25lzMaA6RUjKS08ozvTd083Scl7NltGrBHlLcRn/zA3mTE0293OGyKyohmf2efcN66GovEvVM@vger.kernel.org, AJvYcCWAAKrXT908+U2ZA5/su247+s+oc4yCbLX4rYX+doNdVkrzA3YlNR1ssgtsGJrdKAnoB5L4Ekb/xOR84r9Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoWagaKQP0TMMG90URyZKK2wBIL4V9PW6LQMwUgYWrT6y/zlbC
-	VNYK0arNUqD/Xaf7+97M6SbE2mDLMsIPKxd6zJ6DSYDm/N9oBqRw
-X-Gm-Gg: ASbGncsy+rpxqMwz2JZ2iy1HMpG5WoFdaiUtZCzCJUsygzQy17euuPnCQSv8WU7RP+p
-	2R5epB6ZWw6PTixfl0y5t+Ho07QqcReOiM3KjUjM1VI8/dtkNJA2ZdvqrDq8O+qs7kCYmVEDeC2
-	/Dw7s4V+Xh79lyf0/rJdix2OEgHPPoANinz4nWtUY8Zrdkr3VkBPxcBN5owVURsdRjwg/YrxK2D
-	5Hc8n3Vr4hTV8IbR2wx8LMl3W01iuHRojxY705KWEbKBuM5k2G4O5sxS+noG1sJQ6aFDT7UoL3n
-	QipWgJb+0VM8prO8MBv+XqZIM/XNJfqBbCI07fhVDDcw/sQ=
-X-Google-Smtp-Source: AGHT+IHRl6n/PcvFmVqTKcKkKTKXFlF0vBC9rAGLMcXBhHukm2ZXzJDlZ8iPMEeKDYk4scJUsge3Ew==
-X-Received: by 2002:a17:902:f78f:b0:227:ac2a:2472 with SMTP id d9443c01a7336-22c535acabcmr115757225ad.28.1745099112451;
-        Sat, 19 Apr 2025 14:45:12 -0700 (PDT)
-Received: from localhost ([2804:30c:90e:1e00:5265:5254:2e32:7e5])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50fe0679sm38044845ad.249.2025.04.19.14.45.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 14:45:11 -0700 (PDT)
-Date: Sat, 19 Apr 2025 18:46:22 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] iio: frequency: Use SLEEP bit instead of RESET to
- disable output
-Message-ID: <aAQZrhBLQCa0TjOJ@debian-BULLSEYE-live-builder-AMD64>
-References: <20250417135434.568007-1-gshahrouzi@gmail.com>
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YxZ81tInjf+3AOzriV4/ir5vlvx9biD9AQ8GQHEUm/Q=;
+ b=Fk3FujNIHtwRmzlmTpNTCgIUWpSqgljshDRMEspKfwvSSiVrURr7BjmRI2IAP8zWR/w9g5Php2fjHwa7twtYURGSGZ1v2W4LqW1F1H6svNmvbYBhcYdwudv+Imwee0v3A0Amfnaf8gGt5LD/QF2W1Uo3QugFtRQmMyLil0sG5yI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=labundy.com;
+Received: from BN7PR08MB3937.namprd08.prod.outlook.com (2603:10b6:406:8f::25)
+ by BY1PR08MB10067.namprd08.prod.outlook.com (2603:10b6:a03:5a7::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Sat, 19 Apr
+ 2025 22:22:39 +0000
+Received: from BN7PR08MB3937.namprd08.prod.outlook.com
+ ([fe80::b729:b21d:93b4:504d]) by BN7PR08MB3937.namprd08.prod.outlook.com
+ ([fe80::b729:b21d:93b4:504d%5]) with mapi id 15.20.8655.031; Sat, 19 Apr 2025
+ 22:22:38 +0000
+Date: Sat, 19 Apr 2025 17:22:23 -0500
+From: Jeff LaBundy <jeff@labundy.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] input: iqs5xx: Fix incorrect argument passed to hex2bin
+Message-ID: <aAQiH1DnDXRcRsya@nixie71>
+References: <20250419200434.39661-1-purvayeshi550@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250419200434.39661-1-purvayeshi550@gmail.com>
+X-ClientProxiedBy: SA9PR13CA0084.namprd13.prod.outlook.com
+ (2603:10b6:806:23::29) To BN7PR08MB3937.namprd08.prod.outlook.com
+ (2603:10b6:406:8f::25)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417135434.568007-1-gshahrouzi@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN7PR08MB3937:EE_|BY1PR08MB10067:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbb2a59e-4181-470e-7640-08dd7f90b0fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2gBpn0QMJc3xSsx2jaho1c/YR4S1Zl9dnKu1+p8QmPZ1p6G0j3sqHMhaKMP3?=
+ =?us-ascii?Q?/ZFva8+5GIYQ+o9Lh4Zaf+yBSD2W0ECx5dfe7ebPfltNv/9j7VcmPuOw2utx?=
+ =?us-ascii?Q?DZYqbjoTJqW6G5AsX9WnyBW+8xQgL5M2Q4IoXzwE49y8VxsMGSjEywsS+M4x?=
+ =?us-ascii?Q?e04S9PQOUTy1GIyQ3+izj3hbr/blychMREfJizxAycw3nJdPF14cFqPXlTWh?=
+ =?us-ascii?Q?I2eXSKm3w+zw0qKstzAmLO2BtjOhR7Z/M0s85Wc14ujhq5ML2jJJ86YVewpb?=
+ =?us-ascii?Q?Sx8TD9FDgZ9YSJ+m/Ls9pzZ/KGLJ4fjeXSRyu5EB6sG3v2lyL+a7pj1sOjgZ?=
+ =?us-ascii?Q?GN6FC93ICYu4f4bjM921BE7QUCStC3Q+H6VRiExbFZq0H1P9M2maGvcognDE?=
+ =?us-ascii?Q?aeEuBDCz90XiKNfVnSCOlJSBx48Qs2swEinalciZB5zemP/q+Lz/OWJo1pBd?=
+ =?us-ascii?Q?IlEqJN/pJ+V0LWACfLpOyw/zoGvzb4D84zKYVQFC9U2KuOe7BISp3+HurFsR?=
+ =?us-ascii?Q?kP29ESI7IT3Tx7pllGT9RI5IUEAfBlu7CHx730yU8TFwriqGDkr4a9fM04at?=
+ =?us-ascii?Q?76l7hoXcyw4vKWQhsQRPsANFTd3wBbn+/xe+2xRFh+CIaZBU+VbZzUnqsibE?=
+ =?us-ascii?Q?qZ9WPBqXvagAwFcdaDgePhI4Rc9Tla1cINM8kWTibAxz6j05xkgt76F6lzC5?=
+ =?us-ascii?Q?jt9p9rgb+a9VaDAaGOqJXM9/E7Lvldu8nMXBnVKltzAEuI22CfNlIGyQKGO/?=
+ =?us-ascii?Q?Q0vQ7ku8dfx1GeKA5GAFE/BB5I9R8LDJmnX7EeFGOwDznsWpSwl8Ft0IQXl2?=
+ =?us-ascii?Q?W9nT8VEsOZysOUG+CQ/cdi8WWty6vXiyyDk6P/acY/Q2b1nm5NHijeByOmzh?=
+ =?us-ascii?Q?eLkmTvHEsZlZpDxcAZJafbDpFUwoQIylsrq8COAQQ0BCnqISJuVQkv/3GZ2H?=
+ =?us-ascii?Q?rtha8vt6MPp35oIkhGxR3semeFXoCP65bGXpuxABBqsmzI1lfsaXpUUEH3Bk?=
+ =?us-ascii?Q?ueDaX/dsDKF5G0yEide67tZcANsxnPcjHRrXMYbo8OFiGxsmz2OVqpH7gjXU?=
+ =?us-ascii?Q?DB6Av3/a4OOd50/ZIYiTCiNXj5EHrHKJv2hD6XPfeB5zYUhG187Syw40OWet?=
+ =?us-ascii?Q?brs6eN5CAqyqfGARmdDchS1R6NWipx98tTZanj6pEILgMdAQnrVWP1QeAZTC?=
+ =?us-ascii?Q?3zXkBAbXGYUWNvNoxfnxSvQZTqry1Q62xyRCfy7ZWMnY4uDyObxWDuvd8vzS?=
+ =?us-ascii?Q?osHke0IDRv5k9AmMalEJ1cPQNXt0TxPSR83QPNTieeENGkScRFPCJ7AFXpeH?=
+ =?us-ascii?Q?D3vAnlaXUvX0ShUlc/37a28KT0sffQAjVue/ATbN2/dGTF/KWeLfHdw9Z0NA?=
+ =?us-ascii?Q?gH09XCjRBOXyG/m44VhIwcdb55fyffJDq4jWWwAPbys9KjVKK9AHn5oAwQp8?=
+ =?us-ascii?Q?y97Sqj7L7Hw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR08MB3937.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?w86nlBfMjn0oC7RomloMo9EZFWQEh8vx6GPvDd8T1lBaAgQ8T0qpzUEr08qT?=
+ =?us-ascii?Q?vS1DXqgW0jJLDkjl4Vp4h/LN0IaOPDX5hGK+ZEvXARDLhJkcc4k4nbFMJuV8?=
+ =?us-ascii?Q?Tiq4We/cyVzSjd9NaUAURIlG3A3Zt8JgNMl573XMgz3tAW16ThQTKqzZ26Jg?=
+ =?us-ascii?Q?CfuQbKF0+cI6HZ0mFEWg2jIE6WKjUGv6RfoPsQG7ozYMbmSODAWvujA9g6u4?=
+ =?us-ascii?Q?PBKtPk0Qq8bHT7AWQx8dGj3AUq6yLG2AAJIkPVP1lrTxUJeKrrx8iDdMLtno?=
+ =?us-ascii?Q?+1Sp9YV6EgFORhV/A/bXXEUsbJxfygYeM/HcpzpZGOeAG+rI598P9BpnvIJy?=
+ =?us-ascii?Q?xRb5/CVnWV7VBXsUT/1bVD49kJUFm8HEHm8/ulJMYUL9fgVaxr8nz4jZwVwn?=
+ =?us-ascii?Q?Uwo+UM3rKP8mnyBze+7S8kyMfUtmB4L8QXkAxpXMNGdjRUmLbLSNawUNjTq6?=
+ =?us-ascii?Q?Ponf3WPwy+idj1jlPIvV4+s21kpKYqE3VVNjwjW7IW+vwstN7vwVNwE9MBTW?=
+ =?us-ascii?Q?Pvz3OiugTDpXB5FDRjoXHH+SDQzGKdIa5RKRvRumUXHaAqeGmSiN26JEkwrt?=
+ =?us-ascii?Q?OhCenwulh5+8cxPxaaNAk1kE9vkyYDmn+bhEHGRCLIlfY4wkwVoREMuPOWJf?=
+ =?us-ascii?Q?iR+c65iSHpFDtvB15KxtN5oZWZrvdEQx3G73L4BWmmdMyDoXxtKklf5DaLRG?=
+ =?us-ascii?Q?F7wYwyDQ16Nyj83rCrPZ548uS88EEMMuxJcrrgOxNQ5wbHkRfxQ+9Vvcprpf?=
+ =?us-ascii?Q?XZp9A2aRS7YQlTpBDDkotZp4MXZdacVzsOd6tpau2MNS9VquhtqyBM9gR/7y?=
+ =?us-ascii?Q?WsmXGSJqB4Iko/GjBp6YIqfyZ62Wy5GyprwjRFpE+7DeTOHpO0vh4RqALHAI?=
+ =?us-ascii?Q?ZeKE13IJbcGLIuHlqGErUc1lVJicynl+NQJoicaAHItAfoC8A5aNs//X3+Cv?=
+ =?us-ascii?Q?dvTz/pvsGUbqQcabmmPuNWuYbRl+qFXCurOOHAh+6Yok9I1LPAz1NCgdl43/?=
+ =?us-ascii?Q?JAMlpUrYIpfZ4bSzmtrUazHooUj/bTQjma48/eqLDSO1jAHT/QKZaeMdYKxf?=
+ =?us-ascii?Q?wLg69YfbvECI4baTYrVyPgJtTDCkce8SjadPAYXCvcAVnrABrhqiECl/tict?=
+ =?us-ascii?Q?mJ0ueja5Vh/15Qw4NN3mVTXkJfjpHkjeRs2pfktuhIFyAHzQZ6+sSoanSZrV?=
+ =?us-ascii?Q?8uPLmUPXqlqinsF0+0DOusN9kDJyODRwIoSXTsFpj5wKXeDeJHY/yw0K+VUY?=
+ =?us-ascii?Q?t3BM7y5ynf1ZFneL4iL1qJLGL7Kpa/FveTtPN2gsBEHpRyDW1LRQY8sTwz43?=
+ =?us-ascii?Q?M4wUvtXBsNzGNoR1BXO8YdXcpcZ6OZvsw5ZfQcj9M1jZz2KpmcRnNNOkNaYl?=
+ =?us-ascii?Q?8xZ3IsTkrn2IhsKkmgLGi0CUmkTD8cy25sGOMZUUz96ZlIDFNugdHwgqUIjl?=
+ =?us-ascii?Q?BX3DO00EWMyzupyUqbqvDzNUljaEqoJamPrEu2toES95zGcVh7xd48NnLfbI?=
+ =?us-ascii?Q?4vXh6QIr7+ojO1sfqLjbVy+zuV4r/ZpRDHX0CxffW4ESbaJkxmoD6Erp6uhe?=
+ =?us-ascii?Q?PRD6aytlhqD613yD6OHIsyTDZj5ufV7CwrThSnKo?=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbb2a59e-4181-470e-7640-08dd7f90b0fe
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR08MB3937.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 22:22:38.1639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mt9nT9fqD5hz2n1gG0WBRR4CT1dXsusLIhQyIOrWvBdrkUkehPgJmg0/CT1uf1Bt6Gi8nYHnvEOsapsN7WUbMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR08MB10067
 
-On 04/17, Gabriel Shahrouzi wrote:
-> According to the AD9832 datasheet (Table 10, D12 description), setting
-> the RESET bit forces the phase accumulator to zero, which corresponds to
-> a full-scale DC output, rather than disabling the output signal.
+Hi Purva,
+
+On Sun, Apr 20, 2025 at 01:34:34AM +0530, Purva Yeshi wrote:
+> Fix Smatch-detected issue:
+> drivers/input/touchscreen/iqs5xx.c:747 iqs5xx_fw_file_parse()
+> error: hex2bin() 'rec->len' too small (2 vs 4)
 > 
-> The correct way to disable the output and enter a low-power state is to
-> set the AD9832_SLEEP bit (Table 10, D13 description), which powers down
-> the internal DAC current sources and disables internal clocks.
+> Fix incorrect second argument to hex2bin() when parsing firmware records.
 > 
-> Fixes: ea707584bac1 ("Staging: IIO: DDS: AD9832 / AD9835 driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> Pass a pointer to the ASCII hex data instead of the u8 record length to
+> hex2bin(), which expects a pointer, not an integer. The previous code
+> passed rec->len as the second argument, leading to undefined behavior
+> as hex2bin() attempted to read from an unintended memory address.
+> 
+> Cast the entire rec structure to a const char * using a new pointer
+> rec_bytes. Skip the initial ':' character in the Intel HEX format by
+> passing rec_bytes + 1 to hex2bin(). This allows the function to decode
+> the 4-byte record header (length, address high, address low, and type)
+> correctly from its ASCII hex representation into binary form.
+> 
+> Preserve the original code flow while ensuring correctness and resolving
+> the issue detected by Smatch.
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 > ---
-Looks okay.
+>  drivers/input/touchscreen/iqs5xx.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/iqs5xx.c b/drivers/input/touchscreen/iqs5xx.c
+> index 4ebd7565ae6e..e8140a54685f 100644
+> --- a/drivers/input/touchscreen/iqs5xx.c
+> +++ b/drivers/input/touchscreen/iqs5xx.c
+> @@ -744,7 +744,9 @@ static int iqs5xx_fw_file_parse(struct i2c_client *client,
+>  			break;
+>  		}
+>  
+> -		error = hex2bin(rec_hdr, rec->len, sizeof(rec_hdr));
+> +		const char *rec_bytes = (const char *)rec;
+> +
+> +		error = hex2bin(rec_hdr, rec_bytes + 1, sizeof(rec_hdr));
+> +
+>  		if (error) {
+>  			dev_err(&client->dev, "Invalid header at record %u\n",
+>  				rec_num);
+> -- 
+> 2.34.1
+> 
+> 
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Thank you for the patch! I appreciate your having investigated this
+warning, but this patch is a NAK. I can't speak to why Smatch thinks
+there is a problem here, but we can see from the definition of the
+struct 'iqs5xx_ihex_rec' that 'len' is indeed a pointer:
 
-Unrelated to this patch but, if anybody be looking to work on getting this out
-of staging, I think maybe this driver could use out_altvoltage_powerdown ABI
-instead of this custom out_altvoltageX_out_enable.
-Crazy thing this driver doesn't declare a single IIO channel.
-Seems to be somewhat ancient IIO driver.
+        char len[2];
 
-Regards,
-Marcelo
+I also checked with actual HW on latest kernel that FW updates still
+work just fine. The following line ensures we are looking at a valid
+memory location when locating the 'src' pointer:
+
+        rec = (struct iqs5xx_ihex_rec *)(fw->data + pos);
+
+In case I have misunderstood, please let me know.
+
+Kind regards,
+Jeff LaBundy
