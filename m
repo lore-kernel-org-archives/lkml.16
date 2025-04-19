@@ -1,63 +1,62 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063432B9CD
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50219343B
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745076108; cv=none; b=d8skScFMbp0GBqJjzKHCXvjw3amh1i+eR6ezpzQDxuPCkR/iUYIcgcSdUGuX2OeN6ts6my/MsRHvk0aimJi9XvQVgFmjR80j8NJjcJNlCE+1PRQ80d2K78D6RDY8Qts6DbqFR0yeM6UIdovcVzmMYYBr1JHRK18jo3v1M0AQ0pE=
+	t=1745076128; cv=none; b=j8BhY84kf3Ks+fE6s8XXRovTT6SNnIVLHYhrQb7hk2uVAjqdDA/gl2MYIQj+xucn3vOw0eYR5dGA9LtiL20O1QXa5EXGFgAUEeWYrv5qz6FXeD0OTMgWcUTi+DxEb3p6xCg+h3S78NfegkK0372nJcqCAUA8MEzSE2MINQAfWMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745076108; c=relaxed/simple;
-	bh=lSV8rRyHZ6dAi93S48PR/v++SJn4bGAMINRJFduCmGc=;
+	s=arc-20240116; t=1745076128; c=relaxed/simple;
+	bh=MogfJOt1bBZYoqAVNlvVZWq0v58Entr788DqatBCldg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHRJA8H+OoY2vP4wpeaFw8Z2hToDSuHbs+gwpV6b9qppmUT3qUnxGYvmyAYf4JwWjpLkvS7jGzPlcmi9R+yLE6eIVNmO/2tkV797HnsqYFee8uZSja4TTK2xjAd2AXLcIIJRfQn/bNHAmfKzElVaMqPe24IbxUH/sog9aGOHI54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IrsVmLDi; arc=none smtp.client-ip=198.175.65.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8u4lsfoYg/a7NNYGDF0gk3cRr9HtWGKA44iWXpGAUI+ON6usuHaLo1+OaK0QaKpnSkKGQM/aOW+OcpML1ZvW3jIwtvf0WpmI9+WzNNGCBAGs3pyA8NvdxJwTf/VuJNZQPA9OhSlYhutmG78kzfooWlqJfJ5Q1MS7e3BrNK7DNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9Oj2r3q; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrsVmLDi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9Oj2r3q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745076107; x=1776612107;
+  t=1745076126; x=1776612126;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=lSV8rRyHZ6dAi93S48PR/v++SJn4bGAMINRJFduCmGc=;
-  b=IrsVmLDitWxdLGl61bJQ0vLkYk7OLKFKFUNhPztNbydZPo8DNXMJiXCp
-   q+Cb2OtsN88qc9IYx5cNBrOkZJIHy6V2Ejf1OD3FIlQSQ6VZz6J/8bAPR
-   RdaVRKUnpYPslf4aD8lIIY18TXW/Y8Dt/MI8JN0K/QI8UjJx5HAmbLmbc
-   ruzpw8gq9iYUH+ivw2ebFt/KBXDQ9//ybgYqJRaomVdfdanU2aXOhuAeB
-   Gfqi2691OuvJrUKi3j9xEPQRuqW+NXzgKVP/o2Aavt91Dpq2t/2Er2JuJ
-   OipsN0acdOJkRHWPwqUr+KqoXhhE1PuFKhGPnlEEQTcGYacEnFMzDHwfR
+  bh=MogfJOt1bBZYoqAVNlvVZWq0v58Entr788DqatBCldg=;
+  b=m9Oj2r3qSdjmfldaTVxnY3hL75rQg3vTfFnrRFhB08uRc678k4LImf4K
+   ko6GdY4MxPcA/KiVkb8giFX/fUvU3TWRNf2eg3I3cg0PlBsblzzFnT2Rs
+   PhWjnP2PcHsqle3Oq3748f+BvEvyOR4rbKeMlj9JAq/3dj+xRANCbEFsy
+   GvQ33sZljn3ujWh6c5oZln3WQT9z4pCuNOljAq6FS0SH+JUAkDJDGU2Hz
+   TAwLwxHLoBMURGn490dx5XFxARu3RamIX4zDEfvIhwGJUg3xNwsO2DXaG
+   Go2rVmqo/LBB9RDOo1BC68b1f/SSDC8MDQBPQhzqpHulXh6Og1PxI5tWP
    w==;
-X-CSE-ConnectionGUID: pO3rflUcSumO4gZy3WoT0A==
-X-CSE-MsgGUID: y81kSV+dS7W0ZT/diAxrtw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806278"
+X-CSE-ConnectionGUID: PxwpclEKQBSJBNcnOuuY6w==
+X-CSE-MsgGUID: eACzxnGwR2urIcZlcijmVA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806293"
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="46806278"
+   d="scan'208";a="46806293"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:21:47 -0700
-X-CSE-ConnectionGUID: FJJofWCZR9CFitWUo59J1A==
-X-CSE-MsgGUID: bDbWT53+SFmdWvcc18cSeg==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:22:06 -0700
+X-CSE-ConnectionGUID: hsGIN0NdTA+QtNop4+8mzQ==
+X-CSE-MsgGUID: 8S430m31SpWuVhW510ILfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
-   d="scan'208";a="154516420"
+   d="scan'208";a="154516484"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:21:45 -0700
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:22:03 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u6A0k-0000000Dqki-01Wu;
-	Sat, 19 Apr 2025 18:21:42 +0300
-Date: Sat, 19 Apr 2025 18:21:41 +0300
+	id 1u6A12-0000000Dql6-3Ok8;
+	Sat, 19 Apr 2025 18:22:00 +0300
+Date: Sat, 19 Apr 2025 18:22:00 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: xiaopeitux@foxmail.com
 Cc: linux-kernel@vger.kernel.org, f.fangjian@huawei.com, robh@kernel.org,
 	john.g.garry@oracle.com, xuwei5@hisilicon.com,
 	Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH 2/2] logic_pio: Add detailed comments for find_io_range()
- and logic_pio_trans_cpuaddr()
-Message-ID: <aAO_hdYdKW1_Z-T8@smile.fi.intel.com>
+Subject: Re: [PATCH 1/2] bus: hisi_lpc: remove unused head file in hisi_lpc.c
+Message-ID: <aAO_mIY99CMH4o8d@smile.fi.intel.com>
 References: <cover.1744964101.git.xiaopei01@kylinos.cn>
- <tencent_CDDCEC54C190265E5927ED7353AE68116A08@qq.com>
+ <tencent_8024B8D7E209E31C8E2B5AC411B70C551106@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,20 +65,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_CDDCEC54C190265E5927ED7353AE68116A08@qq.com>
+In-Reply-To: <tencent_8024B8D7E209E31C8E2B5AC411B70C551106@qq.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 18, 2025 at 04:51:45PM +0800, xiaopeitux@foxmail.com wrote:
+On Fri, Apr 18, 2025 at 04:51:23PM +0800, xiaopeitux@foxmail.com wrote:
 > From: Pei Xiao <xiaopei01@kylinos.cn>
 > 
-> Add comments that we were previously overlooked for find_io_range()
-> and logic_pio_trans_cpuaddr().
+> linux/console.h,linux/io.h,linux/pci.h,linux/slab.h
+> are not used, this patch removes it.
 
-You haven't run definitely the kernel-doc validator. There are missing Return
-sections. And even style for returned value description differs in two...
-
-Also, you have an issue with your tools, the cover letter is detached from the
-patches. Please, take your time and fix that.
+Definitely you haven't tested this...
 
 -- 
 With Best Regards,
