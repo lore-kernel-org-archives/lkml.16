@@ -1,168 +1,129 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239D93232;
-	Sat, 19 Apr 2025 00:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33953232
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 00:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745022134; cv=none; b=RQCa/DnH8/SZunkW4blM0uvNK8OxuLSE1O2bWZ9pbOfVhY86lZRMoE+Bn/Cwt5UBKoaA2TNlB5A+JeDX6p4sk16b9mDDZuqZmBrNZ0+jXY8TLte4vcJCMwzWS5XTzp3Mo1d2J8XY1VU4hBtL5DnlFPK4HyqqFHn+EXr4wlA2Mkg=
+	t=1745022212; cv=none; b=ci42yx1ovQlRNVvAtglCOchm4Eg3wIAdmtaByGnbidMTMdzHQhVshEUEJg9laWfWr9szd2UVAV8iMPEymL7zM7vnkxoS1lK12TLpFoIr/gENCuskhEngPPGhJ0GfQWCocftLa7W3RxzApaKMTef29fhJxYtxNtqepPuNcmdazSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745022134; c=relaxed/simple;
-	bh=sady8YJRJXVmxiHPDhDApwxkv6YC6fPfISQ6M56Cvbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVA/R4e1jrLDtcOsmKJa6tdRu30szSbBu1susgDW+dG/uG18IhnzFuUBO7FvddgwFtK+PpI7k8TEfQ9+x/DoKqCCPhrhtJrE7WNUfuzR/q3WEIUZ2AJBQCcP1BBWz60MuCMnrSLcr1ObeR5W51xCXSKS+61YzSbhrQH72Tw9kLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=kjZR2+Wq; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745022212; c=relaxed/simple;
+	bh=ZfvvuouS4E2kMmqXo8fFvosbAuq9IeCZu9j7vLtFTIU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OjlZKW7TjQvtFS8Zm+NUxkYbtlAJp7rSO8UsacDr8NHqLR14PsL0wGgu+Hy/Qo8pJXFde9Dh21sNm0AzL4WoRVJ/u6Dpu1YApBYkgd5CVsUNsZttlsD6bMesBey3IPqVaeD9amwaDXR8KiJQSm3rsAlWLULiWP7G/rOy/n7YnNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FNtKOr5j; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="kjZR2+Wq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=otKc+S46bwpVZkZBNdXVAJNZQaZf6mFC5EJT8PDuBQc=; b=kjZR2+WqTKAuaTvR
-	E2vLv3V4bsCtYV/mUl6P8zTXoMFLuPu5HMhN6RVhOcm7jZGg/FHBLahDO+dl/FccD1x6w9Pfx346D
-	//wKlz1T8phK0kvl5tzFUxAA+XHPgyM5AgTKyH4UEFUg1Ho1PdnZ3ZSbI3hZgPG1a3S3z1QacaMYY
-	C+8Rura3O8VnvRkbXIEp+i5bk+yBNcp4psSN+3mvo9NRmT9lxXH4WApMj1xAhNV3RE805cQQud+aJ
-	4vHawoE7Ok51FGo+tmw5JNQfYJBqTa2bJWre1cD6LFc9q4SkpIJkgArEG24Az40XdezEuvTpofrJe
-	e3ofR0AGuqP/5qVCpQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u5vy9-00Cbg0-0t;
-	Sat, 19 Apr 2025 00:22:05 +0000
-Date: Sat, 19 Apr 2025 00:22:05 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: zyjzyj2000@gmail.com, jgg@ziepe.ca, leon@kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/rxe: Remove unused rxe_run_task
-Message-ID: <aALsrZxAqhwxDD7d@gallifrey>
-References: <20250418165948.241433-1-linux@treblig.org>
- <bf07ce66-32e8-4069-894a-7eff120a07ff@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FNtKOr5j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745022211; x=1776558211;
+  h=date:from:to:cc:subject:message-id;
+  bh=ZfvvuouS4E2kMmqXo8fFvosbAuq9IeCZu9j7vLtFTIU=;
+  b=FNtKOr5j9WSQK+bm+BMFopX28/X5xDDoBr9llh2GTG4J94bHkW7+tRh8
+   TCmGZIAkyTx3quVDwOPZNgImnNDbMLtsooubLbtXPrwJVVCE31wopAWZh
+   fRy0UT0s3N2aul78SL55on8C2QHw7ci08Zrsyp7wvxl+YO9ZpkSyW+Ss8
+   LxX/lK6kwScP9KDfmiI1SOf/Vpc70HbDjhP4EX4rk/oy4IuqJPkj9x1zg
+   aXuJUJOZfs6qQdQbrkZ9yb1FKWpHC3txbhujbojis0pSUs9YCB8srwWrp
+   LLrH/OwwU7s7hiJv2jt2UvppxvdBJz6S/PlI3gd7flF2uaVqcMrY5YjRM
+   A==;
+X-CSE-ConnectionGUID: CwjSV6k9R8yV5JtF2ZoHeQ==
+X-CSE-MsgGUID: rK6fd5rOTGmWC249vWFPoA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46536027"
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="46536027"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 17:23:30 -0700
+X-CSE-ConnectionGUID: gvt3B8hfQUWKj0D5M8j52Q==
+X-CSE-MsgGUID: lE7Ku45BSEi2h76jtb6Raw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="131188946"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 18 Apr 2025 17:23:29 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u5vzS-0003SG-2j;
+	Sat, 19 Apr 2025 00:23:26 +0000
+Date: Sat, 19 Apr 2025 08:23:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev] BUILD SUCCESS
+ 8245d618b99640981d122aea615cc9a37bb81cc8
+Message-ID: <202504190855.dqpx6eBz-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bf07ce66-32e8-4069-894a-7eff120a07ff@linux.dev>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 00:18:27 up 345 days, 11:32,  1 user,  load average: 0.00, 0.00,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
 
-* Zhu Yanjun (yanjun.zhu@linux.dev) wrote:
-> 在 2025/4/18 18:59, linux@treblig.org 写道:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > rxe_run_task() has been unused since 2024's
-> > commit 23bc06af547f ("RDMA/rxe: Don't call direct between tasks")
-> > 
-> > Remove it.
-> > 
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+branch HEAD: 8245d618b99640981d122aea615cc9a37bb81cc8  rcutorture: Print only one rtort_pipe_count splat
 
-Hi,
+elapsed time: 1453m
 
-> Thanks a lot. Please add the Fixes tags.
-> Fixes: 23bc06af547f ("RDMA/rxe: Don't call direct between tasks")
+configs tested: 52
+configs skipped: 0
 
-Thanks for the review;  I've tended to avoid the fixes tag because
-people use 'Fixes' to automatically pull in patches to stable or
-downstream kernels, and there is no need for them to do that for
-a cleanup patch.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> And in the following comments, the function rxe_run_task is still mentioned.
-> "
->  86 /* do_task is a wrapper for the three tasks (requester,
->  87  * completer, responder) and calls them in a loop until
->  88  * they return a non-zero value. It is called either
->  89  * directly by rxe_run_task or indirectly if rxe_sched_task
->  90  * schedules the task. They must call __reserve_if_idle to
->  91  * move the task to busy before calling or scheduling.
->  92  * The task can also be moved to drained or invalid
->  93  * by calls to rxe_cleanup_task or rxe_disable_task.
->  94  * In that case tasks which get here are not executed but
->  95  * just flushed. The tasks are designed to look to see if
->  96  * there is work to do and then do part of it before returning
->  97  * here with a return value of zero until all the work
->  98  * has been consumed then it returns a non-zero value.
->  99  * The number of times the task can be run is limited by
-> 100  * max iterations so one task cannot hold the cpu forever.
-> 101  * If the limit is hit and work remains the task is rescheduled.
-> 102  */
-> "
-> Not sure if you like to modify the above comments to remove rxe_run_task or
-> not.
+tested configs:
+arc                  randconfig-001-20250419    gcc-14.2.0
+arc                  randconfig-002-20250419    gcc-14.2.0
+arm                  randconfig-001-20250419    gcc-6.5.0
+arm                  randconfig-002-20250419    gcc-7.5.0
+arm                  randconfig-003-20250419    clang-18
+arm                  randconfig-004-20250419    gcc-7.5.0
+arm64                randconfig-001-20250419    gcc-7.5.0
+arm64                randconfig-002-20250419    gcc-9.5.0
+arm64                randconfig-003-20250419    gcc-5.5.0
+arm64                randconfig-004-20250419    clang-21
+csky                 randconfig-001-20250419    gcc-11.5.0
+csky                 randconfig-002-20250419    gcc-11.5.0
+hexagon              randconfig-001-20250419    clang-21
+hexagon              randconfig-002-20250419    clang-21
+i386       buildonly-randconfig-001-20250419    gcc-11
+i386       buildonly-randconfig-002-20250419    gcc-12
+i386       buildonly-randconfig-003-20250419    clang-20
+i386       buildonly-randconfig-004-20250419    clang-20
+i386       buildonly-randconfig-005-20250419    clang-20
+i386       buildonly-randconfig-006-20250419    clang-20
+loongarch            randconfig-001-20250419    gcc-14.2.0
+loongarch            randconfig-002-20250419    gcc-14.2.0
+nios2                randconfig-001-20250419    gcc-7.5.0
+nios2                randconfig-002-20250419    gcc-11.5.0
+parisc               randconfig-001-20250419    gcc-10.5.0
+parisc               randconfig-002-20250419    gcc-14.2.0
+powerpc              randconfig-001-20250419    gcc-5.5.0
+powerpc              randconfig-002-20250419    gcc-9.3.0
+powerpc              randconfig-003-20250419    gcc-5.5.0
+powerpc64            randconfig-001-20250419    gcc-5.5.0
+powerpc64            randconfig-002-20250419    gcc-10.5.0
+powerpc64            randconfig-003-20250419    clang-21
+riscv                randconfig-001-20250419    gcc-14.2.0
+riscv                randconfig-002-20250419    clang-21
+s390                 randconfig-001-20250419    clang-21
+s390                 randconfig-002-20250419    gcc-7.5.0
+sh                   randconfig-001-20250419    gcc-5.5.0
+sh                   randconfig-002-20250419    gcc-11.5.0
+sparc                randconfig-001-20250419    gcc-12.4.0
+sparc                randconfig-002-20250419    gcc-8.5.0
+sparc64              randconfig-001-20250419    gcc-8.5.0
+sparc64              randconfig-002-20250419    gcc-10.5.0
+um                   randconfig-001-20250419    clang-19
+um                   randconfig-002-20250419    gcc-12
+x86_64     buildonly-randconfig-001-20250419    gcc-12
+x86_64     buildonly-randconfig-002-20250419    gcc-11
+x86_64     buildonly-randconfig-003-20250419    gcc-12
+x86_64     buildonly-randconfig-004-20250419    gcc-11
+x86_64     buildonly-randconfig-005-20250419    gcc-12
+x86_64     buildonly-randconfig-006-20250419    clang-20
+xtensa               randconfig-001-20250419    gcc-10.5.0
+xtensa               randconfig-002-20250419    gcc-8.5.0
 
-Would it be correct to just reword:
->  88  *                               It is called either
->  89  * directly by rxe_run_task or indirectly if rxe_sched_task
->  90  * schedules the task.
-
-to:
-   It is called indirectly when rxe_sched_task schedules the task.
-
-> Except the above, I am fine with this commit.
-
-Thanks!
-
-> Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-
-Dave
-
-> Best Regards,
-> Zhu Yanjun
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >   drivers/infiniband/sw/rxe/rxe_task.c | 18 ------------------
-> >   drivers/infiniband/sw/rxe/rxe_task.h |  2 --
-> >   2 files changed, 20 deletions(-)
-> > 
-> > diff --git a/drivers/infiniband/sw/rxe/rxe_task.c b/drivers/infiniband/sw/rxe/rxe_task.c
-> > index 80332638d9e3..9d02d847fd78 100644
-> > --- a/drivers/infiniband/sw/rxe/rxe_task.c
-> > +++ b/drivers/infiniband/sw/rxe/rxe_task.c
-> > @@ -234,24 +234,6 @@ void rxe_cleanup_task(struct rxe_task *task)
-> >   	spin_unlock_irqrestore(&task->lock, flags);
-> >   }
-> > -/* run the task inline if it is currently idle
-> > - * cannot call do_task holding the lock
-> > - */
-> > -void rxe_run_task(struct rxe_task *task)
-> > -{
-> > -	unsigned long flags;
-> > -	bool run;
-> > -
-> > -	WARN_ON(rxe_read(task->qp) <= 0);
-> > -
-> > -	spin_lock_irqsave(&task->lock, flags);
-> > -	run = __reserve_if_idle(task);
-> > -	spin_unlock_irqrestore(&task->lock, flags);
-> > -
-> > -	if (run)
-> > -		do_task(task);
-> > -}
-> > -
-> >   /* schedule the task to run later as a work queue entry.
-> >    * the queue_work call can be called holding
-> >    * the lock.
-> > diff --git a/drivers/infiniband/sw/rxe/rxe_task.h b/drivers/infiniband/sw/rxe/rxe_task.h
-> > index a63e258b3d66..a8c9a77b6027 100644
-> > --- a/drivers/infiniband/sw/rxe/rxe_task.h
-> > +++ b/drivers/infiniband/sw/rxe/rxe_task.h
-> > @@ -47,8 +47,6 @@ int rxe_init_task(struct rxe_task *task, struct rxe_qp *qp,
-> >   /* cleanup task */
-> >   void rxe_cleanup_task(struct rxe_task *task);
-> > -void rxe_run_task(struct rxe_task *task);
-> > -
-> >   void rxe_sched_task(struct rxe_task *task);
-> >   /* keep a task from scheduling */
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
