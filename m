@@ -1,113 +1,131 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mail83.out.titan.email (mail83.out.titan.email [3.216.99.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB9554654;
-	Sat, 19 Apr 2025 03:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB627442C
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 04:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745035152; cv=none; b=sc6lXpKL9jPWGVeLeWk3VKSaQVsuugnWjr5RYQK4RerTUheQRLSsc+rXt/HvzWmxIbyfb044n/o8ihRUZ9flJPabciSGQfwn8VXwKL/6Ub2kArBYrwP7mCTsqBdtEpqlU9MradwleohyTWSnvBjEYiwQwhz2HnDneLJOWhmHZfw=
+	t=1745035276; cv=none; b=ZSVc5tB+78CoAstcYKf+vaoQw+Yu41ZbIGOdrVzRhw4nG5auEkaMiolKURR5Leqzm2NZJd+4f5E0dPB4aYNpRYN7LM6eUgPcQJ1RtlmCfiM8gmvjBuglP8mww4NPCYBbTjKgsvgE+6nv74Kz+W9IrN2qNj97sJKsvuXwghZ9YmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745035152; c=relaxed/simple;
-	bh=LAZLZXXR4fpH4UmJ7A0K0g2nbKcoE4qbISCBceZtsLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AjIM/EUsEE1TG/GIeovU5WSwc0iBwHfRz4XO0c7y32VpzXYWH/CQJ+dfqwnLJMy+KEkA2YegXfs6mhiPpx5qyVXnrxnTwsz2THMsy43qgQzedNR4NtWDDqQZJNd07wBLACqx9ohxDf0m/vvIR7L8OX5Rf9rJ7oTfeO6xAKUGlpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UtdRLOIu; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745035276; c=relaxed/simple;
+	bh=8vsWUbNInXOmJ6LkU6uCbJfr9BGsN9vSttRt6BzaTnU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Hpyjmn1aYIyIG6c5lWZDkziQd4SayVWHj3uolworMWxOFQ3AcBoV/zQtsEFEj1Gf7mKUpCA/YHnFa2VryrAR/5gb83PWWh3Dm8CN2z1VywOPNZXupYWnTAiQvGxAa5A9WZ3KV3BYTFH6Y57ATBJbzMVHb2osrjaPfThZGl/nk0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=oJhOnwfe; arc=none smtp.client-ip=3.216.99.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UtdRLOIu"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53J3x1jV1073856
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 18 Apr 2025 22:59:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745035141;
-	bh=OxIm5BWYRHWRtfm3BI4yfvGxCISf/AMNRZprOku6zEE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=UtdRLOIu0pJM/6XS5NGxLt3cnLdiygCDXQ/ujxTPjbsX+mBNG/QBs2WHXto0YAQZL
-	 QThe7bTqs19acGe17QtazFNyPc5lbM5uyEi2z7qus6Izdy7sAouZQIiL4SrAJJJ87J
-	 OOQsZeQy+LZ4UlN+sZPtfRMx2/LFe+O/hFviUXsQ=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53J3x1fX045034
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 18 Apr 2025 22:59:01 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 18
- Apr 2025 22:59:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 18 Apr 2025 22:59:01 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53J3wwhQ128798;
-	Fri, 18 Apr 2025 22:58:59 -0500
-Message-ID: <80b5867b-958a-41ff-854a-6a3173ddbdc0@ti.com>
-Date: Sat, 19 Apr 2025 09:28:57 +0530
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="oJhOnwfe"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp-out.flockmail.com (Postfix) with ESMTP id D13B760059;
+	Sat, 19 Apr 2025 03:55:26 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=bAvYi5ImaoxjDMe4vzylBlBmlqcUZYzHCYPKwoB87qI=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=from:in-reply-to:cc:to:mime-version:subject:references:date:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1745034926; v=1;
+	b=oJhOnwfeVOG8XG2+ePu+rd/hidWNokUuygMfqtb86FuyRwQz7ETjQwhTBXb7BCwtnAY3iYwH
+	Yh1+xXALoOaA+3snTLim7K46mUvpB+x3mwVCC6wrPZiKcHLJZgeMtxiTfm/uHx9NomZibAM/Ar/
+	VJgUsYz0lAVs9qpKOELp5Qy4=
+Received: from smtpclient.apple (unknown [43.161.241.230])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id C447160038;
+	Sat, 19 Apr 2025 03:55:23 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-common-proc-board: Add
- bootph-all to HBMC nodes
-To: Anurag Dutta <a-dutta@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>
-CC: <vaishnav.a@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250411082637.2271746-1-a-dutta@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250411082637.2271746-1-a-dutta@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v2] md/bcache: Mark __nonstring look-up table
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <20250418202130.it.887-kees@kernel.org>
+Date: Sat, 19 Apr 2025 11:55:10 +0800
+Cc: Coly Li <colyli@kernel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ linux-bcache@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <389A9925-0990-422C-A1B3-0195FAA73288@coly.li>
+References: <20250418202130.it.887-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1745034926648469019.5242.7544881322108761200@prod-use1-smtp-out1001.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=RvE/LDmK c=1 sm=1 tr=0 ts=68031eae
+	a=sdR4fqZNG57T/J2FY8bnUA==:117 a=sdR4fqZNG57T/J2FY8bnUA==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=VwQbUJbxAAAA:8
+	a=BDcCamcCxTd4Ojxa7JYA:9 a=QEXdDO2ut3YA:10 a=FvX_cx3yyqDC_9C4kSCW:22
 
 
-On 4/11/2025 1:56 PM, Anurag Dutta wrote:
-> Add bootph-all to HBMC controller and hyperflash nodes for successful
-> hyperflash boot on j721e-evm.
->
-> Signed-off-by: Anurag Dutta <a-dutta@ti.com>
+
+> 2025=E5=B9=B44=E6=9C=8819=E6=97=A5 04:21=EF=BC=8CKees Cook =
+<kees@kernel.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> GCC 15's new -Wunterminated-string-initialization notices that the 16
+> character lookup table "zero_uuid" (which is not used as a C-String)
+> needs to be marked as "nonstring":
+>=20
+> drivers/md/bcache/super.c: In function 'uuid_find_empty':
+> drivers/md/bcache/super.c:549:43: warning: initializer-string for =
+array of 'char' truncates NUL terminator but destination lacks =
+'nonstring' attribute (17 chars into 16 available) =
+[-Wunterminated-string-initialization]
+>  549 |         static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+>      |                                           =
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Add the annotation (since it is not used as a C-String), and switch =
+the
+> initializer to an array of bytes.
+>=20
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->
-> Test logs : https://gist.github.com/anuragdutta731/90a492589557c2ec2881e1de50a62006
->
->   arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> index 4421852161dd..9ada749f16ba 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-> @@ -570,6 +570,13 @@ &usb1 {
->   	maximum-speed = "high-speed";
->   };
->   
-> +&hbmc {
-> +	bootph-all;
-> +	flash@0,0 {
-> +		bootph-all;
-> +	};
-> +};
+> v2: use byte array initializer (colyli)
+> v1: =
+https://lore.kernel.org/all/20250416220135.work.394-kees@kernel.org/
+> Cc: Coly Li <colyli@kernel.org>
+> Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: linux-bcache@vger.kernel.org
+> ---
+> drivers/md/bcache/super.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> index e42f1400cea9..a76ce92502ed 100644
+> --- a/drivers/md/bcache/super.c
+> +++ b/drivers/md/bcache/super.c
+> @@ -546,7 +546,8 @@ static struct uuid_entry *uuid_find(struct =
+cache_set *c, const char *uuid)
+>=20
+> static struct uuid_entry *uuid_find_empty(struct cache_set *c)
+> {
+> - static const char zero_uuid[16] =3D =
+"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+> + static const char zero_uuid[] __nonstring =3D
 
-Could you check once , if this is duplicated
+I notice zero_uuid[16] changes to zero_uuid[], then the element number =
+information is removed.
 
-commit fbdb8aa4eab84 "arm64: dts: ti: k3-j721e-evm*: Add bootph-* 
-properties"
+Is it OK for GCC 15 to only add __nonstring and keep zero_uuid[16]?
 
-adds bootph-all in arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi file for 
-flash.
+Thanks.
 
-AFAIK, parent node should inherit property of child for bootph.
+Coly Li=20
 
-In case you are not getting in u-boot then u-boot shall fix this[0]
 
-[0] : https://lore.kernel.org/all/20250327080642.2269856-1-m-shah@ti.com/
+> + { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+>=20
+> return uuid_find(c, zero_uuid);
+> }
+> --=20
+> 2.34.1
+>=20
+>=20
 
-> +
->   &ospi1 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
