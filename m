@@ -1,124 +1,98 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EA9647;
-	Sat, 19 Apr 2025 13:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A3F1BC5C;
+	Sat, 19 Apr 2025 13:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745069291; cv=none; b=erFzAkrcvAk6/tjLYi5jSREJZJMYq3F/SL92wQnT2LY4zAHl2siUyPcxmTkzTyiQjt2CAJfgFuj+AbYgKuqmC1Od6UIE9D6JMUmB/wfFPIowKnhzWN7ZTL6zCiTXyTkQZJTg78/gOOV4WCAKdiyA3YTZjzXvnFc08CrQtQ9m2qs=
+	t=1745069501; cv=none; b=h2BCThbJHt4k+JePhsDbVuIgJ7pNKOWl7M9PZv6Rgq6VOOM4thqUrhYlRTwvzqBixp50jTuoQB5CHzZvW026A3rFHO/t1wSAufav9IDYYwPRJxdaUKb9ZSLf/hWlWlAQyEv0oV3wp1LJO/7GgH4aKvqHkUpVfPBs/Da4PVjtquc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745069291; c=relaxed/simple;
-	bh=9+MUCOkMNe7ZGVgFobC7L30f9g9LsTmflVbc/x2KK0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJGMt95heb8z9TDTfBUvuh7EiGS9qpWd0w3QfOrWTkvSRdyBMJMObqVoGmoAC3n3izUu8hTIybjbGYWNW59x4lnk8C+z6FgGi/xiczGr00Ms1yatnO1d6JysAUhB3qd8cwOHYt1XwgFCmERDEExO2Ou2MRzjS6FxppwqXBnvwg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=E7RzjPvu; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745069501; c=relaxed/simple;
+	bh=ssXIJJuGP95RkgCpmKHU+tZmzEYFmzhw+s+rRGRogrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sgVr9CrApjJqruubZzLh8/Fx+rSq43HSeM0WxIJGZLNGlfmFqzALPT5Ee4A81YHMmsYv2dXah9qqwQ/VTv35ImwDLyowng5u9ON3t5kPSvuKWCj4lD0uui1Udnc3+IlNpfsiAIDAzeXpv092fbpvJxKIKH5h0UA+Fh34lnef5g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iH28avn5; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="E7RzjPvu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=sk3WbHpmlLdAK/d30vMNt7YLt8OIuLlvE8a6+eKsOuc=; b=E7RzjPvuH7p5UObn
-	Onai09uGmjku+kCixEEtoGp0LoAr9+VGZ0dQDkdssdfFao2XsM0gWJuv7mXLdu4kgyWOEdenKa7jL
-	KCh9xbwj9MRIZmY5tTQnfYONspaHmlUypOc8SCZkPlEIoWNw/sBHr//BBZH2EUh5SCT1XoBJ533qj
-	WQIGSmeXRH9Yw2uwncJW8p5qFnKX01mBl2ovZgdDDw+jPSk9fD/2QOx1AhLxsqg4i+xQ8I2v2hUMe
-	I1nLgL6y911kBUGhuqTVu2SnqI/YtCW5fpcuckR4JWBrtBJUrE8IKB80obV8W8SSdq7ivwA8kuAel
-	AwKl0F5Y54WXiqUwPg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u68Eo-00CeU1-2z;
-	Sat, 19 Apr 2025 13:28:06 +0000
-Date: Sat, 19 Apr 2025 13:28:06 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Zhu Yanjun <yanjun.zhu@linux.dev>
-Cc: zyjzyj2000@gmail.com, jgg@ziepe.ca, leon@kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/rxe: Remove unused rxe_run_task
-Message-ID: <aAOk5iI8oyatlz4R@gallifrey>
-References: <20250418165948.241433-1-linux@treblig.org>
- <bf07ce66-32e8-4069-894a-7eff120a07ff@linux.dev>
- <aALsrZxAqhwxDD7d@gallifrey>
- <7ca8fd94-da46-40ad-8ced-31fe033ee100@linux.dev>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iH28avn5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=aV77m
+	p3/Eh1DGD/CUm+p8HEbcIqk8afWhv5HTlvgT6c=; b=iH28avn58vigPgrFxGndf
+	5FsCVpP6yq9qdnH4zeX1F6frMbjdguMcogQkrpoWzszqPHzjN+8OuvdHBQxbcx++
+	DCNhnkcMwmEGWu0lV0kxER4IdG5/VzF5eXATgzgdC1KAIylfha227FqOhTkKdsEp
+	ZaR2dQbMQ7xkOiJhbAXbgo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAXnlSVpQNokyeUBA--.14018S2;
+	Sat, 19 Apr 2025 21:31:02 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	s-vadapalli@ti.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
+Date: Sat, 19 Apr 2025 21:30:58 +0800
+Message-Id: <20250419133058.162048-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ca8fd94-da46-40ad-8ced-31fe033ee100@linux.dev>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 13:27:51 up 346 days, 41 min,  1 user,  load average: 0.07, 0.02,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+X-CM-TRANSID:_____wAXnlSVpQNokyeUBA--.14018S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw18ArWUXryDXr18Cr15urg_yoW8XF1UpF
+	ZFgryxJ3WfXayYvan7Z3ZrXFyayasxt34DJ392kw1fZF13C3yUtrsFkFyjqFy7KrZFqr13
+	J3WqqasxCF45JFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zi7PE3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx80o2gDoOGcEwAAs2
 
-* Zhu Yanjun (yanjun.zhu@linux.dev) wrote:
-> 在 2025/4/19 2:22, Dr. David Alan Gilbert 写道:
-> > 
-> > Hi,
-> > 
-> > > Thanks a lot. Please add the Fixes tags.
-> > > Fixes: 23bc06af547f ("RDMA/rxe: Don't call direct between tasks")
-> > 
-> > Thanks for the review;  I've tended to avoid the fixes tag because
-> > people use 'Fixes' to automatically pull in patches to stable or
-> > downstream kernels, and there is no need for them to do that for
-> > a cleanup patch.
-> > 
-> > > And in the following comments, the function rxe_run_task is still mentioned.
-> > > "
-> > >   86 /* do_task is a wrapper for the three tasks (requester,
-> > >   87  * completer, responder) and calls them in a loop until
-> > >   88  * they return a non-zero value. It is called either
-> > >   89  * directly by rxe_run_task or indirectly if rxe_sched_task
-> > >   90  * schedules the task. They must call __reserve_if_idle to
-> > >   91  * move the task to busy before calling or scheduling.
-> > >   92  * The task can also be moved to drained or invalid
-> > >   93  * by calls to rxe_cleanup_task or rxe_disable_task.
-> > >   94  * In that case tasks which get here are not executed but
-> > >   95  * just flushed. The tasks are designed to look to see if
-> > >   96  * there is work to do and then do part of it before returning
-> > >   97  * here with a return value of zero until all the work
-> > >   98  * has been consumed then it returns a non-zero value.
-> > >   99  * The number of times the task can be run is limited by
-> > > 100  * max iterations so one task cannot hold the cpu forever.
-> > > 101  * If the limit is hit and work remains the task is rescheduled.
-> > > 102  */
-> > > "
-> > > Not sure if you like to modify the above comments to remove rxe_run_task or
-> > > not.
-> > 
-> > Would it be correct to just reword:
-> > >   88  *                               It is called either
-> > >   89  * directly by rxe_run_task or indirectly if rxe_sched_task
-> > >   90  * schedules the task.
-> > 
-> > to:
-> >     It is called indirectly when rxe_sched_task schedules the task.
-> 
-> I am fine with it. Thanks a lot.
+If the call to pci_host_probe() in cdns_pcie_host_setup()
+fails, PM runtime count is decremented in the error path using
+pm_runtime_put_sync().But the runtime count is not incremented by this
+driver, but only by the callers (cdns_plat_pcie_probe/j721e_pcie_probe).
+And the callers also decrement theruntime PM count in their error path.
+So this leads to the below warning from the PM core:
 
-Thanks, v2 sent.
+runtime PM usage count underflow!
 
-Dave
+So fix it by getting rid of pm_runtime_put_sync() in the error path and
+directly return the errno.
 
-> Zhu Yanjun
-> 
-> > 
-> > > Except the above, I am fine with this commit.
-> > 
-> > Thanks!
-> > 
-> > > Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-> > 
-> > Dave
-> > 
-> 
+Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8af95e9da7ce..741e10a575ec 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	if (!bridge->ops)
+ 		bridge->ops = &cdns_pcie_host_ops;
+ 
+-	ret = pci_host_probe(bridge);
+-	if (ret < 0)
+-		goto err_init;
+-
+-	return 0;
+-
+- err_init:
+-	pm_runtime_put_sync(dev);
+-
+-	return ret;
++	return pci_host_probe(bridge);
+ }
+
+base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+2.25.1
+
