@@ -1,78 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC0B19066D;
-	Sat, 19 Apr 2025 17:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE28E29D0E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 17:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745083938; cv=none; b=pCbHX8x65qfTkLRNNDH8Xz4UX5BISXP5xG5OHN0U4V/tglRP2IZnUUaUJckaHTrBdikXvCIbzXux/C5vTHV0rJtCa327RVY4SwPUbEixi2R80RD0kmYNOmPXc/q6Cce52UvuM8xIuQyd37TjJ32Z50kRb0khSxGj64Dgmx4cUOQ=
+	t=1745084059; cv=none; b=nc6JS/CZZVEzmvt4SLlaiyYqkwfZ2n1zjCqlimG2J+YQSIDbJbtyW1UXHA4N2D9JvWQKCpAN1Sm0kKWFhyyZnGSlTNM7gv1/l80c5pEX9Bpcbw1DyGEN5ifgRwCI2Tojd3cPiYABZAw6nWTQgT/kNypslDk8E1jX/mbbhKmCd/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745083938; c=relaxed/simple;
-	bh=F5gr2eFei0vNBUOugpBm7WEsuy7mqr3bMIQ8rcDq4fY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dpjgeRfmK6iR5395DzD9kZXUaDVyGfvbMl5Rt29BXBCo6tOnTUx/vd1wkCNLTb1drhN+B//O9ID03xXEK8XrmiyjouzP73GcBwmforri7c581fUhYByVDJFjltDjU5h8jG37pg3baIK6buTpkJ972kqyFFqMxneCtnT54G6GtfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/YLZndg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745084059; c=relaxed/simple;
+	bh=FsErTkd992xSTacCc+izQlvA8kjPd00HosNs/DQsdEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N6CcUhVJyNgm+ukKBN/xxa0KJdnba40GDiHrm1LOmAX2x2yY2T7TK/YuzV5rqFanSZXJkNRjGt95ILL7mmp7H28J5cwC/ehf9NLK4/ngxIF6ivd8I0alWnLsZ6xV3g7LIE1Gg5TsnVk2+sWtnpcBnZJVEIZb99g2QVlN79/6XsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoaFCNV9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/YLZndg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32DD0C4CEE7;
-	Sat, 19 Apr 2025 17:32:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoaFCNV9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8F1C4CEE7;
+	Sat, 19 Apr 2025 17:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745083937;
-	bh=F5gr2eFei0vNBUOugpBm7WEsuy7mqr3bMIQ8rcDq4fY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T/YLZndgjxDHQvH+uySfN4z+DaieqKlIAFL7M5Mb+feOpYg4KpXmZlLkrjHZa2MPH
-	 YPZlDQlnrndOR/px64/baotp3mn15j/qOawmfQ+zn7ikdinlSdkoxvgnzII7ta5bmU
-	 6ekBIo+Aek4OVqQ2ZBUMBLrW+W69TBmg5ufRXKoDepGE49E8LKLMTZr5Os6/9luC2V
-	 qEauvlFd2F9dmbVEQa2yGFuSTadxQR3GppC7GRWzSp22ePI2J3/uPK+qdHybIYkqUT
-	 X2r3/aucP2yu8f0/7hEP6rViOZcYvFHwZj9QGbmRO2btp3L1BeKGvGGxols36vozvp
-	 0uxFrxK1Cx2rw==
-From: cel@kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] First set of NFSD fixes for v6.15
-Date: Sat, 19 Apr 2025 13:32:16 -0400
-Message-ID: <20250419173216.7115-1-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1745084058;
+	bh=FsErTkd992xSTacCc+izQlvA8kjPd00HosNs/DQsdEQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eoaFCNV9Q6s97BsHUsI0ufeP83cmDnLL7EzFtdiH23F02d0GqCIMMpct28o5MfGEx
+	 fyWGM3Drz9vGg4hmIl3XYYouNgoE1TjaMIhCGnpaiZtz5Apr7mDbkedLdOdVOY2jF7
+	 h/n5xLDUONvtK76ID5uBBxEwG9YHqhfAcuUS4xxPSjIqyXXiKygyWI+8jl2VYmRRdK
+	 aOWMc2GEOzrqjcH5TQO4BY0syl+zWaOmXxImKtSp9GNxJqkUY3Jdn+ZBxfmbKfvrku
+	 AvLHGgF8ubju58q/MJ543PBhB92Qn3Cjk3Q24oNraMuVoxR41jirUKA3blT3YwAftO
+	 lDfPfQllAnYqA==
+Date: Sat, 19 Apr 2025 07:34:16 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched_ext: Track currently locked rq
+Message-ID: <aAPemAFUsJaF_C2X@slm.duckdns.org>
+References: <20250419123536.154469-1-arighi@nvidia.com>
+ <20250419123536.154469-2-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250419123536.154469-2-arighi@nvidia.com>
 
-The following changes since commit 26a80762153ba0dc98258b5e6d2e9741178c5114:
+Hello, Andrea.
 
-  NFSD: Add a Kconfig setting to enable delegated timestamps (2025-03-14 10:49:47 -0400)
+On Sat, Apr 19, 2025 at 02:24:30PM +0200, Andrea Righi wrote:
+> @@ -149,6 +149,7 @@ struct sched_ext_entity {
+>  	s32			selected_cpu;
+>  	u32			kf_mask;	/* see scx_kf_mask above */
+>  	struct task_struct	*kf_tasks[2];	/* see SCX_CALL_OP_TASK() */
+> +	struct rq		*locked_rq;	/* currently locked rq */
 
-are available in the Git repository at:
+Can this be a percpu variable? While rq is locked, current can't switch out
+anyway and that way we don't have to increase the size of task. Note that
+kf_tasks[] are different in that some ops may, at least theoretically,
+sleep.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.15-1
+> +static inline void update_locked_rq(struct rq *rq)
+> +{
+> +	/*
+> +	 * Check whether @rq is actually locked. This can help expose bugs
+> +	 * or incorrect assumptions about the context in which a kfunc or
+> +	 * callback is executed.
+> +	 */
+> +	if (rq)
+> +		lockdep_assert_rq_held(rq);
+> +	current->scx.locked_rq = rq;
+> +	barrier();
 
-for you to fetch changes up to a1d14d931bf700c1025db8c46d6731aa5cf440f9:
+As these conditions are program-order checks on the local CPU, I don't think
+any barrier is necessary.
 
-  nfsd: decrease sc_count directly if fail to queue dl_recall (2025-04-13 16:39:42 -0400)
+Thanks.
 
-----------------------------------------------------------------
-nfsd-6.15 fixes:
-
-- v6.15 libcrc clean-up makes invalid configurations possible
-- Fix a potential deadlock introduced during the v6.15 merge window
-
-----------------------------------------------------------------
-Eric Biggers (1):
-      nfs: add missing selections of CONFIG_CRC32
-
-Li Lingfeng (1):
-      nfsd: decrease sc_count directly if fail to queue dl_recall
-
- fs/Kconfig           | 1 +
- fs/nfs/Kconfig       | 2 +-
- fs/nfs/internal.h    | 7 -------
- fs/nfs/nfs4session.h | 4 ----
- fs/nfsd/Kconfig      | 1 +
- fs/nfsd/nfs4state.c  | 2 +-
- fs/nfsd/nfsfh.h      | 7 -------
- include/linux/nfs.h  | 7 -------
- 8 files changed, 4 insertions(+), 27 deletions(-)
+-- 
+tejun
