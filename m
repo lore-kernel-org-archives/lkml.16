@@ -1,30 +1,31 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB066189BAC;
-	Sat, 19 Apr 2025 09:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE541BFE00;
+	Sat, 19 Apr 2025 09:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745053260; cv=none; b=dauRysMRKHaB6DLqw7U8T8/2VMZTxZmbBD2TFashai33P+/yBEDymjp2NtR/nOjrR67KyBgAAoqewNcE49vYkb9el3kPd7PBVEwEiuCQxPsbHn+JhHSxQDKM+WHphKVotqq3smcfGRFwx4RW/WuRaozy3iv6dQJ96mIMetibUWM=
+	t=1745053262; cv=none; b=nLAjwmXZ3JAsX8jX7bIaqJ3fTWpfUkLNAuSj3H2khXDUh06OC4eXvnWtFIrOxXr+n4tdoAS7V4Ztqzk3HjqfqN3xeUjlJRXFOfrtywE4fFbxfGuFAj/eEfvEjGWopzM1KPkY7jCYllYYkZUJBDvcnRD+dZ2NEjUecqd4SeZdAGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745053260; c=relaxed/simple;
-	bh=UTB0iLCcYAYtmujp3pQBrPpMHS5LGsxj+4ZntLwyGu0=;
+	s=arc-20240116; t=1745053262; c=relaxed/simple;
+	bh=rmgJm/JsERPy/3TdFszDhxywwL/IurERnhLfOReUByg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NvLDCprPsHCc/02rtzkceCZGpPgTjXG99/G5T+6rCzLF2yj/vfdDc9zHR9pntM48rUL9qivd0u06wdbNE1IoKLqlR1HlF6/uoMNSET0pBcTs0uU2e/p0qgtuB7vCL/Pc55+Lb+jOJSiBHhcloA+mWgu3/S3jLZJZsvdf1Tc+GfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=rUvEFJlY; arc=none smtp.client-ip=128.199.32.197
+	 In-Reply-To:To:Cc; b=iWRXBRpihH/jeJymKJFzdG37EoPOK33oI26ZF9qz+lmchUc4d17B75ZVu/iU2ry7eaOwMhya8oHoCwGhp8Dqf3NNMgKAbkYoMgnbFxkOo7h9Ni+8TEr52rot3vJHJjbPqN642Gpkttt0adG6Sg9/ZKOBOrl02w8dXftfVja2xyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=oHT6XIUW; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="rUvEFJlY"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="oHT6XIUW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1745053250; bh=UTB0iLCcYAYtmujp3pQBrPpMHS5LGsxj+4ZntLwyGu0=;
+	t=1745053253; bh=rmgJm/JsERPy/3TdFszDhxywwL/IurERnhLfOReUByg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=rUvEFJlYqHygyIaSPnu8GaKHbC+d2NothMP+5r0wTocCVQTBOEUMr3eHrE44pK4eZ
-	 8EiCZUXCwfkbZ0mh0VLmDLXnJOzabea/Eo2NA3XElttGhpyLd0FfeE6RPSJwitQUdy
-	 zERbtErbBIMUtVkEU3JhE1ChY4Ep9rnWxXdskVEw=
+	b=oHT6XIUWQPUff9UekeFFLnLa/LhBGTyDt4SsKctpv715qw4yd1kFkrPe7bHAwKR0m
+	 fw9PrVpl4c1giqRIsURPGaAqNHg52G0u8yJD0raFXdWNWIT1EmlOnsN0Vu+fEdxvnk
+	 RCxyA0Guc7hoV3g2sNCXiheTSXhH8tXoJrBwQ24I=
 From: Luca Weiss <luca@lucaweiss.eu>
-Date: Sat, 19 Apr 2025 11:00:38 +0200
-Subject: [PATCH 1/4] ARM: dts: qcom: sony-xperia-rhine: Enable USB charging
+Date: Sat, 19 Apr 2025 11:00:40 +0200
+Subject: [PATCH 3/4] dt-bindings: arm: qcom: Add Sony Xperia Z Ultra
+ (togari)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250419-togari-v1-1-45840c677364@lucaweiss.eu>
+Message-Id: <20250419-togari-v1-3-45840c677364@lucaweiss.eu>
 References: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
 In-Reply-To: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
@@ -45,46 +46,45 @@ Cc: Kevin Widjaja <kevin.widjaja21@gmail.com>,
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1037; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=e6y8Mu1vjYCiO29scDHc/QVR91PS09dXMQ9Omaobgrs=;
- b=kA0DAAgBcthDuJ1N11YByyZiAGgDZjuic59Kx8ixMybDal8rTIg7bX8Rx8tPREhd60hsHsHLo
- YkCMwQAAQgAHRYhBDm60i8ILNqRuhWP+nLYQ7idTddWBQJoA2Y7AAoJEHLYQ7idTddW5UkP/j35
- irxfaVsLOOj+QDtrbp9fRzFpyibucEgdBRNg5jagrt47CwqJql8wOJExbicjVB/ArqYaBJ75iaT
- Dwq4lP6AKAMSWr06EKjpqpSTRdXvABuh5J8vrbunJCY+cz1DOcDicT749zhCt5mdosXd1RZ7rec
- +4L9t93O0XTmUA/rom/6QZ1z0GqJ4bmlGJ0OREvIU2BllLOrbSVJ7hiArK81Bha3lgRxUfrEP+i
- bHY6nyeqvmUmGO+xubeYenDbLu47efd+F6PySSkLhdVfEc7UPLv20zXnOpHk2lByIuAYiVfkYFn
- cdwOOHeeDzltjaeT94V1sI1AsilwWPdf4KyvtOqMyJdNK3MSHLV6Q54C+Ry1Y6X8OfOyqMoUSZl
- tjmy05AG3+dpeFdAnXHVWBap7jEIBw/GmqcjPdiY5dnJ/gdUgEDHyTY5GYFyWX37DNoESmTaBA7
- syeRqhLP6VpSirIqGfjZpiADGDFexyqmkwOGfYNqZKyG+iof2TqatB7l7/RmkiO+fnmBtiNkh1N
- SIXN+pXm+13WzJexgWBfApCwV5NBCbcNUNUUpMXCrLlczLMfGd4/AFiyfr41EF95h1zsQWKP3sL
- Zh2lxj+3fta8kB2952e00MHZX4Jb+MKew4uvmJyDQw5Uk2LdSfHB/MrGDz8AgkHj5hZl0SAE3Sh
- ggpBX
+X-Developer-Signature: v=1; a=openpgp-sha256; l=788; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=3pYZLD6BRjR4THekXqYU3cNCBio85/oAmVd32raWyRk=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBoA2Y9S3lMNBjMXo7l4VQLIDso5rLhDFnSFqojD
+ aUhOwYuRIuJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaANmPQAKCRBy2EO4nU3X
+ VqOQEACUawpzrjJkF8ReMQr19bwfeatd2JZ9VYiRWBVhHarh40sU3p4uBgffY9K/9I0UfDb/qWu
+ 5jesz9JHUBAVy144lgwcNUbeOy0xsgryWg4OHLB6buQlFj+dJw0PSQadYE8Mcd39t2B/LfTFpId
+ LVT6ihVIYvo4ScWLgR2FZb+LO5UaJaOPCJoinP9gacsNWo3Peuu6ul2kuJMCIpwuuGmnOHvrNfE
+ xLlmZjAnu1OJE4Y0KJcb+92Hn1lxkkglYMH0C5Zjtjp66qS3PFLLIcN5EQGfJy2q/jYb7vq0p1Q
+ DvLOIF2PnF6M/C00ULR+GyPNwAgB2iLR50S6R+vonZdGLUKb0kn8NjPPghl6chz1YDmvScSujP/
+ /ictp+srLbZVv4zwI3ri5NrRWUHOWG0rRu0Ho5WcF0dBH9Ey5rM4FcfQGysbT7BxNNiN/Wpaey1
+ cGFP7OcrxsZxwFYsk3Q/KSGc3eg4RLmkj0xHTCiuBkmN4osXizE1fs/cZ+tb45tIAmJyGMIjVy6
+ RpIofsDjpGPCzNa29xYgAGD2ChopQ6f04z1k/6qdAAAW4fRVHb/RTof8uBWbTyLdCmHxLzAuwMz
+ OjP9QcaVdGkm11WPhyrku1ZxWfi+3YAnYJqsQeoEPGzCSHeuZGHZ+FgptFc/HNEryRM5GB699nj
+ 34S85uH1j12Q78Q==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
 From: Kevin Widjaja <kevin.widjaja21@gmail.com>
 
-Set usb-charge-current-limit to enable charging over USB for all
-sony-rhine devices.
+Based on the msm8974.
 
 Signed-off-by: Kevin Widjaja <kevin.widjaja21@gmail.com>
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
- arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi | 1 +
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
-index d34659ebac22e65a511994ef201fe04f12089781..915221e00ff348309b62bd9b637ae9771d213f1e 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi
-@@ -449,6 +449,7 @@ &smbb {
- 	qcom,fast-charge-safe-current = <1500000>;
- 	qcom,fast-charge-current-limit = <1500000>;
- 	qcom,dc-current-limit = <1800000>;
-+	usb-charge-current-limit = <1800000>;
- 	qcom,fast-charge-safe-voltage = <4400000>;
- 	qcom,fast-charge-high-threshold-voltage = <4350000>;
- 	qcom,fast-charge-low-threshold-voltage = <3400000>;
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 618a87693ac1dc32b40a2201bc219a4f12e9f3e8..8b355fdc56ea3581540e60c5b9b7a9687439da55 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -208,6 +208,7 @@ properties:
+               - samsung,hlte
+               - sony,xperia-amami
+               - sony,xperia-honami
++              - sony,xperia-togari
+           - const: qcom,msm8974
+ 
+       - items:
 
 -- 
 2.49.0
