@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1444E1DF75C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6876BFC0;
 	Sat, 19 Apr 2025 16:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745079454; cv=none; b=r0goUZiFlJqoGyMV9CnDlPLtn5+DlENjBUZtdG0Q0EaQMB7nz88LPVfC7MgUNwKQWHKCKnc7OkEf7JR3p3mDBFYXErEp2BpsLVTpm0USA4aSoMqqPE2UvvM0U5vqrYDNgew8rc7kzApGiUq8edSYxHQ6NXLi1wXMPfrkjhrZ3us=
+	t=1745079453; cv=none; b=XoilOAsbpVnmac0E8+2xG3BPwmkwCsJZQ/FyID0RPoqKMmUb4ZRykHpUiO2Pj4E2dxgMxJwCN536BLQU73zTz5prFL7qTHVW1RxSKE4ziD6byr8zp1lT8joDwEudIPAuZS27EXipt0d0cUO5zzvf7a4uK/z77Di4YhLRgiXuoqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745079454; c=relaxed/simple;
-	bh=XtyEiCkEKuikYYRpeUpbHx3EOmA+Ieo50jo5BElj4QI=;
+	s=arc-20240116; t=1745079453; c=relaxed/simple;
+	bh=nww4iDqCd5K43fJVUdqt607LG+PEqEZdkJi0yiS6zYI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SAe/ObRXfGefP4vAPyt2mMQnJao/Fj0Ll6lvLV0BaLEiBRLuH24J1hP3j4LSLeK4dhoMXsgDaQ5bZaUbfJI7IBStFZDWmIeNO9NcjJJIClBcKPg19fkOzip9B6xAD+y883QcOzDU+e9i8UXAZ91qMmyJFd1g5FjR+x6A9yCJQvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lg5496XI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QEx/CIM4AkfRJ+Zzj1UcaUIt9qoi5SzddI/d3u8nqZBk7ZVDqTsrbqlhz1wRIVvW/LDSEL10Gng9BLQJti12/Le+IhY2z1BPwTyPH2DhF7F0LX7AhoYlTgz8BZCRC3B7GTYCTY0aRFjcemL7L1vGQrKKsRwCtYcg+swaIIcNSe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuQLsiP/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lg5496XI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89071C4CEE7;
-	Sat, 19 Apr 2025 16:17:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuQLsiP/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A0EC4CEEC;
+	Sat, 19 Apr 2025 16:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745079453;
-	bh=XtyEiCkEKuikYYRpeUpbHx3EOmA+Ieo50jo5BElj4QI=;
+	bh=nww4iDqCd5K43fJVUdqt607LG+PEqEZdkJi0yiS6zYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Lg5496XIE7QMKhR+payE/ypvMqKYJE/Q5ubTeWaC7JMuArlPtfI/WQeyQ6SZ2kGmI
-	 DeKZwZqxxqd+W/HOZZJrhhVA9zFkbkzke58Y3TUFgahhk3EsX0Pgs8vh7Jbi6D3Sgx
-	 RZ33vsPZEalz2UhOqpoUyR94KC9yl2x4ur5wlueOOlcmzbTIcvEjTw0VdwF/BQSieD
-	 THGCPtw4bJCbgzVp1L3d3L5VCHTElqoXNdwowITTN4p/6GQ4UqkvEMddjKtRaLc8Ul
-	 jQjnxJQNG0Yv70paoCyjGd2e5mu7dzJaFvejQsOUoqH7sGBvaqjCEK2gUO32Txwkz5
-	 W2bjShHEzhj4A==
+	b=PuQLsiP/bt3je2ckVF/UE/oZgcMoakW6hvWjT4a/7hJdhufntVaxqnqxbzd5/zEbU
+	 9HIMfr7wHJ2ZnIDpmBNsJxxJyS9l/blM1Z0BsEg7zr0wdzpTw8JEmLMLt9eSquZMzu
+	 y5swK+qP34ZQl4adgWqKg0h5ITvuUiPdcga+KpRb/MD/GXEPKky2HaxlhJPXvcXjWo
+	 NSOmp65kphCNRb0xc2q7iY6KlltIPtzbCpVFtwOuW18Yz/RaMs7ciVp7lE7iqmNq30
+	 yf+K67KbcXVlK4C+XzVmHmilarJymoOiUGRyHS5w9yWgBt1JgquEW+OZGVsOHgxMKr
+	 tgwb+xBrek1+A==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] crypto: testmgr - remove panic_on_fail
-Date: Sat, 19 Apr 2025 09:15:38 -0700
-Message-ID: <20250419161543.139344-5-ebiggers@kernel.org>
+Subject: [PATCH 1/9] crypto: tcrypt - remove CRYPTO_TEST from defconfigs
+Date: Sat, 19 Apr 2025 09:15:35 -0700
+Message-ID: <20250419161543.139344-2-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250419161543.139344-1-ebiggers@kernel.org>
 References: <20250419161543.139344-1-ebiggers@kernel.org>
@@ -45,53 +45,508 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-The cryptomgr.panic_on_fail=1 kernel command-line parameter is not very
-useful now that the tests have been fixed to WARN on failure, since
-developers can just use panic_on_warn=1 instead.  There's no need for a
-special option just for the crypto self-tests.  Remove it.
+CONFIG_CRYPTO_TEST enables a benchmarking module that is only really
+useful for developers working on the crypto subsystem.  It is in a bunch
+of defconfigs.  But as with most of the other crypto options that tend
+to be randomly set in defconfigs, it is unlikely that much thought was
+put into these, especially when placed in "production" defconfigs.
+Clear it out of the defconfigs for now.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- crypto/testmgr.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/arm/configs/exynos_defconfig           | 1 -
+ arch/arm/configs/pxa_defconfig              | 1 -
+ arch/arm/configs/spitz_defconfig            | 1 -
+ arch/arm64/configs/defconfig                | 1 -
+ arch/m68k/configs/amiga_defconfig           | 1 -
+ arch/m68k/configs/apollo_defconfig          | 1 -
+ arch/m68k/configs/atari_defconfig           | 1 -
+ arch/m68k/configs/bvme6000_defconfig        | 1 -
+ arch/m68k/configs/hp300_defconfig           | 1 -
+ arch/m68k/configs/mac_defconfig             | 1 -
+ arch/m68k/configs/multi_defconfig           | 1 -
+ arch/m68k/configs/mvme147_defconfig         | 1 -
+ arch/m68k/configs/mvme16x_defconfig         | 1 -
+ arch/m68k/configs/q40_defconfig             | 1 -
+ arch/m68k/configs/sun3_defconfig            | 1 -
+ arch/m68k/configs/sun3x_defconfig           | 1 -
+ arch/mips/configs/gpr_defconfig             | 1 -
+ arch/mips/configs/lemote2f_defconfig        | 1 -
+ arch/mips/configs/mtx1_defconfig            | 1 -
+ arch/mips/configs/rb532_defconfig           | 1 -
+ arch/parisc/configs/generic-32bit_defconfig | 1 -
+ arch/powerpc/configs/g5_defconfig           | 1 -
+ arch/powerpc/configs/powernv_defconfig      | 1 -
+ arch/powerpc/configs/ppc64_defconfig        | 1 -
+ arch/powerpc/configs/ppc64e_defconfig       | 1 -
+ arch/powerpc/configs/ppc6xx_defconfig       | 1 -
+ arch/s390/configs/debug_defconfig           | 1 -
+ arch/s390/configs/defconfig                 | 1 -
+ arch/sparc/configs/sparc64_defconfig        | 1 -
+ 29 files changed, 29 deletions(-)
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 82977ea25db3..d075c48ff1a2 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -43,13 +43,10 @@ MODULE_IMPORT_NS("CRYPTO_INTERNAL");
- 
- static bool notests;
- module_param(notests, bool, 0644);
- MODULE_PARM_DESC(notests, "disable crypto self-tests");
- 
--static bool panic_on_fail;
--module_param(panic_on_fail, bool, 0444);
--
- #ifdef CONFIG_CRYPTO_MANAGER_EXTRA_TESTS
- static bool noextratests;
- module_param(noextratests, bool, 0644);
- MODULE_PARM_DESC(noextratests, "disable expensive crypto self-tests");
- 
-@@ -5858,15 +5855,14 @@ int alg_test(const char *driver, const char *alg, u32 type, u32 mask)
- 		rc |= alg_test_descs[j].test(alg_test_descs + j, driver,
- 					     type, mask);
- 
- test_done:
- 	if (rc) {
--		if (fips_enabled || panic_on_fail) {
-+		if (fips_enabled) {
- 			fips_fail_notify();
--			panic("alg: self-tests for %s (%s) failed in %s mode!\n",
--			      driver, alg,
--			      fips_enabled ? "fips" : "panic_on_fail");
-+			panic("alg: self-tests for %s (%s) failed in fips mode!\n",
-+			      driver, alg);
- 		}
- 		pr_warn("alg: self-tests for %s using %s failed (rc=%d)",
- 			alg, driver, rc);
- 		WARN(rc != -ENOENT,
- 		     "alg: self-tests for %s using %s failed (rc=%d)",
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index 7ad48fdda1da..b8e2267f68cc 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -347,11 +347,10 @@ CONFIG_ROOT_NFS=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ASCII=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
+ CONFIG_CRYPTO_USER=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_LRW=m
+ CONFIG_CRYPTO_XTS=m
+ CONFIG_CRYPTO_MD5=m
+ CONFIG_CRYPTO_SHA512=m
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index de0ac8f521d7..821c670dd687 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -637,11 +637,10 @@ CONFIG_NLS_UTF8=m
+ CONFIG_TIMER_STATS=y
+ CONFIG_SECURITY=y
+ CONFIG_CRYPTO_MANAGER=y
+ CONFIG_CRYPTO_CRYPTD=m
+ CONFIG_CRYPTO_AUTHENC=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
+ CONFIG_CRYPTO_FCRYPT=m
+ CONFIG_CRYPTO_KHAZAD=m
+diff --git a/arch/arm/configs/spitz_defconfig b/arch/arm/configs/spitz_defconfig
+index ac5b7a5aaff6..1013c58d27ee 100644
+--- a/arch/arm/configs/spitz_defconfig
++++ b/arch/arm/configs/spitz_defconfig
+@@ -213,11 +213,10 @@ CONFIG_NLS_DEFAULT="cp437"
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_CRYPTO_NULL=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_ECB=m
+ CONFIG_CRYPTO_SHA256=m
+ CONFIG_CRYPTO_AES=m
+ CONFIG_CRYPTO_ANUBIS=m
+ CONFIG_CRYPTO_ARC4=m
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5bb8f09422a2..72e6cd8b6c81 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1727,11 +1727,10 @@ CONFIG_ROOT_NFS=y
+ CONFIG_9P_FS=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_SECURITY=y
+ CONFIG_CRYPTO_USER=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_ECHAINIV=y
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_ANSI_CPRNG=y
+ CONFIG_CRYPTO_USER_API_RNG=m
+ CONFIG_CRYPTO_CHACHA20_NEON=m
+diff --git a/arch/m68k/configs/amiga_defconfig b/arch/m68k/configs/amiga_defconfig
+index 31ecb8b7b9f1..2f9770cf6760 100644
+--- a/arch/m68k/configs/amiga_defconfig
++++ b/arch/m68k/configs/amiga_defconfig
+@@ -549,11 +549,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/apollo_defconfig b/arch/m68k/configs/apollo_defconfig
+index 1f57514624d5..91de4c6aecb9 100644
+--- a/arch/m68k/configs/apollo_defconfig
++++ b/arch/m68k/configs/apollo_defconfig
+@@ -506,11 +506,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/atari_defconfig b/arch/m68k/configs/atari_defconfig
+index 02db7a48e57e..561613c10744 100644
+--- a/arch/m68k/configs/atari_defconfig
++++ b/arch/m68k/configs/atari_defconfig
+@@ -526,11 +526,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/bvme6000_defconfig b/arch/m68k/configs/bvme6000_defconfig
+index f0e673cb17eb..ed37e5aa0045 100644
+--- a/arch/m68k/configs/bvme6000_defconfig
++++ b/arch/m68k/configs/bvme6000_defconfig
+@@ -498,11 +498,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/hp300_defconfig b/arch/m68k/configs/hp300_defconfig
+index e8ca5a50b86d..0307583dc4a8 100644
+--- a/arch/m68k/configs/hp300_defconfig
++++ b/arch/m68k/configs/hp300_defconfig
+@@ -508,11 +508,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/mac_defconfig b/arch/m68k/configs/mac_defconfig
+index b3a270441bb1..83c94360c151 100644
+--- a/arch/m68k/configs/mac_defconfig
++++ b/arch/m68k/configs/mac_defconfig
+@@ -525,11 +525,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/multi_defconfig b/arch/m68k/configs/multi_defconfig
+index d215dba006ce..2be267f10b92 100644
+--- a/arch/m68k/configs/multi_defconfig
++++ b/arch/m68k/configs/multi_defconfig
+@@ -612,11 +612,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/mvme147_defconfig b/arch/m68k/configs/mvme147_defconfig
+index a888ed93ff82..9828470a9caf 100644
+--- a/arch/m68k/configs/mvme147_defconfig
++++ b/arch/m68k/configs/mvme147_defconfig
+@@ -498,11 +498,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/mvme16x_defconfig b/arch/m68k/configs/mvme16x_defconfig
+index b481782375f6..8cc6811aad14 100644
+--- a/arch/m68k/configs/mvme16x_defconfig
++++ b/arch/m68k/configs/mvme16x_defconfig
+@@ -499,11 +499,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/q40_defconfig b/arch/m68k/configs/q40_defconfig
+index 6eba743d8eb5..b1bda41516f6 100644
+--- a/arch/m68k/configs/q40_defconfig
++++ b/arch/m68k/configs/q40_defconfig
+@@ -515,11 +515,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/sun3_defconfig b/arch/m68k/configs/sun3_defconfig
+index 9bdbb418ffa8..7ec14bcfd626 100644
+--- a/arch/m68k/configs/sun3_defconfig
++++ b/arch/m68k/configs/sun3_defconfig
+@@ -496,11 +496,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/m68k/configs/sun3x_defconfig b/arch/m68k/configs/sun3x_defconfig
+index e1cf20fa5343..e6f943d68959 100644
+--- a/arch/m68k/configs/sun3x_defconfig
++++ b/arch/m68k/configs/sun3x_defconfig
+@@ -496,11 +496,10 @@ CONFIG_NLS_MAC_TURKISH=m
+ CONFIG_DLM=m
+ CONFIG_ENCRYPTED_KEYS=m
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_CRYPTO_USER=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+diff --git a/arch/mips/configs/gpr_defconfig b/arch/mips/configs/gpr_defconfig
+index 12f3eed8a946..ec55b07e572a 100644
+--- a/arch/mips/configs/gpr_defconfig
++++ b/arch/mips/configs/gpr_defconfig
+@@ -271,11 +271,10 @@ CONFIG_NFS_V4=y
+ CONFIG_ROOT_NFS=y
+ CONFIG_NLS_CODEPAGE_437=y
+ CONFIG_NLS_CODEPAGE_850=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_CRYPTO_AUTHENC=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_MD4=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_SHA512=m
+ CONFIG_CRYPTO_WP512=m
+diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
+index 71d6340497c9..af4e53da39f8 100644
+--- a/arch/mips/configs/lemote2f_defconfig
++++ b/arch/mips/configs/lemote2f_defconfig
+@@ -295,11 +295,10 @@ CONFIG_NLS_ISO8859_14=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_NLS_UTF8=y
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAMELLIA=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
+ CONFIG_CRYPTO_FCRYPT=m
+diff --git a/arch/mips/configs/mtx1_defconfig b/arch/mips/configs/mtx1_defconfig
+index 06b7a0b97eca..9ff468d7eba0 100644
+--- a/arch/mips/configs/mtx1_defconfig
++++ b/arch/mips/configs/mtx1_defconfig
+@@ -660,11 +660,10 @@ CONFIG_NLS_ISO8859_13=m
+ CONFIG_NLS_ISO8859_14=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_NLS_UTF8=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_HMAC=y
+ CONFIG_CRYPTO_MD5=y
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_WP512=m
+diff --git a/arch/mips/configs/rb532_defconfig b/arch/mips/configs/rb532_defconfig
+index 0261969a6e45..5c4befe1d873 100644
+--- a/arch/mips/configs/rb532_defconfig
++++ b/arch/mips/configs/rb532_defconfig
+@@ -151,9 +151,8 @@ CONFIG_TMPFS=y
+ CONFIG_CONFIGFS_FS=y
+ CONFIG_JFFS2_FS=y
+ CONFIG_JFFS2_SUMMARY=y
+ CONFIG_JFFS2_COMPRESSION_OPTIONS=y
+ CONFIG_SQUASHFS=y
+-CONFIG_CRYPTO_TEST=m
+ # CONFIG_CRYPTO_HW is not set
+ CONFIG_CRC16=m
+ CONFIG_STRIP_ASM_SYMS=y
+diff --git a/arch/parisc/configs/generic-32bit_defconfig b/arch/parisc/configs/generic-32bit_defconfig
+index f5fffc24c3bc..0d4c4298bcc6 100644
+--- a/arch/parisc/configs/generic-32bit_defconfig
++++ b/arch/parisc/configs/generic-32bit_defconfig
+@@ -249,11 +249,10 @@ CONFIG_NFS_FS=m
+ CONFIG_NFSD=m
+ CONFIG_CIFS=m
+ CONFIG_CIFS_XATTR=y
+ CONFIG_CIFS_POSIX=y
+ # CONFIG_CIFS_DEBUG is not set
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAST5=m
+ CONFIG_CRYPTO_CAST6=m
+ CONFIG_CRYPTO_DES=y
+ CONFIG_CRYPTO_SERPENT=m
+diff --git a/arch/powerpc/configs/g5_defconfig b/arch/powerpc/configs/g5_defconfig
+index 9215bed53291..6ede430de615 100644
+--- a/arch/powerpc/configs/g5_defconfig
++++ b/arch/powerpc/configs/g5_defconfig
+@@ -234,11 +234,10 @@ CONFIG_NLS_UTF8=y
+ CONFIG_CRC_T10DIF=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_DEBUG_MUTEXES=y
+ CONFIG_BOOTX_TEXT=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_HMAC=y
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_SHA512=m
+ CONFIG_CRYPTO_WP512=m
+diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
+index 6b6d7467fecf..258a1ceca006 100644
+--- a/arch/powerpc/configs/powernv_defconfig
++++ b/arch/powerpc/configs/powernv_defconfig
+@@ -315,11 +315,10 @@ CONFIG_BLK_DEV_IO_TRACE=y
+ CONFIG_PPC_EMULATED_STATS=y
+ CONFIG_CODE_PATCHING_SELFTEST=y
+ CONFIG_FTR_FIXUP_SELFTEST=y
+ CONFIG_MSI_BITMAP_SELFTEST=y
+ CONFIG_XMON=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_HMAC=y
+ CONFIG_CRYPTO_MD5_PPC=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_SHA1_PPC=m
+diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+index 5fa154185efa..0474ee4b2f43 100644
+--- a/arch/powerpc/configs/ppc64_defconfig
++++ b/arch/powerpc/configs/ppc64_defconfig
+@@ -375,11 +375,10 @@ CONFIG_IMA_KEXEC=y
+ CONFIG_IMA_DEFAULT_HASH_SHA256=y
+ CONFIG_IMA_WRITE_POLICY=y
+ CONFIG_IMA_APPRAISE=y
+ CONFIG_IMA_ARCH_POLICY=y
+ CONFIG_IMA_APPRAISE_MODSIG=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_BLOWFISH=m
+ CONFIG_CRYPTO_CAST6=m
+ CONFIG_CRYPTO_SERPENT=m
+ CONFIG_CRYPTO_TWOFISH=m
+ CONFIG_CRYPTO_PCBC=m
+diff --git a/arch/powerpc/configs/ppc64e_defconfig b/arch/powerpc/configs/ppc64e_defconfig
+index 4c05f4e4d505..54d68d0c7bb0 100644
+--- a/arch/powerpc/configs/ppc64e_defconfig
++++ b/arch/powerpc/configs/ppc64e_defconfig
+@@ -219,11 +219,10 @@ CONFIG_SCHED_TRACER=y
+ CONFIG_BLK_DEV_IO_TRACE=y
+ CONFIG_CODE_PATCHING_SELFTEST=y
+ CONFIG_FTR_FIXUP_SELFTEST=y
+ CONFIG_MSI_BITMAP_SELFTEST=y
+ CONFIG_XMON=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_CCM=m
+ CONFIG_CRYPTO_GCM=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_HMAC=y
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
+index a91a766b71a4..34e78ed557df 100644
+--- a/arch/powerpc/configs/ppc6xx_defconfig
++++ b/arch/powerpc/configs/ppc6xx_defconfig
+@@ -1071,11 +1071,10 @@ CONFIG_SECURITY=y
+ CONFIG_SECURITY_NETWORK=y
+ CONFIG_SECURITY_NETWORK_XFRM=y
+ CONFIG_SECURITY_SELINUX=y
+ CONFIG_SECURITY_SELINUX_BOOTPARAM=y
+ CONFIG_SECURITY_SELINUX_DISABLE=y
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_CTS=m
+ CONFIG_CRYPTO_LRW=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_XTS=m
+ CONFIG_CRYPTO_HMAC=y
+diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+index 6f2c9ce1b154..0216a6f50801 100644
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@ -744,11 +744,10 @@ CONFIG_IMA_APPRAISE=y
+ CONFIG_BUG_ON_DATA_CORRUPTION=y
+ CONFIG_CRYPTO_USER=m
+ # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+ CONFIG_CRYPTO_PCRYPT=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+ CONFIG_CRYPTO_CURVE25519=m
+diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+index f18a7d97ac21..c0528f791ecf 100644
+--- a/arch/s390/configs/defconfig
++++ b/arch/s390/configs/defconfig
+@@ -730,11 +730,10 @@ CONFIG_BUG_ON_DATA_CORRUPTION=y
+ CONFIG_CRYPTO_FIPS=y
+ CONFIG_CRYPTO_USER=m
+ # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+ CONFIG_CRYPTO_PCRYPT=m
+ CONFIG_CRYPTO_CRYPTD=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_DH=m
+ CONFIG_CRYPTO_ECDH=m
+ CONFIG_CRYPTO_ECDSA=m
+ CONFIG_CRYPTO_ECRDSA=m
+ CONFIG_CRYPTO_CURVE25519=m
+diff --git a/arch/sparc/configs/sparc64_defconfig b/arch/sparc/configs/sparc64_defconfig
+index 01b2bdfbf9a8..f1f68e43616b 100644
+--- a/arch/sparc/configs/sparc64_defconfig
++++ b/arch/sparc/configs/sparc64_defconfig
+@@ -203,11 +203,10 @@ CONFIG_DETECT_HUNG_TASK=y
+ CONFIG_SCHEDSTATS=y
+ CONFIG_BLK_DEV_IO_TRACE=y
+ CONFIG_UPROBE_EVENTS=y
+ CONFIG_KEYS=y
+ CONFIG_CRYPTO_NULL=m
+-CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_LRW=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_XTS=m
+ CONFIG_CRYPTO_XCBC=y
+ CONFIG_CRYPTO_MD4=y
 -- 
 2.49.0
 
