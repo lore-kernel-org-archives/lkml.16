@@ -1,187 +1,126 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23DD13EFF3;
-	Sat, 19 Apr 2025 03:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DA47E107
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 03:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745033585; cv=none; b=WEqq8grOKDi3imB4zpU4Vwq3z7gEFOCNVl2njwn5JfMqYT4z16juEDiolJta6NnA7nRk+mLIM1OWeKDDSpzM6nSmssIa+yevx1JU0LI591iTOWTJ+BuBP+STOo24TQWWzZQDTWVgqjqIlCZtu12213jAjVpmB/DJSdRsQjs9Ugs=
+	t=1745034068; cv=none; b=PtriOvd9kUdWafZApJuSNW2JBjgzVW9a0QNzl4B1+6YO6RocLFh43Bhfjoux4C2nK/mTpB5AsO1ztu+H8WrKQYXHVpR6Ql9eNKJPaHQHG3rCSA7kClTwQaB9bYTslBYZeg8KwFffq41/yo90gXoTZrzEXNkSoMKX8utwBfC5ibs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745033585; c=relaxed/simple;
-	bh=qG33W8pZh9cohXq8CNvMyPhQr05ENy2yUo6n0wyKswk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mtKF/3Vlt1fvM53hg+cOjKQKPBaZ6U2ImQkwcnKyzHd7hUtn6lSOyTU4RmhCSfifOMZILC5dWiteek4X14hN1mbHxkgeeA72Sr9lN7En20UVfXow11p1UwCG+WuqeNy64LTwsrsxP+ZviRghZ2s1ENcluFm3+2r6KQ0eCZ9UozE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.27.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 18798342FFE;
-	Sat, 19 Apr 2025 03:32:56 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Sat, 19 Apr 2025 11:32:31 +0800
-Subject: [PATCH 2/2] riscv: dts: spacemit: Acquire clocks for UART
+	s=arc-20240116; t=1745034068; c=relaxed/simple;
+	bh=PHdsXTX3X2tbXBA7ibrldPy1C6uFMyd0FcF6/SMQ3AY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=okRlJ21b64rTGkx9rlhN5PVkrgsTlo5JbU+sR0w7lSorOspP/KP2MfE4rCpWdIKhFrnQRfuMyMxnNwESRzcRQmtEAGmPbr/lBYxKcX7XVa+aXVl+9dMRPvo+MLsgQNwuwwwc6piNAnD1RtI+BeLWSKhxHk35/r+2RocPt8/uXc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EZJEDGQ0; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EZJEDGQ0"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5568355ffso191626385a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 20:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745034065; x=1745638865; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vf/SdZzWZ/97U55NJCW7xj0E3zqMD/eAiVLqyHOwDFs=;
+        b=EZJEDGQ0FmEbQ4lG28XHQFa7Z+5PvAWw2Foazq+K7DqaCDW1u1/k7dAdDMhYj00shn
+         ljFyV+anvi8XNichPVN6tnDhwULLdTqqS4a7HEIJZElhmWaRx0uvbk/h7fFKGtYjT1hP
+         PLi1IqCMF2NEH+RotV7pMTXl4iFlH+2B9OSh/6DayNhqnCziAlcDo+dB34q6iUkM23LO
+         L8edvFpYeRiE6WlOWd18Ee2kbRYoIpAI8Tz4gIHX2O9vjwOOY9QqMWTg95DjfD+wwKfw
+         7vzIEklhrL1BHebuW5unEjnEo5iTi2RxCjd/xaoEF9Sa0RUCR9tQXIt1oVjktlpLK9b9
+         k9ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745034065; x=1745638865;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vf/SdZzWZ/97U55NJCW7xj0E3zqMD/eAiVLqyHOwDFs=;
+        b=cjivHURhkwkBz91q4pIN+k3mbTn7T9wQ1IstJa+pKuNNIl9zW7Tui08ejnJAdov4qX
+         Y7ap1pm8iuilMR4xcWGWkmlD+pyUYfpn5iO0W/xyTwkCvA4+X7M1fsiqlGkGdyxMRa27
+         6zYGAofxqmaFlFaj2+W1doIpjVDXiQnreWkhsg1tu1PaFbkvj+vxgIs+F9pAbjKZC8ps
+         K9/6NaxHNg+/4spejB/4UAG5Sta5UJ5ylD8aqW3m93mUYKVWuDWZpL4zuJAcDUtZu24A
+         fJz4jEeHFrxaYzesw4WC5kyYQIMIDgTrr9Iuh6afWz8j8y4EuWq9jLWLlLpxY+2Brs2B
+         Y9jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVblUMNYMiSR3f6FjWNsggBOrwDCe40VjQcU6CycUBjhgalTqdASSPrX1KZNPVmAB0lk/8X/IeOwJgcX3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyySJjFSuQRIvXLP//33/tU+tHRJkIrzP1/B7nmravt0qFIzGdK
+	W7zaeBgKSMSR7Fw0QK5JqqdXl+j8zhnyP8fNNInObF57shuh1/weCrbMC/lSi6s=
+X-Gm-Gg: ASbGncsYebRrV5JgF0awKmWY+nrfq5KnZZC5LmVGZznJN2HCZDDHDH02O8P8a76LcQx
+	V12h7uig6Ht3XwkH3+lHFGxV53TCYBJnA4IfvA8s6TFv3QgCvG80fADkVrUjE36g4Pw73sjjnqy
+	pCEifzXSXpIk85VARPiapf3zS7BWWhnA8M6VR8cx0l/55jh124tril+ASppphnfNfbZvOPX/CUG
+	sbRSvMjGYy6ZYsxkUWpOAxWmxOPJLCFNDvcRZRP0+vOZtchoKThurJT3M0EVTfYuTUQJvukVl47
+	sv5uIu9WL+CRuHFFNiqPqsvxOxkS/z2jrCQy/B17a3pXWI4AwPFIvKMK9Q++9gze1H1/+oV1X6j
+	IT8OpyM2hkSL7eOKqyBxoRis=
+X-Google-Smtp-Source: AGHT+IHBuLN56lYhOyNk3hQZI/IKMdqmk7y+jZIExTVI9cAFyXEhsXltOxcEYmpfFoMh81jIo2Y7oQ==
+X-Received: by 2002:a05:620a:260e:b0:7c5:94b2:99da with SMTP id af79cd13be357-7c927fb51f8mr786359885a.28.1745034065642;
+        Fri, 18 Apr 2025 20:41:05 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c9280de4adsm152367485a.114.2025.04.18.20.41.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 20:41:05 -0700 (PDT)
+Date: Fri, 18 Apr 2025 23:41:03 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Tejun Heo <tj@kernel.org>
+Cc: cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	hannes@cmpxchg.org, mkoutny@suse.com, longman@redhat.com,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, akpm@linux-foundation.org
+Subject: Re: [PATCH v2 2/2] vmscan,cgroup: apply mems_effective to reclaim
+Message-ID: <aAMbT0Qh6yyrSJqt@gourry-fedora-PF4VCD3F>
+References: <20250418031352.1277966-1-gourry@gourry.net>
+ <20250418031352.1277966-2-gourry@gourry.net>
+ <aAMTLKolO0GWCoMN@slm.duckdns.org>
+ <aAMYOxSOrVpjhtzT@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250419-05-dts-clock-v1-2-1cce5d59aba2@gentoo.org>
-References: <20250419-05-dts-clock-v1-0-1cce5d59aba2@gentoo.org>
-In-Reply-To: <20250419-05-dts-clock-v1-0-1cce5d59aba2@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alex Elder <elder@riscstar.com>, Haylen Chu <heylenay@4d2.org>, 
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
- spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4275; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=qG33W8pZh9cohXq8CNvMyPhQr05ENy2yUo6n0wyKswk=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoAxla/CuSzJaQd3efb8dgbHtSmb3zQpqQCiCBL
- CBemk1p3raJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaAMZWl8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277Y8uD/0aDEL9y1ipWFny2s
- Q/8scp0VWSTj7mU1DwAhO65jJ3yS9eYJChvJasDXDZukcMrHXxCMXTo5NEL+x0dTAd67TehU9Cb
- KogxfclpbSgkCHrQe0MTxrByjFd9DUHXU5i4a67KmT4exYcl1D4BbJKXS/1KU1n/68GYgZ4YApr
- cZkMd6T0gkY/jdrUF2VWCilp0iabpPhFMLcHjTzALtsfjJMb/24ZVwdyDUO2c5nWx3qDeaxVbf7
- 0J7uWfTCamGpWePfnjQfl163ZjzLIcpfzsyGCQ+ctoAOdEwnHiLNyQXhyMqdbZAOZ5WBgL6kpq3
- zo88xoGGNvjj1Th9ECoHAcBGs/Uz1Cqy3ngtarlaBL+d4jI/sJb71r8PdWp6EFzwmWLZ+leM1s6
- vNL+U/jH0kFkwkmq+xjj0Ve6vjRAO+LDIYGz0V5J4D2sDmiu3ykgaTO2U5n7+3Y04PFCGbPw0fE
- MCX686u7nxNoJUFr29tY5zRsTN5TmjhGCa+kQGw8SOavaF8JrIQYaHDvNu6bwFyDm06YZmVOrT1
- qVVhWDniWCAD1qZ1Hmof1kknBWbF1bGJ5qGsu5mrFtgbftllfTMGc0lFsUk6AAUgaTt1VTckHT8
- Mlog5Mqv6LGA71hkoOBziQvFKNxrXO/I4MbKZCvULP6+ECXSogvynude9N9/yISgzBhA==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAMYOxSOrVpjhtzT@gourry-fedora-PF4VCD3F>
 
-The K1 SoC features two clocks for UART controller,
-Acquire them explicitly in the driver.
+On Fri, Apr 18, 2025 at 11:27:55PM -0400, Gregory Price wrote:
+> On Fri, Apr 18, 2025 at 05:06:20PM -1000, Tejun Heo wrote:
+> > Hello,
+> > 
+> > On Thu, Apr 17, 2025 at 11:13:52PM -0400, Gregory Price wrote:
+> > ...
+> > > +static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
+> > > +{
+> > > +	return memcg ? cgroup_node_allowed(memcg->css.cgroup, nid) : true;
+> > > +}
+> > > +
+> > ...
+> > > +bool cgroup_node_allowed(struct cgroup *cgroup, int nid)
+> > > +{
+> > > +	return cpuset_node_allowed(cgroup, nid);
+> > > +}
+> > ...
+> > > +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+> > > +{
+> > 
+> > What does the indirection through cgroup_node_allowed() add? Why not just
+> > call cpuset directly?
+> > 
+> 
+> This is an artifact of me trying to figure out how to get this to build
+> with allconfig (matrix of CPUSET and MEM_CGROUP).
+> 
+... snip ...
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/boot/dts/spacemit/k1.dtsi | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+Looking back through the include graph again
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 153fd1160182b42fe1a2f7f042c9c1da90f63b0c..415e1c3e1c78db987cbb65759adc26e98aaa24d3 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -360,8 +360,10 @@ syscon_apbc: system-control@d4015000 {
- 		uart0: serial@d4017000 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017000 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART0>,
-+				 <&syscon_apbc CLK_UART0_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <42>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -370,8 +372,10 @@ uart0: serial@d4017000 {
- 		uart2: serial@d4017100 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017100 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART2>,
-+				 <&syscon_apbc CLK_UART2_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <44>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -380,8 +384,10 @@ uart2: serial@d4017100 {
- 		uart3: serial@d4017200 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017200 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART3>,
-+				 <&syscon_apbc CLK_UART3_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <45>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -390,8 +396,10 @@ uart3: serial@d4017200 {
- 		uart4: serial@d4017300 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017300 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART4>,
-+				 <&syscon_apbc CLK_UART4_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <46>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -400,8 +408,10 @@ uart4: serial@d4017300 {
- 		uart5: serial@d4017400 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017400 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART5>,
-+				 <&syscon_apbc CLK_UART5_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <47>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -410,8 +420,10 @@ uart5: serial@d4017400 {
- 		uart6: serial@d4017500 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017500 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART6>,
-+				 <&syscon_apbc CLK_UART6_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <48>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -420,8 +432,10 @@ uart6: serial@d4017500 {
- 		uart7: serial@d4017600 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017600 0x0 0x100>;
-+			clocks = <&syscon_apbc CLK_UART7>,
-+				 <&syscon_apbc CLK_UART7_BUS>;
-+			clock-names = "core", "bus";
- 			interrupts = <49>;
--			clock-frequency = <14857000>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -431,7 +445,9 @@ uart8: serial@d4017700 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017700 0x0 0x100>;
- 			interrupts = <50>;
--			clock-frequency = <14857000>;
-+			clocks = <&syscon_apbc CLK_UART8>,
-+				 <&syscon_apbc CLK_UART8_BUS>;
-+			clock-names = "core", "bus";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
-@@ -441,7 +457,9 @@ uart9: serial@d4017800 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xd4017800 0x0 0x100>;
- 			interrupts = <51>;
--			clock-frequency = <14857000>;
-+			clocks = <&syscon_apbc CLK_UART9>,
-+				 <&syscon_apbc CLK_UART9_BUS>;
-+			clock-names = "core", "bus";
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			status = "disabled";
+The reason was lack of inclusion of cpuset.h in memcontrol.c while
+chasing the allconfig solution.
 
--- 
-2.49.0
+I was trying to following the current includes rather than making the
+graph more complex - it wasn't clear to me whether going directly to
+cpuset.h from memcontrol.c made sense - since memcontrol can be built
+without cpuset.
 
+The graph here is a head scratcher.  I'll still try a build with
+cpuset.h included in memcontrol.c.
+
+~Gregory
