@@ -1,107 +1,91 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCAB101E6;
-	Sat, 19 Apr 2025 08:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A5478F40;
+	Sat, 19 Apr 2025 09:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745052866; cv=none; b=PkU7h7LEnWKUL9J1/hBJOTOeet9FAZnQBCTVNSqtU+h+ardOgNq/g/c1ADGelzX+ZPGLJ4NfKcZH/5GR+9shPzbgpovUDgREJo3M8rOwU1D0kn82tCiMm3sj5jXStTOx8mabfv5Q5jH8WHYD3k85UFv+jeWFgEKEMdBCZ7YNGmg=
+	t=1745053260; cv=none; b=Yt1lsfDG5mfAjLkJPZS9TrlBIrjoaGdWQazwgKYUKcsjemeyNN+ynnBWLj46CTVTMxp9tRiLhRMe5o+OazNMsv0WS649JW6BJH+P++0FK2g+y6cpjkSfgUxEMNvstnBQ1ymHTtaxcfO4OXRHG97f30WCK/BPhpBrxGDU36j3Qvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745052866; c=relaxed/simple;
-	bh=+SFKeaCvc8Z6rN6mPqZFDLfncPrrvd/BtHbSNYc6qk0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Lgqb7FkWbsh1Q6JgXzhaRUVfyqhuoJgrK2VbXVGsPVUaQZXEdiqDDpuTUKgXxCZ5Ykf2QZy6bfJYL555Wcw5c+f8lHvmVePjAh9ut0aI+39snEcFxQOiHNW8igOXfkFWtUukbWsxYpX2RlDFhmnpHE6xj7PyKEK2WUy9Zp07auI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CDngH0LP; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745053260; c=relaxed/simple;
+	bh=xNbkUqzCNfW/d74pg3Gfs3yC8dEh1hdbu1bcAwrNlko=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Qq9aIwMJVefxgdEDnHm5NISq098eicQv1vQ6zr1/3sAE4YjzscpExZmDX0YKs3gzUaNe7ouxp+UV7956+fMGh7hq6H3sC/cVOUA/rx8cYgmJ5m17CF2keqMs40EfOENGEQxuMqCwAOf8/ukVYOnU1XNpbktyJoDIs77XGZkP2HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=dsNP6RHq; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CDngH0LP"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53J8s4K6463776
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 19 Apr 2025 03:54:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745052844;
-	bh=I7H05z7jucR/EtRAv3/7u/jdhZGjnuRYvP/7J7BdyYQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=CDngH0LP6iWrIm4xwCRueRHYVp5sJ2QABV3bFAxxaAUlZD6uKswwxPhxNGouxLTGJ
-	 raO445F56FsjfEt+fxGp8U0fuxWZkppDOa+qsN3lqpXmSOi79XlQhrSls/kMWt9ndj
-	 xqs5TDQXnzIJCdccRF9bS6/ibtJnsOv3r8WkTcPo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53J8s4Xn088680
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 19 Apr 2025 03:54:04 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
- Apr 2025 03:54:03 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 19 Apr 2025 03:54:04 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53J8rVQn040142;
-	Sat, 19 Apr 2025 03:53:32 -0500
-Message-ID: <02f1912f-0a05-4446-923a-7935ed305cb3@ti.com>
-Date: Sat, 19 Apr 2025 14:23:31 +0530
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="dsNP6RHq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1745053249; bh=xNbkUqzCNfW/d74pg3Gfs3yC8dEh1hdbu1bcAwrNlko=;
+	h=From:Subject:Date:To:Cc;
+	b=dsNP6RHqQci/HiZRgwlNbRYTAZyKYCgcED9VVgFRmWyaMsdr7vCuk633RES6Nl9UQ
+	 vQ09TdxBuc/4N1TGpWeWHdxscMcE3+lp/83sEQLC82Rj2t43tuw+Fpj9RGbNakvcr8
+	 21v5Qht64QsR+NBKs4XepfgzwjkrEbgVeoQ3hhBs=
+From: Luca Weiss <luca@lucaweiss.eu>
+Subject: [PATCH 0/4] Add support for Sony Xperia Z Ultra (togari)
+Date: Sat, 19 Apr 2025 11:00:37 +0200
+Message-Id: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Add DSI display support for TI's Jacinto platforms
-To: Jayesh Choudhary <j-choudhary@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250411105155.303657-1-j-choudhary@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20250411105155.303657-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-B4-Tracking: v=1; b=H4sIADVmA2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0NL3ZL89MSiTN2k5NRkc0sLI0tjY3MloOKCotS0zAqwQdGxtbUAsI+
+ iLlgAAAA=
+X-Change-ID: 20250419-togari-bcec79829337
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Kevin Widjaja <kevin.widjaja21@gmail.com>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1134; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=xNbkUqzCNfW/d74pg3Gfs3yC8dEh1hdbu1bcAwrNlko=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBoA2Y3mYRrMX6JOWLNz3akM5JWWFhc37/MGmpnt
+ NBlBlzorraJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCaANmNwAKCRBy2EO4nU3X
+ VmFSD/9yi6VyIGE1e5Uc+5/9FdTinE1TJqsvhvwZCYRTwK6D3n5CMP5BLYC2ZZYZteNTLrRvFhR
+ Sa+/I1RVEMntL/ys1M+KlyDZDDxAW9Wb98jjz916G2G95ETzpdzAmgM59STck4VcE9NMEMAYz2r
+ B7XC2/8KUjCLW60AAkO+ycJ5vX11+lEwrfcoIvZJjuTldIFn/TSvPFjaSEgr+I0CtTomkHsLt97
+ NFL3larfw8kfJ+rgmWVCqew5hfSeX95kOYHeW3vSXh6KRSYHHqe/22HjuwWXkMAQEHVnrOkjkZC
+ +qczX60jF1/cxQLfmg+OfwCG0HIVcqq60uMqIWitIOlK+iC6HrCNCHTOhj2uuCSgZ8QUQ9B1LA6
+ Ks2O0o7dbLaaJWHeiJJPUuRlSRkRYwcS0a/VKGGpxKLCMNoF+iPk0H7XwAPAf1z6g5KykqyY4nc
+ mjgT/z1Z/+ruUifCi+hxzFfe5hwPfWSIMfC9eg/a3DriS2pabic0xY3SgK0v+TtnfYoJ9MGcwoK
+ d5JIGUQmRnqPGZkaXWM5uibQz0LGGIfqlGtqOuodVr7VYcuTeOAPFE68zRPgkRbgcVQincFzwSA
+ rt9Mrcbsl1Xihr6RXW4GAy/Jcp7Jn9KYnaWDA73ckH/diZvxdTUqG9koKrBLe7XLDKcBhYz/LfT
+ JFz+9t7TaqcZ6Kg==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
+Do some tweaks to the common file for the devices in the 'rhine' family
+of Sony devices, and add a dts for togari.
 
-On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
-> Hello All,
->
-> This series adds the dts support to enable DSI on 3 platforms for TI SoCs:
-> - J784S4-EVM
-> - J721S2-EVM
-> - AM68-SK
->
-> [..]
->
-> NOTE: For higher resolutions, we need bigger CMA region.
-> But for validation, the default value is enough.
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+Kevin Widjaja (4):
+      ARM: dts: qcom: sony-xperia-rhine: Enable USB charging
+      ARM: dts: qcom: sony-xperia-rhine: Move camera buttons to amami & honami
+      dt-bindings: arm: qcom: Add Sony Xperia Z Ultra (togari)
+      ARM: dts: qcom: Add initial support for Sony Xperia Z Ultra (togari)
 
-I am not sure , how DSS uses CMA region
+ Documentation/devicetree/bindings/arm/qcom.yaml         |  1 +
+ arch/arm/boot/dts/qcom/Makefile                         |  1 +
+ .../dts/qcom/qcom-msm8974-sony-xperia-rhine-amami.dts   | 16 ++++++++++++++++
+ .../dts/qcom/qcom-msm8974-sony-xperia-rhine-honami.dts  | 16 ++++++++++++++++
+ .../dts/qcom/qcom-msm8974-sony-xperia-rhine-togari.dts  | 16 ++++++++++++++++
+ .../boot/dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi   | 17 ++---------------
+ 6 files changed, 52 insertions(+), 15 deletions(-)
+---
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250419-togari-bcec79829337
 
+Best regards,
+-- 
+Luca Weiss <luca@lucaweiss.eu>
 
-> I am posting another series to add CMA region to Jacinto platforms
-> similar to Sitara family soon:
-> <https://lore.kernel.org/all/20240613150902.2173582-1-devarsht@ti.com/>
->
-> Jayesh Choudhary (5):
->    arm64: dts: ti: k3-j784s4-j742s2-main-common: add DSI & DSI PHY
->    arm64: dts: ti: k3-j784s4-j742s2-evm-common: Enable DisplayPort-1
->    arm64: dts: ti: k3-j721s2-common-proc-board: Add main_i2c4 instance
->    arm64: dts: ti: k3-j721s2-common-proc-board: Enable DisplayPort-1
->    arm64: dts: ti: k3-am68-sk: Enable DSI on DisplayPort-0
->
-> Rahul T R (2):
->    arm64: dts: ti: k3-j721s2-main: add DSI & DSI PHY
->    arm64: dts: ti: k3-j721s2-som-p0: add DSI to eDP
->
->   .../boot/dts/ti/k3-am68-sk-base-board.dts     |  96 ++++++++++++++
->   .../dts/ti/k3-j721s2-common-proc-board.dts    | 116 +++++++++++++++++
->   arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi    |  37 ++++++
->   arch/arm64/boot/dts/ti/k3-j721s2-som-p0.dtsi  |  52 ++++++++
->   .../dts/ti/k3-j784s4-j742s2-evm-common.dtsi   | 117 +++++++++++++++++-
->   .../dts/ti/k3-j784s4-j742s2-main-common.dtsi  |  37 ++++++
->   6 files changed, 454 insertions(+), 1 deletion(-)
->
