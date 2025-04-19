@@ -1,65 +1,65 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4791EF36B
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 22:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FC81EF39E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 22:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745102170; cv=none; b=EdxXo49/ZAA8ixxDmnI4U28tnCVTPZ7wBTJUTiUJpNiIWhwJyrED23KrhuNmPYZSPum/UvVtykOs2jj7mtjqA7afZs1eXhvUxoPAXvUJ8jMJK54iM4Kh5KVjdfh05ng2mhk5x1cLQROMv+n/wc2OQsfeY5SRIWXePclWmQANf8A=
+	t=1745102172; cv=none; b=qbUW9PwGB8tMkVyeuqXKVtycvm8WcO/PxWo3QnPEZ2JdQHsBAltisz/Zopw78xdRQSQ4ZeI5aSSdnOJgrV1MYu7xj0cJotJDo9W4T8W5r4p1VxmVZiHwoUcUA3rqF2vM61VylsmdAABuPJM87jw0/WLbDdexd0wNwZHXT40HqXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745102170; c=relaxed/simple;
-	bh=GjuzgP6o/H3QbhkPNB4rDABhts4Jsa/gdYzzkN8CaaE=;
+	s=arc-20240116; t=1745102172; c=relaxed/simple;
+	bh=8Lmq+B+8dQHOJgJYKg4Eu++IihkxOmet9HBYrJI4JGE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OAwPh1mIquvSdkgIpICt74IJhg6/evSMooNm+7hWvg9I+81KyY4r4bcsQzRiOIO5yzwrGw29hZMs0AQ5BhBWwc+GWgbu8EBXJynp6jPNBhclChoUzbDIGy1y0gaYFFVjxv1PpmKaghvPmH+Z3ILhlRO1Jt4cEdmEqqR0kBOEf38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VV8vOEqc; arc=none smtp.client-ip=209.85.167.43
+	 In-Reply-To:To:Cc; b=tp8XFzorhCCHaLNuuiT6X/BsQOrnmJBGzzfTO1w6Cap+J8GF37ZoeFqtwXkB2+Ljf8bMpBFfRQ66+KmnT5G/iEVLRhU7BBf4JNddFzCZ1fjS2VggtHvp2h0k83xQsugGBxC8YhbJumX2e7F9HcChWjIiNJ8TMglSkbzlRZJpKx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a+3nMgwp; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VV8vOEqc"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549b116321aso3285346e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:36:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+3nMgwp"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b1095625dso3502733e87.0
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745102167; x=1745706967; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745102168; x=1745706968; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZVzjh4CI2wdh2Lb2nY0LTHSQ875qMVuhPD3D7+BHQLo=;
-        b=VV8vOEqchbICg1PiY0tSlYtvgq8+tVF7CMYzRoRIzx8z/rIXuYZaHqWjWqmCdsOpaC
-         kWTbsJVjoKWqZT1W1sjjHN51YVYmwVEvD38wr8gZTsPN+i6v6hEInqAt6OYfhYpJzvUM
-         YkiZR2uYehcjgWil/6lEtIf+7hzaVIA2ytNbX9Txf3JUAwylaTCqH4YqXhvCRKKw5Azj
-         sge1kRHNV6RZOFv/Wv4sZggE/s8IS69WDYdyncxBZtdW4DP6lxd5ES11mhU3R5dkfr0r
-         dXijPZEyTMWEKDo13sETxhqizpSEO1v7R3+WFWgjkTcVebwoXoUmfUNK39DrdAP0i7M8
-         Alaw==
+        bh=kzUqR1jHKNDNB1MvP/C818suEL+5EgmWCT+bBhmdbf0=;
+        b=a+3nMgwpMQKiVMFbFSzkZPjll5Ho0l8Q+CpPT61slP6Jd7tpiHrNNmKBDYotkXHQx2
+         mTExYnMnuzLjxoBbm+KMyccGD7gBAQOA/a2itFqGEodMvcN1OHT5G1nlsDFFs1lHOZ8o
+         liPkRi+jq/WIEOiW+YbGg385D3omQ2nAxIz7apN3lB8YBeD/yTHh33s+ZhZGsCC9nxZ1
+         AGxamLpSEUAuORCDUkSFZVMelK1oDZFlerPQv5uESfuutrwQdbqLJQtwTaiPhtBQynGJ
+         TfeYTedugxu1aDQ/6/K3VyiywcH4VkGrzC2TL5o+GKTluoVBsXBreKxhPd2Cne7Nx6NM
+         f4AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745102167; x=1745706967;
+        d=1e100.net; s=20230601; t=1745102168; x=1745706968;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZVzjh4CI2wdh2Lb2nY0LTHSQ875qMVuhPD3D7+BHQLo=;
-        b=XDvCDoQ+lFobSFELBF0d6xbSqW+rKqdRFNZuHHP0a+TpxTvFbq0e+f8BkoimrPsYy7
-         AHOwO2jHLWAna5qsxzOhkoco8TVRL+dV90s1qYNyxqS5Ib4WVYG6IWEirq8Jwu1iWIAn
-         LbsFnIDHqZc+pSrOoNJvKXUKnBRJkUKPpykP36QjZ451lJvWMSSEuWFHKbDm/u74Cz4g
-         kuSz+2t+Wnvwrg5jlPVG3idwHrfJxLbEFtxfJJT80Tgmf5h7ksb+uTAQ99OfsRP7kQvB
-         uZk3Ll3eYzWw82EL9tcXdA5/otyZuOEDf671iFVK19lzbZ+HcABGNQ8lALc+5M+rw46Z
-         jRYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwpyCQqry82YiTxdw0HiVpQRtAi/xQ1n1+LbMbLarYZdrnO1zs6TUKUDIYdLie9o7I/ABDSHJPpYZ0TeM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRc6355n0iYueT61Jkf5qA2kY0jTYoZunxxamPpIipVxHbyOaY
-	OFWKP6yH2Zg4Fd1F40YOjeiFatGKqxWq+07N2K0fvAzZ9KvWEEbBz4Nt+eFCa/0=
-X-Gm-Gg: ASbGncs/SzdEO3Y9dkosatJOl/GXo+dYyrAnF7RJZP21jDBerxbdom90MllfVrCbWtH
-	9z7hwqca1vWn9k2SOC4nQt5Snt5Us9Td7bauyodde2gyHt49suE54RrxADw+N0Rvit1JvZCJji1
-	NrLZXv5H6U0Sink5D/LX3W6BuXzgZL4A/8BArN8u7QwGa5hukF9Q1D8DtxHXVObQ8pst4ekh8NM
-	gu3WvnRi2ShTiO/UUDuyuILSDYFIEAWHFlEp8loeFNYwUVHkw5LLQr66K3RV0QWCOIYRqEzZhBo
-	9xjyEIgpDchKjxK19+1pSEUCIjuOdUDOTsbHLlBGSKNl1NFK5B8=
-X-Google-Smtp-Source: AGHT+IG1pK5ONP5zwkjmb5F3Kh3pNns2KgCXtbBbSCQoJiPI86cXUdyKSiDMdutuwP1A2HrNm1AC0g==
-X-Received: by 2002:a05:6512:3d28:b0:54d:65e8:31e0 with SMTP id 2adb3069b0e04-54d6e61be01mr1979159e87.5.1745102166756;
-        Sat, 19 Apr 2025 15:36:06 -0700 (PDT)
+        bh=kzUqR1jHKNDNB1MvP/C818suEL+5EgmWCT+bBhmdbf0=;
+        b=YVZX+/mTX8t7EP7gHhifFGd3fnl7/3RqnRiy1CqUNlTWUsBVLe12PGiAYSc69wT592
+         4VBRYaL6ZBa+v8ZGJ/Y0QEq7ytJO8UJ+QPylQLNTgAoKQRAMHCC8EZyEoUD94ee/Bpep
+         NZ9IfWAuqicxuttdz+aCEUGeiJSsmtKMhkTl1wW+x449E7LSH+u2ypl90ihhu53z8DsJ
+         BX1pdeSu9UfuFnkQwuvqyKX8ayHyT9eqy9rIXM8oDQnUFAFKvSPsa/OGLqash45xCw9w
+         54MNbQ2Pu8o5cZY2Dbkvl6djxDympGQlUrv5Mu6n+WWt7uoswk1tc3lYkF61bs/iN+aP
+         vpkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7Mh1OIEv4nM+z7emXGfDvZ74cYKxdaxzAGfftPUY4f67rIU11XntjoeImbeB2HbbDOMV/cfVg5PuwDfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk8wqyjUwUf/cYdkYnfQe7kfUBdxy1sC6maYpxTYsQiEyl0FSu
+	kXkrYGAA1dpzKI7vvzeHwNO65/e/KClIQhTxaJCPDqGwhpSlJSQwq67z7/uDDO8=
+X-Gm-Gg: ASbGnctR6LcW/4crWHfVw7Y3kk86QZ8ogBeEiZa9f2gJifeUuLOtDbkwurh5OtSGvJw
+	KQYILEe8Gk7PGfdOcD5Ihu97yCQ/P6iRKpC8Dv8YfXHrT3iq8HH4V9DajPJ8BK4VIDjhwvD+4t9
+	ZLqzOC7+nTtyE4Q0BFeNWq34Jyyhp9VjWyE9M5q0Df7W2k1j6toFfUlg/qqvjDi/EAgkMjygejr
+	PEhFrEems45qnhU0ZMZm/FTeuKTH5vomoRAeP/N0lhHN3s5P/8e6ZHImL3l8P4usQ5jI8tzOxkD
+	jGLWYBQFlgn76ES9gsnZG5IzX9NO7ZLNIAtOTifeoDgJKntxi78=
+X-Google-Smtp-Source: AGHT+IFmea0W7fyk5E36UX+d1KPazK0iLChsYY2dcspCJddLKNCeOYSi+wYuBVuxVxg8eew0JWKzvA==
+X-Received: by 2002:ac2:4c47:0:b0:545:2cb6:af31 with SMTP id 2adb3069b0e04-54d6e62cb53mr1849382e87.15.1745102168217;
+        Sat, 19 Apr 2025 15:36:08 -0700 (PDT)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540daesm535322e87.79.2025.04.19.15.36.05
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540daesm535322e87.79.2025.04.19.15.36.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 15:36:06 -0700 (PDT)
+        Sat, 19 Apr 2025 15:36:07 -0700 (PDT)
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 20 Apr 2025 00:35:55 +0200
-Subject: [PATCH v6 08/31] ARM: entry: Move trace entry to C function
+Date: Sun, 20 Apr 2025 00:35:56 +0200
+Subject: [PATCH v6 09/31] ARM: entry: save the syscall sp in thread_info
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250420-arm-generic-entry-v6-8-95f1fcdfeeb2@linaro.org>
+Message-Id: <20250420-arm-generic-entry-v6-9-95f1fcdfeeb2@linaro.org>
 References: <20250420-arm-generic-entry-v6-0-95f1fcdfeeb2@linaro.org>
 In-Reply-To: <20250420-arm-generic-entry-v6-0-95f1fcdfeeb2@linaro.org>
 To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
@@ -83,70 +83,90 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Thomas Gleixner <tglx@linutronix.de>
 X-Mailer: b4 0.14.2
 
-This moves over the code entering into tracing into the
-C syscall invocation code. As syscall_trace_enter() will
-provide the current syscall number from the regs we need
-not provide the syscall number to the invocation function
-any more.
+We are going to rewrite the syscall handling in C, which
+means that the stack used by the call code is no longer
+predicatably 8 bytes (for syscall arguments r4 and r5)
+but a varying number of bytes depending on how nested the
+C code is.
+
+However the current code is just assuming it can rewind
+the stack by adding 8 to sp if a syscall is interrupted by
+a sigreturn call.
+
+Solve this by storing the entry sp in the per-task
+struct thread_info and use that in the sigreturn wrapper
+instead. We already have the thread info available in
+the SWI entry and sigreturn is probably not so common
+that retrieveing a pointer to thread_info should affect
+anything very much.
+
+Storing this per-task in thread_info makes the solution
+SMP robust.
 
 Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/include/asm/syscall.h | 2 +-
- arch/arm/kernel/entry-common.S | 6 +-----
- arch/arm/kernel/syscall.c      | 5 ++++-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ arch/arm/include/asm/thread_info.h | 1 +
+ arch/arm/kernel/asm-offsets.c      | 1 +
+ arch/arm/kernel/entry-common.S     | 8 ++++++--
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/syscall.h b/arch/arm/include/asm/syscall.h
-index 1d21f26ecf510ac00a878b4d51a5753ee49475f5..66067d165ba3fbbe0f840a89ae396eb1a311bacc 100644
---- a/arch/arm/include/asm/syscall.h
-+++ b/arch/arm/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- extern const unsigned long sys_call_table[];
- 
- int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *retp);
--int invoke_syscall_trace(void *table, struct pt_regs *regs, int scno, void *retp);
-+int invoke_syscall_trace(void *table, struct pt_regs *regs, void *retp);
- 
- static inline int syscall_get_nr(struct task_struct *task,
- 				 struct pt_regs *regs)
+diff --git a/arch/arm/include/asm/thread_info.h b/arch/arm/include/asm/thread_info.h
+index 943ffcf069d29cf4a035964d20d56f7ebdd6d602..d8a45c5a10496aaf806bfeaa0353d5e8985bd6f5 100644
+--- a/arch/arm/include/asm/thread_info.h
++++ b/arch/arm/include/asm/thread_info.h
+@@ -67,6 +67,7 @@ struct thread_info {
+ 	__u32			cpu_domain;	/* cpu domain */
+ 	struct cpu_context_save	cpu_context;	/* cpu context */
+ 	__u32			abi_syscall;	/* ABI type and syscall nr */
++	__u32			sp_syscall;	/* SP when entering syscall */
+ 	unsigned long		tp_value[2];	/* TLS registers */
+ 	union fp_state		fpstate __attribute__((aligned(8)));
+ 	union vfp_state		vfpstate;
+diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+index 123f4a8ef44660a39c4eff2a6e5fd86cb48fb572..291de33ec53d11d87d39d9b87c3c82843e4ebbe8 100644
+--- a/arch/arm/kernel/asm-offsets.c
++++ b/arch/arm/kernel/asm-offsets.c
+@@ -49,6 +49,7 @@ int main(void)
+   DEFINE(TI_CPU_DOMAIN,		offsetof(struct thread_info, cpu_domain));
+   DEFINE(TI_CPU_SAVE,		offsetof(struct thread_info, cpu_context));
+   DEFINE(TI_ABI_SYSCALL,	offsetof(struct thread_info, abi_syscall));
++  DEFINE(TI_SP_SYSCALL,		offsetof(struct thread_info, sp_syscall));
+   DEFINE(TI_TP_VALUE,		offsetof(struct thread_info, tp_value));
+   DEFINE(TI_FPSTATE,		offsetof(struct thread_info, fpstate));
+ #ifdef CONFIG_VFP
 diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index 77801d039b5f6562b231a6fd4979e318c7e736a6..3cfc6d952ff99be9c4c1be4481ac3039260e3e57 100644
+index 3cfc6d952ff99be9c4c1be4481ac3039260e3e57..8baab7f97f59c434396f30b08ddd3029c5f9c0e5 100644
 --- a/arch/arm/kernel/entry-common.S
 +++ b/arch/arm/kernel/entry-common.S
-@@ -292,13 +292,9 @@ ENDPROC(vector_swi)
- 	 * context switches, and waiting for our parent to respond.
- 	 */
- __sys_trace:
--	add	r0, sp, #S_OFF
--	bl	syscall_trace_enter
--	mov	scno, r0
--	mov	r2, r0				@ scno into r2
- 	add	r1, sp, #S_R0 + S_OFF		@ pointer to regs
- 	mov	r0, tbl
--	badr	r3, __sys_trace_return
-+	badr	r2, __sys_trace_return
- 	bl	invoke_syscall_trace
- 	cmp	r0, #-1
- 	bne	__sys_trace_return
-diff --git a/arch/arm/kernel/syscall.c b/arch/arm/kernel/syscall.c
-index d637dc74b1c70415933898fbcadbedc71df5f654..377e16c8c53c8e809e3f8b157a889ef115d5c043 100644
---- a/arch/arm/kernel/syscall.c
-+++ b/arch/arm/kernel/syscall.c
-@@ -21,8 +21,11 @@ __visible int invoke_syscall(void *table, struct pt_regs *regs, int scno, void *
- int invoke_syscall_trace_asm(void *table, struct pt_regs *regs, int scno, void *retp);
- __ADDRESSABLE(invoke_syscall_trace_asm);
+@@ -232,6 +232,8 @@ ENTRY(vector_swi)
  
--__visible int invoke_syscall_trace(void *table, struct pt_regs *regs, int scno, void *retp)
-+__visible int invoke_syscall_trace(void *table, struct pt_regs *regs, void *retp)
- {
-+	int scno;
-+
-+	scno = syscall_trace_enter(regs);
- 	if (scno == -1)
- 		return -1;
+ 	uaccess_disable tbl
+ 	get_thread_info tsk
++	/* Save a per-task copy of SP for sigreturn */
++	str	sp, [tsk, #TI_SP_SYSCALL]
  
+ 	adr	tbl, sys_call_table		@ load syscall table pointer
+ 
+@@ -377,13 +379,15 @@ sys_syscall:
+ ENDPROC(sys_syscall)
+ 
+ sys_sigreturn_wrapper:
+-		add	r0, sp, #S_OFF
++		get_thread_info tsk
++		ldr	r0, [tsk, #TI_SP_SYSCALL]	@ read back SP
+ 		mov	why, #0		@ prevent syscall restart handling
+ 		b	sys_sigreturn
+ ENDPROC(sys_sigreturn_wrapper)
+ 
+ sys_rt_sigreturn_wrapper:
+-		add	r0, sp, #S_OFF
++		get_thread_info tsk
++		ldr	r0, [tsk, #TI_SP_SYSCALL]	@ read back SP
+ 		mov	why, #0		@ prevent syscall restart handling
+ 		b	sys_rt_sigreturn
+ ENDPROC(sys_rt_sigreturn_wrapper)
 
 -- 
 2.49.0
