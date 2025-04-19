@@ -1,79 +1,99 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02253172BD5
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 06:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D168828E0F;
+	Sat, 19 Apr 2025 06:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745042629; cv=none; b=vAkXySXTzvpr7sXIjuIJ4p1vB3tWKugr+r8MShIce+N9UbiTvb52jCJXPMc/90Mo9+22s8x0WGVwomCXJ5B63rKAmPpO1I5uR//jekPbjn7u3qcfJgd5Ll0m987N7URMJ6S5LIbqc6yKgMLy8eAfCSMsed0I+MJ4kj1iDAWdWvE=
+	t=1745044966; cv=none; b=HIqQ+aMOVuRSjQoymd2/Shde7UaX40CcuAsjGpbM4SC+Jq9YuSJHcyvyJk6HhG82L0tG1roZWn8w5ccKtskOvdax1p9u/fxEvthKw0ENmBFIEV3o5uyCc19wu80mX4pXCBDufM92QNKucTOc9yIdg21Oc+rVPtsfYY/BvmbWpbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745042629; c=relaxed/simple;
-	bh=dBw0csETq4Oax7D/gIJsoGLgmtl6zPN0tQTFG8GjEtw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYh4Qpz4VzNn5D01BnUryQ1vcHmzpNBnu3J0uCph3GuwZEflAqKn2mUtZ8KbvzXSCVJh1mwqQU6n4RUEj9dzU0JJQd7d8/quwAdqO4RNqIQg1ER+Ujd+1h5bMXddQqETlcsfys84zs4L8TOwd0l9mgp/TGC4GmgEL7lMV6WoKK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rGD1hFqv; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745044966; c=relaxed/simple;
+	bh=RpDJN/CwCIEnkvfWDcWekSrBuACy5eLCDUNY+0W0a4g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z4RgwoggI8u/Bfd9mAZDjl81UDDpkCAkbPY44igkyNg+34IhD7IhOb/C60iTp5L57Ci5Mf1nT4e366vph6Hd2wYUHgJ1kg0UIZ4S6ASs1zYfsafrpm44MLsNAP5Aa2MMRZ2ZW2JJbS0fw6N+2pY8pmV/DmL5eK7+3Ve5017GhgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=Oh9mfdsp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UfrNYTHn; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rGD1hFqv"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225477548e1so25124415ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 23:03:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745042627; x=1745647427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2lTgQTvZYqN0TLCj43/V6Q2NyHBYHePk/+H2FCWatKs=;
-        b=rGD1hFqvX+Qm6W1NKqWPKkkt1ZWZso6vUSwToAeQtLPVmc0f4UXf1eiLnelAbpyFE1
-         w4r/Xhmmnp3hsZ2Zq/QKL9U15uIr1ifSkhEzPDvlgC1lsbEy22YwZlbnWI2E/0dIoPhu
-         4ONYm2bnYZnJkfAOBNCteg/sZ8OYHUp7tOZfSAaPPbyr3FJXhgGcM/UtAXJrdW0+Ivii
-         1Hm/xEEOhsrussOzGVNRb1AaGRpKRTZVYsdWxpFdSUlPYEzLAros98ddZ7zP/rxhw9ya
-         reYIHc9XrTbphu3gXEWGVWstuCI870N1Pm3XIQZky46qCavtj5yaAGrC0nGIDxnbLHKW
-         rpxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745042627; x=1745647427;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2lTgQTvZYqN0TLCj43/V6Q2NyHBYHePk/+H2FCWatKs=;
-        b=XJUgYAxFc647cAUnKq9KtJqU/tHqDyVzAVpmAXCxjcxpS0hxh85cOeqQzYiVRJWsfi
-         y0ynZJ1B/38kK26yGsDiPa46apGg41N403H84obN0Pl1fH7/na8z4BE5oIzXpZ8MW17J
-         vjHacfMDfYF+aUmw8LbD1Gs25Wy00nnNUyKV7F4p98g9OzaPa5G80SDy6zHdWHqRL4X4
-         arHIi0XYmWmGxvqd5cTmIkmmHHJ+tBHUYsrFNiQ474JsR4LVv6HYAakm26fTCW0yjli7
-         KevbrHVo5gwXYUBLkP7Sk42Wl1wz6CGzfWM5o5A7i5luVL3csPKgnUJ5NbdcsJnBGMg4
-         VOSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUn3TevbOxrCmEkhQoRhaLR7EM/pliLY/HLeLjj1aR2UD1u1x0iFy1LN8B3C3GSZ+NBn2QNK/jeTk3UGAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHfS+X4nGRRaWNKGQio7x6RWf1g5W8wjlJfg5Z+rSzz+iw2WVy
-	hPFQ8RXIloxNCGYQUivXFs3LymmfVTTk2Rbvml03fooodTTUWr9o6vsiWX59uQ==
-X-Gm-Gg: ASbGncs8TaufKsUt0/F8aCgtQiUzXhQfQJJzwmkRslRjR7XxGjSgz2mpCRauOHvQRh/
-	ENp4b5xi032gQJXNu1YbWi9WqQk5tFIv1VfROndrlggyRbqXy9S42rxDyXRhVyytUDrurSlQx8U
-	jXW8xpJu8bAsb+ZSIYjlV1MyUORb1fjV5DkOuLep1UyuAv7767vjIC5X4YlmQH6iYaQvEPsPfBo
-	OD8IGqi+5hanSZBs2EHcFaOhQwzfzdIRX+jfVkV12TFx0ik8G9+tsbOnYqXO5fdLep2y6opM8av
-	LjDksVtW5mwZxrH97GyACLlGCCRc1RyVtd1n++5/nVDTFfORKlHGXRnXFHFdHCCJ
-X-Google-Smtp-Source: AGHT+IHe7z+mwljypPJwxHYQDW6Or2SxhxqJIzdabeYhZVRypfM4toLH9er4he0mUfYtnDMuCNfesQ==
-X-Received: by 2002:a17:902:e546:b0:21a:8300:b9d5 with SMTP id d9443c01a7336-22c535a7ec7mr65152705ad.23.1745042626951;
-        Fri, 18 Apr 2025 23:03:46 -0700 (PDT)
-Received: from thinkpad.. ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8bf7ecsm2609173b3a.31.2025.04.18.23.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Apr 2025 23:03:46 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="Oh9mfdsp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UfrNYTHn"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 417362540395;
+	Sat, 19 Apr 2025 02:42:42 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Sat, 19 Apr 2025 02:42:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
+	 t=1745044962; x=1745131362; bh=zjt7NfBTzseQQMbU4/Y8LSDbLij1PLqZ
+	aamI7Qx/jKQ=; b=Oh9mfdsplZ7i20GBTkOnAnIP3l43QK4SIe0Oew6G5Vn8rjDH
+	Jkzx6Xdgkqau6Tr9sg6fdh9RdZmVngGuaEtFU+s91KEFO1/Ty6LBUjLiSCsSTO+W
+	GZUMjhe0t0VDHHH4Furz/W2aUTkg7Noicw1E/u+ICm+7VtCRR2bSyTQo6D5KIxzv
+	5Gdaf/gtacF04VHSEJetuAZdz2DPbURnQqQY9l6yvu/anIX2QYfdJUkLJFHfvD9N
+	p2lS4e1nW0I5t1UEAXUW86f+FRXwslbZdodOAweJLz09CVm71WKWsfQal8RDNNaY
+	m9PboVUhZQ9IUGx7Mkhh9f6rfkJKDV8bFwRjkQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745044962; x=
+	1745131362; bh=zjt7NfBTzseQQMbU4/Y8LSDbLij1PLqZaamI7Qx/jKQ=; b=U
+	frNYTHneRJPrz+u2FZYVGWYEb/oJPDEkfkJmCemiKjDbphzYsj9to3yvXzqDuxND
+	tma2eP3q2rFbCngaSqNEd6mxezuQLYb004rM+y059La1SvmTz2fYdUAPv/cfOIMe
+	be/oRvTS9uSnHx4ievbR4ahwaPunb5Ok+ozS4/D+5seBOuGDwk8N373HI7xHfUEl
+	PJ+0Qbbt/XeG63phsDUHo9ewLubEpHlrgq0OkkksMMv4oz5xn14av/fCLhgEJ7Re
+	9b99upCdxMZS2xgcaSdNSS7eglKr8zz3wY5f0fSW2L7BchEEkPsYSUufwD/mjmhn
+	5V5b6/qyr376NoM1kmwhg==
+X-ME-Sender: <xms:4UUDaIs5Ny7GF38C8WnUn0nR48lDcMXrwqpGX9IZvw4kHNogcGPeCg>
+    <xme:4UUDaFd-UCklpb-X5bxoUNiEQd1yoiR1mFOE-qv1BXUD2Msvrk52lW0Va2AwT_WIQ
+    SSLTAS7LANOosagsDA>
+X-ME-Received: <xmr:4UUDaDxNXMpVP_b_QdrhZ0KjRd8enuK4YtIXq1wjQXK2gaAdwkm2dtBbLia8TL4IOoVX>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeegfeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
+    tdejnecuhfhrohhmpefuvhgvnhcurfgvthgvrhcuoehsvhgvnhesshhvvghnphgvthgvrh
+    druggvvheqnecuggftrfgrthhtvghrnhepleetudehlefgteduffeijeehfeduudekhffg
+    fedvueekvedvveeuhefgieetgfegnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnhes
+    shhvvghnphgvthgvrhdruggvvhdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgt
+    phhtthhopehnvggrlhesghhomhhprgdruggvvhdprhgtphhtthhopehrohgshheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtoh
+    ifihhntghhvghnmhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepfhhnkhhlrdhkvghr
+    nhgvlhesghhmrghilhdrtghomhdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprh
+    gtphhtthhopehsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:4UUDaLM25JbRuYmCuFzy8hpuXXbZDn8mw_IgxhT6pDJw7zQAJYqThA>
+    <xmx:4UUDaI_glysPJGPj2VfOhzjRGHrEa_5Fl9_Nfw8Ome00AyJKkUJYJQ>
+    <xmx:4UUDaDWzJYoLb2zfyJ7NEkkQxLixy39eC_5VqQ-DtSKcTfpushl5vQ>
+    <xmx:4UUDaBd9iE4KcB8v0v61cUf9HSWGj1B7fI-2B5x15ZE04mZsHfdHxQ>
+    <xmx:4kUDaILQRmgzG8Z9BoOLGaiybrwn3SiiHE4Ym-YYn-dMGZdocIVv0jJR>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 19 Apr 2025 02:42:39 -0400 (EDT)
+From: Sven Peter <sven@svenpeter.dev>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nick Chan <towinchenmi@gmail.com>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@svenpeter.dev>,
+	asahi@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
-Date: Sat, 19 Apr 2025 11:33:32 +0530
-Message-ID: <174504243663.11666.13632057141942882562.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241107153255.2740610-1-robh@kernel.org>
-References: <20241107153255.2740610-1-robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: apple: touchbar: Mark ps_dispdfr_be as always-on
+Date: Sat, 19 Apr 2025 08:42:34 +0200
+Message-Id: <174504490666.63781.1711699267217097502.b4-ty@svenpeter.dev>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250416-arm64_dts_apple_touchbar-v1-1-e1c0b53b9125@jannau.net>
+References: <20250416-arm64_dts_apple_touchbar-v1-1-e1c0b53b9125@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,20 +103,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-
-On Thu, 07 Nov 2024 09:32:55 -0600, Rob Herring (Arm) wrote:
-> The mvebu "ranges" is a bit unusual with its own encoding of addresses,
-> but it's still just normal "ranges" as far as parsing is concerned.
-> Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
-> instead of open coding the parsing.
+On Wed, 16 Apr 2025 20:06:18 +0200, Janne Grunau wrote:
+> The driver depends on boot loader initialized state which resets when the
+> ps_dispdfr_be power-domain is powered off. This happens on suspend or
+> when the driver is missing during boot.
+> Mark the domain as always on until the driver can handle this.
 > 
 > 
 
-Applied to controller/mvebu, thanks!
+Applied to git@github.com:AsahiLinux/linux.git (asahi-soc/fixes), thanks!
 
-[1/1] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
-      commit: 506d34571e2f204c991aefe3f1300175907594e3
+[1/1] arm64: dts: apple: touchbar: Mark ps_dispdfr_be as always-on
+      https://github.com/AsahiLinux/linux/commit/dc5befecbe26
 
 Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Sven Peter <sven@svenpeter.dev>
+
