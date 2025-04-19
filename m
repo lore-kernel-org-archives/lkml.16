@@ -1,90 +1,88 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72BB1DC98C
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063432B9CD
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 15:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745075635; cv=none; b=QJX3h3h8UxwRJn7iTrJE7EX5YU3z/17IKdER2nDVejvutTVnxTAveEdcuUjeN1tCOU3Sk8WG4aAHvZWXX6KRg5jARBkWZuFSsltJc9fMR0ztCsGxY6mqM2CT6kKUxjYJJVxKcG9BvUkIQH6dFbQwFN2NKQ5jk44DusC08+IoLA0=
+	t=1745076108; cv=none; b=d8skScFMbp0GBqJjzKHCXvjw3amh1i+eR6ezpzQDxuPCkR/iUYIcgcSdUGuX2OeN6ts6my/MsRHvk0aimJi9XvQVgFmjR80j8NJjcJNlCE+1PRQ80d2K78D6RDY8Qts6DbqFR0yeM6UIdovcVzmMYYBr1JHRK18jo3v1M0AQ0pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745075635; c=relaxed/simple;
-	bh=xjS2bMDeIbhC0yshi+jMm+EWIBUbVhlRrjV+NI3C8Ok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPIqiGaR8h2mJTwAsEc/MwoE3iWWHGbzj0ih9ziWfzrBQbzJ7p4ex6S05A+AH/R3vFvBpYcAgIox5T6GySSTqsyvpU/vSIx+01U7aY8ICVhhS1GhZuuKWTzERP2Lzhlqn4CbC+G8x/UucZBfS7iZFlOe411DN+fdIK1PaazMdYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kpzTYnGS; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745076108; c=relaxed/simple;
+	bh=lSV8rRyHZ6dAi93S48PR/v++SJn4bGAMINRJFduCmGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHRJA8H+OoY2vP4wpeaFw8Z2hToDSuHbs+gwpV6b9qppmUT3qUnxGYvmyAYf4JwWjpLkvS7jGzPlcmi9R+yLE6eIVNmO/2tkV797HnsqYFee8uZSja4TTK2xjAd2AXLcIIJRfQn/bNHAmfKzElVaMqPe24IbxUH/sog9aGOHI54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IrsVmLDi; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpzTYnGS"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3054e2d13a7so430778a91.2
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 08:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745075632; x=1745680432; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xjS2bMDeIbhC0yshi+jMm+EWIBUbVhlRrjV+NI3C8Ok=;
-        b=kpzTYnGS0xzLL3YNVHpuqvEX2hs4Rfh20o/CechMBhTbaFRn50mHNsDzbYJm19DIXq
-         pEcrHm5aPMjZtRm3yawGwTRgqm9dEFq4camDbA45DcoRGt8p7mdtt9Eai3d4hyFYphOY
-         aWCYZ6U3AO8JDT8tvX8QLaf+yCXMp/1mffesL8pvfuRmLQ86VO4JvC+FRGLy1dg31BBW
-         0UZ6eGJubbmqtLT2t/5IEaYlEr9D4Ne8vj+CuungGvrS1KD77d0vXZi2nERBKtjTWAKd
-         u5UyFqzALLmu+eXUvMYTsWFUECcK7irviUSYCYy8CA+P7fb6Am/3Y/U22Z5sItMKuY4A
-         DrXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745075632; x=1745680432;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xjS2bMDeIbhC0yshi+jMm+EWIBUbVhlRrjV+NI3C8Ok=;
-        b=TBnBcaq89VI5aEOHb64XOWB1w7krWxMWm/ZzDVuAlykGOQArJnR2wPnFXgHKYGkSLu
-         dRF9HM5eNERzOXooZgIedA1XzQYHxGX71zMVHHktcdPzg2YWfWayBvhjbEMeduB7tAXK
-         8DbM27edrhTxr1vgnPUgz2aCff6OMNzPFxpl2MSINl5ujDIvv3M+b6Au+E9gIK4n2ljC
-         wrNdbLN+6U1qaUvsXO6zo1tFxWTBjIMi2uZ8rI+6cOst75ZSVQ6vqcVApRG0ioNhJmbb
-         trI1l72GvGI+baQeDfmbpHVnPp2DhT8gEZOyQA/PSI6aJCa5iLUUYWjjTxMJVpTI8TpO
-         z4ng==
-X-Forwarded-Encrypted: i=1; AJvYcCXyBWGTAzyYaJD3UN16q8orqV+Fjht6Slqm6AIiT77GpEG/dzrp0sr6OyaCf7nEaIuCn263YnUYN1sMpNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhwqT4tTT8Fb/0NzYOZ/sDOE2Vv4XEs2X+kx5WQLjV5OGAwkOE
-	BjfMN/lDlSzZTTA1ydr+r12eScGR5lVnwtbIkP7XUqW/DaOxCaxS38AWxZP3z3Wf8Mgnrl8W77w
-	UzgfXHu5fGg9oepM4cendUPvyOWk=
-X-Gm-Gg: ASbGnctbd4PhBsJ7YnM5jDLy0tg3nn/nt+fAD02ATrWnQmuR5unpQrvEh19FriJgvnO
-	AZJ/38t+f0HteLHk6G98/jAfnDRqB6ltb3c2OFvKzoK94Bzfc5+sGHLoihkAx5p2vj1Ofxnq+fM
-	PBLgvWpWeCT6oe2pzdutaDKA==
-X-Google-Smtp-Source: AGHT+IG1aCfPQhnBXsvG8ECP52ka2sLz5yKvS0cOAtGpRTOS3+qv2td4+5bLSvnUJnRNYP0BaXxwScy8wtNUpAhrsdw=
-X-Received: by 2002:a17:90b:1d06:b0:2ff:7970:d2bd with SMTP id
- 98e67ed59e1d1-3087bbc4f53mr3345545a91.5.1745075632258; Sat, 19 Apr 2025
- 08:13:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrsVmLDi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745076107; x=1776612107;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lSV8rRyHZ6dAi93S48PR/v++SJn4bGAMINRJFduCmGc=;
+  b=IrsVmLDitWxdLGl61bJQ0vLkYk7OLKFKFUNhPztNbydZPo8DNXMJiXCp
+   q+Cb2OtsN88qc9IYx5cNBrOkZJIHy6V2Ejf1OD3FIlQSQ6VZz6J/8bAPR
+   RdaVRKUnpYPslf4aD8lIIY18TXW/Y8Dt/MI8JN0K/QI8UjJx5HAmbLmbc
+   ruzpw8gq9iYUH+ivw2ebFt/KBXDQ9//ybgYqJRaomVdfdanU2aXOhuAeB
+   Gfqi2691OuvJrUKi3j9xEPQRuqW+NXzgKVP/o2Aavt91Dpq2t/2Er2JuJ
+   OipsN0acdOJkRHWPwqUr+KqoXhhE1PuFKhGPnlEEQTcGYacEnFMzDHwfR
+   w==;
+X-CSE-ConnectionGUID: pO3rflUcSumO4gZy3WoT0A==
+X-CSE-MsgGUID: y81kSV+dS7W0ZT/diAxrtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46806278"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="46806278"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:21:47 -0700
+X-CSE-ConnectionGUID: FJJofWCZR9CFitWUo59J1A==
+X-CSE-MsgGUID: bDbWT53+SFmdWvcc18cSeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="154516420"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 08:21:45 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u6A0k-0000000Dqki-01Wu;
+	Sat, 19 Apr 2025 18:21:42 +0300
+Date: Sat, 19 Apr 2025 18:21:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: xiaopeitux@foxmail.com
+Cc: linux-kernel@vger.kernel.org, f.fangjian@huawei.com, robh@kernel.org,
+	john.g.garry@oracle.com, xuwei5@hisilicon.com,
+	Pei Xiao <xiaopei01@kylinos.cn>
+Subject: Re: [PATCH 2/2] logic_pio: Add detailed comments for find_io_range()
+ and logic_pio_trans_cpuaddr()
+Message-ID: <aAO_hdYdKW1_Z-T8@smile.fi.intel.com>
+References: <cover.1744964101.git.xiaopei01@kylinos.cn>
+ <tencent_CDDCEC54C190265E5927ED7353AE68116A08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416152800.GA570023@ax162>
-In-Reply-To: <20250416152800.GA570023@ax162>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 19 Apr 2025 17:13:39 +0200
-X-Gm-Features: ATxdqUGRNkjsD6enVW3TUiA5cYbGWXxCCSBQlvVzerYHNWFwSBicBV9k8htVI0Y
-Message-ID: <CANiq72kB6H9g24Aw+Oux4oiJdwWbutyMw0uvLEUBUjg=Mj3jzg@mail.gmail.com>
-Subject: Re: Prebuilt LLVM 20.1.3 uploaded
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, ojeda@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_CDDCEC54C190265E5927ED7353AE68116A08@qq.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 5:28=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
->
-> I have built and uploaded LLVM 20.1.3 to
-> https://mirrors.edge.kernel.org/pub/tools/llvm/.
->
-> If there are any issues found, please let us know via email or
-> https://github.com/ClangBuiltLinux/linux/issues/new, so that we have an
-> opportunity to get them fixed in main and backported before the 20.x
-> series is no longer supported.
+On Fri, Apr 18, 2025 at 04:51:45PM +0800, xiaopeitux@foxmail.com wrote:
+> From: Pei Xiao <xiaopei01@kylinos.cn>
+> 
+> Add comments that we were previously overlooked for find_io_range()
+> and logic_pio_trans_cpuaddr().
 
-Looks good, thanks! I also did a few quick tests on the older 20.1 ones.
+You haven't run definitely the kernel-doc validator. There are missing Return
+sections. And even style for returned value description differs in two...
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+Also, you have an issue with your tools, the cover letter is detached from the
+patches. Please, take your time and fix that.
 
-Cheers,
-Miguel
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
