@@ -1,131 +1,109 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098EB2AD1C
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C747136E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 02:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745031209; cv=none; b=QxBDWKsSE+nVE2RRCZn6Zk6WSGE56jDfo+vINDJhCeQmucu7hNr/CuGRLTI/c4FJy3dvBbogPJrDaIJ2yxOxhjiKBwQPrXQN07DVdGfeBXPe+nfug0ZNB5EAHRbJkZsIak79qgcs+dSfKglA+9LdXpaBCbHIn7L7uv5rKsDhT58=
+	t=1745031311; cv=none; b=YgRAGsK+dFV8EqaDkNigMtHKZ2SOWJyKdewXzMEuYoUekptCHPQIuezYvmRS2cisgE6HayjpReh2qrSfRL337vaMCVvddyvCCidXI6HMawfo2ausAz4Nz4Zrp3R4DQsSNZoW0tiGL6ZkD/15P16OmxOhonjZFyaleE6HOrLbHVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745031209; c=relaxed/simple;
-	bh=UuJYNB6rYkrZrohvvpTtvlU1rLTogN1AI0WOxTxR6FM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M/gnrOW9QC7me1SOmAWJt+OVH8Usy2rpEZghBtQpTwBRXJwccVDwNKynrQls/Ae0u/np3kXMy3Lgv6Z4v4k7jIfZAr+aNgcsctvMDMOyF6/wMZkSdrjDPQ5JzS9dEBsOM3UKmBABvLv8UzRPDzTPlMi9UdpHJyD6LyADiB411lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=e9CPw/ne; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745031311; c=relaxed/simple;
+	bh=K9LT1D/0tD04Hyl41reZpd68EkxgVEYYcMwMlkrApPQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FfZDeaz7oAV/Nslp05miaWL1/ZDCz4j23loOQMz4kRlyy7Gpt+9DNH/S9xNTBq7So1e0siDc3PxPmYb8FGOqQdNcYFip0XThX2yBYAdj0vhfLDf54UViORkqkdoZzbw/k7/xj8wCF/YXWBkkA0rxNui1Wred9LVzzDYtxCiYQVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dQcVhoNN; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="e9CPw/ne"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745031192; x=1745635992; i=efault@gmx.de;
-	bh=t0GmCaFlbIMWirTc5jRMMpyQ6CJ5ZAVjDZ+DH3p3t80=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=e9CPw/neNy5jVx29NL+qaZIXorCKjnk0gXDAyWz0k1ha+phhFfkYUkkIhvBnkBFX
-	 UhLEivoVvrKJhjCW1ncAMatx4k5IEkaLM/ZcpF+lh1v3XT60tStRPTO7b6jbIwzoM
-	 xtRdpbsCNSED0sP9PlTGJQ722t9HyQZasZ53URibytT7T7YKmktGRV7T1WrgmOsxB
-	 QTEXSn3Iw12OCIhWmjdr3mh+NfL4pN5xA+KS3uJVsGGar5KtJ1UtiAyvcpHHdyzxW
-	 zrtjgvonmnhY4xUhZpBTEuSS9zCHGmVj+8aeIwFyECO4x53zt0or+OGuxm2mXWTAy
-	 S9tJ8j+XBCEVrBIHvQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([91.212.106.41]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MlNp7-1urBFl0DIT-00ongj; Sat, 19
- Apr 2025 04:53:12 +0200
-Message-ID: <3083fb0006f3f872ae8e7fee5b53e1bd6d3b2373.camel@gmx.de>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-From: Mike Galbraith <efault@gmx.de>
-To: Peter Zijlstra <peterz@infradead.org>, Rik van Riel <riel@surriel.com>
-Cc: Chris Mason <clm@meta.com>, Pat Cody <pat@patcody.io>, mingo@redhat.com,
-  juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,  rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com,  linux-kernel@vger.kernel.org,
- patcody@meta.com, kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-Date: Sat, 19 Apr 2025 04:53:08 +0200
-In-Reply-To: <20250418154438.GH17910@noisy.programming.kicks-ass.net>
-References: <20250320205310.779888-1-pat@patcody.io>
-	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
-	 <7B2CFC16-1ADE-4565-B555-7525A50494C2@surriel.com>
-	 <20250402082221.GT5880@noisy.programming.kicks-ass.net>
-	 <b378f48593ca7449257a1bb55e78b186d88cd9f1.camel@surriel.com>
-	 <20250415080235.GK5600@noisy.programming.kicks-ass.net>
-	 <20250416124442.GC6580@noisy.programming.kicks-ass.net>
-	 <abffc286b637060f631925f9b373fad114d667d6.camel@surriel.com>
-	 <20250418154438.GH17910@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dQcVhoNN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745031305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=509KQPGQIr3wARpO0voQQWEHesmQ91+o+xtJTGAi9GM=;
+	b=dQcVhoNNESuBOAZ++LX43Y1EWUIxYlO3e26/l2k/JMP8/JOpNALyIBtwdopsC0F7h8Zd2X
+	1kvyqk70Zb7QZKPoSKCieESNsPOdbEMBRe4SxfruTiFFBUVUP0wPnJi2UMrPRwPdT3yYRJ
+	LStkwjFk/rKFjWZBQA+fJIqWJPO5coo=
+From: sunliming@linux.dev
+To: nbd@nbd.name,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	shayne.chen@mediatek.com,
+	sean.wang@mediatek.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	chui-hao.chiu@mediatek.com,
+	Bo.Jiao@mediatek.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: sunliming <sunliming@kylinos.cn>,
+	kernel test robot <lkp@intel.com>,
+	Dan Carpenter <error27@gmail.com>
+Subject: [PATCH] wifi: mt76: mt7996: fix variable dereferenced before check warning
+Date: Sat, 19 Apr 2025 10:54:17 +0800
+Message-Id: <20250419025417.2066787-1-sunliming@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bBBYI9dVkvKzzZlSzJOhXfQJNoxPGss3HUB/z8TzT/dgh2Arqrs
- 3E1Fsuh5oxtNAPCVLQUpelrhSWcKBS4T5g16O5RBnKtHe2FhHguQLEj3zE+8S3dULLX0eEx
- KOAsNhe5ki4Ieje2uvzHPwSamZp4yDeNaN9wCtylXYc1Sq/BbKilC9xQlOGAEOW3Smr6cbE
- V6XZq5yV9Z6vO9iRG5iEg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5+Vowruws3w=;an+rJ//uQ/AT7dNUeCJmKPjg2Du
- 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
- 0ApRBnJth6iHZen4asNYV9tQJE3rqSc=
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2025-04-18 at 17:44 +0200, Peter Zijlstra wrote:
->=20
-> However, due to PREEMPT_NONE, it is possible (Chris mentioned direct
-> reclaim and OOM) to have very long (in-kernel) runtimes without
-> scheduling.
+From: sunliming <sunliming@kylinos.cn>
 
-Dunno what Chris considers 'very long', but FYI you can take some
-pretty awful hits even sans PREEMPT_NONE.  In 6.12 time frame I caught
-move_expired_inodes() eating 66ms, and isolate_lru_folios() holding
-IRQs off for 78ms via dirt simple kbuild+bonnie on spinning rust.
+Fix below smatch warnings:
+drivers/net/wireless/mediatek/mt76/mt7996/main.c:73 mt7996_stop_phy() warn:
+variable dereferenced before check 'phy' (see line 71)
+drivers/net/wireless/mediatek/mt76/mt7996/main.c:360 mt7996_set_monitor() warn:
+variable dereferenced before check 'phy' (see line 358)
 
-(fugly bandaids for both linger in my 6.12+ trees compost heaps)=20
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <error27@gmail.com>
+Closes: https://lore.kernel.org/r/202504101051.1ya4Z4va-lkp@intel.com/
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ drivers/net/wireless/mediatek/mt76/mt7996/main.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-> (I suppose this should be visible by tracing sched_switch)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+index 91c64e3a0860..cc6bb4544c2a 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+@@ -68,11 +68,13 @@ static int mt7996_start(struct ieee80211_hw *hw)
+ 
+ static void mt7996_stop_phy(struct mt7996_phy *phy)
+ {
+-	struct mt7996_dev *dev = phy->dev;
++	struct mt7996_dev *dev;
+ 
+ 	if (!phy || !test_bit(MT76_STATE_RUNNING, &phy->mt76->state))
+ 		return;
+ 
++	dev = phy->dev;
++
+ 	cancel_delayed_work_sync(&phy->mt76->mac_work);
+ 
+ 	mutex_lock(&dev->mt76.mutex);
+@@ -414,11 +416,13 @@ static void mt7996_phy_set_rxfilter(struct mt7996_phy *phy)
+ 
+ static void mt7996_set_monitor(struct mt7996_phy *phy, bool enabled)
+ {
+-	struct mt7996_dev *dev = phy->dev;
++	struct mt7996_dev *dev;
+ 
+ 	if (!phy)
+ 		return;
+ 
++	dev = phy->dev;
++
+ 	if (enabled == !(phy->rxfilter & MT_WF_RFCR_DROP_OTHER_UC))
+ 		return;
+ 
+-- 
+2.25.1
 
-(I used modified wakeup_rt that only traces max prio)
-
-	-Mike
