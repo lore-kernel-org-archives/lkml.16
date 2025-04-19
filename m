@@ -1,177 +1,140 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5046EBE4E
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 11:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06F7BE4E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 11:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745060547; cv=none; b=rkAAKBanYRjoO8LLEQ8pNCfTpN7iWJ8pfsGGgdC+viw2zLpTzL1KJEM2PXrBS9JLXFEKTZtT7L4QnbW+rKWkhr2EwZFw8/6182RQhmxWgTSxBtUab7P49pYf/+QP+KsL3cg+vmBFd1T53zB48C8glBx1CzPVy1gsUaIPxlrwJ/o=
+	t=1745060845; cv=none; b=mvVApygs6bUlY97tLKS12378m1Yv+BCF0ELvayMNXV0MejUfVV/JruxFzZV4HJFSAYMZfhn8g7EpiZCIHFVPqSmjTrkTGheAkrK9U2sRxLUDd7jtNJmUKhR1OSP6AbXEFl/HFPWHczX8BEkltkcQOxSfSg6lTDyQ0nJSu6g62Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745060547; c=relaxed/simple;
-	bh=j7FwO2l9S0QmP4nxvJ2rDoyVmG4aTFv1LllhmMD3eXY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iAECpYNkeR6/2FSNW3C6BJxNDtjZ0OKZTqr9rWJM4tMpOSHmCr6HPwwIiws19B7CEDyyv+A344b+4ShtkesSPPkuLdkjzRQBHqufdjehiDweMvjdhgk8vxVEU4lerUWa7z5ngwU0gywT9Kz8rlbxBo6jZcAEbQs4Im7ztRl488Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-851a991cf8bso300750339f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 04:02:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745060544; x=1745665344;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dnthPBfvaEqWHBvCO77erjYDeS1wsd+KvgMIgGq5O9M=;
-        b=ecosJFXjeEAqSLlXKYSSZWWW1dySRRY+7S/+vmoXvz9fr/pP+q6fIJifulSrZbuo5N
-         0KAfg6ZYpR3MQsF2KUE4UmXfw1BtC4mEvZF8v2grgfEuZAKOdc313zEIATUa9YNqFUvO
-         QVAUkXGpaw4jFaF9ns4vizhSuik2hXLGkX2hO/XIbySgqx9fquPp+6oLRcpjKXNK/jrx
-         bXHOF84O8awFtSUD9mKtVasXwqIuLe3gN3GGvwaMGianMzbn1WV8ewUQFnCxwziDbxT2
-         rNw7Y5fxDwWqCJKARvxjh6hJTD7WVmfEhDZWFc5i2phmdgYmss6UqeVpwjhTc8ZGykPI
-         eMyg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2p44f1rsQVa/5bpgPqEtxvd+28SXYnGUo1Qf+gDu1T/g3TMhVOcDUuxZKoCKtizJL62nL+xfPesbPuTc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlMEonUIV/ZnhSA2Dr5mBbr5ZrFPVLOLQfD8KGQjbOo2L43l8C
-	flSB2K4ThDLF7fZvJzrA76YHglSTvA6J/mnFCXIlraPacqDAbWpeXY02VYIfhJIPPnQ9z1QinRb
-	PYGg1FqveybEyB5m77vsvlm84uxRSEleWZSwNQ0o5qwz/qGCTCWZRjFc=
-X-Google-Smtp-Source: AGHT+IHBRORsgVD6xrKi3sXfub+esEBTYoU9fRFbVL8zWu6tskX1/nBiKFsUQTcGhTkgxC8U/r8RCcuWaSzq38hVVOTgeiMQnMT1
+	s=arc-20240116; t=1745060845; c=relaxed/simple;
+	bh=6/Bq+wC1TElgwKJijhenPYtXnDs2ewz5mgzreuNFVEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GeO8FHZUk2dqemqFNw+gBx4ClT8OnpYu9AXT0Rk/O6Z387mTEA0DLOdksEKqqTcAjlxZLO4kPzNLRKE2hfKHavEBdinPvor1aNF0SpzKBK6aBQ21So9nS+oeZLENMXKnDa9txBo3OgErdFlmtliDHzUDZyp1TKuNJn4wUYnFM9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ipfxEpw1; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ipfxEpw1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745060844; x=1776596844;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6/Bq+wC1TElgwKJijhenPYtXnDs2ewz5mgzreuNFVEc=;
+  b=ipfxEpw1tOqoRRLQt+CxR8Dwk+Sz2jPJfyxN2VCI0K1nauoRqm52Mi6J
+   mhMrj7RaoKUno2f9qf/KXC7c7xPyRgfWdvC+xp0Ms471HXA6ElsvCLauA
+   cY4kVfmKQa1kRw85ePwtf8dQeeuAcRCEUzfhB387w7w4pyRFW5UO7WH8m
+   627pXcoutIQz72q7aREep/Ez4/zzSJDwiGYoVaV6qLFXn9tY2QZdOCbQE
+   9OrBz5r3q34nJd6madF17gtrzwuaOG6KVTW+GUgTcjPal6bi79jKSwqQG
+   TyoGyyK7dwiju6F6rReusAJXAQ9NkU1cJmcioYNRDsO/Gso5xvbW2ZjUN
+   A==;
+X-CSE-ConnectionGUID: D6fQo3K/TDeCataQJLDoFQ==
+X-CSE-MsgGUID: jP712l47Tfq0dXVTSg7XzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46679764"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="46679764"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 04:07:23 -0700
+X-CSE-ConnectionGUID: 1M3dG9vYQH+NyN2r9P4ykw==
+X-CSE-MsgGUID: 2YiU9dAXSR+8dPesollMFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="131891179"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 19 Apr 2025 04:07:22 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u662Y-0003oP-2n;
+	Sat, 19 Apr 2025 11:07:18 +0000
+Date: Sat, 19 Apr 2025 19:06:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ruihan Li <lrh2000@pku.edu.cn>, Mike Rapoport <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Message-ID: <202504191834.zUYILN1L-lkp@intel.com>
+References: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b41:b0:3d5:890b:d9e1 with SMTP id
- e9e14a558f8ab-3d8b694907emr41996275ab.1.1745060544423; Sat, 19 Apr 2025
- 04:02:24 -0700 (PDT)
-Date: Sat, 19 Apr 2025 04:02:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680382c0.050a0220.297747.001b.GAE@google.com>
-Subject: [syzbot] [ocfs2?] possible deadlock in ocfs2_try_to_free_truncate_log (2)
-From: syzbot <syzbot+c535cfdd86331295512d@syzkaller.appspotmail.com>
-To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
-	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418162727.1535335-1-lrh2000@pku.edu.cn>
 
-Hello,
+Hi Ruihan,
 
-syzbot found the following issue on:
+kernel test robot noticed the following build errors:
 
-HEAD commit:    834a4a689699 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=171ff398580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a972ee73c2fcf8ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=c535cfdd86331295512d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+[auto build test ERROR on akpm-mm/mm-everything]
 
-Unfortunately, I don't have any reproducer for this issue yet.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ruihan-Li/mm-mm_init-Don-t-iterate-pages-below-ARCH_PFN_OFFSET/20250419-002910
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250418162727.1535335-1-lrh2000%40pku.edu.cn
+patch subject: [PATCH] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+config: s390-randconfig-001-20250419 (https://download.01.org/0day-ci/archive/20250419/202504191834.zUYILN1L-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250419/202504191834.zUYILN1L-lkp@intel.com/reproduce)
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-834a4a68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4454365a3050/vmlinux-834a4a68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2d99dbd9f6f4/bzImage-834a4a68.xz
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504191834.zUYILN1L-lkp@intel.com/
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c535cfdd86331295512d@syzkaller.appspotmail.com
+All errors (new ones prefixed by >>):
 
-loop0: detected capacity change from 0 to 32768
-=======================================================
-WARNING: The mand mount option has been deprecated and
-         and is ignored by this kernel. Remove the mand
-         option from the mount to silence this warning.
-=======================================================
-ocfs2: Mounting device (7,0) on (node local, slot 0) with ordered data mode.
-netlink: 'syz.0.0': attribute type 15 has an invalid length.
-(syz.0.0,5322,0):ocfs2_dio_end_io:2398 ERROR: Direct IO failed, bytes = -28
-============================================
-WARNING: possible recursive locking detected
-6.15.0-rc2-syzkaller-00037-g834a4a689699 #0 Not tainted
---------------------------------------------
-syz.0.0/5322 is trying to acquire lock:
-ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
-ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_try_to_free_truncate_log+0xd8/0x430 fs/ocfs2/alloc.c:6132
-
-but task is already holding lock:
-ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
-ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_defrag_extent fs/ocfs2/move_extents.c:247 [inline]
-ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: __ocfs2_move_extents_range+0x1540/0x4470 fs/ocfs2/move_extents.c:857
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
-  lock(&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-5 locks held by syz.0.0/5322:
- #0: ffff88803ee5c420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write_file+0x5e/0x200 fs/namespace.c:600
- #1: ffff888045d842c0 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888045d842c0 (&sb->s_type->i_mutex_key#20){+.+.}-{4:4}, at: ocfs2_move_extents+0x1c7/0xac0 fs/ocfs2/move_extents.c:905
- #2: ffff888045d83f60 (&oi->ip_alloc_sem){++++}-{4:4}, at: ocfs2_move_extents+0x3cd/0xac0 fs/ocfs2/move_extents.c:925
- #3: ffff888045d7ed80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #3: ffff888045d7ed80 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#3){+.+.}-{4:4}, at: ocfs2_reserve_suballoc_bits+0x18d/0x4f30 fs/ocfs2/suballoc.c:786
- #4: ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #4: ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: ocfs2_defrag_extent fs/ocfs2/move_extents.c:247 [inline]
- #4: ffff888045d83480 (&ocfs2_sysfile_lock_key[args->fi_sysfile_type]#6){+.+.}-{4:4}, at: __ocfs2_move_extents_range+0x1540/0x4470 fs/ocfs2/move_extents.c:857
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5322 Comm: syz.0.0 Not tainted 6.15.0-rc2-syzkaller-00037-g834a4a689699 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_deadlock_bug+0x2be/0x2d0 kernel/locking/lockdep.c:3042
- check_deadlock kernel/locking/lockdep.c:3094 [inline]
- validate_chain+0x928/0x24e0 kernel/locking/lockdep.c:3896
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- down_write+0x9c/0x220 kernel/locking/rwsem.c:1577
- inode_lock include/linux/fs.h:867 [inline]
- ocfs2_try_to_free_truncate_log+0xd8/0x430 fs/ocfs2/alloc.c:6132
- ocfs2_reserve_clusters_with_limit+0x4ec/0xb60 fs/ocfs2/suballoc.c:1184
- ocfs2_defrag_extent fs/ocfs2/move_extents.c:266 [inline]
- __ocfs2_move_extents_range+0x19c8/0x4470 fs/ocfs2/move_extents.c:857
- ocfs2_move_extents+0x3f0/0xac0 fs/ocfs2/move_extents.c:927
- ocfs2_ioctl_move_extents+0x61c/0x840 fs/ocfs2/move_extents.c:1053
- ocfs2_ioctl+0x19b/0x7f0 fs/ocfs2/ioctl.c:946
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe8d0d8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe8d1b27038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fe8d0fa5fa0 RCX: 00007fe8d0d8d169
-RDX: 00002000000000c0 RSI: 0000000040406f06 RDI: 0000000000000004
-RBP: 00007fe8d0e0e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fe8d0fa5fa0 R15: 00007ffc184f1808
- </TASK>
+>> mm/mm_init.c:975:27: error: use of undeclared identifier 'ARCH_PFN_OFFSET'
+     975 |         unsigned long hole_pfn = ARCH_PFN_OFFSET;
+         |                                  ^
+   1 error generated.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+vim +/ARCH_PFN_OFFSET +975 mm/mm_init.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+   971	
+   972	static void __init memmap_init(void)
+   973	{
+   974		unsigned long start_pfn, end_pfn;
+ > 975		unsigned long hole_pfn = ARCH_PFN_OFFSET;
+   976		int i, j, zone_id = 0, nid;
+   977	
+   978		for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+   979			struct pglist_data *node = NODE_DATA(nid);
+   980	
+   981			for (j = 0; j < MAX_NR_ZONES; j++) {
+   982				struct zone *zone = node->node_zones + j;
+   983	
+   984				if (!populated_zone(zone))
+   985					continue;
+   986	
+   987				memmap_init_zone_range(zone, start_pfn, end_pfn,
+   988						       &hole_pfn);
+   989				zone_id = j;
+   990			}
+   991		}
+   992	
+   993		/*
+   994		 * Initialize the memory map for hole in the range [memory_end,
+   995		 * section_end] for SPARSEMEM and in the range [memory_end, memmap_end]
+   996		 * for FLATMEM.
+   997		 * Append the pages in this hole to the highest zone in the last
+   998		 * node.
+   999		 */
+  1000	#ifdef CONFIG_SPARSEMEM
+  1001		end_pfn = round_up(end_pfn, PAGES_PER_SECTION);
+  1002	#else
+  1003		end_pfn = round_up(end_pfn, MAX_ORDER_NR_PAGES);
+  1004	#endif
+  1005		if (hole_pfn < end_pfn)
+  1006			init_unavailable_range(hole_pfn, end_pfn, zone_id, nid);
+  1007	}
+  1008	
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
