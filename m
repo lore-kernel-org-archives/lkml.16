@@ -1,203 +1,388 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87549823DE
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745041646; cv=fail; b=EGv2VBppjIx+4OzlqpBk2/GkOg7xm3LWDgwC7RgPFENAdmW8DJ0hypcRYQ8V3olPIpU6xN2VU4SiJ95CZR4pzjTQx4K3FovtZbj82sekQNVqXN9xQd3Egz57P2rw9NDodS4GkYxGBz+RchgmovvIGCl5lDxLdvzaUE4DLcR2kbI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745041646; c=relaxed/simple;
-	bh=vS0TbOCXb7jGCZRFiRTnaIQRpc+rsmQQtkZTxTPWqbE=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rmYQg7VgEWw3brj/gmt+XVGjztVAVzWNcOkX74KrfQ+2rBDpByeR2kTyS2D55TANqHcwJXx5pMWFf5zRBwP5lXj26WcsS46a3Unkkz5+oN4+JLfPPvZ02kNll06BFR06Joa1WJOKlcYC+779LglGB4YqlIPg7lf+Rhh7tOTfLDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HUBcitzc; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA34184F
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745041681; cv=none; b=WAds8lJ+vo+XNHV5TQ0GOkw52VYGCPlYVRN8C3E3zxljU5ZfZ4+h96Df5pZmUq741zg4n4uQgifVZ3FYZs1xqT6p3eDdYcrZtxJXisjoHknL78RSE1W/+pThdzGRojOmBEsmwkERaRAxZdbDNhoRsiZ2S29rMguH8h93JALOFno=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745041681; c=relaxed/simple;
+	bh=T36w7T6WsGB+nWqm2COg4Z23poGoMCRvgw0i8WcZNv4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gKKn1WmDMJG1J6NPV+bl/pj/rM3nR66TBi7OBDFzwrLzpYliU9b8K1rSynYPn7GG2IVKaPD0v3Ir07cIxwjnFwhbfl5ymV5IGJ4IC90t+ffEXvXPmxVuDow+I35OtPWMKFBnZgq/3uJQiZfR1KJh3ckpihB/uOIYXSKyIFNngGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qt5yGOk/; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HUBcitzc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745041645; x=1776577645;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=vS0TbOCXb7jGCZRFiRTnaIQRpc+rsmQQtkZTxTPWqbE=;
-  b=HUBcitzcKA0i6OPKANRk6gJQFzIpJX5zvHZtvwf02daIgmr0dc6oxha8
-   vbR8DNeHsbCM1/3J1nO/dFUwUR8ADjhOYriNo5g+mDUF1ACkmy1QF71Zx
-   u3LB4Py+JMSCJEjFLAL2tBVcCkBDrNSQLMzpQqkNWLZn3VJUJ0jfEMONH
-   7sE5efnBSktKIWLgvbJ3HFnWFrBYzRaebE6fW5mYD+uszYyfvfJJgzJKJ
-   m7eOnW3WHbv2iiC81ZaJnbrTkKB8Xfc0n14f/A1oXPwL8ycvOH1ca4pEc
-   2eXqh3HLV5zzOYenvXrlslai9E9NK0mmQvWdignHTkpL2s2i0jmvNKye/
-   w==;
-X-CSE-ConnectionGUID: WB9FTHwORsyL3jkj6C/HIw==
-X-CSE-MsgGUID: yUlReo1bQZm9SS0+e+Ctgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="46765683"
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="46765683"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:47:24 -0700
-X-CSE-ConnectionGUID: k1E4UjORQ0eB98WrCnSUww==
-X-CSE-MsgGUID: /cpa83teSeSvGBZnoMYYaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
-   d="scan'208";a="131854085"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:47:24 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 18 Apr 2025 22:47:23 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:47:23 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 18 Apr 2025 22:47:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gJl0zcl8O7uS6iYSxoZW9b3sTNtTJojIUu/m5KzbglmIejhltZzx3DyllMtG8p034SeoWjVl0NzCLDaRslvL9T5/ziDgd7Ymo2nvqZspsAinouWPaHJzdoyRPgchVcxQebmw1Dp1xtRfylcK+1H8FOEGGq/FwPmECBL9S4Z4NCJzBZFXWX4fIEig5gmawHmXmnCIDof5QjsPmnY+m+He8fSr5AUk9zsMLfceNCPW4TvdkwRNe3931S7AELZKLWhCoi0InpI0Btef6Ywq4nJSGhTfP80cE+Kwx2vb7UIx2IWC8Jl+vGjZ9MPVLESqL/rqJTxBfjZaLgAN6tLvvSK0OA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vS0TbOCXb7jGCZRFiRTnaIQRpc+rsmQQtkZTxTPWqbE=;
- b=g2PZqX95xho1jsH3q3wBM1coQBslr8laqPWBLJv1cu2ywuyF//vabgT/vCIt7FGxKA6fLVh3fE2TgohIJuJW28TALaj7Aja70Xmdlb1e7JwepaatQeCvBRvxRXTebxL38iCVG38En4gwNtsAgaAvXrq9s3TwrS/3RPQwZqIbfdy9tVVBq+VprCrTapc5ihtCKDhhHygm7FCu09LZ9VdTBlyIa79/8EJ0K190KZhpLsdSaGWjn7JdriAYYIO6JYLeq4YYOx2MuXVI/9Iqg2TjalZbuwieaS4qF5BcoXFVDrsnvMZCaA5Xnr/3v5f4LJRJgf4KbB8rbtZpcCF9fyyiFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by CO1PR11MB5156.namprd11.prod.outlook.com (2603:10b6:303:94::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.26; Sat, 19 Apr
- 2025 05:47:06 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
- 05:47:06 +0000
-Message-ID: <51256c94-9621-45c2-acae-9182b52a2221@intel.com>
-Date: Fri, 18 Apr 2025 22:47:04 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/26] x86/resctrl telemetry monitoring
-To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
- Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
-	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
-	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
-	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
-References: <20250407234032.241215-1-tony.luck@intel.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250407234032.241215-1-tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0097.namprd04.prod.outlook.com
- (2603:10b6:303:83::12) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qt5yGOk/"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736c7df9b6cso2988949b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745041679; x=1745646479; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdJKpwbPcy6gRTD8c2n1oCcw85CayJPijKUia1p0ZF4=;
+        b=qt5yGOk/ncRE0Wf6iZEiK7YQCe/gS2nIeLUfA2longdQ+eQPjUvh3nfnOEMvniHmM8
+         wGB19qDtOKeQbKy234uL5da8nmdbNU2DfzDvrY8pomQLXrEK7W7yiisLol17vXcaEuQQ
+         yVhgbGa08hP9BVJc+rnEfeXCP1KwUcx0r9XJ7PfYh9ORiSHXARRsayFh5m29PwEk0dkb
+         OdZuhsu0mIL/a+ZpyN+I1Bv/2dvRKoEoIg86Ffes8TGkKtRVra98NUao35pq80S2w0Fg
+         YGR3HyG53VxCWfTet2E3KaEh4qiYJ8OFXPBiqA5btIKIPkIVOuYsXZCNfn19FaUOFuF7
+         TnPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745041679; x=1745646479;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdJKpwbPcy6gRTD8c2n1oCcw85CayJPijKUia1p0ZF4=;
+        b=pTcSeZk23ndr4f4zSFkEfa2PUoPANy7GzDPZfq4wI/+ANudBssvhSlnE19MYuyjune
+         Rsbrzq2grrrwL3b1zVIpgYgw58IGa4XL02CSgZKqXXp5EhCedbmBBBd9/9AQ3KKVxaMq
+         0LC9+ePDsFPk0shI81SPjic084vRfUSVjlhL6wEp3AEOVCm4/lkr0Q/S0FcqQHGzo98O
+         ZNaGNGc1e49LrypGgWh2tNwzCtEAxjXoGp5LVBmfaCYhuIj7ufAgst5lFXiNqA/is6ic
+         wwoGxAD8Bpa5TTu1AGFp/2PQWTPIyymq2a+JkTB1bE+N+cIeNfVLoMHwhA76lHbx/Rg2
+         YpeA==
+X-Gm-Message-State: AOJu0Yxf7gY6tWjy8UX9H9oBoHZx3XN0K63YUd+7+cR/kCMzTP6KKN6Q
+	l77U5hQWx2FVos/u/TOmJBm0ZBHUMAh1ssM0ryROnlCaIIf1dLpTgV7fRZIeyRhwQehlpH6E8RI
+	xsgT7SgSGtcSSR2AzZ/aS+u/AHeo8b9ruZWeOwlLg/pzN0uWhDdJY3AeHAljgPQOfzpgzAjnM4v
+	v8K6X+p4w4l10PLngAHfl1woU6coN3mFFlN6IM3ChhZLdm
+X-Google-Smtp-Source: AGHT+IG1zUCrEEgDh4YEOCfxrp+PRvSy7bLVCAiyGydhxQAJdgGbPUV4CQEDGgo07a33wuJ5mEF+r/MZQKJQ
+X-Received: from pfbjc2.prod.google.com ([2002:a05:6a00:6c82:b0:73c:26eb:39b0])
+ (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1305:b0:736:42a8:a742
+ with SMTP id d2e1a72fcca58-73dc14ccd73mr6440107b3a.11.1745041678543; Fri, 18
+ Apr 2025 22:47:58 -0700 (PDT)
+Date: Fri, 18 Apr 2025 22:46:52 -0700
+In-Reply-To: <CANDhNCrNYuxP7xqNLKWGnhMOBEHGhD9-FceNAj7n=fQUsLwvMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CO1PR11MB5156:EE_
-X-MS-Office365-Filtering-Correlation-Id: 89a1d7ef-6408-4e1e-8c55-08dd7f059e17
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Y3p2VVVjaDJvb09vMUFtOU0wZS91RzNTMzN4Q2xnRi9lcEFmbjBnSi9yeEoy?=
- =?utf-8?B?dzNsV3Jjcnh1VUNsajZ3eDdSTG0zekF3VGpad3VNZ1pnb0V5eUREVktXSWdB?=
- =?utf-8?B?b0Q4NGs1cjYydGJUdHIxVXNPMWt3REQ5MUdZSy9zbExqdlpSazV3Z2xFWTJB?=
- =?utf-8?B?c3hDVTUrMmg4N1NXcDhaaGlVeGszSTJEY2xZdndxT2IvYk9tVERia01UZ0h4?=
- =?utf-8?B?a052b2x6YUNlL29LWTZhU3hwbC93NE5DUUJ6Z2cvdHdMK3hxNnpwNEhXaThn?=
- =?utf-8?B?SmlRNnVoYUlaQlJ0ekFUMjVYMDJYZWJyakVPUG5vV0FTSUkxc0VXb3VTbTVj?=
- =?utf-8?B?b3BEdzFBcHVSYXd2bkNTSmQyMitrVGpkT2ppdS9nNnZTcHZMdEtlOTB1T1Nl?=
- =?utf-8?B?VDB0c2JaK3l0emhuWEpFSkt5d2YwTEtXODl0U09aM2hLOXgvb2FhSzZtN09y?=
- =?utf-8?B?WTBpTFl1RzBhY0Z0cTFUbmtxaFBQWnpmWHQrZFM3LzZmby9ibUlHZGpZRXQ5?=
- =?utf-8?B?bFR5biswWDh0Ym54RTdCQlBoK3d3bTFhQU5CcXk0angzR2JpUnluQVR0alVj?=
- =?utf-8?B?ZGNtOTV5RkVmNUlFdm4wbVVicGFoS0xxVU5ORXVPeEF3cDd0bU8rQm5WNnd0?=
- =?utf-8?B?OWI2OVZzeEdWVy9Cc283SmdPb1hzYkFucVJlQklZQTk5UGErSVNzeHR6T1Zl?=
- =?utf-8?B?TkVXV3pHSGFkS2ZTSVVKZ2tFcDZ0cTI3SWZwbXp2ejkwZnJpRUp3N1FFdm9u?=
- =?utf-8?B?NFE2VWVTaGpIQUo4VE5JM1E1QTc2b3J2dDVZSXloSUdlUmU1eEcreGJOQlRh?=
- =?utf-8?B?Zk9pMkNLazUwMmhtUUdlakE3dGhrQUtOc1RGWUpCYUkwelJBSktHdGxuOENY?=
- =?utf-8?B?MVRlbERmWlVHQnBzMjJTcmVpY1lBSnhXM1FORkxLUXNxMnlZNGNaRkxJb0Zr?=
- =?utf-8?B?c2pndW1tc2FBc1M1UzZ3cnNma0pzZll5TGJGcU9aR1d0MFBBajFUZmhhM0xm?=
- =?utf-8?B?cXhlMmZrb2E2RHpybG1DWUJLQUYrRjltRmtGbFFyYWlsSjBSMTh6dUNwOVdh?=
- =?utf-8?B?U3BzQVpFL3IvY0NxZnNDYjIyclVndkQrM0xpSWIrS3ZIREFuMHVwc2hYdEp5?=
- =?utf-8?B?SHE2UGJWeXlYWnlZR0QvdnRaVVRwVjM0QnJieGdnRGtVQllMcmwyR3gvMlNS?=
- =?utf-8?B?aFo5WXhpUnNadW44TzQxOGR6VzU0MUNkYlFCV1RKVTZvWkc2L3pXZkdkMncr?=
- =?utf-8?B?dlplTHRET0FiY3k3M3VBSm9JdmVoNlRzVkZMeURkY0h2TUhHdWI3dm9LV1Iv?=
- =?utf-8?B?VnV0UCtoekhHSk9EMXlBenU4Ykh4TzhRNEo1ZUJJeUlaZXlSMWNwYUhzOHM4?=
- =?utf-8?B?cU1JcWNNL0pHMXM2MFRoNVBWSlVzQ1BoZHc2bzZDZjZsUkJDZk5vS0RObGFW?=
- =?utf-8?B?UXMwWnhuMkVXNmloKzNKaENFUlByU01lSGtWL3BVSnZrb0tBb2N5NTZrZHZy?=
- =?utf-8?B?bUJtY1h3ek5oVk5WVmxSV2hPT2xyeXJhZVd5U0xYcm5iRUFuZEZXOUtSZnMr?=
- =?utf-8?B?a0NJMGZsUEJDaVhnK1p3VnRraFJjYWpCNWRwM1lZWUZxbmtueGNQSWlUQUw5?=
- =?utf-8?B?M0o1ZVRNZWZidnl2WkZQV3lTNThBdDBpWTRBM2tmOElsKzRxK1hMY3Y1R0Rm?=
- =?utf-8?B?WFBHRElPbEs0Mng5S2UrTEdGZ1lHbFBSeU1VbHJCM29zTzRBUTlYUlZMczh3?=
- =?utf-8?B?RVpITHdtQjBsYXdtcDB6SjhLZlM2d01oVXJHMVZPMGtHbzlhdzFCS3pVdnpM?=
- =?utf-8?B?YklpTEJWUUE5dUY1VCtHeEVPZUVzWHZ2NklDQkdqUlYwMk9jTzF1ZXZYTXcv?=
- =?utf-8?B?bFVpd0tiVDl5eFg0SUcwd2txcnFXZmVDcHJoUmFrZDEvay83Tm56MW9pUGJq?=
- =?utf-8?Q?oHkahXVLvH0=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WWtpQVIyc0N5eWpRVlMzc1pDMUlqNlJjSXNWd3ZueUxtaWZ0eFdkV3F5dDdz?=
- =?utf-8?B?WlFrakRnN0dBMUJLQzFQRXRmYmxFUGtZTjNXOGVtWmRXUU1obHM1UFNXVjRv?=
- =?utf-8?B?TzhQZ3JTSGQrNFZLRkswbGU0QmpyU1VsUEVlaHVaamxVRUVSb1d2NWY5Unc5?=
- =?utf-8?B?dVpyNmdhNzRqTlNKVU5iSzFPRWswNG8zUFB1TFMxUElXclhJNGVhVitsMlZk?=
- =?utf-8?B?aG95amJYMEpGOW9QQzg0UXBKWVFZVUREQzdhWTdYZVphK0dKLzhibDVxakFz?=
- =?utf-8?B?ZVNzeURRb0ZPVVFRTWJiV1NjNjUyUFFVZFkzOW1INGs5QXRqV0E4WEZRUDFr?=
- =?utf-8?B?OXlISXU2ekhBTHFXbm5NRXFQR25oRFVtNHg2YThsTFdFK3UzdXVMTXo0UzVF?=
- =?utf-8?B?SDJndHVMS25ER2FJV1VKZHNoZGVxUHFYZWtXZmZ6VldCemhNSU40S1R3L2ow?=
- =?utf-8?B?VnB5OWxFSDloLzlEa0R0Nlgwc3FSamsyRE05MW1aNXJEV3Q5MklEb0YxbEFQ?=
- =?utf-8?B?MmJBV3hyc2s2bUxYVVU0dm5KK1VFMmkwWEdWblMydVJRZnMwMzBrZ2VLUEp0?=
- =?utf-8?B?NTgydDhMR3NGdlNxSEROOU04czVKNlV5Z0xHTFpVNFZrUVdwNVljSWNzcUQ3?=
- =?utf-8?B?WlJvODN6bkNqSVUwTkQ1emFmL1NFcDVJOVc2Ymo1b1hXeEY5aEZvcXB1cDlF?=
- =?utf-8?B?dXNnWXNMY3FXWDByM2lWUFltN1BhdGxuK0VrTU56OHhyUFJVUXVqVmZpSXpU?=
- =?utf-8?B?RTdSNkdsbmV2Y3Z4ZVJmQnlLbGMzc1hGR0lPTFdkOUtBZEIzRExMSDJpR0RS?=
- =?utf-8?B?WEt0cnduVlJSQnNoSWJ1SnRzR0U4L2Z3TTVtaEZDNUV5YzZGVEorSXArUGVM?=
- =?utf-8?B?M3htU0Y4M0F1Wms2eEVOenBUY3hXRXdCZUdlWHhsbS9GSy9kVEVpb2hNRnBC?=
- =?utf-8?B?MFNNRDdQTXViQ21rZ1NJQ2hkOEI0VTduWWFnUnQyM01YNzlIYlh4bUloNVNI?=
- =?utf-8?B?Y3pkUXZnNDlBMDZBR3NEQXUvbGFKK0NpdVFraEFDWkhyQjZEdFVrWmhxS01i?=
- =?utf-8?B?amFYZWV4WHV2ZUNLeGZ6UWRueU45QmRFUk1DMUZiREd0Q2JxempqOE5oSkJn?=
- =?utf-8?B?Q1h0ZVdtd3p4ZlplR3VobzY2NG9jSnhPck85YnoxRWs3NHF0VTN5M2pjcFl6?=
- =?utf-8?B?Q0ZjT3c3Y20rQ3RUM0VUODkxMjBmaXcvcW1RMzBwOHdoK2VLQ0wxeDZLRkRl?=
- =?utf-8?B?b21rQUZoOFhyWWtkSjJPbVlpMFFUZ3Bsb2lobU1abURLc2IyRVJBYm41ZGZy?=
- =?utf-8?B?KzdwL241czlRcHZNc0tZSFRyWkRGYStLUEdNZ29KR3NhM25rQ3NCT2ljeHBR?=
- =?utf-8?B?Uy90S1VnZXdlTTIva3RVR0VpNjlPQ1h3YTE3SWVHMnV2QnJsc0VhZzM1UFJB?=
- =?utf-8?B?dnNWSkRwRklwbDYydGVMdWc0dXpKQzBGWEJSVEdqS0s2WEhuYWM1MFdibndM?=
- =?utf-8?B?akwzdlQvNDNOcE56RXZkbnlLOGZNWFNjSGV4ek9UUUwwRlErODRJeUhidEJ1?=
- =?utf-8?B?ajBRcGxySDAvT0hVM2hEVk4xWktnZE1JMUhDQ0Ixak15TGlUaDhMcytleVdJ?=
- =?utf-8?B?ZjVpc2hLa05URFhPbTRmeXVRd0l2YVRyVCthb25kcUJRN0FrdE5KZTE2MTA5?=
- =?utf-8?B?cFNzbm1aalY0K3VWeU1OQ3dib0RpUUpOcmFmVjNsS0c0d2FHRVlkV0dqSkRI?=
- =?utf-8?B?djR0N0NudjJIeUpGZ3VFRXBkMlk5TXBYWjVGZkN0dFNzVFcyemg5QkQ4UVE3?=
- =?utf-8?B?VjBScVVhZVlqb3ZZSDU0ZVVOVVR2Vk1MYldJREdxM29Nd2dXV25QQ0tjT1JH?=
- =?utf-8?B?NTZTRGFlMjk3MGIrZStaNW5SeElHdlNlbjI4c3BnL1lsWUF5UWRvZ05jT2Ir?=
- =?utf-8?B?MVFJSFNYNGwxZVZ5NzUyVTFGaWIxQytzVXVNY2NUVlBUenp2ZlNrbWUxUHdi?=
- =?utf-8?B?RHpIeHJBWHl3dEZOQWh3cVFNTUZQUXBSckxCdEwxQmZDTWJUYW1XNDVFak94?=
- =?utf-8?B?TG5HUDBYMEMvbld3UG9wWlRnZFB6TDRPSFVyeG13cUI2R2h5UlBqTDVYeVg5?=
- =?utf-8?B?WEJkRUVpS0Fyc1JsN3RUdEVkT0FXT2tkOUN0anZIUytkTk9Xb29DUC83QTN4?=
- =?utf-8?B?WUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89a1d7ef-6408-4e1e-8c55-08dd7f059e17
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:47:06.2283
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +tnrdpi1ChXhaA5PSdTiTS/PssPRoVtVlBwTGbd+WlVq4VGOUog+Q0OJ7SuXDW6qgoZDygsBTBlNt4E9faP8/hc/H1DkOkyrqGBa04xdFWo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5156
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <CANDhNCrNYuxP7xqNLKWGnhMOBEHGhD9-FceNAj7n=fQUsLwvMA@mail.gmail.com>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250419054706.2319105-1-jstultz@google.com>
+Subject: [PATCH v3] timekeeping: Prevent coarse clocks going backwards
+From: John Stultz <jstultz@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Miroslav Lichvar <mlichvar@redhat.com>, 
+	Lei Chen <lei.chen@smartx.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	John Stultz <jstultz@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Tony,
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Just noticed ... could you please include x86 maintainers
-(X86 ARCHITECTURE (32-BIT AND 64-BIT) in MAINTAINERS) in your
-submission?
+Lei Chen raised an issue with CLOCK_MONOTONIC_COARSE seeing time
+inconsistencies. Lei tracked down that this was being caused by the
+adjustment
 
-Thank you
+    tk->tkr_mono.xtime_nsec -= offset;
 
-Reinette
+which is made to compensate for the unaccumulated cycles in offset when the
+multiplicator is adjusted forward, so that the non-_COARSE clockids don't
+see inconsistencies.
+
+However, the _COARSE clockid getter functions use the adjusted xtime_nsec
+value directly and do not compensate the negative offset via the
+clocksource delta multiplied with the new multiplicator. In that case the
+caller can observe time going backwards in consecutive calls.
+
+By design, this negative adjustment should be fine, because the logic run
+from timekeeping_adjust() is done after it accumulated approximately
+
+     multiplicator * interval_cycles
+
+into xtime_nsec.  The accumulated value is always larger then the
+
+     mult_adj * offset
+
+value, which is subtracted from xtime_nsec. Both operations are done
+together under the tk_core.lock, so the net change to xtime_nsec is always
+always be positive.
+
+However, do_adjtimex() calls into timekeeping_advance() as well, to
+apply the NTP frequency adjustment immediately. In this case,
+timekeeping_advance() does not return early when the offset is smaller
+then interval_cycles. In that case there is no time accumulated into
+xtime_nsec. But the subsequent call into timekeeping_adjust(), which
+modifies the multiplicator, subtracts from xtime_nsec to correct for the
+new multiplicator.
+
+Here because there was no accumulation, xtime_nsec becomes smaller than
+before, which opens a window up to the next accumulation, where the
+_COARSE clockid getters, which don't compensate for the offset, can
+observe the inconsistency.
+
+This has been tried to be fixed by forwarding the timekeeper in the case
+that adjtimex() adjusts the multiplier, which resets the offset to zero:
+
+  757b000f7b93 ("timekeeping: Fix possible inconsistencies in _COARSE clockids")
+
+That works correctly, but unfortunately causes a regression on the
+adjtimex() side. There are two issues:
+
+   1) The forwarding of the base time moves the update out of the original
+      period and establishes a new one.
+
+   2) The clearing of the accumulated NTP error is changing the behaviour as
+      well.
+
+Userspace expects that multiplier/frequency updates are in effect, when the
+syscall returns, so delaying the update to the next tick is not solving the
+problem either.
+
+Commit 757b000f7b93 was reverted so that the established expectations of
+user space implementations (ntpd, chronyd) are restored, but that obviously
+brought the inconsistencies back.
+
+One of the initial approaches to fix this was to establish a separate
+storage for the coarse time getter nanoseconds part by calculating it from
+the offset. That was dropped on the floor because not having yet another
+state to maintain was simpler. But given the result of the above exercise,
+this solution turns out to be the right one. Bring it back in a slightly
+modified form.
+
+Thus introduce timekeeper::coarse_nsec and store that nanoseconds part in
+it, switch the time getter functions and the VDSO update to use that value.
+coarse_nsec is set on operations which forward or initialize the timekeeper
+or after we have accumulated time during a tick
+
+This leaves the adjtimex() behaviour unmodified and prevents coarse time
+from going backwards.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: Lei Chen <lei.chen@smartx.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kernel-team@android.com
+Fixes: da15cfdae033 ("time: Introduce CLOCK_REALTIME_COARSE")
+Reported-by: Lei Chen <lei.chen@smartx.com>
+Closes: https://lore.kernel.org/lkml/20250310030004.3705801-1-lei.chen@smartx.com/
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[jstultz: Simplified the coarse_nsec calculation and kept behavior so
+coarse clockids aren't adjusted on each inter-tick adjtimex call,
+slightly reworking the comments and commit message]
+Signed-off-by: John Stultz <jstultz@google.com>
+---
+v3:
+* John's Rework of Thomas' version here:
+  - https://lore.kernel.org/lkml/87r01qq7hp.ffs@tglx/
+---
+ include/linux/timekeeper_internal.h |  8 +++--
+ kernel/time/timekeeping.c           | 50 ++++++++++++++++++++++++-----
+ kernel/time/vsyscall.c              |  4 +--
+ 3 files changed, 49 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/timekeeper_internal.h b/include/linux/timekeeper_internal.h
+index e39d4d563b197..785048a3b3e60 100644
+--- a/include/linux/timekeeper_internal.h
++++ b/include/linux/timekeeper_internal.h
+@@ -51,7 +51,7 @@ struct tk_read_base {
+  * @offs_real:			Offset clock monotonic -> clock realtime
+  * @offs_boot:			Offset clock monotonic -> clock boottime
+  * @offs_tai:			Offset clock monotonic -> clock tai
+- * @tai_offset:			The current UTC to TAI offset in seconds
++ * @coarse_nsec:		The nanoseconds part for coarse time getters
+  * @tkr_raw:			The readout base structure for CLOCK_MONOTONIC_RAW
+  * @raw_sec:			CLOCK_MONOTONIC_RAW  time in seconds
+  * @clock_was_set_seq:		The sequence number of clock was set events
+@@ -76,6 +76,7 @@ struct tk_read_base {
+  *				ntp shifted nano seconds.
+  * @ntp_err_mult:		Multiplication factor for scaled math conversion
+  * @skip_second_overflow:	Flag used to avoid updating NTP twice with same second
++ * @tai_offset:			The current UTC to TAI offset in seconds
+  *
+  * Note: For timespec(64) based interfaces wall_to_monotonic is what
+  * we need to add to xtime (or xtime corrected for sub jiffy times)
+@@ -100,7 +101,7 @@ struct tk_read_base {
+  * which results in the following cacheline layout:
+  *
+  * 0:	seqcount, tkr_mono
+- * 1:	xtime_sec ... tai_offset
++ * 1:	xtime_sec ... coarse_nsec
+  * 2:	tkr_raw, raw_sec
+  * 3,4: Internal variables
+  *
+@@ -121,7 +122,7 @@ struct timekeeper {
+ 	ktime_t			offs_real;
+ 	ktime_t			offs_boot;
+ 	ktime_t			offs_tai;
+-	s32			tai_offset;
++	u32			coarse_nsec;
+ 
+ 	/* Cacheline 2: */
+ 	struct tk_read_base	tkr_raw;
+@@ -144,6 +145,7 @@ struct timekeeper {
+ 	u32			ntp_error_shift;
+ 	u32			ntp_err_mult;
+ 	u32			skip_second_overflow;
++	s32			tai_offset;
+ };
+ 
+ #ifdef CONFIG_GENERIC_TIME_VSYSCALL
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 1e67d076f1955..a009c91f7b05f 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -164,10 +164,34 @@ static inline struct timespec64 tk_xtime(const struct timekeeper *tk)
+ 	return ts;
+ }
+ 
++static inline struct timespec64 tk_xtime_coarse(const struct timekeeper *tk)
++{
++	struct timespec64 ts;
++
++	ts.tv_sec = tk->xtime_sec;
++	ts.tv_nsec = tk->coarse_nsec;
++	return ts;
++}
++
++/*
++ * Update the nanoseconds part for the coarse time keepers. They can't rely
++ * on xtime_nsec because xtime_nsec could be adjusted by a small negative
++ * amount when the multiplication factor of the clock is adjusted, which
++ * could cause the coarse clocks to go slightly backwards. See
++ * timekeeping_apply_adjustment(). Thus we keep a separate copy for the coarse
++ * clockids which only is updated when the clock has been set or  we have
++ * accumulated time.
++ */
++static inline void tk_update_coarse_nsecs(struct timekeeper *tk)
++{
++	tk->coarse_nsec = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++}
++
+ static void tk_set_xtime(struct timekeeper *tk, const struct timespec64 *ts)
+ {
+ 	tk->xtime_sec = ts->tv_sec;
+ 	tk->tkr_mono.xtime_nsec = (u64)ts->tv_nsec << tk->tkr_mono.shift;
++	tk_update_coarse_nsecs(tk);
+ }
+ 
+ static void tk_xtime_add(struct timekeeper *tk, const struct timespec64 *ts)
+@@ -175,6 +199,7 @@ static void tk_xtime_add(struct timekeeper *tk, const struct timespec64 *ts)
+ 	tk->xtime_sec += ts->tv_sec;
+ 	tk->tkr_mono.xtime_nsec += (u64)ts->tv_nsec << tk->tkr_mono.shift;
+ 	tk_normalize_xtime(tk);
++	tk_update_coarse_nsecs(tk);
+ }
+ 
+ static void tk_set_wall_to_mono(struct timekeeper *tk, struct timespec64 wtm)
+@@ -708,6 +733,7 @@ static void timekeeping_forward_now(struct timekeeper *tk)
+ 		tk_normalize_xtime(tk);
+ 		delta -= incr;
+ 	}
++	tk_update_coarse_nsecs(tk);
+ }
+ 
+ /**
+@@ -804,8 +830,8 @@ EXPORT_SYMBOL_GPL(ktime_get_with_offset);
+ ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
+-	unsigned int seq;
+ 	ktime_t base, *offset = offsets[offs];
++	unsigned int seq;
+ 	u64 nsecs;
+ 
+ 	WARN_ON(timekeeping_suspended);
+@@ -813,7 +839,7 @@ ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 		base = ktime_add(tk->tkr_mono.base, *offset);
+-		nsecs = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++		nsecs = tk->coarse_nsec;
+ 
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+@@ -2161,7 +2187,7 @@ static bool timekeeping_advance(enum timekeeping_adv_mode mode)
+ 	struct timekeeper *real_tk = &tk_core.timekeeper;
+ 	unsigned int clock_set = 0;
+ 	int shift = 0, maxshift;
+-	u64 offset;
++	u64 offset, orig_offset;
+ 
+ 	guard(raw_spinlock_irqsave)(&tk_core.lock);
+ 
+@@ -2172,7 +2198,7 @@ static bool timekeeping_advance(enum timekeeping_adv_mode mode)
+ 	offset = clocksource_delta(tk_clock_read(&tk->tkr_mono),
+ 				   tk->tkr_mono.cycle_last, tk->tkr_mono.mask,
+ 				   tk->tkr_mono.clock->max_raw_delta);
+-
++	orig_offset = offset;
+ 	/* Check if there's really nothing to do */
+ 	if (offset < real_tk->cycle_interval && mode == TK_ADV_TICK)
+ 		return false;
+@@ -2205,6 +2231,14 @@ static bool timekeeping_advance(enum timekeeping_adv_mode mode)
+ 	 */
+ 	clock_set |= accumulate_nsecs_to_secs(tk);
+ 
++	/*
++	 * To avoid inconsistencies caused adjtimex TK_ADV_FREQ calls
++	 * making small negative adjustments to the base xtime_nsec
++	 * value, only update the coarse clocks if we accumulated time
++	 */
++	if (orig_offset != offset)
++		tk_update_coarse_nsecs(tk);
++
+ 	timekeeping_update_from_shadow(&tk_core, clock_set);
+ 
+ 	return !!clock_set;
+@@ -2248,7 +2282,7 @@ void ktime_get_coarse_real_ts64(struct timespec64 *ts)
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 
+-		*ts = tk_xtime(tk);
++		*ts = tk_xtime_coarse(tk);
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ }
+ EXPORT_SYMBOL(ktime_get_coarse_real_ts64);
+@@ -2271,7 +2305,7 @@ void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts)
+ 
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+-		*ts = tk_xtime(tk);
++		*ts = tk_xtime_coarse(tk);
+ 		offset = tk_core.timekeeper.offs_real;
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+@@ -2350,12 +2384,12 @@ void ktime_get_coarse_ts64(struct timespec64 *ts)
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 
+-		now = tk_xtime(tk);
++		now = tk_xtime_coarse(tk);
+ 		mono = tk->wall_to_monotonic;
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+ 	set_normalized_timespec64(ts, now.tv_sec + mono.tv_sec,
+-				now.tv_nsec + mono.tv_nsec);
++				  now.tv_nsec + mono.tv_nsec);
+ }
+ EXPORT_SYMBOL(ktime_get_coarse_ts64);
+ 
+diff --git a/kernel/time/vsyscall.c b/kernel/time/vsyscall.c
+index 01c2ab1e89719..32ef27c71b57a 100644
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -98,12 +98,12 @@ void update_vsyscall(struct timekeeper *tk)
+ 	/* CLOCK_REALTIME_COARSE */
+ 	vdso_ts		= &vc[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
+ 	vdso_ts->sec	= tk->xtime_sec;
+-	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++	vdso_ts->nsec	= tk->coarse_nsec;
+ 
+ 	/* CLOCK_MONOTONIC_COARSE */
+ 	vdso_ts		= &vc[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
+ 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+-	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
++	nsec		= tk->coarse_nsec;
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+ 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+ 
+-- 
+2.49.0.805.g082f7c87e0-goog
 
