@@ -1,122 +1,113 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 591601DE4E3;
-	Sat, 19 Apr 2025 13:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CF41ADC7E;
+	Sat, 19 Apr 2025 14:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745071007; cv=none; b=GzFNzrTabSrjqjyJBuEtB8U/vahiw9tSzq+1HZe3QuzqYBfsnQXU9oi6dyYWKFNMXngBl8VhWX7hcTdRdK5SCVC/lZTf0yLN7FX+Lvc3SfBZVCavSojYUQYmpVPeCQb5US7hoFCXhJ6NYbeGO4EeAsJNwdfntowiVUTqaA/xeXE=
+	t=1745071420; cv=none; b=F3jwTcvp+FEB+WkslR3ASFvS0SOCgmfxoTci94QakEQa9B6Qs73gL2+0hO9k1Sp8qN2l9FXG2YzUKk8kyLqDyYZ7tLMUOzHTWtdE8J/Yq5PscbTPv8xe1/cQj3ItCHb6Vj9PHLGb0na4silPWWt0UGSGIPp9XdR+N4NThXNFqE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745071007; c=relaxed/simple;
-	bh=Ubbbw15hEAZ+J5L1Ub1FKSI3XNWrOXLdqS9DAd1ONgc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OhcH4Tyu/s5YujaKrV3OANvUjrMURa8JYhbx98YDWFo4FCWL+jLmRZeL9u/IQFqqtwPvcXmmTsgLa/ejjmBz3TfJs90WMfJQJl37vuXqpLc74cmlgSW3iD+Q1W8e3+p/QQifW9sXUY7nb13oDi9UQ//MoeMGdN3EnNIoWX6SS48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hrrtT06l; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745071420; c=relaxed/simple;
+	bh=GAXSd6P51bCdcrlHYICGtiJPhrHgJGc7cexJ3Fvo3TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tCIpyX5sV/43cQRe8ZUMCOjxrx8a4J+gkQStHaIN+HcFnueR4grVbyawHNJCZlcTW5GVwamSoVFjAuw62j80hSWzh2NEM0haiGrOsoViIenzFebKBv8eZyQ143WSXR5dF6GQMPkAKB4ZQZPuOktPLnntLPK0kOwkYr4N9DgqFYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VTh3k4Bk; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrrtT06l"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c5ba363f1aso348226885a.0;
-        Sat, 19 Apr 2025 06:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745071005; x=1745675805; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aXLzgwUjjblsXqDwVt3NWjFIy+rshNgbw5xBdqozz6Y=;
-        b=hrrtT06lJXVAIxITzNZJ7zdPxhodZHC8tEYIfuz1rtvL6N+6D2b0T8QlXi4v/J1jTI
-         lRpqvSzeyIT5p1IB4TNGMnEvM6cPvEWXuuTK8mUMfuaeVB1C9MDG79l0eGuwRg6E8nOv
-         GvsgaAyoHNozfjHzb/93GBubi7VrMOdgFWdjBQ0xhw7RJYvGxjb1hQoXSpOIX9U59vQM
-         u8vzSQlEP+51gfuZ+jClBQPjl6ZJ14oISPGNT6G3eR8Hdoz5kJgdzdxoMPk+F0aVcjub
-         5tNR8WUCrl29ZOPK7D2EPDEDtLFxz31OILCZddcV8URCGBjuYRjtc7+g67ZFHGc0ua8M
-         9bsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745071005; x=1745675805;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aXLzgwUjjblsXqDwVt3NWjFIy+rshNgbw5xBdqozz6Y=;
-        b=XLy4OA2GYU7t5lJmJ2pyBueMKIx5R5Pq7+qFelN4Lc3e7BSO2zlNzTdXKfXAtm2DqU
-         eh67tV8wSyepRiNIlGZp31gLu4IRryfybyKocFa91urh5bxUZk97aTvaHAS0EzBNU0Hr
-         KCdMUG/trRDO68XgpP+l0+WogI4dGlgJjkkDyDxzoZAeM+03lw+BZNUKtIC3ow9MEriK
-         iyZ8zpmP7aCoMWPxECGmYsyiqlR5n0+IJECS4JU9Ij6UCI+zQAHsU9PE2eZZ0ClAl8eG
-         YN5XPojzxhDnTuMFl2m2rflxqlWC7rhfy/QouDsHHBif6sYEo42OHA+eSAgeiFU6k9BD
-         a38g==
-X-Forwarded-Encrypted: i=1; AJvYcCUR+smzRulaNWq71mhNkyIv/jev1Quyfs1H4PRFkBBIUdJBO3VX7t84Mas8mLhu0yF14F0U/hd0IE4=@vger.kernel.org, AJvYcCVOlajSL9Ni8r9d4rHsAEN0m0eXDEUs/euBZuI04KXctdYTgS/ZJ+6aiRsSMrnVMXDukqAIExNUl3GKhBzl@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeH7lSw+AWOtv5SLK8ls7cjBQskTLfDH77434ljTTDNE7jcCXr
-	UgUUeCzh55C8u7dkVzRFjx2hu24Ufd19SFAj2AiQw7Ijxrvx8i2R
-X-Gm-Gg: ASbGncsD+wXgMpWBNlCH6tmN1fV6YZRLauDWgV4hiZN13dkyaNQdw0Kjrov6swfDYDE
-	2xJGKSzbTX9Y67hpwLoB+U0IcgjiiAGz4VTQP9W6CNlOLQqjsKNhGfO34e3rNF2jEXjzQrYmxFe
-	6O34vXl0ZdACqzsjq72o83CLsYw4rDGnBhImrbLouR8adXo/GswveNDfrcwEow8fUinQ/XYXJ9s
-	w08E/DSOCAd6lTWiXPNqS3AhQQe21elVU2TlaDD9of73PllVsUWgb0SabPCpQJAy880aMlAeE6q
-	ghYVY3tirCJV5a7e85nIFq8+WGJ5yCdJsWM5uhqcC08uax/LAl4rwRI=
-X-Google-Smtp-Source: AGHT+IEY8DzCnNRzJzQfqd4P+slFQb/ni465buefMU1Eu3pZIczpyhT3BmlaRKBhgbKTouNSjsq4gg==
-X-Received: by 2002:a05:620a:4694:b0:7c5:4738:8a1b with SMTP id af79cd13be357-7c927fb19cemr812146285a.28.1745071005256;
-        Sat, 19 Apr 2025 06:56:45 -0700 (PDT)
-Received: from theriatric.mshome.net ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925ac4749sm214350185a.59.2025.04.19.06.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 06:56:45 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: gregkh@linuxfoundation.org,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Michael.Hennerich@analog.com,
-	sonic.zhang@analog.com,
-	vapier@gentoo.org
-Cc: gshahrouzi@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH 5/5] staging: iio: adc: ad7816: Simplify channel validation using chip_info
-Date: Sat, 19 Apr 2025 09:56:38 -0400
-Message-ID: <20250419135638.810070-6-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250419135638.810070-1-gshahrouzi@gmail.com>
-References: <20250419135638.810070-1-gshahrouzi@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VTh3k4Bk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745071419; x=1776607419;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GAXSd6P51bCdcrlHYICGtiJPhrHgJGc7cexJ3Fvo3TU=;
+  b=VTh3k4BkzdXC2/x1wfhYcJEcGWECOthZbaqWuUBIvdYHGxqRCgnCrjEQ
+   7dzGq2Kv1jAY6yCCeoJeyvuB48s1reyBZHyVqFRliqF9V9l3Jxfymn7WG
+   5tWyuDAFk/yhPMmjN0IhcMp67azDvSb9hONri2iuioZbWu8lZofTKM/2z
+   VJRME7fLOBTAVxPZ2GEj2Au4rS2sdlJ+j83mlWVfj+wXHm/8a2mJwJUOG
+   OhepzgkjpIsVthlucUg/86qg9AVEdgwFEJdanBi6jcZGpX8HaxbUSF7Xo
+   g2Nc++phGJdOBd0tlZ+jHakF18l7ENLLfJuecx5SVYim7OB87VXP+LsHN
+   A==;
+X-CSE-ConnectionGUID: LyKSWrsaQDSfTcszldEitQ==
+X-CSE-MsgGUID: 0BDs/wutQ8+06ar1gzj7Mg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="34292407"
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="34292407"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 07:03:38 -0700
+X-CSE-ConnectionGUID: XdbiROmrSbmrdAVKpH0EQQ==
+X-CSE-MsgGUID: vXO5A6SyQDCixNkSFvRNGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,224,1739865600"; 
+   d="scan'208";a="135430196"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 19 Apr 2025 07:03:34 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u68n5-0003uH-2q;
+	Sat, 19 Apr 2025 14:03:31 +0000
+Date: Sat, 19 Apr 2025 22:03:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ivan Vecera <ivecera@redhat.com>, netdev@vger.kernel.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 04/14] mfd: zl3073x: Register itself as devlink device
+Message-ID: <202504192124.BZN8TTbm-lkp@intel.com>
+References: <20250409144250.206590-5-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409144250.206590-5-ivecera@redhat.com>
 
-Refactor the channel validation logic within ad7816_store_channel() to
-leverage the max_channels field previously introduced in the
-ad7816_chip_info structure.
+Hi Ivan,
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
- drivers/staging/iio/adc/ad7816.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
-index ab7520a8a3da9..7a59cfbcc6e33 100644
---- a/drivers/staging/iio/adc/ad7816.c
-+++ b/drivers/staging/iio/adc/ad7816.c
-@@ -204,17 +204,9 @@ static ssize_t ad7816_store_channel(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	if (data > AD7816_CS_MAX && data != AD7816_CS_MASK) {
-+	if (data > chip->chip_info->max_channels && data != AD7816_CS_MASK) {
- 		dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for %s.\n",
--			data, indio_dev->name);
--		return -EINVAL;
--	} else if (strcmp(indio_dev->name, "ad7818") == 0 && data > 1 && data != AD7816_CS_MASK) {
--		dev_err(&chip->spi_dev->dev,
--			"Invalid channel id %lu for ad7818.\n", data);
--		return -EINVAL;
--	} else if (strcmp(indio_dev->name, "ad7816") == 0 && data > 0 && data != AD7816_CS_MASK) {
--		dev_err(&chip->spi_dev->dev,
--			"Invalid channel id %lu for ad7816.\n", data);
-+			data, chip->chip_info->name);
- 		return -EINVAL;
- 	}
- 
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master v6.15-rc2 next-20250417]
+[cannot apply to lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ivan-Vecera/dt-bindings-dpll-Add-device-tree-bindings-for-DPLL-device-and-pin/20250409-225519
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250409144250.206590-5-ivecera%40redhat.com
+patch subject: [PATCH v2 04/14] mfd: zl3073x: Register itself as devlink device
+config: nios2-kismet-CONFIG_MFD_ZL3073X_CORE-CONFIG_MFD_ZL3073X_SPI-0-0 (https://download.01.org/0day-ci/archive/20250419/202504192124.BZN8TTbm-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250419/202504192124.BZN8TTbm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504192124.BZN8TTbm-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for MFD_ZL3073X_CORE when selected by MFD_ZL3073X_SPI
+   WARNING: unmet direct dependencies detected for MFD_ZL3073X_CORE
+     Depends on [n]: HAS_IOMEM [=y] && NET [=n]
+     Selected by [y]:
+     - MFD_ZL3073X_SPI [=y] && HAS_IOMEM [=y] && SPI [=y]
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
