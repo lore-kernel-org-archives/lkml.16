@@ -1,177 +1,164 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626D11AF0BB
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 08:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E750D1A5B9B;
+	Sat, 19 Apr 2025 08:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745051817; cv=none; b=BgdfzdXCyziabzowb7jDUiBFSyjaolpBJ5yUxzlc9/6uf5p0XjzQoCJlLJM7Q/25AA2LuohcOgnSzbWEE4PhOgMA7ifC+ltuFMGT+EpuJSRDTbNFx356l0uhbcG52gwe1mskkQqQU4B+yJ8EtlldYBZ7XStPq5o+oDbngkmKUZU=
+	t=1745051875; cv=none; b=LUgI3DhfOgAOIFzEv4tPjXGzfb3yzEgCYTX+Y5POxfrFkySudHTCY51PZTge7yQX/rgjtX+Pgh97KAtxkFgO912JqHbdjzaa6dSQRbAhB2o49VQ7TeuwMhbf40DUOcIeF2Aa1KwyPfZIJWD8iMZNMfhUmoCU5u6mocVyQ9i2Yw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745051817; c=relaxed/simple;
-	bh=/cjQX46TG/1tQiEUY53/IXcAF6SECujuKDfyckSZ8M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAKBSOQDDDO+lKzkXHSUKP+ouB3aXKq5R0Fup+4U5e0pqCp0+aBGZssdWkPdDWCmqe8IW2+pdEk0F403C1ZsdpZIyrqKhFDvLpke9elq5us20eLyPezQD1oq0aqVYtVfCJNA/RDLFwbgU0bib02SDLDkJHKaVgOWvpih2VburpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FBH+Fftj; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FBH+Fftj"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736c277331eso3269817b3a.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 01:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745051815; x=1745656615; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hWIuLilHx+0m0PNW09Z0k4xV/guGg8/Qmv8ZqaHqGFA=;
-        b=FBH+Fftj2XjkPn1OXUXpglgOKQBZrDNs0XOGePtrDCn/llECg2us4NDnv/1orXblln
-         RBr6QmduX8nm1HYmJcMHYym4LWjzOm8aZVAnZpDwT+spTXd/DqiOSUrv8OhF3uSxPIUD
-         X6XLFWkHwIdEBlUoMS9IO814rclcW7FvQRQd243h+tXXdCUYPWu99YcQ+8JM9L/wVdYe
-         B5jJFvADu1ae27WPcbBO1+m+0V/XB1i3hBO3BMc2vXDfULPHEwE6mraU7dCPUDv9vVDz
-         hGipwmCxZL6SDp1VqwkEoOTopG4weYngMgYXWyhzGDtR1SsbTHV9mxwf1LMpFSXFv2zo
-         T60A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745051815; x=1745656615;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hWIuLilHx+0m0PNW09Z0k4xV/guGg8/Qmv8ZqaHqGFA=;
-        b=d5qavJp6stEU3Hbmyei4CYoj7RfHU1eCq1uvnMDE1VHdAjWA18AD/w2UzTZIi8yW11
-         +dI45/ErtIirDPgYoHYbSHmDsaQgCeJf3YRy2Go1tm7aoc6WWgcmLDBNejQA2KZY1JNQ
-         zgML+FKQOB5AK1/EHBzeu/dzE0I75HbSx+3woHLKWB/PIwU/GdqJPXCz1vBdHReDvGTt
-         RJPIRLPAfdIdBKrTBZXxCtfSDtYaDNRmcKoK5BqjnVuyGvztFnVdC4A5+wJjMAEom+4e
-         E/pU78TMLIgg1bOSCX9GIVDkhlKWd625gonvvDzi3KYof3pcEVjvhUTV18WRaOjCbNhR
-         i2LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcs5EMp0PY0C/YPa6Hi7pw/NjHlOfvgcXYNoP2SpkE1hMTw/2+pz7ypxT/EFEtDf+lyvzssrhe1/g38/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA28PeXxbQWmrlznQBxwYPDIN1d4ECfMIDPIIG5a2CfavKF8XL
-	YyuqXhIKtYYCk3ez25XhcUh49etFLP6OFN0bxpfeh+jT1oPMqDtCtcrnH7qNZQ==
-X-Gm-Gg: ASbGncuzG7m78n66bKVssE/GQy/1T8EpfTovyCGQG6YJJGxNlcyBVR4223Y6V8xYSHq
-	3KFDyC4SiZpVXYPldespda7krICWsSucRqky3cz8BbSYsCza6nqPSkgtQQ5F4qzT0GzNa9hcE7z
-	QfOlnRL0dLovxtnYF9swllt3ajbVXoWa7X9cu967K3Zpy+iKEFu4AdRIfqaRjapk75fMfr4TXD9
-	raZG8iMMCm9JYsDfs+vWdk9+cFxdygrsXrwWqly4MTlDyX3506q5jrD0SHtRuiaWinfJzC49diU
-	jHUaGrbZ0Je85HrOUEw6l3t2CQ2c64bYbrtpnxhPCjClUvQtVeZoTO2gfmEZSg==
-X-Google-Smtp-Source: AGHT+IH3NDcdNNb8pbSv2t3bDQf2H8zk313Y64ucJBKvLy8gNjS7N5oRSvDjpG+wLPNMUPr2fDtP/Q==
-X-Received: by 2002:a05:6a20:9c9a:b0:1f3:20be:c18a with SMTP id adf61e73a8af0-203cc60880bmr6254890637.10.1745051814740;
-        Sat, 19 Apr 2025 01:36:54 -0700 (PDT)
-Received: from thinkpad ([36.255.17.167])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db14488casm2467771a12.56.2025.04.19.01.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 01:36:54 -0700 (PDT)
-Date: Sat, 19 Apr 2025 14:06:49 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Ryder Lee <ryder.lee@mediatek.com>, linux-pci@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
-Message-ID: <oiwee2kiwex6dz3scmvpwc2x25tq4qmdah6kcvgqhhukmku3uj@va465i7ofstd>
-References: <20250107052108.8643-1-jianjun.wang@mediatek.com>
+	s=arc-20240116; t=1745051875; c=relaxed/simple;
+	bh=P9RFDeyBkDkbaio9Lo6rkiHLfMPI1vCJmkTnj0lCITo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OPa5dSiKCeEUhrJOOkqKTnLwA6LHJDBr9VYjMxwZn2xJKXUTb+FOsPFSV8elq1JqfUAEXxkexSnVgIgZcJ3EncirSOuBFdrXUOrQ478NKeMIlUmDHzxHMl9v1dLdtb4qpNwLaJnnSrNpD4m1paBovIeAKC97Q55l/iEdydGZZjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZflKp4MVbzHrDH;
+	Sat, 19 Apr 2025 16:34:22 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 697E6140259;
+	Sat, 19 Apr 2025 16:37:50 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 19 Apr
+ 2025 16:37:49 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
+	<bcodding@redhat.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH] nfs: fix the race of lock/unlock and open
+Date: Sat, 19 Apr 2025 16:57:09 +0800
+Message-ID: <20250419085709.1452492-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250107052108.8643-1-jianjun.wang@mediatek.com>
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
-> Remove the usage of virt_to_phys, as it will cause sparse warnings when
-> building on some platforms.
-> 
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+LOCK may extend an existing lock and release another one and UNLOCK may
+also release an existing lock.
+When opening a file, there may be access to file locks that have been
+concurrently released by lock/unlock operations, potentially triggering
+UAF.
+While certain concurrent scenarios involving lock/unlock and open
+operations have been safeguarded with locks – for example,
+nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
+locks_lock_inode_wait() – there remain cases where such protection is not
+yet implemented.
 
-I'm changing the status of this patch as 'Changes Requested' in patchwork. Feel
-free to submit the next iteration incorporating review comments.
+The issue can be reproduced through the following steps:
+T1: open in read-only mode with three consecutive lock operations applied
+    lock1(0~100) --> add lock1 to file
+    lock2(120~200) --> add lock2 to file
+    lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
+T2: restart nfs-server and run state manager
+T3: open in write-only mode
+    T1                            T2                                T3
+                            start recover
+lock1
+lock2
+                            nfs4_open_reclaim
+                            clear_bit // NFS_DELEGATED_STATE
+lock3
+ _nfs4_proc_setlk
+  lock so_delegreturn_mutex
+  unlock so_delegreturn_mutex
+  _nfs4_do_setlk
+                            recover done
+                                                lock so_delegreturn_mutex
+                                                nfs_delegation_claim_locks
+                                                get lock2
+   rpc_run_task
+   ...
+   nfs4_lock_done
+    locks_lock_inode_wait
+    ...
+     locks_dispose_list
+     free lock2
+                                                use lock2
+                                                // UAF
+                                                unlock so_delegreturn_mutex
 
-- Mani
+Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
+issue.
 
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 3bcfc4e58ba2..dc1e5fd6c7aa 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -178,6 +178,7 @@ struct mtk_pcie_soc {
->   * @phy: pointer to PHY control block
->   * @slot: port slot
->   * @irq: GIC irq
-> + * @msg_addr: MSI message address
->   * @irq_domain: legacy INTx IRQ domain
->   * @inner_domain: inner IRQ domain
->   * @msi_domain: MSI IRQ domain
-> @@ -198,6 +199,7 @@ struct mtk_pcie_port {
->  	struct phy *phy;
->  	u32 slot;
->  	int irq;
-> +	phys_addr_t msg_addr;
->  	struct irq_domain *irq_domain;
->  	struct irq_domain *inner_domain;
->  	struct irq_domain *msi_domain;
-> @@ -393,12 +395,10 @@ static struct pci_ops mtk_pcie_ops_v2 = {
->  static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  {
->  	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
-> -	phys_addr_t addr;
->  
->  	/* MT2712/MT7622 only support 32-bit MSI addresses */
-> -	addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
->  	msg->address_hi = 0;
-> -	msg->address_lo = lower_32_bits(addr);
-> +	msg->address_lo = lower_32_bits(port->msg_addr);
->  
->  	msg->data = data->hwirq;
->  
-> @@ -510,10 +510,8 @@ static int mtk_pcie_allocate_msi_domains(struct mtk_pcie_port *port)
->  static void mtk_pcie_enable_msi(struct mtk_pcie_port *port)
->  {
->  	u32 val;
-> -	phys_addr_t msg_addr;
->  
-> -	msg_addr = virt_to_phys(port->base + PCIE_MSI_VECTOR);
-> -	val = lower_32_bits(msg_addr);
-> +	val = lower_32_bits(port->msg_addr);
->  	writel(val, port->base + PCIE_IMSI_ADDR);
->  
->  	val = readl(port->base + PCIE_INT_MASK);
-> @@ -913,6 +911,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
->  	struct mtk_pcie_port *port;
->  	struct device *dev = pcie->dev;
->  	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *regs;
->  	char name[10];
->  	int err;
->  
-> @@ -921,12 +920,18 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
->  		return -ENOMEM;
->  
->  	snprintf(name, sizeof(name), "port%d", slot);
-> -	port->base = devm_platform_ioremap_resource_byname(pdev, name);
-> +	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
-> +	if (!regs)
-> +		return -EINVAL;
-> +
-> +	port->base = devm_ioremap_resource(dev, regs);
->  	if (IS_ERR(port->base)) {
->  		dev_err(dev, "failed to map port%d base\n", slot);
->  		return PTR_ERR(port->base);
->  	}
->  
-> +	port->msg_addr = regs->start + PCIE_MSI_VECTOR;
-> +
->  	snprintf(name, sizeof(name), "sys_ck%d", slot);
->  	port->sys_ck = devm_clk_get(dev, name);
->  	if (IS_ERR(port->sys_ck)) {
-> -- 
-> 2.46.0
-> 
+Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfs/nfs4proc.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 970f28dbf253..297ee2442c02 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
+ 		.inode = calldata->lsp->ls_state->inode,
+ 		.stateid = &calldata->arg.stateid,
+ 	};
++	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
+ 
+ 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
+ 		return;
+ 	switch (task->tk_status) {
+ 		case 0:
+ 			renew_lease(calldata->server, calldata->timestamp);
++			mutex_lock(&sp->so_delegreturn_mutex);
+ 			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
++			mutex_unlock(&sp->so_delegreturn_mutex);
+ 			if (nfs4_update_lock_stateid(calldata->lsp,
+ 					&calldata->res.stateid))
+ 				break;
+@@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs4_lockdata *data = calldata;
+ 	struct nfs4_lock_state *lsp = data->lsp;
++	struct nfs4_state_owner *sp = data->ctx->state->owner;
+ 
+ 	if (!nfs4_sequence_done(task, &data->res.seq_res))
+ 		return;
+@@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ 				data->timestamp);
+ 		if (data->arg.new_lock && !data->cancelled) {
+ 			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+-			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
++			mutex_lock(&sp->so_delegreturn_mutex);
++			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
++				mutex_unlock(&sp->so_delegreturn_mutex);
+ 				goto out_restart;
++			}
++			mutex_unlock(&sp->so_delegreturn_mutex);
+ 		}
+ 		if (data->arg.new_lock_owner != 0) {
+ 			nfs_confirm_seqid(&lsp->ls_seqid, 0);
+@@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
+ 	int status;
+ 
+ 	request->c.flc_flags |= FL_ACCESS;
+-	status = locks_lock_inode_wait(state->inode, request);
+-	if (status < 0)
+-		goto out;
+ 	mutex_lock(&sp->so_delegreturn_mutex);
+ 	down_read(&nfsi->rwsem);
++	status = locks_lock_inode_wait(state->inode, request);
++	if (status < 0) {
++		up_read(&nfsi->rwsem);
++		mutex_unlock(&sp->so_delegreturn_mutex);
++		goto out;
++	}
+ 	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
+ 		/* Yes: cache locks! */
+ 		/* ...but avoid races with delegation recall... */
 -- 
-மணிவண்ணன் சதாசிவம்
+2.31.1
+
