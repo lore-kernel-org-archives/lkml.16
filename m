@@ -1,328 +1,355 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7952D17C219
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745040003; cv=none; b=eVkl/ayBm6Zl1M79ZJhv5oYkCvCRO+dTNY/yzHLPyIGM6ETsRxZfoj1hxPj6X8F44NKQ6auXQhRqBElBkZv/7PJoXCl2X4KsRzAZaORI1ssMLTGyNtzYFKKRgVKyBpZz1DSLaly4+R2TfmdBa3t8TStAmCZb+1WdZ1lCYh4HXpc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745040003; c=relaxed/simple;
-	bh=pfENF6ZO4GFUwtMBD4h5ZaW9MTwA7/zq2Dmyg693lV4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=W8Am70MbkIY1O2BXPHeIKZ3StwLXmj1E8YmY2YAPdx5HbrZF+gcOYGKjRnngpeX5lVZPF2csAkMTna1UiQ7oGP38XtZFQ7p2NK/Au2BajkO+ecP8jZeCFtnH7ZzmeWndNbydF97qYNEPo1dOQuymm6dor4yr8Dlif8XCmJSg6Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bp/PAmEI; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9B75464E
+	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 05:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745040188; cv=fail; b=nH6RBjaB2CSCz8UwSjiNsQfL5ddf3omjjwzrrzxB4ObTU5Rq7RBGEIrRq0eivuDJlsF/qWIxOeGIUhgJZiAK6MUh/THHhnjHKqzcKURzFFRu9iE9upjYkavFP3hZIkzTICgj7sFTuHEO83z+ynEUrsUehYgKQlzxuyn0YXWJGHM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745040188; c=relaxed/simple;
+	bh=U4McoGq0hTo4qlaCicIJ3sZpy2GIk3jpesHAO2V9y64=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JX8dMC1X3xXCnl9puR/RDMUkik1noUQRShrVJ65R/4SBxCvHVUJq4Vb2ChO/mT165B3nvC2tbIj6p2rJqwp3GrDSHnL3ZrgpGrQ6ngdGxcPLPP3rKzbLPU7T4YFNoYL3VJMhdZWJ2mtACFmfiJNzT0/X36Gxt4qzzNqkOyvAKZM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z/Ouc5Zj; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bp/PAmEI"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac41514a734so366767766b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 22:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745040000; x=1745644800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q4qy193G/yKAzPZrbZZI+4C7rTMR6HHOb2/qcaQ+evw=;
-        b=bp/PAmEI1IapozN+4i449kjMBYsK+YHvzevq7Xa4+0iqxf+BNPnVVdDxZQo9H6BaOK
-         Elrg0EJ4aLzcgIzGXE2ZezUjDP9n94XhUDgQzzYDubI+WYfAtriUGSG7UAaZpEjbKlTe
-         bJeadbdjG7LxF+rMQ4njkOu7Gg1A9+uI7z/KbsYCnhw/2TmLufzcdWLXIs9W92tEisI6
-         rTMe3DCWPiCsNdyBhpFZmKf7oCjwqTxBk62WmfjDNyD36M31hNe8r44r8fJTi1ecssYT
-         G9MIBZwtCzaX3BBJ/duwkO34fHOCk0ZgVsXBAogI1u8P2QCa9RRBV/8o62WRdoH38h4c
-         9v/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745040000; x=1745644800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q4qy193G/yKAzPZrbZZI+4C7rTMR6HHOb2/qcaQ+evw=;
-        b=gHB7N2QjpgDJhdVaCpy15jBVXhGYdeewHcJsPmRTyUhi2/Y/CcW81EcfNVrOmNYI5G
-         j0yf3irmi+kALqVBW4xC7lHj/prldvPddhVY5ljR2JOtPhkTLPsjcaKm7vI90SauFHCl
-         BpAkKDhni/hKEoxxIHquwkSCpemE15spC6h7F/YkkHD+AbqpH2+3+h7wB9apClCIBrGE
-         cycnyUT/uAR6mUSXc61Sdp+zT37wC3N86mx20OZYWmF2Vr5wK66V1xKgvOQ9paneHK4r
-         JkGE7NMGETXbaJp4pchGbhDAVmCy+KGXwJYNzxpQvQj4wfK+SUPGRuRJ0N6viJYC98nT
-         J1Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy808dyJqGW2TgWYb2lQxw/v2xOsCyVHa5R2Y8dL8FO5DMd5WsHVaE9dj9fSMFIGP07zZzmLZosoYuvgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2mMQKN0It/L/gn8uIXv3dA7XZAtL4hK0KGGg0F1SO1hsK3672
-	LP7VWi0VM2RtddN8wC5qGP5ozmu+vawAVMhpPNfAds4ESAPoseL1z8gI5Qg5lN+Gk2y2l52X/Bk
-	/5+Kf2qQZTmRgCl9jjAoxi6KbC9g=
-X-Gm-Gg: ASbGnctj+cBivqoCPjhOBggNVsuSgJBwPNg3jcsQqSjaur+MP6D/XdGRedEXFz469yC
-	isYGu2E+829LO0PZhpqA4HKTRon0m4TXeDKuScwpwwyCkR2o7SNk4XUJ7GeSKbb1ozdRB6MrIKa
-	pdo2Kp7dVqeb/eoSrDvq/zjO3jmH7R1+4=
-X-Google-Smtp-Source: AGHT+IGX+H7blyO9O2IZIcMf/GbMEebHGvi3KDEWr5ty1K8Chcjwt7Xp7VuXDZRGe702QXmsX2Ex+rOJAFL7miwCGgM=
-X-Received: by 2002:a17:907:d8e:b0:acb:30a9:8361 with SMTP id
- a640c23a62f3a-acb74db5f78mr411309466b.40.1745039999365; Fri, 18 Apr 2025
- 22:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z/Ouc5Zj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745040186; x=1776576186;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=U4McoGq0hTo4qlaCicIJ3sZpy2GIk3jpesHAO2V9y64=;
+  b=Z/Ouc5ZjdK+UZm+ehy8sDjr1pf3r7RPnM+/tXg+ZLjocUb4v/D2paOLJ
+   K1oMcQOsVJtUsg5gxIhRqQmfbCqHUb09OgcqLB6cT2Dp/32z/Fh49fmsr
+   4KnZMlKEE98csQfF3Y9D6b7R4P+opXthUKEJPR/EVIuaMoHZ78Ll1gxZd
+   iF7OK1veJPucq+vCzqpHERgDTxlG8ilwfdpqrgPbHY4loWXItUgw8fxmg
+   6Gltd20U/sSxbSzCiFGLFrhrnSm9PmBZSG5gtnAgLw3mOu8lX3r+1FF9+
+   2zZ1543POXEAEzT39L0pxbygAD0kD2hJ3M9EjSs9DRgLD5/yxqH6beXR0
+   A==;
+X-CSE-ConnectionGUID: ZT8ajjEeRKKe8Fes/k2shw==
+X-CSE-MsgGUID: KOxwmttDT2KBpB+I/EnMqQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11407"; a="50327552"
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="50327552"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:23:05 -0700
+X-CSE-ConnectionGUID: aAuegM8bSwaagbSEuPbZlw==
+X-CSE-MsgGUID: efTNLPHWRhus16Dbl/kmqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,223,1739865600"; 
+   d="scan'208";a="131255270"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2025 22:23:05 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 18 Apr 2025 22:23:04 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 18 Apr 2025 22:23:04 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.45) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 18 Apr 2025 22:22:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WUzR5FlErPam63DHphHGObdS4CVKpJf2Y6g3WJxNlsWA4AFaosIbjpynGIwu7K2bFat6E6IUH5ZEsgItrvRq7fIqvhN6mOZ847nSzVMXQlG6YMRKxl4HGza7NQR+lyFKHNP/jcDq626sHLsLyYZZqA/mOCVUDbxb1UH6zDOf26gb4Vr9daeG2N+fuc8ustxs9JAL4MZOJ579BfHYdnSTCpSOHpO0uekhWNXitd6jsE1ceUk8x/UpZh81WrfRgnpP3Qhzz+pYZOVB0Ot8um2meO3urFk8UIB+LbqneYb/1x4XvddbVP5GZl0a9UKfCLOdf96T7t/IFKaWRrdTLvWehA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5cM/FLkBSMt02VFQoYuasasW0ROX0lvV+w2+r91UqLs=;
+ b=xREbx9m2JQa6AZY1HFUGl1ZfbUGLzKO1xRebInwrWp4sCgQTsfr2nMOaceDQ8owUubSB/oHH+JUxctLNBoUsfIgvwW6E9CakdMxAoliTlkENTj4Ui8lZjiy/3Vi9eWcxdZLcNOldEfJRNs10EanmXNRccwYHeJhRRMN5o4EvVBkTzedLtsH5BnnqLM6SdQsdc87hD3q0b+caSGRLWzuYabZDOwTOUL7QAb1HuODXGyLj6Dwnv8e6EutkvBKbZYRqp+XQa+qi9tAtR0xgVqmrz/SdD54yM1aJikpGH76kxJW0VXJoBka3MetOgKff1w6bPfZ6vAjBiPvd/WH8cpMAMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by PH7PR11MB7003.namprd11.prod.outlook.com (2603:10b6:510:20a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Sat, 19 Apr
+ 2025 05:22:38 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8632.030; Sat, 19 Apr 2025
+ 05:22:38 +0000
+Message-ID: <d83e898a-4ac6-413d-8228-989d5395fde6@intel.com>
+Date: Fri, 18 Apr 2025 22:22:36 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 21/26] fs-x86/resctrl: Handle RDT_RESOURCE_PERF_PKG in
+ domain create/delete
+To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghuay@nvidia.com>, "Maciej
+ Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
+	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
+	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
+	<Dave.Martin@arm.com>, Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+CC: <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+References: <20250407234032.241215-1-tony.luck@intel.com>
+ <20250407234032.241215-22-tony.luck@intel.com>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <20250407234032.241215-22-tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW2PR16CA0011.namprd16.prod.outlook.com (2603:10b6:907::24)
+ To SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 19 Apr 2025 15:19:47 +1000
-X-Gm-Features: ATxdqUE4L_w9F4cg0enA_0ANZpRSqXBY-u7vHQckr6-wKOW5jOmco9XtqJDmklg
-Message-ID: <CAPM=9tz_TQb0KRXAzverESVSPD1Ap5D=oZhab4tvYJ-XrwN0cQ@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.15-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB7003:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ce026f8-3001-4b3f-7346-08dd7f023354
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cXIxcUVBZ0dYaFg2eU5uTU95SHdBVlZVU2h1VDU3YXpRSmxwWFY0UGM1ZVY1?=
+ =?utf-8?B?RWljbXl3VXpwcmxlYitOSVlBaTlIbVhhTWFGRllHZFQwK3VYNms0OG5YNkx2?=
+ =?utf-8?B?VlpYVno5dkVmRENoV2JaOWxYYVNkc21uUURFRVRFM2Q5aHo3a1dWQlBEWlZr?=
+ =?utf-8?B?Szh4eE1DRWZVa3E4ZGlBKzRMcWRqMzdOZkJybnNDbnVTK1ZlZkJTdU84OU1H?=
+ =?utf-8?B?WHBtNjA4cDRDalhCekMwY2hheWFZYm9lc0MwOFZ4cU1TNmVUTW1OU3F0ZXhU?=
+ =?utf-8?B?elZiUllzcU94WHdQVDhmQkJ3NHRXYU96SzlLSy9oQ285YzI4QUhucUp5Y2pO?=
+ =?utf-8?B?MG1OMkpTQURSekRoekpTVGJ5SStoa2pMQ0Z2V3lQb3dHS2xyK1VTV1liS1VS?=
+ =?utf-8?B?VEZlWmZtVXlqZSs1RVNBUG1WakYzMTI1S0t1TnFvMHFZMlpGSlYrWTcrbGE0?=
+ =?utf-8?B?U2htWE1CUE9wMnF3OWpLbnpUSnphRld2WjIyTnhKb3VxeStCZzcxRkNjMG5o?=
+ =?utf-8?B?NVRCMFQrSlA3ZXRFd2JXcVd5cUlySmt6a09yYkRXRTk2NHoybFFTTlVhZEtq?=
+ =?utf-8?B?dVZvNUFSR3BLQXQrUm5QQkthRmlFYXVCTFdSQlFlS3g3MnhqY3lSWWtwNzlQ?=
+ =?utf-8?B?V2Mvb3VSaEN1UUZ2WkZMZ0JoTC9pWVVTTnU4aUIzYWl3SWxjMVNMelYzWGt2?=
+ =?utf-8?B?VURYWXMvY1VmVmh2ek9nQmZXMmUvUDZrRkU4MXFHWERGYXRBTlZjb2E4cVdV?=
+ =?utf-8?B?ajQyNUtzZzc4RDBnTXIxalFMZURDVEhTOTRiVk1QSzgwVjZxZ0tpZmE4OFJi?=
+ =?utf-8?B?aFlQWjhsWDVILzZVYk1EWmgzZUdFcTRlV2RwUTJEb242RFlVS1RQRU1GdHl2?=
+ =?utf-8?B?Zjk1c3cvMGxMNFdlckNLL2Q0bFoxaHdHYXdYM2h6WVI3bW84eDlWR2FGSkFz?=
+ =?utf-8?B?SnZQd1ExOTkrWE02MllUa3l3R0hITWhkVlkwelk1QXhlUFV4cys4Q1VScjFt?=
+ =?utf-8?B?cmd1ZE1FZWkzWHhWejhYMVcwdHFST1JHNDVsUEpVNW4xYlExWFRvQ3Z6ZDRv?=
+ =?utf-8?B?bGN5T1ViK0srVjBmK1liQlM0b0xxS1RJNzhWOHJDWTU3K3hHZ2ZBMmgySVRB?=
+ =?utf-8?B?TVlNamhDWjdYLy9yTmljaHpiOWIzSXVtVnZIL3lOVVh5czRxSFVUUStYYVdF?=
+ =?utf-8?B?engwUHh0b2FaRVMrdUljV2czVlVLMktNZFQvSjkvaG52YjF6eFpLbUdsZnh1?=
+ =?utf-8?B?bUV4Um9qNlBkMGFaOFdtT1NhOUR0cFhkNnRnSGhySTcvakJtSHFTaWVJUnhZ?=
+ =?utf-8?B?bzY2ZVdxN2ZZRVVUZTZCOFVkYzVXSkMwREVpNUdZYXF6OVZxbnVkbGdMaElX?=
+ =?utf-8?B?b001ek82WC85K3pVcENWWTJkbFkwa3RkOFBmRUJ1SUU4bUd2eW9qbVVPMUpP?=
+ =?utf-8?B?SERsVzFzNTFtU0oybkRCVlhCRjhnWGtmeE1vVjJPUmNHSlBFNmtKRXFjbEtr?=
+ =?utf-8?B?d282Z3J1QlEyem5ja0puQWZXZ0JVYTZua0J3SEdzOHFqT0Z0RFVLaWZEemIz?=
+ =?utf-8?B?WnlBNDRTdVgrckZ3V0FySVFVcXJPV2FCRG00TUZ4c0E4My9Kejg5T2tSMEp1?=
+ =?utf-8?B?WWg5N3FORmZsUm1MK2VkaDRBZHNxOGZiL0Zvbk9jR3IyWHlCVXNUSUxCeitC?=
+ =?utf-8?B?VmFGazlqaXRxT2w2NzgzZFJLZDhPN1ZDYmU3RUFRSlA3ZGx1NklGSktoaTd4?=
+ =?utf-8?B?azVkOURYdDgydFhqWWY5Qk1yR2pSODBCaVNpZFBSd3dpVEhUL3d4dHVyYWVi?=
+ =?utf-8?B?MmUwOFVkTTBhMHlSL3daL2pkRjVhOE5XU0x2aExhRytPa2JJRDM3cFBhN2xo?=
+ =?utf-8?B?Ymc3Uis1SThkczY5TzJvdkxyU01JT2twb0hiRkd1bmxXV3ZmZ2t5VDBCbCtw?=
+ =?utf-8?Q?EVH8SdUASIM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UUZqKzhxTkZyNEVMN0hLTU1mZG1TRVcxTU85YWRJWnhBVUZBUWtFdVM2Tmts?=
+ =?utf-8?B?MUdVVnpUNlZtZkFuYktvKzFRSnJEdG43TFN1UGlGdGkyY1V2OVZpMTcrRTJq?=
+ =?utf-8?B?dVhVWjkrNzdoYzhsZDdTeVR1bzFEdWRqdTZvSHhVNk9EbVRya2drdkYraEUz?=
+ =?utf-8?B?c09ZTStWbitUYVZjRDc2cHlXZ0gvU2FtbU1sbkl3dmNBaElnOHQvamVsMGRo?=
+ =?utf-8?B?VzA1MGIwL1lEeXRJSlJUT2p0N3dWWm8rWXo1S1M3S2pxK2NtUzJoZ1g0VjhC?=
+ =?utf-8?B?YmhkUzUvZE9hQ3JiYXAwdEJpVGpubG5hMnArc2VtZjR0azQvZ1R1SERvRFM1?=
+ =?utf-8?B?VTVyWFV3MEpKR2txVXhETVFTbDVUdmZZWU1aSmxzTU1ycGg4Y2hNbURxVGgx?=
+ =?utf-8?B?WXEvUUFoTGpNNE9mV0RZa3dOYXJzQzNuT3ZNZGc3OWZqbkt5WTR5MmMxNm96?=
+ =?utf-8?B?SDZpdlo3azd3c2FzcHIzSjRFbFNOWDd3ZmtBaW4xWGZsTnJBSkNRaVJnSlI1?=
+ =?utf-8?B?SUtKMzZ3bkFTb3FtSzhIWHloNlN2V1g5QW8yMnZnd2JwdHRXbVZ3Lzdhd2xq?=
+ =?utf-8?B?TUtPT0QvU0lLQlNRKzg1UGNIdTZTeWE0REhvbExnaVJzbVBpUlVoY1o5c29w?=
+ =?utf-8?B?K0cxc0wwcE1DZmUwTFpoUzdLak9JcFFrbHJnTlZic2hST0hEa1RaWWNRdjZH?=
+ =?utf-8?B?ZFdoTnBwUDUwTVlSY2FjcWxvK1hXRXhMVEVTTGZxQkZxZWhaTjV4QWlHcWFr?=
+ =?utf-8?B?ZW04N1R1OXZBZ21tOG5FeExhdjdpM0NQb2x0NjdNMHJKUWVPYmRIaitOR3N1?=
+ =?utf-8?B?bFFsRGxNQWIxNlVHcm5Fb3dBeEFRTTlPQkQ4dFVpWWNUQmtpUnV2bGVISzB4?=
+ =?utf-8?B?NWVsdWw1bGErR2sveFJ0TExtMUdhdG8yWFJEQU04UVZKZE4vOFRGcXZuSHlo?=
+ =?utf-8?B?NnlvUDNndmFTZEo4SDcwZitMdlVBZU0zaXBZaXIyam5DWWJPcnFhd0J1Vzlt?=
+ =?utf-8?B?U1Q1MURsVjdPRm90Rm9MN1Zrck9KV3o0MklIQld3RUJyaVVkT1FrOWs5STFh?=
+ =?utf-8?B?ci9oSHgwQjFpbFdsSEwvZUdxQ24rbytIM2lKZU02ci9sNWV2YUk2RTV1TGJ2?=
+ =?utf-8?B?SUptSGtNeXdhZzdnWE5Mb2VYMVlqQ1VHUG01WGV2QXlOaFB3R1Focm0wSzdq?=
+ =?utf-8?B?ZHhreHh0UTM5TnBuSENyVlFJcG9iZnMxOVNJRmdiSXFRdUtYYURYTmhvY3Bp?=
+ =?utf-8?B?T3hlK2FjVTNzdWl5MktVUXM3czhhdXlwemkyTy9sTUFwNjRJVVBHamFwdHBt?=
+ =?utf-8?B?TWdWVll6WWF0U1FpSGRqZkdDcWJ6eU5DUWtGaXl3NndPdDZMSmZEbmxxUFdi?=
+ =?utf-8?B?L0tqdlRzV3VuamhzM3hOanYrNHFseFlYdUg4aEdXdEloNjFXMlpHalo4R0Rw?=
+ =?utf-8?B?OU1XWExQeFZ6RFhyQy85QW9OSkZTOFpQckErN3FGaTV3c1E5MkRaVUpPNFhX?=
+ =?utf-8?B?MEJ2bDBQWEgweVJiL2hjWlgxUzROalkyWVdRN0Q4ay94eXJhWVROSXpHc2o1?=
+ =?utf-8?B?c1hKSUFOVG1MR0xPRlozNmF5ZmIxSEpBVEZ2QlJvbXBEd1k4SGNtMFFmNWdu?=
+ =?utf-8?B?SXlVTnAzN1NlM1BKSnlSb3ZCV3U0L0lXWjBNSnppRlhBaUV4TUZpMHA0K2VW?=
+ =?utf-8?B?T3JiSi9FQTFiNjVtTVREMW1UQTJ2bm5lR2lOQXI3TUxoS1ZRQklQVlpNQkMw?=
+ =?utf-8?B?dlV0cUc3RlZ6NEhHRmlBTDA3MUdzbG82TlVqYzFDdmtwdjlZNGdsTElJRENO?=
+ =?utf-8?B?aDRyRlhjRWYyZHlzR0tPSUZkRlUwcXFFb2czZDBBR0ViOXhOWHRPbC9uVmFq?=
+ =?utf-8?B?dk8rRzkralk1T2JNUkdsazB1Y0tJSGhqcGhWMDBBNnJRZlc1SGh6S1FrdEdF?=
+ =?utf-8?B?SUkrcCsrT1FzUnZGdDdhV0d0ZXFtUGlkTXVuUjFwY2lUQWNVVUg1eW84SGpk?=
+ =?utf-8?B?VjEwR1FwSHAyb3FnbjVpd0VZa3Q3WFVJWWVRWHdCQThXTFJKNmxIYUp3dUYr?=
+ =?utf-8?B?cHZpdzFYZFRmeW53eGwva0VKZklEUDlHYzRJL21iVWIwSXFxK1NUV0hqeENh?=
+ =?utf-8?B?cWROQnBmd0VBYm9iWUZaSkRwb1pGSGd1dTVQZkIyN3VPdkw4YXJRU0FVUnFX?=
+ =?utf-8?B?MXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ce026f8-3001-4b3f-7346-08dd7f023354
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2025 05:22:38.5622
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pO3OtJtlDms23bc2cj1x+JHySGe8mrS7/1JNy9AOCvz8V/dWYsBTIbAsHh9Os8W557EXLjCnOtCdwV6rqMh4WHJ/D1dxU6/lXmyFj2BK2HY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7003
+X-OriginatorOrg: intel.com
 
-Hi Linus,
+Hi Tony,
 
-Easter rc3 pull request, fixes in all the usuals, amdgpu, xe, msm,
-with some i915/ivpu/mgag200/v3d fixes, then a couple of bits in
-dma-buf/gem.
+On 4/7/25 4:40 PM, Tony Luck wrote:
+> Add a new rdt_perf_pkg_mon_domain structure. This only consists of
+> the common rdt_domain_hdr as there is no need for any per-domain
+> data structures.
+> 
+> Use as much as possible of the existing domain setup and tear down
+> infrastructure. In many cases the RDT_RESOURCE_PERF_PKG uses the
+> same functions but just skips over the pieces it does not need.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  include/linux/resctrl.h            |  8 ++++++++
+>  arch/x86/kernel/cpu/resctrl/core.c | 32 ++++++++++++++++++++++++++++++
+>  fs/resctrl/rdtgroup.c              | 11 ++++++++--
+>  3 files changed, 49 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+> index c03e7dc1f009..6f598a64b192 100644
+> --- a/include/linux/resctrl.h
+> +++ b/include/linux/resctrl.h
+> @@ -169,6 +169,14 @@ struct rdt_mon_domain {
+>  	int				cqm_work_cpu;
+>  };
+>  
+> +/**
+> + * struct rdt_perf_pkg_mon_domain - CPUs sharing an Intel-PMT-scoped resctrl monitor resource
 
-Hopefully has no easter eggs in it,
+It is a red flag when architecture specific things ("rdt" and "Intel-PMT-scoped") land
+in include/linux/resctrl.h
 
-Regards,
-Dave.
+> + * @hdr:               common header for different domain types
+> + */
+> +struct rdt_perf_pkg_mon_domain {
+> +	struct rdt_domain_hdr   hdr;
+> +};
+> +
+>  /**
+>   * struct resctrl_cache - Cache allocation related data
+>   * @cbm_len:		Length of the cache bit mask
+> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+> index 9578d9c7260c..6f5d52a8219b 100644
+> --- a/arch/x86/kernel/cpu/resctrl/core.c
+> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+> @@ -542,6 +542,29 @@ static void setup_l3_mon_domain(int cpu, int id, struct rdt_resource *r, struct
+>  	}
+>  }
+>  
+> +static void setup_intel_aet_mon_domain(int cpu, int id, struct rdt_resource *r,
+> +				       struct list_head *add_pos)
+> +{
+> +	struct rdt_perf_pkg_mon_domain *d;
+> +	int err;
+> +
+> +	d = kzalloc_node(sizeof(*d), GFP_KERNEL, cpu_to_node(cpu));
+> +	if (!d)
+> +		return;
+> +
+> +	d->hdr.id = id;
+> +	d->hdr.type = DOMTYPE(r->rid, DOMTYPE_MON);
+> +	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
+> +	list_add_tail_rcu(&d->hdr.list, add_pos);
+> +
+> +	err = resctrl_online_mon_domain(r, &d->hdr);
+> +	if (err) {
+> +		list_del_rcu(&d->hdr.list);
+> +		synchronize_rcu();
+> +		kfree(d);
+> +	}
+> +}
+> +
+>  static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+>  {
+>  	int id = get_domain_id_from_scope(cpu, r->mon_scope);
+> @@ -571,6 +594,9 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+>  	case RDT_RESOURCE_L3:
+>  		setup_l3_mon_domain(cpu, id, r, add_pos);
+>  		break;
+> +	case RDT_RESOURCE_PERF_PKG:
+> +		setup_intel_aet_mon_domain(cpu, id, r, add_pos);
+> +		break;
+>  	default:
+>  		WARN_ON_ONCE(1);
+>  	}
+> @@ -668,6 +694,12 @@ static void domain_remove_cpu_mon(int cpu, struct rdt_resource *r)
+>  		synchronize_rcu();
+>  		mon_domain_free(hw_dom);
+>  		break;
+> +	case RDT_RESOURCE_PERF_PKG:
+> +		resctrl_offline_mon_domain(r, d);
 
-drm-fixes-2025-04-19:
-drm fixes for 6.15-rc3
+Something should have complained about using an uninitialized variable here (d).
 
-dma-buf:
-- Correctly decrement refcounter on errors
+> +		list_del_rcu(&hdr->list);
+> +		synchronize_rcu();
+> +		kfree(container_of(hdr, struct rdt_perf_pkg_mon_domain, hdr));
+> +		break;
+>  	}
+>  }
+>  
+> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> index 5ca6de6a6e5c..34fcd20f8dd7 100644
+> --- a/fs/resctrl/rdtgroup.c
+> +++ b/fs/resctrl/rdtgroup.c
+> @@ -4020,6 +4020,9 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+>  	if (resctrl_mounted && resctrl_arch_mon_capable())
+>  		rmdir_mondata_subdir_allrdtgrp(r, &d->hdr);
+>  
+> +	if (r->rid == RDT_RESOURCE_PERF_PKG)
+> +		goto done;
 
-gem:
-- Fix test for imported buffers
+Could you please change this test to 
+	if (r->rid != RDT_RESOURCE_L3)
 
-amdgpu:
-- Cleaner shader sysfs fix
-- Suspend fix
-- Fix doorbell free ordering
-- Video caps fix
-- DML2 memory allocation optimization
-- HDP fix
+this makes it clear about what the code that follows supports as opposed to one resource that it does
+not support (and possibly cause issue in future when adding another monitoring resource).
 
-i915:
-- Fix DP DSC configurations that require 3 DSC engines per pipe
+> +
+>  	if (resctrl_is_mbm_enabled())
+>  		cancel_delayed_work(&d->mbm_over);
+>  	if (resctrl_arch_is_llc_occupancy_enabled() && has_busy_rmid(d)) {
+> @@ -4036,7 +4039,7 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+>  	}
+>  
+>  	domain_destroy_mon_state(d);
+> -
+> +done:
+>  	mutex_unlock(&rdtgroup_mutex);
+>  }
+>  
+> @@ -4104,12 +4107,15 @@ int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d
+>  int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr)
+>  {
+>  	struct rdt_mon_domain *d;
+> -	int err;
+> +	int err = 0;
+>  
+>  	WARN_ON_ONCE(hdr->type != DOMTYPE(r->rid, DOMTYPE_MON));
+>  	d = container_of(hdr, struct rdt_mon_domain, hdr);
+>  	mutex_lock(&rdtgroup_mutex);
+>  
+> +	if (r->rid == RDT_RESOURCE_PERF_PKG)
+> +		goto do_mkdir;
 
-xe:
-- Fix LRC address being written too late for GuC
-- Fix notifier vs folio deadlock
-- Fix race betwen dma_buf unmap and vram eviction
-- Fix debugfs handling PXP terminations unconditionally
+same
 
-msm:
-- Display:
-  - Fix to call dpu_plane_atomic_check_pipe() for both SSPPs in
-    case of multi-rect
-  - Fix to validate plane_state pointer before using it in
-    dpu_plane_virtual_atomic_check()
-  - Fix to make sure dereferencing dpu_encoder_phys happens after
-    making sure it is valid in _dpu_encoder_trigger_start()
-  - Remove the remaining intr_tear_rd_ptr which we initialized
-    to -1 because NO_IRQ indices start from 0 now
-- GPU:
-  - Fix IB_SIZE overflow
+> +
+>  	err = domain_setup_mon_state(r, d);
+>  	if (err)
+>  		goto out_unlock;
+> @@ -4123,6 +4129,7 @@ int resctrl_online_mon_domain(struct rdt_resource *r, struct rdt_domain_hdr *hdr
+>  	if (resctrl_arch_is_llc_occupancy_enabled())
+>  		INIT_DELAYED_WORK(&d->cqm_limbo, cqm_handle_limbo);
+>  
+> +do_mkdir:
+>  	/*
+>  	 * If the filesystem is not mounted then only the default resource group
+>  	 * exists. Creation of its directories is deferred until mount time
 
-ivpu:
-- Fix debugging
-- Fixes to frequency
-- Support firmware API 3.28.3
-- Flush jobs upon reset
-
-mgag200:
-- Set vblank start to correct values
-
-v3d:
-- Fix Indirect Dispatch
-The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444=
-:
-
-  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-04-19
-
-for you to fetch changes up to 0467145fab3b3a7a1efd221722310fe32329b3da:
-
-  Merge tag 'drm-msm-fixes-2025-04-18' of
-https://gitlab.freedesktop.org/drm/msm into drm-fixes (2025-04-19
-15:09:29 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.15-rc3
-
-dma-buf:
-- Correctly decrement refcounter on errors
-
-gem:
-- Fix test for imported buffers
-
-amdgpu:
-- Cleaner shader sysfs fix
-- Suspend fix
-- Fix doorbell free ordering
-- Video caps fix
-- DML2 memory allocation optimization
-- HDP fix
-
-i915:
-- Fix DP DSC configurations that require 3 DSC engines per pipe
-
-xe:
-- Fix LRC address being written too late for GuC
-- Fix notifier vs folio deadlock
-- Fix race betwen dma_buf unmap and vram eviction
-- Fix debugfs handling PXP terminations unconditionally
-
-msm:
-- Display:
-  - Fix to call dpu_plane_atomic_check_pipe() for both SSPPs in
-    case of multi-rect
-  - Fix to validate plane_state pointer before using it in
-    dpu_plane_virtual_atomic_check()
-  - Fix to make sure dereferencing dpu_encoder_phys happens after
-    making sure it is valid in _dpu_encoder_trigger_start()
-  - Remove the remaining intr_tear_rd_ptr which we initialized
-    to -1 because NO_IRQ indices start from 0 now
-- GPU:
-  - Fix IB_SIZE overflow
-
-ivpu:
-- Fix debugging
-- Fixes to frequency
-- Support firmware API 3.28.3
-- Flush jobs upon reset
-
-mgag200:
-- Set vblank start to correct values
-
-v3d:
-- Fix Indirect Dispatch
-
-----------------------------------------------------------------
-Alex Deucher (1):
-      drm/amd/display/dml2: use vzalloc rather than kzalloc
-
-Andrzej Kacprowski (2):
-      accel/ivpu: Fix the NPU's DPU frequency calculation
-      accel/ivpu: Show NPU frequency in sysfs
-
-Ankit Nautiyal (2):
-      drm/i915/display: Add macro for checking 3 DSC engines
-      drm/i915/dp: Check for HAS_DSC_3ENGINES while configuring DSC slices
-
-Chenyuan Yang (1):
-      drm/msm/dpu: Fix error pointers in dpu_plane_virtual_atomic_check
-
-Christian K=C3=B6nig (1):
-      drm/amdgpu: use a dummy owner for sysfs triggered cleaner shaders v4
-
-Dan Carpenter (1):
-      dma-buf/sw_sync: Decrement refcount on error in
-sw_sync_ioctl_get_deadline()
-
-Daniele Ceraolo Spurio (1):
-      drm/xe/pxp: do not queue unneeded terminations from debugfs
-
-Dave Airlie (5):
-      Merge tag 'amd-drm-fixes-6.15-2025-04-16' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-      Merge tag 'drm-intel-fixes-2025-04-17' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
-      Merge tag 'drm-misc-fixes-2025-04-17' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'drm-xe-fixes-2025-04-18' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-      Merge tag 'drm-msm-fixes-2025-04-18' of
-https://gitlab.freedesktop.org/drm/msm into drm-fixes
-
-David Rosca (1):
-      drm/amdgpu: Add back JPEG to video caps for carrizo and newer
-
-Dmitry Baryshkov (1):
-      drm/msm/dpu: drop rogue intr_tear_rd_ptr values
-
-Jun Nie (1):
-      drm/msm/dpu: check every pipe per capability
-
-Karol Wachowski (2):
-      accel/ivpu: Update FW Boot API to version 3.28.3
-      accel/ivpu: Add cmdq_id to job related logs
-
-Lijo Lazar (1):
-      drm/amdgpu: Use the right function for hdp flush
-
-Lucas De Marchi (1):
-      drm/xe: Set LRC addresses before guc load
-
-Maciej Falkowski (1):
-      accel/ivpu: Flush pending jobs of device's workqueues
-
-Mario Limonciello (1):
-      drm/amd: Forbid suspending into non-default suspend states
-
-Matthew Auld (2):
-      drm/xe/userptr: fix notifier vs folio deadlock
-      drm/xe/dma_buf: stop relying on placement in unmap
-
-Ma=C3=ADra Canal (1):
-      drm/v3d: Fix Indirect Dispatch configuration for V3D 7.1.6 and later
-
-Qasim Ijaz (1):
-      drm/msm/dpu: reorder pointer operations after sanity checks to
-avoid NULL deref
-
-Rob Clark (1):
-      drm/msm/a6xx+: Don't let IB_SIZE overflow
-
-Thomas Zimmermann (2):
-      drm/gem: Internally test import_attach for imported objects
-      drm/mgag200: Fix value in <VBLKSTR> register
-
-ZhenGuo Yin (1):
-      drm/amdgpu: fix warning of drm_mm_clean
-
- drivers/accel/ivpu/ivpu_drv.c                      |  10 +-
- drivers/accel/ivpu/ivpu_fw.c                       |  17 ++-
- drivers/accel/ivpu/ivpu_hw.h                       |  16 +--
- drivers/accel/ivpu/ivpu_hw_btrs.c                  | 134 ++++++++++-------=
-----
- drivers/accel/ivpu/ivpu_hw_btrs.h                  |   7 +-
- drivers/accel/ivpu/ivpu_job.c                      |  15 +--
- drivers/accel/ivpu/ivpu_sysfs.c                    |  49 +++++++-
- drivers/accel/ivpu/vpu_boot_api.h                  |  13 +-
- drivers/accel/ivpu/vpu_jsm_api.h                   |  53 +++++---
- drivers/dma-buf/sw_sync.c                          |  19 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu.h                |   1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         |   2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  14 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c            |  14 ++-
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |   8 +-
- drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c             |  12 +-
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c             |   6 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c             |   4 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c             |   4 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c             |   4 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c              |   2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v11_0.c             |   2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v13_0.c             |   2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v14_0.c             |   2 +-
- drivers/gpu/drm/amd/amdgpu/vi.c                    |   7 ++
- .../drm/amd/display/dc/dml2/dml21/dml21_wrapper.c  |  11 +-
- drivers/gpu/drm/amd/display/dc/dml2/dml2_wrapper.c |   6 +-
- .../gpu/drm/i915/display/intel_display_device.h    |   1 +
- drivers/gpu/drm/i915/display/intel_dp.c            |   7 +-
- drivers/gpu/drm/mgag200/mgag200_mode.c             |   2 +-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |   8 +-
- .../drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h   |   2 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h   |   1 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h   |   3 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h    |   4 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h |   3 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h |   2 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c          |  74 ++++++------
- .../gpu/drm/msm/registers/adreno/adreno_pm4.xml    |   7 ++
- drivers/gpu/drm/v3d/v3d_sched.c                    |  16 ++-
- drivers/gpu/drm/xe/xe_dma_buf.c                    |   5 +-
- drivers/gpu/drm/xe/xe_guc_ads.c                    |  75 +++++++-----
- drivers/gpu/drm/xe/xe_hmm.c                        |  24 ----
- drivers/gpu/drm/xe/xe_pxp_debugfs.c                |  13 +-
- include/drm/drm_gem.h                              |   3 +-
- include/uapi/drm/ivpu_accel.h                      |   4 +-
- 47 files changed, 407 insertions(+), 285 deletions(-)
+Reinette
