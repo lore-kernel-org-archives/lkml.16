@@ -1,166 +1,249 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DA32B9AA
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 01:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFAF2AE97;
+	Sat, 19 Apr 2025 02:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745027955; cv=none; b=senUqg3mMypfoyICLMyrVs9JZ0cLGGTd9SR99TivZzuJMVgDLRe+prBbiq8XekgBWU0BFhcoq9FDjN3rKI0rVEKAgk59XU8jDU1IOGQa2yER7f1tZRl04ZmvISKlYC6TAGLowAjxR66qBllfj+H/LHcQaLVLodlj1x58lKfR7oU=
+	t=1745028026; cv=none; b=TIVEUZTgPhGQgv6S6yIHFurfh1OUcAp/vNaf5KxTz0Tm+Mv3FFiOs9je6qL348YAd7RqInSkqX7T4keLI/1GtUF3JISjxCGEQKQbeQ7kOhAVVl2AbLC85dKIshkjub68gbGyVMjx0fRIylqWo9inluFOB64v33CGJOvsZaPsu6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745027955; c=relaxed/simple;
-	bh=9n9HtjJv8+BJmPIFKBtxa5gCuPSM+N4P1U/vEDnhiSo=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=O882aEXmia1jiAj0hFU9bAYFAUnflKlVM5CKke4hKzHQnVnKgiZdp6CEbNsxDhtDw3qNmALdx7XhVAywk962yclHOlclmv1rfnbZV2PsQtHs0R3lUhd9ykyQ+HX8gEbdGS6jJGW41Ht04HVz7zkeCHGB1RsU7nMGn7hRwuj27ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SkDAy9pc; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkDAy9pc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745027951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MyE2GzEt6O7iPqkt2gvQatRQFTaplB3Bd3IRBQ3niCU=;
-	b=SkDAy9pcb3DKpkWxQoLBxIoOaADZSPFBPlEpq/S8oEBke174Y/fBqBxnaE7jzKauqiYRHi
-	I15Z+uEZMsqHCjIsNYpv5qN6eetV59Smx6eNGm1mrKxyx7vo+rsJlVaRvHp+ylw5uGevjT
-	z9KI70vMarlmr6QfGP1+M8+EaEZpx5M=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-uwovp6oePwyN5WX89hJv0A-1; Fri, 18 Apr 2025 21:59:07 -0400
-X-MC-Unique: uwovp6oePwyN5WX89hJv0A-1
-X-Mimecast-MFC-AGG-ID: uwovp6oePwyN5WX89hJv0A_1745027947
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5750ca8b2so331814585a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 18 Apr 2025 18:59:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745027947; x=1745632747;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MyE2GzEt6O7iPqkt2gvQatRQFTaplB3Bd3IRBQ3niCU=;
-        b=f7d54y0dukdc/vLJ5Zfk/Ri54CpOW1BbX46UT6FW55bnV3QB2k6lUYBWJiReGEDtgE
-         IhAaKAobkcG3Nc2tYR+mkV6Xo3Cq2/2EHk8FnHDNaf3qyHcv9g1/bXx++wzOBIRTRb5m
-         PkS0qmaZgo70rPnPWvPfHssunM5ImVim8luWN2BBCxb65e4uWvLMSbiKoHmdXH6/O5ck
-         MXAhY0JB8xuIlWoEr4Rz66+gAg16OLSTYvwHyM1Ddsag+mnDR9GUPvGsPbYpp3ghOc7v
-         vN1mXhyQXHGDbCSMTIK7T03LT9n4Re44968lZ2TExaqYfqkwIPHlo+bQBT9qF7ryGUQr
-         Nvtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhxg8xEssCyiFy324i0MQnjUgX0u+KqZ2vISFGuY8Xv6wFvgTRsFwPAf7omVeAdK4X50RiH8Bum4Zs64A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzTAr2vhMym86IqK5tG8lbRHbXrkdYeUQzeSLrzUl8BbHO/6Sw
-	MN0Ad22jZQRQfgOGbnUF+Xiu0YJNwN8TX0HQioKaUI0nI3cX6MVem3PbAqBTRgFNzn6eSpofFLa
-	ldqg1yGzg4QxqbXf5FsQ4wy7hH3CWmSXymQEEga9qs4K6K3CIGJeTDgkC8dRanA==
-X-Gm-Gg: ASbGncvyUNN6Pf7tMLISaxipzbC3f4jc90OK+BY9PfOrfJqyjbPywDHyr2YnrNJsgAM
-	6aeBkkZdI5hyABYvBVUv2x1XCzxHSpw8XzjZDviabrernZeI2F+Owu0vcz1haFouLCk5QWRlsFn
-	BhC1mzT4/5EXZbo/eojlXIoG27o1lmf+gFKOxBR9PbVCG/cKPzZ5erisd08jZXId1t6KK2otE3p
-	4upISIRdVo58fS3MIw9uL5WKPGEdPmXbzVBIBca4uCo1ty6Fu4BPGzE41rEgukc3len3liMUg94
-	NvOhxJAR8nopMzpmKhEQHnAReFt5yq46cpzUU2bMUXwIVJWZww==
-X-Received: by 2002:a05:620a:2a12:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c92804942dmr920493285a.54.1745027946867;
-        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcXj4b/NM1OREe7QzWswzHIaHccrZVLgLJcaMbiSk/L6WwkHUEvx8kXDiJC2XmvPRO2v/pUg==
-X-Received: by 2002:a05:620a:2a12:b0:7c5:3b52:517d with SMTP id af79cd13be357-7c92804942dmr920491585a.54.1745027946562;
-        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
-Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6ea8dsm168807885a.9.2025.04.18.18.59.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Apr 2025 18:59:06 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <9bcb139c-451b-4ea5-b4ff-21916372d94e@redhat.com>
-Date: Fri, 18 Apr 2025 21:59:04 -0400
+	s=arc-20240116; t=1745028026; c=relaxed/simple;
+	bh=Lc8RrCtRgBKviLEHvyYUpfft9HiJOg++t4SII0Z8Um0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=L0q0mIOc1017FxPB91sZRKhS0+hVr+roaXhc1Lx7K7D6krEO+6yB64Qy3Fha6LCFKOaixgCX3BOOaOgYOrvgKWGcQOU3SwcC7w00ORoqVjfNx1vECHe+DEu+Q+0x8rjT3z1wSE1TYWtq7Ke216cApcBl8vTTrVr2lJV8vQ7h0LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZfZZm6L5Lz4f3jt8;
+	Sat, 19 Apr 2025 10:00:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 543811A1410;
+	Sat, 19 Apr 2025 10:00:19 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+xAwNosGGcJw--.25822S3;
+	Sat, 19 Apr 2025 10:00:19 +0800 (CST)
+Subject: Re: [PATCH v2 4/5] md: fix is_mddev_idle()
+To: Su Yue <l@damenly.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, xni@redhat.com, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, viro@zeniv.linux.org.uk,
+ akpm@linux-foundation.org, nadav.amit@gmail.com, ubizjak@gmail.com,
+ cl@linux.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
+ <20250418010941.667138-5-yukuai1@huaweicloud.com> <v7r19baz.fsf@damenly.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <e5ec218e-dcab-ff8c-f455-d8fc6943a6e7@huaweicloud.com>
+Date: Sat, 19 Apr 2025 10:00:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] cpuset: rename cpuset_node_allowed to
- cpuset_current_node_allowed
-To: Gregory Price <gourry@gourry.net>, cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
- tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, mhocko@kernel.org,
- roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
- akpm@linux-foundation.org
-References: <20250418031352.1277966-1-gourry@gourry.net>
-Content-Language: en-US
-In-Reply-To: <20250418031352.1277966-1-gourry@gourry.net>
+In-Reply-To: <v7r19baz.fsf@damenly.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl+xAwNosGGcJw--.25822S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF18Gr47GF17WF15XF1rtFb_yoW3Gw43pF
+	WkJFy5tryUJr1fJr1UJryUJFy5Jry8Jw4Dtr18XF1UXr17Ar1jgF1UWr1qgr1UJr48XF1U
+	Jw1UJrsruFyUJrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 4/17/25 11:13 PM, Gregory Price wrote:
-> Rename cpuset_node_allowed to reflect that the function checks the
-> current task's cpuset.mems.  This allows us to make a new
-> cpuset_node_allowed function that checks a target cgroup's cpuset.mems.
->
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   include/linux/cpuset.h | 4 ++--
->   kernel/cgroup/cpuset.c | 4 ++--
->   mm/page_alloc.c        | 4 ++--
->   3 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-> index 835e7b793f6a..893a4c340d48 100644
-> --- a/include/linux/cpuset.h
-> +++ b/include/linux/cpuset.h
-> @@ -82,11 +82,11 @@ extern nodemask_t cpuset_mems_allowed(struct task_struct *p);
->   void cpuset_init_current_mems_allowed(void);
->   int cpuset_nodemask_valid_mems_allowed(nodemask_t *nodemask);
->   
-> -extern bool cpuset_node_allowed(int node, gfp_t gfp_mask);
-> +extern bool cpuset_current_node_allowed(int node, gfp_t gfp_mask);
->   
->   static inline bool __cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
->   {
-> -	return cpuset_node_allowed(zone_to_nid(z), gfp_mask);
-> +	return cpuset_current_node_allowed(zone_to_nid(z), gfp_mask);
->   }
->   
->   static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 0f910c828973..d6ed3f053e62 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4090,7 +4090,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
->   }
->   
->   /*
-> - * cpuset_node_allowed - Can we allocate on a memory node?
-> + * cpuset_current_node_allowed - Can current task allocate on a memory node?
->    * @node: is this an allowed node?
->    * @gfp_mask: memory allocation flags
->    *
-> @@ -4129,7 +4129,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
->    *	GFP_KERNEL   - any node in enclosing hardwalled cpuset ok
->    *	GFP_USER     - only nodes in current tasks mems allowed ok.
->    */
-> -bool cpuset_node_allowed(int node, gfp_t gfp_mask)
-> +bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
->   {
->   	struct cpuset *cs;		/* current cpuset ancestors */
->   	bool allowed;			/* is allocation in zone z allowed? */
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 5079b1b04d49..233ce25f8f3d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -3461,7 +3461,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
->   retry:
->   	/*
->   	 * Scan zonelist, looking for a zone with enough free.
-> -	 * See also cpuset_node_allowed() comment in kernel/cgroup/cpuset.c.
-> +	 * See also cpuset_current_node_allowed() comment in kernel/cgroup/cpuset.c.
->   	 */
->   	no_fallback = alloc_flags & ALLOC_NOFRAGMENT;
->   	z = ac->preferred_zoneref;
-> @@ -4148,7 +4148,7 @@ gfp_to_alloc_flags(gfp_t gfp_mask, unsigned int order)
->   		/*
->   		 * Ignore cpuset mems for non-blocking __GFP_HIGH (probably
->   		 * GFP_ATOMIC) rather than fail, see the comment for
-> -		 * cpuset_node_allowed().
-> +		 * cpuset_current_node_allowed().
->   		 */
->   		if (alloc_flags & ALLOC_MIN_RESERVE)
->   			alloc_flags &= ~ALLOC_CPUSET;
-Acked-by: Waiman Long <longman@redhat.com>
+Hi,
+
+在 2025/04/19 9:42, Su Yue 写道:
+> On Fri 18 Apr 2025 at 09:09, Yu Kuai <yukuai1@huaweicloud.com> wrote:
+> 
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> If sync_speed is above speed_min, then is_mddev_idle() will be called
+>> for each sync IO to check if the array is idle, and inflihgt sync_io
+>> will be limited if the array is not idle.
+>>
+>> However, while mkfs.ext4 for a large raid5 array while recovery is in
+>> progress, it's found that sync_speed is already above speed_min while
+>> lots of stripes are used for sync IO, causing long delay for mkfs.ext4.
+>>
+>> Root cause is the following checking from is_mddev_idle():
+>>
+>> t1: submit sync IO: events1 = completed IO - issued sync IO
+>> t2: submit next sync IO: events2  = completed IO - issued sync IO
+>> if (events2 - events1 > 64)
+>>
+>> For consequence, the more sync IO issued, the less likely checking will
+>> pass. And when completed normal IO is more than issued sync IO, the
+>> condition will finally pass and is_mddev_idle() will return false,
+>> however, last_events will be updated hence is_mddev_idle() can only
+>> return false once in a while.
+>>
+>> Fix this problem by changing the checking as following:
+>>
+>> 1) mddev doesn't have normal IO completed;
+>> 2) mddev doesn't have normal IO inflight;
+>> 3) if any member disks is partition, and all other partitions doesn't
+>>    have IO completed.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>  drivers/md/md.c | 84  +++++++++++++++++++++++++++----------------------
+>>  drivers/md/md.h |  3 +-
+>>  2 files changed, 48 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 52cadfce7e8d..dfd85a5d6112 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -8625,50 +8625,58 @@ void md_cluster_stop(struct mddev *mddev)
+>>      put_cluster_ops(mddev);
+>>  }
+>>
+>> -static int is_mddev_idle(struct mddev *mddev, int init)
+>> +static bool is_rdev_holder_idle(struct md_rdev *rdev, bool init)
+>>  {
+>> +    unsigned long last_events = rdev->last_events;
+>> +
+>> +    if (!bdev_is_partition(rdev->bdev))
+>> +        return true;
+>> +
+>> +    /*
+>> +     * If rdev is partition, and user doesn't issue IO to the array, the
+>> +     * array is still not idle if user issues IO to other partitions.
+>> +     */
+>> +    rdev->last_events = part_stat_read_accum(rdev->bdev->bd_disk->part0,
+>> +                         sectors) -
+>> +                part_stat_read_accum(rdev->bdev, sectors);
+>> +
+>> +    if (!init && rdev->last_events > last_events)
+>> +        return false;
+>> +
+>> +    return true;
+>> +}
+>> +
+>> +/*
+>> + * mddev is idle if following conditions are match since last check:
+>> + * 1) mddev doesn't have normal IO completed;
+>> + * 2) mddev doesn't have inflight normal IO;
+>> + * 3) if any member disk is partition, and other partitions doesn't 
+>> have IO
+>> + *    completed;
+>> + *
+>> + * Noted this checking rely on IO accounting is enabled.
+>> + */
+>> +static bool is_mddev_idle(struct mddev *mddev, int init)
+>> +{
+>> +    unsigned long last_events = mddev->last_events;
+>> +    struct gendisk *disk;
+>>      struct md_rdev *rdev;
+>> -    int idle;
+>> -    int curr_events;
+>> +    bool idle = true;
+>>
+>> -    idle = 1;
+>> -    rcu_read_lock();
+>> -    rdev_for_each_rcu(rdev, mddev) {
+>> -        struct gendisk *disk = rdev->bdev->bd_disk;
+>> +    disk = mddev_is_dm(mddev) ? mddev->dm_gendisk : mddev->gendisk;
+>> +    if (!disk)
+>> +        return true;
+>>
+>> -        if (!init && !blk_queue_io_stat(disk->queue))
+>> -            continue;
+>> +    mddev->last_events = part_stat_read_accum(disk->part0, sectors);
+>> +    if (!init && (mddev->last_events > last_events ||
+>> +              bdev_count_inflight(disk->part0)))
+>> +        idle = false;
+>>
+> 
+> Forgot return or goto here?
+
+No, following still need to be executed to init or update
+rdev->last_events.k
+
+Thanks,
+Kuai
+
+> 
+> -- 
+> Su
+> 
+>> -        curr_events = (int)part_stat_read_accum(disk->part0, sectors) -
+>> -                  atomic_read(&disk->sync_io);
+>> -        /* sync IO will cause sync_io to increase before the disk_stats
+>> -         * as sync_io is counted when a request starts, and
+>> -         * disk_stats is counted when it completes.
+>> -         * So resync activity will cause curr_events to be smaller than
+>> -         * when there was no such activity.
+>> -         * non-sync IO will cause disk_stat to increase without
+>> -         * increasing sync_io so curr_events will (eventually)
+>> -         * be larger than it was before.  Once it becomes
+>> -         * substantially larger, the test below will cause
+>> -         * the array to appear non-idle, and resync will slow
+>> -         * down.
+>> -         * If there is a lot of outstanding resync activity when
+>> -         * we set last_event to curr_events, then all that activity
+>> -         * completing might cause the array to appear non-idle
+>> -         * and resync will be slowed down even though there might
+>> -         * not have been non-resync activity.  This will only
+>> -         * happen once though.  'last_events' will soon reflect
+>> -         * the state where there is little or no outstanding
+>> -         * resync requests, and further resync activity will
+>> -         * always make curr_events less than last_events.
+>> -         *
+>> -         */
+>> -        if (init || curr_events - rdev->last_events > 64) {
+>> -            rdev->last_events = curr_events;
+>> -            idle = 0;
+>> -        }
+>> -    }
+>> +    rcu_read_lock();
+>> +    rdev_for_each_rcu(rdev, mddev)
+>> +        if (!is_rdev_holder_idle(rdev, init))
+>> +            idle = false;
+>>      rcu_read_unlock();
+>> +
+>>      return idle;
+>>  }
+>>
+>> diff --git a/drivers/md/md.h b/drivers/md/md.h
+>> index b57842188f18..1d51c2405d3d 100644
+>> --- a/drivers/md/md.h
+>> +++ b/drivers/md/md.h
+>> @@ -132,7 +132,7 @@ struct md_rdev {
+>>
+>>      sector_t sectors;        /* Device size (in 512bytes sectors)  */
+>>      struct mddev *mddev;        /* RAID array if running */
+>> -    int last_events;        /* IO event timestamp */
+>> +    unsigned long last_events;    /* IO event timestamp */
+>>
+>>      /*
+>>       * If meta_bdev is non-NULL, it means that a separate device  is
+>> @@ -520,6 +520,7 @@ struct mddev {
+>>                               * adding a spare
+>>                               */
+>>
+>> +    unsigned long            last_events;    /* IO event timestamp */
+>>      atomic_t            recovery_active; /* blocks scheduled, but 
+>>  not written */
+>>      wait_queue_head_t        recovery_wait;
+>>      sector_t            recovery_cp;
+> .
+> 
 
