@@ -1,130 +1,239 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3353513BC0E;
-	Sun, 20 Apr 2025 09:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745142427; cv=none; b=t7ntFSMi+GFbYmMqhH9Bn6jBmOZ13Q/deriz6cqiOuUlvw2v4mTZfWkAo7i4jLddYtBLa34e7DhX4CgrFQpqbZr7Fnqa7RSt12o52p2sYbJdgPzt6AkYKrVTf100VX2uczoTnoaHQ3KhfXLNgE/qblMYo2Xb4yXppYiLgplGBU4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745142427; c=relaxed/simple;
-	bh=/ZOqv278q2ZTXUneUVZ0jLxKfZSxoGlL/oJi7uf3QIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rREb9MGE1R283j2t1yqahXFt4HdfAenu7QW5QontHXJBK+KJT9YF1VyrqukpAZS05v51Xj3JNKdSMguRFG3ld9IIfmE+PJskePICkiEBfnifjYHBpiPPSeDvNcJNCYe/tNqVsbbNilHGCqZRlYL8+0qGZ+5ujPA+k2Ton8ZGKKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QoHeC6iY; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9173B14D29B;
+	Sun, 20 Apr 2025 10:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745143617; cv=pass; b=BHghFIHuSjZPCNJ28+iQf8WlH9jX5G5jbUnB0ZGar2ySyuIb2Wxe2Mg3UwyPeVmIBPMETqr5nKjtjCdHxAuxwGaQh3Lfod+7Bv5sgEWrndL8sO5H7gXVrB7a/UxJPXLB/sQ8XZnG+2y54i0VpNQOZ6t0bOQnAAgAQcNK1ak+GY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745143617; c=relaxed/simple;
+	bh=KEZ8NbBI4R0rm+plo5T2i1pnOqzfp8/jirVQ2IBpD9E=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=cxgSmv1IsnU+bGYOjMyB57y92hhX3dPRaZT2vws2DzRO5y1jCpafx+g3pU79LH5wBmw3rsTwXOfeFAOTIkILxRzK4avalFaoYcgF+IX+tdtSeZmzxVk0Xp7hUD+KwYg9jOVq+bDYFg4irH6vmkUlMYenTQbaJ63tdsQrxhGrarc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=We/ougYr; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QoHeC6iY"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso45380445ad.1;
-        Sun, 20 Apr 2025 02:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745142424; x=1745747224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NwGjcfQn9dffbQqYDt/0oQtNjwiBuJchu3RJ+FcdXoA=;
-        b=QoHeC6iYVKTxGODd+WubtEhR9zaIe2wKeaHMGOtAZsG1z++15bc/EdO5AgMLDoJV0m
-         G9ZNSKidd8cW1K26KEMUZClDSvrCdrABZnCPPj4FeJm8WWRaq8SY9IS2NuYuYTRCYtKZ
-         DVLUXStk9/em48nRADLe26lRSFP6/0pBk3AWYmGVTSCCsSPMtUnrfA21EvyDLoBdEAdC
-         zpHV+T2MOktLloRfOpAQZRUVmmh07iiyTBk9nZH8LyIlqpWTV4yH/8ZquqCkkNuxjoyL
-         M88eKcJa6hjIlnjNUDLRo/rD4asxlTnXSnn/ceXeZhFATzonu+thQ28mMfQ21w/E/gvN
-         TsPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745142424; x=1745747224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NwGjcfQn9dffbQqYDt/0oQtNjwiBuJchu3RJ+FcdXoA=;
-        b=v6tdmRUdNbfwQOQAR1Fh9OVrZMV+17J9nAr0Ud4QrGwZdVaLZThhMcZG5v+VrX6+pc
-         hmBqabBuWGr5qWd9q1Z1NFUbwAGNxQx9fd4iFR6Ivi7SYccHnZBYt12yVUZ1a9ps2sAC
-         RPgDhJFmp4L8WLpwXmuex4Fi+uGLP6i2GyCCpzZxiIj2LQ8sYEFITJI76s6ArWFmEf/e
-         pPRwZa6wD/3GTY443wIrqbZjX3ebgSZNr00B2w9Ek8BSOv0XD1AdwHlfG/bfoNHd4Xhr
-         uj0THIUUL03dG/EAAjAbFWHX1JBTi9Pw170AnecSN49fzGMQU4E8vvFLcjNe6Uz9ra63
-         KopA==
-X-Forwarded-Encrypted: i=1; AJvYcCUoKYM14VaCSOt17HN7VgLUdpz+ULhn7aDR/8TD8WP9qDCJ5aFaCgA8B4Atay1m5fzYswoN0To+Z78E@vger.kernel.org, AJvYcCVEVeh3/wFF3DEG+KbG31lvEDkgj+ClQ47UpRREKwLDGVGOEmM8dEs1qwwFPlCCXYFU/GtJSLw7/+zLZF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7kXUuUOpkVmR5PPmosPK5Kodacqf2/nLUnC60lhlYzLPhTPwe
-	GoPKAMNGfX1ix7KunJscqV/4P46GV9mGWZxK3S2miVj1jP+QHBRB
-X-Gm-Gg: ASbGncvirrBSLXDBy6l6tPff+6LM3diTq3DveCgQeIzGI6ZOgArb/zw5k/7eL9vDeLv
-	KvhfsR0klXCFzOgvb4SDigXbBzl9JR2nleZ6DeUp1VA140LxgTSVgyFMEtSjP78QjWvrudyxm1U
-	3W9DpYPViNwyUsX42qMaPk8jthRYWTEiWrxLDFZfNBysKYv3B3Dvr1VDgO7G5/qSCuZ/KeI+aYq
-	atIEg8SEhcJc1HoOJ+D/zxosHQxLRfF4USKwCwfBHN3KmbgKXc2x3xvzOrj06R0lvoz7neBS7Ug
-	D3j04//cHQ11SfyQifxLZQbUnOW+Nk7Wd/7OyFvlORy5kDQ1rq1Rlg==
-X-Google-Smtp-Source: AGHT+IHeKEE/UxATDdchD69yalqsOikmgiA+/+GRAMjf3xor5QEZatBPH41VBe8xcfbMzEZ7DedVgw==
-X-Received: by 2002:a17:902:ce84:b0:224:24d3:6103 with SMTP id d9443c01a7336-22c5361988bmr121198995ad.35.1745142424295;
-        Sun, 20 Apr 2025 02:47:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdb34fsm45831705ad.31.2025.04.20.02.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 02:47:03 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 20 Apr 2025 02:47:02 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>,
-	"Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: add tunable threshold parameter for triggering zone
- GC
-Message-ID: <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
-References: <20250325091007.24070-1-hans.holmberg@wdc.com>
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="We/ougYr"
+ARC-Seal: i=1; a=rsa-sha256; t=1745143591; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QBauzDLNVigVpXO6PhsJiTmwWipRP1oE4nzNOFy35xdg6wQAl+tplqVYc/oRE9hWTHkDnt5vfrUb7wGOLQqtHp3wr2Y7yY+tpimwOPYmjbLq7VWLbb4CmBpo2YkyeKwbDTA2t8CHrss6xe5D20wn/i6MzDj3xuJd6Fx8tnyyv4c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745143591; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xemWXU9zQclMEmhBNpJXAygrjZW6BOjxP7DM9G4DMmo=; 
+	b=M8b3Zham98XYbAZWSBMJwJIAXMk7KFxYXz02NMM6tJIvNJWEabPZp2fxLFobfDh2M3gAjvI1rXrXU9L6wGgmHbP82rxWvDzhKLwEWHHGErIlLlNwI30ADdUg3a/180fmszwcejUrJwKYubMsa411BzFQeQLic6Cc6P3PZu0WB/I=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745143591;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=xemWXU9zQclMEmhBNpJXAygrjZW6BOjxP7DM9G4DMmo=;
+	b=We/ougYr3T20guamLRPUh/e6u3gJA41/mBRueGsjxQesCN9IxwTbm5f03FdkRjBw
+	qa1h49+fQ9bNBnbZS2yXuQ9M6gX/KRA5jcuS1v3IHlJ51HPe19KkDhLbQbXhuGQ3yi6
+	gDEMHW0ks02dwF3FZE38cPu08bR1sYHE7TwPIioU=
+Received: by mx.zohomail.com with SMTPS id 1745143589716357.5982257748544;
+	Sun, 20 Apr 2025 03:06:29 -0700 (PDT)
+Message-ID: <eff33a971679fb47f5c9da9fd39f433a8e997089.camel@rong.moe>
+Subject: Re: [RFC PATCH] ACPI: EC: Set ec_no_wakeup for MECHREVO Wujie 14XA
+ (GX4HRXL)
+From: Rong Zhang <i@rong.moe>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>, Mingcong Bai <jeffbai@aosc.io>,
+ Yemu Lu	 <prcups@krgm.moe>, Xinhui Yang <cyan@cyano.uk>, "Rafael J.
+ Wysocki"	 <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org,  Runhua He <hua@aosc.io>,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250418112229.93075-1-hua@aosc.io>
+References: <20250418112229.93075-1-hua@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 20 Apr 2025 18:05:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325091007.24070-1-hans.holmberg@wdc.com>
+User-Agent: Evolution 3.56.1-1 
+X-ZohoMailClient: External
 
-On Tue, Mar 25, 2025 at 09:10:49AM +0000, Hans Holmberg wrote:
-> Presently we start garbage collection late - when we start running
-> out of free zones to backfill max_open_zones. This is a reasonable
-> default as it minimizes write amplification. The longer we wait,
-> the more blocks are invalidated and reclaim cost less in terms
-> of blocks to relocate.
-> 
-> Starting this late however introduces a risk of GC being outcompeted
-> by user writes. If GC can't keep up, user writes will be forced to
-> wait for free zones with high tail latencies as a result.
-> 
-> This is not a problem under normal circumstances, but if fragmentation
-> is bad and user write pressure is high (multiple full-throttle
-> writers) we will "bottom out" of free zones.
-> 
-> To mitigate this, introduce a zonegc_low_space tunable that lets the
-> user specify a percentage of how much of the unused space that GC
-> should keep available for writing. A high value will reclaim more of
-> the space occupied by unused blocks, creating a larger buffer against
-> write bursts.
-> 
-> This comes at a cost as write amplification is increased. To
-> illustrate this using a sample workload, setting zonegc_low_space to
-> 60% avoids high (500ms) max latencies while increasing write
-> amplification by 15%.
-> 
-...
->  bool
->  xfs_zoned_need_gc(
->  	struct xfs_mount	*mp)
->  {
-> +	s64			available, free;
-> +
-...
-> +
-> +	free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
-> +	if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
-> +		return true;
-> +
+Hi Mario,
 
-With some 32-bit builds (parisc, openrisc so far):
+I noticed a patch [1] of yours fixed an identical issue on old AMD
+platforms with outdated platform firmware while another recent patch
+[2] set ec_no_wakeup for Lenovo Go S, and you are the author of amd-
+debug-tools (hence also amd_s2idle.py). Could you kindly take a look at
+this?
 
-Error log:
-ERROR: modpost: "__divdi3" [fs/xfs/xfs.ko] undefined!
-ERROR: modpost: "__umoddi3" [fs/xfs/xfs.ko] undefined!
-ERROR: modpost: "__moddi3" [fs/xfs/xfs.ko] undefined!
-ERROR: modpost: "__udivdi3" [fs/xfs/xfs.ko] undefined!
+I reached Runhua in private, asking him to try disabling
+/sys/kernel/irq/1/wakeup and
+/sys/bus/serio/devices/serio0/power/wakeup to reproduce the effect of
+patch [1]. Doing so also worked around the issue.
 
-Guenter
+[1]: 8e60615e8932 ("platform/x86/amd: pmc: Disable IRQ1 wakeup for
+RN/CZN")
+[2]: b988685388ef ("ACPI: EC: Set ec_no_wakeup for Lenovo Go S")
+
+Thanks,
+Rong
+
+On Fri, 2025-04-18 at 19:22 +0800, Runhua He wrote:
+> MECHREVO Wujie 14XA (GX4HRXL) wakes up immediately after s2idle entry.
+> This happens regardless of whether the laptop is plugged into AC power, o=
+r
+> whether any peripheral is plugged into the laptop.
+>=20
+> Using `amd_s2idle.py --debug-ec', we found that the laptop has a wakeup
+> event triggered by IRQ 1 (PS/2 Controller) and IRQ 9 (ACPI SCI), and was
+> eventually woken up by IRQ 9. Taking a look at `dmesg', we found that the
+> EC was quite chatty after s2idle entry:
+>=20
+> [ 1842.317151] PM: suspend-to-idle
+> [ 1842.317178] ACPI: EC: ACPI EC GPE status set
+> [ 1842.317184] ACPI: EC: IRQ (5)
+> [ 1842.317190] ACPI: EC: EC_SC(R) =3D 0x28 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317196] ACPI: EC: Polling enabled
+> [ 1842.317198] ACPI: EC: Command(QR_EC) submitted/blocked
+> [ 1842.317202] ACPI: EC: ACPI EC GPE dispatched
+> [ 1842.317248] ACPI: EC: Event started
+> [ 1842.317259] ACPI: EC: 2: Increase command
+> [ 1842.317264] ACPI: EC: Command(QR_EC) started
+> [ 1842.317271] ACPI: EC: TASK (14)
+> [ 1842.317288] ACPI: EC: EC_SC(R) =3D 0x28 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317294] ACPI: EC: EC_SC(W) =3D 0x84
+> [ 1842.317303] ACPI: EC: TASK (14)
+> [ 1842.317324] ACPI: EC: EC_SC(R) =3D 0x2a SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D1 OBF=3D0
+> [ 1842.317329] ACPI: EC: TASK (14)
+> [ 1842.317336] ACPI: EC: EC_SC(R) =3D 0x2a SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D1 OBF=3D0
+>=20
+> [...]
+>=20
+> [ 1842.317399] ACPI: EC: EC_SC(R) =3D 0x28 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317405] ACPI: EC: TASK (14)
+> [ 1842.317412] ACPI: EC: EC_SC(R) =3D 0x28 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317418] ACPI: EC: TASK (14)
+> [ 1842.317425] ACPI: EC: EC_SC(R) =3D 0x29 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D1
+> [ 1842.317432] ACPI: EC: EC_DATA(R) =3D 0x7b
+> [ 1842.317436] ACPI: EC: Command(QR_EC) unblocked
+> [ 1842.317445] ACPI: EC: Polling quirk
+> [ 1842.317448] ACPI: EC: TASK (14)
+> [ 1842.317455] ACPI: EC: EC_SC(R) =3D 0x28 SCI_EVT=3D1 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317463] ACPI: EC: Polling enabled
+> [ 1842.317466] ACPI: EC: Command(QR_EC) submitted/blocked
+> [ 1842.317469] ACPI: EC: Polling disabled
+> [ 1842.317472] ACPI: EC: Command(QR_EC) completed by hardware
+> [ 1842.317476] ACPI: EC: Command(QR_EC) stopped
+> [ 1842.317480] ACPI: EC: 1: Decrease command
+> [ 1842.317484] ACPI: EC: Query(0x7b) scheduled
+> [ 1842.317495] ACPI: EC: 2: Increase command
+> [ 1842.317499] ACPI: EC: Command(QR_EC) started
+> [ 1842.317504] ACPI: EC: TASK (14)
+> [ 1842.317516] ACPI: EC: EC_SC(R) =3D 0x08 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317521] ACPI: EC: EC_SC(W) =3D 0x84
+> [ 1842.317529] ACPI: EC: TASK (14)
+> [ 1842.317537] ACPI: EC: EC_SC(R) =3D 0x0a SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D1 OBF=3D0
+> [ 1842.317543] ACPI: EC: TASK (14)
+> [ 1842.317550] ACPI: EC: EC_SC(R) =3D 0x0a SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D1 OBF=3D0
+> [ 1842.317555] ACPI: EC: TASK (14)
+>=20
+> [...]
+>=20
+> [ 1842.317638] ACPI: EC: EC_SC(R) =3D 0x08 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317643] ACPI: EC: TASK (14)
+> [ 1842.317650] ACPI: EC: EC_SC(R) =3D 0x08 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317656] ACPI: EC: TASK (14)
+> [ 1842.317663] ACPI: EC: EC_SC(R) =3D 0x09 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D1
+> [ 1842.317670] ACPI: EC: EC_DATA(R) =3D 0x00
+> [ 1842.317674] ACPI: EC: Command(QR_EC) unblocked
+> [ 1842.317682] ACPI: EC: Polling quirk
+> [ 1842.317685] ACPI: EC: TASK (14)
+> [ 1842.317692] ACPI: EC: EC_SC(R) =3D 0x08 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.317697] ACPI: EC: Polling disabled
+> [ 1842.317700] ACPI: EC: Command(QR_EC) completed by hardware
+> [ 1842.317704] ACPI: EC: Command(QR_EC) stopped
+> [ 1842.317707] ACPI: EC: 1: Decrease command
+> [ 1842.317711] ACPI: EC: Event stopped
+> [ 1842.317723] ACPI: EC: Query(0x7b) started
+> [ 1842.318142] ACPI: EC: Query(0x7b) stopped
+> [ 1842.318150] ACPI: EC: ACPI EC work flushed
+> [ 1842.318158] ACPI: PM: Rearming ACPI SCI for wakeup
+> [ 1842.318169] amd_pmc: SMU idlemask s0i3: 0x1ffb3ebd
+> [ 1842.318193] PM: Triggering wakeup from IRQ 9
+> [ 1842.318244] ACPI: EC: ACPI EC GPE status set
+> [ 1842.318249] ACPI: EC: IRQ (5)
+> [ 1842.318254] ACPI: EC: EC_SC(R) =3D 0x08 SCI_EVT=3D0 BURST=3D0 CMD=3D1 =
+IBF=3D0 OBF=3D0
+> [ 1842.318263] ACPI: PM: Rearming ACPI SCI for wakeup
+>=20
+> I'm not quite sure what the EC was during this time. As
+> `acpi.ec_no_wakeup=3D1' works around this issue, I believe that the EC ha=
+d
+> for some reason caused the system to wake up.
+>=20
+> Browsing the source code, I found that in `drivers/acpi/ec.c',
+> `struct dmi_system_id acpi_ec_no_wakeup[]' records a few machines with
+> incorrect suspend behaviors caused by EC wakeup.
+>=20
+> As this struct corresponds to a series of machines that needs
+> `acpi.ec_no_wakeup' enabled by default, add GX4HRXL to this struct. Note
+> that I have only matched the motherboard model, as MECHREVO is a "white
+> label" manufacturer using commonly used chassis and motherboards - GX4HRX=
+L
+> may be found in a variety of laptops sold under different brands and mode=
+l
+> names.
+>=20
+> Since the reason behind this EC wakeup is not yet clear to me, I'm sendin=
+g
+> this patch in hope of getting more comments and guidance on how to furthe=
+r
+> debug this issue.
+>=20
+> Suggested-by: Mingcong Bai <jeffbai@aosc.io>
+> Link: https://zhuanlan.zhihu.com/p/730538041
+> Tested-by: Yemu Lu <prcups@krgm.moe>
+> Co-developed-by: Xinhui Yang <cyan@cyano.uk>
+> Signed-off-by: Xinhui Yang <cyan@cyano.uk>
+> Co-developed-by: Rong Zhang <i@rong.moe>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> Signed-off-by: Runhua He <hua@aosc.io>
+> ---
+>  drivers/acpi/ec.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index 3c5f34892..19f1d36a5 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -2329,6 +2329,12 @@ static const struct dmi_system_id acpi_ec_no_wakeu=
+p[] =3D {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "83Q3"),
+>  		}
+>  	},
+> +	{
+> +		/* MECHREVO Wujie 14 Series (GX4HRXL) */
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_BOARD_NAME, "GX4HRXL"),
+> +		}
+> +	},
+>  	{ },
+>  };
+> =20
