@@ -1,134 +1,152 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2227E0E8;
-	Sun, 20 Apr 2025 22:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E7582899
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 22:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745188428; cv=none; b=Ng3Kc0RGcxHFojazy3zCAV0qS8dzXaJCDYBmcVBDK+66Va2OcFzbITeoEqS8DQvszInS84qfpSoZHVPkA/2+dej5mpzFt36ZxFP2BcGT774dBS5TKOpRUhbWor9SL0Do45GBXKx6kju8mAi8hDy4bWDOjqsc7OM7Ruf7ZvqFd7c=
+	t=1745188554; cv=none; b=A779oFwFv7tdcEiqUKKl20j3cXeR4Ofed4LuKON3GD88xblY8uS9KbSlHtHiG0owaT4/UL+D+ahoseyhf0YmVcrBX1e61wTH9VRUuOhqLXTmR9uhpYoFcAgzl5jlb87NfYRRperZ54UUOus9hVw6OWbiirPNCBL/LtHwWto4o4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745188428; c=relaxed/simple;
-	bh=Qx3z+j2HX+QOxtcS4rs6ymT9x6wbAF7BUh+b0bmZ6yc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cMnkHuDpGPLa10WVTbkpOPponzqCSzDEeC/BTKQt1gU66s3qb9avF4h6QFPJaDG9OWmCtBY4r994bjYmk2vXVG3M2k/yLElv3OKRdZggU2f+e4kAnfgv4nGCof8NNxUn2jZeS/em1PgbFy+vjhO+ZsUDbJ3F45a5dsc811QMMAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=HBp5SRi5; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1745188554; c=relaxed/simple;
+	bh=XRxNxsnuSO3K0gpdnSRQxV2lMXRCSK4RVoUJrzFEzq4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NbGSAQgtEa4gSdKIMgcfo7UdLplumfFWIj8XtT52pEjlS3Lto75CIF4jUm2t5+Wv/0v006TLwoLgVJL4tdZwq1TSuehgKuBhJyicXLbkSx6U4OqFKsHtS+q7rtgrKgKupwGKbannCukoNULemgjvxu84V6kES6Y3yQE1JwLVJtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VETGHU7Z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="HBp5SRi5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1745188418; x=1745793218; i=w_armin@gmx.de;
-	bh=fthjne6OmtQsqrjZYqKaJ4Y0cGO+9TN6rwmAoJnV36A=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HBp5SRi5FDnGpsPuGehLj43E9TSci625Ms23qz/namDjhFwxSQGC6Htkiq8ZD935
-	 9QjViiZ3JtzIxFCGUqk8195Y2nIu3WWncjJpJTsiW2vjwFwOfHuyJ3uptvaWBplgN
-	 v8iZTlzl3ZGfc/T+ChionqcrnufRBgjUxKA4/niW9nSPGTilar1tfVQF5oXlACL1A
-	 dYonfNPgkVqrNPMMj55lkAaEEurCUNqPNZcXNzN9zL4vZUtZgMc4bH/iu01hp5yip
-	 HEwNMUQPg7h0dcJY8tUAhwoafaK/fR4bYJaKKCp1aNa4tZg3sFwlvOHDHvQJiqCNn
-	 8W9AGUuDJ7VhAs05xA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MGQj7-1uKbsK2zHx-00B2vC; Mon, 21 Apr 2025 00:33:37 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: pali@kernel.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (dell-smm) Add the Dell OptiPlex 7050 to the DMI whitelist
-Date: Mon, 21 Apr 2025 00:33:34 +0200
-Message-Id: <20250420223334.12920-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VETGHU7Z"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KMIJsJ000537
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 22:35:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yWToxAdnI6Aa9yCRFIPR9W7z9KJYBd0BVcFA7/xQZy0=; b=VETGHU7ZdMmSPg1u
+	mm6xJoxzR7diITNxdHOrVBiOWOsUjmYfdOv5dBArLmnkkTpXpazh41iBZ+6r3O78
+	XoMjEw0sAZk06VoWWyMoi29CbaHKibMZZyvR+ESTeylwvDCKLuS0I3DXv+CsnDWL
+	1BWeCOexNAveWvKhWNCr3xUNnM7EpNyR5OR3CRAAFcxPl5vY/v5CCNatdTdTY50s
+	+6Voa1veAjLBGzoSYAAlt9CK9sWSYpFslAZ0rf3NiMoW9kJl4ckf5RTTJk4dORt8
+	TT9f3y9b3/JVyC8DGlq4xi99+1CUA91D57lvEb2yi5gqg8A172g1luA4OpSb+J3m
+	tEoeZw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46416qtnud-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 22:35:51 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c54e9f6e00so666314885a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 15:35:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745188549; x=1745793349;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yWToxAdnI6Aa9yCRFIPR9W7z9KJYBd0BVcFA7/xQZy0=;
+        b=cuPjUv2iD1vPYHjoCCgKthZayZdJrmIMzWduT+kSKG6uPNj25gZJ5GW8lRP7KAsYfu
+         efOj+SeGaZ3UIacFVx3CSz+1rjWGxAQ2Bzls+S9Nf0lkMcSrYmKrHo086w5WW1DFcTpL
+         IU1i5tAMpD1b+Eb/q1XhYxwKJvqOBA1sWiWP59YpcslNeaYH8EVhIh94rL6r7FYAQpko
+         AummMm9cEFpFoxee4mzd35SkZC1rkxNXjeZxsyRf8ZXND6FiscH36sfjHkbyKNAdh68y
+         twdBv6S1bPBSeTdcpoVTJC+8jbPMX9w/EqPStzSL/+1KQ/ORjV32xEdyPXuKZeYjWm1k
+         5kxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2GG//hIF8bWO2gtwUzcTWjttfGeVrQS4j91FxbFPguE16nqrDiM92ftOmThxVBMRPS36jEmFBJyaZjys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZdZKspidc6EmOaQNobv4Ruq7hDnxmKqDL5knfluwPQ96JAbGQ
+	g++sNokw3MwnDPPO+53VoYHuMiW8KtCWe+PE/etO9UANuClEigoPqC2NyB/A3THkgXt1wsKvNi7
+	s4VmVW5HM1Fk8y0XMX4wEkhnxGFCoiyW/qJdmsbYqRpNLpmVXoepcLT58o7FzJXY=
+X-Gm-Gg: ASbGnct/sDIYpCsolKdfPZzQAjtZq6Bd6y7iTJMENaCiVcwAHsGpw3mC012iixE1lh+
+	4V8vUvh9lKiQllsGLt5+wn07K+fji42dNV2vXAfHWuq1hvrC1hoMX67VAUOGWR5JGJDkvW56Ju9
+	RpZHLjBtjRsZw3JMNevQcURkxqI45yn7jDg5tL2FayEzK0v7QmA8qYlCCqIam+W2+fJOBgQHdSi
+	r5c3E+m9kh/bzjqaW/avLwYlfH62QYLVyvIdrL/bAE4yL5PkXS4N6twBGoZACBI4jyikW/Z7MQ1
+	RM61DT+aKuW9GDixogSKamzWlV1ioFBUYP7LbJkY8abdcEMlcDnVB/gHFTn3O5M4WcSw73O9peE
+	=
+X-Received: by 2002:a05:620a:17a1:b0:7c5:93bd:fbf2 with SMTP id af79cd13be357-7c9257ef5e5mr1664104885a.19.1745188549547;
+        Sun, 20 Apr 2025 15:35:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBIsV9h73etG5RMWOHPnVmCLLh+xKK8HOQ3zsl0XthtAmLfRYE2wnVV4KjY87RqdCOwW2XyA==
+X-Received: by 2002:a05:620a:17a1:b0:7c5:93bd:fbf2 with SMTP id af79cd13be357-7c9257ef5e5mr1664102385a.19.1745188549177;
+        Sun, 20 Apr 2025 15:35:49 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-31090782facsm9022941fa.33.2025.04.20.15.35.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 15:35:48 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: heiko@sntech.de, Damon Ding <damon.ding@rock-chips.com>
+Cc: andy.yan@rock-chips.com, hjc@rock-chips.com,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, dianders@chromium.org,
+        sebastian.reichel@collabora.com, cristian.ciocaltea@collabora.com,
+        boris.brezillon@collabora.com, l.stach@pengutronix.de,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <lumag@kernel.org>
+In-Reply-To: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+References: <20250310104114.2608063-1-damon.ding@rock-chips.com>
+Subject: Re: (subset) [PATCH v8 00/13] Add eDP support for RK3588
+Message-Id: <174518854674.614969.14581984196577762340.b4-ty@oss.qualcomm.com>
+Date: Mon, 21 Apr 2025 01:35:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:a5v2M1/aVJwtTiYXPCtpcf4tGhECL+5M5JZHEDptnwwmKwvauOo
- 2ELyPGJEVMdpvKo23OSHq1qt4p75/jU7QuHB07bCV/T4IqgufsgsNr/EPvhZBoG4o3twCCX
- 0E7zkwIAV2EoqB5rMUeH2Ze6BX2PKQzffXQ5aQGOlfQISl7vfanIkwiGA9oeIWgTbdQQjsg
- o23ruW2UakLh4sxCuOj3g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:iWCLIIbyJjA=;s395TWvMMMz4XcIM9PeTCaMAZ3/
- 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
- BxJx3qR85GFSs=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=N7UpF39B c=1 sm=1 tr=0 ts=680576c7 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=XGKhw0KbdVzlZrVxzTIA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: g9zGhRjK8hYqm8XandBaXNoe66HqRr6I
+X-Proofpoint-ORIG-GUID: g9zGhRjK8hYqm8XandBaXNoe66HqRr6I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-20_10,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ mlxscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 impostorscore=0 bulkscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504200187
 
-A user reported that the driver works on the OptiPlex 7050. Add this
-machine to the DMI whitelist.
+On Mon, 10 Mar 2025 18:41:01 +0800, Damon Ding wrote:
+> Picked from:
+> https://patchwork.kernel.org/project/linux-rockchip/list/?series=936932
+> 
+> These patchs have been tested with a 1536x2048p60 eDP panel on
+> RK3588S EVB1 board, and HDMI 1080P/4K display also has been verified
+> on RK3588 EVB1 board. Furthermore, the eDP display has been rechecked
+> on RK3399 sapphire excavator board.
+> 
+> [...]
 
-Closes: https://github.com/Wer-Wolf/i8kutils/issues/12
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/hwmon/dell-smm-hwmon.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Applied to drm-misc-next, thanks!
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon=
-.c
-index 79e5606e6d2f..1e2c8e284001 100644
-=2D-- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1273,6 +1273,13 @@ static const struct dmi_system_id i8k_dmi_table[] _=
-_initconst =3D {
- 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "OptiPlex 7060"),
- 		},
- 	},
-+	{
-+		.ident =3D "Dell OptiPlex 7050",
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "OptiPlex 7050"),
-+		},
-+	},
- 	{
- 		.ident =3D "Dell Precision",
- 		.matches =3D {
-=2D-=20
-2.39.5
+[01/13] drm/bridge: analogix_dp: Add irq flag IRQF_NO_AUTOEN instead of calling disable_irq()
+        commit: efab13e7d13a641a22c7508cde6e1a5285161944
+[02/13] drm/bridge: analogix_dp: Remove CONFIG_PM related check in analogix_dp_bind()/analogix_dp_unbind()
+        commit: c71db051142a74b255cb61b84d8fedae3b70952f
+[03/13] drm/bridge: analogix_dp: Add support for phy configuration.
+        commit: 2c0883459ed62ac65784289e9236d673102eee68
+[04/13] dt-bindings: display: rockchip: analogix-dp: Add support to get panel from the DP AUX bus
+        commit: 46b0caaad3a5aed817a02b239d4cb4392c2a5dea
+[05/13] drm/bridge: analogix_dp: Support to get &analogix_dp_device.plat_data and &analogix_dp_device.aux
+        commit: fd073dffef041d6a2d11f00cd6cbd8ff46083396
+[06/13] drm/bridge: analogix_dp: Add support to get panel from the DP AUX bus
+        commit: e5e9fa9f7aad4ad7eedb6359baea9193531bf4ac
+[07/13] drm/bridge: analogix_dp: Add support for &drm_dp_aux.wait_hpd_asserted()
+        commit: c8f0b7cb01eadef03558b21245357683409da438
+[08/13] drm/rockchip: analogix_dp: Add support to get panel from the DP AUX bus
+        commit: d7b4936b2bc0987ccea125d9653381a1a0038d6d
+[09/13] dt-bindings: display: rockchip: analogix-dp: Add support for RK3588
+        commit: f855146263b14abadd8d5bd0e280e54fbab3bd18
+[10/13] drm/bridge: analogix_dp: Add support for RK3588
+        commit: 0e8b86b6df143662c631dee8bb3b1fff368aa18a
+[11/13] drm/rockchip: analogix_dp: Add support for RK3588
+        commit: 729f8eefdcadaff98606931e691910f17d8d59d6
+
+Best regards,
+-- 
+With best wishes
+Dmitry
+
 
