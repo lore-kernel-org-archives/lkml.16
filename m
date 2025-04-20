@@ -1,121 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A69258A;
-	Sun, 20 Apr 2025 04:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C59CEEDE;
+	Sun, 20 Apr 2025 04:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745123194; cv=none; b=l/oW1og80olNQN1KPF2+9OPWi0nMNFve/1BL2SSf7dx5yq839i0oLrfHq0AOM88tqdBSq1OLAjmJKovJS0Q3MmGUivU7uzApOmIxv433hkPxJwghA3vYW3hR+3/yUS7xP8C8/P1R3KT9vk3Rt8tzTkz/UNUpzDOpEkwjA+TNTzA=
+	t=1745123818; cv=none; b=II+n+h5bhqiNGQvD3BmfOadFMj26fYTbYBshX6kEWT3MJ+ge/KW73a2WmotszlgCUU1m6r9XcMI1NzY4iXizFNeJXfoop/DH99v4xcuQ2PprMKbBp3OtkmCtpsTdIJlCZKb1hsiF+Y4isOxh39Ae8e3fd8a9Yd66XDxWW12Sqt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745123194; c=relaxed/simple;
-	bh=OexycGlnF3hxhAIHaIY2JYwk7C6llKn6YRf+F2al/f8=;
-	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=uwo6GTf3xxnewicYc3QzDCBLcmE2A3fsCMI+nxtqzS/bd1Bl5Q2FvvSoWj7pwZEj4kdWj1vPhSHDbtuBqqzvLTk1splqs/+Q6HICxSs/izqOJmLjpGM/D/mQhxzDCepyL3Fmc4f6HlOvRNCjcF/QxtvPFy9d1mv+uEAUPVCsz6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CXHkWV7M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745123818; c=relaxed/simple;
+	bh=u3c63v6eYgVIIEuuAuLE4NfbYZpTokBg6euJh1qMooY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U60ZNLg7ViLSWnJYuCJrje6ZYiV9ZJ10jWLUTIzhqZ0NUSkR5ce1a/QtK2T+0NirWqBqn1CwgNwqO4CshbOCAxwMuN5jFrbG4CrMT3aR8OqiKEQ6FRYkRPExa0bqEE9Sl4fSs2ly7V0DsA3QDZNhFyt4+PeeDhUSnXvHWcIWzlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtoMclsS; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CXHkWV7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F98C4CEE2;
-	Sun, 20 Apr 2025 04:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745123193;
-	bh=OexycGlnF3hxhAIHaIY2JYwk7C6llKn6YRf+F2al/f8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CXHkWV7M7CkKvii+m/oF/Osms6L8FmhTlSdLIDJZpNCYcxlGfYQOZtcU1qanW7bMw
-	 MjRKQJ9R9SbaWk/BwcjS3Imy6HHIU0hde/1rrPrKrtVaMQxxkC33cTHK2TReL6x8fq
-	 bWI+kX0/zjwo3sj08Oxy5SQ73p76Llx2XW/O3v9w=
-Date: Sat, 19 Apr 2025 21:26:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
- linux-mm@kvack.org
-Subject: [GIT PULL] hotfixes for 6.15-rc3
-Message-Id: <20250419212632.41bd67c6fa1459f817f0ea58@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtoMclsS"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so4692106a12.0;
+        Sat, 19 Apr 2025 21:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745123814; x=1745728614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbRJ4qFwyobcIGndyaXTTaP6oXbYgisvmymcgV986Lk=;
+        b=FtoMclsSY13y59xj7Qi4pWxRtFguU2yvZPkI4oi1IKmL08/tatbC5P8aNivkQ360O2
+         Gzzz962/0a/en70vPJyeddaBIfCB68FzV3xHEHISDAl++KxLMB3/3IIzNviuCkD7Qi3J
+         zGbQ7USdnCG5/AG2vUnMn66wUllPqclrJyuC5ptaYmij980TGL1OSk5DskkIXklEt9q+
+         8oKErKxVWMsPmrGnS4J3YeOcTLgeCnnjXy6qM/D2Fp3d9oHulsEVDFpx2MFCV2qrGoEJ
+         /jEaFYjLsTB7UmV+2wvfkbJAYjHM9/DUgm9rD8apSv+hfRMKZihhrsoGx3ImSdCbFN9W
+         Lkbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745123814; x=1745728614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbRJ4qFwyobcIGndyaXTTaP6oXbYgisvmymcgV986Lk=;
+        b=Ybdz9bmQj7EvZcJBdLXm2FtPOHofscqX539x3Y3fVGskNnk+2Ebu3gBNxyklM1RaR4
+         xIeOb09IoZUQQXEpdFPHhb6/Cs1aIQmgvFj0BYtoxk0yQaWTQt4oWtzpBObJXxsmhfYH
+         Sv27iQXstcURiVt7ftGGRbxLAYac7wrgLZWPFTvNRZ0yzCMXDC6Lr6t9x8TCtCegac3a
+         rfexnJQSRgf0pCAeaP5r8Icxp+No8ajZPRdMbRBLVIbGp4lZaHrp1IAzhclNxGH6gB42
+         Ck8EFyboOKwRaiGlC9YnhZ+tWl0E8zR6ZOr0qfYuYBFBLyIqzWWxkAtvlSwEEb//D9ia
+         AlXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2OTU5pCwaQ8Rd1AWUwA1VfHY8WuK0UlcRmRjkE5MGS+tP+Vju9GoyxxBF3Y05jom+PV2tUmGVftU=@vger.kernel.org, AJvYcCVm+2zGxj+u+Q8pzzRCGYY+4r7sbGxt7rGl/FdK6Jmd4L99UfFZqeKHS3W/oaEmbUpVZ76VzZTyby1x/Dez@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywen8M8gu0nQHpqVlhyEQmLHj8tkZUMe7Nx/jL5ouKCvQD5JnBG
+	jrMlZ+eyEtX7UJVwUd0SHcyyq6pNPq/z5TSK/xw2CPc3H9gJjlxQHWWSbov2U5NTJypRLZk6bof
+	4HnEOEetxsquODSJh5jHP9K/oThk=
+X-Gm-Gg: ASbGnctsdL836a7at3HIvPcZgAbnMgwHRUx7tFq5wCnaDDNRmsg6atlejtUt1Cw4qe+
+	0tyO6xIMqjI774vjOE0FycsC8oXQC/ZVJhpwf4+CR0tNcF+swsvkfU2fiA0PNACmKYX8NnJF2/0
+	WP2hLs3qiB2FXRkncJvxB3WA==
+X-Google-Smtp-Source: AGHT+IEZtMxpIOpgj0BiX3b4rCxCeSReO7I3OFNc+w0rwCr3NPFYMZMRCX4R/6qGeS1IWSgRYBPndOkcGshtLNjvceI=
+X-Received: by 2002:a17:906:f5a5:b0:acb:6ec0:12ec with SMTP id
+ a640c23a62f3a-acb74b87d49mr686883166b.35.1745123814251; Sat, 19 Apr 2025
+ 21:36:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+In-Reply-To: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 20 Apr 2025 07:36:18 +0300
+X-Gm-Features: ATxdqUFs5m5brW2LGy4SoZCUe0fRKmWpm72CmkbtHljHRe_kPuHBhB8VwXHWys8
+Message-ID: <CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Apr 19, 2025 at 1:59=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> Creating a buffer of the proper size and correct alignment for use with
+> iio_push_to_buffers_with_ts() is commonly used and not easy to get
+> right (as seen by a number of recent fixes on the mailing list).
+>
+> In general, we prefer to use this pattern for creating such buffers:
+>
+> struct {
+>     u16 data[2];
+>     aligned_s64 timestamp;
+> } buffer;
+>
+> However, there are many cases where a driver may have a large number of
+> channels that can be optionally enabled or disabled in a scan or the
+> driver might support a range of chips that have different numbers of
+> channels or different storage sizes for the data.  In these cases, the
+> timestamp may not always be at the same place relative to the data. We
+> just allocate a buffer large enough for the largest possible case and
+> don't care exactly where the timestamp ends up in the buffer.
+>
+> For these cases, we propose to introduce a new macro to make it easier
+> it easier for both the authors to get it right and for readers of the
+> code to not have to do all of the math to verify that it is correct.
+>
+> I have just included a few examples of drivers that can make use of this
+> new macro, but there are dozens more.
 
-Linus, please merge this batch of hotfixes, thanks.
+I'm going to answer here as the summary of my view to this series and
+macro after your replies.
 
+So, first of all, the macro embeds alignment which is used only once
+in practice and the alignment used in most of the cases is DMA one.
+Having two alignments in a row seems a bit weird to me. Second one, if
+we drop alignment, it means each of the users will need it. That
+significantly increases the line size and with high probability will
+require two LoCs to occupy. And third, based on the examples, the
+macro doesn't help much if we don't convert drivers to properly handle
+what they are using instead of plain u8 in all of the cases. Yes, it
+might require quite an invasive change to a driver, but this is how I
+see it should go.
 
-The following changes since commit fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2:
+That said, it feels like this series took a half road.
 
-  Merge tag 'pci-v6.15-fixes-2' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci (2025-04-17 16:00:31 -0700)
+I leave it to Jonothan, but I don't like it to be merged in this form.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-04-19-21-24
-
-for you to fetch changes up to ea21641b6a79f9cdd64f8339983c71c89949dcb5:
-
-  MAINTAINERS: add section for locking of mm's and VMAs (2025-04-17 20:10:09 -0700)
-
-----------------------------------------------------------------
-16 hotfixes.  2 are cc:stable and the remainder address post-6.14 issues
-or aren't considered necessary for -stable kernels.
-
-All patches are basically for MM although five are alterations to
-MAINTAINERS.
-
-----------------------------------------------------------------
-Ahmad Fatoum (1):
-      docs: ABI: replace mcroce@microsoft.com with new Meta address
-
-Andreas Gruenbacher (1):
-      writeback: fix false warning in inode_to_wb()
-
-Baoquan He (1):
-      mm/gup: fix wrongly calculated returned value in fault_in_safe_writeable()
-
-David Hildenbrand (2):
-      fs/dax: fix folio splitting issue by resetting old folio order + _nr_pages
-      mm/memory: move sanity checks in do_wp_page() after mapcount vs. refcount stabilization
-
-Johannes Weiner (2):
-      mm: vmscan: restore high-cpu watermark safety in kswapd
-      mm: vmscan: fix kswapd exit condition in defrag_mode
-
-Kirill A. Shutemov (1):
-      mm/page_alloc: fix deadlock on cpu_hotplug_lock in __accept_page()
-
-Liam R. Howlett (1):
-      MAINTAINERS: add mmap trace events to MEMORY MAPPING
-
-Lorenzo Stoakes (3):
-      MAINTAINERS: add memory advice section
-      MAINTAINERS: add Pedro as reviewer to the MEMORY MAPPING section
-      MAINTAINERS: add section for locking of mm's and VMAs
-
-Muchun Song (1):
-      mm: memcontrol: fix swap counter leak from offline cgroup
-
-Oscar Salvador (1):
-      mm, hugetlb: increment the number of pages to be reset on HVO
-
-Vlastimil Babka (2):
-      MAINTAINERS: update SLAB ALLOCATOR maintainers
-      MAINTAINERS: add MM subsection for the page allocator
-
- CREDITS                                       |  4 +++
- Documentation/ABI/stable/sysfs-block          |  2 +-
- Documentation/ABI/testing/sysfs-kernel-reboot | 10 +++---
- MAINTAINERS                                   | 49 +++++++++++++++++++++++++--
- fs/dax.c                                      |  1 +
- include/linux/backing-dev.h                   |  1 +
- include/linux/mm.h                            | 17 ++++++++++
- include/linux/mmzone.h                        |  5 +--
- mm/gup.c                                      |  4 +--
- mm/hugetlb_vmemmap.c                          |  6 ++--
- mm/internal.h                                 |  1 +
- mm/memcontrol-v1.c                            |  2 +-
- mm/memory.c                                   |  4 +--
- mm/mm_init.c                                  |  1 +
- mm/page_alloc.c                               | 40 ++++++++++++++--------
- mm/vmscan.c                                   | 29 ++++++++++++++--
- 16 files changed, 141 insertions(+), 35 deletions(-)
-
+--=20
+With Best Regards,
+Andy Shevchenko
