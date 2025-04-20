@@ -1,89 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81862111;
-	Sun, 20 Apr 2025 21:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243BA17A2E7
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 21:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745185349; cv=none; b=LZ/z+cMt1mArgO52Ncwm6fYV6n/rS4MCBkVyetWXnaIxVZ5i/jCaWJwSKL6XcsncCSXkKSomRk8keTKKIel+veTArpFzIkLT20fTj6Vea2niF0xIaoL2twTPzhxcG5+CzjJstAxgmxTDrpfHDtEji1fBrZ+QYiBj+DGat2IbPMU=
+	t=1745185703; cv=none; b=P1SEU9xpjmuVD2q+HW6XnM6/eS2E4lZPaw7u9SOyKuv/mi3bcl5Bo1MCQVxaNQ6UznJ7MoCmV+TuIzwTaehWg+38pr0qdoSTnA4rWz67ESYwNqQQd2KZYp3tRy5XFhtLaSzmpatXkR0XBmeugaKf+DYr2n50DtdW9hVxBEtJBvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745185349; c=relaxed/simple;
-	bh=o3lK09+otg6DgvlTkRd0uEq2A+YS26/sGwIIKbHBcag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lrp8cGu1xqtyphUvMQu2kkbWT9wTYfmang4Pk/1xJaSzBuYD/T9yxWNfUJzIFXueC6HvFg5G8Ab6DkRfrUlTindzZhYcDN2Xh6IMtpzkP0vSus0HflLk+B7YCGOjk+oGnM+JzJCWF807ZfHrNCGp2qYCMFwJ18uH2qE8Jx8B9MQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V14kX5gV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745185703; c=relaxed/simple;
+	bh=IBu7tifNB1j2tCG4W4YMRP4oTCUk0PFSrFVfM3EZhOw=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kWv4/vbDn+WwNYEbtCeC+PyQyoY0J9yI9sKaWcu2O1txZEGp+OXRKCMDrupZXXsR3Tt1r6N2YRoXGW/QTfHeONG+t3qKycuwp07GMqnixRotM2zkBJ8OzylnsfVxYPBBJZu9osDnQjhjR7VQr3jscbzmjvyoS9qQRrMrd5/atAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rfl8jbPh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V14kX5gV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E842BC4CEE2;
-	Sun, 20 Apr 2025 21:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745185348;
-	bh=o3lK09+otg6DgvlTkRd0uEq2A+YS26/sGwIIKbHBcag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V14kX5gVKJQ4TKr1kjqcj4uB/vdwkcoBtAzqAd6oYHr/0UFPi5Xb4XNt2bgobpadx
-	 fHLW4TYVRN58fg+nvS5iX8RxLw4WD2uHHLtRHXM8Fdzq0zf/m9Jea3Dw9SN4//RZic
-	 ATxeSy8c398InEkzqu0EoYWWLNR9+5n7gOY+jzhg+foAWNabfgvGsLuAiv1wAU1p5q
-	 gEJO9Hc83boZUsPd9mdUX74gegIaxXpsyScNdEd5NPpa5d0+pAveQwe+GXHrNRv35O
-	 JZfCuQ5QtXX/qaeCAd7eOiMQFvnuGssZ557aDkUuMoDftndQ6sqUI8SdS8WUi74F4v
-	 27V1otuThl43w==
-Date: Sun, 20 Apr 2025 14:42:26 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, x86@kernel.org,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 05/13] crypto: arm - move library functions to
- arch/arm/lib/crypto/
-Message-ID: <20250420214226.GA14633@sol.localdomain>
-References: <20250420192609.295075-1-ebiggers@kernel.org>
- <20250420192609.295075-6-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rfl8jbPh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745185699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GOUfeRWcjMIh7HWgzJ0PWrB/E+2a4XRZ58CSESwgEfQ=;
+	b=Rfl8jbPh0YbGnjGzeGh/E1ojcbOSQSOnrl491TOqsWkwj8I2pZOHVNaMOrwEDYJ/WpecGx
+	6RQhg6OMPslH1cNJu8GsMcVU6mesQkHGWzQ0fUpnJMYLANWzb5Z8sS/9GXQihfHp26kkka
+	Y1neK0dx5BnkyXso8P3GBispa4WB2HQ=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-vTQmQs3TOJu5XXmv5lxT0g-1; Sun, 20 Apr 2025 17:48:18 -0400
+X-MC-Unique: vTQmQs3TOJu5XXmv5lxT0g-1
+X-Mimecast-MFC-AGG-ID: vTQmQs3TOJu5XXmv5lxT0g_1745185698
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e91d8a7165so60564536d6.0
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 14:48:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745185698; x=1745790498;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GOUfeRWcjMIh7HWgzJ0PWrB/E+2a4XRZ58CSESwgEfQ=;
+        b=e/yNfVBB51O1Ak4t0FshxuW42HxuWVUccGpm4cjoBfBOBz/E5/9VBf3jWLQyMsk/Yp
+         dsomhBZS2pqQP/OZQxhVjKglG0GSG+HvVWh6h3Tr7tFMuE9U5ZIWg4yqED8AO1dUe/6u
+         4B90qE0TFeTOWO+L0dI+glPYwztUPeNcRFxZnNSPK9dNTuwnL5S2QMDSz2x6HDrbt/ZI
+         +WSUlDQBhEFGXOa5QtHXKP4aMZTd9+BqEF3pIGUdSf7R2/8r51J6eYUhPu4ZU2oSRE2B
+         S2i9AsrnlDK7KqUODg9wfQnNM7mdSZLfSz4uNW3Unn7M8OYkEGQ3VXlxcpCUrPaaNZzQ
+         8M7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXF5En4qUFfxsWNHg2Grq/o5UpRQbRG/W6J0w3ns6nXJcCvHeWABaFrnYb1poJlx3xKFfYwA8B3XNnOzTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/atAHM2DKC/rBKx2+ayto5hQOMHPJ89ppg3q0NgItA4RO2j/G
+	w/sEhtyNUIiRFcleKG1tYW3qkwGX65NX2g98TNH7o7Y9h5s6AEKHGu41seo1FGUa/r+09yE4dLm
+	0U4yj7lbyre6/WIeMDQNqA3rf5UgjbZQBcRi3acd8EeDT45CySnrjTdWpA7MGLw==
+X-Gm-Gg: ASbGncvv59Xcmo5vBxMoJO+NQsOCZDnMEoTWJkPRGt0IlUEPPCzzlNX+KrraSky/6e+
+	c1qNxlfJhqGRxAg0/bJ7OiAIVuoXqhBnbtBXeQcpROnJiFYCkqSivEYtz6oi+yU5OCGCW8kQQ1P
+	ObqTcxeHqj064iFwbS03q6kZE6Co87usz9E8dN3NWFge7+1ejeYENPOjAjbuLGd1VOhxIsdrhqk
+	AcZfCRgbU4MCqlNKOSV09fu2LkgLgbCKVFPSoYBCXfg4zxB2imuuDQoBIowqFOiF1RNPNEYmkId
+	Y70oJ/tez6rPmmaSU1/3JQ/eelYZWfzYI5CXYSOK/I/dEv6B/g==
+X-Received: by 2002:a05:6214:20ee:b0:6f0:e2e1:50b4 with SMTP id 6a1803df08f44-6f2c4665552mr155639756d6.35.1745185698071;
+        Sun, 20 Apr 2025 14:48:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1rjz0rbTdMsGxlXep21QS1BL8dfWYnSrJCLKXWkQdNHadHwWjUHhvmnzBn0KbSPKMCrPC5Q==
+X-Received: by 2002:a05:6214:20ee:b0:6f0:e2e1:50b4 with SMTP id 6a1803df08f44-6f2c4665552mr155639546d6.35.1745185697701;
+        Sun, 20 Apr 2025 14:48:17 -0700 (PDT)
+Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b0e2b2sm36456396d6.28.2025.04.20.14.48.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Apr 2025 14:48:17 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <0033f39f-ff47-4645-9b1e-f19ff39233e7@redhat.com>
+Date: Sun, 20 Apr 2025 17:48:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250420192609.295075-6-ebiggers@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <20250415210415.13414-1-longman@redhat.com>
+ <20250415210415.13414-2-longman@redhat.com>
+ <psbduszek3llnvsykbm3qld22crppq4z24hyhsp66ax3r2jji5@xhklroqn2254>
+Content-Language: en-US
+In-Reply-To: <psbduszek3llnvsykbm3qld22crppq4z24hyhsp66ax3r2jji5@xhklroqn2254>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 20, 2025 at 12:26:01PM -0700, Eric Biggers wrote:
-> diff --git a/arch/arm/lib/crypto/Makefile b/arch/arm/lib/crypto/Makefile
-> new file mode 100644
-> index 0000000000000..dbdf376e25336
-> --- /dev/null
-> +++ b/arch/arm/lib/crypto/Makefile
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +obj-$(CONFIG_CRYPTO_BLAKE2S_ARM) += libblake2s-arm.o
-> +libblake2s-arm-y:= blake2s-core.o blake2s-glue.o
-> +
-> +obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
-> +chacha-neon-y := chacha-scalar-core.o chacha-glue.o
-> +chacha-neon-$(CONFIG_KERNEL_MODE_NEON) += chacha-neon-core.o
-> +
-> +obj-$(CONFIG_CRYPTO_POLY1305_ARM) += poly1305-arm.o
-> +poly1305-arm-y := poly1305-core.o poly1305-glue.o
-> +
-> +quiet_cmd_perl = PERL    $@
-> +      cmd_perl = $(PERL) $(<) > $(@)
-> +
-> +$(obj)/%-core.S: $(src)/%-armv4.pl
-> +	$(call cmd,perl)
-> +
-> +clean-files += poly1305-core.S
-> +
-> +# massage the perlasm code a bit so we only get the NEON routine if we need it
-> +poly1305-aflags-$(CONFIG_CPU_V7) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=5
-> +poly1305-aflags-$(CONFIG_KERNEL_MODE_NEON) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=7
-> +AFLAGS_poly1305-core.o += $(poly1305-aflags-y) $(aflags-thumb2-y)
 
-As noticed by kernel test robot
-(https://lore.kernel.org/oe-kbuild-all/202504210545.llc4JaKQ-lkp@intel.com), I
-forgot to include the following line here:
+On 4/16/25 5:25 AM, Michal Koutný wrote:
+> On Tue, Apr 15, 2025 at 05:04:14PM -0400, Waiman Long <longman@redhat.com> wrote:
+>> +	/*
+>> +	 * Child 2 has memory.low=0, but some low protection is still being
+>> +	 * distributed down from its parent with memory.low=50M if cgroup2
+>> +	 * memory_recursiveprot mount option is enabled. So the low event
+>> +	 * count will be non-zero in this case.
+> I say: Child 2 should have zero effective low value in this test case.
+> Johannes says (IIUC): One cannot argue whether there is or isn't
+> effective low for Child 2, it depends on siblings.
+> (I also say that low events should only be counted for nominal low
+> breaches but that's not so important here.)
+>
+> But together this means no value of memory.events:low is valid or
+> invalid in this testcase. Hence I suggested ignoring Child 2's value in
+> checks.
+I understand your point of view. What I want to do is to document the 
+expected behavior and I don't see any example of ignoring a metric for a 
+particular child in the test. In this particular test, I did see an elow 
+of 17 for child 2.
+>
+>> +	 */
+>>   	for (i = 0; i < ARRAY_SIZE(children); i++) {
+>> -		int no_low_events_index = 1;
+>> +		int no_low_events_index = has_recursiveprot ? 2 : 1;
+>>   		long low, oom;
+>>   
+>>   		oom = cg_read_key_long(children[i], "memory.events", "oom ");
+> But this is not what I Suggested-by: [1]
 
-    aflags-thumb2-$(CONFIG_THUMB2_KERNEL) := -U__thumb2__ -D__thumb2__=1
+I was referring to the suggestion that the setting of 
+memory_recursiveprot mount option has a material impact of the child 2 
+test result. Roman probably didn't have memory_recursiveprot set when 
+developing this selftest.
+
+I can take out the Suggested-by tag.
+
+Cheers,
+Longman
+
+
+>
+> Michal
+>
+> [1] https://lore.kernel.org/r/awgbdn6gwnj4kfaezsorvopgsdyoty3yahdeanqvoxstz2w2ke@xc3sv43elkz5
+
