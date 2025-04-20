@@ -1,152 +1,136 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10D763B9;
-	Sun, 20 Apr 2025 01:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F29763B9;
+	Sun, 20 Apr 2025 01:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745111425; cv=none; b=THw5ewrDSBOVj7Mz0oYEGYzDDokUX2Bhi3bO43EI1lhe5jJ+xpwZeSjKjaoPV9HBQQCJjiy3OeaTc66BvMTb6l60B2941X7EoERwiEtF5ZPj8zguL5+RRdX26xCeLHTXXozYdcdTbbz9ghsQ+mXg2X6IdR9Cp3iwhktCPL7P3nU=
+	t=1745111582; cv=none; b=aE7Vw82wvvqrYS6kvIC0qLnUg3bnhiNwczKY5LLIBoYYEA6vSW08qzbdDJP/q/RzvtvF+yCu6aqPxhFvXFVMLkueKxU4c8986EhRMkWEnExGQ7dl8TnJbjcteH6QGG35XiknqSjXUwuQ24SITObj6OwbxlUnq3ToQbj5w7l/H/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745111425; c=relaxed/simple;
-	bh=ja50x9YSZBiEJzoBeBeZJTWwVHlolA3KqEdNCZcDRmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cpNQEtrCpqfo9oKrZRlmq1ZfMwfUMIPptl42HEo3hPEh96V9ff2YdMopYd88in8EPliROC1oXpp/h6/Bv01OT2IUN3byLXG9PK5MfRd36Xm6vNRd0XsQiKHKZ/CHCJsXAh1sghVJVSF8owALWoaybNSQsZDhFnh4d5ehYgaGKw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
+	s=arc-20240116; t=1745111582; c=relaxed/simple;
+	bh=6G44rOBDOpX3K4dAYqiZRKu6NlpsI8kYJwv4t94PWfs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MLmMLexkzn+MKVhzCGvwgbpiCiSUwn6hqqc6FTJObyQCJ4V9zS7B7Ls5Ypm8bThOocXzBGfvE+wJr63XW8PcA+0pPI0JsqeCT/8uDYNgVKtpOx6aOSeSHiSDXbewQ/hht6WBGkQUqS0lJ84RdwcNSJJokNfBOrIpf3l8pgR9Yjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hgGXLwHP; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fb0f619dso33633355ad.1;
-        Sat, 19 Apr 2025 18:10:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745111423; x=1745716223;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hgGXLwHP"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4774193fdffso42019301cf.1;
+        Sat, 19 Apr 2025 18:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745111580; x=1745716380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bmtt+iGwGo57tSqQlN6wy7yMxAZqiR8ZZe19BPCcPEg=;
-        b=l/dgHxd8m30kcJU6Ra8ayBs1ns397tHHAk+lrWyLY8A8T4dgDs+A1D3v1PWy4yuqOl
-         4/BCCBBxBGoYr6U65MOP2pFISz3cvtHjf3ZCJW+tJ+qnYcV06js5rrgmsqXdE9TdGKj9
-         NCAOavJ7ZK1mdGYA1AehsdfhvTZ6YIou0VUwZYFFJrTlicHsKDghPVbndQhaszVdPD+0
-         qpGqYdNyVwj4wtljgXg76j6mJmRABfIztmeFLYk6kXrdxE2Po6CsNMDEo6pZlhqS+H91
-         nIsOPIS+4QYe6ynPYn516GB+Uk4OySVRNcgKOvTl0T31okmBNU/AePcjKEfiBOzzS3i1
-         dO6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWs+aO+Qmx4vFk83KPM31xTuOMAC8bFmBLCHsdKsAtANWD1balBl4cin0FJ+p91HnHSarvsVOy0er6HLKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMDpSQuM5uHLXTPyLO79nn1OugMxGOGylZQCtDpLc4Mtqr329O
-	zOXkGGogln+OTI1tII18GWO4yXc8y/Z9IaQnjrm7JFfoCzshOKldwd35BCQzv8M=
-X-Gm-Gg: ASbGncuMfEKiuMFj4BlmkZVA5P2X3J6xUYV9vkvpjRVM4GPk3bQK/I5M3Lt1uqNMmnp
-	y+Y5Rnfvp6kmr6irzS1x5CnDOWVAwm0hjvQhgbEQOwPnVVtWVSvzPC36wwVq4NKBuuLeuh3gUze
-	rYlH3pItk7HvYwRWUHUumpCep4fFELfkAwzEKj5L9dBcrycz0r0VWZ9jPBFNiD1TtBY185SZ+wF
-	r0wCySbl9iCow59QLni5afzW7zpeYC9JbK+uLH4yDnVjshxC+OCKd+Jyo8sTU+rE33+4TD6u2Fm
-	p+lEtLaD53YTe2wzGz2N7cwh9q7cjYp+MCVO4XghemewO3WGofp8YQTv39vnR+gAKuyokLcfbTT
-	5nGfAmihBtnND9LWLF+W+UGwkKO0j
-X-Google-Smtp-Source: AGHT+IELFEeT36yzUXduH5Fc3nPW03gNNzv3CpJC4KPjiXo9WDn2r/50Tid6nCAnSPzc6LaPnFU9Yg==
-X-Received: by 2002:a17:903:19e3:b0:224:1af1:87f4 with SMTP id d9443c01a7336-22c5358625amr125819405ad.22.1745111422905;
-        Sat, 19 Apr 2025 18:10:22 -0700 (PDT)
-Received: from sultan-box.localdomain (n122-107-215-46.sbr1.nsw.optusnet.com.au. [122.107.215.46])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb427csm39739665ad.113.2025.04.19.18.10.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 18:10:22 -0700 (PDT)
-Date: Sun, 20 Apr 2025 11:10:13 +1000
-From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v2 1/6] cpufreq/sched: Fix the usage of
- CPUFREQ_NEED_UPDATE_LIMITS
-Message-ID: <aARJdWE8VtWZPpK7@sultan-box.localdomain>
-References: <6171293.lOV4Wx5bFT@rjwysocki.net>
- <3010358.e9J7NaK4W3@rjwysocki.net>
+        bh=thDcOLdPkfwcZEXoGMprWBcv7sRiqWfZZa3+HhTK2aY=;
+        b=hgGXLwHP5CuMo9gdrBfaF7/WKxbKCNPscjVScxVFYQWiueoRvUNQxP04AcKv5CCBqD
+         wXeDmjKoM0MriAZhW3gay5e1jEEd0GelCFtyCwguN+0L+dygfj1zaye1twlVV/kJAyBH
+         UP4TSzWzsFrJE3ei10fhMwOld2+hjPTbO0e1U4YweR9L9OqPRHJ1EGQHOpTUodqG0mhI
+         5HSWnsv0v83SWMlIO1tbvudgFHqkP04qH8GfHoAARxUj+QiTQrYcBSNNcFF8ZU4Ega9L
+         ciHscloWbvePVAqJjmxRUAu10forgCy8hQd5oPkcINXi7SghQzi7QwnORWbeHaGfLqQd
+         vppQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745111580; x=1745716380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=thDcOLdPkfwcZEXoGMprWBcv7sRiqWfZZa3+HhTK2aY=;
+        b=k/DageeOp85XlFZtD0mE55f2Gd7brMuWRdm13oNcNk8rLS07fZvMOOOtnhOAzsw6sy
+         k4Sa27aHthlsInGEw46X4u0yBs0HPe40/ODod0hJXg2ce9+uoj6UH7ckBJO4FSfz7oBS
+         rJolYPXUv5fDrE9MylHaNLJiwMekYqJ3O0Fg91m62JgrNtHroCXab8UpUM7rhYLTNAJ7
+         +Tx54TlbuVsrzWzMfFo2DJu/kItv+396GZSL4BDm7g4nxq5ZpvJauenyLVgleG2DXQSh
+         RqadsgC4XmLWJx49Wyuoi712lKvhRrHdi4UkqBSfpyqt93izILKquGU9Igh0w4uOdgku
+         RYVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrQhUIwxMhEq0dnfFt+s16Gg0ZGaeaD65+/pf8fXl6ClzWcuRckoSAgF+6TV4EbVpWeiQpd43N@vger.kernel.org, AJvYcCWiltG40NK32muFR3DH0nwHNY9xwA+ouIpRv5xXExWos59Bb4BOn8MK1QsRT8AflLOpr+JPwPTXq4Wg4QIr@vger.kernel.org, AJvYcCXLpveCU3H17+kMEa4twrywIZwHu73L7tmfcu4fdmyh98a8At9+eqLVkXeSFjcGifLXOEn9mmgfP84=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx+ouBJmDac6Wk9jR/xnehfn95dfq4BYOImVRTUV3ekk2ZBO+T
+	opHaGEB+GxjSnIPef1ju9ocCCJyveBcZCzOYqO+SZ0tgQ97Q9pCbTTHXMS7R7XpCLSbKnBfSHi7
+	62En1p6D4QdKU2QMhftToxoCMTg4=
+X-Gm-Gg: ASbGncuMnEBjJGubXKicPoIFDWujr7xP4gykVY27ArSCKDMxzp5HaW7a/fcIrKvmGTT
+	xwOl6spv6mTB+umdwG47Pxca1YmxMZL5jrKwVFzD3dVo2H3spAxX+pNn1h8O1ojshY2oyIGZvE4
+	sRV6o2UxLHMHYJhufeRm9uNNKb0g7XkfDJ0sJjCK6QK5lnxQIHassdvg==
+X-Google-Smtp-Source: AGHT+IHEJ7vE4gi5RgLqomFtoI5GERYeArL9FKjlt/33MJezcaz4LvqnHBrczqzMF0c7tY7ke3BUtbN25Hbq0WYgaG0=
+X-Received: by 2002:a05:622a:19a5:b0:47a:e70c:e1ac with SMTP id
+ d75a77b69052e-47aec36591bmr112062821cf.9.1745111580039; Sat, 19 Apr 2025
+ 18:13:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3010358.e9J7NaK4W3@rjwysocki.net>
+References: <20250416142219.554938-1-gshahrouzi@gmail.com> <aAPEUUAHsG2CvFbr@debian-BULLSEYE-live-builder-AMD64>
+ <CAKUZ0zJoV6pLEFh6mEjz5awousn4o8Mq2D9AL8CfvqqW620X4A@mail.gmail.com> <aAREYg1uAc8NSVKY@debian-BULLSEYE-live-builder-AMD64>
+In-Reply-To: <aAREYg1uAc8NSVKY@debian-BULLSEYE-live-builder-AMD64>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Sat, 19 Apr 2025 21:12:49 -0400
+X-Gm-Features: ATxdqUExlWtyU2bbnRz5E1qlm3t9KbBZuxxYHLjhSGsEHuHTdMVaw2WyNWhZT0k
+Message-ID: <CAKUZ0z+1JZs3ky3Yo4FNev8fow4bNvH_089=PvwEd-Rpvpj6Xg@mail.gmail.com>
+Subject: Re: [PATCH] iio: ad5933: Correct settling cycles encoding per datasheet
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com, 
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 11:58:08AM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Commit 8e461a1cb43d ("cpufreq: schedutil: Fix superfluous updates caused
-> by need_freq_update") modified sugov_should_update_freq() to set the
-> need_freq_update flag only for drivers with CPUFREQ_NEED_UPDATE_LIMITS
-> set, but that flag generally needs to be set when the policy limits
-> change because the driver callback may need to be invoked for the new
-> limits to take effect.
-> 
-> However, if the return value of cpufreq_driver_resolve_freq() after
-> applying the new limits is still equal to the previously selected
-> frequency, the driver callback needs to be invoked only in the case
-> when CPUFREQ_NEED_UPDATE_LIMITS is set (which means that the driver
-> specifically wants its callback to be invoked every time the policy
-> limits change).
-> 
-> Update the code accordingly to avoid missing policy limits changes for
-> drivers without CPUFREQ_NEED_UPDATE_LIMITS.
-> 
-> Fixes: 8e461a1cb43d ("cpufreq: schedutil: Fix superfluous updates caused by need_freq_update")
-> Closes: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org/
-> Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Thanks for fixing this.
-
-Reviewed-by: Sultan Alsawaf <sultan@kerneltoast.com>
-
-> ---
-> 
-> v1 -> v2:
->    * Always set need_freq_update when limits_changed is set.
->    * Take CPUFREQ_NEED_UPDATE_LIMITS into account in sugov_update_next_freq().
-> 
-> ---
->  kernel/sched/cpufreq_schedutil.c |   18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -83,7 +83,7 @@
->  
->  	if (unlikely(sg_policy->limits_changed)) {
->  		sg_policy->limits_changed = false;
-> -		sg_policy->need_freq_update = cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> +		sg_policy->need_freq_update = true;
->  		return true;
->  	}
->  
-> @@ -95,10 +95,22 @@
->  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
->  				   unsigned int next_freq)
->  {
-> -	if (sg_policy->need_freq_update)
-> +	if (sg_policy->need_freq_update) {
->  		sg_policy->need_freq_update = false;
-> -	else if (sg_policy->next_freq == next_freq)
-> +		/*
-> +		 * The policy limits have changed, but if the return value of
-> +		 * cpufreq_driver_resolve_freq() after applying the new limits
-> +		 * is still equal to the previously selected frequency, the
-> +		 * driver callback need not be invoked unless the driver
-> +		 * specifically wants that to happen on every update of the
-> +		 * policy limits.
-> +		 */
-> +		if (sg_policy->next_freq == next_freq &&
-> +		    !cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
-> +			return false;
-> +	} else if (sg_policy->next_freq == next_freq) {
->  		return false;
-> +	}
->  
->  	sg_policy->next_freq = next_freq;
->  	sg_policy->last_freq_update_time = time;
-> 
-> 
-> 
+On Sat, Apr 19, 2025 at 8:47=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt1@gmail.com> wrote:
+>
+> ...
+> > > > @@ -411,14 +417,15 @@ static ssize_t ad5933_store(struct device *de=
+v,
+> > > >               ret =3D ad5933_cmd(st, 0);
+> > > >               break;
+> > > >       case AD5933_OUT_SETTLING_CYCLES:
+> > > > -             val =3D clamp(val, (u16)0, (u16)0x7FF);
+> > > > +             val =3D clamp(val, (u16)0, (u16)AD5933_MAX_SETTLING_C=
+YCLES);
+> > > >               st->settling_cycles =3D val;
+> > > >
+> > > > -             /* 2x, 4x handling, see datasheet */
+> > > > +             /* Encode value for register: D10..D0 */
+> > > > +             /* Datasheet Table 13: If cycles > 1022 -> val/4, set=
+ bits D10=3D1, D9=3D1 */
+> > > >               if (val > 1022)
+> > > > -                     val =3D (val >> 2) | (3 << 9);
+> > > > -             else if (val > 511)
+> > > > -                     val =3D (val >> 1) | BIT(9);
+> > > > +                     val =3D (val >> 2) | AD5933_SETTLE_MUL_4X;
+> > > then this would become something like
+> > >
+> > >                 reg_data &=3D ~AD5933_SETTLE_MUL_MSK;
+> > >                 reg_data |=3D FIELD_PREP(AD5933_SETTLE_MUL_MSK, AD593=
+3_SETTLE_MUL_4X);
+> > >                 reg_data &=3D ~AD5933_SETTLING_TIME_CYCLES_MSK;
+> > >                 reg_data |=3D FIELD_PREP(AD5933_SETTLING_TIME_CYCLES_=
+MSK, val >> 2);
+> > I currently have:
+> >                         val >>=3D 2;
+> >                         val |=3D FIELD_PREP(AD5933_SETTLING_MULTIPLIER_=
+MASK,
+> >                                         AD5933_SETTLING_MULTIPLIER_VAL_=
+X4);
+> > which assumes val only has bits within a certain range which I believe
+> > is the case here but not completely sure. Would it be better to clear
+> > the bits regardless and then apply said operations?
+> Nah, since val is being clamped to max settling time value, I think this =
+is good.
+Got it.
+>
+> > > ...
+> > >
+> > > Though, I guess it would then be preferable to use masks and bitfield=
+ macros for
+> > > all other places where we handle register data in ad5933 driver. Prob=
+ably
+> > > something for a different patch (if worth it).
+> > I separated the original fix from the refactoring so the patches stay
+> > modular. I can apply the use of masks and bitfield macros for other
+> > register data. Should the refactoring be all in one patch or spread
+> > across multiple?
+>
+> I believe all mask/bitfield refactoring can be done in one patch.
+Sounds good.
