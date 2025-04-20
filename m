@@ -1,103 +1,130 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from outbound.pv.icloud.com (p-west1-cluster6-host1-snip4-10.eps.apple.com [57.103.67.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA7815D1;
-	Sun, 20 Apr 2025 03:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE8B1E89C
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 03:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745118312; cv=none; b=C7WsdYg8se4Rc/k2BjiC7sa+Tp6/2Ootm30xoN0UYd3jwutJ2czBQ3sXUf9y5PJ4sAxL9tGfdeDJ8igPVW2TAm6idcKtUdlXrJ1bzCwW7jcTqVHX3M5apfTDVIPL/R2ymJl5sI+mDx6hZLkyswFer/TTs7Bhr85vU8NQNYAbeG0=
+	t=1745119103; cv=none; b=FN6b7JiQ5+Ilv6+nydV0nssB4ZNYO4JMij1CzyzZp0Wxl4LzCm6weV8s3S4iB2g9ygEwIni+jgW8GlL88JSNLUHZqS8K8Jvp0kWxBxO/WpWZmP14vIvVydxb37l255KWSq7s8KBPm0BQp6sgKIMrdfghQLv5D+XUeJO7y2Hf4H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745118312; c=relaxed/simple;
-	bh=XXPr06KzWm878iqOS5CflCy1fXQr3c2IadOUe/BBCzg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vGYWG1u0xa+zWv8dRtTvsCPPFlGDIsW1abf+sxiImkpmOsRNvT9FfFfg6X+jl6kSoylnr3z/qNqUQegwNf/EO3FLBgDClBZNbcTXHnB4f+YP/po3ShV7+YH7/O8tYygfXxm3/2yp7SX7x2xehuURVRn9fkKPk9h7GQPLCv5IYGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ByXi7g+h; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745119103; c=relaxed/simple;
+	bh=czmOxfiQ7Tu/mSdpKDOKMa5nbv+44cvPUlogRQdlUuE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EigWr+m22M+M+TzRASzv3JelVHA4DuiaUmEjdT3+sO6K3OB3Ud3EI7jPwwoe6HRkIYxT24FppEYOjoHkQApUQAz4MWTUgwN4r/JazrnV6LLER/6wFgNmXUwXLheZOn2uCEONLlL5QVZmpT3oxz/hIsKfz+q+1nGCEGUuUUmBsDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=TGHhw4yf; arc=none smtp.client-ip=57.103.67.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ByXi7g+h"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53K355Yb602066
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 19 Apr 2025 22:05:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745118306;
-	bh=oZ9ziYOK8AMefDH28dk974JiuKuWWef/8ABJn5sihOQ=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ByXi7g+hVtHcSvxqCy/g9v+ZWvKGpszt+SVj8dJmxQviJbwzMEooOvBSFz8JlktXK
-	 PDXMzvizbU6jQqci0CNUejg9I5I9xE92FmxtYnU3ZI4N6kL2Cf/TdEAryEdYDiApR2
-	 83qYxQBdfDdG05yRV7aVrRYy0sETCQJd0591fGfE=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53K355og075840
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 19 Apr 2025 22:05:05 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 19
- Apr 2025 22:05:05 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 19 Apr 2025 22:05:05 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53K354MJ060597;
-	Sat, 19 Apr 2025 22:05:05 -0500
-Date: Sun, 20 Apr 2025 08:35:03 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: "Kumar, Udit" <u-kumar1@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 3/7] arm64: dts: ti: k3-j721e: add ranges for PCIe0 DAT1
- and PCIe1 DAT1
-Message-ID: <45e368a9-43ed-4d03-9a03-f60abee698ca@ti.com>
-References: <20250417120407.2646929-1-s-vadapalli@ti.com>
- <20250417120407.2646929-4-s-vadapalli@ti.com>
- <f9cb52e2-d211-47b1-9536-3aa81db916c7@ti.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="TGHhw4yf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=zP8gRbrasrVuhIXn2PxV4CCw/YI6If8H1SVTepBuvaY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=TGHhw4yf3ZM/2/aDQAwdy1eVAFqkmt6yqVgOzRxxm8aTWuSCRJIADYbhiupP3hMi+
+	 mJJOrJbs8f/QT+G4HSpQJr+HgGWOC2+yB1O3TQABWIkMVSe+EhhreorKGAAcvHtiBi
+	 ixsetfud6OZ8vDV5qu9JvCcp0SIygq4rnBC9k6JFliaSNe+PspF3g0rDqKKOjKpcNt
+	 K7aimz4+zXYqzKtGQ2zTVN0sTyrIBMix8Jb1t9VnGq7KxCsak3OfkixEjmO05ePWjV
+	 YwtEi1te1KV8Wo3rtTqMPFL9Yw5uymQGjwjY8h5d69kjFzOnjT4JUo5hoAJAkYoVh4
+	 bjSYYGtELS9Lw==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id C7F401800259;
+	Sun, 20 Apr 2025 03:18:17 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Sun, 20 Apr 2025 11:17:50 +0800
+Subject: [PATCH] PM: wakeup: Do not expose wakeup_source_create()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f9cb52e2-d211-47b1-9536-3aa81db916c7@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250420-fix_power-v1-1-1454cf1dc534@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAF1nBGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyMD3bTMiviC/PLUIt0UUwNzM+NUk2QLI0MloPqColSgJNis6NjaWgB
+ ZSxQfWwAAAA==
+X-Change-ID: 20250420-fix_power-d50763e4c821
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: xKijEZKSrRiE0ugYtaaETNz0Z1fNrhVM
+X-Proofpoint-ORIG-GUID: xKijEZKSrRiE0ugYtaaETNz0Z1fNrhVM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-20_01,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 clxscore=1011
+ bulkscore=0 adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503100000 definitions=main-2504200026
 
-On Sat, Apr 19, 2025 at 11:39:55PM +0530, Kumar, Udit wrote:
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Hello Udit,
+wakeup_source_create() is only used by drivers/base/power/wakeup.c
+internally.
 
-> 
-> On 4/17/2025 5:34 PM, Siddharth Vadapalli wrote:
-> > The PCIe0 DAT1 and PCIe1 DAT1 are 4 GB address regions in the 64-bit
-> > address space of the respective PCIe Controllers. Hence, update the
-> > ranges to include them.
-> > 
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > ---
-> >   arch/arm64/boot/dts/ti/k3-j721e.dtsi | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> > index a7f2f52f42f7..4f5d277c97a4 100644
-> > --- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> > +++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> > @@ -126,6 +126,8 @@ cbass_main: bus@100000 {
-> >   			 <0x00 0x10000000 0x00 0x10000000 0x00 0x10000000>, /* PCIe DAT */
-> >   			 <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71 */
-> >   			 <0x00 0x6f000000 0x00 0x6f000000 0x00 0x00310000>, /* A72 PERIPHBASE */
-> > +			 <0x40 0x00000000 0x40 0x00000000 0x00 0x08000000>, /* PCIe0 DAT1 */
-> > +			 <0x41 0x00000000 0x41 0x00000000 0x00 0x08000000>, /* PCIe1 DAT1 */
-> 
-> Do you want to map whole 4GB or just 128M ?
+Do not expose it by making it as static function as its counterpart
+wakeup_source_free() does.
 
-It should have been 4 GB and needs to be updated. Thank you for
-reviewing the patch and pointing this out. I will fix this in the next
-version of the series.
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ drivers/base/power/wakeup.c | 3 +--
+ include/linux/pm_wakeup.h   | 6 ------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-Regards,
-Siddharth.
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 63bf914a4d4467dcf6c42e50951b91677fb9c46d..bb311c02f5a4754beb1c3d97e61f36d50d474e23 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -77,7 +77,7 @@ static DEFINE_IDA(wakeup_ida);
+  * wakeup_source_create - Create a struct wakeup_source object.
+  * @name: Name of the new wakeup source.
+  */
+-struct wakeup_source *wakeup_source_create(const char *name)
++static struct wakeup_source *wakeup_source_create(const char *name)
+ {
+ 	struct wakeup_source *ws;
+ 	const char *ws_name;
+@@ -106,7 +106,6 @@ struct wakeup_source *wakeup_source_create(const char *name)
+ err_ws:
+ 	return NULL;
+ }
+-EXPORT_SYMBOL_GPL(wakeup_source_create);
+ 
+ /*
+  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 51e0e8dd5f9e50d928db6efa2e3232a117d7e012..6689e73a3a2d249a6eb3517b0597e737b01248bb 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -95,7 +95,6 @@ static inline void device_set_wakeup_path(struct device *dev)
+ }
+ 
+ /* drivers/base/power/wakeup.c */
+-extern struct wakeup_source *wakeup_source_create(const char *name);
+ extern void wakeup_source_destroy(struct wakeup_source *ws);
+ extern void wakeup_source_add(struct wakeup_source *ws);
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+@@ -129,11 +128,6 @@ static inline bool device_can_wakeup(struct device *dev)
+ 	return dev->power.can_wakeup;
+ }
+ 
+-static inline struct wakeup_source *wakeup_source_create(const char *name)
+-{
+-	return NULL;
+-}
+-
+ static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
+ 
+ static inline void wakeup_source_add(struct wakeup_source *ws) {}
+
+---
+base-commit: 8117b017f3826b18a426f22de1e001767bc50fd3
+change-id: 20250420-fix_power-d50763e4c821
+
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
+
