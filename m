@@ -1,123 +1,119 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 561E317E0;
-	Sun, 20 Apr 2025 01:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66116AD2D;
+	Sun, 20 Apr 2025 01:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745112330; cv=none; b=SGlZ4OCHIN/1cnwip4hGklpGJlNTynzvOD+hSipd+pZUrHBLrcz9PP1d4tLxBMVXgj/sUMwLe2kdEAgj58twhlEAoYVcGdhd+Z5pqYxlLQ7rMioRLJmphzl2oRps+o2lXtSplU8/sLiTrf2zAVvnwEz7Y3K1bFiERKHPv5HmE94=
+	t=1745112615; cv=none; b=dqVaUAKQ15Rnztinm4aa6YBk30ZxlADp3tGf+SK7W2M/yPwZfSeccyXBOWQSMbFmZz02s1HojtHClqGypLnSmIYc0MwbugXY/Iwz+U4Q21wBEJ3KSnHoJKmnMRZWAF0uNhiSqtZzHImVBCorvug/Lfwwf3qgC+BwqlQ0TFsLDYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745112330; c=relaxed/simple;
-	bh=5atS7FFvmFxbssnIE/lCOBgY4+PdYuxAh3bI2+OokjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tJLV7gVQ34nY5knGj9RfzoyDrOFLgBzkjGv/y9cqLB/FaWqA+MtC3n76i/8Y5TEenxFX4OQf+A22cD8u9byswuUq1sbHk7I79bMAGWCFRpOJwaRoMCsyWC1JpnDl2RfUw2momIxnnrIeSCCHFnfU96JIOpIMJoukLa3LtAwzzbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=F9Iuod3l; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745112615; c=relaxed/simple;
+	bh=CyuSRiVyKJEGI/x2kS5E1Rp/4iqAVY4WrRx/nkz9QqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jf+5ReW9fT3GQPh3QWQCrhCrl7JSgOR6Z6gkY/eEubKu78WeGD/JJw/6MAVIuwKLNUATulY1kYianV0jVkM+AQ9kCEfLS0dgVa006WxqsKmM2lAYt3kNpLdAcsTfYS4+eUCmEpuCp7TNU4A46HBuYM4xlSUR9B30ruPRM3WEZ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJppjJIv; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="F9Iuod3l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=ZI5YA1hMU5Y0iOLUPey0MFJ6qdSoV0qfKyN2Ge7o89w=;
-	b=F9Iuod3lCyule7G5J1NMA7526srFhHpNE9oP0Bwh72KKGYabqelomvcJ34opEE
-	K5LOELXbXz1v1Crb/AsVpI96tRk6+qjMrFyMhUkNczwETUt2T1cyCiQtS1ZVAhDt
-	iOg9dN2UivGuvr2saLVjcilmtmbrXbx8d7uhjjlJ63Qdg=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wCnTsnTTARoeswdBQ--.57004S2;
-	Sun, 20 Apr 2025 09:24:36 +0800 (CST)
-Message-ID: <348fd943-3ada-4688-bafc-3b6095e86b61@163.com>
-Date: Sun, 20 Apr 2025 09:24:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJppjJIv"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c55500d08cso301910285a.0;
+        Sat, 19 Apr 2025 18:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745112612; x=1745717412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RTJrgwusKmBJGDT7w2SBMbCLd44w3bPlBa47XAgc/1Q=;
+        b=FJppjJIv6pWmK636ru4q2Gkbb/qWNcFe8i4+rgYSYmG3MmqbX5OHwy0G0P4l0NXonl
+         J5YQ+H2c/+4sTvjqa/d8uVbFPeuaOiW8ziQczCUJduuyJoku4XFxrkiEcCfuq1AWGSmh
+         7aDlvwV5Ej9SpxEzLUZJ+QpCdU2UxecP0lexsZU79oGy89ExjteT8jqr4FzrkEEOsppr
+         b0+3Ji72F6uZ/Y+DVePHDfCJipkudSMFg0Z4tN+t0c9JpNHv3HurrhwB6TUWs6omTUBY
+         yZFRaFil+U8ZBEkDyqRCoebySRWDORs7Cm3uLwoEatHZrgGWfHawK0q50SmsZxp1DZti
+         H+IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745112612; x=1745717412;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RTJrgwusKmBJGDT7w2SBMbCLd44w3bPlBa47XAgc/1Q=;
+        b=D+iM/pHU8eA5g+8kf4SVY6t39uWk7yh7e4dd3pMlHgTI28/9Dz6Z1NmAJ8ERAG28si
+         gWMXMaEBUTeGGH7RLcbvEMe7Ml7WfH74xOoATTX8gxZ03G2VwnCYrpyVjLwKLBm4Bm/Q
+         WxNyjNYmAz0owDup6h8/vrOaT0odU2M5gU7WBPLBKCey25/8z8EvoMJ4nqXPkh3Olgat
+         IXLujuHyWsbgPBWlyEkV1vSGW14gjIJKy81JdXdIhODJiiJ6BH69YUN+kpWlWXt3M9t0
+         BfHPY25iqeNrjcSTeDgbVQl4WO9n/JzifK2olYLE5Qo31wXlxy37YbEHe5cgVwcysMxr
+         kwUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdHN+PL8f/2yolgGzeqqbzVHot8Ej/YoDETT5ZRu56V9Wb2zYFgpD3HnTO2HU0jxFXI2YN1/frmfI=@vger.kernel.org, AJvYcCV/nD/5rY9gHJvg1CfmbleClgtOo2CgKFxLjjE63lNUTaErQlF7sKWE6si7Q2SYKkW0h25ubkK0@vger.kernel.org, AJvYcCX7rNUF26bHlzEbsqE6GLaAOmY+/wqop3gY7R85bm+ESbtbXDRYOB7QE4E/ZLIvyrpUSVtqjSldzSpLLU+a@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4b4SokQCSbKwHbbqwmntHv1vRnePgztsx4WkoESY63nEARQbk
+	7VMBtl3w1eIXkZnbKs/QVA2u1Sstw1aoy1E+XYKtdHcZ9tQjskwF
+X-Gm-Gg: ASbGncvQErsTFk5jMNRDfMgYWYzFpZFbcMsE55OXh9/uvCi6pcb38atn3EtJ29uhJeO
+	LvcNE+UVAQUybDzwOlg/pC8bapvHM2P8npXYOMB9XUUpt20uOtFgGrGItWmoQILQF29nF6Dj+dB
+	kQXaFj8WEDOsDJuRqTakuDvfQrYqFplPoMyChpc2n9o1S9GWDUxlUhBSc6wglPeH240iTvuuqMG
+	OJNtebq0AW9z/TUB7KtAlAH3pU9IRnRIh6Kzy6LT2fmZSndK8p1pXtNcXueYUklxL0/TEPHJyHo
+	y3dS2R+/SsdNtDY50A6AoUOnXhLnY4SolLPPZ98Xy5MJJS3fYn299Wa2dBVyKzpT3hz4FdZPrL4
+	e3TBmgD9KdkWJi2MW1tU=
+X-Google-Smtp-Source: AGHT+IHuRChHb64yjYSyNvCrPInTUCyNqDkr2FIU5+hyx3zlq5oe6v2nUcAjw9rPd5yYHVs51m7ZJQ==
+X-Received: by 2002:a05:620a:1727:b0:7c5:5d9b:b626 with SMTP id af79cd13be357-7c92805d79cmr1629015385a.36.1745112612227;
+        Sat, 19 Apr 2025 18:30:12 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a8bf65sm266054685a.25.2025.04.19.18.30.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 18:30:11 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Michael.Hennerich@analog.com
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH v4] staging: iio: ad5933: Correct settling cycles encoding per datasheet
+Date: Sat, 19 Apr 2025 21:30:09 -0400
+Message-ID: <20250420013009.847851-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: cadence: Fix runtime atomic count underflow.
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, s-vadapalli@ti.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20250419133058.162048-1-18255117159@163.com>
- <pjacxodfaywqxabqeftguqcrz2eoib5l5l32oevy5j5rrwl5s6@hhglbkyrmnzg>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <pjacxodfaywqxabqeftguqcrz2eoib5l5l32oevy5j5rrwl5s6@hhglbkyrmnzg>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCnTsnTTARoeswdBQ--.57004S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tw18Gry7Jw4fZF1DWF4DArb_yoW8tr1rpF
-	ZrWF1xCan7Xayjy3Z2v3Z8XFyayF9xJryDJws7Kw1xZr13Cw1DtFsFqayYgFnrKrZ7tr1x
-	J3WqvasrCFnxAF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgtxDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhI0o2gD1IoZTQABsf
+Content-Transfer-Encoding: 8bit
 
+The AD5933 datasheet (Table 13) lists the maximum cycles to be 0x7FC
+(2044).
 
+Clamp the user input to the maximum effective value of 0x7FC cycles.
 
-On 2025/4/20 00:51, Manivannan Sadhasivam wrote:
-> On Sat, Apr 19, 2025 at 09:30:58PM +0800, Hans Zhang wrote:
->> If the call to pci_host_probe() in cdns_pcie_host_setup()
->> fails, PM runtime count is decremented in the error path using
->> pm_runtime_put_sync().But the runtime count is not incremented by this
->> driver, but only by the callers (cdns_plat_pcie_probe/j721e_pcie_probe).
->> And the callers also decrement theruntime PM count in their error path.
->> So this leads to the below warning from the PM core:
->>
->> runtime PM usage count underflow!
->>
->> So fix it by getting rid of pm_runtime_put_sync() in the error path and
->> directly return the errno.
->>
->> Fixes: 1b79c5284439 ("PCI: cadence: Add host driver for Cadence PCIe controller")
->>
-> 
-> This is not the correct Fixes commit. In fact it took me a while to find the
-> correct one. This exact same issue was already fixed by commit, 19abcd790b51
-> ("PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error path").
-> 
-> But then, this bug got reintroduced while fixing the merge conflict in:
-> 49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
-> 
-> I will change the tag while applying.
-> 
+Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+Changes in v4:
+	- Provide clear git body description.
+Changes in v3:
+	- Only include fix (remove refactoring which will be its own
+	  separate patch).
+Changes in v2:
+        - Fix spacing in comment around '+'.
+        - Define mask and values for settling cycle multipliers.
+---
+ drivers/staging/iio/impedance-analyzer/ad5933.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Mani,
-
-Thank you very much.
-
-Best regards,
-Hans
-
-> - Mani
-> 
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
->>   1 file changed, 1 insertion(+), 10 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 8af95e9da7ce..741e10a575ec 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -570,14 +570,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>   	if (!bridge->ops)
->>   		bridge->ops = &cdns_pcie_host_ops;
->>   
->> -	ret = pci_host_probe(bridge);
->> -	if (ret < 0)
->> -		goto err_init;
->> -
->> -	return 0;
->> -
->> - err_init:
->> -	pm_runtime_put_sync(dev);
->> -
->> -	return ret;
->> +	return pci_host_probe(bridge);
->>   }
->>
->> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
->> -- 
->> 2.25.1
->>
-> 
+diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+index d5544fc2fe989..f8fcc10ea8150 100644
+--- a/drivers/staging/iio/impedance-analyzer/ad5933.c
++++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+@@ -411,7 +411,7 @@ static ssize_t ad5933_store(struct device *dev,
+ 		ret = ad5933_cmd(st, 0);
+ 		break;
+ 	case AD5933_OUT_SETTLING_CYCLES:
+-		val = clamp(val, (u16)0, (u16)0x7FF);
++		val = clamp(val, (u16)0, (u16)0x7FC);
+ 		st->settling_cycles = val;
+ 
+ 		/* 2x, 4x handling, see datasheet */
+-- 
+2.43.0
 
