@@ -1,112 +1,102 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781671D6194
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 14:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0BB19EED3;
+	Sun, 20 Apr 2025 14:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745158835; cv=none; b=CfCnUjykZO122h3wJ6lCsMuoYSdF7nXNaS1S2HxpZCR+LyX+jvHT+f9wqAW+O5/nSNSJSK3tiZW16rq7tXngdxDoRGEJDRpm/e3khAL5R5Qn5IkI1YLieftnkTyvHXPtTNYqfQYFkrR2w6CwDXFHptGp1BakISP0FKnt8quKCZg=
+	t=1745159739; cv=none; b=TmR2JnpfUcl+hNl275+4K2ULH2ec30xxZIX00SvgrNIpgqV4+bDH/mCUua3q6RHl5SDmaN6OSHadtBL0WRIUU9y3QvORYF8ZzshbHPfvOlS58NW/3hD1hKsSrunNZCqUyry51QdtaUNP/GygA3M9UyQ+hIXpQSeVToiB3u6xe6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745158835; c=relaxed/simple;
-	bh=5Q5i7KC4tbs7p5pMGOP2kc91ew9TX1lZ59n9t6QhCis=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SzVjcBXgYI0CTUt8NMza1yuGWopkxy7tkHTz4Jhi9T+ac2NSkH2PMYhLxI8FFyTZ+LPGXHhik3nYaUd43liFyfh73hV5l88f3y9w1uRS4Hb2WzQXXOLhvm0qhJUYFjHhVshXx43mMhPrFnPI95iAa4kSsgjgfO2GutK501uEH5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHQKnEbY; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745159739; c=relaxed/simple;
+	bh=9OoBrdf0aTphFq3DQgOnSUzXQkKcFYrB4Ko2JU4ZoTs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=d++Bi2Nf7iNDdeGrfw33HQmOTVa9op4zt/nUz0G+gwCtHgxVQZJdCf28KG0R2g2UXyfXyPmgvccX/hgEsb7M682lY4A3RA+32Nvtqx2Or1/I8vGE9bTiaDtHhvH5AmE2iwzxsWgOvATHkR8PP0UfQRMGKEAXwR+xuf95c0vamjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjB0Kszn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHQKnEbY"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54addb5a139so3529345e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 07:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745158831; x=1745763631; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=R6NewQPC+NPAN0p4UbtSvMkN5v6iYP/vCMH0ZciTUOM=;
-        b=nHQKnEbY3sueKunyUg9HmgHLPQge2lMv7EO1aidyIRGQFVHMZsKlvPHwul7XnIi4et
-         jeUddNtXt9nwcTHiTYgEo4UzFmPj71ZfAm4+IvWZMn6necrkOZ1QoyCqivatFQbND0em
-         ytzLHJFzD1/1U23/7tGxKQtuW9rlFkNAWougcO1UKUZltwft6r810zEoirE7vdXyDyMe
-         Das6s93qkySkgXst/cIWGcT19Ekbax5qGJEoYMETdbyVZ1qBfcwink0s9fdDc3kYTDKC
-         h9WkoEH9sKOWlT9FXjz2ykCQqerp0EWBMQBfCkROwuQC/XszYnd5EDvkhsNGvXra6QaG
-         v3Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745158831; x=1745763631;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R6NewQPC+NPAN0p4UbtSvMkN5v6iYP/vCMH0ZciTUOM=;
-        b=sRCjtGg4DBuk6vEIzEy1ZowMJTdiHZabbSDUg6aSDU/1DspH8PZ+0j2aleBcsjwxbb
-         UE2Vfe9piwrq4WLdZF4tiW0mAP0XniUlgvc0Ft3FigJw2tk4qRgsqVKyrv2C+QNzSO33
-         W6G3f6+M4/vOW3ALszOOZ5V1pCm8MBI7SlDhTblErIKRuvfUfQz7hH/daYnSv4Vwq+aG
-         ptGehuygtFihntmSFCbTbv0GBuCnpZVFulngh7q2qtyr/6PuU5uO3llONX+jAXYfGABn
-         Qi7BmZiov+Ttm4Q+/DJeI8i8yauAxKRL4Fgpf5NSFSUhItwADfb7WEOHhoBpd97HzFxI
-         QY2g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5V+6lI9wOBwYu2QOnA57XIVg+5xjQdkM0rs9pqct9tatQvf8GHqO6FsvL6aZ7yNGMLzgb7AOAPtkL5SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmKE/ygnBJ5i2ZqTes/Ao76hwcuQG4/+PWS/lfDtHAbTLWnjrn
-	c0ypm/TBsEHm2EvjfSK83qJdSmoK71rJfHIiZX7xuHKa4bMkxvg7
-X-Gm-Gg: ASbGncvcDceV2E/ch0+WhXdOb7jBGkmazokrHoB6xEKGUye+mQhGMeOvMHpHZjF0gOI
-	SjM18a5/MQPFNftp2KUAd/MlzooVavLZ6Uuu4KOUWF5Spsf2+xjGAPTcJfw3P4E+5Ox+JcHSUNm
-	I7A5yrzeAJ8RZFP/VV2LCq/CojlFtnBCC+u2T28lCc+f4BAwhA/V2DH6HMkTj36ktA3t4Y8/G9K
-	BQ748S663wbk+DofaWzK/J4dkkBc3Umlqin7NSwQtaQqrGYI17r3ccTIe2Gitf56m0snGeS3iha
-	3iHz30GW3HrILQPOV5NVdj9BVhTl+FvIwKry
-X-Google-Smtp-Source: AGHT+IHE68XspiUjqpUHibkxiCU9kulIe4oZ0gY3J2Wa8Tfz6uswLV8842logMrkr836fRSPJUni7g==
-X-Received: by 2002:a05:6512:124e:b0:549:4a13:3a82 with SMTP id 2adb3069b0e04-54d6e627866mr2265440e87.21.1745158831198;
-        Sun, 20 Apr 2025 07:20:31 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e548dsm708711e87.193.2025.04.20.07.20.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 07:20:30 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] lib/test_vmalloc.c: Fix compile error with CONFIG_TINY_RCU
-Date: Sun, 20 Apr 2025 16:20:29 +0200
-Message-Id: <20250420142029.103169-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjB0Kszn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D96DDC4CEE2;
+	Sun, 20 Apr 2025 14:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745159738;
+	bh=9OoBrdf0aTphFq3DQgOnSUzXQkKcFYrB4Ko2JU4ZoTs=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=QjB0KsznHU9kt2rA6FD7GB00L8cU4Z708N0EZhJdSGdHpZljmRT+H8iiZfLbK3mzr
+	 HOOaqO4wgjAnEDzhes1YNYm/6NfoIWo0+csKRBrEI6j2R6AftbAxdKEWmWGIIr1C3n
+	 rW8+KJh4fv3j+9Vk7O8H1M9zMBoQUxOHqgdpdkii4yV2a0wIfKGQPMX00YL69eBquz
+	 dkPGrSBaLhlZxCEi35PjMSWI/0ENfO9oWbfKMtfQVnQ+hHdTvPhjkkvX9eR1DD1OYF
+	 vZqe6of86neR5iwvn8JWG9nGc98tRI9taJ9+VqYHHh3qnGrjYWYX59z9zxsAnCMbEc
+	 /0vr7M7Wa/IMw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC2C369C2;
+	Sun, 20 Apr 2025 14:35:38 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Sun, 20 Apr 2025 09:35:37 -0500
+Subject: [PATCH] arm64: tegra: Add uartd serial alias for Jetson TX1 module
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250420-tx1-bt-v1-1-153cba105a4e@gmail.com>
+X-B4-Tracking: v=1; b=H4sIADgGBWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0NL3ZIKQ92kEl3TNKBIonmqSXJishJQcUFRalpmBdig6NjaWgBGD1t
+ MWAAAAA==
+X-Change-ID: 20250419-tx1-bt-5f202a7e4cac
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Tomasz Maciej Nowak <tmn505@gmail.com>
+Cc: Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745159738; l=1081;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=s5PVuRKvd6CVIIO1qFvDhPIiDwgl5quGNSuOC1OhL7M=;
+ b=tnSSFZwOfguUzNM3zleHB3uCj3aIawzpDFK6Qv9DPsuELzx6WbQRO825xb1LpP8J2+Y5b/eTq
+ XgBvci+4zi5BTpRT+QMO9qJRCjH4K05RI9sHD5RhwIFZGHVkC4OE4wH
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-When the kernel is built with CONFIG_TINY_RCU, compiling the
-test_vmalloc.c fails, due to conflicting definitions like
-"struct srcu_usage", etc. between "srcutiny.h" and "srcutree.h".
+From: Aaron Kling <webgeek1234@gmail.com>
 
-It happens because of direct including the "srcutree.h" bypassing
-the automatic selection mechanism. A correct approach is to include
-a generic <linux/srcu.h> which properly select SRCU implementation
-based on a kernel configuration.
+If a serial-tegra interface does not have an alias, the driver fails to
+probe with an error:
+serial-tegra 70006300.serial: failed to get alias id, errno -19
+This prevents the bluetooth device from being accessible.
 
-Fix it by replacing the "srcutree.h" include with "srcu.h".
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504190717.tJHs381f-lkp@intel.com/
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Fixes: 6eba6471bbb7 ("arm64: tegra: Wire up Bluetooth on Jetson TX1 module")
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 ---
- lib/test_vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index 6d65ef725d42c..1b0b59549aaf1 100644
---- a/lib/test_vmalloc.c
-+++ b/lib/test_vmalloc.c
-@@ -15,7 +15,7 @@
- #include <linux/delay.h>
- #include <linux/mm.h>
- #include <linux/rcupdate.h>
--#include <linux/srcutree.h>
-+#include <linux/srcu.h>
- #include <linux/slab.h>
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+index 9b9d1d15b0c7eafd3895f02db1bc747d7cc8923c..1bb1f9640a800af6c10fabf0ee3916f2566a6d4b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+@@ -11,6 +11,7 @@ aliases {
+ 		rtc0 = "/i2c@7000d000/pmic@3c";
+ 		rtc1 = "/rtc@7000e000";
+ 		serial0 = &uarta;
++		serial3 = &uartd;
+ 	};
  
- #define __param(type, name, init, msg)		\
+ 	chosen {
+
+---
+base-commit: 119009db267415049182774196e3cce9e13b52ef
+change-id: 20250419-tx1-bt-5f202a7e4cac
+
+Best regards,
 -- 
-2.39.5
+Aaron Kling <webgeek1234@gmail.com>
+
 
