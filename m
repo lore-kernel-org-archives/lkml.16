@@ -1,125 +1,83 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377CF647;
-	Sun, 20 Apr 2025 00:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D02136A;
+	Sun, 20 Apr 2025 00:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745110046; cv=none; b=h0G0JsdkupjoQ0kR1qF3MK8etCy6fPdIkimZCgsH2LxGTsYsjn+RecXyJHKjVuQOmlZIeKlJX0S3nor/qX9XP3GN31hfd8rPPu5M6/weGCw7v/J1CdQqz97npoKrscNNeJSQaQzaxve2AvoEaoCTUUTeuXX0voo2xehOhLiwydc=
+	t=1745110188; cv=none; b=BnYap1SKKn6e6A1gsjR1G1eCSPJUuUxsR5hQdLNYVlorfC+d+lJPW92W9LGi+jBYBjeRdhsjQzMsJ0aivIu+kXRAnlE7vnG1HLV7Ipb/tYaR2kNpoMBD9zc61XFj0exi0kNyzzvSzUD7HuR28Ts5cf3u/5k4hmza1ziBQ82PVTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745110046; c=relaxed/simple;
-	bh=oPEQvbu8JP50TDbHOHgqHxhAKnR79/d/8OgWww/ne2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RypVQQGgZIykF3n1Ud5wspc5cx1k9mikfJfiAQb4E3vhHgjB0b+J2OTxN00W6xOtTrhA5EJqgJrJdLy25PQY/xhOMCVXhEPRIm1dA3K2nicndMBQKlz7oZFBiT/zfsWic3idJcpQGf/4vTIbTFFnqncuLuDke8eNjakhJs0MTY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ChRlgBO/; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChRlgBO/"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22423adf751so31533825ad.2;
-        Sat, 19 Apr 2025 17:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745110044; x=1745714844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3UbJ6sVj0Q1eE44m7wvB7g9mVugpdeJOq3atIyJK1o=;
-        b=ChRlgBO/yxSB4aI7FJYPCMt0AGtdezHzAiDTOgGhUvwtIVTzSeZ70/3Vna6t/4m9uZ
-         Vbj1E9PxQ//K9bPFO45QYoVhBJ3/SQw1BDfh5JGWmFeVBaWna0pcNfp8FJgYkzrB00Jf
-         hG/4VMdE8rPuFwD/mAvbtk/q8Y5K3wjQ8ks0nBdr0dkQ2gTHDrTb1mMJ1dLEDPaHMYSY
-         uAEj+gWbJX9cAns/kdBMrid3Hj/zhciUFkYwY714fKw4CpdlsPaaacF41cKBltT2uwPI
-         IB6h3Di77rrUq0ZhI30qi1VMr9uVnwT5R1rprycKarKBiSxLBzYHFWXJFkZ7L1q1Lu5h
-         mu3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745110044; x=1745714844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z3UbJ6sVj0Q1eE44m7wvB7g9mVugpdeJOq3atIyJK1o=;
-        b=KLeAyHfYgorwYBCKWi0d5FrxHmDn5YdvvXGJ6+Mj421UdykEQJlNETgZPBYhj7Klm1
-         7uzGgXz/3SstPIAP1ZCRueMUcwTLeP58gKeM8QjkWM3diIL+tmLG1TC7q/yMIu8wzIKT
-         VVhghe2YvTcR5hj00g/NjPylyZ7/gzUI6dfv90U0e3wZQzVpX3EMUi6zytI0ykbp0hyl
-         3PzLxBe/EXYt8a11c0UhT9tq4tL5FDqKqLhB2q3wPwGzR2+L2SGj4BpnmC6+TMZw5Tnr
-         uHYhQaRO4LDj2wEMIxVLwaD/tI6MLY53+Kil0ZFGk4PGeJDYQKShd1g1dPOVgowFIw0+
-         wWQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHDxKV0LYxlKaZDU8zTQof0mR4c+W0RMCWigUw/q+tditEO61FzgbIAVGCqOZmWMUHqBHgcTAX@vger.kernel.org, AJvYcCWFipdBupyH52+5J3czwzz0j0CTXPfKruaoWdBaj+3O8c9F6zVZ/zIYUd4XeCvdq9o2+lx8DVtyBkrgPh80@vger.kernel.org, AJvYcCXRnrP5lOVQ/ZkN6cf8pNtCyKGBaKztjkt8IkNU2kN3BINJNUYfkxx16tmMNUhd2DopNAg8kpHk2Ds=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3wViQ05IjcNo2YDiPmK1NjF54T4/RlEV6Q3+6TvuV0MqqjelC
-	90NWl0eel0jDAIVLJ9Tz5cYVcO6WuDh1yp6bK1N8UlRoiBW7CMbV
-X-Gm-Gg: ASbGncvwp0kGILod2xuyY3g0rEIhvDsoZN2XmzHukS0XNsttkZaPSR5h+wsdi8T6X92
-	YVETaJxEhbHNpBWR1z2p5lnWPYlMhzNU90J6EPNF4bl4a8gKuqACxeNT9dQsxxiBso7h0dydS2G
-	Ai8WH4Af2tmKuMkwQt5780yo0f7ogCvq30Ru++QfEnncirYNQGzI4lOuwh/NicxIWGdkxCb0h83
-	/S4rh2pJG5Xr1THJ1dc0sscbVstWR3HrXgjuXYZ2izmSJZI0Ive7GZsCRo7k/7AGQs1Tzf+XjUB
-	nElEWO9UUcrTg0Lq+M8fOS2zrMBGGmXyZF9AHZr5P28XdvU=
-X-Google-Smtp-Source: AGHT+IHX4JfCAGLHU+bXJ/YVu1CcsjhWotihBQ6Qsp9Bb6qEvbmSQUbeTDYj5k85HbBPZGMXyXD7TA==
-X-Received: by 2002:a17:902:d549:b0:215:4a4e:9262 with SMTP id d9443c01a7336-22c5356deb7mr97366575ad.8.1745110044318;
-        Sat, 19 Apr 2025 17:47:24 -0700 (PDT)
-Received: from localhost ([2804:30c:90e:1e00:5265:5254:2e32:7e5])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50bf543esm39858255ad.95.2025.04.19.17.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 17:47:23 -0700 (PDT)
-Date: Sat, 19 Apr 2025 21:48:34 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com,
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] iio: ad5933: Correct settling cycles encoding per
- datasheet
-Message-ID: <aAREYg1uAc8NSVKY@debian-BULLSEYE-live-builder-AMD64>
-References: <20250416142219.554938-1-gshahrouzi@gmail.com>
- <aAPEUUAHsG2CvFbr@debian-BULLSEYE-live-builder-AMD64>
- <CAKUZ0zJoV6pLEFh6mEjz5awousn4o8Mq2D9AL8CfvqqW620X4A@mail.gmail.com>
+	s=arc-20240116; t=1745110188; c=relaxed/simple;
+	bh=uH5w60ZKQo9st9KyEt5K4q1afZynKAInPJQIETXOtBM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=t7FwrgrHM+b4HtSU2vwUtrCWI0EW9KItsrFt8JxHFDxt7QuD6YMR1h54X8uWf+60zdexLUVts5iOCoByBXfLYLT4WoBRMLNs2zteNrfISvwCrjSHHBUBNSASAcVW3FS05LKl0CGUFBMG6BDj+EHQ/ZnPKC3ZzO5D+i0LJHLSQuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.192.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w001.hihonor.com (unknown [10.68.25.235])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4Zg8yS6c8KzYl9q5;
+	Sun, 20 Apr 2025 08:49:04 +0800 (CST)
+Received: from a001.hihonor.com (10.68.28.182) by w001.hihonor.com
+ (10.68.25.235) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sun, 20 Apr
+ 2025 08:49:42 +0800
+Received: from a007.hihonor.com (10.68.22.31) by a001.hihonor.com
+ (10.68.28.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sun, 20 Apr
+ 2025 08:49:37 +0800
+Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
+ a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
+ 15.02.1544.011; Sun, 20 Apr 2025 08:49:32 +0800
+From: gaoxu <gaoxu2@honor.com>
+To: Kamalesh Babulal <kamalesh.babulal@oracle.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>, =?utf-8?B?TWljaGFsIEtvdXRuw70=?=
+	<mkoutny@suse.com>
+CC: "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"surenb@google.com" <surenb@google.com>, yipengxiang <yipengxiang@honor.com>
+Subject: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjJdIGNncm91cDogRml4IGNvbXBpbGF0aW9uIGlz?=
+ =?utf-8?Q?sue_due_to_cgroup=5Fmutex_not_being_exported?=
+Thread-Topic: [PATCH v2] cgroup: Fix compilation issue due to cgroup_mutex not
+ being exported
+Thread-Index: AQHbsDYeM197mJQUykeNvUExeh4Rj7Oru2KA
+Date: Sun, 20 Apr 2025 00:49:32 +0000
+Message-ID: <d181a0a4e1bf42f69d9b1a26fc5dc8ea@honor.com>
+References: <5df9200f0e7c4bc586af76e21b380f67@honor.com>
+ <af289b54-de43-4d7c-bf74-926abfad7808@oracle.com>
+In-Reply-To: <af289b54-de43-4d7c-bf74-926abfad7808@oracle.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKUZ0zJoV6pLEFh6mEjz5awousn4o8Mq2D9AL8CfvqqW620X4A@mail.gmail.com>
 
-...
-> > > @@ -411,14 +417,15 @@ static ssize_t ad5933_store(struct device *dev,
-> > >               ret = ad5933_cmd(st, 0);
-> > >               break;
-> > >       case AD5933_OUT_SETTLING_CYCLES:
-> > > -             val = clamp(val, (u16)0, (u16)0x7FF);
-> > > +             val = clamp(val, (u16)0, (u16)AD5933_MAX_SETTLING_CYCLES);
-> > >               st->settling_cycles = val;
-> > >
-> > > -             /* 2x, 4x handling, see datasheet */
-> > > +             /* Encode value for register: D10..D0 */
-> > > +             /* Datasheet Table 13: If cycles > 1022 -> val/4, set bits D10=1, D9=1 */
-> > >               if (val > 1022)
-> > > -                     val = (val >> 2) | (3 << 9);
-> > > -             else if (val > 511)
-> > > -                     val = (val >> 1) | BIT(9);
-> > > +                     val = (val >> 2) | AD5933_SETTLE_MUL_4X;
-> > then this would become something like
-> >
-> >                 reg_data &= ~AD5933_SETTLE_MUL_MSK;
-> >                 reg_data |= FIELD_PREP(AD5933_SETTLE_MUL_MSK, AD5933_SETTLE_MUL_4X);
-> >                 reg_data &= ~AD5933_SETTLING_TIME_CYCLES_MSK;
-> >                 reg_data |= FIELD_PREP(AD5933_SETTLING_TIME_CYCLES_MSK, val >> 2);
-> I currently have:
->                         val >>= 2;
->                         val |= FIELD_PREP(AD5933_SETTLING_MULTIPLIER_MASK,
->                                         AD5933_SETTLING_MULTIPLIER_VAL_X4);
-> which assumes val only has bits within a certain range which I believe
-> is the case here but not completely sure. Would it be better to clear
-> the bits regardless and then apply said operations?
-Nah, since val is being clamped to max settling time value, I think this is good.
-
-> > ...
-> >
-> > Though, I guess it would then be preferable to use masks and bitfield macros for
-> > all other places where we handle register data in ad5933 driver. Probably
-> > something for a different patch (if worth it).
-> I separated the original fix from the refactoring so the patches stay
-> modular. I can apply the use of masks and bitfield macros for other
-> register data. Should the refactoring be all in one patch or spread
-> across multiple?
-
-I believe all mask/bitfield refactoring can be done in one patch.
+PiANCj4gSGksDQo+IA0KPiBPbiA0LzE4LzI1IDg6MTIgQU0sIGdhb3h1IHdyb3RlOg0KPiANCj4g
+Wy4uLl0NCj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL2Nncm91cC9jZ3JvdXAuYyBiL2tlcm5lbC9j
+Z3JvdXAvY2dyb3VwLmMgaW5kZXgNCj4gPiA0NDdhYzg1N2UuLmMxYmM1MTA1OCAxMDA2NDQNCj4g
+PiAtLS0gYS9rZXJuZWwvY2dyb3VwL2Nncm91cC5jDQo+ID4gKysrIGIva2VybmVsL2Nncm91cC9j
+Z3JvdXAuYw0KPiA+IEBAIC04NCwxMyArODQsMTMgQEANCj4gPiAgICogY3NzX3NldF9sb2NrIHBy
+b3RlY3RzIHRhc2stPmNncm91cHMgcG9pbnRlciwgdGhlIGxpc3Qgb2YgY3NzX3NldA0KPiA+ICAg
+KiBvYmplY3RzLCBhbmQgdGhlIGNoYWluIG9mIHRhc2tzIG9mZiBlYWNoIGNzc19zZXQuDQo+ID4g
+ICAqDQo+ID4gLSAqIFRoZXNlIGxvY2tzIGFyZSBleHBvcnRlZCBpZiBDT05GSUdfUFJPVkVfUkNV
+IHNvIHRoYXQgYWNjZXNzb3JzIGluDQo+ID4gLSAqIGNncm91cC5oIGNhbiB1c2UgdGhlbSBmb3Ig
+bG9ja2RlcCBhbm5vdGF0aW9ucy4NCj4gPiArICogVGhlc2UgbG9ja3MgYXJlIGV4cG9ydGVkIGlm
+IENPTkZJR19QUk9WRV9SQ1Ugb3IgQ09ORklHX0xPQ0tERVAgc28NCj4gPiArIHRoYXQNCj4gPiAr
+ICogYWNjZXNzb3JzIGluIGNncm91cC5oIGNhbiB1c2UgdGhlbSBmb3IgbG9ja2RlcCBhbm5vdGF0
+aW9ucy4NCj4gPiAgICovDQo+IA0KPiBUZWp1biBoYXMgYWxyZWFkeSBtZXJnZWQgdGhlIGluaXRp
+YWwgdmVyc2lvbiBvZiB0aGUgcGF0Y2ggd2l0aG91dCB0aGUgdXBkYXRlZA0KPiBkZXNjcmlwdGlv
+bi4gWW91IG1heSB3YW50IHRvIHNlbmQgdGhlIGRlc2NyaXB0aW9uIGNoYW5nZSBhcyBhIHNlcGFy
+YXRlIHBhdGNoLA0KPiByZWJhc2VkIG9uIHRvcCBvZiB0aGUgY2dyb3VwL2Zvci1uZXh0IGJyYW5j
+aC4NCj4gDQo+IEkndmUgcmVwaHJhc2VkIHRoZSBkZXNjcmlwdGlvbiB0byBjbGFyaWZ5IHRoYXQg
+bG9ja2RlcCBhbm5vdGF0aW9ucyBjYW4gb2NjdXIgZXZlbg0KPiB3aXRob3V0IENPTkZJR19QUk9W
+RV9SQ1UuIEZlZWwgZnJlZSB0byB1c2UgdGhpcyB2ZXJzaW9uIG9yIG1vZGlmeSBpdCBmdXJ0aGVy
+Og0KPiAiRXhwb3J0IGxvY2tzIGZvciBsb2NrZGVwIGFubm90YXRpb25zLiBVc2UgQ09ORklHX1BS
+T1ZFX1JDVSBmb3IgYWNjZXNzb3JzIGluDQo+IGNncm91cC5oLCBhbmQgQ09ORklHX0xPQ0tERVAg
+Zm9yIGFjY2Vzc29ycyB0aGF0IGRvIG5vdCByZXF1aXJlDQo+IENPTkZJR19QUk9WRV9SQ1UuIg0K
+UmVjZWl2ZWQsIHRoYW5rcyENCj4gDQo+IC0tDQo+IENoZWVycywNCj4gS2FtYWxlc2gNCg0K
