@@ -1,264 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361B218A6CF;
-	Sun, 20 Apr 2025 05:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE5D134AC
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 05:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745126287; cv=none; b=JU7vJHAcGiDLLlPbyfIGExt9u8lJ21gCLhDRiGlRhpbpEavMkuwd/rqZ6C8NoXBUHxVtXEx7b5TpCC+5kr60y9QgJ2nw0i+UfCL8iloopwAW4Dha+eyYw+LBzyC4OoJ3zZmJe2nxU53xaQxXgtxMBHBBOkOm6QYOUUfYAz2Y1R8=
+	t=1745128328; cv=none; b=pydRax3UDDwLoUdCgjMr2KLafIVgsFOpMtA/KJofktTFk8PGYOLGCleBvebSvjk+wrbzD8hBSjWYfLrrS5xusHekd8sOp4XPYxV3tcgaWXMJFlBIxHSR7eaCYl31cSM7CYdxFBF5Q6sV4l5OXBzIuLix4nosS9t2xWpCEur7ygI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745126287; c=relaxed/simple;
-	bh=eb5MS92w01Wn4bIj5DxBtSQ/xzcRrFMjXnejgx6Ul88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WlSKz4/XJs3ht4yOXU/P83vXa4xAq3HrTdB9SvSbGpCwAVZurYCdAJPYUH2GQpNOWSyWa2SpnTTbwrT09m1XlIaypBt9HDteN6TKkKNpLLkFNDwVPzT0pq9UgjF6mS+6obUNfDwq4v07qrkSqRt+730WbzeaR8/Obtff78OM2Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EPsoiXAJ; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745128328; c=relaxed/simple;
+	bh=HCgaxnfn+Tp+WsF29tOMlEzQ5sDEhPtkaMDrsjM6Lu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eQgAmFEum24GSERpstqywkcHM62/Wvje6oeKVJ7Om44c77r5RIMcLdVa3SxYy08jbvrbrE1AGws3IeGlkzSg4PS0CkU+G4j66XI037XHclQnX+Xr1UZBg4EcULdiqOS+GI1jvk+Xbw5xhHwyXMv7+eCZdMqu7gg1vqW2mwRA74Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaaBDUmI; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EPsoiXAJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745126286; x=1776662286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eb5MS92w01Wn4bIj5DxBtSQ/xzcRrFMjXnejgx6Ul88=;
-  b=EPsoiXAJjiUkXDDCpV/BFZlgQPT09pWN60ItAGpLoUp9SUHdbo7pTIwF
-   +PeZk6wDyvTTJAiJT4hPbC+CBGWQhLonDlZT2qnr15wN4sDMeVuMwE+nH
-   Mn3Jc7SRmCKDkJWRlUsGaRN8Ni5uFP5NHN/1ZrNmJT2c0DnRoDcYsfJy2
-   OJF6zNqcuDM2a9ThKkASHZi0hTD0z/vdLKcqfukxMcGLEZ8oOwYv/XS1L
-   Evm1ALzwTsC1tpJptj1y3Gx5biYJWfloMqNXnYaVQ/Veia1ULB1jgwjT5
-   RM4hhpnoM6v9titHi9XFyZzls4EP1K5dKTA1e/HYQPYuldQqhTI7bmKDB
-   w==;
-X-CSE-ConnectionGUID: J00K3TGkQ0mbFe8pNZDAEQ==
-X-CSE-MsgGUID: OfxvqO17Rt+cSB+HIc4aGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46587382"
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="46587382"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 22:18:05 -0700
-X-CSE-ConnectionGUID: G7CwwnahTrOaK9IDptIeQg==
-X-CSE-MsgGUID: Lu5gSQxHTzSmdGRy7OT2Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="136298994"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 19 Apr 2025 22:18:03 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6N44-0004RX-0r;
-	Sun, 20 Apr 2025 05:18:00 +0000
-Date: Sun, 20 Apr 2025 13:17:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	ukleinek@kernel.org
-Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
- synchronized in .probe()
-Message-ID: <202504201347.OiWigSUq-lkp@intel.com>
-References: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaaBDUmI"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b09c090c97eso1978807a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 22:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745128326; x=1745733126; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JlR1Cl/7Pf+X4fiHaZz55r1eEkogd8TlZyAeSyaqNBM=;
+        b=iaaBDUmIgpWepB5q0cCH7BCyXY4WnwIc46cNqyb9df1lJsS8Ip1yul2qsW7hFsQ+eO
+         7JceSYIImb3mIbYnHNz+1+s8zE82IaLaWfvUtK5tiuDivjJIrf4b7rdCAsCmwX3lp7io
+         clhGMw59U0FxIzDlTNhwM+sjwiFd+vKejLtWkjdU6yTJWPztY8GU7PkhfzCRbCDl8grb
+         fnEJW5Z4weyBet97h00d6+71wEHXEnN4qji84+smDIQJIum/CVSKZw32ZPJhwP9WjQTa
+         n1lwdiOE9Tefjhr97p+QVK3KrbB8K3hVD7Cjy5OoyxDMZxZVnWLS6G69b/LZQj7VkSkW
+         yi1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745128326; x=1745733126;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JlR1Cl/7Pf+X4fiHaZz55r1eEkogd8TlZyAeSyaqNBM=;
+        b=AoWk2zlxRCIUsh1CvZlpFSofEsm3H4RU0TcRe6iLxLtA175XfIBfEkMTIjdYjnE3rj
+         LPddz+DMv3O6/l0dZzVMPFt/efXRyy1MDoVdJrmZVoPjX/WB1SPb8F93nzIMlwe65yQv
+         bWV40uoWlScmEMLLjfWVoPPG2ysuO/46XXx3BlfEA/y6WpCSoIRJIvsGa/mnwIlavAs1
+         5V9txR9IdTOIU0e4/grNfXMxHjfhP+Dc/YUDqaEt0CVshz/qW6K0ZOzB6ZCkqOBJ0h4Y
+         sAaV1vUc+QbqiWwYLTIPfnSX8eaEWeSLmNkehcZdjaXyR0rryavV1pKAlINVkuOaFVGy
+         x4ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWV8dottGLnOjEyz4SlcO6e7K8f++wkuLUNGp74IRVCRZhjBqnKEZYbI2wDG2GjHa2jWhKyMLwDFHF0lBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3Okn/xwn98RkWT0pY4BjinNxvpqZzqpEjlfTMNsMeTGpzFmLg
+	7l5nA5bkKuaRKdaUsqivzQsqNPQfcUoZ+lMpihqeDGT1mDBlgVzC
+X-Gm-Gg: ASbGnctI1rIeAsbbMgDAaoVWpUwU248PW7w0l1Zqr3Evgm++hOwx4ACDbheT0lEaJLB
+	YFqUokKr9Cq66xx2dkhb6q81xMofgC0HT2fmMy6BZ1nXWQsV3zfmRSNULoUnpTzguFdilbdSvzL
+	603iBGbzqXVoBOc25RLgGOzPoHnsPr60dG6EMP2nWlRRZNY85EZI19H26oKeMopenqBLSkxajbf
+	VsChrtXjH/Se78VIL8epETN1PlkX7aRwqRqpAXvHNpY8gv3R2UdW7ZqnrzZrEhInQtbwBf17JSd
+	ygMvh44onZzR6H1UegLqUG+W5Iu0dNYDjmBWF4vLZrtMDyhRfQ==
+X-Google-Smtp-Source: AGHT+IF3cll38uRyxsB2kcUfmP59mZlO2KBDMq2EIAY6WmBp89fc1amrCvru7mMoZVUbqHrL11MH6w==
+X-Received: by 2002:a17:90b:498d:b0:2ff:4e90:3c55 with SMTP id 98e67ed59e1d1-3087bbaeb22mr10719705a91.27.1745128326453;
+        Sat, 19 Apr 2025 22:52:06 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.202.66])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df4e12asm4062534a91.37.2025.04.19.22.52.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sat, 19 Apr 2025 22:52:06 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: akpm@linux-foundation.org
+Cc: mingzhe.yang@ly.com,
+	ioworker0@gmail.com,
+	david@redhat.com,
+	willy@infradead.org,
+	ziy@nvidia.com,
+	mhocko@suse.com,
+	vbabka@suse.cz,
+	surenb@google.com,
+	linux-mm@kvack.org,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org,
+	Lance Yang <lance.yang@linux.dev>
+Subject: [PATCH 1/1] mm/rmap: optimize MM-ID mapcount handling with union
+Date: Sun, 20 Apr 2025 13:51:59 +0800
+Message-ID: <20250420055159.55851-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Rafael,
+From: Lance Yang <lance.yang@linux.dev>
 
-kernel test robot noticed the following build warnings:
+This patch moves '_mm_id_mapcount' into a union with an unsigned long
+'_mm_id_mapcounts'. In that way, we can zap both slots to -1 at once via
+-1UL, which is compatible with both 32/64-bit systems and makes compiler
+happy without any memory/performance overhead.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc2 next-20250417]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Also, we remove the two MM_ID_DUMMY checks for each '_mm_id' slot and only
+validate '_mm_ids' once.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rafael-V-Volkmer/pwm-tiehrpwm-ensures-that-state-enabled-is-synchronized-in-probe/20250420-075200
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250206031852.64853-1-rafael.v.volkmer%40gmail.com
-patch subject: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
-config: um-randconfig-002-20250420 (https://download.01.org/0day-ci/archive/20250420/202504201347.OiWigSUq-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250420/202504201347.OiWigSUq-lkp@intel.com/reproduce)
+Signed-off-by: Lance Yang <lance.yang@linux.dev>
+---
+ include/linux/mm_types.h |  6 +++++-
+ include/linux/rmap.h     |  3 +--
+ mm/internal.h            |  9 +++++++--
+ mm/page_alloc.c          | 11 +++++------
+ 4 files changed, 18 insertions(+), 11 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504201347.OiWigSUq-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:549:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     549 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:567:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     567 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:585:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/pwm/pwm-tiehrpwm.c:11:
-   In file included from include/linux/io.h:12:
-   In file included from arch/um/include/asm/io.h:24:
-   include/asm-generic/io.h:601:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     601 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:616:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     616 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:631:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     631 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:724:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     724 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:737:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     737 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:750:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     750 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:764:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     764 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:778:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     778 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:792:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     792 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> drivers/pwm/pwm-tiehrpwm.c:675:7: warning: variable 'tbclk_enabled' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-     675 |                 if (ret) {
-         |                     ^~~
-   drivers/pwm/pwm-tiehrpwm.c:706:6: note: uninitialized use occurs here
-     706 |         if (tbclk_enabled)
-         |             ^~~~~~~~~~~~~
-   drivers/pwm/pwm-tiehrpwm.c:675:3: note: remove the 'if' if its condition is always false
-     675 |                 if (ret) {
-         |                 ^~~~~~~~~~
-     676 |                         dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     677 |                         goto err_pwmchip_remove;
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~
-     678 |                 }
-         |                 ~
-   drivers/pwm/pwm-tiehrpwm.c:629:20: note: initialize the variable 'tbclk_enabled' to silence this warning
-     629 |         bool tbclk_enabled;
-         |                           ^
-         |                            = 0
-   13 warnings generated.
-
-
-vim +675 drivers/pwm/pwm-tiehrpwm.c
-
-   621	
-   622	static int ehrpwm_pwm_probe(struct platform_device *pdev)
-   623	{
-   624		struct device_node *np = pdev->dev.of_node;
-   625		struct ehrpwm_pwm_chip *pc;
-   626		struct pwm_state state;
-   627		struct pwm_chip *chip;
-   628		struct clk *clk;
-   629		bool tbclk_enabled;
-   630		int ret;
-   631	
-   632		chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
-   633		if (IS_ERR(chip))
-   634			return PTR_ERR(chip);
-   635		pc = to_ehrpwm_pwm_chip(chip);
-   636	
-   637		clk = devm_clk_get(&pdev->dev, "fck");
-   638		if (IS_ERR(clk)) {
-   639			if (of_device_is_compatible(np, "ti,am33xx-ecap")) {
-   640				dev_warn(&pdev->dev, "Binding is obsolete.\n");
-   641				clk = devm_clk_get(pdev->dev.parent, "fck");
-   642			}
-   643		}
-   644	
-   645		if (IS_ERR(clk))
-   646			return dev_err_probe(&pdev->dev, PTR_ERR(clk), "Failed to get fck\n");
-   647	
-   648		pc->clk_rate = clk_get_rate(clk);
-   649		if (!pc->clk_rate) {
-   650			dev_err(&pdev->dev, "failed to get clock rate\n");
-   651			return -EINVAL;
-   652		}
-   653	
-   654		chip->ops = &ehrpwm_pwm_ops;
-   655	
-   656		pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-   657		if (IS_ERR(pc->mmio_base))
-   658			return PTR_ERR(pc->mmio_base);
-   659	
-   660		/* Acquire tbclk for Time Base EHRPWM submodule */
-   661		pc->tbclk = devm_clk_get(&pdev->dev, "tbclk");
-   662		if (IS_ERR(pc->tbclk))
-   663			return dev_err_probe(&pdev->dev, PTR_ERR(pc->tbclk), "Failed to get tbclk\n");
-   664	
-   665		ret = clk_prepare(pc->tbclk);
-   666		if (ret < 0) {
-   667			dev_err(&pdev->dev, "clk_prepare() failed: %d\n", ret);
-   668			return ret;
-   669		}
-   670	
-   671		ehrpwm_get_state(chip, &chip->pwms[0], &state);
-   672	
-   673		if (state.enabled == true) {
-   674			ret = clk_prepare_enable(pc->tbclk);
- > 675			if (ret) {
-   676				dev_err_probe(&pdev->dev, ret, "clk_prepare_enable() failed");
-   677				goto err_pwmchip_remove;
-   678			}
-   679	
-   680			tbclk_enabled = true;
-   681		}
-   682	
-   683		ret = pwmchip_add(chip);
-   684		if (ret < 0) {
-   685			dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-   686			goto err_clk_unprepare;
-   687		}
-   688	
-   689		platform_set_drvdata(pdev, chip);
-   690		pm_runtime_enable(&pdev->dev);
-   691	
-   692		if (state.enabled == true) {
-   693			ret = pm_runtime_get_sync(&pdev->dev);
-   694			if (ret < 0) {
-   695				dev_err_probe(&pdev->dev, ret, "pm_runtime_get_sync() failed");
-   696				clk_disable_unprepare(pc->tbclk);
-   697				goto err_pwmchip_remove;
-   698			}
-   699		}
-   700	
-   701		return 0;
-   702	
-   703	err_pwmchip_remove:
-   704		pwmchip_remove(chip);
-   705	err_clk_unprepare:
-   706		if (tbclk_enabled)
-   707			clk_unprepare(pc->tbclk);
-   708	
-   709		return ret;
-   710	}
-   711	
-
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 56d07edd01f9..0ac80eaa775e 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -363,6 +363,7 @@ typedef unsigned short mm_id_t;
+  * @_mm_id: Do not use outside of rmap code.
+  * @_mm_ids: Do not use outside of rmap code.
+  * @_mm_id_mapcount: Do not use outside of rmap code.
++ * @_mm_id_mapcounts: Do not use outside of rmap code.
+  * @_hugetlb_subpool: Do not use directly, use accessor in hugetlb.h.
+  * @_hugetlb_cgroup: Do not use directly, use accessor in hugetlb_cgroup.h.
+  * @_hugetlb_cgroup_rsvd: Do not use directly, use accessor in hugetlb_cgroup.h.
+@@ -435,7 +436,10 @@ struct folio {
+ 					atomic_t _entire_mapcount;
+ 					atomic_t _pincount;
+ #endif /* CONFIG_64BIT */
+-					mm_id_mapcount_t _mm_id_mapcount[2];
++					union {
++						mm_id_mapcount_t _mm_id_mapcount[2];
++						unsigned long _mm_id_mapcounts;
++					};
+ 					union {
+ 						mm_id_t _mm_id[2];
+ 						unsigned long _mm_ids;
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index 6b82b618846e..99c0518c1ad8 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -231,8 +231,7 @@ static __always_inline void folio_set_large_mapcount(struct folio *folio,
+ {
+ 	__folio_large_mapcount_sanity_checks(folio, mapcount, vma->vm_mm->mm_id);
+ 
+-	VM_WARN_ON_ONCE(folio_mm_id(folio, 0) != MM_ID_DUMMY);
+-	VM_WARN_ON_ONCE(folio_mm_id(folio, 1) != MM_ID_DUMMY);
++	VM_WARN_ON_ONCE(folio->_mm_ids != MM_ID_DUMMY);
+ 
+ 	/* Note: mapcounts start at -1. */
+ 	atomic_set(&folio->_large_mapcount, mapcount - 1);
+diff --git a/mm/internal.h b/mm/internal.h
+index 838f840ded83..1505174178f4 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -772,8 +772,13 @@ static inline void prep_compound_head(struct page *page, unsigned int order)
+ 		atomic_set(&folio->_nr_pages_mapped, 0);
+ 	if (IS_ENABLED(CONFIG_MM_ID)) {
+ 		folio->_mm_ids = 0;
+-		folio->_mm_id_mapcount[0] = -1;
+-		folio->_mm_id_mapcount[1] = -1;
++		/*
++		 * One-shot initialization of both mapcount slots to -1.
++		 * Using 'unsigned long' ensures cross-arch compatibility:
++		 * - 32-bit: Fills both short slots (0xFFFF each)
++		 * - 64-bit: Fills both int slots (0xFFFFFFFF each)
++		 */
++		folio->_mm_id_mapcounts = -1UL;
+ 	}
+ 	if (IS_ENABLED(CONFIG_64BIT) || order > 1) {
+ 		atomic_set(&folio->_pincount, 0);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index bbfd8e4ce0df..f5c5829c4bfa 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -976,12 +976,11 @@ static int free_tail_page_prepare(struct page *head_page, struct page *page)
+ 			goto out;
+ 		}
+ 		if (IS_ENABLED(CONFIG_MM_ID)) {
+-			if (unlikely(folio->_mm_id_mapcount[0] != -1)) {
+-				bad_page(page, "nonzero mm mapcount 0");
+-				goto out;
+-			}
+-			if (unlikely(folio->_mm_id_mapcount[1] != -1)) {
+-				bad_page(page, "nonzero mm mapcount 1");
++			if (unlikely(folio->_mm_id_mapcounts != -1UL)) {
++				if (folio->_mm_id_mapcount[0] != -1)
++					bad_page(page, "nonzero mm mapcount 0");
++				if (folio->_mm_id_mapcount[1] != -1)
++					bad_page(page, "nonzero mm mapcount 1");
+ 				goto out;
+ 			}
+ 		}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
