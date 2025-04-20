@@ -1,120 +1,117 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF123A9
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 02:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C78D515;
+	Sun, 20 Apr 2025 02:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745115976; cv=none; b=VL+9Gd+JpkUy2sFCO+hDvU9T13nAeWczC/dQJ/nQ3GzhHKilwCmAXqA6iSOTP71FLWxODwUfJddfKC6CWDcooee6IMENbMzW5iw8CRXiBMQPVebf+WXmGYoTjkldQFRp3bU0729MD7x7VTFD+ZVqvpMT70ExuIVVLL9/uDa37XM=
+	t=1745116459; cv=none; b=gsyho8UdIik3W43YVk+SlOV4qVsngoRQgzi8SqjNYCeEkHrOdF9tLoJ6oLmSStw3a6dZ0ZxJXpK+Q057E9F0941NTpoMHdPxKGJ1ExWkv8hud+PPYmj9xRclk3RyCPUFEzf2td5UaX8ZrgSGtrL4nOkMJQQu1vBJwUwYuBYeJyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745115976; c=relaxed/simple;
-	bh=QlvYbnjmX+W9K5stFkZ0L0iTSHEa3C6CvwYAW0xyphA=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=tVY1zLIJCx00x6lXGup1oTDgXFFNAj0DIHFaNrwcdaG5Jj2YzFFeUukpnBsmSUdwyk38pqU1EAtQRjdUB4haM8hfsNCLWjReZrh8cEBRkfgw80ErP4XPp4//SXG2df4EHM7yRRylT8nGGxf2pQ/j8VrDxAE1gvNVBiUdXi3acKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaz/z6VJ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745116459; c=relaxed/simple;
+	bh=zpRG+4ESqx8weMv/lLvyN70WbZRncAlm97xmEM8W+zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQ3B8vT/nH3X8ETdSkhRTgfmZt7I/P8oiO/gjOCXMgerQUempUY4/e2LsYkOx6j0sLuU4H7538R1KlShcvKNurZ5J4jVnEebw3x+7dAY0yrkh/ZiTBdVX6TOKOoLaEKpBdtVfz9+SFgusvGVb8kO0Gry81SUWbElkFWQQlBoXrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYs2DN2H; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaz/z6VJ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2263428c8baso400025ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 19:26:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYs2DN2H"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af51596da56so2363593a12.0;
+        Sat, 19 Apr 2025 19:34:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745115974; x=1745720774; darn=vger.kernel.org;
-        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PwmHDGV+N70/f3UyaxNCX6reyKyfr9ddRKfVtg5RWn0=;
-        b=oaz/z6VJfW8GNfbAfJFuqWJ2UTrIDavrjS9USzjjVzms+GvlqjDKTB9+FL5Ew2nfH+
-         38ucfc5rBzX5HepPCL3AIpnVzp96WVBQ3LhF6BwUyaAbPmTOzw5yq+muzwu6i4WpTc5g
-         k7OPyedj9j9/jxYjTISBTytAwkKDtqQdOJ/Tqebx/AX3ue/2A8oN/euYfzzQ7o29OukK
-         w7Qp5D/uf8Qnq5AXlHvMT0kBRvcBfdZD8pTmnp/uGyQTzd+CQvs49GGI2cs+N8dB0Aae
-         vVjk93AqNRsTqL3lYyNNmUS5gqHZzwz5zuJxS6ePpPokgw7xD+rwOsh/m0Sbmuf+3pMJ
-         PiQQ==
+        d=gmail.com; s=20230601; t=1745116457; x=1745721257; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cer7pacIvzGQHZLSRkFuB7iMRA/qUESA+zB+RrPnUOs=;
+        b=aYs2DN2HDv7zd4jqBfl/QQZJZJONrVY6DNuvOwY7G+tU3CsAWcLenY/BebTaERZMDm
+         7W/1JzNbYSLnRJu2oAMmuEi/eMsnIjneRnGrSXLRoAzKPyCAa8vcBxhTAMLjnLA/YWY6
+         cYyCwzSMvOIbQo71VUCkZBa7Qiezjijn4A78DnVHOXjPMyGYOQ+6mTYq0Bu+XsfG07uZ
+         oLEieoEZm836Aa5SJUQxdWqmkP5RGR/lsvTrbEOKV+IjiLGbLxWRDryN2JVerrwI0wti
+         NCUhby/rtrX/g5czDS/9wH6oj7qyiOHA6bqoF3yMbluUI1iLWFkE1bZ2aZ6rsd+JR92+
+         Jz9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745115974; x=1745720774;
-        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PwmHDGV+N70/f3UyaxNCX6reyKyfr9ddRKfVtg5RWn0=;
-        b=Ax0Lg2nxyw4tGty5EMGJiASZbhp6DgTSjRpSQ7FEGBIumBMykFMqtaIwOAXiX1zx4F
-         Jz7WHXADwEsHWvGWmXIzj7Mtzy53REIX3NrMp15oDUVAJ/izgFo3pJkoi7h7qPrR4+qv
-         mkJR29jQZ/r0Yfh3SbHVMNKkT0LNBjgqyH2vxlH68IHYdKUNIlDzo/YnnJuEs3+uzs+/
-         EBqwZBY1ZxGvyARSvqlBi0FCd4kHdhCVY9oSqhC0Kg1+JATuqRaZFiKp55VOJlwOKr7w
-         iy4K2R+JJlqPpEvcxWUaW+hKdI/EYQs478NNYekoqPu0z7wpRBtEpznTHzKlhwjSlNjY
-         9+8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUqv06OSX9Dj606Hqh/8DyAK2Rip2zr0WOdFJj9s6vjgVMVI7D1/+00EWDg6P8yJEc5lL3JdZhImlzzaOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz3ZAaegw09B3OXU3nhu2zYUYS10C1kuteYbY0NvDjIKAPK5Fo
-	fgxCTR7D5ig83SfuwMxUKOOZ5G7/NV7gCsE5wdV3tWU0RBcNTfQq/vAfS3z8nI4Syp/hmjkRt5K
-	Lzw==
-X-Gm-Gg: ASbGnctv0wYvcVaWbevnykBJm0z6SesAdVVBVC0L08Iv4W+NYQK6MuvIg02D39rcJuz
-	O41Ose8sqDAUm2TqUVQi1ZIYmN2JXFtEmUbs8xM06x63a9M1hXn6HNHzURjbHcuZEir1xZibsi+
-	8PfQbVL9qNIwpYZg/hDRE65xYdRwbpTDJhoU7TMPTNIIieZZiJtmbFBZ0TTPuKqYRn3XAcodY2F
-	fDJSpC/ZfTGB+keuigMhBqIT60myfdVjJa0qHrKYIEnZj2cHRwzX3SwSwf04tw2XfQXAcQ8se04
-	b30YntNMowAeRpR6c2ZejDT+f9YrdObb1ePTwscSvqtzrYEqAfyxqKCtY7E2hMCs03pAVknvKoj
-	STahq+jPHEEHS4fqzEO7bpX73+107vl3wSvQ=
-X-Google-Smtp-Source: AGHT+IGnLUYbDggjdUQLI5hza7vToJkfmKyNR75xrDRYJIxY+Hnlxo9WBkXTYtO4CsdL2gGRVNS7tw==
-X-Received: by 2002:a17:903:8c6:b0:220:c905:689f with SMTP id d9443c01a7336-22c54680d66mr4584665ad.25.1745115973210;
-        Sat, 19 Apr 2025 19:26:13 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:3e8e:d566:514d:339b] ([2a00:79e0:2eb0:8:3e8e:d566:514d:339b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c04afsm3964752b3a.23.2025.04.19.19.26.12
+        d=1e100.net; s=20230601; t=1745116457; x=1745721257;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cer7pacIvzGQHZLSRkFuB7iMRA/qUESA+zB+RrPnUOs=;
+        b=C7Cbe9UJ8XFxZBeHjtAFgIi+xWdNJ8eJuxkVqEZWQfdUOVAfJqe1DKhpZu6MaqVcVH
+         YWJLNOiWDDq8frW6OnJrtrtgU09e8r4rXKyYIfEGCMs+0cg8JmQ3sAbKeYXGxkZs8eJL
+         IrV7HcWGA8w/sw4O+HsvUFqaggobjDjHcRNaoLZt4MMZxUrG444QC7XhkoKr7vsMpfAL
+         YhCPVweoXCwJYJ4M5TqwCBT/m03g0tbZJHNSjOK0H+O2KK0fMoBVBNxFqtb1rYr0pD4F
+         C+nVL/YQSTICygKjihGnCTthUAOoJ6BAXDF4PyT8J6XdjXpqa9B94k0mScCovWEgzJo4
+         9Nig==
+X-Forwarded-Encrypted: i=1; AJvYcCUgYOpVZA8G9RAdkev5S7X0tX63G/zWpoKsnTkrkZ6yk7jFkWwcEAzYcuvMjeYPXYcjatqzP5HRFCU=@vger.kernel.org, AJvYcCWjtWT/INhDZU7wjM0nVRcN7eIjyBEouQ9aqqgI0rw8BQ5mGJ0pigobJgUYAeDstY8zIWxbWZjx4X+5P9Hf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8kqjp7vzJCmWZMTXmFJAdMoSdX52fLtpUGAt/1Ff0Grr1Yz35
+	qJRXN4A+FChBGomRD1741j1cZP8Ac/7bOltW6pI1IUykG2VLU/DU
+X-Gm-Gg: ASbGnct02TO0Zmfa2GnOp1oWETxuSp1RBoMveRThUB1WEM07i7wt/otab/snQuQZX8f
+	1YJHSxl01+28vr8hxfLo7Uuie5AoB7RL9UIdBP0zEQZDZc7WO3ihYtZtjHsFH0PH5lS9+kvQI2J
+	ghP+22qiYbqKoMNA0HY+zOAnBNHIQ3kPA3LSeZu2yWqjWj7miLdgwbIpVUg0EbcFTQ00E48EmXA
+	u+pVA6Zbk8VmHfq40KE6Gc7CDOVN4KhgWGH7BtGRN7tH7ZEc45kUR66ih/nE8QhMQgx5qkYh1E7
+	DJwicQ88ltlu95Y1v6pROUbf+3hUV39rmBNwBuGd
+X-Google-Smtp-Source: AGHT+IEDZ1t1jMw2FiN3A0cP9gyJ3a09UAw7Kj90kwun9fTwMj5UtoOryCIOPgp/BHuqqhth5Rto+A==
+X-Received: by 2002:a17:902:ce8c:b0:224:160d:3f54 with SMTP id d9443c01a7336-22c535ad0f8mr114306245ad.31.1745116457247;
+        Sat, 19 Apr 2025 19:34:17 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c05dcsm3962485b3a.27.2025.04.19.19.34.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 19:26:12 -0700 (PDT)
-Date: Sat, 19 Apr 2025 19:26:11 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Christoph Lameter <cl@linux.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Vlastimil Babka <vbabka@suse.cz>
-cc: Roman Gushchin <roman.gushchin@linux.dev>, 
-    Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org, 
-    linux-kernel@vger.kernel.org
-Subject: [patch] mm, slab: show total unreclaimable slab footprint on oom
-Message-ID: <93c5936a-fbcf-20a5-af1d-bee840e18d39@google.com>
+        Sat, 19 Apr 2025 19:34:16 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 7EE8F43F1C0F; Sun, 20 Apr 2025 09:34:10 +0700 (WIB)
+Date: Sun, 20 Apr 2025 09:34:10 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] docs: namespace: Tweak and reword resource control doc
+Message-ID: <aARdIqU6Y7baKrSk@archie.me>
+References: <20250419150428.1129352-1-jsavitz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="26tnTgdynCWnioaZ"
+Content-Disposition: inline
+In-Reply-To: <20250419150428.1129352-1-jsavitz@redhat.com>
 
-When there is a large amount of unreclaimable slab memory in use at the
-time of oom kill, what really matters is the memory footprint that it
-consumes rather than only the number of active and total objects.
 
-Include the memory footprint in the kernel log for debugging.
+--26tnTgdynCWnioaZ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This may overestimate the amount of memory since slab pages may not be
-all of the same order, but it gives a useful upper bound for
-understanding where all the memory is going similar to slabinfo.
+On Sat, Apr 19, 2025 at 11:04:28AM -0400, Joel Savitz wrote:
+> -There are a lot of kinds of objects in the kernel that don't have
+> -individual limits or that have limits that are ineffective when a set
+> -of processes is allowed to switch user ids.  With user namespaces
+> -enabled in a kernel for people who don't trust their users or their
+> -users programs to play nice this problems becomes more acute.
+> +The kernel contains many kinds of objects that either don't have
+> +individual limits or that have limits which are ineffective when
+> +a set of processes is allowed to switch their UID. On a system
+> +where there admins don't trust their users or their users' programs,
+> +user namespaces expose the system to potential misuse of resources.
 
-At the same time, align the fields for some lengthy slab cache names such
-as fsnotify_mark_connector.
+Do you mean "when there are admins who don't trust ..." or "where admins do=
+n't
+trust ..."?
 
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- mm/slab_common.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Confused...
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1145,7 +1145,7 @@ void dump_unreclaimable_slab(void)
- 	}
- 
- 	pr_info("Unreclaimable slab info:\n");
--	pr_info("Name                      Used          Total\n");
-+	pr_info("Name                            Active_objs   Total_objs       Memory\n");
- 
- 	list_for_each_entry(s, &slab_caches, list) {
- 		if (s->flags & SLAB_RECLAIM_ACCOUNT)
-@@ -1154,9 +1154,10 @@ void dump_unreclaimable_slab(void)
- 		get_slabinfo(s, &sinfo);
- 
- 		if (sinfo.num_objs > 0)
--			pr_info("%-17s %10luKB %10luKB\n", s->name,
--				(sinfo.active_objs * s->size) / 1024,
--				(sinfo.num_objs * s->size) / 1024);
-+			pr_info("%-30s %10luKB %10luKB %10luKB\n", s->name,
-+				(sinfo.active_objs * s->size) >> 10,
-+				(sinfo.num_objs * s->size) >> 10,
-+				sinfo.num_slabs << (sinfo.cache_order + PAGE_SHIFT - 10));
- 	}
- 	mutex_unlock(&slab_mutex);
- }
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--26tnTgdynCWnioaZ
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaARdHAAKCRD2uYlJVVFO
+ozKKAP4y74GboL6dwb9pcAYpiirdpARFK999Ta1CwtOXo0RM0QEA9jSOmOeXnBP4
+DOBtXmaFFeijLoNfkB//yZnQQGGxAAg=
+=OvWN
+-----END PGP SIGNATURE-----
+
+--26tnTgdynCWnioaZ--
