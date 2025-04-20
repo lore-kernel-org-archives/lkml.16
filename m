@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6A0215F6B;
-	Sun, 20 Apr 2025 19:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4814521B9FC;
+	Sun, 20 Apr 2025 19:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745177260; cv=none; b=MIsXri589E4Q77qqDpGf6bZil5d1fmMX8iXsALpuidTLwgi4Tj/o0FPCUVk4Y8gu8XSLFNeEZ54S5Dwrwb68lWKfp5CjSZo0e+SutfEkqmlFNQgZmGgfhVoFFO1j6ImiV1ZauZ0QcabjIf0I1jIog3KAp+p8S6Et/g00snZtICg=
+	t=1745177262; cv=none; b=jUeDewIU1zbw5aa3Z59y7wKoJ9iRRZasL1ey98RrNF5XQvUbuSa9+DuzZa+r21r6tsslPeBzkyEG1GBVqHpD18rE1fcLRvvfzfvlvOK/NBKW9eC/NTcS/PTqYOMMKssRgxJaO6TUyby/sVgvyU0lhpgVWOGMW44jztkGjLJPv28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745177260; c=relaxed/simple;
-	bh=07fhhYma+1YUcmrHOr5BYh37/3JJX1SJ3+293Aux6XM=;
+	s=arc-20240116; t=1745177262; c=relaxed/simple;
+	bh=u+OK7tFveVR0om3+lNaIeYM0HzeTeASq3YZREbliyFs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qGLgtelp6HpEHBf/CFRapYCcdu8LJj+mmz5FY79yiu9FhC/GLAHHFSHMnJCNEcywN6Ps81Y+FsQAo7ddURVgPSA+vyF4yMoRrs+rf4TfiB4xcl66JxzsKVUlwRjGuFf2JFCR7YVH4Fpp+31Jpq7T+tAUG3zJ1aUQQerj2uL8YAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awAuO20g; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aj9r/GR/6CvFN3hvu4zaSuAOWlR23zhAozeZE2h0ZweKIqJwP77f7qJi7ELhkhg4hEekf3DHkLRZ3yGLYzYmEhiMJJj75ewII5cpZhw4iYiH6lt05e6nk7vn9cqvGjydND5TpCEKA3doLzxqFKBuo4ggpZU5cKrS3/gStp7Z978=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLQurH4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awAuO20g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ECC7C4CEF7;
-	Sun, 20 Apr 2025 19:27:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLQurH4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CDADC4CEF0;
+	Sun, 20 Apr 2025 19:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745177259;
-	bh=07fhhYma+1YUcmrHOr5BYh37/3JJX1SJ3+293Aux6XM=;
+	s=k20201202; t=1745177261;
+	bh=u+OK7tFveVR0om3+lNaIeYM0HzeTeASq3YZREbliyFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=awAuO20gApCxC08ZoLWf6wa29NaGj7w2LM+jz+rpkOjmD4MqPFU/mWMoVpkHZiajP
-	 iLBgTmWQFCWfO/vtcnEXPbTjJiss35GZOL4hF+LNCsQVXeSLIvCJ+iBFld1YTen2Dg
-	 wQJDb/vQRaZwawkqsyLX/1r9DeZ/KosIKXXj9+5Kym6sUy+yu4qsfpZSIAdk0I5Q6Q
-	 YToY/1DvOGBoHkmP0hvCjnS5sRPYs8ACqSIDR5t3Q39M2qdR3WqPajYFdEjrS4IZa3
-	 88/J3sXgGdWGvidlM/lG62UKYpFkROSowHPBBBQkhPZYpGEMlw3AZpuZEr9Dn27LaU
-	 pl9/8qNlZ/JIw==
+	b=FLQurH4mvImNRkbdsejvvFmWVFmrkhdpmyEEO9MnBmWuy8/+SmxN9LYIlDW3djSE2
+	 /1xoV9sY7d/MZAwj5oFvWgyU6pQZbjgUyPxdVsKOsF54vbz1mutBkw4axN+VYwfYCn
+	 Ms3bMFuXRd+OFvsjAgJkn0F3MuNidZw7NM055c+XbPkkksj/I2/vpuQiUbZOXRbJ5V
+	 rxBJgpMYScXs1Mb3njNRNfY9LqY/zYKdhi1Jeb+PH0l97Xt5hRoviXNzmARfwnxeka
+	 cWUOZmm71r1VQuU7NOBG4ny/tFUv8B9hOAkPB6FqaDKziniWnoCqNa69YcrMoEtg7/
+	 cK2/icIun6j9w==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-arch@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc: linux-arch@vger.kernel.org,
 	x86@kernel.org,
 	"Jason A . Donenfeld" <Jason@zx2c4.com>,
 	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2 05/13] crypto: arm - move library functions to arch/arm/lib/crypto/
-Date: Sun, 20 Apr 2025 12:26:01 -0700
-Message-ID: <20250420192609.295075-6-ebiggers@kernel.org>
+Subject: [PATCH v2 10/13] crypto: s390 - move library functions to arch/s390/lib/crypto/
+Date: Sun, 20 Apr 2025 12:26:06 -0700
+Message-ID: <20250420192609.295075-11-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250420192609.295075-1-ebiggers@kernel.org>
 References: <20250420192609.295075-1-ebiggers@kernel.org>
@@ -55,286 +55,132 @@ Content-Transfer-Encoding: 8bit
 From: Eric Biggers <ebiggers@google.com>
 
 Continue disentangling the crypto library functions from the generic
-crypto infrastructure by moving the arm BLAKE2s, ChaCha, and Poly1305
-library functions into a new directory arch/arm/lib/crypto/ that does
-not depend on CRYPTO.  This mirrors the distinction between crypto/ and
-lib/crypto/.
+crypto infrastructure by moving the s390 ChaCha library functions into a
+new directory arch/s390/lib/crypto/ that does not depend on CRYPTO.
+This mirrors the distinction between crypto/ and lib/crypto/.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- MAINTAINERS                                   |  1 +
- arch/arm/crypto/Kconfig                       | 23 ------------------
- arch/arm/crypto/Makefile                      | 14 +----------
- arch/arm/lib/Makefile                         |  2 ++
- arch/arm/lib/crypto/.gitignore                |  2 ++
- arch/arm/lib/crypto/Kconfig                   | 24 +++++++++++++++++++
- arch/arm/lib/crypto/Makefile                  | 24 +++++++++++++++++++
- arch/arm/{ => lib}/crypto/blake2s-core.S      |  0
- arch/arm/{ => lib}/crypto/blake2s-glue.c      |  0
- arch/arm/{ => lib}/crypto/chacha-glue.c       |  0
- arch/arm/{ => lib}/crypto/chacha-neon-core.S  |  0
- .../arm/{ => lib}/crypto/chacha-scalar-core.S |  0
- arch/arm/{ => lib}/crypto/poly1305-armv4.pl   |  0
- arch/arm/{ => lib}/crypto/poly1305-glue.c     |  0
- lib/crypto/Kconfig                            |  6 +++++
- 15 files changed, 60 insertions(+), 36 deletions(-)
- create mode 100644 arch/arm/lib/crypto/.gitignore
- create mode 100644 arch/arm/lib/crypto/Kconfig
- create mode 100644 arch/arm/lib/crypto/Makefile
- rename arch/arm/{ => lib}/crypto/blake2s-core.S (100%)
- rename arch/arm/{ => lib}/crypto/blake2s-glue.c (100%)
- rename arch/arm/{ => lib}/crypto/chacha-glue.c (100%)
- rename arch/arm/{ => lib}/crypto/chacha-neon-core.S (100%)
- rename arch/arm/{ => lib}/crypto/chacha-scalar-core.S (100%)
- rename arch/arm/{ => lib}/crypto/poly1305-armv4.pl (100%)
- rename arch/arm/{ => lib}/crypto/poly1305-glue.c (100%)
+ arch/s390/crypto/Kconfig                 | 6 ------
+ arch/s390/crypto/Makefile                | 3 ---
+ arch/s390/lib/Makefile                   | 1 +
+ arch/s390/lib/crypto/Kconfig             | 7 +++++++
+ arch/s390/lib/crypto/Makefile            | 4 ++++
+ arch/s390/{ => lib}/crypto/chacha-glue.c | 0
+ arch/s390/{ => lib}/crypto/chacha-s390.S | 0
+ arch/s390/{ => lib}/crypto/chacha-s390.h | 0
+ lib/crypto/Kconfig                       | 3 +++
+ 9 files changed, 15 insertions(+), 9 deletions(-)
+ create mode 100644 arch/s390/lib/crypto/Kconfig
+ create mode 100644 arch/s390/lib/crypto/Makefile
+ rename arch/s390/{ => lib}/crypto/chacha-glue.c (100%)
+ rename arch/s390/{ => lib}/crypto/chacha-s390.S (100%)
+ rename arch/s390/{ => lib}/crypto/chacha-s390.h (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a2604c13f11b4..d0d1968e323aa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6286,10 +6286,11 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git
- F:	Documentation/crypto/
- F:	Documentation/devicetree/bindings/crypto/
- F:	arch/*/crypto/
-+F:	arch/*/lib/crypto/
- F:	crypto/
- F:	drivers/crypto/
- F:	include/crypto/
- F:	include/linux/crypto*
- F:	lib/crypto/
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index 3530e7c80793a..1f889d6bab77d 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -44,28 +44,10 @@ config CRYPTO_NHPOLY1305_NEON
- 	  NHPoly1305 hash function (Adiantum)
+diff --git a/arch/s390/crypto/Kconfig b/arch/s390/crypto/Kconfig
+index e88d9cd256ef5..a2bfd6eef0ca3 100644
+--- a/arch/s390/crypto/Kconfig
++++ b/arch/s390/crypto/Kconfig
+@@ -97,16 +97,10 @@ config CRYPTO_DES_S390
+ 	  Architecture: s390
  
- 	  Architecture: arm using:
- 	  - NEON (Advanced SIMD) extensions
+ 	  As of z990 the ECB and CBC mode are hardware accelerated.
+ 	  As of z196 the CTR mode is hardware accelerated.
  
--config CRYPTO_POLY1305_ARM
+-config CRYPTO_CHACHA_S390
 -	tristate
--	select CRYPTO_ARCH_HAVE_LIB_POLY1305
--	default CRYPTO_LIB_POLY1305_INTERNAL
--
--config CRYPTO_BLAKE2S_ARM
--	bool "Hash functions: BLAKE2s"
--	select CRYPTO_ARCH_HAVE_LIB_BLAKE2S
--	help
--	  BLAKE2s cryptographic hash function (RFC 7693)
--
--	  Architecture: arm
--
--	  This is faster than the generic implementations of BLAKE2s and
--	  BLAKE2b, but slower than the NEON implementation of BLAKE2b.
--	  There is no NEON implementation of BLAKE2s, since NEON doesn't
--	  really help with it.
--
- config CRYPTO_BLAKE2B_NEON
- 	tristate "Hash functions: BLAKE2b (NEON)"
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_BLAKE2B
- 	help
-@@ -204,12 +186,7 @@ config CRYPTO_AES_ARM_CE
- 	     and IEEE 1619)
- 
- 	  Architecture: arm using:
- 	  - ARMv8 Crypto Extensions
- 
--config CRYPTO_CHACHA20_NEON
--	tristate
+-	select CRYPTO_LIB_CHACHA_GENERIC
 -	select CRYPTO_ARCH_HAVE_LIB_CHACHA
 -	default CRYPTO_LIB_CHACHA_INTERNAL
 -
- endmenu
- 
-diff --git a/arch/arm/crypto/Makefile b/arch/arm/crypto/Makefile
-index 3d0e23ff9e746..ecabe6603e080 100644
---- a/arch/arm/crypto/Makefile
-+++ b/arch/arm/crypto/Makefile
-@@ -7,14 +7,11 @@ obj-$(CONFIG_CRYPTO_AES_ARM) += aes-arm.o
- obj-$(CONFIG_CRYPTO_AES_ARM_BS) += aes-arm-bs.o
- obj-$(CONFIG_CRYPTO_SHA1_ARM) += sha1-arm.o
- obj-$(CONFIG_CRYPTO_SHA1_ARM_NEON) += sha1-arm-neon.o
- obj-$(CONFIG_CRYPTO_SHA256_ARM) += sha256-arm.o
- obj-$(CONFIG_CRYPTO_SHA512_ARM) += sha512-arm.o
--obj-$(CONFIG_CRYPTO_BLAKE2S_ARM) += libblake2s-arm.o
- obj-$(CONFIG_CRYPTO_BLAKE2B_NEON) += blake2b-neon.o
--obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
--obj-$(CONFIG_CRYPTO_POLY1305_ARM) += poly1305-arm.o
- obj-$(CONFIG_CRYPTO_NHPOLY1305_NEON) += nhpoly1305-neon.o
- obj-$(CONFIG_CRYPTO_CURVE25519_NEON) += curve25519-neon.o
- 
- obj-$(CONFIG_CRYPTO_AES_ARM_CE) += aes-arm-ce.o
- obj-$(CONFIG_CRYPTO_SHA1_ARM_CE) += sha1-arm-ce.o
-@@ -27,34 +24,25 @@ sha1-arm-y	:= sha1-armv4-large.o sha1_glue.o
- sha1-arm-neon-y	:= sha1-armv7-neon.o sha1_neon_glue.o
- sha256-arm-neon-$(CONFIG_KERNEL_MODE_NEON) := sha256_neon_glue.o
- sha256-arm-y	:= sha256-core.o sha256_glue.o $(sha256-arm-neon-y)
- sha512-arm-neon-$(CONFIG_KERNEL_MODE_NEON) := sha512-neon-glue.o
- sha512-arm-y	:= sha512-core.o sha512-glue.o $(sha512-arm-neon-y)
--libblake2s-arm-y:= blake2s-core.o blake2s-glue.o
- blake2b-neon-y  := blake2b-neon-core.o blake2b-neon-glue.o
- sha1-arm-ce-y	:= sha1-ce-core.o sha1-ce-glue.o
- sha2-arm-ce-y	:= sha2-ce-core.o sha2-ce-glue.o
- aes-arm-ce-y	:= aes-ce-core.o aes-ce-glue.o
- ghash-arm-ce-y	:= ghash-ce-core.o ghash-ce-glue.o
--chacha-neon-y := chacha-scalar-core.o chacha-glue.o
--chacha-neon-$(CONFIG_KERNEL_MODE_NEON) += chacha-neon-core.o
--poly1305-arm-y := poly1305-core.o poly1305-glue.o
- nhpoly1305-neon-y := nh-neon-core.o nhpoly1305-neon-glue.o
- curve25519-neon-y := curve25519-core.o curve25519-glue.o
- 
- quiet_cmd_perl = PERL    $@
-       cmd_perl = $(PERL) $(<) > $(@)
- 
- $(obj)/%-core.S: $(src)/%-armv4.pl
- 	$(call cmd,perl)
- 
--clean-files += poly1305-core.S sha256-core.S sha512-core.S
-+clean-files += sha256-core.S sha512-core.S
- 
- aflags-thumb2-$(CONFIG_THUMB2_KERNEL)  := -U__thumb2__ -D__thumb2__=1
- 
- AFLAGS_sha256-core.o += $(aflags-thumb2-y)
- AFLAGS_sha512-core.o += $(aflags-thumb2-y)
+ config CRYPTO_HMAC_S390
+ 	tristate "Keyed-hash message authentication code: HMAC"
+ 	select CRYPTO_HASH
+ 	help
+ 	  s390 specific HMAC hardware support for SHA224, SHA256, SHA384 and
+diff --git a/arch/s390/crypto/Makefile b/arch/s390/crypto/Makefile
+index 14dafadbcbed4..e3853774e1a3a 100644
+--- a/arch/s390/crypto/Makefile
++++ b/arch/s390/crypto/Makefile
+@@ -9,12 +9,9 @@ obj-$(CONFIG_CRYPTO_SHA512_S390) += sha512_s390.o sha_common.o
+ obj-$(CONFIG_CRYPTO_SHA3_256_S390) += sha3_256_s390.o sha_common.o
+ obj-$(CONFIG_CRYPTO_SHA3_512_S390) += sha3_512_s390.o sha_common.o
+ obj-$(CONFIG_CRYPTO_DES_S390) += des_s390.o
+ obj-$(CONFIG_CRYPTO_AES_S390) += aes_s390.o
+ obj-$(CONFIG_CRYPTO_PAES_S390) += paes_s390.o
+-obj-$(CONFIG_CRYPTO_CHACHA_S390) += chacha_s390.o
+ obj-$(CONFIG_S390_PRNG) += prng.o
+ obj-$(CONFIG_CRYPTO_GHASH_S390) += ghash_s390.o
+ obj-$(CONFIG_CRYPTO_HMAC_S390) += hmac_s390.o
+ obj-y += arch_random.o
 -
--# massage the perlasm code a bit so we only get the NEON routine if we need it
--poly1305-aflags-$(CONFIG_CPU_V7) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=5
--poly1305-aflags-$(CONFIG_KERNEL_MODE_NEON) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=7
--AFLAGS_poly1305-core.o += $(poly1305-aflags-y) $(aflags-thumb2-y)
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index 007874320937d..39ffabd3cf2a2 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -3,10 +3,12 @@
- # linux/arch/arm/lib/Makefile
+-chacha_s390-y := chacha-glue.o chacha-s390.o
+diff --git a/arch/s390/lib/Makefile b/arch/s390/lib/Makefile
+index 14bbfe50033c7..fce4edbe8a078 100644
+--- a/arch/s390/lib/Makefile
++++ b/arch/s390/lib/Makefile
+@@ -1,10 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0
  #
- # Copyright (C) 1995-2000 Russell King
+ # Makefile for s390-specific library files..
  #
  
 +obj-y += crypto/
-+
- lib-y		:= changebit.o csumipv6.o csumpartial.o               \
- 		   csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
- 		   delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
- 		   memmove.o memset.o setbit.o                        \
- 		   strchr.o strrchr.o                                 \
-diff --git a/arch/arm/lib/crypto/.gitignore b/arch/arm/lib/crypto/.gitignore
+ lib-y += delay.o string.o uaccess.o find.o spinlock.o tishift.o
+ lib-y += csum-partial.o
+ obj-y += mem.o xor.o
+ lib-$(CONFIG_KPROBES) += probes.o
+ lib-$(CONFIG_UPROBES) += probes.o
+diff --git a/arch/s390/lib/crypto/Kconfig b/arch/s390/lib/crypto/Kconfig
 new file mode 100644
-index 0000000000000..0d47d4f21c6de
+index 0000000000000..b79fd91af9fe1
 --- /dev/null
-+++ b/arch/arm/lib/crypto/.gitignore
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+poly1305-core.S
-diff --git a/arch/arm/lib/crypto/Kconfig b/arch/arm/lib/crypto/Kconfig
-new file mode 100644
-index 0000000000000..181f138d563b6
---- /dev/null
-+++ b/arch/arm/lib/crypto/Kconfig
-@@ -0,0 +1,24 @@
++++ b/arch/s390/lib/crypto/Kconfig
+@@ -0,0 +1,7 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +
-+config CRYPTO_BLAKE2S_ARM
-+	bool "Hash functions: BLAKE2s"
-+	select CRYPTO_ARCH_HAVE_LIB_BLAKE2S
-+	help
-+	  BLAKE2s cryptographic hash function (RFC 7693)
-+
-+	  Architecture: arm
-+
-+	  This is faster than the generic implementations of BLAKE2s and
-+	  BLAKE2b, but slower than the NEON implementation of BLAKE2b.
-+	  There is no NEON implementation of BLAKE2s, since NEON doesn't
-+	  really help with it.
-+
-+config CRYPTO_CHACHA20_NEON
++config CRYPTO_CHACHA_S390
 +	tristate
 +	default CRYPTO_LIB_CHACHA_INTERNAL
++	select CRYPTO_LIB_CHACHA_GENERIC
 +	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+
-+config CRYPTO_POLY1305_ARM
-+	tristate
-+	default CRYPTO_LIB_POLY1305_INTERNAL
-+	select CRYPTO_ARCH_HAVE_LIB_POLY1305
-diff --git a/arch/arm/lib/crypto/Makefile b/arch/arm/lib/crypto/Makefile
+diff --git a/arch/s390/lib/crypto/Makefile b/arch/s390/lib/crypto/Makefile
 new file mode 100644
-index 0000000000000..dbdf376e25336
+index 0000000000000..06c2cf77178ef
 --- /dev/null
-+++ b/arch/arm/lib/crypto/Makefile
-@@ -0,0 +1,24 @@
++++ b/arch/s390/lib/crypto/Makefile
+@@ -0,0 +1,4 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +
-+obj-$(CONFIG_CRYPTO_BLAKE2S_ARM) += libblake2s-arm.o
-+libblake2s-arm-y:= blake2s-core.o blake2s-glue.o
-+
-+obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
-+chacha-neon-y := chacha-scalar-core.o chacha-glue.o
-+chacha-neon-$(CONFIG_KERNEL_MODE_NEON) += chacha-neon-core.o
-+
-+obj-$(CONFIG_CRYPTO_POLY1305_ARM) += poly1305-arm.o
-+poly1305-arm-y := poly1305-core.o poly1305-glue.o
-+
-+quiet_cmd_perl = PERL    $@
-+      cmd_perl = $(PERL) $(<) > $(@)
-+
-+$(obj)/%-core.S: $(src)/%-armv4.pl
-+	$(call cmd,perl)
-+
-+clean-files += poly1305-core.S
-+
-+# massage the perlasm code a bit so we only get the NEON routine if we need it
-+poly1305-aflags-$(CONFIG_CPU_V7) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=5
-+poly1305-aflags-$(CONFIG_KERNEL_MODE_NEON) := -U__LINUX_ARM_ARCH__ -D__LINUX_ARM_ARCH__=7
-+AFLAGS_poly1305-core.o += $(poly1305-aflags-y) $(aflags-thumb2-y)
-diff --git a/arch/arm/crypto/blake2s-core.S b/arch/arm/lib/crypto/blake2s-core.S
++obj-$(CONFIG_CRYPTO_CHACHA_S390) += chacha_s390.o
++chacha_s390-y := chacha-glue.o chacha-s390.o
+diff --git a/arch/s390/crypto/chacha-glue.c b/arch/s390/lib/crypto/chacha-glue.c
 similarity index 100%
-rename from arch/arm/crypto/blake2s-core.S
-rename to arch/arm/lib/crypto/blake2s-core.S
-diff --git a/arch/arm/crypto/blake2s-glue.c b/arch/arm/lib/crypto/blake2s-glue.c
+rename from arch/s390/crypto/chacha-glue.c
+rename to arch/s390/lib/crypto/chacha-glue.c
+diff --git a/arch/s390/crypto/chacha-s390.S b/arch/s390/lib/crypto/chacha-s390.S
 similarity index 100%
-rename from arch/arm/crypto/blake2s-glue.c
-rename to arch/arm/lib/crypto/blake2s-glue.c
-diff --git a/arch/arm/crypto/chacha-glue.c b/arch/arm/lib/crypto/chacha-glue.c
+rename from arch/s390/crypto/chacha-s390.S
+rename to arch/s390/lib/crypto/chacha-s390.S
+diff --git a/arch/s390/crypto/chacha-s390.h b/arch/s390/lib/crypto/chacha-s390.h
 similarity index 100%
-rename from arch/arm/crypto/chacha-glue.c
-rename to arch/arm/lib/crypto/chacha-glue.c
-diff --git a/arch/arm/crypto/chacha-neon-core.S b/arch/arm/lib/crypto/chacha-neon-core.S
-similarity index 100%
-rename from arch/arm/crypto/chacha-neon-core.S
-rename to arch/arm/lib/crypto/chacha-neon-core.S
-diff --git a/arch/arm/crypto/chacha-scalar-core.S b/arch/arm/lib/crypto/chacha-scalar-core.S
-similarity index 100%
-rename from arch/arm/crypto/chacha-scalar-core.S
-rename to arch/arm/lib/crypto/chacha-scalar-core.S
-diff --git a/arch/arm/crypto/poly1305-armv4.pl b/arch/arm/lib/crypto/poly1305-armv4.pl
-similarity index 100%
-rename from arch/arm/crypto/poly1305-armv4.pl
-rename to arch/arm/lib/crypto/poly1305-armv4.pl
-diff --git a/arch/arm/crypto/poly1305-glue.c b/arch/arm/lib/crypto/poly1305-glue.c
-similarity index 100%
-rename from arch/arm/crypto/poly1305-glue.c
-rename to arch/arm/lib/crypto/poly1305-glue.c
+rename from arch/s390/crypto/chacha-s390.h
+rename to arch/s390/lib/crypto/chacha-s390.h
 diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
-index 2c6ab80e0cdc4..59135009e4f02 100644
+index 0b06c25eb38a5..db19a7acc2fbf 100644
 --- a/lib/crypto/Kconfig
 +++ b/lib/crypto/Kconfig
-@@ -153,6 +153,12 @@ config CRYPTO_LIB_SHA256
- 	tristate
- 
- config CRYPTO_LIB_SM3
- 	tristate
- 
-+if !KMSAN # avoid false positives from assembly
-+if ARM
-+source "arch/arm/lib/crypto/Kconfig"
+@@ -169,8 +169,11 @@ if PPC
+ source "arch/powerpc/lib/crypto/Kconfig"
+ endif
+ if RISCV
+ source "arch/riscv/lib/crypto/Kconfig"
+ endif
++if S390
++source "arch/s390/lib/crypto/Kconfig"
 +endif
-+endif
-+
+ endif
+ 
  endmenu
 -- 
 2.49.0
