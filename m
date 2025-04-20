@@ -1,63 +1,64 @@
 Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2946020C48A;
-	Sun, 20 Apr 2025 16:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692BE20CCDC;
+	Sun, 20 Apr 2025 16:48:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745167708; cv=none; b=WsB0ZUne78mBycTwbPz3UJKqvqFRlPr+kqGcVDCdNG/fxcwoU7A8Kbms81JJZRWV/nIbPrTcnNtM3r6CruWHXNxSXg5MfU6drP925Lx3QgAC3zcxDO4tv/j0N4vMC9FQrGU2q3OLxn2jhgvlTSll3RtNhaeKugs+C3u9wvDvmAs=
+	t=1745167710; cv=none; b=H1i81MU/cvw3S7gC+D58z1rdJhjjTsBWr2NkXfIaq7jzEezCxpTDjTY2G4UGBAV7zwvCZhuvBWZx6DFpfUCH9aZTcdUlRJ/HR9sxHo2OiZmYrgDNT118/SGxxGTGe9NtIRGhVH8oLchXU1wk/HZ2JZeym9WiyaIlHmxMgF3bvpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745167708; c=relaxed/simple;
-	bh=MmcV+i6ORpTIlVVNnkp4p3q0PDn002foMs78dxHDGxY=;
+	s=arc-20240116; t=1745167710; c=relaxed/simple;
+	bh=uw/+1bsdwBdfgGfUbE0CoCeP34Y3QrghcmLeMHCyRQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B4QXZq63sHqIQPQwRXWk08dTfE2z51BBx+QtY6cvk96zK+WKUjuBAm+943kwTyRLg8BMMvAEyMtIDNsPVC/pndIT2oYgma8TuHGaJtolnV9EBnFfLsmNvCxlM+h9DnGZ4p78k+EYIOZqUBeMWSzatlvXxoiSs2ANAmPEHL9Yj1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=F1zQcCmX; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=LoytHtFkWS8Kq2bfq/5jMQui6qYg/Bx/Rd6QG5i32OEV9qcDWpx1THA0BGQWJ15mv3w3vIl7pBpSABpipt8XprinwbLdHZO8kinqyGKTkWyKNXqd171K+b6YbAY8GTxVTUQz2aWHyzcmH3MAWQ/7a6TrW98VwnpWmFNlvVEYAmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=CmpzNDje; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F1zQcCmX"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so3173140a12.2;
-        Sun, 20 Apr 2025 09:48:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CmpzNDje"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso4621639a12.2;
+        Sun, 20 Apr 2025 09:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1745167705; x=1745772505; darn=vger.kernel.org;
+        d=googlemail.com; s=20230601; t=1745167707; x=1745772507; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o6B760vwD3lkBSm3PWk3A57ArcHkVyL13m2W1khg+TY=;
-        b=F1zQcCmX93JCkRYis6eRF77s/V5C6Rk6cva2jTkVAQpdyFipHMKrCt6FwuvwWytXb0
-         ktE1ELqHW71+4EiI6XuhevJZgIuz5tCZaVxnXwNMTMGhaBoR0mk9SJuzlbEfXFOyE8BF
-         +uftKOuzC83jpxOrv3wBP849tGziagdgSw2GWtZly2CNygc0HcVIsALQMAKiDFQ1BA8h
-         LeKCFwwWDFMaRIX/XacxRHc/c8ribkSuCmy7P9zXnt30RkABRWwPxnjW670wdOgu0Wzq
-         D0UOLG38WC99iiO7KbVzxiUh9aObiiCL8kTnIj0XKh40pUt8N20zoAmQtubDdH5RNaqo
-         0/bQ==
+        bh=5dz4v7wTWh+buxV5bkfnQh5u0ZNU8LLDOpCZ4M3mCLY=;
+        b=CmpzNDjeJb8qg9rAseybeFgO9/RNUChE9A2eHTlxRjBo/i6fsEuNXy6ShY0/XL8Vk0
+         mzP6pcGGgrAX5ho76ibSHmurMSUqlSBeL2Dls03tJVmZG9fSi5FV1L9KwguS+/UyrPxm
+         F4SL0uTaMZyx5+WDo2nCcbfWKSZSITw1bNUbRlebATpm2spvdzXiqwut5e9bFYOAt19K
+         XregUmkj2Z1nmpq5vgi14ljlEbeCLE+C9zt+9yeO5VtUNqqgEFOKsm0otE7oIBH7oaWw
+         odlaygmm/9BW9Ri77julJQUVfclGZFlvQGgfw5QRr5V1bZK6DBcsonU1kz0mt9jPzIAC
+         tVOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745167705; x=1745772505;
+        d=1e100.net; s=20230601; t=1745167707; x=1745772507;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o6B760vwD3lkBSm3PWk3A57ArcHkVyL13m2W1khg+TY=;
-        b=FLBep2LceAS0rxUNJEDexpeGHaRG8ReoWAPvlt9LLQ2xYXABVsStRjZCgiKAujdKFG
-         wkIdMkq1aglZLhvgAcbC93gAy7izolq6kjvHLBCidxfRQo3SqJHUnoMWcRpzHpKhrKOe
-         HsPbLXDD49vDI3uvfT8oHtlxiekWZOphd1YjCYG8doAUVKB9rPA7VcuUbvt8qE37WmBo
-         NZqhNTSHtNIaXOx80VkKubZrLCgHQGNj32k4rEzrGJXLRmFpwYgVt4iE5K2OT0cDYIfR
-         W2L8Yb5sOwbCrqN6YViasieUisUCNThQXTN+gh/7sAmB8HBlYRqnT1DBgifsnT8Ez+Zm
-         0Lfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGE2lm2rK6s3CLz4C5ZCITJi2/rOyoUqpX2BXPjBimkU5PZVNZ7qaoJnEpokbF6LkpeKt6Mvr8X1knGC05@vger.kernel.org, AJvYcCXYVQ0sr5yALumjf9JgFvqdTL4UKeUolPC2cRqC4PwjxhjDQbtdfYXsTa2LTGfkY0Qv3bLShpnD7qeo@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQj71thWaZrG1trzlrGK7Mhhsk4FpBoEJHkCzUImjw/Ic9BmYZ
-	/EF+XUiBVoiVuSTAdlThnzFLnmk0HAsAvD5AmXk/is2b0H0vW4eHaD0QQw==
-X-Gm-Gg: ASbGncu4iYKKUsOUmyVOYzPpc97ArStH2YcZ8XsRarXvKRxzNQIObrzWesbTwn8kIFq
-	R5d4QOiSL00ASbfpJm84fHoghSUPm2cl/wsYH7YuGeeKGiwrxcNRXwJNDn7P7WPCOf3LJPExund
-	VXNf2BDtwaEKrroIoN3s6SPdfiOCfwyOHgUTGFMRmqyWDZxxhZaSKjAaopDAIpdnEN/6toQ+OPd
-	kC8C6zoRfDEiHxsBzWqjSByetntebOF+/q+mU/xjvDf9xEmdF8CfO6/e+BNJ/PuOOIoo5g3gLRT
-	dVxXRYWjfvoZLnbeWhTAklUOxmt7od7yefkRz+SeVOlJL48R2jGjr50cLghFD/4+wPnmzGLaq3+
-	Cso/e0inLvc8q/cn8wnpSAXpcxlWVHXa/k3FUz0B94cbqbCMTQXBPsQ4aCAQRpnCz+g==
-X-Google-Smtp-Source: AGHT+IH/eLbPz2QxTBGbuutkzwofZVG2md1CrF1k2JxxXi3HLjmA0IuJvyPtAWBqRGuXvGc9OuzF1w==
-X-Received: by 2002:a17:906:6a0b:b0:ac3:3d10:6f with SMTP id a640c23a62f3a-acb74ad845cmr846203266b.8.1745167705255;
-        Sun, 20 Apr 2025 09:48:25 -0700 (PDT)
+        bh=5dz4v7wTWh+buxV5bkfnQh5u0ZNU8LLDOpCZ4M3mCLY=;
+        b=UxUj6VAuFpFAEaFAx215VD9heZMcarvFe1ZEMt/ltro7NV0UIgXP7n+iPpXYT3j1dV
+         Gi5GxkHJt+YkgM6UBVcVV0w1hJIuTRc6jRGTyG/JEHtQomqtg99mjiye8q4TWdiPefLR
+         C1Dgh8+xn3z05Muh7THg9c/t6ug1j0NrAut1bsTkT5OBlqtJbDwZgsNCpIjvpvh9OBq8
+         2RUqEvv6iILXc1Vj71AoUFvNucNt1OB/iKS3NGv3rqIIj3nifISyzjKbWuSul/x+w+iL
+         Np+10/QmQD5XEfPYEug90pTvQQ3pR8kFg84BgWhJrMUMtL24+yR7Q4PzdqcEUK0j37u6
+         rdMw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Lh8owJY4K1K3xqgf553FX5vqIwiAEQYIvt3Auoq55wNeFbawPtIOab7J49Tgl/ohrG05RtYCrHBhHmF1@vger.kernel.org, AJvYcCVDcZt3STWVqs+ex836gV0dghY8070oXl/5pOxADBSw7GGPaqtzp1fd4smqwqHgvE0ZfuiSDn6xgBzW@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDwH6aQLxQrUtLNymAY2u4ZsDfNfH98rqRQwVzEotxUNSyG0bd
+	ewDwYOa22+rTzo9ninN8Asw5SbTWoQGT8Uvon36oCMuFKAjyRuff
+X-Gm-Gg: ASbGncsPTy+GoVa5FQcaBcNYAPZmNnh5FjSWrMfFPje9uY+n8R8ys+e3+MR3jx6EUaM
+	n7Xro9I1LvA4MG3aRMdug1dC+9BAyLQVENx3lw/0e0C/CsQ0NEnGgfsUYfroE5FO9A8X2TKQ/gj
+	0v4nKBkvJP2JNOaeBZRGXNgeZmQkUo3qtDYpOMwzGYeL58ZniispMcbIvgzLABzlX/GKCGuLV9I
+	BJYG7ZboDy8bkHeV7sONIGb4MWq555hH61yEw0xAHkgHf2rEuRocV04HkfSxmXL2FMhzjsWWdKq
+	Cn+1X9tWdzH22cHF3iA1O94KaunHD36JojEu9CXXVFibCTOWA6/BC4Hv+78mk/Ox5QcagIVWYlZ
+	bvZnmV7XyOsNb4uArAiYlH7UjrAzuHQM7X1wGR3J2zGJR1T9LMJOIDeDL9hz8iRkrrcOIGDm9xX
+	D2
+X-Google-Smtp-Source: AGHT+IEBFRcd9cWwhp7FQGAe1toZz54QqQETJ9/xJS0fRLA7xLURJChGI3PkKm/lnF/PunHA3BuHHA==
+X-Received: by 2002:a17:907:7255:b0:acb:33ba:2889 with SMTP id a640c23a62f3a-acb74dd0838mr829185166b.41.1745167706321;
+        Sun, 20 Apr 2025 09:48:26 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-9ddb-f900-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:9ddb:f900::e63])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm416142366b.148.2025.04.20.09.48.22
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm416142366b.148.2025.04.20.09.48.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 09:48:23 -0700 (PDT)
+        Sun, 20 Apr 2025 09:48:25 -0700 (PDT)
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To: linux-amlogic@lists.infradead.org
 Cc: neil.armstrong@linaro.org,
@@ -67,9 +68,9 @@ Cc: neil.armstrong@linaro.org,
 	linux-kernel@vger.kernel.org,
 	christianshewitt@gmail.com,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v1 2/4] ARM: dts: amlogic: meson8b: fix reference to unknown/untested PWM clock
-Date: Sun, 20 Apr 2025 18:47:59 +0200
-Message-ID: <20250420164801.330505-3-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v1 3/4] arm64: dts: amlogic: gx: fix reference to unknown/untested PWM clock
+Date: Sun, 20 Apr 2025 18:48:00 +0200
+Message-ID: <20250420164801.330505-4-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
 References: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
@@ -87,40 +88,70 @@ seen at their correct index (while before they were recognized, but at
 the correct index - resulting in the hardware using a different clock
 than what the kernel sees).
 
-Fixes: dbf921861985 ("ARM: dts: amlogic: meson8b: switch to the new PWM controller binding")
+Fixes: a526eeef9a81 ("arm64: dts: amlogic: gx: switch to the new PWM controller binding")
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/amlogic/meson8b.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/amlogic/meson8b.dtsi b/arch/arm/boot/dts/amlogic/meson8b.dtsi
-index faf09f77c605..2d77b9876bf4 100644
---- a/arch/arm/boot/dts/amlogic/meson8b.dtsi
-+++ b/arch/arm/boot/dts/amlogic/meson8b.dtsi
-@@ -406,7 +406,7 @@ pwm_ef: pwm@86c0 {
- 		compatible = "amlogic,meson8b-pwm-v2", "amlogic,meson8-pwm-v2";
- 		reg = <0x86c0 0x10>;
- 		clocks = <&xtal>,
--			 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
-+			 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
- 			 <&clkc CLKID_FCLK_DIV4>,
- 			 <&clkc CLKID_FCLK_DIV3>;
- 		#pwm-cells = <3>;
-@@ -680,7 +680,7 @@ timer@600 {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index c4a9f855e5de..f69923da07fe 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -741,7 +741,7 @@ mux {
+ 
  &pwm_ab {
- 	compatible = "amlogic,meson8b-pwm-v2", "amlogic,meson8-pwm-v2";
  	clocks = <&xtal>,
--		 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
-+		 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
  		 <&clkc CLKID_FCLK_DIV4>,
  		 <&clkc CLKID_FCLK_DIV3>;
  };
-@@ -688,7 +688,7 @@ &pwm_ab {
+@@ -752,14 +752,14 @@ &pwm_AO_ab {
+ 
  &pwm_cd {
- 	compatible = "amlogic,meson8b-pwm-v2", "amlogic,meson8-pwm-v2";
  	clocks = <&xtal>,
--		 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
-+		 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
+ 
+ &pwm_ef {
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 460c46cfad6a..bc52b9e954b4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -811,7 +811,7 @@ internal_phy: ethernet-phy@8 {
+ 
+ &pwm_ab {
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
+@@ -822,14 +822,14 @@ &pwm_AO_ab {
+ 
+ &pwm_cd {
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
+ 
+ &pwm_ef {
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
++		 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
  		 <&clkc CLKID_FCLK_DIV4>,
  		 <&clkc CLKID_FCLK_DIV3>;
  };
