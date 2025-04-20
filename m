@@ -1,85 +1,121 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06715258A;
-	Sun, 20 Apr 2025 04:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A69258A;
+	Sun, 20 Apr 2025 04:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745123063; cv=none; b=N8wyDw445OoPs7gOSA9jh/YK0qSQ18oMAqPyU8/ZwxYU/onYawrPWRlreyLu8wRKOUxsIhNuA+g6n52rdava0OTrDWN9p/9fet+nQqVnnXhdpQeoAVutWg0vQo4ipTpiWIiERSwhyrWzQnHqF9LKIc7Ixcbke2IRn2uS5KAk/rA=
+	t=1745123194; cv=none; b=l/oW1og80olNQN1KPF2+9OPWi0nMNFve/1BL2SSf7dx5yq839i0oLrfHq0AOM88tqdBSq1OLAjmJKovJS0Q3MmGUivU7uzApOmIxv433hkPxJwghA3vYW3hR+3/yUS7xP8C8/P1R3KT9vk3Rt8tzTkz/UNUpzDOpEkwjA+TNTzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745123063; c=relaxed/simple;
-	bh=qpGp/hvCdpddsSQAiFEZtJs+MZRgmSA06DPH9WGl5Cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwDXDeEO0FiKo69eSi/NVhFpWTqW3s9yv4kpluxXn47xi7KOZS6DYmVkCq5x0qQvhWi1vhamTTg+VTCemOHPgL1log9I2B4BdSD1LHiKTMCR7PwVRaI4cvAlmqIZ+2jq6i9Wzlupk48LU54r7aQFoh7D6hDZm/aDo/Nf7rifAFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=qP0sd6jx; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1745123194; c=relaxed/simple;
+	bh=OexycGlnF3hxhAIHaIY2JYwk7C6llKn6YRf+F2al/f8=;
+	h=Date:From:To:Cc:Subject:Message-Id:Mime-Version:Content-Type; b=uwo6GTf3xxnewicYc3QzDCBLcmE2A3fsCMI+nxtqzS/bd1Bl5Q2FvvSoWj7pwZEj4kdWj1vPhSHDbtuBqqzvLTk1splqs/+Q6HICxSs/izqOJmLjpGM/D/mQhxzDCepyL3Fmc4f6HlOvRNCjcF/QxtvPFy9d1mv+uEAUPVCsz6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CXHkWV7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="qP0sd6jx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EXpjqqkYgWFpxmIfvyHYNkH5n5ljP+com3Bt+11ZzSs=; b=qP0sd6jxXmaeoG1chZXL1nnfvb
-	BMJKSM3T2WcH2+GWzkmewGTZ+nELqXBR+v4NsGTsTN8Sg4cTqQfu73V4EN2bHJGI7ai4bs3bcZkmV
-	MJ7Nt8oIZgCQLRpRJGLMBp/YAn36TLHrVm7wOiPp80NcZ/9BY4TmJUoytdQAccYaoqsMKdXnkY94x
-	4t6yNka1PrprDVY3SIo7tMSqljXFgrdO4jStNufFJOZSCLW/MVcY++WZ25EFxt+a6fYU0IV6QD2hX
-	kydYbC5IJUAz4ZNMa61K6+JCQmqCtxc09qMTOEkaD/utP890OHCaweuxuasTfRsgt/A4YWdle3AIj
-	fey4eJEQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u6ME0-0000000BMoK-2w2i;
-	Sun, 20 Apr 2025 04:24:12 +0000
-Date: Sun, 20 Apr 2025 05:24:12 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Ian Kent <raven@themaw.net>, Mark Brown <broonie@kernel.org>,
-	Eric Chanudet <echanude@redhat.com>, Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Alexander Larsson <alexl@redhat.com>,
-	Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250420042412.GQ2023217@ZenIV>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
- <20250417-wolfsrudel-zubewegt-10514f07d837@brauner>
- <fb566638-a739-41dc-bafc-aa8c74496fa4@themaw.net>
- <20250417-abartig-abfuhr-40e558b85f97@brauner>
- <20250417-outen-dreihundert-7a772f78f685@brauner>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CXHkWV7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F98C4CEE2;
+	Sun, 20 Apr 2025 04:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745123193;
+	bh=OexycGlnF3hxhAIHaIY2JYwk7C6llKn6YRf+F2al/f8=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CXHkWV7M7CkKvii+m/oF/Osms6L8FmhTlSdLIDJZpNCYcxlGfYQOZtcU1qanW7bMw
+	 MjRKQJ9R9SbaWk/BwcjS3Imy6HHIU0hde/1rrPrKrtVaMQxxkC33cTHK2TReL6x8fq
+	 bWI+kX0/zjwo3sj08Oxy5SQ73p76Llx2XW/O3v9w=
+Date: Sat, 19 Apr 2025 21:26:32 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: [GIT PULL] hotfixes for 6.15-rc3
+Message-Id: <20250419212632.41bd67c6fa1459f817f0ea58@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417-outen-dreihundert-7a772f78f685@brauner>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 05:12:26PM +0200, Christian Brauner wrote:
 
-> (2) If a userspace task is dealing with e.g., a broken NFS server and
->     does a umount(MNT_DETACH) and that NFS server blocks indefinitely
->     then right now it will be the task's problem that called the umount.
->     It will simply hang and pay the price.
-> 
->     With your patch however, that cleanup_mnt() and the
->     deactivate_super() call it entails will be done from
->     delayed_mntput_work...
-> 
->     So if there's some userspace process with a broken NFS server and it
->     does umount(MNT_DETACH) it will end up hanging every other
->     umount(MNT_DETACH) on the system because the dealyed_mntput_work
->     workqueue (to my understanding) cannot make progress.
-> 
->     So in essence this patch to me seems like handing a DOS vector for
->     MNT_DETACH to userspace.
+Linus, please merge this batch of hotfixes, thanks.
 
-(3) Somebody does umount -l and a few minutes later proceeds to reboot.
-All filesystems involved are pinned only by mounts, but the very first
-victim happens to be an NFS mount from a slow server.  No indication
-of the problem, just a bunch of local filesystems that got a dirty shutdown...
+
+The following changes since commit fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2:
+
+  Merge tag 'pci-v6.15-fixes-2' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci (2025-04-17 16:00:31 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm tags/mm-hotfixes-stable-2025-04-19-21-24
+
+for you to fetch changes up to ea21641b6a79f9cdd64f8339983c71c89949dcb5:
+
+  MAINTAINERS: add section for locking of mm's and VMAs (2025-04-17 20:10:09 -0700)
+
+----------------------------------------------------------------
+16 hotfixes.  2 are cc:stable and the remainder address post-6.14 issues
+or aren't considered necessary for -stable kernels.
+
+All patches are basically for MM although five are alterations to
+MAINTAINERS.
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      docs: ABI: replace mcroce@microsoft.com with new Meta address
+
+Andreas Gruenbacher (1):
+      writeback: fix false warning in inode_to_wb()
+
+Baoquan He (1):
+      mm/gup: fix wrongly calculated returned value in fault_in_safe_writeable()
+
+David Hildenbrand (2):
+      fs/dax: fix folio splitting issue by resetting old folio order + _nr_pages
+      mm/memory: move sanity checks in do_wp_page() after mapcount vs. refcount stabilization
+
+Johannes Weiner (2):
+      mm: vmscan: restore high-cpu watermark safety in kswapd
+      mm: vmscan: fix kswapd exit condition in defrag_mode
+
+Kirill A. Shutemov (1):
+      mm/page_alloc: fix deadlock on cpu_hotplug_lock in __accept_page()
+
+Liam R. Howlett (1):
+      MAINTAINERS: add mmap trace events to MEMORY MAPPING
+
+Lorenzo Stoakes (3):
+      MAINTAINERS: add memory advice section
+      MAINTAINERS: add Pedro as reviewer to the MEMORY MAPPING section
+      MAINTAINERS: add section for locking of mm's and VMAs
+
+Muchun Song (1):
+      mm: memcontrol: fix swap counter leak from offline cgroup
+
+Oscar Salvador (1):
+      mm, hugetlb: increment the number of pages to be reset on HVO
+
+Vlastimil Babka (2):
+      MAINTAINERS: update SLAB ALLOCATOR maintainers
+      MAINTAINERS: add MM subsection for the page allocator
+
+ CREDITS                                       |  4 +++
+ Documentation/ABI/stable/sysfs-block          |  2 +-
+ Documentation/ABI/testing/sysfs-kernel-reboot | 10 +++---
+ MAINTAINERS                                   | 49 +++++++++++++++++++++++++--
+ fs/dax.c                                      |  1 +
+ include/linux/backing-dev.h                   |  1 +
+ include/linux/mm.h                            | 17 ++++++++++
+ include/linux/mmzone.h                        |  5 +--
+ mm/gup.c                                      |  4 +--
+ mm/hugetlb_vmemmap.c                          |  6 ++--
+ mm/internal.h                                 |  1 +
+ mm/memcontrol-v1.c                            |  2 +-
+ mm/memory.c                                   |  4 +--
+ mm/mm_init.c                                  |  1 +
+ mm/page_alloc.c                               | 40 ++++++++++++++--------
+ mm/vmscan.c                                   | 29 ++++++++++++++--
+ 16 files changed, 141 insertions(+), 35 deletions(-)
+
