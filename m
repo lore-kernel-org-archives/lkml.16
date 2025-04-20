@@ -1,42 +1,75 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7FE15CD74
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 14:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02C02036F0
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 15:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745161066; cv=none; b=iFZ5QNbsqBk7XWQzeUoozoZst9gOrHu4XdzyX2PjSE/+kPMznDhbI9k90C1cdL+8QVIE2/393mqLid+q9syqyOaoMeetTvoKHpbj4VobFgV7y5OuHf0fHG81oWP3Ax0A1Rk+YPToFpxxNy3+8XoQJVcB1zF8NQ34zVvd3R39wBE=
+	t=1745161369; cv=none; b=HqDCIomKfVRfUseThQcpVIpwkolrEI0savu7AYstxvhyzRRAzDgjSlmSXggMKQV/AjTiDFffI2LgHQnsqeRY9cVKeBNtUmYsXG2l3xSZmF2cu5yBnMv3dAgg1w8WVQl7+v1jsv9yCmB2k0xHZEMbRHkPB7sVmoBToZySkef1KU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745161066; c=relaxed/simple;
-	bh=AGiai40zWvo7HBmJs/nM8/DEK2i6Svtaq3lA5Msj1BE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e8JhFxCKsBGySxEdj90KP/KgtUk+GoZmT0otViSq5GS7Ogfu92b7YhYzih+Gg+FONl99J1x8pKLWbGT+IH0E2qdFF+QBx2UHzaunXWBCxcRRv6MuUWF1kGK0sHUnNRw/L2ZADJU2kj39natKarLmciBUWpJMfo+RxaFDQHynLJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=RUAK36Yg; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745161369; c=relaxed/simple;
+	bh=YcGGxN2CucbXvN5hALkqtcm/FrJP/bZ0bP5uSmmbwKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q4EybZqvlU1KPwx4TyIa4XAXgxDHPxf3n2wh/HSn6rBBbnRMRet1BcAbGY1m4VmXaIlUksDlVj4T8h68u8dJ7HzptGqdXx6A0uUxyNJCij8kn4mToHdYvW4oEIAjmGVee14P9coI1SspJdvxCf/p1N1MuDYxTrssLqHQkcRPCyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AyrXtCA4; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="RUAK36Yg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=nCJuTErfoD404VEFv24FFd42vP+TJEphZMa7lv0QHsI=; b=RUAK36Yg8irb4Nqr
-	d0+MRtJprtzjWIQ7BrF0eISxip0F+Q8Qqm5afqCCCnRp86iUwwspZ6QfZLoWLcRyek7vRgJ/RfrKj
-	E+yyT1WA4tCRv1Mt3kJgfA7aH6BaSG8ksENknPUy0DE3YIgn8M4/CPn1rmQGdDRTDgcz3yBm2Y+ll
-	40hKPfM1za966AZXIlVrSudRbbJENaOm/reCNcZaBh9RwT35Fld6Ewrk+4RRQRf5FH9z/OwC/TEw4
-	UM0QE6gRnaXnAgmoRVTwcAJo0b4pVz1ozHHWg2Pw17V+vbAEPEWO+mGZQa6jGCBaykTfDrcNKSYfF
-	3xEdtHmyJThfB16Sag==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u6W71-00Cilv-2n;
-	Sun, 20 Apr 2025 14:57:39 +0000
-From: linux@treblig.org
-To: arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] misc: rtsx: Remove deadcode
-Date: Sun, 20 Apr 2025 15:57:39 +0100
-Message-ID: <20250420145739.58337-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyrXtCA4"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739525d4e12so2648428b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 08:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745161366; x=1745766166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aehsPDvDGlCXhd1pUgsfJlGsVEXqTibUGcDVjj8O5Vg=;
+        b=AyrXtCA4JUW7UpffKCZaP9mtZ7PDpUAgpPmueF1FJY+ZGNOS8OHF0HK9SPGWkiq1NH
+         iccsTUgKSQLuhcY35Gstg0bq3mzdFatCGCbjsOlJTluzOvaqd5ck56Od1B5VWA1iKxgT
+         gRadJwaMsRsv7QkGW3ud8f+m+KYqCsdzaGMz97h6j7BfLG8M0ZCDWyXuIsR7Wn1j4rBs
+         H+qZoFD+WJW0pzkYO4jybmobKkHYh24t5z2GwnN2dvUj+2Oqe/s8PGNxxxpcfWNrL+pi
+         fTMtO4c9xQFuGvk+Eikc/TddLoLScvR8y/fse//0C3MFcWJK4sGYQ2rJNvTUDwp9dfXo
+         Bb1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745161366; x=1745766166;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aehsPDvDGlCXhd1pUgsfJlGsVEXqTibUGcDVjj8O5Vg=;
+        b=khpitNnpArKlPCx45ErPwKr0H4kzfBOWcKjZcLPoB1s4WxRds8ruWS3IGE9y1Xn3Gn
+         rpj9+rJxgUwQiN5uHBzBjVN764tpmqAxEaPaT1fJpNsrgmMnu1rJmXRBZvE5uTDPccC4
+         0RnQHo3+aOZjo/BxeKa935v8Ibe/1BWPz8w3vcVl/u8IghdvUAvgh4dMBjQKyCu10jTp
+         KQF3WuyDgu4yWezoW1mYoxfcLgH/oMUtZsh5J/0qk6VyM0o7jT/YQlVl/B1NbOmutcKL
+         NISzIGC3cXf6mkjjjSC34F7qMEYOOD8Pl5QNqlw0BdRJvf9Rk2SNoIhaNnrhr8tX5d6R
+         ZWgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeBkBOLMc9G+eNU1aPIirdG8a4h7qOrm0vqvdAsLCqr1hjEnh4/HE1VhRtxXioy5bcd03F8S+9oaXe8fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsebP5y06IGXq9KSJuzqb8OnrtENG/wZW6+nKfv87mvebRHLzI
+	Ptlje4CZGsY46YG08/Pxupc4TjXXbNXyrbCkdfOZReLR/1y/IVb1
+X-Gm-Gg: ASbGncs1a6sumWEkkIhMKTonsOtYFEaqUMpaDTwE5Yi40s+717NLKtcq1TKnQTR3kv5
+	CGXnpPgLvi/nBfzzA7kRdETX3/nyhCJqixpSyNA+tWYrBddYTliGa80nYslEPoEEorxyy5AN7fU
+	XFdpTuzX55bqyrMRrmM2HnCEvpJEqLwMKRNl17ksvPx/n4/YzNX2XbSgu5fVKfS9i+bDrVbot+4
+	IO0C9yJaQ8bJVA8LQ0mTOXFk2A566GWjXMRRAs2UTkjqnBUTleh1tR36pIAMt4eoLKtapo4EZrf
+	pMqKora2oGa0kihY000SFuyzrkJuqbN/7+MoZYSvVEOEV78dKAXYu473khOpSw==
+X-Google-Smtp-Source: AGHT+IEIPnL0Uw/ordlEG8yN3dohZH5sE8RnQZl5rG7FZbuPaF3Jock47l2BVtliEjCVnJJ2jcgVPA==
+X-Received: by 2002:a05:6a00:1d81:b0:736:39d4:ccf6 with SMTP id d2e1a72fcca58-73dc14a934cmr12060711b3a.8.1745161365899;
+        Sun, 20 Apr 2025 08:02:45 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8bed02sm4804547b3a.29.2025.04.20.08.02.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 08:02:45 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: alexjlzheng@gmail.com
+Cc: alexjlzheng@tencent.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	tj@kernel.org
+Subject: Re: [PATCH v2 0/2] kernfs: switch global locks to per-fs lock
+Date: Sun, 20 Apr 2025 23:02:44 +0800
+Message-ID: <20250420150244.127569-1-alexjlzheng@tencent.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250415153659.14950-1-alexjlzheng@tencent.com>
+References: <20250415153659.14950-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,115 +78,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, 15 Apr 2025 23:36:57 +0800, Jinliang Zheng wrote:
+> From: Jinliang Zheng <alexjlzheng@tencent.com>
+> 
+> The kernfs implementation has big lock granularity so every kernfs-based
+> (e.g., sysfs, cgroup) fs are able to compete the locks. This patchset
+> switches the global locks to per-fs locks.
+> 
+> In fact, the implementation of global locks has not yet introduced
+> performance issues. But in the long run, more and more file systems will
+> be implemented based on the kernfs framework, so this optimization is
+> meaningful.
+> 
+> There are three global locks now, kernfs_idr_lock, kernfs_rename_lock
+> and kernfs_pr_cont_lock. We only switch kernfs_idr_lock and
+> kernfs_rename_lock here, because kernfs_pr_cont_lock is on a cold path.
+> 
+> Changelog:
+> v2: Only switch kernfs_idr_lock and kernfs_rename_lock to per-fs
+> v1: https://lore.kernel.org/all/20250411183109.6334-1-alexjlzheng@tencent.com/
+> 
+> Jinliang Zheng (2):
+>   kernfs: switch global kernfs_idr_lock to per-fs lock
+>   kernfs: switch global kernfs_rename_lock to per-fs lock
+> 
+>  fs/kernfs/dir.c             | 28 +++++++++++++++-------------
+>  fs/kernfs/kernfs-internal.h | 16 ++++++++++++----
+>  2 files changed, 27 insertions(+), 17 deletions(-)
 
-The last uses of rtsx_ms_power_off_card3v3() and
-rtsx_sd_power_off_card3v3() were removed by 2019's
-commit bede03a579b3 ("misc: rtsx: Enable OCP for rts522a rts524a rts525a
-rts5260")
+Ding Dong ~
 
-The last use of rtsx_pci_transfer_data() was removed by 2024's
-commit d0f459259c13 ("memstick: rtsx_pci_ms: Remove Realtek PCI memstick
-driver")
+thanks,
+Jinliang Zheng. :)
 
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/misc/cardreader/rtsx_pcr.c | 46 ------------------------------
- drivers/misc/cardreader/rtsx_pcr.h |  2 --
- include/linux/rtsx_pci.h           |  2 --
- 3 files changed, 50 deletions(-)
-
-diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
-index be3d4e0e50cc..a7b066c48740 100644
---- a/drivers/misc/cardreader/rtsx_pcr.c
-+++ b/drivers/misc/cardreader/rtsx_pcr.c
-@@ -420,25 +420,6 @@ static void rtsx_pci_add_sg_tbl(struct rtsx_pcr *pcr,
- 	pcr->sgi++;
- }
- 
--int rtsx_pci_transfer_data(struct rtsx_pcr *pcr, struct scatterlist *sglist,
--		int num_sg, bool read, int timeout)
--{
--	int err = 0, count;
--
--	pcr_dbg(pcr, "--> %s: num_sg = %d\n", __func__, num_sg);
--	count = rtsx_pci_dma_map_sg(pcr, sglist, num_sg, read);
--	if (count < 1)
--		return -EINVAL;
--	pcr_dbg(pcr, "DMA mapping count: %d\n", count);
--
--	err = rtsx_pci_dma_transfer(pcr, sglist, count, read, timeout);
--
--	rtsx_pci_dma_unmap_sg(pcr, sglist, num_sg, read);
--
--	return err;
--}
--EXPORT_SYMBOL_GPL(rtsx_pci_transfer_data);
--
- int rtsx_pci_dma_map_sg(struct rtsx_pcr *pcr, struct scatterlist *sglist,
- 		int num_sg, bool read)
- {
-@@ -1197,33 +1178,6 @@ void rtsx_pci_disable_oobs_polling(struct rtsx_pcr *pcr)
- 
- }
- 
--int rtsx_sd_power_off_card3v3(struct rtsx_pcr *pcr)
--{
--	rtsx_pci_write_register(pcr, CARD_CLK_EN, SD_CLK_EN |
--		MS_CLK_EN | SD40_CLK_EN, 0);
--	rtsx_pci_write_register(pcr, CARD_OE, SD_OUTPUT_EN, 0);
--	rtsx_pci_card_power_off(pcr, RTSX_SD_CARD);
--
--	msleep(50);
--
--	rtsx_pci_card_pull_ctl_disable(pcr, RTSX_SD_CARD);
--
--	return 0;
--}
--
--int rtsx_ms_power_off_card3v3(struct rtsx_pcr *pcr)
--{
--	rtsx_pci_write_register(pcr, CARD_CLK_EN, SD_CLK_EN |
--		MS_CLK_EN | SD40_CLK_EN, 0);
--
--	rtsx_pci_card_pull_ctl_disable(pcr, RTSX_MS_CARD);
--
--	rtsx_pci_write_register(pcr, CARD_OE, MS_OUTPUT_EN, 0);
--	rtsx_pci_card_power_off(pcr, RTSX_MS_CARD);
--
--	return 0;
--}
--
- static int rtsx_pci_init_hw(struct rtsx_pcr *pcr)
- {
- 	struct pci_dev *pdev = pcr->pci;
-diff --git a/drivers/misc/cardreader/rtsx_pcr.h b/drivers/misc/cardreader/rtsx_pcr.h
-index 9215d66de00c..8e5951b61143 100644
---- a/drivers/misc/cardreader/rtsx_pcr.h
-+++ b/drivers/misc/cardreader/rtsx_pcr.h
-@@ -127,7 +127,5 @@ int rtsx_pci_get_ocpstat(struct rtsx_pcr *pcr, u8 *val);
- void rtsx_pci_clear_ocpstat(struct rtsx_pcr *pcr);
- void rtsx_pci_enable_oobs_polling(struct rtsx_pcr *pcr);
- void rtsx_pci_disable_oobs_polling(struct rtsx_pcr *pcr);
--int rtsx_sd_power_off_card3v3(struct rtsx_pcr *pcr);
--int rtsx_ms_power_off_card3v3(struct rtsx_pcr *pcr);
- 
- #endif
-diff --git a/include/linux/rtsx_pci.h b/include/linux/rtsx_pci.h
-index 4612ef09a0c7..3b4c36705a9b 100644
---- a/include/linux/rtsx_pci.h
-+++ b/include/linux/rtsx_pci.h
-@@ -1312,8 +1312,6 @@ void rtsx_pci_add_cmd(struct rtsx_pcr *pcr,
- 		u8 cmd_type, u16 reg_addr, u8 mask, u8 data);
- void rtsx_pci_send_cmd_no_wait(struct rtsx_pcr *pcr);
- int rtsx_pci_send_cmd(struct rtsx_pcr *pcr, int timeout);
--int rtsx_pci_transfer_data(struct rtsx_pcr *pcr, struct scatterlist *sglist,
--		int num_sg, bool read, int timeout);
- int rtsx_pci_dma_map_sg(struct rtsx_pcr *pcr, struct scatterlist *sglist,
- 		int num_sg, bool read);
- void rtsx_pci_dma_unmap_sg(struct rtsx_pcr *pcr, struct scatterlist *sglist,
--- 
-2.49.0
-
+> 
+> -- 
+> 2.49.0
