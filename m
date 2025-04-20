@@ -1,246 +1,105 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587291474D3;
-	Sun, 20 Apr 2025 18:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF6C1E7660;
+	Sun, 20 Apr 2025 18:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745172958; cv=none; b=PX9hp3e9+5Rl6JgZVkRL9Myt7QG/IX8/c75Vqyeo0dRuVJ1ZEitzbwNk5pAaA7e7s1m9IH/Xi5LB0XtdeXnJJXNf5oSVBdpRMXTgwtdhSo7wnOH0twk3tbB/Ylzcxq96JeAyY0Bt+p3PErw6vyPH9HXuKx2dEtgj3IG4v0tTJzc=
+	t=1745173690; cv=none; b=Kb6hBPbbvaVn8C3EZuH4E8bBgDv613fP1KgqzEwhYACJW4L9dPBSoMwuqmWhNG4Csm/yEjP6C8cAEod3z+tLO7F8BHCEDuehqVO4O+IoY1HtvB00BX8iRii5HyAfohF6wjIV6/eODEX4bllk+g3mHLdWvs4w1QODcpUAd3fGa5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745172958; c=relaxed/simple;
-	bh=odgvtHg+XTEO3AmTBRmJwQpSOiq18WH8OzEFqaQ2MYU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mBzAv8P/oxH5KP1vVPnr2VTmE+raOeOw5eu6yLpW/ieLp8I5BWY4V9R7uK7NA4VoNoCuO8yuEjDfcJDz5uwzfGKuDR4r0N1X4JvO2HwxkUaSJBcnBY/VdyFpaVPu03AmPAIRH7+prJydxK1N2eRgieYVc9h6sj/pyZn2N877rBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AfDLzQms; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1745173690; c=relaxed/simple;
+	bh=A28BMqEM5XRskObtd5FGXGO5L9lP2inxSmwMszehi4I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eXjJHPQG1O5fCGPZ5NP41oiM46EfkJ15I5jLQ9uCaGnwEHkMiXwonRzM1SqnHbFfYgBlS/Si7hB/iYJXFBRHq6OKT15b77eetwgp61VP7zhs+wuVBYmmrwuqXLhy+x9SIU6/uivanj/RpAyRHRzaTjWzsp0kDYa2+6yAojKMJwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TSrHlgmA; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfDLzQms"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff64550991so2346754a91.0;
-        Sun, 20 Apr 2025 11:15:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSrHlgmA"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224171d6826so49072325ad.3;
+        Sun, 20 Apr 2025 11:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745172955; x=1745777755; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FydHjTRLby7TeTt4ekj3nT37iiEU98LG90xEAmWrSzs=;
-        b=AfDLzQmsYAN3StPmYO5E75eEy7SUl6WEsTwA9mBLQRcaC8R0OyK16EeBHi9fq0qz+N
-         /CDiMoR8365ocPmd1HDGtOue7wHanAj5r5MnllQus/73W3uRnw8hHj9ZaO05y+t2xIq8
-         4BCW9Odnb7nhc6BVU14R1SBUURUZ8Hm9oy8keBrQgVoYXiws50m8wERYEbbdqa/71wUW
-         siymIsbo5Vvn9z64PiQ+hj16uwvjJuLZ6MkQYglZu20DsI7dA0HycgL5hZOVZs6nASsV
-         5MFh5EMdq0s+Wq7vWmQxUGoUEhiNZk5+qq8wnm4nXBxAy8LbsYLjiThM1FdRJsZKQlxF
-         GzRA==
+        d=gmail.com; s=20230601; t=1745173688; x=1745778488; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+trkXrRRKx/OxRun+UYOcpJ7PjoXN8nrk3yxYTiKZ1U=;
+        b=TSrHlgmAPtKmYGXLgG3HZvkXraqmeOGOVGvTKC5QDRxK1vq3vg+W06SV6MppfSA7Yr
+         6xvUB0kYppPfo6hsj0JC7D78rQDVWu+H6QuPRhux9d/8sOgSIlwotANg1omHqtvvegLN
+         SxmmH9o9U4oiSh/dgMuSPvd1WGJRFaSH7IznJ7nC206Fv6182LR+mvy3fTrmtShD0ql4
+         pc65jieEFJG3bjH6lcFEVXtvy3lAjDRODGTX1pM1cEAg7zKfuzNkfh3B7cDZq0TlYIyn
+         HNlP6QrSqykFexgYHptmTxt7Hih4YVlw5vZdoMuTqmh8mIbg3hk9o+AtR3c0+HImVUYd
+         4HgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745172955; x=1745777755;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745173688; x=1745778488;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FydHjTRLby7TeTt4ekj3nT37iiEU98LG90xEAmWrSzs=;
-        b=oQHqWbLt8ZD4aTiLrWyyDJktVyUZ4DYbmKNvLWxtn4Raf+dBY2F+UWFsTOqaYIc89Q
-         Hyyr3kpc2a5I2a2fEscrzd8HUvx39xyVgoOzsrm/edwG26+G6GGv8eOUvwnWx73mo8C0
-         hgqXgao1DbVT/7s3xeV5YNPZV86pd2tlzmwMPdXJse1lvVOzAj258uiESEZlMBEfU9uq
-         5TxHcd5aw+EBKv0pPudC0lT7+6YgrUPgjXo2LILYIBTpRd5xQFX8+oud9rjjjd6wT4cF
-         B25CR7U5vZDF2+Yz9HLI8XCpJ66Frdjb4VcS89MtFs7OCg0v62U67l1v8eFMynrxod2p
-         DGGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWt93W8zgLGZ9GcyQ0ik7VCGETn7WMFjLXEbXwzIhd4CiD1G4oqZiRkQcOYFRS1ZZ+20l1u19NBAnobZTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwS6Uo3WiYX2+6kD9kaQo8HeHiGfIasUoW1qr2049rp5YH3oVvo
-	sHeVfCkbrdmF0CZ/phQYlV2LLrQF87aNsNSp7Hd9qnegUsK5h+9f2FdIfrMPm/nSrXnAVGI5HRL
-	zt5f4Y/q1ovai8pHQ14ROQ5E2nKI=
-X-Gm-Gg: ASbGnctEkCOUwsvXync6sb5Z/z5h7Jx/K46pLF/PhKKceAvm+642X4/6PhAb1GfMgc7
-	Vlu7L3P07vNmkyx7FvQKhhQBzIxd5jMGRC0wc5qzW+4QvFDglKm/goICUc6jIt96u4YA6jahyiI
-	zVqafPCla+ArOFeRnQO9f84cJRauGmL6muP1g=
-X-Google-Smtp-Source: AGHT+IEmrCEogNYMFqbLYQVZ2wE2zn/ZiUmho4x2xb45nu3PoI0IbYdfcJq0+S2G2M/5p2WSif/7k2jiPfHtMeeEtEY=
-X-Received: by 2002:a17:90a:d60b:b0:2fe:a0ac:5fcc with SMTP id
- 98e67ed59e1d1-3087bccb0e3mr11217210a91.34.1745172955368; Sun, 20 Apr 2025
- 11:15:55 -0700 (PDT)
+        bh=+trkXrRRKx/OxRun+UYOcpJ7PjoXN8nrk3yxYTiKZ1U=;
+        b=RWLVHrdvWBYXzEZ86NSpgbvu/epEYrDMxdGQnMfQ99Yp4CviDljzrVZ4mSYmrV0JiX
+         2cswUjmrS7Wl2Ark+qMWIdPes/k0IA6bhZT9T7Zyd3wvELgck/AX/8Wb5Av/KqQB/2hb
+         VdJSuqcW21PfNszGkpH8j0bLPmPi2x4FoGsDvXH0W6lcoNdQMm+cLUQLDX+Ho+7s0Oxb
+         xWgNRLC/iyYi7RFmpcLebOVc6gb/1wmw/yjn+spmGlQS7Hmm9R1CjChEEajmm0J1hWvY
+         6dEy+T4SrK+By97uBtMm0Wx+atMZDrblw/ltqcqRE5m8yJH1LDyd1C11ff+AlgMZJzkQ
+         yI4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWFkzLKcWQAqq9U1WRwXxpQMZHGplXh/qxeg0+QXtgz9d+WEejqqbYbqmUq92DVw22v3Oxfe6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXqMWZH3RiadeqKWZkCiNHhWjBFaGlDxL+M5Ly0KZx1AVK77rb
+	b6OYeR+JmLOZOzNRd1KXhyOANavA5aN4kncvpHg6MdmZJ/WZEwAU
+X-Gm-Gg: ASbGncsIeJd8GBVFv3Csb0UcMREgBaQg8265eBLkKhqEGfTN8ElgXgixMfK1io7HURj
+	shQMQZQQ/HlDLIbWz4sXz8UdVpf2ISCNMabIQPAuDS0JJPL98DRtRppiXkeldFbeHIYY18+61Ng
+	+FJkArUi7jVvZamMPJnPcsMoM2Y8pkKfeLkA0raPr1FrjHz9emXT6aFA0IgJghZkoRcMIFxHkz1
+	5ErSDuX0BhPaAWngiQCOa023lI0ug7KuX+CfgvqZmPhELziOPr0EqsNPIkTzeRfXH+lglrjHpxq
+	bQ71WPW9XbMzCFEHrE6g5KYShFJBjDsuWxjKx0eKQRTaTOs/Qb+UElhN9sWb
+X-Google-Smtp-Source: AGHT+IH0EqSLhfnWbXQaiPgwk7p2UenbM3xRhJcGrt8wqTu+7alWiNw+4a2gxlWYtHrDCTRU/DO+SA==
+X-Received: by 2002:a17:902:d4c4:b0:224:5a8:ba29 with SMTP id d9443c01a7336-22c5361b3afmr139842215ad.43.1745173687971;
+        Sun, 20 Apr 2025 11:28:07 -0700 (PDT)
+Received: from [192.168.0.6] ([2804:14c:490:1191:f66d:1f0e:c11e:5e8b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eceb74sm50550055ad.166.2025.04.20.11.28.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 11:28:07 -0700 (PDT)
+From: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>
+Subject: [PATCH 0/2] regulator: max20086: Fixes chip id and enable gpio
+Date: Sun, 20 Apr 2025 15:28:00 -0300
+Message-Id: <20250420-fix-max20086-v1-0-8cc9ee0d5a08@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407042028.1481-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250407042028.1481-1-vulab@iscas.ac.cn>
-From: KeithG <ys3al35l@gmail.com>
-Date: Sun, 20 Apr 2025 13:15:44 -0500
-X-Gm-Features: ATxdqUFigDSeDaDfsJZsrpcPI_gDT8BH5CS6xrxpWSxVb-pUH52VIWxRWgBhpBo
-Message-ID: <CAG17S_NDLjfeTZ_qo8B6aXi2z6BHYCakBHzy2AqcqP2Co32hNw@mail.gmail.com>
-Subject: Cannot maintain an ap with brcmfmac
-To: Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
-	brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIALA8BWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyMD3bTMCt3cxAojAwMLM10TY4NEM+M080TL1CQloJaColSgPNi46Nj
+ aWgCG/JZ3XgAAAA==
+X-Change-ID: 20250420-fix-max20086-430a63f7a9eb
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Watson Chow <watson.chow@avnet.com>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-Group,
+Hello,
 
-I do not really know what has changed, but I can no longer maintain an
-ap runnning with brcmfmac on my Pis with the brcmfmac43455 chip. The
-firmware is current (and ahead of what RPiOS ships):
+I'm working on integrating a system with a MAX20086 and noticed these
+small issues in the driver: the chip ID for MAX20086 is 0x30 and not
+0x40. Also, in my use case, the enable pin is always enabled by
+hardware, so the enable GPIO isn't needed. Without these changes, the
+driver fails to probe.
 
-[    3.472501] brcmfmac: F1 signature read @0x18000000=0x15264345
-[    3.493274] brcmfmac: brcmf_fw_alloc_request: using
-brcm/brcmfmac43455-sdio for chip BCM4345/6
-[    3.494583] usbcore: registered new interface driver brcmfmac
-[    3.900038] brcmfmac: brcmf_c_process_txcap_blob: no txcap_blob
-available (err=-2)
-[    3.901161] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4345/6
-wl0: Oct 28 2024 23:27:00 version 7.45.286 (be70ab3 CY) FWID
-01-95efe7fa
+Signed-off-by: João Paulo Gonçalves <jpaulo.silvagoncalves@gmail.com>
+---
+João Paulo Gonçalves (2):
+      regulator: max20086: Fix MAX200086 chip id
+      regulator: max20086: Change enable gpio to optional
 
-I get this with the default RPiOS verison of hostapd:
-# hostapd -v
-hostapd v2.10
-User space daemon for IEEE 802.11 AP management,
-IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
-Copyright (c) 2002-2022, Jouni Malinen <j@w1.fi> and contributors
+ drivers/regulator/max20086-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+---
+base-commit: 6fea5fabd3323cd27b2ab5143263f37ff29550cb
+change-id: 20250420-fix-max20086-430a63f7a9eb
 
-And also with the one I built from source. The latest hostapd I could find.
-The git repo it is built from is from here: https://w1.fi/hostapd/
+Best regards,
+-- 
+João Paulo Gonçalves <jpaulo.silvagoncalves@gmail.com>
 
-# hostapd -v
-hostapd v2.11-hostap_2_11+
-User space daemon for IEEE 802.11 AP management,
-IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
-Copyright (c) 2002-2024, Jouni Malinen <j@w1.fi> and contributors
-
-My hostapd.conf is:
-# cat /etc/hostapd/hostapd.conf
-# interface and driver
-interface=ap0
-driver=nl80211
-
-ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]
-
-# WIFI-Config
-ssid=TestAP
-channel=6
-hw_mode=g
-wmm_enabled=1
-macaddr_acl=0
-auth_algs=1
-max_num_sta=10
-
-# WIFI authorization
-wpa=2
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP CCMP
-rsn_pairwise=CCMP
-wpa_psk_radius=0
-wpa_passphrase=secret123
-
-If there is something wrong in my setup, let me know.
-
-when I start hostapd with dnsmasq, an interface comes up and I can
-connect. As soon as it connects, it disconnects:
-Apr 20 12:57:39 pi4 systemd-networkd[181]: ap0: Gained carrier
-Apr 20 12:57:39 pi4 dnsmasq[169728]: started, version 2.90 cachesize 150
-Apr 20 12:57:39 pi4 dnsmasq[169728]: compile time options: IPv6
-GNU-getopt DBus no-UBus i18n IDN2 DHCP DHCPv6 no-Lua TFTP conntrack
-ipset nftset auth cryptohash DNSSEC loop-detect inotify dumpfile
-Apr 20 12:57:39 pi4 dnsmasq[169728]: warning: interface ap0 does not
-currently exist
-Apr 20 12:57:39 pi4 dnsmasq-dhcp[169728]: DHCP, IP range 192.168.5.2
--- 192.168.5.254, lease time 1d
-Apr 20 12:57:39 pi4 dnsmasq[169728]: reading /run/systemd/resolve/resolv.conf
-Apr 20 12:57:39 pi4 dnsmasq[169728]: using nameserver 192.168.2.253#53
-Apr 20 12:57:39 pi4 dnsmasq[169728]: read /etc/hosts - 8 names
-Apr 20 12:57:39 pi4 hostapd[169681]: ap0: interface state UNINITIALIZED->ENABLED
-Apr 20 12:57:39 pi4 hostapd[169681]: ap0: AP-ENABLED
-Apr 20 12:57:39 pi4 resolvconf[169735]: Dropped protocol specifier
-'.dnsmasq' from 'lo.dnsmasq'. Using 'lo' (ifindex=1).
-Apr 20 12:57:39 pi4 resolvconf[169735]: Failed to set DNS
-configuration: Link lo is loopback device.
-Apr 20 12:57:39 pi4 systemd[1]: Started dnsmasq.service - dnsmasq - A
-lightweight DHCP and caching DNS server.
-Apr 20 12:57:40 pi4 kernel: brcmfmac: brcmf_cfg80211_set_power_mgmt:
-power save disabled
-Apr 20 12:57:48 pi4 kernel: ieee80211 phy0: brcmf_escan_timeout: timer expired
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: associated
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: associated
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-RADIUS: starting accounting session 4336779F2221A786
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-pairwise key handshake completed (RSN)
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
-50:84:92:a6:7a:7a
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-RADIUS: starting accounting session 4336779F2221A786
-Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-pairwise key handshake completed (RSN)
-Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
-Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
-50:84:92:a6:7a:7a
-Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
-192.168.5.214 50:84:92:a6:7a:7a
-Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
-50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: associated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: associated
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-RADIUS: starting accounting session 33CFF844DBBE630F
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-pairwise key handshake completed (RSN)
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
-50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-RADIUS: starting accounting session 33CFF844DBBE630F
-Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-pairwise key handshake completed (RSN)
-Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
-50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
-192.168.5.214 50:84:92:a6:7a:7a
-Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
-50:84:92:a6:7a:7a
-Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:57 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
-Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-802.11: disassociated
-Apr 20 12:58:11 pi4 hostapd[169681]: ap0: interface state ENABLED->DISABLED
-Apr 20 12:58:11 pi4 systemd[1]: Stopping hostapd.service - Hostapd
-IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator...
-Apr 20 12:58:11 pi4 hostapd[169681]: ap0: AP-DISABLED
-Apr 20 12:58:11 pi4 hostapd[169681]: ap0: CTRL-EVENT-TERMINATING
-Apr 20 12:58:11 pi4 hostapd[169681]: nl80211: deinit ifname=ap0
-disabled_11b_rates=0
-Apr 20 12:58:11 pi4 systemd-networkd[181]: ap0: Lost carrier
-Apr 20 12:58:11 pi4 systemd[1]: hostapd.service: Deactivated successfully.
-Apr 20 12:58:11 pi4 systemd[1]: Stopped hostapd.service - Hostapd IEEE
-802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator.
-Apr 20 12:58:12 pi4 systemd[1]: Stopping dnsmasq.service - dnsmasq - A
-lightweight DHCP and caching DNS server...
-Apr 20 12:58:12 pi4 resolvconf[170375]: Dropped protocol specifier
-'.dnsmasq' from 'lo.dnsmasq'. Using 'lo' (ifindex=1).
-Apr 20 12:58:12 pi4 resolvconf[170375]: Failed to revert interface
-configuration: Link lo is loopback device.
-Apr 20 12:58:12 pi4 dnsmasq[169728]: exiting on receipt of SIGTERM
-Apr 20 12:58:12 pi4 systemd[1]: dnsmasq.service: Deactivated successfully.
-Apr 20 12:58:12 pi4 systemd[1]: Stopped dnsmasq.service - dnsmasq - A
-lightweight DHCP and caching DNS server.
-Apr 20 12:58:12 pi4 systemd-networkd[181]: ap0: Link DOWN
-Apr 20 12:58:12 pi4 kernel: ieee80211 phy0:
-brcmf_cfg80211_get_channel: chanspec failed (-52)
