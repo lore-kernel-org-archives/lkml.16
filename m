@@ -1,130 +1,203 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host1-snip4-10.eps.apple.com [57.103.67.33])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE8B1E89C
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 03:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A949D299;
+	Sun, 20 Apr 2025 03:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745119103; cv=none; b=FN6b7JiQ5+Ilv6+nydV0nssB4ZNYO4JMij1CzyzZp0Wxl4LzCm6weV8s3S4iB2g9ygEwIni+jgW8GlL88JSNLUHZqS8K8Jvp0kWxBxO/WpWZmP14vIvVydxb37l255KWSq7s8KBPm0BQp6sgKIMrdfghQLv5D+XUeJO7y2Hf4H4=
+	t=1745119527; cv=none; b=eTMm911grvczD0FwOJoSQblak3I+mqk3pcrf+zJIkTi6O1KzU3TsOroHjpifhA/HQYL4eb1iZAhgN1LW02nHKnxEoz3Vjb4Lzgz49XpxCWi2vEEJjucgQ9jy40gHW1XohPQYvWWofNGugetTvWcZbD5LmdBQnA74vKQx2SmmBYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745119103; c=relaxed/simple;
-	bh=czmOxfiQ7Tu/mSdpKDOKMa5nbv+44cvPUlogRQdlUuE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=EigWr+m22M+M+TzRASzv3JelVHA4DuiaUmEjdT3+sO6K3OB3Ud3EI7jPwwoe6HRkIYxT24FppEYOjoHkQApUQAz4MWTUgwN4r/JazrnV6LLER/6wFgNmXUwXLheZOn2uCEONLlL5QVZmpT3oxz/hIsKfz+q+1nGCEGUuUUmBsDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=TGHhw4yf; arc=none smtp.client-ip=57.103.67.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1745119527; c=relaxed/simple;
+	bh=4PTMLF+2WYhuj37KXBAWvcLc4lKUp79q57tkZLc0AVU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OwOkOXcoRwPl043V3LF2F3CER558ZiRJEuOMWJ07huq7veKoybpeTd3o2xweGbyYIcL52wt1xFLJgkqXc+abwtud8XDsEQcrr5Ezu+swVuUDEo8WdlJJCkplKpPqYMvufLGtcXcYZBp7C/NV9echNKFJE9QMP8NEGmv2w5IJGgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OuxSpPQM; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="TGHhw4yf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=zP8gRbrasrVuhIXn2PxV4CCw/YI6If8H1SVTepBuvaY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=TGHhw4yf3ZM/2/aDQAwdy1eVAFqkmt6yqVgOzRxxm8aTWuSCRJIADYbhiupP3hMi+
-	 mJJOrJbs8f/QT+G4HSpQJr+HgGWOC2+yB1O3TQABWIkMVSe+EhhreorKGAAcvHtiBi
-	 ixsetfud6OZ8vDV5qu9JvCcp0SIygq4rnBC9k6JFliaSNe+PspF3g0rDqKKOjKpcNt
-	 K7aimz4+zXYqzKtGQ2zTVN0sTyrIBMix8Jb1t9VnGq7KxCsak3OfkixEjmO05ePWjV
-	 YwtEi1te1KV8Wo3rtTqMPFL9Yw5uymQGjwjY8h5d69kjFzOnjT4JUo5hoAJAkYoVh4
-	 bjSYYGtELS9Lw==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id C7F401800259;
-	Sun, 20 Apr 2025 03:18:17 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sun, 20 Apr 2025 11:17:50 +0800
-Subject: [PATCH] PM: wakeup: Do not expose wakeup_source_create()
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OuxSpPQM"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53K3CbYT011446;
+	Sat, 19 Apr 2025 20:24:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=5w3IvGl6OlZmAqeGCF3dB3I
+	FoWI+f6VbmMyXYd6YiRw=; b=OuxSpPQMBfHktZfjEjf3qYdDqeKZO44huWFHiK7
+	SNE05R/ofBMtpMORzYx/cNNBBTLlYR+k5zWSqxAob9sGPmDiu/vBl7FzmRRtzdXS
+	I5jbluOR3DPgEAwLIlBHxP+DR9HWv3/JFN0pmpxUdUrlAqEl9lcTqAkLagTJSzAt
+	4ItavtEXrSHGxlOZ5kKLsTlH1xev3NH8z7HmlkB9IvdsFnimByFZ3Zoi/lE8L2Om
+	E7HxrBWiZADgO8h2uYj9XPzZ73QZirJwOPP+lC+BS0hcIo8bWSCzzMCXMiR3+8QJ
+	wPliSaP6Df5Rql9lceVN5o4JhqYytgCo7ZqcoNC8JJ5FXXQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 4629a685yd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 19 Apr 2025 20:24:43 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sat, 19 Apr 2025 20:24:34 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Sat, 19 Apr 2025 20:24:34 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id 3AD486267C3;
+	Sat, 19 Apr 2025 20:24:28 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Hariprasad Kelam <hkelam@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        "Subbaraya
+ Sundeep" <sbhatta@marvell.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        "Andrew Lunn" <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Alexei Starovoitov
+	<ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard
+ Brouer <hawk@kernel.org>,
+        "John Fastabend" <john.fastabend@gmail.com>
+Subject: [net-next PATCH] octeontx2-pf: AF_XDP: code clean up
+Date: Sun, 20 Apr 2025 08:53:50 +0530
+Message-ID: <20250420032350.4047706-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250420-fix_power-v1-1-1454cf1dc534@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAF1nBGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyMD3bTMiviC/PLUIt0UUwNzM+NUk2QLI0MloPqColSgJNis6NjaWgB
- ZSxQfWwAAAA==
-X-Change-ID: 20250420-fix_power-d50763e4c821
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: xKijEZKSrRiE0ugYtaaETNz0Z1fNrhVM
-X-Proofpoint-ORIG-GUID: xKijEZKSrRiE0ugYtaaETNz0Z1fNrhVM
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: vBTczJX-0XK-wFvID-dMGKb4mbvFOuGA
+X-Proofpoint-ORIG-GUID: vBTczJX-0XK-wFvID-dMGKb4mbvFOuGA
+X-Authority-Analysis: v=2.4 cv=ZobtK87G c=1 sm=1 tr=0 ts=680468fc cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=qgJZpCoBWuLJu9ZvEgAA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-20_01,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
- spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 clxscore=1011
- bulkscore=0 adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503100000 definitions=main-2504200026
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+The current API, otx2_xdp_sq_append_pkt, verifies the number of available
+descriptors before sending packets to the hardware.
 
-wakeup_source_create() is only used by drivers/base/power/wakeup.c
-internally.
+However, for AF_XDP, this check is unnecessary because the batch value
+is already determined based on the free descriptors.
 
-Do not expose it by making it as static function as its counterpart
-wakeup_source_free() does.
+This patch introduces a new API, "otx2_xsk_sq_append_pkt" to address this.
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Remove the logic for releasing the TX buffers, as it is implicitly handled
+by xsk_tx_peek_release_desc_batch
+
+Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
 ---
- drivers/base/power/wakeup.c | 3 +--
- include/linux/pm_wakeup.h   | 6 ------
- 2 files changed, 1 insertion(+), 8 deletions(-)
+ .../marvell/octeontx2/nic/otx2_common.h       |  2 +
+ .../marvell/octeontx2/nic/otx2_txrx.c         |  5 +--
+ .../ethernet/marvell/octeontx2/nic/otx2_xsk.c | 42 ++++++++++++++-----
+ 3 files changed, 35 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 63bf914a4d4467dcf6c42e50951b91677fb9c46d..bb311c02f5a4754beb1c3d97e61f36d50d474e23 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -77,7 +77,7 @@ static DEFINE_IDA(wakeup_ida);
-  * wakeup_source_create - Create a struct wakeup_source object.
-  * @name: Name of the new wakeup source.
-  */
--struct wakeup_source *wakeup_source_create(const char *name)
-+static struct wakeup_source *wakeup_source_create(const char *name)
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index 1e88422825be..7e3ddb0bee12 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -1107,6 +1107,8 @@ int otx2_enable_rxvlan(struct otx2_nic *pf, bool enable);
+ int otx2_install_rxvlan_offload_flow(struct otx2_nic *pfvf);
+ bool otx2_xdp_sq_append_pkt(struct otx2_nic *pfvf, struct xdp_frame *xdpf,
+ 			    u64 iova, int len, u16 qidx, u16 flags);
++void otx2_xdp_sqe_add_sg(struct otx2_snd_queue *sq, struct xdp_frame *xdpf,
++			 u64 dma_addr, int len, int *offset, u16 flags);
+ u16 otx2_get_max_mtu(struct otx2_nic *pfvf);
+ int otx2_handle_ntuple_tc_features(struct net_device *netdev,
+ 				   netdev_features_t features);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+index 0a6bb346ba45..9593627b35a3 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+@@ -1410,9 +1410,8 @@ void otx2_free_pending_sqe(struct otx2_nic *pfvf)
+ 	}
+ }
+ 
+-static void otx2_xdp_sqe_add_sg(struct otx2_snd_queue *sq,
+-				struct xdp_frame *xdpf,
+-				u64 dma_addr, int len, int *offset, u16 flags)
++void otx2_xdp_sqe_add_sg(struct otx2_snd_queue *sq, struct xdp_frame *xdpf,
++			 u64 dma_addr, int len, int *offset, u16 flags)
  {
- 	struct wakeup_source *ws;
- 	const char *ws_name;
-@@ -106,7 +106,6 @@ struct wakeup_source *wakeup_source_create(const char *name)
- err_ws:
- 	return NULL;
- }
--EXPORT_SYMBOL_GPL(wakeup_source_create);
+ 	struct nix_sqe_sg_s *sg = NULL;
+ 	u64 *iova = NULL;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.c
+index ce10caea8511..b328aae23d73 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_xsk.c
+@@ -11,6 +11,7 @@
+ #include <net/xdp.h>
  
- /*
-  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index 51e0e8dd5f9e50d928db6efa2e3232a117d7e012..6689e73a3a2d249a6eb3517b0597e737b01248bb 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -95,7 +95,6 @@ static inline void device_set_wakeup_path(struct device *dev)
- }
+ #include "otx2_common.h"
++#include "otx2_struct.h"
+ #include "otx2_xsk.h"
  
- /* drivers/base/power/wakeup.c */
--extern struct wakeup_source *wakeup_source_create(const char *name);
- extern void wakeup_source_destroy(struct wakeup_source *ws);
- extern void wakeup_source_add(struct wakeup_source *ws);
- extern void wakeup_source_remove(struct wakeup_source *ws);
-@@ -129,11 +128,6 @@ static inline bool device_can_wakeup(struct device *dev)
- 	return dev->power.can_wakeup;
+ int otx2_xsk_pool_alloc_buf(struct otx2_nic *pfvf, struct otx2_pool *pool,
+@@ -196,11 +197,39 @@ void otx2_attach_xsk_buff(struct otx2_nic *pfvf, struct otx2_snd_queue *sq, int
+ 		sq->xsk_pool = xsk_get_pool_from_qid(pfvf->netdev, qidx);
  }
  
--static inline struct wakeup_source *wakeup_source_create(const char *name)
--{
--	return NULL;
--}
++static void otx2_xsk_sq_append_pkt(struct otx2_nic *pfvf, u64 iova, int len,
++				   u16 qidx)
++{
++	struct nix_sqe_hdr_s *sqe_hdr;
++	struct otx2_snd_queue *sq;
++	int offset;
++
++	sq = &pfvf->qset.sq[qidx];
++	memset(sq->sqe_base + 8, 0, sq->sqe_size - 8);
++
++	sqe_hdr = (struct nix_sqe_hdr_s *)(sq->sqe_base);
++
++	if (!sqe_hdr->total) {
++		sqe_hdr->aura = sq->aura_id;
++		sqe_hdr->df = 1;
++		sqe_hdr->sq = qidx;
++		sqe_hdr->pnc = 1;
++	}
++	sqe_hdr->total = len;
++	sqe_hdr->sqe_id = sq->head;
++
++	offset = sizeof(*sqe_hdr);
++
++	otx2_xdp_sqe_add_sg(sq, NULL, iova, len, &offset, OTX2_AF_XDP_FRAME);
++	sqe_hdr->sizem1 = (offset / 16) - 1;
++	pfvf->hw_ops->sqe_flush(pfvf, sq, offset, qidx);
++}
++
+ void otx2_zc_napi_handler(struct otx2_nic *pfvf, struct xsk_buff_pool *pool,
+ 			  int queue, int budget)
+ {
+ 	struct xdp_desc *xdp_desc = pool->tx_descs;
+-	int err, i, work_done = 0, batch;
++	int  i, batch;
+ 
+ 	budget = min(budget, otx2_read_free_sqe(pfvf, queue));
+ 	batch = xsk_tx_peek_release_desc_batch(pool, budget);
+@@ -211,15 +240,6 @@ void otx2_zc_napi_handler(struct otx2_nic *pfvf, struct xsk_buff_pool *pool,
+ 		dma_addr_t dma_addr;
+ 
+ 		dma_addr = xsk_buff_raw_get_dma(pool, xdp_desc[i].addr);
+-		err = otx2_xdp_sq_append_pkt(pfvf, NULL, dma_addr, xdp_desc[i].len,
+-					     queue, OTX2_AF_XDP_FRAME);
+-		if (!err) {
+-			netdev_err(pfvf->netdev, "AF_XDP: Unable to transfer packet err%d\n", err);
+-			break;
+-		}
+-		work_done++;
++		otx2_xsk_sq_append_pkt(pfvf, dma_addr, xdp_desc[i].len, queue);
+ 	}
 -
- static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
- 
- static inline void wakeup_source_add(struct wakeup_source *ws) {}
-
----
-base-commit: 8117b017f3826b18a426f22de1e001767bc50fd3
-change-id: 20250420-fix_power-d50763e4c821
-
-Best regards,
+-	if (work_done)
+-		xsk_tx_release(pool);
+ }
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+2.34.1
 
