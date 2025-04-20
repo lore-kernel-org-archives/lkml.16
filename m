@@ -1,105 +1,259 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E79A1A23AF
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 23:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D811DD0F2;
+	Sun, 20 Apr 2025 23:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745190228; cv=none; b=nAkVSx48KW6NBXserWUwpYmJdMf0XYcwHSJwSjDB0/R2TytpYxJWLe+rHFnA2kDKtf79jSnFznMRDRbjJB1ifdAycWIynx56E96D4oNbxiVZuGnqKFl8ikcsE6Uc8rbqrbW64EvG6gA6eId5yR0WYQlTako+DQWQkscYO0qb2+0=
+	t=1745191664; cv=none; b=jgw+nJeaaILgzUbIXAV8Lgv6CMV0OJWP+xSbeWuFA6N7nUh74ZAjGaG8e4Fu8x5dF3oO2z+TtMsl5P9Kf1++VJHEd4enMMo2ugXkS1ofMJUtj32l4X/MKI5YXp/w5j+xri+EhqzSAVIoJCcSJWD2x0XrbUGVozy94RUHuAueS3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745190228; c=relaxed/simple;
-	bh=LOdqESJ6+vaRZxULRq1zMNqWuKStARp1yitSYBxp3mg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=rdN/i4eSuLbyA11Vz7bO3K9Gqfu2fTfnxbvl4dLvmXl8CU1SS5OOH2jhqFhkvI4XCXBYqb3OWZBIe6zBfbSbMVqsbbdkEMsPs3D979ExisiqUSDj0t+Q5crkS1wjHmnlBky25rVR2vtk4b95QEb9vCVWbfipoeLbTV8RzedYmak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iD2/KQ6g; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745191664; c=relaxed/simple;
+	bh=aLrT+Ui+faChf8Zuy/64i/Seqf6twImS6GoSOCadXqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GYnS781Wbjw/+Z59+LllTUaeVQlNmdrjAd60oqTzsGSx9Cgf+XahkF4UmUz1C4S4BFZJid5zzDTWe95NpAXnMSclBXhC/NaEUGZeLVsDQcomm6tyJNAJo+S57rgxWI+ypMNBEbJH421hACH+LzdcotHqpCw6sLht6JEVzqweKr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=WhGBGfCa; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iD2/KQ6g"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so5797345a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 16:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745190223; x=1745795023; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uc1SpWYdKUw86NbVOiEIz675x7c8RVBtZv7TBp2h0Q4=;
-        b=iD2/KQ6gdt09JRTepCro3FAD4ZKGn9HZVjwU39qHxoNPztLL+vFuTZE4HIr5w+2K3I
-         867Ji3l2l3Nk8Ei83dm1r22fTbJGUKqXChe/7Oz98poQiVpV25sTsBTYxJT1YtHsgeFY
-         EqsczHgA7aExrOCsi+Mry4dD/a/PiU5O+f1mU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745190223; x=1745795023;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uc1SpWYdKUw86NbVOiEIz675x7c8RVBtZv7TBp2h0Q4=;
-        b=T2BNIW7YIUxvv7mkqLv5NIj6FaNNX7Z2aFPmOvfPVQZWAfoSM7jJRT4AdxZ5vPoXiv
-         nwrCc90MXdhviFq9L1sOKt1cNeVmh0QwC8i1Wul5Z3uapkHyVOpwFm5kJzIvxjpPfy1T
-         5m0op/yWz7bSzqdggABUaAnJFfVvXbQfhkErSC+TdkPo6NvV4ql+qp8S3inytpmyRpmK
-         kaZRo6c9SGtbXLunblSdSJHmDLYkMPoTiAzvBPFGy7TY9fH3A560vwAvZoVtkqASSSY/
-         Ay7vocQYr6hnnyh/oKxcdVg5oPrR2+ICFgbXYjnELWRPU14xHorWAEDM2E7IrT1Bu2tY
-         LznA==
-X-Gm-Message-State: AOJu0YzR8lznWfs6gWmOVaVm1rEw4PE45zsSDNA78Jg1Ntjd3gefM2DF
-	3WANGzMg6aEtDy8GiV/4nkochgafwXqrhqKBGHxHXrxwSW8stb0Rj0U0gBmq9fTZ3lerbYRGhsV
-	/7Tg=
-X-Gm-Gg: ASbGnctxWtlphpdMWWMXhDBN5jNS8J7agBkVjuTUjaGXWdZ/J6Frg2GQsPWY5+ox4GH
-	0H0bIz9qmpfOTd7AijKnts7lJYYduHIFteHypZCRVIW/kPZqySLmrVcvmjM4/VkQtH+dAtvFXVB
-	8zn1UIbSW+v1vNvAxJdgvnG/gFXbxZjI+HVl2USMMsvoiWQlulJ+yIP8sXUXOUr3wd6MFJFBqLc
-	R65sgBXqMaVa3WvHlqCZ6l5r6pcMMGg0k8hq5Y5sQkNpiZMgLIv4PsxAbWXJ1g7gxKKKtAvANss
-	LJ6vp1rrzZe8Lp9EC7ALlWCExty4yGpTePoCdFFiC6q7z56vBEjRR6USpzpdlU7Vd9xXQ46ZJ5K
-	UZzjHC+M5e65kvfK4+Tl5DQ70vg==
-X-Google-Smtp-Source: AGHT+IE6PPw1ORAvIQ3hJsSo+5qJZPIHRA3o/dLcEWpadRxBcoyykbfEk5jndS7W+tf//qwzwv60vA==
-X-Received: by 2002:a17:907:3f29:b0:ac1:ecb5:7207 with SMTP id a640c23a62f3a-acb74b7f3ddmr1124003266b.29.1745190223417;
-        Sun, 20 Apr 2025 16:03:43 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef47089sm436635366b.130.2025.04.20.16.03.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Apr 2025 16:03:42 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso531795566b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 16:03:42 -0700 (PDT)
-X-Received: by 2002:a17:907:944d:b0:ac7:d10c:1f39 with SMTP id
- a640c23a62f3a-acb74b1eba8mr1021793966b.20.1745190222249; Sun, 20 Apr 2025
- 16:03:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="WhGBGfCa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=WXKIlxFCERVyzYNMkGoSWDr/fiBxpxoP3/WtJFnoIlg=; b=WhGBGfCaDTfmfrNc
+	Q20w8ure+y8nylGAlM8M2FbzcP5E8secRFNFVAUuHy6/7WEnnYYzlrBtpTD0+w2ooaIreCJEubv8v
+	tSbLmcXmrF7cZDNNjLUmvG5T9Y63czjibnEaLv7rNJKlrttrc87KfbT4TnofYw8rgk1q18jPYuSfy
+	Ei0rJLYrtmHeqnvrvbpnOAFYChY9cRhex9nUJEyGLPUMBtzkvSAUQIo2XdXG0o8KEu39WRvscWgzT
+	pqR35rC+WyB+Zbj8a/SPREagjeF66GSUs6a7k3/YJMOan+GmKqd6J3Cjp5MI6pAJYezyXaACsDjZ6
+	PLni3QDaW4exMYMncg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u6e4U-00CkbO-12;
+	Sun, 20 Apr 2025 23:27:34 +0000
+From: linux@treblig.org
+To: oder_chiou@realtek.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] ASoC: codecs: Remove unused rt566[58]_sel_asrc_clk_src
+Date: Mon, 21 Apr 2025 00:27:33 +0100
+Message-ID: <20250420232733.182802-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 20 Apr 2025 16:03:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whxaq7LGfTcYH7-cG2PhHtSVVMGrfgviqOmqw7UNacaVA@mail.gmail.com>
-X-Gm-Features: ATxdqUFinCIr6nSUWwraman_5VKu6dYnNRcqzXXpn-IrXQ-ZnUUO87DfEpiIaAk
-Message-ID: <CAHk-=whxaq7LGfTcYH7-cG2PhHtSVVMGrfgviqOmqw7UNacaVA@mail.gmail.com>
-Subject: Re: Linux 6.15-rc3
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, 20 Apr 2025 at 14:01, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So everything looks fine, and while the merge window was fairly big,
-> that doesn't seem to have resulted in any particular pain. At least so
-> far. Knock wood.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Well, that was short-lived - my last-minute fixes to make things build
-for me with gcc-15 ends up having broken the gcc-14, as reported by
-Chris Clayton.
+rt5665_sel_asrc_clk_src() was added in 2016 by
+commit 33ada14a26c8 ("ASoC: add rt5665 codec driver")
 
-I try to do my build environment updates when it's all very quiet, but
-clearly I should do them on a Tuesday, not on a weekend when I also do
-my release candidates.
+rt5668_sel_asrc_clk_src() was added in 2018 by
+commit d59fb2856223 ("ASoC: rt5668: add rt5668B codec driver")
 
-Anyway, I pushed out a fix.
+Neither have been used.
 
-Hopefully everybody is too busy eating strange Easter desserts(*) that
-nobody else even noticed.
+Remove them.
 
-              Linus
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ sound/soc/codecs/rt5665.c | 96 ---------------------------------------
+ sound/soc/codecs/rt5665.h |  3 --
+ sound/soc/codecs/rt5668.c | 43 ------------------
+ sound/soc/codecs/rt5668.h |  3 --
+ 4 files changed, 145 deletions(-)
 
-(*) "What? You're telling me you don't eat memma/m=C3=A4mmi all day for
-Easter? What's the point of it all then?"
+diff --git a/sound/soc/codecs/rt5665.c b/sound/soc/codecs/rt5665.c
+index bcb6d7c6f301..b16b2c66e754 100644
+--- a/sound/soc/codecs/rt5665.c
++++ b/sound/soc/codecs/rt5665.c
+@@ -1022,102 +1022,6 @@ static int rt5665_mono_vol_put(struct snd_kcontrol *kcontrol,
+ 	return ret;
+ }
+ 
+-/**
+- * rt5665_sel_asrc_clk_src - select ASRC clock source for a set of filters
+- * @component: SoC audio component device.
+- * @filter_mask: mask of filters.
+- * @clk_src: clock source
+- *
+- * The ASRC function is for asynchronous MCLK and LRCK. Also, since RT5665 can
+- * only support standard 32fs or 64fs i2s format, ASRC should be enabled to
+- * support special i2s clock format such as Intel's 100fs(100 * sampling rate).
+- * ASRC function will track i2s clock and generate a corresponding system clock
+- * for codec. This function provides an API to select the clock source for a
+- * set of filters specified by the mask. And the codec driver will turn on ASRC
+- * for these filters if ASRC is selected as their clock source.
+- */
+-int rt5665_sel_asrc_clk_src(struct snd_soc_component *component,
+-		unsigned int filter_mask, unsigned int clk_src)
+-{
+-	unsigned int asrc2_mask = 0;
+-	unsigned int asrc2_value = 0;
+-	unsigned int asrc3_mask = 0;
+-	unsigned int asrc3_value = 0;
+-
+-	switch (clk_src) {
+-	case RT5665_CLK_SEL_SYS:
+-	case RT5665_CLK_SEL_I2S1_ASRC:
+-	case RT5665_CLK_SEL_I2S2_ASRC:
+-	case RT5665_CLK_SEL_I2S3_ASRC:
+-	case RT5665_CLK_SEL_SYS2:
+-	case RT5665_CLK_SEL_SYS3:
+-	case RT5665_CLK_SEL_SYS4:
+-		break;
+-
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	if (filter_mask & RT5665_DA_STEREO1_FILTER) {
+-		asrc2_mask |= RT5665_DA_STO1_CLK_SEL_MASK;
+-		asrc2_value = (asrc2_value & ~RT5665_DA_STO1_CLK_SEL_MASK)
+-			| (clk_src << RT5665_DA_STO1_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_DA_STEREO2_FILTER) {
+-		asrc2_mask |= RT5665_DA_STO2_CLK_SEL_MASK;
+-		asrc2_value = (asrc2_value & ~RT5665_DA_STO2_CLK_SEL_MASK)
+-			| (clk_src << RT5665_DA_STO2_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_DA_MONO_L_FILTER) {
+-		asrc2_mask |= RT5665_DA_MONOL_CLK_SEL_MASK;
+-		asrc2_value = (asrc2_value & ~RT5665_DA_MONOL_CLK_SEL_MASK)
+-			| (clk_src << RT5665_DA_MONOL_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_DA_MONO_R_FILTER) {
+-		asrc2_mask |= RT5665_DA_MONOR_CLK_SEL_MASK;
+-		asrc2_value = (asrc2_value & ~RT5665_DA_MONOR_CLK_SEL_MASK)
+-			| (clk_src << RT5665_DA_MONOR_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_AD_STEREO1_FILTER) {
+-		asrc3_mask |= RT5665_AD_STO1_CLK_SEL_MASK;
+-		asrc3_value = (asrc2_value & ~RT5665_AD_STO1_CLK_SEL_MASK)
+-			| (clk_src << RT5665_AD_STO1_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_AD_STEREO2_FILTER) {
+-		asrc3_mask |= RT5665_AD_STO2_CLK_SEL_MASK;
+-		asrc3_value = (asrc2_value & ~RT5665_AD_STO2_CLK_SEL_MASK)
+-			| (clk_src << RT5665_AD_STO2_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_AD_MONO_L_FILTER) {
+-		asrc3_mask |= RT5665_AD_MONOL_CLK_SEL_MASK;
+-		asrc3_value = (asrc3_value & ~RT5665_AD_MONOL_CLK_SEL_MASK)
+-			| (clk_src << RT5665_AD_MONOL_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5665_AD_MONO_R_FILTER)  {
+-		asrc3_mask |= RT5665_AD_MONOR_CLK_SEL_MASK;
+-		asrc3_value = (asrc3_value & ~RT5665_AD_MONOR_CLK_SEL_MASK)
+-			| (clk_src << RT5665_AD_MONOR_CLK_SEL_SFT);
+-	}
+-
+-	if (asrc2_mask)
+-		snd_soc_component_update_bits(component, RT5665_ASRC_2,
+-			asrc2_mask, asrc2_value);
+-
+-	if (asrc3_mask)
+-		snd_soc_component_update_bits(component, RT5665_ASRC_3,
+-			asrc3_mask, asrc3_value);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(rt5665_sel_asrc_clk_src);
+-
+ static int rt5665_button_detect(struct snd_soc_component *component)
+ {
+ 	int btn_type, val;
+diff --git a/sound/soc/codecs/rt5665.h b/sound/soc/codecs/rt5665.h
+index 12ab28e5f10d..089e4078d37a 100644
+--- a/sound/soc/codecs/rt5665.h
++++ b/sound/soc/codecs/rt5665.h
+@@ -1999,7 +1999,4 @@ enum {
+ 	RT5665_CLK_SEL_SYS4,
+ };
+ 
+-int rt5665_sel_asrc_clk_src(struct snd_soc_component *component,
+-		unsigned int filter_mask, unsigned int clk_src);
+-
+ #endif /* __RT5665_H__ */
+diff --git a/sound/soc/codecs/rt5668.c b/sound/soc/codecs/rt5668.c
+index f626453f332b..8442dd09cfaf 100644
+--- a/sound/soc/codecs/rt5668.c
++++ b/sound/soc/codecs/rt5668.c
+@@ -799,49 +799,6 @@ static void rt5668_reset(struct regmap *regmap)
+ 	regmap_write(regmap, RT5668_RESET, 0);
+ 	regmap_write(regmap, RT5668_I2C_MODE, 1);
+ }
+-/**
+- * rt5668_sel_asrc_clk_src - select ASRC clock source for a set of filters
+- * @component: SoC audio component device.
+- * @filter_mask: mask of filters.
+- * @clk_src: clock source
+- *
+- * The ASRC function is for asynchronous MCLK and LRCK. Also, since RT5668 can
+- * only support standard 32fs or 64fs i2s format, ASRC should be enabled to
+- * support special i2s clock format such as Intel's 100fs(100 * sampling rate).
+- * ASRC function will track i2s clock and generate a corresponding system clock
+- * for codec. This function provides an API to select the clock source for a
+- * set of filters specified by the mask. And the component driver will turn on
+- * ASRC for these filters if ASRC is selected as their clock source.
+- */
+-int rt5668_sel_asrc_clk_src(struct snd_soc_component *component,
+-		unsigned int filter_mask, unsigned int clk_src)
+-{
+-
+-	switch (clk_src) {
+-	case RT5668_CLK_SEL_SYS:
+-	case RT5668_CLK_SEL_I2S1_ASRC:
+-	case RT5668_CLK_SEL_I2S2_ASRC:
+-		break;
+-
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	if (filter_mask & RT5668_DA_STEREO1_FILTER) {
+-		snd_soc_component_update_bits(component, RT5668_PLL_TRACK_2,
+-			RT5668_FILTER_CLK_SEL_MASK,
+-			clk_src << RT5668_FILTER_CLK_SEL_SFT);
+-	}
+-
+-	if (filter_mask & RT5668_AD_STEREO1_FILTER) {
+-		snd_soc_component_update_bits(component, RT5668_PLL_TRACK_3,
+-			RT5668_FILTER_CLK_SEL_MASK,
+-			clk_src << RT5668_FILTER_CLK_SEL_SFT);
+-	}
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(rt5668_sel_asrc_clk_src);
+ 
+ static int rt5668_button_detect(struct snd_soc_component *component)
+ {
+diff --git a/sound/soc/codecs/rt5668.h b/sound/soc/codecs/rt5668.h
+index 6b851ddcc58a..b34a61d2109c 100644
+--- a/sound/soc/codecs/rt5668.h
++++ b/sound/soc/codecs/rt5668.h
+@@ -1309,7 +1309,4 @@ enum {
+ 	RT5668_CLK_SEL_I2S2_ASRC,
+ };
+ 
+-int rt5668_sel_asrc_clk_src(struct snd_soc_component *component,
+-		unsigned int filter_mask, unsigned int clk_src);
+-
+ #endif /* __RT5668_H__ */
+-- 
+2.49.0
+
