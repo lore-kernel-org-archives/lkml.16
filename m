@@ -1,89 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006C4FC1D;
-	Sun, 20 Apr 2025 16:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6EE367
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 16:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745166431; cv=none; b=YuXbYO1VOps8q7VoSVGma8pBo9N0XerX8tF4qYfYkSi0PNMPTErDdEYGqd57qj1CONXnxtQxvz6WjloRib6CEGy9TWeUvdbENAcV5670ufYMAzbX6sOf/N1A7A/FjsnE8961pkiZwapdo0ll9Uc9KUtpai28TyMxSaR25mMr040=
+	t=1745167283; cv=none; b=PcI0/u/1Na15w5VEwr7c5eCMPPmba3Ze8QHr1wT20fqyNlmqPOFACVYw4BPm/kVjrf/iJcY9rpKhUJv8h3+YB6SYLI9fE3kfsm6p4CrYhoWmEzh6jaw3DM0jkgDkl8uquNMZnwUXItD0RB5U5F6MkBUukZ4nPB1zpUQCZT1kSpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745166431; c=relaxed/simple;
-	bh=l4DpvoZ2s+5NheW/iw+WP+lM6nk2Cg0No3jGiCAkkDk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fzrSt+/dGHEgbU5Yka4qF2/TFR4urysQnowVnrCbOlq7uUP4I/RBeXW394CfUHMRa0Py+v9Jjnml5M3A4Ed2UjRXBNVqQalW4X8Pbz6bsWtrkYtMchZPyCS+mEEiVZ1McDZ/FU5PBJ+S+2dKyN5SJ8DFGr40agrCNhRDYAQppcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIN0MxU0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745167283; c=relaxed/simple;
+	bh=hN+hGvHDZ4ZzpptkfxDxf5ziiJE93m8B8IE6t8bemaw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=MlrIkYJFJyPh/33a1C2M8Gaaq9hJ9X0U0frnPTl/Aw4Ajwci/KvOiCFRhVArXnN2xWeHLA0E+z8yZeOPNRL1nmToRLGtNYk9taThYS7egzOqqYytpAUGJPONfkJN+arivrBYcgj6FYXc0/2BTWRygXUgfcyRVwOStmM9U6R5NGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/bqg4S4; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIN0MxU0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C66C4CEE2;
-	Sun, 20 Apr 2025 16:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745166430;
-	bh=l4DpvoZ2s+5NheW/iw+WP+lM6nk2Cg0No3jGiCAkkDk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LIN0MxU0MD6AGPjVyLyQJ4ASQeJaJREXdpOrdRw8DSfdWqpQVVkgbeWjtuhpLsLvo
-	 CvbfAmbWkMHrKNbPRxUYkg8ooA32vNj0E8BAeT7W4u4IhfjWwPmzx9X/pZWdkCOEt+
-	 y5fIrPDNHFtmwGLYSiim5LSoMIvuDV1PGAlTxgjrDfOYGgWs2XKYAx6xa/GCMKcZK3
-	 MInfGQM8tyqDqNiabI+5zSAcg0gxbA2eJcMwiaQU0oHwhmQcHdcsJY8kXz45iqahlA
-	 nPWZpnFBf3E3YGtjqHoE6vi8eAC3A7edVkVmva1hlGecf2DVN2OblNJZKDtzlyVrgT
-	 ZIybJXV5Wk6yA==
-From: SeongJae Park <sj@kernel.org>
-To: zuoze <zuoze1@huawei.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	wangkefeng.wang@huawei.com
-Subject: Re: [RFC PATCH] mm/damon: add full LPAE support for memory monitoring above 4GB
-Date: Sun, 20 Apr 2025 09:27:06 -0700
-Message-Id: <20250420162706.2844-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <5801dee7-0c22-4424-acb1-fe5f63645bc8@huawei.com>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/bqg4S4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745167280; x=1776703280;
+  h=date:from:to:cc:subject:message-id;
+  bh=hN+hGvHDZ4ZzpptkfxDxf5ziiJE93m8B8IE6t8bemaw=;
+  b=M/bqg4S4h1HlyhHOcSIZQFeucRAGQ3Al/q+6kRemP7X5GzVx+j3Zd3Hb
+   arjcgvDjvxCSR9L15fc3iKKu7CnkzxQ4ucHZrw3NC3xkgv4liA0m3c+Xm
+   utIsK2tzWc+vy2F/z4CUyQX+nV0BsAn90fdzqwYJPHxWXtpsrHA9J4Ujo
+   MeS2YO/9JnWN58iFM22DjPXXIHyn3G+uwk0J4wdGgj9a2IMypQGtuyCRU
+   PXlY3dX7/5Ekk6luhr/wT5JyNa0feVHEpgAjzaqyBk+T0SYHzVkS13wdT
+   cIkKr1yBtoemTCbONIp8RuzfjjShTDOgXuJy9V+lc6Sinl/+yA3CKP/we
+   w==;
+X-CSE-ConnectionGUID: 0iV8r8G4Tl6OWEFyCBtnvA==
+X-CSE-MsgGUID: W//kx+qQSM+K/olh592NnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="46844967"
+X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
+   d="scan'208";a="46844967"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 09:41:19 -0700
+X-CSE-ConnectionGUID: fWYVdk8gR06jxi9Hdw+t8A==
+X-CSE-MsgGUID: U1XG49++SnekVkQtfOv5wA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
+   d="scan'208";a="131274879"
+Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 20 Apr 2025 09:41:17 -0700
+Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u6XjH-0004lv-0y;
+	Sun, 20 Apr 2025 16:41:15 +0000
+Date: Mon, 21 Apr 2025 00:40:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 83b2d345e1786fdab96fc2b52942eebde125e7cd
+Message-ID: <202504210016.vTVwPpPq-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hello Ze,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 83b2d345e1786fdab96fc2b52942eebde125e7cd  x86/e820: Discard high memory that can't be addressed by 32-bit systems
 
-On Mon, 14 Apr 2025 09:21:55 +0800 zuoze <zuoze1@huawei.com> wrote:
+elapsed time: 1445m
 
-> 
-> 
-> 在 2025/4/12 0:35, SeongJae Park 写道:
-> > On Fri, 11 Apr 2025 14:30:40 +0800 zuoze <zuoze1@huawei.com> wrote:
-> > 
-> >> 在 2025/4/11 6:25, SeongJae Park 写道:
-> > [...]
-> >>> So I still don't anticipate big problems with my proposed approach.  But only
-> >>> prototyping and testing would let us know more truth.  If you don't mind, I
-> >>> will quickly write and share a prototype of my idea so that you could test.
-> >>>
-> >>
-> >> Sounds good! Please share the prototype when ready - happy to test and
-> >> help improve it.
-> > 
-> > Thanks, I will share the prototype as soon as be ready. I expect up to a few
-> > weeks.
-> > 
-> 
-> Got it! Excited to see the prototype. Let me know if you need anything
-> in the meantime.
+configs tested: 19
+configs skipped: 133
 
-I posted the RFC patch series[1] a few days ago.  I also just implemented[2]
-and pushed the support of it on DAMON user-space tool.  Please let me know if
-you find any concern on those.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-[1] https://lore.kernel.org/20250416042551.158131-1-sj@kernel.org
-[2] https://github.com/damonitor/damo/commit/5848e3a516e3b10e62c4ad7ebf0e444d7be09f6b
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250420    clang-20
+i386    buildonly-randconfig-002-20250420    clang-20
+i386    buildonly-randconfig-003-20250420    clang-20
+i386    buildonly-randconfig-004-20250420    clang-20
+i386    buildonly-randconfig-005-20250420    clang-20
+i386    buildonly-randconfig-006-20250420    clang-20
+i386                            defconfig    clang-20
+x86_64                        allnoconfig    clang-20
+x86_64                       allyesconfig    clang-20
+x86_64  buildonly-randconfig-001-20250420    clang-20
+x86_64  buildonly-randconfig-002-20250420    gcc-12
+x86_64  buildonly-randconfig-003-20250420    gcc-12
+x86_64  buildonly-randconfig-004-20250420    gcc-12
+x86_64  buildonly-randconfig-005-20250420    clang-20
+x86_64  buildonly-randconfig-006-20250420    clang-20
+x86_64                          defconfig    gcc-11
 
-
-Thanks,
-SJ
-
-[...]
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
