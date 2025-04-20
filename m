@@ -1,108 +1,79 @@
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1ED2905
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 19:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9BD101E6;
+	Sun, 20 Apr 2025 19:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745178318; cv=none; b=ETHnOHKarshYv8PuSYPjykyAPu+cTGimDm9uTNFtH2wAtGky3cDyF3aFptgamZ10TeGpP6itgFqPhC94+EcMtQlax4ByNx9Sb0k5ngJgAdnUlW0uLzxNw3ic4UgdW1jTTE4TCDIk8ONzizTmFwMvqrklF6xreN10ZiOMgKEFko0=
+	t=1745178479; cv=none; b=OcvjKr07764OLlBr0B6yrnpEbD88OZUGz1uJIsJMWrLJliFsKR2ibZovT8hLr/eNJ1MNoLWXyfHHps51wZYZ4Ccz/TKhREoEGOXXsu57egXc0lADiPgQNkhV0Cc4BX5yPj6Iv2MG5WgHywHwWFQllhA5KRN6fJWjI+AYG4687sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745178318; c=relaxed/simple;
-	bh=vJdBOf82Iy5iMcvXU5YCcDimg9KUr1N7wqDkB08AQLQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icjUpqg4Y+/nd2ajF7wgWdqMn9ucBU5Pa9KkxQIDpk1/f9BFJH3HfZt2kTF0g16YJXNMmxnZUlykEgwEZ7O0m3cWDZ/CTb2pAp9Ny/0div1SJi4CvhnbK9ugVkwSt5lbzOnUQOgf1IPtz53AJLSFt0b87T/wkhsLufUw+zAd92U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id f826c47b-1e1f-11f0-ac2f-005056bd6ce9;
-	Sun, 20 Apr 2025 22:45:12 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 20 Apr 2025 22:45:10 +0300
-To: Yu-Hsian Yang <j2anfernee@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, jic23@kernel.org,
-	lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
-	alisadariana@gmail.com, tgamblin@baylibre.com,
-	olivier.moysan@foss.st.com, antoniu.miclaus@analog.com,
-	eblanc@baylibre.com, joao.goncalves@toradex.com,
-	tobias.sperling@softing.com, marcelo.schmitt@analog.com,
-	angelogioacchino.delregno@collabora.com,
-	thomas.bonnefille@bootlin.com, herve.codina@bootlin.com,
-	chanh@os.amperecomputing.com, KWLIU@nuvoton.com,
-	yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] iio: adc: add support for Nuvoton NCT7201
-Message-ID: <aAVOxhe_VAvMXWRQ@surfacebook.localdomain>
-References: <20250416081734.563111-1-j2anfernee@gmail.com>
- <20250416081734.563111-3-j2anfernee@gmail.com>
- <Z_95naiV7zpLokPr@smile.fi.intel.com>
- <CA+4VgcKfDo2NSeBA6+z5AqCeEBds0-DwC0-e3H-bkJ7hEcHaWw@mail.gmail.com>
+	s=arc-20240116; t=1745178479; c=relaxed/simple;
+	bh=TE3wplbp/HpSIX1ikJZWqicehqT4BVmSMSnUx6glWCA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YCa95jEUdMuRN2O7JW3WoGec4OZ9vXvRQ8NCSUK+7XU8tY/9RFTFtU/zOduKAKRaNGr0jaeN1a90WY69WdLrw43MA2lmoaiiBt+Jpm32UoBS9mrRwbp0jUVDOZ79fk5YFTx1DNydaVvDW18jdg2hYuBELgoR+DCksKjJbzU6P2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkWDHalK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkWDHalK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD0A5C4CEE2;
+	Sun, 20 Apr 2025 19:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745178477;
+	bh=TE3wplbp/HpSIX1ikJZWqicehqT4BVmSMSnUx6glWCA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VkWDHalKkgkCcv/OqNI2Z0TAjZ6fZxfxYkhSCO2hG0hm3j9nokhRXjqTgTFKGezxB
+	 ACdnGqy7889fNnhqDGPOSkKaeAq9H+hWe1rkaBlnM/ZLZPfcNaK5bTvnKWOUuStdtw
+	 rZYVzHOeHVyekj6+ksdm9dr/h/tSopSH4goVG6yK3yv+EjWryy+2vGIkPq2hFB5sJ4
+	 zUSAF8x5UGCImqY8wZ8+aqQv1fFzxL/T/HUBtKRtEG6spT763prF0PjoYxzxN/YIiD
+	 Mgmp2iC6JxIyew/4w+6YC6pp9HM0sb9MN0n4wn6G2wGFlVxiCC7fpAJ9e0oZmxTwLU
+	 qb52K8nLzYjcg==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 0/7] mm/damon: auto-tune DAMOS for NUMA setups including tiered memory
+Date: Sun, 20 Apr 2025 12:47:54 -0700
+Message-Id: <20250420194754.76186-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250420194030.75838-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+4VgcKfDo2NSeBA6+z5AqCeEBds0-DwC0-e3H-bkJ7hEcHaWw@mail.gmail.com>
 
-Sun, Apr 20, 2025 at 09:03:05PM +0800, Yu-Hsian Yang kirjoitti:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> 於 2025年4月16日 週三 下午5:34寫道：
-> > On Wed, Apr 16, 2025 at 04:17:34PM +0800, Eason Yang wrote:
+On Sun, 20 Apr 2025 12:40:23 -0700 SeongJae Park <sj@kernel.org> wrote:
 
-...
-
-> > > +#define NCT7201_REG_VIN(i)                           (i)
-> >
-> > This doesn't do anything useful. Why do you need this rather useless macro?
-> >
+> Utilizing DAMON for memory tiering usually requires manual tuning and/or
+> tedious controls.  Let it self-tune hotness and coldness thresholds for
+> promotion and demotion aiming high utilization of high memory tiers, by
+> introducing new DAMOS quota goal metrics representing the used and the
+> free memory ratios of specific NUMA nodes.  And introduce a sample DAMON
+> module that demonstrates how the new feature can be used for memory
+> tiering use cases.
+[...]
+> References
+> ==========
 > 
-> Actually here we should define NCT7201_REG_VIN(i) as (0x00 + i),
-> We simply it as (i).
+> [1] https://lore.kernel.org/20231112195602.61525-1-sj@kernel.org/
+> [2] https://lore.kernel.org/20250303221726.484227-1-sj@kernel.org
+> [3] https://github.com/facebookresearch/DCPerf/blob/main/packages/tao_bench/README.md
 
-Please, don't. Use the full form which makes a big difference to the perception
-of this macro.
+Forgot adding below, sorry.
 
-...
+Revision History
+================
 
-> > > +struct nct7201_chip_info {
-> > > +     struct device *dev;
-> >
-> > This can be derived from the respective regmap. No need to have it here.
-> >
-> > > +     struct regmap *regmap;
-> > > +     struct regmap *regmap16;
-> > > +     int num_vin_channels;
-> > > +     u16 vin_mask;
-> > > +};
-> 
-> Use regmap->dev is okay if use regmap API.
+Changes from RFC
+(https://lore.kernel.org/20250320053937.57734-1-sj@kernel.org)
+- Wordsmith commit messages
+- Add documentations
 
-No, you are not supposed to use regmap->dev (and you can't), you need to call a
-getter API and get the device pointer.
-
-> But if we need to print message not from regmap API,
-
-I don't get this. What do you mean? The example you showed prints a message for
-the device. The same device that was used to create a regmap.
-
-> how suggestions to do in this case?
-
-Use the one that you can retrieve from regmap.
-
-...
-
-So, you have commented on some with agreement, and left uncommented a lot. Does
-it mean you are agree on all points? The rule of thumb do not comment on the cases
-you are fully agree with. Current email just makes a confusion.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+[...]
