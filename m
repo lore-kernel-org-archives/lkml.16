@@ -1,164 +1,217 @@
-Received: from m239-7.eu.mailgun.net (m239-7.eu.mailgun.net [185.250.239.7])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA731C1F0C
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 07:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.239.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E9E42A94
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 07:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745135144; cv=none; b=FGfBiJl9cr8qbxe6RoO9W/kmvfvT7njMjmr392XGDnZgaeaG2dSDH9NtZHRZGTIzTfXWzUHBmR5XFwb0Xc/tb4XM9PSnRWFxyd4/0DdpDPLGFmE66asdXjTDxuuqSSYzByj88NzMNBth/e5sOYmbDrOgQDCqI/5Mms6Uca40g1w=
+	t=1745135396; cv=none; b=T0xwIFaOmGHOEfUuc4NR87OcJUn26BB8M9oa4zAxtxZbyohF0ZAgsRqjsyq0kOFyH56WAUlOBp+PnUz9EkAeojuMKkA74UZlZNPKONDuUcXUDD+USHEjSlhWTM4KEJzdST1aVCvHEC3cLIq+Cg17OseLlQsQTZuFT+FABmOA/o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745135144; c=relaxed/simple;
-	bh=BkudVnTAnNC/V6WNtP7NAWkhu59T0YQbYmSZiw0Adb8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Gb1oC9MuHcO4F9A3UhFUCtwRSZNYzsHgaQy8TPwk/2CJkElxT2ry/K4zFOpk/cmV80s9zBWCHur8oVTr4x+B6nfdA9d8RsBwH68A2LzJCOoc+eSyKV0nJ4u5FBmnibqoeVxd6Hf+PWNzfCiwwXiURabmzGaNnUIBXFf6S/fs6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hewittfamily.org.uk; spf=pass smtp.mailfrom=hewittfamily.org.uk; dkim=pass (2048-bit key) header.d=hewittfamily.org.uk header.i=@hewittfamily.org.uk header.b=UjJsCs19; arc=none smtp.client-ip=185.250.239.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hewittfamily.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hewittfamily.org.uk
+	s=arc-20240116; t=1745135396; c=relaxed/simple;
+	bh=3erdAmULIY95rowLNakW1trC9jjblPqPQbhBi+dK2dY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aKkGoTmNdqhbqd6HO6K9SlJAZSQYXUhorwdigR94UFgddTGwtwO2qkjPdstUDiGepWcr/UgomYjcZkVR5Wkou3OgfeMh8mxmBkaeAt2RlbRNENOz8DtVaoExy7yA6gLgas72YyCS7dxYA1d8m4IB1eVFY7C/JAN+RiPCkbR0fLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWWTM9Qe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DCcY41oE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZWWTM9Qe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DCcY41oE; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hewittfamily.org.uk header.i=@hewittfamily.org.uk header.b="UjJsCs19"
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=hewittfamily.org.uk; q=dns/txt; s=s1; t=1745135140; x=1745142340;
- h=To: To: References: Message-Id: Content-Transfer-Encoding: Cc: Date: In-Reply-To: From: From: Subject: Subject: Mime-Version: Content-Type: Sender: Sender;
- bh=AItcyn0Q5k6MSVPg2w1qZOZG10cgn3d5vIEn6SA5F+w=;
- b=UjJsCs194UstY1COTvnDtiVMN7vtRZNhF6ArAgRKpmEEH028TV7xS0ay6XJhs0yFNvMaMDh/gKIsh1gPr5rUqFF42KJW8mi09RVA1dRc/pBQuVFHCBYS+Cb6daDP05DCzlnC9FLDouBlxgc0/sFdCzOIVVQlusY8kV0on+opKjJjmTBOutCCpVF+585tZa03DEEQvBN/v2YVq6J0fxpJAkWJA4JRFo+kSZ3DSIXf/UcbSQy8mBaLwyivoue7Dn5iIoSMLoAVSLUFYypWse3YVIH8gMDF7uuqNegNIDAN4FjigHdoCtwd36EO3MIAoTdzyyMEtYpNpJ6Qh3Zg/PH83Q==
-X-Mailgun-Sending-Ip: 185.250.239.7
-X-Mailgun-Sending-Ip-Pool-Name: 
-X-Mailgun-Sending-Ip-Pool: 
-X-Mailgun-Sid: WyIyNWUwNSIsImxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmciLCJlMzcyMCJd
-Received: from mail.hewittfamily.org.uk (unknown [87.200.95.144]) by 16311eb4e9af with
- SMTP id 6804a62428d7c2ba46392bc6 (version=TLS1.3,
- cipher=TLS_AES_128_GCM_SHA256); Sun, 20 Apr 2025 07:45:40 GMT
-Sender: christian@hewittfamily.org.uk
-Received: from smtpclient.apple (unknown [172.16.20.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWWTM9Qe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DCcY41oE";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZWWTM9Qe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DCcY41oE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.hewittfamily.org.uk (Postfix) with ESMTPSA id 4ZgLC51FmDz2Vymn;
-	Sun, 20 Apr 2025 11:45:37 +0400 (+04)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 48A841F7B7;
+	Sun, 20 Apr 2025 07:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745135387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBgxVaieIqG7dUDdWr8amJOLFVs9J9JZCobWB6kEjZ8=;
+	b=ZWWTM9Qeqpph5XfrHvtKSwKNp9R75VIbIMoMFcs71X8CMmJ5/9NTPQVEvcuUndDnDzyBCz
+	/v+mEQDgzSKQ9/kYIMYvixpcUmUr6xk7v9IlvILsJAmZPVzPMbINUgcvaZlCDjLxUAp7Jq
+	6zFFOVDryGmUn/ru1xSlDcF/ZbOLAEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745135387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBgxVaieIqG7dUDdWr8amJOLFVs9J9JZCobWB6kEjZ8=;
+	b=DCcY41oEVRzqAKX3NIVvkgCjStkTH8EFzJTauCWBmLWVvzXzOa2mmGRG4g7VCt7Z6jN949
+	ek505jjRI/TJV7AA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745135387; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBgxVaieIqG7dUDdWr8amJOLFVs9J9JZCobWB6kEjZ8=;
+	b=ZWWTM9Qeqpph5XfrHvtKSwKNp9R75VIbIMoMFcs71X8CMmJ5/9NTPQVEvcuUndDnDzyBCz
+	/v+mEQDgzSKQ9/kYIMYvixpcUmUr6xk7v9IlvILsJAmZPVzPMbINUgcvaZlCDjLxUAp7Jq
+	6zFFOVDryGmUn/ru1xSlDcF/ZbOLAEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745135387;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eBgxVaieIqG7dUDdWr8amJOLFVs9J9JZCobWB6kEjZ8=;
+	b=DCcY41oEVRzqAKX3NIVvkgCjStkTH8EFzJTauCWBmLWVvzXzOa2mmGRG4g7VCt7Z6jN949
+	ek505jjRI/TJV7AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 220BA13A6A;
+	Sun, 20 Apr 2025 07:49:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yIi6BhunBGj9FAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sun, 20 Apr 2025 07:49:47 +0000
+Date: Sun, 20 Apr 2025 09:49:46 +0200
+Message-ID: <871ptnuvad.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: alsa-devel@alsa-project.org,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/9] ALSA: usb-audio: Fix possible race at sync of urb completions
+In-Reply-To: <20250419080410.4148-1-hdanton@sina.com>
+References: <20210929080844.11583-1-tiwai@suse.de>
+	<20210929080844.11583-3-tiwai@suse.de>
+	<20250418103533.4078-1-hdanton@sina.com>
+	<87a58dvia7.wl-tiwai@suse.de>
+	<20250418144518.4097-1-hdanton@sina.com>
+	<875xj0ve49.wl-tiwai@suse.de>
+	<20250419080410.4148-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 0/5] dts: amlogic: switch to the new PWM controller
- binding
-From: Christian Hewitt <christian@hewittfamily.org.uk>
-In-Reply-To: <20241227212514.1376682-1-martin.blumenstingl@googlemail.com>
-Date: Sun, 20 Apr 2025 11:45:20 +0400
-Cc: linux-amlogic@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,
- jbrunet@baylibre.com,
- neil.armstrong@linaro.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4A37D0CD-FD4F-445A-87F8-19D65CB7FDB9@hewittfamily.org.uk>
-References: <20241227212514.1376682-1-martin.blumenstingl@googlemail.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-Synology-Spam-Flag: no
-X-Synology-Virus-Status: no
-X-Synology-Spam-Status: score=-0.091, required 5, FREEMAIL_ENVRCPT 0, FROM_HAS_DN 0, FROM_EQ_ENVFROM 0, SUSPICIOUS_RECIPS 2.51, __NOT_A_PERSON 0, TO_MATCH_ENVRCPT_ALL 0, BAYES_HAM -3, __INR_AND_NO_REF 0, __HDRS_LCASE_KNOWN 0, MIME_GOOD -0.1, MV_CASE 0.5, MID_RHS_MATCH_FROM 0, NO_RECEIVED -0.001, RCPT_COUNT_SEVEN 0, RCVD_COUNT_ZERO 0, TAGGED_RCPT 0, FREEMAIL_TO 0, __BODY_URI_ONLY 0, ARC_NA 0, TO_DN_SOME 0, MIME_TRACE 0, __THREADED 0, __NOT_SPOOFED 0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -1.80
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[sina.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[alsa-project.org,gmail.com,vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-> On 28 Dec 2024, at 1:25=E2=80=AFam, Martin Blumenstingl =
-<martin.blumenstingl@googlemail.com> wrote:
->=20
-> This series switches all Amlogic SoCs to use the new PWM controller
-> binding. The main benefits of the new binding are:
-> - the pwm controller driver now picks the best possible clock to
->  achieve the most accurate pwm output
-> - board.dts don't have to know about the pwm clock inputs anymore (as
->  the driver picks the best one automatically)
-> - new SoCs only need a new compatible string but no pwm-meson driver
->  changes, assuming only the clock inputs differ from older IP
->  revisions
->=20
-> This silences the following warning(s) at boot (for each pwm
-> controller instance):
->  using obsolete compatible, please consider updating dt
->=20
-> I have tested this on two devices:
-> - meson8b: odroidc1 (boots fine and cycling through all CPU
->  frequencies and thus voltages works fine)
-> - meson-sm1: x96-air-gbit (boots and the rtw8822cs SDIO card is
->  detected, so the 32kHz clock for the SDIO card works)
->=20
-> Since I cannot test all devices I'm asking for this series to be
-> applied so the Kernel CI board farm can help verify it works on all
-> boards available there.
+On Sat, 19 Apr 2025 10:04:08 +0200,
+Hillf Danton wrote:
+> 
+> On Sat, 19 Apr 2025 08:50:46 +0200 Takashi Iwai wrote:
+> >On Fri, 18 Apr 2025 16:45:17 +0200, Hillf Danton wrote:
+> >> On Fri, 18 Apr 2025 13:08:32 +0200 Takashi Iwai wrote:
+> >> > On Fri, 18 Apr 2025 12:35:32 +0200 Hillf Danton wrote:
+> >> > > On Wed, 29 Sep 2021 10:08:37 +0200 Takashi Iwai wrote:
+> >> > > > USB-audio driver tries to sync with the clear of all pending URBs in
+> >> > > > wait_clear_urbs(), and it waits for all bits in active_mask getting
+> >> > > > cleared.  This works fine for the normal operations, but when a stream
+> >> > > > is managed in the implicit feedback mode, there is still a very thin
+> >> > > > race window: namely, in snd_complete_usb(), the active_mask bit for
+> >> > > > the current URB is once cleared before re-submitted in
+> >> > > > queue_pending_output_urbs().  If wait_clear_urbs() is called during
+> >> > > > that period, it may pass the test and go forward even though there may
+> >> > > > be a still pending URB.
+> >> > > > 
+> >> > > > For covering it, this patch adds a new counter to each endpoint to
+> >> > > > keep the number of in-flight URBs, and changes wait_clear_urbs()
+> >> > > > checking this number instead.  The counter is decremented at the end
+> >> > > > of URB complete, hence the reference is kept as long as the URB
+> >> > > > complete is in process.
+> >> > > > 
+> >> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> >> > > > ---
+> >> > > >  sound/usb/card.h     | 1 +
+> >> > > >  sound/usb/endpoint.c | 7 ++++++-
+> >> > > >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >> > > > 
+> >> > > > diff --git a/sound/usb/card.h b/sound/usb/card.h
+> >> > > > index 3329ce710cb9..746a765b2437 100644
+> >> > > > --- a/sound/usb/card.h
+> >> > > > +++ b/sound/usb/card.h
+> >> > > > @@ -97,6 +97,7 @@ struct snd_usb_endpoint {
+> >> > > >  	unsigned int nominal_queue_size; /* total buffer sizes in URBs */
+> >> > > >  	unsigned long active_mask;	/* bitmask of active urbs */
+> >> > > >  	unsigned long unlink_mask;	/* bitmask of unlinked urbs */
+> >> > > > +	atomic_t submitted_urbs;	/* currently submitted urbs */
+> >> > > >  	char *syncbuf;			/* sync buffer for all sync URBs */
+> >> > > >  	dma_addr_t sync_dma;		/* DMA address of syncbuf */
+> >> > > >  
+> >> > > > diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+> >> > > > index 29c4865966f5..06241568abf7 100644
+> >> > > > --- a/sound/usb/endpoint.c
+> >> > > > +++ b/sound/usb/endpoint.c
+> >> > > > @@ -451,6 +451,7 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
+> >> > > >  		}
+> >> > > >  
+> >> > > >  		set_bit(ctx->index, &ep->active_mask);
+> >> > > > +		atomic_inc(&ep->submitted_urbs);
+> >> > > >  	}
+> >> > > >  }
+> >> > > >  
+> >> > > > @@ -488,6 +489,7 @@ static void snd_complete_urb(struct urb *urb)
+> >> > > >  			clear_bit(ctx->index, &ep->active_mask);
+> >> > > >  			spin_unlock_irqrestore(&ep->lock, flags);
+> >> > > >  			queue_pending_output_urbs(ep);
+> >> > > 
+> >> > > 			smp_mb();
+> >> > > 
+> >> > > > +			atomic_dec(&ep->submitted_urbs); /* decrement at last */
+> >> > > 
+> >> > > Does it match the comment to add a mb?
+> >> > 
+> >> > How...?  I don't understand your intention.
+> >> > 
+> >> In addition to the UAF report [1], I saw a customer report of list
+> >> corruption of linux-6.1.99 on arm64 this week without reproducer.
+> >> 
+> >> 	list corruption
+> >> 	list_add_tail();
+> >> 	push_back_to_ready_list();
+> >> 	snd_complete_urb();
+> >> 
+> >> And after another look at this patch I wonder if the race can not be
+> >> erased without the certainty that ep will be no longer used after the
+> >> atomic decrement.
+> >
+> > But why adding more barrier if you perform the atomic op...?
+> >
+> Because atomic op != ordering, see 26fbe9772b8c ("USB: core: Fix hang 
+> in usb_kill_urb by adding memory barriers") for detail for example.
+> And c5b2cbdbdac5 ("ipc/mqueue.c: update/document memory barriers") as well.
 
-This series breaks Broadcom BT on the GXBB/GXM/G12B boards in my
-current test rotation. I=E2=80=99m running Linux 6.14.2 with this series
-backported for testing. This is generally what=E2=80=99s seen in dmesg:
+Still don't get it.  Which reads and writes are you trying to solve?
 
-VIM2:~ # dmesg | grep -i blue
-[    8.659535] Bluetooth: Core ver 2.22
-[    8.659681] NET: Registered PF_BLUETOOTH protocol family
-[    8.659690] Bluetooth: HCI device and connection manager initialized
-[    8.659712] Bluetooth: HCI socket layer initialized
-[    8.659721] Bluetooth: L2CAP socket layer initialized
-[    8.659742] Bluetooth: SCO socket layer initialized
-[    8.724898] Bluetooth: HCI UART driver ver 2.3
-[    8.724953] Bluetooth: HCI UART protocol H4 registered
-[    8.725106] Bluetooth: HCI UART protocol Three-wire (H5) registered
-[    8.725434] Bluetooth: HCI UART protocol Broadcom registered
-[    8.725502] Bluetooth: HCI UART protocol QCA registered
-[    8.725559] Bluetooth: HCI UART protocol AML registered
-[    8.966727] Bluetooth: hci0: Frame reassembly failed (-84)
-[    8.966772] Bluetooth: hci0: Frame reassembly failed (-84)
-[   11.148157] Bluetooth: hci0: command 0xfc18 tx timeout
-[   11.148383] Bluetooth: hci0: BCM: failed to write update baudrate =
-(-110)
-[   11.148446] Bluetooth: hci0: Failed to set baudrate
-[   13.281510] Bluetooth: hci0: command 0xfc18 tx timeout
-[   13.281576] Bluetooth: hci0: BCM: Reset failed (-110)
+And more importantly, does it actually help at all?  If yes, I'd
+happily take the patch, of course.
 
-This is also visible on a VIM3 board in kernelci (Linux 6.15.-rc2):
 
-=
-https://dashboard.kernelci.org/test/maestro%3A67fd3cda3328e043e96da230?l=3D=
-true
+thanks,
 
-[ 3.954267] Bluetooth: hci0: Frame reassembly failed (-84)
-[ 4.040555] Bluetooth: hci0: Frame reassembly failed (-84)
-
-(linux-firmware and thus kernelci is lacking Broadcom BT firmwares so
-later messages that result from trying to load fw aren=E2=80=99t seen)
-
-With the series reverted:
-
-VIM2:~ # dmesg | grep -i blue
-[    8.452570] Bluetooth: Core ver 2.22
-[    8.452695] NET: Registered PF_BLUETOOTH protocol family
-[    8.452703] Bluetooth: HCI device and connection manager initialized
-[    8.452724] Bluetooth: HCI socket layer initialized
-[    8.452735] Bluetooth: L2CAP socket layer initialized
-[    8.452752] Bluetooth: SCO socket layer initialized
-[    8.530077] Bluetooth: HCI UART driver ver 2.3
-[    8.530113] Bluetooth: HCI UART protocol H4 registered
-[    8.530387] Bluetooth: HCI UART protocol Three-wire (H5) registered
-[    8.530902] Bluetooth: HCI UART protocol Broadcom registered
-[    8.530983] Bluetooth: HCI UART protocol QCA registered
-[    8.531037] Bluetooth: HCI UART protocol AML registered
-[    8.917685] Bluetooth: hci0: BCM: chip id 101
-[    8.918000] Bluetooth: hci0: BCM: features 0x2f
-[    8.919526] Bluetooth: hci0: BCM4354A2
-[    8.919560] Bluetooth: hci0: BCM4356A2 (001.003.015) build 0000
-[    8.941837] Bluetooth: hci0: BCM4356A2 'brcm/BCM4356A2.hcd' Patch
-[    9.831321] Bluetooth: hci0: BCM: features 0x2f
-[    9.832884] Bluetooth: hci0: BCM4356 37.4MHz AMPAK AP6356-0055
-[    9.832902] Bluetooth: hci0: BCM4356A2 (001.003.015) build 0266
-[    9.856044] Bluetooth: MGMT ver 1.23
-
-An SML544TW board (S905D) with a QCA9377 chip is not affected by the
-changes so the scope appears to be limited to Broadcom BT.
-
-I=E2=80=99ve also noticed that VIM3 and the SML5442TW have device-tree =
-items
-like max-speed, clocks, clock-names defined, but adding these to e.g.
-a WeTek Play2 board or removing from VIM3 doesn=E2=80=99t change =
-anything.
-
-Christian
-
+Takashi
