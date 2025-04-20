@@ -1,103 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C171EEA49;
-	Sun, 20 Apr 2025 07:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085C778F3E;
+	Sun, 20 Apr 2025 07:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745133291; cv=none; b=L84JWn20ARDG4FCOXb3XYErDVUTXF3IqaSIVNFgccv2BTUaB8i3w0053HnPrRVz90N7+xYnv7McnrhcRwde3BRpXqH7QXdx5kaBmk0uS/tPsH6tNNLf3JwjRtZY6JTK4tSXbMG4tGSWdqF2G6nBAeAHbG9aRqIiAarqxGEFLaK8=
+	t=1745133458; cv=none; b=Q1sjTgqrsK4BGSM3oCGg9Kjyxf1KpdVNS+M/jPhIhkJqUFXRe+JuIs3hmh5j6+pTarMBYMKNeSybVkUto9VNmLG0z+Mlb9e750O9PqPhBHBI8lerkumvvTy1c4zXku0oRxhJEn+mMxAfl/olxUC0quGDEnjPqBE1BwVaqc3wLRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745133291; c=relaxed/simple;
-	bh=SpNXshGC4uEadiZ9mic8rX/qeMHOKG3enirsdDCvXf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzNpRyd/M8rladr6YKym5WHYbrmN9JfulukOBBRk6uD7GxPPTj8yiPkM+Azk2gM1J7AvXyRneHaC0Nwluj3dPaFwx0+2VQTLHJ1TvvbS+/0VHp4enSEqzHxJltbFDYXecLBaO2nGxMvL3EJYy5TeeA8T6Kwf9bdFWkXqeGqgoW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9hnRRtm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745133458; c=relaxed/simple;
+	bh=kAbt2L4kg671pYS37gU/fZtxIXbvKl2K/RxKTomXmT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WPVLWQ0OuV4AR+Wjxt9EppJqlWTU/qssA1/jxFPm3ycDRk6H2tNn+a0eMX916rYpB69Mo4J4snczAXFsLsHTGlZ4cYjBffxJ7nX2hCFpy8ebg/iJrrPBeZ9+x2AK0izkRweGIM2aNYMksb5ab46bHvtWdAfj/uRDh3XO2VSRVC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nzeff6/y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9hnRRtm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E37C4CEE2;
-	Sun, 20 Apr 2025 07:14:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nzeff6/y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C07C4AF09;
+	Sun, 20 Apr 2025 07:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745133290;
-	bh=SpNXshGC4uEadiZ9mic8rX/qeMHOKG3enirsdDCvXf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9hnRRtmNHfnuM6gp/E+KrJvokqSb71oYMhBqMYRZgnnOGfewaBmv+VxsqSvw2mx7
-	 2fUdjbY/H46G3VKGRBnVwSy+Gjl4Z6RSMWeY14FJU6YmfQyL7kYGD5MBt7GIedAPYf
-	 WshWPr5dJTN9Wmr96QKS9Qodv+qsrhzEMuJXAU6Bd5tnDEQoGrprjYI9sbQ8XZCPzs
-	 8+caVRnyAL4BM9TX5W2rx5tKmtonDo4tGbYQ3BgJlrPC3GoZ4wZDsnfOB4NIgP2BY7
-	 tY3+8mvVofskwTyS6lS/IiWKwTGTcxkr24eh0/y5LbaD9SKuEGZVJwz5YEwht/9f63
-	 yZpV0FW9cb2BA==
-Date: Sun, 20 Apr 2025 10:14:46 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v8 00/24] Provide a new two step DMA mapping API
-Message-ID: <20250420071446.GB10635@unreal>
-References: <cover.1744825142.git.leon@kernel.org>
- <93ef8629-4040-4773-beac-03c62f848727@kernel.dk>
+	s=k20201202; t=1745133457;
+	bh=kAbt2L4kg671pYS37gU/fZtxIXbvKl2K/RxKTomXmT8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Nzeff6/yynvStEnBnW35r39G49OQu2MTljTONZkQieNcZu3kPYn+FWKKIWC8yINQr
+	 Djq3eXpij4bDEhrg4Uno68L14b9SdWuKGFPuemZEvIpIePvODTaxwRUXzCldwwm7AO
+	 jKSXJBrafY59LbaFu6aOkW2IyCbqHKqlw47DYOqc8BNg4R5lpqaM/XyJW+ICqLTY8b
+	 61RRSATkXLuns755feYrs50Hx8NC7fXRZcLJOVC/jIfod3kIWv2BvFan6XFjr8rYJN
+	 qorGd8x03AwlQjNYyO6QGy37M46EC/iGpoqKKdlAmIF9RyqCNfBnYWRhxWhqnpYl15
+	 0S2Z6UTAahA0g==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so2205750a12.1;
+        Sun, 20 Apr 2025 00:17:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/FlsEIzzSlIe5peNoLndX1hsPsjuAWGMAO5ydQoU1iFE2dCJIZFKUpwTf4f6WILtVThESdfQn7b7uiaLSlUeF@vger.kernel.org, AJvYcCVfZVdbcoMPLGF+A5d0pqZCh3lNrgxjkMzx7RRvN8I793Hs4ZLfAX0NFMUqea+AorWWen7uo9y2UZQbDMI=@vger.kernel.org, AJvYcCWG5HLaTkaaeL5/GtYI3+Bz603oHVIrlg5RTGHmRw1+CXBOQ81tGERectQFx3jdq2zleFEp+r+GYiayeI0t@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKo8I2t70HIlzO86AS19Ir5Ksp77tX5VXKuofANi6HYtGoG/dv
+	e2v/cKPT90QczVzv1EC+FTKx4FjHqvu91/dwdnUD/I00UtCB1FsUvLEuPbENFmTYfCM6f6wQLEK
+	4rIy+vAzadRVuaeeA2seZgVUzDWE=
+X-Google-Smtp-Source: AGHT+IFipSDphqQejDTjEHb6w0t3D9Mrp3gh/Gk2d+8YbuuQI2ckZv0Gh3jPFkzypUkadOvfGgfov6bhfBarLFeSYpA=
+X-Received: by 2002:a17:907:7d90:b0:aca:c864:369a with SMTP id
+ a640c23a62f3a-acb74b36c86mr707209566b.18.1745133455991; Sun, 20 Apr 2025
+ 00:17:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93ef8629-4040-4773-beac-03c62f848727@kernel.dk>
+References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 20 Apr 2025 15:17:23 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+X-Gm-Features: ATxdqUHeiIpaROzGe_pe_P3wq4_tDyoL2Q2Sk3RB0jlyT4bmdmtQNL857Drp9PY
+Message-ID: <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, peterhuewe@gmx.de, 
+	jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	pmenzel@molgen.mpg.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 06:18:00AM -0600, Jens Axboe wrote:
-> On 4/18/25 12:47 AM, Leon Romanovsky wrote:
-> > Following recent on site LSF/MM 2025 [1] discussion, the overall
-> > response was extremely positive with many people expressed their
-> > desire to see this series merged, so they can base their work on it.
-> > 
-> > It includes, but not limited:
-> >  * Luis's "nvme-pci: breaking the 512 KiB max IO boundary":
-> >    https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
-> >  * Chuck's NFS conversion to use one structure (bio_vec) for all types
-> >    of RPC transports:
-> >    https://lore.kernel.org/all/913df4b4-fc4a-409d-9007-088a3e2c8291@oracle.com
-> >  * Matthew's vision for the world without struct page:
-> >    https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
-> >  * Confidential computing roadmap from Dan:
-> >    https://lore.kernel.org/all/6801a8e3968da_71fe29411@dwillia2-xfh.jf.intel.com.notmuch
-> > 
-> > This series is combination of effort of many people who contributed ideas,
-> > code and testing and I'm gratefully thankful for them.
-> 
-> Since I previously complained about performance regressions from this
-> series, I re-tested the current code. I no longer see a performance
-> regression on a AMD EPYC 9754 256 core box, nor on AMD EPYC 7763 128
-> core box.
-> 
-> Tested-by: Jens Axboe <axboe@kernel.dk>
+Hi, Qunqin,
 
-Thanks a lot.
+On Fri, Apr 18, 2025 at 5:33=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+> accelerator engines. Each engine have its own DMA buffer provided
+> by the controller. The kernel cannot directly send commands to the
+> engine and must first send them to the controller, which will
+> forward them to the corresponding engine. Based on these engines,
+> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+> as an engine.
+>
+> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>     are all encryption related drivers and SM2, SM3, and SM4 drivers
+>     will be added to the crypto subsystem in the future, the base driver
+>     need to be changed when adding these drivers. Therefore, it may be
+>     more appropriate to place the base driver within the crypto subsystem=
+.
+I don't know what Lee Jones exactly means. But I don't think this
+version is what he wants. You move the SE driver from drivers/mfd to
+drivers/crypto, but it is still a mfd driver because of "struct
+mfd_cell engines".
 
-> 
-> -- 
-> Jens Axboe
-> 
+Huacai
+
+>
+>     Removed complete callback in all drivers. Removed the concepts of
+>     "channel", "msg" and "request" as they may be confusing. Used the
+>     concepts of "egnine" and "command" may be better.
+>
+> v7: Addressed Huacai's comments.
+>
+> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>
+>     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>     ls6000se-rng.c ->loongson-rng.c
+>
+>     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>
+> v5: Registered "ls6000se-rng" device in mfd driver.
+> v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+>     and crypto.
+> v3: Put the updates to the MAINTAINERS in a separate patch.
+>
+> Qunqin Zhao (5):
+>   crypto: loongson - Add Loongson Security Engine chip controller driver
+>   crypto: loongson - add Loongson RNG driver support
+>   MAINTAINERS: Add entry for Loongson crypto driver
+>   tpm: Add a driver for Loongson TPM device
+>   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>
+>  MAINTAINERS                            |   7 +
+>  drivers/char/tpm/Kconfig               |   9 +
+>  drivers/char/tpm/Makefile              |   1 +
+>  drivers/char/tpm/tpm_loongson.c        |  78 ++++++++
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |  17 ++
+>  drivers/crypto/loongson/Makefile       |   3 +
+>  drivers/crypto/loongson/loongson-rng.c | 198 ++++++++++++++++++++
+>  drivers/crypto/loongson/loongson-se.c  | 239 +++++++++++++++++++++++++
+>  drivers/crypto/loongson/loongson-se.h  |  52 ++++++
+>  11 files changed, 606 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_loongson.c
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>  create mode 100644 drivers/crypto/loongson/loongson-se.c
+>  create mode 100644 drivers/crypto/loongson/loongson-se.h
+>
+>
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+> --
+> 2.45.2
+>
+>
