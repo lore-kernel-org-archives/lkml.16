@@ -1,103 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB511BF37;
-	Sun, 20 Apr 2025 10:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D31BF37;
+	Sun, 20 Apr 2025 10:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745146409; cv=none; b=eRUcZp05QQLhuH5c2zQzUbuSQSZ5z9qJJYl9orh1+m8mHRFD9wL3YMcdn/rkeOsIua0hkD6ADbRPfsM8Ikq79Sd+Ha2Zal2cCiko5+pV5zcf6jVvCrmq+NkudG2Bl280WNbfyZtLX0z33gjzLtuNMOnp2vZb2sMo1NDQ8T+315g=
+	t=1745146524; cv=none; b=EBEotuw2x8y5weeP3qlDi5sCe8t/GjT2BUQdX9lCUhVEY561f/JKC2V44HUa6cJC02JykTfZxriyTpmW0wjmLjrktYpfuA+MUntOdug8jQEVSiRUUUNMERs5yI1kfeR39EwdBmynlze64iPBIKAgKeu9AmNTAwO+7tBjdRcklGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745146409; c=relaxed/simple;
-	bh=w3GPUz20Zg0wYepIr6mudCRKy58RJwen5VNml7NOkdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLDnzJDljbkcphMmiCBSAy0LZlTDzbn8BpOUcguUg4Sf8hEZWZvzWorEFiwon46pKSOX+4FPShn5nZaWErX6X9JCzrIKiUU/m+Okxm7IP5TW8Pkp+AR++4j0Hc9X+gaEtdbgEJVzHz4qqQqJNB7EdqRmNzlk/bzCpo9ap9VNdi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukFPP9d+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745146524; c=relaxed/simple;
+	bh=JnxvrHfkRPZ/aF3Ett+En37YJDb+bJxbnYGGJW/fipM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IXawv1aA1rE+QCKvsUvmrKdKWHwaVj6A6dJ4s1xng0WPtv2DEQBe5ggVsiZQ9X44cQm75JiM5WfCsAkMlYTl07bK7bFExwaxyaaQW+jFmu3f75aBRizJCt1df/qyGPygUZugdhpRqe1O8ITnjoGpmmvRAucNozB/dKmWpyK89gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRfmr9sd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukFPP9d+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33703C4CEE2;
-	Sun, 20 Apr 2025 10:53:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRfmr9sd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065A9C4CEE2;
+	Sun, 20 Apr 2025 10:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745146408;
-	bh=w3GPUz20Zg0wYepIr6mudCRKy58RJwen5VNml7NOkdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ukFPP9d+Se0sUld91nc3n08tMfbpzJBP5/vowWPDIRnM4x1p6+XD+AU/qCyuX060o
-	 I1StpR3Z+KQANu6ONS0VHgezaOncSnI0cN0AUGbenjzPYw/rLpW+pE817RpPVGxp7D
-	 bFXqL3HNV59nHob2sLjRXr89AMo7SNnzRZEQTt2xJb3+LYf0kU8V75Xd9s7tyeMlMX
-	 rJZY6c0OtxpZ8kvusJW/WAjOlF/fKM0ApnWpacZ9lnPFm5gpNf9aRNPJODKiWIewbP
-	 MYQUT8nZmCZeEwvvyXGcjecYd7/uDfUTNBJ7ldHRZmy7cMnl2/CGazEwWRW/uTjbOO
-	 B9FJDKBTxrhvA==
-Date: Sun, 20 Apr 2025 12:53:22 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, 
-	Dave Chinner <david@fromorbit.com>, "Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: add tunable threshold parameter for triggering zone
- GC
-Message-ID: <mt3tlttnxheypljdkyy6bpjfkb7n5pm2w35wuf7bsma3btwnua@a3zljdrqqaq7>
-References: <20250325091007.24070-1-hans.holmberg@wdc.com>
- <iB7R4jpT-AaCUfizQ4YDpmyoSwGWmjJCdGfIRdvTE76nG3sPcUxeHgwVOgS5vFYV0DCeR1L5EINLppSGbgC3gg==@protonmail.internalid>
- <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
+	s=k20201202; t=1745146524;
+	bh=JnxvrHfkRPZ/aF3Ett+En37YJDb+bJxbnYGGJW/fipM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SRfmr9sdsja7Aoc1SiAZ/JHB5zy1GvSQaNbbB+rprHa3uCm1RodAJXkN5DaozT0f8
+	 xRGLBuijVcFeN/7RqMgON9J9zQLs8vB7XMaUYOgSF9WznvKAAdEDGZfh3NYOrL6DQE
+	 0WjuJaTqpb7tQG3mlO1uLHSsjuOUErkJS5p4uR4Hac3I1wVV0OacUnLYQEdKhV72qd
+	 T1RkRfJHtHc1ahlJKEVN0kUvHlfI8WEAA/zy8txJAj09+9G9VuNtXLt8h0smrs0p0x
+	 gZzQlxMiec0A/rKO08a7JE0cnjL8+19Xsw16nebceTbrQ1WGeIDW6Pm2HIWFAGBkVc
+	 9Y4Zjtmx+KlAw==
+From: Christian Brauner <brauner@kernel.org>
+To: glaubitz@physik.fu-berlin.de,
+	linux-fsdevel@vger.kernel.org,
+	Viacheslav Dubeyko <slava@dubeyko.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Slava.Dubeyko@ibm.com,
+	dsterba@suse.cz,
+	torvalds@linux-foundation.org,
+	willy@infradead.org,
+	jack@suse.com,
+	viro@zeniv.linux.org.uk,
+	josef@toxicpanda.com,
+	sandeen@redhat.com,
+	linux-kernel@vger.kernel.org,
+	djwong@kernel.org
+Subject: Re: [RFC PATCH] MAINTAINERS: add HFS/HFS+ maintainers
+Date: Sun, 20 Apr 2025 12:55:16 +0200
+Message-ID: <20250420-ansturm-hippen-47bb33bd2a47@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250417223507.1097186-1-slava@dubeyko.com>
+References: <20250417223507.1097186-1-slava@dubeyko.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1271; i=brauner@kernel.org; h=from:subject:message-id; bh=JnxvrHfkRPZ/aF3Ett+En37YJDb+bJxbnYGGJW/fipM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSwXJrKWyZe/Ylx1V6b+GtbDWfHnF9Q21hY5JD9xbph2 ox0j6iujlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIncU2P476y44rdUq6S/UA/3 108iaZLMM8P0Z4gksPvtTlr2eeqDRkaGjl+p247fLihZPO23+imnVL72hYH3hH6t+2Vgk2La9m4 tOwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 20, 2025 at 02:47:02AM -0700, Guenter Roeck wrote:
-> On Tue, Mar 25, 2025 at 09:10:49AM +0000, Hans Holmberg wrote:
-> > Presently we start garbage collection late - when we start running
-> > out of free zones to backfill max_open_zones. This is a reasonable
-> > default as it minimizes write amplification. The longer we wait,
-> > the more blocks are invalidated and reclaim cost less in terms
-> > of blocks to relocate.
-> >
-> > Starting this late however introduces a risk of GC being outcompeted
-> > by user writes. If GC can't keep up, user writes will be forced to
-> > wait for free zones with high tail latencies as a result.
-> >
-> > This is not a problem under normal circumstances, but if fragmentation
-> > is bad and user write pressure is high (multiple full-throttle
-> > writers) we will "bottom out" of free zones.
-> >
-> > To mitigate this, introduce a zonegc_low_space tunable that lets the
-> > user specify a percentage of how much of the unused space that GC
-> > should keep available for writing. A high value will reclaim more of
-> > the space occupied by unused blocks, creating a larger buffer against
-> > write bursts.
-> >
-> > This comes at a cost as write amplification is increased. To
-> > illustrate this using a sample workload, setting zonegc_low_space to
-> > 60% avoids high (500ms) max latencies while increasing write
-> > amplification by 15%.
-> >
-> ...
-> >  bool
-> >  xfs_zoned_need_gc(
-> >  	struct xfs_mount	*mp)
-> >  {
-> > +	s64			available, free;
-> > +
-> ...
-> > +
-> > +	free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
-> > +	if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
-> > +		return true;
-> > +
+On Thu, 17 Apr 2025 15:35:07 -0700, Viacheslav Dubeyko wrote:
+> Both the hfs and hfsplus filesystem have been orphaned since at least
+> 2014, i.e., over 10 years. However, HFS/HFS+ driver needs to stay
+> for Debian Ports as otherwise we won't be able to boot PowerMacs
+> using GRUB because GRUB won't be usable anymore on PowerMacs with
+> HFS/HFS+ being removed from the kernel.
 > 
-> With some 32-bit builds (parisc, openrisc so far):
+> This patch proposes to add Viacheslav Dubeyko and
+> John Paul Adrian Glaubitz as maintainers of HFS/HFS+ driver.
 > 
-> Error log:
-> ERROR: modpost: "__divdi3" [fs/xfs/xfs.ko] undefined!
-> ERROR: modpost: "__umoddi3" [fs/xfs/xfs.ko] undefined!
-> ERROR: modpost: "__moddi3" [fs/xfs/xfs.ko] undefined!
-> ERROR: modpost: "__udivdi3" [fs/xfs/xfs.ko] undefined!
-> 
+> [...]
 
-I opened a discussion about this:
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-https://lore.kernel.org/lkml/20250419115157.567249-1-cem@kernel.org/
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] MAINTAINERS: add HFS/HFS+ maintainers
+      https://git.kernel.org/vfs/vfs/c/fc16ec278b6e
