@@ -1,79 +1,38 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEA51A316B
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 04:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98A818D
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 04:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745122509; cv=none; b=kThKj55FfisbmNuI0W7b5fzkDEQvWo8tl0a2dNNZZOEVm+FTkxkyuhPCwktmmpq0+8WXIJ9Y6RFZvEhAlOihKWVYoNAEPcHh3eq3IrmgPmTVqZx8T7FjDGgHNIl8x7gykxSwHt5xh2n+qq1/9kpJHFIWnB6AvN7qHiqMydThfLw=
+	t=1745122769; cv=none; b=Tno3WwQYaro+g9XwTq9oMDmP9o8GnNjVYQSiopquqbcq++0npXIHHuy7bKp7MfGN4ksgvsGLerYN06sZq4jYgcNStp9GctPlwiX8MBOjy7dw22dwvioRl3P/XeyuhsxNvZxqn9Uggg5QqscfnQhohFUaQV8AyHM1uQ4ysUxHkg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745122509; c=relaxed/simple;
-	bh=l/JQQddlhPynwDPY0hqUzEhGKbXSBZE37ftjqTkM7uw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tMS0fSTMuEA+Qh6px/C4PC0BmSf5LOqiGPrRDHhPFmo/WI+s8I+Sbne+fRETxNUfSiJ+m996w4q4G3SjboTd7q3S9NNCrjUWPhZyCyU4ZG7l1XsYiFCHj2G1pisUh4fhhLm+mPByed99kJbW7p2ZCNP5bLAFLTlFpUp9bcYncis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x0++PaRm; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745122769; c=relaxed/simple;
+	bh=oJ4ev4gPfUUpOWJJebFfVVipT76kmtJVhyalc4Dz3Tk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=I6LTgTZbOwO7/+8/R3uLz1W9EkbZFsd7oqjEQ28gdLyLKf1KvE2gftn45AyKDnie7piKHpSEPeQFy0tEzRewtGNVCpGC/28UTADCYqiOjoS3PpKBRegqsvmbtNIpuNmNOx7b87chiCwaFaojIReu2krMhW+B5STl0hnZjvKgMU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=EvcCqQI4; arc=none smtp.client-ip=17.58.23.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x0++PaRm"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227b828de00so31702345ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 21:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745122507; x=1745727307; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BWq/yk6egdF/dXjQzH1qk63eH8P6QSiGPtgR+xWOm0g=;
-        b=x0++PaRmLDoHAJ78CbRoeeO9R+zELfcHVkmVZ8WBOWNAcaFAhEWISbLWimo6WRA9bO
-         HlMIs7fF/8kuwMRdXKFs8xWVMV+eHzqCwIm3m9PNX6IaJL3MKY0ac32kiC33DhJSGHjC
-         uQ7GuwIxisQbaeId0vOxL/TyrX1LeF+vcAsAwc1h4Gj0OY5h4dwBd/SD9fs73qqpU3W9
-         rnTeEaFbhW/hWTL1bk+M56LcOD6OppbnzG3/vwmL6zo/MqYkUj5vedlPLfXldCZjWlFf
-         bENaQk7iIgvKOM0MbX/5wRNJHHinmrz7HJlinhfWb5m/CL8HPJMwivT8urp/Y82KzPyh
-         SGkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745122507; x=1745727307;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BWq/yk6egdF/dXjQzH1qk63eH8P6QSiGPtgR+xWOm0g=;
-        b=Eg1Um2p9oh8QgDVKTEjlmQW0UMvPcsfeVCTL2Ij44TMuKhUiU0hJAc2d/oLYJV/aof
-         hGXNU85JYLRZzsD6Cxn0i9+mRzWdFookWO33GgYPGrMEUAKlewHVTo8k0m+yxj8UEMzG
-         EKp/3tmc8RUVnjaIBsLZP7PKILJkc7+rYhMO0/doa0Nssw6Pj/dWCil7kfTzaPf0UEOf
-         jySueFGlMFozVogc87+95QgBxIXIBGeUeABz39K2eRWvVfbvEZWmEPDDrEtqJwlzwHyU
-         NS8++FxRbC4hm3Dbe9A5+03mKI1tby/fZU247xAd5YSeA/NkE5L1LBoK3U+ZSbIScFbJ
-         DIZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7T4V8w68GNM0xvudZC8B1dVS/FXxfR9ATCUl6cABuwkDEdf9uy23BtpfpelosB6XFj7WKGV4ca9QOQR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjbE2xSb4NWC4aEUHMKdVqt9NtgTRNhwXMtAc71JyIl+UehvAJ
-	Z+4INUUsB0tlGNpOIDXAekx07Vyyqt/jZAO2vusNSkTE2bcynUDNZGsGTTc3WQ==
-X-Gm-Gg: ASbGnct7DQwyT5MRL5AysWPLhRTY2Oyi5WEA4nkZWs4946Ei7nOtjdUfBBEZ0U+tJtA
-	4aenhv5L6NqSiHW43D+u2WL0M/PKlQzt19urRqXCSWv8FvSCR+sO15LiRqBryvuo49HdoO5FgFz
-	L6unew2ZX68ws/6G04WxoNUygGmAG16i67j2PWy5xiIsbBC0iDEfoWq2M3gKKi2TP32HGnyqPwR
-	splMvUevgNsWz9qxARdIonimazHXHY96nCzv5bn6ifU615U53XA7ay/ZVYMO+RRdC30BO3MW2kZ
-	7XhDo7wI6PYCSW4AU9yxXVULVixibMbuW9+j7Xdn0XU47O0nXsj8vg==
-X-Google-Smtp-Source: AGHT+IEwT70MqJZh1REZd2GwFUgsulJR3hGmpXtb4k2hyt7Uf4STg11Rb+IyyGIokskY4EblKXX3ZQ==
-X-Received: by 2002:a17:903:1a24:b0:223:47d9:1964 with SMTP id d9443c01a7336-22c53607709mr128586875ad.34.1745122506897;
-        Sat, 19 Apr 2025 21:15:06 -0700 (PDT)
-Received: from [127.0.1.1] ([36.255.17.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fde851sm41412575ad.239.2025.04.19.21.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Apr 2025 21:15:06 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Frank Li <Frank.li@nxp.com>, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250404221559.552201-1-robh@kernel.org>
-References: <20250404221559.552201-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
-Message-Id: <174512250279.7011.5486812509432679947.b4-ty@linaro.org>
-Date: Sun, 20 Apr 2025 09:45:02 +0530
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="EvcCqQI4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=tjvSTKhyna1+OrrF4Lw07G232zTaXzdvfLNs8LBa9kU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=EvcCqQI4qnr+MVJAadmvHXSgn7dOBeZ8H8BYgFo/2fLigQ2jYPdZ+0fPyR4x7H3Yg
+	 leBAU6bpaPzmrw5p2RhaHB/vLlYHzoeDEL47XEkDzHpqKd8MfrSGie9NAShI+RQv8u
+	 OVvdFapuZG5/bw7FxAzf9Z8TibrbldOq2a3GWMlILlaFpAKUa28N36z1MGftZ4B1BC
+	 fZRGOVFTLx61dbisRFttDGnNfygP5MeipiIfTazzberrHVC/wtIEfPETHUHvSwC0sr
+	 NWAdOmBHtA5bGaQ082xRQqPop8lUobat58sCZATqL/4bCI8tXLHhEcrtY0OzVfb8Mr
+	 XlGIoiLIlNpMQ==
+Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
+	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPS id 7E5A527942D6;
+	Sun, 20 Apr 2025 04:19:26 +0000 (UTC)
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id 7247927942B8;
+	Sun, 20 Apr 2025 04:19:24 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Sun, 20 Apr 2025 12:19:09 +0800
+Subject: [PATCH v2] PM: wakeup: Do not expose 4 device wakeup source APIs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,23 +41,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250420-fix_power-v2-1-9b938d2283aa@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIALx1BGgC/22MwQ7CIBBEf6XZsxigoMaT/2EaY5at3YOlBUVNw
+ 7+79mzm9GYmb4FMiSnDsVkgUeHMcRSwmwZwuI43UhyEwWrrtbNa9fy+TPFFSQWv97uWHB6sAfl
+ PiWRcXedOeOD8iOmzqov5tf8sxSiJ8w57E9C37jQ/GXnELcY7dLXWLySEiIykAAAA
+X-Change-ID: 20250420-fix_power-d50763e4c821
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
 X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: OdVoQQbM0ELLh_n_LQsqqNTuL6CvSKXC
+X-Proofpoint-ORIG-GUID: OdVoQQbM0ELLh_n_LQsqqNTuL6CvSKXC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-20_01,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
+ spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 clxscore=1015
+ bulkscore=0 adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503100000 definitions=main-2504200033
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-On Fri, 04 Apr 2025 17:15:57 -0500, Rob Herring (Arm) wrote:
-> The content in these files has been moved to the schemas in dtschema.
-> pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
-> pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
-> msi-map property in pci-host-bridge.yaml.
-> 
-> 
+The following 4 APIs are only used by drivers/base/power/wakeup.c
+internally.
 
-Applied, thanks!
+- wakeup_source_create()
+- wakeup_source_destroy()
+- wakeup_source_add()
+- wakeup_source_remove()
 
-[1/1] dt-bindings: PCI: Remove obsolete .txt docs
-      commit: 7ab8db9042cb37222bebf77beeb1ff4df0789a84
+Do not expose them by making them as static functions.
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v2:
+- Remove 3 more APIs, correct tile and commit message.
+- Link to v1: https://lore.kernel.org/r/20250420-fix_power-v1-1-1454cf1dc534@quicinc.com
+---
+ drivers/base/power/wakeup.c | 12 ++++--------
+ include/linux/pm_wakeup.h   | 15 ---------------
+ 2 files changed, 4 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 63bf914a4d4467dcf6c42e50951b91677fb9c46d..27505dea7c1b454e7f124637af1834f558e0d022 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -77,7 +77,7 @@ static DEFINE_IDA(wakeup_ida);
+  * wakeup_source_create - Create a struct wakeup_source object.
+  * @name: Name of the new wakeup source.
+  */
+-struct wakeup_source *wakeup_source_create(const char *name)
++static struct wakeup_source *wakeup_source_create(const char *name)
+ {
+ 	struct wakeup_source *ws;
+ 	const char *ws_name;
+@@ -106,7 +106,6 @@ struct wakeup_source *wakeup_source_create(const char *name)
+ err_ws:
+ 	return NULL;
+ }
+-EXPORT_SYMBOL_GPL(wakeup_source_create);
+ 
+ /*
+  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
+@@ -149,7 +148,7 @@ static void wakeup_source_free(struct wakeup_source *ws)
+  *
+  * Use only for wakeup source objects created with wakeup_source_create().
+  */
+-void wakeup_source_destroy(struct wakeup_source *ws)
++static void wakeup_source_destroy(struct wakeup_source *ws)
+ {
+ 	if (!ws)
+ 		return;
+@@ -158,13 +157,12 @@ void wakeup_source_destroy(struct wakeup_source *ws)
+ 	wakeup_source_record(ws);
+ 	wakeup_source_free(ws);
+ }
+-EXPORT_SYMBOL_GPL(wakeup_source_destroy);
+ 
+ /**
+  * wakeup_source_add - Add given object to the list of wakeup sources.
+  * @ws: Wakeup source object to add to the list.
+  */
+-void wakeup_source_add(struct wakeup_source *ws)
++static void wakeup_source_add(struct wakeup_source *ws)
+ {
+ 	unsigned long flags;
+ 
+@@ -179,13 +177,12 @@ void wakeup_source_add(struct wakeup_source *ws)
+ 	list_add_rcu(&ws->entry, &wakeup_sources);
+ 	raw_spin_unlock_irqrestore(&events_lock, flags);
+ }
+-EXPORT_SYMBOL_GPL(wakeup_source_add);
+ 
+ /**
+  * wakeup_source_remove - Remove given object from the wakeup sources list.
+  * @ws: Wakeup source object to remove from the list.
+  */
+-void wakeup_source_remove(struct wakeup_source *ws)
++static void wakeup_source_remove(struct wakeup_source *ws)
+ {
+ 	unsigned long flags;
+ 
+@@ -204,7 +201,6 @@ void wakeup_source_remove(struct wakeup_source *ws)
+ 	 */
+ 	ws->timer.function = NULL;
+ }
+-EXPORT_SYMBOL_GPL(wakeup_source_remove);
+ 
+ /**
+  * wakeup_source_register - Create wakeup source and add it to the list.
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 51e0e8dd5f9e50d928db6efa2e3232a117d7e012..c838b4a30f876ef5a66972d16f461cfba9ff2814 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -95,10 +95,6 @@ static inline void device_set_wakeup_path(struct device *dev)
+ }
+ 
+ /* drivers/base/power/wakeup.c */
+-extern struct wakeup_source *wakeup_source_create(const char *name);
+-extern void wakeup_source_destroy(struct wakeup_source *ws);
+-extern void wakeup_source_add(struct wakeup_source *ws);
+-extern void wakeup_source_remove(struct wakeup_source *ws);
+ extern struct wakeup_source *wakeup_source_register(struct device *dev,
+ 						    const char *name);
+ extern void wakeup_source_unregister(struct wakeup_source *ws);
+@@ -129,17 +125,6 @@ static inline bool device_can_wakeup(struct device *dev)
+ 	return dev->power.can_wakeup;
+ }
+ 
+-static inline struct wakeup_source *wakeup_source_create(const char *name)
+-{
+-	return NULL;
+-}
+-
+-static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
+-
+-static inline void wakeup_source_add(struct wakeup_source *ws) {}
+-
+-static inline void wakeup_source_remove(struct wakeup_source *ws) {}
+-
+ static inline struct wakeup_source *wakeup_source_register(struct device *dev,
+ 							   const char *name)
+ {
+
+---
+base-commit: 8117b017f3826b18a426f22de1e001767bc50fd3
+change-id: 20250420-fix_power-d50763e4c821
 
 Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Zijun Hu <quic_zijuhu@quicinc.com>
 
