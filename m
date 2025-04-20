@@ -1,63 +1,62 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D6C1D63C7
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 07:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084401DF256
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 07:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745132757; cv=none; b=ESJlaZBiUsCTK9Vk4EGHnIN1detrFHByWxKfIAYjy4Pfv/RZRDvwamGrmq0VKEaGGrmjoYrn8P3uypIJw3O5yRdMuZEdIrN1o5WU5JZT3YzKbZY1/SN36tYjOnGI+rKvX2Bi98p+6TTE64oS3FoZ7xf76ZZB7uqTTVqg94W4Nz4=
+	t=1745132774; cv=none; b=ma45J/iF1mMKwyiZdJRBNFQqw6dSAfpidDufAy+g6ckxhpbSTnmIFfUmpyU/M4nwEBRnDk9HNHMCLCHZuWfRkzcn0PJEsFEtVvM3X6r5Ffodi29vQOwR5fu7/9aDTrKhx4Sg9OCZsChZBbOe0nz2pgnWn9uZu9xYp8ZGrO7A4VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745132757; c=relaxed/simple;
-	bh=naU+Nm6I+OWCRU692DlZpNGwp9uIvhKLLXB6jext1Rs=;
+	s=arc-20240116; t=1745132774; c=relaxed/simple;
+	bh=iTRDl9eIM1vHDXRz79uJ7GC6Y8TqkdFZFbsYIQKe0dE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BYBGKeOVyY/V8D+azyL3ItHJB7y/R/B/h31in18VZdd4cXaWTfXonq5ZzCDCa1cMGHzUS4pinqyx34lkU3hj8lXZN26RbSJ/4/jyz65yqGt/QsCHlYfZKUMO8K8yWMBcSETKVgpCbt3XmUlcoWou4KsyQV2KxGBNR1+bP7hUhmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ds6SLhtd; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=KuVhLG17HSC30L+fLyBSlIBLpQrDHoOYSgQv3vSVC5O3jn7n/u4wFJfZai5EjlGNsdJupbFeeYsfo0/E2/cUmFBum956r2rNWk3edCbRUpe/vfl8HzeRQbxBUO20Rb2yamYYER8H+bZ5mEaYZQyytrcpO1ytgPAsog6g6pjkzKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=N3ZIWMYT; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ds6SLhtd"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736b0c68092so2505823b3a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 00:05:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="N3ZIWMYT"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736b34a71a1so3438616b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 00:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745132755; x=1745737555; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1745132771; x=1745737571; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=82p2hGF43l3nHL3xd1lQgBU5B0CP4KmhX25rKqULFWk=;
-        b=ds6SLhtdBs+dZkHyP321JSs2pMtIxje9edOKxL9iI9qIzVqUAoKUgNHT2MmxQ0CgDr
-         VxvmJv8pmofcIUwEm0TlBIztezhIYlJVtFyQHBywgirmClymDz1W+CWhXgNdluj+T2eT
-         P5p+e5yjQuO0kWKxAetx7Yy8IGOJyHR+CdItp7HL0UdJilRLrBfGL1LXUCy9tuQFWR32
-         2ajZ24KKkcPqeklJ0o0lhG8WrJ3/EnAqkdppowt15K81O6hOeo4TDILAjJc18hywZa7j
-         gyjbV0NSNpb9F28qadAvk4wzMvX61izXVuJvblroSwUIXDYcTNCaqnIKmMS5HgdVnWE1
-         +2mg==
+        bh=3fcZq8o5SROXi3wQjym5oYgJNhmITCc4NsmF81Zj+a8=;
+        b=N3ZIWMYT7WYg6o2oswnh9mWBD3/lr92fFqSpsSBKkOKYJuHJfFt93PULzu161OwmQy
+         P1ZJrohuGcmOFtdLFYUrufCQ7gtZW0A8Dsr+mD0L1LnfRET1JGSbyKAJ82YvLwKwgU1W
+         FpCYip81stmLB9nwOHCjxywC6eKF7hjYZeYkGUEIYlHHSX3ZUbFI5j0tTPo5qgc5BuLx
+         4wAXTw9JtJ7lO9J9jRHmFtozgkcjmz83nQQDF526VongXKtc4U1L98oFAClDSXcXcDiC
+         +FWQntTmrBjW/pQGMUdiUQWiw1SKHVbHnJjoON19h/YuRYrC+Xq8e8ycXR0lt1GRxuL4
+         YqEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745132755; x=1745737555;
+        d=1e100.net; s=20230601; t=1745132771; x=1745737571;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=82p2hGF43l3nHL3xd1lQgBU5B0CP4KmhX25rKqULFWk=;
-        b=eEkHqYdK0Stv1KrOgr9O0fkTeL1dLyvYFX5EySVU7ki6ldcaOHhXWP3veQpziv2NG6
-         JbSukoN68RTPGLPz3vyubOtCKFvPCkpK2TGKY4bt/EJ9Ak37zHzQjXjti1in70bseBr6
-         D7pL0UzAyrNvSeQs2/o61ztO5iWmp70JJtLkW76XG0Hosvrr43WLh4XBA23AsqVBThEv
-         ZzkI2ZXwU2bbeKW4tevHCBLnXePKsKx7sv2gZK35GDs1oa8Be/8eats+dLKaHPNQO68U
-         yYzimZV+rHWvNETFTVxg/WyaUdfn1dMCunvPF6gHGawfcn2aFs1y5959U+zfrKH1nNZf
-         j9fA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5l/xgltMZlEAX/hTnQGIA+453f0mY4BuQAccZJgV86Gz+28KiMtTxfHCsOFxBXSdbc47Cp2Wn1/OlMaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw26NEtc6h9IsWcH+qGjw3wNRrOexZDUJGOc5P/EOVQ8aDg936D
-	Kk8UNUlRbXKQTgkXFJCQ0KT2H+TozbicWwutHKkCO8K1kbTDbnKVv9Ujeqiqa8wigrrpyeUYWsZ
-	J020=
-X-Gm-Gg: ASbGncuOZIzUfq/H3wCp8zSWAmAC02hE2mHKOhmUshXBa9+0GtpvRkiYHJ2YjuyjIu2
-	TZWEGulA9p++rMYX6itoADO5lFREZSEh8kuViilmK2nZC4O5CP2SRMwEPgVBbXWBb7xSOS+v934
-	VDWmaDpQWLwbDC652ZZ7v3uMP+MXxVJ6NGLBmiIP+n2H3lMUwx6NpxbBZDAUlFn22zcAxSRxQBh
-	oC5G+guPmRD/4gFYE7TBqYVb66ayS0UO9qbegsFCiadtEpwZIqU4lQqdOXjELNwstxkPFyZY1i7
-	+sHVqXICIoiuXDp+UvYXvcgk1y3Vig==
-X-Google-Smtp-Source: AGHT+IGlKkNRMGUbwKmTBceKff072Fm/DzOacdnjFvDMw7BvjtUfzlAQ7rY/VZVOV3UNRwKeqrDsWw==
-X-Received: by 2002:a05:6a20:6f92:b0:1f3:4427:74ae with SMTP id adf61e73a8af0-203cbc75495mr11575555637.25.1745132754866;
-        Sun, 20 Apr 2025 00:05:54 -0700 (PDT)
+        bh=3fcZq8o5SROXi3wQjym5oYgJNhmITCc4NsmF81Zj+a8=;
+        b=kYE4YfrlcOHPm3XJQTpQorZA80JzZ3X6OEE2VP2hX3MgTrrH1eQ/8KD+iLI60H3Zrl
+         IGQnFccJjS30DYPF5f7bxAuuV8Fi9goPUtS7cCZGhvj2vCqvr0E1t/acRdg+06xIUfyX
+         m9Gvs9KwGnQMzjskjmYAbQfw/9BZ6ejV9X56ZBq6j18BPjBAxEmkWMJW2606rNd5llpN
+         oOSNqniDFKFuWHD1HldN8+VGm1iScIvE028O0cITBsiQ++MTl0z4knI4jzmnhE94v6za
+         2ViMP39ShxJu0Ju1SWsW0pHSGcRRLS1HcBqDktYyZKWBFEUYQFAUnuUfuGGr9876ETTo
+         YRtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAbrJ9SaeYkBCI38W7ywI3rPG6HurAGqnX8g/7mXksY6TtZTBDgvDqEe/lgB17iHA11TnOPfzj76OoVAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE8btn4el+87mHIjKlXeoweeEgVGCSkJXOiS53sNEt9wl/YAun
+	nhiWB7yxOnMoRGDYpEVKK8lhSZTD1gGlLHSVcxNATR6ESP85kNT2MtOsL6wd84c=
+X-Gm-Gg: ASbGnctQnaX6UTnOPVyG6FBE9InRI3UgOcJlJaa5dsIYtkxZ8+oKo6dkniaVq0X90Xk
+	QqECEK3fUyTNYR0DDDYuITOZa0rv68VwDG4wrM5JajyIya7pypD/S8sS8ro0k8iLkMCVUNBngdp
+	TZRaa8CY4qZ2fWvx3+zBLUDGV1V8SRhdljw7ZapDecPXxdXtzX2hdfGn3ANRnmHY9ogZbFU3oX+
+	uhyQiDqXPPSV4ef+UkIgzye0VuzYAVgpA/3aoaj/agD0/5QpjLt5HQvW7/uaJsOVCTEHSS+LQGD
+	TK8xhYNjOnzpcoZU3ZYnIRo3SIwZvvx7adltJOXH
+X-Google-Smtp-Source: AGHT+IEE+OeQFiCCtU8Ee9YBkXu2dzO/ybh/igItlS4KQN0WO89uCSH/pwRn+/1oKh3T6c5poKcuYg==
+X-Received: by 2002:a05:6a00:1305:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-73dc14ccd73mr10174885b3a.11.1745132771298;
+        Sun, 20 Apr 2025 00:06:11 -0700 (PDT)
 Received: from localhost.localdomain ([2a11:3:200::40b3])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db12743afsm3742626a12.16.2025.04.20.00.05.40
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db12743afsm3742626a12.16.2025.04.20.00.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 00:05:54 -0700 (PDT)
+        Sun, 20 Apr 2025 00:06:10 -0700 (PDT)
 From: Guodong Xu <guodong@riscstar.com>
 To: ukleinek@kernel.org,
 	robh@kernel.org,
@@ -84,9 +83,9 @@ Cc: elder@riscstar.com,
 	linux-riscv@lists.infradead.org,
 	spacemit@lists.linux.dev,
 	guodong@riscstar.com
-Subject: [PATCH v2 5/6] pwm: Kconfig: add depends on ARCH_SPACEMIT to PWM_PXA
-Date: Sun, 20 Apr 2025 15:02:50 +0800
-Message-ID: <20250420070251.378950-6-guodong@riscstar.com>
+Subject: [PATCH v2 6/6] riscv: defconfig: Enable PWM support for SpacemiT K1 SoC
+Date: Sun, 20 Apr 2025 15:02:51 +0800
+Message-ID: <20250420070251.378950-7-guodong@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250420070251.378950-1-guodong@riscstar.com>
 References: <20250420070251.378950-1-guodong@riscstar.com>
@@ -98,31 +97,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SpacemiT K1 SoC uses PWM_PXA driver.
-
-Update the Kconfig file for the PWM_PXA driver to allow
-the SpacemiT K1 SoC to use it.
+Enable CONFIG_PWM and CONFIG_PWM_PXA in the defconfig
+to support the PWM controller used on the SpacemiT K1 SoC.
 
 Signed-off-by: Guodong Xu <guodong@riscstar.com>
 ---
-v2: No change
+v2: Changed PWM_PXA from built-in to a loadable module (=m)
 
- drivers/pwm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+arch/riscv/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 4731d5b90d7e..6731669e724e 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -493,7 +493,7 @@ config PWM_PCA9685
- 
- config PWM_PXA
- 	tristate "PXA PWM support"
--	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
-+	depends on ARCH_PXA || ARCH_MMP || ARCH_SPACEMIT || COMPILE_TEST
- 	depends on HAS_IOMEM
- 	help
- 	  Generic PWM framework driver for PXA.
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 4888529df1d8..8a8b77a0ac5a 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -259,6 +259,8 @@ CONFIG_RPMSG_CTRL=y
+ CONFIG_RPMSG_VIRTIO=y
+ CONFIG_PM_DEVFREQ=y
+ CONFIG_IIO=y
++CONFIG_PWM=y
++CONFIG_PWM_PXA=m
+ CONFIG_THEAD_C900_ACLINT_SSWI=y
+ CONFIG_PHY_SUN4I_USB=m
+ CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
 -- 
 2.43.0
 
