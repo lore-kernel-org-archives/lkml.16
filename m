@@ -1,32 +1,40 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64C3C1E9905;
-	Sun, 20 Apr 2025 13:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC9C1CB332;
+	Sun, 20 Apr 2025 13:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745154629; cv=none; b=SC1R/ROERJ4lhXLAw3ezc95bnIOHoCMG5W6SdKQdHQHvkAhYO8loxWAtaLrQ97SD7wVK2W1BsvZiSE3w5tygmtvE27/rANqqu7wIeRV8Q7tk/aLONWKLmOhv3D6mRYuP8+vg/JWfvzAiHVaTJIF2lfoyYr5xt0XuklKUoqLwan0=
+	t=1745155772; cv=none; b=STMAx0Yuhy2YrE+Zkfy3k8lPh7VOdbLz5IitXo3y3MKLC1qQRahgNzxxcNgXn8xCiAz7Wn1bDZE1IoLDoZgQXbP7adnnG90IY5eK9tkH/T0pYttAT5hFq8aBQlApU+12rVR93cdjSupni41J097J/PMEM980oVver+/a0tBI11E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745154629; c=relaxed/simple;
-	bh=zNNlBENvsCMoov/hDU2BXQexFpYKj/CEPuIGt83kohw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qpx3e5de93TkDWRPXhZFALrrTpqGuQM1VGSQqkh88ZohIRpL/0QJVHk0wJyhNRreEA5YOigOf0THtjpqQKX4MokaMY/wH1tKsA/0/7jzmjDff3cRMoBAioe5LmrRqN7n7th23h4TlV52mWSwyjtchozOO2x7fi5aAssexRmw5B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pHx/vc/N; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745155772; c=relaxed/simple;
+	bh=PcRb4vLeIVgs+hODsyml2Uafst7f0xS4MleR3zZREiY=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=ZjNEN6k4zVDK+HImfoSrRT/yQliQdKl0kx27zMcX4wxXF327xbbFwrcgF96U5sFqpNlFfi0ZG/uywxWJPpJLpmSolu7ENHBMN/ocUX/KZj9OR1jQyDzmn/5XFa0Ot7ndrWJ0XMoPPe4PeLmAHv3wfEIGC4Z9FTVQ5UN/0mQL9s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=t//J+PRX; arc=none smtp.client-ip=80.12.242.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pHx/vc/N"
-Received: from [100.70.200.26] (unknown [172.200.70.35])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DACD921165A5;
-	Sun, 20 Apr 2025 06:10:25 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DACD921165A5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745154627;
-	bh=v8/kjfMBX5j8otcEjoEy9F00J/rSQ+ksJRgSx0LzXFY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pHx/vc/NZF4cnSWNIalzxFIb81vkZ06zt+dIWhi+JXx6jLz53S9tgyJir/YVKLwwf
-	 iWeQDP1iuyZ+YGDvQFdV14T7ikZPiervu0iRYlmO7wFtxh5C5uZFCkgC/WUix0HTjn
-	 EfXaB0QH27xlDR2BK3JPVWLxifSMYg3/yoqgs+A0=
-Message-ID: <193deea5-c1b4-4189-a5a0-a3e29841225a@linux.microsoft.com>
-Date: Sun, 20 Apr 2025 06:10:23 -0700
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="t//J+PRX"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 6UjTu60N15k816UjWuGJEq; Sun, 20 Apr 2025 15:29:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1745155760;
+	bh=jYjltECi5YDKwKyj5VL5qpNIaEa30McnrQUxHJBKdS8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=t//J+PRXn14OhvQxuWZr96TclZsScn64qkAYynsgUG+EJL6JfKw2OVcT57RGF8SPd
+	 KMgkOfPjrtX9hGGU5COZhZZIwLdwul5XimSDMv4f6Kpm4h49qfc3DC8R1TMCVpwjrv
+	 3yG7OAs9cqGJHQR9xwRFXb9iisskKReiETaiFUYXEse3wLTSODuCyuof2jmYxD6/5v
+	 Dd5Woemd9Js/moxzKGcaIUBuvlxLb7MtR3Ud4pyQSUvyDm9VhEJWplyCBxlL922Hnn
+	 HPFyRjcTzejYynOeWgw4hn9U6qnUE9lKNBD0GgW6IBuT/HbF8E6P39MXty9T0IhMaO
+	 iSJoKAMROfKoQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 20 Apr 2025 15:29:20 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <688b74ce-3650-418f-82bd-63a5cee080d1@wanadoo.fr>
+Date: Sun, 20 Apr 2025 15:29:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,163 +42,379 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 9/9] ima: measure kexec load and exec events as
- critical data
-To: Baoquan He <bhe@redhat.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
- nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- vgoyal@redhat.com, dyoung@redhat.com
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
- <20250416021028.1403-10-chenste@linux.microsoft.com>
- <aAIWcwzuht+GCn29@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <aAIWcwzuht+GCn29@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v6 2/5] leds: add TI/National Semiconductor LP5812 LED
+ Driver
+References: <20250419184333.56617-1-trannamatk@gmail.com>
+ <20250419184333.56617-3-trannamatk@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: trannamatk@gmail.com
+Cc: conor+dt@kernel.org, corbet@lwn.net, devicetree@vger.kernel.org,
+ krzk+dt@kernel.org, lee@kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, pavel@kernel.org, robh@kernel.org
+In-Reply-To: <20250419184333.56617-3-trannamatk@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/18/2025 2:08 AM, Baoquan He wrote:
-> On 04/15/25 at 07:10pm, steven chen wrote:
->> From: Steven Chen <chenste@linux.microsoft.com>
->>
->> The amount of memory allocated at kexec load, even with the extra memory
->> allocated, might not be large enough for the entire measurement list.  The
->> indeterminate interval between kexec 'load' and 'execute' could exacerbate
->> this problem.
->>
->> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->> measured as critical data at kexec 'load' and 'execute' respectively.
->> Report the allocated kexec segment size, IMA binary log size and the
->> runtime measurements count as part of those events.
->>
->> These events, and the values reported through them, serve as markers in
->> the IMA log to verify the IMA events are captured during kexec soft
->> reboot.  The presence of a 'kexec_load' event in between the last two
->> 'boot_aggregate' events in the IMA log implies this is a kexec soft
->> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
->> after kexec soft reboot implies missing events in that window which
->> results in inconsistency with TPM PCR quotes, necessitating a cold boot
->> for a successful remote attestation.
->>
->> These critical data events are displayed as hex encoded ascii in the
->> ascii_runtime_measurement_list.  Verifying the critical data hash requires
->> calculating the hash of the decoded ascii string.
->>
->> For example, to verify the 'kexec_load' data hash:
->>
->> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements
->> | grep  kexec_load | cut -d' ' -f 6 | xxd -r -p | sha256sum
->>
->>
->> To verify the 'kexec_execute' data hash:
->>
->> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements
->> | grep kexec_execute | cut -d' ' -f 6 | xxd -r -p | sha256sum
->>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->    ^^^^^
->> Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
->    ^^^^^
-Hi Baoquan,
+Le 19/04/2025 à 20:43, Nam Tran a écrit :
+> The LP5812 is a 4×3 matrix RGB LED driver
+> with an autonomous animation engine
+> and time-cross-multiplexing (TCM) support for up to 12 LEDs.
+> Each LED can be configured through the related registers
+> to realize vivid and fancy lighting effects.
 
-I will add Co-developed-by tag in next version.
+...
 
-Thanks,
+> +static int lp5812_init_dev_config(struct lp5812_chip *chip,
+> +		const char *drive_mode, int rm_led_sysfs);
+> +
+> +static struct drive_mode_led_map chip_leds_map[] = {
 
-Steven
->> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> ---
->>   security/integrity/ima/ima.h       |  6 ++++++
->>   security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
->>   security/integrity/ima/ima_queue.c |  5 +++++
->>   3 files changed, 32 insertions(+)
-> Acked-by: Baoquan He <bhe@redhat.com>
->
->> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
->> index 24d09ea91b87..34815baf5e21 100644
->> --- a/security/integrity/ima/ima.h
->> +++ b/security/integrity/ima/ima.h
->> @@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
->>   				   unsigned long flags, bool create);
->>   #endif
->>   
->> +#ifdef CONFIG_IMA_KEXEC
->> +void ima_measure_kexec_event(const char *event_name);
->> +#else
->> +static inline void ima_measure_kexec_event(const char *event_name) {}
->> +#endif
->> +
->>   /*
->>    * The default binary_runtime_measurements list format is defined as the
->>    * platform native format.  The canonical format is defined as little-endian.
->> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->> index d1c9d369ba08..38cb2500f4c3 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -17,6 +17,8 @@
->>   #include "ima.h"
->>   
->>   #ifdef CONFIG_IMA_KEXEC
->> +#define IMA_KEXEC_EVENT_LEN 256
->> +
->>   static bool ima_kexec_update_registered;
->>   static struct seq_file ima_kexec_file;
->>   static size_t kexec_segment_size;
->> @@ -31,6 +33,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
->>   	sf->count = 0;
->>   }
->>   
->> +void ima_measure_kexec_event(const char *event_name)
->> +{
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->> +	size_t buf_size = 0;
->> +	long len;
->> +	int n;
->> +
->> +	buf_size = ima_get_binary_runtime_size();
->> +	len = atomic_long_read(&ima_htable.len);
->> +
->> +	n = scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		      "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
->> +		      "ima_runtime_measurements_count=%ld;",
->> +		      kexec_segment_size, buf_size, len);
->> +
->> +	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event, n, false, NULL, 0);
->> +}
->> +
->>   static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   {
->>   	/*
->> @@ -53,6 +73,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   out:
->>   	ima_kexec_file.read_pos = 0;
->>   	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
->> +	ima_measure_kexec_event("kexec_load");
->>   
->>   	return 0;
->>   }
->> diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
->> index 83d53824aa98..590637e81ad1 100644
->> --- a/security/integrity/ima/ima_queue.c
->> +++ b/security/integrity/ima/ima_queue.c
->> @@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
->>   			       unsigned long action,
->>   			       void *data)
->>   {
->> +#ifdef CONFIG_IMA_KEXEC
->> +	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
->> +		ima_measure_kexec_event("kexec_execute");
->> +#endif
->> +
->>   	ima_measurements_suspend();
->>   
->>   	return NOTIFY_DONE;
->> -- 
->> 2.43.0
->>
+I think this could be const.
+
+> +	{
+> +		"direct_mode",
+> +		(const char *[]){LED0, LED1, LED2, LED3, NULL}
+> +	},
+
+...
+
+> +static int lp5812_get_phase_align(struct lp5812_chip *chip, int led_number,
+> +		int *phase_align_val)
+> +{
+> +	int ret;
+> +	int bit_pos;
+> +	u16 reg;
+> +	u8 reg_val;
+> +
+> +	reg = DEV_CONFIG7 + (led_number / 4);
+> +	bit_pos = (led_number % 4) * 2;
+> +
+> +	ret = lp5812_read(chip, reg, &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*phase_align_val = (reg_val >> bit_pos) & 0x03;
+> +
+> +	return ret;
+> +}
+> +
+> +static int lp5812_get_led_mode(struct lp5812_chip *chip,
+> +		int led_number, enum control_mode *mode)
+> +{
+> +	int ret = 0;
+
+In several function, sometimes ret is initialized, sometimes it is not.
+See lp5812_get_led_mode() and lp5812_get_phase_align() just above.
+
+This could be done in a more consistent way.
+
+> +	u16 reg;
+> +	u8 reg_val;
+> +
+> +	if (led_number < 0x8)
+> +		reg = DEV_CONFIG3;
+> +	else
+> +		reg = DEV_CONFIG4;
+> +
+> +	ret = lp5812_read(chip, reg, &reg_val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*mode = (reg_val & (1 << (led_number % 8))) ? AUTONOMOUS : MANUAL;
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static void set_mix_sel_led(struct lp5812_chip *chip, int mix_sel_led)
+> +{
+
+Maybe init the 4 values at 0 first, then set to 1 only what is needed 
+below? This would save a few lines of code.
+
+> +	if (mix_sel_led == 0) {
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_0 = 1;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_1 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_2 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_3 = 0;
+> +	}
+> +	if (mix_sel_led == 1) {
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_0 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_1 = 1;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_2 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_3 = 0;
+> +	}
+> +	if (mix_sel_led == 2) {
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_0 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_1 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_2 = 1;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_3 = 0;
+> +	}
+> +	if (mix_sel_led == 3) {
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_0 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_1 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_2 = 0;
+> +		chip->u_drive_mode.s_drive_mode.mix_sel_led_3 = 1;
+> +	}
+> +}
+
+...
+
+> +static ssize_t dev_config_show(struct device *dev,
+> +		struct device_attribute *attr,
+> +		char *buf)
+> +{
+
+The whole function could be simplified with sysfs_emit_at().
+This avoids temp buffer, malloc/free and some copies.
+
+See led_auto_animation_show() below.
+
+> +	int i;
+> +	int num_drive_mode;
+> +	char *mode_info;
+> +	char *total_str;
+> +	size_t total_length;
+> +	char *const_str = "\nPlease select below valid drive mode:\n";
+> +	char *const_ex_str = "For Ex: echo tcmscan:1:0 > dev_config\n";
+> +	int ret = 0;
+> +	struct lp5812_chip *chip = i2c_get_clientdata(to_i2c_client(dev));
+> +
+> +	/* get drive mode and scan order */
+> +	mutex_lock(&chip->lock);
+> +	ret = lp5812_get_drive_mode_scan_order(chip);
+> +	mutex_unlock(&chip->lock);
+> +	if (ret)
+> +		return -EIO;
+> +
+> +	mode_info = parse_dev_config_info(chip);
+> +	if (!mode_info)
+> +		return -ENOMEM;
+> +
+> +	num_drive_mode = ARRAY_SIZE(chip_leds_map);
+> +	total_length = strlen(mode_info) + strlen(const_str) +
+> +			strlen(const_ex_str) + 1;
+> +	for (i = 0; i < num_drive_mode; ++i) {
+> +		total_length += strlen(chip_leds_map[i].drive_mode) +
+> +					strlen("\n");
+> +	}
+> +
+> +	total_str = kmalloc(total_length, GFP_KERNEL);
+> +	if (!total_str)
+> +		return -ENOMEM;
+> +
+> +	sprintf(total_str, "%s%s%s", mode_info, const_str, const_ex_str);
+> +	for (i = 0; i < num_drive_mode; ++i) {
+> +		strcat(total_str, chip_leds_map[i].drive_mode);
+> +		strcat(total_str, "\n");
+> +	}
+> +
+> +	ret = sysfs_emit(buf, "%s", total_str);
+> +	kfree(mode_info);
+> +	kfree(total_str);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +static ssize_t led_auto_animation_show(struct kobject *kobj,
+> +		struct kobj_attribute *attr, char *buf)
+> +{
+> +	int ret;
+> +	char tmp_str[256] = {};
+> +	char usage[128] = {};
+> +	char *aeu_select = "AEU Select: ";
+> +	char *start_pause_time = "Start pause time: ";
+> +	char *stop_pause_time = "; Stop pause time: ";
+> +	char *led_playback_time = "; LED Playback time: ";
+> +	int aeu_selection, playback_time, start_pause, stop_pause;
+> +	struct lp5812_led *led = to_lp5812_led(kobj);
+> +	struct lp5812_chip *chip = led->priv;
+> +
+> +	sprintf(usage, "%s%s",
+> +	"Command usage: echo (aeu number):(start pause time):",
+> +	"(stop pause time):(playback time) > autonomous_animation");
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_get_autonomous_animation_config(led);
+> +	if (ret) {
+> +		ret = -EIO;
+> +		goto out;
+> +	}
+> +
+> +	/* parse config and feedback to userspace */
+> +	aeu_selection = led->led_playback.s_led_playback.aeu_selection;
+> +	playback_time = led->led_playback.s_led_playback.led_playback_time;
+> +	start_pause = led->start_stop_pause_time.s_time.second;
+> +	stop_pause = led->start_stop_pause_time.s_time.first;
+> +	if (aeu_selection == ONLY_AEU1) {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+> +		"Only use AEU1; ", start_pause_time,
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	} else if (aeu_selection == AEU1_AEU2) {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+> +		"Use AEU1 and AEU2; ", start_pause_time,
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	} else {
+> +		sprintf(tmp_str, "%s%s%s%s%s%s%s%s\n", aeu_select,
+> +		"Use AEU1,AEU2 and AEU3; ", start_pause_time,
+
+Space missing after the , ?
+
+> +		time_name_array[start_pause], stop_pause_time,
+> +		time_name_array[stop_pause], led_playback_time,
+> +		led_playback_time_arr[playback_time]);
+> +	}
+> +	strcat(tmp_str, usage);
+> +	mutex_unlock(&chip->lock);
+> +	return sysfs_emit(buf, "%s\n", tmp_str);
+> +
+> +out:
+> +	mutex_unlock(&chip->lock);
+> +	return ret;
+> +}
+
+In order to have it more readable (IMHO), use less buffers, make less 
+copies, reduce code duplication and reduce the locking section, maybe 
+something like (un-tested):
+
+static ssize_t led_auto_animation_show(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
+{
+	int aeu_selection, playback_time, start_pause, stop_pause;
+	struct lp5812_led *led = to_lp5812_led(kobj);
+	struct lp5812_chip *chip = led->priv;
+	int pos = 0;
+	int ret;
+
+	mutex_lock(&chip->lock);
+	ret = led_get_autonomous_animation_config(led);
+	if (ret) {
+		ret = -EIO;
+		goto out;
+	}
+
+	/* parse config and feedback to userspace */
+	aeu_selection = led->led_playback.s_led_playback.aeu_selection;
+	playback_time = led->led_playback.s_led_playback.led_playback_time;
+	start_pause = led->start_stop_pause_time.s_time.second;
+	stop_pause = led->start_stop_pause_time.s_time.first;
+
+	mutex_unlock(&chip->lock);
+
+	pos += sysfs_emit_at(buf, pos, "AEU Select: ");
+	if (aeu_selection == ONLY_AEU1)
+		pos += sysfs_emit_at(buf, pos, "Only use AEU1");
+	else if (aeu_selection == AEU1_AEU2)
+		pos += sysfs_emit_at(buf, pos, "Use AEU1 and AEU2");
+	else
+		pos += sysfs_emit_at(buf, pos, "Use AEU1, AEU2 and AEU3");
+
+	pos += sysfs_emit_at(buf, pos, "; Start pause time: %s",
+			     time_name_array[start_pause]);
+	pos += sysfs_emit_at(buf, pos, "; Start pause time: %s",
+			     time_name_array[start_pause]);
+	pos += sysfs_emit_at(buf, pos, "; LED Playback time: %s",
+			     led_playback_time_arr[playback_time]);
+
+	pos += sysfs_emit_at(buf, pos, "\n");
+	pos += sysfs_emit_at(buf, pos, "Command usage: echo (aeu number):(start 
+pause time):(stop pause time):(playback time) > autonomous_animation\n");
+
+	return pos;
+
+out:
+	mutex_unlock(&chip->lock);
+	return ret;
+}
+
+...
+
+> +static ssize_t aeu_playback_time_show(struct kobject *kobj,
+> +		struct kobj_attribute *attr, char *buf)
+> +{
+> +	int ret = 0;
+> +	u8 val = 0;
+> +	struct anim_engine_unit *aeu = to_anim_engine_unit(kobj);
+> +	struct lp5812_chip *chip = aeu->led->priv;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = led_aeu_playback_time_get_val(aeu, &val);
+
+Maybe unlock here, to simplify code and be consistent with some other 
+functions above? (led_pwm_dimming_scale_show(), ...)
+
+Several other show/store function could be slightly simplified the same way.
+
+> +	if (ret != 0) {
+> +		mutex_unlock(&chip->lock);
+> +		return -EIO;
+> +	}
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return sysfs_emit(buf, "%d\n", val);
+> +}
+
+...
+
+> +struct lp5812_led {
+> +	struct kobject                        kobj;
+> +	struct lp5812_chip                    *priv;
+> +	struct attribute_group                attr_group;
+> +	int                                   enable;
+> +	enum control_mode                     mode;
+> +	enum dimming_type                     dimming_type;
+> +	u8                                    lod_lsd;
+> +	u8                                    auto_pwm;
+> +	u8                                    aep_status;
+> +	u16                                   anim_base_addr;
+> +	int                                   led_number; /* start from 0 */
+> +	int                                   is_sysfs_created;
+> +	const char                            *led_name;
+> +
+> +	union led_playback                    led_playback;
+> +	union time                            start_stop_pause_time;
+> +
+> +	int                                   total_aeu;
+
+What is the need to keeping it here?
+It is set to MAX_AEU. Why not just use it directly?
+
+If needed for future use, maybe, 'aeu' below should be a flex array?
+
+> +	struct anim_engine_unit               aeu[MAX_AEU];
+> +};
+> +
+> +struct lp5812_chip {
+> +	struct i2c_client                     *i2c_cl;
+> +	struct mutex                          lock; /* Protects access to device registers */
+> +	struct device                         *dev;
+> +	struct attribute_group                attr_group;
+> +	const struct lp5812_specific_regs     *regs;
+> +	const struct drive_mode_led_map       *chip_leds_map;
+> +	enum device_command                   command;
+> +	int                                   total_leds;
+
+What is the need to keeping it here?
+It is set to MAX_LEDS. Why not just use it directly?
+
+If needed for future use, maybe, 'leds' below should be a flex array?
+
+> +	union scan_order                      u_scan_order;
+> +	union drive_mode_info                 u_drive_mode;
+> +
+> +	struct lp5812_led                     leds[MAX_LEDS]; /* MAX 16 LEDs */
+
+This comment looks useless, IMHO.
+
+> +};
+> +
+> +#endif /*_LEDS_LP5812_H_*/
 
