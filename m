@@ -1,254 +1,86 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227871853;
-	Sun, 20 Apr 2025 18:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE117A2E2
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 19:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745174838; cv=none; b=hHgrDNsu4JUWOp/ABHNO4n/CDNYOn4NlTI3s136wKc8u8/SKIgHl/U1ULG6muL3HVEUOmj17RofcsoeIdBWkD19p+PG7N70fF/l9s7BQLNZbjINXS9LVw+YjXJzcd4h8ecL3VgUHTZQ2ryQk6PNSuEggOfiQ1Ld9Y5hzlGBNEmQ=
+	t=1745175652; cv=none; b=fjiRCYjBNdcCQZLUOJWUnnkuP1dMNDh4D7oTwxYnytBcbDNYMuo6BYW9MqDFGjyxCg9IQeITq/0uggwvr1ZR4AjHdCdCt6wYpSAEktyTPyd+odiq+NEXvbKC5mIj4qDdeNigN2PYHuWiE6J3vVbpksHbQi4S4tgOChJw3SfvKN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745174838; c=relaxed/simple;
-	bh=S913B2MOZt5/aXQTO5QqrTDrBHGlJ9jTSkJEjk056yQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fboc2lZZ1uGY7gCTKVTxOlSBSoEMdGOdl/swAZaAiCvqxvF33NkrpYwe399CblERZbKFY4AqUNcbWqI5W8/NZOB8MMqPwbQ5ncvtW+GSPpu6xSCC8Y3wXP0UgLNCfBZ1Igo7WSpEUWKH/rsMepKDs8I0pfsRVMHsPdQ28+EL244=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:729e:aceb:e7bf:d311])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 2C84153F3E;
-	Sun, 20 Apr 2025 18:47:11 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:729e:aceb:e7bf:d311) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev,
-	contact@arnaud-lcm.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v2 0/2] checkpatch.pl: Add warning for // comments on private
- Rust items
-Date: Sun, 20 Apr 2025 20:47:00 +0200
-Message-ID: <20250420184700.47144-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1745175652; c=relaxed/simple;
+	bh=f31ZqoUi2cLrlBE6sOstnrARr8afP+5sSmKf/ykpvkU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Dhv7nnK5rFSuaeQxYAgHWolTkF+vv8FOTN5TXI2XC131nD+/DKZ/bDjnVpnICoi6QCA9d+jhijiGKJ5gOXui6XVPor4xA9MV2lGzfkACxKhgO3EWaIQLtbEuqPMFw7aY6hS2uBqj0E+XaXmkPWFUQRYZ/C6p0ZBJA/3ANAdijro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=0xX/eF37; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="0xX/eF37"
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=0xX/eF37cMhK7cmWjEm/0Fjxpgl2dGrqC8Ncj0HoRIUsN9iF0ur+EWqMzvZTIcLM1ii7hrfnhW/pfq/+pN8JD4jx5czfL8OzmxfyATqK1Bz+nPdfgPF1gPwe4Q867tqhEX2E0J4NlgIqXx8fCsCpQbg7eDq+AmeTkpNzl9Q2xoIbwHUugo/6PVweGDHdEfcZ9tGVZxdhL3deHJfpoTXEb+iDIRFObh9kYr91Wsa0CVCwiGls6KQejlQ+G6DteurXmoLKrifNjhYnwKC/FLYuOJdw8pMPY5KHU5SY+a3wMf9O3sDExxIZKXOJzcnSpB2qqer1es0MCNQ4Q4fU4z94vQ==; s=purelymail3; d=purelymail.com; v=1; bh=f31ZqoUi2cLrlBE6sOstnrARr8afP+5sSmKf/ykpvkU=; h=Feedback-ID:Received:From:Subject:Date:To;
+Feedback-ID: 68247:10037:null:purelymail
+X-Pm-Original-To: linux-kernel@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 1640089901;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Sun, 20 Apr 2025 19:00:40 +0000 (UTC)
+From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Subject: [PATCH 0/2] RESEND: watchdog: Exynos990 WDT enablement
+Date: Sun, 20 Apr 2025 21:00:37 +0200
+Message-Id: <20250420-wdt-resends-april-v1-0-f58639673959@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174517483182.6702.4574765664478934960@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFVEBWgC/x3MMQqAMAxA0atIZgO11IpeRRykjRqQKomoIN7d4
+ viG/x9QEiaFrnhA6GTlLWVUZQFhGdNMyDEbrLG1cdbgFQ8UUkpRcdyFV2x81QRvnIu+hdztQhP
+ f/7Mf3vcDFeigy2MAAAA=
+X-Change-ID: 20250420-wdt-resends-april-7617c6044d69
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-watchdog@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ Igor Belwon <igor.belwon@mentallysanemainliners.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745175638; l=1062;
+ i=igor.belwon@mentallysanemainliners.org; s=20241206;
+ h=from:subject:message-id; bh=f31ZqoUi2cLrlBE6sOstnrARr8afP+5sSmKf/ykpvkU=;
+ b=aeMb1mip4EuNFqnut4/hMZguKoBKG/Zi7/f1mbPVfUPZVCbVdFvTE4znVX8+yT+f8d+8MRYBh
+ DeRPJLpgeT8D/uu+14I3oXVub138Ah77Vj20pHmReqMqoGxPvVmOU8y
+X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
+ pk=qKAuSTWKTaGQM0vwBxV0p6hPKMN4vh0CwZ+bozrG5lY=
 
-Hi,
+Hi all!
+This series enables the two clusters of the Exynos990 watchdog timer
+to be used. Weirdly enough, this SoC is missing the cl1 cluster, it has
+the cl0 cluster and then jumps over to cl2. As such, new cluster index
+code has been added to accomodate this oddity.
 
-Background
-----------
-
-The Rust-for-Linux project currently lacks enforcement of documentation for private Rust items,
-as highlighted in https://github.com/Rust-for-Linux/linux/issues/1157.
-While rustc already lints missing documentation for public items, private items remain unchecked.
-This patch series aims to close that gap by ensuring proper documentation practices
-for private Rust items in the kernel.
-
-The actual solution comes in several parts
-------------------------------------------
-
- 1) Patch 1 : Implements detection logic to emit warnings for improperly
- documented private Rust items (e.g., // comments instead of ///).
- 2) Patch 2 : Adds an auto-fix mechanism via the --fix option to help
- developers correct documentation issues.
-
-Results
---------------------
-
-The following implementation has been tested against real patches:
- - https://lore.kernel.org/rust-for-linux/dc63bdc4bff8f084714e2c8ff30e4c0d435e85b7.camel@redhat.com/T/#t
- - https://lore.kernel.org/rust-for-linux/20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com/T/#t
- - https://lore.kernel.org/rust-for-linux/20250420-nova-frts-v1-1-ecd1cca23963@nvidia.com/T/#u	
-and this file:
-// SPDX-License-Identifier: GPL-2.0
-
-// Simple comment - should not trigger
-
-// Returns a reference to the underlying [`cpufreq::Table`]. - should trigger
-#[inline]
-fn table(&self) -> &cpufreq::Table {
-    // SAFETY: The `ptr` is guaranteed by the C code to be valid. - should not trigger
-    unsafe { cpufreq::Table::from_raw(self.ptr) }
-}
-
-// Improper doc comment for a private function. - should trigger
-fn test() -> u32 {
-    42
-}
-
-/// Proper doc comment for a private function. - should not trigger
-fn proper_doc() -> u32 {
-    42
-}
-
-// TODO: implement more logic - should not trigger
-fn todo_marker() -> bool {
-    true
-}
-
-// Just a regular comment not followed by code - should not trigger
-
-pub fn public_function() {
-    // Public function - should not trigger
-}
-
-// Test - should trigger
-#[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
-struct Point2D {
-  pub x: f32,
-  pub y: f32
-}
-
-// Test - should not trigger
-#[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
-pub struct Point2D {
-  pub x: f32,
-  pub y: f32
-}
-
-// Test - should not trigger
-#[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
-pub struct Point2D {
-  pub x: f32,
-  pub y: f32
-}
-
-mod test_module {
-    // Module inner comment - should not trigger
-}
-
-// Comment before macro - should trigger
-macro_rules! my_macro {
-    // Comment inside macro - should not trigger
-    () => {};
-}
-
-// Comment before public macro - should not trigger
-#[macro_export]
-macro_rules! my_public_macro {
-
-}
-
-// Comment before unsafe block - should not trigger
-unsafe {
-    // Comment inside unsafe block - should not trigger
-    let x = 5;
-}
-
-
-// Comment with unsafe word - should trigger
-fn with_unsafe_keyword() {
-    println!("test");
-}
-
-// Comment with code example: - should trigger
-// let x = 5; - should trigger
-fn with_code_example() {
-    println!("test");
-}
-
-// NOTE: important consideration - should not trigger
-fn note_marker() -> bool {
-    true
-}
-
-
-// Comment with code example: - should not trigger
-/// let x = 5; - should not trigger
-fn with_mixed_comments() {
-    println!("test");
-}
-
-
-which led to this output:
-WARNING: Consider using `///` for private item documentation (line 5)
-#7: FILE: ./test.rs:7:
-+// Returns a reference to the underlying [`cpufreq::Table`]. - should trigger
-WARNING: Consider using `///` for private item documentation (line 12)
-#13: FILE: ./test.rs:13:
-+// Improper doc comment for a private function. - should trigger
-WARNING: Consider using `///` for private item documentation (line 33)
-#36: FILE: ./test.rs:36:
-+// Test - should trigger
-WARNING: Consider using `///` for private item documentation (line 61)
-#62: FILE: ./test.rs:62:
-+// Comment before macro - should trigger
-WARNING: Consider using `///` for private item documentation (line 80)
-#81: FILE: ./test.rs:81:
-+// Comment with unsafe word - should trigger
-WARNING: Consider using `///` for private item documentation (line 85)
-#87: FILE: ./test.rs:87:
-+// Comment with code example: - should trigger
-WARNING: Consider using `///` for private item documentation (line 86)
-#87: FILE: ./test.rs:87:
-+// let x = 5; - should trigger
-total: 0 errors, 7 warnings, 101 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
-
-./test.rs has style problems, please review.
-
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-To: Andy Whitcroft <apw@canonical.com>
-To: Joe Perches <joe@perches.com>
-To: Dwaipayan Ray <dwaipayanray1@gmail.com>
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-To: Alex Gaynor <alex.gaynor@gmail.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-To: Gary Guo <gary@garyguo.net>
-To: Björn Roy Baron <bjorn3_gh@protonmail.com>
-To: Benno Lossin <benno.lossin@proton.me>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-To: Trevor Gross <tmgross@umich.edu>
-To: Danilo Krummrich <dakr@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-To: Bill Wendling <morbo@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: rust-for-linux@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Cc: contact@arnaud-lcm.com
-Cc: skhan@linuxfoundation.org
-Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
 ---
 Changes in v2:
-- Tested against real patches
-- Link to v1: https://lore.kernel.org/all/20250419-checkpatch-rust-private-item-comment-v1-0-0f8bc109bd5a@arnaud-lcm.com/ 
+- bindings: Fix cluster-index limiting
+- Link to v1: https://lore.kernel.org/r/20250217-exynos990-wdt-v1-0-9b49df5256b0@mentallysanemainliners.org
+
 ---
+Igor Belwon (2):
+      dt-bindings: watchdog: samsung-wdt: Add exynos990-wdt compatible
+      watchdog: s3c2410_wdt: Add exynos990-wdt compatible data
+
+ .../devicetree/bindings/watchdog/samsung-wdt.yaml  | 11 +++---
+ drivers/watchdog/s3c2410_wdt.c                     | 39 +++++++++++++++++++++-
+ 2 files changed, 45 insertions(+), 5 deletions(-)
+---
+base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
+change-id: 20250420-wdt-resends-april-7617c6044d69
+
+Best regards,
 -- 
-2.43.0
+Igor Belwon <igor.belwon@mentallysanemainliners.org>
+
