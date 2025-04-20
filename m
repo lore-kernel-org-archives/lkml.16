@@ -1,194 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AACF12B63
-	for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 23:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962981876
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 00:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745105196; cv=none; b=iLda+t41a8bVB/CTyzx971yS/ZK7m7dUd1rcHUv03Wi/uWFSHCSrNixRZjeqx5E4mQXPETKWHN0oiJKHhJ7izbxQgFCEkD+TSTqLwIN7mi+Wp6/U/ckXv035QvpHWvPfk46w7NSA67DaRxJVQ4Ecrusj5E1eCgyhwVuUtoprlB0=
+	t=1745108077; cv=none; b=N7S0VVrMmsSwlRVyTX6SqGxef+TYgFTv9fRfxfP6PZUFYw9rTJMymlOvAFzge3V1lStrjv43WX9UFuxKqndlotZh9l9/bpY4QjZ0RjtRIiqePaPd3/fi7iGSXW6tzGLbi+yWI4ctCx+IEfqaOwz61h+OBUl9hPOSAPuDc6M4St4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745105196; c=relaxed/simple;
-	bh=qVScdkl5iPBLiBdRmiJzCqG13jp15oisHxcdqp8EuQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SBTtAxCBKFgZjQJwvO6OyYLShilL2Offi80w2kHVYjwL3AyKfMYPrFGOvC4uc0AV3QXbS7JC8q6+Z2dGec8Q5oQQ6tzt4AljIidCgUFvaFIvx+NniVS4HRnijpUKVMIQ1QNjrFCdNc6ZGOARpZeIW6XmCGRkkEUeLyVF1/MooEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSblfsvJ; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745108077; c=relaxed/simple;
+	bh=8kTwL8I7Bqe/i3B6H+KQI1SdZVpjeHYdl2D98OU+p+o=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Y4ta1EpHwNcaThjhYWee5/jSnbvaaxQSs9JlR5TPWpe8X5tuy/W65QumA8RM5JqE+cnnWvhvyuzaZ+Sixya18xzsFT4YoGd2a2ehV7u6oJ3MLrWtnr8bXX/YcZRsFe5+W6WC6mFqGqINQh3GGSU+QEB7jvPn9U+6zXvY8O0ht2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iYNMZZD5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSblfsvJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745105195; x=1776641195;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=qVScdkl5iPBLiBdRmiJzCqG13jp15oisHxcdqp8EuQk=;
-  b=LSblfsvJjdM1ERH2u8SPdUAfse5B6menGyZCAXam6X7ZNZrau+dp7zBX
-   t0z56ZoikNGpoeFi3iFZlcHuDiMIkEGQobNBZ7QnXUKQexxf8TmVa9E0T
-   GFFvxbV2ZGECCi76pLlM3AS3S3dV6DU2ujGQkoavzaRs4mJgvse2zmb41
-   lPmq0jqiNrXAZI8ddPmzuNgzHdCT+6SRHwngVWUsHKSx0ClEGFJ8Hfh29
-   +ZzVgKCp6+pPO7f18L//WxZQKjYBlgDy12oUYiA54uQRoZ+rxxYyD+4NW
-   2UVaMknww1mzZ+Tdk2FcZn7Pntv9Q4UGfmPHYCgP3QSSlHbHZeItpxCWa
-   g==;
-X-CSE-ConnectionGUID: ggejyDTFQz2Bt2CmH1jrRw==
-X-CSE-MsgGUID: 8QIS/W53RbixGU2oUxvhyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46395028"
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="46395028"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 16:26:34 -0700
-X-CSE-ConnectionGUID: 9OEHYU2bTi6f0WXx2F/voA==
-X-CSE-MsgGUID: +X3W9JFzRu+7kqitwi7C8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="168601627"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 19 Apr 2025 16:26:32 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6HZt-0004Ft-2Y;
-	Sat, 19 Apr 2025 23:26:29 +0000
-Date: Sun, 20 Apr 2025 07:25:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Sam Protsenko <semen.protsenko@linaro.org>
-Subject: drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive
- writing between 1 and 3 bytes into a region of size 2
-Message-ID: <202504200747.91Ja2Gmr-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYNMZZD5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745108074;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NuYZPgib8XXRmGrAdptMQ05xG1oDA8T8AcbL73YF0K4=;
+	b=iYNMZZD5khS8VivJ1+OgtdlzFf2zZY5tGKvWFwYkknc6KjXDnxS73hcfQ49xWfpVxFj+ws
+	4QvWlEKW4MQKAOTHoG/VDNV1bTAcHEE8MOinmNuqEb1PgsZCa7cQVpWULle8Sj8g6k4dYI
+	jJx14GvaBKTvBomN5Aope83uI4q6wXw=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-0WpaV-qpNQWeicAnReSRtg-1; Sat, 19 Apr 2025 20:14:32 -0400
+X-MC-Unique: 0WpaV-qpNQWeicAnReSRtg-1
+X-Mimecast-MFC-AGG-ID: 0WpaV-qpNQWeicAnReSRtg_1745108072
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5d608e703so507589685a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 17:14:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745108072; x=1745712872;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NuYZPgib8XXRmGrAdptMQ05xG1oDA8T8AcbL73YF0K4=;
+        b=TPJThDcZyWMOMco0+PQocLQsr+nLdWVglWVU9PYxK/ZAOx/3Zwm9RS1H9R5qT//von
+         GBC2cOquBi3T1b0SWpfDtYP9TgGasnetVhGrnptYundLq2TGEZ7crMXFL0zbysYD9KaO
+         BvL3+36PmnNARILT9iQ0TSqkpLoAeYs2loGI/DUeYwCcEyZ1X2jCHgc+e5btfek7CyLL
+         65jnH2Hvkw4bCVwZQmtvUV9+x86OwJxbLRVasQkUP1kgZvALM/Rq5LGI7lqPZ19XBjXK
+         lJQIzwhwYSg1PV4Ml+CD1UU76+aON3RLn0pafY/QIcpNhtyQKXGLC3k7OdWNN+WFoZ5P
+         iKhw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkL8+nfOmd/xFfeP8vDSko4r1qdsqWS5mp+BB2sieI6l/xVIN+Oyb9bOQZ5/HuPQxS5UNV4uPZGH/VYP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5+xLUDgb1JsrgGmWPmhpHFNtngeDuUEz8RFXrd86vVUpkObIX
+	zRJ7O6ow9oKVyJxLBhVcsZgovzZnEYmmKdf/gs0vPgE7BcmcjXUHm9CpJcP2cIisAPO/N2b8+9n
+	3f3bbIGf1J1s3DsK/P1wXVZEk98r5uEQG+eO8JMmFUbLrhR72jNrsaH0+DNXw6A==
+X-Gm-Gg: ASbGnctzBfiqtx0Py8Bke2ZyV3Vo1bmEGa0px9f6FLFz1MOya+58ta1t0vWK+0Kc30o
+	4GcBqtQcOmxs+19MsG3ccB9Tz3B+gRx02ZklTyrDHLuWFQDcE4WpsbiAoO2I+t38R+HKyMQB0fw
+	4fFwsBgLjqCsbdU7TkU2CQ158Wk4HQsKdmAY6cZYFwbwk/MTLUcBpY96ISJfFLEGcmeb5ORcKAY
+	tr5Ii2oLWPd0mnm7u/+6K9Mf6e+nzk+2TZ945O4UxigegukDrmR5OA+0nNgW3AJOk+MjhZxeYG9
+	9SldS24WzslfKdIFCmWqiMr4zUSc5AZNz8riT0DuTpxVWjCC1A==
+X-Received: by 2002:a05:620a:2909:b0:7c9:2425:a7ae with SMTP id af79cd13be357-7c927fb657cmr1078311485a.29.1745108072000;
+        Sat, 19 Apr 2025 17:14:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFta6KY5a629CPuxTTV5gcifkgwp8GViCo40FJtDLnnoc0MmUJKHFN4xPTcWiE6U+QjlnfB4g==
+X-Received: by 2002:a05:620a:2909:b0:7c9:2425:a7ae with SMTP id af79cd13be357-7c927fb657cmr1078310185a.29.1745108071708;
+        Sat, 19 Apr 2025 17:14:31 -0700 (PDT)
+Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c9282cca4esm232635685a.50.2025.04.19.17.14.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Apr 2025 17:14:31 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <babdca88-1461-4d47-989a-c7a011ddc2bd@redhat.com>
+Date: Sat, 19 Apr 2025 20:14:29 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Tudor,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   1ca0f935a126950c2f0b305a50f31f3b00542b0d
-commit: 6e1e48b6ef2613ff4c28a34f7a57c29a4367ad87 tty: serial: samsung: shrink the clock selection to 8 clocks
-date:   1 year, 3 months ago
-config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250420/202504200747.91Ja2Gmr-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250420/202504200747.91Ja2Gmr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504200747.91Ja2Gmr-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_set_termios':
->> drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                                                ^~
-   In function 's3c24xx_serial_getclk',
-       inlined from 's3c24xx_serial_set_termios' at drivers/tty/serial/samsung_tty.c:1492:9:
-   drivers/tty/serial/samsung_tty.c:1391:34: note: directive argument in the range [0, 254]
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                                  ^~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c:1391:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_init_port':
-   drivers/tty/serial/samsung_tty.c:1789:49: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                                                 ^~
-   In function 's3c24xx_serial_enable_baudclk',
-       inlined from 's3c24xx_serial_init_port' at drivers/tty/serial/samsung_tty.c:1895:8:
-   drivers/tty/serial/samsung_tty.c:1789:35: note: directive argument in the range [0, 254]
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                                   ^~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c:1789:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
+To: Shakeel Butt <shakeel.butt@linux.dev>, Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, hannes@cmpxchg.org,
+ mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev,
+ tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
+References: <20250419053824.1601470-1-gourry@gourry.net>
+ <20250419053824.1601470-3-gourry@gourry.net>
+ <ro3uqeyri65voutamqttzipfk7yiya4zv5kdiudcmhacrm6tej@br7ebk2kanf4>
+Content-Language: en-US
+In-Reply-To: <ro3uqeyri65voutamqttzipfk7yiya4zv5kdiudcmhacrm6tej@br7ebk2kanf4>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +1391 drivers/tty/serial/samsung_tty.c
+On 4/19/25 2:48 PM, Shakeel Butt wrote:
+> On Sat, Apr 19, 2025 at 01:38:24AM -0400, Gregory Price wrote:
+>>   
+>> +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+>> +{
+>> +	struct cgroup_subsys_state *css;
+>> +	unsigned long flags;
+>> +	struct cpuset *cs;
+>> +	bool allowed;
+>> +
+>> +	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
+>> +	if (!css)
+>> +		return true;
+>> +
+>> +	cs = container_of(css, struct cpuset, css);
+>> +	spin_lock_irqsave(&callback_lock, flags);
+> Do we really need callback_lock here? We are not modifying and I am
+> wondering if simple rcu read lock is enough here (similar to
+> update_nodemasks_hier() where parent's effective_mems is accessed within
+> rcu read lock).
 
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1372  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1373  static unsigned int s3c24xx_serial_getclk(struct s3c24xx_uart_port *ourport,
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1374  			unsigned int req_baud, struct clk **best_clk,
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1375  			u8 *clk_num)
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1376  {
-97a6cfe8115b04 drivers/tty/serial/samsung_tty.c Krzysztof Kozlowski 2022-03-08  1377  	const struct s3c24xx_uart_info *info = ourport->info;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1378  	struct clk *clk;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1379  	unsigned long rate;
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1380  	unsigned int baud, quot, best_quot = 0;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1381  	char clkname[MAX_CLK_NAME_LENGTH];
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1382  	int calc_deviation, deviation = (1 << 30) - 1;
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1383  	u8 cnt;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1384  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1385  	for (cnt = 0; cnt < info->num_clks; cnt++) {
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1386  		/* Keep selected clock if provided */
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1387  		if (ourport->cfg->clk_sel &&
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1388  			!(ourport->cfg->clk_sel & (1 << cnt)))
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1389  			continue;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1390  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24 @1391  		sprintf(clkname, "clk_uart_baud%d", cnt);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1392  		clk = clk_get(ourport->port.dev, clkname);
-7cd88831feb03c drivers/tty/serial/samsung.c     Kyoungil Kim        2012-05-20  1393  		if (IS_ERR(clk))
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1394  			continue;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1395  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1396  		rate = clk_get_rate(clk);
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1397  		if (!rate) {
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1398  			dev_err(ourport->port.dev,
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1399  				"Failed to get clock rate for %s.\n", clkname);
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1400  			clk_put(clk);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1401  			continue;
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1402  		}
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1403  
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1404  		if (ourport->info->has_divslot) {
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1405  			unsigned long div = rate / req_baud;
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1406  
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1407  			/* The UDIVSLOT register on the newer UARTs allows us to
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1408  			 * get a divisor adjustment of 1/16th on the baud clock.
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1409  			 *
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1410  			 * We don't keep the UDIVSLOT value (the 16ths we
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1411  			 * calculated by not multiplying the baud by 16) as it
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1412  			 * is easy enough to recalculate.
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1413  			 */
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1414  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1415  			quot = div / 16;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1416  			baud = rate / div;
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1417  		} else {
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1418  			quot = (rate + (8 * req_baud)) / (16 * req_baud);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1419  			baud = rate / (quot * 16);
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1420  		}
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1421  		quot--;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1422  
-f3710f5e9e1a68 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1423  		calc_deviation = abs(req_baud - baud);
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1424  
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1425  		if (calc_deviation < deviation) {
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1426  			/*
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1427  			 * If we find a better clk, release the previous one, if
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1428  			 * any.
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1429  			 */
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1430  			if (!IS_ERR(*best_clk))
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1431  				clk_put(*best_clk);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1432  			*best_clk = clk;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1433  			best_quot = quot;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1434  			*clk_num = cnt;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1435  			deviation = calc_deviation;
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1436  		} else {
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1437  			clk_put(clk);
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1438  		}
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1439  	}
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1440  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1441  	return best_quot;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1442  }
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1443  
+The callback_lock is required to ensure the stability of the 
+effective_mems which may be in the process of being changed if not taken.
 
-:::::: The code at line 1391 was first introduced by commit
-:::::: 5f5a7a5578c5885201cf9c85856f023fe8b81765 serial: samsung: switch to clkdev based clock lookup
+Cheers,
+Longman
 
-:::::: TO: Thomas Abraham <thomas.abraham@linaro.org>
-:::::: CC: Kukjin Kim <kgene.kim@samsung.com>
+>
+>> +	/* On v1 effective_mems may be empty, simply allow */
+>> +	allowed = node_isset(nid, cs->effective_mems) ||
+>> +		  nodes_empty(cs->effective_mems);
+>> +	spin_unlock_irqrestore(&callback_lock, flags);
+>> +	css_put(css);
+>> +	return allowed;
+>> +}
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
