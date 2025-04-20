@@ -1,169 +1,254 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2048.outbound.protection.outlook.com [40.107.243.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C20712E5D
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 18:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745174071; cv=fail; b=ZDCcfLeOcwvUJJud+QtZzPjjrrI0VMHM67Jc33+GzCuVsE+lUU79WQ/YRQ11QblCTu9e1N7gs0v57oXKngtByLXF2VdyVj6ZdIyr+OyFTmmjdIkYz8iU1GJqTTskjcxi9g14xgWK1abjah9PQ4TINil9YRx+uX28N+pdYijLhcY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745174071; c=relaxed/simple;
-	bh=z8XlqRHTmn0xj+SakeRS5P4ONMcySSUyf8bc269ADZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GXtPBxTKlitH5B4V8vhkk6xTIBLnsLXcaRDN0wQ9+Ch/H9ftGk01vGRG5AgIn01kMyO0ntmI0oaoTtHo2mgCC1PMvXL0TRy6OFN6uWB5+ZBV1Ln7WAcqVdN2usYZVab3FzB4bGY3FJCjS50N1q9ToLPp3tKt2C+pfEH1BB7o/yo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VeV4zb09; arc=fail smtp.client-ip=40.107.243.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VeV4zb09"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ygwphjMw+ZuB3EoisnRK7enMZHs1OotDSd5gost6Jf6Zx0EX3htAPLyfuYxHiJdzwkJtz24uCaM5XVZ2dXRRrwhynYwCaOrHjlz9t17KHrfAEm4x2/FyfBPROBTCH7hCBfCZFCJXtd1pgMU73TILl+QEzKjyh7+8bPE4Was2Vm/99c2fs7lGdxaObBR1IZbbwsNxq2udaAEKAUEmAAJkYssH9EOF6ywr49fK/CSoRkJo4scUGySHM4cp56O4Nxj01n/XWNauxlLasJrL/XQYhsAGdPWRKgRRhL73V6AqxmsS1tF76VmnKfxrq5lwh6O4LsyZ4G5AfshAQeO/1Igmmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bN+ZUwRuZ1aFbfh7+NZFB63ObSo9ZaQHgj9s44IVKsU=;
- b=VpnfVRfHlHn7OUOajDf+l3c7mCGhT7vfEIC+Klog/XkDmxXaRZZwzAD1yC5NmdtKGDkOpDzLoB0LT3WomzySLoto9JyFM7zmuZhHbXgYycJyqxfwXyvRJwf3pjYVRFdupPRxSj0YVT3wV9gjkcl4w5PEKkQkd1BVWlYukm8tRS234GCKoQiGz/EukcKO7NLSBV7+bi4gF/Uj7OHqUoyRHCPfTXvFXR//YpLUdVBImxLYd+8nKtvYSyLaQQjowu728JP6O/2zQYDHsMfBt8s/djRxt3+JI30RFnETWXpIo7yPrdfD5/BHG6n6U3wySqZQgxUlu5ZjxYAZZeTCjKmvTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bN+ZUwRuZ1aFbfh7+NZFB63ObSo9ZaQHgj9s44IVKsU=;
- b=VeV4zb09JRi1g6l0R+nOiqDOeknLdYo4bc+IpxzeyCIb8bGj1gH3Y3ams87oCaeSJ5H6xhdYyy79y7DfDm9QLxWbkuzZY+qocUl0V+uXoEr/UFkKDhryMYo7kMtjif62rJnBV+c6kOt5idGmg/HENHJMxse/dzbmsUt+g0bLbe86peqikkWUAHKpFN+rnrjF4/ZwxQO39WSmh8gpKecaIC81h20xZ6NUVFZ5HoDiEh1bnwN6MKuJhLDDYtXfmLexkUhYCfw3qj4zw8/PLp8OJc/+Ohwlby/3m0Zgt21khZAs9d7pf+CKDJ++Dbl0dFBxugfrMp8CIwtvkoJg3opvnA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by SJ2PR12MB8925.namprd12.prod.outlook.com (2603:10b6:a03:542::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.26; Sun, 20 Apr
- 2025 18:34:24 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8655.033; Sun, 20 Apr 2025
- 18:34:24 +0000
-Date: Sun, 20 Apr 2025 20:34:12 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched_ext: Track currently locked rq
-Message-ID: <aAU-JMwPkBBORCar@gpd3>
-References: <20250419123536.154469-1-arighi@nvidia.com>
- <20250419123536.154469-2-arighi@nvidia.com>
- <aAPemAFUsJaF_C2X@slm.duckdns.org>
- <aAQDIIPOUAU-nB_F@gpd3>
- <aAQH6Q9tTmLvozyv@gpd3>
- <aAUybKUc3LyKZ3F4@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAUybKUc3LyKZ3F4@slm.duckdns.org>
-X-ClientProxiedBy: ZR0P278CA0010.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:16::20) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227871853;
+	Sun, 20 Apr 2025 18:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745174838; cv=none; b=hHgrDNsu4JUWOp/ABHNO4n/CDNYOn4NlTI3s136wKc8u8/SKIgHl/U1ULG6muL3HVEUOmj17RofcsoeIdBWkD19p+PG7N70fF/l9s7BQLNZbjINXS9LVw+YjXJzcd4h8ecL3VgUHTZQ2ryQk6PNSuEggOfiQ1Ld9Y5hzlGBNEmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745174838; c=relaxed/simple;
+	bh=S913B2MOZt5/aXQTO5QqrTDrBHGlJ9jTSkJEjk056yQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fboc2lZZ1uGY7gCTKVTxOlSBSoEMdGOdl/swAZaAiCvqxvF33NkrpYwe399CblERZbKFY4AqUNcbWqI5W8/NZOB8MMqPwbQ5ncvtW+GSPpu6xSCC8Y3wXP0UgLNCfBZ1Igo7WSpEUWKH/rsMepKDs8I0pfsRVMHsPdQ28+EL244=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
+Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:729e:aceb:e7bf:d311])
+	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 2C84153F3E;
+	Sun, 20 Apr 2025 18:47:11 +0000 (UTC)
+Authentication-Results: Plesk;
+	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:729e:aceb:e7bf:d311) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
+Received-SPF: pass (Plesk: connection is authenticated)
+From: Arnaud Lecomte <contact@arnaud-lcm.com>
+To: Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	llvm@lists.linux.dev,
+	contact@arnaud-lcm.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v2 0/2] checkpatch.pl: Add warning for // comments on private
+ Rust items
+Date: Sun, 20 Apr 2025 20:47:00 +0200
+Message-ID: <20250420184700.47144-1-contact@arnaud-lcm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|SJ2PR12MB8925:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f48ec1b-643a-4c01-6010-08dd8039f94d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hLnhmIkiBJnWiG51cWSBnrzt+V/x0w0GulLAmXUTmGRPURiDikovh12x0WZC?=
- =?us-ascii?Q?1DOtUcuW7MQwLvycL+Tr5OiOqYMj5g1pxnFymklPlNzwbcP+ZwxiIiRHAoXg?=
- =?us-ascii?Q?61NMMH8JlM+d0UQZlbOfT1bNu7FV2BQGfkodnwLqAZ06pq1yO23Lc1yEV1nn?=
- =?us-ascii?Q?tcs5J4jG9H40OAZtIVXCifhWaPJTS5jqK5KuxGzWHKF6C3AxDoWRzZvEpGMh?=
- =?us-ascii?Q?ztCVsB+FCc0A/5FG8+mJtZr15IV1nLRxI+hi5qpNyFLdv05LbwD/F8+uevFl?=
- =?us-ascii?Q?q9mDPwmgYHVs7Tb1drScHAU7ryS2GYYTrMtUJLf3qw/fxY8O4w22jA0mVKzK?=
- =?us-ascii?Q?Y50ItYG6N6taypMUhxncaho6dWE/ZLLKH3Vc+5PubyBWzHVTjMMTHbrf/1Bx?=
- =?us-ascii?Q?gwolQ9piS7GxO5zm+eq3GhrnomS6lX5714alcap03nE7Kfz4QmbLruF2hfy+?=
- =?us-ascii?Q?Hw2HAoOE7meTtYJGWt2VCSsMVZ7GEfuqcUOzclZK/4cuCJcExoROwXDFLQKp?=
- =?us-ascii?Q?LPwfL5n8wD2Qr9/fxM6vSw/RwzUTLD1+2JjwbnWtYIS/WCD3vfOy3PiJomVz?=
- =?us-ascii?Q?8cRRE3Lm3Rgvi+iAsT90OfkIQ41M9UfpwbmURrB92XIx3yGFWE6KbrlY2Bfl?=
- =?us-ascii?Q?FoLgHVmtlBcEM3zTPzRvZngbkdyAS73680VgfNlh9a+PywwaOxAUgnna60Vg?=
- =?us-ascii?Q?/KPlKboRwLp/srcN2KdRbTOK8BAD7WpwW33h4MyuQPZg1JGKSU/a1PGiNXyV?=
- =?us-ascii?Q?YZIH38t8MTaXmWF4UJN9cbR5ORMRElldLQH+au0S6fugqTgPCE4E9fyQXYCW?=
- =?us-ascii?Q?IlFs1AVr6MWnaatTqkMKKyUTU8IJpmiNuQcDBMCxyoAzcN5NKBN1mhwi6R1W?=
- =?us-ascii?Q?/IMDvcjba9gkvYLzf0G1xvHXMfjbl+4z0MtNU7ux8AmtrBn72/xKHjETE3dV?=
- =?us-ascii?Q?xsjWMqNZwg9PXp7JuVL4Zn6C8TxXHkOWuSV+hqirGG3E/NKKX/1Z1hNH9rvF?=
- =?us-ascii?Q?ip2t/8QD8a0ynzxucz4V9J7gn107caYRvv7tE/brNfxOAJZqKnxR/Frao87J?=
- =?us-ascii?Q?18IrtVnJ7swhI683VQWUEpU9KHmAIgGvim1AAe4exQDeoAd67LsYR6EP4YXo?=
- =?us-ascii?Q?nH4ux9grJhoneJ14TySUcFbNVkt2vI0zNbB7VqD+F0XuMuBwv6A6kVojFauN?=
- =?us-ascii?Q?h+d+ZB3v+nHiUO4U7T0ugrLybFo2aDwqqKQoXiUJhRtaLzpGc0mCl9IE6iDZ?=
- =?us-ascii?Q?5gQRIVHCMF+oZnv8ENjblL8yTXm2AIiskU8i4AuL+bYvQVSj/F/GffkZZfqW?=
- =?us-ascii?Q?jRlVYIDFmK1jfZP7yRhU+eUQPPMB5jMTHWUp+oUipYk3OJ2yvLf0bISWcghg?=
- =?us-ascii?Q?V+XF+8IxdEJCLgFbS2L+fFo2dxR7hfTKGRmHSdPDMdUDnbl0hQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?x+fyyx5l7SbT7dujgFHolGfoHjoOAkdqAe/74PSyD+NQT0i3NRlFLbsR+vjY?=
- =?us-ascii?Q?fO94v8Mwir3Y85qWu64ax6SNfuRBD5ZsSR7ToXTCrp5bordsYhYVqnHicmvB?=
- =?us-ascii?Q?cQ2J7o3uBZI0w5mHrObwMtllFyZvx3ypmd9D5kRtvuU3YQZY3fq54o2BKlUC?=
- =?us-ascii?Q?b8GQgXUOaM8AHmZU/Xw2lUNbq55S+ftG/S3GBceIANl7kYp216yRdDsi2XC1?=
- =?us-ascii?Q?u4a4ntBatn4/VymlwwQOuXm6Yf/+aK1SuFgk4JkQunMRngW8dinbRKDPeODX?=
- =?us-ascii?Q?tI6YkpPGelBmsBgxpBnf1iZgVZZwXplnrqgpOH+uaFEaP+yTl3OlI23E2qtb?=
- =?us-ascii?Q?Uk8q2kHH22ynhfX20tzKuPdkHI2c9V0U1gic4WCylxqSnb7dAOgSft9CgVpd?=
- =?us-ascii?Q?7/mrZmiis0OXoaKsM8xPrjoFuLOXlWvl/AI8TuFa4omdtvgIVhL3oPIfJBzI?=
- =?us-ascii?Q?sRTSdlNse5B3fzUfH50HwpuDQ1BdZg80cN7Z+KUuWueeEvoc1B39JQ4CZL37?=
- =?us-ascii?Q?4dHw0/LjFhi/T9mT9WHZcHwiXQ2eArufH88ZnNb78ROMrRA47uWRsAeBRRRB?=
- =?us-ascii?Q?QviQu3NMIE0Gu0oWvDaLsKYj1IgRxEC8ZFfMQSDDfF+67Pqx+OGz35lbNTVO?=
- =?us-ascii?Q?QiKJn3XV1vmX5xHSfB7wAlht3BqeKqHmlLgkirT4dm9Q0Zlljzc1W2f90pUx?=
- =?us-ascii?Q?nXNSfkUl1R6tyUcKgoNUj5eAtuI+hVjvSJK5Z9ZPbzJ26T+uIDYUiY33c3Nc?=
- =?us-ascii?Q?A/CzHoR84zCTB/Yo68AO/RqqxoGIhduttC1pAHxu6NyO1OOke4R1DjzIpjkE?=
- =?us-ascii?Q?rKTz0kglSmlXMWA5R2d1sarAEnAqgGg3AmoNxA8jPb49QWzKbheSOHYL2H3R?=
- =?us-ascii?Q?qFUP3LvljjDezNTuMK6IZ9MqBK8w9V+5+1+B97dBSWgQKl/FPhdIaLy5ybAL?=
- =?us-ascii?Q?LLcWGNk1dxT/CBICJ9EVI5kg324VkIlh1ixfMbjqVLacTDYjQqYg2HRjm7VN?=
- =?us-ascii?Q?lv9vt0/4LHuuzI78c6Dr+1u4NQVTnQtxmmYHLE2vXqa5U8jl8ztVpOXZ1gmT?=
- =?us-ascii?Q?qzopkJAkRCkWOxPcv6ABcj1+b2m5ZsZ5C0uoEumwJkJdCNWsY4JcH9/kO1Pi?=
- =?us-ascii?Q?ER205leu+Qbtj+ohGDqZJ1HhpRCtLwepLiXci5bz+zq8DQX136WU+WD3KXqF?=
- =?us-ascii?Q?EBlTvAZ7zLy8hKgkUJB8zIZfGOT+Dky9t0ilvZhVuplVQ83O3t3IJo9YU4qH?=
- =?us-ascii?Q?sEFE9AUovv9D3nL8bzH0Is6DKMsA8vX4EodjEa/YEh7QTSabZXfzyGP7Un42?=
- =?us-ascii?Q?GfOOFkjndP8fFUHka1vGj+EVlItb3Rd/6EofnILKh8I/gfINB1Z8t1VEX+mN?=
- =?us-ascii?Q?uFcgqhSZdzrxYw4CSOJFB1iDAYHZdZLMTf2DpRa6mLdIEetHomA1SpAvVSyS?=
- =?us-ascii?Q?93XVjmqzvvLznotjKGbvnAhVmVPIJ+PabsN2WWaIzryP7yAGIQdsROiciqfQ?=
- =?us-ascii?Q?7YAGZtu7uGChESf5pTw8MEYzHxLqRV5x4CE7oUYI0+arn5/KNMRWROt95bF5?=
- =?us-ascii?Q?X36QdfvEn5B9Td+EGdOJ+CiBmbc2S4atolQvpAyj?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f48ec1b-643a-4c01-6010-08dd8039f94d
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2025 18:34:24.1766
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cM2ZF3RtdN34N5nix4Oc+ZICCfCE51JrWnoXN+oTTZ7AI5HEKb//J37+HuF2X1tgGx/690wZ8PB2bJPIWxcBmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8925
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <174517483182.6702.4574765664478934960@Plesk>
+X-PPP-Vhost: arnaud-lcm.com
 
-On Sun, Apr 20, 2025 at 07:44:12AM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Sat, Apr 19, 2025 at 10:30:33PM +0200, Andrea Righi wrote:
-> > Hm... actually thinking more about this, a problem with the percpu variable
-> > is that, if no rq is locked, we could move to a different CPU and end up
-> > reading the wrong rq_locked via scx_locked_rq(). I don't think we want to
-> > preempt_disable/enable all the callbacks just to fix this... Maybe storing
-> > in current is a safer choice?
-> 
-> Hmm... I have a hard time imagining a timeline of events which would lead to
-> the wrong conclusion. The percpu variable is set only while an rq is locked
-> and cleared before the rq lock is released and thus can only be read as
-> non-NULL while the rq is locked by that CPU. Maybe I'm missing something.
-> Can you illustrate a timeline of events which would lead to the wrong
-> conclusion?
+Hi,
 
-Oh ok, I was only thinking of setting the percpu variable when we call
-SCX_CALL_OP*(), but if we clear it after the scx op returns, then it should
-work. If no rq is locked and we bounce to a different CPU, we'd still read
-NULL, so it should be always correct.
+Background
+----------
 
-Alright, I'll send a v2 with this logic and the percpu variable.
+The Rust-for-Linux project currently lacks enforcement of documentation for private Rust items,
+as highlighted in https://github.com/Rust-for-Linux/linux/issues/1157.
+While rustc already lints missing documentation for public items, private items remain unchecked.
+This patch series aims to close that gap by ensuring proper documentation practices
+for private Rust items in the kernel.
 
-Thanks,
--Andrea
+The actual solution comes in several parts
+------------------------------------------
+
+ 1) Patch 1 : Implements detection logic to emit warnings for improperly
+ documented private Rust items (e.g., // comments instead of ///).
+ 2) Patch 2 : Adds an auto-fix mechanism via the --fix option to help
+ developers correct documentation issues.
+
+Results
+--------------------
+
+The following implementation has been tested against real patches:
+ - https://lore.kernel.org/rust-for-linux/dc63bdc4bff8f084714e2c8ff30e4c0d435e85b7.camel@redhat.com/T/#t
+ - https://lore.kernel.org/rust-for-linux/20250418-ptr-as-ptr-v10-0-3d63d27907aa@gmail.com/T/#t
+ - https://lore.kernel.org/rust-for-linux/20250420-nova-frts-v1-1-ecd1cca23963@nvidia.com/T/#u	
+and this file:
+// SPDX-License-Identifier: GPL-2.0
+
+// Simple comment - should not trigger
+
+// Returns a reference to the underlying [`cpufreq::Table`]. - should trigger
+#[inline]
+fn table(&self) -> &cpufreq::Table {
+    // SAFETY: The `ptr` is guaranteed by the C code to be valid. - should not trigger
+    unsafe { cpufreq::Table::from_raw(self.ptr) }
+}
+
+// Improper doc comment for a private function. - should trigger
+fn test() -> u32 {
+    42
+}
+
+/// Proper doc comment for a private function. - should not trigger
+fn proper_doc() -> u32 {
+    42
+}
+
+// TODO: implement more logic - should not trigger
+fn todo_marker() -> bool {
+    true
+}
+
+// Just a regular comment not followed by code - should not trigger
+
+pub fn public_function() {
+    // Public function - should not trigger
+}
+
+// Test - should trigger
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+struct Point2D {
+  pub x: f32,
+  pub y: f32
+}
+
+// Test - should not trigger
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+pub struct Point2D {
+  pub x: f32,
+  pub y: f32
+}
+
+// Test - should not trigger
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+pub struct Point2D {
+  pub x: f32,
+  pub y: f32
+}
+
+mod test_module {
+    // Module inner comment - should not trigger
+}
+
+// Comment before macro - should trigger
+macro_rules! my_macro {
+    // Comment inside macro - should not trigger
+    () => {};
+}
+
+// Comment before public macro - should not trigger
+#[macro_export]
+macro_rules! my_public_macro {
+
+}
+
+// Comment before unsafe block - should not trigger
+unsafe {
+    // Comment inside unsafe block - should not trigger
+    let x = 5;
+}
+
+
+// Comment with unsafe word - should trigger
+fn with_unsafe_keyword() {
+    println!("test");
+}
+
+// Comment with code example: - should trigger
+// let x = 5; - should trigger
+fn with_code_example() {
+    println!("test");
+}
+
+// NOTE: important consideration - should not trigger
+fn note_marker() -> bool {
+    true
+}
+
+
+// Comment with code example: - should not trigger
+/// let x = 5; - should not trigger
+fn with_mixed_comments() {
+    println!("test");
+}
+
+
+which led to this output:
+WARNING: Consider using `///` for private item documentation (line 5)
+#7: FILE: ./test.rs:7:
++// Returns a reference to the underlying [`cpufreq::Table`]. - should trigger
+WARNING: Consider using `///` for private item documentation (line 12)
+#13: FILE: ./test.rs:13:
++// Improper doc comment for a private function. - should trigger
+WARNING: Consider using `///` for private item documentation (line 33)
+#36: FILE: ./test.rs:36:
++// Test - should trigger
+WARNING: Consider using `///` for private item documentation (line 61)
+#62: FILE: ./test.rs:62:
++// Comment before macro - should trigger
+WARNING: Consider using `///` for private item documentation (line 80)
+#81: FILE: ./test.rs:81:
++// Comment with unsafe word - should trigger
+WARNING: Consider using `///` for private item documentation (line 85)
+#87: FILE: ./test.rs:87:
++// Comment with code example: - should trigger
+WARNING: Consider using `///` for private item documentation (line 86)
+#87: FILE: ./test.rs:87:
++// let x = 5; - should trigger
+total: 0 errors, 7 warnings, 101 lines checked
+
+NOTE: For some of the reported defects, checkpatch may be able to
+      mechanically convert to the typical style using --fix or --fix-inplace.
+
+./test.rs has style problems, please review.
+
+NOTE: If any of the errors are false positives, please report
+      them to the maintainer, see CHECKPATCH in MAINTAINERS.
+
+To: Andy Whitcroft <apw@canonical.com>
+To: Joe Perches <joe@perches.com>
+To: Dwaipayan Ray <dwaipayanray1@gmail.com>
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+To: Alex Gaynor <alex.gaynor@gmail.com>
+To: Boqun Feng <boqun.feng@gmail.com>
+To: Gary Guo <gary@garyguo.net>
+To: Björn Roy Baron <bjorn3_gh@protonmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+To: Trevor Gross <tmgross@umich.edu>
+To: Danilo Krummrich <dakr@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+To: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+To: Bill Wendling <morbo@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Cc: contact@arnaud-lcm.com
+Cc: skhan@linuxfoundation.org
+Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+---
+Changes in v2:
+- Tested against real patches
+- Link to v1: https://lore.kernel.org/all/20250419-checkpatch-rust-private-item-comment-v1-0-0f8bc109bd5a@arnaud-lcm.com/ 
+---
+-- 
+2.43.0
