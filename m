@@ -1,63 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2E11BF37;
-	Sun, 20 Apr 2025 10:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB511BF37;
+	Sun, 20 Apr 2025 10:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745146400; cv=none; b=Z5gihdFnNLygXqPr5ckL9w6C0jM0ve0TXn/57+KUkr7BAWx9c0xJRLbAgzRYhdukQoyPfcoJloeOOqYCw0BEK7wdqjtzes9wYFALy2onaV3uFmvmjfbGKOlbEzoLMCdiuCf2BZ8xKaDmvWxbIzzBMkD/WIPVvXaEsiQhVHnDEwk=
+	t=1745146409; cv=none; b=eRUcZp05QQLhuH5c2zQzUbuSQSZ5z9qJJYl9orh1+m8mHRFD9wL3YMcdn/rkeOsIua0hkD6ADbRPfsM8Ikq79Sd+Ha2Zal2cCiko5+pV5zcf6jVvCrmq+NkudG2Bl280WNbfyZtLX0z33gjzLtuNMOnp2vZb2sMo1NDQ8T+315g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745146400; c=relaxed/simple;
-	bh=2JtSp0HfCxJNDl+86dI0/8lLHBCORCFKkM6Oyfjb3pk=;
+	s=arc-20240116; t=1745146409; c=relaxed/simple;
+	bh=w3GPUz20Zg0wYepIr6mudCRKy58RJwen5VNml7NOkdc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRaMMpNWtnD58KzhO0j/K41Ys9Qfaf/vaD6p29jmBLdTgj9q2GKPzb9IQ+UCmhCu3vKplJZw3te7MXV+xxxGmjE89i468wtC+GnNMIXrUsyogyWlTj1eFjlLZHwCjNEeenQHnwT2Dj0lIDCYAr1aJz71zDLS5V56dPB2spPJkCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UhO/wmmZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLDnzJDljbkcphMmiCBSAy0LZlTDzbn8BpOUcguUg4Sf8hEZWZvzWorEFiwon46pKSOX+4FPShn5nZaWErX6X9JCzrIKiUU/m+Okxm7IP5TW8Pkp+AR++4j0Hc9X+gaEtdbgEJVzHz4qqQqJNB7EdqRmNzlk/bzCpo9ap9VNdi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukFPP9d+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UhO/wmmZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA008C4CEE2;
-	Sun, 20 Apr 2025 10:53:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukFPP9d+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33703C4CEE2;
+	Sun, 20 Apr 2025 10:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745146399;
-	bh=2JtSp0HfCxJNDl+86dI0/8lLHBCORCFKkM6Oyfjb3pk=;
+	s=k20201202; t=1745146408;
+	bh=w3GPUz20Zg0wYepIr6mudCRKy58RJwen5VNml7NOkdc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UhO/wmmZO8s3upAMPcSH/5YVtWifC6PIrSSqxSixq+c+Pka5u+ulRf2hMbLZNtrjz
-	 ncf/nbIyctgxueO9xK9TQqUHi85znWQMknPexM1e14DJqYfv77WxaOrN3t+jha2+CN
-	 0/gI/yfDMD8+GEaNszC93oTFXk7EAyYGkQYVbndTh72G7FlRZawk8dY6iGeKf3kcfH
-	 z1q1eYUM2hqkGxdN/9Zwg0EOsIb4b/pY2eZ377e7YhcGTN+LLUOIeAiE3UyrkulgOf
-	 Cwu23VCtuSZZkB7QvBc43ombsjQkQ1jEIUwZ2GzDAwc+mcz0UpykmVZTf4DztzPPF7
-	 6qHt0QPqqSVAA==
-Date: Sun, 20 Apr 2025 12:53:14 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.10] umount: Allow superblock owners to force
- umount
-Message-ID: <20250420-sticken-seehund-9614ddbcad43@brauner>
-References: <20250331143234.1667913-1-sashal@kernel.org>
- <aAKDGmxq/snqaYhQ@duo.ucw.cz>
+	b=ukFPP9d+Se0sUld91nc3n08tMfbpzJBP5/vowWPDIRnM4x1p6+XD+AU/qCyuX060o
+	 I1StpR3Z+KQANu6ONS0VHgezaOncSnI0cN0AUGbenjzPYw/rLpW+pE817RpPVGxp7D
+	 bFXqL3HNV59nHob2sLjRXr89AMo7SNnzRZEQTt2xJb3+LYf0kU8V75Xd9s7tyeMlMX
+	 rJZY6c0OtxpZ8kvusJW/WAjOlF/fKM0ApnWpacZ9lnPFm5gpNf9aRNPJODKiWIewbP
+	 MYQUT8nZmCZeEwvvyXGcjecYd7/uDfUTNBJ7ldHRZmy7cMnl2/CGazEwWRW/uTjbOO
+	 B9FJDKBTxrhvA==
+Date: Sun, 20 Apr 2025 12:53:22 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, 
+	Dave Chinner <david@fromorbit.com>, "Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xfs: add tunable threshold parameter for triggering zone
+ GC
+Message-ID: <mt3tlttnxheypljdkyy6bpjfkb7n5pm2w35wuf7bsma3btwnua@a3zljdrqqaq7>
+References: <20250325091007.24070-1-hans.holmberg@wdc.com>
+ <iB7R4jpT-AaCUfizQ4YDpmyoSwGWmjJCdGfIRdvTE76nG3sPcUxeHgwVOgS5vFYV0DCeR1L5EINLppSGbgC3gg==@protonmail.internalid>
+ <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAKDGmxq/snqaYhQ@duo.ucw.cz>
+In-Reply-To: <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
 
-On Fri, Apr 18, 2025 at 06:51:38PM +0200, Pavel Machek wrote:
-> Hi!
+On Sun, Apr 20, 2025 at 02:47:02AM -0700, Guenter Roeck wrote:
+> On Tue, Mar 25, 2025 at 09:10:49AM +0000, Hans Holmberg wrote:
+> > Presently we start garbage collection late - when we start running
+> > out of free zones to backfill max_open_zones. This is a reasonable
+> > default as it minimizes write amplification. The longer we wait,
+> > the more blocks are invalidated and reclaim cost less in terms
+> > of blocks to relocate.
+> >
+> > Starting this late however introduces a risk of GC being outcompeted
+> > by user writes. If GC can't keep up, user writes will be forced to
+> > wait for free zones with high tail latencies as a result.
+> >
+> > This is not a problem under normal circumstances, but if fragmentation
+> > is bad and user write pressure is high (multiple full-throttle
+> > writers) we will "bottom out" of free zones.
+> >
+> > To mitigate this, introduce a zonegc_low_space tunable that lets the
+> > user specify a percentage of how much of the unused space that GC
+> > should keep available for writing. A high value will reclaim more of
+> > the space occupied by unused blocks, creating a larger buffer against
+> > write bursts.
+> >
+> > This comes at a cost as write amplification is increased. To
+> > illustrate this using a sample workload, setting zonegc_low_space to
+> > 60% avoids high (500ms) max latencies while increasing write
+> > amplification by 15%.
+> >
+> ...
+> >  bool
+> >  xfs_zoned_need_gc(
+> >  	struct xfs_mount	*mp)
+> >  {
+> > +	s64			available, free;
+> > +
+> ...
+> > +
+> > +	free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
+> > +	if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
+> > +		return true;
+> > +
 > 
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > 
-> > [ Upstream commit e1ff7aa34dec7e650159fd7ca8ec6af7cc428d9f ]
-> > 
-> > Loosen the permission check on forced umount to allow users holding
-> > CAP_SYS_ADMIN privileges in namespaces that are privileged with respect
-> > to the userns that originally mounted the filesystem.
+> With some 32-bit builds (parisc, openrisc so far):
 > 
-> Should we be tweaking permissions in -stable?
+> Error log:
+> ERROR: modpost: "__divdi3" [fs/xfs/xfs.ko] undefined!
+> ERROR: modpost: "__umoddi3" [fs/xfs/xfs.ko] undefined!
+> ERROR: modpost: "__moddi3" [fs/xfs/xfs.ko] undefined!
+> ERROR: modpost: "__udivdi3" [fs/xfs/xfs.ko] undefined!
+> 
 
-Seems fine to me if you'd backport it.
+I opened a discussion about this:
+
+https://lore.kernel.org/lkml/20250419115157.567249-1-cem@kernel.org/
