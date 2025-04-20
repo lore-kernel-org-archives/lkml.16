@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BCC13B59B;
-	Sun, 20 Apr 2025 15:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839BB13FEE;
+	Sun, 20 Apr 2025 15:27:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745162535; cv=none; b=sXmDBR7K5Mwu+r8XXar2s2xHXT5hVjr+9Q7CaVOFbE/Q10AHqtW3PP89bT+ZiSU1/DqtX/+Ui0gV6gjnod0mFr9G+TXkPxMI74hW6611uin0HVOz5S6vV3P+O9zcHD/a6QaMxoaaffjzzhAKE0ZJ52GeFvm/gPMYqO+Q+ZSw5t8=
+	t=1745162865; cv=none; b=ngK+enNIUU2QZ9GPkzCDID/683ZNHc7en7yO8aIYY6cZX/+hEq93gN0VHoVShuFDxWbSo3Eolfq99JNOzshiYNvPl5QKgohKaz7w2MnGNt3e76EvM20tkTei7LjZOWidv7WVEDo56Zo1BteK1Ea+KCosA0ofL8FDbiO6ISw9lyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745162535; c=relaxed/simple;
-	bh=OQ20mkTiGknvqf/kHMGluQwjSWZG3iUa228Wigy35JI=;
+	s=arc-20240116; t=1745162865; c=relaxed/simple;
+	bh=V55SXw4UhqFu8GRo/A6cgKYLUZbR15vYqzt2fLxWWic=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=d14L3GFrDW2AkOm3iLT8GE5AOf471ypaf7R02Qma4HyijVR/QkLM/22Jspmv+rZXuLZvEwlfzDBV7MpK38EDWOOqopasIn0KMKewL2H2bHCQh3+b44LoErY8MpK8CI0Hu1OmEB8cd8ONmobTMgcduEdWkbldeu43LYkKoxW8JAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lW4HeE/3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=QezF+elver3eEzdexQZTKOeQVZQh2AgQ5pN0vViLm8QrA0q1Re6JD4oR/fbMNRD+DePV7FnypSMDTNNexozliPlXk/jj8N2DwlxuRa7cxR5I7VROxKOyrza3t/NIl86WeG+wSkdgq16/60ZqxvkT1CENvqShwPw2JoP2AmnakcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXQBrGWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lW4HeE/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D8FC4CEE2;
-	Sun, 20 Apr 2025 15:22:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXQBrGWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF53DC4CEE2;
+	Sun, 20 Apr 2025 15:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745162534;
-	bh=OQ20mkTiGknvqf/kHMGluQwjSWZG3iUa228Wigy35JI=;
+	s=k20201202; t=1745162865;
+	bh=V55SXw4UhqFu8GRo/A6cgKYLUZbR15vYqzt2fLxWWic=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=lW4HeE/3MTLX8PiV/8QZ4grtGqi+MHUJ5DVG5oyqjw0KxbOS6AQcGmWqJevCVabjX
-	 g7L3LrDigZS68SSPNQfCDJjzEzP5+UJNVmZL0P8cVIhUQzB8sgEqo7jzALOeL2mxUP
-	 kX6RXJwhPx2IMWI5cK86E2XrM6j2t7gPG9yUGSsWkYfHPYIWDpjUOh9vof4Z9iX9mG
-	 Qhv5qBGRSTVyEMjwppDQCc+CiTxDDy1f/qhT6DYgmO8M4k6gJuxbcYYKnOMXSjVqVC
-	 oF0T2Dkk/PWDSt+VsX6L4QLm2JaUnA4JhBh4XaJVtyCNWR6Iho+SGA/ObzZZLAvxRC
-	 CjtAzsHAgGsfg==
+	b=uXQBrGWryYPpuqt9FSAI+EZPcUSTj5qXYqNHOtPQpTospMijmLmHcldBbKKoiP6aL
+	 1apX68U7KZX973Hl5+OJlWfZApa5pENvIABsQWTM+sD49m1w3HpxdepmMbNPUczzs/
+	 wjl/Xt0MKBmwAgy50Shl3NZ1yxzzsfkVy2E5kLh0InunRVQui9nc1vTrXzlCEBE4is
+	 +7v1x5eNVSDSvNdyNEoLyS1Xz+bSScUfA7XKov2FQXpuagBcxuldGGdKgO7Q0XNwjQ
+	 DQZmb0izpME7vrDkWqmCvuBAaTGtyAyIDqO7aScwr4ar7DnnOIdOf4u7LzqG4NShOW
+	 97k8L7I3cfuAw==
 From: Leon Romanovsky <leon@kernel.org>
-To: jgg@ziepe.ca, linux@treblig.org
+To: yanjun.zhu@linux.dev, zyjzyj2000@gmail.com, jgg@ziepe.ca, 
+ linux@treblig.org
 Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250418165848.241305-1-linux@treblig.org>
-References: <20250418165848.241305-1-linux@treblig.org>
-Subject: Re: [PATCH] RDMA/cma: Remove unused rdma_res_to_id
-Message-Id: <174516252721.721883.15933851274910173867.b4-ty@kernel.org>
-Date: Sun, 20 Apr 2025 11:22:07 -0400
+In-Reply-To: <20250419132725.199785-1-linux@treblig.org>
+References: <20250419132725.199785-1-linux@treblig.org>
+Subject: Re: [PATCH v2] RDMA/rxe: Remove unused rxe_run_task
+Message-Id: <174516286248.722194.12727712261042812715.b4-ty@kernel.org>
+Date: Sun, 20 Apr 2025 11:27:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,9 +46,9 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-37811
 
 
-On Fri, 18 Apr 2025 17:58:48 +0100, linux@treblig.org wrote:
-> The last use of rdma_res_to_id() was removed in 2020 by
-> commi t211cd9459fda ("RDMA: Add dedicated CM_ID resource tracker function")
+On Sat, 19 Apr 2025 14:27:25 +0100, linux@treblig.org wrote:
+> rxe_run_task() has been unused since 2024's
+> commit 23bc06af547f ("RDMA/rxe: Don't call direct between tasks")
 > 
 > Remove it.
 > 
@@ -55,8 +56,8 @@ On Fri, 18 Apr 2025 17:58:48 +0100, linux@treblig.org wrote:
 
 Applied, thanks!
 
-[1/1] RDMA/cma: Remove unused rdma_res_to_id
-      https://git.kernel.org/rdma/rdma/c/04039390cc3cb3
+[1/1] RDMA/rxe: Remove unused rxe_run_task
+      https://git.kernel.org/rdma/rdma/c/d85080df12f33a
 
 Best regards,
 -- 
