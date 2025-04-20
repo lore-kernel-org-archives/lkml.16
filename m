@@ -1,170 +1,159 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2118.outbound.protection.partner.outlook.cn [139.219.146.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B2915D1
-	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 03:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745120354; cv=none; b=PgCVobImyd/41XNCA73RKQC3sVHcGVWwN6nL+rMj6JuBzf4BLryfZgMH5odfGNmEc9WV/A0DUao2TbnrljHHUr1JhGeTnV79f5RS0HMf+3AcvxlqdAFsUcDFdkgOi80CKUCSK7Xb11uoE9QshLj3ocNtlYy3jmrQ75FOkJbZMxs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745120354; c=relaxed/simple;
-	bh=keDdGVbH7Wl1A4kHPgs+w8OnLrgpE4m++kf/2b4/C+o=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ceDGLzloaZGAtTImnaOy0IH9Ld6ZfQMNqOG6LbPtuydA4WoqVHSsxQWgLHv6kjNtk2HQ6FIagjAdCclHvqERroYgVwXwQ3r6HuBlYkp302u+EAg8tKwdEk/SnXKYcPB7NA3PnrpxYLNxwIo1q/URJY2l+oReGgxb8ewngOYhTNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WrQaJpDa; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WrQaJpDa"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53K1TgN5001489;
-	Sun, 20 Apr 2025 03:38:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=OdlyrnsxWWj84F1ODfjW5z8fuNDIoCt3uSloN2QG5iM=; b=WrQaJpDahCfz
-	gUdj6DqTh7gMVrNxwYG5HE4nJqCM/wpAK1eXTI4wyjA5k4aCfVDSenfDOkRwzjU/
-	yni4eVq4085/I+YNJutkrOtFcd/33Z+HeAbyEpYqJbKRP2PmnqRKDIZcjSYHBRhi
-	8Ne6Hv+CrLziknIyNMaI5i3ERECAzyHwjaKlM8fHImuINJoXlKlVDbyj2dxVtLw9
-	aaXefrh/lAnSIF8Y0G0i+aD1oTGUdwTRWC/XAmiowMk2EJ1hTVLOKKpNGJw8o8G0
-	9/kcy2a0mI6vNyxD58Zie+SF2gQVmzAyVbNN9vK3FziL/nu/pEFEPqwmsE+bE9Op
-	HvmIBlJ52Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464kyv0rvn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Apr 2025 03:38:32 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53K3cV6o006317;
-	Sun, 20 Apr 2025 03:38:31 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464kyv0rvk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Apr 2025 03:38:31 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53K0BM3U012493;
-	Sun, 20 Apr 2025 03:38:30 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 464p5srkfy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 20 Apr 2025 03:38:30 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53K3cT5v29164238
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 20 Apr 2025 03:38:29 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7582D58052;
-	Sun, 20 Apr 2025 03:38:29 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E19F558056;
-	Sun, 20 Apr 2025 03:38:24 +0000 (GMT)
-Received: from [9.43.83.33] (unknown [9.43.83.33])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 20 Apr 2025 03:38:24 +0000 (GMT)
-Message-ID: <1d0a5987-1aa9-450e-a37e-97bbefeaa649@linux.ibm.com>
-Date: Sun, 20 Apr 2025 09:08:23 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30ED15D1;
+	Sun, 20 Apr 2025 03:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.118
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745120821; cv=fail; b=jgerVK2sQTBZCKgrIQUpHCEVV72fc0/VWws3XZrW2e5JSDBqL8HfC5CUqrPVhzkTbeu6VCSTmXZTneL0SmNIW4tE8jV4HRDBaufEut/tV9R71lNf9Ec0oAPc4jVr7jZhXhWtBtb+bG+iD6dEgQ94JcVBchdg9sX0wa59J2lH+R4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745120821; c=relaxed/simple;
+	bh=jDyWg08MZo+zSzFhQu2/0YeSQ5MqqgzBQzTyMoU1GSU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HmOWGGJcHnhgNqcf12wrpovEp8a4Korf2jPOoKnfJTrxHCfkgPSFT/VlYIwbaTC4POjuB2bQTmpkTMf4cFkMH8H0k7e4Jypx1+vQd914qevYXKaCmZZf5p+fy791SDpkmQVMH67SWt5cwRYiSU6ADAegGAA11bbTkNqZO5ir19A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dgVPnOaE56/PV64gXGIF8vjiXNhdIRdcjhouEqJ3baZNOso2a+ZXvb1wGisugxGeN2EhOPyfSPBgMwnUlZX0PBvcIRvl7iS5eC55YmFRy0M/334R2BbasIKMSG5oVB8MWWlJgX3NU3D6zcFEuT8z8FgSqrLNI+ZKiAMZAIhl87cYS/HttFGBVmlfFKn/TkEZ/QVHzrNOAraW9VKOxR/k5pHRaxYXXImP4j7uSae3UTZIgFtM8iMD59z6URTa9ANwZvIXBq9ehqCF3BLtoRD5TspEQSGJbHT0FdeCN2iywVckfRxm65v/1LA8oOtU4+kzfzx2U0x3l3XFjHv/P9EpGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jDyWg08MZo+zSzFhQu2/0YeSQ5MqqgzBQzTyMoU1GSU=;
+ b=Xo3e9seL0/lIY38TXc66gR2/orThzrhOLDKvl0LJJ+3g80cI8sdRdadcGVq2cisuDeBelqM61ncCKQmjvDMnqAcsaSSw0ZlASId4wxw41IGf4v2x7meT6BxG8/C9oUz1TrDzIPAJgxcknQHGX6kcYySqj/9URfxi8n4M3L6mf/vCDbBjrJjuK4hOiKRRAUXjKiE6XWusOeJI1jZYxqcuCBbVgC+QFwvleYdOsy2stvKcQ4s+UhmfsfMlcxQngwX6JDWLOHlWqMYLek/0TIO+B8MQ4YYKSiuBhdNWlgLODhtFFFkiLZ+fExp2n8t0l+6fT8faytkC9/Bz02qTLnZyqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:b::7) by NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:8::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Sun, 20 Apr
+ 2025 03:31:10 +0000
+Received: from NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e1c4:5bb3:adc:97f5]) by NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e1c4:5bb3:adc:97f5%5]) with mapi id 15.20.8655.031; Sun, 20 Apr 2025
+ 03:31:10 +0000
+From: EnDe Tan <ende.tan@starfivetech.com>
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>
+CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+	"jsd@semihalf.com" <jsd@semihalf.com>, "andi.shyti@kernel.org"
+	<andi.shyti@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	"endeneer@gmail.com" <endeneer@gmail.com>
+Subject: RE: [1/1] i2c: designware: Ensure runtime suspend is invoked during
+ rapid slave unregistration and registration
+Thread-Topic: [1/1] i2c: designware: Ensure runtime suspend is invoked during
+ rapid slave unregistration and registration
+Thread-Index: AQHbq1NZxeBeZwmSbU+ZT1PgQ+QN37OkxeGAgAciiEA=
+Date: Sun, 20 Apr 2025 03:31:09 +0000
+Message-ID:
+ <NTZPR01MB10182E9F6E50D679A6EAC3B4F8B92@NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn>
+References: <20250412023303.378600-1-ende.tan@starfivetech.com>
+ <6e155241-3403-49df-8f0d-5aa63e2e74ab@linux.intel.com>
+In-Reply-To: <6e155241-3403-49df-8f0d-5aa63e2e74ab@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: NTZPR01MB1018:EE_|NTZPR01MB0956:EE_
+x-ms-office365-filtering-correlation-id: 7b376770-e93b-4c24-be8b-08dd7fbbcb07
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|41320700013|10070799003|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ SxeItvI5qwoyM6O6dHvRU958jNktMEBPL/1tBjkELYrOWaHHbAWz4mNPh7cu3/Dxqyg8u1NIyIEaJ8Faf2dTX+HSj5jim87eQFzq9hKXfJ01L/s0MrdH5e/jLJmHlYE+WTjeoS9UHJM59AO45KQ9P+YpSx65Mbx+LoPlPYT6lHqyzGxKSXNUAYI3qEznVtJjayv12+3OT+sRF1Lhiqpo7GQLXIMfRAWLFGm1AovRYkqQILKWBuPuBKrNbTV76aiXAJiV4UU2nzrZRbJiakVYvXClBquR68kIss7Ys4zLWO1+gzzLOxlPhQyl/4L+j14PkG+W5jJL8JxzvuJQgh0Nx8UUDsLHbJ9fg6TQSOfH3NIgG33ylSj+jwe7NCPQCjBAQN4Dn2wvCRCE2/DZxrU/d3or8P8pd5TntlgiIh8tgantTSp3SoiNAJrD4jcbWFliqkbnraXKobsHC1xz/2ClhgeeULYsAMSHWK4SKTwfUlmQT35uOxBQltPiKsxiQo+wZtYPtrCQamQ/EbYGlge+bXUzIDmQXIIAfZONAZQmhZJsIrtwZYvwI5BBJ/EFUzDg4M4rR/QberrHSqGrA3OjYv0fLiWkbcxupwCtQic3xrU=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(10070799003)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VrqiXtovpftqSwDZHKLBOva1h0/kAi1ZndLLTNbflT0S+KZsobgwBPAT5Xb4?=
+ =?us-ascii?Q?LYnei4JQdjTbCIDUlMQDDJEvsuCE004MYXufGz1WrwtXfvQo2klMn2PGPLZ1?=
+ =?us-ascii?Q?EathJH6/ZEPYSDS7w4+z15DXf4m+FV7teVbZIFkIwjSokZPPr48i4TdYoRrL?=
+ =?us-ascii?Q?En3exiVaBI4vZG1k72900/yfXWP22swxejh3LqEbIBvEn/sITEkP4Mpl0Jms?=
+ =?us-ascii?Q?C9g6jCML1qm2JBRSk+S+eBjW0wQHBt/P55U9ghJzmPP6TXNtYW5dupRiA57+?=
+ =?us-ascii?Q?7ejOqka3DapjS6iw8TgUIRIpu3eZTVKOwHWte7f/3DglCZ7dNYwVU2tC15dU?=
+ =?us-ascii?Q?PssuFcs2YtEioG2ZkqsSUwwQ8qfqjyE9W9NfoYpY8VwtdO+nX4b4FTRwjBJT?=
+ =?us-ascii?Q?/v3DIOlE/i4dYPl+uxyIAuU+LCK6PZDmfjiZHxhRlsC9e+LahuwdJ/jD3GSX?=
+ =?us-ascii?Q?6WjvyJhj50a/1LJJqJ0CP+ihci25fjyvWMsLsocHnFihwkuQqk0NG4+YfQCd?=
+ =?us-ascii?Q?IbIFg7zz8NOnBDBCtuOPadxeHYwCKhJXhy9hFEBgImJK6euS8MKI6PuYqsGB?=
+ =?us-ascii?Q?LpBcGY063VVGsXcAuTXXqT/SaUG6bSdvZpxmG2ENNBvk8LsfMTubguElLfRV?=
+ =?us-ascii?Q?vEDmiR1xbsxtNi8m/juG5PyquvRYVWxWPOwBbwTIlcDIswONUKm9Xw7eL7WV?=
+ =?us-ascii?Q?mqExO+Ijoi0M2nZDWD/U1h1edsr4+0mv0+sqnHeGEG110Qc01J+57lQlV0j5?=
+ =?us-ascii?Q?TbCLAx5o0NjzRrSmzZjrVbusLXFXEXqwiqvWfuf0sMDJnV1DIDtU2CACCNEW?=
+ =?us-ascii?Q?77j3XuNzJvWPTbNLBbnep8wPh/SSdEaKN17BSSlJhHzBVQHDfrrh8orzG6ap?=
+ =?us-ascii?Q?glDSl/zzRckmE3gL4jTJtmEZaIUrZ2ov7ANhTMf82LKjrM19Wcj3IeFUmUFz?=
+ =?us-ascii?Q?ajeKU9jZvBTn/m/xQ5iQ1cdRZLe6HQycMxdYfqNquBvYaaX5DmTAPged2tuq?=
+ =?us-ascii?Q?PU1mymsb2L432VVvT2z2zr6slEdSpi8f3/U17l4obsVCgp19Tp6hsCCd7Lgq?=
+ =?us-ascii?Q?IFfyB2k1MSjZlpCVr2kAv7jGn4ZokD/iL4tzb3CAN2llx2ovlmZyVph+G6/G?=
+ =?us-ascii?Q?PN6+8qgJGu3SEsdotSPHbp6Y0AmmN4HyrReRrWNEnkaow6LQRztnYbEc+qKa?=
+ =?us-ascii?Q?9zlLjAIXN2vZmvbgxGsj0BMWfPYyfGrTcNRyyt7xMMkt4SvP6f6vPilMcme+?=
+ =?us-ascii?Q?W+x76n/6GAvEpG09SBr+yGdZy2QV+6QSMg6sHqzO4iGN0TBsxT7P285wFFrt?=
+ =?us-ascii?Q?cm2g293oJQaJ3xPas4DU+CAfKWTUeofr74d8LK72O+wi75sFLW4Z0FXe0zbO?=
+ =?us-ascii?Q?rwx3aisD59SqlqkDuL54daUYFfMcegF8VLCbDaF8wlMtPbRbOM7ut4JtC1s7?=
+ =?us-ascii?Q?rEoDvWCzmHgx/2+ajlkzG2B3HCFDU0fTJedkzaVkorzANHdQTTdKOuB03sP1?=
+ =?us-ascii?Q?GJg4roElTmDYQcMZrWnEMvh5iVeXI3ntXs2AwePyYBVbu/erofBSIYhNImRl?=
+ =?us-ascii?Q?uFkdDb/dDi3ZCr3qaSBfaqNow7tiq8Z8WDFCT8j/se3s8o+lBDMrNYbnzxo+?=
+ =?us-ascii?Q?F4eo4iNcNIkk/54HG3HRJNUrUS6nRpA8+uH8fMrckl/n?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: Re: [RFC PATCH 0/2] sched/fair: Reorder scheduling related structs to
- reduce cache misses
-To: ZECHENG LI <zecheng@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Xu Liu <xliuprof@google.com>, Blake Jones <blakejones@google.com>,
-        Josh Don <joshdon@google.com>, linux-kernel@vger.kernel.org,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20250402212904.8866-1-zecheng@google.com>
- <dad0822a-5e0b-4518-a246-a3820787ed87@linux.ibm.com>
- <CAJUgMyLDwyK-WgNFOr7bGmXPG9eAEnG7mNtjfPSTeJnJT8bAVg@mail.gmail.com>
-Content-Language: en-US
-Reply-To: CAJUgMyLDwyK-WgNFOr7bGmXPG9eAEnG7mNtjfPSTeJnJT8bAVg@mail.gmail.com
-In-Reply-To: <CAJUgMyLDwyK-WgNFOr7bGmXPG9eAEnG7mNtjfPSTeJnJT8bAVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: J2moqHfekDspChsNaQGJ2SItrK1zGyjx
-X-Proofpoint-ORIG-GUID: lJlAaA3hOKMQS59fkPGnXc-5OdCpap_U
-X-Authority-Analysis: v=2.4 cv=c8KrQQ9l c=1 sm=1 tr=0 ts=68046c38 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=p4LLdNialmM4HVgT2nUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-20_01,2025-04-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxlogscore=322 lowpriorityscore=0
- impostorscore=0 clxscore=1015 mlxscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504200027
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB1018.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b376770-e93b-4c24-be8b-08dd7fbbcb07
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Apr 2025 03:31:09.8016
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dlwmLOgSXilxM62GVz0+y/wIwUYoNo7H15eFSKCsOpks7mS4dsZsVEeiP4zXr7FOx6LK3ZHUPlDApPb5KBb/PcVnm1vD17UkX1HeBRuXRqc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB0956
 
-On 19/04/25 02:28, ZECHENG LI wrote:
-> Hi Madadi Vineeth Reddy,
-> 
->> This patch is based on optimizations by reordering for 64 byte systems.
->> In case of 128 byte L1 D-cache systems like Power10, this might or might
->> not be beneficial. Moreover lot of space(almost half) would be wasted
->> on the cache line due to APIs like `__cacheline_group_begin_aligned`
->> and `__cacheline_group_end_aligned` that may restrict size to 64 bytes.
->>
->> Since this is in generic code, any ideas on how to make sure that
->> other architectures with different cache size don't suffer?
-> 
-> We propose to conditionally align to the cacheline boundary only when
-> the cacheline size is 64 bytes, since this is the most common size.
-> 
-> For architectures with 128-byte cachelines (like PowerPC), this
-> approach will still collocate the hot fields, providing some
-> performance benefit from improved locality, but it will not enforce
-> alignment to the larger 128-byte boundary. This avoids wasting cache
+It appears that when performing a rapid sequence of `delete_device -> new_d=
+evice -> delete_device -> new_device`, the `dw_i2c_plat_runtime_suspend` is=
+ not invoked for the second `delete_device`.
 
-I don't see the check to enforce the alignment only for 64 bytes. IIUC,
-the macros seem to apply the alignment unconditionally based on arch
-specific cacheline size. I might be missing something, could you
-clarify this?
+This seems to happen because when `i2c_dw_unreg_slave` is about to trigger =
+suspend during the second `delete_device`, the second `new_device` operatio=
+n cancels the suspend. As a result, `dw_i2c_plat_runtime_resume` is not cal=
+led (since there was no suspend), which means `i_dev->init` (i.e., `i2c_dw_=
+init_slave`) is skipped.
 
-> space on those architectures due to padding introduced by the
-> alignment, while still gaining benefits from collocating frequently
-> accessed fields.
-> 
->> Due to the reordering of the fields, there might be some workloads
->> that could take a hit. May be try running workloads of different
->> kinds(latency and throughput oriented) and make sure that regression
->> is not high.
-> 
-> For workloads running without a cgroup hierarchy, we expect a small
-> performance impact. This is because there is only one cfs_rq per CPU
-> in this scenario, which is likely in cache due to frequent access.
-> 
-> For workloads with the cgroup hierarchy, I have tested sysbench threads
-> and hackbench --thread, there are no obvious regression.
-> 
-> Heavy load on 1024 instances of sysbench:
-> Latency (ms), after-patch, origial
-> avg avg: 2133.51, 2150.97
-> avg min: 21.9629, 20.9413
-> avg max: 5955.8, 5966.78
-> 
-> Avg runtime for 1024 instances of ./hackbench --thread -g 2 -l 1000
-> in a cgroup hierarchy:
-> After-patch: 34.9458s, Original: 36.8647s
-> 
-> We plan to include more benchmark results in the v2 patch. Do you have
-> suggestions for other benchmarks you would like us to test?
+Because `i2c_dw_init_slave` is skipped, `i2c_dw_configure_fifo_slave` is no=
+t invoked, which leaves `DW_IC_INTR_MASK` unconfigured.
+If we inspect the interrupt mask register using devmem, it will show as zer=
+o.
 
-May be some throughput oriented workloads like ebizzy, sysbench and also
-some real life workloads would be good to include.
+Here's an example shell script to reproduce the issue:
+```
+#!/bin/sh
 
-Thanks,
-Madadi Vineeth Reddy
+SLAVE_LADDR=3D0x1010
+SLAVE_BUS=3D13
+NEW_DEVICE=3D/sys/bus/i2c/devices/i2c-$SLAVE_BUS/new_device
+DELETE_DEVICE=3D/sys/bus/i2c/devices/i2c-$SLAVE_BUS/delete_device
 
-> 
-> Regards,
-> Zecheng
+# Create initial device
+echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+sleep 2
+
+# Rapid sequence of delete_device -> new_device -> delete_device -> new_dev=
+ice
+echo $SLAVE_LADDR > $DELETE_DEVICE
+echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+echo $SLAVE_LADDR > $DELETE_DEVICE
+echo slave-24c02 $SLAVE_LADDR > $NEW_DEVICE
+
+# If we use devmem to inspect IC_INTR_MASK, it will show as zero
+```
 
