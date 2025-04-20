@@ -1,130 +1,180 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED18C20CCE8;
-	Sun, 20 Apr 2025 16:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F111EB5E7;
+	Sun, 20 Apr 2025 16:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745167710; cv=none; b=NE8BdsyGnpsrQnhXDf9atkWhr8Us9PtrCf2nwNlX2C2fvwvIZrI/OsgJOflM5Ghhrj1ink9l3ELBBzstSwMPZfaxYncXsTozrwG+WkwsCec52nRbH9R4rkVt3TpH7yHKMD/ioFyPybPNnWtmDskFz1dorIWvT/n07n76jAuJLdY=
+	t=1745167999; cv=none; b=nAgYqwA+39j2PdfaVF9gyR5cz/g7ijShr10PI4xs9b932JzJQ5abe9RVXk/DDYu8zPx0PiZzyPu4LEycQF/joswHvem097UG81R7ZybOSoxk+uPoO/kpb4YO9gUbfsaDqde6u4pIie1uqOH/jMCZrBPGnLlg/gVLBerzOo/dtYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745167710; c=relaxed/simple;
-	bh=q5KCd0/Y1jvumxaNbaXiGfMVxXVi4tyTV0M4h0eTwic=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CcgcHetHsjsN2dNvOctYkq4S8BskJcMwpWMen4KJX1tyzNsvX1eiW/I3iwyIxtRI0ZhT04HN4Nu6O4ySv/hzSbIss6EAGKwJQs94xjC4VxNLvxcmQPrOGuXTbZE01FBNBX0GIMzNjEhgki+8feGY4CeezCJyGmtnoiNenrV4C3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=mu/fEfva; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1745167999; c=relaxed/simple;
+	bh=a/YSaxMtnkz3x+ibIzhkE9mCzEFE2bazmNNuXRGQ0Eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gxbNQ8inpkUFhCJYxxaNAm4Kxt6bGsicIf3HVpAS4hilvnItYvRAuOTeZLAg6KLfj/H7u+stj2ZlCyXcTPxQnVt2nvB/maX2OfUXHi1onobDv/AQ0Jr1DBTk1Koos0NJH9qGndw8mmxYHP3Ol8fVFCUDfrsq8AFfldYtq20rvc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=BCyd2pp0; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mu/fEfva"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac29fd22163so507648766b.3;
-        Sun, 20 Apr 2025 09:48:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="BCyd2pp0"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22c33ac23edso32516095ad.0;
+        Sun, 20 Apr 2025 09:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1745167707; x=1745772507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=googlemail.com; s=20230601; t=1745167996; x=1745772796; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EjUWRNhL7mfMeWSPy6sa+7SQ8UfbaKL0kzhkdxakcaA=;
-        b=mu/fEfvazC+xo5DtbESZGMSNOjjuGaO4PSl57GjxTGEj5CUQjswF3sMOcTdyh8XIsa
-         yBGx3+JY6GTy5FWuHGBW1riYzddPhh97GOE23D6amjAd0cU9DRwCxT87zI3J5OjYznb0
-         IjOfUzP1G5dUoko4O67bOF/59ddXQ89Rl5DgF1X+NsFQTeFMIGX1FHiCbG29WQec6462
-         G1sy6Il2yU+m7eKerZMAltHlhF7piDhsQpmx8FZhF1SOqR4VaImILYHqiQnYNyUVBT9p
-         e+vjZMmyuMdIXd8Fa01m/ZqMDPyyRkeUVwaCiYJxTAfu07s1PSOOhK+5BdKIkBCyaMgO
-         E9Ig==
+        bh=8SPeMr2qOZn4YU1fh/fx5ZM9kAovJzAmEca1OBcRO4o=;
+        b=BCyd2pp0C8/lQaKc97Zkb4J3qKkhddbCbbH6CdPQWr+4tzhbyYFB29vDcy5TuiDF5P
+         RNEWAhA7yjHRhnGa77UWKKnGn78H5qM2INcZRpJIsMGPAOuuRA7zjq5YHxeIZpiS7RgL
+         cHmYHnCw+ByhvuopfuUgGo389U+T3IRti/rbsLp96FvdzqeYgPrYSMGWgEpIbc9Ak+Gm
+         Hus1WoMbi9o9PTwLc0q43v3d3RDEsBtR2jrdU4rk8+oaRZtkIzB4Exp7vaaxoM0v9zq1
+         gvnBZ/jz9TgjToSReDwCvT63jgjhvPqo0QcU/XH/ctf2earm9M3dUVO33h4BfAAxmbfW
+         Pjwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745167707; x=1745772507;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745167996; x=1745772796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EjUWRNhL7mfMeWSPy6sa+7SQ8UfbaKL0kzhkdxakcaA=;
-        b=A/va7xcvzuxd0irKEvQ5UlKHraJ9tGZqz4rUBrIUplaMONUjkf2N+qHZqpi0O1NS1w
-         94Od9eCVkQKvdbZHp/K9wwpO5Fd+syPv32hIplo5jA3AuA2Aus75koF/s5YVwK6uSU2r
-         0Hd31yiGGmp9P01ooMNVL1FlaZFh7TX6ceAKoCrjumYBAe9rK+t9pd9in/9ileNP5nRW
-         iRjNspm+qoENAhW/i/fHWHDqiJjavpkT48Orb0LOioNgUl6GUHIu4Dw9amaO6DLK4jz+
-         aBN5onc3mR5A9AlqI4TE9elftUArYr6hIhMhaCFVd5yUjL6OqHT91kvX7Upe8Mg2oUHq
-         hqCg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+UktcxO10ziuQWiaqaeC49snaRGPRMNhve4kdWTzOUb0Ip705cxC3dAzo7Sky6D61zT413fJKyyE8Fnrj@vger.kernel.org, AJvYcCXgSSeorQQZ9qOKsQ59Oornyu3b5gafRoCQd3NvWhixmwzQ1f19XxW0kIE4b07EMr0SrroqBOR4Hsox@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOZj7Rwhjq4pWEzS7rHXwKM9TD9vTJiz3tx8XUL7lwGVBllXpV
-	bA7VKhbFnAgfaYemAZg4wfr+VoBa4i0HtH31h8iUaR6sLsZkMo2v
-X-Gm-Gg: ASbGnctYgM+J6g/Z/qg3sUEmTQaakvx2pM+yOQTtTexBhgKEtwkMwwMkyp7CYhrPge+
-	qNAsRgEM/eMY3UrVG3JhatqkO075ra9ppKHnrRHjgX8Vs3C+Cw8ajTa7NhfaU5uWWtmupyYUuKx
-	1ffszIYuHPL7vqg6Zk2hebKLOQmzF7Ot3TWmLgUp7tIKJdKYN2ACXzszHwAqj8u7EInn1FrYBk2
-	v8Z8iZ1G+agHB+GjA685PE2tdpPI2DX9PewNwND4CCwRyK/Sf4su78oB6McSlpQen/WBCYo9SXN
-	+2PrbZ7x2UxBuMusPG0blr/fuGvS01P3L+JxKEXLyW/e9Y2B6qkRDAYT28oL91mCxL/MYz8DNaK
-	XysIMDjQ5rncv5y+mXqrIsG90/9x0IbBvMQzW5gLZIWSapBpcyk9eJdiaA561vw/bkEt91PSkcb
-	nb
-X-Google-Smtp-Source: AGHT+IGQbKyjINDvHkLRsaTYirDNCXIf/EYtZjqg3lz7IMf8gugQhBZRZ/3/lwYabSVCSHziooRzLQ==
-X-Received: by 2002:a17:906:478f:b0:ab7:bac4:b321 with SMTP id a640c23a62f3a-acb74b80e1fmr754056366b.29.1745167707194;
-        Sun, 20 Apr 2025 09:48:27 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-2a02-3100-9ddb-f900-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:9ddb:f900::e63])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm416142366b.148.2025.04.20.09.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 09:48:26 -0700 (PDT)
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To: linux-amlogic@lists.infradead.org
-Cc: neil.armstrong@linaro.org,
-	jbrunet@baylibre.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	christianshewitt@gmail.com,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v1 4/4] arm64: dts: amlogic: g12: fix reference to unknown/untested PWM clock
-Date: Sun, 20 Apr 2025 18:48:01 +0200
-Message-ID: <20250420164801.330505-5-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
-References: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
+        bh=8SPeMr2qOZn4YU1fh/fx5ZM9kAovJzAmEca1OBcRO4o=;
+        b=MZfbbQGVxQeSU0RcSYHSgGGHmhZQxz2nglBoFv5IX7Y78b9A+IkYsgRF7i89H0Aigp
+         78lCH0kQZTDhIPrwYuTXog1Zhknyhyr12mMttQMEl5mVb5d2Yv3ucfAUNdX97RP5UMuT
+         ISxco/GF6fNZcXqsf7PR6FXdsUUVkIA1x2ExRC2wHSC4uUOJxXzIuqfKkr09rdwNA01c
+         kORkilbzAkZxvBnWdAt51QGGaKkoUac4yxTMbN58rrmQ+QgW5B70r9RUxyDrhaHBGtbY
+         016Hr6bW8d2rZjb4lDtZEtAjpTIa7Olfl0osUrjjs/ZSZVtG75lHT29+s3lWzRVRBndN
+         cFqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvWMNtVAdg7DqcY6i6R63pUkW4qDFJF9YSqN0lHEcKWzdiqGFnXP0/XfwnoZh02QFdCW5HrZFUv6KM@vger.kernel.org, AJvYcCVxts+Qqo98RgsCjwGfCNL/PKVC3uYrGOh9a3sSedy7TM9e+DIsQpR9HTf0nFZzhO6HaHkxyAiVg4HEJAjY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd3esTwRq1GDB2SLj1yNKvSzPeE9oq3g8sL/Ad5Vz0IQpASHTq
+	f5U6SCrsyhFk6TdLxWOltc274JaHAUf9KM9YscNraMVtL/IqCkjC9q6lRTdrJBMHQFrr4HAvmwA
+	U6kB5B9nFJZg12URDS+31/HRkmFA=
+X-Gm-Gg: ASbGncsYUFIhgMVl8L+mtavzuEphXGEn47wOUlJzxuTgxfKpcGba53TUiMj4K/YsIPo
+	FM+2rc5kBvyHJ6doYjCeqlkVDu34EMpcA6O+1joVoqyM0hXcFHxcmvigYx4Ccc+eHeQbxL3kPZh
+	OxkucPojUtk9Zj2I2MeHkFPMQXW1tURnHQXxGwa0EidquWBOE=
+X-Google-Smtp-Source: AGHT+IH8DzvTiy4h+KL4U19Sci4voDMK4mciBQ4BPN22Pz+pQoaq5S9v0/nWEx5fqmVPXETBHXM/RT+poBdLM+MB/+0=
+X-Received: by 2002:a17:902:f684:b0:223:635d:3e2a with SMTP id
+ d9443c01a7336-22c535c0760mr127312745ad.23.1745167995675; Sun, 20 Apr 2025
+ 09:53:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241227212514.1376682-1-martin.blumenstingl@googlemail.com> <4A37D0CD-FD4F-445A-87F8-19D65CB7FDB9@hewittfamily.org.uk>
+In-Reply-To: <4A37D0CD-FD4F-445A-87F8-19D65CB7FDB9@hewittfamily.org.uk>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Sun, 20 Apr 2025 18:53:04 +0200
+X-Gm-Features: ATxdqUHEOYPXXRr0KRgABoAXqlDBucnLKVCiuCrN19sebvABvHD_xIDDHJKPPek
+Message-ID: <CAFBinCC7HrT_fD0zYudtj10SNiajwq-OSC7ceeoNrz2neChptg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] dts: amlogic: switch to the new PWM controller binding
+To: Christian Hewitt <christian@hewittfamily.org.uk>
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	jbrunet@baylibre.com, neil.armstrong@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Device-tree expects absent clocks to be specified as <0> (instead of
-using <>). This fixes using the FCLK4/FCLK3 clocks as they are now
-seen at their correct index (while before they were recognized, but at
-the correct index - resulting in the hardware using a different clock
-than what the kernel sees).
+On Sun, Apr 20, 2025 at 9:45=E2=80=AFAM Christian Hewitt
+<christian@hewittfamily.org.uk> wrote:
+>
+> > On 28 Dec 2024, at 1:25=E2=80=AFam, Martin Blumenstingl <martin.blumens=
+tingl@googlemail.com> wrote:
+> >
+> > This series switches all Amlogic SoCs to use the new PWM controller
+> > binding. The main benefits of the new binding are:
+> > - the pwm controller driver now picks the best possible clock to
+> >  achieve the most accurate pwm output
+> > - board.dts don't have to know about the pwm clock inputs anymore (as
+> >  the driver picks the best one automatically)
+> > - new SoCs only need a new compatible string but no pwm-meson driver
+> >  changes, assuming only the clock inputs differ from older IP
+> >  revisions
+> >
+> > This silences the following warning(s) at boot (for each pwm
+> > controller instance):
+> >  using obsolete compatible, please consider updating dt
+> >
+> > I have tested this on two devices:
+> > - meson8b: odroidc1 (boots fine and cycling through all CPU
+> >  frequencies and thus voltages works fine)
+> > - meson-sm1: x96-air-gbit (boots and the rtw8822cs SDIO card is
+> >  detected, so the 32kHz clock for the SDIO card works)
+> >
+> > Since I cannot test all devices I'm asking for this series to be
+> > applied so the Kernel CI board farm can help verify it works on all
+> > boards available there.
+>
+> This series breaks Broadcom BT on the GXBB/GXM/G12B boards in my
+> current test rotation. I=E2=80=99m running Linux 6.14.2 with this series
+> backported for testing. This is generally what=E2=80=99s seen in dmesg:
+>
+> VIM2:~ # dmesg | grep -i blue
+> [    8.659535] Bluetooth: Core ver 2.22
+> [    8.659681] NET: Registered PF_BLUETOOTH protocol family
+> [    8.659690] Bluetooth: HCI device and connection manager initialized
+> [    8.659712] Bluetooth: HCI socket layer initialized
+> [    8.659721] Bluetooth: L2CAP socket layer initialized
+> [    8.659742] Bluetooth: SCO socket layer initialized
+> [    8.724898] Bluetooth: HCI UART driver ver 2.3
+> [    8.724953] Bluetooth: HCI UART protocol H4 registered
+> [    8.725106] Bluetooth: HCI UART protocol Three-wire (H5) registered
+> [    8.725434] Bluetooth: HCI UART protocol Broadcom registered
+> [    8.725502] Bluetooth: HCI UART protocol QCA registered
+> [    8.725559] Bluetooth: HCI UART protocol AML registered
+> [    8.966727] Bluetooth: hci0: Frame reassembly failed (-84)
+> [    8.966772] Bluetooth: hci0: Frame reassembly failed (-84)
+> [   11.148157] Bluetooth: hci0: command 0xfc18 tx timeout
+> [   11.148383] Bluetooth: hci0: BCM: failed to write update baudrate (-11=
+0)
+> [   11.148446] Bluetooth: hci0: Failed to set baudrate
+> [   13.281510] Bluetooth: hci0: command 0xfc18 tx timeout
+> [   13.281576] Bluetooth: hci0: BCM: Reset failed (-110)
+>
+> This is also visible on a VIM3 board in kernelci (Linux 6.15.-rc2):
+>
+> https://dashboard.kernelci.org/test/maestro%3A67fd3cda3328e043e96da230?l=
+=3Dtrue
+>
+> [ 3.954267] Bluetooth: hci0: Frame reassembly failed (-84)
+> [ 4.040555] Bluetooth: hci0: Frame reassembly failed (-84)
+>
+> (linux-firmware and thus kernelci is lacking Broadcom BT firmwares so
+> later messages that result from trying to load fw aren=E2=80=99t seen)
+>
+> With the series reverted:
+>
+> VIM2:~ # dmesg | grep -i blue
+> [    8.452570] Bluetooth: Core ver 2.22
+> [    8.452695] NET: Registered PF_BLUETOOTH protocol family
+> [    8.452703] Bluetooth: HCI device and connection manager initialized
+> [    8.452724] Bluetooth: HCI socket layer initialized
+> [    8.452735] Bluetooth: L2CAP socket layer initialized
+> [    8.452752] Bluetooth: SCO socket layer initialized
+> [    8.530077] Bluetooth: HCI UART driver ver 2.3
+> [    8.530113] Bluetooth: HCI UART protocol H4 registered
+> [    8.530387] Bluetooth: HCI UART protocol Three-wire (H5) registered
+> [    8.530902] Bluetooth: HCI UART protocol Broadcom registered
+> [    8.530983] Bluetooth: HCI UART protocol QCA registered
+> [    8.531037] Bluetooth: HCI UART protocol AML registered
+> [    8.917685] Bluetooth: hci0: BCM: chip id 101
+> [    8.918000] Bluetooth: hci0: BCM: features 0x2f
+> [    8.919526] Bluetooth: hci0: BCM4354A2
+> [    8.919560] Bluetooth: hci0: BCM4356A2 (001.003.015) build 0000
+> [    8.941837] Bluetooth: hci0: BCM4356A2 'brcm/BCM4356A2.hcd' Patch
+> [    9.831321] Bluetooth: hci0: BCM: features 0x2f
+> [    9.832884] Bluetooth: hci0: BCM4356 37.4MHz AMPAK AP6356-0055
+> [    9.832902] Bluetooth: hci0: BCM4356A2 (001.003.015) build 0266
+> [    9.856044] Bluetooth: MGMT ver 1.23
+>
+> An SML544TW board (S905D) with a QCA9377 chip is not affected by the
+> changes so the scope appears to be limited to Broadcom BT.
+>
+> I=E2=80=99ve also noticed that VIM3 and the SML5442TW have device-tree it=
+ems
+> like max-speed, clocks, clock-names defined, but adding these to e.g.
+> a WeTek Play2 board or removing from VIM3 doesn=E2=80=99t change anything=
+.
+Thanks for reporting this - a fix has been submitted here: [0]
 
-Fixes: e6884f2e4129 ("arm64: dts: amlogic: g12: switch to the new PWM controller binding")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 12e8daaa1c9b..dcc927a9da80 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -2313,7 +2313,7 @@ pwm_ef: pwm@19000 {
- 					     "amlogic,meson8-pwm-v2";
- 				reg = <0x0 0x19000 0x0 0x20>;
- 				clocks = <&xtal>,
--					 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
-+					 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
- 					 <&clkc CLKID_FCLK_DIV4>,
- 					 <&clkc CLKID_FCLK_DIV3>;
- 				#pwm-cells = <3>;
-@@ -2325,7 +2325,7 @@ pwm_cd: pwm@1a000 {
- 					     "amlogic,meson8-pwm-v2";
- 				reg = <0x0 0x1a000 0x0 0x20>;
- 				clocks = <&xtal>,
--					 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
-+					 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
- 					 <&clkc CLKID_FCLK_DIV4>,
- 					 <&clkc CLKID_FCLK_DIV3>;
- 				#pwm-cells = <3>;
-@@ -2337,7 +2337,7 @@ pwm_ab: pwm@1b000 {
- 					     "amlogic,meson8-pwm-v2";
- 				reg = <0x0 0x1b000 0x0 0x20>;
- 				clocks = <&xtal>,
--					 <>, /* unknown/untested, the datasheet calls it "vid_pll" */
-+					 <0>, /* unknown/untested, the datasheet calls it "vid_pll" */
- 					 <&clkc CLKID_FCLK_DIV4>,
- 					 <&clkc CLKID_FCLK_DIV3>;
- 				#pwm-cells = <3>;
--- 
-2.49.0
-
+[0] https://lore.kernel.org/linux-amlogic/20250420164801.330505-1-martin.bl=
+umenstingl@googlemail.com/T/#t
