@@ -1,114 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9635946;
-	Sun, 20 Apr 2025 02:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EF123A9
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 02:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745115709; cv=none; b=Cwnq4Q+lDCYrAeuIZCzrKYU9dJn/cg9Ea9FuKVjyOacb6uPNsA4CAL6R/pzpu4b5IpmQgNSaBNSCMZMxkQ4MOen7rHq+A4hOmE/b/XhxidraYpek+WQn3SHHF977iRu3JTXojFbTUp8JnjIrzN4wLZiLZQu9uUc3ZvybTYE1bHM=
+	t=1745115976; cv=none; b=VL+9Gd+JpkUy2sFCO+hDvU9T13nAeWczC/dQJ/nQ3GzhHKilwCmAXqA6iSOTP71FLWxODwUfJddfKC6CWDcooee6IMENbMzW5iw8CRXiBMQPVebf+WXmGYoTjkldQFRp3bU0729MD7x7VTFD+ZVqvpMT70ExuIVVLL9/uDa37XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745115709; c=relaxed/simple;
-	bh=S2qG97NYouj37jOehp9hrQYtd5QhRNH6vXMDLSxVO1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jhmyznBD8YXvfSEUISqO/jchvMVXmMOgrXeRzypz50A4z0SS8dHYL6aucFgTvSMYmXQ3nhhjFzc9QeVkxTAmvEmYVc9PRHeTI+J4wrv9mA+j0fQIVr97paPSDi6pFoMe7wwLuYAzDuhAbalhe7XAFH11a3WAtJVGaJws9R13sCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BwESSD6l; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745115976; c=relaxed/simple;
+	bh=QlvYbnjmX+W9K5stFkZ0L0iTSHEa3C6CvwYAW0xyphA=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=tVY1zLIJCx00x6lXGup1oTDgXFFNAj0DIHFaNrwcdaG5Jj2YzFFeUukpnBsmSUdwyk38pqU1EAtQRjdUB4haM8hfsNCLWjReZrh8cEBRkfgw80ErP4XPp4//SXG2df4EHM7yRRylT8nGGxf2pQ/j8VrDxAE1gvNVBiUdXi3acKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaz/z6VJ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BwESSD6l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745115708; x=1776651708;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=S2qG97NYouj37jOehp9hrQYtd5QhRNH6vXMDLSxVO1A=;
-  b=BwESSD6lXSXLET6k/8X7qu5IalMDbJgOvC1L98oeI7ly02F4Yj2RbCFJ
-   cLBg7y9O25z4oWXJtHci8bMlN66KXNT5U2VzNaPif2NkiWRLQz1zhyY/W
-   cJXONPutqZ2Md9yvwf1PX7WexYGc6gAUaKoWqhMIs3COLuBWbYm/viNbd
-   cV5b/f7EamwtFhpyRSIBbAse7O8soUU6ale/gBzsLST5+bXZu/iHhCDmI
-   poxLR5NEZGO5dJ3tnqo/GbCHwc9M5OmMsP1nyKp8QqZT8o2qSOqAhP6AD
-   zvvzmor/ZFr/q0PjoDI5dEjGLrwqc7+hTyW/XDgTu3FDCUrbJPfESsP6A
-   g==;
-X-CSE-ConnectionGUID: qZg8dISxREqH6ikJEHnDIQ==
-X-CSE-MsgGUID: YMadNgLWRzG847AgjMCmGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11408"; a="46583973"
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="46583973"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2025 19:21:47 -0700
-X-CSE-ConnectionGUID: BCen5bskTb+oZo+xMNn8YA==
-X-CSE-MsgGUID: tgU5JMTuRCaq9U4zInUKDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,225,1739865600"; 
-   d="scan'208";a="168621082"
-Received: from lkp-server01.sh.intel.com (HELO 61e10e65ea0f) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 19 Apr 2025 19:21:45 -0700
-Received: from kbuild by 61e10e65ea0f with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6KJT-0004Kz-06;
-	Sun, 20 Apr 2025 02:21:43 +0000
-Date: Sun, 20 Apr 2025 10:21:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, ukleinek@kernel.org
-Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
- synchronized in .probe()
-Message-ID: <202504201050.o3m04RP6-lkp@intel.com>
-References: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaz/z6VJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2263428c8baso400025ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 19:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745115974; x=1745720774; darn=vger.kernel.org;
+        h=mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PwmHDGV+N70/f3UyaxNCX6reyKyfr9ddRKfVtg5RWn0=;
+        b=oaz/z6VJfW8GNfbAfJFuqWJ2UTrIDavrjS9USzjjVzms+GvlqjDKTB9+FL5Ew2nfH+
+         38ucfc5rBzX5HepPCL3AIpnVzp96WVBQ3LhF6BwUyaAbPmTOzw5yq+muzwu6i4WpTc5g
+         k7OPyedj9j9/jxYjTISBTytAwkKDtqQdOJ/Tqebx/AX3ue/2A8oN/euYfzzQ7o29OukK
+         w7Qp5D/uf8Qnq5AXlHvMT0kBRvcBfdZD8pTmnp/uGyQTzd+CQvs49GGI2cs+N8dB0Aae
+         vVjk93AqNRsTqL3lYyNNmUS5gqHZzwz5zuJxS6ePpPokgw7xD+rwOsh/m0Sbmuf+3pMJ
+         PiQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745115974; x=1745720774;
+        h=mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PwmHDGV+N70/f3UyaxNCX6reyKyfr9ddRKfVtg5RWn0=;
+        b=Ax0Lg2nxyw4tGty5EMGJiASZbhp6DgTSjRpSQ7FEGBIumBMykFMqtaIwOAXiX1zx4F
+         Jz7WHXADwEsHWvGWmXIzj7Mtzy53REIX3NrMp15oDUVAJ/izgFo3pJkoi7h7qPrR4+qv
+         mkJR29jQZ/r0Yfh3SbHVMNKkT0LNBjgqyH2vxlH68IHYdKUNIlDzo/YnnJuEs3+uzs+/
+         EBqwZBY1ZxGvyARSvqlBi0FCd4kHdhCVY9oSqhC0Kg1+JATuqRaZFiKp55VOJlwOKr7w
+         iy4K2R+JJlqPpEvcxWUaW+hKdI/EYQs478NNYekoqPu0z7wpRBtEpznTHzKlhwjSlNjY
+         9+8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUqv06OSX9Dj606Hqh/8DyAK2Rip2zr0WOdFJj9s6vjgVMVI7D1/+00EWDg6P8yJEc5lL3JdZhImlzzaOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz3ZAaegw09B3OXU3nhu2zYUYS10C1kuteYbY0NvDjIKAPK5Fo
+	fgxCTR7D5ig83SfuwMxUKOOZ5G7/NV7gCsE5wdV3tWU0RBcNTfQq/vAfS3z8nI4Syp/hmjkRt5K
+	Lzw==
+X-Gm-Gg: ASbGnctv0wYvcVaWbevnykBJm0z6SesAdVVBVC0L08Iv4W+NYQK6MuvIg02D39rcJuz
+	O41Ose8sqDAUm2TqUVQi1ZIYmN2JXFtEmUbs8xM06x63a9M1hXn6HNHzURjbHcuZEir1xZibsi+
+	8PfQbVL9qNIwpYZg/hDRE65xYdRwbpTDJhoU7TMPTNIIieZZiJtmbFBZ0TTPuKqYRn3XAcodY2F
+	fDJSpC/ZfTGB+keuigMhBqIT60myfdVjJa0qHrKYIEnZj2cHRwzX3SwSwf04tw2XfQXAcQ8se04
+	b30YntNMowAeRpR6c2ZejDT+f9YrdObb1ePTwscSvqtzrYEqAfyxqKCtY7E2hMCs03pAVknvKoj
+	STahq+jPHEEHS4fqzEO7bpX73+107vl3wSvQ=
+X-Google-Smtp-Source: AGHT+IGnLUYbDggjdUQLI5hza7vToJkfmKyNR75xrDRYJIxY+Hnlxo9WBkXTYtO4CsdL2gGRVNS7tw==
+X-Received: by 2002:a17:903:8c6:b0:220:c905:689f with SMTP id d9443c01a7336-22c54680d66mr4584665ad.25.1745115973210;
+        Sat, 19 Apr 2025 19:26:13 -0700 (PDT)
+Received: from [2a00:79e0:2eb0:8:3e8e:d566:514d:339b] ([2a00:79e0:2eb0:8:3e8e:d566:514d:339b])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c04afsm3964752b3a.23.2025.04.19.19.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 19:26:12 -0700 (PDT)
+Date: Sat, 19 Apr 2025 19:26:11 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Christoph Lameter <cl@linux.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Vlastimil Babka <vbabka@suse.cz>
+cc: Roman Gushchin <roman.gushchin@linux.dev>, 
+    Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org
+Subject: [patch] mm, slab: show total unreclaimable slab footprint on oom
+Message-ID: <93c5936a-fbcf-20a5-af1d-bee840e18d39@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Rafael,
+When there is a large amount of unreclaimable slab memory in use at the
+time of oom kill, what really matters is the memory footprint that it
+consumes rather than only the number of active and total objects.
 
-kernel test robot noticed the following build warnings:
+Include the memory footprint in the kernel log for debugging.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc2 next-20250417]
-[cannot apply to thierry-reding-pwm/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This may overestimate the amount of memory since slab pages may not be
+all of the same order, but it gives a useful upper bound for
+understanding where all the memory is going similar to slabinfo.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rafael-V-Volkmer/pwm-tiehrpwm-ensures-that-state-enabled-is-synchronized-in-probe/20250420-075200
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250206031852.64853-1-rafael.v.volkmer%40gmail.com
-patch subject: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is synchronized in .probe()
-config: arc-randconfig-001-20250420 (https://download.01.org/0day-ci/archive/20250420/202504201050.o3m04RP6-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250420/202504201050.o3m04RP6-lkp@intel.com/reproduce)
+At the same time, align the fields for some lengthy slab cache names such
+as fsnotify_mark_connector.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504201050.o3m04RP6-lkp@intel.com/
+Signed-off-by: David Rientjes <rientjes@google.com>
+---
+ mm/slab_common.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pwm/pwm-tiehrpwm.c:105: warning: expecting prototype for The ePWM hardware encodes compare actions with two bits each(). Prototype was for AQ_CLEAR() instead
-
-
-vim +105 drivers/pwm/pwm-tiehrpwm.c
-
-    97	
-    98	/**
-    99	 * The ePWM hardware encodes compare actions with two bits each:
-   100	 *   00 = Do nothing
-   101	 *   01 = Clear
-   102	 *   10 = Set
-   103	 *   11 = Toggle
-   104	 */
- > 105	#define AQ_CLEAR  1
-   106	#define AQ_SET    2
-   107	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1145,7 +1145,7 @@ void dump_unreclaimable_slab(void)
+ 	}
+ 
+ 	pr_info("Unreclaimable slab info:\n");
+-	pr_info("Name                      Used          Total\n");
++	pr_info("Name                            Active_objs   Total_objs       Memory\n");
+ 
+ 	list_for_each_entry(s, &slab_caches, list) {
+ 		if (s->flags & SLAB_RECLAIM_ACCOUNT)
+@@ -1154,9 +1154,10 @@ void dump_unreclaimable_slab(void)
+ 		get_slabinfo(s, &sinfo);
+ 
+ 		if (sinfo.num_objs > 0)
+-			pr_info("%-17s %10luKB %10luKB\n", s->name,
+-				(sinfo.active_objs * s->size) / 1024,
+-				(sinfo.num_objs * s->size) / 1024);
++			pr_info("%-30s %10luKB %10luKB %10luKB\n", s->name,
++				(sinfo.active_objs * s->size) >> 10,
++				(sinfo.num_objs * s->size) >> 10,
++				sinfo.num_slabs << (sinfo.cache_order + PAGE_SHIFT - 10));
+ 	}
+ 	mutex_unlock(&slab_mutex);
+ }
