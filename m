@@ -1,61 +1,63 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B04367;
-	Sun, 20 Apr 2025 16:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6254C1EA7FE;
+	Sun, 20 Apr 2025 16:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745167705; cv=none; b=iE+I0Hru25lDN6SxjNZ8V92v4WbA9QyseygukxJ3hdQKk6C4xZoZylmBRTuhK732noAt07IATaDeYcOBPElU9vzDTDrjsh0nktEBV+05Zwcl8oZ2Dmz50n5Omsr2i1MgJoJNiqa7vzZTuToX5KmPeZYE3BnEWhU/hJl7SrM1T3g=
+	t=1745167706; cv=none; b=D9IqRdduPnOc0LCZtV4tFhOWPzlB8b5GW65NwsJaXkMwrXoJxObJYnzKSsGy8P9h9UiSClqMU7fRWHuiKfF9LsemUu+4QzwuG0i2E5UBJ9lWCUkfyq/7O5nxzM9RfAbbBH0C/9lrMa0OBqfvZ7B/Qd2ByH035w4b+BZ1M88M0Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745167705; c=relaxed/simple;
-	bh=r5BUDroOZ6LSp7aT9+MILiAhHhSHpvQ1qz+XAOWXZU4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YJDHHh/U0x3Ca1qT4pmD+EMtTXVb/NY6wRFwhZCv+G74sukLjTAjfyx03PLOvdwUs4LPwzJ6g+4hVwpjIlm/0j1kOvwLNY+PF9C9VPpjwUGCmFurx6pTm121gsOtnTtTOQ8cD6qnFha6emFpmOPeq2fZ+unT0BlQH6oCwj33zJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=lvLO2rNj; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1745167706; c=relaxed/simple;
+	bh=dD7MHTcAJ8dZLQP7NejBP5RH7ngfpZYUN/1YsgBBHp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LKKOikQ43i7cjIbbseMG5DyJbJcb7AnE3697liDBj+2TauhSB6SS+f5uddsCqULHd9hE3k5/mJiKGJgOEjYaZR0H1kPayyoNBVKyzYotkCvXEMyfhZVHjzM6ZKVbQLWDo+HzstEHltC+B3Frd/uv6jwX9jFr6g8U28TxB+KqjUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=fUnFFlQv; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lvLO2rNj"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac289147833so594401066b.2;
-        Sun, 20 Apr 2025 09:48:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="fUnFFlQv"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso4353211a12.3;
+        Sun, 20 Apr 2025 09:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1745167702; x=1745772502; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EEGw4ei1ltPqT9EdfPygnEz1mrR7+WwPBOwxKSKXcf4=;
-        b=lvLO2rNjUtTsYXU056/zBfSYyoK7mrqW1c9UFqy4VGs77q3I2SestFUxUOqbYfJfEX
-         TIWtzKNaL+J0R5yKzladIGc36uaOGVbr+LRLBO3BdiJTEZ7H2K/g1H8dzbc32R6KpuZ1
-         zJMsdF4W70qpbTPC7gal3QjHXVAw51seP6xyGfO2c69gaHmPURbVVmtXwHmJUTNap0Fz
-         +BUVQ9L+XeItZKAmAT20CMMFKL3CAHEW5+1118F6P/qutt2jMhXmnx2xICefk4HfZJe7
-         wHNbD/Ccf9KdFqRIS40WJ4htAYhPgKPFItOEmQQNQBg2xNrn7kXX6h1ELdvH88/sz1ts
-         Cc5w==
+        d=googlemail.com; s=20230601; t=1745167703; x=1745772503; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TSDIdMS2R6liY+Rg+fw/qUWZGerrvhAudF6jdSavCD4=;
+        b=fUnFFlQvol4AVxARjd3LAqO38wa531kS8Ba0HkSYvRL7NWr8wNvRYDh0EG1gQ86eiE
+         eDv8G0I2L6vS9O87Fk/+71MxU+r8XJFACf5AUMjN4Idg9jlvpCiUUAZSE9OUii6OJKhS
+         H9l1wXjxuV7LXNH9pjSdePcQBsiFqQvTmpJbksCjy2b+kI+pbBpCU1nj/imstRnyl8Th
+         Vz5GwSmcihDzDiVO6JLYxWbPTMAMTxH60hbRAQVk1TxjPbAbp85YtFguJZ7R0AmYixkJ
+         BQYeDVPsrjbR6O7r48p+zAkNPiNRN4t9opYOeOy3/FmIKO+tCDH28SEAnKtIFycLG/uz
+         Wyug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745167702; x=1745772502;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EEGw4ei1ltPqT9EdfPygnEz1mrR7+WwPBOwxKSKXcf4=;
-        b=TMshiEigWbukZpGhwaJ0E2r+wzX+u6+MBGr8Xjvh2wiFnunTjeK4rIoR0orV1ZcGlP
-         dUs6nutuhHjXaIDpxIGx/JFzjusYc57RyeSxFMpPa9YfU6H2UPmXpIN5RUcjg5fsmlxh
-         Pyn+ThnnMG7lIrSZ2PwPW/pDgSzbVEsjlfhWoBTy2GzZ7s41iwM3LtoRbD8767cUgDWx
-         NwDHci5S4M8IvUlOvbxxEi6kglg1Av2ITkDs0Yx9JKB/hL5ofv8Yjp72JuMxoYSRkxfJ
-         huV5ndeK937aLNq3/yIU/LL6sLaDMf+dJNIXg5vKYkBk66jekrE+Rtdi1hM0pejJoHhl
-         yAkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpm+v1Q+/JBWB1H/djW0afjZZyGkkzg+/eW0I3XY4s5yM1RCJZUTjLXW+xRUzEbvv7Tm3h5eWUxOU/RANe@vger.kernel.org, AJvYcCWgqlq6h6M61wgMnvnRCoepam10cCd2zwiUzwxB/Rirggt7nuCuZzslbxo/YtA2ufUC66G0sovrn8JH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYYM0199x03kJkFLp24mVo0+gb+KGFUOmTQmx4e+r1sSe4wRFh
-	xxU5FRdlZNsquvfvboi+xGBo2e5nNQRhEwgJlKxblqgQmGr9pEHPgzT1lA==
-X-Gm-Gg: ASbGncsPyOOTmbHaTKxk1pXTm4GEQoG3SXi2aCULRK71s7iqZ+mge2HQvMerLj9Lmyo
-	8RPcWNn/ODWdCaUOmJLlg2AXog+RNnqV6KICt0wzlKjtZzY5TK3znvXWQd21vutis0XzMbE1L39
-	Nz8k19BEIADLrN39MgxPnCvt+xixX8118IPqnYfETrhXMItZju+0uuLZwlGG828O0w63rD3Qb8Q
-	C/AQYN0gABnPAfO7gtow5ojQeSmVFgDK9HyYXNn9s2Kq3UMthuF2mWiOJuQTXrm8705FqMdaX7M
-	pVvUNKQ9Ono+CisfyiAkBZioLir/Af40ExIoSAO9KcI2nFzorRg+iKqft/k1pFG+eowwt9PrnQH
-	IgMMGk7Bap5iEb34PbI4GQvlJYWIFK+KnNGobI4vp19SPpyot4VJBt0wAf1KrXa0NLw==
-X-Google-Smtp-Source: AGHT+IE3PsQolxVL2KiqFnBgslOuRCqoai4HIDr8cg10JY7uGcdQOpXmUPJ3NaFiU0N/NqtaE0v6vQ==
-X-Received: by 2002:a17:907:7207:b0:acb:168e:c257 with SMTP id a640c23a62f3a-acb74b7f3c5mr939128866b.26.1745167701617;
-        Sun, 20 Apr 2025 09:48:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745167703; x=1745772503;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TSDIdMS2R6liY+Rg+fw/qUWZGerrvhAudF6jdSavCD4=;
+        b=p8kQB8gwxDTAvIgcx01RVBDICUA9AkECIYnOlpGTcuXbi1QXHU/HYTCbGtDEXsug0v
+         iU03uoRgaWckAR0H+eHEF6fY0vZHRRNkM12uZTDFO5KwjBk9zm+syMiGohwhCLrNPZnL
+         zQjTZn5S8NRFuNA15e5qsHvjRyqXUoPX+SaL8fA0Uri0Fwz6pbza/0z86NU/BSKMqrNm
+         e48LYFt0tUXShDx6QmQvrxcg5QPq5xmcw95LugWrrrYGkM+UYfdgfVy5sW371jVvMJDD
+         yP5D5DRNsW7Sb6KM5Y1RZxrigZyHtm5v+6tYfQ1z9DNRyWD2CU8q6rMJuuqOrY/QJv5w
+         TMAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHtsnkwglJ45sLRjB+RNRo9T5wH+MfyTmroynkfNbd+TNQPRpD22o9KG0Ra3u14sR4k7UiwpSepboa@vger.kernel.org, AJvYcCWAEPeuCJ5uxybmRJwUGf8TNVi0YRnr5op7LZ1H2VjPaJJVAhvsrndF5uxTpXF8jcN+7mZsBE1lPmXa3D/4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy75ATRO1UDoLnEGRLUk5ulqSFkTEnM04J0a5gRESXcjTz6zLeH
+	PyXVUV+xbiJZLx+p2/BvwCrfm4AdBfPHEbpyyAWxpdL0x8fr6UeW
+X-Gm-Gg: ASbGncv/53Ir3LsJ8AV3ondle/MyKSQG87sPfRiWjbXFHA1Bb7dieydV9N8NjbDLoto
+	VVYRFjHqwLnT7lA22X/7uv2eVKGpwHmNlhNzPS1AIq5Dng12k2bfrSGuktbgzTdAbRF0hNRgInd
+	kS1FZU/sxZ8AXG9s7HQL582WgCQoSTSzZ7EEWyYm44DWP2UBrhpApYhCHBCOqjZAQLq/xd9TtgE
+	KNuH6JqpVg37N68dOA5Qds+F0iU/d4HeUd3YsSiJ06pujgFBU7tzkxkwre7sUhywELXE6P7uk5M
+	A1u9RmqpRDW4/tp0MHNHLaNj7kKHDwwVm9lOAb5/oqsq5L6LM7R8LhVx+yEyfllTtbwAbboc7q9
+	HQwWtZIMUcX1ZZV4m+ZOc3+yTId6tCjPM9PWfFTayex4akBZtdqMWImX5m580L2FbEQ==
+X-Google-Smtp-Source: AGHT+IHDqZGR/C4pyAoG+Pzf6q71gs+2fbe1eacbY+0bbZd64TmYxRfYf9le5qi7eevSgXvzJtxo2A==
+X-Received: by 2002:a17:907:7288:b0:ab7:cfe7:116f with SMTP id a640c23a62f3a-acb74db6d92mr846438866b.46.1745167702517;
+        Sun, 20 Apr 2025 09:48:22 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-9ddb-f900-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:9ddb:f900::e63])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm416142366b.148.2025.04.20.09.48.20
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm416142366b.148.2025.04.20.09.48.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 09:48:21 -0700 (PDT)
+        Sun, 20 Apr 2025 09:48:22 -0700 (PDT)
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To: linux-amlogic@lists.infradead.org
 Cc: neil.armstrong@linaro.org,
@@ -65,10 +67,12 @@ Cc: neil.armstrong@linaro.org,
 	linux-kernel@vger.kernel.org,
 	christianshewitt@gmail.com,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v1 0/4] dts: amlogic: fix FCLK{3,4} clocks for new PWM controller binding
-Date: Sun, 20 Apr 2025 18:47:57 +0200
-Message-ID: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v1 1/4] ARM: dts: amlogic: meson8: fix reference to unknown/untested PWM clock
+Date: Sun, 20 Apr 2025 18:47:58 +0200
+Message-ID: <20250420164801.330505-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
+References: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,61 +81,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Christian has reported Bluetooth issues on some of his boards, for
-example on a (GXBB) WeTek Play 2:
-  # dmesg | grep -i blue
-  Bluetooth: Core ver 2.22
-  NET: Registered PF_BLUETOOTH protocol family
-  Bluetooth: HCI device and connection manager initialized
-  Bluetooth: HCI socket layer initialized
-  Bluetooth: L2CAP socket layer initialized
-  Bluetooth: SCO socket layer initialized
-  Bluetooth: HCI UART driver ver 2.3
-  Bluetooth: HCI UART protocol H4 registered
-  Bluetooth: HCI UART protocol Three-wire (H5) registered
-  Bluetooth: HCI UART protocol Broadcom registered
-  Bluetooth: HCI UART protocol QCA registered
-  Bluetooth: HCI UART protocol AML registered
-  Bluetooth: null: hu 0000000023fa9791
-  Bluetooth: hci0: hu 0000000023fa9791
-  Bluetooth: hci0: hu 0000000023fa9791 skb 000000003f7acf2f
-  Bluetooth: hci0: command 0x0c03 tx timeout
-  Bluetooth: hci0: BCM: Reset failed (-110)
-  Bluetooth: hci0: hu 0000000023fa9791
-  Bluetooth: hci0: hu 0000000023fa9791
+Device-tree expects absent clocks to be specified as <0> (instead of
+using <>). This fixes using the FCLK4/FCLK3 clocks as they are now
+seen at their correct index (while before they were recognized, but at
+the correct index - resulting in the hardware using a different clock
+than what the kernel sees).
 
-It turns out there's a typo in the references to the untested/unknown
-clock input that made it into the already applied series
-"dts: amlogic: switch to the new PWM controller binding" [0]
+Fixes: 802cff460aab ("ARM: dts: amlogic: meson8: switch to the new PWM controller binding")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm/boot/dts/amlogic/meson8.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The original goal was to skip this input. This can be achieved by
-specifying a clock input as <0> (which this series does). When using
-<> (note the lack of 0) the clock is completely ignored when parsing
-the .dtb, resulting in a shift in index of the FCLK DIV4 / DIV3 inputs.
-This then results in the PWM controller driver calculating the
-frequencies for a different clock compared to what the actual hardware
-uses.
-
-Neil, please apply this as a fix for the next 6.15-rc.
-
-
-[0] https://lore.kernel.org/linux-amlogic/20241227212514.1376682-1-martin.blumenstingl@googlemail.com/
-
-
-Martin Blumenstingl (4):
-  ARM: dts: amlogic: meson8: fix reference to unknown/untested PWM clock
-  ARM: dts: amlogic: meson8b: fix reference to unknown/untested PWM
-    clock
-  arm64: dts: amlogic: gx: fix reference to unknown/untested PWM clock
-  arm64: dts: amlogic: g12: fix reference to unknown/untested PWM clock
-
- arch/arm/boot/dts/amlogic/meson8.dtsi             | 6 +++---
- arch/arm/boot/dts/amlogic/meson8b.dtsi            | 6 +++---
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 6 +++---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 6 +++---
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 6 +++---
- 5 files changed, 15 insertions(+), 15 deletions(-)
-
+diff --git a/arch/arm/boot/dts/amlogic/meson8.dtsi b/arch/arm/boot/dts/amlogic/meson8.dtsi
+index 7fe0c7d3ee6e..8702941ec2b1 100644
+--- a/arch/arm/boot/dts/amlogic/meson8.dtsi
++++ b/arch/arm/boot/dts/amlogic/meson8.dtsi
+@@ -451,7 +451,7 @@ analog_top: analog-top@81a8 {
+ 	pwm_ef: pwm@86c0 {
+ 		compatible = "amlogic,meson8-pwm-v2";
+ 		clocks = <&xtal>,
+-			 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
++			 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
+ 			 <&clkc CLKID_FCLK_DIV4>,
+ 			 <&clkc CLKID_FCLK_DIV3>;
+ 		reg = <0x86c0 0x10>;
+@@ -705,7 +705,7 @@ timer@600 {
+ &pwm_ab {
+ 	compatible = "amlogic,meson8-pwm-v2";
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
++		 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
+@@ -713,7 +713,7 @@ &pwm_ab {
+ &pwm_cd {
+ 	compatible = "amlogic,meson8-pwm-v2";
+ 	clocks = <&xtal>,
+-		 <>, /* unknown/untested, the datasheet calls it "Video PLL" */
++		 <0>, /* unknown/untested, the datasheet calls it "Video PLL" */
+ 		 <&clkc CLKID_FCLK_DIV4>,
+ 		 <&clkc CLKID_FCLK_DIV3>;
+ };
 -- 
 2.49.0
 
