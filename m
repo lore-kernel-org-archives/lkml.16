@@ -1,158 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C3EB667;
-	Sun, 20 Apr 2025 00:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7926136A
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 00:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745109013; cv=none; b=YDc0fppuCcET4LKWztCbPOT+E0hbKpfeyYUQ7d1kUvetVVjsLBIp/01VYdAJOgr1MVHg0+zrUspVsZ9WVof1+aFfK95liD3dzHFfYrAOoAR6PEP0tm4ArKDOWp04oq6FP4/eO2Ytp/xq6HVJW8BT2+iAo9/Nxo+ZItoOdOi5T/I=
+	t=1745109108; cv=none; b=skMTLH4gGjHZcylvF/AW3xI56T552HFxAm5MsZihM+Pr7hCSwn5o8GzuCiDUr6OJMBDAkeKIAvp95tnH873YdCkvJzYrLIiJ3X/nFib22hPUrweJhciHo5cZiYjjwiMggzDZE4W1cmfElQG0gcUBkzyOPlsnHaQwVoRf2Z3a2WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745109013; c=relaxed/simple;
-	bh=lFsiqVIeYeqhHXcEjTCFxaRVC5Dt8c2tiWMgb1QT3HA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GcAg90Nh6yTMnffi+8ZmFZAZCd9YHFg63voWMoO5G4p4ebynFpWxV/zRriPVMpt81fQLM2IF377yv7vdxw1w0uRdtbmnv+mL4FXCQ4KdeqFp9imO+34ESjzaq/wG7BZIGZ+cXrcTys60S6cJXdOzBS5jeRQkLLvLmz4sPpiPzm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqJbf+De; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745109108; c=relaxed/simple;
+	bh=t2bUeDF0C4BrIq4nQJddgy/7oBtAv3a3RWQqjgt8epc=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SnDvrMkxA0BH4LpuXcsx9jdDCMqRQ1qAOsz+m0BTcAEKNfnMid5n+3fHUGjTn4XlOsqp/BntS2RC+Neujc6aOCrkbcY1KZdxWTeuZ4ISpAX8sLEbkgqN+Uj5Q2EqGULcdH8TMW4tr6Xhiy88VIJblIYaJ1MEvNdP2sMb1BezT4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ug1ib6UZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqJbf+De"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 59682C4CEE7;
-	Sun, 20 Apr 2025 00:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745109012;
-	bh=lFsiqVIeYeqhHXcEjTCFxaRVC5Dt8c2tiWMgb1QT3HA=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=gqJbf+DeUMUSRzjCItVwNpi8nQdXP0CMVX5fSfnEMKSHvv/+a1NB64gMjtkIH3Tq+
-	 WNmUtx8I5WGXswas34sIAmMTitqfGTU8WhKU1zmE3LsmCXQlGRO9Fl0X1pkEcdCB9t
-	 Y80a2XV0jL40C7jLrh+/t+gc4vCbeC+wTW/W2YfDYr5sSa4yM2yPTBcofszzZH6Fjp
-	 DMRHyYgS5CRVzR5x6gM4MgPALwUxwLuueo+D88p8dUxzUZe2EMJzlgKUt0hjxLshgI
-	 dpMlKo6wkX0LApxf/EP292sOBBPMsIlS6P09wA7r+DqlMZGJHb08AjhP729ihRyCH9
-	 R1FHIc2s2o1jw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D51DC369CF;
-	Sun, 20 Apr 2025 00:30:12 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Sat, 19 Apr 2025 19:30:02 -0500
-Subject: [PATCH] drm/tegra: Assign plane type before registration
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ug1ib6UZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745109105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dgEWx6bqfsYcNIZ2nRjRSHhDwyAXgwASsQ5jmGYZ/+8=;
+	b=Ug1ib6UZPrDZt49xw4cSQLcY9nuYpIeyHDj1ewRlwA03RrpTeG8suOwUP65xg+fK8CB+Tr
+	aPUhdsTirJRoPMKrUNRXOJRRhhKFVwI/wB2HOw0rZY4PbiXQ0uTpaDp7midcK1GYHQW1bM
+	EZA5mm866w9+nOTNWO+Na5+X3H4DxL8=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-A7aJne0GPXCxijhHPTDacA-1; Sat, 19 Apr 2025 20:31:44 -0400
+X-MC-Unique: A7aJne0GPXCxijhHPTDacA-1
+X-Mimecast-MFC-AGG-ID: A7aJne0GPXCxijhHPTDacA_1745109103
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c544d2c34fso392920885a.1
+        for <linux-kernel@vger.kernel.org>; Sat, 19 Apr 2025 17:31:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745109103; x=1745713903;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dgEWx6bqfsYcNIZ2nRjRSHhDwyAXgwASsQ5jmGYZ/+8=;
+        b=OOwULT2VRb1lnbSrma7C0ZhWS7k07hQH5+E+x9D+kILSvVgSCFb4fh/kWWxrBDGZk2
+         7ikO8rirjkUdh+lANFqyceoTSkN4/2D1qR6tqOb1dxV8/NsfZ5Kv3xxtxMNHvGMHKdnp
+         sPRGJrIvGVDqev245UfGLnYlpUjWxrEggQT5/ZyJTBbwgSyllJBLokq+7CEX7axqu13t
+         5ENgixO0OaGNsiIg200F8F06P004dGkzdvoTj5g+sAsipF/9F0dRrKFTuYwPvKErBzOD
+         lyLgURojq3O3uA8b+ZeH3d9Tfo3Ud2zpKFsO6VUops+DySUKd7cDCryedrb/ZCbNEpcv
+         gooA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuBWPtojbXMh+tw8heC8NPm+eVSzuVXiZQgVXfu9+//S5L12mu3Fs+Q2tSo0odv2VTakVAWnpQKvowYR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlzR5V2qu3mYhcooCpU6zhtOeBW77YHATqbs8212fyoX7GZxQs
+	9Vc62ygHpvu/31HcasqBBIexTh3r7j9+uwoV/axc3afXs7RyEEECP3e5oNtnU3mum/d0HTw5VKm
+	GCtXCAoB1U1ygB1rnyBzmQJa4TNYJ2LsBnIjqWJ3E/zmPunSyTrRaZy+Ve+9Erg==
+X-Gm-Gg: ASbGnct8AeHEEQYZGCeWpO0iRvsABhV99c+YBihR9pwy/dhkL4S7KugWwkUhFrhzPSi
+	ZuVvD0hMEX2TglclRjSMx1Pps1QFMaLEf2ldH4iCNKnwkKn5rpwcpeF2b9OQDbCkUq+g5y7XSa8
+	Y6d3XQ6rErG+qE0wOEwfZ6W4LqFswhgiIoLT8XVlr0WRHcpwikpLsIHl9WKIfHWDFfb3mqHHc2H
+	MKFaH80LmV45ydjH+ZnbDh6toAemC5NmgBat/yzMPbN4cN2jfg+2MmlU7xL1NVTRdCbKmscCR/7
+	V6e1nXGDaUKc624684lb9LVFA/6npzSxrwwW1XnQ8Jhf0joxsg==
+X-Received: by 2002:a05:620a:2482:b0:7c5:4454:6b05 with SMTP id af79cd13be357-7c92804d3e6mr1365215185a.57.1745109103695;
+        Sat, 19 Apr 2025 17:31:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3CW4OI4+0M83k8AsYGQ4HxOMj60YbZOnkxwdYcny3UUeUE0axskyJtzAkSfGwP8v9qyUOJA==
+X-Received: by 2002:a05:620a:2482:b0:7c5:4454:6b05 with SMTP id af79cd13be357-7c92804d3e6mr1365213585a.57.1745109103442;
+        Sat, 19 Apr 2025 17:31:43 -0700 (PDT)
+Received: from [192.168.130.170] (67-212-218-66.static.pfnllc.net. [67.212.218.66])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4da22sm258243385a.66.2025.04.19.17.31.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 19 Apr 2025 17:31:42 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <532fe761-4907-4f4b-b98d-566453301399@redhat.com>
+Date: Sat, 19 Apr 2025 20:31:41 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, hannes@cmpxchg.org, mhocko@kernel.org,
+ roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
+ tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
+References: <20250419053824.1601470-1-gourry@gourry.net>
+ <20250419053824.1601470-3-gourry@gourry.net>
+Content-Language: en-US
+In-Reply-To: <20250419053824.1601470-3-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250419-tegra-drm-primary-v1-1-b91054fb413f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAAlABGgC/x3MOwqAMBBF0a3I1A5EUUS3IhbRvOgUfpiIKJK9G
- yxPce9LASoI1GUvKS4Jsm8JRZ7RtNhtBotLptKUtamKlk/MatnpyofKavXhCVXjMcI76yl1h8L
- L/T/7IcYPfS/jYGMAAAA=
-X-Change-ID: 20250419-tegra-drm-primary-ce47febefdaf
-To: Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>, 
- Aaron Kling <webgeek1234@gmail.com>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745109011; l=3395;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=2G8UkSlgwDeChFlfMMABWHEAXMgLzztWjpyaOPbKpVg=;
- b=5SgytgEJbkPisD/RHBHH6irE+mqOTQ2Ld0kkRR7fsi+WTpG1T6fpPWy5RZKmNCanrOc94c8fx
- G/84KB4qIX9CHhOZagae0TMnmaUU7Qvy9Eb2UPx5Y/LUL8lFNeRhTUk
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
 
-From: Thierry Reding <treding@nvidia.com>
+On 4/19/25 1:38 AM, Gregory Price wrote:
+> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+> index 893a4c340d48..c64b4a174456 100644
+> --- a/include/linux/cpuset.h
+> +++ b/include/linux/cpuset.h
+> @@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
+>   	task_unlock(current);
+>   }
+>   
+> +extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
+>   #else /* !CONFIG_CPUSETS */
+>   
+>   static inline bool cpusets_enabled(void) { return false; }
+> @@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
+>   	return false;
+>   }
+>   
+> +static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+> +{
+> +	return false;
+> +}
+>   #endif /* !CONFIG_CPUSETS */
 
-Changes to a plane's type after it has been registered aren't propagated
-to userspace automatically. This could possibly be achieved by updating
-the property, but since we can already determine which type this should
-be before the registration, passing in the right type from the start is
-a much better solution.
+I suppose we should return true in the !CONFIG_CPUSETS case.
 
-Suggested-by: Aaron Kling <webgeek1234@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Cc: stable@vger.kernel.org
----
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/gpu/drm/tegra/dc.c  | 12 ++++++++----
- drivers/gpu/drm/tegra/hub.c |  4 ++--
- drivers/gpu/drm/tegra/hub.h |  3 ++-
- 3 files changed, 12 insertions(+), 7 deletions(-)
+Other than that, the patch looks good to me.
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 798507a8ae56d6789feb95dccdd23b2e63d9c148..56f12dbcee3e93ff5e4804e5fe9b23f160073ebf 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -1321,10 +1321,16 @@ static struct drm_plane *tegra_dc_add_shared_planes(struct drm_device *drm,
- 		if (wgrp->dc == dc->pipe) {
- 			for (j = 0; j < wgrp->num_windows; j++) {
- 				unsigned int index = wgrp->windows[j];
-+				enum drm_plane_type type;
-+
-+				if (primary)
-+					type = DRM_PLANE_TYPE_OVERLAY;
-+				else
-+					type = DRM_PLANE_TYPE_PRIMARY;
- 
- 				plane = tegra_shared_plane_create(drm, dc,
- 								  wgrp->index,
--								  index);
-+								  index, type);
- 				if (IS_ERR(plane))
- 					return plane;
- 
-@@ -1332,10 +1338,8 @@ static struct drm_plane *tegra_dc_add_shared_planes(struct drm_device *drm,
- 				 * Choose the first shared plane owned by this
- 				 * head as the primary plane.
- 				 */
--				if (!primary) {
--					plane->type = DRM_PLANE_TYPE_PRIMARY;
-+				if (!primary)
- 					primary = plane;
--				}
- 			}
- 		}
- 	}
-diff --git a/drivers/gpu/drm/tegra/hub.c b/drivers/gpu/drm/tegra/hub.c
-index fa6140fc37fb16df4b150e5ae9d8148f8f446cd7..8f779f23dc0904d38b14d3f3a928a07fc9e601ad 100644
---- a/drivers/gpu/drm/tegra/hub.c
-+++ b/drivers/gpu/drm/tegra/hub.c
-@@ -755,9 +755,9 @@ static const struct drm_plane_helper_funcs tegra_shared_plane_helper_funcs = {
- struct drm_plane *tegra_shared_plane_create(struct drm_device *drm,
- 					    struct tegra_dc *dc,
- 					    unsigned int wgrp,
--					    unsigned int index)
-+					    unsigned int index,
-+					    enum drm_plane_type type)
- {
--	enum drm_plane_type type = DRM_PLANE_TYPE_OVERLAY;
- 	struct tegra_drm *tegra = drm->dev_private;
- 	struct tegra_display_hub *hub = tegra->hub;
- 	struct tegra_shared_plane *plane;
-diff --git a/drivers/gpu/drm/tegra/hub.h b/drivers/gpu/drm/tegra/hub.h
-index 23c4b2115ed1e36e8d2d6ed614a6ead97eb4c441..a66f18c4facc9df96ea8b9f54239b52f06536d12 100644
---- a/drivers/gpu/drm/tegra/hub.h
-+++ b/drivers/gpu/drm/tegra/hub.h
-@@ -80,7 +80,8 @@ void tegra_display_hub_cleanup(struct tegra_display_hub *hub);
- struct drm_plane *tegra_shared_plane_create(struct drm_device *drm,
- 					    struct tegra_dc *dc,
- 					    unsigned int wgrp,
--					    unsigned int index);
-+					    unsigned int index,
-+					    enum drm_plane_type type);
- 
- int tegra_display_hub_atomic_check(struct drm_device *drm,
- 				   struct drm_atomic_state *state);
-
----
-base-commit: 119009db267415049182774196e3cce9e13b52ef
-change-id: 20250419-tegra-drm-primary-ce47febefdaf
-
-Best regards,
--- 
-Aaron Kling <webgeek1234@gmail.com>
-
+Cheers,
+Longman
 
