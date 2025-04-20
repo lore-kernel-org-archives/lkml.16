@@ -1,32 +1,33 @@
 Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C71353AC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C741433B3
 	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 10:48:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745146087; cv=none; b=AgYpqk5sckQxtUBnzX3c4/XBSNq7xu2thPNdccBKggyQyoFDtZvGyxtCbZIa1HBbUEP01NdNw7CgdULforKkbxcfyDV0vIe+G9N1gokifcEosLzVZBMXegRR+SDqPYxNBFxJioyQgbagAcVLWwkeKnGHsClsEImR93BZPSLv0Ow=
+	t=1745146089; cv=none; b=XLApH3CPGDaLe9Xq+af9BVvTtSLnFxmujbGRAIpXxmWZcPVTXq4X7EMh/gHnimx4NujuGTV+EgXwxIg0CFGzteQI5d9FCA8Ja+i2NMcNajZskQcSRave5G5q4b5wOn2oq2v7Epn1/DBG2FOAH3B68dTccP2IuBTEwR7v/S95ZEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745146087; c=relaxed/simple;
-	bh=MQJ6vIxK6wL4cRlnGr4pyTZNffc5UIzokVnWloZn7pI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WT9e3B0dz73W9a9+CbVFy3p3LkK9gkpysPznCnwNAjHVcnch0gEWhP9kHgbVL7H6YEFE0wvXHKSGeFuX239CLcKuFeePmqiMWP5QqKm1nzDQTJAbsLIWWwYONs+Jb8ALa/gE7FTJ8Fo4iEoe+lNMJ4dA3RHNh9WKU0PtkDgi9rw=
+	s=arc-20240116; t=1745146089; c=relaxed/simple;
+	bh=tmUNixq6zPlv+TrOVRSV/A+QcCbcaAEOJtkojtHcOt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k8JHXHelOcLQA5ehkLY0Iwentz2CKhnZaM+OysI4KuwpJmj8pS4yVjto7GhbhLV0kIUMisEK3bzbPEvUa6dsteYF/1Ogu9hqJWSAuphmrD85BRTga7sL/qiT895U87vg6wqH1X7c+xdIWeofOGa0CHFeYQvzfJFKGif5bboVcOA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 03E7D298566;
+	by lithops.sigma-star.at (Postfix) with ESMTP id 3A956298567;
 	Sun, 20 Apr 2025 12:47:57 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id BRkj1ldQ_UCU; Sun, 20 Apr 2025 12:47:56 +0200 (CEST)
+	with ESMTP id xY4LTf1S-asA; Sun, 20 Apr 2025 12:47:57 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 94DBA298567;
+	by lithops.sigma-star.at (Postfix) with ESMTP id E255B298562;
 	Sun, 20 Apr 2025 12:47:56 +0200 (CEST)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 56sgopLhutVU; Sun, 20 Apr 2025 12:47:56 +0200 (CEST)
+	with ESMTP id llVxRfCL_f69; Sun, 20 Apr 2025 12:47:56 +0200 (CEST)
 Received: from anvil.corp.sigma-star.at (84-115-238-41.cable.dynamic.surfer.at [84.115.238.41])
-	by lithops.sigma-star.at (Postfix) with ESMTPSA id 21BE0298562;
+	by lithops.sigma-star.at (Postfix) with ESMTPSA id 83470298566;
 	Sun, 20 Apr 2025 12:47:56 +0200 (CEST)
 From: Richard Weinberger <richard@nod.at>
 To: linux-nvme@lists.infradead.org
@@ -38,10 +39,12 @@ Cc: linux-kernel@vger.kernel.org,
 	hch@lst.de,
 	upstream+nvme@sigma-star.at,
 	Richard Weinberger <richard@nod.at>
-Subject: [PATCH 1/2] configfs: Add CONFIGFS_ATTR_PERM helper
-Date: Sun, 20 Apr 2025 12:47:25 +0200
-Message-ID: <20250420104726.2963750-1-richard@nod.at>
+Subject: [PATCH 2/2] nvmet: Restrict in-band config files to root
+Date: Sun, 20 Apr 2025 12:47:26 +0200
+Message-ID: <20250420104726.2963750-2-richard@nod.at>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250420104726.2963750-1-richard@nod.at>
+References: <20250420104726.2963750-1-richard@nod.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,40 +53,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This new helper allows creating rw files with custom
-permissions.
+There is no need to have key material world readable.
 
 Signed-off-by: Richard Weinberger <richard@nod.at>
 ---
- include/linux/configfs.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/nvme/target/configfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/configfs.h b/include/linux/configfs.h
-index c771e9d0d0b9..698520b1bfdb 100644
---- a/include/linux/configfs.h
-+++ b/include/linux/configfs.h
-@@ -120,15 +120,19 @@ struct configfs_attribute {
- 	ssize_t (*store)(struct config_item *, const char *, size_t);
- };
-=20
--#define CONFIGFS_ATTR(_pfx, _name)			\
-+#define CONFIGFS_ATTR_PERM(_pfx, _name, _perm)		\
- static struct configfs_attribute _pfx##attr_##_name =3D {	\
- 	.ca_name	=3D __stringify(_name),		\
--	.ca_mode	=3D S_IRUGO | S_IWUSR,		\
-+	.ca_mode	=3D _perm,			\
- 	.ca_owner	=3D THIS_MODULE,			\
- 	.show		=3D _pfx##_name##_show,		\
- 	.store		=3D _pfx##_name##_store,		\
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configf=
+s.c
+index e44ef69dffc2..7327543f161d 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -2128,7 +2128,7 @@ static ssize_t nvmet_host_dhchap_key_store(struct c=
+onfig_item *item,
+ 	return ret < 0 ? ret : count;
  }
 =20
-+#define CONFIGFS_ATTR(_pfx, _name) CONFIGFS_ATTR_PERM(	\
-+		_pfx, _name, S_IRUGO | S_IWUSR		\
-+)
-+
- #define CONFIGFS_ATTR_RO(_pfx, _name)			\
- static struct configfs_attribute _pfx##attr_##_name =3D {	\
- 	.ca_name	=3D __stringify(_name),		\
+-CONFIGFS_ATTR(nvmet_host_, dhchap_key);
++CONFIGFS_ATTR_PERM(nvmet_host_, dhchap_key, S_IRUSR | S_IWUSR);
+=20
+ static ssize_t nvmet_host_dhchap_ctrl_key_show(struct config_item *item,
+ 		char *page)
+@@ -2161,7 +2161,7 @@ static ssize_t nvmet_host_dhchap_ctrl_key_store(str=
+uct config_item *item,
+ 	return ret < 0 ? ret : count;
+ }
+=20
+-CONFIGFS_ATTR(nvmet_host_, dhchap_ctrl_key);
++CONFIGFS_ATTR_PERM(nvmet_host_, dhchap_ctrl_key, S_IRUSR | S_IWUSR);
+=20
+ static ssize_t nvmet_host_dhchap_hash_show(struct config_item *item,
+ 		char *page)
+@@ -2187,7 +2187,7 @@ static ssize_t nvmet_host_dhchap_hash_store(struct =
+config_item *item,
+ 	return count;
+ }
+=20
+-CONFIGFS_ATTR(nvmet_host_, dhchap_hash);
++CONFIGFS_ATTR_PERM(nvmet_host_, dhchap_hash, S_IRUSR | S_IWUSR);
+=20
+ static ssize_t nvmet_host_dhchap_dhgroup_show(struct config_item *item,
+ 		char *page)
+@@ -2217,7 +2217,7 @@ static ssize_t nvmet_host_dhchap_dhgroup_store(stru=
+ct config_item *item,
+ 	return count;
+ }
+=20
+-CONFIGFS_ATTR(nvmet_host_, dhchap_dhgroup);
++CONFIGFS_ATTR_PERM(nvmet_host_, dhchap_dhgroup, S_IRUSR | S_IWUSR);
+=20
+ static struct configfs_attribute *nvmet_host_attrs[] =3D {
+ 	&nvmet_host_attr_dhchap_key,
 --=20
 2.48.1
 
