@@ -1,138 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231FC14286;
-	Sun, 20 Apr 2025 18:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42BE1853
+	for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 18:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745172081; cv=none; b=mQk1xB0yuC2Lb7O8BahA5uzOTDKnRVAoqpVWPXlsSsdJ57W80pqUAqPsba2A+dp6PoeFoPAQJg21fKXFUK22Bkd25k9xjijhg6TBc4r6U65PHYijdYbgvXR+6FOYXuxRRLkYSLeX9CdQqaJsmMqRG13lCY6E7TTnMSWeZLtBqYk=
+	t=1745172141; cv=none; b=AkN0EYdF35YezNDFssZeEn3XZ/7Iwy4QvAi9ksg6Tx3n9W+PWj/PfJss4yTPNXyCgLK8vufqeygC8bhj2HkrAaR0nqanMJC7K8TxrH++xhodZxYrCus24/RF/AOLKsZJOrGJc/OR6hztPiPoAqLg25kjkdIPiycFg6lTYQmclEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745172081; c=relaxed/simple;
-	bh=XLO7NtZPaeDnBt7JzrDpb+rKz54Qxyabh0nurUp41Q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QfJb6o1gyoeuT0bH9l6UyS0hL0N3yOV66RPqGfIukeKe4DEP4Q+s4GQjQ7zUNhj+ZJ2yLSBF+nZ7mAnD3vdb6A1Y6EN0jeWwFaU5r/zSGx6HV/fvlXwyOKa+o2E0Rg0XkekiNm3nf9nOgapq3nbcFpRI6K/44fGq/X40wPne5FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uApWUl/C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745172141; c=relaxed/simple;
+	bh=Z62lxCtBRp/2/fUDTg36hQJ6qGNTZoetkvn7mZilOOE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GT8ZVLOi2KQYEWHLvsRidw1FGFFVJ7FUtQWOe4CfPp2mc/cISK2HRwWnHHQAly0TZtt2FA0dQmlb61KL0DcTCRgzaUQdT/5sMDZX6P0/FM9LevQgI/1XX0HDujaa9H2Hj7BxkRgZ8oQgGCu+uOwaH7pBhevb+2/unrYmNae3ic0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G3LdSFbm; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uApWUl/C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90459C4CEE2;
-	Sun, 20 Apr 2025 18:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745172080;
-	bh=XLO7NtZPaeDnBt7JzrDpb+rKz54Qxyabh0nurUp41Q0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uApWUl/CRqrrFMFVnDN/uD18tZhhcjWugbQyg5zpcXHSdqMdCttvzWoQmjmOVV0XH
-	 jRExVlkEHhXuKsMYJg18DHXTDj3P+2yZ6NHZEOZDQpckzqy6N9iCjcIcbp1tY4SatH
-	 E8PjcOpxWqVKqpgzefqtNkPTNUYiJMLXHjJai+DrgWmsB//ZXALmPRQnJcxu/0DPMX
-	 T+fzErpp4lHbejiPBpfg2yMuvjJn3BCq1vEMvyZwVnM/DEsRvsXfVDPw4beDFfj4KF
-	 EVUp24CRI18TpAclq7019hLMcrqR7R3ZfoBbv0R6VjO8Nm5JEUzBSK46B7NWDcp6Ty
-	 SL8SVA+aAajYQ==
-Date: Sun, 20 Apr 2025 20:01:15 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, Hans.Holmberg@wdc.com, 
-	oe-kbuild-all@lists.linux.dev, hch@lst.de, lukas@wunner.de, 
-	angelogioacchino.delregno@collabora.com, Jonathan.Cameron@huawei.com
-Subject: Re: [RFC PATCH] math.h: Account for 64-bit division on i386
-Message-ID: <6qz2fm4o2zpteh5cs2xandvm2sq3c6rv244z7cagmdpkboday4@kjsan4fzqp3v>
-References: <20250419115157.567249-1-cem@kernel.org>
- <AXxRwdy0shsxKS1AfJTrdc0xRddKqZbbL4sZuFhubZsJ3DFUVSot6DzlGNKNk0bJMxzojB8nt7106nUqIMoXSA==@protonmail.internalid>
- <81d49efc-1b81-48e1-b9ca-c3665d0cf73c@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G3LdSFbm"
+Message-ID: <7de0229a-192f-4d0f-8add-1a50c58f367b@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745172135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RNV6mUL9LuZCuP3+4baaG3zrGHMcnuMfKZ/AN4GnbKw=;
+	b=G3LdSFbmjhexJplLYkrlHdZCRR6rbQ908yzpsyib+g+rZDekzmZPhjbketatQVm/t7w71A
+	T0vRpJv5Iha9iMHLzDGcSLOlItDceSAMK8ny6VeQa138XUSXfukckdMHQttcp+sb9QsbTG
+	mkB+ZPJuOZuSgxkQEN3gVmx4wASutqA=
+Date: Sun, 20 Apr 2025 23:31:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81d49efc-1b81-48e1-b9ca-c3665d0cf73c@roeck-us.net>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: Re: [PATCH v3 16/17] drm/bridge: cdns-dsi: Tune adjusted_mode->clock
+ according to dsi needs
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Devarsh Thakkar <devarsht@ti.com>
+References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
+ <20250414-cdns-dsi-impro-v3-16-4e52551d4f07@ideasonboard.com>
+Content-Language: en-US
+In-Reply-To: <20250414-cdns-dsi-impro-v3-16-4e52551d4f07@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Apr 20, 2025 at 08:40:25AM -0700, Guenter Roeck wrote:
-> On Sat, Apr 19, 2025 at 01:51:46PM +0200, cem@kernel.org wrote:
-> > From: Carlos Maiolino <cem@kernel.org>
-> >
-> > Building linux on i386 might fail if a 64bit type is passed to
-> 
-> i386 actually builds. Its compiler is probably able to convert
-> the offending mult_frac() without helpers since the divisor is
-> a constant. I see the problem with openrisc and parisc, with
-> gcc 13.3.0.
+Hi Tomi,
 
-It does fail to build, that's how it got identified in the first place. I
-managed to reproduce here according to the reproducer sent by the test robot.
-I think it works if you don't enable build checks (in this case W=1) though.
+On 14/04/25 16:41, Tomi Valkeinen wrote:
+> The driver currently expects the pixel clock and the HS clock to be
+> compatible, but the DPHY PLL doesn't give very finely grained rates.
+> This often leads to the situation where the pipeline just fails, as the
+> resulting HS clock is just too off.
+> 
+> We could change the driver to do a better job on adjusting the DSI
+> blanking values, hopefully getting a working pipeline even if the pclk
+> and HS clocks are not exactly compatible. But that is a bigger work.
+> 
+> What we can do easily is to see in .atomic_check() what HS clock rate we
+> can get, based on the pixel clock rate, and then convert the HS clock
+> rate back to pixel clock rate and ask that rate from the crtc. If the
+> crtc has a good PLL (which is the case for TI K3 SoCs), this will fix
+> any issues wrt. the clock rates.
+> 
+> If the crtc cannot provide the requested clock, well, we're no worse off
+> with this patch than what we have at the moment.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 37 ++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> index 63031379459e..165df5d595b8 100644
+> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+> @@ -908,6 +908,28 @@ static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+>  	return input_fmts;
+>  }
+>  
+> +static long cdns_dsi_round_pclk(struct cdns_dsi *dsi, unsigned long pclk)
+> +{
+> +	struct cdns_dsi_output *output = &dsi->output;
+> +	unsigned int nlanes = output->dev->lanes;
+> +	union phy_configure_opts phy_opts = { 0 };
+> +	u32 bitspp;
+> +	int ret;
+> +
+> +	bitspp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
+> +
+> +	ret = phy_mipi_dphy_get_default_config(pclk, bitspp, nlanes,
+> +					       &phy_opts.mipi_dphy);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = phy_validate(dsi->dphy, PHY_MODE_MIPI_DPHY, 0, &phy_opts);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return div_u64((u64)phy_opts.mipi_dphy.hs_clk_rate * nlanes, bitspp);
+> +}
+> +
+>  static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+>  					struct drm_bridge_state *bridge_state,
+>  					struct drm_crtc_state *crtc_state,
+> @@ -919,11 +941,26 @@ static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
+>  	struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
+>  	struct cdns_dsi_cfg *dsi_cfg = &dsi_state->dsi_cfg;
+>  	struct videomode vm;
+> +	long pclk;
+>  
+>  	/* cdns-dsi requires negative syncs */
+>  	adjusted_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
+>  	adjusted_mode->flags |= DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC;
+>  
+> +	/*
+> +	 * The DPHY PLL has quite a coarsely grained clock rate options. See
+> +	 * what hsclk rate we can achieve based on the pixel clock, convert it
+> +	 * back to pixel clock, set that to the adjusted_mode->clock. This is
+> +	 * all in hopes that the CRTC will be able to provide us the requested
+> +	 * clock, as otherwise the DPI and DSI clocks will be out of sync.
+> +	 */
+> +
+> +	pclk = cdns_dsi_round_pclk(dsi, adjusted_mode->clock * 1000);
+> +	if (pclk < 0)
+> +		return (int)pclk;
+> +
+> +	adjusted_mode->clock = pclk / 1000;
+> +
+>  	drm_display_mode_to_videomode(adjusted_mode, &vm);
+>  
+>  	return cdns_dsi_check_conf(dsi, &vm, dsi_cfg);
 
-I didn't try other architectures other than x86 though, thanks for the heads up.
+I think at this point cdns_dsi_check_conf is really only creating a
+dsi_cfg (from the video-mode) so that it can later be used, and then
+running phy_mipi_dphy_get_default_config(), and phy_validate(), both of
+which have nothing to do with the freshly made dsi_cfg.
+
+If there is no benefit in running both the latter functions again after
+cdns_dsi_round_pclk() runs them, then perhaps we can just drop the
+cdns_dsi_check_conf() altogether in favor of cdns_dsi_mode2cfg() being
+called from .atomic_check()?
 
 
-> 
-> > mult_fract(). To prevent the failure, use do_div() for the division
-> > calculation instead of hardcoding a / b.
-> >
-> > Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
-> > ---
-> >
-> > I'm sending it as a RFC because I didn't to extensive testing on this
-> > patch, also I'm not sure if mult_frac() was intended to work on 32-bit
-> > only types. If that's the case, perhaps, a new mult_frac64() might be a
-> > better idea?!
-> >
-> >  include/linux/math.h | 19 ++++++++++---------
-> >  1 file changed, 10 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/linux/math.h b/include/linux/math.h
-> > index 0198c92cbe3e..05ea853b75b4 100644
-> > --- a/include/linux/math.h
-> > +++ b/include/linux/math.h
-> > @@ -133,15 +133,16 @@ __STRUCT_FRACT(u32)
-> >  #undef __STRUCT_FRACT
-> >
-> >  /* Calculate "x * n / d" without unnecessary overflow or loss of precision. */
-> > -#define mult_frac(x, n, d)	\
-> > -({				\
-> > -	typeof(x) x_ = (x);	\
-> > -	typeof(n) n_ = (n);	\
-> > -	typeof(d) d_ = (d);	\
-> > -				\
-> > -	typeof(x_) q = x_ / d_;	\
-> > -	typeof(x_) r = x_ % d_;	\
-> > -	q * n_ + r * n_ / d_;	\
-> > +#define mult_frac(x, n, d)		\
-> > +({					\
-> > +	typeof(x) x_ = (x);		\
-> > +	typeof(n) n_ = (n);		\
-> > +	typeof(d) d_ = (d);		\
-> > +					\
-> > +	typeof(x_) r = do_div(x_, d_);	\
-> > +	r *= n_;			\
-> > +	do_div(r, d_);			\
-> > +	x_ * n_ + r;			\
-> >  })
-> >
-> 
-> Unfortunately that doesn't work. I get build errors on parisc.
-> 
-> In file included from ./arch/parisc/include/generated/asm/div64.h:1,
->                  from ./include/linux/math.h:6,
->                  from ./include/linux/kernel.h:27,
->                  from ./arch/parisc/include/asm/bug.h:5,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/mmdebug.h:5,
->                  from ./include/linux/mm.h:6,
->                  from mm/page_alloc.c:19:
-> mm/page_alloc.c: In function 'boost_watermark':
-> ./include/asm-generic/div64.h:183:35: error: comparison of distinct pointer types lacks a cast [-Werror]
->   183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
->       |                                   ^~
-> ./include/linux/math.h:142:24: note: in expansion of macro 'do_div'
->   142 |         typeof(x_) r = do_div(x_, d_);  \
->       |                        ^~~~~~
-> mm/page_alloc.c:2010:21: note: in expansion of macro 'mult_frac'
->  2010 |         max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
-> 
-> That is just one example. It seems to affect all uses of
-> mult_frac().
-> 
-> Guenter
+Furthermore, I understand updating the adjusted_mode->clock might help
+the CRTC to use a pixel clock that's more in-tune with the _actual_
+hs_clk_rate that is going to be generated. But, I am worried that it'll
+cause a delta from the intended fps from the CRTC's end because the
+timings aren't adjusted in accordance with the pixel-clock.
+
+Perhaps, along with pixel-clock, we can update the dsi_htotal and
+dpi_htotal both too, to
+
+new_dsi_htotal = (hs_clk_rate * #lanes) / (dpi_votal * fps * 8)
+new_dpi_htotal = (hs_clk_rate * #lanes) / (dpi_vtotal * fps * bitspp).
+
+And then, the respective front-porches can too get updated accordingly.
+
+
+--
+Regards
+Aradhya
