@@ -1,69 +1,71 @@
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CCF20C037
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73567264A9E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745240456; cv=none; b=acs2SJCMhfit1hiA5aArEp0Nf4dLKEmTH+wX/HsZ/bj47XQ1bTNZVGiv0n0szZQ8nj5YiN5GOU+Gy5xoNqJkoM/N7nAjVRBMDAF1naoNHUTPJlAjQTYin9Vry+XuN2iIKDki34vZQwVWXi+04PTd1s8pK2kZjEXOkrzavQo5UWs=
+	t=1745240456; cv=none; b=hGkK3GltUleOAqQr3eggk64S6ByaMzgvKitG40KuNjOTjSFSh0BxMKiWhaW96ivTjIqScHj5AR2uFyq1QZntVLrUJhgLyitxe4TMVoJtvDU2x+4nxLUN3To7qiJddbZqWbgwz7vd06TMiySL43BLnPr57cPygjEXELjbOtf7H4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745240456; c=relaxed/simple;
-	bh=UdoBYXZDI6i91jbwfQE13A2pfJqNj28gRiPFYgsqjEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NUrptslEwOnQpARDlfMdzVbf4+cA5c69gcEn+pSLy7VYzij+46vEGWTdrRymWMXKK71aGbY2UcD2B5YtOXdMM0JwYCkBUz0gLc18XzP/ng5So+ICd2s6cIqWSYIX9/t3mGnsF0GdFZtjfZX+eNEyKk+lp2mfY+FV+mw9xTlxwUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=P+SboFVm; arc=none smtp.client-ip=185.125.188.122
+	bh=U6HdusizQQ44WP/OcKAx6zUmmKr7k0YwKNHZu1i2KaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AhEJk7ejXDkaluWhEmsBWjcxa3GV4//woLjpmnZaXW3uuxWvbxZq7i9l2DFOw/oRHxzXM09WZSZj8mu0h1tG9h83pI7rVtUV2PbCV/kczT3H6GboOKNHI3Mf5viKmY2wM2C4liAg5WSva025mEIPiqKQiXpSqMkz/bitPFnEWpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=auL+r6RC; arc=none smtp.client-ip=185.125.188.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="P+SboFVm"
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="auL+r6RC"
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8A2F63FFE3
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:45 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 9336740058
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1745240445;
-	bh=vQ6ou3tWqXEiNZ+OJ9V6Fm/EPrs0acywzCR64vd5LIA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=P+SboFVmDBjMjpg9phP5s6RtXbandTWjQNrD7CSlHIMacS+0Xyj4cyO7wOxVKdIJw
-	 3EnhXjzXupUp7AVETcbNAndaluOJumHP8svu5UDRDmaU8IqI+yeKaftDIco58T9nAG
-	 vpwlFHZd27qtqSw6AQUwjTvXqOOsgRgKaQ6nvobnSquUdDQ04VtakyOrAJ2P/+jgR3
-	 HxcS0BhnWoLcB7RkhrDcdSdYNf6vaA3MvNQKvof+rHMCkkNzE1+bvMTp1YfzdVCwW0
-	 dnnrnAeXBwyx3mLlm4H0NVWmfNyQ1MrKrhmISBNvWmhmnLEDjyVbYaeW5M0GTGdLtf
-	 b2IVB6Y9b8kqw==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-225505d1ca5so37699895ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:00:45 -0700 (PDT)
+	s=20210705; t=1745240451;
+	bh=xt2B9ADJDt0Wyq0DI03C72a3TKtZqtXqFgRaWL3xAMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=auL+r6RCuX0GsJufbzlp/TnJeRqU2wFQSmrbDWd0JUC94XRTStrp4LZa5qRAh9D5S
+	 fpggaAcLk7Bgbv3Dp/GUWohR59NnBIXDHv4HiLjdxAsN69LlzBTQZ0epWsTRsBsgiQ
+	 AMkPBjmWADNmIGIGaCwyLO9Ze1IXM2q17hYpRJ3aGM1EIBHunCSk7SDFGV9GXsgmI9
+	 eWgEXRkbK7/QTH8BsZxnINkCBmQQZacwgaMUmgV/gABnRiZlVM4U5yuGRJE5lZhGVW
+	 uoufctTb9KqTCm9s64FlBPiq6EAGh0DPxXn4Erj4to+Z4a74OMNilP6fsWUCim/OHW
+	 FnVirKwu3YyAQ==
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-af59547f55bso2198285a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:00:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745240444; x=1745845244;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vQ6ou3tWqXEiNZ+OJ9V6Fm/EPrs0acywzCR64vd5LIA=;
-        b=Kp48aMsFdYpwq6PJ+0tjIPx96ChzxEpHjXoAlSeNtL2q/BJHsKQdgFYLadMz4YfnR+
-         xR12T/83nSDscLqc7aRbZkDMd5FLcJrgug7KWVRz0J+moqjsWtqofzbM9jUqLbU1a/NE
-         inNrfeDO6QrmAFKBDaTL+K0KapgB4nmLRhoIuY3YGeu1FylFwKEZxcQQC3+8+ox76aJl
-         cvAqZ0L9EMJ9YgJc/L6rO240K1y5vZdF3q9tDEqoQsX5OaB7rmQEruyiP/xidLWRKSy6
-         m+XlIWlfGTpRSCWQ3ZPXFQVWTFAXqwohUvVHUTAOadNoBjUIyvzoJhQDEMrUT4kYtYXb
-         jO2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXKTHkGi1JOJcszfdD4hQB7W2kXrgIyLW5k2GqfF8uvU5ZvlHacfntr3Q2J3dPXjONo9RotTFcQD7oEPiI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFZH7kO6TnTtM91wdX5Men80oagBoC1aLrEQ8HbRZgf05ubpnx
-	2Qz8F0ConWuFuTEilmSUrJSZOZkaXTkVea+FiYPBdbvvBeXhhzlzbWK2HEZzAD0x1+PNWsnGWiA
-	2OQnbiZbN0bcAfoCsVMl0eAkP7OjNbh3fgd4EHMabw+C0rz8aXtjVLMNIe4xDGEZ+tDTyc+jz1Q
-	vQ7w==
-X-Gm-Gg: ASbGnctbMja5cbcuIm4uxan8VOQ5KbBi48/lPjvEX+ITJCIv8Jze3Nw6i5F7z0t93mO
-	773kArm53gLCLi7HsmLp0Tu1SqFfLtQkrQVj6RBTDtrxPe1M8rZTs0e611FdWxMzIAZcVbBMPj7
-	QPjDux60FnRE6qlSCpzJJr30Sz2bkS0rMG22rp1uFNITtmzTvXimGIsCq6RCz1T7s3Ux+D7wJTZ
-	v5qKTZlFd414JWLRmonKtZwr9TtoLH0vFeYcpSVs6uD+61hz4IKHsN3/D2gfFHxvUB74fYz49Js
-	7p4+ViXpbEvWt9ZF171IipIK950EHqdoEZT5ytA99hJqYvsek3Ccu+ak/fuepyATZHE=
-X-Received: by 2002:a17:902:cf12:b0:21a:8300:b9ce with SMTP id d9443c01a7336-22c53626fb6mr170043345ad.49.1745240443749;
-        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IExX1Xc2vMU2pblQy0GGeMZoJV1lDHlig9j2h90ZQJ2QyMEyBmrDv5Jg0PlkH60VKL6UPlkuQ==
-X-Received: by 2002:a17:902:cf12:b0:21a:8300:b9ce with SMTP id d9443c01a7336-22c53626fb6mr170043015ad.49.1745240443473;
-        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745240450; x=1745845250;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xt2B9ADJDt0Wyq0DI03C72a3TKtZqtXqFgRaWL3xAMI=;
+        b=B2LUdx/RIV8wo1FSXxc+tp5i0yHtgTPpd2Jxz7LKrpmSDmq9gBA9IszyxJ24jC4R4l
+         bVp/Oc2aAjWAvLZnvRgTNYsPhsJdT7R1v+nCUzxOVYTwKD7JYjX2GALyQopKrOAXpNGN
+         XYCfFMHqop/srFLEWImWsojsxuzVWr4Dfkq8W1sm41Vdh7XAqh8OTf7SNu+YmVCtblkQ
+         x++PLSimyJKIE7BtXBugnLIKIOrk0PhyVhBtToPvQsLmtVBWNUWcV8q/8BL6LBFnD/ZF
+         e9mFrO1bFrxUR01U3gNA4kxbCGqsNkWKamNETe9KO6U89iYsVJIp7zB4DRTFBm0h2cz0
+         fe+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVPY9xQRQlmu6suFD4kt2t4MKFoidH4EaPEHD4My/RgptehJ+ZS0N1z15ToN4OGi5J7FYUsjPBNLuWBb0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsnx4Wmh3AP8NER/YvcJLv5aC+4RP4g1O7TqC5YWBlKmVyzB/M
+	neiG4FNpTExv5Hze9PaxQQ1PRSi/90YExJxQHFlsVgvm5/N2L96svW6L/y9hnlmr+K1SkLyRalv
+	e9eXYe/WJNvfnEcAQkihFqGHPeR7UqoorwLlPiXxw3sVIiPFZeuS3mQ2Dm0+e+uonbrq3nP7pmC
+	FzMwkkxlBNsg==
+X-Gm-Gg: ASbGncsYtgLLkYNtr2j5KhT5ei6STSzG3tu3SLC1/aB6woTLDBS6axxR7WCp++f3p0O
+	XgBykHryCKFKT5KyrYZn19C5IZQ4ul3/2FJ/d2VfXNTqRPLnZei3NDEZVPBI/WEGRxZZnEmxm9i
+	BwKU2IxGT4XCHb+2kZL6qDiD+NM9Xlii7Ms82p+B20SeQrCCc44igZuofRWLgOh2v6ozUma/Xxk
+	SZ5k6IWvnxsD8bRs3PU0Z0T7Q+WN82U/K7pg/g4GAvgeR6wNiAs9UpsTyW0ZIJMIa1YEcdXO62O
+	e+RU3sHr+expu4hoDe0UP0NBYV9+iTp1tmLzQ1VfJa3SaWgUYCxA/z9CxOBE4vXXtVE=
+X-Received: by 2002:a17:902:f611:b0:220:d909:1734 with SMTP id d9443c01a7336-22c5359c1fdmr169217845ad.14.1745240449756;
+        Mon, 21 Apr 2025 06:00:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGC3QVfR3rmUZ11eoJYGY0QEOqAKR0jKz3lbZlewuMME5I1asWEVrEnNWc0ZMiKJm9A0yP6IA==
+X-Received: by 2002:a17:902:f611:b0:220:d909:1734 with SMTP id d9443c01a7336-22c5359c1fdmr169217335ad.14.1745240449310;
+        Mon, 21 Apr 2025 06:00:49 -0700 (PDT)
 Received: from rickywu0421-ThinkPad-X1-Carbon-Gen-11.cnshub.home ([182.233.178.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bda7b3sm64758665ad.52.2025.04.21.06.00.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bda7b3sm64758665ad.52.2025.04.21.06.00.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
+        Mon, 21 Apr 2025 06:00:48 -0700 (PDT)
 From: En-Wei Wu <en-wei.wu@canonical.com>
 To: marcel@holtmann.org,
 	luiz.dentz@gmail.com,
@@ -73,10 +75,12 @@ To: marcel@holtmann.org,
 Cc: quic_tjiang@quicinc.com,
 	chia-lin.kao@canonical.com,
 	anthony.wong@canonical.com
-Subject: [PATCH v4 0/2] btusb: fix NULL pointer dereference in QCA devcoredump handling
-Date: Mon, 21 Apr 2025 21:00:36 +0800
-Message-ID: <20250421130038.34998-1-en-wei.wu@canonical.com>
+Subject: [PATCH v4 2/2] Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump handling
+Date: Mon, 21 Apr 2025 21:00:38 +0800
+Message-ID: <20250421130038.34998-3-en-wei.wu@canonical.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250421130038.34998-1-en-wei.wu@canonical.com>
+References: <20250421130038.34998-1-en-wei.wu@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,44 +89,182 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series fixes a NULL pointer dereference in skb_dequeue()
-during QCA devcoredump handling, and adds some safety checks to make the
-parsing more robust.
+Use skb_pull() and skb_pull_data() to safely parse QCA dump packets.
 
-The first patch fixes the logic bug where dump packets were mistakenly
-passed to hci_recv_frame() and freed prematurely. This was caused by
-handle_dump_pkt_qca() returning 0 even when the dump was successfully
-handled. It also refactors dump packet detection into separate helpers
-for ACL and event packets.
+This avoids direct pointer math on skb->data, which could lead to
+invalid access if the packet is shorter than expected.
 
-The second patch adds bounds checks and replaces direct pointer access
-with skb_pull() and skb_pull_data() to avoid accessing invalid memory
-on malformed packets.
+Signed-off-by: En-Wei Wu <en-wei.wu@canonical.com>
+---
+ drivers/bluetooth/btusb.c | 98 ++++++++++++++++-----------------------
+ 1 file changed, 41 insertions(+), 57 deletions(-)
 
-Tested on WCN7851 (0489:e0f3) with devcoredump enabled. Crash no
-longer occurs and dumps are processed correctly.
-  
-Changes in v4:
-- Fix unused variable error in the first patch
-- Refine commit messages
-
-Changes in v3:
-- Use skb_pull_data() for safe packet header access
-- Split dump packet detection into separate ACL and event helpers
-
-Changes in v2:
-- Fixed typo in the title
-- Re-flowed commit message line to fit 72 characters
-- Added blank line before btusb_recv_acl_qca()
-
-En-Wei Wu (2):
-  Bluetooth: btusb: avoid NULL pointer dereference in skb_dequeue()
-  Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump
-    handling
-
- drivers/bluetooth/btusb.c | 120 +++++++++++++++++++++++---------------
- 1 file changed, 74 insertions(+), 46 deletions(-)
-
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index f905780fcdea..031292ab766f 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3017,8 +3017,6 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+ 	int ret = 0;
+ 	u8 pkt_type;
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+ 	u16 seqno;
+ 	u32 dump_size;
+ 
+@@ -3027,18 +3025,8 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 	struct usb_device *udev = btdata->udev;
+ 
+ 	pkt_type = hci_skb_pkt_type(skb);
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
++	dump_hdr = (struct qca_dump_hdr *)skb->data;
+ 
+-	if (pkt_type == HCI_ACLDATA_PKT) {
+-		sk_ptr += HCI_ACL_HDR_SIZE;
+-		sk_len -= HCI_ACL_HDR_SIZE;
+-	}
+-
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
+-
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+ 	seqno = le16_to_cpu(dump_hdr->seqno);
+ 	if (seqno == 0) {
+ 		set_bit(BTUSB_HW_SSR_ACTIVE, &btdata->flags);
+@@ -3058,16 +3046,15 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 
+ 		btdata->qca_dump.ram_dump_size = dump_size;
+ 		btdata->qca_dump.ram_dump_seqno = 0;
+-		sk_ptr += offsetof(struct qca_dump_hdr, data0);
+-		sk_len -= offsetof(struct qca_dump_hdr, data0);
++
++		skb_pull(skb, offsetof(struct qca_dump_hdr, data0));
+ 
+ 		usb_disable_autosuspend(udev);
+ 		bt_dev_info(hdev, "%s memdump size(%u)\n",
+ 			    (pkt_type == HCI_ACLDATA_PKT) ? "ACL" : "event",
+ 			    dump_size);
+ 	} else {
+-		sk_ptr += offsetof(struct qca_dump_hdr, data);
+-		sk_len -= offsetof(struct qca_dump_hdr, data);
++		skb_pull(skb, offsetof(struct qca_dump_hdr, data));
+ 	}
+ 
+ 	if (!btdata->qca_dump.ram_dump_size) {
+@@ -3087,7 +3074,6 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ 		return ret;
+ 	}
+ 
+-	skb_pull(skb, skb->len - sk_len);
+ 	hci_devcd_append(hdev, skb);
+ 	btdata->qca_dump.ram_dump_seqno++;
+ 	if (seqno == QCA_LAST_SEQUENCE_NUM) {
+@@ -3115,67 +3101,65 @@ static int handle_dump_pkt_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ /* Return: true if the ACL packet is a dump packet, false otherwise. */
+ static bool acl_pkt_is_dump_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+-
+ 	struct hci_event_hdr *event_hdr;
+ 	struct hci_acl_hdr *acl_hdr;
+ 	struct qca_dump_hdr *dump_hdr;
++	void *orig_data;
++	unsigned int orig_len;
+ 
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
++	orig_data = skb->data;
++	orig_len = skb->len;
+ 
+-	acl_hdr = hci_acl_hdr(skb);
+-	if (le16_to_cpu(acl_hdr->handle) != QCA_MEMDUMP_ACL_HANDLE)
+-		return false;
+-	sk_ptr += HCI_ACL_HDR_SIZE;
+-	sk_len -= HCI_ACL_HDR_SIZE;
+-	event_hdr = (struct hci_event_hdr *)sk_ptr;
++	acl_hdr = skb_pull_data(skb, sizeof(*acl_hdr));
++	if (!acl_hdr || (le16_to_cpu(acl_hdr->handle) != QCA_MEMDUMP_ACL_HANDLE))
++		goto restore_return;
+ 
+-	if ((event_hdr->evt != HCI_VENDOR_PKT)
+-		|| (event_hdr->plen != (sk_len - HCI_EVENT_HDR_SIZE)))
+-		return false;
++	event_hdr = skb_pull_data(skb, sizeof(*event_hdr));
++	if (!event_hdr || (event_hdr->evt != HCI_VENDOR_PKT))
++		goto restore_return;
+ 
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
+-
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+-	if ((sk_len < offsetof(struct qca_dump_hdr, data))
+-		|| (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS)
+-	    || (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
+-		return false;
++	dump_hdr = (struct qca_dump_hdr *)skb->data;
++	if ((skb->len < sizeof(*dump_hdr)) ||
++	   (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
++	   (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
++		goto restore_return;
+ 
+ 	return true;
++
++restore_return:
++	skb->data = orig_data;
++	skb->len = orig_len;
++	return false;
+ }
+ 
+ /* Return: true if the event packet is a dump packet, false otherwise. */
+ static bool evt_pkt_is_dump_qca(struct hci_dev *hdev, struct sk_buff *skb)
+ {
+-	u8 *sk_ptr;
+-	unsigned int sk_len;
+-
+ 	struct hci_event_hdr *event_hdr;
+ 	struct qca_dump_hdr *dump_hdr;
++	void *orig_data;
++	unsigned int orig_len;
+ 
+-	sk_ptr = skb->data;
+-	sk_len = skb->len;
++	orig_data = skb->data;
++	orig_len = skb->len;
+ 
+-	event_hdr = hci_event_hdr(skb);
++	event_hdr = skb_pull_data(skb, sizeof(*event_hdr));
++	if (!event_hdr || (event_hdr->evt != HCI_VENDOR_PKT))
++		goto restore_return;
+ 
+-	if ((event_hdr->evt != HCI_VENDOR_PKT)
+-		|| (event_hdr->plen != (sk_len - HCI_EVENT_HDR_SIZE)))
+-		return false;
++	dump_hdr = (struct qca_dump_hdr *)skb->data;
++	if ((skb->len < sizeof(*dump_hdr)) ||
++	   (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS) ||
++	   (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
++		goto restore_return;
+ 
+-	sk_ptr += HCI_EVENT_HDR_SIZE;
+-	sk_len -= HCI_EVENT_HDR_SIZE;
++	return true;
+ 
+-	dump_hdr = (struct qca_dump_hdr *)sk_ptr;
+-	if ((sk_len < offsetof(struct qca_dump_hdr, data))
+-		|| (dump_hdr->vse_class != QCA_MEMDUMP_VSE_CLASS)
+-	    || (dump_hdr->msg_type != QCA_MEMDUMP_MSG_TYPE))
+-		return false;
++restore_return:
++	skb->data = orig_data;
++	skb->len = orig_len;
++	return false;
+ 
+-	return true;
+ }
+ 
+ static int btusb_recv_acl_qca(struct hci_dev *hdev, struct sk_buff *skb)
 -- 
 2.43.0
 
