@@ -1,170 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AC35FDA7
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF223BA36;
+	Mon, 21 Apr 2025 03:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745207182; cv=none; b=myznaPAxuzKvN9TO5mAMjsVpyTAZJRq/D76R1xiaVlELrxeVzgib9YD1zzv6sXf/iKtlm7AEeHIAtO4sINK/wyYAR9L6XrcjaCcZXuUnTjobEUUJaPBDcOegR35T9+s/QtRYrsdyJxiHx457atf3CgNqKb0k+KNsVm4HVPUDLMk=
+	t=1745207535; cv=none; b=mn1Vpk7Uc6w3jyLSyzY00WNNG4KRBPVgF4lF/SNnzFGtTwSsKXMJndBOAsOE31KDPASaN2jYXAFccRwKictW5iswL/uLmNXNa7MvlFnJ5nN5mQDdP1GQfJRmPrhvmAvdOySxqlSkwDYpO0fDdckQrMHQ0EPH9psmbf2FmvF11eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745207182; c=relaxed/simple;
-	bh=WDWbIvSU773gRjsi9Bt8QnyBPdTx2jqcvGDaCCgw+xk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VrXkF9ADKWLepihzj+h+5Dy29iAPcvMU/Cq8x++EtT+aOS3M8hQIyVmTn1mGCABXA2psI2GsnQQCM59W9mcQ30b+WEsfq+yZ8lALAGmwvKBMNZ5nAc6lTSvv2Hf2H6CVgHqwMx13IVlvpceRKiVq3E7+5FczNj5eI3iT4AgLZ+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eQKqd+bg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745207535; c=relaxed/simple;
+	bh=SKy360k2jX7Gti4B3tJCD993GCWcNTHmk1yoWFKrfh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QgO4LJdZ+cIdD2oYP0xHAoiJJyXOqpupfqxrxOUtG2dK5DmuO3H+3xYsz0Gvo4hnFb7GIgdshEe7y9LpxJvPv+ChA59YTV8DtMgEDxNOLADPsmjXY4eLA3dx1xRm6l32YrKBqOyhxm07oqoTUG+VsamdRb935D383vHM3+ei4xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EG7Ld6U4; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQKqd+bg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745207179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9MmNHzTsOXktJvVrWiuSPufs0RXIPgJ4SHes9h94zrI=;
-	b=eQKqd+bgySb3n2oFtJqPLi1otd/z9soAeg19HEUnkJcvX4/9NQSeKbMFZZlWUH4AVTRoav
-	joar3A38i2HZBznNOsl5pDJ2iTIJu6dtSEIc8EFT20Wa4HOx1ZJl1Ags31R84rFfq7FB0f
-	9A9qaclVCv0chkEJlqf5iOUyPTikz80=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-girSVqliMbCJWBd5i9jxEA-1; Sun, 20 Apr 2025 23:46:18 -0400
-X-MC-Unique: girSVqliMbCJWBd5i9jxEA-1
-X-Mimecast-MFC-AGG-ID: girSVqliMbCJWBd5i9jxEA_1745207178
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-524021ac776so815428e0c.2
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 20:46:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745207178; x=1745811978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9MmNHzTsOXktJvVrWiuSPufs0RXIPgJ4SHes9h94zrI=;
-        b=kDoRafRLTu4WS4wk7QhuidbhVbl809FZCWI/sWrHWoofPuhYH85DrOG+xOOyou0JxB
-         81P5ls81THfBFjHsVppoQsw9gXovHpv1LfRC3b+mw/h/izzl63GN7btQuKJT09S5HPdf
-         RS5LbVQrokNRYnaFWhs706QBnWF0uS1r57DJ6C7xVke8ThmgGDokcAGNu+KClAYV4CdJ
-         N5FafAqvBAlkFokpgbolO28bzsiofZIQOOUdYOBMKNL6v65HIC8eRUkT/uRD0pesaPBT
-         d3+x4mxwWBjHiHwnL4WQ05mp08KbxqRsJpLU+mV5e7w5UH7xhqcYVSYzJgKEEJD+IrGk
-         ZzSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXyGLEDxHnPmPpXhXCTifXfcKFLQubjzpyUP848tqgmQ9aWosSJqVmjBxnZtZTe2aJzukBPQzGaHsCy49A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhRHxdQJA4tKQL45QEZ0hSz0l1BcIAUW4vEOYrafeK/PUQpLj2
-	ZN9wiTizsHwI47TSTGr7jzJBw91rzIMFwVJdRriI89q9/zb28d9JWGBPmNZ5MwC5D2rtWDDdn8k
-	CxDmv6C0e+GyfVSZvl2BUmQ7vXSvx0I3uV7NlePGV/4u3uPkeVvHCZaM/++nKuu+wcdWlYa9fzl
-	XMDyuH5EWMUVBnrpEwokxLCx8YYy1JEsFIGjgI
-X-Gm-Gg: ASbGncuLATnVVn7whkAIQGtCISHOS18SWkdxdwvDjCyzismbnGc4Y9Bx8/bJ1Dqo18Z
-	unFDSPYwbbCSpkP7Ke+6uh7vs1njyGRnJDvGdsiCUU2/8CftamWIm67Ia+ixviXd6ltY/JA==
-X-Received: by 2002:a67:f085:0:b0:4cb:5d6e:e6c8 with SMTP id ada2fe7eead31-4cb80128dcamr5512631137.9.1745207177638;
-        Sun, 20 Apr 2025 20:46:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjeQwKCOfHzvN3lUTtfHim7VBEQTh/TCbfRNy3QnFlzQ8hxPYthyT/QZOXVv5k8ci+MMU+1s1BplANJT3lPBo=
-X-Received: by 2002:a67:f085:0:b0:4cb:5d6e:e6c8 with SMTP id
- ada2fe7eead31-4cb80128dcamr5512625137.9.1745207177278; Sun, 20 Apr 2025
- 20:46:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EG7Ld6U4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=HPPSSA49F2GQFYt4Y3+jo5LCCyAfhAv7rGkUEFsAg2c=; b=EG7Ld6U4DAUbtxsn3tkr+eGn0v
+	kxXkR+MHBvDsceOcYb96/Ypg4Xa6x74Itezu5DqfP/dwzSraKK5DlytGlTIJyNilAyIkZbmiwBcFo
+	Hb21edNODFSLNmnDF0vQ13X5CSFfozaHGwSt6bTVs+BO/94px/OGwnzQNPeQ105jPJF2aD+ytX0NS
+	YwGXBLQycV44ptuCT9l0BdbRIP34dg02Dmt3QY4Tq1goySGanPRlspvFoYrisyUghzDrML4xDoJyp
+	mLs5CjgmNUuATiEC/D0CxhLLu2skBjFVKAFutNuEMzBA8nk+qUyWcofA4eYX/6fffIPDelsC79Hop
+	BhMvra/w==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u6iCK-0000000Azui-2RFo;
+	Mon, 21 Apr 2025 03:51:59 +0000
+Message-ID: <f0b218f4-7379-4fa5-93e4-a1c9dd4c411c@infradead.org>
+Date: Sun, 20 Apr 2025 20:51:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421024457.112163-1-lulu@redhat.com> <20250421024457.112163-5-lulu@redhat.com>
- <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
-In-Reply-To: <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 21 Apr 2025 11:46:04 +0800
-X-Gm-Features: ATxdqUHeO85TtbIdV-aJBSr0-Cr6xqgcKTQNuiFED9cSXLQ7VllgtcbY3bYiDRg
-Message-ID: <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
-Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
-To: Cindy Lu <lulu@redhat.com>
-Cc: mst@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 17/19] famfs_fuse: Add famfs metadata documentation
+To: John Groves <John@Groves.net>, Dan Williams <dan.j.williams@intel.com>,
+ Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, "Darrick J . Wong"
+ <djwong@kernel.org>, Luis Henriques <luis@igalia.com>,
+ Jeff Layton <jlayton@kernel.org>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>,
+ Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Amir Goldstein <amir73il@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
+ <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
+ Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-18-john@groves.net>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250421013346.32530-18-john@groves.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 11:45=E2=80=AFAM Jason Wang <jasowang@redhat.com> w=
-rote:
->
-> On Mon, Apr 21, 2025 at 10:45=E2=80=AFAM Cindy Lu <lulu@redhat.com> wrote=
-:
-> >
-> > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-> > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-> > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-> > is disabled, and any attempt to use it will result in failure.
->
-> I think we need to describe why the default value was chosen to be false.
->
-> What's more, should we document the implications here?
->
-> inherit_owner was set to false: this means "legacy" userspace may
 
-I meant "true" actually.
 
-> still be broken unless it can do VHOST_FORK_FROM_OWNER which is
-> impractical. Does this defeat the purpose of this series actually?
->
-> >
-> > Signed-off-by: Cindy Lu <lulu@redhat.com>
-> > ---
-> >  drivers/vhost/Kconfig | 15 +++++++++++++++
-> >  drivers/vhost/vhost.c |  3 +++
-> >  2 files changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-> > index 020d4fbb947c..bc8fadb06f98 100644
-> > --- a/drivers/vhost/Kconfig
-> > +++ b/drivers/vhost/Kconfig
-> > @@ -96,3 +96,18 @@ config VHOST_CROSS_ENDIAN_LEGACY
-> >           If unsure, say "N".
-> >
-> >  endif
-> > +
-> > +config VHOST_ENABLE_FORK_OWNER_IOCTL
-> > +       bool "Enable IOCTL VHOST_FORK_FROM_OWNER"
-> > +       default n
-> > +       help
-> > +         This option enables the IOCTL VHOST_FORK_FROM_OWNER, which al=
-lows
-> > +         userspace applications to modify the thread mode for vhost de=
-vices.
-> > +
-> > +          By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL` is set to=
- `n`,
-> > +          meaning the ioctl is disabled and any operation using this i=
-octl
-> > +          will fail.
-> > +          When the configuration is enabled (y), the ioctl becomes
-> > +          available, allowing users to set the mode if needed.
-> > +
-> > +         If unsure, say "N".
-> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > index fb0c7fb43f78..568e43cb54a9 100644
-> > --- a/drivers/vhost/vhost.c
-> > +++ b/drivers/vhost/vhost.c
-> > @@ -2294,6 +2294,8 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigne=
-d int ioctl, void __user *argp)
-> >                 r =3D vhost_dev_set_owner(d);
-> >                 goto done;
-> >         }
-> > +
-> > +#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL
-> >         if (ioctl =3D=3D VHOST_FORK_FROM_OWNER) {
-> >                 u8 inherit_owner;
-> >                 /*inherit_owner can only be modified before owner is se=
-t*/
-> > @@ -2313,6 +2315,7 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigne=
-d int ioctl, void __user *argp)
-> >                 r =3D 0;
-> >                 goto done;
-> >         }
-> > +#endif
-> >         /* You must be the owner to do anything else */
-> >         r =3D vhost_dev_check_owner(d);
-> >         if (r)
-> > --
-> > 2.45.0
-> >
->
-> Thanks
+On 4/20/25 6:33 PM, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> This describes the fmap metadata - both simple and interleaved
+> 
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  fs/fuse/famfs_kfmap.h | 90 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 85 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
+> index 325adb8b99c5..7c8d57b52e64 100644
+> --- a/fs/fuse/famfs_kfmap.h
+> +++ b/fs/fuse/famfs_kfmap.h
+> @@ -7,10 +7,90 @@
+>  #ifndef FAMFS_KFMAP_H
+>  #define FAMFS_KFMAP_H
+>  
+> +
+> +/* KABI version 43 (aka v2) fmap structures
+> + *
+> + * The location of the memory backing for a famfs file is described by
+> + * the response to the GET_FMAP fuse message (devined in
 
-Thanks
+                                                 divined
+
+> + * include/uapi/linux/fuse.h
+> + *
+> + * There are currently two extent formats: Simple and Interleaved.
+> + *
+> + * Simple extents are just (devindex, offset, length) tuples, where devindex
+> + * references a devdax device that must retrievable via the GET_DAXDEV
+
+                                      must be
+
+> + * message/response.
+> + *
+> + * The extent list size must be >= file_size.
+> + *
+> + * Interleaved extents merit some additional explanation. Interleaved
+> + * extents stripe data across a collection of strips. Each strip is a
+> + * contiguous allocation from a single devdax device - and is described by
+> + * a simple_extent structure.
+> + *
+> + * Interleaved_extent example:
+> + *   ie_nstrips = 4
+> + *   ie_chunk_size = 2MiB
+> + *   ie_nbytes = 24MiB
+> + *
+> + * ┌────────────┐────────────┐────────────┐────────────┐
+> + * │Chunk = 0   │Chunk = 1   │Chunk = 2   │Chunk = 3   │
+> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
+> + * │Stripe = 0  │Stripe = 0  │Stripe = 0  │Stripe = 0  │
+> + * │            │            │            │            │
+> + * └────────────┘────────────┘────────────┘────────────┘
+> + * │Chunk = 4   │Chunk = 5   │Chunk = 6   │Chunk = 7   │
+> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
+> + * │Stripe = 1  │Stripe = 1  │Stripe = 1  │Stripe = 1  │
+> + * │            │            │            │            │
+> + * └────────────┘────────────┘────────────┘────────────┘
+> + * │Chunk = 8   │Chunk = 9   │Chunk = 10  │Chunk = 11  │
+> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
+> + * │Stripe = 2  │Stripe = 2  │Stripe = 2  │Stripe = 2  │
+> + * │            │            │            │            │
+> + * └────────────┘────────────┘────────────┘────────────┘
+> + *
+> + * * Data is laid out across chunks in chunk # order
+> + * * Columns are strips
+> + * * Strips are contiguous devdax extents, normally each coming from a
+> + *   different
+> + *   memory device
+
+Combine 2 lines above.
+
+> + * * Rows are stripes
+> + * * The number of chunks is (int)((file_size + chunk_size - 1) / chunk_size)
+> + *   (and obviously the last chunk could be partial)
+> + * * The stripe_size = (nstrips * chunk_size)
+> + * * chunk_num(offset) = offset / chunk_size    //integer division
+> + * * strip_num(offset) = chunk_num(offset) % nchunks
+> + * * stripe_num(offset) = offset / stripe_size  //integer division
+> + * * ...You get the idea - see the code for more details...
+> + *
+> + * Some concrete examples from the layout above:
+> + * * Offset 0 in the file is offset 0 in chunk 0, which is offset 0 in
+> + *   strip 0
+> + * * Offset 4MiB in the file is offset 0 in chunk 2, which is offset 0 in
+> + *   strip 2
+> + * * Offset 15MiB in the file is offset 1MiB in chunk 7, which is offset
+> + *   3MiB in strip 3
+> + *
+> + * Notes about this metadata format:
+> + *
+> + * * For various reasons, chunk_size must be a multiple of the applicable
+> + *   PAGE_SIZE
+> + * * Since chunk_size and nstrips are constant within an interleaved_extent,
+> + *   resolving a file offset to a strip offset within a single
+> + *   interleaved_ext is order 1.
+> + * * If nstrips==1, a list of interleaved_ext structures degenerates to a
+> + *   regular extent list (albeit with some wasted struct space).
+> + */
+> +
+> +
+>  /*
+> - * These structures are the in-memory metadata format for famfs files. Metadata
+> - * retrieved via the GET_FMAP response is converted to this format for use in
+> - * resolving file mapping faults.
+> + * The structures below are the in-memory metadata format for famfs files.
+> + * Metadata retrieved via the GET_FMAP response is converted to this format
+> + * for use in  * resolving file mapping faults.
+
+                  ^drop
+
+> + *
+> + * The GET_FMAP response contains the same information, but in a more
+> + * message-and-versioning-friendly format. Those structs can be found in the
+> + * famfs section of include/uapi/linux/fuse.h (aka fuse_kernel.h in libfuse)
+>   */
+>  
+>  enum famfs_file_type {
+> @@ -19,7 +99,7 @@ enum famfs_file_type {
+>  	FAMFS_LOG,
+>  };
+>  
+> -/* We anticipate the possiblity of supporting additional types of extents */
+> +/* We anticipate the possibility of supporting additional types of extents */
+>  enum famfs_extent_type {
+>  	SIMPLE_DAX_EXTENT,
+>  	INTERLEAVED_EXTENT,
+> @@ -63,7 +143,7 @@ struct famfs_file_meta {
+>  /*
+>   * dax_devlist
+>   *
+> - * This is the in-memory daxdev metadata that is populated by
+> + * This is the in-memory daxdev metadata that is populated by parsing
+>   * the responses to GET_FMAP messages
+>   */
+>  struct famfs_daxdev {
+
+-- 
+~Randy
 
