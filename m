@@ -1,176 +1,204 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD713597B;
-	Mon, 21 Apr 2025 08:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745222404; cv=none; b=n12Twg2QsnBLRepNF5OXJouplu9co7leGdSbfOedNUgDyvsnoFR6qWw+zxg+of098WiVZYU3FRqbdw8NqooSkX6FOlxM6CRuZuVsuA3ddfuhbwdID5FdRqJns4P1LOU1hkCm7ZHnK5umK0D/+JNFjnMDeY6VqFFng7goq7L+qms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745222404; c=relaxed/simple;
-	bh=AmRZAZ+4oNxOx4V1t7gmV4I0LqgEnDoXqNH/485r1TI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B1b7bJWlTw7CBkqb0WhA5Zf9SuDeUqe1IyJIRTl/O/7ro/i9tBXJ5AjHAjMQ9Y9aJr1QJpZRgIlF7M4MDaEzmxB+ZkQ3AHJzr9FqMwGUPspY3RhtBIAHJDkTlbWmL2uah0jQkCttazfVjP0/gG50CeupvWa2T+ZgbKm+DAzGZt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f7xBbe5w; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142B2F9C0;
+	Mon, 21 Apr 2025 08:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745222470; cv=fail; b=aBywZAwS1MqS+VqItX+9MLgBjQLC1MoxgbdYkV70iGoohpp358LU6wQPFyopEyaE4Jj/C54iYwUZ3EnNA1QcUaR4zKlSCHWOcfZ8U1Mju6+lNJHrdFu10aonHXFD0S2fXy7tleBn1BF0lFASixvNMNSCrsAs/GMrtJqEfxUiKos=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745222470; c=relaxed/simple;
+	bh=nbuwpFHm9j4tblZNlz8AlqVhvLhgzrqbu+s2MZKHhjs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WLqF1YUMjEYYmDDOX8KPO6JaedCSqbsg1SGwFMRiK8xRISvqk4oIsKqWOoEbssOUkxvsj+WGgwW47ft1PLHcvjhNrjc/EiYDVeZ3/VKSs/2JLkIYamGbAtl0fAKTOPUfGv6AHMYzLe2G1PUkqO6PMhEz0llAaVC4QV0+RyVryN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K1sgSQ5i; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f7xBbe5w"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53L7xqf7859994
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 02:59:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745222392;
-	bh=3KE2Gy26ZzuCmAUw5vnv1H2E8aAjLIG+uFRQDf8v+UA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=f7xBbe5w9agULXZz1JqJrgurC9ih2x7qO7h0QVWUHfQdD1CuROAKDlBaDx5QzDvju
-	 65egL6vDf+ypH2Mw+1dpiymmb636YnQebeTXocl1td53R/iz5h2yfm3rmfw3QEHNr2
-	 cjZRPhdk8Tz3yRXUHyy1EhpCIsQPUvLWNJcZl2HA=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53L7xqQd130356
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 02:59:52 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 02:59:51 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 02:59:52 -0500
-Received: from [172.24.18.98] (lt5cd2489kgj.dhcp.ti.com [172.24.18.98])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53L7xmsR113313;
-	Mon, 21 Apr 2025 02:59:49 -0500
-Message-ID: <8c7b68fc-c275-45c3-830a-3ea3174f38f5@ti.com>
-Date: Mon, 21 Apr 2025 13:29:47 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K1sgSQ5i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745222465; x=1776758465;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=nbuwpFHm9j4tblZNlz8AlqVhvLhgzrqbu+s2MZKHhjs=;
+  b=K1sgSQ5i14ZnX4daqpkhAnTuelefsWKSYSl6rTHcoC58Vxb94lv17bJU
+   krxnKZoHZt+PQ2s90X4KuYvJF/dpeCM9rLgzR0wBbkqJ3mjI5v7JhqW7P
+   njy1r0TBU8bH46yzI/7K09GYzg1SOZ6WmwFIpWHAL6kulnhQzTR2CiHAw
+   Q8EI6F9WyNdwyf+8VoOa/AD5AA9YXX9SC1i60I+mFx1bLPzKBNn449CG1
+   WzGIb06DBg3RLwf5NGc7XO/kVy5wg9EaIVn34YtsvVrOSFhv3fSTpMYDr
+   GCfzPWm79MzPm5AlJb4ytPlVT7sFQyBq4KJmcHHN+8EM10F6HPhaJfNGi
+   g==;
+X-CSE-ConnectionGUID: nNZ2vKQmSfe/4ESf0TIZ3g==
+X-CSE-MsgGUID: fwtSjchtSYO2QJed/QLq7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="64161787"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="64161787"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 01:01:04 -0700
+X-CSE-ConnectionGUID: Udh/7U7URo+jCw5acA8rxQ==
+X-CSE-MsgGUID: tN5KU/fLQjaFcbDjpQiitA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="131569485"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 01:00:41 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 21 Apr 2025 01:00:40 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 21 Apr 2025 01:00:40 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.46) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 21 Apr 2025 01:00:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JZ4nM7PXHhNWbNVamYrIaMrktWAqVUPygjibwzPHZhqwOicHT3B6wXVT0y2k150GWOZV+OWVmEGTh2KxNrB5CQl8w7Ulo2tL+VbYa/LL8y41F1o9FLYx8MS84qvG0VZx1fMvHOl4OiPIornRvp0fKrNcuU0yNBQgcDBwjJFncUWUg1HPGL3TnF5rn3h/id1ChkqNUcf2K1Xbzhy5tJDCz12KsDm1V2pflrypRX0W6nzQ4orS39YdgOkYTMWhaDg1W3nsX1G/NBukNM75vbdoEBE1pVTJCCijmpHQguXa3deuW0++m18CawePZFJXhM+di9xJ58XDL6hqrSgxNixwBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eYSSAPxrS0IdplOkK/c2+FX2wz6CzvJkaMUT7qHYCbk=;
+ b=GRtvozE7OYjvGw2q4wky+VLpjZHCZGQumyzz5CnFR9znb+aEXFBXW8X2OFy/Lzvxfx/0VFluaHUnpnCkOjxa7/mjfzIryazgne35Yhzkw5ZVK1RIXiEkKZDCkmEBgVaBllyGU283y/37QybqY5wT5a2G6hAEOzntboW5riIBXo/3NNInUolssc3gDiPmB1X5ghCxrWJuJDVR3GOZtSSYXPBCyLdSLcnyfuWc8+xSDPg4RGTQ0ThvGQk2Ba+DpQmzJ0fxLtat1WgFVVhxpOqD+xfPzy9cY/NEv8QWHTD4WVEM/xC8tZA0eIc2UP3OCjKP8faFWCFoiWmwp0FKyb1F3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by SJ5PPF5DFCDEDFC.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::82e) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 08:00:37 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 08:00:37 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Nicolin Chen <nicolinc@nvidia.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+	"corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>
+CC: "robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org"
+	<joro@8bytes.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+	"vdumpa@nvidia.com" <vdumpa@nvidia.com>, "jonathanh@nvidia.com"
+	<jonathanh@nvidia.com>, "shuah@kernel.org" <shuah@kernel.org>,
+	"praan@google.com" <praan@google.com>, "nathan@kernel.org"
+	<nathan@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi
+ L" <yi.l.liu@intel.com>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
+	"mshavit@google.com" <mshavit@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>
+Subject: RE: [PATCH v1 07/16] iommufd/viommu: Add driver-allocated vDEVICE
+ support
+Thread-Topic: [PATCH v1 07/16] iommufd/viommu: Add driver-allocated vDEVICE
+ support
+Thread-Index: AQHbqqxj+R/ibWUos0Gs+XtXZ1ED0bOt0Tfg
+Date: Mon, 21 Apr 2025 08:00:37 +0000
+Message-ID: <BN9PR11MB527601845E1E55D02F57F04E8CB82@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1744353300.git.nicolinc@nvidia.com>
+ <349fa2c4c291488bb5bae6e4a8bc0dcbd0c51fd4.1744353300.git.nicolinc@nvidia.com>
+In-Reply-To: <349fa2c4c291488bb5bae6e4a8bc0dcbd0c51fd4.1744353300.git.nicolinc@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SJ5PPF5DFCDEDFC:EE_
+x-ms-office365-filtering-correlation-id: b82f3b01-0aec-439b-2323-08dd80aa9a0c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?90kJ2o4zjCiI8TzeZHN1GQx9SLoSAKFlWe+ZxdkBGDddWShJ/kPZ6MrkV7i9?=
+ =?us-ascii?Q?JYBCs4xFsKB7kTu2lDQ/puWgvvg/l82+STKQZIvXD+yF1dOfxHrpr3LQhn5I?=
+ =?us-ascii?Q?qCwEYQi7ydjV2Ivmxanwi3pcbkXRHAZLIf9ab6klpPkRBAQOTRfXAOgKcAOs?=
+ =?us-ascii?Q?jjuMbuTan6AVezYBbSDriAhQL6tAHEhGA+zy/VW3vMFO8DjfuEsmygBqzMlZ?=
+ =?us-ascii?Q?nr5beCH1uXK+hiZpclajPKAZpDKBifyolsLLbhk9rhp7PNtJvLghQbOF6PEJ?=
+ =?us-ascii?Q?YLEjeLHM1Kx/9+oyeOM3YYxn/W1GR7aqtf4DIAEooosuFKsJNcsYiEKZF3xC?=
+ =?us-ascii?Q?bDR/VRphyPQz9t1cUXr3uxMneiGjqFdC5h0fMKmuwa5xJ/jhN4fg1Bo8cA1P?=
+ =?us-ascii?Q?/OJgcpJSGSW7hZIk3QBg2x2+ldEzHn+7yKSh5Ta/Qvj55rfKKNTFHI35H2dB?=
+ =?us-ascii?Q?j6h6c7AQg3wTofM7+5OPfKEpaewXPTvoLl6AIyg1+b9c6fpquuRelHPIISQQ?=
+ =?us-ascii?Q?ncOcb9iZUu0PAGuc5bgdM6jbCIbiRQssnXqzEJXGvhJ21MK34T7wlU03LTTC?=
+ =?us-ascii?Q?AeU7o4kOiXmqsRERNoFzNcFs5SFvhX72GlHa09f52BHM0aeD5N9Pdeng/dFX?=
+ =?us-ascii?Q?ud7vO1PaAdRWe3i3m1xKWyMNk83W8hLlIIhh9j+RHMq0m9hNSyZOfKdNDfbx?=
+ =?us-ascii?Q?JplQwqbpiUm0Jlnpd+CU0AbNs3gG4hMIgCpiAflJ8ROw/WsqLqXsV+Gv+u6y?=
+ =?us-ascii?Q?RKXrGvbwGqGFD96zvHBxtqj0/uu9S0GHxiyPcl5VMqHbDVg9tczLnQvrGAnJ?=
+ =?us-ascii?Q?lUGVtMaD2c6RpkhwYXv+yqxzDyrQte3z05t+9AWWCcEhtDVnsPLyFFexjYZG?=
+ =?us-ascii?Q?0odaupKSefRyhPKUw/sOwOSCxHD2Qd5ttNdePmBG1uPzC1v+/N1HgbxGr8L8?=
+ =?us-ascii?Q?+I2R6BMcjkZdP+COsEm20lPoOoXw+25M0fmb+hae2oiuKUaJiYX5dWB2Fbkk?=
+ =?us-ascii?Q?IkM858oVdFvoN+dXBeMpEa4X1zCGhPiUYylHgCkxmGq07E5FrLO+6HJx4gMi?=
+ =?us-ascii?Q?rceTAUN5Oyfxtkp734Eo4djnd38HWEp6LdWlh5p5y71CB7OH1EyU1sAIiken?=
+ =?us-ascii?Q?xiSgJMMpoI/HaWU4i8tWIZtIGgA9PBVDStqBiAqwua/I0Q/E4oCVBqFLYRT2?=
+ =?us-ascii?Q?uWyrDr5UNjoxjIRf5c59z7XmMGM5glC1HZL4DaCGenXtOXWNu0wQEOobHvB1?=
+ =?us-ascii?Q?Fe/lvOOX1z4CnHWFvudSoZpEXQW/RA0uGuOENxJmcf4wdUQwGWegnHjZJxmc?=
+ =?us-ascii?Q?qzUwQfMn/x5dXR6SOJSswcrG+O7GpWb+jfotl9OXDDKHB92/XIJYlvO4YESc?=
+ =?us-ascii?Q?XLqP+C4QPX+oTnbrJdEcfo04+Gwq6XJmeaRl2O26tNS6va2U/3/FH1NGesQq?=
+ =?us-ascii?Q?9Il6fs0C+xfzfGMrDjszDLwiAO5u7JAeFP7TKkqY3ZbmMAH/+3rrcd+DK6tI?=
+ =?us-ascii?Q?4MRlU6ILFqZ69yg=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?idYlSNq1vB8HkDCcu4vcUwd3VY+P5BQY3mpjGRzUVawcwAEjFx4TrX3/uz5Q?=
+ =?us-ascii?Q?k9IuOcJPkus1Ubt1E3KppKxxaIiz6Us1jjoP/4QKJOhzl7UpZ9Ve9/Pbe/39?=
+ =?us-ascii?Q?sPUxJwHVOvo8wm6ATNXqy/LbCr+gzH/zFIlJorDk7SMiH5Jnh7F5kg4EMJM7?=
+ =?us-ascii?Q?A2mzPCxzT85rKmDWeFdjJzQq87FWjU0N+F2Dt1/RcMoHUWLhT0RLK9XmQkZW?=
+ =?us-ascii?Q?/RkwKqpiP8IZTo4fzTh3Il/e8j80yX2qDgCddvdiXDwTLg8Qfs7ll4rcm4Zq?=
+ =?us-ascii?Q?RKJhMvOLgr+0qwFsUXEYoGpLvgWcU9ZwdqJBh2BfWQhpXeTGfvbOyn8kcHuu?=
+ =?us-ascii?Q?covIseNkgolXuFx+DXSAXTUlo9H4H8OwrIk+tZGwKLlA6sQpKOXdCXIq7NMh?=
+ =?us-ascii?Q?0pNUKKbLmERNBL/OsM5yNQNoIEz6Q8UXUSzjus1sNEZV7xtS14PTtXxDzsVe?=
+ =?us-ascii?Q?qudf83vE9mfMwW79iZMw8c82xqKh6Mik7SMzO63uAVf2xW/R6JAfqtcmG1GT?=
+ =?us-ascii?Q?oVYZE3XmxL1bcK5eEGW2yUgLjlk/NTYHb3TJxEYEWScspcdC5EDcvOOapswe?=
+ =?us-ascii?Q?BZ/iEJZBi/2Qd7H9L99+EUW82qoOWGxOaJ+8TTe52pTTLjmRl3cZePifX+n+?=
+ =?us-ascii?Q?WoiZv9OS8Y4c6HLqMepsohaTGKvwIlxgZ8sQibpKJ518uV1gKY4WOsJ1UfRw?=
+ =?us-ascii?Q?pc5VUE3sZVItBbQx4gA4jDSi/6RtexxhbNJ8hhRb3yFGGGsWJmdQcF2SE870?=
+ =?us-ascii?Q?O0eDFiagMbfrkak4HUOyHW7JbohQ6Q6lkAQUXOlMYUze5QiXhrMpmF2ufzo9?=
+ =?us-ascii?Q?tbPdmq3FF3gcRZp9uT1AxIaaHL2gIi9KWeEyDYFVC8ZBT6YDGT9zP0Dqnm+G?=
+ =?us-ascii?Q?F9ldTBkeQhfS22nMd4LY5kxBv5Aox2bR8Rypg4NQ8R9dtwTqsRR9W49U/yQ+?=
+ =?us-ascii?Q?pdLZatFjhyYVkQdovWvyppgJFRJrdyDcqXTQDsucPHaFLX4CJbtzpQwSc1zr?=
+ =?us-ascii?Q?w6ltzcknhOKL1RfxZUQ1ITOzHnq+ivKK89rwDKFeR2zyf9TOIY2CGIH3zQWE?=
+ =?us-ascii?Q?rrnOdx7ULLyGf8uAc5EO1OveK+M8ZWIqWbHcMMPDngE+QOsK6ACUKThKOLep?=
+ =?us-ascii?Q?WTIArC2hP2LX6ebsVTUNe445rz6uTL6EfYi2TQgfvkm9uoU3Gr1N6GDkqjN7?=
+ =?us-ascii?Q?SA4eAw5CL4MX7cT8KG4S3xfCeOxIC6mqO6jngBX+v/64c92etM1s6pYEGwYD?=
+ =?us-ascii?Q?ohQB5bO5Ga5PYcyIckREr0YENuYOp1U8iCgBNvFoKDtdl4AZcIlBJa53tfg5?=
+ =?us-ascii?Q?5pUL4vsFqOSjbOVKzTyVRJu2ZVli1hxN1C/9x5s7ulbNB0SN9F7eF4QrbHYU?=
+ =?us-ascii?Q?ViVf8XW3iIyMexsJdlQnHP8MQjinSbJ6fCUsirgE729ye8WvM6AKUyDazUVe?=
+ =?us-ascii?Q?Cxlt40kC2GQLPf/QafsP6tN7EMDAVD3m5HhSuJgdFMhY7WnSPlod9sSOQ/dP?=
+ =?us-ascii?Q?y3wh90eExDSrgtKFjbDM2ATEZVhoPf0SSAfP5knxt6QirCFqUKujaDLulGWn?=
+ =?us-ascii?Q?gGPqSt4FbeFZ0m6WA39dxKi78YzYkpcDCXfL5REi?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-j7200-main: switch to 64-bit
- address space for PCIe1
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <u-kumar1@ti.com>
-References: <20250417120407.2646929-1-s-vadapalli@ti.com>
- <20250417120407.2646929-3-s-vadapalli@ti.com>
- <8b707fbc-9d82-48d0-a227-366d4e83e8a7@ti.com>
- <231e009e-0dc2-4876-b052-d11b64ee5a0a@ti.com>
- <d517b2bb-2bf2-44ec-8509-6281c5566972@ti.com>
- <8d43fdc6-760d-49cd-b4f5-95d13a52220b@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <8d43fdc6-760d-49cd-b4f5-95d13a52220b@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b82f3b01-0aec-439b-2323-08dd80aa9a0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 08:00:37.3471
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DuSbmMUaVwf8kzKBcZsb17ZHCteBRbIcmFQIpBUXzhFtrEMhYKkjV9RilDAEIuJVzDIR9IfyT9augxm8haSZ/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF5DFCDEDFC
+X-OriginatorOrg: intel.com
 
+> From: Nicolin Chen <nicolinc@nvidia.com>
+> Sent: Friday, April 11, 2025 2:38 PM
+>=20
+> @@ -128,6 +142,9 @@ struct iommufd_viommu_ops {
+>  		const struct iommu_user_data *user_data);
+>  	int (*cache_invalidate)(struct iommufd_viommu *viommu,
+>  				struct iommu_user_data_array *array);
+> +	struct iommufd_vdevice *(*vdevice_alloc)(struct iommufd_viommu
+> *viommu,
+> +						 struct device *dev, u64 id);
 
-On 4/20/2025 7:48 PM, Siddharth Vadapalli wrote:
-> On Sun, Apr 20, 2025 at 10:17:46AM +0530, Kumar, Udit wrote:
->> Hello Siddharth
->>
->> On 4/20/2025 8:33 AM, Siddharth Vadapalli wrote:
->>> On Sat, Apr 19, 2025 at 11:35:50PM +0530, Kumar, Udit wrote:
->>>
->>> Hello Udit,
->>>
->>>> On 4/17/2025 5:34 PM, Siddharth Vadapalli wrote:
->>>>> The PCIe0 instance of PCIe in J7200 SoC supports:
->>>>> 1. 128 MB address region in the 32-bit address space
->>>>> 2. 4 GB address region in the 64-bit address space
->>>>>
->>>>> The default configuration is that of a 128 MB address region in the
->>>>> 32-bit address space. While this might be sufficient for most use-cases,
->>>>> it is insufficient for supporting use-cases which require larger address
->>>>> spaces. Therefore, switch to using the 64-bit address space with a 4 GB
->>>>> address region.
->>>>>
->>>>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->>>>> ---
->>>>>     arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 7 ++++---
->>>>>     1 file changed, 4 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
->>>>> index 5ab510a0605f..e898dffdebbe 100644
->>>>> --- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
->>>>> +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
->>>>> @@ -759,7 +759,7 @@ pcie1_rc: pcie@2910000 {
->>>>>     		reg = <0x00 0x02910000 0x00 0x1000>,
->>>>>     		      <0x00 0x02917000 0x00 0x400>,
->>>>>     		      <0x00 0x0d800000 0x00 0x00800000>,
->>>>> -		      <0x00 0x18000000 0x00 0x00001000>;
->>>>> +		      <0x41 0x00000000 0x00 0x00001000>;
->>>>>     		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
->>>>>     		interrupt-names = "link_state";
->>>>>     		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
->>>>> @@ -778,8 +778,9 @@ pcie1_rc: pcie@2910000 {
->>>>>     		device-id = <0xb00f>;
->>>>>     		msi-map = <0x0 &gic_its 0x0 0x10000>;
->>>>>     		dma-coherent;
->>>>> -		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
->>>>> -			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
->>>>> +		ranges = <0x01000000 0x00 0x00001000 0x41 0x00001000 0x00 0x00100000>, /* IO (1 MB) */
->>>>> +			 <0x02000000 0x00 0x00101000 0x41 0x00101000 0x00 0x08000000>, /* 32-bit Non-Prefetchable MEM (128 MB) */
->>>>> +			 <0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>; /* 64-bit Prefetchable MEM (4 GB - (129 MB + 4 KB)) */
->>>> Sorry for novice question,
->>>>
->>>> with this change,  How do you see  old EP working which supports 32 bit
->>>> addressing,
->>>>
->>>> or some translation is possible ?
->>>>
->>>> 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
->>>>
->>>> to
->>>>
->>>> 0x63000000 0x00 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
->>> I didn't understand the question completely, but I shall try to explain
->>> the changes being made which might possibly answer your question.
->> If I understood well then what you are doing here
->>
->> 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
->>
->> PCIe address
->> 0x43000000 0x41 0x08101000 -->
->> Property 0x43
->> 0x43 as npt000ss ->relocatable, prefetch and 64 Bit memory space PCIe Bus address  0x41 0x08101000
->> CPU address space 0x41 0x08101000
->> This will work fine, if EP supports 64 bit addressing scheme.
->>
->> In case, we want to work with EP of 32 Bit, Then do you see , we need to relocate PCIe (lower 32 bits) to CPU address (64 bits)
-> A total of 3 Address Regions have been defined:
-> 1. 1 MB IO in the 32-bit PCIe Bus Address Space
-> 2. 128 MB Non-Prefetchable MEM in the 32-bit PCIe Bus Address Space
-> 3. (4 GB - 129 MB - 4 KB) Prefetchable MEM in the 64-bit PCIe Bus
-> Address Space
->
-> '1' and '2' above provide backward compatibility with Endpoint Devices
-> that can only support 32-bit PCIe Bus Addressing. The __newly__ added
-> '3' enables Endpoint Devices that support 64-bit PCIe Bus Addressing to
-> claim larger Memory Address Space on top of what is supported by '1' and
-> '2'.
-
-Thanks Siddharth,
-
-I understand, you are enabling 64 bit addressing, keeping previous 
-addressing scheme unchanged.
-
-Since, you are changing, it will be good to give max possible addresses 
-for 32 bits EP.
-
-or
-
-If you are saying , 32 bit EP has to be limited to 128MB then
-
-Acked-by: Udit Kumar <u-kumar1@ti.com>
-
-> Regards,
-> Siddharth.
+s/id/virt_id/ would be clearer.
