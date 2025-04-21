@@ -1,155 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFD213A418;
-	Mon, 21 Apr 2025 14:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB78E13A418;
+	Mon, 21 Apr 2025 14:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245185; cv=none; b=jQDXtWcCUBdMY76WIOZuvn5SLLKJ1xzTUOGT9ULEUV3cQHzcficVR/ztqnkEBM3M0NSdzT+0JKSYUGwiJpIz8lakKa34LD7/NDpdFW7yLk2X0wuoMith1TVvTbsJYN7W7vap6eoMOwRBNUKBOM3fyfRnscDtDHjs+Bo1ic+NADs=
+	t=1745245227; cv=none; b=kscNXcEvoha8VGAFaDpAeCr4ZCMA6adwqIwNrWxnxbkX/OOrhbMRXoynaI8vJmg+LB+HvAdDG3mwyR6nkv2dQoTumNBTOAU0wFR5dRtg6pHaahbxb1Tgs+OS4/oEbBEY0xFmSgoUrcboBiOIwkSbwyN3BeRWyWzse73kzoBn+mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245185; c=relaxed/simple;
-	bh=Tr9+pqiq4D1eXz6CFkFBVMqYsvom8aBnfD6QBxYvocg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LhanomHGxtcgxml67b4VsGrQ5VBqwOgnIOAq0C6rMuvXQaBLPBqMxGzFu2CFSKAXTXBgTtyKcmIUgV8a6/Dua4pJQxrQbVytBXZp7VYALQtgj62Wjh0Amvs6+IAkM4iOk5RzNIrKI47/po2/7HCYtJI6sOXGju/HTQmxFi1uVgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3Jo7K93; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745245227; c=relaxed/simple;
+	bh=9BaS4/yvCP2VWZ4vW+sjMlK9au+mAQZhlwBJy+NiT+Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h59/zR60gwu09RhAbkHfQewhl9lFND4+gDOMED7AZdECDCxwPQdPSAxiKXcs+aOyVOfReIzayP6h3/F+E0SRJjNzWS3WSMzUXW0EmW8tc18l9hV8H7ve8gHJvk8P2InlNMhBNU3RV+G4pSEPgF9bjCdvLBjeeubHqprC7/f1TWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjSap1yS; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3Jo7K93"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A95C4CEE4;
-	Mon, 21 Apr 2025 14:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745245185;
-	bh=Tr9+pqiq4D1eXz6CFkFBVMqYsvom8aBnfD6QBxYvocg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t3Jo7K93LVgH9rdJjTmiOPAouPdZfKVSSsI7tt0fE5/7NBNVaKUOx2TsqBgxaCnsx
-	 Z7XXaeoqdpcPl/j8zO29nasbGPGUeZReKOfPCG6Ag71sWYNoH69DrPvAqv6XHr5h4+
-	 c+8qagFwgMr0+CDx/i7qjqdHTkccn08kGgN1SR9suu+8LjldZMoLT4aNJ7bqJ5pfez
-	 XQFZ1fmQeeyR5vpQHfmuVM4+O+Tcys00pb6Xq31Y6QNAr4YSADBc0pEUsdetpE8Reo
-	 mWdp8kB+FdDO3RCPww9QmdbioUw8FXut2rQ1PvdJcPYRb7qQvxIZB0P1JAhK30yoyY
-	 nDS0mdRdLjsHw==
-Date: Mon, 21 Apr 2025 15:19:37 +0100
-From: Simon Horman <horms@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Wenjun Wu <wenjun1.wu@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>,
-	Phani R Burra <phani.r.burra@intel.com>
-Subject: Re: [PATCH iwl-next 06/14] libeth: add bookkeeping support for
- control queue messages
-Message-ID: <20250421141937.GI2789685@horms.kernel.org>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-7-larysa.zaremba@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjSap1yS"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47ae894e9b7so65728871cf.3;
+        Mon, 21 Apr 2025 07:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745245224; x=1745850024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CI2xNSbeewY7lsc4y3gCRJvOG3cBl5hA05Vzfe6wrpg=;
+        b=kjSap1ySjo4T37x47m4a2T8w6dCqzLLPXYoXXol6gGsCf5Avs4J/Tnyx1x9eISkmPU
+         j77AWTcz1+Z59mzn8ZMMbUf5N02tA86F0WC7hW3v4eIrZ3zLtSJcXYWfSUdVIB2KSMjD
+         ZztPYiDoNBEQPkoPoO//iL0n0mLZLX0AlQsctUsUhr2Y12MPdPGd28GL/Zzd9pITqg/N
+         KLa2BnTApl2ooym4a4GpnAyF0k9zVIbu6TW+eAQKHsOWKZy1N/21NXCdiR4dPbl2R5iP
+         Ojkb7QRCVndRzgnq0iYdR72xMCSf2u7tcZGZHUFsBU2T3mVyb7AuH+CYJ4I4bwvdsvgA
+         e9aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745245224; x=1745850024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CI2xNSbeewY7lsc4y3gCRJvOG3cBl5hA05Vzfe6wrpg=;
+        b=n86auOJq3vup5OuWjwT29y2QZOoGwj114WRWYE8pc29JtMopaEptvNtMeyH/Zyb8j1
+         UXLP3Bv671M0pJ89g7HFr9Ve5v2Dn+tGHgQGEHyH64G38mthntvc8U8huV2eeyRlRcNv
+         Iru+RYKa+DO42ZEUsjUZ0XCxZjoyW2MKtpLjQmNOnSwIekbXusSpqeVc62fkCNj8TUC5
+         crYocHq80TEjapFel/RdQKS7pSMvbxA6yhxj/4cO7LUhLfANyoc18Mf8t6mRpLEmsAAa
+         1ciUKvVMwKWFL+LC0hvBS7GVrSC1aBsttTZzfXbl6OpFqWlMkKeW4I22hkb3zB16YrE9
+         a1Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCV5BmJoUvFi/IKqq6cHAplYmzGgmPu35HcjJbbW6j6kP70833CHA/VW058kwURVt9VbrOwgGCeWfU4=@vger.kernel.org, AJvYcCWXb8uxD4/5vpMkDs0G+J5Wl2tpJf1MZtWyFQS9GtMhxxxku+x8UaYrVIsxDA8NZbHy0+sUk6lPh432Ks+5@vger.kernel.org, AJvYcCX4rfMImGcqijqAgHwJX0IwxGKBegnxsLTtb5lfynu+G2Uk1XQzKynyWGN8HNIMSwKAIWxXMPxw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDrF6C9wCKarcuQBbgpJmIBuMtvCvGmzkEPXr1DSG/tb5RcleV
+	NTOvFB7uO1x3aZDujM4usxsJeaTrfiVbuLEGUGNrXMlRPHF27RIQ41EzCUXKAHXaDfpXNWB79Gh
+	Y5rDf9l9z7GFbd6BKMLkrKBwwI5M=
+X-Gm-Gg: ASbGncuqrrSRAd7WNQZCKcxAirJKhbBv5Nth3MuBfWFY/hozAQGSmsHVk1TgDwR04Cx
+	gpnXfG6vEY42G7K+UpIDDmYUrlva8mRQBXlcWHFbwz7jYGnvTPpwBC+do+PI0upAfQIJbf6n5ch
+	9ZvsqDXx2bRtAy8h6iEvhoosVz9djeT2fbjocImAaSke62JW2RjA0GwQ==
+X-Google-Smtp-Source: AGHT+IGiwVHdFSP3RyYjNXEtkPVmd51AlMlVK54vlvEAduXQRnI0NpLK+6bgJH5tuxlzzGRreEFkNYv6mIKVQO9CN70=
+X-Received: by 2002:a05:622a:251:b0:476:ad9d:d4f0 with SMTP id
+ d75a77b69052e-47aec4c56c6mr169031841cf.48.1745245223831; Mon, 21 Apr 2025
+ 07:20:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408124816.11584-7-larysa.zaremba@intel.com>
+References: <20250421124915.32a18d36@jic23-huawei> <20250421131539.912966-1-gshahrouzi@gmail.com>
+ <20250421145931.605df588@jic23-huawei>
+In-Reply-To: <20250421145931.605df588@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Mon, 21 Apr 2025 10:20:13 -0400
+X-Gm-Features: ATxdqUEcsfhAZuHj_DJDNyEENkD2VFIfgxR7tR6TCwWttn2zmwd8Sxn6BTIeyn0
+Message-ID: <CAKUZ0z+=Vo-QUW1ph5FKej-o6Vmv_TcX=WF=3gteDs1Lg9_w3w@mail.gmail.com>
+Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev, marcelo.schmitt1@gmail.com, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 02:47:52PM +0200, Larysa Zaremba wrote:
-> From: Phani R Burra <phani.r.burra@intel.com>
-> 
-> All send control queue messages are allocated/freed in libeth itself
-> and tracked with the unique transaction (Xn) ids until they receive
-> response or time out. Responses can be received out of order, therefore
-> transactions are stored in an array and tracked though a bitmap.
-> 
-> Pre-allocated DMA memory is used where possible. It reduces the driver
-> overhead in handling memory allocation/free and message timeouts.
-> 
-> Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-> Signed-off-by: Phani R Burra <phani.r.burra@intel.com>
-> Co-developed-by: Victor Raj <victor.raj@intel.com>
-> Signed-off-by: Victor Raj <victor.raj@intel.com>
-> Co-developed-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> ---
->  drivers/net/ethernet/intel/libeth/controlq.c | 578 +++++++++++++++++++
->  include/net/libeth/controlq.h                | 169 ++++++
->  2 files changed, 747 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/libeth/controlq.c b/drivers/net/ethernet/intel/libeth/controlq.c
-
-...
-
-> +/**
-> + * libeth_ctlq_xn_deinit - deallocate and free the transaction manager resources
-> + * @xnm: pointer to the transaction manager
-> + * @ctx: controlq context structure
-> + *
-> + * All Rx processing must be stopped beforehand.
-> + */
-> +void libeth_ctlq_xn_deinit(struct libeth_ctlq_xn_manager *xnm,
-> +			   struct libeth_ctlq_ctx *ctx)
-> +{
-> +	bool must_wait = false;
-> +	u32 i;
-> +
-> +	/* Should be no new clear bits after this */
-> +	spin_lock(&xnm->free_xns_bm_lock);
-> +		xnm->shutdown = true;
-
-nit: The line above is not correctly indented.
-
-     Flagged by Smatch.
-
-> +
-> +	for_each_clear_bit(i, xnm->free_xns_bm, LIBETH_CTLQ_MAX_XN_ENTRIES) {
-> +		struct libeth_ctlq_xn *xn = &xnm->ring[i];
-> +
-> +		spin_lock(&xn->xn_lock);
-> +
-> +		if (xn->state == LIBETH_CTLQ_XN_WAITING ||
-> +		    xn->state == LIBETH_CTLQ_XN_IDLE) {
-> +			complete(&xn->cmd_completion_event);
-> +			must_wait = true;
-> +		} else if (xn->state == LIBETH_CTLQ_XN_ASYNC) {
-> +			__libeth_ctlq_xn_push_free(xnm, xn);
-> +		}
-> +
-> +		spin_unlock(&xn->xn_lock);
-> +	}
-> +
-> +	spin_unlock(&xnm->free_xns_bm_lock);
-> +
-> +	if (must_wait)
-> +		wait_for_completion(&xnm->can_destroy);
-> +
-> +	libeth_ctlq_xn_deinit_dma(&ctx->mmio_info.pdev->dev, xnm,
-> +				  LIBETH_CTLQ_MAX_XN_ENTRIES);
-> +	kfree(xnm);
-> +	libeth_ctlq_deinit(ctx);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(libeth_ctlq_xn_deinit, "LIBETH_CP");
-
-...
+On Mon, Apr 21, 2025 at 9:59=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Mon, 21 Apr 2025 09:15:39 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > The inclinometer channels were previously defined with 14 realbits.
+> > However, the ADIS16201 datasheet states the resolution for these output
+> > channels is 12 bits (Page 14, text description; Page 15, table 7).
+> >
+> > Correct the realbits value to 12 to accurately reflect the hardware.
+> >
+> > Fixes: f7fe1d1dd5a5 ("staging: iio: new adis16201 driver")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> If you post a new version, always add the version number.
+>
+> Anyhow, I was just asking for the fixes tag, but this is fine.
+Ah, that makes sense - thanks for the clarification. I was debating
+whether to just send the Fixes tag or resend the full patch, and
+figured the full patch might make it easier to apply.
+>
+> Applied to the fixes-togreg branch of iio.git
+>
+> Thanks,
+>
+> Jonathan
+>
+> > ---
+> >  drivers/iio/accel/adis16201.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis1620=
+1.c
+> > index 982b33f6eccac..dcc8d9f2ee0f1 100644
+> > --- a/drivers/iio/accel/adis16201.c
+> > +++ b/drivers/iio/accel/adis16201.c
+> > @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channel=
+s[] =3D {
+> >                       BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> >       ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, =
+0, 12),
+> >       ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_=
+X,
+> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> > +                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+> >       ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_=
+Y,
+> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> > +                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+> >       IIO_CHAN_SOFT_TIMESTAMP(7)
+> >  };
+> >
+>
