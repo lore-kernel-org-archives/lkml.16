@@ -1,68 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D6B1E51E3;
-	Mon, 21 Apr 2025 11:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4E11E51E3;
+	Mon, 21 Apr 2025 11:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234404; cv=none; b=EBX26taShmNWJdiMoqk7tsokz9USzAErY4IlPcTrFsqCKxT242QkZL9qTmbz/x9gvN5Z6L2+muUlYLIUkqU6qxsfunjJSS/lm2fZT0AqTJ6QQv3nRHWa/oOopQ/fbs8r6Ds4SbIGLSxk21aBRbNiz57ob0oLEvZoTYAbUfnQAp4=
+	t=1745234455; cv=none; b=YzX42pFfF6lqxqlzGsjeyJKJVVzJEHeHsetY6tOsGrGKP4olpsr3b8f78fWYzb5lWuJu+2fizeEs1TvYdc//zHywfW1oPJdGjJJFJ6YHmp+p9e23QpMwSnsCqJKqGYput7etyz5raFrgX2W+N2ywBMlfAlCNJkyOtn8QMgvUJ5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234404; c=relaxed/simple;
-	bh=1/Vt+zHQK1P+ptzrOwqPzYhvDovRK7kF4kbV9IIzcSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R6FOM94TnzU1AKv1vrpaV5f1nTk9hEE6/bks/0PPc00yiYaM44tpvAeg8iR2bSogLFJqzj2Ph2abd9Q2vLgcZxsBsmtWqc93Swh56acoYpdo8amqtDyHGQMS+Q612DTQMtsaIAakT7CQFMDpwWMw15eKxU6/80BypJzcB1qtf54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPyYU9TS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745234455; c=relaxed/simple;
+	bh=hdFkc5aw4MjLw2JIT+KUBIv7V/54VZs+5iIEIh3SJCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRFcjl6eGCQsz4g/sBx84Q352LcgAkbMgB7iaC8BGPZihsdxhYP+K2YhtVq4dXVqbPE73g+0U7UzWXJ3GrnpUgWMYaxT+X/GBZGFaf3sisf7e+Pzx+t6wv25VRCInjNS5WZDcQSeMS/K7YYbo0GZxuJOfaJ82FLnjhWrzIsmIz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtIRpNgN; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPyYU9TS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B556C4CEE4;
-	Mon, 21 Apr 2025 11:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745234404;
-	bh=1/Vt+zHQK1P+ptzrOwqPzYhvDovRK7kF4kbV9IIzcSw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nPyYU9TSv9uKB724RISR3F9Azb4iFOl8JUbkG0yXWdmnzXGqS0p1GQkXKkx/uIFzD
-	 5dVm1t0CUVx20hi53CyPa8Z3h/WisWLhfwdFODEcLFEOou7YyUGY/fiRDXMUNvNINW
-	 Yp2ggz9if50TlhOVIwmmpM1G2jH/hmXzyyn3YzZ0QqYtltVF7H+Dv1XZ4sfDeVPVWN
-	 R9jiExjzMM9e/+dTTudJ1ddhc4RjVoYILZ19CVb03Pd7lZDIgAXAZyeKh9RVJoV4kf
-	 YtXQuxXQEbRh5J0xHqNOVWWfQemsqtyDYx17WWhbuYeOap0xyqoLgHzvhNecBVHuRL
-	 3o1puRwU2V/Lw==
-Date: Mon, 21 Apr 2025 12:19:58 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, Jiri Kosina <jikos@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-input@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: orientation: hid-sensor-rotation: remove
- unnecessary alignment
-Message-ID: <20250421121958.690ed909@jic23-huawei>
-In-Reply-To: <aAPM3yhLn_aEkrlH@smile.fi.intel.com>
-References: <20250418-iio-orientation-hid-sensor-rotation-remove-alignment-v1-1-6da68eae7ecf@baylibre.com>
-	<aAPM3yhLn_aEkrlH@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtIRpNgN"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22622ddcc35so56944705ad.2;
+        Mon, 21 Apr 2025 04:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745234453; x=1745839253; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sGxrIsfttRS2s8260/XWCpTi1j2sM8XQx5x9IuQNs8g=;
+        b=FtIRpNgN7frLmcIvlYPB0vc+8Kv0kTMOGT7DxGI4ha5aO1UTR9YRvrUQWgDBOQao+K
+         6WjQ1k+KEI2NJOP4AkB9OHQs06UrGtuAywwtav3PBcGLuvLPFYtZ8eLKZlyZUgmAQ1UX
+         sN4k33bA5FN641TY5tPiH1B+yf/ePTG35o5uFzajgIh5x9ymSeHleNL5OsG9RON25lsR
+         SWFlVmUNMaut/tJNj9osrEYKAHwDU/EPu7Y/w26IebIJFjbK1ssE0KJsd7DuePvFPDK2
+         0su7nN/CNWxLJJwLQSlhvkikZ93WtLv6712uTNuKL1108jfA83bY4b2txvAYFoFymKfW
+         viyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745234453; x=1745839253;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sGxrIsfttRS2s8260/XWCpTi1j2sM8XQx5x9IuQNs8g=;
+        b=tliJ76ux171rAS90+lBzb++qyjhRLOLrAD0lDkrf8IKrbQBEba7+eKbk8Lh8ujKqm5
+         Jga9VklH8Cxkw8MPoxw4Xgh4f5aPS9nwo0br/cNNTfI5K1RhIzjIz6Icg/bzKtmaFbhU
+         4hCOpv5xTusMrGBAIWFYxkAn8u9DnP1eZwKSCyTqag2VCwCqPu3heOrF8SM27/crO0vl
+         W5xyjPqKO+H8ZN+1kAaKo/61w1a28wgPbtD+Jy/YsPcVUHCmD/aPxg94PSDSNGWTuxl0
+         VOZDDDgBJKO78+qqLOQGZQFGXxkwAMk+gNSohrtusNlU6Pt/CXSYCEa7pI/mv/zxNWV3
+         CMwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjHLC7xsiqrB74+gdY2PViTJyEikSqxMbeE72XcGWN17HKMluuoPY4EpNwpYRaTZPyogQtPnbWhA2fWnQ=@vger.kernel.org, AJvYcCXi/mz0rc6Xjb+r3SSfc9Hy+0bcs2Qo5IrZDsbkcGQNM8kz3WI0R92c4CcVOhiNE2aOWjl9menc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCZMlPYWo3EIsXQE8fe+jUAvGvl/my6rE1W/GuzBdpq3kte5vT
+	TwDasVuISe4+l5YICB4oci/MJD39yJWIfFmyqIBx9KV3sash7JKU5AoCXQ==
+X-Gm-Gg: ASbGncvvclw4VJn0nkNdHCMx6+t0Z03Qq/WyDES/jFp95MQNJlV7z4piTLVUEqD55GS
+	1UQLKeLZAYZwdx3XpZqzdbfn78Fj7CgySqAuKqvpKsd91x6WVd4F4zPIIEMOm2quGT5UO+VJA+M
+	c4yYkreTqTWY0EzcjraeceiNfvHFg0iVEFCpaUUdhvBPPATdmkDtTGLFCHlNiC/WF8wSsD9pcAr
+	hQ+yStxIMOqYcXvsmkJnnaqCQaUptKBe9prnahTbg4sO9ZLMgn79JyDwMLmLg5ghHL58H3n9qY/
+	+FcpKK3tr0DJI4ABsBj46/O7H8eQZfSaRWs6/pRCTh7fftksASP9xsWP7RzT
+X-Google-Smtp-Source: AGHT+IH0bHBGNQwbcDhrSj/hVB8zKY6lA8BeCc+OkGmX99YEIabvhymOzF0+/yS2fvNNoz/rQ/6sZQ==
+X-Received: by 2002:a17:902:d4cd:b0:21f:35fd:1b6c with SMTP id d9443c01a7336-22c5364235fmr147132115ad.45.1745234453313;
+        Mon, 21 Apr 2025 04:20:53 -0700 (PDT)
+Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdbad2sm63166355ad.226.2025.04.21.04.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 04:20:52 -0700 (PDT)
+Date: Mon, 21 Apr 2025 04:20:50 -0700
+From: Richard Cochran <richardcochran@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Kory Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <aAYqEgZJP5gd8pPV@hoboy.vegasvil.org>
+References: <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+ <20250409104858.2758e68e@kmaincent-XPS-13-7390>
+ <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
+ <20250409143820.51078d31@kmaincent-XPS-13-7390>
+ <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
+ <20250409180414.19e535e5@kmaincent-XPS-13-7390>
+ <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
+ <Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
+ <Z_dGE4ZwjTgLMTju@hoboy.vegasvil.org>
+ <Z_d2xntJMPQYGQ6T@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_d2xntJMPQYGQ6T@shell.armlinux.org.uk>
 
-On Sat, 19 Apr 2025 19:18:39 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+On Thu, Apr 10, 2025 at 08:44:06AM +0100, Russell King (Oracle) wrote:
+> What else is there to test PTP support that is better?
 
-> On Fri, Apr 18, 2025 at 03:08:53PM -0500, David Lechner wrote:
-> > Remove __aligned(16) in the scan data struct in the hid-sensor-rotation
-> > driver. There is nothing in the code that requires this alignment.  
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> 
+There is nothing else, as far as I know.  So I guess you are stuck
+with ptp4l.
 
-Odd case. I wonder what motivated that...  Anyhow, I've applied
-this to the togreg branch of iio.git and pushed that out as testing.
-If there is something odd going on that the 3 of us have missed
-hopefully someone will point it out!
-
-Jonathan
-
+Sorry,
+Richard
