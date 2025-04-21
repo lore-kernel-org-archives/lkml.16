@@ -1,89 +1,135 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5922820C037;
-	Mon, 21 Apr 2025 13:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3EE13C918;
+	Mon, 21 Apr 2025 13:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745240543; cv=none; b=buEhTpnNgCtVe8IE7eyR4hnBn3ALfFJhE6mSOt0B/3QteWj9G7QrSVusFFh10jUWJCbZgb/zs8Z8dVZcowmq37faeTsONd/nnSA3pGB96ybS5fSdE8E7zMVYExgKZF0okq8u37HD/ldYD6kIl1xbyVPyaqNScPYaTHFkSmc55gw=
+	t=1745240629; cv=none; b=kzhnV9rCVUERcpjuIxHbb9P1xovlWdDmMtOVemwO0pr1lx+plv2HFzPf+TajO63kPVqnaRtsTLcIY6ndKLiHNzojiyNSv+Nrl9MAaY56aWsuLMEuykfhBjALY/ZDQZ+06iyX4eDttWWLWq28XGRZLBIGbh9lABse+nSRhYZNLxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745240543; c=relaxed/simple;
-	bh=bq9TctTgx5UnhHGLToD1nmTyePEW6dO6CqXllYYZThY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q4fzyCwDNnwfr9ld0zIkuLSoXZ6CGdT1JJJzYBaCrZkECEWnbAhS1uKrs82aevO+RFYxhKBwie84U1Xof7r+SSnvO5+uU5UBdO37tTJjCrvJLbhNcRnjELz8BmbPufxyJTpVFm/6E04973kILYndaEEFd46jXfzygWZSEbzNmZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=kTgSATTt; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1745240629; c=relaxed/simple;
+	bh=sP8/NKPFESl3jwqPE7MLSdYvKtkO2SIR8tLuFX5e2SA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RrvcAsJxKcxExtoReKkh6jmUkBidSntf9r+2iyMBZ/bPYcxubOVv21v4pzsgyGI3ILeI7sIxdsJOjNnl6cdxE1Mkzbs9Pti2uZaTkt+yHKNWmcfG31QIfVZrM+Tu1eIgTMmj2XsSj6AOJpKuHBqX3DVlXbQFMM5ChQ7yecTc2D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0JO6qpD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="kTgSATTt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E54843B19;
-	Mon, 21 Apr 2025 13:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1745240534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J2FNTsgyF2aQ6QtjVQqKA5pPx+bVu/5KrAYYRX8T8Nk=;
-	b=kTgSATTt2fIeg8A3cuasn62oe9ZgF4H9IEOs08m4l3Phu6pXJF+iKtNYR1CqIip5/iTubO
-	loxnQjilptQJW19uKGlI3EcFzAEaQwzLwCh11PzqQ2immM6OB8IVExWH18vabuWxtgCarM
-	J0h7tlX/XZBqBDADD7wq1E3OXAOba3F42A1rbo5h+8zXt+A3n/HwrM1x5pdDvcaKDX9ECg
-	pO66sTKCCOqp6olk98qKsUFBtJLbBhlDSF2LrpPJMp662M8E6qq+c3qQoowFZwvaCwkY8R
-	5EV/xWxt4RhyfL4cZFPc+GgFpKhVYlbOSuW5wegKWNlHvt08mp+SugICgxFpFw==
-Message-ID: <f178cc44-1b97-4e72-94ae-cffa08173a99@yoseli.org>
-Date: Mon, 21 Apr 2025 15:02:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0JO6qpD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BCF8C4CEE4;
+	Mon, 21 Apr 2025 13:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745240629;
+	bh=sP8/NKPFESl3jwqPE7MLSdYvKtkO2SIR8tLuFX5e2SA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=N0JO6qpDPxKWq68jvUxw8B5xKbKu3JSd/ruInsoQE179kBZggV0PgOj0z6kAAVgGz
+	 gYzhy1IgBXFuTqu0UsnKlsVYQXvmqKcHqkxLlzCVJ3XD8+vj6iHvjaHwOSPCLMT/u2
+	 Jhao2gSYTdw1k8PDt19p+pbSzhn4jICkF7Uq1A+pQs80tHzgK0wbC7b/CFNe9Je6s/
+	 ovrMeEyVxlycWhwQB/rxuOkQsM0wItaEQ8P93msCBh7ZvQKTHTpF9Ai+KtVvtI/z8T
+	 Lc7Vx25I32Ful5Jn2vq9vrihvQ8/D82xuboy/KTu4cUzrTE8ySnxrHQGKtPrq4fDzf
+	 2puXKkezucLdQ==
+Date: Mon, 21 Apr 2025 14:03:42 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+Message-ID: <20250421140342.4097c0c4@jic23-huawei>
+In-Reply-To: <CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+	<CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] m68k: mm: Replace strcpy() with strscpy() in
- hardware_proc_show()
-To: Thorsten Blum <thorsten.blum@linux.dev>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <kees@kernel.org>,
- Greg Ungerer <gerg@linux-m68k.org>
-Cc: linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
- linux-kernel@vger.kernel.org
-References: <20250421122839.363619-1-thorsten.blum@linux.dev>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20250421122839.363619-1-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedtledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheplfgvrghnqdfoihgthhgvlhcujfgruhhtsghoihhsuceojhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgqeenucggtffrrghtthgvrhhnpedtheektdeiteduieffkefhgefhtdehteeffedtvdelkeegleeiudevteeuheegfeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeeluddrudeihedrudeihedrudeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeluddrudeihedrudeihedrudeljedphhgvlhhopegludelvddrudeikedruddriegnpdhmrghilhhfrhhomhepjhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgpdhnsggprhgtphhtthhopeejpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumheslhhinhhugidruggvvhdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvrhhgsehlihhnuhigqdhmieekkhdrohhrg
- hdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thorsten,
+On Sun, 20 Apr 2025 07:36:18 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-On 21/04/2025 14:28, Thorsten Blum wrote:
-> strcpy() is deprecated; use strscpy() instead.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->   arch/m68k/kernel/setup_mm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
-> index 0fba32552836..c7e8de0d34bb 100644
-> --- a/arch/m68k/kernel/setup_mm.c
-> +++ b/arch/m68k/kernel/setup_mm.c
-> @@ -484,7 +484,7 @@ static int hardware_proc_show(struct seq_file *m, void *v)
->   	if (mach_get_model)
->   		mach_get_model(model);
->   	else
-> -		strcpy(model, "Unknown m68k");
-> +		strscpy(model, "Unknown m68k");
->   
->   	seq_printf(m, "Model:\t\t%s\n", model);
->   	for (mem = 0, i = 0; i < m68k_num_memory; i++)
+> On Sat, Apr 19, 2025 at 1:59=E2=80=AFAM David Lechner <dlechner@baylibre.=
+com> wrote:
+> >
+> > Creating a buffer of the proper size and correct alignment for use with
+> > iio_push_to_buffers_with_ts() is commonly used and not easy to get
+> > right (as seen by a number of recent fixes on the mailing list).
+> >
+> > In general, we prefer to use this pattern for creating such buffers:
+> >
+> > struct {
+> >     u16 data[2];
+> >     aligned_s64 timestamp;
+> > } buffer;
+> >
+> > However, there are many cases where a driver may have a large number of
+> > channels that can be optionally enabled or disabled in a scan or the
+> > driver might support a range of chips that have different numbers of
+> > channels or different storage sizes for the data.  In these cases, the
+> > timestamp may not always be at the same place relative to the data. We
+> > just allocate a buffer large enough for the largest possible case and
+> > don't care exactly where the timestamp ends up in the buffer.
+> >
+> > For these cases, we propose to introduce a new macro to make it easier
+> > it easier for both the authors to get it right and for readers of the
+> > code to not have to do all of the math to verify that it is correct.
+> >
+> > I have just included a few examples of drivers that can make use of this
+> > new macro, but there are dozens more. =20
+>=20
+> I'm going to answer here as the summary of my view to this series and
+> macro after your replies.
+>=20
+> So, first of all, the macro embeds alignment which is used only once
+> in practice and the alignment used in most of the cases is DMA one.
 
-As we are not using the return value, I think it is a safe replacement.
+It think that's because this is only converting a few examples.  There
+are more of these to come (9 of the ones that David first converted
+to structures then realized this was a better fit for starters!).
 
-Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+A lot might still be aligned for DMA but I'd expect to see more of
+the cases that don't need that either because they are i2c only or
+because data shuffling means the DMA hits a different buffer and we
+unscramble it into this one.
+
+> Having two alignments in a row seems a bit weird to me. Second one, if
+> we drop alignment, it means each of the users will need it. That
+> significantly increases the line size and with high probability will
+> require two LoCs to occupy. And third, based on the examples, the
+> macro doesn't help much if we don't convert drivers to properly handle
+> what they are using instead of plain u8 in all of the cases. Yes, it
+> might require quite an invasive change to a driver, but this is how I
+> see it should go.
+
+Agreed for almost all cases that a conversion to the right type
+is good to have - preferably as a precursor.  There is that one case in
+here where it depends on the specific part though which will remain
+in a messier form.
+
+>=20
+> That said, it feels like this series took a half road.
+>=20
+> I leave it to Jonothan, but I don't like it to be merged in this form.
+>=20
+
+Whilst there are no current platforms where IIO_DMA_MINALIGN is < 8
+in theory it might be in future.=20
+
+The other way around, IIO_DMA_MINALIGN is large on some architectures
+so could result in considerable additional padding and should only
+be used where it is needed.  Also that alignment is useless on the
+stack as it does nothing about data after the buffer. Hence there
+isn't really a general solution with one or the other :(
+
+So I like the idea in general as a way to make things a little better
+but agree it is still somewhat ugly.
+
+Maybe we could add...
+IIO_DECLARE_BUFFER_WITH_TS_FOR_DMA()
+Might be worth it?
+
+Jonathan=20
+
