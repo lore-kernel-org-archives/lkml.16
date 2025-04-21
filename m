@@ -1,58 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F9A261372;
-	Mon, 21 Apr 2025 13:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B39261372;
+	Mon, 21 Apr 2025 13:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243791; cv=none; b=qH3UCHbasHrbWE2pD0db9EJ82Gxaz+B3D24pyoPmx0dm1RAEdQEDPmARMcTXdBj05tzjTlLwv9CIx+Xg7UCmYfw2u7KDTSaeN44caQpEw9UVAko5jHJi7JtI4MHjzX4tPcnLDvKqHwcXD8HjBT84Upa3PUjLjGvbQp41oH+kNso=
+	t=1745243814; cv=none; b=lqx4Qh8ew1L+Zmki//w6CiG1PzAc7uTxTBMaAAKjanrtWQUzebKdzCrrUS/K5BKoHSm9+uzaMKWhjp34cFRmRqEKQLu6rm5YFvW6njOjMjlp46C4JiLh5PZB7b4KAzUeH9vN+IxcRR32lKW+L3dpDqeR3L1lMy51xgMfuyLxKMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243791; c=relaxed/simple;
-	bh=lWVnBGd2GWJpmsSY9G04fw5DXUAJg0i7cR1tyQegw3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q8t0Hh7OapXB71vuTJNTgjupxH11X7D6KuEWNhTyhX2s75H5jxA3foTLtFJB1Shy+YgGKR7dh1FDU6jsxbjryv6wcUwnU6Zj/kN3g4AN9YIHZjk/3ErsrWRT+fyVN2Hp4JZMLLM5izYpcTCLlPzFw7Kvqzv9Hd391jhxnmWu68I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3056EC4CEE4;
-	Mon, 21 Apr 2025 13:56:29 +0000 (UTC)
-Date: Mon, 21 Apr 2025 09:58:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, David Ahern <dsahern@kernel.org>,
- Juri Lelli <juri.lelli@gmail.com>, Breno Leitao <leitao@debian.org>,
- netdev@vger.kernel.org, Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, Gabriele
- Monaco <gmonaco@redhat.com>
-Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <20250421095817.49c433b7@gandalf.local.home>
-In-Reply-To: <aAY9pcvYHkYKFwZ5@krava>
-References: <20250418110104.12af6883@gandalf.local.home>
-	<aAY9pcvYHkYKFwZ5@krava>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745243814; c=relaxed/simple;
+	bh=7G952GCUAgQVq0vHrcyEXSe0jtpjyYe3cHfs5H9tRi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aCHcMweoohxK/RQVI6vg0jeHFmBPzec8Yra+z2f5KqkKFLapqs1IFxqTjPXd5HQeLSxPTKfSrGugusb1pb/zOW0XoeLXaO6kdEcvmlk1OWHQKo597UGl+tSu8iSSZiFVhyugKv3zVxN9NVOF3Mc9E+RcM1WEY5cPi+f9vw9jnXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZYmnm7tC; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYmnm7tC"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5e39d1db2so198400985a.3;
+        Mon, 21 Apr 2025 06:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745243811; x=1745848611; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U50DhOW5tvqG4LqE1ZhO21eZnqHSraou5vt7RRanSeU=;
+        b=ZYmnm7tCWx/SinX5CEtwzSyxAZBhJpwuZ57D209lQB9+d2U+MPQ5abDEQ0fD5Ezyu3
+         j7uG0UC3zAZGNfdv4GY+KEA5WzxnThDh98maNXYek2eCpjOv/eu498dKhI47fFudAKmf
+         WjF83QkmjwBWvTWC6+eokIX7TVF+pctBq2ciwcz+QvnKa1ox6bDT9gsEOtlkrWSGf82p
+         C9GCksvVB2Mu6zhKvcXDlcbt+Zb343fRd95xPr+2luyNZ0ShSqxmPUuG32cO+J02gHwm
+         8jcDAmIIazKfelq9PVhxF1w2Bjc5Biov3OYGnnRuOPWrsC3Rswnj5i6V+afnMsRSPTUt
+         VPww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745243811; x=1745848611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U50DhOW5tvqG4LqE1ZhO21eZnqHSraou5vt7RRanSeU=;
+        b=iU1/3g495IyOTtnoEBtosrt70jGXQQvPmADRM6BHoZazHVsUwnrrUsAPQxBvqFekVd
+         3s2LV4RCzMNHBNFoL69HCKQ9h0+SP5X71ksXYqqI19WoAuVFnM/t9XTrZZDnigMkbCOT
+         ISLSUBIS4IONrCGeYEkANQNMqNWKw8NtQ4lhGWaPibTozjtYuhY4mNpLDHK+aPSN2YyH
+         hmKhv7IPf9AxR8pW3o5jL2rIFIyXa3R/PuzCPtBCPQGMjg5JuuEm5Z0IIf9cRwNB3XZ/
+         QCS0QfJq1hCZA0KdKWmOp+VhB0OVj5G6ztWihBPjOrvsbhtmGUQPEbn0q0SdRUBRd8Sp
+         oEAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUywMiI8yOl2Vloq0ABXWNNnLZ5ndXAb/MdW1oq6Ypu61Kwpjycqejm02fqe8tSCTZUPCOA3qsO54k=@vger.kernel.org, AJvYcCV8SNfBZR8Zm0B6RdcpkCshssokovUsILs5gpcE3i/LNEURQgJr+KLT7fRIBVgJ+Cfr939z7C4hV9dTjoXr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzzy+9/90ow2lfVtJprr5Jz1ku3hdtNzRVDC61EzhA3ABuV8Kzz
+	LB+7Vmy7rzpj9iNtfRt7Hf0TNE/BiwhX1AaBZteX8fusyvTKP4tk1A7FygNPGo8eaBmhk4rzbbK
+	w16ioe+8xu7dOjqlItINrVKtkR+M=
+X-Gm-Gg: ASbGncsRdIMkPWssr2zz1kc2CQKwXQeS1bhJUCViIaHfctXuRktdseFgSggwzVuV5I2
+	FlYoyQhk+h9mk0QuKMcWwGzCi1S7iAuy/5BRgLIeuF50Z3SywX3eGU8LAc03vMUyDBCbuPtjoHy
+	ccafdVE3EgFHgHm4XqGFmU8oplA814+bq2d8lPEuSZHDrCXpaZ/o5H9w==
+X-Google-Smtp-Source: AGHT+IFwPfdkoy6EEJ8mTuzbNgnOACCZf4/Uyv3+B3FbTRzHLK/2P/3awjMDcxErAWDSHIh3e4LjnEgs1WpxoLtiYfY=
+X-Received: by 2002:a05:620a:2409:b0:7c5:b909:fde1 with SMTP id
+ af79cd13be357-7c927f9dd6fmr1930284085a.25.1745243811525; Mon, 21 Apr 2025
+ 06:56:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250420175419.889544-1-gshahrouzi@gmail.com> <20250421123331.634076d5@jic23-huawei>
+In-Reply-To: <20250421123331.634076d5@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Mon, 21 Apr 2025 09:56:40 -0400
+X-Gm-Features: ATxdqUEiUsxoWmmaJ2xyXvjpRnVfAONnlaUDxmAq11sV0agws9ETpfjcyGC5AFA
+Message-ID: <CAKUZ0zJ9LkkeWsFQEvAdNw4qYOeX2p=J5PKEoc3Kh9LmCAa4Jg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Fix and refactor output disable logic
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 21 Apr 2025 14:44:21 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
-
-> hi,
-> do we need the change also for DECLARE_TRACE_WRITABLE?
-
-Probably ;-)
-
-> I needed change below for bpf selftest kmod
-
-Thanks, I'll fold this in.
-
-I'll make a more formal patch if nobody has any objections.
-
--- Steve
+On Mon, Apr 21, 2025 at 7:33=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Sun, 20 Apr 2025 13:54:16 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > Patch 1 includes the initial fix.
+> >
+> > Patch 2 refactors the code to use the out_altvoltage_powerdown ABI.
+> >
+> > Patch 3 adds small improvements by minimizing the size of types and
+> > doing a redundancy check.
+> >
+> > Not sure whether to include a read function for powerdown as well since
+> > all the other attributes only had write permissions. I can also do this
+> > for the other attributes to help modernize the driver.
+> >
+> > Changes in v3:
+> >       - Include version log in cover letter.
+> Just post it in reply to that v2!
+Got it.
+>
+> Note though that this needs a rebase as I mentioned in the thread wrt to
+> the original fix. I'll take a quick look though to see if I can spot
+> anything else for v4.
+Got it.
+>
+> > Changes in v2:
+> >       - Refactor and make small improvements ontop of the initial fix.
+> >
+> > Gabriel Shahrouzi (3):
+> >   iio: frequency: Use SLEEP bit instead of RESET to disable output
+> >   staging: iio: ad9832: Refactor powerdown control
+> >   staging: iio: ad9832: Add minor improvements to ad9832_write_powerdow=
+n
+> >
+> >  drivers/staging/iio/frequency/ad9832.c | 50 ++++++++++++++++++--------
+> >  1 file changed, 36 insertions(+), 14 deletions(-)
+> >
+>
