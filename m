@@ -1,173 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E2C6EB79;
-	Mon, 21 Apr 2025 10:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 0F14C25FA0A;
+	Mon, 21 Apr 2025 10:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745232547; cv=none; b=IKwHxYlpCWJhvmHt7T/WeCopiNEaGW2Td6B9MiOIpnVSQoNikZeXW0ql+HBHaHSXePtFEQxHoQNYiXdy+WEgmT96XCX5+sCx13/P5AV8hNg0LB21+KEGWwXEXl+EUVac+sKXoL+urfLUap+Uyc81dL84A4LEBO8RHtgj+8aiRgo=
+	t=1745232664; cv=none; b=ktdKeZVfZbQksdURXFLYhZ7aGEBmSK1zH5J/XXp1wkSOH3mSjHOOh7+WEt6h8SBBHwG4pcURcidcdLD+bAcxvuMAYIQ8gTGpnEtCMa69EcwzjtF9QLmy7sRsxvFE3pOloabwChLmLjSvkHrkoM6EL0QFV2fPGX5QBk2TPeKR15M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745232547; c=relaxed/simple;
-	bh=Vsf1C5Sz0Rt9Ggnznv6TR+Hr6QRJuvi3rx7RTg71Q1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h/lXf4V++F0wDMIv52sEr+jRHPCRskcXY9Zl2LrVOd5nZZxlf+4nxofRa1ypjP1kDmaSljSLElAYSxRxLQwh66muZQqKruUQGb7+yWR5Si71KzWk/ovYQRhW+8HxeeXV72JLB90lY/1Z3ZmdeluBAeZsKEpfE6SbcRHfkA6MFDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCg+XydH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745232664; c=relaxed/simple;
+	bh=duhNAeM4qnQvRG9T9MEItkigvOCJnMpC4Lj0H5VjsdM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Shu+HhadvyXc5vZ+RjyGBoyMOJ5GVaY3PZX+jbjoJ2m4PGnJ5Y0tyzJV9PhpoUZpZg0Ja/Q3vl0isMELsG/eIkecMiza2x2Ag7joSK/Un2C2fPU9DEN6l/hnHrIMEvkAd9tiHB7riBo5IViLawTK5dv/FJtuYFcO+cpPhH5xuaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=ohUZW4wr; arc=none smtp.client-ip=111.202.70.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCg+XydH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D9BC4CEE4;
-	Mon, 21 Apr 2025 10:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745232547;
-	bh=Vsf1C5Sz0Rt9Ggnznv6TR+Hr6QRJuvi3rx7RTg71Q1A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qCg+XydHRHs0kfi7NTDKAmAlUuMpXK8WhbpAGFD2ceeGIB/b/dLbi3HC9yMMcFaia
-	 O84FKlhvWio3jwvuZpNzzgEC5eX9YCzdeJEcnVwoZ2UQkAvMqo5UJ5SLE0jXqGhVQF
-	 Rp9Dv4eZmZeWB+ag8miyWNaGQIKl+7GfYtwvGK5xp1vQAdLwAWrFAtw4cSLpLIhhht
-	 zZVSnb6eJjcHXShBm/1XuW0C3l9udVuTzyg/prwqqFG183/yKF/wbRiiJGapSx88VQ
-	 WhTTd1ZeTf6yAPs/9kSYnZnQgPGM8Mctm6Wmx2wDZeyNNjkhUZUIZx9ITCOsUNeLjz
-	 mnMzA8ILhtEXw==
-Date: Mon, 21 Apr 2025 11:48:58 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Jean-Baptiste Maneyrol via B4 Relay
- <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Cc: jean-baptiste.maneyrol@tdk.com, Lars-Peter Clausen <lars@metafoo.de>,
- David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] iio: imu: inv_icm42600: add WoM support
-Message-ID: <20250421114858.72a726c9@jic23-huawei>
-In-Reply-To: <20250418-losd-3-inv-icm42600-add-wom-support-v3-1-7a180af02bfe@tdk.com>
-References: <20250418-losd-3-inv-icm42600-add-wom-support-v3-0-7a180af02bfe@tdk.com>
-	<20250418-losd-3-inv-icm42600-add-wom-support-v3-1-7a180af02bfe@tdk.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="ohUZW4wr"
+Received: from mail.didiglobal.com (unknown [10.79.71.37])
+	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id CC6AC192BB6571;
+	Mon, 21 Apr 2025 18:49:56 +0800 (CST)
+Received: from BJ01-ACTMBX-08.didichuxing.com (10.79.64.15) by
+ BJ03-ACTMBX-01.didichuxing.com (10.79.71.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Mon, 21 Apr 2025 18:50:30 +0800
+Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
+ BJ01-ACTMBX-08.didichuxing.com (10.79.64.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Mon, 21 Apr 2025 18:50:29 +0800
+Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787]) by
+ BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787%7]) with mapi id
+ 15.02.1748.010; Mon, 21 Apr 2025 18:50:29 +0800
+X-MD-Sfrom: chentaotao@didiglobal.com
+X-MD-SrcIP: 10.79.71.37
+From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
+To: "tytso@mit.edu" <tytso@mit.edu>, "adilger.kernel@dilger.ca"
+	<adilger.kernel@dilger.ca>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "willy@infradead.org" <willy@infradead.org>
+CC: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
+Subject: [PATCH 0/3] ext4: Implement IOCB_DONTCACHE handling
+Thread-Topic: [PATCH 0/3] ext4: Implement IOCB_DONTCACHE handling
+Thread-Index: AQHbsqsyiCqqgNZbJ0inKTDAh3pcrQ==
+Date: Mon, 21 Apr 2025 10:50:29 +0000
+Message-ID: <20250421105026.19577-1-chentaotao@didiglobal.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
+	s=2025; t=1745232621;
+	bh=duhNAeM4qnQvRG9T9MEItkigvOCJnMpC4Lj0H5VjsdM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
+	b=ohUZW4wr63PVheohkKLXU0hAIVgu6yW994GThJgx/1TTecRjDeW2GzlsmX2a3MxGT
+	 5Qs5HaeyjOfBSSnLDqmZsXBnBJ92NWEjg4tVcjvEBEfyYxU5Gyo/HykiIZ60TMUm/T
+	 HrBhat3Y/ZiPMAfAH3qKEF0PKxPHKQDuB+d1afQg=
 
-On Fri, 18 Apr 2025 18:19:02 +0200
-Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote:
-
-> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> 
-> Add WoM as accel roc rising x|y|z event.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Hi Jean-Baptiste,
-
-One thing on mixing gotos and scoped_guard().  It might be fine but we've
-had weird issues with compilers and this stuff + the guidance in cleanup.h
-suggests not mixing the two approaches.
-
-Easy enough to sort out here with a helper function and I think the
-end result will both avoid that issue and be easier to read.
-
-Jonathan
-
-> ---
->  drivers/iio/imu/inv_icm42600/inv_icm42600.h        |  54 +++-
->  drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c  | 279 ++++++++++++++++++++-
->  drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c |   2 +-
->  drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   |  58 +++++
->  4 files changed, 385 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> index f893dbe6996506a33eb5d3be47e6765a923665c9..bcf588a048836f909c26908f0677833303a94ef9 100644
-> --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-> @@ -135,6 +135,14 @@ struct inv_icm42600_suspended {
->  	bool temp;
->  };
->  
-> +struct inv_icm42600_apex {
-> +	unsigned int on;
-> +	struct {
-> +		uint64_t value;
-> +		bool enable;
-> +	} wom;
-> +};
-> +
->  /**
->   *  struct inv_icm42600_state - driver state variables
->   *  @lock:		lock for serializing multiple registers access.
-> @@ -148,9 +156,10 @@ struct inv_icm42600_suspended {
->   *  @suspended:		suspended sensors configuration.
->   *  @indio_gyro:	gyroscope IIO device.
->   *  @indio_accel:	accelerometer IIO device.
-> - *  @buffer:		data transfer buffer aligned for DMA.
-> - *  @fifo:		FIFO management structure.
->   *  @timestamp:		interrupt timestamps.
-> + *  @apex:		APEX features management.
-
-Maybe give a little more info on what APEX is somewhere?
-
-
-
-> +static int inv_icm42600_accel_enable_wom(struct iio_dev *indio_dev)
-> +{
-> +	struct inv_icm42600_state *st = iio_device_get_drvdata(indio_dev);
-> +	struct inv_icm42600_sensor_state *accel_st = iio_priv(indio_dev);
-> +	struct device *pdev = regmap_get_device(st->map);
-> +	struct inv_icm42600_sensor_conf conf = INV_ICM42600_SENSOR_CONF_INIT;
-> +	unsigned int sleep_ms = 0;
-> +	int ret;
-> +
-> +	ret = pm_runtime_resume_and_get(pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	scoped_guard(mutex, &st->lock) {
-> +		/* turn on accel sensor */
-> +		conf.mode = accel_st->power_mode;
-> +		conf.filter = accel_st->filter;
-> +		ret = inv_icm42600_set_accel_conf(st, &conf, &sleep_ms);
-> +		if (ret)
-> +			goto error_suspend;
-
-As below.  Compilers are not great at the more complex scope vs goto stuff.
-This one may be fine buf in general we avoid it.
-
-> +	}
-> +
-> +	if (sleep_ms)
-> +		msleep(sleep_ms);
-> +
-> +	scoped_guard(mutex, &st->lock) {
-> +		ret = inv_icm42600_enable_wom(st);
-> +		if (ret)
-> +			goto error_suspend;
-
-This doesn't follow the guidance in cleanup.h about never mixing gotos and
-scoped cleanup. Two options here, either factor out everthing after the
-pm handling and have
-	ret = pm_runtime_resume_and_get(pdev);
-	if (ret)
-		return ret;
-
-	ret = __inv_icm62600_accel_enabled_wom();
-	if (ret) {
-		pm_runtime_mark_last_busy(pdev);
-		pm_runtime_put_autosuspend(pdev)'
-		return ret;
-	}
-
-	return 0;
-
-The rest of the cases are fine.
-
-> +		st->apex.on++;
-> +		st->apex.wom.enable = true;
-> +	}
-> +
-> +	return 0;
-> +
-> +error_suspend:
-> +	pm_runtime_mark_last_busy(pdev);
-> +	pm_runtime_put_autosuspend(pdev);
-> +	return ret;
-> +}
-
+RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClRoaXMgc2Vy
+aWVzIGltcGxlbWVudHMgcHJvcGVyIGhhbmRsaW5nIG9mIElPQ0JfRE9OVENBQ0hFIGZsYWcNCmlu
+IGV4dDQgZmlsZXN5c3RlbS4NCg0KVGFvdGFvIENoZW4gKDMpOg0KICBtbS9maWxlbWFwOiBpbml0
+aWFsaXplIGZzZGF0YSB3aXRoIGlvY2ItPmtpX2ZsYWdzDQogIGV4dDQ6IGltcGxlbWVudCBJT0NC
+X0RPTlRDQUNIRSBoYW5kbGluZyBpbiB3cml0ZSBvcGVyYXRpb25zDQogIGV4dDQ6IHN1cHBvcnQg
+Rk9QX0RPTlRDQUNIRSBmbGFnDQoNCiBmcy9leHQ0L2ZpbGUuYyAgfCAgMiArLQ0KIGZzL2V4dDQv
+aW5vZGUuYyB8IDIxICsrKysrKysrKysrKysrKysrLS0tLQ0KIG1tL2ZpbGVtYXAuYyAgICB8ICA2
+ICsrKysrLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
+LSkNCg0KLS0gDQoyLjM0LjENCg==
