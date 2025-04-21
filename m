@@ -1,73 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC90EEDE
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E514D8D1
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745219868; cv=none; b=njq/lYRj2wEyBDr45eIOgHOOA7ue1QvgPQ0R+4JXJQF9BISDt0WSZ6Chvvn+nAmDC0n286yVKYtMvaSEo98tUayWw/Eo0cWgj0Ws2yoiCLCPOPQyBORzOsmKNMpz9cAnVtwbnN6SJ3aZYJO/xhp+Zp7HYaXF5GF0UrWwIDZkrFU=
+	t=1745220009; cv=none; b=SWCEPKyYM3EBtSWHAdly9oDOXPJ6yUy0qI67GH0eDaehfEPzI8bia8WvMk0GZ3W/0tz2uS8NCn6SIBU6t9cGKNZuAZd2uudxzMT5o9e3eTRSlRVuONoNek3A4HHEc1knQHKK1KRG/h6VZjNLAurOiQ6BcbzKGnfHDrA36L16DOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745219868; c=relaxed/simple;
-	bh=z4upDJZci7xHnzViGeYDSLslIrODk6y5axDmehZGDBg=;
+	s=arc-20240116; t=1745220009; c=relaxed/simple;
+	bh=ICkV05Pc5E2m+DevuUWOj5eX/6YUssTtiLbkIZDzj4s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hXZDpC2s9D47C1Sdwe9vc/wjMaIjNi20LPnignfSR8W6RrofcqTa2YVBZg7VFSx9BdTIBY1NL36VlR2ussNvxMdbuFsPRX9Hz3ZkgVxKF7Onh6WxeEiFnXtOC3ypWSM7zbIA1nSm+Nh7ak7At8ucbiVquoEh3CogaDAc9TjhcjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WLtaX82A; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=MyXDtaujUB6s+MvU5Q/7+6Yu2mag7/L47ieLNDMac9au/cbXl293A9vU7Gb+XEHDVDCl8a2jFJlZYyKaoRQnQY9l8HUSKorR6IRZNcjULdH0n+AnNJWv9h8kbLNt6+8bIz91QcIEDPDVyQypdwrOIytgFwoHVXoAm5gbOOMa84o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UbYAWIvn; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLtaX82A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UbYAWIvn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745219864;
+	s=mimecast20190719; t=1745220006;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=T5mW9NCCHCkay/jPJBmMQL4bt1khz2U8sjcPo5OyGgM=;
-	b=WLtaX82ANZZq+llUHR5s1TzYNrgRrtFC94rVWO6oBh0KpLHicrewVTtbAPSVnaMDo11QBb
-	BK87G+ygZyhL/dFoDQ+6oXnJC9SS8Obe1HzfVxhnEMmBBO83YGBoDYZ8n505gpJ/rm6lii
-	ZOiV299TcIHS2/YoL2ufjgGUFw+Xg1I=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=BVm/35slZ//afajKPGTr6wSA/8XwvAGcEMaTfmHHVFA=;
+	b=UbYAWIvnuAGuP71gwtUB8MW8HKgODJlgqxqvxzIvUM7T4XH/Y0i5R8TXuOmIbkEu8MnI92
+	c09oDgzxRV3z5eIXAH1YfuerYPyxiU5T7uMnbzNLggKJ/UtBHXiGUnfKti0K1YnMlbZDQN
+	ymDmqWMfKc6ZDg8KlUmgCjvBWxdmUhQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-557-VF3ltyNQOCyHjaTfsIdhTw-1; Mon, 21 Apr 2025 03:17:40 -0400
-X-MC-Unique: VF3ltyNQOCyHjaTfsIdhTw-1
-X-Mimecast-MFC-AGG-ID: VF3ltyNQOCyHjaTfsIdhTw_1745219859
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391492acb59so1744932f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 00:17:40 -0700 (PDT)
+ us-mta-612-1UFylFnKPrWAPsLvfnNjtw-1; Mon, 21 Apr 2025 03:20:04 -0400
+X-MC-Unique: 1UFylFnKPrWAPsLvfnNjtw-1
+X-Mimecast-MFC-AGG-ID: 1UFylFnKPrWAPsLvfnNjtw_1745220003
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912a0439afso1101789f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 00:20:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745219859; x=1745824659;
+        d=1e100.net; s=20230601; t=1745220003; x=1745824803;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=T5mW9NCCHCkay/jPJBmMQL4bt1khz2U8sjcPo5OyGgM=;
-        b=F2mlrR8YAK1H2Rt/MBJ1T8XpBWkgZR6Bx/MDyIawzja84Pmsjk26QYZZ2asxh/oM+V
-         yQyzU7d6xOg48RsF9uGCe+Mb8+Xoa1+oonYKIgcwERLNBpuo3vyZBPaCFnvMrMqn8QOE
-         Fq8VZBR7w+fh4wyxpplZLPPfIe2ubdxHHgx8F1AHw9aHILiRcjZLJNCq93xCzCajd0uz
-         oFkjSP3o2Ldeh5MxmTfiS1w5LLRTOvsa5/ANvI71vFxlYBrLISe2yjtND1fGCkXSF/qP
-         Kj5/tcMbulvgBc0T1YKQPuxHHDHKRA5MoY86+CTrQNcj+ujH0T2QOwBObT/wOilVtC5V
-         7wMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVK0JOegeQWFU2AhyP4bJx9TqA0hHsJgNGSWGEWjSebPkjAQiEd/Vf7HaEsiXvG+urfdhVOkjxj9y0tAEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZCKG1tVii3mJHh3f4x/ott7dXJzlio7MdyYy31R7B2tYsnyeu
-	gB4G3KeUJMeMBN8mlOAx1UuOPahyWR1Ig+4dc4a6FQBsBU9wEwrrXCAcam22R4ZaIMHZ5/sndi5
-	WzgioBcgw+qY9apep4Mkk4YUHSer0HYsGvQLR3Y9ttz+C3LdZCbkwIOhAgqsDXg==
-X-Gm-Gg: ASbGnctaWb//UzgNBHH9sPHiVWrSatoOvemz4QAwUz/p4rSd+GEHOO1l7dDcYOnFpcs
-	mQo03pvpnXziiAfmUsh2EhYqWSIPrpp9PxHTKAvbq498ypcB/72E34CfpRvch3K9pwEvRo01egc
-	9R7XXAak3IR8MAzfv592o7oVq78wXrSbh8nURxSky2mRqjYuXwQ7A3eq5hgnyMjg3q97alwi5Sm
-	UCRUWyGB4wnFvKyunUc8IhJXuKCAsZhAg/16+OM59nWnVP40iAueZZzh5NeROCjVlOS1idRh/8u
-	VCya28qvzGLGHFfvHzIJyO9hf8r+MxFAbRFr9UnLGUyJq9tGFRjmkSDLhSwy3BxHbLFNHI73JxS
-	DSi4Qc8jHZDuo2kz5z/xzXt0uUGOFoNGm7qrD960=
-X-Received: by 2002:a5d:648d:0:b0:39c:141b:904a with SMTP id ffacd0b85a97d-39efba2ca27mr7845171f8f.11.1745219859453;
-        Mon, 21 Apr 2025 00:17:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEa5JpNd0bUwH4c2uwFSJFx8GqNF4KiWfX89tD5Q6hv3uVQ6xAc5kB997MPn1gXgsFzCR/NCw==
-X-Received: by 2002:a5d:648d:0:b0:39c:141b:904a with SMTP id ffacd0b85a97d-39efba2ca27mr7845148f8f.11.1745219859055;
-        Mon, 21 Apr 2025 00:17:39 -0700 (PDT)
+        bh=BVm/35slZ//afajKPGTr6wSA/8XwvAGcEMaTfmHHVFA=;
+        b=YlrAiou2kMlxBehd6jnlkMH8DEvMYuuFNyTYBTsrdITWAtB/SP2/FJczf0uOA8VHiw
+         2RSmrRLyB/V5G/zUTSCBs5Wvg/y6qQI0Dvs0A9KTfXgYVi3h2HlyXhQNaSGJmjMZ/ndy
+         xc0eqHc/v+Q0uaqjcZ7L4x469yP6hNbgD1ADOKhmMbP5x8E6l/Qi+8e8fzTHB0CxerF6
+         aRG0CKWO3C34u7Mtbep8Fk1B5zP9/3iF1cf20rLzl23LYanjr9psC2WLlEFUZl2JEGMZ
+         RPrgAmVbnoTxoFHXiA9vD56PJO2NQWcVNZroa+xFRF1aiNY7XfwPE5GaONnpITy0JE3X
+         qbsQ==
+X-Gm-Message-State: AOJu0YzP4Z0Z0a6NkTVa8nL149XVoiKVSOiI4P4vN1d2LjXqhrSAUQgL
+	ofkYkNBfKQgrgWHlB2aXiyAf/TCq/jGOAp8GqiTv291SetPfpbVFg4LSDIC6gdErePhMKPipNlT
+	q1WEHLcIQAvMY3Ht22QiM7/KCkt38XmauMVc6QpqXtHlqNC9a1jB6zuCAibmMqg==
+X-Gm-Gg: ASbGncvZuGLRBlKOH7dGnzgo9bcs9zSmiNamLQ41d3oKgyZFSd/kMdOBhPuXIP/c31M
+	8GKspHVZ9w02/xJ+HC0C92hOVjkCV4OgIMBWIYagAGPdIMIpiGPtnp9yFma55nSLuKbrlnI7FY6
+	KXYBgEaDxD2UG2aaC6JcKYRMYov8H21Dk4EqmG0xHusVQiB5JbWxWnWvJNpPIFnCG+Z4ZQmPEjN
+	iP3VSvErRvSvrR4cQ+X4hHI0mgKzk6fXIskmYmLAa/dmdaTikcQy6uJoFdhIWmfUjz1B3REIxV/
+	NqL38vKy1MuXsAiFBWjEcWyCHuXtuUS5WYc3GI58sp4aIaCNCEoCP9mhdUZ14yeV3B0M3jlllnU
+	r3zIFtSIrHuBaDnbslYXi2cDLegPfoR4F3OzB5+4=
+X-Received: by 2002:a05:6000:40cd:b0:39a:d32c:fb5e with SMTP id ffacd0b85a97d-39efba3cbe4mr8305380f8f.21.1745220003121;
+        Mon, 21 Apr 2025 00:20:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFB0GLaOn+aTgyeiw7B3/d2SBPmHHapdEtSzBIqu8UdMb8jCHsdrC55UgFoLrXMrUsa6f7fDw==
+X-Received: by 2002:a05:6000:40cd:b0:39a:d32c:fb5e with SMTP id ffacd0b85a97d-39efba3cbe4mr8305361f8f.21.1745220002697;
+        Mon, 21 Apr 2025 00:20:02 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bf20sm10774796f8f.48.2025.04.21.00.17.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4c8fsm10763640f8f.89.2025.04.21.00.20.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 00:17:38 -0700 (PDT)
-Message-ID: <d562572c-6b0d-443f-bcae-b862338fa7f7@redhat.com>
-Date: Mon, 21 Apr 2025 09:17:37 +0200
+        Mon, 21 Apr 2025 00:20:02 -0700 (PDT)
+Message-ID: <f345f393-9715-4d4a-ad1f-19a30dc3d7ef@redhat.com>
+Date: Mon, 21 Apr 2025 09:20:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,16 +74,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for
- folio_test_large_maybe_mapped_shared()
-To: Lance Yang <lance.yang@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: mingzhe.yang@ly.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Lance Yang <ioworker0@gmail.com>
-References: <20250418152228.20545-1-lance.yang@linux.dev>
- <20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
- <641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
- <1c81b176893c349dfb12feaebd17e0694fedec0b@linux.dev>
+Subject: Re: [PATCH v3] mm/rmap: rename page__anon_vma to anon_vma for
+ consistency
+To: Ye Liu <ye.liu@linux.dev>, akpm@linux-foundation.org,
+ nao.horiguchi@gmail.com, linmiaohe@huawei.com
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, harry.yoo@oracle.com,
+ riel@surriel.com, vbabka@suse.cz, liuye@kylinos.cn
+References: <20250421015823.32009-1-ye.liu@linux.dev>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -132,152 +129,34 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <1c81b176893c349dfb12feaebd17e0694fedec0b@linux.dev>
+In-Reply-To: <20250421015823.32009-1-ye.liu@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 21.04.25 07:16, Lance Yang wrote:
-> April 21, 2025 at 1:13 PM, "Lance Yang" <lance.yang@linux.dev> wrote:
+On 21.04.25 03:58, Ye Liu wrote:
+> From: Ye Liu <liuye@kylinos.cn>
 > 
+> Renamed local variable page__anon_vma in page_address_in_vma() to
+> anon_vma. The previous naming convention of using double underscores
+> (__) is unnecessary and inconsistent with typical kernel style, which uses
+> single underscores to denote local variables. Also updated comments to
+> reflect the new variable name.
 > 
+> Functionality unchanged.
 > 
->>
->> April 21, 2025 at 7:29 AM, "Andrew Morton" <akpm@linux-foundation.org> wrote:
->>
->>>
->>> On Fri, 18 Apr 2025 23:22:28 +0800 Lance Yang <ioworker0@gmail.com> wrote:
->>>
->>>   
->>>
->>>   
->>>
->>>   From: Lance Yang <lance.yang@linux.dev>
->>>
->>>   
->>>
->>>   
->>>
->>>   
->>>
->>>   To prevent folio_test_large_maybe_mapped_shared() from being used without
->>>
->>>   
->>>
->>>   CONFIG_MM_ID, we add a compile-time check rather than wrapping it in
->>>
->>>   
->>>
->>>   '#ifdef', avoiding even more #ifdef in callers that already use
->>>
->>>   
->>>
->>>   IS_ENABLED(CONFIG_MM_ID).
->>>
->>>   
->>>
->>>   
->>>
->>>   
->>>
->>>   Also, we used plenty of IS_ENABLED() on purpose to keep the code free of
->>>
->>>   
->>>
->>>   '#ifdef' mess.
->>>
->>>   
->>>
->>>   
->>>
->>>   I dunno, this just seems really whacky.
->>>
->>
->> I'd hope David could leave some comments on that.
->>
->>>
->>> --- a/include/linux/page-flags.h
->>>
->>>   
->>>
->>>   +++ b/include/linux/page-flags.h
->>>
->>>   
->>>
->>>   @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const struct folio *folio)
->>>
->>>   
->>>
->>>   
->>>
->>>   
->>>
->>>   static inline bool folio_test_large_maybe_mapped_shared(const struct folio *folio)
->>>
->>>   
->>>
->>>   {
->>>
->>>   
->>>
->>>   + /* This function should never be called without CONFIG_MM_ID enabled. */
->>>
->>>   
->>>
->>>   
->>>
->>>   A correcter comment would be "This function should never be compiled
->>>
->>>   
->>>
->>>   without CONFIG_MM_ID enabled".
->>>
->>
->> Yes, that is more exact ;)
->>
->>>
->>> Which lets the cat out of the bag. Why the heck is it being compiled
->>>
->>>   
->>>
->>>   with CONFIG_MM_ID=n?? We have tools to prevent that.
->>>
->>>   
->>>
->>>   Can we just slap "#ifdef CONFIG_MM_ID" around the whole function? It
->>>
->>>   
->>>
->>>   should have no callers, right? If the linker ends up complaining then
->>>
->>>   
->>>
->>>   something went wrong.
->>>
->>
->> The reason we can't simply add #ifdef CONFIG_MM_ID around folio_test_large_maybe_mapped_shared()
->>
->> is because its caller folio_maybe_mapped_shared() relies on IS_ENABLED(CONFIG_MM_ID).
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
 > 
-> static inline bool folio_maybe_mapped_shared(struct folio *folio)
-> {
->          [...]
->          if (!IS_ENABLED(CONFIG_MM_ID))
->                  return true;
->          [...]
->          return folio_test_large_maybe_mapped_shared(folio);
-> }
-> 
-> folio_maybe_mapped_shared() is always available - doesn't depend on
-> CONFIG_MM_ID or CONFIG_TRANSPARENT_HUGEPAGE.
+> Changes in v3:
+> - Rename variable from page_anon_vma to anon_vma.
+> ---
 
-We could #ifdef in folio_maybe_mapped_shared(), which I find rather 
-suboptimal ...
+Agreed to Lorenzo's comments ... tearing up patch sets is tricky :)
 
-or simply inline it into the 4 callers.
+Patch content LGTM
 
-That might be the best approach, given that only selected user should be 
-using the low-level primitive and everybody else should be using 
-folio_maybe_mapped_shared().
+Acked-by: David Hildenbrand <david@redhat.com>
+
+Thanks!
 
 -- 
 Cheers,
