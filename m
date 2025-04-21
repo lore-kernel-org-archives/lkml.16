@@ -1,147 +1,102 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BCB1C84A8;
-	Mon, 21 Apr 2025 11:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92B22561DA;
+	Mon, 21 Apr 2025 11:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234147; cv=none; b=udj7s3kpK5YjV3qvFcayRpMoItYMxIaf8Mn1LvdNoYnS22LuAUdNjzoc8CaUM39D4eWerqr01nS610ZcwJ0Zxf8cPw3qpE81GZSv9utxCSh7eUC0edf/0c06vNYnPLAOV+Ysq9NURLvsq2xuT/fJCq+HcyYYGaUaZ2Lg0Q+se2Q=
+	t=1745234283; cv=none; b=ptTan9N17QYO5/Ak/T3Lwabzq7cR9ziis93UXH9iGhjoINV/hdEhg+AurcyWcdRon3WBd4nOY8F21Oub9oKK9W9jipYy3qHgK7+mVIBd9nauleBxfojceuvhvwLDXmJuAFmhwL0ghoR3geN+1JRsuTcM0UTBwMDW8O5BTappIKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234147; c=relaxed/simple;
-	bh=gb6H71H255jNIQkaN9PNs3CzBVkNE1XHrGeu4wvrND8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qL3CarB/vSsu0B9EEBqiVlZbwt5lL5ISsP2Igc+Qz7NaZkLOmq74OkAM1gt50mtGqOFG6BNNda/qVmswdt/TQTp2wamoyaFazF5OZb0JNWEW0YJ+XaB/NZ6dd1BikHCaXyCtvWYw5LpwKeUB72T6CB6CPUQF4MVjfalW3/Kxbi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=v7C3ReX7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745234283; c=relaxed/simple;
+	bh=USOlz+eqtQB3+FtKVUspdDKmHiwUiEaAqh+xoaci2Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZuNmsbDrUgNL4aP4V4aXEp2X9joXdL7r/2BTAQGAHHVsbwG7uCCMoAb0b27L1FUV5na6Us55OIvvxUCk9/MezbV1ObYDTaLLHKiIaL1igfAS93QpRyE0sqYymfy0vOD6wB2aeU6M54MWLu5bIxHsNCWLs1IZs6//Famx2hDjv6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+mQihMe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="v7C3ReX7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7E28D6D5;
-	Mon, 21 Apr 2025 13:13:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745234016;
-	bh=gb6H71H255jNIQkaN9PNs3CzBVkNE1XHrGeu4wvrND8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v7C3ReX7dAS7/S+1xECf/hq7AKFeoHuwwvUK9RU53N2mLm6QGkp5YCW1tV24ILlW0
-	 Tfwcy30tsWQeX9qG/EXO9gJlZus5ODLcZ9A2RNYpVzak3c3bW40qcpYowpxoTz9eTJ
-	 sQnuKVtk6V9en9dY9MOrARsyXDtaQ0XpHfhy2ZVs=
-Date: Mon, 21 Apr 2025 14:15:41 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 01/13] dt-bindings: media: ti,j721e-csi2rx-shim:
- Support 32 dma chans
-Message-ID: <20250421111541.GA29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-2-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+mQihMe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45781C4CEE4;
+	Mon, 21 Apr 2025 11:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745234283;
+	bh=USOlz+eqtQB3+FtKVUspdDKmHiwUiEaAqh+xoaci2Lo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u+mQihMeljmxRToq4vLWJkTWNB90Va0fKqkBYzu8vYC/MxjJU+CG72R4LBbJjLo91
+	 BoCMnbHxkzQ4LOxaYbDmIgJ3nuQN1MPCHL8NgOEvFlsGvdRUSoWFv0CfMKT3FZVeL0
+	 IRECzDhQsSUeucp1L8AUQhNisZ3q6aICkBfUhTkIGIaHjWJFvNa/AAHnTMmqgJn/jO
+	 psgr+Q6iCj5qDorPs38PyrAyftZMpqSug/e2BC/U96v26UwTTTbEqbWdyW//8Tp143
+	 bSrG78Fde/w6848U8BZXQom1OxXevS9DAtMMEs8A0QXlLOfFyH8P74CUfbmzAfuOWF
+	 TkMaau80HEy7Q==
+Date: Mon, 21 Apr 2025 12:17:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
+ <andy@kernel.org>, Eugen Hristev <eugen.hristev@linaro.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Andreas Klinger <ak@it-klinger.de>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 00/10] iio: prefer aligned_s64 timestamp (round 1)
+Message-ID: <20250421121752.5a7a178e@jic23-huawei>
+In-Reply-To: <abe0db44-b27f-4cea-9edc-862e4096f80c@baylibre.com>
+References: <20250418-iio-prefer-aligned_s64-timestamp-v1-0-4c6080710516@baylibre.com>
+	<abe0db44-b27f-4cea-9edc-862e4096f80c@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-2-r-donadkar@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Rishikesh,
+On Fri, 18 Apr 2025 18:05:42 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-Thank you for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:42PM +0530, Rishikesh Donadkar wrote:
-> From: Jai Luthra <j-luthra@ti.com>
+> On 4/18/25 2:58 PM, David Lechner wrote:
+> > While reviewing the recent conversion to iio_push_to_buffers_with_ts(),
+> > I found it very time-consuming to check the correctness of the buffers
+> > passed to that function when they used an array with extra room at the
+> > end for a timestamp. And we still managed find a few that were wrongly
+> > sized or not properly aligned despite several efforts in the past to
+> > audit these for correctness already.
+> > 
+> > Even though these ones look to be correct, it will still be easier for
+> > future readers of the code if we follow the pattern of using a struct
+> > with the array and timestamp instead.
+> > 
+> > For example, it is much easier to see that:
+> > 
+> > struct {
+> > 	__be32 data[3];
+> > 	aligned_s64 timestamp;
+> > } buffer;
+> >   
+> After sending [1], I realized that some (perhaps many) of these would actually
+> be a better candidate for the proposed IIO_DECLARE_BUFFER_WITH_TS macro rather
+> that converting to the struct style as above.
 > 
-> The CSI2RX SHIM IP can support 32x DMA channels. These can be used to
-> split incoming "streams" of data on the CSI-RX port, distinguished by
-> MIPI Virtual Channel (or Data Type), into different locations in memory.
+> Case in point: if the driver using that struct allows reading only one channel,
+> then the offset of the timestamp when doing iio_push_to_buffers_with_ts() would
+> be 8 bytes, not 16, so the struct would not always be the correct layout.
 > 
-> Actual number of DMA channels allocated to CSI-RX is dependent on the
-> usecase, and can be modified using the K3 Resource Partitioning tool [1].
-> So set the minimum channels as 1 and maximum as 32.
+> As long as the driver doesn't access the timestamp member of the struct, it
+> doesn't really matter, but this could be a bit misleading to anyone who might
+> unknowing try to use it in the future.
+Agreed.  
+
+These timestamp inserting functions have always been a bit weird. I kind
+of regret not just leaving it as a per driver thing to do, but that ship
+long sailed.  I definitely want to keep the layout apparent in the drivers
+though so this approach only applied to 1 of the ones in this series.
+
+Jonathan
+
 > 
-> Link: https://software-dl.ti.com/processor-sdk-linux/esd/AM62X/10_00_07_04/exports/docs/linux/How_to_Guides/Host/K3_Resource_Partitioning_Tool.html [1]
-> Link: https://www.ti.com/lit/pdf/spruiv7
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
+> [1]: https://lore.kernel.org/linux-iio/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com/
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  .../bindings/media/ti,j721e-csi2rx-shim.yaml  | 39 +++++++++++++++++--
->  1 file changed, 36 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml b/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-> index b9f033f2f3ce4..bf62998b0445a 100644
-> --- a/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-> +++ b/Documentation/devicetree/bindings/media/ti,j721e-csi2rx-shim.yaml
-> @@ -20,11 +20,44 @@ properties:
->      const: ti,j721e-csi2rx-shim
->  
->    dmas:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 32
->  
->    dma-names:
-> +    minItems: 1
->      items:
->        - const: rx0
-> +      - const: rx1
-> +      - const: rx2
-> +      - const: rx3
-> +      - const: rx4
-> +      - const: rx5
-> +      - const: rx6
-> +      - const: rx7
-> +      - const: rx8
-> +      - const: rx9
-> +      - const: rx10
-> +      - const: rx11
-> +      - const: rx12
-> +      - const: rx13
-> +      - const: rx14
-> +      - const: rx15
-> +      - const: rx16
-> +      - const: rx17
-> +      - const: rx18
-> +      - const: rx19
-> +      - const: rx20
-> +      - const: rx21
-> +      - const: rx22
-> +      - const: rx23
-> +      - const: rx24
-> +      - const: rx25
-> +      - const: rx26
-> +      - const: rx27
-> +      - const: rx28
-> +      - const: rx29
-> +      - const: rx30
-> +      - const: rx31
->  
->    reg:
->      maxItems: 1
-> @@ -62,8 +95,8 @@ examples:
->  
->      ti_csi2rx0: ticsi2rx@4500000 {
->          compatible = "ti,j721e-csi2rx-shim";
-> -        dmas = <&main_udmap 0x4940>;
-> -        dma-names = "rx0";
-> +        dmas = <&main_udmap 0x4940>, <&main_udmap 0x4941>;
-> +        dma-names = "rx0", "rx1";
->          reg = <0x4500000 0x1000>;
->          power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
->          #address-cells = <1>;
-
--- 
-Regards,
-
-Laurent Pinchart
