@@ -1,126 +1,145 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2082AD2D;
-	Mon, 21 Apr 2025 12:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060BB264A7A;
+	Mon, 21 Apr 2025 12:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745237937; cv=none; b=DLNxwwt43/R4ZmZnhMnjYhdNRIk8qweNlWI6yvzTfIgW/7WQiCcXT+suTyHEBwqhgXQ9U6z52rL2GOh+pXRmjLQUFt+xm+jRl8Kmg+FibC7mqTU2HjFKCvVpRtAp5IbYw20THvaG6RpejyQir6JmlneiKhR14lZift6FW8mcN9U=
+	t=1745237942; cv=none; b=YoQHBw2t/4Y2T/LEg9XtJlCQXzAAzgzCztpUrBD8qhXdVPSncsoaZYTjtJMDlkmnFpKRtht51Tf2U2tbyFCYbgKF1YgAeavWXRt9OqVkbwhHOKOQNNaDffeIIyC9BIy9p6GlbD+lK5ippaCIdT5PS0+XW/LXJ6hhlehaQMCPdU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745237937; c=relaxed/simple;
-	bh=um4fv7mKGdJpS30iPGTyzDWjtnZo/lnitFmcd8PY2cQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JdJVak3tA2C/mZNihu8VnJmcOdnbuDdPdeLlIeIt3Ih+DaHkJIzLploQ4wmX34S8LOFJw5cDmWMg707IgFP+F7FXtYK9Du0a17nwp6gw8M/OsTqG69XPlVFbFD4UzGvwX4eJrj8XMbQFDqnYzgWXzczBn/C/V1goEEFxVydlk4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BZKn1Icj; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745237942; c=relaxed/simple;
+	bh=lNXJZ31mKKdrH3rm5j2vahEHI71PEeUKRoEiRzkJTPA=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=WTg9oVmTG0UgJKHlEzvUOhxooT1O40o6YD6L+2/S8pYNv8bLoC73iyrp21yrmxclRJCwOx2avOAOToLVCf51Qg68U5c9t2zd2mXCXctkjuEz6XuDKr9MxIDoMp2eQJTy35RU2dhGJiMAlE1bCaZl3AkNJfvVnNcWRTm1p03R4nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=TlgD93VJ; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BZKn1Icj"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LCImUA1545741
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 07:18:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745237928;
-	bh=HRhwr6bsuUpHJokkn7OOYPwCV0G4EhNX1INeaCHd44E=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BZKn1IcjY/qIX90o+ZurQTtKZqjPrgXf4wjt8S5Xx7qjZ5A8ejXuDw0A8qkoSAom3
-	 ENz+2z4Ak8AqrSSNbVO0nzfGcbStX1yWOGGClkkHz5FfQWb8GzwXK2jYIfn1xcv7v6
-	 bFrCTZKtFAuyIv28c1EtsMqvom3owEPl2ckMubHA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LCImtg061686
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 07:18:48 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 07:18:47 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 07:18:47 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LCIiHl032378;
-	Mon, 21 Apr 2025 07:18:45 -0500
-Message-ID: <94e79e4b-ff72-49ba-bcd7-ba69e2296d3b@ti.com>
-Date: Mon, 21 Apr 2025 17:48:43 +0530
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="TlgD93VJ"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53L8Imuc028756;
+	Mon, 21 Apr 2025 08:18:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=owl87XtYV1NrpUYxAc9w7Tbs9Dh
+	e54+iGFHKXKalFRw=; b=TlgD93VJcT37sOqWCQVz/sSlhBQRMdnyRdgcb8UpkhU
+	lTXMC9m7RSOyQ7BCoPIBdI+Uq8Up/wNOlzezez5whj8hP/1jkfsjRIoP/WwonFeg
+	613+fgq8mf+fjrZUEv1e0JZeXXzljsLRSZnclE1LKB+eb4VUkZWURy38oRxkmX+K
+	xZJ30BmPk/mA0bT7C49nY/tEgvjxxhF1fvfHV6MnqQvoP1Jx0m7QOI+ZvxlLFnT/
+	q43T3tO4rwyjZywXQeax/86Td2xJe6Cjn6wD3Iidwf1uDwuQz4NyJNQfEzIEqIlS
+	TfHGVEcxGWjr8y9glbEM+cpADA+JQ9pjLyMUs097lBA==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 464t5gd6td-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 08:18:42 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53LCIfBi045296
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 08:18:41 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 21 Apr 2025 08:18:41 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Mon, 21 Apr 2025 08:18:41 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Mon, 21 Apr 2025 08:18:41 -0400
+Received: from CENCARNA-L02.ad.analog.com (CENCARNA-L02.ad.analog.com [10.117.222.60])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53LCIO2P013389;
+	Mon, 21 Apr 2025 08:18:27 -0400
+From: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+Subject: [PATCH v3 0/2] Add support for LT3074 low voltage linear regulator
+Date: Mon, 21 Apr 2025 20:18:17 +0800
+Message-ID: <20250421-upstream-lt3074-v3-0-71636322f9fe@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Add DSI display support for TI's Jacinto platforms
-To: "Kumar, Udit" <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250411105155.303657-1-j-choudhary@ti.com>
- <02f1912f-0a05-4446-923a-7935ed305cb3@ti.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <02f1912f-0a05-4446-923a-7935ed305cb3@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIk3BmgC/3XNTQqDMBCG4atI1k1JZuIPXfUepYuoowbUSJKGF
+ vHujW5KKV2+H8wzK/PkDHl2yVbmKBpv7JwCTxlrBj33xE2bmoGAXEhQ/LH44EhPfAwoSsUlIFY
+ KVEGiZulqcdSZ5yHe7qkH44N1r+NBlPv634qSC14WAjtUhUKkq571aPtzYye2YxE+AED+C0ACZ
+ KVbKWqdK/gGtm17A9BHJGvwAAAA
+X-Change-ID: 20250124-upstream-lt3074-123384246e0b
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        "Guenter Roeck" <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
+        "Delphine CC Chiu" <Delphine_CC_Chiu@Wiwynn.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>,
+        Cedric Encarnacion
+	<cedricjustine.encarnacion@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745237904; l=1845;
+ i=cedricjustine.encarnacion@analog.com; s=20250124;
+ h=from:subject:message-id; bh=lNXJZ31mKKdrH3rm5j2vahEHI71PEeUKRoEiRzkJTPA=;
+ b=19nmfMCWVgOFErGDCjRj0mFhubfocQbq9ME6dzcmA9WxZ9mJIcYVH5BGIqKN2W2SGHctcmH/g
+ wVxpkLCwLDiD4W/JRG2BFw2WcKyS76yVwFwWiVB1OQxXpZ/UeCGUHBg
+X-Developer-Key: i=cedricjustine.encarnacion@analog.com; a=ed25519;
+ pk=ZsngY3B4sfltPVR5j8+IO2Sr8Db8Ck+fVCs+Qta+Wlc=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=RaiQC0tv c=1 sm=1 tr=0 ts=680637a2 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=AJfnRGXR9aJ9-Gz2uG0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Yv_yTgn6-Ywz2Kcd7ulpSelN1wzd2eO7
+X-Proofpoint-ORIG-GUID: Yv_yTgn6-Ywz2Kcd7ulpSelN1wzd2eO7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0
+ malwarescore=0 priorityscore=1501 suspectscore=0 clxscore=1011
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210095
 
-Hello Udit,
+Introduce hardware monitoring and regulator support for LT3074. The
+component is an ultrafast, ultralow noise 3A, 5.5V dropout linear
+regulator with a PMBus serial interface that allows telemetry for
+input/output voltage, output current, and die temperature. It has a
+single channel and requires a bias voltage which can be monitored via
+manufacturer-specific registers.
 
-On 19/04/25 14:23, Kumar, Udit wrote:
-> 
-> On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
->> Hello All,
->>
->> This series adds the dts support to enable DSI on 3 platforms for TI 
->> SoCs:
->> - J784S4-EVM
->> - J721S2-EVM
->> - AM68-SK
->>
->> [..]
->>
->> NOTE: For higher resolutions, we need bigger CMA region.
->> But for validation, the default value is enough.
-> 
-> I am not sure , how DSS uses CMA region
-> 
+Signed-off-by: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+---
+Changes in v3:
+- 
+ * Non-nested dt-binding regulator support.
+ * PMBUS_REGULATOR_ONE("vout") -> PMBUS_REGULATOR_ONE("regulator").
+   New macro needs node-name to be matched.
 
-The framebuffers for dss are allocated from cma-pool.
-By default the cma-region is of 32MiB that is shared by various peripherals.
+- Link to v2: https://lore.kernel.org/r/20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com
 
-1920x1080 requires ~16MiB of CMA but sometimes due to fragmentation,
-we cannot get even this much for framebuffer and memory is not allocated 
-resulting in display failures.
+Changes in v2:
+ * Separated dt-binding for LT3074.
+ * Added __maybe_unused attribute to of_device_id. This addresses kernel
+   test robot warning.
+ * Added entry to MAINTAINERS.
 
-And large resolutions like 4k@60fps require ~64MiB straight away.
-So it is better to reserve appropriate CMA region.
+- Link to v1: https://lore.kernel.org/r/20250124-upstream-lt3074-v1-0-7603f346433e@analog.com
 
-Thanks
-Jayesh
+---
+Cedric Encarnacion (2):
+      dt-bindings: hwmon: pmbus: add lt3074
+      hwmon: (pmbus/lt3074): add support for lt3074
 
-> 
->> I am posting another series to add CMA region to Jacinto platforms
->> similar to Sitara family soon:
->> <https://lore.kernel.org/all/20240613150902.2173582-1-devarsht@ti.com/>
->>
->> Jayesh Choudhary (5):
->>    arm64: dts: ti: k3-j784s4-j742s2-main-common: add DSI & DSI PHY
->>    arm64: dts: ti: k3-j784s4-j742s2-evm-common: Enable DisplayPort-1
->>    arm64: dts: ti: k3-j721s2-common-proc-board: Add main_i2c4 instance
->>    arm64: dts: ti: k3-j721s2-common-proc-board: Enable DisplayPort-1
->>    arm64: dts: ti: k3-am68-sk: Enable DSI on DisplayPort-0
->>
->> Rahul T R (2):
->>    arm64: dts: ti: k3-j721s2-main: add DSI & DSI PHY
->>    arm64: dts: ti: k3-j721s2-som-p0: add DSI to eDP
->>
->>   .../boot/dts/ti/k3-am68-sk-base-board.dts     |  96 ++++++++++++++
->>   .../dts/ti/k3-j721s2-common-proc-board.dts    | 116 +++++++++++++++++
->>   arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi    |  37 ++++++
->>   arch/arm64/boot/dts/ti/k3-j721s2-som-p0.dtsi  |  52 ++++++++
->>   .../dts/ti/k3-j784s4-j742s2-evm-common.dtsi   | 117 +++++++++++++++++-
->>   .../dts/ti/k3-j784s4-j742s2-main-common.dtsi  |  37 ++++++
->>   6 files changed, 454 insertions(+), 1 deletion(-)
->>
+ .../bindings/hwmon/pmbus/adi,lt3074.yaml           |  50 +++++++++
+ Documentation/hwmon/index.rst                      |   1 +
+ Documentation/hwmon/lt3074.rst                     |  72 ++++++++++++
+ MAINTAINERS                                        |   9 ++
+ drivers/hwmon/pmbus/Kconfig                        |  18 +++
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/lt3074.c                       | 122 +++++++++++++++++++++
+ 7 files changed, 273 insertions(+)
+---
+base-commit: 86d264b68309d9f9804db4079642b98104ca15df
+change-id: 20250124-upstream-lt3074-123384246e0b
+
+Best regards,
+-- 
+Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+
