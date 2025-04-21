@@ -1,144 +1,116 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966D32586EC;
-	Mon, 21 Apr 2025 13:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C81DED63;
+	Mon, 21 Apr 2025 13:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745241247; cv=none; b=g2g31h18BfjZAVVtrP+DjJ6rrX2anHG8bem9IrxTumDCbRylex+BK1wrWfyQCF4Duqyrzd7Ktfi5TrzKuDDdCZ/B9BTCiXszcyBVTZPq0yB71Lw2Uy2WyU8IA77kt3WlnrCprL+mAvS+zZtkrEa95TfTFUQY5nP2moQWL43XUwQ=
+	t=1745241358; cv=none; b=gs60abVRGx8w9hHgMFnCXScF6fo6FGPOrqaXT0yvYQoxt2NZFLbhN/8H6mhv0lVSaVdGmMvbFsbYJA/irBlFvakMHyNO1JptfdpuvMKO+heRuhuFp+axNGMCYdCS49UtCIJTlSOrsPESGBsmAs3tEHd7agvkYMWiX8pMmfnGJ+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745241247; c=relaxed/simple;
-	bh=IdQbmGzuuQ6dFSsgC24zxtxhDHuKqzcmqcVagXyTWp0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S83tyb8E4FDbHsNe40ANce5wyuj75Ez0JKGsvDSBi6oQnk8/sHQv9nyS2+wshrUHkNyo+Y/GEVop6e3D8K6ll8u5XKqCtGh62cJAfuj7UfNaOzvK+2pRzoOO5W+ZNFwQGFWOIeIxab7vlwXJxFhjAEMZ8xc18cl2cBUoTpS3pdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zh5R3727tz4f3jY8;
-	Mon, 21 Apr 2025 21:13:35 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D61191A06D7;
-	Mon, 21 Apr 2025 21:13:59 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe1+VRAZoJ06RKA--.64775S3;
-	Mon, 21 Apr 2025 21:13:59 +0800 (CST)
-Subject: Re: [PATCH v2 1/5] block: cleanup and export bdev IO inflight APIs
-To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, xni@redhat.com, agk@redhat.com, snitzer@kernel.org,
- mpatocka@redhat.com, song@kernel.org, viro@zeniv.linux.org.uk,
- akpm@linux-foundation.org, nadav.amit@gmail.com, ubizjak@gmail.com,
- cl@linux.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
- <20250418010941.667138-2-yukuai1@huaweicloud.com>
- <aAYzPYGR_eF7qveO@infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <f01cb2d7-d69c-1565-d3e4-09c4b70856f6@huaweicloud.com>
-Date: Mon, 21 Apr 2025 21:13:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745241358; c=relaxed/simple;
+	bh=vqIN4spBQeK7QHzc7uNdXC3miJFucfrtR29H2awIC94=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h99Ok0TGmxxo7oOt+XFe4s9JajUtoBkzFXWAhep8SzU5dsC3DIB6nCeBKtDloATG84LS4EWzkLq/csLOS+HfFM2zMt/A+MyC2jQ5pHmW0177NPHHhChwDQDkpCQS2JYcbuIXV8y1PehAOgT17n16o20XQrTTHeMTUdst2htcZoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPp/hyWx; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPp/hyWx"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f2b05f87bcso40056776d6.3;
+        Mon, 21 Apr 2025 06:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745241356; x=1745846156; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o004w6PxOK9088i8LiB4BRrBgsNqHpUt0xgvZEh56tg=;
+        b=YPp/hyWxi4mWAwKi5e5zSQW+TmuYs5Sy/1YeYhYP2NdKb3CduVOIbuQS1ayueOE3cX
+         Po3Txje6GN861fovswnZo9G+vUNI8ciDqv8WNXQRU3YiyFoPCf59BNb3fjhI6Ys1F7oF
+         EaLcYnplVK30lgvrpoAinaM10yV0DLCRdOleR4KW+bACrzAfXPmHSI7UebHwCuoiR2ve
+         Cx63B1g6fp0mAHQzVYQEOVhx9Hp/amuIDEwQ8BhWJpZbTupQQAactMxl7TMxX/PPlRV8
+         Ev8NUC6c/sdmrL9D//Dm+HH/JUrWDC+IBsq9/WS4+ipcAdBDeKlUt2W//IAXd1jKVTwS
+         XS6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745241356; x=1745846156;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o004w6PxOK9088i8LiB4BRrBgsNqHpUt0xgvZEh56tg=;
+        b=gKdxLYzAXc8QQhzqVxpH2f1awgB8rsFCDS2+nHX9tbek9es+2hgnUbrIB6YRqft2Xv
+         IKCIUkrJ1nPjJbTdW1hDJtUFNRA/lvlZnEXxISogtYiYQZ3XSU66s+673s6kxgAokva3
+         BZAbAPdQsDK+ur1pDfTLQsae1XnchS0Jsv1Gis4YdehaEXCeChnYJMv/uwEq4HBmsl4T
+         QRx2oakksHrT+seI0xE/pvXm2zppcbKvzkzUu+/GHZRmseuy31Sv4y/kEFs5pL7UGgeg
+         6GjWc/VMXPdKyjOH/iB18YUNDL6acnN5vjaEVhj6ZFJuJLXmWGJhYtDuisvB2HM9tlX6
+         +SVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCqjw+6albbW6gIXQSt1WzA72DQ+REEQXud2/M0gv2tOS8aIV0aueNoiAn4bRBBhrekXyzXY2c@vger.kernel.org, AJvYcCVz2HCW7xDVVrqOsaut9Y2hizJaG7AqJZAKk0CFh/CuSpWU3aFzkxX2eSeY9qDQOqV48azba3VuClNJOrcB@vger.kernel.org, AJvYcCXPZp5uDHjEg9iSvABjtuVB8D3G0OvJgqbJY5lk/CbCbaHs4PQdRHzhqkkb79R3GqcmJoe1Bfo3nPs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM5H10L8HpWygxP1r+uTXZHqa/QSYKTCbcEz71/yrBry/hit1Y
+	g6Y+f/PmTM9bxvifIjnkLcqKn3xaexnPBBmAg7qjM8a/9hqWhNJC
+X-Gm-Gg: ASbGncs53HgbirSPk87fOHjTxUomOX70mc2vILQbEluCxIEbXChLw+y3USs+iwFpk2I
+	brsvZVwIMPFuHfDw4GzckjkchrkFPJZynl4zPsHbcd3Fux8EiGvla0E7SV+EkUkmbANX67IZvMc
+	LHwkfn9Mu8hORg8s9tsIS5a0BONTXwUUfq2qOWXzAmvMv11HC7fYPZdQTgciF+QVxgxODMf7mZu
+	3xUTSOtxgAwkR1dORJ7GJkeMrglJDsVDTGfb9oN5qAtBsqPqmDWrbhrsiyDjv7dLriKLRaKUyVW
+	xUPwdi4rjKkhmNmoKSMkJPn9c/pIg6nTgGVUK17Zm/FV76B1tTWKe+G74CY1wL4rGg==
+X-Google-Smtp-Source: AGHT+IEWBfCVAOXcUeFF/010CnRUb7fPPxCRQbrwrjJ+7VllZ6Ahm19o/N9f/euG42Wg9GTMhpL5NQ==
+X-Received: by 2002:ad4:5d43:0:b0:6e6:602f:ef68 with SMTP id 6a1803df08f44-6f2c455698bmr277444346d6.10.1745241355667;
+        Mon, 21 Apr 2025 06:15:55 -0700 (PDT)
+Received: from theriatric.mshome.net ([73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21d3asm43579276d6.100.2025.04.21.06.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 06:15:55 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: jic23@kernel.org
+Cc: lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael.Hennerich@analog.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	marcelo.schmitt1@gmail.com,
+	Gabriel Shahrouzi <gshahrouzi@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] iio: adis16201: Correct inclinometer channel resolution
+Date: Mon, 21 Apr 2025 09:15:39 -0400
+Message-ID: <20250421131539.912966-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250421124915.32a18d36@jic23-huawei>
+References: <20250421124915.32a18d36@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aAYzPYGR_eF7qveO@infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXe1+VRAZoJ06RKA--.64775S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWrtrW5Xw1rXF1UAryfCrg_yoW8KrW5pF
-	4UKa98trWDGr1xur1Iqws7ZFySyws8GryS9r1Sy3sI9r1DJr1fur4xtrsrCF4xtrZ2kFnr
-	u3WYyFyxuFsYy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
+The inclinometer channels were previously defined with 14 realbits.
+However, the ADIS16201 datasheet states the resolution for these output
+channels is 12 bits (Page 14, text description; Page 15, table 7).
 
-ÔÚ 2025/04/21 19:59, Christoph Hellwig Ð´µÀ:
-> On Fri, Apr 18, 2025 at 09:09:37AM +0800, Yu Kuai wrote:
->> - remove unused blk_mq_in_flight
-> 
-> That should probably be a separate patch.
-ok
+Correct the realbits value to 12 to accurately reflect the hardware.
 
-> 
->> - rename blk_mq_in_flight_rw to blk_mq_count_in_driver_rw, to distinguish
->>    from bdev_count_inflight_rw.
-> 
-> I'm not sure why this is needed or related, or even what additional
-> distinction is added here.
+Fixes: f7fe1d1dd5a5 ("staging: iio: new adis16201 driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+ drivers/iio/accel/adis16201.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Because for rq-based device, there are two different stage,
-blk_account_io_start() while allocating new rq, and
-blk_mq_start_request() while issuing the rq to driver.
-
-When will we think the reqeust is inflight? For iostat, my anser is the
-former one, because rq->start_time_ns is set here as well. And noted in
-iostats api diskstats_show£¨/proc/diskstats) and part_stat_show
-(/sys/block/sda/stat), inflight is get by part_in_flight, which is
-different from disk sysfs api(/sys/block/sda/inflight).
-
-> 
->> -
->> -void blk_mq_in_flight_rw(struct request_queue *q, struct block_device *part,
->> -		unsigned int inflight[2])
->> +void blk_mq_count_in_driver_rw(struct request_queue *q,
->> +			       struct block_device *part,
->> +			       unsigned int inflight[2])
-> 
-> Any reason to move away from two tab indents for the prototype
-> continuations in various places in this patch?
-> 
->> + * Noted, for rq-based block device, use blk_mq_count_in_driver_rw() to get the
->> + * number of requests issued to driver.
-> 
-> I'd just change this helper to call blk_mq_count_in_driver_rw for
-> blk-mq devices and remove the conditional from the sysfs code instead.
-> That gives us a much more robust and easier to understand API.
-
-Ok, and another separate patch, right?
-> 
->> +void bdev_count_inflight_rw(struct block_device *bdev, unsigned int inflight[2]);
-> 
-> Overly long line.
-> 
->> +static inline unsigned int bdev_count_inflight(struct block_device *bdev)
->> +{
->> +	unsigned int inflight[2];
->> +
->> +	bdev_count_inflight_rw(bdev, inflight);
->> +
->> +	return inflight[0] + inflight[1];
->> +}
->>   #endif /* _LINUX_PART_STAT_H */
-> 
-> Maybe keep this inside of block as it should not not be used by
-> drivers?  Also the reimplementation should probably be a separate
-> patch from the public API change and exporting.
-
-ok, and I should probably send the first set just related to this patch
-first.
-
-Thanks,
-Kuai
-
-> 
-> .
-> 
+diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+index 982b33f6eccac..dcc8d9f2ee0f1 100644
+--- a/drivers/iio/accel/adis16201.c
++++ b/drivers/iio/accel/adis16201.c
+@@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
+ 			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+ 	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
+ 	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
+-			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
++			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+ 	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
+-			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
++			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+ 	IIO_CHAN_SOFT_TIMESTAMP(7)
+ };
+ 
+-- 
+2.43.0
 
