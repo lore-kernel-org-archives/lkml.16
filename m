@@ -1,94 +1,237 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32BF17BB6
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75086197A68
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247033; cv=none; b=KH01rPBFhYelkZNob3ozWbl/1W3BiFlfYgaEFAwCUcRnu6QRmra7sKwt6Iud6wtH4HLNuuXZdUvLlOQUVFtrrnKAt4crkllsQ7PDY4lZogEKoXJnM3aztFnJizcGRceXery9Q3TM5Z3Ssm9BsKTygcfBTKz8V9D01OEswFsg1ZY=
+	t=1745247048; cv=none; b=pdrHARtA6iaAFy2KXlxyF2rXgx2MjLb2oUd9QI7oByiqOAJa5ITNNxqFZyLLEyB6DjfHRLGod+W4+By71+pnmh8zz7uUM4rgkKmRfsX1DOF7NI+pIDwnAZNsaQU3NmmT4pWCA+2Ie7GREXTTwXScqFpiIOh9ETmaAWjYi4nFNgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247033; c=relaxed/simple;
-	bh=ma6VSPAerTYV945vq+tPVgiv/w3GUlc6YvG/pZlt/8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=itWWbmNDqGmK0nXvUmy30eWjreN8KQgxFcPOemE/upDAbjkTZy93W7OnYekBfLJeZOSABMA/i5REXJ+T6KUF3mTKcvZ3uHiAm18sCwA5M4zGtDiNZLwMM1lQVTLXVj5eXOGsAtZqrfzhTFnAg9m00lTFJStFCPgbQTRqmUahJEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BAFv76h3; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745247048; c=relaxed/simple;
+	bh=AYPiDAdFdvMcbSHtvlruYFEjRQl5VIn15bf/moyKBUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Osu45uW0pAf2IL0/NQl8U5egT5nB46g6qv6kYxmkcbUixYLn2Db9SFwciGxaRodYe6mb6/u6bD7DlEUGedhw+cbpBCDqpUNZJYTat0afh36wd9QWI2H2HgaVzjg4K6Q6IwKT45atpaET3nGdIaZsnMEj1lurBwLO/+H4sw5x1JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GSIQ5Lpj; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BAFv76h3"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af9a6958a08so411935a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745247031; x=1745851831; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QENNCrjCWntef3deRbb4YDB7wTorwvsVGVDTK+xRntE=;
-        b=BAFv76h3i5ZBorkZj7biuvAx9izUG4xLIE3L1fkYy8Bp1we6ekcm0AxLDlr+K5G12R
-         KYm8xhTEQ3JnvnD1JdtEy3icbiqnbip1d2tyixLVqrpj53vbhE/HTbMf560ORiMRj4zq
-         R9vQw6RoAodlHYGz+Ea/iPyjR42maG2QljDZs8/QFLwQUjIU7EDK/gJ81GQFWKtmct4V
-         3nT+ji7epzuArxpc3wTEH8ryGCvzgGrCsssag1W1aF8zf2tHhTxiXbVT4l9XWq96+gda
-         9XVk+i3ieD0Dah/cBddOFHP9AwmcNkrJgAEOVR1TT/Zi/piA4iMNRRHwfaTw9J108gfU
-         zydA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745247031; x=1745851831;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QENNCrjCWntef3deRbb4YDB7wTorwvsVGVDTK+xRntE=;
-        b=Vs+ZygY6zUwHiNrzj/VMktzGIsUfG4o2zXnrciJx0dlOWESP8Lpbk4cz58xMtUmSpF
-         9yuNDuHcIFcFOwK/KP/IkW0bwghMHi7jJ37EybL+XwcE+c9uT9wvQ5bBwmEEo05DMP/y
-         Ej62dU0kf0QQCaHH6IYsJZdZZoNlzoCJW8JKSWd/xOrxx+PNIRSrRpPJ42+76XWbFvsr
-         lSrwbrRvo5FzTC7du6jVAbQDcqUzt6QqcuyLwVWQBVhPEfkQ/oYV4jwA7HMwyNjmPBiZ
-         G9j1chusTwxWjaVdD+o05tyn2aFYpyIKFoLms51eHsEMLlvobsgTfxQ8NtMh866+reed
-         iSaw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6XsjuvdIda66IQzAmAkud07tnjpv7NvazP2W8CkDbh93cBbB8XkRaAM5ZAxb5VkOgwbI6BrZuBPDhNUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+qx5LrHd+yqlpkW0HeiRctM+2ZaVyYGBVujZ7deCkK8DKwn9e
-	7M0GRhQgkshazDAdhLIOGOjpMJUe5b+ZQY7mBG6BazXIzm6Sq5TEbISAGYUuyoAD6Opezcx/phC
-	iFUP7OkltQCyAeMm9LjgfCkSMrQU5D1VB2u5K47eYajAa8qVg
-X-Gm-Gg: ASbGncuk6ca7mwNLecxnMlMvk2f2bGLa8rZ8SKcBCUrkQgJYjn5avxO1uzPvcYZmliD
-	3ZZm1ej7iUDu13iaXZVRLNA4ZPEy3NWe7ioww8K5VqBNvWHjxzyz6Q9Vn7JSsLE5Lh5xllJCMMA
-	n1ylSEbWPnIX0mV2AaIWJF4g==
-X-Google-Smtp-Source: AGHT+IHGyIn8Ggts2Cc0qvPGykqovnuCA00psLfWjJbSCUbMZNw6jer7jEaCr1NDs6Jo7lxB27P4MZf4Q205Us9cxvc=
-X-Received: by 2002:a17:90b:3b82:b0:2ff:6bcf:5411 with SMTP id
- 98e67ed59e1d1-3087bb313f0mr6899291a91.1.1745247030715; Mon, 21 Apr 2025
- 07:50:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GSIQ5Lpj"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 73DB856D;
+	Mon, 21 Apr 2025 16:48:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745246917;
+	bh=AYPiDAdFdvMcbSHtvlruYFEjRQl5VIn15bf/moyKBUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GSIQ5Lpjzz6evdC+AHZ2y/ana0vtKDnFhv1h2+ocK8ioR/ZjveUiPtY3YIDSzh7qP
+	 N+4qS15MxwxzjBRTu2d4nvY0w3ipjX0giXstZnBSt8ilraM0TB5ZGXnZyuuvzBpWsa
+	 Y4WNGxNN5JfnXcR9OLG6qsrmrMP5AxpMub+Cyxlg=
+Date: Mon, 21 Apr 2025 17:50:39 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Vishal Sagar <vishal.sagar@amd.com>,
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Michal Simek <michal.simek@amd.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250421145039.GA19213@pendragon.ideasonboard.com>
+References: <20250327112009.6b4dc430@eldfell>
+ <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+ <20250327175842.130c0386@eldfell>
+ <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+ <20250331105446.098f0fbe@eldfell>
+ <20250331082135.GB13690@pendragon.ideasonboard.com>
+ <20250331135337.61934003@eldfell>
+ <20250401162732.731ef774@eldfell>
+ <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+ <20250417111315.62a749e5@eldfell>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250420164653epcas5p10dba2c638655fd4b16c6553d5125a3a0@epcas5p1.samsung.com>
- <20250420164450.1144416-1-csander@purestorage.com> <ba40abc8-8b41-4e2c-a700-04e8e424bcc3@samsung.com>
-In-Reply-To: <ba40abc8-8b41-4e2c-a700-04e8e424bcc3@samsung.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Mon, 21 Apr 2025 07:50:19 -0700
-X-Gm-Features: ATxdqUF55Ax7ibERHwBXWAwdTqIHaIXovQcmFJZCKc-VxqIvQ5GCvoXYN6uIH88
-Message-ID: <CADUfDZpDS6GUOhhM=je1hiKd-iAQLR6c6pWCyS-qTuutKNWzuw@mail.gmail.com>
-Subject: Re: [PATCH] nvme/pci: make PRP list DMA pools per-NUMA-node
-To: Kanchan Joshi <joshi.k@samsung.com>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250417111315.62a749e5@eldfell>
 
-On Mon, Apr 21, 2025 at 12:09=E2=80=AFAM Kanchan Joshi <joshi.k@samsung.com=
-> wrote:
->
-> On 4/20/2025 10:14 PM, Caleb Sander Mateos wrote:
-> >   static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
-> >                         unsigned int hctx_idx)
->
-> Missing this handling for admin queue.
->
-> We may go to that case (i.e., admin command with data payload > 1
-> segment) less often. But when we do, this code will give
-> null-pointer-deference.
+Hi Pekka,
 
-Good catch, will fix in v2. I'll also adopt your suggestion of
-dynamically allocating the per-NUMA-node pool list.
+On Thu, Apr 17, 2025 at 11:13:15AM +0300, Pekka Paalanen wrote:
+> On Wed, 16 Apr 2025 11:59:43 +0300 Tomi Valkeinen wrote:
+> > On 01/04/2025 16:27, Pekka Paalanen wrote:
+> > > On Mon, 31 Mar 2025 13:53:37 +0300 Pekka Paalanen wrote:
+> > >> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote:
+> > >>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
+> > >>>> On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wrote:
+> > >>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote:
+> > >>>>>> On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrote:
+> > >>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote:
+> > >>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wrote:
+> > >>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+> > >>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote:
+> > >>>>>>>>>>> Add greyscale Y8 format.
+> > >>>>>>>>>>>
+> > >>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > >>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>  
+> > >>>>>>>>>>
+> > >>>>>>>>>> Thanks for your patch!
+> > >>>>>>>>>>         
+> > >>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+> > >>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > >>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
+> > >>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+> > >>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+> > >>>>>>>>>>>
+> > >>>>>>>>>>> +/* Greyscale formats */
+> > >>>>>>>>>>> +
+> > >>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */  
+> > >>>>>>>>>>
+> > >>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+> > >>>>>>>>>> the number of bits in the FOURCC format. What do you envision
+> > >>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?  
+> > >>>>>>>>>
+> > >>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
+> > >>>>>>>>> not required, but different fourccs for the same formats do confuse.
+> > >>>>>>>>>
+> > >>>>>>>>> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
+> > >>>>>>>>> possible, and if not, invent a new one.  
+> > >>>>>>>>
+> > >>>>>>>> what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
+> > >>>>>>>>
+> > >>>>>>>> Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+> > >>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+> > >>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
+> > >>>>>>>>
+> > >>>>>>>> That would be my intuitive assumption following how YCbCr is handled.
+> > >>>>>>>> Is it obvious enough, or should there be a comment to that effect?  
+> > >>>>>>>
+> > >>>>>>> You raise an interesting point. Is it defined how a display driver, that
+> > >>>>>>> supports R8 as a format, shows R8 on screen? I came into this in the
+> > >>>>>>> context of grayscale formats, so I thought R8 would be handled as (R, R,
+> > >>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sense.  
+> > >>>>>>
+> > >>>>>> That is a good question too. I based my assumption on OpenGL behavior
+> > >>>>>> of R8.
+> > >>>>>>
+> > >>>>>> Single channel displays do exist I believe, but being single-channel,
+> > >>>>>> expansion on the other channels is likely meaningless. Hm, but for the
+> > >>>>>> KMS color pipeline, it would be meaningful, like with a CTM.
+> > >>>>>> Interesting.
+> > >>>>>>
+> > >>>>>> I don't know. Maybe Geert does?  
+> > >>>>>
+> > >>>>> I did some digging, and was a bit surprised that it was you who told
+> > >>>>> me to use R8 instead of Y8?
+> > >>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell  
+> > >>>>
+> > >>>> Hi Geert,
+> > >>>>
+> > >>>> indeed I did. I never thought of the question of expansion to R,G,B
+> > >>>> before. Maybe that expansion is what spells R8 and Y8 apart?
+> > >>>>
+> > >>>> I do think that expansion needs to be specified, so that the KMS color
+> > >>>> pipeline computations are defined. There is a big difference between
+> > >>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
+> > >>>>
+> > >>>> - (R, 0, 0)
+> > >>>> - (R, R, R)
+> > >>>> - (c1 * Y, c2 * Y, c3 * Y)  
+> > >>>
+> > >>> I'd be very surprised by an YUV to RGB conversion matrix where the first
+> > >>> column would contain different values. What we need to take into account
+> > >>> though is quantization (full vs. limited range).  
+> > > 
+> > > Quantization range is indeed good to note. R8 would be always full
+> > > range, but Y8 would follow COLOR_RANGE property.
+> > >   
+> > >> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
+> > >> (R, 0, 0), so we have both variants.
+> > >>
+> > >> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
+> > >> in the KMS color processing?  
+> > > 
+> > > I think this 0.0 - 1.0 nominal range definition for the abstract KMS
+> > > color processing is necessary.
+> > > 
+> > > It also means that limited range Y8 data, when containing values 0-15
+> > > or 240-255, would produce negative and greater than 1.0 values,
+> > > respectively. They might get immediately clamped to 0.0 - 1.0 with the
+> > > first color operation they face, though, but the concept seems
+> > > important and carrying over to the new color pipelines UAPI which might
+> > > choose not to clamp.  
+> > 
+> > Is the behavior of values outside the limited range something that needs 
+> > to be defined? We can't know how each piece of HW behaves with 
+> > "undefined" input, so should we not just define the behavior as platform 
+> > specific?
+> 
+> Hi Tomi,
+> 
+> it's not undefined nor illegal input in general. The so-called
+> sub-black and super-white ranges exist for a reason, and they are
+> intended to be used in video processing to avoid clipping in
+> intermediate processing steps when a filter overshoots a bit. There are
+> also practices that depend on them, like PLUGE calibration with
+> traditional signals on a display: https://www.itu.int/rec/R-REC-BT.814
+> 
+> I think it would be really good to have defined behaviour if at all
+> possible.
+> 
+> > In any case: I can't say I fully understood all the discussions wrt. 
+> > color spaces. But my immediate interest is, of course, this series =). 
+> > So is there something that you think should be improved here?
+> 
+> Right, the range discussion is a tangent and applies to all YUV
+> formats, so it's not a new question.
+> 
+> > My understanding is that the Y-only pixel formats behave in a well 
+> > defined way (or, as well defined as the YUV formats), and there's 
+> > nothing more to add here. Is that right?
+> 
+> There are two things:
+> 
+> - Y8 follows COLOR_RANGE property, just like all other YUV formats.
+> - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values).
+> 
+> I'd like these explicitly written down, so that they become obvious to
+> everyone. I suspect either one might be easy to forget when writing
+> code and taking shortcuts without thinking.
+> 
+> 
+> Laurent,
+> 
+> I did find a case where (Y', neutral, neutral) does *not* seem to expand
+> to RGB=(Y, Y, Y): ICtCp. The conversion from ICtCp to L'M'S' does
+> produce (Y', Y', Y'), but the LMS-to-RGB matrix scrambles it.
+> 
+> I didn't dig through BT.2020 constant-luminance Y'C'bcC'rc, but I
+> wouldn't be surprised if it scrambled too.
+> 
+> Of course, both of the above are not just one matrix. They require two
+> matrices and the transfer characteristic each to compute. KMS color
+> operations cannot implement those today, but with the colorop pipelines
+> they will if the hardware does it.
+> 
+> That's why I think it's important to document the assumption of Cb and
+> Cr when not part of the pixel format, and not write down a specific
+> expansion to RGB like (Y, Y, Y).
 
-Thanks,
-Caleb
+Every time I discuss color spaces, the scopes of "RGB" and "YUV" seem to
+expand more and more. This makes me wonder how we define those two
+concepts. Taking the conversion from RGB to ICtCp as an example, would
+you consider LMS and L'M'S' as "RGB" formats, and ICtCp as a "YUV"
+format ?
+
+-- 
+Regards,
+
+Laurent Pinchart
