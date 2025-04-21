@@ -1,74 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com [47.90.199.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F572571CC;
-	Mon, 21 Apr 2025 03:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3492571A6;
+	Mon, 21 Apr 2025 03:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745204994; cv=none; b=l93ag/xLSJQBQkG4/SQ/jseFL+/DjLcupLf/uPQkMQwN4xF8th50TFDsKS0SYHaJ2ej4Cm5kAGIzmAqMrXCbBGRbxJzWuUcB3CdUlQ8HqZKR2/HTSRL1Gqi3kfbMK+RHK2j0kIj2zDKB0kxDkrDsQEgrwcwGfnXQTVH/PZNKSCE=
+	t=1745205037; cv=none; b=P+6NGLj1gUkg3uSiuONZfc01QU9mIcjq2RQPOdsfpNcBxs8acSmfv6inZGPbwUkKChxbT4uszS1ak5nzcjW7RBUYswSSU3IGXczUI+Nvm0X9OfLI47JdE6RWdOwdSMUd+lso9PDl5baaIBJlfjPziFnqIb58eMQCRP8ifUTJOcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745204994; c=relaxed/simple;
-	bh=utlV7YV5L4zVTAuFRwKh50s3JF93WI0+AxKIZ+qDB0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i3yluE9ppo/ytfww+STerTn7IqW+zGKOTlSTHGbdARldrl3KhOpzo9SrvWCNi5n0JcYJDDOrwN38OkjjLLONTP+MdHM7/IkSj0ADHyorWkMw863AzJf8uINSXr32xnNzQf1LUgys+CxiW08lxmLjZdnIuZTr6setaxJFD5TgGOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKw6y3hr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745205037; c=relaxed/simple;
+	bh=iprY2zXnlUwG2yTN+Eg/CLNl/6+OwHB6ofTHwi6qcJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h9UUGnsERMoUqoI0aPkAM60vyg49BTI1CFw1qkTK66AT5MICxNSxbrcIUj9qrdlPy7JpSpkEU3OL6F19hHk7HHyeOlC3q2Ay1SbKlK6S9p3v0xok60xCBxh0YhvnvcMj8PC+AgSCPmbgL2AV2q6KWixx8ZGkk36kQ2NyztPOYBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=riJseXti; arc=none smtp.client-ip=47.90.199.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKw6y3hr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8C5C4CEE2;
-	Mon, 21 Apr 2025 03:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745204993;
-	bh=utlV7YV5L4zVTAuFRwKh50s3JF93WI0+AxKIZ+qDB0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FKw6y3hrVj02EZe0H2U3x0U1HOqhtt62f9Euh3YcPKMcQW3D2ip0fMoj6AltHEqlk
-	 8pxyxuUflGB4pxWmJibBGoz9T1ha/KEV6q9alpDtVfDH2jwfmXGje/2/UjeISWMAMa
-	 hLiguzAYUhrwHzfgI6f5/f71WNX8FQGw/cWAk4ooBN+MZBml22F+aV1OtwK+fqNxwd
-	 sdgUFmZ2DSVWf1ZIkHjF+e2vNAfm9k4j0eE/Em0scJtexJBec5MxSKWzU9f/abDBuO
-	 szWVZAg6Qlpyzgflbu/f/sIunfw/B+JEeGkh2E1lcF+hiHmKLy3HbjmGXR3bjxp0NX
-	 TvpiIpKPKcXtg==
-Date: Sun, 20 Apr 2025 20:09:50 -0700
-From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] enumarated refcounts, for debugging refcount issues
-Message-ID: <202504202008.533326EF4@keescook>
-References: <20250420155918.749455-1-kent.overstreet@linux.dev>
- <202504201808.3064FFB55E@keescook>
- <yd3f6ie56x2dbagqycwluxtz7inrmbub5fg7omp226vrdvxtb2@sjn23uj3r6t7>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="riJseXti"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745205015; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=70UhExgNaocK5X30hvKk4vB85NegZCk9Mwiwz/Y2+cw=;
+	b=riJseXtiijWJwAuybiZB12za1gZyDZCIB0wdj/z6MJF9iNyJR6Cqy8zUzA2vdLsW6WZvQ8PxyN+YjwWqH/KbPEcziodNgPhvOr9E/eILYe3iufBS5cFmwHwPGJX0o1m5VAI/zGor7kWeCXLF5GWF7W7soPqJKW/whaoz7LH+gPg=
+Received: from 30.74.144.126(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXRJzgE_1745204077 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 21 Apr 2025 10:54:38 +0800
+Message-ID: <65a0ffcd-d650-4dcd-8366-833f4a0ee7b6@linux.alibaba.com>
+Date: Mon, 21 Apr 2025 10:54:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yd3f6ie56x2dbagqycwluxtz7inrmbub5fg7omp226vrdvxtb2@sjn23uj3r6t7>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] khugepaged: Refactor
+ trace_mm_khugepaged_scan_pmd() to take folio instead of page
+To: nifan.cxl@gmail.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ willy@infradead.org
+Cc: akpm@linux-foundation.org, david@redhat.com, fan.ni@samsung.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, npache@redhat.com,
+ mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net
+References: <20250418183920.273154-1-nifan.cxl@gmail.com>
+ <20250418183920.273154-2-nifan.cxl@gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250418183920.273154-2-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 20, 2025 at 09:27:26PM -0400, Kent Overstreet wrote:
-> On Sun, Apr 20, 2025 at 06:08:41PM -0700, Kees Cook wrote:
-> > On Sun, Apr 20, 2025 at 11:59:13AM -0400, Kent Overstreet wrote:
-> > > Not sure we have a list for library code, but this might be of interest
-> > > to anyone who's had to debug refcount issues on refs with lots of users
-> > > (filesystem people), and I know the hardening folks deal with refcounts
-> > > a lot.
-> > 
-> > Why not use refcount_t instead of atomic_t?
+
+
+On 2025/4/19 02:34, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> It's rather pointless here since percpu refcounts don't (and can't)
-> support saturation, and atomic_long_t should always suffice - you'd have
-> to be doing something particularly bizarre for it not to, since
-> refcounts generally count things in memory.
+> trace_mm_khugepaged_scan_pmd() is only called in
+> hpage_collapse_scan_pmd(), where the head page of a folio is passed in,
+> so refactor it to take folio directly.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Ah yes, my eyes skipped over the "long" part when I was reading the
-patches. There's currently no sane reason to use refcount_t when
-already using atomic_long_t. Sorry for the noise!
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-> Out of curiousity, has overflow of an atomic_long_t refcount ever been
-> observed?
-
-Not to my knowledge. :)
-
--- 
-Kees Cook
+> ---
+> This is a new patch added to the series.
+> ---
+>   include/trace/events/huge_memory.h | 6 +++---
+>   mm/khugepaged.c                    | 2 +-
+>   2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+> index a73699f000de..2305df6cb485 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -55,10 +55,10 @@ SCAN_STATUS
+>   
+>   TRACE_EVENT(mm_khugepaged_scan_pmd,
+>   
+> -	TP_PROTO(struct mm_struct *mm, struct page *page, bool writable,
+> +	TP_PROTO(struct mm_struct *mm, struct folio *folio, bool writable,
+>   		 int referenced, int none_or_zero, int status, int unmapped),
+>   
+> -	TP_ARGS(mm, page, writable, referenced, none_or_zero, status, unmapped),
+> +	TP_ARGS(mm, folio, writable, referenced, none_or_zero, status, unmapped),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(struct mm_struct *, mm)
+> @@ -72,7 +72,7 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
+>   
+>   	TP_fast_assign(
+>   		__entry->mm = mm;
+> -		__entry->pfn = page ? page_to_pfn(page) : -1;
+> +		__entry->pfn = folio ? folio_pfn(folio) : -1;
+>   		__entry->writable = writable;
+>   		__entry->referenced = referenced;
+>   		__entry->none_or_zero = none_or_zero;
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 950d147cd95e..bf5583dca1cb 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1435,7 +1435,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+>   		*mmap_locked = false;
+>   	}
+>   out:
+> -	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
+> +	trace_mm_khugepaged_scan_pmd(mm, folio, writable, referenced,
+>   				     none_or_zero, result, unmapped);
+>   	return result;
+>   }
