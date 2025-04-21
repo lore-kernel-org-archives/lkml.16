@@ -1,212 +1,208 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF223BA36;
-	Mon, 21 Apr 2025 03:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED331BA36
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745207535; cv=none; b=mn1Vpk7Uc6w3jyLSyzY00WNNG4KRBPVgF4lF/SNnzFGtTwSsKXMJndBOAsOE31KDPASaN2jYXAFccRwKictW5iswL/uLmNXNa7MvlFnJ5nN5mQDdP1GQfJRmPrhvmAvdOySxqlSkwDYpO0fDdckQrMHQ0EPH9psmbf2FmvF11eg=
+	t=1745207821; cv=none; b=Q1RO9CQiDOueh+Zz9OmQCNuNgpZc7QFmZcobcF3DVztlEWawbmqg102nEn9Dt7bZfnORPtL3G1ngemSshKAnXVXrAmHb/BKGO0zbpgbXwL+8ZYsSqvAJtZue/+Dhi9NswT1+Go9Ahi7EARHGYUpAoz57pxfyv1w9SfkjxRcCuNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745207535; c=relaxed/simple;
-	bh=SKy360k2jX7Gti4B3tJCD993GCWcNTHmk1yoWFKrfh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QgO4LJdZ+cIdD2oYP0xHAoiJJyXOqpupfqxrxOUtG2dK5DmuO3H+3xYsz0Gvo4hnFb7GIgdshEe7y9LpxJvPv+ChA59YTV8DtMgEDxNOLADPsmjXY4eLA3dx1xRm6l32YrKBqOyhxm07oqoTUG+VsamdRb935D383vHM3+ei4xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EG7Ld6U4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745207821; c=relaxed/simple;
+	bh=qkPzZXkMUThgzD0HD+qQ/HclVAEa2ofo3SQJJNjLthk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pzL/knVlC1ST4FMwok5AhcG4VoUeiCM8DGNxBJ/LA6/GkdufUuVDr21Gm+R47mPm4JaTNhyY5wFjuYZ41pYjF8EJXTa/8Ng0IjTCKmQbYUB/2yrN994jE1NEadQKuwqLZa65jqrB1mEg0VFr4LWRv7WPsVKL+C5iQNNgQZoAXDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=VnpKC4sa; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EG7Ld6U4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=HPPSSA49F2GQFYt4Y3+jo5LCCyAfhAv7rGkUEFsAg2c=; b=EG7Ld6U4DAUbtxsn3tkr+eGn0v
-	kxXkR+MHBvDsceOcYb96/Ypg4Xa6x74Itezu5DqfP/dwzSraKK5DlytGlTIJyNilAyIkZbmiwBcFo
-	Hb21edNODFSLNmnDF0vQ13X5CSFfozaHGwSt6bTVs+BO/94px/OGwnzQNPeQ105jPJF2aD+ytX0NS
-	YwGXBLQycV44ptuCT9l0BdbRIP34dg02Dmt3QY4Tq1goySGanPRlspvFoYrisyUghzDrML4xDoJyp
-	mLs5CjgmNUuATiEC/D0CxhLLu2skBjFVKAFutNuEMzBA8nk+qUyWcofA4eYX/6fffIPDelsC79Hop
-	BhMvra/w==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u6iCK-0000000Azui-2RFo;
-	Mon, 21 Apr 2025 03:51:59 +0000
-Message-ID: <f0b218f4-7379-4fa5-93e4-a1c9dd4c411c@infradead.org>
-Date: Sun, 20 Apr 2025 20:51:48 -0700
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VnpKC4sa"
+X-UUID: a893ba761e6411f09b6713c7f6bde12e-20250421
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/1VmN4dVZC6QitL81EwDWdsbp7Ol4HqNNMgrSzo39II=;
+	b=VnpKC4sab2ypsBi0hMYsQYiyYoC8zrZAm+j7DNbQJpPyv3r+k3H7vy4Yooc3S3Qw4Yzw+qQLBCcUq2mEoFvnKhma5eXnkev1Eu0nYCtSFbbcndIPF7kQGFUQ+TtxJM3wkLQ/BTHleTWklBB+iBnGIRbF4Ft4ZzVbBX5cxL0m0ls=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:034e18ea-0618-41ac-8921-ec73221ea491,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:ffe2cdc7-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: a893ba761e6411f09b6713c7f6bde12e-20250421
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 216296205; Mon, 21 Apr 2025 11:56:52 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Mon, 21 Apr 2025 11:56:51 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 21 Apr 2025 11:56:51 +0800
+From: Jason-JH Lin <jason-jh.lin@mediatek.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
+	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
+	<singo.chang@mediatek.com>, Xavier Chang <xavier.chang@mediatek.com>,
+	Xiandong Wang <xiandong.wang@mediatek.com>, Sirius Wang
+	<sirius.wang@mediatek.com>, Yongqiang Niu <yongqiang.niu@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3] mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
+Date: Mon, 21 Apr 2025 11:55:47 +0800
+Message-ID: <20250421035650.441383-1-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 17/19] famfs_fuse: Add famfs metadata documentation
-To: John Groves <John@Groves.net>, Dan Williams <dan.j.williams@intel.com>,
- Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, "Darrick J . Wong"
- <djwong@kernel.org>, Luis Henriques <luis@igalia.com>,
- Jeff Layton <jlayton@kernel.org>, Kent Overstreet
- <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>,
- Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Amir Goldstein <amir73il@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
- <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-18-john@groves.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250421013346.32530-18-john@groves.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
+Add cmdq_gctl_value_toggle() to configure GCE_CTRL_BY_SW and GCE_DDR_EN
+together in the same GCE_GCTL_VALUE register.
 
+For the SoCs whose GCE is located in MMINFRA and uses MMINFRA_AO power,
+this allows it to be written without enabling the clocks. Otherwise, all
+GCE registers should be written after the GCE clocks are enabled.
+Move this function into cmdq_runtime_resume() and cmdq_runtime_suspend()
+to ensure it is called when the GCE clock is enabled.
 
-On 4/20/25 6:33 PM, John Groves wrote:
-> From: John Groves <John@Groves.net>
-> 
-> This describes the fmap metadata - both simple and interleaved
-> 
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  fs/fuse/famfs_kfmap.h | 90 ++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 85 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
-> index 325adb8b99c5..7c8d57b52e64 100644
-> --- a/fs/fuse/famfs_kfmap.h
-> +++ b/fs/fuse/famfs_kfmap.h
-> @@ -7,10 +7,90 @@
->  #ifndef FAMFS_KFMAP_H
->  #define FAMFS_KFMAP_H
->  
-> +
-> +/* KABI version 43 (aka v2) fmap structures
-> + *
-> + * The location of the memory backing for a famfs file is described by
-> + * the response to the GET_FMAP fuse message (devined in
+Fixes: 7abd037aa581 ("mailbox: mtk-cmdq: add gce ddr enable support flow")
+Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
 
-                                                 divined
+Change in v3:
+- Move cmdq_gctl_value_toggle() after the public API cmdq_get_shift_pa().
 
-> + * include/uapi/linux/fuse.h
-> + *
-> + * There are currently two extent formats: Simple and Interleaved.
-> + *
-> + * Simple extents are just (devindex, offset, length) tuples, where devindex
-> + * references a devdax device that must retrievable via the GET_DAXDEV
+---
+ drivers/mailbox/mtk-cmdq-mailbox.c | 51 +++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 29 deletions(-)
 
-                                      must be
-
-> + * message/response.
-> + *
-> + * The extent list size must be >= file_size.
-> + *
-> + * Interleaved extents merit some additional explanation. Interleaved
-> + * extents stripe data across a collection of strips. Each strip is a
-> + * contiguous allocation from a single devdax device - and is described by
-> + * a simple_extent structure.
-> + *
-> + * Interleaved_extent example:
-> + *   ie_nstrips = 4
-> + *   ie_chunk_size = 2MiB
-> + *   ie_nbytes = 24MiB
-> + *
-> + * ┌────────────┐────────────┐────────────┐────────────┐
-> + * │Chunk = 0   │Chunk = 1   │Chunk = 2   │Chunk = 3   │
-> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-> + * │Stripe = 0  │Stripe = 0  │Stripe = 0  │Stripe = 0  │
-> + * │            │            │            │            │
-> + * └────────────┘────────────┘────────────┘────────────┘
-> + * │Chunk = 4   │Chunk = 5   │Chunk = 6   │Chunk = 7   │
-> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-> + * │Stripe = 1  │Stripe = 1  │Stripe = 1  │Stripe = 1  │
-> + * │            │            │            │            │
-> + * └────────────┘────────────┘────────────┘────────────┘
-> + * │Chunk = 8   │Chunk = 9   │Chunk = 10  │Chunk = 11  │
-> + * │Strip = 0   │Strip = 1   │Strip = 2   │Strip = 3   │
-> + * │Stripe = 2  │Stripe = 2  │Stripe = 2  │Stripe = 2  │
-> + * │            │            │            │            │
-> + * └────────────┘────────────┘────────────┘────────────┘
-> + *
-> + * * Data is laid out across chunks in chunk # order
-> + * * Columns are strips
-> + * * Strips are contiguous devdax extents, normally each coming from a
-> + *   different
-> + *   memory device
-
-Combine 2 lines above.
-
-> + * * Rows are stripes
-> + * * The number of chunks is (int)((file_size + chunk_size - 1) / chunk_size)
-> + *   (and obviously the last chunk could be partial)
-> + * * The stripe_size = (nstrips * chunk_size)
-> + * * chunk_num(offset) = offset / chunk_size    //integer division
-> + * * strip_num(offset) = chunk_num(offset) % nchunks
-> + * * stripe_num(offset) = offset / stripe_size  //integer division
-> + * * ...You get the idea - see the code for more details...
-> + *
-> + * Some concrete examples from the layout above:
-> + * * Offset 0 in the file is offset 0 in chunk 0, which is offset 0 in
-> + *   strip 0
-> + * * Offset 4MiB in the file is offset 0 in chunk 2, which is offset 0 in
-> + *   strip 2
-> + * * Offset 15MiB in the file is offset 1MiB in chunk 7, which is offset
-> + *   3MiB in strip 3
-> + *
-> + * Notes about this metadata format:
-> + *
-> + * * For various reasons, chunk_size must be a multiple of the applicable
-> + *   PAGE_SIZE
-> + * * Since chunk_size and nstrips are constant within an interleaved_extent,
-> + *   resolving a file offset to a strip offset within a single
-> + *   interleaved_ext is order 1.
-> + * * If nstrips==1, a list of interleaved_ext structures degenerates to a
-> + *   regular extent list (albeit with some wasted struct space).
-> + */
-> +
-> +
->  /*
-> - * These structures are the in-memory metadata format for famfs files. Metadata
-> - * retrieved via the GET_FMAP response is converted to this format for use in
-> - * resolving file mapping faults.
-> + * The structures below are the in-memory metadata format for famfs files.
-> + * Metadata retrieved via the GET_FMAP response is converted to this format
-> + * for use in  * resolving file mapping faults.
-
-                  ^drop
-
-> + *
-> + * The GET_FMAP response contains the same information, but in a more
-> + * message-and-versioning-friendly format. Those structs can be found in the
-> + * famfs section of include/uapi/linux/fuse.h (aka fuse_kernel.h in libfuse)
->   */
->  
->  enum famfs_file_type {
-> @@ -19,7 +99,7 @@ enum famfs_file_type {
->  	FAMFS_LOG,
->  };
->  
-> -/* We anticipate the possiblity of supporting additional types of extents */
-> +/* We anticipate the possibility of supporting additional types of extents */
->  enum famfs_extent_type {
->  	SIMPLE_DAX_EXTENT,
->  	INTERLEAVED_EXTENT,
-> @@ -63,7 +143,7 @@ struct famfs_file_meta {
->  /*
->   * dax_devlist
->   *
-> - * This is the in-memory daxdev metadata that is populated by
-> + * This is the in-memory daxdev metadata that is populated by parsing
->   * the responses to GET_FMAP messages
->   */
->  struct famfs_daxdev {
-
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index d186865b8dce..ab4e8d1954a1 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -92,18 +92,6 @@ struct gce_plat {
+ 	u32 gce_num;
+ };
+ 
+-static void cmdq_sw_ddr_enable(struct cmdq *cmdq, bool enable)
+-{
+-	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
+-
+-	if (enable)
+-		writel(GCE_DDR_EN | GCE_CTRL_BY_SW, cmdq->base + GCE_GCTL_VALUE);
+-	else
+-		writel(GCE_CTRL_BY_SW, cmdq->base + GCE_GCTL_VALUE);
+-
+-	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
+-}
+-
+ u8 cmdq_get_shift_pa(struct mbox_chan *chan)
+ {
+ 	struct cmdq *cmdq = container_of(chan->mbox, struct cmdq, mbox);
+@@ -112,6 +100,19 @@ u8 cmdq_get_shift_pa(struct mbox_chan *chan)
+ }
+ EXPORT_SYMBOL(cmdq_get_shift_pa);
+ 
++static void cmdq_gctl_value_toggle(struct cmdq *cmdq, bool ddr_enable)
++{
++	u32 val = cmdq->pdata->control_by_sw ? GCE_CTRL_BY_SW : 0;
++
++	if (!cmdq->pdata->control_by_sw && !cmdq->pdata->sw_ddr_en)
++		return;
++
++	if (cmdq->pdata->sw_ddr_en && ddr_enable)
++		val |= GCE_DDR_EN;
++
++	writel(val, cmdq->base + GCE_GCTL_VALUE);
++}
++
+ static int cmdq_thread_suspend(struct cmdq *cmdq, struct cmdq_thread *thread)
+ {
+ 	u32 status;
+@@ -140,16 +141,10 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+ static void cmdq_init(struct cmdq *cmdq)
+ {
+ 	int i;
+-	u32 gctl_regval = 0;
+ 
+ 	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
+-	if (cmdq->pdata->control_by_sw)
+-		gctl_regval = GCE_CTRL_BY_SW;
+-	if (cmdq->pdata->sw_ddr_en)
+-		gctl_regval |= GCE_DDR_EN;
+ 
+-	if (gctl_regval)
+-		writel(gctl_regval, cmdq->base + GCE_GCTL_VALUE);
++	cmdq_gctl_value_toggle(cmdq, true);
+ 
+ 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
+ 	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
+@@ -315,14 +310,21 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+ static int cmdq_runtime_resume(struct device *dev)
+ {
+ 	struct cmdq *cmdq = dev_get_drvdata(dev);
++	int ret;
+ 
+-	return clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
++	ret = clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
++	if (ret)
++		return ret;
++
++	cmdq_gctl_value_toggle(cmdq, true);
++	return 0;
+ }
+ 
+ static int cmdq_runtime_suspend(struct device *dev)
+ {
+ 	struct cmdq *cmdq = dev_get_drvdata(dev);
+ 
++	cmdq_gctl_value_toggle(cmdq, false);
+ 	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
+ 	return 0;
+ }
+@@ -347,9 +349,6 @@ static int cmdq_suspend(struct device *dev)
+ 	if (task_running)
+ 		dev_warn(dev, "exist running task(s) in suspend\n");
+ 
+-	if (cmdq->pdata->sw_ddr_en)
+-		cmdq_sw_ddr_enable(cmdq, false);
+-
+ 	return pm_runtime_force_suspend(dev);
+ }
+ 
+@@ -360,9 +359,6 @@ static int cmdq_resume(struct device *dev)
+ 	WARN_ON(pm_runtime_force_resume(dev));
+ 	cmdq->suspended = false;
+ 
+-	if (cmdq->pdata->sw_ddr_en)
+-		cmdq_sw_ddr_enable(cmdq, true);
+-
+ 	return 0;
+ }
+ 
+@@ -370,9 +366,6 @@ static void cmdq_remove(struct platform_device *pdev)
+ {
+ 	struct cmdq *cmdq = platform_get_drvdata(pdev);
+ 
+-	if (cmdq->pdata->sw_ddr_en)
+-		cmdq_sw_ddr_enable(cmdq, false);
+-
+ 	if (!IS_ENABLED(CONFIG_PM))
+ 		cmdq_runtime_suspend(&pdev->dev);
+ 
 -- 
-~Randy
+2.43.0
 
