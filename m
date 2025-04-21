@@ -1,224 +1,240 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011025.outbound.protection.outlook.com [52.101.65.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBE8155A25
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745217348; cv=none; b=OtSgXMDa9AaeawY0UK4NFpiVkAM1tX0IOfNUsviA4xIykR+gXCgzQjRmk2qdvh8s8KU8Q12QF/MWMOQx0sIwheJOwvhAyu3tZdN7AXt9MrstP8CEh8p5FjGmFWAdP6YpXaGHq7S7qK+oh1qnmmdhQzodOJzyaMtkeDCGhWx09Gs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745217348; c=relaxed/simple;
-	bh=IF3zXt1NZj47mVCLkAECpFLhWCDuWYyrNvMOR1KtfBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YqBpw13Js+cw9LyDyluolOVv0AGClq2JhZRJk2NBxGHWaoNFJlkwKltODRmhk3YJqJ394GaXZxomf47xP9XYw12A5SJHon3l5OHr9aYB7QH0aZYzuoSm0p4iy9WcEJevBuS4M7I9AckSmxCd/06qNoKc7Y/JYSMTQHucJnmAx4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aCtrz6gp; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843EF155A25;
+	Mon, 21 Apr 2025 06:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745217475; cv=fail; b=LZUw9E7bOImJizqSwINzak86/iQIT4QztZXjgn+GT2NktbWLW0IWTDQMAc9nZKEEJ3CVT9UlHR7m+Ik/tEfKCJt7Y4Z84hmQxwOc2Kmpwf7snVmejpnuyYLJsgEKvswPPUI9jCIfZHVt9sY2o4x0QJkVSe/5LYdV5KH8niKxFGY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745217475; c=relaxed/simple;
+	bh=WPDxqGApjEH1alzHU6Oe1/g+Ff2kPOgOCtHnDjVJKoo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rBFBtX8VZ1yD3lIGHe216rofeFZ5oKtCWd1ytYtJEz7s4g8tfSmwXeihWCkKL4bmkA67cNi1ku+OwhxJ5Ad+xsXrD+6SFeJYeFW2SRNUCFwrFGJSR6ALgKTmnoxqIGe0Ky3W2n2SGNRFo0CbBKkqZN0Ae6+11FNkSIjPnrzuZVE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=opS8lmj1; arc=fail smtp.client-ip=52.101.65.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aCtrz6gp"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745217334; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=idPt4awxei//Gm12NGcnuqpMWa/emoKeVAP9nz2q0EM=;
-	b=aCtrz6gpecKrIxjHKphxNG/eu2VEqFS1+Wh4MyXoyH9eyBb92p/5MkzvyUkylim0emncuYz/Q3WKY3uxsk6BB6XxRLo9DxDQfhQ+mhARG1gQQL3q09RtfS8BvjhX7D1cJ8vjPzGBYR7cBQw55l6PBTrhNR8sPBq9YDA2PYva8oE=
-Received: from 30.74.144.126(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXStuVy_1745217014 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 21 Apr 2025 14:30:15 +0800
-Message-ID: <e04b4295-80f4-44c8-a7ec-9e946a83ef12@linux.alibaba.com>
-Date: Mon, 21 Apr 2025 14:30:14 +0800
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="opS8lmj1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CFZaeJVn9gqsyWmkoErI6XwG8wBHG9AINKldwEBzVDbTvS9a7FOIUWpZ+Va9CPyLUfbETYdhXid1N1N5m6w1eygco3wuQpl3sKeU8QXc96wWtgBE02mLKGRBlw27LLuR5c/0bKrWQN54Q10uT3lxyv8UzlpL7JVUYhUwbgS/O7q4EitAQcfV4TJ+c4hD47pWAPvO7bHfFd5VR/3xVgNEvtJja3mMmixdB6kJzbpNe5o1rPRLwgM1XvtzSbi1rsyNMNbJ9t0bErwDv4cmqNXnSKJjq/ULZwnfrvVU9VAS+A7vIKg/2ujdENmYdWLkK435cGzy1PWFsL1ni0AMdptC9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rFHb++fh6EBQcV1ThER9vCX5h4SD+wXxBVLvgb1rs58=;
+ b=M4qISzI7ykFlQd2pgLpsF03HMyTou9ImEjGRVbgh69venoaL5lKfMKhZnXi2MmoByW4H5OmiVTVb7QrEpRwMHqHKWqNWX1t95TMUba8URxFYsIlCCuQCiw0tAHmqs65LU1WpW7KgE3ZJ7ShS4vvy/UXgWh6QvyImx9u90hGcbVjl6vaFNYX9azbLXtcu/cWFfef7EMnolUHtzty0mbcRl7J+8ywTEdNRGO17nDEKv9aZxpz2T2/ti84GZBZr2UMetafRJgx4sqcoOP6FA2dkwfcVmsh9vbK5cH0SttSDgWNzLA7dz6epwU4sfXm0ZwrW984izSB8xLDlxu+91nujhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rFHb++fh6EBQcV1ThER9vCX5h4SD+wXxBVLvgb1rs58=;
+ b=opS8lmj1Jr7TzdeD9erBN7WpI8xc5QZbQjMiQAJairON5Yqka1JhdbZhga5zkD2JUvWafNortjqKJWSPOPNc4bX2jqciyaJ76VlqwG9P61fZTjf12EnOTlKRx6lAP8Yc5sPLCTsBKk6Lkm4HweBf9mCUO0BuyWw48KvuHQwNrnuse8sBrGyLOSNI+i9AA7UY35mEUI2iHzmkuvLO3jRRJv64Jvkb+RVGci8N05Rjrk8DJjR5YAeR+9IBXBfmkZY01ndjTBf4uvbRRXGUP8ujRzOUQ9/BxvmEC9EWyETsv9QquocXiZFoQ4snR/DSAmcn02RedfK9liB8VsDtOpjAiw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by PAXPR04MB9678.eurprd04.prod.outlook.com (2603:10a6:102:23c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 06:37:48 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 06:37:48 +0000
+Message-ID: <d3668dc7-b8c8-497c-ae3a-b476a8658c40@oss.nxp.com>
+Date: Mon, 21 Apr 2025 14:37:39 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: imx-jpeg: Drop the first error frames
+To: Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
+ hverkuil-cisco@xs4all.nl, mirela.rabulea@oss.nxp.com
+Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
+ linux-imx@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250305022513.2312731-1-ming.qian@oss.nxp.com>
+ <4549d9abf5f93fb6f417d0fb8f73877272d7c495.camel@ndufresne.ca>
+From: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
+In-Reply-To: <4549d9abf5f93fb6f417d0fb8f73877272d7c495.camel@ndufresne.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR01CA0012.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::8) To PAXPR04MB8254.eurprd04.prod.outlook.com
+ (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mempolicy: Optimize queue_folios_pte_range by PTE
- batching
-To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
- akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250416053048.96479-1-dev.jain@arm.com>
- <7f96283b-11b3-49ee-9d2d-5ad977325cb0@linux.alibaba.com>
- <019d1c4a-ffd0-4602-b2ba-cf07379dab17@redhat.com>
- <7392a21b-10bf-4ce9-a6fd-807ed954c138@linux.alibaba.com>
- <8b387a53-40e0-40d1-8bfa-b7524657a7dd@redhat.com>
- <be88bfc7-ea89-4cef-bbce-3572d3902481@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <be88bfc7-ea89-4cef-bbce-3572d3902481@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|PAXPR04MB9678:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b02551c-ce0f-426d-e426-08dd809f0811
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TUJFd2s1d2Qxc2Z5aGV0Qk96a1Y3YVNEaWhlbDFRcGpKaDAxREs1c0tkT0dX?=
+ =?utf-8?B?cFZ2a2xXUjNKZUtIcW9RU3hXNjN2TzBRenIwVk5LS0VXMjZUeXBReGdTWWk0?=
+ =?utf-8?B?RWxKc0h2aUhUU09BMGphSEhjYldPQVc1dnlKbXpmZXRCWDBtMDRKVWlhVjFW?=
+ =?utf-8?B?VzliTitFYlJzR2pSblV3QkVTSGphOC9oVkhKL0dsYjVycjVRR3VUcEhORVdq?=
+ =?utf-8?B?QWl5UVh4cXdOU0tTbVZZY3FXOFFrTDRLTHJOVVRhaVFqbG8vdldKMys1UFk0?=
+ =?utf-8?B?ejZNclU4K1c5bmVmVWRBWlMwbU5oTDRUYlJRdnNmWGxDeGx3V0Zjd0VIZkk3?=
+ =?utf-8?B?bWwyWVBNMWJiOThJNTVzRDJhLzlLR3lCWHdXVndTOU5rK080YUJuYW9ydkhP?=
+ =?utf-8?B?R3hKU0ZhTVFEOEwwUEpWM3hMVTI2NmR0VU1GYmpNeHBRRVdyOVN2YUtkVnVP?=
+ =?utf-8?B?SHZFWThGcEh4N1A1SElYQU9yNmQ0d1U3STArQTVwYUtqS1RHOXRwcm9pRU9S?=
+ =?utf-8?B?L1J1bDBHdUpsaHd4REplMTNJa3VVTWwzU1o1SzY1WEk4UzBRUTV0SEFSVGJl?=
+ =?utf-8?B?SjUzRjl5YnFMbWZ3WHF1ZmsrSEhIOXNwUnFYbEVydFF4ZHRCVytHaG1pR3h4?=
+ =?utf-8?B?dkdySENDOWZYUlVDZEdSQXRkenFZRHNKTWFQcnN2WDJFRENwKzloeDJpdDJn?=
+ =?utf-8?B?SHUwY0pGOWNFMGUyUUJOejA5NkVjT1M5YWs1czhwV3dRZFFWVlUxSXRwdnla?=
+ =?utf-8?B?V0RDNWlmeEdZd2pzU25CRDROWnRjMzhPYnJQb0tqOGhKRVRSYVhjOVhoQ1VL?=
+ =?utf-8?B?SXJ1Sy9wYVlLb0pEdTd1QVZiT0pNTWEwUmZTaW1TajQwcDNWNmNLd056THV6?=
+ =?utf-8?B?SjZ4dWlXT01RVGl2eG1WMi8zR2hqQVZWbzB2bE5zRk9rbWg1UWlxdzlRL2FH?=
+ =?utf-8?B?SUJlZ3FnTTd4NUpma0JxR042c3NVNHA4QWNQRVMrZStYQkhObWx6UjFCUStH?=
+ =?utf-8?B?bGhZbzNGTXlhcjBSRjJEaGdIRmhZKyszUEg5WmR1aFNYSVdpZU4rc0JjbEMv?=
+ =?utf-8?B?b293dVhmK3hQYjkvbS9velg1Z1ptblhlWjNMUFBDeUQxckx6czFobUlrejQ5?=
+ =?utf-8?B?ZW1rZzJWdkpvQlptekZSS2dZcjArbVhVQ2h2RlIyMTZXL21HNTNjT2RZZUFi?=
+ =?utf-8?B?Vi90SkJva0NTVVBrOEZ1NHYwMkJkRjFPd2FjbTFPMnhqTThyYkdCRHlCeGhD?=
+ =?utf-8?B?blpsVXpxYWpkRUJPWXZxYnplZ3d0VStvVndNYnlwendRZGZlQ0FUcHFYRFYr?=
+ =?utf-8?B?eDVzT2llbTh0TVdKN0xFTGp6YjhTRU1SVndSNkd2NXZUSkVlRk5yL2hYM3pH?=
+ =?utf-8?B?SWJWM1ZTb2t5Zm5tZTRCKys2ekVmMzIwUGZxaDNVMlZKVWtmdk5hUkpXZHN4?=
+ =?utf-8?B?Y0VVcWd4aUNiUWtLVWJ5RWN1Yml4SldSYW5sVjFrTjk1NUtCOVdBMndzU1hN?=
+ =?utf-8?B?S0k2ZjQrakgxSkdteFZqelk4eVZoNXovWXRsQWp5ZTJ0czFNOGVoUlZZTHV2?=
+ =?utf-8?B?bUdVMTQ1TXdhZXRZREo4OFVKVytZYkVTM01JS2Q1dE4wNzNFcXRXR0ZiNStY?=
+ =?utf-8?B?NXlJSFdENWI4ZTRHTUt2MklCeVo1eUJUOVBvY2tJSXpabFF1eS9lc0ZlNjgv?=
+ =?utf-8?B?S3MxRC9xZUdhZmxidkZ0Q0daL3k1Yk5tL0ViVFpTQkxaV3MvYXBxWFA2ZE9X?=
+ =?utf-8?B?SlJCSGUxc2haNDQ5SVBlUkJ3RE1mV3BxeDUrVzVHODRkbmJRSTVWMGtKL0NI?=
+ =?utf-8?B?Ym14QXBOOE9kYjcyWVJXR1g3di83L2Q3cDBQK2RVQzI3LzVnanZiaGQvNkoz?=
+ =?utf-8?B?THpzS2xxRGFDTFo0L1JzVk5SSEVWalZWNnBCS2dmK0I1QS9QcGErdHZESXZu?=
+ =?utf-8?Q?02DRznBLdhU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dk1WMGNGUzRIWEE4N1l3QVZ5a3ZaYzFoZlVCU0N3dmZ1ZVlJTmRrck1hNytC?=
+ =?utf-8?B?YlpFeUVKY25sWnZwL01XOFRLY3RoNnVPbk1QUS91ejBxUVpYQjJhd0JUM1Vq?=
+ =?utf-8?B?a2VhNTV5ck5QcU9FWGt5Tmo4UldaN0pac29jYjhIR3hoNjR0eGhsQkZsSzhT?=
+ =?utf-8?B?QjJSWWc1OEU4REdTeUV1WTVjd0pCcWJTSVgyZytRVGFkNzFnVmVZdkhFcVRU?=
+ =?utf-8?B?OUlLaTZkNW9PUDgxdEE0T1lLcmYxT0pHS0FrODdxdVdjRlFrVFhqZE5rRnZv?=
+ =?utf-8?B?cTIzS2tFbkdBV3Y5dDNSaGF5dlV2UnNsWnNsV3pOT2Q5OG5FUW5Dc0FOZXJH?=
+ =?utf-8?B?Q01LMjMxcE5OSEN5YlNzSkV0Y2VZRDAvWFE1M0RoZ0RBd2hPTExlTDZZYUpM?=
+ =?utf-8?B?QlZxWCtISndreXZyMTc0QWFDckt5KzFLemdPQjRrand3bmduaHJJY1UwMU91?=
+ =?utf-8?B?T0tvcHpkVmdZUmFrQm1NbGE4eUpZTUpXZlhEekVzTEFsSGZvaFRNb2ZPWU1F?=
+ =?utf-8?B?Nm1wTldBeEljRXpjS045VjRyWVhYVXYrTkp5MDRyNXJJYitNeVpRaFJJaEdS?=
+ =?utf-8?B?MFBTdzZJdE8zOUNXZWVYYnpsdC9sK0lkdk4wUzNiazU3TkFmeUZIemRud1Q2?=
+ =?utf-8?B?TDd2ZkYzSDJBR3cxekgzWE5Xb0lZeWxxTkR0cXlXUGs3WmM5MEwydlIyamJE?=
+ =?utf-8?B?cnA3cjRTc01aK1pOVXUyZVZ4Z3ptWlpHcTc2S25DblFzN2lHbHpqY2JaNUE4?=
+ =?utf-8?B?U2ZHZU95RUZyTzNSUFpCdS9KUStqWGVidlhLQkZNRHVPbU4vVXpzakxGYTJJ?=
+ =?utf-8?B?eHdTQlZPUWtWQ2NwcmJTMHM4cTdjekJma1kvam1KczlzdmJNZ01VRWhEOE41?=
+ =?utf-8?B?UGphejJYUXFySEtPWDBTbjhPbkw4UUFWcW9uVUZiaGpkMnpYZHI0OWUvQURG?=
+ =?utf-8?B?MjI4cng5SjdIZXVYNGs0M3dKR20yOFRFbmptY3hZaGxZQUZpMXNySC91aXhF?=
+ =?utf-8?B?dDh4VCtCRGxpc0tVRWpjbVpjMktBUlR6NWhqWXVYdDROMFFSQS9rWmxsaGtt?=
+ =?utf-8?B?cE9EOWROWmY3N2Q5a1hYNUtwSjV1c3UwTnE0YUt2Y0J3Y0l4SmoxUW1xUXRF?=
+ =?utf-8?B?L0VHcmhQS2NnZ29STzZMemVad2VYWmQ3bVYyNE41Z0tqR242N0ZkQ282MGhD?=
+ =?utf-8?B?bWZuMitnbnptMWtTLzlCYTNsOWNadGxEVkJ0UDZIVjloSnFleWhhMUNwMCtZ?=
+ =?utf-8?B?Ymc1Q21VbXVGSFZMelJFZytpTXRpd2tIS1dWUXo5VWtwYlRWUTErVWpua0o5?=
+ =?utf-8?B?c1ZRMXRpNHhIWUovcHBlNHhCeGM3ZTM5SWszc0FVYlV4ckdybjlBOWZmbjhk?=
+ =?utf-8?B?YjNuZ0dnQXcydmdMNW5hcm5IaUdSSmFFc1AwTUoyU0NlUTdSYzhwMytBVFFW?=
+ =?utf-8?B?TUF4bi9FOTN5cjc2NHEzOGJlMlNqNUZRZDltU3VKQzdJandtdnl5Y0tsYzN3?=
+ =?utf-8?B?SXIrMUlQeURHdlpISnd4NkppRVpkM3lxUHdHMmR0QTlvTXZyQzdPWk45ZFRL?=
+ =?utf-8?B?K01Dek90YThpYVhrUzIzUGJkVFFUdk9pdmk4SFRlTU1ZeDN4bW9sSGM5Zjkx?=
+ =?utf-8?B?Zy9jYTFVVm5RWmxhZFVldGtKU3hlZXpnODlhYXNlOGFNU3IzNFk4bG5YYnhz?=
+ =?utf-8?B?U0JhWmc2QTRIMDFNNlhaNngrcm94K1VjSTJiWHRzeFhyWTg0Zkw0bGV5MDFk?=
+ =?utf-8?B?SW9DYTZqTmh0Sm9QTVdxbkN2MWRuMVUyYlhETXgySFN0bjhENVI0ZnFzVERa?=
+ =?utf-8?B?aktQYTBuS3p4dnBnMU5pdEJhZGdSbTNuOTFrT1JjVXVyTEhmQWsyR0R6OWtC?=
+ =?utf-8?B?all5MFVXckZOY1QxY3Y1WWV1T21nY1BMMDBtMy9VRXZ2ckJQSFRKWGJnNDA4?=
+ =?utf-8?B?STRDc1dITmJHK3dScEthU1RERW5SVWxBLzV1aHBoNDUwWm5iYmJGcDFNdmJy?=
+ =?utf-8?B?ejJFNnlLN2tLWFdIUFNqSGdLRlN4STVTWXlRS2lQbW9yeWxwVUFEREN3QkFR?=
+ =?utf-8?B?Mm5CZjRSOGxjb0p4b3JaZWExaEkzMk1wMFlURFJzRjhDM1pnOHQzVFVKU2Nx?=
+ =?utf-8?Q?xD4itTki67Oljv0cnF1HFJEsC?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b02551c-ce0f-426d-e426-08dd809f0811
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 06:37:48.4496
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Nypwyjm0KgL/lBu8Zny2NPXCeqjilG/SJe5suFovnDGrlXTwEc4cUE81tie3xhBqpvUXLerjI0UsJ+ybQN1xcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9678
 
+Hi Nicolas,
 
+On 2025/4/18 21:12, Nicolas Dufresne wrote:
+> Le mercredi 05 mars 2025 à 10:25 +0800, ming.qian@oss.nxp.com a écrit :
+>> From: Ming Qian <ming.qian@oss.nxp.com>
+>>
+>> When an output buffer contains error frame header,
+>> v4l2_jpeg_parse_header() will return error, then driver will mark this
+>> buffer and a capture buffer done with error flag in device_run().
+>>
+>> But if the error occurs in the first frames, before setup the capture
+>> queue, there is no chance to schedule device_run(), and there may be no
+>> capture to mark error.
+>>
+>> So we need to drop this buffer with error flag, and make the decoding
+>> can continue.
+>>
+>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+> 
+> This seems like a relatively important bug fix to be, perhaps you can
+> offer "Fixes" tag to this commit ?
+> 
 
-On 2025/4/16 16:56, David Hildenbrand wrote:
-> On 16.04.25 10:51, David Hildenbrand wrote:
->> On 16.04.25 10:41, Baolin Wang wrote:
->>>
->>>
->>> On 2025/4/16 16:22, David Hildenbrand wrote:
->>>> On 16.04.25 08:32, Baolin Wang wrote:
->>>>>
->>>>>
->>>>> On 2025/4/16 13:30, Dev Jain wrote:
->>>>>> After the check for queue_folio_required(), the code only cares about
->>>>>> the
->>>>>> folio in the for loop, i.e the PTEs are redundant. Therefore, 
->>>>>> optimize
->>>>>> this loop by skipping over a PTE batch mapping the same folio.
->>>>>>
->>>>>> With a test program migrating pages of the calling process, which
->>>>>> includes
->>>>>> a mapped VMA of size 4GB with pte-mapped large folios of order-9, and
->>>>>> migrating once back and forth node-0 and node-1, the average 
->>>>>> execution
->>>>>> time reduces from 7.5 to 4 seconds, giving an approx 47% speedup.
->>>>>>
->>>>>> v2->v3:
->>>>>>      - Don't use assignment in if condition
->>>>>>
->>>>>> v1->v2:
->>>>>>      - Follow reverse xmas tree declarations
->>>>>>      - Don't initialize nr
->>>>>>      - Move folio_pte_batch() immediately after retrieving a 
->>>>>> normal folio
->>>>>>      - increment nr_failed in one shot
->>>>>>
->>>>>> Acked-by: David Hildenbrand <david@redhat.com>
->>>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>>>> ---
->>>>>>      mm/mempolicy.c | 12 ++++++++++--
->>>>>>      1 file changed, 10 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>>>>> index b28a1e6ae096..4d2dc8b63965 100644
->>>>>> --- a/mm/mempolicy.c
->>>>>> +++ b/mm/mempolicy.c
->>>>>> @@ -566,6 +566,7 @@ static void queue_folios_pmd(pmd_t *pmd, struct
->>>>>> mm_walk *walk)
->>>>>>      static int queue_folios_pte_range(pmd_t *pmd, unsigned long 
->>>>>> addr,
->>>>>>                  unsigned long end, struct mm_walk *walk)
->>>>>>      {
->>>>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | 
->>>>>> FPB_IGNORE_SOFT_DIRTY;
->>>>>>          struct vm_area_struct *vma = walk->vma;
->>>>>>          struct folio *folio;
->>>>>>          struct queue_pages *qp = walk->private;
->>>>>> @@ -573,6 +574,7 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>>>> unsigned long addr,
->>>>>>          pte_t *pte, *mapped_pte;
->>>>>>          pte_t ptent;
->>>>>>          spinlock_t *ptl;
->>>>>> +    int max_nr, nr;
->>>>>>          ptl = pmd_trans_huge_lock(pmd, vma);
->>>>>>          if (ptl) {
->>>>>> @@ -586,7 +588,9 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>>>> unsigned long addr,
->>>>>>              walk->action = ACTION_AGAIN;
->>>>>>              return 0;
->>>>>>          }
->>>>>> -    for (; addr != end; pte++, addr += PAGE_SIZE) {
->>>>>> +    for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
->>>>>> +        max_nr = (end - addr) >> PAGE_SHIFT;
->>>>>> +        nr = 1;
->>>>>>              ptent = ptep_get(pte);
->>>>>>              if (pte_none(ptent))
->>>>>>                  continue;
->>>>>> @@ -598,6 +602,10 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>>>> unsigned long addr,
->>>>>>              folio = vm_normal_folio(vma, addr, ptent);
->>>>>>              if (!folio || folio_is_zone_device(folio))
->>>>>>                  continue;
->>>>>> +        if (folio_test_large(folio) && max_nr != 1)
->>>>>> +            nr = folio_pte_batch(folio, addr, pte, ptent,
->>>>>> +                         max_nr, fpb_flags,
->>>>>> +                         NULL, NULL, NULL);
->>>>>>              /*
->>>>>>               * vm_normal_folio() filters out zero pages, but 
->>>>>> there might
->>>>>>               * still be reserved folios to skip, perhaps in a VDSO.
->>>>>> @@ -630,7 +638,7 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>>>> unsigned long addr,
->>>>>>              if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
->>>>>>                  !vma_migratable(vma) ||
->>>>>>                  !migrate_folio_add(folio, qp->pagelist, flags)) {
->>>>>> -            qp->nr_failed++;
->>>>>> +            qp->nr_failed += nr;
->>>>>
->>>>> Sorry for chiming in late, but I am not convinced that 'qp->nr_failed'
->>>>> should add 'nr' when isolation fails.
->>>>
->>>> This patch does not change the existing behavior. But I stumbled over
->>>> that as well ... and scratched my head.
->>>>
->>>>>
->>>>>     From the comments of queue_pages_range():
->>>>> "
->>>>> * >0 - this number of misplaced folios could not be queued for moving
->>>>>      *      (a hugetlbfs page or a transparent huge page being counted
->>>>> as 1).
->>>>> "
->>>>>
->>>>> That means if a large folio is failed to isolate, we should only 
->>>>> add '1'
->>>>> for qp->nr_failed instead of the number of pages in this large folio.
->>>>> Right?
->>>>
->>>> I think what the doc really meant is "PMD-mapped THP". PTE-mapped THPs
->>>> always had the same behavior: per PTE of the THP we would increment
->>>> nr_failed by 1.
->>>
->>> No? For pte-mapped THPs, it only adds 1 for the large folio, since we
->>> have below check in queue_folios_pte_range().
->>>
->>> if (folio == qp->large)
->>>     continue;
->>>
->>> Or I missed anything else?
->>
->> Ah, I got confused by that and thought it would only be for LRU
->> isolation purposes.
->>
->> Yeah, it will kind-of work for now and I think you are correct that we
->> would only increment nr_failed by 1.
->>
->> I still think that counting nr_failed that way is dubious. We should be
->> counting pages, which is something that user space from migrate_pages()
->> could understand. Having it count arbitrary THPs/large folio sizes is
->> really questionable.
->>
->> But that is indeed a separate issue to resolve.
-> 
-> Digging into it:
-> 
-> commit 1cb5d11a370f661c5d0d888bb0cfc2cdc5791382
-> Author: Hugh Dickins <hughd@google.com>
-> Date:   Tue Oct 3 02:17:43 2023 -0700
-> 
->      mempolicy: fix migrate_pages(2) syscall return nr_failed
->      "man 2 migrate_pages" says "On success migrate_pages() returns the 
-> number
->      of pages that could not be moved".  Although 5.3 and 5.4 commits fixed
->      mbind(MPOL_MF_STRICT|MPOL_MF_MOVE*) to fail with EIO when not all 
-> pages
->      could be moved (because some could not be isolated for migration),
->      migrate_pages(2) was left still reporting only those pages failing 
-> at the
->      migration stage, forgetting those failing at the earlier isolation 
-> stage.
->      Fix that by accumulating a long nr_failed count in struct queue_pages,
->      returned by queue_pages_range() when it's not returning an error, for
->      adding on to the nr_failed count from migrate_pages() in 
-> mm/migrate.c.  A
->      count of pages?  It's more a count of folios, but changing it to pages
->      would entail more work (also in mm/migrate.c): does not seem 
-> justified.
-> 
-> Yeah, we should be counting pages, but likely nobody really cares, 
-> because we
-> only care if everything was migrated or something was not migrated.
+thanks for the reminder
 
-Agree. Like you said, we need a separate patch to do some cleanup for this.
+>> ---
+>>   drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>> index 1221b309a916..0e6ee997284b 100644
+>> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>> @@ -1921,6 +1921,15 @@ static void mxc_jpeg_buf_queue(struct vb2_buffer *vb)
+>>   	if (ret)
+>>   		jpeg_src_buf->jpeg_parse_error = true;
+>>   
+>> +	/*
+>> +	 * if the capture queue is not setup, the device_run() won't be scheduled,
+>> +	 * need to drop the error buffer, so that the decoding can continue
+>> +	 */
+>> +	if (jpeg_src_buf->jpeg_parse_error &&
+>> +	    !vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
+>> +		v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
+>> +		return;
+>> +	}
+> 
+> Looks good to me, an alternative implementation could have been to
+> merged into the error branch above.
+> 
+>   	if (ret) {
+>   		jpeg_src_buf->jpeg_parse_error = true;
+>   
+> 		/*
+> 	 	 * If the capture queue is not setup, the device_run() won't
+> 		 * be scheduled, drop the error buffer so that the decoding
+> 		 * can continue.
+> 	 	 */
+> 		if (!vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
+> 			v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
+> 			return;
+> 		}
+> 	}
+> 
+> With or without this suggestion, but with the Fixes tag, you can include in your v2:
+> 
+> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> 
+
+I'll apply your suggestion and with the Fixes tag in V2
+
+Regards,
+Ming
+
+>>   end:
+>>   	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, vbuf);
+>>   }
