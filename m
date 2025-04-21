@@ -1,106 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B698F2561B4;
-	Mon, 21 Apr 2025 02:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF4B256C97;
+	Mon, 21 Apr 2025 02:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745204359; cv=none; b=vE3s9aJ5KvmAYzWuIOvo8t50GvnZEgop4EZ5FA6MpRkoUknadxBn2piZXxwcaYBslMvIq/eguzHS7/a6GksLhhP3uv8LM74zl7oIkZpc6rBMYI5wZIYES6chjbp/ZBDc4yc82f+PuZi9QixcRtYo7IAKQQkdKmCfDQx+q/NzTg4=
+	t=1745204393; cv=none; b=tLOK/ATl/2HnQ9NHYwpuzrqRo6DsXN0aDvuSXAzcqBFh27WXDsIpllsuoXDDSN0z32rCx2ltRxK8xEOyxNojOaKhW0zDHTc9Zve0Z2LWljzMpjRwC4WUAMC+B7kQOe4+uxxZdSKTIl60qZ0oxmUeDnATCNH7vJa7ahcOub1nUo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745204359; c=relaxed/simple;
-	bh=IhphpY0o4i7Nl1j4CbYkOEF3b1+ONoH+eN1oOCIVXZk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E9XUivujYsqrVQd8iqNnnAi+HZU4VgkUfDoD6xwcdllFsarzYiwYvmJL4ZJwyg7tWD9Kyg4odwhVCy+RPLfqvCj9Trt2iNqbTkjdB60e6ngDm22uBEfH9W0+zqS3lS1M7Lw5CtGm2oENQSdWfxANl4he5hc0m0qz5xKBVTwr0WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i674J8zC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i674J8zC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B26DC4CEEE;
-	Mon, 21 Apr 2025 02:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745204359;
-	bh=IhphpY0o4i7Nl1j4CbYkOEF3b1+ONoH+eN1oOCIVXZk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=i674J8zCxQDFYskdIciIt1zH0XL9L2wDequTMQyDFFq1a1ZU7jC0tTPq8xOdQIGQr
-	 uDUoTmp7gxp1skM6zdbxOQ3GRCzgQSHTBK1TVHCYl+Ro+ZqxmDXAPJpgrgKK9FvZiz
-	 bQEXdSISL1sJg9aPkQvONQ2mZwprJRrSD6Tj6oKV59G+bvnKBBiqWdOlb3pYnPwo8/
-	 geAH8nEjEOxBXEfFC9iZm8ojCaZq8AdczoVMYGU1kPlChD+Ie8f7rz/QDsuqu5/eGS
-	 QMRF+0Alvzn+b/58wO1dVLvBWEYh0GyKtMmEldevz3ukO+WWpTuxXFf47p7+amlai/
-	 0hWAqvxsDEM+A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA00C369D6;
-	Mon, 21 Apr 2025 02:59:19 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Sun, 20 Apr 2025 21:59:06 -0500
-Subject: [PATCH 2/2] PCI: tegra: Allow building as a module
+	s=arc-20240116; t=1745204393; c=relaxed/simple;
+	bh=b3utdDm0Z6t9OefgFnK0cFUvw67lcxsX8bFrpK6UQHA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=awXreRopvOfhi4NKz94oKZYB8Y/BbKt/caFV/fK7gFGnj5hGc/g36Ux7m3NBAc1FD+XXs5aZfiuz3BQUEf/rYjJuxg7K+YTZJZ7fY3+KbXPBtuD63feUM/6GOEUKa+IVEfoMCdH94xWF34Br5rKblnY9YAwxqp57A1IUR0qi6Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zgqk40xgBzvWpP;
+	Mon, 21 Apr 2025 10:55:40 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4700D180080;
+	Mon, 21 Apr 2025 10:59:48 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 21 Apr 2025 10:59:47 +0800
+Message-ID: <bf2e5c68-e20c-437e-9aa8-1b5326f4fd14@huawei.com>
+Date: Mon, 21 Apr 2025 10:59:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
-In-Reply-To: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-tegra@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745204358; l=1330;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=wWrPTvwS8jQlrXtSz5cnnPOard6fs6fh1GhK5NDgNmg=;
- b=8J8tPTGbIDW4YOXuDJAJ/wlyLdpEM1EeTtjZPwF65RK2+uyH0nkKpYQvXP6gbatkV/CONBrRA
- n9uf9hDTxFRBjxFEMCiBqcQbyS1MaVzFb2dT8x3MNUniublfOF/gMAi
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
-
-From: Aaron Kling <webgeek1234@gmail.com>
-
-The driver works fine as a module, so allow building as such.
-
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/pci/controller/Kconfig     | 2 +-
- drivers/pci/controller/pci-tegra.c | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
- 	  driver.
- 
- config PCI_TEGRA
--	bool "NVIDIA Tegra PCIe controller"
-+	tristate "NVIDIA Tegra PCIe controller"
- 	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on PCI_MSI
- 	help
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index b3cdbc5927de3742161310610dc5dcb836f5dd69..c260842695f2e983ae48fd52b43f62dbb9fb5dd3 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2803,3 +2803,6 @@ static struct platform_driver tegra_pcie_driver = {
- 	.remove = tegra_pcie_remove,
- };
- module_platform_driver(tegra_pcie_driver);
-+MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-+MODULE_DESCRIPTION("NVIDIA PCI host controller driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.48.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2025-22077: smb: client: Fix netns refcount imbalance causing
+ leaks and use-after-free
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+To: <cve@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cve-announce@vger.kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <2025041612-CVE-2025-22077-d534@gregkh>
+ <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
+In-Reply-To: <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
 
+Given these findings, I recommend updating CVE-2025-22077 to reflect that the true fix
+is the reversion of e9f2517a3e18 (via commit 95d2b9f693ff).
+
+Best regards,
+Wang Zhaolong
+
+> Dear CVE Community,
+> 
+> As the author of commit 4e7f1644f2ac ("smb: client: Fix netns refcount imbalance
+> causing leaks and use-after-free"), I want to clarify some confusion around the
+> proper fixes for these issues:
+> 
+> 1. Commit 4e7f1644f2ac is currently associated with CVE-2025-22077. However, this
+> patch was merely attempting to fix issues introduced by commit e9f2517a3e18 ("smb:
+> client: fix TCP timers deadlock after rmmod").
+> 
+> 2. As I've previously discussed with Greg Kroah-Hartman on the kernel mailing list[1],
+>     commit e9f2517a3e18 (which was intended to address CVE-2024-54680):
+>     - Failed to address the actual null pointer dereference in lockdep
+>     - Introduced multiple serious issues:
+>       - Socket leak vulnerability (bugzilla #219972)
+>       - Network namespace refcount imbalance (bugzilla #219792)
+> 
+> 3. Our testing and analysis confirms that the original fix by Kuniyuki Iwashima,
+> commit ef7134c7fc48 ("smb: client: Fix use-after-free of network namespace."), is
+> actually the correct approach. This patch properly handles network namespace
+> reference counting without introducing the problems that e9f2517a3e18 did.
+> 
+> 4. The proper resolution for these issues was ultimately commit 95d2b9f693ff
+> ("Revert 'smb: client: fix TCP timers deadlock after rmmod'"), which reverted
+> the problematic patch. In the latest Linux mainline code, the problematic patch and
+> my subsequent fix patch have been reverted.[2][3]
+> 
+> Thank you for your attention to this matter. I'm happy to provide additional details if needed.
+> 
+> [1] https://lore.kernel.org/all/2025040248-tummy-smilingly-4240@gregkh/
+> [2] https://github.com/torvalds/linux/commit/c707193a17128fae2802d10cbad7239cc57f0c95
+> [3] https://github.com/torvalds/linux/commit/4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
+> 
+> Best regards,
+> Wang Zhaolong
+> 
