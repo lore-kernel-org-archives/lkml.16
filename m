@@ -1,122 +1,76 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3071A1E501C;
-	Mon, 21 Apr 2025 16:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5701E1E5B7E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745253323; cv=none; b=lmRNU3FHN4EJ2h99y3FqsF0rX5DEKGH4wdPYOsFQHO7p+2tKjdqSIRDafP8xUToY1o1AI0LTIKyb6E6yAe/w+RwtluhtSJ4wgHBGk6X1w5VnkyzW/jcrvOk+JlUsVyqsxD55uGgjPAmwxHNg4VFHcuX4xGCS660dYslfbCLylYc=
+	t=1745253331; cv=none; b=cHJpCsNMtfOgC1gMe6AYwB5xELl95A1rueyZP8T9WPzF8a4sDpPv5LreVz5wfZIaqZ+o3PQA7/g/JA2Kr3dtkEVQNzYYSK5a450zl311Adl0Jgm0Sy7tHbMuLvXyZAwbH6fADSls9RpjZw5A/Z0U5eXa6pNW5ri6ntLkgF5XuBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745253323; c=relaxed/simple;
-	bh=+Dr2rdt07Bf/3vfLKYZUeg3sAhLM47iMFsmNMF203u8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZZ7DpT5CI0Tata8VnC0oEYw0gaO1fSP8aRgDmo6Q2WevN2zypncqIy4enELsn3IXS0VQl/hcrDFzuNFYaLXeOM/3R0BjEA2gT9Bm/fU2doxEsEOCauc0g5iNWbj6ZUcJoe0Hb9u1Y5C6KDF5k3UUkOhv2ujSuYSnrvuKpkADXII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SzZooK5Q; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1745253331; c=relaxed/simple;
+	bh=3mFuU2DUGI7GC/f6E3ePt0mrV93b5VvBdvwSVwqYDa4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJQDuGDWraI4Rwoz8bGKVlTm5isAiBZp5YsqSQctqzZpuzCYLY3IW3ZnO3T8m1BWkyaYTZx82w+5z56YO+gtlpnvn0fY/zpy173uI4FDKgBORrnG6zMEycNms4P+Q7DLCYtdEpgjpFOZSuzKQ1s2UD+PBWOU2fCL73RPUNrrOIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMMOicHW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SzZooK5Q"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCAnpW023188;
-	Mon, 21 Apr 2025 16:34:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=YWEss
-	uEBBr4tKu86KInYgbn7SmP5Emu0oAFHvMzKI98=; b=SzZooK5Q1I6PWaR3mOhb7
-	P+dqW+qL/OtHZvnDqgFsx4X1vr8ncD/bb8xNG4v41DHGEwPy2saeAab1BxC2NBlq
-	GuWEcTQ7/xaFR11cCPdNVDVVw6Yr/zDja+vlmfoVTcUiOl44HPsN42FNeSn4oeDj
-	0vi6ZEUuyuv8xeZ37dXDANzvBo+A3r/ip2l5Sha9ci6joAxUjrjnn1+bhzOd6ZWS
-	yBYYkFT0youF82NVrmdS0mmysOSPvgFHV28ER/MqnHxTDSj1/qIh7AbrlV5tvKoF
-	a0o/HXBLAPD9+FlYTuOvmh6Ptbp+ztN/fE56xeldaZQR+l6VUFtKtGy39KSGmiBY
-	Q==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4643q8ttty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 16:34:51 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LEwVVw002262;
-	Mon, 21 Apr 2025 16:34:51 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46429882cj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 21 Apr 2025 16:34:51 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53LGYoHd032853;
-	Mon, 21 Apr 2025 16:34:50 GMT
-Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46429882ah-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 21 Apr 2025 16:34:50 +0000
-From: Ross Philipson <ross.philipson@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-Subject: [PATCH v14 07/19] x86/msr: Add variable MTRR base/mask and x2apic ID registers
-Date: Mon, 21 Apr 2025 09:27:00 -0700
-Message-Id: <20250421162712.77452-8-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250421162712.77452-1-ross.philipson@oracle.com>
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMMOicHW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D454C4CEEB;
+	Mon, 21 Apr 2025 16:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745253330;
+	bh=3mFuU2DUGI7GC/f6E3ePt0mrV93b5VvBdvwSVwqYDa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMMOicHWTRtMFJd3ibw5uTk5PRTQKMxdj34sO+hKbQTUywjRYCVPA3H3jjPtGFWgO
+	 NPrPJY9vvWd4FSsKYLsVE+XBd+NRdEGUVOIkXPuOeS/Ud2mB5CG7Y4t0yL9qJajp/k
+	 6z1KBciH+0nIs1VGfiz5cW+3HSNHCmbqNFFY2gYCk8voVTM0m+t5bhZaLRIUpcc91N
+	 iLfaMJeD1bsgT/EbcRF0xXgpzcCkUjXjtWF+Fr1OTdDeBxtPy12PVzh6X+R80ZNVXM
+	 Dlu7QcFhfQhl7QnzT5Z0Kb8opnwDwerWbiCIg/PnpByBM07PusB1/dlsNUvekysMfp
+	 JDy8ambtHveiQ==
+Date: Mon, 21 Apr 2025 19:35:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ruihan Li <lrh2000@pku.edu.cn>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Message-ID: <aAZzzVDsmtqP3uAg@kernel.org>
+References: <20250419122801.1752234-1-lrh2000@pku.edu.cn>
+ <20250420135709.732883ee775ad8b41fb668ca@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_08,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504210129
-X-Proofpoint-GUID: K4fbtksCDvMCHDiDi9Q-LB7Ia6Bwl_RL
-X-Proofpoint-ORIG-GUID: K4fbtksCDvMCHDiDi9Q-LB7Ia6Bwl_RL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420135709.732883ee775ad8b41fb668ca@linux-foundation.org>
 
-Add the MSR values required by Secure Launch to locate particular CPU cores
-during application processor (AP) startup, and restore the MTRR state after
-an Intel TXT launch.
+On Sun, Apr 20, 2025 at 01:57:09PM -0700, Andrew Morton wrote:
+> On Sat, 19 Apr 2025 20:28:01 +0800 Ruihan Li <lrh2000@pku.edu.cn> wrote:
+> 
+> > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+> > kernel is used as a library and loaded at a very high address), the
+> > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+> > long time, and the kernel will look stuck at boot time.
+> > 
+> > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+> > avoids the problematic and useless iteration mentioned above.
+> > 
+> > This problem has existed since commit 907ec5fca3dc ("mm: zero remaining
+> > unavailable struct pages").
+> > 
+> > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+> > ---
+> > Link to v1:
+> >  - https://lore.kernel.org/linux-mm/20250418162727.1535335-1-lrh2000@pku.edu.cn/
+> > Changes since v1:
+> >  - Removed the unnecessary Fixes tag.
+> 
+> Why was the Fixes: considered unnecessary?  It seems to be useful
+> information?
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
----
- arch/x86/include/asm/msr-index.h | 5 +++++
- 1 file changed, 5 insertions(+)
+I didn't think it was important enough for AUTOSEL to pick it. 
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index e6134ef2263d..97cc926c6d1b 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -366,6 +366,9 @@
- #define MSR_IA32_RTIT_OUTPUT_BASE	0x00000560
- #define MSR_IA32_RTIT_OUTPUT_MASK	0x00000561
- 
-+#define MSR_MTRRphysBase0		0x00000200
-+#define MSR_MTRRphysMask0		0x00000201
-+
- #define MSR_MTRRfix64K_00000		0x00000250
- #define MSR_MTRRfix16K_80000		0x00000258
- #define MSR_MTRRfix16K_A0000		0x00000259
-@@ -890,6 +893,8 @@
- #define MSR_IA32_APICBASE_ENABLE	(1<<11)
- #define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
- 
-+#define MSR_IA32_X2APIC_APICID		0x00000802
-+
- #define MSR_IA32_UCODE_WRITE		0x00000079
- #define MSR_IA32_UCODE_REV		0x0000008b
- 
 -- 
-2.39.3
-
+Sincerely yours,
+Mike.
