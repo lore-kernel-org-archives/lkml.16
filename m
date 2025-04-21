@@ -1,86 +1,100 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D801DE8A8
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA461DF984;
+	Mon, 21 Apr 2025 17:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745256537; cv=none; b=u7Gt+YG5AcfMV47Y0xf9B6/i5HikZL40iDEe69t4l2S7DOJoZmVOSpfqVsrGDqR3M5MD1h9SY+NHmddlAscEwAElJADz9KJe/R0hnY4jIFro7WG9AhXGWaCRzgim9An6SMSs1q1tG5FTx/aRdhAfwrzFKsz7mCipqYr8a1zgRU4=
+	t=1745256839; cv=none; b=CMSkjXyf2QTA/DbbEauZh4Sd7HA1GlvMq2Tb5aKDZhi/Q1h8ee0CwqjRN1VzKc8kRWd+QT8dUPYP5lq+V+gCBI/6xt5MTKHLuLr7XfaPZw4MYVjtFtxy29NKYK3UYLav9rzPTxV1E7bP76xmE/AGLTPp6VlReIEgH1l4ZDNjMbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745256537; c=relaxed/simple;
-	bh=wSD15zZe1xhmLJKxFic7wEhhslrq+k0Kcd4AMKop3I8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JGYo1hc0nBIvoNYHR7tNtFJ8VWFfCaVn+g4x9nqLEPQr6h7+msLgqqpA9uWS/EcbMRsbNlxr0p+Bm4dQndTQOTcpJHGKZPpATlznKv3KOfVZBK7mYUnpoAxgBTwsJC6Vp0H5T4Snttscg1+xVOVyGo2NDwxMhkYbMgCFx58tf6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FwPg2vh6; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745256839; c=relaxed/simple;
+	bh=an4XT5sgGD6GiQNc4+ujYYfFrngTMsWP8TIiMqbzahc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OItPGmQNGKIxymQ8rasMfC9xsEnTTv8/x2yvGBIehRF4z4LQhcffrHpuvdQpfR1UcDmiAG1oYYT/7TfXNJ6BTPTkc0gOOAgFMb5TDnhdc9DlpZs5gN7ux0S2VdoRGmuWV71/BTQYFhAuYkTF6kQRQwUkbLdLUaAboYvYy2P+YiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9hlLUlG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FwPg2vh6"
-Date: Mon, 21 Apr 2025 10:28:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745256533;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vG4L1oHMagTDUnGqJG8Pj6sUOyHcw1R8xhgw+ZpiQQY=;
-	b=FwPg2vh6/QXx0x8p+cDPsZYRgoRp1GzFG2qd3JJhdgVc9j7aSpDrd5zJK0XaX2J2clVX3y
-	M1uyNlT7F+0yQB7zwvi5uMMFjXBgbiMkg2FD5mmQqU7V74glo+wAq8fCummrAPBl0qjCI4
-	UBYbWpJ5L9Bh23t8rPnLug1cw8Mod8o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Greg Thelen <gthelen@google.com>
-Cc: Tejun Heo <tj@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: introduce non-blocking limit setting interfaces
-Message-ID: <awhadja7fr5uqkhj54mqlbrrcyzjnjhw7wayfa74llamlcd3ya@netfkab3mvee>
-References: <20250418195956.64824-1-shakeel.butt@linux.dev>
- <CAHH2K0as=b+EhxG=8yS9T9oP40U2dEtU0NA=wCJSb6ii9_DGaw@mail.gmail.com>
- <ohrgrdyy36us7q3ytjm3pewsnkh3xwrtz4xdixxxa6hbzsj2ki@sn275kch6zkh>
- <aALNIVa3zxl9HFK5@google.com>
- <nmdwfhfdboccgtymfhhcavjqe4pcvkxb3b2p2wfxbfqzybfpue@kgvwkjjagqho>
- <aAMVWsFbht3MdMEk@slm.duckdns.org>
- <rgze2xgrslssxoe7k3vcfg6fy2ywe4jowvwlbdsxrcrvhmklzv@jhyomycycs4n>
- <xr93ecxlsauy.fsf@gthelen-cloudtop.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9hlLUlG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 34DB4C4CEE4;
+	Mon, 21 Apr 2025 17:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745256839;
+	bh=an4XT5sgGD6GiQNc4+ujYYfFrngTMsWP8TIiMqbzahc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=M9hlLUlG0Q4rrdXhvxjYsrLsnoIVwluXJ72iGCoVqPXEk0hqF/lGbL04YCjPfJvmL
+	 Bkol6+akiQJA67+Ry47+jnz4B6JeJ2qRgeq6u/BWnbrvtJOsZLFK2eroBmlGNhHod8
+	 OYkBZSZ3nCx9n4TzAyOSowhDGEvb7I5fvdtk85lXUlicAbCYUSvN5xfOzf3iheTG7H
+	 BF/uWAFrEu3Oz9FHmJvqQC53C8Q/Q4ZIsxP9slh6Fmy/LkWM5Sf8DHUAYcGCp1U0aV
+	 kEewKAWmHnK7SDYx7Sgk8WJLE+mo1zmRDUE/V0AEx7Vqqw2B9m2yKQRTp32n7CknQg
+	 u5FGEWMYkOO4A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D73C369AB;
+	Mon, 21 Apr 2025 17:33:59 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH v3 0/2] Support building tegra124-cpufreq as a module
+Date: Mon, 21 Apr 2025 12:33:52 -0500
+Message-Id: <20250421-tegra124-cpufreq-v3-0-95eaba968467@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xr93ecxlsauy.fsf@gthelen-cloudtop.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAICBBmgC/23OzQ6CMAzA8VchOzvT1ongyfcwHpbRwRL5cMNFQ
+ 3h3B/FAosd/k/7aSQT2joM4Z5PwHF1wfZfisMuEaXRXs3RVakFAR1CAcuTaayQlzfC0nh/SVqV
+ StjKckxFpbfBs3Wslr7fUjQtj79/rhYjL9IsR/GIRJUjQ6mQZKYcSL3Wr3X1v+lYsWKQt8OebS
+ Akgi6owbLXCYgvM8/wBg+CXXPEAAAA=
+X-Change-ID: 20250401-tegra124-cpufreq-fd944fdce62c
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-tegra@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745256838; l=1232;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=an4XT5sgGD6GiQNc4+ujYYfFrngTMsWP8TIiMqbzahc=;
+ b=xCB/vHo+bw5EXi3xw2qeWcQVcOddGFRZBrnWmZpWdWMTX3bX2BX5l8J7IIKyCqxuH7opso136
+ qngoqLZo5SgDsIGoKhRCJEPLyDOlw4S73FUq4g80UWMQjEHFny2Sw3Z
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Mon, Apr 21, 2025 at 10:06:13AM -0700, Greg Thelen wrote:
-> Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> 
-> > On Fri, Apr 18, 2025 at 05:15:38PM -1000, Tejun Heo wrote:
-> > > On Fri, Apr 18, 2025 at 04:08:42PM -0700, Shakeel Butt wrote:
-> > > > Any reasons to prefer one over the other? To me having separate
-> > > > files/interfaces seem more clean and are more script friendly. Also
-> > > > let's see what others have to say or prefer.
-> 
-> > > I kinda like O_NONBLOCK. The subtlety level of the interface seems
-> > > to match
-> > > that of the implemented behavior.
-> 
-> 
-> > Ok, it seems like more people prefer O_NONBLOCK, so be it. I will send
-> > v2 soon.
-> 
-> > Also I would request to backport to stable kernels. Let me know if
-> > anyone have concerns.
-> 
-> I don't feel strongly, but I thought LTS was generally intended for bug
-> fixes. So I assume that this new O_NONBLOCK support would not be LTS
-> worthy.
-> 
+This adds remove and exit routines that were not previously needed when
+this was only available builtin. It also converts use of an unexported
+function to a more sane alternative.
 
-I got the request asking for this behavior for distributions on older
-LTS kernels and I think it is solving a real user pain, so worth
-backporting to stable kernels.
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Changes in v3:
+- In patch 1, set cpufreq_dt_pdev to an error after unregister on fail
+  to prevent a potential double unregister on remove
+- In patch 2, clean up clocks on exit
+- Link to v2: https://lore.kernel.org/r/20250421-tegra124-cpufreq-v2-0-2f148cefa418@gmail.com
+
+Changes in v2:
+- Replace patch 1 with a patch to not use the unexported function
+- Update patch 2 to add remove and exit routines
+- Link to v1: https://lore.kernel.org/r/20250420-tegra124-cpufreq-v1-0-0a47fe126091@gmail.com
+
+---
+Aaron Kling (2):
+      cpufreq: tegra124: Remove use of disable_cpufreq
+      cpufreq: tegra124: Allow building as a module
+
+ drivers/cpufreq/Kconfig.arm        |  2 +-
+ drivers/cpufreq/tegra124-cpufreq.c | 46 +++++++++++++++++++++++++++++++++-----
+ 2 files changed, 42 insertions(+), 6 deletions(-)
+---
+base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+change-id: 20250401-tegra124-cpufreq-fd944fdce62c
+
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
+
+
