@@ -1,123 +1,174 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487BA19DF99;
-	Mon, 21 Apr 2025 09:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DE125D913;
+	Mon, 21 Apr 2025 09:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745229059; cv=none; b=GbzixC7ED08w/YfyrC9q2BFK6b2tuu7ngtdhGxjXYNbIsoYfpJUIW2WOOlN7PAY5t3IZTd/rKVruGESw8/eLOPc2DpUZiXKqiVxjS4c2PVlldNo6XbYbmD4hhQrGQ/45w/xAIAfAoq0g8fxTic7AjXnIptD6CV+9bAKb0binFFM=
+	t=1745229066; cv=none; b=mR/QuCzWiLXL5Em4uWhYkzghOy0Df627Y40p9VgFiRjbSZQ2E28K0gBugDLTxltUwfRCHt4borJaRTOnjd6zwr1JlqwlQ3qPF/7TG0ABy21saJQrdxv+6iluMhDymMSMToVGOe7fCF/nsa7n4whwOkuI9AdzHPBveyoHzyzPy5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745229059; c=relaxed/simple;
-	bh=kdyTtW+aDnediSAQNm+CqqexrHdwy9hwbT0UGQq/mBQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=W5su1dQDNg6NPGXr7Fx5A+DUQJr7JGMEmyg+IPHjATzRCQtT50yheWeZKySb1uTF8s2goZ5hObzeaJ5f42Bvq7RVTP8RNjjvoubLv+Jy3C3GGl9WUwKZqO0a42dWNH6EvxqfHr/a2QVxS3D55Rvmn1AZ3kBRGE921Dw5ITSpcsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=poLEOiys; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745229066; c=relaxed/simple;
+	bh=GLEgbpMEfc6DvRYVqlJnbq8YGhcyB3jB8rNmeNWMpc0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mHRoQeDQbefcIz0m6C2SqeAhnKn1Tbz7AzrRh19vuUcn/6RIjONlaR0G+dXdAEVz0LOCpZECbHMnT0lD8u3vTIs7tF8eyN/nMAtqNWAnkLXpQNR4mfpeF4+ctSvWnLKNR5Mb2xuS9mw/SZK4GzS4OQWDXR3wlkH6K+QZqJiOxyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=snzUOYRQ; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="poLEOiys"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745229048; x=1745833848; i=markus.elfring@web.de;
-	bh=kdyTtW+aDnediSAQNm+CqqexrHdwy9hwbT0UGQq/mBQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=poLEOiystaKP6l4B5ifvr/g5kpozWZPt8yBSSkGM6bTI6r4bZyUzIcyZTD6BLOXd
-	 onJ2N3P/Kh+pekCzcGPCc6LgT0fSmoh8klVL0SEQrSOK+geDHCBWTKgJTrfqApwB7
-	 qnOwuIuuObHbvdki96rcWHeFGAAdy3cJcY2V4Y31HfuDK4QJeQQQ/8HuMoKwUuxe8
-	 pk1fB1cFECzjcKL4yQ78h7opJ+CkY1t4Y5ddgiXQR2MIuGEUFnI4VD/jgpdr3l4K1
-	 FYHHGUuxwx/1gROFAYHH2fmwfFUyWdxC20k76QFK5hp3OIZby5lnVwkYn3DpJ7lWI
-	 BsqPQ0IO6PFsmIYsWQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.16]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MUl9B-1uXZyj0TSb-00IrOI; Mon, 21
- Apr 2025 11:50:48 +0200
-Message-ID: <834fe207-523c-42ff-8a95-4468a1e08b46@web.de>
-Date: Mon, 21 Apr 2025 11:50:45 +0200
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="snzUOYRQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1745229058; bh=comqgaUQOxn93ZxQu1EvnNHU0RsO6P+D6nZ/mcIInMw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From:To:CC:Subject;
+	b=snzUOYRQlWCuQNdt+aRBbVgCYN3e81XK7ZKQS84VXg08XOCJyfrKz3kz2AsKoVgtX
+	 CBmwq8t/ET6b3LOqRKJGX8f+mF6j3QzxpnN2xCIHNz2+gjKjcpj5tOUCngZHak9ilr
+	 pP0AOvCNeG9Y6NgcZW57XsWioVUaYhtiY0EPtc4NVHsOpEAa1x25c7ByQq4lQ9tuy7
+	 K+syGWQ+gEPsnH1bbOz76UoIJxxNtaiS72ma1Tw18oQGi9fH7H4sLnMPt5zqSjy5Mx
+	 OcI/iRzG8wBSiYrIrIwLLY9eufFdt0DJr6Brl5mhhBl2WPQTM6xRvS8H+0OJOI35IP
+	 YfWkFHS2+qfwg==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0xG2pkvz8shv;
+	Mon, 21 Apr 2025 11:50:58 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX18yPx2sYrjGa0RSvjuhGTnmvUS3lQ6MWsI=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0x32mSsz8sdr;
+	Mon, 21 Apr 2025 11:50:47 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v2 09/11] selftests/bpf: Add test for Spectre v1 mitigation
+Date: Mon, 21 Apr 2025 11:18:00 +0200
+Message-ID: <20250421091802.3234859-10-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- Mark Bloch <mbloch@nvidia.com>,
- Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
-References: <20250418023814.71789-2-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v7 1/2] net/mlx5: Fix null-ptr-deref in
- mlx5_create_{inner_,}ttc_table()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250418023814.71789-2-bsdhenrymartin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:1hI6MGondi0rfkI/QZ68cl7X8ZsCcgBewfSi6cWw16MOPpZRn6B
- mrR80XaR2wZDoUEZAtv8xjLbyH/fQbZzWnS1+Rgr50yGPVnEQnT6idMPCBqxHleJU59bPuA
- veexEo19cEvlMkWZrYvyPO9SMitvWKfSl+GxLBmBgn24AElmo4O+CBdr5ISq75V3pP36Bx5
- lq5tn8vkAhVr6l+StgJNg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:M/lzPykxPFg=;iM5VFp+xB8rXo5yUzWFMNzuo8dv
- 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
+Content-Transfer-Encoding: 8bit
 
-> Add NULL check for mlx5_get_flow_namespace() returns in
-> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
-> NULL pointer dereference.
+This is based on the gadget from the description of commit 9183671af6db
+("bpf: Fix leakage under speculation on mispredicted branches").
 
-* Can an other summary phrase variant become more desirable accordingly?
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+---
+ .../selftests/bpf/progs/verifier_unpriv.c     | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-* Please avoid duplicate source code.
+diff --git a/tools/testing/selftests/bpf/progs/verifier_unpriv.c b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
+index c42c3839b30c..43236b93ebb5 100644
+--- a/tools/testing/selftests/bpf/progs/verifier_unpriv.c
++++ b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
+@@ -729,4 +729,61 @@ l0_%=:	r0 = 0;						\
+ "	::: __clobber_all);
+ }
+ 
++SEC("socket")
++__description("unpriv: Spectre v1 path-based type confusion of scalar as stack-ptr")
++__success __success_unpriv __retval(0)
++#ifdef SPEC_V1
++__xlated_unpriv("if r0 != 0x1 goto pc+2")
++/* This nospec prevents the exploit because it forces the mispredicted (not
++ * taken) `if r0 != 0x0 goto l0_%=` to resolve before using r6 as a pointer.
++ * This causes the CPU to realize that `r6 = r9` should have never executed. It
++ * ensures that r6 always contains a readable stack slot ptr when the insn after
++ * the nospec executes.
++ */
++__xlated_unpriv("nospec")
++__xlated_unpriv("r9 = *(u8 *)(r6 +0)")
++#endif
++__naked void unpriv_spec_v1_type_confusion(void)
++{
++	asm volatile ("					\
++	r1 = 0;						\
++	*(u64*)(r10 - 8) = r1;				\
++	r2 = r10;					\
++	r2 += -8;					\
++	r1 = %[map_hash_8b] ll;				\
++	call %[bpf_map_lookup_elem];			\
++	if r0 == 0 goto l2_%=;				\
++	/* r0: pointer to a map array entry */		\
++	r2 = r10;					\
++	r2 += -8;					\
++	r1 = %[map_hash_8b] ll;				\
++	/* r1, r2: prepared call args */		\
++	r6 = r10;					\
++	r6 += -8;					\
++	/* r6: pointer to readable stack slot */	\
++	r9 = 0xffffc900;				\
++	r9 <<= 32;					\
++	/* r9: scalar controlled by attacker */		\
++	r0 = *(u64 *)(r0 + 0); /* cache miss */		\
++	if r0 != 0x0 goto l0_%=;			\
++	r6 = r9;					\
++l0_%=:	if r0 != 0x1 goto l1_%=;			\
++	r9 = *(u8 *)(r6 + 0);				\
++l1_%=:  /* leak r9 */					\
++	r9 &= 1;					\
++	r9 <<= 9;					\
++	*(u64*)(r10 - 8) = r9;				\
++	call %[bpf_map_lookup_elem];			\
++	if r0 == 0 goto l2_%=;				\
++	/* leak secret into is_cached(map[0|512]): */	\
++	r0 = *(u64 *)(r0 + 0);				\
++l2_%=:							\
++	r0 = 0;						\
++	exit;						\
++"	:
++	: __imm(bpf_map_lookup_elem),
++	  __imm_addr(map_hash_8b)
++	: __clobber_all);
++}
++
+ char _license[] SEC("license") = "GPL";
+-- 
+2.49.0
 
-
-Regards,
-Markus
