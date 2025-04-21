@@ -1,132 +1,413 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAA721ABDC;
-	Mon, 21 Apr 2025 21:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873811EF387;
+	Mon, 21 Apr 2025 21:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745272719; cv=none; b=kMmdaOnWkl3/AixKgVt/0WRvPOxfD36EccVIpoJg79nSorojKJZ3eJ/Be3WGEwNPd0Mfl0qLA6D5mgZxXXz7pN5mOF8CYGSNDEvhZEeKdXCcYS0Xz93GZJMgJhu0mL+sM1UpmGd7CauCQ+6xNFQbX2X+10QZb8Tz6ywnRwZNI6Q=
+	t=1745272741; cv=none; b=iK1nJfxfZLU+ORSPsJvZm1jYKt8LKJfW+pdDZGuEXiueM46JWZ8ixgGmNcG9xtUInBzqkKnZbhpvCEJy4cOnlzsBwjRTLHvY/rcMXPvGA15hIGz5IUMBzh23ICEAIK66cM1fyz2ZYWfE4qDfQbKee2SG7EP9b/EJwDSLmdelcPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745272719; c=relaxed/simple;
-	bh=jTKO/ZVih+JbltPyJqGvHcdaODnrapZSlfJDyMxef4Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=M/s9MjIa2tezRY+fXsHEOq4lTUNORMvm2Ebxguib13zd7pHhbQwT5yijZEcuRbYPkk+YoQJ/NCrpX9+RasX4eiTHNn8PXsiJPsG5ntjREDRCRu/SdTRH270HXRW81leCe7KMJ5zXLMBHAgnRsaxl40QU7GwdUZM3is7mmzSiN/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFtgHgPG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745272741; c=relaxed/simple;
+	bh=IhvTrBPT9MajnxD0h1Zm9/Y9wvCGsNsEcHqoA7mdQ5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tFcxllnTJ5MqYx68h6OOMUKIX7tTauj02cyLdW0z06+Y3ZV8JdrFI85+yF2DNjSgIAb9eoeu/UlohChXl1PKpsXrKQHzWqazGnGoVOtJ/HY8U7NGUOWCAk0gsaOLdWCN3OgHZYhXsAVUtzQ2OfTv/qZRB2OfuSsXDx8Jt1AlpCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=OOZbEV2U; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFtgHgPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DE7C4CEE4;
-	Mon, 21 Apr 2025 21:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745272719;
-	bh=jTKO/ZVih+JbltPyJqGvHcdaODnrapZSlfJDyMxef4Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fFtgHgPGy3B/E/XUe25ID7SWmNeqPWBZxkCVdbHHYL+A51fXREBW8icOwy2DQ1PGZ
-	 smwFCDE95c6RimcL1YJg9aTDuUYltW33fZi9YMbmACjVwDjG1z/PAFzPST6qh01MnH
-	 9KJSw7OSA6E9BHLHw176HqTRC4XPgsDEIMZuXyGRPFfOSmsgg6pEqS/z4I5JiAvYNr
-	 ALH/HpWab/u82LXnJcB/8M/YqWo/ANNAuKYDerSBBuD6gQBtYA/ubzdJWSfczHdRIS
-	 7wM4umVvzxVlGqeqvyjSTgjjbS9aqm1I7po1F3gwmV6MCpIxTwvLmyidAoekEfb/Xw
-	 lKL/3oJrWjufw==
-From: Kees Cook <kees@kernel.org>
-To: Alex Deucher <alexander.deucher@amd.com>
-Cc: Kees Cook <kees@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jesse Zhang <jesse.zhang@amd.com>,
-	Tim Huang <Tim.Huang@amd.com>,
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Alexander Richards <electrodeyt@gmail.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] drm/amdgpu/atom: Work around vbios NULL offset false positive
-Date: Mon, 21 Apr 2025 14:58:34 -0700
-Message-Id: <20250421215833.work.924-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OOZbEV2U"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA24C6D6;
+	Mon, 21 Apr 2025 23:56:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745272611;
+	bh=IhvTrBPT9MajnxD0h1Zm9/Y9wvCGsNsEcHqoA7mdQ5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OOZbEV2UQiH6RcClkRuaM/ImkkkPeLr3TDOIT3KK/1+7lP1ed4pT0AC6SgUG5QQaZ
+	 +DLn7UJMiDqyQSgONrJdIbEeGliH86t+cm1ZWVSWIyvUrVAYPzmGoDZvfqIb6nUTuf
+	 zQhHoyomXTWl+XU/59/yMfXNHnPX3Xi1pHUGJE5U=
+Date: Tue, 22 Apr 2025 00:58:55 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v3 03/12] media: dt-bindings: Add binding doc for
+ i.MX8QXP and i.MX8QM ISI
+Message-ID: <20250421215855.GA31885@pendragon.ideasonboard.com>
+References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
+ <20250210-8qxp_camera-v3-3-324f5105accc@nxp.com>
+ <20250327184425.GE4861@pendragon.ideasonboard.com>
+ <Z+WzZDNxpPcYScYT@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2865; i=kees@kernel.org; h=from:subject:message-id; bh=jTKO/ZVih+JbltPyJqGvHcdaODnrapZSlfJDyMxef4Y=; b=owGbwMvMwCVmps19z/KJym7G02pJDBls+zvvHM+YreCqfKrQev31s18a+6e/XrJg684vsbzLU 48ZvEp82VHKwiDGxSArpsgSZOce5+Lxtj3cfa4izBxWJpAhDFycAjCRDQEMPxkXbGaK6YjXLGtc O/0tz4G3f7gCeBMVuF2kjIJqT2+zt2T47+lbZ/C35qeel/qk3j0vTpQrS/tNEXbtmxJf8EMws6S BFwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z+WzZDNxpPcYScYT@lizhi-Precision-Tower-5810>
 
-GCC really does not want to consider NULL (or near-NULL) addresses as
-valid, so calculations based off of NULL end up getting range-tracked into
-being an offset wthin a 0 byte array. It gets especially mad about this:
+Hi Frank,
 
-                if (vbios_str == NULL)
-                        vbios_str += sizeof(BIOS_ATOM_PREFIX) - 1;
-	...
-        if (vbios_str != NULL && *vbios_str == 0)
-                vbios_str++;
+On Thu, Mar 27, 2025 at 04:21:56PM -0400, Frank Li wrote:
+> On Thu, Mar 27, 2025 at 08:44:25PM +0200, Laurent Pinchart wrote:
+> > On Mon, Feb 10, 2025 at 03:59:22PM -0500, Frank Li wrote:
+> > > Add binding documentation for i.MX8QXP and i.MX8QM ISI. The clock-names,
+> > > power-domains, and ports differ significantly from the existing
+> > > nxp,imx8-isi.yaml. Create a new file to avoid complex if-else branches.
+> >
+> > Mixed feelings about having different bindings files for what is
+> > essentially the same IP, but I won't object.
+> 
+> Rob suggest split it at v1.
+> 
+> https://lore.kernel.org/all/20250203221659.GA130749-robh@kernel.org/
+> 
+> "I think this addition is borderline whether it should be its own schema
+> doc. The if/then schemas are larger than the main part. The ports are
+> not even the same."
+> 
+> >
+> > > Add new file to MAINTAINERS.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > change from v2 to v3
+> > > - none
+> > > change from v1 to v2
+> > > - create new file for 8qm and 8qxp accroding rob's suggestion.
+> > > ---
+> > >  .../devicetree/bindings/media/fsl,imx8qm-isi.yaml  | 117 +++++++++++++++++++++
+> > >  .../devicetree/bindings/media/fsl,imx8qxp-isi.yaml | 103 ++++++++++++++++++
+> > >  MAINTAINERS                                        |   1 +
+> > >  3 files changed, 221 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/fsl,imx8qm-isi.yaml b/Documentation/devicetree/bindings/media/fsl,imx8qm-isi.yaml
+> > > new file mode 100644
+> > > index 0000000000000..61c551673e2a4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/fsl,imx8qm-isi.yaml
+> > > @@ -0,0 +1,117 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/fsl,imx8qm-isi.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: i.MX8QM Image Sensing Interface
+> > > +
+> > > +maintainers:
+> > > +  - Frank Li <Frank.Li@nxp.com>
+> > > +
+> > > +description:
+> > > +  The Image Sensing Interface (ISI) combines image processing pipelines with
+> > > +  DMA engines to process and capture frames originating from a variety of
+> > > +  sources. The inputs to the ISI go through Pixel Link interfaces, and their
+> > > +  number and nature is SoC-dependent. They cover both capture interfaces (MIPI
+> > > +  CSI-2 RX, HDMI RX, ...) and display engine outputs for writeback support.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,imx8qm-isi
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 8
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: per0
+> > > +      - const: per1
+> > > +      - const: per2
+> > > +      - const: per3
+> > > +      - const: per4
+> > > +      - const: per5
+> > > +      - const: per6
+> > > +      - const: per7
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 8
+> > > +
+> > > +  power-domains:
+> > > +    maxItems: 8
+> >
+> > This surprises me. The reference manual does list 8 clocks and
+> > interrupts, but only 6 channels in the ISI section (for instance in
+> > 15.6.1.1.4). Which one is wrong ?
+> 
+> Support 6 input, 8 output.
+> 
+> "The crossbar is a 6 input 8 output multiplexer where each output port can
+> be configured to connect to any of the 6 inputs."
 
-It sees this as being "sizeof(BIOS_ATOM_PREFIX) - 1" byte offset from
-NULL, when building with -Warray-bounds (and the coming
--fdiagnostic-details flag):
+Which version of the reference manual are you looking at ? The latest
+version I can find on the nxp.com website is "i.MX 8QuadMax Applications
+Processor Reference Manual, Rev. 1.1, 05/2024", and it states on page 
 
-In function 'atom_get_vbios_pn',
-    inlined from 'amdgpu_atom_parse' at drivers/gpu/drm/amd/amdgpu/atom.c:1553:2:
-drivers/gpu/drm/amd/amdgpu/atom.c:1447:34: error: array subscript 0 is outside array bounds of 'unsigned char[0]' [-Werror=array-bounds=]
- 1447 |         if (vbios_str != NULL && *vbios_str == 0)
-      |                                  ^~~~~~~~~~
-  'amdgpu_atom_parse': events 1-2
- 1444 |                 if (vbios_str == NULL)
-      |                    ^
-      |                    |
-      |                    (1) when the condition is evaluated to true
-......
- 1447 |         if (vbios_str != NULL && *vbios_str == 0)
-      |                                  ~~~~~~~~~~
-      |                                  |
-      |                                  (2) out of array bounds here
-In function 'amdgpu_atom_parse':
-cc1: note: source object is likely at address zero
+    The crossbar is a 6 input, 6 output multiplexer where each output
+    port can be configured to connect to any of the 6 inputs.
 
-As there isn't a sane way to convince it otherwise, hide vbios_str from
-GCC's optimizer to avoid the warning so we can get closer to enabling
--Warray-bounds globally.
+> 8 irq and clocks is for output dmac.
+> 
+> > > +
+> > > +  ports:
+> > > +    $ref: /schemas/graph.yaml#/properties/ports
+> > > +    properties:
+> > > +      port@2:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: MIPI CSI-2 RX 0
+> > > +      port@3:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: MIPI CSI-2 RX 1
+> > > +      port@4:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: HDMI RX
+> >
+> > Figure 15-59 in the reference manual list MIPI CSI-2 RX 0 and RX 1 as
+> > connected to inputs 0 and 1 respectively.
+> 
+> Reference document should be wrong, I reference another internal document
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Xinhui Pan <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Simona Vetter <simona@ffwll.ch>
-Cc: Jesse Zhang <jesse.zhang@amd.com>
-Cc: Tim Huang <Tim.Huang@amd.com>
-Cc: Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>
-Cc: Alexander Richards <electrodeyt@gmail.com>
-Cc: Lijo Lazar <lijo.lazar@amd.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/amd/amdgpu/atom.c | 1 +
- 1 file changed, 1 insertion(+)
+Ah, that answers my question above.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
-index 81d195d366ce..427b073de2fc 100644
---- a/drivers/gpu/drm/amd/amdgpu/atom.c
-+++ b/drivers/gpu/drm/amd/amdgpu/atom.c
-@@ -1444,6 +1444,7 @@ static void atom_get_vbios_pn(struct atom_context *ctx)
- 		if (vbios_str == NULL)
- 			vbios_str += sizeof(BIOS_ATOM_PREFIX) - 1;
- 	}
-+	OPTIMIZER_HIDE_VAR(vbios_str);
- 	if (vbios_str != NULL && *vbios_str == 0)
- 		vbios_str++;
- 
+Could you report this issue, to get it fixed in the next version of the
+reference manual ? Same for the QXP.
+
+> 0: display control 0
+> 1: display control 1
+> 2: csi2 rx0
+> 3: csi2 rx1
+> 4: hdmi rx
+
+I assume you've tested the driver, so I'll trust those values more than
+the ones from the reference manual.
+
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - interrupts
+> > > +  - power-domains
+> > > +  - ports
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    #include <dt-bindings/clock/imx8-clock.h>
+> > > +    #include <dt-bindings/clock/imx8-lpcg.h>
+> > > +    #include <dt-bindings/firmware/imx/rsrc.h>
+> > > +
+> > > +    image-controller@58100000 {
+> > > +        compatible = "fsl,imx8qm-isi";
+> > > +        reg = <0x58100000 0x90000>;
+> >
+> > The memory map in the reference manual lists the "Pixel DMA" region as
+> > ending at 0x5817ffff. Shouldn't the length of the region be 0x80000 ?
+> 
+> Yes, it should be 0x80000.
+> 
+> > > +        interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        clocks = <&pdma0_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma1_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma2_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma3_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma4_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma5_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma6_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma7_lpcg IMX_LPCG_CLK_0>;
+> > > +        clock-names = "per0", "per1", "per2", "per3",
+> > > +                      "per4", "per5", "per6", "per7";
+> > > +        power-domains = <&pd IMX_SC_R_ISI_CH0>, <&pd IMX_SC_R_ISI_CH1>,
+> > > +                        <&pd IMX_SC_R_ISI_CH2>, <&pd IMX_SC_R_ISI_CH3>,
+> > > +                        <&pd IMX_SC_R_ISI_CH4>, <&pd IMX_SC_R_ISI_CH5>,
+> > > +                        <&pd IMX_SC_R_ISI_CH6>, <&pd IMX_SC_R_ISI_CH7>;
+> > > +
+> > > +        ports {
+> > > +            #address-cells = <1>;
+> > > +            #size-cells = <0>;
+> > > +
+> > > +            port@2 {
+> > > +                reg = <2>;
+> > > +                endpoint {
+> > > +                    remote-endpoint = <&mipi_csi0_out>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > diff --git a/Documentation/devicetree/bindings/media/fsl,imx8qxp-isi.yaml b/Documentation/devicetree/bindings/media/fsl,imx8qxp-isi.yaml
+> > > new file mode 100644
+> > > index 0000000000000..818fea0e4679f
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/fsl,imx8qxp-isi.yaml
+> > > @@ -0,0 +1,103 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/fsl,imx8qxp-isi.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: i.MX8QXP Image Sensing Interface
+> > > +
+> > > +maintainers:
+> > > +  - Frank Li <Frank.Li@nxp.com>
+> > > +
+> > > +description:
+> > > +  The Image Sensing Interface (ISI) combines image processing pipelines with
+> > > +  DMA engines to process and capture frames originating from a variety of
+> > > +  sources. The inputs to the ISI go through Pixel Link interfaces, and their
+> > > +  number and nature is SoC-dependent. They cover both capture interfaces (MIPI
+> > > +  CSI-2 RX, HDMI RX, ...) and display engine outputs for writeback support.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,imx8qxp-isi
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 5
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: per0
+> > > +      - const: per4
+> > > +      - const: per5
+> > > +      - const: per6
+> > > +      - const: per7
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 5
+> > > +
+> > > +  power-domains:
+> > > +    maxItems: 5
+> >
+> > Here you have 5 channels, while the reference manual lists 8 interrupts
+> > and 6 channels in the ISI documentation.
+> 
+> QXP should only have 5 irqs and clocks. QM have 8, see above reply.
+> 
+> > > +
+> > > +  ports:
+> > > +    $ref: /schemas/graph.yaml#/properties/ports
+> > > +    properties:
+> > > +      port@2:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: MIPI CSI-2 RX 0
+> > > +      port@6:
+> > > +        $ref: /schemas/graph.yaml#/properties/port
+> > > +        description: CSI-2 Parallel RX
+> >
+> > Table 15-6 in the reference manual lists the parallel port as input 4.
+> 
+> Reference manual is wrong.
+> 
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - interrupts
+> > > +  - power-domains
+> > > +  - ports
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    #include <dt-bindings/clock/imx8-clock.h>
+> > > +    #include <dt-bindings/clock/imx8-lpcg.h>
+> > > +    #include <dt-bindings/firmware/imx/rsrc.h>
+> > > +
+> > > +    image-controller@58100000 {
+> > > +        compatible = "fsl,imx8qxp-isi";
+> > > +        reg = <0x58100000 0x90000>;
+> >
+> > Same comment here about the registers range.
+> >
+> > > +        interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        clocks = <&pdma0_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma4_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma5_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma6_lpcg IMX_LPCG_CLK_0>,
+> > > +                 <&pdma7_lpcg IMX_LPCG_CLK_0>;
+> > > +        clock-names = "per0", "per4", "per5", "per6", "per7";
+> > > +        power-domains = <&pd IMX_SC_R_ISI_CH0>, <&pd IMX_SC_R_ISI_CH4>,
+> > > +                        <&pd IMX_SC_R_ISI_CH5>, <&pd IMX_SC_R_ISI_CH6>,
+> > > +                        <&pd IMX_SC_R_ISI_CH7>;
+> > > +
+> > > +        ports {
+> > > +            #address-cells = <1>;
+> > > +            #size-cells = <0>;
+> > > +
+> > > +            port@2 {
+> > > +                reg = <2>;
+> > > +                endpoint {
+> > > +                    remote-endpoint = <&mipi_csi0_out>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +...
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 40d1b7ec30fde..f243257ef7653 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -17000,6 +17000,7 @@ NXP i.MX 8M ISI DRIVER
+> > >  M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >  L:	linux-media@vger.kernel.org
+> > >  S:	Maintained
+> > > +F:	Documentation/devicetree/bindings/media/fsl,imx8*-isi.yaml
+> > >  F:	Documentation/devicetree/bindings/media/nxp,imx8-isi.yaml
+> >
+> > Should nxp,imx8-isi.yaml be renamed to fsl,imx8-isi.yaml ?
+> 
+> Suppose yes, it should match one of compatible string name. This patch
+> have not touch nxp,imx8-isi.yaml. we may rename it later
+> 
+> > >  F:	drivers/media/platform/nxp/imx8-isi/
+> > >
+
 -- 
-2.34.1
+Regards,
 
+Laurent Pinchart
