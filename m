@@ -1,156 +1,117 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6678842A82;
-	Mon, 21 Apr 2025 07:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E97E3D81
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745221274; cv=none; b=KvL9i6MXGPIJUnYrmR+hpaGWW+tLdTurtPaK78H2ZrvzhJ95hSc/MrKfoW3XqcJPx6Fv51+u9TbHzzv5/4j+/jrnq5n9bCXw7d3l7coUh+cUHSh1DB/l6mdreA5/hE0tyh0+JBxbZDRSxqjsoyeznnhbPwXLY1XRf1lgQtg3RoQ=
+	t=1745221393; cv=none; b=erU0QwYMJHRdicmCjOVyCGGzbd50ECMGwpnlh6lLkjCu+lEJrMQEdu428VaTongjm3C2cQZHoO737dZfTE9aYqiq/y/6pFxyC6roC8Mnm2L9wdYKBKZb9irNJsg5JK8UgvAT4GeNv02QBS5IZdVBu3pzyXEJHwWf4VaJ7Hk0Su8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745221274; c=relaxed/simple;
-	bh=7A4KIJxhzQOnGJuAMSwNnQDreE7Acs/kCJswmbM0wFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mFqUhIFUdy+xVADpjfX/up7EaJoKgghLxOjxQIl9Z0s+hx+XQYlgS4o/DmrOivOaKw1t21IsK/nC0GMpZTGRGpMc7tqxMEdJ5muiw0Zz8IzWRkn4ieeBsJ4t6oYEjV+rtp9HeaoFgmSoXREiabT+yKA05lG8ntKh1oUADXhMY2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=c+JZuHZG; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745221393; c=relaxed/simple;
+	bh=zNr0ghVhsv/1Vj+Sp7mLYUgmXNQzQSx/eC0cYZR67mg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UJRJBZTrqlGL8TQtS4DxysXm0bTC/533hwNz/9GT8xbEdwTKRbdr1i7OfQAvu0L3DqWi68zKa6FQztscO/XwHG9/8gqHwDiH8UBwxEiB6PTGvdDjHFn18AyVFqTnLjLWhj6RVvEK+n4dYgF3oWQ33i2v/UFemRLzfsi8pTTHgec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F2yUarBY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="c+JZuHZG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745221237;
-	bh=Fxs9NxWDxUFieX7yGlVwvGNZOmO3A4Li11xcTkfRoqY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=c+JZuHZGDLyKwHTWf2IUYHfzaucLKIrB4o/xUzz9vMttHACdw7wY2NzotuvJrlNt6
-	 rmjuUut7YhwPBBT1GlZmtxPT5ZIqKRblCh+OwLBqi4F5fEQsYFY+vWtQZOcic0TGw5
-	 v+HcuuS2HzLH5zJ8i1sa97ZiEnIbbpmiSqK6+ruI=
-X-QQ-mid: zesmtpip4t1745221226t7d1c116b
-X-QQ-Originating-IP: jqo7yqqOLdTjgbTqbuM2nYummntLNnOIXlBWdBK0Yoc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 21 Apr 2025 15:40:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10529845600704120540
-EX-QQ-RecipientCnt: 22
-From: WangYuli <wangyuli@uniontech.com>
-To: hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	borntraeger@linux.ibm.com,
-	svens@linux.ibm.com,
-	obitton@habana.ai,
-	akpm@linux-foundation.org
-Cc: gerald.schaefer@linux.ibm.com,
-	viro@zeniv.linux.org.uk,
-	wangyuli@uniontech.com,
-	meted@linux.ibm.com,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	yujiaoliang@vivo.com,
-	shenlichuan@vivo.com,
-	cvam0000@gmail.com,
-	jesse.brandeburg@intel.com,
-	colin.i.king@gmail.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com
-Subject: [PATCH] treewide: Fix typo "previlege"
-Date: Mon, 21 Apr 2025 15:38:37 +0800
-Message-ID: <F3FFD123DE5F85F3+20250421073837.64732-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F2yUarBY"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNDt89025922;
+	Mon, 21 Apr 2025 07:42:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Uda27OR6jl0Qtu3XrSgAsNeJj/Kw9HnJ8gdvEdHRSF4=; b=F2yUarBYjb+LQ3d2
+	V2lAUDqrg0jWn0XcZW25Z53FIFZEss70bgzq6J0rz2sAaVMSXaKWrhLMn3qzMGkK
+	OkP8x/GUns5LxP6z4cP6NqpuljJlHDCBaXIWVr9WOG+bu7XPWlTX3DkOYD0jDGdb
+	9/QHFjuOQ7bF6xn2wmi5hxtEIadNmMOxOFuAKW6OlEG5q62dKaNHyYEAdd67vtdW
+	sAsU2axmFuRsPeXwis/869V5OgFJ5pPfq/r0keXgZ0UNAzfbim0RXhP2XPtb4mfj
+	2YI0yXga7KIHKKTGaNykWuRDA0Taai3vJra0MwJh6fpr2UWEtBZiN2GomoPWP/CC
+	OWa0Yw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426kb2e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 07:42:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L7gghw004059
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 07:42:42 GMT
+Received: from [10.239.132.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
+ 2025 00:42:39 -0700
+Message-ID: <cedf31b0-e639-4062-bb65-c36d36da7e5c@quicinc.com>
+Date: Mon, 21 Apr 2025 15:42:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MxdW4jxL6NvXiQrhiHczdKneicZuKJXFOt13NcIfsjbX2xahoTwFtYB/
-	Dcrzh8kDp2x7xmH26D7a+5DTTav3rnlyK2Te2hYXvE7FHy49LaUSr/KRshYuLCnJ5sYCSfe
-	qypehXgU5mA7FHRPR9DJZCPMjoCL88kUR2kF52PUXfwLxp3xabnnz6K1Mb9I45pgv/CniM3
-	qnXyKeD/mtlb6rePQuVyK6WQdrpQ3nG9d6O0r8UXgF5AaalyS9wD5X5GrI/TfMLpO5zaYzp
-	xjo+ja3Ns4++6I0c9AoUyyf5iFR9Ask8vsV0qUEGKyFeWvUWPHzStxwZRrY42y56q96ZwQC
-	U9kBmo5HQXKBIABNrtm9QMh55Jq9SykpBzDefyh5n/8Ck02u1ZfvOEpyZQ4bM4UIMduKoOT
-	+TDK4407AaNQae/7K4Ok7xbwD079zdxZYjnY0Zhn3dwZHRPgEULmOzrtTEQ9HspSaUYdLeP
-	fdb7QeG9khVFvZRHKLaofv6qIQeQr86mxLkaqu629UVzGppXpiGTVHGrx9TY7gGRo8zyx4Q
-	MnWNLWoJw6FylYSJpr6kkbNqrUvi5WiKshu+g/gBJQ2YeUEbv2QR4gNk5+bgz2YZBnYTUBT
-	AzhfWTgb2NQ+dow55QPVXMkgbEtBAffZmsdeAzVsvwdlEAGFEBNO4paN2NvtDvN9ZfKkvU3
-	YTEW+F5il3ZkBmWo9pPu2itQg8UZawIFBIkWGUcpc6sN4oM5nmNLLS92WD0QIWnxm9o4R5h
-	QOBncOXfUevJ65p2GkNRn8H4q2JRM7NXtuqrkHqtymjrH9arA+0Ev5OLWADfalUAAXQIiPV
-	zvu3nyW2t+wOP+sNFi4GNCICQ4+vDWKvIOLJDbc+fsV6FqlBv1UUinnV5G9S0hXBioVDz66
-	vWoZJrVLDttkbiwbvpY/6jmo1sUH3HPxM2sNBaDNgDENO9tMYT0rLApU1Kre2kb7axPDkFX
-	Kt2pYAzxR/Dtl3afFNo/ZGeA0ztvgPV8SsAspHloJjLxJTBtezjnPZdl9o4lU18Fmr3Oob0
-	B6NZuP57ArAFUuCpUkvFtCBnmOYBo=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm, slab: clean up slab->obj_exts always
+To: Harry Yoo <harry.yoo@oracle.com>
+CC: <cl@linux.com>, <rientjes@google.com>, <vbabka@suse.cz>,
+        <roman.gushchin@linux.dev>, <surenb@google.com>,
+        <pasha.tatashin@soleen.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <quic_tingweiz@quicinc.com>
+References: <20250418061459.3898802-1-quic_zhenhuah@quicinc.com>
+ <aAJtFwAH_ayIJ-SR@harry>
+Content-Language: en-US
+From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+In-Reply-To: <aAJtFwAH_ayIJ-SR@harry>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: QdMRYimzp7ELfGaPx9J1Lx3SlfpZrx1O
+X-Proofpoint-GUID: QdMRYimzp7ELfGaPx9J1Lx3SlfpZrx1O
+X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6805f6f2 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=yPCof4ZbAAAA:8 a=tUVUhsVVWxwbZEqO3ecA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210059
 
-There are some spelling mistakes of 'previlege' in comments which
-should be 'previlege'.
 
-Fix them and add it to scripts/spelling.txt.
 
-The typo in arch/loongarch/kvm/main.c was corrected by a different
-patch [1] and is therefore not included in this submission.
+On 2025/4/18 23:17, Harry Yoo wrote:
+> On Fri, Apr 18, 2025 at 02:14:59PM +0800, Zhenhua Huang wrote:
+>> When memory allocation profiling is disabled at runtime or due to an
+>> error, shutdown_mem_profiling() is called: slab->obj_exts which
+>> previously allocated remains.
+>> It won't be cleared by unaccount_slab() because of
+>> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
+>> should always be cleaned up in unaccount_slab() to avoid following error:
+>>
+>> [...]BUG: Bad page state in process...
+>> ..
+>> [...]page dumped because: page still charged to cgroup
+>>
+>> Fixes: 21c690a349baa ("mm: introduce slabobj_ext to support slab object extensions")
+>> Signed-off-by: Zhenhua Huang<quic_zhenhuah@quicinc.com>
+>> ---
+> Acked-by: Harry Yoo<harry.yoo@oracle.com>
+> 
+> I reproduced the issue locally and confirmed that this patch fixes
+> the issue.
+> 
+> Tested-by: Harry Yoo<harry.yoo@oracle.com>
+> 
+> By the way, I think this should probably be backported to -stable?
 
-[1]. https://lore.kernel.org/all/20250420142208.2252280-1-wheatfox17@icloud.com/
+Thanks Harry, I'll send another patch that incorporates Suren's 
+suggestion as well.
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- drivers/s390/char/vmlogrdr.c          | 4 ++--
- include/linux/habanalabs/hl_boot_if.h | 2 +-
- scripts/spelling.txt                  | 2 ++
- 3 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/s390/char/vmlogrdr.c b/drivers/s390/char/vmlogrdr.c
-index dac85294d2f5..e284eea331d7 100644
---- a/drivers/s390/char/vmlogrdr.c
-+++ b/drivers/s390/char/vmlogrdr.c
-@@ -255,7 +255,7 @@ static int vmlogrdr_recording(struct vmlogrdr_priv_t * logptr,
- 
- 	/*
- 	 * The recording commands needs to be called with option QID
--	 * for guests that have previlege classes A or B.
-+	 * for guests that have privilege classes A or B.
- 	 * Purging has to be done as separate step, because recording
- 	 * can't be switched on as long as records are on the queue.
- 	 * Doing both at the same time doesn't work.
-@@ -557,7 +557,7 @@ static ssize_t vmlogrdr_purge_store(struct device * dev,
- 
-         /*
- 	 * The recording command needs to be called with option QID
--	 * for guests that have previlege classes A or B.
-+	 * for guests that have privilege classes A or B.
- 	 * Other guests will not recognize the command and we have to
- 	 * issue the same command without the QID parameter.
- 	 */
-diff --git a/include/linux/habanalabs/hl_boot_if.h b/include/linux/habanalabs/hl_boot_if.h
-index d2a9fc96424b..af5fb4ad77eb 100644
---- a/include/linux/habanalabs/hl_boot_if.h
-+++ b/include/linux/habanalabs/hl_boot_if.h
-@@ -295,7 +295,7 @@ enum cpu_boot_dev_sts {
-  *					Initialized in: linux
-  *
-  * CPU_BOOT_DEV_STS0_GIC_PRIVILEGED_EN	GIC access permission only from
-- *					previleged entity. FW sets this status
-+ *					privileged entity. FW sets this status
-  *					bit for host. If this bit is set then
-  *					GIC can not be accessed from host.
-  *					Initialized in: linux
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index a290db720b0f..ac94fa1c2415 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -1240,6 +1240,8 @@ prefered||preferred
- prefferably||preferably
- prefitler||prefilter
- preform||perform
-+previleged||privileged
-+previlege||privilege
- premption||preemption
- prepaired||prepared
- prepate||prepare
--- 
-2.49.0
+> 
+> -- Cheers, Harry / Hyeonggon
 
