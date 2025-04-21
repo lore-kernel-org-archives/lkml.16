@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116981E8854;
-	Mon, 21 Apr 2025 18:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9761A238A;
+	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745259233; cv=none; b=obyKjgjkHGvVIwfFzMQE1oXq6XBhM00wQ3idgPiMSh2tLXbaByrLUR+bcbZBC89wfYfoUysF6Q5wXt2BvqysPiUpTGx+OHCmlkQk6yzH8dOMpfG/Z+qvdVSz5IdUhmQlAqF3ETYYqSotwe9GGQkyE/FZReWJqY9X0plDIcPrlzc=
+	t=1745259232; cv=none; b=GrgqL8hI4uYoPIfqR0+ypdkhA60vGQRzgn+wo91Mg222AJpg7MK/KKvaq/6f0G5JlNyB3oDA3JpkDzgJt1qxvNfTeDmEAOVq8Tx1MywyrCM3yzB4Fg32kSTw8mLC73lYV9OIcaqysqbMcuvtiS1y6lP2ypTYluNISeArAWObR/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745259233; c=relaxed/simple;
-	bh=5xEPkCKOVRabxXHHeF2mu6uzqMA218cBnnVPAnWjDKU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G7HmFuCthz1vF44uq4sNmk2s1gz+teBNtmm948Jca7QmWLR/aws9qmOgHqxUL6vQNm5G7DkOG04V4r5wqhPCY2LICCW6fDk7G5xs6yJyz2RxGennshR+sYLMiYmlHeZh6EGTkZAaN95GIkREHNcSaJPOpCDd59voFUBNt3T59KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOrIlr69; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745259232; c=relaxed/simple;
+	bh=dhTtr4K5vrV7Ifdau0v9q818igO+jXIFRbDPCub+EH4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ComQHUUBhCCT3ZO9BGG2dGQyZewt9fRSdfGSKQdc4PmazC93OTR8i4rJxsgPyRZ3hE5AVVWYjP+sgUGNE8cmfH55GgjnZYY13sQVBf/qnvBV7BIbJqdcGJzCaf8zB+TprbVgLTKkX6RBES0ECgM0oQ3VaS7HaxNFZTlaAhYlfXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7aVrTM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOrIlr69"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AB3B6C4CEF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7aVrTM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 357B9C4CEE4;
 	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745259232;
-	bh=5xEPkCKOVRabxXHHeF2mu6uzqMA218cBnnVPAnWjDKU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IOrIlr694miPvQfU2wp3lnwc7P631sDN8U+hIUlcI3sV32VBnRhVwAf98A9aGl49Q
-	 oTa1GcLupUCKz71t3LjmW87kJnyeG3F6nKq0tT3WA8m5bmqDHok4m5LFYCja9CEvV2
-	 BIDBvdOL3Sjkez5/Kgayg/+qoSaWPs54drYOkFAjexReHrPmLDu0ACERgeSyiN2kZ8
-	 bI/Zdpwbtb42R2l2/LwjKgJZEQiQiji6oBzS6OoUAggGsZC+wjb3C6dqHzzkFM+DJE
-	 MHjfGQOOzKKLkqgBhqJ9uw6pLsfQpvoph7L7UlM4ZXh10LhUS72d5jtjiDG4DOAVRv
-	 MzlQXwrPlRxjg==
+	bh=dhTtr4K5vrV7Ifdau0v9q818igO+jXIFRbDPCub+EH4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=n7aVrTM4SSiqBQsCcmlfb/iCV95UvM0+xkkUXFNELTCDTATexZEYW5OsonA9k3Ayy
+	 gyAGBk/GHrCItpPeR99EkNRQoXcOH7MH5efrZlJqIQp5C0GKgNo96/lA6m4tnBA6A0
+	 YXc40UzpRGl/ishD6BNxpsBnUj+8AiL+8HbDQu3JrXe0osbN3NlzWTL2PpxlqPF6F9
+	 DVlejcjcY0mlL+UslpOyNiIWDnd7B4Xj8mOWuS3I1cEBMQ9v6ZyWdKCkEv38ZFKsyP
+	 6SgGrkXkw0fdRqerKlbDMAbTWs1JJha1gTeEorYjX0Ixmw+QMQ2uUMpX3bMoBbCGWU
+	 wciqDZZFfhsXg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD30C369D7;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252F8C369AB;
 	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 From: Thomas Antoine via B4 Relay <devnull+t.antoine.uclouvain.be@kernel.org>
-Date: Mon, 21 Apr 2025 20:13:36 +0200
-Subject: [PATCH v3 5/5] arm64: dts: exynos: gs101-oriole: enable Maxim
- max77759 fuel gauge
+Subject: [PATCH v3 0/5] Google Pixel 6 (oriole): max77759 fuel gauge
+ enablement and driver support
+Date: Mon, 21 Apr 2025 20:13:31 +0200
+Message-Id: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250421-b4-gs101_max77759_fg-v3-5-50cd8caf9017@uclouvain.be>
-References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
-In-Reply-To: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMuKBmgC/4XNSwqDMBCA4atI1k3JS2K66j1KkUQnOtBqSWqwi
+ HdvFLoplG4G/oH5ZiERAkIkp2IhARJGHIcc8lCQprdDBxTb3EQwoXge1CnaRc54fbez1ro0te+
+ oYgKE5FY5KUk+fQTwOO/s5Zq7x/gcw2v/kvi2/QMmThk1VSu81c6DZOepuY1TsjgcHZDNTOLjl
+ Iz/dER2Km1KYx047f2Xs67rGzi+m2oDAQAA
+X-Change-ID: 20241202-b4-gs101_max77759_fg-402e231a4b33
 To: Rob Herring <robh@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
  Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -55,11 +57,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pm@vger.kernel.org, Thomas Antoine <t.antoine@uclouvain.be>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745259219; l=1313;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745259219; l=4444;
  i=t.antoine@uclouvain.be; s=20241202; h=from:subject:message-id;
- bh=+E8KTkRWD/mhjwDdm0OrzwMI0i7bo8G/TbulwCt/cNU=;
- b=3Vmi01/6lLR8bdWK8rEFtyFk8OJvaSSYwt+P0HGLokKmOmUByXF181HxjD28obfVkyXl2dRlz
- +rwW3Uw+43aDGPshLCK05RKjDNecb/srcSX5tw0KEv7JXZaDrFG9C9G
+ bh=dhTtr4K5vrV7Ifdau0v9q818igO+jXIFRbDPCub+EH4=;
+ b=3CyC063e2T/TqTX5MRwjHsd8hbpR6TjK1Pr6MnLxmcY/r8rh0CIB1UVM+rSZUHbSbmnsg+VHB
+ +tYJgdik7b/Av0XZI4sCgokWmJuekfiYOdQMS3iNVrZba8CINTf6tbK
 X-Developer-Key: i=t.antoine@uclouvain.be; a=ed25519;
  pk=sw7UYl31W1LTpgWRiX4xIF5x6ok7YWZ6XZnHqy/d3dY=
 X-Endpoint-Received: by B4 Relay for t.antoine@uclouvain.be/20241202 with
@@ -67,48 +69,105 @@ X-Endpoint-Received: by B4 Relay for t.antoine@uclouvain.be/20241202 with
 X-Original-From: Thomas Antoine <t.antoine@uclouvain.be>
 Reply-To: t.antoine@uclouvain.be
 
-From: Thomas Antoine <t.antoine@uclouvain.be>
+The Google Pixel 6 has a Maxim MAX77759 which provides a fuel gauge with
+an interface with a lot in common with the Maxim max1720x.
 
-Add the node for the Maxim MAX77759 fuel gauge as a slave of the i2c.
+Modify the Maxim MAX1720x driver to be compatible with the Maxim MAX77759
+and enable it for the gs101-oriole board.
 
-The TODO is still applicable given there are other slaves on the
-bus (e.g. PCA9468, other MAX77759 functions and the MAX20339 OVP).
+The voltage, current, capacity, temperature and charge have all been
+tested and show coherent results. The charge full design and capacity
+equal the ones seen on android, the ratio between average charge and
+average current does predict pretty accurately the time to empty under
+a constant workload and temperature is coherent with the dynamic state
+of the device.
+
+Health is not enabled as it always reports overheating. The time to empty
+is wrong by about a factor 2 and is thus also disabled.
 
 Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
+
 ---
- arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Changes in v3:
+- Update base tree to avoid conflicts
+- Fix capacity computation for max1720x
+- Add separate properties for the max7759 to disable non-functional ones
+- Take TASKPERIOD into account for voltage computation of max77759
+- Simplify vcell computation (Dimitri Fedrau)
+- Switch has_nvmem to bool and keep it only in chip_data (Dimitri Fedrau)
+- Drop the yes_range from the write table (Sebastian Reichel)
+- Add test_power_supply_properties.sh to cover letter (Sebastian Reichel)
+- Switch back some changes to binding and actually use allOf:if: to
+  restrict constraints (Krzysztof Kozlowski)
+- Fix style errors
+- Link to v2: https://lore.kernel.org/r/20250102-b4-gs101_max77759_fg-v2-0-87959abeb7ff@uclouvain.be
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-index b25230495c64dce60916b7cd5dcb9a7cce5d0e4e..84fc10c3562958ab1621f24644709e85a9433b9b 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101-pixel-common.dtsi
-@@ -10,6 +10,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/usb/pd.h>
- #include "gs101-pinctrl.h"
- #include "gs101.dtsi"
-@@ -188,6 +189,15 @@ usbc0_role_sw: endpoint {
- 			};
- 		};
- 	};
-+
-+	fuel-gauge@36 {
-+		compatible = "maxim,max77759-fg";
-+		reg = <0x36>;
-+		reg-names = "m5";
-+		interrupt-parent = <&gpa9>;
-+		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+		shunt-resistor-micro-ohms = <5000>;
-+	};
- };
- 
- &pinctrl_far_alive {
+Changes in v2:
+- Add fallback for voltage measurement (André Draszik)
+- Add regmap for the max77759 (André Draszik)
+- Add chip identification for the max77759 (André Draszik, Peter Griffin)
+- Move RSense value to a devicetree property shunt-resistor-micro-ohms
+  (Dimitri Fedrau, André Draszik)
+- Use allOf:if to narrow binding per variant (Krzysztof Kozlowski)
+- Remove binding example (Krzysztof Kozlowski)
+- Change defconfig order to follow savedefconfig (Krzysztof Kozlowski)
+- Fix style errors
+- Link to v1: https://lore.kernel.org/r/20241202-b4-gs101_max77759_fg-v1-0-98d2fa7bfe30@uclouvain.be
 
+tools/testing/selftests/power_supply/test_power_supply_properties.sh:
+ok 1 max77759-fg.exists
+ok 2 max77759-fg.uevent.NAME
+ok 3 max77759-fg.sysfs.type
+ok 4 max77759-fg.uevent.TYPE
+ok 5 max77759-fg.sysfs.usb_type # SKIP
+ok 6 max77759-fg.sysfs.online # SKIP
+ok 7 max77759-fg.sysfs.present
+ok 8 max77759-fg.sysfs.status # SKIP
+ok 9 max77759-fg.sysfs.capacity
+ok 10 max77759-fg.sysfs.capacity_level # SKIP
+ok 11 max77759-fg.sysfs.model_name
+ok 12 max77759-fg.sysfs.manufacturer
+ok 13 max77759-fg.sysfs.serial_number # SKIP
+ok 14 max77759-fg.sysfs.technology # SKIP
+ok 15 max77759-fg.sysfs.cycle_count # SKIP
+ok 16 max77759-fg.sysfs.scope # SKIP
+ok 17 max77759-fg.sysfs.input_current_limit # SKIP(Dimitri Fedrau)
+ok 18 max77759-fg.sysfs.input_voltage_limit # SKIP
+ok 19 max77759-fg.sysfs.voltage_now
+ok 20 max77759-fg.sysfs.voltage_min # SKIP
+ok 21 max77759-fg.sysfs.voltage_max # SKIP
+ok 22 max77759-fg.sysfs.voltage_min_design # SKIP
+ok 23 max77759-fg.sysfs.voltage_max_design # SKIP
+ok 24 max77759-fg.sysfs.current_now
+ok 25 max77759-fg.sysfs.current_max # SKIP
+ok 26 max77759-fg.sysfs.charge_now # SKIP
+ok 27 max77759-fg.sysfs.charge_full
+ok 28 max77759-fg.sysfs.charge_full_design
+ok 29 max77759-fg.sysfs.power_now # SKIP
+ok 30 max77759-fg.sysfs.energy_now # SKIP
+ok 31 max77759-fg.sysfs.energy_full # SKIP
+ok 32 max77759-fg.sysfs.energy_full_design # SKIP
+ok 33 max77759-fg.sysfs.energy_full_design # SKIP
+
+---
+Thomas Antoine (5):
+      power: supply: correct capacity computation
+      power: supply: add support for max77759 fuel gauge
+      dt-bindings: power: supply: add max77759-fg flavor
+      arm64: defconfig: enable Maxim max1720x driver
+      arm64: dts: exynos: gs101-oriole: enable Maxim max77759 fuel gauge
+
+ .../bindings/power/supply/maxim,max17201.yaml      |  34 ++-
+ .../boot/dts/exynos/google/gs101-pixel-common.dtsi |  10 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/power/supply/max1720x_battery.c            | 271 ++++++++++++++++++---
+ 4 files changed, 280 insertions(+), 36 deletions(-)
+---
+base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
+change-id: 20241202-b4-gs101_max77759_fg-402e231a4b33
+
+Best regards,
 -- 
-2.49.0
+Thomas Antoine <t.antoine@uclouvain.be>
 
 
