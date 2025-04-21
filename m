@@ -1,87 +1,108 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AD65475E
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F7B2905;
+	Mon, 21 Apr 2025 14:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245848; cv=none; b=vFmA955m68B3DtRnNjhUOz4Kr4OT5SzJVq9WeTlTiIH8boslxMiH0B21SmZAPojOX912WwdF+G9hUCs6zejFZwT+OH/NeGtgmpJoOzwW1VNlhtR0xCwOCPdMBJbux23oEmDRqsQOkuzFHI9aiyb+OiRAmAsMvMWUw+tVosTcK+M=
+	t=1745245934; cv=none; b=bgX3RierjpSiNlb6TvI4+jj5/GvYIYy0UPSDqQ1szTNrZRXSkTn30R5rUGiuXb1YAIF4IcgYbOWY9RGJqmKNhz0JDkVwtiTvWQnKA087tpavNJRaC4MdYxarOyoEttIZ7hfomcHS6/AuDFdwdgt8X/h7g9/MSBcbnqCTJtkE814=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245848; c=relaxed/simple;
-	bh=GhE+7yJlZPXfDXcKbz8rIU+n/bOKRUbbW8k0nBGxPcY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ooi/AYlYI035NSyKUAgAvshzoPbXPDOZ72KiCJqhZ/iQcNipgbB4syhDNpRjt2AwAa44XQWpWQWF8dA+sr3Ites9c8xBVMsBwBB/WKruf37IhD6M6dRJ7ICr1cM49wd8uhQxFxe/DGRXJmN3+5nWKzezV/eNM6PEKlJX8e8yz04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=PVB98+6o; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1745245934; c=relaxed/simple;
+	bh=Z+S9eHf9/wqNoLRF4hWQ88+VPLnFVCb3FpbJphuVF/U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=RkmlnALyWZNmcGK4h8QzMQv43gl/dWDJ09TlHs8GqWev2jU2wrlwyBEDeFl5eIlUUYvBF0NMINgEmG/irzdtWdUN90JKRVdCbmv15IsWHdboSKHsRX/vEkSlltrvTYtsX173/cPjwOdH0XKnawcn4AtaMp5Dct0Xto8YgoQwrPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=eQTeObu4; arc=none smtp.client-ip=203.205.221.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="PVB98+6o"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1745245843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qsv9H0ash+njBouLPA0/pRo+0GrFRby9AbDJsN0GOKE=;
-	b=PVB98+6oxX50Q9XW+Za3dp/6aoF6QIsk+GkQG+RhwgAuqCO/PRha/bOC32n/j4OBZ2Vp5l
-	fj5ukLpZ9H+rapRiCP5KjSosPe2nVRabrAJJSHJwKEIXCN4UK+uS8J+ghdAdvV4jg9S4e2
-	CxoRLNJNJm/OrHZWBTn0zEdDROUIwv06M8rN+lHSNNb0uwvhL9qM3lLyrKX3o/ryPZFwWT
-	8FT3DAjMxF7MrDxL8cFiXiDx1lrHCr8ZN9RnZsDc4eNxY6heu9v5jy6Yg7lMS8gof37QZ2
-	MzD1LcaBxhJid07mg0m6tHJLgIqQEKNj2tEMr3UFqGv1DiXsGU/ioB/KoLyOHA==
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Petr Mladek <pmladek@suse.com>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>, 
- airlied@redhat.com, Simona Vetter <simona@ffwll.ch>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, 
- apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com, 
- lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com, 
- Aditya Garg <gargaditya08@live.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
- Hector Martin <marcan@marcan.st>, 
- Asahi Linux Mailing List <asahi@lists.linux.dev>
-In-Reply-To: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
-Message-Id: <174524583908.462870.16724111514713149267.b4-ty@rosenzweig.io>
-Date: Mon, 21 Apr 2025 10:30:39 -0400
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="eQTeObu4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1745245922; bh=6eXqKYUutXENtnDpmaxLPdOoYJJXdLFbAthrsL6H9FU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=eQTeObu47aOCDcD2QJkiCqJEETcXyOQxxMIqYjcIR1+yR/7muroihG3/KYLdUrJK9
+	 IcVPtAkv8HxS5HSHEg8ke1YsCJU0tkD1SP+vIe4MRsN8yVMDrcoPrEsBwph8p76Pj/
+	 P4zq7zmPCnqFq0xTi6FMEBYIVCFsUZcqcklIxa3M=
+Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 7F93A2A7; Mon, 21 Apr 2025 22:31:57 +0800
+X-QQ-mid: xmsmtpt1745245917t2dv8uoxg
+Message-ID: <tencent_93C4465D499DEEDF6EE60CB667DC46D0D206@qq.com>
+X-QQ-XMAILINFO: MzNwb/pqyJTkyMB3X34qFTf82JRI6mTinyGHLW/dR+aCXw9U5XiXR0SQvNgTBw
+	 f0+43DWZdLWuULnmZOll4L5FrcH8MEdHE7oiIPUmuM5X044USavdSZJvAeNevVStSpBWMg+PzJsF
+	 5DAtHtlulGRU6TP7d46ho7huCvJuVIkQTByvBbZ17eIwI/pjxTTFNbwsb2LO2r53sSesBadO/JA0
+	 QcW6q+SwWyRF7SOQMbzK704nu1mGMpK66NJyPucuyAGrTHC0hxsboga/x+H+IpZKmywkVK6FFsrz
+	 Y7zY6hK3q+9KhwA9107RAwrkeQV7fH1vz2DW1sqnhSIUkP5HzJX6BJ8ztSvQ05pYQl8OuTPnbqtw
+	 sl8Uj1BZmqJ5t4ZAPEVd0zVSgILx003ZOY8w7/Ed4I8fGhDWoYSbVo1eI7i0Gjby8PtE6IQthv5h
+	 IKFY9Kq1PqpBxwU17dOise2YU18e+panZFthp3bbx2xg8/vmNR32nnWyboH1Jxq3DUMPybWh6X9e
+	 lQ84FJ0NoxL8PtuFvt1iRBp6TGjFz0A7ccVuzpn6v4osvYobBBKjl9NCVMkdHfJh8498gvcs5ho1
+	 T9JuqqeG5utFoBuVIJn1wVLKTUIhZhnmctMUIW11/ujDMotU0RgXQy1079JK92lriLO/FK53cW9t
+	 Da8GVHKPz34zA4K8EVB73ZbCE442Q0Ui9v3bNCqe9xqdDMBanqBmGswdZCtsr7aaNEjgFoCJNbB+
+	 9PSY5WCng17FZ/EP5tMqmdI19d/vsf75ORN6AJrpmvyYL9I8XwYZA5bVRjWMNmWCFYaIXjuo0l1R
+	 3VkJcpeOzmxxmedQNXB2eqf949lqVxVPhPrL22mJ/nF/dCahfrEgHP+RblXzamJzKgR8g2TT/N5M
+	 MdInrHed/S+prffUW71qh7ZPLcuEEqmrmUV1YmAYtsZr7VEswuYt7U5hYvxT+AIvZYdh9M+n65t/
+	 Jf/6YRBubEeih491Mu0akKkF6ryqMwCIUlMyQ8LHc+FpNFFC3hWA==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+0192952caa411a3be209@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	mchehab@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] media: az6007: Add upper bound check to the data of device state
+Date: Mon, 21 Apr 2025 22:31:56 +0800
+X-OQ-MSGID: <20250421143155.1019130-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <6805a24c.050a0220.4e547.000b.GAE@google.com>
+References: <6805a24c.050a0220.4e547.000b.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+syzbot report a corrupted list in az6007_i2c_xfer. [1]
 
-On Tue, 08 Apr 2025 12:17:13 +0530, Aditya Garg wrote:
-> The vsprint patch was originally being sent as a seperate patch [1], and
-> I was waiting it to be taken up. But as suggested by Petr, I'm sending
-> them via DRM.
-> 
-> v2:
-> Remove printf tests, will merge later through Kees' tree
-> 
-> [...]
+Before accessing the member data of the struct az6007_device_state, only
+the lower boundary of data is checked, but the upper boundary is not checked.
+When the value of msgs[i].len is damaged or too large, it will cause out
+of bounds access to st->data.
 
-Applied, thanks!
+[1]
+UBSAN: array-index-out-of-bounds in drivers/media/usb/dvb-usb-v2/az6007.c:821:30
+index 4096 is out of range for type 'unsigned char [4096]'
+CPU: 1 UID: 0 PID: 5832 Comm: syz-executor328 Not tainted 6.15.0-rc2-syzkaller-00493-gac71fabf1567 #0 PREEMPT(full)
+Call Trace:
+ <TASK>
+ az6007_i2c_xfer+0x549/0xc30 drivers/media/usb/dvb-usb-v2/az6007.c:821
+ i2c_transfer_buffer_flags+0x10c/0x190 drivers/i2c/i2c-core-base.c:2343
+ i2cdev_read+0x111/0x280 drivers/i2c/i2c-dev.c:155
+ do_loop_readv_writev fs/read_write.c:833 [inline]
+ do_preadv+0x1af/0x270 fs/read_write.c:1130
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
 
-[1/3] lib/vsprintf: Add support for generic FourCCs by extending %p4cc
-      commit: 1938479b2720ebc05aab349c7dc0a53921ff7c87
-[2/3] printf: add tests for generic FourCCs
-      commit: 403ff8fd2dbf5066128af4d1fde76c35a800369d
-[3/3] drm/appletbdrm: use %p4cl instead of %p4cc
-      commit: a49ce9cc85a82d5c5d65186f5a8fda0ebfcff571
+Reported-by: syzbot+0192952caa411a3be209@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=0192952caa411a3be209
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ drivers/media/usb/dvb-usb-v2/az6007.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/drivers/media/usb/dvb-usb-v2/az6007.c b/drivers/media/usb/dvb-usb-v2/az6007.c
+index 65ef045b74ca..6322894eda27 100644
+--- a/drivers/media/usb/dvb-usb-v2/az6007.c
++++ b/drivers/media/usb/dvb-usb-v2/az6007.c
+@@ -806,7 +806,8 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
+ 			if (az6007_xfer_debug)
+ 				printk(KERN_DEBUG "az6007: I2C R addr=0x%x len=%d\n",
+ 				       addr, msgs[i].len);
+-			if (msgs[i].len < 1) {
++			if (msgs[i].len < 1 ||
++			    msgs[i].len > ARRAY_SIZE(st->data) - 5) {
+ 				ret = -EIO;
+ 				goto err;
+ 			}
 -- 
-Alyssa Rosenzweig <alyssa@rosenzweig.io>
+2.43.0
 
