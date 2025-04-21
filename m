@@ -1,152 +1,112 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F731362;
-	Mon, 21 Apr 2025 09:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464DC19ADA4;
+	Mon, 21 Apr 2025 09:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745227821; cv=none; b=BFDryYuiCzLQLEDInq8ss17m2QNC4R/L6W+aGcZKYMeXJUHZt+VdxT+PGYZn73MCkmidPKw3Tu7/X/4/4kmrVUAvyLxrf4mpSf5wRfNlvcmPdYPjTmB7h3Kxa2PpRAKgYBWD1speg8RVD3L1dE3JNmTOg797uMlaf5jB6hdXFj4=
+	t=1745228009; cv=none; b=X/EoMWAxNy/x2REiBEPk1edG9pKktUTJ5Ls4BPOK25qNqtk/HOmqi4s33BwvzFQQfO55Ptf2AHHR0o4G2AKtLhH45QykPfYYqLp9Tlk5ZIAsx+TfziRCkAUGnTRAhRlerCYGRGVFU/hRLt+1yC9ml/jZg5CQev5VdJol3cvnluU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745227821; c=relaxed/simple;
-	bh=hkrlTZ62WZIbf+MUF5R0plLe7rX+Hn2FPe/EawkV0eM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YRAgRqTO0+TsjuuYFEWSWpStqC+fauMtzPDhQGb/fVEZMZFqUvQ2UdjPbKDl7qWADFcypSreKO9P4vPGCeXeCif9CrzI7Zw+h/87wq3Gn5TV53g+rkM4EvTc9NOJ++Lb0xjeXSk/bvCnCX9zMFnNZUhlQgP8oYuy5d5JhcjM8Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=Q58yTLNi; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1745228009; c=relaxed/simple;
+	bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lJ4SvWe1JZe7pQ3sZRr7R7LZN1Eb8njM8lv862QNUgxUdDBA8tsWQet1gfx3NY02QLF3W5/CB9Fvv7AiLOqlm47HrUCOV51boqHrjjM5H0PhqEQFFdDpbnqovadqviwec/Ezn4CUFsSQ9X+S72+eOify5YfGUR8GEgLD5FqtwuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NsKCMx0E; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="Q58yTLNi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1745227355; bh=x1254cGxcCub/kUQM5hyyDzmObtkQ9/oIwWSNnQPgK4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From:To:CC:Subject;
-	b=Q58yTLNirc90MfQQmv3WZEWQgKgv39jvjR97S0Dw+0pZfWRtR27c0n9QrGk1swR8W
-	 Gbj4HXZOqEx88TVx8IGnXx+aj5A9F9ry9SEhG6neNxgkZMHDJLbSYZIwzFGhZkMBHp
-	 f1k81ShqLHH40k9ku7EZdXZUqUQ1+h8wKGRG5G3JaLlYc5Ncc4bYUHC57V/qVX1hlQ
-	 DYy9ak2pisCyBhkqry46aUBQ/UoOhDLLG4NMm+nIxnKZrZh4KgaUDLe6tJ8WrEfO/h
-	 scoiDfhNE39CsAz9fjvUQoQ0f6mgk4vvbflb8X/df2LZ70TznkKE1KqhuguWnYhDhv
-	 65U0kRlQ/6GLA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0JW2BHRz8sv4;
-	Mon, 21 Apr 2025 11:22:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX19/Cw3SxbY0NrcDswZrJkba51HAa62QSVk=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0JR6bnNz8sx9;
-	Mon, 21 Apr 2025 11:22:31 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v2 01/11] selftests/bpf: Fix caps for __xlated/jited_unpriv
-Date: Mon, 21 Apr 2025 11:17:52 +0200
-Message-ID: <20250421091802.3234859-2-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
-References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NsKCMx0E"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso4334264a91.3;
+        Mon, 21 Apr 2025 02:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745228007; x=1745832807; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
+        b=NsKCMx0EDOtwtfBkK/6tHptgElCVixq9fdKDHotuhWK6FfqvX8pNVaJ6delVKzWBcm
+         lEAz4ZhmFE7Ayqg9Zjz7UBpsdJVQiHQ4vpgMXtNXTDNzV0D4Rf/k+PLea/HDxJ7KjQ4q
+         7VJr9as3Tfu+T2262mk/zIEzbFsalAKvdO1qevPKtbCoWPZxKX+Ra8BO94kWRzcNnr/q
+         C7tOmr5UkKmDiJdIJ035alsLnyvsrYDLiR6Pu7RCJk5HEEu0xXkvqSfK7EFjeD+jDiuF
+         t21dznQWunnqsWDPwqiIrXsCpYqzHtzCSQ5Xvl6dqQTo7L8z/VdA4BI16237EWfmratH
+         HSAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745228007; x=1745832807;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
+        b=F3uj/iLY5VZrRq7K1pcpX1xyAI6AjgwpMdGz8pY051EYI7iuXDlNCUzU0d7hbt1LIA
+         RlxxnzDX35+HZUdyJfIVFMZsti1IJN3ziDmt91RmeYq/WqgMOhwV6Rj9dfPCST1iM8wu
+         Xn+OiogcQJPeBtc7DdfKMjx6MuHx6fVmr38mb/ODs1x0JyLHCj4hJst1U+0znu/u+Dn1
+         vhXJPuBjqguVDzzndj8ZIddfsrxSmc/LcS5gauv6UdO5UZOgcefNlhNQap52QYSfp8l1
+         IdIg17kJqdgZrWJgDGxhimEKmHztikNdaDvQlgDvMXD2P4Ats5vWGvIl1Kiqcwibnoct
+         PVkg==
+X-Forwarded-Encrypted: i=1; AJvYcCV++/CVr04WF1IRjdOvn8vOWapNO+DnOyYQwBupoZ0C5MHroHm51aT0Ysu73m2dC5yhWaG/8dXjfQcAsSS7@vger.kernel.org, AJvYcCW7avKsHF7xSx+Nulu9cgsHmy/B3a+5jAewop8IDJRE+GGw+0VcYrySo5/4fvjzWA/6SOK4SJq5fj/B1okZZQ==@vger.kernel.org, AJvYcCWEiUIYkP9Ov54qI6oZYPTi/Q6gow+rfVNv2eOgyLqlRK+pGxrqIpYOL8LFi2XcktNrfkbO+09yL4U7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWRXAn+BUdRSv3Y+VC/4XROBa7rIWCyJGIVc1YbB9XM6gz5oL3
+	8xfUPsIX32pu6ct7ZpyzufydA5SBHhyqX8hYWoOxEBLc7On23Sp7HTA2Geu6/LIOr0qv8YzS7ni
+	Q7BBOuWSwTf1+YgeD3aTeQVMAOFc=
+X-Gm-Gg: ASbGncuBgVICiAJKuZqZU5DbKXsG3cWlDeTre6QLoVWS2dEbUOxglYaw9c0KEDJJr/q
+	1sq3q6HrGZt70UASLvRibWB3eps4JcvALcVa782Mo5gaH+oKbtQSv4q/nUgIyKnOqM47Sg3jy14
+	asgl8Cl8Ww1GFg+1bJvhvdqP+8vjBcJwK198IhCgI94WHxUSwrr4bTVw==
+X-Google-Smtp-Source: AGHT+IHrv/CfywC3Z3w3v+tLaCUyWoTMwBYk/eQj5k5woE2zOueaVZuMH+tFBRRVB2z8ZWvLPsMmutvF4JK+qBcJAgo=
+X-Received: by 2002:a17:90b:17c9:b0:308:5273:4dfd with SMTP id
+ 98e67ed59e1d1-3087bbc19c7mr12876797a91.26.1745228007374; Mon, 21 Apr 2025
+ 02:33:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250421-a5xx-schema-v1-0-7d96b889322a@mainlining.org>
+ <20250421-a5xx-schema-v1-2-7d96b889322a@mainlining.org> <nxv2k2ofiao47w7gmqcgfgn57heucs6yp2og3lkzlavjarado7@p5u4663yw3oz>
+ <4688d4d4ecee7078e535bb940b6055b9@mainlining.org>
+In-Reply-To: <4688d4d4ecee7078e535bb940b6055b9@mainlining.org>
+From: Dmitry Baryshkov <dbaryshkov@gmail.com>
+Date: Mon, 21 Apr 2025 12:33:15 +0300
+X-Gm-Features: ATxdqUGr9nPPKaBUMkNhLDRXQwqcoCYwQ0iMeD2IUAxFlF5xQe-JH9lP3m5xflQ
+Message-ID: <CALT56yOyowxkeu5a7MixkujYh8UmBb8wy-L2y3m5Pp-zEZ6p8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: msm8953: sort adreno clocks
+To: barnabas.czeman@mainlining.org
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Clark <robdclark@gmail.com>, 
+	Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, __xlated_unpriv and __jited_unpriv do not work because the
-BPF syscall will overwrite info.jited_prog_len and info.xlated_prog_len
-with 0 if the process is not bpf_capable(). This bug was not noticed
-before, because there is no test that actually uses
-__xlated_unpriv/__jited_unpriv.
+On Mon, 21 Apr 2025 at 12:22, <barnabas.czeman@mainlining.org> wrote:
+>
+> On 2025-04-21 10:16, Dmitry Baryshkov wrote:
+> > On Mon, Apr 21, 2025 at 05:09:22AM +0200, Barnab=C3=A1s Cz=C3=A9m=C3=A1=
+n wrote:
+> >> Sort adreno clocks in alphabetical order.
+> >
+> > Why? The order of the clocks here matches the order in which they
+> > should
+> > be brought up.
+> Simple misunderstanding from previous attempts of documenting the
+> alwayson clock.
+> By the way i have find out a508/a509/a512 clock bring up order is
+> different from downstream.
+> Upstream: iface, rbmmtimer, mem, mem_iface, rbcpr, core
+> Downstream: core, iface, rbmmtimer, mem, alt_mem_iface, rbcpr
+> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-074=
+00-sdm660.0/arch/arm/boot/dts/qcom/sdm630-gpu.dtsi#L85
+> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-074=
+00-sdm660.0/arch/arm/boot/dts/qcom/sdm660-gpu.dtsi#L87
+> Should I fix it?
 
-To resolve this, simply restore the capabilities earlier (but still
-after loading the program). Adding this here unconditionally is fine
-because the function first checks that the capabilities were initialized
-before attempting to restore them.
+Good question. I will check the msm-4.4 sources later.
 
-This will be important later when we add tests that check whether a
-speculation barrier was inserted in the correct location.
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Fixes: 9c9f73391310 ("selftests/bpf: allow checking xlated programs in verifier_* tests")
-Fixes: 7d743e4c759c ("selftests/bpf: __jited test tag to check disassembly after jit")
----
- tools/testing/selftests/bpf/test_loader.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/test_loader.c b/tools/testing/selftests/bpf/test_loader.c
-index 49f2fc61061f..9551d8d5f8f9 100644
---- a/tools/testing/selftests/bpf/test_loader.c
-+++ b/tools/testing/selftests/bpf/test_loader.c
-@@ -1042,6 +1042,14 @@ void run_subtest(struct test_loader *tester,
- 	emit_verifier_log(tester->log_buf, false /*force*/);
- 	validate_msgs(tester->log_buf, &subspec->expect_msgs, emit_verifier_log);
- 
-+	/* Restore capabilities because the kernel will silently ignore requests
-+	 * for program info (such as xlated program text) if we are not
-+	 * bpf-capable. Also, for some reason test_verifier executes programs
-+	 * with all capabilities restored. Do the same here.
-+	 */
-+	if (restore_capabilities(&caps))
-+		goto tobj_cleanup;
-+
- 	if (subspec->expect_xlated.cnt) {
- 		err = get_xlated_program_text(bpf_program__fd(tprog),
- 					      tester->log_buf, tester->log_buf_sz);
-@@ -1067,12 +1075,6 @@ void run_subtest(struct test_loader *tester,
- 	}
- 
- 	if (should_do_test_run(spec, subspec)) {
--		/* For some reason test_verifier executes programs
--		 * with all capabilities restored. Do the same here.
--		 */
--		if (restore_capabilities(&caps))
--			goto tobj_cleanup;
--
- 		/* Do bpf_map__attach_struct_ops() for each struct_ops map.
- 		 * This should trigger bpf_struct_ops->reg callback on kernel side.
- 		 */
--- 
-2.49.0
-
+--=20
+With best wishes
+Dmitry
