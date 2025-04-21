@@ -1,194 +1,118 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DB21EFFBB
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 20:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFF191EFFBB;
+	Mon, 21 Apr 2025 20:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745268049; cv=none; b=E4OHsWtuDcKSBE24XFVJ4OYXGF1L49hAPvITnjmtlmDaBepmU7iRpoOni11NLNcYmtqdDBg03VfUWQ+lf3VvIhX/Lb75lM1AWIrOY5qAs673P3jNWj4TMF9JCmh9zH9OLENQmwKnMAv+wpzH9hsCEqwCMDhJJH476vR6PCQMacU=
+	t=1745268065; cv=none; b=cVEOvG9czqlAZPSGrYNyY3zZFhKqlukHVeNyj3KOzFBxx+kP9gTLnrZhRGdWMVHpPFBXfbHxqPAJ874iE/oKx5xGaBBNc7XLz89HyaG+RMBQIR1/jqH8YaWPyR8B3wDceoU68XhTMmOTrw41GYFl3PkeitLCuHNkK4vgIHPF8mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745268049; c=relaxed/simple;
-	bh=HPo1U1bOEBIqpKO3dXYxoCWodJ4tVhT3FiOemlOnrz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KQrvb+6wpMSL2OcLHZcvd6nPm4bSn7nAUDmRVv2G2LJfJfQLIJXqGC3cDqaRX2bpRB27SrtZxNxN80Kt+PlLqCr1QQDc8nhWpRO5Vxqt7mgQeP81ABHfglmt2hjtv+oqMFcDYkk/M+Ye6ezFheb1T12/6Y6LWsf6c20T2zqLASs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dausynZJ; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745268065; c=relaxed/simple;
+	bh=k/KvvdmYqnq20t4QpYKRC5H2tOPmgmWGmQI2x5qrhVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+9LH9s8fvOmTL7uj3WJifE4qLeGCdUGphfZ2zcOZ2KXysTSjLFenSiLJj1ldimmjhlBnQi6NkmedzwYk7u1tMPC9bK8Lwcr5wBLSaWXaOtX2uIqCcI8OUk/LDDCoEdnf3WlZFgd/vRtTGqel/IzXNY853+z9JhQDzBwUirtRXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZYBrkbU/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dausynZJ"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe808908so179865e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745268045; x=1745872845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/hk3KoCQ3cfNcS9T6WIJOvBbJ6pbk94kV2LEPNPjexo=;
-        b=dausynZJgBKI3+nPgYAJpN6vp/vHVH+hAWPpkz+ODVCKFsD1Uva0khcagArMClc/lV
-         WlN6CIN7RN5nSSh2iylmURg5eM/MnA3XgSCRhjhR8OZNuNoxHs7hju2LRPnpg82UZWkw
-         fu1SDBfrfyahOOVRVPtWAyYQKHiQAO2ZPr5ZFAr6w88sQ3Y5G2X1CWDmPNXSUL+d4hjl
-         TPTHKA2+Bl84yr42rVA/EWN12RdDDuWDiMMrDSZy6JmUsaGC4UyOMs9c94iWsFWs3TPe
-         qoGr/N//G07ss4JtKTwTlhxpwtdpcD3hDvT2Tca0eysPu1qarLrgjvjREASwIYOTh82Q
-         WFIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745268045; x=1745872845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/hk3KoCQ3cfNcS9T6WIJOvBbJ6pbk94kV2LEPNPjexo=;
-        b=aZhIQMI4QLV3X0qGlaUDg+ueGCEXuuWJ7t2Xpum2BkAwhVKwi7NhPsLAkoT4jgIHm/
-         yAsY1H5aHQqwsnpPoTmFKGQqmR3qk4E7pqw0ugbDXTui2hSxidHr1aVhjLJzuUODLZqw
-         JD682FMtUt5rxyeA1pDuQX4bst98nkyquALC2AI4QmZQzaGTV8ms9E5uJKWPGeeik461
-         X8e6kRbB7/XotXcr9+xZRhCPYx655CqaDx00s7aQcKZZnJNQ1CJ/WZJbMEMjJiEYwTbF
-         t7Oo9NgoA2ZmCzpxVnlsI7OMH3Kky2tVUsOc9Rf2hX7xJE3mFIIZk2TkQibFck5y5oja
-         TWPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWiAW8I1uTovRN3SJ2Vbrpaq+fS82zvW+bFV37/zXIblK4e1fbX7fZgwFYEdX0ClOKTcPtg8MGvxqnJyGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzny7qvnJZzzK4fDml2zhmOmgxbpi9Bm3JOiunugYbFy9diNmyL
-	J5S2VW/6nH7/TsmVGbCho82ptpYKJy/9WTWbXqRT25jsMQB6cTV0MgP5jSYY6BiF3PZBGxvYlUC
-	0LYJvkXdAbopvbBLhnU5PrHgwwd0okh9gRwRPr1eWDlCRYIUonQ==
-X-Gm-Gg: ASbGnctHSo6trM4L4Wgqh5eFvGywWEsxKvc2en4E7P6g/3HW6ZlnNXf3viaub0rvSIA
-	RgZlMavkGbfDoh+VR3jk6PyffGCVdIGfu4Ed7dYfLR7HgQPOhtsLXUFAKu7L+/5RHJLrcavOtB5
-	Z2mt1EMeZcQjwd+xesr7PRzCCfuyPvNCsy
-X-Google-Smtp-Source: AGHT+IGWcp45aLSZt8FM85c+hC9w5ExOa3HAud/x2yrnqew4c284QGEuar9sexOtbZfwcaDamqAvguiKQzmIHXztEi0=
-X-Received: by 2002:a05:600c:4e47:b0:43d:169e:4d75 with SMTP id
- 5b1f17b1804b1-4406b5e061dmr4739435e9.1.1745268045300; Mon, 21 Apr 2025
- 13:40:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZYBrkbU/"
+Received: from [100.70.226.168] (unknown [172.172.34.12])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2D1FE203B867;
+	Mon, 21 Apr 2025 13:40:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D1FE203B867
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745268060;
+	bh=g0iye+uMwzSnSSeghwU6QTJxGHXm0NSZS7e1/drAZPU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZYBrkbU/LFFdjvk6DLcNcYdLDKhhaGSQR/VM+5s0eBYMJ1WmqQvw2jeEg+kjCCJcr
+	 mAZrX5xhGwPSSokj4TSa6TuNWe4itLJKu6yqKfDtdvb6ksfjPB/Ztl36SqHC6mcAdR
+	 PVjR03iqBgEl8blRnYvobIEdJlyW2oh2xpSBveQM=
+Message-ID: <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+Date: Mon, 21 Apr 2025 13:40:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414225227.3642618-1-tjmercier@google.com>
- <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW54g5YCmLVX=cc3m2nfQTZrMH+6ZMBgouEMMfqcccOtww@mail.gmail.com>
-In-Reply-To: <CAPhsuW54g5YCmLVX=cc3m2nfQTZrMH+6ZMBgouEMMfqcccOtww@mail.gmail.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Mon, 21 Apr 2025 13:40:32 -0700
-X-Gm-Features: ATxdqUHzaEdOwMz7Tlm_8h9gjvDy0ZSo4bia9-RfsuFhcpdkvxrkrY5bpFAEPyo
-Message-ID: <CABdmKX1OqLLsY5+LSMU-c=DDUxTFaivNcyXG3ntD8D0ty1Pwig@mail.gmail.com>
-Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
-To: Song Liu <song@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	jolsa@kernel.org, mykolal@fb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap segments
+To: Mimi Zohar <zohar@linux.ibm.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+ roberto.sassu@huawei.com, eric.snowberg@oracle.com, ebiederm@xmission.com,
+ paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+ linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@hansenpartnership.com, vgoyal@redhat.com, dyoung@redhat.com
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+ <20250416021028.1403-4-chenste@linux.microsoft.com>
+ <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+ <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
+ <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 21, 2025 at 10:58=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+On 4/21/2025 7:18 AM, Mimi Zohar wrote:
+> On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
+>> On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
+>>> On 04/15/25 at 07:10pm, steven chen wrote:
+>>>> From: Steven Chen <chenste@linux.microsoft.com>
+>>>   ^^^^^^
+>> As James Bottomley previously explained[1], if you haven't made any changes to
+>> Tushar's patch, then the very first line of the patch description would be
+>> "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a blank line.
+>> If there is a minor change, you would add "<your email address>: explanation".
+>> For example:
+>>
+>> Steven Chen <chenste@linux.microsoft.com>: modified patch description
+> To clarify: This line would be included below with your Signed-off-by tag.
 >
-> On Mon, Apr 14, 2025 at 3:53=E2=80=AFPM T.J. Mercier <tjmercier@google.co=
-m> wrote:
-> >
-> > The dmabuf iterator traverses the list of all DMA buffers. The list is
-> > maintained only when CONFIG_DEBUG_FS is enabled.
-> >
-> > DMA buffers are refcounted through their associated struct file. A
-> > reference is taken on each buffer as the list is iterated to ensure eac=
-h
-> > buffer persists for the duration of the bpf program execution without
-> > holding the list mutex.
-> >
-> > Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> > ---
-> >  include/linux/btf_ids.h  |   1 +
-> >  kernel/bpf/Makefile      |   3 +
-> >  kernel/bpf/dmabuf_iter.c | 130 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 134 insertions(+)
-> >  create mode 100644 kernel/bpf/dmabuf_iter.c
-> >
-> > diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
-> > index 139bdececdcf..899ead57d89d 100644
-> > --- a/include/linux/btf_ids.h
-> > +++ b/include/linux/btf_ids.h
-> > @@ -284,5 +284,6 @@ extern u32 bpf_cgroup_btf_id[];
-> >  extern u32 bpf_local_storage_map_btf_id[];
-> >  extern u32 btf_bpf_map_id[];
-> >  extern u32 bpf_kmem_cache_btf_id[];
-> > +extern u32 bpf_dmabuf_btf_id[];
->
-> This is not necessary. See below.
->
-> >
-> >  #endif
-> > diff --git a/kernel/bpf/Makefile b/kernel/bpf/Makefile
-> > index 70502f038b92..5b30d37ef055 100644
-> > --- a/kernel/bpf/Makefile
-> > +++ b/kernel/bpf/Makefile
-> > @@ -53,6 +53,9 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D relo_core.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D btf_iter.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D btf_relocate.o
-> >  obj-$(CONFIG_BPF_SYSCALL) +=3D kmem_cache_iter.o
-> > +ifeq ($(CONFIG_DEBUG_FS),y)
-> > +obj-$(CONFIG_BPF_SYSCALL) +=3D dmabuf_iter.o
-> > +endif
-> >
-> >  CFLAGS_REMOVE_percpu_freelist.o =3D $(CC_FLAGS_FTRACE)
-> >  CFLAGS_REMOVE_bpf_lru_list.o =3D $(CC_FLAGS_FTRACE)
-> > diff --git a/kernel/bpf/dmabuf_iter.c b/kernel/bpf/dmabuf_iter.c
-> > new file mode 100644
-> > index 000000000000..b4b8be1d6aa4
-> > --- /dev/null
-> > +++ b/kernel/bpf/dmabuf_iter.c
->
-> Maybe we should add this file to drivers/dma-buf. I would like to
-> hear other folks thoughts on this.
+>> [1]
+>> https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81.camel@HansenPartnership.com/
+>>
+>>>> Implement kimage_map_segment() to enable IMA to map the measurement log
+>>>> list to the kimage structure during the kexec 'load' stage. This function
+>>>> gathers the source pages within the specified address range, and maps them
+>>>> to a contiguous virtual address range.
+>>>>
+>>>> This is a preparation for later usage.
+>>>>
+>>>> Implement kimage_unmap_segment() for unmapping segments using vunmap().
+>>>>
+>>>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>    ^^^^^^
+>> Neither "Author:" nor "From:" belong here.  Please remove.
+>>
+>>>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>    ^^^^^^^
+>> Having Tushar's "Signed-off-by" tag and yours below indicate that you modified
+>> the original author's patch.
+> To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below indicate
+> that you modified the original author's patch.
 
-This is fine with me, and would save us the extra
-CONFIG_DMA_SHARED_BUFFER check that's currently needed in
-kernel/bpf/Makefile but would require checking CONFIG_BPF instead.
-Sumit / Christian any objections to moving the dmabuf bpf iterator
-implementation into drivers/dma-buf?
+Hi Mimi,
 
-> > @@ -0,0 +1,130 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/* Copyright (c) 2025 Google LLC */
-> > +#include <linux/bpf.h>
-> > +#include <linux/btf_ids.h>
-> > +#include <linux/dma-buf.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/seq_file.h>
-> > +
-> > +BTF_ID_LIST_GLOBAL_SINGLE(bpf_dmabuf_btf_id, struct, dma_buf)
->
-> Use BTF_ID_LIST_SINGLE(), then we don't need this in btf_ids.h
->
-> > +DEFINE_BPF_ITER_FUNC(dmabuf, struct bpf_iter_meta *meta, struct dma_bu=
-f *dmabuf)
-> > +
-> > +static void *dmabuf_iter_seq_start(struct seq_file *seq, loff_t *pos)
-> > +{
-> > +       struct dma_buf *dmabuf, *ret =3D NULL;
-> > +
-> > +       if (*pos) {
-> > +               *pos =3D 0;
-> > +               return NULL;
-> > +       }
-> > +       /* Look for the first buffer we can obtain a reference to.
-> > +        * The list mutex does not protect a dmabuf's refcount, so it c=
-an be
-> > +        * zeroed while we are iterating. Therefore we cannot call get_=
-dma_buf()
-> > +        * since the caller of this program may not already own a refer=
-ence to
-> > +        * the buffer.
-> > +        */
->
-> We should use kernel comment style for new code. IOW,
-> /*
->  * Look for ...
->  */
->
->
-> Thanks,
-> Song
+I will update it in next version.
 
-Thanks, I have incorporated all of your comments and retested. I will
-give some time for more feedback before sending a v2.
->
-> [...]
+Just wandering are you done reviewing or still need more time?
+
+Thanks,
+
+Steven
+
+>>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>>> Cc: Baoquan He <bhe@redhat.com>
+>>>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>>>> Cc: Dave Young <dyoung@redhat.com>
+>>>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>>>    ^^^^^
+>>>
+>>> The signing on this patch is a little confusing. I can't see who is the
+>>> real author, who is the co-author, between you and Tushar. You may need
+>>> to refer to Documentation/process/5.Posting.rst to make that clear.
+>>>
+>>>> Acked-by: Baoquan He <bhe@redhat.com>
+
+
