@@ -1,133 +1,100 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5A120D4F2;
-	Mon, 21 Apr 2025 07:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C05F1D63DF;
+	Mon, 21 Apr 2025 07:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745222039; cv=none; b=rFdM0s9ITfcYHNPc8dz69qQjP1/1Cy5eRwwwkvTAjVtlOn2j/UJLEBosIG0xGhKEa1QAhYuxiu05eIBNZEXIdQtTHGkWta2yZ6s2xkat9MAFaVjQL3QSAH+7g1y4zCJ0w0u0cIVsFdwDbItJ7sussLa84qO3Xv0ZfPwAfNkgPiE=
+	t=1745222159; cv=none; b=tr8sNNMsdEYnJWcdTzX23l1w++INul6KKrk4zQLv7wDzu4wtFntOftEzxAs9ytMEPpAO3GV5czxgrm8Gs5KeJd3Vh1gIr1StI+2lS8SbiilMSw+qtiH0X9QLnrSPUap3ToLLU863UbtKBNWi26K+tPgcqdXHdp3z33DjfWnXC50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745222039; c=relaxed/simple;
-	bh=gkizvQE2WuXh1qOKHyGyJTDTiqv4/vG9LrxxlO30Gdo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kF21K/1X4kKKWPIeGklNt0sSrdl8mgU/bgWYl1Ed18ShYlmfMTu2XxcM4NzHi4df+Jzlflz+kc0B7iQbXwqGkiL+x8CQRqihyXq9D8E21C8Nwo/FL0JlNp27WhUpeaC4muZ1HC3OkqRTgA/wwlhXIhBBYxon+gcwMFs2Kh4g3FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W5s5YFBY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745222159; c=relaxed/simple;
+	bh=6G4c/zZG7Kc5/hL0bEevZukEDVzAy/jTY2Tm/1enJPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M60N9OkkPWPXia+G4nzQn+RFeuQ+3rc6cI8TwFlPEZMTpoiEKx+ObJsUnCZeBJxwFaL0U3GyPK/2LfPny2+mvYoRLM8Mr1d/3U5rv5TWqeZuLa7aegl5r5NwZd3cdKGnC/Wrc2L2HLf7/U9sn2g7abhZ1rjD0mRYbyd0sP/GmHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ez9m+SUV; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W5s5YFBY"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNKDNw010248;
-	Mon, 21 Apr 2025 07:52:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=ppYXZ3wkWrV0BixkWCtHnH
-	/2YA2f+v2dT2O39a4EUuk=; b=W5s5YFBYa7DrUfsGiCheWWMM+jY+XjjrLs9qXE
-	tn4/9qwUVdnjMUbGE5RCyqukKJU3xCsZ9kxt36e/YB7P7vFuK6TfU3xi4/fV+Kqe
-	sZJycfxCm6+1sW/iEkQGGTtqa+r8Ko4w60U2HkNjfhT5vufaQmcO0QdYvPPjGyY5
-	yU9J9Q0Q40EN5kWQP3m1OWnAo5wq6IzmX5Fr+jX2o3NePxKFQ3Jpk9gyLaqNUnct
-	o608UHw6A33z8xzi3u3v0izvKjef+ySId/Z4dhkD3XT3pe/LPU0MAlg4G4fELcop
-	QYxKaHoPeipFVu9CRPssDaW2OnkB0zBZBvJ6+PyFvGZ2nWDg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46450pbae3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 07:52:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L7qqBX022213
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 07:52:52 GMT
-Received: from ap-kernel-sh01-lnx.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 21 Apr 2025 00:52:48 -0700
-From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-To: <cl@linux.com>, <rientjes@google.com>, <vbabka@suse.cz>,
-        <roman.gushchin@linux.dev>, <harry.yoo@oracle.com>,
-        <surenb@google.com>, <pasha.tatashin@soleen.com>,
-        <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <quic_tingweiz@quicinc.com>, Zhenhua Huang <quic_zhenhuah@quicinc.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2] mm, slab: clean up slab->obj_exts always
-Date: Mon, 21 Apr 2025 15:52:32 +0800
-Message-ID: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ez9m+SUV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745222157; x=1776758157;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6G4c/zZG7Kc5/hL0bEevZukEDVzAy/jTY2Tm/1enJPc=;
+  b=ez9m+SUVAi/HZS7zdoDPWbuaLivckxGfnTzApayydxTMJ2fam0QHi/e4
+   BXhmV2p0wVAAY6IpFRZeblzzKUirWB6xmkmxRP+u0EohZHIUVWUdm3BVH
+   Q6hQKfp5CmAIacyR9M5qbazcNWU8d8PHvWf7zV8Ah0ShgSCJssE9SsnwI
+   xQJLbKequQvOt/pORv4jLh0k3v2bDVIgHgive+HDTqBJsPhCEhIwpueC8
+   dP28bmPh287Pi/yKGE05KvvHckJx5coa6xWY0BHHGqvh9l1E/gPs2kbUZ
+   jcvSzlbT3SanMYLS2vRX/VR+6J3QGqg+V0HPzU4AnsoLTuHjZcPckys/U
+   w==;
+X-CSE-ConnectionGUID: Og57QeCwSHqMm+IR+gwO8Q==
+X-CSE-MsgGUID: nLGR1yf0SA6i0XFi/26FKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="56931640"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="56931640"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 00:55:57 -0700
+X-CSE-ConnectionGUID: UtaCzL9ASiyctQpUGHlyVg==
+X-CSE-MsgGUID: yKXlQK+uQ/G7UDS5dOlBGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="131670491"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 00:55:54 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id EF84011F871;
+	Mon, 21 Apr 2025 10:55:51 +0300 (EEST)
+Date: Mon, 21 Apr 2025 07:55:51 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: David Heidelberg <david@ixit.cz>
+Cc: Rob Herring <robh@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Pavel Machek <pavel@ucw.cz>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] media: dt-bindings: Convert Analog Devices ad5820 to
+ DT schema
+Message-ID: <aAX6B-zMpu8e_9fP@kekkonen.localdomain>
+References: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
+ <20250415223557.GA940473-robh@kernel.org>
+ <7ae72214-3f91-4bd7-b5f0-07391006f531@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Hd0UTjE8 c=1 sm=1 tr=0 ts=6805f954 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=1XWaLZrsAAAA:8 a=yPCof4ZbAAAA:8
- a=TuTZUksUTkBGaCY47_EA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: vOWrspQ1g8xb5AE5zS7VeoD1AIprgx-j
-X-Proofpoint-ORIG-GUID: vOWrspQ1g8xb5AE5zS7VeoD1AIprgx-j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7ae72214-3f91-4bd7-b5f0-07391006f531@ixit.cz>
 
-When memory allocation profiling is disabled at runtime or due to an
-error, shutdown_mem_profiling() is called: slab->obj_exts which
-previously allocated remains.
-It won't be cleared by unaccount_slab() because of
-mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
-should always be cleaned up in unaccount_slab() to avoid following error:
+Hi David,
 
-[...]BUG: Bad page state in process...
-..
-[...]page dumped because: page still charged to cgroup
+On Fri, Apr 18, 2025 at 01:42:01PM +0200, David Heidelberg wrote:
+> On 16/04/2025 00:35, Rob Herring wrote:
+> > On Mon, Apr 14, 2025 at 06:04:01PM +0200, David Heidelberg wrote:
+> > > +allOf:
+> > > +  - $ref: /schemas/iio/iio.yaml#
+> > 
+> > You have the ref, so #io-channel-cells is allowed, but you need to say
+> > what the value for it should be for *this* binding. IOW, you still need
+> > to list it explicitly.
+> 
+> I considered to keep the previous and new binding 1:1 and drop
+> #io-channel-chells with the all references to it (missed this one).
 
-Cc: stable@vger.kernel.org
-Fixes: 21c690a349ba ("mm: introduce slabobj_ext to support slab object extensions")
-Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Acked-by: David Rientjes <rientjes@google.com>
-Acked-by: Harry Yoo <harry.yoo@oracle.com>
-Tested-by: Harry Yoo <harry.yoo@oracle.com>
----
- mm/slub.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+There's also one in the commit message.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 566eb8b8282d..a98ce1426076 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2028,8 +2028,8 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
- 	return 0;
- }
- 
--/* Should be called only if mem_alloc_profiling_enabled() */
--static noinline void free_slab_obj_exts(struct slab *slab)
-+/* Free only if slab_obj_exts(slab) */
-+static inline void free_slab_obj_exts(struct slab *slab)
- {
- 	struct slabobj_ext *obj_exts;
- 
-@@ -2601,8 +2601,12 @@ static __always_inline void account_slab(struct slab *slab, int order,
- static __always_inline void unaccount_slab(struct slab *slab, int order,
- 					   struct kmem_cache *s)
- {
--	if (memcg_kmem_online() || need_slab_obj_ext())
--		free_slab_obj_exts(slab);
-+	/*
-+	 * The slab object extensions should now be freed regardless of
-+	 * whether mem_alloc_profiling_enabled() or not because profiling
-+	 * might have been disabled after slab->obj_exts got allocated.
-+	 */
-+	free_slab_obj_exts(slab);
- 
- 	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
- 			    -(PAGE_SIZE << order));
+> 
+> Would that be ok for v4?
+
+Sounds good to me.
+
 -- 
-2.34.1
+Kind regards,
 
+Sakari Ailus
