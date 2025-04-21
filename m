@@ -1,94 +1,79 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9680614F98;
-	Mon, 21 Apr 2025 09:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B7F339A1
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228637; cv=none; b=HE23uPvvuYDDuPTDB8mviV2tz3XnpKinYPc2zh697FfHfqsyqVavgaAP5spUQxRQZugWRfteapbpvVyVpic31HV/TPyGCTHn9SAMcu+Nd6Yc1cllxnC5QPfLMqPs5yX3OZEDjohGRofwBB/wqFP8dgJbiWAsnE27UgwG8iqly7o=
+	t=1745228638; cv=none; b=HvOvB3UtQdSwbC9XVMc2KVu9E1IIReArM+IiW2GeSuh5RRVykZyNHV8Bm3VSyaF9QOyelQk46rwphqdANXk5a+x2PuBLwJNsMivyyCabXU+mdVMh7xlfrHcVI03LmCA/IZEeW2x2NGltgBO1L8QJueXeSdz0ba848KNe/p7x74I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228637; c=relaxed/simple;
-	bh=LiPyv+QYFRZOfxilm/rqoFghKYpnruzZIuGPXJyshFY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OsPGqg/xmCs1ZhTDNDA0TSn/1eFc4NAqn2RbdZ6xlA4APj4CIq0Ex+rMlUKsrKIf7ABa40JwIb9MqDftSe5Xdz2P3DId9UQOUUgr2qmZZJKSsfqJ6elBp0Ml5Tn7YVm6j8bV+oG752fVjlKK3sq4zbn/SwDpgcxVWii3DTf1ROY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=Bjn/QEof; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1745228638; c=relaxed/simple;
+	bh=2SSnYwvp2/HqoQaObtoLHJiNHWC40LdDSI85C5X007o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ecNbXKdHKx/sM1V47MPh0+l7+ec48u0O/yDuHo1H+1WSqzq8cFO879svFbyq4Va0PgnMCZ2YHSfclAe/SUPnj9wmQIrZWbAtvTkGRhe6+VORX8oau+qDp9eT8qpUmIDUDq9nGlk3Zo5xxPi73HeBMlLG5tKpUqAmKf3+N+2yK/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Vq5yVSZJ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="Bjn/QEof"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1745228633; bh=bKc9yVDD12zFt5PActr4wA/mqYObJPYba1F2TtgIniE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=Bjn/QEofQTdq/J3TseRjZdcqev313eZp49KQMpDxw3fcrP2tpiLaGTBqE8GZY4VgE
-	 rjAV2qWcX0yCLh7mrHHLLUBweYbo+YNgF3Xf79KyJSGwei7EeYdAePeUsP4bygd3Pl
-	 pWA8VO1xci2awe1hMjd7tW1qpL2ziIt3TJ9OyHSXdc1vzOesbCNGI+d+iyAbjdfipa
-	 RqWzC08Ud7MIZ9hoLz2GGA4fFORkata3vsh86MjGg5dbAjL6gLobC8c9Nci4+LmZ+q
-	 uCN67LZzyM/c35wMeaSUdjsVwJAtRr1m72TuEk8kc3vr7OlO352MDunu1vGYOdmHDJ
-	 /VS++ChghzKzg==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0n50GM9zPjsG;
-	Mon, 21 Apr 2025 11:43:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX19cmuOIeBrlP12vMR/oAY988hn6ybM2J80=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0my3j2BzPk5Y;
-	Mon, 21 Apr 2025 11:43:46 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Vq5yVSZJ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso3312520b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1745228635; x=1745833435; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O8r8PRZBSMwqOsQQkiAo5Ug34CtBtLjSR9VzLdpS8hc=;
+        b=Vq5yVSZJzYtm5Smzm/SCMvkJgx69rskdPGLmo/lWbsM9Gtb6TH6kT+MUS8x5f5dY8O
+         3hYCmh/v7SFsFf0QMATH+ZuYB1yHlBxql63MK2XbgSpm0LOdkSqBxs/9J2grRD1haNvE
+         RU4LzN0x6j4nW+rTn7KLC546VtR5EXy02FWS5DOYfe2PMSMkbxt9uWQBtymSmvhbXfeX
+         7Nya/GilaO2QM/+1d6ck9O8CzLxQpvjTQZgB//EuuDX2m4DAEf0Q6X+urwEfGNDkbCdA
+         cTauE7UUXesUam4uX4HKASQLABA20gkE8heo28Hd5Z4lBnXRgVotMLZAAbTmFEuxaKZD
+         eg9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745228635; x=1745833435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O8r8PRZBSMwqOsQQkiAo5Ug34CtBtLjSR9VzLdpS8hc=;
+        b=w+lO6jrvJTB2tBg/p20YurK2LDMi86m7pcKI0aitZ10ZbT2lti90DBisYgEO6TiwY9
+         HGctiXYUBoxJb5Yo/8uuovOpvXFK8i9NZGeMFBbSeqhq8bkN3/TBAXFeQjxokdMg4TBu
+         E0/Ax3shhWr37i10nRmnMP7ufnOyEFL69zPRnkO6Gp6z2fSkQamFWQ1NMYgHdUN+PJlG
+         p2M3gEfeH4XIz6WYTsGCM8cp+uV+UFt/FCCfQBkKqgjmDpnVbNuPYTRNAIt0UeLXcgB6
+         Cz/odIcugWEwI6yuoq0sfaBwuNP3QRDmQRqY60WFJEUr9tnY4XDggPP6KbX7n5brx2MU
+         /spA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDLLTyLNB0+FU1xnjHqBKxnqLiohP+c/3W5EQH3vNO/19CTmQFScuUtquwOFdlilgwAfTkUiFoxzX7r9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrJVfxvz3k1rNQBKxkP8Xxx/VmuLkYqkazceNuL9G9MAmh/eV1
+	YH32Vn4dh6NaicxUwfFQSrXy9KbYyJQMhrBVCHpO1RlLDeItuwBwWwh8JRhP1Is=
+X-Gm-Gg: ASbGncuaVJzWnzyigasBHMlzfivsuxY/rBA/H3aMov0sUhdKTPbiVM+ZnwjF6Nqhc5t
+	wkBPqapQWi/NhgtOvyTBkSQF/SvRZQFtehotW3PovRrIC1mhZot4y1A/hjhut0r/M9wXmjzGsFK
+	XuHCGlNyKCwSGzSOn98E3+aI4gDrGlhDI3NlsSMSzk2xIzrN1PBRLE+/0TsCGmkiO22UKLU1M7p
+	FKheMWMkYAg7theurdeUf8Ry+a5XqMyg7y2xeBUMHctCiqTEPrq6z++gXitz5OLwzFUzknRWgGR
+	xqlRIWGLZJWeGufU2jeXf8ACf6QqsKfnUjfvJpfk1yPa9CGiZd2Xvzc5ic6H/KHQCYn63NN6BEs
+	zkQ==
+X-Google-Smtp-Source: AGHT+IGhhm/9RykTH/OsZ/BlA/Y/U3CBjIrgF60WUexTWjWufmCT5/ANaQZOPSEaVkm2xDGoxKPQAQ==
+X-Received: by 2002:a05:6a00:3988:b0:736:9e40:13b1 with SMTP id d2e1a72fcca58-73dc15cfce7mr14584741b3a.23.1745228634697;
+        Mon, 21 Apr 2025 02:43:54 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaacf32sm6371965b3a.142.2025.04.21.02.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 02:43:54 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Cc: Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next v2 07/11] bpf: Rename sanitize_stack_spill to nospec_result
-Date: Mon, 21 Apr 2025 11:17:58 +0200
-Message-ID: <20250421091802.3234859-8-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
-References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+	linux-pwm@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>
+Subject: [PATCH v11 0/5] Change PWM-controlled LED pin active mode and algorithm
+Date: Mon, 21 Apr 2025 17:55:16 +0800
+Message-Id: <20250421095521.1500427-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,54 +82,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is made to clarify that this flag will cause a nospec to be added
-after this insn and can therefore be relied upon to reduce speculative
-path analysis.
+According to the circuit diagram of User LEDs - RGB described in the
+manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- include/linux/bpf_verifier.h | 2 +-
- kernel/bpf/verifier.c        | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+The behavior of PWM is acitve-high.
 
-diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-index 9734544b6957..cebb67becdad 100644
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -576,7 +576,7 @@ struct bpf_insn_aux_data {
- 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
- 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
- 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
--	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
-+	bool nospec_result; /* result is unsafe under speculation, nospec must follow */
- 	bool zext_dst; /* this insn zero extends dst reg */
- 	bool needs_zext; /* alu op needs to clear upper bits */
- 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 27d3bc97a9e0..3d446c19bdf6 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5031,7 +5031,7 @@ static int check_stack_write_fixed_off(struct bpf_verifier_env *env,
- 		}
- 
- 		if (sanitize)
--			env->insn_aux_data[insn_idx].sanitize_stack_spill = true;
-+			env->insn_aux_data[insn_idx].nospec_result = true;
- 	}
- 
- 	err = destroy_if_dynptr_stack_slot(env, state, spi);
-@@ -20886,7 +20886,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 		}
- 
- 		if (type == BPF_WRITE &&
--		    env->insn_aux_data[i + delta].sanitize_stack_spill) {
-+		    env->insn_aux_data[i + delta].nospec_result) {
- 			struct bpf_insn patch[] = {
- 				*insn,
- 				BPF_ST_NOSPEC(),
+According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual[2].
+
+The pwm algorithm is (PW) pulse active time  = (D) duty * (T) period.
+The `frac` variable is pulse "inactive" time so we need to invert it.
+
+So this patchset removes active-low in DTS and adds reverse logic to the driver.
+
+Links:
+- [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf
+- [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf
+- [2]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf
+
+Updated patches: 0
+New patches: 2
+Unchanged patches: 3
+
+Changed in v11:
+ - Fix rounding consistency in apply() and get_state()
+ - Add code comments to help clarify Reference Manual errors.
+
+Changed in v10:
+ - Add 'inactive' variable in apply() to match pwm_sifive_get_state()
+   style
+ - Update comment about hardware limitation - it cannot generate 0% duty
+   cycle rather than 100% duty cycle
+
+Changed in v9:
+ - Fix commit message to adhere to 75 columns rule.
+ - Update commit message's subject.
+ - Add a variable for inactive logic.
+
+Changed in v8:
+ - Fix Signed-off-by and Co-developed-by typo.
+
+Changed in v7:
+ - Remove active-low strings from hifive-unleashed-a00.dts file.
+
+Changed in v6:
+ - Separate the idempotent test bug fixes into a new patch.
+ - Move the reversing the duty before the line checking
+   state->enabled.
+ - Fix the algorithm and change it to take the minimum value first and
+   then reverse it.
+
+Changed in v5:
+ - Add the updates to the PWM algorithm based on version 2 back in.
+ - Replace div64_ul with DIV_ROUND_UP_ULL to correct the error in the
+   period value of the idempotent test in pwm_apply_state_debug.
+
+Changed in v4:
+ - Remove previous updates to the PWM algorithm.
+
+Changed in v3:
+ - Convert the reference link to standard link.
+ - Move the inverted function before taking the minimum value.
+ - Change polarity check condition(high and low).
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+
+Changed in v2:
+ - Convert the reference link to standard link.
+ - Fix typo: s/sifive unmatched:/sifive: unmatched:/.
+ - Remove active-low from hifive-unleashed-a00.dts.
+ - Include this reference link in the dts and pwm commit messages.
+
+Nylon Chen (5):
+  riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+    active-low properties
+  pwm: sifive: change the PWM algorithm
+  pwm: sifive: Fix the error in the idempotent test within the
+    pwm_apply_state_debug function
+  pwm: sifive: Fix rounding issues in apply and get_state functions
+  pwm: sifive: clarify inverted compare logic in comments
+
+ .../boot/dts/sifive/hifive-unleashed-a00.dts  | 12 ++---
+ .../boot/dts/sifive/hifive-unmatched-a00.dts  | 12 ++---
+ drivers/pwm/pwm-sifive.c                      | 46 ++++++++++++++-----
+ 3 files changed, 42 insertions(+), 28 deletions(-)
+
 -- 
-2.49.0
+2.34.1
 
