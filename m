@@ -1,119 +1,95 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B69820E338;
-	Mon, 21 Apr 2025 21:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA9519F127;
+	Mon, 21 Apr 2025 21:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745270474; cv=none; b=tlT4XsiQpBWyzL/PejhZS6/7yWRjtfmcPLeICiwXQxI87E/fvxda2NnkxSoRC1h45KXQ3bKmG3iv+o23BLkjFVr/6t8hg6Crz2VG1cBgmWLLKTIpdY6LubcG58QJfpyiDfLVVDFR5WH0wBsbZtDqIc0WFbd0d0v6LsEbBecq3BU=
+	t=1745270512; cv=none; b=H+YRLJHhou9nMJyxOXFKvptkty1h4vGFW8SiD2uFDbXVzn4xKfrSWm3HiQAC+orxwOb1rVWZokal8yc9SpnokrqbGGy2NDM6QooHdpeRJrA4If+8OkaWkaNXM87ZvAbEoYR8xolqx+P4dwn6J/ZefYorGWlJ6VQgdqUU+inxCkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745270474; c=relaxed/simple;
-	bh=gbGNiLskkmYRnfhaDT9bpoBD6PYRZv46CeHD/P2qXpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lm/IXeqaG87MxzyPMAe1OMwFN8Gn3gDpP6RnMPh3Lfo3KF+CTE9nh7r67knK92+nU8ImSjKkJL6P1reRTK2QfT2uPsgTX4OT7cx/tQKmZxGqW9gHfLtuwOIDtCYnUkhUt7GnUFacckd85ASK3UZPjHopq3EMIS9vlpwqqV08A8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=K9IxOC49; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745270512; c=relaxed/simple;
+	bh=xO4hJqtW3nhfpJm4/YvtzVvkxDSKomYlRulbwgEvP3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nMWZ2ZT5tlBbaQSQ/f/lMJ35iZ50z7N7mDus5p7OwEIodgSDy6EX++YA6TynvmzTbMcnQK4PJHz9RhMWG1b1SyBe9LTdt+PU/AY9od6JRbx63QzJbnJpBbUsk0Or3jc27BDrgIJlulbJZNB9IF49a8UD0LzPI3MGfNwJIiG94V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZLXA/ZN; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K9IxOC49"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9DBA96D6;
-	Mon, 21 Apr 2025 23:19:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745270344;
-	bh=gbGNiLskkmYRnfhaDT9bpoBD6PYRZv46CeHD/P2qXpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K9IxOC49dSTtU49w7/HCkhvaaKZlahqnNF+Qmymta/l7Q5+DBh3QpaRImohAN2dBg
-	 UOZh7W/gs2KGZbxO14kADhJ2D8gLF8jMKwCWhpQEV6GDrXvztd/XHEIaUzIJ/y8Gu4
-	 +OO4g6zJxHA9eqzZtOEYFJntgMCRl2Y2lhKAYwZo=
-Date: Tue, 22 Apr 2025 00:21:09 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 06/13] media: nxp: imx8-isi: Use dev_err_probe()
- simplify code
-Message-ID: <20250421212109.GP17813@pendragon.ideasonboard.com>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-6-ef695f1b47c4@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZLXA/ZN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745270511; x=1776806511;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xO4hJqtW3nhfpJm4/YvtzVvkxDSKomYlRulbwgEvP3k=;
+  b=YZLXA/ZNJKkbk0lETqJ+mO+87YhqbTtVKWsXpq4YiIFDI+wc/ZXfAFy1
+   0wZ6b4BXBwOTba2Ulf40WJxpeMZveANyJ7exqDOb7n7O+UgtWi1G+l1sg
+   ufLzS3jhyi7qPz9t1BINyGJrQ417MInHeWz9o35nrOvUf23LbfkAkugIs
+   jtIRxBaT2fexjgaBt6wAhhlNedQNgE433yrujTk/V4q8yzG6Us2a5CtI9
+   OSQ3F4b28dOIzCvpuPqwwJJjYKoaXs6bQXBXo0XB7EnAw87KaTz29nViY
+   XqyXYAyDWZIXwu2neL8QzHQ/0yCcf6T/0hRmFhvELLWJ0w/spSHMEu5/9
+   Q==;
+X-CSE-ConnectionGUID: 5cjGkEZwQ7y8h4FePbJkzw==
+X-CSE-MsgGUID: rtADCSKNQfaG73HX7lRyUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="50611611"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="50611611"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:21:50 -0700
+X-CSE-ConnectionGUID: p7jXhTI1RmGsHe/jZMvrcA==
+X-CSE-MsgGUID: AzhsdTJxQYqu6qLJL7ncyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132780280"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.70])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:21:47 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v4 07/14] cxl/region: Move find_cxl_root() to cxl_add_to_region()
+Date: Mon, 21 Apr 2025 23:21:44 +0200
+Message-ID: <4624465.M3a2QDmDih@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-8-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-8-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408-8qxp_camera-v4-6-ef695f1b47c4@nxp.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Frank,
-
-Thank you for the patch.
-
-On Tue, Apr 08, 2025 at 05:53:04PM -0400, Frank Li wrote:
-> Use dev_err_probe() simplify code. No functional changes intended.
-
-In the subject line and here, s/simplify/to simplify/
-
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On Thursday, March 6, 2025 5:44:41=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> When adding an endpoint to a region, the root port is determined
+> first. Move this directly into cxl_add_to_region(). This is in
+> preparation of the initialization of endpoints that iterates the port
+> hierarchy from the endpoint up to the root port.
+>=20
+> As a side-effect the root argument is removed from the argument lists
+> of cxl_add_to_region() and related functions. Now, the endpoint is the
+> only parameter to add a region. This simplifies the function
+> interface.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
 > ---
->  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c | 13 ++++---------
->  1 file changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> index 073ea5912de3b..398cc03443be3 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> @@ -428,19 +428,14 @@ static int mxc_isi_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
->  
->  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
-> -	if (IS_ERR(isi->regs)) {
-> -		dev_err(dev, "Failed to get ISI register map\n");
-> -		return PTR_ERR(isi->regs);
-> -	}
-> +	if (IS_ERR(isi->regs))
-> +		return dev_err_probe(dev, PTR_ERR(isi->regs), "Failed to get ISI register map\n");
 
-		return dev_err_probe(dev, PTR_ERR(isi->regs),
-				     "Failed to get ISI register map\n");
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
->  
->  	if (isi->pdata->gasket_ops) {
->  		isi->gasket = syscon_regmap_lookup_by_phandle(dev->of_node,
->  							      "fsl,blk-ctrl");
-> -		if (IS_ERR(isi->gasket)) {
-> -			ret = PTR_ERR(isi->gasket);
-> -			dev_err(dev, "failed to get gasket: %d\n", ret);
-> -			return ret;
-> -		}
-> +		if (IS_ERR(isi->gasket))
-> +			return dev_err_probe(dev, PTR_ERR(isi->gasket), "failed to get gasket\n");
 
-			return dev_err_probe(dev, PTR_ERR(isi->gasket),
-					     "failed to get gasket\n");
 
-With that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
->  	}
->  
->  	dma_size = isi->pdata->has_36bit_dma ? 36 : 32;
-
--- 
-Regards,
-
-Laurent Pinchart
