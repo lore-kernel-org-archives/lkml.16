@@ -1,192 +1,117 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5996A1E9B38
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49421D63D3
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745273676; cv=none; b=Oc2SieHNwhaRee1Mu7PuNFZHnS3/Za9PXEUdRtJ3pznISgTWARcc3p0uXZv2A5fPoyTIHSOG3d9rbt/WrC8sYLEBT9XuGDIwji5GkwMA1rTKKoYPf9wL+QOYwDfdT+hvuf54sYRyfvsFzFjvo1h53CeXMfv7rXajyVCgFl1AhzY=
+	t=1745273880; cv=none; b=QZGh2lAg90D+WNDaxAVCMs654zEijLsTMAIcwx0YJJHnZjQeVzHdRu4CRHZulQ5vkHZ0pCyV7tXuHdeU6rWwutGSceNOflalSzwu/D5KKAlL4FWnDcnCJZnEEuAt+hbAwjhbd9WPZZRSJ1/eYc47YV//Ce2is6y7VxKS+OnDsZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745273676; c=relaxed/simple;
-	bh=I+fS8BWsJxzLZuIHDFpn3nda+BABRxTodRnpVgbVDgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sBDI6u2PdydRhCLl6yW2atPE60M2j4+A0JGtK/IVtRedzXwSFHTZHmOx5do/y4L9ULDrHJkdLlmOrQNKgl74V4h7v7bpyDgV+/48LMt7aGDhW0l4/FI6NTuz6sPBE4L1gJZn3AO6P2oPJq9b759mEoTsVUizlmjvYEELyfH39mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WohYOHqD; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745273880; c=relaxed/simple;
+	bh=itlT5b2XTrKzhjvIuJuhVAVCPA+FeNCUxakIFO2msm4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cSy6QwB1fMEeyR0O0duA5eOkI6Yfn76Ov/iwFA4fU6KGgrDewhVKdPvolg/Pkb8Hwqzqy3kTvpRFGSzVASI+32sLw/NUg9oxb0dkVn6oWN9dnWGhdOG7212PWtWoIg+XkSrLtv1VHZ6qXaqsvh2wu47IYffnA8VpbCJCXBhTxrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OP8pvYo2; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WohYOHqD"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-5259331b31eso1956655e0c.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:14:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745273673; x=1745878473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ze/KZBLQ8SAn7srsJbazi617+XiMAQ4PSnAV1iGpND0=;
-        b=WohYOHqDaRKiDli7YKPetaN8Ed7NkO/eGapjwYzeYH8GzTmyo7LX+bIyHBmFFRAvJ2
-         zsNoFm0704W82vnvalNLaeAxP0V5ZrO84kIuG4Ac+9LABuoAPEbCZigmykJy2g3IlX8a
-         JUQeiYVM/thLtgvy7sS3k+4AYSs7LKmnzcR0nF4rrYOOF6tMmDELu90b5qBV3DzaY92i
-         rxzoAja0778rdx4mZ6acGNLSAicZ8Cu9Xmtk752gBW5hejtn96cP5dI4ql/lFkP+G89G
-         yFL8Ev/MlCjLMwfykxs0Z12iQVM6k5TQmNr/R4shC7+lyJbmt/5XUlUn/+C/PNupZvO6
-         99Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745273673; x=1745878473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ze/KZBLQ8SAn7srsJbazi617+XiMAQ4PSnAV1iGpND0=;
-        b=PxavTXQLDZMUZFaXHtY8tnFj9427Msx9HwdJ4hw2gkqyAgU6eM16umP7eWV6BK3O1w
-         gavTe3fqCHJVQR3J38zfAgocNjPZBFUNKnVKvUHUV7Lb7um6k+5CdCS+gTCrGisJ+1/2
-         Fr5drk1VTztbFRJiifhr+mwWCZA6qMBSL3WbeB5PX2dYl+3FSFob1aauANZbTdVNv7sJ
-         R5pYZkyWljP8PuAPyKG253tBRaOeH02WalLqeuZe+3h5dM0VC002brKynTbdTw+KxLaG
-         t31DAdZZl4v2pPPpJ0HkcRQjonUKI1RlvRfPhjdYupgktB8irZ9uJWjorQ7Cb6yViAiS
-         RH2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWh6g8xuots4XF8xphMgPTB98q+JPIaeXzh/yQfx+P7LvOGQBgu8/nvwJltzQUkmXsuYT7UrZ50c/w9jnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjPgMW5/p2GzdRDmCFxLTX/XXGsouql9nI3Pczn9WQydJlrvH8
-	78jp9uRfGN8cxzgqhvO+QaoYwmDpNPQb8WS42e6GuOMQfM+E8MsULiIc01No7z6cVY9eCd0J5rT
-	R5Gyb78PknvKYc6doZNHEkbWXQnFlhRh+jYo5
-X-Gm-Gg: ASbGncvltEhUDkEWb7yyopx8oPdiNJ2veG+GXT/jjPnbKSGpYqwk6gKT7Ge5D7Fd7E+
-	6Igh8z/32h+E8g29596maHqyx0PNGxrfyngUYtXEKyh5Ov7QHe0v7bUO/Dp74afqNKCJd2v5ixc
-	rFpfCXCBbegm9GH369tGFNuA==
-X-Google-Smtp-Source: AGHT+IFxHYOugr6C48wO68yTTOBk7oPHItPFJzeV9k+AVGrZNWzX1hubYeJVAkRQHrqSFyznWM7DLyj2iw3cza70BSU=
-X-Received: by 2002:ac5:c252:0:b0:529:2644:5eec with SMTP id
- 71dfb90a1353d-5292644603fmr7360353e0c.8.1745273672851; Mon, 21 Apr 2025
- 15:14:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OP8pvYo2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1745273876; x=1745533076;
+	bh=1vkTGyA1zdmJAb8MDaGP9PiFcRJIhuTCCFKfhptdvxU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=OP8pvYo2kefWXDcDUYMtata9Lk5qPrtlAGjuXeNaxwfgDIFcgvIBcBklie9AYA21p
+	 ZIBypu/sP63DD0bVmBa8XoSRr+PX75SfxlHXBtVUTreJAzGg5PF0YQ3KIJb70/3CRd
+	 dbZdgUnvFCMW4zUOM8GIOfiByAXXEhwexola7UFj0mBcjOxMQSghhmrQokuBPHDeKl
+	 s3hOLOWaxU0glXYAC5yU+gUHXw/httOdcpMZvTzqVn+vsITx5TKA0pDOjTtK1lG61N
+	 AfqjSkkCPSeI3mY2aTV/sjE4fz0xI6WROoRyWNvbZ7YzRS/Rj+07EDLWioeuX2RdvE
+	 0tZrpR3P61Egg==
+Date: Mon, 21 Apr 2025 22:17:50 +0000
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, Christian Schrefl <chrisi.schrefl@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] rust: pin-init: add `cast_[pin_]init` functions to change the initialized type
+Message-ID: <20250421221728.528089-2-benno.lossin@proton.me>
+In-Reply-To: <20250421221728.528089-1-benno.lossin@proton.me>
+References: <20250421221728.528089-1-benno.lossin@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 090927d2a73103e0e04ddc3bc806d1ccce825fd1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412010940.1686376-1-dylanbhatch@google.com> <20250412010940.1686376-2-dylanbhatch@google.com>
-In-Reply-To: <20250412010940.1686376-2-dylanbhatch@google.com>
-From: Dylan Hatch <dylanbhatch@google.com>
-Date: Mon, 21 Apr 2025 15:14:21 -0700
-X-Gm-Features: ATxdqUFzGJwrYp9hInlANxzcemcPCph2eSPtOYX9msHSoocZGM8q3RrkHGLCnhk
-Message-ID: <CADBMgpwh+9YxbGvyWwT3VjFLaAvdFFexHe-9yBmpOYsPsN-xrg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] arm64: patching: Rename aarch64_insn_copy to text_poke.
-To: Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Song Liu <song@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 11, 2025 at 6:10=E2=80=AFPM Dylan Hatch <dylanbhatch@google.com=
-> wrote:
->
-> Match the name and signature of the equivalent in the x86 text-poke API.
-> Making the src pointer const also allows this function to be
-> interchangeable with memcpy().
->
-> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
-> ---
->  arch/arm64/include/asm/text-patching.h |  2 +-
->  arch/arm64/kernel/patching.c           | 12 ++++++------
->  arch/arm64/net/bpf_jit_comp.c          |  2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/text-patching.h b/arch/arm64/include/=
-asm/text-patching.h
-> index 587bdb91ab7a6..450d806d11109 100644
-> --- a/arch/arm64/include/asm/text-patching.h
-> +++ b/arch/arm64/include/asm/text-patching.h
-> @@ -9,7 +9,7 @@ int aarch64_insn_write(void *addr, u32 insn);
->
->  int aarch64_insn_write_literal_u64(void *addr, u64 val);
->  void *aarch64_insn_set(void *dst, u32 insn, size_t len);
-> -void *aarch64_insn_copy(void *dst, void *src, size_t len);
-> +void *text_poke(void *dst, const void *src, size_t len);
->
->  int aarch64_insn_patch_text_nosync(void *addr, u32 insn);
->  int aarch64_insn_patch_text(void *addrs[], u32 insns[], int cnt);
-> diff --git a/arch/arm64/kernel/patching.c b/arch/arm64/kernel/patching.c
-> index 1041bc67a3eee..e07dc32620053 100644
-> --- a/arch/arm64/kernel/patching.c
-> +++ b/arch/arm64/kernel/patching.c
-> @@ -102,9 +102,9 @@ noinstr int aarch64_insn_write_literal_u64(void *addr=
-, u64 val)
->         return ret;
->  }
->
-> -typedef void text_poke_f(void *dst, void *src, size_t patched, size_t le=
-n);
-> +typedef void text_poke_f(void *dst, const void *src, size_t patched, siz=
-e_t len);
->
-> -static void *__text_poke(text_poke_f func, void *addr, void *src, size_t=
- len)
-> +static void *__text_poke(text_poke_f func, void *addr, const void *src, =
-size_t len)
->  {
->         unsigned long flags;
->         size_t patched =3D 0;
-> @@ -132,12 +132,12 @@ static void *__text_poke(text_poke_f func, void *ad=
-dr, void *src, size_t len)
->         return addr;
->  }
->
-> -static void text_poke_memcpy(void *dst, void *src, size_t patched, size_=
-t len)
-> +static void text_poke_memcpy(void *dst, const void *src, size_t patched,=
- size_t len)
->  {
->         copy_to_kernel_nofault(dst, src + patched, len);
->  }
->
-> -static void text_poke_memset(void *dst, void *src, size_t patched, size_=
-t len)
-> +static void text_poke_memset(void *dst, const void *src, size_t patched,=
- size_t len)
->  {
->         u32 c =3D *(u32 *)src;
->
-> @@ -145,14 +145,14 @@ static void text_poke_memset(void *dst, void *src, =
-size_t patched, size_t len)
->  }
->
->  /**
-> - * aarch64_insn_copy - Copy instructions into (an unused part of) RX mem=
-ory
-> + * text_poke - Copy instructions into (an unused part of) RX memory
->   * @dst: address to modify
->   * @src: source of the copy
->   * @len: length to copy
->   *
->   * Useful for JITs to dump new code blocks into unused regions of RX mem=
-ory.
->   */
-> -noinstr void *aarch64_insn_copy(void *dst, void *src, size_t len)
-> +noinstr void *text_poke(void *dst, const void *src, size_t len)
->  {
->         /* A64 instructions must be word aligned */
->         if ((uintptr_t)dst & 0x3)
-> diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.=
-c
-> index 70d7c89d3ac90..b5be90edff410 100644
-> --- a/arch/arm64/net/bpf_jit_comp.c
-> +++ b/arch/arm64/net/bpf_jit_comp.c
-> @@ -2047,7 +2047,7 @@ bool bpf_jit_supports_kfunc_call(void)
->
->  void *bpf_arch_text_copy(void *dst, void *src, size_t len)
->  {
-> -       if (!aarch64_insn_copy(dst, src, len))
-> +       if (!text_poke(dst, src, len))
->                 return ERR_PTR(-EINVAL);
->         return dst;
->  }
-> --
-> 2.49.0.604.gff1f9ca942-goog
->
+These functions cast the given pointer from one type to another. They
+are particularly useful when initializing transparent wrapper types.
 
-Friendly ping.
+Link: https://github.com/Rust-for-Linux/pin-init/pull/39/commits/80c03ddee4=
+1b154f1099fd8cc7c2bbd8c80af0ad
+Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+---
+ rust/pin-init/src/lib.rs | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+index 0806c689f693..a880c21d3f09 100644
+--- a/rust/pin-init/src/lib.rs
++++ b/rust/pin-init/src/lib.rs
+@@ -1216,6 +1216,38 @@ unsafe fn __pinned_init(self, slot: *mut T) -> Resul=
+t<(), E> {
+     __internal::InitClosure(f, PhantomData)
+ }
+=20
++/// Changes the to be initialized type.
++///
++/// # Safety
++///
++/// - `*mut U` must be castable to `*mut T` and any value of type `T` writ=
+ten through such a
++///   pointer must result in a valid `U`.
++#[expect(clippy::let_and_return)]
++pub const unsafe fn cast_pin_init<T, U, E>(init: impl PinInit<T, E>) -> im=
+pl PinInit<U, E> {
++    // SAFETY: initialization delegated to a valid initializer. Cast is va=
+lid by function safety
++    // requirements.
++    let res =3D unsafe { pin_init_from_closure(|ptr: *mut U| init.__pinned=
+_init(ptr.cast::<T>())) };
++    // FIXME: remove the let statement once the nightly-MSRV allows it (1.=
+78 otherwise encounters a
++    // cycle when computing the type returned by this function)
++    res
++}
++
++/// Changes the to be initialized type.
++///
++/// # Safety
++///
++/// - `*mut U` must be castable to `*mut T` and any value of type `T` writ=
+ten through such a
++///   pointer must result in a valid `U`.
++#[expect(clippy::let_and_return)]
++pub const unsafe fn cast_init<T, U, E>(init: impl Init<T, E>) -> impl Init=
+<U, E> {
++    // SAFETY: initialization delegated to a valid initializer. Cast is va=
+lid by function safety
++    // requirements.
++    let res =3D unsafe { init_from_closure(|ptr: *mut U| init.__init(ptr.c=
+ast::<T>())) };
++    // FIXME: remove the let statement once the nightly-MSRV allows it (1.=
+78 otherwise encounters a
++    // cycle when computing the type returned by this function)
++    res
++}
++
+ /// An initializer that leaves the memory uninitialized.
+ ///
+ /// The initializer is a no-op. The `slot` memory is not changed.
+--=20
+2.48.1
+
+
