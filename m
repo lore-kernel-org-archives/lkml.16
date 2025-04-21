@@ -1,62 +1,63 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD3E3BBC9
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA6A256C97
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745226845; cv=none; b=ftMs3kuemnoEDVjFyGcchrhS/BP7UFRckVJ2iQsmxSoBpCNPFp4d/3Opoxxw9WYQpAQ/U04mk8p4AudhlKfLOifIeL718b9on7zhFHLog/d0JsqkvmmXdXdZerBG63/bnEdb56vw5MvNr0nI2tbVjzj5h2Oj19vqmdZQlL/drhM=
+	t=1745226850; cv=none; b=Bayk0z3A8Zxpg0SMDVQ6jHgmucqhBq2t5Qb6W7qbN0yfdU/go6L3dQgb3JaDMKOfgORMbez9m13m01GjYLh2jl8cz4F/PUWNJf4A8/8frF67rbX9CLef/9MKIi1sFt+wdOWWLb3FH1q8BQ/e+GJgwV4Y9n1ZkcG1lzCTPXxwWew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745226845; c=relaxed/simple;
-	bh=na0tf5sit+luKBwCF5RgPCxKQY5xZnDJHAwP9xyIyPU=;
+	s=arc-20240116; t=1745226850; c=relaxed/simple;
+	bh=Yy9sZgdklGFmFaDuSPWUdtOoXvrQDwdmrdaX+WxA0nI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ngp4B0iUUzNC3fW5lJeQr2IOAfcfO+9jylG3E2hHNyHPS3ze4DNKRqtuMY5xiaP9bLTJ2m5ZwUb61nb4gGPNJLYIUdwpJ2FWLJlSxnlPh6IdKRz3GJBSTod0TTE6CPil/ItDGsBxQd1vWrvOoj6+310kuuMcRIRfSkPNbvZ5XAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=h8VOJQwl; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=ZuyiFUx/7APlNUKngulKvzzUt1JjdWEVnPpl00dxsIrRbzWWeJnbfSnK6uKiJV5VstoL3oliAxv0TDKDB/VbBcEf8Acm88sNQVR4V/RRBrXtPjAH+gIDdqXGKYSqFvU4Zw0ZOPPBusapRIhkUKFesaxL8O08TxmmZ5dFEQF/CiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=WIRqwg3d; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="h8VOJQwl"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227d6b530d8so37681195ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:14:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="WIRqwg3d"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736aaeed234so3085463b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1745226842; x=1745831642; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1745226848; x=1745831648; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rwNGrkHqtII9hHebmCv8hT2EO8L3wdoKwS9DkX4S/JM=;
-        b=h8VOJQwlJMaPZBetuBvji2CkvLUdWLtquzf9Kh0bZnPtYpgVC/0a25CLH7dVTnDx1m
-         tMV2JUtR4oO8dwFdd3XSh9VMhhm8+rLFcrgZCxhz2KdjRCkO3QPgct86hepWa343fMaS
-         3U8VGNPMSoQM2+vVPoZZHfVaQL2U9MM87+dAYrj8s0fbNcigex234EEh9ut+/AIM+gy1
-         3d176Rxf+oIR1Ou6rfbZX7PuA3zHQxSyJ7qWXVtxzb/nwLcPxiviDusMbuk+tyeZ8QAa
-         ASfD3VVfYpsSn5i7ryWa1ZwdbZMxzMIHGRkE82MEgu0IdzcoKOimzA51CUxpA2HhohDZ
-         WqMw==
+        bh=AsJEbSZvZdA9M9xR3JLAkzpH6h6tuBABgV3Gz0g2ACA=;
+        b=WIRqwg3dUFnM45O22HOC3DSegKLMaJTLRHw5oUrZ58Jlty4JvR2hiASxnHE1iplYiv
+         AWALNNJu24TcPyzy1X6lFtg12EPOctp7a6YdL1DLHq1P6pHyj5gMHyg7kHdt2IQCjEAh
+         jC0H02+fyxOeBxzrgm/W4FvrX105sN0GBepgs6rN8tsbwvzKvDiWhfCSQBH+NcK6u0sU
+         IeToDjVPMwNc9sDXK6F6Bp9GqXDD0Fvz1mkcaR5zq+y+m9KehMvnKSXkdFAD/x/jFPNM
+         mRwoFNz6Sbum1J3wvPdtpLVqZnl4TNC0q7Yj4z8IPgYY90d1cXvJWbmYpNhehPovoRcW
+         dmZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745226842; x=1745831642;
+        d=1e100.net; s=20230601; t=1745226848; x=1745831648;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rwNGrkHqtII9hHebmCv8hT2EO8L3wdoKwS9DkX4S/JM=;
-        b=jypyNS/GqgwXwkU5MJ1Z+qnIxlkos8PIZnMKeGGU4vMwXtZZjrWTxXTD5MU7Z8n8Ao
-         RVJCRkvEkd1C2Z0HJZtWtaIEXL0ZRYFiS379Od3hjyJA3+6F5c5+hssbHG7pJO/liQMe
-         Z3cKNn+4nbFHG21IOv4WLFRkSZ+yopfQv+i28p8aTzM7zd/EzVTLzzqvIByifznjYyLo
-         IvPyOcekJ7pgeF20Kk/k35g89bksJ/m0FCi7iUrQLH3UhS6EecWjopQzA9wqGgJw1n4w
-         Aqy4+Bfn/pk54nkEPxC/RrDvGUxZNGK3bTSu079C/EIQo3kbLyh5ug19eJMKvm4tTfq8
-         eFSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa2aCcgVQPxM90vEKyKB+71qJwOTNfSzFwqipxtBA+YBfc8SvCf9MZ62XyqlQMJNSAIST6jBHxqUARJR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf9u+KJG4HuIm3tuqwukWPSeWgc93p5ZzDxAlxKK8tNBAw7oJn
-	4u8McdFdyzveubRku7/HzpHqi5SYoSZktEZsjDB6DV9JrsIRm+3eqhf0MP1a5HI=
-X-Gm-Gg: ASbGncsXkkjQJIeP558jZvZOPCQWuN50RCHFDZ6MZ+6eELQcEWoJCSrboOwHJbtx5RK
-	Znc4En2XUFR6KMC82/4ZsojwFWBOYRuFbXX3OuDcMFW3ZIOENyv3Q2g+LUZeurQrsYDnUbLsMSN
-	Bz3sNOca3VayQ4nsUhyuvQL3KusDQLKO5SJc4PreQaqB8cQVrhU5dkvaZZRYuq+4c7evCUe6I3V
-	8J7/urPgfcJuBJSffv2dsrPr8RppuTbFP7MUKh+ox6htuTejvfUhrRBELb9LlxVGuFbQz2MLJO/
-	VpsEclF4EW+ueNOsqA6+/sMSFKeqo3Cfy2K3bjV5LJIivGR6DZMkZxyO4G0DJR1HdQ==
-X-Google-Smtp-Source: AGHT+IG8Xt4Ez8eHR0AdyQar+DTN2NHlhc9GFJ7M3y+sg+/0Ss8t7pUCmNYFFQfl4rEm0AP3+cR/yw==
-X-Received: by 2002:a17:902:e54e:b0:22c:35c5:e30d with SMTP id d9443c01a7336-22c53583e3dmr138421385ad.13.1745226842358;
-        Mon, 21 Apr 2025 02:14:02 -0700 (PDT)
+        bh=AsJEbSZvZdA9M9xR3JLAkzpH6h6tuBABgV3Gz0g2ACA=;
+        b=uxYlUGyBVjuRtpD2+2S5lzJGrLKsxJwFYLMVWC4bfYe/mrOH7NSnQkIEJlggkO5j1v
+         Prx7Pl3qhzysAsGt67W7mom1qDv6yTsBQnDtt8e8tVh3r3W0dybdG/GcfCo/YGqn9r7S
+         H+6zGJBAbsvhJt4q/qJ7dEqQyy4S5N1NtJyd332YdK8edcfoPHgf2NLvrIJZoRhFALzV
+         N023H1zhNcmyaBDOqrkTpv4OrkH2N6IX640pQcbnBnmELlpECCzrubGPVL71qQT7abRa
+         B40tFprcVXog2HFnELwdUJ+/0pP9a+wyH0TqfdycUnrmlxSGnMWAYX8PVNJG+3QhyR0P
+         1l8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUyBlh1gUiGoI7UTZV9md7G1cvqI3Bi0aDMeY1X1ceP7EcpGSsmP9a/izpW9kvCLg/MUMtwhLOPehQZXtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWZ5sqzR+QaXT29LNqBQL7f8us72dYkNp9UDJRzycdIVPXoz5j
+	YxgjkAydwTTSX0BUZQ4bpNwMNMZ8iLB8D+cdYyY4dFx2t/UdHmpGhXY2Vb+Qew4=
+X-Gm-Gg: ASbGncuOTfxBG5m2jlNSNWAUaOTzdiKLynYIGT3I+QgFbYNWPvwlNwb0hWGHIR1//k9
+	OdfMapjYx0KxjWNtkvUuAfXWuGOdlhX0wLmGukJyRsLcUSEqet0fYlrVV2Aa3eFmAlWySwCsOMr
+	zv6uoOcPJPKmRfLZFm4PKFcUnSgYbx5IgVhDiJ6C9X/1r0wcaGNNeQTHvmdx97ZC41Zlh2vxOdJ
+	5FTCH6JywkFj/3rgBmnJHFTi861X3wxiAcZPO1+fxlSUkbz2LlJx6vzs7QsQ/eZvqTdVT714Xih
+	ydZnIDe+cYmKIftJy+b0qFg6Hg2U3u6ER1HXdv4tUwbqcjS1I2WAE/HSILr3GclBZUeLrcH54Fs
+	e
+X-Google-Smtp-Source: AGHT+IHueA1196GNLskkec36YuY6fc1vKwEyqs5bJkXUqE3Keaq4gAYLH3kEP+dsJDbTfxHzr5P94w==
+X-Received: by 2002:a05:6a20:c6cb:b0:1f5:8da5:ffe9 with SMTP id adf61e73a8af0-203cbc55037mr16154792637.12.1745226847909;
+        Mon, 21 Apr 2025 02:14:07 -0700 (PDT)
 Received: from n37-069-081.byted.org ([115.190.40.15])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157be12sm5246285a12.64.2025.04.21.02.13.58
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157be12sm5246285a12.64.2025.04.21.02.14.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 02:14:01 -0700 (PDT)
+        Mon, 21 Apr 2025 02:14:07 -0700 (PDT)
 From: Zhongkun He <hezhongkun.hzk@bytedance.com>
 To: akpm@linux-foundation.org
 Cc: hannes@cmpxchg.org,
@@ -67,9 +68,9 @@ Cc: hannes@cmpxchg.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: [PATCH V4 1/4] mm: add swappiness=max arg to memory.reclaim for only anon reclaim
-Date: Mon, 21 Apr 2025 17:13:28 +0800
-Message-Id: <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
+Subject: [PATCH V4 2/4] mm: vmscan: add more comments about cache_trim_mode
+Date: Mon, 21 Apr 2025 17:13:29 +0800
+Message-Id: <4baad87ba637f1e6f666e9b99b3fdcb7ab39171b.1745225696.git.hezhongkun.hzk@bytedance.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
 References: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
@@ -81,127 +82,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
-memory.reclaim")', we can submit an additional swappiness=<val> argument
-to memory.reclaim. It is very useful because we can dynamically adjust
-the reclamation ratio based on the anonymous folios and file folios of
-each cgroup. For example,when swappiness is set to 0, we only reclaim
-from file folios.
+Add more comments for cache_trim_mode, and the annotations
+provided by Johannes Weiner in [1].
 
-However,we have also encountered a new issue: when swappiness is set to
-the MAX_SWAPPINESS, it may still only reclaim file folios.
+[1]:
+https://lore.kernel.org/all/20250314141833.GA1316033@cmpxchg.org/
 
-So, we hope to add a new arg 'swappiness=max' in memory.reclaim where
-proactive memory reclaim only reclaims from anonymous folios when
-swappiness is set to max. The swappiness semantics from a user
-perspective remain unchanged.
-
-For example, something like this:
-
-echo "2M swappiness=max" > /sys/fs/cgroup/memory.reclaim
-
-will perform reclaim on the rootcg with a swappiness setting of 'max' (a
-new mode) regardless of the file folios. Users have a more comprehensive
-view of the application's memory distribution because there are many
-metrics available. For example, if we find that a certain cgroup has a
-large number of inactive anon folios, we can reclaim only those and skip
-file folios, because with the zram/zswap, the IO tradeoff that
-cache_trim_mode or other file first logic is making doesn't hold -
-file refaults will cause IO, whereas anon decompression will not.
-
-With this patch, the swappiness argument of memory.reclaim has a new
-mode 'max', means reclaiming just from anonymous folios both in traditional
-LRU and MGLRU.
-
-Here is the previous discussion:
-https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@bytedance.com/
-https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@bytedance.com/
-https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@bytedance.com/
-
-Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
 ---
- Documentation/admin-guide/cgroup-v2.rst | 3 +++
- include/linux/swap.h                    | 4 ++++
- mm/memcontrol.c                         | 5 +++++
- mm/vmscan.c                             | 7 +++++++
- 4 files changed, 19 insertions(+)
+ mm/vmscan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 1a16ce68a4d7..472c01e0eb2c 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1348,6 +1348,9 @@ The following nested keys are defined.
- 	same semantics as vm.swappiness applied to memcg reclaim with
- 	all the existing limitations and potential future extensions.
- 
-+	The valid range for swappiness is [0-200, max], setting
-+	swappiness=max exclusively reclaims anonymous memory.
-+
-   memory.peak
- 	A read-write single value file which exists on non-root cgroups.
- 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index db46b25a65ae..f57c7e0012ba 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -414,6 +414,10 @@ extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- #define MEMCG_RECLAIM_PROACTIVE (1 << 2)
- #define MIN_SWAPPINESS 0
- #define MAX_SWAPPINESS 200
-+
-+/* Just recliam from anon folios in proactive memory reclaim */
-+#define SWAPPINESS_ANON_ONLY (MAX_SWAPPINESS + 1)
-+
- extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 						  unsigned long nr_pages,
- 						  gfp_t gfp_mask,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index c96c1f2b9cf5..796c78b26e43 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4395,11 +4395,13 @@ static ssize_t memory_oom_group_write(struct kernfs_open_file *of,
- 
- enum {
- 	MEMORY_RECLAIM_SWAPPINESS = 0,
-+	MEMORY_RECLAIM_SWAPPINESS_MAX,
- 	MEMORY_RECLAIM_NULL,
- };
- 
- static const match_table_t tokens = {
- 	{ MEMORY_RECLAIM_SWAPPINESS, "swappiness=%d"},
-+	{ MEMORY_RECLAIM_SWAPPINESS_MAX, "swappiness=max"},
- 	{ MEMORY_RECLAIM_NULL, NULL },
- };
- 
-@@ -4433,6 +4435,9 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
- 			if (swappiness < MIN_SWAPPINESS || swappiness > MAX_SWAPPINESS)
- 				return -EINVAL;
- 			break;
-+		case MEMORY_RECLAIM_SWAPPINESS_MAX:
-+			swappiness = SWAPPINESS_ANON_ONLY;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 3783e45bfc92..ebe1407f6741 100644
+index ebe1407f6741..49eb2a4e490d 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -2503,6 +2503,13 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 		goto out;
- 	}
+@@ -2530,7 +2530,8 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
  
-+	/* Proactive reclaim initiated by userspace for anonymous memory only */
-+	if (swappiness == SWAPPINESS_ANON_ONLY) {
-+		WARN_ON_ONCE(!sc->proactive);
-+		scan_balance = SCAN_ANON;
-+		goto out;
-+	}
-+
  	/*
- 	 * Do not apply any pressure balancing cleverness when the
- 	 * system is close to OOM, scan both anon and file equally
+ 	 * If there is enough inactive page cache, we do not reclaim
+-	 * anything from the anonymous working right now.
++	 * anything from the anonymous working right now to make sure
++         * a streaming file access pattern doesn't cause swapping.
+ 	 */
+ 	if (sc->cache_trim_mode) {
+ 		scan_balance = SCAN_FILE;
 -- 
 2.39.5
 
