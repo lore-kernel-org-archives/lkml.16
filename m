@@ -1,139 +1,188 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759F32641DB
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 10:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844F714658C;
+	Mon, 21 Apr 2025 10:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745230414; cv=none; b=HrQVCDAxjMzqk1DbsNqYO/4iWOMkV+7cSKiYC4o30O6tMfMD2Z3KO1eOce6gVf+/k24C8xTWJ9B2l/0aNyWTPh1dLbpQGFGbXE0CKzKOx6mZ1cuQHTUhbiywp/2WNTmmcSU54M/TYiggHMCjF0uSz0E/dhqltoaImv7jZQfoYf4=
+	t=1745230608; cv=none; b=WKgV5x3KjjXXqx5xzHsGCz+qeLHuS/rDin9BgWXwJQhdxFlB9bvM1/8x82fSNn3hhzLLobT+zpEfkZgsszUeIrtqL1Sv5cRTZBDFr7vqU4VRu6FFlp6ZVrNFjbuzARgFI1ezfxRC6mOO+nZHJacoWNFiWVD7lkQl2S5XNqQaJ/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745230414; c=relaxed/simple;
-	bh=Pz2EbCAhTSbi3s1n0uikdRPmeNKPOIEQOu+qX+8XfSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jymL/5AXZAI4rjjMxImDqPs0xGR8gCgpKCk96H1G9kNQOExWdaayx47f957E3dt8qmDxyRsE0/zzQtDGjZ9tKq7oGmAiSR/yWLwxv/vgkZ4a5/G/eRGdRl/cH+GpcKKRxPWH6/b0t03V5HIUxjcjfMOjrqAp3bVPb0VExn7mw+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Uq0J0tNU; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745230608; c=relaxed/simple;
+	bh=xhjnF2yWUOPLWpYB/sG9bvUoeOYj4o6fed/kiEyZNCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B6iaHo1FJhud+V4xRzTVeY22SbkvbYL8mRwRtpjxl+FMi0H5ZClhSxCEPBIChpw/uv7aO7CNVMDXGrtbNE8wDdEf1I0iLpUH8QUmhGLdY3EZ5KPF54XQnxyB3nrfAzqsi4YL9iHLovOSaM30lVWpTCvTLEkBpgoevIYlc0UaYp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWJP9rWH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Uq0J0tNU"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240b4de12bso55715545ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745230411; x=1745835211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JlRUONHPgdRG0yBjPS5/nMKjk95rCFAaXubE+yQQ9K0=;
-        b=Uq0J0tNUMXMRSwnV4897lUxgzT3P0xngZoRg/eWiM6OnZ0DGA0zliAwCai/oDgOAIe
-         T6j8+aLgluv1ZTjs5xLZRez6n26sss2fjxgy3zjrIGBZvhFjwODQGlnVWJTSYttyPXeu
-         CMTwETZAL9HW4AO7MBzI00Ohf/8Z43r4yqC2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745230411; x=1745835211;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JlRUONHPgdRG0yBjPS5/nMKjk95rCFAaXubE+yQQ9K0=;
-        b=DuM23RqX4IMd14rZzpGhzzIkTeEWpj71s+rSliBkPZ/Yv6/Nb6MYV2AR5Nl8yV5SyR
-         aEPyckNWgAfLfeqjLVwvYcsnhtul5wfx5MZ4h9dIQmFyqNjvnKhPpGkKRzOJXgxExoCN
-         pf9CFG/3EdZmk/2PlSzgKxtoVWBpkIXmos46b0O7Ari1eoGJ7rl9VlfrbdbJYcAMMi3l
-         jR7CvZxPNTA0FZOlmeaCdbTf5PojDbLc0aivevG/uSjBnoE5AUrhSGHQm88du2n8qdKB
-         5GaJ31FibuP5V5oGBoy4ReB3Ng3iBNQwaqA2k3SUfDwGZXiYFLv2J5TCFwR74r0PwC5r
-         f2KA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2CVBHHYFp6Kt9kBgzvaEYvnMlFa4JQemoGbi0ZkK4tf6lAWQCfNIfSyrgxUcyh8SNiK2VRROcMcMM/+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztr+6r84PovxuLmyigrOz55FLQDkK0DXmWZ1GB//VCbTCyaFWm
-	1SBVEZzt3bk6F0rc+qJFbGMnVsz4/8IW1t2/MmSG+u/xPbwyLHjzvMieXT+kIg==
-X-Gm-Gg: ASbGnct1TdJDZ/AP2R4OLuqC90MbgNfCpdTfsnItScpB3zUzYUnUkXS1aWxtTQlhLy8
-	aqbvnQL0Pe1CDOCC+WFT7YhDMuyNOa+OBX7mqFlCUDGe7ND/IoCaEY8tOJ66QeG7tZCWeNn6WWE
-	ODI1YnGunTUNtdnVh9alm2HG8KJygMludrqzi7tvQ3XHzjT2TnGom9oDB4CrysX80+5zb9aL+jD
-	Jydq3RTjl5w895CZE2egZ+HLyQOqbwB5HsqrOypfWb69l4YQn/6Jn/YOIIYPvxsWgkgjyk0fr98
-	9d6ciR4Gnrsw/YAeYwPDx77lMaAbpnn4Th/OTEASYX6yVIiNQv1EZ8EFMUQ=
-X-Google-Smtp-Source: AGHT+IGaSj2NjUkLJYtvrXbaniU4ZUkVXBRJQywqY5KHy1I4U9ywfY/tOoiirvNsMeMMe1Zel8Bsug==
-X-Received: by 2002:a17:902:ce86:b0:220:c143:90a0 with SMTP id d9443c01a7336-22c535a7254mr159468475ad.24.1745230410702;
-        Mon, 21 Apr 2025 03:13:30 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:7633:f42a:d31d:3f9c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22d78db8b04sm38985205ad.238.2025.04.21.03.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 03:13:30 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	chrome-platform@lists.linux.dev,
-	linux-input@vger.kernel.org,
-	Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v2 8/8] platform/chrome: of_hw_prober: Support touchscreen probing on Squirtle
-Date: Mon, 21 Apr 2025 18:12:46 +0800
-Message-ID: <20250421101248.426929-9-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-In-Reply-To: <20250421101248.426929-1-wenst@chromium.org>
-References: <20250421101248.426929-1-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWJP9rWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1433DC4CEE4;
+	Mon, 21 Apr 2025 10:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745230608;
+	bh=xhjnF2yWUOPLWpYB/sG9bvUoeOYj4o6fed/kiEyZNCQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MWJP9rWH1s6igmdGH02bzkUY6qLI1SYiQW41EG8E4JgvCJx4AMv03UBoyDkhHTmKJ
+	 QOkrCN5Lu7wrIpc3WdOGktC/mTwoSUytQhL7rR/4CVtHgwGieCLNbziU/pL49gGvDl
+	 al0NJ+fVY5qwUEZbHM2YYJhP6Sl0kzREJ+Tur+PMTt9KtsYkF9Iz0n7jd9VdPO2d4H
+	 K3kbeXUiTa8Je7fQXZTqjjvjnuauWzFW87FmcEFA3qc19pkjrlto65TdFeZrzkdnWp
+	 vWYK9PYnrpoKko8dG4Y/AEWl75IHaveek5Al8GPNRggQyk1U1tguf6SW88UoMtQ00d
+	 KOyvb46aaxieA==
+Date: Mon, 21 Apr 2025 11:16:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v6 05/11] iio: accel: adxl345: add freefall feature
+Message-ID: <20250421111641.1cb83848@jic23-huawei>
+In-Reply-To: <CAFXKEHZNmUsUmheyDdh1bDDf97-7ZTpsm2xqqbwT+hq3K58F5A@mail.gmail.com>
+References: <20250414184245.100280-1-l.rubusch@gmail.com>
+	<20250414184245.100280-6-l.rubusch@gmail.com>
+	<20250418192254.0becd27d@jic23-huawei>
+	<CAFXKEHZNmUsUmheyDdh1bDDf97-7ZTpsm2xqqbwT+hq3K58F5A@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The MT8186 Squirtle Chromebook is built with one of two possible
-touchscreens. Let the prober probe for them.
+On Sun, 20 Apr 2025 23:26:47 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- drivers/platform/chrome/chromeos_of_hw_prober.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> Happy Easter!
+>=20
+> On Fri, Apr 18, 2025 at 8:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Mon, 14 Apr 2025 18:42:39 +0000
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > =20
+> > > Add the freefall detection of the sensor together with a threshold and
+> > > time parameter. A freefall event is detected if the measuring signal
+> > > falls below the threshold.
+> > >
+> > > Introduce a freefall threshold stored in regmap cache, and a freefall
+> > > time, having the scaled time value stored as a member variable in the
+> > > state instance.
+> > > =20
+> > Reading this I wondered whether we had the event code consistent for
+> > freefall detectors... Or indeed inactivity ones (which are kind of simi=
+larish)
+> >
+> > :( We don't it seems.  The issue is that
+> > freefall is actually that all channels are simultaneously under the the=
+ magnitude
+> > threshold, not one of them.  So it should I think be
+> > X_AND_Y_AND_Z not X_OR_Y_OR_Z
+> > =20
+>=20
+> I change to X_AND_Y_AND_Z.
+>=20
+> > This is as opposed to activity detectors which tend to be any axis shows
+> > activity and X_OR_Y_OR_Z applies.
+> >
+> > Anyhow upshot is I think I lead you astray on this and we should make t=
+his
+> > one IIO_MOD_X_AND_Y_AND_Z
+> >
+> > A few other things inline.
+> >
+> > Unfortunately we don't deal with these events that often so I forget
+> > what we did before :(
+> > =20
+> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > ---
+> > >  drivers/iio/accel/adxl345_core.c | 125 +++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 125 insertions(+)
+> > >
+> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
+l345_core.c
+> > > index c464c87033fb..ae02826e552b 100644
+> > > --- a/drivers/iio/accel/adxl345_core.c
+> > > +++ b/drivers/iio/accel/adxl345_core.c
+> > > @@ -75,6 +75,7 @@ struct adxl345_state {
+> > >       u32 tap_duration_us;
+> > >       u32 tap_latent_us;
+> > >       u32 tap_window_us;
+> > > +     u32 ff_time_ms;
+> > >
+> > >       __le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned=
+(IIO_DMA_MINALIGN);
+> > >  };
+> > > @@ -96,6 +97,14 @@ static struct iio_event_spec adxl345_events[] =3D {
+> > >                       BIT(IIO_EV_INFO_RESET_TIMEOUT) |
+> > >                       BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
+> > >       },
+> > > +     {
+> > > +             /* free fall */
+> > > +             .type =3D IIO_EV_TYPE_MAG,
+> > > +             .dir =3D IIO_EV_DIR_FALLING,
+> > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE) |
+> > > +                     BIT(IIO_EV_INFO_VALUE) |
+> > > +                     BIT(IIO_EV_INFO_PERIOD),
+> > > +     }, =20
+> > This is creating separate per axis enables, values and period. Does tha=
+t make
+> > sense?  If not you need to spin a kind of virtual channel (with mod X_A=
+ND_Y_AND_Z)
+> > and add the events to it.
+> >
+> > See how the sca3000 does it for example. =20
+>=20
+> Hum, I'm not sure if I understand you correctly. In my driver, I'm
+> using .mask_shared_by_type, and I verified there appears only one
+> enable, one value and one period handle.
+> # ls -l /sys/bus/iio/devices/iio:device0/events/
+> total 0
+> ...
+> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_en
+> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_period
+> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_value
+> ...
+>=20
+> In the sources of sca3000.c I saw this setup with .mask_separate. So,
+> there I'd expect to see separate enables per axis, or am I wrong? In
+> the case of the ADXL345, there should only be one freefall enable (in
+> my driver) and not per axis. So, isn't this what is currently there?
+>=20
+> So far I only adjust the or'ing to and'ing the axis for freefall.
 
-diff --git a/drivers/platform/chrome/chromeos_of_hw_prober.c b/drivers/platform/chrome/chromeos_of_hw_prober.c
-index 10dbaede0541..f3cd612e5584 100644
---- a/drivers/platform/chrome/chromeos_of_hw_prober.c
-+++ b/drivers/platform/chrome/chromeos_of_hw_prober.c
-@@ -59,6 +59,7 @@ static int chromeos_i2c_component_prober(struct device *dev, const void *_data)
- DEFINE_CHROMEOS_I2C_PROBE_DATA_DUMB_BY_TYPE(touchscreen);
- DEFINE_CHROMEOS_I2C_PROBE_DATA_DUMB_BY_TYPE(trackpad);
- 
-+DEFINE_CHROMEOS_I2C_PROBE_CFG_SIMPLE_BY_TYPE(touchscreen);
- DEFINE_CHROMEOS_I2C_PROBE_CFG_SIMPLE_BY_TYPE(trackpad);
- 
- static const struct chromeos_i2c_probe_data chromeos_i2c_probe_hana_trackpad = {
-@@ -76,6 +77,17 @@ static const struct chromeos_i2c_probe_data chromeos_i2c_probe_hana_trackpad = {
- 	},
- };
- 
-+static const struct chromeos_i2c_probe_data chromeos_i2c_probe_squirtle_touchscreen = {
-+	.cfg = &chromeos_i2c_probe_simple_touchscreen_cfg,
-+	.opts = &(const struct i2c_of_probe_simple_opts) {
-+		.res_node_compatible = "elan,ekth6a12nay",
-+		.supply_name = "vcc33",
-+		.gpio_name = "reset",
-+		.post_power_on_delay_ms = 10,
-+		.post_gpio_config_delay_ms = 300,
-+	},
-+};
-+
- static const struct hw_prober_entry hw_prober_platforms[] = {
- 	{
- 		.compatible = "google,hana",
-@@ -93,6 +105,10 @@ static const struct hw_prober_entry hw_prober_platforms[] = {
- 		.compatible = "google,squirtle",
- 		.prober = chromeos_i2c_component_prober,
- 		.data = &chromeos_i2c_probe_dumb_trackpad,
-+	}, {
-+		.compatible = "google,squirtle",
-+		.prober = chromeos_i2c_component_prober,
-+		.data = &chromeos_i2c_probe_squirtle_touchscreen,
- 	}, {
- 		.compatible = "google,steelix",
- 		.prober = chromeos_i2c_component_prober,
--- 
-2.49.0.805.g082f7c87e0-goog
+So this is a messy corner of the ABI (because these are tricky to describe).
+Shared by type usually means there is one attribute applying to all the
+axis, but that they are reported separately, or potentially multiple events
+/ _OR_ form used if we can distinguish exactly what the event is.
+
+In this case there is no way for userspace to anticipate that the event
+that might be generate is X_AND_Y_AND_Z.  So for this
+the ABI solution we came up with is that virtual channel and separate.
+
+So you get something along the lines of
+in_accel_x&y&z_mag_falling_en
+in_accel_x&y&z_mag_falling_period
+etc
+
+The tricky remaining corner is this only makes sense if we always enable
+all axis (which is typical for a freefall detector). If we get a device
+that oddly has per axis free fall enables, then it would be hard and I
+might argue nonsense to enable them separately anyway.  Not true
+here though I think.
+
+Note that we may well have drivers using the ABI slightly differently for
+freefall events which will be at least partly because I'd forgotten how
+we resolved all this complexity long ago (that sca3000 driver is ancient!)
+ABI like this is tricky to fix up, but we might want to consider some dupli=
+cation
+in those drivers so we standardize on one form for freefall (even if we hav=
+e some
+stray ABI from other possible solutions).
+
+What we should definitely do is pull together some documentation on multi c=
+hannel
+event handling as the ABI docs are probably not enough.
+
+Jonathan
 
