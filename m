@@ -1,190 +1,79 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BFCA22AE45;
-	Mon, 21 Apr 2025 22:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AF41DF984;
+	Mon, 21 Apr 2025 22:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745274354; cv=none; b=rxnATx4CvFodPxCs+Q/Ievk7UvpRJng4x0AwJy/yXzxevAGhc2VfCpfO1SwowzURPX8GRGSECuapZrsBVKd+PH5u9ItoHl309N7HYMPDh37Vo9oMsqTmas9T+FiYp7e/naTwJqrowyr3z2/nCOOyg1bhXMmUO+RzM0JbW08J+eM=
+	t=1745274417; cv=none; b=RqHkwk8H21jL8UadqIPUQHZnI48r7nAdvBKUBEqXHOx4Qw2jZXuFrscB0Hvm9EDpxu4P5fCU3x3YX0AZa6dK3L1BWFv8ATKeuRNed/CLFxOj27iZw+UKOGFpoccWsVpm9+sGaEPn/X28r37k2OIKg9s0lMUqakJwsknGUyvGd7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745274354; c=relaxed/simple;
-	bh=JWWdsa8lp+LrFXcffOTskLuqlErNEGei91SZN+Ep5Rs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bwc4wJKaj6/ApuMTQVzppOqmYtYZdlSuBl+swDluYUXDPEZAgQbXDQ7buE7eWLOjQYElxN2IazcTkcm/b48MNXoeGUwgibh/EJJH+79ezwzjAqmvNiRpLesI4tkUhoQMxOGy5VW3uPF1bHNQMm+VUD7ROmrWbimAbbedq2pIjL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fmry9bUG; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745274417; c=relaxed/simple;
+	bh=sjB84uxPDLrSxZbudQCJO1bZYpvmP3+3SV0sD3RB5aU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UT0VmCQbDTTa4iYhV3kar0kMP2kG/LGXraCoJFiGUobZUplddJphRQpEJZ0fKW5SOMshzGDh7K7u/CgUctHh1uveXOnTJ7f6Dtvf0tJ4UdnUJ05d6Wnpdtc1gRNKXfOuHB7BOISuvFRsQf8YjNMhE8SDdsiNVyxQ/HquZnXA6EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9J69WdB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fmry9bUG"
-Received: from DESKTOP-VOT081N.hsd1.ga.comcast.net (unknown [20.110.218.7])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 406F5203B86F;
-	Mon, 21 Apr 2025 15:25:50 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 406F5203B86F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745274352;
-	bh=SrfZknngoXtvdKtTmABqW9U7IynhHbXYv+i4I64RFKE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fmry9bUGG2vjujWYCfrnXtHLxtaqe9gPwDpeVFRzDNGDNKRUobkGhEVbgd7l8bNrX
-	 /VzO5Wu2Ahs7Hk06cq2peQ9U0d2RJReHTyoCODb7rQ5Ok9FWgb9vxPQPANXipL84zW
-	 H7G9EhV7PiIsclqjuA/vs6HueRoo14fnv2Fgq8cE=
-From: steven chen <chenste@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com,
-	roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com,
-	ebiederm@xmission.com,
-	paul@paul-moore.com,
-	code@tyhicks.com,
-	bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com,
-	nramas@linux.microsoft.com,
-	James.Bottomley@HansenPartnership.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: [PATCH v13 9/9] ima: measure kexec load and exec events as critical data
-Date: Mon, 21 Apr 2025 15:25:15 -0700
-Message-ID: <20250421222516.9830-10-chenste@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250421222516.9830-1-chenste@linux.microsoft.com>
-References: <20250421222516.9830-1-chenste@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9J69WdB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB8DC4CEE4;
+	Mon, 21 Apr 2025 22:26:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745274415;
+	bh=sjB84uxPDLrSxZbudQCJO1bZYpvmP3+3SV0sD3RB5aU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t9J69WdBBkV3WEGtVhU7DQwRwiwNhebcdw8EfDY4tpzK2HPX1q6/L1UU8nMvKiMEN
+	 3hC99k9LoPNNdE331GHT4+vHtkpzaui3+DfTRw7pkItjJ+sdEftZ3IDlU7fF2nIzUu
+	 Z3eY1Jg1rjobEQkPCS70yeCx6DGtZC6vsswbG5CCddxesIWPGkExX0qNGVrj3EZEex
+	 XD72cUD/vWbnV9+w7DKOvJ7vW4Sdxaka+xf/XHEFw2kDjDKUEIfFs3fBOWc3lfbrGU
+	 jvertGBLyRu0A7QzasJ1qBbbEexZy1MOBiM+FEt1FQ2uSsyvEEzYolVpDyGvLoNU9t
+	 stAkkdDO/oALQ==
+Date: Mon, 21 Apr 2025 17:26:53 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Rishikesh Donadkar <r-donadkar@ti.com>
+Cc: krzk+dt@kernel.org, mchehab@kernel.org, devarsht@ti.com,
+	hverkuil-cisco@xs4all.nl, s-jain1@ti.com, jack.zhu@starfivetech.com,
+	vigneshr@ti.com, linux-media@vger.kernel.org,
+	jai.luthra@ideasonboard.com, laurent.pinchart@ideasonboard.com,
+	changhuang.liang@starfivetech.com, linux-kernel@vger.kernel.org,
+	tomi.valkeinen@ideasonboard.com, vaishnav.a@ti.com,
+	y-abhilashchandra@ti.com, jai.luthra@linux.dev,
+	devicetree@vger.kernel.org, mripard@kernel.org,
+	sakari.ailus@linux.intel.com, conor+dt@kernel.org
+Subject: Re: [PATCH v3 01/13] dt-bindings: media: ti,j721e-csi2rx-shim:
+ Support 32 dma chans
+Message-ID: <174527441344.3212247.14328786024565701263.robh@kernel.org>
+References: <20250417065554.437541-1-r-donadkar@ti.com>
+ <20250417065554.437541-2-r-donadkar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-From: Steven Chen <chenste@linux.microsoft.com>
-
-The amount of memory allocated at kexec load, even with the extra memory
-allocated, might not be large enough for the entire measurement list.  The
-indeterminate interval between kexec 'load' and 'execute' could exacerbate
-this problem.
-
-Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
-measured as critical data at kexec 'load' and 'execute' respectively.
-Report the allocated kexec segment size, IMA binary log size and the
-runtime measurements count as part of those events.
-
-These events, and the values reported through them, serve as markers in
-the IMA log to verify the IMA events are captured during kexec soft
-reboot.  The presence of a 'kexec_load' event in between the last two
-'boot_aggregate' events in the IMA log implies this is a kexec soft
-reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-after kexec soft reboot implies missing events in that window which
-results in inconsistency with TPM PCR quotes, necessitating a cold boot
-for a successful remote attestation.
-
-These critical data events are displayed as hex encoded ascii in the
-ascii_runtime_measurement_list.  Verifying the critical data hash requires 
-calculating the hash of the decoded ascii string.  
-
-For example, to verify the 'kexec_load' data hash:
-
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep  kexec_load | cut -d' ' -f 6 | xxd -r -p | sha256sum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417065554.437541-2-r-donadkar@ti.com>
 
 
-To verify the 'kexec_execute' data hash:
+On Thu, 17 Apr 2025 12:25:42 +0530, Rishikesh Donadkar wrote:
+> From: Jai Luthra <j-luthra@ti.com>
+> 
+> The CSI2RX SHIM IP can support 32x DMA channels. These can be used to
+> split incoming "streams" of data on the CSI-RX port, distinguished by
+> MIPI Virtual Channel (or Data Type), into different locations in memory.
+> 
+> Actual number of DMA channels allocated to CSI-RX is dependent on the
+> usecase, and can be modified using the K3 Resource Partitioning tool [1].
+> So set the minimum channels as 1 and maximum as 32.
+> 
+> Link: https://software-dl.ti.com/processor-sdk-linux/esd/AM62X/10_00_07_04/exports/docs/linux/How_to_Guides/Host/K3_Resource_Partitioning_Tool.html [1]
+> Link: https://www.ti.com/lit/pdf/spruiv7
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
+> ---
+>  .../bindings/media/ti,j721e-csi2rx-shim.yaml  | 39 +++++++++++++++++--
+>  1 file changed, 36 insertions(+), 3 deletions(-)
+> 
 
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements 
-| grep kexec_execute | cut -d' ' -f 6 | xxd -r -p | sha256sum
-
-Co-developed-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Signed-off-by: Steven Chen <chenste@linux.microsoft.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- security/integrity/ima/ima.h       |  6 ++++++
- security/integrity/ima/ima_kexec.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_queue.c |  5 +++++
- 3 files changed, 32 insertions(+)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 24d09ea91b87..34815baf5e21 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -240,6 +240,12 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 				   unsigned long flags, bool create);
- #endif
- 
-+#ifdef CONFIG_IMA_KEXEC
-+void ima_measure_kexec_event(const char *event_name);
-+#else
-+static inline void ima_measure_kexec_event(const char *event_name) {}
-+#endif
-+
- /*
-  * The default binary_runtime_measurements list format is defined as the
-  * platform native format.  The canonical format is defined as little-endian.
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index d1c9d369ba08..38cb2500f4c3 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -17,6 +17,8 @@
- #include "ima.h"
- 
- #ifdef CONFIG_IMA_KEXEC
-+#define IMA_KEXEC_EVENT_LEN 256
-+
- static bool ima_kexec_update_registered;
- static struct seq_file ima_kexec_file;
- static size_t kexec_segment_size;
-@@ -31,6 +33,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
- 	sf->count = 0;
- }
- 
-+void ima_measure_kexec_event(const char *event_name)
-+{
-+	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-+	size_t buf_size = 0;
-+	long len;
-+	int n;
-+
-+	buf_size = ima_get_binary_runtime_size();
-+	len = atomic_long_read(&ima_htable.len);
-+
-+	n = scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-+		      "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
-+		      "ima_runtime_measurements_count=%ld;",
-+		      kexec_segment_size, buf_size, len);
-+
-+	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event, n, false, NULL, 0);
-+}
-+
- static int ima_alloc_kexec_file_buf(size_t segment_size)
- {
- 	/*
-@@ -53,6 +73,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
- out:
- 	ima_kexec_file.read_pos = 0;
- 	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-+	ima_measure_kexec_event("kexec_load");
- 
- 	return 0;
- }
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 83d53824aa98..590637e81ad1 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -241,6 +241,11 @@ static int ima_reboot_notifier(struct notifier_block *nb,
- 			       unsigned long action,
- 			       void *data)
- {
-+#ifdef CONFIG_IMA_KEXEC
-+	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
-+		ima_measure_kexec_event("kexec_execute");
-+#endif
-+
- 	ima_measurements_suspend();
- 
- 	return NOTIFY_DONE;
--- 
-2.43.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
