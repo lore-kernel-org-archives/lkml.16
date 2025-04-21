@@ -1,352 +1,294 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2046.outbound.protection.outlook.com [40.107.223.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CE11519A6;
-	Mon, 21 Apr 2025 16:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745254424; cv=fail; b=RDpp2DEGcHC071eOx0g5Bq4hTNJ5NCPUeycYcyOFaCWOXF8LVgdHwd2oVSVuOccgp+JWST0jS902htBG7n/nOR+CsRhjnk6glc0dmA2v1nfz7fsbBJHHvb2LzbsqPKpl6XAZP/zx5yg5ne3RAWVAAKt2Aw6Ri3qQwszNugSVk48=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745254424; c=relaxed/simple;
-	bh=28LNU5Tx9mmukX6VN1gxt64MRhR2BLVlFwDcGUvAvl4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ltdQVXcJ3AXOjaQY25uiPeS34TPTB3aBhm/MhSY+ogoMK+8bLt51yQm+LmWtJLy+SSMneXoxUxzFTNeopj8eqlxsBbVQ4nh6gm/iIB3bBzm+RfD4LIsvcHrzkP28+/EUps0euFvlaExqs7rADE8txslcFmt2jEyXKYj2yzQjb6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=afphqLDs; arc=fail smtp.client-ip=40.107.223.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505407D3F4;
+	Mon, 21 Apr 2025 16:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745254518; cv=none; b=l6DcaM8nRNMynfGmetDI/sPLBYzwO5h4VK2IBP4l1Q9QEfQLEkdVXw67tjxeykQd0OO4bh+ocGj+m8gTO567Rl3ocfG7i1xJmvMXH1Vzod7XLp+m/TlPGHcbAK8oEeDOPjIy31XL2h3rJRCDvvWsJlBPlbknKjIWqwsNCclxjOA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745254518; c=relaxed/simple;
+	bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eXQE9FxzH1tLMKjg3UjjgCPiKhMy/D9rvUNwgSXqpmHBZsHoiwsqqBfYdsDE1iW7rmvUbl+TBi2qwAFR5qkfTh0Dh7BtiYt15Lm9lLXBeyR9II05jcCtT23As1bMX1CpO/+GQB6C0QW8PI3NmdBMXc9gdX/KkwglgFQ4IVjw5TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEQ/+Bnl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="afphqLDs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a0SulF1XhsFKN2PSguiLrgRJBoIaLEtXdXS09yZYW20H27tcyw6RjYFIt2uNMTTh+cpDaHf82qQdCRpf5/pCSC4579Lzcx9j9IPaaoEUMGWjUQNbliKlHLe5mTByXtg3vMLd04R8BNf02sFk5mA0eHR0EHUn8+CjxoVtVin2r3LCCXmTi7hh9468PLZM3G3zw3EbX5SP4fmsHoPTSSomx0DJOOQb/EABUl83P8RO61Zos+VTWMIhE/s1UrPhxZ0Gl73z1VIiEvMixTTFfWu2N3i+sNKpC2iZAeHNIYeQ17DJVjIZeIcpKo6onBkevKIAr6srRvQTJrafx47W5/aHsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RcWVwqygS0rgC5WVzUL47/ruHySQ60VWG/00/BLhFic=;
- b=xxOlyI3LwBuLzZRoW7zZNO6Ma03ilz52oWZbNaIBHw7X09vurIFKQCqvFxlKI9r3QdPBIzwwVEuxfRMLcCdqjLuRVRwc8JRtmQfda+ikbWXyH77fsmANv+oPe9BMULeMntscGpAK85uzb9H5BIPbuT6UDZ/m8xLrnbWyeTnxlrFK3NM1A9LeDTcZ3BsOY9Pk/M5lDYlDDzfGj0vALpn4gkFpLioFm09igYxk8m+oSuVkf8b7yzH/MGArNCDNn8oeki15WNLqRKjJVPTjY2kWkWsW9fkn5Hko0SyLWUsO4LWVos7IIOsnNF+tT2PVgECb2ai3fft8pVyJFUYAEKXSvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RcWVwqygS0rgC5WVzUL47/ruHySQ60VWG/00/BLhFic=;
- b=afphqLDs9qDCncfVSu1FXWv0hpafFZ9Vmbr3/OliJB7vzHarapYv7JOuS0uGpqRRoBwaIpPF15v1paM6P2qp8j4MrNkuYWFjKJQkbLBmvJxpRh3hPxoolZhE1iGJ1K1QCjSvWQQcMjLPSM3HVuyugwNQCkrEaHhfPF+XFmPxrJQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by PH0PR12MB8005.namprd12.prod.outlook.com (2603:10b6:510:26c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.31; Mon, 21 Apr
- 2025 16:53:39 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
- 16:53:34 +0000
-Message-ID: <eedfe953-7468-4b4c-934c-4589de601fa2@amd.com>
-Date: Mon, 21 Apr 2025 11:53:32 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] cpufreq/amd-pstate: Add support for the "Requested
- CPU Min frequency" BIOS option
-To: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>, gautham.shenoy@amd.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421080444.707538-1-dhananjay.ugwekar@amd.com>
- <20250421080444.707538-3-dhananjay.ugwekar@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250421080444.707538-3-dhananjay.ugwekar@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0088.namprd13.prod.outlook.com
- (2603:10b6:806:23::33) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEQ/+Bnl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1809C4CEE4;
+	Mon, 21 Apr 2025 16:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745254517;
+	bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HEQ/+Bnljgi00rzGfwQQ4rzbZdPoy6U4YfVEDaSaWmnWI9juv9NOFrQokwSQ31r8S
+	 00dXshXMLhkJ+1rahKpfDjjrWwtz/ysxDf+6q3RPy3g0dWGgQTMqzRvttaDadrCtwL
+	 qVA3GpiiZc9MVsm1V9Pms/TNCEfNoGbSoZ+wA8rbQN7U2XMISYmVkuzndAoAdpIlFb
+	 r/9JALcDB1QcDJt0KyJcJmZxT0LAyhsx2kgIu+AUvMnv8DuPp8kbXce/PM1+b7iUd6
+	 jCWDjxqDoG4xht9HCjXxewUUzBapczQxOMWJ8NzL/5sULwrx6q5dpEP4xNqhfGBf7D
+	 edYENDkQNoniw==
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Rafael Aquini <raquini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Stephen Boyd <swboyd@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3] slab: Decouple slab_debug and no_hash_pointers
+Date: Mon, 21 Apr 2025 09:55:12 -0700
+Message-Id: <20250421165508.make.689-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH0PR12MB8005:EE_
-X-MS-Office365-Filtering-Correlation-Id: 405a471b-0933-4787-15bf-08dd80f50d82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c09URmIwTnloSmJpbGJWVFhvWXVFK2NiSlZ1OVVBSzBLSUJrOGN2NVRzUEEw?=
- =?utf-8?B?WUtMMExHUU1hMmZPUDRPOG1yVWxjY3RHakNiY1BoVGRTeExudTRZRVk4VWxG?=
- =?utf-8?B?c3dWVFh5R3oyM285ZDV0RE9XSUkwMmxvTmdWYTFoT0F4d1hxL2xsUklKeXUz?=
- =?utf-8?B?NS9ERFF5d0FadHhEaEtTUW5uajNPT005cUpJcHRqdlBveGxyaCtwKzhyd2JM?=
- =?utf-8?B?SXI3MVhBalo3dU40eFNLUnhHOWZEMU03SmxVNGxIbFh0Z2RkN3dIQ0pTaVBD?=
- =?utf-8?B?UUY3SXNkbjF4VzB4U3Fuc3k2cEVYbWpRRmlTU3d2TXE3WHoxbk84NmdvWkZE?=
- =?utf-8?B?RFp6YVZYWGg1N1lINWJPWkJ2N1h3SU5za3pDRmVYcmcxSEZwTndLWVlyd2Ev?=
- =?utf-8?B?T0lkV25sa2FqWUVGS1JtMEx5c05tVElIYk0rNWRFSXQ0emowWWJ2M2FrQ3dN?=
- =?utf-8?B?UmJtRUZ0Z2NmdWNneWVKTjhta2hQNFM1U0xTeVZvVk5XWVl3ZlFkSEhlQ01X?=
- =?utf-8?B?T2t1MW5SL1BqeGR4VFBiK215OU5DbnRZQi9hbVlGeDlOaUl3dWwwRm8yS0h2?=
- =?utf-8?B?Mjc3RjAzaFk0QmlUWjNxQWk3UnhNeUh1eFBrdU93MWxLWHNhQW9INUhFRFEr?=
- =?utf-8?B?L0RNbXp1TE8rRlJSUWQrSjNRcGVvTlNmR1B3RXR3Zjk2NCtocnZ1bVNVQ21I?=
- =?utf-8?B?OFo5MXJWQ1lMbnI5djJMb1AvdGcwZUxGZktuOUVpaFZpWHpTSld1eUJwcXdB?=
- =?utf-8?B?NyttcVlUTmRrY0d6d0JXRDcxV1hMcU1BZk9EOGNGSEFGc1NmNlFsdWp4Y2sy?=
- =?utf-8?B?N2dGcHJtMk1ERUJyUWg0ZjkwZktMSVFXYmMrQjhFNVE1MmplYjdpK0tFMkZX?=
- =?utf-8?B?NXRkOUx1TG5aSzQ0SXhVYjg2ZVdXaVBwc1pBRHRTM1lpZ2Y4am00TVdsWkxm?=
- =?utf-8?B?aTAzUlREdWgwYmFQcS9NcHM3LytiRzNwMWJqMXdacHNXZWx6TFRTZzM5NnJD?=
- =?utf-8?B?VEF1N1hnN1c5eEtpYnQ3Qm16cG5yWUt1bXF5ZFM0U1RvTS9qOU5MWlhvQW9E?=
- =?utf-8?B?aHN3TzVmV1BLUC9UYzljaFBWTG9YM1hCMXZtQ0xTOVM0VHYrSWZ2VGk2M3Fo?=
- =?utf-8?B?emhtanN5NVNBaVhETDlwNy9wNWQwMjhtUXRZMEw5VmJlVGhWMWpwYmZMMHoy?=
- =?utf-8?B?S1NYWmI5L0JySEpFT0E5bTdpdm9CSEh0NlFMVFdTcUpIeDh0OVdWb253dGpW?=
- =?utf-8?B?ZWM0TlZyQTRxYVZtQXA2QzE1UjRsUS90ZFJ0bldwSFNNZldpN1EyZVhCVURx?=
- =?utf-8?B?YksyM0UyQkozY2ZpbSsrSEpYTmZXZUNwRlRDYkRBY1FqdHNvMEZrZDJDNWNE?=
- =?utf-8?B?WWdibjJlTjUzWCtjbjV0bjdaZzF4RDNtVlBCYTNxWUprMGdDRlhPVDl4Tjlt?=
- =?utf-8?B?eWVkc0taa01rTFRlQzRyNVBBb05JR2hKM2pjTW9nS2NONmhCWWQ1MjF4bG04?=
- =?utf-8?B?c05vNGFINjgyaWhYZ0RBcHVsb2JLTFN5ZVpmTGpINm8vV0R2bE1XaFk0emF4?=
- =?utf-8?B?bHlYTEFLSkloVHY5VEtzdVErWmFSTURiMklSVW1WZzRPTklXbk9vNGhpUWZv?=
- =?utf-8?B?UjZQbzB0SWwzcElycXl2bXQ1WUhneUZBUzZ0dVIvK0l5YlIwclBpVEhvaFNH?=
- =?utf-8?B?UlZsdlVEMnA1WENhMlJOdWxvdE0veVNEVDVPYXp2alNPN0tiRXAzMDhIdTlS?=
- =?utf-8?B?K3p6QWZUb3VYOEZQL3Yrek5QSFpVNkkyZlJBdWROUk1HZGxYelZRS3pXb0xF?=
- =?utf-8?B?VjRERFZUalFVbmQ5aTVSbWFyOThoLzIyZkN0dEZIQVZoZlFmdGxZanRYZUV4?=
- =?utf-8?B?d2FmNlhnZmFTQlpEYVhYOXF6akpGdmV1S25MTlFDMFhxWkpJSFZVQnJnbDBK?=
- =?utf-8?Q?EwwHteUMLu0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NjRzRCtTREVkN1IrTDNLOFpMRHNMVXd5blNZWTB4T2dGZ1NLMFRqYlpxTzdn?=
- =?utf-8?B?T1ZZODRLakx4enZFWmkvWWlZcEFBVi9CSTNrS056OUxndjFJSGJCRDZmRHVP?=
- =?utf-8?B?WXR4dUEydm5JYk1aVW9YRXo4d01lM2hIUVNYSGRpbmNScHBMM0xsd0kwZllE?=
- =?utf-8?B?R2o5MEh4cDBaMFhBYnJIWFhQLzJWYmZHT2FLYm1zZ0syR0xyOTNWQ1diS2E5?=
- =?utf-8?B?dEVmTHR1cWpMVEZoWVZESXNNQ21WMCt1bjRNSFpDK09NLzJRVjJqYmRUQUtG?=
- =?utf-8?B?Y3F0V0pXNjVJQWFxeGE3MGtFamtOaGhlMm1FZUMzWnNQZUdHdE5qczQ2NEdN?=
- =?utf-8?B?d1Q2aWZBL0wrYU5ZeXQ4ODJYMi85UHE5MUZrODg3UXlNRHk4cmEwOUpmQ3lk?=
- =?utf-8?B?UnpzenVrK1FuQ1BHNHc1SzhydWhzcER5N3dXT3pEdWNqTG5RamFqR29VdGpQ?=
- =?utf-8?B?VlBhTnBTWHJzcktzdDE1aHVDRGV1Qm1aeHl6dDlBbUtWZjFNWGw2NUU5T3R0?=
- =?utf-8?B?aVBqYk9vMGNXL2sxUmtOSndpYVpvSjBNNGI1OER0QkhRL3VlZ2d5bXlrNlZC?=
- =?utf-8?B?NzlHcDhBT3RZL3RkaTU3Q2NLcXVGanRLWXNTdFhGN2VuK09pVnRyOTNHSllk?=
- =?utf-8?B?eWNxV2Z2SURLRmJ1ZWlzZm1Hb3VlTldZM251UlZMZW1YMlp4cVRaVzVRSHNa?=
- =?utf-8?B?eXZzRTNRMW9VNCs1ZXllNVN4Ni81OG54T0NWVDN1MmlkWkJmR1k5TmVtRlVM?=
- =?utf-8?B?cnZDT25JU1hYcHE1VW51NytqeVNkU3RRRlNFUkRkVUtaVCs5NVZVbzBNVGlT?=
- =?utf-8?B?VGtRYmxSZ09wUEpVb1lBWW53K1hDdVJiUlhzRXlxcDRqNnZJcm0vMzZmc3kr?=
- =?utf-8?B?MGRSY29yaEFSdlEzdlVUaTRudzYrcHIzcmYvQmZrZlhZQTZpdm9MSXZ2WGIr?=
- =?utf-8?B?eHQzL283bFdjdTdOVWNEOWRIaFlsUGRYc3hsNlZqTDNjN3FVbFltcE1GQnMy?=
- =?utf-8?B?VkxocW9JTzREdFdtNTk3WnlTT1pHNWM1RXh0MElnTUxOOEErVFNSRy9JTkFF?=
- =?utf-8?B?bng4OHdJL1R1UFovS3laUWRSMThlZGl5SUNOMVdQdUZKYWltMldHUDFraVpF?=
- =?utf-8?B?MzdiWnZOMUt2ZC9Dc1lHTzhHVTZ3dDVjM2g4WjlTV1pGREdveWZLRlBmSTlH?=
- =?utf-8?B?VzJQZ1FxZWhpQUlha1pWdVF6S2RMSDdKOWlXWTlxSHh5bG44bXQydzBCc0Vh?=
- =?utf-8?B?QXBNamNseEo0bmNjYUxpM0k4Y2V2K3BPL3VtdFMrNUR1MitlMUJ5OUcyanAy?=
- =?utf-8?B?WEpvUW1nQzFwaEtmNjJuTUxZendTOHRmeXo0V1BpQXBPWGlhOXRSOGhMc3pN?=
- =?utf-8?B?TG5wRDMyZWJWWW9YVUhXV3JsdTZRczJGaWRvK1ZYNnBVN3RYTzBodW1helVz?=
- =?utf-8?B?QVNNb1Z4bGxycWk5dXowZGViTys4QWxuUDEyOFVpU2tyVUJVUUkvZktoaGZu?=
- =?utf-8?B?NkdpRmZvL0lGSnV1UXpGWlpySitINzEyQitId0owWit4NTRDbnY2VTZDRmpr?=
- =?utf-8?B?bXJtZnU0K25Sbmc3bU9uTlczZTlGVE03Z3pMdmUyUWZIOGI4MUoyYzlzOC8x?=
- =?utf-8?B?ZXNmWEZadVA3aVROWkNXM0w3cjdCUmpFalYxaW1MVHlRNGZCVkVxMERmS1FR?=
- =?utf-8?B?UWljeEVHaWNqek5IWFhma3VEVkh6Z3E3YkxrTkV0QzlXekhUa2tQUUQ5TXc5?=
- =?utf-8?B?NlhKczNnbkNqOENyYnBjQXIyckJ6SlFKVUlJdmZpUU5kWjRYa2Z6clBkY1B1?=
- =?utf-8?B?c0ZNNGhTb2ZTdC9DUWo2QU1saVhiak1yb0FicWRPKzRCUVlxbmk5RlpsZmxs?=
- =?utf-8?B?bnU4OFk5VXM4cXFaaGNTZXRUQWtOUitwQVptYXpKQU94bGdBUjByVjVPL21E?=
- =?utf-8?B?ek42TEtleXd3ZGhzTFFvTmJ4L3RtQ0I2TThUMU9rTjZaclVaQ2Z6bEx4cmhX?=
- =?utf-8?B?K1Y1ekNqVlM4TTU4Y3dPYm1GSkVEMDJ3MWlKMHY1Y3ZYTC9GSHBFRkRha00v?=
- =?utf-8?B?cFdubGlBdzI2NmRNVnl6cW1CQjhhQWpwS3JPWlFweGZVYjYrQ2YvZUJGRzds?=
- =?utf-8?Q?hdg9HUKQ8BnUx29i5RaQGhmL9?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 405a471b-0933-4787-15bf-08dd80f50d82
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 16:53:34.0572
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xrO0FtllUvw3vYSn+a7iH596xx/mK3jHvc4j5slV/okQ47gLeicCyoF+6+1DNo4g0tuplXH2fyGTu6EEPs54cg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8005
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8609; i=kees@kernel.org; h=from:subject:message-id; bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlsFfkRtxzucF1bXNfZ/STmaC3/poZAvv5nTEZlv2dce +y1uLito5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCI95owMs+6sMnQuY/21ZUXp Rd3/ihzcx47ey1x4+d5ML991+a8yghkZ9imJL9dZ8n7zFNnXnHVFb7ecfH4l9xEz///YV7FNXz8 ZswAA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 4/21/2025 3:04 AM, Dhananjay Ugwekar wrote:
-> Initialize lower frequency limit to the "Requested CPU Min frequency"
-> BIOS option (if it is set) value as part of the driver->init()
-> callback. The BIOS specified value is passed by the PMFW as min_perf in
-> CPPC_REQ MSR.
-> 
-> To ensure that we don't mistake a stale min_perf value in CPPC_REQ
-> value as the "Requested CPU Min frequency" during a kexec wakeup, reset
-> the CPPC_REQ.min_perf value back to the BIOS specified one in the offline,
-> exit and suspend callbacks. amd_pstate_target() and
-> amd_pstate_epp_update_limit() which are invoked as part of the resume()
-> and online() callbacks will take care of restoring the CPPC_REQ back to
-> the latest sane values.
-> 
-> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-> ---
-> Changes in v2:
-> * Modify the condition in msr_init_perf to initialize perf.bios_min_perf
->    to 0 by default
-> * Use READ_ONCE to read cpudata->perf in exit, suspend and offline
->    callbacks
-> ---
->   drivers/cpufreq/amd-pstate.c | 67 +++++++++++++++++++++++++++++-------
->   drivers/cpufreq/amd-pstate.h |  2 ++
->   2 files changed, 56 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 02de51001eba..407fdd31fb0b 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -389,7 +389,8 @@ static inline int amd_pstate_cppc_enable(struct cpufreq_policy *policy)
->   static int msr_init_perf(struct amd_cpudata *cpudata)
->   {
->   	union perf_cached perf = READ_ONCE(cpudata->perf);
-> -	u64 cap1, numerator;
-> +	u64 cap1, numerator, cppc_req;
-> +	u8 min_perf;
->   
->   	int ret = rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
->   				     &cap1);
-> @@ -400,6 +401,22 @@ static int msr_init_perf(struct amd_cpudata *cpudata)
->   	if (ret)
->   		return ret;
->   
-> +	ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
-> +	if (ret)
-> +		return ret;
-> +
-> +	WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
-> +	min_perf = FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
-> +
-> +	/*
-> +	 * Clear out the min_perf part to check if the rest of the MSR is 0, if yes, this is an
-> +	 * indication that the min_perf value is the one specified through the BIOS option
-> +	 */
-> +	cppc_req &= ~(AMD_CPPC_MIN_PERF_MASK);
-> +
-> +	if (!cppc_req)
-> +		perf.bios_min_perf = min_perf;
-> +
->   	perf.highest_perf = numerator;
->   	perf.max_limit_perf = numerator;
->   	perf.min_limit_perf = FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1);
-> @@ -580,20 +597,26 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
->   {
->   	/*
->   	 * Initialize lower frequency limit (i.e.policy->min) with
-> -	 * lowest_nonlinear_frequency which is the most energy efficient
-> -	 * frequency. Override the initial value set by cpufreq core and
-> -	 * amd-pstate qos_requests.
-> +	 * lowest_nonlinear_frequency or the min frequency (if) specified in BIOS,
-> +	 * Override the initial value set by cpufreq core and amd-pstate qos_requests.
->   	 */
->   	if (policy_data->min == FREQ_QOS_MIN_DEFAULT_VALUE) {
->   		struct cpufreq_policy *policy __free(put_cpufreq_policy) =
->   					      cpufreq_cpu_get(policy_data->cpu);
->   		struct amd_cpudata *cpudata;
-> +		union perf_cached perf;
->   
->   		if (!policy)
->   			return -EINVAL;
->   
->   		cpudata = policy->driver_data;
-> -		policy_data->min = cpudata->lowest_nonlinear_freq;
-> +		perf = READ_ONCE(cpudata->perf);
-> +
-> +		if (perf.bios_min_perf)
-> +			policy_data->min = perf_to_freq(perf, cpudata->nominal_freq,
-> +							perf.bios_min_perf);
-> +		else
-> +			policy_data->min = cpudata->lowest_nonlinear_freq;
->   	}
->   
->   	cpufreq_verify_within_cpu_limits(policy_data);
-> @@ -1040,6 +1063,10 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->   static void amd_pstate_cpu_exit(struct cpufreq_policy *policy)
->   {
->   	struct amd_cpudata *cpudata = policy->driver_data;
-> +	union perf_cached perf = READ_ONCE(cpudata->perf);
-> +
-> +	/* Reset CPPC_REQ MSR to the BIOS value */
-> +	amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->   
->   	freq_qos_remove_request(&cpudata->req[1]);
->   	freq_qos_remove_request(&cpudata->req[0]);
-> @@ -1428,7 +1455,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->   	struct amd_cpudata *cpudata;
->   	union perf_cached perf;
->   	struct device *dev;
-> -	u64 value;
->   	int ret;
->   
->   	/*
-> @@ -1493,12 +1519,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->   		cpudata->epp_default = AMD_CPPC_EPP_BALANCE_PERFORMANCE;
->   	}
->   
-> -	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
-> -		ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
-> -		if (ret)
-> -			return ret;
-> -		WRITE_ONCE(cpudata->cppc_req_cached, value);
-> -	}
->   	ret = amd_pstate_set_epp(policy, cpudata->epp_default);
->   	if (ret)
->   		return ret;
-> @@ -1518,6 +1538,11 @@ static void amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)
->   	struct amd_cpudata *cpudata = policy->driver_data;
->   
->   	if (cpudata) {
-> +		union perf_cached perf = READ_ONCE(cpudata->perf);
-> +
-> +		/* Reset CPPC_REQ MSR to the BIOS value */
-> +		amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
-> +
->   		kfree(cpudata);
->   		policy->driver_data = NULL;
->   	}
-> @@ -1575,12 +1600,28 @@ static int amd_pstate_cpu_online(struct cpufreq_policy *policy)
->   
->   static int amd_pstate_cpu_offline(struct cpufreq_policy *policy)
->   {
-> -	return 0;
-> +	struct amd_cpudata *cpudata = policy->driver_data;
-> +	union perf_cached perf = READ_ONCE(cpudata->perf);
-> +
-> +	/*
-> +	 * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
-> +	 * min_perf value across kexec reboots. If this CPU is just onlined normally after this, the
-> +	 * limits, epp and desired perf will get reset to the cached values in cpudata struct
-> +	 */
-> +	return amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->   }
->   
->   static int amd_pstate_suspend(struct cpufreq_policy *policy)
->   {
->   	struct amd_cpudata *cpudata = policy->driver_data;
-> +	union perf_cached perf = READ_ONCE(cpudata->perf);
-> +
-> +	/*
-> +	 * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
-> +	 * min_perf value across kexec reboots. If this CPU is just resumed back without kexec,
-> +	 * the limits, epp and desired perf will get reset to the cached values in cpudata struct
-> +	 */
-> +	amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
+Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+but do not want to be forced into having kernel addresses exposed due
+to the implicit "no_hash_pointers" boot param setting.[1]
 
-In EPP mode this appears it would be OK because the perf value should 
-get reset in the resume for amd_pstate_epp_update_limit() but in passive 
-mode won't this never get reset on resume from suspend?
+Introduce the "hash_pointers" boot param, which defaults to "auto"
+(the current behavior), but also includes "always" (forcing on hashing
+even when "slab_debug=..." is defined), and "never". The existing
+"no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
 
->   
->   	/* invalidate to ensure it's rewritten during resume */
->   	cpudata->cppc_req_cached = 0;
-> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
-> index fbe1c08d3f06..2f7ae364d331 100644
-> --- a/drivers/cpufreq/amd-pstate.h
-> +++ b/drivers/cpufreq/amd-pstate.h
-> @@ -30,6 +30,7 @@
->    * @lowest_perf: the absolute lowest performance level of the processor
->    * @min_limit_perf: Cached value of the performance corresponding to policy->min
->    * @max_limit_perf: Cached value of the performance corresponding to policy->max
-> + * @bios_min_perf: Cached perf value corresponding to the "Requested CPU Min Frequency" BIOS option
->    */
->   union perf_cached {
->   	struct {
-> @@ -39,6 +40,7 @@ union perf_cached {
->   		u8	lowest_perf;
->   		u8	min_limit_perf;
->   		u8	max_limit_perf;
-> +		u8	bios_min_perf;
->   	};
->   	u64	val;
->   };
+This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+
+Link: https://github.com/KSPP/linux/issues/368 [1]
+Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
+Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Rientjes <rientjes@google.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+Acked-by: Rafael Aquini <raquini@redhat.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ v3: add docs about implicit "no_hash_pointers" when using "slab_debug" (harry.yoo)
+ v2: https://lore.kernel.org/all/20250415170232.it.467-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20250410174428.work.488-kees@kernel.org/
+---
+ .../admin-guide/kernel-parameters.txt         | 38 ++++++++----
+ include/linux/sprintf.h                       |  2 +-
+ lib/vsprintf.c                                | 61 +++++++++++++++++--
+ mm/slub.c                                     |  5 +-
+ 4 files changed, 86 insertions(+), 20 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9fd26b95b34..cb12531b2100 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1795,6 +1795,27 @@
+ 			backtraces on all cpus.
+ 			Format: 0 | 1
+ 
++	hash_pointers=
++			[KNL,EARLY]
++			By default, when pointers are printed to the console
++			or buffers via the %p format string, that pointer is
++			"hashed", i.e. obscured by hashing the pointer value.
++			This is a security feature that hides actual kernel
++			addresses from unprivileged users, but it also makes
++			debugging the kernel more difficult since unequal
++			pointers can no longer be compared. The choices are:
++			Format: { auto | always | never }
++			Default: auto
++
++			auto   - Hash pointers unless slab_debug is enabled.
++			always - Always hash pointers (even if slab_debug is
++				 enabled).
++			never  - Never hash pointers. This option should only
++				 be specified when debugging the kernel. Do
++				 not use on production kernels. The boot
++				 param "no_hash_pointers" is an alias for
++				 this mode.
++
+ 	hashdist=	[KNL,NUMA] Large hashes allocated during boot
+ 			are distributed across NUMA nodes.  Defaults on
+ 			for 64-bit NUMA, off otherwise.
+@@ -4117,18 +4138,7 @@
+ 
+ 	no_hash_pointers
+ 			[KNL,EARLY]
+-			Force pointers printed to the console or buffers to be
+-			unhashed.  By default, when a pointer is printed via %p
+-			format string, that pointer is "hashed", i.e. obscured
+-			by hashing the pointer value.  This is a security feature
+-			that hides actual kernel addresses from unprivileged
+-			users, but it also makes debugging the kernel more
+-			difficult since unequal pointers can no longer be
+-			compared.  However, if this command-line option is
+-			specified, then all normal pointers will have their true
+-			value printed. This option should only be specified when
+-			debugging the kernel.  Please do not use on production
+-			kernels.
++			Alias for "hash_pointers=never".
+ 
+ 	nohibernate	[HIBERNATION] Disable hibernation and resume.
+ 
+@@ -6478,6 +6488,10 @@
+ 			Documentation/mm/slub.rst.
+ 			(slub_debug legacy name also accepted for now)
+ 
++			Using this option implies the "no_hash_pointers"
++			option which can be undone by adding the
++			"hash_pointers=always" option.
++
+ 	slab_max_order= [MM]
+ 			Determines the maximum allowed order for slabs.
+ 			A high setting may cause OOMs due to memory
+diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
+index 51cab2def9ec..521bb2cd2648 100644
+--- a/include/linux/sprintf.h
++++ b/include/linux/sprintf.h
+@@ -22,7 +22,7 @@ __scanf(2, 0) int vsscanf(const char *, const char *, va_list);
+ 
+ /* These are for specific cases, do not use without real need */
+ extern bool no_hash_pointers;
+-int no_hash_pointers_enable(char *str);
++void hash_pointers_finalize(bool slub_debug);
+ 
+ /* Used for Rust formatting ('%pA') */
+ char *rust_fmt_argument(char *buf, char *end, const void *ptr);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 01699852f30c..22cbd75266ef 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -60,6 +60,20 @@
+ bool no_hash_pointers __ro_after_init;
+ EXPORT_SYMBOL_GPL(no_hash_pointers);
+ 
++/*
++ * Hashed pointers policy selected by "hash_pointers=..." boot param
++ *
++ * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
++ * `always` - Hashed pointers enabled unconditionally
++ * `never`  - Hashed pointers disabled unconditionally
++ */
++enum hash_pointers_policy {
++	HASH_PTR_AUTO = 0,
++	HASH_PTR_ALWAYS,
++	HASH_PTR_NEVER
++};
++static enum hash_pointers_policy hash_pointers_mode __initdata;
++
+ noinline
+ static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
+ {
+@@ -2271,12 +2285,23 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
+ 	return resource_string(buf, end, ptr, spec, fmt);
+ }
+ 
+-int __init no_hash_pointers_enable(char *str)
++void __init hash_pointers_finalize(bool slub_debug)
+ {
+-	if (no_hash_pointers)
+-		return 0;
++	switch (hash_pointers_mode) {
++	case HASH_PTR_ALWAYS:
++		no_hash_pointers = false;
++		break;
++	case HASH_PTR_NEVER:
++		no_hash_pointers = true;
++		break;
++	case HASH_PTR_AUTO:
++	default:
++		no_hash_pointers = slub_debug;
++		break;
++	}
+ 
+-	no_hash_pointers = true;
++	if (!no_hash_pointers)
++		return;
+ 
+ 	pr_warn("**********************************************************\n");
+ 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+@@ -2289,11 +2314,39 @@ int __init no_hash_pointers_enable(char *str)
+ 	pr_warn("** the kernel, report this immediately to your system   **\n");
+ 	pr_warn("** administrator!                                       **\n");
+ 	pr_warn("**                                                      **\n");
++	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
++	pr_warn("**                                                      **\n");
+ 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+ 	pr_warn("**********************************************************\n");
++}
++
++static int __init hash_pointers_mode_parse(char *str)
++{
++	if (!str) {
++		pr_warn("Hash pointers mode empty; falling back to auto.\n");
++		hash_pointers_mode = HASH_PTR_AUTO;
++	} else if (strncmp(str, "auto", 4) == 0)   {
++		pr_info("Hash pointers mode set to auto.\n");
++		hash_pointers_mode = HASH_PTR_AUTO;
++	} else if (strncmp(str, "never", 5) == 0) {
++		pr_info("Hash pointers mode set to never.\n");
++		hash_pointers_mode = HASH_PTR_NEVER;
++	} else if (strncmp(str, "always", 6) == 0) {
++		pr_info("Hash pointers mode set to always.\n");
++		hash_pointers_mode = HASH_PTR_ALWAYS;
++	} else {
++		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
++		hash_pointers_mode = HASH_PTR_AUTO;
++	}
+ 
+ 	return 0;
+ }
++early_param("hash_pointers", hash_pointers_mode_parse);
++
++static int __init no_hash_pointers_enable(char *str)
++{
++	return hash_pointers_mode_parse("never");
++}
+ early_param("no_hash_pointers", no_hash_pointers_enable);
+ 
+ /*
+diff --git a/mm/slub.c b/mm/slub.c
+index b46f87662e71..f3d61b330a76 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -6314,9 +6314,8 @@ void __init kmem_cache_init(void)
+ 	if (debug_guardpage_minorder())
+ 		slub_max_order = 0;
+ 
+-	/* Print slub debugging pointers without hashing */
+-	if (__slub_debug_enabled())
+-		no_hash_pointers_enable(NULL);
++	/* Inform pointer hashing choice about slub debugging state. */
++	hash_pointers_finalize(__slub_debug_enabled());
+ 
+ 	kmem_cache_node = &boot_kmem_cache_node;
+ 	kmem_cache = &boot_kmem_cache;
+-- 
+2.34.1
 
