@@ -1,89 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB04C85;
-	Mon, 21 Apr 2025 11:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F5A4C85
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236163; cv=none; b=iBBYdK158KsxYVaWC5+J/flMQIuMMg5s6DN6pSfMraCpM7Zrf5P2cwoHaRbQvN4BZw8UqS7ogUY82EWKT/CHqYTlNHZdVjqn9V/2eBFHvh3NNwZqDUdb38TvsMd7/e2c2FciYNTzievgTfxblBetgDk4FOHoaMHQdo+z64IVO+U=
+	t=1745236237; cv=none; b=DDlXk8Z0rAOum127qM+mjEQAWc3VwQ+Plmfg0ZEIZj5HwiCHea94YM69jKGII5FBp4QvYIBusqf4Qsz2ph20h836XP122X80Pu2S2RwoBxxpHCLxxbbmSLyDwHCZwoTKim3mQAOoAh1gMEVN2lHZAhbv96kXIDsv4KaJih0Bf6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236163; c=relaxed/simple;
-	bh=o5jpVjh6M95IwHo0cOnF2XWauP9xFFq5pREq0Q+F/3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H5yzSjsVBxkcOe/JPlhK/SowrPJSiK/8dhmghVLn9iSV7ebJDC4godA1Hm6F4aEtMwef57MgMVPFpbki4HVkKKkg1FZG4DM4ZDOb5AaEoWv7EMtBKwODcqrt0BWrZKp14GTyBEMMSc/cB0ksKKlZd7ViPrwzvQLBpQQ4Y7tnEBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzCnhf4N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745236237; c=relaxed/simple;
+	bh=MJovKVXEWX36rbT7ZlqVbpCnAH21xxf7j2V9N1Et5xY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h6l/dhH4uwQTF7ceyPB3rDEqNvhqz0kXVynBZqzEt0x+qQVa1pIZvqgIlz7Qi45fkB2Eg1WI0P+IAkAmlMs+ETUw+tQ2WH9HDWps1M/vmY6e0nT+yXJIBkPr3ksjeS59Owz/iQa7VerIjxzkyj+ylWtnSfORsD7Lx4VNCT0Us+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VX6xYAH+; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzCnhf4N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3596CC4CEE4;
-	Mon, 21 Apr 2025 11:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745236163;
-	bh=o5jpVjh6M95IwHo0cOnF2XWauP9xFFq5pREq0Q+F/3A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qzCnhf4N18HXKHEhnXVoW+xMCdKcTNPeSyNHMvpR30Cc7dwhkvm1qU8PNOpbrVPAR
-	 QG9yrLEIWKOHvFI1oLf9v0CDmaAO5MK6r+qv1B7Fp+7WIhldS4+NsBd4PGKIpCQbnB
-	 b1zkBpSC+NbjN28EnKsco8pGvj0tD/xWh9JK+yYA1iXwbxS0uuizj+u+oqy0Eiw65/
-	 uhVGDWUi+TqscR/FMGM6+qfcFaQtKSS/dYRutkjT8LqSDW+R79arEMcGWkNJ17Nd/W
-	 wfMW0xFl92ZX96Zt4qbBKNeRWW1IrPERydIOhgQiv69+fkt6cReI+orXE/Efx0ytAi
-	 dCDp9ODSSPLag==
-Date: Mon, 21 Apr 2025 12:49:15 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
-Message-ID: <20250421124915.32a18d36@jic23-huawei>
-In-Reply-To: <20250419144520.815198-1-gshahrouzi@gmail.com>
-References: <20250419144520.815198-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VX6xYAH+"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAexPj011252;
+	Mon, 21 Apr 2025 11:50:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=hN4zG5R3enJX2OMcr2mXN7QUjbNu2A
+	CnQiD/BEJAzII=; b=VX6xYAH+Jzu9wLK4IrfN49dE3O65++WWAPQ8E3fvjKXOcj
+	zlwzwBfEb03BKLkQmnHr3yfjR86J1Zcqo4sfG0lgpApwnvcCH41i09YU0WrAA9QV
+	cWFUSqBw1aAZOLGQ8HIkiNPY5wX+mIdaxVOUfSJg9B9X2rrMyubr3OowzDBa1BDt
+	4xcXslu7U78XOtQa/QqclV88ADHV9qOpdiDqZD2gUrvjACVO5VQljtb0jaKTc+RZ
+	1RUWrzXXeNW0+FzxqpvTI0rZfvuIXRijdvWejXw1zINbzF1Brm0fceqxg9MuaDQI
+	HdquxnP+GIaY4nQGenJhEkOzuq3O+v6srD3E+tVQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465mfs880w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 11:50:18 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53LBoILU028139;
+	Mon, 21 Apr 2025 11:50:18 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465mfs880u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 11:50:18 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LALK3n012355;
+	Mon, 21 Apr 2025 11:50:17 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 464p5sxc8x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 11:50:17 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LBoDmu50266594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 11:50:13 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A2F8720043;
+	Mon, 21 Apr 2025 11:50:13 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 08B3220040;
+	Mon, 21 Apr 2025 11:50:12 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 21 Apr 2025 11:50:11 +0000 (GMT)
+Date: Mon, 21 Apr 2025 17:20:08 +0530
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: Vaibhav Jain <vaibhav@linux.ibm.com>, maddy@linux.ibm.com,
+        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+        naveen@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/pseries/msi: Avoid reading PCI device registers
+ in reduced power states
+Message-ID: <pjuk4ckhtlpu2m6qykrpv6jw4eafymnarrpun4psn6yptogj2b@5ird52o5ml4p>
+References: <20250305090237.294633-1-gautam@linux.ibm.com>
+ <87tt81tr8t.fsf@vajain21.in.ibm.com>
+ <0baf5da4-3cf9-47d0-a4da-68e50a0fce80@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0baf5da4-3cf9-47d0-a4da-68e50a0fce80@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=cM/gskeN c=1 sm=1 tr=0 ts=680630fa cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=_u-ZW7uzS0qod4lKHOEA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: OH3feazQ_ztt-DO_Eg5vcSjhhLEhr4IB
+X-Proofpoint-ORIG-GUID: WZAgA8JbT8PHj0Cgwy8SKe-O1vl13pft
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_05,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=486 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210089
 
-On Sat, 19 Apr 2025 10:45:20 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+Hi Venkat,
 
-> The inclinometer channels were previously defined with 14 realbits.
-> However, the ADIS16201 datasheet states the resolution for these output
-> channels is 12 bits (Page 14, text description; Page 15, table 7).
-> 
-> Correct the realbits value to 12 to accurately reflect the hardware.
-> 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
-> Omit fixes tag because it targets driver before it moved out of staging.
+Thanks for the report. I looked into this and found that the new warning
+you reported can be observed even on current distro kernels, and is not
+caused by the patch I've posted.
 
-Why does that matter?  Should have a fixes tag.  Whether we chose
-to backport the fix is a different matter.
+I was able to observe the same warning with fedora distro kernel 6.13.7-200.fc41
 
-Otherwise looks fine to me. Reply to this thread with a fixes tag
-and I can pick it up without needing a v2.
+[   70.294478] icp_hv_set_xirr: bad return code eoi xirr=0x50a0002 returned -4
+[   70.294521] ------------[ cut here ]------------
+[   70.294546] WARNING: CPU: 7 PID: 54 at arch/powerpc/sysdev/xics/icp-hv.c:55 icp_hv_eoi+0xf8/0x120
+[   70.294599] Modules linked in: xt_conntrack xt_MASQUERADE bridge stp llc ip6table_nat ip6table_filter ip6_tables xt_set ip_set iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_addrtype iptable_filter ip_tables kvm rpcrdma rdma_cm iw_cm ib_cm ib_core bonding overlay rfkill binfmt_misc vmx_crypto pseries_rng nfsd auth_rpcgss nfs_acl loop dm_multipath lockd grace nfs_localio nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vsock xfs nvme_tcp nvme_fabrics nvme_keyring nvme_core nvme_auth ibmvscsi ibmveth scsi_transport_srp crct10dif_vpmsum crc32c_vpmsum pseries_wdt sunrpc be2iscsi bnx2i cnic uio cxgb4i cxgb4 tls cxgb3i cxgb3 mdio libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse aes_gcm_p10_crypto crypto_simd cryptd
+[   70.295015] CPU: 7 UID: 0 PID: 54 Comm: ksoftirqd/7 Kdump: loaded Not tainted 6.13.7-200.fc41.ppc64le #1
+[   70.295064] Hardware name: IBM,9080-HEX POWER8 (architected) 0x800200 0xf000004 of:IBM,FW1060.00 (NH1060_022) hv:phyp pSeries
+[   70.295120] NIP:  c000000000197c98 LR: c000000000197c94 CTR: 0000000000000000
+[   70.295157] REGS: c000000007dd3a20 TRAP: 0700   Not tainted  (6.13.7-200.fc41.ppc64le)
+[   70.295197] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24004202  XER: 00000001
+[   70.295247] CFAR: c00000000032731c IRQMASK: 1
+[   70.295247] GPR00: c000000000197c94 c000000007dd3cc0 c0000000024daa00 000000000000003f
+[   70.295247] GPR04: 00000000ffff7fff 00000000ffff7fff c000000007dd3ae8 00000007ec8e0000
+[   70.295247] GPR08: 0000000000000027 0000000000000000 0000000000000000 0000000000004000
+[   70.295247] GPR12: 0000000000000000 c00000000ffc6f00 c000000000287ef8 c000000004a51080
+[   70.295247] GPR16: 0000000000000000 0000000004208040 c000000003d62c80 c0000000031faf80
+[   70.295247] GPR20: 00000000ffffa63b 000000000000000a c0000000031e6990 c000000000335f10
+[   70.295247] GPR24: 0000000000000001 0000000000000000 0000000000000006 0000000000000002
+[   70.295247] GPR28: c0000007efac68b8 0000000000000000 00000000050a0002 00000000050a0002
+[   70.295603] NIP [c000000000197c98] icp_hv_eoi+0xf8/0x120
+[   70.295633] LR [c000000000197c94] icp_hv_eoi+0xf4/0x120
+[   70.295661] Call Trace:
+[   70.295675] [c000000007dd3cc0] [c000000000197c94] icp_hv_eoi+0xf4/0x120 (unreliable)
+[   70.295717] [c000000007dd3d40] [c000000000337a5c] handle_fasteoi_irq+0x16c/0x350
+[   70.295757] [c000000007dd3d70] [c000000000335fd0] resend_irqs+0xc0/0x190
+[   70.295793] [c000000007dd3db0] [c000000000254064] tasklet_action_common+0x154/0x440
+[   70.295833] [c000000007dd3e20] [c000000000253458] handle_softirqs+0x168/0x4f0
+[   70.295871] [c000000007dd3f10] [c000000000253848] run_ksoftirqd+0x68/0xb0
+[   70.295912] [c000000007dd3f30] [c000000000292f20] smpboot_thread_fn+0x1d0/0x240
+[   70.295951] [c000000007dd3f90] [c000000000288020] kthread+0x130/0x140
+[   70.295984] [c000000007dd3fe0] [c00000000000ded8] start_kernel_thread+0x14/0x18
+[   70.296022] Code: 48c84251 60000000 e9210068 4bffff98 7c661b78 3c82ff31 3c62ff7d 7fc5f378 38842b40 38639bf8 4818f649 60000000 <0fe00000> 38210080 7be34622 e8010010
+[   70.296104] ---[ end trace 0000000000000000 ]---
+[   70.297273] PM: resume devices took 0.000 seconds
+[   70.297415] OOM killer enabled.
+[   70.297433] Restarting tasks ... done.
+[   70.298959] random: crng reseeded on system resumption
+[   70.299106] PM: suspend exit
 
 
-> ---
->  drivers/iio/accel/adis16201.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
-> index 982b33f6eccac..dcc8d9f2ee0f1 100644
-> --- a/drivers/iio/accel/adis16201.c
-> +++ b/drivers/iio/accel/adis16201.c
-> @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
->  			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
->  	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
->  	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
-> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
->  	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
-> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
->  	IIO_CHAN_SOFT_TIMESTAMP(7)
->  };
->  
+This can be tracked as a separate bug, as it is unrelated to the patch.
 
+Thanks,
+Gautam
