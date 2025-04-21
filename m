@@ -1,243 +1,137 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8542566DF;
-	Mon, 21 Apr 2025 02:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD97256C7B;
+	Mon, 21 Apr 2025 02:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745203984; cv=none; b=cAEV1GdUeAGEwFTy3y46bO/baKJLIc6PhFWAv27eIDJvTGXpiGrMNRImOfUQN7AB/LhQq8W82cBPtlimJNNOy3BYWlparje2/65ZqpYDcw0V7v7XBiDg/vtI1Fqn6RzegvNWxflRhdNPFEySrvSClEfJp8INBEdi/kmd2bmSa94=
+	t=1745204005; cv=none; b=dXvQ70Gys248267kr+xknBu9KxpN7MatGu8nOQO9GBavWDKgvaxDJStHFIXrSvbG2XJLJhfYGmtxvhN80svg4bv2hc6fEm6zUU+Pq3dM9sKvF2Hnohi2UhUvcvoxXuFoa9CubpnFPIj6SwHpZNef4WiGAzQG7UCARr6qXjpN3Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745203984; c=relaxed/simple;
-	bh=76YqBZtheMprSrRFH1+QUbuhvLXmGgaCoHb4ztvhMlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DmxQ3YleTJQc8d8FPx24oaFIBkij1NOd8yz6yKc7wxSBmI6BM5wPJA4ZhDhCe/UI9H+6cjGcVGIMMvK7B4llpFdVwoJAGWTgunMwrICosqQARNNzQjSnORN+HwHgZft6qZwueIBpRdybH6uKwrhKOqvPFGW+z2Yi7nXSxdBPEs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZgqZr2Nv0zHrPM;
-	Mon, 21 Apr 2025 10:49:24 +0800 (CST)
-Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E6AD6180080;
-	Mon, 21 Apr 2025 10:52:52 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 21 Apr 2025 10:52:52 +0800
-Message-ID: <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
-Date: Mon, 21 Apr 2025 10:52:51 +0800
+	s=arc-20240116; t=1745204005; c=relaxed/simple;
+	bh=ohoYy81jPOBHi3Kl/yJ0GpN9kR2CeXImpedVkpQqUl8=;
+	h=To:From:Cc:Subject:Message-ID:Date:MIME-Version:Content-Type; b=RQN7Gcc9PEhOteCZXWnDmTdCmhIiPMAzLezINQ1tcA6GPf/YHnnNWOpwMA8aB9n+KLVbI5jVxVfjDqceqHZqgBEUC9n9F+STQyi7+xdT65cxID4De/s446JQpek7aYF+8Au7JYm1gtEew3mWI8jhH7p1LG8TB71pygfAgyXgq2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.62])
+	by gateway (Coremail) with SMTP id _____8CxieAaswVoDy_DAA--.16802S3;
+	Mon, 21 Apr 2025 10:53:15 +0800 (CST)
+Received: from [10.20.42.62] (unknown [10.20.42.62])
+	by front1 (Coremail) with SMTP id qMiowMDx_MQUswVoS6yNAA--.21709S3;
+	Mon, 21 Apr 2025 10:53:13 +0800 (CST)
+To: yangtiezhu <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+From: bibo mao <maobibo@loongson.cn>
+Cc: bpf@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: BUG: bpf test case fails to run on LoongArch
+Message-ID: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
+Date: Mon, 21 Apr 2025 10:52:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: CVE-2025-22077: smb: client: Fix netns refcount imbalance causing
- leaks and use-after-free
-To: <cve@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cve-announce@vger.kernel.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <2025041612-CVE-2025-22077-d534@gregkh>
-From: Wang Zhaolong <wangzhaolong1@huawei.com>
-In-Reply-To: <2025041612-CVE-2025-22077-d534@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg500010.china.huawei.com (7.202.181.71)
+X-CM-TRANSID:qMiowMDx_MQUswVoS6yNAA--.21709S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAFyrKFyUJry3tFW8KF1fXwc_yoW5tr4xpr
+	y3Jr1UGr4kJr17Ar1UJr1UJr15J3ZrAF18Jr1UJryUCr15Gr1UJr1UtrW7JryUJr4UJr17
+	Jw1Dtr1Utr1DGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
+	sqAUUUUU=
 
-Dear CVE Community,
+Hi,
 
-As the author of commit 4e7f1644f2ac ("smb: client: Fix netns refcount imbalance
-causing leaks and use-after-free"), I want to clarify some confusion around the
-proper fixes for these issues:
+When I run built-in bpf test case with lib/test_bpf.c,
+it reports such error, I do not know whether it is a problem.
 
-1. Commit 4e7f1644f2ac is currently associated with CVE-2025-22077. However, this
-patch was merely attempting to fix issues introduced by commit e9f2517a3e18 ("smb:
-client: fix TCP timers deadlock after rmmod").
+  test_bpf: #843 ALU32_RSH_X: all shift values jited:1 239 PASS
+  test_bpf: #844 ALU32_ARSH_X: all shift values jited:1 237 PASS
+  test_bpf: #845 ALU64_LSH_X: all shift values with the same register
+  ------------[ cut here ]------------
+  kernel BUG at lib/test_bpf.c:794!
+  Oops - BUG[#1]:
+  CPU: 15 UID: 0 PID: 2323 Comm: insmod Not tainted 6.15.0-rc2+ #297 
+PREEMPT(full)
+  Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
+  pc ffff80000272c0e0 ra ffff80000272bf90 tp 900000013defc000 sp 
+900000013deffb40
+  a0 0000000000000000 a1 900000013deffb80 a2 900000010aa4fbf8 a3 
+900000013deffb88
+  a4 900000013deffb80 a5 900000010aa4fbf0 a6 0000000000000218 a7 
+8000000000000000
+  t0 00000000000000c0 t1 0000000000000c10 t2 00000000000000c0 t3 
+0000000000000000
+  t4 0000000000000095 t5 0000000000000c08 t6 00000000000000c0 t7 
+00000001000000b7
+  t8 0000000000000183 u0 0000000000010000 s9 0000000000000040 s0 
+0000000000000c00
+  s1 0000000000000181 s2 0000000000000000 s3 0000000000000040 s4 
+000000000001211d
+  s5 0000000000000218 s6 0000000000000011 s7 00000000000001b7 s8 
+900000010aa4f000
+    ra: ffff80000272bf90 __bpf_fill_alu_shift_same_reg+0x118/0x298 
+[test_bpf]
+    ERA: ffff80000272c0e0 __bpf_fill_alu_shift_same_reg+0x268/0x298 
+[test_bpf]
+   CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
+   PRMD: 00000004 (PPLV0 +PIE -PWE)
+   EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
+   ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
+  ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
+   PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
+  Modules linked in: test_bpf(+) snd_seq_dummy snd_seq snd_seq_device 
+rfkill vfat fat virtio_net virtio_gpu net_failover virtio_balloon 
+failover virtio_dma_buf efi_pstore virtio_scsi pstore dm_multipath fuse 
+nfnetlink efivarfs
+  Process insmod (pid: 2323, threadinfo=000000006d91be37, 
+task=00000000064df522)
+  Stack : 9000000002018bc0 0000000000000060 000000000000006f 
+000000000000006c
+          0000000000000183 ffff800002ba1c40 8000000000000000 
+0000000000000218
+          8000000000000000 545a35de324f71ab 900000013deffbb8 
+ffff800002808080
+          9000000002018bc0 0000000000000000 0000000000000000 
+000000000000034d
+          0000000000000000 ffff80001d438000 ffff800002ba0b08 
+ffff800002ba2c40
+          000000000000034d ffff8000027807e8 0000000000000001 
+0000000000000341
+          ffff800002808100 0000000000000341 00000000000003e8 
+0000000000000001
+          ffff800002ba1b09 ffff800002ba1bb4 9000000002c30140 
+9000000002b240b8
+          0000000000000000 0000000000000000 ffff80001d438000 
+0000000000000000
+          0000000000000000 545a35de324f71ab 0000000000000000 
+000000000000002f
+          ...
+  Call Trace:
+  [<ffff80000272c0e0>] __bpf_fill_alu_shift_same_reg+0x268/0x298 [test_bpf]
+  [<ffff8000027807e4>] test_bpf_init+0x39c/0x3bb8 [test_bpf]
+  [<9000000000240154>] do_one_initcall+0x74/0x200
+  [<9000000000327764>] do_init_module+0x54/0x2a0
+  [<9000000000329ccc>] __do_sys_init_module+0x204/0x2a8
+  [<90000000015b17a0>] do_syscall+0xa0/0x188
+  [<90000000002413b8>] handle_syscall+0xb8/0x158
 
-2. As I've previously discussed with Greg Kroah-Hartman on the kernel mailing list[1],
-    commit e9f2517a3e18 (which was intended to address CVE-2024-54680):
-    - Failed to address the actual null pointer dereference in lockdep
-    - Introduced multiple serious issues:
-      - Socket leak vulnerability (bugzilla #219972)
-      - Network namespace refcount imbalance (bugzilla #219792)
+  Code: 03400000  03400000  03400000 <002a0001> 29c28076  29c26077 
+29c24078  29c1e07b  29c1c07c
 
-3. Our testing and analysis confirms that the original fix by Kuniyuki Iwashima,
-commit ef7134c7fc48 ("smb: client: Fix use-after-free of network namespace."), is
-actually the correct approach. This patch properly handles network namespace
-reference counting without introducing the problems that e9f2517a3e18 did.
-
-4. The proper resolution for these issues was ultimately commit 95d2b9f693ff
-("Revert 'smb: client: fix TCP timers deadlock after rmmod'"), which reverted
-the problematic patch. In the latest Linux mainline code, the problematic patch and
-my subsequent fix patch have been reverted.[2][3]
-
-Thank you for your attention to this matter. I'm happy to provide additional details if needed.
-
-[1] https://lore.kernel.org/all/2025040248-tummy-smilingly-4240@gregkh/
-[2] https://github.com/torvalds/linux/commit/c707193a17128fae2802d10cbad7239cc57f0c95
-[3] https://github.com/torvalds/linux/commit/4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
-
-Best regards,
-Wang Zhaolong
-
-> Description
-> ===========
-> 
-> In the Linux kernel, the following vulnerability has been resolved:
-> 
-> smb: client: Fix netns refcount imbalance causing leaks and use-after-free
-> 
-> Commit ef7134c7fc48 ("smb: client: Fix use-after-free of network
-> namespace.") attempted to fix a netns use-after-free issue by manually
-> adjusting reference counts via sk->sk_net_refcnt and sock_inuse_add().
-> 
-> However, a later commit e9f2517a3e18 ("smb: client: fix TCP timers deadlock
-> after rmmod") pointed out that the approach of manually setting
-> sk->sk_net_refcnt in the first commit was technically incorrect, as
-> sk->sk_net_refcnt should only be set for user sockets. It led to issues
-> like TCP timers not being cleared properly on close. The second commit
-> moved to a model of just holding an extra netns reference for
-> server->ssocket using get_net(), and dropping it when the server is torn
-> down.
-> 
-> But there remain some gaps in the get_net()/put_net() balancing added by
-> these commits. The incomplete reference handling in these fixes results
-> in two issues:
-> 
-> 1. Netns refcount leaks[1]
-> 
-> The problem process is as follows:
-> 
-> ```
-> mount.cifs                        cifsd
-> 
-> cifs_do_mount
->    cifs_mount
->      cifs_mount_get_session
->        cifs_get_tcp_session
->          get_net()  /* First get net. */
->          ip_connect
->            generic_ip_connect /* Try port 445 */
->              get_net()
->              ->connect() /* Failed */
->              put_net()
->            generic_ip_connect /* Try port 139 */
->              get_net() /* Missing matching put_net() for this get_net().*/
->        cifs_get_smb_ses
->          cifs_negotiate_protocol
->            smb2_negotiate
->              SMB2_negotiate
->                cifs_send_recv
->                  wait_for_response
->                                   cifs_demultiplex_thread
->                                     cifs_read_from_socket
->                                       cifs_readv_from_socket
->                                         cifs_reconnect
->                                           cifs_abort_connection
->                                             sock_release();
->                                             server->ssocket = NULL;
->                                             /* Missing put_net() here. */
->                                             generic_ip_connect
->                                               get_net()
->                                               ->connect() /* Failed */
->                                               put_net()
->                                               sock_release();
->                                               server->ssocket = NULL;
->            free_rsp_buf
->      ...
->                                     clean_demultiplex_info
->                                       /* It's only called once here. */
->                                       put_net()
-> ```
-> 
-> When cifs_reconnect() is triggered, the server->ssocket is released
-> without a corresponding put_net() for the reference acquired in
-> generic_ip_connect() before. it ends up calling generic_ip_connect()
-> again to retry get_net(). After that, server->ssocket is set to NULL
-> in the error path of generic_ip_connect(), and the net count cannot be
-> released in the final clean_demultiplex_info() function.
-> 
-> 2. Potential use-after-free
-> 
-> The current refcounting scheme can lead to a potential use-after-free issue
-> in the following scenario:
-> 
-> ```
->   cifs_do_mount
->     cifs_mount
->       cifs_mount_get_session
->         cifs_get_tcp_session
->           get_net()  /* First get net */
->             ip_connect
->               generic_ip_connect
->                 get_net()
->                 bind_socket
-> 	         kernel_bind /* failed */
->                 put_net()
->           /* after out_err_crypto_release label */
->           put_net()
->           /* after out_err label */
->           put_net()
-> ```
-> 
-> In the exception handling process where binding the socket fails, the
-> get_net() and put_net() calls are unbalanced, which may cause the
-> server->net reference count to drop to zero and be prematurely released.
-> 
-> To address both issues, this patch ties the netns reference counting to
-> the server->ssocket and server lifecycles. The extra reference is now
-> acquired when the server or socket is created, and released when the
-> socket is destroyed or the server is torn down.
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=219792
-> 
-> The Linux kernel CVE team has assigned CVE-2025-22077 to this issue.
-> 
-> 
-> Affected and fixed versions
-> ===========================
-> 
-> 	Issue introduced in 6.6.62 with commit e8c71494181153a134c96da28766a57bd1eac8cb and fixed in 6.6.87 with commit c6b6b8dcef4adf8ee4e439bb97e74106096c71b8
-> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.12.23 with commit 7d8dfc27d90d41627c0d6ada97ed0ab57b3dae25
-> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.13.11 with commit 961755d0055e0e96d1849cc0425da966c8a64e53
-> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.14.2 with commit 476617a4ca0123f0df677d547a82a110c27c8c74
-> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.15-rc1 with commit 4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
-> 	Issue introduced in 6.11.9 with commit c7f9282fc27fc36dbaffc8527c723de264a132f8
-> 	Issue introduced in 6.6.68 with commit 906807c734ed219dcb2e7bbfde5c4168ed72a3d0
-> 
-> Please see https://www.kernel.org for a full list of currently supported
-> kernel versions by the kernel community.
-> 
-> Unaffected versions might change over time as fixes are backported to
-> older supported kernel versions.  The official CVE entry at
-> 	https://cve.org/CVERecord/?id=CVE-2025-22077
-> will be updated if fixes are backported, please check that for the most
-> up to date information about this issue.
-> 
-> 
-> Affected files
-> ==============
-> 
-> The file(s) affected by this issue are:
-> 	fs/smb/client/connect.c
-> 
-> 
-> Mitigation
-> ==========
-> 
-> The Linux kernel CVE team recommends that you update to the latest
-> stable kernel version for this, and many other bugfixes.  Individual
-> changes are never tested alone, but rather are part of a larger kernel
-> release.  Cherry-picking individual commits is not recommended or
-> supported by the Linux kernel community at all.  If however, updating to
-> the latest release is impossible, the individual changes to resolve this
-> issue can be found at these commits:
-> 	https://git.kernel.org/stable/c/c6b6b8dcef4adf8ee4e439bb97e74106096c71b8
-> 	https://git.kernel.org/stable/c/7d8dfc27d90d41627c0d6ada97ed0ab57b3dae25
-> 	https://git.kernel.org/stable/c/961755d0055e0e96d1849cc0425da966c8a64e53
-> 	https://git.kernel.org/stable/c/476617a4ca0123f0df677d547a82a110c27c8c74
-> 	https://git.kernel.org/stable/c/4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
-> 
+  ---[ end trace 0000000000000000 ]---
 
