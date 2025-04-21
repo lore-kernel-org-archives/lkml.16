@@ -1,385 +1,222 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012012.outbound.protection.outlook.com [52.101.43.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C5D2F3E;
-	Mon, 21 Apr 2025 16:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745252860; cv=none; b=AotM3KF3ZNiHwAbOS6xiEpbhCnx7HW3lVbwbf0KgnuKJLENzStupEoSVvRhVbHpXczZPQqNppfeILYTIT6lwytO1v+Wg/S4e/EYEzUix9CqICsLPVRgi1S83k42P4eAK3znpqmuWP/wKeInV7A3Pe4KPggoLDXIDKE+X7PAkQWk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745252860; c=relaxed/simple;
-	bh=d29f1CbXH/K+cVH+CEkYm8rZ6C6Sgeo7I7Z1B49VYSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LBKZvHAlgJEB+BZTSSi7zjPYLECKk+Xy7x2hDNuIcI0oEkrTC13Gi8L/SEh6ks3kbok4U2hJsDTHFWYbxpJ0bs+KHwd/PQ2tEBan+7slQAuYB+2UCvHZZWqGelz9qjcOA0Z3pDjwQHXJcCtcTwS2HM92YqZAhSWB1TW1FFAbKqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfktyoxR; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A936D2F3E;
+	Mon, 21 Apr 2025 16:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745252990; cv=fail; b=JUdwk8koM2S6jkghjK/8jtzLrIDjxefjWIz8h9d/Pamm6QBFQ4lBd3E9MxMw48Mwxpqf+LzWlosUKMNNdDdnwvE2rkzd76uWkgMrrs+tZmcZ/dOHkEQC+2wCn4ag95dFK1SJB8cn70VgqXzOJCJpcoguRORFPbnpxKEV+vzWfqI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745252990; c=relaxed/simple;
+	bh=vleF8E3hielBKKGuv/nTkoLWxwzW113bRORfDOSHwww=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=iIZQcsBzpJkWxAoUgn+u5qm8QVYAaVC7WtR18cClwG3AcMNJcqFaCSZ34wJrhSriH8KpZE3SgQBXMDsikXDD8igiJwL1eqZyXgj1ERwxueMA0jgIsvuJA0IuxCiicp5iZ8hmPajK4uQ4vpQ8YRQ9A78mM8twKP2ldOo3V2AE3Ho=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=BGUQecGR; arc=fail smtp.client-ip=52.101.43.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfktyoxR"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5568355ffso334962385a.0;
-        Mon, 21 Apr 2025 09:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745252857; x=1745857657; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oLHYuRchr7pwRfQW4u682e1RScHliKjKzEJvvrT1wG0=;
-        b=mfktyoxRgLaOqRHlq2BACASEJ1xUe5ywvqnPYzuFFn1FnMHEjOqD5/YvfIhhSfdQgh
-         EH6J8Q6kUGua8Yi0umt3U9od2eq2Toly8z9aMfH0hkLPgQ5xX9tZpSTR5fARxWc/OodB
-         UfmTVCld07DUaHww36g1RxSCjrdj1zsVHhfUnMIj3LUaKNvyIOkiMbQMvRpemnmizQp+
-         z7d+PwQ8TvueikFfT8suy3YPIuCeCGccZ7gq+zOkPHrAsnOM7K5Ynp7Isj//q9wLnoYp
-         4flwYCAoxtJkbRrKcQzmoKL+ldGnDVkPkduUamFft7H0kLWXhdyxiKlX4N+q6BmfcBsC
-         QJ0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745252857; x=1745857657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oLHYuRchr7pwRfQW4u682e1RScHliKjKzEJvvrT1wG0=;
-        b=VMQmRFvn4ukhAasUd6m79vDPmAUfAyDwGUGqdVSkIUccLrEX5uTkNjeGZK3aFgoEF6
-         Cycp7SwmrasxgSd9S669tLp4qB2368E7HS1WPNYXnfQYiLT4uVvDogbU7B2RphX/Ff0G
-         8bNv25wBLInX+nWcvQG0YFIlPosI8NuBgXdP0RBl4OT32kzU8qZP0r7ARDpMDGZOHaDk
-         E/goNdEF67U3NQaoK9TXMrgmqYzITk4VFJYP18cGY0qadJPzJUVStRigwgWs1e/b4sJR
-         yQAmIHX2+eYjt2BjYMTgro8OJLeXq5J3vJDn6RFFbKddQsXBMc/hJYVQt2dYjMKWNLNR
-         aZZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU51y/5Kyivb5xmMIwnJ3soN2dyzlh3gZptber4B5OpzrnQfb6yU65RJWrpJa41mZiilWRatwMKPYLSrOeaRw==@vger.kernel.org, AJvYcCUU7s9w28bJHkOe6F0jGHihOzuqQWpHRH45wUfBvlw54um4AB1VoYmFvvKf0DAVuYAefS3avJb/1H96MSag@vger.kernel.org, AJvYcCUxQ4Gdc1PN3G3blMTMAY9wICRUSppfL2oTCdCbwcSiVS3obnySeoblTOoNETXKR+sBMrnprdNEwhNH@vger.kernel.org, AJvYcCXsNy0w9JeS1I2HuJlbOsBKZKfAbCwN+oQ5vjTAdLgH+LO3a5H/4z1VENNYLjGCfetWIhRB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUnwJA1kHioFcoc/5gtLEwNBVqa97Y+D5jdAHmZMWz8rE8vaZQ
-	FrecFTryUCSDraFFM5WTB3A9h9RWO5+UjFLnUoyiYFF+wzBhLTbB
-X-Gm-Gg: ASbGncvzJzxMHrS4fwgtZGxEcoVgL2ZLfalG9KcMu4nHBZqlX1DH92M7o3jbTQSoA+I
-	mscHqmXqYvnfLoRx4/bvqFV+DtuD3BiegD48A6orpt0vZXy/K/U4vwbgaeHJcCd5iJgEfECPvrJ
-	krsJGzMZO/tgvtLL8cNucO6qIPomrcvJyhYWdGZOySqmvCvinrX+xoAgctoxvcyXfp+Tb+pMvel
-	ZamuMMCcAAHhb0eNyrGINS+hjyP5IikTDihUbieiZkONcIbnmZGMNfl5jYQR+E9tvN91dFmaMNI
-	p4B4qVoqbkJHsMnEcR+INowfJzlDqEKrDDJo67MRXCWUpQQBZ03Zmzr+I46TQN1M2WzQKnMWEu5
-	0ETCz6hhywpW3dmHqdd2kgGMZ5RMkIAo=
-X-Google-Smtp-Source: AGHT+IHKXIDlBPVp3gyYgxOjFyUzKte/+Px4RacQpXr3c5UOtQ5sJmTvggKv28JeiPdTZfVVuzZ2eg==
-X-Received: by 2002:a05:620a:17aa:b0:7c5:a41a:b1a with SMTP id af79cd13be357-7c927f6b4e5mr1830134985a.10.1745252857057;
-        Mon, 21 Apr 2025 09:27:37 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6eb31sm438947785a.3.2025.04.21.09.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 09:27:36 -0700 (PDT)
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfauth.phl.internal (Postfix) with ESMTP id D68B31200043;
-	Mon, 21 Apr 2025 12:27:35 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Mon, 21 Apr 2025 12:27:35 -0400
-X-ME-Sender: <xms:93EGaPl6BmgDg5HRVTlKEySE3NnVGFFCOwIj3_v1rNJpu3CQJ6K5Eg>
-    <xme:93EGaC0uwLD5t9mIRSOE_S8HjDz1DQV3c15V-1MFrJQr4xI9-HF4I6GI5qPDpUoMO
-    juS44Uj89gQYEOh-A>
-X-ME-Received: <xmr:93EGaFpvLHpOndPFbORX2EV6IMd2U1UEDKtmyhUzyLci7s2P5hHfAqbqSDWQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedufedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeffvdehfeejjeeliefgtdduuddtjeejveeu
-    veeugeefleefkeekuefgudeuhfefgeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpd
-    hlfihnrdhnvghtpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrsh
-    honhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghn
-    gheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohephe
-    ekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegurghvihgughhofiesghhoohhg
-    lhgvrdgtohhmpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgtuhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehlihhnuhigqdgrrhgthhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtth
-    hopehlkhhmmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehojhgvuggr
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrih
-    hlrdgtohhm
-X-ME-Proxy: <xmx:93EGaHmx0ei2frON30pFqG29hH6FxIISfKFIz4y0bydjQ2hjEbYuGg>
-    <xmx:93EGaN0Ki0yvaurBA4rYcYRpOq27QuhicUvHpsftxbYlhIZ31G0jnw>
-    <xmx:93EGaGvKmK1ylW0v-5qMLRuZMoRSF1lzFGDRVkp7ot-zrvvXP9n7FA>
-    <xmx:93EGaBXjKwcfkYmoa2p6XPyJyMmxu_7rONV9PmDsnLPfsWF3VpWZbA>
-    <xmx:93EGaM1awRHGn3vR7mMNQRnUEgoIxz259bYnVfYkzH9QAtkYQ1rePPx1>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 21 Apr 2025 12:27:34 -0400 (EDT)
-Date: Mon, 21 Apr 2025 09:27:28 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: David Gow <davidgow@google.com>
-Cc: rust-for-linux@vger.kernel.org, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	llvm@lists.linux.dev, lkmm@lists.linux.dev,
-	Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	torvalds@linux-foundation.org,
- linux-arm-kernel@lists.infradead.org,	linux-fsdevel@vger.kernel.org,
- Trevor Gross <tmgross@umich.edu>,	dakr@redhat.com,
- Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org
-Subject: Re: [RFC v2 00/13] LKMM *generic* atomics in Rust
-Message-ID: <aAZx8GARiCW-pq9_@boqun-archlinux>
-References: <20241101060237.1185533-1-boqun.feng@gmail.com>
- <CABVgOSm1cDcrsgYutooRG-ZLuzMypAO+ndNFyPy2w3_5B84TSQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="BGUQecGR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TEpuMdAWrAPqjXO0wwlhWE0cAZj2kNau1D4c4aTcl6wAe2KFklmvMSDyCvPv2N+32OQtiOEG0fhMa2nUkWCesp1NRjPC+scItA8XtRGXHnmpRcH4TzPFbADvBQSeWquq9p/X1y/URqsaAoh3Gld6aYFhtL5jWM3YEP4V60tA3XYxXnAQKXCkPJT1XuDjXLyvI45Sr0f9cNDvrXXGmuFaY9lKgUtaD8l3IoRSqME9kybU7pAkfpjziweECe6CpVaGlWtTpYdm8kb9I/J1th5BV4IoqMYQgxXs0E06tCNBySs2dbUlmZyxtcKVD/tjCvQZlEarNrilNm4PNgDVmkhCsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=euFQnk2xA2QdcHwjlxsa0gqqKR9p2sd9USMrY2Y2KlM=;
+ b=SjHxyM5g6fDbDcrqsMqqOVVIvfjl4bUxvpR4Ui2MvhA7aBx/ckcBpxIL4aQsJh9FQXdIyD2OCYDG7ILQu8BhPdrk//EJoRtbonR+uNhJy7jsIjylS2poFAvOPEQGPJC7tM8+5FYX7aXG2Kyn0Wq/3JBQl+WeRa+tOL5zX2GgUUySwiavv+QZzD56WhLTvWqjEUC8C9qF5XqUXvCCdbtykodj/ntk8YccTqC85CE2qsoI9MIvTbZB/2JLRzBup2qCGmwXLcSoiLCD6AbyLPbzAQPZ4K+rAEm7pt5QUid5+MkkYaVNwooPtV4Hg7RL0B5aWEf1wEEf4R0oZeS0zl90SQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=euFQnk2xA2QdcHwjlxsa0gqqKR9p2sd9USMrY2Y2KlM=;
+ b=BGUQecGRxubrgH5W5a+gsLcqmyEaXdnm6nmyfjwAWtGb6MvI8SRGzHdvJb3/O2dVoDTJ0DBiDLcIZ8LbOFA8IWcKGZzUBmQIS5aMHo/VdyJKsrv1XsMV7ui1A9cdhI/91+Ms1YP5fePJkQdYP9UrtVw64imWTf0pks+04IG2jleXT6k9ZMpsvzRXQEjvlmbGJjZUZw8qqK7p3gTwr4a/mpbBSzJEjJ3IIQCHfxizD8F6DqMK/MdYJ/xBvEWKBObMzNN2+ScCh5jBewS8dYqZliDUj5twHGOp1ylFAzX4ze0w6T9eCC0G3lkjBPqJMaSxNDo55VHwKj0tzU+bqizaYA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BN8PR03MB5073.namprd03.prod.outlook.com (2603:10b6:408:dc::21)
+ by DM4PR03MB6109.namprd03.prod.outlook.com (2603:10b6:5:394::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Mon, 21 Apr
+ 2025 16:29:46 +0000
+Received: from BN8PR03MB5073.namprd03.prod.outlook.com
+ ([fe80::7483:7886:9e3d:f62a]) by BN8PR03MB5073.namprd03.prod.outlook.com
+ ([fe80::7483:7886:9e3d:f62a%3]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 16:29:46 +0000
+From: Boon Khai Ng <boon.khai.ng@altera.com>
+To: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Matthew Gerlach <matthew.gerlach@altera.com>,
+	Tien Sung Ang <tien.sung.ang@altera.com>,
+	Mun Yew Tham <mun.yew.tham@altera.com>,
+	G Thomas Rohan <rohan.g.thomas@altera.com>,
+	Boon Khai Ng <boon.khai.ng@altera.com>
+Subject: [PATCH net-next v4 0/2] Refactoring designware VLAN code. 
+Date: Tue, 22 Apr 2025 00:29:28 +0800
+Message-Id: <20250421162930.10237-1-boon.khai.ng@altera.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0111.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::26) To BN8PR03MB5073.namprd03.prod.outlook.com
+ (2603:10b6:408:dc::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABVgOSm1cDcrsgYutooRG-ZLuzMypAO+ndNFyPy2w3_5B84TSQ@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR03MB5073:EE_|DM4PR03MB6109:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ddc0d57-7467-49d3-015b-08dd80f1b9da
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?w9VP3jT8EYiTDJ51OK1Xa14nTFca+Y04nrHCGBjf9qiWwfKwICkLBSyi+pwL?=
+ =?us-ascii?Q?P8T5ebB2v+ui2TW4nsd90Ms3YwvGKMpgy4Z2WqqjOSfqe1snxvgnPgJi4cVi?=
+ =?us-ascii?Q?TuyldvyHBRzD4TNHpmD2PwKfbWxLLmFJ8eT4HzOXz5xoGz9QGBXyWxgoEuKi?=
+ =?us-ascii?Q?phkAZyeefYKgU1Xi07APDJ+5yRO9F15rSN3EtptJaKqtuU2XUllV75rUXlW/?=
+ =?us-ascii?Q?qM8EN3Bu6BDDffFDka/qeqB1AF1ev+Wu1kszhlSklPkb7BvrubJ2fqKZvUhw?=
+ =?us-ascii?Q?e+CE9uflRSw0Ntp5PqArojzjPpnMi4JFSauoY0qhAHjv0ws1IRwxZHbs0/1z?=
+ =?us-ascii?Q?p52Fxb3G5lhz+byRjgzULzNts4pNMxgWg8FeTynTBuPUoiTPiQfr7ayOZMsq?=
+ =?us-ascii?Q?c6KVJjcmOEHKup9ZiNOpZJYfP2nz/+tzjSgo9fnouZzugbpgxvYeDVmBnfH1?=
+ =?us-ascii?Q?tQTgCzkDAQB8JyxWX1g8a0lu8+UghoX6FrdBe43PMjXmDJ7KwUGf+mWIfIZI?=
+ =?us-ascii?Q?EpXTcw/KkizZaYI5DRObMX3cgeRSkbbySooC9SdO8vLZ/n0JnDMt2lH4P/MT?=
+ =?us-ascii?Q?4wOcG5N0ZGR7woJvaOz1CVkQXi0GyztlE5gT2jU6M50Pc5uIPgO5felP8voG?=
+ =?us-ascii?Q?o2vBuJxD6TzBXqA6aIRcPDBW7LfkE0gICIAizkHsfY/A2+I8fAQeCSkqU1xo?=
+ =?us-ascii?Q?3vIe2LO/PTOvThXugp9pgI7TPfSOQINUj4YeJWktPF7MS5ezlxGFpCn9rIhf?=
+ =?us-ascii?Q?zh/j1F1SxhiSZCs+d5ydBIUIos2LAd9Y5P+t+wgYZYSMQ6vh5EfyeUyMd+b3?=
+ =?us-ascii?Q?lkOi8woyG9/IEdkKVierIcQiYa1raoFhTdASHLnnvb2xK9ZfdBiV+oqIhb16?=
+ =?us-ascii?Q?WpD5K/eTACIYkIY4JKoxdQ1B+OhmIy84uhHLXnswEgKok+BqmzzvFe0dCgyG?=
+ =?us-ascii?Q?GpE0mCrIK21dct8wV1x9NSxjBzw8qlABgcO9PfBwEqWLx3fvZI7mtPfOJGR3?=
+ =?us-ascii?Q?FVKI6CdGJ4xpyeUFxKiqA4rrgyZexk2E3XbVQBMMYouRVXBLbeS4rpyWeZro?=
+ =?us-ascii?Q?hRMxxODu9TpuW3IOoGqG7p9PJK4YknG5ZVRUAO/isM1YLGmAFYtdO7azCgXG?=
+ =?us-ascii?Q?9HE4fY+s4u6gErBq1wn++sW+rC0517NBziS9lfTtHKRKCWz3MQs1WPfBXCI2?=
+ =?us-ascii?Q?E24QNJEgqx1fzjfkkx8yFWkW51XbkomH7r6cfWyRm26CGV6Nw2Z12S+lxmso?=
+ =?us-ascii?Q?Dy4otgpDX09tS/K/1slQhtDpj/qnrt48NiwbQ0qUA0xEKPHkbcAz1ogR8up9?=
+ =?us-ascii?Q?wJbymwmu/c/vkdKJn+FSMxtMO5+Bz+FQfiI+Q5RmWnO8TXRLbOmpFo8swbOy?=
+ =?us-ascii?Q?l1vn0Ac=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR03MB5073.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?pT/zPhqIDMqQAbQmDDmlfrNlWTJ7+W7Rftgc92vOYSFSC7rd/dczdOZ4jSHJ?=
+ =?us-ascii?Q?nsvhfNBDKUSUBhOUsl+w4Vr/MA5oZxP8CgNj77+b7JPSA5aX7PoltdZKRhsw?=
+ =?us-ascii?Q?RnI8tWuLrKvamoLHvR7MGkdatNe+7nqSC+Sfzh9vS0jwgtmXtT8ajqx0wXlk?=
+ =?us-ascii?Q?17q7TNI2Kyof7yLxRou/yl9y9aCaRS85oRrw5XBCfUWgxn1fJXN4PXY7tu+7?=
+ =?us-ascii?Q?nplk/9SqZBQNM41kJQuj0rP1yVONUgXkVIWBOkEDA2o6H1LzFv1YeajewEn8?=
+ =?us-ascii?Q?ojLwT7q/zI/4iMLPZA7S9YN83ZpLmgfFDabG1TcF2+X8DVS+E/r20s/kMmZR?=
+ =?us-ascii?Q?iYIXgviNUrtDOtbne2tBCLJILbU0Zvb8j41RS3B9DOgHxrTXzF9CK7eyTpl0?=
+ =?us-ascii?Q?oWYNjTJASbxB3TlH1JFA11HdFys/EMFsYziMaUSAebmasZL/D8RDAOuaDEQQ?=
+ =?us-ascii?Q?74i2N8zNj1palWAQV1WQZ0AkSORQ+H8Hf9+lmi0kUT3km3c8ERlCnmxfaHse?=
+ =?us-ascii?Q?tThrihF5KrB4Wv4/xRgutmn/CHOqqDL+mpzQOnFbIqHx4WZ5DbRf9NwKbydS?=
+ =?us-ascii?Q?SEqVjbJqIOhBxKMd3VwiwYTtEBELOr2OS3102fzdWzuuXjCe9SOJypV+4dbt?=
+ =?us-ascii?Q?q+CDuhgbUTyCWUqzMlurtRw55Coxhg9UtPCtnRKHzafpaAqBdHuH9wES5xQJ?=
+ =?us-ascii?Q?1JMCR+sTTmB6X6PBhcsrGTMD7MU4d8q+9sS0oLga4LO2inic5YciLPccTm2x?=
+ =?us-ascii?Q?dfU1Ct8dOmaXv3ljwIe7bAQY9drJZN0EDUm3jIkuSI1M5Dz4OVfM0G1Lm4Pn?=
+ =?us-ascii?Q?+dSW93Ebxqsfaiobc+C9nF3PjCNk7ohWYoDLoy5cZuv3O3WB8NMCbBWKZou/?=
+ =?us-ascii?Q?R+cA0lhY7Fs4Y/lnyb6PgEndiommZuA4vjTdWX3tl6HLYx7twDyFVLBvMXfV?=
+ =?us-ascii?Q?4NhYILllrsCRoBE3umzeczu437AgefhQpOrewHHRC7K2xwGopPHL92LOabV0?=
+ =?us-ascii?Q?fnl2XrVfIlHG5TlRbDUDvlY8+mPAKa5psHK1FVhvIblgSBPMdBoOrGA8m27H?=
+ =?us-ascii?Q?bZ0TMZv6qniDVgQOOn3k4drH/jb3x5G7kYOwTlIOMKUXZKQKT4uxQBEOIdxQ?=
+ =?us-ascii?Q?xhyMnT7tbFtt0z6gr49dwAG2UHtR04vCTC/HAH0qx3+43yUc0sCe3Q8HLr6U?=
+ =?us-ascii?Q?SjeJmSgAlPChwnyarXOiiZCSeH4hMG2aKTkue7ncfOhuT3plcFOLLOu44rU5?=
+ =?us-ascii?Q?1faYm7T4h7DooudWYUhsAkbXVwBan9omR94ve36LxgEVwS2F91POWXNwXBho?=
+ =?us-ascii?Q?YF9+r76Mvwg410eovXYHt6PiQMi2RKKOuNmM6JD5Kz8wu2CFi8mDcKsp1OXJ?=
+ =?us-ascii?Q?tLszkrtuxKeFVbMKygltXJ3OLdOIYo9LOeP9mzTmMQ1ahCG363CneNmAdsaX?=
+ =?us-ascii?Q?DV/oP1g2yJKGDUWsCgygYZuePmONyzEbvS+p7iv5hHDPmcysYhcTBfjHf893?=
+ =?us-ascii?Q?vwUsbLN4AKRNOnjHexWWBJa3CyBK2UdVMVCBrQLc0c+R2c+szQbvQyHhtKlF?=
+ =?us-ascii?Q?b49LV5WDKwS+HUNHOZJ3wVEPVeqRrQPT/hWxkQCh?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ddc0d57-7467-49d3-015b-08dd80f1b9da
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR03MB5073.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 16:29:45.9078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CUIUqAU3AcpABY//4z1UbIJQPeJFaYG10IGS6UKaUHnVr9xpBk0qCRTjqlRVyaApba4tvwc4zwg/gj1zB842Zg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR03MB6109
 
-On Sat, Nov 02, 2024 at 03:35:36PM +0800, David Gow wrote:
-> On Fri, 1 Nov 2024 at 14:04, Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > This is another RFC version of LKMM atomics in Rust, you can find the
-> > previous versions:
-> >
-> > v1: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun.feng@gmail.com/
-> > wip: https://lore.kernel.org/rust-for-linux/20240322233838.868874-1-boqun.feng@gmail.com/
-> >
-> > I add a few more people Cced this time, so if you're curious about why
-> > we choose to implement LKMM atomics instead of using the Rust ones, you
-> > can find some explanation:
-> >
-> > * In my Kangrejos talk: https://lwn.net/Articles/993785/
-> > * In Linus' email: https://lore.kernel.org/rust-for-linux/CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com/
-> >
-> > This time, I try implementing a generic atomic type `Atomic<T>`, since
-> > Benno and Gary suggested last time, and also Rust standard library is
-> > also going to that direction [1].
-> >
-> > Honestly, a generic atomic type is still not quite necessary for myself,
-> > but here are a few reasons that it's useful:
-> >
-> > *       It's useful for type alias, for example, if you have:
-> >
-> >         type c_long = isize;
-> >
-> >         Then `Atomic<c_clong>` and `Atomic<isize>` is the same type,
-> >         this may make FFI code (mapping a C type to a Rust type or vice
-> >         versa) more readable.
-> >
-> > *       In kernel, we sometimes switch atomic to percpu for better
-> >         scalabity, percpu is naturally a generic type, because it can
-> >         have data that is larger than machine word size. Making atomic
-> >         generic ease the potential switching/refactoring.
-> >
-> > *       Generic atomics provide all the functionalities that non-generic
-> >         atomics could have.
-> >
-> > That said, currently "generic" is limited to a few types: the type must
-> > be the same size as atomic_t or atomic64_t, other than basic types, only
-> > #[repr(<basic types>)] struct can be used in a `Atomic<T>`.
-> >
-> > Also this is not a full feature set patchset, things like different
-> > arithmetic operations and bit operations are still missing, they can be
-> > either future work or for future versions.
-> >
-> > I included an RCU pointer implementation as one example of the usage, so
-> > a patch from Danilo is added, but I will drop it once his patch merged.
-> >
-> > This is based on today's rust-next, and I've run all kunit tests from
-> > the doc test on x86, arm64 and riscv.
-> >
-> > Feedbacks and comments are welcome! Thanks.
-> >
-> > Regards,
-> > Boqun
-> >
-> > [1]: https://github.com/rust-lang/rust/issues/130539
-> >
-> 
-> Thanks, Boqun.
-> 
+Refactoring designware VLAN code and introducing support for
+hardware-accelerated VLAN stripping for dwxgmac2 IP,
+the current patch set consists of two key changes:
 
-Hi David,
+1) Refactoring VLAN Functions:
+The first change involves moving common VLAN-related functions
+of the DesignWare Ethernet MAC into a dedicated file, stmmac_vlan.c.
+This refactoring aims to improve code organization and maintainability
+by centralizing VLAN handling logic.
 
-> I played around a bit with porting the blk-mq atomic code to this. As
-> neither an expert in Rust nor an expert in atomics, this is probably
-> both non-idiomatic and wrong, but unlike the `core` atomics, it
-> provides an Atomic::<u64> on 32-bit systems, which gets UML's 32-bit
-> build working again.
-> 
-> Diff below -- I'm not likely to have much time to work on this again
-> soon, so feel free to pick it up/fix it if it suits.
-> 
+2) Enabling VLAN for 10G Ethernet MAC IP:
+The second change enables VLAN support specifically
+for the 10G Ethernet MAC IP. This enhancement leverages
+the hardware capabilities of the to perform VLAN stripping,
 
-Thanks. These look good to me, however, I think I prefer Gary's patch
-for this:
+Changes from previous submmited patches.
+v4:
+a) Updated the commit message to explain the descriptors
+behaviour on different hardware.
 
-	https://lore.kernel.org/lkml/20250219201602.1898383-4-gary@garyguo.net/
+b) Updated the perfect_match variable with the correct
+byte order.
 
-therefore, I won't take this into the next version. But thank you for
-taking a look!
+v3:
+Seperating the VLAN functionality into common code:
+https://lore.kernel.org/lkml/
+20250408081354.25881-1-boon.khai.ng@altera.com
 
-Regards,
-Boqun
+v2:
+The hardware VLAN enablement switch was detached from the
+device tree source (DTS). Instead, the hardware VLAN enablement
+is now dynamically determined in stmmac_main.c based on the
+currently running IP.
+Link: https://lore.kernel.org/lkml/BL3PR11MB5748AC693D9D61FB56DB7313C1F32
+@BL3PR11MB5748.namprd11.prod.outlook.com/
 
-> Thanks,
-> -- David
-> 
-> ---
-> diff --git a/rust/kernel/block/mq/operations.rs
-> b/rust/kernel/block/mq/operations.rs
-> index 9ba7fdfeb4b2..822d64230e11 100644
-> --- a/rust/kernel/block/mq/operations.rs
-> +++ b/rust/kernel/block/mq/operations.rs
-> @@ -11,7 +11,8 @@
->      error::{from_result, Result},
->      types::ARef,
->  };
-> -use core::{marker::PhantomData, sync::atomic::AtomicU64,
-> sync::atomic::Ordering};
-> +use core::marker::PhantomData;
-> +use kernel::sync::atomic::{Atomic, Relaxed};
-> 
->  /// Implement this trait to interface blk-mq as block devices.
->  ///
-> @@ -77,7 +78,7 @@ impl<T: Operations> OperationsVTable<T> {
->          let request = unsafe { &*(*bd).rq.cast::<Request<T>>() };
-> 
->          // One refcount for the ARef, one for being in flight
-> -        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
-> +        request.wrapper_ref().refcount().store(2, Relaxed);
-> 
->          // SAFETY:
->          //  - We own a refcount that we took above. We pass that to `ARef`.
-> @@ -186,7 +187,7 @@ impl<T: Operations> OperationsVTable<T> {
-> 
->              // SAFETY: The refcount field is allocated but not initialized, so
->              // it is valid for writes.
-> -            unsafe {
-> RequestDataWrapper::refcount_ptr(pdu.as_ptr()).write(AtomicU64::new(0))
-> };
-> +            unsafe {
-> RequestDataWrapper::refcount_ptr(pdu.as_ptr()).write(Atomic::<u64>::new(0))
-> };
-> 
->              Ok(0)
->          })
-> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
-> index 7943f43b9575..8d4060d65159 100644
-> --- a/rust/kernel/block/mq/request.rs
-> +++ b/rust/kernel/block/mq/request.rs
-> @@ -13,8 +13,8 @@
->  use core::{
->      marker::PhantomData,
->      ptr::{addr_of_mut, NonNull},
-> -    sync::atomic::{AtomicU64, Ordering},
->  };
-> +use kernel::sync::atomic::{Atomic, Relaxed};
-> 
->  /// A wrapper around a blk-mq [`struct request`]. This represents an
-> IO request.
->  ///
-> @@ -102,8 +102,7 @@ fn try_set_end(this: ARef<Self>) -> Result<*mut
-> bindings::request, ARef<Self>> {
->          if let Err(_old) = this.wrapper_ref().refcount().compare_exchange(
->              2,
->              0,
-> -            Ordering::Relaxed,
-> -            Ordering::Relaxed,
-> +            Relaxed
->          ) {
->              return Err(this);
->          }
-> @@ -168,13 +167,13 @@ pub(crate) struct RequestDataWrapper {
->      /// - 0: The request is owned by C block layer.
->      /// - 1: The request is owned by Rust abstractions but there are
-> no [`ARef`] references to it.
->      /// - 2+: There are [`ARef`] references to the request.
-> -    refcount: AtomicU64,
-> +    refcount: Atomic::<u64>,
->  }
-> 
->  impl RequestDataWrapper {
->      /// Return a reference to the refcount of the request that is embedding
->      /// `self`.
-> -    pub(crate) fn refcount(&self) -> &AtomicU64 {
-> +    pub(crate) fn refcount(&self) -> &Atomic::<u64> {
->          &self.refcount
->      }
-> 
-> @@ -184,7 +183,7 @@ pub(crate) fn refcount(&self) -> &AtomicU64 {
->      /// # Safety
->      ///
->      /// - `this` must point to a live allocation of at least the size
-> of `Self`.
-> -    pub(crate) unsafe fn refcount_ptr(this: *mut Self) -> *mut AtomicU64 {
-> +    pub(crate) unsafe fn refcount_ptr(this: *mut Self) -> *mut Atomic::<u64> {
->          // SAFETY: Because of the safety requirements of this function, the
->          // field projection is safe.
->          unsafe { addr_of_mut!((*this).refcount) }
-> @@ -202,28 +201,22 @@ unsafe impl<T: Operations> Sync for Request<T> {}
-> 
->  /// Store the result of `op(target.load())` in target, returning new value of
->  /// target.
-> -fn atomic_relaxed_op_return(target: &AtomicU64, op: impl Fn(u64) ->
-> u64) -> u64 {
-> -    let old = target.fetch_update(Ordering::Relaxed,
-> Ordering::Relaxed, |x| Some(op(x)));
-> -
-> -    // SAFETY: Because the operation passed to `fetch_update` above always
-> -    // return `Some`, `old` will always be `Ok`.
-> -    let old = unsafe { old.unwrap_unchecked() };
-> -
-> -    op(old)
-> +fn atomic_relaxed_op_return(target: &Atomic::<u64>, op: impl Fn(u64)
-> -> u64) -> u64 {
-> +    let old = target.load(Relaxed);
-> +    let new_val = op(old);
-> +    target.compare_exchange(old, new_val, Relaxed);
-> +    old
->  }
-> 
->  /// Store the result of `op(target.load)` in `target` if `target.load() !=
->  /// pred`, returning [`true`] if the target was updated.
-> -fn atomic_relaxed_op_unless(target: &AtomicU64, op: impl Fn(u64) ->
-> u64, pred: u64) -> bool {
-> -    target
-> -        .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |x| {
-> -            if x == pred {
-> -                None
-> -            } else {
-> -                Some(op(x))
-> -            }
-> -        })
-> -        .is_ok()
-> +fn atomic_relaxed_op_unless(target: &Atomic::<u64>, op: impl Fn(u64)
-> -> u64, pred: u64) -> bool {
-> +    let old = target.load(Relaxed);
-> +    if old == pred {
-> +        false
-> +    } else {
-> +        target.compare_exchange(old, op(old), Relaxed).is_ok()
-> +    }
->  }
-> 
->  // SAFETY: All instances of `Request<T>` are reference counted. This
+v1:
+The initial submission introduced hardware VLAN support for the
+10G Ethernet MAC IP.
+Link: https://lore.kernel.org/netdev/DM8PR11MB5751E5388AEFCFB80BCB483FC13FA
+@DM8PR11MB5751.namprd11.prod.outlook.com/
 
+Boon Khai Ng (2):
+  net: stmmac: Refactor VLAN implementation
+  net: stmmac: dwxgmac2: Add support for HW-accelerated VLAN stripping
+
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h  |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  40 ---
+ .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 295 +-----------------
+ .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  25 +-
+ .../ethernet/stmicro/stmmac/dwxgmac2_core.c   |  89 +-----
+ .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |  18 ++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c    |   8 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  61 ++--
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |   2 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_vlan.c | 294 +++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_vlan.h |  63 ++++
+ 12 files changed, 434 insertions(+), 464 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.c
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_vlan.h
+
+-- 
+2.25.1
 
