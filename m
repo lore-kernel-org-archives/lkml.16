@@ -1,121 +1,100 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAF6FC08
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+Received: from pku.edu.cn (mx18.pku.edu.cn [162.105.129.181])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A45CFC08
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228132; cv=none; b=CAd2xJpRp7qmMGLMUUSJoZ0GQiu6dqL5k0+kwbZAz658Rm+4ezqelMtD6tPHI1tGPM+xTgpLifU52dtoxz4oIYHdypOEZczfNOBhkLdMlzl74Uvr3ilNf3Puz8ZeG9SGoSX9lQCFNedfRnkJT+zi2ZmWx9x7/ekxQgaijF27SCQ=
+	t=1745228167; cv=none; b=VlQk4vhgzXDRlb4g24kq7j8xLJ9/UnxxwNCYy9bkjUyOeEgLBiw9d1OMRJp93HzbYm63WvpVdcrNaCUbEAH6gaiU6gtaXKRETbfTnk7he5vmkgnOYO5uoN+RLTbHXYE98dwMTBS5Vb+Wmksi4NwMhDLGFfg88O5N6xX2Y/pfivA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228132; c=relaxed/simple;
-	bh=bUKfKjum813rPN4vzZFzmrYZkvGsU7gI7x8EL6azOkQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=lcTvDlpPi+k++8HyYOrlPFSKfAcirhVgdipectvrnjSWzLLFR6gfFSy6ehVTnl3+uJxQuZbVnmtDRlVU/JQuT8e/dT8uUloT8IDO+RK3UdxrXzKSBuoh5cG3U9rKHoqtYdwVJZFjZkXMaPqHLWKPSy19YGzak+/VDmZ4FTEDbmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lidvml90; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745228167; c=relaxed/simple;
+	bh=l50qTUJeKCFAz3iATzvIzd6Rf6l8XRdYB0lBCJhUUN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+j6goUB0ft1x9zJEIAAW8JUjMcrFpFboM6l4cbjgKCuTlahdrNuMVHH2W9S/0/kYZSlXN8WiBgGYa+KR+2gTFqSZaQ/5d8OgvKh1DRtvBKugGFDah1Xv/RZM7ZkxkPfVwMMIDclG7sgJz4QWVTOPvQkpDNAMvfgPDaC8uhU/wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=V78K4p4h; arc=none smtp.client-ip=162.105.129.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lidvml90"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745228127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bUKfKjum813rPN4vzZFzmrYZkvGsU7gI7x8EL6azOkQ=;
-	b=lidvml900hH8Avhw1iFfdjq39Gjf+wb19CFUBfv3KviezRu9fhjsJ975KCje+KSIvdmBJh
-	nVt7FmEC+mI8n7yQwiESEUpeuRFoEvkUYQnD6GmOiQW/OxzItmTtypgX6Q6ivNRUc84Sts
-	pqgP9AF0UjsUwNAS32eetj7ladT+V9k=
+	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="V78K4p4h"
+Received: from pku.edu.cn (unknown [10.4.225.203])
+	by mtasvr (Coremail) with SMTP id _____7Dwq6p4EQZo7f85AQ--.6923S3;
+	Mon, 21 Apr 2025 17:35:53 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=pku.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+	Message-ID:References:MIME-Version:Content-Type:
+	Content-Disposition:In-Reply-To; bh=5Ai8f9MeggrfRLqhBIbrDp0fdwTf
+	dFbgBB4ylUfNRGI=; b=V78K4p4h/lDCtik8Bvz040YILEeGoM48ZkZ4H+fC17bM
+	3wHnVu2u944E1xBRMJ3KI3WBOKse3e3PevvLFX+6mxC48xnLnjx6iFuNYk7dnl+r
+	Oc3Ln1HXE/Q29rRp1TS0RyVE325t07R6SedH5Wt1UFlRSUYPxIDWX6YGDLTetpo=
+Received: from localhost (unknown [10.4.225.203])
+	by front02 (Coremail) with SMTP id 54FpogC36oRyEQZopzRfAA--.30840S2;
+	Mon, 21 Apr 2025 17:35:50 +0800 (CST)
+Date: Mon, 21 Apr 2025 17:35:46 +0800
+From: Ruihan Li <lrh2000@pku.edu.cn>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH v2] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Message-ID: <7eunuizzdfpgskxrfmngklrq632szzgscp6agwxsl7wsodpdqn@vnyg7d3v6tmh>
+References: <20250419122801.1752234-1-lrh2000@pku.edu.cn>
+ <20250420135709.732883ee775ad8b41fb668ca@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH V4 1/4] mm: add swappiness=max arg to memory.reclaim for
- only anon reclaim
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
-Date: Mon, 21 Apr 2025 17:34:50 +0800
-Cc: akpm@linux-foundation.org,
- hannes@cmpxchg.org,
- mhocko@suse.com,
- yosry.ahmed@linux.dev,
- yuzhao@google.com,
- linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <972CD38C-9084-4CC0-8AD7-127745CACCDF@linux.dev>
-References: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
- <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420135709.732883ee775ad8b41fb668ca@linux-foundation.org>
+X-CM-TRANSID:54FpogC36oRyEQZopzRfAA--.30840S2
+X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwAYsu
+X-CM-DELIVERINFO: =?B?e7M+XaaAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
+	0+BDdXjm5Mlm64oODP/CxX7Cf2JIhgSgyACdMUW+7z6NjTyzqRnhhfG2Fy/TDcNc2v3qRm
+	vOLh3hF4Q3MRpa5gnRFIj2rOMEQnOcipZfzoYUAV81A49P3JdCzVwLiTrUlRWg==
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
+Hi Andrew,
 
+Thanks for your review and for taking the patch in the -mm tree!
 
-> On Apr 21, 2025, at 17:13, Zhongkun He <hezhongkun.hzk@bytedance.com> =
-wrote:
->=20
-> With this patch 'commit <68cd9050d871> ("mm: add swappiness=3D arg to
-> memory.reclaim")', we can submit an additional swappiness=3D<val> =
-argument
-> to memory.reclaim. It is very useful because we can dynamically adjust
-> the reclamation ratio based on the anonymous folios and file folios of
-> each cgroup. For example,when swappiness is set to 0, we only reclaim
-> from file folios.
->=20
-> However,we have also encountered a new issue: when swappiness is set =
-to
-> the MAX_SWAPPINESS, it may still only reclaim file folios.
->=20
-> So, we hope to add a new arg 'swappiness=3Dmax' in memory.reclaim =
-where
-> proactive memory reclaim only reclaims from anonymous folios when
-> swappiness is set to max. The swappiness semantics from a user
-> perspective remain unchanged.
->=20
-> For example, something like this:
->=20
-> echo "2M swappiness=3Dmax" > /sys/fs/cgroup/memory.reclaim
+On Sun, Apr 20, 2025 at 01:57:09PM -0700, Andrew Morton wrote:
+> On Sat, 19 Apr 2025 20:28:01 +0800 Ruihan Li <lrh2000@pku.edu.cn> wrote:
+> 
+> > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+> > kernel is used as a library and loaded at a very high address), the
+> > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+> > long time, and the kernel will look stuck at boot time.
+> > 
+> > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+> > avoids the problematic and useless iteration mentioned above.
+> > 
+> > This problem has existed since commit 907ec5fca3dc ("mm: zero remaining
+> > unavailable struct pages").
+> > 
+> > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+> > ---
+> > Link to v1:
+> >  - https://lore.kernel.org/linux-mm/20250418162727.1535335-1-lrh2000@pku.edu.cn/
+> > Changes since v1:
+> >  - Removed the unnecessary Fixes tag.
+> 
+> Why was the Fixes: considered unnecessary?  It seems to be useful
+> information?
+> 
 
-We already have this kind of style (mixing numbers and strings) within
-io.max under cgroup v2. As a result, I'm okay with this change.=20
+To clarify, I only removed it because I got comments saying that this
+patch doesn't really fix a BUG (well, that statement depends on how one
+defines a BUG: it's a real BUG in my scenario, but maybe not a BUG for
+many other scenarios):
+https://lore.kernel.org/linux-mm/aANN0rwxcajUtFXs@kernel.org/
 
->=20
-> will perform reclaim on the rootcg with a swappiness setting of 'max' =
-(a
-> new mode) regardless of the file folios. Users have a more =
-comprehensive
-> view of the application's memory distribution because there are many
-> metrics available. For example, if we find that a certain cgroup has a
-> large number of inactive anon folios, we can reclaim only those and =
-skip
-> file folios, because with the zram/zswap, the IO tradeoff that
-> cache_trim_mode or other file first logic is making doesn't hold -
-> file refaults will cause IO, whereas anon decompression will not.
->=20
-> With this patch, the swappiness argument of memory.reclaim has a new
-> mode 'max', means reclaiming just from anonymous folios both in =
-traditional
-> LRU and MGLRU.
->=20
-> Here is the previous discussion:
-> =
-https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@byteda=
-nce.com/
-> =
-https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@byteda=
-nce.com/
-> =
-https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@byteda=
-nce.com/
->=20
-> Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Since I don't know if there are other rules that apply here, I followed
+the review comments to remove it.
 
-Acked-by: Muchun Song <muchun.song@linux.dev>
+Another possibility is that I misunderstood Mike's original comment?
+Sorry if that happens.
 
-Thanks.=
+Thanks,
+Ruihan Li
+
