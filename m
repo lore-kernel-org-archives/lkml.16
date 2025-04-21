@@ -1,457 +1,282 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazolkn19010009.outbound.protection.outlook.com [52.103.66.9])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2069.outbound.protection.outlook.com [40.107.243.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1C9800;
-	Mon, 21 Apr 2025 14:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.66.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4659A800;
+	Mon, 21 Apr 2025 14:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745244316; cv=fail; b=dwatI1mxjw9rYo93EynoxMu7cRBkXGi9qbuXImv790eDfq4Yo5p/LR7JL7zk2Dxx2NgWsEurMjboYr3SuiDxHLVU7dTI09Yg6uSPfQp+qXN5YOj2I7Vbr58+YRrKWUF/luqCkzFHEjVTixpvoYesGmi48Ivr6sy6l1PbauHXrcc=
+	t=1745244324; cv=fail; b=pBhSA6iXU2zwZC0L0Q4ELrZlObrSkMCKaElIdbIzrSPXtZZ+4QC4W1ujreM3bJUjQtAzL4bYpN3almXda47y5Ou4Y1+ksPviCdeYl5x6fWvbXh1ccaSKP6N4FkY+62UN2mG18Gve+bvSDqKFP2Muh6bV5nl+3amxoLPF08TnBlo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745244316; c=relaxed/simple;
-	bh=UaJKJkZiJAph5LRws2/72BVkSFg8J/TYUkBPtzxoU/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=LbZxCkNNZrkKflcd+sEQ2nz3l3quOxdSWbT47coVd+pXezFarEkKHKVla80QzWYiG2ezeycufsKTKKBzsLJTYCtm1Fjzt88jRD+lGur9XxKLoyslxK1+uv+MigfMn4/Ax+/q6JjsE5YKJvhECo3mPVzjflmT2yCGnQ+1HnArnb0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cdcRMQ1o; arc=fail smtp.client-ip=52.103.66.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1745244324; c=relaxed/simple;
+	bh=131oWNqP/6BERAsIG0Px/y32dWwqC3tgzPxf1i8Lmpc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rwiRJhA0n5HqNVQv1ViaN7CRnIUqyK3T3/xOf22jmuFFVo06hvlv3lVREOlhqC3hrMhldxqTfy60EUxVoUEJkg+a1DOXr/yqH5rS8jDqS0zC9KjWfx2PRKFGhi9FH0t+88iXFaR6Lq1ZV9yb63txmNvqHoMsR1DvfBHbZ1zNu+0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J3/F5zOA; arc=fail smtp.client-ip=40.107.243.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cdcRMQ1o"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J3/F5zOA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TtK1xgyidFVHwCMoYCfXmgLkspZHDYPgQNnGmO6j6kg731wMipH8D2aEUAFYYRngs6e8ne3aeFGc9GYkAxWx4LMJHlQR1KglpS3vwIWg/zFncYI0338Wn0vDsBGlOrAlto8VkI+BmJN+gq5bIjYXw8vMCaHiMQRmkuauY1370fRozttIltblUPezbRs1opI6ucW0YsBn3dqwuUvU02eNJAJIRRvImYVm7KwiNzZMfQy1ucLP92VUnJE2RB3J+svq6tAe0T8zkn4tnChHfrmol9okEINgJBg0F3QTVBaaY8Yj8mEzZ1zeMs923dMsWGCbiTcSHePAE3UYfXaV0aB2Hw==
+ b=iNLKEnjLC+HPlNFv+ulG6w2qM+8duinqlWeHb/kxTbOJRGoJNDYa7rrCTvUhcQEh/cflNjcraDR/Y0NOJWbtqgYseyLuO7cya1JqVipOUUjQVY5+5Bcu32CO8mqFtzrJfXyeu90wm+zxbwE5q9OnmkZHZP/KHhh9yuaQBZeXFGRhL/7cgOKxcLEiSID+5NDGhIf2mmkG5F1BQdFHZ5wkdtqfJFwXAzSkPGV7/EKLOANG1/AD283MENdNehf4u5sngMJWVYVyQJzBe5YJkOQrGePIuaoKA24SINg+azvBn0ihc8FnAviLVaJSpYAPipiI6vSwvHvjNESvoiVNEEmYaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dRIsL7AuWochSBHQl19aNLtei9ojbuBN+CRI7MECEuY=;
- b=vOp2JDkAYm9hGgxagHEYmQ1uojxpjGS/QLVxw9vwM3hYG00WctrnMbe6lxhHe1NyekULZ5rKW1lEnWUVsl76px3nU21WK3tHfuCDSrEp5DCZU+G+wCeBcBQshR5e0R5Q6da6Dg680QsOY5ih8L5muLZlerFAoxkxzsqp7h/owDESgwacqryOyiwadN9JzRhGJIJdziy+qCfYK3myF1lwZPHpspfKh1VzbDODxlYIEDKDP/3IjL1ytHE1g6YQHa3qdDQWPWqot8NFiy6K2/beM0sfHwjDaVSzmkilR6WeyRxVcorrkJYqLjerNREVe7gZmJKH2v064TsKmONZBYXmxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=RYGrHX8PRgiqcNOdoCT8xeROUlKlwYqcNmo7kgeR3IA=;
+ b=b5i2eXHZfma4ZsPO94uAw0XO9V+81Xh0ZdX+Mb+YVPrGhE0x/1b2CUWiGNql5DW6BNKGMc1FNczfsw7PhdubbKYrJ0wE8vXFWMzrUtYf+mKbAOPpslMeE4C5gttqGE1nmNRjDecTpCaxdRTwP3OZ+ddlLyLxw27moxLXV5v3iZhaRRlTGRwBrjYVHDzthzGkDI5nejvrzYKotUKG7FLe7MZgC9ng2A7/tS2NKezZikOZc85ng2LQoonKhXanHWSLHrvkiE5/qubiweuLRf7vnn5mZrW68DiwT2/ifcaWtEw8Wqw8raAewpJSFN7/yS7eChwgAs6UN4qZG9y8Por69w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dRIsL7AuWochSBHQl19aNLtei9ojbuBN+CRI7MECEuY=;
- b=cdcRMQ1oTC2db/fH3rhahF7UMs1NW8uBydSlPXUYLp5AgJhrFg2cYfMMfvHJRbGSBRARh11EGfiKYZCdkUvCeD3TMbuY+dFpOMe9gJpVgyVvKcaVAyGiYMYm7DHaqHBQ+Fq5N+nG8w1htc4SpmoB5xaB4zg9L7vObpGgLYIvvnG6GYHquzw4sxlwz2W0Ys9GVAObyEgC+v76+eI0p6+11nWRzjBFzcnImEmHig1+jlX9BBuUWhElUMDrjCfRhmPVTCfKOPS1MoTg1r7lg9UDs6Hv9UjWHIEf2NNL1XAmr1HS2MQlaqDZ0dcxWPlKJ9WhYrKgFFe4LOqhBSEMdi59LA==
-Received: from OSZPR01MB8434.jpnprd01.prod.outlook.com (2603:1096:604:183::12)
- by TYYPR01MB15050.jpnprd01.prod.outlook.com (2603:1096:405:1a1::12) with
+ bh=RYGrHX8PRgiqcNOdoCT8xeROUlKlwYqcNmo7kgeR3IA=;
+ b=J3/F5zOAlysPYCvGU9o9akeul8RcCKiFBB+CnSjnGVjC0sE0dvjPAcin0jqFX5UraNF0oL22ctcvXoFEd1EENe+9g44AIo3mqnwb4AF2zA3FgKXtnEQ8n83VaNEDw2c7fBrZ3nD1UgQxALFvtOBY0NI1A2Sg4ddWsweXcrwohqc=
+Received: from PH8PR22CA0018.namprd22.prod.outlook.com (2603:10b6:510:2d1::24)
+ by CYYPR12MB8655.namprd12.prod.outlook.com (2603:10b6:930:c4::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Mon, 21 Apr
- 2025 14:05:03 +0000
-Received: from OSZPR01MB8434.jpnprd01.prod.outlook.com
- ([fe80::7c3f:73bc:3c62:fe7]) by OSZPR01MB8434.jpnprd01.prod.outlook.com
- ([fe80::7c3f:73bc:3c62:fe7%5]) with mapi id 15.20.8655.022; Mon, 21 Apr 2025
- 14:05:03 +0000
-From: Shengyu Qu <wiagn233@outlook.com>
-To: nbd@nbd.name,
-	pkshih@realtek.com,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	johannes.berg@intel.com,
-	miriam.rachel.korenblit@intel.com,
-	christophe.jaillet@wanadoo.fr,
-	greearb@candelatech.com,
-	howard-yh.hsu@mediatek.com,
-	StanleyYP.Wang@mediatek.com,
-	deren.wu@mediatek.com,
-	chui-hao.chiu@mediatek.com,
-	quic_adisi@quicinc.com,
-	gustavoars@kernel.org,
-	razvan.grigore@vampirebyte.ro,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Shengyu Qu <wiagn233@outlook.com>,
-	Sujuan Chen <sujuan.chen@mediatek.com>,
-	Bo Jiao <bo.jiao@mediatek.com>
-Subject: [PATCH v10 RESEND] wifi: mt76: mt7915: add wds support when wed is enabled
-Date: Mon, 21 Apr 2025 22:04:57 +0800
-Message-ID:
- <OSZPR01MB84342A0E21AAD111ED7AF6B198B82@OSZPR01MB8434.jpnprd01.prod.outlook.com>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0024.apcprd02.prod.outlook.com
- (2603:1096:4:1f4::12) To OSZPR01MB8434.jpnprd01.prod.outlook.com
- (2603:1096:604:183::12)
-X-Microsoft-Original-Message-ID: <20250421140457.1221-1-wiagn233@outlook.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 21 Apr
+ 2025 14:05:16 +0000
+Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
+ (2603:10b6:510:2d1:cafe::1c) by PH8PR22CA0018.outlook.office365.com
+ (2603:10b6:510:2d1::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Mon,
+ 21 Apr 2025 14:05:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 14:05:15 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
+ 2025 09:05:10 -0500
+From: Vishal Badole <Vishal.Badole@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <andrew+netdev@lunn.ch>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <Thomas.Lendacky@amd.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <vishal.badole@amd.com>, Vishal Badole <Vishal.Badole@amd.com>,
+	<stable@vger.kernel.org>
+Subject: [PATCH net V2] amd-xgbe: Fix to ensure dependent features are toggled with RX checksum offload
+Date: Mon, 21 Apr 2025 19:34:38 +0530
+Message-ID: <20250421140438.2751080-1-Vishal.Badole@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSZPR01MB8434:EE_|TYYPR01MB15050:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97c28306-4c48-485f-c853-08dd80dd82aa
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|CYYPR12MB8655:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e4222eb-169d-4bf7-0d67-08dd80dd8a58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|19110799003|15080799006|7092599003|5062599005|8060799006|461199028|440099028|3412199025|12091999003|41001999003|26104999006|19111999003|1710799026;
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jLN/at27f3ky2QZtSbLVK+zpGUbqFAUet9QWHmjNGZVnTPAcDJwPFOHNUoqB?=
- =?us-ascii?Q?H5yqE2OFvQY7mIvm6ih0cecwDWkk3hpcyswEJkLg1UgSB6FbjSQ1p/gb1bVD?=
- =?us-ascii?Q?3RPh1qTccIdFMaDbqg31G0iiKD+zjp/EQatVXyw8m7xqlt8Z6hk0JZQvHvTb?=
- =?us-ascii?Q?R63MfW4xCTsYBJAAjh8lQaeIpCIhuAM/BK2YQ/WDuFK7J++Oty4lxTIkomdX?=
- =?us-ascii?Q?vtbQ6M6C1qB9SkgtKhRxxlKAHeJCzM5A9corAHMqkSFADf70p/3MIhBFLi2+?=
- =?us-ascii?Q?DQeeMm+EpIW1FEoJ0mEgVIfqryWKeCYlHgxXTsaPlp1BYhLmxUmDbMGmrupZ?=
- =?us-ascii?Q?SKGCssz15KAFv0Gx6uleqzG52EinUTor6Wp4T8jD15q3P9DPLQv00OkogYGN?=
- =?us-ascii?Q?zm6lz9EdLRfWXZRbeQMo/Fn1MVIjahcooCZwnFIHo2FJQUdS9bsrHX99n5t3?=
- =?us-ascii?Q?XPwqZ9/EjV4dFUCY4SHr34u4igEJxgP/MwiIqKmyrVLCxnFKQgyR58ev63tB?=
- =?us-ascii?Q?SFu2nw8vePG7ylpxm2d4p3ZlqVR0CfUCEbv0oxV5KnccnAfljvj2FLDvozCw?=
- =?us-ascii?Q?6ehtXyh0DajMZaHuIEeniBu7pICKTJ2yID6KK2cvy861ZmaN5Oo9Dv0P9OtJ?=
- =?us-ascii?Q?01M2cB2uM3Me0qoVPbic6ajZDDyVOjPc07gJZJ06fTRGCZe9YIJN1sLggGhT?=
- =?us-ascii?Q?N7IS7AODXNIgwzKzFzkn+OOD+gLwT30K9Jundq/fbwyAtION/+tmQJXlgEMJ?=
- =?us-ascii?Q?zFXSDe4VPjior+j9vpIfrMeXXS4PodPguTtCL8VO9EBPP66B1jGBsIQOjPos?=
- =?us-ascii?Q?POfMsrsVaEbpERU6dQaorau74R3b+dnZkl1RLMXnA1ACeS864SOfrndYPkdc?=
- =?us-ascii?Q?2u2D/Ycs+AA0i9MMf6rtMrT28KIPNCQEoW7yvn9TY+C/s/NAar96HzvXAZT5?=
- =?us-ascii?Q?BV1Br/ItEKSzA1wddugjQoaMQ9oP2nw+GcW3xW1cW2cXdvm6DXBzV8enjgjk?=
- =?us-ascii?Q?6PK2jMO1qowGLhGOEv7Hr43kO9yU029w4ZRKuBe6TqYiW4gJ7aQVk595U4Fo?=
- =?us-ascii?Q?9Maoy4P7T52NaIE10Oq3qNZ8nWsWPLRCfwP6+IKA5XgrUq8N84EcVf8ULfuf?=
- =?us-ascii?Q?gekZYfHWOcfWnth/18EufbbLZ8NYQQjXIXu7xhEH3hd4WQwdZmiB6NQFKOmk?=
- =?us-ascii?Q?VongbHZKIch9+Wg7JIzFieJKT67EFU9WahGnL0UpfH9HUcMnpnVmpgul5i3K?=
- =?us-ascii?Q?b+atzXztSlN4egAzf+nL4JozrKUdMKR1V66+D6tncwbRamAHXsEOD5WeRY0w?=
- =?us-ascii?Q?ock=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VRz+z1LZ74BG6OURyyp5bJv0m4v/J2eyUGZhweThrLvmaZC8MO8gb0+W0Hws?=
- =?us-ascii?Q?VOW4wjUWVfuWpi2CVor+7aBLMeu1eOhRVVCUKZGPEqxT/4Awvrt7ALAm7WXw?=
- =?us-ascii?Q?QIr/dVn2HHxwBnOSCa6j7zIFpdWjrF8ufz4K0pis8q8vXjSRadL4fEQ1e2Qf?=
- =?us-ascii?Q?Cl+SCK4xsF2Jwy73Qk5HlgxDW6hb2KUVR1V7VW1Vd8+jijcGmrb6lU0Fb1ml?=
- =?us-ascii?Q?XyZvHkhvOMLZR+lYTpChy7+XjomUalC7Cqka5hlRWKOCqpWxEBtLvcOuf2mD?=
- =?us-ascii?Q?5AxItbQFL6RXfluesLRz8RRleY7xThTH28vRYfoUnqH+8OsxPe9xaj3kXv9m?=
- =?us-ascii?Q?lxGqfT0kX0okD0tV1jNQUCEGJATCeGy2547Si1EZtgxUC7NfjayrT7ExS2vW?=
- =?us-ascii?Q?YNDZrrLnwPXtoeKrvLFGyONRnm9hlYUuVS0Oi38xHq/rMHutgpNcrOTlx3bR?=
- =?us-ascii?Q?XlPQCfKnt7+9rWrA8GUX5TKw4+8UZXpc99kWv/J+v7dRIs9GPk1RA0XJZuSt?=
- =?us-ascii?Q?3iTVSU59r6jemvAf5osRuelTw4cq8u2InLjxBmGsq3fNPfUgio2kgKwbjnfS?=
- =?us-ascii?Q?X2W+MoN7Jsz84EY9QfhoIjJ7/mevgHqx5iiaJgraDgAyh6aiJdRI30An+c6q?=
- =?us-ascii?Q?QgIcVB+XuFZ01bCLkGTGXR07lSeJm5hU6lPzYMMatYeQgtCnSP0qKtfOxWL6?=
- =?us-ascii?Q?zSA75l3ODXpLRg1p1sXmk6CSHvjX1YHzMsPbxoLfkmR0K6qiFTCf2dapjJbd?=
- =?us-ascii?Q?PxKnr1VUtRHAKuFr8iFE96KH60CXnMbDiAAUmP+TqT1omHuZQrhYcf7iJp8g?=
- =?us-ascii?Q?P5mQp80Ldu8tPxCK9UB74CnNrQVQS1x3Gp5b/4q2ha8vMr0czLP+d9acfnIs?=
- =?us-ascii?Q?Hd5fXEhvF3Z1jmAk8hkg5GIGAs/bz0NWU7DvRzZuDhVEb+kdIApZey4pSk1Q?=
- =?us-ascii?Q?T6mBAuFmwgSeGv/5eEtMlKOII3LFn08u2JkKF6gTSTRf6/23Vw/v+RLfweu4?=
- =?us-ascii?Q?GrRHIqAfYUDo3JwvMhfNW9MvkmRZO7gc9avQPi2ZoGsHqlSa+tPcFp1KqaLL?=
- =?us-ascii?Q?T819zWzYuTrtzLQdnAJKWkOnKR2DqobNEQsnkzWTYVJ9YLR8QoDv6uX8CrPO?=
- =?us-ascii?Q?V0ei3E3wZ0fYvPD14Z1ZqVhaSCABLjPncTOz4cbMCD1zOPibtvDyW7j0Oixc?=
- =?us-ascii?Q?x/VCS3/Klz2a3iVP5d/NW9r6TVlUVWGE86OF7B0KfUquu/1U7t0j1xPt5LM?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97c28306-4c48-485f-c853-08dd80dd82aa
-X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB8434.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 14:05:02.9663
+	=?us-ascii?Q?ywFPLsxCuU4yjh6H9auh3tBLC+On5CQrBAR5f/PE8Sywmd5OlB8VVta1U/6r?=
+ =?us-ascii?Q?WX0069z44JSkiekhPboI4hDVRIuFGIhgPwV3v4x7wr3d+qG1+DQpff7zJrF9?=
+ =?us-ascii?Q?UguPEh1xDiq6S5wTxgTd8yuy/ZMvJ3v8HH1FHl9t+sQRemaliAN2dt5XBBhD?=
+ =?us-ascii?Q?EGkSctCN3jfGmGln3il01ZZSRYRjpwcpzUdGrN3KQNvrA32dbTpeCrD3UPed?=
+ =?us-ascii?Q?IirkOIUAqplE5Y7mNuVeYJ+O/Rtw2pxJP+tFzU7GFmri9xxs44R6REkYvow7?=
+ =?us-ascii?Q?yTbM5KhrqG5p6xbLlSC0wUGiZuyCNLbpC6jDBJxPi1SnYo7iO1FfVfB9KjyL?=
+ =?us-ascii?Q?Wt/SdikOGroFPECYu7gp+z0gz0dujCVfuZIhFWHHZlz/M3IPZHm/vq4e04tz?=
+ =?us-ascii?Q?6CCobd7o97AehsbLybCjZ1MRBvOF02Wqnr81BqexU2z1jq426yMliNVwkvBH?=
+ =?us-ascii?Q?BAj2T7lk3dx0a05AzDTv6ZYP/BVkgOvpkxYYI+HFukHYDaGib3VBP/K/8TH6?=
+ =?us-ascii?Q?W5obRwxs5C+184aiNJRWI8snxtI/puqCBfT9HU/b/G6yI2ig7r7mc8p/299t?=
+ =?us-ascii?Q?ovwxPs4a58pgw2EneL7vat0ojpxTtDvDgSjZlaNky/7ZEZ/oyfWFh5PuP/8P?=
+ =?us-ascii?Q?kAsQr/EPfSkVaF4N5I5pjQm96pVpZ5d3K1uIbnf/EL4wFyBTfyuO6JTlNO/9?=
+ =?us-ascii?Q?Q1kyGVJKi+mxEWItSa4zmFqJRVrs6uY6B7eFfBoTegZmCuZYTt/ThNE9yDW5?=
+ =?us-ascii?Q?9VyQvIFj02LxXDY9VRY70PrT9PYxbQLDFEJ18xlwzLjhe5D99qARjnxu1o5R?=
+ =?us-ascii?Q?Upi7/ulYG7whZjMsr9HzJIU9G6bwJdUp9JPqQMHPLLQzoPozaWbR6GQs6rs7?=
+ =?us-ascii?Q?yFf5Mx+U2gitJXPPtC7cgEYp4CKDN8l9cZeMqqbH2Io+tOZxtJwujTiLEmaa?=
+ =?us-ascii?Q?mNopO1pR+wNMHyB7EvlDmHx1qDXQVsOG5okJabts4sm5M9NW6Hrg/EIZTucF?=
+ =?us-ascii?Q?SrBGsyWqPjxsyP710Af8cFK1PdVupqCbpBLCf12VtGqg2JWYadqo2EnMLKyb?=
+ =?us-ascii?Q?RQwK3PXcIbfKwFowigahCXBKKYHX6so3OuLUMIycKEk+tCk6u1dAHu68WLCU?=
+ =?us-ascii?Q?ph2G80EJ06cAvpubAXVqPvnJfboneOCaQPxozLtGeQF/WVbqorIToi0OzJ0H?=
+ =?us-ascii?Q?3toSAinKgBU1SIY9IjWt6T2L37Pfc1wiJ1tVlMGCZJZB4+eq0G0G44M6CpM4?=
+ =?us-ascii?Q?/xQ1ZJxt2V135z5bfTE9bWjXLMF8zQLvJ4BltWCVS5Z+cHBydf38/grYYakO?=
+ =?us-ascii?Q?G8W6wwjHJD9q0Q7dcvG8VgHAbd59LSPGIwfduogtrUwxLVPgAiHJdc3Xp+Gz?=
+ =?us-ascii?Q?+5wxznpKDJnox/SZXdMwZO5wk22ZAKD4kUVdpnurvmI9I5r7f6UmAx3HO8vr?=
+ =?us-ascii?Q?/qi6NYdnT/c+i+M0hJb4VzJOOcRWpralgU1VGquL5DpzXGzNrdg5qcjftrRv?=
+ =?us-ascii?Q?UV9EA8ll4kO2XA/EueLXG0Rqe1aaXPVcL6e6?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 14:05:15.3163
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB15050
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e4222eb-169d-4bf7-0d67-08dd80dd8a58
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8655
 
-The current WED only supports 256 wcid, whereas mt7986 can support up to
-512 entries, so firmware provides a rule to get sta_info by DA when wcid
-is set to 0x3ff by txd. Also, WED provides a register to overwrite txd
-wcid, that is, wcid[9:8] can be overwritten by 0x3 and wcid[7:0] is set
-to 0xff by host driver.
+According to the XGMAC specification, enabling features such as Layer 3
+and Layer 4 Packet Filtering, Split Header, Receive Side Scaling (RSS),
+and Virtualized Network support automatically selects the IPC Full
+Checksum Offload Engine on the receive side.
 
-However, firmware is unable to get sta_info from DA as DA != RA for
-4addr cases, so firmware and wifi host driver both use wcid (256 - 271)
-and (768 ~ 783) for sync up to get correct sta_info.
+When RX checksum offload is disabled, these dependent features must also
+be disabled to prevent abnormal behavior caused by mismatched feature
+dependencies.
 
-Currently WDS+WED config is completely broken on MT7986/7981 devices if
-without this patch.
+Ensure that toggling RX checksum offload (disabling or enabling) properly
+disables or enables all dependent features, maintaining consistent and
+expected behavior in the network device.
 
-Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
-Tested-by: Sujuan Chen <sujuan.chen@mediatek.com>
-Co-developed-by: Bo Jiao <bo.jiao@mediatek.com>
-Signed-off-by: Bo Jiao <bo.jiao@mediatek.com>
-Signed-off-by: Sujuan Chen <sujuan.chen@mediatek.com>
-Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
+v1->v2:
+-------
+- Combine 2 patches into a single patch
+- Update the "Fix: tag"
+- Add necessary changes to support earlier versions of the hardware as well
+
+Cc: stable@vger.kernel.org
+Fixes: 1a510ccf5869 ("amd-xgbe: Add support for VXLAN offload capabilities")
+Signed-off-by: Vishal Badole <Vishal.Badole@amd.com>
 ---
-Changes since v1:
- - Drop duplicate setting in mmio
- - Reduce the patch size by redefining mt76_wcid_alloc
-Changes since v2:
- - Rework wds wcid getting flow
-Changes since v3:
- - Rebase to next-20240703
- - Sync with downstream patch
-Changes since v4:
- - Rebase to next-20240802
-Changes since v5:
- - Fixed build test error reported by robot
- - Rebase to next-20240805
-Changes since v6:
- - Fix potential race conditions on tx/rx packets during the transition
- - Rebase to Felix's newest codebase
-Changes since v7:
- - Fix build fail
-Changes since v8:
- - Changed code as Shih advised
-Changes since v9:
- - Changed code as Shih advised
- - Moved mt76_wcid_alloc to mt76.h
----
- drivers/net/wireless/mediatek/mt76/mt76.h     | 15 ++++++
- .../net/wireless/mediatek/mt76/mt7915/main.c  | 53 +++++++++++++++++--
- .../net/wireless/mediatek/mt76/mt7915/mcu.c   | 18 +++++--
- .../net/wireless/mediatek/mt76/mt7915/mcu.h   |  1 +
- drivers/net/wireless/mediatek/mt76/util.c     | 37 +++++++++++--
- drivers/net/wireless/mediatek/mt76/util.h     |  2 +-
- 6 files changed, 115 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/amd/xgbe/xgbe-desc.c |  9 +++++++--
+ drivers/net/ethernet/amd/xgbe/xgbe-dev.c  | 24 +++++++++++++++++++++--
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c  | 21 ++++++++++++++++++--
+ drivers/net/ethernet/amd/xgbe/xgbe.h      |  4 ++++
+ 4 files changed, 52 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index d7cd467b812f..7f590854959e 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -28,6 +28,9 @@
- 
- #define MT76_TOKEN_FREE_THR	64
- 
-+#define MT76_WED_WDS_MIN    256
-+#define MT76_WED_WDS_MAX    272
-+
- #define MT_QFLAG_WED_RING	GENMASK(1, 0)
- #define MT_QFLAG_WED_TYPE	GENMASK(4, 2)
- #define MT_QFLAG_WED		BIT(5)
-@@ -73,6 +76,12 @@ enum mt76_wed_type {
- 	MT76_WED_RRO_Q_IND,
- };
- 
-+enum mt76_wed_state {
-+	MT76_WED_DEFAULT,
-+	MT76_WED_ACTIVE,
-+	MT76_WED_WDS_ACTIVE,
-+};
-+
- struct mt76_bus_ops {
- 	u32 (*rr)(struct mt76_dev *dev, u32 offset);
- 	void (*wr)(struct mt76_dev *dev, u32 offset, u32 val);
-@@ -1169,6 +1178,12 @@ void mt76_wed_dma_reset(struct mt76_dev *dev);
- int mt76_wed_net_setup_tc(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 			  struct net_device *netdev, enum tc_setup_type type,
- 			  void *type_data);
-+
-+static inline int mt76_wcid_alloc(u32 *mask, int size)
-+{
-+	return __mt76_wcid_alloc(mask, size, MT76_WED_DEFAULT);
-+}
-+
- #ifdef CONFIG_NET_MEDIATEK_SOC_WED
- u32 mt76_wed_init_rx_buf(struct mtk_wed_device *wed, int size);
- int mt76_wed_offload_enable(struct mtk_wed_device *wed);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/main.c b/drivers/net/wireless/mediatek/mt76/mt7915/main.c
-index 3aa31c5cefa6..fcbf4f971026 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/main.c
-@@ -744,9 +744,16 @@ int mt7915_mac_sta_add(struct mt76_dev *mdev, struct ieee80211_vif *vif,
- 	struct mt7915_sta *msta = (struct mt7915_sta *)sta->drv_priv;
- 	struct mt7915_vif *mvif = (struct mt7915_vif *)vif->drv_priv;
- 	bool ext_phy = mvif->phy != &dev->phy;
-+	u8 flags = MT76_WED_DEFAULT;
- 	int idx;
- 
--	idx = mt76_wcid_alloc(dev->mt76.wcid_mask, MT7915_WTBL_STA);
-+	if (mtk_wed_device_active(&dev->mt76.mmio.wed) &&
-+	    !is_mt7915(&dev->mt76)) {
-+		flags = test_bit(MT_WCID_FLAG_4ADDR, &msta->wcid.flags) ?
-+		       MT76_WED_WDS_ACTIVE : MT76_WED_ACTIVE;
-+	}
-+
-+	idx = __mt76_wcid_alloc(mdev->wcid_mask, MT7915_WTBL_STA, flags);
- 	if (idx < 0)
- 		return -ENOSPC;
- 
-@@ -1271,6 +1278,11 @@ static void mt7915_sta_set_4addr(struct ieee80211_hw *hw,
- {
- 	struct mt7915_dev *dev = mt7915_hw_dev(hw);
- 	struct mt7915_sta *msta = (struct mt7915_sta *)sta->drv_priv;
-+	int min = MT76_WED_WDS_MIN, max = MT76_WED_WDS_MAX;
-+	struct ieee80211_sta *pre_sta;
-+	struct mt7915_sta *pre_msta;
-+	u8 flags = MT76_WED_DEFAULT;
-+	int tmp_idx;
- 
- 	if (enabled)
- 		set_bit(MT_WCID_FLAG_4ADDR, &msta->wcid.flags);
-@@ -1280,6 +1292,37 @@ static void mt7915_sta_set_4addr(struct ieee80211_hw *hw,
- 	if (!msta->wcid.sta)
- 		return;
- 
-+	if (mtk_wed_device_active(&dev->mt76.mmio.wed) &&
-+	    !is_mt7915(&dev->mt76) &&
-+	    (msta->wcid.idx < min || msta->wcid.idx > max - 1)) {
-+		pre_sta = kmemdup(sta, sizeof(*sta) + sizeof(*msta), GFP_KERNEL | __GFP_ZERO);
-+		if (!pre_sta)
-+			goto error_alloc;
-+		pre_msta = (struct mt7915_sta *)pre_sta->drv_priv;
-+
-+		flags = test_bit(MT_WCID_FLAG_4ADDR, &msta->wcid.flags) ?
-+			MT76_WED_WDS_ACTIVE : MT76_WED_ACTIVE;
-+
-+		tmp_idx = __mt76_wcid_alloc(dev->mt76.wcid_mask, MT7915_WTBL_STA, flags);
-+		if (tmp_idx < 0)
-+			goto error_wcid;
-+		pre_msta->wcid.idx = (u16)tmp_idx;
-+		mt7915_mac_sta_add(&dev->mt76, vif, pre_sta);
-+		rcu_assign_pointer(dev->mt76.wcid[tmp_idx], &msta->wcid);
-+
-+		tmp_idx = msta->wcid.idx;
-+		msta->wcid.idx = pre_msta->wcid.idx;
-+		pre_msta->wcid.idx = (u16)tmp_idx;
-+		rcu_assign_pointer(dev->mt76.wcid[tmp_idx], NULL);
-+
-+		synchronize_rcu();
-+		mt7915_mac_sta_remove(&dev->mt76, vif, pre_sta);
-+
-+error_wcid:
-+		kfree(pre_sta);
-+	}
-+
-+error_alloc:
- 	mt76_connac_mcu_wtbl_update_hdr_trans(&dev->mt76, vif, sta);
- }
- 
-@@ -1726,15 +1769,19 @@ mt7915_net_fill_forward_path(struct ieee80211_hw *hw,
- 	if (!mtk_wed_device_active(wed))
- 		return -ENODEV;
- 
--	if (msta->wcid.idx > 0xff)
-+	if (msta->wcid.idx > MT7915_WTBL_STA)
- 		return -EIO;
- 
- 	path->type = DEV_PATH_MTK_WDMA;
- 	path->dev = ctx->dev;
- 	path->mtk_wdma.wdma_idx = wed->wdma_idx;
- 	path->mtk_wdma.bss = mvif->mt76.idx;
--	path->mtk_wdma.wcid = is_mt7915(&dev->mt76) ? msta->wcid.idx : 0x3ff;
- 	path->mtk_wdma.queue = phy != &dev->phy;
-+	if (test_bit(MT_WCID_FLAG_4ADDR, &msta->wcid.flags) ||
-+	    is_mt7915(&dev->mt76))
-+		path->mtk_wdma.wcid = msta->wcid.idx;
-+	else
-+		path->mtk_wdma.wcid = 0x3ff;
- 
- 	ctx->dev = NULL;
- 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-index 427542777abc..61a854d2c416 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
-@@ -2403,10 +2403,20 @@ int mt7915_mcu_init_firmware(struct mt7915_dev *dev)
- 
- 	mt76_connac_mcu_del_wtbl_all(&dev->mt76);
- 
--	if ((mtk_wed_device_active(&dev->mt76.mmio.wed) &&
--	     is_mt7915(&dev->mt76)) ||
--	    !mtk_wed_get_rx_capa(&dev->mt76.mmio.wed))
--		mt7915_mcu_wa_cmd(dev, MCU_WA_PARAM_CMD(CAPABILITY), 0, 0, 0);
-+#if IS_ENABLED(CONFIG_NET_MEDIATEK_SOC_WED)
-+	if (mtk_wed_device_active(&dev->mt76.mmio.wed)) {
-+		if (is_mt7915(&dev->mt76) ||
-+		    !mtk_wed_get_rx_capa(&dev->mt76.mmio.wed))
-+			ret = mt7915_mcu_wa_cmd(dev, MCU_WA_PARAM_CMD(CAPABILITY),
-+						0, 0, 0);
-+		else
-+			ret = mt7915_mcu_wa_cmd(dev, MCU_WA_PARAM_CMD(SET),
-+						MCU_WA_PARAM_WED_VERSION,
-+						dev->mt76.mmio.wed.rev_id, 0);
-+		if (ret)
-+			return ret;
-+	}
-+#endif
- 
- 	ret = mt7915_mcu_set_mwds(dev, 1);
- 	if (ret)
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-index 086ad89ecd91..989f24cb49eb 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.h
-@@ -278,6 +278,7 @@ enum {
- 	MCU_WA_PARAM_PDMA_RX = 0x04,
- 	MCU_WA_PARAM_CPU_UTIL = 0x0b,
- 	MCU_WA_PARAM_RED = 0x0e,
-+	MCU_WA_PARAM_WED_VERSION = 0x32,
- 	MCU_WA_PARAM_RED_SETTING = 0x40,
- };
- 
-diff --git a/drivers/net/wireless/mediatek/mt76/util.c b/drivers/net/wireless/mediatek/mt76/util.c
-index 95b3dc96e4c4..e80bef2b33a1 100644
---- a/drivers/net/wireless/mediatek/mt76/util.c
-+++ b/drivers/net/wireless/mediatek/mt76/util.c
-@@ -42,8 +42,10 @@ bool ____mt76_poll_msec(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
- }
- EXPORT_SYMBOL_GPL(____mt76_poll_msec);
- 
--int mt76_wcid_alloc(u32 *mask, int size)
-+int __mt76_wcid_alloc(u32 *mask, int size, u8 flag)
- {
-+	int max = MT76_WED_WDS_MAX;
-+	int min = MT76_WED_WDS_MIN;
- 	int i, idx = 0, cur;
- 
- 	for (i = 0; i < DIV_ROUND_UP(size, 32); i++) {
-@@ -53,16 +55,45 @@ int mt76_wcid_alloc(u32 *mask, int size)
- 
- 		idx--;
- 		cur = i * 32 + idx;
--		if (cur >= size)
-+
-+		switch (flag) {
-+		case MT76_WED_ACTIVE:
-+			if (cur >= min && cur < max)
-+				continue;
-+
-+			if (cur >= size) {
-+				u32 end = max - min - 1;
-+
-+				i = min / 32;
-+				idx = ffs(~mask[i] & GENMASK(end, 0));
-+				if (!idx)
-+					goto error;
-+				idx--;
-+				cur = min + idx;
-+			}
-+
- 			break;
-+		case MT76_WED_WDS_ACTIVE:
-+			if (cur < min)
-+				continue;
-+			if (cur >= max)
-+				goto error;
-+
-+			break;
-+		default:
-+			if (cur >= size)
-+				goto error;
-+			break;
-+		}
- 
- 		mask[i] |= BIT(idx);
- 		return cur;
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-desc.c b/drivers/net/ethernet/amd/xgbe/xgbe-desc.c
+index 230726d7b74f..d41b58fad37b 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-desc.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-desc.c
+@@ -373,8 +373,13 @@ static int xgbe_map_rx_buffer(struct xgbe_prv_data *pdata,
  	}
  
-+error:
- 	return -1;
+ 	/* Set up the header page info */
+-	xgbe_set_buffer_data(&rdata->rx.hdr, &ring->rx_hdr_pa,
+-			     XGBE_SKB_ALLOC_SIZE);
++	if (pdata->netdev->features & NETIF_F_RXCSUM) {
++		xgbe_set_buffer_data(&rdata->rx.hdr, &ring->rx_hdr_pa,
++				     XGBE_SKB_ALLOC_SIZE);
++	} else {
++		xgbe_set_buffer_data(&rdata->rx.hdr, &ring->rx_hdr_pa,
++				     pdata->rx_buf_size);
++	}
+ 
+ 	/* Set up the buffer page info */
+ 	xgbe_set_buffer_data(&rdata->rx.buf, &ring->rx_buf_pa,
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-dev.c b/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
+index 7a923b6e83df..d0a35aab7355 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-dev.c
+@@ -321,6 +321,18 @@ static void xgbe_config_sph_mode(struct xgbe_prv_data *pdata)
+ 	XGMAC_IOWRITE_BITS(pdata, MAC_RCR, HDSMS, XGBE_SPH_HDSMS_SIZE);
  }
--EXPORT_SYMBOL_GPL(mt76_wcid_alloc);
-+EXPORT_SYMBOL_GPL(__mt76_wcid_alloc);
  
- int mt76_get_min_avg_rssi(struct mt76_dev *dev, u8 phy_idx)
++static void xgbe_disable_sph_mode(struct xgbe_prv_data *pdata)
++{
++	unsigned int i;
++
++	for (i = 0; i < pdata->channel_count; i++) {
++		if (!pdata->channel[i]->rx_ring)
++			break;
++
++		XGMAC_DMA_IOWRITE_BITS(pdata->channel[i], DMA_CH_CR, SPH, 0);
++	}
++}
++
+ static int xgbe_write_rss_reg(struct xgbe_prv_data *pdata, unsigned int type,
+ 			      unsigned int index, unsigned int val)
  {
-diff --git a/drivers/net/wireless/mediatek/mt76/util.h b/drivers/net/wireless/mediatek/mt76/util.h
-index 260965dde94c..fe95a847182e 100644
---- a/drivers/net/wireless/mediatek/mt76/util.h
-+++ b/drivers/net/wireless/mediatek/mt76/util.h
-@@ -27,7 +27,7 @@ enum {
- #define MT76_INCR(_var, _size) \
- 	(_var = (((_var) + 1) % (_size)))
+@@ -3750,8 +3762,12 @@ static int xgbe_init(struct xgbe_prv_data *pdata)
+ 	xgbe_config_tx_coalesce(pdata);
+ 	xgbe_config_rx_buffer_size(pdata);
+ 	xgbe_config_tso_mode(pdata);
+-	xgbe_config_sph_mode(pdata);
+-	xgbe_config_rss(pdata);
++
++	if (pdata->netdev->features & NETIF_F_RXCSUM) {
++		xgbe_config_sph_mode(pdata);
++		xgbe_config_rss(pdata);
++	}
++
+ 	desc_if->wrapper_tx_desc_init(pdata);
+ 	desc_if->wrapper_rx_desc_init(pdata);
+ 	xgbe_enable_dma_interrupts(pdata);
+@@ -3910,5 +3926,9 @@ void xgbe_init_function_ptrs_dev(struct xgbe_hw_if *hw_if)
+ 	hw_if->disable_vxlan = xgbe_disable_vxlan;
+ 	hw_if->set_vxlan_id = xgbe_set_vxlan_id;
  
--int mt76_wcid_alloc(u32 *mask, int size);
-+int __mt76_wcid_alloc(u32 *mask, int size, u8 flags);
++	/* For Split Header*/
++	hw_if->enable_sph = xgbe_config_sph_mode;
++	hw_if->disable_sph = xgbe_disable_sph_mode;
++
+ 	DBGPR("<--xgbe_init_function_ptrs\n");
+ }
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index f249f89fec38..4d290ec934a8 100755
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -2267,6 +2267,16 @@ static netdev_features_t xgbe_fix_features(struct net_device *netdev,
+ 		}
+ 	}
  
- static inline void
- mt76_wcid_mask_set(u32 *mask, int idx)
++	if (features & NETIF_F_RXCSUM) {
++		netdev_notice(netdev,
++			      "forcing receive hashing on\n");
++		features |= NETIF_F_RXHASH;
++	} else {
++		netdev_notice(netdev,
++			      "forcing receive hashing off\n");
++		features &= ~NETIF_F_RXHASH;
++	}
++
+ 	return features;
+ }
+ 
+@@ -2290,10 +2300,17 @@ static int xgbe_set_features(struct net_device *netdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	if ((features & NETIF_F_RXCSUM) && !rxcsum)
++	if ((features & NETIF_F_RXCSUM) && !rxcsum) {
++		hw_if->enable_sph(pdata);
++		hw_if->enable_vxlan(pdata);
+ 		hw_if->enable_rx_csum(pdata);
+-	else if (!(features & NETIF_F_RXCSUM) && rxcsum)
++		schedule_work(&pdata->restart_work);
++	} else if (!(features & NETIF_F_RXCSUM) && rxcsum) {
++		hw_if->disable_sph(pdata);
++		hw_if->disable_vxlan(pdata);
+ 		hw_if->disable_rx_csum(pdata);
++		schedule_work(&pdata->restart_work);
++	}
+ 
+ 	if ((features & NETIF_F_HW_VLAN_CTAG_RX) && !rxvlan)
+ 		hw_if->enable_rx_vlan_stripping(pdata);
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe.h b/drivers/net/ethernet/amd/xgbe/xgbe.h
+index db73c8f8b139..92b61a318f66 100755
+--- a/drivers/net/ethernet/amd/xgbe/xgbe.h
++++ b/drivers/net/ethernet/amd/xgbe/xgbe.h
+@@ -902,6 +902,10 @@ struct xgbe_hw_if {
+ 	void (*enable_vxlan)(struct xgbe_prv_data *);
+ 	void (*disable_vxlan)(struct xgbe_prv_data *);
+ 	void (*set_vxlan_id)(struct xgbe_prv_data *);
++
++	/* For Split Header */
++	void (*enable_sph)(struct xgbe_prv_data *pdata);
++	void (*disable_sph)(struct xgbe_prv_data *pdata);
+ };
+ 
+ /* This structure represents implementation specific routines for an
 -- 
-2.43.0
+2.34.1
 
