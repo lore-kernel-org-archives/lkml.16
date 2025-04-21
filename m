@@ -1,142 +1,148 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D001E2AE8B;
-	Mon, 21 Apr 2025 05:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F11DF246
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 05:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745212231; cv=none; b=pjQNHLO8eM1KUTbzwkPp7HS4CRAPtSRhsfxTJztHhOOmvz8xMT+ih+BwRU5tg+MeHV0pipRblygUE4qVX8M3W6l5yfEdXCy8NJE+KZ9a0dJFUqwnBDnHMFezYwNV+vQqTmJOYTvLxCIhCHbMrfbYWR04sflYtRjZjfAyZOZx9FU=
+	t=1745212395; cv=none; b=ToUoPBukbstzhBpZv14XswwizrSffSW991lry6mpe/az3Ci3QAJ7ds+vZBzixsrTop3NDeredhulZC15Z9SztkOuznIH/HTXEs3j67OOXc1mF5JK6ZEYn8/s4EIPK9ApERSfgWn0WYxZgOHUKzj8lDGliOd/UF41wg5AODE+5kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745212231; c=relaxed/simple;
-	bh=ifZ054TzkWPviROXaS7e97wYSY/LdjcxMNn+uXCh1F8=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=ix0AO0u1/yVSV4EC9iaBdtku5rcPKjeugDJP9n8GkunR11/EnA6x4vZ1i6iI0VCKmiCpT31nqt2QecnyGRrMgWxzvEyxLr+Jim48e8tKjObbpQtH27FJaryCQJDqxa+3A5Izjcl07uWsCnYh0mDH9MuFTX1h/HzuyPRh2CzqnUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=d3p6E9cn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pvl3+98v; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
+	s=arc-20240116; t=1745212395; c=relaxed/simple;
+	bh=mReNNPuNhp7xf3f+8g5zttLQwu1tj4uLl3lDmZGL9u4=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Da/plqYF8QofecBH41pfFemP8Uaa+wmysYa8dAZ6sGcRXmjaBaRii9xwxcQBUjOhYzFD6ionSK3e+SCcBgD61+XQMZErd5ZQCuk4FWFHXAbs3Ggbc5alxq9rwyCUpCW9PP3/BlFjV9asqhzxFiulK6JMOsETDZW+x8QQzYjSSvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fhM1GVzx; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="d3p6E9cn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pvl3+98v"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 93EAF11401F8;
-	Mon, 21 Apr 2025 01:10:26 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Mon, 21 Apr 2025 01:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
-	 h=cc:cc:content-id:content-type:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1745212226; x=
-	1745298626; bh=gZNKRlDZ7KS5u3VMG7yx75wRgEflOKQxVSXOy4SQZds=; b=d
-	3p6E9cn8k1yiSfqovdgTMSLtWNzY026KIDeHe/TO7naI0pznfVGIAYo/Uz3WHkfC
-	ivk7+jKBvGtWeWyp952f9MgjRkj/IysrFApuUejp7BXBIzJZ/FtZ8YshtMuviMw8
-	60ARKWhdREhSSx8ddyFUtB6qjyFksxKafz8Ao8tzzWylGxbdcFw8VWh9T/QpURda
-	Y+ld75wsbEWEJh2YGfpZOnbctTEHCCSnOXkHHRLz0fMUKH3rexqOUp3NAWigthge
-	lqFuupY8xQn+sRdYfvq8azCQ6rBCjMVu8Ttbo9PEMrV/Oy5/iuY/bBIJ8Q3lQuZ3
-	DxrUPPnmtVeEAY7ed7bHg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-id:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1745212226; x=1745298626; bh=g
-	ZNKRlDZ7KS5u3VMG7yx75wRgEflOKQxVSXOy4SQZds=; b=pvl3+98vRZFZNaSRg
-	qWNTDYC1GgS+UVpyXAie8S5HHf0qCl12TBlFq643KSs2yB2aU1+GvYCEssUEqjXz
-	eLpUCN6+xt/J0T6miM5JwkT5NRH2ZvTgUhxgw8jiOVc4MhRdtFaAb1poIymMHumy
-	49Ajfv58y0b3KQULSlktH1RWukwe3AnT/bgHWEZpD0I3fqGBXmUmPBlCwl7tpNjd
-	uMFHpmLgMoFSIkF2XS6vNwfBu5XYnf46rQYc0UN1LE/fkyQcXzFd4MKi6VqWHB12
-	XOfWQYOocc5+A46IJWUY4KSDY45icEw6waCChTh3O4p7n2vjg/QTECHlvIZ6EEA0
-	J+NPw==
-X-ME-Sender: <xms:QtMFaNvr5KcBurClK7gbWVcuvygvdFHSoshAgIuUBzSHdCUcjAw7HQ>
-    <xme:QtMFaGdKOcjv47evf7fLAp1EONc75U7qQe6MFe5qQOzHToCYTE6zqtxwgrp0TJvuy
-    WKfsV9t65fsG12gejE>
-X-ME-Received: <xmr:QtMFaAyQkZnx1lJWzOWslovvwzv5cDPYdOr9tlLi6vcUfD7SLgJkBGHo7MwzNSvRDNC-2g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvfeelleejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgffkfesthdtredtredt
-    vdenucfhrhhomheplfgrhicugghoshgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrd
-    hnvghtqeenucggtffrrghtthgvrhhnpeejvdfghfetvedvudefvdejgeelteevkeevgedt
-    hfdukeevieejueehkeegffejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehjvhesjhhvohhssghurhhghhdrnhgvthdpnhgspghrtghpthht
-    ohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrrgiiohhrsegslhgrtg
-    hkfigrlhhlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
-    thdprhgtphhtthhopehlihhuhhgrnhhgsghinhesghhmrghilhdrtghomhdprhgtphhtth
-    hopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhhorhhmshes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohep
-    tghrrghtihhusehnvhhiughirgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvug
-    hhrghtrdgtohhm
-X-ME-Proxy: <xmx:QtMFaEOJWKK9NHPu-0IbFSwJk9yn7a-q1z4Q4M0YOtolWJtyEiWu2w>
-    <xmx:QtMFaN9nDIuXLBxkwgvwLHhiRITd2T2EP3SreUfz_T8aQ1aS1-zURA>
-    <xmx:QtMFaEUwFf7-HojDC9bdsB2Z5pL8dGOrF7e0pQ7RwT1xYqBk-yoKNA>
-    <xmx:QtMFaOccnQAYFx0odqJLh9e946TWl_L9Vll2Yr0UwuTILw_c95roOQ>
-    <xmx:QtMFaIqDLlw-PXwBik6-DpgJE3YZeZ49paMv7PlPosFoZ2QXvyw5lbn1>
-Feedback-ID: i53714940:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 21 Apr 2025 01:10:25 -0400 (EDT)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id 8C7BC9FD38; Sun, 20 Apr 2025 22:10:24 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id 87ADD9FC89;
-	Sun, 20 Apr 2025 22:10:24 -0700 (PDT)
-From: Jay Vosburgh <jv@jvosburgh.net>
-To: Hangbin Liu <liuhangbin@gmail.com>
-cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>,
-    Nikolay Aleksandrov <razor@blackwall.org>,
-    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
- device address is same
-In-reply-to: <aAXIZAkg4W71HQ6c@fedora>
-References: <20250401090631.8103-1-liuhangbin@gmail.com>
- <3383533.1743802599@famine> <Z_OcP36h_XOhAfjv@fedora>
- <Z_yl7tQne6YTcU6S@fedora> <4177946.1744766112@famine>
- <Z_8bfpQb_3fqYEcn@fedora> <155385.1744949793@famine>
- <aAXIZAkg4W71HQ6c@fedora>
-Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
-   message dated "Mon, 21 Apr 2025 04:24:04 -0000."
-X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fhM1GVzx"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <360699.1745212224.1@famine>
-Date: Sun, 20 Apr 2025 22:10:24 -0700
-Message-ID: <360700.1745212224@famine>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745212388;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yba2DH1EDjNgUXaKKw6VxTi22gaO7PDpRoTTNn5NzZY=;
+	b=fhM1GVzxQjaB8x1SFxwmzboWOamHOE0Rbn8NO4APvL2/MHiixtTPE1IzY3nnSwa+Q7nO3Z
+	9H06+n43qByybukVepL4b6c/TlJ/nICrronhpL1Hgnkb7zEIxD0DqKzkgksR+HM15NQ6Pp
+	QlpKjOt1nIkSgR9xomwKuyCFg13yhZc=
+Date: Mon, 21 Apr 2025 05:13:03 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Lance Yang" <lance.yang@linux.dev>
+Message-ID: <641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
+TLS-Required: No
+Subject: Re: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for
+ folio_test_large_maybe_mapped_shared()
+To: "Andrew Morton" <akpm@linux-foundation.org>, "David Hildenbrand"
+ <david@redhat.com>
+Cc: mingzhe.yang@ly.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ "Lance Yang" <ioworker0@gmail.com>
+In-Reply-To: <20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
+References: <20250418152228.20545-1-lance.yang@linux.dev>
+ <20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hangbin Liu <liuhangbin@gmail.com> wrote:
+April 21, 2025 at 7:29 AM, "Andrew Morton" <akpm@linux-foundation.org> wr=
+ote:
 
->Hi Jay,
+
+
+>=20
+>=20On Fri, 18 Apr 2025 23:22:28 +0800 Lance Yang <ioworker0@gmail.com> w=
+rote:
+>=20
+>=20>=20
+>=20> From: Lance Yang <lance.yang@linux.dev>
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  To prevent folio_test_large_maybe_mapped_shared() from being used =
+without
+> >=20
+>=20>  CONFIG_MM_ID, we add a compile-time check rather than wrapping it =
+in
+> >=20
+>=20>  '#ifdef', avoiding even more #ifdef in callers that already use
+> >=20
+>=20>  IS_ENABLED(CONFIG_MM_ID).
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Also, we used plenty of IS_ENABLED() on purpose to keep the code f=
+ree of
+> >=20
+>=20>  '#ifdef' mess.
+> >=20
+>=20
+> I dunno, this just seems really whacky.
+
+I'd hope David could leave some comments on that.
+
+>=20
+>=20>=20
+>=20> --- a/include/linux/page-flags.h
+> >=20
+>=20>  +++ b/include/linux/page-flags.h
+> >=20
+>=20>  @@ -1232,6 +1232,8 @@ static inline int folio_has_private(const st=
+ruct folio *folio)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  static inline bool folio_test_large_maybe_mapped_shared(const stru=
+ct folio *folio)
+> >=20
+>=20>  {
+> >=20
+>=20>  + /* This function should never be called without CONFIG_MM_ID ena=
+bled. */
+> >=20
+>=20
+> A correcter comment would be "This function should never be compiled
+>=20
+>=20without CONFIG_MM_ID enabled".
+
+Yes, that is more exact ;)
+
+>=20
+>=20Which lets the cat out of the bag. Why the heck is it being compiled
+>=20
+>=20with CONFIG_MM_ID=3Dn?? We have tools to prevent that.
+>=20
+>=20Can we just slap "#ifdef CONFIG_MM_ID" around the whole function? It
+>=20
+>=20should have no callers, right? If the linker ends up complaining then
+>=20
+>=20something went wrong.
+
+The reason we can't simply add #ifdef CONFIG_MM_ID around folio_test_larg=
+e_maybe_mapped_shared()
+is because its caller folio_maybe_mapped_shared() relies on IS_ENABLED(CO=
+NFIG_MM_ID).
+
+If we do, with CONFIG_TRANSPARENT_HUGEPAGE=3DN, we'll hit compilation err=
+ors like:
+
+./include/linux/mm.h: In function =E2=80=98folio_maybe_mapped_shared=E2=
+=80=99:
+./include/linux/mm.h:2337:16: error: implicit declaration of function =E2=
+=80=98folio_test_large_maybe_mapped_shared=E2=80=99; did you mean =E2=80=
+=98folio_maybe_mapped_shared=E2=80=99? [-Werror=3Dimplicit-function-decla=
+ration]
+ 2337 |         return folio_test_large_maybe_mapped_shared(folio);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                folio_maybe_mapped_shared
+cc1: some warnings being treated as errors
+
+
+Thanks,
+Lance
 >
->On Thu, Apr 17, 2025 at 09:16:33PM -0700, Jay Vosburgh wrote:
->> 	Wouldn't it be equally effective to, when the conflicting
->> interface is added, give it a random MAC to avoid the conflict?  That
->> random MAC shouldn't end up as the bond's MAC, so it would exist only as
->> a placeholder of sorts.
->> 
->> 	I'm unsure if there are many (any?) devices in common use today
->> that actually have issues with multiple ports using the same MAC, so I
->> don't think we need an overly complicated solution.
->
->I'm not familiar with infiniband devices. Can we use eth_random_addr()
->to set random addr for infiniband devices? And what about other device
->type? Just return error directly?
-
-	Infiniband devices have fixed MAC addresses that cannot be
-changed.  Bonding permits IB devices only in active-backup mode, and
-will set fail_over_mac to active (fail_over_mac=follow is not permitted
-for IB).
-
-	I don't understand your questions about other device types or
-errors, could you elaborate?
-
-	-J
-
----
-	-Jay Vosburgh, jv@jvosburgh.net
