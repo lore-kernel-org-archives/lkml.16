@@ -1,67 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3503F1D5178;
-	Mon, 21 Apr 2025 08:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D72220E01E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745223694; cv=none; b=cF8BZVq7aUHskwfcYh2P9Xz6bBIdvUQLZ6VOp7/YLoGMTY4hVJRoYi5qcMJxgOCyDIibIjiz1qdEQYmLriNNdOMqVcJQRVr98VkCC9Mb77BrfxnaAyUuzJL3Nhu8xSTlXGcpu4BiQpdUkVup5vN+/jQf2J/i0Lc6J2gD94OLEpM=
+	t=1745223721; cv=none; b=Jco0bnHlm3OIh0NzOoPtVKCJjDuDo4ymfCsXHGj5Mt/PDeGFKTgttEfK20FnY8cZJKMgzk3uNzBhw2qoO38L3sG+qofy55vmY/ji91B/wnl+IQ0KTgTC//150evH8px/hQ0cEjI1kV+JWeyAFXYNS+AqxVNcSSuGum+Xxd6QDRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745223694; c=relaxed/simple;
-	bh=C7Yr9B85WuyxzW/DyvbRmztxW7xiL896fdLQzr9xw6o=;
+	s=arc-20240116; t=1745223721; c=relaxed/simple;
+	bh=rfBDcIm653IrfaI7zELXpLUcNIgBnt6pj9hB8cCMYuA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nw7VMsKmFw9hljs7cqdxRZGSGPCaYe5+GM7Q9S7TJZDrp+K9A9FEdlk5wbXCWhUhNhi0lfWsC+ZMnTE2jmiLN+QtmXdS7zoukix9spMF6ZZ+OTTQHtlyiPxJW8qEOBOWXWHmssRE5TfMYL3jkWXErHJDUHC6aac2XZu5ie0r6zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jHfwiB9w; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AnJCejppFKFDCc5KHzP/FG52pP3xvPhDoZ+rpNB2qpDXwOW6Zf6rIy2o4APdFtyeKxujoyVsMN3bB0bgS9rJLxA6jjgxLQravRJGDtHHEJCgY4WeQotW0EeSUAWn0+U6E+eV2htr8tR7mjxgEZMi3qp958oZHQME1fGPPXQ++Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NLw130jc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jHfwiB9w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745223692; x=1776759692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C7Yr9B85WuyxzW/DyvbRmztxW7xiL896fdLQzr9xw6o=;
-  b=jHfwiB9wL40LX16Qab3oTybHGUBnbu3AjyoIgFgYSFtIS2ORVWCXZh6B
-   O+WN4hCNqANfr6kTrifPj2ndYfhPru08prZbRGqoXNW9yEpJ/DiVorU0B
-   6wk/NWNB1/UzGfJBlNHQ6h/uBnbF7YfyaUD9BLFB5CqHejMlGdMRMBux4
-   eRadN1AULaRGudVckK7O8wFqeF5u1+OyBrSA4TC2Nhk0mbF4PMHsHiNoR
-   IhsVnabdXeA9vOF1yP1Uvw51Ah9pTDo+G4x45Wc/wwhYytaiO44Fm0Xek
-   TReeiIsy/R2xVfutA1Xf/VZItaUZYf+UBrbxxDPgL99tjLDdeX+CJou/L
-   A==;
-X-CSE-ConnectionGUID: w/qyha6xRt2AzLKQTnoYUw==
-X-CSE-MsgGUID: 2m3MhDhqT7+IMInIfsa03g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="46635718"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="46635718"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 01:21:31 -0700
-X-CSE-ConnectionGUID: 9zpDJSyeTBKPkrXoSj84vw==
-X-CSE-MsgGUID: s+znY0pVR464Y46mObjRPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="168862263"
-Received: from lkp-server01.sh.intel.com (HELO 9c2f37e2d822) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 21 Apr 2025 01:21:27 -0700
-Received: from kbuild by 9c2f37e2d822 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6mP6-0000H1-2v;
-	Mon, 21 Apr 2025 08:21:24 +0000
-Date: Mon, 21 Apr 2025 16:20:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: carlos.song@nxp.com, miquel.raynal@bootlin.com, Frank.Li@nxp.com,
-	alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	conor.culhane@silvaco.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-i3c@lists.infradead.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/3] i3c: master: svc: switch to bulk clk API for
- flexible clock support
-Message-ID: <202504211643.FJsMtmVl-lkp@intel.com>
-References: <20250421061544.2471379-3-carlos.song@nxp.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NLw130jc"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KMt2ej022316
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:21:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=3dOV6TefbQJrNU5fY48fEav9
+	8ivZ7YhZXWg/363uaxY=; b=NLw130jc/sr36xMO9dNl/g6IyD7ilOeIFbzF9qus
+	2Q7pUhbsYma/bac/sVzWK5N6bHxtztyQWebdcv+txHS2qXQZLFBms/JUBq92ePYR
+	uXqk1gr+l78B6NM7yF0DPGmVeBKi+/Tdbh8inaRYfXem5SvLJCnLXwInhQGg76rt
+	oaeCoSPiAPzkxaFv89Sz5D3IUicTS3oVwj9/pMJxRvGnbpf4PSxZPao/wZC0MHHX
+	W+LS9vx3ajkiHkhSP381maBSwCBBPqHpT1LE1LzQhes87umsssD/O1mU/4m2tUWp
+	N/AaESjzu5o9/61s05AVsqSWT+q5yd2MIjKF4HCjoOeMGw==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jbhd6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:21:53 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e90788e2a7so53452216d6.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:21:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745223713; x=1745828513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3dOV6TefbQJrNU5fY48fEav98ivZ7YhZXWg/363uaxY=;
+        b=K4CMPWymkf5wHqTzj5xjRQMhJUODUkL/FgLaDww+yh4v2jFxjcsF1xDGJwjx+BaiJk
+         VEMHukOviuNhipemr/q4YpLKnS+XXrmuEcVOpd3jd8YIQuhacAVWUvJwNPyqWJUtve4d
+         f0L7+oDvubEIIrLj42kjwUA7JdNo644p1LwgBHpWI46eu+heG7DWZ3OfgQOqRgaHAswS
+         MXwsIHHIyfQJ3HIILtCqfq/Cx7fEedLewjcF02Nkju0LS1p82nZ/sU0uzEDeNOR4BXYm
+         2Mwr8jEngtUN+GI5liW1lUFMVVNK374apuMhtZkwj+m3EJhJFPMCi784/hBeFyrzJucJ
+         cDXw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Xu8mPZgTyrv6I6N2hid5aKS82xCcjTwLEbRSD9BftqvHM/zBmpfpEcwB0RYH8oBvCmSrtT+rKBpUc7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6ECpC7UKY2wqraHittfwpc3vV/W0T/1cTy2JWfmZ0BjaQtuGW
+	fkzS/+l6qqcipxXR93jzamuh69GsuHrhK2OL6KaA4vsMmVXNhPUbG5h6yAjE6LFySlrgnzHOLPw
+	2umvAI8AAJXeKmorhHcB2DsO7jZpp0hqhU5SL+ty31RJPHuHtAfnTNWcFbwznxbM=
+X-Gm-Gg: ASbGnctpUHhi1X3UcMe8NrJvI2niBd5fyFzfrT+fcxATOiHIeBa6+peR3mGIqjZlLNz
+	dpy/ZAYJslYAXZPPzI2/EkqE3b1YIcT6jAnVhgkeVvKpO5vZZupjsJGdyAhpYPbHAYOQgkCKr18
+	bNOgyWedxC9azYC2rDsU+uRtAXWojS/Wi3r1x9xLzBWNScuaaruUsHIAziFb6dhph1wnOI2I9De
+	tIPmnpIvyHpZ6jfjtzns0TQ50n96/EXCV6ee4OwcXSTjT3A2F/HAoco09wS9gt8TefBON9THROL
+	ch/PLGfpZVVkiZJvUukwHocBcnl98P/+bzmNPu+ozey7vPfcoITfDSput7je1qgsuuM0nH6MJtA
+	=
+X-Received: by 2002:a05:6214:2505:b0:6e8:903c:6e5b with SMTP id 6a1803df08f44-6f2c26db1fdmr178470786d6.9.1745223712763;
+        Mon, 21 Apr 2025 01:21:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFiFDbAU4iG+kC4GnIeIE42J3FEGXYRJXXp4pFCBWX4GU50la+M9HKv+Oo+djrzzh+vCDGc+A==
+X-Received: by 2002:a05:6214:2505:b0:6e8:903c:6e5b with SMTP id 6a1803df08f44-6f2c26db1fdmr178470656d6.9.1745223712436;
+        Mon, 21 Apr 2025 01:21:52 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5f4cf2sm864754e87.215.2025.04.21.01.21.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 01:21:51 -0700 (PDT)
+Date: Mon, 21 Apr 2025 11:21:49 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: webgeek1234@gmail.com
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] drm/tegra: Assign plane type before registration
+Message-ID: <nxp2vzmushnkigmyk2yv5vz2j7pc7fghtvn4uielhaqqn2dcnv@eq37j45mqpng>
+References: <20250419-tegra-drm-primary-v1-1-b91054fb413f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,149 +86,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250421061544.2471379-3-carlos.song@nxp.com>
+In-Reply-To: <20250419-tegra-drm-primary-v1-1-b91054fb413f@gmail.com>
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=68060021 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=Ikd4Dj_1AAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=ONaZQ3SXXcwgrymDYLYA:9 a=CjuIK1q_8ugA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-GUID: UuRLmjCyuRUMLz_m8bhYmHNXZVSlg64P
+X-Proofpoint-ORIG-GUID: UuRLmjCyuRUMLz_m8bhYmHNXZVSlg64P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_04,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=659 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210064
 
-Hi,
+On Sat, Apr 19, 2025 at 07:30:02PM -0500, Aaron Kling via B4 Relay wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Changes to a plane's type after it has been registered aren't propagated
+> to userspace automatically. This could possibly be achieved by updating
+> the property, but since we can already determine which type this should
+> be before the registration, passing in the right type from the start is
+> a much better solution.
+> 
+> Suggested-by: Aaron Kling <webgeek1234@gmail.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Cc: stable@vger.kernel.org
+> ---
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
 
-kernel test robot noticed the following build warnings:
+Your tag should come after other tags, without any separation between
+those. Also, if you consider this to be a bug, please add the Fixes tag
+as described in Documentation/process/submitting-patches.rst .
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.15-rc3 next-20250417]
-[cannot apply to shawnguo/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/carlos-song-nxp-com/dt-bindings-i3c-silvaco-i3c-master-add-i-MX94-and-i-MX95-I3C/20250421-140716
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250421061544.2471379-3-carlos.song%40nxp.com
-patch subject: [PATCH 2/3] i3c: master: svc: switch to bulk clk API for flexible clock support
-config: arm-randconfig-001-20250421 (https://download.01.org/0day-ci/archive/20250421/202504211643.FJsMtmVl-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504211643.FJsMtmVl-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504211643.FJsMtmVl-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/i3c/master/svc-i3c-master.c:1898:29: warning: variable 'ret' is uninitialized when used here [-Wuninitialized]
-    1898 |                 return dev_err_probe(dev, ret, "can't get I3C clocks\n");
-         |                                           ^~~
-   drivers/i3c/master/svc-i3c-master.c:1882:9: note: initialize the variable 'ret' to silence this warning
-    1882 |         int ret, i;
-         |                ^
-         |                 = 0
-   1 warning generated.
-
-
-vim +/ret +1898 drivers/i3c/master/svc-i3c-master.c
-
-  1877	
-  1878	static int svc_i3c_master_probe(struct platform_device *pdev)
-  1879	{
-  1880		struct device *dev = &pdev->dev;
-  1881		struct svc_i3c_master *master;
-  1882		int ret, i;
-  1883	
-  1884		master = devm_kzalloc(dev, sizeof(*master), GFP_KERNEL);
-  1885		if (!master)
-  1886			return -ENOMEM;
-  1887	
-  1888		master->drvdata = of_device_get_match_data(dev);
-  1889		if (!master->drvdata)
-  1890			return -EINVAL;
-  1891	
-  1892		master->regs = devm_platform_ioremap_resource(pdev, 0);
-  1893		if (IS_ERR(master->regs))
-  1894			return PTR_ERR(master->regs);
-  1895	
-  1896		master->num_clks = devm_clk_bulk_get_all(dev, &master->clks);
-  1897		if (master->num_clks < 0)
-> 1898			return dev_err_probe(dev, ret, "can't get I3C clocks\n");
-  1899	
-  1900		for (i = 0; i < master->num_clks; i++) {
-  1901			if (!strcmp(master->clks[i].id, "fast_clk"))
-  1902				break;
-  1903		}
-  1904	
-  1905		if (i == master->num_clks)
-  1906			return dev_err_probe(dev, -EINVAL,
-  1907					     "can't get I3C peripheral clock\n");
-  1908	
-  1909		master->fclk = devm_clk_get(dev, "fast_clk");
-  1910		if (IS_ERR(master->fclk))
-  1911			return PTR_ERR(master->fclk);
-  1912	
-  1913		master->irq = platform_get_irq(pdev, 0);
-  1914		if (master->irq < 0)
-  1915			return master->irq;
-  1916	
-  1917		master->dev = dev;
-  1918		ret = clk_bulk_prepare_enable(master->num_clks, master->clks);
-  1919		if (ret)
-  1920			return dev_err_probe(dev, ret, "can't enable I3C clocks\n");
-  1921	
-  1922		INIT_WORK(&master->hj_work, svc_i3c_master_hj_work);
-  1923		INIT_WORK(&master->ibi_work, svc_i3c_master_ibi_work);
-  1924		mutex_init(&master->lock);
-  1925	
-  1926		ret = devm_request_irq(dev, master->irq, svc_i3c_master_irq_handler,
-  1927				       IRQF_NO_SUSPEND, "svc-i3c-irq", master);
-  1928		if (ret)
-  1929			goto err_disable_clks;
-  1930	
-  1931		master->free_slots = GENMASK(SVC_I3C_MAX_DEVS - 1, 0);
-  1932	
-  1933		spin_lock_init(&master->xferqueue.lock);
-  1934		INIT_LIST_HEAD(&master->xferqueue.list);
-  1935	
-  1936		spin_lock_init(&master->ibi.lock);
-  1937		master->ibi.num_slots = SVC_I3C_MAX_DEVS;
-  1938		master->ibi.slots = devm_kcalloc(&pdev->dev, master->ibi.num_slots,
-  1939						 sizeof(*master->ibi.slots),
-  1940						 GFP_KERNEL);
-  1941		if (!master->ibi.slots) {
-  1942			ret = -ENOMEM;
-  1943			goto err_disable_clks;
-  1944		}
-  1945	
-  1946		platform_set_drvdata(pdev, master);
-  1947	
-  1948		pm_runtime_set_autosuspend_delay(&pdev->dev, SVC_I3C_PM_TIMEOUT_MS);
-  1949		pm_runtime_use_autosuspend(&pdev->dev);
-  1950		pm_runtime_get_noresume(&pdev->dev);
-  1951		pm_runtime_set_active(&pdev->dev);
-  1952		pm_runtime_enable(&pdev->dev);
-  1953	
-  1954		svc_i3c_master_reset(master);
-  1955	
-  1956		/* Register the master */
-  1957		ret = i3c_master_register(&master->base, &pdev->dev,
-  1958					  &svc_i3c_master_ops, false);
-  1959		if (ret)
-  1960			goto rpm_disable;
-  1961	
-  1962		pm_runtime_mark_last_busy(&pdev->dev);
-  1963		pm_runtime_put_autosuspend(&pdev->dev);
-  1964	
-  1965		return 0;
-  1966	
-  1967	rpm_disable:
-  1968		pm_runtime_dont_use_autosuspend(&pdev->dev);
-  1969		pm_runtime_put_noidle(&pdev->dev);
-  1970		pm_runtime_disable(&pdev->dev);
-  1971		pm_runtime_set_suspended(&pdev->dev);
-  1972	
-  1973	err_disable_clks:
-  1974		clk_bulk_disable_unprepare(master->num_clks, master->clks);
-  1975	
-  1976		return ret;
-  1977	}
-  1978	
+> ---
+>  drivers/gpu/drm/tegra/dc.c  | 12 ++++++++----
+>  drivers/gpu/drm/tegra/hub.c |  4 ++--
+>  drivers/gpu/drm/tegra/hub.h |  3 ++-
+>  3 files changed, 12 insertions(+), 7 deletions(-)
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
