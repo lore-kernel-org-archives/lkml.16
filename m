@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEBE18DF86;
-	Mon, 21 Apr 2025 21:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB94D21931B;
+	Mon, 21 Apr 2025 21:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271516; cv=none; b=KH5nYwFxRoqk0Koj1FPKtk7alNTVH3eRttWiJlEttAyUmSxl4pMUxm89vIKW8eFGxUBpBU26yPe006K+up7ylLwomrXcdJkt3xNXyFVJMH2kXnEIwn17aEfFGd3Pg34ck3fgAaM9LOBk1LspaQGu1YzJhtJGeW9E+AqCc2y7ODo=
+	t=1745271535; cv=none; b=pkVOItOgeqKtltgBB235gTgSKpZm3SQ+RWUBXT67YlT0osnl04xs9Zv+DSY7jPrD3+e5GgjZwQ+lJzakkiY/oF3CI8WwHT+9FavmP29kObhggT7LHpzCEehl/xnfjN+GVe85TWCc8rRkGReEYES+g1daAo2xFi2kjGgxmrFpDxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271516; c=relaxed/simple;
-	bh=teUYICP7yxIXUdOVNrYCte8DQh1l8t6HHmNsrha758w=;
+	s=arc-20240116; t=1745271535; c=relaxed/simple;
+	bh=P6nmFQfl8tDNHNuZzm4b6tttJQZW4Sac0+eacXTdEPk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUl9hIsqR8zrLiNEFbhYBgEc3IYM4pwvaz7mzFbfR66ca2GFrS5EfZ8VCoxsLbzzhlGz7NcZqhXPcPn7acnwrRv68i1KCLPHfTYUa95sMS5iTtAaLQqvWnFjgOpNyvd/J9wTjnWkLMuXx9tJxPcd3z2tLy3ULZeCbg60VOGclvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=brih1nJa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dETojj1SEAWubvZOKpQOsn94m2JNRZgvZW+ndT1uXg9s7yNtC41TwH+NQc3IGU7mrI6BAjNWON3kG+7CUXjT8XHkJrN+FLFXMVFF5m2kdEMQ1kmgVue/2mdEkUdYl4NzeJ9xd/8zxYeNM/bz+HKVvEniqQOjchvIGXOzhyoHt3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqvlGE7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="brih1nJa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AD3C4CEE4;
-	Mon, 21 Apr 2025 21:38:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqvlGE7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20443C4CEE4;
+	Mon, 21 Apr 2025 21:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745271515;
-	bh=teUYICP7yxIXUdOVNrYCte8DQh1l8t6HHmNsrha758w=;
+	s=k20201202; t=1745271533;
+	bh=P6nmFQfl8tDNHNuZzm4b6tttJQZW4Sac0+eacXTdEPk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=brih1nJa/PjX5hVF83+YmG1qJS+oDhbzGboBmkmjVmmkWCf7VGmK7+sX/GaHn8RWQ
-	 WQcdc4fYLk7MF2rwQ3fnV5xIRtRs+zxHla5KLEswQuAPMkhd1du5EIFrKd3W2bWljJ
-	 oauBvw4tfteGbe/lF4yR7+ozUr91LXlJ9PwlCEzJyMt0BicuYfYQCEKXxBbI1nCleX
-	 9ZTNAig5mE7XglwCcA1oK9Awy8soREhYWX6UmcxJ5e5pMPXpMGFo83FdtlgVuDQvTU
-	 TLNcl37f/y4YbXWxQdjwHmHbXD0PFsXQpv6zwScJXbOHbfLqArW3wYuGFgt/MLIPFK
-	 UKRKEK4ZqjNag==
-Date: Mon, 21 Apr 2025 16:38:33 -0500
-From: Rob Herring <robh@kernel.org>
+	b=SqvlGE7AxRIVNM8q2NdMVuX1QDRm31fP5PW6Me/cYE8T24hhSJ+s9XcJ9Xj6NBehq
+	 Z4EJTSvJZWaFB9CLVrajvm++/uOVBw7FUS4OCI0pk1Aa1l3ZUV62B0Q4BGMID6IQYr
+	 APNMubOH9TEwCY2PS+7dINzSYC9XwzzzNF/6/95/HTWs1G6K9ArEMUOytYvKVSF5mf
+	 jcqT2RwfSVzOIMDUNK0LncWVGfPO40M8/ehb73KYh7ueiF2U5dMetgA4M4/KYRMu+Z
+	 xI5m0LhjqEc4bN0s2Kk0umYFpKpaHTShxw59p3hzfWT3Lc3vSzS2Llx8+z0q8SXYnK
+	 imSeilgUrOzCA==
+Date: Mon, 21 Apr 2025 16:38:51 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
 To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jassisinghbrar@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, houlong.wei@mediatek.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH] dt-bindings: mailbox: mediatek,gce-mailbox: Add support
- for MT6893
-Message-ID: <20250421213833.GA2966253-robh@kernel.org>
-References: <20250416120230.147844-1-angelogioacchino.delregno@collabora.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, andy@kernel.org,
+	dlechner@baylibre.com, matthias.bgg@gmail.com,
+	linux-kernel@vger.kernel.org, jic23@kernel.org,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org, nuno.sa@analog.com,
+	conor+dt@kernel.org, linux-iio@vger.kernel.org,
+	zhiyong.tao@mediatek.com, kernel@collabora.com
+Subject: Re: [PATCH] dt-bindings: iio: adc: Add compatible for Dimensity 1200
+ MT6893
+Message-ID: <174527153072.2973088.9157423165074778113.robh@kernel.org>
+References: <20250416120235.147889-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,45 +48,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416120230.147844-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250416120235.147889-1-angelogioacchino.delregno@collabora.com>
 
-On Wed, Apr 16, 2025 at 02:02:30PM +0200, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for the MediaTek Dimensity 1200 (MT6893)
-> SoC using MT8195 as a fallback, and add a header for the GCE
-> mailbox found in MT6893.
-> 
-> Similarly to MT8195, this SoC has two GCE hardware instances, but
-> the event values are different (hence requiring its own header).
+
+On Wed, 16 Apr 2025 14:02:35 +0200, AngeloGioacchino Del Regno wrote:
+> Add a compatible for the Dimensity 1200 (MT6893) SoC; The AUXADC
+> IP in this chip is fully compatible with the one found in MT8173.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../mailbox/mediatek,gce-mailbox.yaml         |   4 +
->  include/dt-bindings/gce/mediatek,mt6893-gce.h | 312 ++++++++++++++++++
->  2 files changed, 316 insertions(+)
->  create mode 100644 include/dt-bindings/gce/mediatek,mt6893-gce.h
+>  .../devicetree/bindings/iio/adc/mediatek,mt2701-auxadc.yaml      | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
-> index 73d6db34d64a..277d290d852b 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
-> +++ b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
-> @@ -19,6 +19,7 @@ properties:
->      oneOf:
->        - enum:
->            - mediatek,mt6779-gce
-> +          - mediatek,mt6893-gce
->            - mediatek,mt8173-gce
->            - mediatek,mt8183-gce
->            - mediatek,mt8186-gce
-> @@ -29,6 +30,9 @@ properties:
->        - items:
->            - const: mediatek,mt6795-gce
->            - const: mediatek,mt8173-gce
-> +      - items:
-> +          - const: mediatek,mt6893-gce
-> +          - const: mediatek,mt8195-gce
 
-You shouldn't have with and without a fallback.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
->  
->    "#mbox-cells":
->      const: 2
