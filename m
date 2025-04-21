@@ -1,211 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFC18635B;
-	Mon, 21 Apr 2025 08:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 7284E70830;
+	Mon, 21 Apr 2025 08:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745225349; cv=none; b=s+dD7ZAzr4/U6CixVon1DX/pbZvNhnHd70NZrEf59R08LWEBwgDf74RXBxUmaxYE1m6oVOLLTityuAXfQ00HZy7u4hXYru9JSV/WzgMMsjVewWsPNW6t5MDhX2sKdDkqKCzLeaVgqhsSTh8hnXr+tqhU1VKDuld0nFUdIilzSgU=
+	t=1745225439; cv=none; b=uX3XB/uOoWgTRntq2o02J+og66VKHnN8CueM/QM/aw3evgAiPFLEUHCDkqTiAyRVtPMRDRgVWcHADxjkXY+Kl55t/kqNS+WDOtct1pn8AWN7mkV2obrGBqrA8Zt8DJNQj4d3JpNmoDajLem5I5d8ib/QldGi23oYh8Z73xoTwiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745225349; c=relaxed/simple;
-	bh=6eovJpBKe/AFxgf0YskJ7sCQHIJkYg2Tnl2f/E+C84I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=miU4lgIE7NYsN9C2w+p85Np4KJdJe0ZrB0sKtkxeJg8Fg/UvT9HGPgUJoaZmgiKfl4J1x2JiNagHv3UUivpJBrgHUherJOTccQVSfuQS2h1eGF4he0L1WxpLk4MZmywI6FFMCGrTYNlypmv/KQCvnZAsP9nxRkH0qOezHDxwSjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zqKyKhhg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zqKyKhhg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC7F7C4CEE4;
-	Mon, 21 Apr 2025 08:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745225348;
-	bh=6eovJpBKe/AFxgf0YskJ7sCQHIJkYg2Tnl2f/E+C84I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zqKyKhhg/4IP1vHpd13S+HQK7or5cw7aNlYWOfbWqNUfTiJpSYt/mi2sd8wv88zxk
-	 YFNZ5MDVtpjrwTVwyUvawtWIXvK6nv3tl9REDdWZkn2N6/TrCnOK1tkdTiG1t0ScnI
-	 8xNs49D/Cvz8oUL7Nh0zdadzm7evyv2OcfbX9iEw=
-Date: Mon, 21 Apr 2025 10:49:05 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Deepika Singh <quic_dsi@quicinc.com>
-Cc: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	dmitry.baryshkov@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
-	linux-arm-msm@vger.kernel.org, quic_bkumar@quicinc.com,
-	linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
-	dri-devel@lists.freedesktop.org, arnd@arndb.de
-Subject: Re: [PATCH v1 4/4] misc: fastrpc: Add debugfs support for fastrpc
-Message-ID: <2025042125-kebab-faceplate-aa9d@gregkh>
-References: <c3b285b0-33d1-4bfa-b8ab-6783ff5ed78d@quicinc.com>
- <cn7pqvhw4x4y7s5hbgzjpvyjnw4g6hoyepic4jai7x2fjdenxr@ikr4hkorbuwb>
- <365c4709-b421-4af8-b521-a195630242de@quicinc.com>
- <nsaq3zungvyhuikz35arvxmle2fovxh422jpyqxuleh57ufqnk@bekeh7qr7y76>
- <697e90db-6ecc-44ac-af86-6c7f910fc902@quicinc.com>
- <CAA8EJppbptPryu_O3G3YAapHT=Ai+MAdA38FtSU=YvWb+mqa1g@mail.gmail.com>
- <e1c23027-94c3-4fdf-b842-b154179aa2b8@oss.qualcomm.com>
- <a3addff2-1ee6-45aa-ac2c-693ffe804948@quicinc.com>
- <2025041534-subdivide-upward-1eca@gregkh>
- <20e60deb-f1f3-4f96-a454-9cb9d8cc7c1d@quicinc.com>
+	s=arc-20240116; t=1745225439; c=relaxed/simple;
+	bh=xsonTwJHhHFspOne+zY7lEzLXKjSZ+d9ysyxg6qfREc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type; b=imDWImE/fyasaP6FLZ4z/lzEomKnMN2Jcmwv6940kA4j0NPkXooWLvpH0+B3ywAj9WpvlFT5LWulGoC328VzbMOSzd9Zz1jJ+ZoA6k1NGed4ouTyqVR1K+rxolry6lBHo+Nw1l+eJqF4+qQSi+j3ZIP9YNyhs/RFSPNXT5ZXBVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 4E02F602637EF;
+	Mon, 21 Apr 2025 16:50:31 +0800 (CST)
+Message-ID: <fe8468d5-7bb3-4acf-960f-fa23a0000faa@nfschina.com>
+Date: Mon, 21 Apr 2025 16:50:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
+Content-Language: en-US
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, davem@davemloft.net,
+ herbert@gondor.apana.org.au
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <efe80b82-4b64-46cb-97d6-4ae2f4d82b97@nfschina.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20e60deb-f1f3-4f96-a454-9cb9d8cc7c1d@quicinc.com>
 
-On Mon, Apr 21, 2025 at 01:51:09PM +0530, Deepika Singh wrote:
-> 
-> 
-> On 4/15/2025 6:47 PM, Greg KH wrote:
-> > On Mon, Apr 14, 2025 at 12:41:47PM +0530, Deepika Singh wrote:
-> > > 
-> > > 
-> > > On 4/11/2025 1:55 PM, Ekansh Gupta wrote:
-> > > > 
-> > > > 
-> > > > On 12/3/2024 5:27 PM, Dmitry Baryshkov wrote:
-> > > > > On Tue, 3 Dec 2024 at 07:22, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 12/2/2024 6:18 PM, Dmitry Baryshkov wrote:
-> > > > > > > On Mon, Dec 02, 2024 at 03:27:43PM +0530, Ekansh Gupta wrote:
-> > > > > > > > On 11/22/2024 12:23 AM, Dmitry Baryshkov wrote:
-> > > > > > > > > On Thu, Nov 21, 2024 at 12:12:17PM +0530, Ekansh Gupta wrote:
-> > > > > > > > > > On 11/18/2024 7:32 PM, Greg KH wrote:
-> > > > > > > > > > > On Mon, Nov 18, 2024 at 02:10:46PM +0530, Ekansh Gupta wrote:
-> > > > > > > > > > > > Add changes to support debugfs. The fastrpc directory will be
-> > > > > > > > > > > > created which will carry debugfs files for all fastrpc processes.
-> > > > > > > > > > > > The information of fastrpc user and channel contexts are getting
-> > > > > > > > > > > > captured as part of this change.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> > > > > > > > > > > > ---
-> > > > > > > > > > > >    drivers/misc/fastrpc/Makefile        |   3 +-
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_debug.c | 156 +++++++++++++++++++++++++++
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_debug.h |  31 ++++++
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_main.c  |  18 +++-
-> > > > > > > > > > > >    4 files changed, 205 insertions(+), 3 deletions(-)
-> > > > > > > > > > > >    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > >    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.h
-> > > > > > > > > > > > 
-> > > > > > > > > > > > diff --git a/drivers/misc/fastrpc/Makefile b/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > index 020d30789a80..4ff6b64166ae 100644
-> > > > > > > > > > > > --- a/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > +++ b/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > @@ -1,3 +1,4 @@
-> > > > > > > > > > > >    # SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > > >    obj-$(CONFIG_QCOM_FASTRPC)      += fastrpc.o
-> > > > > > > > > > > > -fastrpc-objs    := fastrpc_main.o
-> > > > > > > > > > > > \ No newline at end of file
-> > > > > > > > > > > > +fastrpc-objs    := fastrpc_main.o \
-> > > > > > > > > > > > +                fastrpc_debug.o
-> > > > > > > > > > > Only build this file if debugfs is enabled.
-> > > > > > > > > > > 
-> > > > > > > > > > > And again, "debug.c"?
-> > > > > > > > > > I'll add change to build this only if debugfs is enabled. Going forward I have plans to add
-> > > > > > > > > > few more debug specific changes, maybe then I'll need to change the build rules again.
-> > > > > > > > > > > > diff --git a/drivers/misc/fastrpc/fastrpc_debug.c b/drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > > new file mode 100644
-> > > > > > > > > > > > index 000000000000..cdb4fc6845a8
-> > > > > > > > > > > > --- /dev/null
-> > > > > > > > > > > > +++ b/drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > > @@ -0,0 +1,156 @@
-> > > > > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > > > +// Copyright (c) 2024 Qualcomm Innovation Center.
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +#include <linux/debugfs.h>
-> > > > > > > > > > > > +#include <linux/seq_file.h>
-> > > > > > > > > > > > +#include "fastrpc_shared.h"
-> > > > > > > > > > > > +#include "fastrpc_debug.h"
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +#ifdef CONFIG_DEBUG_FS
-> > > > > > > > > > > Please put the #ifdef in the .h file, not in the .c file.
-> > > > > > > > > > Ack
-> > > > > > > > > > > > +void fastrpc_create_user_debugfs(struct fastrpc_user *fl)
-> > > > > > > > > > > > +{
-> > > > > > > > > > > > +        char cur_comm[TASK_COMM_LEN];
-> > > > > > > > > > > > +        int domain_id, size;
-> > > > > > > > > > > > +        char *debugfs_buf;
-> > > > > > > > > > > > +        struct dentry *debugfs_dir = fl->cctx->debugfs_dir;
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +        memcpy(cur_comm, current->comm, TASK_COMM_LEN);
-> > > > > > > > > > > > +        cur_comm[TASK_COMM_LEN-1] = '\0';
-> > > > > > > > > > > > +        if (debugfs_dir != NULL) {
-> > > > > > > > > > > > +                domain_id = fl->cctx->domain_id;
-> > > > > > > > > > > > +                size = snprintf(NULL, 0, "%.10s_%d_%d_%d", cur_comm,
-> > > > > > > > > > > > +                                current->pid, fl->tgid, domain_id) + 1;
-> > > > > > > > > > > > +                debugfs_buf = kzalloc(size, GFP_KERNEL);
-> > > > > > > > > > > > +                if (debugfs_buf == NULL)
-> > > > > > > > > > > > +                        return;
-> > > > > > > > > > > > +                /*
-> > > > > > > > > > > > +                 * Use HLOS process name, HLOS PID, fastrpc user TGID,
-> > > > > > > > > > > > +                 * domain_id in debugfs filename to create unique file name
-> > > > > > > > > > > > +                 */
-> > > > > > > > > > > > +                snprintf(debugfs_buf, size, "%.10s_%d_%d_%d",
-> > > > > > > > > > > > +                        cur_comm, current->pid, fl->tgid, domain_id);
-> > > > > > > > > > > > +                fl->debugfs_file = debugfs_create_file(debugfs_buf, 0644,
-> > > > > > > > > > > > +                                debugfs_dir, fl, &fastrpc_debugfs_fops);
-> > > > > > > > > > > Why are you saving the debugfs file?  What do you need to do with it
-> > > > > > > > > > > that you can't just delete the whole directory, or look up the name
-> > > > > > > > > > > again in the future when removing it?
-> > > > > > > > > > fl structure is specific to a process using fastrpc driver. The reason to save
-> > > > > > > > > > this debugfs file is to delete is when the process releases fastrpc device.
-> > > > > > > > > > If the file is not deleted, it might flood multiple files in debugfs directory.
-> > > > > > > > > > 
-> > > > > > > > > > As part of this change, only the file that is getting created by a process is
-> > > > > > > > > > getting removed when process is releasing device and I don't think we
-> > > > > > > > > > can clean up the whole directory at this point.
-> > > > > > > > > My 2c: it might be better to create a single file that conains
-> > > > > > > > > information for all the processes instead of that. Or use fdinfo data to
-> > > > > > > > > export process / FD information to userspace.
-> > > > > > > > Thanks for your review. The reason of not having single file for all processes is that
-> > > > > > > > I can run 100s of iteration for any process(say calculator) and every time the properties
-> > > > > > > > of the process can differ(like buffer, session etc.). For this reason, I'm creating and
-> > > > > > > > deleting the debugfs files for every process run.
-> > > > > > > > 
-> > > > > > > > Do you see any advantage of using fdinfo over debugfs? I'm not sure if we can add all
-> > > > > > > > the information(like in debugfs) here.
-> > > > > > > Which information is actually useful / interesting for application
-> > > > > > > developers? If not for the fdinfo, I might still vote for a single file
-> > > > > > > rather than a pile of per-process data.
-> > > Let’s say I am trying to do debugfs read when 10+ or more sessions are
-> > > active per channel, then for pushing data of nth process in a single file, I
-> > > would have to wait for n-1 processes, by that time process data might get
-> > > changed. How do you suggest handling this?
-> > 
-> > I suggest you NEVER use debugfs for anything that you care about this
-> > type of thing for.
-> > 
-> > debugfs is for debugging.  Don't expect to rely on it for anything
-> > relating to performance, and many/most systems don't even have it
-> > enabled.  It also can NOT be used for anything that actually is a real
-> > functionality of the system, and MUST work properly if it is not enabled
-> > or a failure happens with the creation of a debugfs file.
-> > 
-> > So why would this even be an issue, as surely you aren't expecting that
-> > debugfs be the main api for your driver, right?  :)
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> I am not going to rely on debugfs for anything related to performance or
-> real functionality. It would be used for debugging alone. Concern here is if
-> i push all processes data to one file, then data might get updated by the
-> time nth process's data is pushed and I might not get get correct data for
-> nth process.
+On 2025/4/21 16:46, Su Hui wrote:
+> On 2025/4/21 16:32, Christophe JAILLET wrote:
+>> Le 21/04/2025 à 09:43, Su Hui a écrit :
+>>> On 2025/4/21 15:10, Christophe JAILLET wrote:
+>>>> Le 21/04/2025 à 07:51, Su Hui a écrit :
+>>>>> It's safer to use size_add() to replace open-coded aithmetic in 
+>>>>> allocator
+>>>>> arguments, because size_add() can prevent possible overflow problem.
+>>>>>
+>>>>> Signed-off-by: Su Hui <suhui@nfschina.com>
+>>>>> ---
+>>>>>   include/crypto/aead.h     | 3 ++-
+>>>>>   include/crypto/akcipher.h | 4 +++-
+>>>>>   include/crypto/kpp.h      | 3 ++-
+>>>>>   3 files changed, 7 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/include/crypto/aead.h b/include/crypto/aead.h
+>>>>> index 0e8a41638678..cf212d28fe18 100644
+>>>>> --- a/include/crypto/aead.h
+>>>>> +++ b/include/crypto/aead.h
+>>>>> @@ -10,6 +10,7 @@
+>>>>>     #include <linux/atomic.h>
+>>>>>   #include <linux/container_of.h>
+>>>>> +#include <linux/overflow.h>
+>>>>
+>>>> You could move this 1 line below, to keep alphabetical order.
+>>>> And why do you say that it is redundant in your follow-up mail?
+>>> Thanks for your suggestion, I didn't notice this alphabetical order 
+>>> at first :( .
+>>> Because I found that  <linux/crypto.h> includes <linux/slab.h>, and
+>>> <linux/slab.h> includes <linux/overflow.h>, so this overflow.h is 
+>>> redundant.
+>>
+>> It is usually considered best practice to include what is used, and 
+>> not relying on indirect includes.
+>>
+>> Should these others includes change one day, then some apparently 
+>> unrelated files will fails to built.
+>>
+> I already send a v2 patch, too fast for this v2 sending :(.
+> v2: 
+> https://lore.kernel.org/all/20250421083116.1161805-1-suhui@nfschina.com/
+>
+> I agreed with 'include what is used'.  So I guess v1 is enough and v2 
+> maybe a wrong patchset.
+> Sorry for the noise.
 
-But why would you care?  This is just debugging code, you should NEVER
-make any action based on the output of a debugfs file.  This is all just
-for your convience in working on the kernel code only.  If you have any
-tool that relies on it, or requires performance issues with it, that is
-flat out wrong.
+Oh, I forget to keep alphabetical order, so v3 is needed if there is no 
+other suggestions.
 
-Remember, the code can, and MUST, work just fine if debugfs is not
-enabled in the kernel at all as that is how the majority of Linux
-systems in the world are configured (for good reason).
-
-thanks,
-
-greg k-h
