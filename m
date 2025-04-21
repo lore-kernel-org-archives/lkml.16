@@ -1,163 +1,150 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2040F1FDA;
-	Mon, 21 Apr 2025 08:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C89920C005
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745222997; cv=none; b=Do25Xf1hkPYO0qfKUMVoxzzm4VXjArTOvSd/LNN7swA1mEiWqJhIxwWMfXUUH2wG72iTla8EltSaAIXT85j11BQCzAn5Pqr/BJCIKuDiag2Z+02bt1Gl/CA9KXgjMqdYfdmn/wBEpVW9zWShSvm5fmzMh7LzsBSIM9KYN4zmpNg=
+	t=1745223071; cv=none; b=ISc1Qv6UBgwQpBVHcnDwW29ysFVQU8O9h3g64g9ihcXUGNstnLXVeZznQYwwwCYd2SFOgj5HJlWZeoe6rXZD/T9e1pfm50rNLdIyLBe/9W12ThUtFyTwpZDpGgzh3zusQhV4M4N+r7/lZN7jAjBon5WVfvmADAYGFyCUblDo5ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745222997; c=relaxed/simple;
-	bh=XpSVWIoRM/bSSzF4R1F4P4Y2Mzyol/7p7Paa0a0lh8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJac2A6bUQrrz2s+lBot7dW8R9LBKd/c7y+te6KMTNzbm30wS/AGe+jgjX7onqECs/Lq7LkmfetiUBhL+0S9pu+hPujjNO4a3PH4psPW97+Lkp7XA0CNvYmQfuCUkNN7PzVFcfDBbp+hoIObRX0ixeUB7YaUwuSbqGlc90KoVM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YPWG3LlA; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745223071; c=relaxed/simple;
+	bh=8cnbqnEIT2SapONFBAoVoxc2fqVmncyHVScTK2PoKRo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jMLch8WSoG6Q/G/3RrMvWQ+nLuUYGepIObIIOcHPFfagJi/js9S9E4pZ+rO0AHqMkY6GY3Ag4Ik/s62fp/NzMORPuDuqYzEandtiQgsYMX2lc9PZca9tk4F83Ra34DTY+ncEiJwe6Vs7zS4JvRvs5BXpqEmYqfRx4i1Di8sPmjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eZiA2ggq; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPWG3LlA"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so5275075e87.2;
-        Mon, 21 Apr 2025 01:09:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eZiA2ggq"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac25520a289so491533366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:11:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745222994; x=1745827794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I2mjSQTce/ct1xp5p+D1e5MxdFlEqzn1xpx6QH6j78I=;
-        b=YPWG3LlAXARs1MeR4Jv9GU7FwFKOdtu+VAV1mNTeeu7THD+8KxMTea4lcj3KO2rzRq
-         fEHvnxi1JJB1mai6WyI2MJA1IbLQCYG2Db/3+VmYyWwLoX8cFhK3a/oalWlwCf9lfnqs
-         MYskGtKd52YUhHpaY6mtwzd9K17TvXA+Y99XwAHdRp5RlHeFpW6rmxQemLYpvemStUPS
-         sZGWv5pduUusMr+8lqfOU8PkDutL8W4kDDvyDIi7ppq1dP9JFpKm1MXsnwFKUbi3IdaO
-         HpscKPevMZOPxOfLjOjeTMpCuucvuJwzbQmuW//uOS0YxGJUGzR3ftueLdL98AYUYPlQ
-         mxdQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745223067; x=1745827867; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xXgQQbKgfnh8/TwrQq0CXBZDridfnrlUyigTFtKkpUk=;
+        b=eZiA2ggqNIM6uoGrV/3/+E6nv64g+gGn4PxAuujLludy356xZMUFTDn6oELoRziZ8j
+         dDk9QSuPBgf5HaY6S6DaAUswjUQr26VLdTeF66fg1Zjs4O9bKvvB17KfnRDuzI+5zkrr
+         xlLgz9fujv4uGfm8Ad26pYIRSfcVCXmSCH/NDHk53aCFtJ8h/Ab5laGPcy8Aj4XBhc6m
+         qy6lNydz6js+7QLMy4WPKCpqpcpQYidOSINv5D9nMXrU5lL1c6Yzh0XHcHV8sLpQxYBr
+         IhM0zx7BtVJXHHzEM2T5yAGfBpXzRu3/pZ9HUSAknNGiWgPM6yzMnN2A0uImMFWwsHDJ
+         lkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745222994; x=1745827794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745223067; x=1745827867;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I2mjSQTce/ct1xp5p+D1e5MxdFlEqzn1xpx6QH6j78I=;
-        b=gKqmPbrty7V9a9tK6tUUgptAF4jSvB6ck+SGkJkFeVDqOf8Mwg3Luk7sPCiKNaFvVq
-         QXVViL8mZxntxN02NJBzmOSfxqcz1w39lM2couAE01p9h9PtiJjJYpgDh/oEN77MQ8oy
-         kTXezM1+2C5UZHRx75IZS3VLb1O5ocmm7TEocrRPGf9tLs3EtSCTckJoLdmNhxK1ICRf
-         84x7V5oPIn7JX+gwOKHPqZDvm6UzElVhtHn5tE4Vi9B7EEuHNxtK/qgeqyzRfEmh8nKb
-         t/sI70iV1VZrEi1pR8Tchjj77n1ny8glrwU5ON3sshvFsXJvnbYhd9hCRLgdLIgX+xEk
-         WHZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW08s3Rh8sgSANNnXW25+9VLLPG9HiMztD87uyU0qlFVkx2MazfmdzOhepe6+rSKxhdm2b+wsVptsUg@vger.kernel.org, AJvYcCWHv11ZLJhAEa2Q/lJEcNu2Jq7NBVsXJe120qxb8jgfXaKR/+iHrC+k4ZQuw/muJhqvsNdnm3dbBZgXNR4=@vger.kernel.org, AJvYcCXzDnR2wGJiDn1zy+wB4kXXQ9sYJug2Ajias2Jfhxka/rRdsUmbL3kTb+4k6NWXGHL/QLmJFLfUEKMawo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycNC+8+3Uvj+E4XE76oq6BBnzYZN9HImuy3lMxqnPq67efUYUx
-	6PP7fVS948Z2NNfiPyJ9yU9U+Sj0PIOh1QvQUKl1MBBm9AmW1jGSLLQR9M5RoFPwpGCecbJw9Gv
-	nlMOPP+EyBw9iWFjNjcaMseCXS1VkFi9F/J8=
-X-Gm-Gg: ASbGnct5CuOgaVL4I++XJvrj/7yCNO4QPxkPRl97J9YBtKiqiJK7nqc2RBXJkISWiGu
-	CpkOaYb1po9GJ7t10yeMo+0x6wKinSMNnolHfplZuAsUxI4Eb6cntJMidMMD9QjfORop0DHhRDs
-	CgVDjOLzCMpe5Ui7pVNEtD0r85p0veDR0U
-X-Google-Smtp-Source: AGHT+IGGnwYms/bwQR4bfKLFxhGYy6bjC9kpgReShLXDrZx0BD5MBp6fWCsOgOl04IWSsloNeftYWOCMqI0GGiljTE8=
-X-Received: by 2002:a2e:a808:0:b0:30b:9813:b002 with SMTP id
- 38308e7fff4ca-3109054a531mr36843501fa.30.1745222994000; Mon, 21 Apr 2025
- 01:09:54 -0700 (PDT)
+        bh=xXgQQbKgfnh8/TwrQq0CXBZDridfnrlUyigTFtKkpUk=;
+        b=Jl29mCkRoy83to1ufBvfVFGAupe3x2/VhWfXHZqVGLi595aZKuMrJo8Rp4SFeB8lxb
+         a5P3R7HVTseNytLQrE+FABeljVsdBn2aU6Xhi/fLOYrf83dYOclmJC0KdBMyHLG5UH2+
+         GJAZTyVXi0oNkJlPL39opw+zfEDzhcTWvU/VeXRSmckiMzA8z0dXDZVsIC9/6jzK/R6K
+         r5WoaZqpBAsGw21/nI21hMEDc/QIlAl4RaWzQkL15sV4k5KX3zDmPyM1/72/pQtLTM5X
+         J9g+mW9uexEWKSzh9KGqjJhGo3E+ap3pz9LN9TdMUB7Cc3jJTQAmqP+SYvg57SclWOmC
+         aouA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5rjcgUBB/06Km3GzN0dTB3FVI9XQGGbXp3st3wt4SWgRcgG5zrpoynSFPgOfC7DLUuQcOb2Kqyd24pkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMMLz6QgdCiCxmnOo9tpCoC8g5s2CKwvuBXImemI67pLXyAmQz
+	1yg2NEq7PEHfbTqI2zItFM1oyFJjRQLTyx0Ve7SfdmrVff3tE+DJPiD0sCReLC0=
+X-Gm-Gg: ASbGnct4p3y9n5eoVZTcjujKTXxS+6H1XXR5f/8io5cLBf0xnzHh+K01U5Pa1VhhWgX
+	XYw66vtMW+AIN28nX/amcsBttE5K/gb288USdPJQ0qhKuHNb6jHSyiQ8mzIbhFp4qtZZOxAZd5b
+	AlCu2rEQFsOoYFkHXzQ4K9mXkkHhNpNx94YPQ8aLdEM/O/sriGEe8BG2LggSW7+T60bHHsfvbdb
+	p59C1cRCXO6srMsWR9EZOPCWetWUA81GBVHzNdIuzpnU3E3SzGPC7fjX2TkkZ3xKxVKsdIFRa1r
+	V8RWV4myipKcnRbYzIOJPgmoobc0jmb3zL0=
+X-Google-Smtp-Source: AGHT+IFm/Skz537wfTeoh2KozrNOOTUDzhipX6Al/MEzRYRXMbJwDdJHpyUOgxUlClgZmtUma/F09A==
+X-Received: by 2002:a17:907:7288:b0:aca:a383:b0c9 with SMTP id a640c23a62f3a-acb74afba44mr971434066b.13.1745223067279;
+        Mon, 21 Apr 2025 01:11:07 -0700 (PDT)
+Received: from localhost ([2001:4091:a245:826e:c0c:4cef:7dd:26bd])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acb6ec0b389sm475749866b.20.2025.04.21.01.11.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 01:11:06 -0700 (PDT)
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+Date: Mon, 21 Apr 2025 10:10:37 +0200
+Subject: [PATCH v7 1/4] dt-bindings: can: m_can: Add wakeup properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
- <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com> <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
-In-Reply-To: <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Mon, 21 Apr 2025 03:09:42 -0500
-X-Gm-Features: ATxdqUGjmCjoWgRy9CFGvBYM3AO3yhleNveM0vXHl0xHTlWPrWFnQUy71zJlHaA
-Message-ID: <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250421-topic-mcan-wakeup-source-v6-12-v7-1-1b7b916c9832@baylibre.com>
+References: <20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com>
+In-Reply-To: <20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com>
+To: Chandrasekar Ramakrishnan <rcsekar@samsung.com>, 
+ Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Vishal Mahaveer <vishalm@ti.com>, Kevin Hilman <khilman@baylibre.com>, 
+ Dhruva Gole <d-gole@ti.com>, Sebin Francis <sebin.francis@ti.com>, 
+ Kendall Willis <k-willis@ti.com>, Akashdeep Kaur <a-kaur@ti.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Vincent MAILHOL <mailhol.vincent@wanadoo.fr>, linux-can@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Markus Schneider-Pargmann <msp@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1809; i=msp@baylibre.com;
+ h=from:subject:message-id; bh=8cnbqnEIT2SapONFBAoVoxc2fqVmncyHVScTK2PoKRo=;
+ b=owGbwMvMwCXWejAsc4KoVzDjabUkhgzWvy17Oeq+FiudfrvfStt+jk7OAqn0iEtnJDZY7Fpj+
+ aZYaF1xRykLgxgXg6yYIktnYmjaf/mdx5IXLdsMM4eVCWQIAxenAEzkUh3D/4A/8Wf3Ls5cuNSN
+ +U+ejch+9V2mvRM6C/tExV0UHL//VWX4X61XbtC8ccPa36Xr2330dz/fKPW6iqVtfs7zgKeXWL5
+ NZQUA
+X-Developer-Key: i=msp@baylibre.com; a=openpgp;
+ fpr=BADD88DB889FDC3E8A3D5FE612FA6A01E0A45B41
 
-On Mon, Apr 21, 2025 at 2:52=E2=80=AFAM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Relay wrote:
-> > From: Aaron Kling <webgeek1234@gmail.com>
-> >
-> > The driver works fine as a module, so allow building as such.
-> >
->
-> In the past, the former irqchip maintainer raised concerns for allowing t=
-he
-> irqchip drivers to be removed from the kernel. The concern was mostly (af=
-aik)
-> due to not disposing all IRQs before removing the irq_domain.
->
-> So Marek submitted a series [1] that added a new API for that. But that s=
-eries
-> didn't progress further. So if you want to make this driver a module, you=
- need
-> to do 2 things:
->
-> 1. Make sure the cited series gets merged and this driver uses the new AP=
-I.
-> 2. Get an Ack from Thomas (who is the only irqchip maintainer now).
+The pins associated with m_can have to have a special configuration to
+be able to wakeup the SoC from some system states. This configuration is
+described in the wakeup pinctrl state while the default state describes
+the default configuration.
 
-Should this be a hard blocker for building this one driver as a
-module? I did a quick grep of drivers/pci/controller for irq_domain,
-then compared several of the hits to the Kconfig. And every single one
-is tristate. Tegra is by far not a unique offender here.
+Also m_can can be a wakeup-source if capable of wakeup.
 
-Sincerely,
-Aaron
+Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+---
+ .../devicetree/bindings/net/can/bosch,m_can.yaml   | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->
-> - Mani
->
-> [1] https://lore.kernel.org/linux-pci/20240715114854.4792-1-kabel@kernel.=
-org
->
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> >  drivers/pci/controller/Kconfig     | 2 +-
-> >  drivers/pci/controller/pci-tegra.c | 3 +++
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kc=
-onfig
-> > index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c=
-24a5ad75fcb40f507 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
-> >         driver.
-> >
-> >  config PCI_TEGRA
-> > -     bool "NVIDIA Tegra PCIe controller"
-> > +     tristate "NVIDIA Tegra PCIe controller"
-> >       depends on ARCH_TEGRA || COMPILE_TEST
-> >       depends on PCI_MSI
-> >       help
-> > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controlle=
-r/pci-tegra.c
-> > index b3cdbc5927de3742161310610dc5dcb836f5dd69..c260842695f2e983ae48fd5=
-2b43f62dbb9fb5dd3 100644
-> > --- a/drivers/pci/controller/pci-tegra.c
-> > +++ b/drivers/pci/controller/pci-tegra.c
-> > @@ -2803,3 +2803,6 @@ static struct platform_driver tegra_pcie_driver =
-=3D {
-> >       .remove =3D tegra_pcie_remove,
-> >  };
-> >  module_platform_driver(tegra_pcie_driver);
-> > +MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-> > +MODULE_DESCRIPTION("NVIDIA PCI host controller driver");
-> > +MODULE_LICENSE("GPL");
-> >
-> > --
-> > 2.48.1
-> >
-> >
->
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+diff --git a/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+index c4887522e8fe97c3947357b4dbd4ecf20ee8100a..ecba8783198fc1658fcc236d8aa3c89d8c90abbd 100644
+--- a/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
++++ b/Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+@@ -106,6 +106,22 @@ properties:
+         maximum: 32
+     minItems: 1
+ 
++  pinctrl-0:
++    description: Default pinctrl state
++
++  pinctrl-1:
++    description: Wakeup pinctrl state
++
++  pinctrl-names:
++    description:
++      When present should contain at least "default" describing the default pin
++      states. The second state called "wakeup" describes the pins in their
++      wakeup configuration required to exit sleep states.
++    minItems: 1
++    items:
++      - const: default
++      - const: wakeup
++
+   power-domains:
+     description:
+       Power domain provider node and an args specifier containing
+@@ -122,6 +138,12 @@ properties:
+     minItems: 1
+     maxItems: 2
+ 
++  wakeup-source:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++      List of phandles to system idle states in which mcan can wakeup the system.
++
++
+ required:
+   - compatible
+   - reg
+
+-- 
+2.49.0
+
