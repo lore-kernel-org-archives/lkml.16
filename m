@@ -1,103 +1,150 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5923D81
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9680614F98;
+	Mon, 21 Apr 2025 09:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228500; cv=none; b=GMuFp/pehdUtol4TySdUXJdEQDmviBZU+iop/FAgGXoRTrQ6n9edM2mFSz4duxVp1/IjfoLlQTsYKF0ABduxADiAzeUBCm/K97iMYjtMEhsiOhzNteVW1Ot/2aiHPgIuDCTmVKy9yAlfFWYdBTSG8bRkelEzlAsdJOrUTXQLNkY=
+	t=1745228637; cv=none; b=HE23uPvvuYDDuPTDB8mviV2tz3XnpKinYPc2zh697FfHfqsyqVavgaAP5spUQxRQZugWRfteapbpvVyVpic31HV/TPyGCTHn9SAMcu+Nd6Yc1cllxnC5QPfLMqPs5yX3OZEDjohGRofwBB/wqFP8dgJbiWAsnE27UgwG8iqly7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228500; c=relaxed/simple;
-	bh=uPgfam8lKzJ6HaS9GA1x6r5vZ0rGveb0lKBAkH9cU6I=;
+	s=arc-20240116; t=1745228637; c=relaxed/simple;
+	bh=LiPyv+QYFRZOfxilm/rqoFghKYpnruzZIuGPXJyshFY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RQJgMvoilm5UTj3V92ziacoOXtNihztO3zbzyuKd1+FAbh2rRZ01/FZTTWgBUxdssc+ZPn1Z17pkcd3Hy5tk91SOiaYuqPmmFBpbeqqsI1WtOXYic/4JmbSf+k4gAY8n5nGjLpxo8jLfG9zDcEKhZX7qmU2y3jVv9yyYwJqPOiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eNLrVgkk; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 MIME-Version; b=OsPGqg/xmCs1ZhTDNDA0TSn/1eFc4NAqn2RbdZ6xlA4APj4CIq0Ex+rMlUKsrKIf7ABa40JwIb9MqDftSe5Xdz2P3DId9UQOUUgr2qmZZJKSsfqJ6elBp0Ml5Tn7YVm6j8bV+oG752fVjlKK3sq4zbn/SwDpgcxVWii3DTf1ROY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=Bjn/QEof; arc=none smtp.client-ip=131.188.11.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eNLrVgkk"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KKj4J0023900;
-	Mon, 21 Apr 2025 09:41:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ZM/Vh+
-	Q8fAqwssrrkeeTgcVyCQuwd+1HH02zH4Dgn4g=; b=eNLrVgkkl2mmBl0kxo8tha
-	Z3ShciAV2kM0So19TgJeo4HU+Kloy/QEej3HSUBJd8kTPQwYWDIpyegacnu1+2ol
-	HbZ/sohb8HPgPqGyibpUV5E9qzejttBm/X99DeGO6dFWXRRqmGNDiexpdDCNYaeq
-	5sa9aFNyGWoZEhaR62EVpvm6uX/TVYDntPSRpUkgtGhffLR8+Kal1/cw8/wpZku9
-	3lQO3Hopcp4H3cXGkaVoyUEL2SuWRorvANelxuDTYy4PvSvYAEphjbIgvFrt4mhy
-	dmGLKHX/Guh4L0ezMflVcuu0ASBrFXA8xOGFiLbX/ydf13ckaXiTg3BdFcUc63Zw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464ycrkjne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 09:41:24 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53L8mAAC028109;
-	Mon, 21 Apr 2025 09:41:23 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv1wdkm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 09:41:23 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53L9fMFO45023630
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 09:41:22 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2A3EB2035B;
-	Mon, 21 Apr 2025 09:41:22 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E945D20352;
-	Mon, 21 Apr 2025 09:41:08 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.29.154])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 09:41:08 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, Anthony Iliopoulos <ailiop@suse.com>
-Cc: linux-kernel@vger.kernel.org, Naveen N Rao <naveen@kernel.org>
-Subject: Re: [PATCH] powerpc64/ftrace: fix module loading without patchable function entries
-Date: Mon, 21 Apr 2025 15:11:05 +0530
-Message-ID: <174516637905.525631.8856999917576384417.b4-ty@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="Bjn/QEof"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1745228633; bh=bKc9yVDD12zFt5PActr4wA/mqYObJPYba1F2TtgIniE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=Bjn/QEofQTdq/J3TseRjZdcqev313eZp49KQMpDxw3fcrP2tpiLaGTBqE8GZY4VgE
+	 rjAV2qWcX0yCLh7mrHHLLUBweYbo+YNgF3Xf79KyJSGwei7EeYdAePeUsP4bygd3Pl
+	 pWA8VO1xci2awe1hMjd7tW1qpL2ziIt3TJ9OyHSXdc1vzOesbCNGI+d+iyAbjdfipa
+	 RqWzC08Ud7MIZ9hoLz2GGA4fFORkata3vsh86MjGg5dbAjL6gLobC8c9Nci4+LmZ+q
+	 uCN67LZzyM/c35wMeaSUdjsVwJAtRr1m72TuEk8kc3vr7OlO352MDunu1vGYOdmHDJ
+	 /VS++ChghzKzg==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0n50GM9zPjsG;
+	Mon, 21 Apr 2025 11:43:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX19cmuOIeBrlP12vMR/oAY988hn6ybM2J80=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0my3j2BzPk5Y;
+	Mon, 21 Apr 2025 11:43:46 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [PATCH bpf-next v2 07/11] bpf: Rename sanitize_stack_spill to nospec_result
+Date: Mon, 21 Apr 2025 11:17:58 +0200
+Message-ID: <20250421091802.3234859-8-luis.gerhorst@fau.de>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250204231821.39140-1-ailiop@suse.com>
-References: <20250204231821.39140-1-ailiop@suse.com>
+In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Jp7xrN4C c=1 sm=1 tr=0 ts=680612c4 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=X3jz0Fj359h8prLIXbUA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: WEC61si-qoKmDNKnOHVL0ow40nl3lrfn
-X-Proofpoint-ORIG-GUID: WEC61si-qoKmDNKnOHVL0ow40nl3lrfn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=645 impostorscore=0 phishscore=0 spamscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210073
 
-On Wed, 05 Feb 2025 00:18:21 +0100, Anthony Iliopoulos wrote:
-> get_stubs_size assumes that there must always be at least one patchable
-> function entry, which is not always the case (modules that export data
-> but no code), otherwise it returns -ENOEXEC and thus the section header
-> sh_size is set to that value. During module_memory_alloc() the size is
-> passed to execmem_alloc() after being page-aligned and thus set to zero
-> which will cause it to fail the allocation (and thus module loading) as
-> __vmalloc_node_range() checks for zero-sized allocs and returns null:
-> 
-> [...]
+This is made to clarify that this flag will cause a nospec to be added
+after this insn and can therefore be relied upon to reduce speculative
+path analysis.
 
-Applied to powerpc/fixes.
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
+---
+ include/linux/bpf_verifier.h | 2 +-
+ kernel/bpf/verifier.c        | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-[1/1] powerpc64/ftrace: fix module loading without patchable function entries
-      https://git.kernel.org/powerpc/c/534f5a8ba27863141e29766467a3e1f61bcb47ac
+diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
+index 9734544b6957..cebb67becdad 100644
+--- a/include/linux/bpf_verifier.h
++++ b/include/linux/bpf_verifier.h
+@@ -576,7 +576,7 @@ struct bpf_insn_aux_data {
+ 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
+ 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
+ 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
+-	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
++	bool nospec_result; /* result is unsafe under speculation, nospec must follow */
+ 	bool zext_dst; /* this insn zero extends dst reg */
+ 	bool needs_zext; /* alu op needs to clear upper bits */
+ 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 27d3bc97a9e0..3d446c19bdf6 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -5031,7 +5031,7 @@ static int check_stack_write_fixed_off(struct bpf_verifier_env *env,
+ 		}
+ 
+ 		if (sanitize)
+-			env->insn_aux_data[insn_idx].sanitize_stack_spill = true;
++			env->insn_aux_data[insn_idx].nospec_result = true;
+ 	}
+ 
+ 	err = destroy_if_dynptr_stack_slot(env, state, spi);
+@@ -20886,7 +20886,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 		}
+ 
+ 		if (type == BPF_WRITE &&
+-		    env->insn_aux_data[i + delta].sanitize_stack_spill) {
++		    env->insn_aux_data[i + delta].nospec_result) {
+ 			struct bpf_insn patch[] = {
+ 				*insn,
+ 				BPF_ST_NOSPEC(),
+-- 
+2.49.0
 
-Thanks
