@@ -1,117 +1,257 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49719ADA4;
-	Mon, 21 Apr 2025 11:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA85F263F3F
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234767; cv=none; b=rfTeFVyIp69BTIz+WVQQZ3ihmtE1yVvRM0zdtNZO09il/VvDw00TLKPONYG+SAtIej+M3F1om75A8lwaX8gdV6MeVb0uclcT+pdRq2s//3IOzPSnfhsRkpqPTgktn5vrWL86cMXnl5wC3tP9mg9DphaYB3dR15fuUtvmyL7oVMs=
+	t=1745234769; cv=none; b=bUqQvStZZ3q5uE2xQr1+FMc9GL7REbQXZNnkOcQwxsZTkFkLsjEHGAPNd7ilzcN/3Rc66cFcq5fsHyFJLY8QkaLMyk+qu+58cp+Z8GzdFN/m8jiOtatyOh6RFdi2pTE0yDZFif42BnlzherXGmxDf9TadxcOltKssjzr4E39W0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234767; c=relaxed/simple;
-	bh=nrhgipuQElBRXLd+C1UKsGu61t1Dp41M14C3lSsJ+qQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=at+p4Ie7l1QPLpclav/oPYriEfk/LHU6tBleyWjeudNqEbODGjA3PqTz7076YGn3SAwU+NOVmv3eJ8oTTC+6NdC8Ow+bHSM1xv0CPPf9M0wKbGc4ad+OQSqnON1c3qD4sPK+/S5+Bj2/tYgKsxqO1jcyWlq91Lz+m+Dmd7znuss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VV7GMbpN; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745234769; c=relaxed/simple;
+	bh=zHcWarPj9NjR3xEtkYaqxlJfwvkaDX9lLrQsKXg/rjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a1f8qGWlygAl/e/sv6Ui+M5duBbqHYfnfKDE15acHZTxYaklX0up679urlXTJPmEWvnS9CMVcATd0jarK+C9ymlJVNQQq7stvWjggnDP7raLMXdkewQWNMWgeFSA3PZ+j/jA9CJYHhx7MU0cbdLMAhEFDJtDL198IDjz67MlkaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRnYRcml; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VV7GMbpN"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so28817735e9.0;
-        Mon, 21 Apr 2025 04:26:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRnYRcml"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d689c0741so16355e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 04:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745234764; x=1745839564; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DywDJj+TP6Fy0BegsYxCLBJnBZZmwEA8i9S4As70Fkc=;
-        b=VV7GMbpNDKZexuiR3E3L//NaABPb/mpUCpoqlNeIjFcNqabge5WR9YGAv4cuvZuOte
-         w0WojlGT/vxWzqf6BGT+cp8ws0ub32XOeQro8j2Zdq/K+0rQ3rcKbIfYbw3+8dw5N3Hq
-         sE6NJB5/8dW+DLKWhltezudDfBW1170fPoTHkTsTo7BDe2/2MnicDcKSq7weZ9Pa5dZm
-         vlBJ4uY/cjvLE+ctXDAFwase/ctSvorfKJzWD5+N3vKFs6buxOCYn2TPhU32cI/Cgywx
-         BJ0POn9t7zv5jKMkqe5IntBDSi+BE/TbjBFU896OZUAdrLPMpEAODbmemQikN0WPucPs
-         785g==
+        d=google.com; s=20230601; t=1745234766; x=1745839566; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=12ulIlL+bStUTIpncUPTjhwEK2bBCc519N9u/ukXq2U=;
+        b=KRnYRcmly1Y9j/ulMUHgMrSTuBzTDllSSObq7k7w7jMYsB9ADYIDjwirapXdfxFN3t
+         384x8YWRvINVqtKfmyYSnADLXNX01TQ/uxAvyrb4D4HLx7zS+brtkROKGFot55oAJxME
+         VlPsdSq3kjyVRRIEdw332PQvl8v3OcgVItRFAAFuXYQRH0bK0KHDN+BVqdNxUQwOrXh2
+         WNoHTRyP9nEruGcjcdBR10/0ypa+DUL37WO7BbKkER2umRiF0G1+/L9L1DoScuZfRqwZ
+         tSVvFOOFRKQiDU/8t4yjzHt8Qu4srvESQ8YZqga+LWOjFEABCS7fFqYcAQw3w4VImEGL
+         BZmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745234764; x=1745839564;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DywDJj+TP6Fy0BegsYxCLBJnBZZmwEA8i9S4As70Fkc=;
-        b=OUkYg1jiD6/fj38jsDWe/s88pGkMTif6WJ///H/slqn1JLCSOR9Vh2C/pmGsy6mppR
-         j4chjxDIKXlXoAu38yhhVH1997wQbeE4lYHMv0kTSIHfpp5ZYp7rku4063LXh6vRAG3k
-         XNnc3Vf+gbm8zqQY7kiJnCYRa+0eX+wvUJx1SdD37i9eyigKpIz8OmIJci0x95S67D0N
-         G3j9DpGc4mtduim/BJ/Pk8OGIlhCz5WiVI2CftVY6epHQEJac/oTSR9SRE0xGI0v76zr
-         S4Cd1n5KTgdAHMEhgRX74YCW9YloOz8BVXDzi95UaDZ36m2kaUpy64ArEcqX0yjRg8+/
-         DbLA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5B/Yl8n/gfsxngZiYF8nDtxYGKapr2k9VS0GE4mUyfOh8nTVp/KocjS2LEDFbVVLNSNEFrF0aSKzpBus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJtE2yCBRpn4mWs7jqb5QXF4fOClKP7o7dMECUG7dR93Y4yEvk
-	O6DGz86QPR8rJa5ByOqSj7msDliJOSA+oSDOHl+wh3pFev9Ljv6JzNircQ==
-X-Gm-Gg: ASbGnctWC4UaSHGdme5VoAybXAFIff3Fu7RlKbQDPiGJf2P16BICDmWIJ1Ou8fgiQ8y
-	VBegroxYkUP5DTs5e6WYEbu8YTKR/Qg7v7RVEySr8PhyokAKqaBxmUmmjn6f59lcaaBSWtTakg+
-	s1lQoHG+Dk1PRb322o4Yahck+EUVF8LtLJrLFZGP6jvLtQGMHAh30VFQSyXSTskfZA5Q691RknS
-	dRgmV3LC3zvL8+AqOwRt1qokmukGSJKB4Yfb/0szaV4wJPG4C6D00boOmXrVsPd4TStaCkbLkyF
-	lo4BGjOqkuy5PPy1C3y4azCXBkCdiGATnAGWNsd3KyohTh+QJTTcBsempjM0tPEpog==
-X-Google-Smtp-Source: AGHT+IEyd/gCLe6uVv+NRUValpX0NFG/QctCP0805z/W9pjLxvuoIW7drtqziovnyPlzm17OYnq17g==
-X-Received: by 2002:a05:600c:1c8f:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-4406ac21897mr78319485e9.33.1745234763686;
-        Mon, 21 Apr 2025 04:26:03 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:c7c:6696:8300:fc11:84a0:480d:20a0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207e6sm11450879f8f.7.2025.04.21.04.26.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 04:26:03 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: nbd@nbd.name,
-	lorenzo@kernel.org,
-	ryder.lee@mediatek.com,
-	shayne.chen@mediatek.com,
-	sean.wang@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	chui-hao.chiu@mediatek.com,
-	Bo.Jiao@mediatek.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH RESEND] wifi: mt76: mt7996: avoid NULL pointer dereference in mt7996_set_monitor()
-Date: Mon, 21 Apr 2025 12:25:44 +0100
-Message-Id: <20250421112544.13430-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1745234766; x=1745839566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=12ulIlL+bStUTIpncUPTjhwEK2bBCc519N9u/ukXq2U=;
+        b=jvvkTfUJHhHngAvJgys/zwWGpzUB2PLmKNexyf0YSauRoUnaNfdrYDbQAie06Wwpi8
+         RkrYkg1a94AC0x1xrrbFiG+HLg9HHKPTbYdrnePiMIJqe+yvpYVwyD7Cnhdyh5clNqMR
+         mRwRCa3EXmSnPah0wGGVTdBl+5/XRYDv4dLIiqfuhKj0VDkrCrvzfKUaQER+13BeApR4
+         7Huy0vrygtAGVEOBCnOoxGrHdWv+Xf7hdp9kpa9t60nIC0VWe+3X00uTPfFa30XNfrtF
+         9aIbbJCa+AU1/4lKiMIBd3ST0q6o1mjUW9TjJV9t+/7rndTfuWU1VjAaoMMs9q0UEAkq
+         s88w==
+X-Forwarded-Encrypted: i=1; AJvYcCWTKJJakd8LhB9S0SSTsWHHfBiz/8vRINqolo9FI0DzMM5yi8LiaTVg2V0D3MbQVpQ99sCQvr6q33Gni3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc+wKKyO17nql4bLUs4G5bpyk3jPcBdzEXMmRhnydwD0yZdsWr
+	5n0CDa+wieJcoDso1/wnT7RtiZoNUlgkequrOggf+lfBUuA4SYNZq3kmr5cQuTH8CGr0ds5amal
+	Po70bFkrbRoEBcXLfhSxrDX8VFLwy6HCYfL0roDS362ZxthAGy1Hi
+X-Gm-Gg: ASbGnctjSWQAUXKqzMZ3Nb5z13aM+UVd5UvglJG1lHQHSRmEvwlPGV7Ijrga7+fPfvV
+	23vVb37qNkHY7EsbCCHaYmUF1d07VySQoq8MOk4q26GPe1Qeyf2AfZ6guoPvCJ1Zn1U4Az2rn3o
+	t4YpE3nUyJl7GOMASg4S0WfFhrh5D0K2kEQkAu1gkRSr4lEWlYjjY5Kv+lFI8=
+X-Google-Smtp-Source: AGHT+IFEdze/a99TFCtvLVk5Rmo1yzKGRrpY13nJyWYeXkfaum583hJP2CO4rOYArfuDXtsh6chVGi7ekLd/CoQxvFQ=
+X-Received: by 2002:a19:5f0f:0:b0:549:73a8:c258 with SMTP id
+ 2adb3069b0e04-54d6e168ca4mr515392e87.0.1745234765451; Mon, 21 Apr 2025
+ 04:26:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250416100515.2131853-1-khtsai@google.com> <20250419012408.x3zxum5db7iconil@synopsys.com>
+In-Reply-To: <20250419012408.x3zxum5db7iconil@synopsys.com>
+From: Kuen-Han Tsai <khtsai@google.com>
+Date: Mon, 21 Apr 2025 19:25:37 +0800
+X-Gm-Features: ATxdqUFlg1rMsWTAwoJOmoAmk_rGgxuPXSGtKm4qaRrSNgRpxrJoYCc9QRhljnU
+Message-ID: <CAKzKK0qCag3STZUqaX5Povu0Mzh5Ntfew5RW64dTtHVcVPELYQ@mail.gmail.com>
+Subject: Re: [PATCH v4] usb: dwc3: Abort suspend on soft disconnect failure
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The function mt7996_set_monitor() dereferences phy before
-the NULL sanity check.
+On Sat, Apr 19, 2025 at 9:24=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
+.com> wrote:
+>
+> On Wed, Apr 16, 2025, Kuen-Han Tsai wrote:
+> > When dwc3_gadget_soft_disconnect() fails, dwc3_suspend_common() keeps
+> > going with the suspend, resulting in a period where the power domain is
+> > off, but the gadget driver remains connected.  Within this time frame,
+> > invoking vbus_event_work() will cause an error as it attempts to access
+> > DWC3 registers for endpoint disabling after the power domain has been
+> > completely shut down.
+> >
+> > Abort the suspend sequence when dwc3_gadget_suspend() cannot halt the
+> > controller and proceeds with a soft connect.
+> >
+> > Fixes: 9f8a67b65a49 ("usb: dwc3: gadget: fix gadget suspend/resume")
+> > CC: stable@vger.kernel.org
+> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
+> > ---
+> >
+> > Kernel panic - not syncing: Asynchronous SError Interrupt
+> > Workqueue: events vbus_event_work
+> > Call trace:
+> >  dump_backtrace+0xf4/0x118
+> >  show_stack+0x18/0x24
+> >  dump_stack_lvl+0x60/0x7c
+> >  dump_stack+0x18/0x3c
+> >  panic+0x16c/0x390
+> >  nmi_panic+0xa4/0xa8
+> >  arm64_serror_panic+0x6c/0x94
+> >  do_serror+0xc4/0xd0
+> >  el1h_64_error_handler+0x34/0x48
+> >  el1h_64_error+0x68/0x6c
+> >  readl+0x4c/0x8c
+> >  __dwc3_gadget_ep_disable+0x48/0x230
+> >  dwc3_gadget_ep_disable+0x50/0xc0
+> >  usb_ep_disable+0x44/0xe4
+> >  ffs_func_eps_disable+0x64/0xc8
+> >  ffs_func_set_alt+0x74/0x368
+> >  ffs_func_disable+0x18/0x28
+> >  composite_disconnect+0x90/0xec
+> >  configfs_composite_disconnect+0x64/0x88
+> >  usb_gadget_disconnect_locked+0xc0/0x168
+> >  vbus_event_work+0x3c/0x58
+> >  process_one_work+0x1e4/0x43c
+> >  worker_thread+0x25c/0x430
+> >  kthread+0x104/0x1d4
+> >  ret_from_fork+0x10/0x20
+> >
+> > ---
+> > Changelog:
+> >
+> > v4:
+> > - correct the mistake where semicolon was forgotten
+> > - return -EAGAIN upon dwc3_gadget_suspend() failure
+> >
+> > v3:
+> > - change the Fixes tag
+> >
+> > v2:
+> > - move declarations in separate lines
+> > - add the Fixes tag
+> >
+> > ---
+> >  drivers/usb/dwc3/core.c   |  9 +++++++--
+> >  drivers/usb/dwc3/gadget.c | 22 +++++++++-------------
+> >  2 files changed, 16 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index 66a08b527165..f36bc933c55b 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -2388,6 +2388,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >  {
+> >       u32 reg;
+> >       int i;
+> > +     int ret;
+> >
+> >       if (!pm_runtime_suspended(dwc->dev) && !PMSG_IS_AUTO(msg)) {
+> >               dwc->susphy_state =3D (dwc3_readl(dwc->regs, DWC3_GUSB2PH=
+YCFG(0)) &
+> > @@ -2406,7 +2407,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >       case DWC3_GCTL_PRTCAP_DEVICE:
+> >               if (pm_runtime_suspended(dwc->dev))
+> >                       break;
+> > -             dwc3_gadget_suspend(dwc);
+> > +             ret =3D dwc3_gadget_suspend(dwc);
+> > +             if (ret)
+> > +                     return ret;
+> >               synchronize_irq(dwc->irq_gadget);
+> >               dwc3_core_exit(dwc);
+> >               break;
+> > @@ -2441,7 +2444,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >                       break;
+> >
+> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEVICE) {
+> > -                     dwc3_gadget_suspend(dwc);
+> > +                     ret =3D dwc3_gadget_suspend(dwc);
+> > +                     if (ret)
+> > +                             return ret;
+> >                       synchronize_irq(dwc->irq_gadget);
+> >               }
+> >
+> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> > index 89a4dc8ebf94..630fd5f0ce97 100644
+> > --- a/drivers/usb/dwc3/gadget.c
+> > +++ b/drivers/usb/dwc3/gadget.c
+> > @@ -4776,26 +4776,22 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+> >       int ret;
+> >
+> >       ret =3D dwc3_gadget_soft_disconnect(dwc);
+> > -     if (ret)
+> > -             goto err;
+> > -
+> > -     spin_lock_irqsave(&dwc->lock, flags);
+> > -     if (dwc->gadget_driver)
+> > -             dwc3_disconnect_gadget(dwc);
+> > -     spin_unlock_irqrestore(&dwc->lock, flags);
+> > -
+> > -     return 0;
+> > -
+> > -err:
+> >       /*
+> >        * Attempt to reset the controller's state. Likely no
+> >        * communication can be established until the host
+> >        * performs a port reset.
+> >        */
+> > -     if (dwc->softconnect)
+> > +     if (ret && dwc->softconnect) {
+> >               dwc3_gadget_soft_connect(dwc);
+> > +             return -EAGAIN;
+>
+> This may make sense to have -EAGAIN for runtime suspend. I supposed this
+> should be fine for system suspend since it doesn't do anything special
+> for this error code.
+>
+> When you tested runtime suspend, did you observe that the device
+> successfully going into suspend on retry?
 
-Fix this to avoid NULL pointer dereference by moving the
-dereference after the check.
+Hi Thinh,
 
-Fixes: 69d54ce7491d ("wifi: mt76: mt7996: switch to single multi-radio wiphy")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/net/wireless/mediatek/mt76/mt7996/main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yes, the dwc3 device can be suspended using either
+pm_runtime_suspend() or dwc3_gadget_pullup(), the latter of which
+ultimately invokes pm_runtime_put().
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-index 91c64e3a0860..32846da51cbc 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
-@@ -414,11 +414,13 @@ static void mt7996_phy_set_rxfilter(struct mt7996_phy *phy)
- 
- static void mt7996_set_monitor(struct mt7996_phy *phy, bool enabled)
- {
--	struct mt7996_dev *dev = phy->dev;
-+	struct mt7996_dev *dev;
- 
- 	if (!phy)
- 		return;
- 
-+	dev = phy->dev;
-+
- 	if (enabled == !(phy->rxfilter & MT_WF_RFCR_DROP_OTHER_UC))
- 		return;
- 
--- 
-2.39.5
+One question: Do you know how to naturally cause a run stop failure?
+Based on the spec, the controller cannot halt until the event buffer
+becomes empty. If the driver doesn't acknowledge the events, this
+should lead to the run stop failure. However, since I cannot naturally
+reproduce this problem, I am simulating this scenario by modifying
+dwc3_gadget_run_stop() to return a timeout error directly.
 
+Regards,
+Kuen-Han
+
+
+>
+> In any case, I think this should be good. Thanks for the fix:
+>
+> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+>
+> Thanks,
+> Thinh
+>
+> > +     }
+> >
+> > -     return ret;
+> > +     spin_lock_irqsave(&dwc->lock, flags);
+> > +     if (dwc->gadget_driver)
+> > +             dwc3_disconnect_gadget(dwc);
+> > +     spin_unlock_irqrestore(&dwc->lock, flags);
+> > +
+> > +     return 0;
+> >  }
+> >
+> >  int dwc3_gadget_resume(struct dwc3 *dwc)
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
+> >
