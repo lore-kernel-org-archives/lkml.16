@@ -1,105 +1,106 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311EE264619;
-	Mon, 21 Apr 2025 11:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8FE1DB546;
+	Mon, 21 Apr 2025 11:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235867; cv=none; b=fWAMI11NfxV0d/Vy1iz2w+8Jm9GYWfuAZzyELjzBmS0ZEu/SA/HYGXDsUItC/xrQuq2dZk7Q6mzso8ebU6MH7LqH/tgxwrnudeb94NtKoDE3wzG954yTLbY5ot0ehZ997PTTXRw1X65RqW+TyeZS58RVWf8zxBpNq4AgWZec0ys=
+	t=1745236007; cv=none; b=a+dvFtrS52hzsr15GIYMXy+oo2XJUwZ/MxNqNlrw0MX0hSu4uUHd0Ymp4d36Cvu2RbhFJfwRp26hifKSqSEYQiGNTMU8E9yYDxr3hl54a4erFDxIUfCEYDMahKoVXf/fiI5TtPW9wUKb3ld8Iz/LwY8mWvX+UhVtJfCaf3DPH4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235867; c=relaxed/simple;
-	bh=K2yDIHrClKJMzFSfH79towDwJE2UtYL4T0nd7cHxXio=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyGx0YjbzIk5kV0UNusT/OZOOTgOHK0/bF/Z+a7v5s+V2LBoSCRrsvEliaAuAArmcN7gXZgLShsjrkQ/orl5yUR7M98G/M9W3eXpEZ5PksXcrQlizFu5r8eyzPqGCFKlu1ro4z8ct29H4MoxpD+8HR2jwG3WF2Oea2MEtQZ/yho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PPPHtQpM; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745236007; c=relaxed/simple;
+	bh=LhoBD6Hk5Y8BDPmeOJbsXnEeNxeHWVAfgyR6c47ax/8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jDB2frWnhfpFVip4eMCd9IMXuZ90OM8pQvF0E05I04rF92tEybNmrUxWDPBQ5yoHAWesw5SuB9rHhsQy9+TuDu0A+eEiR5G5kabwV8v83pb1XENn7YHXYQahax4rviYEqacogPqTqpZAGrdIDSDbzWnTYp/S/yj9H6MHVErMGMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dKoD5xUD; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PPPHtQpM"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBiLBC1538159
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 06:44:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745235861;
-	bh=dgV536aKTURayOABQgXkmovr+QyXvP7zhUmjnkrwm5M=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=PPPHtQpMHPxFn0vUFkBubAbpbv9Y9otaMEmRss1vSJxtNZ/DTA9cZ4owWfweKhkdx
-	 ojw6FHIYrP1URZJUqqryZYePV5kOrYOYbhX9PQ2qYomf+/CWEwDMJ0wd1fBhz8z4T5
-	 QeH9nCcIFPEbFhKMKmjad3nVmkE4ycgDs1dK4m24=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBiLC0008738
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 06:44:21 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 06:44:21 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 06:44:21 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LBiLat113661;
-	Mon, 21 Apr 2025 06:44:21 -0500
-Date: Mon, 21 Apr 2025 06:44:21 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Anurag Dutta <a-dutta@ti.com>
-CC: <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-j721e-som-p0: Add bootph-all to
- HBMC node
-Message-ID: <20250421114421.pj6vceavzjl2qkky@filing>
-References: <20250416060754.2393701-1-a-dutta@ti.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dKoD5xUD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KXn/Q
+	AXx6ktszUXP77q4WQFVEYAlsySZj6s3Mkg/SdA=; b=dKoD5xUDgYwc1EoQAAAjv
+	HxJ8eZLGICvYnFDpZK97WykbiC3p4YlE4sqp9rUPXly4wcQxLXydOhUtcZFrFxhe
+	9s3znTLk37XuNTcO4W85oVpT3o224SMBGXFFvxUBlfPQMWWSIJgBFDiCjIhhfsYw
+	ORhrz4CVkGXLXRajUEFeDA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3zV_vLwZooPBmBg--.44597S2;
+	Mon, 21 Apr 2025 19:45:52 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	manivannan.sadhasivam@linaro.org,
+	kw@linux.com
+Cc: robh@kernel.org,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] PCI: dwc: ep: Use FIELD_GET()
+Date: Mon, 21 Apr 2025 19:45:48 +0800
+Message-Id: <20250421114548.171803-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250416060754.2393701-1-a-dutta@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC3zV_vLwZooPBmBg--.44597S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar45uF4kCFWxtw18Zr1fZwb_yoW8uFW3pF
+	18Can0kF1UJF4UXws5ua93A3W5GanxG3y8Cas3GwsIvF9Fvryvq3yqyF9agw1xJF40vr45
+	G3ZrtwnxWFsxA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRyq2_UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx42o2gGKVyjFQAAsp
 
-On 11:37-20250416, Anurag Dutta wrote:
-> Add bootph-all to HBMC controller node for successful hyperflash
-> boot on j721e-evm
-> 
-> Signed-off-by: Anurag Dutta <a-dutta@ti.com>
-> ---
-> Test log : https://gist.github.com/anuragdutta731/103e84e84f013093fa089803719d997d
-> 
-> Changelog : v1:
-> 1. Added bootph-all to hbmc node in k3-j721e-som-p0.dtsi
-> 2. Removed bootph-all from v1 patch from flash@0,0 node
-> 
-> Link to v1 : https://lore.kernel.org/all/20250411082637.2271746-1-a-dutta@ti.com/
-> 
->  arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> index 0722f6361cc8..5665b9490003 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-> @@ -440,6 +440,7 @@ &hbmc {
->  	pinctrl-0 = <&mcu_fss0_hpb0_pins_default>;
->  	ranges = <0x00 0x00 0x05 0x00000000 0x4000000>, /* 64MB Flash on CS0 */
->  		 <0x01 0x00 0x05 0x04000000 0x800000>; /* 8MB RAM on CS1 */
-> +	bootph-all;
->  
->  	flash@0,0 {
->  		compatible = "cypress,hyperflash", "cfi-flash";
+Use FIELD_GET() and FIELD_PREP() to remove dependences on the field
+position, i.e., the shift value. No functional change intended.
 
-This node already has bootph-all, only the child nodes need bootph
-properties. Am i missing something?
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+I referred to Bjorn Helgaas' submitted patch.
+https://lore.kernel.org/all/20231010204436.1000644-2-helgaas@kernel.org/
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-> -- 
-> 2.34.1
-> 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 1a0bf9341542..f3daf46b5e63 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -256,11 +256,11 @@ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
+ 		return offset;
+ 
+ 	reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-	nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
++	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 	for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		bar_index = reg & PCI_REBAR_CTRL_BAR_IDX;
++		bar_index = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, reg);
+ 		if (bar_index == bar)
+ 			return offset;
+ 	}
+@@ -875,8 +875,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 
+ 	if (offset) {
+ 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
+-			PCI_REBAR_CTRL_NBAR_SHIFT;
++		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
+ 
+ 		/*
+ 		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
+@@ -897,7 +896,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
+ 			 * is why RESBAR_CAP_REG is written here.
+ 			 */
+ 			val = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
+-			bar = val & PCI_REBAR_CTRL_BAR_IDX;
++			bar = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, val);
+ 			if (ep->epf_bar[bar])
+ 				pci_epc_bar_size_to_rebar_cap(ep->epf_bar[bar]->size, &val);
+ 			else
 
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.25.1
+
