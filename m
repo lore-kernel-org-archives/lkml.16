@@ -1,129 +1,123 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FA31C3C1F;
-	Mon, 21 Apr 2025 19:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EEA1411DE
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263081; cv=none; b=e6YlbQ78Q8i/m+6IrBXCGhVD/RXkycMwJpV9xW3sTNgjkf+c9D9Qzxoia22ZD9vEon10NsFi+/KCek3UOrCw8cc4kry2krUC5WQtlTnNpD4k+k6TT+0IZ8rMJ6SVKTXYeUdMJTu807LTkCKovr3mikbiyvfFmnpveaB7JcSI4Hc=
+	t=1745263155; cv=none; b=RiwoRU6f6kNxJ6jqnT46AHqrEM+uqXORlZKtbR2ILALu5GTiFeoAn7h2brzeebaJsE+O18DIm64wusAOW35GUihiu38LE5VofSibXTrjJOhAhJMCArl3ekZuU5T4TarAkM2SM7NkAOUznbIFbBsiWiFpXbQRuQYt8iT/yTyEjxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263081; c=relaxed/simple;
-	bh=6Lt6s2kB5xiKzlFdAj66SBUP/GuCc0AQgjD4vfIFCcI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nNohjCrl4Y+My5Ncz0UI0yDW/5zT7yzzZI3tpl9jx3qPd+d/HOS95ts/5iNpaBjAFuJZ6IyCJieZfouoE03ThcFI9tBdjZvSgZxXOTQe0VKa0nTy8TwdWlMYmyBhWiuprm978bFKm/9U0FlhyYoqInLuFkMmH7uTGy5SZQDJoig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDqlCtEn; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745263155; c=relaxed/simple;
+	bh=YzyhNX9KUIj9DB4k9cyjB4ql8xv3pIrEL47uAOd+GFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLY2BgfpDimc9VV80B5Xpl3toTKZ5yGw++lcBDcs4bwwM42Z2QQ2vaMYXYq3xRKtlKl1cxUf05FqRCIEL2SceUpTHI5tCOjQ4MisulNgk2D7hxNaWWtk9Tfg78ZZTrYEHBGXkN65YTOgJh9JBbejv1tdKl4D3Eg+iKWsWUCThas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dRvigm5f; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDqlCtEn"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a070so43427061fa.2;
-        Mon, 21 Apr 2025 12:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745263078; x=1745867878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rvx762aZIWnIRrfPsLkFmtHGZEgCQuMTQMsPMH9+g74=;
-        b=NDqlCtEnUVMk4FRJoX8MnOos9pZi3Btle/9KUDfHqP18po007j7PL4pd0KJoEFjj5q
-         CH7aFU0HYwAfDngyoTaOcj0nUu+SzrWR8YsvfkySjzCOjeaiFdFgwJ3UQu07EQhw2bht
-         OyDMPXElX37zlCJLFHTyR7/5v7PMX4BhiiKg+grISCFauoPepbs8+33SLe7zznRlGUde
-         ndS2hnKl9MDkmhLgwtNnvYviil8VHy9WJMGmdZth5kCp9FvgLCovmFUxhDibeKmA2Nm1
-         KxPkQuPw4NdUjQJl7zxh6JjN763KnlA4lFL4OM4gYNbe/374EePCJt8joBw2TyK7YTjA
-         PP+g==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dRvigm5f"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIg5FP010134
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=P3HJl5U4M+u/M9qqMj09srNN
+	G0MDWTXKKxwIH4K4Y7M=; b=dRvigm5fwWZc1ilMX/w8yI7PuHCy+5FF58b+6HIq
+	V0TUg5RHAUvBzFNoCHImgJKL85cyjUqkfeUKCNX+chaSb1lQUHn7QVnGyDvbbrLS
+	+X5IMjell2ndEpIRyG3WmzOpMn97E/YTKdJL9ixO6Vzv6QPhauY/kke8trO+jA+a
+	TtIWCAKCElJx1BWCeelebVxcZSjlE9lw+v9KhIFCF73UYrpSFZFcaDlOtnecxOnf
+	yuCvykTuvLONEEOg6m9j7OH0VFYV2FMgtzSWtVo61GxRM8tCZO3gO8QhWOHndWBL
+	+fg/P+ElBdNgaCcKJ4yo/X2PfPBCK23MDxK3p8tLovN0Bw==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bn0su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:06 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ecfbdaaee3so78548096d6.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:19:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263078; x=1745867878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rvx762aZIWnIRrfPsLkFmtHGZEgCQuMTQMsPMH9+g74=;
-        b=hMCbQIyYdaWSsxePL6WaJoJgZ3SqW9jjJwx3+OM4Dxk07zWUPYJCe5KX7mfAbBF7pN
-         dPhr3k4IOrRIwJmhTiPSwTssCVbUG0soDqKHdSrswYGZJa3Eai/qz/9yTcl3pd+dFcD2
-         0ZgPs0gLrmoipVOVVqfNpKz9trijou16VOUyqjNh3T32BnAH0Hha54U3nINDfDzY2PRZ
-         bO5Gu+XHdsZ9HaNof19EFJXLaI7xQbLGCFGF95qyCn6UuPm1mgN+IkXwpsW3N4WaDYoz
-         agwrI4Lf4AS3+/uFjBSyk2KIYcCkYzaReru4WTtlx1pD1hEiEncClXrupwMN+KfPq0Jl
-         5BHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBbQRVPt+JYa0+dyU92Ujo43NoW2Tpc5GA4+bIuK0CmfU4OeVrwMIUvfi1hkRLxV6s5M/djtRsCkP2Do/pPYI=@vger.kernel.org, AJvYcCW+9JlesJtIpzDa3WPIYl3swJcapb4RdU1ARpcmwlg4mkmtwCz2gXDZYEQdsnjL+VknMQLP1iaCcKE0IKso@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkPu2ps/u45AO4t7CyF8ePNeoxBC7DPxLaq39Q3ozLGQ4c1ypM
-	q1TN7Mcvedo3DHUpm5QBx8jpEqpQhuJgCXlFVbSGR8TpE16VLHqvifIdGQiu0/EaQ8aBzjJHE7E
-	ihi0lkabnPeyg027MqpC7ol4muBr3+FAU/vY=
-X-Gm-Gg: ASbGncu018RNMeylfnnAua/bWIKlGw3tkS5RboBRMocrCqLCC93jdeeHEKJVO+iWy7K
-	pPZtEfgpwYvmXzHkiwbV4KtcndOIdr1s/m/n5W0SLNXXI966ij8nYFu51/ywl1YG/zWW7rjYLjh
-	IQEdC4PU3yW4qcHVClhei9
-X-Google-Smtp-Source: AGHT+IGs3B57KMvlgjlfvccjd0/38p0xmvDab1+u0Sox3eMJMunwv+qpBFbV8vLCIEwxkeTnXIuR2T9fhEFCZyWI0PY=
-X-Received: by 2002:a05:651c:988:b0:30b:c328:3c9a with SMTP id
- 38308e7fff4ca-3109054ea5amr43995041fa.29.1745263077487; Mon, 21 Apr 2025
- 12:17:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745263145; x=1745867945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P3HJl5U4M+u/M9qqMj09srNNG0MDWTXKKxwIH4K4Y7M=;
+        b=BlEyi2WrfueDl6Z19IZEWu6XBiY6IYmHYdhhS/8y23BZeEILYGjcrkUAs+1lKfEesn
+         Yjkpmbq1pDIy+C5q/Nca9xDUvJ71C3kV2xbtapg5Mnu8elfI6/ZOBkVAslLQvuO5cADV
+         P6GdXSj3R6r/RYVaICHPXoGkgwQE9k8OpGOOdZk/uLVCp6Ws18PSMVdoiya+WM2ElJlI
+         N4rKKh8y1LLFLOY4LcGhAjmE8c2JlKsLQ3Z3WbpAXZcouuiXzPK+f4zsr/IVlOasi/68
+         6VEXP5XhpEVUjqTOE40RDkbpxLn2XY89sRrdv+hSRi9a0oCfbg8+Qj4JU81fWE1seXWr
+         Zygw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsaNi4RLt769s9sgYdjBL3AvtozfW2i2bRA+R7vskjzGmueLxfesAJtccCs2njxSfwEJyqAwaUgEIrFrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKudDJDgABNnINY0m1WIMwcLjVXfS2A+5DuXsYOFVbWfvJs0+C
+	sqzmjHZzG/Y+eKdmyR3TZjINT37/RK6TQJiReQ5F86c6SWnrlLOxNiEZ6sAmkvY7y+9NzlibcBu
+	BdkzECJRQuhquN83nVO/oJFPYsboBOwkuDyzw7MiC9LS3mXMOhji0Ij9oh8YW6F0=
+X-Gm-Gg: ASbGnctpPy7l8kyKdo6WJoA6YQngoW93av9w6rUZVQydP971Z3dHLFC4R+PANdGXJOI
+	vuPuQlq2+QhzKAvWhcqnj7vpgrFQtrcIr6QdcqlzSrCOZg3Wyo6ovCy42tYTxUOefNLP14jsA9m
+	t0Cwo+OlZ6VH6/W1wA3jDsZvC3Fbmgjd7HCwvj/lGZy/AIxG/G1JEYQIjr/f/wGjFaknbioEVmw
+	OHI61bcdPJQxBC1SMWSRU7/+FcoZ5TLrmS0AMNFwGQkO2wFy7Gwhys3fmMp+4zFDHQPZ3iw2Kse
+	GkwLu/vJpaQAqK7TOUojaqQ2vtREMdPt8mZ90YgI2x6uVAvV9+hdgaROcObo2Qb/R3G0A914Qu0
+	=
+X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr244942996d6.34.1745263145465;
+        Mon, 21 Apr 2025 12:19:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZIiJHpu+XUpxDxWiR87XVzvWdC1v4TRH+LmXdVc2oMPFMOGKvkVumgqYB9XfpZ+V0eYgvyQ==
+X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr244942486d6.34.1745263145127;
+        Mon, 21 Apr 2025 12:19:05 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5f6854sm1002109e87.254.2025.04.21.12.19.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 12:19:04 -0700 (PDT)
+Date: Mon, 21 Apr 2025 22:19:02 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
+Cc: dianders@chromium.org, neil.armstrong@linaro.org,
+        quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+        simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] drm/panel-edp: Add support for several panels
+Message-ID: <323jsow4mg4ku7hrcw25qpr26nnzbjbtin367ysevyqg6ax46y@247gfrr3rk64>
+References: <20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421130038.34998-1-en-wei.wu@canonical.com>
-In-Reply-To: <20250421130038.34998-1-en-wei.wu@canonical.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 21 Apr 2025 15:17:45 -0400
-X-Gm-Features: ATxdqUGFwSCA4kgTPjKIQgEDjGMucb5LwgwhlNcqp8vwVHLix3TA-zSWQ7Rfkno
-Message-ID: <CABBYNZLXd3EzMhf41wJg93jNp7DWQK7oHOnHGv_ThZJ7yMXTGw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] btusb: fix NULL pointer dereference in QCA
- devcoredump handling
-To: En-Wei Wu <en-wei.wu@canonical.com>
-Cc: marcel@holtmann.org, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, quic_tjiang@quicinc.com, 
-	chia-lin.kao@canonical.com, anthony.wong@canonical.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com>
+X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=68069a2a cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=waiYy8LU7usWoTZ8VmwA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-ORIG-GUID: w1p4do5PRWAbkBMWjyyHeX7_oRAVcLVp
+X-Proofpoint-GUID: w1p4do5PRWAbkBMWjyyHeX7_oRAVcLVp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 adultscore=0 mlxlogscore=919 malwarescore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210150
 
-Hi En-Wei,
+On Mon, Apr 21, 2025 at 07:36:34PM +0800, Zhengqiao Xia wrote:
+> AUO B140QAN08.H
+> BOE NE140WUM-N6S
+> CSW MNE007QS3-8
+> 
+> Zhengqiao Xia (3):
+>   drm/panel-edp: Add support for AUO B140QAN08.H panel
+>   drm/panel-edp: Add support for BOE NE140WUM-N6S panel
+>   drm/panel-edp: Add support for CSW MNE007QS3-8 panel
+> 
+>  drivers/gpu/drm/panel/panel-edp.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 
-On Mon, Apr 21, 2025 at 9:00=E2=80=AFAM En-Wei Wu <en-wei.wu@canonical.com>=
- wrote:
->
-> This patch series fixes a NULL pointer dereference in skb_dequeue()
-> during QCA devcoredump handling, and adds some safety checks to make the
-> parsing more robust.
+For the series,
 
-While at it, please move this logic to qca specific file, there is no
-reason for this logic to remain inside btusb.c
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-> The first patch fixes the logic bug where dump packets were mistakenly
-> passed to hci_recv_frame() and freed prematurely. This was caused by
-> handle_dump_pkt_qca() returning 0 even when the dump was successfully
-> handled. It also refactors dump packet detection into separate helpers
-> for ACL and event packets.
->
-> The second patch adds bounds checks and replaces direct pointer access
-> with skb_pull() and skb_pull_data() to avoid accessing invalid memory
-> on malformed packets.
->
-> Tested on WCN7851 (0489:e0f3) with devcoredump enabled. Crash no
-> longer occurs and dumps are processed correctly.
->
-> Changes in v4:
-> - Fix unused variable error in the first patch
-> - Refine commit messages
->
-> Changes in v3:
-> - Use skb_pull_data() for safe packet header access
-> - Split dump packet detection into separate ACL and event helpers
->
-> Changes in v2:
-> - Fixed typo in the title
-> - Re-flowed commit message line to fit 72 characters
-> - Added blank line before btusb_recv_acl_qca()
->
-> En-Wei Wu (2):
->   Bluetooth: btusb: avoid NULL pointer dereference in skb_dequeue()
->   Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump
->     handling
->
->  drivers/bluetooth/btusb.c | 120 +++++++++++++++++++++++---------------
->  1 file changed, 74 insertions(+), 46 deletions(-)
->
-> --
-> 2.43.0
->
+I'd still like to hear a word from Doug as he usually manages/reviews
+panels.
 
-
---=20
-Luiz Augusto von Dentz
+-- 
+With best wishes
+Dmitry
