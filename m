@@ -1,62 +1,64 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842C11E5B89
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 20:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC0A1EFFBB;
+	Mon, 21 Apr 2025 20:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745266398; cv=none; b=gTJvqWYVFe0q59wRqvLElXastEOY6AFqvd6y6tEQTR3Qch6uEBUmYKz9YpPZJMPk4MWfTaQMS/MgVHQjV17I5zCzo0PxTasP8hze4ShNmKzKUMvV8O1wE+6psrdWktZ6UI9O0h6Fi+L+jTW9NzOeMJ/6B7NHlgHxvACv7FTUcrE=
+	t=1745266400; cv=none; b=AmvaQgattx5gBomMcGVc+Vt/qXllUlQP1suE+lBYYWRMUszAWdIrl+vfdjLPih+ZW5mD+M2G+nZtmitxmwWjCFs49pj23a/d6NOcw96X8Qbl+adPtMgbZlHY2ICpIHeJAcTixUfer5a251QwPw5fPZspuUj2fBwPok3hwvESpPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745266398; c=relaxed/simple;
-	bh=/jot4spygDq6aFrjcdGc8ey22UJakZ8GONE+CcJB/pE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DXXrBQB4mNOV5lgLi6UDp1WqWVMnM0/j4IbG9wAe/tKXed2ZX5lWkZGo8ybRCObV3oDIypevxLdEnVPcsKKjIPO4WdlZOtHpPLWkduyyrT9eNAzE2HmQYZlcIVhvzz2YoOjt1xqyWSVv2e/vrocMQqIMslNQE4JwEmkfGQ3cv94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kCAWLWCG; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1745266400; c=relaxed/simple;
+	bh=pPSvjKFuytS3W/8vuBEQCuBseFQbm2us8uSCuS1HVI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ME4GKFKvCsyaN4h3Q/DFhPLUU79iGdqd6D46aexJis/xPmPa/srqZR7ltQRfQa4icKxXsOyoe5WfyLumL64gsMV5Gc3jCxsAapLLnXblOA3n3JkRkBBfCTqptEtALId3U+d7QBTk8WwwFpKqDVWh7DUyMDzGxOK6foP4t45UHdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=Yf0jxJ4l; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kCAWLWCG"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so7168347a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Yf0jxJ4l"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so5322987a12.1;
+        Mon, 21 Apr 2025 13:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1745266395; x=1745871195; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pPtaoI6utTrKKW12z4v7ojubkyOrmx1+ChT5b/t83TQ=;
-        b=kCAWLWCGpUG852eSmfP/47NZizRiPPlq3YeFgV0kmLbmmFHv9Qkeqih2dGJkKsdaJ5
-         D0xwKHERt23HfNj79yvCI2d659Y3TN0RbvYorVPBh+j43d44RGhCewRklxGLJq48p95M
-         Oaspo2OYAgn1gVpHwKMi33OrTvrBYl325L3u+9gD9XfXl3odzmnB5mtxLBrMTdSlH0HK
-         Zq49n0OaefWp/tMlt8SXhH78I4qWgUcyAfcS7KOszGdk1Kfs7l+KVvLMq4SNys8MbcXz
-         76eQYJJvjeJJuNhrnqUqeqw3/c5bu723VsKnI621CGGCXLmbO6YDDI385YUCT4LGG3sz
-         6RrA==
+        d=googlemail.com; s=20230601; t=1745266397; x=1745871197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HQ3M+bxooYYic4r0LufR96nrU2z3BmGWMkGOU6zDDn4=;
+        b=Yf0jxJ4l+kyCceqmWsxcnI3Cu6UjI2svpC6s7aDfgyTG+uUSGA5TbrSxQKVIGdoLjc
+         B0fTiQh/3gMUVfNW8QMf/BeTrheWlBmtBo0eQxj0940Y3R5cpi73v8fRJhKj2go9UJ8q
+         RHBDW3EQlZK7v4ecqQs1LHQIk2pe22CSX+6/Y416XPD5tshJArLWu7QquaFeXIMsaQX6
+         4y8X+QXqkRCTUrsTuKNamLt3kOU6SmxzY4lGLJu+8kryAZ748l7VLjNgY+LpXGFCuTJk
+         EGsZ1yDmvf2WiXpcli5Vudd/bN6OHDcpfVuy4mkrBXTZ4cpIz1AiJLjHm4aFGmKwyZMX
+         6QjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745266395; x=1745871195;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pPtaoI6utTrKKW12z4v7ojubkyOrmx1+ChT5b/t83TQ=;
-        b=WOsl6MH1hLCNqze8UlAHBmZul2J5r3JEamQx3s+j2X8FJGEqaUVMcS/AtZOuPnIidH
-         bGoe4KnOk938P3jtBcHAnE6hW+elYjNNfpOyeOI/zQjMt4vT/Gu374U1Z1gsAhM5fMYw
-         FNY7e3g3hEzzLYqg5gu08xuXCIldT4iQ/YXQH9mzZSG8o3DbJLwq8RDfl79j7TosUlsS
-         +9eG66r25gbNwKe16jftkg8h1XLVU9LS7IHWurQAHCt0VNKYhqxWHWu1Bha8NdLV2Xeb
-         EvoeeEMFk6ZQAOhNP1Tx7QVAQEhDGbJ4l5b7YQ/vzZFSxAEgb+IsuQLwusIeb95RjaR/
-         wK7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWTUzfZ+jjgDBkP9nbPK3AgylWVYo+JX4i7OXzoag548BUOWDITD3C3Yk0sqLzIbgvAg6mb5ZMj1Oq6BII=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHjMgf9HrFePkIGTA54x+JGcS9KHxSsNJ2ymJDn2/sf29iOqCv
-	eEtZ1h1AK3BFOyQzMGXN+j8bc2adj2ucMJ8dJzatemCTHFGVk771
-X-Gm-Gg: ASbGncvgwVoEMiDp+a9MqNLHFVvlKtkSwSPFaLV/Y4LaDmCMS4sUwmIGTd92znJ0xEu
-	TGBz6DHJf7JQIrx8F1kdAZfVawguBITkrQoUEchMryq2DYEHZzOfQMDlIMRaT0EyUDYDxyi+b44
-	z6KlCPSU//bwlf/KwUhgsDib9HYi3+6V3Hh0pF9yyQmG2vwEPOnS7/NYc+LfLt/jd6oONMX2GhC
-	7PEEa+O2KwRW64SjNyczG86Dm3Lp2O56qYCK89muS2xsD3n2LaITzGzywH7YuGx2M3mWKvJpd9z
-	pj7WG3t43heuOMnQD9N6uwJMV5EJ9qZVlohChqldEEcts3DrWDSVFL958AfXd2HQB/JabovGYYL
-	sMK8zVXXZK9Gc0KUUEVKu+D7q8p6O509meEoTWR4D898s2PSXrmlnLJlIAuFiaTePgB28GNCqAH
-	C/
-X-Google-Smtp-Source: AGHT+IEO+r+TuKnbuDISVGRChkpOQoNFOMRtWzn2WYKsN7WzPIYIE4fyTgA9Q7GUCV45qkxbPx0NaQ==
-X-Received: by 2002:a05:6402:529a:b0:5ee:497:67d7 with SMTP id 4fb4d7f45d1cf-5f62861bb8amr11048893a12.34.1745266394376;
-        Mon, 21 Apr 2025 13:13:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745266397; x=1745871197;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HQ3M+bxooYYic4r0LufR96nrU2z3BmGWMkGOU6zDDn4=;
+        b=A+AAfliZWTNDga5oMEM1sMdnHUMUzXhSV0Du762G0FybeUzrCJ+8Y7GA/1iBjiQrs2
+         lmHKTFfkmmRvImS1DttMCN6O1rbePLSNKVlkbwQ4mbnM4SMs4Z+8QwEHhiolqoYROCTP
+         SB/mn2GwWMyXczzBgDcf43qaeYneVzPlKa85KVAxPQKoSjtgfoadZYdkyBwHDzru5T0w
+         DHid3K4UBJZBLmc7badnK32F/eXZeWZb+v+HAzIeCdPxzttoY6MgQJL5Cf2kCip9BT94
+         eVQDLK+VulgDqA9sYOiekSED4ZLnrErMLc2sINtaWOSqF+wnxLSq2yIzB6sR/hKM4X24
+         nlCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDHy3HNmqgu2sSg8W9hwfHe9oHTbawtnOCy/CEycJlvtVu5vuAd9IqW3/g1mlpECCUG05fLvDu@vger.kernel.org, AJvYcCX8vFhgDJ2Cx6jQEQdRb0bnDt6vB0p8IBls9jzTQAAk+D/piQNVlUz+2y0uGjPq2nfR6z9xT7R+e9ajU9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSum0HD4tiSlKn8XAIGSDVFKEmB3eMTuBjkkoBnKlIkT2nAncg
+	axvFIBcuUXf3K+BXmeJcHnSdGIUuft04GVmWDhkFGLScyhb4zNuz
+X-Gm-Gg: ASbGnctLSZ92gY9Cy5jBr8E3uokkMiI3Yr/jLROs9h5Si9TdC0n/IjoElnyP/OUOPEQ
+	dHEhF3OXmWqL0vtIWQgKxJ++x/roN+++IYoDIzeXM8QBuypQaU7M27a+2G21Ah2hipRexrOWLdx
+	YCiwrMSKPft4F/Dc5Bq1QhnIeGJpLBQUyTnwWgDEqiqSGSkT5NmjIMWqN8GNfIzhm/d1lM5UIMj
+	DO1+/eOxGxWBpv9H4IgieD32wgG6MNIzY0XAa7/0k4Zmg85ydUNugzTXEl/G1FRIi48yPygcjPL
+	6ZhwykTZMbMEi3yIW0JnZNkhqP+sSL36lLjGH65qeMoaDS3XdU4amZav1b4ZEKf83+B9vTjcoYJ
+	BZD0QBUDVACdEpn5xUYpief+Di3o7payoPaD+hkAJFWEjSeNhfVHxc9cGK/ltp3TSbPl6yi3ssk
+	JT
+X-Google-Smtp-Source: AGHT+IEaYd+jxjizAP2cVKjHkYaRIFui46Kp2EDtjubhkBoNX1u0J2KrystqnAigLWaQ0WwVYnx50w==
+X-Received: by 2002:a50:ab11:0:b0:5f6:44de:d977 with SMTP id 4fb4d7f45d1cf-5f644dee040mr5106066a12.1.1745266397171;
+        Mon, 21 Apr 2025 13:13:17 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-2a02-3100-a503-5900-0000-0000-0000-0e63.310.pool.telefonica.de. [2a02:3100:a503:5900::e63])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5f62557a547sm4955447a12.22.2025.04.21.13.13.12
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5f62557a547sm4955447a12.22.2025.04.21.13.13.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 13:13:13 -0700 (PDT)
+        Mon, 21 Apr 2025 13:13:15 -0700 (PDT)
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To: dri-devel@lists.freedesktop.org,
 	linux-amlogic@lists.infradead.org
@@ -64,11 +66,14 @@ Cc: neil.armstrong@linaro.org,
 	christianshewitt@gmail.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH RFC v2 0/2] drm/meson: vclk: revert and re-fix vclk calculations
-Date: Mon, 21 Apr 2025 22:12:58 +0200
-Message-ID: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH RFC v2 1/2] Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
+Date: Mon, 21 Apr 2025 22:12:59 +0200
+Message-ID: <20250421201300.778955-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
+References: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,37 +82,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a successor of a previous patchset by Christian [0]
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-Patch 1 reverts a previous fix for loss of HDMI sync when playing YUV420
-@ 59.94 media. The patch does resolve a calculation issue. It also makes
-all fractional rates invalid which is a bigger problem.
+This reverts commit bfbc68e.
 
-Patch 2 changes the whole drm/meson driver to use Hz as unit for clocks/
-frequencies. And importantly it uses the relevant 64-bit maths helpers so
-the code can still be compiled using for 32-bit ARM.
-Maxime previously suggested using drm_hdmi_compute_mode_clock(). That's
-still something to implement with future patches.
+The patch does permit the offending YUV420 @ 59.94 phy_freq and
+vclk_freq mode to match in calculations. It also results in all
+fractional rates being unavailable for use. This was unintended
+and requires the patch to be reverted.
 
-Neil, I'd like to hear your feedback on this approach.
+Fixes: bfbc68e4d869 ("drm/meson: vclk: fix calculation of 59.94 fractional rates")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/gpu/drm/meson/meson_vclk.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-[0] https://lore.kernel.org/linux-amlogic/20250110074458.3624094-1-christianshewitt@gmail.com/
-
-
-Christian Hewitt (1):
-  Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
-
-Martin Blumenstingl (1):
-  drm/meson: use unsigned long long / Hz for frequency types
-
- drivers/gpu/drm/meson/meson_drv.c          |   2 +-
- drivers/gpu/drm/meson/meson_drv.h          |   2 +-
- drivers/gpu/drm/meson/meson_encoder_hdmi.c |  29 +--
- drivers/gpu/drm/meson/meson_vclk.c         | 195 +++++++++++----------
- drivers/gpu/drm/meson/meson_vclk.h         |  13 +-
- 5 files changed, 126 insertions(+), 115 deletions(-)
-
+diff --git a/drivers/gpu/drm/meson/meson_vclk.c b/drivers/gpu/drm/meson/meson_vclk.c
+index 2a942dc6a6dc..2a82119eb58e 100644
+--- a/drivers/gpu/drm/meson/meson_vclk.c
++++ b/drivers/gpu/drm/meson/meson_vclk.c
+@@ -790,13 +790,13 @@ meson_vclk_vic_supported_freq(struct meson_drm *priv, unsigned int phy_freq,
+ 				 FREQ_1000_1001(params[i].pixel_freq));
+ 		DRM_DEBUG_DRIVER("i = %d phy_freq = %d alt = %d\n",
+ 				 i, params[i].phy_freq,
+-				 FREQ_1000_1001(params[i].phy_freq/1000)*1000);
++				 FREQ_1000_1001(params[i].phy_freq/10)*10);
+ 		/* Match strict frequency */
+ 		if (phy_freq == params[i].phy_freq &&
+ 		    vclk_freq == params[i].vclk_freq)
+ 			return MODE_OK;
+ 		/* Match 1000/1001 variant */
+-		if (phy_freq == (FREQ_1000_1001(params[i].phy_freq/1000)*1000) &&
++		if (phy_freq == (FREQ_1000_1001(params[i].phy_freq/10)*10) &&
+ 		    vclk_freq == FREQ_1000_1001(params[i].vclk_freq))
+ 			return MODE_OK;
+ 	}
+@@ -1070,7 +1070,7 @@ void meson_vclk_setup(struct meson_drm *priv, unsigned int target,
+ 
+ 	for (freq = 0 ; params[freq].pixel_freq ; ++freq) {
+ 		if ((phy_freq == params[freq].phy_freq ||
+-		     phy_freq == FREQ_1000_1001(params[freq].phy_freq/1000)*1000) &&
++		     phy_freq == FREQ_1000_1001(params[freq].phy_freq/10)*10) &&
+ 		    (vclk_freq == params[freq].vclk_freq ||
+ 		     vclk_freq == FREQ_1000_1001(params[freq].vclk_freq))) {
+ 			if (vclk_freq != params[freq].vclk_freq)
 -- 
 2.49.0
 
