@@ -1,88 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5214B263F45;
-	Mon, 21 Apr 2025 11:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236261; cv=none; b=VRVxVElRsTSqtvSfStUzBdP9+aqYWxb4+IHTw8kWKB2rrf10vhQr7CHfmamMp9GVe4xPS2TZvx2B6T3VktkeOXCNA7vEt7Ypz/dibuSHRJpqTKqER/XxmP5qKPVKkNqQNkjkW5R7+GaVqSV2k767SDivhA+UNPKj2aKA1aJT0vg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236261; c=relaxed/simple;
-	bh=iqzPLokdK52iTpABVBzXV5mawjNYeU3GNuEBmXtj0Sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDsbAK0Ox23FyFAGudS0IxjlF0GLDpzRbKYffkDSSiH4dCbC7LCgvoBBp6ymR2/buGA8KNOKH8JXVpIIgN0bjCeOTHzoSQXoiI4xq4rM5fsRkRmC4afEWJz1eLi3mB/pXR5tm4d0a733GnCv2aQNLtXSuiCsEBDWDyD+5i1PJXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jiMfBl+W; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jiMfBl+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC73CC4CEE4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2321263C9B;
 	Mon, 21 Apr 2025 11:51:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745236261;
-	bh=iqzPLokdK52iTpABVBzXV5mawjNYeU3GNuEBmXtj0Sc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jiMfBl+WiGNzMNDskLdjxsWJ1xbphBDHUNEzCl6zgnu5E+6vHSqP8G2CoxpwDt0Kk
-	 JCFz16JEJdx3r4rESJM9MR0odx5QryDpXs4u3foDhLVrGf8DENFn9STrR5c0kagkUl
-	 m1l6u7L0dbcaE7iOC9H8p3VVrCq+nyymT6nwYl+3zodawnrLFirgk2dox+qDmkeGpm
-	 L1/pvNcH/KFj5gq8U7m3ghqVo4M2cXDSJKtXDEoFCb2sjIR0udC4CbZIqF38/SgwtH
-	 fawJN+jS/4G/TrVkjXRcCoxHk9/7uV50JbznoV7ajndhtJGQBANkRRJw7/X2OMuXaW
-	 xr19/OfSuLiTQ==
-Date: Mon, 21 Apr 2025 06:50:59 -0500
-From: Rob Herring <robh@kernel.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-media@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: qcom,sm8550-iris: document
- QCS8300 IRIS accelerator
-Message-ID: <20250421115059.GA1624060-robh@kernel.org>
-References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
- <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745236265; cv=none; b=LTnEe5S3H1OohT98SGfKliIQlA4GViJp/TUi/rin7X/FdKgeHRKuEjc1B4aLYTNtN8HYnP+aga9AYIzSGua2FXAz9Sz0UdtP6SBRcMjGbVcD/OfiKjfB/ePG3zOFy+158pqlwXsyyvCbc4pUnp7mRAuqfLMOsCWKKQHy4AZKgas=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745236265; c=relaxed/simple;
+	bh=xLSeYSn0wxwfBOXloKBUUIaklM5Lf3N9jYHxYSNill4=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ExoaqWIgKPGmeTXXm+MffvwG8lQRQmqYF/0E5bZoLgPd+0cWAvQ+peRVnoy3jInZsbyNihQ5bgne06Sf7y/7PQK5eZpV6eI4F8EiLp98F/Cozrjm+tnj9cULvzsCL/mszel8x1vF4yGAwwoS4ZdjcvxKPyJATZ+Glxju0/2Q/eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
+	by mail.itouring.de (Postfix) with ESMTPSA id 670791255FA;
+	Mon, 21 Apr 2025 13:50:53 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 32042601893B6;
+	Mon, 21 Apr 2025 13:50:52 +0200 (CEST)
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+To: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
+ regressions@lists.linux.dev, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+ =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+ stable@vger.kernel.org
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+Date: Mon, 21 Apr 2025 13:50:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
+In-Reply-To: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 11:58:39AM +0530, Vikash Garodia wrote:
-> Document the IRIS video decoder and encoder accelerator found in the
-> QCS8300 platform. QCS8300 is a downscaled version of SM8550, thereby
-> have different(lower) capabilities when compared to SM8550.
+On 2025-04-21 11:40, Alan J. Wylie wrote:
+> #regzbot introduced: 6.14.2..6.14.3
 > 
-> This patch depends on patch 20250225-topic-sm8x50-iris-v10-a219b8a8b477
+> Since 6.14.3 I have been seeing random panics, all in htb_dequeue.
+> 6.14.2 was fine.
 
-An incomplete message-id is not useful. It also should go below the 
-'---' so it is not recorded in git forever.
+6.14.3 contains:
+"codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()" aka
+https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/net/sched?h=linux-6.14.y&id=a57fe60ef4cf96bfbb6b58397ec28bdb5a5c6b31
 
-> 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> index f567f84bd60d439b151bb1407855ba73582c3b83..3dee25e99204169c6c80f7db4bad62775aaa59b5 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> @@ -24,6 +24,7 @@ properties:
->        - enum:
->            - qcom,sm8550-iris
->            - qcom,sm8650-iris
-> +          - qcom,qcs8300-iris
->  
->    power-domains:
->      maxItems: 4
-> 
-> -- 
-> 2.34.1
-> 
+Is your HTB backed by fq_codel by any chance? If so, try either
+reverting the above or adding:
+"sch_htb: make htb_qlen_notify() idempotent" aka
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5ba8b837b522d7051ef81bacf3d95383ff8edce5
+
+which was successfully not added to 6.14.3, along with the rest of the series:
+https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmail.com/
+
+Hope this helps. I am running fq_codel without issue but not behind htb.
+
+cheers
+Holger
