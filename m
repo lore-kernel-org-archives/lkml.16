@@ -1,42 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C81E9916;
-	Mon, 21 Apr 2025 21:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6541F2E401
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271224; cv=none; b=LMz/Ul64kxQRexSpheNMA5BjQ4DjmHIDv+in4C2IECLp3rBnzWaZGPgZlN83m1T/z/sWnOSBjsvEGC0wkpozKcqbHPosBqYYZtV8wBDNm52F/DZPOEkvMaVW713fhRh+C8OWDApbuh/qz2kFIWYZzOmOpf1Gpt2wJRwnBNdeN00=
+	t=1745271296; cv=none; b=jKkV4h099DuFhtwZ+Mq6sIwZUFuIRAVPmaFUx+wLEGB1v22y9SCZP2pCV/0M0JHu8qYAW19q/VKgcphf8T7bJoIfZ8WToMlENd7zwrgGgXCe8dKXNj7C4HWoRur3vggWHsf8m3rlL1NiBrIQAhgzWzjgCx9miPsLUSNNi+d9e6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271224; c=relaxed/simple;
-	bh=eWQGFVOb67pwuM4hIzwD8j+qtic7xt7xLG1iErnbV80=;
+	s=arc-20240116; t=1745271296; c=relaxed/simple;
+	bh=8qJzO1ZLC8/KZccvex8eKof6pGy6JwT3E8gASVra+cA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRzomoUQo1ywx0ePp+N5LUzzNCNUUthJdWtjXoNA2VzvmfbkUZUbE7CiFBWFHVo89GHZekbsbTY6pjW1GSaCVPgtG3YPMI1U8BOXzWza+mcRdWaLR+VxD8e5v+r5FMK490GeT7+Z8xvAbGPGMCqLVpx4NzxBGMp/Jpc7XrUUEwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCAjD2yg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUnR/DB9I96s0F7fIXPiyvK3d5XDLLqCxtd9+tGwTmR9q7EBcMOna/dYfPrVqrLUY/g7V84nI6YSPCWBNsHkBXLcVtjyo71tFV3oCwAjnNGJq88pl6Zejbe5VcKxEZ/60bC0J2cGZS73oV+PZ/b5YYiVBXvkL8PlrSyVicobILs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H1M8vOPg; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCAjD2yg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 763DCC4CEE4;
-	Mon, 21 Apr 2025 21:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745271222;
-	bh=eWQGFVOb67pwuM4hIzwD8j+qtic7xt7xLG1iErnbV80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WCAjD2ygtiAME3dvLC9OERSMi0Jt62PUQw+UiYuJddJJm6p+wa4wPNvpuRw27UNoO
-	 Z8fZ9QIXyDDiPidkqjeojtNyWk4/9+KjqCyhv/aHdrQ2jK6rxU36sw4bBi/pktY+aC
-	 bhnC/nG5sVxPjb2es8OJ8f4RHx/4aAGx0VrTnni9XL5AtXKuCOsMlH7DyRMu9jP1ik
-	 K9YjZV6qTqXH5Bd2qDyAVObzFiDY73aid1Zy5LxMqHMKcosGoRAehEYLmKkt9gH8Tj
-	 87Gf818rys1vlW2TimPTSq7NDn2KmRXsFPQFzR6/SpmXbq2o1u1PQ+G6Y0+TWNR4fx
-	 pV6fyLI7mADAA==
-Date: Mon, 21 Apr 2025 16:33:40 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: lee@kernel.org, mandyjh.liu@mediatek.com, conor+dt@kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	kernel@collabora.com, krzk+dt@kernel.org, matthias.bgg@gmail.com
-Subject: Re: [PATCH] dt-bindings: mfd: mediatek,mt8195-scpsys: Add support
- for MT6893
-Message-ID: <174527122027.2966032.17419699387190944980.robh@kernel.org>
-References: <20250416120225.147826-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H1M8vOPg"
+Date: Mon, 21 Apr 2025 21:34:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745271290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H/P6KO5tmhrmW7ovw7XWmmzoB4BERa9BgtVy7OgEIno=;
+	b=H1M8vOPg30LswLGaE8LCWjWxA2FMnO6Ya3I3SjGeZyEdGb5wh71XL+MpMLezULbnwcojD+
+	MrJ4HfPEtbJ73NLjwmyCdhPdyORWn6TYDM2v0lghbYCBO/fUbbtEXH8RiBMhguZ14PJ0M3
+	GjUQp+jm7jol1Y0FgvGCzIkxogYd3Uw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
+Message-ID: <aAa58xJFJ3du6OlY@google.com>
+References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,18 +49,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416120225.147826-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-
-On Wed, 16 Apr 2025 14:02:25 +0200, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for the scpsys block found in the MediaTek
-> Dimensity 1200 (MT6893) SoC.
+On Sat, Apr 19, 2025 at 11:35:45AM -0700, Shakeel Butt wrote:
+> Setting the max and high limits can trigger synchronous reclaim and/or
+> oom-kill if the usage is higher than the given limit. This behavior is
+> fine for newly created cgroups but it can cause issues for the node
+> controller while setting limits for existing cgroups.
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> In our production multi-tenant and overcommitted environment, we are
+> seeing priority inversion when the node controller dynamically adjusts
+> the limits of running jobs of different priorities. Based on the system
+> situation, the node controller may reduce the limits of lower priority
+> jobs and increase the limits of higher priority jobs. However we are
+> seeing node controller getting stuck for long period of time while
+> reclaiming from lower priority jobs while setting their limits and also
+> spends a lot of its own CPU.
+> 
+> One of the workaround we are trying is to fork a new process which sets
+> the limit of the lower priority job along with setting an alarm to get
+> itself killed if it get stuck in the reclaim for lower priority job.
+> However we are finding it very unreliable and costly. Either we need a
+> good enough time buffer for the alarm to be delivered after setting
+> limit and potentialy spend a lot of CPU in the reclaim or be unreliable
+> in setting the limit for much shorter but cheaper (less reclaim) alarms.
+> 
+> Let's introduce new limit setting option which does not trigger
+> reclaim and/or oom-kill and let the processes in the target cgroup to
+> trigger reclaim and/or throttling and/or oom-kill in their next charge
+> request. This will make the node controller on multi-tenant
+> overcommitted environment much more reliable.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > ---
->  .../devicetree/bindings/mfd/mediatek,mt8195-scpsys.yaml          | 1 +
->  1 file changed, 1 insertion(+)
+> Changes since v1:
+> - Instead of new interfaces use O_NONBLOCK flag (Greg, Roman & Tejun)
 > 
+>  Documentation/admin-guide/cgroup-v2.rst | 14 ++++++++++++++
+>  mm/memcontrol.c                         | 10 ++++++++--
+>  2 files changed, 22 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
 
+Re stable backports: can you, please, share some details about the problem
+users are facing? Which kernel are they using?
+
+Thanks!
