@@ -1,81 +1,138 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8134618641;
-	Mon, 21 Apr 2025 07:29:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6918042AAF;
+	Mon, 21 Apr 2025 07:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745220567; cv=none; b=IY9IrjfTwfcCjWRlR2BPqevnu2V0GZhhlxZ1FIn8Sj0RlLYAP8YGnPq8aRcTbyXEVZxVWTcvzzlPdk/Q/rW6kuoBiJjUpOHCYK8l43nBge8yeBbOQjo5wH6EEhNiDQiAUu27kCwJ+uOGxbnABZ72JeSmkNWEr+JLvkTm2wRnFPI=
+	t=1745220569; cv=none; b=FICCt+6sCOg2HwoQ0Gk1jtYxVdA7N981wWoR4fUBO5xb7dbPuXAr1QHPC7YV+YqIlXhHqEh0+mSQT/ROsycZubSk26fVH+iQItjkoFlKoKMTg7UaZA6v9IHIu/N/3N2R47P54QLMzlahiXkxWdf5agQ7gCrxYrQ2rPpMGK1Fnfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745220567; c=relaxed/simple;
-	bh=d39wYXddYwuaCFz9yYCpeGTvr6DSC4adeaQeJ3iQTNk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jmXY3jIdwJmyzff2j4lVtuE4tSILP9RT57l6i6Xh+HK9PcF2XdLuYczgxqdUCqjZrz46FRglcqIo43Um3ubam34CBjAgC5DKvGWBrnJvvx/hV4KI4X7NMBeO0Ge9GD6tRUX3Pjf0pgNKbjjfDCGjOWo34uHMedieCGI0E+3Oxh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=b6fWAwLO; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1745220569; c=relaxed/simple;
+	bh=01/f1NraBtWpGWUC221XvSWIgnjPGGgSGxblojkWilk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kflCrJN4Rms6fg1MsqUfDDpmILNuFRfUQBXxl31/zUYlznsPKhb72gGzMgkxP3WSdZaBDbvRwXKDaKqYKhVClBNMtHKgJFVqRdHvIaMgNJOlazHlLYqNhe1euQJu/QtKgKYfBhHBg0P7dkNc2f/0rEufAAMGCwL8o9QXjzN0TAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGdkgXa2; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="b6fWAwLO"
-X-UUID: 55f17c901e8211f09b6713c7f6bde12e-20250421
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=bxJ9xVr+bWsUPq5pZ49UQFeAPTX6wfXQHs3mOpxc1y0=;
-	b=b6fWAwLOV+GsHGqjL165kFyc9OCbiK+RNIsDwWoQh1Pddc1B6Kq1B2idzYUotxBCVXSeQ9AjNppjuDMPiKTiOo9oo9+8/3r8dAYkCuse3cw29aLx/yCWkCaIAHN2Cefpw0d6ZHGizjt7e9vnbCeCLO5/Nc4pe/m57mHcxGLp5c8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:0ed75501-4364-4d3b-943c-87b8c70d74b0,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:8d2a51a6-c619-47e3-a41b-90eedbf5b947,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 55f17c901e8211f09b6713c7f6bde12e-20250421
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-	(envelope-from <chris.lu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1877950885; Mon, 21 Apr 2025 15:29:18 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 21 Apr 2025 15:29:17 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 21 Apr 2025 15:29:17 +0800
-From: Chris Lu <chris.lu@mediatek.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
-CC: Sean Wang <sean.wang@mediatek.com>, Jiande Lu <jiande.lu@mediatek.com>,
-	Will Lee <will-cy.lee@mediatek.com>, SS Wu <ss.wu@mediatek.com>, Steve Lee
-	<steve.lee@mediatek.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-mediatek
-	<linux-mediatek@lists.infradead.org>, Chris Lu <chris.lu@mediatek.com>
-Subject: [PATCH v1 0/2] Bluetooth: btmtksdio: ensure btmtksdio_close is executed before btmtksdio_remove
-Date: Mon, 21 Apr 2025 15:29:12 +0800
-Message-ID: <20250421072914.466092-1-chris.lu@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGdkgXa2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745220567; x=1776756567;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=01/f1NraBtWpGWUC221XvSWIgnjPGGgSGxblojkWilk=;
+  b=eGdkgXa2CcCBvmecogxY9gWhQsHrxq2zDSk4ussKEwip471crnxAYxP/
+   kl7ZKzuYRk1ikRGHN3/CYFQtPCTgNSsuzxKHKurBDZQxx2aWzMB+g0A42
+   o0+dnkgfIwM2MhU3RCY8FoCPwY/Aq/L2V9tE9dZmnfmNTnBs8FlMNrlJd
+   MRWZ023ZcIeHHCnWpBn9WrkD4zJmYlD6KKYE6vAWJJj/jWG1YxeuEtbMM
+   5iGWbE7Paic2MBDtsU1P2Eiw9/upA8bfXZPXIdgFO0E1D8BPxNIwXHZkB
+   TApHYNmNWueANjOtDh/qIzJfSTJx05bT6SGVXT1FexwMn8CJYwrMvC5eT
+   g==;
+X-CSE-ConnectionGUID: 7nOz2+XGT42BqQoCWLxa0Q==
+X-CSE-MsgGUID: c/C2M+pmTRiR3GOo5jpd7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="46458366"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="46458366"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 00:29:26 -0700
+X-CSE-ConnectionGUID: oPu2/drdQy2zzZf0R09YaA==
+X-CSE-MsgGUID: jIHOrVRJS62KkkGTBy1ktQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="131950489"
+Received: from lkp-server01.sh.intel.com (HELO 9c2f37e2d822) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 21 Apr 2025 00:29:23 -0700
+Received: from kbuild by 9c2f37e2d822 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u6lai-0000Ep-1f;
+	Mon, 21 Apr 2025 07:29:20 +0000
+Date: Mon, 21 Apr 2025 15:28:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Troy Mitchell <troymitchell988@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-i2c@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Troy Mitchell <troymitchell988@gmail.com>,
+	Yongchao Jia <jyc0019@gmail.com>
+Subject: Re: [PATCH 1/2] i2c: imx: use guard to take spinlock
+Message-ID: <202504211501.MNwGdl5F-lkp@intel.com>
+References: <20250421-i2c-imx-update-v1-1-1137f1f353d5@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-i2c-imx-update-v1-1-1137f1f353d5@gmail.com>
 
-If Bluetooth SDIO card is unexpectedly removed due to hardware removal
-or SDIO issue, it is possible for remove to be called before close.
-If an interrupt occurs during this process, it may cause kernel panic.
-Therefore, it is necessary to ensure that close is executed before
-remove to stop interrupts and cancel txrx workqueue.
+Hi Troy,
 
-Chris Lu (2):
-  Bluetooth: btmtksdio: Check function enabled before doing close
-  Bluetooth: btmtksdio: Do close if SDIO card removed without close
+kernel test robot noticed the following build warnings:
 
- drivers/bluetooth/btmtksdio.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+[auto build test WARNING on 9d7a0577c9db35c4cc52db90bc415ea248446472]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Troy-Mitchell/i2c-imx-use-guard-to-take-spinlock/20250421-133753
+base:   9d7a0577c9db35c4cc52db90bc415ea248446472
+patch link:    https://lore.kernel.org/r/20250421-i2c-imx-update-v1-1-1137f1f353d5%40gmail.com
+patch subject: [PATCH 1/2] i2c: imx: use guard to take spinlock
+config: hexagon-randconfig-001-20250421 (https://download.01.org/0day-ci/archive/20250421/202504211501.MNwGdl5F-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504211501.MNwGdl5F-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504211501.MNwGdl5F-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/i2c/busses/i2c-imx.c:1140:17: warning: unused variable 'ret' [-Wunused-variable]
+                                   irqreturn_t ret;
+                                               ^
+   1 warning generated.
+
+
+vim +/ret +1140 drivers/i2c/busses/i2c-imx.c
+
+aa11e38ce6fe88 Darius Augulis     2009-01-30  1124  
+f7414cd6923fd7 Biwen Li           2020-11-11  1125  static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+f7414cd6923fd7 Biwen Li           2020-11-11  1126  {
+f7414cd6923fd7 Biwen Li           2020-11-11  1127  	struct imx_i2c_struct *i2c_imx = dev_id;
+f7414cd6923fd7 Biwen Li           2020-11-11  1128  	unsigned int ctl, status;
+f7414cd6923fd7 Biwen Li           2020-11-11  1129  
+d3973a577b8e10 Troy Mitchell      2025-04-21  1130  	guard(spinlock_irqsave)(&i2c_imx->slave_lock);
+d3973a577b8e10 Troy Mitchell      2025-04-21  1131  
+f7414cd6923fd7 Biwen Li           2020-11-11  1132  	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+f7414cd6923fd7 Biwen Li           2020-11-11  1133  	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+05ae60bc24f765 Kevin Paul Herbert 2020-12-22  1134  
+f7414cd6923fd7 Biwen Li           2020-11-11  1135  	if (status & I2SR_IIF) {
+f7414cd6923fd7 Biwen Li           2020-11-11  1136  		i2c_imx_clear_irq(i2c_imx, I2SR_IIF);
+d3973a577b8e10 Troy Mitchell      2025-04-21  1137  
+05ae60bc24f765 Kevin Paul Herbert 2020-12-22  1138  		if (i2c_imx->slave) {
+05ae60bc24f765 Kevin Paul Herbert 2020-12-22  1139  			if (!(ctl & I2CR_MSTA)) {
+f89bf95632b416 Corey Minyard      2021-11-12 @1140  				irqreturn_t ret;
+f89bf95632b416 Corey Minyard      2021-11-12  1141  
+d3973a577b8e10 Troy Mitchell      2025-04-21  1142  				return i2c_imx_slave_handle(i2c_imx,
+f89bf95632b416 Corey Minyard      2021-11-12  1143  							    status, ctl);
+05ae60bc24f765 Kevin Paul Herbert 2020-12-22  1144  			}
+f89bf95632b416 Corey Minyard      2021-11-12  1145  			i2c_imx_slave_finish_op(i2c_imx);
+05ae60bc24f765 Kevin Paul Herbert 2020-12-22  1146  		}
+d3973a577b8e10 Troy Mitchell      2025-04-21  1147  
+f7414cd6923fd7 Biwen Li           2020-11-11  1148  		return i2c_imx_master_isr(i2c_imx, status);
+f7414cd6923fd7 Biwen Li           2020-11-11  1149  	}
+f7414cd6923fd7 Biwen Li           2020-11-11  1150  
+aa11e38ce6fe88 Darius Augulis     2009-01-30  1151  	return IRQ_NONE;
+aa11e38ce6fe88 Darius Augulis     2009-01-30  1152  }
+aa11e38ce6fe88 Darius Augulis     2009-01-30  1153  
 
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
