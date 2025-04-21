@@ -1,135 +1,83 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E32D14658C;
-	Mon, 21 Apr 2025 11:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1A835961;
+	Mon, 21 Apr 2025 11:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235213; cv=none; b=PAzSVJJWaxPaWgG0kJrfaSvTnLIF6YENA7iCYn/gCH6HqnE72fu2/OldRFM8YvQh9b18lEcaBwFSSAckXQ5AdaKk0Upzx9kuI9vv1jB0RZhCox9ux0FhAR7JMJxFObxMW10QzIZKU11ma4+2Nx8w1BA1tejUxwm2FdIsfLFo7N4=
+	t=1745235219; cv=none; b=nXaN/mzQ2CUasWQ/rdsHVLet/JKf4TrRAuGQkF6Iu7BO5RNjPk+toxxKXoVnVJtatdJk+71v6XoHnUKPZw6lGhgta1ye3MtLbYhT/7F3PgE3GTYTXDEtxoJpUs0ejGGoCyaB/8RwOiIzYWhhbY22OBoHC247fxmtRrByhmXII1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235213; c=relaxed/simple;
-	bh=BS73TbWoRbRLz9Ow/2wvxGQ5xhsENh8PoydPAUWqWSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KwHvPpPpZuM1AH2Ezf2/Uzdv01jNJRwwWo6qyYSYx6Iw0mcbg1et3Avj7PcSFCQGT2pmjTNW7HYh4ablLNtxSMWBLu6rFmpUGwTq/pcNOS6vh9KVoLhlbS+FNB+Kf/yy1e0LWGM5XjZxqrSO0yxATKRUXZA90cpV74l2hO5HhwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=aJ7jGu15; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745235219; c=relaxed/simple;
+	bh=OGYIMz+Uwt/sJEJ2ysFUESDiElsLDxozy6olHhsXkE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LVJ23lVpjh6N0XNwaNAVYklK0yGaA4x88dwMtuiJE4lVnDtoE+lL5TcUjRLUuYQQln/Dr95lmPTy2Ln6LYC5EDH1ynAmenQ5B7NC/WQrGVD/cYB17mlvpqtz8YC8qNtDLrk9LpqZic8ABi2l1/jmBA5xgPqqWiSyVd9SvieYm14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hU7x46/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aJ7jGu15"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 87B2D6D5;
-	Mon, 21 Apr 2025 13:31:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745235083;
-	bh=BS73TbWoRbRLz9Ow/2wvxGQ5xhsENh8PoydPAUWqWSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aJ7jGu15aWo8OMHAdE4KVOsqvVS0hVJ6rghDQmxHtDysvzntc21ZIGRsM00S2jFZI
-	 pL/QIiFZA0PmpL30TlM8EMhpg3U+oUuy1IFkM3rexG/KTN4uPgi2CLNZe5XiHCVl41
-	 xwHAWE/94W4PhaNSiHfMNB3STASEHBnvTWt4HPc4=
-Date: Mon, 21 Apr 2025 14:33:28 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 03/13] media: ti: j721e-csi2rx: prepare SHIM code for
- multiple contexts
-Message-ID: <20250421113328.GC29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-4-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hU7x46/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751D3C4CEE4;
+	Mon, 21 Apr 2025 11:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745235219;
+	bh=OGYIMz+Uwt/sJEJ2ysFUESDiElsLDxozy6olHhsXkE8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hU7x46/nbpCEWTmFFBbmra+yVnLOLPyQAIkMtK5VqxhXUubPvOSOmsDF/J281Vq2t
+	 dDu25C9wo4vWsqaGkIU4zWo8KiSCT4MsURvTQgozjp3JLVPwAzxrhUQ8EPIdzVEwX+
+	 aSbIetjT8+sPp1QmDXBDGTTpFAHYIpwV72a8gk8TeG1EfiMftvqJ5FuAXqrdbhhn2N
+	 gDeqF4ZtSa8S//n7isbgTIaaBWY777qGlipOKtmSWT4QOOWnVkM57/+SRX5L0KGsl0
+	 wpKL0w3PMY0a4SsIcn6jdcTbw8TWTu78dnFDJ2IkDWXwHZGAtE7SWndSb7E6XFyVH8
+	 iG8P8YTKubY3Q==
+Date: Mon, 21 Apr 2025 12:33:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3 0/3] Fix and refactor output disable logic
+Message-ID: <20250421123331.634076d5@jic23-huawei>
+In-Reply-To: <20250420175419.889544-1-gshahrouzi@gmail.com>
+References: <20250420175419.889544-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-4-r-donadkar@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Rishikesh,
+On Sun, 20 Apr 2025 13:54:16 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-Thank you for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:44PM +0530, Rishikesh Donadkar wrote:
-> From: Pratyush Yadav <p.yadav@ti.com>
+> Patch 1 includes the initial fix.
 > 
-> Currently the SHIM code to configure the context only touches the first
-> context. Add support for writing to the context's registers based on the
-> context index.
+> Patch 2 refactors the code to use the out_altvoltage_powerdown ABI.
 > 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c    | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> Patch 3 adds small improvements by minimizing the size of types and
+> doing a redundancy check.
 > 
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 36cde2e87aabb..d03dc4e56d306 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -25,7 +25,7 @@
->  #define SHIM_CNTL			0x10
->  #define SHIM_CNTL_PIX_RST		BIT(0)
->  
-> -#define SHIM_DMACNTX			0x20
-> +#define SHIM_DMACNTX(i)			(0x20 + ((i) * 0x20))
->  #define SHIM_DMACNTX_EN			BIT(31)
->  #define SHIM_DMACNTX_YUV422		GENMASK(27, 26)
->  #define SHIM_DMACNTX_SIZE		GENMASK(21, 20)
-> @@ -35,7 +35,7 @@
->  #define SHIM_DMACNTX_SIZE_16		1
->  #define SHIM_DMACNTX_SIZE_32		2
->  
-> -#define SHIM_PSI_CFG0			0x24
-> +#define SHIM_PSI_CFG0(i)		(0x24 + ((i) * 0x20))
->  #define SHIM_PSI_CFG0_SRC_TAG		GENMASK(15, 0)
->  #define SHIM_PSI_CFG0_DST_TAG		GENMASK(31, 16)
->  
-> @@ -549,11 +549,11 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_ctx *ctx)
->  
->  	reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
->  
-> -	writel(reg, csi->shim + SHIM_DMACNTX);
-> +	writel(reg, csi->shim + SHIM_DMACNTX(ctx->idx));
->  
->  	reg = FIELD_PREP(SHIM_PSI_CFG0_SRC_TAG, 0) |
->  	      FIELD_PREP(SHIM_PSI_CFG0_DST_TAG, 0);
-> -	writel(reg, csi->shim + SHIM_PSI_CFG0);
-> +	writel(reg, csi->shim + SHIM_PSI_CFG0(ctx->idx));
->  }
->  
->  static void ti_csi2rx_drain_callback(void *param)
-> @@ -870,7 +870,7 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
->  err_pipeline:
->  	video_device_pipeline_stop(&ctx->vdev);
->  	writel(0, csi->shim + SHIM_CNTL);
-> -	writel(0, csi->shim + SHIM_DMACNTX);
-> +	writel(0, csi->shim + SHIM_DMACNTX(ctx->idx));
->  err:
->  	ti_csi2rx_cleanup_buffers(ctx, VB2_BUF_STATE_QUEUED);
->  	return ret;
-> @@ -885,7 +885,7 @@ static void ti_csi2rx_stop_streaming(struct vb2_queue *vq)
->  	video_device_pipeline_stop(&ctx->vdev);
->  
->  	writel(0, csi->shim + SHIM_CNTL);
-> -	writel(0, csi->shim + SHIM_DMACNTX);
-> +	writel(0, csi->shim + SHIM_DMACNTX(ctx->idx));
->  
->  	ret = v4l2_subdev_call(csi->source, video, s_stream, 0);
->  	if (ret)
+> Not sure whether to include a read function for powerdown as well since
+> all the other attributes only had write permissions. I can also do this
+> for the other attributes to help modernize the driver.
+> 
+> Changes in v3:
+> 	- Include version log in cover letter.
+Just post it in reply to that v2!
 
--- 
-Regards,
+Note though that this needs a rebase as I mentioned in the thread wrt to
+the original fix. I'll take a quick look though to see if I can spot
+anything else for v4.
 
-Laurent Pinchart
+> Changes in v2:
+> 	- Refactor and make small improvements ontop of the initial fix.
+> 
+> Gabriel Shahrouzi (3):
+>   iio: frequency: Use SLEEP bit instead of RESET to disable output
+>   staging: iio: ad9832: Refactor powerdown control
+>   staging: iio: ad9832: Add minor improvements to ad9832_write_powerdown
+> 
+>  drivers/staging/iio/frequency/ad9832.c | 50 ++++++++++++++++++--------
+>  1 file changed, 36 insertions(+), 14 deletions(-)
+> 
+
