@@ -1,175 +1,153 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539D214EC46;
-	Mon, 21 Apr 2025 19:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC4714EC46;
+	Mon, 21 Apr 2025 19:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745265133; cv=none; b=bcIW2SpLEWRBHphJIdi5vBHFPfqcOz3Twkp27IW01CmX0PhWLL3nGnke8dqcHXCLKUQVI7Pscp1yzqedg/i0FpglBnNvA27SOyh7Tkxnk07KI9XU+lvYDQ/vJxuKrQQJZaeqARxCmgoHkM9GuC2TJgIFPWX09c74SMnsWbeHgFY=
+	t=1745265156; cv=none; b=JOi27BbcuL4/7fSs94KlofzAOqVGDUTz59R2iFmPC7xCnYR6Y8rlEPW7vpRPlB/GE/sWwfUfNERQPi5f2aLY6vAKo0/pOwM5Uh2CNDjEpecoXsF88IKo0t1H9toPtpSbg33g0F15qdiBzC5l+SpUeKUxM2Di8Sg4t5XkxK0eabU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745265133; c=relaxed/simple;
-	bh=u6safFetNv4QEP0r9Iz/YmPmNAmPjrfsQtubWT4us/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODBvd+IFbjMoK94e/BwryM5HOaY2SOKISZtyMUM9Y+moOaBHDhvgK8DBONcWVU3qxQvcaTcUuRuBfUqNUcNwCnGMmU4Afexo5JrbiMBb+NdTnMvvIXn8DDhktJzrs6kjoLnwN5V4MLqcqh7G55mGCk9mjOk037/nT2z+7i2TyNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JKafrj3O; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1745265156; c=relaxed/simple;
+	bh=CwnKBAr4cUyRwa8J2zXYMHIU8XEWi6UIPWpMk48l28s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XAl11uC0tabVvI5Alg3UyHnDiY54aHRhKUK77d9Mxs2dv6M620lDH3Xb8yAB4yLLPZMiZnuPp4+VGb0v7pWjg1rmJnB0Ve4yG8COjXEFBN+9j10yeZJkICtZ0O6IAAVFblDd15b1RB7KuLqNgqXi02Kwl1ws/vqg3YpVVfd3Lyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L8k2pEOj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JKafrj3O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CoIXiOR5N4qvjIOVDMGoDjq4P3o+Q3XWknsTh3hugIQ=; b=JKafrj3OLsnuxsHw+VFNxH82yA
-	TM2jheskPpBoFDY5/xp844xNRSPBxUT1UGoyCTP5TwbV50UiGTJoK6lWRZrqdjNdoqXDGgITcN5gz
-	vevJR9DnBmIsQrgPVjts1CpRpFMUhXxVZckI8feZJxMwsbYilm0Ksuqec755JzCtDTN6asu9iFr2Q
-	PdBYFesIWfaFrffZQqHMsx0HpE3KWeG17VDrJf0RgoktrUf9s+UbZbKo1llLg6z7M12lX+ePK85mi
-	s4UG2UfzOixSH0XOn4K0rRPUZHUXVrlngVhCvsSzLcxzoCNYk0WdDmw5QponUsuyMPUM7lUqY0n8O
-	quYz+Yug==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55886)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u6xBH-0003Je-1s;
-	Mon, 21 Apr 2025 20:51:52 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u6xBC-0006js-0V;
-	Mon, 21 Apr 2025 20:51:46 +0100
-Date: Mon, 21 Apr 2025 20:51:46 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-Message-ID: <aAah0ofEozVUZAOa@shell.armlinux.org.uk>
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
- <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
- <CA+V-a8tbW2Zs6op20yRTcihSm1bcMC2dYnRXVCKRf=q4fymZyg@mail.gmail.com>
- <TY3PR01MB1134633A8CB82788BB98C6E6286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <aAaVrVFql3vSktrT@shell.armlinux.org.uk>
- <TY3PR01MB113461CDEA58CB260ADB9FB9286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <TY3PR01MB11346DD3E3AEB0CCEAB57AE9C86B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L8k2pEOj"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIgAah029923;
+	Mon, 21 Apr 2025 19:52:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=yOIrzqR+rXq2XrGpFo1MpR
+	tGpckguk0edcRik++A3b0=; b=L8k2pEOjkvSns7jA98WWP3/wQzJ8Lu1T6Hayrw
+	O9k7bolr1zdEm18MAS1gAiD2kns9KfteCvvLxnAEEHXvUglpTcZl7Y+oxRoal1Gc
+	37fyr5ag4+Yqz+HPmvGMWM3h49Kpb7GHAi3vt2t/UTkPmJLxpc/4AAtALxLbVQaG
+	gv7CeO55b5DfI65cmL9CTLuY569TXddt6o5gR3Eczk8RascDunAaPyJdkKS5S1jn
+	F5APOQZU1Erhnj3oqdbZBZWPIjYdfvetG44LimwbCbW44Tgb++h9wy6/otZiWaRa
+	hlwimrisNgsTFAwqtYUHatlAD0eBWcI+9i+gbEa+1TpXS2dg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jd628-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 19:52:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53LJqJZ9013101
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 19:52:19 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 21 Apr 2025 12:52:19 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi
+	<cristian.marussi@arm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Viresh
+ Kumar" <viresh.kumar@linaro.org>
+CC: <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Peng Fan
+	<peng.fan@oss.nxp.com>,
+        Mike Tipton <quic_mdtipton@quicinc.com>
+Subject: [PATCH v2] cpufreq: scmi: Skip SCMI devices that aren't used by the CPUs
+Date: Mon, 21 Apr 2025 12:52:06 -0700
+Message-ID: <20250421195206.3736128-1-quic_mdtipton@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB11346DD3E3AEB0CCEAB57AE9C86B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=6806a1f4 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=z2bt77sjNeVQpZcblNcA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: kyF5pzhsMiCIzvRccGShrh7q2I38hOoz
+X-Proofpoint-ORIG-GUID: kyF5pzhsMiCIzvRccGShrh7q2I38hOoz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210155
 
-On Mon, Apr 21, 2025 at 07:23:52PM +0000, Biju Das wrote:
-> Hi Russell,
-> 
-> > -----Original Message-----
-> > From: Biju Das
-> > Sent: 21 April 2025 20:06
-> > Subject: RE: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for Renesas GBETH
-> > 
-> > Hi Russell,
-> > 
-> > > -----Original Message-----
-> > > From: Russell King <linux@armlinux.org.uk>
-> > > Sent: 21 April 2025 20:00
-> > > Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer
-> > > for Renesas GBETH
-> > >
-> > > On Mon, Apr 21, 2025 at 01:45:50PM +0000, Biju Das wrote:
-> > > > Hi All,
-> > > > FYI, On RZ/G3E, for STR to work with mainline, we need to reinitialize the PHY.
-> > >
-> > > Which "mainline" are you using?
-> > >
-> > > Reading your emails, I suspect v6.14 rather than something post-dating
-> > > v6.15-rc1, since your latest email suggests that the PHY driver's
-> > > ->resume method is not being called early in stmmac's resume. However,
-> > > commits 367f1854d442 and ef43e5132895 made this happen, which were
-> > > merged during the merge window, and are thus in v6.15-rc1.
-> > 
-> > I am using Linux version 6.15.0-rc2-next-20250417 + renesas_defconfig with CONFIG_PROVE_LOCKING
-> > enabled.
-> 
-> For me, it looks like issue related to timing, see[1] for details
-> 
-> [1] https://lore.kernel.org/all/TY3PR01MB1134690619EC6CADD07CD2DE186B82@TY3PR01MB11346.jpnprd01.prod.outlook.com/
-> 
-> Please let me know, if you have any patch that I can try out to fix the random timing issue.
+Currently, all SCMI devices with performance domains attempt to register
+a cpufreq driver, even if their performance domains aren't used to
+control the CPUs. The cpufreq framework only supports registering a
+single driver, so only the first device will succeed. And if that device
+isn't used for the CPUs, then cpufreq will scale the wrong domains.
 
-That's the email that provoked me to reply this evening (I wouldn't have
-because I'm still on vacation.)
+To avoid this, return early from scmi_cpufreq_probe() if the probing
+SCMI device isn't referenced by the CPU device phandles.
 
-So, this is how things are supposed to be working:
-- stmmac_phy_setup() sets phylink_config.mac_managed_pm and
-  phylink_config.mac_requires_rxc to be true. The former disables phylib
-  based power management.
+This keeps the existing assumption that all CPUs are controlled by a
+single SCMI device.
 
-- You've hooked in stmmac_pltfr_pm_ops.
-- On resume, this will call stmmac_pltfr_resume().
-- stmmac_pltfr_resume() will call your ->init function followed by
-  stmmac_resume().
-- stmmac_resume() will call phylink_prepare_resume().
-- phylink_prepare_resume() will call phy_resume() to resume the PHY
-  if pl->config->mac_requires_rxc && phydev && phydev->suspended is
-  true. The first and second will be true. The third... depends.
+Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+---
+Changes in v2:
+- Return -ENODEV instead of 0 for irrelevant devices.
+- Link to v1: https://lore.kernel.org/all/20250411212941.1275572-1-quic_mdtipton@quicinc.com/
 
-For phydev->suspended to be true, phy_suspend() needs to have been
-called. Neither mdio_bus_phy_suspend() nor mdio_bus_phy_resume()
-should be having any effect as phydev->mac_managed_pm should be
-set (as a result of phylink_config.mac_managed_pm having been set.)
+ drivers/cpufreq/scmi-cpufreq.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-phy_suspend() also gets called from phy_detach() and
-_phy_state_machine_post_work() when the work is PHY_STATE_WORK_SUSPEND.
-This happens when we halt the PHY, which will happen if phy_stop() is
-called.
-
-phylink_suspend() will do this only when WoL is not active - calling
-it when WoL is active will prevent WoL from working as the PHY needs
-to stay awake to (1) detect WoL packets if it is programmed to do
-so, or (2) pass packets to the MAC in the case where the MAC is doing
-WoL.
-
-So, phy_resume() should be getting called for the !WoL case, which will
-result in the PHY driver's ->resume method being called - in your case
-kszphy_resume().
-
-This will occur synchronously, and after gbeth's ->init function has
-been called, and as its all in the same thread of execution, it should
-be 100% reliable.
-
-For the WoL case, we assume that the PHY retains its settings since it
-needs to remain powered up, and because it hasn't been suspended or
-shutdown, it should be retaining all settings when the system wakes up.
-
+diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+index 944e899eb1be..b558f210c342 100644
+--- a/drivers/cpufreq/scmi-cpufreq.c
++++ b/drivers/cpufreq/scmi-cpufreq.c
+@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+ 	.set_boost	= cpufreq_boost_set_sw,
+ };
+ 
++static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
++{
++	struct device_node *scmi_np = scmi_dev->of_node;
++	struct device_node *np;
++	struct device *cpu_dev;
++	int cpu, idx;
++
++	for_each_possible_cpu(cpu) {
++		cpu_dev = get_cpu_device(cpu);
++		if (!cpu_dev)
++			continue;
++
++		np = cpu_dev->of_node;
++
++		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
++			return true;
++
++		idx = of_property_match_string(np, "power-domain-names", "perf");
++
++		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
++			return true;
++	}
++
++	return false;
++}
++
+ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+ {
+ 	int ret;
+@@ -401,7 +427,7 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+ 
+ 	handle = sdev->handle;
+ 
+-	if (!handle)
++	if (!handle || !scmi_dev_used_by_cpus(dev))
+ 		return -ENODEV;
+ 
+ 	scmi_cpufreq_driver.driver_data = sdev;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
