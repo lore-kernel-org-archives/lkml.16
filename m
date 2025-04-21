@@ -1,188 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844F714658C;
-	Mon, 21 Apr 2025 10:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0491D54D8;
+	Mon, 21 Apr 2025 10:18:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745230608; cv=none; b=WKgV5x3KjjXXqx5xzHsGCz+qeLHuS/rDin9BgWXwJQhdxFlB9bvM1/8x82fSNn3hhzLLobT+zpEfkZgsszUeIrtqL1Sv5cRTZBDFr7vqU4VRu6FFlp6ZVrNFjbuzARgFI1ezfxRC6mOO+nZHJacoWNFiWVD7lkQl2S5XNqQaJ/c=
+	t=1745230738; cv=none; b=dUoULh0DsfcO+Deh/N9nnV/0iyjQAaq3lBrL0h1ObspXXDRb2RLJkzTjc0SFGtfLQpTMRdVNdPW7DTFxBBXQrST3Oj5gfw/QbTgf9ogy4rOFYbRu0caKQsMoaccG2rXz86hsx5566L57BYkWLMshMsoUqflSr3c0TIgo0m1PX9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745230608; c=relaxed/simple;
-	bh=xhjnF2yWUOPLWpYB/sG9bvUoeOYj4o6fed/kiEyZNCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B6iaHo1FJhud+V4xRzTVeY22SbkvbYL8mRwRtpjxl+FMi0H5ZClhSxCEPBIChpw/uv7aO7CNVMDXGrtbNE8wDdEf1I0iLpUH8QUmhGLdY3EZ5KPF54XQnxyB3nrfAzqsi4YL9iHLovOSaM30lVWpTCvTLEkBpgoevIYlc0UaYp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWJP9rWH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745230738; c=relaxed/simple;
+	bh=8Ffn2L/E0jE5G4k79DkPy1qxCBgnq2nUNskI3OC5VYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EW2WChxTpkmWDM42DAGGyYijBtvyKM+oy7+xNiQtR4kVy3vR6IvGEvBwpivZPrIA03fkJsnx0Mp7Kq42eHwV7vk94e19M0HcKBZqunEsLtKtCrbuGhCoxOkQkiXl+6IjUCnNb81Jkq5Yk6CTC/tQZ8aRuquL06uEPohmvu6cepk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vIvT1Q2b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWJP9rWH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1433DC4CEE4;
-	Mon, 21 Apr 2025 10:16:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vIvT1Q2b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A7AC4CEE4;
+	Mon, 21 Apr 2025 10:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745230608;
-	bh=xhjnF2yWUOPLWpYB/sG9bvUoeOYj4o6fed/kiEyZNCQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MWJP9rWH1s6igmdGH02bzkUY6qLI1SYiQW41EG8E4JgvCJx4AMv03UBoyDkhHTmKJ
-	 QOkrCN5Lu7wrIpc3WdOGktC/mTwoSUytQhL7rR/4CVtHgwGieCLNbziU/pL49gGvDl
-	 al0NJ+fVY5qwUEZbHM2YYJhP6Sl0kzREJ+Tur+PMTt9KtsYkF9Iz0n7jd9VdPO2d4H
-	 K3kbeXUiTa8Je7fQXZTqjjvjnuauWzFW87FmcEFA3qc19pkjrlto65TdFeZrzkdnWp
-	 vWYK9PYnrpoKko8dG4Y/AEWl75IHaveek5Al8GPNRggQyk1U1tguf6SW88UoMtQ00d
-	 KOyvb46aaxieA==
-Date: Mon, 21 Apr 2025 11:16:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v6 05/11] iio: accel: adxl345: add freefall feature
-Message-ID: <20250421111641.1cb83848@jic23-huawei>
-In-Reply-To: <CAFXKEHZNmUsUmheyDdh1bDDf97-7ZTpsm2xqqbwT+hq3K58F5A@mail.gmail.com>
-References: <20250414184245.100280-1-l.rubusch@gmail.com>
-	<20250414184245.100280-6-l.rubusch@gmail.com>
-	<20250418192254.0becd27d@jic23-huawei>
-	<CAFXKEHZNmUsUmheyDdh1bDDf97-7ZTpsm2xqqbwT+hq3K58F5A@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1745230738;
+	bh=8Ffn2L/E0jE5G4k79DkPy1qxCBgnq2nUNskI3OC5VYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vIvT1Q2b+urrArvw0pMf7nki2sOwhMimV+cTWMMxX2mdc7xoOo73naTPPmuav+9UT
+	 y2v9P5elcn4StqqYSTIFW4ljb0Qn0PcVgR7WN7YMgwRDpFmTSCLZH16XKzT9tMlPgF
+	 xuZF5kNkJLmBrtqgVrOgaCIiccOV5a4QZofRqKLwjJqI3R898RBLaH3mPT3Z1W5IZE
+	 Ww3TlB9j04jXctgTguQFCredejFVaRGmryL4IFT08RGNrtAIkty9VWuYx4BKgRhCph
+	 lcG7Pi8Q0qQWMnbUeecWd55ncbeq2fQfF5g5LhchReHmN1sSeYh52Ixq6BNTKNyuHe
+	 kObt26Hr32aVw==
+Date: Mon, 21 Apr 2025 15:48:48 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 01/11] tee: allow a driver to allocate a tee_device
+ without a pool
+Message-ID: <aAYbiAOyYkYob3rU@sumit-X1>
+References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
+ <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-1-7f457073282d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-1-7f457073282d@oss.qualcomm.com>
 
-On Sun, 20 Apr 2025 23:26:47 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+On Thu, Mar 27, 2025 at 07:47:23PM -0700, Amirreza Zarrabi wrote:
+> A TEE driver doesn't always need to provide a pool if it doesn't
+> support memory sharing ioctls and can allocate memory for TEE
+> messages in another way. Although this is mentioned in the
+> documentation for tee_device_alloc(), it is not handled correctly.
+> 
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/tee/tee_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-> Happy Easter!
->=20
-> On Fri, Apr 18, 2025 at 8:23=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
-g> wrote:
-> >
-> > On Mon, 14 Apr 2025 18:42:39 +0000
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Add the freefall detection of the sensor together with a threshold and
-> > > time parameter. A freefall event is detected if the measuring signal
-> > > falls below the threshold.
-> > >
-> > > Introduce a freefall threshold stored in regmap cache, and a freefall
-> > > time, having the scaled time value stored as a member variable in the
-> > > state instance.
-> > > =20
-> > Reading this I wondered whether we had the event code consistent for
-> > freefall detectors... Or indeed inactivity ones (which are kind of simi=
-larish)
-> >
-> > :( We don't it seems.  The issue is that
-> > freefall is actually that all channels are simultaneously under the the=
- magnitude
-> > threshold, not one of them.  So it should I think be
-> > X_AND_Y_AND_Z not X_OR_Y_OR_Z
-> > =20
->=20
-> I change to X_AND_Y_AND_Z.
->=20
-> > This is as opposed to activity detectors which tend to be any axis shows
-> > activity and X_OR_Y_OR_Z applies.
-> >
-> > Anyhow upshot is I think I lead you astray on this and we should make t=
-his
-> > one IIO_MOD_X_AND_Y_AND_Z
-> >
-> > A few other things inline.
-> >
-> > Unfortunately we don't deal with these events that often so I forget
-> > what we did before :(
-> > =20
-> > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > > ---
-> > >  drivers/iio/accel/adxl345_core.c | 125 +++++++++++++++++++++++++++++=
-++
-> > >  1 file changed, 125 insertions(+)
-> > >
-> > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adx=
-l345_core.c
-> > > index c464c87033fb..ae02826e552b 100644
-> > > --- a/drivers/iio/accel/adxl345_core.c
-> > > +++ b/drivers/iio/accel/adxl345_core.c
-> > > @@ -75,6 +75,7 @@ struct adxl345_state {
-> > >       u32 tap_duration_us;
-> > >       u32 tap_latent_us;
-> > >       u32 tap_window_us;
-> > > +     u32 ff_time_ms;
-> > >
-> > >       __le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __aligned=
-(IIO_DMA_MINALIGN);
-> > >  };
-> > > @@ -96,6 +97,14 @@ static struct iio_event_spec adxl345_events[] =3D {
-> > >                       BIT(IIO_EV_INFO_RESET_TIMEOUT) |
-> > >                       BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
-> > >       },
-> > > +     {
-> > > +             /* free fall */
-> > > +             .type =3D IIO_EV_TYPE_MAG,
-> > > +             .dir =3D IIO_EV_DIR_FALLING,
-> > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE) |
-> > > +                     BIT(IIO_EV_INFO_VALUE) |
-> > > +                     BIT(IIO_EV_INFO_PERIOD),
-> > > +     }, =20
-> > This is creating separate per axis enables, values and period. Does tha=
-t make
-> > sense?  If not you need to spin a kind of virtual channel (with mod X_A=
-ND_Y_AND_Z)
-> > and add the events to it.
-> >
-> > See how the sca3000 does it for example. =20
->=20
-> Hum, I'm not sure if I understand you correctly. In my driver, I'm
-> using .mask_shared_by_type, and I verified there appears only one
-> enable, one value and one period handle.
-> # ls -l /sys/bus/iio/devices/iio:device0/events/
-> total 0
-> ...
-> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_en
-> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_period
-> -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_value
-> ...
->=20
-> In the sources of sca3000.c I saw this setup with .mask_separate. So,
-> there I'd expect to see separate enables per axis, or am I wrong? In
-> the case of the ADXL345, there should only be one freefall enable (in
-> my driver) and not per axis. So, isn't this what is currently there?
->=20
-> So far I only adjust the or'ing to and'ing the axis for freefall.
+Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
 
-So this is a messy corner of the ABI (because these are tricky to describe).
-Shared by type usually means there is one attribute applying to all the
-axis, but that they are reported separately, or potentially multiple events
-/ _OR_ form used if we can distinguish exactly what the event is.
+-Sumit
 
-In this case there is no way for userspace to anticipate that the event
-that might be generate is X_AND_Y_AND_Z.  So for this
-the ABI solution we came up with is that virtual channel and separate.
-
-So you get something along the lines of
-in_accel_x&y&z_mag_falling_en
-in_accel_x&y&z_mag_falling_period
-etc
-
-The tricky remaining corner is this only makes sense if we always enable
-all axis (which is typical for a freefall detector). If we get a device
-that oddly has per axis free fall enables, then it would be hard and I
-might argue nonsense to enable them separately anyway.  Not true
-here though I think.
-
-Note that we may well have drivers using the ABI slightly differently for
-freefall events which will be at least partly because I'd forgotten how
-we resolved all this complexity long ago (that sca3000 driver is ancient!)
-ABI like this is tricky to fix up, but we might want to consider some dupli=
-cation
-in those drivers so we standardize on one form for freefall (even if we hav=
-e some
-stray ABI from other possible solutions).
-
-What we should definitely do is pull together some documentation on multi c=
-hannel
-event handling as the ABI docs are probably not enough.
-
-Jonathan
-
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index d113679b1e2d..24edce4cdbaa 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -888,7 +888,7 @@ struct tee_device *tee_device_alloc(const struct tee_desc *teedesc,
+>  
+>  	if (!teedesc || !teedesc->name || !teedesc->ops ||
+>  	    !teedesc->ops->get_version || !teedesc->ops->open ||
+> -	    !teedesc->ops->release || !pool)
+> +	    !teedesc->ops->release)
+>  		return ERR_PTR(-EINVAL);
+>  
+>  	teedev = kzalloc(sizeof(*teedev), GFP_KERNEL);
+> 
+> -- 
+> 2.34.1
+> 
+> 
