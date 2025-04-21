@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B191F1317
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048AB1EBFE0
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745261606; cv=none; b=t6+ohemgYqci/y6wir6Hohm4UQfMaLFjh2YSCybgiO09CXwK2po0+ulxqrK2PUX2AcVFjStSNP92AO/GwVCBZpinwSnAPyZJF4rZF3fi8/70pTFRX7nZFi4HhFTPTGult0p0Jq4+FY7O10S86R9IHPwWnOCehByry1dOkIH8hXU=
+	t=1745261609; cv=none; b=o9S2+6FOJIg63MU0cVcl+BsdgwbAEkWNSLzQc3gzbr9gxQxalpRQkK5KiezfnBJLiv47b9DdWyRoBbO99QS9bqqTrlvP4Zvc7mycVWOB+smtm69y5xT001dz2iMw5Tpvm+PzqZc43wTiRkPZ/ksNfHjLzjTCwYBcXooLWqFOwcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745261606; c=relaxed/simple;
-	bh=llkZNwRDTXnM7RyZfx311thpcdgrfSKxzjxOVFqcJJ0=;
+	s=arc-20240116; t=1745261609; c=relaxed/simple;
+	bh=fup/Ks0ZisKAHfo7PloZj7/wqfacxOjMZEqtnF76wu8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Eo0SoFFacKtn0/OogtVzu9OgZLKZeHDO7p17jf4rLwRP0THMirqt4YYRqVVctjXhwf4wMMV3VGdoVRj/dcjN31nDPVgiPNCDzGawVbXzh59JMhB2KHu5brfe3Bnvp96KAmy3viFMPtz1TaKBOZ7djcY3q5azkUyqejXA/DCC+Pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAf034F0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lATl3SpOd1lU5q+D6pqbVtvpoI8mP1ggayNArV9jzDtouBglyMJbwDzf57OiyCQt2Uzhl5m0+Wm/aHtXi2xbk2eoSXUMs7DxBAJdbbvd8i222UrxMj39F4deJxTy+8agmF9chqnaBKantiQd8U2gGEgG6VBGcoHQuRg269pnbxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=to9pPqu8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAf034F0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF14C4CEEB;
-	Mon, 21 Apr 2025 18:53:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="to9pPqu8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706AAC4CEEC;
+	Mon, 21 Apr 2025 18:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745261606;
-	bh=llkZNwRDTXnM7RyZfx311thpcdgrfSKxzjxOVFqcJJ0=;
+	s=k20201202; t=1745261608;
+	bh=fup/Ks0ZisKAHfo7PloZj7/wqfacxOjMZEqtnF76wu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GAf034F0Apeab9olix68xcaE9/Bq/3wKK/13vKGjS1xbGxWS/eJ1UcwKSUZ0Bnxvj
-	 NHDSfNRkDFrqx2LSVviqujiMiOePdjAol/ejuanWS1iT1Fu+OxaY3DJEoU6RQb4Ln3
-	 6U0+J6iKMVZQeyKEIVpBTdMS3PAD/EA7QOsP9OeQYAYNmaszfdp1nKQ95L3vTjgC7l
-	 Q61xBki7W/9tfWZ7u7VxaN6e7SUlz6/lW6f6GIV3y/aZHZb/VYqikmngXa1K3wIrZr
-	 Tq4Wkjb11O22oPUhlTJv3ueR2OL1EGwD7XT4J2TtaF7W/gWkN3/fdr10gXsRFFoiW3
-	 3iP41nQN8cQDg==
+	b=to9pPqu8EgLQYxybK31paryTYUn2m7VMYPB2IUtH0nBMJsGP1eSo+Rwks1XUDTENc
+	 Zn3D9eqz0hpRcBT0hO2NCA/WLtZx2W1swTR4Vlkf4OEzOixuhhBDE9e2G0eODnK67w
+	 ThG5p3vYgJGd4qIbyqBBIUKP0WNah5I8W7ckTKFvh57tLru85CrzTHpOFiWM7vYGE8
+	 WVscDhE060+FFtZtpB/GVwvoinqwqYdowzVERhDxA/LFtO5xPzZ1NNiS6ntVwCAVQq
+	 fLYREFLA2xbZSvvFykPzK9VbmJz32eMtVwL+N+70nZQRht6VBYT+PIIKpp7R6l8nuh
+	 LRpMUK+ezMYHQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 13/29] x86/boot/e820: Improve e820_print_type() messages
-Date: Mon, 21 Apr 2025 20:51:53 +0200
-Message-ID: <20250421185210.3372306-14-mingo@kernel.org>
+Subject: [PATCH 14/29] x86/boot/e820: Clean up __e820__range_add() a bit
+Date: Mon, 21 Apr 2025 20:51:54 +0200
+Message-ID: <20250421185210.3372306-15-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250421185210.3372306-1-mingo@kernel.org>
 References: <20250421185210.3372306-1-mingo@kernel.org>
@@ -55,13 +55,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For E820_TYPE_RESERVED, print:
-
-  'reserved'  -> 'device reserved'
-
-For E820_TYPE_PRAM and E820_TYPE_PMEM:
-
-  'persistent' -> 'persistent RAM'
+ - Use 'idx' index variable instead of a weird 'x'
+ - Make the error message E820-specific
+ - Group the code a bit better
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -72,35 +68,37 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/kernel/e820.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 484419711ecf..ae05161896d4 100644
+index ae05161896d4..6e626c4a3817 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -187,15 +187,15 @@ void __init e820__range_add(u64 start, u64 size, enum e820_type type)
- static void __init e820_print_type(enum e820_type type)
+@@ -165,17 +165,18 @@ int e820__get_entry_type(u64 start, u64 end)
+  */
+ static void __init __e820__range_add(struct e820_table *table, u64 start, u64 size, enum e820_type type)
  {
- 	switch (type) {
--	case E820_TYPE_RAM:		pr_cont(" kernel usable RAM");		break;
--	case E820_TYPE_RESERVED:	pr_cont(" reserved");			break;
--	case E820_TYPE_SOFT_RESERVED:	pr_cont(" soft reserved");		break;
--	case E820_TYPE_ACPI:		pr_cont(" ACPI data");			break;
--	case E820_TYPE_NVS:		pr_cont(" ACPI NVS");			break;
--	case E820_TYPE_UNUSABLE:	pr_cont(" unusable");			break;
-+	case E820_TYPE_RAM:		pr_cont(" kernel usable RAM");			break;
-+	case E820_TYPE_RESERVED:	pr_cont(" device reserved");			break;
-+	case E820_TYPE_SOFT_RESERVED:	pr_cont(" soft reserved");			break;
-+	case E820_TYPE_ACPI:		pr_cont(" ACPI data");				break;
-+	case E820_TYPE_NVS:		pr_cont(" ACPI NVS");				break;
-+	case E820_TYPE_UNUSABLE:	pr_cont(" unusable");				break;
- 	case E820_TYPE_PMEM:		/* Fall through: */
--	case E820_TYPE_PRAM:		pr_cont(" persistent (type %u)", type);	break;
--	default:			pr_cont(" type %u", type);		break;
-+	case E820_TYPE_PRAM:		pr_cont(" persistent RAM (type %u)", type);	break;
-+	default:			pr_cont(" type %u", type);			break;
+-	int x = table->nr_entries;
++	int idx = table->nr_entries;
+ 
+-	if (x >= ARRAY_SIZE(table->entries)) {
+-		pr_err("too many entries; ignoring [mem %#010llx-%#010llx]\n",
+-		       start, start + size - 1);
++	if (idx >= ARRAY_SIZE(table->entries)) {
++		pr_err("too many E820 table entries; ignoring [mem %#010llx-%#010llx]\n",
++		       start, start + size-1);
+ 		return;
  	}
+ 
+-	table->entries[x].addr = start;
+-	table->entries[x].size = size;
+-	table->entries[x].type = type;
++	table->entries[idx].addr = start;
++	table->entries[idx].size = size;
++	table->entries[idx].type = type;
++
+ 	table->nr_entries++;
  }
  
 -- 
