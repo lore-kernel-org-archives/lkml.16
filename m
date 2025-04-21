@@ -1,300 +1,190 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D171EBFFF
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B731EBFFF;
+	Mon, 21 Apr 2025 19:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263010; cv=none; b=XSLWqMRuzFAR9D0pLIHKxff2Y7WWh4lwWRE6DumQymaehuTWDuyAalRYmjYko763g7ns5c9mQiOlUcN+JsODpwbc7BFwpbtUCS3ZO6zvmF9m6vZF3XGpczNQNoz6PwDnaau7fRTecm8VwMtbPAkVP32EcAQjv+3DJFxF0+wqpUQ=
+	t=1745263030; cv=none; b=T9Pb/+bRaqbx38a0HgaQf46zvNzX3nI7nHm8Da42NWMyCa5qRadZ/s5v123Hg+kHcQ38znX5BrPeHG5++1esykT3bCaTicUF+YjyW/uuxRGrFuSHtoCGzJ/Cl9aPgEnoPumsLHPdOd5lH94IckB+LcqSnjFsB/7r/7OMEdh6wdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263010; c=relaxed/simple;
-	bh=c5go3KxK1zoZKY6v1YTGcV/St36i2GGcdHudZryufyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gm6uFGIEksyyl6QFHTo6ifYImlm9cIm6RM/NgqZPbKFA3/RLfSZ6cy7iyrl/7ISxnxaMn6qeI+C3thJfxGtHq24DPGde+Dgnmq6fKpV2O3J/oy5aMsN7M4c7kZXEHrgfBb3Sr3qjwhIi+SVNZCP1HN+qWURpiApo5ioJCLITRNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MY6S0EQs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745263030; c=relaxed/simple;
+	bh=vNVjzy6SY6NB8V0+5kVwIcx0deQrkMhPB96hHSvdq/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J8/HPBBqk49Tw/H73tHIqDmfV7mWDFeAN4AxsuS7hWWZgsP5PvOV3u3tzD9C4fpMlTT74I4N0a6ipj11m70HM781PPQfl6A0g6SjEfFSDhezLe8AbdAJdWGO+effK9H27SmSa5y4MpcrxDCGHDPYXHnWE+FkKSHhHqHReMudPiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LyWDJ/AQ; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MY6S0EQs"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIgpHA030909
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:16:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=utVDdpxrgjnfN0h4lobydcS8
-	PzzalhnEHxW9nCf1r/E=; b=MY6S0EQskGWy8rz4Cee7XeMpzfOvMJ93mAyoiOC1
-	WquXJufkxDsZ7wa6jAPKbLyvquclJ2I33dS4ZoMvAQE+47H1EB+OBp2s/ZvRKWRD
-	VTogoGE9ZOLR8NVTZFOD64meJPRApGvUwhU0S6J05yTzRVmggxafSMA5JQhZBXnM
-	gFU/Poi00CG0bNrRtNV/mulpZJSdpKQhZn/Qdl+63ore+tOnYW+O+b3pd1RtM+ZV
-	eS5d/vYgtrnBpMjrUxD56y7uCbZiJq80CK+3Z3i0zakN8Touqbur09T0Worq5oJa
-	4VSq2zvd4D1Oj/5GhIOK1rY3jmmIpaXuxLwkX3Ps0xoGTg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jd45e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:16:47 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c92425a8b1so629993985a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyWDJ/AQ"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-aee773df955so4277903a12.1;
+        Mon, 21 Apr 2025 12:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745263028; x=1745867828; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F874gon9E3P4hwlV/yFSCkcXv75v2itLgs6pZvbeUpA=;
+        b=LyWDJ/AQA8bnh+J+IZwX/LunlaUpPywOP5VoyhYzmA2TL3mmxW6X0yydPPm3VMD0p5
+         eyVimzavEFXh6yFEkp+0oKCOONglIFhvFW+nDXV7oOLjS4rWhDp7cCtisVZbAOmIcNyM
+         0YqH1+GpnWOlLK+No2GDFoffAflijkMaBwn2GxkDmTk2q3Svog1/mWs8BqDfZ1wngDFB
+         m449sHL4eQP+8su+zxJzDzer24afyIpZ/cWzsxAt3CnF1YrhHv9Wy6kWqhdNORfZCfDC
+         yQDOesKXsSKoKbK2G3VPKuxREc819vKptHWmIC3k8C/I+eybQFfZEXBJv9JqEbq3cUIT
+         6GZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263007; x=1745867807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=utVDdpxrgjnfN0h4lobydcS8PzzalhnEHxW9nCf1r/E=;
-        b=V0pccP9GVnx9geJ8+FbonXNUmAMxV6rGAJHMgg/gVAYJ3u9HFgjooeujYll3nIC5X5
-         Hf5NwA2QCvHmnsnToBuYsJYJpgqQ3HhWFk47HtwszMgXF+2+EsoW5nrwuN6erALojNQq
-         qAyuZh+Z8GoujYOQikXmrs6HyfPqzkZurM2crqHVe5ugdWVHwT3aLhONZXmyhLFLAhmH
-         I8+rpGVqGchH+tHMS8TY1QGwREbH8ejSuvWYQbs+rOnsyNxlKOGj1uNiuQuf9fKlJRtf
-         tR9pT5K0XP8M2eHJhRgwpWG5NXHBs/vCDmjqz/uwA4EEWOFV4usHZyGZejLggerEr1NX
-         ueJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMnrX6040Nb1tZRAZ6kqHz+mkxfpIXl0dF51MyLxuEdVgeqGB6xCa6a7BdioJhcTXeqFrQifqnSlD9EjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2VPjpcPb2sdDHR3Q9owjrk2CpwxF8xZpo/Tdwz3Act0K1n0Ud
-	S3k3KgY/hVo7en8uydrUP7lusaCT/PSC0KHRl7ecTkWOd9LiAjvBr8WggXyUoAAovzOu+pI1Vpa
-	hfOP490Lik1byHFBJwKuJt611D+bzI2MGrm5QFuP7w7K7ezRmqXxZvFqo0Mr99bY=
-X-Gm-Gg: ASbGncuEmm7TJgTwnlLwFtB+FJR7b6TQ/1/q0J48XE54HBOzoog/0XvdL5mvZWqhcpU
-	/iP1vSam6Rb9CheKnQTAbcupDTohnE51HKVAzmEE+SnrI6CVRmhUSAkFA8WDB3jXdJaJdrXATu7
-	aqTBBksrVECqM/z3/0Swyy+duFOxrn9lKqIIJTovxq+yKq3YiH0HkuNzjRK/oNuiZK8E+PtX7tY
-	fL/eYjsPX9cEj/bAeiJBvDUaLQx80NsX2dnCzXyhHqgg44jNqag0ngzaDijDJBp1jQjoLG8JnNp
-	Ttyn0K5SYt7s6KVWRewPOP7IN3Pg4mAjE2ElvVp/DGsVK/gMNOhhqpaFMi3VNTvPJ9yTajszfR8
-	=
-X-Received: by 2002:a05:620a:3707:b0:7c9:142d:3c66 with SMTP id af79cd13be357-7c92565eeb9mr2626998485a.0.1745263006758;
-        Mon, 21 Apr 2025 12:16:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEwsaWGw4uh2u7lX7Z9kxeE1gU+aUICLwSlmuNpDpcbTieu7XF0j4yvIIDpkValfcGqijWYKA==
-X-Received: by 2002:a05:620a:3707:b0:7c9:142d:3c66 with SMTP id af79cd13be357-7c92565eeb9mr2626993785a.0.1745263006368;
-        Mon, 21 Apr 2025 12:16:46 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5242a2sm1005685e87.2.2025.04.21.12.16.44
+        d=1e100.net; s=20230601; t=1745263028; x=1745867828;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F874gon9E3P4hwlV/yFSCkcXv75v2itLgs6pZvbeUpA=;
+        b=V+bK7wyX83QgG3p6+Co/YZsOB0Ctnal0qu2F2Ci44wwF2EFkN3gUtktBZVrp5xWQoO
+         3BlQHdXV1TA6O90cdPaURZedZs1nXUIrzr1PNt7n2HTVZdxOVjfVKPygUD/eNZkFcxjS
+         MWEHT2MiddNPL+jDscfVVWjPm1EQ+AP72EV+D6vdwLgfCUj18fgmkQRtFmoMuAXsXTZT
+         BPNJTAot8yIJ3LSPVtRnLlq7mjfDu5D9ZscKs62uMydsfOO4mqSybQbE2RTxaXroGoCh
+         uvqKCLWUG0A3nk0eim7jWmb3S6bCHfOsV3TkU7MYR/Ek8wJonsm7QVhYE+txNJTiYSoS
+         SIDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU46gXrkxnuRbwld3DmjRSezuWHNvYJs3efw3KhE/RFGdanpVukBRNTIOzpjwiGRlJKoQZwHK2BlFb86xc=@vger.kernel.org, AJvYcCUugO8bZp9rBd9QXhOe/zRCuOzLF7Qv2vkKwaofnCEKdfFZoP20O0qRmYer7DXozKjwzERKxFn1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4SrwzWBtcQ7Vab2BGuCWfd815X8iQ1OP3UoVJFAHXuL/a8Wiz
+	GF1+uH+9Zqy46kkNPKSUpPwh3djm2RzKP3auixsNZzfZcrBEWudz
+X-Gm-Gg: ASbGncsdkSYrhwyrydN5fhH+JihASDjisTMmypmhmXalLbQ1xZexfzaUmCgzbEDATks
+	3vZESCSwRBB91pfS4SJFBXfKdod8axEhMk9MKIBppJzuCKnDIxpwS2N8IEexiITzUlLWgQcjTlG
+	L/AaVLjmZWgeSa2FhwxoPF/4n76cbWimC3i59fvk+w56RXzFbXvmBPmPb4GFiu6LwgZumglHQf7
+	y7HazKWCydP0EBU1iiuAUq8Oaz+HHD4wjkGu9GwhzIpQcpjITSvLZ1TF6VieZe6uVGTqJbiTzNj
+	G0Xu3u1y4nU0xKy1xWTBZiJnTCz+BBjWb0gD7LKNAw==
+X-Google-Smtp-Source: AGHT+IH6t+tcpp4993pIVk43Qfm1vQX+JJNqthrLys0H4E9YIC8cmt+4g1IsPuNP9Vkk7i0VPJDevA==
+X-Received: by 2002:a17:90b:51c1:b0:2ff:71d2:ee8f with SMTP id 98e67ed59e1d1-3087c361083mr19056772a91.13.1745263027604;
+        Mon, 21 Apr 2025 12:17:07 -0700 (PDT)
+Received: from mythos-cloud.. ([125.138.201.7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df24097sm6968738a91.21.2025.04.21.12.17.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 12:16:45 -0700 (PDT)
-Date: Mon, 21 Apr 2025 22:16:43 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com,
-        simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, matthias.bgg@gmail.com, ck.hu@mediatek.com,
-        jitao.shi@mediatek.com, jie.qiu@mediatek.com, junzhi.zhao@mediatek.com,
-        dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
-        dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com,
-        ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com,
-        jason-jh.lin@mediatek.com
-Subject: Re: [PATCH v9 22/23] drm/mediatek: Introduce HDMI/DDC v2 for
- MT8195/MT8188
-Message-ID: <aestmu2rblcrcz77tuqgkimaj4stg24skyp2avdstahwr3aa3i@cfv5ov2qjcf6>
-References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
- <20250415104321.51149-23-angelogioacchino.delregno@collabora.com>
+        Mon, 21 Apr 2025 12:17:07 -0700 (PDT)
+From: Moon Yeounsu <yyyynoom@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Moon Yeounsu <yyyynoom@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: dlink: add synchronization for stats update
+Date: Tue, 22 Apr 2025 04:16:44 +0900
+Message-ID: <20250421191645.43526-2-yyyynoom@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415104321.51149-23-angelogioacchino.delregno@collabora.com>
-X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=6806999f cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=mpaa-ttXAAAA:8 a=QX4gbG5DAAAA:8 a=VUQ5xn941hO9jOC13tcA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-GUID: m9-5DaH_d_bYXkDSmK1LR9-4vztmS53x
-X-Proofpoint-ORIG-GUID: m9-5DaH_d_bYXkDSmK1LR9-4vztmS53x
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=761 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210150
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 12:43:20PM +0200, AngeloGioacchino Del Regno wrote:
-> Add support for the newer HDMI-TX (Encoder) v2 and DDC v2 IPs
-> found in MediaTek's MT8195, MT8188 SoC and their variants, and
-> including support for display modes up to 4k60 and for HDMI
-> Audio, as per the HDMI 2.0 spec.
-> 
-> HDCP and CEC functionalities are also supported by this hardware,
-> but are not included in this commit and that also poses a slight
-> difference between the V2 and V1 controllers in how they handle
-> Hotplug Detection (HPD).
-> 
-> While the v1 controller was using the CEC controller to check
-> HDMI cable connection and disconnection, in this driver the v2
-> one does not.
-> 
-> This is due to the fact that on parts with v2 designs, like the
-> MT8195 SoC, there is one CEC controller shared between the HDMI
-> Transmitter (HDMI-TX) and Receiver (HDMI-RX): before eventually
-> adding support to use the CEC HW to wake up the HDMI controllers
-> it is necessary to have support for one TX, one RX *and* for both
-> at the same time.
-> 
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  drivers/gpu/drm/mediatek/Kconfig            |    7 +
->  drivers/gpu/drm/mediatek/Makefile           |    2 +
->  drivers/gpu/drm/mediatek/mtk_hdmi_common.c  |    4 +
->  drivers/gpu/drm/mediatek/mtk_hdmi_common.h  |    9 +
->  drivers/gpu/drm/mediatek/mtk_hdmi_ddc_v2.c  |  385 +++++
->  drivers/gpu/drm/mediatek/mtk_hdmi_regs_v2.h |  263 ++++
->  drivers/gpu/drm/mediatek/mtk_hdmi_v2.c      | 1396 +++++++++++++++++++
->  7 files changed, 2066 insertions(+)
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_ddc_v2.c
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_regs_v2.h
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
-> 
-> +
-> +static int mtk_hdmi_v2_setup_audio_infoframe(struct mtk_hdmi *hdmi)
-> +{
-> +	struct hdmi_codec_params *params = &hdmi->aud_param.codec_params;
-> +	struct hdmi_audio_infoframe frame;
-> +	u8 buffer[14];
-> +	ssize_t ret;
-> +
-> +	memcpy(&frame, &params->cea, sizeof(frame));
-> +
-> +	ret = hdmi_audio_infoframe_pack(&frame, buffer, sizeof(buffer));
-> +	if (ret < 0)
-> +		return ret;
+There are two paths that call `get_stats()`:
+    1. From user space via the `ip` command
+    2. From interrupt context via `rio_interrupt()`
 
-This should really be done via
-drm_atomic_helper_connector_hdmi_update_audio_infoframe() or
-drm_atomic_helper_connector_hdmi_clear_audio_infoframe().
+Case 1 is synchronized by `rtnl_lock()`, so it is safe.
+However, the two cases above are not synchronized with each other.
+Therefore, `spin_lock` is needed to protect `get_stats()` as it can be
+preempted by an interrupt. In this context, `spin_lock_irq()` is required
+(using `spin_lock_bh()` may result in a deadlock).
 
-Ideally this should come from the .hw_params() / .prepare() calls so
-that you don't need to store the params in the driver data.
+While `spin_lock` protects `get_stats()`, it does not protect updates to
+`dev->stats.tx_errors` and `dev->stats.collisions`, which may be
+concurrently modified by the interrupt handler and user space.
+By using temporary variables in `np->tx_errors` and `np->collisions`,
+we can safely update `dev->stats` without additional locking.
 
-> +
-> +	mtk_hdmi_v2_hw_write_audio_infoframe(hdmi, buffer);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void mtk_hdmi_v2_hw_gcp_avmute(struct mtk_hdmi *hdmi, bool mute)
-> +{
-> +	u32 val;
-> +
-> +	regmap_read(hdmi->regs, TOP_CFG01, &val);
-> +	val &= ~(CP_CLR_MUTE_EN | CP_SET_MUTE_EN);
-> +
-> +	if (mute) {
-> +		val |= CP_SET_MUTE_EN;
-> +		val &= ~CP_CLR_MUTE_EN;
-> +	} else {
-> +		val |= CP_CLR_MUTE_EN;
-> +		val &= ~CP_SET_MUTE_EN;
-> +	}
-> +	regmap_write(hdmi->regs, TOP_CFG01, val);
-> +
-> +	regmap_set_bits(hdmi->regs, TOP_INFO_RPT, CP_RPT_EN);
-> +	regmap_set_bits(hdmi->regs, TOP_INFO_EN, CP_EN | CP_EN_WR);
-> +}
-> +
-> +static void mtk_hdmi_v2_hw_ncts_enable(struct mtk_hdmi *hdmi, bool enable)
-> +{
-> +	if (enable)
-> +		regmap_set_bits(hdmi->regs, AIP_CTRL, CTS_SW_SEL);
-> +	else
-> +		regmap_clear_bits(hdmi->regs, AIP_CTRL, CTS_SW_SEL);
-> +}
-> +
-> +static void mtk_hdmi_v2_hw_aud_set_channel_status(struct mtk_hdmi *hdmi)
-> +{
-> +	u8 *ch_status = hdmi->aud_param.codec_params.iec.status;
-> +
-> +	/* Only the first 5 to 7 bytes of Channel Status contain useful information */
-> +	regmap_write(hdmi->regs, AIP_I2S_CHST0, mtk_hdmi_v2_format_hw_packet(&ch_status[0], 4));
-> +	regmap_write(hdmi->regs, AIP_I2S_CHST1, mtk_hdmi_v2_format_hw_packet(&ch_status[4], 3));
-> +}
-> +
-> +static void mtk_hdmi_v2_hw_aud_set_ncts(struct mtk_hdmi *hdmi,
-> +				     unsigned int sample_rate,
-> +				     unsigned int clock)
-> +{
-> +	unsigned int n, cts;
-> +
-> +	mtk_hdmi_get_ncts(sample_rate, clock, &n, &cts);
+Tested-on: D-Link DGE-550T Rev-A3
+Signed-off-by: Moon Yeounsu <yyyynoom@gmail.com>
+---
+Question:
+	This might be a bit off-topic, but I don’t fully understand why a single global
+	`rtnl_lock` is used for synchronization. While I may not be fully aware of the 
+	design rationale, it seems somewhat suboptimal. I believe it could be improved.
+---
+ drivers/net/ethernet/dlink/dl2k.c | 11 +++++++++--
+ drivers/net/ethernet/dlink/dl2k.h |  5 +++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-drm_hdmi_acr_get_n_cts() ?
-
-> +
-> +	regmap_write(hdmi->regs, AIP_N_VAL, n);
-> +	regmap_write(hdmi->regs, AIP_CTS_SVAL, cts);
-> +}
-> +
-
-[...]
-
-> +
-> +static int mtk_hdmi_v2_audio_hw_params(struct device *dev, void *data,
-> +				       struct hdmi_codec_daifmt *daifmt,
-> +				       struct hdmi_codec_params *params)
-> +{
-> +	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	if (hdmi->audio_enable) {
-> +		mtk_hdmi_audio_params(hdmi, daifmt, params);
-> +		mtk_hdmi_v2_aud_output_config(hdmi, &hdmi->mode);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int mtk_hdmi_v2_audio_startup(struct device *dev, void *data)
-> +{
-> +	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	mtk_hdmi_v2_hw_aud_enable(hdmi, true);
-> +	hdmi->audio_enable = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtk_hdmi_v2_audio_shutdown(struct device *dev, void *data)
-> +{
-> +	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	hdmi->audio_enable = false;
-> +	mtk_hdmi_v2_hw_aud_enable(hdmi, false);
-
-Most likely you need to stop sending the AUDIO packet too. Or is it dome
-by the hardware?
-
-> +}
-> +
-> +static int mtk_hdmi_v2_audio_mute(struct device *dev, void *data, bool enable, int dir)
-> +{
-> +	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	mtk_hdmi_v2_hw_aud_mute(hdmi, enable);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hdmi_codec_ops mtk_hdmi_v2_audio_codec_ops = {
-> +	.hw_params = mtk_hdmi_v2_audio_hw_params,
-> +	.audio_startup = mtk_hdmi_v2_audio_startup,
-> +	.audio_shutdown = mtk_hdmi_v2_audio_shutdown,
-> +	.mute_stream = mtk_hdmi_v2_audio_mute,
-> +	.get_eld = mtk_hdmi_audio_get_eld,
-> +	.hook_plugged_cb = mtk_hdmi_v2_audio_hook_plugged_cb,
-> +};
-
-Do you plan to switch to the OP_HDMI_AUDIO? I'd really like to see
-bridges use the framework instead of implementing everthing on their
-own.
-
-> +
-> +static __maybe_unused int mtk_hdmi_v2_suspend(struct device *dev)
-> +{
-> +	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
-> +
-> +	mtk_hdmi_v2_disable(hdmi);
-> +
-> +	return 0;
-> +}
-> +
-
+diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
+index d0ea92607870..2d929a83e101 100644
+--- a/drivers/net/ethernet/dlink/dl2k.c
++++ b/drivers/net/ethernet/dlink/dl2k.c
+@@ -865,7 +865,7 @@ tx_error (struct net_device *dev, int tx_status)
+ 	frame_id = (tx_status & 0xffff0000);
+ 	printk (KERN_ERR "%s: Transmit error, TxStatus %4.4x, FrameId %d.\n",
+ 		dev->name, tx_status, frame_id);
+-	dev->stats.tx_errors++;
++	np->tx_errors++;
+ 	/* Ttransmit Underrun */
+ 	if (tx_status & 0x10) {
+ 		dev->stats.tx_fifo_errors++;
+@@ -904,7 +904,7 @@ tx_error (struct net_device *dev, int tx_status)
+ 	}
+ 	/* Maximum Collisions */
+ 	if (tx_status & 0x08)
+-		dev->stats.collisions++;
++		np->collisions++;
+ 	/* Restart the Tx */
+ 	dw32(MACCtrl, dr16(MACCtrl) | TxEnable);
+ }
+@@ -1074,6 +1074,7 @@ get_stats (struct net_device *dev)
+ #endif
+ 	unsigned int stat_reg;
+ 
++	spin_lock_irq(&np->stats_lock);
+ 	/* All statistics registers need to be acknowledged,
+ 	   else statistic overflow could cause problems */
+ 
+@@ -1085,6 +1086,7 @@ get_stats (struct net_device *dev)
+ 	dev->stats.multicast = dr32(McstFramesRcvdOk);
+ 	dev->stats.collisions += dr32(SingleColFrames)
+ 			     +  dr32(MultiColFrames);
++	dev->stats.collisions += np->collisions;
+ 
+ 	/* detailed tx errors */
+ 	stat_reg = dr16(FramesAbortXSColls);
+@@ -1095,6 +1097,8 @@ get_stats (struct net_device *dev)
+ 	dev->stats.tx_carrier_errors += stat_reg;
+ 	dev->stats.tx_errors += stat_reg;
+ 
++	dev->stats.tx_errors += np->tx_errors;
++
+ 	/* Clear all other statistic register. */
+ 	dr32(McstOctetXmtOk);
+ 	dr16(BcstFramesXmtdOk);
+@@ -1123,6 +1127,9 @@ get_stats (struct net_device *dev)
+ 	dr16(TCPCheckSumErrors);
+ 	dr16(UDPCheckSumErrors);
+ 	dr16(IPCheckSumErrors);
++
++	spin_unlock_irq(&np->stats_lock);
++
+ 	return &dev->stats;
+ }
+ 
+diff --git a/drivers/net/ethernet/dlink/dl2k.h b/drivers/net/ethernet/dlink/dl2k.h
+index 195dc6cfd895..dc8755a69b73 100644
+--- a/drivers/net/ethernet/dlink/dl2k.h
++++ b/drivers/net/ethernet/dlink/dl2k.h
+@@ -372,6 +372,8 @@ struct netdev_private {
+ 	struct pci_dev *pdev;
+ 	void __iomem *ioaddr;
+ 	void __iomem *eeprom_addr;
++	// To ensure synchronization when stats are updated.
++	spinlock_t stats_lock;
+ 	spinlock_t tx_lock;
+ 	spinlock_t rx_lock;
+ 	unsigned int rx_buf_sz;		/* Based on MTU+slack. */
+@@ -401,6 +403,9 @@ struct netdev_private {
+ 	u16 negotiate;		/* Negotiated media */
+ 	int phy_addr;		/* PHY addresses. */
+ 	u16 led_mode;		/* LED mode read from EEPROM (IP1000A only) */
++
++	u64 collisions;
++	u64 tx_errors;
+ };
+ 
+ /* The station address location in the EEPROM. */
 -- 
-With best wishes
-Dmitry
+2.49.0
+
