@@ -1,129 +1,169 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292522641CC;
-	Mon, 21 Apr 2025 12:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEBD264F8F
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745239345; cv=none; b=m4KVXsCklYmCnRbWZe7gixB5qjdJl2X4nsybctZTSYcZjyvt8IiYO5RAx2dmbtmxtKWxn04HHbsJoq4E7hxKOzRMa7jhGIKIguwfXOvFrUMR07zvnbIaTLjp02bPU3ncR5U2Z3RaXVoF0mpCmVWxy0p0hVa1tiZKJi6x1OKd3ck=
+	t=1745239363; cv=none; b=nwA08IXSPKamc9VIxojXfM8P/1yO3jWTTJEj0y1UOY7bQnEGbSM0hIPDkXBfuGJlC1+QbZnMUeBkRR9p/I2NfOuethXWvjVyjzh/ugQ3iS/MdCUNF28wwEaT4Vwgcl1HbwYWF1f8j/hTusBNh1oCgqTzQJgn99Q/aRjdtBZxPco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745239345; c=relaxed/simple;
-	bh=ySaU0zfcByRkaTwII81wn1XRoHdzTb73+Y3DGUNQiWA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PG+jI8f6yTS2sQEecB2+nNAK3x5Rpdc6O+9qbhRb6JKhhG0Aj9Mn5lWYn/CWpD1z5n3+dQRXUGKtG92/6jwSGIKpmVlyBcuwTJq49AhhsLwbOLt7/yQEFlKcrqtvbucojI8rrGfc7gYxesrML2n6pKsNlG2VT559i/1XB+Aphdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hIw4797F; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hIw4797F"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476ae781d21so41628431cf.3;
-        Mon, 21 Apr 2025 05:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745239343; x=1745844143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7PTLCflwUHpQ/HL4KjpSfyOHQhDYwwUWvDGsEADJNO8=;
-        b=hIw4797FRdCjcHq3SDDQJ57VgiSXzhTZC5dGXYxVHS6P7LZDImMqn8/50dNTY1iBRz
-         Hm2wCTXhWpF7UlPFeeDI20ym/2+RD4X67LC00G2jTa+aftwr/edX+yy9XPMw57LPoY3J
-         29Xfo4m1JFwNCJMF7Ajv54kPSh5AvG3F2BjeSSAIm7dXRV4lBHs4yxWv9rdv4awz02NK
-         DGNumUL9zpGKtOTsiaTB73+lCS7RliM9uRKN/twXxDMZa7hyCMt7xDRgZfK5phoLQMnr
-         eI1258TK6xV/zDyuo95/SeGReQ0ZbiBQxKIGUNlcWYsDhYOHtdNzD7zOaHZSHG1l3AJD
-         wKCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745239343; x=1745844143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7PTLCflwUHpQ/HL4KjpSfyOHQhDYwwUWvDGsEADJNO8=;
-        b=Llw0Hj1x8TIlakArAM5kizdUpWYyQbdvCArRezg/HGKKuNM9Vz0qHaze0keHtC1sdx
-         kQFaEaZHBq27Wp/UNKCQm1K/Dqivl9ZBAEhTHBFNUBtimv+ZXasHxi2S2eJHF43RR1U2
-         K5qikc3KNK4lddl8iE7yAGILCO3xPy1z/Xd+/WEKZj3CXp80u5rEmsOj/Er0IBe9Wwwr
-         Bfz8g/H+TTCEtLtse6u0+Sdel29WcNXTi1NkfYeoJrq+TyRzlnItNodvpbTt5GBUZGny
-         F1+VBCTyprYVO3XNEa8evOkzWzUdzUC/0UMDwBgUTRmfb83mQhHsA4FOPXFNSKCeNgOy
-         C3lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVMiqA+aBrdVrRalF4zdFSB7QUC1U9Oy5NnT9R+GbQjZDGPmRM10ijpVKSFJQHDSVdlnB6CF9Nw+jmBNOy@vger.kernel.org, AJvYcCWrrJkZZO/GlwR9IF3GbmAOFIacusUWwntaTwyQyQHYkLo8O2zkwjFkoTaLCjWgOt8tz4CuXVfG@vger.kernel.org, AJvYcCX9U+cd1MKbzggPhuHruHcxBXJnrEUmYs+kIYF4SVXJy2+UHIpLFoYfjgpjpj7BLnnu+8cq1jE4/C4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtqb8lnBEWAnIFZ02B/FbpRjKb+BrE0cM6F27diV7S9s5h46Fn
-	mzR0irZo8qKn3F5k5IgX1YslslE7sBAwBAkcLF9E2f66u7F1S6A34K6bxFMhPdarVgo45SAxm9m
-	i7KipsGjfTE/BjTdmXxp7ckzGipc=
-X-Gm-Gg: ASbGnctujlnu5pdAEaaET4qBXsM+VEqXFRLZ4yRGQlm241NrziyEPYUf6Y84L1XPbsV
-	egznxIjj59Kj6WkFjB7ArJH/WDpyk4emWr0xReRnX4ZBhE3EXb/b1CdZWe3PZ6lBuonZpSkNDIa
-	KtfAUBmLnQhFTraJNfkoa1mZawB4vj8LC+dDOGiAH0p2GcTVQu7R0UOw==
-X-Google-Smtp-Source: AGHT+IFGRI6w4PZTzPqR/wy6WxWpUIfMgCPO/lf/RGWDPHDkzKldCNpcwF092qguuCIgto3Q9ayDtKHGpNvNYtXoYHE=
-X-Received: by 2002:ac8:5796:0:b0:476:875e:516d with SMTP id
- d75a77b69052e-47aec4c44e9mr191962431cf.36.1745239342859; Mon, 21 Apr 2025
- 05:42:22 -0700 (PDT)
+	s=arc-20240116; t=1745239363; c=relaxed/simple;
+	bh=nRO5OSLtxXidrQVlQfeNk550Tzm4uT/LC9HCLrmY1fs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2dVFL3o0bauT6bGd1cuwwYJlb//sgXPfj+zgpnSngC7b9oguAFpFcUGXqm5/84cA9C8Xmw1YFj069OwSv3+/O9eVf4eYA3f1CDJZLWJN8u5HHTTvr/YdDEARMWsPXUjPuO8xVp+h/nUJBVXA6lVAIa3uVHGkyNSTWzOW4EpYMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
+	by Atcsqr.andestech.com with ESMTP id 53LCKdH8046275
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 20:20:39 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
+	by Atcsqr.andestech.com with ESMTPS id 53LCJT2d045671
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
+	Mon, 21 Apr 2025 20:19:29 +0800 (+08)
+	(envelope-from ben717@andestech.com)
+Received: from atctrx.andestech.com (10.0.15.11) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
+ 2025 20:19:29 +0800
+Date: Mon, 21 Apr 2025 20:19:29 +0800
+From: Ben Zong-You Xie <ben717@andestech.com>
+To: Rob Herring <robh@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <paul.walmsley@sifive.com>,
+        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <tglx@linutronix.de>,
+        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        <tim609@andestech.com>
+Subject: Re: [PATCH 4/9] dt-bindings: interrupt-controller: add Andes
+ machine-level software interrupt controller
+Message-ID: <aAY30QwzG6/7RWhE@atctrx.andestech.com>
+References: <20250407104937.315783-1-ben717@andestech.com>
+ <20250407104937.315783-5-ben717@andestech.com>
+ <20250407141708.GA2250717-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250420013009.847851-1-gshahrouzi@gmail.com> <20250421124401.0daa6a2e@jic23-huawei>
-In-Reply-To: <20250421124401.0daa6a2e@jic23-huawei>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Mon, 21 Apr 2025 08:42:11 -0400
-X-Gm-Features: ATxdqUG2HbCo2jVQA1NMcR6DOLpddrMYAY_8SU4fLCk3lus5iMrFHCUuPeKi4mQ
-Message-ID: <CAKUZ0zLTjXPm7qGLsV==fJZZEFMEiEM78-qgZ__DYhqL7Te5BQ@mail.gmail.com>
-Subject: Re: [PATCH v4] staging: iio: ad5933: Correct settling cycles encoding
- per datasheet
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
-	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250407141708.GA2250717-robh@kernel.org>
+User-Agent: Mutt/2.1.4 (2021-12-11)
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
+X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:Atcsqr.andestech.com 53LCKdH8046275
 
-On Mon, Apr 21, 2025 at 7:44=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Sat, 19 Apr 2025 21:30:09 -0400
-> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
->
-> > The AD5933 datasheet (Table 13) lists the maximum cycles to be 0x7FC
-> > (2044).
+On Mon, Apr 07, 2025 at 09:17:08AM -0500, Rob Herring wrote:
+> [EXTERNAL MAIL]
+> 
+> On Mon, Apr 07, 2025 at 06:49:32PM +0800, Ben Zong-You Xie wrote:
+> > Add the DT binding documentation for Andes machine-level software
+> > interrupt controller.
 > >
-> > Clamp the user input to the maximum effective value of 0x7FC cycles.
+> > In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
+> > second time with all interrupt sources tied to zero as the software
+> > interrupt controller (PLICSW). PLICSW can generate machine-level software
+> > interrupts through programming its registers.
 > >
-> > Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 =
-Impedance Converter, Network Analyzer")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> I'm taking this the slow path as it has been wrong a very long time
-> and there is a lot of churn on IIO staging drivers right now so we may
-> have other stuff that I don't want to delay building on top of this.
-Got it, thanks.
->
-> Applied to the togreg branch of iio.git and pushed out as testing.
->
-> Jonathan
->
+> > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
 > > ---
-> > Changes in v4:
-> >       - Provide clear git body description.
-> > Changes in v3:
-> >       - Only include fix (remove refactoring which will be its own
-> >         separate patch).
-> > Changes in v2:
-> >         - Fix spacing in comment around '+'.
-> >         - Define mask and values for settling cycle multipliers.
-> > ---
-> >  drivers/staging/iio/impedance-analyzer/ad5933.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >  .../andestech,plicsw.yaml                     | 48 +++++++++++++++++++
+> >  MAINTAINERS                                   |  1 +
+> >  2 files changed, 49 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
 > >
-> > diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/=
-staging/iio/impedance-analyzer/ad5933.c
-> > index d5544fc2fe989..f8fcc10ea8150 100644
-> > --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-> > +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> > @@ -411,7 +411,7 @@ static ssize_t ad5933_store(struct device *dev,
-> >               ret =3D ad5933_cmd(st, 0);
-> >               break;
-> >       case AD5933_OUT_SETTLING_CYCLES:
-> > -             val =3D clamp(val, (u16)0, (u16)0x7FF);
-> > +             val =3D clamp(val, (u16)0, (u16)0x7FC);
-> >               st->settling_cycles =3D val;
-> >
-> >               /* 2x, 4x handling, see datasheet */
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+> > new file mode 100644
+> > index 000000000000..5432fcfd95ed
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+> > @@ -0,0 +1,48 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/andestech,plicsw.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Andes machine-level software interrupt controller
+> > +
+> > +description:
+> > +  In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
+> > +  second time with all interrupt sources tied to zero as the software interrupt
+> > +  controller (PLIC_SW). PLIC_SW can generate machine-level software interrupts
+> > +  through programming its registers.
+> > +
+> > +maintainers:
+> > +  - Ben Zong-You Xie <ben717@andestech.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - andestech,qilai-plicsw
+> > +      - const: andestech,plicsw
+> 
+> Drop the fallback. If you have another implementation that's compatible,
+> then andestech,qilai-plicsw will be the fallback.
 >
+
+Hi Rob,
+
+Maybe this is a stupid question, but I don't understand the reason for
+dropping the fallback. I follow the same logic in commit 1267d9831171
+(dt-bindings: interrupt-controller: sifive,plic: Document Renesas RZ/Five
+SoC). Thus, I think if there is a new SoC also equipped with Andes
+PLIC-SW (NCEPLIC100-SW), the SoC vendor can simply add a new compatible
+string under the enum.
+
+Also, I will rename andestech,plisw to andestech,nceplic100-sw if the
+fallback string is not dropped.
+
+Thanks,
+Ben
+
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts-extended:
+> > +    minItems: 1
+> > +    maxItems: 15872
+> > +
+> > +additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts-extended
+> > +
+> > +examples:
+> > +  - |
+> > +    interrupt-controller@400000 {
+> > +      compatible = "andestech,qilai-plicsw", "andestech,plicsw";
+> > +      reg = <0x400000 0x400000>;
+> > +      interrupts-extended = <&cpu0intc 3>,
+> > +                            <&cpu1intc 3>,
+> > +                            <&cpu2intc 3>,
+> > +                            <&cpu3intc 3>;
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index a0ccac1cca29..645d7137cb07 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -20728,6 +20728,7 @@ F:    include/linux/irqchip/riscv-imsic.h
+> >  RISC-V ANDES SoC Support
+> >  M:   Ben Zong-You Xie <ben717@andestech.com>
+> >  S:   Maintained
+> > +F:   Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
+> >  F:   Documentation/devicetree/bindings/riscv/andes.yaml
+> >
+> >  RISC-V ARCHITECTURE
+> > --
+> > 2.34.1
+> >
