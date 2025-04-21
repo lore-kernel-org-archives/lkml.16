@@ -1,73 +1,98 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1421DDC0B
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F033B264A77;
+	Mon, 21 Apr 2025 12:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238544; cv=none; b=NVMJnZWPj/5QPkcT+ad+LWJw4aWu5TPMagdT9xORVPcYkaMmXDCTLJb9miklUSXk03cXG7O780MFCLaqnInOvIVVOp0N3HM46itvSw7KQ+Cq/RVgVBsz//3v+UZlHkZwvV3poykO6ZNY/W2hzbZsm99pMqFNTpFEjSY1rEWQYvE=
+	t=1745238564; cv=none; b=dIhOfR+/ey9Jb3xz+YG9V7JPRvISAgFzOum/ALN4cAh23oNp6dy4uQ4XdYSPpzOSiV1bfgWG5KaT6/wghbXZOJT0hg445kI1AyDSPXlz2iOrG6PwWJBTLU3KqdBx0RIVgYoTb6P7rTIdYUD7aW1HBeIQKE9mHenv8jTAkTCPwBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238544; c=relaxed/simple;
-	bh=GZ4EAJ6Hr/EOxOC+zB3KAgeRnUiGHQV35R+BS6pG7pk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ryAlZu6PiNYuYAARocaltr1+poGCvkkM2y++SMblognEFYkOjrTJpJ0/QKOux5v/rCiZ++FbMTHPc5ATv2bAkeMqgyblTgcIcRjI0eRBCh2rItWQyRmURXX0qfTzlOWmkrvu+wy2+1LKRnwWdCOhlRL6Vv7Pm3QcWAjjzCnXhKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MKC2q2Q7; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745238564; c=relaxed/simple;
+	bh=a4mG/AcamjUGOjuPHpCrzRiY4gqqnB5bypmobsfll8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f1/P0Mzu7oYUjRw68+ZX8glGK0Zj20ToyaAmdR4lsFKjTp0I/QLZg3rE6aRIkWgeJOSSjM4POOYtrDJOj2Gm53I0hVh91j0ZRbMmajkHFGn6zY86nAUyhrb7pWN9y2r3FFjb8dZcxBQVDPaNCMen8+yZ0yPLckhbiaTWQXwVjVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQfhxBMV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MKC2q2Q7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745238530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IxqkS7lt69bHaMltk5gXyQH9LvD91wxpy08FtaUvczY=;
-	b=MKC2q2Q7Bb0B+cCkXxkXX0Fv0vs72j4GnSKdWHbh34NAG84FoV1nSMfsjzSYkhTlcltZRc
-	sr9k+ZM6Ue/A7X7FfeSb0CZEeWU07d3xBLPFayfPxr8QfRCwDVE14S9Wr5ttuf2FJSkAVW
-	PN/+SP3KRJ6WlB3kU9My6Oxq/R3PpLQ=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
-	Kees Cook <kees@kernel.org>,
-	Greg Ungerer <gerg@linux-m68k.org>
-Cc: linux-hardening@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] m68k: mm: Replace strcpy() with strscpy() in hardware_proc_show()
-Date: Mon, 21 Apr 2025 14:28:37 +0200
-Message-ID: <20250421122839.363619-1-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQfhxBMV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A32BC4CEE4;
+	Mon, 21 Apr 2025 12:29:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745238563;
+	bh=a4mG/AcamjUGOjuPHpCrzRiY4gqqnB5bypmobsfll8Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IQfhxBMVtKQOx6JV5m/XqoB2GmmquSJluCneDYYoJLRqr8/nPzW22A8zSUTTcZjGn
+	 1ff4COTbUlLe3wf4j0toSvLPBssKXAdwKPCvGI+4vwV7GGmwOrwKsynU7mqX/RvJRL
+	 ctwQCQ2Mwtu1w9IhkRyKVFo1ecb76H5zilU3GB2/Xy6aBoMLysM2ve6ABX/fj95rqw
+	 OUlzT445HfS/CYS7LizuNAiOK9bfBmFb3LAmRrkx6R/CTRV5oF1B8Z4WKiWWgMh/2F
+	 JmidIjkXGSB8ga6RJZV6/uJWIjwd5AMITwKMNcWoNZnR3YfBc4T1E+SLgyzyWvjsu1
+	 6XcDA8EL2bxPg==
+Date: Mon, 21 Apr 2025 13:29:14 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+ stable@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] staging: iio: adc: ad7816: Allow channel 7 for
+ all devices
+Message-ID: <20250421132914.7a456dac@jic23-huawei>
+In-Reply-To: <20250420014910.849934-2-gshahrouzi@gmail.com>
+References: <20250420014910.849934-1-gshahrouzi@gmail.com>
+	<20250420014910.849934-2-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-strcpy() is deprecated; use strscpy() instead.
+On Sat, 19 Apr 2025 21:49:06 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/m68k/kernel/setup_mm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> According to the datasheet on page 9 under the channel selection table,
+> all devices (AD7816/7/8) are able to use the channel marked as 7. This
+> channel is used for diagnostic purposes by routing the internal 1.23V
+> bandgap source through the MUX to the input of the ADC.
+> 
+> Modify the channel validation logic to permit channel 7 for all
+> supported device types.
+> 
+> Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices")
 
-diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
-index 0fba32552836..c7e8de0d34bb 100644
---- a/arch/m68k/kernel/setup_mm.c
-+++ b/arch/m68k/kernel/setup_mm.c
-@@ -484,7 +484,7 @@ static int hardware_proc_show(struct seq_file *m, void *v)
- 	if (mach_get_model)
- 		mach_get_model(model);
- 	else
--		strcpy(model, "Unknown m68k");
-+		strscpy(model, "Unknown m68k");
- 
- 	seq_printf(m, "Model:\t\t%s\n", model);
- 	for (mem = 0, i = 0; i < m68k_num_memory; i++)
--- 
-2.49.0
+Adding a missing channel is not a fix.  It is a feature enhancement.
+Not appropriate for backporting in general (though obviously someone wanting
+to use it might do so).
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  drivers/staging/iio/adc/ad7816.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
+> index 6c14d7bcdd675..a44b0c8c82b12 100644
+> --- a/drivers/staging/iio/adc/ad7816.c
+> +++ b/drivers/staging/iio/adc/ad7816.c
+> @@ -190,11 +190,11 @@ static ssize_t ad7816_store_channel(struct device *dev,
+>  		dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for %s.\n",
+>  			data, indio_dev->name);
+>  		return -EINVAL;
+> -	} else if (strcmp(indio_dev->name, "ad7818") == 0 && data > 1) {
+> +	} else if (strcmp(indio_dev->name, "ad7818") == 0 && data > 1 && data != AD7816_CS_MASK) {
+
+Why use the mask?  I think this is something entirely unrelated that just happens to have
+the value 7.
+
+>  		dev_err(&chip->spi_dev->dev,
+>  			"Invalid channel id %lu for ad7818.\n", data);
+>  		return -EINVAL;
+> -	} else if (strcmp(indio_dev->name, "ad7816") == 0 && data > 0) {
+> +	} else if (strcmp(indio_dev->name, "ad7816") == 0 && data > 0 && data != AD7816_CS_MASK) {
+>  		dev_err(&chip->spi_dev->dev,
+>  			"Invalid channel id %lu for ad7816.\n", data);
+>  		return -EINVAL;
 
