@@ -1,127 +1,132 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F18527463;
-	Mon, 21 Apr 2025 19:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D3627463;
+	Mon, 21 Apr 2025 19:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263209; cv=none; b=XGlBz3+Ix+VXac2ymOHr+BtQQdRnWLts0pTzr79PizpY8w1Vop+yeTrPV9DjzZHHqDGY2gCPGNQRVZv7Na2wVmc0jr0uHcrK1d7N7blifi1/LbUG5UYUX54YJ+jTjb7ugjJ7SRvzdVAxXgMGiV60e4mqglMzk8q3Voi4DDzjRsQ=
+	t=1745263258; cv=none; b=mIv1G/zXOXcq8LUx7TTEsMz0Z2qrN+mi+HF8mX2fXgkZ1VPrsMOobWSsEfxDU39Q9u6MXbUWiAV0A1L0mYpnzfoZJHxkK/n2GFkA4EzCJQvRoVXLCHIvZDwdUWRTXDUGRToX2f4W5XphAQLdzhlAvQz3fbEcp+UjdRx6es8IHWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263209; c=relaxed/simple;
-	bh=GYhBSuvOd94T2wIA87TS8lozvlXyu0nmtsd4xTPXieo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VgJFt+5dmg/ucc993f9Bxwwp7oS86iMVOHwEUIpurOZmXf8RC02kP2utjvyHSLJFepEZyvPMOREpFJGA9OoZz/a4YLM5Np7aEoeyjj1ygfHQouYIf2zQVUq6Szj+lyqcCClDj2SIIpp2KEygGxy9nXr0sWNYmIoXXM0TlOxSz4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jPL1nqGl; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745263258; c=relaxed/simple;
+	bh=FIgFzNnBr++vmjtDk8pCe3cYTsEPiaXPjORFzQs4bws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rhdfod3r75r42uuog+mQjOWBu4DLgSogQsLLSKWDS8eSKTEbo2+61vaRi8PEJ4N2od7jOOJZat236vaqxz5bnNICwPtxhK86cYPC2WvIB884wLQLEzrsCti+VCO81mUi4hjKn5hDO8oFeoQ6g+X1W3lBSi4rLJg//LQftsZvmBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JYRwM/jE; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPL1nqGl"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54298ec925bso6361288e87.3;
-        Mon, 21 Apr 2025 12:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745263204; x=1745868004; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GGSXO/dPI5+jUcYdtbCw4JQ75NbzfN4qotDsVJGePCc=;
-        b=jPL1nqGlebOvOYR0rk3/LGVgBr/NGGib0/Tz76vBsE8hDx/Qe9djgbpbEWMq6A3OMp
-         f7wMjKlr3ciMKcRFYrQzaeBBNE+1JyjGwMGWT+Df+r/KllbLOYWb71N0XTdwKu7vmLcp
-         HqqtkB7n/1JuYTl3ZcmDlBvPIXB6ZZvDViQeh0omTvQvmBPgMAqjnhzHK6MUEmFz2ueC
-         16Pe5giNYccNyDQDMcyHc5mO3hGHiufW3TcBxsU3wBn4hppGk/MjFSB/trL0L7+lR/cV
-         fu084dtaF7cAPvtwOEYCbbS3GL61qrziTbYYHfIPJr9SofD20772RVqjkrIWtOcjWRji
-         /LRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263204; x=1745868004;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GGSXO/dPI5+jUcYdtbCw4JQ75NbzfN4qotDsVJGePCc=;
-        b=XfWFIcnVdUnvGIxBLO2eM366zPphQQZSDEmo+SF2AO9dey9L3I0xGe1wTpD853EAcM
-         5bkS+Gl2LGNUF+EdCKTNCYR0TDYPWACKEDKhUtjKEu2rmSJRcZwh/x0fDLrI+8Xaewcm
-         Qcrh2kyex+KK+Uj9inwA9PvPLOyh34iZfO8q997C4kr1m8Yg0G7GRYV3cNK6Att+vOwz
-         98Xn1GUmtq7mRreOF2z6nsuCF0wDstay499h6ppJfzaeVAzuGiD5/EcUXwXwACDs1b+A
-         w45Oa2O63hwxmJpqewRnXzBY66RX4OQ8ZS6ZMoYzC3bEfhMGVhVJa+7+koptTaKRkNJK
-         8RCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdaQkoRuaOq2MOt6elQsZDM9p2lSJAJLsWO3nTj+YWkyGHjw8JJu/6zzcDau03p2Llj9hi3A/O9EVaEAE6qBw=@vger.kernel.org, AJvYcCWudC/ZLCNYjoO3CwVnvCbaRj5GJxi2sb/Mq8xRUVjJGuN6mTO4YxdntPSkV8jR8Tti5h/rIpClmFjqiaON@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3cJkH8A1wTPwclxd39fcD5Ilh2dv4xDkKAuoYgk8IZW53XrYx
-	qWqTg43eSfumoMiF0uJ50f9EK2wT92aGziGSs57L/tPvVxjiY8C1L7kz6iXm4xQs0FIVWhFxZ1F
-	naDlLezXCexQl40tL5E9z/V50QzPyQIzyFYSgcg==
-X-Gm-Gg: ASbGncv8h5uiuHmJe5zsJB5aoE7/ecpfQmCr8LHl5ufbAt4v/2ZNPNaCYRrTFiUw1cv
-	wCWuZZ80zg/ga4b0mq5RGH0fBQkAYyjqpnJYrgKTwJq3y9YInz5DMFVS1ofKpQYqT7jtfR7QjiH
-	Sq27d5Y0+o+72MCoC41UyeY5vp1reQ09c=
-X-Google-Smtp-Source: AGHT+IGWThofn9kjjT1rYmsVcaPR8mJeAZVdYEgrHXFQvPh13eYbpQ/cssZm6gZPLFnSLYTrbE/DfygAH4fyrYRssLM=
-X-Received: by 2002:a05:6512:3b93:b0:54d:6574:faec with SMTP id
- 2adb3069b0e04-54d6e62b403mr3576751e87.20.1745263204132; Mon, 21 Apr 2025
- 12:20:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JYRwM/jE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=RBxdBp38IXRTVJ8jY24aTNAum3SlxGZFX20fKSQ3ODk=; b=JYRwM/jEdQoWgGqz6IdOEGv5e0
+	D/tDikDnrG0Zhs6L62dkRU3gpNIyQa5Sqn7jXvKICVVMX2FiKeVl8hrgfKNt3ivSdKTUjvpBpaYUp
+	oJPbnMmr3MS/8wX/kBL9F7OafQgHlIjx/ey0huY5PAOPGA41R+mS+/zf0cnLfDxdTQhWqhnW6/7TS
+	O2ei9BBeMgvKyeBHj44IIspAKGjekqp4k4aqAVcA18ljtzZbX61rFTzz0QFRpLYeDSdVHnTuqQxLc
+	9WUa3/qvqz8TLAiH3FQyEK4Jr3cX1Xeox3El7JzIOjKSa5iWn3BcuuVajsAIBnbyH8inmnyXZS2bc
+	xUq6JpPA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50644)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u6wh1-0003I5-1f;
+	Mon, 21 Apr 2025 20:20:35 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u6wgw-0006hE-0M;
+	Mon, 21 Apr 2025 20:20:30 +0100
+Date: Mon, 21 Apr 2025 20:20:29 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421072914.466092-1-chris.lu@mediatek.com> <20250421072914.466092-3-chris.lu@mediatek.com>
-In-Reply-To: <20250421072914.466092-3-chris.lu@mediatek.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Mon, 21 Apr 2025 15:19:51 -0400
-X-Gm-Features: ATxdqUGeWWnEGKGhSE2EeBxAvnphjMU67tQYCCQZGa1NbEsf5e652QVfEsmaqSg
-Message-ID: <CABBYNZLb_yqUsnRzcUxxtFnqEYwhD4hRXaAn-QwT8s6cZvTv_A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] Bluetooth: btmtksdio: Do close if SDIO card
- removed without close
-To: Chris Lu <chris.lu@mediatek.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Jiande Lu <jiande.lu@mediatek.com>, 
-	Will Lee <will-cy.lee@mediatek.com>, SS Wu <ss.wu@mediatek.com>, 
-	Steve Lee <steve.lee@mediatek.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-mediatek <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Chris,
+On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index 45819b2358002..2ddc1ce2439a6 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -74,19 +74,21 @@ properties:
+>        - rev-rmii
+>        - moca
+>  
+> -      # RX and TX delays are added by the MAC when required
+> +      # RX and TX delays are part of the board design (through PCB traces). MAC
+> +      # and PHY must not add delays.
+>        - rgmii
+>  
+> -      # RGMII with internal RX and TX delays provided by the PHY,
+> -      # the MAC should not add the RX or TX delays in this case
+> +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
+> +      # delays are included in the board design; this is the most common case
+> +      # in modern designs.
+>        - rgmii-id
+>  
+> -      # RGMII with internal RX delay provided by the PHY, the MAC
+> -      # should not add an RX delay in this case
+> +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
+> +      # part of the board design.
+>        - rgmii-rxid
+>  
+> -      # RGMII with internal TX delay provided by the PHY, the MAC
+> -      # should not add an TX delay in this case
+> +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
+> +      # part of the board design.
+>        - rgmii-txid
+>        - rtbi
+>        - smii
 
-On Mon, Apr 21, 2025 at 3:29=E2=80=AFAM Chris Lu <chris.lu@mediatek.com> wr=
-ote:
->
-> To prevent Bluetooth SDIO card from being physically removed suddenly,
-> driver needs to ensure btmtksdio_close is called before btmtksdio_remove
-> to disable interrupts and txrx workqueue.
->
-> Signed-off-by: Chris Lu <chris.lu@mediatek.com>
+Sorry, but I don't think this wording improves the situation - in fact,
+I think it makes the whole thing way more confusing.
 
-Ditto, please add Fixes tag.
+Scenario 1: I'm a network device driver author. I read the above, Okay,
+I have a RGMII interface, but I need delays to be added. I'll detect
+when RGMII-ID is used, and cause the MAC driver to add the delays, but
+still pass PHY_INTERFACE_MODE_RGMII_ID to phylib.
 
-> ---
->  drivers/bluetooth/btmtksdio.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.=
-c
-> index 3c66e3ee9834..c16a3518b8ff 100644
-> --- a/drivers/bluetooth/btmtksdio.c
-> +++ b/drivers/bluetooth/btmtksdio.c
-> @@ -1447,11 +1447,15 @@ static void btmtksdio_remove(struct sdio_func *fu=
-nc)
->         if (!bdev)
->                 return;
->
-> +       hdev =3D bdev->hdev;
-> +
-> +       /* Make sure to call btmtksdio_close before removing sdio card */
-> +       if (test_bit(BTMTKSDIO_FUNC_ENABLED, &bdev->tx_state))
-> +               btmtksdio_close(hdev);
-> +
->         /* Be consistent the state in btmtksdio_probe */
->         pm_runtime_get_noresume(bdev->dev);
->
-> -       hdev =3D bdev->hdev;
-> -
->         sdio_set_drvdata(func, NULL);
->         hci_unregister_dev(hdev);
->         hci_free_dev(hdev);
-> --
-> 2.45.2
->
+Scenario 2: I'm writing a DT file for a board. Hmm, so if I specify
+rgmii because the delays are implemented in the traces, but I need to
+fine-tune them. However, the documentation says that delays must not
+be added by the MAC or the PHY so how do I adjust them. I know, I'll
+use rgmii-id because that allows delays!
 
+I suspect neither of these two are really want you mean, but given
+this wording, that's exactly where it leads - which is more
+confusion and less proper understanding.
 
---=20
-Luiz Augusto von Dentz
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
