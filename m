@@ -1,178 +1,186 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2083.outbound.protection.outlook.com [40.107.100.83])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5EC224EA;
-	Mon, 21 Apr 2025 16:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745254045; cv=fail; b=SIAu4mBIerjt0yakb49VBK4Fye2pE1prnRQw+vvUfyKsqB66S1W2vfgCV6NBAQzz4TH22Ubr/1NnyelpvA4r9ChuDdOAA6ESx0O5Q3xFzmZR3zcpeKvzLYobnhwHDk1Rkf82PqDFdxYTQa3s4lZ6eWeNTJzD16qAZsa6YOqTrl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745254045; c=relaxed/simple;
-	bh=RyoYHvirLNOs1Mdwh6lJI8kI6cksiOg+TSaaJH42Koc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=T6Pn8Q/NNW/43/hUSTXqvkhTjAEeKaRftWqvLCjUiNyXjVmKgnhJmVeOfqizglEGAbs04KS3NG/pYmLednkt2iSQEESTmjEadP+Ji+5Rqrlt4R6r+Y9cBfvMdl7YH2XW+FtcqyjNAm06Wc7+g7DAYPcPjAhgNS4NbVxy/c8bako=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=UxtkzFIe; arc=fail smtp.client-ip=40.107.100.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24642E401
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745254046; cv=none; b=QjhxBNGr0LR1D8o44YbGbG8o6PDYLTiwjkogZof/QmHdH+g6fpEsGxRZMZpO6t2OHz+foMyKmzPM/Y/0xmnimhnZY3+5AFIpk+dq/NABRIYHDu7lt1HTFL9DSsCztweZ0qQ0pL/qz9Yx2cOdK/uPLOftVJZIShcMgWYzI5+f0cg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745254046; c=relaxed/simple;
+	bh=zQ0EGh/F12wna3NvvINOFg8KOFnSaliwDsC8vZaldpg=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=D0cF+8d+QVt274ZLfKVWGTRtYAh+0mkcZiXwrVg2/TMTCa/DMQXpBS1sSLcQSKdvuW3iPC+C8T+HjB5tgXAiM4AL5Tjgg3Rm1cEcLwsZDffD4zLNm9IMLB2WsMZ3Ok2/bhRHITep3EWeiL7CW+XPv2TQX1Nm8D8upw/qc8jFCkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=MT7IGPsT; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="UxtkzFIe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y9jCiqM1jQYAzjvvGwdnaaShjaUmKZMr54Gp75kplHfefGADbF67/CRwSNql3h2w1MjGai4e6wiLPDuCpCHQXVbdRDOnaH/o7crVD2EmoC2Dznm/0q+AdBro8O2JItaIn8ZacBInWZHWjhbI76ssBwYVj4KqW8Oywh52Hguc62SLfS3VMS0qF1I6ugvsU8V88G8ZlVn9OSOgEqU7o4dBvpFO9AxGUyZY2pYcZ6bjeZJ9x0Dx6yPgCikFSaaxX3sZdSrsREbvbty/Vgno2NzZ2m8BjY0DIilpLdxHJu4Wrd/NEzZBgAeBFwe+G+aFPU/beaDTaW8VtvUAGXmk930DPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RyoYHvirLNOs1Mdwh6lJI8kI6cksiOg+TSaaJH42Koc=;
- b=aBaa+LAC6jZgvyO65cxb00dJpwkTeU02DspzL2y3P2ij5nPozwqVeN9mYK3Lg/3cYY3a4qm7RJ3luxRUWiV3Zskxpoc7OyoL+vh3g4oheJRwC8xdjrjUcX2pnmS40H8rZLzmXSiHZ5xVB0nTR3E2HR8ld7ZxM5vbfnhxw9VN3fayN2QgUWn0vWnzy2XK6cyjlg/meQ0j2UEDzhT9fshKnS9hIwoywo6C/FLx6qToVcJ4xJ1/Oik5Itx4MkEbCCxgW1NMKteOBdDNCYaJ2hINrUahY8kKcVMT/+HXp+fwdKFgewAmivRcvnWOd78ZeSNVyl2VZWudkGUbxQyssSDN3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RyoYHvirLNOs1Mdwh6lJI8kI6cksiOg+TSaaJH42Koc=;
- b=UxtkzFIeLzwMxu/55kl2q7zG5JErkhOwb6al0ZGLPrxSNPQ03vDZnApc64cu2uUpitQBNVIetkgd3038GSNppefysVcDos826xr0aOvE0dey7u9SfnjDgGvoJiF/NvXDBRgXA3eLWNz7K13b02t0M1aLFcm2VjILlkJU0bIEKmXRaQnG3qjdVGShV+aVdbP998MVJb3fyiCbFViVHP5a+Orp0WF05VdbNHYeR8mVTvtRH9l/ZxlaYCIUO+Zu9R0VDdvVt2w0tujrEcUlu+Ka72AXcH3h15wsgYuKkuyIt01HMuJMTpGBv09BBDNOC1BV7tE6pLsgaJmWJodryLVz+A==
-Received: from BN8PR03MB5073.namprd03.prod.outlook.com (2603:10b6:408:dc::21)
- by DM6PR03MB5289.namprd03.prod.outlook.com (2603:10b6:5:24c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 21 Apr
- 2025 16:47:20 +0000
-Received: from BN8PR03MB5073.namprd03.prod.outlook.com
- ([fe80::7483:7886:9e3d:f62a]) by BN8PR03MB5073.namprd03.prod.outlook.com
- ([fe80::7483:7886:9e3d:f62a%3]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
- 16:47:13 +0000
-From: "Ng, Boon Khai" <boon.khai.ng@altera.com>
-To: Simon Horman <horms@kernel.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, "Gerlach,
- Matthew" <matthew.gerlach@altera.com>, "Ang, Tien Sung"
-	<tien.sung.ang@altera.com>, "Tham, Mun Yew" <mun.yew.tham@altera.com>, "G
- Thomas, Rohan" <rohan.g.thomas@altera.com>
-Subject: RE: [PATCH net-next v3 1/2] net: stmmac: Refactor VLAN implementation
-Thread-Topic: [PATCH net-next v3 1/2] net: stmmac: Refactor VLAN
- implementation
-Thread-Index: AQHbqF534FzGLRNwp0yA1XNTHIr18LOeruIAgA+55CA=
-Date: Mon, 21 Apr 2025 16:47:13 +0000
-Message-ID:
- <BN8PR03MB5073253767315FB81E5C76B8B4B82@BN8PR03MB5073.namprd03.prod.outlook.com>
-References: <20250408081354.25881-1-boon.khai.ng@altera.com>
- <20250408081354.25881-2-boon.khai.ng@altera.com>
- <20250411163602.GM395307@horms.kernel.org>
-In-Reply-To: <20250411163602.GM395307@horms.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN8PR03MB5073:EE_|DM6PR03MB5289:EE_
-x-ms-office365-filtering-correlation-id: f3293345-cf22-4d87-4b49-08dd80f42ac0
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?BncIRxoum9qiLnmxuNt+Tkvn1pkOT3C+IV40jXupZlrXA478btaCccqMRxWJ?=
- =?us-ascii?Q?pTiUaEL3qePsckdJy/WfxzAD3ZdAyZI9UamDoLF97ICR13PKg3fqdPiqmi6O?=
- =?us-ascii?Q?LyiBcR3w72ivBQyoJCuzAvZhMaP0bnOXblrKCEj1YAYokvvBDBRKiYzh1/yc?=
- =?us-ascii?Q?cDitGGrmuquhwNEMu/96oehJZrsdL3gkwrWQeuxVQvMopOqaQN9OIGrjHZ3m?=
- =?us-ascii?Q?wkmDf+LQ2IF0yLD1RDMfg9zlu65g6aYY+XYk+EucApHs7Ahvp4XxJWVNAiYb?=
- =?us-ascii?Q?Ih/kOK2NzgIeX/bQuH8s1id9xfcc+vlVVCTiEB5RQPdKW+joR4CwhFP5/xYz?=
- =?us-ascii?Q?9moLFe+wAR72je1TlK9n/ywME+MBN+4tMuz4fG+0gbuk4jnbxSB7iOaj9xrK?=
- =?us-ascii?Q?dJCesaekjGSHQCbXfneLQvaOGl2tJZZKb9FV2D4BKHZPyZu0hVohD5jNfpKK?=
- =?us-ascii?Q?8NF5i7tOAx+zZJHhDuE5ZX9tAAGbHBLXaQOoGsTl3DZf4Zstti883gUAnp00?=
- =?us-ascii?Q?BI1jtAA/sWPrR918iqmI2PqLhYYR4CH2yq5NMIDhXeefthsSi8DRxVF5g/6q?=
- =?us-ascii?Q?VnYFyMZdMrvlip5P2eeOpDR+PkoweJTMwzKTNQV0MuLzvJfPnqMHEAYqxDv3?=
- =?us-ascii?Q?HE8sPlP2THTtPI63H3vtzgUGZ42necUCWjtW71MYPB0ZNxQY7e69rd/xybmT?=
- =?us-ascii?Q?Br+6fCXqD4q6wG9r1+aTX0YkfsZWNEyqItu/r9o2qD7t5BnZOWokw3kEfJd0?=
- =?us-ascii?Q?6b35+1buMQhKg8/jn/I+1m9MvHUN6+k7FJ7gTfVqxVMPUmeddzvjqlSdIh9q?=
- =?us-ascii?Q?a5bm4fJVTeDTp0Cqrav/wfLijN9jKGLcZJX3czGnd0A5shui7BZeCXNwUVCi?=
- =?us-ascii?Q?kcpxkNBf1UjCQmzb0YnVx2QkDQh1jHKcoRMUWEYnocbNGSfJ/t6nMfVtzOua?=
- =?us-ascii?Q?9XP8Fjc3TRCDvt62aCr1sqKOcalpsPvxAVbgpw8pICIJdgnEFeHU793v/eri?=
- =?us-ascii?Q?NXQy73J6s4VQbai2HAimXDAO0cX2mleSQwgSYKnLoJHP+nKIL73oN2NL1Jl8?=
- =?us-ascii?Q?xSQbGXNhzrQy17ffWBysQbFMzkI/ibdzCyQ2kBI8bH7NlaYny8CvijbMhQJE?=
- =?us-ascii?Q?DOVSLCqU7BlKrIBtC7jisGQ0PD1Y3eYVsXDRUNf737WNtFpL5Cf/AEDuit9E?=
- =?us-ascii?Q?Dky7wx0FHu9phHJWQhssXwZxHJOIRoASMzEhg7fngLvxx1Mj+L+jzYuGypm7?=
- =?us-ascii?Q?9MI8Cvths6X2OxfYyWHXmbpzf36p9qzin0uuNtw5iC+qT6jRsn42eqxULbLk?=
- =?us-ascii?Q?kQY/hb2XW/OrqUiwrn7APP5eXzWFDjnhEHYc++oJnARV2+iSFqvv/KH/XHL6?=
- =?us-ascii?Q?sJGF/voT52wLMPoJXflhWhS3OnGRPAjx8H+/rGtbWIHGqZnf41H/j5Q+YIiz?=
- =?us-ascii?Q?4+41lwXTDBZXCu7ScjOKtE4Es+nAqLOswCVqs8Nu80q8K1YG7lWgRg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR03MB5073.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?YYcSwMe3C/aHzLCb12n4p6tC+F0Gh1R3B3A1Nc4Q4d9mxz5uudbjz/G5ZWoO?=
- =?us-ascii?Q?2FU2g8OJ8ImBCqDgffQmnunbMMr3q6/wNPAY/VwBRbuDdXDtIQYdmrGd/V/f?=
- =?us-ascii?Q?uSTrigI3divEZgFdl3zaykZuTlpU5V3O5JNqzJMc7LVTfc6OxrDHO6RMLq0r?=
- =?us-ascii?Q?onI0cJBEcu1xqJM/wiKMb7Os2keSNxHOy/7CePelBInsuL8jzDGLGfNXtZbz?=
- =?us-ascii?Q?J9eQ0YgTXBf8+8MuOjQdYup5Ikx8mcTW4mDr5tm0xZe4d8hKhN8pbhbYjziV?=
- =?us-ascii?Q?vUD1YxjJrmfeX2XYkHbvJNs3xdv66MAPrI+8gizvGYGw8NGCeLrK4jYhJ6gb?=
- =?us-ascii?Q?/fU8Ql60Lv4b5KHiCkEFcRNaKbOPpCM5uJngzULtv8Ycb4oyYCJrQIoyIT6x?=
- =?us-ascii?Q?3kPSoMLhKxinoql6WlwjCP+kzHRy3IfdnVOuVyzGDxkG+eR6gcU+oD2Xqhb0?=
- =?us-ascii?Q?OB/fHIY5LKB0yO7PTbCpfTgzJAJx/sgabPNuTj4fGQ6LvCOT5Do21G1bHCjZ?=
- =?us-ascii?Q?phG9/Sd+i2o6rOkymUiw3qL6fFaoBHRz45u+qGAHOf9aZ2hbiroppgSbkyon?=
- =?us-ascii?Q?7QkAoLvTLyhKZPqgHsyI3xuYD5Qd3CXj9I8Gzsa2HLm0lhLYPP7FiYFL8gnw?=
- =?us-ascii?Q?mMurkq9s1NxA183esm03ZoFHcxmVFChbb1kl0PH+XDuFKOH+gTunUW8ZvDUt?=
- =?us-ascii?Q?rhHtApjzoVD3khSg0xcMdoGQbWTJA+cPLk/os3cminW/eoVGXLV1NqqUWI0v?=
- =?us-ascii?Q?7txX5b/REZ3N4tgWiXhjSF1wX9jjg2v3bXU9hCH7WcMhl4nWsxtphB9gPDg8?=
- =?us-ascii?Q?jbeytmDbnFEE9GHGdO5OdexGtMdhvXscrejw3HWF3ojF3UzMywdBq+ZTjBMv?=
- =?us-ascii?Q?iVbw9vRm7FJ0uG5Mf6vZ1IspMna8cdW1rjLqKH5YLKgMZ9PNIsItcWBLGUni?=
- =?us-ascii?Q?LtIcUnTf4La8goEA6ok2uMWwmP7MnBs4tHID+Q2GHeKZew0wdj1CnTi14mFJ?=
- =?us-ascii?Q?JCAg1AFqlH408BPMLLOL7zkADMalZD8CiiL+pbtlbZkLiZF5CulMqJ0iaCB5?=
- =?us-ascii?Q?h5UD7Fofowd0Q/uFR5hcuKU4ZZD3+qptFeW8FUDNUcklhJ9UFh9JpjrL2pay?=
- =?us-ascii?Q?11qFVpuiu30TppttYzxMwaZP8iG5L+RqLnM+3z/6o/YEHmYt1ISN50XhcUez?=
- =?us-ascii?Q?hOQgbkOc3soLQBfVu+r4mceZEhsEZ+NAujZ5shZI7SsIPoaY6rETlfZbKf+5?=
- =?us-ascii?Q?J1NrJ52Yh0KKgTHBhvmOoiPa9MSdQ+MGq2WmovO3nYkhscyPHsA3gFl5o0G4?=
- =?us-ascii?Q?tRJlp+yUcRhXGNLHxX1ERuqeRYqi99v/nskCyNOy1e17G2AvrZozDXXOt/ZH?=
- =?us-ascii?Q?IqOyU457akktWl1CL7WFpilV/cp4H5j5m0QubamFeorK+vb+x+uHxmibiCIE?=
- =?us-ascii?Q?9H/Qyi+8ZmAjYKCzJbG8wg25B+zXqlVnUgxjYsa39cCWNDX6VRMcP4o9TPZD?=
- =?us-ascii?Q?VcxxZ2vMHi3756w8ktcoeOsLUpwDUaTKZFM+OALlG21uknN7NnhfYFBNPhOA?=
- =?us-ascii?Q?9vfiRL2ZPKKznrKoVkkrr5sKjZT26IHTOaOEpu92?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="MT7IGPsT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1745254038; bh=dUdLgnEveokE4y01P7eq6jBsYcwFEiE6grPLxuZ/jDg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=MT7IGPsT7r/wW8tfcjfT8U2L6kEFAB2AVF0FehbwD7ALtPpaNUC9I2nkNJqjndhfE
+	 lrmXRvrHEnyr6xeBX06Ybia/tqOU1DAp7XVfBktvx0YGlosDCqGNTfMJOVWRejp70E
+	 uPtpDU9HEaiz6zWpkTiFSH1zdnuAtxoDvVWwRmUs=
+Received: from jckeep-Lenovo-XiaoXinAir-14IIL-2020.. ([240e:3b1:d003:cf1:7732:da7c:bd29:219d])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id BD01B88F; Tue, 22 Apr 2025 00:47:16 +0800
+X-QQ-mid: xmsmtpt1745254036t94odr9h3
+Message-ID: <tencent_D04FE925ED0AD6F0A4C297CA1A1A74FDE608@qq.com>
+X-QQ-XMAILINFO: NKv2G1wnhDBnnvGgBqycrvnoYnY0GdGeelSXNyyebH1PgO5rYgYR/KLlnYIpNI
+	 2trnWrhJtDH0B7NADdOzyClcEaWrwvvy+HWUNaAnD+FVRH6zx2euyemAbOwNUNEWJqEYVnFdJUqU
+	 PPQosVSbMhjRdahIx4QzzyU5HzQdEtwTR9tnkwSq1ILn0sRxQTyigjEuV7YGgjChkWUqS8Evhfg6
+	 /yzOm/6qZ8Qb2wMyHf74oRIoFt8MYqru0kGIM9G6DlzutK699TICba0kNm3iWgSVbcq3td68dmN6
+	 ZzEoq2bzqBdV5KYQLtM/CCD4Bxaih1idXBJJMLmdmciH+xVhMb2X4fv43lnMKw8Y552apIIn3XCY
+	 Agtv4eu0lhR7R7m8uzapjq3UENwYqAAwifgxXIb7lrVHwjo8rJIT9ILzQeqrfewix3GsBAK5J4r8
+	 XMY8KGKZ2JqI10w7yAd1IhR3kIPp9V/NX/Ft0XhzEqZ4v1snD4jrlcDyMJAJzVk3RfN5JKeDWKfu
+	 7i4nwQAKa4Shfi6aVwLZDhKO0ZlYwmOuPrAXKYC3dTHk4qUKhrsCuN8wDikY+S65+L3P4rzDvocm
+	 oqy71QQVHIJk276lY3/R8CzGPQfTCOH/WALhUEVoNBvU31iSKuKRqU3sjq/njb+Ko3kMLcytN4cT
+	 6LiB+Ml5avHDg6GQhGnuEGKK1iRLbU6NWRNJ640rVNPLD4tRpa6toZxl67aA3ilawn0ItFUNJIh1
+	 kZHYgGzGRdokrHSZu/PoEEOQT9H/qTm94h0cXj4oueFQ+nh4LWrINGR8ONNH2CCHzfo4ziWtvdq5
+	 KjatrhXMmDYeFsZunpE43PhcmUWw0F9TiC1LZ3jX/rEeB+/EgmaocBnV687WvRD0J88E8pZg5afg
+	 9pRIVVt0Wx9tkxfmB+FAPG3tFJduA0Q8UAfPFBXYynLWCJucdK3f1ruZ6Fj3IIRgl9U90nx3InHe
+	 CXtDsALHyIEZR28EmE+KZfc4w/TFDl/0nC2RV+I4DH8E4hwnFX8bmtePdnkCs/
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Guangbo Cui <2407018371@qq.com>
+To: benno.lossin@proton.me
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	simona.vetter@ffwll.ch,
+	tmgross@umich.edu
+Subject: Re: [PATCH v3 3/4] rust: validate: add `Validate` trait
+Date: Tue, 22 Apr 2025 00:47:15 +0800
+X-OQ-MSGID: <20250421164715.427350-1-2407018371@qq.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250421134909.464405-4-benno.lossin@proton.me>
+References: <20250421134909.464405-4-benno.lossin@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR03MB5073.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3293345-cf22-4d87-4b49-08dd80f42ac0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 16:47:13.3944
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xq7W86XHwHP4pR5t99k4C9gCNqiNceay4R6xFlEetPMAn6QiCtm9rbHhOVPrJxFUYhdl196D+mq05qqCV/cg6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5289
+Content-Transfer-Encoding: 8bit
 
->=20
-> Hi,
->=20
-> The signature of this new function does not appear to match that of the
-> functions it replaces. And it appears to regress the endian annotation of
-> perfect_match which was corrected in commit e9dbebae2e3c ("net: stmmac:
-> Correct byte order of perfect_match")
->=20
-> Flagged by Sparse.
+Really cool patch! I got a few thoughts below.
 
-Hi Simon,=20
+> Introduce the `Validate<Input>` trait and functions to validate
+> `Untrusted<T>` using said trait. This allows one to access the inner
+> value of `Untrusted<T>` via `validate{,_ref,_mut}` functions which
+> subsequently delegate the validation to user-implemented `Validate`
+> trait.
+> 
+> The `Validate` trait is the only entry point for validation code, making
+> it easy to spot where data is being validated.
+> 
+> The reason for restricting the types that can be inputs to
+> `Validate::validate` is to be able to have the `validate...` functions
+> on `Untrusted`. This is also the reason for the suggestions in the
+> `Usage in API Design` section in the commit that introduced
+> `Untrusted<T>`.
+> 
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+> ---
+>  rust/kernel/validate.rs | 61 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/validate.rs b/rust/kernel/validate.rs
+> index 8b33716be0c7..eecac39365db 100644
+> --- a/rust/kernel/validate.rs
+> +++ b/rust/kernel/validate.rs
+> @@ -11,6 +11,9 @@
+>  //! APIs that write back into userspace usually allow writing untrusted bytes directly, allowing
+>  //! direct copying of untrusted user data back into userspace without validation.
+>  //!
+> +//! The only way to access untrusted data is to [`Validate::validate`] it. This is facilitated by
+> +//! the [`Validate`] trait.
+> +//!
+>  //! # Rationale
+>  //!
+>  //! When reading data from an untrusted source, it must be validated before it can be used for
+> @@ -46,7 +49,7 @@
+>  /// untrusted, as it would otherwise violate normal Rust rules. For this reason, one can easily
+>  /// convert that reference to `&[Untrusted<u8>]`. Another such example is `Untrusted<KVec<T>>`, it
+>  /// derefs to `KVec<Untrusted<T>>`. Raw bytes however do not behave in this way, `Untrusted<u8>` is
+> -/// totally opaque.
+> +/// totally opaque and one can only access its value by calling [`Untrusted::validate()`].
+>  ///
+>  /// # Usage in API Design
+>  ///
+> @@ -101,6 +104,30 @@ pub fn new(value: T) -> Self
+>      {
+>          Self(value)
+>      }
+> +
+> +    /// Validate the underlying untrusted data.
+> +    ///
+> +    /// See the [`Validate`] trait for more information.
+> +    pub fn validate<V: Validate<Self>>(self) -> Result<V, V::Err>
+> +    where
+> +        T: Sized,
+> +    {
+> +        V::validate(self.0)
+> +    }
+> +
+> +    /// Validate the underlying untrusted data.
+> +    ///
+> +    /// See the [`Validate`] trait for more information.
+> +    pub fn validate_ref<'a, V: Validate<&'a Self>>(&'a self) -> Result<V, V::Err> {
+> +        V::validate(&self.0)
+> +    }
+> +
+> +    /// Validate the underlying untrusted data.
+> +    ///
+> +    /// See the [`Validate`] trait for more information.
+> +    pub fn validate_mut<'a, V: Validate<&'a mut Self>>(&'a mut self) -> Result<V, V::Err> {
+> +        V::validate(&mut self.0)
+> +    }
+>  }
 
-Thanks for highlighting this issue, I have fixed it in v4
+The `validate_ref` and `validate_mut` functions should just call `V::validate(self)`
+directly, since self is an Untrusted<T>, and you already implemented ValidateInput for it.
+Calling `V::validate(&self.0)` would cause a type mismatch error.
 
-Regards,=20
-Boon Khai
+> +/// Marks valid input for the [`Validate`] trait.
+> +pub trait ValidateInput: private::Sealed {}
+> +
+> +impl<T: ?Sized> ValidateInput for Untrusted<T> {}
+> +
+> +impl<'a, T: ?Sized> ValidateInput for &'a Untrusted<T> {}
+> +
+> +impl<'a, T: ?Sized> ValidateInput for &'a mut Untrusted<T> {}
+> +
+> +mod private {
+> +    use super::Untrusted;
+> +
+> +    pub trait Sealed {}
+> +
+> +    impl<T: ?Sized> Sealed for Untrusted<T> {}
+> +    impl<'a, T: ?Sized> Sealed for &'a Untrusted<T> {}
+> +    impl<'a, T: ?Sized> Sealed for &'a mut Untrusted<T> {}
+> +}
+> +
+> +/// Validate [`Untrusted`] data.
+> +///
+> +/// Care must be taken when implementing this trait, as unprotected access to unvalidated data is
+> +/// given to the [`Validate::validate`] function. The implementer must ensure that the data is only
+> +/// used for logic after successful validation.
+> +pub trait Validate<Input: ValidateInput>: Sized {
+> +    /// Validation error.
+> +    type Err;
+> +
+> +    /// Validate the raw input.
+> +    fn validate(raw: Input) -> Result<Self, Self::Err>;
+> +}
+
+Best regards,
+Guangbo Cui
+
