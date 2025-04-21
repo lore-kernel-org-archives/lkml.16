@@ -1,48 +1,22 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E97E3D81
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id AD6C219ABB6;
+	Mon, 21 Apr 2025 07:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745221393; cv=none; b=erU0QwYMJHRdicmCjOVyCGGzbd50ECMGwpnlh6lLkjCu+lEJrMQEdu428VaTongjm3C2cQZHoO737dZfTE9aYqiq/y/6pFxyC6roC8Mnm2L9wdYKBKZb9irNJsg5JK8UgvAT4GeNv02QBS5IZdVBu3pzyXEJHwWf4VaJ7Hk0Su8=
+	t=1745221431; cv=none; b=oLnic7KTXyl8hM+HyCuEg7dY42ZL5v1lfm/2PkwILO23RI8xW+vVcODAzjm0Bh8J8eTYsMNlx2en+mWcBujPSzFwvQvYDtvoMCq2pRjlq4oQP0e4pNxIxKqDbd4NAU5Mct04MEvk6qGqBBFgBGjmgjUjF9IOV947zX6KR10fMP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745221393; c=relaxed/simple;
-	bh=zNr0ghVhsv/1Vj+Sp7mLYUgmXNQzQSx/eC0cYZR67mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UJRJBZTrqlGL8TQtS4DxysXm0bTC/533hwNz/9GT8xbEdwTKRbdr1i7OfQAvu0L3DqWi68zKa6FQztscO/XwHG9/8gqHwDiH8UBwxEiB6PTGvdDjHFn18AyVFqTnLjLWhj6RVvEK+n4dYgF3oWQ33i2v/UFemRLzfsi8pTTHgec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F2yUarBY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F2yUarBY"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNDt89025922;
-	Mon, 21 Apr 2025 07:42:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Uda27OR6jl0Qtu3XrSgAsNeJj/Kw9HnJ8gdvEdHRSF4=; b=F2yUarBYjb+LQ3d2
-	V2lAUDqrg0jWn0XcZW25Z53FIFZEss70bgzq6J0rz2sAaVMSXaKWrhLMn3qzMGkK
-	OkP8x/GUns5LxP6z4cP6NqpuljJlHDCBaXIWVr9WOG+bu7XPWlTX3DkOYD0jDGdb
-	9/QHFjuOQ7bF6xn2wmi5hxtEIadNmMOxOFuAKW6OlEG5q62dKaNHyYEAdd67vtdW
-	sAsU2axmFuRsPeXwis/869V5OgFJ5pPfq/r0keXgZ0UNAzfbim0RXhP2XPtb4mfj
-	2YI0yXga7KIHKKTGaNykWuRDA0Taai3vJra0MwJh6fpr2UWEtBZiN2GomoPWP/CC
-	OWa0Yw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426kb2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 07:42:42 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L7gghw004059
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 07:42:42 GMT
-Received: from [10.239.132.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
- 2025 00:42:39 -0700
-Message-ID: <cedf31b0-e639-4062-bb65-c36d36da7e5c@quicinc.com>
-Date: Mon, 21 Apr 2025 15:42:30 +0800
+	s=arc-20240116; t=1745221431; c=relaxed/simple;
+	bh=9mr/4ygQi24ODHbaZeN0vo/LVPGCcnhTa5BHpr99sRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=dt1umVfZjN87aAtXiIbjY2RdNOkQkTv5abpXdvYZ2B88C5ziPFbL8i/g1mDAnbS3aHDQ9QfA+j+iBY+PVAX0Qe8S6DqmkrcoFa9p1gKAoF3UIKp7/KQyCeLYCnZMTGskFqWCEHQ7tJmlHQ2auO8xG7cjGpR0g+2y3/GdHDD/Skk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id C17DE60252AD4;
+	Mon, 21 Apr 2025 15:43:38 +0800 (CST)
+Message-ID: <bade4ad1-2be7-45a4-8232-0be5fe2e7ef7@nfschina.com>
+Date: Mon, 21 Apr 2025 15:43:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,68 +24,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm, slab: clean up slab->obj_exts always
-To: Harry Yoo <harry.yoo@oracle.com>
-CC: <cl@linux.com>, <rientjes@google.com>, <vbabka@suse.cz>,
-        <roman.gushchin@linux.dev>, <surenb@google.com>,
-        <pasha.tatashin@soleen.com>, <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <quic_tingweiz@quicinc.com>
-References: <20250418061459.3898802-1-quic_zhenhuah@quicinc.com>
- <aAJtFwAH_ayIJ-SR@harry>
+Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
 Content-Language: en-US
-From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-In-Reply-To: <aAJtFwAH_ayIJ-SR@harry>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: QdMRYimzp7ELfGaPx9J1Lx3SlfpZrx1O
-X-Proofpoint-GUID: QdMRYimzp7ELfGaPx9J1Lx3SlfpZrx1O
-X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6805f6f2 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=yPCof4ZbAAAA:8 a=tUVUhsVVWxwbZEqO3ecA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- mlxscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210059
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, davem@davemloft.net,
+ herbert@gondor.apana.org.au
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <c86fcb5b-73d0-4d55-833f-26a16713e325@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2025/4/18 23:17, Harry Yoo wrote:
-> On Fri, Apr 18, 2025 at 02:14:59PM +0800, Zhenhua Huang wrote:
->> When memory allocation profiling is disabled at runtime or due to an
->> error, shutdown_mem_profiling() is called: slab->obj_exts which
->> previously allocated remains.
->> It won't be cleared by unaccount_slab() because of
->> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
->> should always be cleaned up in unaccount_slab() to avoid following error:
+On 2025/4/21 15:10, Christophe JAILLET wrote:
+> Le 21/04/2025 à 07:51, Su Hui a écrit :
+>> It's safer to use size_add() to replace open-coded aithmetic in 
+>> allocator
+>> arguments, because size_add() can prevent possible overflow problem.
 >>
->> [...]BUG: Bad page state in process...
->> ..
->> [...]page dumped because: page still charged to cgroup
->>
->> Fixes: 21c690a349baa ("mm: introduce slabobj_ext to support slab object extensions")
->> Signed-off-by: Zhenhua Huang<quic_zhenhuah@quicinc.com>
+>> Signed-off-by: Su Hui <suhui@nfschina.com>
 >> ---
-> Acked-by: Harry Yoo<harry.yoo@oracle.com>
-> 
-> I reproduced the issue locally and confirmed that this patch fixes
-> the issue.
-> 
-> Tested-by: Harry Yoo<harry.yoo@oracle.com>
-> 
-> By the way, I think this should probably be backported to -stable?
+>>   include/crypto/aead.h     | 3 ++-
+>>   include/crypto/akcipher.h | 4 +++-
+>>   include/crypto/kpp.h      | 3 ++-
+>>   3 files changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/crypto/aead.h b/include/crypto/aead.h
+>> index 0e8a41638678..cf212d28fe18 100644
+>> --- a/include/crypto/aead.h
+>> +++ b/include/crypto/aead.h
+>> @@ -10,6 +10,7 @@
+>>     #include <linux/atomic.h>
+>>   #include <linux/container_of.h>
+>> +#include <linux/overflow.h>
+>
+> You could move this 1 line below, to keep alphabetical order.
+> And why do you say that it is redundant in your follow-up mail?
+Thanks for your suggestion, I didn't notice this alphabetical order at 
+first :( .
+Because I found that  <linux/crypto.h> includes <linux/slab.h>, and
+<linux/slab.h> includes <linux/overflow.h>, so this overflow.h is 
+redundant.
+>
+>>   #include <linux/crypto.h>
+>>   #include <linux/slab.h>
+And I also found these <linux/{atomic,container_of,slab,types,list}.h> 
+is included by
+<linux/crypto.h>, I am trying to remove these redundant headers in v2 patch.
 
-Thanks Harry, I'll send another patch that incorporates Suren's 
-suggestion as well.
-
-> 
-> -- Cheers, Harry / Hyeonggon
-
+It's sad that remving these duplicate header files didn't save any 
+compilation time,
+only save some code space.
+>>   #include <linux/types.h>
+>> @@ -433,7 +434,7 @@ static inline struct aead_request 
+>> *aead_request_alloc(struct crypto_aead *tfm,
+>> --- a/include/crypto/kpp.h
+>> +++ b/include/crypto/kpp.h
+>> @@ -11,6 +11,7 @@
+>>     #include <linux/atomic.h>
+>>   #include <linux/container_of.h>
+>> +#include <linux/overflow.h>
+>
+> You could move this 1 line below, to keep alphabetical order.
+This overflow.h is redundant too.
+>
+>>   #include <linux/crypto.h>
+>>
+>
