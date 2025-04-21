@@ -1,123 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EEA1411DE
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5491EEA56;
+	Mon, 21 Apr 2025 19:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263155; cv=none; b=RiwoRU6f6kNxJ6jqnT46AHqrEM+uqXORlZKtbR2ILALu5GTiFeoAn7h2brzeebaJsE+O18DIm64wusAOW35GUihiu38LE5VofSibXTrjJOhAhJMCArl3ekZuU5T4TarAkM2SM7NkAOUznbIFbBsiWiFpXbQRuQYt8iT/yTyEjxk=
+	t=1745263157; cv=none; b=IGhm6IoCq3qVkGrkkyPxbg/npUFkrohluBLD1fichcno5tmQzPFUsp6dFNB31EXYT3PMj9HWRZg7qrdD+jFtt03Pit3XJHJS94JEwIzs+vxo6D3crhAujIQLZg03oY63kJsRRCcX7blvQimyGnSGeBT/cNlpeg0nfncqf/ab/8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263155; c=relaxed/simple;
-	bh=YzyhNX9KUIj9DB4k9cyjB4ql8xv3pIrEL47uAOd+GFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLY2BgfpDimc9VV80B5Xpl3toTKZ5yGw++lcBDcs4bwwM42Z2QQ2vaMYXYq3xRKtlKl1cxUf05FqRCIEL2SceUpTHI5tCOjQ4MisulNgk2D7hxNaWWtk9Tfg78ZZTrYEHBGXkN65YTOgJh9JBbejv1tdKl4D3Eg+iKWsWUCThas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dRvigm5f; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745263157; c=relaxed/simple;
+	bh=DYO3AST2o4cYujiXtTVLxnklyh1EeJ0a9ELH1uW0/4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hRB6pJkIqJiPXSeuVoQmV0f8cesboA+eGOczf7m2kW8uREp1rNBEJ+voROqUYaKW6A19DLNLjtH3I0xXxv5E8yg/oPbHRj+TtljV3oYRpoDEWlLqDA5W4dlC2Mi5JG9FQXp/ifVjOhNY03Z6ex3y4V+suFc46VD9vNZKuowasw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HAzdaqfL; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dRvigm5f"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIg5FP010134
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=P3HJl5U4M+u/M9qqMj09srNN
-	G0MDWTXKKxwIH4K4Y7M=; b=dRvigm5fwWZc1ilMX/w8yI7PuHCy+5FF58b+6HIq
-	V0TUg5RHAUvBzFNoCHImgJKL85cyjUqkfeUKCNX+chaSb1lQUHn7QVnGyDvbbrLS
-	+X5IMjell2ndEpIRyG3WmzOpMn97E/YTKdJL9ixO6Vzv6QPhauY/kke8trO+jA+a
-	TtIWCAKCElJx1BWCeelebVxcZSjlE9lw+v9KhIFCF73UYrpSFZFcaDlOtnecxOnf
-	yuCvykTuvLONEEOg6m9j7OH0VFYV2FMgtzSWtVo61GxRM8tCZO3gO8QhWOHndWBL
-	+fg/P+ElBdNgaCcKJ4yo/X2PfPBCK23MDxK3p8tLovN0Bw==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bn0su-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:19:06 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ecfbdaaee3so78548096d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:19:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263145; x=1745867945;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAzdaqfL"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54d98aa5981so3074108e87.0;
+        Mon, 21 Apr 2025 12:19:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745263153; x=1745867953; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P3HJl5U4M+u/M9qqMj09srNNG0MDWTXKKxwIH4K4Y7M=;
-        b=BlEyi2WrfueDl6Z19IZEWu6XBiY6IYmHYdhhS/8y23BZeEILYGjcrkUAs+1lKfEesn
-         Yjkpmbq1pDIy+C5q/Nca9xDUvJ71C3kV2xbtapg5Mnu8elfI6/ZOBkVAslLQvuO5cADV
-         P6GdXSj3R6r/RYVaICHPXoGkgwQE9k8OpGOOdZk/uLVCp6Ws18PSMVdoiya+WM2ElJlI
-         N4rKKh8y1LLFLOY4LcGhAjmE8c2JlKsLQ3Z3WbpAXZcouuiXzPK+f4zsr/IVlOasi/68
-         6VEXP5XhpEVUjqTOE40RDkbpxLn2XY89sRrdv+hSRi9a0oCfbg8+Qj4JU81fWE1seXWr
-         Zygw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsaNi4RLt769s9sgYdjBL3AvtozfW2i2bRA+R7vskjzGmueLxfesAJtccCs2njxSfwEJyqAwaUgEIrFrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKudDJDgABNnINY0m1WIMwcLjVXfS2A+5DuXsYOFVbWfvJs0+C
-	sqzmjHZzG/Y+eKdmyR3TZjINT37/RK6TQJiReQ5F86c6SWnrlLOxNiEZ6sAmkvY7y+9NzlibcBu
-	BdkzECJRQuhquN83nVO/oJFPYsboBOwkuDyzw7MiC9LS3mXMOhji0Ij9oh8YW6F0=
-X-Gm-Gg: ASbGnctpPy7l8kyKdo6WJoA6YQngoW93av9w6rUZVQydP971Z3dHLFC4R+PANdGXJOI
-	vuPuQlq2+QhzKAvWhcqnj7vpgrFQtrcIr6QdcqlzSrCOZg3Wyo6ovCy42tYTxUOefNLP14jsA9m
-	t0Cwo+OlZ6VH6/W1wA3jDsZvC3Fbmgjd7HCwvj/lGZy/AIxG/G1JEYQIjr/f/wGjFaknbioEVmw
-	OHI61bcdPJQxBC1SMWSRU7/+FcoZ5TLrmS0AMNFwGQkO2wFy7Gwhys3fmMp+4zFDHQPZ3iw2Kse
-	GkwLu/vJpaQAqK7TOUojaqQ2vtREMdPt8mZ90YgI2x6uVAvV9+hdgaROcObo2Qb/R3G0A914Qu0
-	=
-X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr244942996d6.34.1745263145465;
-        Mon, 21 Apr 2025 12:19:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFZIiJHpu+XUpxDxWiR87XVzvWdC1v4TRH+LmXdVc2oMPFMOGKvkVumgqYB9XfpZ+V0eYgvyQ==
-X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr244942486d6.34.1745263145127;
-        Mon, 21 Apr 2025 12:19:05 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5f6854sm1002109e87.254.2025.04.21.12.19.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 12:19:04 -0700 (PDT)
-Date: Mon, 21 Apr 2025 22:19:02 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-Cc: dianders@chromium.org, neil.armstrong@linaro.org,
-        quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-        simona@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] drm/panel-edp: Add support for several panels
-Message-ID: <323jsow4mg4ku7hrcw25qpr26nnzbjbtin367ysevyqg6ax46y@247gfrr3rk64>
-References: <20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com>
+        bh=KJcRqfa5CCPmTaOo2sTvJJGxZ9DlOMCI9iLuHheiPr8=;
+        b=HAzdaqfLVj5cCkKa+X+aiomkAFSsvkGTY9nbGrdEtvQ6EIoeZ9Jyo7iXcBccedk/+5
+         xV37iiqpczm260z8NDR6+Fn+EFAMmBvXdYnFigXGNkWN75YdPb8IbDOWmcpwvlKqw7GY
+         dSOV/GrVgQfBmFvfhPpNmzXV4eO9hNN/MT9ZTlQkKhe1uUJmdDPc80xeLmcXbs57Ax78
+         EE1iFxRqpAlZa+fa+aerWwQKgPtzV5Uz25vqPCoogzLNiS7rv/nvDkIfycRMPa0s7ITJ
+         7DpGdPR/8faQS6LhTfgc63j2i2LToXBoMAanMy+ARocnNlKX5b8/y0zsFrG+mMaVkrIy
+         aUQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745263153; x=1745867953;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJcRqfa5CCPmTaOo2sTvJJGxZ9DlOMCI9iLuHheiPr8=;
+        b=A3BTjdLJSew2/1T4MgClIWi8EiyTY3x9gMijx/VY5EhcGeJfa/aC4dkvqF4ExrPWUm
+         zLFAMSrP4RkyHMf2Dd5+ALKKIH/BZd2qFCB94rNBKb8mjNsmgApM/YpZwZqdtwNstbyM
+         QFdbWlv8hSmdE5zft8t3uU3Pb82wMRprgjOyMHg4N2Yfne6n/pqDTu7FGA/qjnDh0sbb
+         yiNhOr4Q2bOJ8ZHXLVJ+iL48JsHL17n+swqEPjUl4PptqQt6PIt81uclta4z7UEdF3tF
+         Z89IJX9TnmITDrlSDyvjq9M8CvOswBTbcbXvJkFx7iEwqu9yhXRItOXtV/gGxsbsFQQy
+         G/Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUn+ykMSGf6FOdPQ0IRjXhTd+6T34brT3DBCSy+ISKggLgASDZ5hefs782qVe9HH04jI6e4ehnLuFTefKuu@vger.kernel.org, AJvYcCV2xvXjgBfabWAwyKxNNWP/K/3DzvZGP4c43oFNx0wEdUy+Ld0Uyf+fNJJpA2mH+1se6M0Pd8mfpa4j/UdGm0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH8xbKlgHPlPNCSKCf6X6owXPCXzAQVr09HSfP1lcQvtXUDn4/
+	oMUxXky20yIEbTJXK1JkU5JlhZLSHzwHGSzabRscq8PClEYuzYBkkHfbebzzpABQjyZdIojxEb5
+	hQWApr6qlQNeAC/aVb3+XklO+k0c=
+X-Gm-Gg: ASbGncsWbUkbDRK2tttUtcTedFGBDijNGjpTC7DdFaKkN1nFxhufLp7VVlnlkgJleuZ
+	aD4MxEMEcxXzb/eLwl1aBq8iTPvZfqP3C43cOcv1UpnOiamSjs3g+gpu0eaCkHzhFbnaLAfEWOf
+	5BR5yHdX/28BCdMS4tW4a9
+X-Google-Smtp-Source: AGHT+IHXHFlrF4EijWInQ0q6byiERQ/3YNIJpnij63pytbHmgcPlJabHpsS0ZaHrvX3ER21PDg85XpuTKP5mo+QMWuE=
+X-Received: by 2002:a05:6512:4020:b0:54c:a49:d3de with SMTP id
+ 2adb3069b0e04-54d6e61ba8amr3683500e87.10.1745263152985; Mon, 21 Apr 2025
+ 12:19:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421113637.27886-1-xiazhengqiao@huaqin.corp-partner.google.com>
-X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=68069a2a cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=waiYy8LU7usWoTZ8VmwA:9 a=CjuIK1q_8ugA:10 a=OIgjcC2v60KrkQgK7BGD:22
-X-Proofpoint-ORIG-GUID: w1p4do5PRWAbkBMWjyyHeX7_oRAVcLVp
-X-Proofpoint-GUID: w1p4do5PRWAbkBMWjyyHeX7_oRAVcLVp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- phishscore=0 adultscore=0 mlxlogscore=919 malwarescore=0 clxscore=1015
- spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210150
+References: <20250421072914.466092-1-chris.lu@mediatek.com> <20250421072914.466092-2-chris.lu@mediatek.com>
+In-Reply-To: <20250421072914.466092-2-chris.lu@mediatek.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 21 Apr 2025 15:19:00 -0400
+X-Gm-Features: ATxdqUGL3FDMyjw1v0Rvzf5QBxrifSLl3fT6ELdaZgKRxwz3EqxSIe_IBUO2sh0
+Message-ID: <CABBYNZLZ7tx6nm1=gzuShgrp5xV4_4AT4_Y=kvAg8zbWjTR5dQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] Bluetooth: btmtksdio: Check function enabled
+ before doing close
+To: Chris Lu <chris.lu@mediatek.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	Sean Wang <sean.wang@mediatek.com>, Jiande Lu <jiande.lu@mediatek.com>, 
+	Will Lee <will-cy.lee@mediatek.com>, SS Wu <ss.wu@mediatek.com>, 
+	Steve Lee <steve.lee@mediatek.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mediatek <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 07:36:34PM +0800, Zhengqiao Xia wrote:
-> AUO B140QAN08.H
-> BOE NE140WUM-N6S
-> CSW MNE007QS3-8
-> 
-> Zhengqiao Xia (3):
->   drm/panel-edp: Add support for AUO B140QAN08.H panel
->   drm/panel-edp: Add support for BOE NE140WUM-N6S panel
->   drm/panel-edp: Add support for CSW MNE007QS3-8 panel
-> 
->  drivers/gpu/drm/panel/panel-edp.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+Hi Chris,
 
-For the series,
+On Mon, Apr 21, 2025 at 3:29=E2=80=AFAM Chris Lu <chris.lu@mediatek.com> wr=
+ote:
+>
+> Check BTMTKSDIO_FUNC_ENABLED flag before doing close to prevent
+> btmtksdio_close been called twice.
+>
+> Signed-off-by: Chris Lu <chris.lu@mediatek.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Please add Fixes tag.
 
-I'd still like to hear a word from Doug as he usually manages/reviews
-panels.
+> ---
+>  drivers/bluetooth/btmtksdio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.=
+c
+> index 566c136e83bf..3c66e3ee9834 100644
+> --- a/drivers/bluetooth/btmtksdio.c
+> +++ b/drivers/bluetooth/btmtksdio.c
+> @@ -723,6 +723,10 @@ static int btmtksdio_close(struct hci_dev *hdev)
+>  {
+>         struct btmtksdio_dev *bdev =3D hci_get_drvdata(hdev);
+>
+> +       /* Skip btmtksdio_close if BTMTKSDIO_FUNC_ENABLED isn't set */
+> +       if (!test_bit(BTMTKSDIO_FUNC_ENABLED, &bdev->tx_state))
+> +               return 0;
+> +
+>         sdio_claim_host(bdev->func);
+>
+>         /* Disable interrupt */
+> --
+> 2.45.2
+>
 
--- 
-With best wishes
-Dmitry
+
+--=20
+Luiz Augusto von Dentz
