@@ -1,240 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C603C1FC7F1;
-	Mon, 21 Apr 2025 04:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1D9262A6;
+	Mon, 21 Apr 2025 04:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745209229; cv=none; b=cyzAsZB+ih0H9R5gmRwQYps6jV2uD2D4j+2wR5soJx/QLT1GOv3w88DWU6BDJ4zRg8TI+oVB/dYFnL3o77vRL+H6Xt8zs09VOyxjf6z+yB2YpHUeukmRa5DN2DnhYK4t+XU/mMDfAKeoAHEZqw7dLFjulDzUFKVefC9ZfoAx8kk=
+	t=1745209285; cv=none; b=pECJsHvzkAP1yfEYlug7dmGQDE1ylZwH4f1/SWfTjBYaMyUqTYwfC9ajG83xvAdHkK5u3d0GOe9nMQ0MVaW5D8QfnIPyrRbJWl+fiQ9K1+fnwXnJ1PHH92F7oLUlUUJjbaXr8v80XoKczYaKnpaRSlelVjGSgdHagfx9P4sguHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745209229; c=relaxed/simple;
-	bh=fzz5vJbGd7pv6ViNSfPjoRWY9qisTbb7I3wGIOAq57U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q+WgRxhY8k0fPi9srTdSxCClEYbN15IUafwTdoS1fbFqiW4G6Wsod9cWpQeYZwdhZnRdTFIi65H6p1xjdHuQ9uF0VZkfDue9gsOLl6fOPPvqVvQtemtrWS2yxEnxgbU9VB7kLl0Hqgo9Jjy1xQOsiTrBGc9gtSLw+w4OhKgqmZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWSWFEQP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745209285; c=relaxed/simple;
+	bh=pniZ2vXu7q4ZAogZzkjAYPN5wKLi3NF85XJ1oYPxgzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g4ltxrt3tPYuQCM4XP7uj3XuuYRxLdaHDNb3nB/Jgvmd+vJ91/rgGRpdKyXqIs8mLK3cRskqaoNxnnxL5vfJCt8SZXB4/8oWN0uCBlOYb14oXgXTnTrsZOmk2pgTbpZE7oGlGr01RhIbzuuRnCaRasJ77oK2fp5f7NMdhNdwBi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQuP9d6A; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWSWFEQP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40689C4CEEE;
-	Mon, 21 Apr 2025 04:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745209229;
-	bh=fzz5vJbGd7pv6ViNSfPjoRWY9qisTbb7I3wGIOAq57U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jWSWFEQPPejY8w/rkDYZ/medBuywLpbOJspqi/LqHnzp8PSV89wF/urssd3wohMlt
-	 Wnnw36x5op00Hq8uPR5KY7hDhtRKdrTz4ZIsTdkY5ed6OZzPtbToWHgkr8Cx6ylCAl
-	 TeBT68SoTgBLVaJyxzruKqlbw1U5ANXlxpusUidp7ML0jvMQ0H/VR66m9BSPDvOcm4
-	 h8sQTZozvmZWXFNNbeFeidHPpDkcc9sT+K1q+RyVDFY4hujOtpf2Jw4ITviKmlhIJy
-	 ZrJP4VKdArdmd14dcINNM0OzZt2ntPXX4ipxkosIX+XMQ6U/uYWZxiU8vkgbGSEvnK
-	 c5F4SNW48xB/A==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so5405556a12.0;
-        Sun, 20 Apr 2025 21:20:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV94h2gIuTExG/WQgmX9PWoyvywIDQaAcYxKuvbRvr88/eU85Qjpci/eEsjA6pC41ePkCTJ+M0o+/A4q9A=@vger.kernel.org, AJvYcCWiZTQlC7vIXVBNvfgYvNW0mUq0FkK7p4OMiNiwseqL0gkDknzG2jMPyCAHegKaG17isZc06yBg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrRxdXdYXJtAXPWbbw3jCMF8rwLLYnw8r5UXXjnPEVKzhh65Ud
-	/mHs1/s/XBoZXzvSFbJoeP1Ev7rpVLvIRMPGjHXKfK2GFr14JWdASaKl0LeaASJ2Kguao2YoBEZ
-	u+Vg2+fhPBTZC4MMHBZ9HysvzE9A=
-X-Google-Smtp-Source: AGHT+IHZsdvuMa94t5s7Wl81xSRyFyVOkOs7YuACBk6z/PpL2AUVEIqZOYxYjZN7u4uX7F3LM3lScub97stGyXyigSo=
-X-Received: by 2002:a17:907:2da4:b0:aca:cad6:458e with SMTP id
- a640c23a62f3a-acb74dd6021mr966291966b.43.1745209227816; Sun, 20 Apr 2025
- 21:20:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQuP9d6A"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736e52948ebso4119897b3a.1;
+        Sun, 20 Apr 2025 21:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745209283; x=1745814083; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0me9D7HF9QKBEL74pTv2jHUMZzDdUUcB3pHPjboOlA8=;
+        b=mQuP9d6AOwPQpyuHrUZ2izCEc18ulCR6RzGhqLclR0KPnrJW0nSzzJOaw645LLDkX7
+         AhsE5FxqbiLIbAZjEjsjEr2FSzcYQsyI5rS7Uqcb2Gm7DvigOcjBUvViDovhTxSR1BQF
+         3jVy2kYTjY/Bk5H6b2OwYqZQug6Qvtcl4VTJfWIMqZscFByYqMJBpWMQs9iJOdA5IAQ6
+         HJthhNLOL9f7fnySQo4/IYdQSjnk6O4d9L7gVvKTKf1t4XCm8BlH5WbId3Q3sqYcWBlp
+         q90mIeeK7f6NPfmxV3SSxphCV64uBL31iO4XBXuq8w1kxJZcbIjCZlTdZ53xcIXhoj6V
+         6uVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745209283; x=1745814083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0me9D7HF9QKBEL74pTv2jHUMZzDdUUcB3pHPjboOlA8=;
+        b=il/x8hHExWaDdIzXZpCjCXTkxZB/Q0p0RzJC/xtzkfzbNdEE4qwFiKsXD6uiJvNC/7
+         L5IFHh+5EQEg6UXRNcH/DevqJJQ1Mb2FCcj6MxsIafjVr8zmbM+W3apxRvL1g28wfLU8
+         LgjNGdHt+rlys+jq2dwvY0ZDe/d63r2Fhk1wohCOAgfed1e2b+yI/3OEDEX9Eu8iReXp
+         rjAJeB5oVmtG2us6ki2o5Ons5IJweGBJXy0pCQ0pc+Jt/bp3gFGd2RjLLZJOJJzQQhkq
+         3eHslvzsCDHQUNhHd/a8PY1lA+aRwNFlMAg9nl29+VsppkBL4teNokiRauzbJ9P/58+N
+         td/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUhCMgtI9HVBkNoBavyQyDJF0Xi1UMWt8IuH5ku+YYF6uDy6X8kSzPijvHHmC+6I+wm6k0MdlFHNxrm@vger.kernel.org, AJvYcCVK6PiTmiMwtLA/BcqRg+mPv7EtJO781qEkdAzlOCYqOd9yfEYuadlZXZH7EMB+iM3rl2UvrwT+fGExtJM+@vger.kernel.org, AJvYcCVSic7xNrzzWXnRWp+7fhmt+o7DdLnW6xnSvzJrDgA4tKPXrCBIC+wXNxBIm+Wn0FO403I=@vger.kernel.org, AJvYcCXPHTUe3BoS6TWrxRZvdI5VR5OtJ+K6GptW5eN9JHARiU8W+ZoLLIw6pAHSERI/2y6jMxpgW0ZR1eva7FqiU81n@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVeHkb3ctv9170y4c2MJtnsz3G2APsWEquLyKUmjQT8319wC5X
+	d7oI8PgiGMsaxMTnjOtI4DKZuuo7pTYNgJYc0R7GpIfNq4pj3Zbt
+X-Gm-Gg: ASbGncuCVch5yxnuolDE5h2+10mjZXa3GY+C5EcTL21ELxHaGd85bWqSIsxIq2DZLH6
+	kEf4zcYSBoKXvHTvUIR//q6EFDTz53cjtjMotTVjfsi4ytxOdlTOMf5wJOrN3LS+3163k2OAEhO
+	LOyanT6dTuPD/dQgUco6s48oFGO2jrWyUQusyQ8Pi+Eev5Hs+pFq583THxVsSeERAUBEM+uYLo7
+	mJ4aMZRX/kxNVZMldMbiMxUX/GcJGYAn+sWtJcOtD8I69QOPOg72V5AWN2Q4eTbNb2WqHsG6bt0
+	kLM2jXE8DrQ3C+8rJMEodlKQQ9aEGGnF1OF81LC7xw==
+X-Google-Smtp-Source: AGHT+IH79Tj+w/Pl9QMwoZKyI1uQZN8MFCC3AjIPOHkcRYSVHhFrWzIgCYG76qUDj6dV5c9OQxhHVQ==
+X-Received: by 2002:a05:6a00:ad3:b0:732:a24:7354 with SMTP id d2e1a72fcca58-73dc14535a1mr13723334b3a.4.1745209283243;
+        Sun, 20 Apr 2025 21:21:23 -0700 (PDT)
+Received: from gmail.com ([98.97.45.254])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e13b5sm5504194b3a.48.2025.04.20.21.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 21:21:22 -0700 (PDT)
+Date: Sun, 20 Apr 2025 21:20:51 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Jakub Sitnicki <jakub@cloudflare.com>
+Subject: Re: [PATCH bpf-next v2 0/9] selftests/bpf: Test sockmap/sockhash
+ redirection
+Message-ID: <20250421042051.ub5n5hn7rveosltw@gmail.com>
+References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-3-chenhuacai@loongson.cn> <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
-In-Reply-To: <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Mon, 21 Apr 2025 12:20:17 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
-X-Gm-Features: ATxdqUGcc8EyLCwgp78OF_HVaGFUNUUqjJ_56kgJ9EU-Z9uo3q6DMaUSt86Aug8
-Message-ID: <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
-Subject: Re: [PATCH net-next V2 2/3] net: stmmac: dwmac-loongson: Add new
- multi-chan IP core support
-To: Yanteng Si <si.yanteng@linux.dev>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>, Biao Dong <dongbiao@loongson.cn>, 
-	Baoqi Zhang <zhangbaoqi@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
 
-Hi, Yanteng,
-
-On Mon, Apr 21, 2025 at 10:04=E2=80=AFAM Yanteng Si <si.yanteng@linux.dev> =
-wrote:
->
->
-> =E5=9C=A8 4/16/25 10:41 PM, Huacai Chen =E5=86=99=E9=81=93:
-> > Add a new multi-chan IP core (0x12) support which is used in Loongson-
-> > 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
-> > reduces channel numbers from 8 to 4, but checksum is supported for all
-> > channels.
-> >
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > Tested-by: Henry Chen <chenx97@aosc.io>
-> > Tested-by: Biao Dong <dongbiao@loongson.cn>
-> > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > ---
-> >   .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 62 +++++++++++-------=
--
-> >   1 file changed, 37 insertions(+), 25 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/dri=
-vers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > index 2fb7a137b312..57917f26ab4d 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > @@ -68,10 +68,11 @@
-> >
-> >   #define PCI_DEVICE_ID_LOONGSON_GMAC 0x7a03
-> >   #define PCI_DEVICE_ID_LOONGSON_GNET 0x7a13
-> > -#define DWMAC_CORE_LS_MULTICHAN      0x10    /* Loongson custom ID */
-> > -#define CHANNEL_NUM                  8
-> > +#define DWMAC_CORE_MULTICHAN_V1      0x10    /* Loongson custom ID 0x1=
-0 */
-> > +#define DWMAC_CORE_MULTICHAN_V2      0x12    /* Loongson custom ID 0x1=
-2 */
-> >
-> >   struct loongson_data {
-> > +     u32 multichan;
->
-> In order to make the logic clearer, I suggest splitting this patch.=EF=BC=
-=9A
->
->
-> 2/4  Add multichan for loongson_data
->
-> 3/4 Add new multi-chan IP core support
-I don't think the patch is unclear now, the multichan flag is really a
-combination of DWMAC_CORE_MULTICHAN_V1 and DWMAC_CORE_MULTICHAN_V2.
-
->
->
-> >       u32 loongson_id;
-> >       struct device *dev;
-> >   };
-> > @@ -119,18 +120,29 @@ static void loongson_default_data(struct pci_dev =
-*pdev,
-> >       plat->dma_cfg->pbl =3D 32;
-> >       plat->dma_cfg->pblx8 =3D true;
-> >
-> > -     if (ld->loongson_id =3D=3D DWMAC_CORE_LS_MULTICHAN) {
-> > -             plat->rx_queues_to_use =3D CHANNEL_NUM;
-> > -             plat->tx_queues_to_use =3D CHANNEL_NUM;
-> > +     switch (ld->loongson_id) {
-> > +     case DWMAC_CORE_MULTICHAN_V1:
->
-> How about adding some comments? For example:
->
-> case DWMAC_CORE_MULTICHAN_V1:   /* 2K2000 */
-> case DWMAC_CORE_MULTICHAN_V2:   /* 2K3000 and 3B6000M */
-Do you know why we deprecate PRID (a.k.a SOC name) detection and
-prefer CPUCFG detection in cpu_probe()? Because SOC-types and function
-features are orthogonal, they should not be strictly bound. There will
-be other SOCs using MULTICHAN_V1 or MULTICHAN_V2, should we update the
-comments every time when a new SOC publishes? There may also be one
-SOC with different IP-cores, then how to comment on this case?
-
+On 2025-04-11 13:32:36, Michal Luczaj wrote:
+> The idea behind this series is to comprehensively test the BPF redirection:
+> 
+> BPF_MAP_TYPE_SOCKMAP,
+> BPF_MAP_TYPE_SOCKHASH
+> 	x
+> sk_msg-to-egress,
+> sk_msg-to-ingress,
+> sk_skb-to-egress,
+> sk_skb-to-ingress
+> 	x
+> AF_INET, SOCK_STREAM,
+> AF_INET6, SOCK_STREAM,
+> AF_INET, SOCK_DGRAM,
+> AF_INET6, SOCK_DGRAM,
+> AF_UNIX, SOCK_STREAM,
+> AF_UNIX, SOCK_DGRAM,
+> AF_VSOCK, SOCK_STREAM,
+> AF_VSOCK, SOCK_SEQPACKET
+> 
+> New module is introduced, sockmap_redir: all supported and unsupported
+> redirect combinations are tested for success and failure respectively. Code
+> is pretty much stolen/adapted from Jakub Sitnicki's sockmap_redir_matrix.c
+> [1].
+> 
+> Usage:
+> $ cd tools/testing/selftests/bpf
+> $ make
+> $ sudo ./test_progs -t sockmap_redir
 > ...
->
-> > +             ld->multichan =3D 1;
-> > +             plat->rx_queues_to_use =3D 8;
-> > +             plat->tx_queues_to_use =3D 8;
-> >
-> >               /* Only channel 0 supports checksum,
-> >                * so turn off checksum to enable multiple channels.
-> >                */
-> > -             for (int i =3D 1; i < CHANNEL_NUM; i++)
-> > +             for (int i =3D 1; i < 8; i++)
-> >                       plat->tx_queues_cfg[i].coe_unsupported =3D 1;
-> > -     } else {
-> > +
-> > +             break;
-> > +     case DWMAC_CORE_MULTICHAN_V2:
-> > +             ld->multichan =3D 1;
-> > +             plat->rx_queues_to_use =3D 4;
-> > +             plat->tx_queues_to_use =3D 4;
-> > +             break;
-> > +     default:
-> > +             ld->multichan =3D 0;
-> >               plat->tx_queues_to_use =3D 1;
-> >               plat->rx_queues_to_use =3D 1;
-> > +             break;
-> >       }
-> >   }
-> >
-> > @@ -328,14 +340,14 @@ static struct mac_device_info *loongson_dwmac_set=
-up(void *apriv)
-> >               return NULL;
-> >
-> >       /* The Loongson GMAC and GNET devices are based on the DW GMAC
-> > -      * v3.50a and v3.73a IP-cores. But the HW designers have changed =
-the
-> > -      * GMAC_VERSION.SNPSVER field to the custom 0x10 value on the
-> > -      * network controllers with the multi-channels feature
-> > +      * v3.50a and v3.73a IP-cores. But the HW designers have changed
-> > +      * the GMAC_VERSION.SNPSVER field to the custom 0x10/0x12 value
-> > +      * on the network controllers with the multi-channels feature
-> >        * available to emphasize the differences: multiple DMA-channels,
-> >        * AV feature and GMAC_INT_STATUS CSR flags layout. Get back the
-> >        * original value so the correct HW-interface would be selected.
-> >        */
-> > -     if (ld->loongson_id =3D=3D DWMAC_CORE_LS_MULTICHAN) {
-> > +     if (ld->multichan) {
-> >               priv->synopsys_id =3D DWMAC_CORE_3_70;
-> >               *dma =3D dwmac1000_dma_ops;
-> >               dma->init_chan =3D loongson_dwmac_dma_init_channel;
-> > @@ -356,13 +368,13 @@ static struct mac_device_info *loongson_dwmac_set=
-up(void *apriv)
-> >       if (mac->multicast_filter_bins)
-> >               mac->mcast_bits_log2 =3D ilog2(mac->multicast_filter_bins=
-);
-> >
-> > -     /* Loongson GMAC doesn't support the flow control. LS2K2000
-> > -      * GNET doesn't support the half-duplex link mode.
-> > +     /* Loongson GMAC doesn't support the flow control. Loongson GNET
-> > +      * without multi-channel doesn't support the half-duplex link mod=
-e.
-> >        */
-> >       if (pdev->device =3D=3D PCI_DEVICE_ID_LOONGSON_GMAC) {
-> >               mac->link.caps =3D MAC_10 | MAC_100 | MAC_1000;
-> >       } else {
-> > -             if (ld->loongson_id =3D=3D DWMAC_CORE_LS_MULTICHAN)
-> > +             if (ld->multichan)
-> >                       mac->link.caps =3D MAC_ASYM_PAUSE | MAC_SYM_PAUSE=
- |
-> >                                        MAC_10 | MAC_100 | MAC_1000;
-> >               else
-> > @@ -391,9 +403,11 @@ static int loongson_dwmac_msi_config(struct pci_de=
-v *pdev,
-> >                                    struct plat_stmmacenet_data *plat,
-> >                                    struct stmmac_resources *res)
-> >   {
-> > -     int i, ret, vecs;
-> > +     int i, ch_num, ret, vecs;
-> >
-> > -     vecs =3D roundup_pow_of_two(CHANNEL_NUM * 2 + 1);
-> > +     ch_num =3D min(plat->tx_queues_to_use, plat->rx_queues_to_use);
->
-> I'm curious. Will there still be hardware with RX not equal to TX in the
-> future?
-Currently rx queue number is equal to tx queue number, but
-min(plat->tx_queues_to_use, plat->rx_queues_to_use) is still the best
-solution. If not, which one should be used here? tx_queues_to_use or
-rx_queues_to_use?
+> Summary: 1/576 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> [1]: https://github.com/jsitnicki/sockmap-redir-matrix/blob/main/sockmap_redir_matrix.c
+> 
+> Changes in v2:
+> - Verify that the unsupported redirect combos do fail [Jakub]
+> - Dedup tests in sockmap_listen
+> - Cosmetic changes and code reordering
+> - Link to v1: https://lore.kernel.org/bpf/42939687-20f9-4a45-b7c2-342a0e11a014@rbox.co/
+> 
+> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+> ---
+ 
+For the series. Thanks.
 
-Huacai
-
->
->
-> Thanks,
->
-> Yanteng
->
->
+Acked-by: John Fastabend <john.fastabend@gmail.com>
