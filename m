@@ -1,107 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4741C1C6FE5;
-	Mon, 21 Apr 2025 03:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4E4257422;
+	Mon, 21 Apr 2025 04:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745207914; cv=none; b=I3C2sOoRI1tyA1Pfh/VXbcCfYmGRma+9J82OadWA5qZOiYjq6iYPv19k8ibfDvZNa1fL6zTJaQ0t0/1Ka8veoApSI6DPSL+Su4cNEaD1lHNeCIUQd7Ht86gWgxKmui+yhrfX/8fodBtEku7oDH7ZVa0ReeNwsmUbN3iOxPK4iYk=
+	t=1745208004; cv=none; b=T6KxyrA/bFDnUhewPL/7FwbVzZBR7rNGEHC38u3p4U1xLI5edY/4Rymto5ZafmD9TdDFPVohLWTKA70gK2f1STzGHWYT0UoMq63H2tcSK7hBUxAWXSIhq/n09HY6J31VZS45EtdB37YTbnnbdLCKtJ94inrwZz287m0NY/ahO2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745207914; c=relaxed/simple;
-	bh=NkaxfKqaA0p8lcKslxsH+Igb9BpefV+P8KTPsvttPZc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mhUvrCNt6txwV/aT3p3oEzAy4nkxHyTT7jS8ETrWKgtPkWdRDJj7OnV210dyiL0jvgQKtsrmMq6MQFHiiyBKqDShN6wdm9zg4YsuRSshwRLtsA41/yAUZhS6e4vYnX3dvsE+Qn1pjKRpWb3OjlS5wsRwAUokBOOHB9uEa1gTZ7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NIk0dLVA; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745208004; c=relaxed/simple;
+	bh=RW11lH/vgZHjN0mrmXY31n6A+FJGXzaLFXSDkuu3JhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxpDjYsHPPeuy0VTbb0oEzyv7DjN8JzAUtrpjDmI9iblnS0AHeHxGlT8Xe+YgKXLZSGAfp5UHCGyfxRNXRSz7uCbzjdaz5AzMpmc7z2K8kYnrNJWZqh8cjByzzBZ0g8Gmz4Va85JjnAVJLSOkgaypotEEFh8d1jv/lgf3TI7lDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eruI6xRT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIk0dLVA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745207912; x=1776743912;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=NkaxfKqaA0p8lcKslxsH+Igb9BpefV+P8KTPsvttPZc=;
-  b=NIk0dLVAHqFYM4QY5mPbTo3/L1lG2nk6bbGKK/eomEeVY8JSKAc+D5K1
-   MzAm2igVLy0ok28IxWhNFdw6b9jMsFovE6QMiUHT3ijfXB+vfAzAAKEg8
-   wrQrUurUb96zbs70C+AMIQCkkTOHY7425o/xUzssfjsxeXrGlyr3AyZnq
-   2klTeWx14E4BJIZ9LkJ9P/rzZvHwtHwvLep4pz8YQCJZCATYqlZluEJJX
-   hVTLCirBUrsBRqV7h2KmrzD4Ole49A9z+Gmr7NFlsl5ClpbMny+FWXlT7
-   DsV5grEEBLP0e8Ykf02mh+ywvssk4eUUVSoycDF5A0cH7ksY0b4mXYkCr
-   g==;
-X-CSE-ConnectionGUID: h2I2z6bxQNmQ06ABD44KzQ==
-X-CSE-MsgGUID: WlA7HVmaToK+2LhganCB8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="64145380"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="64145380"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 20:58:25 -0700
-X-CSE-ConnectionGUID: FpNN5sNZTUyIW96QErOquw==
-X-CSE-MsgGUID: IcM8LLWyTYWZGHq71HhCxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="136471875"
-Received: from senthil-nuc10i7fnh.iind.intel.com ([10.223.163.83])
-  by orviesa003.jf.intel.com with ESMTP; 20 Apr 2025 20:58:22 -0700
-From: Saranya Gopal <saranya.gopal@intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Saranya Gopal <saranya.gopal@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] platform/x86/intel: hid: Add Pantherlake support
-Date: Mon, 21 Apr 2025 09:43:32 +0530
-Message-Id: <20250421041332.830136-1-saranya.gopal@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eruI6xRT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C2C4CEEB;
+	Mon, 21 Apr 2025 04:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745208003;
+	bh=RW11lH/vgZHjN0mrmXY31n6A+FJGXzaLFXSDkuu3JhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eruI6xRT0hI3rN17Hfjkve1biEZD3zMDpyRPPNuGgED/1kYdIk4M15eqoZl8ABBgv
+	 mfdRfOybmACfFl85C7b0M6MzK8rbHXnzVrweWDm0QDBMHnrNYfapjpr82Hbet3ckE6
+	 IlGsMeb01/zjSDKI+B43tHwVaQtRtXM7r7obyR4mG8OVuVtQ7kwzKfcEWPyCaueRqO
+	 6sM0gAh/dfTyTcFvwoeguYBtdG87SdzzdqRgBF23d/mVaCsXxfXx7dQTge11nZYGN3
+	 yRIJp+H9l0U5oEvJTEhKGRyyv1dmrtiKWxw3dXd76ONaTsAE5qDohgA0ZTya2lIf4J
+	 OBWKhNQ3p/aFw==
+Date: Sun, 20 Apr 2025 21:00:02 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
+Message-ID: <20250421040002.GU25675@frogsfrogsfrogs>
+References: <20250415121425.4146847-1-john.g.garry@oracle.com>
+ <20250415121425.4146847-12-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415121425.4146847-12-john.g.garry@oracle.com>
 
-Add Pantherlake ACPI device ID to the Intel HID driver.
-While there, clean up the device ID table to remove the ", 0" parts.
+On Tue, Apr 15, 2025 at 12:14:22PM +0000, John Garry wrote:
+> Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
+> 
+> The function works based on two operating modes:
+> - HW offload, i.e. REQ_ATOMIC-based
+> - CoW based with out-of-places write and atomic extent remapping
+> 
+> The preferred method is HW offload as it will be faster. If HW offload is
+> not possible, then we fallback to the CoW-based method.
+> 
+> HW offload would not be possible for the write length exceeding the HW
+> offload limit, the write spanning multiple extents, unaligned disk blocks,
+> etc.
+> 
+> Apart from the write exceeding the HW offload limit, other conditions for
+> HW offload can only be detected in the iomap handling for the write. As
+> such, we use a fallback method to issue the write if we detect in the
+> ->iomap_begin() handler that HW offload is not possible. Special code
+> -ENOPROTOOPT is returned from ->iomap_begin() to inform that HW offload
+> not possible.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> ---
+>  fs/xfs/xfs_file.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index ba4b02abc6e4..81a377f65aa3 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -728,6 +728,72 @@ xfs_file_dio_write_zoned(
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Handle block atomic writes
+> + *
+> + * Two methods of atomic writes are supported:
+> + * - REQ_ATOMIC-based, which would typically use some form of HW offload in the
+> + *   disk
+> + * - COW-based, which uses a COW fork as a staging extent for data updates
+> + *   before atomically updating extent mappings for the range being written
+> + *
+> + */
+> +static noinline ssize_t
+> +xfs_file_dio_write_atomic(
+> +	struct xfs_inode	*ip,
+> +	struct kiocb		*iocb,
+> +	struct iov_iter		*from)
+> +{
+> +	unsigned int		iolock = XFS_IOLOCK_SHARED;
+> +	ssize_t			ret, ocount = iov_iter_count(from);
+> +	const struct iomap_ops	*dops;
+> +
+> +	/*
+> +	 * HW offload should be faster, so try that first if it is already
+> +	 * known that the write length is not too large.
+> +	 */
+> +	if (ocount > xfs_inode_buftarg(ip)->bt_bdev_awu_max)
+> +		dops = &xfs_atomic_write_cow_iomap_ops;
+> +	else
+> +		dops = &xfs_direct_write_iomap_ops;
+> +
+> +retry:
+> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = xfs_file_write_checks(iocb, from, &iolock, NULL);
+> +	if (ret)
+> +		goto out_unlock;
+> +
+> +	/* Demote similar to xfs_file_dio_write_aligned() */
+> +	if (iolock == XFS_IOLOCK_EXCL) {
+> +		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
+> +		iolock = XFS_IOLOCK_SHARED;
+> +	}
+> +
+> +	trace_xfs_file_direct_write(iocb, from);
+> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
+> +			0, NULL, 0);
+> +
+> +	/*
+> +	 * The retry mechanism is based on the ->iomap_begin method returning
+> +	 * -ENOPROTOOPT, which would be when the REQ_ATOMIC-based write is not
+> +	 * possible. The REQ_ATOMIC-based method typically not be possible if
+> +	 * the write spans multiple extents or the disk blocks are misaligned.
+> +	 */
+> +	if (ret == -ENOPROTOOPT && dops == &xfs_direct_write_iomap_ops) {
+> +		xfs_iunlock(ip, iolock);
+> +		dops = &xfs_atomic_write_cow_iomap_ops;
+> +		goto retry;
+> +	}
+> +
+> +out_unlock:
+> +	if (iolock)
+> +		xfs_iunlock(ip, iolock);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Handle block unaligned direct I/O writes
+>   *
+> @@ -843,6 +909,8 @@ xfs_file_dio_write(
+>  		return xfs_file_dio_write_unaligned(ip, iocb, from);
+>  	if (xfs_is_zoned_inode(ip))
+>  		return xfs_file_dio_write_zoned(ip, iocb, from);
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Saranya Gopal <saranya.gopal@intel.com>
----
- drivers/platform/x86/intel/hid.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+What happens to an IOCB_ATOMIC write to a zoned file?  I think the
+ioend for an atomic write to a zoned file involves a similar change as
+an outofplace atomic write to a file (one big transaction to absorb
+all the mapping changes) but I don't think the zoned code quite does
+that...?
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 88a1a9ff2f34..0b5e43444ed6 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -44,16 +44,17 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- 
- static const struct acpi_device_id intel_hid_ids[] = {
--	{"INT33D5", 0},
--	{"INTC1051", 0},
--	{"INTC1054", 0},
--	{"INTC1070", 0},
--	{"INTC1076", 0},
--	{"INTC1077", 0},
--	{"INTC1078", 0},
--	{"INTC107B", 0},
--	{"INTC10CB", 0},
--	{"", 0},
-+	{ "INT33D5" },
-+	{ "INTC1051" },
-+	{ "INTC1054" },
-+	{ "INTC1070" },
-+	{ "INTC1076" },
-+	{ "INTC1077" },
-+	{ "INTC1078" },
-+	{ "INTC107B" },
-+	{ "INTC10CB" },
-+	{ "INTC10CC" },
-+	{ }
- };
- MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
- 
--- 
-2.34.1
+--D
 
+> +	if (iocb->ki_flags & IOCB_ATOMIC)
+> +		return xfs_file_dio_write_atomic(ip, iocb, from);
+>  	return xfs_file_dio_write_aligned(ip, iocb, from,
+>  			&xfs_direct_write_iomap_ops, &xfs_dio_write_ops, NULL);
+>  }
+> -- 
+> 2.31.1
+> 
+> 
