@@ -1,128 +1,88 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2DB265CDE;
-	Mon, 21 Apr 2025 13:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF0F264A8E;
+	Mon, 21 Apr 2025 13:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745241729; cv=none; b=XWReq0nyuakC82EsfuzMZnWbpSkdrutFVLGJj2uH5LBBs4kV5izImDjf0mc1z6fjjHDB07yaSu6Ko35YJVaiRjZp3u8uSV0Ti3O85/yk/LT021SNXUdwzrsKDw7AQpM9g5AdltkDttBEeop6xoY2XMottFMHnEdwKd3fhRxL4pw=
+	t=1745241756; cv=none; b=ozIoPvTUttKM+xD7Ll9yOFWRPgwyyBSe140xQNCvAotA2jhPriyyX23Ca704U0Iy4/rs6S0RGhq1kKWBmmVvbZBiRD2DUr7vPIyxOYiLZ48ePPOeHmbrRkq5nUz4uqvGL61xa3c7R4+JIUSy/RzY+eh21BZZKUTLfJTmP4xCs94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745241729; c=relaxed/simple;
-	bh=wjAmj3yBRwON5AC2N8EIOOjXnWbRpJNYgGcGb2FQTvQ=;
+	s=arc-20240116; t=1745241756; c=relaxed/simple;
+	bh=O/Wl7D2AALWkD5h899UW87JVEqspsVHGQ7Vw+1YDJhw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WPWRzOg6/EPUekEfkglU61HS+l0ojeFd52YgekbNuLX4G7iyQkW7grOep30LXX9PCX+49qNfg8oMg2DJvV6Y/TGGXecxRVm96gUUNp44df9IJNS8JjDoxQAPVYD4g3UeaDrRofZfzwl3SsAKcwYSzliTOL3q4goQsvLeQwyvFbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DBLZcoAL; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eb+nr/xzIfrEPmNJFGsPUW8nscfTlVaEC7tjzMUfAgws2OGwE+q4+LetiPvUFZH9O7fdNNYQFVQxcxGxytg/4SLCfl3vj/Kd19NXke+y75q8mIi9ohz3eZht8icvpwd7vpbKezxy/gjX8TLrl4n9uzZW3uqdayk43EqgDXb+A8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcEVkLLa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DBLZcoAL"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6C6696D5;
-	Mon, 21 Apr 2025 15:19:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745241599;
-	bh=wjAmj3yBRwON5AC2N8EIOOjXnWbRpJNYgGcGb2FQTvQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcEVkLLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532B2C4CEF0;
+	Mon, 21 Apr 2025 13:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745241755;
+	bh=O/Wl7D2AALWkD5h899UW87JVEqspsVHGQ7Vw+1YDJhw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DBLZcoALsV0uCYSqS4/I7xvM1HlsdnOhToWc1lz+eG29sDbFYR0Sl8hWVB03B1pRc
-	 eAACbLkkVKn3GA9QEAyzlFGDU14meXVKrZ08ueWpd1ZBS4eyOwmWNe9UTZ9cFjZ0DH
-	 2nUCRRvAkVcZUOIUtIpV1jWzsq9xHdVD19lS+96I=
-Date: Mon, 21 Apr 2025 16:22:04 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 07/13] media: cadence: csi2rx: add get_frame_desc
- wrapper
-Message-ID: <20250421132204.GG29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-8-r-donadkar@ti.com>
+	b=XcEVkLLa18wZ/O/fdSVxTbdHCC+nICbmRPV8gkt1GbLw7ut8rPyP+enBmJ8BpaqWJ
+	 nhpRMbAjrqJJPDT5ZpWQYYQkjkuGYgbkV5t/cml7Uf0qhK7BJmuXBvliG7SKCkeM0h
+	 RT1Uhlqj/IoUY/8H5uRs5o7QDnS66tDCLJAO8MjYrW8r/p3Cm39rfDdjqd8bqjD7Uk
+	 oum9ogqBnYatc27BOKnnqIP6WmZnHmdGKD/PL4otQH0S8eNOF3ArFjj9dcFEIlxZH8
+	 xkFgqZn6HPRZ1iYjeCIPDxDFkUFzjI33Y4EKTRSkYhP02vdmbzlHhQzYvyhj7EBnp7
+	 PFxw2WOx4gmJA==
+Date: Mon, 21 Apr 2025 14:22:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, vadim.fedorenko@linux.dev,
+	jiri@resnulli.us, anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch,
+	aleksandr.loktionov@intel.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org, Milena Olech <milena.olech@intel.com>
+Subject: Re: [PATCH net-next v1 2/3] dpll: add reference sync get/set
+Message-ID: <20250421132230.GE2789685@horms.kernel.org>
+References: <20250415175115.1066641-1-arkadiusz.kubalewski@intel.com>
+ <20250415175115.1066641-3-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-8-r-donadkar@ti.com>
+In-Reply-To: <20250415175115.1066641-3-arkadiusz.kubalewski@intel.com>
 
-Hi Rishikesh,
-
-Thank you for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:48PM +0530, Rishikesh Donadkar wrote:
-> From: Pratyush Yadav <p.yadav@ti.com>
+On Tue, Apr 15, 2025 at 07:51:14PM +0200, Arkadiusz Kubalewski wrote:
+> Define function for reference sync pin registration and callback ops to
+> set/get current feature state.
 > 
-> J721E wrapper CSI2RX driver needs to get the frame descriptor from the
-> source to find out info about virtual channel. This driver itself does
-> not touch the routing or virtual channels in any way. So simply pass the
-> descriptor through from the source.
+> Implement netlink handler to fill netlink messages with reference sync
+> pin configuration of capable pins (pin-get).
 > 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/platform/cadence/cdns-csi2rx.c | 24 ++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> Implement netlink handler to call proper ops and configure reference
+> sync pin state (pin-set).
 > 
-> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-> index cebcae196eecc..b7e9225f66a41 100644
-> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> @@ -135,6 +135,21 @@ static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
->  	return NULL;
->  }
->  
-> +static int csi2rx_get_frame_desc_from_source(struct csi2rx_priv *csi2rx,
-> +					     struct v4l2_mbus_frame_desc *fd)
-> +{
-> +	struct media_pad *remote_pad;
-> +
-> +	remote_pad = media_entity_remote_source_pad_unique(&csi2rx->subdev.entity);
-> +	if (!remote_pad) {
-> +		dev_err(csi2rx->dev, "No remote pad found for sink\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return v4l2_subdev_call(csi2rx->source_subdev, pad, get_frame_desc,
-> +				remote_pad->index, fd);
-> +}
-> +
->  static inline
->  struct csi2rx_priv *v4l2_subdev_to_csi2rx(struct v4l2_subdev *subdev)
->  {
-> @@ -458,10 +473,19 @@ static int csi2rx_init_state(struct v4l2_subdev *subdev,
->  	return csi2rx_set_fmt(subdev, state, &format);
->  }
->  
-> +static int csi2rx_get_frame_desc(struct v4l2_subdev *subdev, unsigned int pad,
-> +				 struct v4l2_mbus_frame_desc *fd)
-> +{
-> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> +
-> +	return csi2rx_get_frame_desc_from_source(csi2rx, fd);
-> +}
-> +
->  static const struct v4l2_subdev_pad_ops csi2rx_pad_ops = {
->  	.enum_mbus_code	= csi2rx_enum_mbus_code,
->  	.get_fmt	= v4l2_subdev_get_fmt,
->  	.set_fmt	= csi2rx_set_fmt,
-> +	.get_frame_desc	= csi2rx_get_frame_desc,
->  };
->  
->  static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
+> Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+> Reviewed-by: Milena Olech <milena.olech@intel.com>
+> Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
 
--- 
-Regards,
+...
 
-Laurent Pinchart
+> diff --git a/drivers/dpll/dpll_core.h b/drivers/dpll/dpll_core.h
+> index 2b6d8ef1cdf3..b77e021356ca 100644
+> --- a/drivers/dpll/dpll_core.h
+> +++ b/drivers/dpll/dpll_core.h
+> @@ -56,6 +56,7 @@ struct dpll_pin {
+>  	struct module *module;
+>  	struct xarray dpll_refs;
+>  	struct xarray parent_refs;
+> +	struct xarray sync_pins;
+
+nit: Please add sync_pins to the Kernel doc for struct dpll_pin.
+
+     And, separately, it would be quite nice if documentation
+     of the non-existent rclk_dev_name member removed too.
+
+>  	struct dpll_pin_properties prop;
+>  	refcount_t refcount;
+>  	struct rcu_head rcu;
+
+...
