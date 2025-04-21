@@ -1,78 +1,262 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A44265633
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A05126461D;
+	Mon, 21 Apr 2025 13:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243840; cv=none; b=FrqYdYf1SLY018wxU61D35GyrMzSrMb5gwZZ5aXVur5WeFcuxzRHUeE4/KkgNY3l5UhWEwHEAbK51fca+NAm9D5KVJqPbFp4ZYtUs0CR6gur0OyTnP0TF4EGq2qbOA/IjXUkYmUaXxosEwSBhBCqyEX+kutW9Or78CCsrYCZdx4=
+	t=1745243849; cv=none; b=F8ho9/8zqjm3TWAo97/65gbuo4NA4veRMljc5tqc6yyqeXMN+OSynhlMiFc0MO4l5SHt3HhAPqoDnC8UXInNIQjNRLgfoFpXn6NwOkNdhUPdDAOi2hdW8hGwQnqDY62brgN8C5l+taMhTJBpzLraIQRB3FbTsEK/Spbzd0FHH0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243840; c=relaxed/simple;
-	bh=pJd8WsxtAYkHwS8ClpQ3xqwdhETlXCk5deE+sz8qGtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkvpVh/fWBHdbMg7O8L0uPXX8Uu2+qGAk3JvOCTJnlvxoIAAi59TLcruMDoyFcm3VevKlwTpLkYWv4eEf6s4Kjg5f+tdEyIiUcmm6jy+fuYU3utN4IJUtfnqqS2ZVr4hCeNv14RvA5kuuWfyZXbpNsOIPD56ecZ9OQYhc49Kwkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=IKnYMhIo; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1745243849; c=relaxed/simple;
+	bh=DpxM/W3KLOT0bOG1M5mF2m7TOzys32pjRdcAJGXvzAM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pFOd4A8ZuLBsTCnnh31i93gTHeyqI/ssSJqW49R1ZDYfM1uawaTBaQrRJuN4XYrsqa/BHBF5FuSuUrUXeYPeNEKx27Z2KRcEWoKn4eY0ZYcrk9LahAGaOhfmoslesneIEWP08+MvR+7g7VNl4reiVQBPx4CiInxi8IbOVgIHsx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QTwNh/ZX; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="IKnYMhIo"
-Date: Mon, 21 Apr 2025 09:56:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1745243826;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pJd8WsxtAYkHwS8ClpQ3xqwdhETlXCk5deE+sz8qGtA=;
-	b=IKnYMhIo3I397WCqX+KqiNcubIvRK/YQxQCvQRIp7b2/5IU8k4Fc8nZBsAONLPIRZdezi6
-	Zjl+bUVpO1RbP1hEJvwg/kruiB3I342cu0emyGn+XeC9I8/wMrPR5Obrevpj2XoZQy42+X
-	GAaUWnyBOIPc7HbcGAovNUhbs+nZFCvMzSqp8t/CreBHxRLolMlT1KzMT8gjzJywUt9/OT
-	HQG8P7/RstCG5cHFe5MXFBTgU0knd2JYY3ksGYBhsyLZsRGdw+AUej+HcStXnPPBwY59Y0
-	9Iu4QFTerpHxwKY3my+gSB4x9zgPtCKEI5Husu7WnavpT+/iELXPkycMIqvHiw==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sven Peter <sven@svenpeter.dev>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
-	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-	Kees Cook <kees@kernel.org>, tamird@gmail.com,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	Hector Martin <marcan@marcan.st>,
-	Asahi Linux Mailing List <asahi@lists.linux.dev>
-Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
-Message-ID: <aAZOpLeqBeeZ-4mG@blossom>
-References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB9597D506487C3133B0358CE5B8BC2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAY0hRvNCi0y6rlt@blossom>
- <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAZDApE-Wm_NlbMx@blossom>
- <PN3PR01MB95977FDD2F4DF6D9E198C516B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB95976BAC455F10F6D75B9C84B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAZM0svrO2MiNAdg@blossom>
- <PN3PR01MB95973648BB4FECBB2E24C5C7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QTwNh/ZX"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LDE7gR022026;
+	Mon, 21 Apr 2025 13:51:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=LDiMB+
+	IB9Epa4dk82xsNeI+gtOGLk4hDJ+02LRGwKvo=; b=QTwNh/ZXLAGNHoAyMQutNk
+	ar1WOjVOVejBnDHeShFphwHHmTZq2dMry4zuiEH94Xgz8vwASgyXMxAz/5eu7lgy
+	B3OAs7OF4esG1bYR7a8vC6UmaCuKYuwQAuUQ4bhCW/+VDQDPxw5a/vt3F/vJsH0j
+	xg1+0uectaFrJZB6nbrCDcAQulE9HcfMBUMroAYB5Pk00AF2gIGWlc7UuyXIw69h
+	eTgKoZWL0siS40KvW/LYkP560YSK8d3pfk+YYph5rBGhJiVbcyj7ofYy+HUjQRGs
+	gYMFRWb5DXNXod3ZfPJQRU1yOj0XPCYyWBe0Dw5Ok6oeVk8R/Us6FHVN9MhZDaOw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46592vb1ny-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 13:51:53 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCFC1Y015377;
+	Mon, 21 Apr 2025 13:51:52 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464qnkeetj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 13:51:52 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LDpprL23790238
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 13:51:51 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8D0D858055;
+	Mon, 21 Apr 2025 13:51:51 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 887B658043;
+	Mon, 21 Apr 2025 13:51:50 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.21.104])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Apr 2025 13:51:50 +0000 (GMT)
+Message-ID: <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap
+ segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>, steven chen <chenste@linux.microsoft.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Mon, 21 Apr 2025 09:51:50 -0400
+In-Reply-To: <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+	 <20250416021028.1403-4-chenste@linux.microsoft.com>
+	 <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN3PR01MB95973648BB4FECBB2E24C5C7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-X-Migadu-Flow: FLOW_OUT
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: PCNqx9-9ZgpGycN3Ym2BvbFni4szNvPA
+X-Authority-Analysis: v=2.4 cv=RorFLDmK c=1 sm=1 tr=0 ts=68064d79 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=bLk-5xynAAAA:8 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8
+ a=LftU4j_592J91X9VZ9UA:9 a=QEXdDO2ut3YA:10 a=zSyb8xVVt2t83sZkrLMb:22 a=BpimnaHY1jUKGyF_4-AF:22
+X-Proofpoint-GUID: PCNqx9-9ZgpGycN3Ym2BvbFni4szNvPA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ bulkscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 spamscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210105
 
-> Any change needed or just because some other maintainer manages this? Although Tbh, I really don't care about backporting since T2 Mac users are still using patched kernels provided by us. I'd rather free my mind in getting this done.
+On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
+> On 04/15/25 at 07:10pm, steven chen wrote:
+> > From: Steven Chen <chenste@linux.microsoft.com>
+>  ^^^^^^
 
-I'm just too new to kernel to do nontrivial merges. Either I can queue
-this series to drm-misc-next today (no backport no changes) or we can
-wait for someone more experienced. Let me know which one.
+As James Bottomley previously explained[1], if you haven't made any changes=
+ to
+Tushar's patch, then the very first line of the patch description would be
+"From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a blank =
+line.
+If there is a minor change, you would add "<your email address>: explanatio=
+n".
+For example:
+
+Steven Chen <chenste@linux.microsoft.com>: modified patch description
+
+[1]
+https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81.camel=
+@HansenPartnership.com/
+
+> >=20
+> > Implement kimage_map_segment() to enable IMA to map the measurement log=
+=20
+> > list to the kimage structure during the kexec 'load' stage. This functi=
+on
+> > gathers the source pages within the specified address range, and maps t=
+hem
+> > to a contiguous virtual address range.
+> >=20
+> > This is a preparation for later usage.
+> >=20
+> > Implement kimage_unmap_segment() for unmapping segments using vunmap().
+> >=20
+> > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>   ^^^^^^
+
+Neither "Author:" nor "From:" belong here.  Please remove.
+
+> > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>   ^^^^^^^
+
+Having Tushar's "Signed-off-by" tag and yours below indicate that you modif=
+ied
+the original author's patch.
+
+thanks,
+
+Mimi
+
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Cc: Baoquan He <bhe@redhat.com>=20
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>   ^^^^^
+>=20
+> The signing on this patch is a little confusing. I can't see who is the
+> real author, who is the co-author, between you and Tushar. You may need
+> to refer to Documentation/process/5.Posting.rst to make that clear.
+>=20
+> > Acked-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  include/linux/kexec.h |  6 +++++
+> >  kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 60 insertions(+)
+> >=20
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index f0e9f8eda7a3..7d6b12f8b8d0 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+> >  #define kexec_dprintk(fmt, arg...) \
+> >          do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0=
+)
+> > =20
+> > +extern void *kimage_map_segment(struct kimage *image, unsigned long ad=
+dr, unsigned long size);
+> > +extern void kimage_unmap_segment(void *buffer);
+> >  #else /* !CONFIG_KEXEC_CORE */
+> >  struct pt_regs;
+> >  struct task_struct;
+> > +struct kimage;
+> >  static inline void __crash_kexec(struct pt_regs *regs) { }
+> >  static inline void crash_kexec(struct pt_regs *regs) { }
+> >  static inline int kexec_should_crash(struct task_struct *p) { return 0=
+; }
+> >  static inline int kexec_crash_loaded(void) { return 0; }
+> > +static inline void *kimage_map_segment(struct kimage *image, unsigned =
+long addr, unsigned long size)
+> > +{ return NULL; }
+> > +static inline void kimage_unmap_segment(void *buffer) { }
+> >  #define kexec_in_progress false
+> >  #endif /* CONFIG_KEXEC_CORE */
+> > =20
+> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > index c0bdc1686154..a5e378e1dc7f 100644
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+> >  	return result;
+> >  }
+> > =20
+> > +void *kimage_map_segment(struct kimage *image,
+> > +			 unsigned long addr, unsigned long size)
+> > +{
+> > +	unsigned long src_page_addr, dest_page_addr =3D 0;
+> > +	unsigned long eaddr =3D addr + size;
+> > +	kimage_entry_t *ptr, entry;
+> > +	struct page **src_pages;
+> > +	unsigned int npages;
+> > +	void *vaddr =3D NULL;
+> > +	int i;
+> > +
+> > +	/*
+> > +	 * Collect the source pages and map them in a contiguous VA range.
+> > +	 */
+> > +	npages =3D PFN_UP(eaddr) - PFN_DOWN(addr);
+> > +	src_pages =3D kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+> > +	if (!src_pages) {
+> > +		pr_err("Could not allocate ima pages array.\n");
+> > +		return NULL;
+> > +	}
+> > +
+> > +	i =3D 0;
+> > +	for_each_kimage_entry(image, ptr, entry) {
+> > +		if (entry & IND_DESTINATION) {
+> > +			dest_page_addr =3D entry & PAGE_MASK;
+> > +		} else if (entry & IND_SOURCE) {
+> > +			if (dest_page_addr >=3D addr && dest_page_addr < eaddr) {
+> > +				src_page_addr =3D entry & PAGE_MASK;
+> > +				src_pages[i++] =3D
+> > +					virt_to_page(__va(src_page_addr));
+> > +				if (i =3D=3D npages)
+> > +					break;
+> > +				dest_page_addr +=3D PAGE_SIZE;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	/* Sanity check. */
+> > +	WARN_ON(i < npages);
+> > +
+> > +	vaddr =3D vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+> > +	kfree(src_pages);
+> > +
+> > +	if (!vaddr)
+> > +		pr_err("Could not map ima buffer.\n");
+> > +
+> > +	return vaddr;
+> > +}
+> > +
+> > +void kimage_unmap_segment(void *segment_buffer)
+> > +{
+> > +	vunmap(segment_buffer);
+> > +}
+> > +
+> >  struct kexec_load_limit {
+> >  	/* Mutex protects the limit count. */
+> >  	struct mutex mutex;
+> > --=20
+> > 2.43.0
+> >=20
+>=20
+>=20
+
