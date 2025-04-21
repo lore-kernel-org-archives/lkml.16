@@ -1,185 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568421DEFDD;
-	Mon, 21 Apr 2025 21:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF771E9B0C;
+	Mon, 21 Apr 2025 21:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745270303; cv=none; b=Hclo0GMqd0jU7X5wP9eWOc+zUcmgCMjbhzvydV5KGQHiQN6BQPa0BPgYQAk9DO9Ky/8dmrLJWerOScbSAT1dRKWV+DO5awuW3dIQtjpleMQ/WlZrB/fAjMPtZppjlUEWfS7jsUfMuVgOyegIJZWi22HGC/sB42S5ILxjCH76PtI=
+	t=1745270372; cv=none; b=T6mwEElqP4Zkuepu79MCu4RA0P73QJs5pEKpYc6K9/IwPzqSrUFrqezdx48ECLjWefprIq2k3A5a8wAnihtLtS/GClXEh+sYl7heOA6oyVCF8KzB3qIzc/Xp0BBPCwwI6D6zznoQQXL3Op5RKS3TMPHHVfLrWmlzEmCoKAGEfCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745270303; c=relaxed/simple;
-	bh=nm/spt30O/o+pWKt15dVV16PBqrGcK+Efxp5WTZ2q6Q=;
+	s=arc-20240116; t=1745270372; c=relaxed/simple;
+	bh=zKVa3Z5aM32fCtoxaiw1OCcvtoZ41LoC9dMmnkEK18Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smcROfiPRPZA/TePjKbihSrBlvq7TCvldH85ZtLCJQDrAEKzYRXz0dSFJ0yzEjmA3a4LtbZVtPeTS0GJlwO89tWxbcqw8yOS4kJyRlqVKBnBtFgt1739DGvCjD7vvhmQTwrLOQuz6GHtKFKMaoMbJlj/RDc9lSTLq6dzOd8Angc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWbByfGy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nba53JeUIp4tTKVAX0gGQSlZpZlPo1mwzLpnzxuE1/jxswbFS19NBaxYOD0KA2kQCePA4s/4kbsVkM3VBD6TJut+tfWIi1xrVDXIPs+pODEHyVTx/qJ8zHlCT3FQSvIz3T8UgKv54OL9ArdQWZwIUD7QOi8Ff/+tmu7f2l67DQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GxXpiLfY; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWbByfGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A947C4CEE4;
-	Mon, 21 Apr 2025 21:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745270302;
-	bh=nm/spt30O/o+pWKt15dVV16PBqrGcK+Efxp5WTZ2q6Q=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GxXpiLfY"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 460536D6;
+	Mon, 21 Apr 2025 23:17:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745270242;
+	bh=zKVa3Z5aM32fCtoxaiw1OCcvtoZ41LoC9dMmnkEK18Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pWbByfGyg2xHttX9Ke26F3lJ1auGSoAUUYDxTSvYY6oNDze89JhBx8wO6MuaIB8iC
-	 hxkrcEKiVfGpKMchkp24LvMHJ1VOxPz0QCcQEQ3EFFPxOTfvUKMcm9UNAzioMoQRhw
-	 i56Dxsawujw3GjTPFtyTOFSa1uWp1GlEXQTea26FmqBRDro+VlbHXBU3CUcmPu9NiZ
-	 myflRWL5UcGgR1Cof63Af0ZwwUByuJ/YMuYnpvfTKBMFbSVLhPtPHMclwJwCy3ECe2
-	 DzDI4+Uk4keuyw+wju8weC66y0XX682AXNQRr2eDWLX+e7iNok28P0D1WldgSuA2JK
-	 L5zNy4wM6v+QQ==
-Date: Mon, 21 Apr 2025 14:18:20 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: John Garry <john.g.garry@oracle.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>
-Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>,
-	Daniel Gomez <da.gomez@samsung.com>
-Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
-Message-ID: <aAa2HMvKcIGdbJlF@bombadil.infradead.org>
-References: <20250415121425.4146847-1-john.g.garry@oracle.com>
- <20250415121425.4146847-12-john.g.garry@oracle.com>
+	b=GxXpiLfY1K3IMcZFWy/UyfAvTFnjR5IhvBQ8X0xgNiCiybSUeGP8AOik/4QpkrVpE
+	 87A2M/3P9gVlzCoJcFab91etnV+Zm3OR5AfQiQ6UNow0jWaq/LgEbkj6TTOm8/xiR6
+	 xrOMBeoz0qqRlzfiptHMp1OjqqKM9QbSxN/FXuZw=
+Date: Tue, 22 Apr 2025 00:19:27 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v4 05/13] media: nxp: imx8-isi: Remove redundant check
+ for dma_set_mask_and_coherent()
+Message-ID: <20250421211927.GO17813@pendragon.ideasonboard.com>
+References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
+ <20250408-8qxp_camera-v4-5-ef695f1b47c4@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250415121425.4146847-12-john.g.garry@oracle.com>
+In-Reply-To: <20250408-8qxp_camera-v4-5-ef695f1b47c4@nxp.com>
 
-On Tue, Apr 15, 2025 at 12:14:22PM +0000, John Garry wrote:
-> Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
+Hi Frank,
+
+Thank you for the patch.
+
+On Tue, Apr 08, 2025 at 05:53:03PM -0400, Frank Li wrote:
+> dma_set_mask_and_coherent() never return failure when mask bigger than
+> 32bit.
 > 
-> The function works based on two operating modes:
-> - HW offload, i.e. REQ_ATOMIC-based
-> - CoW based with out-of-places write and atomic extent remapping
+> See commit f7ae20f2fc4e ("docs: dma: correct dma_set_mask() sample code")
 > 
-> The preferred method is HW offload as it will be faster. If HW offload is
-> not possible, then we fallback to the CoW-based method.
+> So remove return value check for dma_set_mask_and_coherent().
 > 
-> HW offload would not be possible for the write length exceeding the HW
-> offload limit, the write spanning multiple extents, unaligned disk blocks,
-> etc.
-> 
-> Apart from the write exceeding the HW offload limit, other conditions for
-> HW offload can only be detected in the iomap handling for the write. As
-> such, we use a fallback method to issue the write if we detect in the
-> ->iomap_begin() handler that HW offload is not possible. Special code
-> -ENOPROTOOPT is returned from ->iomap_begin() to inform that HW offload
-> not possible.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  fs/xfs/xfs_file.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+>  drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index ba4b02abc6e4..81a377f65aa3 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -728,6 +728,72 @@ xfs_file_dio_write_zoned(
->  	return ret;
->  }
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> index 015350c6f2784..073ea5912de3b 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> @@ -444,11 +444,7 @@ static int mxc_isi_probe(struct platform_device *pdev)
+>  	}
 >  
-> +/*
-> + * Handle block atomic writes
-> + *
-> + * Two methods of atomic writes are supported:
-> + * - REQ_ATOMIC-based, which would typically use some form of HW offload in the
-> + *   disk
-> + * - COW-based, which uses a COW fork as a staging extent for data updates
-> + *   before atomically updating extent mappings for the range being written
-> + *
-> + */
-> +static noinline ssize_t
-> +xfs_file_dio_write_atomic(
-> +	struct xfs_inode	*ip,
-> +	struct kiocb		*iocb,
-> +	struct iov_iter		*from)
-> +{
-> +	unsigned int		iolock = XFS_IOLOCK_SHARED;
-> +	ssize_t			ret, ocount = iov_iter_count(from);
-> +	const struct iomap_ops	*dops;
-> +
-> +	/*
-> +	 * HW offload should be faster, so try that first if it is already
-> +	 * known that the write length is not too large.
-> +	 */
-> +	if (ocount > xfs_inode_buftarg(ip)->bt_bdev_awu_max)
-> +		dops = &xfs_atomic_write_cow_iomap_ops;
-> +	else
-> +		dops = &xfs_direct_write_iomap_ops;
-> +
-> +retry:
-> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = xfs_file_write_checks(iocb, from, &iolock, NULL);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	/* Demote similar to xfs_file_dio_write_aligned() */
-> +	if (iolock == XFS_IOLOCK_EXCL) {
-> +		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
-> +		iolock = XFS_IOLOCK_SHARED;
-> +	}
-> +
-> +	trace_xfs_file_direct_write(iocb, from);
-> +	ret = iomap_dio_rw(iocb, from, dops, &xfs_dio_write_ops,
-> +			0, NULL, 0);
-> +
-> +	/*
-> +	 * The retry mechanism is based on the ->iomap_begin method returning
-> +	 * -ENOPROTOOPT, which would be when the REQ_ATOMIC-based write is not
-> +	 * possible. The REQ_ATOMIC-based method typically not be possible if
-> +	 * the write spans multiple extents or the disk blocks are misaligned.
-> +	 */
-> +	if (ret == -ENOPROTOOPT && dops == &xfs_direct_write_iomap_ops) {
+>  	dma_size = isi->pdata->has_36bit_dma ? 36 : 32;
+> -	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(dma_size));
+> -	if (ret) {
+> -		dev_err(dev, "failed to set DMA mask\n");
+> -		return ret;
+> -	}
+> +	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(dma_size));
+>  
+>  	pm_runtime_enable(dev);
+>  
 
-Based on feedback from LSFMM, due to the performance variaibility this
-can introduce, it sounded like some folks would like to opt-in to not
-have a software fallback and just require an error out.
+-- 
+Regards,
 
-Could an option be added to not allow the software fallback?
-
-If so, then I think the next patch would also need updating.
-
-Or are you suggesting that without the software fallback atomic writes
-greater than fs block size are not possible?
-
-  Luis
-
-> +		xfs_iunlock(ip, iolock);
-> +		dops = &xfs_atomic_write_cow_iomap_ops;
-> +		goto retry;
-> +	}
-> +
-> +out_unlock:
-> +	if (iolock)
-> +		xfs_iunlock(ip, iolock);
-> +	return ret;
-> +}
-> +
->  /*
->   * Handle block unaligned direct I/O writes
->   *
-> @@ -843,6 +909,8 @@ xfs_file_dio_write(
->  		return xfs_file_dio_write_unaligned(ip, iocb, from);
->  	if (xfs_is_zoned_inode(ip))
->  		return xfs_file_dio_write_zoned(ip, iocb, from);
-> +	if (iocb->ki_flags & IOCB_ATOMIC)
-> +		return xfs_file_dio_write_atomic(ip, iocb, from);
->  	return xfs_file_dio_write_aligned(ip, iocb, from,
->  			&xfs_direct_write_iomap_ops, &xfs_dio_write_ops, NULL);
->  }
-> -- 
-> 2.31.1
-> 
+Laurent Pinchart
