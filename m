@@ -1,82 +1,105 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1098D2E401;
-	Mon, 21 Apr 2025 19:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96E11E9B2D
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745264871; cv=none; b=rxHLr/WQF0n+U7rff7lj8WkSc95HSGShAybavJOyizi8QNVhZFfcyWcMHbzcbR2Ro4pe4lBgosNQJ2AypHfe/Qt/0ryzLcnCs9LHnj/zzFjZAWfoTj5tDtl4ewvo+3ZJlw3Oknhdmp5Fa3snmQ8yLUmerzcxZsD/LLNYcHw2Kp0=
+	t=1745265034; cv=none; b=TJFp6nshe92e+HD54xNvW3eBrWTj0WhxCmMVQiAkSWbRs+KtCaMdyJlkfjvijO2Mumks/MQIVoZ+aMdWubayEfXs38CJT7bHse97SCO2DdIkkRp5EiG+9kOL5c0D5tF9vZQGPc5vKNrN+Rkse9bOPWjjgnxMVmcpXakEUjgfuw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745264871; c=relaxed/simple;
-	bh=10zB3zWNYiSJJwL/V/fxIicMAY2mD0WAywQ+9NZAld8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LabJ+bgSnYei+uxdEiJiiZQKGSRd7qsXt8Bc++XPxCTN4+cpnlmxiNQaaLv1Wg9GgecRJxWK7r50CT544aaX3eAS9Twif5fd4SwtA9j4zKSCDwYprTBzFvUEs1OZ/OEgnS+JwPmRQcQ8CukGJZXdNNnWIPXdbuvT4tXqEmsU0+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id A88E31255FA;
-	Mon, 21 Apr 2025 21:47:44 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 41D7E601893B6;
-	Mon, 21 Apr 2025 21:47:44 +0200 (CEST)
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-To: "Alan J. Wylie" <alan@wylie.me.uk>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
- Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Octavian Purdila <tavip@google.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vu?=
- =?UTF-8?Q?sen?= <toke@redhat.com>, stable@vger.kernel.org
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-Date: Mon, 21 Apr 2025 21:47:44 +0200
+	s=arc-20240116; t=1745265034; c=relaxed/simple;
+	bh=ybN8/D3DwdDsf4kxotjWKDlJLEajwmwv6kf50pNbrAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=obDvmd37F6oleMceWCz8Ed1hcpG3mcLlrZuzI4RaJAz1/ubY1B63DrXMu7DM22Q52tAnbs+nzGxg9mGdE6MkNbmdkujWKDnACta79/cZmoYjm9zEDfNYS+n4ffh0jII1gW6NzXKVs3wuHE2PKEkC5Kgh/JeaTgW+bHLp0/MYlWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWSLhc2e; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWSLhc2e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745265033; x=1776801033;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ybN8/D3DwdDsf4kxotjWKDlJLEajwmwv6kf50pNbrAs=;
+  b=iWSLhc2ek9pzuV3rH3XuDT4m4XIsj55Wel9WxwgPbfSU/T0cX4WEbW7i
+   AAurZ2qhrAvlLh8RsAFu9FRAR2cFx+8Wpu+tq/5En/+zrUKa98vAXw8XM
+   /K0PSMwO9p9RzHipCwZDtLtsDFwox3j0l9PNydrqiQbAT7xpyg/ETYkFZ
+   dF2PZ34l6kWBabO2GScEwYsEVNNiF3tP3ea8CyeFwmFBx8Ezq9I3VEmvC
+   hWTFeGoqHpnzCES4i6OW8ZFuYkLdo4tWP0Vv797oTdyl2DBzXtqmPDDhY
+   +NDRHdUQT174usbRKocsDfnKT8soS33SGtare4PLPsW4rOzyRvasZEsqO
+   w==;
+X-CSE-ConnectionGUID: uXs6I39wR/23AY5cF/Xe/Q==
+X-CSE-MsgGUID: DLfQcL48TXC2N7DOGd7pAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="50467273"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="50467273"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:50:33 -0700
+X-CSE-ConnectionGUID: 7pt6h8IkTCSCJYJnRtkvYQ==
+X-CSE-MsgGUID: PqlTLV11R/uK0RnTi5v+Lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132112044"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:50:32 -0700
+Date: Mon, 21 Apr 2025 12:50:31 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v3 12/26] fs/resctrl: Add hook for architecture code to
+ set monitor event attributes
+Message-ID: <aAahh0Mv6m1sIq1k@agluck-desk3>
+References: <20250407234032.241215-1-tony.luck@intel.com>
+ <20250407234032.241215-13-tony.luck@intel.com>
+ <948e4fb6-f1c2-4547-b430-7d9ca3af7cf3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <948e4fb6-f1c2-4547-b430-7d9ca3af7cf3@intel.com>
 
-On 2025-04-21 21:06, Alan J. Wylie wrote:
-> On Mon, 21 Apr 2025 13:10:00 +0100
-> "Alan J. Wylie" <alan@wylie.me.uk> wrote:
+On Fri, Apr 18, 2025 at 04:11:22PM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
->> On Mon, 21 Apr 2025 13:50:52 +0200
->> Holger Hoffstätte <holger@applied-asynchrony.com> wrote:
+> On 4/7/25 4:40 PM, Tony Luck wrote:
+> > Architecture code knows whether an event can be read from any CPU, or
+> > from a CPU on a specific domain. It also knows what format to use
+> > when printing each event value.
+> > 
+> > Add a hook to set mon_event.any_cpu and mon_event.type.
 > 
->>> If so, try either reverting the above or adding:
->>> "sch_htb: make htb_qlen_notify() idempotent" aka
->>> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5ba8b837b522d7051ef81bacf3d95383ff8edce5
->>>
->>> which was successfully not added to 6.14.3, along with the rest of
->>> the series:
->>> https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmail.com/
->>
->> "successfully not added"?
->>
->> $ git cherry-pick  5ba8b837b522d7051ef81bacf3d95383ff8edce5
->> [linux-6.14.y 2285c724bf7d] sch_htb: make htb_qlen_notify() idempotent
->>   Author: Cong Wang <xiyou.wangcong@gmail.com>
->>   Date: Thu Apr 3 14:10:23 2025 -0700
->>   1 file changed, 2 insertions(+)
->>
->> It will take a while (perhaps days?) before I can confirm success.
-> 
-> I'm afraid that didn't help. Same panic.
+> If the architecture modifies the output format then the values exposed
+> to user space will look different between architectures. User space will
+> need to know how to parse the data. We do not want user space to need to
+> know which architecture it is running on to determine how to interact with
+> user space so this makes me think that this change needs to be accompanied
+> with a change that exposes the event format to user space.
 
-Bummer :-(
+Would it be enough to include this in Documentation? I.e. add specific
+entries for "core_energy" to say that it is reported as a floating point
+value with unit Joules, and "activity" is reported as a floating point
+value with unit of Farads.
 
-Might be something else missing then - so for now the only other thing
-I'd suggest is to revert the removal of the qlen check in fq_codel.
+Alternatively the filesystem code could convert the fixed point values
+to integer values of micro-Joules and micro-Farads. Then the filesystem
+code can print with "%llu" just like every other event. Would still need
+the Documentation entries to explain the units. This has the limitation
+that some future implementation that measures in greater precision would
+be forced to round to nearest micro-{Joule,Farad}.
 
-Holger
+File system code controls the formating options available, so options
+for architecture code to break the user interface are limited.
+
+-Tony
