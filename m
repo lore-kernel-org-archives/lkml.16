@@ -1,69 +1,58 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD32F9E6;
-	Mon, 21 Apr 2025 00:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD108645;
+	Mon, 21 Apr 2025 00:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745195759; cv=none; b=BjWQP0rfHCMlQaJ+l/exEh5d3YWVZ3flCfUrjDI+V5Wju8nnWvsy6ox2RI7hEv7TOAmJPnnBSh+5cM/XInMmx2bYmRTjiYBMMYFI6ZSkRAnU5YJhBc3nqxx4lI1BSFDnLLqArkwrpppFqdWb5IFzFN5NCFUYpzUvb5tACXotR8s=
+	t=1745196270; cv=none; b=IwTID0aMLMTGPzX6pa0STKYTcLQmmiP4+Pn42JCOg+etK6s49TYA16kZdAD0xaShAy3DVAJopWUCYoctp2+O+2nERByfG7pKPoBbASB4rehB4lrF5I3EpbmeN2bLKBYkSVq5b5Q6EWh7UeAgKnyDG/CCWBuaG1LASuOkJ3DPQFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745195759; c=relaxed/simple;
-	bh=w+nRilCPBo4qLjezANmHi6IUbbDOLmbkRqy4iIoI0Ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SZFEyDZP2KTjazuQ3y62SNirktJAr/N+KHc5Lnw9S1wortYKSbHalCaadAUo9YZ5nxtKQIFHiojELeBOzz5AJ3MrE8WeKQFrIuMZN6v+9pV81NrQO8dJC7Vy5cpl7WrjlggnXPTCLSQDWX+FI07cNMofFfoB21K9lNlQwiipHkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWG3LSvi; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745196270; c=relaxed/simple;
+	bh=tpc7JI9zhuZRUMpn8JtVPnErk+zdJMycBNuPABRdwVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJbWUwWLSUAbzsXljaQZxltHqWYh6iQSOd18b5h06ig7fgd6gdW5+KPYfrgvf87nFR/zvpi9l8WdX4e7wyF0pMhLYlAnb/YA4VzFdOR+oKjzU/pxwZz1CxCWE31/+HaPN6SlEqLGK6TUVwF87CLy1epMQ3fNX9+mZV9fryUqKPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ZxaIxn+F; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWG3LSvi"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30820167b47so3219282a91.0;
-        Sun, 20 Apr 2025 17:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745195757; x=1745800557; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=jj+ccMxnA1lCVJdjs6F8PzqhSDUsTWPy1/yOR0FwxBI=;
-        b=MWG3LSviP3yWkow1piTwMdHXMUsBExfV7a7ZFsJ6pZocceoaWcsB41p1/BBZktJGPK
-         HLdyjuxnn+ePYFqE7m3xhG8Ph2AuuuLobL4eJhlnQbRz12KNOM6FC6sScCyp10Axr/Xl
-         7o85pxm1ZTZiDJ+qiWS+pI9I6msB1eBefgWfgr0GgACTgEX+ywUYG9PUIY21KfQLvJcM
-         WrCg3hvPYGVVcFxqTyb3lgmQe8Nj/Xn/Yl1ApAwq5YK2Q/1DqnJTfGuagSzImLLIja1w
-         IYvsGAF1I9z7QSzo+o/vuekn0AlFGmZGGUc74HAhREbIVs4Dw0H6nEIUXOQAa58BbRRo
-         kohQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745195757; x=1745800557;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jj+ccMxnA1lCVJdjs6F8PzqhSDUsTWPy1/yOR0FwxBI=;
-        b=RixGmsbOxKn9OpjHgV3EZHx3WbOVICRn99W/XLKbW6RX9tDQnbMndlz5ynTVArZ1kY
-         OakTfMie8CvQmoHKvB4lpONQTr61SE9qS9NWvVTyUlP0z6ychyHYq3kySyFzi0Hbj2OZ
-         mwhkvqo/h0e0Ae/8PxkRrz1x2fAjHS2AW5M+rzVwuRfi+FpuH1cv6ABXjrUVTU1A8yG7
-         YvSiHBxe6eR0CUVJCrKQBEVVq4cfQ3ujpR/0Ml1dgSFJj7cMgbUxLtTGSPugvjfUksh9
-         vOA43Mw+OemH/l2WUmd7n2E7fnIvfS7Jm4+Qnc1bvUd5uzuCZ0W1QV1ZtAfDauETmuss
-         ZDkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHQRemQQieur3iri33RPazmmT9H5KCgCyui5/PequJMxnGJYY9CvrZDwoQPs4bifb/Wm5XTN+Sn7+O@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaQusUOpY1L/Give3gpIkU48GHK/9RbIgwPsYGmFg5HKnbEztt
-	vB7S3AkAoud63Hru1oUjzAwfdE7R6slxycBiFo0HmAiMNUkaWxQBdu+YiQ==
-X-Gm-Gg: ASbGnctgiKWOvjlRWHsyQAzXqSLwhohxx8JQf/xDSjOVULJ0KB3JRjysi6b4xNOJM4q
-	fACbmXhyJLYszAyGIbrg3YG9Or8FrznHqlY+aHpNWhnVPjJJ7fh0OnJ73yus6+Nh7d9TXGf6P8x
-	07GlFSo/qSoTOGEj7FQB9KKE6EDDfpRGoNh9IMWmZutCJ+qV8r4vTA8nEJ9hUatbvFFVIzn5aUw
-	R04ZpSNvPO/+L91m6npA9cqzL8OsUphYyU6fxzl1yHzuXqzdhp8EEpZB+lB8GlqOlRmGyqcQJe6
-	IpmQZrao8oTVujZvcLL2ubwCUFu5heDNUd6sfRMLR/8c2LERZvFa+3fY82RVQkEj
-X-Google-Smtp-Source: AGHT+IG2TklQtz1p2iLWA/jIJ1CzsVsliNAcdJBGwbUsGJh+pMCAckaAuI4xAFEMVT2sR98dxpdI0Q==
-X-Received: by 2002:a17:90b:568b:b0:2fa:42f3:e3e4 with SMTP id 98e67ed59e1d1-30879ab0397mr14142056a91.3.1745195757007;
-        Sun, 20 Apr 2025 17:35:57 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf2548sm54073125ad.64.2025.04.20.17.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 17:35:56 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 20 Apr 2025 17:35:55 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gcc-15: acpi: sprinkle random '__nonstring' crumbles
- around
-Message-ID: <4f941c51-784a-4f10-8df5-6bd103d1d80e@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ZxaIxn+F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vPXublOhMjlOwCfZ5gPbmVGyzTgvlu2iZbOFAWd6GXg=; b=ZxaIxn+Fj20GsHtAKXYV6YKHg5
+	Hg3KTBOsCwV699IuUwWg75w2fOCQ3NBhNLsvUHsiPhua0+pvvPLFJa4s8prTVb72R/p7f7YOf7aZp
+	Hj5VC/rCJaSWzb/4/8/Cjj2v4WGp+9PA/v2lr9IGDvTyWoyLsfxSAC9Q6GRGjOIviDZ5d+pS6WScS
+	bETfBaReHLmCnqR2YlyBe21vtUH3BtPx83fTNjYzGgZyw7YxK9sbR7W/sdPbyrL9aHuJlpytZp5qV
+	N0tnXyPaGQnh2DL0qp3p/hkJN6RlXyrrqCyI9OQB4SiO6QHcxsUrCm4o/X7Pvl4eNPRhOn1pze1l5
+	A+km/t8w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u6fGl-0000000GYpw-1WIA;
+	Mon, 21 Apr 2025 00:44:19 +0000
+Date: Mon, 21 Apr 2025 01:44:19 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Ian Kent <ikent@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>, Ian Kent <raven@themaw.net>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	Eric Chanudet <echanude@redhat.com>, Jan Kara <jack@suse.cz>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Alexander Larsson <alexl@redhat.com>,
+	Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
+Message-ID: <20250421004419.GU2023217@ZenIV>
+References: <20250417-zappeln-angesagt-f172a71839d3@brauner>
+ <20250417153126.QrVXSjt-@linutronix.de>
+ <20250417-pyrotechnik-neigung-f4a727a5c76b@brauner>
+ <39c36187-615e-4f83-b05e-419015d885e6@themaw.net>
+ <125df195-5cac-4a65-b8bb-8b1146132667@themaw.net>
+ <20250418-razzia-fixkosten-0569cf9f7b9d@brauner>
+ <834853f4-10ca-4585-84b2-425c4e9f7d2b@themaw.net>
+ <20250419-auftrag-knipsen-6e56b0ccd267@brauner>
+ <20250419-floskel-aufmachen-26e327d7334e@brauner>
+ <95fc6b43-4e33-4e3f-932f-254ec3734f8c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,27 +61,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <95fc6b43-4e33-4e3f-932f-254ec3734f8c@redhat.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Sun, Apr 20, 2025 at 11:02:18AM -0700, Linus Torvalds wrote:
-> This is not great: I'd much rather introduce a typedef that is a "ACPI
-> name byte buffer", and use that to mark these special 4-byte ACPI names
-> that do not use NUL termination.
+On Mon, Apr 21, 2025 at 08:12:25AM +0800, Ian Kent wrote:
+
+> > One issue is of course that we need to guarantee that someone will
+> > always put the last reference.
+> > 
+> > Another is that the any scheme that elides the grace period in
+> > namespace_unlock() will also mess up the fastpath in mntput_no_expire()
+> > such that we either have to take lock_mount_hash() on each
+> > mntput_no_expire() which is definitely a no-no or we have to come up
+> > with an elaborate scheme where we do a read_seqbegin() and
+> > read_seqcount_retry() dance based on mount_lock. Then we still need to
+> > fallback on lock_mount_hash() if the sequence count has changed. It's
+> > ugly and it will likely be noticable during RCU lookup.
 > 
-> But as noted in the previous commit ("gcc-15: make 'unterminated string
-> initialization' just a warning") gcc doesn't actually seem to support
-> that notion, so instead you have to just mark every single array
-> declaration individually.
+> But the mounts are unhashed before we get to the scu sync, doesn't that
 > 
-> So this is not pretty, but this gets rid of the bulk of the annoying
-> warnings during an allmodconfig build for me.
-> 
+> buy us an opportunity for the seqlock dance to be simpler?
 
-With gcc 13.3:
+What does being unhashed have to do with anything?  Both unhashing and
+(a lot more relevant) clearing ->mnt_ns happens before the delay - the
+whole point of mntput_no_expire() fastpath is that the absolute majority
+of calls happens when the damn thing is still mounted and we are
+definitely not dropping the last reference.
 
-Building i386:defconfig ... failed
---------------
-Error log:
-drivers/acpi/tables.c:399:1: error: 'nonstring' attribute ignored on objects of type 'const char[][4]' [-Werror=attributes]
-  399 | static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst __nonstring = {
+We use "has non-NULL ->mnt_ns" as a cheap way to check that the reference
+that pins the mounted stuff is still there.  The race we need to cope with
+is
 
-Guenter
+A: mntput_no_expire():
+	sees ->mnt_ns != NULL, decides that we can go for fast path
+B: umount(2):
+	detaches the sucker from mount tree, clears ->mnt_ns, drops the
+	reference that used to be there for the sucker being mounted.
+	The only reference is one being dropped by A.
+A: OK, so we are on the fast path; plain decrement is all we need
+
+... and now mount has zero refcount and no one who would destroy it.
+
+RCU delay between the removal from mount tree (no matter which test
+you are using to detect that) and dropping the reference that used
+to be due to being mounted avoids that - we have rcu_read_lock()
+held over the entire fast path of mntput_no_expire(), both the
+test (whichever test we want to use) and decrement.  We get
+A: rcu_read_lock()
+A: see that victim is still in the tree (again, in whatever way you
+want - doesn't matter)
+A: OK, we know that grace period between the removal from tree and
+dropping the reference couldn't have started before our rcu_read_lock().
+Therefore, even if we are seeing stale data and it's being unmounted,
+we are still guaranteed that refcount is at least 2 - the one we are
+dropping and the one umount() couldn't have gotten around to dropping
+yet.  So the last reference will not be gone until we drop rcu_read_lock()
+and we can safely decrement refcount without checking for zero.
+
+And yes, that case of mntput() is _MUCH_ hotter than any umount-related
+load might ever be.  Many orders of magnitude hotter...
