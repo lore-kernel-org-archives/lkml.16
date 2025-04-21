@@ -1,106 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3091CA5E;
-	Mon, 21 Apr 2025 12:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9F0B666;
+	Mon, 21 Apr 2025 12:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238936; cv=none; b=WsoemzShmIOi7Y86xEclg3/dfAAa05h+AlapKEpoV0HMqSh1hkl2sTQziHa/1epuX144L6xs0niqo/xSCYT2afIE2rRjvdCtGsEtsvWb+P7YOq5lSEFv3aofm2fHxdm7lBb06Tw2dlACq7n9Dp7PnDl4fp4db/kgR29AKUtS2ws=
+	t=1745239026; cv=none; b=XDB8D15oi6ud8Ja67VsRiiPd2wF3c7wEwyZytJE2U8FrXsA9nAO7A6yiUx1lkSZjnQhIDhMTmmmLKP9JSTI23tGIarGOcqLFw61pRN3HSZA+QVHx40AIyLfYWaQSmUBwMr2zzeolBTx7D+daQvBBnYDxI3UWEGrPwj3gQhAr9OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238936; c=relaxed/simple;
-	bh=LKV5AF+UI7xJyCRmClBJn1fAs26XKw6odVEo5yG6Itw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VX+QtxsIN3A7F2ErEaXxai2iGIKfJXJxKHQsAgISdtIER/2ISpYvmZL1YGvwHw0fBLUUIGNbmaxdVHMl05fSUjCOPsBGeXcNprmTMEiYDlemgCD1UOIF9Ef5B116RYw3XUaV7ZoOHvNeyLuxQPUBuFV0tZNv7UrHUYH4OULHPFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGOSlejL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745239026; c=relaxed/simple;
+	bh=xUoy18CdiDXwRbZeN4HdFmHR7gr0IcLOiQofTpsxvoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oLaoqZOeq2b73iTvRNykExZ98Lqk5aEKABcRM5n5tVKp4bUTqC8S0Zs1LSXOl2wgOgOiN1PWO5wGFwQV1H9iB/WT1efAndRraK+cdPT7ieRjQToIUbxsnmxwICM3UwI3W05YD4J7wdFNeDsPS3ShWseXrSoiTyoQogEFG/6jc4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iq/IEZjF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGOSlejL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2076CC4CEE4;
-	Mon, 21 Apr 2025 12:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745238935;
-	bh=LKV5AF+UI7xJyCRmClBJn1fAs26XKw6odVEo5yG6Itw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hGOSlejLY9j/kj+DCdjHBTSBlxfjlF6oBGJnK4zbT9Gf4iXcwg9xSdAhbbi5X6ph0
-	 Ue3pP6Cr3S3AgBiglPcmzlfIHtIBWs7f7Ik5bSkJrN7TxZqScRSaprkg2tSHJ//7aH
-	 wWCTy6GSunTuW/kZPJpZPjS7uQoNcQ3LshWb/kDQl7v6aHPzTCkyMpxSaA1TF2Q+04
-	 S800ivtSabXe6xnlsrhY65kBc7ZoStSCwtDyjfGlJOWa8yPuoBpNkQA8zee1wIgCxj
-	 WilqjS2r/Ya/+kXTCosvFtvbLWC9C6vkpPRWtnVH/HIWcaih74YKImiXhuxzBRPgyX
-	 D/ZBpH9exl0lA==
-Date: Mon, 21 Apr 2025 13:35:26 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v5 4/5] staging: iio: adc: ad7816: Use chip_info for
- device capabilities
-Message-ID: <20250421133526.29a562be@jic23-huawei>
-In-Reply-To: <20250420014910.849934-5-gshahrouzi@gmail.com>
-References: <20250420014910.849934-1-gshahrouzi@gmail.com>
-	<20250420014910.849934-5-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iq/IEZjF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=NKiLvGqiMQUIQKr+UjuD8tWiHt3uwJSWt0OKD4dCah4=; b=iq/IEZjFmxmua3Fr6ALoKkqg27
+	mw1tKDU6vLbPzbGtqnd2ujDZXTUoobt427h0Td38hyU0s87xDMA/GcoDI7m6y7dVBMDvHnw8NKNK1
+	ABcpXENB80Fsda3wgaQwf1o377EE509n8trVH0NlM5MxudSFFeYirJXCwfClE/Lnwi7Q=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u6qOB-00A5Ye-QJ; Mon, 21 Apr 2025 14:36:43 +0200
+Date: Mon, 21 Apr 2025 14:36:43 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	mhklinux@outlook.com, pasha.tatashin@soleen.com,
+	kent.overstreet@linux.dev, brett.creeley@amd.com,
+	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, leon@kernel.org, rosenp@gmail.com,
+	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: mana: Add speed support in
+ mana_get_link_ksettings
+Message-ID: <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
+References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+ <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
 
-On Sat, 19 Apr 2025 21:49:09 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+On Sun, Apr 20, 2025 at 11:33:38PM -0700, Erni Sri Satya Vennela wrote:
+> Add support for speed in mana ethtool get_link_ksettings
+> operation. This feature is not supported by all hardware.
 
-> Move device-specific capability information, like the presence of a
-> BUSY pin, into the ad7816_chip_info structure.
-> 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  drivers/staging/iio/adc/ad7816.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
-> index 39310ade770d0..ab7520a8a3da9 100644
-> --- a/drivers/staging/iio/adc/ad7816.c
-> +++ b/drivers/staging/iio/adc/ad7816.c
-> @@ -44,21 +44,25 @@
->  struct ad7816_chip_info {
->  	const char *name;
->  	u8 max_channels;
-> +	bool has_busy_pin;
->  };
->  
->  static const struct ad7816_chip_info ad7816_info_ad7816 = {
->  	.name = "ad7816",
->  	.max_channels = 0,
-> +	.has_busy_pin = true,
->  };
->  
->  static const struct ad7816_chip_info ad7817_info_ad7817 = {
->  	.name = "ad7817",
->  	.max_channels = 3,
-> +	.has_busy_pin = true,
->  };
->  
->  static const struct ad7816_chip_info ad7818_info_ad7818 = {
->  	.name = "ad7818",
->  	.max_channels = 1,
-> +	.has_busy_pin = false,
->  };
->  
->  struct ad7816_state {
-> @@ -98,7 +102,7 @@ static int ad7816_spi_read(struct ad7816_state *chip, u16 *data)
->  		gpiod_set_value(chip->convert_pin, 1);
->  	}
->  
-> -	if (chip->chip_info == &ad7816_info_ad7816 || chip->chip_info == &ad7817_info_ad7817) {
-> +	if (chip->chip_info->has_busy_pin) {
-There are two places in the previous patch that have this pattern, but only one is
-being converted here.  Why not replace the one in probe() as well?
+This needs a lot more justification. tc(1) will show you the current
+HTB Qdisc setting. No other MAC driver i know of will show you Qdisc
+info in ksettings. So why is mana special?
 
+Something your said in an earlier thread might be relevant here. There
+are two shaper settings involved. The Hypervisor can configure a
+limit, which the VM has no control over. And then you have this second
+limit the VM can set, which only has any effect if it is lower than
+the hypervisor limit.
 
->  		while (gpiod_get_value(chip->busy_pin))
->  			cpu_relax();
->  	}
+The hypervisor limit is much more like the value ksettings represents,
+the media speed, which is impossible to go above, and the machine has
+no control over. Reporting that limit in ksettings would seem
+reasonable. But it does not appear your firmware offers that?
 
+    Andrew
+
+---
+pw-bot: cr
