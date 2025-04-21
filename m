@@ -1,202 +1,133 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61DC263F22;
-	Mon, 21 Apr 2025 13:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4123263F22
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745241635; cv=none; b=am60fYRrGheZrI35akFAtGHQ4M3zUpUKuBTrkBa2RF7qSGE7j0zV73RNuTdn/4BvxpMBSSDVo0ZukhELMrcpkQbuJBea5mdPYuzGOF0g0GA/I4txfs5CQofDUohmvN0XPEV7Eyo/vZ6N72L6HcnZMMmgyvOl8kS3CmSNpGsZok0=
+	t=1745241647; cv=none; b=us4xoJDISaLdgkSlcpX6GOtI0u4HpBwAeLn8FyqP5HKa8l8awMZYuK2LOnyIF4/i9XkNSJLO6eVo02nzO2qA7lGEE/SUZHaNrX6FQ06sJHrJM+hlIwNt8F8q8HUw58rH0Rfz4nBGgYmXft2YHFPmlJe0i97PMnDqgBZNf4uI3uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745241635; c=relaxed/simple;
-	bh=s/MEn69Vxiwgbi3TnjgmMNpoidNLH7016dKMoDI/3b0=;
+	s=arc-20240116; t=1745241647; c=relaxed/simple;
+	bh=yr5u4N3yDuIYaV72wLIMS3lZ4xFyEBaA/73ShEQBB+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=boqTEh/z0jZlZFzdGFxk8gkVSpHmxbyftGlU2Y1rWDCv9hPPtsvujlJIvMmfBlsnEbo+PQHbcpxr8aZxH9Bcxc4iWv6KmFk90tES3OeL9gNbTZjgCyetVx//1qw2hM9GKeDWw3HiK/pqhXtpaYnnUIxFDVS98kIzBLSRLReIXf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=h4Hnhhbo; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnUZ/CCaAkEzGz8f8DYMywemmroc1eOKFkFiSUGt5jIKoo09+U87XjkULPl5poWzi5IdL4Um2IMVeDDi3sBrtPbsd7nux45WB+8XqafgHN1xKDZTNuHF2+uBX30sfuC6zrjGXTIhpOSFBxzVgJ2kaw0O99CdMLAJ8ILfZ30ZC6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3g579Qd; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="h4Hnhhbo"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5CC806D5;
-	Mon, 21 Apr 2025 15:18:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745241505;
-	bh=s/MEn69Vxiwgbi3TnjgmMNpoidNLH7016dKMoDI/3b0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h4HnhhboDu5KoTpyBcY1Ycj5vlIySSnDKCsLEfTX80R7uSerlmmffWgWENezev7nG
-	 dKcsIwxLNk45NequPkiefxdQJo0gZeU3OBlMtRcUDbVr9QNzQaHytv/h8QRqQurjw3
-	 FFphnHqcIXLMa4fUH/+pdVpR98yh4VARDPwELPMU=
-Date: Mon, 21 Apr 2025 16:20:30 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 06/13] media: ti: j721e-csi2rx: get number of contexts
- from device tree
-Message-ID: <20250421132030.GF29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-7-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3g579Qd"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22928d629faso38337695ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745241643; x=1745846443; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ypsQ6P+T8bstA/K8ioTPiTkgiiwRiP/Vk02TLkIe/EU=;
+        b=H3g579Qd+waOSnQ11seVJ0edmTvnk6nhQIMPB0o7z4QPq0mNsDQfGoN+abR/+UcnpY
+         CR+WfYgZcJtSH2UYJEIIaPUgKcOfW38jjgL1FEtwnmg/m98yC06XdGv+oR2Tt4xiwh7C
+         P9+IOgIuvWFidQO+W3CknNC2QPSjazRQVXRMnjsbn0BZqb8aKzCrTgz7harr5ic3qh0E
+         xesxIyltuBO5LcumeOJo2maQVkhBtBt10s3xz5arwB+GIdnQHceUiBHIlpA1GdGZGJKZ
+         xDEwaRSMlFS005EE2+58ohOhy8uZUnhZy6b9gaVjCtCYKfTkO9PMODY5Oyf8KkECT5x8
+         uFOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745241643; x=1745846443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ypsQ6P+T8bstA/K8ioTPiTkgiiwRiP/Vk02TLkIe/EU=;
+        b=oCBDHGCR9CmwSfSPxiGRum7mI25FUyjTRWCcmWf+vkfPOjslix3AC/0a2imQ8dSEYn
+         0JLCLPHstHRhaEbphAuT5OskFVraIU8gWA5A5B+pXNnFowi8jKQCcNw/b0Pq13XDZlhG
+         c4ZdnrU4GL7l4Qee13l/dgb9pP58+DIxPYFowWgL7NRXGnA37mztrN7QCkVPppDGC13n
+         oKDa6+bEn7fnN4RRdM9HOZiHLT0zrw9s3CMR1DTu7TM4tl4HuIlAECxJd/QnyLB8fxJr
+         UrcJkeKdyabncrWYpcIaWHELGsuoTh267+fd7mQbQrD6TwOzAaEPBIJG5GwN2MdMNRR8
+         gDbw==
+X-Gm-Message-State: AOJu0Ywj5a8nOHEURX2EJGUuxcEmFxnHWjKFMfrfrAQk/UBxd+SE+DuY
+	tglutJU+1mFlz7N12wRGiSDGrv257eV58ybHO6AKqdYRaRWX4pQ3B5hmKQ==
+X-Gm-Gg: ASbGncsXg3nml1upMUfQHXZMoqQV0iENAS2KD02Fl2l97d9UucyOfi9+R5c8G4H/YVo
+	LArYsZX9IA8CcNdPWi3+zY4XuU7k+54Q2P3no/aNz/9Xv1JSJ6ZvTESc4k5w9jn5iil/oTKU+Fx
+	Tzi+HlYzQRYRInUDpUlBGiVOuQUV4ZdIo/54XOQTf+XtKiige0rilnrOQDDDCTAM6sohFTDXDKl
+	XKTwfF0KF0IdisIfqNAKL7M2+yM/Fj8lDXUBsEF6stvgfvhqx+p0fADujRJVe9OT7JCeLosTj9a
+	1yQMzfwNGAgMXUfNOZI+PSOTFz8QqQBWp0d6PfLq09eee1G9gRAJiw==
+X-Google-Smtp-Source: AGHT+IGRY7uEkUe11a/A39zqw+fquFygWl+m9yJFJaMmdCnaVZ5wvdtF1WcAvgZyoBsv0NQUjPA4rw==
+X-Received: by 2002:a17:903:1cd:b0:21f:4649:fd49 with SMTP id d9443c01a7336-22c5361a27cmr173759685ad.49.1745241643058;
+        Mon, 21 Apr 2025 06:20:43 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdda5csm64807445ad.44.2025.04.21.06.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 06:20:42 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 21 Apr 2025 06:20:41 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 6.15-rc3
+Message-ID: <3f135f66-4633-4a96-86a4-9d89cfecadbc@roeck-us.net>
+References: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-7-r-donadkar@ti.com>
+In-Reply-To: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
 
-Hi Rishikesh,
-
-Thank you for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:47PM +0530, Rishikesh Donadkar wrote:
-> From: Pratyush Yadav <p.yadav@ti.com>
+On Sun, Apr 20, 2025 at 02:01:49PM -0700, Linus Torvalds wrote:
+> There's absolutely nothing of huge note here as far as I can tell.
+> Just a fair number of small fixes all over  the place - the biggest
+> changes are to fix some ublk driver issues, and the related selftests
+> for same. The rest is generally one- or few-lines.
 > 
-> Different platforms that use this driver might have different number of
-> DMA channels allocated for CSI. So only as many DMA contexts can be used
-> as the number of DMA channels available. Get the number of channels
-> provided via device tree and only configure that many contexts, and
-> hence only that many pads.
+> So everything looks fine, and while the merge window was fairly big,
+> that doesn't seem to have resulted in any particular pain. At least so
+> far. Knock wood.
 > 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> Co-developed-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-> ---
->  .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 41 ++++++++++++++-----
->  1 file changed, 30 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index ea7e331e872af..e85d04d7c2ff9 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -40,7 +40,7 @@
->  #define SHIM_PSI_CFG0_DST_TAG		GENMASK(31, 16)
->  
->  #define PSIL_WORD_SIZE_BYTES		16
-> -#define TI_CSI2RX_NUM_CTX		1
-> +#define TI_CSI2RX_MAX_CTX		32
->  
->  /*
->   * There are no hard limits on the width or height. The DMA engine can handle
-> @@ -53,8 +53,8 @@
->  
->  #define TI_CSI2RX_PAD_SINK		0
->  #define TI_CSI2RX_PAD_FIRST_SOURCE	1
-> -#define TI_CSI2RX_NUM_SOURCE_PADS	1
-> -#define TI_CSI2RX_NUM_PADS		(1 + TI_CSI2RX_NUM_SOURCE_PADS)
-> +#define TI_CSI2RX_MAX_SOURCE_PADS	TI_CSI2RX_MAX_CTX
-> +#define TI_CSI2RX_MAX_PADS		(1 + TI_CSI2RX_MAX_SOURCE_PADS)
->  
->  #define DRAIN_TIMEOUT_MS		50
->  #define DRAIN_BUFFER_SIZE		SZ_32K
-> @@ -112,14 +112,15 @@ struct ti_csi2rx_dev {
->  	void __iomem			*shim;
->  	struct mutex			mutex; /* To serialize ioctls. */
->  	unsigned int			enable_count;
-> +	unsigned int			num_ctx;
->  	struct v4l2_device		v4l2_dev;
->  	struct media_device		mdev;
->  	struct media_pipeline		pipe;
-> -	struct media_pad		pads[TI_CSI2RX_NUM_PADS];
-> +	struct media_pad		pads[TI_CSI2RX_MAX_PADS];
->  	struct v4l2_async_notifier	notifier;
->  	struct v4l2_subdev		*source;
->  	struct v4l2_subdev		subdev;
-> -	struct ti_csi2rx_ctx		ctx[TI_CSI2RX_NUM_CTX];
-> +	struct ti_csi2rx_ctx		ctx[TI_CSI2RX_MAX_CTX];
->  	/* Buffer to drain stale data from PSI-L endpoint */
->  	struct {
->  		void			*vaddr;
-> @@ -449,7 +450,7 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
->  		return ret;
->  
->  	/* Create and link video nodes for all DMA contexts */
-> -	for (i = 0; i < TI_CSI2RX_NUM_CTX; i++) {
-> +	for (i = 0; i < csi->num_ctx; i++) {
->  		struct ti_csi2rx_ctx *ctx = &csi->ctx[i];
->  		struct video_device *vdev = &ctx->vdev;
->  
-> @@ -1212,10 +1213,11 @@ static int ti_csi2rx_v4l2_init(struct ti_csi2rx_dev *csi)
->  	csi->pads[TI_CSI2RX_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
->  
->  	for (unsigned int i = TI_CSI2RX_PAD_FIRST_SOURCE;
-> -	     i < TI_CSI2RX_NUM_PADS; i++)
-> +	     i < TI_CSI2RX_PAD_FIRST_SOURCE + csi->num_ctx; i++)
->  		csi->pads[i].flags = MEDIA_PAD_FL_SOURCE;
->  
-> -	ret = media_entity_pads_init(&sd->entity, ARRAY_SIZE(csi->pads),
-> +	ret = media_entity_pads_init(&sd->entity,
-> +				     TI_CSI2RX_PAD_FIRST_SOURCE + csi->num_ctx,
->  				     csi->pads);
->  	if (ret)
->  		goto unregister_media;
-> @@ -1301,8 +1303,9 @@ static int ti_csi2rx_init_ctx(struct ti_csi2rx_ctx *ctx)
->  
->  static int ti_csi2rx_probe(struct platform_device *pdev)
->  {
-> +	struct device_node *np = pdev->dev.of_node;
->  	struct ti_csi2rx_dev *csi;
-> -	int ret, i;
-> +	int ret, i, count;
->  
->  	csi = devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
->  	if (!csi)
-> @@ -1324,13 +1327,29 @@ static int ti_csi2rx_probe(struct platform_device *pdev)
->  	if (!csi->drain.vaddr)
->  		return -ENOMEM;
->  
-> +	/* Only use as many contexts as the number of DMA channels allocated. */
-> +	count = of_property_count_strings(np, "dma-names");
-> +	if (count < 0) {
-> +		dev_err(csi->dev, "Failed to get DMA channel count: %d\n",
-> +			count);
-> +		return count;
 
-You're leaking the drain buffer.
+For v6.15-rc3-1-g9d7a0577c9db:
 
-> +	}
-> +
-> +	csi->num_ctx = count;
-> +	if (csi->num_ctx > TI_CSI2RX_MAX_CTX) {
-> +		dev_warn(csi->dev,
-> +			 "%u DMA channels passed. Maximum is %u. Ignoring the rest.\n",
-> +			 csi->num_ctx, TI_CSI2RX_MAX_CTX);
+Build results:
+	total: 162 pass: 158 fail: 4
+Failed builds:
+	openrisc:allmodconfig
+	parisc:allmodconfig
+	x86_64:allyesconfig
+	xtensa:allmodconfig
+Qemu test results:
+	total: 635 pass: 627 fail: 8
+Failed tests:
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:ext2
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:erofs
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:f2fs
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:ext2
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:erofs
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:f2fs
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:btrfs
+	mipsel64:boston:64r6el_defconfig:notests:nonet:smp:ide:cd
+Unit test results:
+	pass: 594143 fail: 0
 
-I'd rather turn this into a hard error and get the device trees fixed.
+There is a new build failure, affecting openrisc, parisc, and xtensa.
+Example from parisc:
 
-> +		csi->num_ctx = TI_CSI2RX_MAX_CTX;
-> +	}
-> +
->  	mutex_init(&csi->mutex);
->  
->  	ret = ti_csi2rx_v4l2_init(csi);
->  	if (ret)
->  		goto err_v4l2;
->  
-> -	for (i = 0; i < TI_CSI2RX_NUM_CTX; i++) {
-> +	for (i = 0; i < csi->num_ctx; i++) {
->  		csi->ctx[i].idx = i;
->  		csi->ctx[i].csi = csi;
->  		ret = ti_csi2rx_init_ctx(&csi->ctx[i]);
-> @@ -1369,7 +1388,7 @@ static void ti_csi2rx_remove(struct platform_device *pdev)
->  	struct ti_csi2rx_dev *csi = platform_get_drvdata(pdev);
->  	unsigned int i;
->  
-> -	for (i = 0; i < TI_CSI2RX_NUM_CTX; i++)
-> +	for (i = 0; i < csi->num_ctx; i++)
->  		ti_csi2rx_cleanup_ctx(&csi->ctx[i]);
->  
->  	ti_csi2rx_cleanup_notifier(csi);
+Building parisc:allmodconfig ... failed
+--------------
+Error log:
+ERROR: modpost: "__divdi3" [fs/xfs/xfs.ko] undefined!
+ERROR: modpost: "__umoddi3" [fs/xfs/xfs.ko] undefined!
+ERROR: modpost: "__moddi3" [fs/xfs/xfs.ko] undefined!
+ERROR: modpost: "__udivdi3" [fs/xfs/xfs.ko] undefined!
 
--- 
-Regards,
+Commit 845abeb1f06a ("xfs: add tunable threshold parameter for triggering
+zone GC") introduced a 64-bit divide operation. I reported this to the
+author, and a fix is in discussion.
 
-Laurent Pinchart
+Other than that, there is the known allyesconfig build failure for
+x86_64:allyesconfig. I submitted a number of different proposals for
+fixing it. We'll see if one of them makes it.
+
+The fix for the mipsel64 test failure is known and will hopefully be pushed
+soon.
+
+Guenter
