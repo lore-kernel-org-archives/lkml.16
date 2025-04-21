@@ -1,134 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C258D1E9916;
-	Mon, 21 Apr 2025 22:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7844C22ACE3
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745276284; cv=none; b=bqEwsifvZcG3kqqzMsXNOOEk325t7s0uh0s5FAKIygynWLRClpmPGz3N0PvrWnJUU4ItUm0EL1vvmuqn2/rJw9Ju8GTni8HF1znh5/QjGBsG3m4rvqGbVJIO26WulywnC6vlcIDDIGA3dz9vPo7Ubg7KGupeh+j4SZOOvEMKL10=
+	t=1745276366; cv=none; b=h+8Z5rhhmeS9jtwJE1b/lO2M+GOyIaJ0ojiZI7M+l2wKNOo+dxUgvYPKlu9idSnNM9jdg698oIAczosKDUyb/7rINoMYji6s5CWHX2Q+Ec+B2TtfxnjhN9/rsiRwJYnPWixviSGwIqlqawnoQgvp0MFYutQ6Z164YKZ/1IpQ3e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745276284; c=relaxed/simple;
-	bh=9FzfySd8JcmYcJhA+RbTr4cgSyXJQBTIYaQ0EG+ywnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M6hJx/6g9x2Fe5bU3gnbTHZBflUSiEaXnr1AbW/AScGqBFQ6q1eYGG1NhtYYDNnyEIDBhLk3tAZz/9ZJ8wDBx7Z12eMpvVqjUc9NsodwW2MAtBONu6FF2nf8rRvG2iRbXfYMytAsOvf7ZXzFVmqgQXw/OOhxeiGD/2mGUFJAqv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EsBnV/aP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745276366; c=relaxed/simple;
+	bh=ebsskF4Rmx9x2NEcLJ3VCcQSQ/+L1tQBK+Pn+z3GXaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=drhpVcvzfFeaLFIbH0a38ncoer6+pcB3QHHHu6eBh0/Q6dMVj7Dlh014ybJEpFOGlHoT4IuZsO0X4vesCBSHe3iruW7zZpN5qZAC+gPkRuEdOiQ1UHxUO1OlLUhqYL9geTEC1e1hiMzabqD1fVK4GPwEFMpxglcYQL6ktU/Q4PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EgWVdVWN; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EsBnV/aP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745276283; x=1776812283;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9FzfySd8JcmYcJhA+RbTr4cgSyXJQBTIYaQ0EG+ywnI=;
-  b=EsBnV/aPN48xxGUt9hXpLItmmZYh24iGUzsTVZ0Hx1ALFCQn7cLVgWip
-   47mJnUrX067ZJluz5VEJOjjOJHzp2GXDJNaqBhqFYqf8JdEaUrFhn/koo
-   CcEnSjCdAIJeRfF9FzgFZ2AhnzWBxF97ihWj2JnZyMYHx3VFQJg0JdyGv
-   AuHQeXXFaBSDXp8cMQgFa0+ZRrdw2I7H3yOEVUwECJoVVKO+Rf7a/hs3d
-   Uwv+G1KYN4iaFAL8wR0Py/M1sa83hdg2AxJIJitQHys5N+PQpMB//5bn/
-   GMQGKLZSqL/9E+tfKBVYxdms+nP/kMGS67cJ4h8omLt0cBZ5fMvjn08Js
-   Q==;
-X-CSE-ConnectionGUID: f+PGQpjhSjaz0T1sHaaAJg==
-X-CSE-MsgGUID: 08xspJJDRuSXWUvEoQujJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46999053"
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="46999053"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 15:58:02 -0700
-X-CSE-ConnectionGUID: egVHXNvjQWKwu19MNmVNzg==
-X-CSE-MsgGUID: KWGaevgqTj+G7k6IQqxz3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="131750970"
-Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.220.113]) ([10.124.220.113])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 15:57:58 -0700
-Message-ID: <26278368-cd3b-4bfb-9091-f3eec4cab35f@intel.com>
-Date: Mon, 21 Apr 2025 15:57:56 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EgWVdVWN"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4769aef457bso53928301cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745276363; x=1745881163; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RCxYzSvMQrXsgyqCqZOeSZ06BULrmA1cRmi98g2+icg=;
+        b=EgWVdVWNBi9KfwYxmeMa80V7aPGhahxPd63cLqj4un87WlNvXolXZ/nj8QfWt/3K61
+         xwMhuO630wQL8P/IR+6S3G8WmpgSnoNXv6snIbLKxFHXBL3KODtZ97ZW0tiT/xcjYAkT
+         sBPhqt78QMJCFa0QfGZkkh/OJ0v+y7iq080XdU1jlG14mQP/+fGggCqYyb33YOeU++Fz
+         UtFlQCX8B9F20AwMbbhQaZOEfe3IMoxLutCITT4UYNTCUzFrERREqSsVgzbPOimeUBK+
+         DIn8SwZ07EPeCmCGNten1GqXeyTBzfxekHifNmPM1VCLImQjgLZjw/dEIk/O2PHtiojM
+         SVQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745276363; x=1745881163;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RCxYzSvMQrXsgyqCqZOeSZ06BULrmA1cRmi98g2+icg=;
+        b=FIu/Hd1gkJ5rJnbLJMAnqg9eVt4ByZldFByXUx7S1ucjKo2Qp1DPV3w5a0t5immiVi
+         b+s/NBtd7dqTTFQkt0DvoqdwaAU7T9T6oK5l7kA1SQc7v+lIwtvKBhz3yRXKU2nQt0rY
+         n2kAOy3bWV4Oeyc0e2al5PAxWQ37ZLOj1+FVJdKlxM/DIAUmwfurvXiLQpWLgO9icf0Y
+         5aDxSgLzhgDksusxMqSu/b/1+AaVauKYw5bs5bQ0MJtUf8RujPZdFZIMtDXlnDWq+cRJ
+         9+NgIBO4dw67mhFIGGaUpp/O/GCKgfS6po/vF2MLgakknQNykdb4USDuYPwTayLDjceD
+         l30w==
+X-Forwarded-Encrypted: i=1; AJvYcCWncjZvrgdhvYff05Qy5H13+Y+1EG/dVINWqyq2chgZ8TUPU/4EvpPWBPSaRfNDMa2ed96V4mimXGs7x/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb4Vgzl9AuN2aZwu9X5Rh4AoB+eRNeqvwVHoocoUXwCwQeDGES
+	DBOJBy3JpNJVU9TvSQ+CEtqeH1WF9LOCaG86F4b/Uzfr3FdTSEsMNNFO74VmVDI=
+X-Gm-Gg: ASbGncsgDrWnAuBJ6Y9yFpRmgPkriPb1FdikjR7L8lxDLNdjB0iEMuVnpjTEdzrmccu
+	0YbORXOxU9J5x1y13B7050cZg2SWz9hWxOi/4hBBgmi3UhfcYeCvhgvCXJ/KpKAZwu4FNzENuen
+	7I7qXGb0EvrAfU7RwGQkeYP683hDUye68ftCWLY2yVxqaGId94tbOqbnraAh95s0gzHoJTJe5zV
+	BcYbryd96CjkC6DyL35UWnBf8+812PGQGivU+LW2JXfzDtsi5qTAsMg9UhHVJZb8f0TrZl0ileK
+	vX/2gSpzSa8ybHiGkxKhaa2dk6pu2ZedVi04X4GrqTwgQXqWV3Ls8g==
+X-Google-Smtp-Source: AGHT+IETwYmaYx0EttRck+9kgxlJI3atNAQf8VACLl80GW0wQZExnGpeej3Nd8ilBizlPR2Jq06v1g==
+X-Received: by 2002:a05:622a:180c:b0:477:13b7:8336 with SMTP id d75a77b69052e-47aec394c93mr174731611cf.17.1745276363290;
+        Mon, 21 Apr 2025 15:59:23 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c4d68csm48905001cf.47.2025.04.21.15.59.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 15:59:22 -0700 (PDT)
+Date: Mon, 21 Apr 2025 18:59:20 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Waiman Long <llong@redhat.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, hannes@cmpxchg.org, mhocko@kernel.org,
+	roman.gushchin@linux.dev, muchun.song@linux.dev, tj@kernel.org,
+	mkoutny@suse.com, akpm@linux-foundation.org
+Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
+Message-ID: <aAbNyJoi_H5koD-O@gourry-fedora-PF4VCD3F>
+References: <20250419053824.1601470-1-gourry@gourry.net>
+ <20250419053824.1601470-3-gourry@gourry.net>
+ <ro3uqeyri65voutamqttzipfk7yiya4zv5kdiudcmhacrm6tej@br7ebk2kanf4>
+ <babdca88-1461-4d47-989a-c7a011ddc2bd@redhat.com>
+ <7dtp6v5evpz5sdevwrexhwcdtl5enczssvuepkib2oiaexk3oo@ranij7pskrhe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 13/19] x86/reboot: Secure Launch SEXIT support on
- reboot paths
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-14-ross.philipson@oracle.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250421162712.77452-14-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7dtp6v5evpz5sdevwrexhwcdtl5enczssvuepkib2oiaexk3oo@ranij7pskrhe>
 
-On 4/21/25 09:27, Ross Philipson wrote:
-> @@ -788,6 +790,9 @@ static void native_machine_halt(void)
->  
->  	tboot_shutdown(TB_SHUTDOWN_HALT);
->  
-> +	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-> +	slaunch_finalize(1);
+On Mon, Apr 21, 2025 at 10:39:58AM -0700, Shakeel Butt wrote:
+> On Sat, Apr 19, 2025 at 08:14:29PM -0400, Waiman Long wrote:
+> > 
+> > On 4/19/25 2:48 PM, Shakeel Butt wrote:
+> > > On Sat, Apr 19, 2025 at 01:38:24AM -0400, Gregory Price wrote:
+> > > > +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+> > > > +{
+> > > > +	struct cgroup_subsys_state *css;
+> > > > +	unsigned long flags;
+> > > > +	struct cpuset *cs;
+> > > > +	bool allowed;
+> > > > +
+> > > > +	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
+> > > > +	if (!css)
+> > > > +		return true;
+> > > > +
+> > > > +	cs = container_of(css, struct cpuset, css);
+> > > > +	spin_lock_irqsave(&callback_lock, flags);
+> > > Do we really need callback_lock here? We are not modifying and I am
+> > > wondering if simple rcu read lock is enough here (similar to
+> > > update_nodemasks_hier() where parent's effective_mems is accessed within
+> > > rcu read lock).
+> > 
+> > The callback_lock is required to ensure the stability of the effective_mems
+> > which may be in the process of being changed if not taken.
+> 
+> Stability in what sense? effective_mems will not get freed under us
+> here or is there a chance for corrupted read here? node_isset() and
+> nodes_empty() seems atomic. What's the worst that can happen without
+> callback_lock?
 
-This is the kind of stuff that needs to get fixed up before this series
-can go _anywhere_.
+Fairly sure nodes_empty is not atomic, it's a bitmap search.
 
-"TXT requirements" is not useful to a maintainer. *WHAT* requirement?
-*WHY* must it be done this way?
-
-This code is unmaintainable as it stands.
+~Gregory
