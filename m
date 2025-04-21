@@ -1,133 +1,216 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EC7264A90
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDF2263F3A;
+	Mon, 21 Apr 2025 12:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238861; cv=none; b=mG/7a5CoR0nLXfKB7r4myR3BiDcme3G3lUEUaqwEu0vPP1daJBBzS8kPm6S5N8UJ9gZKGC6KLEHx6fSVkOTqge1j7rq2tKVPz33epXDmA+HtHqdO3jOT8fwQtHjYQfqXVDfnQ+IYzttFSL+4CnQoD4WNq9cDqy4JsyJSO1dBYJs=
+	t=1745238871; cv=none; b=hCFXFXe0zyIxmMbNTSZHF1H031FFwA/ouCkcQh7fFLiK7sVoGNHasQLGDLJ9bTexu8wkEtHjgTmObsboJlpNQoPqYff29WogPUJ2Bb4J97ljuGmeqzjQIyx3aEZJLCzngsGM7MC5QxUwaeszHzM7iAwpMlV+ArPUztjpkDx1sqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238861; c=relaxed/simple;
-	bh=tBnOWminYQiAD8VcUWZjwBQVEiHljlN/Q+tV+nA8C/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A2/VH8P7CnqdG8wiuABa7cnMMvcaCPjsffChx1NIttTGXr6CDY1qq65VqEvEp5o3kGyVyMZ1T2nO9vFNYeelYNrRw3JSkaGqrnzOyuHTa2sPAKO1DTsFz/r27/R5SnwjjB9urbnnfVZypduxEiNc1rNS25aZ7oDdQ/vMeRdF1vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZJkx09Fo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745238871; c=relaxed/simple;
+	bh=xrauOpA4/vhOQFxpBIPOet7Xc8Z+xF1XZzZkt6m+Ot0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QUfM2ZY3a5E65Vgpi1ThK+gbJWk4sM5z9+JUEIeKb7KKvbjhKCKy2brsnj5YSXjQ1wyqovhXS0VySj5u2fcpF6pTYU2LS8/Nks2TfkM1xo2G4KUvl/7O/3Hs6VMcbOzW/u38l2MsdgO1xH0T09Syi36/zRG++Cfn6a8pJCdbi5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geC/2wbw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZJkx09Fo"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LA541A009401;
-	Mon, 21 Apr 2025 12:34:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Y7onz8
-	cl48XsU3bJSx9rmiPBhBfsK++dY7LgegblbwQ=; b=ZJkx09FoOaB3soUW3C+L5e
-	zWt94fe0oZ0jUvF+4YYxlRj8qr7+Yf7qD2G4qqulvwe1hZzSmprEz1tQIqDaWaHc
-	CNOEz/WWkb5bfHuV1FmxTOEa7iHH802C4EihtTO2YJdxH47sA3p7Y2subRinq/IK
-	4IwIJFJb3CCAF5FJdg81LN6JILiSnh18+C0ARRsb0YI0pjeuCK5RPtGGxudv8o3y
-	r85YC1vVWGgmv8NJtS/IuuiIODZjQHTHRPHd8yv3PnLc9nLEZ/xiyRRC2q+ZhYH8
-	HGJNcBbCA1LAAdWkZgXF1uG5v07SxJDH0TEkDIHzn/MtBe/iBReNeVjSD1yi/cqw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465kxj8h3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 12:34:09 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53LCVaon018921;
-	Mon, 21 Apr 2025 12:34:09 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465kxj8h38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 12:34:09 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53L94unm028120;
-	Mon, 21 Apr 2025 12:34:08 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv1wy2p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 12:34:08 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LCY4Ex58786150
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 12:34:04 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5ED252004B;
-	Mon, 21 Apr 2025 12:34:04 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F08520043;
-	Mon, 21 Apr 2025 12:34:01 +0000 (GMT)
-Received: from [9.39.25.91] (unknown [9.39.25.91])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 12:34:01 +0000 (GMT)
-Message-ID: <f1cb42d7-573c-4c48-a4f5-c19cf0485b10@linux.ibm.com>
-Date: Mon, 21 Apr 2025 18:04:00 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geC/2wbw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04115C4CEE4;
+	Mon, 21 Apr 2025 12:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745238870;
+	bh=xrauOpA4/vhOQFxpBIPOet7Xc8Z+xF1XZzZkt6m+Ot0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=geC/2wbwJ9gTVO7FI2haYfOwzQCq4ws3InzjoXohF6sKRomK+jXdUWxAxLzeyyeXd
+	 TOC4sxLizCNmwDGAuSpHTF32pN3w6wiQiXL9BMWfE8NjWcSIEGITmEdCVuc+udQPw8
+	 z4OJNokB1/2l8Sfw3TRcByFlAg0ozVxD3YBUHMAy/M2QRJc7X61aLpvBKaPbEBjDQu
+	 2TIVBuU+XtlvlZOq3COaLRPz7NqleOJ5To5mhBp5Zi5wOwFQAbCOm5aR6Z6N3jLedG
+	 DYpwK9RbOokAvkvptCMFAm51fFxBX9EKnqjBSP29dIjXLJefa/uQB/NM/m+HWFiqCm
+	 /gFbZ36wVHAXg==
+Date: Mon, 21 Apr 2025 13:34:23 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v5 3/5] staging: iio: adc: ad7816: Introduce chip_info
+ and use pointer matching
+Message-ID: <20250421133423.3833e911@jic23-huawei>
+In-Reply-To: <20250420014910.849934-4-gshahrouzi@gmail.com>
+References: <20250420014910.849934-1-gshahrouzi@gmail.com>
+	<20250420014910.849934-4-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] powerpc: kvm: generic framework and run posix timers
- in task context
-To: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, gautam@linux.ibm.com
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, vaibhav@linux.ibm.com,
-        bigeasy@linutronix.de, linux-kernel@vger.kernel.org
-References: <20250421102837.78515-1-sshegde@linux.ibm.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250421102837.78515-1-sshegde@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xIHtw0W0b6MXw8v9NiI0Jqc7FWVbDrPx
-X-Proofpoint-ORIG-GUID: F0Zk8WCYH4lY-Wfp3sdBm6MRQoripmC5
-X-Authority-Analysis: v=2.4 cv=HLDDFptv c=1 sm=1 tr=0 ts=68063b41 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=YefxoRAhaFKz9cKMQ00A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210098
 
+On Sat, 19 Apr 2025 21:49:08 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
+> Introduce struct ad7816_chip_info to centralize static properties (e.g.
+> name, max channels) that differ between chip variants (AD7816/7/8) but
+> are constant for any specific type.
+> 
+> Store pointers to these instances in the of_device_id (.data) and
+> spi_device_id (driver_data) tables. Retrieve the pointer in probe()
+> using the firmware-independent device_get_match_data() and store it in
+> the ad7816_state struct.
+> 
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Hi Gabriel
 
-On 4/21/25 15:58, Shrikanth Hegde wrote:
-> From: Gautam Menghani <gautam@linux.ibm.com>
-> 
+A few minor things inline.
 
-I made a mistake while generating the patch. Sorry about that. i will 
-fix it up in next version.
-Please consider the above as:
+I think this went a little too far in splitting up changes and you should combine
+patches 3 and 4 to avoid a nasty intermediate bit of code.
 
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Jonathan
 
-> This is an effort to use the generic kvm infra which handles check for
-> need_resched, handling signals etc. i.e xfer_to_guest_mode_handle_work.
+> ---
+>  drivers/staging/iio/adc/ad7816.c | 55 +++++++++++++++++++++-----------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
 > 
-> kvm guests boots and runs stress-ng CPU stressor on PowerVM and on PowerNV.
-> preempt=full and preempt=lazy was tested on PowerNV and in both cases the
-> KVM guest boots and runs stress-ng CPU stressor.
-> 
-> Please let me know if any specific testing to be done.
-> 
-> Kept the patches separate since they differ functionally, but kept them
-> is a series since 2nd patch depends on functionality of 1st. Also this
-> could help in git bisect.
-> 
-> This is based on tip/master
-> 
-> Shrikanth Hegde (2):
->    powerpc: kvm: use generic transfer to guest mode work
->    powerpc: enable to run posix cpu timers in task context
-> 
->   arch/powerpc/Kconfig         |  2 ++
->   arch/powerpc/kvm/book3s_hv.c | 13 +++++++------
->   arch/powerpc/kvm/powerpc.c   | 22 ++++++++--------------
->   3 files changed, 17 insertions(+), 20 deletions(-)
-> 
+> diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
+> index cad2e55aff3f9..39310ade770d0 100644
+> --- a/drivers/staging/iio/adc/ad7816.c
+> +++ b/drivers/staging/iio/adc/ad7816.c
+> @@ -41,8 +41,28 @@
+>   * struct ad7816_state - chip specific information
+>   */
+>  
+> +struct ad7816_chip_info {
+> +	const char *name;
+> +	u8 max_channels;
+
+Something called max_channels should be the number of channels.
+If you called it max_channel then it could be used for the maximum channel
+number present. I assume that is what you have here as otherwise the
+ad7816 has no channels which seems odd!
+
+> +};
+> +
+> +static const struct ad7816_chip_info ad7816_info_ad7816 = {
+> +	.name = "ad7816",
+> +	.max_channels = 0,
+> +};
+> +
+> +static const struct ad7816_chip_info ad7817_info_ad7817 = {
+> +	.name = "ad7817",
+> +	.max_channels = 3,
+> +};
+> +
+> +static const struct ad7816_chip_info ad7818_info_ad7818 = {
+> +	.name = "ad7818",
+> +	.max_channels = 1,
+> +};
+> +
+>  struct ad7816_state {
+> -	kernel_ulong_t id;
+> +	const struct ad7816_chip_info *chip_info;
+>  	struct spi_device *spi_dev;
+>  	struct gpio_desc *rdwr_pin;
+>  	struct gpio_desc *convert_pin;
+> @@ -52,12 +72,6 @@ struct ad7816_state {
+>  	u8  mode;
+>  };
+>  
+> -enum ad7816_type {
+> -	ID_AD7816,
+> -	ID_AD7817,
+> -	ID_AD7818,
+> -};
+> -
+>  /*
+>   * ad7816 data access by SPI
+>   */
+> @@ -84,7 +98,7 @@ static int ad7816_spi_read(struct ad7816_state *chip, u16 *data)
+>  		gpiod_set_value(chip->convert_pin, 1);
+>  	}
+>  
+> -	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
+> +	if (chip->chip_info == &ad7816_info_ad7816 || chip->chip_info == &ad7817_info_ad7817) {
+
+Hmm. I'd be tempted to squash the next patch with this one simply to avoid this
+horrible intermediate state where you match on pointers.
+
+It is all part of moving from the enum over to data so I think is
+fine in one patch.
+
+>  		while (gpiod_get_value(chip->busy_pin))
+>  			cpu_relax();
+>  	}
+> @@ -353,6 +367,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
+>  {
+>  	struct ad7816_state *chip;
+>  	struct iio_dev *indio_dev;
+> +	const struct ad7816_chip_info *info;
+>  	int i, ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(&spi_dev->dev, sizeof(*chip));
+> @@ -362,11 +377,15 @@ static int ad7816_probe(struct spi_device *spi_dev)
+>  	/* this is only used for device removal purposes */
+>  	dev_set_drvdata(&spi_dev->dev, indio_dev);
+>  
+> +	info = device_get_match_data(&spi_dev->dev);
+> +	if (!info)
+> +		return -ENODEV;
+> +	chip->chip_info = info;
+> +
+>  	chip->spi_dev = spi_dev;
+>  	for (i = 0; i <= AD7816_CS_MAX; i++)
+>  		chip->oti_data[i] = 203;
+>  
+> -	chip->id = spi_get_device_id(spi_dev)->driver_data;
+>  	chip->rdwr_pin = devm_gpiod_get(&spi_dev->dev, "rdwr", GPIOD_OUT_HIGH);
+>  	if (IS_ERR(chip->rdwr_pin)) {
+>  		ret = PTR_ERR(chip->rdwr_pin);
+> @@ -382,7 +401,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
+>  			ret);
+>  		return ret;
+>  	}
+> -	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
+> +	if (chip->chip_info == &ad7816_info_ad7816 || chip->chip_info == &ad7817_info_ad7817) {
+>  		chip->busy_pin = devm_gpiod_get(&spi_dev->dev, "busy",
+>  						GPIOD_IN);
+>  		if (IS_ERR(chip->busy_pin)) {
+> @@ -393,7 +412,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
+>  		}
+>  	}
+>  
+> -	indio_dev->name = spi_get_device_id(spi_dev)->name;
+> +	indio_dev->name = chip->chip_info->name;
+>  	indio_dev->info = &ad7816_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+> @@ -420,18 +439,18 @@ static int ad7816_probe(struct spi_device *spi_dev)
+>  }
+>  
+>  static const struct of_device_id ad7816_of_match[] = {
+> -	{ .compatible = "adi,ad7816", },
+> -	{ .compatible = "adi,ad7817", },
+> -	{ .compatible = "adi,ad7818", },
+> +	{ .compatible = "adi,ad7816", .data = &ad7816_info_ad7816 },
+> +	{ .compatible = "adi,ad7817", .data = &ad7817_info_ad7817 },
+> +	{ .compatible = "adi,ad7818", .data = &ad7818_info_ad7818 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, ad7816_of_match);
+>  
+>  static const struct spi_device_id ad7816_id[] = {
+> -	{ "ad7816", ID_AD7816 },
+> -	{ "ad7817", ID_AD7817 },
+> -	{ "ad7818", ID_AD7818 },
+> -	{}
+> +	{ "ad7816", (kernel_ulong_t)&ad7816_info_ad7816 },
+> +	{ "ad7817", (kernel_ulong_t)&ad7817_info_ad7817 },
+> +	{ "ad7818", (kernel_ulong_t)&ad7818_info_ad7818 },
+> +	{ }
+>  };
+>  
+>  MODULE_DEVICE_TABLE(spi, ad7816_id);
 
