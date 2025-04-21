@@ -1,92 +1,113 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA201D5ADC;
-	Mon, 21 Apr 2025 17:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4957612D758;
+	Mon, 21 Apr 2025 17:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745257309; cv=none; b=AO85TzuWMouOI/xG9VW5//AbOKV+Tiwq1FfD4huN9OsOVbkAFkh7J8JF7BNz9XQIooeTrvA0/z4FMRMieL9pfClRyfec+d0xNQ4D8oH0/54dJyUE3h62p8VQtl1ywMj1s6h/61FwmAeq0p9qbPR7indQO+OLRdApp/4CJO5EtlA=
+	t=1745257334; cv=none; b=FRhnPQbDG4Di/Fd4ea7okeRdTPPWQG++Jj7IQ87N14SgAGIjeGD1JkBwl6fuvMLuNp3uAAmBeOc3kVphJ3D/af1QAOuK0EYx9fpUfCfTqZotb2/J3psUwGGziX3F/MIRDE27uyD3Wx2Sm41Vpno/9pFGuMF6P3JsV/b0Amka4uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745257309; c=relaxed/simple;
-	bh=MInvo/TJqnPXzU3X5PwPYokDZsTAhzEEcwDju2P+M8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1K86ibY+agTRPaNAEN5dH0LDuaraWMessvAs+9lSMH5wFKeZYN5LKlSHMWt4VhvKUxNHe3980MA02JXAHTsH/RDX6dnLg4/QhO/0zd9xDcMnuHdyZDrsuRP4hg3tGxC5T8POvoWxzMUHjWf7WpSLxn6xt+zSi2vh78t37bfXMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ORG0Iapu; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745257334; c=relaxed/simple;
+	bh=Tcp+W4GOivE/alIkfZcFBn1KNwLFI8yqmnIUl936MWI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=axGq+kcadEsseL0hoI9zOLCYh9jqK5L3GzXbnO0FYiXJnnewtWGxqcWhw5RfM3mOQGrsDzSb1vVLGhM1r8uIGVFlU+pORudSvxiAraoE7sZUKGVCqP64mC8fEhtjD93WGnNSV7Tg9HUvJZfx0jdeSW9RNprXKHZqXGh7TQE2fBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=L3RzMhZH; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ORG0Iapu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Ff+h7YRAkELws4CRWM7YOB1YCS1xo5ywus2jMjXmZLo=; b=ORG0IapudPPt0kyVA64pyXTGLZ
-	2ozgqSwMiwrIoNUfzdXuzOgGfP16RJ+MkH+lgjykjY8nOmzW5/NkJ2DMvgGjKDk0z6wNysFJIgBuW
-	eQ+XYGrRi2LiWjjRcBFJl3+4TtqK8TqlR5M40OMEp71P/4+ZG8I6M8Wv9gNwdcts8y4lgfRgiy4J4
-	R4jpTc/Z0wW2DChYSHRG5jQxNZZcs17DWw7J8iCANSTwDCOCGVvTT2hkZwh5+AZNMOiAVAIUEGf+N
-	qORbtkQuyYEPCvSKOXk/2pk6sanGbLe+QCLnJLbDWUVNAgzwNXST9tHHRVyjKQUMMk49qS98WYQhD
-	VTpPUq1A==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u6v9F-0000000B5HO-0I13;
-	Mon, 21 Apr 2025 17:41:37 +0000
-Message-ID: <e1e3dc8f-ca16-4cce-a670-bb8ef566213d@infradead.org>
-Date: Mon, 21 Apr 2025 10:41:27 -0700
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="L3RzMhZH"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 40DDB41060
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1745257330; bh=kbs5fOEIqoMuSmTCb/0c14ohUB+eNd5Yd+A6QZOfyOk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=L3RzMhZHaFDKZlO8k+JjVnArK6TtC0YGfjyzq6aaYlZonkUMEzHH/Ip84Rn5gsFkf
+	 NHuwFjn87dhvG55P5W5ykb7WQwyKndvhOJ58ohkc2b6EFkvKS9qSM0Eu6Wpx5fysDL
+	 CM6sXZI7fSo+7j6WUN630LYZ14otSz9BxBFATrzlqY2W+P1D/o2uD+0YfGt11Sf1s9
+	 x1zrhPsHEqsHiv3tHYfkUqXCuiPdk3fxsF2FCXBA5WZjxV01u+3HBw6YYpq9GSGpU7
+	 YHHoqvOz1dG0E6hqR7zv5VGsbash7+yySGS4XRjEpaWOPFKLAt9X8HV8G9vVVC0lgM
+	 DODH7dPyk12AA==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 40DDB41060;
+	Mon, 21 Apr 2025 17:42:10 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Improve Sphinx kerneldoc extension
+In-Reply-To: <cover.1744685912.git.mchehab+huawei@kernel.org>
+References: <cover.1744685912.git.mchehab+huawei@kernel.org>
+Date: Mon, 21 Apr 2025 11:42:09 -0600
+Message-ID: <87jz7dxvgu.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 02/19] x86: Secure Launch Kconfig
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-3-ross.philipson@oracle.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250421162712.77452-3-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi,
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-On 4/21/25 9:26 AM, Ross Philipson wrote:
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 4b9f378e05f6..badde1e9742e 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2001,6 +2001,17 @@ config EFI_RUNTIME_MAP
->  
->  	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
->  
-> +config SECURE_LAUNCH
-> +	bool "Secure Launch support"
-> +	depends on X86_64 && X86_X2APIC && TCG_TIS && TCG_CRB && CRYPTO_LIB_SHA1 && CRYPTO_LIB_SHA256
+> Hi Jon,
+>
+> As promised, this series improves the Sphinx kerneldoc extension making it using the
+> kernel-doc.py classes directly if available.
+>
+> The script still supports excecuting kernel-doc via shell, and, in verbose mode, it will
+> show the command line arguments to run kernel-doc manually, even when the Python
+> classes are used. The idea is that the command line verbose will help to eventually
+> debug issues if one needs to run kernel-doc.py manually. 
+>
+> On other words, after this series, if one does:
+>
+> 	make htmldocs KERNELDOC=scripts/kernel-doc.py
+>
+> Or, simply (as internally KERNELDOC is set to scripts/kernel-doc.py):
+>
+> 	make htmldocs
+>
+> It will use the Python classes instead of running a subprocess.
+>
+> If one uses, instead:
+>
+> 	make htmldocs KERNELDOC=scripts/kernel-doc
+> or:
+> 	make htmldocs KERNELDOC=scripts/kernel-doc.pl
+>
+> As the file extension doesn't end with .py, it will excecute the Python or the Perl
+> version of kernel-doc via a subprocess.
+>
+> On this version, I opted to re-create the Python objects for every single kernel-doc
+> line, so no caches from past runs are used. I'm working on a version that will cache
+> results, but it is currently causing some regressions. So, let's do the changes
+> step-by-step, applying first this improvement patch series.
+>
+> PS.: the first patches on this series are addressing some some bugs and one
+> improvement that I noticed while debugging the patch changing kerneldoc
+> Sphinx extension.
+>
+> Mauro Carvalho Chehab (4):
+>   scripts/lib/kdoc/kdoc_files.py: don't try to join None
+>   scripts/lib/kdoc/kdoc_parser.py: move states to a separate class
+>   scripts:kdoc_files.py: use glob for export_file seek
+>   docs: sphinx: kerneldoc: Use python class if available
+>
+>  Documentation/sphinx/kerneldoc.py | 138 ++++++++++++++++++++++++++++--
+>  scripts/lib/kdoc/kdoc_files.py    |  11 ++-
+>  scripts/lib/kdoc/kdoc_parser.py   | 119 ++++++++++++++------------
+>  3 files changed, 200 insertions(+), 68 deletions(-)
 
-It's normal to select needed library symbols instead of depending on them.
-Nothing else in the kernel tree uses depends on for these 2 Kconfig symbols.
-(CRYPTO_LIB_SHAxxx)
+I've applied the series.
 
-> +	help
-> +	   The Secure Launch feature allows a kernel to be loaded
-> +	   directly through an Intel TXT measured launch. Intel TXT
-> +	   establishes a Dynamic Root of Trust for Measurement (DRTM)
-> +	   where the CPU measures the kernel image. This feature then
-> +	   continues the measurement chain over kernel configuration
-> +	   information and init images.
+I do note that the default "make htmldocs" build time is reliably slower
+than with KERNELDOC=scripts/kernel-doc, I'd be curious to understand
+why.
 
--- 
-~Randy
+        External kdoc:  170s
+        w/classes:	186s
 
+jon
