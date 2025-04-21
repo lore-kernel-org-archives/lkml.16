@@ -1,217 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33181DE2A4
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EBD1DE2A4
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745216360; cv=none; b=MBj3ABlh30JlXcC8DwKPiT3GdaMpxub9Lnx6MT2SfgDqOr4peNiI1i4UG6AoQBNjJ10XNAod1mgA14qVySLK2c4DplBsTjl+i/P4bYLKJ5N0UfhWDx4nB4/ONgl2cSiTjZbpeHOj6TgVf9pQf7SIy4hJGqItkc34DxzvUqHoKrk=
+	t=1745216409; cv=none; b=EE9Z9XQaUAZ7NugPvWpOjZWhcBxP5jY8mw2ThshiDW8sm52X7vKr/14eKAXLdoa6yqtaUG3zeoND0OvxLy2judcUbmw3Js8nc72+kUC2GGkBWPTrSngpcqkrqVfqJVUYVVEqC4onZxY2rsCXUUjpyO+IDrt2cwTv5cBWPfQmYyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745216360; c=relaxed/simple;
-	bh=HwzV/ngFo9XRIYxSDILlQawp4GJu4SEL5rBHh5jL5RA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=HwX4924EjOk0mtejDC7O8u3iS2zs9JfI6yU5dIh++8yws56m57cNx/Jiy4UuMyh8cGuEzm/RHwNPy9n3Qi9yRqWD+4Herc4PzRbjhTnmEHF0CCIEQVw/iOvffLr+bxCYijaPdpW6xHATJIZ9Ou+wW/gj7qCGBXJ57+Ndg8Rpp0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YhID1sUr; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745216409; c=relaxed/simple;
+	bh=5ShY1vAOjKO9LkFdxOS4Dz8PnV2WVVq3VAPLn3aR2MY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h5EKYVmgEqo/yxhuneVWDst+cBeWwBA8onBE3ZfWRA2kwJe1/2YGi2GwX/fXZ35Xg4h2j5kIeAr81/rDcorJwKIHpyR5rq5YehkNo4IsTH8M+YzBkOYq/iDVjhd6uucrAPMOtm+bWfZKQJz7DqLniZCegB+d20mtCPx0QIG4F4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A0r6QPBh; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YhID1sUr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745216359; x=1776752359;
-  h=date:from:to:cc:subject:message-id;
-  bh=HwzV/ngFo9XRIYxSDILlQawp4GJu4SEL5rBHh5jL5RA=;
-  b=YhID1sUrvQlGc2bYYKwzPrjqnJfzwgSjt7O18sjgphdr0Lhz2uFph5D2
-   5y3uqwZFNHM53QtF6UYixgep26Ou1ov4YtLjkjDG5OfYaGpiICCUx1cDf
-   vtFQE3HXRlCFJz9eB8CgxO6dutgi9vShYLjxqvFKKL6v0G6fo46yBjQWz
-   icaZVdED8MZL6Lstcqx1G68SlqZfaCwsyMxdpLdAwJJIr0/EgmnOwViEe
-   xDdfNxHi9kmw9UGwdTvX1SFp1pRIEu/ayCcXE03w3wjWOO21rlv1vmXe2
-   eZ7WPrTwXLZlfLl4Z0RwYZuZpnRgV2IkZzsDZRyweM3bZygTv2XJjjHHk
-   w==;
-X-CSE-ConnectionGUID: u1wCgMXoT42JRRfFRlAWAA==
-X-CSE-MsgGUID: X+bMStW+RxydpAxkyfwONg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="57404596"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="57404596"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 23:19:18 -0700
-X-CSE-ConnectionGUID: PNqC+st+R/6StFVWt2uFag==
-X-CSE-MsgGUID: 6pQyVe0yRXqM4mwY9N7A4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="154810559"
-Received: from lkp-server01.sh.intel.com (HELO 9c2f37e2d822) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 20 Apr 2025 23:19:17 -0700
-Received: from kbuild by 9c2f37e2d822 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6kUs-0000CH-2J;
-	Mon, 21 Apr 2025 06:19:14 +0000
-Date: Mon, 21 Apr 2025 14:18:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 6f3972af178b8d717c91ccde6cf2a43913b15e59
-Message-ID: <202504211418.lTMnBJco-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A0r6QPBh"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22622ddcc35so54288655ad.2
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 23:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745216407; x=1745821207; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3yyoS1DmLQn/njuhu79GSmOu58DF5dEFijXO4m2g5lE=;
+        b=A0r6QPBhm4p5bXkLQcj1OCOICkvdS+UkrVl1n815IMm8V4xhx0RtWs8iTWi5AWBo7B
+         OLMtbbUC/TkNTEnPRJJTihCLvlTOXEnbAMOfOTcmhxBCEu/Vac8N4jO2uaclJyd3ZojF
+         5o7WNqzbHAPidlMpkNO6HnogycKcONcwoNfeXsmKDDOqw5Gj5r1ofQWoHuHzjEjwDLb7
+         UBncXBdvqEnjt/pCfs27VF5j4jIUOkNp7QtFRAEqsat4VHwy/aFEfhfGHrKqILhJtFnM
+         taSzrTeLQjNSnNkFC0aulYGF0+ySa3N0qaSb6IXNFz090ZWjIPv/Vet1X6xp9WfhXbFy
+         CVGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745216407; x=1745821207;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3yyoS1DmLQn/njuhu79GSmOu58DF5dEFijXO4m2g5lE=;
+        b=a/YahSxyhubFL1xTYa0KOVJzHyDSxNzXj1k6gV8TWJdusa3k8iZHN+OOM7vQeqU57k
+         9/fvnW7WciLXfDNeoAUEMF9P0KHZlVOAIILKGUs+JMrHZxh3KFNRdOhNUXpWZF1DVbFi
+         gSyJoo1GuBceMPeZXdbEOKq84sGJpV9WjO1xKAw5E/MPgc/X6LK5Xu2XTK5iAOGi0gEU
+         3yJSrxewpMKURxACXjk5RhXNnnO3RQwapMeLeiXFxYEpeLCaSd8f0f+mPzRQFczRWhi0
+         zA7XTz6ooQ/PbeQHCxTdoBJqr0cFa2vO0cRYkHNU8OC9Hf6hpnKU8ZS3phfqvhhENGyV
+         QMQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBP8oqiUa9TL10h0qhn0ZfcdQl6exkXhvPmacljT9PWtD50BkzbZWAgmBbDNy4JNwyYLnQbHLfKMB2EOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRY5iHckTW6AVQY9VPFgKy/Lv3Hu+PdquFbC28tsNzcIp8ZvoQ
+	IcruMRvpNxR9tP/3UfejebvuQDzinWD6OHA7jCwlfuuwbC6gsyimf9yTYCAJW1o=
+X-Gm-Gg: ASbGnctJYvE7xSFreuroDQKCAa/3sr/HHSw87M7CtN32DpRbez0JYMjUQfdWHu6yt+D
+	YwP6gifVcHiVr3m6z3ihwB/oQVgXPxJeG3Nhht2xEBn3hv7m1Pe3VHKDtlmnJqDVgtAKr4BXhvu
+	aTn9RFlCIjnDh7vnTJu3FnRILhDihhhBNfrW32lvnmNSN0aiRLtgl1zFIe0SuGSKFg+Za7xZo8S
+	xoXy5R5oszlFz5dADuVtkUJKArFRXL2d35eUs9vPVU8z/0LtVH4Wt3GfaKlsqyk+OxhG75HoWK3
+	8uZlf2uOOwDDxkgSlTKuZaI42fdjTkqnmAX4YjxrpA==
+X-Google-Smtp-Source: AGHT+IE9Eww3HoH4RLAEaMq6rXZiNmV6E4Np474my0w4C0bQJ32+oOoJCrbqu7P7aWjSR6KjdYIX6w==
+X-Received: by 2002:a17:902:f690:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22c53618cfemr152910315ad.41.1745216406731;
+        Sun, 20 Apr 2025 23:20:06 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdbc5esm57552985ad.222.2025.04.20.23.20.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 23:20:06 -0700 (PDT)
+Date: Mon, 21 Apr 2025 11:50:03 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com,
+	vincent.guittot@linaro.org
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+Message-ID: <20250421062003.lbxdxhlp6ulnjq7f@vireshk-i7>
+References: <20250417015424.36487-1-nic.c3.14@gmail.com>
+ <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
+ <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
+ <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+ <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
+ <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com>
+ <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
+ <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
+ <CAKohponCr6pwgmK+J0WnvY_VZdDhA738JF18L518A2MKJVQLmw@mail.gmail.com>
+ <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: 6f3972af178b8d717c91ccde6cf2a43913b15e59  Merge branch into tip/master: 'x86/sev'
+On 19-04-25, 17:35, zhenglifeng (A) wrote:
+> Yes, the policy boost will be forcibly set to mirror the global boost. This
+> indicates that the global boost value is the default value of policy boost
+> each time the CPU goes online. Otherwise, we'll meet things like:
+> 
+> 1. The global boost is set to disabled after a CPU going offline but the
+> policy boost is still be enabled after the CPU going online again.
+> 
+> 2. The global boost is set to enabled after a CPU going offline and the
+> rest of the online CPUs are all boost enabled. However, the offline CPU
+> remains in the boost disabled state after it going online again. Users
+> have to set its boost state separately.
 
-elapsed time: 1447m
+I agree that both of these are valid issues, but so is retaining state
+across suspend/resume too.. There is a difference in a user manually
+removing a CPU (offline) and suspend/resume.
 
-configs tested: 140
-configs skipped: 3
+With a manual offline operation, the code in cpufreq_online() is doing
+the right thing, default to global boost. But the user configuration
+shouldn't change with just suspend resume.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> IMV, a user set the global boost means "I want all policy boost/unboost",
+> every CPU going online after that should follow this order. So I think
+> the code in cpufreq_online() is doing the right thing.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                          axs103_defconfig    gcc-14.2.0
-arc                      axs103_smp_defconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250420    gcc-12.4.0
-arc                   randconfig-002-20250420    gcc-12.4.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                                 defconfig    clang-21
-arm                      footbridge_defconfig    clang-17
-arm                   randconfig-001-20250420    clang-21
-arm                   randconfig-002-20250420    gcc-8.5.0
-arm                   randconfig-003-20250420    gcc-7.5.0
-arm                   randconfig-004-20250420    gcc-8.5.0
-arm                          sp7021_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250420    gcc-8.5.0
-arm64                 randconfig-002-20250420    gcc-8.5.0
-arm64                 randconfig-003-20250420    clang-21
-arm64                 randconfig-004-20250420    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250420    gcc-14.2.0
-csky                  randconfig-002-20250420    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250420    clang-21
-hexagon               randconfig-002-20250420    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250420    clang-20
-i386        buildonly-randconfig-002-20250420    clang-20
-i386        buildonly-randconfig-003-20250420    clang-20
-i386        buildonly-randconfig-004-20250420    clang-20
-i386        buildonly-randconfig-005-20250420    clang-20
-i386        buildonly-randconfig-006-20250420    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250420    gcc-12.4.0
-loongarch             randconfig-002-20250420    gcc-12.4.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       bvme6000_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                           virt_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                      maltaaprp_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250420    gcc-14.2.0
-nios2                 randconfig-002-20250420    gcc-8.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                generic-32bit_defconfig    gcc-14.2.0
-parisc                randconfig-001-20250420    gcc-13.3.0
-parisc                randconfig-002-20250420    gcc-7.5.0
-parisc64                            defconfig    gcc-14.1.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                   bluestone_defconfig    clang-21
-powerpc                      cm5200_defconfig    clang-21
-powerpc                       holly_defconfig    clang-21
-powerpc                      mgcoge_defconfig    clang-21
-powerpc               randconfig-001-20250420    clang-21
-powerpc               randconfig-002-20250420    gcc-6.5.0
-powerpc               randconfig-003-20250420    clang-21
-powerpc64             randconfig-001-20250420    gcc-8.5.0
-powerpc64             randconfig-002-20250420    clang-21
-powerpc64             randconfig-003-20250420    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250420    clang-21
-riscv                 randconfig-002-20250420    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-21
-s390                  randconfig-001-20250420    gcc-6.5.0
-s390                  randconfig-002-20250420    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250420    gcc-14.2.0
-sh                    randconfig-002-20250420    gcc-14.2.0
-sh                            titan_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250420    gcc-11.5.0
-sparc                 randconfig-002-20250420    gcc-7.5.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250420    gcc-9.3.0
-sparc64               randconfig-002-20250420    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250420    gcc-12
-um                    randconfig-002-20250420    clang-21
-um                           x86_64_defconfig    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250420    clang-20
-x86_64      buildonly-randconfig-002-20250420    gcc-12
-x86_64      buildonly-randconfig-003-20250420    gcc-12
-x86_64      buildonly-randconfig-004-20250420    gcc-12
-x86_64      buildonly-randconfig-005-20250420    clang-20
-x86_64      buildonly-randconfig-006-20250420    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250420    gcc-9.3.0
-xtensa                randconfig-002-20250420    gcc-14.2.0
+Yes, but any change to policy->boost after that must also be honored.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> BTW, I think there is optimization can be done in
+> cpufreq_boost_trigger_state(). Currently, Nothing will happend if users set
+> global boost flag to true when this flag is already true. But I think it's
+> better to set all policies to boost in this situation. It might make more
+> sense to think of this as a refresh operation. This is just my idea. I'd
+> like to hear your opinion.
+
+Makes sense.
+
+-- 
+viresh
