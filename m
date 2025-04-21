@@ -1,193 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078624C85;
-	Mon, 21 Apr 2025 12:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC3B264A7C;
+	Mon, 21 Apr 2025 12:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238473; cv=none; b=GJhyaNG4wACHrw1zKI+05Ic0wSsiP1lUTVY9j41Pxqf9og9inEbx5tFm56z6q7TBjI517jyJoxM4CEb6BW4NTFE5y7riVJEFN9yacHPoYz6w9xdYuVuGoIp5Gx0M18SFUUxVjv/R8URRH3FtWGqo0MqwQCmLnoxdimbdmH9Jv2E=
+	t=1745238508; cv=none; b=BoexyAdhLe/GqKuyw47f2R4T+JyoiW+QVn9m2jzh8XgS5Ms81jyM64U97DSLwqVPpGMKbsCifm+ge5ZZeEkkJP54F5OL0JXwwybUOnN0PQ7Fg5W4K4hdUuPvwrnCqX6G8zLaUIVmGBk5nOMGoEF91CHyjojwcE7+6JP1isLEBxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238473; c=relaxed/simple;
-	bh=Lga4SQ1YKdH047BqCjt4UvsjVVRdjKUATPZCmLak1Yk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rYIsmwo8W1eubnjyDRrDycEskN+5BRnX/HVp2O6plQmTf5h25YDyAabR8kAZoiam7qcJ7gJUxJWvnkxurQRf3Lo9PN0i9Yum9J201SGaUShj8XL7znKzyv8kU1LiDGk2cPEQMYWo6RjumYJIMs4XZ5q1tmlopcXA+xKaHKb5fL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cncwPx8b; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745238508; c=relaxed/simple;
+	bh=e+WN91nPHLRESKaOGAavp3iu6QDsieZbWsN29aZj1Z8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmYdwiwTSE9Kpe+gWrHj5hkdn61BmcmmsynMqcaFAVq0kTTWEbM7toPiGlICXrQ6FyPitXj10xBNwFKho9ZG5F3mpRDN68yEzHXbGxVajtZeV1WrtCfkoqhMwa7Z4AWf4i4gH2sg48xF2Q6JUYXTfbjugmVT2rRh8b0AmAUTw4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fh6tgXAU; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cncwPx8b"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAWNUZ025412;
-	Mon, 21 Apr 2025 12:27:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pqZ9U1jRsr96bYu87sJMOtDCiZGC2tEtmMG3JM3z/eU=; b=cncwPx8bLKBz5VSo
-	XOwOObljaUxnhPfJlHzYvcUCDxpR2LIEltgL8+ULZG63RQg3y5hPaW5E/XXSCFxv
-	JkwfoEanV9FuFa8+weAiocizSgKBGupQN0Z2OCBP/N3/r6cylUHNmW6q3jt/BXKU
-	TxzNfHP7tFCTAkULWULFykwqUs0JQy5JQQFiYsz3j7ziEfpUs76n3snB4tgmIUYb
-	wqtgBTG3OK/0ItTs9TXMmzvBg0e/ZB1qy0EPReKrDO+xccQ/UcsAX/4deLO+Peco
-	PxI88vOTjsIg8MXZme/lco/7NjYFJNzRBhACoSxkqyVFVVeNnyd/P76eawlz22Bz
-	yP206A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642u9c7cb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 12:27:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53LCRk97031800
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 12:27:46 GMT
-Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
- 2025 05:27:43 -0700
-Message-ID: <fc38532c-06c9-2bc7-cbf9-9554e1f25ce6@quicinc.com>
-Date: Mon, 21 Apr 2025 17:57:40 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fh6tgXAU"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5e1b40f68so397130785a.1;
+        Mon, 21 Apr 2025 05:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745238506; x=1745843306; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2wIp4O5aFba/VFIEdYS6vzun+UYuyoA/BMDFjUKnEU=;
+        b=fh6tgXAUXMMl6ZjJsO9OFiNT104QZv7H9WE+bJwpFmdQNcYUbnAF/L4YqcLdqHJUMV
+         zuVZzppcjd7af8w4pjJ621gTyRCz9HPP/Uadslgs6x7PprR6hxehxDRrUFxdia/4ZtMs
+         kudmPOc/+Lj48pEEsBeUj8KJTTqVgFDnvQXO6FlBMyrnqJZ/4PET9tJPTe6x0en1cAG6
+         SRwA1XGkS6QvPa7UVd4h0aNglfoNAHumJdMnXMxdfdnsUUvwaryjGKC3WdTre/kQ51tq
+         JAAW3z0mATD7TSyIerOfXQzWhz4kAb+uTV5l9gBnVKbJ/xmGfMfhbtGOIQtFnBJIQsP3
+         tP0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745238506; x=1745843306;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c2wIp4O5aFba/VFIEdYS6vzun+UYuyoA/BMDFjUKnEU=;
+        b=FUmBmdslWnAxci+bdSrkZEKC0RXkmlXHxk5DUH9o8kjYnEv5wizaRDVMT8DrgEcbtQ
+         /3HFsEW0Ib/TMvg4+C3zJ5dz3zFBOiYCE2HnrEb5p4/GDZwX9Pws9kbXlPXN95XstPnQ
+         Js4kyv60EubElICPJ1ONX/wkVQ0hv1S+Kqij9nc4BxVLo4pb9INaYjnws4Jw9xI5wP++
+         5D19dcvt9wYAxely7KrIwCI7R4RN46UBnqfDGtoS5ARk4Pc+eMQOiTtOj/apbvwiXyLE
+         DzJi5QFW3CfHXvNRtuuCdD2fqm+Recyh6QQObUeK6Y9SymbhwIoRi6gAiriZvhQntp9L
+         yPaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJevFjRkRraLoRCP1eJIOFmuyJAcYpOpjfAjHhr4q7lq+VLctTnjLK2ZEJT/9Z3pjsRsdDDKFV@vger.kernel.org, AJvYcCWL+aSpR1HYm7FAqSxmdjITv+bNIRFyzOVywza5S+VN85XJqAyR11xP94antbrSqAYiCdP1kDfgSCI=@vger.kernel.org, AJvYcCWU/NSugFcpL0AJjQTFnUWJ9JCvZb56BBy2Yh+SxOXlpcWkN1egdUpTlVtsX/tsBTCy6Q5U+V4wzxY9OY7D@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGI9swJrnUsIZGWJ1joRzOz7z+dAOcorLNdsb0QP040/RUrobq
+	CPrsQ45vTyXi0fz2p7IaIG873kS1YTNj0EaTYy2+CtU05oNtBCoo
+X-Gm-Gg: ASbGncvLUYMuFsI2TU1MGnzE56MrU8JlXFnKYsGVHl4Q0LWhXfvO7itL4xZAmE+lWxl
+	RLB8ZvY8j8u6ouhz2zM/FeJ4s4/9Ea4QB81ajC4f3EsCpH9zM7UCO6lMyAkZvrxcZTfYeiK5OFU
+	LLBwvuJUqAIS+sNrgIM0Qou/q+xwcNFoA4AyMtMFs3hAX8EkV4mlNO/4i46FITJg68Y6Umso0qV
+	LPNkIF4X6keoIFC9BB8LvE3Z9mxwPqdspE5jcAZDU7fCyBBwF0mz2Sfn+2iPgDQQgzh482JVuzQ
+	VUIhtJBWPbAZrguCaHNTJwoT1LDcU7O0SiCtnsl2HGD0184FChHoh+nvAzY6vf2e5lHUEabf/65
+	Fh5x/luS80Bfzcjjsmyo=
+X-Google-Smtp-Source: AGHT+IFiW3P7e10p3XKaEoJEdAV43qnaCDOH2uR8uU6ICsm90RmKmXLfKhA2kcISDnvAu8nqURfE6w==
+X-Received: by 2002:a05:620a:2911:b0:7c5:4d2e:4d2d with SMTP id af79cd13be357-7c92805fb68mr2053018385a.50.1745238505835;
+        Mon, 21 Apr 2025 05:28:25 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925ac2f27sm412267685a.54.2025.04.21.05.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 05:28:25 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: gregkh@suse.de,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael.Hennerich@analog.com
+Cc: gshahrouzi@gmail.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH] iio: accel: adis16201: Use IIO_VAL_INT for temperature scale
+Date: Mon, 21 Apr 2025 08:28:19 -0400
+Message-ID: <20250421122819.907735-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: qcs8300: add support for video
- node
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
- <20250418-qcs8300_iris-v2-2-1e01385b90e9@quicinc.com>
- <df97067e-a293-424d-aa19-24a99670a354@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <df97067e-a293-424d-aa19-24a99670a354@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=TYaWtQQh c=1 sm=1 tr=0 ts=680639c4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=pr9gLcTrLKOj9eJSbYgA:9
- a=nbm2OD6Gl27TcRA3:21 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: ZoipHZbbzAtDevHAf7Iv0oxrzSqEVRfh
-X-Proofpoint-GUID: ZoipHZbbzAtDevHAf7Iv0oxrzSqEVRfh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210097
 
+This is a leftover from the patch: commit cf96ffd8c2ed
+("staging:iio:accel:adis16201 move to chan_spec based setup.").
+Initially *val = 0 and *val2 = -470000.  However, they were later
+changed to -470 and 0 respectively but their return type was not
+updated.
 
+Use correct type as -470 is an integer in the base units.
 
-On 4/18/2025 3:57 PM, Bryan O'Donoghue wrote:
-> On 18/04/2025 07:28, Vikash Garodia wrote:
->> Video node enables video on Qualcomm QCS8300 platform.
-> 
-> Add the IRIS video-codec node on QCS8300.
-Ok.
-> 
->> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs8300.dtsi | 71 +++++++++++++++++++++++++++++++++++
->>   1 file changed, 71 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> index
->> 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..158779434f610b10ea82d2cdae08090a7a4402de 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
->> @@ -2929,6 +2929,77 @@ usb_2_dwc3: usb@a400000 {
->>               };
->>           };
->>   +        iris: video-codec@aa00000 {
->> +            compatible = "qcom,qcs8300-iris";
->> +
->> +            reg = <0x0 0x0aa00000 0x0 0xf0000>;
->> +            interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +            power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
->> +                    <&videocc VIDEO_CC_MVS0_GDSC>,
->> +                    <&rpmhpd RPMHPD_MX>,
->> +                    <&rpmhpd RPMHPD_MMCX>;
->> +            power-domain-names = "venus",
->> +                         "vcodec0",
->> +                         "mxc",
->> +                         "mmcx";
->> +
->> +            operating-points-v2 = <&iris_opp_table>;
->> +
->> +            clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
->> +                 <&videocc VIDEO_CC_MVS0C_CLK>,
->> +                 <&videocc VIDEO_CC_MVS0_CLK>;
->> +            clock-names = "iface",
->> +                      "core",
->> +                      "vcodec0_core";
->> +
->> +            interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
->> +                     &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
->> +                    <&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
->> +                     &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
->> +            interconnect-names = "cpu-cfg",
->> +                         "video-mem";
->> +
->> +            memory-region = <&video_mem>;
->> +
->> +            resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
->> +            reset-names = "bus";
->> +
->> +            iommus = <&apps_smmu 0x0880 0x0400>,
->> +                 <&apps_smmu 0x0887 0x0400>;
->> +            dma-coherent;
->> +
->> +            status = "disabled";
->> +
->> +            iris_opp_table: opp-table {
->> +                compatible = "operating-points-v2";
->> +
->> +                opp-366000000 {
->> +                    opp-hz = /bits/ 64 <366000000>;
->> +                    required-opps = <&rpmhpd_opp_svs_l1>,
->> +                            <&rpmhpd_opp_svs_l1>;
->> +                };
->> +
->> +                opp-444000000 {
->> +                    opp-hz = /bits/ 64 <444000000>;
->> +                    required-opps = <&rpmhpd_opp_nom>,
->> +                            <&rpmhpd_opp_nom>;
->> +                };
->> +
->> +                opp-533333334 {
->> +                    opp-hz = /bits/ 64 <533333334>;
->> +                    required-opps = <&rpmhpd_opp_turbo>,
->> +                            <&rpmhpd_opp_turbo>;
->> +                };
->> +
->> +                opp-560000000 {
->> +                    opp-hz = /bits/ 64 <560000000>;
->> +                    required-opps = <&rpmhpd_opp_turbo_l1>,
->> +                            <&rpmhpd_opp_turbo_l1>;
->> +                };
->> +            };
->> +        };
->> +
->>           videocc: clock-controller@abf0000 {
->>               compatible = "qcom,qcs8300-videocc";
->>               reg = <0x0 0x0abf0000 0x0 0x10000>;
->>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Fixes: cf96ffd8c2ed ("staging:iio:accel:adis16201 move to chan_spec based setup.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+ drivers/iio/accel/adis16201.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+index dcc8d9f2ee0f1..1f27386edcc4e 100644
+--- a/drivers/iio/accel/adis16201.c
++++ b/drivers/iio/accel/adis16201.c
+@@ -125,7 +125,7 @@ static int adis16201_read_raw(struct iio_dev *indio_dev,
+ 		case IIO_TEMP:
+ 			*val = -470;
+ 			*val2 = 0;
+-			return IIO_VAL_INT_PLUS_MICRO;
++			return IIO_VAL_INT;
+ 		case IIO_ACCEL:
+ 			/*
+ 			 * IIO base unit for sensitivity of accelerometer
+-- 
+2.43.0
+
