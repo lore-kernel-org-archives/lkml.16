@@ -1,293 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32FF507
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B839CF507;
+	Mon, 21 Apr 2025 03:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745206277; cv=none; b=Sy2OmM07akeAyE7SQ83Gt7ygEH36ao7hrVLGMiZVZgjlpLIHXnma2RZxYtq4xZDi7okdR2nYuS4fmbhpkIXtgCVovv3PvoUgo5lq2ryUoJ77wHt12NXIEwIrs4ulE5at5pHsYXSXvMCqst9q9jztUaEoYaG976WhLcA91fv2QDE=
+	t=1745206323; cv=none; b=Cf/UjLils14bCcoPEYAzraKrZLXjTaVMQ9VwyeZjQRv35iQGEmyO8lDSdcBZ0oORd3Q0J9G6YligaXXvT2gyHQv4+uN7QU33UyUoPTixaxlBDpCORQtHM1/hcp3Hz+KiY/vLLjFhxrxbd2OLlK7LSQDRqxjG0AMNiENckbYSu0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745206277; c=relaxed/simple;
-	bh=yMJHcecm2zj6M6Q7DbedbLw6+meHZ2UNj7fqi76HCNQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kZPFkaOYdXyRmevrT4/sZC4hCp/TupabKRGzs1td8WMqA/GsOlUJZ1s3WAG9ZNbUbkogXzm27SniI/sagl3q3/f0bhPbYVzfeALEGSRURhzQaA2lUlvyFqfiYxvByVPF3yxWjwtFVWPFn9LLNj91hybn8UZ0a1hyFl5KBLolZU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pj53XDj/; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745206323; c=relaxed/simple;
+	bh=gJmcQzS9mQxoIny6Mfrlu2W63jA7fze9RaoVDjMxI7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewHZ1LXq3BcojJ6VbVm3f7Y69ywdO5lw6fhtWtKkE0W1WzGwC7ZA+1C3SKxD64KmVsLql96TNxx23B+tE28skA8nYrwir7hQ8GgM/+4xdTdpaT0/GzjJCk7Rpzqw7GA2C9Mo/c1aruYpRWmUhwv0fp/u2YjvEaY36DXl463Qk5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=CyezWd7G; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pj53XDj/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745206277; x=1776742277;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yMJHcecm2zj6M6Q7DbedbLw6+meHZ2UNj7fqi76HCNQ=;
-  b=Pj53XDj/IO0qJOuvtvqrM16lPjaEVY1ks3oPSXFDzF8ltVGpzsoStm1l
-   C+6YrmSyvReUJt3/MCuN4grNA0cGBkyK62hlRsNT6HRWivyhTNzPMbPhl
-   xsKgLcs2n1MLdKNH9CBWkwX/zobDVEfzRZ5OdT4zqcv+r1QfW+h6+9aI6
-   gBFhy02HonE1rDg0jhYiTr21JdJeiRJBKwA8F9CuIHskYOT7sgPJl+oWi
-   MYm24J2Wxe91+FTDDRqyfjDy+KN9n4+ynZZGyz82jTUgf/WKJiW5FZfqA
-   MIRrRnbVqu/R/UjAdoRIEvQHcS8csAWzMvIBqozuRUWEPJyvDMO6wpmVG
-   A==;
-X-CSE-ConnectionGUID: 6TXKzjgjQbegoH94qV5gVg==
-X-CSE-MsgGUID: Eaz94i42Q+eIIKykoUY8vw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="56913626"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="56913626"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 20:31:14 -0700
-X-CSE-ConnectionGUID: HJ/8UCbwQTyqzEykmeLLwQ==
-X-CSE-MsgGUID: NPsK7sG8Rv6yXocPBpLLiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="132488712"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa009.fm.intel.com with ESMTP; 20 Apr 2025 20:31:09 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Tim Chen <tim.c.chen@intel.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Libo Chen <libo.chen@oracle.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Hillf Danton <hdanton@sina.com>,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC PATCH 5/5] sched: Add ftrace to track task migration and load balance within and across LLC
-Date: Mon, 21 Apr 2025 11:25:33 +0800
-Message-Id: <5d5a6e243b88d47a744f3c84d2a3a74832a6ef35.1745199017.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1745199017.git.yu.c.chen@intel.com>
-References: <cover.1745199017.git.yu.c.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="CyezWd7G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=XHQGWIF/Cf0LNQ2lU/EhN3J9AF8B1+/NLjxMdpt6BvY=; b=CyezWd7GqkBfuVUuu1PjynG9T+
+	We0CIr5a4UubcrNgmHmzUXpKvUfUAkUVR2al+UFnbA+nR/onZy9Hj4kxWkVlyLj6HqmPt3LP0q4KI
+	xpBAyuxg0Kc4Td9/R6HnJsjkrW6PTRUQvOE6cPF8nV9wA6qKsBOFFb+DIfQ0Yo/IA0QcER49VmJ6G
+	hjBQHcXCVRTRKCSI81aEj4RXUxsY1d+2eL8NjuWQDFmj90PxHGo6O3DRcCr3FCzVNRlfnbAaI7leE
+	NsWAlPjXm2MewowIpWHT5uB/6nV3MvUZRFc0dUKI7d5Cqwnr4AtoNUorlXJ3qmSa64656T4v7Zm2t
+	P8ZiPgAw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u6hsZ-00HF9Z-2B;
+	Mon, 21 Apr 2025 11:31:32 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 21 Apr 2025 11:31:31 +0800
+Date: Mon, 21 Apr 2025 11:31:31 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+	"chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
+	"usamaarif642@gmail.com" <usamaarif642@gmail.com>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>,
+	"ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"ebiggers@google.com" <ebiggers@google.com>,
+	"surenb@google.com" <surenb@google.com>,
+	"Accardi, Kristen C" <kristen.c.accardi@intel.com>,
+	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>,
+	"Gopal, Vinodh" <vinodh.gopal@intel.com>, m95d@psihoexpert.ro
+Subject: [PATCH] crypto: scomp - Fix off-by-one bug when calculating last page
+Message-ID: <aAW8E9NrKWq1Xk2w@gondor.apana.org.au>
+References: <Z88h1mPkYNM6yOGE@google.com>
+ <SA3PR11MB812082535F1E6D63BC0F1412C9DF2@SA3PR11MB8120.namprd11.prod.outlook.com>
+ <Z9mB5IbNEdNdtmUp@google.com>
+ <SA3PR11MB81206531E9B3C7F13F5740A2C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
+ <Z9nECMZW67F8XYoV@google.com>
+ <SA3PR11MB8120A474C20104FF22CCE396C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
+ <Z9n-OnGPK7BOdGxR@google.com>
+ <SA3PR11MB81202E35C1CAF0409711A1B0C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
+ <20250420140116.b6db3aafcc2f99569190c97e@linux-foundation.org>
+ <CAKEwX=P39kvB9Ei1xt+iOcDRMr32=ujGiKKa=e947k0MyJ7xZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKEwX=P39kvB9Ei1xt+iOcDRMr32=ujGiKKa=e947k0MyJ7xZA@mail.gmail.com>
 
-[Not for upstream]
-Introduce these ftrace events for debugging purposes.
-The task migration activity is an important indicator to
-infer the performance regression.
+On Sun, Apr 20, 2025 at 04:35:44PM -0700, Nhat Pham wrote:
+>
+> Anyhow, this looks like a crypto/compression infra bug. Herbert, does
+> this ring any bell for you?
 
-Use the following bpftrace script to capture the task migrations:
+Yes this looks like an off-by-one bug in the new scomp scratch
+code.
 
-tracepoint:sched:sched_attach_task
-{
-  $src_cpu = args->src_cpu;
-  $dst_cpu = args->dst_cpu;
-  $src_llc = args->src_llc;
-  $dst_llc = args->dst_llc;
-  $idle = args->idle;
+---8<---
+Fix off-by-one bug in the last page calculation for src and dst.
 
-  if ($src_llc == $dst_llc) {
-    @lb_mig_1llc[$idle] = count();
-  } else {
-    @lb_mig_2llc[$idle] = count();
-  }
-}
+Reported-by: Nhat Pham <nphamcs@gmail.com>
+Fixes: 2d3553ecb4e3 ("crypto: scomp - Remove support for some non-trivial SG lists")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-tracepoint:sched:sched_select_task_rq
-{
-  $new_cpu = args->new_cpu;
-  $old_cpu = args->old_cpu;
-  $new_llc = args->new_llc;
-  $old_llc = args->old_llc;
-
-  if ($new_cpu != $old_cpu) {
-    if ($new_llc == $old_llc) {
-      @wake_mig_1llc[$new_llc] = count();
-    } else {
-      @wake_mig_2llc = count();
-    }
-  }
-}
-
-interval:s:10
-{
-        time("\n%H:%M:%S scheduler statistics: \n");
-        print(@lb_mig_1llc);
-        clear(@lb_mig_1llc);
-        print(@lb_mig_2llc);
-        clear(@lb_mig_2llc);
-        print(@wake_mig_1llc);
-        clear(@wake_mig_1llc);
-        print(@wake_mig_2llc);
-        clear(@wake_mig_2llc);
-}
-
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- include/trace/events/sched.h | 51 ++++++++++++++++++++++++++++++++++++
- kernel/sched/fair.c          | 24 ++++++++++++-----
- 2 files changed, 69 insertions(+), 6 deletions(-)
-
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 3bec9fb73a36..9995e09525ed 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -10,6 +10,57 @@
- #include <linux/tracepoint.h>
- #include <linux/binfmts.h>
+diff --git a/crypto/scompress.c b/crypto/scompress.c
+index 5762fcc63b51..36934c78d127 100644
+--- a/crypto/scompress.c
++++ b/crypto/scompress.c
+@@ -215,8 +215,8 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 			spage = nth_page(spage, soff / PAGE_SIZE);
+ 			soff = offset_in_page(soff);
  
-+TRACE_EVENT(sched_attach_task,
-+
-+	TP_PROTO(int src_cpu, int dst_cpu, int src_llc, int dst_llc, int idle),
-+
-+	TP_ARGS(src_cpu, dst_cpu, src_llc, dst_llc, idle),
-+
-+	TP_STRUCT__entry(
-+		__field(	int,	src_cpu		)
-+		__field(	int,	dst_cpu		)
-+		__field(	int,	src_llc		)
-+		__field(	int,	dst_llc		)
-+		__field(	int,	idle		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->src_cpu	= src_cpu;
-+		__entry->dst_cpu	= dst_cpu;
-+		__entry->src_llc	= src_llc;
-+		__entry->dst_llc	= dst_llc;
-+		__entry->idle		= idle;
-+	),
-+
-+	TP_printk("src_cpu=%d dst_cpu=%d src_llc=%d dst_llc=%d idle=%d",
-+		  __entry->src_cpu, __entry->dst_cpu, __entry->src_llc,
-+		  __entry->dst_llc, __entry->idle)
-+);
-+
-+TRACE_EVENT(sched_select_task_rq,
-+
-+	TP_PROTO(int new_cpu, int old_cpu, int new_llc, int old_llc),
-+
-+	TP_ARGS(new_cpu, old_cpu, new_llc, old_llc),
-+
-+	TP_STRUCT__entry(
-+		__field(	int,	new_cpu		)
-+		__field(	int,	old_cpu		)
-+		__field(	int,	new_llc		)
-+		__field(	int,	old_llc		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->new_cpu	= new_cpu;
-+		__entry->old_cpu	= old_cpu;
-+		__entry->new_llc	= new_llc;
-+		__entry->old_llc	= old_llc;
-+	),
-+
-+	TP_printk("new_cpu=%d old_cpu=%d new_llc=%d old_llc=%d",
-+		  __entry->new_cpu, __entry->old_cpu, __entry->new_llc, __entry->old_llc)
-+);
-+
- /*
-  * Tracepoint for calling kthread_stop, performed to end a kthread:
-  */
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f74d8773c811..635fd3a6009c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8902,7 +8902,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
- 	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
- 	struct sched_domain *tmp, *sd = NULL;
- 	int cpu = smp_processor_id();
--	int new_cpu = prev_cpu;
-+	int new_cpu = prev_cpu, orig_prev_cpu = prev_cpu;
- 	int want_affine = 0;
- 	/* SD_flags and WF_flags share the first nibble */
- 	int sd_flag = wake_flags & 0xF;
-@@ -8965,6 +8965,10 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
- 		new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
- 	}
+-			n = slen / PAGE_SIZE;
+-			n += (offset_in_page(slen) + soff - 1) / PAGE_SIZE;
++			n = (slen - 1) / PAGE_SIZE;
++			n += (offset_in_page(slen - 1) + soff) / PAGE_SIZE;
+ 			if (PageHighMem(nth_page(spage, n)) &&
+ 			    size_add(soff, slen) > PAGE_SIZE)
+ 				break;
+@@ -243,9 +243,9 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
+ 			dpage = nth_page(dpage, doff / PAGE_SIZE);
+ 			doff = offset_in_page(doff);
  
-+	trace_sched_select_task_rq(new_cpu, orig_prev_cpu,
-+				   per_cpu(sd_llc_id, new_cpu),
-+				   per_cpu(sd_llc_id, orig_prev_cpu));
-+
- 	return new_cpu;
- }
- 
-@@ -10026,11 +10030,17 @@ static int detach_tasks(struct lb_env *env)
- /*
-  * attach_task() -- attach the task detached by detach_task() to its new rq.
-  */
--static void attach_task(struct rq *rq, struct task_struct *p)
-+static void attach_task(struct rq *rq, struct task_struct *p, struct lb_env *env)
- {
- 	lockdep_assert_rq_held(rq);
- 
- 	WARN_ON_ONCE(task_rq(p) != rq);
-+
-+	if (env)
-+		trace_sched_attach_task(env->src_cpu, env->dst_cpu,
-+					per_cpu(sd_llc_id, env->src_cpu),
-+					per_cpu(sd_llc_id, env->dst_cpu),
-+					env->idle);
- 	activate_task(rq, p, ENQUEUE_NOCLOCK);
- 	wakeup_preempt(rq, p, 0);
- }
-@@ -10039,13 +10049,13 @@ static void attach_task(struct rq *rq, struct task_struct *p)
-  * attach_one_task() -- attaches the task returned from detach_one_task() to
-  * its new rq.
-  */
--static void attach_one_task(struct rq *rq, struct task_struct *p)
-+static void attach_one_task(struct rq *rq, struct task_struct *p, struct lb_env *env)
- {
- 	struct rq_flags rf;
- 
- 	rq_lock(rq, &rf);
- 	update_rq_clock(rq);
--	attach_task(rq, p);
-+	attach_task(rq, p, env);
- 	rq_unlock(rq, &rf);
- }
- 
-@@ -10066,7 +10076,7 @@ static void attach_tasks(struct lb_env *env)
- 		p = list_first_entry(tasks, struct task_struct, se.group_node);
- 		list_del_init(&p->se.group_node);
- 
--		attach_task(env->dst_rq, p);
-+		attach_task(env->dst_rq, p, env);
- 	}
- 
- 	rq_unlock(env->dst_rq, &rf);
-@@ -12457,6 +12467,7 @@ static int active_load_balance_cpu_stop(void *data)
- 	struct sched_domain *sd;
- 	struct task_struct *p = NULL;
- 	struct rq_flags rf;
-+	struct lb_env env_tmp;
- 
- 	rq_lock_irq(busiest_rq, &rf);
- 	/*
-@@ -12512,6 +12523,7 @@ static int active_load_balance_cpu_stop(void *data)
- 		} else {
- 			schedstat_inc(sd->alb_failed);
- 		}
-+		memcpy(&env_tmp, &env, sizeof(env));
- 	}
- 	rcu_read_unlock();
- out_unlock:
-@@ -12519,7 +12531,7 @@ static int active_load_balance_cpu_stop(void *data)
- 	rq_unlock(busiest_rq, &rf);
- 
- 	if (p)
--		attach_one_task(target_rq, p);
-+		attach_one_task(target_rq, p, sd ? &env_tmp : NULL);
- 
- 	local_irq_enable();
- 
+-			n = dlen / PAGE_SIZE;
+-			n += (offset_in_page(dlen) + doff - 1) / PAGE_SIZE;
+-			if (PageHighMem(dpage + n) &&
++			n = (dlen - 1) / PAGE_SIZE;
++			n += (offset_in_page(dlen - 1) + doff) / PAGE_SIZE;
++			if (PageHighMem(nth_page(dpage, n)) &&
+ 			    size_add(doff, dlen) > PAGE_SIZE)
+ 				break;
+ 			dst = kmap_local_page(dpage) + doff;
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
