@@ -1,110 +1,125 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4058CA5E;
-	Mon, 21 Apr 2025 09:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53D11D7984
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745226203; cv=none; b=jtuXkoGRd5BrSsknSZBYQNxTxGCfrzMegDZ5lZ2itBmcamrGTzgT1xI18u+MQJoXSJCuF4emuw+38lbYOUmmJJTa0IF/n+ikZemB98rafv3JzGCT0clIa6NDrIHs7vKnw2L554DW2LiDR4229TTO+5DHO0Ut8DOor6kkPAhhkoo=
+	t=1745226598; cv=none; b=YNeRIvlscLqOid4Z7QGVYsTlZ1DGe1CRHWwrXqw+vtuODt2YBPXb4KJV9vmTrYAIKUZDxYANMm/1/s9lySBozV7l/MJWyCULucM/8CULftWjiuLQPsgn2+iM2j38I8MAnYbJUowtPxMjfL3kkn+X71J5tFMGWFQZl2vkrvNU3qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745226203; c=relaxed/simple;
-	bh=NaNLxjVYAiHVKkQcBc30sZU1PvjgM6D5TdHmW1yTgO0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q0kByAjWTciCrSweoktq984qN0pGIv92Wd4Nvq9PNHNhT+uZ1Xwb867f7b8nhRU83wSj33UyOeSXWRkxgoaCioijxYmdHVynjwkAxIZOHEcnbhVi7e+COYnffJuu7702sKZBhABU9ZE+zxL6DHS49fsLAeAnSLq1ZWrBuUX5D10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCE6ompp; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745226598; c=relaxed/simple;
+	bh=jYfITdAy8llVjno19Ac2CzcMCZqR2AGhRl0UKubybFQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AFA7C9f+a6mjXv5P7whiFMBu5j6KwmTAm+2V+gvK2wm2QvSI0AmrroRJFNTABE3P2CRcYzaW5aJcprXY4I99ShcdnvPU6oT21klMWhjSeq8Jamn6fn3nek7h1uMYR2w3UotGvaW/25obvffIzIGK5UTbYtEaEFvub4R95ltm0YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ifrf0QRU; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCE6ompp"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acae7e7587dso514583166b.2;
-        Mon, 21 Apr 2025 02:03:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ifrf0QRU"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227a8cdd241so43795795ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745226200; x=1745831000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NaNLxjVYAiHVKkQcBc30sZU1PvjgM6D5TdHmW1yTgO0=;
-        b=kCE6omppRet/Y6kPq/KpID0MWziJP9A42xZh5uuTiXV02/S26Yg6JJk2l4aOnH7X0v
-         O16ccyfFRsQVDbX5U4OeHDM0bqOpFSuKKyZMV2zURLVzqkvC8ZCQw+HVT3ommMJM8GdL
-         6xePzbrRCWKG0itbQQTwxFksxk3aZdEFb2CrWjboMuFmK+YbDDkqwnhuCphJzjo2zowp
-         DTQarYBoO2s5K5g36XjjlBwJSSF84MYZBYqw+BJ+HZ/o5jUoCqHeFndaKY6U8kV147FO
-         SqnGLwijvg0Pmi3AuIDF+lcNucOv4qeXOIkUih6GQcMlFOudd3uwLzL0r6+zRZhs3NX/
-         cb7g==
+        d=chromium.org; s=google; t=1745226596; x=1745831396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xw8UIDvZBCcr83U5CXKVA2bqzTMOFGkmm5WFSkBADIc=;
+        b=ifrf0QRUSss3cnedRZ6j/eUymIc5z05KQgmQxrM2o7I69fLbR8d1EBadrQb4fZSlMc
+         96BaiQlPZDQML5tYrWb7T+Fc2KBtFTw9p1fUhMj0ZaQGsuANzQag0G+Y/KsFImCKlYaf
+         ikCvwamv3vKvw2x0IV7gYsBn94RMLoIEjuk/I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745226200; x=1745831000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NaNLxjVYAiHVKkQcBc30sZU1PvjgM6D5TdHmW1yTgO0=;
-        b=NSU1V90X4Hp7z3nLvgLsSWIw+15RmAnMALGDk8C7n/QIpwkJaDKg6pTIs/qjL/SeI4
-         OxJ4fE3W56HMraqsKYOd/WEVyPLZtMyJZzppQSQj00xowb7/erBOstLNFiZtjXlF4yqV
-         ExxZ9wTxkhqDio3/SMkjwHv6q7GHWwox1fqkcgDglCopuEpLpqhKGTdW0YUttrIv20Ub
-         91+7ivQE8JL8BVofzUqJ1q45TlgkSZ9DacC6hA/9ShB7UKf4f9AZt30GvfQExNhwdxml
-         ojXePW0HRzM5GmONLLu8msQMlBh8ZeXuMlrsg4Op9755UVZdGFWfK0vtE67v2AyDvIVm
-         W+jA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQbiLXTgF1HDvfUNgQUQNrrY50dOG657mSruheRA1F898ltmB6A0N8tzN1ru0rkqVutcZjFjqnUW6RROI=@vger.kernel.org, AJvYcCXegGTZHKvfcOk70PnQIT9nV42laq7GK+stSHgt0ZofY0R2bPB2zKFrWgexYPDDnK4/Y6dW9ilRrOsJBwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIbyFHFCi0ndbAb1KYwMWsU8W+gb7QJomFHlvUQ3AVLVzY2Kuv
-	7PCefjG779CsPekX88UU1PsI2WgAXiRjvs90S6fXIZteP+NNBWcrIupqBu8SJAxLtfDG2kKEOkn
-	ArBpHE0l30CaFLjrxzaU0LD4AzXw=
-X-Gm-Gg: ASbGncul3yGjPH5t2bI72HyXd+kkJuriLBbSbSMmYv3Gjlz5hkx06/lQlaY1+avMnlp
-	rWPVe6TLPcNhFClEDg3Vabf8MJdVV8KiMNG/PDRiSvbd+GAsZ4sDD/Z8KO1wGbXXKctVhWVdGG9
-	iWv6fMZ2f9beZR4Wi1ax0JNw==
-X-Google-Smtp-Source: AGHT+IGrgBeOr4Q/absMM+Za+LCqe/Lll5BRdgNYHJVgjNFROenyLOx65DMpqcEBtUSR/JNtqFQe9uIFaPpojiNX1i4=
-X-Received: by 2002:a17:906:dc8b:b0:aca:aeb3:c220 with SMTP id
- a640c23a62f3a-acb74720810mr1148270466b.0.1745226199906; Mon, 21 Apr 2025
- 02:03:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745226596; x=1745831396;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xw8UIDvZBCcr83U5CXKVA2bqzTMOFGkmm5WFSkBADIc=;
+        b=uFJDsQyOxTfGGYFXx4fJiR3Pec1Rzig62LNkknz65wbgbHqX1s5dxd9BntX+EJuNC5
+         HA7VOWajyycocsMvrTL9LeebJpQqob6+X/YR9Y7vPgP6IGdiqgmmYOBxL/naSA4wXbHp
+         Tutx9FB232FEaP0ajcovMLskDmkG/9ymQSBETZkiV+F+xFf0Wk4LIkGSZzymW8C0e4qE
+         wRiWghCj5f0tykEZwXL2kgaxKKtGO8QLMqclZAq/8MC2u3CvJyWhrm8mK4uH2VFGkLxX
+         zGTPNU+vCitsOhGSJ1PKg1q8/ij1XJLt7s6JPOE1CRNMaQ9Ny97nYuwv8+sCNTK8HoCN
+         hU+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXn9lVOHfLTGWWoPmnCeJwF8ubMVK3FnHkGJ0FG0S5A7GC2RhJY/ChiErMgNiXXYyPm8OewDTNQqdrAv88=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygupPEi7YyyygyqLGYDiXgIH6UxpRS7k1h2FXZd5cYBjby6reS
+	jTQRkZCr/mot1a6j8Q+J8Dm2fR4HE8EhvvPFQRoWkY6/q3F7jLS1RzE51tahBg==
+X-Gm-Gg: ASbGnctBUa/9oJ/KZk/sikEeWYuDlP0i3Mlhmai59kNkkJW6+mSl48fnkxQtUwshBKh
+	r9NzsOcCEsrefHv5FA72FGK8GqzJjaulmXIgl3fhunG1Y6xzaQzmBBTz/yGyvC+WzqvYMhFEuGX
+	KrnOq7JYBBOCB67IBivF/wwIJlDmenyEkRahIwX129WAFdvOi/au3IfCDA6CF8zt5L9rv1ThUzm
+	T3icA34T0EuAK2isnKepKgRHC+YgwLURMTSHB27EQasaE8E6ZW246BTIqwoM3+Qo8G6dbvMpSlt
+	oH5TFT2HkDSHb+sIUeioGi2FJGKeyjzN9HZK/n9crsJ4HX/TGceMy03Qf8iQ2xDEP5DU9g==
+X-Google-Smtp-Source: AGHT+IHDl/Ex7FBzvgMFPAFFoh7YhHYfxUvKL5Gx49McL1TrmyCRhCWjmqZwJhpIy+Bel/jx902Q6g==
+X-Received: by 2002:a17:903:2ca:b0:224:1609:a747 with SMTP id d9443c01a7336-22c535cbfb0mr168110325ad.31.1745226596121;
+        Mon, 21 Apr 2025 02:09:56 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:7633:f42a:d31d:3f9c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3d4asm6113079b3a.70.2025.04.21.02.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 02:09:55 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] pmdomain: mediatek: Add error messages for missing regmaps
+Date: Mon, 21 Apr 2025 17:09:50 +0800
+Message-ID: <20250421090951.395467-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421052804.11721-1-hardevsinh.palaniya@siliconsignals.io>
-In-Reply-To: <20250421052804.11721-1-hardevsinh.palaniya@siliconsignals.io>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 21 Apr 2025 12:02:43 +0300
-X-Gm-Features: ATxdqUEQ8x2EIouk8KiFcVlxbg2SzLuyxAZXaUX5Lyn4hOI7kkBZXG-d9UCmXRI
-Message-ID: <CAHp75VeZy3+0bGCNKjzPaK1Y234ZnZtG7v5iygtF1+Uhm9bTEA@mail.gmail.com>
-Subject: Re: [PATCH v2] media: atomisp: Remove compat ioctl32 header file
-To: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>
-Cc: andy@kernel.org, sakari.ailus@linux.intel.com, 
-	Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 8:28=E2=80=AFAM Hardevsinh Palaniya
-<hardevsinh.palaniya@siliconsignals.io> wrote:
->
-> Arnd's patch [1] removed the compat ioctl32 code, so this
-> header file is no longer needed.
->
-> Additionally, the definition of atomisp_compat_ioctl32()
-> was deleted in Arnd's patch [1], making its declaration
-> unused as well.
->
-> Moreover, there are no references to this header file or
-> the function(atomisp_compat_ioctl32) in the atomisp codebase.
+A recent change to the syscon regmap API caused the MediaTek power
+controller drivers to fail, as the required regmap could no longer be
+retrieved. The error did not have an accompanying message, making the
+failure less obvious. The aforementioned change has since been reverted.
 
-> Link URL[1]: https://lore.kernel.org/linux-media/20210614103409.3154127-7=
--arnd@kernel.org/
+Add error messages to all the regmap retrievals, thereby making all
+error paths in scpsys_add_one_domain() have visible error messages.
 
-Not so literally :-)
-Should be just
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ drivers/pmdomain/mediatek/mtk-pm-domains.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Link: https://lore.kernel.org/linux-media/20210614103409.3154127-7-arnd@ker=
-nel.org/
-[1]
+diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+index b866b006af69..22cdd34ed008 100644
+--- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
++++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
+@@ -397,20 +397,26 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
+ 
+ 	pd->infracfg = syscon_regmap_lookup_by_phandle_optional(node, "mediatek,infracfg");
+ 	if (IS_ERR(pd->infracfg))
+-		return ERR_CAST(pd->infracfg);
++		return dev_err_cast_probe(scpsys->dev, pd->infracfg,
++					  "%pOF: failed to get infracfg regmap\n",
++					  node);
+ 
+ 	smi_node = of_parse_phandle(node, "mediatek,smi", 0);
+ 	if (smi_node) {
+ 		pd->smi = device_node_to_regmap(smi_node);
+ 		of_node_put(smi_node);
+ 		if (IS_ERR(pd->smi))
+-			return ERR_CAST(pd->smi);
++			return dev_err_cast_probe(scpsys->dev, pd->smi,
++						  "%pOF: failed to get SMI regmap\n",
++						  node);
+ 	}
+ 
+ 	if (MTK_SCPD_CAPS(pd, MTK_SCPD_HAS_INFRA_NAO)) {
+ 		pd->infracfg_nao = syscon_regmap_lookup_by_phandle(node, "mediatek,infracfg-nao");
+ 		if (IS_ERR(pd->infracfg_nao))
+-			return ERR_CAST(pd->infracfg_nao);
++			return dev_err_cast_probe(scpsys->dev, pd->infracfg_nao,
++						  "%pOF: failed to get infracfg-nao regmap\n",
++						  node);
+ 	} else {
+ 		pd->infracfg_nao = NULL;
+ 	}
+-- 
+2.49.0.805.g082f7c87e0-goog
 
-> Signed-off-by: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io=
->
-
-Otherwise LGTM,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-
-P.S. No need to resend, I hope Hans can tweak this whilst applying.
-
---=20
-With Best Regards,
-Andy Shevchenko
