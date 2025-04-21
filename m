@@ -1,205 +1,110 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1628920C016;
-	Mon, 21 Apr 2025 23:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911AC2ED;
+	Mon, 21 Apr 2025 23:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745277137; cv=none; b=EgpUhhtJm/22IbYEhGyeeYVBZ+dmbzgu+kh+qGPmPTu4wVB/IlWs0GOctiS9JrsdZuv3N5BsevZorg2Vv+7pC3ur1gOaLx9eUfvVacxcY9z8YstJy4UREqU2Z4RD+x3njZrMjT7A6CtIe1yDapEQgnfxi3vDGVC9vlnPfby6h0o=
+	t=1745277328; cv=none; b=PU1h3J7vFqnLeAOhqOnTUOrw5DCxUII2TjHVXIQx4lFOvTp8O+fn6WjGCJfnTs6V8xCehhu8jBoUCcUNIzdtrmnCuQBo1rK7NX2J0Dnp9ZxWY8QQMC+rlhj8yWjXDU7xl3bO1uM0+6nSn66YHSZw3wTqriOSWu3RNaNI0TFcm1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745277137; c=relaxed/simple;
-	bh=4Q9QOck4LEaT8mQGUHQrpRn2qWlOd028X/Rn3doSDD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZeRQig+yhceb9SrVqviBjXoVFCd/9qUbRNB2EegyM/nt+URGsQBykVM3h29KnaKVUm1DunrnGORdtqDYXnWZtTWgaXYet+0CXKBqUoa/altDyBqdMNIsPiQIsXwe/Zc8vgUiG6cxXhTPFiPuvVh3pxYBPw2IuH7ug6ShCai1AK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faEGl61t; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745277328; c=relaxed/simple;
+	bh=UZ41G4ylpY5ShMVGCSb2rFeV054LTjtX2MVIBAknHw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qifNZzu1UJf45mLeXNc6M4iNRQPJi1Y01y8b90Tj5NfawznMS0aI2nZZZGzF35dZVx+fPNVCZubNSwgrJWMUYNvpqNYtLxtuU/RSlScpRlnN6C+MMlEsYKl/V58RdCFlTM3BBnUoC4cq1N8JX227ET73nGq0cU1yjKz48opwr5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ez+/JrKx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faEGl61t"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so45129575ad.2;
-        Mon, 21 Apr 2025 16:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745277134; x=1745881934; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K7uD5qXzvc6aMulN+BeaNa7iatoiX4T3pgrjFm94VSk=;
-        b=faEGl61t6YR+8dxQ6ZpO2NB8r0pkO4aYvSS/5iHfFOYg76yyOPJNwd5STJd0We9f4O
-         ieXuipxRLJxUAMeU3/yY7F9TjOgFe1Dt2bo9Ina0Bky5CAps2wGLYJ2pXfOoNk9qLNw6
-         O+VP2hHkzV2iT4Dn59FCeMrs4sFgWCZkT72v8R+MhlF5ktHpfzPGjtrUejVIvrJQ3ax/
-         xhjnfyvpZm0e7dB+138johGyST5ZEv9IB7JFToyh93r4KG2GuAw0tXTXfWrnPku+lE1q
-         e3bOxIVFPB+buTU3Q5nTo3+GcLail4cmVMvRWBP2VgKz9HUnZHdRFe34KZGL0qImj9PY
-         X8ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745277134; x=1745881934;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7uD5qXzvc6aMulN+BeaNa7iatoiX4T3pgrjFm94VSk=;
-        b=a8qrQYFY9+3+ZJpie7qkTgOWkasuV8WbkAVpuaRcyZWDS8DE8FdLx45Pjo6NsH/3m1
-         DznE1fuWh9XsXwrjtiAP8vl/IlxSFsEgUX1v2wltzB6yP+rU3iZcUB7kQvc76khWSElV
-         SiAPfdd0Us/Kkvwald2wVeR/WJbN/WWAfXDk7dsmEZs4K/0BDiPQK75d/AeOElTHIQ6G
-         2BNiR+LwYP222P9xbM4OrBQ4LsszRgWw5VCezIjuSzjnzoHCmPaASpxb37UdqGBPA6cR
-         IWhpU0YrLATU7P64Do1WolksC7LBzt9EFeGNQytnXAQEP7YX8iTFbb6dmPba7oj/90L8
-         mqug==
-X-Forwarded-Encrypted: i=1; AJvYcCVGY5b38zYKG73PM6pxJfrZPlWh8k6ND0TTlfO3E0BMVMO4cF4Y3myp87dws0DBO6ng+Q0KOKOq7Zbp8Xo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaDMThqS8OKeJqhDKUwGg+a+XwER3a4btUzhWblPpQ0YiUKSvd
-	8wfAihdFGK3Xmq1o4GndE/mZ27TquRWS6unVDhnW9vb3y449jFzj
-X-Gm-Gg: ASbGncvP8kB2Sed002uLqppoMTxbZI/bkUpQ0Ohv7fEu0GWXPs8BPylSimNeNyvcI7n
-	YD2J3jcXMLS9FFL3YUqhCNW4ElZ1gV86/DS87GFQ+myltD9sfAfRS6O2D152SGJ7V2uI5Lih8tB
-	OInLVhyaV6oW2nj6uGNbXV8S2L/gvStTS7zT5ctPzZoTSXN78oz9j3v2SE1CBNrQ0eQWpDG+hjX
-	SQEitnXSiT5P+fJh9AAHRn+lCBLk5bhOB8skrO3QbMcn1HN0WTeUy5gueoqXxHrVMdIEo9f06Nc
-	Qye3xLF+nmnNysES6QKt2BwhKwAC75DnwyzpSCB7Bf146XJ11C3pbA==
-X-Google-Smtp-Source: AGHT+IHT5fKKS1SMCd+Tj+8NxbOpVvUcbxkPakCnNVQ1oPl2cEDp8mNkaefvPYVXcT9AzKeGfB9Oyg==
-X-Received: by 2002:a17:902:f706:b0:224:1c41:a4cd with SMTP id d9443c01a7336-22c5356dfbbmr179816285ad.3.1745277134121;
-        Mon, 21 Apr 2025 16:12:14 -0700 (PDT)
-Received: from ?IPV6:2a02:8010:6606:0:4561:1890:fe60:cec1? ([2a02:8010:6606:0:4561:1890:fe60:cec1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eceb74sm70766835ad.166.2025.04.21.16.12.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 16:12:13 -0700 (PDT)
-Message-ID: <bda07179-1ff4-46e4-9dda-ece9c63fd613@gmail.com>
-Date: Tue, 22 Apr 2025 00:12:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ez+/JrKx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A90C4CEE4;
+	Mon, 21 Apr 2025 23:15:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745277327;
+	bh=UZ41G4ylpY5ShMVGCSb2rFeV054LTjtX2MVIBAknHw8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ez+/JrKxyHpRtFC5L35wmvfkTto5w+y8Z9/xD7HTu4RTLCiulhYdgH2WFNRVb2AxB
+	 0vb7/DhDNXR+Hf4h8sWIaIsukpWxcDxhG26qv+3EwP9rJDQmkbFI58H2pEIDkempJA
+	 yfAo54jlLtxQdO/bLmA1mHlYL/5x9kXkprtQyouQhJ7PZd4WUbTPcVneFbtqYgW+15
+	 ht662xWFf2vvWiO1En8Gt+EPD6AwRhjNPpp5PARCnYaH/Ewgb2iIJX0KRej1yRg8C2
+	 wA0zoJ5rChij0RJLjWFd9bB3pDwRTVT+jlZAcQnZZLf7veMtCDssGMow9sQx1IKJ7g
+	 8D2mBT81jEp7g==
+From: Kees Cook <kees@kernel.org>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ovl: Check for NULL d_inode() in ovl_dentry_upper()
+Date: Mon, 21 Apr 2025 16:15:19 -0700
+Message-Id: <20250421231515.work.676-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: rockchip: rk3588-nanopc-t6: fix usb-c port
- functionality
-Content-Language: en-GB
-To: John Clark <inindev@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Marcin Juszkiewicz <mjuszkiewicz@redhat.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Jonas Karlman <jonas@kwiboo.se>
-References: <20250419023715.16811-1-inindev@gmail.com>
-From: Hugh Cole-Baker <sigmaris@gmail.com>
-In-Reply-To: <20250419023715.16811-1-inindev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2842; i=kees@kernel.org; h=from:subject:message-id; bh=UZ41G4ylpY5ShMVGCSb2rFeV054LTjtX2MVIBAknHw8=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlsF9u9v7/eqibJqLEgZvK2vJ4jvj4njn+9NM3SmWHTm f+nO/497ihlYRDjYpAVU2QJsnOPc/F42x7uPlcRZg4rE8gQBi5OAZjI6heMDH2XNprG1716UDLx zZ4NzQxh1lzOTwT3ru4VK1rRfVnpQxMjwxWPQ/Fvp57VPyL5dN0i8yTF2PoPU+ZvXu4UlHm/ZZ/ MFVYA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi John,
+In ovl_path_type() and ovl_is_metacopy_dentry() GCC notices that it is
+possible for OVL_E() to return NULL (which implies that d_inode(dentry)
+may be NULL). This would result in out of bounds reads via container_of(),
+seen with GCC 15's -Warray-bounds -fdiagnostics-details. For example:
 
-On 19/04/2025 03:37, John Clark wrote:
-> The USB-C port on the NanoPC-T6 was not providing VBUS (vbus5v0_typec
-> regulator disabled, gpio-58 out lo) due to misconfiguration. The
-> original setup with regulator-always-on and regulator-boot-on forced
-> the port on, masking the issue, but removing these properties revealed
-> that the fusb302 driver was not enabling the regulator dynamically.
-> 
-> Changes:
-> - Removed regulator-always-on and regulator-boot-on from vbus5v0_typec
->   and vbus5v0_usb to allow driver control.
-> - Changed power-role from "source" to "dual" in the usb-c-connector
->   to support OTG functionality.
-> - Add pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>; to the FUSB302MPX node
->   to specify USB Power Delivery (PD) Revision 2.0, Version 1.2,
->   ensuring the driver correctly advertises PD capabilities and
->   negotiates power roles (source/sink) per the FUSB302MPX’s supported
->   PD protocol.
-> - Added op-sink-microwatt and sink-pdos for proper sink mode
->   configuration (1w min, 15w max).
-> - Add typec-power-opmode = "3.0A"; to enable 3.0A (15W) fallback for
->   non-PD USB-C devices with the FUSB302MPX.
-> - Set try-power-role to "source" to prioritize VBUS enablement.
-> - Adjusted usb_host0_xhci dr_mode from "host" to "otg" and added
->   usb-role-switch for dual-role support.
-> 
-> Testing:
-> - Verified VBUS (5V) delivery to a sink device (USB thumb drive).
-> - Confirmed USB host mode with lsusb detecting connected devices.
-> - Validated USB device mode with adb devices when connected to a PC.
-> - Tested dual-role (OTG) functionality with try-power-role set to
->   "source" and "sink"; "source" prioritizes faster VBUS activation.
-> - Validated functionality with a mobile device, including USB Power
->   Delivery, file transfer, USB tethering, MIDI, and image transfer.
-> - Tested USB-C Ethernet adapter compatibility, ensuring proper
->   operation in host mode.
-> - Tested USB-C hub compatibility, ensuring proper operation in host mode.
-> 
-> Signed-off-by: John Clark <inindev@gmail.com>
-> ---
->  .../boot/dts/rockchip/rk3588-nanopc-t6.dtsi   | 21 ++++++++++---------
->  1 file changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-> index cecfb788bf9e..8f2bd30786d9 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
-> @@ -174,8 +174,6 @@ vbus5v0_typec: regulator-vbus5v0-typec {
->  		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&typec5v_pwren>;
-> -		regulator-always-on;
-> -		regulator-boot-on;
->  		regulator-name = "vbus5v0_typec";
->  		regulator-min-microvolt = <5000000>;
->  		regulator-max-microvolt = <5000000>;
-> @@ -188,8 +186,6 @@ vbus5v0_usb: regulator-vbus5v0-usb {
->  		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&usb5v_pwren>;
-> -		regulator-always-on;
-> -		regulator-boot-on;
->  		regulator-name = "vbus5v0_usb";
->  		regulator-min-microvolt = <5000000>;
->  		regulator-max-microvolt = <5000000>;
-> @@ -465,24 +461,30 @@ regulator-state-mem {
->  };
->  
->  &i2c6 {
-> -	clock-frequency = <200000>;
->  	status = "okay";
->  
-> -	fusb302: typec-portc@22 {
-> +	usbc0: usb-typec@22 {
->  		compatible = "fcs,fusb302";
->  		reg = <0x22>;
->  		interrupt-parent = <&gpio0>;
->  		interrupts = <RK_PD3 IRQ_TYPE_LEVEL_LOW>;
-> -		pinctrl-0 = <&usbc0_int>;
->  		pinctrl-names = "default";
-> +		pinctrl-0 = <&usbc0_int>;
->  		vbus-supply = <&vbus5v0_typec>;
-> +		status = "okay";
->  
->  		connector {
->  			compatible = "usb-c-connector";
->  			data-role = "dual";
->  			label = "USB-C";
-> -			power-role = "source";
-> +			/* fusb302 supports PD Rev 2.0 Ver 1.2 */
-> +			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>;
-> +			power-role = "dual";
-> +			op-sink-microwatt = <1000000>;
-> +			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
->  			source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-> +			try-power-role = "source";
-> +			typec-power-opmode = "3.0A";
+In file included from arch/x86/include/generated/asm/rwonce.h:1,
+                 from include/linux/compiler.h:339,
+                 from include/linux/export.h:5,
+                 from include/linux/linkage.h:7,
+                 from include/linux/fs.h:5,
+                 from fs/overlayfs/util.c:7:
+In function 'ovl_upperdentry_dereference',
+    inlined from 'ovl_dentry_upper' at ../fs/overlayfs/util.c:305:9,
+    inlined from 'ovl_path_type' at ../fs/overlayfs/util.c:216:6:
+include/asm-generic/rwonce.h:44:26: error: array subscript 0 is outside array bounds of 'struct inode[7486503276667837]' [-Werror=array-bounds=]
+   44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+      |                         ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include/asm-generic/rwonce.h:50:9: note: in expansion of macro '__READ_ONCE'
+   50 |         __READ_ONCE(x);                                                 \
+      |         ^~~~~~~~~~~
+fs/overlayfs/ovl_entry.h:195:16: note: in expansion of macro 'READ_ONCE'
+  195 |         return READ_ONCE(oi->__upperdentry);
+      |                ^~~~~~~~~
+  'ovl_path_type': event 1
+  185 |         return inode ? OVL_I(inode)->oe : NULL;
+  'ovl_path_type': event 2
 
-According to the manufacturer wiki [1] "Power Output Capacity" table, the USB-C
-port maximum output is 5V/2A. So I think "1.5A" would be a better value here.
+Avoid this by allowing ovl_dentry_upper() to return NULL if d_inode() is
+NULL, as that means the problematic dereferencing can never be reached.
+Note that this fixes the over-eager compiler warning in an effort to
+being able to enable -Warray-bounds globally. There is no known
+behavioral bug here.
 
-[1]: https://wiki.friendlyelec.com/wiki/index.php/NanoPC-T6
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+This is the spirital v2 of https://lore.kernel.org/lkml/20241117044612.work.304-kees@kernel.org/
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-unionfs@vger.kernel.org
+---
+ fs/overlayfs/util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->  
->  			ports {
->  				#address-cells = <1>;
-> @@ -1135,9 +1137,8 @@ &usb_host0_ohci {
->  };
->  
->  &usb_host0_xhci {
-> -	dr_mode = "host";
-> -	status = "okay";
->  	usb-role-switch;
-> +	status = "okay";
->  
->  	port {
->  		usb_host0_xhci_drd_sw: endpoint {
+diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+index 0819c739cc2f..5d6b60d56c27 100644
+--- a/fs/overlayfs/util.c
++++ b/fs/overlayfs/util.c
+@@ -305,7 +305,9 @@ enum ovl_path_type ovl_path_realdata(struct dentry *dentry, struct path *path)
+ 
+ struct dentry *ovl_dentry_upper(struct dentry *dentry)
+ {
+-	return ovl_upperdentry_dereference(OVL_I(d_inode(dentry)));
++	struct inode *inode = d_inode(dentry);
++
++	return inode ? ovl_upperdentry_dereference(OVL_I(inode)) : NULL;
+ }
+ 
+ struct dentry *ovl_dentry_lower(struct dentry *dentry)
+-- 
+2.34.1
 
-br, Hugh
