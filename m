@@ -1,291 +1,101 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3F52905;
-	Mon, 21 Apr 2025 12:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787562905;
+	Mon, 21 Apr 2025 12:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745239469; cv=none; b=TS8GAQU8dJVSV/loIbE0Z9wqfEy0ltvD6NOheMc0/6AmgatEk0H9t5BwcVlsUW/lRo3p0PltcGEwUzONS1B52mWNYwTG4EIpoQ6oRyxuUiB6W5se2+sdo5v/FghZag2zAEC80hCqsICv/h5XFa0O9aT1DYu/lMo00KSMwMNmQeg=
+	t=1745239830; cv=none; b=cGrIyY7b63KiM73vgC+Wk5uYfzRxASwvJmYwbddvR+9CPreFRUDopTzNeOMeB8RVCkcU1XoYnD2E5o/V3DUD/OvgtgFdgFmmbk5Nohahqn+ttqJQdNHtjLDlxzuxkdFn0Vm9CV8c8H6q5Xr9p4WOL4u+aFc6niYaaQXre6rRzy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745239469; c=relaxed/simple;
-	bh=msmr++qMaRrpMwocl7aVdZOHFvpjPy35z+sljXfcCqs=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IAMyBk0RH1xfgbotu+t2F6PfoUOFAnmBaRojGYHTFpu+fTjlHoV2U8uNod3+w7D7csaLE78F17zq/oWY6wiOoxjGVm9n0acQ/+/v8yfGuTONASZ7Iz+QC//+w80/C0yexwVfEPag5PwOBDWEczXkjiEORXbngwpMreYgLOWxSYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6B9ZQBE; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745239830; c=relaxed/simple;
+	bh=aQVZG5DEu8YE5FWBUQD4b4UZYTXfV9Xxq60orHtA5b4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gPmBVSDlJJe8Ot1Afe5GHSFhqW6DJT0o3XAzwegnTlqaE0ZEU81cKSCF0vrSNalqdJEHo1Oxd3KSyLMgmJ+ZjQZdDydgGCfn1Qw8UdDgJby/NaYMG+xF5p838mSeQKq1Mu3ISQwqzyigrMV6Ih545ZBRBUkVV2YUx/iLQus8Gc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgv+YWhT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6B9ZQBE"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso7392620a12.3;
-        Mon, 21 Apr 2025 05:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745239466; x=1745844266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8wgu7iDQ+eyYe+Yv9pFlAr+skkcnHXb23MdhqN0e3I=;
-        b=b6B9ZQBEDNciquwjZkli2pyforkDvngEnRzLTlhSdpxbiL7hw12JVnjuNoM/9fEBqC
-         QxHdDp/IVFJvMzG3ffyIoiMvbh0jshaNZ1AHPRkE9BpfIaNsjRWVJknn8O2vCdgqXGma
-         xq6Lpu7hI7/0+hxkU/hGSHzFaUTYJGM5LfwNNVlOdkUmGZtQUCfMgAbqPlI6uMZP/9uH
-         y/ChHxwJrBgEva57KWYKuJhm1f8aGhajNzw6mkHIv4dCgsYJ6Qxjn6g8VbrBUnreJqJB
-         bcOpeeB5dOPDWAibqiLOTqJ6bm2hAxu3ycOEhabdre7TsX0gexaBYTNY9PSqAqfLZcV+
-         ElAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745239466; x=1745844266;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q8wgu7iDQ+eyYe+Yv9pFlAr+skkcnHXb23MdhqN0e3I=;
-        b=cDwK1eNC8DAXZRL1sPKyYcdIdTeDYlY6L2F4kFws1ZubZ6ANWlQfTH++VdxeNeZYZC
-         OGP1tOsqV6O51cBOktjV7UFA4D9N8PFZwGD76UxgF5vauXn/f3MIk6mXkmc/W2xhFb77
-         y1lF4ycCNSfrnVj+KdL0HvSldvHD10zKJb2oVW1nsWKRvR0U3ynQTqZ/8DAz4RzxPFX3
-         udhPqb/p5etLnDk4LuzwSdxGUF2MzdKxuSUxY/vY7gOntYigu084Hvr2G0yW8SBjsVjG
-         mwJmcunLNSxtHx4yFlGQRI8DSbFgwMeIFhAIijyJZ8zIMfb2qLZ+JTsm5rU9odPAXvTa
-         QCww==
-X-Forwarded-Encrypted: i=1; AJvYcCW+qitfpT7qFU2GnrZff5Ygfx2AGQ4/jQ2ZQ3h6aoYF2X1vGiajhMLIEnJGQqQC0xRxSrxAR6HWjvQtxLxOfCxnxzhP@vger.kernel.org, AJvYcCWOngqATotedxnWYVJOuexdtzd9EtAESy6c+Pj1IJcLk4Kg1dUuavTnGRPdDO5+IyDyMp0=@vger.kernel.org, AJvYcCXtB7UV1IVX7wOZj0OTidlZPFcm7/t7Vj1N5J4jmhJmJhG1Cm3W9Ms9dx72iEJdT8dqoq4xalH9@vger.kernel.org
-X-Gm-Message-State: AOJu0YykVN33eofjSiSHWhAn/3fJ1jlEEN/npIPVe5wFCiJV80GIrSd5
-	wuHe4OrReN8YOpkbO2SR2pSr2rCjLqsgZ4YkzQ9qf/3rtHunO7Lm
-X-Gm-Gg: ASbGncuUzcekS/fBP9y0ODPf/5+qto/l16l27LCIDa7oSltRHzhpcEqLcRqo6bQT9kz
-	7sNNbKo1Bg+71ZI/mc2b9maOtMYirMBCoizupY9kLFd7mzs7xQQAEZ2+UFkTtB0PiYiJLabg3ZP
-	IpwCpzI0ZhCjEJgNhjH1DdzyUoecry8HzZZgzyZMf9FJDu98TMP8CJ3LRllzOEzPPNPLMsfDlPU
-	zRR/vS/Hem68NZ1/3wOgwznyMLFDWNxj0M/+Bcu13kD2ROmBr6egmfV1ZgUhnmvDPuuiKg7Gbhz
-	uCAKZIABso8G1O+27yMeO8Zr1TMZiymAfVWf0wBmC1RUvfk=
-X-Google-Smtp-Source: AGHT+IFKOfPK1H0jKNo8rpw2hwhKgxQI2qhVac83pOeQAKMWP+1BKJj1LGWSLFV72pzppkcN9eu4lw==
-X-Received: by 2002:a17:907:2ce6:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-acb74d9b35dmr900858166b.43.1745239465528;
-        Mon, 21 Apr 2025 05:44:25 -0700 (PDT)
-Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4c673sm513175466b.52.2025.04.21.05.44.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 05:44:25 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 21 Apr 2025 14:44:21 +0200
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	David Ahern <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>,
-	Breno Leitao <leitao@debian.org>, netdev@vger.kernel.org,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <aAY9pcvYHkYKFwZ5@krava>
-References: <20250418110104.12af6883@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgv+YWhT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF85C4CEE4;
+	Mon, 21 Apr 2025 12:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745239829;
+	bh=aQVZG5DEu8YE5FWBUQD4b4UZYTXfV9Xxq60orHtA5b4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fgv+YWhTU2HZODtmds8W4MVh0NOcX3pzh1JMJjm4ozbVVxXfAuwjFwWkU2wNHLcAg
+	 OQormlguLaQi6KPpvhIB1Xokig1AbU1uJZRmanxrJ/6gS8PlHMwpUhW58UBVURV1J6
+	 1pBu9cAJAXKy4jxd/xmxkKqp9t+nGonliE3Yyd3TJjDimpojTYoUu0xND/HKcpJZYB
+	 m17EpGWcFS3RshIWBHmaTRfRN2AjZJR3Jfj9JSdAEuJMtTtQqwxSo561wmZT/a9Arn
+	 zKzdXe7ukWAo1rSJWgWDrzEcJLZE6v5kWBLjVl8JPpJbhEYeXCYtgzR3ootD+VGP03
+	 IAS8oOpGFdHEA==
+Date: Mon, 21 Apr 2025 13:50:22 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] iio: adc: ad4695: use IIO_DECLARE_BUFFER_WITH_TS
+Message-ID: <20250421135022.2ab97685@jic23-huawei>
+In-Reply-To: <a834e345-6d44-4fe6-a3ed-cc856e9dc4d3@baylibre.com>
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+	<20250418-iio-introduce-iio_declare_buffer_with_ts-v1-2-ee0c62a33a0f@baylibre.com>
+	<aAPRbb93lJrnEE5l@smile.fi.intel.com>
+	<a834e345-6d44-4fe6-a3ed-cc856e9dc4d3@baylibre.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418110104.12af6883@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 11:01:04AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Most tracepoints in the kernel are created with TRACE_EVENT(). The
-> TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
-> reality, TRACE_EVENT() is just a helper macro that calls those other two
-> macros), will create not only a tracepoint (the function trace_<event>()
-> used in the kernel), it also exposes the tracepoint to user space along
-> with defining what fields will be saved by that tracepoint.
-> 
-> There are a few places that tracepoints are created in the kernel that are
-> not exposed to userspace via tracefs. They can only be accessed from code
-> within the kernel. These tracepoints are created with DEFINE_TRACE()
-> 
-> Most of these tracepoints end with "_tp". This is useful as when the
-> developer sees that, they know that the tracepoint is for in-kernel only
-> and is not exposed to user space.
-> 
-> Instead of making this only a process to add "_tp", enforce it by making
-> the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-> requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-> to use that keeps the original name.
-> 
-> Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/tracepoint.h   | 38 ++++++++++++++++++++++++------------
->  include/trace/bpf_probe.h    |  4 ++--
->  include/trace/define_trace.h | 17 +++++++++++++++-
->  include/trace/events/sched.h | 30 ++++++++++++++--------------
->  include/trace/events/tcp.h   |  2 +-
->  5 files changed, 60 insertions(+), 31 deletions(-)
-> 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index a351763e6965..826ce3f8e1f8 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  #endif
->  
->  #define DECLARE_TRACE(name, proto, args)				\
-> -	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-> +	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
->  			cpu_online(raw_smp_processor_id()),		\
->  			PARAMS(void *__data, proto))
->  
->  #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
-> -	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-> +	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
->  			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
->  			PARAMS(void *__data, proto))
->  
->  #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
-> +	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
-> +				PARAMS(void *__data, proto))
-> +
-> +#define DECLARE_TRACE_EVENT(name, proto, args)				\
-> +	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-> +			cpu_online(raw_smp_processor_id()),		\
-> +			PARAMS(void *__data, proto))
-> +
-> +#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
-> +	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-> +			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
-> +			PARAMS(void *__data, proto))
-> +
-> +#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
->  	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
->  				PARAMS(void *__data, proto))
->  
-> @@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  
->  #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
->  #define DEFINE_EVENT(template, name, proto, args)		\
-> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
->  #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
-> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
->  #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
-> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
->  #define DEFINE_EVENT_CONDITION(template, name, proto,		\
->  			       args, cond)			\
-> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
->  				PARAMS(args), PARAMS(cond))
->  
->  #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
-> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
->  #define TRACE_EVENT_FN(name, proto, args, struct,		\
->  		assign, print, reg, unreg)			\
-> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-> -#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
-> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
-> +#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
->  		assign, print, reg, unreg)			\
-> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
-> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
->  			PARAMS(args), PARAMS(cond))
->  #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
->  			      struct, assign, print)		\
-> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
->  				PARAMS(args), PARAMS(cond))
->  #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
->  			    print, reg, unreg)			\
-> -	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
-> +	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
->  
->  #define TRACE_EVENT_FLAGS(event, flag)
->  
-> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-> index 183fa2aa2935..fbfe83b939ac 100644
-> --- a/include/trace/bpf_probe.h
-> +++ b/include/trace/bpf_probe.h
-> @@ -119,8 +119,8 @@ static inline void bpf_test_buffer_##call(void)				\
->  
->  #undef DECLARE_TRACE
->  #define DECLARE_TRACE(call, proto, args)				\
-> -	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
-> -	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
-> +	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
-> +	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
->  
->  #undef DECLARE_TRACE_WRITABLE
->  #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
+On Sat, 19 Apr 2025 12:57:11 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-hi,
-do we need the change also for DECLARE_TRACE_WRITABLE?
-I needed change below for bpf selftest kmod
+> On 4/19/25 11:38 AM, Andy Shevchenko wrote:
+> > On Fri, Apr 18, 2025 at 05:58:33PM -0500, David Lechner wrote:  
+> >> Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
+> >> iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
+> >> and understand.
+> >>
+> >> AD4695_MAX_CHANNEL_SIZE macro is dropped since it was making the line
+> >> too long and didn't add that much value.
+> >>
+> >> AD4695_MAX_CHANNELS + 2 is changed to AD4695_MAX_CHANNELS + 1 because
+> >> previously we were overallocating. AD4695_MAX_CHANNELS is the number of
+> >> of voltage channels and + 1 is for the temperature channel.  
+> > 
+> > ...
+> >   
+> >> -/* Max size of 1 raw sample in bytes. */
+> >> -#define AD4695_MAX_CHANNEL_SIZE		2  
+> >   
+> >>  	/* Raw conversion data received. */
+> >> -	u8 buf[ALIGN((AD4695_MAX_CHANNELS + 2) * AD4695_MAX_CHANNEL_SIZE,
+> >> -		     sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
+> >> +	IIO_DECLARE_BUFFER_WITH_TS(u8, buf, (AD4695_MAX_CHANNELS + 1) * 2)
+> >> +		__aligned(IIO_DMA_MINALIGN);  
+> > 
+> > I would rather expect this to be properly written as u16 / __le16 / __be16
+> > instead of playing tricks with u8.
+> > 
+> > With all comments given so far I would expect here something like:
+> > 
+> > 	IIO_DECLARE_BUFFER_WITH_TS(u16, buf, AD4695_MAX_CHANNELS + 1);
+> > 
+> >   
+> 
+> We would have to make significant changes to the driver to allow u16 instead
+> of u8. I don't remember why I did it that way in the first place, but I consider
+> changing it out of scope for this patch.
 
-jirka
+There are drivers where the size varies depending on the exact part.
+Maybe this is a cut and paste from one of those or you thought this might get
+bigger to support > 16bit channels in the future.  Either way, right now
+it is always 16 bits so an appropriately sized type would be good as you
+say.   I think such a change should be in a precursor patch probably
+rather than left for another day.  Looks trivial to me given st->buf
+is only accessed directly in 2 places.
 
-
----
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index fbfe83b939ac..9391d54d3f12 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -125,8 +125,8 @@ static inline void bpf_test_buffer_##call(void)				\
- #undef DECLARE_TRACE_WRITABLE
- #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
- 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
- 
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
- 
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-index aeef86b3da74..2bac14ef507f 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-@@ -42,7 +42,7 @@ DECLARE_TRACE(bpf_testmod_test_nullable_bare,
- 
- struct sk_buff;
- 
--DECLARE_TRACE(bpf_testmod_test_raw_tp_null,
-+DECLARE_TRACE(bpf_testmod_test_raw_null,
- 	TP_PROTO(struct sk_buff *skb),
- 	TP_ARGS(skb)
- );
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index f38eaf0d35ef..dd9b806d255e 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 
- 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
- 
--	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
-+	(void)trace_bpf_testmod_test_raw_null_tp(NULL);
- 
- 	bpf_testmod_test_struct_ops3();
- 
-@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 	if (bpf_testmod_loop_test(101) > 100)
- 		trace_bpf_testmod_test_read(current, &ctx);
- 
--	trace_bpf_testmod_test_nullable_bare(NULL);
-+	trace_bpf_testmod_test_nullable_bare_tp(NULL);
- 
- 	/* Magic number to enable writable tp */
- 	if (len == 64) {
- 		struct bpf_testmod_test_writable_ctx writable = {
- 			.val = 1024,
- 		};
--		trace_bpf_testmod_test_writable_bare(&writable);
-+		trace_bpf_testmod_test_writable_bare_tp(&writable);
- 		if (writable.early_ret)
- 			return snprintf(buf, len, "%d\n", writable.val);
- 	}
-@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
- 		.len = len,
- 	};
- 
--	trace_bpf_testmod_test_write_bare(current, &ctx);
-+	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
- 
- 	return -EIO; /* always fail */
- }
+Jonathan
