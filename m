@@ -1,474 +1,260 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E19020E6E1;
-	Mon, 21 Apr 2025 07:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745220688; cv=none; b=elRUq3thESUZv5OJFG4rDKMGJjQpqAxaZML9lMOb8woAUEjEhibu8ISb3bN43S0zboG1RxPackwy7/3gXDvRttjrQh2J29Wbyokg1CZiMfKLEdIbuCAqfHmoOJWU1FH0EnoeM+DgcHIm/N5Kbto+t47lqJUbXXWMQNdJ/NKvYgg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745220688; c=relaxed/simple;
-	bh=kaHKEfRJPT1vH9ogghYE3sYeZslAFruSb9Rt/aCNBoE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q4fLT6WvH84VjaZ7GMw0wveThoIfCEK1XPWKaJvJZ0xdCjoEKSOlHFERQ+miurORlxfcugOD2vgD44jUbERPN6TocGJOaTxSzV2A8Yzob7GYDpnxUv9eOc0qfo+THRObzFsjvQkz0QmGtAzv9meSdEssflgcmsSN82M4e0kPXU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxaeFJ9AVoe0nDAA--.17534S3;
-	Mon, 21 Apr 2025 15:31:21 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMBxn8U+9AVopeqNAA--.25751S5;
-	Mon, 21 Apr 2025 15:31:20 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v10 3/5] KVM: selftests: Add core KVM selftests support for LoongArch
-Date: Mon, 21 Apr 2025 15:31:08 +0800
-Message-Id: <20250421073110.2259397-4-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250421073110.2259397-1-maobibo@loongson.cn>
-References: <20250421073110.2259397-1-maobibo@loongson.cn>
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83289199FA2;
+	Mon, 21 Apr 2025 07:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745220815; cv=fail; b=TGnwx88QtobLCp7pT7SdTdnXdaa6XKwtkVzDir4J4SpH9QZgIwSkEJ/654PjVF0YX2/gA7ruOWW9n7lN+XhvRQytBtMoZ583fyTqqsnMHRS69wTuWg2FilkoM5bUA2gjzgqBnH8V/eBCa2yhbgqi4+tcPRnXRgrNC0geZBwd1PU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745220815; c=relaxed/simple;
+	bh=UIs8/K21UHld2B+hTscpg+ZtYTW/KW85fXs6LToe3a4=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=LWMl74Vns6IPkPvZt9aOAV8eyRyO5lHadyjZHx48XEQs491sV9dKbWc9zFSy5QGyITnvDSMIo0mW35CH78jb4XVR5UQi3E3jzgbo4N9zb4yD5CRhV/4pG8BqKBdL9dtGVy+2MyaekGagsMvuX6K8kTx1ZJ8TWjZ8quVuBfnPKd0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D1gdMZpW; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D1gdMZpW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745220813; x=1776756813;
+  h=date:from:to:cc:subject:message-id:
+   content-transfer-encoding:mime-version;
+  bh=UIs8/K21UHld2B+hTscpg+ZtYTW/KW85fXs6LToe3a4=;
+  b=D1gdMZpWmvyN5PW2MJIXV89w9rYbYRBZzGW3k+ZP1FXED1yQIFUHypVT
+   jiueQ4jQbtszKe4UCzfz33yKEq++ncw9ia0jL02Is5dwXSvdcjVbrww7g
+   b6Woh9JJB0UV7eo94Q5ndUJLme9WzFMswsn3FY45z0tEpaI+w1l9q314C
+   uOeRWQigaamy08936IqW4NomnWhVDgA1YhPH2g97Gx7MbbNqGDVGiuZ0M
+   0Gz7U0naP+DXsSqZZ+TZQDChejqWpDK04+ZBBYDgyVvg2x/M7WxcLJ5e7
+   7H7iVY5nT01ksT6UC/elFnqguUnv+4HsGp/LCU/4cUw7DHLIY0Ka5zj9k
+   g==;
+X-CSE-ConnectionGUID: RIEnXQZ5T26bHTCi94yxXg==
+X-CSE-MsgGUID: 1b++L5ICSvqOa0lLpV5Sdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="57396478"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="57396478"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 00:33:33 -0700
+X-CSE-ConnectionGUID: Gumc7bXYSD+yVo0DWq8G6w==
+X-CSE-MsgGUID: BBsRfZdPR1OQKEq+Frky6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="132172964"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 00:33:32 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 21 Apr 2025 00:33:32 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 21 Apr 2025 00:33:32 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 21 Apr 2025 00:33:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bal2DlUhFmYmvK31/vdX/xQha2NT5LyeqnQbWxJMV4yEbxAB4vhN6Qn6zxZjls5tMSy4x3QA1tYr7zi2v6YP2gAA8Zw4vlSfHqURkI9weflcdROl2/oBMUsaUUOtyMyff73ZRgCEPg5U73BkCv75PXsxyxVymLBBwZ2FMKqwW9MY2IG5OFdEz7hK/CyZAjVH/5dFdfQuRxwqZ+ZaVHMK6BBsr0aPd0F2Qu1DCb1hmwj1eCtBgfw+Y/SQSl2rmaV+FNESXaSVZ64b7lzXm1Lfejx7zYdtLcHimwoAbI50bVhsbZ4zrDiWg4H5UYQDR7tccR5nzwy5vfetogQ5BrqWAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ubI0lJKQJMZh0vYpHPmIuTxxr5eDaB7fe8ovXYTqcLQ=;
+ b=xOulEDJaNq0FwCZRG2zVP8woLs4cwPWvSJzTjzzQzPuuhaftDtpnAu6DpMEDd7weWyNnFe7K5WUb8Gy8NoUmBtU+C+CfwTwS/h72aJDlYdl/V+ko2LRUKkheCLf8tBgct/KS9yv90WGkYOmbxxm6/srtog1KEiNXIkpvl2Y7lJboTw8rZSGvgtNpiQwBtRcc5hzFF1tJ0easGTPHsO3Mt+CGm5f5uYhtMtwtfrYrJBoH3TRNYyRElQ/0k6iEa/dFyO4A0rW8NyM6faFfdwRGkJKyoVqVo3EHYmzDaV47Es6eMC/iYNo8XTK5kAtPrKuc0zkDUPHQsy5r2hlw9s+jOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB8587.namprd11.prod.outlook.com (2603:10b6:a03:568::21)
+ by SA1PR11MB6845.namprd11.prod.outlook.com (2603:10b6:806:29f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.31; Mon, 21 Apr
+ 2025 07:33:25 +0000
+Received: from SJ2PR11MB8587.namprd11.prod.outlook.com
+ ([fe80::4050:8bc7:b7c9:c125]) by SJ2PR11MB8587.namprd11.prod.outlook.com
+ ([fe80::4050:8bc7:b7c9:c125%6]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 07:33:25 +0000
+Date: Mon, 21 Apr 2025 15:33:17 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Miklos Szeredi <mszeredi@redhat.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+	Christian Brauner <brauner@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<oliver.sang@intel.com>
+Subject: [linus:master] [vfs]  bf630c4016:  stress-ng.bind-mount.ops_per_sec
+ 4.4% improvement
+Message-ID: <202504211504.5f3ebfe2-lkp@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR04CA0011.apcprd04.prod.outlook.com
+ (2603:1096:4:197::10) To SJ2PR11MB8587.namprd11.prod.outlook.com
+ (2603:10b6:a03:568::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxn8U+9AVopeqNAA--.25751S5
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB8587:EE_|SA1PR11MB6845:EE_
+X-MS-Office365-Filtering-Correlation-Id: a174d121-bf08-47f8-1579-08dd80a6cd03
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?aORVzjCKlgoxsB+kMQOnx2/AxdNM1kvd6qoDHOeZOkAqagpsTOHOUZijTy?=
+ =?iso-8859-1?Q?VVtIKKKH4DT7fWORNLX/wtHX0FamyYpgQihr3G5OX9oQdqrfgjYg0gnJET?=
+ =?iso-8859-1?Q?dJ4r/CVKrw8j+rHOftuKJFG6eJ0vNX/Fqk6IS/VqNf80XhQMi7Z1/3B9DT?=
+ =?iso-8859-1?Q?+soXkUe3UtfucWwwpkN562J/OrT7oURoaPpL/OWumdV9MuHbQQCeoB7rV4?=
+ =?iso-8859-1?Q?TEGrB+Mdwdu8IAYp4ATAtis6+C3MLnuq6ZA26HOlPFv1opuxTGt3vglO8T?=
+ =?iso-8859-1?Q?tG/AE6oKzWRpD6u78w7dZwdOSccWFgs5jBqxMZlyypXU08KX+IMiv25nVW?=
+ =?iso-8859-1?Q?Ex/jVz04ATadtO9ptARDO1IsO7/KDThFB96CMxJ1+Y/DCAspUyH5FNJG0P?=
+ =?iso-8859-1?Q?JTQ8R1kDCGik+hR8Ug1ycP44a/UVDiGEIs2SxQ84BYeVaIf9DQVViYnckQ?=
+ =?iso-8859-1?Q?97zW5O/FjGQH6oAaQL6pFRFxWzN8YfQZW55TdyUAQsgiRD4Rcg+SG0Slyn?=
+ =?iso-8859-1?Q?iKinIWzhDMHmiT9oDZQbo5Ydecx/IWI/sdA+ar/TE22c2/zOMVaVRrrDeR?=
+ =?iso-8859-1?Q?xFo6QBLTitX17yQ76uX4OVrH7hhluDdi0VdIF864I4QaOBqLjs6NlExiVA?=
+ =?iso-8859-1?Q?kc0ytdmn2b/NiUlTO887BELDubai5H0WgMIu9ueJIk/VJesHrxa2DHg4qi?=
+ =?iso-8859-1?Q?nWq6hOo5T8Rcf7NgvNnqWR2Y+s+aSODucLRoJhnm3Er1kGG7tOTY11PCZH?=
+ =?iso-8859-1?Q?WPQpUtdhLb4lqUodVHc4EW1YTpe6VrGyrS4iGsK0p0a+T7j8wmDvcgQess?=
+ =?iso-8859-1?Q?RGR9FhxNqx3V3SSlH9EHaG2AgroZgPGfux0hMvExcO07AB93MRZhTBB46+?=
+ =?iso-8859-1?Q?lmJQzWnNQNZoaIo1Axnh8Qmp5b7/NGjk62IrNPf9Csqk1DApvXqLWnXCvD?=
+ =?iso-8859-1?Q?kuHmzHYMsXmJRdu+Zb4tbswHKnItixt1QBBHoQNGL5e7GND9H1q9vLh9X3?=
+ =?iso-8859-1?Q?Tj8u+uUE6Ylq6AJVp6N8d45JT1Do17KD5M+JEjlm79qHiq/2Zi+WztGDKD?=
+ =?iso-8859-1?Q?ZALm80wfNJ9VJkVGuSXAofrwyZQh8rOHJC5Fskw9ZPTNWJ65KspnZr/e3q?=
+ =?iso-8859-1?Q?iTvy48wSZM3sIsMAoR1fQDKWLjXyeQLPsYRPP+SC80yMxmpfLZjt04j+Db?=
+ =?iso-8859-1?Q?XBKKWHw/dG8UMF+iqi+XjQV6vUqaJm9PMinTYHUFrBmSdtVaympjpxj2Bn?=
+ =?iso-8859-1?Q?nrvbMQU9QVN8gLSnvV8G6UJrx5R0GUPrzyGzOt3tFjCh9Dy7pSSA4ZywXf?=
+ =?iso-8859-1?Q?xC0UHmT0+RNzbhJs2IjIVTXHoHpCWfCtdHM045ltWffmrBvNF+HiLfWEN8?=
+ =?iso-8859-1?Q?s7cWFk4IQWO3595/UZ9MLDIDODIJwepH14VsU9PX7mPL6Xy9/LCt9xXX3m?=
+ =?iso-8859-1?Q?DrsC7ftCTle6dwl7?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8587.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?6WzmLaV33G+vcWjMWHiyFo2zcT0w0mpqARxf+23DilrSmFTE0m9qn1bVSl?=
+ =?iso-8859-1?Q?Suir1MG7Bd8/yRK5X+ffTWLIRUpgBFRR43swWM6ESwhDtkqxS5v1mHYtqV?=
+ =?iso-8859-1?Q?ufkrHOc2mnd0cUvcvajxQnVKocdAFYZUSuGRsryTSndUkNarin217zGWYP?=
+ =?iso-8859-1?Q?TIIRxrfHrqXDcD0cZ3lp6z3SKO/1ecAcqIbjqDlgTEd716jlnsEmmH2wS2?=
+ =?iso-8859-1?Q?Uzr/6vH6CBvRw0tePuFKdllibmiApM1a/A7GR7cCfhsYnNiDmx+iksIQvc?=
+ =?iso-8859-1?Q?aConaZ01yxAXNEznhqJ8AGBTPfAlm+8iirIdS1wcrr6sL2KlQYFHDPhGJw?=
+ =?iso-8859-1?Q?AQqNqGgBYyW8pa0x8Zp3HatnVCziq3FssVtcvJtiGhy6boySlmbbbMLYAE?=
+ =?iso-8859-1?Q?eUarKWv0aIlJM8GpcM+nIRjH5cvGzG81n0/eqlZAzCnzyB1KPEJHAnEm2g?=
+ =?iso-8859-1?Q?5Z45bPIkeV27AL19q4vPZXuh0X4bGf8uEUftb96lwLFEmWgSwE3mp/L94l?=
+ =?iso-8859-1?Q?CuunGD0x9Wp9+6/s0ImmQTK8NbLS5bzAHRs/CZkHU/zK3HRMJVHFalcGYA?=
+ =?iso-8859-1?Q?O8VSBG+tP3a+haL8SsY/x9aLJ2qqS23nIlqvrVNw4EkhMUeonUlEebRx+Q?=
+ =?iso-8859-1?Q?nohcZ5Nd+pu3cSyvTxMSCmCf/zswnqjZdpA3kBXpcagmdsMD9Omj3iY5h5?=
+ =?iso-8859-1?Q?Hugu/rAv2mjZkFsFvQuurTmhGRy6jIKEymVMJmsZ4WJhus5Dyp2y8PxW//?=
+ =?iso-8859-1?Q?wwBCRmYUteyRpEOe6Dq17tMqFlHc7Hh2WP93Fv45T0RYLHVaZCRwTJZbri?=
+ =?iso-8859-1?Q?aIoj2I/8OyT0X01/BMWMafJd5uSzIGme3HCZiISY9YUC3Bosp+GU4R/N50?=
+ =?iso-8859-1?Q?0EKjaeSdhdM7Z/bcPBs/zYXTop/ZbYL9TBa7pHmCioE+12qR/FMIz4PHQH?=
+ =?iso-8859-1?Q?H/HYjVOgCq7CPW9YKgi17IEGgA37Mtqvr8RqGseoXiQjxJOr613CD0b1RX?=
+ =?iso-8859-1?Q?WUtlvUMYctN84pBfWQWOLN17+6NWI1fB6o7JhNIcCqZz3H+cNshcyOGqKi?=
+ =?iso-8859-1?Q?SN8dM44AHgp9VkfL+NgdIzJJrI03UPQ1a/100gkIQJFI3W2nDfF+WXERLx?=
+ =?iso-8859-1?Q?yOd9Q+uaEgAsyTqHH2AkQnWyaXU3wQUMn+BiOxPnVoQ+J2F4SAdGcML8Um?=
+ =?iso-8859-1?Q?wOoMbqmUnuzLhbH0Jk7Fkm/tNP9Gh7Li3UckhFmeNxcabrzSbJBjmrUKnF?=
+ =?iso-8859-1?Q?6Y0HEfUNgiuYW3HR3GBAL/cuNoKeD5XMMehzBIzz42b8f3DZMZSYCWf/Gg?=
+ =?iso-8859-1?Q?ctFtKD/1OPoN5gzAr4Fv7d/UkF5O0hkzK4XBQetgCbNn+EniuH6LrR7EMT?=
+ =?iso-8859-1?Q?Tgvu+0Ne/mZp+5v0EHcZKgSTuyAILYg21ACwdFZD9y3KxeaPnsYwgyydul?=
+ =?iso-8859-1?Q?p33I8luQhkhpV84acxqzCbW4CtNJmxFL13Dk+1euFD/eSxB8C1dfw8POTQ?=
+ =?iso-8859-1?Q?GvEiLcTv3IKB3Lp1tLvcCFNxUtu0CsnpO3lVTBUHARdH8YMaDmpi4HoQvY?=
+ =?iso-8859-1?Q?7PcdNTZlrnr3MYgMBxamG48OKUR1WkM1lswN/9WywAOtCf+lxs+x6wmglv?=
+ =?iso-8859-1?Q?jR1XinAWYlxKmohUWeMbUI20fc/aimJ7CnQ5tYRC2sYOBBcyPVl8OHfQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a174d121-bf08-47f8-1579-08dd80a6cd03
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 07:33:25.0732
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: euTHiylzNQjZrCAQCwNwXCkXTZyZpG2zb7a0IamNeNkubhV7Ui7x0t4ywHR1GXZZlQMFACUkQ6/3bwYNUAQlAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6845
+X-OriginatorOrg: intel.com
 
-Add core KVM selftests support for LoongArch, it includes exception
-handler, mmu page table setup and vCPU startup entry support.
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- .../selftests/kvm/lib/loongarch/exception.S   |  59 +++
- .../selftests/kvm/lib/loongarch/processor.c   | 342 ++++++++++++++++++
- 2 files changed, 401 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
 
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/exception.S b/tools/testing/selftests/kvm/lib/loongarch/exception.S
-new file mode 100644
-index 000000000000..88bfa505c6f5
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/loongarch/exception.S
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include "processor.h"
-+
-+/* address of refill exception should be 4K aligned */
-+.balign	4096
-+.global handle_tlb_refill
-+handle_tlb_refill:
-+	csrwr	t0, LOONGARCH_CSR_TLBRSAVE
-+	csrrd	t0, LOONGARCH_CSR_PGD
-+	lddir	t0, t0, 3
-+	lddir	t0, t0, 1
-+	ldpte	t0, 0
-+	ldpte	t0, 1
-+	tlbfill
-+	csrrd	t0, LOONGARCH_CSR_TLBRSAVE
-+	ertn
-+
-+	/*
-+	 * save and restore all gprs except base register,
-+	 * and default value of base register is sp ($r3).
-+	 */
-+.macro save_gprs base
-+	.irp n,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+	st.d    $r\n, \base, 8 * \n
-+	.endr
-+.endm
-+
-+.macro restore_gprs base
-+	.irp n,1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31
-+	ld.d    $r\n, \base, 8 * \n
-+	.endr
-+.endm
-+
-+/* address of general exception should be 4K aligned */
-+.balign	4096
-+.global handle_exception
-+handle_exception:
-+	csrwr  sp, LOONGARCH_CSR_KS0
-+	csrrd  sp, LOONGARCH_CSR_KS1
-+	addi.d sp, sp, -EXREGS_SIZE
-+
-+	save_gprs sp
-+	/* save sp register to stack */
-+	csrrd  t0, LOONGARCH_CSR_KS0
-+	st.d   t0, sp, 3 * 8
-+
-+	csrrd  t0, LOONGARCH_CSR_ERA
-+	st.d   t0, sp, PC_OFFSET_EXREGS
-+	csrrd  t0, LOONGARCH_CSR_ESTAT
-+	st.d   t0, sp, ESTAT_OFFSET_EXREGS
-+	csrrd  t0, LOONGARCH_CSR_BADV
-+	st.d   t0, sp, BADV_OFFSET_EXREGS
-+
-+	or     a0, sp, zero
-+	bl route_exception
-+	restore_gprs sp
-+	csrrd  sp, LOONGARCH_CSR_KS0
-+	ertn
-diff --git a/tools/testing/selftests/kvm/lib/loongarch/processor.c b/tools/testing/selftests/kvm/lib/loongarch/processor.c
-new file mode 100644
-index 000000000000..82d3f041f57a
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/loongarch/processor.c
-@@ -0,0 +1,342 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <assert.h>
-+#include <linux/compiler.h>
-+
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "ucall_common.h"
-+
-+#define LOONGARCH_GUEST_STACK_VADDR_MIN		0x200000
-+#define LOONGARCH_PAGE_TABLE_PHYS_MIN		0x200000
-+
-+static vm_paddr_t invalid_pgtable[4];
-+static uint64_t virt_pte_index(struct kvm_vm *vm, vm_vaddr_t gva, int level)
-+{
-+	unsigned int shift;
-+	uint64_t mask;
-+
-+	shift = level * (vm->page_shift - 3) + vm->page_shift;
-+	mask = (1UL << (vm->page_shift - 3)) - 1;
-+	return (gva >> shift) & mask;
-+}
-+
-+static uint64_t pte_addr(struct kvm_vm *vm, uint64_t entry)
-+{
-+	return entry &  ~((0x1UL << vm->page_shift) - 1);
-+}
-+
-+static uint64_t ptrs_per_pte(struct kvm_vm *vm)
-+{
-+	return 1 << (vm->page_shift - 3);
-+}
-+
-+static void virt_set_pgtable(struct kvm_vm *vm, vm_paddr_t table, vm_paddr_t child)
-+{
-+	uint64_t *ptep;
-+	int i, ptrs_per_pte;
-+
-+	ptep = addr_gpa2hva(vm, table);
-+	ptrs_per_pte = 1 << (vm->page_shift - 3);
-+	for (i = 0; i < ptrs_per_pte; i++)
-+		WRITE_ONCE(*(ptep + i), child);
-+}
-+
-+void virt_arch_pgd_alloc(struct kvm_vm *vm)
-+{
-+	int i;
-+	vm_paddr_t child, table;
-+
-+	if (vm->pgd_created)
-+		return;
-+	child = table = 0;
-+	for (i = 0; i < vm->pgtable_levels; i++) {
-+		invalid_pgtable[i] = child;
-+		table = vm_phy_page_alloc(vm, LOONGARCH_PAGE_TABLE_PHYS_MIN,
-+				vm->memslots[MEM_REGION_PT]);
-+		TEST_ASSERT(table, "Fail to allocate page tale at level %d\n", i);
-+		virt_set_pgtable(vm, table, child);
-+		child = table;
-+	}
-+	vm->pgd = table;
-+	vm->pgd_created = true;
-+}
-+
-+static int virt_pte_none(uint64_t *ptep, int level)
-+{
-+	return *ptep == invalid_pgtable[level];
-+}
-+
-+static uint64_t *virt_populate_pte(struct kvm_vm *vm, vm_vaddr_t gva, int alloc)
-+{
-+	uint64_t *ptep;
-+	vm_paddr_t child;
-+	int level;
-+
-+	if (!vm->pgd_created)
-+		goto unmapped_gva;
-+
-+	level = vm->pgtable_levels - 1;
-+	child = vm->pgd;
-+	while (level > 0) {
-+		ptep = addr_gpa2hva(vm, child) + virt_pte_index(vm, gva, level) * 8;
-+		if (virt_pte_none(ptep, level)) {
-+			if (alloc) {
-+				child = vm_alloc_page_table(vm);
-+				virt_set_pgtable(vm, child, invalid_pgtable[level - 1]);
-+				WRITE_ONCE(*ptep, child);
-+			} else
-+				goto unmapped_gva;
-+
-+		} else
-+			child = pte_addr(vm, *ptep);
-+		level--;
-+	}
-+
-+	ptep = addr_gpa2hva(vm, child) + virt_pte_index(vm, gva, level) * 8;
-+	return ptep;
-+
-+unmapped_gva:
-+	TEST_FAIL("No mapping for vm virtual address, gva: 0x%lx", gva);
-+	exit(EXIT_FAILURE);
-+}
-+
-+vm_paddr_t addr_arch_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
-+{
-+	uint64_t *ptep;
-+
-+	ptep = virt_populate_pte(vm, gva, 0);
-+	TEST_ASSERT(*ptep != 0, "Virtual address vaddr: 0x%lx not mapped\n", gva);
-+
-+	return pte_addr(vm, *ptep) + (gva & (vm->page_size - 1));
-+}
-+
-+void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
-+{
-+	uint32_t prot_bits;
-+	uint64_t *ptep;
-+
-+	TEST_ASSERT((vaddr % vm->page_size) == 0,
-+			"Virtual address not on page boundary,\n"
-+			"vaddr: 0x%lx vm->page_size: 0x%x", vaddr, vm->page_size);
-+	TEST_ASSERT(sparsebit_is_set(vm->vpages_valid,
-+			(vaddr >> vm->page_shift)),
-+			"Invalid virtual address, vaddr: 0x%lx", vaddr);
-+	TEST_ASSERT((paddr % vm->page_size) == 0,
-+			"Physical address not on page boundary,\n"
-+			"paddr: 0x%lx vm->page_size: 0x%x", paddr, vm->page_size);
-+	TEST_ASSERT((paddr >> vm->page_shift) <= vm->max_gfn,
-+			"Physical address beyond maximum supported,\n"
-+			"paddr: 0x%lx vm->max_gfn: 0x%lx vm->page_size: 0x%x",
-+			paddr, vm->max_gfn, vm->page_size);
-+
-+	ptep = virt_populate_pte(vm, vaddr, 1);
-+	prot_bits = _PAGE_PRESENT | __READABLE | __WRITEABLE | _CACHE_CC;
-+	prot_bits |= _PAGE_USER;
-+	WRITE_ONCE(*ptep, paddr | prot_bits);
-+}
-+
-+static void pte_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent, uint64_t page, int level)
-+{
-+	static const char * const type[] = { "pte", "pmd", "pud", "pgd"};
-+	uint64_t pte, *ptep;
-+
-+	if (level < 0)
-+		return;
-+
-+	for (pte = page; pte < page + ptrs_per_pte(vm) * 8; pte += 8) {
-+		ptep = addr_gpa2hva(vm, pte);
-+		if (virt_pte_none(ptep, level))
-+			continue;
-+		fprintf(stream, "%*s%s: %lx: %lx at %p\n",
-+				indent, "", type[level], pte, *ptep, ptep);
-+		pte_dump(stream, vm, indent + 1, pte_addr(vm, *ptep), level--);
-+	}
-+}
-+
-+void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
-+{
-+	int level;
-+
-+	if (!vm->pgd_created)
-+		return;
-+
-+	level = vm->pgtable_levels - 1;
-+	pte_dump(stream, vm, indent, vm->pgd, level);
-+}
-+
-+void vcpu_arch_dump(FILE *stream, struct kvm_vcpu *vcpu, uint8_t indent)
-+{
-+}
-+
-+void assert_on_unhandled_exception(struct kvm_vcpu *vcpu)
-+{
-+	struct ucall uc;
-+
-+	if (get_ucall(vcpu, &uc) != UCALL_UNHANDLED)
-+		return;
-+
-+	TEST_FAIL("Unexpected exception (pc:0x%lx, estat:0x%lx, badv:0x%lx)",
-+			uc.args[0], uc.args[1], uc.args[2]);
-+}
-+
-+void route_exception(struct ex_regs *regs)
-+{
-+	unsigned long pc, estat, badv;
-+
-+	pc = regs->pc;
-+	estat = regs->estat;
-+	badv  = regs->badv;
-+	ucall(UCALL_UNHANDLED, 3, pc, estat, badv);
-+	while (1)
-+		;
-+}
-+
-+void vcpu_args_set(struct kvm_vcpu *vcpu, unsigned int num, ...)
-+{
-+	va_list ap;
-+	struct kvm_regs regs;
-+	int i;
-+
-+	TEST_ASSERT(num >= 1 && num <= 8, "Unsupported number of args,\n"
-+		    "num: %u\n", num);
-+
-+	vcpu_regs_get(vcpu, &regs);
-+	va_start(ap, num);
-+	for (i = 0; i < num; i++)
-+		regs.gpr[i + 4] = va_arg(ap, uint64_t);
-+	va_end(ap);
-+	vcpu_regs_set(vcpu, &regs);
-+}
-+
-+static void loongarch_get_csr(struct kvm_vcpu *vcpu, uint64_t id, void *addr)
-+{
-+	uint64_t csrid;
-+
-+	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
-+	__vcpu_get_reg(vcpu, csrid, addr);
-+}
-+
-+static void loongarch_set_csr(struct kvm_vcpu *vcpu, uint64_t id, uint64_t val)
-+{
-+	uint64_t csrid;
-+
-+	csrid = KVM_REG_LOONGARCH_CSR | KVM_REG_SIZE_U64 | 8 * id;
-+	vcpu_set_reg(vcpu, csrid, val);
-+}
-+
-+static void loongarch_vcpu_setup(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long val;
-+	int width;
-+	struct kvm_vm *vm = vcpu->vm;
-+
-+	switch (vm->mode) {
-+	case VM_MODE_P36V47_16K:
-+	case VM_MODE_P47V47_16K:
-+		break;
-+
-+	default:
-+		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
-+	}
-+
-+	/* user mode and page enable mode */
-+	val = PLV_USER | CSR_CRMD_PG;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_CRMD, val);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_PRMD, val);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_EUEN, 1);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_ECFG, 0);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_TCFG, 0);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_ASID, 1);
-+
-+	width = vm->page_shift - 3;
-+	val = 0;
-+	switch (vm->pgtable_levels) {
-+	case 4:
-+		/* pud page shift and width */
-+		val = (vm->page_shift + width * 2) << 20 | (width << 25);
-+		/* fall throuth */
-+	case 3:
-+		/* pmd page shift and width */
-+		val |= (vm->page_shift + width) << 10 | (width << 15);
-+		/* pte page shift and width */
-+		val |= vm->page_shift | width << 5;
-+		break;
-+	default:
-+		TEST_FAIL("Got %u page table levels, expected 3 or 4", vm->pgtable_levels);
-+	}
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL0, val);
-+
-+	/* PGD page shift and width */
-+	val = (vm->page_shift + width * (vm->pgtable_levels - 1)) | width << 6;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_PWCTL1, val);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_PGDL, vm->pgd);
-+
-+	/*
-+	 * Refill exception runs on real mode
-+	 * Entry address should be physical address
-+	 */
-+	val = addr_gva2gpa(vm, (unsigned long)handle_tlb_refill);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBRENTRY, val);
-+
-+	/*
-+	 * General exception runs on page-enabled mode
-+	 * Entry address should be virtual address
-+	 */
-+	val = (unsigned long)handle_exception;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_EENTRY, val);
-+
-+	loongarch_get_csr(vcpu, LOONGARCH_CSR_TLBIDX, &val);
-+	val &= ~CSR_TLBIDX_SIZEM;
-+	val |= PS_DEFAULT_SIZE << CSR_TLBIDX_SIZE;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBIDX, val);
-+
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_STLBPGSIZE, PS_DEFAULT_SIZE);
-+
-+	/* LOONGARCH_CSR_KS1 is used for exception stack */
-+	val = __vm_vaddr_alloc(vm, vm->page_size,
-+			LOONGARCH_GUEST_STACK_VADDR_MIN, MEM_REGION_DATA);
-+	TEST_ASSERT(val != 0,  "No memory for exception stack");
-+	val = val + vm->page_size;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_KS1, val);
-+
-+	loongarch_get_csr(vcpu, LOONGARCH_CSR_TLBREHI, &val);
-+	val &= ~CSR_TLBREHI_PS;
-+	val |= PS_DEFAULT_SIZE << CSR_TLBREHI_PS_SHIFT;
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_TLBREHI, val);
-+
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_CPUID, vcpu->id);
-+	loongarch_set_csr(vcpu, LOONGARCH_CSR_TMID,  vcpu->id);
-+}
-+
-+struct kvm_vcpu *vm_arch_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id)
-+{
-+	size_t stack_size;
-+	uint64_t stack_vaddr;
-+	struct kvm_regs regs;
-+	struct kvm_vcpu *vcpu;
-+
-+	vcpu = __vm_vcpu_add(vm, vcpu_id);
-+	stack_size = vm->page_size;
-+	stack_vaddr = __vm_vaddr_alloc(vm, stack_size,
-+			LOONGARCH_GUEST_STACK_VADDR_MIN, MEM_REGION_DATA);
-+	TEST_ASSERT(stack_vaddr != 0,  "No memory for vm stack");
-+
-+	loongarch_vcpu_setup(vcpu);
-+	/* Setup guest general purpose registers */
-+	vcpu_regs_get(vcpu, &regs);
-+	regs.gpr[3] = stack_vaddr + stack_size;
-+	vcpu_regs_set(vcpu, &regs);
-+
-+	return vcpu;
-+}
-+
-+void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
-+{
-+	struct kvm_regs regs;
-+
-+	/* Setup guest PC register */
-+	vcpu_regs_get(vcpu, &regs);
-+	regs.pc = (uint64_t)guest_code;
-+	vcpu_regs_set(vcpu, &regs);
-+}
+Hello,
+
+kernel test robot noticed a 4.4% improvement of stress-ng.bind-mount.ops_per_sec on:
+
+
+commit: bf630c40164162ba1d3933c2f5e3397d083e0948 ("vfs: add notifications for mount attach and detach")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+
+testcase: stress-ng
+config: x86_64-rhel-9.4
+compiler: gcc-12
+test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
+parameters:
+
+	nr_threads: 100%
+	disk: 1HDD
+	testtime: 60s
+	fs: ext4
+	test: bind-mount
+	cpufreq_governor: performance
+
+
+
+
+
+
+Details are as below:
+-------------------------------------------------------------------------------------------------->
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250421/202504211504.5f3ebfe2-lkp@intel.com
+
+=========================================================================================
+compiler/cpufreq_governor/disk/fs/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
+  gcc-12/performance/1HDD/ext4/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp8/bind-mount/stress-ng/60s
+
+commit: 
+  0f46d81f2b ("fanotify: notify on mount attach and detach")
+  bf630c4016 ("vfs: add notifications for mount attach and detach")
+
+0f46d81f2bce970b bf630c40164162ba1d3933c2f5e 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+    239.00 ±  5%     +12.6%     269.13 ±  6%  perf-sched.wait_and_delay.count.__cond_resched.smpboot_thread_fn.kthread.ret_from_fork.ret_from_fork_asm
+    164599            +4.7%     172303        vmstat.system.cs
+    191335            +2.9%     196836        vmstat.system.in
+     93378            +3.7%      96874        proc-vmstat.nr_shmem
+    553581            +2.2%     565891        proc-vmstat.numa_hit
+    486549            +2.5%     498853        proc-vmstat.numa_local
+      3679            -3.5%       3549        stress-ng.bind-mount.microsecs_per_mount
+      1977            -5.8%       1863        stress-ng.bind-mount.microsecs_per_umount
+    672707            +4.4%     702611        stress-ng.bind-mount.ops
+     11210            +4.4%      11709        stress-ng.bind-mount.ops_per_sec
+    393.73            -1.9%     386.40        stress-ng.time.percent_of_cpu_this_job_got
+   1717204            +5.0%    1803755        stress-ng.time.voluntary_context_switches
+  2.26e+09            +2.4%  2.315e+09        perf-stat.i.branch-instructions
+  20796668            +2.3%   21274158        perf-stat.i.branch-misses
+    170642            +5.0%     179197        perf-stat.i.context-switches
+      2.14            -2.1%       2.10        perf-stat.i.cpi
+ 1.097e+10            +2.3%  1.122e+10        perf-stat.i.instructions
+      2.66            +5.0%       2.80        perf-stat.i.metric.K/sec
+      2.10            -2.1%       2.06        perf-stat.overall.cpi
+      0.48            +2.1%       0.49        perf-stat.overall.ipc
+ 2.223e+09            +2.4%  2.277e+09        perf-stat.ps.branch-instructions
+  20458454            +2.3%   20926770        perf-stat.ps.branch-misses
+    167851            +5.0%     176265        perf-stat.ps.context-switches
+ 1.079e+10            +2.3%  1.104e+10        perf-stat.ps.instructions
+ 6.615e+11            +2.4%  6.771e+11        perf-stat.total.instructions
+
+
+
+
+Disclaimer:
+Results have been estimated based on internal Intel analysis and are provided
+for informational purposes only. Any difference in system hardware or software
+design or configuration may affect actual performance.
+
+
 -- 
-2.39.3
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
