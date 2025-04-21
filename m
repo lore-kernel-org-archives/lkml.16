@@ -1,97 +1,98 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9AC14F98
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 05:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9871EB3E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745215092; cv=none; b=Han/r3xFR1ZQhf9voGkb/iqG79xJlrMB2FybBvMKkcXfun1UEkGobXQjMHpWpX0k97vnNWHTX3ew7ua4i5TFUaVTe/MdCx/HhRvwxRXQo9zacuq/wGnW5lXQdiwpOPCWhY4ZCbaGa6uqJy2eNLjN5jYguo1nOzZKltLddO+cyGg=
+	t=1745215273; cv=none; b=BURc4YZRRhTGg+41shwGAnzx611sIDaLQrnG9N1yn5DYZ93FyW1kVMfJxSgUwbMw6Nd9HGGAbzaXejNvOY7rkmgYYqmoYFnRoYyIj5VvSa4rg0rNRsbev/jVBk+VNEH5Bu4zoUfWnb8gdTy2w/sOxAzXj4jU9cjrdriRU792wwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745215092; c=relaxed/simple;
-	bh=0oE9OFzMBm6elx/Vv+nqc+vDAozrn/qUS97uTf+6q6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fIUT43t7G8ORIxBe6NY0HA9GwjvgF+DN/UcxzvceW/uSGG1+hY4BpgrWJRCLKVDphVVgNiXeGLvSigd6gNpl1yp+nYQQVt2sfKaPkL/41pPLjbTf8SA7jf/jkQ86KHhGZvNct8IT60fQ9hriIBDuIaj9MKmSY6kfuVuQqF2VMEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MKDoXdIs; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1745215273; c=relaxed/simple;
+	bh=Qj1s8hJ9DXiEm9MNH49j1b4bMmSc2pA7qd4oNUeIcbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tNiUWdamBIq9JKzYS1oAKKJRtSN6LcCI2/N930o/0RQFYBJjqek8jzGZ65rxLR5kdmiYCTTTLoTpTsDgVEXfYEl2M7Rex6+i48b18/6e51n+4IS5Y40zedLG9bAACNan6ahH4FB0CLSo0V0mKWKWzsTWPYa9RJeRBMSZyn/+jYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G27RepnC; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKDoXdIs"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2295d78b433so41288695ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 22:58:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G27RepnC"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so3459323e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 23:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745215091; x=1745819891; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lLmdl7omBx5GUZwRrka7MxtVvlDhA5e/J1YjqrIrVUg=;
-        b=MKDoXdIsQ1VB6ETQu/bPkabWkgNWJ6Ume9P/jhVUNbsigmRkzTDMje+Pz/qUnBjXcD
-         ETt4lxINFb7g0/i7Ym3h/3/FCfwIdwRyw/eWPphqmxzPZ7qdTDEHIlpACXWez1LhOxXr
-         ITMPNsK0wIrj+pVgiJHFnYS4CBeUWtXx+032nHqKbvQNnM6M43Jer74S92pSTTv4j97u
-         nEpl/Yo93aaHFZ8YsEvM9v9d0q/pO8a7WAPiIDrgAr9aHyjQTfnVA4KhSz4f0EIl/fJ4
-         8tCK9yNf5l6A80bQaO6gLUfIksfiNHEt+rOyrCTJLMuGJSjQr2QZcC9px/id9cdfqp42
-         eZpQ==
+        d=linaro.org; s=google; t=1745215269; x=1745820069; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qj1s8hJ9DXiEm9MNH49j1b4bMmSc2pA7qd4oNUeIcbI=;
+        b=G27RepnCfgkP1NmeaXZUAEHKaAtvckvcD4xaHtyMKbJ8B+5sd68G1tePjLixCF4fV3
+         4ACY9cMka3IlNWIO2cTFchPpLYDkcjmGuANQR/8iVk33rRBDbd8rGQRKUXYqRuBsUYu8
+         X4u8dDqdyoD+V4qaCcjogX7DNcX5onDRDFCnenAzBCGCLefQMqKtMmn/ugoWMbWCKYcb
+         adQ+NRbV002gTLUyjoQR8wnFFe9TmNxM0PlNTpwLQStEYpzu45pAN1S0QpkCXKsJJ7IM
+         TnWoFqbOtac0E6QP85Fk1rUrg6OQJSE+z/3LFlkyQMh33vEy1mG9X791HQDFLaYqiHLr
+         wEiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745215091; x=1745819891;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lLmdl7omBx5GUZwRrka7MxtVvlDhA5e/J1YjqrIrVUg=;
-        b=ZFLMSbHrWKO6nB8+jRZP+cFJ82dia29aIs9/KPeuxCw2rqGR0NOxtAPFuk2xrk8qgt
-         TZvl1UGC25hlOGYAS7DSDzoPe6KO8chm+bzkD4BH/aWQ0GBP2HXfKYI4mQ5zKha3/+hB
-         rarEBiHOT3dpRmIJX5ARRExT5TS8d/Dshz98XZVglAv/Em1BV35z+ZpO7QtX4IZ5Suaq
-         S/CLTA/S9G1sukQraJ9SCNSbfNqgIPuTKh6dLYkekV3CW4ctUMx2ZgB2S5lPNeMXSFaz
-         z254O8/Rov3Gl9g+W9beZpz6YcBoht5KHha9kEmpRpYPdY/9K+llbWIk1p08MZaODpVG
-         XD2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXC/lg/wiQAiZwuNsiT4AKYZDb6cNzpg8W/6Q08BmCNBTVSOQ81GlDcBNsjGDOjyuDlAe+J4dRNYn0MPss=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6wp5WE7Q0lOh4/SDpf22cWwMjmee8ulj/R9fFlaaGlIbEs4om
-	O+8yREMwpgLBApohjzV/ZJOCdwoP0SGHC48SReSUQlLNuUZuSEq3CeRyCMmIaLA=
-X-Gm-Gg: ASbGncsXsIPDxes3PNvmxyeWVByycV7VqTHxOiFj6Ny9mOq/FWN9n3rtNh5YRI+3FTZ
-	aaxDAkP6zJDWYVxH6e8nraXiTI4VhN0tjaY8vO8f1lv3L2Fjx77XPwEDYVa6GVKFoicb6YHS7Z/
-	SaotkdZAqx227PoXVNI9sdmsBA9OJeWXSrAKvWQPLoIT0wxOHEXHHyoGtBBk13vrjc2xeEQsTs7
-	AsYT0uDhGjanLkE+WHcKwPsF2ZokoRJy7m3UEPMCdVCITbGZ8ztFyYkHSYfG/vvH6JFj7lx+cv0
-	Ia6G+7ePIBosviAJQ/cphkxvkWYQ7dHShVkyTBIgqQ==
-X-Google-Smtp-Source: AGHT+IEY2InDe48NWBZXkKiVwylBh/Sebrc/gEQikw0+OigWJcxwoh1jfGHofwTjCk/KfkXpgp7nXg==
-X-Received: by 2002:a17:903:fad:b0:224:c47:cb7 with SMTP id d9443c01a7336-22c530b581fmr160942705ad.0.1745215090770;
-        Sun, 20 Apr 2025 22:58:10 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdbc9dsm57311465ad.227.2025.04.20.22.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 22:58:10 -0700 (PDT)
-Date: Mon, 21 Apr 2025 11:28:08 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] cpufreq: tegra124: Allow building as a module
-Message-ID: <20250421055808.ol4bu3vsdphv4pvs@vireshk-i7>
-References: <20250420-tegra124-cpufreq-v1-0-0a47fe126091@gmail.com>
- <20250420-tegra124-cpufreq-v1-2-0a47fe126091@gmail.com>
- <20250421054555.oavale3xjqlrc236@vireshk-i7>
- <CALHNRZ-1XfbN8nOt33Ktsq9z2cjGL8AiWKEZwigXO6OYd64fFw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745215269; x=1745820069;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qj1s8hJ9DXiEm9MNH49j1b4bMmSc2pA7qd4oNUeIcbI=;
+        b=C+qhIwGdfNovYcW43W3Wj8YIpXOfigI7RjVd9011fzvgv4EUpLSxSxVo6AgjrZOU7Z
+         oOg8o/fYzuNQb4AARJTnmWrpeA3ezUl/fApIiegAzZ9ut1acQNs885/dPMTN5cL0chzl
+         miqN8/ecnR8868xs9uqmshj8sKkhvTF469SHIBvjHdxmKqM9hzPMBENcBb7RsG44Dwf3
+         H6djfV/CXFM0QYCZ9mTBRs+Mjz4QU0kigpUs6i8YVF6E4ISm6qr/c/QazLcWnYfaE6NT
+         LOkIadIsMkY0k5VmHp2AphxMmLo5nAh40LLG8bdd3H2nYKhQl2Z3Vv1gYrWjNlHTMB7e
+         NU+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWmrzb2+Cq59FM39p3Dmtzk0Xvk1GZUzln9a4kR2FSuUtk26bthwIIs/7bD78P3BmPcsCtApNA0mI9ZZP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjaeUfxRARTz7TgJfOCFtWuBY/tUchujBNK2x3BFuO/W5OL6Di
+	7pbRurQLM4Ll20wIIrPj3UpFWr7O5i/UolbgKv2eoYCLGqfiG2eCT7IBI4CKuAd2ktGSx44zS+9
+	G/THQhiky2qg8XCnZx9GGwYK3brYYocqrTTan5w==
+X-Gm-Gg: ASbGncv5S5ml33ghSWB4A4vcsd26krqCOkQK04g9EdKhQ4VyhDxRR2Ve5wdZ/RPvEXw
+	MmCfmGMoQkL81b2pGMqX3y0xkFHXcPl1MTgWRjXT+b+FPP2FfPQWP3E03rb1Pacq1NHm9Ni4qjC
+	qGuEdi9vd26n4+5cflqUSdDVcHRRw=
+X-Google-Smtp-Source: AGHT+IFpdIjOtEnxzjKCdjSva/bFhUKuTrOh7qIYruUBQR/M2P/bhrI3sjKrLZhTnHSoz7nebIh9KQbhGyVxmzuzWZo=
+X-Received: by 2002:a05:6512:3dab:b0:54d:6555:44a6 with SMTP id
+ 2adb3069b0e04-54d6e65777bmr2612352e87.36.1745215268658; Sun, 20 Apr 2025
+ 23:01:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALHNRZ-1XfbN8nOt33Ktsq9z2cjGL8AiWKEZwigXO6OYd64fFw@mail.gmail.com>
+References: <20250418080130.1844424-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20250418080130.1844424-1-baolu.lu@linux.intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Mon, 21 Apr 2025 14:00:56 +0800
+X-Gm-Features: ATxdqUF2Hbg6JZF5AMHnIGWAfLBf6Ntwc6Ex8d-AAeUImsUJKzLj3aUJE2ShbcQ
+Message-ID: <CABQgh9Ehp+mMyHLzCrpkMN88mD8+T9144Nx-YtyVez7Rq5h76A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 21-04-25, 00:52, Aaron Kling wrote:
-> lsmod lists the module as "[permanent]" and if I try to rmmod the
-> module, the command throws 'device or resource busy'.
+On Fri, 18 Apr 2025 at 16:01, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> The new method for driver fault reporting support relies on the domain
+> to specify a iopf_handler. The driver should detect this and setup the
+> HW when fault capable domains are attached.
+>
+> Move SMMUv3 to use this method and have VT-D validate support during
+> attach so that all three fault capable drivers have a no-op FEAT_SVA and
+> _IOPF. Then remove them.
+>
+> This was initiated by Jason. I'm following up to remove FEAT_IOPF and
+> further clean up.
+>
+> The whole series is also available at github:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu_no_feat-v5
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Ahh, I thought kernel will give error on double insertion instead. But
-it looks like we keep some sort of refcount for the devices registered
-by the driver and don't let it unload.
+Thanks Baolu for the re-spin.
+Re-tested OK
 
-Anyway, if you want it to be a module, then it must unload as well I
-guess.
-
-You need to do the reverse of tegra_cpufreq_init() from module_exit to
-get it working I guess.
-
--- 
-viresh
+Thanks
