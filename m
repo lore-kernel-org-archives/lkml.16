@@ -1,136 +1,159 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18AA1362;
-	Mon, 21 Apr 2025 10:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412F61362
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 10:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745230217; cv=none; b=gm5vcQB5h874iu4YksAdlsesijSWaV9pozYOybbX3ZApVlgYLDkrrNdHOTVx7bm1xvLMx6y0E3G5iF/6UzdTIg5ZVuIvVmQjGcLi6+IWNyKjNoBdOPaSEDdPP0+eC1a3Zr0phm+oqvl6XZDmhEuMcEnuoW6TMW5bkWJDqf78ZtI=
+	t=1745230389; cv=none; b=htDGuoYWKeRSUed29hks2/dj7n7oZMZDZKI8piYF/JW1orrWzxd+rUpxkH64m/NBttBajEgjBDKe/MOMM3YX34t9/NJQ4IqeoCKdAElZZPAz41E61L0BUWOHlUqoCUpfFf0RcSWMB66e9gI3NS9F7z9if0hS+n5uiOOSVSgqyic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745230217; c=relaxed/simple;
-	bh=FfyJm9NpDg8tA9buZVudpWXEIfJ0WHFaK9XW39O5sKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=piXKfd6CVFEuLfPE1saw93/rO19FX7YF6A6h/y2B4qY2fM0BGvpB7xh/+KyuUfnPRstZfZ9+3cEMWrXRJfT/74+fJxSSF1ECCl553uix31iTPYzR7GRiuR2YEOUXSGEYEnlCpihtjxngbjtWCIjXzLvvxy/WQyKkC1J1nb5p4zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xQHk6hPT; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745230389; c=relaxed/simple;
+	bh=ixRYONgnygzUENQX+ohridJXTFmoDUomB21ryQ2dw9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O2k2dOgKNCvxXN6jPLkue18+65BRzfLnbuTJjJlmpmKgKoGf7XkB/n98bdm6zv+Tdg3H7fBhuSQLV3Lu1LHunDA7T3I0K+hgkSon+yioW/9NrmBckbwSx1OhdyvfQsrB2tWv4tKfnkrNQGd8T0pJrfTr8PuAqNI7WXFqpBrSqSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Wh2msPt7; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xQHk6hPT"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LA9vVN1523976
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 05:09:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745230197;
-	bh=/noc+Q/n6Kpzt6EQXIhcOW/BLsq1uA3nULifFhnVrf0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=xQHk6hPT96DmZifpQ0tj/GnpHuDgb6fhQo6VMbPiCrm17i8Yvuqww/8n87jRe7SGY
-	 E7oezRk48w44hYM9WR7EYcA7iJsOU5pP+3sd3yOe+EXZfYVharMYBzPjFjzeAAJLVf
-	 lU8Yha8CjmCOQm+gWnr+ERMitW5CBBDDkMHYB0/4=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LA9vwG018213
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 05:09:57 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 05:09:56 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 05:09:56 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LA9qrE015453;
-	Mon, 21 Apr 2025 05:09:53 -0500
-Message-ID: <8a0bbbd1-4767-4399-b163-8243bd849bdf@ti.com>
-Date: Mon, 21 Apr 2025 15:39:51 +0530
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wh2msPt7"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2295d78b433so42969355ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745230385; x=1745835185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9AOgrKhqWzlPfaierQD2uw1OzuGW6898QT6wOBkGCJE=;
+        b=Wh2msPt7jsueLcvAy5+60KWTolGX9G3PuktwgH0Gt2s0FUohgMLsjOozc45LSXogOW
+         JRVGDUpgz0ynQupyUjie7Bkf5SWLxP8vlXYL//H1jViNAq5DreLSlSgkxAqbdc5AiWut
+         MvW9fxk/b5J1Cfu/ghgeZLq3wJ0PxrXWh30nI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745230385; x=1745835185;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9AOgrKhqWzlPfaierQD2uw1OzuGW6898QT6wOBkGCJE=;
+        b=bwnElzSo64HRdlQjiCYje+zv2llaXkxJDx8LxV6DenKCzQ1odIG+LM/6+8Dl4cGZD3
+         1XSEx0+7Cp39dCqhV6/E+nBnMmbaIZz/WLLQr6OJOq9BZ4DB7Wv/36nhE0n8LSjw3uKW
+         yJVy9LT0tRwtmpgSi/WSsVudDOvZis3274c2vXVqJsvtia0xHPaX1JCilR7qQ8R+qdYN
+         plovfk5VNJg2AX970hV05Y/tcXc2LMz/6ebZNJ8uloUSp3wmdDGB1kLOJawQPxOinLSW
+         MGEvEMy4eZGgvGolx9cOFnoFHUUNWhOZJwxhC/zR0Ci564DFZQNfO7QnF+v8b25pDdq2
+         kQBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMRH45AjOLOrB0rublaqm+PYBXErxgfv6tAtNEhaGz+sHo6OXtvJPfZf+z6BPKkm4lEGwEu7YHja5WHgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP7QP+yvnKiAuqaKErhSS1Eivfs+7PU1TN5AWCUBnvzWXbQZjD
+	wGHzKNSGbO8kkaQm2nFmyWVT2wKfUE2oqPgAAAfA+Q0P01IZNiVIiW7MnUt8pQ==
+X-Gm-Gg: ASbGncv+Hx8I+Qa5AlPVv/vp9Dv5DZZA9uyQPub3yUrCHLdabp/646MhemvEupnOQCF
+	RYnz0jE5YVWvZtt/mKiFdGs4oRD5ETmbtXbl79ErVvViEouytK9wBR7pIuXARocig05CWdnf2EQ
+	SVKjSo4R5qaCmAJRr1HHLlR8bMwMHMF9RELXSQjtM237dakxjJVoG1FHLCAqx1KPInmzl/pkW3W
+	lfmn7QoqzCUP/0JtQzPN5PXLhqNnSMV9bkK9Ta7zDGfNoEj6qirBdq0Uj0Cxhubx6bO1rzZGQgh
+	lddBal+GCuNoIwTvSZwuD4xvfpRSj7EBGYOTgjY/CnuKpV1eQ54iC2opGLE=
+X-Google-Smtp-Source: AGHT+IGnpHCEjIJrIXmHvs6VqUJ4pvMmeTt+m8C/FSrMMx0dcqiEAz4cygU8b09pUtOZGuXYRXJLmQ==
+X-Received: by 2002:a17:903:19ed:b0:224:1c95:451e with SMTP id d9443c01a7336-22c53607dffmr160232245ad.33.1745230385598;
+        Mon, 21 Apr 2025 03:13:05 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:7633:f42a:d31d:3f9c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22d78db8b04sm38985205ad.238.2025.04.21.03.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 03:13:05 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	chrome-platform@lists.linux.dev,
+	linux-input@vger.kernel.org,
+	Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v2 0/8] arm64: mediatek: mt8186-corsola: Consolidate and add new devices
+Date: Mon, 21 Apr 2025 18:12:38 +0800
+Message-ID: <20250421101248.426929-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/7] arm64: dts: ti: k3-j721s2-common-proc-board: Add
- main_i2c4 instance
-To: "Kumar, Udit" <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
-CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250411105155.303657-1-j-choudhary@ti.com>
- <20250411105155.303657-5-j-choudhary@ti.com>
- <ab27873e-cada-4135-a617-5d4567a4eaa5@ti.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <ab27873e-cada-4135-a617-5d4567a4eaa5@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello Udit,
+Hi everyone,
 
-On 19/04/25 14:53, Kumar, Udit wrote:
-> 
-> On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
->> Add dt node for main_i2c4 instance along with required pinmuxing.
->> Also add the gpio expander 'exp4' required by display connector.
->>
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->> ---
->>   .../dts/ti/k3-j721s2-common-proc-board.dts    | 21 +++++++++++++++++++
->>   1 file changed, 21 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts 
->> b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
->> index e2fc1288ed07..f691ae4c19e6 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
->> @@ -148,6 +148,13 @@ J721S2_IOPAD(0x060, PIN_INPUT_PULLUP, 13) /* 
->> (AC27) MCASP2_AXR1.I2C3_SDA */
->>           >;
->>       };
->> +    main_i2c4_pins_default: main-i2c4-default-pins {
->> +        pinctrl-single,pins = <
->> +            J721S2_IOPAD(0x014, PIN_INPUT_PULLUP, 8) /* (AD25) 
->> I2C4_SCL */
->> +            J721S2_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AF28) 
->> I2C4_SDA */
->> +        >;
->> +    };
->> +
->>       main_i2c5_pins_default: main-i2c5-default-pins {
->>           pinctrl-single,pins = <
->>               J721S2_IOPAD(0x01c, PIN_INPUT, 8) /* (Y24) 
->> MCAN15_TX.I2C5_SCL */
->> @@ -370,6 +377,20 @@ exp2: gpio@22 {
->>       };
->>   };
->> +&main_i2c4 {
->> +    status = "okay";
->> +    pinctrl-names = "default";
->> +    pinctrl-0 = <&main_i2c4_pins_default>;
->> +    clock-frequency = <400000>;
->> +
->> +    exp4: gpio@20 {
->> +        compatible = "ti,tca6408";
->> +        reg = <0x20>;
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
-> 
-> I suggest to add, gpio-line-names as well for this gpio expander.
-> 
+This is v2 of my "component probe for Corsola devices" series.
 
-Sure, I will add gpio-line-names.
+Changes since v1:
+- Reworded commit message for Elan I2C-HID binding change
+- Dropped I2C address constraint from Elan I2C-HID binding completely
+- Dropped enum from new compatible string entry in Elan I2C-HID binding
+- Picked up Rob's ack on two binding changes
+- Rebased onto next-20250417, resolving conflicts with "spherion
+  component prober" changes
+- Link to v1:
+  https://lore.kernel.org/all/20250312104344.3084425-1-wenst@chromium.org/
 
-> 
->> +    };
->> +};
->> +
->>   &main_i2c5 {
->>       pinctrl-names = "default";
->>       pinctrl-0 = <&main_i2c5_pins_default>;
+Here's a follow up series of the I2C component probers for Chromebooks.
+This series enables the component prober for the Corsola series of
+devices, combines the two existing Voltorb SKUs, and adds a new
+device, codename Squirtle.
+
+Patch 1 adds a new HID-over-I2C touchscreen from Elan.
+
+Patch 2 merges the Voltorb entries in the device tree bindings into one.
+
+Patch 3 adds a new entry for the Squirtle device to the bindings.
+
+Patch 4 fixes up the existing device trees for the component prober to
+be active.
+
+Patch 5 merges the device trees for the Voltorb device.
+
+Patch 6 adds a device tree file for the Squirtle device, with I2C
+components ready to be probed by the prober.
+
+Patch 7 enables the prober to probe trackpads on some devices in the
+Corsola family.
+
+Patch 8 enables the prober to probe touchscreens on Squirtle.
+
+Please take a look.
 
 
-Thanks,
-Jayesh
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (8):
+  dt-bindings: HID: i2c-hid: elan: Introduce Elan eKTH8D18
+  dt-bindings: arm: mediatek: Merge MT8186 Voltorb entries
+  dt-bindings: arm: mediatek: Add MT8186 Squirtle Chromebooks
+  arm64: dts: mediatek: mt8186-steelix: Mark second source components
+    for probing
+  arm64: dts: mediatek: mt8186: Merge Voltorb device trees
+  arm64: dts: mediatek: mt8186: Add Squirtle Chromebooks
+  platform/chrome: of_hw_prober: Support trackpad probing on Corsola
+    family
+  platform/chrome: of_hw_prober: Support touchscreen probing on Squirtle
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   7 +-
+ .../bindings/input/elan,ekth6915.yaml         |  12 +-
+ arch/arm64/boot/dts/mediatek/Makefile         |   4 +-
+ .../dts/mediatek/mt8186-corsola-squirtle.dts  | 107 ++++++++++++++++++
+ .../dts/mediatek/mt8186-corsola-steelix.dtsi  |   9 +-
+ .../mt8186-corsola-tentacool-sku327683.dts    |   2 +
+ .../mt8186-corsola-tentacruel-sku262148.dts   |   2 +
+ .../mt8186-corsola-voltorb-sku589824.dts      |  13 ---
+ ...u589825.dts => mt8186-corsola-voltorb.dts} |   5 +-
+ .../boot/dts/mediatek/mt8186-corsola.dtsi     |  10 +-
+ .../platform/chrome/chromeos_of_hw_prober.c   |  29 +++++
+ 11 files changed, 167 insertions(+), 33 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-squirtle.dts
+ delete mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dts
+ rename arch/arm64/boot/dts/mediatek/{mt8186-corsola-voltorb-sku589825.dts => mt8186-corsola-voltorb.dts} (76%)
+
+-- 
+2.49.0.805.g082f7c87e0-goog
+
