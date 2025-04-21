@@ -1,200 +1,196 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020136.outbound.protection.outlook.com [52.101.191.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1A584039
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247206; cv=none; b=OfdYgFiYF7lfTJ+QVNdonGN7aFzRfZjiBOQEtE98yNKGNJmmw7XkqLwXJX+umjOzS3TLTMzvEBgjuLCcNQ6tNGsLlBHOHVruQ+ETupMv75XV+w9i7TOtksDl2r7OVXJkgtzM5tjCylUWSBczvrOJi8He2dNZbhDlOjB2PHMcJQ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247206; c=relaxed/simple;
-	bh=LESRlj7KZifRMRVlVUCzrnfPDG7wPoAe3hzr240OKMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lu0JRpgM3DPDctl9ukiySHx4gkJ5vZ0DhK5VBHs5OmZAD5j4+erJEyOOhbe4tOug9f8VoGRTtjarjQNUltxhqWvdpwVExrQ4RUYp1KHDshpVwWq254ANavDIx0u/+B8nAoR9yS7636es3Vtjf62V7yiLP5+P8s+FNRdvXs9e05w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YwLdwQCL; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510784039;
+	Mon, 21 Apr 2025 14:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745247242; cv=fail; b=oTO+1v8iSKmGiodOu9r4E8D/nc9r2LrlPe0s+lZeGNWimXp9FZRl3NTMpqVcda1yqjGxxw+hcpMZJeJsvqYl7YRaUaGdOjul8Mss/4LBH8/SDwuclvsPzOWhKF/Dc7+O33uP2Q4Tr0tKR1NufI+DvOvBq3wAy5bqOxhBmlwb4lk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745247242; c=relaxed/simple;
+	bh=nqPQ1ue/tUL3Oa/VYqSvWoR8pI0ufLtodP7qf8kp7Fs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DqZ5oXBtXNImTGWH8ARxRpWlCk6wfy5YvASyh2zuAjRddw250Do1CWjyvmyhNtuY8d7MyATXycDolcsZmuTSwW/C1On9le86SEjcfJmo77q0N07J06egwj0yc+/C8xueXVy+ylNu2X21+T6XaHFv6SIYIVy/BPYOCdURQv3y0wc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=IlVpUYmc; arc=fail smtp.client-ip=52.101.191.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YwLdwQCL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22423adf751so41132135ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745247204; x=1745852004; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TNHDYvZ+kXQIgJtW4CpMeV/F9LD9o9x0KLwHdWA+41Y=;
-        b=YwLdwQCLAEWov1T7OWgmzy8gc0Rnqw4l22N21GWsj5cg8iUdCRnDorD51iL751VAhS
-         EoQQEL2mjF6lN7ly6poJeXis3HhS81SKaQ2gVdiT4bQJfPmB3xd3niPn9ge7u5bnyqX8
-         zGtmiFbXDOjlEQH9qCa8PYeSIA3BXhtV9lJ8NiB8qufmwU9TZ4UTvxZs5r3BpKY85VVR
-         0GK/Ty3sVYUllgwalPDZwHJCa/AapQ8l2eTGlboNb1xTSMg8Jy/aFgJSRAqVZvp7koo5
-         cQvgmqPcDu1JoJr8jTSG9zEhlcDwxO4SiX5oKk1gA4HaujFHpakd+HyNmo5iGKC18eVr
-         fu7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745247204; x=1745852004;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TNHDYvZ+kXQIgJtW4CpMeV/F9LD9o9x0KLwHdWA+41Y=;
-        b=pnqSjBlk0IYj645Hj/ngoRPJi0XW+N43fWyGk0Zvr0A/dCpVRvyUfaMhmOmWJIgoBE
-         vlVQ9TvG6ClOyR6alAURRQ4xwA9UJpT8Y2DuYJnbB61Iwhr2nrYrGpSxAUD4v+oIiWqe
-         20xXFi8z8B/NXOeUtBouu0zhmBoW3s/Ce0N3ymi8C1ptlnTirtZ73TsWsuEOEB47pGEV
-         bIUhXKjIsl7dmkcjpXARS+fexCqxP1NwQoJ5DmZz1brApbdM3BE0uoplkoI8UYpqRdM4
-         ZktQiH+oxgZbWib9cTJEsZzxF6CFbKsIasFo33p4TcgnvNcgjeL/ejZSDuB8jvUvQXjv
-         VVew==
-X-Forwarded-Encrypted: i=1; AJvYcCWcRUni3GV3zhR8MdgRTG6PKFranm9WMHEsD0dnzPiqWGQ08xXzL3maInIEJwabP0V3z1mDr89Eu1RQMcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL0DoP3T7lBS4dxjkD4cNmvlaoXmjcWobDmC5+rFH8Uw2flts9
-	mSXq+SX3ojNdViLhNOGxHXVx0uTs75bZ3etJlWhbM2BQ2/YM9BsLuLonWZetFQ==
-X-Gm-Gg: ASbGnct9L9DOMCKU4KahLT6KDPoy6H2XjF0Ec+BX7Iu6+VFYiPQ6WTxH4uNViXPKfl+
-	VY9tSQJvk49x0SKqJstD2QHcUtWMECRcXGojeJzbXlO1HDQF1alPtpN7HFiXo702Y5ke80BiZSl
-	/GdV6bpL35nUA/imWNe7LQ3+8aRhY9oV/C4l8OcMSttU0+9r8HH3kk7dBk9i8/P0Oq4rFtkjTOZ
-	1MN60kIJ3yJtls7EQYJ/AbQhlHQftzKzWjUQ1Ku13YXkFe/uHNLYGsxM5bEjHFNzyeCddiiQthf
-	xPBeD+OXTyWatRGb4aV7tjlmV0ZCn9W1IK8V5FjJMANwlDGYY6om
-X-Google-Smtp-Source: AGHT+IEFdCxUF0IGkc39Y6ivCpK40FOP5pObjbZbRz+JR102E0UDzHVcUjHWjvl2BLeEpo3bJDhIxA==
-X-Received: by 2002:a17:903:228f:b0:223:653e:eb09 with SMTP id d9443c01a7336-22c5356e485mr145692145ad.7.1745247203811;
-        Mon, 21 Apr 2025 07:53:23 -0700 (PDT)
-Received: from thinkpad ([120.56.203.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ecec61sm66006875ad.182.2025.04.21.07.53.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 07:53:23 -0700 (PDT)
-Date: Mon, 21 Apr 2025 20:23:18 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Niklas Cassel <cassel@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Shawn Lin <shawn.lin@rock-chips.com>, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
-	heiko@sntech.de, robh@kernel.org, jingoohan1@gmail.com, 
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <vc6z6pzgk2sjgkghnwfzlmj3dblrvpkfnsmnlb2nnkj2leju7t@uxy3kthse7g6>
-References: <20250417165219.GA115235@bhelgaas>
- <22720eef-f5a3-4e72-9c41-35335ec20f80@163.com>
- <225CC628-432C-4E88-AF2B-17C948B3790B@kernel.org>
- <8af8a418-b808-4a14-9969-1c6d549e1633@163.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="IlVpUYmc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ofImpv1wpC2IIJr4leycOJg8zTjCNr81yXJpII3LSecdMhcxpXSuRP0I1Jf+HTkXx02uil139vI0ne3VhojTg5DISSaSRXjSKr/JBeFvuT5rYX+RlUkJeKHfm89Byl6l6aQjjyGy0W+6258sitA3KhJDzP/XC8BS34vBy7s+zSuOyfpBzm7UAS/krX0dvdbPid2S+F4Z+gTRtaegGp81Gvz3Ruvq/fLDoQqhbivT9u26w6XI8qL5PffuLyLk1MRFvzgjd2xCOYe5yxfJWDjVI8s1LgdQTcfe8MD/xGTwHlUYuinEOZcDkWb9+8SrgzM2XI8wXsrvvwR/9GWkgxF7ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XuJA5Nw9k74JvmBD8wvLFX1NMWsNEwujI6La9UVDg7M=;
+ b=GL8GNjlalgk5jZb4Yl1wiq6hpguMCtSXztKzTsaA62Gy4yzEvCCe9fTjPa0zFDTmkcaIqkVgP57kWYbXCSu7bE7U5UW9uz4Fec9ANv9B9M2IQTJbWvFi9BcF79ApIbzwN3J+T7Po/x6J634WevacWz3/7aPdBHmlUV8pK7HM+jGdUVbORPa+Upm9Uk1WUTSJaUNioZ9MK7PzIHMcvHcCxv4XjSUb+GOt6IOQhm0vzzPNbPntdtMy1doK0XzuuqFnzB4GW/C5Ng1aHTSS0Mz19Vx1kycEzY52efkzEICKwRNcvOsUs+xaGWz6+tCaPqZY4wHI1xiqtTK3Ew6WswBN9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XuJA5Nw9k74JvmBD8wvLFX1NMWsNEwujI6La9UVDg7M=;
+ b=IlVpUYmcnlHIqz9tRIjsJ/XCvqo+IoZkTMGMPv98DtMXBW9dfsOwQ50xiDY1FeSNWddpohE/MxRTtuxdfYqNmfjkKFlJJgtdHe+j4lK6xpRgt3YlND+TEfd8d1M+KJyehpiB3K1/3kCvAdvQpkBPiYTpjVdUDPecijjbwFC/dho9BdTaSvGUHqn4cCk1/Z3oZNcHhum6GbQ5Tz1OGucsyGW/BaXahvtv7yGYhQPXSI7mVVQebS94Z2RYMytVO1mJKIPYWWGW4yxmF18YNmnqxn4qQ5S4KENlYOe2gAawHuztGoBYeMu0N9GOY1MllsnjKmd2rJG8vBfONU4xhtBnvA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YQBPR01MB10237.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:78::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Mon, 21 Apr
+ 2025 14:53:52 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%7]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
+ 14:53:51 +0000
+Message-ID: <2730ae6d-b8e6-4464-b623-b1dd6a2e3110@efficios.com>
+Date: Mon, 21 Apr 2025 10:53:47 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
+ DECLARE_TRACE() have _tp suffix
+To: Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <olsajiri@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, David Ahern <dsahern@kernel.org>,
+ Juri Lelli <juri.lelli@gmail.com>, Breno Leitao <leitao@debian.org>,
+ netdev@vger.kernel.org, Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+ Gabriele Monaco <gmonaco@redhat.com>
+References: <20250418110104.12af6883@gandalf.local.home>
+ <aAY9pcvYHkYKFwZ5@krava> <20250421095817.49c433b7@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20250421095817.49c433b7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0244.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:66::16) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8af8a418-b808-4a14-9969-1c6d549e1633@163.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQBPR01MB10237:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe6e7879-dec2-428c-2277-08dd80e45499
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UWVpZUluVHo4WUtSRWM5VmFJaTIwQktkaXNia00vSTJ0a3o1VXNBeDlZTGNS?=
+ =?utf-8?B?STA5TCs5MjhBcmd2YWlxRzVocVNrazR6b2luRTVValJUVVpGWnE4d3Z1Z0dR?=
+ =?utf-8?B?dStYUFhRd1hJODNXWmx5VlVLaXZTelhJZ3NpZW00ZHEvS0FDeFRMcVhXblhR?=
+ =?utf-8?B?VFhjWk51VFFROTJtVFBidDVDQXpkRlA1MTJQZGdReUhtR1VPVSsrdlJmUXZW?=
+ =?utf-8?B?VWZ1Y1hrSlVrMkxGSUR2Q1pSSGFzcXlGN0JJOVBVMTA0bVJmNFQ5S01QTm1L?=
+ =?utf-8?B?U3RRZ2RSRWNhYTViVjEvRGdhWStJNFN3NXBxMXBVbkZjcURpR1c3Y2tqOW8y?=
+ =?utf-8?B?eGNndFNPd0kySERhSCthSjhMemFCNE0wUXM1eTNMZitZREZKSHhzbGwvWFpN?=
+ =?utf-8?B?TVFwK3pQQ0hiQ0xMcDBOTmd5Vi9yaUtsR2lIQUxFYUR1UmJUYTNiOEZYY092?=
+ =?utf-8?B?cGVEajU2UW8rUklHR1lEaEdjRWltSEFtbm0yZ1FadFA4Q25iMUZlK1dYQUN5?=
+ =?utf-8?B?SjhSdlByc0Z0ZDEvT2kwVUU4R0FNRlNONTBYWEdnWTZHQXVSd3pYYmM2YU5H?=
+ =?utf-8?B?U01PRTZsa0kybE1RWEUxUy8rYjFTZkZndHRvRGxLWnNEOXBxVWxKZWJxM0FY?=
+ =?utf-8?B?NHhwM2pNUEZOUDEvYk42TjlwdEZuc1hqNStjcVpsTGlwT1pNeVRYcCt2N092?=
+ =?utf-8?B?T0dHMkZFanJSeGxJc0pXc0hSaDlLZ2lUZUxCOXBXdU40S0NkbURvZSsvYmI5?=
+ =?utf-8?B?WjlxMkxqSWFjMXV0WENQdW03NDdzNi9Wc3c0NlZyRWVITlJQRWNCV1NIU2dE?=
+ =?utf-8?B?Mm5RUWs2UWxBTGRRQVcxMk1MY3k3R1pGLzF6K2Rtd083VTlDU2p5bGI4bTVt?=
+ =?utf-8?B?eWZWdHRKNllIM09JaTV1UWNvYjVxWkozODVSRUFyVTJld29rSUpTbHBoYlpX?=
+ =?utf-8?B?cVQ5RzZXQ1RwU3l1bUF4L2tJeTkreWszZis2ZkFCTlR5enRndnNxT3VKaXhD?=
+ =?utf-8?B?NGFaQ0xYRitGcm9QWHpvaCtqeHFaTVdydjFGWnB2QkY1bCtKOG9VZ0JST1pO?=
+ =?utf-8?B?OTFtWkhHOFRSM1V2aEZ2NHM1TDRQR2FUTHlqcVpML1Irc096dEl5UTFpNEJq?=
+ =?utf-8?B?bm5XUlB1S0E3a29GbCszdDdtdnRCdHl4TFFwRFBQeHJrUHFHbWhSRjZyZk01?=
+ =?utf-8?B?Umw0djRpb2JiVzUwLzV3anJKTU1PVlpoTlJRTTF4dXh4TktXNUVpc082YUlk?=
+ =?utf-8?B?eWsxK3RBbURkL0x6WlhuMXdUT2szRUttMmNBcDBDNmVmWWkycTd5MnJHUnA5?=
+ =?utf-8?B?RkszZlh6SzdrWXdrd1QzTnJpWnMwaVh3SmZ1REdIcVJ0SHZXbys5YWg2MFp2?=
+ =?utf-8?B?OVJacU1peGhjSU1qLzl4UXo0RVU1b00wS0dXR0lBTXJtQS9KQTY4cVpRakRC?=
+ =?utf-8?B?TmVRVFVsVDNZOHRpcjdiN2lkQ2hDb0t3VTJHU0V1S0VSOVUyQU5xR0RFNUQv?=
+ =?utf-8?B?VzV0aG96VUh1U25mMzdLNWhFdEg4amJEc2l6WkdiYkNBRllFL09lOWVHbThz?=
+ =?utf-8?B?SDh1dHpWWk8rd25qcTJndEs4RW9GckJOZHJNdTVSZGE4QkN5c3g0R3ZlbXJ2?=
+ =?utf-8?B?VGlua2lxc2RoM3BSaEthTFVBUktYbTlYTzhFY1oxUkhXRmNvRjBZbkdZSHNU?=
+ =?utf-8?B?ZzJxdlNMdkJWcXJCZllob0IvV0VicTdvcDFReHFrOFdjcWRIUndKd1VtZGdS?=
+ =?utf-8?B?VWFtZUw0dC9kTktYMkFWVnVLdnp3T1E1a3d6UVdyYlRYVmNONTZwc0JDT0Nh?=
+ =?utf-8?Q?2ZK/OUCSKZXHASGN6cafZsKo7IBD67Z6P2JDQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?S2JqOWFGaFZ1bERGOUtSTlJPVHQrS2IvYjZUNkFNY21icTBrR0k2cFpadmxv?=
+ =?utf-8?B?UWpiOFo4b2FScUJwWWtSbS9rSWZkbDJURS9oRHZmVTBlY2FZRXNSQWpNWEpY?=
+ =?utf-8?B?TzBBN1BEQjVwVGVEMEpJVVk3SVNXNC8yK3NTWWVYankrYWtrT0llL2kwQVZx?=
+ =?utf-8?B?S29MNXgxSDdZRU9OUGZlT3dYYjlWaDMzWldmSkxCck1mejhFRHNyT2t4WEti?=
+ =?utf-8?B?NmlhaUtGNHBKN2s3b3h1N0RIbTg0bWViWlcxN3lYYlpnWXQ4bWg3ZThuNThT?=
+ =?utf-8?B?QW11MnIvSnNuR3NtVlowYWZsWDkwTnpSYm5lbWZsNzBXcFZNWVUxcWtaN0RG?=
+ =?utf-8?B?anZZbG1FaGI5UnVxS1BIMVlld0lWQ0dOSHM4WkNVdmYzTCszWGJRMXV0L0R4?=
+ =?utf-8?B?cGthNzdpaWpvZXpnc0dJeTV1WFpMOVNqb2FhdUhudjVpSDhlRU1vQVEvdGxi?=
+ =?utf-8?B?Nnh1RVZrZU5DTVJHMi9ZZzF3SnFsMjN1VXcxUHUyYmlseTFuUEdLZGcwdXVz?=
+ =?utf-8?B?YmxYSU52RTZyZGFYbElPWVIyc2FaLzU5L2g0VDMrdTB5ZEpETUVUVDBwN2xW?=
+ =?utf-8?B?MTZkckRqK2EwOUZnQldkYmtPMFB6N3VuWUY2SHUwbTRiUjNqcnJIUXBNemow?=
+ =?utf-8?B?TEppSklVbjcxQWE2cEc0KzFRL2V0R281eUJQQlF3WEJkYktoMmhXWFMyODJT?=
+ =?utf-8?B?eU9XSnRQeVFuL1JnUjhCT255RHV5cmtJbVRRVEtLTEt3c0k2S3NjTURxU3ZY?=
+ =?utf-8?B?OGxSQUdLR25aUVJkRElsVXlQWXNuaFlYcGJxNXdjZGdmb2Y0YzJXMmd0Sldt?=
+ =?utf-8?B?NmlYTU9Ic3NtWlBOa1lGbHVuTFVQTGhFcXdJUlZoNEVyM0ZZVnYyVkxYZzJI?=
+ =?utf-8?B?bEFkK3gyWmZUanNOaVMrUWE2dlNSQXJteWpWTEdGZ1hsOEFqaVpOZHRGNHM3?=
+ =?utf-8?B?RXhHV1VXU0ZqdUtjZEhTK0srdzdXb2l1aFlEMjJOZ0NXV1RKT3FNTnc3cy8y?=
+ =?utf-8?B?R2JNMU41dkxnYm84Y24yaU12RkVCMm5YWUdHREpZRytNci9Bb0NQeVJVV3hx?=
+ =?utf-8?B?cDNabFdkVzlMZ3VOV3ovMkQzU1JjRTVYdENJY3ZBT01oWXQwMUZERnNnS3c2?=
+ =?utf-8?B?MkJXN2IzcVN2VUZwcER6UTZ5YXNLdW9qdjhWOUpYcVVsNVk5ZTFSZEVSTFFt?=
+ =?utf-8?B?Q1RlOWtURlFVNnFwRmxpbTVsUmR3WG8yWUJ0SktZTnJwdnU3ZHpIZGYyWEpQ?=
+ =?utf-8?B?Z1U0QjRabnpCTm5HN0RvYlAxd0p2QjRhQmhHWHhPcXZoWTlwUVkyazdFcUJY?=
+ =?utf-8?B?QjRRdHRpWjVCdlpjTnRWRFlKN1B6dDQ1WkswdzRaVVlmeGY4eXJPMGtPMlNh?=
+ =?utf-8?B?cFA4MzFUdmM1Vjg5bTRQUk5OYzB5TlFSZnUxZGpZVll4LzVTUVQrTDNKanJ4?=
+ =?utf-8?B?bFhNUWtZaXNZVnYxSUtuSTNWV0ZvbjRQSHVTR2xvN0JlbFA0WWtBZUdWMkNY?=
+ =?utf-8?B?NFI3WW1GQjB2Sk5GWWhoeS9NVmJDbGxZTVQ4WUcrWFdlNGRQRVFMTmIxWWU5?=
+ =?utf-8?B?ZzhlVTdWQUF6WW9QWHdTanhPRFluTWZCMFBCRVRMMCtvYU5XWnFUSlZQbDdS?=
+ =?utf-8?B?aE1lc2cyMUZ2S1NBUXJmckxhUi8ybnJpcUJGQzVwMGlvSFo5U1VmMDU0Rlp5?=
+ =?utf-8?B?azFzUC9pbnNBMElJa3B0N3EyTk1tOEs1aENGa2FnOGptdTA4SGltNUp2cnIv?=
+ =?utf-8?B?ZldLa1Q5UWNZU1lGT1gwc3VxMDB2OU5wK2V3MGVOUi9TTmFyUHFyZ0l4dUxa?=
+ =?utf-8?B?dlgvR1dwTDF0dFFKOS8wNmZDOWZhL1MzZWIvNnF5WFo3Ti81bkZaRkRkQk0v?=
+ =?utf-8?B?dFFIRHRkY05wa3YxWEtFRjBBTSsybTFCc3c2VjlJSmJmMzFURzc0K0dWdEsw?=
+ =?utf-8?B?S3dQV0JRbDZEZmdpa05zTDdKNXdXWHRFNkE4QWh4SmFZUzMvYUxTcjl2RHBI?=
+ =?utf-8?B?NTVIR2dJenU2SFVuempPZFFWODJnZUJCRk90UW1XZi9DNGRXc2lWcTJ0T3dY?=
+ =?utf-8?B?eDBReEZGdFc2ckd2bFFCMVhWNW5RNlBCcmNBdG0vb0lKZVdHUVZhYk1oQ0s4?=
+ =?utf-8?B?QnViYmxlTzFMLys4ZGV3dnZtL293TFBFZUFJV3Uwd0RnYmgxSGVVL3VscXZ3?=
+ =?utf-8?Q?+YfZsVnk+qVVyceI0/p3WWo=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe6e7879-dec2-428c-2277-08dd80e45499
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 14:53:51.8686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3ckftoRn1fJaTd0CsV1NrKzVoig5lGpR6ZxaAAaBsnEtxN5ijUw8whdYFe2Kv2RBzChJ35V6EJfA3ea4nkYCiDJtWUXbNu5qFjUAtsfR73g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR01MB10237
 
-On Sat, Apr 19, 2025 at 01:21:54AM +0800, Hans Zhang wrote:
+On 2025-04-21 09:58, Steven Rostedt wrote:
+> On Mon, 21 Apr 2025 14:44:21 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
 > 
+>> hi,
+>> do we need the change also for DECLARE_TRACE_WRITABLE?
 > 
-> On 2025/4/18 22:55, Niklas Cassel wrote:
-> > 
-> > 
-> > On 18 April 2025 14:33:08 CEST, Hans Zhang <18255117159@163.com> wrote:
-> > > 
-> > > Dear Bjorn,
-> > > 
-> > > Thanks your for reply. Niklas and I attempted to modify the relevant logic in drivers/pci/probe.c and found that there was a lot of code judging the global variable pcie_bus_config. At present, there is no good method. I will keep trying.
-> > > 
-> > > I wonder if you have any good suggestions? It seems that the code logic regarding pcie_bus_config is a little complicated and cannot be modified for the time being?
-> > 
-> > 
-> > Hans,
-> > 
-> > If:
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 364fa2a514f8..2e1c92fdd577 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2983,6 +2983,13 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
-> >           if (!pci_is_pcie(bus->self))
-> >                   return;
-> >    +       /*
-> > +        * Start off with DevCtl.MPS == DevCap.MPS, unless PCIE_BUS_TUNE_OFF.
-> > +        * This might get overriden by a MPS strategy below.
-> > +        */
-> > +       if (pcie_bus_config != PCIE_BUS_TUNE_OFF)
-> > +               smpss = pcie_get_mps(bus->self);
-> > +
+> Probably ;-)
 > 
-> Dear Niklas,
+>> I needed change below for bpf selftest kmod
 > 
-> Thank you very much for your reply and thoughts.
+> Thanks, I'll fold this in.
 > 
-> pcie_get_mps: Returns maximum payload size in bytes
-> 
-> I guess you want to obtain the DevCap MPS. But the purpose of the smpss
-> variable is to save the DevCtl MPS.
-> 
-> >           /*
-> >            * FIXME - Peer to peer DMA is possible, though the endpoint would need
-> >            * to be aware of the MPS of the destination.  To work around this,
-> > 
-> > 
-> > 
-> > does not work, can't you modify the code slightly so that it works?
-> > 
-> > I haven't tried myself, but considering that it works when walking the bus, it seems that it should be possible to get something working.
-> > 
-> 
-> 
-> After making the following modifications, my test shows that it is normal.
-> If the consideration is not comprehensive. Could Bjorn and Niklas please
-> review my revisions?
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 364fa2a514f8..5b54f1b0a91d 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2951,8 +2951,7 @@ static int pcie_bus_configure_set(struct pci_dev *dev,
-> void *data)
->         if (!pci_is_pcie(dev))
->                 return 0;
-> 
-> -       if (pcie_bus_config == PCIE_BUS_TUNE_OFF ||
-> -           pcie_bus_config == PCIE_BUS_DEFAULT)
-> +       if (pcie_bus_config == PCIE_BUS_TUNE_OFF)
->                 return 0;
-> 
->         mps = 128 << *(u8 *)data;
-> @@ -2991,7 +2990,8 @@ void pcie_bus_configure_settings(struct pci_bus *bus)
->         if (pcie_bus_config == PCIE_BUS_PEER2PEER)
->                 smpss = 0;
-> 
-> -       if (pcie_bus_config == PCIE_BUS_SAFE) {
-> +       if ((pcie_bus_config == PCIE_BUS_SAFE) ||
-> +           (pcie_bus_config != PCIE_BUS_TUNE_OFF)) {
->                 smpss = bus->self->pcie_mpss;
-> 
->                 pcie_find_smpss(bus->self, &smpss);
-> 
-> 
+> I'll make a more formal patch if nobody has any objections.
 
-As I replied to Niklas, I'd like to limit the changes to platforms having
-controller drivers. So here is my proposal:
+No objection from me:
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 364fa2a514f8..d32a0f90beb1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -3228,6 +3228,17 @@ int pci_host_probe(struct pci_host_bridge *bridge)
-         */
-        pci_assign_unassigned_root_bus_resources(bus);
- 
-+       if (pcie_bus_config != PCIE_BUS_TUNE_OFF) {
-+               /* Configure root ports MPS to be MPSS by default */
-+               for_each_pci_bridge(dev, bus) {
-+                       if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+                               continue;
-+
-+                       pcie_write_mps(dev, 128 << dev->pcie_mpss);
-+                       pcie_write_mrrs(dev);
-+               }
-+       }
-+
-        list_for_each_entry(child, &bus->children, node)
-                pcie_bus_configure_settings(child);
+Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-- Mani
+Thanks!
+
+Mathieu
+
+> 
+> -- Steve
+
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
