@@ -1,72 +1,169 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DD7E4A04;
-	Mon, 21 Apr 2025 01:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B353028DB3
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745198334; cv=none; b=lTSVPc1J3ynC8ivhgO4IXTtSoRb0Si1T3ieccOwVbXjJc1GAwXIsqLfpynH4HtB7d0ZpaAxCaQsq2MtTZekkLGzvdrCP05NmX54HM0qVv2RG3990Yt/hB2PpC6akoQUNv3LEW4A79b9Nto0EMJImHolLumJ21+U0NpsvqROTgU8=
+	t=1745198541; cv=none; b=PopZsAga/5aMndS423iC23t7wvuFfGP9vxvcJvUQiySPhRqU8vx9G5QVeB8/5/9cq+3PYm5WQVIiMY88TvdJgSYKDEALOKDXr8HwmbDpftiniOT37ETZJzy2y6nvvL0OoGBkGBmdwMauDrB4GzH953ecpvNSk5uUokTPPGYn270=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745198334; c=relaxed/simple;
-	bh=AGjGEA3UQHflfsSVzsJYKfbazpiUPBGawRA+JlJmfG4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dm8CCR/GleeI5dR3wVJWQTLChq672/ixZ2jRrJM7qEHmRwu6gfitkf/lq5r/kKp4HygiQZ4LCk7h0NMN1T0nZs11eC+HR9sd5YFC+gNAQuunsp5OpPW5pv3A9Zl0l9oL2BN05NljLEPoZWPM0AW3u2+qUWcugZ6CwZMAOsD9l+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Bx12n3nAVoZCTDAA--.60723S3;
-	Mon, 21 Apr 2025 09:18:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxPcXznAVo2ZiNAA--.23015S2;
-	Mon, 21 Apr 2025 09:18:45 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Song Gao <gaosong@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Fix PMU pass-through issue if VM exits to host finally
-Date: Mon, 21 Apr 2025 09:18:43 +0800
-Message-Id: <20250421011843.1760829-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1745198541; c=relaxed/simple;
+	bh=SFE0MJRfjYH4OGtYcClVp9vSMnQJgeOEqGG4xlve4Vg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IFKGMuSBFdcCxMA0/+m4kgaHfFMQZazqEfGfAQt/BkvOCHc+/k4PEHA9wdGVPJPbtohUbWxd3xLkrlwGopM1I46S9UzWiA+YWZ8Vnb7xNHFPvDilIpfkkCqCpWHbUNahmePu2BHoeMiXqe8jMACaUO6yohc8Sfhu3IUVXi2kU9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D3CB4m9P; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D3CB4m9P"
+Message-ID: <329a7e1e-d3dc-4dcc-9599-828b6ff1a0f1@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745198525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=56eepAxGX2u61o56/SlW6FxmYQZ28USspOPPNVGSEvY=;
+	b=D3CB4m9PWee+iZiVHLBxgU7qhe0ehupvlmj0ZU3ayFyo6x2E+QpcZ9lkCHu9OfELc4+3ap
+	2tHCRLBdLArKgAINFexKPVKcbaml/JEyxzp6JNmXX3bVlIoKzQbKCwk14IgWKwOVL7em/T
+	RDCVoew9eE6PTnGIZaNDVVYLnNjFn/I=
+Date: Mon, 21 Apr 2025 09:21:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH net-next V2 1/3] net: stmmac: dwmac-loongson: Move queue
+ number init to common function
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Henry Chen <chenx97@aosc.io>, Biao Dong <dongbiao@loongson.cn>,
+ Baoqi Zhang <zhangbaoqi@loongson.cn>
+References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
+ <20250416144132.3857990-2-chenhuacai@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250416144132.3857990-2-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcXznAVo2ZiNAA--.23015S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+X-Migadu-Flow: FLOW_OUT
 
-In function kvm_pre_enter_guest(), it prepares to enter guest and check
-whether there are pending signals or events. And it will not enter guest
-if there are, PMU pass-through preparation for guest should be cancelled
-and host should own PMU hardware.
 
-Fixes: f4e40ea9f78f ("LoongArch: KVM: Add PMU support for guest")
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/vcpu.c | 2 ++
- 1 file changed, 2 insertions(+)
+在 4/16/25 10:41 PM, Huacai Chen 写道:
+> Currently, the tx and rx queue number initialization is duplicated in
+> loongson_gmac_data() and loongson_gnet_data(), so move it to the common
+> function loongson_default_data().
+>
+> This is a preparation for later patches.
+>
+> Tested-by: Henry Chen <chenx97@aosc.io>
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 8e427b379661..d96191d65f53 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -294,6 +294,8 @@ static int kvm_pre_enter_guest(struct kvm_vcpu *vcpu)
- 		vcpu->arch.aux_inuse &= ~KVM_LARCH_SWCSR_LATEST;
- 
- 		if (kvm_request_pending(vcpu) || xfer_to_guest_mode_work_pending()) {
-+			/* Lose pmu for guest and let host own it */
-+			kvm_lose_pmu(vcpu);
- 			/* make sure the vcpu mode has been written */
- 			smp_store_mb(vcpu->mode, OUTSIDE_GUEST_MODE);
- 			local_irq_enable();
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-base-commit: 3088d26962e802efa3aa5188f88f82a957f50b22
--- 
-2.39.3
 
+Thanks,
+
+Yanteng
+
+> ---
+>   .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 54 ++++++-------------
+>   1 file changed, 16 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index 1a93787056a7..2fb7a137b312 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -83,6 +83,8 @@ struct stmmac_pci_info {
+>   static void loongson_default_data(struct pci_dev *pdev,
+>   				  struct plat_stmmacenet_data *plat)
+>   {
+> +	struct loongson_data *ld = plat->bsp_priv;
+> +
+>   	/* Get bus_id, this can be overwritten later */
+>   	plat->bus_id = pci_dev_id(pdev);
+>   
+> @@ -116,32 +118,27 @@ static void loongson_default_data(struct pci_dev *pdev,
+>   
+>   	plat->dma_cfg->pbl = 32;
+>   	plat->dma_cfg->pblx8 = true;
+> +
+> +	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
+> +		plat->rx_queues_to_use = CHANNEL_NUM;
+> +		plat->tx_queues_to_use = CHANNEL_NUM;
+> +
+> +		/* Only channel 0 supports checksum,
+> +		 * so turn off checksum to enable multiple channels.
+> +		 */
+> +		for (int i = 1; i < CHANNEL_NUM; i++)
+> +			plat->tx_queues_cfg[i].coe_unsupported = 1;
+> +	} else {
+> +		plat->tx_queues_to_use = 1;
+> +		plat->rx_queues_to_use = 1;
+> +	}
+>   }
+>   
+>   static int loongson_gmac_data(struct pci_dev *pdev,
+>   			      struct plat_stmmacenet_data *plat)
+>   {
+> -	struct loongson_data *ld;
+> -	int i;
+> -
+> -	ld = plat->bsp_priv;
+> -
+>   	loongson_default_data(pdev, plat);
+>   
+> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
+> -		plat->rx_queues_to_use = CHANNEL_NUM;
+> -		plat->tx_queues_to_use = CHANNEL_NUM;
+> -
+> -		/* Only channel 0 supports checksum,
+> -		 * so turn off checksum to enable multiple channels.
+> -		 */
+> -		for (i = 1; i < CHANNEL_NUM; i++)
+> -			plat->tx_queues_cfg[i].coe_unsupported = 1;
+> -	} else {
+> -		plat->tx_queues_to_use = 1;
+> -		plat->rx_queues_to_use = 1;
+> -	}
+> -
+>   	plat->phy_interface = PHY_INTERFACE_MODE_RGMII_ID;
+>   
+>   	return 0;
+> @@ -172,27 +169,8 @@ static void loongson_gnet_fix_speed(void *priv, int speed, unsigned int mode)
+>   static int loongson_gnet_data(struct pci_dev *pdev,
+>   			      struct plat_stmmacenet_data *plat)
+>   {
+> -	struct loongson_data *ld;
+> -	int i;
+> -
+> -	ld = plat->bsp_priv;
+> -
+>   	loongson_default_data(pdev, plat);
+>   
+> -	if (ld->loongson_id == DWMAC_CORE_LS_MULTICHAN) {
+> -		plat->rx_queues_to_use = CHANNEL_NUM;
+> -		plat->tx_queues_to_use = CHANNEL_NUM;
+> -
+> -		/* Only channel 0 supports checksum,
+> -		 * so turn off checksum to enable multiple channels.
+> -		 */
+> -		for (i = 1; i < CHANNEL_NUM; i++)
+> -			plat->tx_queues_cfg[i].coe_unsupported = 1;
+> -	} else {
+> -		plat->tx_queues_to_use = 1;
+> -		plat->rx_queues_to_use = 1;
+> -	}
+> -
+>   	plat->phy_interface = PHY_INTERFACE_MODE_GMII;
+>   	plat->mdio_bus_data->phy_mask = ~(u32)BIT(2);
+>   	plat->fix_mac_speed = loongson_gnet_fix_speed;
