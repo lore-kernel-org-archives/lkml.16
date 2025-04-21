@@ -1,259 +1,261 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13174224238
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37456BA4A;
+	Mon, 21 Apr 2025 22:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745273940; cv=none; b=AgsAZakd/3JyP429tG0/yXWJ1KRr7o/o0kXHTYmr430/sSp9HVyyiHbnW1f+G+6XBpwZ/cYF/WZpoQwgtwjHxnsZZ5ywf+SKr2GRGc+zTUmHiKerblQJL047eBaNMpaA5J81kXYgm6gNEMPgp+m4dItZ8ULOSuYvwhkNw31ZPyc=
+	t=1745274028; cv=none; b=mbyzPIdT42UmSg5HgGde7BzTruWG3C7mJ9xit0SnDY9WbBCuaFzAjMt6DBTujTtEAbMNs6MGThPLru+8bGh9FWnFAG18I/E3YdPM5qfCN79ixkx1/XLv6rvZHLnzy5TbHuR53pPSy7DW0iMVzT4cwM5QqmTYeTjrrL7gypQ0iyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745273940; c=relaxed/simple;
-	bh=U2UZw3j/Kd1liUF+BkxLfMmTgTkOtQ+h9XZlaK3Xjtk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2iaeKSdJM68tm4zjJoqZbf9IFmIfoalrEUMhJHXsFahOujdLFsJUARCP6OgBxgjz6ivmmJZAz6w258kLTInmuQa5Op+g/q1j85MIrwifTvXTbOibpN1uEuCp4dVRczLiqkrNYPLGUdnZWq8MDLG5GCii0gcemWBzuU6gsKw+/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=co4+BBVM; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1745274028; c=relaxed/simple;
+	bh=Dlk2kizodiJSpWj38CgCmp8e9t/53aVYjJzM1ShlIZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQ/rWdKjfdMe4+cQapD+QxdizwDmwiii9MO7jntqq6/muD80iOl9vx+p9a8P4e6YttwBVLgPU9CwKTvjL3Q0RW65CnPNX7VVjgQH0MfXRWs6YHBcIURNde7CXJEjntHuNX/rZJOwxam3cfEwtxYqeq77byeeZAPjXFff5L68u6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rv0RpuRU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="co4+BBVM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=sxjlrzrgunhyjmljmxlu2hdng4.protonmail; t=1745273935; x=1745533135;
-	bh=MVGdbV3SGd4Fc+ruEPlA5FCIdEosESgn9Mh12slh7pM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=co4+BBVM5gKI8dINGQ9isYTjYHmsytSFY0u5a0i5tpCDxENHEg4GqYAex/8/1ur2s
-	 AMMPxRElMabv5A1dRGBiA+BxSBBN6qERBwz+7vSI0bZStnsja+OwXCzO7jg7owwmaL
-	 H1uI1UQy4DkMyH7nOcyjvshiDjhETEEqcpVNT9bo2nENtlrXyhWAIwmS5bO+Z8Kxb9
-	 iNbLhas98eRjYazVH0922i2I3eP+n/dZudGAF8Ej1iRS+pcM/JBXfTgdixjbx3bJBZ
-	 ZKPxe5UiAUEQwIFSMsrigSrGzABgUbnFpHus0tN0CiMuqPbNnqMs17H4osue4jMpH+
-	 VHspBajsHOB7A==
-Date: Mon, 21 Apr 2025 22:18:52 +0000
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, Christian Schrefl <chrisi.schrefl@gmail.com>, Alban Kurti <kurti@invicto.ai>, Michael Vetter <jubalh@iodoru.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] rust: pin-init: add `MaybeZeroable` derive macro
-Message-ID: <20250421221728.528089-9-benno.lossin@proton.me>
-In-Reply-To: <20250421221728.528089-1-benno.lossin@proton.me>
-References: <20250421221728.528089-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 944d9bbb8e5a36619444237dfba5f5ebf0d6f119
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv0RpuRU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E5DC4CEE4;
+	Mon, 21 Apr 2025 22:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745274027;
+	bh=Dlk2kizodiJSpWj38CgCmp8e9t/53aVYjJzM1ShlIZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rv0RpuRUEeZRiX6bijYPzFedpo0g7rL8/nRQBAxmgwGkOake7QNYqwE1aBUg1tqzv
+	 dOoIF2quCoa+snIjRSHuN4R8z7ykr6UB4z8KyTCz0WbUMhoEVRDweAOk4pakQJu+aR
+	 y/ciSnGQlp2/l5JIYwliUpSKRAb2ihEaMX3ztMW7xVBtUWHx+96a8PtFVh0gbGALOM
+	 AcKey8Bbvsayca1qYI3TsrKrpmQJ7UYIQDg/9pJv2LDXWKHNzHdUgOM1ijexxOC4dL
+	 d2WBBgdUzHCdFMRtjFOATtTxHUBCnj66dzwbNuAO/5/ZyJ9wWjWu44TJ8UNu9O5mF/
+	 ee0XO3TbwfuGA==
+Date: Mon, 21 Apr 2025 17:20:25 -0500
+From: Rob Herring <robh@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 1/8] dt-bindings: dpll: Add device tree
+ bindings for DPLL device and pin
+Message-ID: <20250421222025.GA3015001-robh@kernel.org>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-2-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416162144.670760-2-ivecera@redhat.com>
 
-This derive macro implements `Zeroable` for structs & unions precisely
-if all fields also implement `Zeroable` and does nothing otherwise. The
-plain `Zeroable` derive macro instead errors when it cannot derive
-`Zeroable` safely. The `MaybeZeroable` derive macro is useful in cases
-where manual checking is infeasible such as with the bindings crate.
+On Wed, Apr 16, 2025 at 06:21:37PM +0200, Ivan Vecera wrote:
+> Add a common DT schema for DPLL device and associated pin.
+> The DPLL (device phase-locked loop) is a device used for precise clock
+> synchronization in networking and telecom hardware.
 
-Move the zeroable generics parsing into a standalone function in order
-to avoid code duplication between the two derive macros.
+In the subject, drop 'device tree binding for'. You already said that 
+with 'dt-bindings'.
 
-Link: https://github.com/Rust-for-Linux/pin-init/pull/42/commits/1165cdad1a=
-391b923efaf30cf76bc61e38da022e
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
----
- rust/pin-init/internal/src/lib.rs      |  5 +++
- rust/pin-init/internal/src/zeroable.rs | 27 +++++++++++-
- rust/pin-init/src/lib.rs               | 30 +++++++++++++
- rust/pin-init/src/macros.rs            | 59 ++++++++++++++++++++++++++
- 4 files changed, 120 insertions(+), 1 deletion(-)
+> 
+> The device itself is equipped with one or more DPLLs (channels) and
+> one or more physical input and output pins.
+> 
+> Each DPLL channel is used either to provide pulse-per-clock signal or
+> to drive ethernet equipment clock.
+> 
+> The input and output pins have a label (specifies board label),
+> type (specifies its usage depending on wiring), list of supported
+> or allowed frequencies (depending on how the pin is connected and
+> where) and can support embedded sync capability.
 
-diff --git a/rust/pin-init/internal/src/lib.rs b/rust/pin-init/internal/src=
-/lib.rs
-index 56aa9ecc1e1a..297b0129a5bf 100644
---- a/rust/pin-init/internal/src/lib.rs
-+++ b/rust/pin-init/internal/src/lib.rs
-@@ -47,3 +47,8 @@ pub fn pinned_drop(args: TokenStream, input: TokenStream)=
- -> TokenStream {
- pub fn derive_zeroable(input: TokenStream) -> TokenStream {
-     zeroable::derive(input.into()).into()
- }
-+
-+#[proc_macro_derive(MaybeZeroable)]
-+pub fn maybe_derive_zeroable(input: TokenStream) -> TokenStream {
-+    zeroable::maybe_derive(input.into()).into()
-+}
-diff --git a/rust/pin-init/internal/src/zeroable.rs b/rust/pin-init/interna=
-l/src/zeroable.rs
-index acc94008c152..e0ed3998445c 100644
---- a/rust/pin-init/internal/src/zeroable.rs
-+++ b/rust/pin-init/internal/src/zeroable.rs
-@@ -6,7 +6,14 @@
- use crate::helpers::{parse_generics, Generics};
- use proc_macro::{TokenStream, TokenTree};
-=20
--pub(crate) fn derive(input: TokenStream) -> TokenStream {
-+pub(crate) fn parse_zeroable_derive_input(
-+    input: TokenStream,
-+) -> (
-+    Vec<TokenTree>,
-+    Vec<TokenTree>,
-+    Vec<TokenTree>,
-+    Option<TokenTree>,
-+) {
-     let (
-         Generics {
-             impl_generics,
-@@ -64,6 +71,11 @@ pub(crate) fn derive(input: TokenStream) -> TokenStream =
-{
-     if in_generic && !inserted {
-         new_impl_generics.extend(quote! { : ::pin_init::Zeroable });
-     }
-+    (rest, new_impl_generics, ty_generics, last)
-+}
-+
-+pub(crate) fn derive(input: TokenStream) -> TokenStream {
-+    let (rest, new_impl_generics, ty_generics, last) =3D parse_zeroable_de=
-rive_input(input);
-     quote! {
-         ::pin_init::__derive_zeroable!(
-             parse_input:
-@@ -74,3 +86,16 @@ pub(crate) fn derive(input: TokenStream) -> TokenStream =
-{
-         );
-     }
- }
-+
-+pub(crate) fn maybe_derive(input: TokenStream) -> TokenStream {
-+    let (rest, new_impl_generics, ty_generics, last) =3D parse_zeroable_de=
-rive_input(input);
-+    quote! {
-+        ::pin_init::__maybe_derive_zeroable!(
-+            parse_input:
-+                @sig(#(#rest)*),
-+                @impl_generics(#(#new_impl_generics)*),
-+                @ty_generics(#(#ty_generics)*),
-+                @body(#last),
-+        );
-+    }
-+}
-diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-index 774f8ca033bc..05a0cd6ad8f4 100644
---- a/rust/pin-init/src/lib.rs
-+++ b/rust/pin-init/src/lib.rs
-@@ -413,6 +413,36 @@
- /// ```
- pub use ::pin_init_internal::Zeroable;
-=20
-+/// Derives the [`Zeroable`] trait for the given struct if all fields impl=
-ement [`Zeroable`].
-+///
-+/// Contrary to the derive macro named [`macro@Zeroable`], this one silent=
-ly fails when a field
-+/// doesn't implement [`Zeroable`].
-+///
-+/// # Examples
-+///
-+/// ```
-+/// use pin_init::MaybeZeroable;
-+///
-+/// // implmements `Zeroable`
-+/// #[derive(MaybeZeroable)]
-+/// pub struct DriverData {
-+///     id: i64,
-+///     buf_ptr: *mut u8,
-+///     len: usize,
-+/// }
-+///
-+/// // does not implmement `Zeroable`
-+/// #[derive(MaybeZeroable)]
-+/// pub struct DriverData2 {
-+///     id: i64,
-+///     buf_ptr: *mut u8,
-+///     len: usize,
-+///     // this field doesn't implement `Zeroable`
-+///     other_data: &'static i32,
-+/// }
-+/// ```
-+pub use ::pin_init_internal::MaybeZeroable;
-+
- /// Initialize and pin a type directly on the stack.
- ///
- /// # Examples
-diff --git a/rust/pin-init/src/macros.rs b/rust/pin-init/src/macros.rs
-index 332d7e08925b..935d77745d1d 100644
---- a/rust/pin-init/src/macros.rs
-+++ b/rust/pin-init/src/macros.rs
-@@ -1443,3 +1443,62 @@ fn ensure_zeroable<$($impl_generics)*>()
-         };
-     };
- }
-+
-+#[doc(hidden)]
-+#[macro_export]
-+macro_rules! __maybe_derive_zeroable {
-+    (parse_input:
-+        @sig(
-+            $(#[$($struct_attr:tt)*])*
-+            $vis:vis struct $name:ident
-+            $(where $($whr:tt)*)?
-+        ),
-+        @impl_generics($($impl_generics:tt)*),
-+        @ty_generics($($ty_generics:tt)*),
-+        @body({
-+            $(
-+                $(#[$($field_attr:tt)*])*
-+                $field_vis:vis $field:ident : $field_ty:ty
-+            ),* $(,)?
-+        }),
-+    ) =3D> {
-+        // SAFETY: Every field type implements `Zeroable` and padding byte=
-s may be zero.
-+        #[automatically_derived]
-+        unsafe impl<$($impl_generics)*> $crate::Zeroable for $name<$($ty_g=
-enerics)*>
-+        where
-+            $(
-+                // the `for<'__dummy>` HRTB makes this not error without t=
-he `trivial_bounds`
-+                // feature <https://github.com/rust-lang/rust/issues/48214=
-#issuecomment-2557829956>.
-+                $field_ty: for<'__dummy> $crate::Zeroable,
-+            )*
-+            $($($whr)*)?
-+        {}
-+    };
-+    (parse_input:
-+        @sig(
-+            $(#[$($struct_attr:tt)*])*
-+            $vis:vis union $name:ident
-+            $(where $($whr:tt)*)?
-+        ),
-+        @impl_generics($($impl_generics:tt)*),
-+        @ty_generics($($ty_generics:tt)*),
-+        @body({
-+            $(
-+                $(#[$($field_attr:tt)*])*
-+                $field_vis:vis $field:ident : $field_ty:ty
-+            ),* $(,)?
-+        }),
-+    ) =3D> {
-+        // SAFETY: Every field type implements `Zeroable` and padding byte=
-s may be zero.
-+        #[automatically_derived]
-+        unsafe impl<$($impl_generics)*> $crate::Zeroable for $name<$($ty_g=
-enerics)*>
-+        where
-+            $(
-+                // the `for<'__dummy>` HRTB makes this not error without t=
-he `trivial_bounds`
-+                // feature <https://github.com/rust-lang/rust/issues/48214=
-#issuecomment-2557829956>.
-+                $field_ty: for<'__dummy> $crate::Zeroable,
-+            )*
-+            $($($whr)*)?
-+        {}
-+    };
-+}
---=20
-2.48.1
+Convince me this is something generic... Some example parts or 
+datasheets would help. For example, wouldn't these devices have 1 or 
+more power supplies or a reset line?
 
+> 
+> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+> ---
+> v1->v3:
+> * rewritten description for both device and pin
+> * dropped num-dplls property
+> * supported-frequencies property renamed to supported-frequencies-hz
+> ---
+>  .../devicetree/bindings/dpll/dpll-device.yaml | 76 +++++++++++++++++++
+>  .../devicetree/bindings/dpll/dpll-pin.yaml    | 44 +++++++++++
+>  MAINTAINERS                                   |  2 +
+>  3 files changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dpll/dpll-device.yaml b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
+> new file mode 100644
+> index 0000000000000..11a02b74e28b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/dpll-device.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dpll/dpll-device.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Digital Phase-Locked Loop (DPLL) Device
+> +
+> +maintainers:
+> +  - Ivan Vecera <ivecera@redhat.com>
+> +
+> +description:
+> +  Digital Phase-Locked Loop (DPLL) device is used for precise clock
+> +  synchronization in networking and telecom hardware. The device can
+> +  have one or more channels (DPLLs) and one or more physical input and
+> +  output pins. Each DPLL channel can either produce pulse-per-clock signal
+> +  or drive ethernet equipment clock. The type of each channel can be
+> +  indicated by dpll-types property.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^dpll(@.*)?$"
 
+There's no 'reg' property, so you can't ever have a unit-address. I 
+suppose you can have more than 1, so you need a '-[0-9]+' suffix.
+
+> +
+> +  "#address-cells":
+> +    const: 0
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  dpll-types:
+> +    description: List of DPLL channel types, one per DPLL instance.
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +    items:
+> +      enum: [pps, eec]
+> +
+> +  input-pins:
+> +    type: object
+> +    description: DPLL input pins
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^pin@[0-9]+$":
+
+Unit-addresses are generally hex.
+
+> +        $ref: /schemas/dpll/dpll-pin.yaml
+> +        unevaluatedProperties: false
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  output-pins:
+> +    type: object
+> +    description: DPLL output pins
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^pin@[0-9]+$":
+> +        $ref: /schemas/dpll/dpll-pin.yaml
+> +        unevaluatedProperties: false
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/dpll/dpll-pin.yaml b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+> new file mode 100644
+> index 0000000000000..44af3a4398a5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dpll/dpll-pin.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: DPLL Pin
+> +
+> +maintainers:
+> +  - Ivan Vecera <ivecera@redhat.com>
+> +
+> +description: |
+> +  The DPLL pin is either a physical input or output pin that is provided
+> +  by a DPLL( Digital Phase-Locked Loop) device. The pin is identified by
+> +  its physical order number that is stored in reg property and can have
+> +  an additional set of properties like supported (allowed) frequencies,
+> +  label, type and may support embedded sync.
+
+blank line here if this is a separate paragraph:
+
+> +  Note that the pin in this context has nothing to do with pinctrl.
+> +
+> +properties:
+> +  reg:
+> +    description: Hardware index of the DPLL pin.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+'reg' already has a type. You need to say how many entries (i.e. 
+'maxItems: 1')
+
+> +
+> +  esync-control:
+> +    description: Indicates whether the pin supports embedded sync functionality.
+> +    type: boolean
+> +
+> +  label:
+> +    description: String exposed as the pin board label
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +
+> +  supported-frequencies-hz:
+> +    description: List of supported frequencies for this pin, expressed in Hz.
+> +
+> +  type:
+
+'type' is too generic of a property name.
+
+> +    description: Type of the pin
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [ext, gnss, int, mux, synce]
+> +
+> +required:
+> +  - reg
+> +
+> +additionalProperties: false
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1248443035f43..f645ef38d2224 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7187,6 +7187,8 @@ M:	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+>  M:	Jiri Pirko <jiri@resnulli.us>
+>  L:	netdev@vger.kernel.org
+>  S:	Supported
+> +F:	Documentation/devicetree/bindings/dpll/dpll-device.yaml
+> +F:	Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+>  F:	Documentation/driver-api/dpll.rst
+>  F:	drivers/dpll/*
+>  F:	include/linux/dpll.h
+> -- 
+> 2.48.1
+> 
