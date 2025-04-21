@@ -1,114 +1,102 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E812B1BD01F;
-	Mon, 21 Apr 2025 06:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3932110;
+	Mon, 21 Apr 2025 06:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745216842; cv=none; b=Hip3GT65kZcQZbnLuyoU6aNnKiqwj861LRLvmcaO5gMW8Y2Ngf6ZTsKXiOYlwTRWHw1fVwSVnJZGZrn8lZLzuiWKl336EZvLFowICdxhD0jrOF0gQOwaMTskKbbdVL7/VBWW8WWBth8Gs8ZoRQxOfvl5icY/0GIIU59oLkmG2w8=
+	t=1745217225; cv=none; b=j28XLFQqan2MiH5y5yaesNb065l9/THjiehXJIAnFqoJTlQ6JDBte3K1Xe/Tfq+K5lpES3bgp3VKNvKsrJHfFzh6JJojNPlHKfHu8wdhVxSxjIJ/eFJ14HygByqsOkcUXUV16Ais/yfAeq2NWZqv8TZhnnjLz4M7I0oo86oDi2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745216842; c=relaxed/simple;
-	bh=+e4r3AuCco/3OGo78Ey5O3/fp5Jdixn0HRrqyS/fYl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=r+zJAIjG+/zPjQ/WhiCP0ZrlxXdD7h3RCJThrJyUt8dk1KkBT3LEmThPlikdJz42qbwQ+GOjbGNJDImkgLNVN9K9eJaxap0SjsZEtP+2spSoS+I4mxkRHPuwW32C13cgvRxOjqzdDWTXoJGnxEiIO8OnXwwlx0sP885YWzouviY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 941C46025A056;
-	Mon, 21 Apr 2025 14:27:12 +0800 (CST)
-Message-ID: <1c680708-eaf0-43da-9714-78b6d7f4d993@nfschina.com>
-Date: Mon, 21 Apr 2025 14:27:11 +0800
+	s=arc-20240116; t=1745217225; c=relaxed/simple;
+	bh=j/Vw2G+VjM1+h4gptLRgRv/M5MBFTvylxUyExbCn99s=;
+	h=From:To:Subject:Date:Message-Id; b=P/ui+Hjgho4+jqNfLaczvQFQzuxeIuVYe7xSaudsKNcsqFCtr/DKYjsEhjRTib1NdJKsmwzDHuFiIH9ckENdIPRcfJyavDlWPPIlcr5R5nmyt3Noprtg0bhAkDkpO3LdeBoD9EN4hdQdkWlac806M3kfziFlUpFMVweEzLB9CRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=L2V2YCr8; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="L2V2YCr8"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id C01F0203B848; Sun, 20 Apr 2025 23:33:42 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C01F0203B848
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745217222;
+	bh=SuSunARB7xTcRbogkHTN30O8aKzzfUDRXpW52WZtbTs=;
+	h=From:To:Subject:Date:From;
+	b=L2V2YCr8LMiSiS21+xgeRnvYrhTnk9jGE0gnVaN10ZXy1nAWSyBnK+7G8yyUmO5fz
+	 9ZB8+MbsQeYYemnBCAp3N4IiDtgFfqMylUqX4KGp8aqIGjUBIpmywqW4suupnIbeiP
+	 Zx67wy+MprsmIPfPQRltmOFaQMaunlOYSC7RAuMc=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	longli@microsoft.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	mhklinux@outlook.com,
+	pasha.tatashin@soleen.com,
+	ernis@linux.microsoft.com,
+	kent.overstreet@linux.dev,
+	brett.creeley@amd.com,
+	schakrabarti@linux.microsoft.com,
+	shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com,
+	leon@kernel.org,
+	rosenp@gmail.com,
+	paulros@microsoft.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH v2 0/3] net: mana: Add HTB Qdisc offload support
+Date: Sun, 20 Apr 2025 23:33:37 -0700
+Message-Id: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-To: herbert@gondor.apana.org.au, davem@davemloft.net
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Language: en-US
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <20250421055104.663552-1-suhui@nfschina.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 2025/4/21 13:51, Su Hui wrote:
-> It's safer to use size_add() to replace open-coded aithmetic in allocator
-> arguments, because size_add() can prevent possible overflow problem.
->
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> ---
->   include/crypto/aead.h     | 3 ++-
->   include/crypto/akcipher.h | 4 +++-
->   include/crypto/kpp.h      | 3 ++-
->   3 files changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/include/crypto/aead.h b/include/crypto/aead.h
-> index 0e8a41638678..cf212d28fe18 100644
-> --- a/include/crypto/aead.h
-> +++ b/include/crypto/aead.h
-> @@ -10,6 +10,7 @@
->   
->   #include <linux/atomic.h>
->   #include <linux/container_of.h>
-> +#include <linux/overflow.h>
-Sorry for this redundant <linux/overflow.h>, will remove in v2 patch.
->   #include <linux/crypto.h>
->   #include <linux/slab.h>
->   #include <linux/types.h>
-> @@ -433,7 +434,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
->   {
->   	struct aead_request *req;
->   
-> -	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
-> +	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
->   
->   	if (likely(req))
->   		aead_request_set_tfm(req, tfm);
-> diff --git a/include/crypto/akcipher.h b/include/crypto/akcipher.h
-> index cdf7da74bf2f..4c37a602cce5 100644
-> --- a/include/crypto/akcipher.h
-> +++ b/include/crypto/akcipher.h
-> @@ -10,6 +10,7 @@
->   
->   #include <linux/atomic.h>
->   #include <linux/crypto.h>
-> +#include <linux/overflow.h>
->   
->   /**
->    * struct akcipher_request - public key cipher request
-> @@ -184,7 +185,8 @@ static inline struct akcipher_request *akcipher_request_alloc(
->   {
->   	struct akcipher_request *req;
->   
-> -	req = kmalloc(sizeof(*req) + crypto_akcipher_reqsize(tfm), gfp);
-> +	req = kmalloc(size_add(sizeof(*req),
-> +			       crypto_akcipher_reqsize(tfm)), gfp);
->   	if (likely(req))
->   		akcipher_request_set_tfm(req, tfm);
->   
-> diff --git a/include/crypto/kpp.h b/include/crypto/kpp.h
-> index 2d9c4de57b69..11ae1ad41d2a 100644
-> --- a/include/crypto/kpp.h
-> +++ b/include/crypto/kpp.h
-> @@ -11,6 +11,7 @@
->   
->   #include <linux/atomic.h>
->   #include <linux/container_of.h>
-> +#include <linux/overflow.h>
->   #include <linux/crypto.h>
->   #include <linux/slab.h>
->   
-> @@ -182,7 +183,7 @@ static inline struct kpp_request *kpp_request_alloc(struct crypto_kpp *tfm,
->   {
->   	struct kpp_request *req;
->   
-> -	req = kmalloc(sizeof(*req) + crypto_kpp_reqsize(tfm), gfp);
-> +	req = kmalloc(size_add(sizeof(*req), crypto_kpp_reqsize(tfm)), gfp);
->   	if (likely(req))
->   		kpp_request_set_tfm(req, tfm);
->   
+Introduce support for HTB Qdisc offload on the mana ethernet 
+controller to enable bandwidth clamping for egress traffic.
+
+The controller offloads only one HTB leaf to support bandwidth
+clamping on the hardware. This involves calling the function 
+mana_set_bw_clamp() which internally calls a HWC command 
+to the hardware to set the speed.
+
+The minimum supported bandwidth is 100 Mbps, and only multiples
+of 100 Mbps are supported by the hardware. The speed will be reset to
+maximum bandwidth supported by the SKU, when the HTB leaf is deleted.
+
+Also add speed support in mana_get_link_ksettings to display speed in the
+standard port information using ethtool. This involves calling
+mana_query_link_config(), which internally sends a HWC command to
+the hardware to query speed information.
+
+Note that this feature is not supported by all hardware.
+
+---
+Changes in v2:
+* Use -EOPNOTSUPP instead of -EPROTO in mana_query_link_cfg() 
+  and mana_set_bw_clamp()
+* Change link_speed to link_speed_mbps in struct mana_set_bw_clamp_req.
+---
+Erni Sri Satya Vennela (3):
+  net: mana: Add speed support in mana_get_link_ksettings
+  net: mana: Add sched HTB offload support
+  net: mana: Handle unsupported HWC commands
+
+ .../net/ethernet/microsoft/mana/hw_channel.c  |   4 +
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 191 ++++++++++++++++++
+ .../ethernet/microsoft/mana/mana_ethtool.c    |   6 +
+ include/net/mana/mana.h                       |  36 ++++
+ 4 files changed, 237 insertions(+)
+
+-- 
+2.34.1
+
