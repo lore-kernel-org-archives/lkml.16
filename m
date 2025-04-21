@@ -1,109 +1,164 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3DC1372;
-	Mon, 21 Apr 2025 14:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2742DDBE;
+	Mon, 21 Apr 2025 14:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745244415; cv=none; b=ZodTm5cqv7fI2sUlFF7tZlddP29w/XYq2Wm6c5Tk5uGv+/2ZUKnkUsx9NRUxeDjjpamw1Y06ZRBGtnM76DkUwGDb3+OTHhoQ1YM/TqZorLCQp4Uu29ten0ohikI2KGMDDaFLpokJGH3wd28iK7lk6d7FVBJcbg5/R2zbs22xdPk=
+	t=1745244525; cv=none; b=KdJedJzrhSfbWxOl86KZicaLU6Hsaj72euK8AaaqSndbLpR8VLEG+SHH3Kc97RQG1u/5TdNF5vPOftCsUsMQFxPzJZwaYRI3i8IO/AhV9sqjNZ/Vgz0LwN7jv6hCO/DCi5Ha3CWFEwl9FInruuUvuanXJSENI0bgt5pdhsSC0a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745244415; c=relaxed/simple;
-	bh=eJSvP6WoW1OnCWuj048isT9pN6rXqEQM0rSV660pM4c=;
+	s=arc-20240116; t=1745244525; c=relaxed/simple;
+	bh=y+u9o3uYT+ExmvtSXbLZr8bAFVgoBqK/gneBhs8PZLk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDYRo/WUVboykM4Q2EuTnECH25WrA8gPbWFz0A+DYZvQFlQu84BZliEMAzsIa0O0VKvYB4Rr9VCXZVkdfW0CPRlmvu7PGI5JQCXFh2lCEmLEW2FZ3qBdi+Xq1sV5nlbgJPeULWp+x+pl6nTGq6VTjoZSVX4ewe+Lk3FTO/F1DOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJIuE7Ut; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=glRW3uMvVRee8JF1emTXrCF5XeV5m+hVP74PWYsOkaOmK2cXAXigSCefr69wbOxf3Hjf3eiJewMWP+k+3Jsg6k10nNC8b0ZJYCyYZHnLjGL4lTPYYAJ0xqtem8nQ0YrJyn9ZIv0a7Z0lv/ILLbp3jUP7bX+sN7QYadMaNKjmi+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee9IrGNV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJIuE7Ut"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-306b78ae2d1so3048992a91.3;
-        Mon, 21 Apr 2025 07:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745244413; x=1745849213; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eJSvP6WoW1OnCWuj048isT9pN6rXqEQM0rSV660pM4c=;
-        b=KJIuE7UtsEFsgUYluW4iWmABKcKlasWEMH0GBWqw3NpRayWkdfrK5ScxjIRltkzNsI
-         Nlnhgt/ACd0JmJzp5TyVHzCgcS5OkA3ylkoVvlcFHRlZ9ZExBmQ1sNuN3nnJ8Xh+9lbd
-         BnLTG83uwK2ykpl5Qb0q4LsgUJjeWIsg7BoJ59U7V9QRdFlXrd9NhW2ebPjcMjt29p9G
-         HjjK6w0pAKJGkZ3fKOOEdBFJFg9lcbwKt8MdNYdMdlkRbHfj3gk5aNYpTNl6wuiSb4i5
-         UFgaE48MqULx7kQXTT4ct2njgO/CdWvEroTbLBxyHF8VZcVk+sjTzbBrHa+9swMeRSpt
-         XQtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745244413; x=1745849213;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJSvP6WoW1OnCWuj048isT9pN6rXqEQM0rSV660pM4c=;
-        b=ny34JTij4A1xIEzRxHLL8GwY09RMOgaVqtUkt4lw3+Lx3jQvdK4PgS99GR1nuUrhUP
-         3ZbA12f/0t6iQPeiGzAZTtGFYkLYPKv4l4sxD4sU1sxRZl+Sy1PjP//Z0/HjOmbEC2s/
-         07YZXM0CItodiwP4lyDORR65lcx0lTWe9x5lZKrpvoSppFPGeDuBUXyuaO8F111+5/Sc
-         gWQ2aCZPDiaPHWfLTvKjbe9g2ui42gIqm6FCfM3O/OW61GRYfS7DFSUtVkBCFHDwNIU1
-         mKJ/uy5J3k+DcOK0mcqgGXdkCpLA+vdqna5jMa5pvXuZsIkvtoyCvU9aqZWI5It+iZpA
-         kJKg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6VB9w4Z7go9AvZDbHsparF352h2upi4GUEwQnt9vX+NQzlkbngkl5Z+miMOxb3TSQfbX3Mb3B@vger.kernel.org, AJvYcCX1MyaqpTm9+cFOypV/vC8sv0OhJb3HHatbOwHO8OS1dtX5D4sUxRC5CRaqZD8aEXbDMNJtZDMiwCc=@vger.kernel.org, AJvYcCXVgBhCkkqoar3nHZxq5PlE3wyBYd5aXTMS3E8ZINQfksXsAmkco4kQn9Y91AdlZkd6eUPTUIVf/2eGJCkp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdvEvJaWyGlrFRuxqgxtEc5SuDb+uTZT80p8wHr5gf5O10QrE8
-	UYr+cNXYiGpdeKfHHUG6XZaQVVXCjICg3xLqH6w5idG/zyhkmWy1u8hMgCWyW3o=
-X-Gm-Gg: ASbGncu/bUmbZeFqCsf8o7mKzBkvhD4F9+ak/ERWbUF2WjWqcvU/JIkgQjN8F52gqvq
-	Y/Fq31Q1eh2FxI1Mb/5mAa727cJaOlZbCmdOLMNcfCtWGrXyL0uY6vunqShotTP+zaMDIl4FfMH
-	v3FloMMJPvj0nF9906JZf/QnjfYe9S13F5+qfiWGHji1as1wA+84kxylML2HhX2xg6oB5VvxTny
-	tQh5IeCRw5tSq+U9Jl7dpn4NNDpq3kAQ9TTSG8UtMCyXClFkyNmWBF/HenKiArxinqIAHTR7mdQ
-	LfBYhC4J/qg/akYXvgHRj74V3ALtLjcENQF1fgwPPuxMcjZGBzWnR3phEA==
-X-Google-Smtp-Source: AGHT+IEMWH811QnX8SwzsqnyFjLTQnfz+ENu2Dko3yepmQHf59RoumB8vWB9UmZwjeYORmMPBWW/mg==
-X-Received: by 2002:a17:90a:c887:b0:2fa:15ab:4df5 with SMTP id 98e67ed59e1d1-3087bccb042mr14746550a91.34.1745244412669;
-        Mon, 21 Apr 2025 07:06:52 -0700 (PDT)
-Received: from localhost ([2804:30c:90e:1e00:5265:5254:2e32:7e5])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50fdf1e6sm65418065ad.224.2025.04.21.07.06.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 07:06:52 -0700 (PDT)
-Date: Mon, 21 Apr 2025 11:08:05 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
-Message-ID: <aAZRRfO1AmiHs4Bf@debian-BULLSEYE-live-builder-AMD64>
-References: <20250421124915.32a18d36@jic23-huawei>
- <20250421131539.912966-1-gshahrouzi@gmail.com>
- <aAZNCEUejrTgy_yZ@debian-BULLSEYE-live-builder-AMD64>
- <CAKUZ0zLEacGg5cD4wGmFz80e4FQ9A=JsVyrzGAHkKEeOT=CU2A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ee9IrGNV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA64C4CEE4;
+	Mon, 21 Apr 2025 14:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745244524;
+	bh=y+u9o3uYT+ExmvtSXbLZr8bAFVgoBqK/gneBhs8PZLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ee9IrGNVBY468I0nIZFGOEwSSO4iJvmV3Vd8XmWujePOkW+RQw0qoTf5gPE74TnZX
+	 C8qwUs7dBOH7vUuZLAMHPY+whZ5y16Alj+g6qhK4NH9aSW8/lQwyAugMGUmHKBPgkX
+	 Ts1mQDeM8F3kFazN6V7zQoAIWI9/BkSajNLajuJFM0ROiLpWxVBeDRz0eNKGLZmJSl
+	 jLi7vAzRyzF0K2AP8N2qSWfhDO6AFW5+6nFbaFugRIYCz8i1SYJEZgZLK5F91i+MwP
+	 7PLXue2MFhNahQ6ie5tjBbSvEt2QfpqOrxjN8pZJABKrBwRH6YHk0J4IJEkLmDcQTW
+	 sZljmP2HBMWYw==
+Date: Mon, 21 Apr 2025 15:08:36 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Wenjun Wu <wenjun1.wu@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next 03/14] libeth: add PCI device initialization
+ helpers to libeth
+Message-ID: <20250421140836.GH2789685@horms.kernel.org>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <20250408124816.11584-4-larysa.zaremba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKUZ0zLEacGg5cD4wGmFz80e4FQ9A=JsVyrzGAHkKEeOT=CU2A@mail.gmail.com>
+In-Reply-To: <20250408124816.11584-4-larysa.zaremba@intel.com>
 
-On 04/21, Gabriel Shahrouzi wrote:
-> On Mon, Apr 21, 2025 at 9:48 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > On 04/21, Gabriel Shahrouzi wrote:
-> > > The inclinometer channels were previously defined with 14 realbits.
-> > > However, the ADIS16201 datasheet states the resolution for these output
-> > > channels is 12 bits (Page 14, text description; Page 15, table 7).
-> > >
-> > > Correct the realbits value to 12 to accurately reflect the hardware.
-> > >
-> > > Fixes: f7fe1d1dd5a5 ("staging: iio: new adis16201 driver")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> >
-> > Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Should I have included the reviewed-by tag on the latest patch sent in
-> this thread since there were no changes to the code?
+On Tue, Apr 08, 2025 at 02:47:49PM +0200, Larysa Zaremba wrote:
+> From: Phani R Burra <phani.r.burra@intel.com>
+> 
+> Add memory related support functions for drivers to access MMIO space and
+> allocate/free dma buffers.
+> 
+> Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+> Signed-off-by: Phani R Burra <phani.r.burra@intel.com>
+> Co-developed-by: Victor Raj <victor.raj@intel.com>
+> Signed-off-by: Victor Raj <victor.raj@intel.com>
+> Co-developed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+> Signed-off-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+> Co-developed-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 
-Not sure I had given a review tag for this.
-Hard to find the previous versrion because it doesn't seem to contain adis16201
-in the subject name :/
-Anyway, good thing the fix should be added to IIO now.
+...
 
-Regards,
-Marcelo
+> diff --git a/drivers/net/ethernet/intel/libeth/pci.c b/drivers/net/ethernet/intel/libeth/pci.c
+
+...
+
+> +/**
+> + * __libeth_pci_map_mmio_region - map PCI device MMIO region
+> + * @mmio_info: struct to store the mapped MMIO region
+> + * @offset: MMIO region start offset
+> + * @size: MMIO region size
+> + * @num_args: number of additional arguments present
+> + *
+> + * Return: true on success, false on memory map failure.
+> + */
+> +bool __libeth_pci_map_mmio_region(struct libeth_mmio_info *mmio_info,
+> +				  resource_size_t offset,
+> +				  resource_size_t size, int num_args, ...)
+> +{
+> +	struct pci_dev *pdev = mmio_info->pdev;
+> +	struct libeth_pci_mmio_region *mr;
+> +	resource_size_t pa;
+> +	void __iomem *va;
+> +	int bar_idx = 0;
+> +	va_list args;
+> +
+> +	if (num_args) {
+> +		va_start(args, num_args);
+> +		bar_idx = va_arg(args, int);
+> +		va_end(args);
+> +	}
+> +
+> +	mr = libeth_find_mmio_region(&mmio_info->mmio_list, offset, bar_idx);
+> +	if (mr) {
+> +		pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
+> +			 bar_idx, offset);
+
+Hi Phani, Larysa, all,
+
+I think that the format specifier here should be %zu rather than %llu.
+
+On ARM W=1 builds gcc 14.2.0 flags this as follows:
+
+    CALL    scripts/checksyscalls.sh
+    CC      drivers/net/ethernet/intel/libeth/pci.o
+  In file included from ./include/linux/device.h:15,
+                   from ./include/linux/pci.h:37,
+                   from ./include/net/libeth/pci.h:7,
+                   from drivers/net/ethernet/intel/libeth/pci.c:4:
+  .../pci.c: In function '__libeth_pci_map_mmio_region':
+  .../pci.c:92:32: warning: format '%llu' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
+     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  .../dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+    110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+        |                              ^~~
+  .../dev_printk.h:156:61: note: in expansion of macro 'dev_fmt'
+    156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+        |                                                             ^~~~~~~
+  .../pci.h:2704:41: note: in expansion of macro 'dev_warn'
+   2704 | #define pci_warn(pdev, fmt, arg...)     dev_warn(&(pdev)->dev, fmt, ##arg)
+        |                                         ^~~~~~~~
+  .../pci.c:92:17: note: in expansion of macro 'pci_warn'
+     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
+        |                 ^~~~~~~~
+  .../pci.c:92:65: note: format string is defined here
+     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
+        |                                                              ~~~^
+        |                                                                 |
+        |                                                                 long long unsigned int
+        |                                                              %u
