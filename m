@@ -1,393 +1,291 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF6025D1FA
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC425D527
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745220225; cv=none; b=YKaT6a8Jf0868+8630pvSUim8SojkUyp5jRM2XC40kQmV53gtij2ikJbs3DJQ1ATRMD0UbocLqFXVpvpYfWHPVruKELeDgJR6+DCqgrouN1qHJFLoTiGO7t9ZkukBg89sfGl2ErixO6uIajsFuwcrWdIIKkBmQW8dnXhcRqK6Dk=
+	t=1745220231; cv=none; b=Fj/MURbtgjp2sk+/YD366VOfXt/efNDMaYWU9CpkA1+AyZ0NGfo8anLGzO8zk5nBUfXOoWVH83APnqrbhdFJVYmcO/9RXXALJ0ybqdVXCkaxXnb+xl65v76y57As9/BeE7kGHEFfm5gvoyIH33nZKFq+oL6SOnZWPb98x64j7m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745220225; c=relaxed/simple;
-	bh=ZIS3z7iPsFidXafxV93b2Yi3FI3yu6TnEKFMXRSjxlU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b/tF/iZ2zRyRm/B2PDO8/Mh5Bx24TdxDkN9DhElLpYUm8o12C6DPA6g8YrSCJi8iSnsELqWSununxhtvuqhD4uom8+mK03aKdtZeJhqlSvI0iyOEp0wCXzbtB5JAwyS1jfV4eg8wvx2MpYZJdE5wHYrpKAXiHN/9rr99OFRs3Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L9g3SjPQ; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745220231; c=relaxed/simple;
+	bh=hKfiXiMkcnNP3ujnT2PpRO3iO/+R8b6X+oKXm7a/sn0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dAUwsuP6OrAXZvgw/mh7wtEeIKSzlB6NDcuAo6az3APKc3o7xMSLQD0XBQvozgdn9MFkjPXGHCKxWuNLBVocT54gYlmYLvHLNj4T/NhcGsM8NpoN3ZUHzfte37a0Hg+EgEdD7Pr8YOycDFeHeHNHjFCrOp376aHq+QQdqjzcryM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F3KhK8OJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZtF+J8Yn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F3KhK8OJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZtF+J8Yn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9g3SjPQ"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376dd56eccso3784118b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 00:23:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745220222; x=1745825022; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c+dWCxW0qa//qOeop3seiJ+PvmpaQk8MdxFASKGEdIg=;
-        b=L9g3SjPQUkY2Ahb7iB6jLTk0tcBGsMIDJuATanEfqotDmN56kcDMkZPxxqejq0kVKu
-         zcoZAl5fbZ6wvId0ae2hYH3Pj6UQY4F7d/+LUOMN1LkWXIeg/f3ytytCg/ZymGUiABGA
-         DoJlI5erqlYCM8c2B3TYx806h23pa+T91LVmvuH83Ux9y3qQEo0cmHUgYisE5qCuZ8r8
-         a3U/MiapCJdBTYsZJQ1MU9n5a3PXb5lxLrp7ZXq2kYbgB1RmwY7inBTJk+M+iHc4tmO3
-         Xlk/fBE2tr3KT3mHZ+xNDbDcZqvBxfe5QJ6haEjU4MVGc4yVd6UcUHXgYc/sJC7jkeTy
-         9Kqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745220222; x=1745825022;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c+dWCxW0qa//qOeop3seiJ+PvmpaQk8MdxFASKGEdIg=;
-        b=kdOLjnsjOaEIXmE2XzOrBmfr+KNWpiuxtRBHdq14IO/hxjngpFTRFfV4E9ZYVIMs9h
-         CEtAhLLupZQcUuzrxufl+iSXxk0QAJ8j0CIbJ2dzrqVwrjYUMpOmoz0nKC/N60O/ApbY
-         L6F6VCCkXzy4yZzBZ9Qv4K+bU19liZKwHxvi/EHhvsJZa3bL4M+DYvh0+SZHRWbUmmLM
-         DpkGUPNtKbIYhrrsEZzYXrTgdur0lI+24+lVZfxThpWbBIGoTQzQjP/lF5ZWw2NK43Zc
-         /6D81DUmcoaqXTUsPI+nvc0eBAz7auKDxpZ+XDlNB/axT4ZROhO2xpceV+d/tNEfFcp/
-         hh6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWtZFvkatcmNzhBg0G2HQJ4TRVqSVW86LxtRrmJPnlaQEUs2hVKYANhEIXn6Dvc0oWdDQfXYCG5qZ+VdO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX6XnHgtl+ZPe6VIhqDVmrJ7i3LSh+9TS2I5PDzmnlvXs5wIYt
-	pq9cJS1WOn9zppNEYvy3Fvlj+f27bkAxVxRYGXL4O+t8q+6RM1P66dTqi4FOa9U=
-X-Gm-Gg: ASbGncuacAL23G4NPjSnw3pe5vI10NRk/N2L8u+uBqQkUlPD5/YFnCNc+ET3cmlO9WT
-	g+pznfZS2BrFT0xcpQ6d9WaAhwCtEiAmBkhlar5QM8CnXeesl5VoiN/0Z73VB71YfKtnHPeCcBL
-	iutHjkQnikwUY5puJjKKVSXOcaf+39q97oOdrSY0bes+HPUV2tN5nOYsh27/s1dS5jTUMkHQlBn
-	nspPMUP5A6llbph/pUilMad0OIwSbIogI8mLkMcB5f51BL6bl78VlbSYuRDrOc7RbwxJ/VYYxXy
-	Kd+fPLDxmSJKpN/N9+JwKuZIW/N1mb+PKM/wAWUUoQ==
-X-Google-Smtp-Source: AGHT+IE3ihNLzBum2t3EhVaSfOP4Ld6WJ65y89kj52Y27XwztxFnklLO3F7HnSJou6+pglNZWyyDOw==
-X-Received: by 2002:a05:6a00:3cc2:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-73dc149bf14mr16837159b3a.8.1745220222266;
-        Mon, 21 Apr 2025 00:23:42 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaeb282sm6081227b3a.176.2025.04.21.00.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 00:23:41 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V11 15/15] cpufreq: Add Rust-based cpufreq-dt driver
-Date: Mon, 21 Apr 2025 12:52:22 +0530
-Message-Id: <f7e96b7da77ac217be5ccb09b9309da28fd96c90.1745218976.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1745218975.git.viresh.kumar@linaro.org>
-References: <cover.1745218975.git.viresh.kumar@linaro.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F3KhK8OJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZtF+J8Yn";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F3KhK8OJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZtF+J8Yn"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2F8B12118D;
+	Mon, 21 Apr 2025 07:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745220226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FuXKNlqdQSD96rxTLybgPKyiLPyyIG35lPtCJ/nud7g=;
+	b=F3KhK8OJegArLmDBQDXCHb0hC781fqpAynHIX7glP7FLMSrd1QBKkx8usKfw9zX1a1QO5Y
+	jesOOu/8BPukrGmcvPtzXCkymwTcYPxEkSDwdwFxF+J3haMNfcEVmtYP/twoW25Pd83MLa
+	v9e+4NTV3A9v7T22xcZUIKzaXOlqU7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745220226;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FuXKNlqdQSD96rxTLybgPKyiLPyyIG35lPtCJ/nud7g=;
+	b=ZtF+J8YnWl4CYCPtNOHr9ySsJjES4h/G73y3r0wdWadLzBpPEXsNIBYzRbvodolpW8fjs5
+	lgSgNTGlAzuOpICw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745220226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FuXKNlqdQSD96rxTLybgPKyiLPyyIG35lPtCJ/nud7g=;
+	b=F3KhK8OJegArLmDBQDXCHb0hC781fqpAynHIX7glP7FLMSrd1QBKkx8usKfw9zX1a1QO5Y
+	jesOOu/8BPukrGmcvPtzXCkymwTcYPxEkSDwdwFxF+J3haMNfcEVmtYP/twoW25Pd83MLa
+	v9e+4NTV3A9v7T22xcZUIKzaXOlqU7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745220226;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FuXKNlqdQSD96rxTLybgPKyiLPyyIG35lPtCJ/nud7g=;
+	b=ZtF+J8YnWl4CYCPtNOHr9ySsJjES4h/G73y3r0wdWadLzBpPEXsNIBYzRbvodolpW8fjs5
+	lgSgNTGlAzuOpICw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 09F0E139D0;
+	Mon, 21 Apr 2025 07:23:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id tScZAYLyBWgcVwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 21 Apr 2025 07:23:46 +0000
+Date: Mon, 21 Apr 2025 09:23:45 +0200
+Message-ID: <87mscat1tq.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: alsa-devel@alsa-project.org,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/9] ALSA: usb-audio: Fix possible race at sync of urb completions
+In-Reply-To: <20250421051832.4179-1-hdanton@sina.com>
+References: <20210929080844.11583-1-tiwai@suse.de>
+	<20210929080844.11583-3-tiwai@suse.de>
+	<20250418103533.4078-1-hdanton@sina.com>
+	<87a58dvia7.wl-tiwai@suse.de>
+	<20250418144518.4097-1-hdanton@sina.com>
+	<875xj0ve49.wl-tiwai@suse.de>
+	<20250419080410.4148-1-hdanton@sina.com>
+	<871ptnuvad.wl-tiwai@suse.de>
+	<20250421051832.4179-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[sina.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[alsa-project.org,gmail.com,vger.kernel.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 
-Introduce a Rust-based implementation of the cpufreq-dt driver, covering
-most of the functionality provided by the existing C version. Some
-features, such as retrieving platform data from `cpufreq-dt-platdev.c`,
-are still pending.
+On Mon, 21 Apr 2025 07:18:31 +0200,
+Hillf Danton wrote:
+> 
+> On Sun, 20 Apr 2025 09:49:46 +0200 Takashi Iwai wrote:
+> >On Sat, 19 Apr 2025 10:04:08 +0200, Hillf Danton wrote:
+> >> On Sat, 19 Apr 2025 08:50:46 +0200 Takashi Iwai wrote:
+> >> >On Fri, 18 Apr 2025 16:45:17 +0200, Hillf Danton wrote:
+> >> >> On Fri, 18 Apr 2025 13:08:32 +0200 Takashi Iwai wrote:
+> >> >> > On Fri, 18 Apr 2025 12:35:32 +0200 Hillf Danton wrote:
+> >> >> > > On Wed, 29 Sep 2021 10:08:37 +0200 Takashi Iwai wrote:
+> >> >> > > > USB-audio driver tries to sync with the clear of all pending URBs in
+> >> >> > > > wait_clear_urbs(), and it waits for all bits in active_mask getting
+> >> >> > > > cleared.  This works fine for the normal operations, but when a stream
+> >> >> > > > is managed in the implicit feedback mode, there is still a very thin
+> >> >> > > > race window: namely, in snd_complete_usb(), the active_mask bit for
+> >> >> > > > the current URB is once cleared before re-submitted in
+> >> >> > > > queue_pending_output_urbs().  If wait_clear_urbs() is called during
+> >> >> > > > that period, it may pass the test and go forward even though there may
+> >> >> > > > be a still pending URB.
+> >> >> > > > 
+> >> >> > > > For covering it, this patch adds a new counter to each endpoint to
+> >> >> > > > keep the number of in-flight URBs, and changes wait_clear_urbs()
+> >> >> > > > checking this number instead.  The counter is decremented at the end
+> >> >> > > > of URB complete, hence the reference is kept as long as the URB
+> >> >> > > > complete is in process.
+> >> >> > > > 
+> >> >> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> >> >> > > > ---
+> >> >> > > >  sound/usb/card.h     | 1 +
+> >> >> > > >  sound/usb/endpoint.c | 7 ++++++-
+> >> >> > > >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >> >> > > > 
+> >> >> > > > diff --git a/sound/usb/card.h b/sound/usb/card.h
+> >> >> > > > index 3329ce710cb9..746a765b2437 100644
+> >> >> > > > --- a/sound/usb/card.h
+> >> >> > > > +++ b/sound/usb/card.h
+> >> >> > > > @@ -97,6 +97,7 @@ struct snd_usb_endpoint {
+> >> >> > > >  	unsigned int nominal_queue_size; /* total buffer sizes in URBs */
+> >> >> > > >  	unsigned long active_mask;	/* bitmask of active urbs */
+> >> >> > > >  	unsigned long unlink_mask;	/* bitmask of unlinked urbs */
+> >> >> > > > +	atomic_t submitted_urbs;	/* currently submitted urbs */
+> >> >> > > >  	char *syncbuf;			/* sync buffer for all sync URBs */
+> >> >> > > >  	dma_addr_t sync_dma;		/* DMA address of syncbuf */
+> >> >> > > >  
+> >> >> > > > diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
+> >> >> > > > index 29c4865966f5..06241568abf7 100644
+> >> >> > > > --- a/sound/usb/endpoint.c
+> >> >> > > > +++ b/sound/usb/endpoint.c
+> >> >> > > > @@ -451,6 +451,7 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
+> >> >> > > >  		}
+> >> >> > > >  
+> >> >> > > >  		set_bit(ctx->index, &ep->active_mask);
+> >> >> > > > +		atomic_inc(&ep->submitted_urbs);
+> >> >> > > >  	}
+> >> >> > > >  }
+> >> >> > > >  
+> >> >> > > > @@ -488,6 +489,7 @@ static void snd_complete_urb(struct urb *urb)
+> >> >> > > >  			clear_bit(ctx->index, &ep->active_mask);
+> >> >> > > >  			spin_unlock_irqrestore(&ep->lock, flags);
+> >> >> > > >  			queue_pending_output_urbs(ep);
+> >> >> > > 
+> >> >> > > 			smp_mb();
+> >> >> > > 
+> >> >> > > > +			atomic_dec(&ep->submitted_urbs); /* decrement at last */
+> >> >> > > 
+> >> >> > > Does it match the comment to add a mb?
+> >> >> > 
+> >> >> > How...?  I don't understand your intention.
+> >> >> > 
+> >> >> In addition to the UAF report [1], I saw a customer report of list
+> >> >> corruption of linux-6.1.99 on arm64 this week without reproducer.
+> >> >> 
+> >> >> 	list corruption
+> >> >> 	list_add_tail();
+> >> >> 	push_back_to_ready_list();
+> >> >> 	snd_complete_urb();
+> >> >> 
+> >> >> And after another look at this patch I wonder if the race can not be
+> >> >> erased without the certainty that ep will be no longer used after the
+> >> >> atomic decrement.
+> >> >
+> >> > But why adding more barrier if you perform the atomic op...?
+> >> >
+> >> Because atomic op != ordering, see 26fbe9772b8c ("USB: core: Fix hang 
+> >> in usb_kill_urb by adding memory barriers") for detail for example.
+> >> And c5b2cbdbdac5 ("ipc/mqueue.c: update/document memory barriers") as well.
+> >
+> > Still don't get it.  Which reads and writes are you trying to solve?
+> >
+> See a simpler UAF case IIUIC.
+> 
+> 	cpu1		cpu2
+> 			atomic_dec(&ep->submitted_urbs);
+> 
+> 	if (!atomic_read(&ep->submitted_urbs))
+> 		kfree(ep);
+> 
+> 			a = ep->xxx; // UAF
 
-The driver has been tested with QEMU, and frequency scaling works as
-expected.
+That's what I don't get it.  Which place does this UAF happen, more
+specifically?  In the whole conversations, the context is missing, and
+you provided only a snippet of the patch.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/Kconfig        |  12 ++
- drivers/cpufreq/Makefile       |   1 +
- drivers/cpufreq/rcpufreq_dt.rs | 229 +++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/cpufreq/rcpufreq_dt.rs
+> > And more importantly, does it actually help at all?  If yes, I'd
+> 
+> Yes and No. Yes because of the fix mentioned in ipc wrt mb.
+> 
+> > happily take the patch, of course.
+> >
+> Provided a repro, a fix like the following diff should have been posted.
 
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index d64b07ec48e5..78702a08364f 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -217,6 +217,18 @@ config CPUFREQ_DT
- 
- 	  If in doubt, say N.
- 
-+config CPUFREQ_DT_RUST
-+	tristate "Rust based Generic DT based cpufreq driver"
-+	depends on HAVE_CLK && OF && RUST
-+	select CPUFREQ_DT_PLATDEV
-+	select PM_OPP
-+	help
-+	  This adds a Rust based generic DT based cpufreq driver for frequency
-+	  management.  It supports both uniprocessor (UP) and symmetric
-+	  multiprocessor (SMP) systems.
-+
-+	  If in doubt, say N.
-+
- config CPUFREQ_VIRT
- 	tristate "Virtual cpufreq driver"
- 	depends on GENERIC_ARCH_TOPOLOGY
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 22ab45209f9b..d38526b8e063 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_COMMON)		+= cpufreq_governor.o
- obj-$(CONFIG_CPU_FREQ_GOV_ATTR_SET)	+= cpufreq_governor_attr_set.o
- 
- obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
-+obj-$(CONFIG_CPUFREQ_DT_RUST)		+= rcpufreq_dt.o
- obj-$(CONFIG_CPUFREQ_DT_PLATDEV)	+= cpufreq-dt-platdev.o
- obj-$(CONFIG_CPUFREQ_VIRT)		+= virtual-cpufreq.o
- 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-new file mode 100644
-index 000000000000..4bc74d6e361d
---- /dev/null
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust based implementation of the cpufreq-dt driver.
-+
-+use kernel::{
-+    c_str,
-+    clk::Clk,
-+    cpu, cpufreq,
-+    cpumask::CpumaskVar,
-+    device::{Core, Device},
-+    error::code::*,
-+    fmt,
-+    macros::vtable,
-+    module_platform_driver, of, opp, platform,
-+    prelude::*,
-+    str::CString,
-+    sync::Arc,
-+};
-+
-+/// Finds exact supply name from the OF node.
-+fn find_supply_name_exact(dev: &Device, name: &str) -> Option<CString> {
-+    let prop_name = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-+    dev.property_present(&prop_name)
-+        .then(|| CString::try_from_fmt(fmt!("{name}")).ok())
-+        .flatten()
-+}
-+
-+/// Finds supply name for the CPU from DT.
-+fn find_supply_names(dev: &Device, cpu: u32) -> Option<KVec<CString>> {
-+    // Try "cpu0" for older DTs, fallback to "cpu".
-+    let name = (cpu == 0)
-+        .then(|| find_supply_name_exact(dev, "cpu0"))
-+        .flatten()
-+        .or_else(|| find_supply_name_exact(dev, "cpu"))?;
-+
-+    let mut list = KVec::with_capacity(1, GFP_KERNEL).ok()?;
-+    list.push(name, GFP_KERNEL).ok()?;
-+
-+    Some(list)
-+}
-+
-+/// Represents the cpufreq dt device.
-+struct CPUFreqDTDevice {
-+    opp_table: opp::Table,
-+    freq_table: opp::FreqTable,
-+    _mask: CpumaskVar,
-+    _token: Option<opp::ConfigToken>,
-+    _clk: Clk,
-+}
-+
-+#[derive(Default)]
-+struct CPUFreqDTDriver;
-+
-+#[vtable]
-+impl opp::ConfigOps for CPUFreqDTDriver {}
-+
-+#[vtable]
-+impl cpufreq::Driver for CPUFreqDTDriver {
-+    const NAME: &CStr = c_str!("cpufreq-dt");
-+    const FLAGS: u16 = cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV;
-+    const BOOST_ENABLED: bool = true;
-+
-+    type PData = Arc<CPUFreqDTDevice>;
-+
-+    fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
-+        let cpu = policy.cpu();
-+        // SAFETY: The CPU device is only used during init; it won't get hot-unplugged. The cpufreq
-+        // core  registers with CPU notifiers and the cpufreq core/driver won't use the CPU device,
-+        // once the CPU is hot-unplugged.
-+        let dev = unsafe { cpu::from_cpu(cpu)? };
-+        let mut mask = CpumaskVar::new_zero(GFP_KERNEL)?;
-+
-+        mask.set(cpu);
-+
-+        let token = find_supply_names(dev, cpu)
-+            .map(|names| {
-+                opp::Config::<Self>::new()
-+                    .set_regulator_names(names)?
-+                    .set(dev)
-+            })
-+            .transpose()?;
-+
-+        // Get OPP-sharing information from "operating-points-v2" bindings.
-+        let fallback = match opp::Table::of_sharing_cpus(dev, &mut mask) {
-+            Ok(()) => false,
-+            Err(e) if e == ENOENT => {
-+                // "operating-points-v2" not supported. If the platform hasn't
-+                // set sharing CPUs, fallback to all CPUs share the `Policy`
-+                // for backward compatibility.
-+                opp::Table::sharing_cpus(dev, &mut mask).is_err()
-+            }
-+            Err(e) => return Err(e),
-+        };
-+
-+        // Initialize OPP tables for all policy cpus.
-+        //
-+        // For platforms not using "operating-points-v2" bindings, we do this
-+        // before updating policy cpus. Otherwise, we will end up creating
-+        // duplicate OPPs for the CPUs.
-+        //
-+        // OPPs might be populated at runtime, don't fail for error here unless
-+        // it is -EPROBE_DEFER.
-+        let mut opp_table = match opp::Table::from_of_cpumask(dev, &mut mask) {
-+            Ok(table) => table,
-+            Err(e) => {
-+                if e == EPROBE_DEFER {
-+                    return Err(e);
-+                }
-+
-+                // The table is added dynamically ?
-+                opp::Table::from_dev(dev)?
-+            }
-+        };
-+
-+        // The OPP table must be initialized, statically or dynamically, by this point.
-+        opp_table.opp_count()?;
-+
-+        // Set sharing cpus for fallback scenario.
-+        if fallback {
-+            mask.setall();
-+            opp_table.set_sharing_cpus(&mut mask)?;
-+        }
-+
-+        let mut transition_latency = opp_table.max_transition_latency_ns() as u32;
-+        if transition_latency == 0 {
-+            transition_latency = cpufreq::ETERNAL_LATENCY_NS;
-+        }
-+
-+        policy
-+            .set_dvfs_possible_from_any_cpu(true)
-+            .set_suspend_freq(opp_table.suspend_freq())
-+            .set_transition_latency_ns(transition_latency);
-+
-+        let freq_table = opp_table.cpufreq_table()?;
-+        // SAFETY: The `freq_table` is not dropped while it is getting used by the C code.
-+        unsafe { policy.set_freq_table(&freq_table) };
-+
-+        // SAFETY: The returned `clk` is not dropped while it is getting used by the C code.
-+        let clk = unsafe { policy.set_clk(dev, None)? };
-+
-+        mask.copy(policy.cpus());
-+
-+        Ok(Arc::new(
-+            CPUFreqDTDevice {
-+                opp_table,
-+                freq_table,
-+                _mask: mask,
-+                _token: token,
-+                _clk: clk,
-+            },
-+            GFP_KERNEL,
-+        )?)
-+    }
-+
-+    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn online(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // We did light-weight tear down earlier, nothing to do here.
-+        Ok(())
-+    }
-+
-+    fn offline(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // Preserve policy->data and don't free resources on light-weight
-+        // tear down.
-+        Ok(())
-+    }
-+
-+    fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
-+        policy.generic_suspend()
-+    }
-+
-+    fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
-+        data.generic_verify()
-+    }
-+
-+    fn target_index(policy: &mut cpufreq::Policy, index: cpufreq::TableIndex) -> Result<()> {
-+        let Some(data) = policy.data::<Self::PData>() else {
-+            return Err(ENOENT);
-+        };
-+
-+        let freq = data.freq_table.freq(index)?;
-+        data.opp_table.set_rate(freq)
-+    }
-+
-+    fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
-+        policy.generic_get()
-+    }
-+
-+    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn register_em(policy: &mut cpufreq::Policy) {
-+        policy.register_em_opp()
-+    }
-+}
-+
-+kernel::of_device_table!(
-+    OF_TABLE,
-+    MODULE_OF_TABLE,
-+    <CPUFreqDTDriver as platform::Driver>::IdInfo,
-+    [(of::DeviceId::new(c_str!("operating-points-v2")), ())]
-+);
-+
-+impl platform::Driver for CPUFreqDTDriver {
-+    type IdInfo = ();
-+    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-+
-+    fn probe(
-+        pdev: &platform::Device<Core>,
-+        _id_info: Option<&Self::IdInfo>,
-+    ) -> Result<Pin<KBox<Self>>> {
-+        cpufreq::Registration::<CPUFreqDTDriver>::new_foreign_owned(pdev.as_ref())?;
-+
-+        let drvdata = KBox::new(Self {}, GFP_KERNEL)?;
-+
-+        Ok(drvdata.into())
-+    }
-+}
-+
-+module_platform_driver! {
-+    type: CPUFreqDTDriver,
-+    name: "cpufreq-dt",
-+    author: "Viresh Kumar <viresh.kumar@linaro.org>",
-+    description: "Generic CPUFreq DT driver",
-+    license: "GPL v2",
-+}
--- 
-2.31.1.272.g89b43f80a514
+No idea about repro and the report itself, so hard to judge.
 
+
+Takashi
+
+> 
+> 	Hillf
+> 
+> --- x/sound/usb/endpoint.c
+> +++ y/sound/usb/endpoint.c
+> @@ -569,8 +569,11 @@ static void snd_complete_urb(struct urb
+>  			snd_usb_queue_pending_output_urbs(ep, false);
+>  			/* decrement at last, and check xrun */
+>  			if (atomic_dec_and_test(&ep->submitted_urbs) &&
+> -			    !snd_usb_endpoint_implicit_feedback_sink(ep))
+> +			    !snd_usb_endpoint_implicit_feedback_sink(ep)) {
+>  				notify_xrun(ep);
+> +				smp_mb();
+> +				atomic_dec(&ep->submitted_urbs);
+> +			}
+>  			return;
+>  		}
+>  
+> @@ -602,7 +605,8 @@ static void snd_complete_urb(struct urb
+>  
+>  exit_clear:
+>  	clear_bit(ctx->index, &ep->active_mask);
+> -	atomic_dec(&ep->submitted_urbs);
+> +	if (atomic_dec_and_test(&ep->submitted_urbs))
+> +		atomic_dec(&ep->submitted_urbs);
+>  }
+>  
+>  /*
+> @@ -1004,17 +1008,17 @@ static int wait_clear_urbs(struct snd_us
+>  
+>  	do {
+>  		alive = atomic_read(&ep->submitted_urbs);
+> -		if (!alive)
+> -			break;
+> +		if (alive < 0)
+> +			goto update;
+>  
+>  		schedule_timeout_uninterruptible(1);
+>  	} while (time_before(jiffies, end_time));
+>  
+> -	if (alive)
+> -		usb_audio_err(ep->chip,
+> +	usb_audio_err(ep->chip,
+>  			"timeout: still %d active urbs on EP #%x\n",
+>  			alive, ep->ep_num);
+>  
+> +update:
+>  	if (ep_state_update(ep, EP_STATE_STOPPING, EP_STATE_STOPPED)) {
+>  		ep->sync_sink = NULL;
+>  		snd_usb_endpoint_set_callback(ep, NULL, NULL, NULL);
