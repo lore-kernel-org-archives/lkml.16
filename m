@@ -1,106 +1,221 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C27513AD1C
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AA227463;
+	Mon, 21 Apr 2025 14:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247366; cv=none; b=tZhkXByRftgMxgWEOCePyXPaRyaqzEpCzBaUdbA+O5L8U0Ll7KPMKIpSaWmrq5IA5hGtxBmb8fY2kr8xPvnRbDZNM+jKXcVNloRw12TPXf9RxKXbvnNQzFF+3Os3yt6mCTsfuLD8eernRJk5w+0b/NZbrgmz7y36qkUlRHfKiSM=
+	t=1745247412; cv=none; b=dbNPyQ/EiEms0L7oGOR5B8RsuNEoWpRFal3gLlHMBqr48G3Qq2uCx1AavOYkx4fUua0Nr1Dx8q8tlkZJcPNWxzMNPyIS7WHwJFd8q5wO0kRz+/AO28O0OIMNO9zI3rCy+2NOiO3SLjmm5LUawPG0VsyLaKCRWcffLfKoCVtxP7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247366; c=relaxed/simple;
-	bh=ELRmkTdRqMv3QmAXEhzU+df4jLtDbLH6i9rhrVJgjrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ecoO82LpCuZyVH/XFfxhBiwztXyuEdkrahaWgHDsjE/XE1W7TLuUC4JRydg9B+EvrFgJdqTaN/tEKu9aSz+xXKQB8bSD4YopgCN5CxyUMdWmbCH0D98NiEg2uct2iy2eDvvt6CPvowKTUVoe0eiBNeGtPcSq8dotxo98HfXiph0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=f5r1s4EH; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1745247412; c=relaxed/simple;
+	bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WX5i7scWDx8tP0veMKk3RftZDTp/A1nfwgMPkmt7O8xGFo4cYAGS8L+5Gvs5jNMgvJ3GysSO4L9sgRs1V3wEgtvf8FPITfINrTwMcxJeXiRMtruM7BYwyr+K4h2FiEf6fBkBMX/e64QaXMcwoVIPA/da0p/xQDMBMXqecGQHpI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxZbrc0x; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="f5r1s4EH"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476f4e9cf92so29180831cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1745247363; x=1745852163; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ELRmkTdRqMv3QmAXEhzU+df4jLtDbLH6i9rhrVJgjrk=;
-        b=f5r1s4EHUsSKsKyl1yI0fQHcAxCTZeDS55jthIPbYizhG+niM/IpLvKeSEC1Ikp+Nc
-         5ezosHfsIIy2OwIsaPX8ND06iX4MhMQ3PTFV64HGQKVfR7ynOAOMgzgmceD9Y5vJ4GcG
-         B/M2ZpV4xvgUVyYsuJwZvf4rM7CKaY51EFRDgC54EtpzGh+6TzJGR8M3U2ce7ja4qrd7
-         bkLCSG4/FY/06kK7XdOM33pGGTv/zsND8nBlaBFtIKjvogtGe+EyBvieeDkUmDvBJakI
-         Jn7Mcv/fCHPpdlvsgONRRXiff+gcYkoUkt5OupdElIWT51nkCtOhZEDkTX9rJKXHgoPy
-         XIPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745247363; x=1745852163;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ELRmkTdRqMv3QmAXEhzU+df4jLtDbLH6i9rhrVJgjrk=;
-        b=KdCj4UzOAzYPj5OVIGpyKQIKHZKiwgYWXmrGguhNn3fpnJhtrdND46/ol5qqyTbDCb
-         dMisksMG4DqxK2HkGUYp//nXPXBDm+gfU7FcPwRNVnpc4HoT6AyCx3JrGYXI6mshI66g
-         VNgJkLESWaBBhjZ48zbVer/wLqfeSwi5Y3dpFLDctq5g63xFW9SuZoWPn1J5rwnUkke7
-         H+iGg0jCw+La3oIgqolo20qQrnKpWUok65Tv6ZxSA2MVu4GkXLePC8q0UGafs9b+hz5g
-         CgmQcO13pcql1+l9SmnFZ1AKQg9Qq9SCY9J3BlTJrdRfPQErwEqs+bHSXvLNiMPnxbwe
-         SMYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkRA3C3WWI0wFhE8lOOpRDmdgTNNGuvVA16oqmBWSguD6KYnC7JlGFdmO3otyrBrRi7/WO7h9atGTrW0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEu2PO+yWuROnsBXtiSYAKpiNHXahZp5If8wELus98qRyx+cnh
-	BxqQZsBbhKlkHskwlAESq39Q96j4MQBXYxug5K9N/buxzMUVC9YK5OEIH6J/HQdzXrl9i08dcA7
-	dC7fva2u46rUyW3L/KVjk/1LFbDuU9DVl53V03w==
-X-Gm-Gg: ASbGncv9f+/FVVGEGXI8xxYljiqZFskwfNrBqw//sYQiEqUjCXln4fgcICS+H41hJFg
-	ebhDbjqnkNXBKsnc4WLADRnLKVlH/e2OReQlX9QemscLFGVXyLQ1Y0wq/1nRbBdoYrlPL21aKA3
-	MfvpGAB4WS5hzqVw7400w=
-X-Google-Smtp-Source: AGHT+IG7rZTE99WK1bHTOSOgL8Ei1b2E10Kh9ByX6KEwCjeK4vA8bx+QufdyTPIfemEXj3xR90xjsvbo9nLMMoN+O1w=
-X-Received: by 2002:ac8:5946:0:b0:476:83d6:75ed with SMTP id
- d75a77b69052e-47aec4c3d0cmr197368441cf.34.1745247363105; Mon, 21 Apr 2025
- 07:56:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxZbrc0x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745247411; x=1776783411;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AfpQFdxWYCGW2yOTHE8xiNehlAmZLJGt8hAkUsyBys4=;
+  b=bxZbrc0xMog25WV91gFFkSxs4D1mV6AiAfkDsXaoH32edg9YJxYwldiN
+   dR5hPOniRU2b+yPBACuzuHu3jy8q9uoQSli7EFEflfxA/mXPjIiNdLORP
+   4Vr4wE2lVDK5SnCEHdgprog5LbQ2u/SqpG5hPXaBJuazgNHE9QKVXlqNB
+   WwMgpjGio+6uVPJc1BC3zm+/EehZf6T7WG41ljfwCMM16N/b3JdI+ouTt
+   yYV6cMtIkxi7TvvYOmHzw0k9R/6GOoMiBuxtIF5ChUYv0m90ZPKvdnWjt
+   E5y00CPlp6Mv6Xif6jsyAsgxLCOhsnnItzhVYho4psu8p8KN+H1J+zDSe
+   g==;
+X-CSE-ConnectionGUID: aD03p8bOQfac88NVQua54g==
+X-CSE-MsgGUID: iqYRr0FdSU6uHGcAy8Fl0g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46672335"
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="46672335"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
+X-CSE-ConnectionGUID: 6JZXDHGERSiknRZmBk4bKQ==
+X-CSE-MsgGUID: 89xj+DvxTomTnKHLHNyFsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="131491346"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 07:56:50 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id ED29A20B5736;
+	Mon, 21 Apr 2025 07:56:45 -0700 (PDT)
+Message-ID: <f142d45d-4164-4883-ac4c-ea5b1c20c1c0@linux.intel.com>
+Date: Mon, 21 Apr 2025 10:56:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142525.78088-1-mclapinski@google.com> <6805a8382627f_18b6012946a@iweiny-mobl.notmuch>
-In-Reply-To: <6805a8382627f_18b6012946a@iweiny-mobl.notmuch>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 21 Apr 2025 10:55:25 -0400
-X-Gm-Features: ATxdqUG02lj5rHej_8Beu9BNKw0fpQPgfWQ79J7N0ZJ28950dBS1dnNGeIj5FpI
-Message-ID: <CA+CK2bD8t+s7gFGDCdqA8ZaoS3exM-_9N01mYY3OB4ryBGSCEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] libnvdimm/e820: Add a new parameter to configure
- many regions per e820 entry
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Michal Clapinski <mclapinski@google.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, nvdimm@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix lbr event can placed into non lbr
+ group
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250412091423.1839809-1-luogengkun@huaweicloud.com>
+ <342ad7ad-417b-446d-8269-521a1ce9a6c6@linux.intel.com>
+ <7b7642b8-2608-4349-b3cd-3c42eaafcabd@huaweicloud.com>
+ <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <231276ba-bcdd-4d88-af07-4afe46da179b@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 20, 2025 at 10:06=E2=80=AFPM Ira Weiny <ira.weiny@intel.com> wr=
-ote:
+
+
+On 2025-04-19 12:50 a.m., Luo Gengkun wrote:
+> 
+> On 2025/4/19 10:25, Luo Gengkun wrote:
+>>
+>> On 2025/4/14 22:29, Liang, Kan wrote:
+>>>
+>>> On 2025-04-12 5:14 a.m., Luo Gengkun wrote:
+>>>> The following perf command can trigger a warning on
+>>>> intel_pmu_lbr_counters_reorder.
+>>>>
+>>>>   # perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+>>>>
+>>>> The reason is that a lbr event are placed in non lbr group. And the
+>>>> previous implememtation cannot force the leader to be a lbr event in
+>>>> this
+>>>> case.
+>>> Perf should only force the LBR leader for the branch counters case, so
+>>> perf only needs to reset the LBRs for the leader.
+>>> I don't think the leader restriction should be applied to other cases.
+>>
+>> Yes, the commit message should be updated.  The code implementation only
+>>
+>> restricts the leader to be an LBRs.
+>>
+>>>> And is_branch_counters_group will check if the group_leader supports
+>>>> BRANCH_COUNTERS.
+>>>> So if a software event becomes a group_leader, which
+>>>> hw.flags is -1, this check will alway pass.
+>>> I think the default flags for all events is 0. Can you point me to where
+>>> it is changed to -1?
+>>>
+>>> Thanks,
+>>> Kan>
+>>
+>> The hw_perf_event contains a union, hw.flags is used only for hardware
+>> events.
+>>
+>> For the software events, it uses hrtimer. Therefor, when
+>> perf_swevent_init_hrtimer
+>>
+>> is called, it changes the value of hw.flags too.
+>>
+>>
+>> Thanks,
+>>
+>> Gengkun
+> 
+> 
+> It seems that using union is dangerous because different types of
+> perf_events can be
+> placed in the same group.
+
+Only the PMU with perf_sw_context can be placed in the same group with
+other types.
+
+> Currently, a large number of codes directly
+> access the hw
+> of the leader, which is insecure. 
+
+For X86, the topdown, ACR and branch counters will touch the
+leader.hw->flags. The topdown and ACR have already checked the leader
+before updating the flags. The branch counters missed it. I think a
+check is required for the branch counters as well, which should be good
+enough to address the issue.
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 16f8aea33243..406f58b3b5d4 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4256,6 +4256,12 @@ static int intel_pmu_hw_config(struct perf_event
+*event)
+ 		 * group, which requires the extra space to store the counters.
+ 		 */
+ 		leader = event->group_leader;
++		/*
++		 * The leader's hw.flags will be used to determine a
++		 * branch counter logging group. Force it a X86 event.
++		 */
++		if (!is_x86_event(leader))
++			return -EINVAL;
+ 		if (branch_sample_call_stack(leader))
+ 			return -EINVAL;
+ 		if (branch_sample_counters(leader)) {
+
+> This part of the logic needs to be
+> redesigned to void
+> similar problems. And I am happy to work for this.
 >
-> Michal Clapinski wrote:
-> > Currently, the user has to specify each memory region to be used with
-> > nvdimm via the memmap parameter. Due to the character limit of the
-> > command line, this makes it impossible to have a lot of pmem devices.
-> > This new parameter solves this issue by allowing users to divide
-> > one e820 entry into many nvdimm regions.
-> >
-> > This change is needed for the hypervisor live update. VMs' memory will
-> > be backed by those emulated pmem devices. To support various VM shapes
-> > I want to create devdax devices at 1GB granularity similar to hugetlb.
->
-> Why is it not sufficient to create a region out of a single memmap range
-> and create multiple 1G dax devices within that single range?
 
-This method implies using the ndctl tool to create regions and convert
-them to dax devices from userspace. This does not work for our use
-case. We must have these 1 GB regions available during boot because we
-do not want to lose memory for a devdax label. I.e., if fsdax is
-created during boot (i.e. default pmem format), it does not have a
-label. However, if it is created from userspace, we create a label
-with partition properties, UUID, etc. Here, we need to use kernel
-parameters to specify the properties of the pmem devices during boot
-so they can persist across reboots without losing any memory to
-labels.
+OK. Please share your idea.
 
-Pasha
+Thanks,
+Kan
+> 
+> Thanks,
+> Gengkun
+>>>> To fix this problem, using has_branch_stack to judge if leader is lbr
+>>>> event.
+>>>>
+>>>> Fixes: 33744916196b ("perf/x86/intel: Support branch counters logging")
+>>>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>>>> ---
+>>>>   arch/x86/events/intel/core.c | 14 +++++++-------
+>>>>   1 file changed, 7 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/
+>>>> core.c
+>>>> index 09d2d66c9f21..c6b394019e54 100644
+>>>> --- a/arch/x86/events/intel/core.c
+>>>> +++ b/arch/x86/events/intel/core.c
+>>>> @@ -4114,6 +4114,13 @@ static int intel_pmu_hw_config(struct
+>>>> perf_event *event)
+>>>>               event->hw.flags |= PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>>       }
+>>>>   +    /*
+>>>> +     * Force the leader to be a LBR event. So LBRs can be reset
+>>>> +     * with the leader event. See intel_pmu_lbr_del() for details.
+>>>> +     */
+>>>> +    if (has_branch_stack(event) && !has_branch_stack(event-
+>>>> >group_leader))
+>>>> +        return -EINVAL;
+>>>> +
+>>>>       if (branch_sample_counters(event)) {
+>>>>           struct perf_event *leader, *sibling;
+>>>>           int num = 0;
+>>>> @@ -4157,13 +4164,6 @@ static int intel_pmu_hw_config(struct
+>>>> perf_event *event)
+>>>>                 ~(PERF_SAMPLE_BRANCH_PLM_ALL |
+>>>>                   PERF_SAMPLE_BRANCH_COUNTERS)))
+>>>>               event->hw.flags  &= ~PERF_X86_EVENT_NEEDS_BRANCH_STACK;
+>>>> -
+>>>> -        /*
+>>>> -         * Force the leader to be a LBR event. So LBRs can be reset
+>>>> -         * with the leader event. See intel_pmu_lbr_del() for details.
+>>>> -         */
+>>>> -        if (!intel_pmu_needs_branch_stack(leader))
+>>>> -            return -EINVAL;
+>>>>       }
+>>>>         if (intel_pmu_needs_branch_stack(event)) {
+> 
+
