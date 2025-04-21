@@ -1,107 +1,96 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DF12641F4;
-	Mon, 21 Apr 2025 11:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAFE262D29;
+	Mon, 21 Apr 2025 11:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235655; cv=none; b=u+htLhft8nOqCuS7I9HGFJvfAsfArDN8rDzJebS/WWWGcJRkJe7UKwct3GYUhhQ9VQs7g3oH2hQ5JK8GL6EVpsn7TjY9ewQ3jTHiuMRWV9YA5BcPRyUzr8+Fv/XINaYVwRtQp2BLR1a1+Os2pUaoXYHHbrgfx0nm6ZBeMSxIn+c=
+	t=1745235850; cv=none; b=V/JlvTB5DXEe3RWY16/M9f98fEut9+fIq09CM5xezh0PVbaYi+txdrhiSDv2gfJ3vyu+pyxI4GwdbcQdLlzn6AAkxfj6jHsWYNOi/85ILInkzyj+3uWcF2GiotqDXXG1vpESLX5oDSdKaiecAty1nxfQZpQ5TfpYGP7LDNcdxKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235655; c=relaxed/simple;
-	bh=+G+QJR8daWICJSND6Y6z9zPJMawS12+eS2mqBW9L5cI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Ho3dPZzUWk5DTodifVWrDiF/aGoZPmZb/gPdjSBn2nEF2MF0WazA70V/lvZndJ5EL3hDSwqGIW8BRhZ7ofwXvVpfHGCBzGF8r9pakYavCV5eIzeR/8a+mfXXBp0WY/jBX7iG1zTr7RPspb8IqdpOUmqijQVtZ4PmZv00n0l1vVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Bh11iVxV; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1745235850; c=relaxed/simple;
+	bh=KFt7KVz7z+ivKXjqeTBsn4Dyd+33+BcExIfbhTDS1iM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fX8/5QLaroeS5oMLsMekoDI6uxuio3O84aWMvYIXhK+qkvhY3jWp8g5bmTEAe/1eS5JFvY6r4nPFp5qU9N8YJG5/Fu/SAlVbefKrvuKlMA6vmm1CapH3AOBUWlwaYRb3qF0tdo8+vVkoe+3X/dIXEOY4+r8ZMfrppkY2VJKs8go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bsc3jUwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Bh11iVxV"
-Received: from localhost (web.docker-mailserver_default [172.18.0.2])
-	by mail.mainlining.org (Postfix) with ESMTPSA id D24EBBBAD3;
-	Mon, 21 Apr 2025 11:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1745235650;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dzZQUtNftwdikjUTgmz8pxhPpBMvvcvZ+Al8SAKHIww=;
-	b=Bh11iVxVrek3iHmj7JnmhVDudJBjbYPbDN3/q3LAjd+grbzf/l+yMiggD/ihDGJVJasJMM
-	L2NrCYKzdVxrIdVNZgitTnvb/IS+sdBKdZe9G92zPOzdKF0b+iA86fX6psU97TDcHHOPBu
-	PwrifjQTZT9yjEeWOH0D2aPuB2F2s+DLqBVFHghTEL6bd3m90mBOLsvjRecWTQfKDIS79F
-	7WTf4Inc4aU7iGjURdf052g+ZfqGwzWUm3kGEMOa0zw5Pp3X2RrIb1h0n804IkN/inb6nn
-	IxBCTN++oSiuKWM+rEkIi1VDQqcZPmCxsL+w5ABAUYwf5SJRSKEXh4ddRt9axw==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bsc3jUwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358B9C4CEE4;
+	Mon, 21 Apr 2025 11:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745235849;
+	bh=KFt7KVz7z+ivKXjqeTBsn4Dyd+33+BcExIfbhTDS1iM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bsc3jUwPwu0cl688/IsxDAm3p5IvXzLuH34bn5XkG3BqIVWMHJ8Orv0GhYh7UYRRp
+	 Fm1tuVJKv71Q2cOCrqERDUptmbc6eSTLlrbBrf8H4Br7ldYCivPhj3v2Ivyr3xpbRJ
+	 9uAVJkgUQPp29ftVxqVbgKwhrOHAyCn0RQU3yph8/qZNs0gvP9UX40Qek11VuWp3lt
+	 utoIZykp8yz36KaTmXPm9HJsIM4WsIE/qlqmpKtD9lEoY0AFp+hNZPEhbXhH2eytct
+	 yi8DP6MBGl83NWLD0IREMdVRoKfypDu56MdJT3pu/JA9Y//zsBqU6D/FSXk8euc82P
+	 IkP08kQExrTCA==
+Date: Mon, 21 Apr 2025 12:44:01 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
+ linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH v4] staging: iio: ad5933: Correct settling cycles
+ encoding per datasheet
+Message-ID: <20250421124401.0daa6a2e@jic23-huawei>
+In-Reply-To: <20250420013009.847851-1-gshahrouzi@gmail.com>
+References: <20250420013009.847851-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 21 Apr 2025 13:40:50 +0200
-From: barnabas.czeman@mainlining.org
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
- <mathieu.poirier@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
- Jassi Brar <jassisinghbrar@gmail.com>, Konrad Dybcio
- <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Weiss
- <luca@lucaweiss.eu>
-Subject: Re: [PATCH 1/2] rpmsg: qcom_smd: Fix fallback to qcom,ipc parse
-In-Reply-To: <viki5krjvs3vs5jf2lrhah6v5rziqju7jv5kbwz7yyvdfjwhh5@6gieypw5owfp>
-References: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
- <20250421-fix-qcom-smd-v1-1-574d071d3f27@mainlining.org>
- <viki5krjvs3vs5jf2lrhah6v5rziqju7jv5kbwz7yyvdfjwhh5@6gieypw5owfp>
-Message-ID: <114814a2fc59b0fa3dd5a2863394c0f2@mainlining.org>
-X-Sender: barnabas.czeman@mainlining.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-21 12:38, Dmitry Baryshkov wrote:
-> On Mon, Apr 21, 2025 at 04:04:16AM +0200, Barnabás Czémán wrote:
->> mbox_request_channel() returning value was changed in case of error.
->> It uses returning value of of_parse_phandle_with_args().
->> It is returning with -ENOENT instead of -ENODEV when no mboxes 
->> property
->> exists.
+On Sat, 19 Apr 2025 21:30:09 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+
+> The AD5933 datasheet (Table 13) lists the maximum cycles to be 0x7FC
+> (2044).
 > 
-> Why? What is the rationale?
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/of/base.c#n1390
-mailbox: use error ret code of of_parse_phandle_with_args() this commit 
-was changed the return value
-from ENODEV to use retrun value of of_parse_phandle_with_args what is 
-returnung with EINVAL or ENOENT.
-It makes skipping fallback path to parse qcom,ipc if there is no mboxes 
-property defined.
-As far as I know qcom,ipc now only needed for rpm smd-edge on some SoCs 
-like 8939, 8916, 8976, 8917.
-arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM
+> Clamp the user input to the maximum effective value of 0x7FC cycles.
 > 
->> 
->> Fixes: 24fdd5074b20 ("mailbox: use error ret code of 
->> of_parse_phandle_with_args()")
->> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->> ---
->>  drivers/rpmsg/qcom_smd.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
->> index 
->> 40d386809d6b78e209861c23d934e1b9fd743606..e552a9af578e48cfd854a228a4d91e4fa04bf29d 
->> 100644
->> --- a/drivers/rpmsg/qcom_smd.c
->> +++ b/drivers/rpmsg/qcom_smd.c
->> @@ -1368,7 +1368,7 @@ static int qcom_smd_parse_edge(struct device 
->> *dev,
->>  	edge->mbox_client.knows_txdone = true;
->>  	edge->mbox_chan = mbox_request_channel(&edge->mbox_client, 0);
->>  	if (IS_ERR(edge->mbox_chan)) {
->> -		if (PTR_ERR(edge->mbox_chan) != -ENODEV) {
->> +		if (PTR_ERR(edge->mbox_chan) != -ENOENT) {
->>  			ret = PTR_ERR(edge->mbox_chan);
->>  			goto put_node;
->>  		}
->> 
->> --
->> 2.49.0
->> 
+> Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+I'm taking this the slow path as it has been wrong a very long time
+and there is a lot of churn on IIO staging drivers right now so we may
+have other stuff that I don't want to delay building on top of this.
+
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+Jonathan
+
+> ---
+> Changes in v4:
+> 	- Provide clear git body description.
+> Changes in v3:
+> 	- Only include fix (remove refactoring which will be its own
+> 	  separate patch).
+> Changes in v2:
+>         - Fix spacing in comment around '+'.
+>         - Define mask and values for settling cycle multipliers.
+> ---
+>  drivers/staging/iio/impedance-analyzer/ad5933.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> index d5544fc2fe989..f8fcc10ea8150 100644
+> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
+> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
+> @@ -411,7 +411,7 @@ static ssize_t ad5933_store(struct device *dev,
+>  		ret = ad5933_cmd(st, 0);
+>  		break;
+>  	case AD5933_OUT_SETTLING_CYCLES:
+> -		val = clamp(val, (u16)0, (u16)0x7FF);
+> +		val = clamp(val, (u16)0, (u16)0x7FC);
+>  		st->settling_cycles = val;
+>  
+>  		/* 2x, 4x handling, see datasheet */
+
