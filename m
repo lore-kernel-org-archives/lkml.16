@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BB322ACDC;
-	Mon, 21 Apr 2025 22:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55E922D798;
+	Mon, 21 Apr 2025 22:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745275500; cv=fail; b=cPknR56MVtZbFeXck2qSpTzz3KjhHmyXxaqQaQz37tZ/v7AE17QixPDvcKcdFh/pzrv/xIZlGBABnKV0+JBsPMTHXVAxKgTi8x21P/J7V8rOmhOX1yMfYh3IRWOWJTaYCHE2lq9oOUEiaoQ+4W9EHuPCuTQeQyn58mTtH7tB6Pk=
+	t=1745275505; cv=fail; b=BfC6sYDrmSwXLZrrzzS3G4cIcHtnrG2MD7r8lYpOsmBfNHt1ZCeAnXrh2SpeNVnyV39pQMIN4KvFNHLrZiOcL/wetm85N/UctQOiCK+BocEVZgp02CDBPPHmPjTq/M8y1jpwUY3BeV0TvU6igpGWFoVezG8o94IrTY3jTps1B9k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745275500; c=relaxed/simple;
-	bh=3+q03Qa+y/s793yB/jaQsKdbvGmViY4iofM5JSf8N1s=;
+	s=arc-20240116; t=1745275505; c=relaxed/simple;
+	bh=YmAZ98FGE5yZosoHO1WxM0on4DpDSL/+lwqnIT6GEhM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhDwmus08RO37Z4J76f6DTxX1CK+Fl91Hd2PJjL35nE/IKeoMuf1gY++p8Cw8aea66x+3k7qBehrb1fS034DY5zs7KCFrePdVB7PY5VF6csgCjtKJEr0acgw+F7/x89y5lD9nR4eyPg31FuhhOgCopt+erQiuJxXuJJODrx9rrA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DYAVvvPN; arc=fail smtp.client-ip=40.107.237.60
+	 MIME-Version:Content-Type; b=UbjhXJkApgptOkvK8zGx48oGM7L0qcUGaNMqBVh4FC7Ks0mufKZXyGBywFrORK2GWz8PxuSXGeKxoKPrmdiyr8pr7Y3Ax5j5k5fcw25X7r5uWfkQ/aJ4rTxetWkv6frrqmRVEW4HwvI+2HEnxxbYoh26zfPKw3ARbK+cpuWq0xw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NIB9V8A2; arc=fail smtp.client-ip=40.107.93.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DYAVvvPN"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NIB9V8A2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vg7zb26RCIOvKN9Qf5FSF79SDAvkI8Hf1aKBLLTzIglu40ZKsFLETbHXLAoFjyAoAyZGZhzR0TMy3cVEjnaRYAnVgkNdwX+HdY3ca33DUt+1dgQmwjmzWetkQubn570yHHH3J5f6BgZ5wl0RT5/KRPGu8aitxwH+Z4ALJ9ePvzvZdwJsBgwgAc7Nj7lpvK3u9YSWRALPa9QHkmqQ2q3IxCBWoNdHtrl2TqMIQm3JqU47xTCsmsNzqOr4zEbM/WA8vOC2nF9c1SnMCszZ4JpzPPlbdkfvL/wy5xzUeHCJSSDo5OWyg/jLWSC5g0cj8deZ3W1hhRnUvMYdGP87ZnmDBw==
+ b=SFRGNgg3AHyl0mElKbecAf8QLAUrnkHqSTj5hT7o1mf4YsP22RroPP6+MnrzlF0Y0mSg6gmEVtbiBuyt516oYi4P7xY9MtDofjZ7HuPzDN6cXbiUsSpv/SGmy4w9h2UEBT5FBbH8Tw5SgjTQlFoVB86p/C2SlByWjRJIkF45PnFhu7wLGq+2S/WqFoi+yYkqM3qNN3OJOmmPgDtrLUAq0Qkw71NOpFvnvA4Vtg1oBW04SWyI8kz/XnHKE1cQ3iFhtKfHlF2zUipkrfrTwOyARMaT5TVyje2FY77qIzUe114UEts5nf55Y9MzPrAGa0/+dTd4Qw9m5oXaQ5t+yS/I7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5/7Rk83BXoZrGAdBKfi/Exznj/2AGDtvfEVWmiTZT3o=;
- b=C533vA466iVxjTyU1PCXzRNrcxAtUnEd7hBUaTqjuhbs9708eU7vWJmWGjfhKdFtRMmdxKoJlrQaq5RUD9q14MyA/eByCYJXlzsMyqwC0feepFqZxRP+hJ4dDyKCaKLjS4sGojkFg6iHS1WzrTaI97K7Vp9z7yg3NIFLG//daHQGCtGxYEwaVV0E1Ro/pvpouH127KG1t5s8IGFontEzSq7ICQjyv0Uh4m4QZRyYuMU1f0sSFqddI9vAGg671VkMk07mZ1CCjYxYmKjxHefTsECcGoK4DFz6BD661nrE0OExekD4bi4aEdM1Xo1SeFXxlLjhJImucV/R/L1RgWzG8w==
+ bh=PMz2l4lgKeZHEcro94D4plqTbowCf9xCuLJClvO8EnY=;
+ b=rw9RfW7AorxMuJ1FWckm+9teKecARyzJCIUmaDtvxut8uDv75lILwlexeJ8369v+sNdblL7G0hBxjqy70m1r7rbH0fXuDA5IrjNa6swBfghcv+Ri7pDeSzkHI4X5fy+5//LlF5K6ppWZzo6W19KUR3E5l+XMFNEcRsF9iDT/q1gGotrymy2steScGvu4pRp0MfFKvQ+NT3Jmf0DctXjgXCPpRe+VpnP8SwrtbNtMVMlUuUoF+JX05gloSDFcnhdjOhCVEnHIAVRTQYMLUI/U2t9hPJAenwn4ZYxQ3cwXzZS6Za4wzblg3pgzIE3K8lZTC8JDW14wQWoswjzmRJ/qjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5/7Rk83BXoZrGAdBKfi/Exznj/2AGDtvfEVWmiTZT3o=;
- b=DYAVvvPNEokmhbTga+cMDIPa7QYrmHB4Gajm42Xiy1c+7Eni9VL9y2NauahsZbKXa58Ep655iVBrGhhaXnmm+CkR52FvZhu3v7r+howLZUgI8kQohES+VjpeXPFPS913Ii356xDhN1rKfTJXiKy1Urb9vX7m19FAU13mEqjkWDM=
-Received: from BN9P221CA0004.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::12)
- by MW4PR12MB6706.namprd12.prod.outlook.com (2603:10b6:303:1e2::11) with
+ bh=PMz2l4lgKeZHEcro94D4plqTbowCf9xCuLJClvO8EnY=;
+ b=NIB9V8A218e1GIbRtp6VwCdlgiOgHUSXuy9xPpT2ZF1/3b7l0fp2YuuKhOqn3qVKT9P2tYY6wBuJZbkh2cc/xqWaF1s9ScTVWqhPUlULJ7RxF3RYlB7UnVw7vNU74msyvVtMTvoTTkUGqcTLEdvkukl94VXB3uZFcHzj6fAGkAk=
+Received: from BN0PR02CA0053.namprd02.prod.outlook.com (2603:10b6:408:e5::28)
+ by SJ2PR12MB8062.namprd12.prod.outlook.com (2603:10b6:a03:4c8::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 21 Apr
- 2025 22:44:53 +0000
-Received: from BN3PEPF0000B36E.namprd21.prod.outlook.com
- (2603:10b6:408:10a:cafe::5a) by BN9P221CA0004.outlook.office365.com
- (2603:10b6:408:10a::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Mon, 21 Apr
+ 2025 22:45:00 +0000
+Received: from BN3PEPF0000B371.namprd21.prod.outlook.com
+ (2603:10b6:408:e5:cafe::a) by BN0PR02CA0053.outlook.office365.com
+ (2603:10b6:408:e5::28) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Mon,
- 21 Apr 2025 22:44:52 +0000
+ 21 Apr 2025 22:44:59 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B36E.mail.protection.outlook.com (10.167.243.165) with Microsoft
+ BN3PEPF0000B371.mail.protection.outlook.com (10.167.243.168) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.1 via Frontend Transport; Mon, 21 Apr 2025 22:44:52 +0000
+ 15.20.8699.1 via Frontend Transport; Mon, 21 Apr 2025 22:44:59 +0000
 Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
- 2025 17:44:49 -0500
+ 2025 17:44:57 -0500
 From: Babu Moger <babu.moger@amd.com>
 To: <tony.luck@intel.com>, <reinette.chatre@intel.com>, <tglx@linutronix.de>,
 	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
@@ -69,9 +69,9 @@ CC: <babu.moger@amd.com>, <corbet@lwn.net>, <x86@kernel.org>, <hpa@zytor.com>,
 	<Xiaojian.Du@amd.com>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <james.morse@arm.com>, <fenghuay@nvidia.com>,
 	<peternewman@google.com>
-Subject: [PATCH v4 5/8] x86/resctrl: Add user interface to enable/disable io_alloc feature
-Date: Mon, 21 Apr 2025 17:43:49 -0500
-Message-ID: <963710cb374d55856053989e4edc61d7fd033662.1745275431.git.babu.moger@amd.com>
+Subject: [PATCH v4 6/8] x86/resctrl: Introduce interface to display io_alloc CBMs
+Date: Mon, 21 Apr 2025 17:43:50 -0500
+Message-ID: <784fbc61e02e9a834473c3476ee196ef6a44e338.1745275431.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1745275431.git.babu.moger@amd.com>
 References: <cover.1745275431.git.babu.moger@amd.com>
@@ -87,311 +87,124 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36E:EE_|MW4PR12MB6706:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1420f62-4e03-484c-20d3-08dd81262172
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B371:EE_|SJ2PR12MB8062:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58d192c4-ac30-42f1-4b7e-08dd81262565
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lWUgZ6L7vxd9z1+juA6XFvzf+Of5+o4ySxbpeWQoxgVcA1A0XcbeXhYcWzRN?=
- =?us-ascii?Q?VrtsgYtBG7bKI4edXXqv0qo77A/MhRB6hRUT0uGY9W1NYLsW99W7s4ryZE5y?=
- =?us-ascii?Q?ZEtvQ5kJe3cqVFYhpcknganLNVMHWZRs1zohyVF4MvqxjwKdrmsSHvOcp4HW?=
- =?us-ascii?Q?QKD2d052+/S85djj0AuUh/vQz/dpFGBFMqcuIkwWmOuKOIlelSaNJosGxvQs?=
- =?us-ascii?Q?JXIC76zWGHfGOUdokIEkBoxwkRR1dwTDFSGNecjTUG0jM3dC5gCS5Q9Wsky1?=
- =?us-ascii?Q?rwgUzewqVYxwuU10i0Q8iLLOQ4f2CeFggvWIl4FgYdFCSwrDa9UkhrX0gm8U?=
- =?us-ascii?Q?cchwrrFh2FejLhyOp97dzf5uZWAF2YISa0QIi4GMKjrdQi4BO0FqzbMmar0q?=
- =?us-ascii?Q?J+yuQw8sKMjSykS0ocuxQtIJqmj0qp3lzmbsTOc7oWQH89rouW672dv0z41q?=
- =?us-ascii?Q?FyEwp8Ll+csabA5Hd1AysBpN+SdEwrdcnlpf91T8TSQHCNUFH+d3Q1HxFqWn?=
- =?us-ascii?Q?oIytdhDDZeaPuqdI0cUGl07eeCT3YWAsn6F/f/PmjdVXDI5B29gY6pszu1ni?=
- =?us-ascii?Q?y/oXkQLdftotj7w+2LT8Xxqr7XbP5IlfxmjTTojAezRL+W9qG31xDmifICGx?=
- =?us-ascii?Q?k0m9waC12hVcLMdh6ji2swXdpFbjIlZ91jlAHw8QkzpL5f+9lXOTGQKTQHXl?=
- =?us-ascii?Q?LUBW+bMYmpCG4cJ+MN6CGo0JFEKmfcnHerskrPJw4iGDwofqRLIhLCMrzUdJ?=
- =?us-ascii?Q?sl43WETWiZwFkr6GRNQCLaegwg1K7KXFAHWh7FF88eFzvpXYG201/J0uP3tU?=
- =?us-ascii?Q?m4FtzQ0jYDQbIxDi92cOxWNeSa5tJjO2/po0ucd4rdToa9QwH6WYgHymgu9z?=
- =?us-ascii?Q?UNcf5idjwAKnMGWfWk6Rw5FaJSfQln1DfqXgn4N7CngVhO+ty5B7d6Q9/h43?=
- =?us-ascii?Q?Dkp8tudHMokh3RuK+88uqgbsZRqjAs/pgAQUuhIJalsLzCyFwiCp7YIOOaYx?=
- =?us-ascii?Q?aUblYSVGZmIRaPjsCQghNlqC18uBPx7PVKjlKJ4tz9ahoYR4271o4EKXcWZq?=
- =?us-ascii?Q?4xKjgrBXS4zwkhSoxswGj2ZVBpLASA8OOLE2p9tfhrdLfO+NkbimJwb7egtl?=
- =?us-ascii?Q?gFHPZFOOvHTWa48stcknPwzOOajOn3+Kg+Ux1M6GM/HkBwU9oDwI2x69fF4l?=
- =?us-ascii?Q?vYJJXjBQ8zYqYWYdWRAPcOzD21QPdnqH32ykbws22D1cY+8SPcCmCl312LOk?=
- =?us-ascii?Q?Oy9kwIZjHfTzNqjDahzC9EoBDHHesobB3soWtSSIBFQzVVdKFIWRqKbTtjGT?=
- =?us-ascii?Q?BjWQn1A/oEV7usYgrtGktCJDCLJbIFuB9TrGExh+Fwh3rSdm1ZwSvLnrqhzC?=
- =?us-ascii?Q?HmU76fQPywEX8XVDX3NjrML0wlu76Qvv/RxmVOGeD+X3nPpkzRvMOSMPqTMy?=
- =?us-ascii?Q?P7lS/2Xks9SJUdOtg4tBGfiJHSpQ//yKWBeAUmWLFAD/wt8IUfUcJDIxbk4V?=
- =?us-ascii?Q?kq2PGmJSb3xUNes=3D?=
+	=?us-ascii?Q?NKUBOXUlk98GMAS6EdLP0UQg4i8F2rZEVa9Pv5w1lUO++lXZf9LdtTVA+X9Z?=
+ =?us-ascii?Q?qQiR3GJc0UrtMN69cNdWqoLHMJeR81wRBJv2w9XQMcF7fUHfUEz7DQ3qsbf2?=
+ =?us-ascii?Q?K29s4bUIcJsPENfX7Vd/zIgJZBFD9Oy76PUWhBqqxdAHXcwfkxCS0aw2QzKp?=
+ =?us-ascii?Q?lTMFW0+o+sXytzSMz3rsC0/aT8tTpNBXhrHN3kyoJs44XFXt2r10Gi/40ncv?=
+ =?us-ascii?Q?yQnFcuLHjG5m1BURpjA6y7oTmJYj42r925vqGaFROMBSTW3dC+OQGMC5lQK4?=
+ =?us-ascii?Q?H+daIAA1+e2TTjNAbe/dnte07Zdrd3KxDb5nNj+dxMNT9jHjOPe5gGiCmBxU?=
+ =?us-ascii?Q?IQZi3NkNHlr0KpeQAA+j9W4tSHf1Ao0xoXZnhILso7oDSDrGMxenKHS9UQuF?=
+ =?us-ascii?Q?hK8nFdYPWYWBJxRC4CAiYhjf5FqUdPxfUJ4beyzQCKFGjWJphyngHmjQEcjF?=
+ =?us-ascii?Q?M3PMh5/L3BRdpNvlkQFMIhtl4hhH6FPist9ytV0gp0Ns0RT7ERNcxZOwK8vy?=
+ =?us-ascii?Q?lbXEUunLOmHsEBj1zWpGMuxCZiXFWSjJE1xWxTTNaTHrlHL6tsPOL5tqFtg1?=
+ =?us-ascii?Q?SCY9bZ65jVE/aTKijWsyhnddUHHmG9kGg/D4QuQekrlvCkZVK+bF64X3XEoI?=
+ =?us-ascii?Q?Ceeelljx0Mg4H73h7YyAFnHdrOffB9inFLsoZHvkLS+w1VtofVRo10XJ9YLY?=
+ =?us-ascii?Q?Vid8bXM5JFeVsvM7O1G9STRNE4c4NiswUgu4xJtIMCLpsFlf0fIiiC/2PM8N?=
+ =?us-ascii?Q?pT5EcphUfBV7XUP4wkYkgCCYSeCmYSGY1qUFawuOO5jFQTwpr/UOIjpDtLaK?=
+ =?us-ascii?Q?bsqqpXwnE8I9/cX7q2VgUIpIjKGg66JfHXggqehJYSN0RGjiHGMALRQhDEvs?=
+ =?us-ascii?Q?1ULKiDau/m3qIqW/MaFuzNVkGm94b8GGMXbzVrc4C0262mYMcKCH7d/G+B0d?=
+ =?us-ascii?Q?7s64PLkAhjgiEjXQ2WoLtS/hisKBy+I7N5KUV9IUCWcK0f52pldb2DuVNQ3q?=
+ =?us-ascii?Q?XhIzJUmiq8/upYaPswN+ek0rmc13KlH36r0qZZh9ND0Gb1CSNIRuxk1q0pbR?=
+ =?us-ascii?Q?7qL9JurMJb7LjpOYI4gGujZ3i6NQf7POmkyxLo8VDpCO2+p4ZXlUK6QZofEH?=
+ =?us-ascii?Q?ftTfD9i6XxeG5+4zT5R+bBFeXzj4aTo4EAlPnpUo2ONRsrnGsjyuSIswh9RL?=
+ =?us-ascii?Q?Jax7J/Ts/TN/n+RAn00aQLy/0pN+YOP9Z/V7ybGFGnTtRLHfWwsnmymGhSuO?=
+ =?us-ascii?Q?P8tAqBumCYYpEACboJujw52EqVpvaCgXQgPxMtiiRfOiw814WNyL3Wz9qFaO?=
+ =?us-ascii?Q?rlby8Al0Due72nJqRhesPjpEKr7HQHmAM1Yf6KZaCB0VZcC4YNxuSfw4hi8D?=
+ =?us-ascii?Q?9aDwZfCEgfLTiX0WLa990kOJ5weehi6OCuPycMWM05YKJV241OUDWqWohvaZ?=
+ =?us-ascii?Q?U2YXjIFw0XWDjnxdzX36q8GtdWe7Pp8Av6zsWeWDev9QT374mHhbfA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 22:44:52.5939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 22:44:59.2123
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1420f62-4e03-484c-20d3-08dd81262172
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58d192c4-ac30-42f1-4b7e-08dd81262565
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36E.namprd21.prod.outlook.com
+	BN3PEPF0000B371.namprd21.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6706
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8062
 
-The io_alloc feature in resctrl is a mechanism that enables direct
-insertion of data from I/O devices into the L3 cache.
+The io_alloc feature in resctrl enables system software to configure
+the portion of the L3 cache allocated for I/O traffic.
 
-On AMD systems, io_alloc feature is backed by SDCIAE (L3 Smart Data Cache
-Injection Allocation Enforcement). When enabled, SDCIAE forces all SDCI
-lines to be placed into the L3 cache partitions identified by the
-highest-supported L3_MASK_n register as reported by CPUID
-Fn0000_0010_EDX_x1.MAX_COS. For example, if MAX_COS=15, SDCI lines will
-be allocated into the L3 cache partitions determined by the bitmask in
-the L3_MASK_15 register.
+Add the interface to display CBMs (Capacity Bit Mask) of io_alloc
+feature.
 
-When CDP is enabled, io_alloc routes I/O traffic using the highest CLOSID
-allocated for the instruction cache (L3CODE).
-
-Introduce user interface to enable/disable "io_alloc" feature.
+When CDP is enabled, io_alloc routes traffic using the highest CLOSID
+used by a L3CODE resource. Add a check for the CDP resource type.
 
 Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
 v4: Updated the change log.
-    Updated the user doc.
-    The "io_alloc" interface will report "enabled/disabled/not supported".
-    Updated resctrl_io_alloc_closid_get() to verify the max closid availability.
-    Updated the documentation for "shareable_bits" and "bit_usage".
-    Introduced io_alloc_init() to initialize fflags.
-    Printed the group name when io_alloc enablement fails.
+    Added rdtgroup_mutex before rdt_last_cmd_puts().
+    Returned -ENODEV when resource type is CDP_DATA.
+    Kept the resource name while printing the CBM (L3:0=fff) that way
+    I dont have to change show_doms() just for this feature and it is
+    consistant across all the schemata display.
 
-    NOTE: io_alloc is about specific CLOS. rdt_bit_usage_show() is not designed
-    handle bit_usage for specific CLOS. Its about overall system. So, we cannot
-    really tell the user which CLOS is shared across both hardware and software.
-    We need to discuss this.
+v3: Minor changes due to changes in resctrl_arch_get_io_alloc_enabled()
+    and resctrl_io_alloc_closid_get().
+    Added the check to verify CDP resource type.
+    Updated the commit log.
 
-v3: Rewrote the change to make it generic.
-    Rewrote the documentation in resctrl.rst to be generic and added
-    AMD feature details in the end.
-    Added the check to verify if MAX CLOSID availability on the system.
-    Added CDP check to make sure io_alloc is configured in CDP_CODE.
-    Added resctrl_io_alloc_closid_free() to free the io_alloc CLOSID.
-    Added errors in few cases when CLOSID allocation fails.
-    Fixes splat reported when info/L3/bit_usage is accesed when io_alloc
-    is enabled.
-    https://lore.kernel.org/lkml/SJ1PR11MB60837B532254E7B23BC27E84FC052@SJ1PR11MB6083.namprd11.prod.outlook.com/
-
-v2: Renamed the feature to "io_alloc".
-    Added generic texts for the feature in commit log and resctrl.rst doc.
-    Added resctrl_io_alloc_init_cat() to initialize io_alloc to default
-    values when enabled.
-    Fixed io_alloc show functinality to display only on L3 resource.
+v2: Fixed to display only on L3 resources.
+    Added the locks while processing.
+    Rename the displat to io_alloc_cbm (from sdciae_cmd).
 ---
- Documentation/arch/x86/resctrl.rst     |  34 +++++
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 185 ++++++++++++++++++++++++-
- 2 files changed, 218 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  2 +-
+ arch/x86/kernel/cpu/resctrl/internal.h    |  1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 51 ++++++++++++++++++++++-
+ 3 files changed, 52 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
-index 6768fc1fad16..7672c5c52c1a 100644
---- a/Documentation/arch/x86/resctrl.rst
-+++ b/Documentation/arch/x86/resctrl.rst
-@@ -95,6 +95,11 @@ related to allocation:
- 		some platforms support devices that have their
- 		own settings for cache use which can over-ride
- 		these bits.
-+
-+		When the "io_alloc" feature is enabled, a portion of the cache
-+		is reserved for shared use between hardware and software. Refer
-+		to "bit_usage" to see which portion is allocated for this purpose.
-+
- "bit_usage":
- 		Annotated capacity bitmasks showing how all
- 		instances of the resource are used. The legend is:
-@@ -135,6 +140,35 @@ related to allocation:
- 			"1":
- 			      Non-contiguous 1s value in CBM is supported.
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index 0a0ac5f6112e..d1a59b56a456 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -454,7 +454,7 @@ u32 resctrl_arch_get_config(struct rdt_resource *r, struct rdt_ctrl_domain *d,
+ 	return hw_dom->ctrl_val[idx];
+ }
  
-+"io_alloc":
-+		The "io_alloc" enables system software to configure the portion
-+		of the L3 cache allocated for I/O traffic.
-+
-+		The feature routes the I/O traffic via specific CLOSID reserved
-+		for io_alloc feature. By configuring the CBM (Capacity Bit Mask)
-+		for the CLOSID, users can control the L3 portions available for
-+		I/0 traffic. The reserved CLOSID will be excluded for group creation.
-+
-+		The interface provides a means to query the status of feature support.
-+
-+		Example::
-+
-+			# cat /sys/fs/resctrl/info/L3/io_alloc
-+			disabled
-+
-+		Feature can be enabled/disabled by writing to the interface.
-+		Example::
-+
-+			# echo 1 > /sys/fs/resctrl/info/L3/io_alloc
-+			# cat /sys/fs/resctrl/info/L3/io_alloc
-+			enabled
-+
-+		On AMD systems, the io_alloc feature is supported by the L3 Smart
-+		Data Cache Injection Allocation Enforcement (SDCIAE). The CLOSID for
-+		io_alloc is determined by the highest CLOSID supported by the resource.
-+		When CDP is enabled, io_alloc routes I/O traffic using the highest
-+		CLOSID allocated for the instruction cache (L3CODE).
-+
- Memory bandwidth(MB) subdirectory contains the following files
- with respect to allocation:
+-static void show_doms(struct seq_file *s, struct resctrl_schema *schema, int closid)
++void show_doms(struct seq_file *s, struct resctrl_schema *schema, int closid)
+ {
+ 	struct rdt_resource *r = schema->res;
+ 	struct rdt_ctrl_domain *dom;
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 6ead222904fe..2ac78650500a 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -519,6 +519,7 @@ void resctrl_file_fflags_init(const char *config, unsigned long fflags);
+ void rdt_staged_configs_clear(void);
+ bool closid_allocated(unsigned int closid);
+ int resctrl_find_cleanest_closid(void);
++void show_doms(struct seq_file *s, struct resctrl_schema *schema, int closid);
  
+ #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
+ int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 85796a186374..d53a2068cde4 100644
+index d53a2068cde4..5633437ea85d 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -68,6 +68,7 @@ static char last_cmd_status_buf[512];
- 
- static int rdtgroup_setup_root(struct rdt_fs_context *ctx);
- static void rdtgroup_destroy_root(void);
-+static int rdtgroup_init_cat(struct resctrl_schema *s, u32 closid);
- 
- struct dentry *debugfs_resctrl;
- 
-@@ -199,6 +200,19 @@ void closid_free(int closid)
- 	__set_bit(closid, &closid_free_map);
+@@ -2042,6 +2042,46 @@ static ssize_t resctrl_io_alloc_write(struct kernfs_open_file *of, char *buf,
+ 	return ret ?: nbytes;
  }
  
-+static int resctrl_io_alloc_closid_alloc(u32 io_alloc_closid)
-+{
-+	if (__test_and_clear_bit(io_alloc_closid, &closid_free_map))
-+		return io_alloc_closid;
-+	else
-+		return -ENOSPC;
-+}
-+
-+static void resctrl_io_alloc_closid_free(u32 io_alloc_closid)
-+{
-+	closid_free(io_alloc_closid);
-+}
-+
- /**
-  * closid_allocated - test if provided closid is in use
-  * @closid: closid to be tested
-@@ -1033,6 +1047,31 @@ static int rdt_shareable_bits_show(struct kernfs_open_file *of,
- 	return 0;
- }
- 
-+/*
-+ * resctrl_io_alloc_closid_get - io_alloc feature uses max CLOSID to route
-+ * the IO traffic. Get the max CLOSID and verify if the CLOSID is available.
-+ *
-+ * The total number of CLOSIDs is determined in closid_init(),  based on the
-+ * minimum supported across all resources. If CDP (Code Data Prioritization)
-+ * is enabled, the number of CLOSIDs is halved. The final value is returned
-+ * by closids_supported() and stored in s->num_closid for each resource.
-+ * Make sure this value aligns with the maximum CLOSID supported by the
-+ * respective resource.
-+ */
-+static int resctrl_io_alloc_closid_get(struct rdt_resource *r,
-+				       struct resctrl_schema *s)
-+{
-+	int num_closids = closids_supported();
-+
-+	if (resctrl_arch_get_cdp_enabled(r->rid))
-+		num_closids *= 2;
-+
-+	if (num_closids != resctrl_arch_get_num_closid(r))
-+		return -ENOSPC;
-+	else
-+		return s->num_closid - 1;
-+}
-+
- /*
-  * rdt_bit_usage_show - Display current usage of resources
-  *
-@@ -1076,9 +1115,20 @@ static int rdt_bit_usage_show(struct kernfs_open_file *of,
- 		for (i = 0; i < closids_supported(); i++) {
- 			if (!closid_allocated(i))
- 				continue;
-+			/*
-+			 * If io_alloc is enabled, the CLOSID will be
-+			 * allocated but will not be associated with any
-+			 * groups. The region is available for sharing with
-+			 * io_alloc feature as well as resctrl groups.
-+			 */
-+			if (i == resctrl_io_alloc_closid_get(r, s) &&
-+			    resctrl_arch_get_io_alloc_enabled(r))
-+				mode = RDT_MODE_SHAREABLE;
-+			else
-+				mode = rdtgroup_mode_by_closid(i);
-+
- 			ctrl_val = resctrl_arch_get_config(r, dom, i,
- 							   s->conf_type);
--			mode = rdtgroup_mode_by_closid(i);
- 			switch (mode) {
- 			case RDT_MODE_SHAREABLE:
- 				sw_shareable |= ctrl_val;
-@@ -1877,6 +1927,121 @@ int resctrl_arch_io_alloc_enable(struct rdt_resource *r, bool enable)
- 	return 0;
- }
- 
-+static int resctrl_io_alloc_show(struct kernfs_open_file *of,
-+				 struct seq_file *seq, void *v)
++static int resctrl_io_alloc_cbm_show(struct kernfs_open_file *of,
++				     struct seq_file *seq, void *v)
 +{
 +	struct resctrl_schema *s = rdt_kn_parent_priv(of->kn);
 +	struct rdt_resource *r = s->res;
-+
-+	if (r->cache.io_alloc_capable && !(s->conf_type == CDP_DATA)) {
-+		if (resctrl_arch_get_io_alloc_enabled(r))
-+			seq_puts(seq, "enabled\n");
-+		else
-+			seq_puts(seq, "disabled\n");
-+	} else {
-+		seq_puts(seq, "not supported\n");
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Initialize io_alloc CLOSID cache resource with default CBM values.
-+ */
-+static int resctrl_io_alloc_init_cat(struct rdt_resource *r,
-+				     struct resctrl_schema *s, u32 closid)
-+{
-+	int ret;
-+
-+	rdt_staged_configs_clear();
-+
-+	ret = rdtgroup_init_cat(s, closid);
-+	if (ret < 0)
-+		goto out_init_cat;
-+
-+	ret = resctrl_arch_update_domains(r, closid);
-+
-+out_init_cat:
-+	rdt_staged_configs_clear();
-+	return ret;
-+}
-+
-+static const char *rdtgroup_name_by_closid(int closid)
-+{
-+	struct rdtgroup *rdtgrp;
-+
-+	list_for_each_entry(rdtgrp, &rdt_all_groups, rdtgroup_list) {
-+		if (rdtgrp->closid == closid)
-+			return rdtgrp->kn->name;
-+	}
-+
-+	return NULL;
-+}
-+
-+static ssize_t resctrl_io_alloc_write(struct kernfs_open_file *of, char *buf,
-+				      size_t nbytes, loff_t off)
-+{
-+	struct resctrl_schema *s = rdt_kn_parent_priv(of->kn);
-+	struct rdt_resource *r = s->res;
-+	char const *grp_name;
 +	u32 io_alloc_closid;
-+	bool enable;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &enable);
-+	if (ret)
-+		return ret;
++	int ret = 0;
 +
 +	cpus_read_lock();
 +	mutex_lock(&rdtgroup_mutex);
@@ -401,90 +214,60 @@ index 85796a186374..d53a2068cde4 100644
 +	if (!r->cache.io_alloc_capable || s->conf_type == CDP_DATA) {
 +		rdt_last_cmd_puts("io_alloc feature is not supported on the resource\n");
 +		ret = -ENODEV;
-+		goto out_io_alloc;
++		goto cbm_show_out;
++	}
++
++	if (!resctrl_arch_get_io_alloc_enabled(r)) {
++		rdt_last_cmd_puts("io_alloc feature is not enabled\n");
++		ret = -EINVAL;
++		goto cbm_show_out;
 +	}
 +
 +	io_alloc_closid = resctrl_io_alloc_closid_get(r, s);
 +	if (io_alloc_closid < 0) {
 +		rdt_last_cmd_puts("Max CLOSID to support io_alloc is not available\n");
 +		ret = -EINVAL;
-+		goto out_io_alloc;
++		goto cbm_show_out;
 +	}
 +
-+	if (resctrl_arch_get_io_alloc_enabled(r) != enable) {
-+		if (enable) {
-+			ret = resctrl_io_alloc_closid_alloc(io_alloc_closid);
-+			if (ret < 0) {
-+				grp_name = rdtgroup_name_by_closid(io_alloc_closid);
-+				rdt_last_cmd_printf("CLOSID for io_alloc is used by %s group\n",
-+						    grp_name ? grp_name : "another");
-+				ret = -EINVAL;
-+				goto out_io_alloc;
-+			}
++	show_doms(seq, s, io_alloc_closid);
 +
-+			ret = resctrl_io_alloc_init_cat(r, s, io_alloc_closid);
-+			if (ret) {
-+				rdt_last_cmd_puts("Failed to initialize io_alloc allocations\n");
-+				resctrl_io_alloc_closid_free(io_alloc_closid);
-+				goto out_io_alloc;
-+			}
-+
-+		} else {
-+			resctrl_io_alloc_closid_free(io_alloc_closid);
-+		}
-+
-+		ret = resctrl_arch_io_alloc_enable(r, enable);
-+	}
-+
-+out_io_alloc:
++cbm_show_out:
 +	mutex_unlock(&rdtgroup_mutex);
 +	cpus_read_unlock();
-+
-+	return ret ?: nbytes;
++	return ret;
 +}
 +
  /* rdtgroup information files for one cache resource. */
  static struct rftype res_common_files[] = {
  	{
-@@ -2029,6 +2194,13 @@ static struct rftype res_common_files[] = {
- 		.seq_show	= rdtgroup_schemata_show,
- 		.fflags		= RFTYPE_CTRL_BASE,
+@@ -2201,6 +2241,12 @@ static struct rftype res_common_files[] = {
+ 		.seq_show	= resctrl_io_alloc_show,
+ 		.write		= resctrl_io_alloc_write,
  	},
 +	{
-+		.name		= "io_alloc",
-+		.mode		= 0644,
++		.name		= "io_alloc_cbm",
++		.mode		= 0444,
 +		.kf_ops		= &rdtgroup_kf_single_ops,
-+		.seq_show	= resctrl_io_alloc_show,
-+		.write		= resctrl_io_alloc_write,
++		.seq_show	= resctrl_io_alloc_cbm_show,
 +	},
  	{
  		.name		= "mba_MBps_event",
  		.mode		= 0644,
-@@ -2137,6 +2309,15 @@ static void thread_throttle_mode_init(void)
- 				 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
+@@ -2313,9 +2359,12 @@ static void io_alloc_init(void)
+ {
+ 	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 
+-	if (r->cache.io_alloc_capable)
++	if (r->cache.io_alloc_capable) {
+ 		resctrl_file_fflags_init("io_alloc",
+ 					 RFTYPE_CTRL_INFO | RFTYPE_RES_CACHE);
++		resctrl_file_fflags_init("io_alloc_cbm",
++					 RFTYPE_CTRL_INFO | RFTYPE_RES_CACHE);
++	}
  }
  
-+static void io_alloc_init(void)
-+{
-+	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
-+
-+	if (r->cache.io_alloc_capable)
-+		resctrl_file_fflags_init("io_alloc",
-+					 RFTYPE_CTRL_INFO | RFTYPE_RES_CACHE);
-+}
-+
  void resctrl_file_fflags_init(const char *config, unsigned long fflags)
- {
- 	struct rftype *rft;
-@@ -4381,6 +4562,8 @@ int __init resctrl_init(void)
- 
- 	thread_throttle_mode_init();
- 
-+	io_alloc_init();
-+
- 	ret = resctrl_mon_resource_init();
- 	if (ret)
- 		return ret;
 -- 
 2.34.1
 
