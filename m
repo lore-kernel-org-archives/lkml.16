@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B498F21018D;
-	Mon, 21 Apr 2025 21:11:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BD22135C3;
+	Mon, 21 Apr 2025 21:11:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745269869; cv=none; b=eGGmbfQpAKI/Ns1F7ujeuSBTclm39tf5m0LwQHlF8TC9pwttfE/u+vnAQGxp5LXrzr+HVSzPh5s1EN4Isw+BaQhFJWZ0d6r9cAKRHx3rzq46t2l1Qj3yAcRLKJxUVZfuAMpoVzJtmbZUg8hukaW0ciS+8DiZ1PNTpOH81qchKKI=
+	t=1745269871; cv=none; b=tEOCSuD2JQUqApLW+LGZ1PO7lGequpE2Bb0wOc2CbVuzSS19MslQJSUc4u2qx0RvPj6OGa/+NIRIeiTiyLs8parzFYxjpzQB8S4xAU6KNwYpA3qMNUSPipCL8DEzVHI60PxbyCLRgo2mZQc7pn78+UQgONOY539nrlR9S1UMWZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745269869; c=relaxed/simple;
-	bh=PcMt8Jp0f62RG/rNVrmXfgzvG/ZGY+L39bmdXiveS2I=;
+	s=arc-20240116; t=1745269871; c=relaxed/simple;
+	bh=nH0YXIvP0EbZOx0X2yfoIfLi9AhRns2vbzNHfKFg9Zs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WCylulgYvmoGHoPFWdeAFNuvpi5odXcJUFIwOWQw8QUW8WcWEeL+YgWuZiCZOh/a80y0uB1EY1CuuFyv35xXQOydRk+hQtItlZAdzYTGj9h84EM3MsdVYLy/tMGwme3lzyaQpdNNksKy+5qRR+eHOJwtja4M1ZnayTekIMotGB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fAOaLTxx; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=a2deX4nrWQNUFrPTcpDzDcKLqmCE/ULPgh8rjyv93R8zH/uyp0qkacr9dATPe39UvJbXIzFIR+n+JF9QxjBI6A51vf313XuQt3FUpAVObReQTDsCq9XbePtQX7XUE+qpVhKlrjphdxxJiseZcgqHWHQDkzcOo6ZYcJkHOYw3Yuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LKWBnduK; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fAOaLTxx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LKWBnduK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745269868; x=1776805868;
+  t=1745269870; x=1776805870;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=PcMt8Jp0f62RG/rNVrmXfgzvG/ZGY+L39bmdXiveS2I=;
-  b=fAOaLTxx6OgHhqtU0GYwEP6kEhs5oRUyIcEwONjVc4J1rHwk+hxZd1Bo
-   zgzg/qgBBTqel3CQegu+6XDlCThwdZvC7pbyOI3rg7xnb4BtkatOL0tWY
-   dzRkSOHpG2G0E1IFS/kVlc7dxdyUzclGeMDBw/zQMhOmgHFjOptD2eebW
-   EKJtK7pCI2luGHLqymq/ROPLP8EFPhPoybDLnJeXYfm2pBEcDxorsHNwU
-   +4Wc4KJll7Cx/uzS7zu5CgHUTEgBrXgNQZeHNGrzaHKI7kQs0lQmGFjvJ
-   dKba8jV82LaIF6WntixNwiMUfQJ/uSTZKw7ANV+XCc7k3B5RDduWU/FFz
-   A==;
-X-CSE-ConnectionGUID: kDlOx83vQS6IOHZRt0pC3A==
-X-CSE-MsgGUID: dNcaSP8PSuCZdR+Obv931A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="58189449"
+  bh=nH0YXIvP0EbZOx0X2yfoIfLi9AhRns2vbzNHfKFg9Zs=;
+  b=LKWBnduKNPqflbe9t74enxEmYFJ1vA2J2OdXyBEF4kT/x5jZarmSdMvi
+   sXH2XGIVcBdr/36hy4UtbDVcjgS/9N9fFqmct6+j/oa28vevok68vTBTy
+   QHW5FG1sVRJI/plL1lwiLHZMdT3X1S+mEoa8Gop48b5I+es6j2r4HE2iq
+   AlnaPMoCzG2xad+iPkp8pYIGmVT4V3kTR4Do+eCAQ6wcTDFMmRwW1F0vK
+   Kctlq41jU9VFC3dgOMOxwl0UDGzFG0no9uxQkAFKzw9hHa/7TpVwiDJfr
+   mri+EOg8Mz5KpH2h569gk09+WRZy2pc+eYeAv02Ojd8JX95y2gZ7wXvxd
+   g==;
+X-CSE-ConnectionGUID: PHvdJNE5RSic4ArYfp2KEQ==
+X-CSE-MsgGUID: o27+sR0TS2GsWPZhRmlZzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="58189455"
 X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="58189449"
+   d="scan'208";a="58189455"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:04 -0700
-X-CSE-ConnectionGUID: ml2kHgtGRJa0cNwKJz/XAA==
-X-CSE-MsgGUID: YdaVBJTFRm+f5vE03W1fVA==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:05 -0700
+X-CSE-ConnectionGUID: C6A3qnPdRhSHbNGyXQEOKQ==
+X-CSE-MsgGUID: Y1hknJoqQfOoYNiENvEipg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="136912143"
+   d="scan'208";a="136912164"
 Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.220.165])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:03 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:04 -0700
 From: Xi Pardee <xi.pardee@linux.intel.com>
 To: xi.pardee@linux.intel.com,
 	irenic.rajneesh@gmail.com,
@@ -52,9 +52,9 @@ To: xi.pardee@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org
-Subject: [PATCH v4 1/4] platform/x86:intel/vsec: Change return type of intel_vsec_register
-Date: Mon, 21 Apr 2025 14:10:54 -0700
-Message-ID: <20250421211100.687250-2-xi.pardee@linux.intel.com>
+Subject: [PATCH v4 3/4] platform/x86:intel/pmc: Move error handling to init function
+Date: Mon, 21 Apr 2025 14:10:56 -0700
+Message-ID: <20250421211100.687250-4-xi.pardee@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250421211100.687250-1-xi.pardee@linux.intel.com>
 References: <20250421211100.687250-1-xi.pardee@linux.intel.com>
@@ -66,62 +66,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change return type of intel_vsec_register() to int. The current
-implementation does not indicate if the register fail or not.
-Change to return error code if it fails or if INTEL_VSEC config
-is not set. This is a preparation step to introduce a new SSRAM
-Telemetry driver that will be using this API.
+Move error handling code to generic_core_init() function. The previous
+implementation is that init function called for "full cleanup" function
+when error occurs which is error prone. The init function should handle
+the error path itself to improve code maintainability.
 
 Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
 ---
- drivers/platform/x86/intel/vsec.c | 9 ++++++---
- include/linux/intel_vsec.h        | 5 +++--
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ drivers/platform/x86/intel/pmc/core.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index db3c031d1757..055ca9f48fb4 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -332,13 +332,16 @@ static bool intel_vsec_walk_vsec(struct pci_dev *pdev,
- 	return have_devices;
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index 042b60c1185f..e09a97564398 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
++++ b/drivers/platform/x86/intel/pmc/core.c
+@@ -1583,10 +1583,26 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+ 	if (pmc_dev_info->dmu_guid)
+ 		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
+ 
+-	if (ssram)
+-		return pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
++	if (ssram) {
++		ret = pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
++		if (ret)
++			goto unmap_regbase;
++	}
+ 
+ 	return 0;
++
++unmap_regbase:
++	for (unsigned int i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
++		struct pmc *pmc = pmcdev->pmcs[i];
++
++		if (pmc && pmc->regbase)
++			iounmap(pmc->regbase);
++	}
++
++	if (pmcdev->punit_ep)
++		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
++
++	return ret;
  }
  
--void intel_vsec_register(struct pci_dev *pdev,
-+int intel_vsec_register(struct pci_dev *pdev,
- 			 struct intel_vsec_platform_info *info)
- {
- 	if (!pdev || !info || !info->headers)
--		return;
-+		return -EINVAL;
+ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+@@ -1734,7 +1750,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 		ret = generic_core_init(pmcdev, pmc_dev_info);
  
--	intel_vsec_walk_header(pdev, info);
-+	if (!intel_vsec_walk_header(pdev, info))
-+		return -ENODEV;
-+	else
-+		return 0;
- }
- EXPORT_SYMBOL_NS_GPL(intel_vsec_register, "INTEL_VSEC");
+ 	if (ret) {
+-		pmc_core_clean_structure(pdev);
++		platform_set_drvdata(pdev, NULL);
++		mutex_destroy(&pmcdev->lock);
+ 		return ret;
+ 	}
  
-diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-index b94beab64610..bc95821f1bfb 100644
---- a/include/linux/intel_vsec.h
-+++ b/include/linux/intel_vsec.h
-@@ -139,12 +139,13 @@ static inline struct intel_vsec_device *auxdev_to_ivdev(struct auxiliary_device
- }
- 
- #if IS_ENABLED(CONFIG_INTEL_VSEC)
--void intel_vsec_register(struct pci_dev *pdev,
-+int intel_vsec_register(struct pci_dev *pdev,
- 			 struct intel_vsec_platform_info *info);
- #else
--static inline void intel_vsec_register(struct pci_dev *pdev,
-+static inline int intel_vsec_register(struct pci_dev *pdev,
- 				       struct intel_vsec_platform_info *info)
- {
-+	return -ENODEV;
- }
- #endif
- #endif
 -- 
 2.43.0
 
