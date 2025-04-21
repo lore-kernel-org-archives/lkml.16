@@ -1,40 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F1440BF5;
-	Mon, 21 Apr 2025 15:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392BD1494D8;
+	Mon, 21 Apr 2025 15:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745248963; cv=none; b=EvhQBXjtTb1OyKWoR9IfOcip00KUZ20CRx1RBr0mGlvwgg30RTxyDDingg/ym86HNqM3O/XeYrECmQRzFFdibj1glZ93ZvtoDYz2RDooT0IQC5HSPLEJ1P52/PgZDZYn7anMYFRLXH+xgpbuK+4Cylfz8krSfRfupIlhncCUaC4=
+	t=1745249022; cv=none; b=NKZNEMiNxlmTJH0gQJ4jevw0Oi8QEnJ+8SgsLkFvbRXZuJaso4X7IPzbcTWhSPe/0UnhZSctoL3I9lh4UoH/5cjK3SKyKuEvt5tFgKHZOQJwUFSFO2w/NYx6CC6w0mjUN7woONR39SH1t2ZDFn989wXYuFJ3B1ILkT+8I7/C61A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745248963; c=relaxed/simple;
-	bh=YY9gTG9ZBW4E08buukcEYYHP7HWbwATtN3Kqgx1StfY=;
+	s=arc-20240116; t=1745249022; c=relaxed/simple;
+	bh=vJPOq/jtYR3O8m4x/saV7Lfzl0TMxKs1hSTnn1MH0/Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQQR2oCrblQ/0E9GLzd9J+NH2EItg3MydATQ3We5FMZcoP8P1iuqzTNPGCgELEPGWK7h9Us1q5EjnwXctPX8KhysvmDZlzz9keG+7lt/SsYLSxIYiBtWTSonQv45qF2IcYQ/NvbX8en7lbbwjMpOpx1DBk3oZY2fS+1nWMFGWtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=po1kUUUP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPfHUUMJcGpQZBQvhJBdQWJP0XvXiMf2+MqMvwIkL3mC99+w3yGaeBEXQdJJFocXS+ncwvb3LgXRFEmJJq3K8sUl4dXR0SCi+Mq9gHLzW14JNBszLc5KOLSRF6pLnebaf4NtdyY3g5isTqYsGXYtXAFpe/MT7AN1VGMHR/IUYwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J3GFh0q0; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="po1kUUUP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E57C4CEE4;
-	Mon, 21 Apr 2025 15:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745248962;
-	bh=YY9gTG9ZBW4E08buukcEYYHP7HWbwATtN3Kqgx1StfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=po1kUUUPnrue8nQqTrVk04k3i9LGMZ2KOf9Czrgz50hvGrpLUOWSqUpFFZXFPz0tL
-	 6L95GsISSfNIZe4IJPHVPByMrKsMXOVG8tLru+XYNQLt2mcvz0Jsc5JV4pUbzErmWm
-	 nLiW1GiIMh+w/blZlyfGArERrfH9UNv3JBtW5sOSEK7JlN2Jju5mTnnC9hQnUs3hYL
-	 ctwGxl/EPflrlFv5WW7huRiot4jme9zqgu6fZpe+xmgXJhe44uTIhig0eMHRfqorXh
-	 OrN1oRmmUkBQNevpyXK9012ixaHx595JKr0nd2kVGnyOTXb5g8D65AR6R7Ev1JMzrs
-	 xO9B6d0cErMMg==
-Date: Mon, 21 Apr 2025 09:22:40 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Matt Fleming <mfleming@cloudflare.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team <kernel-team@cloudflare.com>
-Subject: Re: 10x I/O await times in 6.12
-Message-ID: <aAZiwGy1A7J4spDk@kbusch-mbp.dhcp.thefacebook.com>
-References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J3GFh0q0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745249020; x=1776785020;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vJPOq/jtYR3O8m4x/saV7Lfzl0TMxKs1hSTnn1MH0/Q=;
+  b=J3GFh0q0+Xo4hZsYg/Pw1Fe4W/+XqWPhK3DPCNA9FDuoITAhCe4WF+JG
+   WOTHmMZF5ovv2HAt7wTYr/sQRKJw/G/0sBEmYFUgfz9lj7+1Hx4FH+Swy
+   of9frH5qJXQNeqS+bpKH0Uo81WR5STSN1r3ekHhuEQaImrNRI1RtMeNP/
+   +zJ3blSmyhDp9TylZDhxjHI/4YaAN00+P97lF0oxU/3LCQpQi92kOI+9D
+   4cZXMWjAeA68cuOOvId7WoeY9kcLGJq2G+krR5mWdP+7/dMmkGHMiQCob
+   24sqbMqotbj5dfzXd3cQfbqVC1l9+tLPp7yKH9CeQjlepD4RdV7QuKlTM
+   A==;
+X-CSE-ConnectionGUID: fqifmB24S8SgltuoGFJZxA==
+X-CSE-MsgGUID: HwVjsAJPSI2kIig6RsbjeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46018344"
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="46018344"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 08:23:39 -0700
+X-CSE-ConnectionGUID: qYxPlAo5T1q0ooVmsIMlWQ==
+X-CSE-MsgGUID: Spq369kLR+qDitQqo2fORA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
+   d="scan'208";a="136707842"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 21 Apr 2025 08:23:35 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u6szd-0000Bh-0Y;
+	Mon, 21 Apr 2025 15:23:33 +0000
+Date: Mon, 21 Apr 2025 23:23:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nylon Chen <nylon.chen@sifive.com>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>, Zong Li <zong.li@sifive.com>
+Subject: Re: [PATCH v11 4/5] pwm: sifive: Fix rounding issues in apply and
+ get_state functions
+Message-ID: <202504212351.Aa9tPMsO-lkp@intel.com>
+References: <20250421095521.1500427-5-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,21 +73,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
+In-Reply-To: <20250421095521.1500427-5-nylon.chen@sifive.com>
 
-On Mon, Apr 21, 2025 at 09:53:10AM +0100, Matt Fleming wrote:
-> Hey there,
-> 
-> We're moving to 6.12 at Cloudflare and noticed that write await times
-> in iostat are 10x what they were in 6.6. After a bit of bpftracing
-> (script to find all plug times above 10ms below), it seems like this
-> is an accounting error caused by the plug->cur_ktime optimisation
-> rather than anything more material.
-> 
-> It appears as though a task can enter __submit_bio() with ->plug set
-> and a very stale cur_ktime value on the order of milliseconds. Is this
-> expected behaviour? It looks like it leads to inaccurate I/O times.
+Hi Nylon,
 
-There are places with a block plug that call cond_resched(), which
-doesn't invalidate the plug's cached ktime. You could end up with a
-stale ktime if your process is scheduled out.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.15-rc3 next-20250417]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nylon-Chen/riscv-dts-sifive-unleashed-unmatched-Remove-PWM-controlled-LED-s-active-low-properties/20250421-174716
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250421095521.1500427-5-nylon.chen%40sifive.com
+patch subject: [PATCH v11 4/5] pwm: sifive: Fix rounding issues in apply and get_state functions
+config: i386-buildonly-randconfig-003-20250421 (https://download.01.org/0day-ci/archive/20250421/202504212351.Aa9tPMsO-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504212351.Aa9tPMsO-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504212351.Aa9tPMsO-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/ucs2_string.o
+>> ERROR: modpost: "__udivdi3" [drivers/pwm/pwm-sifive.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
