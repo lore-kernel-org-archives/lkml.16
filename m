@@ -1,38 +1,42 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54ED1E1041
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A581FDA
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745256375; cv=none; b=GCRyWYLeZNXLqJP4oebkLp4sRrBd57cU8lXkg+2Mf+5upWxYand6EOXF3qTbHcJM9kFIX6mIORoQAOLrtZDc8B50e9+6Kr+Wcihs1xxBa5bjIOEivZTnmwYCD5SCEXHlV9eWBgbBoPKCqQe66FNofS3feSmaxz8Y9e0KHjeWCeM=
+	t=1745256377; cv=none; b=k9+UBXUSdxeXBBaGfko7rkZeTldEUq0RYYSY62TAU4WRwPWszSCJqVovtZhpoclvgE3tTTo1BLD0eWvc7HUuumzDL4hNE3Buqt79e/RycJ+ck2lxQmTeAHVVqHqAW5fDNfQPNED2Co6K40HjZXY1NQPTThPdhsAUwqHqN9bT6d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745256375; c=relaxed/simple;
-	bh=b73IQeqVSXeEuCteEboOl8z9yQadjr4QrRIFp8EIWaY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W3ZR9GQkzLwEAbD4jPjeJLDrzasNVVTmuOYd8kXe/1CDi91lHsOVGxZemFNTHx9ucGqz7cglfc48FXRnuR2A4tZqHDmOCB2CG9Da1x6bKHn3kORZcAGZOlqXrBCXBUTUpvL9Y32N9OZ+3xlVIYwushwnMFNBGS44nfhIk2OoyJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q9XnrfQX; arc=none smtp.client-ip=91.218.175.171
+	s=arc-20240116; t=1745256377; c=relaxed/simple;
+	bh=SGUtdpUB5zya2blGv4NqprNYZmGeLCSRfOpXJtN9cr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QVEgMGNP3SJs8t0gxRgn1d454RDsN64CRRn21TL9iYAwk5lcosoPuKL+zT0rX9y2HBOABySqhiR2AXBfZJK61PiNe0f+fGiWFFyTaw7I42kWpnnIgxGMBrdjYKwGJbFROf90UQhDxCL8HWsuwFHWA/nWle3Tk9/VOlFKcK610+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SqS4XUyw; arc=none smtp.client-ip=91.218.175.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q9XnrfQX"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SqS4XUyw"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745256371;
+	t=1745256372;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UWY/5x4OXNc5RfOjLxARF1zs/ala7v6pVKi6wbtQN6U=;
-	b=q9XnrfQXIPOjgRID3AfOELNKRugGnLy0HATwRdCVBP8SKV6CdRMSm0IiX4ShrXc+nOMXmB
-	MlP/Wqm/Fs/hhosTRyYYOyIHyL8glIHgyB6Nj5vi9dIFxSZMN0pdZLDkawSh8mJH1dN2XI
-	Atqi4ExwS6W6rG9609gQRqJJ8NSfIL4=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L2z6GqvQ7LBQ4lswrWGTx5kZubJK43WWtx1HzRGt0bE=;
+	b=SqS4XUyw7TtX1hmnJDcX7NAYnj3eljc7BYajrUGmGs80793I/JDzEKwz58Zk9OooDH57l5
+	TwgnDFBtfG/A/bMamlDUKDlOJxic5jJnMAH/9vA+TEq4hV6iqgVhe3z0yAiEJZeYsfww7f
+	NnuPFVt1H4oXzpT+ukJ+SlT/91JZuao=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 0/5] bcachefs async object debugging
-Date: Mon, 21 Apr 2025 13:26:00 -0400
-Message-ID: <20250421172607.1781982-1-kent.overstreet@linux.dev>
+Subject: [PATCH 1/5] bcachefs: bch2_bio_to_text()
+Date: Mon, 21 Apr 2025 13:26:01 -0400
+Message-ID: <20250421172607.1781982-2-kent.overstreet@linux.dev>
+In-Reply-To: <20250421172607.1781982-1-kent.overstreet@linux.dev>
+References: <20250421172607.1781982-1-kent.overstreet@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,69 +46,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-More debugging infrastructure that might perhaps be of wider interest.
+Pretty printer for struct bio, to be used for async object debugging.
 
-Currently, when an asynchronous op gets stuck and never completes, it's
-a real problem to debug: all our normal introspection (e.g.
-/proc/pid/stack) doesn't work.
+This is pretty minimal, we'll add more to it as we discover what we
+need.
 
-e.g. if a bio doesn't (seem to) complete - what happened to it?
-Difficult question to answer. We have giant state machines, and
-debugging issues where we stop making forward progress requires
-visibility into the whole thing.
+Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+---
+ fs/bcachefs/util.c | 10 ++++++++++
+ fs/bcachefs/util.h |  2 ++
+ 2 files changed, 12 insertions(+)
 
-(basic question: did the bio complete and the endio not funtion not flip
-the correct state bit, or did it get lost?)
-
-In the reports/test failures I look at, I've been seeing these the most
-in or at the boundary of mm - compaction/migration, writeback...
-
-This series introduces infrastructure that'll allow us to debug these
-kinds of issues in production:
-
-- fast_list, which is a high-enough performance "list" to track these
-  kinds of objects (radix tree + percpu buffer)
-
-- infrastructure for making them visible in debugfs, hooking them up to
-  pretty printers
-
-- and the last patch hooks into just some of the bcachefs paths where
-  we we need this
-
-Kent Overstreet (5):
-  bcachefs: bch2_bio_to_text()
-  bcachefs: bch2_read_bio_to_text
-  bcachefs: fast_list
-  bcachefs: Async object debugging
-  bcachefs: Make various async objs visible in debugfs
-
- fs/bcachefs/Kconfig            |   5 ++
- fs/bcachefs/Makefile           |   3 +
- fs/bcachefs/async_objs.c       | 126 +++++++++++++++++++++++++++++
- fs/bcachefs/async_objs.h       |  39 +++++++++
- fs/bcachefs/async_objs_types.h |  24 ++++++
- fs/bcachefs/bcachefs.h         |   7 ++
- fs/bcachefs/btree_io.c         |  12 +++
- fs/bcachefs/btree_io.h         |   8 ++
- fs/bcachefs/data_update.c      |  18 ++++-
- fs/bcachefs/data_update.h      |  15 ++++
- fs/bcachefs/debug.c            |  52 +++++-------
- fs/bcachefs/debug.h            |  18 +++++
- fs/bcachefs/errcode.h          |   1 +
- fs/bcachefs/fast_list.c        | 140 +++++++++++++++++++++++++++++++++
- fs/bcachefs/fast_list.h        |  41 ++++++++++
- fs/bcachefs/io_read.c          |  76 +++++++++++++++---
- fs/bcachefs/io_read.h          |  14 ++++
- fs/bcachefs/super.c            |   3 +
- fs/bcachefs/util.c             |  10 +++
- fs/bcachefs/util.h             |   2 +
- 20 files changed, 566 insertions(+), 48 deletions(-)
- create mode 100644 fs/bcachefs/async_objs.c
- create mode 100644 fs/bcachefs/async_objs.h
- create mode 100644 fs/bcachefs/async_objs_types.h
- create mode 100644 fs/bcachefs/fast_list.c
- create mode 100644 fs/bcachefs/fast_list.h
-
+diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
+index 6e5d7fc265bd..7e6ebe8cd9ea 100644
+--- a/fs/bcachefs/util.c
++++ b/fs/bcachefs/util.c
+@@ -715,6 +715,16 @@ void bch2_corrupt_bio(struct bio *bio)
+ }
+ #endif
+ 
++void bch2_bio_to_text(struct printbuf *out, struct bio *bio)
++{
++	prt_printf(out, "bi_remaining:\t%u\n",
++		   atomic_read(&bio->__bi_remaining));
++	prt_printf(out, "bi_end_io:\t%ps\n",
++		   bio->bi_end_io);
++	prt_printf(out, "bi_status:\t%u\n",
++		   bio->bi_status);
++}
++
+ #if 0
+ void eytzinger1_test(void)
+ {
+diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
+index 50f7197c67fc..7a93e187a49a 100644
+--- a/fs/bcachefs/util.h
++++ b/fs/bcachefs/util.h
+@@ -419,6 +419,8 @@ static inline void bch2_maybe_corrupt_bio(struct bio *bio, unsigned ratio)
+ #define bch2_maybe_corrupt_bio(...)	do {} while (0)
+ #endif
+ 
++void bch2_bio_to_text(struct printbuf *, struct bio *);
++
+ static inline void memcpy_u64s_small(void *dst, const void *src,
+ 				     unsigned u64s)
+ {
 -- 
 2.49.0
 
