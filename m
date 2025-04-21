@@ -1,137 +1,188 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD97256C7B;
-	Mon, 21 Apr 2025 02:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0E6179BD
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745204005; cv=none; b=dXvQ70Gys248267kr+xknBu9KxpN7MatGu8nOQO9GBavWDKgvaxDJStHFIXrSvbG2XJLJhfYGmtxvhN80svg4bv2hc6fEm6zUU+Pq3dM9sKvF2Hnohi2UhUvcvoxXuFoa9CubpnFPIj6SwHpZNef4WiGAzQG7UCARr6qXjpN3Lg=
+	t=1745204119; cv=none; b=fEIAkJuMmaNkRf4aVZl0bX7O++fSdLSvg86cZKyDgrqBorv1JxbhnxsJx0fVsl3nu2HG6ItBclR+XxAsgoanNeWHd3nmtXaNSmkmrEdxchM6PF9qzJXQCCPlpxPmoIHyoYBuYBOUXtxwnHv6N96nMhVNzEW7RtR7Ecwmo6wjJug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745204005; c=relaxed/simple;
-	bh=ohoYy81jPOBHi3Kl/yJ0GpN9kR2CeXImpedVkpQqUl8=;
-	h=To:From:Cc:Subject:Message-ID:Date:MIME-Version:Content-Type; b=RQN7Gcc9PEhOteCZXWnDmTdCmhIiPMAzLezINQ1tcA6GPf/YHnnNWOpwMA8aB9n+KLVbI5jVxVfjDqceqHZqgBEUC9n9F+STQyi7+xdT65cxID4De/s446JQpek7aYF+8Au7JYm1gtEew3mWI8jhH7p1LG8TB71pygfAgyXgq2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxieAaswVoDy_DAA--.16802S3;
-	Mon, 21 Apr 2025 10:53:15 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMDx_MQUswVoS6yNAA--.21709S3;
-	Mon, 21 Apr 2025 10:53:13 +0800 (CST)
-To: yangtiezhu <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-From: bibo mao <maobibo@loongson.cn>
-Cc: bpf@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
-Subject: BUG: bpf test case fails to run on LoongArch
-Message-ID: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
-Date: Mon, 21 Apr 2025 10:52:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745204119; c=relaxed/simple;
+	bh=AQb46CQkwv8QeUadsbrclWLA6h/SnySMlq4iBKKvV98=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ow9YnbWUgKmKx5Xd/zkQAUYDOOe4oaHj4Z8MsT1Te0c7aPIG+Iz1Zz8R268PkFGl0JTT9nrfeoQxElggmP0clOfz2hALDpiKMTr3bGI0+Kkg1PAME7AVzHQi9b0d0w7Uo5wDYWsClnk4BLWpW0jn4AF5FhTi+2ZxNmz/EBcnVps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=g3kJj5mP; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="g3kJj5mP"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-400b64ac5fcso1930311b6e.0
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 19:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1745204116; x=1745808916; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=24kp0DtFzqPBLQcVjtgOgftKsl0Wykg9m8M9N67arVY=;
+        b=g3kJj5mPxaVapP9jB4aB11DG9J77pBj+tI3XHzVR/27Z72oA0pBngGiH/91cP63Qeu
+         I9KEI/bB8RMsInXLwIPfBJ5xRjdublLjf1C5aYUDuFd4kMflpTvjFkZhoGOrrOp/Bcm8
+         YuK7ZJCuSR4h5Q43uhDDfM80la8x03UM7HK/h0kQ1Sb8YsMhtxA+n9A8te5QINGg25yb
+         0aVXgkCTLipafFg4Z7ayoCVr/aIH4YVVlujAptSXx/j8V1I1XfHR8fqaCraOYJ9u8HyY
+         wDpp54UucPINavtLhKLSEoa6QTiODBCUCPneKIa7cVcymkujBIXI2j7Eptj8AaMZq8SI
+         H7LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745204116; x=1745808916;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=24kp0DtFzqPBLQcVjtgOgftKsl0Wykg9m8M9N67arVY=;
+        b=jFJhF6OWmpcTzxsDeouyqjwQ/+0JgQMLfSUmSjnPBOo5o4Bf4pTCeD9tQwIqHabXEV
+         z/6726GblJmg4ufbwWlD35W31vwRKBZWeU2XrMrz3w7p/MZzvTlimy2z3SiJ2dbgEyIB
+         e58q+OpdusrtMXFSo+Ua+2gEbhgDPSU3piQo00X6RZxyLcxKCOdvM6Ld8bQuqa2FG8fs
+         JL32hATQacdtIUxGOZEJvuJczlmn9itsyQmR6Ux1+jjC2tfigIsKq7KGCDEg6kb+S6/t
+         zz2S1f0QsXsI5RvmrFakPdWy+hlU8W4vAUjrx3KNPB6D6cKaCzPvJbt5IeaVX6PDHbjm
+         KddQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVryklUhYhq56+r+VEZJVEOtd4ubMrUlonsoIajkKYRrrMjQ4pXnC4G54rkGiU7EyEV4Cp/FH2bStpBzBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPFG2cvGvQbbj6I7L6yS9NEi+amn/BUyBCuCMs5DyLH9glgUjE
+	pRGSKjkfN0ue3dpLursw8mPQw8aSPkLUcYUqB2IZY5EF71DqteOtXz/EWXkDxDhmMkPn8YkxnPq
+	Mh/4GoPU5RxcEGo171zj/vYfWJm7FZggH50eONw==
+X-Gm-Gg: ASbGncsC9X9a6BhQWTa3kIpyzWGYeySa7HCR283+4sb5I6yQRbHoQrQZ62wcrFCWbim
+	rZ910+Yp989kuDprYgIkivkVog7rbuHjR/q8Dm0E5VrpDk1QyX6WC59ag/fkzAIC/ennaO9buy4
+	XYxhiVCsk8DyMiHD3iIatk/3Sb
+X-Google-Smtp-Source: AGHT+IGQ/1pe/rx0vrdN1Mljx1yTkRDFB1HBkKKgbmiaqdr/zlWVkn9kXF032wYtBsFK7PAaKvKtp0o7of3PH+VyeuU=
+X-Received: by 2002:a05:6808:6b96:b0:401:188e:caa2 with SMTP id
+ 5614622812f47-401c0c6c149mr6020709b6e.35.1745204116301; Sun, 20 Apr 2025
+ 19:55:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDx_MQUswVoS6yNAA--.21709S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxAFyrKFyUJry3tFW8KF1fXwc_yoW5tr4xpr
-	y3Jr1UGr4kJr17Ar1UJr1UJr15J3ZrAF18Jr1UJryUCr15Gr1UJr1UtrW7JryUJr4UJr17
-	Jw1Dtr1Utr1DGwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
-	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j8
-	sqAUUUUU=
+References: <20250414031450.42237-1-cuiyunhui@bytedance.com> <Z_zLqH1Moavhi52x@smile.fi.intel.com>
+In-Reply-To: <Z_zLqH1Moavhi52x@smile.fi.intel.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Mon, 21 Apr 2025 10:55:05 +0800
+X-Gm-Features: ATxdqUER1LqipBsEUKZFgk1sLE_mXfx3MuJPEsX2epvsl4H0rYMzEmZGhAcjimA
+Message-ID: <CAEEQ3wnEu2o+h2RY4rTGYR0yMX2EcX+7SdciqfzV3VLGWFyG3A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v3] serial: 8250: fix panic due to PSLVERR
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: ilpo.jarvinen@linux.intel.com, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, john.ogness@linutronix.de, pmladek@suse.com, 
+	arnd@arndb.de, namcao@linutronix.de, benjamin.larsson@genexis.eu, 
+	schnelle@linux.ibm.com, heikki.krogerus@linux.intel.com, 
+	markus.mayer@linaro.org, tim.kryger@linaro.org, matt.porter@linaro.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Andy,
 
-When I run built-in bpf test case with lib/test_bpf.c,
-it reports such error, I do not know whether it is a problem.
+On Mon, Apr 14, 2025 at 4:47=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Apr 14, 2025 at 11:14:50AM +0800, Yunhui Cui wrote:
+>
+> You forgot to rebase against latest tty-next or, if there is something
+> in the latter (but I don't see right now), even tty-testing.
+>
+> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> > an error response if an attempt is made to read an empty RBR (Receive
+> > Buffer Register) while the FIFO is enabled.
+> >
+> > In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> > Execution proceeds to the dont_test_tx_en label:
+> > ...
+> > serial_port_in(port, UART_RX);
+> > This satisfies the PSLVERR trigger condition.
+> >
+> > Because another CPU(e.g., using printk()) is accessing the UART (UART
+> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=
+=3D
+> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+> >
+> > To fix this, all calls to serial_out(UART_LCR) and serial_in(UART_RX)
+> > should be executed under port->lock. Additionally, checking the readine=
+ss
+> > via UART_LSR should also be done under port->lock.
+> >
+> > Panic backtrace:
+> > [    0.442336] Oops - unknown exception [#1]
+> > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> > ...
+> > [    0.442416] console_on_rootfs+0x26/0x70
+>
+> This patch seems need split to three. See below.
+>
+> ...
+>
+> First of all, while everything looks better now, there is a chance in the
+> future to miss the same issue again. In order to avoid that I suggest to
+> introduce a new helper where you made this check _and_ add a comment why.
+>
+> (Note that currently you have a mixture of serial_in()/serial_port_in() i=
+n
+>  some cases.)
+>
+> static inline unsigned int serial8250_discard_data(struct uart_8250_port =
+*up)
+> {
+>         u16 lsr;
+>
+>         lsr =3D serial_in(up, UART_LSR);
+>         if (lsr & UART_LSR_DR)
+>                 return serial_in(up, UART_RX);
+>
+>         return 0;
+> }
+>
+> And this can be one patch (patch 2).
+>
+> ...
+>
+> > --- a/drivers/tty/serial/8250/8250_dw.c
+> > +++ b/drivers/tty/serial/8250/8250_dw.c
+>
+> Changes here deserve the separate patch (patch 1).
 
-  test_bpf: #843 ALU32_RSH_X: all shift values jited:1 239 PASS
-  test_bpf: #844 ALU32_ARSH_X: all shift values jited:1 237 PASS
-  test_bpf: #845 ALU64_LSH_X: all shift values with the same register
-  ------------[ cut here ]------------
-  kernel BUG at lib/test_bpf.c:794!
-  Oops - BUG[#1]:
-  CPU: 15 UID: 0 PID: 2323 Comm: insmod Not tainted 6.15.0-rc2+ #297 
-PREEMPT(full)
-  Hardware name: QEMU QEMU Virtual Machine, BIOS unknown 2/2/2022
-  pc ffff80000272c0e0 ra ffff80000272bf90 tp 900000013defc000 sp 
-900000013deffb40
-  a0 0000000000000000 a1 900000013deffb80 a2 900000010aa4fbf8 a3 
-900000013deffb88
-  a4 900000013deffb80 a5 900000010aa4fbf0 a6 0000000000000218 a7 
-8000000000000000
-  t0 00000000000000c0 t1 0000000000000c10 t2 00000000000000c0 t3 
-0000000000000000
-  t4 0000000000000095 t5 0000000000000c08 t6 00000000000000c0 t7 
-00000001000000b7
-  t8 0000000000000183 u0 0000000000010000 s9 0000000000000040 s0 
-0000000000000c00
-  s1 0000000000000181 s2 0000000000000000 s3 0000000000000040 s4 
-000000000001211d
-  s5 0000000000000218 s6 0000000000000011 s7 00000000000001b7 s8 
-900000010aa4f000
-    ra: ffff80000272bf90 __bpf_fill_alu_shift_same_reg+0x118/0x298 
-[test_bpf]
-    ERA: ffff80000272c0e0 __bpf_fill_alu_shift_same_reg+0x268/0x298 
-[test_bpf]
-   CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
-   PRMD: 00000004 (PPLV0 +PIE -PWE)
-   EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
-   ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
-  ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
-   PRID: 0014c010 (Loongson-64bit, Loongson-3A5000)
-  Modules linked in: test_bpf(+) snd_seq_dummy snd_seq snd_seq_device 
-rfkill vfat fat virtio_net virtio_gpu net_failover virtio_balloon 
-failover virtio_dma_buf efi_pstore virtio_scsi pstore dm_multipath fuse 
-nfnetlink efivarfs
-  Process insmod (pid: 2323, threadinfo=000000006d91be37, 
-task=00000000064df522)
-  Stack : 9000000002018bc0 0000000000000060 000000000000006f 
-000000000000006c
-          0000000000000183 ffff800002ba1c40 8000000000000000 
-0000000000000218
-          8000000000000000 545a35de324f71ab 900000013deffbb8 
-ffff800002808080
-          9000000002018bc0 0000000000000000 0000000000000000 
-000000000000034d
-          0000000000000000 ffff80001d438000 ffff800002ba0b08 
-ffff800002ba2c40
-          000000000000034d ffff8000027807e8 0000000000000001 
-0000000000000341
-          ffff800002808100 0000000000000341 00000000000003e8 
-0000000000000001
-          ffff800002ba1b09 ffff800002ba1bb4 9000000002c30140 
-9000000002b240b8
-          0000000000000000 0000000000000000 ffff80001d438000 
-0000000000000000
-          0000000000000000 545a35de324f71ab 0000000000000000 
-000000000000002f
-          ...
-  Call Trace:
-  [<ffff80000272c0e0>] __bpf_fill_alu_shift_same_reg+0x268/0x298 [test_bpf]
-  [<ffff8000027807e4>] test_bpf_init+0x39c/0x3bb8 [test_bpf]
-  [<9000000000240154>] do_one_initcall+0x74/0x200
-  [<9000000000327764>] do_init_module+0x54/0x2a0
-  [<9000000000329ccc>] __do_sys_init_module+0x204/0x2a8
-  [<90000000015b17a0>] do_syscall+0xa0/0x188
-  [<90000000002413b8>] handle_syscall+0xb8/0x158
+Splitting into a patchset is fine. What does "patch 1" refer to here?
 
-  Code: 03400000  03400000  03400000 <002a0001> 29c28076  29c26077 
-29c24078  29c1e07b  29c1c07c
+>
+> ...
+>
+> > +     /*
+> > +      * Serial_in(p, UART_RX) should be under port->lock, but we can't=
+ add
+>
+> serial_in()
 
-  ---[ end trace 0000000000000000 ]---
+Okay.
 
+>
+> > +      * it to avoid AA deadlock as we're unsure if serial_out*(...UART=
+_LCR)
+> > +      * is under port->lock.
+> > +      */
+> > +     lockdep_assert_held_once(&p->lock);
+>
+> ...
+>
+> > +     uart_port_lock_irqsave(port, &flags);
+>
+> And one patch (patch 3) about locking.
+
+Okay.
+
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+Thanks,
+Yunhui
