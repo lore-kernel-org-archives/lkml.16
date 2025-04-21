@@ -1,93 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0211A264FA6;
-	Mon, 21 Apr 2025 13:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ABC800;
+	Mon, 21 Apr 2025 14:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243983; cv=none; b=PW7WCLvPo8oDxoT7eIgdLOgDwXngKj7OUH4444bgupSIMqToGvKy5a7q3lKEySv+HoxEVksZFmS54LmhVsRhn3G77NrFNEvJpeBCHoCCx3ZyFERWh0EFYhbr9peQnA+5VZZfVrOrAQdK6bGrVEBDx8UMl0FSiMOmbi4cRBN8gW4=
+	t=1745244169; cv=none; b=WKwxKHx4Vk1/qf2OG8UAo1QEf9HR2jQ+6zE8J2NUDffbCMJOsjPB4KiBIbAo0WdbuH/KBF+WXQ9jO8brmF5vIxHc3ok865EBZY1s+sxQooQIjQwVvtPpMY3E91ieIWNbzeJhU/eElmWwBm0yPfssQmM1JWO4ZeRAYoDr+5HxCUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243983; c=relaxed/simple;
-	bh=J7iTshs6CmOUgtoiSBVw1f3K2zMl0Vgv+zGSAmPjgtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SQhbYCOlMlGU4iQZMakRoaFqfxI41DnvOlxHYDsIvYZT6Rma3EyN76mVy30Vc8nfjU1EksR3Eq9p13J7MAAyllTfwFZLybJcLpOmHBa8jgSVlLMSukEaxqy5//4/0743fF9hmI8skuTwJ/ImNBa27LTxdhQs1s2V9NdYP4fDmGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJy+Kodz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745244169; c=relaxed/simple;
+	bh=h3ZZv/KKSCup7m16HhNAZBWRkEaSvqwI2RSI3gp6O0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pU9STy8zRdlophMoNc09WKpCEtx9cNi3W2s6hnPOHdBZR4cMGyGaZ5ZmGWkaSqeGIh9kxx+8XyY/G7bc1MDlh54mpYhvYyoxCyYJUddYrtNYwFg3GgI1NWzZwGDNXnZ+a0wT+zFqPsW3PH5mhyfBfDvJbbjY3YtM5F0K23sc73Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Yfj43mif; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJy+Kodz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73FCC4CEE4;
-	Mon, 21 Apr 2025 13:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745243982;
-	bh=J7iTshs6CmOUgtoiSBVw1f3K2zMl0Vgv+zGSAmPjgtA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EJy+Kodz0gmjCgZ7HwUyChvh/DejzC0+EK7D/vx0CSS+wrZAwH8pf56ELPsC9e1xh
-	 BMHeEHYUYv2DXUSBxd6ykFGDjveHORcfn1z5jJh0mGveXGTYkIMY6LX2AB2Tn53FY1
-	 5NAzhKDW7zl+jf6od/eHRmxXdz/BVsuORt+MlfIiHzeJA3CJFpK3NMiJmFiojOl3Hd
-	 VCFRo27RlpXRVHguyOPA9encVuM8XGb9CdfoXDqqRhVNFQl9uQI+hjvLPymfMDQ2gw
-	 ckn8Yh5/nQFkZbqjGFSyUjUnT8CTHZVThfINCgm3IJO26r8J0pREDGjaH415s+VCE9
-	 x6cdUMKRBcaig==
-Date: Mon, 21 Apr 2025 14:59:31 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
- marcelo.schmitt1@gmail.com, stable@vger.kernel.org
-Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
-Message-ID: <20250421145931.605df588@jic23-huawei>
-In-Reply-To: <20250421131539.912966-1-gshahrouzi@gmail.com>
-References: <20250421124915.32a18d36@jic23-huawei>
-	<20250421131539.912966-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Yfj43mif"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=MFZYwdxSqn/pFGqwhSvTBkmdr1A9qUoYYSdRvkpZ+zg=; b=Yfj43mif1iLXl35Re3XXeWfgok
+	y54IzdMSn1t55kC8cNw+ljM+poCJjFGQoUwM/JFbw7/Ddd3dF/sAvBKQsepPvdyUNaHjsq7UURv61
+	WdgeM5vEeCu415wob/Uu/XLLvTFs7JjeIzdOuBos8bSJz5V2TeqIKmJpqtkPKGSzYLXM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u6rj7-00A5uB-T1; Mon, 21 Apr 2025 16:02:25 +0200
+Date: Mon, 21 Apr 2025 16:02:25 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+	"Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+Message-ID: <f27b0531-11dd-4074-9c79-172953d28292@lunn.ch>
+References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
+ <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
+ <CA+V-a8tbW2Zs6op20yRTcihSm1bcMC2dYnRXVCKRf=q4fymZyg@mail.gmail.com>
+ <TY3PR01MB1134633A8CB82788BB98C6E6286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY3PR01MB1134633A8CB82788BB98C6E6286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
 
-On Mon, 21 Apr 2025 09:15:39 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
-
-> The inclinometer channels were previously defined with 14 realbits.
-> However, the ADIS16201 datasheet states the resolution for these output
-> channels is 12 bits (Page 14, text description; Page 15, table 7).
+> > On the RZ/G3E, the upstream support for testing S2R is not yet in a usable state. So for now, I'll
+> > switch to using init/exit callbacks and drop the PM callback.
 > 
-> Correct the realbits value to 12 to accurately reflect the hardware.
-> 
-> Fixes: f7fe1d1dd5a5 ("staging: iio: new adis16201 driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-If you post a new version, always add the version number.
+> FYI, On RZ/G3E, for STR to work with mainline, we need to reinitialize the PHY.
+> I have done below changes on top of [1] to make STR working.
 
-Anyhow, I was just asking for the fixes tag, but this is fine.
+Can you explain why you need to reinitialise the PHY? The MAC driver
+should not need to do this, so something is wrong somewhere. If we
+understand the 'Why?' we can probably tell you a better way to do
+this.
 
-Applied to the fixes-togreg branch of iio.git
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/accel/adis16201.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
-> index 982b33f6eccac..dcc8d9f2ee0f1 100644
-> --- a/drivers/iio/accel/adis16201.c
-> +++ b/drivers/iio/accel/adis16201.c
-> @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
->  			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
->  	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
->  	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
-> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
->  	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
-> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
->  	IIO_CHAN_SOFT_TIMESTAMP(7)
->  };
->  
-
+	Andrew
