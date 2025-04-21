@@ -1,293 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088151E2848;
-	Mon, 21 Apr 2025 15:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745248065; cv=none; b=BNRASEphSHCLCQAxHcoA2JV5j/IiyzaX3JNkaB4FvZ+zX51ACx6biBxje79WoMLRH7FPcW7nymlVD/LDXnJAcynsDLlNqHIq0cISDKhjtNJxA4qdgpHcrcaRoaipkZj7+FquigAcNocDMw2OY9CSJgLELDw3Lg6T1sIfBaa255s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745248065; c=relaxed/simple;
-	bh=tVN20hZ85YLN+8NRYnvSHeVwieScBTswPZoX8rBIYV8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=qZOaZ9OtXVvOMy1BBELRnd1Ab27W3cwYVRR4gxvoR9vQqlMQlAdL+aS+4ALTw/Ym2lKzROgCn+FqRylj8RfRHCHGuQAkEs2/rW2N4goCVpkV1LFCbMeq3ewJ29xigrH6m2FMrMaHoCAQNnBvIkzk8LDsaWr4Tv5KH5/5MFMhg/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqaUd7XT; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E1014AD20
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745248127; cv=fail; b=Y2g+o9MAKXZ0upycjIl9DZJOjIShkFeUlAJtu1hyWwVAkfPGKrXR4ftmZdpm2j1AVnJ8FvKgHJBh2MqVOSy+KNxAKOulmhkWSuC4DqO0h20DORfF3ciqs/xaFnPX9ciwJWtfsBHVTPY66gcn2Nirx+5/VQi8y2Kz2w+B1D6JizQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745248127; c=relaxed/simple;
+	bh=a3fJEorDP/ToBhZzN7lwyzJX3a0J1uDWWKDFfdXf4uQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ey3EB2fVlr9DbkDHSWcelMRhmbOZbsdiU0OQXnSIDXETRYBQsvlgXjauX3eIKYFMuOc53g54QNwsEABFlVTOsZTUPtLcdtU2vmdoywIQCaDXz9gmbfZHx9eOLTY5MWULGq7KeWOAEiFz8OSMVgNa5v8b5h5rJHCcXKLWfYoYVMw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kykewOaW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xdsckcHq; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqaUd7XT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19284C4CEEC;
-	Mon, 21 Apr 2025 15:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745248064;
-	bh=tVN20hZ85YLN+8NRYnvSHeVwieScBTswPZoX8rBIYV8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OqaUd7XTkht1TUYKGkZqu9J9GtpEJTuI+4OCZzs80zlgA+gvPVc4IJqI49gfCVV5D
-	 0oPYuN5sQUYHofki66+x/9QJMldJXRPCh9W28wAAAFEtqGJImgXSvRxUHiaxdpOuU/
-	 Cj/br2jDQ/Sp9gVO7nEENwI17mj5mjSLcnCYiYdCkGN+EdCwBPnwO9EhIUMEVb3wgX
-	 A5peEXfHXHmvE5jEOFGJvAhQOCRj7SAlFYG6sMQkPlF3inMPAE6edS0Oyrwq4LRX89
-	 rL0fxrngr0Pa05uimrJWMxI73IrDJPGwo3m51lN6wId6xQVfTrzVC3zeK0L7nOwhlH
-	 yciv73BtGxEeA==
-Date: Mon, 21 Apr 2025 10:07:41 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kykewOaW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xdsckcHq"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCBXQ2011863;
+	Mon, 21 Apr 2025 15:08:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=T5jkPK6pz8ZgBY89P3Mi8319g5pxp1bO6RA7aARr1Eg=; b=
+	kykewOaWCtoHBIXUE4UOswoWXAKk7xZSoiqZnpC2R+ZpyOeV4LXmmb8a98Uhm2+7
+	hSr7XAuCPY00XmWtfts34SA04eYiqoMGKsYGmBMHxuss5NiFocaQ6Up+9dupu0bU
+	zHc5FnP1XjmGsLxllOUOakHo66DOeeK8KDDdy1P4bGSx0SeGeAyMepnyMAOJc3I4
+	dR92jQs1HqvXxG5g27nsadyDHzoO8kJerVeODnPTgehmFaKXuG8iE3y9ryogQMsm
+	GZXa3r/rsDl3QLkOPhFUQCMV4iCaByQVWmtXkZ3aft/ztv4+rstvf0zEDPktvrmM
+	CZM8zX1vcB38BrdS0TXFXg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46428c2p01-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 15:08:18 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LEeWlf002887;
+	Mon, 21 Apr 2025 15:08:17 GMT
+Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013079.outbound.protection.outlook.com [40.93.1.79])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46429851bk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 15:08:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=muboxSI/1rUsE3Z0nFYHxwMM7wDD65Ahro3988O3oj0ARXjzmyfQrgCTLybRttEFGylqgYA7klTo00bK6OaHOeh0z6SgfXWWW+YpZDlEzEPWl3UqGTdtMGrR5BWyiyuVVK06mZN+P/RfRrQVsn3PpzIr7plnK7M/7Lu6X+7pVPpVUJRLtAvcOywqf21HNnrUUXf9UDTeQKW8m9I9qr0mNortsPBe06LJanA8XNuBUn6wesVwvVAlQQbWrDPuSr9jvWVnTJU6zUI2SDZ49rh8SpdbwcaPhra7ZoDMR/YMYICezGrbr3h6mFM8AltofksKpthrBA8tncsZ2mtcTlMjeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T5jkPK6pz8ZgBY89P3Mi8319g5pxp1bO6RA7aARr1Eg=;
+ b=BUWuqx0KfJnt9yYzgaA7zm82rOz/LGObzEWHCm6z6WF55fMyUgrb5eWnpJPOG4fOw6vlXAFYIkVMKVOvzt+YJdVqgTEmOIFV3yTe4dTXcWoHvz+bDk7PkkyDhtiCoynpehdXY5nQb0I2uFhA90O6nYZcZ/ir8w7GvDe0GEGmhXeI+9Z6xXPR7Rgbh0Ntk0ucIsVp345A/HtbWCP9trtUVI7ZimHL7p1PE/4je9DU29tgEOLjSSLuG2lWs7GlNaxOanBo6HjWm0EzqpdnB/TmfnMiZSZt4xSUcxsVKzw0cwg2AqzyNTaUR2xySPP9yjx1q06b97L2bvPmFbQ6p+mPAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T5jkPK6pz8ZgBY89P3Mi8319g5pxp1bO6RA7aARr1Eg=;
+ b=xdsckcHqmYBO/3vk9DGs6EG9RuSgkdZVpbrjlt3WmhQShdfKFej0F/pyH4YAQbd7Q8Ijeb0Zdgcd1qeqbs2Ahfy8gsnV/UgTUkY3XSiBudP1hEaEqUwVFAfAQ/vxjEHAg0x4RNZzq2WpAIJvWICBSnKdPf6VGm8by9leoeoYl/4=
+Received: from CH0PR10MB5113.namprd10.prod.outlook.com (2603:10b6:610:c9::8)
+ by MN2PR10MB4190.namprd10.prod.outlook.com (2603:10b6:208:19a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Mon, 21 Apr
+ 2025 15:08:14 +0000
+Received: from CH0PR10MB5113.namprd10.prod.outlook.com
+ ([fe80::eab6:6dcc:f05f:5cb2]) by CH0PR10MB5113.namprd10.prod.outlook.com
+ ([fe80::eab6:6dcc:f05f:5cb2%5]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 15:08:14 +0000
+Message-ID: <17189a00-25c4-4b96-a468-84998ef17a77@oracle.com>
+Date: Mon, 21 Apr 2025 11:08:11 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] mm/hugetlb: Convert use of struct page to folio in
+ __unmap_hugepage_range()
+To: nifan.cxl@gmail.com, muchun.song@linux.dev, willy@infradead.org
+Cc: mcgrof@kernel.org, a.manzanares@samsung.com, dave@stgolabs.net,
+        akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Fan Ni <fan.ni@samsung.com>
+References: <20250418170834.248318-2-nifan.cxl@gmail.com>
+ <20250418170834.248318-5-nifan.cxl@gmail.com>
+Content-Language: en-US
+From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+In-Reply-To: <20250418170834.248318-5-nifan.cxl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN9PR03CA0567.namprd03.prod.outlook.com
+ (2603:10b6:408:138::32) To CH0PR10MB5113.namprd10.prod.outlook.com
+ (2603:10b6:610:c9::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Tero Kristo <kristo@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Sebin Francis <sebin.francis@ti.com>, 
- Nishanth Menon <nm@ti.com>, Kendall Willis <k-willis@ti.com>, 
- Dhruva Gole <d-gole@ti.com>, Kevin Hilman <khilman@baylibre.com>, 
- Vishal Mahaveer <vishalm@ti.com>, linux-arm-kernel@lists.infradead.org, 
- Akashdeep Kaur <a-kaur@ti.com>
-To: Markus Schneider-Pargmann <msp@baylibre.com>
-In-Reply-To: <20250421-topic-am62-dt-partialio-v6-15-v1-0-6ced30aafddb@baylibre.com>
-References: <20250421-topic-am62-dt-partialio-v6-15-v1-0-6ced30aafddb@baylibre.com>
-Message-Id: <174524753085.2426038.13409894396395372581.robh@kernel.org>
-Subject: Re: [PATCH 0/7] arm64: dts: ti: k3-am62: Add wakeup-sources for
- low power modes
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR10MB5113:EE_|MN2PR10MB4190:EE_
+X-MS-Office365-Filtering-Correlation-Id: d24ae236-582b-4862-7a77-08dd80e6568f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dU9rR0t1NE9ZdStmYkl4N3FhNmFnKy9CNGpMN1NZL2w3ei9KZmtQd0c0Ny9k?=
+ =?utf-8?B?bVczVndxcTBITXZTZ25LRUxZcWNyWXNtZnpCQ05nc2dQamNnZ2ZYeGwyZG5j?=
+ =?utf-8?B?Um5uekI4YkZVcXVWT05FNlpIcmhkRlMzc2o5NWlvbEdsSFYzOWcyU1BXQVhz?=
+ =?utf-8?B?K09mVDVpSEhZSUF5WGIwK3M3TGt5aDNTS1Frdkl2d2k5bU8wLzNsVlNmVnZH?=
+ =?utf-8?B?UkFjbGZDeFB6eE4za0F5bnMwb2dVN2p4VXFhRldLWEtkb21pelNtZm4xMHp3?=
+ =?utf-8?B?cWNrZWhEbmxmS0Z3SXFNamNjZHBHYlBQWnhpNDhTL001eFZZOGtZeXJXLy9r?=
+ =?utf-8?B?aEgyVWxiVzZoZ20wRTdYb3RZcVI2OUtocTJpZWZCdjFwQzBya01vOGlQdmJX?=
+ =?utf-8?B?NWtqTEpnNWE4aHZqVFdSNFlYU0haZ0liT1hTWUVJc3hBYm1KRFRzaC9YcXE4?=
+ =?utf-8?B?VnFpeFQxSjhkczBMZUdQRXQxS2pvbEMvSXJtbU1rOVdrVXJtYzA0U2lTdFBK?=
+ =?utf-8?B?Ny94RjF4L01zTktYRTlVN2NndzUvcHYwZ1JHQ1E3SkNsVmNFazVydDQyMW9L?=
+ =?utf-8?B?OFdJNGg3cmNHS056VlRtU0NoeG02Y2w5dGFoaHNOdXRzWndxUkJIUFRPUWZM?=
+ =?utf-8?B?WUxRLzNzbnRRbEs2Y0t6aEtnSmZBQ0hYM2txdzVhTWlIUTVNNytxY2QwOWJ3?=
+ =?utf-8?B?NzFoSXBzcEtkWWlaMlQvVUx2d1oyeTZTNUdIMGFRL2NzTkVvYk15SGk4bVVw?=
+ =?utf-8?B?a0x1aHdEb1p0RXFIcnM5ZjBBREtzQnYwd1N5UGRSRHJId2puOWZqeVIyZTVN?=
+ =?utf-8?B?bHRjeVJDNHZXZll4dDhiZStZS29pWTZiYk5SWFVicmZFcUF2eGpqMHo3M0Q5?=
+ =?utf-8?B?SkczT3Vsbno4aVQ5UG11YmVzUk0zdzZkd1h4UExLd0FTdkVJUjVVdmJHZTRu?=
+ =?utf-8?B?NGZiNy9NR2h4OGxYNVlySVBLMXg5eDE5MFpoczZOQ0wzbnlOSHJaU3JDblB0?=
+ =?utf-8?B?Q0poeGw4QWNIa0p6WmhHVzNvbzk3T0Q4NEo2MVlucCs2UzhvR1ord1pCc1Z3?=
+ =?utf-8?B?UHNHbFIxNGtYYVpUU1pManhFaDdZZXk2dTl1Z21zUkRlSmdXTG0zL2x3V3Rr?=
+ =?utf-8?B?OTZGNk9ZMlo5Q1lZTlZnbk9hSkZoZTF4Ry9CWUJ6YmlWWWkyYlJPYmxvaEtQ?=
+ =?utf-8?B?R0taajBEdUMzc0J1by9razVtZFpDQW81ZFF3bWd2clpCMitMWTJPUUpTelVE?=
+ =?utf-8?B?RDZEeitaVGNtM0Rnd2Jabkx2UkVsUXVoLzErM2NOb1FhaW9VRGdzYkJTc3c2?=
+ =?utf-8?B?MUxqYi9sZ2R4VDRFUWVEM3ZKT2d2eHhYNVh4RUFrb0NUZC9mRllIY2ppMVlU?=
+ =?utf-8?B?L3o5MHJvUWNieEN3S2xNRmRsb1N4NzZZclpsTEFKclI3YVpybGdKL0FHU1Jh?=
+ =?utf-8?B?Y0dDT1AzQiswTlpRQlFCM3FUbTN5dC8zUW1UbVpMZ3VaeUdHN3FHSDV2NTJk?=
+ =?utf-8?B?V2hMUzgrYjFYZXZOMGIyNFMwMjkvSXRvYURsNmpZMWRyTVF4UjBLclB6ZDNI?=
+ =?utf-8?B?RWV5TVpKY3B3T0dnTUtoYTRBa2xHMlJTdGgzbTBEQndKOS9XT3lSdlJ2Y2VM?=
+ =?utf-8?B?cUpGWUlzcE1mV0ZMNk1aTGkzMmpqNDljaXZmbXpJdzFaWWIxUEVSVzJtOGNi?=
+ =?utf-8?B?b1F0TGlNV3pFUVZoTHY0MU9GZXhpVWc4d0pXNS9JOWZGclJjdnJBVWN1K3Ry?=
+ =?utf-8?B?Ymgwbnd3cjZLNDBOM0UrUFhrUHFvUTFmdWF1NFJrZURzcVpXRElhVGhYQlNI?=
+ =?utf-8?B?TjllT2FTaWhVb0xsWHdTN3BIUDR0ZDhOYjdyWXhobGpnb0VNVlhTWmN6MnlZ?=
+ =?utf-8?B?VVdtT1JudnRrR1BzNkhBNEp0eUppZ0JxZWlBa2kzNGFRdmJsdFFpVUpoTm5C?=
+ =?utf-8?Q?dCowP9mR4X4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5113.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q2Z6ZGdHYkNWOVBibGcxVGFOeHZEZDlka0hOeXNVZW54NGlWZ2xNaUlReHFy?=
+ =?utf-8?B?azNwMWozQjZZa1N6WlppdUhQa2xEczkzcWc4SGxtMFA5dEpoYXA2c0ovWjEw?=
+ =?utf-8?B?bkg4bk15V25kY1AwbWg3ZlRlK25ZSG5iTUFCUVlUK3ZoNWVMa002UERsSTlk?=
+ =?utf-8?B?RTltbm1uUDcxckdIN0w4dnFEL29MUWlrRlU4TGZaTmRUbEp1d1RqUllmeTVU?=
+ =?utf-8?B?cSsvTFdzTnZ2aTYzNHpoU3EweDJIamkwOUNMOTZMOUt5d1dMMklMUVJJdGV2?=
+ =?utf-8?B?K243eExXZ2hOVGpSYXJGenM0YzMrK2E4dlNTcGVEdXNUdWVzYzRQQ3I5SVdj?=
+ =?utf-8?B?ZmRTUmFZSWJaTkJ4bDROT210NVE5UEJLNS8zZXZyMllNK01qQ1VNYkRLbTVR?=
+ =?utf-8?B?anBkdjVuTXZIZnpCeW1IeXVVMWNiWFBVckUra3FjM1lPNG9tSjBodFI0bmxh?=
+ =?utf-8?B?MC9tM09NN2JFM0tPVW44TUM0TjhpRm9VeUY5SCtyK29ROXpva1F6cVZpM0w3?=
+ =?utf-8?B?VytYRVVhcW0za2NNL1FYMmdFQkpXTER1SWlxdW1wejNuWUkyZjRTMTZsSi9k?=
+ =?utf-8?B?UTQ5OWVyZE5lMmJEOEhjNjRuUkxwbUtZNUp4VjVBSXZNWVd0d3RRR0JtN1FK?=
+ =?utf-8?B?N2xndEZOdFcyTmQ5aHZ2aEFHUjc5dWF6OGpZRmsxT29md2o2dHkzVGdxb1Qv?=
+ =?utf-8?B?NGRnSnNOSm5tdDZHdGR5a2EyeFRxcU9QVERnaUIvWUZtMEpwKzdvelQ0Nkl0?=
+ =?utf-8?B?cmRzd25hcW9zU1NncmNJbTZIRGl5NVdSWFlseUR1ckJBZENBcnNZSTRUZkpo?=
+ =?utf-8?B?SEVOaGhhQnE0NzAzNkhlR3lLZUJWcGVPL3pSZUVDRmxYcWY2K2RYclQ5UjVH?=
+ =?utf-8?B?T1hCR2orYXJMQ2UrRnJXWFhLZk1TUGM0b2F6WEp4MzJtaEZ2MUhNTm9VSita?=
+ =?utf-8?B?b1FTaFVDcWN3U0NNWURHMVdMR0podGEvNG01UDJialpDOENSa0NkR3YxU2wr?=
+ =?utf-8?B?MW1EVWlrTWk5akNEbkp5MGhmRlMyZERJNU9OQ2RqVFRqelllK2pTN0Vmc3Fn?=
+ =?utf-8?B?OVFucjgrVyt2YU9zcHVESjZYakxXRkU3QlVNdEJtUUJnRjZmRnM1Tjh3NGFT?=
+ =?utf-8?B?aFl5bjRQZjZZMEFjNUpmWXNaVi9EdGcxcmlDSmVESmRUU3llQmRCeWhlSW8w?=
+ =?utf-8?B?WWc1MEJldE1rdTVMYjRpS2xoSTRyZ0gxc1lwdlNDUU1CK2JsZUVWMWEveFRD?=
+ =?utf-8?B?QlBhcENlZkNhaGJpTnVXS1dqbHQ3ZWcvTUlIYU9lNlZweWtyZGhiNFZpandt?=
+ =?utf-8?B?dEsxM3l1QXRJREc5cjMydUNhMUhZZXUyRmt3VXUyZkR3MEU4U0YzeHJRQm41?=
+ =?utf-8?B?VUVOS3BaM0JHYjdFaFZ5Y2xDSm5pVWk1QkRhWEx0U1RneVJWYndaQVR2NG91?=
+ =?utf-8?B?cyt4bnBpWlFzZ0FHWW5ONVQ5SURScEQ5MEI2Mmx0Q1hIQ2ZFMGMzeWRWMnoz?=
+ =?utf-8?B?bzVuMnJHd25ZQUlJKzNjM2gyc3Y1MzJialFKSTF2c3VFWFZIUkdUQ1E3MXhY?=
+ =?utf-8?B?Vk0yME10am56ZWZPbVBUSEx0eG0yNnRUS3ZBV09qdkJiTlBaYS9kdm9mYlRO?=
+ =?utf-8?B?NmdFaXlKSDlWV3d1TU5Wc0VDMnNBN3pBdTB1R1kvNFMzay9jWUNzRkhpVHhZ?=
+ =?utf-8?B?N2JPYk5VZUFTWnFnMlpuanBtNHhJYnRnNCsyVEJxTG9kSkVMMjkvQTdFNEcv?=
+ =?utf-8?B?ZDNaWFU4R2k0cE02dG1ycXpId210YWs0aUtvZ1ZCME9aKzJEdUI5cGZrazQv?=
+ =?utf-8?B?bTU1V1JEWVVLVk1rV20zWDR5d3dzeWRseTNJMCtRQzZjM2t6Q2lYbW54cFlB?=
+ =?utf-8?B?TXVkVi9BaVJWNy81bDJPS3pjRWxvdDZHL2VScUdwYzBaWXZCR0REZm81NTVt?=
+ =?utf-8?B?MWVMeTIxOW8wYXNYRkQwSkZaZzVkNXMxM3loVnlaKzYxNFNNS0c0bzJQS2pm?=
+ =?utf-8?B?dFN5MjBCK0pxSllwNHdnTDBXbk0zZXZNWGNwZm56YWp2VXpoODU0RGZpb1JS?=
+ =?utf-8?B?Zi9DT1owdG1Qd1ArOHR3RUt4MVlnTTk5Q3hXOWlDS2lQMWxLZGFiSHRpbkVQ?=
+ =?utf-8?B?MzMzaFpjVElKdEp0NmN1SEtUQ3lLMkZtbjY4c2VZTDg5bVV0RTNnOEhrOWlN?=
+ =?utf-8?B?anc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	RvzRurRUe2fCUqvs8TrQt93Xr3Ll91wqvf5sWyHdSxoOKuRy2ldpHLd5ligyDVUXOodq0H2uLUKRW1myQvSW4+hoNBa5/nPa5Bm+x8j7KJWKq2QT4D+YqmxfMQzWwYg8sNl1DInDzRJRco0DSfaRV5Owt07IVykHrFVwy/5UPMBSe2xQiGMNedd+vPzhgR8KqdsM28kcG3xquEtYIdOH/kY4FZDhEZtuYwuGc2KcIzN4ul8JEZzok2z91vMUjkTx+aThhz00D7iPHV9jmurw41r5VWHVWTZ2BSJIhHzJ4TvHaUQBwbtkW1TXMZvKhtOZ6I7ley/HJC+O3dWM3uGz3T3bcIh6p/o359YN6dVegWi6qUcFMw6IREhis5VXeDJO7K0Tx7fJo1gJDwB156xQQhhjXfCctR9reG3s9u2DiGJN09gztYHNbuh6qGBhn2KxA2pLupi1Ha2uAy63WR17yw/Gy2p4ssvfymEyArOC5Q6KW5Nvn6FCic7L7za+B+XrlNbGV4gKqiSSSed16YwoPLEnuZOUOiDpDR2JdMACt3U1NTJyR8bhWOlzjEh5zDmdkn2JpGQEE13pY8O7DIN95fOthwK3wnWZIFfgU75UZ0Y=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d24ae236-582b-4862-7a77-08dd80e6568f
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5113.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 15:08:14.3045
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZyFfXFU6EkRbgnFtlJ1irwWMlYZ8eJKf79qo6tofpQ5Fyxoob9VKJxabLKYYgCzQBffdO6pzpQpdlDyHWkOWanoqfAyqk/FaoD7ecDWCNRY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4190
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_07,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504210118
+X-Proofpoint-ORIG-GUID: M2v6RvVgBcrI5rDx2AICi9loOB2Cdchd
+X-Proofpoint-GUID: M2v6RvVgBcrI5rDx2AICi9loOB2Cdchd
 
-
-On Mon, 21 Apr 2025 10:14:18 +0200, Markus Schneider-Pargmann wrote:
-> Hi,
+On 4/18/25 12:57 PM, nifan.cxl@gmail.com wrote:
+> From: Fan Ni <fan.ni@samsung.com>
 > 
-> This series adds devicetree changes needed for Partial-IO support
-> on TI am62, am62a, and am62p SoCs. It defines system states for various
-> low power modes and configures the wakeup-sources for devices in the CANUART
-> group. Depending on the SoC and board details, some low power modes may not
-> be available, so the wakeup-sources are described in the board files.
-> The series also adds the necessary pinctrl settings required for proper
-> wakeup functionality.
+> In __unmap_hugepage_range(), the "page" pointer always points to the
+> first page of a huge page, which guarantees there is a folio associating
+> with it.  Convert the "page" pointer to use folio.
 > 
-> Partial-IO Overview
-> ------------------
-> Partial-IO is a low power system state in which nearly everything is
-> turned off except the pins of the CANUART group (mcu_mcan0, mcu_mcan1,
-> wkup_uart0 and mcu_uart0). These devices can trigger a wakeup of the system
-> on pin activity. Note that this does not resume the system as the DDR is
-> off as well. So this state can be considered a power-off state with wakeup
-> capabilities.
-> 
-> A documentation can also be found in section 6.2.4 in the TRM:
->   https://www.ti.com/lit/pdf/spruiv7
-> 
-> Implementation Details
-> ----------------------
-> The complete Partial-IO feature requires three coordinated series, each handling
-> a different aspect of the implementation:
-> 
-> 1. m_can driver series: Implements device-specific wakeup functionality
->     for m_can devices, allowing them to be set as wakeup sources.
->     https://gitlab.baylibre.com/msp8/linux/-/tree/topic/mcan-wakeup-source/v6.15?ref_type=heads
->     https://lore.kernel.org/r/20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com
-> 
-> 2. This series (devicetree): Defines system states and wakeup sources in the
->     devicetree for am62, am62a and am62p.
-> 
-> 3. TI-SCI firmware series: Implements the firmware interface to enter Partial-IO
->     mode when appropriate wakeup sources are enabled.
->     https://gitlab.baylibre.com/msp8/linux/-/tree/topic/tisci-partialio/v6.15?ref_type=heads
-> 
-> Devicetree Bindings
-> -------------------
-> This series depends on the dt-schema pull request that adds bindings for
-> system-idle-states and updates the binding for wakeup-source:
->   https://github.com/devicetree-org/dt-schema/pull/150
-> 
-> These new bindings allow us to define the system states and reference them
-> from device wakeup-source properties.
-> 
-> Testing
-> -------
-> A test branch is available here that includes all patches required to
-> test Partial-IO:
-> 
-> https://gitlab.baylibre.com/msp8/linux/-/tree/integration/am62-partialio/v6.15?ref_type=heads
-> 
-> After enabling Wake-on-LAN the system can be powered off and will enter
-> the Partial-IO state in which it can be woken up by activity on the
-> specific pins:
->     ethtool -s can0 wol p
->     ethtool -s can1 wol p
->     poweroff
-> 
-> I tested these patches on am62-lp-sk.
-> 
-> Best,
-> Markus
-> 
-> Previous versions
-> -----------------
->  - As part of the series "firmware: ti_sci: Partial-IO support"
->    https://lore.kernel.org/r/20250306-topic-am62-partialio-v6-12-b4-v5-0-f9323d3744a2@baylibre.com
-> 
-> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > ---
-> Markus Schneider-Pargmann (7):
->       arm64: dts: ti: k3-pinctrl: Add WKUP_EN flag
->       arm64: dts: ti: k3-am62: Define possible system states
->       arm64: dts: ti: k3-am62a: Define possible system states
->       arm64: dts: ti: k3-am62p: Define possible system states
->       arm64: dts: ti: k3-am62-lp-sk: Set wakeup-source system-states
->       arm64: dts: ti: k3-am62a7-sk: Set wakeup-source system-states
->       arm64: dts: ti: k3-am62p5-sk: Set wakeup-source system-states
-> 
->  arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts | 60 +++++++++++++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62.dtsi      | 22 +++++++++
->  arch/arm64/boot/dts/ti/k3-am62a.dtsi     | 27 ++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts  | 76 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62p.dtsi     | 27 ++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts  | 76 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/ti/k3-pinctrl.h      |  2 +
->  7 files changed, 290 insertions(+)
+> This is a new patch added to the series based on the discussion here:
+> https://lore.kernel.org/linux-mm/aAHUluy7T32ZlYg7@debian/T/#m2b9cc1743e1907e52658815b297b9d249474f387
 > ---
-> base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
-> change-id: 20250415-topic-am62-dt-partialio-v6-15-327dd1ff17da
-> prerequisite-change-id: 20241009-topic-mcan-wakeup-source-v6-12-8c1d69931bd8:v7
-> prerequisite-patch-id: 02b7142f56c849c9a3faab2d2871805febd647aa
-> prerequisite-patch-id: 830b339ea452edd750b04f719da91e721be630cb
-> prerequisite-patch-id: 56fd0aae20e82eb2dfb48f1b7088d62311a11f05
-> prerequisite-patch-id: 41f55b96c0428240d74d488e3c788c09842a1753
+>   mm/hugetlb.c | 18 +++++++++---------
+>   1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> Best regards,
-> --
-> Markus Schneider-Pargmann <msp@baylibre.com>
-> 
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
- Deps: looking for dependencies matching 11 patch-ids
- Deps: Applying prerequisite patch: [PATCH v7 1/4] dt-bindings: can: m_can: Add wakeup properties
- Deps: Applying prerequisite patch: [PATCH v7 2/4] can: m_can: Map WoL to device_set_wakeup_enable
- Deps: Applying prerequisite patch: [PATCH v7 3/4] can: m_can: Return ERR_PTR on error in allocation
- Deps: Applying prerequisite patch: [PATCH v7 4/4] can: m_can: Support pinctrl wakeup state
- Deps: Applying prerequisite patch: [PATCH 1/7] arm64: dts: ti: k3-pinctrl: Add WKUP_EN flag
- Deps: Applying prerequisite patch: [PATCH 2/7] arm64: dts: ti: k3-am62: Define possible system states
- Deps: Applying prerequisite patch: [PATCH 3/7] arm64: dts: ti: k3-am62a: Define possible system states
- Deps: Applying prerequisite patch: [PATCH 4/7] arm64: dts: ti: k3-am62p: Define possible system states
- Deps: Applying prerequisite patch: [PATCH 5/7] arm64: dts: ti: k3-am62-lp-sk: Set wakeup-source system-states
- Deps: Applying prerequisite patch: [PATCH 6/7] arm64: dts: ti: k3-am62a7-sk: Set wakeup-source system-states
- Deps: Applying prerequisite patch: [PATCH 7/7] arm64: dts: ti: k3-am62p5-sk: Set wakeup-source system-states
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/ti/' for 20250421-topic-am62-dt-partialio-v6-15-v1-0-6ced30aafddb@baylibre.com:
-
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: /system-idle-states/system-io-ddr: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: serial@4a00000 (ti,am64-uart): wakeup-source: [[4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: can@4e08000 (bosch,m_can): wakeup-source: [[14, 4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: can@4e18000 (bosch,m_can): wakeup-source: [[14, 4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62p5-sk.dtb: serial@0 (ti,am64-uart): wakeup-source: [[4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: /system-idle-states/system-io-ddr: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: serial@4a00000 (ti,am64-uart): wakeup-source: [[4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: can@4e08000 (bosch,m_can): wakeup-source: [[13, 4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: can@4e18000 (bosch,m_can): wakeup-source: [[13, 4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62a7-sk.dtb: serial@0 (ti,am64-uart): wakeup-source: [[4, 5, 6, 7]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb: /system-idle-states/system-io-ddr: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62a7-phyboard-lyra-rdk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: can@4e08000 (bosch,m_can): wakeup-source: [[9, 10, 11, 12]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: can@4e18000 (bosch,m_can): wakeup-source: [[9, 10, 11, 12]] is not of type 'boolean'
-	from schema $id: http://devicetree.org/schemas/wakeup-source.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /system-idle-states/system-partial-io: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /system-idle-states/system-deep-sleep: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /system-idle-states/system-mcu-only: failed to match any schema with compatible: ['system-idle-state']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /system-idle-states/system-standby: failed to match any schema with compatible: ['system-idle-state']
-
-
-
-
-
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 7d280ab23784..8177a3fe47d7 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -5840,7 +5840,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   	pte_t *ptep;
+>   	pte_t pte;
+>   	spinlock_t *ptl;
+> -	struct page *page;
+> +	struct folio *folio;
+>   	struct hstate *h = hstate_vma(vma);
+>   	unsigned long sz = huge_page_size(h);
+>   	bool adjust_reservation = false;
+> @@ -5904,14 +5904,14 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   			continue;
+>   		}
+>   
+> -		page = pte_page(pte);
+> +		folio = page_folio(pte_page(pte));
+>   		/*
+>   		 * If a reference page is supplied, it is because a specific
+>   		 * page is being unmapped, not a range. Ensure the page we
+>   		 * are about to unmap is the actual page of interest.
+>   		 */
+>   		if (ref_folio) {
+> -			if (page != folio_page(ref_folio, 0)) {
+> +			if (folio != ref_folio) {
+>   				spin_unlock(ptl);
+>   				continue;
+>   			}
+> @@ -5926,7 +5926,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   		pte = huge_ptep_get_and_clear(mm, address, ptep, sz);
+>   		tlb_remove_huge_tlb_entry(h, tlb, ptep, address);
+>   		if (huge_pte_dirty(pte))
+> -			set_page_dirty(page);
+> +			folio_mark_dirty(folio);
+>   		/* Leave a uffd-wp pte marker if needed */
+>   		if (huge_pte_uffd_wp(pte) &&
+>   		    !(zap_flags & ZAP_FLAG_DROP_MARKER))
+> @@ -5934,7 +5934,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   					make_pte_marker(PTE_MARKER_UFFD_WP),
+>   					sz);
+>   		hugetlb_count_sub(pages_per_huge_page(h), mm);
+> -		hugetlb_remove_rmap(page_folio(page));
+> +		hugetlb_remove_rmap(folio);
+>   
+>   		/*
+>   		 * Restore the reservation for anonymous page, otherwise the
+> @@ -5943,8 +5943,8 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   		 * reservation bit.
+>   		 */
+>   		if (!h->surplus_huge_pages && __vma_private_lock(vma) &&
+> -		    folio_test_anon(page_folio(page))) {
+> -			folio_set_hugetlb_restore_reserve(page_folio(page));
+> +		    folio_test_anon(folio)) {
+> +			folio_set_hugetlb_restore_reserve(folio);
+>   			/* Reservation to be adjusted after the spin lock */
+>   			adjust_reservation = true;
+>   		}
+> @@ -5968,12 +5968,12 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
+>   				 * count will not be incremented by free_huge_folio.
+>   				 * Act as if we consumed the reservation.
+>   				 */
+> -				folio_clear_hugetlb_restore_reserve(page_folio(page));
+> +				folio_clear_hugetlb_restore_reserve(folio);
+>   			else if (rc)
+>   				vma_add_reservation(h, vma, address);
+>   		}
+>   
+> -		tlb_remove_page_size(tlb, page, huge_page_size(h));
+> +		tlb_remove_page_size(tlb, folio_page(folio, 0), huge_page_size(h));
+>   		/*
+>   		 * Bail out after unmapping reference page if supplied
+>   		 */
+Reviewed-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
