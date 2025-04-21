@@ -1,162 +1,150 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2102.outbound.protection.partner.outlook.cn [139.219.146.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705CE255E4D
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745218201; cv=none; b=lB5oPa/dBuPP6lEUn60puqpIx96qzyxHkNor0+JlgZsVSIWU0Mzg3adU+8O4kSSAc4vE1ovDBKrS2r1LKed2ozGGqXPjJHrFWkaFU1e6aMp2Cay/2drxpgQYbho0P9OVKDEjU3zFYawn64HXL5L8Oo+GsId+GdauGPjJQ/MGqlc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745218201; c=relaxed/simple;
-	bh=J8gfubvR8xdU8KhWSrCT1xjBe9lNsAVzMtr72P9J4Tc=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=c0p9Gjw26CjrdO4qusY368kmo9VKbLYlpRvO+O5AhUxrTHKi8MHXN6NzrEzRp3fm5+oF/Tc4uY6QidMCuFxYoABIR5BMXH913iJKFXzmnCy8gS96D2c1z5vlrqh+haJJLlzIHSbi010zQnd0e7eNh0YIP/iFRMsEfHg3vrsoGeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=j1xXU1TQ; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j1xXU1TQ"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250421064953epoutp0305496382b9c367cfd70180e85cfb215e~4QrM5e0eI1397513975epoutp03W
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:49:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250421064953epoutp0305496382b9c367cfd70180e85cfb215e~4QrM5e0eI1397513975epoutp03W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745218193;
-	bh=6E/7VFpyvsMUlIQaY+I45HAEDDr2hRhsdBc9fxsVaO4=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=j1xXU1TQIKMbjNg+hAr84gXkb7ydpPW1Rw77624q50UUGDriA/iNrfBATUKdWx6sO
-	 E555tSzi0MRk4xrceohbvUF1FsOVnY5RSEjjEJVYZ+wLLURksHlQUucLFy1nTRrkME
-	 kPGzGZefz/pcnZH8b/G3Fgd1HXCfSkaQ8NZThgnE=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250421064952epcas5p3f0f1267aea243c0043c1618cb44a381a~4QrMWK6Gm2773527735epcas5p3r;
-	Mon, 21 Apr 2025 06:49:52 +0000 (GMT)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZgwwJ3cVBz3hhTP; Mon, 21 Apr
-	2025 06:49:52 +0000 (GMT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59312B63;
+	Mon, 21 Apr 2025 07:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745218893; cv=fail; b=qRkT/83/bZNf46sZ0YCT/XS76ItPrinxJyRbDQmYuHJE8lgE9GfofxsVZ4Vp9c4US7fqVcMN2gDuoA+eoP7VTrzUmUg+8PeRxMLmVRRolADirOEe7NXVsMQU49kxeE45GMlmLO77WcbIMU09xn3VRhFi0HDvgbgjvyubbeM5P0o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745218893; c=relaxed/simple;
+	bh=ta/BaFVrhbQqLy1mdUNJW69NqnU+Ck6Z4hU2JqaIK1I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GsbnuKebq1xXgrZPQRRK4CVsdCGS9BIpGez2kyPozYucE3UJF7tPmcSTJGAgp46qcz/QiVNFL00LmTiKjikAFqBQQ4JHGZzjT980GKNkXJqs/Wop93LE/q4Tffc2FhEd3a0ZpOxGlxdiB2ucspUVhcXUg4M7QJgGIQXVY23SZJU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ct+AwXoMzUcQICSDOQiDXq7cwybGINvGYfQSyi6frAjICvHkewdyieajxTXTQgD0jAdVW7WR1ebrwR7Uc61gqRTAw2kCwSay14XujMuPL6Vs3GPVBWuZnI/lytFUi1/il3UpMfQhdLeNDleMo/X1aHCmX/izfGoMKuQvZzkiy7Llx9bnCrnsUbbZkMYo/cuUHjF/C9rdH0j04ShalYSvYPJEMeS0PTKA/wMD7aAQluK1477QE/7N5Ecj4oNipII6Oq4pp5x+d5aFBzoL77kKiAoMZMtLqciqo9vaBj/z6sbBIqVYMC1IFZxB6XGaYbJ24LaaDAX70AqMAvg/xTtY4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ta/BaFVrhbQqLy1mdUNJW69NqnU+Ck6Z4hU2JqaIK1I=;
+ b=mtyBzz2bbYkcXglwSwdU3vFnxmTFgFbCgv3Md/k643t5OrU7+HulFCAPceHNcICkSq9b3eo5GVf5r9iOmCak4DGNTGGzXxlOoOTqVXI0TuflW0gDQxADIkObibnsWAJ7Ls0MiT9Ev5qj73WofReZXhemYFQaSLWiEA4cM684f99fqgmn00Ps2Lo5NyvopbzDjH89cOaUKLt3wkkTWtrQGg9W4Penzw09GIdckbgx8r27ArQtv2+gX0EZ+8c7bI/NQcgnOhsUU3tUuUjGCkU7Q9gU2qPfgaITzfsvX3kLEX/2Ii5XFNXuE7uTX/eFqjTZ+rZm9rp5BTmlSYTbbl3bxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB0949.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 07:01:17 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::64c5:50d8:4f2c:59aa]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%5])
+ with mapi id 15.20.8655.033; Mon, 21 Apr 2025 07:01:17 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Rishikesh Donadkar <r-donadkar@ti.com>, "jai.luthra@linux.dev"
+	<jai.luthra@linux.dev>, "mripard@kernel.org" <mripard@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devarsht@ti.com"
+	<devarsht@ti.com>, "y-abhilashchandra@ti.com" <y-abhilashchandra@ti.com>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "robh@kernel.org"
+	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "vaishnav.a@ti.com"
+	<vaishnav.a@ti.com>, "s-jain1@ti.com" <s-jain1@ti.com>, "vigneshr@ti.com"
+	<vigneshr@ti.com>, "sakari.ailus@linux.intel.com"
+	<sakari.ailus@linux.intel.com>, "hverkuil-cisco@xs4all.nl"
+	<hverkuil-cisco@xs4all.nl>, "tomi.valkeinen@ideasonboard.com"
+	<tomi.valkeinen@ideasonboard.com>, "jai.luthra@ideasonboard.com"
+	<jai.luthra@ideasonboard.com>, Jack Zhu <jack.zhu@starfivetech.com>,
+	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
+Subject:
+ =?gb2312?B?u9i4tDogW1BBVENIIHYzIDA5LzEzXSBtZWRpYTogY2FkZW5jZTogY3NpMnJ4?=
+ =?gb2312?Q?:_Use_new_enable_stream_APIs?=
+Thread-Topic: [PATCH v3 09/13] media: cadence: csi2rx: Use new enable stream
+ APIs
+Thread-Index: AQHbr2XujRYPpfcXpkW/0j4v4HO2I7Ott3Jg
+Date: Mon, 21 Apr 2025 07:01:17 +0000
+Message-ID:
+ <ZQ0PR01MB1302BDC09B8071290B80DF47F2B82@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
+References: <20250417065554.437541-1-r-donadkar@ti.com>
+ <20250417065554.437541-10-r-donadkar@ti.com>
+In-Reply-To: <20250417065554.437541-10-r-donadkar@ti.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB0949:EE_
+x-ms-office365-filtering-correlation-id: 064cde9b-b7f5-42a1-d456-08dd80a25035
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|41320700013|1800799024|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ oGEGuZVf7EwxmUo2N0kTayfno2grpuKusT3ayU5pc/M31zwT/JX3Go3/YWIFT3uaFetc2GTF83IoP4SnDktN5Q49dGALXpV415dI0ivB59tJejd5Z1/6fPAzFsPe+qOyEeRH6OFpCSK243w3rg0jlBzbTHexeg0rUmKqQhqSomBuIl3MlQ+d2lFeahcxBk7G7XNGCzGmkOq4196MUxkay7yP2CXGve9mg4gTvuDoF1F4XPgisMXaYm6jTE2ioXmiZycl7hE+vLwvLxpOf+AA7lCmJrbDcLJvavGmI6wKtmkjMOBw3/b+bNkMriDcAr693DmfsURmAOj6rAUGyX5ybu3vDCKNxGNq2MWWK8uFO/ipYZ1RB0ReD+OxuNDijT9y9QjKPexZcsw11bfvG5bevId2nclvH/7M4MPzkAqUxbEV3OY3jOoJoGW4fK9Gdp8xjdPQYvXswp++G/YuxSlU+tvossjSWnIlAT9jDT/l13tG/14gwHckyKk8LFZfIxVo+CcadwhDOr2dXoYfet2ccDzwUMPwa7x+HJdt0DmU6FxMIjgQ2VDJGUdeoq9sGEaZxnuwxeQJJ5qZyM/HQ4PHog==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?bnFFeEdvV3I5Q0FuMXczNGsxbnpma0cwUzR2ZjFuanFsQjhZVldUeEllQ0lC?=
+ =?gb2312?B?WjMyek8vM2ZNcVpkWi81a0NXTDBOUVF4SGdUMWhEamd6K0gra2drS1NUQzN2?=
+ =?gb2312?B?WDdXUCtFZ0d4OFcrQkR1UjJQU0Z6V2crMjkwRTZGZ1RaOGFMOXVsWFRCSWZB?=
+ =?gb2312?B?NVQrajNXT292S3BFS29mM0Npa2Jzc3hmMERZb3l6S2hmY01Fb0cycEc5ZE5S?=
+ =?gb2312?B?Vnp0S2h5QnVGdGtaK0h4MWhjRG5jdzJsYTRLblF6KzhoVFN6VGdOVFdQSUQ1?=
+ =?gb2312?B?TzdJMkhkTWhqOEkxN3NvSGJ1Ym9DQ2RNUS9BZzNWeGg2NFBnV1M2NTJKYUth?=
+ =?gb2312?B?QWRYSCtDL09Tcnh6ZzNFc2U1VWFMQ2ZuSWUvKzhqd28yS2VYMC9iYmFLeWFQ?=
+ =?gb2312?B?emNLMzk5bWdpUkVWT08xWmRSUG11eks0ckxRanV3eUt0d2FLTTIvcVFydHNG?=
+ =?gb2312?B?b1VxUi9saXJOck5RM3Q1MUM1MXM1S0RtaTY4NTEyS1RWOElHSG9hUU1vbFQw?=
+ =?gb2312?B?SURENzJ3bXJSYVo1MjZ2YlJjY3RQMEY1dFdqRW1aVVJTam9vNWxPZjhUYnJ2?=
+ =?gb2312?B?N2pNS1JpaDNxOXRkTUUvKzRCTzRZb09DeGE5YXg0ZGJpajZoMkkyZG0zVnFj?=
+ =?gb2312?B?Yk10MTZ1MUFkV0ordVhhYUVtWVk5QmM4TUViT1lvbWFydzdETzRNVHNNUm9X?=
+ =?gb2312?B?dmtxdUVkNUduay9KVXluSCtOanBucHVUcXNOVU53YlVlMjVKdjRzRzAvTVFI?=
+ =?gb2312?B?RWhTTy9sZTU4Wk80R2hDcDVTS0V3ZHo0b3VRN3FVdjdYNXNPdTJRblY0azQx?=
+ =?gb2312?B?MEJYRzhjRFY0UDlWSlVoUzZzTUVlYUZFSGJ2OWlLa1NNaFAycXZCbXJXM2E0?=
+ =?gb2312?B?QTJicEI0NTBFcjJ6SVo1b1lSSEN5eW1TUytJQ3ovV2syZnFtZ2FYaU5MZWlt?=
+ =?gb2312?B?WEZMTFVnQm9xOTBxbG5FdDdDK3VRWWx5L2dnNTJPSzI5RVpDV1hTcTNuNEVY?=
+ =?gb2312?B?QisyUk9selB3T0dod2YxUUtSMVNTSVVFQ2dnRzRUUVlSRnJ1QnNUWVdrTDZZ?=
+ =?gb2312?B?Mm5kTE9BeTkzNTRwdVlERm43dG9OQ0FUckcrVnU3RUhUQndjbVBkUXJrQnpQ?=
+ =?gb2312?B?TTZQcTdzanQza3lOYm1keExvWGorZFFmb05TMEEzUy9uM3VyNEorRnBMekJq?=
+ =?gb2312?B?V2MwVVhJUlBqYmlWK0JvZmlOVWtYUnZOWGtjbU1ENGlvUEl1WVJuVTRvc2dl?=
+ =?gb2312?B?TnFNRk0yRkRrSnF2OGk3TnB5V2VrVU51NFZQQTdQUWREUjhzbHVBTWV3Z085?=
+ =?gb2312?B?U2I3RThOYTR2WWFHTDRHWm43YUsrSWEwWU1HS3NWZHFrZmhROTlPWUVhVTBv?=
+ =?gb2312?B?WWNEOGtQVVVhbzVyeHhLTDM5aW1ZYXBUcnFqOS9hU1dYWWVTS1Nra3hkWE5P?=
+ =?gb2312?B?TDZkU0FTZWJFUktJbmZheEhlNVAvcWVXd3lGa2lyV0V2VGpSenN0STZUa2g3?=
+ =?gb2312?B?TDRSOTNHRXE3Z3Q4OHNFdTBzL21iQ1JjazBvNERwSEUyL3ZQZlJWa0pHdGxF?=
+ =?gb2312?B?UEwzU0k5VkNuUGhwWmZQY2k3UWt2VmQ2cndlMnhmcFpPdnhOZG9TYmhmZHJa?=
+ =?gb2312?B?b2RSc0tCUmxYSFVVcFNhQTZyR1EvbG50L1orTktRNncwRXlIYmVHRUhDNG15?=
+ =?gb2312?B?N05UeDBacDllREFFSVRFU3lJSE9NcitEdkFvWXcvWUx5MnNYV1RjbUVBTGZU?=
+ =?gb2312?B?R3Y0VGsxckM1OVJZdVk4S1BrWEs1SGlYV24wSWJweTZWQ0h5ZjJYNXlQMU5k?=
+ =?gb2312?B?WGZEWE1jeTlSRGpBK3J5Tm5DdThDYUdWZkRNeUp0KzdvLzlPNlJkc3QrNEg3?=
+ =?gb2312?B?OE9XM3BQYUszVWQ2cTFVQXdBWDVzeGRiRWczM1ZodmpCSmF4bnhjWVNCaWZk?=
+ =?gb2312?B?bHA4WjZPWXNPcWZMRCtLc0dlaThRT1p1TjlzbC9WRG5SQ2NiTmJXVjJ3ZnRk?=
+ =?gb2312?B?bTE4SkNPcVVCeHEyaDJmVmd1d0xoOVluRDhMWVZPTEtoMkF5Vnc0dlg0WDRa?=
+ =?gb2312?B?d1p0R0lmbnNjOGlRNGdyeTlsMGJRcG1aQUZMakpScTFQYzBpbVM5Z0NIK04z?=
+ =?gb2312?B?MVBuZHFrOFV4Q0FzekZJdFBCZkYvQTB3cFF2WkZRcklBS2JMZk1qVzQzc3li?=
+ =?gb2312?B?Znc9PQ==?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: Re: [PATCH] drm/edid: fixed the bug that hdr metadata was not
- cleared
-Reply-To: feijuan.li@samsung.com
-Sender: =?UTF-8?B?5p2O6aOe5aif?= <feijuan.li@samsung.com>
-From: =?UTF-8?B?5p2O6aOe5aif?= <feijuan.li@samsung.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>, =?UTF-8?B?5p2O6aOe5aif?=
-	<feijuan.li@samsung.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?B?5ZSQ57qi6aOe?= <hongfei.tang@samsung.com>,
-	=?UTF-8?B?5Lil5piO6LS1?= <minggui.yan@samsung.com>, =?UTF-8?B?546L55Cq55Cz?=
-	<qilin.wang@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <87cydbp5gs.fsf@intel.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20250421064952epcms5p50fcd97121f3b977d561e41b858e3ae21@epcms5p5>
-Date: Mon, 21 Apr 2025 15:49:52 +0900
-X-CMS-MailID: 20250421064952epcms5p50fcd97121f3b977d561e41b858e3ae21
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388
-References: <87cydbp5gs.fsf@intel.com>
-	<20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
-	<CGME20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p5>
+MIME-Version: 1.0
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 064cde9b-b7f5-42a1-d456-08dd80a25035
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 07:01:17.5013
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: p/RGH7Pu1M9665HiU8LJqvu415XJ21kx0ZALh7YFYT28RDxfU9KjyjnVjMlyaMDIw6118D6lwzKXPAACqQg/HZTSItIwkAIHNCU8lbfxnwah4Tjqdg0Ctz2KfMZ4Ltqe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0949
 
-=46rom 7da04ef9ba0c201e7817a21f8c4a1bf88973c8b9 Mon Sep 17 00:00:00 2001
-From: =22feijuan.li=22 <feijuan.li=40samsung.com>
-Date: Fri, 18 Apr 2025 14:56:49 +0000
-Subject: =5BPATCH=5D drm/edid: fixed the bug that hdr metadata was not rese=
-t
-
-When DP connected to a device with HDR capability,
-the hdr structure was filled.Then connected to another
-sink device without hdr capability, but the hdr info
-still exist.
-
-Signed-off-by: feijuan.li <feijuan.li=40samsung.com>
----
- drivers/gpu/drm/drm_edid.c =7C 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 13bc4c290b17..cd0e4148f6b0 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-=40=40 -6576,6 +6576,11 =40=40 static void drm_update_mso(struct drm_connec=
-tor *connector,
- 	displayid_iter_end(&iter);
- =7D
-=20
-+static void drm_reset_hdr_sink_metadata(struct drm_connector *connector)
-+=7B
-+	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_metad=
-ata));
-+=7D
-+
- /* A connector has no EDID information, so we've got no EDID to compute qu=
-irks from. Reset
-  * all of the values which would have been set from EDID
-  */
-=40=40 -6651,6 +6656,7 =40=40 static void update_display_info(struct drm_co=
-nnector *connector,
- 	struct drm_display_info *info =3D &connector->display_info;
- 	const struct edid *edid;
-=20
-+	drm_reset_hdr_sink_metadata(connector);
- 	drm_reset_display_info(connector);
- 	clear_eld(connector);
-=20
---=20
-2.25.1
-
-
-I changed the patch, not to avoid other functions.pls check.
-
-BR=7E
-feijuan
-
-=C2=A0=0D=0A---------=20Original=20Message=20---------=0D=0ASender=20:=20Ja=
-ni=20Nikula=20<jani.nikula=40linux.intel.com>=0D=0ADate=20:=202025-04-17=20=
-17:17=20(GMT+9)=0D=0ATitle=20:=20Re:=20=5BPATCH=5D=20drm/edid:=20fixed=20th=
-e=20bug=20that=20hdr=20metadata=20was=20not=20cleared=0D=0A=C2=A0=0D=0AOn=
-=20Wed,=2016=20Apr=202025,=20=E6=9D=8E=E9=A3=9E=E5=A8=9F=20<feijuan.li=40sa=
-msung.com>=20wrote:=0D=0A>=20From=20a34a1e2dd7aacd45f18775564fce12b03ae4009=
-c=20Mon=20Sep=2017=2000:00:00=202001=0D=0A>=20From:=20=22feijuan.li=22=20<f=
-eijuan.li=40samsung.com>=0D=0A>=20Date:=20Wed,=2016=20Apr=202025=2011:07:39=
-=20+0000=0D=0A>=20Subject:=20=5BPATCH=5D=20drm/edid:=20fixed=20the=20bug=20=
-that=20hdr=20metadata=20was=20not=20cleared=0D=0A>=0D=0A>=20When=20DP=20con=
-nected=20to=20a=20device=20with=20HDR=20capability,=0D=0A>=20the=20hdr=20st=
-ructure=20was=20filled.Then=20connected=20to=20another=0D=0A>=20sink=20devi=
-ce=20without=20hdr=20capability,=20but=20the=20hdr=20info=0D=0A>=20still=20=
-exist.=0D=0A>=0D=0A>=20Signed-off-by:=20feijuan.li=20<feijuan.li=40samsung.=
-com>=0D=0A>=20---=0D=0A>=C2=A0=20drivers/gpu/drm/drm_edid.c=201=20+=0D=0A>=
-=C2=A0=201=20file=20changed,=201=20insertion(+)=0D=0A>=0D=0A>=20diff=20--gi=
-t=20a/drivers/gpu/drm/drm_edid.c=20b/drivers/gpu/drm/drm_edid.c=0D=0A>=20in=
-dex=2013bc4c290b17..5cf5d30321b6=20100644=0D=0A>=20---=20a/drivers/gpu/drm/=
-drm_edid.c=0D=0A>=20+++=20b/drivers/gpu/drm/drm_edid.c=0D=0A>=20=40=40=20-5=
-607,6=20+5607,7=20=40=40=20static=20void=20clear_eld(struct=20drm_connector=
-=20*connector)=0D=0A>=C2=A0=20=7B=0D=0A>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0mutex_lock(&connector->eld_mutex);=0D=0A>=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0memset(connector->eld,=200,=20sizeof(connector->eld));=0D=
-=0A>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0memset(&connector->hdr_sink_met=
-adata,=200,=20sizeof(connector->hdr_sink_metadata));=0D=0A=0D=0Ahdr_sink_me=
-tadata=20is=20not=20related=20to=20ELD,=20and=20should=20not=20be=20cleared=
-=0D=0Awithin=20clear_eld().=0D=0A=0D=0AI=20think=20this=20should=20be=20cle=
-ared=20in=20drm_reset_display_info(),=20and=0D=0Along-term=20fields=20like=
-=20this=20should=20be=20moved=20within=20display=20info.=0D=0A=0D=0ABR,=0D=
-=0AJani.=0D=0A=0D=0A>=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0mutex_unlock=
-(&connector->eld_mutex);=0D=0A>=C2=A0=0D=0A>=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0connector->latency_present=5B0=5D=20=3D=20false;=0D=0A=0D=0A--=
-=0D=0AJani=20Nikula,=20Intel
+PiBGcm9tOiBKYWkgTHV0aHJhIDxqLWx1dGhyYUB0aS5jb20+DQo+IA0KPiBUaGUgZW5hYmxlX3N0
+cmVhbXMoKSBBUEkgaW4gdjRsMiBzdXBwb3J0cyBwYXNzaW5nIGEgYml0bWFzayB0byBlbmFibGUg
+ZWFjaA0KPiBwYWQvc3RyZWFtIGNvbWJpbmF0aW9uIGluZGl2aWR1YWxseSBvbiBhbnkgbWVkaWEg
+c3ViZGV2IGluc3RlYWQgb2YgZG9pbmcNCj4gc19zdHJlYW0oMSkgdG8gc3RhcnQgYWxsIHN0cmVh
+bXMgb24gdGhlIHN1YmRldiBhdCBvbmNlLg0KPiANCj4gVGhpcyBBUEkgaXMgaW1wbGVtZW50ZWQg
+YnkgZHM5MHViOTYwIGRyaXZlciAoRlBETGluayBkZXNlcikgYW5kIHRodXMgdGhlDQo+IGNhbGxl
+ciAoY2Rucy1jc2kyeCkgaXMgcmVxdWlyZWQgdG8gdXNlIGl0LiBGb3Igbm93IHdlIG9ubHkgZW5h
+YmxlIHN0cmVhbTAuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKYWkgTHV0aHJhIDxqLWx1dGhyYUB0
+aS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJpc2hpa2VzaCBEb25hZGthciA8ci1kb25hZGthckB0
+aS5jb20+DQoNClJldmlld2VkLWJ5OiBDaGFuZ2h1YW5nIExpYW5nIDxjaGFuZ2h1YW5nLmxpYW5n
+QHN0YXJmaXZldGVjaC5jb20+DQoNCkJlc3QgUmVnYXJkcywNCkNoYW5naHVhbmcNCg0KDQo=
