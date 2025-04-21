@@ -1,101 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787562905;
-	Mon, 21 Apr 2025 12:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347EE13C918;
+	Mon, 21 Apr 2025 12:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745239830; cv=none; b=cGrIyY7b63KiM73vgC+Wk5uYfzRxASwvJmYwbddvR+9CPreFRUDopTzNeOMeB8RVCkcU1XoYnD2E5o/V3DUD/OvgtgFdgFmmbk5Nohahqn+ttqJQdNHtjLDlxzuxkdFn0Vm9CV8c8H6q5Xr9p4WOL4u+aFc6niYaaQXre6rRzy4=
+	t=1745240005; cv=none; b=BUkgFNWws6/VxNfKiG56m/fHoT2cg4TNOlXhjUeoZTjebGTtrPcEe9YHJKlA2RmqY+yxOKhq5pN5nsSQONbPVVm6FBcXcLSRq6kswBcbnuyFk1PMXDYj6PJt0lUDFcznP9/0XyEN0PFoFk3Drt2JyZuMOHfYubwEZcgH7kq5Kos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745239830; c=relaxed/simple;
-	bh=aQVZG5DEu8YE5FWBUQD4b4UZYTXfV9Xxq60orHtA5b4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPmBVSDlJJe8Ot1Afe5GHSFhqW6DJT0o3XAzwegnTlqaE0ZEU81cKSCF0vrSNalqdJEHo1Oxd3KSyLMgmJ+ZjQZdDydgGCfn1Qw8UdDgJby/NaYMG+xF5p838mSeQKq1Mu3ISQwqzyigrMV6Ih545ZBRBUkVV2YUx/iLQus8Gc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgv+YWhT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745240005; c=relaxed/simple;
+	bh=EMk0vf5ncHir6gspRE/S9VWNaA6+A2Zx+Wr7pmtoO0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cywA8hiKGIst0OXabZhOREmt8XJogH4HQMzDwYhaXvTtppLxPivvbdztG58P4JcY7ZBfV3p8Rj7HN1dyJW4OF2uR0YI5rPYc4aLHNYmTks6LHca0xogYrev7bBsgDOuazozHI9Hzuyn1w9d4O7mxdmfAkPGZOicgNXRcZOkGTUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ce87fbLB; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgv+YWhT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DF85C4CEE4;
-	Mon, 21 Apr 2025 12:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745239829;
-	bh=aQVZG5DEu8YE5FWBUQD4b4UZYTXfV9Xxq60orHtA5b4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fgv+YWhTU2HZODtmds8W4MVh0NOcX3pzh1JMJjm4ozbVVxXfAuwjFwWkU2wNHLcAg
-	 OQormlguLaQi6KPpvhIB1Xokig1AbU1uJZRmanxrJ/6gS8PlHMwpUhW58UBVURV1J6
-	 1pBu9cAJAXKy4jxd/xmxkKqp9t+nGonliE3Yyd3TJjDimpojTYoUu0xND/HKcpJZYB
-	 m17EpGWcFS3RshIWBHmaTRfRN2AjZJR3Jfj9JSdAEuJMtTtQqwxSo561wmZT/a9Arn
-	 zKzdXe7ukWAo1rSJWgWDrzEcJLZE6v5kWBLjVl8JPpJbhEYeXCYtgzR3ootD+VGP03
-	 IAS8oOpGFdHEA==
-Date: Mon, 21 Apr 2025 13:50:22 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] iio: adc: ad4695: use IIO_DECLARE_BUFFER_WITH_TS
-Message-ID: <20250421135022.2ab97685@jic23-huawei>
-In-Reply-To: <a834e345-6d44-4fe6-a3ed-cc856e9dc4d3@baylibre.com>
-References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
-	<20250418-iio-introduce-iio_declare_buffer_with_ts-v1-2-ee0c62a33a0f@baylibre.com>
-	<aAPRbb93lJrnEE5l@smile.fi.intel.com>
-	<a834e345-6d44-4fe6-a3ed-cc856e9dc4d3@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ce87fbLB"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227914acd20so38624345ad.1;
+        Mon, 21 Apr 2025 05:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745240003; x=1745844803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k0Z341bhbJdfIluoARghNHb8N7p7HbS4gyrfYZdno5M=;
+        b=ce87fbLBAiyWmH1qhCbH1y8HytmRqDi146zaS8tEmbmi7l7lx/yJH5wTjCv3qJzZTL
+         U4YTreWWQvUAdUqlHwpN4ULhw8MLOMPpzDM9TmdN2fvxhNFZOAh+j/EEUJ2aMSUixhG4
+         MPJQAo5r3boecGeQRCiO5kL8jY+Rr0F+c6fvWhehGYgT0U6EWZeAzQ98py7PjPYaS6gE
+         KzMt3XPF5oXCU0vCFq+HE+a5ZVjzUcelYbBV6X2eDBf8MZzlHHOCvbhYGoUmAxu1ViRr
+         TCb6cW0A9Mt0+/ni6ttGAs0nLcC+moNDkUQNPe5uVESy43YeN3gNApKzugwpcEx8xzGF
+         mkbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745240003; x=1745844803;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k0Z341bhbJdfIluoARghNHb8N7p7HbS4gyrfYZdno5M=;
+        b=LeIzegFkS5QD+s48R2tvNMYSLAGSKGgypSgqChH+KmlgKxMHOQBrNQH7qF4eJusSax
+         X1GPhOfSsscoigQ24YL8kqolZMCEUUjZkuXHIfqJ17ID87FB3WTXavKMZvAPIgcEbCzU
+         luXhZfSLv7Dvpoi8/BWDIfxv7ndbMHR5c7lxpmTC3bI8rAaj8JkiiU/rB9C8UC78/N3D
+         Mdsky/ubA15YRh9cPFSObSDwZUQH9hipf+FJx7vsbuxDiLeqdgIqoGPW3qWZ95AMaPna
+         HjyuiGNcXwrz6X5mHePfl1MjHuq1XXAcw2Am00+Yafk/k9AsujACWc3E+nstXOtRfQqa
+         JMLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULM/okMZgNhlAgbyhGHZ3kZ6SaCKaIvU4JvbK2yLMuZh48/mrcLoGV7cLvTItmlHb3p0tIA54E4N1HWrk=@vger.kernel.org, AJvYcCX6yW8o7zlBN6GuDx+ATIacmzt9fEEdYZntZl9690fzz6dDd9ce2c0RqFGXKiJ90Z4C0AcMCUB1TD+Zk3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWOjafM2+GVvkrsSIk1ABhfjL5tenz5VO2v1jP5AUuAQu+Jjla
+	c49CU0sSEUKO/FTwCaxe4GDWSmtJDlvuAmPdX0f8lRK67QeX/cWi
+X-Gm-Gg: ASbGncuho9nMNXgrdnis67lc6MWKRvScHucpqxPoWiBd+75y35SvonR7xiwFTCs3eVm
+	Qm3o96ml1P3IgTIlwkViqD6e4CuTvs21LYnA/dna+dlUlyF67UlmD1b+AJFevMOx6ulrfFn2dUw
+	MKE8pnbmvIWG7BaCTQkm6HNzxxTOZAePs4V7Wph+xcSHVI48UZvZ9FBkeSZFuDYZWlVg32I7z+2
+	4JGO0JWZQyEL5CeI96DL39X06jwJ97UU8uGSLX5seASvzTH4Qp2jaEExu8a+M28pfsWmGKJJtH+
+	ao64ZAPJPderGFPrQuxewxdZB7346+CupBTzqmuBhUeUqaePL0uW5h35ADt57OiXAYE06w==
+X-Google-Smtp-Source: AGHT+IFJMcxqkY6NksDb7towAd7IXmFRoakqMANRynQDyHmuj+ex6qS8cVjsyH7ucX3WmvzxKS1Zdg==
+X-Received: by 2002:a17:903:1ca:b0:215:a303:24e9 with SMTP id d9443c01a7336-22c53e1a14amr157747885ad.3.1745240003317;
+        Mon, 21 Apr 2025 05:53:23 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eceb44sm64403675ad.188.2025.04.21.05.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 05:53:22 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: mchehab@kernel.org
+Cc: christophe.jaillet@wanadoo.fr,
+	hverkuil@xs4all.nl,
+	royale@zerezo.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH] media: dvb-usb: dtv5100: fix out-of-bounds in dtv5100_i2c_msg()
+Date: Mon, 21 Apr 2025 21:52:44 +0900
+Message-ID: <20250421125244.85640-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 19 Apr 2025 12:57:11 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+rlen value is a user-controlled value, but dtv5100_i2c_msg() does not
+check the size of the rlen value. Therefore, if it is set to a value
+larger than sizeof(st->data), an out-of-bounds vuln occurs for st->data.
 
-> On 4/19/25 11:38 AM, Andy Shevchenko wrote:
-> > On Fri, Apr 18, 2025 at 05:58:33PM -0500, David Lechner wrote:  
-> >> Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
-> >> iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
-> >> and understand.
-> >>
-> >> AD4695_MAX_CHANNEL_SIZE macro is dropped since it was making the line
-> >> too long and didn't add that much value.
-> >>
-> >> AD4695_MAX_CHANNELS + 2 is changed to AD4695_MAX_CHANNELS + 1 because
-> >> previously we were overallocating. AD4695_MAX_CHANNELS is the number of
-> >> of voltage channels and + 1 is for the temperature channel.  
-> > 
-> > ...
-> >   
-> >> -/* Max size of 1 raw sample in bytes. */
-> >> -#define AD4695_MAX_CHANNEL_SIZE		2  
-> >   
-> >>  	/* Raw conversion data received. */
-> >> -	u8 buf[ALIGN((AD4695_MAX_CHANNELS + 2) * AD4695_MAX_CHANNEL_SIZE,
-> >> -		     sizeof(s64)) + sizeof(s64)] __aligned(IIO_DMA_MINALIGN);
-> >> +	IIO_DECLARE_BUFFER_WITH_TS(u8, buf, (AD4695_MAX_CHANNELS + 1) * 2)
-> >> +		__aligned(IIO_DMA_MINALIGN);  
-> > 
-> > I would rather expect this to be properly written as u16 / __le16 / __be16
-> > instead of playing tricks with u8.
-> > 
-> > With all comments given so far I would expect here something like:
-> > 
-> > 	IIO_DECLARE_BUFFER_WITH_TS(u16, buf, AD4695_MAX_CHANNELS + 1);
-> > 
-> >   
-> 
-> We would have to make significant changes to the driver to allow u16 instead
-> of u8. I don't remember why I did it that way in the first place, but I consider
-> changing it out of scope for this patch.
+Therefore, we need to add proper range checking to prevent this vuln.
 
-There are drivers where the size varies depending on the exact part.
-Maybe this is a cut and paste from one of those or you thought this might get
-bigger to support > 16bit channels in the future.  Either way, right now
-it is always 16 bits so an appropriately sized type would be good as you
-say.   I think such a change should be in a precursor patch probably
-rather than left for another day.  Looks trivial to me given st->buf
-is only accessed directly in 2 places.
+Fixes: 60688d5e6e6e ("V4L/DVB (8735): dtv5100: replace dummy frontend by zl10353")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ drivers/media/usb/dvb-usb/dtv5100.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Jonathan
+diff --git a/drivers/media/usb/dvb-usb/dtv5100.c b/drivers/media/usb/dvb-usb/dtv5100.c
+index 3d85c6f7f6ec..c448e2ebda1a 100644
+--- a/drivers/media/usb/dvb-usb/dtv5100.c
++++ b/drivers/media/usb/dvb-usb/dtv5100.c
+@@ -55,6 +55,11 @@ static int dtv5100_i2c_msg(struct dvb_usb_device *d, u8 addr,
+ 	}
+ 	index = (addr << 8) + wbuf[0];
+ 
++	if (rlen > sizeof(st->data)) {
++		warn("rlen = %x is too big!\n", rlen);
++		return -EINVAL;
++	}
++
+ 	memcpy(st->data, rbuf, rlen);
+ 	msleep(1); /* avoid I2C errors */
+ 	return usb_control_msg(d->udev, pipe, request,
+--
