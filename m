@@ -1,294 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f227.google.com (mail-pg1-f227.google.com [209.85.215.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505407D3F4;
-	Mon, 21 Apr 2025 16:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C347D3F4
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:55:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745254518; cv=none; b=l6DcaM8nRNMynfGmetDI/sPLBYzwO5h4VK2IBP4l1Q9QEfQLEkdVXw67tjxeykQd0OO4bh+ocGj+m8gTO567Rl3ocfG7i1xJmvMXH1Vzod7XLp+m/TlPGHcbAK8oEeDOPjIy31XL2h3rJRCDvvWsJlBPlbknKjIWqwsNCclxjOA=
+	t=1745254555; cv=none; b=kd+nS5VlCjDg+iLxva2Wmk/gIaJ0WzYbwu6oJ1hp2kZY8OGcCGLo6m63hekpe6V5sFP2cDbVtJp8lgypZrZa1lEGuAj/bpCM46eSkcM402mJLF630jnfNlEwQl1uCLRCIf9jJbwgNnT8D55H/8R1Z2SA9zsWgizRXsIQjXExP1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745254518; c=relaxed/simple;
-	bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eXQE9FxzH1tLMKjg3UjjgCPiKhMy/D9rvUNwgSXqpmHBZsHoiwsqqBfYdsDE1iW7rmvUbl+TBi2qwAFR5qkfTh0Dh7BtiYt15Lm9lLXBeyR9II05jcCtT23As1bMX1CpO/+GQB6C0QW8PI3NmdBMXc9gdX/KkwglgFQ4IVjw5TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEQ/+Bnl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745254555; c=relaxed/simple;
+	bh=gEX+O5UW2Z75j+DFBcZysD2JTqUsvj+FynwKucVwP0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jvz0TQPcKPHF3taAjeCGKE0OQsnuFRU1QmHBDOv2U//wh5JGjCaou1SsuUTx+6GFir8OhimXCCZpY1alAzbanudUOSL8weeQNmBWj3nlDLS0J0NpUdkJkNp2TvbuWA9YogbB590lnA/Ng4F+OCu1Qrf18Q4aL6mZyU4SgevAFnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=W3DQt6O+; arc=none smtp.client-ip=209.85.215.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEQ/+Bnl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1809C4CEE4;
-	Mon, 21 Apr 2025 16:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745254517;
-	bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HEQ/+Bnljgi00rzGfwQQ4rzbZdPoy6U4YfVEDaSaWmnWI9juv9NOFrQokwSQ31r8S
-	 00dXshXMLhkJ+1rahKpfDjjrWwtz/ysxDf+6q3RPy3g0dWGgQTMqzRvttaDadrCtwL
-	 qVA3GpiiZc9MVsm1V9Pms/TNCEfNoGbSoZ+wA8rbQN7U2XMISYmVkuzndAoAdpIlFb
-	 r/9JALcDB1QcDJt0KyJcJmZxT0LAyhsx2kgIu+AUvMnv8DuPp8kbXce/PM1+b7iUd6
-	 jCWDjxqDoG4xht9HCjXxewUUzBapczQxOMWJ8NzL/5sULwrx6q5dpEP4xNqhfGBf7D
-	 edYENDkQNoniw==
-From: Kees Cook <kees@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Rafael Aquini <raquini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Christoph Lameter <cl@linux.com>,
-	Pekka Enberg <penberg@kernel.org>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Stephen Boyd <swboyd@chromium.org>,
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="W3DQt6O+"
+Received: by mail-pg1-f227.google.com with SMTP id 41be03b00d2f7-af51b57ea41so451782a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:55:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745254553; x=1745859353; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uwb+nOHiz3v41n7Ozb7A7o5HskDoeZoACSb6waE9l20=;
+        b=W3DQt6O+VOjZT84RUh6/oQWOyZ63EfrkJTSyldc3HCk91/7LQpeNLR7rz5iGLF9nUs
+         XL75rvKW2v4lYdml7QBvL+OouNNROgVojGiUOJkOw4vOrcliTJZ9ZKWqHz13oqGycTmD
+         /hpbdLjPbaGoUOgj3KYrO1GiDkTs2FSpedUgFs9/CJhOsE30Dxd0JcFGqqaxCBTuS1sE
+         phy9V3Cbx+Ouh6gWgxNE4IKNCAcwmJV74Ut/1iymD9Wa7pW2FF1pDQKLRQsu2x8Yq8I3
+         2ZD8GEKH8SkTInIzzvIGXH64gTiA5Upn3NuOr1xDpBKGwkMMPdL4BFhCdS8GiUuVH019
+         akzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745254553; x=1745859353;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uwb+nOHiz3v41n7Ozb7A7o5HskDoeZoACSb6waE9l20=;
+        b=qK8n/AppVsx6SbsiekSBhmvljSOd6dRa4tY3DITiq9hotiN0bKEkFIViA2dLvZQqbP
+         ePYYsVi9JKynW5m8DMnOFXMzLZGTfUbN56INQHZoqXiUt3S/Ka3RPRIE/ORuT8LUXsJp
+         wx38FFLUr/xJmqujOgN4vw5+hd76iqc1CZi8Z+dFIh8SL53VbpRzepZQajyzjt6an2GO
+         NjtObk7VqRFAmc22Dyi4CiephL8P6JzmQ8B6OCehyfCSmIHxFcW6l6oz0oXj/jeoFC7B
+         IhoBJOFvCNeDPpXJ7G0HXhtTfc9BPzP8hbmXxp8msjOKUuWjVcK7GaEdt6ILkWzgFgwc
+         KDfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuDRtqmQ4bxYmsY2zc9ngGb/WdDCiHKIgWGVDgIngTUzxs0ZWuqQGvKFmRxxPDZE4szbW0ijtK2Gefn/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN34Pa62zCdf+/36pmn25rCE0r9/IM2Ad2e4zzBLTvGIleJwaD
+	MbJ8TDQIAzPnB/eqMhbPHhk2bHDyyujs3pB67KpxeX6/5VxR8AMu0nOmk5zVi04QEFCqpnYgYZa
+	ud63fZPacZ4jfiYGct0o4Ay8HFJvFwWqg7IxISO/hfgjuFX9Z
+X-Gm-Gg: ASbGncsPvccAcM5gKgb7Ro0JlNAcY66GCd8rgo/XLFiiOtGd65AvujsBsxVVYfYDG2s
+	GCXNJeQm7N6oeHZZqHpec3FPAuldoJ50OUkcuAIvdpD6OckQX5G7HR0lNTzK4eULQgozo8Nl+hz
+	acuFNbxOKYtljjxOuonFTCHBjurOH5VWeUramQtLIAiPH5hUMOIU+t54tW7dmxrO1337ScSjkRj
+	oY3RibuU39wHGfTPI1aGjjrYnqENPfwT/LLWO90QfVcH7t2csKjHQWzXcIuDueutFUUnm0ZLvlV
+	nsM81oZQ7J93qJv9zVRcY39/kiWfBA==
+X-Google-Smtp-Source: AGHT+IG85z2G3DWzfdnI9ROt0oPEDic7f7+JD3nsO3clnZLEeEYh/yLrcOV3fXTUKsric5qazxM88Hpm8ub9
+X-Received: by 2002:a17:903:1948:b0:223:5e86:efa9 with SMTP id d9443c01a7336-22c535b4b97mr70058485ad.8.1745254552596;
+        Mon, 21 Apr 2025 09:55:52 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-22c50d80d81sm3912055ad.96.2025.04.21.09.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 09:55:52 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id DAC983401B8;
+	Mon, 21 Apr 2025 10:55:51 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id D4F04E4151A; Mon, 21 Apr 2025 10:55:51 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Kanchan Joshi <joshi.k@samsung.com>,
+	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] slab: Decouple slab_debug and no_hash_pointers
-Date: Mon, 21 Apr 2025 09:55:12 -0700
-Message-Id: <20250421165508.make.689-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v3 0/2] nvme/pci: PRP list DMA pool partitioning
+Date: Mon, 21 Apr 2025 10:55:23 -0600
+Message-ID: <20250421165525.1618434-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8609; i=kees@kernel.org; h=from:subject:message-id; bh=iS0I9IX2sFCSsXL/t1+wx5auONRvDGG0fRjH5jXkuQk=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlsFfkRtxzucF1bXNfZ/STmaC3/poZAvv5nTEZlv2dce +y1uLito5SFQYyLQVZMkSXIzj3OxeNte7j7XEWYOaxMIEMYuDgFYCI95owMs+6sMnQuY/21ZUXp Rd3/ihzcx47ey1x4+d5ML991+a8yghkZ9imJL9dZ8n7zFNnXnHVFb7ecfH4l9xEz///YV7FNXz8 ZswAA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-but do not want to be forced into having kernel addresses exposed due
-to the implicit "no_hash_pointers" boot param setting.[1]
+NVMe commands with more than 4 KB of data allocate PRP list pages from
+the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock.
+These device-global spinlocks are a significant source of contention
+when many CPUs are submitting to the same NVMe devices. On a workload
+issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA nodes
+to 23 NVMe devices, we observed 2.4% of CPU time spent in
+_raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
 
-Introduce the "hash_pointers" boot param, which defaults to "auto"
-(the current behavior), but also includes "always" (forcing on hashing
-even when "slab_debug=..." is defined), and "never". The existing
-"no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+Ideally, the dma_pools would be per-hctx to minimize
+contention. But that could impose considerable resource costs in a
+system with many NVMe devices and CPUs.
 
-This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+nvme_queue to the set of DMA pools corresponding to its device and its
+hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+about half, to 1.2%. Preventing the sharing of PRP list pages across
+NUMA nodes also makes them cheaper to initialize.
 
-Link: https://github.com/KSPP/linux/issues/368 [1]
-Fixes: 792702911f58 ("slub: force on no_hash_pointers when slub_debug is enabled")
-Co-developed-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Rientjes <rientjes@google.com>
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
-Acked-by: Rafael Aquini <raquini@redhat.com>
-Tested-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Kees Cook <kees@kernel.org>
----
- v3: add docs about implicit "no_hash_pointers" when using "slab_debug" (harry.yoo)
- v2: https://lore.kernel.org/all/20250415170232.it.467-kees@kernel.org/
- v1: https://lore.kernel.org/lkml/20250410174428.work.488-kees@kernel.org/
----
- .../admin-guide/kernel-parameters.txt         | 38 ++++++++----
- include/linux/sprintf.h                       |  2 +-
- lib/vsprintf.c                                | 61 +++++++++++++++++--
- mm/slub.c                                     |  5 +-
- 4 files changed, 86 insertions(+), 20 deletions(-)
+Caleb Sander Mateos (2):
+  nvme/pci: factor out nvme_init_hctx() helper
+  nvme/pci: make PRP list DMA pools per-NUMA-node
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d9fd26b95b34..cb12531b2100 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1795,6 +1795,27 @@
- 			backtraces on all cpus.
- 			Format: 0 | 1
- 
-+	hash_pointers=
-+			[KNL,EARLY]
-+			By default, when pointers are printed to the console
-+			or buffers via the %p format string, that pointer is
-+			"hashed", i.e. obscured by hashing the pointer value.
-+			This is a security feature that hides actual kernel
-+			addresses from unprivileged users, but it also makes
-+			debugging the kernel more difficult since unequal
-+			pointers can no longer be compared. The choices are:
-+			Format: { auto | always | never }
-+			Default: auto
-+
-+			auto   - Hash pointers unless slab_debug is enabled.
-+			always - Always hash pointers (even if slab_debug is
-+				 enabled).
-+			never  - Never hash pointers. This option should only
-+				 be specified when debugging the kernel. Do
-+				 not use on production kernels. The boot
-+				 param "no_hash_pointers" is an alias for
-+				 this mode.
-+
- 	hashdist=	[KNL,NUMA] Large hashes allocated during boot
- 			are distributed across NUMA nodes.  Defaults on
- 			for 64-bit NUMA, off otherwise.
-@@ -4117,18 +4138,7 @@
- 
- 	no_hash_pointers
- 			[KNL,EARLY]
--			Force pointers printed to the console or buffers to be
--			unhashed.  By default, when a pointer is printed via %p
--			format string, that pointer is "hashed", i.e. obscured
--			by hashing the pointer value.  This is a security feature
--			that hides actual kernel addresses from unprivileged
--			users, but it also makes debugging the kernel more
--			difficult since unequal pointers can no longer be
--			compared.  However, if this command-line option is
--			specified, then all normal pointers will have their true
--			value printed. This option should only be specified when
--			debugging the kernel.  Please do not use on production
--			kernels.
-+			Alias for "hash_pointers=never".
- 
- 	nohibernate	[HIBERNATION] Disable hibernation and resume.
- 
-@@ -6478,6 +6488,10 @@
- 			Documentation/mm/slub.rst.
- 			(slub_debug legacy name also accepted for now)
- 
-+			Using this option implies the "no_hash_pointers"
-+			option which can be undone by adding the
-+			"hash_pointers=always" option.
-+
- 	slab_max_order= [MM]
- 			Determines the maximum allowed order for slabs.
- 			A high setting may cause OOMs due to memory
-diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
-index 51cab2def9ec..521bb2cd2648 100644
---- a/include/linux/sprintf.h
-+++ b/include/linux/sprintf.h
-@@ -22,7 +22,7 @@ __scanf(2, 0) int vsscanf(const char *, const char *, va_list);
- 
- /* These are for specific cases, do not use without real need */
- extern bool no_hash_pointers;
--int no_hash_pointers_enable(char *str);
-+void hash_pointers_finalize(bool slub_debug);
- 
- /* Used for Rust formatting ('%pA') */
- char *rust_fmt_argument(char *buf, char *end, const void *ptr);
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 01699852f30c..22cbd75266ef 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -60,6 +60,20 @@
- bool no_hash_pointers __ro_after_init;
- EXPORT_SYMBOL_GPL(no_hash_pointers);
- 
-+/*
-+ * Hashed pointers policy selected by "hash_pointers=..." boot param
-+ *
-+ * `auto`   - Hashed pointers enabled unless disabled by slub_debug_enabled=true
-+ * `always` - Hashed pointers enabled unconditionally
-+ * `never`  - Hashed pointers disabled unconditionally
-+ */
-+enum hash_pointers_policy {
-+	HASH_PTR_AUTO = 0,
-+	HASH_PTR_ALWAYS,
-+	HASH_PTR_NEVER
-+};
-+static enum hash_pointers_policy hash_pointers_mode __initdata;
-+
- noinline
- static unsigned long long simple_strntoull(const char *startp, char **endp, unsigned int base, size_t max_chars)
- {
-@@ -2271,12 +2285,23 @@ char *resource_or_range(const char *fmt, char *buf, char *end, void *ptr,
- 	return resource_string(buf, end, ptr, spec, fmt);
- }
- 
--int __init no_hash_pointers_enable(char *str)
-+void __init hash_pointers_finalize(bool slub_debug)
- {
--	if (no_hash_pointers)
--		return 0;
-+	switch (hash_pointers_mode) {
-+	case HASH_PTR_ALWAYS:
-+		no_hash_pointers = false;
-+		break;
-+	case HASH_PTR_NEVER:
-+		no_hash_pointers = true;
-+		break;
-+	case HASH_PTR_AUTO:
-+	default:
-+		no_hash_pointers = slub_debug;
-+		break;
-+	}
- 
--	no_hash_pointers = true;
-+	if (!no_hash_pointers)
-+		return;
- 
- 	pr_warn("**********************************************************\n");
- 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-@@ -2289,11 +2314,39 @@ int __init no_hash_pointers_enable(char *str)
- 	pr_warn("** the kernel, report this immediately to your system   **\n");
- 	pr_warn("** administrator!                                       **\n");
- 	pr_warn("**                                                      **\n");
-+	pr_warn("** Use hash_pointers=always to force this mode off      **\n");
-+	pr_warn("**                                                      **\n");
- 	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
- 	pr_warn("**********************************************************\n");
-+}
-+
-+static int __init hash_pointers_mode_parse(char *str)
-+{
-+	if (!str) {
-+		pr_warn("Hash pointers mode empty; falling back to auto.\n");
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	} else if (strncmp(str, "auto", 4) == 0)   {
-+		pr_info("Hash pointers mode set to auto.\n");
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	} else if (strncmp(str, "never", 5) == 0) {
-+		pr_info("Hash pointers mode set to never.\n");
-+		hash_pointers_mode = HASH_PTR_NEVER;
-+	} else if (strncmp(str, "always", 6) == 0) {
-+		pr_info("Hash pointers mode set to always.\n");
-+		hash_pointers_mode = HASH_PTR_ALWAYS;
-+	} else {
-+		pr_warn("Unknown hash_pointers mode '%s' specified; assuming auto.\n", str);
-+		hash_pointers_mode = HASH_PTR_AUTO;
-+	}
- 
- 	return 0;
- }
-+early_param("hash_pointers", hash_pointers_mode_parse);
-+
-+static int __init no_hash_pointers_enable(char *str)
-+{
-+	return hash_pointers_mode_parse("never");
-+}
- early_param("no_hash_pointers", no_hash_pointers_enable);
- 
- /*
-diff --git a/mm/slub.c b/mm/slub.c
-index b46f87662e71..f3d61b330a76 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -6314,9 +6314,8 @@ void __init kmem_cache_init(void)
- 	if (debug_guardpage_minorder())
- 		slub_max_order = 0;
- 
--	/* Print slub debugging pointers without hashing */
--	if (__slub_debug_enabled())
--		no_hash_pointers_enable(NULL);
-+	/* Inform pointer hashing choice about slub debugging state. */
-+	hash_pointers_finalize(__slub_debug_enabled());
- 
- 	kmem_cache_node = &boot_kmem_cache_node;
- 	kmem_cache = &boot_kmem_cache;
+ drivers/nvme/host/pci.c | 171 +++++++++++++++++++++++-----------------
+ 1 file changed, 98 insertions(+), 73 deletions(-)
+
+v3: simplify nvme_release_prp_pools() (Keith)
+
+v2:
+- Initialize admin nvme_queue's nvme_prp_dma_pools (Kanchan)
+- Shrink nvme_dev's prp_pools array from MAX_NUMNODES to nr_node_ids (Kanchan)
+
 -- 
-2.34.1
+2.45.2
 
