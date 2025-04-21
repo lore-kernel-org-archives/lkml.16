@@ -1,79 +1,109 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94261CAA62;
-	Mon, 21 Apr 2025 12:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A812513C918;
+	Mon, 21 Apr 2025 12:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745237163; cv=none; b=JkjeOUVx+tZg0LS+m9EZsFQE7Ooshj5qUL2eYxqEKROrKwS+4RSbVsIjNM1L7DQ+4SuSRQm64mSVz9VCyC+uiMDX3UGyHk99WrEuLzz+toxnC1/+E5+NsVv1vRRnj4TDICxwsARX8+p5GDqTS9DT2CnyELcvwAekXAlYkdHopTg=
+	t=1745237416; cv=none; b=JDwBu4Dd4RsnN+GB0l5Md9QX9/u3Bi6PX/8Vm2LlcyxlIJW+0FO0CSTwUMsHU35f/dYNjr6zZPfVpJzoMUI+d4zW05W1lrx1d5/lCCtITeY6mTSKhoydOeBzkwCeoiZR6b0UOAwr0DJkUFEHhvPnipVM7gX3z0ICcnBF3esFojc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745237163; c=relaxed/simple;
-	bh=1dCc6mOczHaHKNhgjTG1vfLZU1G4PKkgRIurjo4wHZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPsVgtftaR+byWAX0q/SZzv/PLZ+1pQ0LIwsNO6ipvoyhVQ02IIfTv47dc5tTXp1pcH02AELubzMrXEtiUgJa1/QUM+Z0QEvZKzHBqzQ/VkQMKBncGvj7hEuBqZ3GCXnSJYsDBgnZXIQfFkR1r/O/VVNE4awN92e1hW5GHNO5/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=GrGMcmr8; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745237416; c=relaxed/simple;
+	bh=GN+oSxhyQaP1dEE+BYZQp3Hp6FhpAZAswLoJZ2QWsjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KuqyLmo+vfEIUFZXc5yd3JBRBoQhmoTRBp3LYf0xldEfYR8wQ1akd9UXce24yeiBkvDo/a3IxXYgMH1G/9/mZu6RdyTjOdk0bkvOM8pokRCEmBrMB+rHfP/qADOt00Yx6E24RHchM131qCpuS1ZpKI26I2ULdq/1fkyEPjRZjjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=YjFXxPm8; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="GrGMcmr8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=VDKHNDkjFMnK/p2S73Tig7JwCYw2XzJyuUxjtUmiwc8=; b=GrGMcmr8X6hW0Ul8qcDjhsBQtg
-	zZVLkcOVhByCGXnbcKm8CjM1fuHsQCIPgfJ7koZ2Wf4LCCzz1Z7MQjRXmRUFUY10A8xH1hembpXPR
-	BwovjdcHMT8Czh4DIUO7FzYZZQWCQLf/cJBu5sdoFmAde3o+mnO5wXq/7+Im8lRNMuo7BsgL5PrUk
-	nWdVKoWHqVgzggJjn3IHvrkuW3AH3qo4wgox6PWDvz1rJNQtpT0ks5xurASqF4IYfzTF5CNeKUzKH
-	jrCq1IzwP1mp5PtlsvuzzQ4aiQZOaR3gIfIQSXEZ6jLcGzCaRuJHs4SdHQ6raWJ9JmajIGoKzSvBa
-	ocCF+cLQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u6puB-00HJo0-1R;
-	Mon, 21 Apr 2025 20:05:44 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 21 Apr 2025 20:05:43 +0800
-Date: Mon, 21 Apr 2025 20:05:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Su Hui <suhui@nfschina.com>
-Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-Message-ID: <aAY0lyWzsRVDge_f@gondor.apana.org.au>
-References: <20250421055104.663552-1-suhui@nfschina.com>
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="YjFXxPm8"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id 4B5DB120872;
+	Mon, 21 Apr 2025 13:10:02 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745237402;
+	bh=GN+oSxhyQaP1dEE+BYZQp3Hp6FhpAZAswLoJZ2QWsjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=YjFXxPm8p8/BxTIqSiSQ5IrU250a4olASovMaI/eLdCFIkaB1fybuCAn1EdwEhJiW
+	 XIGZEZXpm6uhofKlHj8fOrsRy6gUSzKmEq++nionR/KIjFVSpmfivxmrhVnxa95H/x
+	 sVmrAunlpaYCKBc7CBD1yJzpFa87LSLJAp+PezBCK7Te3JJ2A9tBoSBeTCWl4ac3lV
+	 DkCeVwQkrCDiCjRMT+M2gAMHjSnZc0Z70tRDznAwLP/AIt+1ByRMGIDK2q9mPC8BH/
+	 X6x7LKdFx4fQ11c4m4D+j8/QiVa6tCp1E6HMaN6OSPfTNP8b9Vwtvbs9nyOCrjnDj4
+	 CHSdao/gnWaiA==
+Date: Mon, 21 Apr 2025 13:10:00 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
+ Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
+ <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
+ <toke@redhat.com>, stable@vger.kernel.org
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+In-Reply-To: <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421055104.663552-1-suhui@nfschina.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 01:51:06PM +0800, Su Hui wrote:
->
-> @@ -433,7 +434,7 @@ static inline struct aead_request *aead_request_alloc(struct crypto_aead *tfm,
->  {
->  	struct aead_request *req;
->  
-> -	req = kmalloc(sizeof(*req) + crypto_aead_reqsize(tfm), gfp);
-> +	req = kmalloc(size_add(sizeof(*req), crypto_aead_reqsize(tfm)), gfp);
+On Mon, 21 Apr 2025 13:50:52 +0200
+Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
 
-This is just wrong.  You should fail the allocation altogether
-rather than proceeding with a length that is insufficient.
+> On 2025-04-21 11:40, Alan J. Wylie wrote:
+> > #regzbot introduced: 6.14.2..6.14.3
+> >=20
+> > Since 6.14.3 I have been seeing random panics, all in htb_dequeue.
+> > 6.14.2 was fine. =20
+>=20
+> 6.14.3 contains:
+> "codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()"
+> aka https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/=
+commit/net/sched?h=3Dlinux-6.14.y&id=3Da57fe60ef4cf96bfbb6b58397ec28bdb5a5c=
+6b31
+>=20
+> Is your HTB backed by fq_codel by any chance?
 
-However, reqsize shouldn't be anywhere near overflowing in the
-first place.  If you're truly worried about this, you should
-change the algorithm registration code to check whether reqsize
-is sane.
+Yes
 
-And that needs to wait until the algorithms are fixed to not use
-dynamic reqsizes.
+# grep fq 91-tc.sh=20
+quantum=3D300		# fq_codel quantum 300 gives a boost to interactive flows
+modprobe sch_fq_codel
+tc qdisc add dev "$ext_ingress" parent 1:11 fq_codel quantum $quantum ecn
+tc qdisc add dev "$ext" parent 1:11 fq_codel quantum $quantum noecn
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> If so, try either reverting the above or adding:
+> "sch_htb: make htb_qlen_notify() idempotent" aka
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D5ba8b837b522d7051ef81bacf3d95383ff8edce5
+>=20
+> which was successfully not added to 6.14.3, along with the rest of the
+> series:
+> https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmail.=
+com/
+
+"successfully not added"?
+
+$ git cherry-pick  5ba8b837b522d7051ef81bacf3d95383ff8edce5
+[linux-6.14.y 2285c724bf7d] sch_htb: make htb_qlen_notify() idempotent
+ Author: Cong Wang <xiyou.wangcong@gmail.com>
+ Date: Thu Apr 3 14:10:23 2025 -0700
+ 1 file changed, 2 insertions(+)
+
+It will take a while (perhaps days?) before I can confirm success.
+
+Thanks
+Alan
+
+--=20
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
+
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
