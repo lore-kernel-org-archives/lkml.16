@@ -1,25 +1,48 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F459D531
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E72520C463;
+	Mon, 21 Apr 2025 06:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745216212; cv=none; b=ZHqJhRZG7W4Hh3aR9Ype+mlvnxv+cxFwkDHiJemz1mPS12B+TWIKYJTClK9m9Ok7i1EzetSH/Ne/Lypw0vV0FDPi4USeqJ2ZUJ8V7abPZIXCeKWhkY7AXISC/v4Ug6Gy6uAKnINjUyt5bR0w52GCdu6eDFzviVLIvSL7S+1ndHw=
+	t=1745216272; cv=none; b=OspcfI8PilWdGxAVenxuOfTly0YzPQ7bWKOx8mmyMZhLMmdjW/YOiXDDLYutnmjPI0RPCOSMPzCpfuPkbcj2ZSk30CMmU9b6Vr05AvF1LnoztFYsNyXsq4Ugp0Wa79huKpI94TccwQz9vowR6BnaEqBATv0aVuSsCPic2josMOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745216212; c=relaxed/simple;
-	bh=b8AcnrwWKzzIVI3m/GhK9HbM364009a7ypJqHGrgXV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rFWiGveUDEkyYNUQWfOtxebQfKdxRq/mSfvc2ipdiCZQXIz56BB1f82ZJ8BKyiFFwlMY7pz+6AouF370/FGmABeWFxqi9tE5jPbku7vwHo0gUClssW/ICWY6EEHK+aKqCB/yxFy7HBSfd9oncAhbGxwQxVfLB3sonvSuH2sx3WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89A291063;
-	Sun, 20 Apr 2025 23:16:45 -0700 (PDT)
-Received: from [10.162.16.49] (unknown [10.162.16.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7732F3F59E;
-	Sun, 20 Apr 2025 23:16:47 -0700 (PDT)
-Message-ID: <e703f1c9-2d71-4b27-8f29-f31a22e6e063@arm.com>
-Date: Mon, 21 Apr 2025 11:46:44 +0530
+	s=arc-20240116; t=1745216272; c=relaxed/simple;
+	bh=oCrePx4d4VjH4BHhZkLA44wMiJPbzqpmWXCSiX569BI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Fjf1x4exjzKG5isZUfMGTRPy7rMT+LoBoa5m1r/L4lHa/xV/nEe/VnbVZzSegQ2oh7YHuBi22kOayjySlD8oJep/SE0Brv2NsDONjc87cBJwAHYKc6qCuWbeWB0eRN+DyBk5RKN1bqastLo8gZcefKEvLQl40qXkgxMirK9RTIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jiaQI/UK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jiaQI/UK"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KMalgs029470;
+	Mon, 21 Apr 2025 06:17:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SNXlTlu4T4GsCHREC35AdfkGMvQbe70mPzffQrC9xdY=; b=jiaQI/UK1vk8mIQG
+	rgQpfIU8tp+GJijIds5Kvsp9LczpzWrlOHHU8u/+s3EYVYep/T/nKlEUEnfAYnq3
+	vXtCDWY9V3DAMppy8e32E3pRJ3kO+eEIWHkMznfsGnb2Her9cg541pVRDxJyEiuT
+	QPK8XZtGXFuuYc5u2BNZAODT7WaCBloNdSrbH/beMQoMBXC+RQDR17/rF7HZLjq4
+	EYIzmtrMdmF0lpavf5r6XLgERTm7OmQBxyTNFxZ16B5caKyW9HRtz4olTVuYbavd
+	KJzWQzhGfpDEFgOBs8e/+yxK4AeQnsL7xqbui/xyRDUGEe7PvX6GXzP8eUjvOUKA
+	Dhp16w==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426k4xm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 06:17:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L6Hmmg013992
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 06:17:48 GMT
+Received: from [10.217.218.191] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 20 Apr
+ 2025 23:17:46 -0700
+Message-ID: <b0b09073-f64f-4a2c-9294-713d7970f120@quicinc.com>
+Date: Mon, 21 Apr 2025 11:47:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,185 +50,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/debug: Drop redundant DBG_MDSCR_* macros
-To: inux-arm-kernel@lists.infradead.org,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: ada.coupriediaz@arm.com, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250417105253.3188976-1-anshuman.khandual@arm.com>
+Subject: Re: [PATCH] bus: mhi: host: pci: Disable runtime PM for QDU100
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: Veerabhadrarao Badiganti <quic_vbadigan@quicinc.com>,
+        <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250414-vdev_next-20250411_pm_disable-v1-1-e963677636ca@quicinc.com>
+ <ec99379e-fd54-42b0-a383-8ed212072396@quicinc.com>
+ <o7rv3xgg3btaoqjlzfenbfkrp3fuw54cx6zqojclcfslfg3ha4@c3sqaqqdjdjv>
+ <c8699f79-54cc-4adb-8047-b37a69e69d96@quicinc.com>
+ <qrb4ozkj3zxfpo733mf6xf35tetfyekytkty6sq7civhycbahm@c6s3wfvmdycs>
+ <2ab9a8f9-b051-4213-a9df-4b2c2fa8c6be@quicinc.com>
+ <09ec85db-cc02-4b35-9939-aea3426d0e0b@quicinc.com>
+ <tbktzaxkgsc6d4ma4o6vkkcpnqiwghxkvwryrm36znepgqjotl@5n3di2ew3s6f>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250417105253.3188976-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+In-Reply-To: <tbktzaxkgsc6d4ma4o6vkkcpnqiwghxkvwryrm36znepgqjotl@5n3di2ew3s6f>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: j9vjTexZDzTC8pP9W_ZXZogSuHBywA1P
+X-Proofpoint-GUID: j9vjTexZDzTC8pP9W_ZXZogSuHBywA1P
+X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6805e30c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=XiVaVNMPSDe_k9p-RSYA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_03,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210047
 
-+ linux-arm-kernel@lists.infradead.org
 
-LAKML email address had a typo, just adding it back.
 
-On 4/17/25 16:22, Anshuman Khandual wrote:
-> MDSCR_EL1 has already been defined in tools sysreg format and hence can be
-> used in all debug monitor related call paths. Subsequently all DBG_MDSCR_*
-> macros become redundant and hence can be dropped off completely. While here
-> convert all variables handling MDSCR_EL1 register as u64 which reflects its
-> true width as well.
+On 4/18/2025 6:15 PM, Manivannan Sadhasivam wrote:
+> On Fri, Apr 18, 2025 at 03:40:48PM +0530, Vivek Pernamitta wrote:
+>>
+>>
+>> On 4/18/2025 3:04 PM, Vivek Pernamitta wrote:
+>>>
+>>>
+>>> On 4/18/2025 2:06 PM, Manivannan Sadhasivam wrote:
+>>>> On Fri, Apr 18, 2025 at 11:55:24AM +0530, Vivek Pernamitta wrote:
+>>>>>
+>>>>>
+>>>>> On 4/17/2025 11:37 AM, Manivannan Sadhasivam wrote:
+>>>>>> On Thu, Apr 17, 2025 at 10:00:38AM +0530, Veerabhadrarao
+>>>>>> Badiganti wrote:
+>>>>>>>
+>>>>>>> On 4/14/2025 1:17 PM, Vivek Pernamitta wrote:
+>>>>>>>> The QDU100 device does not support the MHI M3 state,
+>>>>>>>> necessitating the
+>>>>>>>> disabling of runtime PM for this device. Since the
+>>>>>>>> PCIe core framework
+>>>>>>>> enables runtime PM by default for all clients, it is
+>>>>>>>> essential to disable
+>>>>>>>> runtime PM if the device does not support Low Power Mode (LPM).
+>>>>>>>>
+>>>>
+>>>> Not true... See below.
+>>>>
+>>>>>>>> Signed-off-by: Vivek Pernamitta<quic_vpernami@quicinc.com>
+>>>>>>>> ---
+>>>>>>>>      drivers/bus/mhi/host/pci_generic.c | 10 ++++++++++
+>>>>>>>>      1 file changed, 10 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/bus/mhi/host/pci_generic.c
+>>>>>>>> b/drivers/bus/mhi/ host/pci_generic.c
+>>>>>>>> index 03aa887952098661a488650053a357f883d1559b..a011fd2d48c57cf9d1aec74040153267a206d797
+>>>>>>>> 100644
+>>>>>>>> --- a/drivers/bus/mhi/host/pci_generic.c
+>>>>>>>> +++ b/drivers/bus/mhi/host/pci_generic.c
+>>>>>>>> @@ -43,6 +43,7 @@
+>>>>>>>>       * @mru_default: default MRU size for MBIM network packets
+>>>>>>>>       * @sideband_wake: Devices using dedicated
+>>>>>>>> sideband GPIO for wakeup instead
+>>>>>>>>       *           of inband wake support (such as sdx24)
+>>>>>>>> + * @pm_disable: disables runtime PM (optional)
+>>>>>>>>       */
+>>>>>>>>      struct mhi_pci_dev_info {
+>>>>>>>>          const struct mhi_controller_config *config;
+>>>>>>>> @@ -54,6 +55,7 @@ struct mhi_pci_dev_info {
+>>>>>>>>          unsigned int dma_data_width;
+>>>>>>>>          unsigned int mru_default;
+>>>>>>>>          bool sideband_wake;
+>>>>>>>> +    bool pm_disable;
+>>>>>>>>      };
+>>>>>>>>      #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name,
+>>>>>>>> el_count, ev_ring) \
+>>>>>>>> @@ -295,6 +297,7 @@ static const struct
+>>>>>>>> mhi_pci_dev_info mhi_qcom_qdu100_info = {
+>>>>>>>>          .bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+>>>>>>>>          .dma_data_width = 32,
+>>>>>>>>          .sideband_wake = false,
+>>>>>>>> +    .pm_disable = true,
+>>>>>>>
+>>>>>>> |no_m3|orno_|m3_support|would be more suitable than|pm_disable|
+>>>>>>
+>>>>>> Yes!
+>>>>>>
+>> We named variable pm_disable because the M3 state is implicitly set during
+>> runtime PM suspend. Both are not needed and not fully supported for the
+>> QDU100 accelerator card, so we want to disable runtime suspend for it.
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.15-rc2
+> You are mixing terms here. Only M3 is not supported by the device. The fact that
+> you do not want to enable runtime PM for the device to avoid latency is a side
+> effect of that. So you need to name the variable as 'no_m3'.
+sure, I have posted an new patchset v3 with renaming the variable name 
+to "no_m3".
 > 
->  arch/arm64/include/asm/assembler.h      |  4 ++--
->  arch/arm64/include/asm/debug-monitors.h |  6 ------
->  arch/arm64/kernel/debug-monitors.c      | 22 +++++++++++-----------
->  arch/arm64/kernel/entry-common.c        |  2 +-
->  4 files changed, 14 insertions(+), 20 deletions(-)
+> - Mani
 > 
-> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-> index ad63457a05c5..f229d96616e5 100644
-> --- a/arch/arm64/include/asm/assembler.h
-> +++ b/arch/arm64/include/asm/assembler.h
-> @@ -53,7 +53,7 @@
->  	.macro	disable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	bic	\tmp, \tmp, #DBG_MDSCR_SS
-> +	bic	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  	isb	// Take effect before a subsequent clear of DAIF.D
->  9990:
-> @@ -63,7 +63,7 @@
->  	.macro	enable_step_tsk, flgs, tmp
->  	tbz	\flgs, #TIF_SINGLESTEP, 9990f
->  	mrs	\tmp, mdscr_el1
-> -	orr	\tmp, \tmp, #DBG_MDSCR_SS
-> +	orr	\tmp, \tmp, #MDSCR_EL1_SS
->  	msr	mdscr_el1, \tmp
->  9990:
->  	.endm
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-> index 8f6ba31b8658..1f37dd01482b 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -13,14 +13,8 @@
->  #include <asm/ptrace.h>
->  
->  /* Low-level stepping controls. */
-> -#define DBG_MDSCR_SS		(1 << 0)
->  #define DBG_SPSR_SS		(1 << 21)
->  
-> -/* MDSCR_EL1 enabling bits */
-> -#define DBG_MDSCR_KDE		(1 << 13)
-> -#define DBG_MDSCR_MDE		(1 << 15)
-> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
-> -
->  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
->  
->  /* AArch64 */
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index 58f047de3e1c..08f1d02507cd 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -34,7 +34,7 @@ u8 debug_monitors_arch(void)
->  /*
->   * MDSCR access routines.
->   */
-> -static void mdscr_write(u32 mdscr)
-> +static void mdscr_write(u64 mdscr)
->  {
->  	unsigned long flags;
->  	flags = local_daif_save();
-> @@ -43,7 +43,7 @@ static void mdscr_write(u32 mdscr)
->  }
->  NOKPROBE_SYMBOL(mdscr_write);
->  
-> -static u32 mdscr_read(void)
-> +static u64 mdscr_read(void)
->  {
->  	return read_sysreg(mdscr_el1);
->  }
-> @@ -79,16 +79,16 @@ static DEFINE_PER_CPU(int, kde_ref_count);
->  
->  void enable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, enable = 0;
-> +	u64 mdscr, enable = 0;
->  
->  	WARN_ON(preemptible());
->  
->  	if (this_cpu_inc_return(mde_ref_count) == 1)
-> -		enable = DBG_MDSCR_MDE;
-> +		enable = MDSCR_EL1_MDE;
->  
->  	if (el == DBG_ACTIVE_EL1 &&
->  	    this_cpu_inc_return(kde_ref_count) == 1)
-> -		enable |= DBG_MDSCR_KDE;
-> +		enable |= MDSCR_EL1_KDE;
->  
->  	if (enable && debug_enabled) {
->  		mdscr = mdscr_read();
-> @@ -100,16 +100,16 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
->  
->  void disable_debug_monitors(enum dbg_active_el el)
->  {
-> -	u32 mdscr, disable = 0;
-> +	u64 mdscr, disable = 0;
->  
->  	WARN_ON(preemptible());
->  
->  	if (this_cpu_dec_return(mde_ref_count) == 0)
-> -		disable = ~DBG_MDSCR_MDE;
-> +		disable = ~MDSCR_EL1_MDE;
->  
->  	if (el == DBG_ACTIVE_EL1 &&
->  	    this_cpu_dec_return(kde_ref_count) == 0)
-> -		disable &= ~DBG_MDSCR_KDE;
-> +		disable &= ~MDSCR_EL1_KDE;
->  
->  	if (disable) {
->  		mdscr = mdscr_read();
-> @@ -415,7 +415,7 @@ void kernel_enable_single_step(struct pt_regs *regs)
->  {
->  	WARN_ON(!irqs_disabled());
->  	set_regs_spsr_ss(regs);
-> -	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() | MDSCR_EL1_SS);
->  	enable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_enable_single_step);
-> @@ -423,7 +423,7 @@ NOKPROBE_SYMBOL(kernel_enable_single_step);
->  void kernel_disable_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
-> +	mdscr_write(mdscr_read() & ~MDSCR_EL1_SS);
->  	disable_debug_monitors(DBG_ACTIVE_EL1);
->  }
->  NOKPROBE_SYMBOL(kernel_disable_single_step);
-> @@ -431,7 +431,7 @@ NOKPROBE_SYMBOL(kernel_disable_single_step);
->  int kernel_active_single_step(void)
->  {
->  	WARN_ON(!irqs_disabled());
-> -	return mdscr_read() & DBG_MDSCR_SS;
-> +	return mdscr_read() & MDSCR_EL1_SS;
->  }
->  NOKPROBE_SYMBOL(kernel_active_single_step);
->  
-> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-> index b260ddc4d3e9..6dbfc1008007 100644
-> --- a/arch/arm64/kernel/entry-common.c
-> +++ b/arch/arm64/kernel/entry-common.c
-> @@ -354,7 +354,7 @@ static void cortex_a76_erratum_1463225_svc_handler(void)
->  
->  	__this_cpu_write(__in_cortex_a76_erratum_1463225_wa, 1);
->  	reg = read_sysreg(mdscr_el1);
-> -	val = reg | DBG_MDSCR_SS | DBG_MDSCR_KDE;
-> +	val = reg | MDSCR_EL1_SS | MDSCR_EL1_KDE;
->  	write_sysreg(val, mdscr_el1);
->  	asm volatile("msr daifclr, #8");
->  	isb();
+
