@@ -1,111 +1,243 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E41610A3E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C554D20B1EA;
 	Mon, 21 Apr 2025 06:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745215890; cv=none; b=fi6RMe03UHC6h1LRysfsFuwtw1VVVuXbE9W6CUKFr6AJVXGx//2Ry3jo2gd8+H1cs2IfMz16joDGNAKOkf15iWl0ki1AfED1c9bDBXZq+CoNQxkoFTnPL+LyrFfwHDRiYg9JHlTqt6I9cEw3id/MlaLSjS8fkvkA8M8jm5A9PqA=
+	t=1745215891; cv=none; b=Cy/XG+7j0QVZUTi92AzrYzduErfy6sehLXx+D+ENukAlY0VQ/lZeZQKvqETOY0P2ldFVkwstho9vmBqyVUmgtZOzd49JZWSx5e+3+gnxHtcoZW1ob4g7fXzTx3k7Jz3GTGp/LXMp05A3Qc5/j0Wd2N+f0Gj8vV2SQnBaFp/BRGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745215890; c=relaxed/simple;
-	bh=pfOBB66y5AUpbTiLaPwZa6ouIiwqIwDoq3RVh1UM0bU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j5vBst6wuN5AQY9yihqS8Uw53fhrViEuumBJVtekUSNY67KAQGSPLBPa7WxNw6Ms1AIjY10AuC+3tLg4JyyD++w40Dit8+xwa4GsHigkj2rktFG66Zg+q/uxxL54alYaCW81gfNvIXfdOIwO8MomiMnuAFFS8yl3fLGHeRgUvoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zy/aYSCj; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745215891; c=relaxed/simple;
+	bh=9KcI2yonGU2jligR91U+AWHlyB0HrY1KPnwi3Nx0Oys=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gx3fNkO73zGX0pLfu6Pi3dlCM33TwptxX/Tsvj8+l0mC/eRfRJz3U+iV3l+ezfhVwjxg08a2i1NDcSi7JIqzbxoMIEzGNwUWT6t3cZrETllCXf/CNGsc3K+bxLCFJsSToRR13g5TpHQiUH57ib5Z6CAgqZxXN131/+GXYcXbq2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hQ3dDXYj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zy/aYSCj"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-301e05b90caso3593357a91.2;
-        Sun, 20 Apr 2025 23:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745215888; x=1745820688; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=C69EyoD7e1EUPJxpKdh2LcmIsHKCmPyscuaz31gErLo=;
-        b=Zy/aYSCj1dG0xsoHyWAsOVIo5WaXuWguK++UtlxY9yvBLDZrzlyQ+NmQBXtULmJ7BX
-         ++03r2nhLjRhNoVtXdfkqrdZ2BULl+Gn0xit9MeH1pvREbtat+UGsPhlZoaG/1JVp3Jm
-         0qkkndYeBEvnXDZu+Qf/KN1TrmyUFErFz8I7x8PJ/mZancvNdM8w08yo78GfC6a2XxRo
-         btovysr4xNRJYqIVwXdin0ck15jdouJY5f4OBMBl5yJMLuaL/Y6f2pZI6f8l8ILsx0EH
-         TG1ZA71H6n/Xk5zziiPxwp+Xo8C1o/b0+bhO41UnyFR3LDPlyuTf5nZniAdWOZOY2uZv
-         Tvzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745215888; x=1745820688;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C69EyoD7e1EUPJxpKdh2LcmIsHKCmPyscuaz31gErLo=;
-        b=TlXZW5FSDCwUBPQHUvXcL/pZbE9/oCk1LfzLJKbahknpiS9/iXKVKvRRBfK8VfGpHZ
-         wqTA1lYWIZ4FW4SB/PFKdCHhbT6+HAqKTuYhTiPrFlYtRh4loeJPh2nxemzlMUOeE48F
-         MUNR/ojUmb4G6rag3QxOrbMnoQvhCUE/y08rLkgCqmmEmIIhgPWxMK0EoPh5DBGRyj2S
-         re4l8plxNQPv/WnfRT2HmsfwNDwWRxMmMQDCunvo3hzUeKqUAwvF/2U1zK5KzmBpFSwz
-         +tRmKk0zYiU4hWXOwvNdzMhl+VtEudXRht01mLRNFAFjGw3pwxpBWvOQvHIhek9SaJZg
-         PGeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCXxbHHM3W9mkpXjvL6A0e7eM1vBU9B8/ZeuBuQ9RIO/+60Qbzz0f5HizMC6bHiTTZC4KaHYo1pjn+WcA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLWFF6qHrmnFogtGLtH4vhD7KDcapkF//2MbfC7JudNREmFke6
-	iUXneIQfpz33l+3HLFVG08ECJvOiEVXhDcWs+fQEyK9kh2fGFxax
-X-Gm-Gg: ASbGncs4mxjJ0KGvSg+4Wm4IPRW9CzakDA98ZXQh4bx33fY08jCnSLItfIKq8mOTa89
-	FfNaVIGR9Aipduz2u7sRNrWrvIiKbkgWWcF/Z82trw/DdRBPVqe2Bq3Sd7sQcgaBStX6Jm/S013
-	ZgH4cg0pl7cXK1uwEsG66Zpfw9w8+asvfHw8nMIoNGprOV6EqBHExMBbDWFY27iCSy5wlMxsVv0
-	sWTTgZGy1Uj4a3DYup6ZR+XS1TBOBuYFfWucpZ8oe+AQSwazxpHA25RXWDco3n632D62+48jty8
-	bwy2xmn8Jx7PKaS8B53IWdtppyviA7dc1hzKcIR7iQ7ULA==
-X-Google-Smtp-Source: AGHT+IHm7qZcL8Gz7jo51scn41XPIDA07FMq8yyqyXub0ub+fXVBqDVmLhp+aPfsqSY2wk2c0xwsEA==
-X-Received: by 2002:a17:90b:4b89:b0:2ff:6f88:b04a with SMTP id 98e67ed59e1d1-3087bb6922emr14213640a91.15.1745215888492;
-        Sun, 20 Apr 2025 23:11:28 -0700 (PDT)
-Received: from fedora ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4b80sm57762225ad.144.2025.04.20.23.11.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 23:11:27 -0700 (PDT)
-Date: Mon, 21 Apr 2025 06:11:21 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
- device address is same
-Message-ID: <aAXhiW6n-ftxAr9M@fedora>
-References: <20250401090631.8103-1-liuhangbin@gmail.com>
- <3383533.1743802599@famine>
- <Z_OcP36h_XOhAfjv@fedora>
- <Z_yl7tQne6YTcU6S@fedora>
- <4177946.1744766112@famine>
- <Z_8bfpQb_3fqYEcn@fedora>
- <155385.1744949793@famine>
- <aAXIZAkg4W71HQ6c@fedora>
- <360700.1745212224@famine>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hQ3dDXYj"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNj16n014718;
+	Mon, 21 Apr 2025 06:11:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZwvbDD5RDvQIFzA8UVB4+DzSEE8MIhvVVNw8/bP+O6w=; b=hQ3dDXYjQWbjlvQV
+	w1Apr+by8f4p0etqdmoEM7fR4eaxtr1AbDrp3mW4wc3OuX50DLM2MrsykrYY4mLB
+	JhZ0c0l0RRORE9eWgMuTAYyGR8r4xsUlO424fgSm6Hwr+JYper6sj7TcMu0+XKcA
+	drq+R59jIbJbJ+DNXw9ZGZBTbhwfkbt775Y2BBqPssgE/HlZOrIriu3SXJbm/yzF
+	n/mu2u8qRrmusAgxRkM1Av74ZR692x2MrJwidm02t6tarJgfPX34UMw0kS9Zwgir
+	x8nJIOixxeym1XHshTpGIwLy74XTJx8nQGPXF8h6TWjCOZurJ3dWqjlDsKIRn+fe
+	u1/Sqg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bk3rn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 06:11:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L6BLl1011723
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 06:11:21 GMT
+Received: from [10.213.62.209] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 20 Apr
+ 2025 23:11:18 -0700
+Message-ID: <57d58076-1d5c-41ee-b0ac-c2bc4658b96b@quicinc.com>
+Date: Mon, 21 Apr 2025 11:41:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <360700.1745212224@famine>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/4] misc: fastrpc: Add debugfs support for fastrpc
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>, <srinivas.kandagatla@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_bkumar@quicinc.com>,
+        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
+        <dri-devel@lists.freedesktop.org>, <arnd@arndb.de>
+References: <20241118084046.3201290-5-quic_ekangupt@quicinc.com>
+ <2024111804-doze-reflected-0feb@gregkh>
+ <c3b285b0-33d1-4bfa-b8ab-6783ff5ed78d@quicinc.com>
+ <cn7pqvhw4x4y7s5hbgzjpvyjnw4g6hoyepic4jai7x2fjdenxr@ikr4hkorbuwb>
+ <365c4709-b421-4af8-b521-a195630242de@quicinc.com>
+ <nsaq3zungvyhuikz35arvxmle2fovxh422jpyqxuleh57ufqnk@bekeh7qr7y76>
+ <697e90db-6ecc-44ac-af86-6c7f910fc902@quicinc.com>
+ <CAA8EJppbptPryu_O3G3YAapHT=Ai+MAdA38FtSU=YvWb+mqa1g@mail.gmail.com>
+ <e1c23027-94c3-4fdf-b842-b154179aa2b8@oss.qualcomm.com>
+ <a3addff2-1ee6-45aa-ac2c-693ffe804948@quicinc.com>
+ <pczibldk4nzu2zvyca4ub4kxiyvismuy46a4rcxkqwy7ncaf4d@ktm2vpaejdmg>
+Content-Language: en-US
+From: Deepika Singh <quic_dsi@quicinc.com>
+In-Reply-To: <pczibldk4nzu2zvyca4ub4kxiyvismuy46a4rcxkqwy7ncaf4d@ktm2vpaejdmg>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=6805e18a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=spRR_jhHhYAkHvlMeisA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: T4d1Ld7_RxIAkGjwnITjZK2rwKnd98oP
+X-Proofpoint-GUID: T4d1Ld7_RxIAkGjwnITjZK2rwKnd98oP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_03,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210046
 
-On Sun, Apr 20, 2025 at 10:10:24PM -0700, Jay Vosburgh wrote:
-> >I'm not familiar with infiniband devices. Can we use eth_random_addr()
-> >to set random addr for infiniband devices? And what about other device
-> >type? Just return error directly?
+
+
+On 4/14/2025 1:18 PM, Dmitry Baryshkov wrote:
+> On Mon, Apr 14, 2025 at 12:41:47PM +0530, Deepika Singh wrote:
+>>
+>>
+>> On 4/11/2025 1:55 PM, Ekansh Gupta wrote:
+>>>
+>>>
+>>> On 12/3/2024 5:27 PM, Dmitry Baryshkov wrote:
+>>>> On Tue, 3 Dec 2024 at 07:22, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 12/2/2024 6:18 PM, Dmitry Baryshkov wrote:
+>>>>>> On Mon, Dec 02, 2024 at 03:27:43PM +0530, Ekansh Gupta wrote:
+>>>>>>> On 11/22/2024 12:23 AM, Dmitry Baryshkov wrote:
+>>>>>>>> On Thu, Nov 21, 2024 at 12:12:17PM +0530, Ekansh Gupta wrote:
+>>>>>>>>> On 11/18/2024 7:32 PM, Greg KH wrote:
+>>>>>>>>>> On Mon, Nov 18, 2024 at 02:10:46PM +0530, Ekansh Gupta wrote:
+>>>>>>>>>>> Add changes to support debugfs. The fastrpc directory will be
+>>>>>>>>>>> created which will carry debugfs files for all fastrpc processes.
+>>>>>>>>>>> The information of fastrpc user and channel contexts are getting
+>>>>>>>>>>> captured as part of this change.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>    drivers/misc/fastrpc/Makefile        |   3 +-
+>>>>>>>>>>>    drivers/misc/fastrpc/fastrpc_debug.c | 156 +++++++++++++++++++++++++++
+>>>>>>>>>>>    drivers/misc/fastrpc/fastrpc_debug.h |  31 ++++++
+>>>>>>>>>>>    drivers/misc/fastrpc/fastrpc_main.c  |  18 +++-
+>>>>>>>>>>>    4 files changed, 205 insertions(+), 3 deletions(-)
+>>>>>>>>>>>    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.c
+>>>>>>>>>>>    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.h
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/misc/fastrpc/Makefile b/drivers/misc/fastrpc/Makefile
+>>>>>>>>>>> index 020d30789a80..4ff6b64166ae 100644
+>>>>>>>>>>> --- a/drivers/misc/fastrpc/Makefile
+>>>>>>>>>>> +++ b/drivers/misc/fastrpc/Makefile
+>>>>>>>>>>> @@ -1,3 +1,4 @@
+>>>>>>>>>>>    # SPDX-License-Identifier: GPL-2.0
+>>>>>>>>>>>    obj-$(CONFIG_QCOM_FASTRPC)      += fastrpc.o
+>>>>>>>>>>> -fastrpc-objs    := fastrpc_main.o
+>>>>>>>>>>> \ No newline at end of file
+>>>>>>>>>>> +fastrpc-objs    := fastrpc_main.o \
+>>>>>>>>>>> +                fastrpc_debug.o
+>>>>>>>>>> Only build this file if debugfs is enabled.
+>>>>>>>>>>
+>>>>>>>>>> And again, "debug.c"?
+>>>>>>>>> I'll add change to build this only if debugfs is enabled. Going forward I have plans to add
+>>>>>>>>> few more debug specific changes, maybe then I'll need to change the build rules again.
+>>>>>>>>>>> diff --git a/drivers/misc/fastrpc/fastrpc_debug.c b/drivers/misc/fastrpc/fastrpc_debug.c
+>>>>>>>>>>> new file mode 100644
+>>>>>>>>>>> index 000000000000..cdb4fc6845a8
+>>>>>>>>>>> --- /dev/null
+>>>>>>>>>>> +++ b/drivers/misc/fastrpc/fastrpc_debug.c
+>>>>>>>>>>> @@ -0,0 +1,156 @@
+>>>>>>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>>>>>>> +// Copyright (c) 2024 Qualcomm Innovation Center.
+>>>>>>>>>>> +
+>>>>>>>>>>> +#include <linux/debugfs.h>
+>>>>>>>>>>> +#include <linux/seq_file.h>
+>>>>>>>>>>> +#include "fastrpc_shared.h"
+>>>>>>>>>>> +#include "fastrpc_debug.h"
+>>>>>>>>>>> +
+>>>>>>>>>>> +#ifdef CONFIG_DEBUG_FS
+>>>>>>>>>> Please put the #ifdef in the .h file, not in the .c file.
+>>>>>>>>> Ack
+>>>>>>>>>>> +void fastrpc_create_user_debugfs(struct fastrpc_user *fl)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +        char cur_comm[TASK_COMM_LEN];
+>>>>>>>>>>> +        int domain_id, size;
+>>>>>>>>>>> +        char *debugfs_buf;
+>>>>>>>>>>> +        struct dentry *debugfs_dir = fl->cctx->debugfs_dir;
+>>>>>>>>>>> +
+>>>>>>>>>>> +        memcpy(cur_comm, current->comm, TASK_COMM_LEN);
+>>>>>>>>>>> +        cur_comm[TASK_COMM_LEN-1] = '\0';
+>>>>>>>>>>> +        if (debugfs_dir != NULL) {
+>>>>>>>>>>> +                domain_id = fl->cctx->domain_id;
+>>>>>>>>>>> +                size = snprintf(NULL, 0, "%.10s_%d_%d_%d", cur_comm,
+>>>>>>>>>>> +                                current->pid, fl->tgid, domain_id) + 1;
+>>>>>>>>>>> +                debugfs_buf = kzalloc(size, GFP_KERNEL);
+>>>>>>>>>>> +                if (debugfs_buf == NULL)
+>>>>>>>>>>> +                        return;
+>>>>>>>>>>> +                /*
+>>>>>>>>>>> +                 * Use HLOS process name, HLOS PID, fastrpc user TGID,
+>>>>>>>>>>> +                 * domain_id in debugfs filename to create unique file name
+>>>>>>>>>>> +                 */
+>>>>>>>>>>> +                snprintf(debugfs_buf, size, "%.10s_%d_%d_%d",
+>>>>>>>>>>> +                        cur_comm, current->pid, fl->tgid, domain_id);
+>>>>>>>>>>> +                fl->debugfs_file = debugfs_create_file(debugfs_buf, 0644,
+>>>>>>>>>>> +                                debugfs_dir, fl, &fastrpc_debugfs_fops);
+>>>>>>>>>> Why are you saving the debugfs file?  What do you need to do with it
+>>>>>>>>>> that you can't just delete the whole directory, or look up the name
+>>>>>>>>>> again in the future when removing it?
+>>>>>>>>> fl structure is specific to a process using fastrpc driver. The reason to save
+>>>>>>>>> this debugfs file is to delete is when the process releases fastrpc device.
+>>>>>>>>> If the file is not deleted, it might flood multiple files in debugfs directory.
+>>>>>>>>>
+>>>>>>>>> As part of this change, only the file that is getting created by a process is
+>>>>>>>>> getting removed when process is releasing device and I don't think we
+>>>>>>>>> can clean up the whole directory at this point.
+>>>>>>>> My 2c: it might be better to create a single file that conains
+>>>>>>>> information for all the processes instead of that. Or use fdinfo data to
+>>>>>>>> export process / FD information to userspace.
+>>>>>>> Thanks for your review. The reason of not having single file for all processes is that
+>>>>>>> I can run 100s of iteration for any process(say calculator) and every time the properties
+>>>>>>> of the process can differ(like buffer, session etc.). For this reason, I'm creating and
+>>>>>>> deleting the debugfs files for every process run.
+>>>>>>>
+>>>>>>> Do you see any advantage of using fdinfo over debugfs? I'm not sure if we can add all
+>>>>>>> the information(like in debugfs) here.
+>>>>>> Which information is actually useful / interesting for application
+>>>>>> developers? If not for the fdinfo, I might still vote for a single file
+>>>>>> rather than a pile of per-process data.
+>> Let’s say I am trying to do debugfs read when 10+ or more sessions are
+>> active per channel, then for pushing data of nth process in a single file, I
+>> would have to wait for n-1 processes, by that time process data might get
+>> changed. How do you suggest handling this?
 > 
-> 	Infiniband devices have fixed MAC addresses that cannot be
-> changed.  Bonding permits IB devices only in active-backup mode, and
-> will set fail_over_mac to active (fail_over_mac=follow is not permitted
-> for IB).
+> I'm yet to see the response to my question, what kind of information are
+> you outputting? What is actually relevant? Could you please provide an
+> example from the running system, so that we don't have to guess?
 > 
-> 	I don't understand your questions about other device types or
-> errors, could you elaborate?
+Debugfs would include information like userspace maps, kernel allocated 
+buffers, information regarding memory donated to DSP for session 
+creation etc. Other relevant information can be added in debugfs on need 
+basis.
+>>>>> I have tried to capture all the information that could be useful.
+>>>>>
+>>>>> I can try changes to maintain single file for all active processes. Having this file specific
+>>>>> to a channel should be fine, right? like fastrpc_adsp, fastrpc_cdsp, etc.? Each file will
+>>>>> carry information of all processes using that remoteproc.
+>>>> I think it's a better idea, yes.
+>>>
+>>> Hi all,
+>>>
+>>> I'm adding Deepika <quic_dsi@quicinc.com> to this thread who is reworking
+>>> on this patch series.
+>>>
+>>> //Ekansh
+>>>
+>>>>> --ekansh
+>>>>>>> --ekansh
+>>>>
+>>>
+>>
 > 
 
-I mean what if other device type enslaves, other than ethernet or infiniband.
-I'm not sure if we can set random mac address for these devices. Should we
-ignore all none ethernet device or devices that don't support
-ndo_set_mac_address?
-
-Thanks
-Hangbin
