@@ -1,198 +1,390 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011034.outbound.protection.outlook.com [52.103.68.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDCE20E01E;
-	Mon, 21 Apr 2025 10:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745232179; cv=none; b=C3hQOIsyZ+ex8McGvdI4RONoBT9fz+NuDh+8FFWr6WfwGAyoHtFV+oe8l5E2NIqJxcvwBCp+2nj2dE/HzYGIymVoI+RAwmHyoOB8H16eXSxfVtgua8z0OFhaFEuAncIhGKsPh8SZfRJURDp0NXmooagga1kpKuf0GDuwPGfHcHk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745232179; c=relaxed/simple;
-	bh=g6aoNjjUe6gpyU3lEhAAMFrkD8tpCtOClqEvVFyO5lI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sswqxkKrJ4njqHqJs2PuOOZX3RQrmASqmVJnxESySDGH8lddEsk2UGZjH9c3+Lp3ZsaQ5zq9Icw+cPwgOV0W53wKQJ2mpnRCQuPtLKxwYz4bMYz8BTHpKc0nxL1y6QBMgy41oMGQGkZyX3FptYGTEHQyZEU6+AYvX1xrfwPW1Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=AhtBgOZ1; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A7BBA53;
+	Mon, 21 Apr 2025 10:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745232201; cv=fail; b=n+aQ5JxHiyZdpxYTx6WYzAw7B6hTaegjRgTQyO5apybn2FaVTmVK5N67GY7e5es5AEbC6snoQhKYeujprsllFTfQ+yGhjywreZ6cxuwqbl3L3/6T1RXtD9UuSPse1+w3KAWG53MkzGjFFkoxIJBoRKvzchE6ac+X5bDD2cvdYJ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745232201; c=relaxed/simple;
+	bh=9usfQOxMPr4L79N6FCl/bZCe49AVF2wrUPt2ZccBB5g=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=imPnJ+tAXB+AUbw2wZx+NTEhUoFQBNUUynM4BaY5foSpHkddEWtOrU9WGQ7yoLIvY8wOFvdWhjzpSk8kOargvQ2qI4eoNznnViBdVGr0BcQ7RTM/q3mgb57uS6TWCy0tIoaZKyKYJwkMomEQFCa6LAcpZnCYNdDsHwkQzRUKWRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=UT7DX4wu; arc=fail smtp.client-ip=52.103.68.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="AhtBgOZ1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1745232172; x=1745836972; i=quwenruo.btrfs@gmx.com;
-	bh=fztYMfni9OaHqOaPo9QXn2+QMjAAMakdY/6EGbfxUX0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=AhtBgOZ1gWaP1eWPigqxWkPy1fV7y01y0nSGeeuVTIL8P0aVWzAjDGzDKmAtjmC1
-	 Uw81tzs9ZL+YdFDjp9mzHAu1cjuETE9vQBKnygNcDayzjmH/ErieFkZvBg0pz44jf
-	 XUrw2SSMQ6E9VXz/Hfk3bgiMaaWEI0sTUZmkwWvi691XKQLKnRL5sqLP7xBRD9NUu
-	 bVrlOdqYEbLNS92grW1Pws1bKbVDkd1LQ6QZC3/flc8uQ+mhMosVwc/4ul/BF2fsY
-	 0TPqzd27MYGqiSJTedbLxfryS9FByzrDo+xMckybVKFdM323F2eexTb5thjJKyyFF
-	 cTCqEv8zOQY6eGqXCg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6sit-1vBq7w1Shj-012aOk; Mon, 21
- Apr 2025 12:42:52 +0200
-Message-ID: <9e7babf0-310f-40cd-9935-36ef2cebb63f@gmx.com>
-Date: Mon, 21 Apr 2025 20:12:37 +0930
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="UT7DX4wu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fSnbNZSBf3EmK201fpPz47V0C369R6dsCI5oeN6gSgbVF+ObksIgF10UH7xxxJL6/axY6naZMmcx0Mw/z4Y9R0y20OP5G/Uh7FmMuvn2GtQDgFHeNdOiCvErAvr4DXElUXzD8+JIx761fQOCkRiiEX82/5wfSPBlgtQgRcI9tC9OMS3bNWt81mpV7Wsv/yNsqlqNx3Nn8UmmKalhnhQp+iHddYMlhCLukxF5tK/fdstWkq4TwdnP0b+hL1Vu/AcFMe1IB15FxuHwPXJksu/bQyQPtQWRbIltHSRVnaRPscZJdE8MD40zDCarWq2fYI/cYgVKnxc7t7aJTSIrmdR3Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BR3TUfkJ3UvFJHZYGnTPRez5ZwtR7PDVm8O2fgk7AKs=;
+ b=ZthuGsZbpUuMv3ZFGLFVQzvf8lSZCca5iAQ4Bmgw8KB5qXL6RBnidF9AawKyXcvzsusPeSUVF1roRg7Dw8co4YLjvwnyFSmDXt2rpV7BMMnuLYZgxm5d28nkx8UJqTpl9Mr/D1wGkxEYQt8AwYHI9Zd0pIXwtXaTC9ppb5Wn0IlDpoB95inn0yYMX5UynLgFDdy1onYGwTEIpu//q6fTa0ib7y2K8J+B7W3AAkyfWvayNM83Pkq4MnvuJQx992oDQ7bfME1ER6aPillXM8oSzJ24jmjGWfZc8sHzjybUdUbGQSt4L1RchFnUS3nIaTonnJg7CyDaofx3obD7Oyr4pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BR3TUfkJ3UvFJHZYGnTPRez5ZwtR7PDVm8O2fgk7AKs=;
+ b=UT7DX4wuNaNu13h6P3vugLWs5uMfVNGKt6u/ZxImRmz+aXPaiiFD31S5WulsVPVpfJJGhYZE+zYv4/E/LsNaHAewy0WMDSjWV6F7L9AmQtVHSQV3DGe2CGGvDxASUeanosrOCnDHy105VIc7Px+D8UzTKxWH65HQx9vroUi4gzkF0O7ji/5KJdHjdyzkfsel3ZvS4ABLVDTwQlyOPul7WHZmmziJxRazbYTXQnL3xBQv0r74KYDsyrtrgl1YwjTGFeZQbLk8nDmdA6EreEyh8tBlqHBF5ciM4boPH2LwpA+vJXhUZ7Osi91h1FxKN2G5Xv1zZ/dXSLg8ns4+E5WoAw==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN2P287MB0665.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:15b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 10:43:10 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 10:43:10 +0000
+Message-ID:
+ <MA0P287MB2262F6D556E48A73E317553AFEB82@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Mon, 21 Apr 2025 18:43:05 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] clk: canaan: Add clock driver for Canaan K230
+To: Xukai Wang <kingxukai@zohomail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Troy Mitchell <TroyMitchell988@gmail.com>
+References: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
+ <20250415-b4-k230-clk-v6-2-7fd89f427250@zohomail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250415-b4-k230-clk-v6-2-7fd89f427250@zohomail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR02CA0087.apcprd02.prod.outlook.com
+ (2603:1096:4:90::27) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <db5d29ae-0804-47b3-b3cc-32ec5526f1e0@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: fix the resource leak issue in btrfs_iget()
-To: Penglei Jiang <superman.xpt@gmail.com>, clm@fb.com, josef@toxicpanda.com,
- dsterba@suse.com
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421103252.44509-1-superman.xpt@gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <20250421103252.44509-1-superman.xpt@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Mqo4g+batdcBt/v79MDeIgrr3ppT03dgyH7S+a1WC+p3h0rkr9m
- PhEHyQUqOKMnGUgiAeghCMD8PrGYqv66JRCD8RV9M4dSynhoNBoeOAH6kU300bnZwMcEV4i
- nQ3MPrWa5uOBcrm2aNjcTQ9kD3CLlEKpwVK/1hVeHfS/Zb+auXGa5t8xnjRjKDqplHU0KVT
- Kel1wR9eSV6urUgsl9F/g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rr8AEwuPX10=;X7EZ6kud8jlIgZ0DnFJkitJylMW
- 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
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN2P287MB0665:EE_
+X-MS-Office365-Filtering-Correlation-Id: 111611ec-3ee8-4e2d-b056-08dd80c14f43
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|19110799003|8060799006|5072599009|461199028|15080799006|7092599003|1602099012|10035399004|440099028|4302099013|3412199025|41001999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c09WY2w0SXhIbW40VGlQVnV5cWNma0JQeUMrU1lLbEpWbGpYc1hVTTRmcjkr?=
+ =?utf-8?B?SU1Jcmc2UHJUR2xqcUQ3MHY4K0ozOUFEdXBjT3M1MHYrRUZTU0IzN0dsT0px?=
+ =?utf-8?B?aGVURkljU0ovb1NpWGoyeUpMM0swNnBNRkVkdDJ0aWpsSXlQVmk5aVU0MTgw?=
+ =?utf-8?B?UVJiQTJwL040Z3ErU1lucEMySmRWdlRPbitSd3o2ZEhweGxLVTlmVzBFQjhQ?=
+ =?utf-8?B?ZVBySjFmcDhDL1pjM29XaWhFZ2lMTmVwTlpaSFQvc01zZEtOSDJYcjhvYVIy?=
+ =?utf-8?B?aCtxYVI2Ny9iMGdhVytoYXVxbVVCVE5MUEJOc1M1WldmOFdLanhzejVjRXV5?=
+ =?utf-8?B?SURHbW9jWXBxbTRzN3ZxaElKRHY4SUZjN0xpdC9HTGViTGRTVjJqUmV4Y1hv?=
+ =?utf-8?B?WGtwK0lQcGN5WEYwckpYektkVnJUVEVKTWVlNytiQ1NTaWFJUlMvNXJSdUZD?=
+ =?utf-8?B?Nlp0eDJ6QXdQcEhEWWxRbWFUbGI0L2R3QnB1UDA0S1hsTTE1OVp0VXdXcHBk?=
+ =?utf-8?B?dStNbUlkaTRVN1R1SWRJWURaK0s2ZDB2d2lNcnM0cEZyd3dGZllIUGlUMUFD?=
+ =?utf-8?B?d0IrTXZ3VkdjaEl2N2dYZmcxZ25FbEpHdU1FY3pheUpwTU9EWUNRQ3BIZHZ5?=
+ =?utf-8?B?MlB4SzVoNE4wYlNtclhwbkEzQVhCTSs0NGRUNEw0UThlSGhabW1CQzQ3ejJJ?=
+ =?utf-8?B?L3RQYjUzRENBdzBxaUpmSlcxMGd1cUppcEYydklTT2JVYnB1MHF1UHNQQkZK?=
+ =?utf-8?B?dzlleUFCWmJPRlh6RTFmZDdLai9ydVpXV1g3djQ3UVBmdUM0UjRaQ09Denc0?=
+ =?utf-8?B?Q3RPRnJsRjlUTlRoQlJrRjNrMWh0aW9ldVN4dStjVis2VEVhRWRCNXpJWVM3?=
+ =?utf-8?B?T21WK1dZYU9ZWVhHSGZPbjBXVnJUeE1zZG5LbElkQ2FlbzVyZ1lCQis1MFp2?=
+ =?utf-8?B?VXMyYzFpNUloOVk3dzlTU2RlT3pOZEdxZzEvdlZMTU10THZ2bFB0aVJCMlBT?=
+ =?utf-8?B?dlNpSDVDbVcwaHVIUHJzYnBBVHlsVCtIVkttaEU3OTJvWDZqdTNWS2RCSStZ?=
+ =?utf-8?B?bE11WVkvUzR4UlhVTW1mMU1zbHdqbDFlaERpRUhOa2hpSWwvNUZqTFJXOTdv?=
+ =?utf-8?B?VjM5SjdWOEptSjJZM3hnOFdRWElidEdmQnBELzBjSGFYQjJvUmZqZ2w4K2Iv?=
+ =?utf-8?B?NTdhdTZObWNoZEJSSUdZSzY5VmRtSlFNSDFlTXl6U1FVUHRYMTY1VGJPREto?=
+ =?utf-8?B?VXhXaHhqTW9PMHBZNEM3R2FaZzNYdUExNlJFUlZDWEw4eTcwWEw2SHFpSlRF?=
+ =?utf-8?B?enl0OGE3R0IxektUS0FROXI1S1dIQlZ6YndWMkFHMm5LQ2Z3cE4wNDhXWU5K?=
+ =?utf-8?B?MzkzMTR0eWcxOHlvMThMb0M0b2hDVWtWeXRaTzBWVUZwK20vemhhbjBMczNG?=
+ =?utf-8?B?OFVVenU4elhpK1BHYWYySXE1dXNEcHpxdU9NeXcvbjd6NkhzNHVXNXBpRSti?=
+ =?utf-8?B?MFZaajlCNjlTcG9TSGNLWGlKUjlEbWpMdUppMnltU0Yzczl2YlROdy9CUDRn?=
+ =?utf-8?B?aFAxbVZUOWQ4ZnplcEhPUEdkRXRWKzhxMnBreGR2a1F0Zml4ZDIwdGE4MU45?=
+ =?utf-8?B?RHdCbmk3MElBK1dYL0FIUmZnQ2VHY1krcHNiVE5KQlVKSGpoVWlCNGswdDFO?=
+ =?utf-8?B?aHEwQzd5cUt6bWdRd0dVbEJXMjd4QVlYSXFvamlBcGc2bEp4NmplTGZmQlpz?=
+ =?utf-8?B?ckpIMFc2dkZFSHhhYXFlNlRqbDlWWmhPbVk1cDN1dk0wUit0VUIrREVkZkhx?=
+ =?utf-8?B?RkNPM1FHMzAyRDRoVEFzdz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q2dNY1hNdWk1RG1SYXJPMlo0MzQxelZZZmdvQjcyOUIwMm9mL0lIRzVOM0ZT?=
+ =?utf-8?B?YWhkd0d3QnZaMHlsNHBpZ1ZPLzg2SkV1a21SQWd5emxpMG1idkxDd1h1eGt4?=
+ =?utf-8?B?Rmx2YkIrKzhNNFhzdGpONU10aFc5VFN6QnlmMTEzY3BBN0dxcW81T3k5ZWhG?=
+ =?utf-8?B?TW5GTjJWWnRzKysvSXZqdUFNL2hoYU9lQXVmdmlvd0dLamFQbXB4ci9KMjNY?=
+ =?utf-8?B?UytJdlFtMklpMTZyaDk4VkgyL0dzOWdSRGtmSENmYkxOU3J5SURUZmp0UmFV?=
+ =?utf-8?B?OWE3bnBLYStZZGpJcTFpUkxtOStmVE9YK3g3UDhOdy9IWkNtd2dFbmxJcm03?=
+ =?utf-8?B?Z1F1L0d4eGNIc0VpcDZEVFJtUWhwSnZJUlBBWXhKeFJqZlc2TmsvWU9LZUhG?=
+ =?utf-8?B?TGZIbmUxZGF3dVVwemZiN0NnSjVScWFDMEk4eWdKKzdKVHVYc09mS3ZKZmNn?=
+ =?utf-8?B?dDZWZ1lJUE41d2tvd1hkQzBZbHpyd2tlL0JXYml3OGdESmRXZXBBeWU4SG1Q?=
+ =?utf-8?B?V0s2bXpiKzUwNCtSaVlkcVg2L3I1YU5rWXh3L0JoZHZkNmlPaEEraldaZlVp?=
+ =?utf-8?B?RVhMbmxha1diOGc1SWZQa3BQWVVLOUFZODFIMXNjb3FoQ0U4VG5ocEVzdWNh?=
+ =?utf-8?B?WkIzcWRsaVE5TFNFUnRXS1Nad0dISVpPWFM1SEJCaWdSRDZ3VllXdmZJc3Mv?=
+ =?utf-8?B?V2RrRWZKeUJoRDArdEZuWkpoYXVlV0IyeDNjc1Qwc3JBWEFVYitSZkZ5cTFv?=
+ =?utf-8?B?cU1lRDNYWmZpazFqY20vRjNVTDBCQlZqRXk2TmpDdTNqaVVJdVdsWXdoOXVn?=
+ =?utf-8?B?ZEpwTHNCNDJNa0NVUzc1SU1vdU51SDhZMmExTDlPRE9tTTdCRmY2L0VXTU9K?=
+ =?utf-8?B?YlZsL1Z6Nkt6bDZLU0gvWVVPa29oSGpseVVaWlZ4eWtMUWVJakYrNmh0Z1Rl?=
+ =?utf-8?B?Tnp1WFBhU05sVisrbGMxeEp4SXNnSXovYkVWaENRbjVPQ1ZHaTlmNXBFN0ds?=
+ =?utf-8?B?Zi8yWWlTbkE2WDYzUXlDaFUramR4dkdzUlVsUlA3c1lUUkVDSCtXbTZRTlI2?=
+ =?utf-8?B?UnRUZTZzbTZTRk9kRFdQeGNCZFlORlFEdGJlcXhXU093R1dYblI2RzVSSXVL?=
+ =?utf-8?B?dklqUXpIU04wWHprUC90WDdwOUljTjRqK3NJa1Q1SEdLb1ZDbWNRRVhHZGJ4?=
+ =?utf-8?B?Ykk1VE55bU0zVjJ1OUhZWG5xTmU1b0o3MkRyRjVlY282V0VweVNheUJyMTY5?=
+ =?utf-8?B?QlZ1djFNMnJRR1loNkx2ZVpyOVBOajNUVWdhdHBmYVlBamlhaWM4U2lJZ3ZI?=
+ =?utf-8?B?Y2VianNyK2tIQmRTOStpUDlxV013c1JoNVc2UTRNb2hPQkJINVFJUXJNakUr?=
+ =?utf-8?B?NGE0MlFqMm1TcVJiZUJiNVJUQnpoSmQvQ3hpRHdCdlU5bi9NaXdvNUhqRjRa?=
+ =?utf-8?B?Q0h1dmRXMXkxTnp0VXNPSzlKK3pUYVc5Tm9jZTB0V3QxWVRsd0o3VlVjWVFk?=
+ =?utf-8?B?c0hBTXVxY25iSm9ldGhicThMcXQyYklyS29KVHFKQlRSWGZ2QUhoYmxoUzBv?=
+ =?utf-8?B?TzRtZER3SWRXSGFNNzgwWitSNzdoUlRCT0E1YmYyRUE1VnJkcmZocFVHM0dk?=
+ =?utf-8?B?WDJNRXorKzIyTkE0RHluREJvV0VjNCt3eXZiWkJEeVl1cG1RT1NMMUxVUUVZ?=
+ =?utf-8?B?Mkw4RUhWWkV1UkNVcEZUNGFxVElIRlVaTlNmUnk0THRLMzhMclRMQTNTTStl?=
+ =?utf-8?Q?lablGHpQsJB95LV+hFlIhZ3tEROLvN3L00aHcfU?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 111611ec-3ee8-4e2d-b056-08dd80c14f43
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 10:43:10.6969
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2P287MB0665
+
+Hi, Xukai, I have some comments below.
+
+In general, my suggestion is that the code can be further optimized, 
+especially in terms of readability.
 
 
-
-=E5=9C=A8 2025/4/21 20:02, Penglei Jiang =E5=86=99=E9=81=93:
-> When btrfs_iget() returns an error, it does not use iget_failed() to mar=
-k
-> and release the inode. Now, we add the missing iget_failed() call.
->=20
-> Reported-by: Penglei Jiang <superman.xpt@gmail.com>
-> Closes: https://lore.kernel.org/all/20250421102425.44431-1-superman.xpt@=
-gmail.com
-
-IIRC this is not a syzbot report, although it's definitely a C=20
-reproducer from syzbot.
-
-Thus I'm not sure if the closes: tag is correct.
-
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+On 2025/4/15 22:25, Xukai Wang wrote:
+> This patch provides basic support for the K230 clock, which does not
+> cover all clocks.
+>
+> The clock tree of the K230 SoC consists of OSC24M, PLLs and sysclk.
+>
+> Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
+> Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
+> Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
 > ---
->   fs/btrfs/inode.c | 12 +++++++++---
->   1 file changed, 9 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index cc67d1a2d611..61d7f3f94090 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -5681,16 +5681,22 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct b=
-trfs_root *root)
->   		return inode;
->  =20
->   	path =3D btrfs_alloc_path();
-> -	if (!path)
-> -		return ERR_PTR(-ENOMEM);
-> +	if (!path) {
-> +		ret =3D -ENOMEM;
-> +		goto bad_inode;
-> +	}
->  =20
->   	ret =3D btrfs_read_locked_inode(inode, path);
-
-On error, btrfs_read_locked_inode() has already called iget_failed() at=20
-out: tag.
-
->   	btrfs_free_path(path);
->   	if (ret)
-> -		return ERR_PTR(ret);
-> +		goto bad_inode;
-
-So we will either underflow or use-after-free the inode.
-
-It looks like only the btrfs_alloc_path() failure is missing the handling.
-
-And the error looks like a regression caused by commit 7c855e16ab72=20
-("btrfs: remove conditional path allocation in=20
-btrfs_read_locked_inode()"), please add a fixes: tag for it, which is=20
-more important than the syzbot tag.
-
-Thanks,
-Qu
-
->  =20
->   	unlock_new_inode(&inode->vfs_inode);
->   	return inode;
+>   drivers/clk/Kconfig    |    6 +
+>   drivers/clk/Makefile   |    1 +
+>   drivers/clk/clk-k230.c | 1710 ++++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 1717 insertions(+)
+>
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 299bc678ed1b9fcd9110bb8c5937a1bd1ea60e23..1817b8883af9a3d00ac7af2cb88496274b591001 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -464,6 +464,12 @@ config COMMON_CLK_K210
+>   	help
+>   	  Support for the Canaan Kendryte K210 RISC-V SoC clocks.
+>   
+> +config COMMON_CLK_K230
+> +	bool "Clock driver for the Canaan Kendryte K230 SoC"
+> +	depends on ARCH_CANAAN || COMPILE_TEST
+> +        help
+> +          Support for the Canaan Kendryte K230 RISC-V SoC clocks.
 > +
-> +bad_inode:
-> +	iget_failed(&inode->vfs_inode);
-> +	return ERR_PTR(ret);
->   }
->  =20
->   static struct btrfs_inode *new_simple_dir(struct inode *dir,
+>   config COMMON_CLK_SP7021
+>   	tristate "Clock driver for Sunplus SP7021 SoC"
+>   	depends on SOC_SP7021 || COMPILE_TEST
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index fb8878a5d7d93da6bec487460cdf63f1f764a431..5df50b1e14c701ed38397bfb257db26e8dd278b8 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
+>   obj-$(CONFIG_ARCH_HIGHBANK)		+= clk-highbank.o
+>   obj-$(CONFIG_CLK_HSDK)			+= clk-hsdk-pll.o
+>   obj-$(CONFIG_COMMON_CLK_K210)		+= clk-k210.o
+> +obj-$(CONFIG_COMMON_CLK_K230)		+= clk-k230.o
+>   obj-$(CONFIG_LMK04832)			+= clk-lmk04832.o
+>   obj-$(CONFIG_COMMON_CLK_LAN966X)	+= clk-lan966x.o
+>   obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
+> diff --git a/drivers/clk/clk-k230.c b/drivers/clk/clk-k230.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..84a4a2a293e5f278d21510d73888aee4ff9351df
+> --- /dev/null
+> +++ b/drivers/clk/clk-k230.c
+> @@ -0,0 +1,1710 @@
+[......]
+> +
+> +struct k230_pll {
+> +	enum k230_pll_id id;
+> +	struct k230_sysclk *ksc;
+> +	void __iomem *div, *bypass, *gate, *lock;
+
+No need define these iomem address, just calculate them and use them 
+when use them. The clock reading and writing efficiency requirements are 
+not that high, so there is no need to waste memory for this.
+
+
+> +	struct clk_hw hw;
+> +};
+> +
+> +#define to_k230_pll(_hw)	container_of(_hw, struct k230_pll, hw)
+> +
+> +struct k230_pll_cfg {
+> +	u32 reg;
+> +	const char *name;
+> +	struct k230_pll *pll;
+> +};
+
+Can we combine k230_pll and k230_pll_cfg into one to simplfy the code?
+
+> +
+> +struct k230_pll_div {
+> +	struct k230_sysclk *ksc;
+> +	struct clk_hw *hw;
+
+I see k230_clk use "struct clk_hw", but here we use "struct clk_hw*",  
+can we unify these?
+
+Just use "struct clk_hw" and init it as static global var should be 
+enough, see drivers/clk/sophgo/clk-cv1800.c for example.
+
+> +};
+> +
+> +struct k230_pll_div_cfg {
+> +	const char *parent_name, *name;
+> +	int div;
+> +	struct k230_pll_div *pll_div;
+> +};
+> +
+> +enum k230_pll_div_id {
+> +	K230_PLL0_DIV2,
+> +	K230_PLL0_DIV3,
+> +	K230_PLL0_DIV4,
+> +	K230_PLL0_DIV16,
+> +	K230_PLL1_DIV2,
+> +	K230_PLL1_DIV3,
+> +	K230_PLL1_DIV4,
+> +	K230_PLL2_DIV2,
+> +	K230_PLL2_DIV3,
+> +	K230_PLL2_DIV4,
+> +	K230_PLL3_DIV2,
+> +	K230_PLL3_DIV3,
+> +	K230_PLL3_DIV4,
+> +	K230_PLL_DIV_NUM
+> +};
+> +
+> +enum k230_clk_div_type {
+> +	K230_MUL,
+> +	K230_DIV,
+> +	K230_MUL_DIV,
+> +};
+Please document what's meaning of MUL, DIV, and both? They are type for 
+what?
+> +
+> +struct k230_clk {
+> +	int id;
+> +	struct k230_sysclk *ksc;
+> +	struct clk_hw hw;
+> +};
+> +
+> +#define to_k230_clk(_hw)	container_of(_hw, struct k230_clk, hw)
+> +
+> +struct k230_sysclk {
+> +	struct platform_device *pdev;
+> +	void __iomem	       *pll_regs, *regs;
+> +	spinlock_t	       pll_lock, clk_lock;
+> +	struct k230_pll	       *plls;
+> +	struct k230_clk	       *clks;
+> +	struct k230_pll_div    *dclks;
+> +};
+> +
+> +struct k230_clk_rate_cfg {
+> +	/* rate reg */
+> +	u32 rate_reg_off;
+> +	void __iomem *rate_reg;
+> +	/* rate info*/
+> +	u32 rate_write_enable_bit;
+> +	enum k230_clk_div_type method;
+> +	/* rate mul */
+> +	u32 rate_mul_min;
+> +	u32 rate_mul_max;
+> +	u32 rate_mul_shift;
+> +	u32 rate_mul_mask;
+> +	/* rate div */
+> +	u32 rate_div_min;
+> +	u32 rate_div_max;
+> +	u32 rate_div_shift;
+> +	u32 rate_div_mask;
+> +};
+> +
+> +struct k230_clk_rate_cfg_c {
+> +	/* rate_c reg */
+> +	u32 rate_reg_off_c;
+> +	void __iomem *rate_reg_c;
+> +
+> +	/* rate_c info */
+> +	u32 rate_write_enable_bit_c;
+> +
+> +	/* rate mul-changable */
+> +	u32 rate_mul_min_c;
+> +	u32 rate_mul_max_c;
+> +	u32 rate_mul_shift_c;
+> +	u32 rate_mul_mask_c;
+> +};
+> +
+
+What's "k230_clk_rate_cfg_c", and what's the difference against 
+"k230_clk_gate_cfg". Please document it and clarify this.
+
+It is recommended to add documentation comments to important structure 
+types and their members.
+
+Regarding how to document kernel code, see 
+https://docs.kernel.org/doc-guide/kernel-doc.html.
+
+[......]
+
+
+This structure definition looks a bit complicated, with nested structure 
+pointers. Can it be simplified, similar to struct k210_clk_cfg in 
+drivers/clk/clk-k210.c?
+
+And can we use composite clk here?
+
+[......]
+
+> +static struct k230_clk_cfg k230_cpu0_src = {
+> +	.name = "cpu0_src",
+> +	.read_only = false,
+> +	.flags = 0,
+> +	.num_parent = 1,
+> +	.parent[0] = {
+> +		.type = K230_PLL_DIV,
+> +		.pll_div_cfg = &k230_pll_div_cfgs[K230_PLL0_DIV2],
+> +	},
+> +	.rate_cfg = &k230_cpu0_src_rate,
+> +	.rate_cfg_c = NULL,
+> +	.gate_cfg = &k230_cpu0_src_gate,
+> +	.mux_cfg = NULL,
+> +};
+> +
+> +static struct k230_clk_cfg k230_cpu0_aclk = {
+> +	.name = "cpu0_aclk",
+> +	.read_only = false,
+> +	.flags = 0,
+> +	.num_parent = 1,
+> +	.parent[0] = {
+> +		.type = K230_CLK_COMPOSITE,
+> +		.clk_cfg = &k230_cpu0_src,
+> +	},
+> +	.rate_cfg = &k230_cpu0_aclk_rate,
+> +	.rate_cfg_c = NULL,
+> +	.gate_cfg = NULL,
+> +	.mux_cfg = NULL,
+> +};
+> +
+
+Suggest use Macro to simplify the code here, see 
+drivers/clk/sophgo/clk-cv1800.c for example.
+
+[......]
+
 
