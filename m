@@ -1,218 +1,109 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8812F12F399
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65470CA4B
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263966; cv=none; b=Zg2ZyBpP0z0Ustvc/no1/LxPphaxkdcK6BNGUHSNj2Ncw274IT9COPBxG/FFICgOUpFyuvLW3HIDqo9sSdA+kFIWSrFaE7kB0AzzFtlgrJkmX/aCFLNK7bfzHwe7J4Fait/u456CHEqxPdZs3YSXeAXhNE14ebgrBOKT4ys4t3g=
+	t=1745264075; cv=none; b=cU91bkw7Hg7XqQCBjX7NgM9PA0YeLCFzGkkibpJQH4i3KDAfpwvnXA/QH9YUX1E3/BHDturWDvaI+xULkqAIjLztf7kreFIS7eMX9299n65H5qzApCK7c0MXGFRBYXWf4IpVylAx+7GcENql9FEe0zfTeqyOBm6qfvCwh7JUbv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263966; c=relaxed/simple;
-	bh=qIbxaMpRyRPS338Tm5o730kOGM0Ig0vZeilxlqEAma0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hA2rDSISFlhiNvQje9tlvINw4K+7K/2VnV1gj9TUqFyXcIr829F7SIg+61KbSToMmp3VXjX1ZIyfacN/J00/n2vaOR3I7FlsRT2AmWo8zX9qWLmYfhdMoQdW8kkHTd1vArQ5iItPjOPNcXLqjHOnz65oEl133HW5Yq/EYuGuOdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=blZ2b7+m; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1745264075; c=relaxed/simple;
+	bh=lbCqO4UasLmk0cRcUke/nKG3/+FracWKIg8rPKiVO1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovmJqMjPRZq/t+ObgRfO2pgNIMPc+iBpOgo8ZQstOjiIZ/StSZJqn4rod/NEPahE/4P985ZGwLpXcddkzTmWKc5i2kdXUaOOt4m98GOCd+li7gGhp2UJoygpmL9Y/RwZERlprFc5GWgTrgYjzDSaqB2K0yFd03Qsg5pN1wGRq3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LMySdXzn; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="blZ2b7+m"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso42539995e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1745263963; x=1745868763; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/kacNZ/6skUjkEZrrtvXbll6b4DFBykRT2FZt/z4qKo=;
-        b=blZ2b7+mv0UAqRQM8qnE2g8A+lgugqxPttrid4l57affSJ/ohmBKel3ld+QJoTPgK9
-         nnu9vfB96dGKC4TtfPxX6YYCfLzo+aKwUdbuyPNzZ7j+Foxsnvz0hvs+i8n8f+2LbX0R
-         saWvsWWsrCYNcbFvwsd5s9j4xpKSo+vRFkruA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263963; x=1745868763;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/kacNZ/6skUjkEZrrtvXbll6b4DFBykRT2FZt/z4qKo=;
-        b=Hn7Tz2ZMg8lu6j6onIAA9tmZNaTwc0srzdcDJHTkWh8gw+xMYTiwBIZeiePZclBMEX
-         M2TXTS0BFaO9CJ4vxWy0u/moAxIJ24ojd3muWzJ2w43kapVZm9AOO/bFTsuzjcrJ3uri
-         cChdXMbdAiK5AQpm0+LrbvsqO38fH+CrVrAVXM+RK1lQ/g8R//gaR1EqfxksIz7vhqNe
-         ikfG6MpkSlzmzqcJO3IWYAOIGayXB6F8Ed8sSWC8ADb5FTdBkKQiB7rBpMLyvsGQ9I48
-         KTvnfGD3HXuVRavOv21GSB/dFziOQWtwK5WlaPBZmY9MvKsZqtTkCsKMSKl5zOyRDeG5
-         7n+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVyc9cX6qOli64AydrEJkyij0Z0t37D9wLJDAVwvVHCamgji/8tHoChvAiseGWVrqVZn4J2NH9DGPGu1qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc16PimqZpRf5jqJgmRJram/VCYoqdtH3svCRkq42eSJ7tL4oz
-	ZAflQ9gL+KOTbog8JaBN1NWlqoVT7OlvjFsODHz5HlBbA9xuuudD1bFxYXn0nrQ=
-X-Gm-Gg: ASbGncuC8Yl/3kawpgZr/0EIPCJ39GIXybV5xWyImDN6rW7lGQYmSu2Ouy/y2YLnzrL
-	djZ1AkpSJf+QiQAeS3kHIfqPOkQbboBzBzI7FEA9bX/OLOQZuo7HV40z7w+OwYSzlGLGvAWNpZq
-	ZL6wOdjvWMqzoH2zp1WiSW+xrSwJuHHML7S6TvUw4G/+foELiCepkqpD09hfoUiDdkjJIpmIZT3
-	7fmNO7UxIkpDGXR9ISg8OinUMOo2qJP1q+PiKlmsHC420HBCOvl3VJiY+izRacQ9OwsIWp6PseH
-	aPxi3u2zbheicgMHLFup/tbLj3//t/scywZZLBpSrFlsWo/Ox49X2w==
-X-Google-Smtp-Source: AGHT+IEWF27e2Lk3TsGhhPtp8i9MuVYFTgyYsjytcbKCN2ZLg9KCqINVbRgQ08dNGo3HiHLFyWP2HA==
-X-Received: by 2002:a05:6000:40dc:b0:39c:30cd:352c with SMTP id ffacd0b85a97d-39efba383bbmr9041307f8f.8.1745263962782;
-        Mon, 21 Apr 2025 12:32:42 -0700 (PDT)
-Received: from [192.168.86.29] ([83.104.178.215])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43319csm12972645f8f.38.2025.04.21.12.32.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 12:32:42 -0700 (PDT)
-Message-ID: <6142d360-889d-44bb-9a94-b5d2084f90e9@citrix.com>
-Date: Mon, 21 Apr 2025 20:32:41 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LMySdXzn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745264074; x=1776800074;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lbCqO4UasLmk0cRcUke/nKG3/+FracWKIg8rPKiVO1Q=;
+  b=LMySdXznj1JYV8JtarCwspG1qjo50R5XSBuk/WacgOAXFEgO/8rhONSH
+   CmqQ3EwrxQUlI7OwrNp90zFg8C/W0MO+XPORqqFfZX+q7OGXaCs0cme1q
+   nVyeK9gHzV6Leiwlq+tUk7JJPNNbJqPOqHvlAJ+b0f5QyrF/TK4MeAXq7
+   fURBtCjvtZq/a08wVnv/51C3Zl+u6+u7sDdhNDzYpLuvjet9mVifAhtQy
+   EvQ5PM4TrHO2OQoHeA7Fyfoin7JGJHYPEm6/84yGfJm0iN75qVjdRo9y7
+   9jdRwtxdIY1DmQGICghUxnWWnYv79qqv9Ec9zL7fXaOMP1rrWCNBkpJsW
+   A==;
+X-CSE-ConnectionGUID: 65vffJCXROyq2RR/MW2pXw==
+X-CSE-MsgGUID: 9arBVWNuTZi49MKeR7Ls7g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46814037"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="46814037"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:34:33 -0700
+X-CSE-ConnectionGUID: VnxHMjcyTp6Ad91L/0z9Kg==
+X-CSE-MsgGUID: LtCNBmc1QO2jb348ucC48w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132350000"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:34:32 -0700
+Date: Mon, 21 Apr 2025 12:34:30 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghuay@nvidia.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v3 11/26] fs/resctrl: Add support for additional monitor
+ event display formats
+Message-ID: <aAadxhaapT_3-W-I@agluck-desk3>
+References: <20250407234032.241215-1-tony.luck@intel.com>
+ <20250407234032.241215-12-tony.luck@intel.com>
+ <4c8da281-fb6a-423a-bf8f-56c9ee45514f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Handle Ice Lake MONITOR erratum
-To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Len Brown <len.brown@intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- stable@vger.kernel.org, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?=
- <roger.pau@citrix.com>, Frediano Ziglio <frediano.ziglio@cloud.com>
-References: <20250421192205.7CC1A7D9@davehans-spike.ostc.intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250421192205.7CC1A7D9@davehans-spike.ostc.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c8da281-fb6a-423a-bf8f-56c9ee45514f@intel.com>
 
-On 21/04/2025 8:22 pm, Dave Hansen wrote:
-> From: Dave Hansen <dave.hansen@linux.intel.com>
->
-> Andrew Cooper reported some boot issues on Ice Lake servers when
-> running Xen that he tracked down to MWAIT not waking up. Do the safe
-> thing and consider them buggy since there's a published erratum.
-> Note: I've seen no reports of this occurring on Linux.
->
-> Add Ice Lake servers to the list of shaky MONITOR implementations with
-> no workaround available. Also, before the if() gets too unwieldy, move
-> it over to a x86_cpu_id array. Additionally, add a comment to the
-> X86_BUG_MONITOR consumption site to make it clear how and why affected
-> CPUs get IPIs to wake them up.
->
-> There is no equivalent erratum for the "Xeon D" Ice Lakes so
-> INTEL_ICELAKE_D is not affected.
->
-> The erratum is called ICX143 in the "3rd Gen Intel Xeon Scalable
-> Processors, Codename Ice Lake Specification Update". It is Intel
-> document 637780, currently available here:
->
-> 	https://cdrdv2.intel.com/v1/dl/getContent/637780
->
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: stable@vger.kernel.org
+On Fri, Apr 18, 2025 at 04:02:08PM -0700, Reinette Chatre wrote:
+> > +	case EVT_TYPE_U46_18:
+> > +		frac = val & FRAC_MASK;
+> > +		frac = frac * 1000000;
+> > +		frac += 1ul << (NUM_FRAC_BITS - 1);
+> 
+> Could you please help me understand why above line is needed? Seems like
+> shift below will just undo it?
+> 
+> > +		frac >>= NUM_FRAC_BITS;
+> > +		seq_printf(m, "%llu.%06llu\n", val >> NUM_FRAC_BITS, frac);
+> > +		break;
+> > +	}
 
-CC Roger/Frediano, who did most of the work here.  (I mostly just talked
-to people).
+The extra addtion is to round the value to nearest decimal supported
+value.
 
-https://lore.kernel.org/xen-devel/20250417161913.14661-1-roger.pau@citrix.com/T/#u
+E.g. take the case where val == 1 This is a 1 in the 18th binary
+place, so the precise decimal representation is:
 
-~Andrew
+	1 / 2^18 = 0.000003814697265625
 
->
-> ---
->
->  b/arch/x86/include/asm/mwait.h |    3 +++
->  b/arch/x86/kernel/cpu/intel.c  |   17 ++++++++++++++---
->  2 files changed, 17 insertions(+), 3 deletions(-)
->
-> diff -puN arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug arch/x86/kernel/cpu/intel.c
-> --- a/arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug	2025-04-18 13:54:46.022590596 -0700
-> +++ b/arch/x86/kernel/cpu/intel.c	2025-04-18 15:15:19.374365069 -0700
-> @@ -513,6 +513,19 @@ static void init_intel_misc_features(str
->  }
->  
->  /*
-> + * These CPUs have buggy MWAIT/MONITOR implementations that
-> + * usually manifest as hangs or stalls at boot.
-> + */
-> +#define MWAIT_VFM(_vfm)	\
-> +	X86_MATCH_VFM_FEATURE(_vfm, X86_FEATURE_MWAIT, 0)
-> +static const struct x86_cpu_id monitor_bug_list[] = {
-> +	MWAIT_VFM(INTEL_ATOM_GOLDMONT),
-> +	MWAIT_VFM(INTEL_LUNARLAKE_M),
-> +	MWAIT_VFM(INTEL_ICELAKE_X),	/* Erratum ICX143 */
-> +	{},
-> +};
-> +
-> +/*
->   * This is a list of Intel CPUs that are known to suffer from downclocking when
->   * ZMM registers (512-bit vectors) are used.  On these CPUs, when the kernel
->   * executes SIMD-optimized code such as cryptography functions or CRCs, it
-> @@ -565,9 +578,7 @@ static void init_intel(struct cpuinfo_x8
->  	     c->x86_vfm == INTEL_WESTMERE_EX))
->  		set_cpu_bug(c, X86_BUG_CLFLUSH_MONITOR);
->  
-> -	if (boot_cpu_has(X86_FEATURE_MWAIT) &&
-> -	    (c->x86_vfm == INTEL_ATOM_GOLDMONT ||
-> -	     c->x86_vfm == INTEL_LUNARLAKE_M))
-> +	if (x86_match_cpu(monitor_bug_list))
->  		set_cpu_bug(c, X86_BUG_MONITOR);
->  
->  #ifdef CONFIG_X86_64
-> diff -puN arch/x86/include/asm/mwait.h~ICX-MONITOR-bug arch/x86/include/asm/mwait.h
-> --- a/arch/x86/include/asm/mwait.h~ICX-MONITOR-bug	2025-04-18 15:17:18.353749634 -0700
-> +++ b/arch/x86/include/asm/mwait.h	2025-04-18 15:20:06.037927656 -0700
-> @@ -110,6 +110,9 @@ static __always_inline void __sti_mwait(
->   * through MWAIT. Whenever someone changes need_resched, we would be woken
->   * up from MWAIT (without an IPI).
->   *
-> + * Buggy (X86_BUG_MONITOR) CPUs will never set the polling bit and will
-> + * always be sent IPIs.
-> + *
->   * New with Core Duo processors, MWAIT can take some hints based on CPU
->   * capability.
->   */
-> _
+rounding to six decimal places should give: 0.000004
 
+If you run the above code without the small addition you get:
+
+	frac = val & FRAC_MASK; // frac == 1
+	frac = frac * 1000000;	// frac == 1000000
+	frac >>= NUM_FRAC_BITS;	// frac == 3
+
+So the output with be the truncated, not rounded, 0.000003
+
+The addition will have a "carry bit" in to the upper bits.
+That isn't lost when shifting right. The value added is
+as if there was a "1" in the 19th binary place.
+
+-Tony
