@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EA31E9916;
-	Mon, 21 Apr 2025 21:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C521E9916;
+	Mon, 21 Apr 2025 21:33:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271167; cv=none; b=G3cox29+NjynvJcECUe1BW735zxR19Pnli2A48xszgRySNIVmdgoiBY75iBC2XrrDYumOHC7dSJ+RC6+XpBFfBpz1WqFB2LZoDnotA22eoAr8bwKwgIUtKtL5H+XhGvqwWRJnAmuZog7hOsTH52Ai442QfspZnXVb67hKv72Y4M=
+	t=1745271199; cv=none; b=RksNwol7ryc/IWl9S8FdFSdba74Q3GflVmzXM5JYLiZ4N0Jrs8Mre3gu5Svgnj/HqhVf6yIfDnP6cZeKzOCQbUi9veRxZ6FkqPpDK+xd50Gcd84bFobmtYyS9N9I9LMr+aUBbJhq/sW9Jrsl6u8oYL/LAjD4ajH1/TZqyt0i5bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271167; c=relaxed/simple;
-	bh=QLIGv6BbptEPQr0f4i4xGAOTh8BsPkZbgBrT/SzcXm8=;
+	s=arc-20240116; t=1745271199; c=relaxed/simple;
+	bh=eqF+MyBX1r7/lOmnP6a/7aYsckU/IXClGdPLidP0oJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VbEzlMU8unere9MK1KUkotKCncNRLXxZHKPfgeg/kVJCsTj7cmQpiRYTMBcZEA4osw4Rlg172R5U4Z7Kfu8lWJQ8aknVwoKet4kCNe595ZxJPYh0SO8n6xQCIZA9g+TL9mFAvRjJLbmTRbRNfHe6xAWGi3GUL08IaB2vMA2A8M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8ULaN64; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ON8MCQg8ta5tpPAwFTNLmnn6dPUdCbHmnstTgz9Do7ltE1n7PX5yNPgYVROTp+rhOsrlXlZcodS1YHReQC24RLWbaOaZmaFNHNQ8DLe910euKRJOb/gKdlMDpEdPy/prmDaBwMaonHxTdqIoRFxjjxejwEAxjEErs19/hxqB6Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1r+lhge; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8ULaN64"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF39DC4CEE4;
-	Mon, 21 Apr 2025 21:32:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1r+lhge"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C9FC4CEE4;
+	Mon, 21 Apr 2025 21:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745271167;
-	bh=QLIGv6BbptEPQr0f4i4xGAOTh8BsPkZbgBrT/SzcXm8=;
+	s=k20201202; t=1745271196;
+	bh=eqF+MyBX1r7/lOmnP6a/7aYsckU/IXClGdPLidP0oJs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T8ULaN64PeXZQfBJisV9YtKLO1q59790zkrdA9tu9dIiLfgg8a5sgJL01BjAbTgZK
-	 EJZ0fgjVKs11DANCdMkauVLrzKoEZh/fE2+MS686/81nFOeTUpSOo2mojV/YRGHiXF
-	 7oIeOkTWu4ODnomiC6t0j1J4iHu8EEbGdd32b3coyVRUkkHPkZgfXM9+5aAoVptbvc
-	 ZAuYxJCf6Z/LHV1oGY3cbTBuiqH5IgEQph5bmbi3+glaNovUJf1mzWQ28RRMMZg8cG
-	 PiPNWNli+BQ234DC9YXPXt8WpPG2eZtEAs4ekMWpzZGxrSzisv2KAxg3wMJWp4/0MZ
-	 xY3Tm5tiaMxHg==
-Date: Mon, 21 Apr 2025 16:32:44 -0500
-From: Rob Herring <robh@kernel.org>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Add
- more tuning overrides
-Message-ID: <20250421213244.GA2725065-robh@kernel.org>
-References: <20250416120201.244133-1-mitltlatltl@gmail.com>
- <20250416120201.244133-2-mitltlatltl@gmail.com>
+	b=E1r+lhge0tzEevxHJYliMUA4pCBeIkPmf5Wkt4LNojU/JiCKA5pvCNqt1xSa8eW31
+	 mxTASZE5jvy3k/SWBCH7C5viz8cuvj/3PlxR4i8qFTMzcogXk/rKhXAoKnOPEOIEJ2
+	 m39OFF+OYi1Tknl/okIiWoTsK+JGPimADjyIyrukCfAMDZrG3opwwbyfmiUlt1hn1q
+	 4xGQXEIUvHfIDU3WiJt1OEzDvZjp7sk2Jd2DgGhCGm5Ouwv/Rtk4kaTAZwBtcUEVR/
+	 vCms9JX/fXMCcUOzz+tPHHdcFmFcxBawdGspQB13+pN3lqSugu54WTGg3gtg+ceEGi
+	 iI5aqMbpOQWcw==
+Date: Mon, 21 Apr 2025 16:33:14 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, kishon@kernel.org,
+	linux-arm-kernel@lists.infradead.org, chunfeng.yun@mediatek.com,
+	devicetree@vger.kernel.org, matthias.bgg@gmail.com,
+	vkoul@kernel.org, kernel@collabora.com,
+	linux-mediatek@lists.infradead.org, chunkuang.hu@kernel.org,
+	linux-phy@lists.infradead.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: phy: mediatek,dsi-phy: Add support for
+ MT6893
+Message-ID: <174527119351.2964924.8279076574908790939.robh@kernel.org>
+References: <20250416120220.147798-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,96 +48,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416120201.244133-2-mitltlatltl@gmail.com>
+In-Reply-To: <20250416120220.147798-1-angelogioacchino.delregno@collabora.com>
 
-On Wed, Apr 16, 2025 at 08:02:00PM +0800, Pengyu Luo wrote:
-> In downstream tree, many registers need to be overridden, it varies
-> from devices and platforms, not only HS trasmit amplitude(0x51),
 
-spelling
-
-> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57). And
-> some devices require different overrides for different dr_mode. So
-> add property entries for host mode, original entries will be used
-> for device mode.
+On Wed, 16 Apr 2025 14:02:19 +0200, AngeloGioacchino Del Regno wrote:
+> Add support for the MediaTek Dimensity 1200 (MT6893) SoC: the DSI
+> PHY found in this chip is fully compatible with the one found in
+> the MT8183 SoC.
 > 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  .../phy/qcom,snps-eusb2-repeater.yaml         | 41 +++++++++++++++++--
->  1 file changed, 38 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml b/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
-> index d16a543a7..d0f5e770d 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
-> +++ b/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
-> @@ -36,25 +36,60 @@ properties:
->  
->    qcom,tune-usb2-disc-thres:
->      $ref: /schemas/types.yaml#/definitions/uint8
-> -    description: High-Speed disconnect threshold
-> +    description: High-Speed disconnect threshold for device mode
->      minimum: 0
->      maximum: 7
->      default: 0
->  
->    qcom,tune-usb2-amplitude:
->      $ref: /schemas/types.yaml#/definitions/uint8
-> -    description: High-Speed transmit amplitude
-> +    description: High-Speed transmit amplitude for device mode
->      minimum: 0
->      maximum: 15
->      default: 8
->  
->    qcom,tune-usb2-preem:
->      $ref: /schemas/types.yaml#/definitions/uint8
-> -    description: High-Speed TX pre-emphasis tuning
-> +    description: High-Speed TX pre-emphasis tuning for device mode
->      minimum: 0
->      maximum: 7
->      default: 5
->  
-> +  qcom,tune-usb2-squelch:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description: Squelch detection threshold tuning for device mode
-> +    minimum: 0
-> +    maximum: 7
-> +    default: 3
-> +
-> +  qcom,tune-usb2-disc-thres-host:
 
-Put this and the others after each existing property (for device mode). 
-Ideally, these would all be in alphabetical order.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description: High-Speed disconnect threshold for host mode
-> +    minimum: 0
-> +    maximum: 7
-> +    default: 0
-> +
-> +  qcom,tune-usb2-amplitude-host:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description: High-Speed transmit amplitude for host mode
-> +    minimum: 0
-> +    maximum: 15
-> +    default: 8
-> +
-> +  qcom,tune-usb2-preem-host:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description: High-Speed TX pre-emphasis tuning for host mode
-> +    minimum: 0
-> +    maximum: 7
-> +    default: 5
-> +
-> +  qcom,tune-usb2-squelch-host:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description: Squelch detection threshold tuning for host mode
-> +    minimum: 0
-> +    maximum: 7
-> +    default: 3
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.49.0
-> 
