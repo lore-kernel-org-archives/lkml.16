@@ -1,240 +1,265 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011025.outbound.protection.outlook.com [52.101.65.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843EF155A25;
-	Mon, 21 Apr 2025 06:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745217475; cv=fail; b=LZUw9E7bOImJizqSwINzak86/iQIT4QztZXjgn+GT2NktbWLW0IWTDQMAc9nZKEEJ3CVT9UlHR7m+Ik/tEfKCJt7Y4Z84hmQxwOc2Kmpwf7snVmejpnuyYLJsgEKvswPPUI9jCIfZHVt9sY2o4x0QJkVSe/5LYdV5KH8niKxFGY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745217475; c=relaxed/simple;
-	bh=WPDxqGApjEH1alzHU6Oe1/g+Ff2kPOgOCtHnDjVJKoo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rBFBtX8VZ1yD3lIGHe216rofeFZ5oKtCWd1ytYtJEz7s4g8tfSmwXeihWCkKL4bmkA67cNi1ku+OwhxJ5Ad+xsXrD+6SFeJYeFW2SRNUCFwrFGJSR6ALgKTmnoxqIGe0Ky3W2n2SGNRFo0CbBKkqZN0Ae6+11FNkSIjPnrzuZVE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=opS8lmj1; arc=fail smtp.client-ip=52.101.65.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B167D191F7F
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745218080; cv=none; b=Yj1IbKV4BFNnHE+ZShZNe+MYfZ9dEgFJrbg4GfcXwN22rRTrFTDET2XfRMBOU7xi7jG0H1zyX+/bJzTLpcMfbgvUTkfCNeIk5+lknEyCLIfIho/T/Uv8BERlrLu9tMTK407wzpUIluYay+QYTnKdYPWNJdtOx/er8ssVI8SLH8Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745218080; c=relaxed/simple;
+	bh=nL88osFR+xwkq0d89jaqv2lpr1Vg52plmkAJMPjBbWM=;
+	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=KdIn28QNpkQUBygl303KWuW1bvT19y8UeacQzNtS2HtTAiRG+Szy489xckYx7dEh1+y/bye9XWEk+uJE6wL91dOSCJ8AWSbgBF7Xd/rmgVhBTFauqAekeM98AUoVJa7XHOYH63YYXomWFh68RuHXKWIDIkRebu0ZrZSfEp8Ayqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IMo00jIS; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="opS8lmj1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CFZaeJVn9gqsyWmkoErI6XwG8wBHG9AINKldwEBzVDbTvS9a7FOIUWpZ+Va9CPyLUfbETYdhXid1N1N5m6w1eygco3wuQpl3sKeU8QXc96wWtgBE02mLKGRBlw27LLuR5c/0bKrWQN54Q10uT3lxyv8UzlpL7JVUYhUwbgS/O7q4EitAQcfV4TJ+c4hD47pWAPvO7bHfFd5VR/3xVgNEvtJja3mMmixdB6kJzbpNe5o1rPRLwgM1XvtzSbi1rsyNMNbJ9t0bErwDv4cmqNXnSKJjq/ULZwnfrvVU9VAS+A7vIKg/2ujdENmYdWLkK435cGzy1PWFsL1ni0AMdptC9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rFHb++fh6EBQcV1ThER9vCX5h4SD+wXxBVLvgb1rs58=;
- b=M4qISzI7ykFlQd2pgLpsF03HMyTou9ImEjGRVbgh69venoaL5lKfMKhZnXi2MmoByW4H5OmiVTVb7QrEpRwMHqHKWqNWX1t95TMUba8URxFYsIlCCuQCiw0tAHmqs65LU1WpW7KgE3ZJ7ShS4vvy/UXgWh6QvyImx9u90hGcbVjl6vaFNYX9azbLXtcu/cWFfef7EMnolUHtzty0mbcRl7J+8ywTEdNRGO17nDEKv9aZxpz2T2/ti84GZBZr2UMetafRJgx4sqcoOP6FA2dkwfcVmsh9vbK5cH0SttSDgWNzLA7dz6epwU4sfXm0ZwrW984izSB8xLDlxu+91nujhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFHb++fh6EBQcV1ThER9vCX5h4SD+wXxBVLvgb1rs58=;
- b=opS8lmj1Jr7TzdeD9erBN7WpI8xc5QZbQjMiQAJairON5Yqka1JhdbZhga5zkD2JUvWafNortjqKJWSPOPNc4bX2jqciyaJ76VlqwG9P61fZTjf12EnOTlKRx6lAP8Yc5sPLCTsBKk6Lkm4HweBf9mCUO0BuyWw48KvuHQwNrnuse8sBrGyLOSNI+i9AA7UY35mEUI2iHzmkuvLO3jRRJv64Jvkb+RVGci8N05Rjrk8DJjR5YAeR+9IBXBfmkZY01ndjTBf4uvbRRXGUP8ujRzOUQ9/BxvmEC9EWyETsv9QquocXiZFoQ4snR/DSAmcn02RedfK9liB8VsDtOpjAiw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by PAXPR04MB9678.eurprd04.prod.outlook.com (2603:10a6:102:23c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
- 2025 06:37:48 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
- 06:37:48 +0000
-Message-ID: <d3668dc7-b8c8-497c-ae3a-b476a8658c40@oss.nxp.com>
-Date: Mon, 21 Apr 2025 14:37:39 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: imx-jpeg: Drop the first error frames
-To: Nicolas Dufresne <nicolas@ndufresne.ca>, mchehab@kernel.org,
- hverkuil-cisco@xs4all.nl, mirela.rabulea@oss.nxp.com
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- linux-imx@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250305022513.2312731-1-ming.qian@oss.nxp.com>
- <4549d9abf5f93fb6f417d0fb8f73877272d7c495.camel@ndufresne.ca>
-From: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
-In-Reply-To: <4549d9abf5f93fb6f417d0fb8f73877272d7c495.camel@ndufresne.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR01CA0012.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::8) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IMo00jIS"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abbd96bef64so615543166b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 23:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1745218077; x=1745822877; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eoh+UHAHaX63W3Xnorvqri+MwqtBlKW14ThZ2I5rFOc=;
+        b=IMo00jIS7OWhR4nTJE9WCVXlHUK/0pp9NWzyPZXnhtBKZD0qavZFNVYClXoJmy1LCB
+         gnhjLe3fLBzTdOZN1IWW+Z2kM9MuxwwsyV8M1qAhpXkpYUo8EyE96Cj2aZ7ydRbAR1uv
+         zi9mbfJxypcXyGgSqkDCiLAtI/VGGPbe3yQv4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745218077; x=1745822877;
+        h=content-transfer-encoding:mime-version:subject:user-agent
+         :references:in-reply-to:message-id:date:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eoh+UHAHaX63W3Xnorvqri+MwqtBlKW14ThZ2I5rFOc=;
+        b=f+77OfYUBT/cXIsTuHrQqEU/+5RCoJti2CCfCbmYFUnqNXHZmwAwHrgwKkO6Gzayr5
+         wcp2RsZpWTUq1IEXKUfVOJ+7LHE0mjwqoegPz2ixSM5n9ABIP/+iRUfb2v6g1OfPFvuR
+         84YvesjsbUqOIJvPzMgXfYbb7LdwNvuxaG0EE3eUrxiNnyfWXVZkY/sp/9+MYNVR+CdG
+         nEBOI1UIVYpv39m/BiO+/+qhX1DbY1vVnsHeXKhvPIaaO0IvIugFBHy0HWiw7MTlz2yb
+         8BUEwVDmHOHfjYfcbvqMEi/okjyA46BOTdBt4BMbukdxfxkxmZQ7euh41J8vwewGAV/5
+         Jkng==
+X-Forwarded-Encrypted: i=1; AJvYcCWQvJDUJtdnVNpFfDSMfuEsPbzdZ/cCG7rRH5VZb9V1FJZtloJ8ckSKtF9i1j3lsWBd4fvwg+JCXzbBLh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmpC3lJ+79rVdUqbjDDMDQVz0wNDgj65guUYid7nqhCs+lMnk2
+	huaCF+EeG7lbXWRV+MK4EIO9BYPKuecNM8SOgsFKzVykScLRCExPHCnEZPMvDQ==
+X-Gm-Gg: ASbGnctv5IdKMPYDGZrUdgO4/fe5QOeg5xnZOqxg+S350ZwQjFS7SxnyHYOQcSfhsfs
+	vl2ryxL+LdLjMYgwzA2TBT3jl4839KwbwnVWsw9paf0dGoMEu4dE5rXqrLa86Ryejtm7EEHkkfL
+	44BD36eq8M0cR2//CaOgme7gXrxy9PDJElTz3Q/oq3SvF3iMGqiTbbd0l6b4ZT/mYOW3OHzyuFz
+	SutPPNzCsuMMeAoRIpOoY5uS2rsgPl5XMrKtT4og96eDK+Ud1buijctORNtzaZDGRwlCBGCjD1/
+	ZL0VMD8oy83Fszx8cF8K5sMukjNZtsArJZuMPlcxmD8HqRR7YpRlzN+zf/xwvXXCClTf9+sFxkA
+	P07A=
+X-Google-Smtp-Source: AGHT+IF57sTzG2W/MLUToUBMdG3Gp8wae1dAx1ppKQWPBR7VB+1fvf1xtyMNBtv0qPDtnlesQOYTmA==
+X-Received: by 2002:a17:907:9622:b0:aca:df11:c53c with SMTP id a640c23a62f3a-acb74dbb5admr911534466b.43.1745218076812;
+        Sun, 20 Apr 2025 23:47:56 -0700 (PDT)
+Received: from [192.168.178.39] (f215227.upc-f.chello.nl. [80.56.215.227])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec04819sm479666666b.10.2025.04.20.23.47.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Apr 2025 23:47:56 -0700 (PDT)
+From: Arend Van Spriel <arend.vanspriel@broadcom.com>
+To: KeithG <ys3al35l@gmail.com>
+CC: <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <linux-kernel@vger.kernel.org>
+Date: Mon, 21 Apr 2025 08:47:56 +0200
+Message-ID: <196571a7d60.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+In-Reply-To: <CAG17S_NDLjfeTZ_qo8B6aXi2z6BHYCakBHzy2AqcqP2Co32hNw@mail.gmail.com>
+References: <20250407042028.1481-1-vulab@iscas.ac.cn>
+ <CAG17S_NDLjfeTZ_qo8B6aXi2z6BHYCakBHzy2AqcqP2Co32hNw@mail.gmail.com>
+User-Agent: AquaMail/1.54.1 (build: 105401536)
+Subject: Re: Cannot maintain an ap with brcmfmac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|PAXPR04MB9678:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b02551c-ce0f-426d-e426-08dd809f0811
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TUJFd2s1d2Qxc2Z5aGV0Qk96a1Y3YVNEaWhlbDFRcGpKaDAxREs1c0tkT0dX?=
- =?utf-8?B?cFZ2a2xXUjNKZUtIcW9RU3hXNjN2TzBRenIwVk5LS0VXMjZUeXBReGdTWWk0?=
- =?utf-8?B?RWxKc0h2aUhUU09BMGphSEhjYldPQVc1dnlKbXpmZXRCWDBtMDRKVWlhVjFW?=
- =?utf-8?B?VzliTitFYlJzR2pSblV3QkVTSGphOC9oVkhKL0dsYjVycjVRR3VUcEhORVdq?=
- =?utf-8?B?QWl5UVh4cXdOU0tTbVZZY3FXOFFrTDRLTHJOVVRhaVFqbG8vdldKMys1UFk0?=
- =?utf-8?B?ejZNclU4K1c5bmVmVWRBWlMwbU5oTDRUYlJRdnNmWGxDeGx3V0Zjd0VIZkk3?=
- =?utf-8?B?bWwyWVBNMWJiOThJNTVzRDJhLzlLR3lCWHdXVndTOU5rK080YUJuYW9ydkhP?=
- =?utf-8?B?R3hKU0ZhTVFEOEwwUEpWM3hMVTI2NmR0VU1GYmpNeHBRRVdyOVN2YUtkVnVP?=
- =?utf-8?B?SHZFWThGcEh4N1A1SElYQU9yNmQ0d1U3STArQTVwYUtqS1RHOXRwcm9pRU9S?=
- =?utf-8?B?L1J1bDBHdUpsaHd4REplMTNJa3VVTWwzU1o1SzY1WEk4UzBRUTV0SEFSVGJl?=
- =?utf-8?B?SjUzRjl5YnFMbWZ3WHF1ZmsrSEhIOXNwUnFYbEVydFF4ZHRCVytHaG1pR3h4?=
- =?utf-8?B?dkdySENDOWZYUlVDZEdSQXRkenFZRHNKTWFQcnN2WDJFRENwKzloeDJpdDJn?=
- =?utf-8?B?SHUwY0pGOWNFMGUyUUJOejA5NkVjT1M5YWs1czhwV3dRZFFWVlUxSXRwdnla?=
- =?utf-8?B?V0RDNWlmeEdZd2pzU25CRDROWnRjMzhPYnJQb0tqOGhKRVRSYVhjOVhoQ1VL?=
- =?utf-8?B?SXJ1Sy9wYVlLb0pEdTd1QVZiT0pNTWEwUmZTaW1TajQwcDNWNmNLd056THV6?=
- =?utf-8?B?SjZ4dWlXT01RVGl2eG1WMi8zR2hqQVZWbzB2bE5zRk9rbWg1UWlxdzlRL2FH?=
- =?utf-8?B?SUJlZ3FnTTd4NUpma0JxR042c3NVNHA4QWNQRVMrZStYQkhObWx6UjFCUStH?=
- =?utf-8?B?bGhZbzNGTXlhcjBSRjJEaGdIRmhZKyszUEg5WmR1aFNYSVdpZU4rc0JjbEMv?=
- =?utf-8?B?b293dVhmK3hQYjkvbS9velg1Z1ptblhlWjNMUFBDeUQxckx6czFobUlrejQ5?=
- =?utf-8?B?ZW1rZzJWdkpvQlptekZSS2dZcjArbVhVQ2h2RlIyMTZXL21HNTNjT2RZZUFi?=
- =?utf-8?B?Vi90SkJva0NTVVBrOEZ1NHYwMkJkRjFPd2FjbTFPMnhqTThyYkdCRHlCeGhD?=
- =?utf-8?B?blpsVXpxYWpkRUJPWXZxYnplZ3d0VStvVndNYnlwendRZGZlQ0FUcHFYRFYr?=
- =?utf-8?B?eDVzT2llbTh0TVdKN0xFTGp6YjhTRU1SVndSNkd2NXZUSkVlRk5yL2hYM3pH?=
- =?utf-8?B?SWJWM1ZTb2t5Zm5tZTRCKys2ekVmMzIwUGZxaDNVMlZKVWtmdk5hUkpXZHN4?=
- =?utf-8?B?Y0VVcWd4aUNiUWtLVWJ5RWN1Yml4SldSYW5sVjFrTjk1NUtCOVdBMndzU1hN?=
- =?utf-8?B?S0k2ZjQrakgxSkdteFZqelk4eVZoNXovWXRsQWp5ZTJ0czFNOGVoUlZZTHV2?=
- =?utf-8?B?bUdVMTQ1TXdhZXRZREo4OFVKVytZYkVTM01JS2Q1dE4wNzNFcXRXR0ZiNStY?=
- =?utf-8?B?NXlJSFdENWI4ZTRHTUt2MklCeVo1eUJUOVBvY2tJSXpabFF1eS9lc0ZlNjgv?=
- =?utf-8?B?S3MxRC9xZUdhZmxidkZ0Q0daL3k1Yk5tL0ViVFpTQkxaV3MvYXBxWFA2ZE9X?=
- =?utf-8?B?SlJCSGUxc2haNDQ5SVBlUkJ3RE1mV3BxeDUrVzVHODRkbmJRSTVWMGtKL0NI?=
- =?utf-8?B?Ym14QXBOOE9kYjcyWVJXR1g3di83L2Q3cDBQK2RVQzI3LzVnanZiaGQvNkoz?=
- =?utf-8?B?THpzS2xxRGFDTFo0L1JzVk5SSEVWalZWNnBCS2dmK0I1QS9QcGErdHZESXZu?=
- =?utf-8?Q?02DRznBLdhU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dk1WMGNGUzRIWEE4N1l3QVZ5a3ZaYzFoZlVCU0N3dmZ1ZVlJTmRrck1hNytC?=
- =?utf-8?B?YlpFeUVKY25sWnZwL01XOFRLY3RoNnVPbk1QUS91ejBxUVpYQjJhd0JUM1Vq?=
- =?utf-8?B?a2VhNTV5ck5QcU9FWGt5Tmo4UldaN0pac29jYjhIR3hoNjR0eGhsQkZsSzhT?=
- =?utf-8?B?QjJSWWc1OEU4REdTeUV1WTVjd0pCcWJTSVgyZytRVGFkNzFnVmVZdkhFcVRU?=
- =?utf-8?B?OUlLaTZkNW9PUDgxdEE0T1lLcmYxT0pHS0FrODdxdVdjRlFrVFhqZE5rRnZv?=
- =?utf-8?B?cTIzS2tFbkdBV3Y5dDNSaGF5dlV2UnNsWnNsV3pOT2Q5OG5FUW5Dc0FOZXJH?=
- =?utf-8?B?Q01LMjMxcE5OSEN5YlNzSkV0Y2VZRDAvWFE1M0RoZ0RBd2hPTExlTDZZYUpM?=
- =?utf-8?B?QlZxWCtISndreXZyMTc0QWFDckt5KzFLemdPQjRrand3bmduaHJJY1UwMU91?=
- =?utf-8?B?T0tvcHpkVmdZUmFrQm1NbGE4eUpZTUpXZlhEekVzTEFsSGZvaFRNb2ZPWU1F?=
- =?utf-8?B?Nm1wTldBeEljRXpjS045VjRyWVhYVXYrTkp5MDRyNXJJYitNeVpRaFJJaEdS?=
- =?utf-8?B?MFBTdzZJdE8zOUNXZWVYYnpsdC9sK0lkdk4wUzNiazU3TkFmeUZIemRud1Q2?=
- =?utf-8?B?TDd2ZkYzSDJBR3cxekgzWE5Xb0lZeWxxTkR0cXlXUGs3WmM5MEwydlIyamJE?=
- =?utf-8?B?cnA3cjRTc01aK1pOVXUyZVZ4Z3ptWlpHcTc2S25DblFzN2lHbHpqY2JaNUE4?=
- =?utf-8?B?U2ZHZU95RUZyTzNSUFpCdS9KUStqWGVidlhLQkZNRHVPbU4vVXpzakxGYTJJ?=
- =?utf-8?B?eHdTQlZPUWtWQ2NwcmJTMHM4cTdjekJma1kvam1KczlzdmJNZ01VRWhEOE41?=
- =?utf-8?B?UGphejJYUXFySEtPWDBTbjhPbkw4UUFWcW9uVUZiaGpkMnpYZHI0OWUvQURG?=
- =?utf-8?B?MjI4cng5SjdIZXVYNGs0M3dKR20yOFRFbmptY3hZaGxZQUZpMXNySC91aXhF?=
- =?utf-8?B?dDh4VCtCRGxpc0tVRWpjbVpjMktBUlR6NWhqWXVYdDROMFFSQS9rWmxsaGtt?=
- =?utf-8?B?cE9EOWROWmY3N2Q5a1hYNUtwSjV1c3UwTnE0YUt2Y0J3Y0l4SmoxUW1xUXRF?=
- =?utf-8?B?L0VHcmhQS2NnZ29STzZMemVad2VYWmQ3bVYyNE41Z0tqR242N0ZkQ282MGhD?=
- =?utf-8?B?bWZuMitnbnptMWtTLzlCYTNsOWNadGxEVkJ0UDZIVjloSnFleWhhMUNwMCtZ?=
- =?utf-8?B?Ymc1Q21VbXVGSFZMelJFZytpTXRpd2tIS1dWUXo5VWtwYlRWUTErVWpua0o5?=
- =?utf-8?B?c1ZRMXRpNHhIWUovcHBlNHhCeGM3ZTM5SWszc0FVYlV4ckdybjlBOWZmbjhk?=
- =?utf-8?B?YjNuZ0dnQXcydmdMNW5hcm5IaUdSSmFFc1AwTUoyU0NlUTdSYzhwMytBVFFW?=
- =?utf-8?B?TUF4bi9FOTN5cjc2NHEzOGJlMlNqNUZRZDltU3VKQzdJandtdnl5Y0tsYzN3?=
- =?utf-8?B?SXIrMUlQeURHdlpISnd4NkppRVpkM3lxUHdHMmR0QTlvTXZyQzdPWk45ZFRL?=
- =?utf-8?B?K01Dek90YThpYVhrUzIzUGJkVFFUdk9pdmk4SFRlTU1ZeDN4bW9sSGM5Zjkx?=
- =?utf-8?B?Zy9jYTFVVm5RWmxhZFVldGtKU3hlZXpnODlhYXNlOGFNU3IzNFk4bG5YYnhz?=
- =?utf-8?B?U0JhWmc2QTRIMDFNNlhaNngrcm94K1VjSTJiWHRzeFhyWTg0Zkw0bGV5MDFk?=
- =?utf-8?B?SW9DYTZqTmh0Sm9QTVdxbkN2MWRuMVUyYlhETXgySFN0bjhENVI0ZnFzVERa?=
- =?utf-8?B?aktQYTBuS3p4dnBnMU5pdEJhZGdSbTNuOTFrT1JjVXVyTEhmQWsyR0R6OWtC?=
- =?utf-8?B?all5MFVXckZOY1QxY3Y1WWV1T21nY1BMMDBtMy9VRXZ2ckJQSFRKWGJnNDA4?=
- =?utf-8?B?STRDc1dITmJHK3dScEthU1RERW5SVWxBLzV1aHBoNDUwWm5iYmJGcDFNdmJy?=
- =?utf-8?B?ejJFNnlLN2tLWFdIUFNqSGdLRlN4STVTWXlRS2lQbW9yeWxwVUFEREN3QkFR?=
- =?utf-8?B?Mm5CZjRSOGxjb0p4b3JaZWExaEkzMk1wMFlURFJzRjhDM1pnOHQzVFVKU2Nx?=
- =?utf-8?Q?xD4itTki67Oljv0cnF1HFJEsC?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b02551c-ce0f-426d-e426-08dd809f0811
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 06:37:48.4496
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nypwyjm0KgL/lBu8Zny2NPXCeqjilG/SJe5suFovnDGrlXTwEc4cUE81tie3xhBqpvUXLerjI0UsJ+ybQN1xcw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9678
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-Hi Nicolas,
+On April 20, 2025 8:15:56 PM KeithG <ys3al35l@gmail.com> wrote:
 
-On 2025/4/18 21:12, Nicolas Dufresne wrote:
-> Le mercredi 05 mars 2025 à 10:25 +0800, ming.qian@oss.nxp.com a écrit :
->> From: Ming Qian <ming.qian@oss.nxp.com>
->>
->> When an output buffer contains error frame header,
->> v4l2_jpeg_parse_header() will return error, then driver will mark this
->> buffer and a capture buffer done with error flag in device_run().
->>
->> But if the error occurs in the first frames, before setup the capture
->> queue, there is no chance to schedule device_run(), and there may be no
->> capture to mark error.
->>
->> So we need to drop this buffer with error flag, and make the decoding
->> can continue.
->>
->> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-> 
-> This seems like a relatively important bug fix to be, perhaps you can
-> offer "Fixes" tag to this commit ?
-> 
+> Group,
+>
+> I do not really know what has changed, but I
 
-thanks for the reminder
+Can you try to find out?
 
->> ---
->>   drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
->> index 1221b309a916..0e6ee997284b 100644
->> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
->> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
->> @@ -1921,6 +1921,15 @@ static void mxc_jpeg_buf_queue(struct vb2_buffer *vb)
->>   	if (ret)
->>   		jpeg_src_buf->jpeg_parse_error = true;
->>   
->> +	/*
->> +	 * if the capture queue is not setup, the device_run() won't be scheduled,
->> +	 * need to drop the error buffer, so that the decoding can continue
->> +	 */
->> +	if (jpeg_src_buf->jpeg_parse_error &&
->> +	    !vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
->> +		v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
->> +		return;
->> +	}
-> 
-> Looks good to me, an alternative implementation could have been to
-> merged into the error branch above.
-> 
->   	if (ret) {
->   		jpeg_src_buf->jpeg_parse_error = true;
->   
-> 		/*
-> 	 	 * If the capture queue is not setup, the device_run() won't
-> 		 * be scheduled, drop the error buffer so that the decoding
-> 		 * can continue.
-> 	 	 */
-> 		if (!vb2_is_streaming(v4l2_m2m_get_dst_vq(ctx->fh.m2m_ctx))) {
-> 			v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
-> 			return;
-> 		}
-> 	}
-> 
-> With or without this suggestion, but with the Fixes tag, you can include in your v2:
-> 
-> Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> 
+> can no longer maintain an
+> ap runnning with brcmfmac on my Pis with the brcmfmac43455 chip. The
+> firmware is current (and ahead of what RPiOS ships):
 
-I'll apply your suggestion and with the Fixes tag in V2
+Maybe you could try with what RPiOS ships.
+
+> [    3.472501] brcmfmac: F1 signature read @0x18000000=0x15264345
+> [    3.493274] brcmfmac: brcmf_fw_alloc_request: using
+> brcm/brcmfmac43455-sdio for chip BCM4345/6
+> [    3.494583] usbcore: registered new interface driver brcmfmac
+> [    3.900038] brcmfmac: brcmf_c_process_txcap_blob: no txcap_blob
+> available (err=-2)
+> [    3.901161] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4345/6
+> wl0: Oct 28 2024 23:27:00 version 7.45.286 (be70ab3 CY) FWID
+> 01-95efe7fa
+>
+> I get this with the default RPiOS verison of hostapd:
+> # hostapd -v
+> hostapd v2.10
+> User space daemon for IEEE 802.11 AP management,
+> IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
+> Copyright (c) 2002-2022, Jouni Malinen <j@w1.fi> and contributors
+>
+> And also with the one I built from source. The latest hostapd I could find.
+> The git repo it is built from is from here: https://w1.fi/hostapd/
+>
+> # hostapd -v
+> hostapd v2.11-hostap_2_11+
+> User space daemon for IEEE 802.11 AP management,
+> IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
+> Copyright (c) 2002-2024, Jouni Malinen <j@w1.fi> and contributors
+>
+> My hostapd.conf is:
+> # cat /etc/hostapd/hostapd.conf
+> # interface and driver
+> interface=ap0
+> driver=nl80211
+>
+> ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]
+>
+> # WIFI-Config
+> ssid=TestAP
+> channel=6
+> hw_mode=g
+> wmm_enabled=1
+> macaddr_acl=0
+> auth_algs=1
+> max_num_sta=10
+>
+> # WIFI authorization
+> wpa=2
+> wpa_key_mgmt=WPA-PSK
+> wpa_pairwise=TKIP CCMP
+> rsn_pairwise=CCMP
+> wpa_psk_radius=0
+> wpa_passphrase=secret123
+>
+> If there is something wrong in my setup, let me know.
+
+Hard to tell. The above looks okay, but no idea what your setup looks like.
+
+> when I start hostapd with dnsmasq, an interface comes up and I can
+> connect. As soon as it connects, it disconnects:
+> Apr 20 12:57:39 pi4 systemd-networkd[181]: ap0: Gained carrier
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: started, version 2.90 cachesize 150
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: compile time options: IPv6
+> GNU-getopt DBus no-UBus i18n IDN2 DHCP DHCPv6 no-Lua TFTP conntrack
+> ipset nftset auth cryptohash DNSSEC loop-detect inotify dumpfile
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: warning: interface ap0 does not
+> currently exist
+
+So does this mean you run with two wifi interfaces, ie. wlan0 and ap0? Can 
+you try with just only an AP interface?
+
+> Apr 20 12:57:39 pi4 dnsmasq-dhcp[169728]: DHCP, IP range 192.168.5.2
+> -- 192.168.5.254, lease time 1d
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: reading /run/systemd/resolve/resolv.conf
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: using nameserver 192.168.2.253#53
+> Apr 20 12:57:39 pi4 dnsmasq[169728]: read /etc/hosts - 8 names
+> Apr 20 12:57:39 pi4 hostapd[169681]: ap0: interface state 
+> UNINITIALIZED->ENABLED
+> Apr 20 12:57:39 pi4 hostapd[169681]: ap0: AP-ENABLED
+> Apr 20 12:57:39 pi4 resolvconf[169735]: Dropped protocol specifier
+> '.dnsmasq' from 'lo.dnsmasq'. Using 'lo' (ifindex=1).
+> Apr 20 12:57:39 pi4 resolvconf[169735]: Failed to set DNS
+> configuration: Link lo is loopback device.
+> Apr 20 12:57:39 pi4 systemd[1]: Started dnsmasq.service - dnsmasq - A
+> lightweight DHCP and caching DNS server.
+> Apr 20 12:57:40 pi4 kernel: brcmfmac: brcmf_cfg80211_set_power_mgmt:
+> power save disabled
+> Apr 20 12:57:48 pi4 kernel: ieee80211 phy0: brcmf_escan_timeout: timer expired
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: associated
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: associated
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
+> RADIUS: starting accounting session 4336779F2221A786
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
+> pairwise key handshake completed (RSN)
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
+> 50:84:92:a6:7a:7a
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
+> RADIUS: starting accounting session 4336779F2221A786
+> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
+> pairwise key handshake completed (RSN)
+
+So looks like connection and security are setup correctly...
+> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
+> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
+> 50:84:92:a6:7a:7a
+> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
+> 192.168.5.214 50:84:92:a6:7a:7a
+> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
+> 50:84:92:a6:7a:7a
+
+...and DHCP exchange is okay, which clearly indicated encrypted data 
+connection is working.
+
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+
+So not clear what triggers these disassociated events. Can you enable debug 
+prints in brcmfmac, ie. use debug=0x100400? The levels are defined in 
+debug.h [1]
+
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: associated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: associated
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
+> RADIUS: starting accounting session 33CFF844DBBE630F
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
+> pairwise key handshake completed (RSN)
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
+> 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
+> RADIUS: starting accounting session 33CFF844DBBE630F
+> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
+> pairwise key handshake completed (RSN)
+> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
+> 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
+> 192.168.5.214 50:84:92:a6:7a:7a
+> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
+> 50:84:92:a6:7a:7a
+> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
+> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
+> 802.11: disassociated
+> Apr 20 12:58:11 pi4 hostapd[169681]: ap0: interface state ENABLED->DISABLED
+> Apr 20 12:58:11 pi4 systemd[1]: Stopping hostapd.service - Hostapd
+> IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator...
+
+Assuming it is stopped manually here. Correct?
 
 Regards,
-Ming
+Arend
 
->>   end:
->>   	v4l2_m2m_buf_queue(ctx->fh.m2m_ctx, vbuf);
->>   }
+[1] 
+https://elixir.bootlin.com/linux/v6.14.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h
+
+
