@@ -1,212 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6781494CC
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2A7645;
+	Mon, 21 Apr 2025 02:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745201371; cv=none; b=N0cOINLsgxF6g2biNGj5BHB0Jc6IKADFINXxE5z2/zxuDHaVRNh1lcqye0mXFtHN+/QH9JfX1VgGOjZcekQ3swZVXCg0ycsaEMJ612wWEHfsDCiyZ/Xf0/IkKTjC0ENS4Cm0Bzn7FZ1TXR4D+JKylt+CRLoJ6ODxBCrxPNiGDJ8=
+	t=1745201700; cv=none; b=dqkJ3aZHqqbpRAGADDNSR5j1vW2XcZUhXIPUQ9jKjJN5Z6FB426pTzqKMLuI3j5J+fZWlBV4hVcPM9we69vhoNiaEvxQ144qKB91Ol01Ul2R+XdYbC4baUB7K5JNEguBhMDI1SguguZwRQSeVeYfJDzQ8BcMD9uH3z00ewWDC7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745201371; c=relaxed/simple;
-	bh=8665lUcagk6SBaoe799Wqq8bT+Js0KNMGAIWgtHXrB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oqJIOZGRVdi07UAVzM84zy3pLuuuVPAdDBk/QOM+jF/5OeZkrcg1NM2de7Iz6CmC5CZiTgqDJ79Qpjx+hUuHCHliQgc6oF8KXrqJ/SSOVJj9IrwNQTxfK03VT5Y0XT6N0Z20GSN6gSumZ+exrspohBfRJujLGE/CB0RAtYzItH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/uveT18; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/uveT18"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745201367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=656yZBycWTbOcI/QDkiraTK+o6zkkKhUlNx/4jNdMZQ=;
-	b=Q/uveT18ob0kT/xdNkWH4eSfrARBjiIncIQvZ75y7URBlFC2AI3J6wb5BkA4VDegU42UOT
-	vIcQToBMkcbb4ygjpT/UsWH6WjoVTSwjUTl6hn7HchS5haoYemCdSyIgH7myVcMQxWoJT4
-	47NP3e9goICVA9SSoTLosWDvviO60kA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-pYxh_6rgOYKb0DbUIMnJ8w-1; Sun,
- 20 Apr 2025 22:09:22 -0400
-X-MC-Unique: pYxh_6rgOYKb0DbUIMnJ8w-1
-X-Mimecast-MFC-AGG-ID: pYxh_6rgOYKb0DbUIMnJ8w_1745201360
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 373B31800446;
-	Mon, 21 Apr 2025 02:09:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.5])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4A2B19560A3;
-	Mon, 21 Apr 2025 02:09:16 +0000 (UTC)
-Date: Mon, 21 Apr 2025 10:09:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap segments
-Message-ID: <aAWoyExy0UMyxaoI@fedora>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
- <20250416021028.1403-4-chenste@linux.microsoft.com>
- <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
- <95d249ef-bfb3-431f-b633-8b3de383e067@linux.microsoft.com>
+	s=arc-20240116; t=1745201700; c=relaxed/simple;
+	bh=alVflVCr762SqWXcb/aZKIF/Wu6wTJ2sggCUoOYmktA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XJ464hygFsHOe69lY7N6JMxohXjz8rVQ57nUhTkfovAYkUWc1/Prh6n6xPityIV2Hmiav2cn0uVdr1bOXH3Mxyb6nmHSeQfRAjJSIpPejKY6aCJfxVZXcE41oRLwy5UUiCH1EExcehRWzsN2Zep2Pk9JcJCb2S44zTCp4iaifvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZgppM6SDzz4f3mJ6;
+	Mon, 21 Apr 2025 10:14:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 4CDB81A158E;
+	Mon, 21 Apr 2025 10:14:45 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP2 (Coremail) with SMTP id Syh0CgDX4WQTqgVo5dAZKA--.45218S2;
+	Mon, 21 Apr 2025 10:14:44 +0800 (CST)
+Message-ID: <8b800c09-eade-4dcf-90f6-2f5a78170bc4@huaweicloud.com>
+Date: Mon, 21 Apr 2025 10:14:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95d249ef-bfb3-431f-b633-8b3de383e067@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+Content-Language: en-US
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Xu Kuohai <xukuohai@huaweicloud.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>,
+ Bastien Curutchet <bastien.curutchet@bootlin.com>, ebpf@linuxfoundation.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <9da88811-cce0-41df-8069-2e8b67541c39@huaweicloud.com>
+ <D9BLCJSCHE9A.1IKHK3XBPF8MU@bootlin.com>
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <D9BLCJSCHE9A.1IKHK3XBPF8MU@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgDX4WQTqgVo5dAZKA--.45218S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWrW3JryUGw4rWryDXr4fZrb_yoWrJw18pF
+	ZxX3Z8tF4kJr1xZa1qy3yxZrWSq348KryUCrW5tw13trn8GF1xJFW2gF4Y9Fy5Gr1kG3W2
+	vF1jqFy3Za4fZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjTRM6wCDUUUU
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-On 04/20/25 at 05:30am, steven chen wrote:
-> On 4/17/2025 9:36 PM, Baoquan He wrote:
-> > On 04/15/25 at 07:10pm, steven chen wrote:
-> > > From: Steven Chen <chenste@linux.microsoft.com>
-> >   ^^^^^^
-> > > Implement kimage_map_segment() to enable IMA to map the measurement log
-> > > list to the kimage structure during the kexec 'load' stage. This function
-> > > gathers the source pages within the specified address range, and maps them
-> > > to a contiguous virtual address range.
-> > > 
-> > > This is a preparation for later usage.
-> > > 
-> > > Implement kimage_unmap_segment() for unmapping segments using vunmap().
-> > > 
-> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >    ^^^^^^
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >    ^^^^^^^
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: Baoquan He <bhe@redhat.com>
-> > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > Cc: Dave Young <dyoung@redhat.com>
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> >    ^^^^^
-> > 
-> > The signing on this patch is a little confusing. I can't see who is the
-> > real author, who is the co-author, between you and Tushar. You may need
-> > to refer to Documentation/process/5.Posting.rst to make that clear.
+On 4/21/2025 12:02 AM, Alexis Lothoré wrote:
+> Hi Xu,
 > 
-> Hi Baoquan,
+> On Thu Apr 17, 2025 at 4:10 PM CEST, Xu Kuohai wrote:
+>> On 4/17/2025 3:14 PM, Alexis Lothoré wrote:
+>>> Hi Andrii,
+>>>
+>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+>>>> On Fri, Apr 11, 2025 at 1:32 PM Alexis Lothoré (eBPF Foundation)
+>>>> <alexis.lothore@bootlin.com> wrote:
 > 
-> From my understanding, if there is no change from the original author patch,
-> need to add
-> From tag and Signed-off-by tag; otherwise, if there are changes,
-> Signed-off-by can be used.
+> [...]
+> 
+>>>> I might be missing something, but how can the *size* of the field be
+>>>> used to calculate that argument's *alignment*? i.e., I don't
+>>>> understand why arg_largest_member_size needs to be calculated instead
+>>>> of arg_largest_member_alignment...
+>>>
+>>> Indeed I initially checked whether I could return directly some alignment
+>>> info from btf, but it then involves the alignment computation in the btf
+>>> module. Since there could be minor differences between architectures about
+>>> alignment requirements, I though it would be better to in fact keep alignment
+>>> computation out of the btf module. For example, I see that 128 bits values
+>>> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390.
+>>>
+>>> And since for ARM64, all needed alignments are somehow derived from size
+>>> (it is either directly size for fundamental types, or alignment of the
+>>> largest member for structs, which is then size of largest member),
+>>> returning the size seems to be enough to allow the JIT side to compute
+>>> alignments.
+>>>
+>>
+>> Not exactly. The compiler's "packed" and "alignment" attributes cause a
+>> structure to be aligned differently from its natural alignment.
+>>
+>> For example, with the following three structures:
+>>
+>> struct s0 {
+>>       __int128 x;
+>> };
+>>
+>> struct s1 {
+>>       __int128 x;
+>> } __attribute__((packed));
+>>
+>> struct s2 {
+>>       __int128 x;
+>> } __attribute__((aligned(64)));
+>>
+>> Even though the largest member size is the same, s0 will be aligned to 16
+>> bytes, s1 and s2 are not aligned the same way. s1 has no alignment due to
+>> the "packed" attribute, while s2 will be aligned to 64 bytes.
+>>
+>> When these three structures are passed as function arguments, they will be
+>> located on different positions on the stack.
+>>
+>> For the following three functions:
+>>
+>> int f0(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s0 g);
+>> int f1(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s1 g);
+>> int f2(__int128 a, __int128 b, __int128 c, int64_t d, __int128 e, int64_t f, struct s2 g);
+>>
+>> g will be located at sp+32 in f0, sp + 24 in f1, and some 64-byte aligned
+>> stack address in f2.
+> 
+> Ah, thanks for those clear examples, I completely overlooked this
+> possibility. And now that you mention it, I feel a bit dumb because I now
+> remember that you mentioned this in Puranjay's series...
+> 
+> I took a quick look at the x86 JIT compiler for reference, and saw no code
+> related to this specific case neither. So I searched in the kernel for
+> actual functions taking struct arguments by value AND being declared with some
+> packed or aligned attribute. I only found a handful of those, and none
+> seems to take enough arguments to have the corresponding struct passed on the
+> stack. So rather than supporting this very specific case, I am tempted
+> to just return an error for now during trampoline creation if we detect such
+> structure (and then the JIT compiler can keep using data size to compute
+> alignment, now that it is sure not to receive custom alignments). Or am I
+> missing some actual cases involving those very specific alignments ?
+> 
 
-If you don't change a patch, you can add your Signed-off-by when
-posting. However, the From decides who is the real author. There's no
-way to have two From on one patch. My personal understanding.
+How can we reliably 'detect' the case? If a function has such a parameter
+but we fail to detect it, the BPF trampoline will pass an incorrect value
+to the function, which is also unacceptable.
 
+> Thanks,
 > 
-> Steven
-> 
-> > > Acked-by: Baoquan He <bhe@redhat.com>
-> > > ---
-> > >   include/linux/kexec.h |  6 +++++
-> > >   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
-> > >   2 files changed, 60 insertions(+)
-> > > 
-> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > > index f0e9f8eda7a3..7d6b12f8b8d0 100644
-> > > --- a/include/linux/kexec.h
-> > > +++ b/include/linux/kexec.h
-> > > @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
-> > >   #define kexec_dprintk(fmt, arg...) \
-> > >           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
-> > > +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
-> > > +extern void kimage_unmap_segment(void *buffer);
-> > >   #else /* !CONFIG_KEXEC_CORE */
-> > >   struct pt_regs;
-> > >   struct task_struct;
-> > > +struct kimage;
-> > >   static inline void __crash_kexec(struct pt_regs *regs) { }
-> > >   static inline void crash_kexec(struct pt_regs *regs) { }
-> > >   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
-> > >   static inline int kexec_crash_loaded(void) { return 0; }
-> > > +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
-> > > +{ return NULL; }
-> > > +static inline void kimage_unmap_segment(void *buffer) { }
-> > >   #define kexec_in_progress false
-> > >   #endif /* CONFIG_KEXEC_CORE */
-> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > > index c0bdc1686154..a5e378e1dc7f 100644
-> > > --- a/kernel/kexec_core.c
-> > > +++ b/kernel/kexec_core.c
-> > > @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
-> > >   	return result;
-> > >   }
-> > > +void *kimage_map_segment(struct kimage *image,
-> > > +			 unsigned long addr, unsigned long size)
-> > > +{
-> > > +	unsigned long src_page_addr, dest_page_addr = 0;
-> > > +	unsigned long eaddr = addr + size;
-> > > +	kimage_entry_t *ptr, entry;
-> > > +	struct page **src_pages;
-> > > +	unsigned int npages;
-> > > +	void *vaddr = NULL;
-> > > +	int i;
-> > > +
-> > > +	/*
-> > > +	 * Collect the source pages and map them in a contiguous VA range.
-> > > +	 */
-> > > +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
-> > > +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
-> > > +	if (!src_pages) {
-> > > +		pr_err("Could not allocate ima pages array.\n");
-> > > +		return NULL;
-> > > +	}
-> > > +
-> > > +	i = 0;
-> > > +	for_each_kimage_entry(image, ptr, entry) {
-> > > +		if (entry & IND_DESTINATION) {
-> > > +			dest_page_addr = entry & PAGE_MASK;
-> > > +		} else if (entry & IND_SOURCE) {
-> > > +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
-> > > +				src_page_addr = entry & PAGE_MASK;
-> > > +				src_pages[i++] =
-> > > +					virt_to_page(__va(src_page_addr));
-> > > +				if (i == npages)
-> > > +					break;
-> > > +				dest_page_addr += PAGE_SIZE;
-> > > +			}
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* Sanity check. */
-> > > +	WARN_ON(i < npages);
-> > > +
-> > > +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
-> > > +	kfree(src_pages);
-> > > +
-> > > +	if (!vaddr)
-> > > +		pr_err("Could not map ima buffer.\n");
-> > > +
-> > > +	return vaddr;
-> > > +}
-> > > +
-> > > +void kimage_unmap_segment(void *segment_buffer)
-> > > +{
-> > > +	vunmap(segment_buffer);
-> > > +}
-> > > +
-> > >   struct kexec_load_limit {
-> > >   	/* Mutex protects the limit count. */
-> > >   	struct mutex mutex;
-> > > -- 
-> > > 2.43.0
-> > > 
+> Alexis
 > 
 
