@@ -1,90 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A34021E22FC
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F411A238A;
+	Mon, 21 Apr 2025 16:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745253732; cv=none; b=FtuyV/8gPuJzXpi5sjUrUr8P3t+Hiw1UM8Moq0qEinJh31uoHlyYA7QvD7iAtDXJ4uqo65z9nb1PQT68VAMfHTyvU662rzjHwkiXDCbNEFch3g6HJZrS2oEaFYXY+IW9dEWcZN7YGg0FElo3sn61amiqDEWSAiJ+U7pQ9NWw/mg=
+	t=1745253746; cv=none; b=erUNdJL6imQ1v0+1l6TxZ29sfhgxOmH64q0UZGhcfFflPeJSsYj5O0OAnGMS9Kki14BoU+R9icHz6pOWuHl1jCkRf84wddxHyRex1UEIOmeQ8pkesaUioH81tPwoJj1gTtldF/CSxdI+FBgajfPJW4211cmEQng+JFcHPRjtkw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745253732; c=relaxed/simple;
-	bh=SW4V5hITFkxVqEx9wgBTm1FK1FOMP7NvSMKBks1Bcqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEOpHMDZimYnJf5NEcJoXlwdjaMTIeFlOaRdRV2eCCw8Lka240AIg6oiP77Q+hyftQrlY0AYDhzK4FTUwc6dWCCOG9yfaioIfz8Wj+uppHMMYpkJgKHvIIqPk5YoZDkHm8+EtGBY+F6ABOxYU7TG1ZjzHDZ49ngTWYZt2v5tKjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amWAKzZp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745253746; c=relaxed/simple;
+	bh=0fsyOStHwhC1v88XvZ4Ac0nuPUuFtHM5xo1t68kAtVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uFsit2Q5f/pF3ytvaJEqGGIiP3j3M+yVZ7l0T+4LbFyLS9X/vnWLSEEyfzuBwZpD08r1UED2KEKLjmzyssph8wOxopN7DNSzHL5YgXHj2pF/z4U5fpv1S0UPmNpTT2qefb/rZcdyqHIKdxyVnMeMlnjN98ogbsqaXcCBINgryhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RzLCtRo2; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amWAKzZp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85872C4CEE4;
-	Mon, 21 Apr 2025 16:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745253732;
-	bh=SW4V5hITFkxVqEx9wgBTm1FK1FOMP7NvSMKBks1Bcqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=amWAKzZpTbYrg1NLEyFdke9pQmtCVwqZSM2F7YhYWq9kNROjn/AGuOAJH6yLqOHF+
-	 Pl8Vwc2T1bRY7X95UedrGU4uCxcUuwxPvZhBsrLQlarfTQU5UxYx+YFNSxBn6/jZR8
-	 C1+6+14XHUHYGeW8ydzNZ8QELXCbKWH+Hy5BnY8fIUwYpbWXCRIIOni/F4NWAfe57j
-	 /R7INpOpvDnRjcvE//gWmoJTXF5182wTXhZ5EOoii3ccAQAxpqttSAX34dFm9mxJCt
-	 ltp6M+/voLIW1oeXnsT0x9Lmsi/XzgrpsvtzYv5hwm0aRhp5MldR9kaXwWvYqV6p2E
-	 s2f+xt1YGGi6g==
-Date: Mon, 21 Apr 2025 19:42:06 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Fix typos in comments in mm_init.c
-Message-ID: <aAZ1XnTO4xUQf9ow@kernel.org>
-References: <20250420140440.18817-1-pvkumar5749404@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzLCtRo2"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2963dc379so615488566b.2;
+        Mon, 21 Apr 2025 09:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745253743; x=1745858543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1I3cbwltjOGElOuVsLVlgvPqjddyD9qAtM+fs2VWpA=;
+        b=RzLCtRo2dGtqt56ZLaZoVyWLpqxb1ZjzQBk3p2Amr9jUiFSzaBJF6ZET8P+XnmEzBw
+         RqxytAn/4V0qqExxsmIlMUZmCQHDtBU0gChsy9fAHY59x/QAxuK8NW8VWhrj7BX1hOWm
+         RYhcHrQa9vuAiJY5ragTG4+RLjQpWNhoKh6mfUlTkuSXg0deYdyyVW+SDVrTMWl83FYe
+         fGYIWe8O9qbECOpBiK1XR06WQ362VAKijwXtXIadEwJ+97mX1zTKnpzi5p9u5KkbnkzR
+         TuHOp3V1symBe5K5NtOExu4z2NhStAXD9dpVcuzAvQ8ExfagwAGW9tk4KIjoPpBZqbU3
+         N1NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745253743; x=1745858543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L1I3cbwltjOGElOuVsLVlgvPqjddyD9qAtM+fs2VWpA=;
+        b=unyuSKpTQ24s1AlBvKDhkK2J9+rponRV9shllgaNjxJe8/enP1cqR4C72Tm+HudEZs
+         vdltRFTJWgC/H1YXV5UVAvGS6ryIIIe3zJvbz7BZOzwvZig4venwEybMo0JK5jlUivcp
+         WtRu+h0WyVcU5cbc0X+Wlk/TbooSG6hEkJN3yUFDYcBlbaoLC8xbURWHSa+NeXh82WoM
+         HQAOxMeQwsnMTNtZKlhmU/v6j9xpUGgHNYwsXyo74ZAPFJU3TWD9EbheS9PtM1+My3Fe
+         axM12myY1Sopy6DPbFreN9XoYh4VGt33J9RySILtZZ2foeLEaPgXAqeqZrQoiysp7+PJ
+         1u0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU63D7vOJoG1m1rz5YPgre51OTe1i3m/YUJ7XtP4hAqLzShQUpqwDH6OhrDMWZyAOEIKk0ZfP2QkTY=@vger.kernel.org, AJvYcCViAkxYpmB0+NyvbGCPr3QvL4RBCoK/4uf6KXhC+cN84OdKPOyxZ6mhrUZw3vtTx2eEzCvOCpiqYmHJfiVq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3EU4R4Dw6gJ5vqB7ZstVbA+8wAt8NOMJe74fmWOPfErFDfXn1
+	TGha8MaqK/rCM36lrpZR2KHjM18v7QAome1GvdD2jntyAZQr/dY5W1BcU1CKi5rCaFG7YqPKsd+
+	bYFBS3m3zQKCO964vvlr/4/4aaKI=
+X-Gm-Gg: ASbGncuz5pF5tu6Zj8wJOt9oK9iMcAjZsTk/PQajnTFZr524RMC+bBNJ6QPEfSAoqrr
+	1XZfOsDl6TT+d4RofinT0xoDU5oEG50FS+JcpbKU6T9RhMNdE1w6iVlN/ibgc49kLjZzNbDAOds
+	JogEVBX4SAKdbnZhQiKtnZuQ==
+X-Google-Smtp-Source: AGHT+IGOkY/7PisAD2oLp8QqIo0O9LumO+tYusSVEov8PZqxdtzgsegmull0yalfq2NuFZ5JO7zCd3FO9FZrDniI0y8=
+X-Received: by 2002:a17:907:1b1f:b0:ac1:f19a:c0a0 with SMTP id
+ a640c23a62f3a-acb74b1ca7cmr1191466066b.20.1745253743466; Mon, 21 Apr 2025
+ 09:42:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250420140440.18817-1-pvkumar5749404@gmail.com>
+References: <20250418-iio-prefer-aligned_s64-timestamp-v1-0-4c6080710516@baylibre.com>
+ <20250418-iio-prefer-aligned_s64-timestamp-v1-4-4c6080710516@baylibre.com> <20250421121341.49e28ddf@jic23-huawei>
+In-Reply-To: <20250421121341.49e28ddf@jic23-huawei>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 21 Apr 2025 19:41:46 +0300
+X-Gm-Features: ATxdqUH5lMC16PsOqzsa5gclyWSAtg59GNIHcNrRLuTnmqVLHUh5EH6DsroQl_c
+Message-ID: <CAHp75VcAHZV4zGMvR-xVuVhhBJMCmo7A0w0fnwASw3iAWU5wdw@mail.gmail.com>
+Subject: Re: [PATCH 04/10] iio: adc: mxs-lradc-adc: use struct with
+ aligned_s64 timestamp
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Andreas Klinger <ak@it-klinger.de>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	imx@lists.linux.dev, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 20, 2025 at 07:34:40PM +0530, Prabhav Kumar Vaish wrote:
-> Corrected minor typos in comments:
-> 	- 'contigious' -> 'contiguous'
-> 	- 'hierarcy' -> 'hierarchy'
-> 
-> This is a non-functional change in comment text only.
-> 
-> Signed-off-by: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
+On Mon, Apr 21, 2025 at 2:13=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+> On Fri, 18 Apr 2025 14:58:23 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+...
 
-> ---
->  mm/mm_init.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/mm_init.c b/mm/mm_init.c
-> index 9659689b8ace..7f3361fd5392 100644
-> --- a/mm/mm_init.c
-> +++ b/mm/mm_init.c
-> @@ -828,7 +828,7 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
->   * - physical memory bank size is not necessarily the exact multiple of the
->   *   arbitrary section size
->   * - early reserved memory may not be listed in memblock.memory
-> - * - non-memory regions covered by the contigious flatmem mapping
-> + * - non-memory regions covered by the contiguous flatmem mapping
->   * - memory layouts defined with memmap= kernel parameter may not align
->   *   nicely with memmap sections
->   *
-> @@ -1908,7 +1908,7 @@ void __init free_area_init(unsigned long *max_zone_pfn)
->  		free_area_init_node(nid);
->  
->  		/*
-> -		 * No sysfs hierarcy will be created via register_one_node()
-> +		 * No sysfs hierarchy will be created via register_one_node()
->  		 *for memory-less node because here it's not marked as N_MEMORY
->  		 *and won't be set online later. The benefit is userspace
->  		 *program won't be confused by sysfs files/directories of
-> -- 
-> 2.34.1
-> 
+> > +             aligned_u64 ts;
+> aligned_s64
+>
+> I've not idea why timestamps are signed, but they always have been!
 
--- 
-Sincerely yours,
-Mike.
+Because 0 (center point) was chosen as 1970-01-01?
+
+--=20
+With Best Regards,
+Andy Shevchenko
