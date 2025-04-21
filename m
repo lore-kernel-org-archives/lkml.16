@@ -1,292 +1,194 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2058.outbound.protection.outlook.com [40.107.94.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBFE1E3DF2;
-	Mon, 21 Apr 2025 17:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D751E5B7E;
+	Mon, 21 Apr 2025 17:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745257607; cv=fail; b=miEAQ6F5m4iiBvny08Nl4SewMZUBbPwiqOCgp5XGkMj2OMa5wZhKnepZ7XKS7/Yva098d5GPKZdr9IZSyZvfNjeKtH+V/n3VUhFhF0kqEfyVRSUKt2jTEL0gRBbhlIdsavFZxYRzOCd2oN5uOJm1QIzlwreWzd/IYjZah9AXtXM=
+	t=1745257642; cv=fail; b=FxIvKmejrOBN1b9tD5XyEqs9vVoQzRgb45kTsHpXvk8HpL8ZMWs+sYj/Bl9eThPyJZBN3GzrUd3SO2nKUhPY3e+MM/5qF8WNCzT4N1Vgp8zkuj+DgzyoU+OnXlrvC0TbN7w4pgDCKA0gOIpsHjgR8Fo8/imvNdFO7Ds6cNPNfvo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745257607; c=relaxed/simple;
-	bh=M9YSu87AU1yHiosxpWupIOl9+RytBCJHOOlifW+UjvI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jwajgAAQLIpLQnwgbhUMBCzuQkUMsVAspu9T59rx4A4jUz1OR/It8gthphWOe0YHiqW0s2Ee2VWKy/NyCDSYXHxOYZkfhIRVprmwoN8mJtI09Gay5R4OTr9PV30pkO7p1SX4GdmIWneEXshiUacNRjTsca5CJUSAxHqW8FhqkMk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mfg2Fr5S; arc=fail smtp.client-ip=40.107.220.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1745257642; c=relaxed/simple;
+	bh=0Tj0dE6AM4EBR7kSoue+eV89+aGm4FIT03zM9rMelj8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kU9k0F75Opun9DrEtbXJvmf49fvPKjBe5dSfypapm6rdMfkbRCgjfkC106AGBVx04uAhZGTPZXf4azAuSghyHgsdCXMyfRSZ9nbZ9rLrmEF9i9pUkxFDwQ9HEWz/CbsUTSNcKzgPQvUyVOWImMWen3ji3r9+EM53FCPSYTrESds=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LBQMEaTi; arc=fail smtp.client-ip=40.107.94.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mfg2Fr5S"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LBQMEaTi"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SdpjRT5DWLyNzQABAhhz4I9Tuu6JNwflDkriC0Cini8jZSL49OBkc3XeGp/ufIeB+bf8W8MBa7YaZjnYHJdPp2sTnYemdGkCZuR0SmWCOB5sW3WumBoCLxEd7ojKWlEltvEchIu6Gs6QaxlxcD3UO054pP2+dr7MmtTlg7S4T2zqUXz5C5OjZxty51lDVBldtkUZombptdQyLDrowNs0OFX8ZoGABEP376qbm5xDE0KYLHEKJrqFgjVW+ECO/953iteAt0HXLp/jP6F/WENmQ6713fBt1Th1sV5h4um4sYYRIihKvmbJl7+IpN/6Jsz7wNcCJgaF1JIzrRMpeVxC6A==
+ b=MEWKSbVBLw3ncmqtTyrw38CRhFICZnW/RfWJFsOg229jZccC5K0vwkvYgz+ik9d9hWxzOqzqeBHDmd+xQt7DRMaVElg25ptahSX40kqP/uTk9kdE1n/XXsu+oj4/NihaUn1Tcd61F6NTXy41N8mAYQ3iYWkQgF7bmTdCh49G1BNdTEY4/6LdhUdV6eAg7KwNMtEfqvqFzrRzLMnBMdli3LITgclYmOH7ZeWqQh4ZMTQy3i0H4zazxk4bnDgeCxi/vf9P5GBcKfU19lK8HWrjJG3x36R9zFV8qyiebC3RZTfBbk/5ik5kxVW96KpZlfl1yk3vpOzHSzSC9h6N3Vqfog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xZi9k3YXX2PHPrB2V8r1c35oUqVuhPm0BaR5Fpe+dOY=;
- b=gYOQ7KHf06DhmIZcVgHfcBWPZZ6WeFy1fDHFCQjqXp72rc/GF19va65xRFcA5XwATVp/n7AKJe6XoB2IXXXvvCzlIhZoRV9aUYtuiaIIwe6fod0/Vn7Itx7tqq+vR55yi5kkOKgAPQdSLVVJr4CyvMikmvZcKVzYbkhzMQtSNnDlIDLhq7wmmIRKpxigg8dy0hSnkFSOrgexJ9oUvhAhWF8utUDNxkI4Gl6UFyUvVD53PP5ASo5l09flfibuf0Lt2fF7zyIJq3qJpAXIBAXVVBEF9cdXiMuuYTzQ+T+r2m1n97n6k/JJmzGZBGPkspKF1ZEQOI5qfpUueliKItVU8w==
+ bh=e98enXbaWTywM17hyvp86Z3eTyXxGBbdPRvTwYsCHiI=;
+ b=zDZVri3CEO94tzXya7FCzLkT+4x4EDaGyB98w9tPz8aoEUDNOFSQkD6YTA76A+TLKiYRjIwVs8E3FLTc1mKqvGqof5S0fv6k7SP0w+LEkS+qIuXWP+OLK3qnOIBBNLrTNwlVIdf6yzQcGTAh57gBA+PXac3YE2ZOCU4ZkzsHzw+S5rfbp0x03tTBl+L83HOfBzmR5PP+AoVibuS5vtGNv3rMQ+EzD407bUsBPB3OczAQQgHL9Z0RCfR0v1EY+wlM7LgvR/TAkH/HtXTTn6ejsDrfahdasSTKBCtSWVcqPxHAEHqtwxMkTIJtkdlefWwbmPM6m+9C8dUtQh8CqDvR4w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ 216.228.118.232) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xZi9k3YXX2PHPrB2V8r1c35oUqVuhPm0BaR5Fpe+dOY=;
- b=mfg2Fr5SZaPFRh9FFMb63vWX/iNNWTHBAxAbNuQGNiojiATMs9N24IVF5SKG4/e9tpgwB2nSmrsPdfrntgA5E3NjD4ASNJFwQFDe1hW7hRf+0OD7GXmh8UZr2Mv8EpFAEo3UOw87mtVhFu8oOwLUzAgcU103XEYAgi7ABBsZFRg=
-Received: from BYAPR08CA0071.namprd08.prod.outlook.com (2603:10b6:a03:117::48)
- by DS7PR12MB8371.namprd12.prod.outlook.com (2603:10b6:8:e9::18) with
+ bh=e98enXbaWTywM17hyvp86Z3eTyXxGBbdPRvTwYsCHiI=;
+ b=LBQMEaTi5Aq1NIxliGHfsTcwYNDMR/wg3EP3OLJU389NGXgLl70bMoqhECniyhpSEBBmWOlDHgpkSrUeTSUwzcBzR69rgdf5OvYB55SzumkuxvLQ79H+epBrML/fVgLp/xhvdvBRfqJA6BfWCrIvNfBKgIGMmZ5oGl73B+x2kDyIx6P3G0uum7TNuFlmMbCoT8FK1XbXVCq68pzmiElK6YcVcc8H4sH2eNgKsT5kdgm25cjmAwC6mIdb1bPLwURm7Erqt76jdUbiAFWO9qKQc7wB7Opyfc+Q6fzbaJENA40kNPneaPYJOxBnDdHh60F5lhzQOQmrthPUfRdt7gae4A==
+Received: from MW4PR03CA0036.namprd03.prod.outlook.com (2603:10b6:303:8e::11)
+ by PH0PR12MB8099.namprd12.prod.outlook.com (2603:10b6:510:29d::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Mon, 21 Apr
- 2025 17:46:43 +0000
-Received: from CO1PEPF000042A8.namprd03.prod.outlook.com
- (2603:10b6:a03:117:cafe::87) by BYAPR08CA0071.outlook.office365.com
- (2603:10b6:a03:117::48) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Mon, 21 Apr
+ 2025 17:47:14 +0000
+Received: from CO1PEPF000044EE.namprd05.prod.outlook.com
+ (2603:10b6:303:8e:cafe::82) by MW4PR03CA0036.outlook.office365.com
+ (2603:10b6:303:8e::11) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Mon,
- 21 Apr 2025 17:46:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000042A8.mail.protection.outlook.com (10.167.243.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 17:46:42 +0000
-Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
- 2025 12:46:41 -0500
-From: Shannon Nelson <shannon.nelson@amd.com>
-To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<michal.swiatkowski@linux.intel.com>, <horms@kernel.org>,
-	<jacob.e.keller@intel.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH v4 net 4/4] pds_core: make wait_context part of q_info
-Date: Mon, 21 Apr 2025 10:46:06 -0700
-Message-ID: <20250421174606.3892-5-shannon.nelson@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250421174606.3892-1-shannon.nelson@amd.com>
-References: <20250421174606.3892-1-shannon.nelson@amd.com>
+ 21 Apr 2025 17:47:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CO1PEPF000044EE.mail.protection.outlook.com (10.167.241.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 17:47:13 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 21 Apr
+ 2025 10:47:03 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 21 Apr 2025 10:47:03 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Mon, 21 Apr 2025 10:47:01 -0700
+Date: Mon, 21 Apr 2025 10:47:00 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "praan@google.com" <praan@google.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"jsnitsel@redhat.com" <jsnitsel@redhat.com>, "mshavit@google.com"
+	<mshavit@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>
+Subject: Re: [PATCH v1 14/16] iommu/arm-smmu-v3: Add vsmmu_alloc impl op
+Message-ID: <aAaElAdVObJdK64d@Asurada-Nvidia>
+References: <cover.1744353300.git.nicolinc@nvidia.com>
+ <c5193cce7c23590b54e6d03e77fedfcb02037cef.1744353300.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276C09E05B9BE8BC66ACE058CB82@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276C09E05B9BE8BC66ACE058CB82@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A8:EE_|DS7PR12MB8371:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b80de33-c1d1-4185-1a65-08dd80fc7a26
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044EE:EE_|PH0PR12MB8099:EE_
+X-MS-Office365-Filtering-Correlation-Id: ffe043e1-ccd0-4419-66a0-08dd80fc8c72
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|921020;
+	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b2Vu4NW5SXRSfExJ6hjChU4UDsKQ54U+SDUYKmsMOGLeuEfCii89VVfE6fKR?=
- =?us-ascii?Q?wGvnAalbM+Qk2ILVXPx6GXbZhVAgFer+Ra1SgbmjUA/+rdfviQifThMhvdpV?=
- =?us-ascii?Q?94hUfaDn+xnngk1SYIspIsdD26c9mByx90DkAgT51jjRHdKcIpjdaP4GQI3N?=
- =?us-ascii?Q?tIXCv97V4KTKwtDHkrVXc86F8QhwMguN6hWJ1Z1eWg47Kk2kSTU4RRc528Fe?=
- =?us-ascii?Q?uYSvRBviO2cdOPPyR+k6j/gBoMbzaUIcd3PJIsZlYXONLZEmDPkqM/5rCh+3?=
- =?us-ascii?Q?oUKlT3ZEyoKRDDLC7SLWWXh1riLSOABR+u0luA3GYlG2RV0jxizTGDOOPWCo?=
- =?us-ascii?Q?x3Ip9cyR/vvZ302Roj6NZlFFExXWuu2Mom/loV+CvoMUdDIMXfMrRI4dsldw?=
- =?us-ascii?Q?W+edzINfq+P30upkU1LPxudQ8yw84WjJaiepvfKMaCVsU0CLWaaOPsO2ncSg?=
- =?us-ascii?Q?7EOlwjGnSHfD/tNzypKxc6T0eMKoCz4518KstRKMVvUv/ErbBQlHdIX3n/L0?=
- =?us-ascii?Q?tZy05zOB0us+IcpaLxrjXlM83wMVxfibW1nP7koCB++RL5dIp6venPVgml2k?=
- =?us-ascii?Q?Nkj3NOJxb96aF+1vzzR6kraCxVVdgn7r3waOZYML8PJ/029oDs9pozdRv/b+?=
- =?us-ascii?Q?i5fOrDMPc/1tBpjCAu56aO4s23wIeszSmm0hAsjOBLoNMKBPfopxJ66g+te7?=
- =?us-ascii?Q?fWEDHMdJPTVkKNhMRKtY6sLVTbSfAwlSbusUhUjbG36QnlWSYHO5v0qu0iRf?=
- =?us-ascii?Q?vzFRffihWrA+E5Mce359ZeiP6PFrOzyLPicKBFKhRHBFmbfJYM4MOSklDKII?=
- =?us-ascii?Q?OkVn9sPeAO3ZsZOlieX3TLQ7+/3VnwdiMqm9kI6L84+lW64dwflZAnNjSEpq?=
- =?us-ascii?Q?asCX6KCqZ9GZrEXd+96c8nUcAR3DKhhKElS+oe25vFVpJpjdKPSHrxMJ1pXK?=
- =?us-ascii?Q?7j1X5Qk5yof4UsY/3vjxqsYNlcoPk3wzgIWYUBKQ1xhV3q8d0jr14XlsWi1j?=
- =?us-ascii?Q?oN2akcSmUXQuMLCGxqBLElw2709dzfqmkxpqUvpBTJaLtHoqhHSAUY5wY0wp?=
- =?us-ascii?Q?tiKLJHUzGmznoouTq9w4+iuk4bFbkWAEWLdk+cXMjv04rolf8A+IHUMsY8Ru?=
- =?us-ascii?Q?s1ujbCo129U4QRaFNALAxSxXi1lEUjamz8Juz989+8mssRPdUTWGVI85C8XU?=
- =?us-ascii?Q?pqCeLb9Y/yqgdDgWvON3MOIb5e5ys2SyRh/5IjkZcvrxgcCE/NL9gHTfdE6X?=
- =?us-ascii?Q?2eqoZhrmSiBCHdLG8FMrVvsi9GtJMBVPUbxkpIEavzUFT5RCSGA8v36Alc/Y?=
- =?us-ascii?Q?rotrf5G1mL5hV7pgKv1tCqIK3b1COWo2QJiKr3IaeS8D2m5xAG1a7gNQyTSw?=
- =?us-ascii?Q?kKAC73dqRvkjI051A1SmjL7PrG76eNKZqZIuRNf2cZW888bejFar6emaxCx0?=
- =?us-ascii?Q?cmcckTCeAZXmjJQzQlr3T/v/1tER09HazpRCjjx+oeE6i6Cv7bQx2naaIrRR?=
- =?us-ascii?Q?Pbv+wJIyqn6mZf9rrJDW3nlUGa0KsMzz206R4/U114nEj0Cl4XXGxTdDZg?=
- =?us-ascii?Q?=3D=3D?=
+	=?us-ascii?Q?YJQrLOC25oxXHAZwtKBcavQrYVlx51AzxBsLLA9jufrOmidqVT/q16C7XHk8?=
+ =?us-ascii?Q?h3M6sUzue7rVVJk7QHHXSWi9vtZMKp1Z0Ju3yDnUeVMUl6J6UV5+n4KeqAY6?=
+ =?us-ascii?Q?+3eO+6bZfNZ1u+Vc8jD+Q8GwxJ3O59s9ORUat50dfMoBH8/gnL0pz6LEqpk7?=
+ =?us-ascii?Q?a9c4YpzdkcVZAr92iCarbk9JZx8Hsdu4e09+6DWZ9yDKB5OmX7DkVdTBZDc9?=
+ =?us-ascii?Q?j+VVTQlh9alyP8YSD0tiOtzkdbiMsJ3mPlB26ENyblNiJ/mLknySnylzh2dQ?=
+ =?us-ascii?Q?KjY5xIs8IPh6lQGg7JI8J9gkUB3hmxD79/gbsH2esSnHRcKRPpPQRpqtysXR?=
+ =?us-ascii?Q?n9KBHW1XheAkrQyJPRd778y6yY6lgbFxkmAjdIjoqCGBvmk3qb94vUCptn6Q?=
+ =?us-ascii?Q?V6vxf5py0brm5HVfwAe+elxOVcWm/DcJnpWzeLXvA2K8khOftEMIc/T2aTQl?=
+ =?us-ascii?Q?JpISohp+MNCVMEGpH2Js/LJWm/E790elKYVrVSoQ0qjjSM0esytBBp+n1TkP?=
+ =?us-ascii?Q?T+t2yJcP78weRduZMvptmX6FD1aTUAQhHOFCQzw6DaYwv/DHLz3BEJQRCLAU?=
+ =?us-ascii?Q?Nx53DUOEShiBsKBIOFyaNMFvjiOg9SqwloalmOFnBTesF6SxBHLsa/CqbiiP?=
+ =?us-ascii?Q?Z64mBDLMxPkKpF8693IrlAljK0Jy6ScRFhDGGf8jr1eYhS6jlv79EuaMd5ZE?=
+ =?us-ascii?Q?HRksDZrvN9XcGWMcOZ/B0z9CDjkf8g/Sz+Gd/OyYjWHmMtIGm6J7kfJyPZkK?=
+ =?us-ascii?Q?IEOuoLuS0KJ0VGxGlo/xTyuRh+3eH8gcHnItNfiOyscoW9wZSryfBETgZAnS?=
+ =?us-ascii?Q?TIqXFvT8agVyfGMFbVIgAWG9av77QO0xOujstXkrO4rFgLvhlxgNtC0P0RIy?=
+ =?us-ascii?Q?NKSAF1YOR+LozG7XiMnrgU7aMFhnDXW7QOKjkk4ac0D0nDae7dkrdtL5SG5n?=
+ =?us-ascii?Q?dggOeRBJsWJmqXTj7uN143crgrwI6eTnEQuPMzVItUPPOBQGPbQr6e1figQa?=
+ =?us-ascii?Q?c/uYWzvbkYAhDnhSqdLCTjryuf5puAcsoa2p5f3s/qGNq0SQ/zY9i7MxUeti?=
+ =?us-ascii?Q?+HHMoOIEYnUKO3An3szBL98KRuVgR5bSNuFVPm6oDuJUkvMmaYb5+dBh637d?=
+ =?us-ascii?Q?mUNP6whffeU7ReYACaQ647RraPeCcCO7xiPT/lPryQYS7AT9cY/XRcYORV/o?=
+ =?us-ascii?Q?fucwZEp52yhZ1hucrMHDBFC5+jE/0UoGzDRr7OlUOjjBXukAfltZqo+XrUC9?=
+ =?us-ascii?Q?vIeK7Gx6h1SfYaTZkyaZHVMuA1lw4bh6A4/hbXQ4k3dHLXo+rgHmhwuB/CSp?=
+ =?us-ascii?Q?4XvPinlrLTN7a9QBSGY4ucmDrgX3DbEDg1mSgWm2H1NDoJHmrmtwxHHiBx+u?=
+ =?us-ascii?Q?kV/DsjLfD4o80uf0hIGINuJ8QAKsrztDFawlc1P85ekjNez5vhHuvF26ERX7?=
+ =?us-ascii?Q?xDYqNeFz0/xfcXjZ2nmb2ON8xeQEudiASCkI8qpWLmEeLH0/ulFP7bGvpVDm?=
+ =?us-ascii?Q?gF3Br06ngDLBF9dOzOmUj2mjs9RFJa49s36M?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 17:46:42.4503
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 17:47:13.1962
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b80de33-c1d1-4185-1a65-08dd80fc7a26
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffe043e1-ccd0-4419-66a0-08dd80fc8c72
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042A8.namprd03.prod.outlook.com
+	CO1PEPF000044EE.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8371
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8099
 
-Make the wait_context a full part of the q_info struct rather
-than a stack variable that goes away after pdsc_adminq_post()
-is done so that the context is still available after the wait
-loop has given up.
+On Mon, Apr 21, 2025 at 08:23:50AM +0000, Tian, Kevin wrote:
+> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > index 66855cae775e..aa8653af50f2 100644
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > @@ -392,10 +392,7 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct
+> > device *dev,
+> >  		iommu_get_iommu_dev(dev, struct arm_smmu_device,
+> > iommu);
+> >  	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
+> >  	struct arm_smmu_domain *s2_parent = to_smmu_domain(parent);
+> > -	struct arm_vsmmu *vsmmu;
+> > -
+> > -	if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
+> > -		return ERR_PTR(-EOPNOTSUPP);
+> > +	struct arm_vsmmu *vsmmu = NULL;
+> > 
+> >  	if (!(smmu->features & ARM_SMMU_FEAT_NESTING))
+> >  		return ERR_PTR(-EOPNOTSUPP);
+> > @@ -423,8 +420,16 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct
+> > device *dev,
+> >  	    !(smmu->features & ARM_SMMU_FEAT_S2FWB))
+> >  		return ERR_PTR(-EOPNOTSUPP);
+> > 
+> > -	vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
+> > -				     &arm_vsmmu_ops);
+> > +	if (master->smmu->impl_ops && master->smmu->impl_ops-
+> > >vsmmu_alloc)
+> > +		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> > +			master->smmu, s2_parent, ictx, viommu_type,
+> > user_data);
+> > +	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
+> 
+> did it work on standard SMMUv3 when there is no @vsmmu_alloc()
+> and the variable 'vsmmu' is initialized to NULL?
 
-There was a case where a slow development firmware caused
-the adminq request to time out, but then later the FW finally
-finished the request and sent the interrupt.  The handler tried
-to complete_all() the completion context that had been created
-on the stack in pdsc_adminq_post() but no longer existed.
-This caused bad pointer usage, kernel crashes, and much wailing
-and gnashing of teeth.
+You are right. We should do:
 
-Fixes: 01ba61b55b20 ("pds_core: Add adminq processing and commands")
-Reviewed-by: Simon Horman <horms@kernel.org>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
----
- drivers/net/ethernet/amd/pds_core/adminq.c | 36 +++++++++-------------
- drivers/net/ethernet/amd/pds_core/core.c   |  4 ++-
- drivers/net/ethernet/amd/pds_core/core.h   |  2 +-
- 3 files changed, 18 insertions(+), 24 deletions(-)
+-	struct arm_vsmmu *vsmmu = NULL;
++	struct arm_vsmmu *vsmmu = ERR_PTR(-EOPNOTSUPP);
 
-diff --git a/drivers/net/ethernet/amd/pds_core/adminq.c b/drivers/net/ethernet/amd/pds_core/adminq.c
-index c83a0a80d533..506f682d15c1 100644
---- a/drivers/net/ethernet/amd/pds_core/adminq.c
-+++ b/drivers/net/ethernet/amd/pds_core/adminq.c
-@@ -5,11 +5,6 @@
- 
- #include "core.h"
- 
--struct pdsc_wait_context {
--	struct pdsc_qcq *qcq;
--	struct completion wait_completion;
--};
--
- static int pdsc_process_notifyq(struct pdsc_qcq *qcq)
- {
- 	union pds_core_notifyq_comp *comp;
-@@ -109,10 +104,10 @@ void pdsc_process_adminq(struct pdsc_qcq *qcq)
- 		q_info = &q->info[q->tail_idx];
- 		q->tail_idx = (q->tail_idx + 1) & (q->num_descs - 1);
- 
--		/* Copy out the completion data */
--		memcpy(q_info->dest, comp, sizeof(*comp));
--
--		complete_all(&q_info->wc->wait_completion);
-+		if (!completion_done(&q_info->completion)) {
-+			memcpy(q_info->dest, comp, sizeof(*comp));
-+			complete(&q_info->completion);
-+		}
- 
- 		if (cq->tail_idx == cq->num_descs - 1)
- 			cq->done_color = !cq->done_color;
-@@ -162,8 +157,7 @@ irqreturn_t pdsc_adminq_isr(int irq, void *data)
- static int __pdsc_adminq_post(struct pdsc *pdsc,
- 			      struct pdsc_qcq *qcq,
- 			      union pds_core_adminq_cmd *cmd,
--			      union pds_core_adminq_comp *comp,
--			      struct pdsc_wait_context *wc)
-+			      union pds_core_adminq_comp *comp)
- {
- 	struct pdsc_queue *q = &qcq->q;
- 	struct pdsc_q_info *q_info;
-@@ -205,9 +199,9 @@ static int __pdsc_adminq_post(struct pdsc *pdsc,
- 	/* Post the request */
- 	index = q->head_idx;
- 	q_info = &q->info[index];
--	q_info->wc = wc;
- 	q_info->dest = comp;
- 	memcpy(q_info->desc, cmd, sizeof(*cmd));
-+	reinit_completion(&q_info->completion);
- 
- 	dev_dbg(pdsc->dev, "head_idx %d tail_idx %d\n",
- 		q->head_idx, q->tail_idx);
-@@ -231,16 +225,13 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 		     union pds_core_adminq_comp *comp,
- 		     bool fast_poll)
- {
--	struct pdsc_wait_context wc = {
--		.wait_completion =
--			COMPLETION_INITIALIZER_ONSTACK(wc.wait_completion),
--	};
- 	unsigned long poll_interval = 1;
- 	unsigned long poll_jiffies;
- 	unsigned long time_limit;
- 	unsigned long time_start;
- 	unsigned long time_done;
- 	unsigned long remaining;
-+	struct completion *wc;
- 	int err = 0;
- 	int index;
- 
-@@ -250,20 +241,19 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 		return -ENXIO;
- 	}
- 
--	wc.qcq = &pdsc->adminqcq;
--	index = __pdsc_adminq_post(pdsc, &pdsc->adminqcq, cmd, comp, &wc);
-+	index = __pdsc_adminq_post(pdsc, &pdsc->adminqcq, cmd, comp);
- 	if (index < 0) {
- 		err = index;
- 		goto err_out;
- 	}
- 
-+	wc = &pdsc->adminqcq.q.info[index].completion;
- 	time_start = jiffies;
- 	time_limit = time_start + HZ * pdsc->devcmd_timeout;
- 	do {
- 		/* Timeslice the actual wait to catch IO errors etc early */
- 		poll_jiffies = msecs_to_jiffies(poll_interval);
--		remaining = wait_for_completion_timeout(&wc.wait_completion,
--							poll_jiffies);
-+		remaining = wait_for_completion_timeout(wc, poll_jiffies);
- 		if (remaining)
- 			break;
- 
-@@ -292,9 +282,11 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 	dev_dbg(pdsc->dev, "%s: elapsed %d msecs\n",
- 		__func__, jiffies_to_msecs(time_done - time_start));
- 
--	/* Check the results */
--	if (time_after_eq(time_done, time_limit))
-+	/* Check the results and clear an un-completed timeout */
-+	if (time_after_eq(time_done, time_limit) && !completion_done(wc)) {
- 		err = -ETIMEDOUT;
-+		complete(wc);
-+	}
- 
- 	dev_dbg(pdsc->dev, "read admin queue completion idx %d:\n", index);
- 	dynamic_hex_dump("comp ", DUMP_PREFIX_OFFSET, 16, 1,
-diff --git a/drivers/net/ethernet/amd/pds_core/core.c b/drivers/net/ethernet/amd/pds_core/core.c
-index 55163457f12b..9512aa4083f0 100644
---- a/drivers/net/ethernet/amd/pds_core/core.c
-+++ b/drivers/net/ethernet/amd/pds_core/core.c
-@@ -167,8 +167,10 @@ static void pdsc_q_map(struct pdsc_queue *q, void *base, dma_addr_t base_pa)
- 	q->base = base;
- 	q->base_pa = base_pa;
- 
--	for (i = 0, cur = q->info; i < q->num_descs; i++, cur++)
-+	for (i = 0, cur = q->info; i < q->num_descs; i++, cur++) {
- 		cur->desc = base + (i * q->desc_size);
-+		init_completion(&cur->completion);
-+	}
- }
- 
- static void pdsc_cq_map(struct pdsc_cq *cq, void *base, dma_addr_t base_pa)
-diff --git a/drivers/net/ethernet/amd/pds_core/core.h b/drivers/net/ethernet/amd/pds_core/core.h
-index 199473112c29..0b53a1fab46d 100644
---- a/drivers/net/ethernet/amd/pds_core/core.h
-+++ b/drivers/net/ethernet/amd/pds_core/core.h
-@@ -96,7 +96,7 @@ struct pdsc_q_info {
- 	unsigned int bytes;
- 	unsigned int nbufs;
- 	struct pdsc_buf_info bufs[PDS_CORE_MAX_FRAGS];
--	struct pdsc_wait_context *wc;
-+	struct completion completion;
- 	void *dest;
- };
- 
--- 
-2.17.1
-
+Thanks!
+Nicolin
