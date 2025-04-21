@@ -1,164 +1,104 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11E6645;
-	Mon, 21 Apr 2025 01:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628A29476
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745200631; cv=none; b=TfyUwRCbnpg3KVAwJLRA/L7Z2Yuurc/u/Qd/DrNTQ8DwWOpxrdbOoFvV8x82Uhg3A1Y9l7/iK0nZVcdhgp7ULA4Vvol4tJ41P34z/ZjjSiqZW/gHmiKZicAFdXSyaGuh55dLIZIqBS+ZyTc7QNmUQ8LL1at5qbGhmswmDNF9GHM=
+	t=1745200722; cv=none; b=pW5uQGVqlAX+PKfSbADq9cGg7gUtPK+HnSBPYCMlivyC5UZVKP0T3Ze7+p1UVQK/jA3uzFA8CSAcoZkTPdrsH0Tu4nvo9M/3VMV3Qgvd0NxO7VI5k5hroGi0wO87Z+Xgi+sylpEdHGFaQrDQIF9JZasJEDoTVqRajyC/xfdnmYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745200631; c=relaxed/simple;
-	bh=MVjvNl4PBcxCl3avfF2/vYbnNTlgkjDbtbxOGMWH79w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hyo7JXq7FortUpee4sIxnhhu/kdwUSvqnIPx1SsRGXwsFO3XeEyYlsmMGY64LBkzp9lFDB4fkgtTu2Spp9EIp+Z8I98wQYg77PTp6WKmaDQ2laH5kutq0vYhk1oJa9+jF781qSDyEs4Yu8MmqLC90AJmo5aAjMEk6BaN6nY+8zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZgpKc1jNRzvWq6;
-	Mon, 21 Apr 2025 09:52:52 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5E2CB180B49;
-	Mon, 21 Apr 2025 09:57:00 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 21 Apr 2025 09:56:59 +0800
-Message-ID: <40d40603-f9a9-4eaa-aaa6-d5ce31445aa4@huawei.com>
-Date: Mon, 21 Apr 2025 09:56:58 +0800
+	s=arc-20240116; t=1745200722; c=relaxed/simple;
+	bh=TWss7XewSvgsAiYpnIqcJjq6TfeXLZNGvwOZZ+nHeyk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QjpUIRdo10ZAvTiCG+Xnk4p7HniJgNfp1XqudnWIxoTe2CkR2XxnJBR/jltqOJaBOC+qG7x5VZxDTat561j/l4FUfDKLd+hCTBvJCZxqmXSkGHvU4NpIUYUWAZG3TaHfLXG7yf5WoVz7gtrrclmDUuD8k1E/o9z5g+q2VgBIBEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EqHxkeVb; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EqHxkeVb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745200717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ibaFym3OFtgTiKxTW+quUnMt2zax7HWkzpDLzPDX8sA=;
+	b=EqHxkeVbtE6BrU3mqapnjUBCl7euFEQEvnObJEvHGjeOYPQK6VP855mW20N1Rmf/Px8/g4
+	46/24G2Cg9+5fuKSAVHo1SZqfRNezURwFtwS3VLHhSr+uKhbSs8v3D00YLDAwSB43bS7SC
+	0SAM64LNks5jZpNoiApP2qXNscZmXuE=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org,
+	nao.horiguchi@gmail.com,
+	linmiaohe@huawei.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	david@redhat.com,
+	harry.yoo@oracle.com,
+	riel@surriel.com,
+	vbabka@suse.cz,
+	liuye@kylinos.cn,
+	ye.liu@linux.dev
+Subject: [PATCH v3] mm/rmap: rename page__anon_vma to anon_vma for consistency
+Date: Mon, 21 Apr 2025 09:58:23 +0800
+Message-Id: <20250421015823.32009-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH 2/2] nfs: handle failure of get_nfs_open_context
-To: Jeff Layton <jlayton@kernel.org>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250419085355.1451457-1-lilingfeng3@huawei.com>
- <20250419085355.1451457-3-lilingfeng3@huawei.com>
- <828b70d9f1c0a34966aeda8198d80046dcd2bba2.camel@kernel.org>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <828b70d9f1c0a34966aeda8198d80046dcd2bba2.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+X-Migadu-Flow: FLOW_OUT
 
+From: Ye Liu <liuye@kylinos.cn>
 
-在 2025/4/19 20:34, Jeff Layton 写道:
-> On Sat, 2025-04-19 at 16:53 +0800, Li Lingfeng wrote:
->> During initialization of unlockdata or lockdata structures, if acquiring
->> the nfs_open_context fails, the current operation must be aborted to
->> ensure the nfs_open_context remains valid after initialization completes.
->> This is critical because both lock and unlock release callbacks
->> dereference the nfs_open_context - an invalid context could lead to null
->> pointer dereference.
->>
->> Fixes: faf5f49c2d9c ("NFSv4: Make NFS clean up byte range locks asynchronously")
->> Fixes: a5d16a4d090b ("NFSv4: Convert LOCK rpc call into an asynchronous RPC call")
->> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
->> ---
->>   fs/nfs/nfs4proc.c | 22 +++++++++++++++-------
->>   1 file changed, 15 insertions(+), 7 deletions(-)
->>
->> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->> index 9f5689c43a50..d76cf0f79f9c 100644
->> --- a/fs/nfs/nfs4proc.c
->> +++ b/fs/nfs/nfs4proc.c
->> @@ -7075,24 +7075,27 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
->>   	struct nfs4_state *state = lsp->ls_state;
->>   	struct inode *inode = state->inode;
->>   	struct nfs_lock_context *l_ctx;
->> +	struct nfs_open_context *open_ctx;
->>   
->>   	p = kzalloc(sizeof(*p), GFP_KERNEL);
->>   	if (p == NULL)
->>   		return NULL;
->>   	l_ctx = nfs_get_lock_context(ctx);
->> -	if (!IS_ERR(l_ctx)) {
->> +	if (!IS_ERR(l_ctx))
->>   		p->l_ctx = l_ctx;
->> -	} else {
->> -		kfree(p);
->> -		return NULL;
->> -	}
->> +	else
->> +		goto out_free;
->> +	/* Ensure we don't close file until we're done freeing locks! */
->> +	open_ctx = get_nfs_open_context(ctx);
->>
->>
-> Sorry for the confusion. Now that I look more closely, I think I was
-> wrong before.
->
-> This can't fail, because the caller holds a reference to ctx, so the
-> refcount must be non-zero. Instead of this patch, could you add a
-> comment in there to that effect to make this clear in the future?
-Hi Jeff,
+Renamed local variable page__anon_vma in page_address_in_vma() to
+anon_vma. The previous naming convention of using double underscores
+(__) is unnecessary and inconsistent with typical kernel style, which uses
+single underscores to denote local variables. Also updated comments to
+reflect the new variable name.
 
-Thank you for the feedback.
-Adding a comment instead of this patch may be better.
+Functionality unchanged.
 
-However, I’d like to seek your guidance on a broader question: For
-scenarios where an error condition ​currently cannot occur but would lead
-to severe consequences (e.g., NULL pointer dereference, data corruption)
-if it ever did happen (e.g., due to future code changes or bugs), do you
-recommend proactively adding error handling as a defensive measure?
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
 
-My rationale:
-​Current code: No code path triggers this condition today --> Handling
-code would be "dead" for now.
-​Future risks: If a bug introduced later allows the condition to occur,
-silent failure or crashes could result.
-Is there a kernel/dev policy on such preemptive safeguards? Or should we
-address these only when the triggering scenarios materialize?
+Changes in v3:
+- Rename variable from page_anon_vma to anon_vma.
+---
+ mm/rmap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Your insight would help me align with the project’s practices.
-Thanks in advance!
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 67bb273dfb80..447e5b57e44f 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -789,13 +789,13 @@ unsigned long page_address_in_vma(const struct folio *folio,
+ 		const struct page *page, const struct vm_area_struct *vma)
+ {
+ 	if (folio_test_anon(folio)) {
+-		struct anon_vma *page__anon_vma = folio_anon_vma(folio);
++		struct anon_vma *anon_vma = folio_anon_vma(folio);
+ 		/*
+ 		 * Note: swapoff's unuse_vma() is more efficient with this
+ 		 * check, and needs it to match anon_vma when KSM is active.
+ 		 */
+-		if (!vma->anon_vma || !page__anon_vma ||
+-		    vma->anon_vma->root != page__anon_vma->root)
++		if (!vma->anon_vma || !anon_vma ||
++		    vma->anon_vma->root != anon_vma->root)
+ 			return -EFAULT;
+ 	} else if (!vma->vm_file) {
+ 		return -EFAULT;
+@@ -803,7 +803,7 @@ unsigned long page_address_in_vma(const struct folio *folio,
+ 		return -EFAULT;
+ 	}
+ 
+-	/* KSM folios don't reach here because of the !page__anon_vma check */
++	/* KSM folios don't reach here because of the !anon_vma check */
+ 	return vma_address(vma, page_pgoff(folio, page), 1);
+ }
+ 
+-- 
+2.25.1
 
-Best regards,
-Lingfeng
->
->
->> +	if (open_ctx)
->> +		p->ctx = open_ctx;
->> +	else
->> +		goto out_free;
-> If we did decide to keep the error handling however, this would leak
-> l_ctx. That reference would also need to be put if open_ctx was NULL
-> here.
->
->>   	p->arg.fh = NFS_FH(inode);
->>   	p->arg.fl = &p->fl;
->>   	p->arg.seqid = seqid;
->>   	p->res.seqid = seqid;
->>   	p->lsp = lsp;
->> -	/* Ensure we don't close file until we're done freeing locks! */
->> -	p->ctx = get_nfs_open_context(ctx);
->>   	locks_init_lock(&p->fl);
->>   	locks_copy_lock(&p->fl, fl);
->>   	p->server = NFS_SERVER(inode);
->> @@ -7100,6 +7103,9 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
->>   	nfs4_stateid_copy(&p->arg.stateid, &lsp->ls_stateid);
->>   	spin_unlock(&state->state_lock);
->>   	return p;
->> +out_free:
->> +	kfree(p);
->> +	return NULL;
->>   }
->>   
->>   static void nfs4_locku_release_calldata(void *data)
->> @@ -7327,6 +7333,8 @@ static struct nfs4_lockdata *nfs4_alloc_lockdata(struct file_lock *fl,
->>   	p->lsp = lsp;
->>   	p->server = server;
->>   	p->ctx = get_nfs_open_context(ctx);
->> +	if (!p->ctx)
->> +		goto out_free_seqid;
->>   	locks_init_lock(&p->fl);
->>   	locks_copy_lock(&p->fl, fl);
->>   	return p;
