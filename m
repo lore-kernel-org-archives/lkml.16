@@ -1,106 +1,179 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE7813CF9C;
-	Mon, 21 Apr 2025 19:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BED13CF9C;
+	Mon, 21 Apr 2025 19:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745262314; cv=none; b=FF4u1Ybozj082i1oEDtQ8JEIDL7ArzHPTfy3iBEkhSvKsnXqgVUjblBQ62TaRSVIGcd7DlZFV+juNxFI36IpAM7hqBM2wIz9HKGcqwwDVwXMdriBW4aXV9k0z9gEDrkW8CczyAbQF1g5jTQYXtffEO5sYUHdWV+5C7LR/g+ogfA=
+	t=1745262356; cv=none; b=bbm2okjTsEYdyABDAr7NkOu22DAUiygc3y5AzMnIHoSslmJliZthpK5u63qKU3LHLxtgt2cOK/H0hDT0YJt0Bpfgo3z5HVLhxnFINUikS0gHfsNVTybF7KMGg0ZfDBQ4EDpM3kZfTLDaWj2wtZMI5Hb0Qnj5wAZXtPgdjY8GbDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745262314; c=relaxed/simple;
-	bh=cEhy27CeZeK5QaxV6IxlodG4p2ysqvsgc8gma+Bn4Y0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mmu2K4qz0vS51hzTIvWzhpNZw4F8fCU3pPaUf+wVTQGdfbOMUDPMJ1vvaQJ1QO2UJYQ8SyeY0Hs53Cl4dCBCM60vaVoyfaiCyf3mJ7CIgnNPoXW0SNlw3Yu2b7cwLt/sERUdCRxhNjeF2s4sABQ9CesSmIzDO4vHilXUPE8Mvns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D6wGfLMY; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745262356; c=relaxed/simple;
+	bh=vyr2VbonoYO4jRQs+wnsEUf8MTooL+dC+RdsLzA0z3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dz6EDDtI6VggnunjRoh4hOL2SIA6dIltJoyPE4noYBdcHG/RreI8S60UqP0s745pSmrYXM1T2ufSnOzN3hyspQv9ppCHyNL487O8RwrIc37uKqerrP8E13yLaHUzxJ9/tojeEJuWGldjL67ciMgDD0uJ6RIbHMPGfMkYaVTFFT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tVzSsw7H; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D6wGfLMY"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af28bc68846so3723862a12.1;
-        Mon, 21 Apr 2025 12:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745262312; x=1745867112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=egqOJo53kX1P4lbE+VhU9h/iDcziStXYm40YlBK6LPA=;
-        b=D6wGfLMY2j7j3lvE/ANA0B47633rwUZWOq9lEEUBQvxsHdQ9R9W9TpSTBgvZeMv3S0
-         qedxL31BNZE0UPQBkH1wLIDSM2NHdr0Wd7lexFRNvCM/8a8e3wSmLLUkY6pnwxVWScbT
-         zCbtIaI69/L6O9YzjMBHGzhZCl2rMivVKeUerRmtSEUsBO7YzJiaxOQi6q3i2nKMAvhK
-         WrGnWiIDvUAnmYC5GuoRB3TNhw8BxsBXsRYsUfmKZSQZ4/knlGKYcJwS5VWQMArnpQ9t
-         gA+T1NU8mb+1U7wEokpI8WhzED2g73zAiSdcbixeS6AZ+LWn8OlRgR7rIPFlMA+9cfs0
-         BJGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745262312; x=1745867112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=egqOJo53kX1P4lbE+VhU9h/iDcziStXYm40YlBK6LPA=;
-        b=WXbkqV0HS5kI112vNqwngyPS6FK+FkdWZ9GsiFMfX/TY5lutgGYJR67MV61a6VRBph
-         1iPpQafLK2LYvtY3um2ptfig1aiKP61hpSDbuqTI9U9lI4twyqtkG1tiimqZzml6YjXl
-         7x35VWRXY4su/6f1DIasIqxV7Aic06j4Van4uWIsarqbV/hgaEeI3U8+/foRCYCstU1B
-         vWjXs37r/eZmbF+AGF5yOJYRHu+HV0PKzH6DRc+sAVpNNRozAKsdB+dCuKtaYaCbBvo3
-         GNmUlzlOD6uIKIThs4+s1hjC3vxi+Q+NUu1UMVqfL6dxOPJcurh84WZdqgoTOQn20WOf
-         Xkhw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2p09z+NSVwxsxoDG+4cSK2RQlcWBxWavG6WQ53q/w1KKoS4OEnLIwUPKd/T+6/H7CuR92+WBHcdqZ+3UF@vger.kernel.org, AJvYcCXGIdaAIrBzB7dXf+xYYZC//6mkEX8bAPEWbwPvyX4eZpXzMuV22mCcxvJmRUJ2FbSO3bUIxxTK23DJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjAUNxUok3fsekB50pD6pA2Y8d5VB3dqdmDkr29zZ41FTDCcIz
-	U0Q0/7qwnlJvjc1oe12ZA6D9/LVvPv5UtA7ZPK3h4rwrGJFv9crvBTMpYQSA/RI=
-X-Gm-Gg: ASbGncsPPbUJIDK5N60ic9o5LnJWn1F5orqMEHTpvvFOtpOHEd/MBK38d4DH1b87fwM
-	f9TDc/xj+GGXUqG3/MNvcPWcNFZv6wmdJvJaTJIBorA4vtv0+wmfnfcy/3X9f372bCWR/CUyXRp
-	lqdpFsaLbejDEL5+ToNLDcoxrCL9N30KvvXrfLbqfaB9HAo7xlmm/6NcJWsGPKrN02CvyZG7Yle
-	1H/QObpVG8wmvrUrM6f/nnc6o7kA31jPW9bLSIhjjP7jysbQKcrGtdkGqlP/Ih9NYdg3/YaQluv
-	R0ZmBWOIo5CPLFHc7Cezw1vtKvfK0hqyKRjGpU7niW/UK+5ZMU499iHzAA==
-X-Google-Smtp-Source: AGHT+IG+/gqtX0vOJFK0tshavpdIR3JZHVPcmtJiP25Ax4HJgjZf025N9Kpiub2relValP+7nHvjzw==
-X-Received: by 2002:a17:90b:1c0a:b0:2f2:a664:df1a with SMTP id 98e67ed59e1d1-3087bb39638mr19952075a91.2.1745262312528;
-        Mon, 21 Apr 2025 12:05:12 -0700 (PDT)
-Received: from acer-Nitro-ANV15-41.. ([61.83.230.5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df05153sm7017526a91.11.2025.04.21.12.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 12:05:12 -0700 (PDT)
-From: "shaikh.kamal" <shaikhkamal2012@gmail.com>
-To: rafael@kernel.org
-Cc: "shaikh.kamal" <shaikhkamal2012@gmail.com>,
-	Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: tables: Remove incorrect __nonstring attribute from table_sigs
-Date: Tue, 22 Apr 2025 00:34:43 +0530
-Message-ID: <20250421190444.163923-1-shaikhkamal2012@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tVzSsw7H"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LJ5jVU1001592
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 14:05:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745262345;
+	bh=XVV0UZZkpfcBv8laxWwG7iTHxnQbuJ1C+k6PoJEI+7Y=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=tVzSsw7H1vL+IfnEWGPaJs0y2HTjZtAr0MOO55kkbEWbwaOpC/y6t77xz6JoNDSlY
+	 T24CvWJUqeqpkfI7f0abqoEZw4qkccu1h55qCkbdftIKFo52ftV9c7jdHIvWiCgOFq
+	 ib/JdMVmKHJ8LXiAPeYUGqXS+CoeA/EQSQLXZnPs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LJ5jHe023127
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 14:05:45 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 14:05:45 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 14:05:45 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LJ5jEf129113;
+	Mon, 21 Apr 2025 14:05:45 -0500
+Message-ID: <54cbad41-3508-4ffa-99f5-df5618a8fd4c@ti.com>
+Date: Mon, 21 Apr 2025 14:05:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Bryan Brattlof <bb@ti.com>, Nishanth Menon <nm@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla
+	<hnagalla@ti.com>,
+        Beleswar Prasad <b-padhi@ti.com>, Andrew Davis
+	<afd@ti.com>,
+        Markus Schneider-Pargmann <msp@baylibre.com>,
+        Devarsh Thakkar
+	<devarsht@lewv0571a.ent.ti.com>
+References: <20250415153147.1844076-1-jm@ti.com>
+ <20250415153147.1844076-7-jm@ti.com>
+ <20250419150451.v3jgtgp4yisou65u@bryanbrattlof.com>
+ <20250421114042.riw2kw472murjzcc@surfer>
+ <20250421162645.gkgthbl6t2xemnbz@bryanbrattlof.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250421162645.gkgthbl6t2xemnbz@bryanbrattlof.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The table_sigs array is declared as a 2D char array with a fixed size
-(ACPI_NAMESEG_SIZE, which is 4). The use of the __nonstring attribute
-here is unnecessary and triggers a compiler warning:
+Hi Bryan,
 
-  warning: ‘nonstring’ attribute ignored on objects of type ‘const char[][4]’
+On 4/21/25 11:26 AM, Bryan Brattlof wrote:
+> On April 21, 2025 thus sayeth Nishanth Menon:
+>> On 10:04-20250419, Bryan Brattlof wrote:
+>>> On April 15, 2025 thus sayeth Judith Mendez:
+>>>> From: Devarsh Thakkar <devarsht@ti.com>
+>>>>
+>>>> For each remote proc, reserve memory for IPC and bind the mailbox
+>>>> assignments. Two memory regions are reserved for each remote processor.
+>>>> The first region of 1MB of memory is used for Vring shared buffers
+>>>> and the second region is used as external memory to the remote processor
+>>>> for the resource table and for tracebuffer allocations.
+>>>>
+>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>> Acked-by: Andrew Davis <afd@ti.com>
+>>>> Reviewed-by: Beleswar Padhi <b-padhi@ti.com>
+>>>> Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
+>>>> ---
+>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++++--
+>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>> index 1c9d95696c839..7d817b447c1d0 100644
+>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>> @@ -52,6 +52,42 @@ linux,cma {
+>>>>   			linux,cma-default;
+>>>>   		};
+>>>>   
+>>>> +		c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+>>>> +			compatible = "shared-dma-pool";
+>>>> +			reg = <0x00 0x99800000 0x00 0x100000>;
+>>>> +			no-map;
+>>>> +		};
+>>>> +
+>>>> +		c7x_0_memory_region: c7x-memory@99900000 {
+>>>> +			compatible = "shared-dma-pool";
+>>>> +			reg = <0x00 0x99900000 0x00 0xf00000>;
+>>>> +			no-map;
+>>>> +		};
+>>>> +
+>>>
+>>> I know this has been a push for our IPC and MCU+ teams for a couple
+>>> windows now, though I do want to point out that some AM62A devices
+>>> (AM62A12AQMSIAMBRQ1) will not even have a C7x.
+>>>
+>>> It's relatively easy to cut nodes out that describe the hardware in the
+>>> bootloaders, but once we start configuring them to demo something it
+>>> becomes impossible to unwind that during boot.
+>>>
+>>> We can clam we only support the superset devices but I just wanted to
+>>> make this email so I could point people to it when they inevitably ask
+>>> why their parts do not work out of the box with Linux.
+>>>
+>>> Naked-by: Bryan Brattlof <bb@ti.com>
+>>
+>>
+>> I am confused. I do not see support for AM62A1 in upstream. We have
+>> AM62A7-SK in upstream. I am not sure what direction you are suggesting
+>> here.
+> 
+> All I'm trying to point out is for every part we upstream there are >10
+> times the number of parts that for one reason or another will not make
+> it to these upstream repositories.
+> 
+> Most of these parts will have trivial changes like having lower CPU
+> counts, some will not have a GPU, MCU, PRU, or display, or maybe it's
+> just a package change and the thermal zones are different, or it's just
+> the speeds the IP can confidently run at, or it could be as simple as
+> DDR part changes. Each variant will be mostly the superset device with
+> one or two nodes disabled or modified in some way.
+> 
+> For a while now, without configuring the remote cores to demo anything,
+> it's been relatively seamless to support these variants in the
+> bootloaders by disabling or modifying the nodes that do not exist so
+> Linux can at least boot to a shell and provides a great foundation for
+> others to start their development
+> 
+> If we want to use these boards to demo a advanced usecases we can do
+> that but I worry it will come at the cost of supporting all the part
+> variants.
+> 
+> My hope was we could define the board as minimally as possible here so
+> we can maximize their flexibility with what timers, mailboxes and memory
+> carve-outs each remote processor uses.
+> 
 
-Since GCC ignores this attribute on such declarations, and it causes
-a build failure due to -Werror, remove __nonstring to fix the issue.
+Is it not agreed upon to support the superset device upstream? It seems
+like what we need is a detailed whitepaper on board bring-up for each
+part variant instead of NOT adding support for the superset device
+upstream approach.
 
-Signed-off-by: shaikh.kamal <shaikhkamal2012@gmail.com>
----
- drivers/acpi/tables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+~ Judith
 
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index b5205d464a8a..2295abbecd14 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -396,7 +396,7 @@ static u8 __init acpi_table_checksum(u8 *buffer, u32 length)
- }
- 
- /* All but ACPI_SIG_RSDP and ACPI_SIG_FACS: */
--static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst __nonstring = {
-+static const char table_sigs[][ACPI_NAMESEG_SIZE] __initconst = {
- 	ACPI_SIG_BERT, ACPI_SIG_BGRT, ACPI_SIG_CPEP, ACPI_SIG_ECDT,
- 	ACPI_SIG_EINJ, ACPI_SIG_ERST, ACPI_SIG_HEST, ACPI_SIG_MADT,
- 	ACPI_SIG_MSCT, ACPI_SIG_SBST, ACPI_SIG_SLIT, ACPI_SIG_SRAT,
--- 
-2.43.0
+
 
