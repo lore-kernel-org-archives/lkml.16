@@ -1,244 +1,145 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1302F1F5EA;
-	Mon, 21 Apr 2025 14:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6BA647;
+	Mon, 21 Apr 2025 14:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745246557; cv=none; b=qR+GnRiq29/jxJNYTBC3e4U1DDrQ3mzuV+ijFRvagdSgsinotoNRnLosZw++5tQd11ldCAW9U8+BzkC/Z/EcBnnm1amQN4rYEmxxKpX0vIhocEDhHNQLbR/5Pd6hXbAL2GOX5x6VUCiVFB0ODRsJoaKql6bCPejKcEednLj0Okg=
+	t=1745246844; cv=none; b=f2bdBu+2H+P8tSc9CA2VkIhbA5rKyCf0qMpOp8C9wZq8MRVKnGANL17dJMcHgmxqJpmUz3Wr5GczYRMLelfh9/XPHI9xTSO1/0eVW8cTvyj7rOBZSECY9cHKwTeYethzjmQY0LBkAVHx0PK4zuqMBRVFw9rHy8jnxQceQMOwwFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745246557; c=relaxed/simple;
-	bh=IEKwrGYy/VW9MQNFST4Y/K444WyRqQM3wMr2sN3ad7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C9hy2vvnV2IZjR5PCl9g0XXxTzNlpLfW+WZHInlBPzGSZZhTMUtrNM1V8hElKx5PF1RmVhV9tip02pV9l+SFjQSso7TNPJLq3y711LOvVc1E4MuD6iuJpZE5ZF0FEDO83OQ8YgP1iVFDEz66nZL0Naay3DaEly5lI4+p2Ma3m8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KgLdpA27; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745246844; c=relaxed/simple;
+	bh=GJP+NzoZRbU0xIH+5vo6gpsqentwg0czNwjfZAOG/kg=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=ql6YFPjjVEbhvQlXHeBjQRZCvIl6xJcO2MyR75cUKuwpIzyaRZlS10EC6F13pU/fXeMjLDCUGdetvZdia2d8tJp4zLd98KLM5IYZ1aOBNSUjScVZDC505IH4Rx71bZY4kyvyrXq0l20mvXz5n/YBPonJMV0aA4KX/LReQdA6asw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FhOIiwZS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KgLdpA27"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LEgQAX938257
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 09:42:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745246546;
-	bh=Bd4d4NRrmQNS8O+/gOqiB+Q+N/Yiohv30BhbtPRCdM0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=KgLdpA270J+detv6NlTL1hyXXvEizWxj20aEqCMN0PZ30FI4ZRP/UDg/tbSWKB2qG
-	 H6vAd7ZxPLC7OEulIgqig39WUnnyTTPGSiM8tJX26WGDTt1QThHvj75s0OoQe01MHc
-	 6wp8ZGNdTw8CkNTsEAF6d3IGInlcy2ySBI0r4VnQ=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LEgQQq001670
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 09:42:26 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 09:42:26 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 09:42:25 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LEgPXB089963;
-	Mon, 21 Apr 2025 09:42:25 -0500
-Message-ID: <00ba399d-7a26-4ced-8f77-334839bb54c6@ti.com>
-Date: Mon, 21 Apr 2025 09:42:25 -0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FhOIiwZS"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LA0moL011086;
+	Mon, 21 Apr 2025 14:47:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Z7yhPAhQJaMyvHPEF9d6vS
+	0lc/iN28y7qUQsWT4DGro=; b=FhOIiwZSV23aYGTDi1zRA5aTZAiyNIP5juqNGQ
+	DOR0QSOQRRZdEkrOD/Kh5xqukZ06op0NpeK2fOxUHhANfoU/hd6KBrBheEHr4u4T
+	Y6H0fVbZ6HN6TVi53CgZHuOpszJdjn8jec6wzmiUpUSIloDn9rUBFxr/dt2I37Hm
+	aCaW/J++t8s7n6Ts1CBVf3VaP1dT5b32H3yMAq1TQG+xu6JcKdlPns9QefcJ0vcK
+	4ql0FDVdH/5uSg6W/9Xdq08PdPTp+OrzH0tzCDdII4rycXUnutpBowNcGatBuKyb
+	bOAqyqfvpqhk58CYEbBBQRBvcyRmZtt49kP/Tus2r52dsexg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642u9chky-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 14:47:18 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53LElHUk028085
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 14:47:17 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 21 Apr 2025 07:47:12 -0700
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Subject: [PATCH v5 0/3] media: qcom: iris: add support for SA8775P
+Date: Mon, 21 Apr 2025 20:16:54 +0530
+Message-ID: <20250421-dtbinding-v5-0-363c1c05bc80@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 15/33] remoteproc: k3: Refactor rproc_reset()
- implementation into common driver
-To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250417182001.3903905-1-b-padhi@ti.com>
- <20250417182001.3903905-16-b-padhi@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250417182001.3903905-16-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-B4-Tracking: v=1; b=H4sIAF5aBmgC/3WOQQrCMBBFryJZG8kkpq2uvIe4SCcTnYWpNhoU6
+ d1NC0JFXL7PvMe8RKKeKYnt4iV6ypy4iwXsciHw5OKRJPvCQittlQEl/a3l6DkeZbPR0AYEC7Q
+ R5f7SU+DH1NofCp843br+OaUzjOunArNKBqmkxUbV3phQO9pd74wccYXdWYydrGeunn+QdXEb3
+ 5Bza6orxF/X/HVNcbWDKiB5C95+u8MwvAFe3rBqHAEAAA==
+X-Change-ID: 20250310-dtbinding-8921bfc151e9
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745246832; l=1452;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=GJP+NzoZRbU0xIH+5vo6gpsqentwg0czNwjfZAOG/kg=;
+ b=MZrJnwkQn6TJ0QamAk0ln8+iJmgm0+d3aY9q1C9mgUf7TPy4Wa6ewbTYzSi/6052rZqM8vv6/
+ RJUAUHhuinVC7spCzm04chx5znCM0S0XO/wVuSCq8kXV5xGyk2g0Jd8
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=TYaWtQQh c=1 sm=1 tr=0 ts=68065a76 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=uUO1Guatd2edvWoe2zcA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: -j7GK614oiUGl4tF7WE9YSXUn4fXKslU
+X-Proofpoint-GUID: -j7GK614oiUGl4tF7WE9YSXUn4fXKslU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_07,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=980 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210115
 
-On 4/17/25 1:19 PM, Beleswar Padhi wrote:
-> The rproc_reset() implementations in TI K3 DSP and M4 remoteproc drivers
-> assert reset in the same way. Refactor the above function into the
-> ti_k3_common.c driver as k3_rproc_reset() and use it throughout DSP and
-> M4 drivers for resetting the remote processor.
-> 
-> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
-> ---
-> v10: Changelog:
-> 1. Split [v9 12/26] into [v10 14/33] and [v10 15/33] patches.
-> 
-> Link to v9:
-> https://lore.kernel.org/all/20250317120622.1746415-13-b-padhi@ti.com/
-> 
->   drivers/remoteproc/ti_k3_common.c         | 25 ++++++++++++++++++++
->   drivers/remoteproc/ti_k3_common.h         |  1 +
->   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 ++---------------------
->   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 16 +++----------
->   4 files changed, 31 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
-> index aace308b49b0e..19bb6c337af77 100644
-> --- a/drivers/remoteproc/ti_k3_common.c
-> +++ b/drivers/remoteproc/ti_k3_common.c
-> @@ -105,5 +105,30 @@ void k3_rproc_kick(struct rproc *rproc, int vqid)
->   }
->   EXPORT_SYMBOL_GPL(k3_rproc_kick);
->   
-> +/* Put the remote processor into reset */
-> +int k3_rproc_reset(struct k3_rproc *kproc)
-> +{
-> +	struct device *dev = kproc->dev;
-> +	int ret;
-> +
-> +	if (kproc->data->uses_lreset) {
-> +		ret = reset_control_assert(kproc->reset);
-> +		if (ret)
-> +			dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
-> +		return ret;
-> +	}
-> +
-> +	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
-> +						    kproc->ti_sci_id);
-> +	if (ret) {
-> +		dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
-> +		if (reset_control_deassert(kproc->reset))
-> +			dev_warn(dev, "local-reset deassert back failed\n");
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(k3_rproc_reset);
-> +
->   MODULE_LICENSE("GPL");
->   MODULE_DESCRIPTION("TI K3 common Remoteproc code");
-> diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
-> index 6ae7ac4ec5696..f3400fc774766 100644
-> --- a/drivers/remoteproc/ti_k3_common.h
-> +++ b/drivers/remoteproc/ti_k3_common.h
-> @@ -90,4 +90,5 @@ struct k3_rproc {
->   
->   void k3_rproc_mbox_callback(struct mbox_client *client, void *data);
->   void k3_rproc_kick(struct rproc *rproc, int vqid);
-> +int k3_rproc_reset(struct k3_rproc *kproc);
->   #endif /* REMOTEPROC_TI_K3_COMMON_H */
-> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> index 0a8c9e61393d2..f8a5282df5b71 100644
-> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> @@ -24,30 +24,6 @@
->   
->   #define KEYSTONE_RPROC_LOCAL_ADDRESS_MASK	(SZ_16M - 1)
->   
-> -/* Put the DSP processor into reset */
-> -static int k3_dsp_rproc_reset(struct k3_rproc *kproc)
-> -{
-> -	struct device *dev = kproc->dev;
-> -	int ret;
-> -
-> -	if (kproc->data->uses_lreset) {
-> -		ret = reset_control_assert(kproc->reset);
-> -		if (ret)
-> -			dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
-> -		return ret;
-> -	}
-> -
-> -	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
-> -						    kproc->ti_sci_id);
-> -	if (ret) {
-> -		dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
-> -		if (reset_control_deassert(kproc->reset))
-> -			dev_warn(dev, "local-reset deassert back failed\n");
-> -	}
-> -
-> -	return ret;
-> -}
-> -
->   /* Release the DSP processor from reset */
->   static int k3_dsp_rproc_release(struct k3_rproc *kproc)
->   {
-> @@ -201,7 +177,7 @@ static int k3_dsp_rproc_stop(struct rproc *rproc)
->   {
->   	struct k3_rproc *kproc = rproc->priv;
->   
-> -	k3_dsp_rproc_reset(kproc);
-> +	k3_rproc_reset(kproc);
->   
->   	return 0;
->   }
-> @@ -565,7 +541,7 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
->   				return dev_err_probe(dev, ret, "failed to get reset status\n");
->   			} else if (ret == 0) {
->   				dev_warn(dev, "local reset is deasserted for device\n");
-> -				k3_dsp_rproc_reset(kproc);
-> +				k3_rproc_reset(kproc);
->   			}
->   		}
->   	}
-> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> index 8a6917259ce60..7d5b75be2e4f8 100644
-> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
-> @@ -65,11 +65,9 @@ static int k3_m4_rproc_prepare(struct rproc *rproc)
->   	 * Ensure the local reset is asserted so the core doesn't
->   	 * execute bogus code when the module reset is released.
->   	 */
-> -	ret = reset_control_assert(kproc->reset);
-> -	if (ret) {
-> -		dev_err(dev, "could not assert local reset\n");
-> +	ret = k3_rproc_reset(kproc);
-> +	if (ret)
->   		return ret;
-> -	}
->   
->   	ret = reset_control_status(kproc->reset);
->   	if (ret <= 0) {
-> @@ -374,16 +372,8 @@ static int k3_m4_rproc_start(struct rproc *rproc)
->   static int k3_m4_rproc_stop(struct rproc *rproc)
->   {
->   	struct k3_rproc *kproc = rproc->priv;
-> -	struct device *dev = kproc->dev;
-> -	int ret;
->   
-> -	ret = reset_control_assert(kproc->reset);
-> -	if (ret) {
-> -		dev_err(dev, "local-reset assert failed, ret = %d\n", ret);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> +	return k3_rproc_reset(kproc);
+add support for video hardware acceleration on SA8775P platform.
 
-This doesn't feel right. The new common k3_rproc_reset() function
-matches what ti_k3_dsp_remoteproc.c did for reset, you made it that
-way in the previous patch [14/33]. But it doesn't match what this
-M4 version does (yes I know logically they are the same as `uses_lreset`
-will be always true for M4). Maybe you want to do the same as you
-did for DSP to the M4 driver first, before you make this change so
-it is 100% clear the code is the same (and so bisect lands on the
-right patch should someday this be an issue).
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+Changes in v5:
+- Fix clock corner and a power domain specifier
+- Link to v4: https://lore.kernel.org/all/20250321-dtbinding-v4-0-6abd4575bff4@quicinc.com
 
-Also, the common k3_rproc_reset() calls put_device() unconditionally.
-Something that wasn't done at all here in the M4 prepare() and stop()
-functions.
+Changes in v4:
+- Fix the order of video node.
+- Link to v3: https://lore.kernel.org/r/20250320-dtbinding-v3-0-2a16fced51d5@quicinc.com
 
-These two changes make this patch not strictly a pure "refactor"
-patch, which IMHO should in no way change the calls being made nor
-the logical flow, only the code structure.
+Changes in v3:
+- Fix nit review comments.
+- Link to v2: https://lore.kernel.org/r/20250320-dtbinding-v2-0-8d8eaa4e76cc@quicinc.com
 
-Andrew
+Changes in v2:
+- Drop 01/04 patch as it was not needed.
+- Introduce sa8775p as fallback compatible to sm8550.
+- Move firmware files to board DT
+- Link to v1: https://lore.kernel.org/r/20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com
 
->   }
->   
->   /*
+---
+Vikash Garodia (3):
+      dt-bindings: media: qcom,sm8550-iris: document SA8775p IRIS accelerator
+      arm64: dts: qcom: sa8775p: add support for video node
+      arm64: dts: qcom: sa8775p-ride: enable video
+
+ .../bindings/media/qcom,sm8550-iris.yaml           |  7 ++-
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi         |  6 ++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 71 ++++++++++++++++++++++
+ 3 files changed, 83 insertions(+), 1 deletion(-)
+---
+base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+change-id: 20250310-dtbinding-8921bfc151e9
+
+Best regards,
+-- 
+Vikash Garodia <quic_vgarodia@quicinc.com>
+
