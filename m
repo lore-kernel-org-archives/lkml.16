@@ -1,112 +1,142 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464DC19ADA4;
-	Mon, 21 Apr 2025 09:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A391DA62E;
+	Mon, 21 Apr 2025 09:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228009; cv=none; b=X/EoMWAxNy/x2REiBEPk1edG9pKktUTJ5Ls4BPOK25qNqtk/HOmqi4s33BwvzFQQfO55Ptf2AHHR0o4G2AKtLhH45QykPfYYqLp9Tlk5ZIAsx+TfziRCkAUGnTRAhRlerCYGRGVFU/hRLt+1yC9ml/jZg5CQev5VdJol3cvnluU=
+	t=1745228028; cv=none; b=YIliCSW+ztuEDDJBx9LoPvj60Eeat8WmwjJ8Z6BIdOqYwyrWcq6mw46g8pScj7LzzosmBbXZ6zTsbzeezQbUs4BN01uJt98WQz40enTaryq/dQs/xGICaW8g/xf30RzyQyIg4cCuujMlsb8oDd/zfDUkMmRK8/czqJAFtgKTFLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228009; c=relaxed/simple;
-	bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lJ4SvWe1JZe7pQ3sZRr7R7LZN1Eb8njM8lv862QNUgxUdDBA8tsWQet1gfx3NY02QLF3W5/CB9Fvv7AiLOqlm47HrUCOV51boqHrjjM5H0PhqEQFFdDpbnqovadqviwec/Ezn4CUFsSQ9X+S72+eOify5YfGUR8GEgLD5FqtwuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NsKCMx0E; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745228028; c=relaxed/simple;
+	bh=AjiLQSurYGYFui7FZ4Kvgm5WBn3PPg41yRmc9IaTzas=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RTszs3Zqo6vr8QjS/Ii1UMZq24LvNM18GbQqknnH2vUkHHr00UCzVMVQxHSYlExOCptEjR291f0Wp3TczXpBJNRBjdGTvOYCVwSLoXIPF7NJn8qMhFOaLDPlXzkmw9VVskS9cUpXWu+5hoEx4/EbO+xFI22MTDT5VRg9RFJdIeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=ZNoe6BCl; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NsKCMx0E"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso4334264a91.3;
-        Mon, 21 Apr 2025 02:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745228007; x=1745832807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
-        b=NsKCMx0EDOtwtfBkK/6tHptgElCVixq9fdKDHotuhWK6FfqvX8pNVaJ6delVKzWBcm
-         lEAz4ZhmFE7Ayqg9Zjz7UBpsdJVQiHQ4vpgMXtNXTDNzV0D4Rf/k+PLea/HDxJ7KjQ4q
-         7VJr9as3Tfu+T2262mk/zIEzbFsalAKvdO1qevPKtbCoWPZxKX+Ra8BO94kWRzcNnr/q
-         C7tOmr5UkKmDiJdIJ035alsLnyvsrYDLiR6Pu7RCJk5HEEu0xXkvqSfK7EFjeD+jDiuF
-         t21dznQWunnqsWDPwqiIrXsCpYqzHtzCSQ5Xvl6dqQTo7L8z/VdA4BI16237EWfmratH
-         HSAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745228007; x=1745832807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bCswh5FBBRyF2VqJQOKVkSI9+RFrKt7H073L5B8LSVE=;
-        b=F3uj/iLY5VZrRq7K1pcpX1xyAI6AjgwpMdGz8pY051EYI7iuXDlNCUzU0d7hbt1LIA
-         RlxxnzDX35+HZUdyJfIVFMZsti1IJN3ziDmt91RmeYq/WqgMOhwV6Rj9dfPCST1iM8wu
-         Xn+OiogcQJPeBtc7DdfKMjx6MuHx6fVmr38mb/ODs1x0JyLHCj4hJst1U+0znu/u+Dn1
-         vhXJPuBjqguVDzzndj8ZIddfsrxSmc/LcS5gauv6UdO5UZOgcefNlhNQap52QYSfp8l1
-         IdIg17kJqdgZrWJgDGxhimEKmHztikNdaDvQlgDvMXD2P4Ats5vWGvIl1Kiqcwibnoct
-         PVkg==
-X-Forwarded-Encrypted: i=1; AJvYcCV++/CVr04WF1IRjdOvn8vOWapNO+DnOyYQwBupoZ0C5MHroHm51aT0Ysu73m2dC5yhWaG/8dXjfQcAsSS7@vger.kernel.org, AJvYcCW7avKsHF7xSx+Nulu9cgsHmy/B3a+5jAewop8IDJRE+GGw+0VcYrySo5/4fvjzWA/6SOK4SJq5fj/B1okZZQ==@vger.kernel.org, AJvYcCWEiUIYkP9Ov54qI6oZYPTi/Q6gow+rfVNv2eOgyLqlRK+pGxrqIpYOL8LFi2XcktNrfkbO+09yL4U7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWRXAn+BUdRSv3Y+VC/4XROBa7rIWCyJGIVc1YbB9XM6gz5oL3
-	8xfUPsIX32pu6ct7ZpyzufydA5SBHhyqX8hYWoOxEBLc7On23Sp7HTA2Geu6/LIOr0qv8YzS7ni
-	Q7BBOuWSwTf1+YgeD3aTeQVMAOFc=
-X-Gm-Gg: ASbGncuBgVICiAJKuZqZU5DbKXsG3cWlDeTre6QLoVWS2dEbUOxglYaw9c0KEDJJr/q
-	1sq3q6HrGZt70UASLvRibWB3eps4JcvALcVa782Mo5gaH+oKbtQSv4q/nUgIyKnOqM47Sg3jy14
-	asgl8Cl8Ww1GFg+1bJvhvdqP+8vjBcJwK198IhCgI94WHxUSwrr4bTVw==
-X-Google-Smtp-Source: AGHT+IHrv/CfywC3Z3w3v+tLaCUyWoTMwBYk/eQj5k5woE2zOueaVZuMH+tFBRRVB2z8ZWvLPsMmutvF4JK+qBcJAgo=
-X-Received: by 2002:a17:90b:17c9:b0:308:5273:4dfd with SMTP id
- 98e67ed59e1d1-3087bbc19c7mr12876797a91.26.1745228007374; Mon, 21 Apr 2025
- 02:33:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="ZNoe6BCl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1745228024; bh=0fW+/UjdGfFnzd+EIbCwouM/Fsc8JmJBl2eRcLAaljY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=ZNoe6BClon1RARJg/EpFcIiTktCOgSbom2/RjSc35KJ5bEKxScaX3xLtqUPt6W7AS
+	 UH5oL6iZOW2a6Oz/5QsgBgCQgZmt3yb1CfKdpjBHmjEMWUZ0s2DLbvJZBwXQG7IAN9
+	 4CPCzwKc6FOm2oJrgUGAUW1Z7CNhjN66b4FKNSJ8Z23+Kh1aeTkvuiJE4B6vtFbMnP
+	 P0vDSqeT6JKTLsUkn27pW7BVZZAhT9w3m5UoS9bIPYX7/he4jsdjB4+h7do/W1v43Y
+	 f7jpakn0dcYHWXsXZAkiBve1N+4/WnEAaiWN9141VAdoGMB7IRmNPG7W1RywNgTugr
+	 s5LprqqNUoqew==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0YN440yz8sm5;
+	Mon, 21 Apr 2025 11:33:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX18Mub6EG2EVYPnJoCjswmi392jCPxuiAAw=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0YJ60Bwz8sgG;
+	Mon, 21 Apr 2025 11:33:40 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [PATCH bpf-next v2 04/11] bpf: Return -EFAULT on internal errors
+Date: Mon, 21 Apr 2025 11:17:55 +0200
+Message-ID: <20250421091802.3234859-5-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421-a5xx-schema-v1-0-7d96b889322a@mainlining.org>
- <20250421-a5xx-schema-v1-2-7d96b889322a@mainlining.org> <nxv2k2ofiao47w7gmqcgfgn57heucs6yp2og3lkzlavjarado7@p5u4663yw3oz>
- <4688d4d4ecee7078e535bb940b6055b9@mainlining.org>
-In-Reply-To: <4688d4d4ecee7078e535bb940b6055b9@mainlining.org>
-From: Dmitry Baryshkov <dbaryshkov@gmail.com>
-Date: Mon, 21 Apr 2025 12:33:15 +0300
-X-Gm-Features: ATxdqUGr9nPPKaBUMkNhLDRXQwqcoCYwQ0iMeD2IUAxFlF5xQe-JH9lP3m5xflQ
-Message-ID: <CALT56yOyowxkeu5a7MixkujYh8UmBb8wy-L2y3m5Pp-zEZ6p8Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: msm8953: sort adreno clocks
-To: barnabas.czeman@mainlining.org
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Clark <robdclark@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 21 Apr 2025 at 12:22, <barnabas.czeman@mainlining.org> wrote:
->
-> On 2025-04-21 10:16, Dmitry Baryshkov wrote:
-> > On Mon, Apr 21, 2025 at 05:09:22AM +0200, Barnab=C3=A1s Cz=C3=A9m=C3=A1=
-n wrote:
-> >> Sort adreno clocks in alphabetical order.
-> >
-> > Why? The order of the clocks here matches the order in which they
-> > should
-> > be brought up.
-> Simple misunderstanding from previous attempts of documenting the
-> alwayson clock.
-> By the way i have find out a508/a509/a512 clock bring up order is
-> different from downstream.
-> Upstream: iface, rbmmtimer, mem, mem_iface, rbcpr, core
-> Downstream: core, iface, rbmmtimer, mem, alt_mem_iface, rbcpr
-> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-074=
-00-sdm660.0/arch/arm/boot/dts/qcom/sdm630-gpu.dtsi#L85
-> https://git.codelinaro.org/clo/la/kernel/msm-4.4/-/blob/LA.UM.7.2.c27-074=
-00-sdm660.0/arch/arm/boot/dts/qcom/sdm660-gpu.dtsi#L87
-> Should I fix it?
+This prevents us from trying to recover from these on speculative paths
+in the future.
 
-Good question. I will check the msm-4.4 sources later.
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
+Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
+---
+ kernel/bpf/verifier.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 55c1d7ada098..27d3bc97a9e0 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -11667,7 +11667,7 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 				verbose(env, "verifier internal error:");
+ 				verbose(env, "func %s has non-overwritten BPF_PTR_POISON return type\n",
+ 					func_id_name(func_id));
+-				return -EINVAL;
++				return -EFAULT;
+ 			}
+ 			ret_btf = btf_vmlinux;
+ 			ret_btf_id = *fn->ret_btf_id;
+@@ -15261,12 +15261,12 @@ static int adjust_reg_min_max_vals(struct bpf_verifier_env *env,
+ 	if (WARN_ON_ONCE(ptr_reg)) {
+ 		print_verifier_state(env, vstate, vstate->curframe, true);
+ 		verbose(env, "verifier internal error: unexpected ptr_reg\n");
+-		return -EINVAL;
++		return -EFAULT;
+ 	}
+ 	if (WARN_ON(!src_reg)) {
+ 		print_verifier_state(env, vstate, vstate->curframe, true);
+ 		verbose(env, "verifier internal error: no src_reg\n");
+-		return -EINVAL;
++		return -EFAULT;
+ 	}
+ 	err = adjust_scalar_min_max_vals(env, insn, dst_reg, *src_reg);
+ 	if (err)
+-- 
+2.49.0
 
---=20
-With best wishes
-Dmitry
