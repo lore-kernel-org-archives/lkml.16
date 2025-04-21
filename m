@@ -1,267 +1,137 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670F01D63D3;
-	Mon, 21 Apr 2025 21:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1F22F2E;
+	Mon, 21 Apr 2025 21:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271694; cv=none; b=HpurmeLCfugvOjnBkIDJgYSM/Duv1dVK+YvINygTtWQU3Ks1vsRkYgN+XUMWSG0dV2/lr8prDC6CegJL/t1nYNScO2hcj28bIbqwihWGczqTl2xYyWO1GKj1BIIGUGA/zvmEQqMZtyzaJeISP8cVn6vgIJjM2Jpv/cUTmtnMhSA=
+	t=1745271867; cv=none; b=TM0EnkDBberlXOhGmU6PIgROVsdpH9tkOEnPPYtaPrbxVrdlADeQmE7kn3HRvFuxeAvC3eYCbItgbsH+hd/K5lWI9z7kVFLlXavC+sh/fOuxRSG5oEhw//fBcr+XSX2LHwd6w4Cxt4aDNcw50JlSvrEedFyZKdcxpPWhule0LYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271694; c=relaxed/simple;
-	bh=ngbOkPt44/5lw29YiWRn3ahAnnvgeNx9uKhvIob9OW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuBSxEb47w0757Ys36FeVXy/in95wtqf5aQ9Rodnq75G+F6m1AxaunO76CaqPz+29C+JuBNxfYPoQd3zJgSgtFfANWQVVM15nzkw6tc05VbxfzXT989G6WLIBKYrqXLynwcaTiCN5i+fFVEvhBn0qbia8g3nzKQtT87x5jZz3oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YsJXTjO7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745271867; c=relaxed/simple;
+	bh=PT5gupkicFt2esXi8ztZd0p0piQA/lhlpgm4nsM6Gak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZcBBZ2i19nGtLZrikHGuGAo+TrU4tOiQ84qQP7jJQBC7kR1IDjIVuA6ROr5rcUCODYCzr6V5knjWadl/qmQ5k/ghSdr7VG/0PZH4ceD9aaonKp62cqKAUiUSGujTTcKNMk5FyYPsBNiHICwOI7ZA05MsVBr9wWtV3QAPY1gYJnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GbSjsjQD; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YsJXTjO7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 439426D6;
-	Mon, 21 Apr 2025 23:39:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745271563;
-	bh=ngbOkPt44/5lw29YiWRn3ahAnnvgeNx9uKhvIob9OW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YsJXTjO7jyrXG2ntRWEgm8DS3eQK5PNbbQSQvl0CioGBsYAARezH/bJNWZJOHxF+k
-	 0a1zIMuFlBxzlodxTclryAlgbzhP+0vxh0F8H6Dl3HnDGnPCP93x8XhzP6eG6dqyU1
-	 kwukkO79y5qAhhS7kLZptWvySWOX5qZpgrvZaGUw=
-Date: Tue, 22 Apr 2025 00:41:28 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 10/13] media: imx8mq-mipi-csi2: Add support for
- i.MX8QXP
-Message-ID: <20250421214128.GR17813@pendragon.ideasonboard.com>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-10-ef695f1b47c4@nxp.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GbSjsjQD"
+Received: from [100.70.160.93] (unknown [172.172.34.12])
+	by linux.microsoft.com (Postfix) with ESMTPSA id EC27F20BCAD1;
+	Mon, 21 Apr 2025 14:44:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EC27F20BCAD1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1745271865;
+	bh=aqS4FuLxGEljkPeVAmETGzCYTa7oTLpRxOsxhZi2z6I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GbSjsjQDyLZCMRTA1svAS4y/9qHUB+OZmR0RALHX7CiHBX0SfVDQF2KvSK/aRO5Eh
+	 iS4wa32R1E8AI+ZpHnNY6B7Yxbxk2a+kpdOHCMOyvB+YEfqMVPxAavxLO747qIkUzH
+	 PLMsOCr0PoA0zODXoafNJko3zm3p9RoVwF3oMBj4=
+Message-ID: <2434013a-72d2-450d-a043-fcea916ef22d@linux.microsoft.com>
+Date: Mon, 21 Apr 2025 14:44:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408-8qxp_camera-v4-10-ef695f1b47c4@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap segments
+To: Mimi Zohar <zohar@linux.ibm.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+ roberto.sassu@huawei.com, eric.snowberg@oracle.com, ebiederm@xmission.com,
+ paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+ linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@hansenpartnership.com, vgoyal@redhat.com, dyoung@redhat.com
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+ <20250416021028.1403-4-chenste@linux.microsoft.com>
+ <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+ <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
+ <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
+ <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+ <6c3aca6815edf25828bad6f0b4587a040ada03c5.camel@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <6c3aca6815edf25828bad6f0b4587a040ada03c5.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Frank,
+On 4/21/2025 2:35 PM, Mimi Zohar wrote:
+> On Mon, 2025-04-21 at 13:40 -0700, steven chen wrote:
+>> On 4/21/2025 7:18 AM, Mimi Zohar wrote:
+>>> On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
+>>>> On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
+>>>>> On 04/15/25 at 07:10pm, steven chen wrote:
+>>>>>> From: Steven Chen <chenste@linux.microsoft.com>
+>>>>>    ^^^^^^
+>>>> As James Bottomley previously explained[1], if you haven't made any changes to
+>>>> Tushar's patch, then the very first line of the patch description would be
+>>>> "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a blank line.
+>>>> If there is a minor change, you would add "<your email address>: explanation".
+>>>> For example:
+>>>>
+>>>> Steven Chen <chenste@linux.microsoft.com>: modified patch description
+>>> To clarify: This line would be included below with your Signed-off-by tag.
+>>>
+>>>> [1]
+>>>> https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81.camel@HansenPartnership.com/
+>>>>
+>>>>>> Implement kimage_map_segment() to enable IMA to map the measurement log
+>>>>>> list to the kimage structure during the kexec 'load' stage. This function
+>>>>>> gathers the source pages within the specified address range, and maps them
+>>>>>> to a contiguous virtual address range.
+>>>>>>
+>>>>>> This is a preparation for later usage.
+>>>>>>
+>>>>>> Implement kimage_unmap_segment() for unmapping segments using vunmap().
+>>>>>>
+>>>>>> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>>>     ^^^^^^
+>>>> Neither "Author:" nor "From:" belong here.  Please remove.
+>>>>
+>>>>>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>>>>>     ^^^^^^^
+>>>> Having Tushar's "Signed-off-by" tag and yours below indicate that you modified
+>>>> the original author's patch.
+>>> To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below indicate
+>>> that you modified the original author's patch.
+>> Hi Mimi,
+>>
+>> I will update it in next version.
+> Sigh, after reviewing your discussion with Baoquan, I'm not sure whether my
+> comment this morning added more confusion.
+>
+> Option 1: Include a single "From:" line at the very top to change the author
+> from yourself to someone else.  The following from line would make Tushar the
+> patch author:  From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>
+> In addition, any minor changes you made should be added before your Signed-off-
+> by tag.  For example: Steven Chen <chenste@linux.microsoft.com>: modified patch
+> description
+>
+> Option 2: As mentioned previously and now discussed with Baoquan, adding "Co-
+> developed-by:"
+>
+>> Just wandering are you done reviewing or still need more time?
+> Yes, I just finished reviewing/testing.  The patch descriptions are looking much
+> better.  As Baoquan reminded you, please remember to update the "ima: define and
+> call ima_alloc_kexec_file_buf()" patch description.
+>
+> thanks,
+>
+> Mimi
+Thanks a lot!
+>>>>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>>>>> Cc: Baoquan He <bhe@redhat.com>
+>>>>>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>>>>>> Cc: Dave Young <dyoung@redhat.com>
+>>>>>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>>>>>     ^^^^^
+>>>>>
+>>>>> The signing on this patch is a little confusing. I can't see who is the
+>>>>> real author, who is the co-author, between you and Tushar. You may need
+>>>>> to refer to Documentation/process/5.Posting.rst to make that clear.
+>>>>>
+>>>>>> Acked-by: Baoquan He <bhe@redhat.com>
 
-Thank you for the patch.
 
-On Tue, Apr 08, 2025 at 05:53:08PM -0400, Frank Li wrote:
-> Add support for i.MX8QXP, which has a dedicated control and status register
-> (CSR) space. Enable obtaining the second register space and initializing
-> PHY and link settings accordingly.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v3 to v4
-> - remove reset_delay
-> - sort register field defination
-> - fix error messag in dev_err_probe
-> - fix comments
-> - use true for 1
-> - regmap_clear_bits(state->phy_gpr, CSI2SS_CTRL_CLK_RESET, CSI2SS_CTRL_CLK_RESET_EN);
-> in imx8qxp_gpr_disable()
-> - use regmap_write to clean register at imx8qxp_gpr_enable()
-> - remove reduntant CSI2SS_PLM_CTRL_POLARITY
-> - rename register DATA_TYPE to DATA_TYPE_DISABLE_BF
-> 
-> change from v2 to v3
-> - use dedicate csr reg to control phy and link settings.
-> 
-> Change from v1 to v2
-> - change 8QM go 8QXP, 8QM will failback to 8QXP to keep consisense with
-> phy drivers
-> ---
->  drivers/media/platform/nxp/imx8mq-mipi-csi2.c | 111 ++++++++++++++++++++++++++
->  1 file changed, 111 insertions(+)
-> 
-> diff --git a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> index 59ec7107b4508..c6eb6dd0d9e5a 100644
-> --- a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> +++ b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> @@ -5,6 +5,7 @@
->   * Copyright (C) 2021 Purism SPC
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/delay.h>
-> @@ -88,6 +89,7 @@ static const char * const imx8mq_mipi_csi_clk_id[CSI2_NUM_CLKS] = {
->  struct imx8mq_plat_data {
->  	int (*enable)(struct csi_state *state, u32 hs_settle);
->  	void (*disable)(struct csi_state *state);
-> +	bool use_reg_csr;
->  };
->  
->  /*
-> @@ -167,6 +169,95 @@ static const struct imx8mq_plat_data imx8mq_data = {
->  	.enable = imx8mq_gpr_enable,
->  };
->  
-> +/* -----------------------------------------------------------------------------
-> + * i.MX8QXP
-> + */
-> +
-> +#define CSI2SS_PL_CLK_INTERVAL_US		100
-> +#define CSI2SS_PL_CLK_TIMEOUT_US		100000
-> +
-> +#define CSI2SS_PLM_CTRL				0x0
-> +#define CSI2SS_PLM_CTRL_ENABLE_PL		BIT(0)
-> +#define CSI2SS_PLM_CTRL_VSYNC_OVERRIDE		BIT(9)
-> +#define CSI2SS_PLM_CTRL_HSYNC_OVERRIDE		BIT(10)
-> +#define CSI2SS_PLM_CTRL_VALID_OVERRIDE		BIT(11)
-> +#define CSI2SS_PLM_CTRL_POLARITY_HIGH		BIT(12)
-> +#define CSI2SS_PLM_CTRL_PL_CLK_RUN		BIT(31)
-> +
-> +#define CSI2SS_PHY_CTRL				0x4
-> +#define CSI2SS_PHY_CTRL_RX_ENABLE		BIT(0)
-> +#define CSI2SS_PHY_CTRL_AUTO_PD_EN		BIT(1)
-> +#define CSI2SS_PHY_CTRL_DDRCLK_EN		BIT(2)
-> +#define CSI2SS_PHY_CTRL_CONT_CLK_MODE		BIT(3)
-> +#define CSI2SS_PHY_CTRL_RX_HS_SETTLE_MASK	GENMASK(9, 4)
-> +#define CSI2SS_PHY_CTRL_RTERM_SEL		BIT(21)
-> +#define CSI2SS_PHY_CTRL_PD			BIT(22)
-> +
-> +#define CSI2SS_DATA_TYPE_DISABLE_BF		0x38
-> +#define CSI2SS_DATA_TYPE_DISABLE_BF_MASK	GENMASK(23, 0)
-> +
-> +#define CSI2SS_CTRL_CLK_RESET			0x44
-> +#define CSI2SS_CTRL_CLK_RESET_EN		BIT(0)
-> +
-> +static int imx8qxp_gpr_enable(struct csi_state *state, u32 hs_settle)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* Clear format */
-> +	regmap_clear_bits(state->phy_gpr,
-> +			  CSI2SS_DATA_TYPE_DISABLE_BF, CSI2SS_DATA_TYPE_DISABLE_BF_MASK);
-
-	regmap_clear_bits(state->phy_gpr, CSI2SS_DATA_TYPE_DISABLE_BF,
-			  CSI2SS_DATA_TYPE_DISABLE_BF_MASK);
-
-> +
-> +	regmap_write(state->phy_gpr, CSI2SS_PLM_CTRL, 0x0);
-> +	regmap_write(state->phy_gpr, CSI2SS_PHY_CTRL, 0x0);
-
-This write to CSI2SS_PHY_CTRL is overridden by the next line. Is it
-needed ?
-
-> +
-> +	regmap_write(state->phy_gpr, CSI2SS_PHY_CTRL,
-> +		     FIELD_PREP(CSI2SS_PHY_CTRL_RX_HS_SETTLE_MASK, hs_settle) |
-> +		     CSI2SS_PHY_CTRL_RX_ENABLE | CSI2SS_PHY_CTRL_DDRCLK_EN |
-> +		     CSI2SS_PHY_CTRL_CONT_CLK_MODE | CSI2SS_PHY_CTRL_PD |
-> +		     CSI2SS_PHY_CTRL_RTERM_SEL | CSI2SS_PHY_CTRL_AUTO_PD_EN);
-> +
-> +	ret = regmap_read_poll_timeout(state->phy_gpr, CSI2SS_PLM_CTRL,
-> +				       val, !(val & CSI2SS_PLM_CTRL_PL_CLK_RUN),
-> +				       CSI2SS_PL_CLK_INTERVAL_US,
-> +				       CSI2SS_PL_CLK_TIMEOUT_US);
-> +
-> +	if (ret) {
-> +		dev_err(state->dev, "Timeout waiting for Pixel-Link clock");
-
-Missing \n at end of string.
-
-> +		return ret;
-> +	}
-> +
-> +	/* Enable Pixel link Master */
-> +	regmap_set_bits(state->phy_gpr, CSI2SS_PLM_CTRL,
-> +			CSI2SS_PLM_CTRL_ENABLE_PL | CSI2SS_PLM_CTRL_VALID_OVERRIDE);
-> +
-> +	/* PHY Enable */
-> +	regmap_clear_bits(state->phy_gpr, CSI2SS_PHY_CTRL,
-> +			  CSI2SS_PHY_CTRL_PD | CSI2SS_PLM_CTRL_POLARITY_HIGH);
-> +
-> +	/* Release Reset */
-> +	regmap_set_bits(state->phy_gpr, CSI2SS_CTRL_CLK_RESET, CSI2SS_CTRL_CLK_RESET_EN);
-> +
-> +	return ret;
-> +}
-> +
-> +static void imx8qxp_gpr_disable(struct csi_state *state)
-> +{
-> +	/* Disable Pixel Link */
-> +	regmap_write(state->phy_gpr, CSI2SS_PLM_CTRL, 0x0);
-> +
-> +	/* Disable PHY */
-> +	regmap_write(state->phy_gpr, CSI2SS_PHY_CTRL, 0x0);
-> +
-> +	regmap_clear_bits(state->phy_gpr, CSI2SS_CTRL_CLK_RESET, CSI2SS_CTRL_CLK_RESET_EN);
-
-	regmap_clear_bits(state->phy_gpr, CSI2SS_CTRL_CLK_RESET,
-			  CSI2SS_CTRL_CLK_RESET_EN);
-
-With those small issues addressed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +};
-> +
-> +static const struct imx8mq_plat_data imx8qxp_data = {
-> +	.enable = imx8qxp_gpr_enable,
-> +	.disable = imx8qxp_gpr_disable,
-> +	.use_reg_csr = true,
-> +};
-> +
->  static const struct csi2_pix_format imx8mq_mipi_csi_formats[] = {
->  	/* RAW (Bayer and greyscale) formats. */
->  	{
-> @@ -865,6 +956,25 @@ static int imx8mq_mipi_csi_parse_dt(struct csi_state *state)
->  		return PTR_ERR(state->rst);
->  	}
->  
-> +	if (state->pdata->use_reg_csr) {
-> +		const struct regmap_config regmap_config = {
-> +			.reg_bits = 32,
-> +			.val_bits = 32,
-> +			.reg_stride = 4,
-> +		};
-> +		void __iomem *base;
-> +
-> +		base = devm_platform_ioremap_resource(to_platform_device(dev), 1);
-> +		if (IS_ERR(base))
-> +			return dev_err_probe(dev, IS_ERR(base), "Missing CSR register\n");
-> +
-> +		state->phy_gpr = devm_regmap_init_mmio(dev, base, &regmap_config);
-> +		if (IS_ERR(state->phy_gpr))
-> +			return dev_err_probe(dev, PTR_ERR(state->phy_gpr),
-> +					     "Failed to init CSI MMIO regmap\n");
-> +		return 0;
-> +	}
-> +
->  	ret = of_property_read_u32_array(np, "fsl,mipi-phy-gpr", out_val,
->  					 ARRAY_SIZE(out_val));
->  	if (ret) {
-> @@ -984,6 +1094,7 @@ static void imx8mq_mipi_csi_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id imx8mq_mipi_csi_of_match[] = {
->  	{ .compatible = "fsl,imx8mq-mipi-csi2", .data = &imx8mq_data },
-> +	{ .compatible = "fsl,imx8qxp-mipi-csi2", .data = &imx8qxp_data },
->  	{ /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, imx8mq_mipi_csi_of_match);
-
--- 
-Regards,
-
-Laurent Pinchart
