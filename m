@@ -1,172 +1,145 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2F319F12D;
-	Mon, 21 Apr 2025 20:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CAA1EF090;
+	Mon, 21 Apr 2025 20:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745266376; cv=none; b=uPfqGsEb1MjZ6ACJ1fzSfjodc4SUpXPQnUF8yHoqXuA5XW4ubmOJlgD4PJHThmyxlYYykIRYuF33NwnS5QY/zaIHvAHn8mL+107ojSpEEXzyvgSg8Iw9z/xWfIdebrvhJauTTgvucJMNiMjvyR/WJY+ayehcg86RiPBtKiOGwzg=
+	t=1745266388; cv=none; b=snZ3DF1Q7Ri4bUZR3oE13o4gZHsCl85yusITwP2qf8RtCxVd/UGsN5Nm7fRh4YrlM9JBRH5qiY6IC2rVHF4ARTwMw4D5AlwDr/IH//sznoJPwiay2l7R35YruSTHU6B1rtcr3IcfP3KhhNBh9lklqU3LRYeAuOOK26J/gCJ9wQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745266376; c=relaxed/simple;
-	bh=HqMx7zMToJ/PhryrEWssLhFhMlxyMymuvXXy8mbKOnE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EFIY8YL0PI+7Nimk1fq1hr5v6YgRgKETu+Rv4B67jmwvrofKByaZc/M3oqxx2XnEHpP+eW6TwUvW3w1jvrzygFimTM4I++CUtjIym1vjGW98MmmhtCSME+QqKCldcPUqVfLrUws8yUYFOQw3FEGVB24ehDkIFWGpqYIyEgiPlCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=LefJY4Gf; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1745266388; c=relaxed/simple;
+	bh=KuPglRXXva+tRt/1RLlrTkqN4JV8/fN1ppPKTXytjUk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oKB5HQHt4FlOOsFz2zy6+Mvj67FKk62ZPilJvETQqwYGmHRWT6i0OxYgL3jUjG3CIMcL6bfno8YKhI1kyRK/QF382cA63rgxp/R973aFCv3U+bKutPWlmYqOTKoBJlYbVCGACVVo1jwS0AyYHyjqMeuuCFqUFZRWv1J6Jp5mf6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F0+rLbLe; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="LefJY4Gf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1745266369; x=1745871169; i=quwenruo.btrfs@gmx.com;
-	bh=qLY5eVn2v/9BK9n2cGKTxL5O17xb7q/3MUD00up0+Zo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=LefJY4GfCYmE8XgWAMiPJ99xZeKTpaMGICD+RQwobj2CQkiZOcO4rsVTNPImROYO
-	 xb62s1JQ2VBGKK1aSbX0MJpteZKrMa2EHtjNMRlKQtzZzUaSMlo+AGvVKK2S8QblU
-	 l/uzGpmd5Ax358XJhjGjrtd16xkX3LDBl/d1UJg+LZ7XnObTksGS4y+CyXu5/c87k
-	 +f95HEY1M9vFACE2PIjRLFRwoOZqxFgtrLj+QM5wztZn4Zl7JuNqFkukrxtivr/CX
-	 ReJoR2qDKs2idiUFtEugceTqqMHd3u8imqhauiQLlAZ5CWyJ1SRkm3b4oqZ+r+2vt
-	 PTJNSmNiiQ0/RVclZg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MNbox-1uUyXz21cp-00Nchg; Mon, 21
- Apr 2025 22:12:48 +0200
-Message-ID: <367f977b-9c74-486f-9a27-75a8a7ea50ef@gmx.com>
-Date: Tue, 22 Apr 2025 05:42:44 +0930
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0+rLbLe"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso2595004f8f.1;
+        Mon, 21 Apr 2025 13:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745266385; x=1745871185; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KuPglRXXva+tRt/1RLlrTkqN4JV8/fN1ppPKTXytjUk=;
+        b=F0+rLbLeNxQmLiUHq6UehsU1hKKU5uiV/66bpZ/3eECH/iIVwfQdG+MkziMC3tk5NV
+         tf/EDEhNkM3qC0gkYwOCifXrWe6G4I2hwFWx8zhDnEuXKhv+mx/ohAAtjriveQeGVDWf
+         q1jWR5WB1asYQoUIrE+VGDGINRf3DA4iKYrapgPPE44L6lzh716WQjawxJEFxKCs1SG/
+         cUawQO8uKiqxEcnM8VNkRm+frBR/6PjV7XUd8HScSsU5WJrnoll612b0d+dqemz0nwC6
+         Gq2QWH9fK6Ku3s7sOVVcbvKcGuu5oPYBh6If6yErVXbGfnLpRw7bQ198mazKUch43GAL
+         83fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745266385; x=1745871185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KuPglRXXva+tRt/1RLlrTkqN4JV8/fN1ppPKTXytjUk=;
+        b=SKgBrUGZSH7a6hLyWp5pu5+Qr3QIv5E1qrrHU8Mgt6ydMGHDdbO4jFcC1GasnDq/6g
+         repBvstjIQGJeh8/8Bat+OtWY4bC/yv4g9Adr9kwRlDxb4cSNwPanc60IE4Ulcc/Pi7V
+         yqoLgj/70sjKsoZq0XA82cO2PX/NbqA2RFWo6X7Zdk45cPF9ayP4YjkrmrX+rYJk4Yi5
+         JdWPahs/0GHEy48DyVptWN0xvPLdZkrEJcna0z746YIUmxf7mhtgRkkEfCj5vTh4nFgz
+         8Rsj1DOU60983UGazl70rO6n6xypiTHxEDMzmmAf4gGD2lrgBfct7iJvnDR83N1h9iGz
+         zaUg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8u6r+03YZDmt7EbER9u44Wn6SsGTmz4jtAUWxvbttFp31XvWj1XltYqWl9AyiBCrdwDJx5XqFUUtlUz6t@vger.kernel.org, AJvYcCWB4vwcbu5eKUokyhVxsQ40Phy2doFob1PhEK2sp1OXCU65fNWXC7rpZCbtfqftBCO5xqU=@vger.kernel.org, AJvYcCWH+T3xX3e7fZQMPdhY4idcK72UEPRI4VishyR239cIqpM/DKiydhzxy0tupOgRlGuoAGCWNaO18j8ztsTY@vger.kernel.org, AJvYcCWXsMKeBPw+9TLCsJHBnCQ7xtEfOD/gGgfwGwUmznoGlVGfUrJY0tbMlcJnc6Hn8do1IixhhYvUmn8W@vger.kernel.org, AJvYcCWbSRf4UQc1mN6qA31CseskaHRSwIr/Fzd9wJtmikk3thFfRjYKS9Fc9V6nfHkOk8x2RAaBMAusBgwu95/r@vger.kernel.org, AJvYcCWmdIQaOxVg0PPa+NqVqRtvTW+qUb1TBj6WDh9tbKLVtvUkP+KGUEx9zOWNV4A/tOhvgPO3JjBMtyT6IXtOHODMbnzvYr27@vger.kernel.org, AJvYcCX1f2eas/YJS4C48ZN0GwEw+bD1oZHLfHy/liBMr7NIPWdlJSIRTP9jm4cZRsmhd3XKwHHPWqRCtLE=@vger.kernel.org, AJvYcCXE0Dzfu1SXnGdwNdwwrXYZGUkG1u9xe73H2o9gOHKH7pMO45DL24HoweEsd3qw/fVDFVEI6MXyvBE4NzUlJ/td@vger.kernel.org
+X-Gm-Message-State: AOJu0YzORCojolxKqUy2dXwYqWrVqVGtya7MGaM+OF1b6JfMzewYNrhu
+	5UgRUQ+7z2suCA5vapa/tGShlCiIgDjxa05zGcvqC67lDszC2EtXC9rEjO6Yqb8B4egKF3gmZKB
+	I4QPoZrYqQPvhXlLZjrRYtR7HmP8=
+X-Gm-Gg: ASbGncuS1MKLmCN1hoOmym+I2gItZ9QV3rXmxoUvLvK/YysQv/jdkBcHvPNgyzc1Ydb
+	jdZBRl48OGjztfJkvcYVvV7Caa/2mrkKPcnDzxsKoXmqS6qyorg90mvCeW6ZlhSDYdDiX4OuwJd
+	yZmqbEkts8qirQs5RSJSNEZq3cKwSuXVX5KmZiQg==
+X-Google-Smtp-Source: AGHT+IENKQ7OPTDyXPDMm1eLtepnMBhG5YwiFzhKG6wQNnttfR2T/r01wwOVnACt/7hy7lkYefJ9i7RiLoFp/wuHfL0=
+X-Received: by 2002:a05:6000:2285:b0:39e:cbca:74cf with SMTP id
+ ffacd0b85a97d-39efbd5a34bmr10154288f8f.6.1745266384670; Mon, 21 Apr 2025
+ 13:13:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] btrfs: fix the resource leak issue in btrfs_iget()
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <9e7babf0-310f-40cd-9935-36ef2cebb63f@gmx.com>
- <20250421154029.2399-1-superman.xpt@gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <20250421154029.2399-1-superman.xpt@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <87semdjxcp.fsf@microsoft.com> <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
+ <87friajmd5.fsf@microsoft.com> <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+ <87a58hjune.fsf@microsoft.com> <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
+ <87y0w0hv2x.fsf@microsoft.com>
+In-Reply-To: <87y0w0hv2x.fsf@microsoft.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 21 Apr 2025 13:12:53 -0700
+X-Gm-Features: ATxdqUHHcxXreT9hXAZ5WwrofB06M_gd4QuHmZEieMGyBqtir206iJME0ypgG-U
+Message-ID: <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
+	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:oiL3W3g0AvHZ2KU53FmaLvL1Mr23HxBqr7fVrjw75KeXZS9nrCM
- lD5gzBiDJF8MjXgOSvOGtQMPvoABfvuhkCmBcXqvt9dXxfrgeoUXzoKQBg7985rsBME63mV
- cynBW/P+7cOV2xv9W4H7j+VRDA+3XveU0tYUa9tWzj6b+Uq7WF8HBsj2Q+U2zK3WbmS0B/3
- /z4nMqCd2WjSbQQk7IZgw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:o1zKeE896Y4=;SsAtNpGgjfpwcvuqzTNQC56nh6B
- xFSUd8hF5vea7YpbgWDxhb+YhR5TLjqxLUH8NbtF+4qH/SXds4OtxU2m1fbKN0jcR/nXiioEu
- EpiH0Wr4/xYiRtNij2vU18/p53d0Sfy4RUkMfD9YB9YjD4W2Y0ZLbZWlPQy2KYp+hhJumLOPo
- GkxSVoqyF/5s9iUTTtZ0lnWr0Qh9OO3I3lTokSBJnwtSesSwhpMPnzGZE5mvydf+BE3fuQJJY
- sd/tzUxSrCZrv8FeJXm/+5Mim+gij/rKyS9uvzz6+JQnVjEPNDZ2HVmYSHyCC0awekeEiPBqK
- i+vXGUe4zBQ3YhGF3dv44xfaE1BaR6msVTGZemcjjaeHZju6BJc9ytNwehIgqQp0slEVZL3BR
- +RWqB/uhj/ZcJjUgp3nKeMuILlcBiVQFZCh1Bm92CyUHeIx2dgFbr7k5GAiyZhaR/3ITn/vxR
- l+PHhOfAA13tOxAo51qWw1DEipSbpcH/qw6NqHyYZ+LMbs2J0dDKtX3PXAYCZcv5tsCjwOAMk
- bg1eN6wp5oskogORVujnir1/9FyY40lZ1PpZ0MDpSW3fmUYeBXxV0OgAwgovm3f9N3G/p3/Ci
- FBAG7pShVOo23UiJ3tVqoI8VklxCi/6TRW8Cy4Gvpuzam36yxbNUH/cIo5uBwrq7x9gobApLG
- ZEnj6foQnRZdn8btaxbNWyVrW/K+vrKwhs193gGxgcq9YsNJ24jY/zTYZNgu25D2zCZHO/sJM
- 86CvCoUM7W4TkNpg6lBY2l0e3iKBqU7Ld/ZzNynZ9kDN60HGu9Xbkvso5KjbAL5sQ/yHunLlA
- l4mYT/eDHQFeFIkLOU9dnYAJ15kLsm+hBtWlGXw7APOxRL2vaMMyJmOolgvPQKi9SieZhnNsr
- hdAMTALOn2HWQsbn8PojmJBVN0tFPcbhKXrJMn05omipEdeu9RZ8BtcPEeX5BP18eDxTcOiP3
- b/g8pGDQoCE6QuNrnJJobCh9qP+rFn67WFd04vW9PXtFkSzfZzYGKTI70usO+uCxcCs5UwlVg
- SSwmv7lxPZj91ezTJFU9MRJe67Xc8rBd/HF3SSjmBEvBdylN5O9C8tvitlN+z3KqewcQAkKzf
- Lg+NWWkWDOkGNXPNBuu6/6re1CKHi47Pts0SkmVFjHx/IB8KF7NaklfqlHZ1OxsOSEQAK+CLo
- BcoP61p4Ch+phePb/YQ/rjV3uAsfw/akBNXqkO+TxYcLK17Eej6Y7V2fAMW3yu1QskvupVbPA
- GgUtrKBpUucJSHVHAajo/rrRkQMNZIvgXVn4XWs4tMflScf+mQGBvuawcqAhW7l9/SG7RhLA8
- 3F32rklTNSnbRGxs1rrqLQybnu8oW5B98S4RURar+6Hmy3q0lF8ynWHIEkb1kUf+rWjwO2bLs
- HdWqCXO/GWG9mtl86QXvJ/O2n4qL9KmG3iSVHMXO/8s/MbN3W7OJ5+oKJL8ScMD62Tl3P5Ac1
- W5blzmsWpiM7xRcTEABlHfHRfj69CbNWWgvIFLS0T9c78DqpODKB9O3hcQ4l73Pg6HwnQgimu
- asXHjmRM99CDsB/bcIaDvqus64bDhXGtASlJo8XJKDT7/A6vse5XW11FI5Ga4seke/21JAfIl
- ocaWkvwJpvdm8sIYW8VCMfCavFA97ua9acZfKWa49t2NqwSDX+7lBdAHuKj2pOilsSzhAFDYN
- IY7CV8d0oXvcEuHd18n2z6B59hd40p4PXojwiwnoHU+UwViJsRVWKlJgeDOiPC0TB3VNUyQim
- PgRZT/TYHn1mK0xtoa1t158kNc5v4YpM9k8yOWHV+E5rgjerdQGrK4n9VHv+PyDXWi5o53uX2
- UC3CW4yLxsW2/5CbCVtsNcryleaRn8yDzpSAPMlIQ79Qcx4qno3mQNN6vLzqMjtE+Kds9xfNT
- hfIolsIPjF+FXWUxagTU5EE8CXqUcS3g+qoi7Ks2C/zR7UvdQ4/yBR4rPFrf8EYhZoli23doE
- YuEq6Zy+OGRe2a7vQRTFVujklUoa+1DtX0gGdAp/WLejssIWUvmQXT+ifvWRYBw0tt1r0i+6j
- NqV+u26Bgvl1rSqjCpbRcLqK5mXMyZ/9E3TcVv3dzrOTlqjl4Wvdrw36MIuZxcicNpbmjysFD
- M7gJIMj1MtXo4S+6tg7MB8G4xLuS0jHLJ1384reIYq4BJDofMvBWy2STAQCqcpguYjvEMRFE7
- k9uyFvW5DtDx6p0vD3ym5Edtz6mm5AiaYtoP4NCWvc3ibOyOqgkQT9xJ6wiNYEuoz2QwsFLWM
- yQG1MnbGBxUYr9ju1/+IiPtn91SkWyFI2p40vyjYrsNFRNgZowSddhsUhr+XG3+4xCWi4wwoC
- FMrDv22dGqnZ3V50wrcHr8F/Lwy+65jsDHRUFKyU12lXdt3Q61Luo2NXczZux3EZMok6qzWSA
- SLmdM8G6Ev58khmDW59/2n6gpApVvUcsQ3c1UlNQXjEJfmCvdl64m0B52fUOVmsDlraHPYPXt
- T7Bbam0OphSuD5zcrUfjkq+xomxMviMK/RCr/H1KctpJGa4q0fGu2vaF72LVmMWnPHYS3bvkS
- +u2nafqt2sa1hNAL36WHIxEH/Xt43MkLLGptaVDc+qkCTuYBnTOzpuOOwRyhLl0TdIYN4Hj/G
- 0cQ/O7X9i3r+CSoHUejfXCXzHSzkXGWAfgeuYgEOgLzDUCeY1mak9rQFva6uhSgGY1oReI87x
- FktvfBkWYHKYMZC6AEhKgwcQHV0+UyBGkCsaE9sGVtNANpI7uoh9xDW43uWfep7mZfkhiIewj
- H5swy0aZHVzrvU4EkgXQangxY9fZDBxmJ8TLVeL56mYPX4nlMrioS+CuP8jDg2zMYmefZfx68
- 84TyqmWP+clIYAqG7cJiIDZUft2nkkGQoC6wCxSjT2jDdFEwIfvL3aysjpIOfGES1f7YC4yML
- 4dFIBDWnG0PXvX9UwGaUO/9LgnGq1tLAXvriTq95xOu0ZEcC4Av3wOwj9l8k2uz3jVkyjO7s1
- ptKzfjjEXQRgDN5ZBLVaZ7QrH1KI4e/4UVj8gbHeWVqJvQ/P+9RQ6l2HykleFeKxRJYIH09Fk
- w==
 
+On Wed, Apr 16, 2025 at 10:31=E2=80=AFAM Blaise Boscaccy
+<bboscaccy@linux.microsoft.com> wrote:
+>
+> > Hacking into bpf internal objects like maps is not acceptable.
+>
+> We've heard your concerns about kern_sys_bpf and we agree that the LSM
+> should not be calling it. The proposal in this email should meet both of
+> our needs
+> https://lore.kernel.org/bpf/874iypjl8t.fsf@microsoft.com/
 
+kern_sys_bpf was one example of a layering violation.
+Calling bpf_map_get() and
+map->ops->map_lookup_elem() from a module is not ok either.
 
-=E5=9C=A8 2025/4/22 01:10, Penglei Jiang =E5=86=99=E9=81=93:
-> When btrfs_iget() returns an error, it does not use iget_failed() to mar=
-k
-> and release the inode. Now, we add the missing iget_failed() call.
->=20
-> Fixes: 7c855e16ab72 ("btrfs: remove conditional path allocation in btrfs=
-_read_locked_inode()")
-> Reported-by: Penglei Jiang <superman.xpt@gmail.com>
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
-> ---
-> V1 -> V2: Fixed the issue with multiple calls to btrfs_iget()
+lskel doing skel_map_freeze is not solving the issue.
+It is still broken from TOCTOU pov.
+freeze only makes a map readonly to user space.
+Any program can still read/write it.
+That's why freeze wasn't done back then when lskel was introduced.
+There is still work to do to make signing practical.
+One needs to think of libbpf equivalent loaders in golang and rust.
+The solution has to work for them too.
+In that sense bpf signing is not analogous to kernel module signing.
+Programs are not distributed as elf files.
+elf is an intermediate step in a build process.
+bpftool takes elf and generates skel or lskel and
+user space does #include <skel.h>
+to access maps and global variables directly.
+See how systemd does it.
+bpf progs are part of various skel.h-s in there.
+systemd is also using an old style bpf progs written in bpf assembly.
+We need to figure out how to make them signed too.
 
-Looks good to me.
-
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-
-Thanks,
-Qu
-
->=20
->   fs/btrfs/inode.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index cc67d1a2d611..1cbf92ca748d 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -5681,8 +5681,10 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct bt=
-rfs_root *root)
->   		return inode;
->  =20
->   	path =3D btrfs_alloc_path();
-> -	if (!path)
-> +	if (!path) {
-> +		iget_failed(&inode->vfs_inode);
->   		return ERR_PTR(-ENOMEM);
-> +	}
->  =20
->   	ret =3D btrfs_read_locked_inode(inode, path);
->   	btrfs_free_path(path);
+The signing problem is big and difficult.
+It will take time to figure out all these challenges.
+Introduction of lskel back in 2021 was the first step towards signing
+(as the commit log clearly states).
+lskel approach is likely a solution for a large class of bpf users,
+but not for all. It won't work for bpftrace and bcc.
+lskel loading is also opaque.
+The verifier errors are not propagated from the loader prog back to the use=
+r.
+To load normal skeleton the user space can do:
+LIBBPF_OPTS(bpf_object_open_opts, opts);
+opts.kernel_log_buf =3D my_verifier_log_buf;
+myskel__open_opts(&opts);
+There is no __open_opts() equivalent for lskel.
+It needs to be fixed before we can recommend lksel as a solution
+to signing.
