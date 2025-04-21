@@ -1,76 +1,42 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC3B264A7C;
-	Mon, 21 Apr 2025 12:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1421DDC0B
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238508; cv=none; b=BoexyAdhLe/GqKuyw47f2R4T+JyoiW+QVn9m2jzh8XgS5Ms81jyM64U97DSLwqVPpGMKbsCifm+ge5ZZeEkkJP54F5OL0JXwwybUOnN0PQ7Fg5W4K4hdUuPvwrnCqX6G8zLaUIVmGBk5nOMGoEF91CHyjojwcE7+6JP1isLEBxc=
+	t=1745238544; cv=none; b=NVMJnZWPj/5QPkcT+ad+LWJw4aWu5TPMagdT9xORVPcYkaMmXDCTLJb9miklUSXk03cXG7O780MFCLaqnInOvIVVOp0N3HM46itvSw7KQ+Cq/RVgVBsz//3v+UZlHkZwvV3poykO6ZNY/W2hzbZsm99pMqFNTpFEjSY1rEWQYvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238508; c=relaxed/simple;
-	bh=e+WN91nPHLRESKaOGAavp3iu6QDsieZbWsN29aZj1Z8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmYdwiwTSE9Kpe+gWrHj5hkdn61BmcmmsynMqcaFAVq0kTTWEbM7toPiGlICXrQ6FyPitXj10xBNwFKho9ZG5F3mpRDN68yEzHXbGxVajtZeV1WrtCfkoqhMwa7Z4AWf4i4gH2sg48xF2Q6JUYXTfbjugmVT2rRh8b0AmAUTw4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fh6tgXAU; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745238544; c=relaxed/simple;
+	bh=GZ4EAJ6Hr/EOxOC+zB3KAgeRnUiGHQV35R+BS6pG7pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ryAlZu6PiNYuYAARocaltr1+poGCvkkM2y++SMblognEFYkOjrTJpJ0/QKOux5v/rCiZ++FbMTHPc5ATv2bAkeMqgyblTgcIcRjI0eRBCh2rItWQyRmURXX0qfTzlOWmkrvu+wy2+1LKRnwWdCOhlRL6Vv7Pm3QcWAjjzCnXhKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MKC2q2Q7; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fh6tgXAU"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5e1b40f68so397130785a.1;
-        Mon, 21 Apr 2025 05:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745238506; x=1745843306; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2wIp4O5aFba/VFIEdYS6vzun+UYuyoA/BMDFjUKnEU=;
-        b=fh6tgXAUXMMl6ZjJsO9OFiNT104QZv7H9WE+bJwpFmdQNcYUbnAF/L4YqcLdqHJUMV
-         zuVZzppcjd7af8w4pjJ621gTyRCz9HPP/Uadslgs6x7PprR6hxehxDRrUFxdia/4ZtMs
-         kudmPOc/+Lj48pEEsBeUj8KJTTqVgFDnvQXO6FlBMyrnqJZ/4PET9tJPTe6x0en1cAG6
-         SRwA1XGkS6QvPa7UVd4h0aNglfoNAHumJdMnXMxdfdnsUUvwaryjGKC3WdTre/kQ51tq
-         JAAW3z0mATD7TSyIerOfXQzWhz4kAb+uTV5l9gBnVKbJ/xmGfMfhbtGOIQtFnBJIQsP3
-         tP0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745238506; x=1745843306;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c2wIp4O5aFba/VFIEdYS6vzun+UYuyoA/BMDFjUKnEU=;
-        b=FUmBmdslWnAxci+bdSrkZEKC0RXkmlXHxk5DUH9o8kjYnEv5wizaRDVMT8DrgEcbtQ
-         /3HFsEW0Ib/TMvg4+C3zJ5dz3zFBOiYCE2HnrEb5p4/GDZwX9Pws9kbXlPXN95XstPnQ
-         Js4kyv60EubElICPJ1ONX/wkVQ0hv1S+Kqij9nc4BxVLo4pb9INaYjnws4Jw9xI5wP++
-         5D19dcvt9wYAxely7KrIwCI7R4RN46UBnqfDGtoS5ARk4Pc+eMQOiTtOj/apbvwiXyLE
-         DzJi5QFW3CfHXvNRtuuCdD2fqm+Recyh6QQObUeK6Y9SymbhwIoRi6gAiriZvhQntp9L
-         yPaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJevFjRkRraLoRCP1eJIOFmuyJAcYpOpjfAjHhr4q7lq+VLctTnjLK2ZEJT/9Z3pjsRsdDDKFV@vger.kernel.org, AJvYcCWL+aSpR1HYm7FAqSxmdjITv+bNIRFyzOVywza5S+VN85XJqAyR11xP94antbrSqAYiCdP1kDfgSCI=@vger.kernel.org, AJvYcCWU/NSugFcpL0AJjQTFnUWJ9JCvZb56BBy2Yh+SxOXlpcWkN1egdUpTlVtsX/tsBTCy6Q5U+V4wzxY9OY7D@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGI9swJrnUsIZGWJ1joRzOz7z+dAOcorLNdsb0QP040/RUrobq
-	CPrsQ45vTyXi0fz2p7IaIG873kS1YTNj0EaTYy2+CtU05oNtBCoo
-X-Gm-Gg: ASbGncvLUYMuFsI2TU1MGnzE56MrU8JlXFnKYsGVHl4Q0LWhXfvO7itL4xZAmE+lWxl
-	RLB8ZvY8j8u6ouhz2zM/FeJ4s4/9Ea4QB81ajC4f3EsCpH9zM7UCO6lMyAkZvrxcZTfYeiK5OFU
-	LLBwvuJUqAIS+sNrgIM0Qou/q+xwcNFoA4AyMtMFs3hAX8EkV4mlNO/4i46FITJg68Y6Umso0qV
-	LPNkIF4X6keoIFC9BB8LvE3Z9mxwPqdspE5jcAZDU7fCyBBwF0mz2Sfn+2iPgDQQgzh482JVuzQ
-	VUIhtJBWPbAZrguCaHNTJwoT1LDcU7O0SiCtnsl2HGD0184FChHoh+nvAzY6vf2e5lHUEabf/65
-	Fh5x/luS80Bfzcjjsmyo=
-X-Google-Smtp-Source: AGHT+IFiW3P7e10p3XKaEoJEdAV43qnaCDOH2uR8uU6ICsm90RmKmXLfKhA2kcISDnvAu8nqURfE6w==
-X-Received: by 2002:a05:620a:2911:b0:7c5:4d2e:4d2d with SMTP id af79cd13be357-7c92805fb68mr2053018385a.50.1745238505835;
-        Mon, 21 Apr 2025 05:28:25 -0700 (PDT)
-Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925ac2f27sm412267685a.54.2025.04.21.05.28.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 05:28:25 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: gregkh@suse.de,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael.Hennerich@analog.com
-Cc: gshahrouzi@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH] iio: accel: adis16201: Use IIO_VAL_INT for temperature scale
-Date: Mon, 21 Apr 2025 08:28:19 -0400
-Message-ID: <20250421122819.907735-1-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MKC2q2Q7"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745238530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=IxqkS7lt69bHaMltk5gXyQH9LvD91wxpy08FtaUvczY=;
+	b=MKC2q2Q7Bb0B+cCkXxkXX0Fv0vs72j4GnSKdWHbh34NAG84FoV1nSMfsjzSYkhTlcltZRc
+	sr9k+ZM6Ue/A7X7FfeSb0CZEeWU07d3xBLPFayfPxr8QfRCwDVE14S9Wr5ttuf2FJSkAVW
+	PN/+SP3KRJ6WlB3kU9My6Oxq/R3PpLQ=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
+	Kees Cook <kees@kernel.org>,
+	Greg Ungerer <gerg@linux-m68k.org>
+Cc: linux-hardening@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] m68k: mm: Replace strcpy() with strscpy() in hardware_proc_show()
+Date: Mon, 21 Apr 2025 14:28:37 +0200
+Message-ID: <20250421122839.363619-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,35 +44,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-This is a leftover from the patch: commit cf96ffd8c2ed
-("staging:iio:accel:adis16201 move to chan_spec based setup.").
-Initially *val = 0 and *val2 = -470000.  However, they were later
-changed to -470 and 0 respectively but their return type was not
-updated.
+strcpy() is deprecated; use strscpy() instead.
 
-Use correct type as -470 is an integer in the base units.
-
-Fixes: cf96ffd8c2ed ("staging:iio:accel:adis16201 move to chan_spec based setup.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Link: https://github.com/KSPP/linux/issues/88
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/iio/accel/adis16201.c | 2 +-
+ arch/m68k/kernel/setup_mm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
-index dcc8d9f2ee0f1..1f27386edcc4e 100644
---- a/drivers/iio/accel/adis16201.c
-+++ b/drivers/iio/accel/adis16201.c
-@@ -125,7 +125,7 @@ static int adis16201_read_raw(struct iio_dev *indio_dev,
- 		case IIO_TEMP:
- 			*val = -470;
- 			*val2 = 0;
--			return IIO_VAL_INT_PLUS_MICRO;
-+			return IIO_VAL_INT;
- 		case IIO_ACCEL:
- 			/*
- 			 * IIO base unit for sensitivity of accelerometer
+diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
+index 0fba32552836..c7e8de0d34bb 100644
+--- a/arch/m68k/kernel/setup_mm.c
++++ b/arch/m68k/kernel/setup_mm.c
+@@ -484,7 +484,7 @@ static int hardware_proc_show(struct seq_file *m, void *v)
+ 	if (mach_get_model)
+ 		mach_get_model(model);
+ 	else
+-		strcpy(model, "Unknown m68k");
++		strscpy(model, "Unknown m68k");
+ 
+ 	seq_printf(m, "Model:\t\t%s\n", model);
+ 	for (mem = 0, i = 0; i < m68k_num_memory; i++)
 -- 
-2.43.0
+2.49.0
 
