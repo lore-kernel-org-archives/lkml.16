@@ -1,71 +1,84 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065193D81
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC29FC2ED;
+	Mon, 21 Apr 2025 23:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745278662; cv=none; b=kMZf3tdTiCpMHP26nn7A+t6yLBuFt/1BE+Q2/dCFg3D86ElyGzaB5YRDaZbdwiTYJNkQWFgDjbbLs2BCtYgjAVJu2T2Aienjn3MSl8Pfi1zn1hrspn8QcOsKuWj3ZzYYLSxSW5Zndxgdmddx+MmlGfjyWtIq/nNNFxIqawbmZvk=
+	t=1745278721; cv=none; b=th7tNiQNDUqz0a3NB/I+OM7MqE0i1m2KtBQindMW68kdZT+fm5XCjYuIVk9lytM71VAErDJOZJLiY/6ce2bBtrz5km5JST/kCaHjHY82rID2b5HrxvFR6SzJeoqJlHEsIO28e86gNEiyWC+lk5d/tKos6yZxAjp5eBg1YKcQRaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745278662; c=relaxed/simple;
-	bh=sbdGaZBNt2XEezDh/c1AFkYPOuGhzPfaiFGITKsQVTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E6g2JZMCWOTxe4hhpTiBHCaAZZof6fYolGjA019PvzqLWWY8r0tSfYWwKK7fsRzGhEcTpRTXvtxYojftX3sYhBqGtaaJ+C2zs9Wabjsl9oD3OFszkK0v3432Umamau9IGZ9WmHOPCOPkjftWBLpLH+oyv06QAs3WBdCsfTC+9no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BNgBdr8x; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745278721; c=relaxed/simple;
+	bh=PPqxRTJ65Zns3K16whP09vVXKH2agHmSTpJ8QVMw6/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fX5eBicNLTOXwdvAhCz3RnYlaffUAwKJR2W6xVc3zDm5+xC5qsd5UaJgh0Nb0BLBb6Gr0ctS7GDaXk908JY/jfVubOsmgtxUYPF3kJxzavxZE8mGet80FehOwdXQCgYayygpPY8YwArlrlsMNW71ns2N/skQzNLQ13rp1YReCdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GRLELfN0; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BNgBdr8x"
-Date: Mon, 21 Apr 2025 16:37:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745278646;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6iW0sWcGO1gvbOk/e+2PSHbPGtHAbNinELqlnlzCeUE=;
-	b=BNgBdr8xLToLSABGJHQDRuIA1Sq5RmsJowUKjIfx8BKCbe6T5+LPm7rBUKmpR3OuqUJ7aI
-	t3lscJp1GXo+um63hz1T9nA6zl8Y+Syh0+xRWNRQLEPLJZENn8R8zf2JogqBNBs2h0Vq5W
-	R8g3EF3ywZlfQzMPMlm6P29ANQ7yXy8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, longman@redhat.com, hannes@cmpxchg.org, 
-	mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, akpm@linux-foundation.org
-Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
-Message-ID: <snxed24sts5vsrcgi3aajxgngaswe2dtzf4kacfq7nyzc4aayt@4fmqp7i4gs3b>
-References: <20250419053824.1601470-1-gourry@gourry.net>
- <20250419053824.1601470-3-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GRLELfN0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745278715;
+	bh=k5asuIGqHKFn+L4tpxLhkdInQrn88qIrrHJdrM8/ae4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=GRLELfN0B02Jg/77nV82weTy6032cnZFDgGynjmzHNg9JALF7jBcyfh3VEdiGNT47
+	 a8RuJEufoG2lIfn4V8fD6+imwLDZ/NC/DmkF9w+Vn2Q25qsKe6BTfPAWpxsu1acDvI
+	 pIRrmZxaTG0MZn+mFhHBu2EEQICsU/kKfQCh0rpVTrhNtp73W3ZZRtBobDASBQjTUG
+	 daRY/8RozLCdyZ06DRatZuYZ0bapf3KyZikC1edjRUs1Y94XIrHC0il+VJPYcGReCB
+	 ZUvxFkdtfx6UrRa6ulnvirbthINNEuQYUXGxfaSKxezhVFBHQA/o9ztSHAV3nfy0U4
+	 utEp2INrExNxg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhMJC3kpJz4x3S;
+	Tue, 22 Apr 2025 09:38:35 +1000 (AEST)
+Date: Tue, 22 Apr 2025 09:38:34 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the paulmck tree
+Message-ID: <20250422093834.57e9e9d0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419053824.1601470-3-gourry@gourry.net>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/CcftWz4Zid/hKtcoCJHP/Dt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, Apr 19, 2025 at 01:38:24AM -0400, Gregory Price wrote:
->  static unsigned int shrink_folio_list(struct list_head *folio_list,
->  		struct pglist_data *pgdat, struct scan_control *sc,
-> -		struct reclaim_stat *stat, bool ignore_references)
-> +		struct reclaim_stat *stat, bool ignore_references,
-> +		struct mem_cgroup *memcg)
->  {
->  	struct folio_batch free_folios;
->  	LIST_HEAD(ret_folios);
-> @@ -1109,7 +1116,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
->  	folio_batch_init(&free_folios);
->  	memset(stat, 0, sizeof(*stat));
->  	cond_resched();
-> -	do_demote_pass = can_demote(pgdat->node_id, sc);
-> +	do_demote_pass = can_demote(pgdat->node_id, sc, memcg);
+--Sig_/CcftWz4Zid/hKtcoCJHP/Dt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For code paths where we might have folios of different memcgs in
-folio_list, should we look at individual folios for their memcgs or is
-it ok to ignore such cases? If we are ignoring then let's add a comment
-about that.
+Hi all,
 
+Commit
+
+  9e13e90127fb ("ratelimit: Reduce ___ratelimit() false-positive rate limit=
+ing")
+
+is missing a Signed-off-by from its author.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CcftWz4Zid/hKtcoCJHP/Dt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgG1voACgkQAVBC80lX
+0GzdsQf/bN4huI/Atgq8Zxm9bC95FcArzo8Szp4F3F3uEFCuRA5weXu0eLqfQHxC
+cB6jYmbphZjWmbh5sTEScJLWwOuVhpTy+CkRE1i+wfEXdGv+GHuoAaZ0Fh5EuAVE
+HNpB+s2gjdRu5ZYo9PKk2KLmsQP0VbVCc3SQrewNgQEq8tuqkuu3pAK5TON2Liss
+mh6FrOqc7rbd09GGzo6Xz71dyoe2+ZDW0vPX0yHY8E69OYP+S38rlaOU9BafQzYn
+zPkrEDW3fvhtwRWV2a8plrwiGBXbWuIc+av4XQJ+ED6p5t9dbvO5TdHT7PGhR5eF
+3aA4LAzEczsni8YvXBurrAOrkdzRDg==
+=TGr7
+-----END PGP SIGNATURE-----
+
+--Sig_/CcftWz4Zid/hKtcoCJHP/Dt--
