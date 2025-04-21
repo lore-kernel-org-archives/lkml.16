@@ -1,31 +1,48 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A984E2B9A8;
-	Mon, 21 Apr 2025 07:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB50A1FDA
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745221525; cv=none; b=teVfX5s9T6xqDYyDujU8zuryehzejAd8LIjGvwga0PBlwHd4BlcHSnezGNZ0zBgwYzztsbFatspRgnq+M/lEXZypHoyDKI6c8RoTvNYUc8bJHUQsikiPDB5zCusPsLvUD8RlD+lxcO42kDX0WUmVraDk4oE9YEYF6gP4lozg3vk=
+	t=1745221583; cv=none; b=btV6nGnE5S6ZhRLmboLmtjU9hw2+jEoGIAZCqkEfmFeMhL8PUg7FWd1I4PB/73FhGs9Dg2oafLeBpjfSE3o5D/apSLUnOtUTysfNickZRnFvUz8TGhs+CBNBkWByYZs4Sdud8vDTCd70OKAYPyiMCRVNz8oKHmZQIeP1UmaJnuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745221525; c=relaxed/simple;
-	bh=kIM7s0Aj9UnhmqjU0UyLzWBt4wOoBW79+q3PC305GS8=;
+	s=arc-20240116; t=1745221583; c=relaxed/simple;
+	bh=HMDvi2OqoWFaAOsG2tPDoXRjPycE9wLKajMdfqq/DXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SeqRjaFUqdQpY33p6jB3LGxqSW/AbkGOtVH4RRE7q9zeu2aR/2EjMghMbjkRsSSCreBIjAPmJZGmu/Awbfitxhv5vYJ6pSCutPhTEoMA1grAwD5QXSF2NNY+ovWz8PmL/q12blMwuQaGbuqc6lp5ayGEXHyzX4jrRzOpT2yY3iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Zgy794xwvz1d03c;
-	Mon, 21 Apr 2025 15:44:21 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id D18C0180B5A;
-	Mon, 21 Apr 2025 15:45:17 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 21 Apr
- 2025 15:45:17 +0800
-Message-ID: <b135ad48-fa77-4455-b83a-92a6367bfacc@huawei.com>
-Date: Mon, 21 Apr 2025 15:45:16 +0800
+	 In-Reply-To:Content-Type; b=urgSHRDbHYLwJTjJG6PSVMUXsFzTxdfvC60DobJOi5waf21e0g8B9Toq5sFkVZ6SG+7qbJnEiJTdyP+nEWTKblPl4EEcUVf/SA0/7Qh/wqTCjvAO0+qTburCgFO3qi63GJwVruzMYK4b6fhk1xRMwKMn8MEfmpOJ9NbvRGdq78Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fZpU7HWY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fZpU7HWY"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KMK2PS004392;
+	Mon, 21 Apr 2025 07:46:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	u/2VdwI72slCSKnJQaTEkuv8ka/G3kd/+oTh01RpLAU=; b=fZpU7HWY7kuNZoKv
+	5H9EhiibhwtGyGiJuP23H8YYASIH2/vBM0MXp4zLLOceMY+AKvDyj+NhOrwxAfqx
+	aq4W8IYo1djNzJNxeN+WAdh399eXMXcXSv5+ueCkl6+Z6vyov0rupgzcJzbkiHvc
+	JY6hUMC8jwbi6blSibou20/HfpU9nO+qu7FRcPN7MLmz9orihFrIeV1rtqu+UbKq
+	zOfEC6NJdDKX2AggwZZRYHvP4Um+CQIG4JIt9vPg8FGgd4VBS1kUiICwFNWZU9PZ
+	kI7+EyGsFAuMecnVxZwrEbc2T0/WHYCBUtqWTeWjsGscdnp9p82UrCsAdSd3aiTs
+	7cdiGw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bkanb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 07:46:01 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53L7k09S006425
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 07:46:00 GMT
+Received: from [10.239.132.245] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
+ 2025 00:45:57 -0700
+Message-ID: <89b3fbd5-d817-4f43-9721-6a64e5153be6@quicinc.com>
+Date: Mon, 21 Apr 2025 15:45:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,70 +50,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Nicholas Chin
-	<nic.c3.14@gmail.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <rafael.j.wysocki@intel.com>,
-	<vincent.guittot@linaro.org>
-References: <20250417015424.36487-1-nic.c3.14@gmail.com>
- <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
- <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
- <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
- <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
- <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com>
- <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
- <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
- <CAKohponCr6pwgmK+J0WnvY_VZdDhA738JF18L518A2MKJVQLmw@mail.gmail.com>
- <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
- <20250421062003.lbxdxhlp6ulnjq7f@vireshk-i7>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <20250421062003.lbxdxhlp6ulnjq7f@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Subject: Re: [PATCH] mm, slab: clean up slab->obj_exts always
+To: Suren Baghdasaryan <surenb@google.com>, Harry Yoo <harry.yoo@oracle.com>
+CC: <cl@linux.com>, <rientjes@google.com>, <vbabka@suse.cz>,
+        <roman.gushchin@linux.dev>, <pasha.tatashin@soleen.com>,
+        <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <quic_tingweiz@quicinc.com>
+References: <20250418061459.3898802-1-quic_zhenhuah@quicinc.com>
+ <aAJtFwAH_ayIJ-SR@harry>
+ <CAJuCfpFEoGaczKvL-fpd=tzaHvPa5xU6gMWTzp6=OPxYcxBVsA@mail.gmail.com>
+Content-Language: en-US
+From: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+In-Reply-To: <CAJuCfpFEoGaczKvL-fpd=tzaHvPa5xU6gMWTzp6=OPxYcxBVsA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=6805f7b9 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yPCof4ZbAAAA:8 a=COk6AnOGAAAA:8 a=u5Vm5Qlev4DUF23fx0IA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 44RLd3tKO7_fLQeP00ttHKhGs_DDtAoV
+X-Proofpoint-GUID: 44RLd3tKO7_fLQeP00ttHKhGs_DDtAoV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210060
 
-On 2025/4/21 14:20, Viresh Kumar wrote:
+Thanks Suren.
 
-> On 19-04-25, 17:35, zhenglifeng (A) wrote:
->> Yes, the policy boost will be forcibly set to mirror the global boost. This
->> indicates that the global boost value is the default value of policy boost
->> each time the CPU goes online. Otherwise, we'll meet things like:
+On 2025/4/19 7:09, Suren Baghdasaryan wrote:
+> On Fri, Apr 18, 2025 at 8:17 AM Harry Yoo <harry.yoo@oracle.com> wrote:
 >>
->> 1. The global boost is set to disabled after a CPU going offline but the
->> policy boost is still be enabled after the CPU going online again.
+>> On Fri, Apr 18, 2025 at 02:14:59PM +0800, Zhenhua Huang wrote:
+>>> When memory allocation profiling is disabled at runtime or due to an
+>>> error, shutdown_mem_profiling() is called: slab->obj_exts which
+>>> previously allocated remains.
+>>> It won't be cleared by unaccount_slab() because of
+>>> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
+>>> should always be cleaned up in unaccount_slab() to avoid following error:
+>>>
+>>> [...]BUG: Bad page state in process...
+>>> ..
+>>> [...]page dumped because: page still charged to cgroup
+>>>
+>>> Fixes: 21c690a349baa ("mm: introduce slabobj_ext to support slab object extensions")
+>>> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+> 
+> Thanks for reporting and fixing the issue!
+> 
+>>> ---
 >>
->> 2. The global boost is set to enabled after a CPU going offline and the
->> rest of the online CPUs are all boost enabled. However, the offline CPU
->> remains in the boost disabled state after it going online again. Users
->> have to set its boost state separately.
+>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
+>>
+>> I reproduced the issue locally and confirmed that this patch fixes
+>> the issue.
+>>
+>> Tested-by: Harry Yoo <harry.yoo@oracle.com>
+>>
+>> By the way, I think this should probably be backported to -stable?
+>>
+>> --
+>> Cheers,
+>> Harry / Hyeonggon
+>>
+>>>   mm/slub.c | 8 ++++++--
+>>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/mm/slub.c b/mm/slub.c
+>>> index dac149df1be1..b42ce3a88806 100644
+>>> --- a/mm/slub.c
+>>> +++ b/mm/slub.c
+>>> @@ -2023,7 +2023,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+>>>        return 0;
+>>>   }
+>>>
+>>> -/* Should be called only if mem_alloc_profiling_enabled() */
+>>> +/* Should be called if slab_obj_exts(slab) */
+>>>   static noinline void free_slab_obj_exts(struct slab *slab)
+>>>   {
+>>>        struct slabobj_ext *obj_exts;
+>>> @@ -2592,7 +2592,11 @@ static __always_inline void account_slab(struct slab *slab, int order,
+>>>   static __always_inline void unaccount_slab(struct slab *slab, int order,
+>>>                                           struct kmem_cache *s)
+>>>   {
+>>> -     if (memcg_kmem_online() || need_slab_obj_ext())
+>>> +     /*
+>>> +      * The slab object extensions should now be freed regardless of
+>>> +      * whether mem_alloc_profiling_enabled() or not now.
 > 
-> I agree that both of these are valid issues, but so is retaining state
-> across suspend/resume too.. There is a difference in a user manually
-> removing a CPU (offline) and suspend/resume.
-> 
-> With a manual offline operation, the code in cpufreq_online() is doing
-> the right thing, default to global boost. But the user configuration
-> shouldn't change with just suspend resume.
-> 
->> IMV, a user set the global boost means "I want all policy boost/unboost",
->> every CPU going online after that should follow this order. So I think
->> the code in cpufreq_online() is doing the right thing.
-> 
-> Yes, but any change to policy->boost after that must also be honored.
+> This comment does not explain why. I amended it in my suggestion below.
 
-I see. Then I think the key is how to distinguish CPU offline/online and
-suspend/resume in cpufreq_online().
+I will follow your suggestion.
 
 > 
->> BTW, I think there is optimization can be done in
->> cpufreq_boost_trigger_state(). Currently, Nothing will happend if users set
->> global boost flag to true when this flag is already true. But I think it's
->> better to set all policies to boost in this situation. It might make more
->> sense to think of this as a refresh operation. This is just my idea. I'd
->> like to hear your opinion.
+>>> +      */
+>>> +     if (memcg_kmem_online() || slab_obj_exts(slab))
+>>>                free_slab_obj_exts(slab);
 > 
-> Makes sense.
+> free_slab_obj_exts() will be checking again that for
+> slab_obj_exts(slab) != NULL. Since this change effectively removes the
+> static key check (mem_alloc_profiling_enabled() call inside
+> need_slab_obj_ext()), I think we can simply make free_slab_obj_exts()
+> inline function and remove the above condition completely. IOW:
 > 
+
+Got it. I'll send another version that includes these changes.
+
+> static inline void free_slab_obj_exts(struct slab *slab)
+> {
+>          struct slabobj_ext *obj_exts;
+> 
+>          obj_exts = slab_obj_exts(slab);
+>          if (!obj_exts)
+>                  return;
+>          ...
+>          slab->obj_exts = 0;
+> }
+> 
+> static __always_inline void unaccount_slab(...)
+> {
+>       /*
+>        * The slab object extensions should be freed regardless of
+>        * whether mem_alloc_profiling_enabled() or not because profiling
+>        * might have been disabled after slab->obj_exts got allocated.
+>        */
+>        free_slab_obj_exts(slab);
+>        ...
+> }
+> 
+>>>
+>>>        mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
+>>> --
+>>> 2.25.1
+>>>
+>>>
 
