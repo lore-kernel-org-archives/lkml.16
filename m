@@ -1,323 +1,303 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010006.outbound.protection.outlook.com [52.101.69.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78DF20D500;
-	Mon, 21 Apr 2025 10:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745231930; cv=fail; b=fDSjRFJFUMGXYqZggG9qWbtB5AmiA18rml/N++J1nNG4hqZqpz8yTi6aapxy2E7hesbQnuaGJIEFG7czjtzC7h0WdkGu778uFozEutGSGnQFf090oQ8ntr/hWhcnyZR6t83g7sCwU7b8itg8116znZ/o9G0Et3I1xCiltzKRBnw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745231930; c=relaxed/simple;
-	bh=20fDfv/G0yZB4AF8SWADCEvFZCY2vANYs7wPUpClWt8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NTkFzWRWpJNW0q0nkWSRkPweK/+bDK8NLeIzCg0yIm4VQuKafMknjV5eVRWaS8m2YHlisK5FXUmXP52vIHvRJEnfup0zM51Mrfb0x9RHy9XLfCA0UJd/ZCErbAOf9OckJic+s9mQdmDCxmOu57vzZ5eqsf7ncQtctPRT1BMCO2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XJAUX+Bm; arc=fail smtp.client-ip=52.101.69.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4742DBA53;
+	Mon, 21 Apr 2025 10:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745232148; cv=none; b=oPkMNtDChFPNEQGaVjV5jE2Ljw+op955bAnz46nTOniguDtzxCx+fRt1kkLOiaQCWaC5hW/yeuXOG696ejKwdfjmdaVg9ebCemlstOgIjczcehSs6jJYbZ3mJPUo91w3oju7CVcLoooKvIno+aAcmiCYNAgfrwxe1OeqBzavEko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745232148; c=relaxed/simple;
+	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4lTiYgjGKTwIWdC0h1TEma/SNGqbHFbwQElHr5Cdqrj7jZOqVeTU41DXTCiUQgPu91dFpJfweAJyx1yYx8vcFMMkaTUnt6mShZVwELYr+abtVrpBs+LSs5OBr5tLN6PzPoqnxBu6jpaETUtGXe1sDYtcmlqthca+8owE6t6FR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=of5unEST; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XJAUX+Bm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bGkYYE3ve0n/5arlQ12DW37vjRKXkA5RSsq2ejtYQkiZu+o1d1HcuQY4VeGMFGXw6MCFg+jXI8TDPQdMOX209mH+EXJKwufAbH++Az/x5dn9lyee/duKNPcG8Ua4yIhIefKtuNntMgu0MRA4DomMHII9UmV3GVtNdP2NURXY/k+n4+7lc5V0eTWpLsaz2JhfZHZOFbOOuA9wgzhKEhMIK87zvgRt/hWHwCAcHQtgxPNHZyU0pM7fEwixw3ocgEZ1jdpZQMM6ENKP8eYRGCA6RmdNp03kJ0b2DtJhrxpQmn0QhO/YoVLy0Ga12Nb5qSgttA1JBNYJdp4m/zopzchLHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=20fDfv/G0yZB4AF8SWADCEvFZCY2vANYs7wPUpClWt8=;
- b=d5zgs/TWjo2s8pP70Gd6wMqX+HVQQB6zJDiZsWJP+KYdT6vFMhcfn+lodOI1Gn+e8iv2h2pi8D6fu8V+I+gI4dn1w24tKJzNQT0l9J527tC/Uf9AaIQvB1xOJfyd7DUMsvfbEC11TDBA67ZzEHQvOwA6fK6IjO6Zdyq4baU57YoNqLm34xUohuFdxauEz6MHEl2UDfBbYJA7IZPe3TEB227xcSvd9oimsJO/6PBjjzrjHZ1xvCDItxTdc57RxxRWskWwdGTDAnz8Hl4Z9uHMddRViA4nzCGbV4A4PlNu3jz3qcTh2SKT5Jksvsk/SWTPawdAw/XNLEMpe4r7ZY3Zbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=20fDfv/G0yZB4AF8SWADCEvFZCY2vANYs7wPUpClWt8=;
- b=XJAUX+Bmc1rDvA6P2hbewWle54UHM7pHILNPAs8mz0eKrp0t3z0l4AiRFAq9EAkXXvQZCij2W6zALI61w8hEFE8MYryn3Ueax16L4+kC7XC42w3ennll9BRy5SIw49zXkiIk1kVvwMvc4hKYcosTyhEuu/cm0IQ7OIE5g4t1JWSckT/yMFCdwwqr6hewSLp95VC2pq262mk1Ik+i4ChET6giL14qpu+zSWcx1SVisRMqw0evCoFmkv7jE7mLpxRaRO6IMyA10Kvbd+S1ZR4wV6QpznnHQlmkxydbnZM+e2Z+7ikj2NiPXJoUi1Fki+wiAwuM13cbWdjEiWe0MnRPhA==
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- (2603:10a6:800:293::14) by DB9PR04MB9259.eurprd04.prod.outlook.com
- (2603:10a6:10:371::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Mon, 21 Apr
- 2025 10:38:45 +0000
-Received: from VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687]) by VI2PR04MB11147.eurprd04.prod.outlook.com
- ([fe80::75ad:fac7:cfe7:b687%7]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
- 10:38:44 +0000
-From: Carlos Song <carlos.song@nxp.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC: "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, Frank Li
-	<frank.li@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>, "conor.culhane@silvaco.com"
-	<conor.culhane@silvaco.com>, "linux-i3c@lists.infradead.org"
-	<linux-i3c@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] dt-bindings: i3c: silvaco,i3c-master: add i.MX94 and
- i.MX95 I3C
-Thread-Topic: [PATCH 1/3] dt-bindings: i3c: silvaco,i3c-master: add i.MX94 and
- i.MX95 I3C
-Thread-Index: AQHbsqmOsd+/ar3Zz0ezyk9WkgbK1A==
-Date: Mon, 21 Apr 2025 10:38:44 +0000
-Message-ID:
- <VI2PR04MB1114729FDE8ACDB33AC347E09E8B82@VI2PR04MB11147.eurprd04.prod.outlook.com>
-References: <20250421061544.2471379-1-carlos.song@nxp.com>
- <20250421061544.2471379-2-carlos.song@nxp.com>
- <202504210722320ac51194@mail.local>
-In-Reply-To: <202504210722320ac51194@mail.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: VI2PR04MB11147:EE_|DB9PR04MB9259:EE_
-x-ms-office365-filtering-correlation-id: 02f0b283-a586-4ef3-1937-08dd80c0b105
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?WExtbEFPME9TQ3YrV29DWW02aXVuNnlxTGJWU0FsWndDK2REWUV3dFN0WlFF?=
- =?utf-8?B?YXdZdDk4QmRzYjY4V3BhSGhLVU5Kak9OZzN4WWdGaG44cldJOEVvdWNacDN3?=
- =?utf-8?B?bWxRVmZQNUZHUFNaQzFOV0N5Z2s2Q2VzY0xiNzZPTWFSQTBJSmlGdzNwV1po?=
- =?utf-8?B?ZEtma1AydGt5Y0V0Y1FnR241REVLa0kxRWtoRmw1aE1RWEs3TThZVURteHQ0?=
- =?utf-8?B?L1VhUWdTczZSQnBjaE1YSW90aWVDVTZOZ1d0dnpCVGxZek8zV1o5amhBZkMz?=
- =?utf-8?B?VlllcXFuWHlUS002dUhPQ3RTc1NFUmtrT1d3eWNiaVk3VVBBUk1IMElIa0lu?=
- =?utf-8?B?MVM5NXEreTZnMU0yZVpHb1RWQXp1RU9RNlMvZjd1Sk5CVDh5eG1YQmpiZG9Z?=
- =?utf-8?B?d1JEdHpxNEtZV2hjNUhIWXdqRytHdDdTc0MyNnJvZitua0RGOVJNaXdtelpZ?=
- =?utf-8?B?ZWYvUk1nR1lyU0gzSVprYzBNc0NNdFRVYUhtaWFYZlJYTDh6SzlsQmhTRUNk?=
- =?utf-8?B?SWtzL3duQ2lScTJ5ZjhvQTVTdkNRMHNReWZXOWQrdUhmOTlIR3hCU3NZWFRj?=
- =?utf-8?B?aTJxSllNNEdPVXdnUk0zbCttWnV2QnhNWk5KQjZmYWJEekRpRjVoQUduL0cw?=
- =?utf-8?B?UXhKVEsydHRFNEgvcDd6elV2NUJTeno5NmhUUXVqS1JuUW5DSUI4UlVsNnRs?=
- =?utf-8?B?OGo5VldxZWl5SDBSOWgxY0ZEeit3cURmV3A5cjlpWVpLL0x0ZjlkZ2RuMzRt?=
- =?utf-8?B?RFFWT1Rydy9vZUs2MEd6Tml3MTh2aTE2VlkzdnYyUEVqQjVWZFNBclJwMGVR?=
- =?utf-8?B?M1NLRTlCK0FqcURxWTlnYmZtdkxTalRucVlqU0U3NzNaUWlpY2xzNXJlR0pV?=
- =?utf-8?B?ZEZYNFlEYlBabWxxMG5SMS9ac1AzcVE2TlRtYVZHeDY4WW5sV1JXZ3B4V1Ft?=
- =?utf-8?B?MW1LTVI3UDB5Sm03amZzUzc5M3J6WDJqaHpPSC9zUi9RQUhlWVBJaE02TWpL?=
- =?utf-8?B?dWM0ZWlqdDBzK1NSY1ZTYkJoK1pISlUyck5NR2kxczdHK01CNXZTUlJVSHQ3?=
- =?utf-8?B?TTk5M0FwcHVaN0x1NzM4YVdBSnUwZGdQNDJkaEhEcHpKN3R4ZEtwVk1ZeVVu?=
- =?utf-8?B?SkhPaXZ3SVRHeFN6ck1EWnljb0xScGNuVUVMM3hjbW9HTTFiQXBYKzRKb1B6?=
- =?utf-8?B?ZUlZVlVsbzI3UFpNNDFpYzJNQ2d3YlJSSnpmVllIRm8wNlJiTWxwbGFHYmd6?=
- =?utf-8?B?bmJEdmV1YW1YMHN4cHRtUm0zQ2VQUkdVVDFDODh1c21LSDcxQzBPMHYyK0lX?=
- =?utf-8?B?bUowRU5TWHFKTWt6d2RkWnRkRUF3L3ZWaVVuaUJxUnY3eHF2aHlNd0tGdmhR?=
- =?utf-8?B?Z1pNSGJKVXQxdXFWU1QvS0NGdFZwWXZqN1laSXMwUGdmRXBaT0Fvdy95QUd0?=
- =?utf-8?B?N1d1ZTlvZldUcURaU2dnL1RIZG1KNVFXSS93WXQ0QjBWSDAwVDdzZEFxck5O?=
- =?utf-8?B?M3JRK29xbjZ2N2ltc3pSTVZTT0JlMGRGbkNMdS82TnBqamZjR3UrZTNvTUhQ?=
- =?utf-8?B?Z1NnazNJRkJoc2YxbUpibXRhYUZRK2hQYTdDSEd2c0xrU1Zhb1lCNnBobVJW?=
- =?utf-8?B?K1g3aEVrR1BCTWNlQkY2R2U0V0V6VTFudzJRZjVVMU9NZktOSmdLY0I0UXNv?=
- =?utf-8?B?N0V0M3g3Y0lDT2hiZm1KRnR6TGtXRjF6WUdXcFBmUFBwWm5JNTNhU1pQblU2?=
- =?utf-8?B?b29hR3FjcW84U3NVbXpwRXJ2NGw1Rlh5R3VXT29RdjdhZDBuSUJpUWZtbVRt?=
- =?utf-8?B?c1BMWFY4T3ZFUlVVenUyRC9jbDB2dWpUS1l0ZGNRRDlpSzFFL25rTk50U2Iv?=
- =?utf-8?B?OEVUQ2JNbDFTaG5RTlhqdFZjQi9mWXdzKzY1QVJDeVpMSzRCNzB1N1RDR0Nn?=
- =?utf-8?B?bGRtWjhBRC9zYWRsTGllc2Z2ZkZoM3hkS3p6UW5leUo3TjZLQVBLYzJYeTg4?=
- =?utf-8?B?Nm53WDFjUWlBPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI2PR04MB11147.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VzV1NFJxZS96YjJFT2tWUC9lZkpCTENxbDNPLy93SnBZZVk2cnJhSHd4NU1Z?=
- =?utf-8?B?VmJ3c2F5VmEyZjM2Q1JhNHd1bitiSmt4LzhERVB3dkJ6VW56NzZPVkdCWGdk?=
- =?utf-8?B?SVJaOTF4TUR2eDlCcnNPQUQ1TzZ0TjZVVDhyVVhhNU03b3lEelI5TTNXVE1a?=
- =?utf-8?B?UkUxWEozWmxBeGY2dk8zL1YyTDN3WkR5SVkxRGdUWEdUZ3RVMWxJTXVHNEsv?=
- =?utf-8?B?UjdqT1pDY1dKbHFaSXFnQzFHY0phS2hMVEhrOHM4Mjlrc3lJbnIrNnpsMnZ6?=
- =?utf-8?B?YTRJbGtVZitNYW5jSGwwVHNuM2lwYmFZb3RnbURxL291Mkh6aldVWVFtUDRV?=
- =?utf-8?B?NVpLL3ZyWUFHcWFRL1RmRC9xd1RHbGc1RTBPWTRraFBWU2pUMThNdjEwQUNu?=
- =?utf-8?B?VmlwbXlmK2hzdlNDZHU4bEtOcjlpU3c3Nm4xWDlUV0ZsaVZvQUVBbmlpeDZR?=
- =?utf-8?B?R0g4Y3I1NElLQXFyeVFDQklML2wvT2JsZGhudWtqQ21sRDhJTGRnazR5aXZR?=
- =?utf-8?B?MGtzdy9KcDRpdStaVFdHVEozSmVEUm0ybGhrQURvNGVkV3RvTk1FckZOd1Bm?=
- =?utf-8?B?REMwWmJIRXRsTXNrUTJiWlk5bjZhVUx6RFJ2NjFYSWQzL0JSclVreEd0ZG1o?=
- =?utf-8?B?czBXM25haTBtRGorYXYvMlVzb3hwMmIzWU1SQkNrcjlsdThXQS9qdk5UOUhI?=
- =?utf-8?B?clV4bVBld3BwMW90dnJLZzVCcXJLVGlRSURYTUJCbFVFSTdYcGExenJDbmFE?=
- =?utf-8?B?WnRobGNTVXNGL092ZGt0VmprNk81SzYvTUljc21QOXJQOS90akhaaC9EMDJD?=
- =?utf-8?B?cGt3bDgwenh6RnVQNmNhMm5wSlZGNVdRbVVRNUVMenJtUGdveGtVaEJ3bEh4?=
- =?utf-8?B?SzdVbXcrTGFIQkxVUTJRb1lzUmJicFo1bUZwVmpGMUJQVTJkeU5yVEZMK1h3?=
- =?utf-8?B?UzNrYm5YdU93L2grdmljbjhCSHJkQTNRZ2FLOGNwOEdtM1Frb3BqdnloYzhT?=
- =?utf-8?B?U3lxbThlTmFydlB2aThwK09Za3NKYm1JU28xNS9GMHdNWVFod1c1N2thOU1X?=
- =?utf-8?B?dnhaN0RVcUl2UmU4UENQaEo0bEYyKy9KNW5CZ20wR2VVS0dwRUpXcHhxNnVI?=
- =?utf-8?B?VnpQYyttMmY0TE14aEpIZVFUUUZmdUVmdWQyWHhkY0JVV3NoLzB5bWJTM25h?=
- =?utf-8?B?TUVrMzQvb1JabTR5dk4wRDlJU2YrZkhsVENyUkxickZwUk5DbGlBWDIyU2VB?=
- =?utf-8?B?ckdrRktadFI1ZEtnZXorc2JWV21Wc2NMK0RmdHlzbEFUdTF5dUs4ajlCQjQ2?=
- =?utf-8?B?UUtDeVlmaGFzQVlTQzVYeStKWEZwZTFacUdWUUhqc3lucjFyUG5NOHFsc0c4?=
- =?utf-8?B?TUMvVVRvYkJ2MUtjYW5UZ3pZQUN4QnJGVkZKNmdXNUVzbysrWFRZd3hCcWNx?=
- =?utf-8?B?VFJjQXZvT1llQklncEdLYXg2VzI0ZjJvRXZWSWpBWnZCanJaVEVWVGlEOW5j?=
- =?utf-8?B?MU1rMlBsL2hDVHVBQjY4dENEUXNnOTV2N0EvaFhyQlZvMlNlSy9ndzZ0bXhm?=
- =?utf-8?B?NWRoWXc1S2FpT01Kd2l6VUwrYkxwMEJncDM2OVJBVmVnWnp1QVBjTmVPdHJi?=
- =?utf-8?B?NHN5UThndXFiRDhZVTQ2NnVTOVRBQjB0RjBJZFVqNHhtYXdscUI1bUJLZzBL?=
- =?utf-8?B?cGVNNjd0Wm55YmtITC9qWktDQm5xYXVuQ1F5UWEwTmRMbHpxdUIrczNpQTdN?=
- =?utf-8?B?dEJxQmJvamtQQys0QnhUdENtdlQxaUNIaFpFSW5uMU96YVBRU1JIemlYdmlw?=
- =?utf-8?B?Ym9NT3d3NmRzYnRGR2ovVGphbzFjS0pDREtnVlNmTFk1T0dnSm1acFFNU3dj?=
- =?utf-8?B?akJxOVd6T1ljdStKR0tlVGQreGRVWFJVNTg2SlN4cGllVndOYUtGcU1yV20r?=
- =?utf-8?B?QUUxS1dYWXJxNWhDMzNET1g3d0JVOFpTVjg4M01FTUJwUHJtam44SEhydWtq?=
- =?utf-8?B?Mks0dTJaYmJrSlRMSUJLOUMza2lpbW5JRy9WZGYrM3l6V2FpMXA3U1JjM3Nr?=
- =?utf-8?B?ZnJEL1p4M0Izejl3UTZlb0YramdOWlFURHN5cm0vL29WMzVUK3VDYTdLUEY4?=
- =?utf-8?Q?I/Ww=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="of5unEST"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A79C4CEE4;
+	Mon, 21 Apr 2025 10:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745232147;
+	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=of5unESTI9fOzX515uJlYR8s2BP1S8AaCCuikOMQuoXHcmARe+XJjVCUaapvH/8W8
+	 EVTBEUubD0ZG/L8ICdd71XchxAuqy7AsYfITuLteyLgWFKZ4WwTa+/bR7CEtRV9lZk
+	 aTBW6LQU2C0l/nFacyOQJApGdknoamfRBHcbRhq65NmSixegRE10bOX9Jojc3jGs+u
+	 fwXgec7D1lJSqNKLdTBseKqUCUGiBSI21sPC9knPTZ3mrYcJFJVxNOoL0gVTPWO7rh
+	 r+qoeDf+rkF2jJZUCvWuUuDWNRDqxBp90UfVqMwgBypJgEaNQN2iXBuqwtS1giDunh
+	 G8JiznRgBG+0g==
+Date: Mon, 21 Apr 2025 16:12:18 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Apurupa Pattapu <quic_apurupa@quicinc.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 02/11] tee: add close_context to TEE driver operation
+Message-ID: <aAYhCg6XOeZm7jqq@sumit-X1>
+References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
+ <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI2PR04MB11147.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02f0b283-a586-4ef3-1937-08dd80c0b105
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 10:38:44.8010
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mWX9Hz+7FMiEOHoFR41otjeTw4ugLYJsIb4FRzuhyJb4LQ2zINee55ifEdLnk9nY/aAjzLAUFuzkwexYSZDBIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9259
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQWxleGFuZHJlIEJlbGxv
-bmkgPGFsZXhhbmRyZS5iZWxsb25pQGJvb3RsaW4uY29tPg0KPiBTZW50OiBNb25kYXksIEFwcmls
-IDIxLCAyMDI1IDM6MjMgUE0NCj4gVG86IENhcmxvcyBTb25nIDxjYXJsb3Muc29uZ0BueHAuY29t
-Pg0KPiBDYzogbWlxdWVsLnJheW5hbEBib290bGluLmNvbTsgRnJhbmsgTGkgPGZyYW5rLmxpQG54
-cC5jb20+Ow0KPiByb2JoQGtlcm5lbC5vcmc7IGtyemsrZHRAa2VybmVsLm9yZzsgY29ub3IrZHRA
-a2VybmVsLm9yZzsNCj4gc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5k
-ZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBmZXN0ZXZhbUBnbWFpbC5jb207IGNvbm9yLmN1
-bGhhbmVAc2lsdmFjby5jb207DQo+IGxpbnV4LWkzY0BsaXN0cy5pbmZyYWRlYWQub3JnOyBpbXhA
-bGlzdHMubGludXguZGV2OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0ggMS8zXSBkdC1iaW5kaW5nczogaTNjOiBzaWx2
-YWNvLGkzYy1tYXN0ZXI6IGFkZCBpLk1YOTQNCj4gYW5kIGkuTVg5NSBJM0MNCj4gDQo+IENhdXRp
-b246IFRoaXMgaXMgYW4gZXh0ZXJuYWwgZW1haWwuIFBsZWFzZSB0YWtlIGNhcmUgd2hlbiBjbGlj
-a2luZyBsaW5rcyBvcg0KPiBvcGVuaW5nIGF0dGFjaG1lbnRzLiBXaGVuIGluIGRvdWJ0LCByZXBv
-cnQgdGhlIG1lc3NhZ2UgdXNpbmcgdGhlICdSZXBvcnQNCj4gdGhpcyBlbWFpbCcgYnV0dG9uDQo+
-IA0KPiANCj4gT24gMjEvMDQvMjAyNSAxNDoxNTo0MiswODAwLCBjYXJsb3Muc29uZ0BueHAuY29t
-IHdyb3RlOg0KPiA+IEZyb206IENhcmxvcyBTb25nIDxjYXJsb3Muc29uZ0BueHAuY29tPg0KPiA+
-DQo+ID4gQWRkIGNvbXBhdGlibGUgc3RyaW5nICJueHAsaW14OTQtaTNjIiBhbmQgIm54cCxpbXg5
-NS1pM2MiIGZvciB0aGUNCj4gPiBpLk1YOTQgY2hpcCBhbmQgaS5NWDk1IGNoaXAuIEJhY2t3YXJk
-IGlzIGNvbXBhdGlibGUgd2l0aA0KPiAic2lsdmFjbyxpM2MtbWFzdGVyLXYxIi4NCj4gPg0KPiA+
-IEFsc28gaS5NWDk0IGFuZCBpLk1YOTUgSTNDIG9ubHkgbmVlZCB0d28gY2xvY2tzIGFuZCBMZWdh
-Y3kgSTNDIG5lZWRzDQo+ID4gdGhyZWUgY2xvY2tzLiBTbyBhZGQgcmVzdHJpY3Rpb25zIGZvciBj
-bG9jayBhbmQgY2xvY2stbmFtZXMgcHJvcGVydGllcw0KPiA+IGZvciBkaWZmZXJlbnQgU29jcy4N
-Cj4gPg0KPiANCj4gTXkgZ3Vlc3MgaXMgdGhhdCB0aGUgSVAgc3RpbGwgcmVxdWlyZXMgMyBjbG9j
-a3MgYnV0IHRoZSBpbnRlZ3JhdGlvbiBpbiB0aGUgU29DDQo+IGZlZWRzIHRoZSBzYW1lIGNsb2Nr
-IHRvIHR3byBvZiB0aGVtLiBJJ20gbm90IHN1cmUgdGhpcyBjaGFuZ2UgaXMgcmVxdWlyZWQuDQo+
-IA0KDQpIaSwNCg0KVGhhbmsgeW91IGZvciB5b3VyIHN1Z2dlc3Rpb24uDQoNCkkzQyBJUCBpbiBp
-bXg5NC9pbXg5NSBpcyBpbXByb3ZlZCBiYXNlZCBvbiBzdmMgaTNjLCBkb24ndCBjaGFuZ2UgYW55
-IHJlZ2lzdGVyIGFuZCBsb2dpYy4NCk9uZSBkaWZmZXJlbmNlIGZyb20gdGhlIGNsayBudW1iZXIu
-IElNWDk0L0lNWDk1IEkzQyBJUCByZW1vdmVkIHNsb3cgY2xrIGlucHV0IHdoaWNoIGlzIG5vdCB1
-c2VkIHJlYWxseS4NCkkgdGFrZSBhbiBleGFtcGxlIG9mIEkzQzIgaW4gd2FrZXVwIGRvbWFpbi4N
-CkluIElNWDk0Lzk1IHNvYyBpbnRlZ3JhdGlvbiBjb25uZWN0IEJVU1dBS0VVUCB0byBwY2xrIGFu
-ZCBDTEtfSTNDMlNMT1cgdG8gZmFzdF9jbGsuIFRoZXkgZG9uJ3QgcmVtb3ZlIENMS19JM0MyIGZy
-b20gQ0NNLA0KS2VlcCBpdCBoZXJlLiBTbyBJIGFsc28gY2FuIGNvbmZpZ3VyZSAzIGNsb2NrcyBp
-biBkdHMuIE5vdGhpbmcgd2lsbCBiZSBhZmZlY3RlZC4gIEFsc28gQ0xLX0kzQzIgd29uJ3QgaGF2
-ZSBhbnkgZWZmZWN0LiANCg0KSW4gbGVnYWN5IHNvYywgc29jIGludGVncmF0aW9uIGNvbm5lY3Qg
-QlVTV0FLRVVQIHRvIHBjbGsgLENMS19JM0MyIHRvIGZhc3RfY2xrLCBDTEtfSTNDMlNMT1cgdG8g
-c2xvd19jbGsuDQoNCkkgZHJhdyBhIHBpY3R1cmUgdG8gaGVscCB1bmRlcnN0YW5kIHRoaXMuDQog
-DQpGb3IgaW14OTQvaW14OTU6DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICANCiAgICDilIzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAgICAgDQogICAg
-4pSCICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilIIgICAgDQog
-ICAg4pSCICAgICAgICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUkCAgICAgc29jICAgICAg
-ICAgICAgICAgICDilIIgICAgDQogICAg4pSCICAgICAgICAgIOKUgjk1Lzk0MyDilIIgIGludGVn
-cmF0aW9uICAgICAgICAgICAg4pSCICAgIA0KICAgIOKUgiAgICAgICAgICDilIIgaTNjICAg4pSC
-ICAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICANCiAgICDilIIgICAgICAgICAg4pSU4pSA
-4pSs4pSA4pSA4pSA4pSs4pSA4pSYICAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICANCiAg
-ICDilIIgICAgICAgIHBjbGvilIIgICDilIJmY2xrICAgICAgICAgICAgICAgICAgICAgICDilIIg
-ICAgDQogICAg4pSCICAgICDilIzilIDilIDilIDilIDilIDilIDilrogICDil4TilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilJAgICAgICAgICAgICAgICDilIIgICAgDQogICAg4pSC
-ICAgICDilIIgICAgICAgICAgICAgICAgICAgICAg4pSCICAgICAgICAgICAgICAg4pSCICAgIA0K
-ICAgIOKUgiAgICAg4pSCICAgICAgICAgICDilrIgICAgICAgICAg4pSCICAgICAgICAgICAgICAg
-4pSCICAgIA0KICAgIOKUgiAgICAg4pSCQlVTV0FLRVVQICDilIJDTEtfSTNDMiAg4pSCQ0xLX0kz
-QzJTTE9XICAg4pSCICAgIA0KICAgIOKUgiAgICDilIzilLzilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilLzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilLzilJAgICAgICAg
-ICAgICAgIOKUgiAgICANCiAgICDilIIgICAg4pSCICAgICAgICAgICAgICAgICAgICAgICAg4pSC
-ICAgICAgICAgICAgICDilIIgICAgDQogICAg4pSCICAgIOKUgiAgICAgICAgICAgICAgICAgICAg
-ICAgIOKUgiAgICAgICAgICAgICAg4pSCICAgIA0KICAgIOKUgiAgICDilIIgICAgICBDQ00gICAg
-ICAgICAgICAgICDilIIgICAgICAgICAgICAgIOKUgiAgICANCiAgICDilIIgICAg4pSCICAgICAg
-ICAgICAgICAgICAgICAgICAg4pSCICAgICAgICAgICAgICDilIIgICAgDQogICAg4pSCICAgIOKU
-giAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICAgICAgICAgICAg4pSCICAgIA0KICAgIOKU
-giAgICDilJTilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilJggICAgICAgICAgICAgIOKUgiAgICANCiAgICDilJTi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilJggICAgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgDQpGb3IgbGVnYWN5IHN2YyBJM0M6DQogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICANCiDilIzilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
-lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilJAgDQog
-4pSCICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDilIIgDQog4pSC
-ICAgICAgICAgIOKUjOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUkCAgICAgc29jICAgICAgICAgICAg
-ICAgICDilIIgDQog4pSCICAgICAgICAgIOKUgiBTVkMgICDilIIgIGludGVncmF0aW9uICAgICAg
-ICAgICAg4pSCIA0KIOKUgiAgICAgICAgICDilIIgaTNjICAg4pSC4peE4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSQICAgICAgICAgICAgICAg4pSCIA0KIOKUgiAgICAgICAgICDilJTilIDilKzi
-lIDilIDilIDilKzilIDilJggICAgICAgICDilIIgICAgICAgICAgICAgICDilIIgDQog4pSCICAg
-ICAgICBwY2xr4pSCICAg4payZmNsayAgICAgICDilIJzY2xrICAgICAgICAgICDilIIgDQog4pSC
-ICAgICDilIzilIDilIDilIDilIDilIDilIDilrogICDilIIgICAgICAgICAgIOKUgiAgICAgICAg
-ICAgICAgIOKUgiANCiDilIIgICAgIOKUgiAgICAgICAgICDilIIgICAgICAgICAgIOKUgiAgICAg
-ICAgICAgICAgIOKUgiANCiDilIIgICAgIOKUgiAgICAgICAgICDilIIgICAgICAgICAgIOKUgiAg
-ICAgICAgICAgICAgIOKUgiANCiDilIIgICAgIOKUgkJVU1dBS0VVUCDilIIgQ0xLX0kzQzIgIOKU
-gkNMS19JM0MyU0xPVyAgIOKUgiANCiDilIIgICAg4pSM4pS04pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pS04pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSQICAgICAg
-ICAgICAgICDilIIgDQog4pSCICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAgICAg
-ICAgICAgICAg4pSCIA0KIOKUgiAgICDilIIgICAgICAgICAgICAgICAgICAgICAgICDilIIgICAg
-ICAgICAgICAgIOKUgiANCiDilIIgICAg4pSCICAgICAgQ0NNICAgICAgICAgICAgICAg4pSCICAg
-ICAgICAgICAgICDilIIgDQog4pSCICAgIOKUgiAgICAgICAgICAgICAgICAgICAgICAgIOKUgiAg
-ICAgICAgICAgICAg4pSCIA0KIOKUgiAgICDilIIgICAgICAgICAgICAgICAgICAgICAgICDilIIg
-ICAgICAgICAgICAgIOKUgiANCiDilIIgICAg4pSU4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYICAgICAgICAg
-ICAgICDilIIgDQog4pSU4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
-4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSYIA0KICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQoNCj4gPiBTaWduZWQtb2ZmLWJ5OiBDYXJs
-b3MgU29uZyA8Y2FybG9zLnNvbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdz
-L2kzYy9zaWx2YWNvLGkzYy1tYXN0ZXIueWFtbCAgICAgIHwgNDUgKysrKysrKysrKysrKysrKy0t
-LQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9pM2Mvc2lsdmFjbyxpM2MtbWFzdGVyLnlhbWwNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pM2Mvc2lsdmFjbyxpM2MtbWFzdGVyLnlhbWwNCj4gPiBpbmRleCA0
-ZmJkY2RhYzBhZWUuLjkyNTVkMzVlMjg1NCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvaTNjL3NpbHZhY28saTNjLW1hc3Rlci55YW1sDQo+ID4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kzYy9zaWx2YWNvLGkzYy1tYXN0
-ZXIueWFtbA0KPiA+IEBAIC05LDE0ICs5LDE3IEBAIHRpdGxlOiBTaWx2YWNvIEkzQyBtYXN0ZXIN
-Cj4gPiAgbWFpbnRhaW5lcnM6DQo+ID4gICAgLSBDb25vciBDdWxoYW5lIDxjb25vci5jdWxoYW5l
-QHNpbHZhY28uY29tPg0KPiA+DQo+ID4gLWFsbE9mOg0KPiA+IC0gIC0gJHJlZjogaTNjLnlhbWwj
-DQo+ID4gLQ0KPiA+ICBwcm9wZXJ0aWVzOg0KPiA+ICAgIGNvbXBhdGlibGU6DQo+ID4gLSAgICBl
-bnVtOg0KPiA+IC0gICAgICAtIG51dm90b24sbnBjbTg0NS1pM2MNCj4gPiAtICAgICAgLSBzaWx2
-YWNvLGkzYy1tYXN0ZXItdjENCj4gPiArICAgIG9uZU9mOg0KPiA+ICsgICAgICAtIGVudW06DQo+
-ID4gKyAgICAgICAgLSBudXZvdG9uLG5wY204NDUtaTNjDQo+ID4gKyAgICAgICAgLSBzaWx2YWNv
-LGkzYy1tYXN0ZXItdjENCj4gPiArICAgICAgLSBpdGVtczoNCj4gPiArICAgICAgICAtIGVudW06
-DQo+ID4gKyAgICAgICAgICAgIC0gbnhwLGlteDk0LWkzYw0KPiA+ICsgICAgICAgICAgICAtIG54
-cCxpbXg5NS1pM2MNCj4gPiArICAgICAgICAtIGNvbnN0OiBzaWx2YWNvLGkzYy1tYXN0ZXItdjEN
-Cj4gPg0KPiA+ICAgIHJlZzoNCj4gPiAgICAgIG1heEl0ZW1zOiAxDQo+ID4gQEAgLTI1LDEyICsy
-OCwxNCBAQCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAgbWF4SXRlbXM6IDENCj4gPg0KPiA+ICAgIGNs
-b2NrczoNCj4gPiArICAgIG1pbkl0ZW1zOiAyDQo+ID4gICAgICBpdGVtczoNCj4gPiAgICAgICAg
-LSBkZXNjcmlwdGlvbjogc3lzdGVtIGNsb2NrDQo+ID4gICAgICAgIC0gZGVzY3JpcHRpb246IGJ1
-cyBjbG9jaw0KPiA+ICAgICAgICAtIGRlc2NyaXB0aW9uOiBvdGhlciAoc2xvd2VyKSBldmVudHMg
-Y2xvY2sNCj4gPg0KPiA+ICAgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgbWluSXRlbXM6IDINCj4g
-PiAgICAgIGl0ZW1zOg0KPiA+ICAgICAgICAtIGNvbnN0OiBwY2xrDQo+ID4gICAgICAgIC0gY29u
-c3Q6IGZhc3RfY2xrDQo+ID4gQEAgLTQ2LDYgKzUxLDM0IEBAIHJlcXVpcmVkOg0KPiA+ICAgIC0g
-Y2xvY2stbmFtZXMNCj4gPiAgICAtIGNsb2Nrcw0KPiA+DQo+ID4gK2FsbE9mOg0KPiA+ICsgIC0g
-JHJlZjogaTNjLnlhbWwjDQo+ID4gKyAgIyBMZWdhY3kgU29jcyBuZWVkIHRocmVlIGNsb2Nrcw0K
-PiA+ICsgIC0gaWY6DQo+ID4gKyAgICAgIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgICAgY29tcGF0
-aWJsZToNCj4gPiArICAgICAgICAgIGNvbnN0OiBzaWx2YWNvLGkzYy1tYXN0ZXItdjENCj4gPiAr
-ICAgIHRoZW46DQo+ID4gKyAgICAgIHByb3BlcnRpZXM6DQo+ID4gKyAgICAgICAgY2xvY2tzOg0K
-PiA+ICsgICAgICAgICAgbWluSXRlbXM6IDMNCj4gPiArICAgICAgICBjbG9jay1uYW1lczoNCj4g
-PiArICAgICAgICAgIG1pbkl0ZW1zOiAzDQo+ID4gKyAgIyBpbXg5NCBhbmQgaW14OTUgU29jIG5l
-ZWQgdHdvIGNsb2Nrcw0KPiA+ICsgIC0gaWY6DQo+ID4gKyAgICAgIHByb3BlcnRpZXM6DQo+ID4g
-KyAgICAgICAgY29tcGF0aWJsZToNCj4gPiArICAgICAgICAgIGNvbnRhaW5zOg0KPiA+ICsgICAg
-ICAgICAgICBlbnVtOg0KPiA+ICsgICAgICAgICAgICAgIC0gbnhwLGlteDk0LWkzYw0KPiA+ICsg
-ICAgICAgICAgICAgIC0gbnhwLGlteDk1LWkzYw0KPiA+ICsgICAgdGhlbjoNCj4gPiArICAgICAg
-cHJvcGVydGllczoNCj4gPiArICAgICAgICBjbG9ja3M6DQo+ID4gKyAgICAgICAgICBtYXhJdGVt
-czogMg0KPiA+ICsgICAgICAgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgICAgICAgbWF4SXRlbXM6
-IDINCj4gPiArDQo+ID4gIHVuZXZhbHVhdGVkUHJvcGVydGllczogZmFsc2UNCj4gPg0KPiA+ICBl
-eGFtcGxlczoNCj4gPiAtLQ0KPiA+IDIuMzQuMQ0KPiA+DQo+IA0KPiAtLQ0KPiBBbGV4YW5kcmUg
-QmVsbG9uaSwgY28tb3duZXIgYW5kIENPTywgQm9vdGxpbiBFbWJlZGRlZCBMaW51eCBhbmQgS2Vy
-bmVsDQo+IGVuZ2luZWVyaW5nDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24u
-b3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmJvb3RsaW4uDQo+IGNvbSUyRiZkYXRhPTA1
-JTdDMDIlN0NjYXJsb3Muc29uZyU0MG54cC5jb20lN0MwNDAyMjExNGUxNDY0MmQ2DQo+IDVmNTQw
-OGRkODBhNTQ4ZmMlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdD
-DQo+IDYzODgwODE2OTU2NDE0OTg0NiU3Q1Vua25vd24lN0NUV0ZwYkdac2IzZDhleUpGYlhCMGVV
-MWhjR2tpTw0KPiBuUnlkV1VzSWxZaU9pSXdMakF1TURBd01DSXNJbEFpT2lKWGFXNHpNaUlzSWtG
-T0lqb2lUV0ZwYkNJc0lsZFVJam95ZlENCj4gJTNEJTNEJTdDMCU3QyU3QyU3QyZzZGF0YT0ycXFS
-b0tFMzhZUVpweUZnSEp2cVFuajQlMkZIdmFTUkllDQo+IGd5MFMxTk1OVURFJTNEJnJlc2VydmVk
-PTANCg==
+On Thu, Mar 27, 2025 at 07:47:24PM -0700, Amirreza Zarrabi wrote:
+> The tee_context can be used to manage TEE user resources, including
+> those allocated by the driver for the TEE on behalf of the user.
+> The release() callback is invoked only when all resources, such as
+> tee_shm, are released and there are no references to the tee_context.
+> 
+> When a user closes the device file, the driver should notify the
+> TEE to release any resources it may hold and drop the context
+> references. To achieve this, a close_context() callback is
+> introduced to initiate resource release in the TEE driver when
+> the device file is closed.
+
+Can you ellaborate more as to whether the TEE driver will release
+resources corresponding to a particular user or all the users?
+
+> 
+> Relocate teedev_ctx_get, teedev_ctx_put, tee_device_get, and
+> tee_device_get functions to tee_drv.h to make them accessible
+> outside the TEE subsystem.
+
+These should rather be relocated to tee_core.h as tee_drv.h is rather
+meant for kernel TEE client drivers.
+
+> 
+> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+> ---
+>  drivers/tee/tee_core.c    | 39 +++++++++++++++++++++++++++++++++++++++
+>  drivers/tee/tee_private.h |  6 ------
+>  include/linux/tee_core.h  | 11 +++++++++--
+>  include/linux/tee_drv.h   | 40 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 88 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index 24edce4cdbaa..22cc7d624b0c 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -72,6 +72,20 @@ struct tee_context *teedev_open(struct tee_device *teedev)
+>  }
+>  EXPORT_SYMBOL_GPL(teedev_open);
+>  
+> +/**
+> + * teedev_ctx_get() - Increment the reference count of a context
+> + *
+> + * This function increases the refcount of the context, which is tied to
+> + * resources shared by the same tee_device. During the unregistration process,
+> + * the context may remain valid even after tee_device_unregister() has returned.
+> + *
+> + * Users should ensure that the context's refcount is properly decreased before
+> + * calling tee_device_put(), typically within the context's release() function.
+> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
+> + * and release them simultaneously (see shm_alloc_helper()).
+> + *
+> + * @ctx: Pointer to the context
+> + */
+
+Let's not duplicate the documentation here when it has already been
+documented in the header file.
+
+Same for other places below.
+
+-Sumit
+
+>  void teedev_ctx_get(struct tee_context *ctx)
+>  {
+>  	if (ctx->releasing)
+> @@ -79,6 +93,7 @@ void teedev_ctx_get(struct tee_context *ctx)
+>  
+>  	kref_get(&ctx->refcount);
+>  }
+> +EXPORT_SYMBOL_GPL(teedev_ctx_get);
+>  
+>  static void teedev_ctx_release(struct kref *ref)
+>  {
+> @@ -89,6 +104,10 @@ static void teedev_ctx_release(struct kref *ref)
+>  	kfree(ctx);
+>  }
+>  
+> +/**
+> + * teedev_ctx_put() - Decrease reference count on a context
+> + * @ctx: pointer to the context
+> + */
+>  void teedev_ctx_put(struct tee_context *ctx)
+>  {
+>  	if (ctx->releasing)
+> @@ -96,11 +115,15 @@ void teedev_ctx_put(struct tee_context *ctx)
+>  
+>  	kref_put(&ctx->refcount, teedev_ctx_release);
+>  }
+> +EXPORT_SYMBOL_GPL(teedev_ctx_put);
+>  
+>  void teedev_close_context(struct tee_context *ctx)
+>  {
+>  	struct tee_device *teedev = ctx->teedev;
+>  
+> +	if (teedev->desc->ops->close_context)
+> +		teedev->desc->ops->close_context(ctx);
+> +
+>  	teedev_ctx_put(ctx);
+>  	tee_device_put(teedev);
+>  }
+> @@ -1024,6 +1047,10 @@ int tee_device_register(struct tee_device *teedev)
+>  }
+>  EXPORT_SYMBOL_GPL(tee_device_register);
+>  
+> +/**
+> + * tee_device_put() - Decrease the user count for a tee_device
+> + * @teedev: pointer to the tee_device
+> + */
+>  void tee_device_put(struct tee_device *teedev)
+>  {
+>  	mutex_lock(&teedev->mutex);
+> @@ -1037,7 +1064,18 @@ void tee_device_put(struct tee_device *teedev)
+>  	}
+>  	mutex_unlock(&teedev->mutex);
+>  }
+> +EXPORT_SYMBOL_GPL(tee_device_put);
+>  
+> +/**
+> + * tee_device_get() - Increment the user count for a tee_device
+> + * @teedev: Pointer to the tee_device
+> + *
+> + * If tee_device_unregister() has been called and the final user of @teedev
+> + * has already released the device, this function will fail to prevent new users
+> + * from accessing the device during the unregistration process.
+> + *
+> + * Returns: true if @teedev remains valid, otherwise false
+> + */
+>  bool tee_device_get(struct tee_device *teedev)
+>  {
+>  	mutex_lock(&teedev->mutex);
+> @@ -1049,6 +1087,7 @@ bool tee_device_get(struct tee_device *teedev)
+>  	mutex_unlock(&teedev->mutex);
+>  	return true;
+>  }
+> +EXPORT_SYMBOL_GPL(tee_device_get);
+>  
+>  /**
+>   * tee_device_unregister() - Removes a TEE device
+> diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
+> index 9bc50605227c..d3f40a03de36 100644
+> --- a/drivers/tee/tee_private.h
+> +++ b/drivers/tee/tee_private.h
+> @@ -14,12 +14,6 @@
+>  
+>  int tee_shm_get_fd(struct tee_shm *shm);
+>  
+> -bool tee_device_get(struct tee_device *teedev);
+> -void tee_device_put(struct tee_device *teedev);
+> -
+> -void teedev_ctx_get(struct tee_context *ctx);
+> -void teedev_ctx_put(struct tee_context *ctx);
+> -
+>  struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t size);
+>  struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
+>  					  unsigned long addr, size_t length);
+> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
+> index a38494d6b5f4..8a4c9e30b652 100644
+> --- a/include/linux/tee_core.h
+> +++ b/include/linux/tee_core.h
+> @@ -65,8 +65,9 @@ struct tee_device {
+>  /**
+>   * struct tee_driver_ops - driver operations vtable
+>   * @get_version:	returns version of driver
+> - * @open:		called when the device file is opened
+> - * @release:		release this open file
+> + * @open:		called for a context when the device file is opened
+> + * @close_context:	called when the device file is closed
+> + * @release:		called to release the context
+>   * @open_session:	open a new session
+>   * @close_session:	close a session
+>   * @system_session:	declare session as a system session
+> @@ -76,11 +77,17 @@ struct tee_device {
+>   * @supp_send:		called for supplicant to send a response
+>   * @shm_register:	register shared memory buffer in TEE
+>   * @shm_unregister:	unregister shared memory buffer in TEE
+> + *
+> + * The context given to @open might last longer than the device file if it is
+> + * tied to other resources in the TEE driver. @close_context is called when the
+> + * client closes the device file, even if there are existing references to the
+> + * context. The TEE driver can use @close_context to start cleaning up.
+>   */
+>  struct tee_driver_ops {
+>  	void (*get_version)(struct tee_device *teedev,
+>  			    struct tee_ioctl_version_data *vers);
+>  	int (*open)(struct tee_context *ctx);
+> +	void (*close_context)(struct tee_context *ctx);
+>  	void (*release)(struct tee_context *ctx);
+>  	int (*open_session)(struct tee_context *ctx,
+>  			    struct tee_ioctl_open_session_arg *arg,
+> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
+> index a54c203000ed..ce23fd42c5d4 100644
+> --- a/include/linux/tee_drv.h
+> +++ b/include/linux/tee_drv.h
+> @@ -96,6 +96,46 @@ struct tee_param {
+>  	} u;
+>  };
+>  
+> +/**
+> + * tee_device_get() - Increment the user count for a tee_device
+> + * @teedev: Pointer to the tee_device
+> + *
+> + * If tee_device_unregister() has been called and the final user of @teedev
+> + * has already released the device, this function will fail to prevent new users
+> + * from accessing the device during the unregistration process.
+> + *
+> + * Returns: true if @teedev remains valid, otherwise false
+> + */
+> +bool tee_device_get(struct tee_device *teedev);
+> +
+> +/**
+> + * tee_device_put() - Decrease the user count for a tee_device
+> + * @teedev: pointer to the tee_device
+> + */
+> +void tee_device_put(struct tee_device *teedev);
+> +
+> +/**
+> + * teedev_ctx_get() - Increment the reference count of a context
+> + *
+> + * This function increases the refcount of the context, which is tied to
+> + * resources shared by the same tee_device. During the unregistration process,
+> + * the context may remain valid even after tee_device_unregister() has returned.
+> + *
+> + * Users should ensure that the context's refcount is properly decreased before
+> + * calling tee_device_put(), typically within the context's release() function.
+> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
+> + * and release them simultaneously (see shm_alloc_helper()).
+> + *
+> + * @ctx: Pointer to the context
+> + */
+> +void teedev_ctx_get(struct tee_context *ctx);
+> +
+> +/**
+> + * teedev_ctx_put() - Decrease reference count on a context
+> + * @ctx: pointer to the context
+> + */
+> +void teedev_ctx_put(struct tee_context *ctx);
+> +
+>  /**
+>   * tee_shm_alloc_kernel_buf() - Allocate kernel shared memory for a
+>   *                              particular TEE client driver
+> 
+> -- 
+> 2.34.1
+> 
+> 
