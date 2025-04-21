@@ -1,169 +1,291 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CEBD264F8F
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3F52905;
+	Mon, 21 Apr 2025 12:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745239363; cv=none; b=nwA08IXSPKamc9VIxojXfM8P/1yO3jWTTJEj0y1UOY7bQnEGbSM0hIPDkXBfuGJlC1+QbZnMUeBkRR9p/I2NfOuethXWvjVyjzh/ugQ3iS/MdCUNF28wwEaT4Vwgcl1HbwYWF1f8j/hTusBNh1oCgqTzQJgn99Q/aRjdtBZxPco=
+	t=1745239469; cv=none; b=TS8GAQU8dJVSV/loIbE0Z9wqfEy0ltvD6NOheMc0/6AmgatEk0H9t5BwcVlsUW/lRo3p0PltcGEwUzONS1B52mWNYwTG4EIpoQ6oRyxuUiB6W5se2+sdo5v/FghZag2zAEC80hCqsICv/h5XFa0O9aT1DYu/lMo00KSMwMNmQeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745239363; c=relaxed/simple;
-	bh=nRO5OSLtxXidrQVlQfeNk550Tzm4uT/LC9HCLrmY1fs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T2dVFL3o0bauT6bGd1cuwwYJlb//sgXPfj+zgpnSngC7b9oguAFpFcUGXqm5/84cA9C8Xmw1YFj069OwSv3+/O9eVf4eYA3f1CDJZLWJN8u5HHTTvr/YdDEARMWsPXUjPuO8xVp+h/nUJBVXA6lVAIa3uVHGkyNSTWzOW4EpYMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 53LCKdH8046275
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 20:20:39 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 53LCJT2d045671
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Mon, 21 Apr 2025 20:19:29 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.11) by ATCPCS34.andestech.com
- (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
- 2025 20:19:29 +0800
-Date: Mon, 21 Apr 2025 20:19:29 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: Rob Herring <robh@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <alex@ghiti.fr>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <tglx@linutronix.de>,
-        <daniel.lezcano@linaro.org>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        <tim609@andestech.com>
-Subject: Re: [PATCH 4/9] dt-bindings: interrupt-controller: add Andes
- machine-level software interrupt controller
-Message-ID: <aAY30QwzG6/7RWhE@atctrx.andestech.com>
-References: <20250407104937.315783-1-ben717@andestech.com>
- <20250407104937.315783-5-ben717@andestech.com>
- <20250407141708.GA2250717-robh@kernel.org>
+	s=arc-20240116; t=1745239469; c=relaxed/simple;
+	bh=msmr++qMaRrpMwocl7aVdZOHFvpjPy35z+sljXfcCqs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAMyBk0RH1xfgbotu+t2F6PfoUOFAnmBaRojGYHTFpu+fTjlHoV2U8uNod3+w7D7csaLE78F17zq/oWY6wiOoxjGVm9n0acQ/+/v8yfGuTONASZ7Iz+QC//+w80/C0yexwVfEPag5PwOBDWEczXkjiEORXbngwpMreYgLOWxSYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6B9ZQBE; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6B9ZQBE"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso7392620a12.3;
+        Mon, 21 Apr 2025 05:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745239466; x=1745844266; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8wgu7iDQ+eyYe+Yv9pFlAr+skkcnHXb23MdhqN0e3I=;
+        b=b6B9ZQBEDNciquwjZkli2pyforkDvngEnRzLTlhSdpxbiL7hw12JVnjuNoM/9fEBqC
+         QxHdDp/IVFJvMzG3ffyIoiMvbh0jshaNZ1AHPRkE9BpfIaNsjRWVJknn8O2vCdgqXGma
+         xq6Lpu7hI7/0+hxkU/hGSHzFaUTYJGM5LfwNNVlOdkUmGZtQUCfMgAbqPlI6uMZP/9uH
+         y/ChHxwJrBgEva57KWYKuJhm1f8aGhajNzw6mkHIv4dCgsYJ6Qxjn6g8VbrBUnreJqJB
+         bcOpeeB5dOPDWAibqiLOTqJ6bm2hAxu3ycOEhabdre7TsX0gexaBYTNY9PSqAqfLZcV+
+         ElAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745239466; x=1745844266;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q8wgu7iDQ+eyYe+Yv9pFlAr+skkcnHXb23MdhqN0e3I=;
+        b=cDwK1eNC8DAXZRL1sPKyYcdIdTeDYlY6L2F4kFws1ZubZ6ANWlQfTH++VdxeNeZYZC
+         OGP1tOsqV6O51cBOktjV7UFA4D9N8PFZwGD76UxgF5vauXn/f3MIk6mXkmc/W2xhFb77
+         y1lF4ycCNSfrnVj+KdL0HvSldvHD10zKJb2oVW1nsWKRvR0U3ynQTqZ/8DAz4RzxPFX3
+         udhPqb/p5etLnDk4LuzwSdxGUF2MzdKxuSUxY/vY7gOntYigu084Hvr2G0yW8SBjsVjG
+         mwJmcunLNSxtHx4yFlGQRI8DSbFgwMeIFhAIijyJZ8zIMfb2qLZ+JTsm5rU9odPAXvTa
+         QCww==
+X-Forwarded-Encrypted: i=1; AJvYcCW+qitfpT7qFU2GnrZff5Ygfx2AGQ4/jQ2ZQ3h6aoYF2X1vGiajhMLIEnJGQqQC0xRxSrxAR6HWjvQtxLxOfCxnxzhP@vger.kernel.org, AJvYcCWOngqATotedxnWYVJOuexdtzd9EtAESy6c+Pj1IJcLk4Kg1dUuavTnGRPdDO5+IyDyMp0=@vger.kernel.org, AJvYcCXtB7UV1IVX7wOZj0OTidlZPFcm7/t7Vj1N5J4jmhJmJhG1Cm3W9Ms9dx72iEJdT8dqoq4xalH9@vger.kernel.org
+X-Gm-Message-State: AOJu0YykVN33eofjSiSHWhAn/3fJ1jlEEN/npIPVe5wFCiJV80GIrSd5
+	wuHe4OrReN8YOpkbO2SR2pSr2rCjLqsgZ4YkzQ9qf/3rtHunO7Lm
+X-Gm-Gg: ASbGncuUzcekS/fBP9y0ODPf/5+qto/l16l27LCIDa7oSltRHzhpcEqLcRqo6bQT9kz
+	7sNNbKo1Bg+71ZI/mc2b9maOtMYirMBCoizupY9kLFd7mzs7xQQAEZ2+UFkTtB0PiYiJLabg3ZP
+	IpwCpzI0ZhCjEJgNhjH1DdzyUoecry8HzZZgzyZMf9FJDu98TMP8CJ3LRllzOEzPPNPLMsfDlPU
+	zRR/vS/Hem68NZ1/3wOgwznyMLFDWNxj0M/+Bcu13kD2ROmBr6egmfV1ZgUhnmvDPuuiKg7Gbhz
+	uCAKZIABso8G1O+27yMeO8Zr1TMZiymAfVWf0wBmC1RUvfk=
+X-Google-Smtp-Source: AGHT+IFKOfPK1H0jKNo8rpw2hwhKgxQI2qhVac83pOeQAKMWP+1BKJj1LGWSLFV72pzppkcN9eu4lw==
+X-Received: by 2002:a17:907:2ce6:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-acb74d9b35dmr900858166b.43.1745239465528;
+        Mon, 21 Apr 2025 05:44:25 -0700 (PDT)
+Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4c673sm513175466b.52.2025.04.21.05.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 05:44:25 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 21 Apr 2025 14:44:21 +0200
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	David Ahern <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>,
+	Breno Leitao <leitao@debian.org>, netdev@vger.kernel.org,
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
+ DECLARE_TRACE() have _tp suffix
+Message-ID: <aAY9pcvYHkYKFwZ5@krava>
+References: <20250418110104.12af6883@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407141708.GA2250717-robh@kernel.org>
-User-Agent: Mutt/2.1.4 (2021-12-11)
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 53LCKdH8046275
+In-Reply-To: <20250418110104.12af6883@gandalf.local.home>
 
-On Mon, Apr 07, 2025 at 09:17:08AM -0500, Rob Herring wrote:
-> [EXTERNAL MAIL]
+On Fri, Apr 18, 2025 at 11:01:04AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> On Mon, Apr 07, 2025 at 06:49:32PM +0800, Ben Zong-You Xie wrote:
-> > Add the DT binding documentation for Andes machine-level software
-> > interrupt controller.
-> >
-> > In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-> > second time with all interrupt sources tied to zero as the software
-> > interrupt controller (PLICSW). PLICSW can generate machine-level software
-> > interrupts through programming its registers.
-> >
-> > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> > ---
-> >  .../andestech,plicsw.yaml                     | 48 +++++++++++++++++++
-> >  MAINTAINERS                                   |  1 +
-> >  2 files changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> > new file mode 100644
-> > index 000000000000..5432fcfd95ed
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> > @@ -0,0 +1,48 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/andestech,plicsw.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Andes machine-level software interrupt controller
-> > +
-> > +description:
-> > +  In the Andes platform such as QiLai SoC, the PLIC module is instantiated a
-> > +  second time with all interrupt sources tied to zero as the software interrupt
-> > +  controller (PLIC_SW). PLIC_SW can generate machine-level software interrupts
-> > +  through programming its registers.
-> > +
-> > +maintainers:
-> > +  - Ben Zong-You Xie <ben717@andestech.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - andestech,qilai-plicsw
-> > +      - const: andestech,plicsw
+> Most tracepoints in the kernel are created with TRACE_EVENT(). The
+> TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
+> reality, TRACE_EVENT() is just a helper macro that calls those other two
+> macros), will create not only a tracepoint (the function trace_<event>()
+> used in the kernel), it also exposes the tracepoint to user space along
+> with defining what fields will be saved by that tracepoint.
 > 
-> Drop the fallback. If you have another implementation that's compatible,
-> then andestech,qilai-plicsw will be the fallback.
->
+> There are a few places that tracepoints are created in the kernel that are
+> not exposed to userspace via tracefs. They can only be accessed from code
+> within the kernel. These tracepoints are created with DEFINE_TRACE()
+> 
+> Most of these tracepoints end with "_tp". This is useful as when the
+> developer sees that, they know that the tracepoint is for in-kernel only
+> and is not exposed to user space.
+> 
+> Instead of making this only a process to add "_tp", enforce it by making
+> the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
+> requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
+> to use that keeps the original name.
+> 
+> Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  include/linux/tracepoint.h   | 38 ++++++++++++++++++++++++------------
+>  include/trace/bpf_probe.h    |  4 ++--
+>  include/trace/define_trace.h | 17 +++++++++++++++-
+>  include/trace/events/sched.h | 30 ++++++++++++++--------------
+>  include/trace/events/tcp.h   |  2 +-
+>  5 files changed, 60 insertions(+), 31 deletions(-)
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index a351763e6965..826ce3f8e1f8 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  #endif
+>  
+>  #define DECLARE_TRACE(name, proto, args)				\
+> -	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
+> +	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
+>  			cpu_online(raw_smp_processor_id()),		\
+>  			PARAMS(void *__data, proto))
+>  
+>  #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
+> -	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
+> +	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
+>  			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
+>  			PARAMS(void *__data, proto))
+>  
+>  #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
+> +	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
+> +				PARAMS(void *__data, proto))
+> +
+> +#define DECLARE_TRACE_EVENT(name, proto, args)				\
+> +	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
+> +			cpu_online(raw_smp_processor_id()),		\
+> +			PARAMS(void *__data, proto))
+> +
+> +#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
+> +	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
+> +			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
+> +			PARAMS(void *__data, proto))
+> +
+> +#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
+>  	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
+>  				PARAMS(void *__data, proto))
+>  
+> @@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  
+>  #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
+>  #define DEFINE_EVENT(template, name, proto, args)		\
+> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+>  #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
+> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+>  #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
+> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+>  #define DEFINE_EVENT_CONDITION(template, name, proto,		\
+>  			       args, cond)			\
+> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
+> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+>  				PARAMS(args), PARAMS(cond))
+>  
+>  #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
+> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+>  #define TRACE_EVENT_FN(name, proto, args, struct,		\
+>  		assign, print, reg, unreg)			\
+> -	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+> -#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
+> +	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+> +#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
+>  		assign, print, reg, unreg)			\
+> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
+> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+>  			PARAMS(args), PARAMS(cond))
+>  #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
+>  			      struct, assign, print)		\
+> -	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
+> +	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+>  				PARAMS(args), PARAMS(cond))
+>  #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
+>  			    print, reg, unreg)			\
+> -	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
+> +	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
+>  
+>  #define TRACE_EVENT_FLAGS(event, flag)
+>  
+> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+> index 183fa2aa2935..fbfe83b939ac 100644
+> --- a/include/trace/bpf_probe.h
+> +++ b/include/trace/bpf_probe.h
+> @@ -119,8 +119,8 @@ static inline void bpf_test_buffer_##call(void)				\
+>  
+>  #undef DECLARE_TRACE
+>  #define DECLARE_TRACE(call, proto, args)				\
+> -	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
+> -	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
+> +	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
+> +	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
+>  
+>  #undef DECLARE_TRACE_WRITABLE
+>  #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
 
-Hi Rob,
+hi,
+do we need the change also for DECLARE_TRACE_WRITABLE?
+I needed change below for bpf selftest kmod
 
-Maybe this is a stupid question, but I don't understand the reason for
-dropping the fallback. I follow the same logic in commit 1267d9831171
-(dt-bindings: interrupt-controller: sifive,plic: Document Renesas RZ/Five
-SoC). Thus, I think if there is a new SoC also equipped with Andes
-PLIC-SW (NCEPLIC100-SW), the SoC vendor can simply add a new compatible
-string under the enum.
+jirka
 
-Also, I will rename andestech,plisw to andestech,nceplic100-sw if the
-fallback string is not dropped.
 
-Thanks,
-Ben
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts-extended:
-> > +    minItems: 1
-> > +    maxItems: 15872
-> > +
-> > +additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts-extended
-> > +
-> > +examples:
-> > +  - |
-> > +    interrupt-controller@400000 {
-> > +      compatible = "andestech,qilai-plicsw", "andestech,plicsw";
-> > +      reg = <0x400000 0x400000>;
-> > +      interrupts-extended = <&cpu0intc 3>,
-> > +                            <&cpu1intc 3>,
-> > +                            <&cpu2intc 3>,
-> > +                            <&cpu3intc 3>;
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index a0ccac1cca29..645d7137cb07 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -20728,6 +20728,7 @@ F:    include/linux/irqchip/riscv-imsic.h
-> >  RISC-V ANDES SoC Support
-> >  M:   Ben Zong-You Xie <ben717@andestech.com>
-> >  S:   Maintained
-> > +F:   Documentation/devicetree/bindings/interrupt-controller/andestech,plicsw.yaml
-> >  F:   Documentation/devicetree/bindings/riscv/andes.yaml
-> >
-> >  RISC-V ARCHITECTURE
-> > --
-> > 2.34.1
-> >
+---
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index fbfe83b939ac..9391d54d3f12 100644
+--- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -125,8 +125,8 @@ static inline void bpf_test_buffer_##call(void)				\
+ #undef DECLARE_TRACE_WRITABLE
+ #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
+ 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
+-	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
++	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
++	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
+ 
+ #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+ 
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
+index aeef86b3da74..2bac14ef507f 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
+@@ -42,7 +42,7 @@ DECLARE_TRACE(bpf_testmod_test_nullable_bare,
+ 
+ struct sk_buff;
+ 
+-DECLARE_TRACE(bpf_testmod_test_raw_tp_null,
++DECLARE_TRACE(bpf_testmod_test_raw_null,
+ 	TP_PROTO(struct sk_buff *skb),
+ 	TP_ARGS(skb)
+ );
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index f38eaf0d35ef..dd9b806d255e 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+ 
+ 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
+ 
+-	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
++	(void)trace_bpf_testmod_test_raw_null_tp(NULL);
+ 
+ 	bpf_testmod_test_struct_ops3();
+ 
+@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+ 	if (bpf_testmod_loop_test(101) > 100)
+ 		trace_bpf_testmod_test_read(current, &ctx);
+ 
+-	trace_bpf_testmod_test_nullable_bare(NULL);
++	trace_bpf_testmod_test_nullable_bare_tp(NULL);
+ 
+ 	/* Magic number to enable writable tp */
+ 	if (len == 64) {
+ 		struct bpf_testmod_test_writable_ctx writable = {
+ 			.val = 1024,
+ 		};
+-		trace_bpf_testmod_test_writable_bare(&writable);
++		trace_bpf_testmod_test_writable_bare_tp(&writable);
+ 		if (writable.early_ret)
+ 			return snprintf(buf, len, "%d\n", writable.val);
+ 	}
+@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
+ 		.len = len,
+ 	};
+ 
+-	trace_bpf_testmod_test_write_bare(current, &ctx);
++	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
+ 
+ 	return -EIO; /* always fail */
+ }
