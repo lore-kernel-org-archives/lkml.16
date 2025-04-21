@@ -1,495 +1,301 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13549264A86;
-	Mon, 21 Apr 2025 13:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745241150; cv=none; b=Cqabg78FvLlZOqnY7DSlw0wo/WhF9QXYIqIIuFZdD3JRAdcUJsjbuzsotOuWa35xIzXxxJ08boKd0evnnmzBF1iYSLbmj4Pc3Xoiu3vy6RweZnzWaISJWsXUOFYxYVI0ftxzUE1TQXgrdwv6MIfdrQvXk7guMq/6fTi3GzjvDa8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745241150; c=relaxed/simple;
-	bh=mDkQ8BpafYD8bkq1vS3udTjyPhni4W+EplBFBuDryWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b4f2ZTEEc1Co9Zu80YOjA5wz7ei7eFD8nZ32sBgXRlZaoE/jp6FPhFcg/BE2nlCSXWx9qEwl5wX60D7fuzP/ipAboOSPQHAdQna2RDbyefjiQY0v9EwubrwSl9SdCIZ0A/QTT/Wi0rgUU7NHGHDip0XXX9JFXcLkgKYdEQfaPms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=icKEVapo; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8124C265632
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745241174; cv=fail; b=SDac/g+c+kJOg1tr9yt0PE0I91oSslqj1+wRLqjqsXPI1RA48r+eEPCai0krRTOOlc2wB4ZMmS9IkopIzohRd0LhM+I2H9TvasTL60NJ32wwDDT6pj56LC/IMJZCgO1eilx1tmFMlBoOGBm+gjtgVef5tMRmVSi/mooTkhXwRF8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745241174; c=relaxed/simple;
+	bh=e6pJ5Oa9St6Bi2ubbsyyUlqBWG/IdnpgfCawpFu3lGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=koT6rAaoZUnVfbsgMlcS4wsQ28kZE4CWpYIZYaUVJW6MYMbQv6v1/IiCmdxJqivWmNGz/h6SvAtdDQj4RIh0kXsvkB8xe1aLohek4knJ1jFstoqLTDf2v8gCzqtrPbsGkgUD7PLk0DRDvmYAPf/hriNr5oXt69fSXZHIikhUe8U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UixSYqal; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kRjim1LX; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="icKEVapo"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9A8D36D5;
-	Mon, 21 Apr 2025 15:10:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745241018;
-	bh=mDkQ8BpafYD8bkq1vS3udTjyPhni4W+EplBFBuDryWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=icKEVapoIMJafkXK/KYyRZ224cduW/OpqTXysaNlC73KcsJog7sdS4DAPVJLmlVaa
-	 utguAZmB4PwO4v4fiP1TKl4bVRdXCiT1dnn62sf4n14OHB/rHSNXWNqEqk3/C9ZwmU
-	 9CX9eWZr5Kpgu+B11SuhKuixPin9WlwS2xTknfNY=
-Date: Mon, 21 Apr 2025 16:12:23 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 05/13] media: ti: j721e-csi2rx: add a subdev for the
- core device
-Message-ID: <20250421131223.GE29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-6-r-donadkar@ti.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UixSYqal";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kRjim1LX"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LCAmfd015781;
+	Mon, 21 Apr 2025 13:12:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=zCds2idwCngYnJz/z2
+	WuUxhIcSh1oWn3WPVsLe4L3iA=; b=UixSYqalieO9YKPk1kXK9GVHMxr5oKvN0/
+	qJKUIJCXvYYohIe+Xub1gXDNQtHH0nVkgtpjtK8Mhu4kXm80+cOvx6NNND6Xr3VR
+	l6VuIAc2eq4mSvKw5RajnhAZpKaKbpk51PS5DHZC8NNcflqyYQ2b8U0ynAf8Ny0e
+	EumnByBeRs94lYN8akqo7DkV1byofAg0kF6Gzy/xNXcgVMygElmoXnUHwJVk8NWO
+	aBofK4hH+SHTdGIQNJRdTExCynH4vU70Kv7CaBUMy1+n9vgTNpZNmMUdrylQDpKj
+	FcdL42q5SPI8pjqUqPJAP2tTqnY3IL8v/FCLl88KhN4prxD+G00g==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4642e0af3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 13:12:34 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53LD77RM010848;
+	Mon, 21 Apr 2025 13:12:34 GMT
+Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazlp17012032.outbound.protection.outlook.com [40.93.1.32])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 464298h1yp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 13:12:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R2cP33QgcR2HwxVP5tnVb7OvcbHnFZelyfk+kb352IZTsAdCb9aOCn70E0zNChGhjdVxOaUet4IlgUvO1JwGwYR7lBSr8xPJKuotj/Bevuzkd+Rk9VJI2qaD3i2V7/DSq159Fxqc9COXHJ8a3+88BgwSP9bHRekI0wcYnZ1LrMvINJNlpxKxMC/ytLkciCSTFHTAj3QFZATWpWJlpPzcwzf6gSyjWfRN+FooXXsHYJFSD1xVyo+ti5m/ut5DtdL4ydx2aqmFPe9UIfI0W70H38fHIbN+syrRo7DKx4t5ttgYSk9MraCC+jss+mcjw9SClrIeZjQL+4AKsi/3InGhNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zCds2idwCngYnJz/z2WuUxhIcSh1oWn3WPVsLe4L3iA=;
+ b=vc8wmnjoIdXn3ieHm2jt01HOAi4tNNQgLRL3isXXNhaUS5rFfLdtKOZR+EHtjs3g1N237G31pZQZu0Vqv6BvgOdRCLgh1BQYBIzDFWST/5sU1XIeXNoiS60dyM1PLqZClUMwLRjwWA+OS0G5slI63T4anZzIJXzhzWSQ8O504rW4OdElGERqGmi6S/XW11NTIgpJo1RCVXwwvnoj9Do7OfYmZjXTpsyz8k9viXzt0hnaEz91g1RlcFhYruLQJIWK39b8GOunVBqehJw99l+KEquTzkLVQii3Y9V8/ZgsMak0P3pjGCKXZhHuVBuiKhmKtfDODa2SjxO0x06k6s4HyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zCds2idwCngYnJz/z2WuUxhIcSh1oWn3WPVsLe4L3iA=;
+ b=kRjim1LXDkxNqF/HRxEDn0q3/1ry7U9x64ZooaP0RXfns139Nj3Csk/SvICoJZssYVJ/fn1HsSFQNToMabTQwIpzsf4sZiHxn6Onm0OawZ/pWbiSctByvPA3iFg42D6dBOB/6cemWAG4jp2Q/IzlueA8A0AF9sEK5nIGfnBp0r8=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DM6PR10MB4201.namprd10.prod.outlook.com (2603:10b6:5:216::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 13:12:31 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
+ 13:12:31 +0000
+Date: Mon, 21 Apr 2025 14:12:28 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/7] mm/mremap: introduce more mergeable mremap via
+ MREMAP_RELOCATE_ANON
+Message-ID: <f574e997-5276-415e-bdf3-8d347d120bf1@lucifer.local>
+References: <cover.1742478846.git.lorenzo.stoakes@oracle.com>
+ <d10037699391c42a4943f578c2a0bca890640f30.1742478846.git.lorenzo.stoakes@oracle.com>
+ <CAG48ez3CiRTUv4Qwy_UQzQuEDtUoPVVXnuPyiWoAhWVqkF3VTA@mail.gmail.com>
+ <182bf1ce-1b67-4243-854b-4d0c26aae563@redhat.com>
+ <2bdf7ac4-b359-420f-94fe-466ae98c4a49@lucifer.local>
+ <335b3432-af06-420f-b575-7a1d92148f6b@redhat.com>
+ <f718ccd0-7b67-4c82-87e7-720d905c3595@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f718ccd0-7b67-4c82-87e7-720d905c3595@lucifer.local>
+X-ClientProxiedBy: LO4P123CA0180.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18a::23) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-6-r-donadkar@ti.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM6PR10MB4201:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9f9bedb-4e1a-4003-7c9c-08dd80d62c9e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tNMCDlP3SFUSqFs/hg+piYcKKpEMmVDftxxF9RDohLuuPBcQF5UxQvNvWBNU?=
+ =?us-ascii?Q?xYlKPP6V9oeSKC/fut5GjGGmXdAnYVExCZYFBHoT30HwDNbu+bZ/xEX8QKDU?=
+ =?us-ascii?Q?3033XV6dfekRaGEhlx2IA8SZ2HGEd+gZoSXwjBb6OU1M1WAmoB/9hWipGnJK?=
+ =?us-ascii?Q?ZbrmR3HIooVUUohkV5QmjugVrm8rutyzIhIki9k/BNEFcLweY9wZh/UnmNmf?=
+ =?us-ascii?Q?ydmkx31r8/q6kKZRDYwYK3Im2Qc7DcGJThG7mUMvEUYlmgbjZrKiCC4ZhPGl?=
+ =?us-ascii?Q?ULXqHiU7+0UaHO5bQwXwqI4dr9YmSHgjdJFjoquOkjRjioRaI5ZscB64MKIW?=
+ =?us-ascii?Q?ReQXz6WCuoIvsvpucZUjcV9BN2IRbhKIscMSKoc7fLEfoau3mrAWGovqktlA?=
+ =?us-ascii?Q?MCW6985KeRbHjx6YliVdWzb41cw1AtCI62iYsT/cGtD1+NWz6Ou45gofXvU2?=
+ =?us-ascii?Q?mvE3Cf+MnDWJfoJEA+bH+WXkNbBQ6AQGuGRO1qjSb23ue2fb3qlvZKTiedr2?=
+ =?us-ascii?Q?h0g+YBY+aLvuKpDfJdE3rQoXM3MpDDouwMnyTHD9K6xwL3l5p5z9lXCiYsX6?=
+ =?us-ascii?Q?Mi/PmNd7/Uzhy/+V6mlyq4hxYJs3RTKhAwBHOkvdV6NTf0LaLJlFU2tiUYWd?=
+ =?us-ascii?Q?sLXNWjlkYebbhs8Oou16yk3a3bBPGJ3AxywYOY4yr+CVrvu+gDwf4NkdSpKv?=
+ =?us-ascii?Q?sFwgi0jIpC6QuDQ9DTHvHdVoi94J6uhDo8GM1a/EYTQXDDPgpRWTzU3Re5Ok?=
+ =?us-ascii?Q?u/THgz+vverVWmjbubqPQniAm2ibEzVy7OojKgNl/XWEdtKpzX1XzUkQhqP7?=
+ =?us-ascii?Q?tX6gaonnCicF8vBlU+bYkhZaQmG0ZkSKgeyn2aSYHFozxaS3I29GK1e7oGBC?=
+ =?us-ascii?Q?ihxR9bBrFTM0xMjyLFv19SniLnnRN9tQFzYuPRUIXvOVOlgsqqF3paacbs5E?=
+ =?us-ascii?Q?KmGGiF6Y9Qi+jtdx004OBT8D+5pstHtp+1f08ubVsCAwfQOiMQxCxAwRVmuh?=
+ =?us-ascii?Q?hTPp8iUGXMEcqWmkcsyGCBxy+sBWEJNf+MK++4OapZ15V5EKegHOmHa6HDPl?=
+ =?us-ascii?Q?AYDxLKhbw2c/3Hm8W1J+3y+ef9CdU46ieJ3eUPqRNZyHWwbNrh/h10aAxfKy?=
+ =?us-ascii?Q?Ta6HRg03xls4zwNpvQaUSMh04a9/jAnVXPc7vIRYn0bHnKnBSxI+Uawpv4hL?=
+ =?us-ascii?Q?ZAQ0hFYJF8tBYB9f4Gk8h2EobhSWkv3qaat8vUQ7smJbJk9N5HqzWV4qqrEf?=
+ =?us-ascii?Q?MORZTgMFZDNQSgGgB7rdBTDEOZ5DogXhU854tBqYUT41hWRFqHqoELoPa4y9?=
+ =?us-ascii?Q?T6Siy5sFhtfeC4fE+yo9e+cwo5Qi33k2zs+/ebFzgekP3Rhe+QEG5xWsi2pb?=
+ =?us-ascii?Q?jm956lvmB0JlgQHIR8IO9taVJJCNpP6XIYFuCQpGttbnDZSlcpGsb/EyhyGC?=
+ =?us-ascii?Q?BVjymOxY1FU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?D4a0+4Vy8Bk3+l9b1X2Vp6m2GM7p+hf3zCvAq7u0Vp7Gy/Eay0rEgtOb0M8g?=
+ =?us-ascii?Q?oOA2+AspfjOrrePAOUZsQCsEuh0N/LkCbBxGAFeS/zeldFIm0NZgzFu+7gWA?=
+ =?us-ascii?Q?diyzS/JP1ZyUfWavd28gMrnOyEw65+xlY54OjwRpkM/CWKuujfrACs4NaL9k?=
+ =?us-ascii?Q?Ncv+A/OYXOWlzTPmHeUGJNZf6DMGgQkyqOE0ctPiDptV6fWZV089nOsN2Ntq?=
+ =?us-ascii?Q?hAAciiVQH2FfEjr1lEyPLipDEWBkPgQvPFs6hqw/k1j5iqZknePiKzBx3GWu?=
+ =?us-ascii?Q?eZ8ACoeNtLtpQxlD6SO93RQJfeRAaRB+UNqgdIYYv4mmgk1Wo0KcGUw3gMYw?=
+ =?us-ascii?Q?qwHNLpxEIvBjjp6GfiggNM//CvdY8vyOPhJ7GXakUGbJUUpc/A/mKbWh2Zgm?=
+ =?us-ascii?Q?nVfNrBkizM7iNT2LzQcJxUc7GyVVkUTQ6rcVQBxjKNytA4Nzbn4jVrkJQ8MO?=
+ =?us-ascii?Q?Jx49wZNNrTrVc1BI4ZABnxS32Waz/ix3EIf3mSptQgnr2Qbnlp6qUoa9OvHW?=
+ =?us-ascii?Q?Od9/wEnVqOs7FNQblu0RN0VD9DEpk9pS0WaBwGuBBxw/nsLA+xxLFaMaDbnv?=
+ =?us-ascii?Q?Z0W2UXUFifa2Rmz6B1vZMPaY/KPWAsMloc8ctCduLkXl1dUpShOZWgfXHlAC?=
+ =?us-ascii?Q?M7LH5edv6PHgRBRqImdYkPiqLj3Bx+6xzjQwiqfWQAFoz/4uN4QdhOP7QnrS?=
+ =?us-ascii?Q?3b7HD6bGAE75kevw56C+SUPP2L2A6jppcYBZWGNjjKN18ZC69226eGtzSVyq?=
+ =?us-ascii?Q?4LOIeOU3cOB8DkOEDUFqE1+xDWr9Ra+ede6EIZr8w6OUUsCaqKwwW4ffAsd4?=
+ =?us-ascii?Q?hn7hwB+glp5VGIaSXLiq4r+XGn93yK+062rXTyGCTbf/QHvz3ZbzB1QJjQr/?=
+ =?us-ascii?Q?O0g3/mrN6lUiXfy5VB5LsRkqN7BLBdMxvLXdYUMaqgMjeHub6jR4TJphOTQ4?=
+ =?us-ascii?Q?Zm+P/6Nhg/e8aFeFEeXPUXywqdrUyUlC8HKBFD+tF+id4cuu0bMI0AWre/+W?=
+ =?us-ascii?Q?w0Az5oyDUwkpc1FMU+MlwBrtKMux+51hpcyN9ZoWWly7xhBFGqr3aActLdap?=
+ =?us-ascii?Q?C1c6+R8YLbkXPsmx/YXtxWgJF/tX/rO3f/LX9rr2wa5mxLsuuegFLdAFSJ//?=
+ =?us-ascii?Q?wZrUwcKI50ZYbWlLZT4OdJrmlSRx7aCZoxXu5vLFJZiNRIQfU5ZNA2p/JQGX?=
+ =?us-ascii?Q?z3HDljMAMWCxEtRMliDJBRuCWo87j98GaZXrD9xg6gmXFFQhEiHtxGyiNgKP?=
+ =?us-ascii?Q?KJstZASysYXyukYI9KzvuIHvl1y552spk5t+/rS8/T9Obfzc/nl7w/sl3D+u?=
+ =?us-ascii?Q?x8CD9uXlS0etHuUjNhjC2TGXsPdWXge2MOtKdwXTbQN9oF0XVOOQEuh5pX/m?=
+ =?us-ascii?Q?OqpY8DYA2a2OeKw5DbcGxcIOOGbiq+X2km5uAyJZfVrSbMdXSiduzIscXWxW?=
+ =?us-ascii?Q?OYUshd9duh+ZQN+LP05ROf42/IV7guVtoJ43HacPv8U+Jut5DdtYrSFrye8i?=
+ =?us-ascii?Q?pSMxPuTZRwCIxuRsXBKg/gLy8g46VXY5GPu+4H/KvAXHWzPW4f0FaAqxQqh7?=
+ =?us-ascii?Q?q7DP6qhi3oiVZhOL0InBS1xrMmMdsvwoAagAYRDt/hXnxAOw1WIty3FJ+dAD?=
+ =?us-ascii?Q?oQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	4gSFBAh6AP2CzgLf5gDksRxHHMVNRlW17QuD5+I5EM6VYXkOjwSZUSRoIlWC2hLWWE95fK7AmBAyM0wflBk6LsEWF63mpwJX+4I3aiwDqNHsg0uodEMGk9kaWy4xjE24GXJqOnuXD0H3l7LIEYKKVsfd5N3bPirC2QF7TbLbaapU5G/RCkrVWc6eluUkKhUQh6otinO+elrPO0fnWcBZMdQg0YbSDE6DWMPs3btpPySYDsSdVjyym1fQewl97Ecu/ybJkqZ0PtFR2h5+N4D8U9BSZtDj4LQ8W8Qgpno/Np9oCNC4P34ePOHkxFaRS6tiekpzZbgElPbK2ob21NBDEF0x0LoZNKqWoYaT4K1+OCd++paGtzFWWwCYKY0jxxIKucPdtXMCA/uVY22yn59reN81ZVxYzFoOoEuBHIR2bxkCpDKXTUxmHQmsKZLp86DYEF0ExLVtR4KWe2c+/5NIRCiDmbvZwIT+kgjX1qn0RW2ei7ODToRxOOrml1oxtwIo9OUJpx/vPDSd//rhQ6bwCt1+eNi+lTk+sMCJhnh/Ln1zjq54tGB3pv8X3isBLB4rtxbX+pq1ODGIxcmjbVV7dhPYn/wHfxv/96MGM2NPW84=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9f9bedb-4e1a-4003-7c9c-08dd80d62c9e
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 13:12:31.8465
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PXm3poP6OCAFFirKicBuJjX8v2S+MzHgco0L4lOM1sjCzh6mwNN+tgNJNufKirqRkF97v2SKjXv6AGiLESzKt7+S0PG0hKEcuAKT5FwVbv4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4201
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 phishscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504210102
+X-Proofpoint-GUID: ZKBhHNeB_4dLsd5n29vtGNsouIso0QNu
+X-Proofpoint-ORIG-GUID: ZKBhHNeB_4dLsd5n29vtGNsouIso0QNu
 
-Hi Rishikesh,
+On Mon, Mar 31, 2025 at 03:50:59PM +0100, Lorenzo Stoakes wrote:
+> On Sun, Mar 23, 2025 at 01:49:07PM +0100, David Hildenbrand wrote:
+> > > >
+> > > > c)  In -next, there is now be the option to use folio lock +
+> > > > folio_maybe_mapped_shared() == false. But it doesn't tell you into how many
+> > > > VMAs a large folio is mapped into.
+> > > >
+> > > > In the following case:
+> > > >
+> > > > [       folio     ]
+> > > > [ VMA#1 ] [ VMA#2 ]
+> > > >
+> > > > c) would not tell you if you are fine modifying the folio when moving VMA#2.
+> > >
+> > > Right, I feel like prior checks made should assert this is not the case,
+> > > however?  But mapcount check should be a last ditch assurance?
+> >
+> > Something nice might be hiding in c) that might be able to handle a single
+> > folio being covered by multiple vmas.
+> >
+> > I was thinking about the following:
+> >
+> > [       folio0     ]
+> > [       VMA#0      ]
+> >
+> > Then we do a partial (old-school) mremap()
+> >
+> > [ folio0 ]               [ folio0 ]
+> > [ VMA#1  ]               [ VMA#2  ]
+> >
+> > To then extend VMA#1 and fault in pages
+> >
+> > [ folio0 ][ folio1 ]         [ folio0 ]
+> > [      VMA#1       ]         [ VMA#2  ]
+> >
+> > If that is possible (did not try!, maybe something prevents us from
+> > extending VMA#1) mremap(MREMAP_RELOCATE_ANON) of VMA#1  / VMA#2 cannot work.
+> >
+> > We'd have to detect that scenario (partial mremap). You might be doing that
+> > with the anon-vma magic, something different might be: Assume we flag large
+> > folios if they were partially mremapped in any process.
+>
+> Do we have spare folio flags? :)) I always lose track of the situation with this
+> and Matthew's levels of tolerance for it :P
+>
+> >
+> > Then (with folio lock only)
+> >
+> > 1) folio_maybe_mapped_shared() == false: mapped into single process
 
-Thank you for the patch.
+Am looking at this series again :) This function is very handy thanks, will
+use in the upcoming RFCv2!
 
-On Thu, Apr 17, 2025 at 12:25:46PM +0530, Rishikesh Donadkar wrote:
-> From: Jai Luthra <j-luthra@ti.com>
-> 
-> With single stream capture, it was simpler to use the video device as
-> the media entity representing the main TI CSI2RX device. Now with multi
-> stream capture coming into the picture, the model has shifted to each
-> video device having a link to the main device's subdev. The routing
-> would then be set on this subdev.
-> 
-> Add this subdev, link each context to this subdev's entity and link the
-> subdev's entity to the source. Also add an array of media pads. It will
-> have one sink pad and source pads equal to the number of contexts.
-> 
-> Co-developed-by: Pratyush Yadav <p.yadav@ti.com>
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-> ---
->  .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 230 ++++++++++++++++--
->  1 file changed, 205 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 523c890139098..ea7e331e872af 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -51,6 +51,11 @@
->  #define MAX_WIDTH_BYTES			SZ_16K
->  #define MAX_HEIGHT_LINES		SZ_16K
->  
-> +#define TI_CSI2RX_PAD_SINK		0
-> +#define TI_CSI2RX_PAD_FIRST_SOURCE	1
-> +#define TI_CSI2RX_NUM_SOURCE_PADS	1
-> +#define TI_CSI2RX_NUM_PADS		(1 + TI_CSI2RX_NUM_SOURCE_PADS)
-> +
->  #define DRAIN_TIMEOUT_MS		50
->  #define DRAIN_BUFFER_SIZE		SZ_32K
->  
-> @@ -97,6 +102,7 @@ struct ti_csi2rx_ctx {
->  	struct mutex			mutex; /* To serialize ioctls. */
->  	struct v4l2_format		v_fmt;
->  	struct ti_csi2rx_dma		dma;
-> +	struct media_pad		pad;
->  	u32				sequence;
->  	u32				idx;
->  };
-> @@ -104,12 +110,15 @@ struct ti_csi2rx_ctx {
->  struct ti_csi2rx_dev {
->  	struct device			*dev;
->  	void __iomem			*shim;
-> +	struct mutex			mutex; /* To serialize ioctls. */
-> +	unsigned int			enable_count;
->  	struct v4l2_device		v4l2_dev;
->  	struct media_device		mdev;
->  	struct media_pipeline		pipe;
-> -	struct media_pad		pad;
-> +	struct media_pad		pads[TI_CSI2RX_NUM_PADS];
->  	struct v4l2_async_notifier	notifier;
->  	struct v4l2_subdev		*source;
-> +	struct v4l2_subdev		subdev;
->  	struct ti_csi2rx_ctx		ctx[TI_CSI2RX_NUM_CTX];
->  	/* Buffer to drain stale data from PSI-L endpoint */
->  	struct {
-> @@ -431,6 +440,15 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
->  	struct ti_csi2rx_dev *csi = dev_get_drvdata(notifier->v4l2_dev->dev);
->  	int ret, i;
->  
-> +	/* Create link from source to subdev */
-> +	ret = v4l2_create_fwnode_links_to_pad(csi->source,
-> +					      &csi->pads[TI_CSI2RX_PAD_SINK],
-> +					      MEDIA_LNK_FL_IMMUTABLE |
-> +					      MEDIA_LNK_FL_ENABLED);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Create and link video nodes for all DMA contexts */
->  	for (i = 0; i < TI_CSI2RX_NUM_CTX; i++) {
->  		struct ti_csi2rx_ctx *ctx = &csi->ctx[i];
->  		struct video_device *vdev = &ctx->vdev;
-> @@ -438,13 +456,17 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
->  		ret = video_register_device(vdev, VFL_TYPE_VIDEO, -1);
->  		if (ret)
->  			goto unregister_dev;
-> -	}
->  
-> -	ret = v4l2_create_fwnode_links_to_pad(csi->source, &csi->pad,
-> -					      MEDIA_LNK_FL_IMMUTABLE |
-> -					      MEDIA_LNK_FL_ENABLED);
-> -	if (ret)
-> -		goto unregister_dev;
-> +		ret = media_create_pad_link(&csi->subdev.entity,
-> +					    TI_CSI2RX_PAD_FIRST_SOURCE + ctx->idx,
-> +					    &vdev->entity, 0,
-> +					    MEDIA_LNK_FL_IMMUTABLE |
-> +					    MEDIA_LNK_FL_ENABLED);
-> +		if (ret) {
-> +			video_unregister_device(vdev);
-> +			goto unregister_dev;
-> +		}
-> +	}
->  
->  	ret = v4l2_device_register_subdev_nodes(&csi->v4l2_dev);
->  	if (ret)
-> @@ -454,8 +476,10 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
->  
->  unregister_dev:
->  	i--;
-> -	for (; i >= 0; i--)
-> +	for (; i >= 0; i--) {
-> +		media_entity_remove_links(&csi->ctx[i].vdev.entity);
->  		video_unregister_device(&csi->ctx[i].vdev);
-> +	}
->  	return ret;
->  }
->  
-> @@ -859,7 +883,7 @@ static int ti_csi2rx_start_streaming(struct vb2_queue *vq, unsigned int count)
->  	dma->state = TI_CSI2RX_DMA_ACTIVE;
->  	spin_unlock_irqrestore(&dma->lock, flags);
->  
-> -	ret = v4l2_subdev_call(csi->source, video, s_stream, 1);
-> +	ret = v4l2_subdev_call(&csi->subdev, video, s_stream, 1);
->  	if (ret)
->  		goto err_dma;
->  
-> @@ -887,7 +911,7 @@ static void ti_csi2rx_stop_streaming(struct vb2_queue *vq)
->  	writel(0, csi->shim + SHIM_CNTL);
->  	writel(0, csi->shim + SHIM_DMACNTX(ctx->idx));
->  
-> -	ret = v4l2_subdev_call(csi->source, video, s_stream, 0);
-> +	ret = v4l2_subdev_call(&csi->subdev, video, s_stream, 0);
->  	if (ret)
->  		dev_err(csi->dev, "Failed to stop subdev stream\n");
->  
-> @@ -903,8 +927,112 @@ static const struct vb2_ops csi_vb2_qops = {
->  	.stop_streaming = ti_csi2rx_stop_streaming,
->  };
->  
-> +static inline struct ti_csi2rx_dev *to_csi2rx_dev(struct v4l2_subdev *sd)
-> +{
-> +	return container_of(sd, struct ti_csi2rx_dev, subdev);
-> +}
-> +
+> > 2) folio_maybe_partially_mremaped() == false: not scattered in virtual
+> >    address space
 
-It's customary to place such functions just after the definition of the
-corresponding structure.
+This is intriguing, I think perhaps best to defer this to a later date :)
+have added a personal todo accordingly. We are able to fairly reasonably
+detect this case right now so it's not urgent.
 
-> +static int ti_csi2rx_sd_set_fmt(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_state *state,
-> +				struct v4l2_subdev_format *format)
-> +{
-> +	struct v4l2_mbus_framefmt *fmt;
-> +
-> +	/* No transcoding, don't allow setting source fmt */
-> +	if (format->pad > TI_CSI2RX_PAD_SINK)
-> +		return v4l2_subdev_get_fmt(sd, state, format);
-> +
-> +	if (!find_format_by_code(format->format.code))
-> +		format->format.code = ti_csi2rx_formats[0].code;
-> +
-
-Are there no minimum/maximum limits on the side ?
-
-> +	format->format.field = V4L2_FIELD_NONE;
-
-The colorspace fields need handling too. It's typical for userspace to
-set them to *_DEFAULT, on the sink pad, and the kernel is supposed then
-adjust them as the V4L2 spec indicates that *_DEFAULT can't be returned.
-
-As lots of drivers handle color spaces in a pass-through way, some help
-from the V4L2 core would be nice.
-
-> +
-> +	fmt = v4l2_subdev_state_get_format(state, format->pad, format->stream);
-> +	*fmt = format->format;
-> +
-> +	fmt = v4l2_subdev_state_get_format(state, TI_CSI2RX_PAD_FIRST_SOURCE,
-> +					   format->stream);
-> +	*fmt = format->format;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ti_csi2rx_sd_init_state(struct v4l2_subdev *sd,
-> +				   struct v4l2_subdev_state *state)
-> +{
-> +	struct v4l2_subdev_format format = {
-> +		.pad = TI_CSI2RX_PAD_SINK,
-> +		.format = {
-> +			.width = 640,
-> +			.height = 480,
-> +			.code = MEDIA_BUS_FMT_UYVY8_1X16,
-> +			.field = V4L2_FIELD_NONE,
-> +			.colorspace = V4L2_COLORSPACE_SRGB,
-> +			.ycbcr_enc = V4L2_YCBCR_ENC_601,
-> +			.quantization = V4L2_QUANTIZATION_LIM_RANGE,
-> +			.xfer_func = V4L2_XFER_FUNC_SRGB,
-> +		},
-> +	};
-> +
-> +	return ti_csi2rx_sd_set_fmt(sd, state, &format);
-
-Given that ti_csi2rx_sd_set_fmt() doesn't really perform any relevant
-adjustment for the default format, it may be easier to replace the above
-structure with a static const struct v4l2_mbus_framefmt, and assign it
-to the sink and source formats. It depends a bit on how
-ti_csi2rx_sd_set_fmt() will evolve when adding support for multiple
-streams.
-
-> +}
-> +
-> +static int ti_csi2rx_sd_s_stream(struct v4l2_subdev *sd, int enable)
-> +{
-> +	struct ti_csi2rx_dev *csi = to_csi2rx_dev(sd);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&csi->mutex);
-> +
-> +	if (enable) {
-> +		if (csi->enable_count > 0) {
-> +			csi->enable_count++;
-> +			goto out;
-> +		}
-> +
-> +		ret = v4l2_subdev_call(csi->source, video, s_stream, 1);
-> +		if (ret)
-> +			goto out;
-> +
-> +		csi->enable_count++;
-> +	} else {
-> +		if (csi->enable_count == 0) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		if (--csi->enable_count > 0)
-> +			goto out;
-> +
-> +		ret = v4l2_subdev_call(csi->source, video, s_stream, 0);
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&csi->mutex);
-> +	return ret;
-> +}
-> +
-> +static const struct v4l2_subdev_pad_ops ti_csi2rx_subdev_pad_ops = {
-
-Have you run v4l2-compliance ? I would have thought that at least
-.enum_mbus_code would be mandatory.
-
-> +	.get_fmt = v4l2_subdev_get_fmt,
-> +	.set_fmt = ti_csi2rx_sd_set_fmt,
-> +};
-> +
-> +static const struct v4l2_subdev_video_ops ti_csi2rx_subdev_video_ops = {
-> +	.s_stream = ti_csi2rx_sd_s_stream,
-> +};
-> +
-> +static const struct v4l2_subdev_ops ti_csi2rx_subdev_ops = {
-> +	.video = &ti_csi2rx_subdev_video_ops,
-> +	.pad = &ti_csi2rx_subdev_pad_ops,
-> +};
-> +
-> +static const struct v4l2_subdev_internal_ops ti_csi2rx_internal_ops = {
-> +	.init_state = ti_csi2rx_sd_init_state,
-> +};
-> +
->  static void ti_csi2rx_cleanup_v4l2(struct ti_csi2rx_dev *csi)
->  {
-> +	v4l2_subdev_cleanup(&csi->subdev);
->  	media_device_unregister(&csi->mdev);
->  	v4l2_device_unregister(&csi->v4l2_dev);
->  	media_device_cleanup(&csi->mdev);
-> @@ -961,14 +1089,22 @@ static int ti_csi2rx_link_validate(struct media_link *link)
->  	struct v4l2_subdev_format source_fmt = {
->  		.which	= V4L2_SUBDEV_FORMAT_ACTIVE,
->  		.pad	= link->source->index,
-> +		.stream = 0,
->  	};
-> +	struct v4l2_subdev_state *state;
->  	const struct ti_csi2rx_fmt *ti_fmt;
->  	int ret;
->  
-> -	ret = v4l2_subdev_call_state_active(csi->source, pad,
-> -					    get_fmt, &source_fmt);
-> -	if (ret)
-> -		return ret;
-> +	state = v4l2_subdev_lock_and_get_active_state(&csi->subdev);
-> +	ret = v4l2_subdev_call(&csi->subdev, pad, get_fmt, state, &source_fmt);
-> +	v4l2_subdev_unlock_state(state);
-> +
-> +	if (ret) {
-> +		dev_dbg(csi->dev,
-> +			"Skipping validation as no format present on \"%s\":%u:0\n",
-> +			link->source->entity->name, link->source->index);
-
-How can no format be present ? Is this for the case where no stream is
-routed to a particular context ? If so, the corresponding video device
-shouldn't be reached by the pipeline walk algorithm, and this function
-shouldn't be called in the first place. Am I missing something ?
-
-> +		return 0;
-> +	}
->  
->  	if (source_fmt.format.width != csi_fmt->width) {
->  		dev_dbg(csi->dev, "Width does not match (source %u, sink %u)\n",
-> @@ -998,8 +1134,9 @@ static int ti_csi2rx_link_validate(struct media_link *link)
->  
->  	if (ti_fmt->fourcc != csi_fmt->pixelformat) {
->  		dev_dbg(csi->dev,
-> -			"Cannot transform source fmt 0x%x to sink fmt 0x%x\n",
-> -			ti_fmt->fourcc, csi_fmt->pixelformat);
-> +			"Cannot transform \"%s\":%u format %p4cc to %p4cc\n",
-> +			link->source->entity->name, link->source->index,
-> +			&ti_fmt->fourcc, &csi_fmt->pixelformat);
->  		return -EPIPE;
->  	}
->  
-> @@ -1010,6 +1147,10 @@ static const struct media_entity_operations ti_csi2rx_video_entity_ops = {
->  	.link_validate = ti_csi2rx_link_validate,
->  };
->  
-> +static const struct media_entity_operations ti_csi2rx_subdev_entity_ops = {
-> +	.link_validate = v4l2_subdev_link_validate,
-> +};
-> +
->  static int ti_csi2rx_init_dma(struct ti_csi2rx_ctx *ctx)
->  {
->  	struct dma_slave_config cfg = {
-> @@ -1041,6 +1182,7 @@ static int ti_csi2rx_init_dma(struct ti_csi2rx_ctx *ctx)
->  static int ti_csi2rx_v4l2_init(struct ti_csi2rx_dev *csi)
->  {
->  	struct media_device *mdev = &csi->mdev;
-> +	struct v4l2_subdev *sd = &csi->subdev;
->  	int ret;
->  
->  	mdev->dev = csi->dev;
-> @@ -1053,16 +1195,51 @@ static int ti_csi2rx_v4l2_init(struct ti_csi2rx_dev *csi)
->  
->  	ret = v4l2_device_register(csi->dev, &csi->v4l2_dev);
->  	if (ret)
-> -		return ret;
-> +		goto cleanup_media;
->  
->  	ret = media_device_register(mdev);
-> -	if (ret) {
-> -		v4l2_device_unregister(&csi->v4l2_dev);
-> -		media_device_cleanup(mdev);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto unregister_v4l2;
-> +
-> +	v4l2_subdev_init(sd, &ti_csi2rx_subdev_ops);
-> +	sd->internal_ops = &ti_csi2rx_internal_ops;
-> +	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
-> +	sd->flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	strscpy(sd->name, dev_name(csi->dev), sizeof(sd->name));
-> +	sd->dev = csi->dev;
-> +	sd->entity.ops = &ti_csi2rx_subdev_entity_ops;
-> +
-> +	csi->pads[TI_CSI2RX_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
-> +
-> +	for (unsigned int i = TI_CSI2RX_PAD_FIRST_SOURCE;
-> +	     i < TI_CSI2RX_NUM_PADS; i++)
-> +		csi->pads[i].flags = MEDIA_PAD_FL_SOURCE;
-> +
-> +	ret = media_entity_pads_init(&sd->entity, ARRAY_SIZE(csi->pads),
-> +				     csi->pads);
-> +	if (ret)
-> +		goto unregister_media;
-> +
-> +	ret = v4l2_subdev_init_finalize(sd);
-> +	if (ret)
-> +		goto unregister_media;
-> +
-> +	ret = v4l2_device_register_subdev(&csi->v4l2_dev, sd);
-> +	if (ret)
-> +		goto cleanup_subdev;
->  
->  	return 0;
-> +
-> +cleanup_subdev:
-> +	v4l2_subdev_cleanup(sd);
-> +unregister_media:
-> +	media_device_unregister(mdev);
-> +unregister_v4l2:
-> +	v4l2_device_unregister(&csi->v4l2_dev);
-> +cleanup_media:
-> +	media_device_cleanup(mdev);
-> +
-> +	return ret;
->  }
->  
->  static int ti_csi2rx_init_ctx(struct ti_csi2rx_ctx *ctx)
-> @@ -1089,9 +1266,9 @@ static int ti_csi2rx_init_ctx(struct ti_csi2rx_ctx *ctx)
->  
->  	ti_csi2rx_fill_fmt(fmt, &ctx->v_fmt);
->  
-> -	csi->pad.flags = MEDIA_PAD_FL_SINK;
-> +	ctx->pad.flags = MEDIA_PAD_FL_SINK;
->  	vdev->entity.ops = &ti_csi2rx_video_entity_ops;
-> -	ret = media_entity_pads_init(&ctx->vdev.entity, 1, &csi->pad);
-> +	ret = media_entity_pads_init(&ctx->vdev.entity, 1, &ctx->pad);
->  	if (ret)
->  		return ret;
->  
-> @@ -1147,6 +1324,8 @@ static int ti_csi2rx_probe(struct platform_device *pdev)
->  	if (!csi->drain.vaddr)
->  		return -ENOMEM;
->  
-> +	mutex_init(&csi->mutex);
-> +
->  	ret = ti_csi2rx_v4l2_init(csi);
->  	if (ret)
->  		goto err_v4l2;
-> @@ -1179,6 +1358,7 @@ static int ti_csi2rx_probe(struct platform_device *pdev)
->  		ti_csi2rx_cleanup_ctx(&csi->ctx[i]);
->  	ti_csi2rx_cleanup_v4l2(csi);
->  err_v4l2:
-> +	mutex_destroy(&csi->mutex);
->  	dma_free_coherent(csi->dev, csi->drain.len, csi->drain.vaddr,
->  			  csi->drain.paddr);
->  	return ret;
-> @@ -1194,7 +1374,7 @@ static void ti_csi2rx_remove(struct platform_device *pdev)
->  
->  	ti_csi2rx_cleanup_notifier(csi);
->  	ti_csi2rx_cleanup_v4l2(csi);
-> -
-> +	mutex_destroy(&csi->mutex);
->  	dma_free_coherent(csi->dev, csi->drain.len, csi->drain.vaddr,
->  			  csi->drain.paddr);
->  }
-
--- 
-Regards,
-
-Laurent Pinchart
+> >
+> > It would be sufficient to check if the folio fully falls into the memap()
+> > range to decide if we can adjust the folio index etc.
+> >
+> > We *might* be able to use that in the COW-reuse path for large folios to
+> > perform a folio_move_anon_rmap(), which we currently only perform for small
+> > folios / PMD-mapped folios (single mapping). Not sure yet if actually
+> > multiple VMAs are involved.
+>
+> Interesting... this is the wp_can_reuse_anon_folio() stuff? I'll have a look
+> into that!
+>
+> I'm concerned about partial cases moreso though, e.g.:
+>
+>      mremap this
+>     <----------->
+> [       folio0     ]
+> [       VMA#0      ]
+>
+> I mean, I'm leaning more towards just breaking up the folio, especialy if we
+> consider a case like a biiig range:
+>
+>                        mremap this
+>     <--------------------------------------------------->
+> [ folio0 ][ folio1 ][ folio2 ][ folio3 ][ folio4 ][ folio5 ] (say order-9 each)
+> [                           VMA#0                          ]
+>
+> Then at this point, refusing to do the whole thing seems maybe a bad idea, at
+> which point splitting the folios for folio0, 5 might be sensible.
+>
+> I guess a user is saying 'please, I really care about merging' so might well be
+> willing to tolerate losing some of the huge page benefits, at least at the edges
+> here.
+>
+> >
+> >
+> >
+> > Just throwing it out there ...
+> > >
+> > > (actually at least one of the 'prior checks' for large folios are added in a
+> > > later commit but still :P)
+> >
+> >
+> > Yeah, I'm looking at the bigger picture; small folios are easy :P
+>
+> Yeah, back when life was simpler... :P
+>
+> >
+> >
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+> >
+>
+> Cheers, Lorenzo
