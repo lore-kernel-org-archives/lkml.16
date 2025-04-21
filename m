@@ -1,98 +1,103 @@
-Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF752F37;
-	Mon, 21 Apr 2025 20:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0158B19F12D
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 20:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745266180; cv=none; b=hpjVlXjhhyuV6UIQUSrXWQfUHWNpisxv3FF/zA5JLpJ1bQVYzz8Ij1mWzn2yTuVUHJlBhMTcAVhbpw3Fsv5Y+Tm+4TPa3vhkFQhvOa+ysJlCgmKkkUIj3p9uo9PK5xEQZu3HoinIS51K8Zi0F5KUGkR7qYd1Egl8k9wU7Xtp0xY=
+	t=1745266290; cv=none; b=T4qoQ+goZjwLAdhFqJtlY2k6vcRc+Ml9cTV/9m9q9AoRBU3NFyPpAUWJWlmakeVbX3J8NJ7SYl/zP1+X0O/U8f7fFnyLsOhZtfEi4T3Ll5AWDn2idzK/dZBm584GYL9jEIGtsAfqdjCkqwAkk2qjR2R1T0C/RcDaZqWp0WWVFNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745266180; c=relaxed/simple;
-	bh=b+VWpq3NDHwNAt8S/b7pLV0b9kapdPe8ei7JxdNhfaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OQ45fr76WcrRvS/MBgV1ig6k6ZUhAZhKM2d4kVk+ZTTN7K7Jg3OEb+Ip4IsbqjvhOKgoLJIp5Cm5k38Tl/2lHMiCAEsyxELMEyHBIGmYic20cyCPt/nOSdTeq/8+zvzUFzaHMWZ/H5/uesQF/FW3QK3gsId+a306I/m4JZiwYww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=MkXqf1vL; arc=none smtp.client-ip=82.68.155.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+	s=arc-20240116; t=1745266290; c=relaxed/simple;
+	bh=DIR9uRSfnCXoUn2XTytjl4qamEMfuLYfC6sM/232VwU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=R/rz6/+4wWD3ehQFIsJ9+JSPDL5/1cclA3WzXW5JCjHqb/SZ/Xti79L9i6m7MGhBoiX0qe7awdV+lY/GT2oumKwpXLtIKhPP3QVahs/9EBjRUcxR98KJ/qyJsmNZfCxhvBg5Juxk+izlzvzFfooBjRqnC1lvLJkmMt4HSbFfupM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZyPVERNz; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="MkXqf1vL"
-Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
-	by wylie.me.uk (Postfix) with ESMTP id 109A8120872;
-	Mon, 21 Apr 2025 21:09:28 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-	s=mydkim006; t=1745266168;
-	bh=b+VWpq3NDHwNAt8S/b7pLV0b9kapdPe8ei7JxdNhfaI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=MkXqf1vLHKpcBOMj6MpdubBkR6uWNHWZ/SHP8expyNaK801KfQLFnnm+Bv/flwK6U
-	 fNomrj2N516Zd+m623mgNyxfc+w6J6GOUIJ+1HZ29PB0R4PVqm4SLXv7Tju+XyITHk
-	 I2qorgiZA6tj/QWjd41uI+PgBlvpFgCwjIz2cuDvhZQXHSa0JZls7R0v7dNWTNdUIb
-	 dnBy1a4GryRVyIhxecoHR1vIO872VTYajmE0iSmj11dhKBJfK3qRoWB0OPL9ProUm3
-	 XC3xZLIX1jWY+8DC1DXczJkWWY+np94fPJTEcuB/QmcRM+KR2g73U/8rv70L/d9fsu
-	 Iq4adLM4UAfDQ==
-Date: Mon, 21 Apr 2025 21:09:27 +0100
-From: "Alan J. Wylie" <alan@wylie.me.uk>
-To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
- Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
- <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
- <toke@redhat.com>, stable@vger.kernel.org
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <20250421210927.50d6a355@frodo.int.wylie.me.uk>
-In-Reply-To: <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
-	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
-	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
-	<20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-	<89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
-X-Clacks-Overhead: GNU Terry Pratchett
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZyPVERNz"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LKAuxM995915
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 15:10:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745266256;
+	bh=lAfZiqKSWhX8157fzjfmS1p8uv8d5TT2GTALmg3z73Q=;
+	h=From:To:CC:Subject:Date;
+	b=ZyPVERNzJJOtDfVpuBNX0Wq7W7oqRdqdzauTppwN1dAR0n0x+X7P2MY8qg3QwY0Ce
+	 Jkjz+kG0t2K/0LmRdKfdugLPJyX9gAIB/Bx8uGB7qkihnrwpSrYWB6PEKY+LwJHvVm
+	 0e8FSHii2NG066nbCuDXItux8O5ek9X88VRhNHWU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LKAucN020393
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 15:10:56 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 15:10:55 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 15:10:55 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LKAtGA067946;
+	Mon, 21 Apr 2025 15:10:55 -0500
+From: Judith Mendez <jm@ti.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+CC: Judith Mendez <jm@ti.com>,
+        Bjorn Andersson
+	<bjorn.andersson@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Geert Uytterhoeven
+	<geert+renesas@glider.be>,
+        Dmitry Baryshkov <lumag@kernel.org>, Arnd Bergmann
+	<arnd@arndb.de>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>
+Subject: [PATCH] arm64: defconfig: Enable hwspinlock and eQEP for K3
+Date: Mon, 21 Apr 2025 15:10:55 -0500
+Message-ID: <20250421201055.3889680-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, 21 Apr 2025 21:47:44 +0200
-Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
+Enable CONFIG_HWSPINLOCK_OMAP to allow usage of these devices
+across K3 SoC's. Also enable CONFIG_TI_EQEP which is enabled by
+default on am64x SK board.
 
-> > I'm afraid that didn't help. Same panic. =20
->=20
-> Bummer :-(
->=20
-> Might be something else missing then - so for now the only other thing
-> I'd suggest is to revert the removal of the qlen check in fq_codel.
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Like this?
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 9e16b494ab0e2..1f7b97ff46a7e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1415,6 +1415,7 @@ CONFIG_CLK_GFM_LPASS_SM8250=m
+ CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
+ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
++CONFIG_HWSPINLOCK_OMAP=m
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_TEGRA186_TIMER=y
+ CONFIG_RENESAS_OSTM=y
+@@ -1676,6 +1677,7 @@ CONFIG_INTERCONNECT_QCOM_SM8650=y
+ CONFIG_INTERCONNECT_QCOM_SM8750=y
+ CONFIG_INTERCONNECT_QCOM_X1E80100=y
+ CONFIG_COUNTER=m
++CONFIG_TI_EQEP=m
+ CONFIG_RZ_MTU3_CNT=m
+ CONFIG_HTE=y
+ CONFIG_HTE_TEGRA194=y
+-- 
+2.49.0
 
-$ git diff  sch_fq_codel.c
-diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-index 6c9029f71e88..4fdf317b82ec 100644
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct Qdisc *s=
-ch)
-        qdisc_bstats_update(sch, skb);
-        flow->deficit -=3D qdisc_pkt_len(skb);
-=20
--       if (q->cstats.drop_count) {
-+       if (q->cstats.drop_count && sch->q.qlen) {
-                qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
-                                          q->cstats.drop_len);
-                q->cstats.drop_count =3D 0;
-$=20
-
-I'll be off to bed soon, but I'll leave it running overnight.
-
-I might be able to do a quick report in the morning, but I'll
-have to set off early to go digging down a cave all day tomorrow.
-
---=20
-Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
