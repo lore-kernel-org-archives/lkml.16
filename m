@@ -1,106 +1,89 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8FE1DB546;
-	Mon, 21 Apr 2025 11:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB04C85;
+	Mon, 21 Apr 2025 11:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236007; cv=none; b=a+dvFtrS52hzsr15GIYMXy+oo2XJUwZ/MxNqNlrw0MX0hSu4uUHd0Ymp4d36Cvu2RbhFJfwRp26hifKSqSEYQiGNTMU8E9yYDxr3hl54a4erFDxIUfCEYDMahKoVXf/fiI5TtPW9wUKb3ld8Iz/LwY8mWvX+UhVtJfCaf3DPH4w=
+	t=1745236163; cv=none; b=iBBYdK158KsxYVaWC5+J/flMQIuMMg5s6DN6pSfMraCpM7Zrf5P2cwoHaRbQvN4BZw8UqS7ogUY82EWKT/CHqYTlNHZdVjqn9V/2eBFHvh3NNwZqDUdb38TvsMd7/e2c2FciYNTzievgTfxblBetgDk4FOHoaMHQdo+z64IVO+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236007; c=relaxed/simple;
-	bh=LhoBD6Hk5Y8BDPmeOJbsXnEeNxeHWVAfgyR6c47ax/8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jDB2frWnhfpFVip4eMCd9IMXuZ90OM8pQvF0E05I04rF92tEybNmrUxWDPBQ5yoHAWesw5SuB9rHhsQy9+TuDu0A+eEiR5G5kabwV8v83pb1XENn7YHXYQahax4rviYEqacogPqTqpZAGrdIDSDbzWnTYp/S/yj9H6MHVErMGMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dKoD5xUD; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745236163; c=relaxed/simple;
+	bh=o5jpVjh6M95IwHo0cOnF2XWauP9xFFq5pREq0Q+F/3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H5yzSjsVBxkcOe/JPlhK/SowrPJSiK/8dhmghVLn9iSV7ebJDC4godA1Hm6F4aEtMwef57MgMVPFpbki4HVkKKkg1FZG4DM4ZDOb5AaEoWv7EMtBKwODcqrt0BWrZKp14GTyBEMMSc/cB0ksKKlZd7ViPrwzvQLBpQQ4Y7tnEBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzCnhf4N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dKoD5xUD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KXn/Q
-	AXx6ktszUXP77q4WQFVEYAlsySZj6s3Mkg/SdA=; b=dKoD5xUDgYwc1EoQAAAjv
-	HxJ8eZLGICvYnFDpZK97WykbiC3p4YlE4sqp9rUPXly4wcQxLXydOhUtcZFrFxhe
-	9s3znTLk37XuNTcO4W85oVpT3o224SMBGXFFvxUBlfPQMWWSIJgBFDiCjIhhfsYw
-	ORhrz4CVkGXLXRajUEFeDA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3zV_vLwZooPBmBg--.44597S2;
-	Mon, 21 Apr 2025 19:45:52 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	jingoohan1@gmail.com,
-	manivannan.sadhasivam@linaro.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] PCI: dwc: ep: Use FIELD_GET()
-Date: Mon, 21 Apr 2025 19:45:48 +0800
-Message-Id: <20250421114548.171803-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzCnhf4N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3596CC4CEE4;
+	Mon, 21 Apr 2025 11:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745236163;
+	bh=o5jpVjh6M95IwHo0cOnF2XWauP9xFFq5pREq0Q+F/3A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qzCnhf4N18HXKHEhnXVoW+xMCdKcTNPeSyNHMvpR30Cc7dwhkvm1qU8PNOpbrVPAR
+	 QG9yrLEIWKOHvFI1oLf9v0CDmaAO5MK6r+qv1B7Fp+7WIhldS4+NsBd4PGKIpCQbnB
+	 b1zkBpSC+NbjN28EnKsco8pGvj0tD/xWh9JK+yYA1iXwbxS0uuizj+u+oqy0Eiw65/
+	 uhVGDWUi+TqscR/FMGM6+qfcFaQtKSS/dYRutkjT8LqSDW+R79arEMcGWkNJ17Nd/W
+	 wfMW0xFl92ZX96Zt4qbBKNeRWW1IrPERydIOhgQiv69+fkt6cReI+orXE/Efx0ytAi
+	 dCDp9ODSSPLag==
+Date: Mon, 21 Apr 2025 12:49:15 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
+Message-ID: <20250421124915.32a18d36@jic23-huawei>
+In-Reply-To: <20250419144520.815198-1-gshahrouzi@gmail.com>
+References: <20250419144520.815198-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3zV_vLwZooPBmBg--.44597S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar45uF4kCFWxtw18Zr1fZwb_yoW8uFW3pF
-	18Can0kF1UJF4UXws5ua93A3W5GanxG3y8Cas3GwsIvF9Fvryvq3yqyF9agw1xJF40vr45
-	G3ZrtwnxWFsxA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRyq2_UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx42o2gGKVyjFQAAsp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use FIELD_GET() and FIELD_PREP() to remove dependences on the field
-position, i.e., the shift value. No functional change intended.
+On Sat, 19 Apr 2025 10:45:20 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-I referred to Bjorn Helgaas' submitted patch.
-https://lore.kernel.org/all/20231010204436.1000644-2-helgaas@kernel.org/
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> The inclinometer channels were previously defined with 14 realbits.
+> However, the ADIS16201 datasheet states the resolution for these output
+> channels is 12 bits (Page 14, text description; Page 15, table 7).
+> 
+> Correct the realbits value to 12 to accurately reflect the hardware.
+> 
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+> Omit fixes tag because it targets driver before it moved out of staging.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1a0bf9341542..f3daf46b5e63 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -256,11 +256,11 @@ static unsigned int dw_pcie_ep_get_rebar_offset(struct dw_pcie *pci,
- 		return offset;
- 
- 	reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--	nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >> PCI_REBAR_CTRL_NBAR_SHIFT;
-+	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
- 
- 	for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL) {
- 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--		bar_index = reg & PCI_REBAR_CTRL_BAR_IDX;
-+		bar_index = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, reg);
- 		if (bar_index == bar)
- 			return offset;
- 	}
-@@ -875,8 +875,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
- 
- 	if (offset) {
- 		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
--			PCI_REBAR_CTRL_NBAR_SHIFT;
-+		nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, reg);
- 
- 		/*
- 		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
-@@ -897,7 +896,7 @@ static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
- 			 * is why RESBAR_CAP_REG is written here.
- 			 */
- 			val = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
--			bar = val & PCI_REBAR_CTRL_BAR_IDX;
-+			bar = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, val);
- 			if (ep->epf_bar[bar])
- 				pci_epc_bar_size_to_rebar_cap(ep->epf_bar[bar]->size, &val);
- 			else
+Why does that matter?  Should have a fixes tag.  Whether we chose
+to backport the fix is a different matter.
 
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
--- 
-2.25.1
+Otherwise looks fine to me. Reply to this thread with a fixes tag
+and I can pick it up without needing a v2.
+
+
+> ---
+>  drivers/iio/accel/adis16201.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+> index 982b33f6eccac..dcc8d9f2ee0f1 100644
+> --- a/drivers/iio/accel/adis16201.c
+> +++ b/drivers/iio/accel/adis16201.c
+> @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
+>  			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+>  	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
+>  	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
+> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+>  	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
+> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+>  	IIO_CHAN_SOFT_TIMESTAMP(7)
+>  };
+>  
 
