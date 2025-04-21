@@ -1,141 +1,107 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3FC126BFF;
-	Mon, 21 Apr 2025 11:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DF12641F4;
+	Mon, 21 Apr 2025 11:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235653; cv=none; b=EQmPIt90yz4cK5gkCUCBM4vOzfUIMpbthpkFpstVBn1hkKgv7ZoH2u1yUwJCiG5kVaOOH9VB5TGbXGRbb/CNrPoGGf9UrfjZa8fO66ZrQX7C5cArXOdqf0m3JpgGw3ocXMD1wY2X0ZPrKXaRzRpACu/K8do0QxFEP4pDvKLvVls=
+	t=1745235655; cv=none; b=u+htLhft8nOqCuS7I9HGFJvfAsfArDN8rDzJebS/WWWGcJRkJe7UKwct3GYUhhQ9VQs7g3oH2hQ5JK8GL6EVpsn7TjY9ewQ3jTHiuMRWV9YA5BcPRyUzr8+Fv/XINaYVwRtQp2BLR1a1+Os2pUaoXYHHbrgfx0nm6ZBeMSxIn+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235653; c=relaxed/simple;
-	bh=VXSlM78gVVSfw+WCIpCDUFRnxSD9qH9eab8KDWthqfU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYtoy7fAcGJjIwaO4ZWJhtTugmPgrU/4UVSY4FMR2ip9FURgOXz5ZLEOESKKyLINlNticKNtMxJwMKxUOdlMUSg2ZTQRl79bIfYEqEHqNF+dyFrUPrxC9u6Xrog39j0mUvisHPz+waDKCbsosKJoBAU24PaKJKua9EUWjpCSj+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mRUydRqy; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745235655; c=relaxed/simple;
+	bh=+G+QJR8daWICJSND6Y6z9zPJMawS12+eS2mqBW9L5cI=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=Ho3dPZzUWk5DTodifVWrDiF/aGoZPmZb/gPdjSBn2nEF2MF0WazA70V/lvZndJ5EL3hDSwqGIW8BRhZ7ofwXvVpfHGCBzGF8r9pakYavCV5eIzeR/8a+mfXXBp0WY/jBX7iG1zTr7RPspb8IqdpOUmqijQVtZ4PmZv00n0l1vVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=Bh11iVxV; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mRUydRqy"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBehE7908920
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 06:40:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745235643;
-	bh=fMXw+PmwxrAjfO8VUjrovK3MKKuJexE2bKrL5R7FNS0=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=mRUydRqyyHUgvdbVoUJg2XDFi0wiujx68Zz+Zf4uZtfVW8PHWHvBzhAyeE9GptwEs
-	 RuhuSb8td0xm9NxguHXLUdJYfp6nQ7TZFR1Noqk2mS+Bai7iFd1zsqBibA6g8XGv17
-	 eP74CrNen3NsaAvOQ9aidzkC5TeqrOtHm9GdT4YU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBehK9011764
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 06:40:43 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 06:40:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 06:40:43 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LBegd8110641;
-	Mon, 21 Apr 2025 06:40:42 -0500
-Date: Mon, 21 Apr 2025 06:40:42 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Bryan Brattlof <bb@ti.com>
-CC: Judith Mendez <jm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Prasad <b-padhi@ti.com>, Andrew Davis <afd@ti.com>,
-        Markus Schneider-Pargmann
-	<msp@baylibre.com>,
-        Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-Subject: Re: [PATCH v7 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-Message-ID: <20250421114042.riw2kw472murjzcc@surfer>
-References: <20250415153147.1844076-1-jm@ti.com>
- <20250415153147.1844076-7-jm@ti.com>
- <20250419150451.v3jgtgp4yisou65u@bryanbrattlof.com>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="Bh11iVxV"
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id D24EBBBAD3;
+	Mon, 21 Apr 2025 11:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1745235650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dzZQUtNftwdikjUTgmz8pxhPpBMvvcvZ+Al8SAKHIww=;
+	b=Bh11iVxVrek3iHmj7JnmhVDudJBjbYPbDN3/q3LAjd+grbzf/l+yMiggD/ihDGJVJasJMM
+	L2NrCYKzdVxrIdVNZgitTnvb/IS+sdBKdZe9G92zPOzdKF0b+iA86fX6psU97TDcHHOPBu
+	PwrifjQTZT9yjEeWOH0D2aPuB2F2s+DLqBVFHghTEL6bd3m90mBOLsvjRecWTQfKDIS79F
+	7WTf4Inc4aU7iGjURdf052g+ZfqGwzWUm3kGEMOa0zw5Pp3X2RrIb1h0n804IkN/inb6nn
+	IxBCTN++oSiuKWM+rEkIi1VDQqcZPmCxsL+w5ABAUYwf5SJRSKEXh4ddRt9axw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250419150451.v3jgtgp4yisou65u@bryanbrattlof.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Date: Mon, 21 Apr 2025 13:40:50 +0200
+From: barnabas.czeman@mainlining.org
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
+ <mathieu.poirier@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Konrad Dybcio
+ <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Luca Weiss
+ <luca@lucaweiss.eu>
+Subject: Re: [PATCH 1/2] rpmsg: qcom_smd: Fix fallback to qcom,ipc parse
+In-Reply-To: <viki5krjvs3vs5jf2lrhah6v5rziqju7jv5kbwz7yyvdfjwhh5@6gieypw5owfp>
+References: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
+ <20250421-fix-qcom-smd-v1-1-574d071d3f27@mainlining.org>
+ <viki5krjvs3vs5jf2lrhah6v5rziqju7jv5kbwz7yyvdfjwhh5@6gieypw5owfp>
+Message-ID: <114814a2fc59b0fa3dd5a2863394c0f2@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10:04-20250419, Bryan Brattlof wrote:
-> On April 15, 2025 thus sayeth Judith Mendez:
-> > From: Devarsh Thakkar <devarsht@ti.com>
-> > 
-> > For each remote proc, reserve memory for IPC and bind the mailbox
-> > assignments. Two memory regions are reserved for each remote processor.
-> > The first region of 1MB of memory is used for Vring shared buffers
-> > and the second region is used as external memory to the remote processor
-> > for the resource table and for tracebuffer allocations.
-> > 
-> > Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> > Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> > Signed-off-by: Judith Mendez <jm@ti.com>
-> > Acked-by: Andrew Davis <afd@ti.com>
-> > Reviewed-by: Beleswar Padhi <b-padhi@ti.com>
-> > Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> > ---
-> >  arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++++--
-> >  1 file changed, 90 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> > index 1c9d95696c839..7d817b447c1d0 100644
-> > --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> > +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-> > @@ -52,6 +52,42 @@ linux,cma {
-> >  			linux,cma-default;
-> >  		};
-> >  
-> > +		c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
-> > +			compatible = "shared-dma-pool";
-> > +			reg = <0x00 0x99800000 0x00 0x100000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		c7x_0_memory_region: c7x-memory@99900000 {
-> > +			compatible = "shared-dma-pool";
-> > +			reg = <0x00 0x99900000 0x00 0xf00000>;
-> > +			no-map;
-> > +		};
-> > +
+On 2025-04-21 12:38, Dmitry Baryshkov wrote:
+> On Mon, Apr 21, 2025 at 04:04:16AM +0200, Barnabás Czémán wrote:
+>> mbox_request_channel() returning value was changed in case of error.
+>> It uses returning value of of_parse_phandle_with_args().
+>> It is returning with -ENOENT instead of -ENODEV when no mboxes 
+>> property
+>> exists.
 > 
-> I know this has been a push for our IPC and MCU+ teams for a couple 
-> windows now, though I do want to point out that some AM62A devices 
-> (AM62A12AQMSIAMBRQ1) will not even have a C7x. 
+> Why? What is the rationale?
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/of/base.c#n1390
+mailbox: use error ret code of of_parse_phandle_with_args() this commit 
+was changed the return value
+from ENODEV to use retrun value of of_parse_phandle_with_args what is 
+returnung with EINVAL or ENOENT.
+It makes skipping fallback path to parse qcom,ipc if there is no mboxes 
+property defined.
+As far as I know qcom,ipc now only needed for rpm smd-edge on some SoCs 
+like 8939, 8916, 8976, 8917.
+arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM
 > 
-> It's relatively easy to cut nodes out that describe the hardware in the 
-> bootloaders, but once we start configuring them to demo something it 
-> becomes impossible to unwind that during boot.
-> 
-> We can clam we only support the superset devices but I just wanted to 
-> make this email so I could point people to it when they inevitably ask 
-> why their parts do not work out of the box with Linux.
-> 
-> Naked-by: Bryan Brattlof <bb@ti.com>
-
-
-I am confused. I do not see support for AM62A1 in upstream. We have
-AM62A7-SK in upstream. I am not sure what direction you are suggesting
-here.
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+>> 
+>> Fixes: 24fdd5074b20 ("mailbox: use error ret code of 
+>> of_parse_phandle_with_args()")
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
+>>  drivers/rpmsg/qcom_smd.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+>> index 
+>> 40d386809d6b78e209861c23d934e1b9fd743606..e552a9af578e48cfd854a228a4d91e4fa04bf29d 
+>> 100644
+>> --- a/drivers/rpmsg/qcom_smd.c
+>> +++ b/drivers/rpmsg/qcom_smd.c
+>> @@ -1368,7 +1368,7 @@ static int qcom_smd_parse_edge(struct device 
+>> *dev,
+>>  	edge->mbox_client.knows_txdone = true;
+>>  	edge->mbox_chan = mbox_request_channel(&edge->mbox_client, 0);
+>>  	if (IS_ERR(edge->mbox_chan)) {
+>> -		if (PTR_ERR(edge->mbox_chan) != -ENODEV) {
+>> +		if (PTR_ERR(edge->mbox_chan) != -ENOENT) {
+>>  			ret = PTR_ERR(edge->mbox_chan);
+>>  			goto put_node;
+>>  		}
+>> 
+>> --
+>> 2.49.0
+>> 
