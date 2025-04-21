@@ -1,140 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308AB1E9B1A;
-	Mon, 21 Apr 2025 19:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABEE1E2853
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263327; cv=none; b=pw6x9aa7qpHaR/7JOdcxZ7QhjUpABqoZkoXnjufl+tkjfxLvrAQwjKTAxMFNhMKillPW2zslWz+9M0hEpkc1W6olfZXOZ+vRf8hfmd5sMgYuq5asp4Qg9RxBzXtkCicAOV3ai7+3w3BGnHgs+42EwrCZsPR93qQS7kLdvh2z10U=
+	t=1745263360; cv=none; b=tsri+fDKREH1IT5+rR5oKPNKhSouVwoRv0yB6clRGBd0GbaS9wNfd9ooCsy4WRz6ykNKQn/YfmG/SVxQnXQO1i808MtU0EJ4T6V/uMCLnTEEC31Zh8v/v2b0lEBB1JAh3SxWauOec2X7YMWzfoeBP61RDft6fMi4QFdHSh87lS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263327; c=relaxed/simple;
-	bh=NGCt/qFOAddy/Rt8qNrQ8XyhdO6JLq5G3d3sBCsFn30=;
-	h=Subject:To:Cc:From:Date:Message-Id; b=SQ+ke5QmMVQjldCsRTQEnV7ljGlm1OGUZqkOYXVg46WB4xbT1r6DmTA0woAyzu58f5gjrUWYxx9bUTiEs0xqEm27H4tyPLOlcUaxrv0kVWausJVNzrOuroVGAfS8+g5FdT7IgM+tYDIeqWdWWs3JcKiDHCBo9xcZqBvudZgBxFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4Jh238l; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745263360; c=relaxed/simple;
+	bh=dLi5JKR6ufG2dYi6XT+ewltmtm9RyIzmokJF9TH3Ar4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LEatgeELnWoRDES+AdGo/uQzjslkBSjb7ae8ks7HaIg0wSwmztLczuRQlkHNJH5hspIUVYLEYbpvcVqccSIZUQvjhz0ld5kDgqcRu9t7pfG2yJfwJFA/ObQRvc3AaB7n7dWD5pE6wlxAkROZ6STpx5OzQkEeeLYCHYIRFoJEyms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=mwbM+Y1c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4Jh238l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745263326; x=1776799326;
-  h=subject:to:cc:from:date:message-id;
-  bh=NGCt/qFOAddy/Rt8qNrQ8XyhdO6JLq5G3d3sBCsFn30=;
-  b=N4Jh238ldtm9Ep2EUm+O0FuDw465xinUagHi63Cg51eFSwWlxjGuwgCA
-   ShikNljj7hqJfs/lCVG12dw8bMuWtkJlvPnefTuTQ1ZwcleFilJOGyrkK
-   TeCpAvUep56xHIWaRVcmi/tIfoQsnulS4FimPINmZLbgYFXQm4acJW6op
-   T1afljhWhXTI3FqR+vnBFxIUysSweVVCIfn+r+D+VBStKTDgivmJQP6ZD
-   m8mQypUDsiRtyakrbliywvGMw3nXOZ7iiwpsLkefi+rHS9bBAOX5mnsKR
-   q/GSQzRueHCw4vgRnu+Ev7Xird7nQg2bNaJkmDZ5mnxkpD8HkmW++24iL
-   Q==;
-X-CSE-ConnectionGUID: xqu9rPUcQ5OG4H7EhVh91Q==
-X-CSE-MsgGUID: kkgnDOUWQwKXABnyJqW7/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="49468973"
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="49468973"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:22:05 -0700
-X-CSE-ConnectionGUID: /je7+TMVQXK1po4JC+2KNQ==
-X-CSE-MsgGUID: WdZ6EfUeSZi2Vd1V5XfB1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="136951549"
-Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
-  by orviesa005.jf.intel.com with ESMTP; 21 Apr 2025 12:22:05 -0700
-Subject: [PATCH] Handle Ice Lake MONITOR erratum
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, andrew.cooper3@citrix.com, Dave Hansen <dave.hansen@linux.intel.com>, Len Brown <len.brown@intel.com>, Peter Zijlstra <peterz@infradead.org>, Rafael J. Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, stable@vger.kernel.org
-From: Dave Hansen <dave.hansen@linux.intel.com>
-Date: Mon, 21 Apr 2025 12:22:05 -0700
-Message-Id: <20250421192205.7CC1A7D9@davehans-spike.ostc.intel.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="mwbM+Y1c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12AE6C4CEE4;
+	Mon, 21 Apr 2025 19:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745263360;
+	bh=dLi5JKR6ufG2dYi6XT+ewltmtm9RyIzmokJF9TH3Ar4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mwbM+Y1c8/Um6XJE5PIr7/KJSc4ZF1T8Ofe+t82hopbM2/W5RSWsig5rkPr6xboMD
+	 0SNfju7JbXbnYE2gvo8oOGSaczBnNm76+Y+O7bQGMdXWOD2jRj/2ZfD1CBsif+euBQ
+	 jwwDPKLZZ3+tRO/Nf45hl99WkP0iR0eOZzukLDfM=
+Date: Mon, 21 Apr 2025 12:22:39 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lance Yang" <lance.yang@linux.dev>
+Cc: "David Hildenbrand" <david@redhat.com>, mingzhe.yang@ly.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, "Lance Yang"
+ <ioworker0@gmail.com>
+Subject: Re: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for
+ folio_test_large_maybe_mapped_shared()
+Message-Id: <20250421122239.710f5d63487853556cb8f57e@linux-foundation.org>
+In-Reply-To: <641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
+References: <20250418152228.20545-1-lance.yang@linux.dev>
+	<20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
+	<641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On Mon, 21 Apr 2025 05:13:03 +0000 "Lance Yang" <lance.yang@linux.dev> wrote:
+
+> > Can we just slap "#ifdef CONFIG_MM_ID" around the whole function? It
+> > 
+> > should have no callers, right? If the linker ends up complaining then
+> > 
+> > something went wrong.
+> 
+> The reason we can't simply add #ifdef CONFIG_MM_ID around folio_test_large_maybe_mapped_shared()
+> is because its caller folio_maybe_mapped_shared() relies on IS_ENABLED(CONFIG_MM_ID).
+> 
+> If we do, with CONFIG_TRANSPARENT_HUGEPAGE=N, we'll hit compilation errors like:
+> 
+> ./include/linux/mm.h: In function ‘folio_maybe_mapped_shared’:
+> ./include/linux/mm.h:2337:16: error: implicit declaration of function ‘folio_test_large_maybe_mapped_shared’; did you mean ‘folio_maybe_mapped_shared’? [-Werror=implicit-function-declaration]
+>  2337 |         return folio_test_large_maybe_mapped_shared(folio);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |                folio_maybe_mapped_shared
+> cc1: some warnings being treated as errors
+
+That's OK - provide a declaration of folio_maybe_mapped_shared() but no
+definition.  So the compiled-out code can be compiled and the linker
+will confirm that it's never actually called.
 
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
-
-Andrew Cooper reported some boot issues on Ice Lake servers when
-running Xen that he tracked down to MWAIT not waking up. Do the safe
-thing and consider them buggy since there's a published erratum.
-Note: I've seen no reports of this occurring on Linux.
-
-Add Ice Lake servers to the list of shaky MONITOR implementations with
-no workaround available. Also, before the if() gets too unwieldy, move
-it over to a x86_cpu_id array. Additionally, add a comment to the
-X86_BUG_MONITOR consumption site to make it clear how and why affected
-CPUs get IPIs to wake them up.
-
-There is no equivalent erratum for the "Xeon D" Ice Lakes so
-INTEL_ICELAKE_D is not affected.
-
-The erratum is called ICX143 in the "3rd Gen Intel Xeon Scalable
-Processors, Codename Ice Lake Specification Update". It is Intel
-document 637780, currently available here:
-
-	https://cdrdv2.intel.com/v1/dl/getContent/637780
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-
----
-
- b/arch/x86/include/asm/mwait.h |    3 +++
- b/arch/x86/kernel/cpu/intel.c  |   17 ++++++++++++++---
- 2 files changed, 17 insertions(+), 3 deletions(-)
-
-diff -puN arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug arch/x86/kernel/cpu/intel.c
---- a/arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug	2025-04-18 13:54:46.022590596 -0700
-+++ b/arch/x86/kernel/cpu/intel.c	2025-04-18 15:15:19.374365069 -0700
-@@ -513,6 +513,19 @@ static void init_intel_misc_features(str
- }
- 
- /*
-+ * These CPUs have buggy MWAIT/MONITOR implementations that
-+ * usually manifest as hangs or stalls at boot.
-+ */
-+#define MWAIT_VFM(_vfm)	\
-+	X86_MATCH_VFM_FEATURE(_vfm, X86_FEATURE_MWAIT, 0)
-+static const struct x86_cpu_id monitor_bug_list[] = {
-+	MWAIT_VFM(INTEL_ATOM_GOLDMONT),
-+	MWAIT_VFM(INTEL_LUNARLAKE_M),
-+	MWAIT_VFM(INTEL_ICELAKE_X),	/* Erratum ICX143 */
-+	{},
-+};
-+
-+/*
-  * This is a list of Intel CPUs that are known to suffer from downclocking when
-  * ZMM registers (512-bit vectors) are used.  On these CPUs, when the kernel
-  * executes SIMD-optimized code such as cryptography functions or CRCs, it
-@@ -565,9 +578,7 @@ static void init_intel(struct cpuinfo_x8
- 	     c->x86_vfm == INTEL_WESTMERE_EX))
- 		set_cpu_bug(c, X86_BUG_CLFLUSH_MONITOR);
- 
--	if (boot_cpu_has(X86_FEATURE_MWAIT) &&
--	    (c->x86_vfm == INTEL_ATOM_GOLDMONT ||
--	     c->x86_vfm == INTEL_LUNARLAKE_M))
-+	if (x86_match_cpu(monitor_bug_list))
- 		set_cpu_bug(c, X86_BUG_MONITOR);
- 
- #ifdef CONFIG_X86_64
-diff -puN arch/x86/include/asm/mwait.h~ICX-MONITOR-bug arch/x86/include/asm/mwait.h
---- a/arch/x86/include/asm/mwait.h~ICX-MONITOR-bug	2025-04-18 15:17:18.353749634 -0700
-+++ b/arch/x86/include/asm/mwait.h	2025-04-18 15:20:06.037927656 -0700
-@@ -110,6 +110,9 @@ static __always_inline void __sti_mwait(
-  * through MWAIT. Whenever someone changes need_resched, we would be woken
-  * up from MWAIT (without an IPI).
-  *
-+ * Buggy (X86_BUG_MONITOR) CPUs will never set the polling bit and will
-+ * always be sent IPIs.
-+ *
-  * New with Core Duo processors, MWAIT can take some hints based on CPU
-  * capability.
-  */
-_
