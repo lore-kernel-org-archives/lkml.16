@@ -1,183 +1,197 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2085.outbound.protection.outlook.com [40.107.100.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BE75234
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745225677; cv=none; b=aPKu9V7Vd9cs6+AbkNEbM5C7NdkcKt3UyPBZzV5rfM8diDilOZV4MRkQ7xKhQa5J+HTLbtulUEkC5Enng6rSd6aIeEIjkeyeEyfGjUiHrXVNEGTIGKBQKNbodB63rxFUIsKneJCutrBMynBr7lH2K0cpiEVsEPOf+PFriN5leD0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745225677; c=relaxed/simple;
-	bh=6owbIwn0Z92Iad5VoDVl0Hb7ifHZ5gRy5Bq1+R0Ao1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIMRA/cNHyR+XGOMk3s26Jr4zIiL2naNoiqfK40Kj4vpSh7Xfh9YatIX4qLWtKDOMLUVcBjqO9QfkpfNZqJUT7m4hCnROc0/1oNdV6SsQOq04+nGIe2utCoTbNy+/FD86JFYrN0CXtrC9SCVOBAXEjQHiazCCKS+4npzA//hmjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g0npXpJI; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A18A5234
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745225685; cv=fail; b=TIcgkAHzLEoKioXNfxIh7qrnDQi0yxhybNz1XMohmPIAbtnvfKU163LQFwyGjKvHY03Xil2NmtLYUmT2RDxQ5eQgBHikjOIsmKtsNYDwbzBMGwWzsyMsMJoCcSmr1tTkv7XT4Q+xvrFK7GcNbGtQA28QQhswKrLBuC7C8cR3knw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745225685; c=relaxed/simple;
+	bh=FTT9zeSBirB/CCrU3NRtl6WBM+/+E/k2TUFxTKUrBao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kNO6XT3Qo4Aejcs/42PezQCy9uOSabfgapnwSbsfSVPEOTMIt52KQMnl0SUgf0U4HVwD8j7m02gzf5W30N1EvUKSdBpI1/g8yD/Wf1sTx8Uxjk+pVf5yyt2vxUymOLjH3syi+W0jNk8g/xOdvMiNO2AhN840EJJUBG0z0qPusOQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LvgQSjO3; arc=fail smtp.client-ip=40.107.100.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g0npXpJI"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af50f56b862so2674986a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745225675; x=1745830475; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JsUANS/3QmGwXCVqQcGJa453VmqQ/CMnkdO6ufQpYW0=;
-        b=g0npXpJIIrKrb+dQeVfkiJdfQDQj9SC/423WupUbj1wbxEeBo9tpuw5feyRaxe8m3O
-         ptbotn4xNAuV157Y01iaOvoVqkw02lD6zNQmJn0qSU1Ptf61vyecuYzz+W+HCR6nbtvV
-         gaRI7i0hDh/EqrfVJL6D/fVB/NKJ/z3CSQ8SbOX3dsMXTWbHok9WMgQ34OgRwK91xh0f
-         nz9KhN6gFkR0WYZ+E9jctO+jY2SdukNCfBGrPWyOGmPtRFpKzC06KMldAh8qHxno/asy
-         0EiQpfei5f07+AWzUIfXAB4dEhEMf8JgUPBcDujOtTCyPJC0WE6qX8XmHpDE0bAUjnIG
-         zN7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745225675; x=1745830475;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsUANS/3QmGwXCVqQcGJa453VmqQ/CMnkdO6ufQpYW0=;
-        b=cHWE5iojpIAEBeMqARr4FgZiQ7yhFAKSSE9u/G7VlWtYofdg2nGj8BWVJmTa7ieS5T
-         GKS+cTtlGeHcBkN+kspQ6sUVn2ndVTHTEU6QHEIVIPL6ajU7BSPUWfWZC89bnxwflI7r
-         T24lOnksBZNI61lG5SFbf7RQDs28u/tqFEUBMR2U+GdYUo3ZrvO9bIb20eLbgKnr3oqF
-         DCT+FHmaEqiQpLxz59VYlfkisxPT8KSsyF26hcsQy1nCxMkyBCpt9W6dOwVmIO8Wnmxk
-         Y3icFCzdPfWKAZNWxstatyGvxqXLHGglFCsnQq5QYPpgaSwj53ZKoXNo7v24y4p6Jmjv
-         zzfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfrs6BweGXokO9aK2Og6PdAWswXeZvygKDz85n+RKRjASw82V9RU520w6p36Otp0wD1k4QjqhxlfeaLyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaxqXeL3vYmKbAnEb/NPAO7zMSFVtbzdXa5TcdOmw128jl6pNn
-	BcjK9XI+IQa2ixs+pLXPdgFCgNwqbwMiQsjHnjZkNdq/8OyhNS9nkNeMQEDYA5pP1Fc2MC+dBXM
-	=
-X-Gm-Gg: ASbGncsHscw/FVG3pWEYW0ohkqvwAfVikRYsE5Xa4kYxTuBjrgEFGWK/G6CniLqB3Nt
-	Z8Hj/iSSO5u4SOt+PHgad6WjAKem3TYjsPxIWv78SgByoMlS5KyO5Mf0gVySzVmxOPSrIayQ+Vf
-	OakGxVwvYc5JQpJzgtx0P6etBk3D7xjmq7i6MQZf3oXbqg1rOyk0olZisb1nIdU0LeWRttGWHgX
-	HH+MFS4qyMT5JpLSAkm/Xz+FfRmsMZy6QPmKcAjSUW0zrjUUA7SF0tdoqWT9oj9jytDzOPaiodF
-	vetRjg82RevnLUJ3VbMG2i9yHhKM+mGjX983QL7YB1hal0eTPxU=
-X-Google-Smtp-Source: AGHT+IF+6vp1Asd0YufISXtpwDH4F0HjLKz5ncPpxH+cAOzmBbxfoIeObcPr7mGOJDtXf1kolL0S7A==
-X-Received: by 2002:a17:90a:fc4f:b0:308:2b5b:d67f with SMTP id 98e67ed59e1d1-3087bb51a77mr16746598a91.9.1745225674795;
-        Mon, 21 Apr 2025 01:54:34 -0700 (PDT)
-Received: from thinkpad ([120.60.74.237])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdbaa2sm60594995ad.250.2025.04.21.01.54.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 01:54:34 -0700 (PDT)
-Date: Mon, 21 Apr 2025 14:24:28 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
-Message-ID: <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
- <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
- <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
- <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LvgQSjO3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IuFWBO8xXNlsn/9YnrdRehT5+jvum1V0CGE1gSf5BdtTL5AaDBlTp42yFKBJO6c565dF+nw7tZMAAJspJBP6jL41gxrqnGSTqjTRt41ugOMMjYJ5ugoJpc2bYbEhEf7X8x3hXcLcvbo00Gwm2Z7LU/G4PgzWFyEg9rrqlqdTnzxu1uqcoqf2HUHYVOoB2OQ7MwgR9DDhQFn2xU3+DkrKdbWcB8zkKgsSx2dNwQgbm48D93zXSLwPrJMntE5JbvpkWBTtyCBwfUa4CJtHp0kPCF6MbEeGjcxevxtHmcpEtVYXE75u335WhiL/ICtXb3jTNCbyPb21ulXkhnQnA14LuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=95my0NugT/rb/skPvc8KlSmkJ33+9iH/VWzaAPr4a/8=;
+ b=cqshMknsROaAEyEzTTj0fZxXUqoUSeYdKtChVQgRmGnzwkJNNfXxIKkUkcQ0bCStUU2JEmC/yx7FHfpeR5Ztya+FlZqNPYmUNgNYBMELJEM0L0XoQYpjMz5QkBMK8+200I3fnOmLtm6Rlj2R50gUvCyl7UjKHiu9oqqui4NfHLOfjMiSh03baVLKXgHKmp4hI+825+mAYp7ipUkruIN0p/BEoDXXLlm0OO1MOox+8dYiod27qVbQ+1GYWHGywKsQaIZe7nLdj721oCPqdLl/slfcywiSI+OAzWFd43EqSHH8KakaOnJNuk/4QnBrk5HUG/dfwjdt360soX327ypo2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=95my0NugT/rb/skPvc8KlSmkJ33+9iH/VWzaAPr4a/8=;
+ b=LvgQSjO3HEW/YIE1Onsr3ZsNrPvkt2xUv6mxfFRhkQZm0MQBiG07XcKtbXBj0zBQU9tOv2zfujQxziUSHAJxrp4BsvZO1Jy/LM+urleKBgBrHXQakq97wx2FOASlGi67f9GH9oGCkSNBLNt+vC2spJQtRdXB2EfVGUCSH1eB7sk=
+Received: from MN2PR12CA0002.namprd12.prod.outlook.com (2603:10b6:208:a8::15)
+ by MW4PR12MB7016.namprd12.prod.outlook.com (2603:10b6:303:218::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 08:54:39 +0000
+Received: from MN1PEPF0000ECD8.namprd02.prod.outlook.com
+ (2603:10b6:208:a8:cafe::a3) by MN2PR12CA0002.outlook.office365.com
+ (2603:10b6:208:a8::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Mon,
+ 21 Apr 2025 08:54:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000ECD8.mail.protection.outlook.com (10.167.242.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 08:54:38 +0000
+Received: from [10.136.43.233] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
+ 2025 03:54:34 -0500
+Message-ID: <b1c835f3-a574-4201-8628-c5e813a0e19f@amd.com>
+Date: Mon, 21 Apr 2025 14:24:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/5] sched/fair: Update overloaded mask in presence of
+ pushable task
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, <linux-kernel@vger.kernel.org>, "Dietmar
+ Eggemann" <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, "Gautham R. Shenoy"
+	<gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
+References: <20250409111539.23791-1-kprateek.nayak@amd.com>
+ <20250409111539.23791-4-kprateek.nayak@amd.com>
+ <2dae733a-689c-4574-a4dc-f59f11fb0893@linux.ibm.com>
+ <616187d5-e178-4fa5-a0a2-1509f11d1a37@amd.com>
+ <97aaf3e5-22d7-4020-964c-891ad619bf4f@linux.ibm.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <97aaf3e5-22d7-4020-964c-891ad619bf4f@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD8:EE_|MW4PR12MB7016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d794319-2959-4a13-65db-08dd80b2262c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UGI1TmdMdUd2eTEreWNmU0E0bnVjdDk3TmtJK253bFpFeUM5b1JTVDRpOG40?=
+ =?utf-8?B?SVd1Qk1Tay9UY1JDOFZ6OWxIUzdOajBIc0tzSG1zWVl1YklDMjExTVdERjVy?=
+ =?utf-8?B?T0JzVzVUT3hGOWVvbnRRTS9Rd20vbHQyK2N3WS9Tdk9vU3MrcEc5R005N1Ni?=
+ =?utf-8?B?V0Z5Slp0emZaQTJkalFYbWVFSWlsQ0theGxvVCs2UGJ6ckFYVUZPUXNhQThL?=
+ =?utf-8?B?akxQZDVXUTRkZ1NNSDdIZWNrMFBrNGlmcHh1SFhWZnltWUdRWVBVQU55Y1dy?=
+ =?utf-8?B?QTFBbWRJTExNRjZteXpCMzcyUWV3Rko0RXlmY0tnc3pqOHFFbFBxY21QQkgr?=
+ =?utf-8?B?bzhCZm9ZR2tia3A5QVdySnZQR0RzRko0YWNvcW95WUw4UXJURldCcnA4Ty8x?=
+ =?utf-8?B?TDZlWEIrWFJ1SVlzMXRzU3JOZy9tRHhTRTgvSm9yRnE4YXpjbGpjSHJhdHVn?=
+ =?utf-8?B?QTJpOTdBZzM4bXFRMVFuNWUvaGlNNEVwazhTY3BJckdqdlJhZGMva2MzU09p?=
+ =?utf-8?B?WWRRTy84dUF3NjYvNmNxbkFTN3FtNlkzbnZYVDJyY0VxSjZTa1VDenFlQVJ3?=
+ =?utf-8?B?L241STFNZ240cGpUT0tOYnJjVm9BSGJvcW56NkE3dzN5djVSZXRLeWJacjZt?=
+ =?utf-8?B?T1lmRklZZEhQVkFNQlZhS01rb0F0OHFJWWFtR1d0WlNabGFMRVN3R1EzY1ZQ?=
+ =?utf-8?B?eTB5QVVHSXgxTHJoZHFZM2tuT0s5NjNvcU5ic1dhSUc2dlU4U2N5VUZST1FP?=
+ =?utf-8?B?cGJTODVDWDBZSDVWMTBkK0JtbDN4VWZnTlZkMVliNm1lUExIOEFBTWowZXRt?=
+ =?utf-8?B?Uzl3TjVsSHNCSzNNa2lrS1dveXFUYjNGRWczdU4rUUFlTDhBZU9nRnBLZm5X?=
+ =?utf-8?B?ME1ROHE4UGFMQVFGM2Z4blBVVWliYWNzRkZEb0gvaTJGZnJWc0daWEJPbVZB?=
+ =?utf-8?B?Vjg3VDNxby9NMnRMUHZaQ2F6YkNYUldLaGVrdUJ1eFFacmVvMTlsNXhqdUJG?=
+ =?utf-8?B?N2JPK2gyVzZSN1Fya2Y4ZmN4azZKSWJ5SG43ZHVQSyszRHlTRjM0YlVkaUhN?=
+ =?utf-8?B?bGlPTVBDcE1vc21zNEJYckxtZWsxOERpZzZ2cXN4aEQ5Vk5Mbk4zY2RPZnBm?=
+ =?utf-8?B?U25UK3lMT0lLc3d1UTd2QitOSkVOQ1ovdlVDRkxFMWNrOXpDbFhOSUI3aGdG?=
+ =?utf-8?B?cGNBZ0s0Vk5ZWnp3V0o1NFErV3E3M2wzUWlLK3o2ZXU5OEtpQXlYa0lQU1ZK?=
+ =?utf-8?B?UDIvazh3RUlveU1QbzRCTDVLUFI1RWNPZnlRSmRjV0cvZjJna3ZGTHRIVmpK?=
+ =?utf-8?B?OXcvYlVQTkhkOVg0YlozbVg2THVCZ3A5cHcwWDc2Sy9qN0x2QldOUmNPQ1lX?=
+ =?utf-8?B?VEQvM0xCQ0VGbTJSRTdGL1hMWkUwZ2VDelJUTkNZbHoxVXM5SmlKRDBMcEpQ?=
+ =?utf-8?B?a2djRlIvU25YYkZXVjdFWWo5TERETmFXMENGOFVTZVgzeFlLRkV1UkdCTVc4?=
+ =?utf-8?B?SDVQaEM4RmlmTXNqU21LOEpHSVRuSDFFOUJ2OUFjR0s5dXZWYkZwRnhvU0ZX?=
+ =?utf-8?B?NUFwL09IZjNYeEltcnlaY2lqNDY2aW1wNXoxS0NjWVBKRjNWZ0ZLODRhdHd5?=
+ =?utf-8?B?UXppWmVJVzJBaVRtYUVSbjR1VEFsWGpybVN2OXozdTNsSkE3Q0czSG9pMG1Y?=
+ =?utf-8?B?THlqS1JoY04yZ04wVE1mYU5iZzBCQWpwZkpwNS8waXI4K2RBQjNyaDd5WW5Z?=
+ =?utf-8?B?b3ErL0xHc0dSRFJncEd1YUIyZUVxM1JVNEsvdjIycmJSWm5BUkpyZzBWeGEy?=
+ =?utf-8?B?bzVJbG1vd3hqeTg5b0J4eGFzWXVuQWlqODh1My9SSzFMcDA3TVRUVTlWdVB0?=
+ =?utf-8?B?eUhUS0FMckNWeTFWcExxYVZhajBuM2FmekhCYjJYMEtETEhKYTczUmVBUThm?=
+ =?utf-8?B?Z0djSVhwbUNYODdkU1lObURGSWNYTUdIWTJLR0VEaVkvK0pnb3B5ZlRGdWFM?=
+ =?utf-8?B?cGRxZHBZWGt3VkFTYTcyM0kzclhnTE93MnFBNWV4YSsvenJCemwrMWVZd2to?=
+ =?utf-8?Q?GSyZHu?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 08:54:38.9021
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d794319-2959-4a13-65db-08dd80b2262c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000ECD8.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7016
 
-On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
-> On Mon, Apr 21, 2025 at 2:52 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Relay wrote:
-> > > From: Aaron Kling <webgeek1234@gmail.com>
-> > >
-> > > The driver works fine as a module, so allow building as such.
-> > >
-> >
-> > In the past, the former irqchip maintainer raised concerns for allowing the
-> > irqchip drivers to be removed from the kernel. The concern was mostly (afaik)
-> > due to not disposing all IRQs before removing the irq_domain.
-> >
-> > So Marek submitted a series [1] that added a new API for that. But that series
-> > didn't progress further. So if you want to make this driver a module, you need
-> > to do 2 things:
-> >
-> > 1. Make sure the cited series gets merged and this driver uses the new API.
-> > 2. Get an Ack from Thomas (who is the only irqchip maintainer now).
+Hello Shrikanth,
+
+On 4/21/2025 1:33 PM, Shrikanth Hegde wrote:
+>>> I was getting below error when compiling. Noticed that overloaded_mask is a local update and it wouldn't
+>>> update the actual overloaded_mask.
+>>
+>> Interesting! Question: Do you have "CONFIG_CPUMASK_OFFSTACK" enabled in
+>> your config? (me makes a note to test this too in the next iteration)
+>> Looking at the arch specific Kconfigs, there is a slight difference in
+>> how this is toggled on x86 vs powerpc and I'm wondering if that is why
+>> I haven't seen this warning in my testing.
+>>
 > 
-> Should this be a hard blocker for building this one driver as a
-> module? I did a quick grep of drivers/pci/controller for irq_domain,
-> then compared several of the hits to the Kconfig. And every single one
-> is tristate. Tegra is by far not a unique offender here.
+> Yes, that's the reason you didn't run into.
+> for me, CONFIG_CPUMASK_OFFSTACK is not set.
+
+Thank you for confirming!
+
 > 
-
-Not 'unique', yes. But the situation is a bit worse atm. Some of the patches
-(making the driver as a module) were merged in the past without addressing the
-mapping issue.
-
-Please take a look at the reply from Marc:
-https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
-
-Even though Marc said that disposing IRQs is not enough to make sure there are
-no dangling pointers of the IRQs in the client drivers, I'm inclined to atleast
-allow modular drivers if they could dispose all the mappings with the new API.
-This doesn't mean that I'm not cared about the potential issue, but the removing
-of modules is always an 'experimental' feature in the kernel. So users should be
-aware of what they are doing. Also, we have not seen any reported issues after
-disposing the IRQs from the controller drivers. That also adds to my view on
-this issue.
-
-That being said, the safest option would be to get rid of the remove callback
-and make the module modular. This will allow the driver to be built as a module
-but never getting removed (make sure .suppress_bind_attrs is also set).
-
-- Mani
-
-> Sincerely,
-> Aaron
+>>>
+>>> Compilation Error:
+>>> kernel/sched/fair.c: In function ‘update_overloaded_mask’:
+>>> kernel/sched/fair.c:8570:25: error: assignment to expression with array type
+>>>   8570 |         overloaded_mask = sd_share->overloaded_mask;
+>>>        |                         ^
+>>> kernel/sched/fair.c:8571:13: warning: the address of ‘overloaded_mask’ will always evaluate as ‘true’ [-Waddress]
+>>>   8571 |         if (!overloaded_mask)
+>>>
+>>>
+>>>
+>>> Made the below change. Also you would need rcu protection for sd_share i think.
 > 
-> >
-> > - Mani
-> >
-> > [1] https://lore.kernel.org/linux-pci/20240715114854.4792-1-kabel@kernel.org
-> >
-> > > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > > ---
-> > >  drivers/pci/controller/Kconfig     | 2 +-
-> > >  drivers/pci/controller/pci-tegra.c | 3 +++
-> > >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > > index 9800b768105402d6dd1ba4b134c2ec23da6e4201..a9164dd2eccaead5ae9348c24a5ad75fcb40f507 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -224,7 +224,7 @@ config PCI_HYPERV_INTERFACE
-> > >         driver.
-> > >
-> > >  config PCI_TEGRA
-> > > -     bool "NVIDIA Tegra PCIe controller"
-> > > +     tristate "NVIDIA Tegra PCIe controller"
-> > >       depends on ARCH_TEGRA || COMPILE_TEST
-> > >       depends on PCI_MSI
-> > >       help
-> > > diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-> > > index b3cdbc5927de3742161310610dc5dcb836f5dd69..c260842695f2e983ae48fd52b43f62dbb9fb5dd3 100644
-> > > --- a/drivers/pci/controller/pci-tegra.c
-> > > +++ b/drivers/pci/controller/pci-tegra.c
-> > > @@ -2803,3 +2803,6 @@ static struct platform_driver tegra_pcie_driver = {
-> > >       .remove = tegra_pcie_remove,
-> > >  };
-> > >  module_platform_driver(tegra_pcie_driver);
-> > > +MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-> > > +MODULE_DESCRIPTION("NVIDIA PCI host controller driver");
-> > > +MODULE_LICENSE("GPL");
-> > >
-> > > --
-> > > 2.48.1
-> > >
-> > >
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
+> Or you need to use like below. This also works (Not tested on x86)
+> 
+> struct cpumask*  overloaded_mask;
+
+Ack! Perhaps that is the way to go. I'll take some inspiration from
+other cpumask usage in kernel and adjust this accordingly. Thanks a ton
+for testing.
+
+> 
+>>
+>> You are right! Thank you for the pointers and spotting my oversight.
+>> Aaron too pointed some shortcomings here. I'll make sure to test
+>> these bits more next time (LOCKDEP, hotplug, and
+>> !CONFIG_CPUMASK_OFFSTACK)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Thanks and Regards,
+Prateek
+
