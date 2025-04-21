@@ -1,149 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F18D2641D5;
-	Mon, 21 Apr 2025 11:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0952641F3
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235457; cv=none; b=uGm2ySiVFEcWZZo806q3msW/Y1ENcWzDQ1A6OCl9XY1zuo9NKOwy9fIiT9ZUPwoMFf1VIK2YJEeBmTvnhHDJYzMEcIe7V8zM18aQlS1BuCvRpzh9iJMWzUF8X8BaId17edOt1zrbte+F+RZM9++ZimODTAOjii55sYrxSHMKL+Q=
+	t=1745235478; cv=none; b=Y6jRGZzYbt94Qp94+n7O/j50n2Li29ITt+5Rrn5c2dA4DxdMviSyifjbwOFy2s4OGdChl8ii6Awfh52qKG8CTXAOlbdvyvGoyx1C+JPMztMTmOGG/SyaYwh+iuHwTGk8JxGCqXIy7P0lG3eJ8DDfiAVp65EQksUnuLNZUPWgaWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235457; c=relaxed/simple;
-	bh=aJdgUbtTRV3TkqzcwM6X02hCl1vvO5pAYQeD66ZHgBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=avjHKWWqlnlVsDrp/00N0AgA8zE9/5bfTTSSqbtAE0d27LT37ct3FfDb89dneui9aNpNwpwmTn/Gm3RXuaGZ9Zo+5GQvt3jXBsGj7dKzbrcb7aHJUpwwidz1Sfv0Hsya06ihOWRVn5AJG0Z1HIHcsWQUzPM/198qlZ8MrljfjWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP5EJVrK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745235478; c=relaxed/simple;
+	bh=s3frcA3z8CU9QoLViSopNt7NDFbwWp2nvh7sL5twsvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0EhfwWognlnqEWAgF9B2S+yQxQTkpUxmabpsbovqnz3z+vlT+9ZN/xdoTsX5kHILZqGgxIp7gdVTpwu4MIofK92OMqiCRkF46xwFz0DM43iaHUcaX/gpBRv5JUqVygyClAup62okkm/+iUphNZu+ToZ5JcONlChbN0EZfX6TQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=le9XKH/I; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP5EJVrK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFADBC4CEE4;
-	Mon, 21 Apr 2025 11:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745235456;
-	bh=aJdgUbtTRV3TkqzcwM6X02hCl1vvO5pAYQeD66ZHgBg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kP5EJVrKCaG8Z8ltV1+AGgKNfwzd7RBfBGr0wlANayMtdzbJ8pmzs732WNx0K/EQQ
-	 OWrsWHCMpwc+OMsQ9ybes7pLvMe73UshrrG8iDa25xZota0wNwjKX9oMHj1lhLWPEk
-	 SZ61f/1zUWIqdmucnPR6dMZbuK65p0dAW2efUXigV2Cl3o7qHR42HhYq+4sIyFCIG4
-	 9LMsBnotj6DmOCulxmGII7vWpqo9wDfsuzZORSaojEQBA+l1b+5ztM+WWiSMa6qgI5
-	 EFRNry4gzmc2hYjVg6vM3oNj9DNhUTwCjTZ3SVavEwey5EM/fChNFi72XRcrWh50/H
-	 eZ6g09Q785TAw==
-Date: Mon, 21 Apr 2025 12:37:28 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
- linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v3 2/3] staging: iio: ad9832: Refactor powerdown control
-Message-ID: <20250421123728.1564039d@jic23-huawei>
-In-Reply-To: <20250420175419.889544-3-gshahrouzi@gmail.com>
-References: <20250420175419.889544-1-gshahrouzi@gmail.com>
-	<20250420175419.889544-3-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="le9XKH/I"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3014678689aso2988061a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 04:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745235476; x=1745840276; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=43VGHzqPuUUky7P+XVbisg9LKWNE+KONN6bM0cOxWLk=;
+        b=le9XKH/ILqSYCgvMidOJkI6uWNAkkDOMLfrea0mxcj03KL9zwTENCDWmooAEef0h7w
+         AjFq0LYPC5cOxUQCgBSC/NDP32a9lAkhYzEgplSqqFIJI4TBqtuabho+oFy6WC/5E2Kq
+         eraqHSiV+cAMUBBfk11elXRot8gYfZo0M6sTdnndlises0tRN8HqhLIxFVWsOaV1R9Lh
+         qRnltynHsz0CucirKB8mN/NRmkY27EicNsYlf7GAyZFr6wX5tfOjhjEQ7SsbEUa0c4Rb
+         PoIij4gIt3Te6N8/wCigLLdiECF4i0BxaTBmPKzKlP7JYUvYRyf7s/1RMbCANb5Mj9Ha
+         kj0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745235476; x=1745840276;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=43VGHzqPuUUky7P+XVbisg9LKWNE+KONN6bM0cOxWLk=;
+        b=DHQSAyVjXPvr5v1tZ8IoZKMqbnnvIKoV8APlNd/YMyi9FjML2rWZf/7V1G6YyETwHp
+         TyzuYX9uaYMQ6xIS6O2TQuapOdJ5A+mAeLV9cvDH7sjjbsIh7UtbAH4FRENoN7LGNLG7
+         sHZxkWaprnRJol9tC/87jxmN8f7lgyPZfVclPIpfXsTjmtfUhW06Bo2A8PtCeoy794eD
+         RTGSFpgPGeePR0qK49V/wxNAb6VGp7EiiVGDSNPB+4W7T5d1Uu1tu1gas6huJQs/Zchq
+         UJh7wocL/qT0qaPH//2S6hp4Owtp91otZEq/L7iQgHG68rp1NYEZvb16CaVOr4wrzrdc
+         on1A==
+X-Forwarded-Encrypted: i=1; AJvYcCWNlEh/1Ctv4qwaECbSVuCT880Eb5ZsX1pfM/v29R26m/zuK7lBRWR5kgIApfh+EeFt7jirIb6U95PMNwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxoie1R8yZJZA8Nkqru/Vx7El9XCRLCtP4tPJNPJM2r10s1rAEE
+	8ZRHhxCwxiMsf4J5Oy4FrC60rd7P1qERn05kOvifIZL0P0NpvjY0LtNMbQ7Epeo=
+X-Gm-Gg: ASbGnctcJL14zBuZYVFH91u8LuFlLIvyhWalcSUE23biE/ZYNWdgu/4B+vYO+pRYcft
+	454P2XB5Hp8LY1sori8ndhTYyWcqmNH57D8ymXznPX5Hi1Yk9XG5jb+krqjkPNoiEU0LOLPz7dU
+	w4SnB85vsbvXxcgcQD28mshIK5J6yHYIIM3kmYrsHA5cf0r7DUA1gRZw2+4U5lbKDYNKxAa3Tmk
+	GibWVaIyCYgV5iDdyKFQXRSj6dXYiDoTjxKoelisURR+GrQeesO51OnGHU4zDCBfQZh0XZs5WSp
+	rCy50RKwPjMo+9C60VT9dabzUL+5oic9NFpWRlrRIg==
+X-Google-Smtp-Source: AGHT+IFaOdeoa+0VB3w8t8nak86cJD6PiC30jYw32fp5hlcubY8z8edZqqzW2n5AsXdt/BtdeOUuzg==
+X-Received: by 2002:a17:90b:5486:b0:301:c5cb:7b13 with SMTP id 98e67ed59e1d1-3087bb3beadmr14241658a91.3.1745235476099;
+        Mon, 21 Apr 2025 04:37:56 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df1e9adsm6370181a91.27.2025.04.21.04.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 04:37:55 -0700 (PDT)
+Date: Mon, 21 Apr 2025 17:07:53 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com,
+	vincent.guittot@linaro.org
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+Message-ID: <20250421113753.lwukxhi45bnmqbpq@vireshk-i7>
+References: <20250417015424.36487-1-nic.c3.14@gmail.com>
+ <20250417050226.c6kdp2s5du3y3a3j@vireshk-i7>
+ <20250417050911.xycjkalehqsg3i6x@vireshk-i7>
+ <CAJZ5v0iO4=nHcATzPyiKiWumdETFRR32C97K_RH=yhD--Tai=g@mail.gmail.com>
+ <CAJZ5v0gcf07YykOS9VsQgHwM0DnphBX4yc9dt5cKjNR8G_4mAQ@mail.gmail.com>
+ <CAKohpomN1PYn1NPSsxCxqpMfg-9nYgCRQD6dFGQ30B+76vneQw@mail.gmail.com>
+ <978bc0b7-4dfe-4ca1-9dd5-6c4a9c892be6@gmail.com>
+ <CAJZ5v0iwAsVnvYKjKskLXuu5bDV_SMpgnTTy0zD=7fgnGzHQnA@mail.gmail.com>
+ <CAKohponCr6pwgmK+J0WnvY_VZdDhA738JF18L518A2MKJVQLmw@mail.gmail.com>
+ <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c704850d-1fdd-4f25-8251-5bab03f055bb@huawei.com>
 
-On Sun, 20 Apr 2025 13:54:18 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+Coming back to this response again:
 
-> Replace custom implementation with out_altvoltage_powerdown ABI. The
-> attribute's logic is inverted (1 now enables powerdown) to match the
-> standard. Modernize driver by using the standard IIO interface.
+On 19-04-25, 17:35, zhenglifeng (A) wrote:
+> Yes, the policy boost will be forcibly set to mirror the global boost. This
+> indicates that the global boost value is the default value of policy boost
+> each time the CPU goes online. Otherwise, we'll meet things like:
 > 
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  drivers/staging/iio/frequency/ad9832.c | 44 ++++++++++++++++++--------
->  1 file changed, 30 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-> index 0872ff4ec4896..a8fc20379efed 100644
-> --- a/drivers/staging/iio/frequency/ad9832.c
-> +++ b/drivers/staging/iio/frequency/ad9832.c
-> @@ -167,6 +167,34 @@ static int ad9832_write_phase(struct ad9832_state *st,
->  	return spi_sync(st->spi, &st->phase_msg);
->  }
->  
-> +static ssize_t ad9832_write_powerdown(struct device *dev, struct device_attribute *attr,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct ad9832_state *st = iio_priv(indio_dev);
-> +	int ret;
-> +	unsigned long val;
-> +
-> +	ret = kstrtoul(buf, 10, &val);
-> +	if (ret)
-> +		goto error_ret;
-> +
-> +	mutex_lock(&st->lock);
+> 1. The global boost is set to disabled after a CPU going offline but the
+> policy boost is still be enabled after the CPU going online again.
 
-Look at how guard(mutex)(&st->lock);
-can be used in this driver to simplify things considerably.
-May make sense to do that before introducing this new code.
+This is surely a valid case, we must not enable policy boost when
+global boost is disabled.
 
-> +	if (val)
-> +		st->ctrl_src |= AD9832_SLEEP;
-> +	else
-> +		st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
-> +				 AD9832_CLR);
-> +
-> +	st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-> +				st->ctrl_src);
-> +	ret = spi_sync(st->spi, &st->msg);
-> +	mutex_unlock(&st->lock);
-> +
-> +error_ret:
-> +	return ret ? ret : len;
-> +}
-> +
->  static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
->  			    const char *buf, size_t len)
->  {
-> @@ -227,17 +255,6 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
->  					st->ctrl_fp);
->  		ret = spi_sync(st->spi, &st->msg);
->  		break;
-> -	case AD9832_OUTPUT_EN:
-> -		if (val)
-> -			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
-> -					AD9832_CLR);
-> -		else
-> -			st->ctrl_src |= AD9832_SLEEP;
-> -
-> -		st->data = cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
-> -					st->ctrl_src);
-> -		ret = spi_sync(st->spi, &st->msg);
-> -		break;
->  	default:
->  		ret = -ENODEV;
->  	}
-> @@ -266,8 +283,7 @@ static IIO_CONST_ATTR_PHASE_SCALE(0, "0.0015339808"); /* 2PI/2^12 rad*/
->  
->  static IIO_DEV_ATTR_PINCONTROL_EN(0, 0200, NULL,
->  				ad9832_write, AD9832_PINCTRL_EN);
-> -static IIO_DEV_ATTR_OUT_ENABLE(0, 0200, NULL,
-> -				ad9832_write, AD9832_OUTPUT_EN);
-> +static IIO_DEVICE_ATTR(out_altvoltage_powerdown, 0200, NULL, ad9832_write_powerdown, 0);
+> 2. The global boost is set to enabled after a CPU going offline and the
+> rest of the online CPUs are all boost enabled. However, the offline CPU
+> remains in the boost disabled state after it going online again. Users
+> have to set its boost state separately.
 
-Take a look at the use of extended attributes used for this like we see
-in ad5064.c
-That will need an actual channel though so is a more significant rework.
+I now this this is the right behavior. The policy wasn't present when
+the global boost was enabled and so the action doesn't necessarily
+apply to it.
 
->  
->  static struct attribute *ad9832_attributes[] = {
->  	&iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
-> @@ -281,7 +297,7 @@ static struct attribute *ad9832_attributes[] = {
->  	&iio_dev_attr_out_altvoltage0_pincontrol_en.dev_attr.attr,
->  	&iio_dev_attr_out_altvoltage0_frequencysymbol.dev_attr.attr,
->  	&iio_dev_attr_out_altvoltage0_phasesymbol.dev_attr.attr,
-> -	&iio_dev_attr_out_altvoltage0_out_enable.dev_attr.attr,
-> +	&iio_dev_attr_out_altvoltage_powerdown.dev_attr.attr,
->  	NULL,
->  };
->  
+This is how I think this should be fixed, we may still need to fix
+acpi driver's bug separately though:
 
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 3841c9da6cac..7ac8b4c28658 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -620,6 +620,20 @@ static ssize_t show_local_boost(struct cpufreq_policy *policy, char *buf)
+        return sysfs_emit(buf, "%d\n", policy->boost_enabled);
+ }
+
++static int policy_set_boost(struct cpufreq_policy *policy, bool enable, bool forced)
++{
++       if (!forced && (policy->boost_enabled == enable))
++               return 0;
++
++       policy->boost_enabled = enable;
++
++       ret = cpufreq_driver->set_boost(policy, enable);
++       if (ret)
++               policy->boost_enabled = !policy->boost_enabled;
++
++       return ret;
++}
++
+ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+                                 const char *buf, size_t count)
+ {
+@@ -635,21 +649,14 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
+        if (!policy->boost_supported)
+                return -EINVAL;
+
+-       if (policy->boost_enabled == enable)
+-               return count;
+-
+-       policy->boost_enabled = enable;
+-
+        cpus_read_lock();
+-       ret = cpufreq_driver->set_boost(policy, enable);
++       ret = policy_set_boost(policy, enable, false);
+        cpus_read_unlock();
+
+-       if (ret) {
+-               policy->boost_enabled = !policy->boost_enabled;
+-               return ret;
+-       }
++       if (!ret)
++               return count;
+
+-       return count;
++       return ret;
+ }
+
+ static struct freq_attr local_boost = __ATTR(boost, 0644, show_local_boost, store_local_boost);
+@@ -1617,16 +1624,17 @@ static int cpufreq_online(unsigned int cpu)
+        if (new_policy && cpufreq_thermal_control_enabled(cpufreq_driver))
+                policy->cdev = of_cpufreq_cooling_register(policy);
+
+-       /* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
++       /*
++        * Let the per-policy boost flag mirror the cpufreq_driver boost during
++        * initialization for a new policy. For an existing policy, maintain the
++        * previous boost value unless global boost is disabled now.
++        */
+        if (cpufreq_driver->set_boost && policy->boost_supported &&
+-           policy->boost_enabled != cpufreq_boost_enabled()) {
+-               policy->boost_enabled = cpufreq_boost_enabled();
+-               ret = cpufreq_driver->set_boost(policy, policy->boost_enabled);
++           (new_policy || !cpufreq_boost_enabled())) {
++               ret = policy_set_boost(policy, cpufreq_boost_enabled(), false);
+                if (ret) {
+-                       /* If the set_boost fails, the online operation is not affected */
+-                       pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
+-                               str_enable_disable(policy->boost_enabled));
+-                       policy->boost_enabled = !policy->boost_enabled;
++                       pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__,
++                               policy->cpu, str_enable_disable(cpufreq_boost_enabled()));
+                }
+        }
+
+@@ -2864,12 +2872,9 @@ static int cpufreq_boost_trigger_state(int state)
+                if (!policy->boost_supported)
+                        continue;
+
+-               policy->boost_enabled = state;
+-               ret = cpufreq_driver->set_boost(policy, state);
+-               if (ret) {
+-                       policy->boost_enabled = !policy->boost_enabled;
++               ret = policy_set_boost(policy, state, true);
++               if (ret)
+                        goto err_reset_state;
+-               }
+        }
+        cpus_read_unlock();
+
+-- 
+viresh
