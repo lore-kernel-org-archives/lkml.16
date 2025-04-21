@@ -1,96 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B92F2E;
-	Mon, 21 Apr 2025 21:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6916E1E9916;
+	Mon, 21 Apr 2025 21:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271067; cv=none; b=K5xWngRDfp+FSUID8Lm1Ak3ShzEmwjJJaHdyVEEazOkWas6CDNzbZG0hyjPAYD5jAkl13i47iKBMaIecVUN97BI2PbgtnGxrS6fkCVrvkOGnPY/TfpbGRUJd5ZlNCmRCVctfIjc3tG8u3XVLjnBPz+x9wGyobl4w25Rv8CxrKug=
+	t=1745271127; cv=none; b=U11qcX0HoyXW7vEl6/MjQKfmvhrSwg1d0ZApKADZm3FLO21vgmGmWV71Rr8VeVxIs1WnAyft9OPhsyX/Sx1SoXRX26VY0bbeNKnIoqlwrYOdo4fgzlzhFkSFYj7OzWD5dwdPiq0M0vKReXfYPJDxNAvkrZtDnXbWCB0hxOjwzjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271067; c=relaxed/simple;
-	bh=HrJsLZzPcy1u/nryaNlMTL4gJ/L0bfB4RWyaJ0L81uo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XPijZbLLSEF79NvPDg2kqFZCrN8F9AyJU4tj+eEl3Y548nLPdXNAN72lXXU2U1Waytxt/Gi09LM3/JmyxsN8sbDWAFvrfCtTX0prDuLbbq/kagV5FhgjkpHdgKxNBEo87YTX3Dbkw3huXFnSV7S5LdgpVYbSxrvsuwMtw0WPM30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFZtg8Ly; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745271127; c=relaxed/simple;
+	bh=gbZw1+Qy3rOQrfujzuWryb33g5KcKZZ4PqGqFMtj5Lg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IMDxsiRvvrtb1++vcjz+Ykv6RFZbuYu/Qv/HdDJsdCmtvZxiCRMeJ+ZEmEvjxZJc/hdER5fZuxpmIveLbgH3dLFuFWqu/zEFr5hbm4VolVP3ht3R1oE8GozGdi20J43wgxUC2/Ahuwzxk4LP0+CZAxJzEmQjPZHxsjuz9imTY7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=IIMlVJbg; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFZtg8Ly"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31508C4CEE4;
-	Mon, 21 Apr 2025 21:31:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745271067;
-	bh=HrJsLZzPcy1u/nryaNlMTL4gJ/L0bfB4RWyaJ0L81uo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fFZtg8Ly8xvRZpqD8Aj4AgOhzATCs2rOq2Rey1mRudPBUhe1bsXOQYWShbncV1mIN
-	 wGlIE5xQEcXz7cgTiW3PIUnNXf6JdX4bnb8ERVxWE8XcfSD4YtPK+1n7FeCY0dG5s+
-	 dE6DCoiCOVtoJP9mpYuWgY5uL2Wj/Muff+5TBRvUKzJ/9crfQJdrogZ5gO68YIVh+Q
-	 fDjHdaPJQvHhXn+nC7mItgO4vuvq58o6rsUWGdDRJD4NSuTf+8102p6tXhG3kudp5b
-	 Vgbxzf40B7bvAnBqwUin1noM+gsMAdhfgxpLntevB4wPWwc0bvGoDZbPpEENxB3vc7
-	 RCCnWJhi8kH8g==
-From: Kees Cook <kees@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <kees@kernel.org>
-Cc: Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id name length
-Date: Mon, 21 Apr 2025 14:30:51 -0700
-Message-Id: <174527104953.545387.8821005974012895763.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415231420.work.066-kees@kernel.org>
-References: <20250415231420.work.066-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IIMlVJbg"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 96C3E6D6;
+	Mon, 21 Apr 2025 23:29:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745270996;
+	bh=gbZw1+Qy3rOQrfujzuWryb33g5KcKZZ4PqGqFMtj5Lg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IIMlVJbgh48eecoUzpYKj+mljhk2DG6DOcgOWMChPLmZa4jGHcRlh5Bmfpc30IHBI
+	 1O41wXr748Gy+K2+Y5m0mKTB0wWtXx0ypL5vhjymIlfBeK9qqAsypMyH3kkTVGttYo
+	 ZD+bzySXN3lQhwqphxEWjnY+jpWOJHJGGjleAOds=
+Date: Tue, 22 Apr 2025 00:32:01 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v4 07/13] media: imx8-isi: Add support for i.MX8QM and
+ i.MX8QXP
+Message-ID: <20250421213201.GQ17813@pendragon.ideasonboard.com>
+References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
+ <20250408-8qxp_camera-v4-7-ef695f1b47c4@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250408-8qxp_camera-v4-7-ef695f1b47c4@nxp.com>
 
-On Tue, 15 Apr 2025 16:14:24 -0700, Kees Cook wrote:
-> The 20 byte length of struct platform_device_id::name is not long enough
-> for many devices (especially regulators), where the string initialization
-> is getting truncated and missing the trailing NUL byte. This is seen
-> with GCC 15's -Wunterminated-string-initialization option:
+Hi Frank,
+
+Thank you for the patch.
+
+On Tue, Apr 08, 2025 at 05:53:05PM -0400, Frank Li wrote:
+> From: Robert Chiras <robert.chiras@nxp.com>
 > 
-> drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   189 |         { .name = "hi6421v530-regulator" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   278 |         { .name = "hi6421v600-regulator" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   233 |         { "lp87565-q1-regulator", },
->       |           ^~~~~~~~~~~~~~~~~~~~~~
-> sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   818 |         { .name = "rpmsg-micfil-channel" },
->       |                   ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   457 |                 .name = "HID-SENSOR-LISS-0041",
->       |                         ^~~~~~~~~~~~~~~~~~~~~~
-> drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
->   366 |                 .name = "HID-SENSOR-LISS-0226",
->       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> Add compatibles and platform data for i.MX8QM and i.MX8QXP platforms.
+> i.MX8QM's IER register layout is difference with i.MX8QXP.
 > 
-> [...]
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Applied to for-next/hardening, thanks!
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[1/1] mod_devicetable: Enlarge the maximum platform_device_id name length
-      https://git.kernel.org/kees/c/94a821d9355c
-
-Take care,
+> ---
+> Change from v3 to v4
+> - fix i.MX8QMP ier register layout
+> - Remove clk-names array
+> - Change 8QXP channel number to 6
+> 
+> change from v2 to v3
+> - none
+> 
+> change from v1 to v2
+> - remove intenal review tags
+> ---
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 43 +++++++++++++++++++++-
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  2 +
+>  2 files changed, 43 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> index 398cc03443be3..568d7b24466aa 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> @@ -246,7 +246,7 @@ static void mxc_isi_v4l2_cleanup(struct mxc_isi_dev *isi)
+>  
+>  /* Panic will assert when the buffers are 50% full */
+>  
+> -/* For i.MX8QXP C0 and i.MX8MN ISI IER version */
+> +/* For i.MX8MN ISI IER version */
+>  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v1 = {
+>  	.oflw_y_buf_en = { .mask = BIT(19) },
+>  	.oflw_u_buf_en = { .mask = BIT(21) },
+> @@ -257,7 +257,7 @@ static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v1 = {
+>  	.panic_v_buf_en = { .mask = BIT(24) },
+>  };
+>  
+> -/* For i.MX8MP ISI IER version */
+> +/* For i.MX8QXP C0 and i.MX8MP ISI IER version */
+>  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v2 = {
+>  	.oflw_y_buf_en = { .mask = BIT(18) },
+>  	.oflw_u_buf_en = { .mask = BIT(20) },
+> @@ -268,6 +268,21 @@ static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v2 = {
+>  	.panic_v_buf_en = { .mask = BIT(23) },
+>  };
+>  
+> +/* For i.MX8QM ISI IER version */
+> +static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_qm = {
+> +	.oflw_y_buf_en = { .mask = BIT(16) },
+> +	.oflw_u_buf_en = { .mask = BIT(19) },
+> +	.oflw_v_buf_en = { .mask = BIT(22) },
+> +
+> +	.excs_oflw_y_buf_en = { .mask = BIT(17) },
+> +	.excs_oflw_u_buf_en = { .mask = BIT(20) },
+> +	.excs_oflw_v_buf_en = { .mask = BIT(23) },
+> +
+> +	.panic_y_buf_en = { .mask = BIT(18) },
+> +	.panic_u_buf_en = { .mask = BIT(21) },
+> +	.panic_v_buf_en = { .mask = BIT(24) },
+> +};
+> +
+>  /* Panic will assert when the buffers are 50% full */
+>  static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
+>  	.panic_set_thd_y = { .mask = 0x0000f, .offset = 0,  .threshold = 0x7 },
+> @@ -322,6 +337,28 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
+>  	.has_36bit_dma		= false,
+>  };
+>  
+> +static const struct mxc_isi_plat_data mxc_imx8qm_data = {
+> +	.model			= MXC_ISI_IMX8QM,
+> +	.num_ports		= 5,
+> +	.num_channels		= 8,
+> +	.reg_offset		= 0x10000,
+> +	.ier_reg		= &mxc_imx8_isi_ier_qm,
+> +	.set_thd		= &mxc_imx8_isi_thd_v1,
+> +	.buf_active_reverse	= true,
+> +	.has_36bit_dma		= false,
+> +};
+> +
+> +static const struct mxc_isi_plat_data mxc_imx8qxp_data = {
+> +	.model			= MXC_ISI_IMX8QXP,
+> +	.num_ports		= 5,
+> +	.num_channels		= 6,
+> +	.reg_offset		= 0x10000,
+> +	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> +	.set_thd		= &mxc_imx8_isi_thd_v1,
+> +	.buf_active_reverse	= true,
+> +	.has_36bit_dma		= false,
+> +};
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Power management
+>   */
+> @@ -497,6 +534,8 @@ static void mxc_isi_remove(struct platform_device *pdev)
+>  static const struct of_device_id mxc_isi_of_match[] = {
+>  	{ .compatible = "fsl,imx8mn-isi", .data = &mxc_imx8mn_data },
+>  	{ .compatible = "fsl,imx8mp-isi", .data = &mxc_imx8mp_data },
+> +	{ .compatible = "fsl,imx8qm-isi", .data = &mxc_imx8qm_data },
+> +	{ .compatible = "fsl,imx8qxp-isi", .data = &mxc_imx8qxp_data },
+>  	{ .compatible = "fsl,imx8ulp-isi", .data = &mxc_imx8ulp_data },
+>  	{ .compatible = "fsl,imx93-isi", .data = &mxc_imx93_data },
+>  	{ /* sentinel */ },
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> index bd3cfe5fbe063..206995bedca4a 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> @@ -157,6 +157,8 @@ struct mxc_gasket_ops {
+>  enum model {
+>  	MXC_ISI_IMX8MN,
+>  	MXC_ISI_IMX8MP,
+> +	MXC_ISI_IMX8QM,
+> +	MXC_ISI_IMX8QXP,
+>  	MXC_ISI_IMX8ULP,
+>  	MXC_ISI_IMX93,
+>  };
 
 -- 
-Kees Cook
+Regards,
 
+Laurent Pinchart
