@@ -1,200 +1,265 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011026.outbound.protection.outlook.com [52.101.129.26])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16807320F;
-	Mon, 21 Apr 2025 13:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243502; cv=fail; b=d/pYUgCo+SflgSKcnCjlZW/jFQp+oqa0QsrAgnNPc1vTR8+P5z6ggzwhrXo3b0yy2p2VbSv+vSGc62VMzNjcQsl9Tm+J9cVnbfBVyXp6iD7MjGpLTEsYaFiDy2VpChQt3cFpfPQ8kod/Hr20ygk+JNUnboebNTXVt+K8qwMIe8E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243502; c=relaxed/simple;
-	bh=yc0d3WGqg0qbEvkcxxYh9HZHf/jD3IpLdlfnqx7MuJM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=hJsHqMuUQHC57//NQa5+NcN5o0uHSq2KkPvVfJnVANNjWOb+P7P8NUXQrTQUPM0WXGol2yLHi57CIKSCpB9dGtQuKaPhjeBNgWOqcxg44oYQpuDm/qUshjYRM2VSEdxe8YF9IE4UzDcwZ6UeFDDRxV3ZNKEUZF/tVM1Czgfk0/c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=KnG8UUBO; arc=fail smtp.client-ip=52.101.129.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A1E265CCF;
+	Mon, 21 Apr 2025 13:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745243519; cv=none; b=q3qU0nB1rRO80XNyQcVHzNBtcIz4R6yMZvIeQT9NnqKgaLIhfvLdeZI6fWLCT03yJmLe/NrwPk7uOFqmfWis11QX2AMJoVDhs9+aN0hCkzMkCNsBIbiZTgs+ja5V/Mxyc9OTiIC94odveEbhhGSCr8iJ/Ph0/P/FGmFKaN4aHFk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745243519; c=relaxed/simple;
+	bh=XHD5eA9xaklG7sjRpB1N5p1j7MCk5KvdlNPAy+eg8e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jhyeKgt1T8CA03riGQVdp2SN+HnDqTnvj2vFGmRvG99aq+IE0rv7VT6z0Zy4vKjpwi60FgyimAA8V7CQdrOf5ZRlaRD1XEDmtTri0Pe+JfQzW4bNhwKV1nb6kluZjfdfcUoTYqV8nqb+u/bl4PAajDznl9euQYcLRdxr8eqKEOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHBJZJxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="KnG8UUBO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u6ytPSX3g9bTnQOwAcUShY8P2Vimx0PK2xDCUn7STEnJjRQjsSvhFGieiSDIjYlPsrfTmqhJwG7B0dDn+TPQo1yWBoqePgkWnRVTNGtVXsxxcfPfTftydoVQ+BuXkZo+5/ZhDI3a0IAjZGQkMN21CS1mIP8/WvOfK9iH/sZK2rs+hhqNxZ5ISYB/OCqITBjYljJYNILHU1wW1ns0Nk4yqeu7GwZ9aybwHuI/LYtU6422KmWGYVrisfnMJoLJQTV7eRWKW8V96AQFJel6tc7xMzTMZIWuEGgQ8kUYn9lTYIOMYiBSCrodD5odDEurhyXgQY0slun9om6M6Y7l6bmopA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2aXRnt9BpycCt6wdV2bdWn31ZgHIG0s+2FJYkBj7haE=;
- b=gLMFTnGRIy2omhCWqgKIZSog8SuzesgS5l7NzRTJcfnrBe2zZiizcmNcJr57PblrqbTb6eKQaUPrymewr+Z6uAbn6UYqpoOWpk4r3NH/Yrf3QXl5NsOCLOBkSHQ2RpT0EcLQxuxMHERZeBngyk9gkbqk/gKdn2SDgted8EWshZZBDq2Ki6x2h9vA0pAvFItg1YgWXCsjpn76byI93WztAuF3smzDQLOUwqjX9yaZfYhoaJMNthtZG/23M+vQluvuH0LYMuVRyJlBvWuYNQzc2oe+OGCELpNF3rHuWCGzd9yLcuiClZ7KqtmTomF6QsEqfiO3MOuQDPWJ4aPmkp9nWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2aXRnt9BpycCt6wdV2bdWn31ZgHIG0s+2FJYkBj7haE=;
- b=KnG8UUBOidBEbRyB52AFZuuEg0im/HfZZWZqJSorKLbYDQlh2SRAlhedaV0TB7WmDwWD2neUUBriVkVqxt9p1yrzYCIOyo1lOfm4Ml6/EPVb9t4zZ/ifLhWkklObCCFV1wWCPxs+NsGXnNB/Y/+9zMxKMp2Xi+RPHshs0nQv92vRPu//GrrpO8xtI7nv6mUmrqHv5k1o2dCSNHRkok8+E7oAK02dccEBxKA+MuX50gxxbaR5ErriWC6UACavSs2XUolWGB0lIdwkMsqBoVZVSsq1i/IFkYuU6SUrZpRJEjQow6du3poeyrB9mNUHCOB8S/VapgJSYKEhXMpXM2D85Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from KL1PR06MB6273.apcprd06.prod.outlook.com (2603:1096:820:ec::10)
- by SEYPR06MB5349.apcprd06.prod.outlook.com (2603:1096:101:6b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Mon, 21 Apr
- 2025 13:51:32 +0000
-Received: from KL1PR06MB6273.apcprd06.prod.outlook.com
- ([fe80::9d21:d819:94e4:d09]) by KL1PR06MB6273.apcprd06.prod.outlook.com
- ([fe80::9d21:d819:94e4:d09%3]) with mapi id 15.20.8632.030; Mon, 21 Apr 2025
- 13:51:32 +0000
-From: Huan Tang <tanghuan@vivo.com>
-To: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	peter.wang@mediatek.com,
-	manivannan.sadhasivam@linaro.org,
-	quic_nguyenb@quicinc.com,
-	ebiggers@google.com,
-	minwoo.im@samsung.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: opensource.kernel@vivo.com,
-	Huan Tang <tanghuan@vivo.com>
-Subject: [PATCH] ufs: core: add caps UFSHCD_CAP_MCQ_EN
-Date: Mon, 21 Apr 2025 21:51:23 +0800
-Message-Id: <20250421135123.594-1-tanghuan@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0048.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::17)
- To KL1PR06MB6273.apcprd06.prod.outlook.com (2603:1096:820:ec::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHBJZJxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C600C4CEE4;
+	Mon, 21 Apr 2025 13:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745243518;
+	bh=XHD5eA9xaklG7sjRpB1N5p1j7MCk5KvdlNPAy+eg8e4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bHBJZJxFvfm5oAVFOwNv+gPLmP4UIY07SREhtXVSMIGbO+TqDhq4VNhPCv0K3Fyh3
+	 K7CcALNoQSznT5bQUHPLFx+i82o0NM5OylheNLpG7uGm1Ah9iY320aqnp420HO4m75
+	 cNu/iSNQPN+tY4q6t3UvR3sO+qpJVfCZo7SbBv+ILigc/exZ1SVFcr6zYfGiu3+5cz
+	 PrsG5KaA3E/m8PfN61vPwZUYnHfY0Xr+ckAuapzbBoQ41yr/+P68XszR+2bUc1Od2b
+	 Yd3+ZowIwLls/AYAfkOzQrW1iZoeljpPN9nC+pIT4pEv+eeF2Sd38LP4npXpaC/m42
+	 jaR2o1GWNjiLA==
+Date: Mon, 21 Apr 2025 14:51:52 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v6 05/11] iio: accel: adxl345: add freefall feature
+Message-ID: <20250421145152.22f42bc6@jic23-huawei>
+In-Reply-To: <CAFXKEHaG2EBkoc5Zx=oCEePA3nwApRWAg1pGsQ-_68OY2esYVQ@mail.gmail.com>
+References: <20250414184245.100280-1-l.rubusch@gmail.com>
+	<20250414184245.100280-6-l.rubusch@gmail.com>
+	<20250418192254.0becd27d@jic23-huawei>
+	<CAFXKEHZNmUsUmheyDdh1bDDf97-7ZTpsm2xqqbwT+hq3K58F5A@mail.gmail.com>
+	<20250421111641.1cb83848@jic23-huawei>
+	<CAFXKEHaG2EBkoc5Zx=oCEePA3nwApRWAg1pGsQ-_68OY2esYVQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6273:EE_|SEYPR06MB5349:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff29f7f5-5c18-471f-fafb-08dd80db9fdf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|7416014|366016|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?35vbo2FZ8r1Ml+BGl7Jpqs3EdvtZVLqqy8kcPvVLH73JP4UHdFFy2iL55FHP?=
- =?us-ascii?Q?NwMETDaOx8yMeckvU+Iim346sVxI7THHtS38N/MzH0vkGwJBOkCcJZafAXYc?=
- =?us-ascii?Q?rfw3KCDw/cUaR8RpcPV6LgFVBYN0Ysm/avdqDr7BkolXR1mZmA0IAq7fEHSr?=
- =?us-ascii?Q?JuzgqfQKNZOD34AHtfypnO/dlExdzLyAMSOAqLX+zaRL53tnM3+ZiLlUOQd9?=
- =?us-ascii?Q?jmlmiaqkaJtNbbBwXn6YXVw7DteUr/FLV2DQNRfvQS1yoTFlXlBsHF+Ba2MM?=
- =?us-ascii?Q?szXtSnIpRz7pSZSWTTupA3XfVTWflftceGF7M7hTZwV5SdpRUmLOopS64Ywc?=
- =?us-ascii?Q?kIo5P8zi66t8BmYbrwcgjR6edZ191ZsxB1t53pJEL+J2q0ybAeA9rZBpxN+L?=
- =?us-ascii?Q?OEkepFCNQ6CqIKXNHpU/3GsaPnF8M0b0LqriLNgtkRY7WMXn1HgwgXs10SG6?=
- =?us-ascii?Q?/jn4yd0P7PY+j5oyVr8EFjYZoaZZDWpxCTmaU6ZK2io7A2Ax1bmywmpf/8Y8?=
- =?us-ascii?Q?xYvXy70IqAZoxH2FmbY3NSlkCLbqTwzj1gxdC+wlb3m29FbnPw1EP2auOrJn?=
- =?us-ascii?Q?JkU1O8ElzaFPK9iL5U/DSQcxEXupp1oApv44hS38STLXN9so8sGybDB5cyqn?=
- =?us-ascii?Q?8PJnrTKUGo/pFpZz2xvVtkYFpOuiUO2AcHERAXDkXgIG45Fa8tPIR79HjCdB?=
- =?us-ascii?Q?MMno+q2/rT4p1vO7FIaQgOvIk8QraI0YVM97GVtb52lzjS8KifFXa0HpdmuW?=
- =?us-ascii?Q?4/rsPvV8f6HfeGGXo0GSNHghsyUZDPUdXyDNXqw1uOYtH1/rWezYlvdWubvf?=
- =?us-ascii?Q?7W1R+Zx0xYVE+gutd3FgUQWbfaNcCX6gAg+eo+/c6RlOdqZyEkc2rT1xgWKC?=
- =?us-ascii?Q?SiqGm5VIc3dUIXU4Kn0mt9Tz7HholmPw7QdcY8tQFKoqcnQHo5+Q75d6cuCQ?=
- =?us-ascii?Q?5ZDZ3160//MqZzJcPNq5KBhNLSyNkflI0jYEMtFHP+tjZAwYBIncCg/uus1F?=
- =?us-ascii?Q?19oCnOlT0wXo3YOC9MK0hYazHyZWL4i2vursRs8i2LvHbWBoXHokwRI9DTTU?=
- =?us-ascii?Q?CEYg8PJfq+AwSRsNxyTYqoD6XfnOu+bHSA0zAkJtmtKXLM8MECPrBGl1Se6g?=
- =?us-ascii?Q?N6J1CJzPC7esqrSXql0x4dcsbzsiYQjdBWleQHzDKem7W1yB1CDLWu+ZJbhv?=
- =?us-ascii?Q?2ScOTrZjqCpuwThw3GYYQ6i3O59FjajNXDJblFrv9MEgSfRmlPJv8MpjZt1j?=
- =?us-ascii?Q?3eG+D4Fe0TLwwAAQmMVr8fH+or/TXrRUSgaDqu3wDRH/Jk95h9KnHqFq+SD3?=
- =?us-ascii?Q?6MSHfP7/a4D52sX6re1uQnBGsHabKuESKDwSJBa9zZsgoeBZdk687ajA6Ah8?=
- =?us-ascii?Q?HYuKLUoycmPBvNrC3grPCGQROu/cldspvTvTzAHtutRkUPZ2V89k838x/7cn?=
- =?us-ascii?Q?tPozt1yobA/sa+PU6rDpG7EiVkHr+dtjy5wnawet8wa6xU3A4EhzuRf6lzBV?=
- =?us-ascii?Q?TL04hSRDO/2h/HY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6273.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(366016)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NQufYw6K2RI9CYrnqGDM6N8AKkpYx5YXXLSh1lJti0PkZqcHbHh0mPCR7pKa?=
- =?us-ascii?Q?47W1nWm5N30GlWNRibIqLTwPp3U9PTU0nPrNOBvwHZFLPlcsd5CneJ2ufnvL?=
- =?us-ascii?Q?uZa3uD0k7UjMgeAscXyw+BJ1Wtrj7KN21KWk1Wb+05PzkhqT9KtU3RG8Ou9I?=
- =?us-ascii?Q?4kK1gv34TqgoJgxwj565rUmnQbh/QuTwyee8TB9OGZc/VJzIK4bpSPnnWIDa?=
- =?us-ascii?Q?4R4OLBNtzbZurOs85Mb+yZMqB1kdHgjVVdcDP2SGCbvcymldKdvo/hBleVrm?=
- =?us-ascii?Q?ABlG9IlRKusxYksiTRV3SUiXiFSDqgi9hIPvdOZKFIYKpW768IH3e+qIz9Xs?=
- =?us-ascii?Q?mKp03eC+vkaAlWDZFCdSokY5wkQFQ+LoQcmpUMuSz2cQumfZnJaJEiHSjXRD?=
- =?us-ascii?Q?QVpAUD4NkBjB4O9ODHry3qSvZZ1+z2pMQUWneU3Y18LJdWoy84x/HsuzMRm3?=
- =?us-ascii?Q?lygP/XaVPmyLOzFetOzt64b9rU4SPsHDsRHgcsQKMJuoDtoUDRNDWc2pDv5q?=
- =?us-ascii?Q?o0ablaY4nD262QbGS7kE8c5XPGJYRnU5GoBF5BzY6r7GIedfZZWdPwNkBDRi?=
- =?us-ascii?Q?V3oSSJ9//mqeO/d1OOnj7qyN1iezg3rdMPSSxiFop8lOIB4pSOE8HevbYn3V?=
- =?us-ascii?Q?H/N/GRbT1zPMtPef9RG/4mRl1BEqPoHeUOEo2+R1Zw93RTyY5UgdpHEd0LCz?=
- =?us-ascii?Q?Wbx+KCC/NKFhZKzWaAA9yjjoF0+7w14akggHZOYlZUBoI3qA5ydeLxG63vvA?=
- =?us-ascii?Q?4GVre7qa2Wr+ZNwkiD+YszyLWdt0LW9iXHV4EyRzGqbaUqDoLrrsXK4jaPkS?=
- =?us-ascii?Q?kGz9NcQ0wf5hkGiBp2PYkgV1F1nxWkxVIya4H/Ydi5pf0q59hT0pMLrJRiSx?=
- =?us-ascii?Q?AARxm8fkeabHS4xrTZhFwhJbWMBtAsa/rj/tI6nGClwfs6+5ZsL7UTUAbm5w?=
- =?us-ascii?Q?PGNS8yarnttcz6BnSELArINdfMO9AoDNsojR3oy8L090s2z7uzQBQ09HD6e2?=
- =?us-ascii?Q?Fo8q+kNcLV5SU4wUps5yV+k0GeHQOtUB5xjFx+c6rHBVC/OEdIZp5FFbEiZ8?=
- =?us-ascii?Q?Es6laeB1/3Wy1DVyY6tP7MZAEfzmGv5WuzMg6dguyNJWKz1OQI41nbT4jtTL?=
- =?us-ascii?Q?rNnhpW1q647REsCQzkohUdFUIqz45urY17RC01h2CmxmdQ4FeYJmFV6o0e7V?=
- =?us-ascii?Q?UrOeWfm+FHiSuVHMckskRydtwIh0eOVlGOX0RKTK/BFg/dakLLy4oIJsOBzA?=
- =?us-ascii?Q?XjnVP3I4CBbrk+CnHBn8VQ3TYTUVzhxO3s+XdhiTKLk8xDVxMrmLRtTtne1I?=
- =?us-ascii?Q?FTgamJYry7lTY4p5+zRKjptyKACxV6UYhNZU/+qRyattgTbpGUrpccYtwJKp?=
- =?us-ascii?Q?PTNFfGI94eX/3GR32MN8cir26AEy9UcDlvedLOslsYzkBtlgvU7Qp1a0xdOx?=
- =?us-ascii?Q?zoS2lBJWAShTnfybvw6cpwpGY2B/wiRuaqnOL4mx0QgAZXtBl+ywuMs/DGGq?=
- =?us-ascii?Q?i256b09aSWWbY2lbPp2u8p3J+gNDLdi1R2usB8OLDNSepKD9FduVC9KcDQ1k?=
- =?us-ascii?Q?mNygykHcGKi9I0IPxCsVo2nztF6bv+koascyQINP?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff29f7f5-5c18-471f-fafb-08dd80db9fdf
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6273.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 13:51:32.6449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YAJ+NJVxutUEROAVSFCJpUrwZiUNaad/dfu2ZtqDlZdPRO+BC7wCfMdQ73m2fpaSe9SlUH//LqOfQdhAFUVI/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5349
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add caps UFSHCD_CAP_MCQ_EN(default enable), then host driver to
-control the on/off of MCQ; Sometimes, we don't want to enable
-MCQ and want to disable it through the host driver, for example,
-ufs-qcom.c .
+On Mon, 21 Apr 2025 15:31:19 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Signed-off-by: Huan Tang <tanghuan@vivo.com>
----
- drivers/ufs/core/ufshcd.c | 3 ++-
- include/ufs/ufshcd.h      | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+> On Mon, Apr 21, 2025 at 12:16=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
+rg> wrote:
+> >
+> > On Sun, 20 Apr 2025 23:26:47 +0200
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > =20
+> > > Happy Easter!
+> > >
+> > > On Fri, Apr 18, 2025 at 8:23=E2=80=AFPM Jonathan Cameron <jic23@kerne=
+l.org> wrote: =20
+> > > >
+> > > > On Mon, 14 Apr 2025 18:42:39 +0000
+> > > > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > > > =20
+> > > > > Add the freefall detection of the sensor together with a threshol=
+d and
+> > > > > time parameter. A freefall event is detected if the measuring sig=
+nal
+> > > > > falls below the threshold.
+> > > > >
+> > > > > Introduce a freefall threshold stored in regmap cache, and a free=
+fall
+> > > > > time, having the scaled time value stored as a member variable in=
+ the
+> > > > > state instance.
+> > > > > =20
+> > > > Reading this I wondered whether we had the event code consistent for
+> > > > freefall detectors... Or indeed inactivity ones (which are kind of =
+similarish)
+> > > >
+> > > > :( We don't it seems.  The issue is that
+> > > > freefall is actually that all channels are simultaneously under the=
+ the magnitude
+> > > > threshold, not one of them.  So it should I think be
+> > > > X_AND_Y_AND_Z not X_OR_Y_OR_Z
+> > > > =20
+> > >
+> > > I change to X_AND_Y_AND_Z.
+> > > =20
+> > > > This is as opposed to activity detectors which tend to be any axis =
+shows
+> > > > activity and X_OR_Y_OR_Z applies.
+> > > >
+> > > > Anyhow upshot is I think I lead you astray on this and we should ma=
+ke this
+> > > > one IIO_MOD_X_AND_Y_AND_Z
+> > > >
+> > > > A few other things inline.
+> > > >
+> > > > Unfortunately we don't deal with these events that often so I forget
+> > > > what we did before :(
+> > > > =20
+> > > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > > > ---
+> > > > >  drivers/iio/accel/adxl345_core.c | 125 +++++++++++++++++++++++++=
+++++++
+> > > > >  1 file changed, 125 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel=
+/adxl345_core.c
+> > > > > index c464c87033fb..ae02826e552b 100644
+> > > > > --- a/drivers/iio/accel/adxl345_core.c
+> > > > > +++ b/drivers/iio/accel/adxl345_core.c
+> > > > > @@ -75,6 +75,7 @@ struct adxl345_state {
+> > > > >       u32 tap_duration_us;
+> > > > >       u32 tap_latent_us;
+> > > > >       u32 tap_window_us;
+> > > > > +     u32 ff_time_ms;
+> > > > >
+> > > > >       __le16 fifo_buf[ADXL345_DIRS * ADXL345_FIFO_SIZE + 1] __ali=
+gned(IIO_DMA_MINALIGN);
+> > > > >  };
+> > > > > @@ -96,6 +97,14 @@ static struct iio_event_spec adxl345_events[] =
+=3D {
+> > > > >                       BIT(IIO_EV_INFO_RESET_TIMEOUT) |
+> > > > >                       BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
+> > > > >       },
+> > > > > +     {
+> > > > > +             /* free fall */
+> > > > > +             .type =3D IIO_EV_TYPE_MAG,
+> > > > > +             .dir =3D IIO_EV_DIR_FALLING,
+> > > > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE) |
+> > > > > +                     BIT(IIO_EV_INFO_VALUE) |
+> > > > > +                     BIT(IIO_EV_INFO_PERIOD),
+> > > > > +     }, =20
+> > > > This is creating separate per axis enables, values and period. Does=
+ that make
+> > > > sense?  If not you need to spin a kind of virtual channel (with mod=
+ X_AND_Y_AND_Z)
+> > > > and add the events to it.
+> > > >
+> > > > See how the sca3000 does it for example. =20
+> > >
+> > > Hum, I'm not sure if I understand you correctly. In my driver, I'm
+> > > using .mask_shared_by_type, and I verified there appears only one
+> > > enable, one value and one period handle.
+> > > # ls -l /sys/bus/iio/devices/iio:device0/events/
+> > > total 0
+> > > ...
+> > > -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_en
+> > > -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_period
+> > > -rw-r--r-- 1 root root 4096 Apr 20 21:59 in_accel_mag_falling_value
+> > > ...
+> > >
+> > > In the sources of sca3000.c I saw this setup with .mask_separate. So,
+> > > there I'd expect to see separate enables per axis, or am I wrong? In
+> > > the case of the ADXL345, there should only be one freefall enable (in
+> > > my driver) and not per axis. So, isn't this what is currently there?
+> > >
+> > > So far I only adjust the or'ing to and'ing the axis for freefall. =20
+> >
+> > So this is a messy corner of the ABI (because these are tricky to descr=
+ibe).
+> > Shared by type usually means there is one attribute applying to all the
+> > axis, but that they are reported separately, or potentially multiple ev=
+ents
+> > / _OR_ form used if we can distinguish exactly what the event is.
+> >
+> > In this case there is no way for userspace to anticipate that the event
+> > that might be generate is X_AND_Y_AND_Z.  So for this
+> > the ABI solution we came up with is that virtual channel and separate.
+> >
+> > So you get something along the lines of
+> > in_accel_x&y&z_mag_falling_en
+> > in_accel_x&y&z_mag_falling_period
+> > etc
+> >
+> > The tricky remaining corner is this only makes sense if we always enable
+> > all axis (which is typical for a freefall detector). If we get a device
+> > that oddly has per axis free fall enables, then it would be hard and I
+> > might argue nonsense to enable them separately anyway.  Not true
+> > here though I think.
+> >
+> > Note that we may well have drivers using the ABI slightly differently f=
+or
+> > freefall events which will be at least partly because I'd forgotten how
+> > we resolved all this complexity long ago (that sca3000 driver is ancien=
+t!)
+> > ABI like this is tricky to fix up, but we might want to consider some d=
+uplication
+> > in those drivers so we standardize on one form for freefall (even if we=
+ have some
+> > stray ABI from other possible solutions).
+> >
+> > What we should definitely do is pull together some documentation on mul=
+ti channel
+> > event handling as the ABI docs are probably not enough.
+> > =20
+>=20
+> As I (begin to) understand now, in case of the sca3000, the virtual
+> channel is literally an extra channel. That means, we're talking
+> probably about this here down below, right?
+> ...
+yes. That is what I was referring to.
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 44156041d88f..b8937f85d81a 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -112,7 +112,7 @@ static bool use_mcq_mode = true;
- 
- static bool is_mcq_supported(struct ufs_hba *hba)
- {
--	return hba->mcq_sup && use_mcq_mode;
-+	return hba->mcq_sup && use_mcq_mode && (hba->caps & UFSHCD_CAP_MCQ_EN);
- }
- 
- module_param(use_mcq_mode, bool, 0644);
-@@ -10389,6 +10389,7 @@ int ufshcd_alloc_host(struct device *dev, struct ufs_hba **hba_handle)
- 	hba->dev = dev;
- 	hba->dev_ref_clk_freq = REF_CLK_FREQ_INVAL;
- 	hba->nop_out_timeout = NOP_OUT_TIMEOUT;
-+	hba->caps |= UFSHCD_CAP_MCQ_EN;
- 	ufshcd_set_sg_entry_size(hba, sizeof(struct ufshcd_sg_entry));
- 	INIT_LIST_HEAD(&hba->clk_list_head);
- 	spin_lock_init(&hba->outstanding_lock);
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index e928ed0265ff..d8547bc6bf79 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -771,6 +771,12 @@ enum ufshcd_caps {
- 	 * WriteBooster when scaling the clock down.
- 	 */
- 	UFSHCD_CAP_WB_WITH_CLK_SCALING			= 1 << 12,
-+
-+	/*
-+	 * This capability allows the host controller driver to use the
-+	 * multi-circular queue, if it is present
-+	 */
-+	UFSHCD_CAP_MCQ_EN				= 1 << 13,
- };
- 
- struct ufs_hba_variant_params {
--- 
-2.39.0
+>  512 static const struct iio_chan_spec sca3000_channels[] =3D {
+>  513         SCA3000_CHAN(0, IIO_MOD_X),
+>  514         SCA3000_CHAN(1, IIO_MOD_Y),
+>  515         SCA3000_CHAN(2, IIO_MOD_Z),
+>  516         {
+>  517                 .type =3D IIO_ACCEL,
+>  518                 .modified =3D 1,
+>  519                 .channel2 =3D IIO_MOD_X_AND_Y_AND_Z,
+>  520                 .scan_index =3D -1, /* Fake channel */
+>  521                 .event_spec =3D &sca3000_freefall_event_spec,
+>  522                 .num_event_specs =3D 1,
+>  523         },
+>  524 };
+> ...
+> <taken from sca3000.c>
+>=20
+> What's now missing for freefall and the ADXL345 and v7 in particular?
+> - I need to provide a similar channel setup as in  the sca3000 snippet
+> above, the virtual channel
+> - I need to AND the axis for this channel
+> - Now, with the virtual channel usage will be "separate" instead of
+> "shared", which will result in a single enable handle in sysfs
+>=20
+> Is this correct?
+
+Yes.  I think that's all correct.
+
+>=20
+> Sry, I needed to re-read your answer several times. What confuses me
+> is still a bit the "virtual extra-channel".=20
+
+I made up that term for it as there is no actual traditional channel
+there.  I should have given a pointer to the actual iio_chan_spec entry.
+Sorry about that!
+
+>Probably, I need to build
+> up a bit more practical experience with the channels. Providing just a
+> single enable handle already looks good to me. I still don't grok
+> entirely where this can be / is problematic in such case, but no need
+> to explain it now in full detail. If the TODOs match at least with my
+> understanding I will try to implement the above points.
+
+These events are just a bit weird when aligned with the simpler ones
+we tend to get on ADCs etc.  Giving userspace the best visibility we
+can is always good.  Here it is possible to get that, but in some other
+cases we haven't yet come up with a good generic ABI :(
+
+Jonathan
+
+
+>=20
+> > Jonathan
+> > =20
 
