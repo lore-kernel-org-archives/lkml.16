@@ -1,116 +1,93 @@
-Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40814258CC1;
-	Mon, 21 Apr 2025 05:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD5F1EA7D6;
+	Mon, 21 Apr 2025 05:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745213822; cv=none; b=JNWaZG/NY80fVaTo2HYl5G8nH4yP4vDJueL451FdDsSDEuKdQemCUmR766rWqql/ql5bF/PrEYyOUtd+7niXKnnZJ5SISyQVPC73FMmCqY5TbsB8kZnSCo7LVB5uqwn70yL448IyeMEzBYi7JMLOK5+Oy5ohC8jwwNtwv3uHY6Q=
+	t=1745213843; cv=none; b=mOP7YybCGQyImf1UsjS3N/WC8CgKgACqDFieUTy9tqoNRRFxNyY6CWnee9XZ40u3o1xpMgybCDowmwD+8v1CgevcSns6V687J39unAc6C43DlCtDZXPBWIEWJ3Mkfl0Ar6WAv88EFlr4KBU5ZGW+ianR3Gc9/wnUm9Rno201YCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745213822; c=relaxed/simple;
-	bh=qnDuboyg3uC3ZM73XxREV7nSTfV+BWdos5WixRH5ZSc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e7aIDkSahPIZ86MxwPkIHoqWPQKEwoWhBXDYgXomw7Z47vvj2MKrjQUhmhvhKZzg5LDK1Z1+zpPqcTr7jK2ki5345MnCWflrcW7zf67SmMSOuuRB1COwKn/+eaFb/C44GbpRQFF7ukiUTZqJOp/rysY8OLgiPr2HwPJrzYlRgXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaJGJt7y; arc=none smtp.client-ip=209.85.210.196
+	s=arc-20240116; t=1745213843; c=relaxed/simple;
+	bh=2Jzy9ZC6JBUJqedz2CiWnh2u85n2GsNVxwhydMt3RGw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=OvnMhONMTNwObcHQy1NN+g0Rh7b/sIkc1AhUnPIfeZXTgeE4rBaAbVq0+S7QHnHSp3TX8Sa8BvzH9+Y1Q3TnSlOYUi4N3SZWzEFkSPn+WjUYoauPK98dEhsQbpK36B5XXObKkzhnxsoF3gwq8Un7lJTgCPvHVrTj2OaxtmI0Fig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gr+SpRcU; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaJGJt7y"
-Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-7398d65476eso2885279b3a.1;
-        Sun, 20 Apr 2025 22:37:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gr+SpRcU"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-549b159c84cso4332861e87.3;
+        Sun, 20 Apr 2025 22:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745213820; x=1745818620; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qP16P958gYh46YoBLSFtpJ/M9EjZ/0g/N+HcV5FZKJ8=;
-        b=gaJGJt7y8X/z8rpC6BxHyhsyLvydjfGPzoGZ5Tk89A+hYH01l7RYYj6lT6wkN0F0jN
-         faYXo6cniHhG05/I8ELaZ0XVT7WaLT4+NzYTA6BLt57tor30Da2lYFA+4Mh/65SnIi8P
-         dne8Jl703UCfxqaWSiLp/SsBPZUkG59IGxAosn2mA0wNzhp3YB86vC5tHkHXEgPfwaGh
-         XB5soOkMmwJnGHB0Mk00fQrhkMuOqisHXWqFp4lAQhEyxqENfctt6LTCuyzILDJWLOoo
-         +CAdFsb+QJGLGT/mSH3h79Aj/23G1i39yayqddtBuGnzM5BSNZdr+zu36D2OvmD+p/cN
-         IBew==
+        d=gmail.com; s=20230601; t=1745213840; x=1745818640; darn=vger.kernel.org;
+        h=in-reply-to:references:user-agent:from:subject:cc:to:message-id
+         :date:content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Jzy9ZC6JBUJqedz2CiWnh2u85n2GsNVxwhydMt3RGw=;
+        b=Gr+SpRcUlUzXdMF8qVWbYL+2zQoob/7H9b3EMD3vXl5I+wFXkrhKYERluAsoywrRYv
+         ve4cHExd1LG9hcgOGBlnSHjPPjQNxbwR/LMakpATOls741cK5NQWKV9J8+HXHnIgKQFK
+         9ELdaY173xRNkqJ3oBiCoQ06qNEt1ulW5mAzQPi6itWOfrrUJjPdHxOtVfqF08e/VQwi
+         RvSJaLBXDKc4x6YhCSqcGAGQlBaPIbA/df+Q+YQVKkb2fuxKMevBHqenpxAOFSwyitEd
+         c59drbnpSz+lsLx6LTdm6cLJEnogtNV3IQgpBCkWBw1z4y5wrOLjx5+jiixzC+gOz+mq
+         zNOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745213820; x=1745818620;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qP16P958gYh46YoBLSFtpJ/M9EjZ/0g/N+HcV5FZKJ8=;
-        b=Juf6LKAOEPkZYD4s0xJf4JSRiVBxZwoqYIakYC9t+jmDFNEko/n9X5uZuWrMb/DnWK
-         ZavquooIpCJzxm8nMYB7BHVXW636VzXK64vjqudwvkX8gOon54g+V923+xgCyX6lqA4z
-         d250xn1/rOZ77u6cCRZZvSTQ+cSWy2lMGu6bnTaDd0P/WlLfLTVQ7i9dBjQCz6xo6ZR3
-         q7f+IygJs749t+tlifoSOE4J/gTc5TCAwsA0fkXLUqkw0g0vYIx7aSqdzBWFn0zfgVE1
-         H3/x8oPskcrDzFgbDkZTad+x4HeYM7p8Zy2tLA4+AbiZnX0XtJFXdnHYOKT1Kl1GMjA9
-         Xdag==
-X-Forwarded-Encrypted: i=1; AJvYcCWtf8r0EseWL0Qp4zNgIUM+5j7in8Fy5VI6bg/5+17VvWxSv4oIz1O9/c0TeydC25Imj6yxzeqlz50Ro28=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4jlt5vqB4xNtrvJZUvB+YgSM68hi4FpxRnZ2PafN8VGCbpE8q
-	TLLNSy+X4uL0i90i5fGxoVQax3Hw9qu6zvkLVVkP/3TUxt9LGLkR
-X-Gm-Gg: ASbGncsXe+FCIvgX/UyBAegtANG0dH6660nRNMi+t+pthNoqm8emALklCd1DL+5Godf
-	fbCwmSf5KfISasnc3hgYApquj5qTHef7GAo3yjpk/q84MOQry/plRgB2YwpFJBudlu7HhIBU6KQ
-	bk5y6eJr0epIRvRbM478JeJCvNx6/QzJR+y6Y/2twr72VUNmo9c89cg1SdAGMJB3W29AEzB1Lk8
-	5HYdi4zpw4Ie02O8GPZeKuhPugTa5ydIILzH0SSHAy3SljbsqDNOhDqxXUrwFPrzdmjqlHXegh0
-	L4Q3J6BbpXfJjksDVWvtdfM/sOPvef7gLow=
-X-Google-Smtp-Source: AGHT+IGaq1j44bIV9U9aAP6Lw87+CebUioUl2IXpzgU4JKDPc1gVaozyiEZcGrmNCAOWX4YZqafxgA==
-X-Received: by 2002:a05:6a00:3905:b0:736:9f2e:1357 with SMTP id d2e1a72fcca58-73dc1b7d92cmr16890178b3a.12.1745213820426;
-        Sun, 20 Apr 2025 22:37:00 -0700 (PDT)
-Received: from [127.0.1.1] ([2a0d:2683:c100::bf])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8beaf2sm5634270b3a.5.2025.04.20.22.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Apr 2025 22:37:00 -0700 (PDT)
-From: Troy Mitchell <troymitchell988@gmail.com>
-Date: Mon, 21 Apr 2025 13:36:39 +0800
-Subject: [PATCH 2/2] i2c: imx: drop master prefix
+        d=1e100.net; s=20230601; t=1745213840; x=1745818640;
+        h=in-reply-to:references:user-agent:from:subject:cc:to:message-id
+         :date:content-transfer-encoding:mime-version:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2Jzy9ZC6JBUJqedz2CiWnh2u85n2GsNVxwhydMt3RGw=;
+        b=Vt4wY1/kTyuHsC7wPzXkxgdLKeGmG+lIzLIaJ7ehWZqyWhD9x1EgmBha7GDpaDeZQX
+         fQkFqBkKJvdlyFECDKSnKV1ypXAEhbC5dFLcOcAao0DcuUuDEaGDwNzjFALcBF86WuTN
+         8d0y6w5nQEB/QYJe3pfQes7+ngrsEuFQ2PqDfwuYO5025+KF+MqbXFZ7DFbZnAxcDjQ+
+         rcWTAKW0Wq7s9UOGzG6rhsWVTf+I5Km4HByDaVideKriPPPZTbREt32Fka7+//7ZhlhT
+         9Gl17LqVI/8zvjJKzRT+Pvyil7zs1ZSCL72aKmC3RoxH5sFqaRMTS1d171giU3zQ7y7S
+         BKPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKbvpVDgwvYOy7mFanLOszIlp6Tb0SmU1OyCvy+SNBCBl5wPhxZemjEWllxmPvy19JbQBXjKXcljS+moJO@vger.kernel.org, AJvYcCVW8ReL4E1bzt97sAlSxvOmNbm53Sev0JqcWKm4UhYq3nkz6OBjGchPXu02RTWIKn4qUcrhD/gMMQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLo8zFW2v2VrnbkYcRHg3ZOKcWr9F/XkrZlMt6vFaJT1TLvXIX
+	Cf/utdCakLY4H8RSJ/iGx+X/bjDPWcB+rDj+6fMCthkb42S/ZdUV
+X-Gm-Gg: ASbGnctQfZLvPWk4zuQKsuTCjKO0btgcitAr1sJ3/mkbNcAX5rFduajpOMwMZyrZEBK
+	gOSlvCldCsnNvB6miuBFc5PMHrjZwLQx/XmhawUn4Y58Sx1uMjQXrH5bPhelzM0d9KVaZKH6O2N
+	g+R7+9q6PF005ztYLRz8emjBnRPg0UMOU3mKuWWo7jsneOmm62QewiiaqnbD2J4mwL1sQ/MCLrD
+	OsrnIbKq/lGAwv4njh6S41pFoSGd+ic30xW1WkR0/ivtv+u5pYuHf+VHbc1kaktLMcrXjrzEmmM
+	IsDSNXw/xa3GzX073w3fcKvY8bH5qFRAFJ0=
+X-Google-Smtp-Source: AGHT+IEX5ltlPfLCluDI8+idUv9xGtQd7mdwsOJMFE8fBqKtIfiU3iJrIQi2lCu8IGFrW5vsWloWzQ==
+X-Received: by 2002:a05:6512:2346:b0:545:e19:ba1c with SMTP id 2adb3069b0e04-54d6e62cb0amr2400614e87.19.1745213839491;
+        Sun, 20 Apr 2025 22:37:19 -0700 (PDT)
+Received: from localhost ([185.53.22.18])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540849sm831853e87.53.2025.04.20.22.37.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Apr 2025 22:37:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250421-i2c-imx-update-v1-2-1137f1f353d5@gmail.com>
-References: <20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com>
-In-Reply-To: <20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: linux-i2c@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Troy Mitchell <troymitchell988@gmail.com>, Yongchao Jia <jyc0019@gmail.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745213806; l=820;
- i=troymitchell988@gmail.com; h=from:subject:message-id;
- bh=qnDuboyg3uC3ZM73XxREV7nSTfV+BWdos5WixRH5ZSc=;
- b=9uDtFJOoouBVDqMeSweTMN8B5tBnbcf6uzO7/1YWRkgpM8iHl97fMt3EJ7tOaMIeXYzCFS9LS
- xyWr9Pns8uVDLFXmqfUey18aE+a/BSO9hELI++WhIAvbX4BdBLxZoq9
-X-Developer-Key: i=troymitchell988@gmail.com; a=ed25519;
- pk=2spEMGBd/Wkpd36N1aD9KFWOk0aHrhVxZQt+jxLXVC0=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 21 Apr 2025 08:37:18 +0300
+Message-Id: <D9C2O9CUCJT8.334ZUG6YS2XA@gmail.com>
+To: "Cristian Marussi" <cristian.marussi@arm.com>
+Cc: "Sudeep Holla" <sudeep.holla@arm.com>, <arm-scmi@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>, "Peng Fan" <peng.fan@nxp.com>
+Subject: Re: [PATCH] firmware: arm_scmi: add timeout in
+ do_xfer_with_response()
+From: "Matthew Bystrin" <dev.mbstr@gmail.com>
+User-Agent: aerc/0.18.2
+References: <20250402104254.149998-1-dev.mbstr@gmail.com>
+ <20250402-hidden-unyielding-carp-7ee32d@sudeepholla>
+ <Z-1gY8mQLznSg5Na@pluto> <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
+ <20250409-fierce-astonishing-bug-dd2adb@sudeepholla>
+ <D94LGXDHGVBD.1GB1GHOWORHMU@gmail.com> <Z_zJbRH7vQ0TswGg@pluto>
+In-Reply-To: <Z_zJbRH7vQ0TswGg@pluto>
 
-In light of the recent updates to the i2c subsystem,
-drop master prefix.
+Cristian, Sudeep,
 
-Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
----
- drivers/i2c/busses/i2c-imx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+thanks for taking your time!
 
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index cb96a57df4a0..dd07fde79632 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1690,8 +1690,8 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
- }
- 
- static const struct i2c_algorithm i2c_imx_algo = {
--	.master_xfer = i2c_imx_xfer,
--	.master_xfer_atomic = i2c_imx_xfer_atomic,
-+	.xfer = i2c_imx_xfer,
-+	.xfer_atomic = i2c_imx_xfer_atomic,
- 	.functionality = i2c_imx_func,
- 	.reg_slave	= i2c_imx_reg_slave,
- 	.unreg_slave	= i2c_imx_unreg_slave,
+I'll figure something out :)
 
--- 
-2.34.1
-
+--=20
+Best regards,
+Matthew
