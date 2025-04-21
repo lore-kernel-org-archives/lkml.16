@@ -1,45 +1,46 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2057.outbound.protection.outlook.com [40.107.243.57])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386411E3790;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A4C1E5732;
 	Mon, 21 Apr 2025 17:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.57
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745257606; cv=fail; b=PMKGlJ7Uxq3LSLxl3G6GoStfCmjfbfcmK7afS4D0+aN9fVU3J7WXe87SNj8BEADeGAQVW5Dx2fIUarVYJa/0b6vwCY5CkM45N0LPVPljCJ1q3mxWu6/VPl56WRQoh3Wdy7afb7saIV6suetQs9olyRvfLC5CTPAjZFdsl2fQalY=
+	t=1745257607; cv=fail; b=QtM524XSR/FUd8WPJY3l/KkB0cyPxlCAE1C3gkxKMJyjwttnM/osXt619xnRVULhORNKvpXDpDIrrqaZuwVJxf8Dixnp9g4qqWI10hQvDrk5Bnn74Pp+yySuom/4+T1piws0FKozbT9Xhce5/Kw/U5DUyGhww8di9SBxsz9Y/oo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745257606; c=relaxed/simple;
-	bh=R3WVDnBwUSPqGWh8MYGwqQqc/GP9pASk0e+kZs14mKk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ul6Zk/eXU/mUlp93f59qQFui6lPxaM4UEih1uU/HH9Q2+RK1KeicaUm6yRTNMsiN455Ct5Kmbn4sYuPQfUDmI4jiAR7HlfWgtAdAW6RrkNx0P9xnsF8ObHE/IXKy03By8szsnXYahDVUr9OC+W5r59CdRa3ob1c5CYBbPpYiDbc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=F0HYqiEc; arc=fail smtp.client-ip=40.107.243.57
+	s=arc-20240116; t=1745257607; c=relaxed/simple;
+	bh=HGb5tQ3XN8BWou/bI2U2/LtPYoeSoX+TFBaiLGIyDHw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G5nXf1jBITbeKko1l3w7wRtt1KJ/pQ+8heCTcNcSzpQGIG1+RvD0LyZgSdALSmfnH/FeUizFGho8o7z8JFxBONLGxwIwZ0ymCUYG98O6Drs0Ks3TSN+joDIFAflDS30mdvBGPV6s8tmmSB5TAksxPBILHLInR9DQLXbJvlYn0nM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r+W07o/u; arc=fail smtp.client-ip=40.107.92.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="F0HYqiEc"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r+W07o/u"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k0dfDM0Sr4+6BD2SjSmg6Ddn23MxQy/vZ7VLBdcbWF9Ek7jk5wdej/S8OYD7ekabBE9hcb0PyRR22ALSM3NfwmiYTjYf5juf62YrM8MJMQbUalRH0/7lkjT3128f4320LPk7gQMmQtoOxi+//P+2m0bVuOVoHR5Ges6iEumdja36jcdr0UXfd+Qq+2WmJDg4aPwQLy3Wo1wiE31Q/VUA8wM0MjryfdW3Y4bxMJLwK0hUtx+tgidLsSSOHQr3M2vp21KZbuuyopXkGveAffomUhz0+PDguoQDr4aXSxJ9KQPBFaxBSqT+RB5sRVdBk3rBfnuQEOOhXxJ95vFvpnDfRw==
+ b=B/hwy9x4flAnocSK1b4Gigf7zhl9iJcwR8LJgsNrSJYr2zrzRknyVOVxe0rYgdqZj6TBKytRtF+KW+QFlEV0SZiyODsEXsAqybfADycHn7C01XHD31e5KWlg1qCoHAzqryHp91YlG7oSy8DzGsAPyGNw9O52jex/ui0Mb0ivevWOcT5tZfS2lPQNPxGyXwZ39ySTapaatr5XIWw56/YK1gGQYlf47MCVnqKOH9YK9fW73yC9PNILi+WOAE5SK6TC6vqVHpDU7Vmfwp+eiAcq8ug8sckkFY2YGWlMWRtCF1jN7Oa6vZMU0IffQ+WbfB1+n0CCwgpZx8y+0URRhwHZfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dA1mQJNzMYFz8NkPNVfV5gESjRpsVI3Uq9dKppNtUrs=;
- b=rjYJj8ULlMd96GAf41nRBkN3qD6GH6aNfmg4WyQjUHbzRAR20doDmjzyzWPENGpkzz0j2uTq5wOvKeD6vO9FV3AdDHR5usH2g2juU0V1krDRdoanc9ah1bEbcK3wFUYtE+mlt88kIKRAupP9SSNvx5R4XzJ0Kk4/asiulhdXZNh2YOuAnVMNJGMC3P4GONXC4uIoGubx2nCf/hi++idnaI+QhaumRI3q4X/2buymL6pMykIcv6c+q8toFJt87OOA1zLc4spAodbBW3cPdjFO63p8FHUxaV2j9c/UPb8Co3Lgf+gQ2QunzSIb45Z5d2ZOmZF116se7nLNzDbotbXYXQ==
+ bh=csXqUu8Goa2RO5A1a4O/7TRpWKVTfs83nqQ60wBA/VA=;
+ b=XIUTIcciogDGu08DYlibivr7DlHM3+Ewbs+AniwRRguoKIWlwj+ZiVrGgcHm7V0q0+EAkGnkriOpvYhRYXYOkt62dFNWpA74soZ2/bj9SburtrxxQaQvoWRmmZwNNVD9vz1EeDziVArKDO/V6EtXJW7O4vwsjoYkUsOehfEPTJMc+XcwXeBcQQZBRTLyeaGmEb4Qjgt9G8Q0aH2hMdncmMZGh4Sd50xL6ewzvTlJmvfqCUQm4m2p0EzomT8bokGLAqn1Fd/MVHu5rvu7D2g5s4QmhH0zYrIOFlYaqQ+93851z7H9AFFpOmFkxi5QePhvxvK3H+YnTV9Xo9nKsOJMOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dA1mQJNzMYFz8NkPNVfV5gESjRpsVI3Uq9dKppNtUrs=;
- b=F0HYqiEcVRC83njWvh30qmbUMwqSQte8FRs9roGCxSfsJQ/nVuVyobrZfjsAl2cR4wMIvLrcV8llWdmIGoXUoGL+NKvWzuv4VtBylLlGaW3tmu5pfbX3Ty4xpLL8JbmJr11Tor4i+PtLIn3q1jFFR1ozREy8kqiTDS/IKOCLc8A=
-Received: from BYAPR08CA0068.namprd08.prod.outlook.com (2603:10b6:a03:117::45)
- by PH0PR12MB7077.namprd12.prod.outlook.com (2603:10b6:510:21d::7) with
+ bh=csXqUu8Goa2RO5A1a4O/7TRpWKVTfs83nqQ60wBA/VA=;
+ b=r+W07o/ul1302P9eO1fF5fs2jYuu7sU4Kzk3IQXlJZXEWS/sAnBCqWa8hc9oHGBMi7PrwwJ2GcSTvXdwNpCfLMiyUpm9DNoKXcnrtXheKZIUTiu6NgdG6E94j84Fk7qEpJ1uCmybBelF1ZDp1XHQRW3K/Mii+jevZGJmX/v29ww=
+Received: from BYAPR08CA0042.namprd08.prod.outlook.com (2603:10b6:a03:117::19)
+ by SA1PR12MB8945.namprd12.prod.outlook.com (2603:10b6:806:375::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Mon, 21 Apr
- 2025 17:46:39 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 17:46:42 +0000
 Received: from CO1PEPF000042A8.namprd03.prod.outlook.com
- (2603:10b6:a03:117:cafe::26) by BYAPR08CA0068.outlook.office365.com
- (2603:10b6:a03:117::45) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.32 via Frontend Transport; Mon,
- 21 Apr 2025 17:46:39 +0000
+ (2603:10b6:a03:117:cafe::4b) by BYAPR08CA0042.outlook.office365.com
+ (2603:10b6:a03:117::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.33 via Frontend Transport; Mon,
+ 21 Apr 2025 17:46:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  CO1PEPF000042A8.mail.protection.outlook.com (10.167.243.37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 17:46:38 +0000
+ 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 17:46:41 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
- 2025 12:46:36 -0500
+ 2025 12:46:40 -0500
 From: Shannon Nelson <shannon.nelson@amd.com>
 To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
@@ -61,10 +62,12 @@ To: <andrew+netdev@lunn.ch>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<jacob.e.keller@intel.com>, <linux-kernel@vger.kernel.org>,
 	<netdev@vger.kernel.org>
 CC: Shannon Nelson <shannon.nelson@amd.com>
-Subject: [PATCH v4 net 0/4] pds_core: updates and fixes
-Date: Mon, 21 Apr 2025 10:46:02 -0700
-Message-ID: <20250421174606.3892-1-shannon.nelson@amd.com>
+Subject: [PATCH v4 net 3/4] pds_core: Remove unnecessary check in pds_client_adminq_cmd()
+Date: Mon, 21 Apr 2025 10:46:05 -0700
+Message-ID: <20250421174606.3892-4-shannon.nelson@amd.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250421174606.3892-1-shannon.nelson@amd.com>
+References: <20250421174606.3892-1-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,92 +79,101 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A8:EE_|PH0PR12MB7077:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb5c6c07-91f4-41cc-341f-08dd80fc77d9
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042A8:EE_|SA1PR12MB8945:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf4d6b42-3223-4eb4-bd45-08dd80fc79a7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|13003099007|921020;
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/7RhLerKG2inBKTBdi1O41vkXmpyPJO5/39/vKoR7IuhdZLKZUBhcwcj3esY?=
- =?us-ascii?Q?ARsHkSPeKGKT1isPRiF8NheIwSr9fPdnb6yOK9BUWJwAAx6wKgKtLO5Yeu5M?=
- =?us-ascii?Q?2OllItyaYkqewvk5rOG3VevU1yQxVPklG00SkmFdvh7xYrFFj58Zt4aDXeod?=
- =?us-ascii?Q?kzFieJWc00jG+FwGU8TCNQZMiNKElBrekBceMAiRSZBl/xJNY9G59fUGI4N+?=
- =?us-ascii?Q?HJr9jn8qiWsIvqyoiSMuqnTC2biZUPpsF9u12ImqhXy1R8T7aUwRmKpYjdSl?=
- =?us-ascii?Q?3OetCV6EAZ1IYB2i7ExWXScuULT92Bj7Ou5+QR7v3MMtweoL5JjUHz2Vuwe7?=
- =?us-ascii?Q?YBtwzqc7U8QRqSGipa0x2ZKeFGPN4nIEfeaNoQUCYtJsF+d8NIG3d8GaCO0t?=
- =?us-ascii?Q?qSYIHQvt6bWN3TwOrgyZ6OMnSBaWgaaBblpwJ7K6eWMWHJfHMImpJgz+4318?=
- =?us-ascii?Q?/l42kHbDoXDt8RCfeykt+cq7pp7d4wQvxdhiI0hHgiOexeoeAgrEJkSO84QD?=
- =?us-ascii?Q?5TBovTdJnA+7vVo5Y/Drwozzk3To1dgk5w4oHd1VmnC88e9EiuXZsdaGTOae?=
- =?us-ascii?Q?QDgcFqW0osqxoIg+xgRJfleKzopR+Y+SUQfVRAzsgHiwxHRcT1yR+SBJGCbG?=
- =?us-ascii?Q?o5+8SD9A4TTqixvf1W23qfe9li/9sAhuM+HcoPEgFi7gILzNGuLgUe/kFC8z?=
- =?us-ascii?Q?HPFQvHWCmpdcbD44eOzGzPg1dBfreseity4xP97f/HHJ7uwWGe3cPfpnE97E?=
- =?us-ascii?Q?v9a4nk3YOX0Y/xNHoq//FXBCcc3mmSHUBobJEMd7AaIj/ik7scb6C81kiKgy?=
- =?us-ascii?Q?TBk7/peKmeq+DEzHywHoyutWs5RyNZhoIEAXvoMl3KxXN5FbL+jKQXN2YgT0?=
- =?us-ascii?Q?0hUML3aNElNgcuykyC6U9TPt52Jz3Y+5KzUBJ5fTJqbzV4rVtpZDDUjm7CdU?=
- =?us-ascii?Q?o1434cOyHf5Vwj9AWm6ozqlHLfz5Nj9pHBwH6aCyKt0sSSwjUiwMU4vOZkPU?=
- =?us-ascii?Q?4c6jg1CxlS9q4oF4heGQKpeNuqwW+68JPR4PVWvBBH0lGh7lJkz/3n7SpUuY?=
- =?us-ascii?Q?4ULFhMM7ROx7nMyacFCQrytM8gjxFwWN1VlkIQ8hYOnwot/J0vzN6+3vhVbH?=
- =?us-ascii?Q?obASwgaVq2fx8O4vn0mrixEMFeKRFAWXzDTCaNnSom/rtlBuf/lR/VttY0n3?=
- =?us-ascii?Q?fpVNglk0IGpyAKp9kiHve5xpT2MHMVmMeCAultfcNR9HYciClYongoQwBupa?=
- =?us-ascii?Q?5OXqH3f3uLMdK77YYi6StJB9bBHzitUDi/yBOrLvXOyEGPoW2qAk6XyjivlD?=
- =?us-ascii?Q?G3xGh79yyNYjbtchy2kuPx4Tl4IqwBVOS023rtDtiJtznbsEignXFk9+jYpN?=
- =?us-ascii?Q?kHwdsu/E3F8LrAxBJpoLEpj0nnZ3pLuZBA1Omw9qY5cMMv0TmSeD1mnl043a?=
- =?us-ascii?Q?KgU7G467MlRRPhT8diA6HaL6zFaeZqVhRWVVIyVpwWMoHD5MEXBVWg7tsBzf?=
- =?us-ascii?Q?U2orpKgE/BTrCZCylgILGSyxNCnGN3aiP+AUVt1k3N6ttFiUcwdnl8R//sgy?=
- =?us-ascii?Q?yd+QGEoBXsY0gmLsPTk=3D?=
+	=?us-ascii?Q?SreLPKwr1atRfZtzLfqCtNSJQaALcyVAylrSBGAOw0d3yRasYBvndMGdxaoi?=
+ =?us-ascii?Q?yveW0yPoAX7pBH5p1OSIkq5ZL8L9j9GdE9DIqxgfrP+lh9FOtKCmdgr5UADg?=
+ =?us-ascii?Q?fQ4gGUhhNTVESGeAGoZKrh19rKL6tLCD4gv1NUpHmngwS/IPemCalhXmsHPw?=
+ =?us-ascii?Q?lY4xITASrkTXVNRWddJKGM8skMEugry9lioRVwH1x7gTjWts/BM49ieNcGSa?=
+ =?us-ascii?Q?VgVrpkMO4PQhso8Y/8qrUavV42vkkbM7knRJmpSlVWypHXw75EJ79VcV9fsr?=
+ =?us-ascii?Q?DpK3PxbWOsjavwLCtMt6CqW/UA2MG9DfwjJIe7PGhZSG+IAOuNWRBHiSSBQ6?=
+ =?us-ascii?Q?XvpgqPWTzjdR/2f13HrrxoS//IR4OfTCkeNt8AvtrkFDx+61PptFctdkWian?=
+ =?us-ascii?Q?Pt7dYa2/NcH8HrByVdrRticOu8V4ZD3VIoUf2hGVG7NpmzU9+7GEPgvEjXnU?=
+ =?us-ascii?Q?juVla/QiQjYbE7mDPzouFz5NkvVahbHGXmXSkdVWaT0yGHFu+75Cd524hQhI?=
+ =?us-ascii?Q?G6V1aTizvM38j0v3zgoQCjUN0BpI6PgHxPk/tidHQSvFQn+gFRCyHxYzkOC0?=
+ =?us-ascii?Q?t0izYY9c5DjlzMMSdYOCCC/nqwvILb9I9z4nb4pM1t8OF3dIBVsoJNG9NIhv?=
+ =?us-ascii?Q?cc+yrLdyEQ2uxIJ1PhMIj4WV2N77DjE1t2h5O/TJ76qGH1Cyrgeltx38mWkO?=
+ =?us-ascii?Q?/zpWrJQXI3Z1Gj2Mh2j5QNsKqjHDs93JjVjeuRImWlZj5CBJR174avy7G1G2?=
+ =?us-ascii?Q?ew+R19E9eG3TGD7B1RZnGUPZSIL2MbNBTTgGXbNvLFLKnXM8hYo6iktiujGa?=
+ =?us-ascii?Q?+m3sUIGA74uVb2J2C9NWYRIjYuwH8kI6lS1+Jl6TzDZ4MxGX0sVvPnBxUqnJ?=
+ =?us-ascii?Q?c6MQIG+WtY0QtFRdBZYzZjjB+39DY/hRUjulGEW/sTQ/YACSpvckL0zD1vG0?=
+ =?us-ascii?Q?ZMJWUNUkkFEcgK24p1dtPRZAwCU6Cxqd0WFD3z/PfUnWGLLH+azqXppks9lP?=
+ =?us-ascii?Q?UGhLpjvdzkwgFa66cA1hF4ZDZvnFI4DLejJ53QpnV1Oexjw42lSZViYkamaN?=
+ =?us-ascii?Q?1ODhbMiT+ZbF6AOQCfOPr7WAHu4ugFxDdbc9tcvNSQxips+JzgyWkFtnB3a9?=
+ =?us-ascii?Q?4BdNVgh/ajwcHUqTcC7g1MOr6M27NNj1dSJKkOg6PH48+buSvVjvMIR+x846?=
+ =?us-ascii?Q?UNUW91vuLzsP4nCiypW3C33FOQnCEEwCKjNeXq9VqBj9bWwHsERA4Bezf3Ti?=
+ =?us-ascii?Q?aaC2PUeCRjrtWZ0g8JBHN93YNdItonG9/AVj7f6rqu18NhvCwnMjL3koBBQI?=
+ =?us-ascii?Q?b9g3yZ1921rYTUlcGbw20mJckxpbyBA6vJ+9CSG5L45tSW7f7e/rqG9TYlwa?=
+ =?us-ascii?Q?RIIXhap3GUoN/tYWRVtTz2GSCCBcpppkx1DBkClbJ4M3dz7h3odfg1EDwwPa?=
+ =?us-ascii?Q?QDvgSCJnKT78H3KaQGXtyVr7iW3tAZC6XuU44ru7s7G9fOUR2iHvqNyXkTEZ?=
+ =?us-ascii?Q?364T3Q1+YyWgrolSZhTuyBUXO+iKssZ096GNirjs8mvFhx7xPDBTaVjkVA?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(13003099007)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 17:46:38.5753
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 17:46:41.6222
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb5c6c07-91f4-41cc-341f-08dd80fc77d9
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf4d6b42-3223-4eb4-bd45-08dd80fc79a7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CO1PEPF000042A8.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7077
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8945
 
-This patchset has fixes for issues seen in recent internal testing
-of error conditions and stress handling.
+From: Brett Creeley <brett.creeley@amd.com>
 
-Note that the first patch in this series is a leftover from an
-earlier patchset that was abandoned:
-Link: https://lore.kernel.org/netdev/20250129004337.36898-2-shannon.nelson@amd.com/
+When the pds_core driver was first created there were some race
+conditions around using the adminq, especially for client drivers.
+To reduce the possibility of a race condition there's a check
+against pf->state in pds_client_adminq_cmd(). This is problematic
+for a couple of reasons:
 
-v4:
- - use init/reinit_completion() rather than COMPLETION_INITIALIZER_ONSTACK()
- - use completion_done() to protect from completing timed-out requests
+1. The PDSC_S_INITING_DRIVER bit is set during probe, but not
+   cleared until after everything in probe is complete, which
+   includes creating the auxiliary devices. For pds_fwctl this
+   means it can't make any adminq commands until after pds_core's
+   probe is complete even though the adminq is fully up by the
+   time pds_fwctl's auxiliary device is created.
 
-v3:
-https://lore.kernel.org/netdev/20250415232931.59693-1-shannon.nelson@amd.com/
- - dropped the kdoc complaint fix, save for later net-next update
+2. The race conditions around using the adminq have been fixed
+   and this path is already protected against client drivers
+   calling pds_client_adminq_cmd() if the adminq isn't ready,
+   i.e. see pdsc_adminq_post() -> pdsc_adminq_inc_if_up().
 
-v2:
-https://lore.kernel.org/netdev/20250411003209.44053-1-shannon.nelson@amd.com/
- - dropped patch 5/6 "adminq poll interval", will send for net-next later
- - updated commit comments and tags
+Fix this by removing the pf->state check in pds_client_adminq_cmd()
+because invalid accesses to pds_core's adminq is already handled by
+pdsc_adminq_post()->pdsc_adminq_inc_if_up().
 
-v1:
-https://lore.kernel.org/netdev/20250407225113.51850-1-shannon.nelson@amd.com/
+Fixes: 10659034c622 ("pds_core: add the aux client API")
+Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Signed-off-by: Brett Creeley <brett.creeley@amd.com>
+Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+---
+ drivers/net/ethernet/amd/pds_core/auxbus.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Brett Creeley (3):
-  pds_core: Prevent possible adminq overflow/stuck condition
-  pds_core: handle unsupported PDS_CORE_CMD_FW_CONTROL result
-  pds_core: Remove unnecessary check in pds_client_adminq_cmd()
-
-Shannon Nelson (1):
-  pds_core: make wait_context part of q_info
-
- drivers/net/ethernet/amd/pds_core/adminq.c  | 36 ++++++++-------------
- drivers/net/ethernet/amd/pds_core/auxbus.c  |  3 --
- drivers/net/ethernet/amd/pds_core/core.c    |  9 +++---
- drivers/net/ethernet/amd/pds_core/core.h    |  4 +--
- drivers/net/ethernet/amd/pds_core/devlink.c |  4 +--
- 5 files changed, 21 insertions(+), 35 deletions(-)
-
+diff --git a/drivers/net/ethernet/amd/pds_core/auxbus.c b/drivers/net/ethernet/amd/pds_core/auxbus.c
+index eeb72b1809ea..c9aac27883a3 100644
+--- a/drivers/net/ethernet/amd/pds_core/auxbus.c
++++ b/drivers/net/ethernet/amd/pds_core/auxbus.c
+@@ -107,9 +107,6 @@ int pds_client_adminq_cmd(struct pds_auxiliary_dev *padev,
+ 	dev_dbg(pf->dev, "%s: %s opcode %d\n",
+ 		__func__, dev_name(&padev->aux_dev.dev), req->opcode);
+ 
+-	if (pf->state)
+-		return -ENXIO;
+-
+ 	/* Wrap the client's request */
+ 	cmd.client_request.opcode = PDS_AQ_CMD_CLIENT_CMD;
+ 	cmd.client_request.client_id = cpu_to_le16(padev->client_id);
 -- 
 2.17.1
 
