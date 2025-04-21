@@ -1,303 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4742DBA53;
-	Mon, 21 Apr 2025 10:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDCE20E01E;
+	Mon, 21 Apr 2025 10:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745232148; cv=none; b=oPkMNtDChFPNEQGaVjV5jE2Ljw+op955bAnz46nTOniguDtzxCx+fRt1kkLOiaQCWaC5hW/yeuXOG696ejKwdfjmdaVg9ebCemlstOgIjczcehSs6jJYbZ3mJPUo91w3oju7CVcLoooKvIno+aAcmiCYNAgfrwxe1OeqBzavEko=
+	t=1745232179; cv=none; b=C3hQOIsyZ+ex8McGvdI4RONoBT9fz+NuDh+8FFWr6WfwGAyoHtFV+oe8l5E2NIqJxcvwBCp+2nj2dE/HzYGIymVoI+RAwmHyoOB8H16eXSxfVtgua8z0OFhaFEuAncIhGKsPh8SZfRJURDp0NXmooagga1kpKuf0GDuwPGfHcHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745232148; c=relaxed/simple;
-	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4lTiYgjGKTwIWdC0h1TEma/SNGqbHFbwQElHr5Cdqrj7jZOqVeTU41DXTCiUQgPu91dFpJfweAJyx1yYx8vcFMMkaTUnt6mShZVwELYr+abtVrpBs+LSs5OBr5tLN6PzPoqnxBu6jpaETUtGXe1sDYtcmlqthca+8owE6t6FR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=of5unEST; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745232179; c=relaxed/simple;
+	bh=g6aoNjjUe6gpyU3lEhAAMFrkD8tpCtOClqEvVFyO5lI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sswqxkKrJ4njqHqJs2PuOOZX3RQrmASqmVJnxESySDGH8lddEsk2UGZjH9c3+Lp3ZsaQ5zq9Icw+cPwgOV0W53wKQJ2mpnRCQuPtLKxwYz4bMYz8BTHpKc0nxL1y6QBMgy41oMGQGkZyX3FptYGTEHQyZEU6+AYvX1xrfwPW1Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=AhtBgOZ1; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="of5unEST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A79C4CEE4;
-	Mon, 21 Apr 2025 10:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745232147;
-	bh=xT7PnaTlh1xLrB/kDiy/+78LloWAc27/D5zrJIW/rYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=of5unESTI9fOzX515uJlYR8s2BP1S8AaCCuikOMQuoXHcmARe+XJjVCUaapvH/8W8
-	 EVTBEUubD0ZG/L8ICdd71XchxAuqy7AsYfITuLteyLgWFKZ4WwTa+/bR7CEtRV9lZk
-	 aTBW6LQU2C0l/nFacyOQJApGdknoamfRBHcbRhq65NmSixegRE10bOX9Jojc3jGs+u
-	 fwXgec7D1lJSqNKLdTBseKqUCUGiBSI21sPC9knPTZ3mrYcJFJVxNOoL0gVTPWO7rh
-	 r+qoeDf+rkF2jJZUCvWuUuDWNRDqxBp90UfVqMwgBypJgEaNQN2iXBuqwtS1giDunh
-	 G8JiznRgBG+0g==
-Date: Mon, 21 Apr 2025 16:12:18 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 02/11] tee: add close_context to TEE driver operation
-Message-ID: <aAYhCg6XOeZm7jqq@sumit-X1>
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
- <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="AhtBgOZ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
+	s=s31663417; t=1745232172; x=1745836972; i=quwenruo.btrfs@gmx.com;
+	bh=fztYMfni9OaHqOaPo9QXn2+QMjAAMakdY/6EGbfxUX0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=AhtBgOZ1gWaP1eWPigqxWkPy1fV7y01y0nSGeeuVTIL8P0aVWzAjDGzDKmAtjmC1
+	 Uw81tzs9ZL+YdFDjp9mzHAu1cjuETE9vQBKnygNcDayzjmH/ErieFkZvBg0pz44jf
+	 XUrw2SSMQ6E9VXz/Hfk3bgiMaaWEI0sTUZmkwWvi691XKQLKnRL5sqLP7xBRD9NUu
+	 bVrlOdqYEbLNS92grW1Pws1bKbVDkd1LQ6QZC3/flc8uQ+mhMosVwc/4ul/BF2fsY
+	 0TPqzd27MYGqiSJTedbLxfryS9FByzrDo+xMckybVKFdM323F2eexTb5thjJKyyFF
+	 cTCqEv8zOQY6eGqXCg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.229] ([159.196.52.54]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6sit-1vBq7w1Shj-012aOk; Mon, 21
+ Apr 2025 12:42:52 +0200
+Message-ID: <9e7babf0-310f-40cd-9935-36ef2cebb63f@gmx.com>
+Date: Mon, 21 Apr 2025 20:12:37 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-2-7f457073282d@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] btrfs: fix the resource leak issue in btrfs_iget()
+To: Penglei Jiang <superman.xpt@gmail.com>, clm@fb.com, josef@toxicpanda.com,
+ dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250421103252.44509-1-superman.xpt@gmail.com>
+Content-Language: en-US
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
+ sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
+ xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
+ naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
+ tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
+ 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
+ VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
+ CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
+ B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
+ Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
+ +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
+ HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
+In-Reply-To: <20250421103252.44509-1-superman.xpt@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Mqo4g+batdcBt/v79MDeIgrr3ppT03dgyH7S+a1WC+p3h0rkr9m
+ PhEHyQUqOKMnGUgiAeghCMD8PrGYqv66JRCD8RV9M4dSynhoNBoeOAH6kU300bnZwMcEV4i
+ nQ3MPrWa5uOBcrm2aNjcTQ9kD3CLlEKpwVK/1hVeHfS/Zb+auXGa5t8xnjRjKDqplHU0KVT
+ Kel1wR9eSV6urUgsl9F/g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:rr8AEwuPX10=;X7EZ6kud8jlIgZ0DnFJkitJylMW
+ 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
 
-On Thu, Mar 27, 2025 at 07:47:24PM -0700, Amirreza Zarrabi wrote:
-> The tee_context can be used to manage TEE user resources, including
-> those allocated by the driver for the TEE on behalf of the user.
-> The release() callback is invoked only when all resources, such as
-> tee_shm, are released and there are no references to the tee_context.
-> 
-> When a user closes the device file, the driver should notify the
-> TEE to release any resources it may hold and drop the context
-> references. To achieve this, a close_context() callback is
-> introduced to initiate resource release in the TEE driver when
-> the device file is closed.
 
-Can you ellaborate more as to whether the TEE driver will release
-resources corresponding to a particular user or all the users?
 
-> 
-> Relocate teedev_ctx_get, teedev_ctx_put, tee_device_get, and
-> tee_device_get functions to tee_drv.h to make them accessible
-> outside the TEE subsystem.
+=E5=9C=A8 2025/4/21 20:02, Penglei Jiang =E5=86=99=E9=81=93:
+> When btrfs_iget() returns an error, it does not use iget_failed() to mar=
+k
+> and release the inode. Now, we add the missing iget_failed() call.
+>=20
+> Reported-by: Penglei Jiang <superman.xpt@gmail.com>
+> Closes: https://lore.kernel.org/all/20250421102425.44431-1-superman.xpt@=
+gmail.com
 
-These should rather be relocated to tee_core.h as tee_drv.h is rather
-meant for kernel TEE client drivers.
+IIRC this is not a syzbot report, although it's definitely a C=20
+reproducer from syzbot.
 
-> 
-> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
+Thus I'm not sure if the closes: tag is correct.
+
+> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
 > ---
->  drivers/tee/tee_core.c    | 39 +++++++++++++++++++++++++++++++++++++++
->  drivers/tee/tee_private.h |  6 ------
->  include/linux/tee_core.h  | 11 +++++++++--
->  include/linux/tee_drv.h   | 40 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 88 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> index 24edce4cdbaa..22cc7d624b0c 100644
-> --- a/drivers/tee/tee_core.c
-> +++ b/drivers/tee/tee_core.c
-> @@ -72,6 +72,20 @@ struct tee_context *teedev_open(struct tee_device *teedev)
->  }
->  EXPORT_SYMBOL_GPL(teedev_open);
->  
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration process,
-> + * the context may remain valid even after tee_device_unregister() has returned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased before
-> + * calling tee_device_put(), typically within the context's release() function.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
-> + */
+>   fs/btrfs/inode.c | 12 +++++++++---
+>   1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index cc67d1a2d611..61d7f3f94090 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -5681,16 +5681,22 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct b=
+trfs_root *root)
+>   		return inode;
+>  =20
+>   	path =3D btrfs_alloc_path();
+> -	if (!path)
+> -		return ERR_PTR(-ENOMEM);
+> +	if (!path) {
+> +		ret =3D -ENOMEM;
+> +		goto bad_inode;
+> +	}
+>  =20
+>   	ret =3D btrfs_read_locked_inode(inode, path);
 
-Let's not duplicate the documentation here when it has already been
-documented in the header file.
+On error, btrfs_read_locked_inode() has already called iget_failed() at=20
+out: tag.
 
-Same for other places below.
+>   	btrfs_free_path(path);
+>   	if (ret)
+> -		return ERR_PTR(ret);
+> +		goto bad_inode;
 
--Sumit
+So we will either underflow or use-after-free the inode.
 
->  void teedev_ctx_get(struct tee_context *ctx)
->  {
->  	if (ctx->releasing)
-> @@ -79,6 +93,7 @@ void teedev_ctx_get(struct tee_context *ctx)
->  
->  	kref_get(&ctx->refcount);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_get);
->  
->  static void teedev_ctx_release(struct kref *ref)
->  {
-> @@ -89,6 +104,10 @@ static void teedev_ctx_release(struct kref *ref)
->  	kfree(ctx);
->  }
->  
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
->  void teedev_ctx_put(struct tee_context *ctx)
->  {
->  	if (ctx->releasing)
-> @@ -96,11 +115,15 @@ void teedev_ctx_put(struct tee_context *ctx)
->  
->  	kref_put(&ctx->refcount, teedev_ctx_release);
->  }
-> +EXPORT_SYMBOL_GPL(teedev_ctx_put);
->  
->  void teedev_close_context(struct tee_context *ctx)
->  {
->  	struct tee_device *teedev = ctx->teedev;
->  
-> +	if (teedev->desc->ops->close_context)
-> +		teedev->desc->ops->close_context(ctx);
+It looks like only the btrfs_alloc_path() failure is missing the handling.
+
+And the error looks like a regression caused by commit 7c855e16ab72=20
+("btrfs: remove conditional path allocation in=20
+btrfs_read_locked_inode()"), please add a fixes: tag for it, which is=20
+more important than the syzbot tag.
+
+Thanks,
+Qu
+
+>  =20
+>   	unlock_new_inode(&inode->vfs_inode);
+>   	return inode;
 > +
->  	teedev_ctx_put(ctx);
->  	tee_device_put(teedev);
->  }
-> @@ -1024,6 +1047,10 @@ int tee_device_register(struct tee_device *teedev)
->  }
->  EXPORT_SYMBOL_GPL(tee_device_register);
->  
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
->  void tee_device_put(struct tee_device *teedev)
->  {
->  	mutex_lock(&teedev->mutex);
-> @@ -1037,7 +1064,18 @@ void tee_device_put(struct tee_device *teedev)
->  	}
->  	mutex_unlock(&teedev->mutex);
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_put);
->  
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @teedev
-> + * has already released the device, this function will fail to prevent new users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
->  bool tee_device_get(struct tee_device *teedev)
->  {
->  	mutex_lock(&teedev->mutex);
-> @@ -1049,6 +1087,7 @@ bool tee_device_get(struct tee_device *teedev)
->  	mutex_unlock(&teedev->mutex);
->  	return true;
->  }
-> +EXPORT_SYMBOL_GPL(tee_device_get);
->  
->  /**
->   * tee_device_unregister() - Removes a TEE device
-> diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
-> index 9bc50605227c..d3f40a03de36 100644
-> --- a/drivers/tee/tee_private.h
-> +++ b/drivers/tee/tee_private.h
-> @@ -14,12 +14,6 @@
->  
->  int tee_shm_get_fd(struct tee_shm *shm);
->  
-> -bool tee_device_get(struct tee_device *teedev);
-> -void tee_device_put(struct tee_device *teedev);
-> -
-> -void teedev_ctx_get(struct tee_context *ctx);
-> -void teedev_ctx_put(struct tee_context *ctx);
-> -
->  struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t size);
->  struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
->  					  unsigned long addr, size_t length);
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index a38494d6b5f4..8a4c9e30b652 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -65,8 +65,9 @@ struct tee_device {
->  /**
->   * struct tee_driver_ops - driver operations vtable
->   * @get_version:	returns version of driver
-> - * @open:		called when the device file is opened
-> - * @release:		release this open file
-> + * @open:		called for a context when the device file is opened
-> + * @close_context:	called when the device file is closed
-> + * @release:		called to release the context
->   * @open_session:	open a new session
->   * @close_session:	close a session
->   * @system_session:	declare session as a system session
-> @@ -76,11 +77,17 @@ struct tee_device {
->   * @supp_send:		called for supplicant to send a response
->   * @shm_register:	register shared memory buffer in TEE
->   * @shm_unregister:	unregister shared memory buffer in TEE
-> + *
-> + * The context given to @open might last longer than the device file if it is
-> + * tied to other resources in the TEE driver. @close_context is called when the
-> + * client closes the device file, even if there are existing references to the
-> + * context. The TEE driver can use @close_context to start cleaning up.
->   */
->  struct tee_driver_ops {
->  	void (*get_version)(struct tee_device *teedev,
->  			    struct tee_ioctl_version_data *vers);
->  	int (*open)(struct tee_context *ctx);
-> +	void (*close_context)(struct tee_context *ctx);
->  	void (*release)(struct tee_context *ctx);
->  	int (*open_session)(struct tee_context *ctx,
->  			    struct tee_ioctl_open_session_arg *arg,
-> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> index a54c203000ed..ce23fd42c5d4 100644
-> --- a/include/linux/tee_drv.h
-> +++ b/include/linux/tee_drv.h
-> @@ -96,6 +96,46 @@ struct tee_param {
->  	} u;
->  };
->  
-> +/**
-> + * tee_device_get() - Increment the user count for a tee_device
-> + * @teedev: Pointer to the tee_device
-> + *
-> + * If tee_device_unregister() has been called and the final user of @teedev
-> + * has already released the device, this function will fail to prevent new users
-> + * from accessing the device during the unregistration process.
-> + *
-> + * Returns: true if @teedev remains valid, otherwise false
-> + */
-> +bool tee_device_get(struct tee_device *teedev);
-> +
-> +/**
-> + * tee_device_put() - Decrease the user count for a tee_device
-> + * @teedev: pointer to the tee_device
-> + */
-> +void tee_device_put(struct tee_device *teedev);
-> +
-> +/**
-> + * teedev_ctx_get() - Increment the reference count of a context
-> + *
-> + * This function increases the refcount of the context, which is tied to
-> + * resources shared by the same tee_device. During the unregistration process,
-> + * the context may remain valid even after tee_device_unregister() has returned.
-> + *
-> + * Users should ensure that the context's refcount is properly decreased before
-> + * calling tee_device_put(), typically within the context's release() function.
-> + * Alternatively, users can call tee_device_get() and teedev_ctx_get() together
-> + * and release them simultaneously (see shm_alloc_helper()).
-> + *
-> + * @ctx: Pointer to the context
-> + */
-> +void teedev_ctx_get(struct tee_context *ctx);
-> +
-> +/**
-> + * teedev_ctx_put() - Decrease reference count on a context
-> + * @ctx: pointer to the context
-> + */
-> +void teedev_ctx_put(struct tee_context *ctx);
-> +
->  /**
->   * tee_shm_alloc_kernel_buf() - Allocate kernel shared memory for a
->   *                              particular TEE client driver
-> 
-> -- 
-> 2.34.1
-> 
-> 
+> +bad_inode:
+> +	iget_failed(&inode->vfs_inode);
+> +	return ERR_PTR(ret);
+>   }
+>  =20
+>   static struct btrfs_inode *new_simple_dir(struct inode *dir,
+
