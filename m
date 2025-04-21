@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC92513FEE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D841E8320;
 	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745259232; cv=none; b=JARbEae3M6kOdfB4votXY9uB9uK92pQQqJqKSb6UUJJa7KW8AvRaM6Ms+ITmiHOT6G2fo7fmDTQmtOaz9v+VOtQmOGMK68ip1SmnAIxsmWKua6UH+ja6ZcKN75ZzVACc0msZ+8XcmcrcPoMOb9aY30tmZL7JqMvvZMeKehDeb3U=
+	t=1745259233; cv=none; b=hyP5mInzVC4QbAm11wP67QKRcf2YlnZ1Fx9FTK7wfsi0ytHgAoZwslZWn98esyiao5BuQcFoy17p8vUJTg2BIS8oir00CHkUsEVK3FG5cPECSBjFjkFZyMoGerft0Wg6LrhqBSY+G6klhY4aXwcK7ouNKSHjCEA7lIE9N2T9O0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745259232; c=relaxed/simple;
-	bh=qLNiRYeO1WrYRKo8XFM+0fZQHMTw04xZoCDiG8GmDBg=;
+	s=arc-20240116; t=1745259233; c=relaxed/simple;
+	bh=V/kjbIpsR7o8/54il8ImspS8yqRyVOqGksL/52gZejM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OjIbgUcphheDVf1szgM9DMORzDNA3EU1X5soUeYQ9Jyhp74WZcH+jzrqimppF+ImDFzxZq0j/zGhn/GOO+uaB2wDCdrX4xdMTAWfcbCb4gl0YEIMcf8tdLl6gFOxyC9Hkaj+8kQVgmq4TnbYREXAlTJkVXd3UBXHVMcu6/z+dIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXZN4It5; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FRvWKyMC0eynSapPCMYlQMwiwiuPKXrzh8U7RW30PCY1Cs9oyr4NUrFdVeB3vdCO13vzcbkr+8z1nL9Typ62kaGS+zKWvCnv9nwMlEkXwg4o2w02ZEQbtBHfnKn3kDdelkdqO+bTNCdX/Kl/3VlOacxonMtIqrW57dd73/1pQeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOmO3C2Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXZN4It5"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4898FC4CEEB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOmO3C2Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 878E8C4CEF5;
 	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745259232;
-	bh=qLNiRYeO1WrYRKo8XFM+0fZQHMTw04xZoCDiG8GmDBg=;
+	bh=V/kjbIpsR7o8/54il8ImspS8yqRyVOqGksL/52gZejM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sXZN4It5CoVbu+OFug+hdtrBYsJ3ABLNezPEEECPrirns47aHT24loReSHa+2qYrH
-	 2wYs5ydRVKPrfJFumbGF6xY69LWwSx9iUWQPm58NtUJspZENj62juJd+dNjonpm763
-	 OSTloKFD0dzg+y+EnsfcV1CESgcW4/JmuNBex+5Zz+IQzNUTh8a5VuqbLmq+c+y+T7
-	 E//xOICSGvlO4FqZhVuVD2F6IRxYsqh77QA8BcWcfU25cW1/2daJTXDvSXzbsSZbkk
-	 kvCfCoCchtTrVjk0RB4uZRKYVotFgS9rhxOjPDM21UJR2l+vYA2sUMhxCVD5hY429z
-	 F0iJlc0i4zdow==
+	b=lOmO3C2Yt9AKELsFG2PNh2SJmQsyOfel0ZvBWC1rr295EEevtr47I0/JDNADsAZjS
+	 uaRMC2POFuL4SXbACLqgPZLd6vKHLYxZMHaODysCR2tW3JwRAALCJJXNmTih+t4uh/
+	 +qKtAn5ix+HUxs20/OXeSimacWV/cMXdbALGI2POQxBQIoTbmTJZTA5KmJT31dps/q
+	 9zZcMf6w8v/1v7KZcTEeVe2PmWOOw3iYEmkVlR6ZAfUX/TM/CuvhO5OM2LM6puDF9X
+	 tnyy7khtwxTSHxE+ary0+v2gWSjjCCc2m2bAJ6ajmUVisIxc3WqGPBecElTFrLUtf8
+	 QYqVFOhCiOAlQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BECDC369D3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C185C369AB;
 	Mon, 21 Apr 2025 18:13:52 +0000 (UTC)
 From: Thomas Antoine via B4 Relay <devnull+t.antoine.uclouvain.be@kernel.org>
-Date: Mon, 21 Apr 2025 20:13:32 +0200
-Subject: [PATCH v3 1/5] power: supply: correct capacity computation
+Date: Mon, 21 Apr 2025 20:13:34 +0200
+Subject: [PATCH v3 3/5] dt-bindings: power: supply: add max77759-fg flavor
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250421-b4-gs101_max77759_fg-v3-1-50cd8caf9017@uclouvain.be>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250421-b4-gs101_max77759_fg-v3-3-50cd8caf9017@uclouvain.be>
 References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
 In-Reply-To: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
 To: Rob Herring <robh@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
@@ -54,11 +54,11 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pm@vger.kernel.org, Thomas Antoine <t.antoine@uclouvain.be>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745259219; l=1114;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745259219; l=2149;
  i=t.antoine@uclouvain.be; s=20241202; h=from:subject:message-id;
- bh=f0NuHuCRsvILdEaz0eCkw58+qM2h+TcqXwhJ2/+YcfI=;
- b=2QR0PUOyqJGIF5HEIdjTYZyFYYeQnngQYuyDt+nv/btdJkhzALfgAMD1J0icELmwKr0JiNUky
- 0R5GJtFjQUqBeNnjC0fKbxcnRbsF0CXgPli970QT//VV9COBsfu71j7
+ bh=3csHwNLf51MgGPB35l/jqx2BDbuC5NezSGJ/M4ttHB0=;
+ b=hdZ5Rso1TYtabh6eg8jkEmrW24+n8D/oOip4OJEpl0tOPzFFs4tV0EiJ5qsDr9uqLuRHV1LkY
+ qVAnT3vizopCgmKHmOf+5qkukpUjrQt83QCOiMFRCY6pmqavfYCltWB
 X-Developer-Key: i=t.antoine@uclouvain.be; a=ed25519;
  pk=sw7UYl31W1LTpgWRiX4xIF5x6ok7YWZ6XZnHqy/d3dY=
 X-Endpoint-Received: by B4 Relay for t.antoine@uclouvain.be/20241202 with
@@ -68,35 +68,77 @@ Reply-To: t.antoine@uclouvain.be
 
 From: Thomas Antoine <t.antoine@uclouvain.be>
 
-From the datasheet of the MAX17201/17205, the LSB should be
-"5.0μVh/RSENSE". The current computation sets it at 0.5mAh=5.0μVh/10mOhm
-which does not take into account the value of rsense which can be
-different from 10mOhm.
+The Maxim MAX77759 is an IC used to manage the power supply of the battery
+and the USB-C. Based on drivers from google, it contains at least a PMIC,
+a fuel gauge, a TCPCI and a charger.
 
-Change the computation to fit the specs.
+Use max77759-fg compatible to avoid conflict with drivers for other
+functions.
+
+The Maxim MAX77759 has no non-volatile memory so it doesn't require an
+address and instead requires a value for the current sensing resistor.
 
 Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
 ---
- drivers/power/supply/max1720x_battery.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../bindings/power/supply/maxim,max17201.yaml      | 34 ++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
-index ea3912fd1de8bfd0d029c16f276316d06e1b105c..cca5f8b5071fb731f9b60420239ea03d46cb1bf3 100644
---- a/drivers/power/supply/max1720x_battery.c
-+++ b/drivers/power/supply/max1720x_battery.c
-@@ -288,9 +288,10 @@ static int max172xx_voltage_to_ps(unsigned int reg)
- 	return reg * 1250;	/* in uV */
- }
+diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml b/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml
+index fe3dd9bd5585618e45220c51023391a5b21acfd2..4823021ff16b170db83abd0b974986a307c05089 100644
+--- a/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml
++++ b/Documentation/devicetree/bindings/power/supply/maxim,max17201.yaml
+@@ -9,13 +9,11 @@ title: Maxim MAX17201 fuel gauge
+ maintainers:
+   - Dimitri Fedrau <dima.fedrau@gmail.com>
  
--static int max172xx_capacity_to_ps(unsigned int reg)
-+static int max172xx_capacity_to_ps(unsigned int reg,
-+				   struct max1720x_device_info *info)
- {
--	return reg * 500;	/* in uAh */
-+	return reg * (500000 / info->rsense);	/* in uAh */
- }
+-allOf:
+-  - $ref: power-supply.yaml#
+-
+ properties:
+   compatible:
+     oneOf:
+       - const: maxim,max17201
++      - const: maxim,max77759-fg
+       - items:
+           - enum:
+               - maxim,max17205
+@@ -39,6 +37,36 @@ required:
+   - reg
+   - reg-names
  
- /*
++allOf:
++  - $ref: power-supply.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - maxim,max17201
++    then:
++      properties:
++        reg:
++          minItems: 2
++          maxItems: 2
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - maxim,max77759-fg
++    then:
++      properties:
++        reg:
++          items:
++            minItems: 1
++            maxItems: 1
++        shunt-resistor-micro-ohms:
++          description: The value of current sense resistor in microohms.
++      required:
++        - shunt-resistor-micro-ohms
++
+ unevaluatedProperties: false
+ 
+ examples:
 
 -- 
 2.49.0
