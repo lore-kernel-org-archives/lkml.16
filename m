@@ -1,107 +1,182 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013055.outbound.protection.outlook.com [40.107.159.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8AA7261597
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 10:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745233014; cv=none; b=povOU8Eiv/V9lI9HBAsWnUd3EwVbpc0qt09hoj59CN6DpJtu8vIByEBksR+8seqspiSBqq1GsFfoL7Ek5MN0VUBayPoWNr+ow43yXK4R6O5wRGpxCEbJ0I82VpyDs8Z6WEcnXfsyQ3l0CrT/44TdkrwlUCK8HV3Z2e1Ix56ECx4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745233014; c=relaxed/simple;
-	bh=dFtUabfKRAAvW3M57Y2XYLhbkoWV/xW0t/A/tPJhfWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4x/D6Flxadz8nJ4hTN2z2iCKrqdkge4jLmAN57t77zEctuLdn5mbPRkZMnPxFEo2WoQ9Uc4mqHTghuKeQlNaHNWyEwWuBS1rCewWFNr56XWAooaCgiA+LevKoYQcxBL8wkzstVTWk8TBbr6TE/3DqRSGl8Fp9ULxVvgk7taDS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YzCMSwCo; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B35E29D0E;
+	Mon, 21 Apr 2025 10:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745233055; cv=fail; b=OfegyQYnnnWqUtWXn0BJjX46YA2xFAHcTeG4FLNMXupcYx6y4riagkPRvtVeujsk/0cExkItTZK7Lg88NUx80nPSOBHEmMy6si20jTPa3foQVmpg2cub39OkAVXCHNwODHwoZa5Nl+zlFDYqosqeRiDLH1Yln9xMtXBb1/J4HA0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745233055; c=relaxed/simple;
+	bh=P2Ohlm8jduuiAm0AtMkwuhwQXEVJysPBvvB8zX6LlMk=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=X9LFzcmTEWZz67EbUthMGazNNPwVsIL6iHHiy3Tu5Y/ym+vYSS+3Ab+YU1mLuoTKVwFO0vefP1KyOv78aTU6WMaRJTetCY5xdcCrYonX9yuum9cmG1l9FVGWACmqBmU6sh3P7phJlLXyHoWtaciHyLVEWJAdPX8Ac/X5NeTaSWs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KXPvzgxU; arc=fail smtp.client-ip=40.107.159.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YzCMSwCo"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224100e9a5cso44406045ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745233012; x=1745837812; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4JOjjs/eTu6BI/Opf5A56OhMZjn4Z0iGykFeuQ+2ztA=;
-        b=YzCMSwCocFe3W439FJIscVBnSPun2NsIOKjGKfmr+947evOncKJEi/dIqt0A6pVUqz
-         ZNdFj4e2poSSnikA92L9xVTxKA7j7vgmbkIljIMKi6bQ2hjr5NbhbUWzIExRSLFCyuT4
-         Ac6U9lJf9mtMoner4ERbvZCyLe6ryoPUyoLNM9YbRtZS9fbVGZVffiAItfIx+RR9DaR5
-         AMr76ZI+Qzo3Fj9osVJWQSF7Dc4rSBnJ1VGC2lWpeGumXLLS57Nk0c+YXmSHC0xVse3H
-         /xcsNPZcW0RhEIKqdHZcb7eVK6PGuPh71swhBrTuuc/K1YM3JkFtlib3nZ+WsHwykMNp
-         2QzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745233012; x=1745837812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4JOjjs/eTu6BI/Opf5A56OhMZjn4Z0iGykFeuQ+2ztA=;
-        b=ehk9aY0ia18BFs0eifAm0S05FrDG4gmnT6s7Gfx7z9+E7EI/U7WSuUe7lffPSriMRS
-         9M+Ph59M8MAYzOME9BjuyOijlFquUzYyaBcGwJBWDo0qIekzaBC9dDfLE4iSdINTlu/D
-         +xsBvgvg4itAIdsA7vJiNxSI1fna3fEl3w0mvnnGpThU0m7R6tQt9Twz1UytzXvxCaQV
-         g/be/py7cj1fRFq9p3LL+llYWggjAyFmTpHyBsDTQu+Z9hNB/xEdccFDyM6IeZ8aJSZx
-         gFFvGdlbkJH+dkO4q2CND6Ec8Ah9rOIE0msSapXWBEuRDETtnNSntx0NWkN+cFqVIyyo
-         /5lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaH7AQGwEaDePRyTlDduZeoAQOaeklARwnvAyDNYSB4nnFnBEZSr3PfSPzbj4VuxiaG98RuND/J6OXzvM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8vFR3bDky2iCIpoU2tBlqrg0hkKAlZHfr9UC86pUBy01xEDdt
-	xHidIVkkCVpZqD+CndrSUrGXoBhRsaU/t2TeMceqBr+V4yPuPpAmgidihCDQ44A=
-X-Gm-Gg: ASbGncsGoYVc69iGSKKVx4KueVQavz4XlZh/CuJtqIi3j6D+0BpBg7vKfECCzCeFJTX
-	vLNAvAyIKmzdM1a9sPv4/8e1urRKRa/EtKwsX/HYLhLUTY38uXmVmfw8ioF82PGVKjqLptoVg8x
-	QJ/8IK91d676YlXZPo20k1JYZrGASqArAkfbdMHCfXcW/sbjnZ88/F+IOy5WS+OMd9BovAgmdKH
-	LqIHvyS+VAWBjiDZqstYIplMCbKmMeFatwnWDvAh4/BYOKK6DlLIToYTAkz/BkGsc57zI2N9qmH
-	NXHMpnAW1xiURmI8eJvlYPhIbGW9Ao34AsDQOXt/gw==
-X-Google-Smtp-Source: AGHT+IEEJ39NGYkYIENofGn5suL4OvuuiPwgjONjMHmL2nMj73P7QiaKLxsJqccgMDffLqh52LWmCg==
-X-Received: by 2002:a17:902:f788:b0:223:4816:3e9e with SMTP id d9443c01a7336-22c5357ecfamr153311135ad.13.1745233012094;
-        Mon, 21 Apr 2025 03:56:52 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bda75asm62750465ad.18.2025.04.21.03.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 03:56:51 -0700 (PDT)
-Date: Mon, 21 Apr 2025 16:26:49 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: webgeek1234@gmail.com
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] cpufreq: tegra124: Remove use of disable_cpufreq
-Message-ID: <20250421105649.g4xpkimbu6q77fxq@vireshk-i7>
-References: <20250421-tegra124-cpufreq-v2-0-2f148cefa418@gmail.com>
- <20250421-tegra124-cpufreq-v2-1-2f148cefa418@gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KXPvzgxU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DV0hSOLWKhOAhhp7Iy30X5uMUXSQmVWLUoII8k2GTnl9lTaKZqlTQtFpmo1d3MQ4hC7PHvQ93ZThlRzEgAumzr/2PgPJr3yOUj4fuCL/diwGgWwQQAzAo79z7zIr8CnnZ1Yrupwr/9HOo3tB7VobNjRPThNja737W5U1RbmGslXY0HBl7eW38Y2n13vVDdzhuutshnrNiWtSQn5/A5CrrwUyzGwRCYFslLhkV/pXlV3koqEjpXnipT1s/ShBKrwNv6G+J48FEa6ugVsf5fQA3aO4W+6EvZXR68xfnSzvRszkakqP7wuoMaS4ESQ9/gfGBJuJZrQm28hNZg9yM57q3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BdzL/TZo6Vl7Z6f8pGJu4dOs3UWIKSjuca3HftNC06s=;
+ b=yxHkQZwv5D3D/6brVhP2XhmJ5YmsumirKE/fjViRUFJ5tLyiEPedrwiTSzKNiQoV0QIGHYVCDdP4XsiIA94Nc09Trc/yjDR8L+tKMRbLkM6m202thNlwCHf1mKKNMqJ+ebA06aHmb0DRKA12Gr2y+PfmFSL5imyTBz3QyIAGXPFLOKeasv19WXjtm7FLjstKKprvQNYlWMygDAgBMqic0mjQmT+5rHmd3faEOEEj8Gi9e/1MuSbqaypZ9saxgOPu76dbk1sckRWBxMlDOVPTHZnI+8p0qrSFs9oiTw6YFLeCC4n2+HVrLIXUtTuPmHVcsImFHh0/hccuHBKT/3Z4CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BdzL/TZo6Vl7Z6f8pGJu4dOs3UWIKSjuca3HftNC06s=;
+ b=KXPvzgxU7Ivp7ub2Oy3wevLrC0aZ/9BNJ5G3zu1gSdeYxmarG+8yg8SKZck0MAQg1dlYBHR6rmK3MHbk9ANo4xYUCDViMU4mdjOUagDdzLU9pLRbs7NWp1TaIfN+pdWWKxcS5G2+dM4ZeAb8mXJaGEEgFaRqSrDejDdcO5GgqglOLfSMsD6a7wqivpH0IhLStgsa13z1LYar1dO6Z75VNyQevOJ7K8Yhs1yWLa1VUkN+yYRVx5nVTwM/1eUbcbvrpox8kke/ORtk6tJVb9WmIFp8vxTMUF4PFtZQR2+idPh3YKcKiNuzFp/F93V0InKHdft4Sklp6Bj3neHikE0iKw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
+ by DU2PR04MB8710.eurprd04.prod.outlook.com (2603:10a6:10:2dd::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 10:57:29 +0000
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::24fa:6f9:8247:c5dc]) by DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::24fa:6f9:8247:c5dc%6]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 10:57:28 +0000
+From: Chancel Liu <chancel.liu@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	linux-sound@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/2] ASoC: fsl_rpmsg: Configure CPU DAI for card that sits on rpmsg-micfil-channel
+Date: Mon, 21 Apr 2025 19:57:00 +0900
+Message-ID: <20250421105701.2273588-1-chancel.liu@nxp.com>
+X-Mailer: git-send-email 2.47.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0199.apcprd04.prod.outlook.com
+ (2603:1096:4:187::13) To DB9PR04MB9498.eurprd04.prod.outlook.com
+ (2603:10a6:10:360::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421-tegra124-cpufreq-v2-1-2f148cefa418@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|DU2PR04MB8710:EE_
+X-MS-Office365-Filtering-Correlation-Id: 817266b5-df7b-4fc8-a590-08dd80c34ea9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qbjzKiSwjzVSRDFtFpEOfypfg5PbCJJOzJYFUXWgN+TWLztDwAgZI8w8bLqw?=
+ =?us-ascii?Q?TUZiAOYVM21Gpj3sRiKVHx9MsjzyNom669fzpg6dG+EooIk6McXYQcqqLdRR?=
+ =?us-ascii?Q?jCEL+VMQUbulN1qyjylwEQyFS65qm3C3K5HatWNjiGT/hP1/CDtMqRbmGtIG?=
+ =?us-ascii?Q?yTFoJ4PvLsk+rTUyADV6uHqoSL6c1rKr5T4YmpDnU7RE+oZaNUWqQ6TDY2Zr?=
+ =?us-ascii?Q?sJPT/0Qslhx2w4GwT2YaOTkk8JmFa0lAJB8KFsGBTfJhXMwHrEg1aiq34/f5?=
+ =?us-ascii?Q?DN4WgkojdHuE/clc63lgqabsBRy+NsZFKS5elknZ2hm3tFFcHO3b42LRqK05?=
+ =?us-ascii?Q?J2cRpihnQNlWyhPLe2+a6L01ld4LtmRuj+BJhnPqggsKXo8RqVCC7Dl1aycg?=
+ =?us-ascii?Q?mFcNuzqKGjwuDjLX5+XNUV2opSOrmpXWyUgOLxRd7BX9vwTZV4SYdskXehHP?=
+ =?us-ascii?Q?lVltos3MgE+OGf+96iiI6qzjDYUWycB0bWbzhcvVKyQiolAv37JLnFFff4Mx?=
+ =?us-ascii?Q?EJMubCKPRf9JoOGv366dYozfIfDevhlBcwiRZ0GWMEFSG/Sdvr9RjUwQh3Sv?=
+ =?us-ascii?Q?tuHb/Pj/Eg9iis9UmcFsaq1eAOy4TaQzSqicbb4euA94eslQmGMx2KDGoke9?=
+ =?us-ascii?Q?cxxC00SJZ4UGgrdL8tCXwcFz5FENKBSTu5EB7/WNyGAGDZcmdQAN/0ZxC01B?=
+ =?us-ascii?Q?jVPe5arO96ahDzkafOZapnJf4bzbpUTOCjCDwqhFnkiT0pypJ+Cld3WJXcD9?=
+ =?us-ascii?Q?taxVX8jtdFvPbro50AJtn1NZWAcsS1dLI4zG5Hs/jW+r0f6qIhQqvlC5dSOk?=
+ =?us-ascii?Q?dRW8ehXFrg9zzwVkLg5phsROBt1s0UP6Lyni8LLq/tokc3giLj+/17YK1pn7?=
+ =?us-ascii?Q?vkbWeDpxeBa3jY1L8xk5XCR/XVA0A1X4RLS2oQKoaMJ8PJkLtrvAh97xgG57?=
+ =?us-ascii?Q?jfcdFvfyudzSZMZjiPwksuOwWdQKY7+v+hYQKSKi3vu2kdcNMYTNLW+9cKqb?=
+ =?us-ascii?Q?61sgJoM3GFm4ruo2wsRgLs2jtpMQDVnew6EM7jPd5jHJsN9nW/tLKuOpBmJw?=
+ =?us-ascii?Q?4u6fLVEJAxI4SRvAMv2qAvHAkog7t/nj/tTAYfrHngeknAcRPeYKzYOtmEdN?=
+ =?us-ascii?Q?sy0dzdBEiP8uG1snMQvoH7/ZIGtTl8V05ckf77hByXw7FZOkfGY/3TuvsqBx?=
+ =?us-ascii?Q?0DU0GR4zxXmDP9E3qlCNTJz7YApiB3GBYkqgOecneK7b6KXPHCWwzI39dS8l?=
+ =?us-ascii?Q?kEwdC7bFp3tEhVorFQehMRpoYhNoIcpxMoxE7VTdtfx8WSWcGvNDwkyMYbt7?=
+ =?us-ascii?Q?j+uDxNBTMax42ewUQBqjd2wesU3qW4Q7Ej6m25EW5Doeu1sIPijo42hbTwA4?=
+ =?us-ascii?Q?PetkSrLKiMrNLKMn++5JBUGb5wbws0k53Ur96k6HbB2kqaDcJsVizS7irSzm?=
+ =?us-ascii?Q?8KF+borHEI7ODiU6LYs2pWet2F9n4RpH//Nag8BjQj5l67ytJpXWDQiAVKqs?=
+ =?us-ascii?Q?WlunnY4GMQVXLBQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?dks2W5F/xafvGVmBs/NfkzxmxyWNj5mN+iDiDXn5M7j9NmqOjpKrr/CANLIY?=
+ =?us-ascii?Q?cPTk1PIszVDszD4DykDaXV7fYa6xb53I1BedUSuc6pVezMpoQI4UmeUguCoy?=
+ =?us-ascii?Q?xINBFWS9zA0Hagv3qlF0nhP8cAZPh2CYvbF0SNLOXNHHo57QoZKFMxEm/cIQ?=
+ =?us-ascii?Q?C5LkCFcbTGme78HgrOGg94frCNYNFiUdrP1g9pUE3QUYEOGlq+UD/dwlWJ0g?=
+ =?us-ascii?Q?VkWw6wPzIzHt9BW6aDWrAvi4paIKIvNFpyhYtpH7pfDl9Pa4RhabBEFKhGdV?=
+ =?us-ascii?Q?x6GjTlTzBDDQmpGUFEuVZ/Xi/NTcSRtUR0oN14KRIAIxXAcMwtJC5dfh0QZd?=
+ =?us-ascii?Q?ooEM1igK4mnqoGPy58sdqNUafw0OarB2JmIZd57lImg8cdL2A7f/3yCwwhQN?=
+ =?us-ascii?Q?npWAJrvX85tOJQ+mhw5c/DjpTvfuE/gGlE/2ncYLmwhttNLb0AroLagibMa/?=
+ =?us-ascii?Q?ySoGTtH9TTsSCX7BUtlAOscOE3Dg1GZ//qah8OikPd8zWU+9jsz3NUJ+H8e5?=
+ =?us-ascii?Q?UEZ91uZauJfA42/DLkRnxSaG5uO38i27b65FfOrKIiPkAigpI39WoIfvLfqm?=
+ =?us-ascii?Q?cfYCT9+/yA+wjz7VbzheVwPsjVvb+YTuosmwEYlsDbWUiEyV+Kqx6NnUCYpN?=
+ =?us-ascii?Q?fet4h10eOIKfYeCa+T81ZEzug2UKYTdDnRl18HSfC5O4Jn7Ye3kJzVyyRBjb?=
+ =?us-ascii?Q?bmT2OfMsY+mDnQW5zHwFFR0qVLUChFjhGDrqlo3pmrwuwV7KF4bdlIYXs/EY?=
+ =?us-ascii?Q?AvpTd7ek4YxouPDun0LINacZbZxUq9jEmoDH3sw6seQ277nZviMZBL9sUmSs?=
+ =?us-ascii?Q?wsQRMQBcnufyvCuB1n10IOI1S9iwvhSDCu4pfy8o/17LIF0uyea84QpEruFD?=
+ =?us-ascii?Q?aEg8dntrk42fnGdqf0hHszX6jeErggfFUNGKn6zJgxx9sijx/UVSI4ksnl7p?=
+ =?us-ascii?Q?OecAFoMD9B/yyKqWB3drz3CTXTP0ERn5wJm3h/O5g8QLU7ooz9YXIgIDpqJk?=
+ =?us-ascii?Q?LbwR6E75KwUtphF5g9mYI2hT1ZK+dtScMrleG7UpxBFA8OsHMMpG/PWR+v4k?=
+ =?us-ascii?Q?pqDCr+b7DAxdV2yy+x5v+c83fVcw5LRJTmJDioA1CNm38a2Pxv23EC3oP8ZP?=
+ =?us-ascii?Q?1kFkz9V2T1LQA/zg93ECOiXadWMDY31a6pQ5e2onWl8+dK0oYR5S/eTcJlrF?=
+ =?us-ascii?Q?c7Lil8KXSBUYSzo1s7YAYdLYEkzlgRdA3fRPyPs1KdQgwS5c5KMHNmAjmWKS?=
+ =?us-ascii?Q?88PZy8i9+rY1YUFfapGct5JPo6FWOShHBQ6ntHwcvh3pjo77cJZIaZ7GPn+n?=
+ =?us-ascii?Q?amsuDbjGYBMiwXM/eC3c1/PaFbpVkb+CxBROsTvD2w07x0qozBAMX+vSjwRk?=
+ =?us-ascii?Q?ihh9JK6hsVEaR5R8WpP/pnuTlffZfqnuWJ+UjRZULVdKWEyFhuXepHWGUHWM?=
+ =?us-ascii?Q?pJbN61sk6R8ToxPX365xc5gx68IwMth3TzEs62heeUKwKFcNVR7Ya0o1Ivy2?=
+ =?us-ascii?Q?xmmhUDswor4E6hp6bhjYXE/RaUxWL5H0NCserXftOyNV4BNMBZRZvpaUiL6d?=
+ =?us-ascii?Q?fHsancYaqdBzLY05UANay2vLsyCstUeaA4wuq/5v?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 817266b5-df7b-4fc8-a590-08dd80c34ea9
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 10:57:28.7213
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8nX4fAJnADbfyUGccbgxyGfQmmE2e0VbVCSaOOb3DeVnGUHa3kUlmaLOneqDbp1lXz5lRwAvBqklqloyCMpQDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8710
 
-On 21-04-25, 03:13, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
-> 
-> Instead, unregister the cpufreq device for this fatal fail case.
-> 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  drivers/cpufreq/tegra124-cpufreq.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-> index 514146d98bca2d8aa59980a14dff3487cd8045f6..dc83b1631b13ec428f3b6bbea89462448a62adb4 100644
-> --- a/drivers/cpufreq/tegra124-cpufreq.c
-> +++ b/drivers/cpufreq/tegra124-cpufreq.c
-> @@ -168,7 +168,8 @@ static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
->  disable_dfll:
->  	clk_disable_unprepare(priv->dfll_clk);
->  disable_cpufreq:
-> -	disable_cpufreq();
-> +	if (!IS_ERR(priv->cpufreq_dt_pdev))
-> +		platform_device_unregister(priv->cpufreq_dt_pdev);
+Sound card that sits on rpmsg-micfil-channel has different settings on
+CPU DAI.
 
-What if someone tries to remove the module after this ? Won't we try
-this again ? Shouldn't we set the cpufreq_dt_pdev to some sort of
-error to skip doing that ?
+Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
+---
+ sound/soc/fsl/fsl_rpmsg.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/sound/soc/fsl/fsl_rpmsg.c b/sound/soc/fsl/fsl_rpmsg.c
+index 6d67db4e0581..4e3ca05bedd6 100644
+--- a/sound/soc/fsl/fsl_rpmsg.c
++++ b/sound/soc/fsl/fsl_rpmsg.c
+@@ -229,6 +229,16 @@ static int fsl_rpmsg_probe(struct platform_device *pdev)
+ 	}
+ 	dai_drv->name = dai_name;
+ 
++	/* Setup cpu dai for sound card that sits on rpmsg-micfil-channel */
++	if (!strcmp(dai_name, "rpmsg-micfil-channel")) {
++		dai_drv->capture.channels_min = 1;
++		dai_drv->capture.channels_max = 8;
++		dai_drv->capture.rates = SNDRV_PCM_RATE_8000_48000;
++		dai_drv->capture.formats = SNDRV_PCM_FMTBIT_S32_LE;
++		if (of_device_is_compatible(np, "fsl,imx8mm-rpmsg-audio"))
++			dai_drv->capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
++	}
++
+ 	if (of_property_read_bool(np, "fsl,enable-lpa")) {
+ 		rpmsg->enable_lpa = 1;
+ 		rpmsg->buffer_size = LPA_LARGE_BUFFER_SIZE;
 -- 
-viresh
+2.47.1
+
