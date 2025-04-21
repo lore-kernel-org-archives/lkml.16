@@ -1,170 +1,176 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD72F1FC3;
-	Mon, 21 Apr 2025 07:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD713597B;
+	Mon, 21 Apr 2025 08:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745222401; cv=none; b=rq020BCuoj0fqu4Z8OoerEPRMHTOcTdI4QAyjEPuJbeLg9NLMy/S8EUxOtiItP222+axPZYDy9F/vo83rGBChEboA+CGDFSZIw0jx9ICjMMWWCrRja7G1Lp4Ui5GrF0KzXzEde++5O8Qf2on19MQpg+yUmUUW4AbCQZzHhoDJ2c=
+	t=1745222404; cv=none; b=n12Twg2QsnBLRepNF5OXJouplu9co7leGdSbfOedNUgDyvsnoFR6qWw+zxg+of098WiVZYU3FRqbdw8NqooSkX6FOlxM6CRuZuVsuA3ddfuhbwdID5FdRqJns4P1LOU1hkCm7ZHnK5umK0D/+JNFjnMDeY6VqFFng7goq7L+qms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745222401; c=relaxed/simple;
-	bh=Yf9u5pyej2h8xVcNxU8KnVufQwGxnXvmBVbqvBK97k0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=vCDgS1o49rZOk3wVLG5XjKhSucvkU+FlkXVu8tqg/G8Yd9xvmAK4bqiMI5lOjIoZ3UPCjedt5s2K7L1N2Kkt6dcd8z4JBg4O71OMA8g6Il/zdTDSue3UjVoP0SrJzjD3NSo28/Ezkc1EgR+S7V+q69irx8tDvCHgSXpALir+Zbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C6Nm/hqz; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745222404; c=relaxed/simple;
+	bh=AmRZAZ+4oNxOx4V1t7gmV4I0LqgEnDoXqNH/485r1TI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B1b7bJWlTw7CBkqb0WhA5Zf9SuDeUqe1IyJIRTl/O/7ro/i9tBXJ5AjHAjMQ9Y9aJr1QJpZRgIlF7M4MDaEzmxB+ZkQ3AHJzr9FqMwGUPspY3RhtBIAHJDkTlbWmL2uah0jQkCttazfVjP0/gG50CeupvWa2T+ZgbKm+DAzGZt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f7xBbe5w; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6Nm/hqz"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so3518993e87.1;
-        Mon, 21 Apr 2025 00:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745222398; x=1745827198; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OvuBgR56H3Ca/cTTeeHduuUBQ+PQT53LAIdjzkvxWjQ=;
-        b=C6Nm/hqzfIOkWANZ+7Y3LjiGxHsnbnwOPylrLB6aCR/kiCXWFA0tREESdxy3Zwq07p
-         L0G6HTQq4RmZp3JkAfLDo7L29ST02olsnOOeJ+OEkimBGi5aPdDTqBxERnrXUr5//pIy
-         ECo0V/AfLUq+2wDM17T9EDEdLcXanWoiLo5PUiuDKJvxEGis1dKlu24wpTmnnEqNGsOJ
-         ueyb2Qvn8+J2FfPK4uM1G/5k8UQITsqLcIsC1ebm8vI4hEgL2BBlfaeVxro50iak1Mtx
-         hTlJzD4voRqBAYFZgpOMxT3FI2zZ27zvNi3Tyr4j1fpzJ9h4Ug8/IOsIhumAelAFRweJ
-         u5iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745222398; x=1745827198;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OvuBgR56H3Ca/cTTeeHduuUBQ+PQT53LAIdjzkvxWjQ=;
-        b=g/4aNjHy/lZ9Z2Edp0j3WWhjhr2x9mB289s6qukFiQPiu1oP6JW2u7xJvlI2XeblSs
-         eXDzoWbJxHbNMRm3FepL1e8dsAJxlalwNxX+fckbVMd//eYQmgztREMbJJ3peejAds48
-         YtCupgWTSPg5W7YmwxGI32JsNw6SlhJwJNNm/k9zrGmZXryGD6Oduig69yCRoTz4lUB3
-         TG2g64pDUNL1kmJo/i1xnY46MkWm/5XycoMcRpjoqIz9OfiNkYX2CIKNYOyGBkjnMc98
-         pVMA9kUVtUH7OV1qtz+D1BF1q2udFtB+GCqsYTPeveGQK6wkoJ/wn/mYkD2LlEibJ1yj
-         JUgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVw8GgGr5yYcodxwxe4S66pCN9v1oQR2QSPtZVYZe8h/I9ow59kl9dBvwZz3IESskJGR8PSlO7kFcJt@vger.kernel.org, AJvYcCXTKFUiRz+smlzAqu6y2TG8xB1uVySnj7JXeh1SLEgz25hn1yECd+IonGXEI7YPfS7ilaFLgs65P2DZoKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSOE3hbYz7Dt1MfVdtwgt4ziOYfwfm6wcc/0D9h2ZebWodLyoY
-	AxaOPcbWFMt1b4aBxvFh0D7xXQrUOHQRQP/m9z1GR5aetB2/HTpV
-X-Gm-Gg: ASbGncsXp6WCvPmjmfxjjNRv9cNJQYpvl7tolAE95cBMXursye+gspRmpJ5ZUvrK3rv
-	JyEm4e4T33kq0Yi0b7zfsTVx+KpQgEBmk0LV8DSF8TZMQFLZV0fVWAkDnzlyXU5AvO4rjQ9MR3B
-	X8af45wc512IUGOWcIvJ1vv4QGM5TCFgh2TxfAINZO3L9+3GuWCOsvoEyqeCwbvghUvOldCkqXo
-	0cTHhJjNshlEKFWuqCDsaUETA5pplz8aQmDdQ9f1jB++vPHYgU40awkhoTBJfiiKxVS/NbFZ2pB
-	S9YhchyjQKgaEB1Saq3YgEI+A1K/VnBAJhRUy/+VVEdYX3Yc+4T7TX7U03JIuyLvj1wG
-X-Google-Smtp-Source: AGHT+IEZAq3jw+cUUP5NlGWUMUP3rzGP/4HiMhkH7Xv7Tuf9Yrm8p1vgdlCMyuVhxqWNCUOyZFJ+Qg==
-X-Received: by 2002:a05:6512:1288:b0:54d:6e19:ba9a with SMTP id 2adb3069b0e04-54d6e631416mr2423506e87.29.1745222397664;
-        Mon, 21 Apr 2025 00:59:57 -0700 (PDT)
-Received: from foxbook (adtk186.neoplus.adsl.tpnet.pl. [79.185.222.186])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e51a8sm846584e87.178.2025.04.21.00.59.55
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 21 Apr 2025 00:59:56 -0700 (PDT)
-Date: Mon, 21 Apr 2025 09:59:51 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede
- <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org
-Subject: [PATCH] media: uvcvideo: Support large SuperSpeedPlus isochronous
- endpoints
-Message-ID: <20250421095951.1e63824e@foxbook>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f7xBbe5w"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53L7xqf7859994
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 02:59:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745222392;
+	bh=3KE2Gy26ZzuCmAUw5vnv1H2E8aAjLIG+uFRQDf8v+UA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=f7xBbe5w9agULXZz1JqJrgurC9ih2x7qO7h0QVWUHfQdD1CuROAKDlBaDx5QzDvju
+	 65egL6vDf+ypH2Mw+1dpiymmb636YnQebeTXocl1td53R/iz5h2yfm3rmfw3QEHNr2
+	 cjZRPhdk8Tz3yRXUHyy1EhpCIsQPUvLWNJcZl2HA=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53L7xqQd130356
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 02:59:52 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 02:59:51 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 02:59:52 -0500
+Received: from [172.24.18.98] (lt5cd2489kgj.dhcp.ti.com [172.24.18.98])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53L7xmsR113313;
+	Mon, 21 Apr 2025 02:59:49 -0500
+Message-ID: <8c7b68fc-c275-45c3-830a-3ea3174f38f5@ti.com>
+Date: Mon, 21 Apr 2025 13:29:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-j7200-main: switch to 64-bit
+ address space for PCIe1
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <u-kumar1@ti.com>
+References: <20250417120407.2646929-1-s-vadapalli@ti.com>
+ <20250417120407.2646929-3-s-vadapalli@ti.com>
+ <8b707fbc-9d82-48d0-a227-366d4e83e8a7@ti.com>
+ <231e009e-0dc2-4876-b052-d11b64ee5a0a@ti.com>
+ <d517b2bb-2bf2-44ec-8509-6281c5566972@ti.com>
+ <8d43fdc6-760d-49cd-b4f5-95d13a52220b@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <8d43fdc6-760d-49cd-b4f5-95d13a52220b@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-USB 3.1 increased maximum isochronous bandwidth to 96KB per interval,
-too much for 16 bits and the SuperSpeed Endpoint Companion descriptor.
-A new SuperSpeedPlus Isochronous Endpoint Companion descriptor was
-introduced to encode such bandwidths, see spec sections 9.6.7, 9.6.8.
 
-Support the descriptor with code based on xhci_get_max_esit_payload()
-and widen all 'psize' variables to 32 bits. Subsequent calculations
-are 32 bit already and not expected to overflow, so this change ought
-to suffice for proper alt setting selection on USB 3.x Gen 2 devices.
+On 4/20/2025 7:48 PM, Siddharth Vadapalli wrote:
+> On Sun, Apr 20, 2025 at 10:17:46AM +0530, Kumar, Udit wrote:
+>> Hello Siddharth
+>>
+>> On 4/20/2025 8:33 AM, Siddharth Vadapalli wrote:
+>>> On Sat, Apr 19, 2025 at 11:35:50PM +0530, Kumar, Udit wrote:
+>>>
+>>> Hello Udit,
+>>>
+>>>> On 4/17/2025 5:34 PM, Siddharth Vadapalli wrote:
+>>>>> The PCIe0 instance of PCIe in J7200 SoC supports:
+>>>>> 1. 128 MB address region in the 32-bit address space
+>>>>> 2. 4 GB address region in the 64-bit address space
+>>>>>
+>>>>> The default configuration is that of a 128 MB address region in the
+>>>>> 32-bit address space. While this might be sufficient for most use-cases,
+>>>>> it is insufficient for supporting use-cases which require larger address
+>>>>> spaces. Therefore, switch to using the 64-bit address space with a 4 GB
+>>>>> address region.
+>>>>>
+>>>>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>>>>> ---
+>>>>>     arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 7 ++++---
+>>>>>     1 file changed, 4 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+>>>>> index 5ab510a0605f..e898dffdebbe 100644
+>>>>> --- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+>>>>> @@ -759,7 +759,7 @@ pcie1_rc: pcie@2910000 {
+>>>>>     		reg = <0x00 0x02910000 0x00 0x1000>,
+>>>>>     		      <0x00 0x02917000 0x00 0x400>,
+>>>>>     		      <0x00 0x0d800000 0x00 0x00800000>,
+>>>>> -		      <0x00 0x18000000 0x00 0x00001000>;
+>>>>> +		      <0x41 0x00000000 0x00 0x00001000>;
+>>>>>     		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
+>>>>>     		interrupt-names = "link_state";
+>>>>>     		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
+>>>>> @@ -778,8 +778,9 @@ pcie1_rc: pcie@2910000 {
+>>>>>     		device-id = <0xb00f>;
+>>>>>     		msi-map = <0x0 &gic_its 0x0 0x10000>;
+>>>>>     		dma-coherent;
+>>>>> -		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
+>>>>> -			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
+>>>>> +		ranges = <0x01000000 0x00 0x00001000 0x41 0x00001000 0x00 0x00100000>, /* IO (1 MB) */
+>>>>> +			 <0x02000000 0x00 0x00101000 0x41 0x00101000 0x00 0x08000000>, /* 32-bit Non-Prefetchable MEM (128 MB) */
+>>>>> +			 <0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>; /* 64-bit Prefetchable MEM (4 GB - (129 MB + 4 KB)) */
+>>>> Sorry for novice question,
+>>>>
+>>>> with this change,  How do you see  old EP working which supports 32 bit
+>>>> addressing,
+>>>>
+>>>> or some translation is possible ?
+>>>>
+>>>> 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
+>>>>
+>>>> to
+>>>>
+>>>> 0x63000000 0x00 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
+>>> I didn't understand the question completely, but I shall try to explain
+>>> the changes being made which might possibly answer your question.
+>> If I understood well then what you are doing here
+>>
+>> 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
+>>
+>> PCIe address
+>> 0x43000000 0x41 0x08101000 -->
+>> Property 0x43
+>> 0x43 as npt000ss ->relocatable, prefetch and 64 Bit memory space PCIe Bus address  0x41 0x08101000
+>> CPU address space 0x41 0x08101000
+>> This will work fine, if EP supports 64 bit addressing scheme.
+>>
+>> In case, we want to work with EP of 32 Bit, Then do you see , we need to relocate PCIe (lower 32 bits) to CPU address (64 bits)
+> A total of 3 Address Regions have been defined:
+> 1. 1 MB IO in the 32-bit PCIe Bus Address Space
+> 2. 128 MB Non-Prefetchable MEM in the 32-bit PCIe Bus Address Space
+> 3. (4 GB - 129 MB - 4 KB) Prefetchable MEM in the 64-bit PCIe Bus
+> Address Space
+>
+> '1' and '2' above provide backward compatibility with Endpoint Devices
+> that can only support 32-bit PCIe Bus Addressing. The __newly__ added
+> '3' enables Endpoint Devices that support 64-bit PCIe Bus Addressing to
+> claim larger Memory Address Space on top of what is supported by '1' and
+> '2'.
 
-Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
----
+Thanks Siddharth,
 
-This change appears to be a strict necessity for supporting USB3 Gen2
-isochronous devices meaningfully. Whether it's sufficient I don't know,
-I don't have such HW. No regression seen on High Speed and SuperSpeed.
+I understand, you are enabling 64 bit addressing, keeping previous 
+addressing scheme unchanged.
 
- drivers/media/usb/uvc/uvc_
- drivers/media/usb/uvc/uvc_driver.c |  2 +-
- drivers/media/usb/uvc/uvc_video.c  | 13 +++++++++----
- drivers/media/usb/uvc/uvcvideo.h   |  4 ++--
- 3 files changed, 12 insertions(+), 7 deletions(-)
+Since, you are changing, it will be good to give max possible addresses 
+for 32 bits EP.
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 107e0fafd80f..60eaff81a8c0 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -536,7 +536,7 @@ static int uvc_parse_streaming(struct uvc_device *dev,
- 	unsigned int nformats = 0, nframes = 0, nintervals = 0;
- 	unsigned int size, i, n, p;
- 	u32 *interval;
--	u16 psize;
-+	u32 psize;
- 	int ret = -EINVAL;
- 
- 	if (intf->cur_altsetting->desc.bInterfaceSubClass
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index e3567aeb0007..591fbfcda2c1 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -1898,13 +1898,18 @@ static void uvc_video_stop_transfer(struct uvc_streaming *stream,
- /*
-  * Compute the maximum number of bytes per interval for an endpoint.
-  */
--u16 uvc_endpoint_max_bpi(struct usb_device *dev, struct usb_host_endpoint *ep)
-+u32 uvc_endpoint_max_bpi(struct usb_device *dev, struct usb_host_endpoint *ep)
- {
--	u16 psize;
-+	u32 psize;
- 
- 	switch (dev->speed) {
--	case USB_SPEED_SUPER:
- 	case USB_SPEED_SUPER_PLUS:
-+		/* check for the SS+ Isoc EP Companion descriptor */
-+		if (USB_SS_SSP_ISOC_COMP(ep->ss_ep_comp.bmAttributes))
-+			return le32_to_cpu(ep->ssp_isoc_ep_comp.dwBytesPerInterval);
-+		fallthrough;
-+	case USB_SPEED_SUPER:
-+		/* use the SS EP Companion descriptor */
- 		return le16_to_cpu(ep->ss_ep_comp.wBytesPerInterval);
- 	default:
- 		psize = usb_endpoint_maxp(&ep->desc);
-@@ -1923,7 +1928,7 @@ static int uvc_init_video_isoc(struct uvc_streaming *stream,
- 	struct urb *urb;
- 	struct uvc_urb *uvc_urb;
- 	unsigned int npackets, i;
--	u16 psize;
-+	u32 psize;
- 	u32 size;
- 
- 	psize = uvc_endpoint_max_bpi(stream->dev->udev, ep);
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index b4ee701835fc..b0a5ddff6dda 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -450,7 +450,7 @@ struct uvc_streaming {
- 
- 	struct usb_interface *intf;
- 	int intfnum;
--	u16 maxpsize;
-+	u32 maxpsize;
- 
- 	struct uvc_streaming_header header;
- 	enum v4l2_buf_type type;
-@@ -813,7 +813,7 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle);
- /* Utility functions */
- struct usb_host_endpoint *uvc_find_endpoint(struct usb_host_interface *alts,
- 					    u8 epaddr);
--u16 uvc_endpoint_max_bpi(struct usb_device *dev, struct usb_host_endpoint *ep);
-+u32 uvc_endpoint_max_bpi(struct usb_device *dev, struct usb_host_endpoint *ep);
- 
- /* Quirks support */
- void uvc_video_decode_isight(struct uvc_urb *uvc_urb,
--- 
-2.48.1
+or
+
+If you are saying , 32 bit EP has to be limited to 128MB then
+
+Acked-by: Udit Kumar <u-kumar1@ti.com>
+
+> Regards,
+> Siddharth.
