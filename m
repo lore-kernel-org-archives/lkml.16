@@ -1,78 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46A717BB6;
-	Mon, 21 Apr 2025 14:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A1F13A418;
+	Mon, 21 Apr 2025 14:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245045; cv=none; b=Rvki+kY9FJuzx2Jc60wzvgBFEziw3N6ZHsScyMjwXWSx945QQvY+VHvAinDGekhPZBiwCoyKuYP15YrVN+GM6n+6AkfCyS0wz9XVGwGXs87UMIT4Jwe6Mv1KKpp+9/SbCEhPcCgN45fKojZO+Qctkag5p+prkod0IIDE+R2r/2o=
+	t=1745245113; cv=none; b=OJoVvEpKtWZfHkXUN/tdZ2QL+itaZf6sEM5VQnL6ajCwi0vPcpgVL04dfkf5eKjg6f42aTTYp95LDUrnFhIGK3k1pxINp2IIckfb9xjoVHnmu3yusaFZAPkFtDXqiz8vX3ueNu61ZdXzAX6CPOw21K1iZ98tYygnMS+h85yPfPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245045; c=relaxed/simple;
-	bh=KyfHBIohRNr6+NpQwz6UuNu7wEu5lGIl5uEUC8dbxV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P+cXmh43WZYx5Crv0ej13YGFBbvbZZAswXrdYquz8oLMmx0HUzKPFWuqQNKooOWpm2PXsNHs49rfKMPUdYXQ2gGCYd1rEencPUF2aK51T6v6GaN3O8ldNnCx/UQ1nSSWpvz6BZSvds/A6A5+W1rrS2xcrt6/dBrGHBj9x3Cl+LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01ADC4CEE4;
-	Mon, 21 Apr 2025 14:17:24 +0000 (UTC)
-Date: Mon, 21 Apr 2025 10:19:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeongjun Park <aha310510@gmail.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- syzbot+c8cd2d2c412b868263fb@syzkaller.appspotmail.com
-Subject: Re: [PATCH] tracing: fix oob write in trace_seq_to_buffer()
-Message-ID: <20250421101912.4fd7c11a@gandalf.local.home>
-In-Reply-To: <20250421134936.89104-1-aha310510@gmail.com>
-References: <20250421134936.89104-1-aha310510@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745245113; c=relaxed/simple;
+	bh=hVkZBfs5Z+uRfS8N9TKs0Et878ZYWO+BgKsgiFt3bEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OPyJABFa5NsK41ES4F5xLblZ3qQhjNKETd0A626SpxR3x1BnTuaHbKPYBZQBklCaoWOckkmUhpEfOtucJ8tRVvlpOHJ+YyXBv78wiHtIxvb8Y7uksglsUIS+VZdiVeMZndKbZnIqzYwkZ9BTXoxbPptlJjBP3dU9oVqfFlAYKWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Zh6ns6S7Wz2CdT6;
+	Mon, 21 Apr 2025 22:14:57 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 753C01A0188;
+	Mon, 21 Apr 2025 22:18:26 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 21 Apr 2025 22:18:25 +0800
+Message-ID: <b7822cca-5ef5-4e09-bca1-2857aada4741@huawei.com>
+Date: Mon, 21 Apr 2025 22:18:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2025-22077: smb: client: Fix netns refcount imbalance causing
+ leaks and use-after-free
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: <cve@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cve-announce@vger.kernel.org>
+References: <2025041612-CVE-2025-22077-d534@gregkh>
+ <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
+ <bf2e5c68-e20c-437e-9aa8-1b5326f4fd14@huawei.com>
+ <2025042111-provable-activism-ec0e@gregkh>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <2025042111-provable-activism-ec0e@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Mon, 21 Apr 2025 22:49:36 +0900
-Jeongjun Park <aha310510@gmail.com> wrote:
 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 8ddf6b17215c..8ba6ea38411d 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1827,6 +1827,8 @@ static ssize_t trace_seq_to_buffer(struct trace_seq *s, void *buf, size_t cnt)
->  	len = trace_seq_used(s) - s->readpos;
->  	if (cnt > len)
->  		cnt = len;
-> +	if (cnt > PAGE_SIZE)
-> +		return -EINVAL;
 
-You fixed the wrong location. The caller should know how much size the
-buffer is, and that's passed in by cnt.
+Hi Greg,
 
->  	memcpy(buf, s->buffer + s->readpos, cnt);
->  
->  	s->readpos += cnt;
+I apologize for the confusion. Let me clarify the situation more directly:
 
-The correct fix would be:
+>>>
+>>> 1. Commit 4e7f1644f2ac is currently associated with CVE-2025-22077. However, this
+>>> patch was merely attempting to fix issues introduced by commit e9f2517a3e18 ("smb:
+>>> client: fix TCP timers deadlock after rmmod").
+> 
+> Did it not fix those issues?  If not, we can reject that CVE, please let
+> us know.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b6e40e8791fa..c23b5ab27314 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6729,7 +6864,8 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
- 		/* Copy the data into the page, so we can start over. */
- 		ret = trace_seq_to_buffer(&iter->seq,
- 					  page_address(spd.pages[i]),
--					  trace_seq_used(&iter->seq));
-+					  min(trace_seq_used(&iter->seq),
-+					      PAGE_SIZE));
- 		if (ret < 0) {
- 			__free_page(spd.pages[i]);
- 			break;
+Yes, commit 4e7f1644f2ac did attempt to fix the issues introduced by
+e9f2517a3e18, but it only fixed part of the issues introduced by e9f2517a3e18.
 
-Especially since the trace_seq_to_buffer() code should be moved out of this
-file and should have no idea how big the buffer passed in is.
+> 
+>>> 2. As I've previously discussed with Greg Kroah-Hartman on the kernel mailing list[1],
+>>>      commit e9f2517a3e18 (which was intended to address CVE-2024-54680):
+>>>      - Failed to address the actual null pointer dereference in lockdep
+>>>      - Introduced multiple serious issues:
+>>>        - Socket leak vulnerability (bugzilla #219972)
+>>>        - Network namespace refcount imbalance (bugzilla #219792)
+> 
+> So this commit did not actually do anything?  If so, we can reject this
+> CVE.
+> 
 
--- Steve
+e9f2517a3e18 did not fix any issues and instead introduced a series of problems.
+
+Here's the actual sequence:
+
+1. CVE-2024-53095 vulnerability: Use-after-free of network namespace in
+    SMB client and it's correct fix: ef7134c7fc48 by Kuniyuki Iwashima
+3. Problematic patch: e9f2517a3e18 (intended for CVE-2024-54680) fixed
+    nothing and introduced new issues while trying to "fix" a non-existent
+    deadlock. ** CVE-2024-54680 has been rejected **
+4. Attempted fix for some reference count issues: My patch 4e7f1644f2ac
+    (assigned CVE-2025-22077)
+5. Final resolution: Revert the problematic patch e9f2517a3e18 via commit
+    95d2b9f693ff ("Revert "smb: client: fix TCP timers deadlock after rmmod"").
+
+What I'm requesting:
+- CVE-2025-22077 should be associated with commit 95d2b9f693ff, which is the actual
+   final fix.
+
+Best regards,
+Wang Zhaolong
+
