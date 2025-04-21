@@ -1,133 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748191E04BD;
-	Mon, 21 Apr 2025 20:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDCD1D89F0;
+	Mon, 21 Apr 2025 20:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745268775; cv=none; b=WtDxfchj/M/SnsZ5tKHL2AqaGmny347/UpihVi3RvuantNiBuIwzazogkofvqSHLv82a9KI9G4VkZscLtcb+StKwZvy6tqnj2o2PHVLjMER7h/p3uLp1za2+ryOeyRYl6LqrWi7epkAjd+LldmeSie77N4sZPYs1lYjcFQAJcoQ=
+	t=1745269082; cv=none; b=C1Et+nVe2vtRrugeg44adXAoo7tCDgkPHMrlrNms5QjhUVpETqdkzwlPNwOB+Wb+1+u2xusYF3uEHDjvEy1Qmy/y3bLsyDfRHGVvzF4UuivSPjdgY4X2R7w+gcjCZCt08HT8E0KwLFh1rbCV422sWoxdH3lNywQXRdJaeUIJ6Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745268775; c=relaxed/simple;
-	bh=QHt442+DY5nVVL6KjRB8BWAE3g/35KN4kTNAgMQxtiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=az0RGcG/L8EqihP+G2mp2cwe53LOUkP7UfhGSt9Ap8DiBid0tFvOXUtm29LY1KatcL+mzsQ6ccQXy5Z91DbLT3lN3krm7Mv0fh42FSXvxi9wcQWRS7LIyiQIuQ2N3GgV9E0UiBa5gNnZuouMKviXO0pEX5fwVyfcsZnp9nipk7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ELPG5eW+; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745269082; c=relaxed/simple;
+	bh=7pdH9UOfVfuFbbn9mahzEXs7vahfUfV9abHAxtaRBDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBD61LgYgKuX2z93Uxq+DqjeCgTV1JVc03w4mcXKzjDbqwt6vSUVOORFjYvRkgAQwsq3dUS4+l/X+ETwYbALL27As328nig0K/22xUICN2bXKaCrxiPsJv8CjOD5uGXLcmWHQA18GIMF0O4i20JR4pDhoQPGTcHyghhE1TtIxN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSZ1vasp; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ELPG5eW+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745268773; x=1776804773;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QHt442+DY5nVVL6KjRB8BWAE3g/35KN4kTNAgMQxtiQ=;
-  b=ELPG5eW+xkeH0Ji9NK0yKy4viutEqg0ZLPaGbPjJYV9cvMgFvaL7+VuS
-   YjjlrcsG7X7emuon3h5bP8n2BF5d4ThnBZfh7/UwFpt/ho1CjveBypCB/
-   vbj5NCQBT/KL/xWbPF9qEBQ38wa4AkN9VvHVhudwSF4DXf1rPpezp+eUL
-   XIg+IeQrIohJ6z8ZlwLOlaaza3U/G0E8uKnbIryQl++dTB4wicomVwYgR
-   Auc/WDOGcHvqggNgInlA4HnRQf17fGmk4HiAz/o+7d+K9OESqAaFmrd5T
-   /0nabbsM9No81uy5CZk1oUBJ5sD3gl1IMjqg4FuKnpKLaDPKrEzZw1+UW
-   w==;
-X-CSE-ConnectionGUID: aJrRc0eyTEKNe9e4NodVsA==
-X-CSE-MsgGUID: Eqd2ZPxLTBWfhNwqIVLfmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="50471258"
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="50471258"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 13:52:52 -0700
-X-CSE-ConnectionGUID: 7KMhmrQkQxOneaR8qqFdTA==
-X-CSE-MsgGUID: lWZ7fPoAQQaeIwwPtNEjyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
-   d="scan'208";a="132345484"
-Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.220.113]) ([10.124.220.113])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 13:52:50 -0700
-Message-ID: <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
-Date: Mon, 21 Apr 2025 13:52:49 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSZ1vasp"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c0b4a038fso2448714a34.0;
+        Mon, 21 Apr 2025 13:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745269080; x=1745873880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T1OdjLW6crwFiXOwMGrZBFM5IVgmkv8//EKkYeYlw9o=;
+        b=aSZ1vaspZs7YHuWA0zGUI579iz0Y69WvwK+BKkDOSp9dXO6C478jk6fMYA8VTTLtA/
+         7bIjWH5lJ5ZrTzET88krk5YoaieCjpgr91JdFo2s+c8GCn0Ljf2pCBgd8t8UYHcKtO6N
+         wu/84yFfF7WmYPtt/ZlrjzEsiTove9B7wndB6Dg36E07Yqb10Psv1jZnWik7CXONDw36
+         XPPJ+GonWxruQhKvy5T8xMjw2pYyHntwQmgV5WdttvvIlC7IVIp28szLWOEdQspye87v
+         xL4EEUOUJ5ntN1kFIrKfezQOXUkHxaKzZ92S95KDTFFT62FJiSqiMKCyIRhyxSFHzUc8
+         k4HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745269080; x=1745873880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1OdjLW6crwFiXOwMGrZBFM5IVgmkv8//EKkYeYlw9o=;
+        b=RoSv33gNMq78XsZl2cVXTUIvlFPlGqqpqq+p9UO82VFe34K1X8KnqzPoyuWuigzn0i
+         REquol24OGQerWYTHrKdlPB5hEv96FwrcdjOhVgruebAFGl5Hwah/KVrFPeu4KUQP0uo
+         YhRP6rkDZ2FtUQaktIrquJt7z2FeawVrJsQkPKtj/PqY/JglJ94hvYMwFidEBIaIrSad
+         MtI/KaE8A/AY8JOmkzTuepaQ2aWax+DG4zHyIIbFpfa2vnRo4JCFuKUywyN+FTcfFOnS
+         oUo/WFQeSqqwnITqjqMhazoyeAP62XmwzR7l+4Ff1QxDdu1QKL6mmOMqzLlAkTRBO5cd
+         bhKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQqHnK0cS05BrvGZSoAkqF61MLzFEdM3u4xJKSZRfbvl23sTnOEvZ2Q6A+6jAVHwt/b2uY/ThWp1A=@vger.kernel.org, AJvYcCWTlePQQuQLOLlkYe/bTDkcI3LmrCNivj8q/JFnIlJqfpUaM1v/md6R2/KgBpHGjQsOF7qaKW7kfu1v@vger.kernel.org, AJvYcCWm8T+h42i5Ab2vhGCJ83YCp9jZyTjuGvUVOXxJXD32Q/iqDOrBvKjcKMS6jqFabKMkatXfRf8yaQa8Uc65@vger.kernel.org, AJvYcCWy8rsKa6aLVU+HASoncKdI7xLedNvF9yVTWBr+upINdd/15GHG7+0JKt4F1Obac6QuUcCLZBSb2Jiu8NkyKQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrIIuzcEITr+u9JnbqG1uUIuNjrQa1zzb6X4yNrEo98vZJ/dAZ
+	51McLWbqJQIGy8sVgZvcLcQGiZib4b4QDmrLxJzSpNC8VcH49sHK
+X-Gm-Gg: ASbGncumZuSrb+YWdDpg9YHJyJqSm1vmLT0OM67/hYSdLE7GuHevpJqlz2Gvjnmv5Ht
+	RtnuSn3BC42HtgvWynvQgwhGKC8MLcBl2HrAI/hQ0xZJkAB7obYShls9MO5z+LzpWFsyusnH7EV
+	NLrRV2fHhnJKNHCEgNFmm1F9oZKmLm35EvKmxocoSwOCAVMe4BRHR5Obq3LpcJrjf5wnWq09KKY
+	ZOIJg38pVnaYxJ4KHUzJpvHCFsLIlN8ENNtPrwflIyN3HKLZG4peZXqnDJWnL60UpyGFHLwMLPu
+	x5B9ILT+fOA6vODDbDB1m+hmtkBX+A3wEcHFs1BiO4Apw3Yb83jT/7FdlS05tvY577kARVs=
+X-Google-Smtp-Source: AGHT+IHMdN7/gFi03PEkZIAWvXK0QyaJl9vfIw0jL8mnQREGY3rrDCX2+lnbLjDamLf02BoGJopV2g==
+X-Received: by 2002:a05:6830:390f:b0:727:39d7:b0d5 with SMTP id 46e09a7af769-730062290e2mr8959683a34.15.1745269080087;
+        Mon, 21 Apr 2025 13:58:00 -0700 (PDT)
+Received: from Borg-550.local ([2603:8080:1500:3d89:c191:629b:fde5:2f06])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7300489cd44sm1607261a34.66.2025.04.21.13.57.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 13:57:59 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Mon, 21 Apr 2025 15:57:57 -0500
+From: John Groves <John@groves.net>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>, 
+	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
+	Jeff Layton <jlayton@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 14/19] famfs_fuse: GET_DAXDEV message and daxdev_table
+Message-ID: <6f22k2r6uu4rimplfdna7farx3o2vfwp3korye54tfezemfl3q@hcngav32igrt>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-15-john@groves.net>
+ <bed14737-9432-4871-a86f-09c6ce59206b@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250421162712.77452-1-ross.philipson@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bed14737-9432-4871-a86f-09c6ce59206b@infradead.org>
 
-On 4/21/25 09:26, Ross Philipson wrote:
-> The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
-> enhance the boot security and integrity in a unified manner.
+On 25/04/20 08:43PM, Randy Dunlap wrote:
+> Hi,
 
-Hey Folks,
+Hi Randy - thanks for the review!
 
-It isn't immediately apparent what these 5,000 lines of code do which is
-new, why they are important to users and who will use them. I've
-wondered this from v1 and I was hoping it would have gotten better by
-v14, but alas...
+> 
+> On 4/20/25 6:33 PM, John Groves wrote:
+> > * The new GET_DAXDEV message/response is enabled
+> > * The command it triggered by the update_daxdev_table() call, if there
+> >   are any daxdevs in the subject fmap that are not represented in the
+> >   daxdev_dable yet.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/fuse/famfs.c           | 281 ++++++++++++++++++++++++++++++++++++--
+> >  fs/fuse/famfs_kfmap.h     |  23 ++++
+> >  fs/fuse/fuse_i.h          |   4 +
+> >  fs/fuse/inode.c           |   2 +
+> >  fs/namei.c                |   1 +
+> >  include/uapi/linux/fuse.h |  15 ++
+> >  6 files changed, 316 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> > index e62c047d0950..2e182cb7d7c9 100644
+> > --- a/fs/fuse/famfs.c
+> > +++ b/fs/fuse/famfs.c
+> > @@ -20,6 +20,250 @@
+> >  #include "famfs_kfmap.h"
+> >  #include "fuse_i.h"
+> >  
+> > +/*
+> > + * famfs_teardown()
+> > + *
+> > + * Deallocate famfs metadata for a fuse_conn
+> > + */
+> > +void
+> > +famfs_teardown(struct fuse_conn *fc)
+> 
+> Is this function formatting prevalent in fuse?
+> It's a bit different from most Linux.
+> (many locations throughout the patch set)
 
-Purely from the amount of interest and review tags and the whole "v14"
-thing, it doesn't look like this is very important to anyone. Not to be
-to flippant about it, but if nobody else cares, why should I (or the
-other x86 maintainers)?
+I'll check and clean it up if not; function names beginning in column 1 is a
+"thing", but I'll normalize to nearby standards.
+
+> 
+> > +{
+> > +	struct famfs_dax_devlist *devlist = fc->dax_devlist;
+> > +	int i;
+> > +
+> > +	fc->dax_devlist = NULL;
+> > +
+> > +	if (!devlist)
+> > +		return;
+> > +
+> > +	if (!devlist->devlist)
+> > +		goto out;
+> > +
+> > +	/* Close & release all the daxdevs in our table */
+> > +	for (i = 0; i < devlist->nslots; i++) {
+> > +		if (devlist->devlist[i].valid && devlist->devlist[i].devp)
+> > +			fs_put_dax(devlist->devlist[i].devp, fc);
+> > +	}
+> > +	kfree(devlist->devlist);
+> > +
+> > +out:
+> > +	kfree(devlist);
+> > +}
+> > +
+> > +static int
+> > +famfs_verify_daxdev(const char *pathname, dev_t *devno)
+> > +{
+> > +	struct inode *inode;
+> > +	struct path path;
+> > +	int err;
+> > +
+> > +	if (!pathname || !*pathname)
+> > +		return -EINVAL;
+> > +
+> > +	err = kern_path(pathname, LOOKUP_FOLLOW, &path);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	inode = d_backing_inode(path.dentry);
+> > +	if (!S_ISCHR(inode->i_mode)) {
+> > +		err = -EINVAL;
+> > +		goto out_path_put;
+> > +	}
+> > +
+> > +	if (!may_open_dev(&path)) { /* had to export this */
+> > +		err = -EACCES;
+> > +		goto out_path_put;
+> > +	}
+> > +
+> > +	*devno = inode->i_rdev;
+> > +
+> > +out_path_put:
+> > +	path_put(&path);
+> > +	return err;
+> > +}
+> > +
+> > +/**
+> > + * famfs_fuse_get_daxdev()
+> 
+> Missing " - <short function description>"
+> but then it's a static function, so kernel-doc is not required.
+> It's up to you, but please use full kernel-doc notation if using kernel-doc.
+
+Thank you - and sorry for being a bit sloppy on this stuff. I'm caching fixes
+for all your comments along these lines into a branch for the next version of
+the series.
+
+Snipping the rest, but will address it all.
+
+Thanks,
+John
+
