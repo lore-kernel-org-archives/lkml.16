@@ -1,175 +1,243 @@
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97766184;
-	Mon, 21 Apr 2025 02:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8542566DF;
+	Mon, 21 Apr 2025 02:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745203945; cv=none; b=lf2Qpbj7N6gM9tUfwR2iJ/EQSso9mZrwnAnv6n44qYp3t6vzCKff1CmbaaLUe8VhLo8w3CwGXnSHH9ZG9npPdfbSKMvH34WKkkmqj4dCoM2XT7p8YxKLiC8c5PoSat9f2d95c68Jzxk8arqNbXK5P8koY/Z+wJ5PPtIgJbD6shE=
+	t=1745203984; cv=none; b=cAEV1GdUeAGEwFTy3y46bO/baKJLIc6PhFWAv27eIDJvTGXpiGrMNRImOfUQN7AB/LhQq8W82cBPtlimJNNOy3BYWlparje2/65ZqpYDcw0V7v7XBiDg/vtI1Fqn6RzegvNWxflRhdNPFEySrvSClEfJp8INBEdi/kmd2bmSa94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745203945; c=relaxed/simple;
-	bh=YBgTtw3/lIlfbTQBHcf3qYAkL4cxTN7AoK8utuCRMdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cfuKMiniqF1q4cIrI1PxzaYBqI50T5Z9gXSoprfYnU5U3UjUYTIOKIZX3FfXAmjcRohRniQ9ujcFmYd38gaTtiRhl4xFWZIVpCBFMr/00W2+ojas7IAK3XWyI7Cwv+oVXg4FYfPzFmiDoWC8QtvB3hYnc107ZQjlZb7CcCvub/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=KhwhsAf0; arc=none smtp.client-ip=139.138.61.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="KhwhsAf0"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1745203943; x=1776739943;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YBgTtw3/lIlfbTQBHcf3qYAkL4cxTN7AoK8utuCRMdQ=;
-  b=KhwhsAf0Iicx9iA6BeQ+eb3kyA3MV3TyeKiH8MBQvjMoscPcIcNOjgov
-   IcPpWggc/YwmwZl1Y/lPL8u9BPBzLLwZ2AYWaeoH3ziuEm2MYLPw2u/Y0
-   mO+5/wkioelUM31mcZJ+PFSBQvZ6oMkRkixtNZMGx1ND2+IPQuHNKQ4ke
-   uibExKt120oSTdHBlzj+At+TgmWVmG6f4f/XikNLayMFtRd2o4FuS/P1F
-   0vRK1xjqRbs6ob9WUcTfTjiYiN14M/LiZ4QKHlmFq+Yfw+A+yYlfMp0jz
-   ba8Sg5ac6rPQRqu5sVUBGP09SxtKf4gOGVbFUJ6Tj1BoxGwtE9r3+37OH
-   Q==;
-X-CSE-ConnectionGUID: wzGIF3pLRiS5YbKV61wv5w==
-X-CSE-MsgGUID: XFr7jYBLSoWvcvm9BbBuxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="185091490"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739804400"; 
-   d="scan'208";a="185091490"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 11:51:11 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 51D46D4C4A;
-	Mon, 21 Apr 2025 11:51:09 +0900 (JST)
-Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 160FDD7480;
-	Mon, 21 Apr 2025 11:51:09 +0900 (JST)
-Received: from sm-x86-stp01.ssoft.mng.com (unknown [10.124.178.20])
-	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id ADA172025C18;
-	Mon, 21 Apr 2025 11:51:08 +0900 (JST)
-From: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
-To: linux-rdma@vger.kernel.org,
-	leon@kernel.org,
-	jgg@ziepe.ca,
-	zyjzyj2000@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
-Subject: [PATCH for-next] RDMA/rxe: Remove 32-bit architecture support
-Date: Mon, 21 Apr 2025 11:51:01 +0900
-Message-Id: <20250421025101.3588139-1-matsuda-daisuke@fujitsu.com>
-X-Mailer: git-send-email 2.39.1
+	s=arc-20240116; t=1745203984; c=relaxed/simple;
+	bh=76YqBZtheMprSrRFH1+QUbuhvLXmGgaCoHb4ztvhMlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DmxQ3YleTJQc8d8FPx24oaFIBkij1NOd8yz6yKc7wxSBmI6BM5wPJA4ZhDhCe/UI9H+6cjGcVGIMMvK7B4llpFdVwoJAGWTgunMwrICosqQARNNzQjSnORN+HwHgZft6qZwueIBpRdybH6uKwrhKOqvPFGW+z2Yi7nXSxdBPEs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZgqZr2Nv0zHrPM;
+	Mon, 21 Apr 2025 10:49:24 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E6AD6180080;
+	Mon, 21 Apr 2025 10:52:52 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 21 Apr 2025 10:52:52 +0800
+Message-ID: <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
+Date: Mon, 21 Apr 2025 10:52:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2025-22077: smb: client: Fix netns refcount imbalance causing
+ leaks and use-after-free
+To: <cve@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cve-announce@vger.kernel.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <2025041612-CVE-2025-22077-d534@gregkh>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <2025041612-CVE-2025-22077-d534@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-Major linux distibutions have phased out support for 32-bit machines. Since
-rxe is primarily used for development and testing, the benefit of
-maintaining 32-bit support is minimal. This change simplifies ATOMIC WRITE
-implementations and improves maintainability of the driver.
+Dear CVE Community,
 
-Signed-off-by: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
----
- drivers/infiniband/sw/rxe/Kconfig     | 2 +-
- drivers/infiniband/sw/rxe/rxe_loc.h   | 6 +-----
- drivers/infiniband/sw/rxe/rxe_mr.c    | 8 --------
- drivers/infiniband/sw/rxe/rxe_odp.c   | 1 -
- drivers/infiniband/sw/rxe/rxe_param.h | 5 +----
- 5 files changed, 3 insertions(+), 19 deletions(-)
+As the author of commit 4e7f1644f2ac ("smb: client: Fix netns refcount imbalance
+causing leaks and use-after-free"), I want to clarify some confusion around the
+proper fixes for these issues:
 
-diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
-index c180e7ebcfc5..1ed5b63f8afc 100644
---- a/drivers/infiniband/sw/rxe/Kconfig
-+++ b/drivers/infiniband/sw/rxe/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config RDMA_RXE
- 	tristate "Software RDMA over Ethernet (RoCE) driver"
--	depends on INET && PCI && INFINIBAND
-+	depends on INET && PCI && INFINIBAND && 64BIT
- 	depends on INFINIBAND_VIRT_DMA
- 	select NET_UDP_TUNNEL
- 	select CRC32
-diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
-index 30fa83c9c846..f7dbb9cddd12 100644
---- a/drivers/infiniband/sw/rxe/rxe_loc.h
-+++ b/drivers/infiniband/sw/rxe/rxe_loc.h
-@@ -196,6 +196,7 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
- 				   u64 compare, u64 swap_add, u64 *orig_val);
- int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
- 			    unsigned int length);
-+enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
- #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
- static inline int
- rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
-@@ -219,11 +220,6 @@ static inline int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
- {
- 	return -EOPNOTSUPP;
- }
--#endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
--
--#ifdef CONFIG_INFINIBAND_ON_DEMAND_PAGING
--enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
--#else
- static inline enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr,
- 						       u64 iova, u64 value)
- {
-diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
-index 1a74013a14ab..c4936d63e26a 100644
---- a/drivers/infiniband/sw/rxe/rxe_mr.c
-+++ b/drivers/infiniband/sw/rxe/rxe_mr.c
-@@ -539,8 +539,6 @@ enum resp_states rxe_mr_do_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
- 	return RESPST_NONE;
- }
- 
--#if defined CONFIG_64BIT
--/* only implemented or called for 64 bit architectures */
- enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
- {
- 	unsigned int page_offset;
-@@ -580,12 +578,6 @@ enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
- 
- 	return RESPST_NONE;
- }
--#else
--enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
--{
--	return RESPST_ERR_UNSUPPORTED_OPCODE;
--}
--#endif
- 
- int advance_dma_data(struct rxe_dma_info *dma, unsigned int length)
- {
-diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
-index fa5e8f5017cc..6149d9ffe7f7 100644
---- a/drivers/infiniband/sw/rxe/rxe_odp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_odp.c
-@@ -380,7 +380,6 @@ int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
- 	return 0;
- }
- 
--/* CONFIG_64BIT=y */
- enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
- {
- 	struct ib_umem_odp *umem_odp = to_ib_umem_odp(mr->umem);
-diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
-index 003f681e5dc0..767870568372 100644
---- a/drivers/infiniband/sw/rxe/rxe_param.h
-+++ b/drivers/infiniband/sw/rxe/rxe_param.h
-@@ -53,12 +53,9 @@ enum rxe_device_param {
- 					| IB_DEVICE_MEM_WINDOW
- 					| IB_DEVICE_FLUSH_GLOBAL
- 					| IB_DEVICE_FLUSH_PERSISTENT
--#ifdef CONFIG_64BIT
- 					| IB_DEVICE_MEM_WINDOW_TYPE_2B
- 					| IB_DEVICE_ATOMIC_WRITE,
--#else
--					| IB_DEVICE_MEM_WINDOW_TYPE_2B,
--#endif /* CONFIG_64BIT */
-+
- 	RXE_MAX_SGE			= 32,
- 	RXE_MAX_WQE_SIZE		= sizeof(struct rxe_send_wqe) +
- 					  sizeof(struct ib_sge) * RXE_MAX_SGE,
--- 
-2.43.0
+1. Commit 4e7f1644f2ac is currently associated with CVE-2025-22077. However, this
+patch was merely attempting to fix issues introduced by commit e9f2517a3e18 ("smb:
+client: fix TCP timers deadlock after rmmod").
+
+2. As I've previously discussed with Greg Kroah-Hartman on the kernel mailing list[1],
+    commit e9f2517a3e18 (which was intended to address CVE-2024-54680):
+    - Failed to address the actual null pointer dereference in lockdep
+    - Introduced multiple serious issues:
+      - Socket leak vulnerability (bugzilla #219972)
+      - Network namespace refcount imbalance (bugzilla #219792)
+
+3. Our testing and analysis confirms that the original fix by Kuniyuki Iwashima,
+commit ef7134c7fc48 ("smb: client: Fix use-after-free of network namespace."), is
+actually the correct approach. This patch properly handles network namespace
+reference counting without introducing the problems that e9f2517a3e18 did.
+
+4. The proper resolution for these issues was ultimately commit 95d2b9f693ff
+("Revert 'smb: client: fix TCP timers deadlock after rmmod'"), which reverted
+the problematic patch. In the latest Linux mainline code, the problematic patch and
+my subsequent fix patch have been reverted.[2][3]
+
+Thank you for your attention to this matter. I'm happy to provide additional details if needed.
+
+[1] https://lore.kernel.org/all/2025040248-tummy-smilingly-4240@gregkh/
+[2] https://github.com/torvalds/linux/commit/c707193a17128fae2802d10cbad7239cc57f0c95
+[3] https://github.com/torvalds/linux/commit/4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
+
+Best regards,
+Wang Zhaolong
+
+> Description
+> ===========
+> 
+> In the Linux kernel, the following vulnerability has been resolved:
+> 
+> smb: client: Fix netns refcount imbalance causing leaks and use-after-free
+> 
+> Commit ef7134c7fc48 ("smb: client: Fix use-after-free of network
+> namespace.") attempted to fix a netns use-after-free issue by manually
+> adjusting reference counts via sk->sk_net_refcnt and sock_inuse_add().
+> 
+> However, a later commit e9f2517a3e18 ("smb: client: fix TCP timers deadlock
+> after rmmod") pointed out that the approach of manually setting
+> sk->sk_net_refcnt in the first commit was technically incorrect, as
+> sk->sk_net_refcnt should only be set for user sockets. It led to issues
+> like TCP timers not being cleared properly on close. The second commit
+> moved to a model of just holding an extra netns reference for
+> server->ssocket using get_net(), and dropping it when the server is torn
+> down.
+> 
+> But there remain some gaps in the get_net()/put_net() balancing added by
+> these commits. The incomplete reference handling in these fixes results
+> in two issues:
+> 
+> 1. Netns refcount leaks[1]
+> 
+> The problem process is as follows:
+> 
+> ```
+> mount.cifs                        cifsd
+> 
+> cifs_do_mount
+>    cifs_mount
+>      cifs_mount_get_session
+>        cifs_get_tcp_session
+>          get_net()  /* First get net. */
+>          ip_connect
+>            generic_ip_connect /* Try port 445 */
+>              get_net()
+>              ->connect() /* Failed */
+>              put_net()
+>            generic_ip_connect /* Try port 139 */
+>              get_net() /* Missing matching put_net() for this get_net().*/
+>        cifs_get_smb_ses
+>          cifs_negotiate_protocol
+>            smb2_negotiate
+>              SMB2_negotiate
+>                cifs_send_recv
+>                  wait_for_response
+>                                   cifs_demultiplex_thread
+>                                     cifs_read_from_socket
+>                                       cifs_readv_from_socket
+>                                         cifs_reconnect
+>                                           cifs_abort_connection
+>                                             sock_release();
+>                                             server->ssocket = NULL;
+>                                             /* Missing put_net() here. */
+>                                             generic_ip_connect
+>                                               get_net()
+>                                               ->connect() /* Failed */
+>                                               put_net()
+>                                               sock_release();
+>                                               server->ssocket = NULL;
+>            free_rsp_buf
+>      ...
+>                                     clean_demultiplex_info
+>                                       /* It's only called once here. */
+>                                       put_net()
+> ```
+> 
+> When cifs_reconnect() is triggered, the server->ssocket is released
+> without a corresponding put_net() for the reference acquired in
+> generic_ip_connect() before. it ends up calling generic_ip_connect()
+> again to retry get_net(). After that, server->ssocket is set to NULL
+> in the error path of generic_ip_connect(), and the net count cannot be
+> released in the final clean_demultiplex_info() function.
+> 
+> 2. Potential use-after-free
+> 
+> The current refcounting scheme can lead to a potential use-after-free issue
+> in the following scenario:
+> 
+> ```
+>   cifs_do_mount
+>     cifs_mount
+>       cifs_mount_get_session
+>         cifs_get_tcp_session
+>           get_net()  /* First get net */
+>             ip_connect
+>               generic_ip_connect
+>                 get_net()
+>                 bind_socket
+> 	         kernel_bind /* failed */
+>                 put_net()
+>           /* after out_err_crypto_release label */
+>           put_net()
+>           /* after out_err label */
+>           put_net()
+> ```
+> 
+> In the exception handling process where binding the socket fails, the
+> get_net() and put_net() calls are unbalanced, which may cause the
+> server->net reference count to drop to zero and be prematurely released.
+> 
+> To address both issues, this patch ties the netns reference counting to
+> the server->ssocket and server lifecycles. The extra reference is now
+> acquired when the server or socket is created, and released when the
+> socket is destroyed or the server is torn down.
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=219792
+> 
+> The Linux kernel CVE team has assigned CVE-2025-22077 to this issue.
+> 
+> 
+> Affected and fixed versions
+> ===========================
+> 
+> 	Issue introduced in 6.6.62 with commit e8c71494181153a134c96da28766a57bd1eac8cb and fixed in 6.6.87 with commit c6b6b8dcef4adf8ee4e439bb97e74106096c71b8
+> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.12.23 with commit 7d8dfc27d90d41627c0d6ada97ed0ab57b3dae25
+> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.13.11 with commit 961755d0055e0e96d1849cc0425da966c8a64e53
+> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.14.2 with commit 476617a4ca0123f0df677d547a82a110c27c8c74
+> 	Issue introduced in 6.12 with commit ef7134c7fc48e1441b398e55a862232868a6f0a7 and fixed in 6.15-rc1 with commit 4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
+> 	Issue introduced in 6.11.9 with commit c7f9282fc27fc36dbaffc8527c723de264a132f8
+> 	Issue introduced in 6.6.68 with commit 906807c734ed219dcb2e7bbfde5c4168ed72a3d0
+> 
+> Please see https://www.kernel.org for a full list of currently supported
+> kernel versions by the kernel community.
+> 
+> Unaffected versions might change over time as fixes are backported to
+> older supported kernel versions.  The official CVE entry at
+> 	https://cve.org/CVERecord/?id=CVE-2025-22077
+> will be updated if fixes are backported, please check that for the most
+> up to date information about this issue.
+> 
+> 
+> Affected files
+> ==============
+> 
+> The file(s) affected by this issue are:
+> 	fs/smb/client/connect.c
+> 
+> 
+> Mitigation
+> ==========
+> 
+> The Linux kernel CVE team recommends that you update to the latest
+> stable kernel version for this, and many other bugfixes.  Individual
+> changes are never tested alone, but rather are part of a larger kernel
+> release.  Cherry-picking individual commits is not recommended or
+> supported by the Linux kernel community at all.  If however, updating to
+> the latest release is impossible, the individual changes to resolve this
+> issue can be found at these commits:
+> 	https://git.kernel.org/stable/c/c6b6b8dcef4adf8ee4e439bb97e74106096c71b8
+> 	https://git.kernel.org/stable/c/7d8dfc27d90d41627c0d6ada97ed0ab57b3dae25
+> 	https://git.kernel.org/stable/c/961755d0055e0e96d1849cc0425da966c8a64e53
+> 	https://git.kernel.org/stable/c/476617a4ca0123f0df677d547a82a110c27c8c74
+> 	https://git.kernel.org/stable/c/4e7f1644f2ac6d01dc584f6301c3b1d5aac4eaef
+> 
 
