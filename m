@@ -1,98 +1,202 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6541F2E401
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B453F1EF394;
+	Mon, 21 Apr 2025 21:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271296; cv=none; b=jKkV4h099DuFhtwZ+Mq6sIwZUFuIRAVPmaFUx+wLEGB1v22y9SCZP2pCV/0M0JHu8qYAW19q/VKgcphf8T7bJoIfZ8WToMlENd7zwrgGgXCe8dKXNj7C4HWoRur3vggWHsf8m3rlL1NiBrIQAhgzWzjgCx9miPsLUSNNi+d9e6c=
+	t=1745271346; cv=none; b=BS9t3VoJArdJZBAQKS+GJFaMK78hrrE0ZwA6uXsq815GIOSI+WJU/YyhzELRY2QW8bxqA/NOVXkbttmMWxe2lhVbyUctbICA8MaBoQyYgkYS1TT1aj7aJb8LLFfPbytFMYHmOXfylcpmCYJdqCoQOUJW+mKIXkPbOsGGDyb/ON4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271296; c=relaxed/simple;
-	bh=8qJzO1ZLC8/KZccvex8eKof6pGy6JwT3E8gASVra+cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FUnR/DB9I96s0F7fIXPiyvK3d5XDLLqCxtd9+tGwTmR9q7EBcMOna/dYfPrVqrLUY/g7V84nI6YSPCWBNsHkBXLcVtjyo71tFV3oCwAjnNGJq88pl6Zejbe5VcKxEZ/60bC0J2cGZS73oV+PZ/b5YYiVBXvkL8PlrSyVicobILs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H1M8vOPg; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745271346; c=relaxed/simple;
+	bh=IQYal5UE3ClVvN1lCGB7HKtDymzeIsGFwRwCqGsG/T8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kjzZ2DA2pKqpngxirPtjMXjWA+xp1w09haRaJfJ2pnsj33ETIsASGtP79233i7EZYz+3CB3tJ8dFtEIztvojJoBY1pzYhmZieIoe3e8b99ubKIe4bhNkpuw8k9thqFwIr2YTV9/+DKBM7SRzujWa53ri2lXyHR06jxzsTwRdGmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BBOZfSr3; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H1M8vOPg"
-Date: Mon, 21 Apr 2025 21:34:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745271290;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H/P6KO5tmhrmW7ovw7XWmmzoB4BERa9BgtVy7OgEIno=;
-	b=H1M8vOPg30LswLGaE8LCWjWxA2FMnO6Ya3I3SjGeZyEdGb5wh71XL+MpMLezULbnwcojD+
-	MrJ4HfPEtbJ73NLjwmyCdhPdyORWn6TYDM2v0lghbYCBO/fUbbtEXH8RiBMhguZ14PJ0M3
-	GjUQp+jm7jol1Y0FgvGCzIkxogYd3Uw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-Message-ID: <aAa58xJFJ3du6OlY@google.com>
-References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BBOZfSr3"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LL3UF5012850;
+	Mon, 21 Apr 2025 21:35:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=I8hwgS
+	KySN4oDCnUgrZWJ6YPpS5dJqH5If6DsGLP0L0=; b=BBOZfSr3n0F1o3Taj88rDU
+	WUyPRAqj9kD8PDsMsxc0n380+3b4Ed95HJTASegikhJDyGg83VVzG4KccbhJD+/e
+	rRi5i4bB8U6N4PoqHpcbpUtUAy5k5VImNTT4jfAvXuq4RR/rvOQf4O395k4WAXJc
+	nHGylVKOGctUS9ktx+XLWTp5QtHhSObLF+ONCYazP0xV4TD00+n0B6sDgqdApqhU
+	TW8Il8IL/1bWbM2eRZUOlcF4FVf2GAAV9gCuv2goNKz/zK13ZfQ144ka9rE8jVSX
+	Dd2MiNG9tdxExbZZ2Y8FFYXuSEwhe8nUO3yHM91WnLN4Bd3BoGg1eowDFTjz8dzg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465wkkg2yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 21:35:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LJsn51032537;
+	Mon, 21 Apr 2025 21:35:14 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464phyg708-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 21:35:14 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LLZEnR32047824
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 21:35:14 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E6DE45803F;
+	Mon, 21 Apr 2025 21:35:13 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2312158055;
+	Mon, 21 Apr 2025 21:35:12 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.51.165])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Apr 2025 21:35:12 +0000 (GMT)
+Message-ID: <6c3aca6815edf25828bad6f0b4587a040ada03c5.camel@linux.ibm.com>
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap
+ segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Mon, 21 Apr 2025 17:35:11 -0400
+In-Reply-To: <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+	 <20250416021028.1403-4-chenste@linux.microsoft.com>
+	 <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+	 <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
+	 <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
+	 <a9e3713f-4edf-479c-8be1-fe5b3dc22866@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419183545.1982187-1-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=DekXqutW c=1 sm=1 tr=0 ts=6806ba13 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=bLk-5xynAAAA:8 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8
+ a=Scrp5zbnQvEsE254UrAA:9 a=QEXdDO2ut3YA:10 a=zSyb8xVVt2t83sZkrLMb:22 a=BpimnaHY1jUKGyF_4-AF:22
+X-Proofpoint-ORIG-GUID: KnR4bJ9sLsQhWnMkD4xIv9UvzuVn2yjL
+X-Proofpoint-GUID: KnR4bJ9sLsQhWnMkD4xIv9UvzuVn2yjL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_10,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=999 impostorscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210169
 
-On Sat, Apr 19, 2025 at 11:35:45AM -0700, Shakeel Butt wrote:
-> Setting the max and high limits can trigger synchronous reclaim and/or
-> oom-kill if the usage is higher than the given limit. This behavior is
-> fine for newly created cgroups but it can cause issues for the node
-> controller while setting limits for existing cgroups.
-> 
-> In our production multi-tenant and overcommitted environment, we are
-> seeing priority inversion when the node controller dynamically adjusts
-> the limits of running jobs of different priorities. Based on the system
-> situation, the node controller may reduce the limits of lower priority
-> jobs and increase the limits of higher priority jobs. However we are
-> seeing node controller getting stuck for long period of time while
-> reclaiming from lower priority jobs while setting their limits and also
-> spends a lot of its own CPU.
-> 
-> One of the workaround we are trying is to fork a new process which sets
-> the limit of the lower priority job along with setting an alarm to get
-> itself killed if it get stuck in the reclaim for lower priority job.
-> However we are finding it very unreliable and costly. Either we need a
-> good enough time buffer for the alarm to be delivered after setting
-> limit and potentialy spend a lot of CPU in the reclaim or be unreliable
-> in setting the limit for much shorter but cheaper (less reclaim) alarms.
-> 
-> Let's introduce new limit setting option which does not trigger
-> reclaim and/or oom-kill and let the processes in the target cgroup to
-> trigger reclaim and/or throttling and/or oom-kill in their next charge
-> request. This will make the node controller on multi-tenant
-> overcommitted environment much more reliable.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
-> Changes since v1:
-> - Instead of new interfaces use O_NONBLOCK flag (Greg, Roman & Tejun)
-> 
->  Documentation/admin-guide/cgroup-v2.rst | 14 ++++++++++++++
->  mm/memcontrol.c                         | 10 ++++++++--
->  2 files changed, 22 insertions(+), 2 deletions(-)
+On Mon, 2025-04-21 at 13:40 -0700, steven chen wrote:
+> On 4/21/2025 7:18 AM, Mimi Zohar wrote:
+> > On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
+> > > On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
+> > > > On 04/15/25 at 07:10pm, steven chen wrote:
+> > > > > From: Steven Chen <chenste@linux.microsoft.com>
+> > > >   ^^^^^^
+> > > As James Bottomley previously explained[1], if you haven't made any c=
+hanges to
+> > > Tushar's patch, then the very first line of the patch description wou=
+ld be
+> > > "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a =
+blank line.
+> > > If there is a minor change, you would add "<your email address>: expl=
+anation".
+> > > For example:
+> > >=20
+> > > Steven Chen <chenste@linux.microsoft.com>: modified patch description
+> > To clarify: This line would be included below with your Signed-off-by t=
+ag.
+> >=20
+> > > [1]
+> > > https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81=
+.camel@HansenPartnership.com/
+> > >=20
+> > > > > Implement kimage_map_segment() to enable IMA to map the measureme=
+nt log
+> > > > > list to the kimage structure during the kexec 'load' stage. This =
+function
+> > > > > gathers the source pages within the specified address range, and =
+maps them
+> > > > > to a contiguous virtual address range.
+> > > > >=20
+> > > > > This is a preparation for later usage.
+> > > > >=20
+> > > > > Implement kimage_unmap_segment() for unmapping segments using vun=
+map().
+> > > > >=20
+> > > > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > >    ^^^^^^
+> > > Neither "Author:" nor "From:" belong here.  Please remove.
+> > >=20
+> > > > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> > > >    ^^^^^^^
+> > > Having Tushar's "Signed-off-by" tag and yours below indicate that you=
+ modified
+> > > the original author's patch.
+> > To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below =
+indicate
+> > that you modified the original author's patch.
+>=20
+> Hi Mimi,
+>=20
+> I will update it in next version.
 
-Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
+Sigh, after reviewing your discussion with Baoquan, I'm not sure whether my
+comment this morning added more confusion.
 
-Re stable backports: can you, please, share some details about the problem
-users are facing? Which kernel are they using?
+Option 1: Include a single "From:" line at the very top to change the autho=
+r
+from yourself to someone else.  The following from line would make Tushar t=
+he
+patch author:  From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 
-Thanks!
+In addition, any minor changes you made should be added before your Signed-=
+off-
+by tag.  For example: Steven Chen <chenste@linux.microsoft.com>: modified p=
+atch
+description
+
+Option 2: As mentioned previously and now discussed with Baoquan, adding "C=
+o-
+developed-by:"
+
+>=20
+> Just wandering are you done reviewing or still need more time?
+
+Yes, I just finished reviewing/testing.  The patch descriptions are looking=
+ much
+better.  As Baoquan reminded you, please remember to update the "ima: defin=
+e and
+call ima_alloc_kexec_file_buf()" patch description.
+
+thanks,
+
+Mimi
+
+>=20
+> > > > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > > > Cc: Baoquan He <bhe@redhat.com>
+> > > > > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > > > > Cc: Dave Young <dyoung@redhat.com>
+> > > > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> > > >    ^^^^^
+> > > >=20
+> > > > The signing on this patch is a little confusing. I can't see who is=
+ the
+> > > > real author, who is the co-author, between you and Tushar. You may =
+need
+> > > > to refer to Documentation/process/5.Posting.rst to make that clear.
+> > > >=20
+> > > > > Acked-by: Baoquan He <bhe@redhat.com>
