@@ -1,85 +1,92 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A804D1E9B18;
-	Mon, 21 Apr 2025 18:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119191E1041;
+	Mon, 21 Apr 2025 18:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745259260; cv=none; b=rEnxmzjOKYkZm94gh3xaiWRujTaM5nprH2/Sv/ZyZeokhlhfOA57Ewy0jMhq/QRfsssQctrYzl8gL+8WoDzekIAmgFHRf+PKrkQ+hSv4xIy1x3Zei/hbSiNltMlGgI3vJ29mJuE/hs23klwQxPdukDQDZZBOX0jw2DIxF7ufOlA=
+	t=1745259920; cv=none; b=g5Wmqgxea7n5vB1A1Hq5MMgK8J6zK8x8bQwzQOK272/0CP+HlCGr2vh7joiGTKhxu+IgHKHZY9Xo2c16VgFP1TYQhSwbiiEeaRnNda9Heh5SObGTvGC/m1n8qJPQIp035TSX+I+YP4wJIvjzYEKV6wxCZDsfO2Z9QtG+WhoqUYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745259260; c=relaxed/simple;
-	bh=WU7+PH7Aon92/3Ezl8juCWIV0+5fdafHUQuh8yPApZk=;
+	s=arc-20240116; t=1745259920; c=relaxed/simple;
+	bh=twNH0S4pyQylEiqFPX1s507CySCI37q2nkD137RMcic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6QYIkp+Zgy3X1cgO9laLUR4WWw2FOjeQ/NnDvDwsXaV6NsiRFa5kELN/EDa1SoqM/E48/u9OioWbrSW772MNJC81L56Z7ZBc6GAPYXXMSi4Doj08CdO/a6xgFRhq4JgBgFTdHsbGK45MJVcnPKnf6QpHfKQTC1gMUxsMjdhFWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=U3WelcRf; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mflGgdmyvqJVavFhQwh3I9rpermlHW6TdpHMO1wCRVqd5DGxOyOWm5F9UfYs21GsvoVwFWgi+fgHI6GnqM03w2ptKZpR6BHgp7E8xVHFGtJxDsfp/5EiEO6iA7TNLcUCQwhyrzMKt5FqYD5i3BfeOf/IVw/dGrsscgcG9S7JE3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePpSrZlo; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U3WelcRf"
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 13DA1203B867; Mon, 21 Apr 2025 11:14:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13DA1203B867
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745259252;
-	bh=GPITtWCUzrpM+RzwsOn+M9sSZbmXk+2qVYGwk2dgTOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U3WelcRfP+3HM6y55yij5DGCLK+oXqsouZjg849PRjBIINHAE/30U8qeV4J8UstMa
-	 +m4cuHqfTgCfWy2gkCXCXpMjuPoZWuW4daoTLI1xwt3ZVnsmp/b222mRvSXxdLhacY
-	 kulOIeKgnusVMKYOIzrlt3ci3wp9C644FFmngqic=
-Date: Mon, 21 Apr 2025 11:14:12 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	mhklinux@outlook.com, pasha.tatashin@soleen.com,
-	kent.overstreet@linux.dev, brett.creeley@amd.com,
-	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com, leon@kernel.org, rosenp@gmail.com,
-	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: mana: Add speed support in
- mana_get_link_ksettings
-Message-ID: <20250421181412.GA5652@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
- <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
- <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePpSrZlo"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2255003f4c6so47913435ad.0;
+        Mon, 21 Apr 2025 11:25:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745259918; x=1745864718; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kZ7lhE0zceQBiDbb/+v2JkUT6Jl1uZ4guW4PrMbfZ9Q=;
+        b=ePpSrZloEQAHYu75wJpbjTY9ArrC3Ch4gNk09kntusYiNdYue/SseP4zwCSYmqBVVj
+         BD37DsiiaG15b4fYnBFIw3erWy6Wj95AM67YBEBCYmFkvL7l0r8chmun4fIvdf45nF8/
+         iD0lWiHqEMSgWhvJvGkHFctSklrbYxI6Trj489qwPyxb259kK9p6WSL1l4y3hx6nNI5V
+         pa4ZAMHlSBv1WoQBw2Gfy4TBXWE/LdG5ZM6ceh4AlIz5xbDOpYIDaIPztBfpkuVRHDJQ
+         b2CtxeFZRP78jtOfFsTMCZmZlSYDK7x2xNM5TRb9rLgKiHdbz+HdGre0uKXFhAX1xoqq
+         G//A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745259918; x=1745864718;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kZ7lhE0zceQBiDbb/+v2JkUT6Jl1uZ4guW4PrMbfZ9Q=;
+        b=HO9c7CLmBz0HIIrSK3lss3hvA2Du8TNs5OElnySb5unIyc6Gy63k8oFHOn5rR2axR3
+         Ufjc1zj+vUJ6aQPfehoN7xk581OfE0sjdWbkdqiGzF/CguWDLK0livKJjUJJEc95tcjf
+         ipEtvaoUYDdVBbKN44BK1LuglcHQ4v/6CcPPBdoHn6xluwnUsl3JoP0QyjwDMxKdmqAi
+         DV+Fzf/wpFdWEd+kpVW1KZjnk+18yrnZIthCOWyuk/M9tLAjC5scqd2Gvh08fxu1erBy
+         iTcGrBscEtLAqcwi00d6hy6hzbofQtraId523H8NrsueTdVQ4wZ2P3c/Dc6BRmyAlswF
+         BzHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3mWPBcyJA5b7f8fXmIaxqud9rGibj1BYxi+YSnWpQlMmdAOBiJp6nWEbjoyVGBracMbozHvsdozACs5o6@vger.kernel.org, AJvYcCUAp67ZIZRRRtp3HaqUM/+R85FTY3sMDlnNWXd6NpJy+mXincJS2zXkrmhoyP1OaQ+VZ0o7ltQzp8REyQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMYkK3ulVGkCQTD86oR3PfY4HkZITGd9dHtxPD43YnTjV8CZqX
+	10X9bhV6taDmdRcUlBrFmQsRrx/sbTo0nqfcPT1+91esRmWcY1ie
+X-Gm-Gg: ASbGncvoWvQRCSekFr7c+0mvGTfAR6/rQfBn9rowps9kKa8ssBS3mHJXwrcq9YXxKuG
+	vGrJxLZLuL6z3H1czyJFkspHWYgugG8MVD/XNV1dACa8s/WCA2OyDUUhaxOKctuIdFHbE64vGjL
+	3YaHx/lp0PvjCS5fAKsfgE+8f2oZLdfNNk+v/TOzvE7XRKr4twB27Di6I+NlXNKmAQ4yK5X7uTr
+	OOmEvd8FRyMHavuJrR7MBq4/buR/1k2umz19/kkWZ+6Ohd+3kl1MdB1ZmeFBiK/9N+ZagW9raVc
+	YfkE9DMRb94++y7qrqIo/e9ZhvJ1yWExNosW0WVdbwYMmm6nrZDT6w==
+X-Google-Smtp-Source: AGHT+IE99OTnC4BIIEAJtKyh6nGdbIRkB2pMTx7d+sQADO9twzgO0gDZ1AcUaQ2/0ukYHywL0m1DUw==
+X-Received: by 2002:a17:902:d491:b0:221:78a1:27fb with SMTP id d9443c01a7336-22c5356dc2fmr171408555ad.11.1745259918289;
+        Mon, 21 Apr 2025 11:25:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe20b0sm68859305ad.243.2025.04.21.11.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 11:25:17 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 21 Apr 2025 11:25:16 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: pali@kernel.org, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (dell-smm) Add the Dell OptiPlex 7050 to the DMI
+ whitelist
+Message-ID: <e7ea6f37-37fe-403a-8abf-23e40fa24689@roeck-us.net>
+References: <20250420223334.12920-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250420223334.12920-1-W_Armin@gmx.de>
 
-On Mon, Apr 21, 2025 at 02:36:43PM +0200, Andrew Lunn wrote:
-> On Sun, Apr 20, 2025 at 11:33:38PM -0700, Erni Sri Satya Vennela wrote:
-> > Add support for speed in mana ethtool get_link_ksettings
-> > operation. This feature is not supported by all hardware.
+On Mon, Apr 21, 2025 at 12:33:34AM +0200, Armin Wolf wrote:
+> A user reported that the driver works on the OptiPlex 7050. Add this
+> machine to the DMI whitelist.
 > 
-> This needs a lot more justification. tc(1) will show you the current
-> HTB Qdisc setting. No other MAC driver i know of will show you Qdisc
-> info in ksettings. So why is mana special?
-> 
-> Something your said in an earlier thread might be relevant here. There
-> are two shaper settings involved. The Hypervisor can configure a
-> limit, which the VM has no control over. And then you have this second
-> limit the VM can set, which only has any effect if it is lower than
-> the hypervisor limit.
-> 
-> The hypervisor limit is much more like the value ksettings represents,
-> the media speed, which is impossible to go above, and the machine has
-> no control over. Reporting that limit in ksettings would seem
-> reasonable. But it does not appear your firmware offers that?
-> 
->     Andrew
-> 
-Yes, that is correct. I will keep the ethtool mana_get_link_ksettings
-unchanged, since the link speed can be reported using tc too. I will
-make this change in the next version of the patch.
-Thankyou for the pointer, Andrew.
-> ---
-> pw-bot: cr
+> Closes: https://github.com/Wer-Wolf/i8kutils/issues/12
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Acked-by: Pali Rohár <pali@kernel.org>
+
+Applied.
+
+Thanks,
+Guenter
