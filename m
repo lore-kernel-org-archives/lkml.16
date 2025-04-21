@@ -1,117 +1,149 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AF264A74
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6507320F;
+	Mon, 21 Apr 2025 13:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243379; cv=none; b=r/w4B9Ft7cV1tpn6CbA9icYJwMP4i1r08GK3aqIzdEdNUUlInx79YbHwUEglOa5svqAgvDopP5EEQtHT1A9wI/Yu8k+HD4htr9DKyJGEfT5Gt1TreEvY68R3Gm5BZODq/vfW9EqqKy5/PeeOmLAxtabKPmhGVlJnaUeRjEKofWk=
+	t=1745243385; cv=none; b=GrHDWoCjmcATlJZCF0lyvt5tVplA4oCKQnODfIApyyDgYksH4pASGzwD/wK3sO3bhBLLTg1/xzAnnGsFhNTb+bOC9n2fL6Q4bAu8+9qZJRvOGCXf9glHVIO09txYg9v8Byib7lceCyK7N3bpQxPGUKM6njS5TfRs0eXjLNx1UCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243379; c=relaxed/simple;
-	bh=Ao5wNhKv03EPHv0aTteNWmI4WvjIiW9XUFZYal1nH/8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NmqzuwH/qBLJPvjDMQ0Hp5BNpUuFuMrVzclSFn7XNl2FQ7qj6FzCRDYO7DO/LHfQrO2cCBW4sJ+76IMns15Me8COgjeB5RXGocoWYjGgaNzy1uuwX5K5jfZ5GmHRDztTvEq7+ADUr2/0HQBYQfaojGsYSAmn6k+y33HXPcz/mQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=QQdBUYhG; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1745243385; c=relaxed/simple;
+	bh=l977plpmk0kxbBwv0656HR/4LTk1DAyZQR5KKCWAEqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SmU7rFGQEe0Uw/fbURxmgJroia+Yej9ezSHzT9+adglUw6gTst86ovDDgSN+uH0z5scqIy2No1sdF7ii93/m8VHeMcqf5t5CibV4mG0Fbw+CSUyszF8MUV94Uu1UUskiheysl3tMEhBDzFuv+VFcJrnXNd4fRCMoKkNWSo2sgMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=myuuF7ki; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="QQdBUYhG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1745243375; x=1745502575;
-	bh=iieEZG1MGOqcpOcsMb508ZZimJzCm0BTdu+irT5HjF8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=QQdBUYhGs3oPe+Jt+YdDiKEmTRbDGwXiuVVj77VM79pE09oAq3xmrHXDQs6qzalpd
-	 gbVuBgx3kfXaLv5c2IfAI6umfDP3LEvF73Wxc15xsjN6/KUMuJpl9vFtC4Wohtvq7F
-	 qr3ttw2/olWtfNJlSKckYx5+KYUnvDcS9gJIOCXL7PKQrB7inyCVvIEnVioEGOQYpL
-	 6NU8H4LqVjRNkVAlvtiy1Mb1FDzVXJKYYnDOC2cEteqUboRP7KJQplkTzpHyuUP+GU
-	 UcHl86rWfnT9GeWtlbXQtdjQX1Cco2Aa0q2w1a3SuIQgUaLngGcZUT4kiGyVXcPGhc
-	 OoM61E2eKQ5PQ==
-Date: Mon, 21 Apr 2025 13:49:30 +0000
-To: Simona Vetter <simona.vetter@ffwll.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Aliet Exposito Garcia <aliet.exposito@gmail.com>, Fiona Behrens <me@kloenk.dev>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] rust: transmute: add `cast_slice[_mut]` functions
-Message-ID: <20250421134909.464405-2-benno.lossin@proton.me>
-In-Reply-To: <20250421134909.464405-1-benno.lossin@proton.me>
-References: <20250421134909.464405-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 39bf4a4fab2beb80b6346e71ebdc4e1e485cef0a
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myuuF7ki"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476b89782c3so47610371cf.1;
+        Mon, 21 Apr 2025 06:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745243382; x=1745848182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RGx2p1+NRS+hgnX+A6l8EzX7jNG+2zBOfPRO5rKiie4=;
+        b=myuuF7kipqr2h+NMAmqqPu4oPM6NHfGzoCGf7+S1ijSEf0v+zpaqUyeAuNOWTIIt8U
+         RRWsv5QM1hbaTQ5o/qwPium/8csjM8LA4FsUXtwnJRv/cmUBntLPckEQo8otoB+dpb7+
+         4dM1JMgehf+Ex0SiHwHnlZLlXTMtAiC7d+fpLmrl0DA/wxG5b4flylBfu9bkTMpdJJA+
+         4rgsb1f4cyJ1kr7h+qxwkUiJ5KEC3z20cz3gISV7nNkozso6dTChqVw/FKMgpAe9sqs9
+         mukGaZTJ7vyAKwUXLKX7FlVdEmoMCEMJicLssWMq5m0oO+JywRVG88M/W6qB5OWZygis
+         TJMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745243382; x=1745848182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RGx2p1+NRS+hgnX+A6l8EzX7jNG+2zBOfPRO5rKiie4=;
+        b=u8nOkU3GGVhIg12CgSEWfcWvk+z0tvsYtprPbsB0aapaHdmeRU/4IJPpmfT2OMlM9h
+         W91vBlip+6s3dnFNBJ6zx34HL0t3C9KqzotJ1vhlkuF2UYGHWGIFjS4GwWLx73yr2bY4
+         YwSORO1UqfsB41Ci3Dt0CVLIsn6JSx03Nk3epqUHSTe7JmHCOUvagwRr1n9aqlY4kXrj
+         9rXtRbwL4VYCeIGWdrkQX8NuP244tNwU2CPHr5D0JeQKKnnzXNQLJr0nBAs2qsmlhJOG
+         /Sa80Pw1APfIfItQHKrl0DOxRjd4o72omrl6sseRbcrCR1XOUpw2g/Ph0ausNq0+kV3o
+         lq2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRrpYzsM82X0aciiJs6O2NS1y8/AAL2ETkLXwJVogO0PGqDxE/RRfGuoPVa1NXWPWtRxgwmf1j+6Q=@vger.kernel.org, AJvYcCXcRIwqoRsu3E3mhp4c9vvUInZKrRREIUTeMSVFap26zhkrrKzv0VuXPgNoEouHRP0Z44ZIyz/wsWqyXhMg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL5up51GiuyAhMwj+u8v2ZXhI1P0f114eDpvf4pL5LvbbtPw4s
+	sNZ95/LnedQJBdmuqgo/bMJlqGHlwloj8CAZYi7yPbQo4MrBBqV7AA6RQEIv+KC+mM+yA8Fznmp
+	ArbZbt1rWiiE7P9r3kwlnKmfX/W8=
+X-Gm-Gg: ASbGncvGP63EslvuEt8tgHM36BAjcXce1AcJ2UHql+AXpPVHZXS8TbebfU49t+1uzG5
+	l1YnrveSK31vorqYcouIjLY5L/7sAqAnkwG3K4zk5488wej0vqpAXqq8wvZXmzhgJx5+mNSVeJf
+	7eM6gTgOGdoh2W37f0iJW9VzvroylgScRGtO5+jgxlFJ4BrbPR6rDUzw==
+X-Google-Smtp-Source: AGHT+IFCRDEQECEJYjxyKWUBfHcU70YDu9Hdfq/MMsvE0/1Ruba11CTbntRDCvns5SkXCogDR5hE0ZbhsSjPtbHP/F8=
+X-Received: by 2002:a05:622a:255:b0:471:cdae:ac44 with SMTP id
+ d75a77b69052e-47aec4cf303mr202416191cf.47.1745243382551; Mon, 21 Apr 2025
+ 06:49:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250420014910.849934-1-gshahrouzi@gmail.com> <20250421123127.3a5a7d65@jic23-huawei>
+In-Reply-To: <20250421123127.3a5a7d65@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Mon, 21 Apr 2025 09:49:31 -0400
+X-Gm-Features: ATxdqUHi6_oLdhhSvnK3V3HpaBLwSd6oHgBL4E1raTEh9xxnYSdB_6-I_5_l3Ro
+Message-ID: <CAKUZ0zKZ8QfbkPAWaJ59LVR4KfPa0mjv=vx3_NnH-yvx1kHavQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] staging: iio: adc: ad7816: Fix channel handling
+ and refactor
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add functions to make casting slices only one `unsafe` block.
-
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
----
- rust/kernel/transmute.rs | 41 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
-index 1c7d43771a37..242623bbb565 100644
---- a/rust/kernel/transmute.rs
-+++ b/rust/kernel/transmute.rs
-@@ -2,6 +2,8 @@
-=20
- //! Traits for transmuting types.
-=20
-+use core::slice;
-+
- /// Types for which any bit pattern is valid.
- ///
- /// Not all types are valid for all values. For example, a `bool` must be =
-either zero or one, so
-@@ -69,3 +71,42 @@ macro_rules! impl_asbytes {
-     {<T: AsBytes>} [T],
-     {<T: AsBytes, const N: usize>} [T; N],
- }
-+
-+/// Casts the type of a slice to another.
-+///
-+/// # Examples
-+///
-+/// ```rust
-+/// # use kernel::transmute::cast_slice;
-+/// #[repr(transparent)]
-+/// #[derive(Debug)]
-+/// struct Container<T>(T);
-+///
-+/// let array =3D [0u32; 42];
-+/// let slice =3D &array;
-+/// // SAFETY: `Container<T>` transparently wraps a `T`.
-+/// let container_slice =3D unsafe { cast_slice(slice) };
-+/// pr_info!("{container_slice}");
-+/// ```
-+///
-+/// # Safety
-+/// - `T` and `U` must have the same layout.
-+pub unsafe fn cast_slice<T, U>(slice: &[T]) -> &[U] {
-+    // CAST: by the safety requirements, `T` and `U` have the same layout.
-+    let ptr =3D slice.as_ptr().cast::<U>();
-+    // SAFETY: `ptr` and `len` come from the same slice reference.
-+    unsafe { slice::from_raw_parts(ptr, slice.len()) }
-+}
-+
-+/// Casts the type of a slice to another.
-+///
-+/// Also see [`cast_slice`].
-+///
-+/// # Safety
-+/// - `T` and `U` must have the same layout.
-+pub unsafe fn cast_slice_mut<T, U>(slice: &mut [T]) -> &mut [U] {
-+    // CAST: by the safety requirements, `T` and `U` have the same layout.
-+    let ptr =3D slice.as_mut_ptr().cast::<U>();
-+    // SAFETY: `ptr` and `len` come from the same slice reference.
-+    unsafe { slice::from_raw_parts_mut(ptr, slice.len()) }
-+}
---=20
-2.48.1
-
-
+On Mon, Apr 21, 2025 at 7:31=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Sat, 19 Apr 2025 21:49:05 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > The original patch combined a functional fix (allowing channel 7) with
+> > several refactoring steps (introducing chip_info, renaming structs,
+> > improving validation). As requested, these have now been separated.
+> >
+> > The series proceeds as follows:
+> > 1. Fix: Allow diagnostic channel 7 for all device variants.
+> > 2. Refactor: Rename the main state structure for clarity before introdu=
+cing
+> >    the new chip_info struct.
+> > 3. Refactor: Introduce struct ad7816_chip_info to hold static per-varia=
+nt
+> >    data, update ID tables to store pointers, and switch to using
+> >    device_get_match_data() for firmware-independent identification.
+> >    This removes the old enum/id mechanism.
+> > 4. Refactor: Add has_busy_pin to chip_info and use this flag to
+> >    determine BUSY pin handling, replacing pointer comparisons.
+> > 5. Refactor: Simplify channel validation logic using
+> >    chip_info->max_channels, removing strcmp() checks.
+> >
+> > Regarding the 'fixes' tag: I've applied it only to the first commit
+> > containing the core fix, primarily to make backporting easier. Is this
+> > the standard practice, or should the tag typically be applied to
+> > subsequent commits that build upon or are related to the fix as well?
+> >
+> > Changes in v5:
+> >       - Use correct patch version.
+> Generally I wouldn't resend for this. Instead a single email in
+> reply to the messed up version saying it is infact v4 would have
+> done the job.
+Got it.
+>
+> Alternatively a quick reply to that thread to say it was messed
+> up and please look for v5 would have worked to make a reader
+> move on directly to the newer version
+Got it.
+>
+>
+> Jonathan
+>
+> > Changes in v4:
+> >       - Include missing bracket for condtional statement.
+> > Chainges in v3:
+> >       - Split the patch into smaller patches. Make the fix first
+> >         followed by clean up.
+> >       - Include missing channel for channel selection.
+> >       - Address specific feedback regarding enums vs. chip_info data.
+> >       - Use device_get_match_data() for device identification.
+> >       - Move BUSY pin capability check into chip_info data.
+> >       - Simplify channel validation using chip_info data.
+> > Changes in v2:
+> >         - Refactor by adding chip_info struct which simplifies
+> >           conditional logic.
+> >
+> > Gabriel Shahrouzi (5):
+> >   staging: iio: adc: ad7816: Allow channel 7 for all devices
+> >   staging: iio: adc: ad7816: Rename state structure
+> >   staging: iio: adc: ad7816: Introduce chip_info and use pointer
+> >     matching
+> >   staging: iio: adc: ad7816: Use chip_info for device capabilities
+> >   staging: iio: adc: ad7816: Simplify channel validation using chip_inf=
+o
+> >
+> >  drivers/staging/iio/adc/ad7816.c | 94 ++++++++++++++++++--------------
+> >  1 file changed, 54 insertions(+), 40 deletions(-)
+> >
+>
