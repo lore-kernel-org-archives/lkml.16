@@ -1,95 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265E22192F5;
-	Mon, 21 Apr 2025 22:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0610B21C167
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745273037; cv=none; b=o4+k/Xkx4yyhqwK7oSi7yj3IH6irgUXYr30NPubM+oHZrKV9PPsTzmuY5DNCandJDKqr7xZi89TIgq4sncLSxuzi6tgxWYgLubCcnGTp2Jz4IK32/mlKUxgH/NRhSQzjfuTrpYFJuXp22kURNelyQRdtA24AiNqni1tF0GzAInk=
+	t=1745273049; cv=none; b=B0cDLKj63FRW2u6ynz+YxiJpkr5Lu4Z9+Gcgh+1vs/Mk7agCFEL7B2PHc3AzCxotRKo0JfE/xETT/0/hBIWVVIapwsCFY3qNR2UKsvIQPv/2NLvuPJIKQ5/Hey1q8VR6YU8FF0zRujHkIeK9ccGjZLlolvVAflYOmxT0iHHduvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745273037; c=relaxed/simple;
-	bh=01rp54CilMkAwqIJ6zYTHUJAgrWddf98A/Ksdxy40H8=;
+	s=arc-20240116; t=1745273049; c=relaxed/simple;
+	bh=+muycKiBaV5UQqyraI1xwjnbIAioVU0Qup0KnvqWYU8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RrFl/MK0uJIlMQiyXtPHSc1vtfY3RvcuviGC26imkniCHSQJJC6/N0aGaM+GId3/PDLSvmuNQD7lJ4+YaUDWVWHhJuPn+1aRqtgKBdxLk2Dg8gIX9i6ikJ/IqS+bANqiEYxMC9TWqjblJuC3r+fdfhdOJfqeRnauuiC/uGztwmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niazVZue; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=VAAxUTad/NaM6hnk5lNi6twMDzbL67/wIcRLrOQMRAsDhiqYfMsACPDSbZ/rMC4w2S2Pbc2obmxz2yMRqnKlWEe4uDlTFwOuBNaWmoTDsmEdRiCuGjyO3nqRRFZPi7EB0jb6KCsJL/ZwtP+M9lj8R7vd0Ns9hh1AIZ5h0ssbLWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=TM0jYe6K; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niazVZue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F63C4CEEE;
-	Mon, 21 Apr 2025 22:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745273036;
-	bh=01rp54CilMkAwqIJ6zYTHUJAgrWddf98A/Ksdxy40H8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=niazVZueFSQ2KvVxM1rVDNi77ZtQR9FgG2KKza5Ya9JH4acJh3hjyyGvs2NbS8T0C
-	 QZpRWc7BVqGofg3U48tIcaAF4YbPaTyQplyC7dPOwxQFXfzSfUlwCMOXJHtw9fNq9Z
-	 5qAPFcCU4x37EWTn7q43qh5bdSpljhEJz1DgkCqF0MLddyL72ATBiqG3eNbCERg97o
-	 d39fcwkpUP3IFxyWH/M8ky10YA4aJJBjhWbkNO1ZZ6FuA6rKMdMaueC75OaZDFx+eG
-	 WD4JxITWCJyHBP2+FN3o3VRmNCTb7MQtb4dvcAlUSN2+8hDTv/quTlImi63IPrr6sv
-	 9MK7+yV99R4pw==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2aeada833so838836666b.0;
-        Mon, 21 Apr 2025 15:03:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVkETo9GOzwY4og9/w9pgqJ/8FxYO6NJzNzVxDS39tRk7kE+7U8J7/C1Bcw9GhSM4yiigzrpNXXf+z6@vger.kernel.org, AJvYcCWRsd0mUZFy02tiX2iCadoWmY5ZAoo0Xsu7mSJklFH166uhitjiK97OT4Er/HAYrt6rYcE/z5l0W7AJRkM=@vger.kernel.org, AJvYcCXqWDjGR/3II/irlCiY4bn7JiuD/FmQDCMtv1ZlktKWWlB82HBy0EnyK+xYaE21oWi4Epqn5nTSz33XW+pI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3+JyaW5UM+xEsMikPLYDV7UI+iRbYJFdZJYgyTNxl/gd3RjUY
-	EomWKHhuPw4q+KSndfOxy5LIAGe0FyuJPs4xRPR5PZbM1B58Dj7+HBvhl9FQ8MRIMqWmA5EBpa/
-	BNQMY7gZRLB+gTXJ/QdgtNDAmIQ==
-X-Google-Smtp-Source: AGHT+IHxl6XK2QfRQVyCNWgLvJRj7ZuUIQ5fwQHcvIkQqattyeeIKmTOKM9JhGckpjhW3C3lyZts07ybe/w3rZATy8k=
-X-Received: by 2002:a17:906:1f05:b0:acb:aa0e:514c with SMTP id
- a640c23a62f3a-acbaa0e5185mr349993566b.2.1745273035071; Mon, 21 Apr 2025
- 15:03:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="TM0jYe6K"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70433283ba7so37803247b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1745273046; x=1745877846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJkBF2Iq9gEiEg9l+Unpndzsq5ns/iefqc51nXn2fRQ=;
+        b=TM0jYe6KZQyjxuohb24LcAj0BwGkJx71bYweV1zBZAi5uSods9LE7nYSYB1weQAJyA
+         Asb3SNeaVe0WNePwYwLlc587gtrepTlWlFyQI7UVxBJV6w4goVbXoPrJ0DFzCTjj3yT9
+         gfR7Oo7ioVNRFiJGTyzI0VvU8FKpw//ZJh9tYCUKeTlAvD+xzihdwZSTl7dig7sbgpVp
+         ZpM8Sd01p7AgiTdwukFEyS2IwOVYdrtBnZk98SewZ8NkMNAuq4Iio5UMOAA+xWWLJ7Sw
+         /r7LHhjsmDL9n9lv1o0MmTvFgCOzTZcDqqKACG77tU57Y3oHtX8pnnQALz81AvoNuz9G
+         fsbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745273046; x=1745877846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zJkBF2Iq9gEiEg9l+Unpndzsq5ns/iefqc51nXn2fRQ=;
+        b=JMCCeNEAJxl1jn79scbRKyCaSi+NHuMJO0fooC/gHAmKCrWns12/s15j17Ah9Zq9E1
+         TIwZ0dzx/3lxBXbysFy5iC4FhkoYgSK5qS0w2W4QWfG88KcJO1BV1Vz1BVN3/dgd/GXX
+         98fB5yUZnuUbPsWQV/1mKUvC3/Yf4zShkCNm9ldiygNrBhn8KT84Y28J7+mDJEf+RQKC
+         28nJcYxd2L7n8pcaTX59au/1ItfNi3IiAJwxkdGRCgUMYkY5a7sJF/8xR5f8ssRLuUP9
+         tnZ+WHFl5m+nmxD189HKofNG2KvHTQE9h1OwgrqoXB5uhJiveSBKynfxuB26rb7H1R9v
+         ZoVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUy4LYIi2oV8JJxze1R1CrsIszSGwCXZgTQbMoGYmL8sKMCqFj9SJ9f7KikcnLRRwRprWVQkhiZfSXc8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7ewHQ5EjC8NS9LYLzfnEMDDVJzobnumvRMEgrnxpapGskTYnj
+	bxa9H/54IWBQUXgpo0dyOiNqalNBzQ4MKXng0boclk2H31p2q9hvcA5+hGTNsC5sq+R687gTMPM
+	JTeiFDPxGvEcLIAjruGIG9eYMoNhqvokpUJk3
+X-Gm-Gg: ASbGnctyabxJv9e2GRt0skEuLuILJvHQwZaye1s26Xvi26GJYAU3IWDBmMDtImEZzIK
+	EMSyWzj7gA9slij8B2lYszUgjs6jjU5Tn3vsVruoZudqHxiF9SKCJxvnwTV0iMtLzIAg9Dpk+ZL
+	t39bdoQu1ZAiUgVEoly45B9w==
+X-Google-Smtp-Source: AGHT+IFjErmdtD9yYgSCvg50nxSRhAaGxDl0MNp2zLoVowjSrOfaMAYKD0cmZ307fSWsTGOXpc7lz6KmktYrMh1O/kc=
+X-Received: by 2002:a05:690c:380a:b0:706:aedf:4d91 with SMTP id
+ 00721157ae682-706cccfa7f8mr180651297b3.14.1745273045751; Mon, 21 Apr 2025
+ 15:04:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416120619.483793-1-shgarg@nvidia.com> <20250416120619.483793-2-shgarg@nvidia.com>
- <20250421220209.GA2975150-robh@kernel.org>
-In-Reply-To: <20250421220209.GA2975150-robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 21 Apr 2025 17:03:43 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+Wy326DXXp=UGQ6WsB7-30RTJNMY3ckytk9auAh6Ec2Q@mail.gmail.com>
-X-Gm-Features: ATxdqUGmWpmb8bR3-MQ-Nby0OrOQO3Xpm-Hrp3ML4dt6UzrpLCyrIfNheD-Tbpg
-Message-ID: <CAL_Jsq+Wy326DXXp=UGQ6WsB7-30RTJNMY3ckytk9auAh6Ec2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: mfd: add bindings for NVIDIA VRS PSEQ
-To: Shubhi Garg <shgarg@nvidia.com>
-Cc: lee@kernel.org, alexandre.belloni@bootlin.com, thierry.reding@gmail.com, 
-	jonathanh@nvidia.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <87semdjxcp.fsf@microsoft.com> <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
+ <87friajmd5.fsf@microsoft.com> <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+ <87a58hjune.fsf@microsoft.com> <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
+ <87y0w0hv2x.fsf@microsoft.com> <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
+In-Reply-To: <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 21 Apr 2025 18:03:54 -0400
+X-Gm-Features: ATxdqUFcqFjq20jX5yxtvOH3DHCD3LQ0LRd6y2kU6Qtvx6XNCs0BPjy44J04_l4
+Message-ID: <CAHC9VhS0kQf1mdrvdrs4F675ZbGh9Yw8r2noZqDUpOxRYoTL8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
+	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
+	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 5:02=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Wed, Apr 16, 2025 at 12:06:15PM +0000, Shubhi Garg wrote:
-> > Add bindings for NVIDIA VRS (Voltage Regulator Specification) power
-> > sequencer device. NVIDIA VRS PSEQ controls ON/OFF and suspend/resume
-> > power sequencing of system power rails on Tegra234 SoC. This device
-> > also provides 32kHz RTC support with backup battery for system timing.
+On Mon, Apr 21, 2025 at 4:13=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Wed, Apr 16, 2025 at 10:31=E2=80=AFAM Blaise Boscaccy
+> <bboscaccy@linux.microsoft.com> wrote:
 > >
-> > Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
-> > ---
-> >  .../bindings/mfd/nvidia,vrs-pseq.yaml         | 61 +++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,vrs-ps=
-eq.yaml
+> > > Hacking into bpf internal objects like maps is not acceptable.
 > >
-> > diff --git a/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml=
- b/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml
-> > new file mode 100644
-> > index 000000000000..d4c5984930e9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFI=
-LIATES. All rights reserved.
->
-> First I've seen this...
->
-> According to this[1], you shouldn't have 'Copyright (c)'. But better
-> check with your lawyers.
+> > We've heard your concerns about kern_sys_bpf and we agree that the LSM
+> > should not be calling it. The proposal in this email should meet both o=
+f
+> > our needs
+> > https://lore.kernel.org/bpf/874iypjl8t.fsf@microsoft.com/
 
-With the link now:
+...
 
-[1] https://reuse.software/faq/
+> Calling bpf_map_get() and
+> map->ops->map_lookup_elem() from a module is not ok either.
+
+A quick look uncovers code living under net/ which calls into these APIs.
+
+> lskel doing skel_map_freeze is not solving the issue.
+> It is still broken from TOCTOU pov.
+> freeze only makes a map readonly to user space.
+> Any program can still read/write it.
+
+When you say "any program" you are referring to any BPF program loaded
+into the kernel, correct?  At least that is my understanding of
+"freezing" a BPF map, while userspace is may be unable to modify the
+map's contents, it is still possible for a BPF program to modify it.
+If I'm mistaken, I would appreciate a pointer to a correct description
+of map freezing.
+
+Assuming the above is correct, that a malicious bit of code running in
+kernel context could cause mischief, isn't a new concern, and in fact
+it is one of the reasons why Hornet is valuable.  Hornet allows
+admins/users to have some assurance that the BPF programs they load
+into their system come from a trusted source (trusted not to
+intentionally do Bad Things in the kernel) and haven't been modified
+to do Bad Things (like modify lskel maps).
+
+> One needs to think of libbpf equivalent loaders in golang and rust.
+...
+> systemd is also using an old style bpf progs written in bpf assembly.
+
+I've briefly talked with Blaise about the systemd issue in particular,
+and I believe there are some relatively easy ways to work around the
+ELF issue in the current version of Hornet.  I know Blaise is tied up
+for the next couple of days on another fire, but I'm sure the next
+revision will have a solution for this.
+
+> Introduction of lskel back in 2021 was the first step towards signing
+> (as the commit log clearly states).
+> lskel approach is likely a solution for a large class of bpf users,
+> but not for all. It won't work for bpftrace and bcc.
+
+As most everyone on the To/CC line already knows, Linux kernel
+development is often iterative.  Not only is it easier for the kernel
+devs to develop and review incremental additions to functionality, it
+also enables a feedback loop where users can help drive the direction
+of the functionality as it is built.  I view Hornet as an iterative
+improvement, building on the lskel concept, that helps users towards
+their goal of load time verification of code running inside the
+kernel.  Hornet, as currently described, may not be the solution for
+everything, but it can be the solution for something that users are
+desperately struggling with today and as far as I'm concerned, that is
+a good thing worth supporting.
+
+--=20
+paul-moore.com
