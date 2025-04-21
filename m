@@ -1,134 +1,135 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2134.outbound.protection.partner.outlook.cn [139.219.146.134])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEED1EB1BA;
-	Mon, 21 Apr 2025 03:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745206174; cv=fail; b=Ajbwrsc+u3oppUes8dT88euMAndQsCMGKgJ/OoaN2hrEGgizY5vwhyzZEnLz2zQuaNXg+Hzu11osGwNM6AzwfQw48xI30YUzJ02Py3fReMF3VZu9IySRGuOAFVsvWbJ6OuOuGFuz3kSa2Z4nUAPjsUZyYvkGSnpj3urHTpPtlYY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745206174; c=relaxed/simple;
-	bh=m7zSr++p/K1LZKQjqPs9FXCJ0530VPsRkd/Q9Dvr3W0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SFqZdOzgwdO2QWC4UdcAb2dbJsWIbjoymFUcF3qCkB1WkmhhD63YdYyvQqy2Ww2+lqjHozmOuUXicFvVb3m7kDYhwNxDdkYmEvT0wV/a9Kdm3diDyIv3AJYbMqfGXmeTS/WyhMB1U+XPVefHvuvVp+qZNfKqgMHt3bzBLyCP2ZI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JF7A50HK34pMdu1wYsH3HZR3LLnUwQ4MXjF4Z94N9A9SCk66xlsu11I0uzgNKos26Md5oroK0p+oe9BVYEn+93nHRdfUPE3RxdeLpCQj/mnGM4npGkQ9mAB/8FWed+P7tbMV2OLw5x1IAlx7DDXn7J8dShq6rESKTMCdXh9pwDPD1TrvJ3EGjokD/JnLiUmsQpSNbloWjBcOPkUZyw+zyTGRBkXlmItlukPPAlPy4OS/EZpiKnWIt7lh7HlDaOW/tE0rD6ZpuKjUkjO7tacGzxHHhNg4iiWNVolVt/QVeWonmQ0GOpSVkMVVsrqLP+knlTI5jcq6JIwfNvAURNmEKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sESeRFmd+/vde2FbmYt5/7JPn8mt5njyU7DiuJqm2GM=;
- b=epUQkXCGbjLyjmopK0A4vqWbDih+8kQA+NCnpYxQu4Kd2Ta1SVLmn9L+T2SJtz83J+7KQN/MM1raMfWXANyHrZeF6ORyiJ02I08oPvevwsDABMVwkHQ1PyOwhLTDWWspoxEBcuK3VbapyEMv1k7O6RdEgdPGQbIOWBAVwAfWzlBLw7DYd2cXu2CEVjYMJGhZ0zibP3fcZdwHskFN32QKYCkojErUFHgRjXEyeZy1Fpk9Cr35oS65rKqgCI2O8SjcXROdewL4NB4cC2x9OHm4E4thOKEDKhfQbCYmm5Aonkzki286eRZ48EBjMsqTQ8tqxwuGjver8BPV1keC1/lQ2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
- 2025 03:29:18 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::64c5:50d8:4f2c:59aa]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::64c5:50d8:4f2c:59aa%5])
- with mapi id 15.20.8655.033; Mon, 21 Apr 2025 03:29:18 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: y-abhilashchandra@ti.com
-Cc: conor+dt@kernel.org,
-	devarsht@ti.com,
-	devicetree@vger.kernel.org,
-	jai.luthra@linux.dev,
-	krzk+dt@kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36EE256C93
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745206192; cv=none; b=Jilyj5ypNG7yZID/jonMEYeBwfrZx38dkrfgyly4nMbz/KHs3MMd5PiF7tKpDZ9/4V6ZlEiD6t6WOrCrNU9PdhOQArp+63DLyFdZaGb5ZEXjMTSpLN0tKGhYFrni85HVuHTA2swZbqY+a1hxTL23DIAtLYjHji1z21S4DQTG2Ug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745206192; c=relaxed/simple;
+	bh=OM0nAaGd3JcLLZTLK2bZYs40W8rs+4yGk9C1iGBIVFg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BGGt+DHc5X7QurKR4GXbQ/MxvfxsF3kGaoJiKbFI3Fllgh1iQvu9sVpmifsgw1fyJREZPMCvGMydmjFZh3t/Ko4dgM/8p01m8rluplajcW94rvECztFxUZNr6HGmTA6I5z71PztyWizrlfEeD6/NLNPnBwbRAsnghYWJj3Si9n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NR0FXKur; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NR0FXKur"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745206191; x=1776742191;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OM0nAaGd3JcLLZTLK2bZYs40W8rs+4yGk9C1iGBIVFg=;
+  b=NR0FXKurACYQMAG7XioRrCqBtwyyXRBt3r4gpNEG50oI69mOEXLz/KY4
+   X13I44R+ClNVIleMss3P1L2h1gemHrIrC3Y0YGwH2phlYTbEMgjmyDTRn
+   YVvjezaksRbSWfKTcj2uJojuSpYJ7mJCxdNM0j3gMUfgYjmS4gwZ1llwA
+   yzpKYopuJwmNbXMoE7cPiEewo+a5gwDa2R5YbCQM59w1sJFjxGP1wYoVi
+   fNcQsQ+4ndeCREE26Ifp3gEXGmVcjYUA1xjks+NQYK8rOoyIR8H9GnmqG
+   Ng6WLrwVvNwp4EYqHKTBdKvrOx2bEN2VH2EulTHTKPQbshF44xS1Iu5Pi
+   A==;
+X-CSE-ConnectionGUID: p9j19AxTSA+7QSOi5TpmyQ==
+X-CSE-MsgGUID: tSmdaz00RTS+DsPtG9i2hQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="58103901"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="58103901"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 20:29:50 -0700
+X-CSE-ConnectionGUID: 7DsBu+/CTpi0B9Dv8Aqa5Q==
+X-CSE-MsgGUID: Cw49p87/TuWJPpPit5gruw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
+   d="scan'208";a="136700224"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by fmviesa004.fm.intel.com with ESMTP; 20 Apr 2025 20:29:46 -0700
+From: Chen Yu <yu.c.chen@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Tim Chen <tim.c.chen@intel.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Libo Chen <libo.chen@oracle.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+	Hillf Danton <hdanton@sina.com>,
 	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	mchehab@kernel.org,
-	mripard@kernel.org,
-	r-donadkar@ti.com,
-	robh@kernel.org,
-	u-kumar1@ti.com,
-	vaishnav.a@ti.com,
-	changhuang.liang@starfivetech.com
-Subject: [PATCH v6 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq interrupt and add support for VIDIOC_LOG_STATUS
-Date: Sun, 20 Apr 2025 20:29:10 -0700
-Message-Id: <20250421032910.41146-1-changhuang.liang@starfivetech.com>
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [RFC PATCH 0/5] sched: Introduce Cache aware scheduling
+Date: Mon, 21 Apr 2025 11:23:59 +0800
+Message-Id: <cover.1745199017.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250416121938.346435-3-y-abhilashchandra@ti.com>
-References: <20250416121938.346435-3-y-abhilashchandra@ti.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0017.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::18) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c035892-4cef-4e97-9864-08dd8084b2e3
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|41320700013|1800799024|7416014|52116014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	qLS5jqp57gTvV2JIyWjwCwpgGPoKJQUKppYoTEyZdH5fiFKL/NJbowEd+xIkJE82PqaIXOHPX3mbHpRX6yOkWBpa8R2YF46kvxHmO2AV3v7GfzJbmjI6EQB11iWMCmRXxeV1bM1H4QxsMO7L2Yq4rPIz1kisn/ldWs2UUb2ASyqBA0u3zRZ9OyL3molf3Xmg0wNIbrAMRKlVe1oRhNT1GSdx7ca2hC17LvETlYqgUS/ticP2E59Z7rw8cRXyOB51/zHTqF9wR8U40yvoUlPep1s8AndENTHhz8Ak4CzJw+koQv/DDFNgKtTIUOmHOA+QRkVbI1FH7BM253+jtXAHQ/OkypSjy9pZWHdK7qfF9goW3XGJVH8ql/MNltjIMBQaxwxErJ0oX8ctHJTF9C27kcMmO3NW49MLNdGvWKjddf1I8+Ff5LJFRLWPcqfCGqiKsCyR284jNKmpEgbX28OhnryinXvFX6DJ2EBnvwwxN737F6UnFvUwWmUX02YsvQI8q/SZ3y0fGfrFQK4LG8hF4moNDfFyJ/fBsqRKo1/lEWwj5CTqKLnbFNMQYsT8y94kWHbyOn3BAUKtarUpyPxgB7Zkpyie2av+IZJWCFXhXYQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(1800799024)(7416014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KK9pI7VjYoZuFwOfbggsI4DGB4EAtriBCUTpex9bFtY88trYRd3T7ngExQAN?=
- =?us-ascii?Q?2GtTczwfu1gvWyfaCBGML8Db+oxSGWMUP7DVu4YcedJ5u16ZWzrJDeW/tcJO?=
- =?us-ascii?Q?1zC6n1w32wdwhihN9+UEiqfoMx/Pu7YrMW4WbapDlYbughI2UGWHcYPK5cyU?=
- =?us-ascii?Q?rA7uz042iXsbR/XGMO3eFHluvHffV6Ryal40TJaBsVPVFXlXw2ZUlYjDmd69?=
- =?us-ascii?Q?Bbo7+OR3eo+Y4dh68ENhqNCYMPmPbzKUMm3ZyWRrqKlbXk1v12pCNmpZp/r/?=
- =?us-ascii?Q?+T54ki3fYRza6oNyckVB6O2Gii7p7KNgcci4E+o5nuD0NbEf9SEsejaitqr/?=
- =?us-ascii?Q?bRGIMa8o+56rhu5IaJhgE/Achk3x8wp4CIh3/3wT0n8BxS7dahqsqMr4SlKV?=
- =?us-ascii?Q?FQqhAk+/2aZshXzSgc0krqQDhFWuq39KBSK2tGzz/bVjzub7TH3z1JFBP6nO?=
- =?us-ascii?Q?1xE49DWZragHSN2G/+3vhiS090/ZuETbTQ4EmBV1kerek6dvb+3FF0WWP+7a?=
- =?us-ascii?Q?wIEYt1kK39HeVGMda5i5GiSRkZvYX8UAM3mn8z56F74YygWEjKqt8Or0KNBE?=
- =?us-ascii?Q?QxusPDpqA+dIoTM/4Zey6eLLCKC1/Pqo0GoiPSQ70zMko6EmEA6ttQEVtULO?=
- =?us-ascii?Q?Y5PjDMZ/dI30n9j6GDaRfGcCcnmpdWLHf7agMNwHDBYoGHyziv63YBzCngFo?=
- =?us-ascii?Q?HQOWI7hBrzFQV9972FT3zHaw7xHCZSHGoSyacCiEagTBwTP+cu0aL1l8tCJO?=
- =?us-ascii?Q?zn/dqld8qgBqW+jcuJAYdmHFdrCYKz6jMv4kEUJFEk3iHZiP+gRiykfDb2ox?=
- =?us-ascii?Q?jKVGp0O7kSYkHBYvOm+kFHfscH81tS4UdTJyJY5GL5Rc63hyPyCM+3CAxnUV?=
- =?us-ascii?Q?o+5keRDsCB2F5tEi3KbN4Mk9PRerVXQqEbtM9pXvvYTJii1v+1nzIQ8jM0Hk?=
- =?us-ascii?Q?2evPxzclmEH19f5gTP8RaXfk0KpnEeZBj/3W9p3Lb3vjejvo1RVX9+ZHoc+C?=
- =?us-ascii?Q?SpJdibJr88ingcA46wvYsV+PCzOKW6EWgDodczaai3DSxVG/8OBPG5K9x72D?=
- =?us-ascii?Q?rWYahERukTjjZr6ZJy7m/wL9tvANQ0rpov0w02YvIYxW92V/BV0eSdaBhGiR?=
- =?us-ascii?Q?1MM4qSCK2I6Sm8AGmX7wX0G2VT0M5Yhk1cHmijcCkyOdlOJC8NQklMlVGOVf?=
- =?us-ascii?Q?AAQsUkzkBGFCbLb/rQRYvpG7MDciO6NMKnVsekUszPtrs5LK6osEEABEtSo/?=
- =?us-ascii?Q?7wTGZeAJ+sTYnpTv3VYS6wMGaNGey9sIFNaj3ZosJBzzwS5iDsIdwKc0CzEI?=
- =?us-ascii?Q?3DrPlX1hvlBXPY6u0rSyLXBSrerY9M3FiR/ihunMGLS5FMwIyG3XDoFc2SSo?=
- =?us-ascii?Q?ONIuJ29WUJ1qlfgkJum4rmlMoJqByLAFE5boFn7q1SQty4AhhY+UHL5eQlyD?=
- =?us-ascii?Q?ov0RA318CLY7Wchv4WC5Lk+K/6qz0RN85AFvrLAIJFyoccZj+aOq6V9tL3Wt?=
- =?us-ascii?Q?W2QtW0NjBSadUN4ZvZpnLfB9MDaN4Gqf+I0rMmwviqB8YX4hrPq3jiyM69+Q?=
- =?us-ascii?Q?ZjMnCJPkTC9X3B4fhEvJAz/2E/LETbFgZvWTnkxioT9IdNNLgW9fhzoUc20X?=
- =?us-ascii?Q?R09KgUd75TaEZoy436m03vc=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c035892-4cef-4e97-9864-08dd8084b2e3
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 03:29:18.3896
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WAZZ9kSRVZ8C7YZm8wyGaK6OlAR4crtAOVeL6ruxtfIchRjXpnKvFTBCl3eqbMZUuJHaI/cbvSLDZNJRKWlb9mdEWipASPqAlTvCSbJDUXCVro5tq35282iwNzxIoQBX
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1302
+Content-Transfer-Encoding: 8bit
 
-> Enable the csi2rx_err_irq interrupt to record any errors during streaming
-> and also add support for VIDIOC_LOG_STATUS ioctl. This allows users to
-> retrieve detailed error information during streaming, including FIFO
-> overflow, packet errors, and ECC errors.
->
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+This is a respin of the cache-aware scheduling proposed by Peter[1].
+In this patch set, some known issues in [1] were addressed, and the performance
+regression was investigated and mitigated.
 
-Reviewed-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+Cache-aware scheduling aims to aggregate tasks with potential shared resources
+into the same cache domain. This approach enhances cache locality, thereby optimizing
+system performance by reducing cache misses and improving data access efficiency.
 
-> ---
->  drivers/media/platform/cadence/cdns-csi2rx.c | 131 +++++++++++++++++++
->  1 file changed, 131 insertions(+)
+In the current implementation, threads within the same process are considered as
+entities that potentially share resources. Cache-aware scheduling monitors the CPU
+occupancy of each cache domain for every process. Based on this monitoring, it endeavors
+to migrate threads within a given process to its cache-hot domains, with the goal of
+maximizing cache locality.
+
+Patch 1 constitutes the fundamental cache-aware scheduling. It is the same patch as [1].
+Patch 2 comprises a series of fixes for Patch 1, including compiling warnings and functional
+fixes.
+Patch 3 fixes performance degradation that arise from excessive task migrations within the
+preferred LLC domain.
+Patch 4 further alleviates performance regressions when the preferred LLC becomes saturated.
+Patch 5 introduces ftrace events, which is used to track task migrations triggered by wakeup
+and load balancer. This addition facilitate performance regression analysis.
+
+The patch set is applied on top of v6.14 sched/core,
+commit 4ba7518327c6 ("sched/debug: Print the local group's asym_prefer_cpu")
+
+schbench was tested on EMR and Zen3 Milan. An improvement in tail latency was observed when 
+the LLC was underloaded; however, some regressions were still evident when the LLC was
+saturated. Additionally, the load balance should be adjusted to further address these
+regressions.
+
+[1] https://lore.kernel.org/all/20250325120952.GJ36322@noisy.programming.kicks-ass.net/
+
+
+Chen Yu (4):
+  sched: Several fixes for cache aware scheduling
+  sched: Avoid task migration within its preferred LLC
+  sched: Inhibit cache aware scheduling if the preferred LLC is over
+    aggregated
+  sched: Add ftrace to track task migration and load balance within and
+    across LLC
+
+Peter Zijlstra (1):
+  sched: Cache aware load-balancing
+
+ include/linux/mm_types.h       |  44 ++++
+ include/linux/sched.h          |   4 +
+ include/linux/sched/topology.h |   4 +
+ include/trace/events/sched.h   |  51 ++++
+ init/Kconfig                   |   4 +
+ kernel/fork.c                  |   5 +
+ kernel/sched/core.c            |  13 +-
+ kernel/sched/fair.c            | 461 +++++++++++++++++++++++++++++++--
+ kernel/sched/features.h        |   1 +
+ kernel/sched/sched.h           |   8 +
+ 10 files changed, 569 insertions(+), 26 deletions(-)
+
+-- 
+2.25.1
+
