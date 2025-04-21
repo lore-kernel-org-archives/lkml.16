@@ -1,278 +1,373 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BA226659B
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FCB266570;
+	Mon, 21 Apr 2025 13:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745242746; cv=none; b=L/zTBK/mvdZxwwlApkBBC45GAOK/lPwF1YT6UYm59iI3eIxd/e4xpiQXWRWD5TX/BNZS2JFFNejcE1zrSE8y5XiAo0w7CVamOpIA1DgmYmGChKnfZTN1UUviNOl/byo03sr/GBrEKHS/rlnmx0rVwh6HcdflWEyqIPGAp6208LU=
+	t=1745242812; cv=none; b=CYd8BDi1Per+KM5uUnhe47vFT/LAe3PT4J9z/ZrIQmOCRt9v5AzFM8uAdNm6c0Z7wcxbdD+KPnA/py6U21hLQG2m2sJNh0XB/DvzCGkNuQRM8CixeO7bnMrvASvjyhpv/dI0Kk+33gEcU6ceHmsRVJtCnTgSHWpg3yp0krkNAxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745242746; c=relaxed/simple;
-	bh=DOdaVPs69x2mZPBCUZzchy0ZZveEdlMq8pCtxVei/sQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f0RB6/evehk4vWF2Af1hCbo8dSp9hFZZanQBLU4lwUIn+BDUtDpjD7RpTKtZvCCdx6U+6xfVwL16+CYSXO6/66OphRiGBmwEvViIRdOQ1j1nwDn4Gj9u0svqe4ncZ+yoMN+5qII5v7EXyFaCY8QeQ1/EeApNuPnAV/mDJ3dZlGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=gkaHzoE8; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1745242812; c=relaxed/simple;
+	bh=0v6cgyOk0nsKeprhUqYsx2Vd4TgvxqOD24CRhYIun+8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XhLz9qYw40Znu6myvVNywgROEm31kMWHOIa9J38OtKUggHTl7C0TO2xn+iG5sDFH4GNtRskL6q+zKF2NyAdze7aTJUDtlxesmommBhMZGNQNW1IJxXrc4K/s8cVwoQnTl7rzPJH2RyWGkU4UFcDMOyYJdehbn88scgZ8EewjSL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRlBHvHL; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gkaHzoE8"
-X-UUID: f7e2b2ca1eb511f0980a8d1746092496-20250421
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=6vKqy0QcEXpuK8EWaLMHCufERfKU1aoynMMqugHox4o=;
-	b=gkaHzoE8WHzt/1e38y4feZqIW5uxqE0ULqEV7Y/hisSLria9dZYU/h+C4fNHisqd3bk4wGnGqgeJguSMb1VQA4/iXpyhO0umb+K5eXYe+pNLDRxfQH4B8+Neemq56huFDHqdHevdOcIV5oH8GFTDLoCgE9fdLN7uIGOetoMGWlA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:fe25ff65-e76f-4f2e-b68d-9722b3f77c15,IP:0,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:25
-X-CID-META: VersionHash:0ef645f,CLOUDID:0424808b-0afe-4897-949e-8174746b1932,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:5,
-	IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: f7e2b2ca1eb511f0980a8d1746092496-20250421
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-	(envelope-from <sunny.shen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1944861737; Mon, 21 Apr 2025 21:38:54 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 21 Apr 2025 21:38:53 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 21 Apr 2025 21:38:53 +0800
-From: Sunny Shen <sunny.shen@mediatek.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Philipp Zabel
-	<p.zabel@pengutronix.de>, Fei Shao <fshao@chromium.org>, Pin-yen Lin
-	<treapking@chromium.org>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Paul
- Chen --cc=devicetree @ vger . kernel . org" <paul-pl.chen@mediatek.com>,
-	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Sunny Shen
-	<sunny.shen@mediatek.com>
-Subject: [PATCH v2 3/5] soc: mediatek: Add components to support PQ in display path for MT8196
-Date: Mon, 21 Apr 2025 21:38:30 +0800
-Message-ID: <20250421133835.508863-4-sunny.shen@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250421133835.508863-1-sunny.shen@mediatek.com>
-References: <20250421133835.508863-1-sunny.shen@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRlBHvHL"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e72b8b7bf32so160081276.3;
+        Mon, 21 Apr 2025 06:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745242809; x=1745847609; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rpGvaPnt9/CqxJFVMjZ2YiGNcRmTBvg8h75W2bPN2Q8=;
+        b=kRlBHvHLXW0/+qmJer7Wi1wYjYKpGkdf4WsqmMCpt69MBFjJaVJH6kngwwsGYNhxfS
+         PnZbFGnp8D4U1feGMv1WIQHNiP9+y5SyJ2AUd8wDXe6xDPJvGUNFJLUlE0qjDfrPcHgy
+         JceV1fRnuARDL6E/618Lr5AvM8Df2li7RW3nnKrzCM9QXpWiRwZoT+B7LOeKAu5mVbHw
+         oUpLjYfpgvkfWWr+Jp/aJ3Yhl5JCqLOnWBlVFSh4oBg6HZ9s2Svl0t8Q4zixGL+y9cPL
+         rWXRPQoh2imqSyE5vrFJ/z9i7J4AAOh0T/Iyzt0o9W8KNKLGk21l+7Koe2FU2ta/0RRZ
+         PAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745242809; x=1745847609;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rpGvaPnt9/CqxJFVMjZ2YiGNcRmTBvg8h75W2bPN2Q8=;
+        b=FQoXO5tWBNl36EiDRaFWmkGhiOxZnMbjghrjOKvfqLpzZeR8E719zvR1iVgKfGb+yv
+         MBZTfX0Cg6yH5Qokj62IG7E8CUuHKuiYfL+hZLsH3rl2Sg9knPe8TNmUMuOMurn0wYRA
+         fKRZqEFaITnb9R/DcpG8bbHru62i9liptrA0gMFuFmVm3wGZlTZYn5ZPd0ndv4xA+/TB
+         vjFfJTxXuoEOLDFUQAEPTdd+eW3jwWkYCbphOjgSZEL6wih78adYHGkkTIuEf5MZ3cxT
+         XBTg4/0byBYQ+o4m74ymLBYyCS5PfUoxCwpdjMAq2HyXT7Tzp1DtB6UNn6ebx4X0s3rY
+         rpUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUL61gZgcg0oCdi1Mb3LVSDXj5QtohoRRQZi8qj1/UMz9uQMXW3egGSFVEIbtqv5PIkRmPnIT0DauDQrlLa@vger.kernel.org, AJvYcCWss3KUhyIIXB3UV/pvLs1Xop9Q4cZr3PeIoLObvQxnlp8b/iNf8G9v0s4+C09/Mi+WFZetuE6N+8Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY8qzQulFdfTsCU/syG4ZylnaPYBpH+TQyLkIlujX3uhVQpnBV
+	N575+QAk5v02FlaOO/frKTQZUNm9/S1cUDHndbpMGHeSJ2EqqVCC9KIfWgBlSePbYciVQGkNWN7
+	LO7DWZJBJjv3cqDcfRoKgwQoRI5Y=
+X-Gm-Gg: ASbGnctgiTD2Jh/8Iiu5LV8kx5SsSr7rhz5//Heu0+RligjlA+cFNkP/iauHWJAf90F
+	N6NgqMhF3v7PuOuyTErYRQN4mFQMJ7HwErxxPfHNgNg8YE0dclHwP+JSXJ7tjG9lLDlvFy8jRpt
+	Qh/k2d8Go6gFCGo6vipNz6Ew==
+X-Google-Smtp-Source: AGHT+IEwr7hewb5X60u3ctkpPPV5t8VWYhpFPyNmaIAqMFHQsh/fM9viain4nmmAvhCOE/HN7SlFEUMjQ6D4vE1mP8A=
+X-Received: by 2002:a05:6902:218b:b0:e60:a4f4:7f3 with SMTP id
+ 3f1490d57ef6-e7297eae373mr6911994276.6.1745242809332; Mon, 21 Apr 2025
+ 06:40:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20250414184245.100280-1-l.rubusch@gmail.com> <20250414184245.100280-10-l.rubusch@gmail.com>
+ <20250418193411.406bd974@jic23-huawei> <CAFXKEHary=PcCh3GEEXznJQgcxj54ZmGR0jmzBdpx8ZVtk2_0g@mail.gmail.com>
+ <20250421112228.453dfa89@jic23-huawei>
+In-Reply-To: <20250421112228.453dfa89@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Mon, 21 Apr 2025 15:39:33 +0200
+X-Gm-Features: ATxdqUHfgQAnkyNDiR_3ivS4MD9k2ORARyZfvZsLF4q_wXZZaM77xT-0RpgMBzA
+Message-ID: <CAFXKEHYsMKHMYoBq7U5n02=0wnVmp0_CUrbvxxFFRLJDayS7Kg@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] iio: accel: adxl345: add inactivity feature
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Due to the path mux design of the MT8196, the following components
-need to be configured into mutex and mmsys to support
-Picture Quality (PQ) in the display path:CCORR0, CCORR1, DITHER0,
-GAMMA0, MDP_RSZ0, POSTMASK0, TDSHP0.
+On Mon, Apr 21, 2025 at 12:22=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+>
+> On Mon, 21 Apr 2025 00:12:17 +0200
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Happy Easter (again)!
+> >
+> > On Fri, Apr 18, 2025 at 8:34=E2=80=AFPM Jonathan Cameron <jic23@kernel.=
+org> wrote:
+> > >
+> > > On Mon, 14 Apr 2025 18:42:43 +0000
+> > > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > >
+> > > > Add the inactivity feature of the sensor. When activity and inactiv=
+ity
+> > > > are enabled, a link bit will be set linking activity and inactivity
+> > > > handling. Additionally, the auto-sleep mode will be enabled. Due to=
+ the
+> > > > link bit the sensor is going to auto-sleep when inactivity was
+> > > > detected.
+> > > >
+> > > > Inactivity detection needs a threshold to be configured, and a time
+> > > > after which it will go into inactivity state if measurements under
+> > > > threshold.
+> > > >
+> > > > When a ODR is configured this time for inactivity is adjusted with =
+a
+> > > > corresponding reasonable default value, in order to have higher
+> > > > frequencies and lower inactivity times, and lower sample frequency =
+but
+> > > > give more time until inactivity. Both with reasonable upper and low=
+er
+> > > > boundaries, since many of the sensor's features (e.g. auto-sleep) w=
+ill
+> > > > need to operate beween 12.5 Hz and 400 Hz. This is a default settin=
+g
+> > > > when actively changing sample frequency, explicitly setting the tim=
+e
+> > > > until inactivity will overwrite the default.
+> > > >
+> > > > Similarly, setting the g-range will provide a default value for the
+> > > > activity and inactivity thresholds. Both are implicit defaults, but
+> > > > equally can be overwritten to be explicitly configured.
+> > > >
+> > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > > Hi Lothar,
+> > >
+> > > Patches 6-8 look good to me.
+> > >
+> > > This runs into a similar issue to the freefall one. I haven't dug int=
+o
+> > > the datasheet but does it report on one channel going inactive, or
+> > > all being inactive at the same time?  I checked and it is the all
+> > > case so we should be both on a pseudo channel to describe it right
+> > > and reporting IIO_MOD_X_AND_Y_AND_Z not the OR form.
+> > >
+> > > Sorry again that I'm only realising this on v6 :(
+> >
+> > No problem at all! Sure, I'm still in this phase where counting every
+> > single commit upstream makes my ego greater. On the long run, though,
+> > I guess it's better to build up knowledge and end up with a decent
+> > implementation quality, than just increasing a commit counter. For me
+> > it's fine. I also hope it's not too annoying for you.
+> >
+> > >
+> > > Difference is for Activity the definition is:
+> > > "The activity bit is set when acceleration greater than the value
+> > > stored in the THRESH_ACT register (Address 0x24) is experienced
+> > > on _any_ participating axis, set by the ACT_INACT_CTL register
+> > > (Address 0x27)."
+> > > vs Inactivity:
+> > > "The inactivity bit is set when acceleration of less than the value
+> > > stored in the THRESH_INACT register (Address 0x25) is experienced
+> > > for more time than is specified in the TIME_INACT
+> > > register (Address 0x26) on _all_ participating axes, as set by the
+> > > ACT_INACT_CTL register (Address 0x27). "
+> > >
+> > > So all vs any.
+> > >
+> >
+> > I think I  see your point. At least I change here for inactivity, too,
+> > to AND'ed axis.
+> >
+> > IMHO, if I set OR here, the first axis raising the inactivity will put
+> > the sensor to sleep mode,
+> > where AND needs all three axis in inactivity state. I'm not sure if
+> > this works out, I need to verify
+> > it still with the hardware, for now I'll change this to AND.
+>
+> I'd be surprised if it worked differently but indeed good to check!
+>
+> >
+> > > > +
+> > > > +/**
+> > > > + * adxl345_set_inact_time_s - Configure inactivity time explicitly=
+ or by ODR.
+> > > > + * @st: The sensor state instance.
+> > > > + * @val_s: A desired time value, between 0 and 255.
+> > > > + *
+> > > > + * Inactivity time can be configured between 1 and 255 sec. If a v=
+al_s of 0
+> > > > + * is configured by a user, then a default inactivity time will be=
+ computed.
+> > > > + *
+> > > > + * In such case, it should take power consumption into considerati=
+on. Thus it
+> > > > + * shall be shorter for higher frequencies and longer for lower fr=
+equencies.
+> > > > + * Hence, frequencies above 255 Hz shall default to 10 s and frequ=
+encies below
+> > > > + * 10 Hz shall result in 255 s to detect inactivity.
+> > > > + *
+> > > > + * The approach simply subtracts the pre-decimal figure of the con=
+figured
+> > > > + * sample frequency from 255 s to compute inactivity time [s]. Sub=
+-Hz are thus
+> > > > + * ignored in this estimation. The recommended ODRs for various fe=
+atures
+> > > > + * (activity/inactivity, sleep modes, free fall, etc.) lie between=
+ 12.5 Hz and
+> > > > + * 400 Hz, thus higher or lower frequencies will result in the bou=
+ndary
+> > > > + * defaults or need to be explicitly specified via val_s.
+> > > > + *
+> > > > + * Return: 0 or error value.
+> > > > + */
+> > > > +static int adxl345_set_inact_time_s(struct adxl345_state *st, u32 =
+val_s)
+> > > > +{
+> > > > +     unsigned int max_boundary =3D 255;
+> > > > +     unsigned int min_boundary =3D 10;
+> > > > +     unsigned int val =3D min(val_s, max_boundary);
+> > > > +     enum adxl345_odr odr;
+> > > > +     unsigned int regval;
+> > > > +     int ret;
+> > > > +
+> > > > +     if (val =3D=3D 0) {
+> > > > +             ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE, =
+&regval);
+> > > > +             if (ret)
+> > > > +                     return ret;
+> > > > +             odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
+> > > > +
+> > > > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
+> > > > +                     ? min_boundary : max_boundary - adxl345_odr_t=
+bl[odr][0];
+> > > > +     }
+> > > > +
+> > > > +     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
+> > > >  }
+> > > >
+> > > >  /* tap */
+> > > > @@ -837,6 +943,13 @@ static int adxl345_read_event_config(struct ii=
+o_dev *indio_dev,
+> > > >                       if (ret)
+> > > >                               return ret;
+> > > >                       return int_en;
+> > > > +             case IIO_EV_DIR_FALLING:
+> > > > +                     ret =3D adxl345_is_act_inact_en(st, chan->cha=
+nnel2,
+> > >
+> > > Does it makes sense to allow inactivity detection on a subset of chan=
+nels but then
+> > > report it as XYZ?  I guess it didn't matter when it was and OR, but i=
+f we
+> > > change to AND as suggested that is going to be misleading.
+> > >
+> > > we might have to allow separate enables but report an event as the co=
+mbination
+> > > of channels that are enabled X_AND_Y, X_AND_Z etc  I guess we can imp=
+rove activity
+> > > channel case as well by doing that with the X_OR_Y etc
+> > >
+> >
+> > Well, initially I guess I only had one enable for inactivity.
+> >
+> > This was kind of confusing to me. There is a register to enable
+> > activity and inactivity on a per axis base [ACT_INACT_CTL, 0x27].
+>
+> Agreed this is a slightly odd concept.
+>
+> >
+> > The interrupt event will set a single bit for inactivity or activity
+> > [INT_SOURCE, 0x30]. In the interrupt handler further one can read out
+> > the [ACT_TAP_STATUS, 0x2B], which contains tap and activity
+> > directions, but no information about inactivity axis.
+> >
+> > In summary, for the ADXL345 inactivity can be configured on a per axis
+> > base, but the event won't tell about the axis that fell into
+> > inactivity, i.e. the first inactivity is supposed to put the sensor
+> > into power save (with link bit and power modes set - I think
+> > inactivity should mainly be seen in the context of their/Analog's
+> > power save concept). As said before, initially I only provided a
+> > single "inactivity enable". Then I saw actually I could set and offer
+> > this per axis. I don't know if there are use cases only to observe
+> > particularly the x-axis for a general power save. Probably rather not.
+> >
+> > So, I agree. But if you don't tell me explicitely to replace per axis
+> > enables by a single one, I'll probably leave it as is. It implements
+> > most transparently what the sensor can offer for configuration.
+>
+> The snag is what I mentioned for freefall. It becomes very hard to indica=
+te
+> to userspace what it might expect for the x&y&z cases.  If inactivity req=
+uires
+> them all to be inactive, I think separate enables is going to be really
+> tricky to build a consistent ABI around :(
+>
+> Some devices we've had in the past have allowed specific configuration of
+> and / or for axis combinations. For those we've normally kept clear becau=
+se
+> the number of combinations gets sill quickly.
+>
+> If we don't have a separate channel enable usecase today I think we shoul=
+d
+> go ahead with general inactivity / activity (and/or as appropriate) and
+> perhaps solve the per axis case if anyone ever cares about it.
+>
 
-Signed-off-by: Sunny Shen <sunny.shen@mediatek.com>
----
- drivers/soc/mediatek/mt8196-mmsys.h    | 70 +++++++++++++++++++++++++-
- drivers/soc/mediatek/mtk-mutex.c       | 17 +++++++
- include/linux/soc/mediatek/mtk-mmsys.h |  5 ++
- 3 files changed, 90 insertions(+), 2 deletions(-)
+Well, I think here we need to distinguish:
+Activity: would allow per axis enables and events indicate per axis activit=
+y
+Inactivity: allows per axis enables, but only a generic inactivity indicati=
+on
 
-diff --git a/drivers/soc/mediatek/mt8196-mmsys.h b/drivers/soc/mediatek/mt8196-mmsys.h
-index ff841ae9939a..bc2dbdf18d24 100644
---- a/drivers/soc/mediatek/mt8196-mmsys.h
-+++ b/drivers/soc/mediatek/mt8196-mmsys.h
-@@ -68,6 +68,22 @@
- #define MT8196_DISP_OVL_OUT_PROC_CB_TO_OVL_DLO_RELAY7		BIT(2)
- 
- /* DISPSYS0 */
-+#define MT8196_DISP_CCORR0_SEL				0xd28
-+#define MT8196_DISP_CCORR0_FROM_TDSHP0				BIT(1)
-+#define MT8196_DISP_CCORR0_SOUT				0xd2c
-+#define MT8196_DISP_CCORR0_TO_CCORR1				BIT(0)
-+#define MT8196_DISP_CCORR1_SEL				0xd30
-+#define MT8196_DISP_CCORR1_FROM_CCORR0				BIT(0)
-+#define MT8196_DISP_CCORR1_SOUT				0xd34
-+#define MT8196_DISP_CCORR1_TO_GAMMA0				BIT(0)
-+#define MT8196_DISP_GAMMA0_SEL				0xd58
-+#define MT8196_DISP_GAMMA0_FROM_CCORR1				BIT(0)
-+#define MT8196_DISP_POSTMASK0_SOUT			0xd68
-+#define MT8196_DISP_POSTMASK0_TO_DITHER0			0x0
-+#define MT8196_DISP_TDSHP0_SOUT				0xd70
-+#define MT8196_DISP_TDSHP0_TO_CCORR0				BIT(1)
-+#define MT8196_MDP_RSZ0_MOUT_EN				0xd78
-+#define MT8196_MDP_RSZ0_TO_TDSHP0				BIT(0)
- #define MT8196_PANEL_COMP_OUT_CB1_MOUT_EN		0xd84
- #define MT8196_DISP_TO_DLO_RELAY1				BIT(1)
- #define MT8196_PANEL_COMP_OUT_CB2_MOUT_EN		0xd88
-@@ -75,12 +91,14 @@
- #define MT8196_PANEL_COMP_OUT_CB3_MOUT_EN		0xd8c
- #define MT8196_DISP_TO_DLO_RELAY3				BIT(3)
- #define MT8196_PQ_IN_CB0_MOUT_EN			0xdd0
-+#define MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_0				BIT(0)
- #define MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_6				BIT(2)
--
- #define MT8196_PQ_IN_CB1_MOUT_EN			0xdd4
- #define MT8196_PQ_IN_CB1_TO_PQ_OUT_CB_7				BIT(3)
- #define MT8196_PQ_IN_CB8_MOUT_EN			0xdf0
- #define MT8196_PQ_IN_CB8_TO_PQ_OUT_CB_8				BIT(4)
-+#define MT8196_PQ_OUT_CB0_MOUT_EN			0xe3c
-+#define MT8196_PQ_OUT_CB0_TO_PANEL0_COMP_OUT_CB1		BIT(1)
- #define MT8196_PQ_OUT_CB6_MOUT_EN			0xe54
- #define MT8196_PQ_OUT_CB6_TO_PANEL0_COMP_OUT_CB1		BIT(1)
- #define MT8196_PQ_OUT_CB7_MOUT_EN			0xe58
-@@ -318,11 +336,13 @@ static const struct mtk_mmsys_routes mmsys_mt8196_ovl1_routing_table[] = {
- };
- 
- /*
-- * main: DLI_ASYNC0-> PQ_IN_CB0 -> PQ_OUT_CB6 -> PANEL_COMP_OUT_CB1 -> DLO_ASYNC1
-+ * main: DLI_ASYNC0-> PQ_IN_CB0 -> PQ (MDP_RSZ0/TDSHP0/CCORR0/CCORR1/GAMMA0/POSTMASK0/DITHER0)
-+ *       -> PQ_OUT_CB0 -> PANEL_COMP_OUT_CB1 -> DLO_ASYNC1
-  * ext:  DLI_ASYNC1-> PQ_IN_CB1 -> PQ_OUT_CB7 -> PANEL_COMP_OUT_CB2 -> DLO_ASYNC2
-  */
- static const struct mtk_mmsys_routes mmsys_mt8196_disp0_routing_table[] = {
- 	{
-+	/* main: PQ bypass */
- 		DDP_COMPONENT_DLI_ASYNC0, DDP_COMPONENT_DLO_ASYNC1,
- 		MT8196_PQ_IN_CB0_MOUT_EN, MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_6,
- 		MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_6
-@@ -335,6 +355,52 @@ static const struct mtk_mmsys_routes mmsys_mt8196_disp0_routing_table[] = {
- 		MT8196_PANEL_COMP_OUT_CB1_MOUT_EN, MT8196_DISP_TO_DLO_RELAY1,
- 		MT8196_DISP_TO_DLO_RELAY1
- 	}, {
-+	/* main: PQ path */
-+		DDP_COMPONENT_DLI_ASYNC0, DDP_COMPONENT_MDP_RSZ0,
-+		MT8196_PQ_IN_CB0_MOUT_EN, MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_0,
-+		MT8196_PQ_IN_CB0_TO_PQ_OUT_CB_0
-+	}, {
-+		DDP_COMPONENT_MDP_RSZ0, DDP_COMPONENT_TDSHP0,
-+		MT8196_MDP_RSZ0_MOUT_EN, MT8196_MDP_RSZ0_TO_TDSHP0,
-+		MT8196_MDP_RSZ0_TO_TDSHP0
-+	}, {
-+		DDP_COMPONENT_TDSHP0, DDP_COMPONENT_CCORR0,
-+		MT8196_DISP_TDSHP0_SOUT, MT8196_DISP_TDSHP0_TO_CCORR0,
-+		MT8196_DISP_TDSHP0_TO_CCORR0
-+	}, {
-+		DDP_COMPONENT_TDSHP0, DDP_COMPONENT_CCORR0,
-+		MT8196_DISP_CCORR0_SEL, MT8196_DISP_CCORR0_FROM_TDSHP0,
-+		MT8196_DISP_CCORR0_FROM_TDSHP0
-+	}, {
-+		DDP_COMPONENT_CCORR0, DDP_COMPONENT_CCORR1,
-+		MT8196_DISP_CCORR0_SOUT, MT8196_DISP_CCORR0_TO_CCORR1,
-+		MT8196_DISP_CCORR0_TO_CCORR1
-+	}, {
-+		DDP_COMPONENT_CCORR0, DDP_COMPONENT_CCORR1,
-+		MT8196_DISP_CCORR1_SEL, MT8196_DISP_CCORR1_FROM_CCORR0,
-+		MT8196_DISP_CCORR1_FROM_CCORR0
-+	}, {
-+		DDP_COMPONENT_CCORR1, DDP_COMPONENT_GAMMA0,
-+		MT8196_DISP_CCORR1_SOUT, MT8196_DISP_CCORR1_TO_GAMMA0,
-+		MT8196_DISP_CCORR1_TO_GAMMA0
-+	}, {
-+		DDP_COMPONENT_CCORR1, DDP_COMPONENT_GAMMA0,
-+		MT8196_DISP_GAMMA0_SEL, MT8196_DISP_GAMMA0_FROM_CCORR1,
-+		MT8196_DISP_GAMMA0_FROM_CCORR1
-+	}, {
-+		DDP_COMPONENT_POSTMASK0, DDP_COMPONENT_DITHER0,
-+		MT8196_DISP_POSTMASK0_SOUT, MT8196_DISP_POSTMASK0_TO_DITHER0,
-+		MT8196_DISP_POSTMASK0_TO_DITHER0
-+	}, {
-+		DDP_COMPONENT_DITHER0, DDP_COMPONENT_DLO_ASYNC1,
-+		MT8196_PQ_OUT_CB0_MOUT_EN, MT8196_PQ_OUT_CB0_TO_PANEL0_COMP_OUT_CB1,
-+		MT8196_PQ_OUT_CB0_TO_PANEL0_COMP_OUT_CB1
-+	}, {
-+		DDP_COMPONENT_DITHER0, DDP_COMPONENT_DLO_ASYNC1,
-+		MT8196_PANEL_COMP_OUT_CB1_MOUT_EN, MT8196_DISP_TO_DLO_RELAY1,
-+		MT8196_DISP_TO_DLO_RELAY1
-+	}, {
-+	/* ext */
- 		DDP_COMPONENT_DLI_ASYNC1, DDP_COMPONENT_DLO_ASYNC2,
- 		MT8196_PQ_IN_CB1_MOUT_EN, MT8196_PQ_IN_CB1_TO_PQ_OUT_CB_7,
- 		MT8196_PQ_IN_CB1_TO_PQ_OUT_CB_7
-diff --git a/drivers/soc/mediatek/mtk-mutex.c b/drivers/soc/mediatek/mtk-mutex.c
-index f51d1cb5ad1e..ea2e5ce5ee53 100644
---- a/drivers/soc/mediatek/mtk-mutex.c
-+++ b/drivers/soc/mediatek/mtk-mutex.c
-@@ -263,6 +263,11 @@
- #define MT8196_MUTEX_MOD1_OVL_DLO_ASYNC6	(32 + 17)
- 
- /* DISP0 */
-+
-+#define MT8196_MUTEX_MOD0_DISP_CCORR0		6
-+#define MT8196_MUTEX_MOD0_DISP_CCORR1		7
-+#define MT8196_MUTEX_MOD0_DISP_DITHER0		14
-+
- #define MT8196_MUTEX_MOD0_DISP_DLI_ASYNC0	16
- #define MT8196_MUTEX_MOD0_DISP_DLI_ASYNC1	17
- #define MT8196_MUTEX_MOD0_DISP_DLI_ASYNC8	24
-@@ -270,6 +275,11 @@
- #define MT8196_MUTEX_MOD1_DISP_DLO_ASYNC2	(32 + 2)
- #define MT8196_MUTEX_MOD1_DISP_DLO_ASYNC3	(32 + 3)
- 
-+#define MT8196_MUTEX_MOD1_DISP_GAMMA0		(32 + 9)
-+#define MT8196_MUTEX_MOD1_DISP_POSTMASK0	(32 + 14)
-+#define MT8196_MUTEX_MOD1_DISP_MDP_RSZ0		(32 + 18)
-+#define MT8196_MUTEX_MOD1_DISP_TDSHP0		(32 + 21)
-+
- /* DISP1 */
- #define MT8196_MUTEX_MOD0_DISP1_DLI_ASYNC21	1
- #define MT8196_MUTEX_MOD0_DISP1_DLI_ASYNC22	2
-@@ -682,6 +692,13 @@ static const u8 mt8195_mutex_table_mod[MUTEX_MOD_IDX_MAX] = {
- };
- 
- static const u8 mt8196_mutex_mod[DDP_COMPONENT_ID_MAX] = {
-+	[DDP_COMPONENT_CCORR0] = MT8196_MUTEX_MOD0_DISP_CCORR0,
-+	[DDP_COMPONENT_CCORR1] = MT8196_MUTEX_MOD0_DISP_CCORR1,
-+	[DDP_COMPONENT_DITHER0] = MT8196_MUTEX_MOD0_DISP_DITHER0,
-+	[DDP_COMPONENT_GAMMA0] = MT8196_MUTEX_MOD1_DISP_GAMMA0,
-+	[DDP_COMPONENT_MDP_RSZ0] = MT8196_MUTEX_MOD1_DISP_MDP_RSZ0,
-+	[DDP_COMPONENT_POSTMASK0] = MT8196_MUTEX_MOD1_DISP_POSTMASK0,
-+	[DDP_COMPONENT_TDSHP0] = MT8196_MUTEX_MOD1_DISP_TDSHP0,
- 	[DDP_COMPONENT_OVL0_EXDMA2] = MT8196_MUTEX_MOD0_OVL_EXDMA2,
- 	[DDP_COMPONENT_OVL0_EXDMA3] = MT8196_MUTEX_MOD0_OVL_EXDMA3,
- 	[DDP_COMPONENT_OVL0_EXDMA4] = MT8196_MUTEX_MOD0_OVL_EXDMA4,
-diff --git a/include/linux/soc/mediatek/mtk-mmsys.h b/include/linux/soc/mediatek/mtk-mmsys.h
-index 4a0b10567581..250054ca5523 100644
---- a/include/linux/soc/mediatek/mtk-mmsys.h
-+++ b/include/linux/soc/mediatek/mtk-mmsys.h
-@@ -25,6 +25,8 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_AAL1,
- 	DDP_COMPONENT_BLS,
- 	DDP_COMPONENT_CCORR,
-+	DDP_COMPONENT_CCORR0 = DDP_COMPONENT_CCORR,
-+	DDP_COMPONENT_CCORR1,
- 	DDP_COMPONENT_COLOR0,
- 	DDP_COMPONENT_COLOR1,
- 	DDP_COMPONENT_DITHER0,
-@@ -51,6 +53,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_DVO0,
- 	DDP_COMPONENT_ETHDR_MIXER,
- 	DDP_COMPONENT_GAMMA,
-+	DDP_COMPONENT_GAMMA0 = DDP_COMPONENT_GAMMA,
- 	DDP_COMPONENT_MDP_RDMA0,
- 	DDP_COMPONENT_MDP_RDMA1,
- 	DDP_COMPONENT_MDP_RDMA2,
-@@ -59,6 +62,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_MDP_RDMA5,
- 	DDP_COMPONENT_MDP_RDMA6,
- 	DDP_COMPONENT_MDP_RDMA7,
-+	DDP_COMPONENT_MDP_RSZ0,
- 	DDP_COMPONENT_MERGE0,
- 	DDP_COMPONENT_MERGE1,
- 	DDP_COMPONENT_MERGE2,
-@@ -130,6 +134,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_RDMA1,
- 	DDP_COMPONENT_RDMA2,
- 	DDP_COMPONENT_RDMA4,
-+	DDP_COMPONENT_TDSHP0,
- 	DDP_COMPONENT_UFOE,
- 	DDP_COMPONENT_WDMA0,
- 	DDP_COMPONENT_WDMA1,
--- 
-2.45.2
+So, also here, what's still missing? When doing it similarly  to my
+understanding of freefall now, for a v7 of the patches...
 
+Activity:
+- I would leave activity as is (is this ok?)
+
+Inactivity:
+- I replace single three axis enables by a generic enable, setting and
+unsetting all three axis for inactivity
+- I need probably also to provide a similar virtual channel
+- The axis for this channel are AND'ed
+- Now, with the virtual channel, usage will be "separate" instead of
+"shared", which will result in a single enable handle in sysfs
+
+Is this a correct understanding of what is +/- missing? Can you agree
+to the points I listed up, or is something's missing (documentation of
+course later)?
+
+> >
+> > >
+> > >
+> > > > +                                                   ADXL345_INACTIV=
+ITY,
+> > > > +                                                   &int_en);
+> > > > +                     if (ret)
+> > > > +                             return ret;
+> > > > +                     return int_en;
+> > > >               default:
+> > > >                       return -EINVAL;
+> > > >               }
+> > > > @@ -881,6 +994,9 @@ static int adxl345_write_event_config(struct ii=
+o_dev *indio_dev,
+> > > >               case IIO_EV_DIR_RISING:
+> > > >                       return adxl345_set_act_inact_en(st, chan->cha=
+nnel2,
+> > > >                                                       ADXL345_ACTIV=
+ITY, state);
+> > > > +             case IIO_EV_DIR_FALLING:
+> > > > +                     return adxl345_set_act_inact_en(st, chan->cha=
+nnel2,
+> > > > +                                                     ADXL345_INACT=
+IVITY, state);
+> > > >               default:
+> > > >                       return -EINVAL;
+> > > >               }
+> > >
+> > > > @@ -1314,6 +1458,17 @@ static int adxl345_push_event(struct iio_dev=
+ *indio_dev, int int_stat,
+> > > >                       return ret;
+> > > >       }
+> > > >
+> > > > +     if (FIELD_GET(ADXL345_INT_INACTIVITY, int_stat)) {
+> > > > +             ret =3D iio_push_event(indio_dev,
+> > > > +                                  IIO_MOD_EVENT_CODE(IIO_ACCEL, 0,
+> > > > +                                                     IIO_MOD_X_OR_=
+Y_OR_Z,
+> > >
+> > > So this is our open question. Similar to the free fall case. Do we ha=
+ve the boolean
+> > > logic right way around?
+> > >
+> > > > +                                                     IIO_EV_TYPE_T=
+HRESH,
+> > > > +                                                     IIO_EV_DIR_FA=
+LLING),
+> > > > +                                  ts);
+> > > > +             if (ret)
+> > > > +                     return ret;
+> > > > +     }
+> > > > +
+>
