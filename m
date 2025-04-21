@@ -1,96 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAFE262D29;
-	Mon, 21 Apr 2025 11:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311EE264619;
+	Mon, 21 Apr 2025 11:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745235850; cv=none; b=V/JlvTB5DXEe3RWY16/M9f98fEut9+fIq09CM5xezh0PVbaYi+txdrhiSDv2gfJ3vyu+pyxI4GwdbcQdLlzn6AAkxfj6jHsWYNOi/85ILInkzyj+3uWcF2GiotqDXXG1vpESLX5oDSdKaiecAty1nxfQZpQ5TfpYGP7LDNcdxKE=
+	t=1745235867; cv=none; b=fWAMI11NfxV0d/Vy1iz2w+8Jm9GYWfuAZzyELjzBmS0ZEu/SA/HYGXDsUItC/xrQuq2dZk7Q6mzso8ebU6MH7LqH/tgxwrnudeb94NtKoDE3wzG954yTLbY5ot0ehZ997PTTXRw1X65RqW+TyeZS58RVWf8zxBpNq4AgWZec0ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745235850; c=relaxed/simple;
-	bh=KFt7KVz7z+ivKXjqeTBsn4Dyd+33+BcExIfbhTDS1iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fX8/5QLaroeS5oMLsMekoDI6uxuio3O84aWMvYIXhK+qkvhY3jWp8g5bmTEAe/1eS5JFvY6r4nPFp5qU9N8YJG5/Fu/SAlVbefKrvuKlMA6vmm1CapH3AOBUWlwaYRb3qF0tdo8+vVkoe+3X/dIXEOY4+r8ZMfrppkY2VJKs8go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bsc3jUwP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745235867; c=relaxed/simple;
+	bh=K2yDIHrClKJMzFSfH79towDwJE2UtYL4T0nd7cHxXio=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyGx0YjbzIk5kV0UNusT/OZOOTgOHK0/bF/Z+a7v5s+V2LBoSCRrsvEliaAuAArmcN7gXZgLShsjrkQ/orl5yUR7M98G/M9W3eXpEZ5PksXcrQlizFu5r8eyzPqGCFKlu1ro4z8ct29H4MoxpD+8HR2jwG3WF2Oea2MEtQZ/yho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PPPHtQpM; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bsc3jUwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358B9C4CEE4;
-	Mon, 21 Apr 2025 11:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745235849;
-	bh=KFt7KVz7z+ivKXjqeTBsn4Dyd+33+BcExIfbhTDS1iM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Bsc3jUwPwu0cl688/IsxDAm3p5IvXzLuH34bn5XkG3BqIVWMHJ8Orv0GhYh7UYRRp
-	 Fm1tuVJKv71Q2cOCrqERDUptmbc6eSTLlrbBrf8H4Br7ldYCivPhj3v2Ivyr3xpbRJ
-	 9uAVJkgUQPp29ftVxqVbgKwhrOHAyCn0RQU3yph8/qZNs0gvP9UX40Qek11VuWp3lt
-	 utoIZykp8yz36KaTmXPm9HJsIM4WsIE/qlqmpKtD9lEoY0AFp+hNZPEhbXhH2eytct
-	 yi8DP6MBGl83NWLD0IREMdVRoKfypDu56MdJT3pu/JA9Y//zsBqU6D/FSXk8euc82P
-	 IkP08kQExrTCA==
-Date: Mon, 21 Apr 2025 12:44:01 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- Michael.Hennerich@analog.com, skhan@linuxfoundation.org,
- linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v4] staging: iio: ad5933: Correct settling cycles
- encoding per datasheet
-Message-ID: <20250421124401.0daa6a2e@jic23-huawei>
-In-Reply-To: <20250420013009.847851-1-gshahrouzi@gmail.com>
-References: <20250420013009.847851-1-gshahrouzi@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PPPHtQpM"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBiLBC1538159
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 06:44:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745235861;
+	bh=dgV536aKTURayOABQgXkmovr+QyXvP7zhUmjnkrwm5M=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=PPPHtQpMHPxFn0vUFkBubAbpbv9Y9otaMEmRss1vSJxtNZ/DTA9cZ4owWfweKhkdx
+	 ojw6FHIYrP1URZJUqqryZYePV5kOrYOYbhX9PQ2qYomf+/CWEwDMJ0wd1fBhz8z4T5
+	 QeH9nCcIFPEbFhKMKmjad3nVmkE4ycgDs1dK4m24=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LBiLC0008738
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 06:44:21 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 06:44:21 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 06:44:21 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LBiLat113661;
+	Mon, 21 Apr 2025 06:44:21 -0500
+Date: Mon, 21 Apr 2025 06:44:21 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Anurag Dutta <a-dutta@ti.com>
+CC: <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-j721e-som-p0: Add bootph-all to
+ HBMC node
+Message-ID: <20250421114421.pj6vceavzjl2qkky@filing>
+References: <20250416060754.2393701-1-a-dutta@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250416060754.2393701-1-a-dutta@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sat, 19 Apr 2025 21:30:09 -0400
-Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
-
-> The AD5933 datasheet (Table 13) lists the maximum cycles to be 0x7FC
-> (2044).
+On 11:37-20250416, Anurag Dutta wrote:
+> Add bootph-all to HBMC controller node for successful hyperflash
+> boot on j721e-evm
 > 
-> Clamp the user input to the maximum effective value of 0x7FC cycles.
-> 
-> Fixes: f94aa354d676 ("iio: impedance-analyzer: New driver for AD5933/4 Impedance Converter, Network Analyzer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-I'm taking this the slow path as it has been wrong a very long time
-and there is a lot of churn on IIO staging drivers right now so we may
-have other stuff that I don't want to delay building on top of this.
-
-Applied to the togreg branch of iio.git and pushed out as testing.
-
-Jonathan
-
+> Signed-off-by: Anurag Dutta <a-dutta@ti.com>
 > ---
-> Changes in v4:
-> 	- Provide clear git body description.
-> Changes in v3:
-> 	- Only include fix (remove refactoring which will be its own
-> 	  separate patch).
-> Changes in v2:
->         - Fix spacing in comment around '+'.
->         - Define mask and values for settling cycle multipliers.
-> ---
->  drivers/staging/iio/impedance-analyzer/ad5933.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Test log : https://gist.github.com/anuragdutta731/103e84e84f013093fa089803719d997d
 > 
-> diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> index d5544fc2fe989..f8fcc10ea8150 100644
-> --- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-> +++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-> @@ -411,7 +411,7 @@ static ssize_t ad5933_store(struct device *dev,
->  		ret = ad5933_cmd(st, 0);
->  		break;
->  	case AD5933_OUT_SETTLING_CYCLES:
-> -		val = clamp(val, (u16)0, (u16)0x7FF);
-> +		val = clamp(val, (u16)0, (u16)0x7FC);
->  		st->settling_cycles = val;
+> Changelog : v1:
+> 1. Added bootph-all to hbmc node in k3-j721e-som-p0.dtsi
+> 2. Removed bootph-all from v1 patch from flash@0,0 node
+> 
+> Link to v1 : https://lore.kernel.org/all/20250411082637.2271746-1-a-dutta@ti.com/
+> 
+>  arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+> index 0722f6361cc8..5665b9490003 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+> @@ -440,6 +440,7 @@ &hbmc {
+>  	pinctrl-0 = <&mcu_fss0_hpb0_pins_default>;
+>  	ranges = <0x00 0x00 0x05 0x00000000 0x4000000>, /* 64MB Flash on CS0 */
+>  		 <0x01 0x00 0x05 0x04000000 0x800000>; /* 8MB RAM on CS1 */
+> +	bootph-all;
 >  
->  		/* 2x, 4x handling, see datasheet */
+>  	flash@0,0 {
+>  		compatible = "cypress,hyperflash", "cfi-flash";
 
+This node already has bootph-all, only the child nodes need bootph
+properties. Am i missing something?
+
+> -- 
+> 2.34.1
+> 
+
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
