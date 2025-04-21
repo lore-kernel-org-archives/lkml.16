@@ -1,62 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A8A13E02D
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CDB13CF9C
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245712; cv=none; b=BP7lSZVi/9FtMSMT8SSFKDqtZM8pMgkd2atxH0e30YrAjzPWRggd0v1rwog8kgfLEBYhJceGhOG/U3ecLEx0QPbxArQZtBWnTrZawqvPt8YpcdttHytHz44Esd2d5lRvHfJLPii5C0r+xMpSl5JOEQWAlV/YFzJl81oTQbCLBVY=
+	t=1745245778; cv=none; b=lVgIVyKXurRQYAGQvAJ2V4vt5GVGOy2KhHAl+hgdzulCKOKPE6QIAKOloAL84W/htaSt1PICnaWByeKxSGZgh/3OlvO58UeqEf61pfrjvmF68niSHSUDvQqkZ3D09/lW1cl4QL4aTLcXoo/yy/0OiAqKbPqmZJG/3c4SSgef0e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245712; c=relaxed/simple;
-	bh=UrUXHDgH8D7X0VsVKQ4vLuQBSFYiJsoAioszkD948cg=;
+	s=arc-20240116; t=1745245778; c=relaxed/simple;
+	bh=roaBEJjGaKm2arNMjpZ8l/EUIQYjq3i4Wt/e2J+fStY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RJtXFwoPe0DVIy5ROtXMt4J+cvVrZWcD8MK2oUfEph7z0cx88bWFF1IOlMpEEZuR4bDAEPjmGBRH0BmqbeRH3p0jn4UQdTBkJ7uvzQ2qWx8SZHNJC/5UDq3VTNarjy6xv8Exi9/E4z4AZH63QKMfGV28lq0xAjLDD1lSjl8hoq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=FyJ4/9qW; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=b+YBcbuOB9YTe6iXP9Pi+YIWaffuLpUE+pfMJLLWAzyyMzl5cj3N7koq8rp68VfzVmobzyxbCs8Pi05W6HxQk0LUGtUcXpfccbh5df5PAkjJuLOtDwjVV9vWEXFAZUgDEwKt/CRvJqVpiHuCpPepUuLNLqF3XMfz5pcQmzgzehk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=iZsO46rh; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="FyJ4/9qW"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso48655585e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:28:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="iZsO46rh"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso34259665e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 07:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745245709; x=1745850509; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745245775; x=1745850575; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fgXsecntwfRSGjrcDXCs8qD6E3/9J+RIf148wqrIpWA=;
-        b=FyJ4/9qWnsl8Wgpu7VMF2QVKhEX5xTbbyHc7s7gpsZLzkKkTmxmrXhpEmsgUA+RE8e
-         FYt6T9K6ozohuAg7aUiFnstuytdhOXKGw5dwa9f+GTJMOEXwoxiscW2IPATO+TEGv8e9
-         jXE5Vh59G8DZTcQ0g4UjGa9erPN9nf2fv8riJTUPCr12TyGNMoz1pxNj1ahQwoaK2cVe
-         LeCMq3VR4uEV8BBtGIG07Z8BhVPxkkR3nOc/HvXkVreHCFM/N/BDOgTZhrL3iR0ZEFQB
-         LeonTGE13wMqkuBpmBjPkYjJt1KdB8ecpyEAZxS7E5FqCDpcXuJ5xefjLtfOe4qOQc2o
-         EYSg==
+        bh=7PqG7/ov+XLPSS/BI8rl8Yyu60TugcPqJyKJ5mLINmc=;
+        b=iZsO46rh35HDaMu6qmJ8OdFhgkU81Mzj2oI8R3LxDV2m1HZUXrc8yrFsXTm77i0UFG
+         OBGgrWB+seS0Hi7Sor/8hgOk+s4291QqkgbTLN2u/tY+eLz92N68K5uMFh+j3PdDHsV8
+         8vc3p2WcMISUkcBf5pX2QU7dBl0FKF+zvrsEvKvobcKxy+dYznE/pD76xFwa5JIdkNr9
+         pKmO36rRa4PYvR8g1IbBH5QA7Ljd7j+hcMMHCh/PE55UCrDASPv48CBD/MhXYI+jaBnX
+         B3tXrIhY7kqztRKuzRjCLCiMYvJxlASBLJf0lnSnUr4RQvNNlLPR92piP1kCOe6b8hTi
+         x/kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745245709; x=1745850509;
+        d=1e100.net; s=20230601; t=1745245775; x=1745850575;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fgXsecntwfRSGjrcDXCs8qD6E3/9J+RIf148wqrIpWA=;
-        b=o8Q2UsC2k9TaGGVXnbjx7SLNA02PNBYhMqmCk6s/vVWGRQH0xzAG8sYOnWdLFwzphI
-         9uNf2jJxgv/Rb0LI4mekNanBvQTuuHg13G/he0XHj2nq2skP5+ZjL0lIzBPSZKtg9oWK
-         omsVWJUifqDEszHoaeSQIiOpwKUwueYC5gwWdsyeqF3muk0LeUxLTzWj2ka/Hv9eaLIM
-         50Z22gyCbKM6M21XSemBSJY0KIV7q36MUpt0Qyr6O8FsBuleyXCbAwD1/7aONftBaDnb
-         npti9b8IVVmGr28XYZweIp6GL6Vs1SIs6rfDBnbUTZUNDX1XiBX/Mvvzx1wS9p7RjZwE
-         JM9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVtv/jVa8LQQmVHDh1VlCd7rw4cnVLHFVUqfGQW+S0Gw6zHZNp1u8lM8IAL88ky8vYYa9w8mEHFdiYXShs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDfBs83xaQTMqGaRLNog1qTRMgouu77GigXKtFU8JA2nIvu1iT
-	/hORzqUsoeZrR1X5SDOhz30yiDYlAj3yzSEh2yWbka1erpjLV3tlIpZWVV2nUUU=
-X-Gm-Gg: ASbGncvLZkwlMDDpQrjEltgPfRESna8nE0YcA/ly69ssgdZ5+Hy22FcnEMQKHv5asVp
-	dDyAYzNv0Mm7Z7/+lRcta4u1AyKscOjf9AdhM8yxNPzKBRlNbtGNik3+nYhXLo8niJWZ/AoVCcC
-	jEHMtYX4pp02sQDjFHpz+z1/STadEGMQ2Hd2J/4uSwFPJkJOotA+ywPSpPe9V9k7eElBXe7gEbY
-	krspLFjLw6Lw991gvcfx1cx3amZX5/NCdCLYTVOErVt0aia1Np0ndcE6HahfJrJR6qpnDKhHpZv
-	AxQTRPfyY69lTvUWSGkmHJL0zRrJIe+XU/xho7mw76RavVRaVG6sJZYLu+Q=
-X-Google-Smtp-Source: AGHT+IF004bhFEXPI3CCJKmdwXsLTAbZYWv5EdIm3QZ5L16mdpCbU2yQOcrSdZib/PGDekiXc//UtA==
-X-Received: by 2002:a05:600c:8411:b0:43d:83a:417d with SMTP id 5b1f17b1804b1-4406ab944edmr112676395e9.12.1745245708719;
-        Mon, 21 Apr 2025 07:28:28 -0700 (PDT)
+        bh=7PqG7/ov+XLPSS/BI8rl8Yyu60TugcPqJyKJ5mLINmc=;
+        b=dzQiwW17lvtK5QtAYwIqxLO7XtmqMhiijxj29Hiu7mio++lfeF5vMK18A3+rMc4Ly4
+         OuDA7q7sH8vDzTggRyLFN9UXya4PJxP7RnPPeuR1DxYxmdwfvYZbGR1Ja4LLGERqJkGF
+         Z8sZGoxfb/3/ANkdCYkEvmw1H/ePZlD9bE5AheIBBDtgWzTZ/2/OOadMNT1EyjJjBg4l
+         wUZsDM3YQp+fOzPXGw/jUuKXPRitu0xE+4nZojdxAzXWcgONfEK0Ua5NYHah6BMQ90aE
+         AouJzpptXyeG9CPHLyGCcNf+F5SCIUyY9/sb45qEyc8Hj7t1XBW127BfAtW3kXMVnhGD
+         iX3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCURb6og5V5FBO6cYLkKIQiolPo6bLtNzS90v3+GZeg+GY0A+Df5zmnIQ5YKt2jblcDSF7u2NzGrceNBprg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4x34XefoMb7pgihnMuzMG/3P4xvcweZMYeNsFx8c4m1qelSPi
+	Zd/n0PHqUXTAgM0VMfw5LHm5S+Cc/bB1UySpKUW5K3071/E1DnoH1ZT2qWa/jNU=
+X-Gm-Gg: ASbGncurid9cj87bEZ663hm2RGsN4/1+qJO+CZBPI5VNVkhcW5E0QnCmLGA4AonFYSx
+	NrZ29e9wLpF7FxcCQxVJ5DcwZ0jDecKtOcivzHrqSNw81lliRX+5IlGOmQG0Pepn30Ez2nnu3mC
+	qHAxNhBaMjp8mvzHSYWfT0v5VdnznxLE10AyOlZXodwi3X+W+yLdLOZf4Ff5d71+Yj6auQ+z0k4
+	jRX7lWuFEB6DUInXuUHEvIgxNBJvExYXpWTrZPaXakAVynxhZ0WS7kJLjaQ/4u1gNeVt7gpYJH9
+	i+M4TOQKGATl2X4X6HBxBSj3hcE3rx1DtEAwNTzPAvOv06rNlTngMimfbXE=
+X-Google-Smtp-Source: AGHT+IFtaZI4HL07N6roaGJageZKu+pJvFMTwymIjfPu+o3nCKfh2t3UeftOSZHfxlA79jnfnWiZmg==
+X-Received: by 2002:a05:600c:3b9b:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-4406aa8984fmr117511685e9.0.1745245775271;
+        Mon, 21 Apr 2025 07:29:35 -0700 (PDT)
 Received: from localhost.localdomain ([2001:861:3382:ef90:cd58:9e76:e88c:5cd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9e1bsm141981795e9.8.2025.04.21.07.28.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbc13sm135524665e9.17.2025.04.21.07.29.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 07:28:28 -0700 (PDT)
+        Mon, 21 Apr 2025 07:29:34 -0700 (PDT)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -66,9 +66,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: Guo Ren <guoren@linux.alibaba.com>,
 	Guo Ren <guoren@kernel.org>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3 3/4] riscv: Add ARCH_HAS_PREFETCH[W] support with Zicbop
-Date: Mon, 21 Apr 2025 16:24:40 +0200
-Message-Id: <20250421142441.395849-4-alexghiti@rivosinc.com>
+Subject: [PATCH v3 4/4] riscv: xchg: Prefetch the destination word for sc.w
+Date: Mon, 21 Apr 2025 16:24:41 +0200
+Message-Id: <20250421142441.395849-5-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250421142441.395849-1-alexghiti@rivosinc.com>
 References: <20250421142441.395849-1-alexghiti@rivosinc.com>
@@ -82,58 +82,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-Enable Linux prefetch and prefetchw primitives using Zicbop.
+The cost of changing a cacheline from shared to exclusive state can be
+significant, especially when this is triggered by an exclusive store,
+since it may result in having to retry the transaction.
+
+This patch makes use of prefetch.w to prefetch cachelines for write
+prior to lr/sc loops when using the xchg_small atomic routine.
+
+This patch is inspired by commit 0ea366f5e1b6 ("arm64: atomics:
+prefetch the destination word for write prior to stxr").
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Guo Ren <guoren@kernel.org>
-Link: https://lore.kernel.org/r/20231231082955.16516-3-guoren@kernel.org
+Link: https://lore.kernel.org/r/20231231082955.16516-4-guoren@kernel.org
 Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- arch/riscv/include/asm/processor.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/riscv/include/asm/cmpxchg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 09d4c963399a..39dfab495a4c 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -13,6 +13,9 @@
- #include <vdso/processor.h>
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 2ec119eb147b..0b749e710216 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -13,6 +13,7 @@
+ #include <asm/hwcap.h>
+ #include <asm/insn-def.h>
+ #include <asm/cpufeature-macros.h>
++#include <asm/processor.h>
  
- #include <asm/ptrace.h>
-+#include <asm/insn-def.h>
-+#include <asm/alternative-macros.h>
-+#include <asm/hwcap.h>
- 
- #define arch_get_mmap_end(addr, len, flags)			\
- ({								\
-@@ -135,6 +138,27 @@ static inline void arch_thread_struct_whitelist(unsigned long *offset,
- #define KSTK_EIP(tsk)		(task_pt_regs(tsk)->epc)
- #define KSTK_ESP(tsk)		(task_pt_regs(tsk)->sp)
- 
-+#define PREFETCH_ASM(x)							\
-+	ALTERNATIVE(__nops(1), PREFETCH_R(x, 0), 0,			\
-+		    RISCV_ISA_EXT_ZICBOP, CONFIG_RISCV_ISA_ZICBOP)
-+
-+#define PREFETCHW_ASM(x)						\
-+	ALTERNATIVE(__nops(1), PREFETCH_W(x, 0), 0,			\
-+		    RISCV_ISA_EXT_ZICBOP, CONFIG_RISCV_ISA_ZICBOP)
-+
-+#ifdef CONFIG_RISCV_ISA_ZICBOP
-+#define ARCH_HAS_PREFETCH
-+static inline void prefetch(const void *x)
-+{
-+	__asm__ __volatile__(PREFETCH_ASM(%0) : : "r" (x) : "memory");
-+}
-+
-+#define ARCH_HAS_PREFETCHW
-+static inline void prefetchw(const void *x)
-+{
-+	__asm__ __volatile__(PREFETCHW_ASM(%0) : : "r" (x) : "memory");
-+}
-+#endif /* CONFIG_RISCV_ISA_ZICBOP */
- 
- /* Do necessary setup to start up a newly executed thread. */
- extern void start_thread(struct pt_regs *regs,
+ #define __arch_xchg_masked(sc_sfx, swap_sfx, prepend, sc_append,		\
+ 			   swap_append, r, p, n)				\
+@@ -37,6 +38,7 @@
+ 										\
+ 		__asm__ __volatile__ (						\
+ 		       prepend							\
++		       PREFETCHW_ASM(%5)					\
+ 		       "0:	lr.w %0, %2\n"					\
+ 		       "	and  %1, %0, %z4\n"				\
+ 		       "	or   %1, %1, %z3\n"				\
+@@ -44,7 +46,7 @@
+ 		       "	bnez %1, 0b\n"					\
+ 		       sc_append						\
+ 		       : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
+-		       : "rJ" (__newx), "rJ" (~__mask)				\
++		       : "rJ" (__newx), "rJ" (~__mask), "rJ" (__ptr32b)		\
+ 		       : "memory");						\
+ 										\
+ 		r = (__typeof__(*(p)))((__retx & __mask) >> __s);		\
 -- 
 2.39.2
 
