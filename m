@@ -1,165 +1,136 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823426157E;
-	Mon, 21 Apr 2025 10:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745230144; cv=fail; b=qlAvnC+fN38bBN+QSxFHxBDhG3M0xFC9RZcLcwSzM6L8jSi8fVT1DmEn5U7m8YbnbC1bYFrLqxJnY2lIKmZmhlcx8LrTD9Hy2Q70hZUI30CERAR/l2M8zXgRu7e/anArgauv4aWoU5rjPEHEkyNDBk3A+S0tvobVYpXGwbzHric=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745230144; c=relaxed/simple;
-	bh=SUCoBEwc/ZQBKf9VtDBeuhd3All+r3hMSBGlqOpobsM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xd2qZGx8Iu/huBa+KLwG8VYEZvAYJav5zzegjkROpHXLfqTeGNoi0DA6SdH1ESJEykKUoDa5XIdxWRxPUJ7jaxAvlkyPlPajrBP15XBWOhQMxdWtF+XDLyjoZVu2Gma1VNHRdfRRgF5mLbTl1FNakXK4Jbz59hGpUXypbc24xIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Ln7wt0ri; arc=fail smtp.client-ip=40.107.223.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18AA1362;
+	Mon, 21 Apr 2025 10:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745230217; cv=none; b=gm5vcQB5h874iu4YksAdlsesijSWaV9pozYOybbX3ZApVlgYLDkrrNdHOTVx7bm1xvLMx6y0E3G5iF/6UzdTIg5ZVuIvVmQjGcLi6+IWNyKjNoBdOPaSEDdPP0+eC1a3Zr0phm+oqvl6XZDmhEuMcEnuoW6TMW5bkWJDqf78ZtI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745230217; c=relaxed/simple;
+	bh=FfyJm9NpDg8tA9buZVudpWXEIfJ0WHFaK9XW39O5sKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=piXKfd6CVFEuLfPE1saw93/rO19FX7YF6A6h/y2B4qY2fM0BGvpB7xh/+KyuUfnPRstZfZ9+3cEMWrXRJfT/74+fJxSSF1ECCl553uix31iTPYzR7GRiuR2YEOUXSGEYEnlCpihtjxngbjtWCIjXzLvvxy/WQyKkC1J1nb5p4zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xQHk6hPT; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Ln7wt0ri"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WfNkLqKi0p1wgHGXB/lBBshpo6D4LEq+cPzUF5mVgFl/dmobZtlsgVj8qiIeE6pk6xWWTlTehdJftilsvqQULpsxSpUWhtpE1vW1qebadWlljGt1qAPv+iJ8tuNIqkImzng0iE37PKTIqrUxdkbRMmhVTZDCrbHTJ9qylmv/bNO1a1OwhQkqP7PxySKACzh7eek8V2QsQyPDyWN1zUVY9qqI23u9HQXtG05hqSKSeddzP9ZxxAqEi7/7n0AS+prfgxTsXpupO/Fie5NpwFxCqwO+gxzK4qeqNNZQAdC7DmJu3STPw8pl2WsZYR6gD2L2pgI5ScrlZL94Vmmb6IsgrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JsQqPHrrQh5gLajH6xPpDqwWeExoM8ZLXW0N1I2rc0Y=;
- b=wh7rmMLVM52bXWnss7V711QNRxI12yDgYSXFkBJyY3l/awTSi7FM6i0FP6in9VUmZabxHg+jKsejZXAkNjXKMeFvEyeUQ9hzyXBdmDv60PWwxouyYqKk9BZJvrXqdPo6KdssvR02Vflbh2RpCp7lmQabzJu7tan7nCfxnbmD7aY47ya5UvN3h4piwczrTuSXr2MerKcmHXqIOv04luOzrZpBjX8K1Ks0Y3OL3jkBBUIgYNoOcL9pAi+gPn0BnGoN3BXB1WuqMfkimkXpT2ZrR+G6AIzbu+MaoGZkwPSwSamM1dA46jabIOCCnLAKrcqtzRoxpkNSnqMv5+qTCJvk2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JsQqPHrrQh5gLajH6xPpDqwWeExoM8ZLXW0N1I2rc0Y=;
- b=Ln7wt0ri8Ug6jH/VeqjAeo6hPTP0SXyeKAlM2Y2hfv1ZyRVrmiS+1aT+oE7FO7fM5CoihDGrB+kQ9NOzQXou2fxHPTyjan9NqCjUowFWhoSFzcScNDEhB8/fQQtN1ehXupDMJVEScrN4eNCf3PS9N1m9wl2/B+DBimhYf5wf+UJb+gY2CGRZquuDrw0isRSkoc83DYf3k8bhdR6LFjr05pMuyJuBPUIrkix55n2vhrRSqWNsCxZZHBFe7HYM66odKlbOo9VfQSDASzLXotYQvCJRSok+a34r0YB5ATT2gN5Y5T6pOhJ34JlSTbxf44pfMEIzc047M00Wn/vI8UziZQ==
-Received: from BYAPR02CA0014.namprd02.prod.outlook.com (2603:10b6:a02:ee::27)
- by DM4PR12MB8451.namprd12.prod.outlook.com (2603:10b6:8:182::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
- 2025 10:09:00 +0000
-Received: from SJ1PEPF000023D1.namprd02.prod.outlook.com
- (2603:10b6:a02:ee:cafe::e9) by BYAPR02CA0014.outlook.office365.com
- (2603:10b6:a02:ee::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.34 via Frontend Transport; Mon,
- 21 Apr 2025 10:08:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ1PEPF000023D1.mail.protection.outlook.com (10.167.244.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 10:08:59 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 21 Apr
- 2025 03:08:47 -0700
-Received: from robelin-Precision-3660.nvidia.com (10.126.231.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 21 Apr 2025 03:08:45 -0700
-From: Robert Lin <robelin@nvidia.com>
-To: <thierry.reding@gmail.com>, <daniel.lezcano@linaro.org>,
-	<jonathanh@nvidia.com>, <tglx@linutronix.de>, <pohsuns@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<sumitg@nvidia.com>, robelin <robelin@nvidia.com>
-Subject: [PATCH v5 3/3] clocksource/drivers/timer-tegra186: Remove unused bits
-Date: Mon, 21 Apr 2025 18:08:21 +0800
-Message-ID: <20250421100821.2907217-4-robelin@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250421100821.2907217-1-robelin@nvidia.com>
-References: <20250421100821.2907217-1-robelin@nvidia.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xQHk6hPT"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53LA9vVN1523976
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 05:09:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745230197;
+	bh=/noc+Q/n6Kpzt6EQXIhcOW/BLsq1uA3nULifFhnVrf0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=xQHk6hPT96DmZifpQ0tj/GnpHuDgb6fhQo6VMbPiCrm17i8Yvuqww/8n87jRe7SGY
+	 E7oezRk48w44hYM9WR7EYcA7iJsOU5pP+3sd3yOe+EXZfYVharMYBzPjFjzeAAJLVf
+	 lU8Yha8CjmCOQm+gWnr+ERMitW5CBBDDkMHYB0/4=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53LA9vwG018213
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 05:09:57 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 05:09:56 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 05:09:56 -0500
+Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53LA9qrE015453;
+	Mon, 21 Apr 2025 05:09:53 -0500
+Message-ID: <8a0bbbd1-4767-4399-b163-8243bd849bdf@ti.com>
+Date: Mon, 21 Apr 2025 15:39:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] arm64: dts: ti: k3-j721s2-common-proc-board: Add
+ main_i2c4 instance
+To: "Kumar, Udit" <u-kumar1@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <devarsht@ti.com>, <linux-kernel@vger.kernel.org>
+CC: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <kristo@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250411105155.303657-1-j-choudhary@ti.com>
+ <20250411105155.303657-5-j-choudhary@ti.com>
+ <ab27873e-cada-4135-a617-5d4567a4eaa5@ti.com>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <ab27873e-cada-4135-a617-5d4567a4eaa5@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D1:EE_|DM4PR12MB8451:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd61f253-10ab-4f9c-766e-08dd80bc8910
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?be49j5soKYn1Hwf8EajLxZwb4SBMO5zrvlcMZez96Akrd7wOgRcqjFlgiaIP?=
- =?us-ascii?Q?jgP66triYe7o7SEuGklR097AL+ABZKrLHlitxjVw3GXQ0Cx+4N6xqZAZ7V7x?=
- =?us-ascii?Q?x4OR81rVXsQ0/NeU0nFv3+cTNQHJNP8l6MZRDgIGLsuqmQ+7BB6PM3p/G4M8?=
- =?us-ascii?Q?2AWLcynnCklfXk51W8k/n9ti1ounmu3rj236eseoYZi4Jc+2E3iUt94uLG/d?=
- =?us-ascii?Q?0AJTc+oA8OEo1S6M2VGMrZcq51DOZVeY3AL/3TnIeFpva2S/AtjSwnQB6Sud?=
- =?us-ascii?Q?ub1/lqwcTvNXZRMQ8yG1xStiTWVrwe4IPTAXRi/3yYUTEk+GDftnsnKil5j2?=
- =?us-ascii?Q?uaYcXWDPHflk2VdILi8hOHYqWoPI1UBq/90+1a1av1ekR3LuJBjE2G4O7Yz5?=
- =?us-ascii?Q?BcIHE3BYx4+jXpMT4tfxwTthXjdSdqHABkoS8hwVdWn8wJ27B0KHQbjQ/lrq?=
- =?us-ascii?Q?q4VhIvWiebwDcElNWwPahpasayOmLtQ143q61CzHZaVmFaAJH7NI9TYJzaI/?=
- =?us-ascii?Q?DgNFaZFgeY0EiuvNb+HbMjGZo34nrDoDC36MTByJAdXpeCE4ucJ1W2JK1vwg?=
- =?us-ascii?Q?gt4Ih0l9qL0L1CmTpp11vYA/OFLJ7Ifcaye40K30nx+d957zer7/BNBITNMc?=
- =?us-ascii?Q?LNGN6Qfu25L3vZhfIYONkzc+0RGlkpw2ytyTXC9dJGtb4a85pp364FggKSUu?=
- =?us-ascii?Q?sgZMDFAiPAXB1BuR3X0Hk0rfj8WuNWFgEjjrDdhzsEyJqAqjszsJ8+OxoapU?=
- =?us-ascii?Q?+wJN+EHS7N9bHp3ZXGZl1adqaAP7DACbXMzhe9Lu7UVy1wGM3v/UKr6d1z6/?=
- =?us-ascii?Q?PXAb+MEIZtHge4DdjtKixdm30/m+2t9kaoWtw7vdi+2tnQ281eZZhxVH3COz?=
- =?us-ascii?Q?auQmgitHObHT5zsOhiOi09q6FBMhBSIcBJ2s6l4yPRsnwHSx0iJGBDwcgLuP?=
- =?us-ascii?Q?KbjNE8aoy84eivAfptIPCyvAozGq51qjYgy0BEiklPZo0h4yqH8JuBP8mMmj?=
- =?us-ascii?Q?AlSzUrI2g0btZBvnCE8RdUcjpp1EAcv60YSIXcj8HKxhMBiZsu2aDQimwJEh?=
- =?us-ascii?Q?a5zgm4eH673FR3tUbKdBzzoQkMeE0vchrhSRd1KiFQ9A/gi1foA6LBpm8sbN?=
- =?us-ascii?Q?VbdpEGHJrGIFoJRjnC2/FjJmSokU2uZzbtv7cb4Zif0D2Fn9fcCEmaJrFBIl?=
- =?us-ascii?Q?jJMz8Z3pUPbGtxeksTURu/AeJR88qTwCQD1jXW/JHeGlbyI6vkwF5SnTML3F?=
- =?us-ascii?Q?Phi4PkgOO42zoEogY4/c/k1ec5n37E3kHY5plRgZyfgd74mTZ/lHteu+1SNd?=
- =?us-ascii?Q?gEONoWYFgzuHeXZCVDaDCWBbgJvFW6RLnKgs9ZCRvZldk8R9RAsKYI8E9w9s?=
- =?us-ascii?Q?XgLyy1tSSg3TNeet6mA6qM4iNmESUAFA4avyHFuw8KWWKbVzVXijgXUM2slj?=
- =?us-ascii?Q?LWkAFvxsqXcsM3O8ZsfK834rP11THicT8ejryVS3EEojuUuJfEOAGH8Ua73w?=
- =?us-ascii?Q?uux1iwie2dxyTzCYUWieRnFOtELXKfFqH444?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 10:08:59.7200
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd61f253-10ab-4f9c-766e-08dd80bc8910
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D1.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8451
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: robelin <robelin@nvidia.com>
+Hello Udit,
 
-The intention to keep the unsed if(0) block is gone now. Remove
-them for clean codes.
+On 19/04/25 14:53, Kumar, Udit wrote:
+> 
+> On 4/11/2025 4:21 PM, Jayesh Choudhary wrote:
+>> Add dt node for main_i2c4 instance along with required pinmuxing.
+>> Also add the gpio expander 'exp4' required by display connector.
+>>
+>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+>> ---
+>>   .../dts/ti/k3-j721s2-common-proc-board.dts    | 21 +++++++++++++++++++
+>>   1 file changed, 21 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts 
+>> b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+>> index e2fc1288ed07..f691ae4c19e6 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
+>> @@ -148,6 +148,13 @@ J721S2_IOPAD(0x060, PIN_INPUT_PULLUP, 13) /* 
+>> (AC27) MCASP2_AXR1.I2C3_SDA */
+>>           >;
+>>       };
+>> +    main_i2c4_pins_default: main-i2c4-default-pins {
+>> +        pinctrl-single,pins = <
+>> +            J721S2_IOPAD(0x014, PIN_INPUT_PULLUP, 8) /* (AD25) 
+>> I2C4_SCL */
+>> +            J721S2_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AF28) 
+>> I2C4_SDA */
+>> +        >;
+>> +    };
+>> +
+>>       main_i2c5_pins_default: main-i2c5-default-pins {
+>>           pinctrl-single,pins = <
+>>               J721S2_IOPAD(0x01c, PIN_INPUT, 8) /* (Y24) 
+>> MCAN15_TX.I2C5_SCL */
+>> @@ -370,6 +377,20 @@ exp2: gpio@22 {
+>>       };
+>>   };
+>> +&main_i2c4 {
+>> +    status = "okay";
+>> +    pinctrl-names = "default";
+>> +    pinctrl-0 = <&main_i2c4_pins_default>;
+>> +    clock-frequency = <400000>;
+>> +
+>> +    exp4: gpio@20 {
+>> +        compatible = "ti,tca6408";
+>> +        reg = <0x20>;
+>> +        gpio-controller;
+>> +        #gpio-cells = <2>;
+> 
+> I suggest to add, gpio-line-names as well for this gpio expander.
+> 
 
-Signed-off-by: robelin <robelin@nvidia.com>
----
- drivers/clocksource/timer-tegra186.c | 9 ---------
- 1 file changed, 9 deletions(-)
+Sure, I will add gpio-line-names.
 
-diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-index 4f06eb1ad309..1f4bde813a72 100644
---- a/drivers/clocksource/timer-tegra186.c
-+++ b/drivers/clocksource/timer-tegra186.c
-@@ -175,15 +175,6 @@ static void tegra186_wdt_enable(struct tegra186_wdt *wdt)
- 		value &= ~WDTCR_PERIOD_MASK;
- 		value |= WDTCR_PERIOD(1);
- 
--		/* enable local FIQ and remote interrupt for debug dump */
--		if (0)
--			value |= WDTCR_REMOTE_INT_ENABLE |
--				 WDTCR_LOCAL_FIQ_ENABLE;
--
--		/* enable system debug reset (doesn't properly reboot) */
--		if (0)
--			value |= WDTCR_SYSTEM_DEBUG_RESET_ENABLE;
--
- 		/* enable system POR reset */
- 		value |= WDTCR_SYSTEM_POR_RESET_ENABLE;
- 
--- 
-2.34.1
+> 
+>> +    };
+>> +};
+>> +
+>>   &main_i2c5 {
+>>       pinctrl-names = "default";
+>>       pinctrl-0 = <&main_i2c5_pins_default>;
 
+
+Thanks,
+Jayesh
