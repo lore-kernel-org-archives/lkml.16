@@ -1,151 +1,117 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615C533C9
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A121933C9
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745224012; cv=none; b=nvaejPn7VqV06LSVyOz0CHU3Wp4+v1XCNDlQ9O7BzHs0BkaZ9UXC7nrJjiYK9oDtC22NkHeFd6TgxjJsl4r+1CILE6QwsMwC6TTvjiycLarVGMSqv4sA1nRjNVn62SIG26gDRoNhPOxP+4vEJV1j6yWrSoJ8NwZIg/Izx6jn4YA=
+	t=1745224102; cv=none; b=u7e5y6OJUmZD8eBzs+zSlhtK/3tSuDJUP28SX9U7nv6TxltbqC8LWCHGP1oRBo6YMvAF+cd9BFuAvXa3s9r26WFKP88efQuiWyWBKjnXAmpC8uLDnTTgO6AYZkstUFtWj5ZfqJS1S5vcoqq8ejZRugtIUKdrM7DfoBzbqtCKNjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745224012; c=relaxed/simple;
-	bh=CzThu7Zlo7b3oIekyYQKhCWqE86A7zL6cEwXqrAY2m4=;
+	s=arc-20240116; t=1745224102; c=relaxed/simple;
+	bh=y1al2whRLU8QZGBLd24ih0gOg/ODjoIO+E/2W8ziPHU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GPP3V9MATTrhrxfEtRiYrfW0wdfRf6wjvItY2PVblUn/p5dgkyZhLDU1v3RCD0OHPWeT6jrQG9qFjWxYRQGXrDkFIdPFqR8h/Nwvi/PBIzgjL9olWPDxb/zIyh73JVJnqNdHQoEHZYp/SBEDR7eCNSAk/hgHrE6ot91q2tU8TMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JEEzeF9v; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hF+b+o6sRcoXBk6pVRxKCp9j/i0H6jH4ytte/mhcOpg4DuTOGKhfwnrj2zSUyDsoG+if5ChRJHzZygPMOTk7AeQSo5d/gR50uUpYmiGh4MN/oRGCctO1G+iiHzE4YFzp3Pn8IpE3PXgpnio/pWZC9FZWYxd9XrJuQgufCW7zwc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KYW2bHZA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JEEzeF9v"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KJnVNl013827;
-	Mon, 21 Apr 2025 08:26:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=rMB3uO
-	Pd33ZrkG9E7Dm6xG+7/MjPp1n+kwqCvWkl0+M=; b=JEEzeF9vD/cD/m7N3ZD8JN
-	VmRwHFUIfy4xd26qdbfoyJ1BQvReQ7j76NM2I2HBwJlYUOcECDBhWGvhrlJ0QSFx
-	Gp8SmuhQWpDn7Wc9qsmhCXUYO4Da2duZM3RVJhvWQ9YrkuETlJ2NByORwmGmO+Ae
-	eGxf2Mur4lnUO68OZT1KhHkK3GGzfoag+gqG5x3rqNihVZ4I6FsElhrdAemXWpk4
-	jaZUwKwvOCpSKceS09/CEby8pjwT8CwtVMrEtlnZhTIi3XVZ78laIT4+CPodDqI3
-	q1phhnVaSlMuzrCN2QULGGrBYLutBpxh5I9zoL0IYE/4geEGLvj0GFWhOYboF+qw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464xuhugtu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:26:25 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53L8QOu5023367;
-	Mon, 21 Apr 2025 08:26:24 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464xuhugtp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:26:24 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53L4NNNr027744;
-	Mon, 21 Apr 2025 08:26:23 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv1w5ke-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:26:23 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53L8QM8Q52756908
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 08:26:22 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 293732004D;
-	Mon, 21 Apr 2025 08:26:22 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D96CF20049;
-	Mon, 21 Apr 2025 08:26:18 +0000 (GMT)
-Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com (unknown [9.124.216.6])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 21 Apr 2025 08:26:18 +0000 (GMT)
-Date: Mon, 21 Apr 2025 13:56:16 +0530
-From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
-To: Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Cc: linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/boot: Fix build with gcc 15
-Message-ID: <l3xcl2rnzgor6uxsnhzlp3pceg62n256fbzaguhvktuwq3auye@spar6ml5kecp>
-References: <20250307092055.21986-1-msuchanek@suse.de>
- <fo7xb3bqk5h57mqgfrnyfpweitkr2l5vk3tomu6zgxgqlivwpt@afm2n3c2sxke>
- <aADfrUcNqBejcdrR@kitsune.suse.cz>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KYW2bHZA"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNLB00031843
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:28:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=QR5gd+dRR5fQUEaV4R9A66WP
+	hoDwvnauhFrM55J7cyE=; b=KYW2bHZAuL7GVmhH0Q+aiwJw2GtmFtRMq6S3KGPo
+	ORSQnV2lcFzejDfBGiEnROhzIzuFArvR3lsurROQPWtuSgt9+7WtjtrUPGHbjuWE
+	WDrQaJWqtMl4cNTuo0tLUXaJiiTgXMDWLP6cq5nTxF6dNZbyjO+pHnM1Bb9Dk3vC
+	oh0ME23hc4Z+MZqSqp6EiUfC96yKL6Xh7OctQuV1i5SOhpbXhy/Tzsqo6xafW1R7
+	ASdJrPhY47/dI4F+yDkCUJjSlfD1DPQ3sSGZNcmor8DY7YFfVYVskZJK6uNCbC5Y
+	TNyGMTNcDG0c8ZZXXXqUuUEX+YKVKhz+OSok7IPRLMjVkg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jbjnu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:28:13 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c544d2c34fso511597985a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:28:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745224053; x=1745828853;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QR5gd+dRR5fQUEaV4R9A66WPhoDwvnauhFrM55J7cyE=;
+        b=h5fmdGNeLaqXe4KsWFfmF8M0TdfvN8omFUPSgDRZoh8O1fNU9Nf5LCcksN0D6zP/K5
+         ymMLYg4SKoK9cX150xjJxb7zr1R+f+6WIwndk6XuBcHrRQFE/CmooD6jM7+3oVFo+kHt
+         yGgKs9CkS42spbgyVgvoNX5XDPc4TQnZtofHd9T4n+MnmqvfIPDKTMh17CJ5r1IddaIl
+         1yFtu0cZypO1fmEWzhbYiWnrrZaP6PnkdANu0f+HZLZFFKTYySU1pcqlPZawzaLJ881E
+         8itkJPh74ujdeXbUEbvgeajnNxgcD6xYgSABcwqZ5nbMyxOwSnqq3KYkaGcnoVeVcWkV
+         ja7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVFekXL0e4ke2SLZoVmbD+Z84EEkPXcRJqVQW4x8VOE0r+oKCNZWAgiZTl6UgaGxmxnm0TiSxfXq7igAGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfLP1FOjdtUlLowZ8zYIyck6YPfmZMepyGBCOj+QGCfEOyH5+W
+	CRjIofYzQKan7jRUZee3Xb6wuMf2jW7SwbVu3KgGFHeJHlepC0Lb6j7cvL+9/MhYJ7z5BGrvGu/
+	2RpYlZqzAICRYnEeemnQwG2Ky0la9OO+T2byrpyoUVYaWpPxkhiuoig1cKdfpMLM=
+X-Gm-Gg: ASbGncvSYQIfPnFLyWArMIecZWbYwPi6bPd+r5HbGhfj7WXiF0cDpqNggq76JreYuYa
+	eRebKvlwh1P/rEKuxGXYCYpCKZhBvBsh8eYOp5BAOd9SqNxNZR+l+eeGgso1NdVyUFq4AiuwAiS
+	q4A5lAQiUbayQtfVY30kg5TwdCV3LGxnqvC6AUF49dqLSpyWifwsj3sdWeOvG2R4yRoMgMS4L81
+	UJF8HlVw2PW8CC9Dpm6j9ipcgIbMHUV8kdeHUG+6J8T6nSTwjwU/E/VQO9RZfGQhTenWzpoKr6G
+	GSkXNr2hBmHHB7xOVfuxZ6sBFuGAurW7mN4xUmV8P3En/x7WJdBsSIc2o+HRD+/ys90UcrLw610
+	=
+X-Received: by 2002:a05:620a:258b:b0:7c9:25cd:f8c2 with SMTP id af79cd13be357-7c927f9a154mr1745406285a.24.1745224053344;
+        Mon, 21 Apr 2025 01:27:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGedgHyctiheR5eqrlzlMvKmM7DTyttbtDLSE0k3tCBxJ8UaWl/p1CnocaTREfBWeFRrZkBEw==
+X-Received: by 2002:a05:620a:258b:b0:7c9:25cd:f8c2 with SMTP id af79cd13be357-7c927f9a154mr1745405185a.24.1745224053051;
+        Mon, 21 Apr 2025 01:27:33 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e541d95sm873544e87.96.2025.04.21.01.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 01:27:32 -0700 (PDT)
+Date: Mon, 21 Apr 2025 11:27:30 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Tejas Vipin <tejasvipin76@gmail.com>
+Cc: neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+        simona@ffwll.ch, quic_jesszhan@quicinc.com, dianders@chromium.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        asrivats@redhat.com
+Subject: Re: [PATCH 1/2] drm/panel: panel-samsung-sofef00: transition to
+ mipi_dsi wrapped functions
+Message-ID: <juawuyriwzvstzyvtkv5uk5dtlineq36xqougegahcpijqoh4y@ooc3zosckoep>
+References: <20250419041210.515517-1-tejasvipin76@gmail.com>
+ <20250419041210.515517-2-tejasvipin76@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aADfrUcNqBejcdrR@kitsune.suse.cz>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: E-Y5woX01FJWD-O40TfIUk9wMglHGt1o
-X-Proofpoint-ORIG-GUID: oj0DCEysWvjKndr2tqegI6IBgnJfUgtj
-X-Authority-Analysis: v=2.4 cv=LbY86ifi c=1 sm=1 tr=0 ts=68060131 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=8nJEP1OIZ-IA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=EjazUNRJd03PLXMeH1cA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10
+In-Reply-To: <20250419041210.515517-2-tejasvipin76@gmail.com>
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=6806019e cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=i7Jg7TBL8QnUCxN52AwA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: _SbcbNwnA_7JvHrKhpD_JcwSH4M-mQrO
+X-Proofpoint-ORIG-GUID: _SbcbNwnA_7JvHrKhpD_JcwSH4M-mQrO
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 phishscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ definitions=2025-04-21_04,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=858 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210062
+ definitions=main-2504210065
 
-On Thu, Apr 17, 2025 at 01:02:05PM +0200, Michal Suchánek wrote:
-> On Thu, Apr 17, 2025 at 11:37:09AM +0530, Mukesh Kumar Chaurasiya wrote:
-> > On Fri, Mar 07, 2025 at 10:20:52AM +0100, Michal Suchanek wrote:
-> > > Similar to x86 the ppc boot code does not build with GCC 15.
-> > > 
-> > > Copy the fix from
-> > > commit ee2ab467bddf ("x86/boot: Use '-std=gnu11' to fix build with GCC 15")
-> > > 
-> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > > ---
-> > >  arch/powerpc/boot/Makefile | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-> > > index 1ff6ad4f6cd2..e6b35699c049 100644
-> > > --- a/arch/powerpc/boot/Makefile
-> > > +++ b/arch/powerpc/boot/Makefile
-> > > @@ -33,6 +33,7 @@ else
-> > >  endif
-> > >  
-> > >  ifdef CONFIG_PPC64_BOOT_WRAPPER
-> > > +BOOTTARGETFLAGS	+= -std=gnu11
-> > >  BOOTTARGETFLAGS	+= -m64
-> > >  BOOTTARGETFLAGS	+= -mabi=elfv2
-> > >  ifdef CONFIG_PPC64_ELF_ABI_V2
-> > > -- 
-> > > 2.47.1
-> > > 
-> > There's another patch which fixes this problem by version comparison.
-> > https://lore.kernel.org/all/20250323163607.537270-2-misanjum@linux.ibm.com/
-> > 
-> > In my opinion this is a better solution as it will use the features of latest
-> > compiler.
+On Sat, Apr 19, 2025 at 09:42:09AM +0530, Tejas Vipin wrote:
+> Changes the samsung-sofef00 panel to use multi style functions for
+> improved error handling.
 > 
-> No it's not a better solution. It's documented that the kernel is built
-> with the GNU dialect of ISO C11. When a file is not compiled with the
-> documented C dialect that's a bug.
-> 
-> If newer C dialect features are desirable then they should be enabled
-> consistently across the tree, not individually for a few files used in
-> boot code.
-> 
-> Thanks
-> 
-> Michal
-Oh cool.
+> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> ---
+>  drivers/gpu/drm/panel/panel-samsung-sofef00.c | 70 ++++++-------------
+>  1 file changed, 21 insertions(+), 49 deletions(-)
 
-Thanks
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+-- 
+With best wishes
+Dmitry
