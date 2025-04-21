@@ -1,524 +1,213 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1520221CA1C;
-	Mon, 21 Apr 2025 22:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745273230; cv=none; b=PrjdTljj7XHzNhnttd3Bn6vphRvPv9bFefIB9KJ40N1Il428tNo2et8R8LDB6M0J/2gsWzzrUgC9sf1AISYia/ibg1PbE7SSqchdLN8pmSIdjpdWxo9CrKLwrf7ME+taOG/Dx6OQ0T+Swz0hp2K6MJX6jeL+OV2WhkbEgXbW8Qc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745273230; c=relaxed/simple;
-	bh=+NifVuQO9x5JbghGrqSQsE6DlY3y/pAS32e259uP1js=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vhlfrkxg2efOI01uvmg9ONyNMDASi2zD5KCf1czepq7O7dwpOckjJ1rFWHcRApqMGzbWyiF28ldc8rNDt1/pfTgL/n+m3hvXYt/k/5uaZgSaTMuGUxrqlkw0k3yuuckEL6irrmS7JJpyLXxw3wn+gDKs8O+VLrcILv/F3Qc8wcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5OcDpRM; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918EB21B18C;
+	Mon, 21 Apr 2025 22:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745273305; cv=fail; b=IAnpWo/EjZ28345fZDp7a8tAzg8Z8EuKMlfQwoXtHJtxmTYIkIPhkWlNZUwMSR/56nyOQ5+4hHPCgT8t3HMahZAyGV5WRGHMxW31woCkacQtuhz12lfXG0Iz88pkRLO1YBReEW5rmg+immd9UlqodS2xWMgXOr5p62YkXkSxmsQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745273305; c=relaxed/simple;
+	bh=8zO1Rf1jGhzkXTU2pMwxynC29EAS6+1Lgkuttir7zIo=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=aB/Gc+niU5LCAxe1otqC3fF7iE4hz99f78DBmSnD+6GREfeGj6x06fwL+BfbPhbgogu3a62iiD4wYE3ojNL0QRwVenw9psgab1nNlBQuIbEQwnJWMD5Y33N1AVaTKi4HHPjrjr09qUBWEUI3Hizr5AWSXfY03+rrNWoFcI2+MPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NOlKGTlG; arc=fail smtp.client-ip=40.107.92.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5OcDpRM"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f121612dabso622434a12.1;
-        Mon, 21 Apr 2025 15:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745273226; x=1745878026; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x2EDZgRwJRT7jx/AB7jRUIQcQXxW+YuIn1RIegx7Ti4=;
-        b=T5OcDpRM5rGRICXoGP6fV8GWXnLo9sAhPGvBxkBnMbqunJA/WHzmOKXj+mZHiCcDQ7
-         vyQdAMM/G1H91HxcYGFXFHnTGnF8vd6EreK0f//e3pLeKAXV6WmZzC+4vwZ0+/aL1Ycz
-         PjPE5uAe8xDwD4TF+/Nf0IKmKIwmf2hpWmklGEHkgQmYAECtEcGD5spPl/oyCDo/+4W7
-         LqT8nfU78HjP4S1MsK37q+1lEdSZF9Z+WKjocUDoBgLwDZ5Pd9zROs8sWfdpahJaMW0F
-         J95Va01qmOYwnp3KRHriGA6DetGqE+MeVrHxA/NwicidwAyCGK0PdfKFvf0+gvW4gmmb
-         mE9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745273226; x=1745878026;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x2EDZgRwJRT7jx/AB7jRUIQcQXxW+YuIn1RIegx7Ti4=;
-        b=BnFu/3WEQ98iKlzlt8Q6Ar62lHrUY7KtNsVaR7bEXc1Y1ZYGsniciMoE1vWmtCFPu1
-         diHF5edjZ0YwxfggvXIIXJLr4RjKtGv2uGDKtiN/l8nlzv32pP/wktSGakGkUZUCJwYZ
-         8TtefzkdzZP+rcRogm3U7lTK4lLsZXz8IKqGWYJKCiHJs6KOs5mQuPOBVdcjMIcayFqZ
-         hYwk3Sden/DXyS+zms6ZcoPTSfo9wcwiibml2Zz66B4mM2djfDMyJcpJsGz/ccBjj0Gd
-         FwJbxyY3EaFEgA5BPS6ap3k2A8K9hxSON3yocw1hPyW/LEJW02bjrEHmN3PAGbz3MbB4
-         lUjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFG2zkkbH/tvqLj6dKOxmhWoEwRbeJi+3rsd0BM3PwuM4dcPJTDRVU1SvI3uU/alaNtr6wlEJKD9yV288=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy24SmdOQkf14yxf1ZkaXfRs6xZHiqSWOmiB1Vn1frDEdZmVoiA
-	Evskz4wxuF0ig6SEnzes6ZJh6TXM5tUzUToHLf9M86Qm1rbU4hKXipcJhA==
-X-Gm-Gg: ASbGncuUo7F5l8KRqQYvdxiwJGnU48sm5aG8MZ2Hh7wL7L2+Yf8844TgVIjei3Pk/cq
-	zWQoQA9RIVFQtD9y5RE1jd83XUkN+kmfIyQuk36BP7PCqAj4u4jwVSM3Ouv8CT2aovrx0Jnosxh
-	DeNJ+WudGfbfBdlmxh2yV3caWHF4bt5BHLJJ7l++P6lHMd90FUBz0G9ET3sz7dOuxLk/14uiaLp
-	G6cpRJwnEPuM5v6vvOsXV8bGMiNNbkffw68e6RgCnP+gZN85JgYkwAmGouF4xWscE9BfwxXjXSu
-	rcsvCbk3ry2YpEH/yIH4cjMPhVNyOj8uPcJlt1ECwGLgm2RwD+yMjs7Px1KMQvC47LA9/xl24le
-	SUHhVxkUBPKZHA345Tyc=
-X-Google-Smtp-Source: AGHT+IGWa4ho70tDGBwCv8Mpqfjgo4GRDT2Kcj9nBkEjpnJY35Gi5idPiPYFwV0DAkNJmri96HxXtQ==
-X-Received: by 2002:a05:6402:430f:b0:5f5:5064:47f3 with SMTP id 4fb4d7f45d1cf-5f628532f89mr3974527a12.3.1745273226164;
-        Mon, 21 Apr 2025 15:07:06 -0700 (PDT)
-Received: from 0e1b0684397b.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acbb8d49fdasm80311666b.67.2025.04.21.15.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 15:07:05 -0700 (PDT)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	eraretuya@gmail.com,
-	l.rubusch@gmail.com
-Subject: [PATCH v7 11/11] docs: iio: add documentation for adxl345 driver
-Date: Mon, 21 Apr 2025 22:06:41 +0000
-Message-Id: <20250421220641.105567-12-l.rubusch@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250421220641.105567-1-l.rubusch@gmail.com>
-References: <20250421220641.105567-1-l.rubusch@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NOlKGTlG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WOZjSNFdT3eaTrhvUdH1jE6rt4p2tIrivwWSQTzSLLfG7Xq6PIZrY2VTbGlaK5ludNwL9dkofY0i/4kFKtVVmFb6HZKVQWzlC8u+BjUWfcOtNXiuWl5XAZmjBQnNobQaAkeLhS2CKGKGn78o3e7kZB+Szgyek5hEgP+j4FpHIM5hZtIEBK83/XvSKCTYBKCCM3jp06AsBGPiOxgQrSOSh2t8thhCmDLuqJVnkGMUCTVTeD1e+1o8pygw2q2yvcOYDrt73r9KZUTFCPj/1gURkYJpDtQmYy99dZxwNsxRyTugSQHSKMGz79PlbMK+1W0inUOX91cTMRceniVA35rQKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y+UsIqOGhCxOyrPzuHxRR3PTfe6lDHDZ0PQJl8VGA5E=;
+ b=JzWOt3N5Uz0XOnotgKt7D8QAo9TuvaCR2nYAwBmaFJ5Z7i8vz5jHocTBhBR6hixePT6esSR3QUMk0FzSRDPdVp4H7MXwB3lv6/JMbRARCjIZsuTLQhYEJhTvPT8aAcoy7O6Z2PfPLJoSIa1sfMlGPVFhg2ZxQ7/xbWIPi+Vil1+6FpHlt9oSysMdejryNO8Yd5aDIwVVzZnvuOSA3ME30B/11NTRmTO0o72LFaWjAz2/1PVeIuyv5BpBeKy6zEu1ZTOsjU2wikKtHTuB32KEL7fCWATjx77MAA8SFa/khyzFxHNR6Odju7PAEgZChfPSu6mH+h1hvxgbNdU07Vo8TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y+UsIqOGhCxOyrPzuHxRR3PTfe6lDHDZ0PQJl8VGA5E=;
+ b=NOlKGTlGF4+fuDrvjhspil4EE5is57v5yXhK1BSMqnqKKtnVpxoB1H16lcrq/IApIYeuiopiuUe4aIDFbjqmgevqADiy8NcF+NNYZWlJxt6S5Qdnwo+LbxsYYFldO50xsXNT5esY9X7WkWtu6StPn95B0G2912+/wWlSquDtCvI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by IA1PR12MB6387.namprd12.prod.outlook.com (2603:10b6:208:389::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 22:08:20 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8655.033; Mon, 21 Apr 2025
+ 22:08:19 +0000
+Message-ID: <729bd284-f1df-d384-8db1-37b448b0c1da@amd.com>
+Date: Mon, 21 Apr 2025 17:08:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-US
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Cc: roy.hopkins@suse.com, seanjc@google.com, ashish.kalra@amd.com,
+ michael.roth@amd.com, jroedel@suse.de, nsaenz@amazon.com, anelkz@amazon.de,
+ James.Bottomley@HansenPartnership.com
+References: <20250401161106.790710-1-pbonzini@redhat.com>
+ <20250401161106.790710-14-pbonzini@redhat.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 13/29] KVM: implement vCPU creation for extra planes
+In-Reply-To: <20250401161106.790710-14-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0196.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c4::23) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|IA1PR12MB6387:EE_
+X-MS-Office365-Filtering-Correlation-Id: e84f6c85-fb45-4c7a-4612-08dd8121062f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SFR5WDhhSzhOTHNBa0liWTJJNGgzMmdndVNzb0tva0JQMjUwbXc4bUZ2M0N4?=
+ =?utf-8?B?Tktla1NIVHdDd0VPdGtwcG9RdEZyWFF0Zm5iRXZrQXgvZGUvQnZGdjk4cGZU?=
+ =?utf-8?B?eml5dW9VZXQzVHA2Q1pUNU5qODk1SUwzYXQvN0RlbWpCVSt1VVFUT3JrRDdm?=
+ =?utf-8?B?UjlJemNacDg3dVNoYzhwS2hJYzQ0RXVadmZXVWk3LzZFcTlkY05pUldhWElU?=
+ =?utf-8?B?UXVUdnA3ZlFKZmhPS0JwSXBpWlNaWkhQeDEwQUlucGxmWkd2QnZaV2RPM3lm?=
+ =?utf-8?B?QytQL2ZJTExHU1BxV2g0NU9VVjJmaTFaNVZNOHlTSTAzcHNmN3FWRlcrb0RB?=
+ =?utf-8?B?SUptY1lGanJXNjJGL2VIbVdtWnZSb1pLYnZQcmhVcG14bFIvVHdOd2N2VHhB?=
+ =?utf-8?B?dUI0aE9SdVBGdnlIeFRzeDh3NnVqRGU2TE1UaTFlaFpnWFlEVGhnT0xxQUh1?=
+ =?utf-8?B?Y1BlTlRTbWFnZFZpT0d6TkZkV3dHVXY4MkdSM20vOXpaM1RQZ2lib3g3eWhu?=
+ =?utf-8?B?ZTAxR25jREJHbCtPSStBNEpHTGs1MTlrN1VqWEpsU0R4aDF1RldSVDdZQmg5?=
+ =?utf-8?B?anZCenlTajJQcUlaSXh5OVpka2hpRnI0VTV3VFp1REY5TmZTTTIvOHA0Q25T?=
+ =?utf-8?B?MVdHaWtUalRrazVZNHprWnc2V25wRUVxVVE5cUVnMzlnOHdCdlJVbWsyNkZH?=
+ =?utf-8?B?Nm9YdXBKYUV0bERLYVBmckwxdlpkdHdISUtOdFVGNG43aWF2SE55Y2hiQTZh?=
+ =?utf-8?B?SU03Q3FIM0NsUjRkQXRrN2lJZW9CbG9rNzR0MEMyS084K0VSRW5uSUZLRHpR?=
+ =?utf-8?B?bFNQd2ZPYXlKSC90NTZvYkVwK2ljYVpvdndyWVFLeFdqOGx3a2Q1RnhQWE1J?=
+ =?utf-8?B?dWVKQnd4c0gzYWNxWlNvamxsREIvbGxGZzNCN0grenZLcUZqTnFtYmZkVHZ3?=
+ =?utf-8?B?SjZyVEVwVWZ4cmM0VmJreUdGSkFMZUdoTUdrQnBCcXNGZ1pZakgxZGhJbnZR?=
+ =?utf-8?B?SW9XWWtLdnZFdjBjMXQ4U3JZMzdId3dxRW1PNHpWYklZeWNTb0o1U253OVdl?=
+ =?utf-8?B?YldCTlNuZFVGUDZWa0pOVjlGbTd4bEpvcjZiWlhGTng0Mjlqa3YydWlHalli?=
+ =?utf-8?B?ckU1dkxYM085MGNLMXFJcVpFeXViVGprRkV5ZmRCTGdMTDAxRGNKZXBPSjJt?=
+ =?utf-8?B?YWhMRERTUVRkck51Y0Q4S003T3crblV4RkJaemVEMlRlOEx3dlMvVnRpZUJ5?=
+ =?utf-8?B?dktwSzZXU2o0M21CMDI5M0sxZFJrVm1kSGRRaFlCZTBQOG9WZ1FFQit1TVdz?=
+ =?utf-8?B?R0lWeC9BKzZtMW85SmFvTjFYVWxPVTVaNlBBL2xNRzM2YlZsb0J0NE1DUDEr?=
+ =?utf-8?B?TStMWDY3S25oSTVDQjQ4eWh1UjhUeE9aUlYvSnRlejdBTEM4V0c3SU9JR1Fa?=
+ =?utf-8?B?a2dkbytzMGZCSS9ZNXlQVUhjYlI5bGh1WFJvRXdBK3J4NGV4WGVnUlNVMGJB?=
+ =?utf-8?B?bXdabnVXdTZjSUtMdVNSWitna0tvSHZ6R3ZIN3BxbWdJUmc3dC8rMWphcDI3?=
+ =?utf-8?B?SGtCbDF2ckxJcE9WTkllaGdHcWZsNU9VVmE4aHhVK0k0QjNNRFg0dlQrZkdY?=
+ =?utf-8?B?Mm44S25xQXhxbGNWZDRFQ3BVajh0UVNmTnAyc3VYeEc3akxiV2pLSmhlcytW?=
+ =?utf-8?B?Rlhub202WkZkR2grZTkyN1lNS0FSL1BnbEJaWGx5c0NYTkdlNjMwV283K0Vp?=
+ =?utf-8?B?QkloT1RwbEdVbU1SZ1kyM3lxdHN4eUNkZnArT2JXeVl5N3pNVlBJUGdoTnlZ?=
+ =?utf-8?B?d0Z5bDJuTzFZNGpGb0RtdW5wd2FqNnlheHg3U3F0NjYrcndCR3piSmVCSGJL?=
+ =?utf-8?B?MjdDTXYzRnRWU0k3aUtaMmRSRlFxYXR2UW9yZUJqSWhtc3c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a2pvUHl3REJmbkpTOXlLSDM3MTJJSDd1M2lPaWwrL3J3eDk0YTQ1UmwrbWhv?=
+ =?utf-8?B?ZWo3TktHcDZ1SW1oQkh3M2VhTk0yd2MrMGdXRENQcWp5Q3ZRTjVKRk5Oazhv?=
+ =?utf-8?B?QzdmVHRuNE5kbXlobk1yaTJ3TDZyMmRNc29Gd2VmSHBGVXptMnBsM2o5T3NJ?=
+ =?utf-8?B?a2VyajFHc1N3RzkwWDg2N0xGRGtRdXNqMUoxV3REUlpsK1l4Y3BWUEpDZzNJ?=
+ =?utf-8?B?N2cyanlYZU9DZ2xiMVhwKzRNWWhFdXM1Ri9RSjdOMlNSb3ByMGYvbmtoaUl3?=
+ =?utf-8?B?bVNrUXhPWDNDWU02cUJpMlRLOWt5UmFOYThBVUFFYWhxVE5UWmtGeVNOaGwv?=
+ =?utf-8?B?VjJmckpiOEEvRStSdFdFVE9WZUVpeWtQVWtLZk1pRWQ3YW1Fdzdvbm5yWUFa?=
+ =?utf-8?B?UHR1ZWhQOWxxS09YVDljQlNoNGhBSk1sZVM5YmFFYWQraGZ3RDVpc1dIbktk?=
+ =?utf-8?B?cThlMDlQV1BCRHFaTzRpSHIzVURGaThHcEhwSHhWRDVnQmNjQkxuS0QxNnZL?=
+ =?utf-8?B?SUxTUThqMEo5TXYvM3dOaThGbFMyVVQ0MVJ6bEZtTzVQd1pFcU5wd2kzdVhR?=
+ =?utf-8?B?eUxmWkNIM1dGZkdPcDd6SjZ0ZXFGaXZGVEpVbzZkcWtGTEM0UmNhbTZUZWww?=
+ =?utf-8?B?WGNHTStOdzgwbm1iT2tGVXpweTVwUDRZOWdyaEZOc2FFZEhpc2F6bjlMd1V6?=
+ =?utf-8?B?NWg0VEtRc01ZNkV3a3BMZ2M0VS9KNFNEbkZzWlU2dDFFc0N4UUtKSjFFRWtj?=
+ =?utf-8?B?YmgvMzhQNHhPRVZSQVVKNWJzL2QvSDZrRmhEd1ZJZDcvV213SkVjd291TDJp?=
+ =?utf-8?B?dWpuUjlYeU9mQVZpNkZDcGpMR2tuS3kzSmNrNy81VE02c3BOVXJCZklGcUZN?=
+ =?utf-8?B?cThZS0Zxdkc2dENGeWRtaEt1K2NxTUdaQ1JWYmd5QnlxWVIwOE9WT0FZdTZi?=
+ =?utf-8?B?WHNWY3lMTzZyNUxXMjVINGZPRjlGbEdSUEdNSmNwVTA0UERDUEh5ekQrWGZF?=
+ =?utf-8?B?VDFLSVA2bTZMdk5RajNHTTdUMksvV1Y1dWVSdHRTMis3SllBbERkY3pIdzN4?=
+ =?utf-8?B?bi96L1NreXdOK3hvT2dQYzBvQ1djb3drZmMyYVdpeTJnZXYrNUJaQmF6U0xx?=
+ =?utf-8?B?eFhhYUpYazNWaEtvMTd6UmpvSmpib21qU3QrODhlTHUvLzhpRnVMZG1ZQU5X?=
+ =?utf-8?B?L25tTkhlZXRJV2V6ZEdnc3dINmdSc3FScG5qOTUzWEM0UHYvMG9WKzljNEIv?=
+ =?utf-8?B?RTdLblVnQnpUeEo1bEFDaDQwVXdPai82dmRHZy9VdU0vOGZ1Z01abWRzbGJB?=
+ =?utf-8?B?UjQ3Zjlucmw3cDhWMkxyMnhOZ3FtM2pvYS81MjZPWlBHSUtHVlZ1T1lHbnQz?=
+ =?utf-8?B?YUp3ZHIxb3IxSUtRSmdteTZqVVgrSXM2YUlHbnFsY3U2ay9pdTI3UXByN3g3?=
+ =?utf-8?B?WmI0aVZ3Z01ZOFpUa0F6NXgxYjdWQ25sbXc5UTQyOU9vNVNYdFNidU1JQTh5?=
+ =?utf-8?B?akZlanMrb09ZQU42bTBDWUhTMUF5TUhzQ1JMU1loamMxMDF0ZlNxNko1aUdS?=
+ =?utf-8?B?SjAxc3ZmT24rYkRtU0F2V2JGajVOdDUwdE1nQUtPWU8yeVJ4L2Jsd0Z1aVll?=
+ =?utf-8?B?OFMrOFBQMEk1MnU3N2tIelVHN0ptUVdjaUdxVGFWVGFzdnJ6UlREcVRDN2Ur?=
+ =?utf-8?B?MlVqSWJETkhndHMrY0k4d0JLNTU4a0RWeGZudDNYYjc2cVgrZWRXN0FQVnhB?=
+ =?utf-8?B?OGFMYWZpaURCb3BXM1c1d2c5em1LK2xoSEwyZWtzQkRTUmp2ak9HeGExOWlX?=
+ =?utf-8?B?NC9SVXJqb0NOa2l0SVdxVEdjeHRMaCttSlFVbkxveWx1cVYxcEgvaEFjTWov?=
+ =?utf-8?B?QVgrcVFyRVRlbkc2c3c4eUdFOHdDNWY2c2ZGeXNZalRIZUJ4UEp4M2FMU2lH?=
+ =?utf-8?B?d2NselVJMWl2a3NXcVdKOEkrbUo3eWZsUmJHR3VKWlFxMzVvVmxBVXYvU0dl?=
+ =?utf-8?B?d1QyVjR5MzZnWDZsb25TYlVBLzJTQS85VmdweUtHb3NCQVFNTmF3NE5vMjZY?=
+ =?utf-8?B?bm1wV0tZdjBnekJ2aFFzK2x1aEt3c1JaQUM4MWVzUytPOURVaC9OWGdKM3Vl?=
+ =?utf-8?Q?/y/72KizT0UeB5x/kGJLnewLR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e84f6c85-fb45-4c7a-4612-08dd8121062f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 22:08:19.6204
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e+kkaZBnuRDCHpQi/9b+RO0e45fre0OAkFn1g5ukrGQcr78C+WXaeP83JkKxBj9OIPdT9eqhmTTOxKgTHmwHRA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6387
 
-The documentation describes the ADXL345 driver, IIO interface,
-interface usage and configuration.
+On 4/1/25 11:10, Paolo Bonzini wrote:
+> For userspace to have fun with planes it is probably useful to let them
+> create vCPUs on the non-zero planes as well.  Since such vCPUs are backed
+> by the same struct kvm_vcpu, these are regular vCPU file descriptors except
+> that they only allow a small subset of ioctls (mostly get/set) and they
+> share some of the backing resources, notably vcpu->run.
+> 
+> TODO: prefault might be useful on non-default planes as well?
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  Documentation/virt/kvm/locking.rst |   3 +
+>  include/linux/kvm_host.h           |   4 +-
+>  include/uapi/linux/kvm.h           |   1 +
+>  virt/kvm/kvm_main.c                | 167 +++++++++++++++++++++++------
+>  4 files changed, 142 insertions(+), 33 deletions(-)
+> 
 
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
----
- Documentation/iio/adxl345.rst | 423 ++++++++++++++++++++++++++++++++++
- 1 file changed, 423 insertions(+)
- create mode 100644 Documentation/iio/adxl345.rst
+> @@ -4200,8 +4223,13 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+>  	 * release semantics, which ensures the write is visible to kvm_get_vcpu().
+>  	 */
+>  	vcpu->plane = -1;
+> -	vcpu->vcpu_idx = atomic_read(&kvm->online_vcpus);
+> -	r = xa_insert(&kvm->planes[0]->vcpu_array, vcpu->vcpu_idx, vcpu, GFP_KERNEL_ACCOUNT);
+> +	if (plane->plane)
+> +		vcpu->vcpu_idx = atomic_read(&kvm->online_vcpus);
+> +	else
+> +		vcpu->vcpu_idx = plane0_vcpu->vcpu_idx;
 
-diff --git a/Documentation/iio/adxl345.rst b/Documentation/iio/adxl345.rst
-new file mode 100644
-index 000000000000..e12fe280a94f
---- /dev/null
-+++ b/Documentation/iio/adxl345.rst
-@@ -0,0 +1,423 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+ADXL345 driver
-+===============
-+
-+This driver supports Analog Device's ADXL345/375 on SPI/I2C bus.
-+
-+1. Supported Devices
-+====================
-+
-+* `ADXL345 <https://www.analog.com/ADXL345>`_
-+* `ADXL375 <https://www.analog.com/ADXL375>`_
-+
-+The ADXL345 is a generic purpose low power, 3-axis accelerometer with selectable
-+measurement ranges. The ADXL345 supports the ±2 g, ±4 g, ±8 g, and ±16 g ranges.
-+
-+2. Device Attributes
-+====================
-+
-+Each IIO device, has a device folder under ``/sys/bus/iio/devices/iio:deviceX``,
-+where X is the IIO index of the device. Under these folders reside a set of
-+device files, depending on the characteristics and features of the hardware
-+device in questions. These files are consistently generalized and documented in
-+the IIO ABI documentation.
-+
-+The following table shows the ADXL345 related device files, found in the
-+specific device folder path ``/sys/bus/iio/devices/iio:deviceX``.
-+
-++-------------------------------------------+----------------------------------------------------------+
-+| 3-Axis Accelerometer related device files | Description                                              |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_sampling_frequency               | Currently selected sample rate.                          |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_sampling_frequency_available     | Available sampling frequency configurations.             |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_scale                            | Scale/range for the accelerometer channels.              |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_scale_available                  | Available scale ranges for the accelerometer channel.    |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_calibbias                      | Calibration offset for the X-axis accelerometer channel. |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_x_raw                            | Raw X-axis accelerometer channel value.                  |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_calibbias                      | y-axis acceleration offset correction                    |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_y_raw                            | Raw Y-axis accelerometer channel value.                  |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_calibbias                      | Calibration offset for the Z-axis accelerometer channel. |
-++-------------------------------------------+----------------------------------------------------------+
-+| in_accel_z_raw                            | Raw Z-axis accelerometer channel value.                  |
-++-------------------------------------------+----------------------------------------------------------+
-+
-+Channel Processed Values
-+-------------------------
-+
-+A channel value can be read from its _raw attribute. The value returned is the
-+raw value as reported by the devices. To get the processed value of the channel,
-+apply the following formula:
-+
-+.. code-block:: bash
-+
-+        processed value = (_raw + _offset) * _scale
-+
-+Where _offset and _scale are device attributes. If no _offset attribute is
-+present, simply assume its value is 0.
-+
-++-------------------------------------+---------------------------+
-+| Channel type                        | Measurement unit          |
-++-------------------------------------+---------------------------+
-+| Acceleration on X, Y, and Z axis    | Meters per second squared |
-++-------------------------------------+---------------------------+
-+
-+Sensor Events
-+-------------
-+
-+Particular IIO events will be triggered by the corresponding interrupts. The
-+sensor driver supports no or one active INT line, where the sensor has two
-+possible INT IOs. Configure the used INT line in the devicetree. If no INT line
-+is configured, the sensor falls back to FIFO bypass mode and no events are
-+possible, only X, Y and Z axis measurements are possible.
-+
-+The following table shows the ADXL345 related device files, found in the
-+specific device folder path ``/sys/bus/iio/devices/iio:deviceX/events``.
-+
-++---------------------------------------------+-----------------------------------------+
-+| Event handle                                | Description                             |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_gesture_doubletap_en               | Enable double tap detection on all axis |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_gesture_doubletap_reset_timeout    | Double tap window in [us]               |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_gesture_doubletap_tap2_min_delay   | Double tap latent in [us]               |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_gesture_singletap_timeout          | Single tap duration in [us]             |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_gesture_singletap_value            | Single tap threshold value in 62.5/LSB  |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_x&y&z_mag_falling_en               | Enable free fall detection on all axis  |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_mag_falling_period                 | Free fall time in [us]                  |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_mag_falling_value                  | Free fall threshold value in 62.5/LSB   |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_mag_referenced_falling_en          | Set 1 to AC-coupled inactivity, 0 for DC|
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_mag_referenced_rising_en           | Set 1 to AC-coupled activity, 0 for DC  |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_x&y&z_thresh_falling_en            | Enable inactivity detection on all axis |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_thresh_falling_period              | Inactivity time in seconds              |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_thresh_falling_value               | Inactivity threshold value in 62.5/LSB  |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_x_thresh_rising_en                 | Enable activity detection on X axis     |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_y_thresh_rising_en                 | Enable activity detection on Y axis     |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_z_thresh_rising_en                 | Enable activity detection on Z axis     |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_thresh_rising_value                | Activity threshold value in 62.5/LSB    |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_x_gesture_singletap_en             | Enable single tap detection on X axis   |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_y_gesture_singletap_en             | Enable single tap detection on Y axis   |
-++---------------------------------------------+-----------------------------------------+
-+| in_accel_z_gesture_singletap_en             | Enable single tap detection on Z axis   |
-++---------------------------------------------+-----------------------------------------+
-+
-+Find a detailed description of a particular functionality in the sensor
-+datasheet.
-+
-+Setting the **ODR** explicitly will result in estimated adjusted default values
-+for the inactivity time detection, where higher frequencies shall default to
-+longer wait periods, and vice versa. It is also possible to explicetly
-+configure inactivity wait times, if the defaulting approach does not match
-+application requirements. Setting 0 here, will fall back to default setting.
-+
-+The **g range** configuration also tries to estimate activity and inactivity
-+thresholds when switching to another g range. The default range will be
-+factorized by the relation of old range divided by new range. The value never
-+becomes 0 and will be at least 1 and at most 255 i.e. 62.5g/LSB according to
-+the datasheet. Nevertheless activity and inactivity thresholds can be
-+overwritten by explicit values.
-+
-+When **activity** and **inactivity** events are enabled, the driver automatically
-+will implement its hysteresis solution by setting link bit and autosleep bit.
-+The link bit serially links the activity and inactivity functions. On the other
-+side, the autosleep function switches the sensor to sleep mode if the
-+inactivity function is enabled. This will reduce current consumption to the
-+sub-12.5Hz rate. Inactivity time can be configured between 1s and 255s. When 0
-+is configured as inactivity time, the driver will define a reasonable value
-+depending on a heuristic approach to optimize power consumption.
-+
-+In **dc-coupled** operation, the current acceleration magnitude is compared
-+directly with THRESH_ACT and THRESH_INACT registers to determine whether
-+activity or inactivity was detected. In ac-coupled operation for activity
-+detection, the acceleration value at the start of activity detection is taken
-+as a reference value. New samples are then compared to this reference value.
-+Note, ac-coupling and dc-coupling are individually set for activity and/or
-+inactivity detection. Activity detection can be enabled on particular axis.
-+Inactivity detection on the other side, is enabled or disabled on all axis.
-+
-+**Single tap** detection can be configured according to the datasheet by specifying
-+threshold and duration. If only the single tap is in use, the single tap
-+interrupt is triggered when the acceleration goes above threshold (i.e. DUR
-+start) and below the threshold, as long as duration is not exceeded. If single
-+tap and double tap are in use, the single tap is triggered when the doulbe tap
-+event has been either validated or invalidated.
-+
-+For **double tap** configure additionally window and latency in [us]. Latency
-+starts counting when the single tap goes below threshold and is a waiting
-+period, any spikes here are ignored for double tap detection. After latency,
-+the window starts. Any rise above threshold, with a consequent fall below
-+threshold within window time, rises a double tap signal when going below
-+threshold.
-+
-+Double tap event detection is best described in the datasheet. After a
-+single tap event was detected, a double tap event can be detected. Therefore the
-+signal must match several criteria, and detection can also considered invalid
-+for three reasons:
-+* If the **suppress bit** is set and when still in the tap latency period, any
-+measurement of acceleration spike above the tap threshold invalidates double tap
-+detection immediately, i.e. during latency must not occur spikes for double tap
-+detection when the suppress bit is set.
-+* A double tap event is considered invalid, if acceleration lies above the
-+threshold at the start of the window time for double tap.
-+* Additionally, double tap detection can be considered invalid, if an
-+acceleration exceeds the time limit for taps, set by duration register.
-+Note, since for double tap the same duration counts, i.e. when rising above
-+threshold, a consequent falling below threshold has to be within duration time.
-+Also note, the suppress bit is generally set when double tap is enabled.
-+
-+A **free fall** event will be detected if the signal goes below the configured
-+threshold, for the configured time [us].
-+
-+Note, that activity/inactivy, as also freefall is recommended for 12.5 Hz ODR
-+up to 400 Hz.
-+
-+Usage Examples
-+--------------
-+
-+Show device name:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat name
-+        adxl345
-+
-+Show accelerometer channels value:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_raw
-+        -1
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_y_raw
-+        2
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_z_raw
-+        -253
-+
-+Set calibration offset for accelerometer channels:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        0
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 50 > in_accel_x_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> cat in_accel_x_calibbias
-+        50
-+
-+Given the 13-bit full resolution, the available ranges are calculated by the
-+following forumla:
-+
-+.. code-block:: bash
-+
-+        (g * 2 * 9.80665) / (2^(resolution) - 1) * 100; for g := 2|4|8|16
-+
-+Scale range configuration:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_scale
-+        0.478899
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_scale_available
-+        0.478899 0.957798 1.915595 3.831190
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.915595 > ./in_accel_scale
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_scale
-+        1.915595
-+
-+Set output data rate (ODR):
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_sampling_frequency
-+        200.000000
-+
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_sampling_frequency_available
-+        0.097000 0.195000 0.390000 0.781000 1.562000 3.125000 6.250000 12.500000 25.000000 50.000000 100.000000 200.000000 400.000000 800.000000 1600.000000 3200.000000
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.562000 > ./in_accel_sampling_frequency
-+        root:/sys/bus/iio/devices/iio:device0> cat ./in_accel_sampling_frequency
-+        1.562000
-+
-+Configure one or several events:
-+
-+.. code-block:: bash
-+
-+        root:> cd /sys/bus/iio/devices/iio:device0
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./buffer0/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./buffer0/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./buffer0/in_accel_z_en
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./scan_elements/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./scan_elements/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./scan_elements/in_accel_z_en
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 14   > ./in_accel_x_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> echo 2    > ./in_accel_y_calibbias
-+        root:/sys/bus/iio/devices/iio:device0> echo -250 > ./in_accel_z_calibbias
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 24 > ./buffer0/length
-+
-+        ## activity, threshold [62.5/LSB]
-+        root:/sys/bus/iio/devices/iio:device0> echo 6 > ./events/in_accel_thresh_rising_value
-+
-+        ## inactivity, threshold, [62.5/LSB]
-+        root:/sys/bus/iio/devices/iio:device0> echo 4 > ./events/in_accel_thresh_falling_value
-+
-+        ## inactivity, time [s]
-+        root:/sys/bus/iio/devices/iio:device0> echo 3 > ./events/in_accel_thresh_falling_period
-+
-+        ## singletap, threshold
-+        root:/sys/bus/iio/devices/iio:device0> echo 35 > ./events/in_accel_gesture_singletap_value
-+
-+        ## singletap, duration [us]
-+        root:/sys/bus/iio/devices/iio:device0> echo 0.001875  > ./events/in_accel_gesture_singletap_timeout
-+
-+        ## doubletap, window [us]
-+        root:/sys/bus/iio/devices/iio:device0> echo 0.025 > ./events/in_accel_gesture_doubletap_reset_timeout
-+
-+        ## doubletap, latent [us]
-+        root:/sys/bus/iio/devices/iio:device0> echo 0.025 > ./events/in_accel_gesture_doubletap_tap2_min_delay
-+
-+        ## freefall, threshold [62.5/LSB]
-+        root:/sys/bus/iio/devices/iio:device0> echo 8 > ./events/in_accel_mag_falling_value
-+
-+        ## freefall, time [ms]
-+        root:/sys/bus/iio/devices/iio:device0> echo 1.25 > ./events/in_accel_mag_falling_period
-+
-+        ## activity, enable
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_thresh_rising_en
-+
-+        ## inactivity, enable
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x\&y\&z_thresh_falling_en
-+
-+        ## freefall, enable
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x\&y\&z_mag_falling_en
-+
-+        ## singletap, enable
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_x_gesture_singletap_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_y_gesture_singletap_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_z_gesture_singletap_en
-+
-+        ## doubletap, enable
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > ./events/in_accel_gesture_doubletap_en
-+
-+Verify incoming events:
-+
-+.. code-block:: bash
-+
-+        root:# iio_event_monitor adxl345
-+        Found IIO device with name adxl345 with device number 0
-+        Event: time: 1739063415957073383, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063415963770218, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063416002563061, type: accel(z), channel: 0, evtype: gesture, direction: singletap
-+        Event: time: 1739063426271128739, type: accel(x&y&z), channel: 0, evtype: thresh, direction: falling
-+        Event: time: 1739063436539080713, type: accel(x&y&z), channel: 0, evtype: thresh, direction: falling
-+        Event: time: 1739063438357970381, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063446726161586, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063446727892670, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063446743019768, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063446744650696, type: accel(z), channel: 0, evtype: thresh, direction: rising
-+        Event: time: 1739063446763559386, type: accel(z), channel: 0, evtype: gesture, direction: singletap
-+        Event: time: 1739063448818126480, type: accel(x&y&z), channel: 0, evtype: thresh, direction: falling
-+        ...
-+
-+Activity and inactivity belong together and indicate state changes as follows
-+
-+.. code-block:: bash
-+
-+        root:# iio_event_monitor adxl345
-+        Found IIO device with name adxl345 with device number 0
-+        Event: time: 1744648001133946293, type: accel(x), channel: 0, evtype: thresh, direction: rising
-+          <after inactivity time elapsed>
-+        Event: time: 1744648057724775499, type: accel(x&y&z), channel: 0, evtype: thresh, direction: falling
-+        ...
-+
-+3. Device Buffers
-+=================
-+
-+This driver supports IIO buffers.
-+
-+All devices support retrieving the raw acceleration and temperature measurements
-+using buffers.
-+
-+Usage examples
-+--------------
-+
-+Select channels for buffer read:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_x_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_y_en
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > scan_elements/in_accel_z_en
-+
-+Set the number of samples to be stored in the buffer:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 10 > buffer/length
-+
-+Enable buffer readings:
-+
-+.. code-block:: bash
-+
-+        root:/sys/bus/iio/devices/iio:device0> echo 1 > buffer/enable
-+
-+Obtain buffered data:
-+
-+.. code-block:: bash
-+
-+        root:> iio_readdev -b 16 -s 1024 adxl345 | hexdump -d
-+        WARNING: High-speed mode not enabled
-+        0000000   00003   00012   00013   00005   00010   00011   00005   00011
-+        0000010   00013   00004   00012   00011   00003   00012   00014   00007
-+        0000020   00011   00013   00004   00013   00014   00003   00012   00013
-+        0000030   00004   00012   00013   00005   00011   00011   00005   00012
-+        0000040   00014   00005   00012   00014   00004   00010   00012   00004
-+        0000050   00013   00011   00003   00011   00012   00005   00011   00013
-+        0000060   00003   00012   00012   00003   00012   00012   00004   00012
-+        0000070   00012   00003   00013   00013   00003   00013   00012   00005
-+        0000080   00012   00013   00003   00011   00012   00005   00012   00013
-+        0000090   00003   00013   00011   00005   00013   00014   00003   00012
-+        00000a0   00012   00003   00012   00013   00004   00012   00015   00004
-+        00000b0   00014   00011   00003   00014   00013   00004   00012   00011
-+        00000c0   00004   00012   00013   00004   00014   00011   00004   00013
-+        00000d0   00012   00002   00014   00012   00005   00012   00013   00005
-+        00000e0   00013   00013   00003   00013   00013   00005   00012   00013
-+        00000f0   00004   00014   00015   00005   00012   00011   00005   00012
-+        ...
-+
-+See ``Documentation/iio/iio_devbuf.rst`` for more information about how buffered
-+data is structured.
-+
-+4. IIO Interfacing Tools
-+========================
-+
-+See ``Documentation/iio/iio_tools.rst`` for the description of the available IIO
-+interfacing tools.
--- 
-2.39.5
+Don't you want the atomic_read() for the plane0 vCPU and use the plane0
+vcpu->idx value for non-zero plane vCPUs?
 
+> +
+> +	r = xa_insert(&plane->vcpu_array, vcpu->vcpu_idx,
+> +		      vcpu, GFP_KERNEL_ACCOUNT);
+>  	WARN_ON_ONCE(r == -EBUSY);
+>  	if (r)
+>  		goto unlock_vcpu_destroy;
+> @@ -4220,13 +4248,14 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
+>  	if (r < 0)
+>  		goto kvm_put_xa_erase;
+>  
+> -	atomic_inc(&kvm->online_vcpus);
+> +	if (!plane0_vcpu)
+
+It looks like plane0_vcpu will always have value, either from input or
+assigned in an else path earlier in the code. Should this be
+"!plane->plane" ?
+
+Thanks,
+Tom
+
+> +		atomic_inc(&kvm->online_vcpus);
