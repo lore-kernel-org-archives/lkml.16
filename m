@@ -1,148 +1,118 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F5A4C85
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A82F261575;
+	Mon, 21 Apr 2025 11:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236237; cv=none; b=DDlXk8Z0rAOum127qM+mjEQAWc3VwQ+Plmfg0ZEIZj5HwiCHea94YM69jKGII5FBp4QvYIBusqf4Qsz2ph20h836XP122X80Pu2S2RwoBxxpHCLxxbbmSLyDwHCZwoTKim3mQAOoAh1gMEVN2lHZAhbv96kXIDsv4KaJih0Bf6c=
+	t=1745236255; cv=none; b=D7wm3uuhJ6pUd7fSWL77NFD49k/Hh9PXBeocv0IKwX0eVHoEslCudBRmxfxbZR8c4Ux2NqB0SD6p4Mho5Do9L5FwQSd2FWIQ3Cpor/XKu+DtlXUTQ/nCUKUAdnYonicMAa4kl0nY7Mo3OOpx2EJkRwa8SD6WAEPyYFtwqv73yEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236237; c=relaxed/simple;
-	bh=MJovKVXEWX36rbT7ZlqVbpCnAH21xxf7j2V9N1Et5xY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h6l/dhH4uwQTF7ceyPB3rDEqNvhqz0kXVynBZqzEt0x+qQVa1pIZvqgIlz7Qi45fkB2Eg1WI0P+IAkAmlMs+ETUw+tQ2WH9HDWps1M/vmY6e0nT+yXJIBkPr3ksjeS59Owz/iQa7VerIjxzkyj+ylWtnSfORsD7Lx4VNCT0Us+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VX6xYAH+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745236255; c=relaxed/simple;
+	bh=7V0PSME1nWcALYz7UGYE7Ja9J4GO+tNxHAvxb4tYhaw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ThGgPv+35u9YX4EDkItJZlCJ0S6/evB5RfYGq67OO1BhlnU5ltXtYA+Fuuq3iBTSAOTdPaQpzZjdMvzUZZaGCOtHzJRkF5q9l7ZXqiTtMKTLwgkbM7n/6gh2tdqk1vZt1fuUOjmS4lvY7oMol+kRJ3kybCDBHBg3/ri57AJfRAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ge8Fb/E/; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VX6xYAH+"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAexPj011252;
-	Mon, 21 Apr 2025 11:50:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=hN4zG5R3enJX2OMcr2mXN7QUjbNu2A
-	CnQiD/BEJAzII=; b=VX6xYAH+Jzu9wLK4IrfN49dE3O65++WWAPQ8E3fvjKXOcj
-	zlwzwBfEb03BKLkQmnHr3yfjR86J1Zcqo4sfG0lgpApwnvcCH41i09YU0WrAA9QV
-	cWFUSqBw1aAZOLGQ8HIkiNPY5wX+mIdaxVOUfSJg9B9X2rrMyubr3OowzDBa1BDt
-	4xcXslu7U78XOtQa/QqclV88ADHV9qOpdiDqZD2gUrvjACVO5VQljtb0jaKTc+RZ
-	1RUWrzXXeNW0+FzxqpvTI0rZfvuIXRijdvWejXw1zINbzF1Brm0fceqxg9MuaDQI
-	HdquxnP+GIaY4nQGenJhEkOzuq3O+v6srD3E+tVQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465mfs880w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 11:50:18 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53LBoILU028139;
-	Mon, 21 Apr 2025 11:50:18 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465mfs880u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 11:50:18 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LALK3n012355;
-	Mon, 21 Apr 2025 11:50:17 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 464p5sxc8x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 11:50:17 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LBoDmu50266594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 11:50:13 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A2F8720043;
-	Mon, 21 Apr 2025 11:50:13 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08B3220040;
-	Mon, 21 Apr 2025 11:50:12 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 21 Apr 2025 11:50:11 +0000 (GMT)
-Date: Mon, 21 Apr 2025 17:20:08 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Cc: Vaibhav Jain <vaibhav@linux.ibm.com>, maddy@linux.ibm.com,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/pseries/msi: Avoid reading PCI device registers
- in reduced power states
-Message-ID: <pjuk4ckhtlpu2m6qykrpv6jw4eafymnarrpun4psn6yptogj2b@5ird52o5ml4p>
-References: <20250305090237.294633-1-gautam@linux.ibm.com>
- <87tt81tr8t.fsf@vajain21.in.ibm.com>
- <0baf5da4-3cf9-47d0-a4da-68e50a0fce80@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge8Fb/E/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22401f4d35aso42198605ad.2;
+        Mon, 21 Apr 2025 04:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745236253; x=1745841053; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rc0DKkPWrE0e6Vsc/ZtQk+JXgRiTqIJBdziEE9MWJQg=;
+        b=Ge8Fb/E/21V3O7tfK/o0YWBK9dSyEKrynL3DQFCh7bYSL9ldxw6PS98kJGP3iG58S1
+         JQyozdanUeZ7F/U4mca1eUXX9IsQNxKvKYNVzvzH7QBTIoDiExZke0V4EJv6lE13PdQm
+         OL5rICVU+p+XgWEgpeRo9ZeOVIQtbfkCtiQ2LRAex8DHpQbqiiRCByHnrBLzvnbuXlCi
+         oVoP2D+7nqBN77A1qpdnF3QuXq4EAWr7ADicXE2N+DDLWmvhEI21uGJNP6QtA1LM0eeo
+         M/6+G2ayK2PTFONeYuUY8lQA5Hclj6Ab2u1b5628REQ0Z9UQg04u9ObCgHJBJzUdVRvi
+         7Zig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745236253; x=1745841053;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rc0DKkPWrE0e6Vsc/ZtQk+JXgRiTqIJBdziEE9MWJQg=;
+        b=D+nPlY1YfTaRMo7HfohclGVwgANUXxdvNZClT/ypRqp3iq32DiVhGxQqRS105UWeV8
+         F1w4qGWbFyU6Ogpfbw7h2G6Tog66NwMUjitVDzFOV3ATNopBpNA+/KmpymG/Ho3g7LK7
+         RJ5Suf4IIYm+SDr5rM8+FQBJfgqv5C+cXPr4PpaNHFCSs+Pn41UK8QJGRmBU03WvlKO8
+         LNDt0rmGyyDsiN616BS0Weopr1d67JDKHwpDgA6nrc3oCmKUmWShTs9lmLuzpcn3uBlm
+         KP0kieHJ98oWQM3smc/LAKka9KQshXM4U8pEgkZ4yNwge/e+tpXO+7M5oyXKRXnTdlFd
+         xuXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd4jWG+b5qYa8kSR98MhQiRueqkugl7TeMZwi6SsskNnjRfLsAZ18CWYRo6L6ycEi9x/bEGwwl5HWn2eQ=@vger.kernel.org, AJvYcCXOHjwfGLulkTFYpXgVVoblUZEP6LQoVQ2ryjSiRM1sVoJWmW8rBnar+8R97Pq2GL0CSbTH1FpyUKh1uys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCKmc1fzkQc8Cg4+Wfo23j/USaFKxioY0NxkORdZoDWnu78xbH
+	NfScVkTjYDfRrJxokvYtXpcNLP1TnvVw82NcVplyg5cw61Ph4UXh
+X-Gm-Gg: ASbGnct/R1G6tj54EdccAsCHvmpt4t+Yu7ziuKPJ2fuPa9Nu0iQcy+6swxcF7kqWHPs
+	reYf/+JCZfZVs9Fkp9HemChriG4AlCovBJurMcVYpMj8mxO4Sp3dYDreQVjubuttCnfoUSRCQ2J
+	HzVC0ZjkCkRRz1C10nAzK6BDStv5EiNQoSvmOghK20gUTJkdV+9dJIFwNEhRiIqJuC7Gy7/lBxI
+	eFuEJk+gFAwmqRmwv8coGY0DLy6TiIIu6d6B2pRMfez730K0F5hcjXwfNCGMg/ACq3hy3qUaylB
+	7ofz/IOGR57va3ZwWhHlPj9vTgf3mW47AzFgATSgJjwNBYRecqZDMAgIoejeL+/S+GDgMA==
+X-Google-Smtp-Source: AGHT+IHweDS0NqpxlU+xKC7cxp7EuYdOBxBK9+ucLyGMecrMQWr9pEmPSyqRsD8ncvvX+wWS8I7/9g==
+X-Received: by 2002:a17:903:2cb:b0:223:5e76:637a with SMTP id d9443c01a7336-22c535a9c65mr150484045ad.23.1745236253382;
+        Mon, 21 Apr 2025 04:50:53 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf2548sm64007015ad.64.2025.04.21.04.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 04:50:53 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: mchehab@kernel.org
+Cc: christophe.jaillet@wanadoo.fr,
+	hverkuil@xs4all.nl,
+	harperchen1110@gmail.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH] media: dvb-usb: az6027: fix out-of-bounds in az6027_i2c_xfer()
+Date: Mon, 21 Apr 2025 20:50:45 +0900
+Message-ID: <20250421115045.81394-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0baf5da4-3cf9-47d0-a4da-68e50a0fce80@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=cM/gskeN c=1 sm=1 tr=0 ts=680630fa cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=_u-ZW7uzS0qod4lKHOEA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: OH3feazQ_ztt-DO_Eg5vcSjhhLEhr4IB
-X-Proofpoint-ORIG-GUID: WZAgA8JbT8PHj0Cgwy8SKe-O1vl13pft
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_05,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=486 priorityscore=1501
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210089
+Content-Transfer-Encoding: 8bit
 
-Hi Venkat,
+Missing maximum size check on msg[i].len causes out-of-bounds vuln for u8 *data.
+Therefore, we need to add proper range checking to prevent this vuln.
 
-Thanks for the report. I looked into this and found that the new warning
-you reported can be observed even on current distro kernels, and is not
-caused by the patch I've posted.
+Fixes: 858e97d7956d ("media: dvb-usb: az6027: fix three null-ptr-deref in az6027_i2c_xfer()")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ drivers/media/usb/dvb-usb/az6027.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I was able to observe the same warning with fedora distro kernel 6.13.7-200.fc41
-
-[   70.294478] icp_hv_set_xirr: bad return code eoi xirr=0x50a0002 returned -4
-[   70.294521] ------------[ cut here ]------------
-[   70.294546] WARNING: CPU: 7 PID: 54 at arch/powerpc/sysdev/xics/icp-hv.c:55 icp_hv_eoi+0xf8/0x120
-[   70.294599] Modules linked in: xt_conntrack xt_MASQUERADE bridge stp llc ip6table_nat ip6table_filter ip6_tables xt_set ip_set iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 xt_addrtype iptable_filter ip_tables kvm rpcrdma rdma_cm iw_cm ib_cm ib_core bonding overlay rfkill binfmt_misc vmx_crypto pseries_rng nfsd auth_rpcgss nfs_acl loop dm_multipath lockd grace nfs_localio nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vsock xfs nvme_tcp nvme_fabrics nvme_keyring nvme_core nvme_auth ibmvscsi ibmveth scsi_transport_srp crct10dif_vpmsum crc32c_vpmsum pseries_wdt sunrpc be2iscsi bnx2i cnic uio cxgb4i cxgb4 tls cxgb3i cxgb3 mdio libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi scsi_dh_rdac scsi_dh_emc scsi_dh_alua fuse aes_gcm_p10_crypto crypto_simd cryptd
-[   70.295015] CPU: 7 UID: 0 PID: 54 Comm: ksoftirqd/7 Kdump: loaded Not tainted 6.13.7-200.fc41.ppc64le #1
-[   70.295064] Hardware name: IBM,9080-HEX POWER8 (architected) 0x800200 0xf000004 of:IBM,FW1060.00 (NH1060_022) hv:phyp pSeries
-[   70.295120] NIP:  c000000000197c98 LR: c000000000197c94 CTR: 0000000000000000
-[   70.295157] REGS: c000000007dd3a20 TRAP: 0700   Not tainted  (6.13.7-200.fc41.ppc64le)
-[   70.295197] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24004202  XER: 00000001
-[   70.295247] CFAR: c00000000032731c IRQMASK: 1
-[   70.295247] GPR00: c000000000197c94 c000000007dd3cc0 c0000000024daa00 000000000000003f
-[   70.295247] GPR04: 00000000ffff7fff 00000000ffff7fff c000000007dd3ae8 00000007ec8e0000
-[   70.295247] GPR08: 0000000000000027 0000000000000000 0000000000000000 0000000000004000
-[   70.295247] GPR12: 0000000000000000 c00000000ffc6f00 c000000000287ef8 c000000004a51080
-[   70.295247] GPR16: 0000000000000000 0000000004208040 c000000003d62c80 c0000000031faf80
-[   70.295247] GPR20: 00000000ffffa63b 000000000000000a c0000000031e6990 c000000000335f10
-[   70.295247] GPR24: 0000000000000001 0000000000000000 0000000000000006 0000000000000002
-[   70.295247] GPR28: c0000007efac68b8 0000000000000000 00000000050a0002 00000000050a0002
-[   70.295603] NIP [c000000000197c98] icp_hv_eoi+0xf8/0x120
-[   70.295633] LR [c000000000197c94] icp_hv_eoi+0xf4/0x120
-[   70.295661] Call Trace:
-[   70.295675] [c000000007dd3cc0] [c000000000197c94] icp_hv_eoi+0xf4/0x120 (unreliable)
-[   70.295717] [c000000007dd3d40] [c000000000337a5c] handle_fasteoi_irq+0x16c/0x350
-[   70.295757] [c000000007dd3d70] [c000000000335fd0] resend_irqs+0xc0/0x190
-[   70.295793] [c000000007dd3db0] [c000000000254064] tasklet_action_common+0x154/0x440
-[   70.295833] [c000000007dd3e20] [c000000000253458] handle_softirqs+0x168/0x4f0
-[   70.295871] [c000000007dd3f10] [c000000000253848] run_ksoftirqd+0x68/0xb0
-[   70.295912] [c000000007dd3f30] [c000000000292f20] smpboot_thread_fn+0x1d0/0x240
-[   70.295951] [c000000007dd3f90] [c000000000288020] kthread+0x130/0x140
-[   70.295984] [c000000007dd3fe0] [c00000000000ded8] start_kernel_thread+0x14/0x18
-[   70.296022] Code: 48c84251 60000000 e9210068 4bffff98 7c661b78 3c82ff31 3c62ff7d 7fc5f378 38842b40 38639bf8 4818f649 60000000 <0fe00000> 38210080 7be34622 e8010010
-[   70.296104] ---[ end trace 0000000000000000 ]---
-[   70.297273] PM: resume devices took 0.000 seconds
-[   70.297415] OOM killer enabled.
-[   70.297433] Restarting tasks ... done.
-[   70.298959] random: crng reseeded on system resumption
-[   70.299106] PM: suspend exit
-
-
-This can be tracked as a separate bug, as it is unrelated to the patch.
-
-Thanks,
-Gautam
+diff --git a/drivers/media/usb/dvb-usb/az6027.c b/drivers/media/usb/dvb-usb/az6027.c
+index 056935d3cbd6..f9bd8a4c1577 100644
+--- a/drivers/media/usb/dvb-usb/az6027.c
++++ b/drivers/media/usb/dvb-usb/az6027.c
+@@ -988,7 +988,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
+ 			/* write/read request */
+ 			if (i + 1 < num && (msg[i + 1].flags & I2C_M_RD)) {
+ 				req = 0xB9;
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 1 || msg[i + 1].len + 5 > sizeof(data)) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+@@ -1005,7 +1005,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
+ 
+ 				/* demod 16bit addr */
+ 				req = 0xBD;
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 1 || msg[i].len - 2 > sizeof(data)) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+@@ -1034,7 +1034,7 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
+ 			} else {
+ 
+ 				req = 0xBD;
+-				if (msg[i].len < 1) {
++				if (msg[i].len < 1 || msg[i].len - 1 > sizeof(data)) {
+ 					i = -EOPNOTSUPP;
+ 					break;
+ 				}
+--
