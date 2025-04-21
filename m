@@ -1,173 +1,137 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D33813212A;
-	Mon, 21 Apr 2025 12:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EEA2586EF;
+	Mon, 21 Apr 2025 12:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238082; cv=none; b=jjxU5JZLfhtHBtUWY4QdQpqGGPryFfR3+webMfe+T5T0OaMtBK7D/DXzhDDEdS6w4xZoQthyd/YUgMtGmQDT/Krz0wtfVSNzWeTcDJU6DA/ip3MZgN0CL9sooEFDLl5kv5saXkkiiRUXSuOWSdJQZqPeGe3b0P+50DCM4PzJQOc=
+	t=1745238235; cv=none; b=XdHkTf/SODR3RPHN1UKvhASZZV9xqCLDxYKZSu6CG9Y/sIbYO0XMFMLfoPWJ48n48jn7qF/xwK52Z/MAsCYsrgMoWOSp6hAVuW0Viyg+gss4BKyBhLjOpOtaIOH635Zh+0MPhvceTsel2cxw8Ja5wD6LjOgRDY0eNPKrAPJMA+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238082; c=relaxed/simple;
-	bh=iMcOproauThzVJNK7jS09osn3yXkJVBW7zXDM1fWJWA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uUncUaAIF3UshmE4tYs9TuBoEM13mIXOxdQNKTm9sipndnXOhRMZBPdKTTr3oQkPqV6phYfPyXmAtHArA+t/3qdM9qAdM+Eme3luqeJbKd6zFj4pt3VCk33WOdST3nO8s/JQf+OIq43qUPpmeX4aQVOq9jo0DVzq5X2rPd4cNhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zh4GC2hXhz4f3jJ8;
-	Mon, 21 Apr 2025 20:20:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 40C501A058E;
-	Mon, 21 Apr 2025 20:21:15 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl85OAZoQMWNKA--.64428S3;
-	Mon, 21 Apr 2025 20:21:15 +0800 (CST)
-Subject: Re: 10x I/O await times in 6.12
-To: Matt Fleming <mfleming@cloudflare.com>, Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team <kernel-team@cloudflare.com>, "yukuai (C)" <yukuai3@huawei.com>
-References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
-Date: Mon, 21 Apr 2025 20:21:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745238235; c=relaxed/simple;
+	bh=Vd/j64meeGHcx3Hv5oHRqjRxxRl/PfL4kE7d8E57WAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ge2bn8I84PQasBB34Yk8i6i50+lcLfIhhdk9ftUYqLAINGP0o44RiifrBtgKPujsEkmYlkiarQXwUGta1cs5rxL+aMJiMmjUg+gAgVhnwCxRTWpbDmCojKZFub2IhZLCDxbK3umTiUeD5Z53txBRujH2vs6Xtc1wDei1ySb6wfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=muvHCVfn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="muvHCVfn"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAZg9b014864;
+	Mon, 21 Apr 2025 12:23:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1uXkKDGsIuCdNpAW8xSrVEz34+NoLU15x+v9O1poyug=; b=muvHCVfnj8Dzcv2J
+	XHmCKUdwrv6ggFcoxuXx6xaBI+lv8WMs67VAGnytgG19idclF0KX1EO6qtYWRfEe
+	gIVUINIJVEdUGDc/tHbuERGjmjqARqUPTuvZmOL0siNfIJ80Ep5j6EOYEY/SpsF1
+	NrIbhdVztGaTtyXOnpCkZjtwTwWpaOJK8/rgWTG890b5CDrP7Mohf81eIpd9tDYE
+	7AgW6z7vLqzZkm5rS9y1MGiML1PKOXKxpLueFHZxhulCjpLtGI7z8UfTXCcOqvE+
+	VqzAHrh+x5diJ0k3XWDV35qyZP7w089MxR9fD26Qw1LPRLNg0EGElrkY+Hxj79Tz
+	Bin4AQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jc6h1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 12:23:48 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53LCNlFZ026117
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Apr 2025 12:23:47 GMT
+Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
+ 2025 05:23:43 -0700
+Message-ID: <01456ba6-ac9d-d5cc-db66-b9a598f8177f@quicinc.com>
+Date: Mon, 21 Apr 2025 17:53:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl85OAZoQMWNKA--.64428S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF1fur15uryxGF45Ary7KFg_yoW5WrWfpr
-	Z0q3ZIyr4rZFWIga1xAa12vFyrtr1qyrW7JFW5G3ySyw1kCryfKr1FvayY9ry3Zrn5CrW7
-	WFZYgas8ZanIkFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUwx
-	hLUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: qcom,sm8550-iris: document
+ QCS8300 IRIS accelerator
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+CC: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com>
+ <20250418-qcs8300_iris-v2-1-1e01385b90e9@quicinc.com>
+ <20250421115059.GA1624060-robh@kernel.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <20250421115059.GA1624060-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=680638d4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=apd90ujbfaWlIdH5QjUA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 9YdId5-hUvhsftj5gYTKPweECB-H7t5X
+X-Proofpoint-ORIG-GUID: 9YdId5-hUvhsftj5gYTKPweECB-H7t5X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504210096
 
-Hi,
 
-在 2025/04/21 16:53, Matt Fleming 写道:
-> Hey there,
+On 4/21/2025 5:20 PM, Rob Herring wrote:
+> On Fri, Apr 18, 2025 at 11:58:39AM +0530, Vikash Garodia wrote:
+>> Document the IRIS video decoder and encoder accelerator found in the
+>> QCS8300 platform. QCS8300 is a downscaled version of SM8550, thereby
+>> have different(lower) capabilities when compared to SM8550.
+>>
+>> This patch depends on patch 20250225-topic-sm8x50-iris-v10-a219b8a8b477
 > 
-> We're moving to 6.12 at Cloudflare and noticed that write await times
-> in iostat are 10x what they were in 6.6. After a bit of bpftracing
-> (script to find all plug times above 10ms below), it seems like this
-> is an accounting error caused by the plug->cur_ktime optimisation
-> rather than anything more material.
+> An incomplete message-id is not useful. It also should go below the 
+> '---' so it is not recorded in git forever.
+Ok, i can add the lore link to the dependent patch.
 
-What is the base value? If it's microseconds, IO performance should
-actually be better.
+Does your bot picks the dependent patch and run the checkers ? The cover letter
+calls out the dependent change-id #, i am assuming the bot checks for
+dependencies, if it does, in the binding patch, and not the cover letter ?
+
+Regards,
+Vikash
 > 
-> It appears as though a task can enter __submit_bio() with ->plug set
-> and a very stale cur_ktime value on the order of milliseconds. Is this
-> expected behaviour? It looks like it leads to inaccurate I/O times.
-> 
-
-For microseconds I think it's expected, however, I don't think
-milliseconds is acceptable.
-> Thanks,
-> Matt
-> 
-> ---->8----
-> $ sudo bpftrace -e 'k:__submit_bio { $p = curtask->plug; if ($p != 0)
-> { if (((nsecs - $p->cur_ktime) / 1000) > 10000) { @[kstack] =
-> count();}}}'
-
-Can you drop this expensive bpftrace script which might affect IO
-performance, and replace __submit_bio directly to __blk_flush_plug? If
-nsecs - plug->cur_ktime is still milliseconds, can you check if the
-following patch can fix your problem?
-
-Thanks,
-Kuai
-
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index ae8494d88897..37197502147e 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1095,7 +1095,9 @@ static inline void blk_account_io_start(struct 
-request *req)
-                 return;
-
-         req->rq_flags |= RQF_IO_STAT;
--       req->start_time_ns = blk_time_get_ns();
-+
-+       if (!current->plug)
-+               req->start_time_ns = blk_time_get_ns();
-
-         /*
-          * All non-passthrough requests are created from a bio with one
-@@ -2874,6 +2876,7 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, 
-bool from_schedule)
-  {
-         struct request *rq;
-         unsigned int depth;
-+       u64 now;
-
-         /*
-          * We may have been called recursively midway through handling
-@@ -2887,6 +2890,10 @@ void blk_mq_flush_plug_list(struct blk_plug 
-*plug, bool from_schedule)
-         depth = plug->rq_count;
-         plug->rq_count = 0;
-
-+       now = ktime_get_ns();
-+       rq_list_for_each(&plug->mq_list, rq)
-+               rq->start_time_ns = now;
-+
-         if (!plug->multiple_queues && !plug->has_elevator && 
-!from_schedule) {
-                 struct request_queue *q;
-
-
-> Attaching 1 probe...
-> ^C
-> 
-> @[
->      __submit_bio+1
->      submit_bio_noacct_nocheck+390
->      submit_bio_wait+92
->      swap_writepage_bdev_sync+262
->      swap_writepage+315
->      pageout+291
->      shrink_folio_list+1835
->      shrink_lruvec+1683
->      shrink_node+784
->      balance_pgdat+877
->      kswapd+496
->      kthread+207
->      ret_from_fork+49
->      ret_from_fork_asm+26
-> ]: 184
-> @[
->      __submit_bio+1
->      submit_bio_noacct_nocheck+390
->      _xfs_buf_ioapply+599
->      __xfs_buf_submit+110
->      xfs_buf_delwri_submit_buffers+399
->      xfsaild+691
->      kthread+207
->      ret_from_fork+49
->      ret_from_fork_asm+26
-> ]: 28123
-> 
-> .
-> 
-
+>>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+>>  Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> index f567f84bd60d439b151bb1407855ba73582c3b83..3dee25e99204169c6c80f7db4bad62775aaa59b5 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> @@ -24,6 +24,7 @@ properties:
+>>        - enum:
+>>            - qcom,sm8550-iris
+>>            - qcom,sm8650-iris
+>> +          - qcom,qcs8300-iris
+>>  
+>>    power-domains:
+>>      maxItems: 4
+>>
+>> -- 
+>> 2.34.1
+>>
