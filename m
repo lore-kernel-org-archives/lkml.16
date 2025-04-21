@@ -1,68 +1,82 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D3627463;
-	Mon, 21 Apr 2025 19:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218231EB1AF
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263258; cv=none; b=mIv1G/zXOXcq8LUx7TTEsMz0Z2qrN+mi+HF8mX2fXgkZ1VPrsMOobWSsEfxDU39Q9u6MXbUWiAV0A1L0mYpnzfoZJHxkK/n2GFkA4EzCJQvRoVXLCHIvZDwdUWRTXDUGRToX2f4W5XphAQLdzhlAvQz3fbEcp+UjdRx6es8IHWs=
+	t=1745263297; cv=none; b=DY2KooJzjQt8LDrn5RydtRWQM5XALEwcFFNVdi9TMAh6RU50tJ6wC8TdKV5IKsnPbOTbWcoYIO3XwLKUfIACApjpsOrTazcmXwzmZUYaYZuoCqOxSNOgrqWD0U+U0rPH9pPXoVjY6+OssrIaStKI/nQ2THBhdf8rmZXpVkLzYb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263258; c=relaxed/simple;
-	bh=FIgFzNnBr++vmjtDk8pCe3cYTsEPiaXPjORFzQs4bws=;
+	s=arc-20240116; t=1745263297; c=relaxed/simple;
+	bh=rk28eIe8cUsJd6JGPxM8wYcVeLlzBfqL2U6EcTaSL6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rhdfod3r75r42uuog+mQjOWBu4DLgSogQsLLSKWDS8eSKTEbo2+61vaRi8PEJ4N2od7jOOJZat236vaqxz5bnNICwPtxhK86cYPC2WvIB884wLQLEzrsCti+VCO81mUi4hjKn5hDO8oFeoQ6g+X1W3lBSi4rLJg//LQftsZvmBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JYRwM/jE; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2EW05DdxTqDm3KNPnziFiL7ncxczmrtPrQbHpY1ZlYSivd8K2FPN0mAUsPmSNkVp9BHwJebXS4mhSXZ53iTVytGUcDAwd/kc2Rr/BoLtVRrdumrKOjoc85iQukJKT2ie8Euq9S5FVPLuVbe7iLuwkdBKjOOcUPSnqNHvf4S+G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KyR8DsOa; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JYRwM/jE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RBxdBp38IXRTVJ8jY24aTNAum3SlxGZFX20fKSQ3ODk=; b=JYRwM/jEdQoWgGqz6IdOEGv5e0
-	D/tDikDnrG0Zhs6L62dkRU3gpNIyQa5Sqn7jXvKICVVMX2FiKeVl8hrgfKNt3ivSdKTUjvpBpaYUp
-	oJPbnMmr3MS/8wX/kBL9F7OafQgHlIjx/ey0huY5PAOPGA41R+mS+/zf0cnLfDxdTQhWqhnW6/7TS
-	O2ei9BBeMgvKyeBHj44IIspAKGjekqp4k4aqAVcA18ljtzZbX61rFTzz0QFRpLYeDSdVHnTuqQxLc
-	9WUa3/qvqz8TLAiH3FQyEK4Jr3cX1Xeox3El7JzIOjKSa5iWn3BcuuVajsAIBnbyH8inmnyXZS2bc
-	xUq6JpPA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50644)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u6wh1-0003I5-1f;
-	Mon, 21 Apr 2025 20:20:35 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u6wgw-0006hE-0M;
-	Mon, 21 Apr 2025 20:20:30 +0100
-Date: Mon, 21 Apr 2025 20:20:29 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KyR8DsOa"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIgAXP013828
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=GuwNQL7COdR6K7Wu0mEB7jrt
+	g9au9uotOWdW3087MZk=; b=KyR8DsOa4kff5NLOokkO561Lhopgr669vN1aPhR7
+	7pr7YTCCqkYj/zBzgEIFKPzRptdapbJHATcqJLXdF06N/DD4msmgVatevDSiZYof
+	DIXP30+J+69GCmPj4nGoT+FGDX/OBsYWJVCHX5fnBp0lpa5D0YUF0cXlMzPfnE79
+	HhgJFNZrjKOUZPMhUuRJyb92JLH+v23SfAp8hbWANs4ZVgoT6K0QiazTnwnKHY3n
+	x9goIZs1sZD9DFIJmmhQBgYNinqQaSi3Y5vezPx7cH5aDnU0pShOwWRT+EBNr+GU
+	Hj8v7uC3nXEP3+2VXCYT2/CtGnIGcvjmYvH4lgGnULii0Q==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4643wwn5v1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:34 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e913e1cf4aso117783386d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:21:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745263294; x=1745868094;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GuwNQL7COdR6K7Wu0mEB7jrtg9au9uotOWdW3087MZk=;
+        b=me2xFisCJLkruvM4d8SaMz6TgOK2VDAkUEvt13f52D67Y5ym7Otgoz/sldwhcU42P/
+         pjp09nDop0pYSa1udZIgyssVoJGRragJYFCGzvx1ZEa3k9p4uItiMkhISlrJbPDbCTe+
+         wEwpLg/zZlBALAvtve8e28Hw/7RW7BuxHK21a33ETwiO9hoAPrktPWfJithvA/vZHsKf
+         HuAitMY6YrsHirdnywHqjoGNOchxzx8zojQn7zoN9DbIMlQk6B7eGG/QH1pvx5m0QKYi
+         UCxaI7yrb1lcdhQC9tmN2lPTNBGEQ6tQktvtZV3D97Oc+Ga/zi3T00IQUtd/vPxofX7F
+         sdZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLLV+yqmle5mwDQAasy7D5h4UfO3Fu3jXxmKKSn/77iPVVuf168scT57RUYqirBzUB79AyjXpbrymote8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHb52FNLfNA/acdchS1G9A5YQ+RlQ5gTcnZJ9J5m+wyNM2U3DG
+	LovzEjZs8UxqwKzjZNArqvSMfgu8oepSovyyApxb0uz2iYF/1/EVTolvCjGzXa7D1CjNpcSBCS6
+	uFfvnywwXs0sqMrVT2DwSXVma1c2vxe3D4P0IVqaf7q4IHrovyHFC+JHtUs8l3Cc=
+X-Gm-Gg: ASbGncvzxq1qwV+U4LNsy5vFUM0AJ4BbFLxCp2t9OUUCxAk1fdjPQDSbtFzhUw+4UbE
+	vyq40pNBJQFH/EzHgmCsKVUv1ldcSPob4FfdTtvgBCW0xH+35W1wpG/+0BaXbR8p90nfjL3pbGx
+	MX2KasWJR2FfuseOFDCfZ6afghwU373Hj6x10bnv0VyxpzJiWp1ZLdvmd3LJ0gwG9NcUxxcK7Dy
+	2FwnboanLJ7bF6vPyqBB166gcScz/Jjzkm9hgdyVjKPEqTzE11hZi63sG8FV3VYi8a0LDJzeJW+
+	rAZaLRnkBoURcoRZqcZtTh7fdc3Bab6EaITTEfk+DA9PhgeRpRmM9OIdbrXKNVE7W0rU2jFgIgs
+	=
+X-Received: by 2002:ad4:5d43:0:b0:6eb:2878:e1fa with SMTP id 6a1803df08f44-6f2c4688548mr234091486d6.45.1745263294088;
+        Mon, 21 Apr 2025 12:21:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHjCANftnq5MsyzBJlMsyrsIUVpzmaMDTame740xj5QASOSOvM3bIvntY44xJmDpLFkmTi5w==
+X-Received: by 2002:ad4:5d43:0:b0:6eb:2878:e1fa with SMTP id 6a1803df08f44-6f2c4688548mr234091156d6.45.1745263293737;
+        Mon, 21 Apr 2025 12:21:33 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109075f28dsm12536521fa.6.2025.04.21.12.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 12:21:32 -0700 (PDT)
+Date: Mon, 21 Apr 2025 22:21:31 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] interconnect: qcom: sm8650: add the MASTER_APSS_NOC
+Message-ID: <xtumjcqontja5nuaalh2xqij4g7e3bxhlqxdwkiwqxbaickppu@p33ym2w3qnbm>
+References: <20250415-topic-sm8650-upstream-icc-apss-noc-v1-0-9e6bea3943d8@linaro.org>
+ <20250415-topic-sm8650-upstream-icc-apss-noc-v1-2-9e6bea3943d8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,62 +85,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250415-topic-sm8650-upstream-icc-apss-noc-v1-2-9e6bea3943d8@linaro.org>
+X-Authority-Analysis: v=2.4 cv=IpEecK/g c=1 sm=1 tr=0 ts=68069abe cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=pi3gJ-yj7RBswzpYwZwA:9 a=CjuIK1q_8ugA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: brX_aWTRloiEUZvic6RI7NKiy9Hxtijy
+X-Proofpoint-ORIG-GUID: brX_aWTRloiEUZvic6RI7NKiy9Hxtijy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 adultscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=774
+ impostorscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504210151
 
-On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index 45819b2358002..2ddc1ce2439a6 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -74,19 +74,21 @@ properties:
->        - rev-rmii
->        - moca
->  
-> -      # RX and TX delays are added by the MAC when required
-> +      # RX and TX delays are part of the board design (through PCB traces). MAC
-> +      # and PHY must not add delays.
->        - rgmii
->  
-> -      # RGMII with internal RX and TX delays provided by the PHY,
-> -      # the MAC should not add the RX or TX delays in this case
-> +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
-> +      # delays are included in the board design; this is the most common case
-> +      # in modern designs.
->        - rgmii-id
->  
-> -      # RGMII with internal RX delay provided by the PHY, the MAC
-> -      # should not add an RX delay in this case
-> +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
-> +      # part of the board design.
->        - rgmii-rxid
->  
-> -      # RGMII with internal TX delay provided by the PHY, the MAC
-> -      # should not add an TX delay in this case
-> +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
-> +      # part of the board design.
->        - rgmii-txid
->        - rtbi
->        - smii
+On Tue, Apr 15, 2025 at 04:03:48PM +0200, Neil Armstrong wrote:
+> Add the MASTER_APSS_NOC interconnect node of the system NoC
+> and the associated QoS configuration.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/interconnect/qcom/sm8650.c | 19 +++++++++++++++++++
+>  drivers/interconnect/qcom/sm8650.h |  1 +
+>  2 files changed, 20 insertions(+)
+> 
 
-Sorry, but I don't think this wording improves the situation - in fact,
-I think it makes the whole thing way more confusing.
-
-Scenario 1: I'm a network device driver author. I read the above, Okay,
-I have a RGMII interface, but I need delays to be added. I'll detect
-when RGMII-ID is used, and cause the MAC driver to add the delays, but
-still pass PHY_INTERFACE_MODE_RGMII_ID to phylib.
-
-Scenario 2: I'm writing a DT file for a board. Hmm, so if I specify
-rgmii because the delays are implemented in the traces, but I need to
-fine-tune them. However, the documentation says that delays must not
-be added by the MAC or the PHY so how do I adjust them. I know, I'll
-use rgmii-id because that allows delays!
-
-I suspect neither of these two are really want you mean, but given
-this wording, that's exactly where it leads - which is more
-confusion and less proper understanding.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With best wishes
+Dmitry
