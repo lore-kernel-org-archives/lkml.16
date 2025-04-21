@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8ED61DFE22;
-	Mon, 21 Apr 2025 15:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9BF1E1E06;
+	Mon, 21 Apr 2025 15:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745248060; cv=none; b=QVLyQQ1VrU2SV4bzlcj9Tk+qO0KLdgxqjU5GW5u0pWqIuam2fWlgUvUzvyw1/0u7i11RFbAvXFCP0vT5N8SJvIFgzvER5IC6O1tklvKAXshYt7mNNXGUBbMqz6Qkk98cRXQI6m4FAIwYBpz7UKfjX7Ya2CZQ3bWqAu/v606JkXo=
+	t=1745248062; cv=none; b=BNuffJVraBlK0PRjh1NyPUsZYQkAq9mRdi5lCCxTT+j/ZqYcHAryk9x4a5EQXhQXtp4jyRpYI2uMUPD0/txU1tB1TqXSxITKu/2Q+ETBYHVOnv5E4edL02NiuwUcBKw2xT1vkDIu0GA5Zw1rym+NmKNyavDsS6nuQ6hlbmPmRRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745248060; c=relaxed/simple;
-	bh=N0EIcJmYbwc3S1r3REodb7XflNDvfiiQXdWup906UB8=;
+	s=arc-20240116; t=1745248062; c=relaxed/simple;
+	bh=lc5bcB2qS+BayGAd67CTq4rDRW3vovdCcVtSqCmpb44=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=H+9RlTqjkTQlustb69hu5zjxFwf3lARv+B95cwx583n8fI6cHqWjBNj4mjXB3CVdY8lWq0n1EeXeDQdLIKLzvUOoKsVlvFGP8L4PF5c/250tdGGV8pE/PbVH99dVMw5xlzrNHHekgZ1s0OOO0/tNntFuQJsDidDYVyR82kV5wfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFX7fMmJ; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=VVMcG12Kr8V4uiUJ6mJx3ylnXiyydyp/O9JEX49II93zV9cdY5mb7ll6gBIPCBPpx00l6aJ4rIaeS4xeyWd/OLAve5w0GYyxbBBdGeAHedIDD3NCAvr18iFnrKApcDJGgW/jrsiBeTepGmTQGFr611Jq8nfNkXiRRUWSJumO1Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cr3TZhNv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFX7fMmJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A8E9C4CEEE;
-	Mon, 21 Apr 2025 15:07:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cr3TZhNv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CE09C4CEEA;
+	Mon, 21 Apr 2025 15:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745248059;
-	bh=N0EIcJmYbwc3S1r3REodb7XflNDvfiiQXdWup906UB8=;
+	s=k20201202; t=1745248061;
+	bh=lc5bcB2qS+BayGAd67CTq4rDRW3vovdCcVtSqCmpb44=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=nFX7fMmJHKrYRCUZuISYoUF+Y0dQugakVYMqdJ08BOXa8AlUmbmGcdtf9qCaTgzE+
-	 3O0kbVMob3Y5Xoys3hqW5urNDywx2UIaTL7tWXVmRw7NQaIk4j9ohk/l5soFr4DX1s
-	 Rb9ZGp1VxxdNUNv5Hd2496c9G9MMHjIoqt/zY86WoYfEYgy4fycQ/ZFodsTQskvBC9
-	 LEVoXyR7GjL1RXGqsFZpDePTsNBI6bALFCbN5dCCulVX7CU3tS+8ghfcGCUN9HLJt9
-	 Yg/sYbqgv3nJUpao87KaDIWeKLWVWlZj5AQ9lLbt2WYG2sc5fj46iWaHByfPinl9+f
-	 cCa0/vUujLn5w==
-Date: Mon, 21 Apr 2025 10:07:37 -0500
+	b=Cr3TZhNvwmMUJ/5U8n99+jGNWC4DSKVZNDIWmg+ISk8Fek2esnCH3kqwdOVmqiD4o
+	 BcLniD9UC/zRaQNBCbPnn2+1i2DatdPiaqH0ykCfZeYknmwEcXHHB13FCNigg6vc4Y
+	 IIEm5an35XL3v5/XTiFx8mvbz3puSfnNR6Hsw9JHMARMsTurT2cMLMLCoIfwEyKVq3
+	 +Kbo5z5xkNS5GUWDvBCusCmx2kCXjFVcx5u6sIMVSMOS5sz2hoI5oWdPmkKKLu5JyR
+	 5gERLoA2lbr1oCfGx5LfpxQLKcoQVEK+20y/EaXrgX2SUG7bJFhB7CYLEXyak/guC9
+	 A5BkryMbnmpeQ==
+Date: Mon, 21 Apr 2025 10:07:39 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,27 +36,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-In-Reply-To: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
-References: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
-Message-Id: <174524752405.2425882.1720854230912655553.robh@kernel.org>
-Subject: Re: [PATCH] arm64: tegra: Enable PWM fan on the Jetson TX1 Devkit
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Douglas Anderson <dianders@chromium.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Benson Leung <bleung@chromium.org>, devicetree@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, Tzung-Bi Shih <tzungbi@kernel.org>, 
+ chrome-platform@lists.linux.dev
+To: Chen-Yu Tsai <wenst@chromium.org>
+In-Reply-To: <20250421101248.426929-1-wenst@chromium.org>
+References: <20250421101248.426929-1-wenst@chromium.org>
+Message-Id: <174524752509.2425965.7536195118424945972.robh@kernel.org>
+Subject: Re: [PATCH v2 0/8] arm64: mediatek: mt8186-corsola: Consolidate
+ and add new devices
 
 
-On Sun, 20 Apr 2025 17:42:53 -0500, Aaron Kling wrote:
-> This is based on 6f78a94, which enabled added the fan and thermal zones
-> for the Jetson Nano Devkit. The fan and thermal characteristics of the
-> two devkits are similar, so usng the same configuration.
+On Mon, 21 Apr 2025 18:12:38 +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
 > 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 60 ++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+> This is v2 of my "component probe for Corsola devices" series.
+> 
+> Changes since v1:
+> - Reworded commit message for Elan I2C-HID binding change
+> - Dropped I2C address constraint from Elan I2C-HID binding completely
+> - Dropped enum from new compatible string entry in Elan I2C-HID binding
+> - Picked up Rob's ack on two binding changes
+> - Rebased onto next-20250417, resolving conflicts with "spherion
+>   component prober" changes
+> - Link to v1:
+>   https://lore.kernel.org/all/20250312104344.3084425-1-wenst@chromium.org/
+> 
+> Here's a follow up series of the I2C component probers for Chromebooks.
+> This series enables the component prober for the Corsola series of
+> devices, combines the two existing Voltorb SKUs, and adds a new
+> device, codename Squirtle.
+> 
+> Patch 1 adds a new HID-over-I2C touchscreen from Elan.
+> 
+> Patch 2 merges the Voltorb entries in the device tree bindings into one.
+> 
+> Patch 3 adds a new entry for the Squirtle device to the bindings.
+> 
+> Patch 4 fixes up the existing device trees for the component prober to
+> be active.
+> 
+> Patch 5 merges the device trees for the Voltorb device.
+> 
+> Patch 6 adds a device tree file for the Squirtle device, with I2C
+> components ready to be probed by the prober.
+> 
+> Patch 7 enables the prober to probe trackpads on some devices in the
+> Corsola family.
+> 
+> Patch 8 enables the prober to probe touchscreens on Squirtle.
+> 
+> Please take a look.
+> 
+> 
+> Thanks
+> ChenYu
+> 
+> 
+> Chen-Yu Tsai (8):
+>   dt-bindings: HID: i2c-hid: elan: Introduce Elan eKTH8D18
+>   dt-bindings: arm: mediatek: Merge MT8186 Voltorb entries
+>   dt-bindings: arm: mediatek: Add MT8186 Squirtle Chromebooks
+>   arm64: dts: mediatek: mt8186-steelix: Mark second source components
+>     for probing
+>   arm64: dts: mediatek: mt8186: Merge Voltorb device trees
+>   arm64: dts: mediatek: mt8186: Add Squirtle Chromebooks
+>   platform/chrome: of_hw_prober: Support trackpad probing on Corsola
+>     family
+>   platform/chrome: of_hw_prober: Support touchscreen probing on Squirtle
+> 
+>  .../devicetree/bindings/arm/mediatek.yaml     |   7 +-
+>  .../bindings/input/elan,ekth6915.yaml         |  12 +-
+>  arch/arm64/boot/dts/mediatek/Makefile         |   4 +-
+>  .../dts/mediatek/mt8186-corsola-squirtle.dts  | 107 ++++++++++++++++++
+>  .../dts/mediatek/mt8186-corsola-steelix.dtsi  |   9 +-
+>  .../mt8186-corsola-tentacool-sku327683.dts    |   2 +
+>  .../mt8186-corsola-tentacruel-sku262148.dts   |   2 +
+>  .../mt8186-corsola-voltorb-sku589824.dts      |  13 ---
+>  ...u589825.dts => mt8186-corsola-voltorb.dts} |   5 +-
+>  .../boot/dts/mediatek/mt8186-corsola.dtsi     |  10 +-
+>  .../platform/chrome/chromeos_of_hw_prober.c   |  29 +++++
+>  11 files changed, 167 insertions(+), 33 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-squirtle.dts
+>  delete mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb-sku589824.dts
+>  rename arch/arm64/boot/dts/mediatek/{mt8186-corsola-voltorb-sku589825.dts => mt8186-corsola-voltorb.dts} (76%)
+> 
+> --
+> 2.49.0.805.g082f7c87e0-goog
+> 
+> 
 > 
 
 
@@ -75,15 +150,22 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit 9c32cda43eb78f78c73aee4aa344b777714e259b
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250417 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/nvidia/' for 20250420-tx1-therm-v1-1-58516c7fc429@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250421101248.426929-1-wenst@chromium.org:
 
-arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dtb: thermal-zones: cpu-thermal:cooling-maps: 'cpu-active', 'cpu-critical', 'cpu-hot', 'cpu-passive' do not match any of the regexes: '^map[-a-zA-Z0-9]*$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb.dtb: spmi@10015000 (mediatek,mt8186-spmi): Unevaluated properties are not allowed ('interrupts' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-voltorb.dtb: sound (mediatek,mt8186-mt6366-rt5682s-max98360-sound): 'model' is a required property
+	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-steelix-sku131072.dtb: sound (mediatek,mt8186-mt6366-rt1019-rt5682s-sound): 'model' is a required property
+	from schema $id: http://devicetree.org/schemas/sound/mt8186-mt6366-rt1019-rt5682s.yaml#
+arch/arm64/boot/dts/mediatek/mt8186-corsola-squirtle.dtb: spmi@10015000 (mediatek,mt8186-spmi): Unevaluated properties are not allowed ('interrupts' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spmi/mtk,spmi-mtk-pmif.yaml#
 
 
 
