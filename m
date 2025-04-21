@@ -1,138 +1,65 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1691362;
-	Mon, 21 Apr 2025 13:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF42C265CDF;
+	Mon, 21 Apr 2025 13:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745241954; cv=none; b=hn4XxTPdSIF9zXa6q/BuPNJcv0XCpqGPXBO8zIxuI6+4OrA5NXiW/vONZMjycmNS+6oumks4jfxuQA6JpCtGhfq8ttuVQgG8xrQpSK5u0kKJYr+B7hYhGD11GIhfvSAuwHjDmduAJ5RQFRThnKp/1dvv1R4emzw2T+2MIFDDZ70=
+	t=1745242153; cv=none; b=orEbMDdhePiVAY7p5xvBLLBtwDjAsLYqBj2Spfx1fdaqUUiBjkk+BXQDySJJpICFL+b5UMJ3Tn27MI5ZLEY+a0nAixwo2B05G5KWE+OtYRgNgxvZptLCTObbIG3mTvAZ15YJ+W7IBJKzyS4N43UuzSTFCV4nfQ0EYxODqyouJhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745241954; c=relaxed/simple;
-	bh=MJzn4Zot4H4HeKEF6X8CGIulijakqTFooUzzdTfATqc=;
+	s=arc-20240116; t=1745242153; c=relaxed/simple;
+	bh=OjPb0Os4g0jA2afhKN6cIy2DeKVLhPUQwkDjg8pUgS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PTsC30Ks412fj0xN5GVYNHFLTd072ROJbQmE9N0279jWPbsi7hTqyTYjC8s7GkteJBg83J8h0pSgvjAacbvKoWB3mR6XD6nOZLIbAZkA8Ud1FlSH/9xz+l3NAS+dr6fbb8DoH2kEOd/3bQDdtOgeQAfgpnu7taJ+T1VoN5MGp00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DZqMeHWm; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=at5gKxOslsPFzedQpTr6LFF9zt/lYfXqrtUsTw7pmm/nC1zYXjRixzauGRstoz9weJOt7Bj1pCv5u5E3LIqF75Qe/ZzsMSJ6hgSySUzvuIl1jb1psivTu42rcVBjwifkoEGOh9dinY38IJ4+9mWnfd3/rOf5sg4CJV1DPWZKqg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9/aXBKv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DZqMeHWm"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6BED16D5;
-	Mon, 21 Apr 2025 15:23:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745241824;
-	bh=MJzn4Zot4H4HeKEF6X8CGIulijakqTFooUzzdTfATqc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9/aXBKv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D329C4CEE4;
+	Mon, 21 Apr 2025 13:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745242152;
+	bh=OjPb0Os4g0jA2afhKN6cIy2DeKVLhPUQwkDjg8pUgS0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DZqMeHWmEtnO3jQYs4mzh987IXhYkmAwY3UkDe26goGlZbjbRYii11+6OAkDmoGfW
-	 rtPiGHHMh4br+mqXdlRHYv4cMp83OoO3aQ5Nob7J70dTPObbv82trS5jfQIjyFa5hT
-	 rE/+3qbLuzb2drV6hMyvqYSBIzZWjSGz0X4hr8A4=
-Date: Mon, 21 Apr 2025 16:25:49 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rishikesh Donadkar <r-donadkar@ti.com>
-Cc: jai.luthra@linux.dev, mripard@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	devarsht@ti.com, y-abhilashchandra@ti.com, mchehab@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com,
-	sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-	tomi.valkeinen@ideasonboard.com, jai.luthra@ideasonboard.com,
-	changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com
-Subject: Re: [PATCH v3 09/13] media: cadence: csi2rx: Use new enable stream
- APIs
-Message-ID: <20250421132549.GH29483@pendragon.ideasonboard.com>
-References: <20250417065554.437541-1-r-donadkar@ti.com>
- <20250417065554.437541-10-r-donadkar@ti.com>
+	b=u9/aXBKvN9npDfV9FJZez4cOROYseG1kEekFKeg1iwhYLObUU/EfvpSzidlVFpI91
+	 RnKxLQ5jK1YsKzrTY6iw0x1Am/cu+4jO6xipAMzYxLSplamBBjj5I4+IU1XLpV4yB9
+	 neHBwOBNGva+5DlU/ccArocqWCyflgEsbol044vnHtFuVdESK4BJkZVrQhALJuUymO
+	 RpzFNwv5NuK1AnW8A38XwTKnyciLIDBeMcAqFrLnBOFAxyxSOjsSlB+HCb8elPY5mX
+	 vniE4FR0PUEZF3khF0ghVXZxWLvQ/tyaTUkSX2rZacg524WVTFnmzm4o3v1hVd+/HV
+	 OxZ6AMoimFb0g==
+Date: Mon, 21 Apr 2025 14:29:08 +0100
+From: Simon Horman <horms@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	stable@vger.kernel.org, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net v1 1/1] net: selftests: initialize TCP header and skb
+ payload with zero
+Message-ID: <20250421132908.GF2789685@horms.kernel.org>
+References: <20250416160125.2914724-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417065554.437541-10-r-donadkar@ti.com>
+In-Reply-To: <20250416160125.2914724-1-o.rempel@pengutronix.de>
 
-Hi Rishikesh,
-
-Thank you for the patch.
-
-On Thu, Apr 17, 2025 at 12:25:50PM +0530, Rishikesh Donadkar wrote:
-> From: Jai Luthra <j-luthra@ti.com>
+On Wed, Apr 16, 2025 at 06:01:25PM +0200, Oleksij Rempel wrote:
+> Zero-initialize TCP header via memset() to avoid garbage values that
+> may affect checksum or behavior during test transmission.
 > 
-> The enable_streams() API in v4l2 supports passing a bitmask to enable
-> each pad/stream combination individually on any media subdev instead of
-> doing s_stream(1) to start all streams on the subdev at once.
+> Also zero-fill allocated payload and padding regions using memset()
+> after skb_put(), ensuring deterministic content for all outgoing
+> test packets.
 > 
-> This API is implemented by ds90ub960 driver (FPDLink deser) and thus the
-> caller (cdns-csi2x) is required to use it. For now we only enable
-> stream0.
-> 
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-> ---
->  drivers/media/platform/cadence/cdns-csi2rx.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-> index b7e9225f66a41..df05d278df379 100644
-> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> @@ -224,10 +224,18 @@ static int csi2rx_configure_ext_dphy(struct csi2rx_priv *csi2rx)
->  static int csi2rx_start(struct csi2rx_priv *csi2rx)
->  {
->  	unsigned int i;
-> +	struct media_pad *remote_pad;
->  	unsigned long lanes_used = 0;
->  	u32 reg;
->  	int ret;
->  
-> +	remote_pad = media_pad_remote_pad_first(&csi2rx->pads[CSI2RX_PAD_SINK]);
+> Fixes: 3e1e58d64c3d ("net: add generic selftest support")
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: stable@vger.kernel.org
 
-Can't you use csi2rx->source_pad instead ?
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> +	if (!remote_pad) {
-> +		dev_err(csi2rx->dev,
-> +			"Failed to find connected source\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	ret = clk_prepare_enable(csi2rx->p_clk);
->  	if (ret)
->  		return ret;
-> @@ -311,7 +319,8 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
->  
->  	reset_control_deassert(csi2rx->sys_rst);
->  
-> -	ret = v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, true);
-> +	ret = v4l2_subdev_enable_streams(csi2rx->source_subdev,
-> +					 remote_pad->index, BIT(0));
->  	if (ret)
->  		goto err_disable_sysclk;
->  
-> @@ -339,6 +348,7 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
->  
->  static void csi2rx_stop(struct csi2rx_priv *csi2rx)
->  {
-> +	struct media_pad *remote_pad;
->  	unsigned int i;
->  	u32 val;
->  	int ret;
-> @@ -367,8 +377,12 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
->  	reset_control_assert(csi2rx->p_rst);
->  	clk_disable_unprepare(csi2rx->p_clk);
->  
-> -	if (v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, false))
-> +	remote_pad = media_pad_remote_pad_first(&csi2rx->pads[CSI2RX_PAD_SINK]);
-> +	if (!remote_pad ||
-> +	    v4l2_subdev_disable_streams(csi2rx->source_subdev,
-> +					remote_pad->index, BIT(0))) {
->  		dev_warn(csi2rx->dev, "Couldn't disable our subdev\n");
-> +	}
->  
->  	if (csi2rx->dphy) {
->  		writel(0, csi2rx->base + CSI2RX_DPHY_LANE_CTRL_REG);
-
--- 
-Regards,
-
-Laurent Pinchart
