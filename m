@@ -1,171 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D74019ADA4;
-	Mon, 21 Apr 2025 11:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC49719ADA4;
+	Mon, 21 Apr 2025 11:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234657; cv=none; b=TOj83FhOHafzwi6SgF1wxn0FAx677sCqs8BPVwuVkbRIg8X55eVTWSyxU67RxNJn+X5amPSo4RtDpZaa8KyaN/pHMW/jsfOejBjSDWL268avnaoouDEH5j+OAiouNEFYqqdV4is9Cb9yJobm2pr2m0Kr/NXAUGLQRJJnY0WIgdc=
+	t=1745234767; cv=none; b=rfTeFVyIp69BTIz+WVQQZ3ihmtE1yVvRM0zdtNZO09il/VvDw00TLKPONYG+SAtIej+M3F1om75A8lwaX8gdV6MeVb0uclcT+pdRq2s//3IOzPSnfhsRkpqPTgktn5vrWL86cMXnl5wC3tP9mg9DphaYB3dR15fuUtvmyL7oVMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234657; c=relaxed/simple;
-	bh=8Ga9bMa+6Cm+8fRUsswxDiXS5Us0FHpqBOW+oHvBo4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ruwncl54NGEANYChUBBYLmDn2iPOptDKWWIbZMayeKq67mofUB51B6drl5czrJ8YrAY3qugDalCS3w2CYa+Mryz4HtlrGadusa6HcV+vfKa5GZ5QHoT1woa/ql6HTx1G8EUuQ+b+Fy5rTye4Pse99/1QablZ2XmNkz7BXX5eyJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDcUXf9/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745234767; c=relaxed/simple;
+	bh=nrhgipuQElBRXLd+C1UKsGu61t1Dp41M14C3lSsJ+qQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=at+p4Ie7l1QPLpclav/oPYriEfk/LHU6tBleyWjeudNqEbODGjA3PqTz7076YGn3SAwU+NOVmv3eJ8oTTC+6NdC8Ow+bHSM1xv0CPPf9M0wKbGc4ad+OQSqnON1c3qD4sPK+/S5+Bj2/tYgKsxqO1jcyWlq91Lz+m+Dmd7znuss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VV7GMbpN; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDcUXf9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C05A9C4CEE4;
-	Mon, 21 Apr 2025 11:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745234657;
-	bh=8Ga9bMa+6Cm+8fRUsswxDiXS5Us0FHpqBOW+oHvBo4o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tDcUXf9/v8ewocuCpUUaz6Y6o1bx9dmG325jybAa3uIFTwzhxgmIvJCj73w0YUe7K
-	 +nlGrkEZwWHh/sdobv1iDnIV4pdPKWyJqgizAI5JpkzsbfFaQEI8S12XkghrmVDTPh
-	 zBpFET+AGCHLfSSDxvfxbuvSVSWcw5e5gz1jRro6b0QRQB43nytgmb0yUoVPkKWwUz
-	 mcFEpv0sGbHzbVKyKWa9PC9QmkTTN/aPIR9Qm5ZXs0FcsUeZYuWhq2jxdGBqIgZBOZ
-	 teRQlQcM2ExQq7zCY0pdsSLkevchOtfofkavTeD+jb7zJF+UBsXboCHZqlhgewWeMk
-	 a6KIQcs6zZKZQ==
-Date: Mon, 21 Apr 2025 12:24:09 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: amplifiers: ada4250: clean up ada4250_init()
-Message-ID: <20250421122409.79f5580c@jic23-huawei>
-In-Reply-To: <20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v2-1-1bf9b033aaf5@baylibre.com>
-References: <20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v2-1-1bf9b033aaf5@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VV7GMbpN"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so28817735e9.0;
+        Mon, 21 Apr 2025 04:26:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745234764; x=1745839564; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DywDJj+TP6Fy0BegsYxCLBJnBZZmwEA8i9S4As70Fkc=;
+        b=VV7GMbpNDKZexuiR3E3L//NaABPb/mpUCpoqlNeIjFcNqabge5WR9YGAv4cuvZuOte
+         w0WojlGT/vxWzqf6BGT+cp8ws0ub32XOeQro8j2Zdq/K+0rQ3rcKbIfYbw3+8dw5N3Hq
+         sE6NJB5/8dW+DLKWhltezudDfBW1170fPoTHkTsTo7BDe2/2MnicDcKSq7weZ9Pa5dZm
+         vlBJ4uY/cjvLE+ctXDAFwase/ctSvorfKJzWD5+N3vKFs6buxOCYn2TPhU32cI/Cgywx
+         BJ0POn9t7zv5jKMkqe5IntBDSi+BE/TbjBFU896OZUAdrLPMpEAODbmemQikN0WPucPs
+         785g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745234764; x=1745839564;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DywDJj+TP6Fy0BegsYxCLBJnBZZmwEA8i9S4As70Fkc=;
+        b=OUkYg1jiD6/fj38jsDWe/s88pGkMTif6WJ///H/slqn1JLCSOR9Vh2C/pmGsy6mppR
+         j4chjxDIKXlXoAu38yhhVH1997wQbeE4lYHMv0kTSIHfpp5ZYp7rku4063LXh6vRAG3k
+         XNnc3Vf+gbm8zqQY7kiJnCYRa+0eX+wvUJx1SdD37i9eyigKpIz8OmIJci0x95S67D0N
+         G3j9DpGc4mtduim/BJ/Pk8OGIlhCz5WiVI2CftVY6epHQEJac/oTSR9SRE0xGI0v76zr
+         S4Cd1n5KTgdAHMEhgRX74YCW9YloOz8BVXDzi95UaDZ36m2kaUpy64ArEcqX0yjRg8+/
+         DbLA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5B/Yl8n/gfsxngZiYF8nDtxYGKapr2k9VS0GE4mUyfOh8nTVp/KocjS2LEDFbVVLNSNEFrF0aSKzpBus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJtE2yCBRpn4mWs7jqb5QXF4fOClKP7o7dMECUG7dR93Y4yEvk
+	O6DGz86QPR8rJa5ByOqSj7msDliJOSA+oSDOHl+wh3pFev9Ljv6JzNircQ==
+X-Gm-Gg: ASbGnctWC4UaSHGdme5VoAybXAFIff3Fu7RlKbQDPiGJf2P16BICDmWIJ1Ou8fgiQ8y
+	VBegroxYkUP5DTs5e6WYEbu8YTKR/Qg7v7RVEySr8PhyokAKqaBxmUmmjn6f59lcaaBSWtTakg+
+	s1lQoHG+Dk1PRb322o4Yahck+EUVF8LtLJrLFZGP6jvLtQGMHAh30VFQSyXSTskfZA5Q691RknS
+	dRgmV3LC3zvL8+AqOwRt1qokmukGSJKB4Yfb/0szaV4wJPG4C6D00boOmXrVsPd4TStaCkbLkyF
+	lo4BGjOqkuy5PPy1C3y4azCXBkCdiGATnAGWNsd3KyohTh+QJTTcBsempjM0tPEpog==
+X-Google-Smtp-Source: AGHT+IEyd/gCLe6uVv+NRUValpX0NFG/QctCP0805z/W9pjLxvuoIW7drtqziovnyPlzm17OYnq17g==
+X-Received: by 2002:a05:600c:1c8f:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-4406ac21897mr78319485e9.33.1745234763686;
+        Mon, 21 Apr 2025 04:26:03 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:c7c:6696:8300:fc11:84a0:480d:20a0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207e6sm11450879f8f.7.2025.04.21.04.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 04:26:03 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: nbd@nbd.name,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	shayne.chen@mediatek.com,
+	sean.wang@mediatek.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	chui-hao.chiu@mediatek.com,
+	Bo.Jiao@mediatek.com
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH RESEND] wifi: mt76: mt7996: avoid NULL pointer dereference in mt7996_set_monitor()
+Date: Mon, 21 Apr 2025 12:25:44 +0100
+Message-Id: <20250421112544.13430-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 18 Apr 2025 15:37:54 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+The function mt7996_set_monitor() dereferences phy before
+the NULL sanity check.
 
-> There are a few opportunities to simplify the code in ada4250_init():
-> * Replace local spi variable with dev since spi is not used directly.
-> * Drop the data variable and use chip_id directly with the regmap bulk
->   read (__aligned() and initialization of the data variable were
->   unnecessary).
-> * Don't use get_unaligned_le16() when not needed.
-> * Use dev_err_probe() instead of dev_err() and return.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> In v1, I though we had a bug, but Andy set me straight. Still, since we
-> were already looking at this, there is some room for improvement, so I
-> changed this to a cleanup patch instead.
-> 
-> Changes in v2:
-> - Totally new patch.
-> - Link to v1: https://lore.kernel.org/r/20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v1-1-7e7bd6dad423@baylibre.com
-As Andy suggested this wants breaking up.
+Fix this to avoid NULL pointer dereference by moving the
+dereference after the check.
 
-One additional requested change inline.
+Fixes: 69d54ce7491d ("wifi: mt76: mt7996: switch to single multi-radio wiphy")
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7996/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/iio/amplifiers/ada4250.c | 34 ++++++++++++++--------------------
->  1 file changed, 14 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/iio/amplifiers/ada4250.c b/drivers/iio/amplifiers/ada4250.c
-> index 74f8429d652b17b4d1f38366e23ce6a2b3e9b218..13906e4b4842095717566781ad00cd58f3934510 100644
-> --- a/drivers/iio/amplifiers/ada4250.c
-> +++ b/drivers/iio/amplifiers/ada4250.c
-> @@ -13,8 +13,7 @@
->  #include <linux/regmap.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/spi/spi.h>
-> -
-> -#include <linux/unaligned.h>
-> +#include <linux/types.h>
->  
->  /* ADA4250 Register Map */
->  #define ADA4250_REG_GAIN_MUX        0x00
-> @@ -299,25 +298,23 @@ static void ada4250_reg_disable(void *data)
->  
->  static int ada4250_init(struct ada4250_state *st)
->  {
-> +	struct device *dev = &st->spi->dev;
->  	int ret;
-> -	u16 chip_id;
-> -	u8 data[2] __aligned(8) = {};
-> -	struct spi_device *spi = st->spi;
-> +	__le16 chip_id;
->  
-> -	st->refbuf_en = device_property_read_bool(&spi->dev, "adi,refbuf-enable");
-> +	st->refbuf_en = device_property_read_bool(dev, "adi,refbuf-enable");
->  
-> -	st->reg = devm_regulator_get(&spi->dev, "avdd");
-> +	st->reg = devm_regulator_get(dev, "avdd");
->  	if (IS_ERR(st->reg))
-> -		return dev_err_probe(&spi->dev, PTR_ERR(st->reg),
-> +		return dev_err_probe(dev, PTR_ERR(st->reg),
->  				     "failed to get the AVDD voltage\n");
->  
->  	ret = regulator_enable(st->reg);
-> -	if (ret) {
-> -		dev_err(&spi->dev, "Failed to enable specified AVDD supply\n");
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to enable specified AVDD supply\n");
->  
-> -	ret = devm_add_action_or_reset(&spi->dev, ada4250_reg_disable, st->reg);
-> +	ret = devm_add_action_or_reset(dev, ada4250_reg_disable, st->reg);
->  	if (ret)
->  		return ret;
->  
-> @@ -326,16 +323,13 @@ static int ada4250_init(struct ada4250_state *st)
->  	if (ret)
->  		return ret;
->  
-> -	ret = regmap_bulk_read(st->regmap, ADA4250_REG_CHIP_ID, data, 2);
-> +	ret = regmap_bulk_read(st->regmap, ADA4250_REG_CHIP_ID, &chip_id,
-> +			       sizeof(chip_id));
->  	if (ret)
->  		return ret;
->  
-> -	chip_id = get_unaligned_le16(data);
-> -
-> -	if (chip_id != ADA4250_CHIP_ID) {
-> -		dev_err(&spi->dev, "Invalid chip ID.\n");
-> -		return -EINVAL;
-> -	}
-> +	if (le16_to_cpu(chip_id) != ADA4250_CHIP_ID)
-
-Given you are working on this driver, these days we treat an ID match failure
-as informational only.  The reason being to allow fallback compatibles to
-be used in DT so that an old kernel can in theory support a new compatible
-chip that shows up sometime in the future (but has a different chip ID).
-
-So please add a final patch to the series that relaxes this to a dev_info()
-print and carry on anyway.
-
-I've considered just changing all rejected chip IDs, but it seems too noisy
-unless people are touching the code for other reasons.  Hence I've not done it.
-There is also a non zero chance that someone has a broken firmware and
-odd error reports will ensue.
-
-Jonathan
-
-> +		return dev_err_probe(dev, -EINVAL, "Invalid chip ID.\n");
->  
->  	return regmap_write(st->regmap, ADA4250_REG_REFBUF_EN,
->  			    FIELD_PREP(ADA4250_REFBUF_MSK, st->refbuf_en));
-> 
-> ---
-> base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
-> change-id: 20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-93ebb1344295
-> 
-> Best regards,
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+index 91c64e3a0860..32846da51cbc 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+@@ -414,11 +414,13 @@ static void mt7996_phy_set_rxfilter(struct mt7996_phy *phy)
+ 
+ static void mt7996_set_monitor(struct mt7996_phy *phy, bool enabled)
+ {
+-	struct mt7996_dev *dev = phy->dev;
++	struct mt7996_dev *dev;
+ 
+ 	if (!phy)
+ 		return;
+ 
++	dev = phy->dev;
++
+ 	if (enabled == !(phy->rxfilter & MT_WF_RFCR_DROP_OTHER_UC))
+ 		return;
+ 
+-- 
+2.39.5
 
