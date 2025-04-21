@@ -1,151 +1,128 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC6D20DD51;
-	Mon, 21 Apr 2025 21:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539CA20E711;
+	Mon, 21 Apr 2025 21:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745269622; cv=none; b=Ch7SH7cyxh70zauHzLp/FUXH8FdISC2c1LN0rV8mAwpK3R8jc2OuOlBYWYJKzSmMZytIexZxffGK1Lc9wG5ZJ6gQCVhdAUZkQCYSvZtmmxjXECoywEC56n0YUYP5SGN7089O9sPmeJVi7lK2Ruw0lyK2d0OSmTsmwNPgPjJNRVA=
+	t=1745269867; cv=none; b=AGarREpEvObUKP78veipzzqutkrrACTqUimxDaBnbD6JK03OLDP/ksM6Vai3YvZl8oKSpPsnHJxGHmHWuvZQvSrz0IywEJL3duvipu//4n5CmMc2h0WqboAH+tbI2SoAQBiSg9oERBaeTKookben40MVRlQg19CeQR0aBP2EVY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745269622; c=relaxed/simple;
-	bh=zZ9QfTcAgGyVYVMs/hFgm2shARK8oqJFBREnc4yd/O8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E7977fMti+lGvdeeNwYoTurzxBvZpxHHlLxfKwxZRDz9Ljmp1Zuj31QmJgmcyGMI0rYoSWvuObjPP/9SagKrHNm02p20tXKRtoseW4jqHo80SM+8FmHc5y5EvKIezfiRfDNWLymxeY0iAHeGWYcspdKc1wDL957gJIPV4PHH5OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bzYJdNJg; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745269867; c=relaxed/simple;
+	bh=A+QXCvekbww/SlLYl4ayQjYhJtQtXcwSTl7a1uUUzG0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=CBDZVRE+7eKzzscCM1srC9qaIMUUk6OP7HsH8XAm5XSHE9LUud1dZ805gzi9dI0XIWdAft0eP4MxrQxY5N0F2uJOl24X7QmdaTLjVQvA8oJQpqQ89/6nDr9h7PBvSGaD3gzNgXIL+AyBThn+ROMlXKjeYophWldQpp1ALUXvM0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdqEtx6r; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bzYJdNJg"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7B066D6;
-	Mon, 21 Apr 2025 23:04:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745269492;
-	bh=zZ9QfTcAgGyVYVMs/hFgm2shARK8oqJFBREnc4yd/O8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bzYJdNJg/LuvQBr4OL4eciqJS2M7kpo4FXjah87Kf7KRD64nt+dZ34NKjUjp0i/c/
-	 RNz9SWLBw/TuFNcM9G+FcaTDoV5dyQNmdsvlTrT9YqCbNRuI0udA42xi88w5Dt08vj
-	 09s2rEjqY68jvRrSv4nHsMH/oVeQWNkPySkyIrfo=
-Date: Tue, 22 Apr 2025 00:06:55 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 03/13] media: nxp: imx8-isi: Remove unused offset in
- mxc_isi_reg and use BIT() macro for mask
-Message-ID: <20250421210655.GM17813@pendragon.ideasonboard.com>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-3-ef695f1b47c4@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdqEtx6r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745269866; x=1776805866;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=A+QXCvekbww/SlLYl4ayQjYhJtQtXcwSTl7a1uUUzG0=;
+  b=TdqEtx6rqDyPNZljEQSiewD3xzt4S8ORIxCY+XnhLq0zesrurW/Zc219
+   AaXK0z0Tf6Wcy+xie4ej472ifWr4LwxEqvvFDMc9gRWA7bsgObRWtI+9M
+   /CtvNRRzR1jNaD5KPdxSoyyiG/3GSnfT8fhu4aM2XQnOpFjb38U0OT+x3
+   eesCn6pbtwnsRd0f/rxQhzK/Fwr6k8/S58qXUEkTnD6XyDQ0cXkWCbAst
+   NhBUpdcB9QWS47c0eR0pROmaXrYzAHlAGv3JV9Vz9TdmFx+bSoks1j/nr
+   z3Fla2w4Ll3EIu7y6fdCCNSUaT1OZLNEzY4r/yOwi+PDNHix8Sryj5M3y
+   w==;
+X-CSE-ConnectionGUID: bt001XuNQUWwuP84VHCmJQ==
+X-CSE-MsgGUID: FH7LhST1R+WyGmtQYa609g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="58189444"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="58189444"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:04 -0700
+X-CSE-ConnectionGUID: tAfMQPzDRE+5d6M7o5s2Og==
+X-CSE-MsgGUID: vYTl9OtGRrOyqOPAySOnOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="136912131"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.220.165])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 14:11:02 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v4 0/4] Create Intel PMC SSRAM Telemetry driver
+Date: Mon, 21 Apr 2025 14:10:53 -0700
+Message-ID: <20250421211100.687250-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408-8qxp_camera-v4-3-ef695f1b47c4@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Frank,
+This patch series removes the SSRAM support from Intel PMC Core driver
+and creates a separate PCI driver for SSRAM device. The new Intel PMC
+SSRAM driver provides the following functionalities:
+1. Search and store the PMC information in a structure, including PWRMBASE
+address and devid for each available PMC. Then Intel PMC Core driver
+achieves the PMC information using the API provided by the new driver.
+2. Search and register Intel Platform Monitoring Techology telemetry
+regions so they would by available for read through sysfs and Intel PMT
+API. Intel PMC Core driver can achieve Low Power Mode requirement
+information from a telemetry region registered by the new driver.
+ 
+The above functionalities was previously handled by Intel PMC Core
+driver. Intel PMC Core driver returns -EPROBE_DEFER when trying to read
+data from a telem region that is not available yet. This setup may
+result in an infinite loop of .probe() calls as Intel PMC Core driver
+creates child devices. Creating a separate PCI driver avoids the infinite
+loop possibility.
 
-Thank you for the patch.
+V4->v3:
+- Remove the first six patches that are accepted.
+- Add a patch to change the return type of intel_vsec_registeri() from
+  void to int.
+- Change the return type of pmc_ssram_telemetry_get_pmc() so the probe
+  function of Intel PMC SSRAM Telemetry driver will fail if
+  intel_vsec_register() fails. The previous implementation hides the
+  failure.
+- Use __free(pci_dev_put) in core.c.
+- Move pmc_ssram_telemetry_get_pmc_info() function comment to c file
+  from h file.
+- Add a patch to improve pmc_core_get_lpm_req() suggested by comment
+  from last version.
 
-On Tue, Apr 08, 2025 at 05:53:01PM -0400, Frank Li wrote:
-> Preserve clarity by removing the unused 'offset' field in struct mxc_isi_reg,
-> as it duplicates information already indicated by the mask and remains unused.
+v3->v2:
+- Add memory barriers to the new driver to ensure write/read order of
+  device_probed variable.
+- Minor grammar changes: add needed white space and end of life new line.
+- Add patch to move error handling to init function.
+- Remove patch to enable SSRAM support of LNL platforms. This patch will be
+  included in a separate series.
+ 
+v2->v1:
+- Rearrange and restructure patches completely based on feedback from v1
 
-The commit message line length limit is normally 72 characters. I can
-reflow when applying if no other change to the series is needed.
+Xi Pardee (4):
+  platform/x86:intel/vsec: Change return type of intel_vsec_register
+  platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
+  platform/x86:intel/pmc: Move error handling to init function
+  platform/x86:intel/pmc: Improve pmc_core_get_lpm_req()
 
-> 
-> Improve readability by replacing hex value masks with the BIT() macro.
-> 
-> No functional change.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 25 +++++++++++-----------
->  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  1 -
->  2 files changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> index 1e79b1211b603..ecfc95882f903 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> @@ -3,6 +3,7 @@
->   * Copyright 2019-2020 NXP
->   */
->  
-> +#include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/device.h>
->  #include <linux/errno.h>
-> @@ -247,24 +248,24 @@ static void mxc_isi_v4l2_cleanup(struct mxc_isi_dev *isi)
->  
->  /* For i.MX8QXP C0 and i.MX8MN ISI IER version */
->  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v1 = {
-> -	.oflw_y_buf_en = { .offset = 19, .mask = 0x80000  },
-> -	.oflw_u_buf_en = { .offset = 21, .mask = 0x200000 },
-> -	.oflw_v_buf_en = { .offset = 23, .mask = 0x800000 },
-> +	.oflw_y_buf_en = { .mask = BIT(19) },
-> +	.oflw_u_buf_en = { .mask = BIT(21) },
-> +	.oflw_v_buf_en = { .mask = BIT(23) },
->  
-> -	.panic_y_buf_en = {.offset = 20, .mask = 0x100000  },
-> -	.panic_u_buf_en = {.offset = 22, .mask = 0x400000  },
-> -	.panic_v_buf_en = {.offset = 24, .mask = 0x1000000 },
-> +	.panic_y_buf_en = { .mask = BIT(20) },
-> +	.panic_u_buf_en = { .mask = BIT(22) },
-> +	.panic_v_buf_en = { .mask = BIT(24) },
->  };
->  
->  /* For i.MX8MP ISI IER version */
->  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v2 = {
-> -	.oflw_y_buf_en = { .offset = 18, .mask = 0x40000  },
-> -	.oflw_u_buf_en = { .offset = 20, .mask = 0x100000 },
-> -	.oflw_v_buf_en = { .offset = 22, .mask = 0x400000 },
-> +	.oflw_y_buf_en = { .mask = BIT(18) },
-> +	.oflw_u_buf_en = { .mask = BIT(20) },
-> +	.oflw_v_buf_en = { .mask = BIT(22) },
->  
-> -	.panic_y_buf_en = {.offset = 19, .mask = 0x80000  },
-> -	.panic_u_buf_en = {.offset = 21, .mask = 0x200000 },
-> -	.panic_v_buf_en = {.offset = 23, .mask = 0x800000 },
-> +	.panic_y_buf_en = { .mask = BIT(19) },
-> +	.panic_u_buf_en = { .mask = BIT(21) },
-> +	.panic_v_buf_en = { .mask = BIT(23) },
->  };
->  
->  /* Panic will assert when the buffers are 50% full */
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> index 9c7fe9e5f941f..e7534a80af7b4 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> @@ -114,7 +114,6 @@ struct mxc_isi_buffer {
->  };
->  
->  struct mxc_isi_reg {
-> -	u32 offset;
->  	u32 mask;
->  };
->  
+ drivers/platform/x86/intel/pmc/Kconfig        |   4 +
+ drivers/platform/x86/intel/pmc/Makefile       |   8 +-
+ drivers/platform/x86/intel/pmc/core.c         | 191 +++++++++++-------
+ drivers/platform/x86/intel/pmc/core.h         |   7 -
+ .../platform/x86/intel/pmc/ssram_telemetry.c  | 147 +++++++++-----
+ .../platform/x86/intel/pmc/ssram_telemetry.h  |  24 +++
+ drivers/platform/x86/intel/vsec.c             |   9 +-
+ include/linux/intel_vsec.h                    |   5 +-
+ 8 files changed, 261 insertions(+), 134 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
 
 -- 
-Regards,
+2.43.0
 
-Laurent Pinchart
