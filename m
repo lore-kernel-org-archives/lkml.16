@@ -1,249 +1,282 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010007.outbound.protection.outlook.com [52.103.12.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1996E19F127;
-	Mon, 21 Apr 2025 21:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745270597; cv=none; b=vAd/jV0elb6uUzZ7CsuLWMbv9EnAJPmzW/NQ5EJyvWYPLzRWghxZg4sQhfZbXwhCXnjF4JuUvOA51LC+kWFQzu6T3VR70JOf4ulkuwvGIaf4lFvW6bsa9dHE/htcSrguSj5SWOMP4vtBAdS4wvlMy0BOoghUP9mGVPCZtA9TaWM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745270597; c=relaxed/simple;
-	bh=xJ91RYyjNW6ERKd3NB9/gYclSsaCipGeyFTmb3C83Go=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCJ3JqgfMbzc5LoqMqn2uho63YyWOSr6yZ/MMeIiEa+IJXkw2zJQJ3RbOcX+/LU4n8BCi9MEvy9SVJNpV+Ph3kO5XMyjvJWs4nQ9v++yHplSJ11cV//cnC1+quVWkK5ZJx8FEskmU7tm/fFyD0kXGhFohMVfsNUpLGUywwYazOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OChlXyXS; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522A01DF72E;
+	Mon, 21 Apr 2025 21:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745270704; cv=fail; b=A53DtSnSK+qk8LQGTUz+CcykLf0UZMqoqBpJAGiBunjI7jeTnfzmW/3NUv7UsJdykTe8pidut+Y5WrE5zVq1LMEQKQPPHOLg7NmXqZ2lPYwU/Tkh5Rd4FWPDKfRhJEBwyBgJ0dXWSEAIUvAa9dNBpAZDVZZLd3qn2Sn0QAP11bI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745270704; c=relaxed/simple;
+	bh=AD4XQs0/3rc+ijhdkzIxOJWAu9s4rFvHAUaWqZjfSR0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xjso0hCPfgRwOd+hi++LclpVpva1EX/PM4D40o4CoDd6OsOkTC6Qe3IiV6W0Frbd9MKwFMsiTjkewYtIyHeiTaz0+rwD961gBTQmXX/evtbQ2TWo2RfbZwCzPzoFzVr/B56ZnrT9RhrI3COAoRk9tfikVyhIDKhERkckOr08wWY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=AcsZ+Y8o; arc=fail smtp.client-ip=52.103.12.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OChlXyXS"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 61E4340E0173;
-	Mon, 21 Apr 2025 21:23:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kxbgOAo3Tz2X; Mon, 21 Apr 2025 21:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745270580; bh=3QegChI5VmQxyAbe7RGBdtzGP8b1Xp50OSRQDsR75Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OChlXyXS+nYdWunaV00LIgwgVb8U8MPJhVDf9UkoZ+cF7ZWd4v/T5xxJocZ93KUCe
-	 /FFryUHXiyGUxV/rcKkLhvN5TOhBwGu+yFfYTZfPKP7ScC+fUxLUg2SZ6aZIJkdJ1P
-	 T+P/EJHX1Q+FWQvoTmoczENMcc+j+pE0LJRiajmE3skNn+5LssvNiFqyJGgQiO6kUA
-	 VXWXtSEBz1fNlSQAdBnuiLqVJLmTNRYj4xNiYldkQYEK5EFGlHvSmenghl2fBwQKSr
-	 J0pvFzya1at0orsXSFs0dqing3uuAEqVSrhwmYVXCzgG5iRWUn3DvyHN7y/Ww9M0g1
-	 OloaHjNh8JbjdPHLJZQ/4mX/u0IfbLbTtJdQgGJK9AsujRM630n+CbNdRt3IoXWWmI
-	 IyzjAlvJxdVpPBLOYhd5kfwBWH63RVaHeTFId+vAXLo4eN1RpG9QRNmP4szpO6cfjT
-	 arejvAm/G8qF8J4A40Fws6kDzdK/zAhCy1nldoNjUZHCqZJhw5LU80mIO0RH54GWfW
-	 CdMs3TB8i++LlWsKU8H1vU1lj1xXMLQ6j2gJMKKWwsyJz7qSYwrht/4LtA130Atufb
-	 VkFkE28/N/DAfnbNViNTeRFmOrL382hmPGRIkVA+6clC9v7vvYSVMtJS/aQsnOl64X
-	 2NIXmb1/rR5hYCISMWE/WxnU=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id A6C6140E016E;
-	Mon, 21 Apr 2025 21:22:41 +0000 (UTC)
-Date: Mon, 21 Apr 2025 23:23:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, hpa@zytor.com,
-	kees@kernel.org, michael.roth@amd.com, nikunj@amd.com,
-	seanjc@google.com, ardb@kernel.org, gustavoars@kernel.org,
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH] x86/sev: Fix SNP guest kdump hang/softlockup/panic
-Message-ID: <20250421212341.GBaAa3XbwU138aY-__@renoirsky.local>
-References: <20250421204453.318557-1-Ashish.Kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="AcsZ+Y8o"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fIBE7D2aTyiAwQq9gBwEiLr6/enSgmRY8vPqVojjEfXzYJ6mrWQnHGSwZkkp+iHdBvI430p4APg016I3DxgtW5sqQ7JW4WAcdZUMXbPerU8v2oRPoBNT1jWwDIyNT/W5tr0xCdoFe0Kj1osGiu67QB5J8+5/nGLBRS2rrboi2rvO6O43TGr3v3LFmRMM1vrS8UAjF9+rH+55IL6SULEj/51In9hoyPg72Qd9U6/M0ZvqrtEnRPjq+z+TbWXTSeijreTKAjN4OiB2CHtCnORFZ5Zs6E5v1z34y6qM6NA7bntACPvOMD/M/m0T1bv99uGZV1rCopciYWHKraAkfUBXqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7p3OVLg/dzXY30yhNQr6JvrkpOLkRqd2mrQHQImCngg=;
+ b=v9otex0nDoOxP4fvXgu/QGfKTAt5rXOqs0ZLTfSATjyKOgg/yOfCbR2ktrgYvcBa5kvTqgqjqD4do5JipaVZt4cq1wXROSLSRKnyR/SzzKfi8gjMq14/RzpDK7/gHcdawpwiv+I3K9PGklsTXspPlBGm8tbfXm1ssCJjYfHnpUBg+G5v5wRe50IlebHvTjjy81icUG0ePKsSRIn5jJgJVQZyv+qakE6srfxQzZWEZ2NEkxvyC31WDyN1EZ4dUdOgZbyvWbS0w4iOARTSc1WgNCwjsZoqUtO5mbM5l1lFp3q4D/RG1gT59Ldq2EuqZaKgKLnXTOklQ0OXeB2VG102JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7p3OVLg/dzXY30yhNQr6JvrkpOLkRqd2mrQHQImCngg=;
+ b=AcsZ+Y8oHl6wFezOBJ9FR+2J1s3sHw6LNlxScs9yuNXmbRmbwn7zQR3ohwCk0uHxP0KWvXDTEZAxf1c5HDbDct4D+eyUICdJQIgLMwPYOPpc63iYmOpmsqH3dkf8zMh5EBiB/sdOw8S+4CmeOwAz+sQmW5L2p4Nd1azeGAhT7+A7tCGW+YE4CrIT5lLjkAj/ZZwa8dFhfjRDrW6xI9kRBVZoK4GgwKFqwKUTlkT/5Sa8wwQNOznzVIaQpo/TsqRzMz/sfsXdq40gpwK3MukILgxO+hJZX8L0AyscEX3u7TUe2kzcdffezVwcvOWVfqIMa6GkyCz09H8cxhVJvPcCxQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by PH0PR02MB8357.namprd02.prod.outlook.com (2603:10b6:510:100::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.21; Mon, 21 Apr
+ 2025 21:24:58 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8678.015; Mon, 21 Apr 2025
+ 21:24:58 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+CC: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
+	<haiyangz@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "x86@kernel.org"
+	<x86@kernel.org>, "linux-hyperv@vger.kernel.org"
+	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "linux-arch@vger.kernel.org"
+	<linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions for
+ hypercall arguments
+Thread-Topic: [PATCH v3 1/7] Drivers: hv: Introduce hv_hvcall_*() functions
+ for hypercall arguments
+Thread-Index: AQHbrjFiyn0GJkB9FUywLGBELxbpZ7OunwuAgAAH2aA=
+Date: Mon, 21 Apr 2025 21:24:58 +0000
+Message-ID:
+ <SN6PR02MB4157FEE08571B84B6CEBFC92D4B82@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250415180728.1789-1-mhklinux@outlook.com>
+ <20250415180728.1789-2-mhklinux@outlook.com>
+ <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
+In-Reply-To: <f2ccf839-1ce3-4827-997e-809ec9d3b021@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH0PR02MB8357:EE_
+x-ms-office365-filtering-correlation-id: 45931f01-f417-404b-16a0-08dd811af7f7
+x-ms-exchange-slblob-mailprops:
+ ymJijV9pwJk27+axzTH4qfXnaf5wM6uS3dnN6CW9su8qyF8HRJ/i6LlHhD5A62iMFhmAhrnalsr2lHR/b0HzzOFQo+bbn3iK/mCVR7xUr/bvVliL0TQeeBSE7esdlliDa65/KB3Jd+ogYd+QqO+ZZDT4tTvKMo/mfxC/y8/1tLMVHTwz6NABN1t7MyopT6wFQuPXxqHS9o/mJJoermsxVPbk+Dh1wU1TbcKAMwIKPLiyGwAnwA5beDTl5P2I+iX3WwGMX/FvV1Ea/mm6g/MRaiNpHhDpQqszUi9rgnMWWuGEU0xyw2n4/KO5sxwFJSk5zI0Pym4CU57rqy/M5I5koaeClrlSLwzZW3UgdiUmt5QXbuLvaqOSP9weA6hwGNoRLNvMvfvkfFwLtll5b30Y4/y0BVjkqUjjFBF88CJfrCObS1Scsq08FWx79exA+OqjPYR7FDJK15R7tgB7RALcuam93y7ogER4Ab/1Z5hLMmVTDjDGk0+uAeKOXJviTf5RUmGbzrSzMKfEXmQL3iQvbtcO+vPKvK9pH9XnfiGx2rhywcHaqeGmOWtcCVmJrfoCwIvkmcE8b/dLgXWEbhzxChdpXXn+hzqAc0OZTf1W157iPgn51QCrI5clO1z5Y5gmRnkYjVNHEIDl1HqDhR3DCiUQx7Khlh1rK5ws5+unmwAv+6DbEK7FyDsSeEvf4VFK2ZSYD9UZEfD47h5Ee0W7kM8E9UjBbdQ3y9naJQa4/wQ89zKR9lXLW2Fs8o324454Kk6wYYK0xrF16OJMSvuQbTD0+hzSdYsZuQu9AJhYo8mLYejmRMeivnQ0f4U+k3sN
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|15080799006|461199028|8062599003|8060799006|102099032|10035399004|3412199025|440099028|41001999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?UFpHQxz8nevLI0+FhHgh5EFpsCK/1zg+RfJM6UAC/gkVLE/Zi8ueriI1jj/f?=
+ =?us-ascii?Q?MDcuYErzlmCErtefRMZRgfqBKevllL2VpGpP90ex2pzZTTQk/BPzkhJYLAVR?=
+ =?us-ascii?Q?zSB0YCEN5tmq2lc3ZKXoy+9WRjU3JNqqCm8wlJaIasiKyxH29gZUXo+YU/ah?=
+ =?us-ascii?Q?PWnMD/F2JeSWdvoP1WskpzHX6AMLtic/tsJNnmGy88LcJ3Wb8gzr85rZxbxO?=
+ =?us-ascii?Q?nkrJ266J0+DJGOyDUcYaHfUGA7aGSSgL8ogP82v578vi6+bOZbDqin76h3lt?=
+ =?us-ascii?Q?W4nMpCWfqXtmkuAKoL+DD6crUpsdnpUhHXuPQO2MAfvO/DACJDHqcI2NdSBY?=
+ =?us-ascii?Q?Q0LdXe2JhlofWQAHSEB1x2vpZZ+BvJuL2PHzgxaza+QgZxBNvy4f3xdAiQZ6?=
+ =?us-ascii?Q?zMCJL5mWeUV+rLMQh9Ayh/Y9TOsgWR5CJ8a96NMIBbKflYdq/D1Zv+MFHvjc?=
+ =?us-ascii?Q?b/Zs63D+bQmF4Rl8gDqDcftYTYC7V3f97YCakP0nTBc8DgCQxk4C9lee1C+e?=
+ =?us-ascii?Q?ksOX9G9C5F9efnF2ufil5sp9bpqpYhAPkal9+H+Wfl/3oxbDSkQQJFCGgLaP?=
+ =?us-ascii?Q?PGCFolx9BuN/XziiTFLfoqOH9WI0HWHVaqbBPtLyonSPl5YFwooKIzTyv+2F?=
+ =?us-ascii?Q?xC3H9Y1pgWJ46t/rVtQV341j5PxDF+WFAmJcligl9hcojXpurJ5mGcb6qTWa?=
+ =?us-ascii?Q?AKgBGSlif9ANRRKNI9dJRp5F03cQ++mQkLvQKihnjQ7BYKtPzPN9+mGfI9Os?=
+ =?us-ascii?Q?7+v3fzPy6KejAqZl5xzZXQ4nvxhATm/egqy74jnT3RnAYum3Ix/j3zJik+9C?=
+ =?us-ascii?Q?Knb68zPCHgCMwWLiXV91ipYgs4DMYI9qVX79gC0Y4kAEuUEv8mDhBBx4Yk9i?=
+ =?us-ascii?Q?tcV9c9A2TQnKzhx0dCv4oDbUpb/gD1Ts3vL+mwD4ncwnGBjQhNgS9TvifMxy?=
+ =?us-ascii?Q?ht+ASX4MSJkMc0uoxnsS0BDcoZegv+lK2aX1h8zqOl+1AYIBOWt+XDwpV9OA?=
+ =?us-ascii?Q?ZM2RzuZPkPDDvsBP6f0nb/N/lJ+ceoHYAG6fuDjg2ks8wvkJDxp4GwrPkXte?=
+ =?us-ascii?Q?uWNHy8LbrneDBaVTlgckxqnn5ytXMpFB+bxeEMqM4KjRCzLF2vqvg3tB2/Lb?=
+ =?us-ascii?Q?ZxN+YYVPCa5trb7dxwOiHi+Wdext/DoUGeGMOmeNPBqOG7uFbdCDJkQ=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?nu2J+F8hl3I7+M/pZKMBjclMCkNJZhRPJ3lhO7Bkw5MBCBIOIWngn3qswvAF?=
+ =?us-ascii?Q?Q3qY+PT973hXycOjxjGDWS9vPmq251cL2kknkJCO9gdSLw2nm/uCT0ZOIyTH?=
+ =?us-ascii?Q?e8LLAKGi6RtFHyT9epJJbVPsJV8bP6uUb3qbbBgaxOef2SL+Dt4TmgiiEQTJ?=
+ =?us-ascii?Q?3LK9l/SKwUR/bNwBZ27tPIw3z65AFGq61wXHEuUJBsZA5c9NDdI6FGOH3Kyy?=
+ =?us-ascii?Q?kcVp2NfOiWXSzV79mQvg+jUBRvOzzE1Eq5FCvEZnAdiuMAJKccIGwJ75prHS?=
+ =?us-ascii?Q?il/WM4uzcE8SpAp+fxreEdNCT83O68XZYDPIu+mj/3Sg1aqp6QPjv+XwzNwz?=
+ =?us-ascii?Q?avadiGSz4Jte0pb9PE+Ghq+ER3Ip0QHYk3Bb2tjxpEsojHoRZ7daNyMiizKY?=
+ =?us-ascii?Q?x4jkxfcGTxFdHJwTNGVoPjCifsxPAmVGGRZJBvgPTok2sUaB721HC+fdI+UE?=
+ =?us-ascii?Q?/GMxyfqqTrA9VXiX9hlO3l+cUu9wpBI+cZXsHDxurPBJHKimjAO4bs5DVXWJ?=
+ =?us-ascii?Q?gdZ/wjSivO9XF0cVqpt+GoxO3SX4yWYZBQqQ3ZoDJh2O6LLcUwh3DC8PY5pI?=
+ =?us-ascii?Q?D5XroGF8d8EUTq/JexsTv2o17x8nus2O8akdNLckfnSQsXZmJdyvh4T6FBOt?=
+ =?us-ascii?Q?yD5EEnmBYW3kSongBdrHdScg9KvNAlmD9YmkOX9zy4mUhxBteRlWDLOCe6S8?=
+ =?us-ascii?Q?PV6ILtLmxNROlp9juA/rcupWwBi3nast+lGnLjAdFYr2TTdyWJeqh4TsGqwH?=
+ =?us-ascii?Q?Ui5418uyv7evfujiMXtfEqiwiBWZJ2Lf/pgZ91Y4Mdt6ScjSJRMBpSf4RX8f?=
+ =?us-ascii?Q?niUzCkMvv7QYIfHBAcVlFVRlyA8BAA1I2RyGAh0aiqvFEHXgY1U3k78Ay9cj?=
+ =?us-ascii?Q?4jCr/tpib+l92N4oKrWEpz++LN1/+weSrU3qQMjHCJI5God6+mwqlLZM73iG?=
+ =?us-ascii?Q?PjqfSFh1ZTCntjazGiFv0wyjFlEInoIsLtuRVU9XLcG0NqKf37mIxNLHWILV?=
+ =?us-ascii?Q?aMTOK4yxbvaBdO2MaAH/NqiGW6tZOkqikQRgOx8ntXkm1bW6dwd/kvoXYYFQ?=
+ =?us-ascii?Q?nWGMv3n4VRiwNu2FrcK8aGZ+LaGRcp3IB7FJU8dVVGJOc938gqLYg3pdy3bT?=
+ =?us-ascii?Q?xVFEZVJMyzoAjaqdeoVwDTgt8SsGIxR0h2bUKNSK/wJuLofdnrMBN/Hct7OQ?=
+ =?us-ascii?Q?Hjn2pcspHwBaZVldYLd4kYQwXqRO6F34n8xiOUcISv07ReFm59bxzC1R/tE?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250421204453.318557-1-Ashish.Kalra@amd.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45931f01-f417-404b-16a0-08dd811af7f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Apr 2025 21:24:58.5414
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR02MB8357
 
-On Mon, Apr 21, 2025 at 08:44:53PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> [  117.111097] watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [cp:318]
-> [  117.111115] Modules linked in:
-> [  117.111120] irq event stamp: 3066414
-> [  117.111122] hardirqs last  enabled at (3066413): [<ffffffffa04878d9>] irqentry_exit+0x39/0x90
-> [  117.111142] hardirqs last disabled at (3066414): [<ffffffffa0485c15>] sysvec_apic_timer_interrupt+0x15/0xb0
-> [  117.111146] softirqs last  enabled at (3066364): [<ffffffff9f245852>] __irq_exit_rcu+0xb2/0xe0
-> [  117.111157] softirqs last disabled at (3066355): [<ffffffff9f245852>] __irq_exit_rcu+0xb2/0xe0
-> [  117.111165] CPU: 0 UID: 0 PID: 318 Comm: cp Not tainted 6.14.0-next-20250328-snp-host-f2a41ff576cc-dirty #414 VOLUNTARY
-> [  117.111171] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [  117.111176] RIP: 0010:rep_movs_alternative+0x5b/0x70
-> [  117.111182] Code: 8b 06 48 89 07 48 83 c6 08 48 83 c7 08 83 e9 08 74 db 83 f9 08 73 e8 eb c5 eb 05 e9 2f 21 02 00 48 89 c8 48 c1 e9 03 83 e0 07 <f3> 48 a5 89 c1 85 c9 75 ab e9 17 21 02 00 48 8d 0c c8 eb a0 90 90
-> [  117.111184] RSP: 0018:ffffc061c16c7b50 EFLAGS: 00040246
-> [  117.111187] RAX: 0000000000000000 RBX: 0000000000001000 RCX: 0000000000000200
-> [  117.111188] RDX: 0000000000018000 RSI: ffffc061c3f53000 RDI: 00007f27a86a5000
-> [  117.111189] RBP: ffffc061c16c7be8 R08: 00007f27a86a6000 R09: 00000000ffffffff
-> [  117.111190] R10: 0000000000000001 R11: 0000000000000001 R12: ffffc061c16c7d30
-> [  117.111191] R13: ffffc061c3f53000 R14: 0000000000000000 R15: ffffc061c3f53000
-> [  117.111193] FS:  00007f27a86ae800(0000) GS:ffff9d420cf0d000(0000) knlGS:0000000000000000
-> [  117.111195] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  117.111196] CR2: 00007fd1278a3000 CR3: 0008000053e58000 CR4: 00000000003506f0
-> [  117.111200] Call Trace:
-> [  117.111204]  <TASK>
-> [  117.111206]  ? _copy_to_iter+0xc1/0x720
-> [  117.111216]  ? srso_return_thunk+0x5/0x5f
-> [  117.111220]  ? _raw_spin_unlock+0x27/0x40
-> [  117.111234]  ? srso_return_thunk+0x5/0x5f
-> [  117.111236]  ? find_vmap_area+0xd6/0xf0
-> [  117.111251]  ? srso_return_thunk+0x5/0x5f
-> [  117.111253]  ? __check_object_size+0x18d/0x2e0
-> [  117.111268]  __copy_oldmem_page.part.0+0x64/0xa0
-> [  117.111281]  copy_oldmem_page_encrypted+0x1d/0x30
-> [  117.111285]  read_from_oldmem.part.0+0xf4/0x200
-> [  117.111306]  read_vmcore+0x206/0x3c0
-> [  117.111309]  ? srso_return_thunk+0x5/0x5f
-> [  117.111325]  proc_reg_read_iter+0x59/0x90
-> [  117.111334]  vfs_read+0x26e/0x350
-> [  117.111362]  ksys_read+0x73/0xf0
-> [  117.111373]  __x64_sys_read+0x1d/0x30
-> [  117.111377]  x64_sys_call+0x1b90/0x2150
-> [  117.111386]  do_syscall_64+0x8b/0x140
-> [  117.111454] RIP: 0033:0x7f27a7510031
-> [  117.111462] Code: fe ff ff 48 8d 3d cf 9b 0a 00 48 83 ec 08 e8 56 4b 02 00 66 0f 1f 44 00 00 48 8d 05 b1 09 2e 00 8b 00 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f 1f 44 00 00 41 54 55 49 89 d4 53
-> [  117.111464] RSP: 002b:00007fff8f2d31c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> [  117.111466] RAX: ffffffffffffffda RBX: 0000000000001000 RCX: 00007f27a7510031
-> [  117.111467] RDX: 0000000000020000 RSI: 00007f27a868d000 RDI: 0000000000000003
-> [  117.111468] RBP: 0000000000000000 R08: 0000000000006000 R09: 0000000000000000
-> [  117.111469] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000000
-> [  117.111470] R13: 0000000000000000 R14: 00007f27a86ad000 R15: 0000000000000000
-> [  117.111499]  </TASK>
-> [  117.111502] Kernel panic - not syncing: softlockup: hung tasks
-> [  117.164421] CPU: 0 UID: 0 PID: 318 Comm: cp Tainted: G             L      6.14.0-next-20250328-snp-host-f2a41ff576cc-dirty #414 VOLUNTARY
-> [  117.166326] Tainted: [L]=SOFTLOCKUP
-> [  117.166878] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [  117.168116] Call Trace:
-> [  117.168514]  <IRQ>
-> [  117.168862]  dump_stack_lvl+0x2b/0xf0
-> [  117.169530]  dump_stack+0x14/0x20
-> [  117.170068]  panic+0x3a8/0x410
-> [  117.170592]  watchdog_timer_fn+0x293/0x300
-> [  117.171229]  ? __pfx_watchdog_timer_fn+0x10/0x10
-> [  117.171961]  __hrtimer_run_queues+0x1c7/0x3d0
-> [  117.172603]  hrtimer_interrupt+0x126/0x290
-> [  117.173261]  __sysvec_apic_timer_interrupt+0x72/0x1c0
-> [  117.174118]  sysvec_apic_timer_interrupt+0x80/0xb0
+From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Monday, April 2=
+1, 2025 1:41 PM
+> >
+> > Current code allocates the "hyperv_pcpu_input_arg", and in
+> > some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> > page of memory allocated per-vCPU. A hypercall call site disables
+> > interrupts, then uses this memory to set up the input parameters for
+> > the hypercall, read the output results after hypercall execution, and
+> > re-enable interrupts. The open coding of these steps leads to
+> > inconsistencies, and in some cases, violation of the generic
+> > requirements for the hypercall input and output as described in the
+> > Hyper-V Top Level Functional Spec (TLFS)[1].
+> >
+> > To reduce these kinds of problems, introduce a family of inline
+> > functions to replace the open coding. The functions provide a new way
+> > to manage the use of this per-vCPU memory that is usually the input and
+> > output arguments to Hyper-V hypercalls. The functions encapsulate
+> > key aspects of the usage and ensure that the TLFS requirements are
+> > met (max size of 1 page each for input and output, no overlap of
+> > input and output, aligned to 8 bytes, etc.). Conceptually, there
+> > is no longer a difference between the "per-vCPU input page" and
+> > "per-vCPU output page". Only a single per-vCPU page is allocated, and
+> > it provides both hypercall input and output memory. All current
+> > hypercalls can fit their input and output within that single page,
+> > though the new code allows easy changing to two pages should a future
+> > hypercall require a full page for each of the input and output.
+> >
+> > The new functions always zero the fixed-size portion of the hypercall
+> > input area so that uninitialized memory is not inadvertently passed
+> > to the hypercall. Current open-coded hypercall call sites are
+> > inconsistent on this point, and use of the new functions addresses
+> > that inconsistency. The output area is not zero'ed by the new code
+> > as it is Hyper-V's responsibility to provide legal output.
+> >
+> > When the input or output (or both) contain an array, the new functions
+> > calculate and return how many array entries fit within the per-vCPU
+> > memory page, which is effectively the "batch size" for the hypercall
+> > processing multiple entries. This batch size can then be used in the
+> > hypercall control word to specify the repetition count. This
+> > calculation of the batch size replaces current open coding of the
+> > batch size, which is prone to errors. Note that the array portion of
+> > the input area is *not* zero'ed. The arrays are almost always 64-bit
+> > GPAs or something similar, and zero'ing that much memory seems
+> > wasteful at runtime when it will all be overwritten. The hypercall
+> > call site is responsible for ensuring that no part of the array is
+> > left uninitialized (just as with current code).
+> >
+> > The new functions are realized as a single inline function that
+> > handles the most complex case, which is a hypercall with input
+> > and output, both of which contain arrays. Simpler cases are mapped to
+> > this most complex case with #define wrappers that provide zero or NULL
+> > for some arguments. Several of the arguments to this new function
+> > must be compile-time constants generated by "sizeof()"
+> > expressions. As such, most of the code in the new function can be
+> > evaluated by the compiler, with the result that the code paths are
+> > no longer than with the current open coding. The one exception is
+> > new code generated to zero the fixed-size portion of the input area
+> > in cases where it is not currently done.
+> >
+> > [1]
+> https://learn.microsoft/.
+> com%2Fen-us%2Fvirtualization%2Fhyper-v-on-
+> windows%2Ftlfs%2Ftlfs&data=3D05%7C02%7C%7Ceefaa97bb91c4d5c9dfb08dd8114da
+> b3%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C638808648755643707%
+> 7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCI
+> sIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D1S=
+2
+> 9jKMjSZgciblHrJzH1rVbPuIORh%2FrU1vFcviBBHE%3D&reserved=3D0
+> >
+> > Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> > Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+> > ---
+> >
+> > Notes:
+> >     Changes in v3:
+> >     * Added wrapper #define hv_hvcall_in_batch_size() to get the batch =
+size
+> >       without setting up hypercall input/output parameters. This call c=
+an be
+> >       used when the batch size is needed for validation checks or memor=
+y
+> >       allocations prior to disabling interrupts.
+> >
+> >     Changes in v2:
+> >     * Added comment that hv_hvcall_inout_array() should always be calle=
+d with
+> >       interrupts disabled because it is returning pointers to per-cpu m=
+emory
+> >       [Nuno Das Neves]
+> >
+> >  include/asm-generic/mshyperv.h | 106 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 106 insertions(+)
+> >
+>
+> This is very cool, thanks for taking the time! I think the function namin=
+g
+> could be more intuitive, e.g. hv_setup_*_args(). I'd not block it for tha=
+t reason,
+> but would be super happy if you would update it. What do you think?
+>
 
-Why is that untrimmed splat even here?
+I'm not particularly enamored with my naming scheme, but it was the
+best I could come up with. My criteria were:
 
-What is that supposed to say?
+* Keep the length reasonably short to not make line length problems
+   any worse
+* Distinguish the input args only, input & output args, and array versions
+* Use the standard "hv_" prefix for Hyper-V related code
 
-> Kdump while doing vmcore generation will be walking through all the
-> guest pages and copying them to userspace, while walking through
-> these guest pages it dumps/reads the guest VMSA pages which are
-> marked in-use/busy (if the vCPU associated with that VMSA is
-> running then that VMSA page is marked in-use/busy in the RMP table)
-> and touching these in-use pages causes unrecoverable #NPF/RMP faults
-> which causes the guest to hang/softlockup/panic.
+Using "setup" instead of "hvcall" seems like an improvement to me, and
+it is 1 character shorter.  The "hv" prefix would be there, but they wouldn=
+'t
+refer specifically to hypercalls. I would not add "_args" on the end becaus=
+e
+that's another 5 characters in length. So we would have:
 
-This paragraph is one single sentence! I think you're the only one who
-understands it.
+* hv_setup_in()
+* hv_setup_inout()
+* hv_setup_in_array()
+* hv_setup_inout_array()
+* hv_setup_in_batch_size() [??]
 
-> If kdump kernel is running on BSP, then BSP's VMSA itself cannot
-> cause any issues, but other APs may be halted in guest, hence
-> they are still in VMRUN state and their VMSAs are busy/in-use
-> and touching those VMSAs will cause the #NPF.
-> 
-> The issue is that either the AP running the kdump kernel has a
-> conflict with it's VMSA page and additionally other APs halted
-> in guest mode have a conflict with their VMSA pages.
-> 
-> Note that even if kdump kernel is running with one vCPU, other APs
-> can still be halted in guest mode and they are in VMRUN state and
-> their VMSAs are busy and will cause #NPF when they are being
-> dumped during kdump.
-> 
-> Therefore, issue AP_DESTROY GHCB calls on all APs (to ensure they
-> are kicked out of guest mode) and then the VMSA bit is cleared on
-> their VMSA page. Additionally if the vCPU running kdump is an AP,
-> then it's VMSA bit can't be cleared (and that AP can't be shutdown
-> or destroyed as it is running kdump) so it's VMSA page is made offline
-> to ensure that makedumpfile excludes that page while dumping guest
-> memory. If the vCPU running kdump is a BSP then nothing else needs
-> to be done as far as BSP's VMSA is concerned.
-> 
-> This fix is for kdump when using makedumpfile command/utility to
-> generate vmcore.
-> 
-> For kexec, additional fix is required to mark the VMSA page of
-> currently running vCPU as reserved during kexec boot and that fix
-> will be depending on KHO/kstate patch-series which add the ability
-> to preserve memory pages across kexec.
+Or maybe, something like this, or similar, which picks up the "args" string=
+,
+but not "setup":
 
-All that text is missing restraint, proper structure and makes me go:
-what is that thing even trying to fix?
+* hv_hcargs_in()
+* hv_hcargs_inout()
+* hv_hcargs_in_array()
+* hv_hcargs_inout_array()
+* hv_hcargs_in_batch_size() [??]
 
-How about you read this here first:
+I'm very open to any other ideas because I'm not particularly
+happy with the hv_hvcall_* approach.
 
-https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
-
-perhaps even use an AI to help you with the formulations and then send
-a version which is actually parseable by other humans?
-
-> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-
-I'd like to read in the next commit message why are you fixing your own
-patch and why isn't this one CC:stable?
-
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/coco/sev/core.c | 105 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 105 insertions(+)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index dcfaa698d6cf..2c27d4b3985c 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -110,9 +110,12 @@ struct svsm_ca boot_svsm_ca_page __aligned(PAGE_SIZE);
->  
->  DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
->  DEFINE_PER_CPU(struct sev_es_save_area *, sev_vmsa);
-> +DEFINE_PER_CPU(int, sev_vcpu_apic_id);
-
-Why? What for?
-
->  DEFINE_PER_CPU(struct svsm_ca *, svsm_caa);
->  DEFINE_PER_CPU(u64, svsm_caa_pa);
->  
-> +static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id);
-> +
->  static __always_inline bool on_vc_stack(struct pt_regs *regs)
->  {
->  	unsigned long sp = regs->sp;
-> @@ -973,6 +976,104 @@ void snp_kexec_begin(void)
->  		pr_warn("Failed to stop shared<->private conversions\n");
->  }
->  
-> +/*
-> + * kexec/kdump should be shutting down all APs except the one handling
-> + * kexec/kdump and clearing the VMSA tag on those AP's VMSA pages as they
-> + * are not being used as a VMSA page anymore, so that a random page in
-> + * the kexec'ed guest which remains a VMSA page cannot cause unrecoverable
-> + * RMP faults, kdump will anyway reboot afterwards while kexec will set new
-> + * VMSA pages for all the APs to come up. Kdump while doing vmcore generation
-> + * and page walking can cause unrecoverable #NPF/RMP faults when walking guest
-> + * memory for dumping when it touches the VMSA page of the currently running
-> + * vCPU while kexec can randomly use this pages when it is re-allocated after
-> + * kexec via the page-allocator.
-
-More gibberish text.
-
-I give up - this is a mess.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Michael
