@@ -1,127 +1,81 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F84263F32;
-	Mon, 21 Apr 2025 13:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454B5264A9E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745240739; cv=none; b=LhLtpwS7geWZlpYaMcU2Z0GrnsvalsZqApbJX7FFoSrlZdtexewj7rWLHdIXdhmoqA9EbzqPek8YvVH60UgYrzpPQOoaoTt+UBJjB4vTJNmfJFIrTSd40c1eMdPqUsGLOXazB/mmZB4lsYbnZmlkSISQhX231fafZAcTOMOX1H0=
+	t=1745240855; cv=none; b=VxIY3gPGUy7vT0qXeo5v0qPmOjfTWlbE57+WNEsI4uLniz1cJGP/iOlxmo49xA+Jar09rV5215EdqLLuK5qJdV94egk/Zg+/wOuuMmZXbuOXVakOz4bwWeRHmsffaHt2QFQZmf3XLmbAIaQJec114UFg32iZaUo/9zhn8lwCEbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745240739; c=relaxed/simple;
-	bh=f+BKdAC4I6YUGknxlC3Xm4jFCVMEuPMlEQphh5ZvvvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nIYznoqJ3m2GXpRJoOD0U199vGAzwfKuaBzbJWQPtgspN3tQGoVXvUXOjST0MYyeoMkgtT8lZoURnlMSu2h6lmFtgxG4HfYn2chDIpX/rdnAdVPOmV2X1YBhvTbOiBukCY9iR1eYmPBuyI/Hvdj1maT8u2KyOvLy+h6lp3bXdLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fyLLAp0h; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745240855; c=relaxed/simple;
+	bh=SlLdaMxcYIQqr0TfdBgzYc7asASKlMl93hbYkq5Xd2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H5REB2Ev0tOdou4hKGnJ9g4lxLL4tRIRc2sK5AXpZPBdcJvYty0OAJuNRztuytGkyEU4ICAlz7dtUkQdxuA7+1jaZv4+j/TEwrmHbWiEiHozXWKNzgqKI2QQh03uc+rmy4ewHc8smq1lTzmLGYegZTrdG31XeWzt505XhgXqiwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=dcEeqfWQ; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fyLLAp0h"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47690a4ec97so42330361cf.2;
-        Mon, 21 Apr 2025 06:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745240735; x=1745845535; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mFtNIhESQPUgGQGLUOpZgw8PI1xqIhF3XCImtswCRMw=;
-        b=fyLLAp0hBV1cXX9gf/HZAMrb0BH7bdBrylF8ZlmKItnV2WUD/NBnOit3M3hbY69fDL
-         snLI5+vVF3wZAqDi2pn4O+nsIzBlReySopIsNaMgQylOd0jMrPHP3LZQUWJ4NC9fHFid
-         6TN4qJA2TBGtTD5ydceI7B8xWwXEkkWSzFtzNoNkHkzZiUvfkTUgjavBYRHOOWYRgGIC
-         dK25d6YbrPXXou7l8UX/D2ONx1hqwn23eVhRU835dFLIr6jEi+933msIlERsDFFzWWKv
-         QVpYzLxi1dHGk64bJREV1ixDpuPi5bZk2SWeggGcNWf+w8fpqx25iiUL4u2tC4CueCRV
-         BE6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745240735; x=1745845535;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mFtNIhESQPUgGQGLUOpZgw8PI1xqIhF3XCImtswCRMw=;
-        b=afl/oGgTB62BjIYj4GRJLH7FsX7Sp7VdCrjCwHkQxUBPTuzCA01BR/7WhDBJJHA6qy
-         iZMEKx2kGBBfDiKBPDqenF13Uk/R0blayk9uedMbjajiNAgRSXK0EPdBZSUHkOyBJDeW
-         kQHbkXZNSeWDUteNyuYQoz2N1vD2GktBJ0hHCq6aIaE2czil4IFwq0L4xpOxv2ElvJ4t
-         2UL65YFIeknUKFQB9p17KDO/bHb+KfT0FhqbvCv111nLH38BdlVDYU7OKKNgdjW5SUCS
-         bMXf2szMa06YWZsnx2LG5sBHBjhJ+y7uOKuAzt+8l981QFGXNx3UUZjT5U6xi0PVG9XG
-         k31w==
-X-Forwarded-Encrypted: i=1; AJvYcCUG5B35FRD8/dr7OMoSiv3ESRfE11/c8E2G7wHeu6lAxtkeM6A2QTJzJYIfOjFEHwv34qHQajIogeddRQde@vger.kernel.org, AJvYcCV/3djDq+Te7rSaAXkr2heUMcYAh6rzSbE51Gq5luwXhTLRLeEd5zNAILEu0ooVoxgaLIWUycdS9dQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6qI2N6q58wYvSEjfez29kSuHPhpZFAST2CBTRiPc7c9Aouhy3
-	Wx242j2lOGBmhdZSRJT898AXTn1+PRQKyzmM66MtPMnWc6zgySaQgnCYe/8eyOg/EegWki8Xwbd
-	VUAgmCQRGz0vK9UbnyYs4bwtib20=
-X-Gm-Gg: ASbGnctPw2bpdZE284BHzydK6gtd2JQD4E97DBZhu+dxaF0Z58Mdxk/U1QxiXo1QKeE
-	RCc/g7ERXj1Z+OMPT1PsYDDYwqJPCnMq4A7nm6/0Yiaf6ShrmuIMh2l00rcMg9Bc4peG1/y5JTJ
-	ehBBW5pasmYf/NrHtyjZsor5WtcgbiquHSmx8QlxKknZozSu6Sl0LB/Q==
-X-Google-Smtp-Source: AGHT+IFzhhB+GWbWRt4VxGeCchwkPhazFoXhUCuwU/HnqxTikuays0RZ9Gjb8LQHrf9hUaObS2S/SGrxuiz6Va7SYmY=
-X-Received: by 2002:ac8:5748:0:b0:477:cb1:ab2a with SMTP id
- d75a77b69052e-47aec39436bmr229380531cf.13.1745240735267; Mon, 21 Apr 2025
- 06:05:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="dcEeqfWQ"
+Date: Mon, 21 Apr 2025 09:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1745240841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wTozYi6D8Lh0GMP5y3aPKcTP9nDmVxr+Gndx4+CY6oo=;
+	b=dcEeqfWQIqSbJYQWk2BH9IgHv1DIGiprzUF5xfwHQE9hgZOgGJF0Ej1rfiQg5QvtSJGot7
+	WC2mJjHK8hP7GYpP+Ztd3i95JFCaTPslPmYqk+Z9ZBnNGyiMdh25MFG27IbWRFLq6bZkO7
+	tuxKKs/V1RRUh7/xaD1ey33Y9MMrsl548eTAWnNeQtzK/cIowmlLAc2tW0yssTGXOn0cJN
+	fzL17h3OjKCHGUTnIY4cIoPDeJBgigW42p4np3qtK8Rf+Ldk8JxuH9zl6FkdcmhQxco1cc
+	Sfe51i2ERIV8Fi8vDNucDwFo8r8J+VDYfIodlcML22zYFRuiwSZlJJpRTQwpGw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
+	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+	Kees Cook <kees@kernel.org>, tamird@gmail.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>
+Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
+Message-ID: <aAZDApE-Wm_NlbMx@blossom>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597D506487C3133B0358CE5B8BC2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAY0hRvNCi0y6rlt@blossom>
+ <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250419144520.815198-1-gshahrouzi@gmail.com> <20250421124915.32a18d36@jic23-huawei>
-In-Reply-To: <20250421124915.32a18d36@jic23-huawei>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Mon, 21 Apr 2025 09:05:24 -0400
-X-Gm-Features: ATxdqUGZBqiT-xkUtjMAQApZJcXMrreXjPpwyLrHEPICF2V0q6d2B3Psi9ZDg1k
-Message-ID: <CAKUZ0z+CSMqCNFAT9k6nUkiwYjq0QG=hH3QPLO-w47xWLkVUxg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 21, 2025 at 7:49=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Sat, 19 Apr 2025 10:45:20 -0400
-> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
->
-> > The inclinometer channels were previously defined with 14 realbits.
-> > However, the ADIS16201 datasheet states the resolution for these output
-> > channels is 12 bits (Page 14, text description; Page 15, table 7).
-> >
-> > Correct the realbits value to 12 to accurately reflect the hardware.
-> >
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> > Omit fixes tag because it targets driver before it moved out of staging=
-.
->
-> Why does that matter?  Should have a fixes tag.  Whether we chose
-> to backport the fix is a different matter.
-Ah ok, that makes sense.
->
-> Otherwise looks fine to me. Reply to this thread with a fixes tag
-> and I can pick it up without needing a v2.
-Got it, will send shortly.
->
->
-> > ---
-> >  drivers/iio/accel/adis16201.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis1620=
-1.c
-> > index 982b33f6eccac..dcc8d9f2ee0f1 100644
-> > --- a/drivers/iio/accel/adis16201.c
-> > +++ b/drivers/iio/accel/adis16201.c
-> > @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channel=
-s[] =3D {
-> >                       BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> >       ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, =
-0, 12),
-> >       ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_=
-X,
-> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> > +                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
-> >       ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_=
-Y,
-> > -                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
-> > +                     BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
-> >       IIO_CHAN_SOFT_TIMESTAMP(7)
-> >  };
-> >
->
+> On 21-04-2025 05:35 pm, Alyssa Rosenzweig wrote:
+> >> Can I have a feedback from some DRM maintainer on this? AFAIK merge window is over for some time now. It's been more than a week and last time when I submitted, it just stayed in the mailing list without any feedback.
+> > 
+> > DRM hides the merge window from committers so that's not super relevant.
+> > 
+> > I am a DRM committer and can pick this up if necessary but it's not
+> > clear to me what's going thru with DRM vs elsewhere.
+> 
+> All the three patches are intended to go through DRM. IIRC Petr, the vsprintf maintainers had requested for that to be done.
+> 
+> The relevant patches have been Reviewed-by Petr as well.
+
+OK, will queue this today.
