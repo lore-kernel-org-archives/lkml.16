@@ -1,319 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010011.outbound.protection.outlook.com [52.103.67.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5223E26560B;
-	Mon, 21 Apr 2025 13:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243664; cv=none; b=QjJwEOJ8HvRFI9y3BSwGqzrmk24HF73HXksto48bZGcc2KCXCvLdfLvqJ1VDLylLIA6gcfooAbyHsv0OD+Q3cSuq4kGdlwRWdwSv/G/v/Z42cyZlFrPbaEq4WAqqm8gZH6zy5Vp0VtY9T/7LSL0F+jdAq5YZ+DCKfvJFnFL5tkg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243664; c=relaxed/simple;
-	bh=rU7Ggx3GhiggYhFh1HE1Uv7111GkC/g9wfMSFuv1JSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aDPKKKQFsSReFQP1JOzs6A2ymtB6uSAUBR59x7DGYMom5KkljR0H0oFVO+JVDOJg4PVKFlE76BKFsF7oUBeEY8ccy7ntIDalhjIYQhgA21nrDRFM1SJ9FID7ItRPNkcyD5uFzG4TU+O/zp06GrcskbXWZwcK4kNnNO/JklPU4g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbPi7tsl; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942BF265CB6;
+	Mon, 21 Apr 2025 13:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745243696; cv=fail; b=EyOK5L2zHw63kDM5Od9m7sM0qQ5vOL9oCeMYUsL0aCSr3Cnf7ICc/uo2UpTK2cjg425iAQoYBUDhBd2YacdGmnep62Yy+E2IWcit6s+w9VSTcadw8rghP85uRsmbS6+WS6EVpeaK8z1FjY2j3sjTNJDvhMqXmrh4+vgJI0v6yLU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745243696; c=relaxed/simple;
+	bh=qk8yoG5vNADEDnD6dQrOpB27yA9yWqYJuXOwstXXOYc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gT8Us+w6H4T92CbT85vnF9xg8XPcK9DHsbGPrMmCYWw9+6jUvyz5NOTr9MKVtuMmxvEF57QAd6GzRgcrJYqzDADfEv54Mrb7xiHtyWmtB5C/Qf+RQzfetq7IByVQWANEz7OHpkV1/7eP2zi4moQSIT8Hw25A70LGKPlAWKmjexc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Q8QF+TUi; arc=fail smtp.client-ip=52.103.67.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbPi7tsl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A115C4CEE4;
-	Mon, 21 Apr 2025 13:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745243664;
-	bh=rU7Ggx3GhiggYhFh1HE1Uv7111GkC/g9wfMSFuv1JSY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mbPi7tsloXCZnRjTCL5o0yiF9pXM0BdgvJ0ARufgEdyUySammASRwoSBhV75vQo0E
-	 2w3YpLxxUz1MH/2Ik7uRmIdlUtzfFGBOHyQaUWj7t8bOQB1jy9L8uAgpt5lhBu/7SK
-	 2zsraq4VoTDpAAlFa8NJzRIWbw1THFNgORe056KW1lF0q+h3SjxI+fFBDgwakejFkQ
-	 1CWhqraZV6BLBFEeWBBrWMN1NLOgYacnmNzl6kJ1BF30AxcKsjtQ+b6DvZGM3Kpdt5
-	 Q8RtmU31aTjX2Tsx1q8NV7kz5lLxg9+DfgawbX/7U08ObJ1gMK3uk2ucx5KD3UBSnb
-	 LGRS3NXBDiUkw==
-Date: Mon, 21 Apr 2025 14:54:17 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- eraretuya@gmail.com
-Subject: Re: [PATCH v6 09/11] iio: accel: adxl345: add inactivity feature
-Message-ID: <20250421145417.571b862a@jic23-huawei>
-In-Reply-To: <CAFXKEHYsMKHMYoBq7U5n02=0wnVmp0_CUrbvxxFFRLJDayS7Kg@mail.gmail.com>
-References: <20250414184245.100280-1-l.rubusch@gmail.com>
-	<20250414184245.100280-10-l.rubusch@gmail.com>
-	<20250418193411.406bd974@jic23-huawei>
-	<CAFXKEHary=PcCh3GEEXznJQgcxj54ZmGR0jmzBdpx8ZVtk2_0g@mail.gmail.com>
-	<20250421112228.453dfa89@jic23-huawei>
-	<CAFXKEHYsMKHMYoBq7U5n02=0wnVmp0_CUrbvxxFFRLJDayS7Kg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Q8QF+TUi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sdWYN3CZryBI6UFq5fTEbePuc9XelhRT/sjg2QDXJ4lo0o0ycNnRUy5/AwS6EVfKh7SOcimwdHiq81Vk05aj/ubCaD0q9IFN3NnQ4PI/Yeuea9mTOdcQADRsIkxOaJqQ0XhUaSUvm1U+0FWnFbGgAGCIih313uj00ptZtEUJqAdHBfGXXiJJuUoH+8oCSaeLXjujyZmelLZqcanYzFJ3Xp4+eF4j4GVfhbi6wDpk0EDJzmAfrTO1w1gikysNMiYptCFt+fJX/vTGYJfxRBVql+Zx3ua7bFpHCxKJ3JyWV/c/4rV79o7jghGi3lN39X4Pl2RoFtxdXFu2MlVJxc56mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fqSHStR6QEJCbTVTIknGm0ADF6fDsYmMVh/1b07LDpU=;
+ b=fdBMkhcluZtJrT8KPyzdcP698yMKG78q8mO691EfsAeDUyaN4MpDg3wGskA3sffSEq+zjzQ8RauLbX/tnBQCzlFBTNYlhAENGPphPw4o3NhIynYEknw8Gboy640OBsDtM+7a7nObtztVY3QOyUFAD0fsGlVBH+VRE1esLvuN/P5ofED4F3A61Wx3aEdMrGLVQX38aaTzeFDFWGzRpVqQvqdwooLUMe2Z4yl+DM4HYbCv8V5S/8V7Kp89/Pa4IK8H/lsOzWA5TWgwJgkkPyTeSuuPvATjdaQmE43toVenJ8+fzbdI5M1PZBA2/YjZmtShxXG1hgfVEKhgU9NjQ3Ljog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fqSHStR6QEJCbTVTIknGm0ADF6fDsYmMVh/1b07LDpU=;
+ b=Q8QF+TUikvEDs/xaa1aKajtQ9g/TlxkHLGCEsov/gB9P1RKrNSgUlVk30jQEDv2zufohKTwpdZ/uDEl8E6zpBsAvFHFlTzyAkCb1caJ7/LKE0nGFdqY80Q0ffW0DFkJjqL18E6xTUY47h/VaRlu4z5zRWH3is+rhA64rEf/aKtvzGjCKWpQoZCKf80h72BmMAlKW5GVNCRY8c4q9Q5T6epFvmMrLyQzNx4FpgcyZWLu9rN8g74z/7yKj9TTyMkDBhVz3BZ1gdTd0d9b8JQqA850z278VNb6nKDmf+jfq4ZCbm9zoGR/K9/fyIBBByoDsvO/lQbgPgFQKvznX+wSCFw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN0PR01MB9820.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:13c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Mon, 21 Apr
+ 2025 13:54:45 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
+ 13:54:45 +0000
+Message-ID:
+ <PN3PR01MB95973648BB4FECBB2E24C5C7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 21 Apr 2025 19:24:41 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+ airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ Hector Martin <marcan@marcan.st>,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597D506487C3133B0358CE5B8BC2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAY0hRvNCi0y6rlt@blossom>
+ <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAZDApE-Wm_NlbMx@blossom>
+ <PN3PR01MB95977FDD2F4DF6D9E198C516B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB95976BAC455F10F6D75B9C84B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAZM0svrO2MiNAdg@blossom>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <aAZM0svrO2MiNAdg@blossom>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PN3PR01CA0166.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::10) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <daa7101e-12ae-456a-be80-fec0e127eb77@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB9820:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26a8033f-9dac-4dea-a98f-08dd80dc12b2
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|7092599003|461199028|6090799003|5072599009|8060799006|19110799003|3412199025|440099028|12091999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?M3kvb2tPK3p0SGRob3BlaWFieWptYWFsTnRBRkdSOThGTkkzRU51NFUyZlkr?=
+ =?utf-8?B?T3BET0doR3NTWDROYS9xcDlkUGxveDVuMFZpTFNkSm81b1NDakFsUFNDZjQy?=
+ =?utf-8?B?T0tHaVRjb21ySFNNSmFxVlA1WldVdkMybmxDNHZuSjdrZXJnZ2lMOGc5ZkRP?=
+ =?utf-8?B?SGMvNjcrRXhrTUJDNjBQUitRVmNLZjhvN2pZRHZmd0oxZk4wSVpSaGtON2VY?=
+ =?utf-8?B?OGFsYUdkS2dhaDRNZGlxdTFEN21vNmt4ZWpJb2lQSFczVUgvRmZicWlPTG5z?=
+ =?utf-8?B?a1JqdWtrWEwzWmJZUllxT3E5dnFaS1FzM2MvOXROVXVPaU50T1BsK2poM3Ir?=
+ =?utf-8?B?WnV4NEh3WDUvVjNzTXJYbzhBbkxDcWZKa25qem05RkQ1cnBGZWQ2S0ZSZHF2?=
+ =?utf-8?B?aDB0MmFwQkR6MmZhb3hlNzh0WElENUUzRE4wMDFVWW1oUFRxa2NEa2Nrdm0w?=
+ =?utf-8?B?K1phaXV2a2VrRis5a0hZMmRyazV2c0dYR0VtWnJaT3ZQT2ZjWjlDK3Q0RUs2?=
+ =?utf-8?B?NUMzTmgzZWNkT2tnL1dhb1pVSHZicUlZM3FBV3ZRVDR0ejlEQkJWNzBlWW1z?=
+ =?utf-8?B?cSsydkRBN2ZiNmljT0NCMEhOQ1dTY05pTEF2SUEyQ005Skk3OE9EaFpvM2xD?=
+ =?utf-8?B?ME5YdTRSZXdWc3MzbGRURnFRRWEyZjA4VENmVERPbXAwTVpOVmdvOHZDYkVE?=
+ =?utf-8?B?SHpLdDZtY0xnM0dKNFVWc1puNUNDTDVBQi9kM2o0d1EvTlZsYnBaK041MnY4?=
+ =?utf-8?B?R01SYWt4ZXZUbHRTMktoTVN0UkFDQTdtQjA3WnYyeVRRK1RHZ1ROL1Frc3VU?=
+ =?utf-8?B?QTkyK1ZqRytpQ3F6TXZESStUaVlJdDRyTFY0VVkxVkRrTHF6aVhsQVo1UzFW?=
+ =?utf-8?B?cEg1REptaXBzQjRFTmp3NmRPcjIxM2g0djRDYm1ldVhNZ3VONi9wQVBFWDBr?=
+ =?utf-8?B?SkNNSllpclQ0ZUFlOHJDM21YZFJnT0FSU1h0Z0VSOGVtdjhKd05HbGxZL0Yw?=
+ =?utf-8?B?cEx4Z2wzNEw4MnBScGEzQVc5TmFmQWJ1U0ZjRStrSGxudTZaWHM5SDdTa0pp?=
+ =?utf-8?B?LzhOa1VNS2wrNmlVVE1NY01OSC9FeXF2WUZjRzNsRS9PVWZvdE5hcm9vRy80?=
+ =?utf-8?B?UEp0U05GeXI5NXZQRXdDeWdRcTI4V2FUZ0lIRGdZUjg0bEtDU0NVS1BRT3ln?=
+ =?utf-8?B?TW5NcWJ1Rld2TEwwemR1NkxQelYzMHlkaXdrQjhlelEvWDNOOUd4K3FlTHJu?=
+ =?utf-8?B?UDgxZ0Z1SitDSzJCZkVVKzBlSjFPOGhOYTAzVk95Zk1wZkI3YVZ5V1V2MUpo?=
+ =?utf-8?B?NksrMzJyRlJSRHdsVndaMjBScVFwa0JxMVlLeFpGYVRXTVN3RG5nU1RCN2hr?=
+ =?utf-8?B?TjlPaEgzeU9lalk2MkJSNERzb3BvN1Z0M093ckFkZ002RERzWjNzWHIyQ1Vt?=
+ =?utf-8?B?TVdOVmx1RDVoQW1TWWRaZlJ1MndoZ1ZPalZtWHdEQSt0ZUt1Q3pWUFdyaGdu?=
+ =?utf-8?B?RVpWUzdUL05oTWVZc2Z4Ri9nWjhUdWY4cEU0TXQ5dEliZzZvNGJkMWo1eStJ?=
+ =?utf-8?Q?RW9HBQdJOdLQLTIN6kK+0KyR8=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TklHU29kMmRPOWdTdUFmNkd5Tk1LeVlkNU9Xd0t5bkE2bHRNYmYzN05VMmtI?=
+ =?utf-8?B?VDhLSmVJUmVnMnA5NjRKc0hUa0RLZWt0cVNtNzU5R1RRdHNzN3ZaUEVXc29N?=
+ =?utf-8?B?ci82czFKRWtMNTFBZFVJL0RsbG9KNWJCSFR5MWNKVjluRFRhY3hSSWNwM1lY?=
+ =?utf-8?B?WkRDZ0cxU1IwMjNzNXBIbldMcnJPSzk1anVSQUFqWk03S05GSTQ1VkZoY3hX?=
+ =?utf-8?B?cnhzaVZubkpULzBPTklyY20rSnB3TlFVNXNlaDJDNjBDdXlwS1I5ZlFOaFF6?=
+ =?utf-8?B?bEpwS2lEeVUvUHFpbXZ3K0FOdXB3cy9QUkptVzVkVWtSeTNYVmJNNTNXVFBC?=
+ =?utf-8?B?cTFjcU5hTHZPN0Z2ZzVHWVNkVXVROUFMMS9kb2pQQmtjWDVrZWtpNFBaMzBk?=
+ =?utf-8?B?LysxaGpGclQrcy91Z2JabkY4MkZabTMwV01lWXNzQ0ZPNGE2M0lUbDhhTlN0?=
+ =?utf-8?B?R25DYUxBbXNzNW5TLy9lM2tMb3RWN093TWFrYTZQdzFRc2RjSERUSlI2eXdy?=
+ =?utf-8?B?ODZLUHZwN0JMYmFxVDJKZVVRYklnUjQ1a1lZWEloa2hnN0YzdTFOUDl2UVJT?=
+ =?utf-8?B?U3hlTTRLbnI3dXBZVkplTkVCZmdUV0FjQlB1TDlncCtocXJySFVKRllDNXlo?=
+ =?utf-8?B?SlhvTVhGdWdpajIxRWl5Si8xYzdPZzJUUzFlY09IdkRZWDAxczBidkJZUVFw?=
+ =?utf-8?B?Z0J2ZmFDbE45KzhvUHMzSW9kcmh1VlBTU0E1OXYvNFBYTmhpR01CSWszSCt2?=
+ =?utf-8?B?SnRSK2JNNllRSG9MaDl6Z0g0cWdnRTF0YW9RMkp3bTY3TFZWcHU5Rm9XWExV?=
+ =?utf-8?B?MXNXTXJRTUpQOFBuOTZGZFpoaDlkZU5BcXdwKzQ2VlA3amVTU0s5Nk41WjR2?=
+ =?utf-8?B?bldXRy9NQTZpU1JHdVZZL2FmdWI1VXM2cUxJSmwreEZMdk9YTUQzeUhqQUNN?=
+ =?utf-8?B?bzFUWGFWK2hWMW5zN0sxb1pBRlZLSEpqTjI4b0F1aVBicGFtemVZY1FvU1Ft?=
+ =?utf-8?B?NVdrZHFJOEQzUFNrL0pvWTBYVVpuK2twWk1NcGF4azhHVzNHQ2xUMi9LeTR3?=
+ =?utf-8?B?T2RtL20vTVZSVmQ3Qmo4aU9HcWlHeUQvQmNqR1NlTmhWeTlIcGFqQmVZREtj?=
+ =?utf-8?B?eHdqNzQvNlZud1FhamZQWm05eG4yYlVnN0hwYTB5Qys3Q2xPVVg3VnlQZDZL?=
+ =?utf-8?B?NHkvYWRqQ3JoSXl5U0FWTi8rakxHNnkzdHJ0YkRUcnpDOWs1WUMrdFBkVnF6?=
+ =?utf-8?B?Z2dMbDlhMVdRUWR3Um9XbjhhUFE4SEZOSjRTUHhiR2drTjV1bVJ3UzF6TW1v?=
+ =?utf-8?B?R00vTXpGalFxUkdScG1xTkFoWVoyYmN1WjRBcitGakFmYllQVTl5eHo2WDRv?=
+ =?utf-8?B?NURBZjBHenhuMGRVTmZoSWJLb2FycU95d004cFhydTlHVlBlc0FZWm5xeDZE?=
+ =?utf-8?B?N3BxOFR6R1FvVVlWZE1iSVZOS3RWUGsrekZSMFFENU9DTXpHV0V1NEFhbTVx?=
+ =?utf-8?B?SkxpWGd0dWpwS09jZC9nVGtBcXBjMWxsaW9PTk1pNStibDJqSW9UU0J6SFJp?=
+ =?utf-8?B?bE1TU0hheUg4akFxNUZtQTlOMCtoeUpKaGJSdTlGVEFQN2hDOTFZYzV6U0cy?=
+ =?utf-8?B?Ti9LcC9CQ3gwclNzOXFubndkS2xGeGZZMmJqYVEzUWFlbE1JVzhrUHdtQUtP?=
+ =?utf-8?B?QWtoNVAvWTl3WXdZalBHb3JmZGhkNnpBTUVxVVVsQmprVFE0cmFiVU1pL0dv?=
+ =?utf-8?Q?2r6JhIr2lcutNU1TJ1n+qjJJLhH2KZWZC8chzFx?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26a8033f-9dac-4dea-a98f-08dd80dc12b2
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 13:54:45.3625
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB9820
 
-On Mon, 21 Apr 2025 15:39:33 +0200
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-> On Mon, Apr 21, 2025 at 12:22=E2=80=AFPM Jonathan Cameron <jic23@kernel.o=
-rg> wrote:
-> >
-> > On Mon, 21 Apr 2025 00:12:17 +0200
-> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > =20
-> > > Happy Easter (again)!
-> > >
-> > > On Fri, Apr 18, 2025 at 8:34=E2=80=AFPM Jonathan Cameron <jic23@kerne=
-l.org> wrote: =20
-> > > >
-> > > > On Mon, 14 Apr 2025 18:42:43 +0000
-> > > > Lothar Rubusch <l.rubusch@gmail.com> wrote:
-> > > > =20
-> > > > > Add the inactivity feature of the sensor. When activity and inact=
-ivity
-> > > > > are enabled, a link bit will be set linking activity and inactivi=
-ty
-> > > > > handling. Additionally, the auto-sleep mode will be enabled. Due =
-to the
-> > > > > link bit the sensor is going to auto-sleep when inactivity was
-> > > > > detected.
-> > > > >
-> > > > > Inactivity detection needs a threshold to be configured, and a ti=
-me
-> > > > > after which it will go into inactivity state if measurements under
-> > > > > threshold.
-> > > > >
-> > > > > When a ODR is configured this time for inactivity is adjusted wit=
-h a
-> > > > > corresponding reasonable default value, in order to have higher
-> > > > > frequencies and lower inactivity times, and lower sample frequenc=
-y but
-> > > > > give more time until inactivity. Both with reasonable upper and l=
-ower
-> > > > > boundaries, since many of the sensor's features (e.g. auto-sleep)=
- will
-> > > > > need to operate beween 12.5 Hz and 400 Hz. This is a default sett=
-ing
-> > > > > when actively changing sample frequency, explicitly setting the t=
-ime
-> > > > > until inactivity will overwrite the default.
-> > > > >
-> > > > > Similarly, setting the g-range will provide a default value for t=
-he
-> > > > > activity and inactivity thresholds. Both are implicit defaults, b=
-ut
-> > > > > equally can be overwritten to be explicitly configured.
-> > > > >
-> > > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
-> > > > Hi Lothar,
-> > > >
-> > > > Patches 6-8 look good to me.
-> > > >
-> > > > This runs into a similar issue to the freefall one. I haven't dug i=
-nto
-> > > > the datasheet but does it report on one channel going inactive, or
-> > > > all being inactive at the same time?  I checked and it is the all
-> > > > case so we should be both on a pseudo channel to describe it right
-> > > > and reporting IIO_MOD_X_AND_Y_AND_Z not the OR form.
-> > > >
-> > > > Sorry again that I'm only realising this on v6 :( =20
-> > >
-> > > No problem at all! Sure, I'm still in this phase where counting every
-> > > single commit upstream makes my ego greater. On the long run, though,
-> > > I guess it's better to build up knowledge and end up with a decent
-> > > implementation quality, than just increasing a commit counter. For me
-> > > it's fine. I also hope it's not too annoying for you.
-> > > =20
-> > > >
-> > > > Difference is for Activity the definition is:
-> > > > "The activity bit is set when acceleration greater than the value
-> > > > stored in the THRESH_ACT register (Address 0x24) is experienced
-> > > > on _any_ participating axis, set by the ACT_INACT_CTL register
-> > > > (Address 0x27)."
-> > > > vs Inactivity:
-> > > > "The inactivity bit is set when acceleration of less than the value
-> > > > stored in the THRESH_INACT register (Address 0x25) is experienced
-> > > > for more time than is specified in the TIME_INACT
-> > > > register (Address 0x26) on _all_ participating axes, as set by the
-> > > > ACT_INACT_CTL register (Address 0x27). "
-> > > >
-> > > > So all vs any.
-> > > > =20
-> > >
-> > > I think I  see your point. At least I change here for inactivity, too,
-> > > to AND'ed axis.
-> > >
-> > > IMHO, if I set OR here, the first axis raising the inactivity will put
-> > > the sensor to sleep mode,
-> > > where AND needs all three axis in inactivity state. I'm not sure if
-> > > this works out, I need to verify
-> > > it still with the hardware, for now I'll change this to AND. =20
-> >
-> > I'd be surprised if it worked differently but indeed good to check!
-> > =20
-> > > =20
-> > > > > +
-> > > > > +/**
-> > > > > + * adxl345_set_inact_time_s - Configure inactivity time explicit=
-ly or by ODR.
-> > > > > + * @st: The sensor state instance.
-> > > > > + * @val_s: A desired time value, between 0 and 255.
-> > > > > + *
-> > > > > + * Inactivity time can be configured between 1 and 255 sec. If a=
- val_s of 0
-> > > > > + * is configured by a user, then a default inactivity time will =
-be computed.
-> > > > > + *
-> > > > > + * In such case, it should take power consumption into considera=
-tion. Thus it
-> > > > > + * shall be shorter for higher frequencies and longer for lower =
-frequencies.
-> > > > > + * Hence, frequencies above 255 Hz shall default to 10 s and fre=
-quencies below
-> > > > > + * 10 Hz shall result in 255 s to detect inactivity.
-> > > > > + *
-> > > > > + * The approach simply subtracts the pre-decimal figure of the c=
-onfigured
-> > > > > + * sample frequency from 255 s to compute inactivity time [s]. S=
-ub-Hz are thus
-> > > > > + * ignored in this estimation. The recommended ODRs for various =
-features
-> > > > > + * (activity/inactivity, sleep modes, free fall, etc.) lie betwe=
-en 12.5 Hz and
-> > > > > + * 400 Hz, thus higher or lower frequencies will result in the b=
-oundary
-> > > > > + * defaults or need to be explicitly specified via val_s.
-> > > > > + *
-> > > > > + * Return: 0 or error value.
-> > > > > + */
-> > > > > +static int adxl345_set_inact_time_s(struct adxl345_state *st, u3=
-2 val_s)
-> > > > > +{
-> > > > > +     unsigned int max_boundary =3D 255;
-> > > > > +     unsigned int min_boundary =3D 10;
-> > > > > +     unsigned int val =3D min(val_s, max_boundary);
-> > > > > +     enum adxl345_odr odr;
-> > > > > +     unsigned int regval;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     if (val =3D=3D 0) {
-> > > > > +             ret =3D regmap_read(st->regmap, ADXL345_REG_BW_RATE=
-, &regval);
-> > > > > +             if (ret)
-> > > > > +                     return ret;
-> > > > > +             odr =3D FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> > > > > +
-> > > > > +             val =3D (adxl345_odr_tbl[odr][0] > max_boundary)
-> > > > > +                     ? min_boundary : max_boundary - adxl345_odr=
-_tbl[odr][0];
-> > > > > +     }
-> > > > > +
-> > > > > +     return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val=
-);
-> > > > >  }
-> > > > >
-> > > > >  /* tap */
-> > > > > @@ -837,6 +943,13 @@ static int adxl345_read_event_config(struct =
-iio_dev *indio_dev,
-> > > > >                       if (ret)
-> > > > >                               return ret;
-> > > > >                       return int_en;
-> > > > > +             case IIO_EV_DIR_FALLING:
-> > > > > +                     ret =3D adxl345_is_act_inact_en(st, chan->c=
-hannel2, =20
-> > > >
-> > > > Does it makes sense to allow inactivity detection on a subset of ch=
-annels but then
-> > > > report it as XYZ?  I guess it didn't matter when it was and OR, but=
- if we
-> > > > change to AND as suggested that is going to be misleading.
-> > > >
-> > > > we might have to allow separate enables but report an event as the =
-combination
-> > > > of channels that are enabled X_AND_Y, X_AND_Z etc  I guess we can i=
-mprove activity
-> > > > channel case as well by doing that with the X_OR_Y etc
-> > > > =20
-> > >
-> > > Well, initially I guess I only had one enable for inactivity.
-> > >
-> > > This was kind of confusing to me. There is a register to enable
-> > > activity and inactivity on a per axis base [ACT_INACT_CTL, 0x27]. =20
-> >
-> > Agreed this is a slightly odd concept.
-> > =20
-> > >
-> > > The interrupt event will set a single bit for inactivity or activity
-> > > [INT_SOURCE, 0x30]. In the interrupt handler further one can read out
-> > > the [ACT_TAP_STATUS, 0x2B], which contains tap and activity
-> > > directions, but no information about inactivity axis.
-> > >
-> > > In summary, for the ADXL345 inactivity can be configured on a per axis
-> > > base, but the event won't tell about the axis that fell into
-> > > inactivity, i.e. the first inactivity is supposed to put the sensor
-> > > into power save (with link bit and power modes set - I think
-> > > inactivity should mainly be seen in the context of their/Analog's
-> > > power save concept). As said before, initially I only provided a
-> > > single "inactivity enable". Then I saw actually I could set and offer
-> > > this per axis. I don't know if there are use cases only to observe
-> > > particularly the x-axis for a general power save. Probably rather not.
-> > >
-> > > So, I agree. But if you don't tell me explicitely to replace per axis
-> > > enables by a single one, I'll probably leave it as is. It implements
-> > > most transparently what the sensor can offer for configuration. =20
-> >
-> > The snag is what I mentioned for freefall. It becomes very hard to indi=
-cate
-> > to userspace what it might expect for the x&y&z cases.  If inactivity r=
-equires
-> > them all to be inactive, I think separate enables is going to be really
-> > tricky to build a consistent ABI around :(
-> >
-> > Some devices we've had in the past have allowed specific configuration =
-of
-> > and / or for axis combinations. For those we've normally kept clear bec=
-ause
-> > the number of combinations gets sill quickly.
-> >
-> > If we don't have a separate channel enable usecase today I think we sho=
-uld
-> > go ahead with general inactivity / activity (and/or as appropriate) and
-> > perhaps solve the per axis case if anyone ever cares about it.
-> > =20
->=20
-> Well, I think here we need to distinguish:
-> Activity: would allow per axis enables and events indicate per axis activ=
-ity
-> Inactivity: allows per axis enables, but only a generic inactivity indica=
-tion
 
-Ah. I had it in my head it was only one set of per axis enables for the two
-types of event. It's not! So indeed your description is what it should be.
+On 21-04-2025 07:19 pm, Alyssa Rosenzweig wrote:
+> I didn't realize this was so subtle with the backporting. I don't think
+> I can take this on, sorry.
 
->=20
-> So, also here, what's still missing? When doing it similarly  to my
-> understanding of freefall now, for a v7 of the patches...
->=20
-> Activity:
-> - I would leave activity as is (is this ok?)
-
-I think so given the separate enables.
-
->=20
-> Inactivity:
-> - I replace single three axis enables by a generic enable, setting and
-> unsetting all three axis for inactivity
-> - I need probably also to provide a similar virtual channel
-
-Is it the same one?  I think so but maybe I've lost track.
-
-> - The axis for this channel are AND'ed
-> - Now, with the virtual channel, usage will be "separate" instead of
-> "shared", which will result in a single enable handle in sysfs
->=20
-> Is this a correct understanding of what is +/- missing? Can you agree
-> to the points I listed up, or is something's missing (documentation of
-> course later)?
-Looks good to me!
-
-Jonathan
+Any change needed or just because some other maintainer manages this? Although Tbh, I really don't care about backporting since T2 Mac users are still using patched kernels provided by us. I'd rather free my mind in getting this done.
+> 
+> Le Mon, Apr 21, 2025 at 06:40:23PM +0530, Aditya Garg a écrit :
+>>
+>>
+>> On 21-04-2025 06:38 pm, Aditya Garg wrote:
+>>>
+>>>
+>>> On 21-04-2025 06:37 pm, Alyssa Rosenzweig wrote:
+>>>>> On 21-04-2025 05:35 pm, Alyssa Rosenzweig wrote:
+>>>>>>> Can I have a feedback from some DRM maintainer on this? AFAIK merge window is over for some time now. It's been more than a week and last time when I submitted, it just stayed in the mailing list without any feedback.
+>>>>>>
+>>>>>> DRM hides the merge window from committers so that's not super relevant.
+>>>>>>
+>>>>>> I am a DRM committer and can pick this up if necessary but it's not
+>>>>>> clear to me what's going thru with DRM vs elsewhere.
+>>>>>
+>>>>> All the three patches are intended to go through DRM. IIRC Petr, the vsprintf maintainers had requested for that to be done.
+>>>>>
+>>>>> The relevant patches have been Reviewed-by Petr as well.
+>>>>
+>>>> OK, will queue this today.
+>>>
+>>> Thanks!
+>>>
+>>> Also, Petr has requested them to be backported for 6.15
+>>
+>> To be more clear, he does not have objection for backporting to 6.15. Although its your call. 
+>>
 
