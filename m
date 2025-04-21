@@ -1,186 +1,237 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24642E401
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A101E5701
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 16:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745254046; cv=none; b=QjhxBNGr0LR1D8o44YbGbG8o6PDYLTiwjkogZof/QmHdH+g6fpEsGxRZMZpO6t2OHz+foMyKmzPM/Y/0xmnimhnZY3+5AFIpk+dq/NABRIYHDu7lt1HTFL9DSsCztweZ0qQ0pL/qz9Yx2cOdK/uPLOftVJZIShcMgWYzI5+f0cg=
+	t=1745254049; cv=none; b=EfUpY6FItESN97u/y49xFoi6sNwm/G7Lmz2DbtqJ/hmi6cokaxDO3FfFmOnKeldooXIU64ANpPzh8n1rSNkOwYiRUlWP5KDmdPDBJH26LVihsJLzpo0ZJVHu7cL0yFo/ZyZQNMDHVUEr8I4ZjbQs00H4Zi0p/ZMmAk+EBtsrAc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745254046; c=relaxed/simple;
-	bh=zQ0EGh/F12wna3NvvINOFg8KOFnSaliwDsC8vZaldpg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=D0cF+8d+QVt274ZLfKVWGTRtYAh+0mkcZiXwrVg2/TMTCa/DMQXpBS1sSLcQSKdvuW3iPC+C8T+HjB5tgXAiM4AL5Tjgg3Rm1cEcLwsZDffD4zLNm9IMLB2WsMZ3Ok2/bhRHITep3EWeiL7CW+XPv2TQX1Nm8D8upw/qc8jFCkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=MT7IGPsT; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="MT7IGPsT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1745254038; bh=dUdLgnEveokE4y01P7eq6jBsYcwFEiE6grPLxuZ/jDg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MT7IGPsT7r/wW8tfcjfT8U2L6kEFAB2AVF0FehbwD7ALtPpaNUC9I2nkNJqjndhfE
-	 lrmXRvrHEnyr6xeBX06Ybia/tqOU1DAp7XVfBktvx0YGlosDCqGNTfMJOVWRejp70E
-	 uPtpDU9HEaiz6zWpkTiFSH1zdnuAtxoDvVWwRmUs=
-Received: from jckeep-Lenovo-XiaoXinAir-14IIL-2020.. ([240e:3b1:d003:cf1:7732:da7c:bd29:219d])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id BD01B88F; Tue, 22 Apr 2025 00:47:16 +0800
-X-QQ-mid: xmsmtpt1745254036t94odr9h3
-Message-ID: <tencent_D04FE925ED0AD6F0A4C297CA1A1A74FDE608@qq.com>
-X-QQ-XMAILINFO: NKv2G1wnhDBnnvGgBqycrvnoYnY0GdGeelSXNyyebH1PgO5rYgYR/KLlnYIpNI
-	 2trnWrhJtDH0B7NADdOzyClcEaWrwvvy+HWUNaAnD+FVRH6zx2euyemAbOwNUNEWJqEYVnFdJUqU
-	 PPQosVSbMhjRdahIx4QzzyU5HzQdEtwTR9tnkwSq1ILn0sRxQTyigjEuV7YGgjChkWUqS8Evhfg6
-	 /yzOm/6qZ8Qb2wMyHf74oRIoFt8MYqru0kGIM9G6DlzutK699TICba0kNm3iWgSVbcq3td68dmN6
-	 ZzEoq2bzqBdV5KYQLtM/CCD4Bxaih1idXBJJMLmdmciH+xVhMb2X4fv43lnMKw8Y552apIIn3XCY
-	 Agtv4eu0lhR7R7m8uzapjq3UENwYqAAwifgxXIb7lrVHwjo8rJIT9ILzQeqrfewix3GsBAK5J4r8
-	 XMY8KGKZ2JqI10w7yAd1IhR3kIPp9V/NX/Ft0XhzEqZ4v1snD4jrlcDyMJAJzVk3RfN5JKeDWKfu
-	 7i4nwQAKa4Shfi6aVwLZDhKO0ZlYwmOuPrAXKYC3dTHk4qUKhrsCuN8wDikY+S65+L3P4rzDvocm
-	 oqy71QQVHIJk276lY3/R8CzGPQfTCOH/WALhUEVoNBvU31iSKuKRqU3sjq/njb+Ko3kMLcytN4cT
-	 6LiB+Ml5avHDg6GQhGnuEGKK1iRLbU6NWRNJ640rVNPLD4tRpa6toZxl67aA3ilawn0ItFUNJIh1
-	 kZHYgGzGRdokrHSZu/PoEEOQT9H/qTm94h0cXj4oueFQ+nh4LWrINGR8ONNH2CCHzfo4ziWtvdq5
-	 KjatrhXMmDYeFsZunpE43PhcmUWw0F9TiC1LZ3jX/rEeB+/EgmaocBnV687WvRD0J88E8pZg5afg
-	 9pRIVVt0Wx9tkxfmB+FAPG3tFJduA0Q8UAfPFBXYynLWCJucdK3f1ruZ6Fj3IIRgl9U90nx3InHe
-	 CXtDsALHyIEZR28EmE+KZfc4w/TFDl/0nC2RV+I4DH8E4hwnFX8bmtePdnkCs/
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Guangbo Cui <2407018371@qq.com>
-To: benno.lossin@proton.me
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	simona.vetter@ffwll.ch,
-	tmgross@umich.edu
-Subject: Re: [PATCH v3 3/4] rust: validate: add `Validate` trait
-Date: Tue, 22 Apr 2025 00:47:15 +0800
-X-OQ-MSGID: <20250421164715.427350-1-2407018371@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250421134909.464405-4-benno.lossin@proton.me>
-References: <20250421134909.464405-4-benno.lossin@proton.me>
+	s=arc-20240116; t=1745254049; c=relaxed/simple;
+	bh=waSzMPLAQviwrKgfZQTWoUY8aIciLWqFpcE/7zo6wJY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hwmKEmi5FHYonO8/njtnKkW3go02yNW9OwJ6aIwXFp+mMLQVsscvFPXBdRXIA16NPhtLTEbrYMs0kSHLCHe3T9sj8qjzhwnSC911PGDbsIs4+/X4ibgtmsN9C2iugGCD6QdmSO0hvanOvKaoJze2kyUYZbYskpoLRAOdThnQVh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85ed07f832dso423482039f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:47:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745254047; x=1745858847;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O/Z+E4MArse6XwOaXBZnDCHXBo4tMYe14cQIf3eVRG4=;
+        b=r8cnOCCql7wavHEVoQYJ/HupaMVymOMm94guHofq3lhFZJAbXJsVpSyAqWIbBcplp2
+         kq1GbsrdzkBR7rG14nWUbrlZhC7TTfeUjvr92iw4GQDgMbgGkVDNbSNWwMMm1fqd1jzH
+         3EvolCElkRn9DNpTt0Fea0MREwSx2vq7dG3Bek+LEvMa9r8lekME+MEdSd5pT6tjjQmn
+         NyAJkS4ugWPhgE5oBzFJubMPmpYyekkH6446DOIFafoj6VluUJu1ZDQLSNmEV26N4+SH
+         uXMqjf1TMmeltHzFeKY44i5zHKPc2IaJpx4K62ijNrpnIh4ddlTbXhWF89MvE/G3MJ3m
+         GvaA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2kMivVqJXgFXyBHGh8iW5McIw6ufkj6zkhGQ3R9iVz+t+CswAZXCFkTxRpv7sKzapf5XspMgOtZLJABU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjCwIghurk1Tg2PNWtrjEvAWmw2xiDmuTw8fl1MMqR2s5EPiww
+	rNRFFCnamSZBBfkhOpeFsSzgf2EVVNAI8r+q8BP9m0SH4vV0lE81zeAV0LlH+a/GaibSrFA+L1p
+	8V0BmPA3Tgm+lMCcaqwUadbO9sMjqk6IsUR1lPGvJ8wga8uiKupQBkcs=
+X-Google-Smtp-Source: AGHT+IFBF2vkCVLRJ05sS0//j0gW40qowXBVTCjSWhWkxInBAjleaERU+HmzC13ggq3Xfazn9kKJ6JG9M4HwBUJmCTm+5jMu9c9P
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:394c:b0:85d:b054:6eb9 with SMTP id
+ ca18e2360f4ac-861dbf5f998mr1335764639f.14.1745254046895; Mon, 21 Apr 2025
+ 09:47:26 -0700 (PDT)
+Date: Mon, 21 Apr 2025 09:47:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6806769e.050a0220.297747.02f9.GAE@google.com>
+Subject: [syzbot] [ntfs3?] possible deadlock in ni_set_compress
+From: syzbot <syzbot+839ea12926e5df362ff1@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Really cool patch! I got a few thoughts below.
+Hello,
 
-> Introduce the `Validate<Input>` trait and functions to validate
-> `Untrusted<T>` using said trait. This allows one to access the inner
-> value of `Untrusted<T>` via `validate{,_ref,_mut}` functions which
-> subsequently delegate the validation to user-implemented `Validate`
-> trait.
-> 
-> The `Validate` trait is the only entry point for validation code, making
-> it easy to spot where data is being validated.
-> 
-> The reason for restricting the types that can be inputs to
-> `Validate::validate` is to be able to have the `validate...` functions
-> on `Untrusted`. This is also the reason for the suggestions in the
-> `Usage in API Design` section in the commit that introduced
-> `Untrusted<T>`.
-> 
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> ---
->  rust/kernel/validate.rs | 61 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 60 insertions(+), 1 deletion(-)
-> 
-> diff --git a/rust/kernel/validate.rs b/rust/kernel/validate.rs
-> index 8b33716be0c7..eecac39365db 100644
-> --- a/rust/kernel/validate.rs
-> +++ b/rust/kernel/validate.rs
-> @@ -11,6 +11,9 @@
->  //! APIs that write back into userspace usually allow writing untrusted bytes directly, allowing
->  //! direct copying of untrusted user data back into userspace without validation.
->  //!
-> +//! The only way to access untrusted data is to [`Validate::validate`] it. This is facilitated by
-> +//! the [`Validate`] trait.
-> +//!
->  //! # Rationale
->  //!
->  //! When reading data from an untrusted source, it must be validated before it can be used for
-> @@ -46,7 +49,7 @@
->  /// untrusted, as it would otherwise violate normal Rust rules. For this reason, one can easily
->  /// convert that reference to `&[Untrusted<u8>]`. Another such example is `Untrusted<KVec<T>>`, it
->  /// derefs to `KVec<Untrusted<T>>`. Raw bytes however do not behave in this way, `Untrusted<u8>` is
-> -/// totally opaque.
-> +/// totally opaque and one can only access its value by calling [`Untrusted::validate()`].
->  ///
->  /// # Usage in API Design
->  ///
-> @@ -101,6 +104,30 @@ pub fn new(value: T) -> Self
->      {
->          Self(value)
->      }
-> +
-> +    /// Validate the underlying untrusted data.
-> +    ///
-> +    /// See the [`Validate`] trait for more information.
-> +    pub fn validate<V: Validate<Self>>(self) -> Result<V, V::Err>
-> +    where
-> +        T: Sized,
-> +    {
-> +        V::validate(self.0)
-> +    }
-> +
-> +    /// Validate the underlying untrusted data.
-> +    ///
-> +    /// See the [`Validate`] trait for more information.
-> +    pub fn validate_ref<'a, V: Validate<&'a Self>>(&'a self) -> Result<V, V::Err> {
-> +        V::validate(&self.0)
-> +    }
-> +
-> +    /// Validate the underlying untrusted data.
-> +    ///
-> +    /// See the [`Validate`] trait for more information.
-> +    pub fn validate_mut<'a, V: Validate<&'a mut Self>>(&'a mut self) -> Result<V, V::Err> {
-> +        V::validate(&mut self.0)
-> +    }
->  }
+syzbot found the following issue on:
 
-The `validate_ref` and `validate_mut` functions should just call `V::validate(self)`
-directly, since self is an Untrusted<T>, and you already implemented ValidateInput for it.
-Calling `V::validate(&self.0)` would cause a type mismatch error.
+HEAD commit:    cfb2e2c57aef Merge tag 'mm-hotfixes-stable-2025-04-16-19-5..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13441fe4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b8b55ae4a62d79b8
+dashboard link: https://syzkaller.appspot.com/bug?extid=839ea12926e5df362ff1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-> +/// Marks valid input for the [`Validate`] trait.
-> +pub trait ValidateInput: private::Sealed {}
-> +
-> +impl<T: ?Sized> ValidateInput for Untrusted<T> {}
-> +
-> +impl<'a, T: ?Sized> ValidateInput for &'a Untrusted<T> {}
-> +
-> +impl<'a, T: ?Sized> ValidateInput for &'a mut Untrusted<T> {}
-> +
-> +mod private {
-> +    use super::Untrusted;
-> +
-> +    pub trait Sealed {}
-> +
-> +    impl<T: ?Sized> Sealed for Untrusted<T> {}
-> +    impl<'a, T: ?Sized> Sealed for &'a Untrusted<T> {}
-> +    impl<'a, T: ?Sized> Sealed for &'a mut Untrusted<T> {}
-> +}
-> +
-> +/// Validate [`Untrusted`] data.
-> +///
-> +/// Care must be taken when implementing this trait, as unprotected access to unvalidated data is
-> +/// given to the [`Validate::validate`] function. The implementer must ensure that the data is only
-> +/// used for logic after successful validation.
-> +pub trait Validate<Input: ValidateInput>: Sized {
-> +    /// Validation error.
-> +    type Err;
-> +
-> +    /// Validate the raw input.
-> +    fn validate(raw: Input) -> Result<Self, Self::Err>;
-> +}
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Best regards,
-Guangbo Cui
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/5590e609f231/disk-cfb2e2c5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6865703da4ca/vmlinux-cfb2e2c5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6944af88a20f/bzImage-cfb2e2c5.xz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+839ea12926e5df362ff1@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc2-syzkaller-00087-gcfb2e2c57aef #0 Not tainted
+------------------------------------------------------
+syz.5.237/7937 is trying to acquire lock:
+ffff88805e9fca70 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
+ffff88805e9fca70 (&ni->ni_lock#3/5){+.+.}-{4:4}, at: ni_set_compress+0x174/0x5a0 fs/ntfs3/frecord.c:3359
+
+but task is already holding lock:
+ffff88805e9fcea8 (mapping.invalidate_lock#12){++++}-{4:4}, at: filemap_invalidate_lock include/linux/fs.h:912 [inline]
+ffff88805e9fcea8 (mapping.invalidate_lock#12){++++}-{4:4}, at: ntfs_fileattr_set+0x2a9/0x4a0 fs/ntfs3/file.c:108
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (mapping.invalidate_lock#12){++++}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       down_read+0xb3/0xa50 kernel/locking/rwsem.c:1524
+       filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
+       filemap_fault+0x66b/0x13d0 mm/filemap.c:3391
+       __do_fault+0x135/0x390 mm/memory.c:5098
+       do_read_fault mm/memory.c:5518 [inline]
+       do_fault mm/memory.c:5652 [inline]
+       do_pte_missing mm/memory.c:4160 [inline]
+       handle_pte_fault+0x3f0c/0x61c0 mm/memory.c:5997
+       __handle_mm_fault mm/memory.c:6140 [inline]
+       handle_mm_fault+0x1030/0x1aa0 mm/memory.c:6309
+       do_user_addr_fault arch/x86/mm/fault.c:1388 [inline]
+       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
+       exc_page_fault+0x2bb/0x920 arch/x86/mm/fault.c:1538
+       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
+       do_strncpy_from_user lib/strncpy_from_user.c:-1 [inline]
+       strncpy_from_user+0xb8/0x280 lib/strncpy_from_user.c:130
+       getname_flags+0xf1/0x530 fs/namei.c:157
+       getname include/linux/fs.h:2852 [inline]
+       do_sys_openat2+0xbf/0x1d0 fs/open.c:1423
+       do_sys_open fs/open.c:1444 [inline]
+       __do_sys_open fs/open.c:1452 [inline]
+       __se_sys_open fs/open.c:1448 [inline]
+       __x64_sys_open+0x226/0x280 fs/open.c:1448
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&mm->mmap_lock){++++}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __might_fault+0xc6/0x120 mm/memory.c:7151
+       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
+       _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
+       copy_to_user include/linux/uaccess.h:225 [inline]
+       fiemap_fill_next_extent+0x237/0x420 fs/ioctl.c:145
+       ni_fiemap+0xa42/0x12a0 fs/ntfs3/frecord.c:2007
+       ntfs_fiemap+0x134/0x180 fs/ntfs3/file.c:1380
+       ioctl_fiemap fs/ioctl.c:220 [inline]
+       do_vfs_ioctl+0x1975/0x2750 fs/ioctl.c:840
+       __do_sys_ioctl fs/ioctl.c:904 [inline]
+       __se_sys_ioctl+0x80/0x160 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&ni->ni_lock#3/5){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
+       ni_set_compress+0x174/0x5a0 fs/ntfs3/frecord.c:3359
+       ntfs_fileattr_set+0x2ef/0x4a0 fs/ntfs3/file.c:114
+       vfs_fileattr_set+0x901/0xd50 fs/ioctl.c:696
+       ioctl_setflags fs/ioctl.c:728 [inline]
+       do_vfs_ioctl+0x180c/0x2750 fs/ioctl.c:869
+       __do_sys_ioctl fs/ioctl.c:904 [inline]
+       __se_sys_ioctl+0x80/0x160 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &ni->ni_lock#3/5 --> &mm->mmap_lock --> mapping.invalidate_lock#12
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(mapping.invalidate_lock#12);
+                               lock(&mm->mmap_lock);
+                               lock(mapping.invalidate_lock#12);
+  lock(&ni->ni_lock#3/5);
+
+ *** DEADLOCK ***
+
+3 locks held by syz.5.237/7937:
+ #0: ffff88807cdac420 (sb_writers#25){.+.+}-{0:0}, at: mnt_want_write_file+0x5e/0x200 fs/namespace.c:600
+ #1: ffff88805e9fcd08 (&sb->s_type->i_mutex_key#31){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #1: ffff88805e9fcd08 (&sb->s_type->i_mutex_key#31){+.+.}-{4:4}, at: vfs_fileattr_set+0x13b/0xd50 fs/ioctl.c:681
+ #2: ffff88805e9fcea8 (mapping.invalidate_lock#12){++++}-{4:4}, at: filemap_invalidate_lock include/linux/fs.h:912 [inline]
+ #2: ffff88805e9fcea8 (mapping.invalidate_lock#12){++++}-{4:4}, at: ntfs_fileattr_set+0x2a9/0x4a0 fs/ntfs3/file.c:108
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 7937 Comm: syz.5.237 Not tainted 6.15.0-rc2-syzkaller-00087-gcfb2e2c57aef #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
+ check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+ __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+ lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+ ni_lock fs/ntfs3/ntfs_fs.h:1105 [inline]
+ ni_set_compress+0x174/0x5a0 fs/ntfs3/frecord.c:3359
+ ntfs_fileattr_set+0x2ef/0x4a0 fs/ntfs3/file.c:114
+ vfs_fileattr_set+0x901/0xd50 fs/ioctl.c:696
+ ioctl_setflags fs/ioctl.c:728 [inline]
+ do_vfs_ioctl+0x180c/0x2750 fs/ioctl.c:869
+ __do_sys_ioctl fs/ioctl.c:904 [inline]
+ __se_sys_ioctl+0x80/0x160 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5dca38e169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5dcb1ed038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007f5dca5b5fa0 RCX: 00007f5dca38e169
+RDX: 00002000000006c0 RSI: 0000000040086602 RDI: 0000000000000004
+RBP: 00007f5dca410a68 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f5dca5b5fa0 R15: 00007ffcd4490398
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
