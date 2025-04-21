@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ABB17BEBF
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32FF507
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745206261; cv=none; b=BgON1Q6NtCJ5s+QmrduVZgAzjvm548BXKyVJToiEmB4wZaFDKSPFr2p9Q5TAGOigaJzI7vMl12RQ4cIFFX8wZpsOzpwB0vS26Ko+lqr07x0sTwNT6JXTwmlnqaGbsmi5DozOk/9R0tlcC6F4JEgXXu3a0Qujd0KGjVbTymi+izc=
+	t=1745206277; cv=none; b=Sy2OmM07akeAyE7SQ83Gt7ygEH36ao7hrVLGMiZVZgjlpLIHXnma2RZxYtq4xZDi7okdR2nYuS4fmbhpkIXtgCVovv3PvoUgo5lq2ryUoJ77wHt12NXIEwIrs4ulE5at5pHsYXSXvMCqst9q9jztUaEoYaG976WhLcA91fv2QDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745206261; c=relaxed/simple;
-	bh=1MJqnxJnIT/C5QdCNLNcR3OoMKXPPnOwSmh9yOZXkAY=;
+	s=arc-20240116; t=1745206277; c=relaxed/simple;
+	bh=yMJHcecm2zj6M6Q7DbedbLw6+meHZ2UNj7fqi76HCNQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MFw3z9hlx8sfk04LtQuk5EIQeZbyzuuNxN5wP8umpLSjkhPJD0TuLz6eXCCq1EaYCfRdcl6MPu+u67J9yMmUtk8FWEhQxIWC4B9BpnZhZ7TQ4EG7rx+499kdiOw957TfvBb53boLQc/lnsbiYix/YkjBSFHW2PmxZnK5zfyi8hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4qGMvk+; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=kZPFkaOYdXyRmevrT4/sZC4hCp/TupabKRGzs1td8WMqA/GsOlUJZ1s3WAG9ZNbUbkogXzm27SniI/sagl3q3/f0bhPbYVzfeALEGSRURhzQaA2lUlvyFqfiYxvByVPF3yxWjwtFVWPFn9LLNj91hybn8UZ0a1hyFl5KBLolZU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pj53XDj/; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4qGMvk+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pj53XDj/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745206259; x=1776742259;
+  t=1745206277; x=1776742277;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1MJqnxJnIT/C5QdCNLNcR3OoMKXPPnOwSmh9yOZXkAY=;
-  b=Z4qGMvk+MYybEPB2KwHUZ3uIIjonLsTE7i5QY/HqmdMTncmzH3GvRSTv
-   /c53mq+LS1T8DXQFzlx6np14ZVfNRJqw/mIvKpRz0D4HjiDG8VqG9VVY6
-   Gq2/gUVdwBKtKbPK9JKnNK8GhKF+iMpzE+mcfogQPoUiWM8HLx2pdz8JG
-   BHIp67lEn/jEzS35UTdhALl9AGvAMZRBNWMCpYNTbiKl38/MtkPxDLVsV
-   tXxozQ5RbvvI73xlWEKw+TCL18Pf9UobP/4T/0kxoqvgqWebuGygSm2pK
-   CFFN49K3oUnzOunoHKuXhwlNZgB1nIYjFejXKLwRQc7WjcG6QUB7SZysq
-   Q==;
-X-CSE-ConnectionGUID: ZWYdHXSxR1ie1d8UekXgLQ==
-X-CSE-MsgGUID: JptGT7ThTSGM7tFAh1y5PQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="64144220"
+  bh=yMJHcecm2zj6M6Q7DbedbLw6+meHZ2UNj7fqi76HCNQ=;
+  b=Pj53XDj/IO0qJOuvtvqrM16lPjaEVY1ks3oPSXFDzF8ltVGpzsoStm1l
+   C+6YrmSyvReUJt3/MCuN4grNA0cGBkyK62hlRsNT6HRWivyhTNzPMbPhl
+   xsKgLcs2n1MLdKNH9CBWkwX/zobDVEfzRZ5OdT4zqcv+r1QfW+h6+9aI6
+   gBFhy02HonE1rDg0jhYiTr21JdJeiRJBKwA8F9CuIHskYOT7sgPJl+oWi
+   MYm24J2Wxe91+FTDDRqyfjDy+KN9n4+ynZZGyz82jTUgf/WKJiW5FZfqA
+   MIRrRnbVqu/R/UjAdoRIEvQHcS8csAWzMvIBqozuRUWEPJyvDMO6wpmVG
+   A==;
+X-CSE-ConnectionGUID: 6TXKzjgjQbegoH94qV5gVg==
+X-CSE-MsgGUID: Eaz94i42Q+eIIKykoUY8vw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="56913626"
 X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="64144220"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 20:30:59 -0700
-X-CSE-ConnectionGUID: trwDvCizQ7SHIqO4u/C1pw==
-X-CSE-MsgGUID: 39pzNhYuQQiknrhMPQq5dA==
+   d="scan'208";a="56913626"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 20:31:14 -0700
+X-CSE-ConnectionGUID: HJ/8UCbwQTyqzEykmeLLwQ==
+X-CSE-MsgGUID: NPsK7sG8Rv6yXocPBpLLiw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="131355380"
+   d="scan'208";a="132488712"
 Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by orviesa009.jf.intel.com with ESMTP; 20 Apr 2025 20:30:54 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 20 Apr 2025 20:31:09 -0700
 From: Chen Yu <yu.c.chen@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -62,9 +62,9 @@ Cc: Juri Lelli <juri.lelli@redhat.com>,
 	Hillf Danton <hdanton@sina.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC PATCH 4/5] sched: Inhibit cache aware scheduling if the preferred LLC is over aggregated
-Date: Mon, 21 Apr 2025 11:25:18 +0800
-Message-Id: <2c45f6db1efef84c6c1ed514a8d24a9bc4a2ca4b.1745199017.git.yu.c.chen@intel.com>
+Subject: [RFC PATCH 5/5] sched: Add ftrace to track task migration and load balance within and across LLC
+Date: Mon, 21 Apr 2025 11:25:33 +0800
+Message-Id: <5d5a6e243b88d47a744f3c84d2a3a74832a6ef35.1745199017.git.yu.c.chen@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1745199017.git.yu.c.chen@intel.com>
 References: <cover.1745199017.git.yu.c.chen@intel.com>
@@ -76,258 +76,218 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is found that when the process's preferred LLC gets saturated by too many
-threads, task contention is very frequent and causes performance regression.
+[Not for upstream]
+Introduce these ftrace events for debugging purposes.
+The task migration activity is an important indicator to
+infer the performance regression.
 
-Save the per LLC statistics calculated by periodic load balance. The statistics
-include the average utilization and the average number of runnable tasks.
-The task wakeup path for cache aware scheduling manipulates these statistics
-to inhibit cache aware scheduling to avoid performance regression. When either
-the average utilization of the preferred LLC has reached 25%, or the average
-number of runnable tasks has exceeded 1/3 of the LLC weight, the cache aware
-wakeup is disabled. Only when the process has more threads than the LLC weight
-will this restriction be enabled.
+Use the following bpftrace script to capture the task migrations:
 
-Running schbench via mmtests on a Xeon platform, which has 2 sockets, each socket
-has 60 Cores/120 CPUs. The DRAM interleave is enabled across NUMA nodes via BIOS,
-so there are 2 "LLCs" in 1 NUMA node.
+tracepoint:sched:sched_attach_task
+{
+  $src_cpu = args->src_cpu;
+  $dst_cpu = args->dst_cpu;
+  $src_llc = args->src_llc;
+  $dst_llc = args->dst_llc;
+  $idle = args->idle;
 
-compare-mmtests.pl --directory work/log --benchmark schbench --names baseline,sched_cache
-                                    baselin             sched_cach
-                                   baseline            sched_cache
-Lat 50.0th-qrtle-1          6.00 (   0.00%)        6.00 (   0.00%)
-Lat 90.0th-qrtle-1         10.00 (   0.00%)        9.00 (  10.00%)
-Lat 99.0th-qrtle-1         29.00 (   0.00%)       13.00 (  55.17%)
-Lat 99.9th-qrtle-1         35.00 (   0.00%)       21.00 (  40.00%)
-Lat 20.0th-qrtle-1        266.00 (   0.00%)      266.00 (   0.00%)
-Lat 50.0th-qrtle-2          8.00 (   0.00%)        6.00 (  25.00%)
-Lat 90.0th-qrtle-2         10.00 (   0.00%)       10.00 (   0.00%)
-Lat 99.0th-qrtle-2         19.00 (   0.00%)       18.00 (   5.26%)
-Lat 99.9th-qrtle-2         27.00 (   0.00%)       29.00 (  -7.41%)
-Lat 20.0th-qrtle-2        533.00 (   0.00%)      507.00 (   4.88%)
-Lat 50.0th-qrtle-4          6.00 (   0.00%)        5.00 (  16.67%)
-Lat 90.0th-qrtle-4          8.00 (   0.00%)        5.00 (  37.50%)
-Lat 99.0th-qrtle-4         14.00 (   0.00%)        9.00 (  35.71%)
-Lat 99.9th-qrtle-4         22.00 (   0.00%)       14.00 (  36.36%)
-Lat 20.0th-qrtle-4       1070.00 (   0.00%)      995.00 (   7.01%)
-Lat 50.0th-qrtle-8          5.00 (   0.00%)        5.00 (   0.00%)
-Lat 90.0th-qrtle-8          7.00 (   0.00%)        5.00 (  28.57%)
-Lat 99.0th-qrtle-8         12.00 (   0.00%)       11.00 (   8.33%)
-Lat 99.9th-qrtle-8         19.00 (   0.00%)       16.00 (  15.79%)
-Lat 20.0th-qrtle-8       2140.00 (   0.00%)     2140.00 (   0.00%)
-Lat 50.0th-qrtle-16         6.00 (   0.00%)        5.00 (  16.67%)
-Lat 90.0th-qrtle-16         7.00 (   0.00%)        5.00 (  28.57%)
-Lat 99.0th-qrtle-16        12.00 (   0.00%)       10.00 (  16.67%)
-Lat 99.9th-qrtle-16        17.00 (   0.00%)       14.00 (  17.65%)
-Lat 20.0th-qrtle-16      4296.00 (   0.00%)     4200.00 (   2.23%)
-Lat 50.0th-qrtle-32         6.00 (   0.00%)        5.00 (  16.67%)
-Lat 90.0th-qrtle-32         8.00 (   0.00%)        6.00 (  25.00%)
-Lat 99.0th-qrtle-32        12.00 (   0.00%)       10.00 (  16.67%)
-Lat 99.9th-qrtle-32        17.00 (   0.00%)       14.00 (  17.65%)
-Lat 20.0th-qrtle-32      8496.00 (   0.00%)     8528.00 (  -0.38%)
-Lat 50.0th-qrtle-64         6.00 (   0.00%)        5.00 (  16.67%)
-Lat 90.0th-qrtle-64         8.00 (   0.00%)        8.00 (   0.00%)
-Lat 99.0th-qrtle-64        12.00 (   0.00%)       12.00 (   0.00%)
-Lat 99.9th-qrtle-64        17.00 (   0.00%)       17.00 (   0.00%)
-Lat 20.0th-qrtle-64     17120.00 (   0.00%)    17120.00 (   0.00%)
-Lat 50.0th-qrtle-128        7.00 (   0.00%)        7.00 (   0.00%)
-Lat 90.0th-qrtle-128        9.00 (   0.00%)        9.00 (   0.00%)
-Lat 99.0th-qrtle-128       13.00 (   0.00%)       14.00 (  -7.69%)
-Lat 99.9th-qrtle-128       20.00 (   0.00%)       20.00 (   0.00%)
-Lat 20.0th-qrtle-128    31776.00 (   0.00%)    30496.00 (   4.03%)
-Lat 50.0th-qrtle-239        9.00 (   0.00%)        9.00 (   0.00%)
-Lat 90.0th-qrtle-239       14.00 (   0.00%)       18.00 ( -28.57%)
-Lat 99.0th-qrtle-239       43.00 (   0.00%)       56.00 ( -30.23%)
-Lat 99.9th-qrtle-239      106.00 (   0.00%)      483.00 (-355.66%)
-Lat 20.0th-qrtle-239    30176.00 (   0.00%)    29984.00 (   0.64%)
+  if ($src_llc == $dst_llc) {
+    @lb_mig_1llc[$idle] = count();
+  } else {
+    @lb_mig_2llc[$idle] = count();
+  }
+}
 
-We can see overall latency improvement and some throughput degradation
-when the system gets saturated.
+tracepoint:sched:sched_select_task_rq
+{
+  $new_cpu = args->new_cpu;
+  $old_cpu = args->old_cpu;
+  $new_llc = args->new_llc;
+  $old_llc = args->old_llc;
 
-Also, we run schbench (old version) on an EPYC 7543 system, which has
-4 NUMA nodes, and each node has 4 LLCs. Monitor the 99.0th latency:
+  if ($new_cpu != $old_cpu) {
+    if ($new_llc == $old_llc) {
+      @wake_mig_1llc[$new_llc] = count();
+    } else {
+      @wake_mig_2llc = count();
+    }
+  }
+}
 
-case                    load            baseline(std%)  compare%( std%)
-normal                  4-mthreads-1-workers     1.00 (  6.47)   +9.02 (  4.68)
-normal                  4-mthreads-2-workers     1.00 (  3.25)  +28.03 (  8.76)
-normal                  4-mthreads-4-workers     1.00 (  6.67)   -4.32 (  2.58)
-normal                  4-mthreads-8-workers     1.00 (  2.38)   +1.27 (  2.41)
-normal                  4-mthreads-16-workers    1.00 (  5.61)   -8.48 (  4.39)
-normal                  4-mthreads-31-workers    1.00 (  9.31)   -0.22 (  9.77)
+interval:s:10
+{
+        time("\n%H:%M:%S scheduler statistics: \n");
+        print(@lb_mig_1llc);
+        clear(@lb_mig_1llc);
+        print(@lb_mig_2llc);
+        clear(@lb_mig_2llc);
+        print(@wake_mig_1llc);
+        clear(@wake_mig_1llc);
+        print(@wake_mig_2llc);
+        clear(@wake_mig_2llc);
+}
 
-When the LLC is underloaded, the latency improvement is observed. When the LLC
-gets saturated, we observe some degradation.
-
-The aggregation of tasks will move tasks towards the preferred LLC
-pretty quickly during wake ups. However load balance will tend to move
-tasks away from the aggregated LLC. The two migrations are in the
-opposite directions and tend to bounce tasks between LLCs. Such task
-migrations should be impeded in load balancing as long as the home LLC.
-We're working on fixing up the load balancing path to address such issues.
-
-Co-developed-by: Tim Chen <tim.c.chen@intel.com>
-Signed-off-by: Tim Chen <tim.c.chen@intel.com>
 Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- include/linux/sched/topology.h |   4 ++
- kernel/sched/fair.c            | 101 ++++++++++++++++++++++++++++++++-
- 2 files changed, 104 insertions(+), 1 deletion(-)
+ include/trace/events/sched.h | 51 ++++++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 24 ++++++++++++-----
+ 2 files changed, 69 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 198bb5cc1774..9625d9d762f5 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -78,6 +78,10 @@ struct sched_domain_shared {
- 	atomic_t	nr_busy_cpus;
- 	int		has_idle_cores;
- 	int		nr_idle_scan;
-+#ifdef CONFIG_SCHED_CACHE
-+	unsigned long	util_avg;
-+	u64		nr_avg;
-+#endif
- };
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 3bec9fb73a36..9995e09525ed 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -10,6 +10,57 @@
+ #include <linux/tracepoint.h>
+ #include <linux/binfmts.h>
  
- struct sched_domain {
++TRACE_EVENT(sched_attach_task,
++
++	TP_PROTO(int src_cpu, int dst_cpu, int src_llc, int dst_llc, int idle),
++
++	TP_ARGS(src_cpu, dst_cpu, src_llc, dst_llc, idle),
++
++	TP_STRUCT__entry(
++		__field(	int,	src_cpu		)
++		__field(	int,	dst_cpu		)
++		__field(	int,	src_llc		)
++		__field(	int,	dst_llc		)
++		__field(	int,	idle		)
++	),
++
++	TP_fast_assign(
++		__entry->src_cpu	= src_cpu;
++		__entry->dst_cpu	= dst_cpu;
++		__entry->src_llc	= src_llc;
++		__entry->dst_llc	= dst_llc;
++		__entry->idle		= idle;
++	),
++
++	TP_printk("src_cpu=%d dst_cpu=%d src_llc=%d dst_llc=%d idle=%d",
++		  __entry->src_cpu, __entry->dst_cpu, __entry->src_llc,
++		  __entry->dst_llc, __entry->idle)
++);
++
++TRACE_EVENT(sched_select_task_rq,
++
++	TP_PROTO(int new_cpu, int old_cpu, int new_llc, int old_llc),
++
++	TP_ARGS(new_cpu, old_cpu, new_llc, old_llc),
++
++	TP_STRUCT__entry(
++		__field(	int,	new_cpu		)
++		__field(	int,	old_cpu		)
++		__field(	int,	new_llc		)
++		__field(	int,	old_llc		)
++	),
++
++	TP_fast_assign(
++		__entry->new_cpu	= new_cpu;
++		__entry->old_cpu	= old_cpu;
++		__entry->new_llc	= new_llc;
++		__entry->old_llc	= old_llc;
++	),
++
++	TP_printk("new_cpu=%d old_cpu=%d new_llc=%d old_llc=%d",
++		  __entry->new_cpu, __entry->old_cpu, __entry->new_llc, __entry->old_llc)
++);
++
+ /*
+  * Tracepoint for calling kthread_stop, performed to end a kthread:
+  */
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1733eb83042c..f74d8773c811 100644
+index f74d8773c811..635fd3a6009c 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -8791,6 +8791,58 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
- #ifdef CONFIG_SCHED_CACHE
- static long __migrate_degrades_locality(struct task_struct *p, int src_cpu, int dst_cpu, bool idle);
+@@ -8902,7 +8902,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
+ 	struct sched_domain *tmp, *sd = NULL;
+ 	int cpu = smp_processor_id();
+-	int new_cpu = prev_cpu;
++	int new_cpu = prev_cpu, orig_prev_cpu = prev_cpu;
+ 	int want_affine = 0;
+ 	/* SD_flags and WF_flags share the first nibble */
+ 	int sd_flag = wake_flags & 0xF;
+@@ -8965,6 +8965,10 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+ 		new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
+ 	}
  
-+/* expected to be protected by rcu_read_lock() */
-+static bool get_llc_stats(int cpu, int *nr, int *weight, unsigned long *util)
-+{
-+	struct sched_domain_shared *sd_share;
++	trace_sched_select_task_rq(new_cpu, orig_prev_cpu,
++				   per_cpu(sd_llc_id, new_cpu),
++				   per_cpu(sd_llc_id, orig_prev_cpu));
 +
-+	sd_share = rcu_dereference(per_cpu(sd_llc_shared, cpu));
-+	if (!sd_share)
-+		return false;
-+
-+	*nr = READ_ONCE(sd_share->nr_avg);
-+	*util = READ_ONCE(sd_share->util_avg);
-+	*weight = per_cpu(sd_llc_size, cpu);
-+
-+	return true;
-+}
-+
-+static bool valid_target_cpu(int cpu, struct task_struct *p)
-+{
-+	int nr_running, llc_weight;
-+	unsigned long util, llc_cap;
-+
-+	if (!get_llc_stats(cpu, &nr_running, &llc_weight,
-+			   &util))
-+		return false;
-+
-+	llc_cap = llc_weight * SCHED_CAPACITY_SCALE;
-+
-+	/*
-+	 * If this process has many threads, be careful to avoid
-+	 * task stacking on the preferred LLC, by checking the system's
-+	 * utilization and runnable tasks. Otherwise, if this
-+	 * process does not have many threads, honor the cache
-+	 * aware wakeup.
-+	 */
-+	if (get_nr_threads(p) < llc_weight)
-+		return true;
-+
-+	/*
-+	 * Check if it exceeded 25% of average utiliazation,
-+	 * or if it exceeded 33% of CPUs. This is a magic number
-+	 * that did not cause heavy cache contention on Xeon or
-+	 * Zen.
-+	 */
-+	if (util * 4 >= llc_cap)
-+		return false;
-+
-+	if (nr_running * 3 >= llc_weight)
-+		return false;
-+
-+	return true;
-+}
-+
- static int select_cache_cpu(struct task_struct *p, int prev_cpu)
- {
- 	struct mm_struct *mm = p->mm;
-@@ -8813,6 +8865,9 @@ static int select_cache_cpu(struct task_struct *p, int prev_cpu)
- 	if (cpus_share_cache(prev_cpu, cpu))
- 		return prev_cpu;
- 
-+	if (!valid_target_cpu(cpu, p))
-+		return prev_cpu;
-+
- 	if (static_branch_likely(&sched_numa_balancing) &&
- 	    __migrate_degrades_locality(p, prev_cpu, cpu, false) > 0) {
- 		/*
-@@ -9564,7 +9619,8 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
- 	 */
- 	if (sched_feat(SCHED_CACHE) && p->mm && p->mm->mm_sched_cpu >= 0 &&
- 	    cpus_share_cache(env->src_cpu, p->mm->mm_sched_cpu) &&
--	    !cpus_share_cache(env->src_cpu, env->dst_cpu))
-+	    !cpus_share_cache(env->src_cpu, env->dst_cpu) &&
-+	     !valid_target_cpu(env->dst_cpu, p))
- 		return 1;
- #endif
- 
-@@ -10634,6 +10690,48 @@ sched_reduced_capacity(struct rq *rq, struct sched_domain *sd)
- 	return check_cpu_capacity(rq, sd);
+ 	return new_cpu;
  }
  
-+#ifdef CONFIG_SCHED_CACHE
-+/*
-+ * Save this sched group's statistic for later use:
-+ * The task wakeup and load balance can make better
-+ * decision based on these statistics.
-+ */
-+static void update_sg_if_llc(struct lb_env *env, struct sg_lb_stats *sgs,
-+			     struct sched_group *group)
-+{
-+	/* Find the sched domain that spans this group. */
-+	struct sched_domain *sd = env->sd->child;
-+	struct sched_domain_shared *sd_share;
-+	u64 last_nr;
-+
-+	if (!sched_feat(SCHED_CACHE) || env->idle == CPU_NEWLY_IDLE)
-+		return;
-+
-+	/* only care the sched domain that spans 1 LLC */
-+	if (!sd || !(sd->flags & SD_SHARE_LLC) ||
-+	    !sd->parent || (sd->parent->flags & SD_SHARE_LLC))
-+		return;
-+
-+	sd_share = rcu_dereference(per_cpu(sd_llc_shared,
-+				   cpumask_first(sched_group_span(group))));
-+	if (!sd_share)
-+		return;
-+
-+	last_nr = READ_ONCE(sd_share->nr_avg);
-+	update_avg(&last_nr, sgs->sum_nr_running);
-+
-+	if (likely(READ_ONCE(sd_share->util_avg) != sgs->group_util))
-+		WRITE_ONCE(sd_share->util_avg, sgs->group_util);
-+
-+	WRITE_ONCE(sd_share->nr_avg, last_nr);
-+}
-+#else
-+static inline void update_sg_if_llc(struct lb_env *env, struct sg_lb_stats *sgs,
-+				    struct sched_group *group)
-+{
-+}
-+#endif
-+
- /**
-  * update_sg_lb_stats - Update sched_group's statistics for load balancing.
-  * @env: The load balancing environment.
-@@ -10723,6 +10821,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+@@ -10026,11 +10030,17 @@ static int detach_tasks(struct lb_env *env)
+ /*
+  * attach_task() -- attach the task detached by detach_task() to its new rq.
+  */
+-static void attach_task(struct rq *rq, struct task_struct *p)
++static void attach_task(struct rq *rq, struct task_struct *p, struct lb_env *env)
+ {
+ 	lockdep_assert_rq_held(rq);
  
- 	sgs->group_type = group_classify(env->sd->imbalance_pct, group, sgs);
+ 	WARN_ON_ONCE(task_rq(p) != rq);
++
++	if (env)
++		trace_sched_attach_task(env->src_cpu, env->dst_cpu,
++					per_cpu(sd_llc_id, env->src_cpu),
++					per_cpu(sd_llc_id, env->dst_cpu),
++					env->idle);
+ 	activate_task(rq, p, ENQUEUE_NOCLOCK);
+ 	wakeup_preempt(rq, p, 0);
+ }
+@@ -10039,13 +10049,13 @@ static void attach_task(struct rq *rq, struct task_struct *p)
+  * attach_one_task() -- attaches the task returned from detach_one_task() to
+  * its new rq.
+  */
+-static void attach_one_task(struct rq *rq, struct task_struct *p)
++static void attach_one_task(struct rq *rq, struct task_struct *p, struct lb_env *env)
+ {
+ 	struct rq_flags rf;
  
-+	update_sg_if_llc(env, sgs, group);
- 	/* Computing avg_load makes sense only when group is overloaded */
- 	if (sgs->group_type == group_overloaded)
- 		sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+ 	rq_lock(rq, &rf);
+ 	update_rq_clock(rq);
+-	attach_task(rq, p);
++	attach_task(rq, p, env);
+ 	rq_unlock(rq, &rf);
+ }
+ 
+@@ -10066,7 +10076,7 @@ static void attach_tasks(struct lb_env *env)
+ 		p = list_first_entry(tasks, struct task_struct, se.group_node);
+ 		list_del_init(&p->se.group_node);
+ 
+-		attach_task(env->dst_rq, p);
++		attach_task(env->dst_rq, p, env);
+ 	}
+ 
+ 	rq_unlock(env->dst_rq, &rf);
+@@ -12457,6 +12467,7 @@ static int active_load_balance_cpu_stop(void *data)
+ 	struct sched_domain *sd;
+ 	struct task_struct *p = NULL;
+ 	struct rq_flags rf;
++	struct lb_env env_tmp;
+ 
+ 	rq_lock_irq(busiest_rq, &rf);
+ 	/*
+@@ -12512,6 +12523,7 @@ static int active_load_balance_cpu_stop(void *data)
+ 		} else {
+ 			schedstat_inc(sd->alb_failed);
+ 		}
++		memcpy(&env_tmp, &env, sizeof(env));
+ 	}
+ 	rcu_read_unlock();
+ out_unlock:
+@@ -12519,7 +12531,7 @@ static int active_load_balance_cpu_stop(void *data)
+ 	rq_unlock(busiest_rq, &rf);
+ 
+ 	if (p)
+-		attach_one_task(target_rq, p);
++		attach_one_task(target_rq, p, sd ? &env_tmp : NULL);
+ 
+ 	local_irq_enable();
+ 
 -- 
 2.25.1
 
