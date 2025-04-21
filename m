@@ -1,108 +1,1006 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392BD1494D8;
-	Mon, 21 Apr 2025 15:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EC084039;
+	Mon, 21 Apr 2025 15:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745249022; cv=none; b=NKZNEMiNxlmTJH0gQJ4jevw0Oi8QEnJ+8SgsLkFvbRXZuJaso4X7IPzbcTWhSPe/0UnhZSctoL3I9lh4UoH/5cjK3SKyKuEvt5tFgKHZOQJwUFSFO2w/NYx6CC6w0mjUN7woONR39SH1t2ZDFn989wXYuFJ3B1ILkT+8I7/C61A=
+	t=1745249291; cv=none; b=muMdP1vbjbmCjHRcFZiHYnZXce2bMqFjK7XiOo7vw9Gdzht32CBXdzlcMLt3Z+DTWfSRXr8ystnX25Ax30leV+VxPXUZfYtDZMZ8EqT/QK5tA/7hIQJXTHgrpH1OGdga43iIcTgmHcYcD04vEqWIPdDhZ6ybfxDP1ksUyYAIfW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745249022; c=relaxed/simple;
-	bh=vJPOq/jtYR3O8m4x/saV7Lfzl0TMxKs1hSTnn1MH0/Q=;
+	s=arc-20240116; t=1745249291; c=relaxed/simple;
+	bh=pSP8QKyFyWBg9PX/fAVDrMF4yP65OA0eLaolLMOMiCM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sPfHUUMJcGpQZBQvhJBdQWJP0XvXiMf2+MqMvwIkL3mC99+w3yGaeBEXQdJJFocXS+ncwvb3LgXRFEmJJq3K8sUl4dXR0SCi+Mq9gHLzW14JNBszLc5KOLSRF6pLnebaf4NtdyY3g5isTqYsGXYtXAFpe/MT7AN1VGMHR/IUYwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J3GFh0q0; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ih5Mo39jBgK5LoJRpxqzpeOMBoDuz0uRjdLEeHXhn4cXGY377K00lQeq0J+fYWFKUXuSwjrWnYuEKPuzTB1wC6pOBfxMOh4kzWoYzNco8+aDomPPD9I4JDKOjMGOQzK+MkWClKodHn+ev846pJt/Y+NN2ntH+DbIDatC+EtZHfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se; spf=pass smtp.mailfrom=ragnatech.se; dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b=ZvjFbbHd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MFtf+3VM; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ragnatech.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ragnatech.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J3GFh0q0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745249020; x=1776785020;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vJPOq/jtYR3O8m4x/saV7Lfzl0TMxKs1hSTnn1MH0/Q=;
-  b=J3GFh0q0+Xo4hZsYg/Pw1Fe4W/+XqWPhK3DPCNA9FDuoITAhCe4WF+JG
-   WOTHmMZF5ovv2HAt7wTYr/sQRKJw/G/0sBEmYFUgfz9lj7+1Hx4FH+Swy
-   of9frH5qJXQNeqS+bpKH0Uo81WR5STSN1r3ekHhuEQaImrNRI1RtMeNP/
-   +zJ3blSmyhDp9TylZDhxjHI/4YaAN00+P97lF0oxU/3LCQpQi92kOI+9D
-   4cZXMWjAeA68cuOOvId7WoeY9kcLGJq2G+krR5mWdP+7/dMmkGHMiQCob
-   24sqbMqotbj5dfzXd3cQfbqVC1l9+tLPp7yKH9CeQjlepD4RdV7QuKlTM
-   A==;
-X-CSE-ConnectionGUID: fqifmB24S8SgltuoGFJZxA==
-X-CSE-MsgGUID: HwVjsAJPSI2kIig6RsbjeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="46018344"
-X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
-   d="scan'208";a="46018344"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 08:23:39 -0700
-X-CSE-ConnectionGUID: qYxPlAo5T1q0ooVmsIMlWQ==
-X-CSE-MsgGUID: Spq369kLR+qDitQqo2fORA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,228,1739865600"; 
-   d="scan'208";a="136707842"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 21 Apr 2025 08:23:35 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6szd-0000Bh-0Y;
-	Mon, 21 Apr 2025 15:23:33 +0000
-Date: Mon, 21 Apr 2025 23:23:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nylon Chen <nylon.chen@sifive.com>, Conor Dooley <conor@kernel.org>,
+	dkim=pass (2048-bit key) header.d=ragnatech.se header.i=@ragnatech.se header.b="ZvjFbbHd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MFtf+3VM"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfout.phl.internal (Postfix) with ESMTP id 173F813803E3;
+	Mon, 21 Apr 2025 11:28:07 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Mon, 21 Apr 2025 11:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ragnatech.se; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1745249287;
+	 x=1745335687; bh=9uAV2T/G1sG63QeJ2OObJYeEmwkT4v+48TBWCC4TLf4=; b=
+	ZvjFbbHdfVF6MfEx/cz5NW/ERYmh2iWNrauG2A8QIccj6xoVvirwl1C1hTsyJT3G
+	J627WWWmR1HrER1Hj5CdudApTmtUFdu27hLNio3lyd4y82RUr+MbZRhdixMyXLcj
+	IQtPofJzBl3VpzGp2za0LqKEM7RVO02YV2/1i2eDZJTH4IPpV8PdAzSo7lv3kbYx
+	T0GhGtECPosFafTkPkAyWxpX7Wzzqn3MGVJEOk57nTYFmzIaipeKVF7Gpe3LxLKK
+	mtlqKmU1xPRtkOJrZKnMQ7tA2I3FOnmTF5PwXn0n+tbDywWb0HBuy19TB+XXgg2V
+	ZToWt5mbcWP8WeJYTF7qEQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745249287; x=
+	1745335687; bh=9uAV2T/G1sG63QeJ2OObJYeEmwkT4v+48TBWCC4TLf4=; b=M
+	Ftf+3VMQrJV+mlkNNrn3gRJt8BAWUYtizNjZj17qVLXso9hmsoGTynMGf92ZJORJ
+	imdhmL9UZM88Ea5ihuRjkSv0S7s1Nc/pOyVaUXfjOa48td1C1pH2rdLN+4rrfNqO
+	zxtNrfKJh5jiFQXBRsy8iNY1Aajqo//pEhAYgiFQ1mCirO2MzhUXZJMPWwC0DZXn
+	UV8RTc51dKjdf45flebyyVKOWfX7Jf5u0+9X1QEGwAoExHtSTVPtyE8aGrJ9f9i7
+	Juc11zQyrjv1HnlUfIrOeMMzydFUeqr/jtEQilw7+hZR7Ud6apHe0JgUsqtDDgU+
+	z8i4hudHy+ZtsziUozPow==
+X-ME-Sender: <xms:BWQGaBkXCgtoJlWerAUUl0P4rJqUEQIsfWeNBs8wmz3y3aZwB9r5YA>
+    <xme:BWQGaM1nDgUB479kQrG_q_zdqdGIX5HJqrrNn9ORbI-042-s6d-TBCkONN0I2G23G
+    QUMHo8qCVmh85nS4dU>
+X-ME-Received: <xmr:BWQGaHq4wIahLIFfLIEKcxvblYAj1hdn_96WxQT64Xo08XJ9diM4tPo4lNNQsyfRPChvHoK-jbpUbzn1QYFw_zxht8y8l1yNZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeduvdduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpefpihhklhgrshcuufpnuggvrhhluhhnugcuoehnihhklhgrshdrsh
+    houggvrhhluhhnugdorhgvnhgvshgrshesrhgrghhnrghtvggthhdrshgvqeenucggtffr
+    rghtthgvrhhnpedtjeejfefgfeeltdehjeeltedvkeduleeigfdtgeehveehieegtdefhf
+    dugeejkeenucffohhmrghinhephigrmhhlrdhfrghnnecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepnhhikhhlrghsrdhsohguvghrlhhunhguod
+    hrvghnvghsrghssehrrghgnhgrthgvtghhrdhsvgdpnhgspghrtghpthhtohepvdefpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghrvghkrdhvrghsuhhtodhrvghnvg
+    hsrghssehmrghilhgsohigrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgv
+    rhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhhunh
+    hinhhorhhirdhmohhrihhmohhtohdrghigsehrvghnvghsrghsrdgtohhmpdhrtghpthht
+    ohepkhifsehlihhnuhigrdgtohhmpdhrtghpthhtoheprhgrfhgrlhesmhhilhgvtghkih
+    drphhlpdhrtghpthhtoheprgdqsghhrghtihgrudesthhirdgtohhmpdhrtghpthhtohep
+    sghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopegtohhnohhrodguth
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhl
+    ihguvghrrdgsvg
+X-ME-Proxy: <xmx:BWQGaBmUJ6fU6kCz116ZTa9K_8fYmJmz2BRgYcyDvsoL7MwNwZrtgw>
+    <xmx:BWQGaP1IOCyOOxwFY9Kk-lG0rIZOfu1TLfu6u-QOyMr7Fg4wrhFEbw>
+    <xmx:BWQGaAv-rJWE1Lil4xDQkt5PlfTFPTn7RIOO81Q-2yFo4SPNUEBbYg>
+    <xmx:BWQGaDWep1VR5aQqRmCtTdUOIOvycBP9ASo_eDqCo0RH9OzcZ0z4TQ>
+    <xmx:B2QGaLCHOW0ARTFt-aL5pfCAYCIwaWk0tHqOFZL_C8pbVfungHg-6WIX>
+Feedback-ID: i80c9496c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 21 Apr 2025 11:28:04 -0400 (EDT)
+Date: Mon, 21 Apr 2025 17:28:03 +0200
+From: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>, Zong Li <zong.li@sifive.com>
-Subject: Re: [PATCH v11 4/5] pwm: sifive: Fix rounding issues in apply and
- get_state functions
-Message-ID: <202504212351.Aa9tPMsO-lkp@intel.com>
-References: <20250421095521.1500427-5-nylon.chen@sifive.com>
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] arm64: dts: renesas: r8a779g3: Add Retronix R-Car
+ V4H Sparrow Hawk board support
+Message-ID: <20250421152803.GB3760744@ragnatech.se>
+References: <20250420173829.200553-1-marek.vasut+renesas@mailbox.org>
+ <20250420173829.200553-4-marek.vasut+renesas@mailbox.org>
+ <20250421151545.GA3760744@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250421095521.1500427-5-nylon.chen@sifive.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421151545.GA3760744@ragnatech.se>
 
-Hi Nylon,
+Hi again,
 
-kernel test robot noticed the following build errors:
+On 2025-04-21 17:15:51 +0200, Niklas Söderlund wrote:
+> Hi Marek,
+> 
+> Thanks for your work!
+> 
+> On 2025-04-20 19:36:29 +0200, Marek Vasut wrote:
+> > Add Retronix R-Car V4H Sparrow Hawk board based on Renesas R-Car V4H ES3.0
+> > (R8A779G3) SoC. This is a single-board computer with single gigabit ethernet,
+> > DSI-to-eDP bridge, DSI and two CSI2 interfaces, audio codec, two CANFD ports,
+> > micro SD card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe SSD,
+> > debug UART and JTAG.
+> > 
+> > Tested-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> 
+> Compared to v2 this do not boot for me. I get no console output after 
+> U-boot and the board appears dead.
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.15-rc3 next-20250417]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+After discussing this with you on IRC it's clear the issue was at my 
+side. This works as expected, please keep my T-b. Sorry for the noise.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Nylon-Chen/riscv-dts-sifive-unleashed-unmatched-Remove-PWM-controlled-LED-s-active-low-properties/20250421-174716
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250421095521.1500427-5-nylon.chen%40sifive.com
-patch subject: [PATCH v11 4/5] pwm: sifive: Fix rounding issues in apply and get_state functions
-config: i386-buildonly-randconfig-003-20250421 (https://download.01.org/0day-ci/archive/20250421/202504212351.Aa9tPMsO-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504212351.Aa9tPMsO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504212351.Aa9tPMsO-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/ucs2_string.o
->> ERROR: modpost: "__udivdi3" [drivers/pwm/pwm-sifive.ko] undefined!
+> 
+> If I restore the PCIe nodes as such the boards comes back to life.
+> 
+> ----> cut here <----
+> diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> index b109095a0d87..b54d45115a85 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> @@ -133,6 +133,13 @@ sn65dsi86_refclk: clk-x9 {
+>                 clock-frequency = <38400000>;
+>         };
+> 
+> +       /* Page 26 / PCIe.0/1 CLK */
+> +       pcie_refclk: clk-x8 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <25000000>;
+> +       };
+> +
+>         /* Page 17 uSD-Slot */
+>         vcc_sdhi: regulator-vcc-sdhi {
+>                 compatible = "regulator-gpio";
+> @@ -340,6 +347,14 @@ i2c0_mux2: i2c@2 {
+>                         reg = <2>;
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> +
+> +                       /* Page 26 / PCIe.0/1 CLK */
+> +                       pcie_clk: clk@68 {
+> +                               compatible = "renesas,9fgv0441";
+> +                               reg = <0x68>;
+> +                               clocks = <&pcie_refclk>;
+> +                               #clock-cells = <1>;
+> +                       };
+>                 };
+> 
+>                 i2c0_mux3: i2c@3 {
+> @@ -406,20 +421,24 @@ &mmc0 {
+> 
+>  /* Page 26 / 2230 Key M M.2 */
+>  &pcie0_clkref {
+> -       clock-frequency = <100000000>;
+> +       status = "disabled";
+>  };
+> 
+>  &pciec0 {
+> +       clocks = <&cpg CPG_MOD 624>, <&pcie_clk 0>, <&pcie_clk 1>;
+> +       clock-names = "core", "ref", "aux";
+>         reset-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+>         status = "okay";
+>  };
+> 
+>  /* Page 25 / PCIe to USB */
+>  &pcie1_clkref {
+> -       clock-frequency = <100000000>;
+> +       status = "disabled";
+>  };
+> 
+>  &pciec1 {
+> +       clocks = <&cpg CPG_MOD 625>, <&pcie_clk 2>, <&pcie_clk 3>;
+> +       clock-names = "core", "ref", "aux";
+>         /* uPD720201 is PCIe Gen2 x1 device */
+>         num-lanes = <1>;
+>         reset-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+> ----> cut here <----
+> 
+> Is this expected?
+> 
+> > ---
+> > Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > Cc: "Rafał Miłecki" <rafal@milecki.pl>
+> > Cc: Aradhya Bhatia <a-bhatia1@ti.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Conor Dooley <conor+dt@kernel.org>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: Junhao Xie <bigfoot@classfun.cn>
+> > Cc: Kever Yang <kever.yang@rock-chips.com>
+> > Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> > Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Magnus Damm <magnus.damm@gmail.com>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > ---
+> > V2: - Add TB from Morimoto-san
+> >     - Enable pwm-fan and set PWM to full by default, to achieve maximum
+> >       cooling effect unless configured otherwise. The blower fan is user
+> >       supplied device, hence this default.
+> >     - Add arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso
+> >       to demonstrate user supplied blower fan configuration.
+> >     - Add TB from Niklas
+> >     - Rename pins{_,-}mdio, pins{_,-}mii, scif{_,-}clk, sd{_,-}uhs
+> >     - Add serial1 = &hscif1; and serial2 = &hscif3
+> >     - Rename {Renesas,Retronix} R-Car V4H Sparrow Hawk in commit message
+> >       and update R-Car V4H ES3.0 to Renesas R-Car V4H ES3.0
+> > V3: - Remove Renesas 9FGV0441 PCIe clock generator node from I2C bus,
+> >       remove clk-x8 clock node used by the PCIe clock generator, use
+> >       pcie0_clkref and pcie1_clkref to describe 100 MHz clock supplied
+> >       to both the PCIe controller and bus for now. The 9FGV0441 can and
+> >       does operate autonomously without any configuration. The 9FGV0441
+> >       description will be added in a separate follow up patch, once it
+> >       is clear how to describe separate controller and bus clock in DT.
+> > ---
+> >  arch/arm64/boot/dts/renesas/Makefile          |   4 +
+> >  .../r8a779g3-sparrow-hawk-fan-pwm.dtso        |  43 ++
+> >  .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 666 ++++++++++++++++++
+> >  3 files changed, 713 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso
+> >  create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > 
+> > diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+> > index d8a8d7ca4c58a..b24dddee3827c 100644
+> > --- a/arch/arm64/boot/dts/renesas/Makefile
+> > +++ b/arch/arm64/boot/dts/renesas/Makefile
+> > @@ -94,6 +94,10 @@ dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g2-white-hawk-single.dtb
+> >  r8a779g2-white-hawk-single-ard-audio-da7212-dtbs := r8a779g2-white-hawk-single.dtb white-hawk-ard-audio-da7212.dtbo
+> >  dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g2-white-hawk-single-ard-audio-da7212.dtb
+> >  
+> > +dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g3-sparrow-hawk.dtb
+> > +r8a779g3-sparrow-hawk-fan-pwm-dtbs := r8a779g3-sparrow-hawk.dtb r8a779g3-sparrow-hawk-fan-pwm.dtbo
+> > +dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g3-sparrow-hawk-fan-pwm.dtb
+> > +
+> >  dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g3-white-hawk-single.dtb
+> >  r8a779g3-white-hawk-single-ard-audio-da7212-dtbs := r8a779g3-white-hawk-single.dtb white-hawk-ard-audio-da7212.dtbo
+> >  dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g3-white-hawk-single-ard-audio-da7212.dtb
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso
+> > new file mode 100644
+> > index 0000000000000..50d53c8d76c5b
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-fan-pwm.dtso
+> > @@ -0,0 +1,43 @@
+> > +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +/*
+> > + * Device Tree Overlay for the PWM controlled blower fan in connector J3:FAN
+> > + * on R-Car V4H ES3.0 Sparrow Hawk board
+> > + *
+> > + * Copyright (C) 2025 Marek Vasut <marek.vasut+renesas@mailbox.org>
+> > + *
+> > + * Example usage:
+> > + *
+> > + * # Localize hwmon sysfs directory that matches the PWM fan,
+> > + * # enable the PWM fan, and configure the fan speed manually.
+> > + * r8a779g3-sparrow-hawk$ grep -H . /sys/class/hwmon/hwmon?/name
+> > + * /sys/class/hwmon/hwmon0/name:sensor1_thermal
+> > + * /sys/class/hwmon/hwmon1/name:sensor2_thermal
+> > + * /sys/class/hwmon/hwmon2/name:sensor3_thermal
+> > + * /sys/class/hwmon/hwmon3/name:sensor4_thermal
+> > + * /sys/class/hwmon/hwmon4/name:pwmfan
+> > + *                       ^      ^^^^^^
+> > + *
+> > + * # Select mode 2 , enable fan PWM and regulator and keep them enabled.
+> > + * # For details, see Linux Documentation/hwmon/pwm-fan.rst
+> > + * r8a779g3-sparrow-hawk$ echo 2 > /sys/class/hwmon/hwmon4/pwm1_enable
+> > + *
+> > + * # Configure PWM fan speed in range 0..255 , 0 is stopped , 255 is full speed .
+> > + * # Fan speed 101 is about 2/5 of the PWM fan speed:
+> > + * r8a779g3-sparrow-hawk$ echo 101 > /sys/class/hwmon/hwmon4/pwm1
+> > + */
+> > +
+> > +/dts-v1/;
+> > +/plugin/;
+> > +
+> > +/*
+> > + * Override default PWM fan settings. For a list of available properties,
+> > + * see schema Documentation/devicetree/bindings/hwmon/pwm-fan.yaml .
+> > + */
+> > +&fan {
+> > +	/* Available cooling levels */
+> > +	cooling-levels = <0 50 100 150 200 255>;
+> > +	/* Four pulses of tacho signal per one revolution */
+> > +	pulses-per-revolution = <4>;
+> > +	/* PWM period: 100us ~= 10 kHz */
+> > +	pwms = <&pwm0 0 100000>;
+> > +};
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > new file mode 100644
+> > index 0000000000000..b109095a0d872
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > @@ -0,0 +1,666 @@
+> > +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +/*
+> > + * Device Tree Source for the R-Car V4H ES3.0 Sparrow Hawk board
+> > + *
+> > + * Copyright (C) 2025 Marek Vasut <marek.vasut+renesas@mailbox.org>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +#include "r8a779g3.dtsi"
+> > +
+> > +/ {
+> > +	model = "Retronix Sparrow Hawk board based on r8a779g3";
+> > +	compatible = "retronix,sparrow-hawk", "renesas,r8a779g3",
+> > +		     "renesas,r8a779g0";
+> > +
+> > +	aliases {
+> > +		ethernet0 = &avb0;
+> > +		i2c0 = &i2c0;
+> > +		i2c1 = &i2c1;
+> > +		i2c2 = &i2c2;
+> > +		i2c3 = &i2c3;
+> > +		i2c4 = &i2c4;
+> > +		i2c5 = &i2c5;
+> > +		serial0 = &hscif0;
+> > +		serial1 = &hscif1;
+> > +		serial2 = &hscif3;
+> > +		spi0 = &rpc;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=on";
+> > +		stdout-path = "serial0:921600n8";
+> > +	};
+> > +
+> > +	/* Page 31 / FAN */
+> > +	fan: pwm-fan {
+> > +		pinctrl-0 = <&irq4_pins>;
+> > +		pinctrl-names = "default";
+> > +		compatible = "pwm-fan";
+> > +		#cooling-cells = <2>;
+> > +		interrupts-extended = <&intc_ex 4 IRQ_TYPE_EDGE_FALLING>;
+> > +		/*
+> > +		 * The fan model connected to this device can be selected
+> > +		 * by user. Set "cooling-levels" DT property to single 255
+> > +		 * entry to force the fan PWM into constant HIGH, which
+> > +		 * forces the fan to spin at maximum RPM, thus providing
+> > +		 * maximum cooling to this device and protection against
+> > +		 * misconfigured PWM duty cycle to the fan.
+> > +		 *
+> > +		 * User has to configure "pwms" and "pulses-per-revolution"
+> > +		 * DT properties according to fan datasheet first, and then
+> > +		 * extend "cooling-levels = <0 m n ... 255>" property to
+> > +		 * achieve proper fan control compatible with fan model
+> > +		 * installed by user.
+> > +		 */
+> > +		cooling-levels = <255>;
+> > +		pulses-per-revolution = <2>;
+> > +		pwms = <&pwm0 0 50000>;
+> > +	};
+> > +
+> > +	/*
+> > +	 * Page 15 / LPDDR5
+> > +	 *
+> > +	 * This configuration listed below is for the 8 GiB board variant
+> > +	 * with MT62F1G64D8EK-023 WT:C LPDDR5 part populated on the board.
+> > +	 *
+> > +	 * A variant with 16 GiB MT62F2G64D8EK-023 WT:C part populated on
+> > +	 * the board is automatically handled by the bootloader, which
+> > +	 * adjusts the correct DRAM size into the memory nodes below.
+> > +	 */
+> > +	memory@48000000 {
+> > +		device_type = "memory";
+> > +		/* first 128MB is reserved for secure area. */
+> > +		reg = <0x0 0x48000000 0x0 0x78000000>;
+> > +	};
+> > +
+> > +	memory@480000000 {
+> > +		device_type = "memory";
+> > +		reg = <0x4 0x80000000 0x0 0x80000000>;
+> > +	};
+> > +
+> > +	memory@600000000 {
+> > +		device_type = "memory";
+> > +		reg = <0x6 0x00000000 0x1 0x00000000>;
+> > +	};
+> > +
+> > +	/* Page 27 / DSI to Display */
+> > +	mini-dp-con {
+> > +		compatible = "dp-connector";
+> > +		label = "CN6";
+> > +		type = "full-size";
+> > +
+> > +		port {
+> > +			mini_dp_con_in: endpoint {
+> > +				remote-endpoint = <&sn65dsi86_out>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +	reg_1p2v: regulator-1p2v {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "fixed-1.2V";
+> > +		regulator-min-microvolt = <1200000>;
+> > +		regulator-max-microvolt = <1200000>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	reg_1p8v: regulator-1p8v {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "fixed-1.8V";
+> > +		regulator-min-microvolt = <1800000>;
+> > +		regulator-max-microvolt = <1800000>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	reg_3p3v: regulator-3p3v {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "fixed-3.3V";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		regulator-boot-on;
+> > +		regulator-always-on;
+> > +	};
+> > +
+> > +	/* Page 27 / DSI to Display */
+> > +	sn65dsi86_refclk: clk-x9 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <38400000>;
+> > +	};
+> > +
+> > +	/* Page 17 uSD-Slot */
+> > +	vcc_sdhi: regulator-vcc-sdhi {
+> > +		compatible = "regulator-gpio";
+> > +		regulator-name = "SDHI VccQ";
+> > +		regulator-min-microvolt = <1800000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		gpios = <&gpio8 13 GPIO_ACTIVE_HIGH>;
+> > +		gpios-states = <1>;
+> > +		states = <3300000 0>, <1800000 1>;
+> > +	};
+> > +};
+> > +
+> > +/* Page 22 / Ether_AVB0 */
+> > +&avb0 {
+> > +	pinctrl-0 = <&avb0_pins>;
+> > +	pinctrl-names = "default";
+> > +	phy-handle = <&avb0_phy>;
+> > +	tx-internal-delay-ps = <2000>;
+> > +	status = "okay";
+> > +
+> > +	mdio {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		avb0_phy: ethernet-phy@0 {	/* KSZ9031RNXVB */
+> > +			compatible = "ethernet-phy-id0022.1622",
+> > +				     "ethernet-phy-ieee802.3-c22";
+> > +			rxc-skew-ps = <1500>;
+> > +			reg = <0>;
+> > +			/* AVB0_PHY_INT_V */
+> > +			interrupts-extended = <&gpio7 5 IRQ_TYPE_LEVEL_LOW>;
+> > +			/* GP7_10/AVB0_RESETN_V */
+> > +			reset-gpios = <&gpio7 10 GPIO_ACTIVE_LOW>;
+> > +			reset-assert-us = <10000>;
+> > +			reset-deassert-us = <300>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +/* Page 28 / CANFD_IF */
+> > +&can_clk {
+> > +	clock-frequency = <40000000>;
+> > +};
+> > +
+> > +/* Page 28 / CANFD_IF */
+> > +&canfd {
+> > +	pinctrl-0 = <&canfd3_pins>, <&canfd4_pins>, <&can_clk_pins>;
+> > +	pinctrl-names = "default";
+> > +
+> > +	status = "okay";
+> > +
+> > +	channel3 {
+> > +		status = "okay";
+> > +	};
+> > +
+> > +	channel4 {
+> > +		status = "okay";
+> > +	};
+> > +};
+> > +
+> > +/* Page 27 / DSI to Display */
+> > +&dsi1 {
+> > +	status = "okay";
+> > +
+> > +	ports {
+> > +		port@1 {
+> > +			dsi1_out: endpoint {
+> > +				remote-endpoint = <&sn65dsi86_in>;
+> > +				data-lanes = <1 2 3 4>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +/* Page 27 / DSI to Display */
+> > +&du {
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 5 / R-Car V4H_INT_I2C */
+> > +&extal_clk {	/* X3 */
+> > +	clock-frequency = <16666666>;
+> > +};
+> > +
+> > +/* Page 5 / R-Car V4H_INT_I2C */
+> > +&extalr_clk {	/* X2 */
+> > +	clock-frequency = <32768>;
+> > +};
+> > +
+> > +/* Page 26 / 2230 Key M M.2 */
+> > +&gpio4 {
+> > +	/* 9FGV0441 nOE inputs 0 and 1 */
+> > +	pcie-m2-oe-hog {
+> > +		gpio-hog;
+> > +		gpios = <21 GPIO_ACTIVE_HIGH>;
+> > +		output-low;
+> > +		line-name = "PCIe-CLK-nOE-M2";
+> > +	};
+> > +
+> > +	/* 9FGV0441 nOE inputs 2 and 3 */
+> > +	pcie-usb-oe-hog {
+> > +		gpio-hog;
+> > +		gpios = <22 GPIO_ACTIVE_HIGH>;
+> > +		output-low;
+> > +		line-name = "PCIe-CLK-nOE-USB";
+> > +	};
+> > +};
+> > +
+> > +/* Page 23 / DEBUG */
+> > +&hscif0 {	/* FTDI ADBUS[3:0] */
+> > +	pinctrl-0 = <&hscif0_pins>;
+> > +	pinctrl-names = "default";
+> > +	uart-has-rtscts;
+> > +	bootph-all;
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 23 / DEBUG */
+> > +&hscif1 {	/* FTDI BDBUS[3:0] */
+> > +	pinctrl-0 = <&hscif1_pins>;
+> > +	pinctrl-names = "default";
+> > +	uart-has-rtscts;
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 24 / UART */
+> > +&hscif3 {	/* CN7 pins 8 (TX) and 10 (RX) */
+> > +	pinctrl-0 = <&hscif3_pins>;
+> > +	pinctrl-names = "default";
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 24 / I2C SWITCH */
+> > +&i2c0 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c0_pins>;
+> > +	pinctrl-names = "default";
+> > +	clock-frequency = <400000>;
+> > +	status = "okay";
+> > +
+> > +	mux@71 {
+> > +		compatible = "nxp,pca9544";	/* TCA9544 */
+> > +		reg = <0x71>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		vdd-supply = <&reg_3p3v>;
+> > +
+> > +		i2c0_mux0: i2c@0 {
+> > +			reg = <0>;
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			/* Page 27 / DSI to Display */
+> > +			bridge@2c {
+> > +				pinctrl-0 = <&irq0_pins>;
+> > +				pinctrl-names = "default";
+> > +
+> > +				compatible = "ti,sn65dsi86";
+> > +				reg = <0x2c>;
+> > +
+> > +				clocks = <&sn65dsi86_refclk>;
+> > +				clock-names = "refclk";
+> > +
+> > +				interrupts-extended = <&intc_ex 0 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +				enable-gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
+> > +
+> > +				vccio-supply = <&reg_1p8v>;
+> > +				vpll-supply = <&reg_1p8v>;
+> > +				vcca-supply = <&reg_1p2v>;
+> > +				vcc-supply = <&reg_1p2v>;
+> > +
+> > +				ports {
+> > +					#address-cells = <1>;
+> > +					#size-cells = <0>;
+> > +
+> > +					port@0 {
+> > +						reg = <0>;
+> > +						sn65dsi86_in: endpoint {
+> > +							remote-endpoint = <&dsi1_out>;
+> > +						};
+> > +					};
+> > +
+> > +					port@1 {
+> > +						reg = <1>;
+> > +						sn65dsi86_out: endpoint {
+> > +							remote-endpoint = <&mini_dp_con_in>;
+> > +						};
+> > +					};
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +		i2c0_mux1: i2c@1 {
+> > +			reg = <1>;
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +		};
+> > +
+> > +		i2c0_mux2: i2c@2 {
+> > +			reg = <2>;
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +		};
+> > +
+> > +		i2c0_mux3: i2c@3 {
+> > +			reg = <3>;
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +/* Page 29 / CSI_IF_CN / CAM_CN0 */
+> > +&i2c1 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c1_pins>;
+> > +	pinctrl-names = "default";
+> > +};
+> > +
+> > +/* Page 29 / CSI_IF_CN / CAM_CN1 */
+> > +&i2c2 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c2_pins>;
+> > +	pinctrl-names = "default";
+> > +};
+> > +
+> > +/* Page 31 / IO_CN */
+> > +&i2c3 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c3_pins>;
+> > +	pinctrl-names = "default";
+> > +};
+> > +
+> > +/* Page 31 / IO_CN */
+> > +&i2c4 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c4_pins>;
+> > +	pinctrl-names = "default";
+> > +};
+> > +
+> > +/* Page 18 / POWER_CORE and Page 19 / POWER_PMIC */
+> > +&i2c5 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	pinctrl-0 = <&i2c5_pins>;
+> > +	pinctrl-names = "default";
+> > +};
+> > +
+> > +/* Page 17 uSD-Slot */
+> > +&mmc0 {
+> > +	pinctrl-0 = <&sd_pins>;
+> > +	pinctrl-1 = <&sd_uhs_pins>;
+> > +	pinctrl-names = "default", "state_uhs";
+> > +	bus-width = <4>;
+> > +	cd-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;	/* SD_CD */
+> > +	sd-uhs-sdr50;
+> > +	sd-uhs-sdr104;
+> > +	vmmc-supply = <&reg_3p3v>;
+> > +	vqmmc-supply = <&vcc_sdhi>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 26 / 2230 Key M M.2 */
+> > +&pcie0_clkref {
+> > +	clock-frequency = <100000000>;
+> > +};
+> > +
+> > +&pciec0 {
+> > +	reset-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 25 / PCIe to USB */
+> > +&pcie1_clkref {
+> > +	clock-frequency = <100000000>;
+> > +};
+> > +
+> > +&pciec1 {
+> > +	/* uPD720201 is PCIe Gen2 x1 device */
+> > +	num-lanes = <1>;
+> > +	reset-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pfc {
+> > +	pinctrl-0 = <&scif_clk_pins>;
+> > +	pinctrl-names = "default";
+> > +
+> > +	/* Page 22 / Ether_AVB0 */
+> > +	avb0_pins: avb0 {
+> > +		mux {
+> > +			groups = "avb0_link", "avb0_mdio", "avb0_rgmii",
+> > +				 "avb0_txcrefclk";
+> > +			function = "avb0";
+> > +		};
+> > +
+> > +		pins-mdio {
+> > +			groups = "avb0_mdio";
+> > +			drive-strength = <21>;
+> > +		};
+> > +
+> > +		pins-mii {
+> > +			groups = "avb0_rgmii";
+> > +			drive-strength = <21>;
+> > +		};
+> > +
+> > +	};
+> > +
+> > +	/* Page 28 / CANFD_IF */
+> > +	can_clk_pins: can-clk {
+> > +		groups = "can_clk";
+> > +		function = "can_clk";
+> > +	};
+> > +
+> > +	/* Page 28 / CANFD_IF */
+> > +	canfd3_pins: canfd3 {
+> > +		groups = "canfd3_data";
+> > +		function = "canfd3";
+> > +	};
+> > +
+> > +	/* Page 28 / CANFD_IF */
+> > +	canfd4_pins: canfd4 {
+> > +		groups = "canfd4_data";
+> > +		function = "canfd4";
+> > +	};
+> > +
+> > +	/* Page 23 / DEBUG */
+> > +	hscif0_pins: hscif0 {
+> > +		groups = "hscif0_data", "hscif0_ctrl";
+> > +		function = "hscif0";
+> > +	};
+> > +
+> > +	/* Page 23 / DEBUG */
+> > +	hscif1_pins: hscif1 {
+> > +		groups = "hscif1_data_a", "hscif1_ctrl_a";
+> > +		function = "hscif1";
+> > +	};
+> > +
+> > +	/* Page 24 / UART */
+> > +	hscif3_pins: hscif3 {
+> > +		groups = "hscif3_data_a";
+> > +		function = "hscif3";
+> > +	};
+> > +
+> > +	/* Page 24 / I2C SWITCH */
+> > +	i2c0_pins: i2c0 {
+> > +		groups = "i2c0";
+> > +		function = "i2c0";
+> > +	};
+> > +
+> > +	/* Page 29 / CSI_IF_CN / CAM_CN0 */
+> > +	i2c1_pins: i2c1 {
+> > +		groups = "i2c1";
+> > +		function = "i2c1";
+> > +	};
+> > +
+> > +	/* Page 29 / CSI_IF_CN / CAM_CN1 */
+> > +	i2c2_pins: i2c2 {
+> > +		groups = "i2c2";
+> > +		function = "i2c2";
+> > +	};
+> > +
+> > +	/* Page 31 / IO_CN */
+> > +	i2c3_pins: i2c3 {
+> > +		groups = "i2c3";
+> > +		function = "i2c3";
+> > +	};
+> > +
+> > +	/* Page 31 / IO_CN */
+> > +	i2c4_pins: i2c4 {
+> > +		groups = "i2c4";
+> > +		function = "i2c4";
+> > +	};
+> > +
+> > +	/* Page 18 / POWER_CORE */
+> > +	i2c5_pins: i2c5 {
+> > +		groups = "i2c5";
+> > +		function = "i2c5";
+> > +	};
+> > +
+> > +	/* Page 27 / DSI to Display */
+> > +	irq0_pins: irq0 {
+> > +		groups = "intc_ex_irq0_a";
+> > +		function = "intc_ex";
+> > +	};
+> > +
+> > +	/* Page 31 / FAN */
+> > +	irq4_pins: irq4 {
+> > +		groups = "intc_ex_irq4_b";
+> > +		function = "intc_ex";
+> > +	};
+> > +
+> > +	/* Page 31 / FAN */
+> > +	pwm0_pins: pwm0 {
+> > +		groups = "pwm0";
+> > +		function = "pwm0";
+> > +	};
+> > +
+> > +	/* Page 31 / CN7 pin 12 */
+> > +	pwm1_pins: pwm1 {
+> > +		groups = "pwm1_b";
+> > +		function = "pwm1";
+> > +	};
+> > +
+> > +	/* Page 31 / CN7 pin 32 */
+> > +	pwm6_pins: pwm6 {
+> > +		groups = "pwm6";
+> > +		function = "pwm6";
+> > +	};
+> > +
+> > +	/* Page 31 / CN7 pin 33 */
+> > +	pwm7_pins: pwm7 {
+> > +		groups = "pwm7";
+> > +		function = "pwm7";
+> > +	};
+> > +
+> > +	/* Page 16 / QSPI_FLASH */
+> > +	qspi0_pins: qspi0 {
+> > +		groups = "qspi0_ctrl", "qspi0_data4";
+> > +		function = "qspi0";
+> > +		bootph-all;
+> > +	};
+> > +
+> > +	/* Page 6 / SCIF_CLK_SOC_V */
+> > +	scif_clk_pins: scif-clk {
+> > +		groups = "scif_clk";
+> > +		function = "scif_clk";
+> > +	};
+> > +
+> > +	/* Page 17 uSD-Slot */
+> > +	sd_pins: sd {
+> > +		groups = "mmc_data4", "mmc_ctrl";
+> > +		function = "mmc";
+> > +		power-source = <3300>;
+> > +	};
+> > +
+> > +	/* Page 17 uSD-Slot */
+> > +	sd_uhs_pins: sd-uhs {
+> > +		groups = "mmc_data4", "mmc_ctrl";
+> > +		function = "mmc";
+> > +		power-source = <1800>;
+> > +	};
+> > +};
+> > +
+> > +/* Page 31 / FAN */
+> > +&pwm0 {
+> > +	pinctrl-0 = <&pwm0_pins>;
+> > +	pinctrl-names = "default";
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 31 / CN7 pin 12 */
+> > +&pwm1 {
+> > +	pinctrl-0 = <&pwm1_pins>;
+> > +	pinctrl-names = "default";
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 31 / CN7 pin 32 */
+> > +&pwm6 {
+> > +	pinctrl-0 = <&pwm6_pins>;
+> > +	pinctrl-names = "default";
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 31 / CN7 pin 33 */
+> > +&pwm7 {
+> > +	pinctrl-0 = <&pwm7_pins>;
+> > +	pinctrl-names = "default";
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 16 / QSPI_FLASH */
+> > +&rpc {
+> > +	pinctrl-0 = <&qspi0_pins>;
+> > +	pinctrl-names = "default";
+> > +	bootph-all;
+> > +
+> > +	status = "okay";
+> > +
+> > +	flash@0 {
+> > +		compatible = "spansion,s25fs512s", "jedec,spi-nor";
+> > +		reg = <0>;
+> > +		spi-max-frequency = <40000000>;
+> > +		spi-rx-bus-width = <4>;
+> > +		spi-tx-bus-width = <4>;
+> > +		bootph-all;
+> > +
+> > +		partitions {
+> > +			compatible = "fixed-partitions";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +
+> > +			boot@0 {
+> > +				reg = <0x0 0x1000000>;
+> > +				read-only;
+> > +			};
+> > +
+> > +			user@1000000 {
+> > +				reg = <0x1000000 0x2f80000>;
+> > +			};
+> > +
+> > +			env1@3f80000 {
+> > +				reg = <0x3f80000 0x40000>;
+> > +			};
+> > +
+> > +			env2@3fc0000 {
+> > +				reg = <0x3fc0000 0x40000>;
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +&rwdt {
+> > +	timeout-sec = <60>;
+> > +	status = "okay";
+> > +};
+> > +
+> > +/* Page 6 / SCIF_CLK_SOC_V */
+> > +&scif_clk {	/* X12 */
+> > +	clock-frequency = <24000000>;
+> > +};
+> > -- 
+> > 2.47.2
+> > 
+> 
+> -- 
+> Kind Regards,
+> Niklas Söderlund
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kind Regards,
+Niklas Söderlund
