@@ -1,79 +1,40 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A7E2F37;
-	Mon, 21 Apr 2025 19:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7C2C2ED
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745262038; cv=none; b=esw0/SuPbyJGTtLyNPUVNDGFB8YBBW+PqB3mwLvv+cQwuv12b/IrkG2s4yYiLH+nu5Onpd1zVoUuTAq9hbe+rJQkUmjHhlmFZhKBuSlhsL2yLqnPU2dc2FsWndDgNb/e3EHsDpv0dXjLFAATK4xXOK/HnEJdnOtp+8meIyP5Ndc=
+	t=1745262189; cv=none; b=T3LbMYtX+PKrfFKLQ3Les/aVuvzvK0UMQRMuebcw3K08YT0nZBpRudjG/NISavMq2q/EAGAVPjrKCZj1dYUyCPoYWYf25RnUp8KQ/xqSxnru8jSUURNMxaxhzzkmpxVhfMwkKtqSASzTwuMU1bcpq+bbgcHxYdqo3LDPktk0/Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745262038; c=relaxed/simple;
-	bh=rK5+vJ6VPZzb/wi4IEEdQCcbOqq/b4nV0Lzil7+qcFw=;
+	s=arc-20240116; t=1745262189; c=relaxed/simple;
+	bh=bmCgWfnoZUXZEf+W3FrWlYU9o2ER7cVzCqVmQJ6BiVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=le4Y2xYNeEp85z6xJNyUm9eFxDaEOVnhbnU7+shyHIKGeuGL6lIicRNDHPBHOoiw8upItFYPZOaBvpr2LGqcQJsqQmFK0OyAGvvlOMqquQ9AhPUpFNcelgOLnYfZ6ZZlfKXxn6QrrMXJVxykZxCEcQPq3yFIg8kdMkHOFo3xVLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=zfsFMbWg; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8TQvIeEFEkZT+UJSgnohFSVEJ8NoMPgfiWz+RXg2kiRHnOoj+ThAuc5dxSR0LUcKAAcA+eRcrCbRu2HmuG9wJAjaH6gt9C69/UtmWN9hPXrT/g+NhlcRITS0oITneAQ4ldVd3/VcBTw3Hex+OX55QndpOzawmDdFnxE6LERsls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BFxyqAW2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zfsFMbWg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IEN033baaB4ogGADBJMQL9poprZr/OOuFaTb+kBE3qw=; b=zfsFMbWg6CK6J4o+6YCkUph4VD
-	G8rRxLGFNmj1yc8SuXsCdmeBXLFsKmo+pQU/YmDEj6XuVLWOZBctb/wT3kZhd9jkwHP7nDLX7j/5S
-	cBWBX9FWMs4jPDwKAQR/ZY0NkKDBxSI7VpltWeIOoCafynDuzUQ8BsVTGMHO4nxq3AQZ990XL7OmZ
-	KI9dlW7Oa7niv5zhxM7BpQnNsx2RyizT3XdHdAfas9Qpz6L+UBfQCAeBZGXVzxjTDZ6QBCLv03l7G
-	wG2uSezrrzpzhsb+ULzwEsAOe1f5hzufGywh/IeMMcpc4kNcbIXvQheVPTZOzqV+xQomlb7Sx8I/j
-	DAhQts3A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59916)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u6wNB-0003FY-0i;
-	Mon, 21 Apr 2025 20:00:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u6wN3-0006g3-2g;
-	Mon, 21 Apr 2025 19:59:57 +0100
-Date: Mon, 21 Apr 2025 19:59:57 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-Message-ID: <aAaVrVFql3vSktrT@shell.armlinux.org.uk>
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk>
- <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
- <CA+V-a8tbW2Zs6op20yRTcihSm1bcMC2dYnRXVCKRf=q4fymZyg@mail.gmail.com>
- <TY3PR01MB1134633A8CB82788BB98C6E6286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BFxyqAW2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B091C4CEE4;
+	Mon, 21 Apr 2025 19:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745262189;
+	bh=bmCgWfnoZUXZEf+W3FrWlYU9o2ER7cVzCqVmQJ6BiVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BFxyqAW2k4aspOo+lhpNaTzfRAU4T+P4XmhefK5tB6Je5b38vkRuM+rVWuDddFyZL
+	 WlrzT71r5O+hDC5nHJg/II84+nNuGuplI9iT4MU9yownp/p+ax+05643WBqnTQT65v
+	 Ub3+nD9nUXChEOHy69AjHOldVgVDRqThtmDwC7FvwwEvWDd11ndDeeIOE2SdiKtnJk
+	 jmNC7DaWlVH2IRRWFxg+k9FyHbpoDQ+QYUyydUV1IbFgFi1JW6Qf2xNpMuKT+rFthm
+	 z17mF1Ll8P725Sou9eX7Crspw7cx2JE27lsI/m1QmUNCVxhhuX1n8MScPPRZ1ifZH0
+	 G6Z8NA47zHEZQ==
+Date: Mon, 21 Apr 2025 09:03:08 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched_ext: Track currently locked rq
+Message-ID: <aAaWbDu-WKEhQYq_@slm.duckdns.org>
+References: <20250420193106.42533-1-arighi@nvidia.com>
+ <20250420193106.42533-2-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,21 +43,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TY3PR01MB1134633A8CB82788BB98C6E6286B82@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250420193106.42533-2-arighi@nvidia.com>
 
-On Mon, Apr 21, 2025 at 01:45:50PM +0000, Biju Das wrote:
-> Hi All,
-> FYI, On RZ/G3E, for STR to work with mainline, we need to reinitialize the PHY.
+Hello,
 
-Which "mainline" are you using?
+On Sun, Apr 20, 2025 at 09:30:21PM +0200, Andrea Righi wrote:
+...
+> +static inline struct rq *scx_locked_rq(void)
+> +{
+> +	return __this_cpu_read(locked_rq);
+> +}
+> +
+> +#define SCX_CALL_OP(mask, rq, op, args...)					\
+>  do {										\
+> +	update_locked_rq(rq);							\
 
-Reading your emails, I suspect v6.14 rather than something post-dating
-v6.15-rc1, since your latest email suggests that the PHY driver's
-->resume method is not being called early in stmmac's resume. However,
-commits 367f1854d442 and ef43e5132895 made this happen, which were
-merged during the merge window, and are thus in v6.15-rc1.
+Minor but why not
+
+        if (rq)
+                update_locked_rq(rq);
+
+here too to be symmetric?
+
+>  	if (mask) {								\
+>  		scx_kf_allow(mask);						\
+>  		scx_ops.op(args);						\
+> @@ -1125,11 +1155,15 @@ do {										\
+>  	} else {								\
+>  		scx_ops.op(args);						\
+>  	}									\
+> +	if (rq)									\
+> +		update_locked_rq(NULL);						\
+
+Or alternatively, drop `if (rq)` from both places. That's simpler and given
+that all the hot paths are called with rq locked, that may be *minutely*
+faster.
+
+> @@ -2174,7 +2210,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
+>  	WARN_ON_ONCE(*ddsp_taskp);
+>  	*ddsp_taskp = p;
+>  
+> -	SCX_CALL_OP_TASK(SCX_KF_ENQUEUE, enqueue, p, enq_flags);
+> +	SCX_CALL_OP_TASK(SCX_KF_ENQUEUE, rq, enqueue, p, enq_flags);
+
+Let's do SCX_CALL_OP_TASK(SCX_FK_ENQUEUE, enqueue, rq, p, enq_flags) so that
+the static parts of the invocation are grouped together and we usually have
+@rq and @p next to each other when they're used as parameters.
+
+Thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+tejun
