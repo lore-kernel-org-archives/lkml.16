@@ -1,92 +1,78 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119191E1041;
-	Mon, 21 Apr 2025 18:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B454614883F
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745259920; cv=none; b=g5Wmqgxea7n5vB1A1Hq5MMgK8J6zK8x8bQwzQOK272/0CP+HlCGr2vh7joiGTKhxu+IgHKHZY9Xo2c16VgFP1TYQhSwbiiEeaRnNda9Heh5SObGTvGC/m1n8qJPQIp035TSX+I+YP4wJIvjzYEKV6wxCZDsfO2Z9QtG+WhoqUYA=
+	t=1745260011; cv=none; b=JOrcYaT3+jE+Qgff8Dmf6l4awcSJfKwr2n+jEIJBhoGXH9uM1XgUvV+t6t2BAoBTKFqm7gTkBnRxYPy86OsxGHLdyFkM0gQrEjQXujjQP6blSePECxCHSIWAse8muJTxDbL7hMKOxmiREkxTEz87hfodNm0EitQNIflqpZmiIkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745259920; c=relaxed/simple;
-	bh=twNH0S4pyQylEiqFPX1s507CySCI37q2nkD137RMcic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mflGgdmyvqJVavFhQwh3I9rpermlHW6TdpHMO1wCRVqd5DGxOyOWm5F9UfYs21GsvoVwFWgi+fgHI6GnqM03w2ptKZpR6BHgp7E8xVHFGtJxDsfp/5EiEO6iA7TNLcUCQwhyrzMKt5FqYD5i3BfeOf/IVw/dGrsscgcG9S7JE3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePpSrZlo; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745260011; c=relaxed/simple;
+	bh=abb8lHtjBmp/3FXlq9AafpfoQuPpkv881qkgqjb9Rsk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=CIQaeIWL1M9XmKTlWKFKxkUJ4ssKDYAdC8cu3SSvmTvjdFlqqt5QglY+VfRTWSWJKyk4HWHVIl0F0y1zzhk0GyT09ml0Wxn2T5Y6oxE2pNZzCTiW1VmgfIqkZO0RBWknfH3tjZJZthyEiRbQZbwxU8ZvX6Pi4lFpw2noTkHWuEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PPguWuDx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePpSrZlo"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2255003f4c6so47913435ad.0;
-        Mon, 21 Apr 2025 11:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745259918; x=1745864718; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kZ7lhE0zceQBiDbb/+v2JkUT6Jl1uZ4guW4PrMbfZ9Q=;
-        b=ePpSrZloEQAHYu75wJpbjTY9ArrC3Ch4gNk09kntusYiNdYue/SseP4zwCSYmqBVVj
-         BD37DsiiaG15b4fYnBFIw3erWy6Wj95AM67YBEBCYmFkvL7l0r8chmun4fIvdf45nF8/
-         iD0lWiHqEMSgWhvJvGkHFctSklrbYxI6Trj489qwPyxb259kK9p6WSL1l4y3hx6nNI5V
-         pa4ZAMHlSBv1WoQBw2Gfy4TBXWE/LdG5ZM6ceh4AlIz5xbDOpYIDaIPztBfpkuVRHDJQ
-         b2CtxeFZRP78jtOfFsTMCZmZlSYDK7x2xNM5TRb9rLgKiHdbz+HdGre0uKXFhAX1xoqq
-         G//A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745259918; x=1745864718;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZ7lhE0zceQBiDbb/+v2JkUT6Jl1uZ4guW4PrMbfZ9Q=;
-        b=HO9c7CLmBz0HIIrSK3lss3hvA2Du8TNs5OElnySb5unIyc6Gy63k8oFHOn5rR2axR3
-         Ufjc1zj+vUJ6aQPfehoN7xk581OfE0sjdWbkdqiGzF/CguWDLK0livKJjUJJEc95tcjf
-         ipEtvaoUYDdVBbKN44BK1LuglcHQ4v/6CcPPBdoHn6xluwnUsl3JoP0QyjwDMxKdmqAi
-         DV+Fzf/wpFdWEd+kpVW1KZjnk+18yrnZIthCOWyuk/M9tLAjC5scqd2Gvh08fxu1erBy
-         iTcGrBscEtLAqcwi00d6hy6hzbofQtraId523H8NrsueTdVQ4wZ2P3c/Dc6BRmyAlswF
-         BzHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3mWPBcyJA5b7f8fXmIaxqud9rGibj1BYxi+YSnWpQlMmdAOBiJp6nWEbjoyVGBracMbozHvsdozACs5o6@vger.kernel.org, AJvYcCUAp67ZIZRRRtp3HaqUM/+R85FTY3sMDlnNWXd6NpJy+mXincJS2zXkrmhoyP1OaQ+VZ0o7ltQzp8REyQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMYkK3ulVGkCQTD86oR3PfY4HkZITGd9dHtxPD43YnTjV8CZqX
-	10X9bhV6taDmdRcUlBrFmQsRrx/sbTo0nqfcPT1+91esRmWcY1ie
-X-Gm-Gg: ASbGncvoWvQRCSekFr7c+0mvGTfAR6/rQfBn9rowps9kKa8ssBS3mHJXwrcq9YXxKuG
-	vGrJxLZLuL6z3H1czyJFkspHWYgugG8MVD/XNV1dACa8s/WCA2OyDUUhaxOKctuIdFHbE64vGjL
-	3YaHx/lp0PvjCS5fAKsfgE+8f2oZLdfNNk+v/TOzvE7XRKr4twB27Di6I+NlXNKmAQ4yK5X7uTr
-	OOmEvd8FRyMHavuJrR7MBq4/buR/1k2umz19/kkWZ+6Ohd+3kl1MdB1ZmeFBiK/9N+ZagW9raVc
-	YfkE9DMRb94++y7qrqIo/e9ZhvJ1yWExNosW0WVdbwYMmm6nrZDT6w==
-X-Google-Smtp-Source: AGHT+IE99OTnC4BIIEAJtKyh6nGdbIRkB2pMTx7d+sQADO9twzgO0gDZ1AcUaQ2/0ukYHywL0m1DUw==
-X-Received: by 2002:a17:902:d491:b0:221:78a1:27fb with SMTP id d9443c01a7336-22c5356dc2fmr171408555ad.11.1745259918289;
-        Mon, 21 Apr 2025 11:25:18 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe20b0sm68859305ad.243.2025.04.21.11.25.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 11:25:17 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Mon, 21 Apr 2025 11:25:16 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: pali@kernel.org, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (dell-smm) Add the Dell OptiPlex 7050 to the DMI
- whitelist
-Message-ID: <e7ea6f37-37fe-403a-8abf-23e40fa24689@roeck-us.net>
-References: <20250420223334.12920-1-W_Armin@gmx.de>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PPguWuDx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF368C4CEE4;
+	Mon, 21 Apr 2025 18:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745260011;
+	bh=abb8lHtjBmp/3FXlq9AafpfoQuPpkv881qkgqjb9Rsk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PPguWuDxV90WFW4FyKTJraT08uHhvn0/gt+Plk+13SLUmCX7/Oc9r6Zj7Z2tT4IK1
+	 hraku9eA24FpFJw9I6qP+3wMZIcWV21rux5ALfze4LNKVTQisK725WzSnPy2rzCr0b
+	 55ifH/89+CEiDxP+pjauFr8TcBnlUKGKuha7TaQA=
+Date: Mon, 21 Apr 2025 11:26:50 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Ruihan Li <lrh2000@pku.edu.cn>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/mm_init: Don't iterate pages below
+ ARCH_PFN_OFFSET
+Message-Id: <20250421112650.4fe689205944ccdaf078ca28@linux-foundation.org>
+In-Reply-To: <aAZzzVDsmtqP3uAg@kernel.org>
+References: <20250419122801.1752234-1-lrh2000@pku.edu.cn>
+	<20250420135709.732883ee775ad8b41fb668ca@linux-foundation.org>
+	<aAZzzVDsmtqP3uAg@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250420223334.12920-1-W_Armin@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 21, 2025 at 12:33:34AM +0200, Armin Wolf wrote:
-> A user reported that the driver works on the OptiPlex 7050. Add this
-> machine to the DMI whitelist.
+On Mon, 21 Apr 2025 19:35:25 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+
+> On Sun, Apr 20, 2025 at 01:57:09PM -0700, Andrew Morton wrote:
+> > On Sat, 19 Apr 2025 20:28:01 +0800 Ruihan Li <lrh2000@pku.edu.cn> wrote:
+> > 
+> > > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+> > > kernel is used as a library and loaded at a very high address), the
+> > > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+> > > long time, and the kernel will look stuck at boot time.
+> > > 
+> > > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+> > > avoids the problematic and useless iteration mentioned above.
+> > > 
+> > > This problem has existed since commit 907ec5fca3dc ("mm: zero remaining
+> > > unavailable struct pages").
+> > > 
+> > > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+> > > ---
+> > > Link to v1:
+> > >  - https://lore.kernel.org/linux-mm/20250418162727.1535335-1-lrh2000@pku.edu.cn/
+> > > Changes since v1:
+> > >  - Removed the unnecessary Fixes tag.
+> > 
+> > Why was the Fixes: considered unnecessary?  It seems to be useful
+> > information?
 > 
-> Closes: https://github.com/Wer-Wolf/i8kutils/issues/12
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> Acked-by: Pali Rohár <pali@kernel.org>
+> I didn't think it was important enough for AUTOSEL to pick it. 
 
-Applied.
+They've been asked not to backport MM patches unless they have an
+explicit cc:stable.
 
-Thanks,
-Guenter
