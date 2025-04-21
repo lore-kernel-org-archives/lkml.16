@@ -1,74 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C831C84AB;
-	Mon, 21 Apr 2025 19:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25971EDA14;
+	Mon, 21 Apr 2025 19:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745262653; cv=none; b=n/ftPWsh1hJfiodH404/JZjGcs6NXOBr7bz3Vp+gr7D+VnpPKFzl6s1fVPi1W8/OX3Wf0BxKDcJqA2iQJU8GpfkXh6pYEQxAai30FJ6FrSZXEguKt7h8msnyYboYHwr/SlqOdHA/xaCgBN0lgO0fnfQg8Ysi3WW2uj1x4Dr/liE=
+	t=1745262682; cv=none; b=UH5zkDySKAtZuQP2k0LrDnNeTeqqYp2Ie2JPx/PSx07cjlLAx6uLcwVZGapOrph7HhYQItAaTtiSXwgOH/DocKtAMCGMP00kdDl/uNXUjO3gGQjxStxsCe8GKuvYju0iYiQXE4Ywq9KoX7OIVSojXgZ6mk7No8/wm2fgfskxoiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745262653; c=relaxed/simple;
-	bh=lIko2PLVSmH39atI+9eygRcc6+YXTwEAH8wJ5UnclOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kufBGPzO7ix63wrFx97/FJZf61yoRjQUdjMI7XiCdwZVZ95apjs1gActAVgcOFQSLugywZoJ8UXy4wommriZY6M6CN5n/mneDPCyA8MIQkaB8UtB4sm+tMr+N3RgeJGan4oUJxEDxPOqIiC0jsnRBTnlhWbOwJdof+u4MvLFdWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1723FC4CEE4;
-	Mon, 21 Apr 2025 19:10:50 +0000 (UTC)
-Date: Mon, 21 Apr 2025 15:12:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "shaikh.kamal" <shaikhkamal2012@gmail.com>
-Cc: dan.j.williams@intel.com, Davidlohr Bueso <dave@stgolabs.net>, Jonathan
- Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Shiju Jose
- <shiju.jose@huawei.com>, "Fabio M. De Francesco"
- <fabio.m.de.francesco@linux.intel.com>, Smita Koralahalli
- <Smita.KoralahalliChannabasappa@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [PATCH] cxl: trace: Fix macro safety in
- CXL_EVT_TP_fast_assign
-Message-ID: <20250421151239.7981f1fa@gandalf.local.home>
-In-Reply-To: <20250421184520.154714-1-shaikhkamal2012@gmail.com>
-References: <20250421184520.154714-1-shaikhkamal2012@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745262682; c=relaxed/simple;
+	bh=h7Ge3JqI2gUvZQ3tKqKvk1UQ6gAx76a/Wgupd8InyfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpZaAPAEDbRbVjAGuFUmLGN7sQs9BS3ouCxvPMO8Wg/6FNPiEC33YDAJPDfkNIj/vt57RGrO0qBF2cFeEOkPe8D9rdq9DFCUn/VRaisHnXHmLyZeQIyGaRRe0B7SZLDxbwRI/FbSOHqvV2Kh0bpqxOavIUx1LnZ3Z/1KTFLAbx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbC0NnAi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbC0NnAi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF655C4CEE4;
+	Mon, 21 Apr 2025 19:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745262681;
+	bh=h7Ge3JqI2gUvZQ3tKqKvk1UQ6gAx76a/Wgupd8InyfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bbC0NnAizemZjXaq5L97y59y6hQNh6bjPjqf/2hSnifbBDjzWQaw1oFn8tBxaA+yU
+	 ad5lMhd4r2JU1ZbjD0Xps/X2EB0fAmbj+umO45aoiza5/R048EkZ4XSvktgbyqe/nT
+	 E1jieRne9VQDbWeWT2bWnTFRhW5/svlmVpordBRXe93kIWIHWRBENvN71qJ/Wj8YQ8
+	 Nt7m5jHUwB9aukmeG/tXfpOJGfpQb7QO2KPLoTFqyWtinOJCfSmfqMzaR9u/yWqYGQ
+	 Y43e2dcVQvNojJ06XC79rePdJn8EivPj/uv2ayDYD40b3OhA09+Nsd6Hdi++//CTzM
+	 agu1CAVkTFGdQ==
+Date: Mon, 21 Apr 2025 14:11:19 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, spacemit@lists.linux.dev,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: spacemit: add clock and
+ reset property
+Message-ID: <174526267847.2645979.6771559999426063209.robh@kernel.org>
+References: <20250416-02-k1-pinctrl-clk-v2-0-2b5fcbd4183c@gentoo.org>
+ <20250416-02-k1-pinctrl-clk-v2-1-2b5fcbd4183c@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-02-k1-pinctrl-clk-v2-1-2b5fcbd4183c@gentoo.org>
 
-On Tue, 22 Apr 2025 00:15:17 +0530
-"shaikh.kamal" <shaikhkamal2012@gmail.com> wrote:
 
-> Fix checkpatch.pl detected error
-
-First, checkpatch.pl should never be used on existing code unless it's
-yours. As the name suggests, it's for checking patches. It's not to check
-what's already been accepted. Please do not submit patches against accepted
-code because of what checkpatch.pl reports.
-
-If you run it on code and it reports something that you find is a real bug,
-then sure, fix it. But don't submit patches on code you do not understand
-just because checkpatch.pl says there's an issue with it.
-
-> The CXL_EVT_TP_fast_assign macro assigns multiple fields, but does not
-> wrap the body in a `do { ... } while (0)` block. This can lead to
-> unexpected behavior when used in conditional branches.
-
-Next, this is not a normal macro. It's a trace event macro and
-checkpatch.pl fails miserably on pretty much all tracing macros.
-
+On Wed, 16 Apr 2025 08:15:27 +0800, Yixun Lan wrote:
+> SpacemiT K1 SoC's pinctrl controller requires two clocks in order
+> to work properly, also has one reset line from hardware perspective.
 > 
-> Add checks to ensure cxlmd is valid before accessing its fields.
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  .../bindings/pinctrl/spacemit,k1-pinctrl.yaml          | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
 
-If it is invalid, and we do what your patch suggests and just not write
-anything, the event it was writing into has already been created. If we
-exit out of this macro, then the event will simply contain garbage, but is
-already on its way to user space. That means the output to user space will
-be garbage. That's a bug. In other words, if cxlmd is NULL, it had better
-not be calling this macro in the fist place!
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
--- Steve
