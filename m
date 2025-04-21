@@ -1,108 +1,157 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F7B2905;
-	Mon, 21 Apr 2025 14:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6041519B8;
+	Mon, 21 Apr 2025 14:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245934; cv=none; b=bgX3RierjpSiNlb6TvI4+jj5/GvYIYy0UPSDqQ1szTNrZRXSkTn30R5rUGiuXb1YAIF4IcgYbOWY9RGJqmKNhz0JDkVwtiTvWQnKA087tpavNJRaC4MdYxarOyoEttIZ7hfomcHS6/AuDFdwdgt8X/h7g9/MSBcbnqCTJtkE814=
+	t=1745245970; cv=none; b=hQkuhsXJrk5pM/WIDKZk1rpxmqoK6g7E/IPXHKryr4/93n/uzF/rWUoNu3iRp8rOVGCmc4UjmsS3lgFpcpD/2rB+zYnCbPj0mdCguygSjsE4NXE72Ye9xf0IibNLlv7aieOc+skkFMcPCSphQtgXjhZvloUxNV4F940y8b2Pi0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245934; c=relaxed/simple;
-	bh=Z+S9eHf9/wqNoLRF4hWQ88+VPLnFVCb3FpbJphuVF/U=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=RkmlnALyWZNmcGK4h8QzMQv43gl/dWDJ09TlHs8GqWev2jU2wrlwyBEDeFl5eIlUUYvBF0NMINgEmG/irzdtWdUN90JKRVdCbmv15IsWHdboSKHsRX/vEkSlltrvTYtsX173/cPjwOdH0XKnawcn4AtaMp5Dct0Xto8YgoQwrPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=eQTeObu4; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1745245970; c=relaxed/simple;
+	bh=np3UkjIawcr9pyJaI8s3ldqbWJ63gVp/HiIhsW3WyeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FiNL87ha9Vz3QNHHapRp634mcQdHOWLk07+AFjCpwfdRTq0jUIXQYxE7Y+zJbTwkB3yGHGoazrUo7Kxqg64xaqL+LhmT8nw34tTIHYd2A02PKAw0RXc+4SeoSOfDSshN7+FPA3TR975HYAlEBf93AixL6kTT1RiptFgQfuLyLcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/fHD/ct; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="eQTeObu4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1745245922; bh=6eXqKYUutXENtnDpmaxLPdOoYJJXdLFbAthrsL6H9FU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eQTeObu47aOCDcD2QJkiCqJEETcXyOQxxMIqYjcIR1+yR/7muroihG3/KYLdUrJK9
-	 IcVPtAkv8HxS5HSHEg8ke1YsCJU0tkD1SP+vIe4MRsN8yVMDrcoPrEsBwph8p76Pj/
-	 P4zq7zmPCnqFq0xTi6FMEBYIVCFsUZcqcklIxa3M=
-Received: from pek-lxu-l1.wrs.com ([114.244.56.254])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id 7F93A2A7; Mon, 21 Apr 2025 22:31:57 +0800
-X-QQ-mid: xmsmtpt1745245917t2dv8uoxg
-Message-ID: <tencent_93C4465D499DEEDF6EE60CB667DC46D0D206@qq.com>
-X-QQ-XMAILINFO: MzNwb/pqyJTkyMB3X34qFTf82JRI6mTinyGHLW/dR+aCXw9U5XiXR0SQvNgTBw
-	 f0+43DWZdLWuULnmZOll4L5FrcH8MEdHE7oiIPUmuM5X044USavdSZJvAeNevVStSpBWMg+PzJsF
-	 5DAtHtlulGRU6TP7d46ho7huCvJuVIkQTByvBbZ17eIwI/pjxTTFNbwsb2LO2r53sSesBadO/JA0
-	 QcW6q+SwWyRF7SOQMbzK704nu1mGMpK66NJyPucuyAGrTHC0hxsboga/x+H+IpZKmywkVK6FFsrz
-	 Y7zY6hK3q+9KhwA9107RAwrkeQV7fH1vz2DW1sqnhSIUkP5HzJX6BJ8ztSvQ05pYQl8OuTPnbqtw
-	 sl8Uj1BZmqJ5t4ZAPEVd0zVSgILx003ZOY8w7/Ed4I8fGhDWoYSbVo1eI7i0Gjby8PtE6IQthv5h
-	 IKFY9Kq1PqpBxwU17dOise2YU18e+panZFthp3bbx2xg8/vmNR32nnWyboH1Jxq3DUMPybWh6X9e
-	 lQ84FJ0NoxL8PtuFvt1iRBp6TGjFz0A7ccVuzpn6v4osvYobBBKjl9NCVMkdHfJh8498gvcs5ho1
-	 T9JuqqeG5utFoBuVIJn1wVLKTUIhZhnmctMUIW11/ujDMotU0RgXQy1079JK92lriLO/FK53cW9t
-	 Da8GVHKPz34zA4K8EVB73ZbCE442Q0Ui9v3bNCqe9xqdDMBanqBmGswdZCtsr7aaNEjgFoCJNbB+
-	 9PSY5WCng17FZ/EP5tMqmdI19d/vsf75ORN6AJrpmvyYL9I8XwYZA5bVRjWMNmWCFYaIXjuo0l1R
-	 3VkJcpeOzmxxmedQNXB2eqf949lqVxVPhPrL22mJ/nF/dCahfrEgHP+RblXzamJzKgR8g2TT/N5M
-	 MdInrHed/S+prffUW71qh7ZPLcuEEqmrmUV1YmAYtsZr7VEswuYt7U5hYvxT+AIvZYdh9M+n65t/
-	 Jf/6YRBubEeih491Mu0akKkF6ryqMwCIUlMyQ8LHc+FpNFFC3hWA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+0192952caa411a3be209@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	mchehab@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] media: az6007: Add upper bound check to the data of device state
-Date: Mon, 21 Apr 2025 22:31:56 +0800
-X-OQ-MSGID: <20250421143155.1019130-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <6805a24c.050a0220.4e547.000b.GAE@google.com>
-References: <6805a24c.050a0220.4e547.000b.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/fHD/ct"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2055FC4CEE4;
+	Mon, 21 Apr 2025 14:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745245969;
+	bh=np3UkjIawcr9pyJaI8s3ldqbWJ63gVp/HiIhsW3WyeA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r/fHD/ctZWuodJU3ZgdkPlnjSNmKoXOEwaAaSfkjs1RLDTqnyrxZlp8KXxhJosOY3
+	 L91ZewpSnryMwc4Fhl3NdOMl7iJyrwZa/Yk+ojrqMT8syh15YGL0ZSw+k4kZiibMTc
+	 J5MjZ4TAeBvYTJFAcA91aNEShSq+bXI+srbru2I1TE4Gw0f2gYGbAieFCplswXL9gp
+	 JvnuvLTETXdczsHYJ5QixzNLHaETjBvuD1D4Rwyob7iPF3bW4S0MxMoNcIhb3c2iop
+	 K1E9sb4HKZg/zW519d7Eae8Scbs9EdhtxAXS8hpXGWyI+FKbhFeCvphZb5do5RpQfP
+	 fRwkR9NsUWCkw==
+Date: Mon, 21 Apr 2025 15:32:46 +0100
+From: Simon Horman <horms@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v1 3/4] net: selftest: add checksum mode support
+ and SW checksum handling
+Message-ID: <20250421143246.GK2789685@horms.kernel.org>
+References: <20250416161439.2922994-1-o.rempel@pengutronix.de>
+ <20250416161439.2922994-4-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416161439.2922994-4-o.rempel@pengutronix.de>
 
-syzbot report a corrupted list in az6007_i2c_xfer. [1]
+On Wed, Apr 16, 2025 at 06:14:38PM +0200, Oleksij Rempel wrote:
+> Introduce `enum net_test_checksum_mode` to support both CHECKSUM_COMPLETE
+> and CHECKSUM_PARTIAL modes in selftest packet generation.
+> 
+> Add helpers to calculate and apply software checksums for TCP/UDP in
+> CHECKSUM_COMPLETE mode, and refactor checksum handling into a dedicated
+> function `net_test_set_checksum()`.
+> 
+> Update PHY loopback tests to use CHECKSUM_COMPLETE by default to avoid
+> hardware offload dependencies and improve reliability.
+> 
+> Also rename loopback test names to clarify checksum type and transport.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Before accessing the member data of the struct az6007_device_state, only
-the lower boundary of data is checked, but the upper boundary is not checked.
-When the value of msgs[i].len is damaged or too large, it will cause out
-of bounds access to st->data.
+Unfortunately this patch does not apply against net-next
+(or at any rate, the series did not at the time it was submitted).
+Please rebase and repost.
 
-[1]
-UBSAN: array-index-out-of-bounds in drivers/media/usb/dvb-usb-v2/az6007.c:821:30
-index 4096 is out of range for type 'unsigned char [4096]'
-CPU: 1 UID: 0 PID: 5832 Comm: syz-executor328 Not tainted 6.15.0-rc2-syzkaller-00493-gac71fabf1567 #0 PREEMPT(full)
-Call Trace:
- <TASK>
- az6007_i2c_xfer+0x549/0xc30 drivers/media/usb/dvb-usb-v2/az6007.c:821
- i2c_transfer_buffer_flags+0x10c/0x190 drivers/i2c/i2c-core-base.c:2343
- i2cdev_read+0x111/0x280 drivers/i2c/i2c-dev.c:155
- do_loop_readv_writev fs/read_write.c:833 [inline]
- do_preadv+0x1af/0x270 fs/read_write.c:1130
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+> ---
+>  net/core/selftests.c | 218 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 206 insertions(+), 12 deletions(-)
+> 
+> diff --git a/net/core/selftests.c b/net/core/selftests.c
 
-Reported-by: syzbot+0192952caa411a3be209@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=0192952caa411a3be209
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- drivers/media/usb/dvb-usb-v2/az6007.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+...
 
-diff --git a/drivers/media/usb/dvb-usb-v2/az6007.c b/drivers/media/usb/dvb-usb-v2/az6007.c
-index 65ef045b74ca..6322894eda27 100644
---- a/drivers/media/usb/dvb-usb-v2/az6007.c
-+++ b/drivers/media/usb/dvb-usb-v2/az6007.c
-@@ -806,7 +806,8 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
- 			if (az6007_xfer_debug)
- 				printk(KERN_DEBUG "az6007: I2C R addr=0x%x len=%d\n",
- 				       addr, msgs[i].len);
--			if (msgs[i].len < 1) {
-+			if (msgs[i].len < 1 ||
-+			    msgs[i].len > ARRAY_SIZE(st->data) - 5) {
- 				ret = -EIO;
- 				goto err;
- 			}
+> +/**
+> + * net_test_setup_sw_csum - Compute and apply software checksum
+> + *                          (CHECKSUM_COMPLETE)
+> + * @skb: Socket buffer with transport header set
+> + * @iph: Pointer to IPv4 header inside skb
+> + *
+> + * This function computes and fills the transport layer checksum (TCP or UDP),
+> + * and sets skb->ip_summed = CHECKSUM_COMPLETE.
+> + *
+> + * Returns 0 on success, or negative error code on failure.
+> + */
+> +static int net_test_setup_sw_csum(struct sk_buff *skb,
+> +				  struct iphdr *iph)
+> +{
+> +	int transport_offset = skb_transport_offset(skb);
+> +	int transport_len = skb->len - transport_offset;
+> +	__be16 final_csum;
+> +	__wsum csum;
+> +
+> +	switch (iph->protocol) {
+> +	case IPPROTO_TCP:
+> +		if (!pskb_may_pull(skb,
+> +				   transport_offset + sizeof(struct tcphdr)))
+> +			return -EFAULT;
+> +
+> +		tcp_hdr(skb)->check = 0;
+> +		break;
+> +	case IPPROTO_UDP:
+> +		if (!pskb_may_pull(skb,
+> +				   transport_offset + sizeof(struct udphdr)))
+> +			return -EFAULT;
+> +
+> +		udp_hdr(skb)->check = 0;
+> +		break;
+> +	default:
+> +		pr_err("net_selftest: unsupported proto for sw csum: %u\n",
+> +		       iph->protocol);
+> +		return -EINVAL;
+> +	}
+> +
+> +	csum = skb_checksum(skb, transport_offset, transport_len, 0);
+> +	final_csum = csum_tcpudp_magic(iph->saddr, iph->daddr, transport_len,
+> +				       iph->protocol, csum);
+
+Sparse is unhappy about integer type annotations around here.
+The 'final_csum =' line above is line number 101.
+
+  .../selftests.c:101:20: warning: incorrect type in assignment (different base types)
+  .../selftests.c:101:20:    expected restricted __be16 [usertype] final_csum
+  .../selftests.c:101:20:    got restricted __sum16
+  .../selftests.c:105:28: warning: incorrect type in assignment (different base types)
+  .../selftests.c:105:28:    expected restricted __be16 [usertype] final_csum
+  .../selftests.c:105:28:    got restricted __sum16 [usertype]
+  .../selftests.c:108:37: warning: incorrect type in assignment (different base types)
+  .../selftests.c:108:37:    expected restricted __sum16 [usertype] check
+  .../selftests.c:108:37:    got restricted __be16 [usertype] final_csum
+  .../selftests.c:110:37: warning: incorrect type in assignment (different base types)
+  .../selftests.c:110:37:    expected restricted __sum16 [usertype] check
+  .../selftests.c:110:37:    got restricted __be16 [usertype] final_csum
+
+> +
+> +	if (iph->protocol == IPPROTO_UDP && final_csum == 0)
+> +		final_csum = CSUM_MANGLED_0;
+> +
+> +	if (iph->protocol == IPPROTO_TCP)
+> +		tcp_hdr(skb)->check = final_csum;
+> +	else
+> +		udp_hdr(skb)->check = final_csum;
+> +
+> +	skb->ip_summed = CHECKSUM_COMPLETE;
+> +
+> +	return 0;
+> +}
+
+...
+
 -- 
-2.43.0
-
+pw-bot: changes-requested
