@@ -1,188 +1,122 @@
-Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BB91E8320;
-	Mon, 21 Apr 2025 19:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2AF1DF256
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745262382; cv=none; b=An/cm4Jruo0kE/UuQlKjhQC64BTR3GXOG1SaVoQCg/BcgYT3ltwzxXb48193qXNpJZsEFrRiISC+3B09I5M23LtU8DQOi0ZPfYFkmlgwksJLRaC7qXDX5VqhlM3O0V5Lvyzbg0eIFq4IIErkwcVXO3FGvGni3AC7hO4hyZht7Q8=
+	t=1745262586; cv=none; b=uM6z+7nZ6VhtOHuHlcgDUdFKapDo1jlEXBMgYcBvpmgHrMmBAFFddQNuuiJG2Mq5PudMiGaL1eU6VRRdpie8OvvWc/6llLh12D0oxtSqQc/nyMXDjm4bVbisYnKbJdGqYpuQLs4y8h/PYPgczU3xLs5c/HtPtddhuocesrrfGCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745262382; c=relaxed/simple;
-	bh=vTKRaKFRv9kn3SC+rgDREeTrII8g8FovnKvl8R6ktrI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vDFPbiD7ldwmekLHyGzQEL2ciglvquoExfbQjcqYGlEZST+yfoz590TJBui5YqwsTzz549CHW+188oF0PJhDKgKKKbjFX+j8Skr6hTi+lGPWuMfOpIbXt1lMY8x1SoIFO2Ws7kdh9uVlLObavW9EkOEqRP6OhuPePSBudcsaKMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=kER7spcG; arc=none smtp.client-ip=82.68.155.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+	s=arc-20240116; t=1745262586; c=relaxed/simple;
+	bh=Ipy/IlMQR5m3AbiVrZjXOxC3psCUPUEnpm0aP+lGnG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y1l9C2+801/lBRXUGI0GQaAYrgFeAOaysaq5TYXEYN9FL/d6H92gEZCxUeAKNX2RIPoesNjAxaLhuOJaofsurIkAyBOQI3+wwsUsmw9ZdDm5wLoG5vH5t9ccLyVTOftEnNyeXcQg7BhhULUf4KxFojf7FT4cUgC3DofNKe0iJUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=BpnKfwOS; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="kER7spcG"
-Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
-	by wylie.me.uk (Postfix) with ESMTP id AEEC8120872;
-	Mon, 21 Apr 2025 20:06:01 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-	s=mydkim006; t=1745262361;
-	bh=vTKRaKFRv9kn3SC+rgDREeTrII8g8FovnKvl8R6ktrI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kER7spcG8m1/KVwt7QtEORa89/IQs8He89mAmuggsVNgfbYTiGrGrFUm5Kf+aXDD1
-	 yIDlyMWEcjSn1P2Z2/l0Qo3J2yfpWx2An9gyplWX1UBpt9dZYt9MXmquNYHYagdz2T
-	 9ECiMMLPXw970VTiITkgmltKHjlshoM39nKBw0vZxM62cHh4OT4FTxQo1krPZds+BY
-	 g0lCe2WOttRKl3+F10oLJdCRlmFNVr3p9/kNCjohIoum2WwGsyXZSeDiDNE+eb7xYV
-	 aAunimqsXz2zlGLobDK0ZMO3ZH69wfUVed6/CQu0LEA4Cm6K91aTr6r44of3kHxAzN
-	 N/tiLL0XO6Qlg==
-Date: Mon, 21 Apr 2025 20:06:01 +0100
-From: "Alan J. Wylie" <alan@wylie.me.uk>
-To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
- Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
- <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
- <toke@redhat.com>, stable@vger.kernel.org
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-In-Reply-To: <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
-	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
-	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
-X-Clacks-Overhead: GNU Terry Pratchett
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="BpnKfwOS"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-706cb438672so30108277b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1745262580; x=1745867380; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T08XUeirEjZZ3rFusZ9ui4pbr1iJ6mTBH3F3K3ayArk=;
+        b=BpnKfwOSnnHbDHm+0NyompQdo/e9PAF3GvurdUWJGmI5kBBrZh/wT6hOujzhiMb3vr
+         iRDuL7pYUCkdHo5Y8EHMKmwh0Ezl4qa19P2Upv2noI1RAMbxSPlflvry2GDNMVgk7lzK
+         vxHGssoYph8Ndq7i1+a6TPC7xHEO3ViAHfEzobYPv6yU1UVpQUaU2aw7IwmC0uAaCPeS
+         L9dEyDFiPAfDL0vzKIDN1c0SQbSNbfsDkUgCC2O9nBWEywlO2PdQbgkxdttAc4g20TxQ
+         jh7+rkxWlj6ljoA5xJliSG0APSThR9PFQq1Fe4zefqNkXEzoLLoVBn2M7iLj/cnXeWIH
+         WhMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745262580; x=1745867380;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T08XUeirEjZZ3rFusZ9ui4pbr1iJ6mTBH3F3K3ayArk=;
+        b=sqwUhUXpcvmUzsPOwjqcSUgOCfC4BUWYF0/+0oOBAomSKOF9Zv13aVhQPJjidVunJe
+         zAmFPHXQGrQqK5RjRWx5sacSQC9SzfTDv0OVVgPeIetxBjnySy6mWsA07xxQqcWgbF6W
+         AOA4WlJLn0v0FMNsMvWcUXHd8EKKUXinIUNngEM0JMXR/JCqptfO82gFUxAInqyhzxXj
+         VHqdPukrRrp8QtkBbRTxsA+mZpT76RFBKPzRSEmxJ24lETiPlbg+m1QDjGcM6XxFZt6I
+         /Th0DDC7MIeD6pBlQHhUVBWo0FuvBikk7z2jQrD4XPO0SS/tYeciS0hans2fI8RhKaaw
+         bwEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLu/imupXITIsEPexMblKxup6YTIUMcaOxXorOOOIKJbAIjNIGCO/THh+SKtSotZwczIffvgPhFsO7Wpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+pHshdj226mitckLgsNZNV6av6oJcgvSsYm2Bs9gSHYMrqZE5
+	YmPrkdlpNE7sT8Cu3Iw5uvFwpiUj7yOBNCjwcL3bLYHGgNHD10zA4ZgS+Bbn93lzlKql+dWNeny
+	+SaeMsO0K/fhyORsyo0y0fzVfWQZWtkirB5sk
+X-Gm-Gg: ASbGncsPbcnqywdC8023daxPvYzigNK6lA+9kKKnhavUrinedkWXV0Tj/TtiqC2JEwW
+	In6k5goSuDe2Jc5GY/RyPw/n8EbsxcZ+qsbxpISifVxEhEzEd2Wvb9RMyL0o5q4odvHr95GWvOu
+	WDq0U6HieYBJfKDmScwQTHoQ==
+X-Google-Smtp-Source: AGHT+IEq81DQWkZ97JRyt5xETBtFSorBaF92Ou9Zo82I6G2+i+i8EcwH+xtm9xonVfTXTIJqZpTYrjxiZqHXvvmgyoI=
+X-Received: by 2002:a05:690c:3588:b0:703:ac44:d367 with SMTP id
+ 00721157ae682-706cccc0c45mr179795477b3.6.1745262580700; Mon, 21 Apr 2025
+ 12:09:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250416213206.26060-2-kernel@o1oo11oo.de>
+In-Reply-To: <20250416213206.26060-2-kernel@o1oo11oo.de>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 21 Apr 2025 15:09:29 -0400
+X-Gm-Features: ATxdqUEYOsA9flEG-c70fcJwePHBgE2dUMSRCtlm3hgaQYBOzeZmlB1-mNQVx4c
+Message-ID: <CAHC9VhS=jWEZqb3MqCtUAJhY9ci8d_N4H6CqWsYU0YmEG=8_yA@mail.gmail.com>
+Subject: Re: [RFC PATCH] lsm: Add Rust bindings with example LSM
+To: Lukas Fischer <kernel@o1oo11oo.de>
+Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 21 Apr 2025 13:10:00 +0100
-"Alan J. Wylie" <alan@wylie.me.uk> wrote:
+On Wed, Apr 16, 2025 at 5:36=E2=80=AFPM Lukas Fischer <kernel@o1oo11oo.de> =
+wrote:
+>
+> These are the bare necessities to implement an LSM in Rust. They are in
+> an early WIP state intended to gather feedback, mainly for the use of
+> unsafe.
+>
+> The LSM is implemented in security/rust_lsm/lsm.rs and uses the bindings
+> to the C side directly to set itself up. This is of course not
+> production ready, but enough to set up a minimal example of an LSM.
+>
+> The `lsm_info` struct technically needs to be aligned to
+> `size_of::<kernel::ffi::c_ulong>()`, but Rust does not allow this in
+> combination with `repr(transparent)`. So far this works, but it seems
+> brittle.
+>
+> To limit the scope of the implementation, the example and bindings only
+> cover the `file_permission` hook.
+>
+> Signed-off-by: Lukas Fischer <kernel@o1oo11oo.de>
+> ---
+> As part of my master's thesis, I am developing a Rust-based LSM. These
+> are the bindings I have created for that, so that I can register and
+> implement an LSM in Rust.
 
-> On Mon, 21 Apr 2025 13:50:52 +0200
-> Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
+Thanks for sharing this Lukas.  My Rust knowledge is still far too
+basic to offer any constructive review of the Rust code, but I'm happy
+to see some effort being put into looking at what would be required to
+support a LSM written in Rust.
 
-> > If so, try either reverting the above or adding:
-> > "sch_htb: make htb_qlen_notify() idempotent" aka
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?id=3D5ba8b837b522d7051ef81bacf3d95383ff8edce5
-> >=20
-> > which was successfully not added to 6.14.3, along with the rest of
-> > the series:
-> > https://lore.kernel.org/all/20250403211033.166059-2-xiyou.wangcong@gmai=
-l.com/ =20
->=20
-> "successfully not added"?
->=20
-> $ git cherry-pick  5ba8b837b522d7051ef81bacf3d95383ff8edce5
-> [linux-6.14.y 2285c724bf7d] sch_htb: make htb_qlen_notify() idempotent
->  Author: Cong Wang <xiyou.wangcong@gmail.com>
->  Date: Thu Apr 3 14:10:23 2025 -0700
->  1 file changed, 2 insertions(+)
->=20
-> It will take a while (perhaps days?) before I can confirm success.
+It isn't clear to me if this is simply an exercise in seeing what
+Rust/C interfaces would be needed to implement a Rust based LSM, or if
+you ultimately have a LSM you would like to submit upstream and this
+is the necessary groundwork so you can implement it in Rust.  Unless
+it is the latter, I'm not sure this is something that is a candidate
+for merging into the upstream Linux kernel as we don't merge "demo"
+type LSMs.  If you are intending to develop a proper LSM, we do have
+some guidelines that may help explain what is expected:
 
-I'm afraid that didn't help. Same panic.
-
-
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 139bfa067 P4D 139bfa067 PUD 133bf1067 PMD 0=20
-Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G           O       6.14.3-00=
-001-g2285c724bf7d #21
-Tainted: [O]=3DOOT_MODULE
-Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./970A-DS=
-3P, BIOS FD 02/26/2016
-RIP: 0010:rb_next+0x0/0x50
-Code: e8 d5 fa ff ff 5b 4c 89 e0 5d 41 5c 41 5d 41 5e e9 85 73 01 00 5b 5d =
-41 5c 41 5d 41 5e e9 38 76 01 00 0f 1f 84 00 00 00 00 00 <48> 3b 3f 48 89 f=
-8 74 38 48 8b 57 08 48 85 d2 74 11 48 89 d0 48 8b
-RSP: 0018:ffffc90000003e50 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff8881052e9000 RCX: ffff8881052e9180
-RDX: ffff8881e5e4f400 RSI: ffff888190075ee8 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff8881052e92b0 R09: 00000000e49ea9dc
-R10: 000000000000278a R11: 001dcd6500000000 R12: ffff8881e5e4f400
-R13: ffff8881052e92b8 R14: 00000b92b6422fbf R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88842ec00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000139952000 CR4: 00000000000406f0
-Call Trace:
- <IRQ>
- htb_dequeue+0x42f/0x610 [sch_htb]
- __qdisc_run+0x253/0x480
- ? timerqueue_del+0x2c/0x40
- qdisc_run+0x15/0x30
- net_tx_action+0x182/0x1b0
- handle_softirqs+0x102/0x240
- __irq_exit_rcu+0x3e/0xb0
- sysvec_apic_timer_interrupt+0x5b/0x70
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x16/0x20
-RIP: 0010:cpuidle_enter_state+0x126/0x220
-Code: 18 4c 6f 00 85 c0 7e 0b 8b 73 04 83 cf ff e8 a1 22 e5 ff 31 ff e8 9a =
-2e 98 ff 45 84 ff 74 07 31 ff e8 0e 58 9d ff fb 45 85 ed <0f> 88 cc 00 00 0=
-0 49 63 c5 48 8b 3c 24 48 6b c8 68 48 6b d0 30 49
-RSP: 0018:ffffffff81e03e40 EFLAGS: 00000202
-RAX: ffff88842ec00000 RBX: ffff8881008e7400 RCX: 0000000000000000
-RDX: 00000b927d3d4a20 RSI: fffffffc3199eb61 RDI: 0000000000000000
-RBP: 0000000000000002 R08: 0000000000000002 R09: 00000b927aa897c0
-R10: 0000000000000006 R11: 0000000000000020 R12: ffffffff81f98280
-R13: 0000000000000002 R14: 00000b927d3d4a20 R15: 0000000000000000
- cpuidle_enter+0x2a/0x40
- do_idle+0x12d/0x1a0
- cpu_startup_entry+0x29/0x30
- rest_init+0xbc/0xc0
- start_kernel+0x630/0x630
- x86_64_start_reservations+0x25/0x30
- x86_64_start_kernel+0x73/0x80
- common_startup_64+0x12c/0x138
- </TASK>
-Modules linked in: sch_htb cls_u32 sch_ingress sch_cake ifb act_mirred netc=
-onsole xt_hl xt_nat ts_bm xt_string xt_TARPIT(O) xt_CT xt_tcpudp xt_helper =
-nf_nat_ftp nf_conntrack_ftp ip6t_rt ip6table_nat xt_MASQUERADE iptable_nat =
-nf_nat xt_TCPMSS xt_LOG nf_log_syslog ip6t_REJECT nf_reject_ipv6 ipt_REJECT=
- nf_reject_ipv4 ip6table_raw iptable_raw ip6table_mangle iptable_mangle xt_=
-multiport xt_state xt_limit xt_conntrack nf_conntrack nf_defrag_ipv6 nf_def=
-rag_ipv4 ip6table_filter ip6_tables iptable_filter ip_tables x_tables pppoe=
- tun pppox binfmt_misc ppp_generic slhc af_packet bridge stp llc ctr ccm dm=
-_crypt radeon drm_client_lib ath9k video wmi drm_exec ath9k_common drm_suba=
-lloc_helper ath9k_hw drm_ttm_helper syscopyarea ttm ath sysfillrect sysimgb=
-lt fb_sys_fops mac80211 pl2303 drm_display_helper snd_hda_codec_realtek usb=
-serial drm_kms_helper snd_hda_codec_generic snd_hda_codec_hdmi snd_hda_scod=
-ec_component snd_hda_intel agpgart snd_intel_dspcfg snd_hda_codec cfbfillre=
-ct cfbimgblt cfg80211 snd_hda_core fb_io_fops
- cfbcopyarea i2c_algo_bit fb e1000 snd_pcm font cdc_acm snd_timer aesni_int=
-el libarc4 snd at24 acpi_cpufreq k10temp crypto_simd soundcore fam15h_power=
- cryptd regmap_i2c evdev nfsd sch_fq_codel auth_rpcgss lockd grace sunrpc d=
-rm configfs drm_panel_orientation_quirks fuse backlight loop nfnetlink usbh=
-id xhci_pci ohci_pci xhci_hcd ohci_hcd ehci_pci ehci_hcd sha512_ssse3 sha25=
-6_ssse3 sha1_ssse3 usbcore sha1_generic gf128mul usb_common dm_mirror dm_re=
-gion_hash dm_log cpuid i2c_piix4 i2c_smbus i2c_dev i2c_core it87 hwmon_vid =
-msr dmi_sysfs autofs4
-CR2: 0000000000000000
----[ end trace 0000000000000000 ]---
-RIP: 0010:rb_next+0x0/0x50
-Code: e8 d5 fa ff ff 5b 4c 89 e0 5d 41 5c 41 5d 41 5e e9 85 73 01 00 5b 5d =
-41 5c 41 5d 41 5e e9 38 76 01 00 0f 1f 84 00 00 00 00 00 <48> 3b 3f 48 89 f=
-8 74 38 48 8b 57 08 48 85 d2 74 11 48 89 d0 48 8b
-RSP: 0018:ffffc90000003e50 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff8881052e9000 RCX: ffff8881052e9180
-RDX: ffff8881e5e4f400 RSI: ffff888190075ee8 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffff8881052e92b0 R09: 00000000e49ea9dc
-R10: 000000000000278a R11: 001dcd6500000000 R12: ffff8881e5e4f400
-R13: ffff8881052e92b8 R14: 00000b92b6422fbf R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88842ec00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 0000000139952000 CR4: 00000000000406f0
-Kernel panic - not syncing: Fatal exception in interrupt
-Kernel Offset: disabled
-Rebooting in 3 seconds..
-
+* https://github.com/LinuxSecurityModule/kernel/blob/main/README.md
 
 --=20
-Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
-
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+paul-moore.com
