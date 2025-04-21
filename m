@@ -1,127 +1,244 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B839CF507;
-	Mon, 21 Apr 2025 03:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBBFF507
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 03:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745206323; cv=none; b=Cf/UjLils14bCcoPEYAzraKrZLXjTaVMQ9VwyeZjQRv35iQGEmyO8lDSdcBZ0oORd3Q0J9G6YligaXXvT2gyHQv4+uN7QU33UyUoPTixaxlBDpCORQtHM1/hcp3Hz+KiY/vLLjFhxrxbd2OLlK7LSQDRqxjG0AMNiENckbYSu0A=
+	t=1745206636; cv=none; b=O7huJsRwCBr3aiJibVftylK2sctBu3+LkWAqkLDdWZX7nxnMpj9uLHD/POrtlTAxtl9ddY3neydqd/b9FtXCMVwwwzXJawEbleTGjaRA//ag0F1wsuUx9FNwAeC8Xjl6Gj6QCaE6hH1L7BrxoKMImZRVcZPDhCFdxXx177cJYKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745206323; c=relaxed/simple;
-	bh=gJmcQzS9mQxoIny6Mfrlu2W63jA7fze9RaoVDjMxI7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ewHZ1LXq3BcojJ6VbVm3f7Y69ywdO5lw6fhtWtKkE0W1WzGwC7ZA+1C3SKxD64KmVsLql96TNxx23B+tE28skA8nYrwir7hQ8GgM/+4xdTdpaT0/GzjJCk7Rpzqw7GA2C9Mo/c1aruYpRWmUhwv0fp/u2YjvEaY36DXl463Qk5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=CyezWd7G; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="CyezWd7G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=XHQGWIF/Cf0LNQ2lU/EhN3J9AF8B1+/NLjxMdpt6BvY=; b=CyezWd7GqkBfuVUuu1PjynG9T+
-	We0CIr5a4UubcrNgmHmzUXpKvUfUAkUVR2al+UFnbA+nR/onZy9Hj4kxWkVlyLj6HqmPt3LP0q4KI
-	xpBAyuxg0Kc4Td9/R6HnJsjkrW6PTRUQvOE6cPF8nV9wA6qKsBOFFb+DIfQ0Yo/IA0QcER49VmJ6G
-	hjBQHcXCVRTRKCSI81aEj4RXUxsY1d+2eL8NjuWQDFmj90PxHGo6O3DRcCr3FCzVNRlfnbAaI7leE
-	NsWAlPjXm2MewowIpWHT5uB/6nV3MvUZRFc0dUKI7d5Cqwnr4AtoNUorlXJ3qmSa64656T4v7Zm2t
-	P8ZiPgAw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u6hsZ-00HF9Z-2B;
-	Mon, 21 Apr 2025 11:31:32 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 21 Apr 2025 11:31:31 +0800
-Date: Mon, 21 Apr 2025 11:31:31 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"chengming.zhou@linux.dev" <chengming.zhou@linux.dev>,
-	"usamaarif642@gmail.com" <usamaarif642@gmail.com>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"21cnbao@gmail.com" <21cnbao@gmail.com>,
-	"ying.huang@linux.alibaba.com" <ying.huang@linux.alibaba.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"clabbe@baylibre.com" <clabbe@baylibre.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"ebiggers@google.com" <ebiggers@google.com>,
-	"surenb@google.com" <surenb@google.com>,
-	"Accardi, Kristen C" <kristen.c.accardi@intel.com>,
-	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>,
-	"Gopal, Vinodh" <vinodh.gopal@intel.com>, m95d@psihoexpert.ro
-Subject: [PATCH] crypto: scomp - Fix off-by-one bug when calculating last page
-Message-ID: <aAW8E9NrKWq1Xk2w@gondor.apana.org.au>
-References: <Z88h1mPkYNM6yOGE@google.com>
- <SA3PR11MB812082535F1E6D63BC0F1412C9DF2@SA3PR11MB8120.namprd11.prod.outlook.com>
- <Z9mB5IbNEdNdtmUp@google.com>
- <SA3PR11MB81206531E9B3C7F13F5740A2C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
- <Z9nECMZW67F8XYoV@google.com>
- <SA3PR11MB8120A474C20104FF22CCE396C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
- <Z9n-OnGPK7BOdGxR@google.com>
- <SA3PR11MB81202E35C1CAF0409711A1B0C9DE2@SA3PR11MB8120.namprd11.prod.outlook.com>
- <20250420140116.b6db3aafcc2f99569190c97e@linux-foundation.org>
- <CAKEwX=P39kvB9Ei1xt+iOcDRMr32=ujGiKKa=e947k0MyJ7xZA@mail.gmail.com>
+	s=arc-20240116; t=1745206636; c=relaxed/simple;
+	bh=9M6FCK0jC4l932kiPOdskCcpIjFKgQR/1Z9ai4Tre4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LkfO6HikvC47ct9+05KtdjbXsdAH5bEaHqzrwyNyAo8l1CsavG/pga+UrgAmENX1yEEjdUd3mCbIlibs8FhwetEAVLqJGFRhF1/6BQKEWY8xQaH9lZsgeoH3Lx8/Ak62bGuc9rLFpyRkCksugyviwWbN5+OfGuvp4uDQaipseWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zgrdb26KJz4f3jtJ
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:36:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CFE631A06DC
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:37:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgB32l5jvQVo5SppKA--.54381S4;
+	Mon, 21 Apr 2025 11:37:08 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: song@kernel.org,
+	joel.granados@kernel.org,
+	tglx@linutronix.de,
+	dianders@chromium.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] watchdog: Fix watchdog may detect false positive of softlockup
+Date: Mon, 21 Apr 2025 03:50:21 +0000
+Message-Id: <20250421035021.3507649-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKEwX=P39kvB9Ei1xt+iOcDRMr32=ujGiKKa=e947k0MyJ7xZA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB32l5jvQVo5SppKA--.54381S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF4Uur1DAF1fKw43Zr15twb_yoWxCrykpa
+	yayFy3tw4Utrs5XrW3J3ZrXF1kCa48XrWUXFnrGw1SkFnYkr1rJryIkF4FgayDArZxXF1Y
+	qa4FqrWfJayUtF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-On Sun, Apr 20, 2025 at 04:35:44PM -0700, Nhat Pham wrote:
->
-> Anyhow, this looks like a crypto/compression infra bug. Herbert, does
-> this ring any bell for you?
+When updating `watchdog_thresh`, there is a race condition between writing
+the new `watchdog_thresh` value and stopping the old watchdog timer. If the
+old timer triggers during this window, it may falsely detect a softlockup
+due to the old interval and the new `watchdog_thresh` value being used. The
+problem can be described as follow:
 
-Yes this looks like an off-by-one bug in the new scomp scratch
-code.
+ # We asuume previous watchdog_thresh is 60, so the watchdog timer is
+ # coming every 24s.
+echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
+|
++------>+ update watchdog_thresh (We are in kernel now)
+	|
+	|	  # using old interval and new `watchdog_thresh`
+	+------>+ watchdog hrtimer (irq context: detect softlockup)
+		|
+		|
+	+-------+
+	|
+	|
+	+ softlockup_stop_all
 
----8<---
-Fix off-by-one bug in the last page calculation for src and dst.
+To fix this problem, introduce a shadow variable for `watchdog_thresh`. The
+update to the actual `watchdog_thresh` is delayed until after the old timer
+is stopped, preventing false positives.
 
-Reported-by: Nhat Pham <nphamcs@gmail.com>
-Fixes: 2d3553ecb4e3 ("crypto: scomp - Remove support for some non-trivial SG lists")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The following testcase may help to understand this problem.
 
-diff --git a/crypto/scompress.c b/crypto/scompress.c
-index 5762fcc63b51..36934c78d127 100644
---- a/crypto/scompress.c
-+++ b/crypto/scompress.c
-@@ -215,8 +215,8 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
- 			spage = nth_page(spage, soff / PAGE_SIZE);
- 			soff = offset_in_page(soff);
+---------------------------------------------
+echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched/features
+echo -1 > /proc/sys/kernel/sched_rt_runtime_us
+echo 0 > /sys/kernel/debug/sched/fair_server/cpu3/runtime
+echo 60 > /proc/sys/kernel/watchdog_thresh
+taskset -c 3 chrt -r 99 /bin/bash -c "while true;do true; done" &
+echo 10 > /proc/sys/kernel/watchdog_thresh &
+---------------------------------------------
+
+The test case above first removes the throttling restrictions for real-time
+tasks. It then sets watchdog_thresh to 60 and executes a real-time task
+,a simple while(1) loop, on cpu3. Consequently, the final command gets
+blocked because the presence of this real-time thread prevents kworker:3
+from being selected by the scheduler. This eventually triggers a softlockup
+detection on cpu3 due to watchdog_timer_fn operating with inconsistent
+variable - using both the old interval and the updated watchdog_thresh
+simultaneously.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+---
+Changes in v3:
+1. Replace watchdog_thresh_shadow with watchdog_thresh_next.
+2. Add comment to explain the role of watchdog_thresh_next.
+
+Link to v1: https://lore.kernel.org/all/20250416013922.2905051-1-luogengkun@huaweicloud.com/
+---
+ kernel/watchdog.c | 37 ++++++++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 9fa2af9dbf2c..80d1a1dae276 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -47,6 +47,7 @@ int __read_mostly watchdog_user_enabled = 1;
+ static int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
+ static int __read_mostly watchdog_softlockup_user_enabled = 1;
+ int __read_mostly watchdog_thresh = 10;
++static int __read_mostly watchdog_thresh_next;
+ static int __read_mostly watchdog_hardlockup_available;
  
--			n = slen / PAGE_SIZE;
--			n += (offset_in_page(slen) + soff - 1) / PAGE_SIZE;
-+			n = (slen - 1) / PAGE_SIZE;
-+			n += (offset_in_page(slen - 1) + soff) / PAGE_SIZE;
- 			if (PageHighMem(nth_page(spage, n)) &&
- 			    size_add(soff, slen) > PAGE_SIZE)
- 				break;
-@@ -243,9 +243,9 @@ static int scomp_acomp_comp_decomp(struct acomp_req *req, int dir)
- 			dpage = nth_page(dpage, doff / PAGE_SIZE);
- 			doff = offset_in_page(doff);
+ struct cpumask watchdog_cpumask __read_mostly;
+@@ -870,12 +871,20 @@ int lockup_detector_offline_cpu(unsigned int cpu)
+ 	return 0;
+ }
  
--			n = dlen / PAGE_SIZE;
--			n += (offset_in_page(dlen) + doff - 1) / PAGE_SIZE;
--			if (PageHighMem(dpage + n) &&
-+			n = (dlen - 1) / PAGE_SIZE;
-+			n += (offset_in_page(dlen - 1) + doff) / PAGE_SIZE;
-+			if (PageHighMem(nth_page(dpage, n)) &&
- 			    size_add(doff, dlen) > PAGE_SIZE)
- 				break;
- 			dst = kmap_local_page(dpage) + doff;
+-static void __lockup_detector_reconfigure(void)
++static void __lockup_detector_reconfigure(bool thresh_changed)
+ {
+ 	cpus_read_lock();
+ 	watchdog_hardlockup_stop();
+ 
+ 	softlockup_stop_all();
++	/*
++	 * To prevent watchdog_timer_fn from using the old interval and
++	 * the new watchdog_thresh at the same time, which could lead to
++	 * false softlockup reports, it is necessary to update the
++	 * watchdog_thresh after the softlockup is completed.
++	 */
++	if (thresh_changed)
++		watchdog_thresh = READ_ONCE(watchdog_thresh_next);
+ 	set_sample_period();
+ 	lockup_detector_update_enable();
+ 	if (watchdog_enabled && watchdog_thresh)
+@@ -888,7 +897,7 @@ static void __lockup_detector_reconfigure(void)
+ void lockup_detector_reconfigure(void)
+ {
+ 	mutex_lock(&watchdog_mutex);
+-	__lockup_detector_reconfigure();
++	__lockup_detector_reconfigure(false);
+ 	mutex_unlock(&watchdog_mutex);
+ }
+ 
+@@ -908,7 +917,7 @@ static __init void lockup_detector_setup(void)
+ 		return;
+ 
+ 	mutex_lock(&watchdog_mutex);
+-	__lockup_detector_reconfigure();
++	__lockup_detector_reconfigure(false);
+ 	softlockup_initialized = true;
+ 	mutex_unlock(&watchdog_mutex);
+ }
+@@ -924,11 +933,11 @@ static void __lockup_detector_reconfigure(void)
+ }
+ void lockup_detector_reconfigure(void)
+ {
+-	__lockup_detector_reconfigure();
++	__lockup_detector_reconfigure(false);
+ }
+ static inline void lockup_detector_setup(void)
+ {
+-	__lockup_detector_reconfigure();
++	__lockup_detector_reconfigure(false);
+ }
+ #endif /* !CONFIG_SOFTLOCKUP_DETECTOR */
+ 
+@@ -946,11 +955,11 @@ void lockup_detector_soft_poweroff(void)
+ #ifdef CONFIG_SYSCTL
+ 
+ /* Propagate any changes to the watchdog infrastructure */
+-static void proc_watchdog_update(void)
++static void proc_watchdog_update(bool thresh_changed)
+ {
+ 	/* Remove impossible cpus to keep sysctl output clean. */
+ 	cpumask_and(&watchdog_cpumask, &watchdog_cpumask, cpu_possible_mask);
+-	__lockup_detector_reconfigure();
++	__lockup_detector_reconfigure(thresh_changed);
+ }
+ 
+ /*
+@@ -984,7 +993,7 @@ static int proc_watchdog_common(int which, const struct ctl_table *table, int wr
+ 	} else {
+ 		err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ 		if (!err && old != READ_ONCE(*param))
+-			proc_watchdog_update();
++			proc_watchdog_update(false);
+ 	}
+ 	mutex_unlock(&watchdog_mutex);
+ 	return err;
+@@ -1035,11 +1044,13 @@ static int proc_watchdog_thresh(const struct ctl_table *table, int write,
+ 
+ 	mutex_lock(&watchdog_mutex);
+ 
+-	old = READ_ONCE(watchdog_thresh);
++	watchdog_thresh_next = READ_ONCE(watchdog_thresh);
++
++	old = watchdog_thresh_next;
+ 	err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ 
+-	if (!err && write && old != READ_ONCE(watchdog_thresh))
+-		proc_watchdog_update();
++	if (!err && write && old != READ_ONCE(watchdog_thresh_next))
++		proc_watchdog_update(true);
+ 
+ 	mutex_unlock(&watchdog_mutex);
+ 	return err;
+@@ -1060,7 +1071,7 @@ static int proc_watchdog_cpumask(const struct ctl_table *table, int write,
+ 
+ 	err = proc_do_large_bitmap(table, write, buffer, lenp, ppos);
+ 	if (!err && write)
+-		proc_watchdog_update();
++		proc_watchdog_update(false);
+ 
+ 	mutex_unlock(&watchdog_mutex);
+ 	return err;
+@@ -1080,7 +1091,7 @@ static const struct ctl_table watchdog_sysctls[] = {
+ 	},
+ 	{
+ 		.procname	= "watchdog_thresh",
+-		.data		= &watchdog_thresh,
++		.data		= &watchdog_thresh_next,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_watchdog_thresh,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.34.1
+
