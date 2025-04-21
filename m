@@ -1,164 +1,206 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2742DDBE;
-	Mon, 21 Apr 2025 14:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D5618B03;
+	Mon, 21 Apr 2025 14:09:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745244525; cv=none; b=KdJedJzrhSfbWxOl86KZicaLU6Hsaj72euK8AaaqSndbLpR8VLEG+SHH3Kc97RQG1u/5TdNF5vPOftCsUsMQFxPzJZwaYRI3i8IO/AhV9sqjNZ/Vgz0LwN7jv6hCO/DCi5Ha3CWFEwl9FInruuUvuanXJSENI0bgt5pdhsSC0a0=
+	t=1745244569; cv=none; b=hyAMyt04ebBlc7dIBsLWAVM77QwdbPh8RiZuFfqzYuC9AuFAI9WRSA1Vqby+k6EUiRfYq62s8dLNdRFyu73Fly3ZAoY6Gw+xKQIz82SPk1IPYQEnWV/7qfRiejs+G68ZjfGcRXmofyMJtxBJIkybPQz72pQSOmlrRgLz4kv4yGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745244525; c=relaxed/simple;
-	bh=y+u9o3uYT+ExmvtSXbLZr8bAFVgoBqK/gneBhs8PZLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=glRW3uMvVRee8JF1emTXrCF5XeV5m+hVP74PWYsOkaOmK2cXAXigSCefr69wbOxf3Hjf3eiJewMWP+k+3Jsg6k10nNC8b0ZJYCyYZHnLjGL4lTPYYAJ0xqtem8nQ0YrJyn9ZIv0a7Z0lv/ILLbp3jUP7bX+sN7QYadMaNKjmi+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee9IrGNV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745244569; c=relaxed/simple;
+	bh=WYXRdWWnpgKTBUjE3p3Mz4j6ZPQ5w+kSpIXksD6tN68=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ly13ncOE9WiobXquaKs9LdBPvJSYMtO15lErYC6G3mHhTsYrLpQPZGwhKwYas3vtDDB1rMcabRfHWMB3welOD0s/lOCUKdeQi30SBOVc6JH+VCDPWw3D7TXYw47suHeNJZjloljLTU+4DV03XN1jJP2KGwutzae7GBjtCFq5jSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKOto67R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ee9IrGNV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA64C4CEE4;
-	Mon, 21 Apr 2025 14:08:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKOto67R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88F10C4AF09;
+	Mon, 21 Apr 2025 14:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745244524;
-	bh=y+u9o3uYT+ExmvtSXbLZr8bAFVgoBqK/gneBhs8PZLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ee9IrGNVBY468I0nIZFGOEwSSO4iJvmV3Vd8XmWujePOkW+RQw0qoTf5gPE74TnZX
-	 C8qwUs7dBOH7vUuZLAMHPY+whZ5y16Alj+g6qhK4NH9aSW8/lQwyAugMGUmHKBPgkX
-	 Ts1mQDeM8F3kFazN6V7zQoAIWI9/BkSajNLajuJFM0ROiLpWxVBeDRz0eNKGLZmJSl
-	 jLi7vAzRyzF0K2AP8N2qSWfhDO6AFW5+6nFbaFugRIYCz8i1SYJEZgZLK5F91i+MwP
-	 7PLXue2MFhNahQ6ie5tjBbSvEt2QfpqOrxjN8pZJABKrBwRH6YHk0J4IJEkLmDcQTW
-	 sZljmP2HBMWYw==
-Date: Mon, 21 Apr 2025 15:08:36 +0100
-From: Simon Horman <horms@kernel.org>
-To: Larysa Zaremba <larysa.zaremba@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Wenjun Wu <wenjun1.wu@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>,
-	Phani R Burra <phani.r.burra@intel.com>
-Subject: Re: [PATCH iwl-next 03/14] libeth: add PCI device initialization
- helpers to libeth
-Message-ID: <20250421140836.GH2789685@horms.kernel.org>
-References: <20250408124816.11584-1-larysa.zaremba@intel.com>
- <20250408124816.11584-4-larysa.zaremba@intel.com>
+	s=k20201202; t=1745244568;
+	bh=WYXRdWWnpgKTBUjE3p3Mz4j6ZPQ5w+kSpIXksD6tN68=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tKOto67RaYFfUzDqmXLJK8aJvIy6sKsvTmLnTsCMOs1O56tH9Vo7gIqyO4PVryOVx
+	 CEyJ+toAkHjPasJBv0Z3DXpxfFqHrbFljL43OR4d6crPNgIMej7BUXfdTN9WGaeZAN
+	 66LtIk5lebiXDOASN6aXc6yVX9HCcieeI/c0+urJtsyFl8MW75Tmkb344gDvsq2onb
+	 /RlUMqZTyMiy5nWzFScGFVrrB65pBBJdefuMoEtDx/XAQB3Fqo5GhQmRH7/v0K+XE5
+	 eU5M9RUToJ66L5zJz9u6nQkG+dTwd4P13vVRfpXEDEnDOMXDOYozSV6SYRg221jsi1
+	 KBRyzu4ByURVg==
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7376e311086so5484614b3a.3;
+        Mon, 21 Apr 2025 07:09:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWnxCgB+sgx1Mjf4xDUbuQ4xd5hi6XZQmBG42RZ+9eq5kAMaiBSOS6WiJ6U+pAMZEE2UrxmDcbLi8w1@vger.kernel.org, AJvYcCX3MLv93893m/B0kUBe9flur9vZYAc+Uqa7KQAm5NdxP1UOdF4qYTbjrOwZZ1slr0zSvG0Uns1EHHXKWBDh@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGEvpLL1SagfIi3ReSome2PTKXOZuXM/wPTG5G5zKLN3afp2Vq
+	w0UuGagWNYV2V+4P4LsNwvjzT0qZZSmLjqsjOJTgNRwASq1xphGf8No+5DHQlFvyl72io4W9gdh
+	tiz1tbI3Faxlp1QKOkQim3uCx5Q==
+X-Google-Smtp-Source: AGHT+IGS9uz21hRPGhlJ4UMeP7sf9taxpboldIRO54ve55gM+l4Zm966plB6VQpw/Y3RbDZK4VoWG7AVra1mhRruBl4=
+X-Received: by 2002:a17:90b:248e:b0:309:cf0b:cb37 with SMTP id
+ 98e67ed59e1d1-309cf0bcb7amr532295a91.7.1745244568069; Mon, 21 Apr 2025
+ 07:09:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408124816.11584-4-larysa.zaremba@intel.com>
+References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com> <20250415104321.51149-16-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250415104321.51149-16-angelogioacchino.delregno@collabora.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Mon, 21 Apr 2025 22:10:25 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__Tvrx2vfss16jecTQsQU2oSjEmTGoFZZq5ZJZmgyypqg@mail.gmail.com>
+X-Gm-Features: ATxdqUGktFaFTj-3L_NPDr-W-E9d8SqAjhcUgYMe9iV6oOSARNcqSrzlMtbkNXg
+Message-ID: <CAAOTY__Tvrx2vfss16jecTQsQU2oSjEmTGoFZZq5ZJZmgyypqg@mail.gmail.com>
+Subject: Re: [PATCH v9 15/23] drm/mediatek: mtk_hdmi: Improve
+ mtk_hdmi_get_all_clk() flexibility
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com, 
+	jie.qiu@mediatek.com, junzhi.zhao@mediatek.com, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kernel@collabora.com, 
+	dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com, 
+	ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com, 
+	jason-jh.lin@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 02:47:49PM +0200, Larysa Zaremba wrote:
-> From: Phani R Burra <phani.r.burra@intel.com>
-> 
-> Add memory related support functions for drivers to access MMIO space and
-> allocate/free dma buffers.
-> 
-> Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-> Signed-off-by: Phani R Burra <phani.r.burra@intel.com>
-> Co-developed-by: Victor Raj <victor.raj@intel.com>
-> Signed-off-by: Victor Raj <victor.raj@intel.com>
-> Co-developed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> Signed-off-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> Co-developed-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
-> Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+Hi, Angelo:
 
-...
+AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =E6=96=
+=BC
+2025=E5=B9=B44=E6=9C=8815=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:4=
+4=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> In preparation for splitting common bits of this driver and for
+> introducing a new version of the MediaTek HDMI Encoder IP, improve
+> the flexibility of function mtk_hdmi_get_all_clk() by adding a
+> pointer to the clock names array and size of it to its parameters.
+>
+> Also change the array of struct clock pointers in the mtk_hdmi
+> structure to be dynamically allocated, and allocate it in probe.
 
-> diff --git a/drivers/net/ethernet/intel/libeth/pci.c b/drivers/net/ethernet/intel/libeth/pci.c
+Build error happen,
 
-...
+../drivers/gpu/drm/mediatek/mtk_hdmi.c: In function
+\u2018mtk_hdmi_get_cec_dev\u2019:
+../drivers/gpu/drm/mediatek/mtk_hdmi.c:1353:15: error: too few
+arguments to function \u2018mtk_hdmi_get_all_clk\u2019
+ 1353 |         ret =3D mtk_hdmi_get_all_clk(hdmi, np);
+      |               ^~~~~~~~~~~~~~~~~~~~
+../drivers/gpu/drm/mediatek/mtk_hdmi.c:1075:12: note: declared here
+ 1075 | static int mtk_hdmi_get_all_clk(struct mtk_hdmi *hdmi, struct
+device_node *np,
+      |            ^~~~~~~~~~~~~~~~~~~~
 
-> +/**
-> + * __libeth_pci_map_mmio_region - map PCI device MMIO region
-> + * @mmio_info: struct to store the mapped MMIO region
-> + * @offset: MMIO region start offset
-> + * @size: MMIO region size
-> + * @num_args: number of additional arguments present
-> + *
-> + * Return: true on success, false on memory map failure.
-> + */
-> +bool __libeth_pci_map_mmio_region(struct libeth_mmio_info *mmio_info,
-> +				  resource_size_t offset,
-> +				  resource_size_t size, int num_args, ...)
-> +{
-> +	struct pci_dev *pdev = mmio_info->pdev;
-> +	struct libeth_pci_mmio_region *mr;
-> +	resource_size_t pa;
-> +	void __iomem *va;
-> +	int bar_idx = 0;
-> +	va_list args;
+I've apply some patches of this series to mediatek-drm-next [1], and
+I've already fixed some build error.
+I wonder how many error would happen in rest patches,
+so please fix the build error in rest patches and resend patches.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
+>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c | 26 ++++++++++++++++----------
+>  1 file changed, 16 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediat=
+ek/mtk_hdmi.c
+> index b4fbd2e60089..b17f8df145eb 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -159,7 +159,7 @@ struct mtk_hdmi {
+>         struct phy *phy;
+>         struct device *cec_dev;
+>         struct i2c_adapter *ddc_adpt;
+> -       struct clk *clk[MTK_HDMI_CLK_COUNT];
+> +       struct clk **clk;
+>         struct drm_display_mode mode;
+>         bool dvi_mode;
+>         struct regmap *sys_regmap;
+> @@ -1072,17 +1072,18 @@ static const char * const mtk_hdmi_clk_names[MTK_=
+HDMI_CLK_COUNT] =3D {
+>         [MTK_HDMI_CLK_AUD_SPDIF] =3D "spdif",
+>  };
+>
+> -static int mtk_hdmi_get_all_clk(struct mtk_hdmi *hdmi,
+> -                               struct device_node *np)
+> +static int mtk_hdmi_get_all_clk(struct mtk_hdmi *hdmi, struct device_nod=
+e *np,
+> +                               const char * const *clock_names, size_t n=
+um_clocks)
+>  {
+>         int i;
+>
+> -       for (i =3D 0; i < ARRAY_SIZE(mtk_hdmi_clk_names); i++) {
+> -               hdmi->clk[i] =3D of_clk_get_by_name(np,
+> -                                                 mtk_hdmi_clk_names[i]);
+> +       for (i =3D 0; i < num_clocks; i++) {
+> +               hdmi->clk[i] =3D of_clk_get_by_name(np, clock_names[i]);
 > +
-> +	if (num_args) {
-> +		va_start(args, num_args);
-> +		bar_idx = va_arg(args, int);
-> +		va_end(args);
-> +	}
+>                 if (IS_ERR(hdmi->clk[i]))
+>                         return PTR_ERR(hdmi->clk[i]);
+>         }
 > +
-> +	mr = libeth_find_mmio_region(&mmio_info->mmio_list, offset, bar_idx);
-> +	if (mr) {
-> +		pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
-> +			 bar_idx, offset);
-
-Hi Phani, Larysa, all,
-
-I think that the format specifier here should be %zu rather than %llu.
-
-On ARM W=1 builds gcc 14.2.0 flags this as follows:
-
-    CALL    scripts/checksyscalls.sh
-    CC      drivers/net/ethernet/intel/libeth/pci.o
-  In file included from ./include/linux/device.h:15,
-                   from ./include/linux/pci.h:37,
-                   from ./include/net/libeth/pci.h:7,
-                   from drivers/net/ethernet/intel/libeth/pci.c:4:
-  .../pci.c: In function '__libeth_pci_map_mmio_region':
-  .../pci.c:92:32: warning: format '%llu' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
-     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
-        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  .../dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
-    110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-        |                              ^~~
-  .../dev_printk.h:156:61: note: in expansion of macro 'dev_fmt'
-    156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
-        |                                                             ^~~~~~~
-  .../pci.h:2704:41: note: in expansion of macro 'dev_warn'
-   2704 | #define pci_warn(pdev, fmt, arg...)     dev_warn(&(pdev)->dev, fmt, ##arg)
-        |                                         ^~~~~~~~
-  .../pci.c:92:17: note: in expansion of macro 'pci_warn'
-     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
-        |                 ^~~~~~~~
-  .../pci.c:92:65: note: format string is defined here
-     92 |                 pci_warn(pdev, "Mapping of BAR%u with offset %llu already exists\n",
-        |                                                              ~~~^
-        |                                                                 |
-        |                                                                 long long unsigned int
-        |                                                              %u
+>         return 0;
+>  }
+>
+> @@ -1377,15 +1378,15 @@ static int mtk_hdmi_get_cec_dev(struct mtk_hdmi *=
+hdmi, struct device *dev, struc
+>         return 0;
+>  }
+>
+> -static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+> -                                  struct platform_device *pdev)
+> +static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi, struct platfor=
+m_device *pdev,
+> +                                  const char * const *clk_names, size_t =
+num_clocks)
+>  {
+>         struct device *dev =3D &pdev->dev;
+>         struct device_node *np =3D dev->of_node;
+>         struct device_node *remote, *i2c_np;
+>         int ret;
+>
+> -       ret =3D mtk_hdmi_get_all_clk(hdmi, np);
+> +       ret =3D mtk_hdmi_get_all_clk(hdmi, np, clk_names, num_clocks);
+>         if (ret)
+>                 return dev_err_probe(dev, ret, "Failed to get clocks\n");
+>
+> @@ -1634,6 +1635,7 @@ static int mtk_hdmi_probe(struct platform_device *p=
+dev)
+>  {
+>         struct mtk_hdmi *hdmi;
+>         struct device *dev =3D &pdev->dev;
+> +       const int num_clocks =3D MTK_HDMI_CLK_COUNT;
+>         int ret;
+>
+>         hdmi =3D devm_kzalloc(dev, sizeof(*hdmi), GFP_KERNEL);
+> @@ -1643,7 +1645,11 @@ static int mtk_hdmi_probe(struct platform_device *=
+pdev)
+>         hdmi->dev =3D dev;
+>         hdmi->conf =3D of_device_get_match_data(dev);
+>
+> -       ret =3D mtk_hdmi_dt_parse_pdata(hdmi, pdev);
+> +       hdmi->clk =3D devm_kcalloc(dev, num_clocks, sizeof(*hdmi->clk), G=
+FP_KERNEL);
+> +       if (!hdmi->clk)
+> +               return -ENOMEM;
+> +
+> +       ret =3D mtk_hdmi_dt_parse_pdata(hdmi, pdev, mtk_hdmi_clk_names, n=
+um_clocks);
+>         if (ret)
+>                 return ret;
+>
+> --
+> 2.49.0
+>
