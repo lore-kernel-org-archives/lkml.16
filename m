@@ -1,204 +1,153 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6A51754B
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745222632; cv=none; b=HQj8VeC5X1rmb8pU1atVgeewFVVZt779vr3GNhgUzIOJHJGHx7H5hPQVxrSXH0pdmKe6Gs5CfPjmA2iuRvYuMdlWJIjTvLB2eE9BphIvpBqv9ukb+VrZL+01xhsHW6fK5Rr6FZPZyw5tDd3cCL0C7WPAlrIHnC1k13kzpJy2DWk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745222632; c=relaxed/simple;
-	bh=mTSSOjc9BY7rv9+dObcUALYPGq6xd5S1Y5htJx2AGrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CU+HiMkeGVlC8dNLxGQLy6hP7VEHpkIWFo2btmvmEdDaiYJ7horQtS0KX6k+wkW6xCAQ5ouYZh53u3jyP1ehaciquYIbSV4tM0eA9CiG/WaVve4q+Sosof8mglitCqA7d6I8ait//vupbNfR88asnO8gRNdiNWo/+cIWvUKAy9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Sarh4Hij; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543FA12B63;
+	Mon, 21 Apr 2025 08:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745222710; cv=fail; b=pVvEQOlIKPcJZU8EgB/rpVWC7j8fonKnpFB+UY+HcHWXKmThu0lHBSavGbnwALFU6M6ZpmEYpjcMyT5P6432tJv3oZ0BSru3jxhnLHnh/R6SXRD14LS6kxenZPTRmaaqtIQJm4VGSLC2WfPYpJ1ooJtT8EQ77skQQAjtbbKWkTo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745222710; c=relaxed/simple;
+	bh=77IcCQ6qFH3666+1Hu3ifq8LajrE1RJb8iQHRbJeX6I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cpaSZk/wieJFby73bsqs79kR3gwTQURtTGsMXdtcTLkgluJPi/CP6Y2hvuAVqmAuHE93QCjlVHw9CBnKMizB7hgwtybbRsjLMPejh2JIGJPaws6zDOR9bt6BtAUulozQEHzt6fOAKsICUnVVpVc/LXwuXBoHJCOvE/bfMGZNmHY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kpehA241; arc=fail smtp.client-ip=40.107.223.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Sarh4Hij"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53L5EwRS012225;
-	Mon, 21 Apr 2025 08:03:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Ekmguc
-	FaKnkabu4SsiziAwLD5BsMPOiaOigLsjeC+Ww=; b=Sarh4HijhG4cQmcSzaRYKR
-	JZpsdUKayMDKIyvxJ+cg/Bzri9rViOtxS+UijZicKj+R/5TnRlNMiime5eWwJr++
-	f87D0dfLF/KTg/1t/dkVQyiNDRUToYXMjvEC6uCLtrKrap2IS3naEjAKBo6a4Z3+
-	Siz3dalp2+7lwBbrLrfE7Wa7C7UXo6m0XcVIwCy8QekK0En3Nnc8TFUjclHYaK6x
-	v4v38ATIpQ1CEFQXVQp10EKZAsHqEYluCjhX6WpUL7QiBeE4N6cskT0inai5j2gq
-	2Tcb7fgcUeMTgTBE6lcLcdNyxlpU8WhcveGfhZIvfYvT/XWBfuO423gRjdHLnoUQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464ycrk7t7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:03:39 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53L7VOIg012056;
-	Mon, 21 Apr 2025 08:03:38 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 464ycrk7t4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:03:38 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53L4Bxg8027743;
-	Mon, 21 Apr 2025 08:03:37 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv1w3ec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 08:03:37 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53L83ZF533554710
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 08:03:35 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE2B120043;
-	Mon, 21 Apr 2025 08:03:35 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B1E2A20040;
-	Mon, 21 Apr 2025 08:03:33 +0000 (GMT)
-Received: from [9.109.215.252] (unknown [9.109.215.252])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 08:03:33 +0000 (GMT)
-Message-ID: <97aaf3e5-22d7-4020-964c-891ad619bf4f@linux.ibm.com>
-Date: Mon, 21 Apr 2025 13:33:32 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kpehA241"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IDofDtwZawsoAQu4+yD2EF/F6pay2gbtwSdmWunreaxAbugOyNPGM9H+5IC6st1dR4x69gWUPMVgK9XgRH+GmRbsqcqzRQr1OSgkr4GGu/a+eMskhCejth9kgVqsoCaF3Pmmwy3FsvZS12XNiq/mZBikUoQTqpD1rmTuZs90k61wpBneFD4Uh3q+G1/Y0oO91iP1PDoPlP2Cnh4dSFLIohJPTb/256jAwQmanCWbVgyIrDxDyD05A6jdd2MiRwKe/ktC0bO4vM2RqZhz/83AFMNyXzKzqheNOoJ9SnMNBAmOWheoFe8w+NIulu730KQ/5ui8ofO8Q6NaTCDWKSpO+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dLdSl1qovkiPlnltHCy6rcWEq44Yoz9sVYCYTriHHvg=;
+ b=yNsy5TKGI9UIzcklb5KsQojQqYSOLhWbVNTUjUfMr5Xp+zV44oqTYNZ75CRcOKdNZo1tAm5gU27XWFF/1qNMVb8/gDkE66T5a4Gsv73s4dTS2/vCnIlMrWdZWSIOZhTUqkuQWM+JIVOPXnX01zF+oADJtoT2TQsaR+IqVS9Icv67WMqh7rg/oRHK1aAKBUvxEkF1NWl0JnbpwFhygpguFjCfpt0xmhmg7bOhiKSGM9leExb9a6sSF4lwXNl7Mm0LEVc5iWSxNE++7uQwr9IDHKV0pOX8NUssk3UPNCQ8rkLWhafJA14rsz+cu4AI7IjZxFIp0Sx4lr/h4115qYdJPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dLdSl1qovkiPlnltHCy6rcWEq44Yoz9sVYCYTriHHvg=;
+ b=kpehA241j2mE0lx2L4c0XEPhlHaC0DymuRkaC5TGFKw4RVyjKBfYqI5RtvJi2TF3rN8m178jL7zs1swH3jryc+ORJITsBtCuiAX+uN72GmYtysVoDu0EFsUg8GdH/e7kaTWyHgY3GVy6zFUhFJLgbCi6rGnY5tRWa5jvq31C8e4=
+Received: from BL1PR13CA0226.namprd13.prod.outlook.com (2603:10b6:208:2bf::21)
+ by DM6PR12MB4436.namprd12.prod.outlook.com (2603:10b6:5:2a3::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 08:05:06 +0000
+Received: from BL02EPF0001A0F9.namprd03.prod.outlook.com
+ (2603:10b6:208:2bf:cafe::de) by BL1PR13CA0226.outlook.office365.com
+ (2603:10b6:208:2bf::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Mon,
+ 21 Apr 2025 08:05:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A0F9.mail.protection.outlook.com (10.167.242.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Mon, 21 Apr 2025 08:05:05 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
+ 2025 03:05:03 -0500
+From: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
+To: <gautham.shenoy@amd.com>, <mario.limonciello@amd.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Dhananjay
+ Ugwekar" <dhananjay.ugwekar@amd.com>
+Subject: [PATCH v2 0/2] Add support for "Requested CPU Min Frequency" BIOS option
+Date: Mon, 21 Apr 2025 08:04:43 +0000
+Message-ID: <20250421080444.707538-1-dhananjay.ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/5] sched/fair: Update overloaded mask in presence of
- pushable task
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-        Swapnil Sapkal <swapnil.sapkal@amd.com>
-References: <20250409111539.23791-1-kprateek.nayak@amd.com>
- <20250409111539.23791-4-kprateek.nayak@amd.com>
- <2dae733a-689c-4574-a4dc-f59f11fb0893@linux.ibm.com>
- <616187d5-e178-4fa5-a0a2-1509f11d1a37@amd.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <616187d5-e178-4fa5-a0a2-1509f11d1a37@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Jp7xrN4C c=1 sm=1 tr=0 ts=6805fbdb cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=GRa1xJVZynX9AYvoUZ0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Npsl2Xh1SCjYY8FLZggRuGGOtcPXbVaV
-X-Proofpoint-ORIG-GUID: oAtxLDNTajegtEpC0zIyP3rK4y7qFsNL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 spamscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 malwarescore=0 suspectscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210062
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0F9:EE_|DM6PR12MB4436:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3628a859-6294-4093-d352-08dd80ab3a0c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZIH3tLoGt6AIKvIhbg2CcJ+9vVlyX6EtLnAKD/UajnNDtAF6WkZyyXEbmuz6?=
+ =?us-ascii?Q?VE8HTx5c+jVTwJNni5D+aTMj1MMvYiQZ7MPzGUQBW4Ud1/29uhfSr4Rnh0sj?=
+ =?us-ascii?Q?XL/yO16UzS8rE4qFRMzJxqBj63Co/F0O0BWmaguF05Vh1xwL3E1y2zHS/zYc?=
+ =?us-ascii?Q?1pZgY5pp4dcs8/pnenBNVQeFKq95USjvwmkGoaR4O+ScAubRXwnV6UKEtM6R?=
+ =?us-ascii?Q?vE8EAJO3LHEDiJXKZjTGXMa7N5x0+KMaNEJK6O2QKZQtetj3DBuIf5Vw+o0Y?=
+ =?us-ascii?Q?udYybF55+0gNT7v04D4utm/Ner959ZGMEouox3i3YAnt/SY17ToRPUag+k8O?=
+ =?us-ascii?Q?/JCjxm8u9qAJp0gHWZWOZLDbOPQ55LBEBhQEZdBJe4gZjOYVN1dRs5SUn9/d?=
+ =?us-ascii?Q?U9ioFl1pBV9PYHNFadqz2m9YlWNVbvgBOKwEWDbvkK1KV528+4ANSpRHa+F9?=
+ =?us-ascii?Q?17XmCbtSQ8ocUvMf/49OSxQ/PchlY6gg4+vuu7hXAt7nxYmlXs2B/EWeWMKL?=
+ =?us-ascii?Q?arSaBYZVV+mLMP+Sohd7sulhG/S0EIt4tddYqB7iUoNoU/lMb0a3MYKBKHzZ?=
+ =?us-ascii?Q?ZAtzInOQVpCMtduzhbY6WaafSSpVKa1dLix+mIPy4YeY98c0Iiu3sMv7lkg7?=
+ =?us-ascii?Q?7fIN7uS8pkXdKLIwoPyIYdxsAIBS1KpVnRfiQD39tb6NIhIc+S94NyPulb/Y?=
+ =?us-ascii?Q?OM78B9TIgbQHhloCpSyDmoTFjaoWQyKhV51egFrQoFvjYCLBTIoXpabyLAH5?=
+ =?us-ascii?Q?i+HICvtQ4zpLZ4AcKE2Vog06US3RZZRhMOxCTXM1oG86rmy9r6DH25l7hvTp?=
+ =?us-ascii?Q?o1C6YIXItuip5XznChFPK/6qRnDMk2G8fEYOACMPHLudrFekk4yA0KKd/0oo?=
+ =?us-ascii?Q?dGzj/7cKRPod9+/lH20pshNAG/FcHj82rE0FCP+PtmkREUli3gDjWQrz7iVq?=
+ =?us-ascii?Q?s9VfP1lTL6ge1E9KNR5BGmobvodLR2UgpmVkYPamjBhMdRX+17MSujLcDuC6?=
+ =?us-ascii?Q?D0o1ZworMIFSh96K3CsoEDenUoCQtYOAdONct3iSKt1+GIrS+y9aFvb4W8mk?=
+ =?us-ascii?Q?nv0eLiHwMDHknYcflOcrZT/gO6GGaAMSqJ9jrK8EsqNZHSHy46+6TUiAAZqN?=
+ =?us-ascii?Q?Tg0yfZRAAzpXHSTn4M0VWQq6merce/7xHPwMeViTfQhM+pOMp4E9AafJWPXX?=
+ =?us-ascii?Q?p8v5IuGUYWRn6c1J/6gc+2icok8Odd+9veMRzO9+ESKb5SGjEjsoaPjFBUa9?=
+ =?us-ascii?Q?ebAXMq5SQDEQimE87/DGkQoxXSHvz4TuNvDozVVTESMnkYKHTbAP4ZJtfUQE?=
+ =?us-ascii?Q?8aggwK507jlsag6LG9vf77pAobYft0XEOMA4AQhCC1s+E3j0xE0s+iv+MQz5?=
+ =?us-ascii?Q?frVECBHSYSlZpw3ph0YpfdLUuQ7u+ivD1EoAzg55UkmCUZxnN1A7Dtit1StQ?=
+ =?us-ascii?Q?0rJs6KLblAQL7d42Ul3DUiybJ1bNU4a/HbiKT/ClCo96Ahu0AryK0uu7QU/r?=
+ =?us-ascii?Q?yvkMSEwLX4KtGO2KuvZDIDC+hVPJ1mDpmC6P?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 08:05:05.7847
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3628a859-6294-4093-d352-08dd80ab3a0c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A0F9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4436
 
+Zen 4 AMD EPYC systems and above have a "Requested CPU Min Frequency" 
+BIOS option which allows the user to set an initial lower frequency 
+limit. This limit can later be overridden by the user by writing to the
+sysfs file "scaling_min_freq".
 
+Initialize lower frequency limit to the "Requested CPU Min frequency" 
+BIOS option (if it is set) value as part of the driver->init() 
+callback. The BIOS specified value is passed as min_perf in the CPPC_REQ 
+MSR. To ensure that we don't mistake a stale min_perf value in CPPC_REQ 
+value as the "Requested CPU Min frequency" during a kexec wakeup, reset 
+the CPPC_REQ.min_perf value back to the BIOS specified one in the offline,
+exit and suspend callbacks. 
 
-On 4/21/25 11:24, K Prateek Nayak wrote:
-> Hello Shrikanth,
-> 
-> On 4/21/2025 10:50 AM, Shrikanth Hegde wrote:
->>
->>
->> On 4/9/25 16:45, K Prateek Nayak wrote:
->>
->> Hi Prateek. Feel free to cc me in the future versions.
-> 
-> 
-> Will do! Thank you for taking a look at the series.
-> 
->> This seems interesting way if it can get us rid of newidle balance 
->> overheads.
->>
->>> In presence of pushable tasks on the CPU, set it on the newly introduced
->>> "overloaded+mask" in sched_domain_shared struct. This will be used by
->>> the newidle balance to limit the scanning to these overloaded CPUs since
->>> they contain tasks that could be run on the newly idle target.
->>>
->>> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
->>> ---
->>>   kernel/sched/fair.c | 24 ++++++++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index 98d3ed2078cd..834fcdd15cac 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -8559,6 +8559,24 @@ static int find_energy_efficient_cpu(struct 
->>> task_struct *p, int prev_cpu)
->>>       return target;
->>>   }
->>> +static inline void update_overloaded_mask(int cpu, bool 
->>> contains_pushable)
->>> +{
->>> +    struct sched_domain_shared *sd_share = 
->>> rcu_dereference(per_cpu(sd_llc_shared, cpu));
->>> +    cpumask_var_t overloaded_mask;
->>> +
->>> +    if (!sd_share)
->>> +        return;
->>> +
->>> +    overloaded_mask = sd_share->overloaded_mask;
->>> +    if (!overloaded_mask)
->>> +        return;
->>> +
->>> +    if (contains_pushable)
->>> +        cpumask_set_cpu(cpu, overloaded_mask);
->>> +    else
->>> +        cpumask_clear_cpu(cpu, overloaded_mask);
->>> +}
->>> +
->
->> I was getting below error when compiling. Noticed that overloaded_mask 
->> is a local update and it wouldn't
->> update the actual overloaded_mask.
-> 
-> Interesting! Question: Do you have "CONFIG_CPUMASK_OFFSTACK" enabled in
-> your config? (me makes a note to test this too in the next iteration)
-> Looking at the arch specific Kconfigs, there is a slight difference in
-> how this is toggled on x86 vs powerpc and I'm wondering if that is why
-> I haven't seen this warning in my testing.
-> 
+amd_pstate_target() and amd_pstate_epp_update_limit() which are invoked 
+as part of the resume() and online() callbacks will take care of restoring
+the CPPC_REQ back to the last sane values.
 
-Yes, that's the reason you didn't run into.
-for me, CONFIG_CPUMASK_OFFSTACK is not set.
+Dhananjay Ugwekar (2):
+  cpufreq/amd-pstate: Add offline, online and suspend callbacks for
+    amd_pstate_driver
+  cpufreq/amd-pstate: Add support for the "Requested CPU Min frequency"
+    BIOS option
 
->>
->> Compilation Error:
->> kernel/sched/fair.c: In function ‘update_overloaded_mask’:
->> kernel/sched/fair.c:8570:25: error: assignment to expression with 
->> array type
->>   8570 |         overloaded_mask = sd_share->overloaded_mask;
->>        |                         ^
->> kernel/sched/fair.c:8571:13: warning: the address of ‘overloaded_mask’ 
->> will always evaluate as ‘true’ [-Waddress]
->>   8571 |         if (!overloaded_mask)
->>
->>
->>
->> Made the below change. Also you would need rcu protection for sd_share 
->> i think.
+ drivers/cpufreq/amd-pstate.c | 84 +++++++++++++++++++++++++++---------
+ drivers/cpufreq/amd-pstate.h |  2 +
+ 2 files changed, 65 insertions(+), 21 deletions(-)
 
-Or you need to use like below. This also works (Not tested on x86)
-
-struct cpumask*  overloaded_mask;
-
-> 
-> You are right! Thank you for the pointers and spotting my oversight.
-> Aaron too pointed some shortcomings here. I'll make sure to test
-> these bits more next time (LOCKDEP, hotplug, and
-> !CONFIG_CPUMASK_OFFSTACK)
-> 
+-- 
+2.34.1
 
