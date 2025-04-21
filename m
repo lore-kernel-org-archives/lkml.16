@@ -1,265 +1,108 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B167D191F7F
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D30012B17C;
+	Mon, 21 Apr 2025 06:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745218080; cv=none; b=Yj1IbKV4BFNnHE+ZShZNe+MYfZ9dEgFJrbg4GfcXwN22rRTrFTDET2XfRMBOU7xi7jG0H1zyX+/bJzTLpcMfbgvUTkfCNeIk5+lknEyCLIfIho/T/Uv8BERlrLu9tMTK407wzpUIluYay+QYTnKdYPWNJdtOx/er8ssVI8SLH8Q=
+	t=1745218149; cv=none; b=Phk+ixGec4+h1Pgk1gm0FLeUUZB6Bs1+YqOWNyg0l2xHcwBfbVNV5wyAtXN57gEokEjXAP6eI1Hu7Z7b+7Qp/aj83a6lYipfdZxi+h3gGmahV5I+QdyMq7nTWP5wRzyXE9WYn2w04qEhitQy35RF50A0tKJfpQppnyauji66/Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745218080; c=relaxed/simple;
-	bh=nL88osFR+xwkq0d89jaqv2lpr1Vg52plmkAJMPjBbWM=;
-	h=From:To:CC:Date:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=KdIn28QNpkQUBygl303KWuW1bvT19y8UeacQzNtS2HtTAiRG+Szy489xckYx7dEh1+y/bye9XWEk+uJE6wL91dOSCJ8AWSbgBF7Xd/rmgVhBTFauqAekeM98AUoVJa7XHOYH63YYXomWFh68RuHXKWIDIkRebu0ZrZSfEp8Ayqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IMo00jIS; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1745218149; c=relaxed/simple;
+	bh=UG2mt44Cq5UjFNZKjNkTHmal4so1Q5Z9bh2IS+IBsfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oq21n2G2li86cfAC6FgybQUwkuODQr2sCSs2YkSfXEEI98VLGh8HEyVqQINsRQvUtsrnWXF805YmMth8KnX7t9gWdZTe6rycbkPLO4YAPWvt6xsRH9Wmk+g7xmWHRjkiIA2ED8DwRNU1Kxf6irN5ueMHMHGJ73ouIjgnrG1tobY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=df6c95Te; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IMo00jIS"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abbd96bef64so615543166b.3
-        for <linux-kernel@vger.kernel.org>; Sun, 20 Apr 2025 23:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745218077; x=1745822877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eoh+UHAHaX63W3Xnorvqri+MwqtBlKW14ThZ2I5rFOc=;
-        b=IMo00jIS7OWhR4nTJE9WCVXlHUK/0pp9NWzyPZXnhtBKZD0qavZFNVYClXoJmy1LCB
-         gnhjLe3fLBzTdOZN1IWW+Z2kM9MuxwwsyV8M1qAhpXkpYUo8EyE96Cj2aZ7ydRbAR1uv
-         zi9mbfJxypcXyGgSqkDCiLAtI/VGGPbe3yQv4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745218077; x=1745822877;
-        h=content-transfer-encoding:mime-version:subject:user-agent
-         :references:in-reply-to:message-id:date:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eoh+UHAHaX63W3Xnorvqri+MwqtBlKW14ThZ2I5rFOc=;
-        b=f+77OfYUBT/cXIsTuHrQqEU/+5RCoJti2CCfCbmYFUnqNXHZmwAwHrgwKkO6Gzayr5
-         wcp2RsZpWTUq1IEXKUfVOJ+7LHE0mjwqoegPz2ixSM5n9ABIP/+iRUfb2v6g1OfPFvuR
-         84YvesjsbUqOIJvPzMgXfYbb7LdwNvuxaG0EE3eUrxiNnyfWXVZkY/sp/9+MYNVR+CdG
-         nEBOI1UIVYpv39m/BiO+/+qhX1DbY1vVnsHeXKhvPIaaO0IvIugFBHy0HWiw7MTlz2yb
-         8BUEwVDmHOHfjYfcbvqMEi/okjyA46BOTdBt4BMbukdxfxkxmZQ7euh41J8vwewGAV/5
-         Jkng==
-X-Forwarded-Encrypted: i=1; AJvYcCWQvJDUJtdnVNpFfDSMfuEsPbzdZ/cCG7rRH5VZb9V1FJZtloJ8ckSKtF9i1j3lsWBd4fvwg+JCXzbBLh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmpC3lJ+79rVdUqbjDDMDQVz0wNDgj65guUYid7nqhCs+lMnk2
-	huaCF+EeG7lbXWRV+MK4EIO9BYPKuecNM8SOgsFKzVykScLRCExPHCnEZPMvDQ==
-X-Gm-Gg: ASbGnctv5IdKMPYDGZrUdgO4/fe5QOeg5xnZOqxg+S350ZwQjFS7SxnyHYOQcSfhsfs
-	vl2ryxL+LdLjMYgwzA2TBT3jl4839KwbwnVWsw9paf0dGoMEu4dE5rXqrLa86Ryejtm7EEHkkfL
-	44BD36eq8M0cR2//CaOgme7gXrxy9PDJElTz3Q/oq3SvF3iMGqiTbbd0l6b4ZT/mYOW3OHzyuFz
-	SutPPNzCsuMMeAoRIpOoY5uS2rsgPl5XMrKtT4og96eDK+Ud1buijctORNtzaZDGRwlCBGCjD1/
-	ZL0VMD8oy83Fszx8cF8K5sMukjNZtsArJZuMPlcxmD8HqRR7YpRlzN+zf/xwvXXCClTf9+sFxkA
-	P07A=
-X-Google-Smtp-Source: AGHT+IF57sTzG2W/MLUToUBMdG3Gp8wae1dAx1ppKQWPBR7VB+1fvf1xtyMNBtv0qPDtnlesQOYTmA==
-X-Received: by 2002:a17:907:9622:b0:aca:df11:c53c with SMTP id a640c23a62f3a-acb74dbb5admr911534466b.43.1745218076812;
-        Sun, 20 Apr 2025 23:47:56 -0700 (PDT)
-Received: from [192.168.178.39] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec04819sm479666666b.10.2025.04.20.23.47.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Apr 2025 23:47:56 -0700 (PDT)
-From: Arend Van Spriel <arend.vanspriel@broadcom.com>
-To: KeithG <ys3al35l@gmail.com>
-CC: <linux-wireless@vger.kernel.org>, <brcm80211@lists.linux.dev>, <brcm80211-dev-list.pdl@broadcom.com>, <linux-kernel@vger.kernel.org>
-Date: Mon, 21 Apr 2025 08:47:56 +0200
-Message-ID: <196571a7d60.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
-In-Reply-To: <CAG17S_NDLjfeTZ_qo8B6aXi2z6BHYCakBHzy2AqcqP2Co32hNw@mail.gmail.com>
-References: <20250407042028.1481-1-vulab@iscas.ac.cn>
- <CAG17S_NDLjfeTZ_qo8B6aXi2z6BHYCakBHzy2AqcqP2Co32hNw@mail.gmail.com>
-User-Agent: AquaMail/1.54.1 (build: 105401536)
-Subject: Re: Cannot maintain an ap with brcmfmac
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="df6c95Te"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF9EC4CEE4;
+	Mon, 21 Apr 2025 06:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745218148;
+	bh=UG2mt44Cq5UjFNZKjNkTHmal4so1Q5Z9bh2IS+IBsfQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=df6c95Te3OviLdsVj8rDLaPdy8wvBRr+zBFwjiU1Z9ZACZKvSByCOK622Bvp4z7Pk
+	 q/PTc0LlzU0mKeSG48KUqasaR/uaajo88+hNoGJOiTZ8sf6nlmg3eymA/rXCyFkkVo
+	 kJTALuUEUm5ojTfP1Pf5/G0yvGq1epIOO6aBIDgc=
+Date: Mon, 21 Apr 2025 08:49:04 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Wang Zhaolong <wangzhaolong1@huawei.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2025-22077: smb: client: Fix netns refcount imbalance
+ causing leaks and use-after-free
+Message-ID: <2025042111-provable-activism-ec0e@gregkh>
+References: <2025041612-CVE-2025-22077-d534@gregkh>
+ <fa7af63c-899e-4eb5-89d2-27013f4d2618@huawei.com>
+ <bf2e5c68-e20c-437e-9aa8-1b5326f4fd14@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <bf2e5c68-e20c-437e-9aa8-1b5326f4fd14@huawei.com>
 
-On April 20, 2025 8:15:56 PM KeithG <ys3al35l@gmail.com> wrote:
+On Mon, Apr 21, 2025 at 10:59:47AM +0800, Wang Zhaolong wrote:
+> 
+> Given these findings, I recommend updating CVE-2025-22077 to reflect that the true fix
+> is the reversion of e9f2517a3e18 (via commit 95d2b9f693ff).
 
-> Group,
->
-> I do not really know what has changed, but I
+Please do not top-post, it makes things impossible to quote properly :(
 
-Can you try to find out?
+Anyway, I do not understand, sorry.  You are saying that commit
+(95d2b9f693ff) is just reverting other attempts at fixing a bug, that
+were not fixed properly.  So why would that commit be assigned a CVE if
+the bugs were not being fixed properly?  What vulnerability does that
+commit itself fix?
 
-> can no longer maintain an
-> ap runnning with brcmfmac on my Pis with the brcmfmac43455 chip. The
-> firmware is current (and ahead of what RPiOS ships):
+> > Dear CVE Community,
+> > 
+> > As the author of commit 4e7f1644f2ac ("smb: client: Fix netns refcount imbalance
+> > causing leaks and use-after-free"), I want to clarify some confusion around the
+> > proper fixes for these issues:
+> > 
+> > 1. Commit 4e7f1644f2ac is currently associated with CVE-2025-22077. However, this
+> > patch was merely attempting to fix issues introduced by commit e9f2517a3e18 ("smb:
+> > client: fix TCP timers deadlock after rmmod").
 
-Maybe you could try with what RPiOS ships.
+Did it not fix those issues?  If not, we can reject that CVE, please let
+us know.
 
-> [    3.472501] brcmfmac: F1 signature read @0x18000000=0x15264345
-> [    3.493274] brcmfmac: brcmf_fw_alloc_request: using
-> brcm/brcmfmac43455-sdio for chip BCM4345/6
-> [    3.494583] usbcore: registered new interface driver brcmfmac
-> [    3.900038] brcmfmac: brcmf_c_process_txcap_blob: no txcap_blob
-> available (err=-2)
-> [    3.901161] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4345/6
-> wl0: Oct 28 2024 23:27:00 version 7.45.286 (be70ab3 CY) FWID
-> 01-95efe7fa
->
-> I get this with the default RPiOS verison of hostapd:
-> # hostapd -v
-> hostapd v2.10
-> User space daemon for IEEE 802.11 AP management,
-> IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
-> Copyright (c) 2002-2022, Jouni Malinen <j@w1.fi> and contributors
->
-> And also with the one I built from source. The latest hostapd I could find.
-> The git repo it is built from is from here: https://w1.fi/hostapd/
->
-> # hostapd -v
-> hostapd v2.11-hostap_2_11+
-> User space daemon for IEEE 802.11 AP management,
-> IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
-> Copyright (c) 2002-2024, Jouni Malinen <j@w1.fi> and contributors
->
-> My hostapd.conf is:
-> # cat /etc/hostapd/hostapd.conf
-> # interface and driver
-> interface=ap0
-> driver=nl80211
->
-> ht_capab=[HT40][SHORT-GI-20][DSSS_CCK-40]
->
-> # WIFI-Config
-> ssid=TestAP
-> channel=6
-> hw_mode=g
-> wmm_enabled=1
-> macaddr_acl=0
-> auth_algs=1
-> max_num_sta=10
->
-> # WIFI authorization
-> wpa=2
-> wpa_key_mgmt=WPA-PSK
-> wpa_pairwise=TKIP CCMP
-> rsn_pairwise=CCMP
-> wpa_psk_radius=0
-> wpa_passphrase=secret123
->
-> If there is something wrong in my setup, let me know.
+> > 2. As I've previously discussed with Greg Kroah-Hartman on the kernel mailing list[1],
+> >     commit e9f2517a3e18 (which was intended to address CVE-2024-54680):
+> >     - Failed to address the actual null pointer dereference in lockdep
+> >     - Introduced multiple serious issues:
+> >       - Socket leak vulnerability (bugzilla #219972)
+> >       - Network namespace refcount imbalance (bugzilla #219792)
 
-Hard to tell. The above looks okay, but no idea what your setup looks like.
+So this commit did not actually do anything?  If so, we can reject this
+CVE.
 
-> when I start hostapd with dnsmasq, an interface comes up and I can
-> connect. As soon as it connects, it disconnects:
-> Apr 20 12:57:39 pi4 systemd-networkd[181]: ap0: Gained carrier
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: started, version 2.90 cachesize 150
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: compile time options: IPv6
-> GNU-getopt DBus no-UBus i18n IDN2 DHCP DHCPv6 no-Lua TFTP conntrack
-> ipset nftset auth cryptohash DNSSEC loop-detect inotify dumpfile
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: warning: interface ap0 does not
-> currently exist
+> > 3. Our testing and analysis confirms that the original fix by Kuniyuki Iwashima,
+> > commit ef7134c7fc48 ("smb: client: Fix use-after-free of network namespace."), is
+> > actually the correct approach. This patch properly handles network namespace
+> > reference counting without introducing the problems that e9f2517a3e18 did.
 
-So does this mean you run with two wifi interfaces, ie. wlan0 and ap0? Can 
-you try with just only an AP interface?
+But you say that commit is broken?
 
-> Apr 20 12:57:39 pi4 dnsmasq-dhcp[169728]: DHCP, IP range 192.168.5.2
-> -- 192.168.5.254, lease time 1d
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: reading /run/systemd/resolve/resolv.conf
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: using nameserver 192.168.2.253#53
-> Apr 20 12:57:39 pi4 dnsmasq[169728]: read /etc/hosts - 8 names
-> Apr 20 12:57:39 pi4 hostapd[169681]: ap0: interface state 
-> UNINITIALIZED->ENABLED
-> Apr 20 12:57:39 pi4 hostapd[169681]: ap0: AP-ENABLED
-> Apr 20 12:57:39 pi4 resolvconf[169735]: Dropped protocol specifier
-> '.dnsmasq' from 'lo.dnsmasq'. Using 'lo' (ifindex=1).
-> Apr 20 12:57:39 pi4 resolvconf[169735]: Failed to set DNS
-> configuration: Link lo is loopback device.
-> Apr 20 12:57:39 pi4 systemd[1]: Started dnsmasq.service - dnsmasq - A
-> lightweight DHCP and caching DNS server.
-> Apr 20 12:57:40 pi4 kernel: brcmfmac: brcmf_cfg80211_set_power_mgmt:
-> power save disabled
-> Apr 20 12:57:48 pi4 kernel: ieee80211 phy0: brcmf_escan_timeout: timer expired
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: associated
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: associated
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-> RADIUS: starting accounting session 4336779F2221A786
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-> pairwise key handshake completed (RSN)
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
-> 50:84:92:a6:7a:7a
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-> RADIUS: starting accounting session 4336779F2221A786
-> Apr 20 12:57:48 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-> pairwise key handshake completed (RSN)
+> > 4. The proper resolution for these issues was ultimately commit 95d2b9f693ff
+> > ("Revert 'smb: client: fix TCP timers deadlock after rmmod'"), which reverted
+> > the problematic patch. In the latest Linux mainline code, the problematic patch and
+> > my subsequent fix patch have been reverted.[2][3]
+> > 
+> > Thank you for your attention to this matter. I'm happy to provide additional details if needed.
 
-So looks like connection and security are setup correctly...
-> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
-> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
-> 50:84:92:a6:7a:7a
-> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
-> 192.168.5.214 50:84:92:a6:7a:7a
-> Apr 20 12:57:48 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
-> 50:84:92:a6:7a:7a
+So, everything is now reverted and we are back at the beginning with the
+original problem?
 
-...and DHCP exchange is okay, which clearly indicated encrypted data 
-connection is working.
+I'm sorry, but I really do not understand here what to do.  What exactly
+are you wanting us to do?  Is the issue resolved?  If not, why not?  If
+so, what commit fixed it?  Are there CVEs assigned to commits that are
+not actually fixes?
 
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
+totally confused,
 
-So not clear what triggers these disassociated events. Can you enable debug 
-prints in brcmfmac, ie. use debug=0x100400? The levels are defined in 
-debug.h [1]
-
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: associated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: associated
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: AP-STA-CONNECTED 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-> RADIUS: starting accounting session 33CFF844DBBE630F
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-> pairwise key handshake completed (RSN)
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: EAPOL-4WAY-HS-COMPLETED
-> 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a
-> RADIUS: starting accounting session 33CFF844DBBE630F
-> Apr 20 12:57:52 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a WPA:
-> pairwise key handshake completed (RSN)
-> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPDISCOVER(ap0) 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPOFFER(ap0) 192.168.5.214
-> 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPREQUEST(ap0)
-> 192.168.5.214 50:84:92:a6:7a:7a
-> Apr 20 12:57:52 pi4 dnsmasq-dhcp[169728]: DHCPACK(ap0) 192.168.5.214
-> 50:84:92:a6:7a:7a
-> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: AP-STA-DISCONNECTED 50:84:92:a6:7a:7a
-> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:57:57 pi4 hostapd[169681]: ap0: STA 50:84:92:a6:7a:7a IEEE
-> 802.11: disassociated
-> Apr 20 12:58:11 pi4 hostapd[169681]: ap0: interface state ENABLED->DISABLED
-> Apr 20 12:58:11 pi4 systemd[1]: Stopping hostapd.service - Hostapd
-> IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator...
-
-Assuming it is stopped manually here. Correct?
-
-Regards,
-Arend
-
-[1] 
-https://elixir.bootlin.com/linux/v6.14.3/source/drivers/net/wireless/broadcom/brcm80211/brcmfmac/debug.h
-
-
+greg k-h
