@@ -1,135 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010003.outbound.protection.outlook.com [52.103.68.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3EE13C918;
-	Mon, 21 Apr 2025 13:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745240629; cv=none; b=kzhnV9rCVUERcpjuIxHbb9P1xovlWdDmMtOVemwO0pr1lx+plv2HFzPf+TajO63kPVqnaRtsTLcIY6ndKLiHNzojiyNSv+Nrl9MAaY56aWsuLMEuykfhBjALY/ZDQZ+06iyX4eDttWWLWq28XGRZLBIGbh9lABse+nSRhYZNLxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745240629; c=relaxed/simple;
-	bh=sP8/NKPFESl3jwqPE7MLSdYvKtkO2SIR8tLuFX5e2SA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RrvcAsJxKcxExtoReKkh6jmUkBidSntf9r+2iyMBZ/bPYcxubOVv21v4pzsgyGI3ILeI7sIxdsJOjNnl6cdxE1Mkzbs9Pti2uZaTkt+yHKNWmcfG31QIfVZrM+Tu1eIgTMmj2XsSj6AOJpKuHBqX3DVlXbQFMM5ChQ7yecTc2D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0JO6qpD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4130B1DED47;
+	Mon, 21 Apr 2025 13:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745240727; cv=fail; b=kFHaC3lZN/YuyKd9OBWJTEDWwBuGEahxEiVux7c+l7VDieLHBJwXNIHXDWuQ+9/mUFVhQnpYB/KiwR82U0VCbAEcGEUNQmJV+X7+YlPqNrR2BrDbiyDS2tVawwxcUqCovFQe0hvUyn0EoW6OH5MMIcZvPFvU7oQkLoTXTfH6hTY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745240727; c=relaxed/simple;
+	bh=Z6fs2J8bBZEVwjAmueiDv8QBmNuqVEKRwmkcXf/ugLs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cPJhvTrmGZG83DDQQKTCmAbdkXZjZKxPbXWqG3d1/cDXROrJ0JVmIgSnftLGyiqxgxxmYzB1UtfI+Rx2aRBD/NAnxEAGSsuYN6ivwxT5lZNT/QsLGjk3bmzjwczMJ2hvh1mj0Pkenw4+FfACK4xfT57NynG5a1F9nmid5DnBO1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=MCVVNlbH; arc=fail smtp.client-ip=52.103.68.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0JO6qpD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BCF8C4CEE4;
-	Mon, 21 Apr 2025 13:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745240629;
-	bh=sP8/NKPFESl3jwqPE7MLSdYvKtkO2SIR8tLuFX5e2SA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N0JO6qpDPxKWq68jvUxw8B5xKbKu3JSd/ruInsoQE179kBZggV0PgOj0z6kAAVgGz
-	 gYzhy1IgBXFuTqu0UsnKlsVYQXvmqKcHqkxLlzCVJ3XD8+vj6iHvjaHwOSPCLMT/u2
-	 Jhao2gSYTdw1k8PDt19p+pbSzhn4jICkF7Uq1A+pQs80tHzgK0wbC7b/CFNe9Je6s/
-	 ovrMeEyVxlycWhwQB/rxuOkQsM0wItaEQ8P93msCBh7ZvQKTHTpF9Ai+KtVvtI/z8T
-	 Lc7Vx25I32Ful5Jn2vq9vrihvQ8/D82xuboy/KTu4cUzrTE8ySnxrHQGKtPrq4fDzf
-	 2puXKkezucLdQ==
-Date: Mon, 21 Apr 2025 14:03:42 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
-Message-ID: <20250421140342.4097c0c4@jic23-huawei>
-In-Reply-To: <CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
-References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
-	<CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="MCVVNlbH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NAaVrqkfcmBdSIgHhhQ7HjIN/VB+U8gSKCglYFOW/t0aSm58W0IF9595PDm1iuG5yNKv2tr2r3ePus5Pl5LMtSWyJ/4rRGlIO6p4gj2I0ant783FvGvdcFTMNx45bvvyNFp1KWrvT6UeXmQuOqcA0A1zl2yf1+qjot20Vkp6Bmc54gZrJfa3hKhKMf6P7z+htcfmBc6USEdh2L+GN5cifJuoi5PQtKjdSGhmeymiGdcMy4Bn4EjxlzNS8GCZ7bPDlrbclGGp6wKKYEt1jtqrRnQQbyVk9Vvv/hxa7YIA+9WCk2fkEM8hwyG4Q5jf7Vg2X963GaNPLuDzlT5O4XY6yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pz6yFIJdU7o7k2VMNkNir+44fv5yM+FQNgigBPbFz5Y=;
+ b=IA9BhdbUe7cOumjCHOfpv9rUbK4arpS30o3OS7Tp5EFvjqlQVAV8iXxf0Qhk3YfAZdkcV/cVXK3z2u0fzyRdFry/L+jBoheH8JVw03IGulGTND5P7u5Hthc+EqgBUOWBIdt2VDHIZ4nAS/yQ+T6HC4ubXqHq3qaILAbyqn9mGK53A0WWEF2mcjq14ihJIj66PRPJxAyUtxeuVDfB8c/Wf5HcM5PxDJWCN0CvX9rPmc9oqNIAjYWanSviyHiXvF8jle00s6oCbIZ5jUBsna0W916keITRMoYkvp5QkfZ9ptM1lQa8xIq+Vq6VIE5svOecxHH2jNA9hCpiw2Omx9LWpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pz6yFIJdU7o7k2VMNkNir+44fv5yM+FQNgigBPbFz5Y=;
+ b=MCVVNlbHDgOaFskb1qYiPXDeOsMvlVWyZC3rBbSoM2tm6jKOwxLK00xPvBfZB0gVr4fFCqYXMlWZM2Lar/rvuTaZZMFyXpT5KJbqJETo3tSKV6T0r2lJ2Qjh8vTzXM6fbmp2YFwYDWubUCyoRpEQ1pH4JM0pRBXm8BVO5ftqRLgRYhq1HRq/w0LVd7kGIsGaF7s9WOBIQ+KsGNsnUFZ04lJITQmlQh7X1WmjHWTnjaYJBwsMRtuHGP1C+946y6rtvt+KlEYgcq3UB5qEPbEgRguwVtS9H8eA8Bkj6eHXPqvAnbec/7+zRIMhkztR8f2r+WVss41qD7gXdbkQiOYJUQ==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN0PR01MB6492.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:75::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
+ 2025 13:05:17 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
+ 13:05:17 +0000
+Message-ID:
+ <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 21 Apr 2025 18:35:13 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+ airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ Hector Martin <marcan@marcan.st>,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597D506487C3133B0358CE5B8BC2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAY0hRvNCi0y6rlt@blossom>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <aAY0hRvNCi0y6rlt@blossom>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0052.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:270::17) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <9ae6da7e-729b-4372-afb9-f64a44f7eaa9@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB6492:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9700d05-8db9-4af2-99ba-08dd80d52969
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|461199028|7092599003|5072599009|8060799006|19110799003|6090799003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cTh3dmgyclFKQUxiaFdZNlFRVWtWRjFMOU80dHdOcE5qbFJTaERyeUVuK2NL?=
+ =?utf-8?B?MGliSk9uSDhWREVIeEp5bGp0QU5yY1UwdVQ2ZksxTnExVStpQ1hlSEJZU2Zi?=
+ =?utf-8?B?elMvWk14bjVibUNTT0F0M3hSUG9JM2t1ZjBOam5IejhldzNHT044eW5JZ0tW?=
+ =?utf-8?B?OUtTRnpwZTdIRTYzQ1NoTnpWNG01bzl2NTVJWVVUZHY2VUJKVWRyQUthNmZZ?=
+ =?utf-8?B?Tms5RTllVldzNENXZThYU2s0aFJCd0wyYnp4ajZrZlJqZDVHOWRjZDJaMkha?=
+ =?utf-8?B?VGNISGZTK0dCSng0N3lrVG9DUlN1Q2g5RS9MaWk4T2JCQkhRMWVyWVgzVU15?=
+ =?utf-8?B?VGEvQUcxcHh1cVZiL0g2ZVhjNnFQbzhodE1pSkFkNllUUm5Cc0crYUtvdlY2?=
+ =?utf-8?B?ZzVmKzZjUWxqemJYajBXV05STUZjMW1relNtQUp0Q2oraEZVd1lYY3Y0eGpm?=
+ =?utf-8?B?dWsxNlJ6NzJzRzJqWlZxTFNqcjkrNFhnUXVaelJoRlVUY0QrMERkQWZRRUZl?=
+ =?utf-8?B?YzR2ZE5UdlVUVUxLeVRWZ0htejZKWGVFUG1sclZPWWhHNTZaMGN5WjQ0MVJP?=
+ =?utf-8?B?ZG9VVm1zZEw4OUtSWUxTa29XYzJkdVI5dGtnOHQwRlJtWDRiSnpnV21oOWdq?=
+ =?utf-8?B?RncxNHVzaDZZMC9nNFV3eXRqNUk2ekVUOExDMFFsNTVBRmp0YkRlL1BVK05W?=
+ =?utf-8?B?UzBWQmNJTGVHZHdvQTFBTHR6WUo2aVgxS0ZFRXMxcUJHcTQ0a2FkMm50WDR1?=
+ =?utf-8?B?dld0djlHUGNDV2hXb3Y2ZjV3ajNxcS9wcitxYWZNNWcwd0JpWVFPbkQxSjJp?=
+ =?utf-8?B?RnVKU0NMNHN2cTVFb2prSFBmNFhsUjN3cmE1QWliVy8vK09neDkwVHB0VWtP?=
+ =?utf-8?B?OEVVUnBIcDRRYjRDSHYyQjJFY05JcUk0WlZxemxLTjVWZTJrTVI5SitZV2hj?=
+ =?utf-8?B?NWRqV1lPaERvRHBDbU5DMnRkS1dtdVFQZTFEVlZtZExDRDZtcXR0Qm5kSGZ3?=
+ =?utf-8?B?Zmx5T3ZUWVVLSEZoL2hVWks3V0pBdU9TSkFzRTM5RnZ3OEF5a0RseVU0cUUv?=
+ =?utf-8?B?ZjY3M29NTE01dWlVQWpkWnFTTFZoNFFlYXAyYkwwZUtaRXJvNnJxYmNCbG9p?=
+ =?utf-8?B?ZXVaN0dwSStDeHpVSzlUeGtZUmY0WXhwdDN2NWFydzFxUUJnUTM3Wm5BU0t1?=
+ =?utf-8?B?b20vbXE4K0N0WFN1cWYrOTdPd09TRjRBcE5tZ0prYnN1WU12NXFwMHFtZFJW?=
+ =?utf-8?B?RXdiN0JKYWdiTXBNV2tVZUFwRXp0aTdCN3RvdWI0VXRPTVBpUGR5cXNWVHUw?=
+ =?utf-8?B?bUlNMmFLQWRPWjNscWhSaVhOcHlERkg0QkIvUVJ6UFhvaG9Bek83ejJsamt5?=
+ =?utf-8?B?U3JHVE5JZXhhbldTNER0akNKWTUwR2V1SStsdnZpRnVZZ3hvUkNPN01iRmp4?=
+ =?utf-8?B?RnkvS2lMOTVpYVA4T2hYMmNETVpYWWtCd3NqTk9QdnhEVXNaZ1VsYWl1NHlx?=
+ =?utf-8?B?RlhOV2FHWENRcGNGN0JzZUZnUVJvckZDd2VvWW03SEVaK24wclM1UEFKV0Q2?=
+ =?utf-8?B?S3FJZz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RVpiRG5LNWd4V0xyVzZTY2tyWjV6RVlkMm8ycGxhMVJ1Mmkwb1RUSEJFdkhS?=
+ =?utf-8?B?aDdKcGFFT2k1bHp2U2lBTmQxSGhrSHlKSS93RTlqWXNpSVpHMDlTZHN6WFlU?=
+ =?utf-8?B?QkhValB1dURJVEVLNWRTTjFsNHFLUW0rSXk5cDZUNDhoclVPY2UrSzFmbEJB?=
+ =?utf-8?B?MHhiNXRlNHhFMHdJbTNsWHlOT0x4cHU5VSsyZGp5WXNIcnpSdXBKUHNlOUxQ?=
+ =?utf-8?B?dVdHTjVXakU4eHZ1UGg4YlBybkhIcFgrd1ZBa1poazlMYTJoTHZzbzNsbG54?=
+ =?utf-8?B?V3NmYks2MStnclE2TzBNRm5KMW9BQWxvT0ZHM3FLclBhbUxhbTBBdEQ3Qmt6?=
+ =?utf-8?B?dFJiZCtYZm9sVjlvc0h3M2tLWjhsOENicjhBY016VEJHS0dCMjNocnJOWHRy?=
+ =?utf-8?B?MXlLRVJBc2hLUVNGd1JuQ3Z3N3JPckgxTFpiWmJsbVNPdnpkeXZuaEhRS3JX?=
+ =?utf-8?B?Z1EzZGRpMk85WjUwWHI2VmEyd1BLUHJRS1ZMSnRNM0Z6SnBwdTRYNkttWWFh?=
+ =?utf-8?B?N0tSbzhZaVF4VVBXUlBUNWkzZXhpeTNORlhvdjl1ZWdLVDhqWVdCU1lzSE5V?=
+ =?utf-8?B?UDlERTZYdzlYVWVndFU4YmZ2b2ZraGtZTjN6YndsdUQ5dzZiRWhYaUlFRlpz?=
+ =?utf-8?B?UFdsWWRzV2lJZHZvNVZ1T0FDSE9ra3Y5eUljckJtbkZXSFFURmw2QmF3b1A2?=
+ =?utf-8?B?OUhPTHFOQ2ZHcmxXMHlYT2IwL1VxLzBMUDBBSDE2TW54aDRKeHV6R01rejJq?=
+ =?utf-8?B?cUtweWVzVzhjOHRFWUt0RnN6UVdqdTJwRHdGaHlEOW9vbGtNaWp0OStlaUF2?=
+ =?utf-8?B?OTNnN2ZrVytXVlpydDVLZEZ4VmxMT3AzdUdnN0d0MXBsRHFVa3ZITDBEOVRD?=
+ =?utf-8?B?ZzN5ZTlydTRTQUhzc3VWTS90dmEremVTaXlPRXM2bXVGL1ptTDV0Z3E0Wjly?=
+ =?utf-8?B?WHNqQlhJVFAxclVYeEt1dkpySWQzbGIvMUF2VlJlMGZnVHNXZDdFUjNDVnpi?=
+ =?utf-8?B?SlpyVGlpQ3AySGxRck5laDJGTUJldnNnSmFsM2NZd05DYXVVUUJvZk1iN0xR?=
+ =?utf-8?B?NjhhOVFJRlpYT3ZvL3JCdjVkMVo4VGIwOVNLaVhMeUJ5Nlg5eFREQ1JuL0VC?=
+ =?utf-8?B?VmsxdFBuRTJmNzZWdGtFZVpYeDZmRVR4b2xpOFBYZ2lCRUVHbDVFZ3ByclNO?=
+ =?utf-8?B?b1AxcDA1RjlGaFJPTFBVbkhOMlJVbGJML1Bsb0N2ckd4dTVZRjZKOU5jUWlU?=
+ =?utf-8?B?dVRNdU0vc1QxVHE5Z1dONWgydzBSY3k4TFAyZkptR1ZLL05ybEhVTE9oU3h4?=
+ =?utf-8?B?Y2xMNk1jS0h5bWlnTWd6Uzl6em5kT2htbWo4VUhzZkRhWVNKRGIrRTBWV00r?=
+ =?utf-8?B?T04wNUw3MlZBcnZrekx6cFN3RHNKaGI3Y2RiWk9EOVpwckNSN0syYWFsdjlN?=
+ =?utf-8?B?UXBDdDIxZXBWZWcyTTdzNWlPMHp2bmhHRklIMU9ObGFha284WFJLNDFnZ2h0?=
+ =?utf-8?B?L0xvUjl0Z1JtMjlzS2Q5bGhsRWhtN0x6UzN2ZE56N3RFUE9vdGN5SzluQkVh?=
+ =?utf-8?B?ay9pMm1jaUJtNnMxRjZXbm9TQU13WlRzeVNpd2ZjZ1J3bUNpM1NPUHRRdmxR?=
+ =?utf-8?B?NERWeVAySkMwc0tHeXFRakhxN0dYUHFLKzk1cE5TbXdJUXhINklFR0JpWEFK?=
+ =?utf-8?B?MEpaRmpWcCt3T1J1RWFxVTR5MGVwOC96ZkUzc0FBb09GOUlPOStmMlFxZmFQ?=
+ =?utf-8?Q?PAk0nE2vlGn/AQ8/G1NpvIzYdaG9fcHpfyAOmsn?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9700d05-8db9-4af2-99ba-08dd80d52969
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 13:05:16.9639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB6492
 
-On Sun, 20 Apr 2025 07:36:18 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Sat, Apr 19, 2025 at 1:59=E2=80=AFAM David Lechner <dlechner@baylibre.=
-com> wrote:
-> >
-> > Creating a buffer of the proper size and correct alignment for use with
-> > iio_push_to_buffers_with_ts() is commonly used and not easy to get
-> > right (as seen by a number of recent fixes on the mailing list).
-> >
-> > In general, we prefer to use this pattern for creating such buffers:
-> >
-> > struct {
-> >     u16 data[2];
-> >     aligned_s64 timestamp;
-> > } buffer;
-> >
-> > However, there are many cases where a driver may have a large number of
-> > channels that can be optionally enabled or disabled in a scan or the
-> > driver might support a range of chips that have different numbers of
-> > channels or different storage sizes for the data.  In these cases, the
-> > timestamp may not always be at the same place relative to the data. We
-> > just allocate a buffer large enough for the largest possible case and
-> > don't care exactly where the timestamp ends up in the buffer.
-> >
-> > For these cases, we propose to introduce a new macro to make it easier
-> > it easier for both the authors to get it right and for readers of the
-> > code to not have to do all of the math to verify that it is correct.
-> >
-> > I have just included a few examples of drivers that can make use of this
-> > new macro, but there are dozens more. =20
->=20
-> I'm going to answer here as the summary of my view to this series and
-> macro after your replies.
->=20
-> So, first of all, the macro embeds alignment which is used only once
-> in practice and the alignment used in most of the cases is DMA one.
 
-It think that's because this is only converting a few examples.  There
-are more of these to come (9 of the ones that David first converted
-to structures then realized this was a better fit for starters!).
+On 21-04-2025 05:35 pm, Alyssa Rosenzweig wrote:
+>> Can I have a feedback from some DRM maintainer on this? AFAIK merge window is over for some time now. It's been more than a week and last time when I submitted, it just stayed in the mailing list without any feedback.
+> 
+> DRM hides the merge window from committers so that's not super relevant.
+> 
+> I am a DRM committer and can pick this up if necessary but it's not
+> clear to me what's going thru with DRM vs elsewhere.
 
-A lot might still be aligned for DMA but I'd expect to see more of
-the cases that don't need that either because they are i2c only or
-because data shuffling means the DMA hits a different buffer and we
-unscramble it into this one.
+All the three patches are intended to go through DRM. IIRC Petr, the vsprintf maintainers had requested for that to be done.
 
-> Having two alignments in a row seems a bit weird to me. Second one, if
-> we drop alignment, it means each of the users will need it. That
-> significantly increases the line size and with high probability will
-> require two LoCs to occupy. And third, based on the examples, the
-> macro doesn't help much if we don't convert drivers to properly handle
-> what they are using instead of plain u8 in all of the cases. Yes, it
-> might require quite an invasive change to a driver, but this is how I
-> see it should go.
-
-Agreed for almost all cases that a conversion to the right type
-is good to have - preferably as a precursor.  There is that one case in
-here where it depends on the specific part though which will remain
-in a messier form.
-
->=20
-> That said, it feels like this series took a half road.
->=20
-> I leave it to Jonothan, but I don't like it to be merged in this form.
->=20
-
-Whilst there are no current platforms where IIO_DMA_MINALIGN is < 8
-in theory it might be in future.=20
-
-The other way around, IIO_DMA_MINALIGN is large on some architectures
-so could result in considerable additional padding and should only
-be used where it is needed.  Also that alignment is useless on the
-stack as it does nothing about data after the buffer. Hence there
-isn't really a general solution with one or the other :(
-
-So I like the idea in general as a way to make things a little better
-but agree it is still somewhat ugly.
-
-Maybe we could add...
-IIO_DECLARE_BUFFER_WITH_TS_FOR_DMA()
-Might be worth it?
-
-Jonathan=20
-
+The relevant patches have been Reviewed-by Petr as well.
