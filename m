@@ -1,212 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA2610A3E;
-	Mon, 21 Apr 2025 02:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572C322A4C5
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745201229; cv=none; b=oxh2G5+OOlzckSVE+Hhsb447CXLR4hq99H65tWAOvBoYUiXQNwEeW5p8hqGLH9nE2BpzjaGULczrjrVxH31MKusbw3h03njPNx1ua+dvYr+BpxSTcR1o1Jzy2sIwElk+btkTGzobuQpwW1DKcmhN7LGImfVaP/h1h2qMa75+UWQ=
+	t=1745201371; cv=none; b=TniAaRIFJhypYxohKcJWB/xTOuf0DyhNfWUQqMwsvdU8lxeJC/2Zg0YeSuzK0QzLM24WKEizG2dpdEmBtt2RIqnPwR1z26XTytj12XKILtCAC5AmwRYVjHx0SH3jI/lAswkVHiQp+xb+6LbT0WvC+iM7S2+1ZXshxyMlZgruejk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745201229; c=relaxed/simple;
-	bh=rvDBpYvhrT2oxtdi2qm6xbxHsIoIYsSMX4uVIIxKWpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQCvyjpIGLfg8UJM0kezjSSLGHnPpSQGg8y1XhwueENigyxE5syb5tNsBW+y6+uUqvfvQ+DKtXQr1w+7EGGH+7hLVjuSNSG21sbIraoHavi9eB2eOgC9E05E9NZkJ9MuupEiqPvVXowxnGUrcSYCFGDUFxBrHZpgnUJJaa57g7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZO3VmAq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745201371; c=relaxed/simple;
+	bh=vQwPL41UhXSWhazxVBZ9yhLnlauIudYDFz+u76RyH7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EUNjYu2m44T5tC8FYIEwdNShObaiYIXAGjYIuMdCFjKmvyb6T6d+RjuifjOawywfdjiJVpiG/G5/g0luHB4F1h3vupF9vhriBi5UH900qG4DpAPnwfIlI/0X5Z2WSnOp++s4wwfFqbEtpL1rgynyE3t+9fRqHZhFVSqr3YcM7rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G2ht85LP; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZO3VmAq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AACBEC4CEEA;
-	Mon, 21 Apr 2025 02:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745201228;
-	bh=rvDBpYvhrT2oxtdi2qm6xbxHsIoIYsSMX4uVIIxKWpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jZO3VmAqsXxpz6XGWWv2vdc553ldGbGQBdcF0vW4cUNoXLBvZNROOPxUgzOyweKHN
-	 /K6hGl8t4l2bUAa5TRl09Fkh6jG/8plEgSmmOmVuesTImLkLZhBdhN32VpZNFeJrrj
-	 yVXGdLz5CZ8HoxPCQyZiMpAkVKeUW6mwdcmbabUG4ut5hx5+sFSVGq1zIkrTkkVk3q
-	 2KD9cGm4AQjov9K9uZR6zKB6xhIhmRsq9BOTRY8kp4zlfhozTiRdAF2r+15xeKmo3O
-	 8/6wbp1Ruqrr2WYZTAy5NJMgmZnuYquiLvqrgstNGjgxv54pFIZM6QKW4JKseDXxPL
-	 qZ8R2J4u3VPwQ==
-Date: Mon, 21 Apr 2025 10:07:01 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: cdnsp: Fix issue with resuming from L1
-Message-ID: <20250421020701.GB3578913@nchen-desktop>
-References: <20250418043628.1480437-1-pawell@cadence.com>
- <PH7PR07MB953846C57973E4DB134CAA71DDBF2@PH7PR07MB9538.namprd07.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G2ht85LP"
+Message-ID: <ba5bb0ed-54e6-4655-ac52-0594acc3d9ea@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745201367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BkvpI/QNH8sX2vc89J73S1BGYLDtEYPlsj2xsRPRVmc=;
+	b=G2ht85LPDq7ZDR6eziLKyEU9SpDkF7/mxdwUPBkHPi9fnliu01mm+LEGpICIR3qyR6tCeV
+	KCuomqISg7G8ZD939n16VGAQHIaDEofbqGpGlTw4WfVBISU+it6vQ9h2y8YXv1r8wTMe7m
+	YEveVruvceFOMuXF9V8shPCOYwzyhXE=
+Date: Mon, 21 Apr 2025 10:09:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB953846C57973E4DB134CAA71DDBF2@PH7PR07MB9538.namprd07.prod.outlook.com>
+Subject: Re: [PATCH net-next V2 3/3] net: stmmac: dwmac-loongson: Add new
+ GMAC's PCI device ID support
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
+ <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>,
+ Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
+References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
+ <20250416144132.3857990-4-chenhuacai@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250416144132.3857990-4-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 25-04-18 04:55:16, Pawel Laszczak wrote:
-> In very rare cases after resuming controller from L1 to L0 it reads
-> registers before the clock UTMI have been enabled and as the result
-> driver reads incorrect value.
-> Most of registers are in APB domain clock but some of them (e.g. PORTSC)
-> are in UTMI domain clock.
-> After entering to L1 state the UTMI clock can be disabled.
-> When controller transition from L1 to L0 the port status change event is
-> reported and in interrupt runtime function driver reads PORTSC.
-> During this read operation controller synchronize UTMI and APB domain
-> but UTMI clock is still disabled and in result it reads 0xFFFFFFFF value.
-> To fix this issue driver increases APB timeout value.
-> 
-> The issue is platform specific and if the default value of APB timeout
-> is not sufficient then this time should be set Individually for each
-> platform.
-> 
-> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
+在 4/16/25 10:41 PM, Huacai Chen 写道:
+> Add a new GMAC's PCI device ID (0x7a23) support which is used in
+> Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
+> so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
+> the new GMAC device still doesn't support flow control now.
+>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Tested-by: Henry Chen <chenx97@aosc.io>
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 
-Peter
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+
+
+Thanks,
+
+Yanteng
+
 > ---
-> Changelog:
-> v2:
-> - changed patch description
-> - made patch as platform specific
-> 
->  drivers/usb/cdns3/cdnsp-gadget.c | 29 +++++++++++++++++++++++++++++
->  drivers/usb/cdns3/cdnsp-gadget.h |  3 +++
->  drivers/usb/cdns3/cdnsp-pci.c    | 12 ++++++++++--
->  drivers/usb/cdns3/core.h         |  3 +++
->  4 files changed, 45 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
-> index 87f310841735..7f5534db2086 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.c
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
-> @@ -139,6 +139,26 @@ static void cdnsp_clear_port_change_bit(struct cdnsp_device *pdev,
->  	       (portsc & PORT_CHANGE_BITS), port_regs);
->  }
->  
-> +static void cdnsp_set_apb_timeout_value(struct cdnsp_device *pdev)
-> +{
-> +	struct cdns *cdns = dev_get_drvdata(pdev->dev);
-> +	__le32 __iomem *reg;
-> +	void __iomem *base;
-> +	u32 offset = 0;
-> +	u32 val;
-> +
-> +	if (!cdns->override_apb_timeout)
-> +		return;
-> +
-> +	base = &pdev->cap_regs->hc_capbase;
-> +	offset = cdnsp_find_next_ext_cap(base, offset, D_XEC_PRE_REGS_CAP);
-> +	reg = base + offset + REG_CHICKEN_BITS_3_OFFSET;
-> +
-> +	val  = le32_to_cpu(readl(reg));
-> +	val = CHICKEN_APB_TIMEOUT_SET(val, cdns->override_apb_timeout);
-> +	writel(cpu_to_le32(val), reg);
-> +}
-> +
->  static void cdnsp_set_chicken_bits_2(struct cdnsp_device *pdev, u32 bit)
->  {
->  	__le32 __iomem *reg;
-> @@ -1798,6 +1818,15 @@ static int cdnsp_gen_setup(struct cdnsp_device *pdev)
->  	pdev->hci_version = HC_VERSION(pdev->hcc_params);
->  	pdev->hcc_params = readl(&pdev->cap_regs->hcc_params);
->  
-> +	/*
-> +	 * Override the APB timeout value to give the controller more time for
-> +	 * enabling UTMI clock and synchronizing APB and UTMI clock domains.
-> +	 * This fix is platform specific and is required to fixes issue with
-> +	 * reading incorrect value from PORTSC register after resuming
-> +	 * from L1 state.
-> +	 */
-> +	cdnsp_set_apb_timeout_value(pdev);
-> +
->  	cdnsp_get_rev_cap(pdev);
->  
->  	/* Make sure the Device Controller is halted. */
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
-> index 84887dfea763..87ac0cd113e7 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.h
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
-> @@ -520,6 +520,9 @@ struct cdnsp_rev_cap {
->  #define REG_CHICKEN_BITS_2_OFFSET	0x48
->  #define CHICKEN_XDMA_2_TP_CACHE_DIS	BIT(28)
->  
-> +#define REG_CHICKEN_BITS_3_OFFSET       0x4C
-> +#define CHICKEN_APB_TIMEOUT_SET(p, val) (((p) & ~GENMASK(21, 0)) | (val))
-> +
->  /* XBUF Extended Capability ID. */
->  #define XBUF_CAP_ID			0xCB
->  #define XBUF_RX_TAG_MASK_0_OFFSET	0x1C
-> diff --git a/drivers/usb/cdns3/cdnsp-pci.c b/drivers/usb/cdns3/cdnsp-pci.c
-> index a51144504ff3..8c361b8394e9 100644
-> --- a/drivers/usb/cdns3/cdnsp-pci.c
-> +++ b/drivers/usb/cdns3/cdnsp-pci.c
-> @@ -28,6 +28,8 @@
->  #define PCI_DRIVER_NAME		"cdns-pci-usbssp"
->  #define PLAT_DRIVER_NAME	"cdns-usbssp"
->  
-> +#define CHICKEN_APB_TIMEOUT_VALUE       0x1C20
-> +
->  static struct pci_dev *cdnsp_get_second_fun(struct pci_dev *pdev)
->  {
->  	/*
-> @@ -139,6 +141,14 @@ static int cdnsp_pci_probe(struct pci_dev *pdev,
->  		cdnsp->otg_irq = pdev->irq;
->  	}
->  
-> +	/*
-> +	 * Cadence PCI based platform require some longer timeout for APB
-> +	 * to fixes domain clock synchronization issue after resuming
-> +	 * controller from L1 state.
-> +	 */
-> +	cdnsp->override_apb_timeout = CHICKEN_APB_TIMEOUT_VALUE;
-> +	pci_set_drvdata(pdev, cdnsp);
-> +
->  	if (pci_is_enabled(func)) {
->  		cdnsp->dev = dev;
->  		cdnsp->gadget_init = cdnsp_gadget_init;
-> @@ -148,8 +158,6 @@ static int cdnsp_pci_probe(struct pci_dev *pdev,
->  			goto free_cdnsp;
->  	}
->  
-> -	pci_set_drvdata(pdev, cdnsp);
-> -
->  	device_wakeup_enable(&pdev->dev);
->  	if (pci_dev_run_wake(pdev))
->  		pm_runtime_put_noidle(&pdev->dev);
-> diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
-> index 921cccf1ca9d..801be9e61340 100644
-> --- a/drivers/usb/cdns3/core.h
-> +++ b/drivers/usb/cdns3/core.h
-> @@ -79,6 +79,8 @@ struct cdns3_platform_data {
->   * @pdata: platform data from glue layer
->   * @lock: spinlock structure
->   * @xhci_plat_data: xhci private data structure pointer
-> + * @override_apb_timeout: hold value of APB timeout. For value 0 the default
-> + *                        value in CHICKEN_BITS_3 will be preserved.
->   * @gadget_init: pointer to gadget initialization function
->   */
->  struct cdns {
-> @@ -117,6 +119,7 @@ struct cdns {
->  	struct cdns3_platform_data	*pdata;
->  	spinlock_t			lock;
->  	struct xhci_plat_priv		*xhci_plat_data;
-> +	u32                             override_apb_timeout;
->  
->  	int (*gadget_init)(struct cdns *cdns);
->  };
-> -- 
-> 2.43.0
-> 
-
--- 
-
-Best regards,
-Peter
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index 57917f26ab4d..e1591e6217d4 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -66,7 +66,8 @@
+>   					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
+>   					 DMA_STATUS_MSK_COMMON_LOONGSON)
+>   
+> -#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
+> +#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
+> +#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
+>   #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
+>   #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
+>   #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
+> @@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
+>   	/* Loongson GMAC doesn't support the flow control. Loongson GNET
+>   	 * without multi-channel doesn't support the half-duplex link mode.
+>   	 */
+> -	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
+> +	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
+>   		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
+>   	} else {
+>   		if (ld->multichan)
+> @@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
+>   			 loongson_dwmac_resume);
+>   
+>   static const struct pci_device_id loongson_dwmac_id_table[] = {
+> -	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
+> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
+> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
+>   	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
+>   	{}
+>   };
