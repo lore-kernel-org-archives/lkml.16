@@ -1,61 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C4838382
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97766184;
+	Mon, 21 Apr 2025 02:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745203553; cv=none; b=penyLWI5pyY9PbPEG+IUUQZFdXkx+tLAlGlxAr63AouxB4IhoMOOccPbQKlqUJ/23QpSaTV5XfpWeESjKtqhWC4MrR0276IU1RsfsWI3vZwGdLdS8lguA1sc6kYf1cRAv+E0Cdh1BxEqW/Rm7PdEzQz1GvQExhojmWWIuq3oSy8=
+	t=1745203945; cv=none; b=lf2Qpbj7N6gM9tUfwR2iJ/EQSso9mZrwnAnv6n44qYp3t6vzCKff1CmbaaLUe8VhLo8w3CwGXnSHH9ZG9npPdfbSKMvH34WKkkmqj4dCoM2XT7p8YxKLiC8c5PoSat9f2d95c68Jzxk8arqNbXK5P8koY/Z+wJ5PPtIgJbD6shE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745203553; c=relaxed/simple;
-	bh=xai17yd0Iw0cyri+aEzpllkp4/1VDyGHCbJLE5ukZJM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MbO2z04U9E0d/J5Kv6SGEO73ij1IxTN2oydN6zG/xRlWrB1PWtz88sxxd13rxLfV5DP4DI1GFvTncOAqM7KeUzIn6Ic2lDVbxRHt7FTlFscv01UkRlm8KrA3SixF6apoHp0Zem0aKHIpJ6NeEcNppGaKsmsIo9c5rjS0Zxza/XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CIBfcura; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745203945; c=relaxed/simple;
+	bh=YBgTtw3/lIlfbTQBHcf3qYAkL4cxTN7AoK8utuCRMdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cfuKMiniqF1q4cIrI1PxzaYBqI50T5Z9gXSoprfYnU5U3UjUYTIOKIZX3FfXAmjcRohRniQ9ujcFmYd38gaTtiRhl4xFWZIVpCBFMr/00W2+ojas7IAK3XWyI7Cwv+oVXg4FYfPzFmiDoWC8QtvB3hYnc107ZQjlZb7CcCvub/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=KhwhsAf0; arc=none smtp.client-ip=139.138.61.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIBfcura"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745203550;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tksn/BeIa6XB+jednamafWrUiiXuAgrox86wRoZ3XDE=;
-	b=CIBfcuratZHZ5TtODJEqxHIa6Mo4uU0QaUbOUDIRnM5Pu+WEz+oA4IQUXg8f5UhdAo98rT
-	bmJeK+v8ySKPPbaXsX8mF0XK9j4mfY1qIn8Dq4tDjnuodJCrsH3lOmOwc+3DY+rwXYYQ/K
-	5WdFDt9leeyWxonM+ZBbjI3CVsQNLHg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-1w1C6q7mN6-inSOiYaE9XQ-1; Sun,
- 20 Apr 2025 22:45:47 -0400
-X-MC-Unique: 1w1C6q7mN6-inSOiYaE9XQ-1
-X-Mimecast-MFC-AGG-ID: 1w1C6q7mN6-inSOiYaE9XQ_1745203546
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9350219560AA;
-	Mon, 21 Apr 2025 02:45:46 +0000 (UTC)
-Received: from server.redhat.com (unknown [10.72.112.29])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8F8CE180138B;
-	Mon, 21 Apr 2025 02:45:42 +0000 (UTC)
-From: Cindy Lu <lulu@redhat.com>
-To: lulu@redhat.com,
-	jasowang@redhat.com,
-	mst@redhat.com,
-	michael.christie@oracle.com,
-	sgarzare@redhat.com,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
-Date: Mon, 21 Apr 2025 10:44:10 +0800
-Message-ID: <20250421024457.112163-5-lulu@redhat.com>
-In-Reply-To: <20250421024457.112163-1-lulu@redhat.com>
-References: <20250421024457.112163-1-lulu@redhat.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="KhwhsAf0"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1745203943; x=1776739943;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YBgTtw3/lIlfbTQBHcf3qYAkL4cxTN7AoK8utuCRMdQ=;
+  b=KhwhsAf0Iicx9iA6BeQ+eb3kyA3MV3TyeKiH8MBQvjMoscPcIcNOjgov
+   IcPpWggc/YwmwZl1Y/lPL8u9BPBzLLwZ2AYWaeoH3ziuEm2MYLPw2u/Y0
+   mO+5/wkioelUM31mcZJ+PFSBQvZ6oMkRkixtNZMGx1ND2+IPQuHNKQ4ke
+   uibExKt120oSTdHBlzj+At+TgmWVmG6f4f/XikNLayMFtRd2o4FuS/P1F
+   0vRK1xjqRbs6ob9WUcTfTjiYiN14M/LiZ4QKHlmFq+Yfw+A+yYlfMp0jz
+   ba8Sg5ac6rPQRqu5sVUBGP09SxtKf4gOGVbFUJ6Tj1BoxGwtE9r3+37OH
+   Q==;
+X-CSE-ConnectionGUID: wzGIF3pLRiS5YbKV61wv5w==
+X-CSE-MsgGUID: XFr7jYBLSoWvcvm9BbBuxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="185091490"
+X-IronPort-AV: E=Sophos;i="6.15,227,1739804400"; 
+   d="scan'208";a="185091490"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 11:51:11 +0900
+Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 51D46D4C4A;
+	Mon, 21 Apr 2025 11:51:09 +0900 (JST)
+Received: from m3002.s.css.fujitsu.com (msm3.b.css.fujitsu.com [10.128.233.104])
+	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id 160FDD7480;
+	Mon, 21 Apr 2025 11:51:09 +0900 (JST)
+Received: from sm-x86-stp01.ssoft.mng.com (unknown [10.124.178.20])
+	by m3002.s.css.fujitsu.com (Postfix) with ESMTP id ADA172025C18;
+	Mon, 21 Apr 2025 11:51:08 +0900 (JST)
+From: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
+To: linux-rdma@vger.kernel.org,
+	leon@kernel.org,
+	jgg@ziepe.ca,
+	zyjzyj2000@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
+Subject: [PATCH for-next] RDMA/rxe: Remove 32-bit architecture support
+Date: Mon, 21 Apr 2025 11:51:01 +0900
+Message-Id: <20250421025101.3588139-1-matsuda-daisuke@fujitsu.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,63 +62,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-is disabled, and any attempt to use it will result in failure.
+Major linux distibutions have phased out support for 32-bit machines. Since
+rxe is primarily used for development and testing, the benefit of
+maintaining 32-bit support is minimal. This change simplifies ATOMIC WRITE
+implementations and improves maintainability of the driver.
 
-Signed-off-by: Cindy Lu <lulu@redhat.com>
+Signed-off-by: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>
 ---
- drivers/vhost/Kconfig | 15 +++++++++++++++
- drivers/vhost/vhost.c |  3 +++
- 2 files changed, 18 insertions(+)
+ drivers/infiniband/sw/rxe/Kconfig     | 2 +-
+ drivers/infiniband/sw/rxe/rxe_loc.h   | 6 +-----
+ drivers/infiniband/sw/rxe/rxe_mr.c    | 8 --------
+ drivers/infiniband/sw/rxe/rxe_odp.c   | 1 -
+ drivers/infiniband/sw/rxe/rxe_param.h | 5 +----
+ 5 files changed, 3 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
-index 020d4fbb947c..bc8fadb06f98 100644
---- a/drivers/vhost/Kconfig
-+++ b/drivers/vhost/Kconfig
-@@ -96,3 +96,18 @@ config VHOST_CROSS_ENDIAN_LEGACY
- 	  If unsure, say "N".
+diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
+index c180e7ebcfc5..1ed5b63f8afc 100644
+--- a/drivers/infiniband/sw/rxe/Kconfig
++++ b/drivers/infiniband/sw/rxe/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config RDMA_RXE
+ 	tristate "Software RDMA over Ethernet (RoCE) driver"
+-	depends on INET && PCI && INFINIBAND
++	depends on INET && PCI && INFINIBAND && 64BIT
+ 	depends on INFINIBAND_VIRT_DMA
+ 	select NET_UDP_TUNNEL
+ 	select CRC32
+diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+index 30fa83c9c846..f7dbb9cddd12 100644
+--- a/drivers/infiniband/sw/rxe/rxe_loc.h
++++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+@@ -196,6 +196,7 @@ enum resp_states rxe_odp_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
+ 				   u64 compare, u64 swap_add, u64 *orig_val);
+ int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+ 			    unsigned int length);
++enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
+ #else /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+ static inline int
+ rxe_odp_mr_init_user(struct rxe_dev *rxe, u64 start, u64 length, u64 iova,
+@@ -219,11 +220,6 @@ static inline int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+ {
+ 	return -EOPNOTSUPP;
+ }
+-#endif /* CONFIG_INFINIBAND_ON_DEMAND_PAGING */
+-
+-#ifdef CONFIG_INFINIBAND_ON_DEMAND_PAGING
+-enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value);
+-#else
+ static inline enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr,
+ 						       u64 iova, u64 value)
+ {
+diff --git a/drivers/infiniband/sw/rxe/rxe_mr.c b/drivers/infiniband/sw/rxe/rxe_mr.c
+index 1a74013a14ab..c4936d63e26a 100644
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@ -539,8 +539,6 @@ enum resp_states rxe_mr_do_atomic_op(struct rxe_mr *mr, u64 iova, int opcode,
+ 	return RESPST_NONE;
+ }
  
- endif
+-#if defined CONFIG_64BIT
+-/* only implemented or called for 64 bit architectures */
+ enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+ {
+ 	unsigned int page_offset;
+@@ -580,12 +578,6 @@ enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+ 
+ 	return RESPST_NONE;
+ }
+-#else
+-enum resp_states rxe_mr_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+-{
+-	return RESPST_ERR_UNSUPPORTED_OPCODE;
+-}
+-#endif
+ 
+ int advance_dma_data(struct rxe_dma_info *dma, unsigned int length)
+ {
+diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
+index fa5e8f5017cc..6149d9ffe7f7 100644
+--- a/drivers/infiniband/sw/rxe/rxe_odp.c
++++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+@@ -380,7 +380,6 @@ int rxe_odp_flush_pmem_iova(struct rxe_mr *mr, u64 iova,
+ 	return 0;
+ }
+ 
+-/* CONFIG_64BIT=y */
+ enum resp_states rxe_odp_do_atomic_write(struct rxe_mr *mr, u64 iova, u64 value)
+ {
+ 	struct ib_umem_odp *umem_odp = to_ib_umem_odp(mr->umem);
+diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
+index 003f681e5dc0..767870568372 100644
+--- a/drivers/infiniband/sw/rxe/rxe_param.h
++++ b/drivers/infiniband/sw/rxe/rxe_param.h
+@@ -53,12 +53,9 @@ enum rxe_device_param {
+ 					| IB_DEVICE_MEM_WINDOW
+ 					| IB_DEVICE_FLUSH_GLOBAL
+ 					| IB_DEVICE_FLUSH_PERSISTENT
+-#ifdef CONFIG_64BIT
+ 					| IB_DEVICE_MEM_WINDOW_TYPE_2B
+ 					| IB_DEVICE_ATOMIC_WRITE,
+-#else
+-					| IB_DEVICE_MEM_WINDOW_TYPE_2B,
+-#endif /* CONFIG_64BIT */
 +
-+config VHOST_ENABLE_FORK_OWNER_IOCTL
-+	bool "Enable IOCTL VHOST_FORK_FROM_OWNER"
-+	default n
-+	help
-+	  This option enables the IOCTL VHOST_FORK_FROM_OWNER, which allows
-+	  userspace applications to modify the thread mode for vhost devices.
-+
-+          By default, `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL` is set to `n`,
-+          meaning the ioctl is disabled and any operation using this ioctl
-+          will fail.
-+          When the configuration is enabled (y), the ioctl becomes
-+          available, allowing users to set the mode if needed.
-+
-+	  If unsure, say "N".
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index fb0c7fb43f78..568e43cb54a9 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2294,6 +2294,8 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 		r = vhost_dev_set_owner(d);
- 		goto done;
- 	}
-+
-+#ifdef CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL
- 	if (ioctl == VHOST_FORK_FROM_OWNER) {
- 		u8 inherit_owner;
- 		/*inherit_owner can only be modified before owner is set*/
-@@ -2313,6 +2315,7 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
- 		r = 0;
- 		goto done;
- 	}
-+#endif
- 	/* You must be the owner to do anything else */
- 	r = vhost_dev_check_owner(d);
- 	if (r)
+ 	RXE_MAX_SGE			= 32,
+ 	RXE_MAX_WQE_SIZE		= sizeof(struct rxe_send_wqe) +
+ 					  sizeof(struct ib_sge) * RXE_MAX_SGE,
 -- 
-2.45.0
+2.43.0
 
