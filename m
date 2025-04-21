@@ -1,257 +1,107 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA85F263F3F
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 11:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E0819ADA4;
+	Mon, 21 Apr 2025 11:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234769; cv=none; b=bUqQvStZZ3q5uE2xQr1+FMc9GL7REbQXZNnkOcQwxsZTkFkLsjEHGAPNd7ilzcN/3Rc66cFcq5fsHyFJLY8QkaLMyk+qu+58cp+Z8GzdFN/m8jiOtatyOh6RFdi2pTE0yDZFif42BnlzherXGmxDf9TadxcOltKssjzr4E39W0Y=
+	t=1745234794; cv=none; b=UaLZHRR87X+jVgbAvyEak2dQkoJe8eNxlwu0rOqTwfMVQhL/42yARBKugbykexpKsQ5g/RRjtptc7CqzP3r75aPgcLs8MOSp49xF+8T83RpGtpBj4KWQEzR7MmSMvrrFCe3H4eGZkn+eczHBOdBlhZvwYy3T7SsyE9vpz7M56TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234769; c=relaxed/simple;
-	bh=zHcWarPj9NjR3xEtkYaqxlJfwvkaDX9lLrQsKXg/rjA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a1f8qGWlygAl/e/sv6Ui+M5duBbqHYfnfKDE15acHZTxYaklX0up679urlXTJPmEWvnS9CMVcATd0jarK+C9ymlJVNQQq7stvWjggnDP7raLMXdkewQWNMWgeFSA3PZ+j/jA9CJYHhx7MU0cbdLMAhEFDJtDL198IDjz67MlkaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRnYRcml; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745234794; c=relaxed/simple;
+	bh=S1Qr1gUL5Ck5kLLsTAgil/EFoYS6KR0lLR9WWXA4Jh4=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pIU4Opw9KvDii/1sheHVRMAsoeyLtZfm8kT34wK6LBUBo5lLPp/QveKNTsUdor7+Cy734jq159BxAsM6+xNiKsKspbjKMedvCJBUYwlVEF8jPa0ECOD0orMXS6q/zNyVSPNFkBxGQtASTRt7bRvrWuUoRCyolFJBt0tLJ/k/S/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=ZDOdYN8V; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRnYRcml"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d689c0741so16355e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 04:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745234766; x=1745839566; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=12ulIlL+bStUTIpncUPTjhwEK2bBCc519N9u/ukXq2U=;
-        b=KRnYRcmly1Y9j/ulMUHgMrSTuBzTDllSSObq7k7w7jMYsB9ADYIDjwirapXdfxFN3t
-         384x8YWRvINVqtKfmyYSnADLXNX01TQ/uxAvyrb4D4HLx7zS+brtkROKGFot55oAJxME
-         VlPsdSq3kjyVRRIEdw332PQvl8v3OcgVItRFAAFuXYQRH0bK0KHDN+BVqdNxUQwOrXh2
-         WNoHTRyP9nEruGcjcdBR10/0ypa+DUL37WO7BbKkER2umRiF0G1+/L9L1DoScuZfRqwZ
-         tSVvFOOFRKQiDU/8t4yjzHt8Qu4srvESQ8YZqga+LWOjFEABCS7fFqYcAQw3w4VImEGL
-         BZmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745234766; x=1745839566;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=12ulIlL+bStUTIpncUPTjhwEK2bBCc519N9u/ukXq2U=;
-        b=jvvkTfUJHhHngAvJgys/zwWGpzUB2PLmKNexyf0YSauRoUnaNfdrYDbQAie06Wwpi8
-         RkrYkg1a94AC0x1xrrbFiG+HLg9HHKPTbYdrnePiMIJqe+yvpYVwyD7Cnhdyh5clNqMR
-         mRwRCa3EXmSnPah0wGGVTdBl+5/XRYDv4dLIiqfuhKj0VDkrCrvzfKUaQER+13BeApR4
-         7Huy0vrygtAGVEOBCnOoxGrHdWv+Xf7hdp9kpa9t60nIC0VWe+3X00uTPfFa30XNfrtF
-         9aIbbJCa+AU1/4lKiMIBd3ST0q6o1mjUW9TjJV9t+/7rndTfuWU1VjAaoMMs9q0UEAkq
-         s88w==
-X-Forwarded-Encrypted: i=1; AJvYcCWTKJJakd8LhB9S0SSTsWHHfBiz/8vRINqolo9FI0DzMM5yi8LiaTVg2V0D3MbQVpQ99sCQvr6q33Gni3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc+wKKyO17nql4bLUs4G5bpyk3jPcBdzEXMmRhnydwD0yZdsWr
-	5n0CDa+wieJcoDso1/wnT7RtiZoNUlgkequrOggf+lfBUuA4SYNZq3kmr5cQuTH8CGr0ds5amal
-	Po70bFkrbRoEBcXLfhSxrDX8VFLwy6HCYfL0roDS362ZxthAGy1Hi
-X-Gm-Gg: ASbGnctjSWQAUXKqzMZ3Nb5z13aM+UVd5UvglJG1lHQHSRmEvwlPGV7Ijrga7+fPfvV
-	23vVb37qNkHY7EsbCCHaYmUF1d07VySQoq8MOk4q26GPe1Qeyf2AfZ6guoPvCJ1Zn1U4Az2rn3o
-	t4YpE3nUyJl7GOMASg4S0WfFhrh5D0K2kEQkAu1gkRSr4lEWlYjjY5Kv+lFI8=
-X-Google-Smtp-Source: AGHT+IFEdze/a99TFCtvLVk5Rmo1yzKGRrpY13nJyWYeXkfaum583hJP2CO4rOYArfuDXtsh6chVGi7ekLd/CoQxvFQ=
-X-Received: by 2002:a19:5f0f:0:b0:549:73a8:c258 with SMTP id
- 2adb3069b0e04-54d6e168ca4mr515392e87.0.1745234765451; Mon, 21 Apr 2025
- 04:26:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="ZDOdYN8V"
+Received: from mail.crpt.ru ([192.168.60.4])
+	by mail.crpt.ru  with ESMTP id 53LBQCGS005968-53LBQCGU005968
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Mon, 21 Apr 2025 14:26:12 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 21 Apr
+ 2025 14:26:12 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Mon, 21 Apr 2025 14:26:12 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Sathya Prakash <sathya.prakash@broadcom.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, "Sreekanth
+ Reddy" <sreekanth.reddy@broadcom.com>, Suganath Prabu Subramani
+	<suganath-prabu.subramani@broadcom.com>, "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, "MPT-FusionLinux.pdl@broadcom.com"
+	<MPT-FusionLinux.pdl@broadcom.com>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] mpt3sas: Check if the variable 'nr_msix' is equal to zero
+Thread-Topic: [PATCH] mpt3sas: Check if the variable 'nr_msix' is equal to
+ zero
+Thread-Index: AQHbsrAvDsbOz89l6UeuBq57+fZEBA==
+Date: Mon, 21 Apr 2025 11:26:12 +0000
+Message-ID: <20250421112605.97897-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX2.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 4/20/2025 10:00:00 PM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416100515.2131853-1-khtsai@google.com> <20250419012408.x3zxum5db7iconil@synopsys.com>
-In-Reply-To: <20250419012408.x3zxum5db7iconil@synopsys.com>
-From: Kuen-Han Tsai <khtsai@google.com>
-Date: Mon, 21 Apr 2025 19:25:37 +0800
-X-Gm-Features: ATxdqUFlg1rMsWTAwoJOmoAmk_rGgxuPXSGtKm4qaRrSNgRpxrJoYCc9QRhljnU
-Message-ID: <CAKzKK0qCag3STZUqaX5Povu0Mzh5Ntfew5RW64dTtHVcVPELYQ@mail.gmail.com>
-Subject: Re: [PATCH v4] usb: dwc3: Abort suspend on soft disconnect failure
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-FEAS-Client-IP: 192.168.60.4
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=chiOBI0NFnnFyHL+6QC07jGgZAG31p2S9fL2p3s5gJA=;
+ b=ZDOdYN8V3cxXoTMVVjCd612smaX9GrTi+F3tbkIRgh+R2lM5mJV9skg2sdO6QwlLJDTNtQBbWDwZ
+	8meM5qkAVjCHFVvjkfM6RaWHBVKuBvJ4InImUEIQWm+EbYos0w5HZwyav7iqw/ogF3P1SUdQXQoN
+	Ys914/Fbm3YcmRCoiIfFS4HXJsjm2A+3llPtGMNKvkf/1opo4hpCO9hx8Ua45rGqjOTH6xdYEc4u
+	xL/0uSwAHYkQF0gEXUFGhjQRDs/v/M4OQKWiJfFKVB8O9fjCYMsqMqDtY0c2neQpLryuOqXNDmvw
+	qVXoufiyc1UQd2h8k5l4QQx1I+JlGCNCTcj8wg==
 
-On Sat, Apr 19, 2025 at 9:24=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> On Wed, Apr 16, 2025, Kuen-Han Tsai wrote:
-> > When dwc3_gadget_soft_disconnect() fails, dwc3_suspend_common() keeps
-> > going with the suspend, resulting in a period where the power domain is
-> > off, but the gadget driver remains connected.  Within this time frame,
-> > invoking vbus_event_work() will cause an error as it attempts to access
-> > DWC3 registers for endpoint disabling after the power domain has been
-> > completely shut down.
-> >
-> > Abort the suspend sequence when dwc3_gadget_suspend() cannot halt the
-> > controller and proceeds with a soft connect.
-> >
-> > Fixes: 9f8a67b65a49 ("usb: dwc3: gadget: fix gadget suspend/resume")
-> > CC: stable@vger.kernel.org
-> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
-> > ---
-> >
-> > Kernel panic - not syncing: Asynchronous SError Interrupt
-> > Workqueue: events vbus_event_work
-> > Call trace:
-> >  dump_backtrace+0xf4/0x118
-> >  show_stack+0x18/0x24
-> >  dump_stack_lvl+0x60/0x7c
-> >  dump_stack+0x18/0x3c
-> >  panic+0x16c/0x390
-> >  nmi_panic+0xa4/0xa8
-> >  arm64_serror_panic+0x6c/0x94
-> >  do_serror+0xc4/0xd0
-> >  el1h_64_error_handler+0x34/0x48
-> >  el1h_64_error+0x68/0x6c
-> >  readl+0x4c/0x8c
-> >  __dwc3_gadget_ep_disable+0x48/0x230
-> >  dwc3_gadget_ep_disable+0x50/0xc0
-> >  usb_ep_disable+0x44/0xe4
-> >  ffs_func_eps_disable+0x64/0xc8
-> >  ffs_func_set_alt+0x74/0x368
-> >  ffs_func_disable+0x18/0x28
-> >  composite_disconnect+0x90/0xec
-> >  configfs_composite_disconnect+0x64/0x88
-> >  usb_gadget_disconnect_locked+0xc0/0x168
-> >  vbus_event_work+0x3c/0x58
-> >  process_one_work+0x1e4/0x43c
-> >  worker_thread+0x25c/0x430
-> >  kthread+0x104/0x1d4
-> >  ret_from_fork+0x10/0x20
-> >
-> > ---
-> > Changelog:
-> >
-> > v4:
-> > - correct the mistake where semicolon was forgotten
-> > - return -EAGAIN upon dwc3_gadget_suspend() failure
-> >
-> > v3:
-> > - change the Fixes tag
-> >
-> > v2:
-> > - move declarations in separate lines
-> > - add the Fixes tag
-> >
-> > ---
-> >  drivers/usb/dwc3/core.c   |  9 +++++++--
-> >  drivers/usb/dwc3/gadget.c | 22 +++++++++-------------
-> >  2 files changed, 16 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index 66a08b527165..f36bc933c55b 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -2388,6 +2388,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >  {
-> >       u32 reg;
-> >       int i;
-> > +     int ret;
-> >
-> >       if (!pm_runtime_suspended(dwc->dev) && !PMSG_IS_AUTO(msg)) {
-> >               dwc->susphy_state =3D (dwc3_readl(dwc->regs, DWC3_GUSB2PH=
-YCFG(0)) &
-> > @@ -2406,7 +2407,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >       case DWC3_GCTL_PRTCAP_DEVICE:
-> >               if (pm_runtime_suspended(dwc->dev))
-> >                       break;
-> > -             dwc3_gadget_suspend(dwc);
-> > +             ret =3D dwc3_gadget_suspend(dwc);
-> > +             if (ret)
-> > +                     return ret;
-> >               synchronize_irq(dwc->irq_gadget);
-> >               dwc3_core_exit(dwc);
-> >               break;
-> > @@ -2441,7 +2444,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >                       break;
-> >
-> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEVICE) {
-> > -                     dwc3_gadget_suspend(dwc);
-> > +                     ret =3D dwc3_gadget_suspend(dwc);
-> > +                     if (ret)
-> > +                             return ret;
-> >                       synchronize_irq(dwc->irq_gadget);
-> >               }
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 89a4dc8ebf94..630fd5f0ce97 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -4776,26 +4776,22 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
-> >       int ret;
-> >
-> >       ret =3D dwc3_gadget_soft_disconnect(dwc);
-> > -     if (ret)
-> > -             goto err;
-> > -
-> > -     spin_lock_irqsave(&dwc->lock, flags);
-> > -     if (dwc->gadget_driver)
-> > -             dwc3_disconnect_gadget(dwc);
-> > -     spin_unlock_irqrestore(&dwc->lock, flags);
-> > -
-> > -     return 0;
-> > -
-> > -err:
-> >       /*
-> >        * Attempt to reset the controller's state. Likely no
-> >        * communication can be established until the host
-> >        * performs a port reset.
-> >        */
-> > -     if (dwc->softconnect)
-> > +     if (ret && dwc->softconnect) {
-> >               dwc3_gadget_soft_connect(dwc);
-> > +             return -EAGAIN;
->
-> This may make sense to have -EAGAIN for runtime suspend. I supposed this
-> should be fine for system suspend since it doesn't do anything special
-> for this error code.
->
-> When you tested runtime suspend, did you observe that the device
-> successfully going into suspend on retry?
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Hi Thinh,
+The 'nr_msix' variable is checked for a zero after it is assigned a value.
+However, this variable is assigned a value one more time later. After the
+second assignment, the check for a zero value does not exist.
 
-Yes, the dwc3 device can be suspended using either
-pm_runtime_suspend() or dwc3_gadget_pullup(), the latter of which
-ultimately invokes pm_runtime_put().
+Add a check for this variable to ensure it is not zero in order to avoid
+division by zero.
 
-One question: Do you know how to naturally cause a run stop failure?
-Based on the spec, the controller cannot halt until the event buffer
-becomes empty. If the driver doesn't acknowledge the events, this
-should lead to the run stop failure. However, since I cannot naturally
-reproduce this problem, I am simulating this scenario by modifying
-dwc3_gadget_run_stop() to return a timeout error directly.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+      =20
+Fixes: 91b265bf0b57 ("mpt3sas: Rework the MSI-X grouping code")
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+---
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards,
-Kuen-Han
-
-
->
-> In any case, I think this should be good. Thanks for the fix:
->
-> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
->
-> Thanks,
-> Thinh
->
-> > +     }
-> >
-> > -     return ret;
-> > +     spin_lock_irqsave(&dwc->lock, flags);
-> > +     if (dwc->gadget_driver)
-> > +             dwc3_disconnect_gadget(dwc);
-> > +     spin_unlock_irqrestore(&dwc->lock, flags);
-> > +
-> > +     return 0;
-> >  }
-> >
-> >  int dwc3_gadget_resume(struct dwc3 *dwc)
-> > --
-> > 2.49.0.604.gff1f9ca942-goog
-> >
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt=
+3sas_base.c
+index bd3efa5b46c7..f9d5c3bfba53 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3267,6 +3267,8 @@ _base_assign_reply_queues(struct MPT3SAS_ADAPTER *ioc=
+)
+ fall_back:
+ 	cpu =3D cpumask_first(cpu_online_mask);
+ 	nr_msix -=3D (ioc->high_iops_queues - iopoll_q_count);
++	if (!nr_msix)
++		return;
+ 	index =3D 0;
+=20
+ 	list_for_each_entry(reply_q, &ioc->reply_queue_list, list) {
+--=20
+2.43.0
