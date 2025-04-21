@@ -1,81 +1,96 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9F0B666;
-	Mon, 21 Apr 2025 12:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF85B20D51F;
+	Mon, 21 Apr 2025 12:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745239026; cv=none; b=XDB8D15oi6ud8Ja67VsRiiPd2wF3c7wEwyZytJE2U8FrXsA9nAO7A6yiUx1lkSZjnQhIDhMTmmmLKP9JSTI23tGIarGOcqLFw61pRN3HSZA+QVHx40AIyLfYWaQSmUBwMr2zzeolBTx7D+daQvBBnYDxI3UWEGrPwj3gQhAr9OU=
+	t=1745239079; cv=none; b=P+Oubn2UxsJ6DjRBARaABfxHCoB32+slsJBHHXILSi/ueFmP2xraTeyuKrbG965pOJ9HVdXwGdz5a+4lPiE5MHjwYaDG8DSdLl1WU9fI2FTwFu9kYol0QZ9PjB8D8+QdEDK4WXdoL/y/qvChQ87dG36ZNqHjUI2bWwaD9bOZmVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745239026; c=relaxed/simple;
-	bh=xUoy18CdiDXwRbZeN4HdFmHR7gr0IcLOiQofTpsxvoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oLaoqZOeq2b73iTvRNykExZ98Lqk5aEKABcRM5n5tVKp4bUTqC8S0Zs1LSXOl2wgOgOiN1PWO5wGFwQV1H9iB/WT1efAndRraK+cdPT7ieRjQToIUbxsnmxwICM3UwI3W05YD4J7wdFNeDsPS3ShWseXrSoiTyoQogEFG/6jc4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iq/IEZjF; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1745239079; c=relaxed/simple;
+	bh=b54HVeZaJH2l6sLxJ4aYOS+CC2PLI8L1VIFwgXcVqCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UoRwV/bu+/SrxBwEE8P5YA0XGWIfuPT/WjYWdZDkiEtIePNK40PS2/Uy0uW8MGK7FtmGdDpmDqTfdjDFe1m+YccDaTMd/DXU/Zo7Od1zKg2VSJCHQY+QWxX/OVfmGvAu6M+Vja6fVIXMiQMqfzXE8Xad37g4UIUa07FJXsSjm8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZaWPkhE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iq/IEZjF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=NKiLvGqiMQUIQKr+UjuD8tWiHt3uwJSWt0OKD4dCah4=; b=iq/IEZjFmxmua3Fr6ALoKkqg27
-	mw1tKDU6vLbPzbGtqnd2ujDZXTUoobt427h0Td38hyU0s87xDMA/GcoDI7m6y7dVBMDvHnw8NKNK1
-	ABcpXENB80Fsda3wgaQwf1o377EE509n8trVH0NlM5MxudSFFeYirJXCwfClE/Lnwi7Q=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u6qOB-00A5Ye-QJ; Mon, 21 Apr 2025 14:36:43 +0200
-Date: Mon, 21 Apr 2025 14:36:43 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
-	mhklinux@outlook.com, pasha.tatashin@soleen.com,
-	kent.overstreet@linux.dev, brett.creeley@amd.com,
-	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com, leon@kernel.org, rosenp@gmail.com,
-	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: mana: Add speed support in
- mana_get_link_ksettings
-Message-ID: <c481c8a8-4e0f-4498-89f9-988673a584f6@lunn.ch>
-References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
- <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZaWPkhE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2888CC4CEE4;
+	Mon, 21 Apr 2025 12:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745239079;
+	bh=b54HVeZaJH2l6sLxJ4aYOS+CC2PLI8L1VIFwgXcVqCg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KZaWPkhETrk9Xpepa5SvxfET+eYR2n02GR0CSExHMaWquoCRQ6VGBlUqIHHzOYm6q
+	 uenrhUpq2b8RpLKt6Xr0N/yzIB1YCEVDZbLX1Wyfk3l+hEe2ZGaQmv7HidYerkYT/V
+	 4QlGtgfv1+HbI5pugx/WseMPfaAV0v2SvLRRbawIBfPOEMRf9Keh2eeDvO4Jc8AIAu
+	 wq17PyoFRAC1nPOMOcRXpa70rsGLLDocmw5Azm0Kz0gXBN4Cd/I9nhKb8SOApHGk3t
+	 LWjSco6gJuTkwO9hUrcXlOXBKe2+RhEgh8nYvBmpGkwRzdwc/Ga0Iy6wI/ojccp6fz
+	 9UePgPoWBA88Q==
+Date: Mon, 21 Apr 2025 13:37:51 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v5 5/5] staging: iio: adc: ad7816: Simplify channel
+ validation using chip_info
+Message-ID: <20250421133751.6fb5b4d4@jic23-huawei>
+In-Reply-To: <20250420014910.849934-6-gshahrouzi@gmail.com>
+References: <20250420014910.849934-1-gshahrouzi@gmail.com>
+	<20250420014910.849934-6-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1745217220-11468-2-git-send-email-ernis@linux.microsoft.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 20, 2025 at 11:33:38PM -0700, Erni Sri Satya Vennela wrote:
-> Add support for speed in mana ethtool get_link_ksettings
-> operation. This feature is not supported by all hardware.
+On Sat, 19 Apr 2025 21:49:10 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-This needs a lot more justification. tc(1) will show you the current
-HTB Qdisc setting. No other MAC driver i know of will show you Qdisc
-info in ksettings. So why is mana special?
+> Refactor the channel validation logic within ad7816_store_channel() to
+> leverage the max_channels field previously introduced in the
+> ad7816_chip_info structure.
+> 
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Carries forward the odd mask usage from patch 1. So fix that up and then
+I think this is fine. Given you introduce max_channels just for this, ideal 
+would be to only introduce it in this patch (with a better name - see
+earlier comment)
 
-Something your said in an earlier thread might be relevant here. There
-are two shaper settings involved. The Hypervisor can configure a
-limit, which the VM has no control over. And then you have this second
-limit the VM can set, which only has any effect if it is lower than
-the hypervisor limit.
+Jonathan
 
-The hypervisor limit is much more like the value ksettings represents,
-the media speed, which is impossible to go above, and the machine has
-no control over. Reporting that limit in ksettings would seem
-reasonable. But it does not appear your firmware offers that?
 
-    Andrew
+> ---
+>  drivers/staging/iio/adc/ad7816.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/ad7816.c b/drivers/staging/iio/adc/ad7816.c
+> index ab7520a8a3da9..7a59cfbcc6e33 100644
+> --- a/drivers/staging/iio/adc/ad7816.c
+> +++ b/drivers/staging/iio/adc/ad7816.c
+> @@ -204,17 +204,9 @@ static ssize_t ad7816_store_channel(struct device *dev,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (data > AD7816_CS_MAX && data != AD7816_CS_MASK) {
+> +	if (data > chip->chip_info->max_channels && data != AD7816_CS_MASK) {
+>  		dev_err(&chip->spi_dev->dev, "Invalid channel id %lu for %s.\n",
+> -			data, indio_dev->name);
+> -		return -EINVAL;
+> -	} else if (strcmp(indio_dev->name, "ad7818") == 0 && data > 1 && data != AD7816_CS_MASK) {
+> -		dev_err(&chip->spi_dev->dev,
+> -			"Invalid channel id %lu for ad7818.\n", data);
+> -		return -EINVAL;
+> -	} else if (strcmp(indio_dev->name, "ad7816") == 0 && data > 0 && data != AD7816_CS_MASK) {
+> -		dev_err(&chip->spi_dev->dev,
+> -			"Invalid channel id %lu for ad7816.\n", data);
+> +			data, chip->chip_info->name);
+>  		return -EINVAL;
+>  	}
+>  
 
----
-pw-bot: cr
