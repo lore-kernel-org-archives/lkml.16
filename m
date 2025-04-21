@@ -1,104 +1,372 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB495171CD;
-	Mon, 21 Apr 2025 17:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C311E5B71;
+	Mon, 21 Apr 2025 17:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745256105; cv=none; b=ONlB/t3pk4nHl6Wd2OOBcntWWBr+w2ph8sjYudHE2EODEuQNzfOp1AbZmoay52l4StHjRppkSLx1QZosV9kq3Una9yzLrTlq2rgw6zW/Z0m7buNX7y8AQ2rPZ/ZAnj663RiZalfSkvjFD9zlb9CnHnqRFmGjXe++9+hDbjsa6wQ=
+	t=1745256110; cv=none; b=NtspxLteh0g/W5ajfNxwzPXqOpLsPbsa6TUfYXJqnM6Z7wbDo7q+9h6QcZBlmpPHE1RuA4Tg0jQdz5LfoI3AWt8nmtJrjZPC82cpWXSOl4YIB1+Cn5ieoy5byI8dfQE1SW+QX1X32GhM0TtEhOjC3nagzmWn3RiBflLqfEcF/QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745256105; c=relaxed/simple;
-	bh=bfQyol8cLyttAU5Ty1K6oyHALmD81FC1qiTdhSyDwUw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=VCr3lw+IgMYI6ob4ZcDSu64uIu6aZaAB34IYG44mzWcf8VI2VY073hFaIY39WYKqB/awkatH/zMs+lkkouhCO/HKl9+HTV86Dfi6fC4BfeWVFEETorj4M2vGFxsJ29gZZf8lg7jEbMzlCDFE2JCvynEDojf1IHTTyg24ydg2Caw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=XPGRiCaD; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745256110; c=relaxed/simple;
+	bh=y6HuR4ua3EAd1Z8RKCZkUyllyzezlwvlZeKY4vp+ay8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QrMGH7rsGJ7++qWuHEniUY7or2on5v59l3ntdiQ/PgpWZesrWANmruOHK8bY7pnF3BdJgAHKSgpN3lH4ZDsY7WUXDKIWhQYeVWE+Gt25idyaYrXsJtAv34mRV1zzsa/1EaGjfw4QLb8wc0XhlE/lpauHo21OWb65Bfn2OK7IjGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fctg+mXS; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XPGRiCaD"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53LHLViV1525934
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 21 Apr 2025 10:21:31 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53LHLViV1525934
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1745256092;
-	bh=bihgKEf5VZZHwR8VrjuaZrl8CU1ha0I7XvD1WncGFoc=;
-	h=Date:To:Cc:From:Subject:From;
-	b=XPGRiCaDcOGHTUansBjrerVmAQUCueUSnEpoiFgDc+6v41/jDz983OqH96EYbt8JJ
-	 6hOHsdDUFiEFqPPrvHqz5yiY1E5xY/tL/XXsMTo2xzqY+FIgFRO3hseGnfvoD2tAdB
-	 Q9dHijVH5an8M7t4zujxVZgg2pwH4Kvo1z5FCifefazAFeMzMnfUv9O/LQ7GPmBvrq
-	 sLkaX4g3pEG9N357NaLVlXl6shgwFy7YH8rna04F/sRFMUiRISlA38m7PilZ9utCT1
-	 bo6Xzhxxf+r4DpkIqNFXzsPa0wFyReRyDtDNWnoXAT+qvdCVLogN3BoblldO9KrE23
-	 WJZwIXEMXV6PA==
-Message-ID: <a82f4722-478f-4972-a072-80cd13666137@zytor.com>
-Date: Mon, 21 Apr 2025 10:21:30 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fctg+mXS"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so3400376a12.3;
+        Mon, 21 Apr 2025 10:21:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745256108; x=1745860908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hI/kPYQwcnebx1GK8sp1T5NZWGKFVC/9WVdP0WQS4qs=;
+        b=fctg+mXSMH0XMYK0fdCsy2/ospdcUWcpf1YHyrEDwgjMnLYSUAHYJug8SJyZdjRt9P
+         j7eOmDTj3LXU3dxhgX8FWlKrbplWlNFSpP+X7SmhOad3MkkD7UYKSpWmzzUdsQ2L51Im
+         ER78PC3t6BIHtT/Mry2YAAdCzxAtOxVdrDxyZuJhvdTiLuckErIQNv+6P7M+VxtDZiOK
+         wQoGAjt8zFTgXvWP6IGDZS+YNnhkaDi3d7ifWXKzr95dkbmMg7Mv8Y/VyC/VpFXTw8KD
+         hzAp9p+Qb2TQoDdt9IE0r2V+qXpanB0Jw23OCliR+rBJZcbXUhhG0rNBcjK85hzCcLQv
+         6w4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745256108; x=1745860908;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hI/kPYQwcnebx1GK8sp1T5NZWGKFVC/9WVdP0WQS4qs=;
+        b=fZofXbOUfZLMR2e4HGhPCFEURpYZyZT10VSCydW2EW3d/+5lv0KGSN6mJ548Ol9YJ2
+         3T7wYRTLQ+fxvelr0KtAjeMy5LuQ5zTir2AdTGoWsINIay9+blXIMGmyDzT3zUeYW9Je
+         BgO/5+ZbOtvKqTfnKFvt+nzycipKRG5cP3iQosrndLffS0Ezm08S7/9LqnUlX29R8TrE
+         vu0RjZhHu0EqslgfgLjZkzzQYX6cvNtJLTt3eqgH9MG/4KxZ5FsJg6VzvOcpA+6/o1AC
+         D8/CpkDK7KAhTLJ9qmBxaf8OAt+UX0JdOI7j+pdnkb6Ks+5SwNQdICadJp6RPwV/b1gI
+         l+9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXQXWH7xZsS4l5IrGqAAxxEIAGkQeJhpKpEyKMlaFmnNx2iZnHNkF7ODazRCXbZmVgWgfyj8/4XE8CvxRpA@vger.kernel.org, AJvYcCXdbiP7nuUo912vqya1zo9cWfrqZM7lO/bwawhQM5jtkAJfBq5B1pCXvxNeWSLbY7OdEBC5lByUywVE9qNr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyVJd3DoKKwRwftLbKKiVnmEZhlyeKlcpU7VoAYBKmOkEY9FJo
+	+0TvtRSbigo0SXm3t3wfzft3kqvq/XBioQ5xN32OvqQpoPC4cImMcTiFhA==
+X-Gm-Gg: ASbGncuoe5xkJrJ4Qc/IXjYMlQRvbPypCpX1gapRVR4WSYr8jat5LRwKUnp7KANA2kc
+	EU6j6lkpLZIxVaJVxj42XitMHFnPRo9Pjq/1HEdjnMHhYIqssoYrAcdODffr5gLKw2WlVmbiUHS
+	2jn7SGlFv9IGEc2c+wtGMednXwViDumHWI02nMsToDe3Zy8pktgEEtqKJ2wjpZCnt31l325i3dh
+	axv5vZhP2R7XB84IGb+azmSbMw0jEVntK77jNAV0exBItGi9LP02/cFfWUSVgHoDgdM8LSts/Rg
+	d1VvGZaCwOdItODC2+DBfEZW2/1kIDqgpm5jm/ea8tUpCEqLJ076TOTOuC+oCtGXsztDCpuUOhK
+	YDpQNbZ9x7aH7pMY=
+X-Google-Smtp-Source: AGHT+IFUf+PTQfUR2eCURDiia5Zf7s/G+bncDAm/QXNWolKB8z01IfAgsK8aNPfU0hLSVli4c4Ul7A==
+X-Received: by 2002:a05:6a21:6daa:b0:1f5:67c2:e3e9 with SMTP id adf61e73a8af0-203cbd2383fmr18140909637.29.1745256107724;
+        Mon, 21 Apr 2025 10:21:47 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db127742bsm4642984a12.1.2025.04.21.10.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 10:21:47 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Rob Clark <robdclark@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] drm/msm/adreno: Drop fictional address_space_size
+Date: Mon, 21 Apr 2025 10:21:43 -0700
+Message-ID: <20250421172144.168273-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "H. Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
-From: Xin Li <xin@zytor.com>
-Subject: MSR access API uses in KVM x86
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-It looks to me that MSR access API uses in KVM x86 are NOT consistent;
-sometimes {wr,rd}msrl() are used and sometimes native_{wr,rd}msrl() are
-used.
+From: Rob Clark <robdclark@chromium.org>
 
-Was there a reason that how a generic or native MSR API was chosen?
+Really the only purpose of this was to limit the address space size to
+4GB to avoid 32b rollover problems in 64b pointer math in older sqe fw.
+So replace the address_space_size with a quirk limiting the address
+space to 4GB.  In all other cases, use the SMMU input address size (IAS)
+to determine the address space size.
 
-In my opinion KVM should use the native MSR APIs, which can streamline
-operations and potentially improve performance by avoiding the overhead
-associated with generic MSR API indirect calls when CONFIG_XEN_PV=y.
+v2: Properly account for vm_start
 
-No?
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c | 33 +++++++++++------------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c     |  2 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c   | 19 ++++++++++---
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h   |  4 ++-
+ 4 files changed, 36 insertions(+), 22 deletions(-)
 
-Thanks!
-     Xin
-
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+index 53e2ff4406d8..f85b7e89bafb 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_catalog.c
+@@ -681,6 +681,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_SQE] = "a630_sqe.fw",
+ 		},
+ 		.gmem = (SZ_128K + SZ_4K),
++		.quirks = ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a610_zap.mdt",
+@@ -713,6 +714,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a630_gmu.bin",
+ 		},
+ 		.gmem = SZ_512K,
++		.quirks = ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+@@ -743,7 +745,8 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		},
+ 		.gmem = SZ_512K,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mbn",
+ 		.a6xx = &(const struct a6xx_info) {
+@@ -769,7 +772,8 @@ static const struct adreno_info a6xx_gpus[] = {
+ 		},
+ 		.gmem = SZ_512K,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.init = a6xx_gpu_init,
+ 		.a6xx = &(const struct a6xx_info) {
+ 			.protect = &a630_protect,
+@@ -791,6 +795,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a619_gmu.bin",
+ 		},
+ 		.gmem = SZ_512K,
++		.quirks = ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+@@ -815,6 +820,7 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a619_gmu.bin",
+ 		},
+ 		.gmem = SZ_512K,
++		.quirks = ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+@@ -838,8 +844,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a619_gmu.bin",
+ 		},
+ 		.gmem = SZ_512K,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a615_zap.mdt",
+ 		.a6xx = &(const struct a6xx_info) {
+@@ -874,7 +881,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020200,
+ 			.prim_fifo_threshold = 0x00010000,
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0, 0 },
+ 			{ 137, 1 },
+@@ -907,7 +913,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 				{ /* sentinel */ },
+ 			},
+ 		},
+-		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(
+ 			0x06030001,
+@@ -920,8 +925,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a630_gmu.bin",
+ 		},
+ 		.gmem = SZ_1M,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a630_zap.mdt",
+ 		.a6xx = &(const struct a6xx_info) {
+@@ -939,8 +945,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a640_gmu.bin",
+ 		},
+ 		.gmem = SZ_1M,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a640_zap.mdt",
+ 		.a6xx = &(const struct a6xx_info) {
+@@ -973,7 +980,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020202,
+ 			.prim_fifo_threshold = 0x00300200,
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0, 0 },
+ 			{ 1, 1 },
+@@ -1000,7 +1006,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020000,
+ 			.prim_fifo_threshold = 0x00300200,
+ 		},
+-		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06060300),
+ 		.family = ADRENO_6XX_GEN4,
+@@ -1019,7 +1024,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020200,
+ 			.prim_fifo_threshold = 0x00300200,
+ 		},
+-		.address_space_size = SZ_16G,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x06030500),
+ 		.family = ADRENO_6XX_GEN4,
+@@ -1039,7 +1043,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020202,
+ 			.prim_fifo_threshold = 0x00200200,
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.speedbins = ADRENO_SPEEDBINS(
+ 			{ 0,   0 },
+ 			{ 117, 0 },
+@@ -1056,8 +1059,9 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			[ADRENO_FW_GMU] = "a640_gmu.bin",
+ 		},
+ 		.gmem = SZ_2M,
++		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT |
++			  ADRENO_QUIRK_4GB_VA,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+-		.quirks = ADRENO_QUIRK_HAS_CACHED_COHERENT,
+ 		.init = a6xx_gpu_init,
+ 		.zapfw = "a640_zap.mdt",
+ 		.a6xx = &(const struct a6xx_info) {
+@@ -1085,7 +1089,6 @@ static const struct adreno_info a6xx_gpus[] = {
+ 			.gmu_cgc_mode = 0x00020200,
+ 			.prim_fifo_threshold = 0x00800200,
+ 		},
+-		.address_space_size = SZ_16G,
+ 	}
+ };
+ DECLARE_ADRENO_GPULIST(a6xx);
+@@ -1395,7 +1398,6 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			.pwrup_reglist = &a7xx_pwrup_reglist,
+ 			.gmu_cgc_mode = 0x00020000,
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.preempt_record_size = 2860 * SZ_1K,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x43050a01), /* "C510v2" */
+@@ -1429,7 +1431,6 @@ static const struct adreno_info a7xx_gpus[] = {
+ 				{ /* sentinel */ },
+ 			},
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.preempt_record_size = 4192 * SZ_1K,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x43050c01), /* "C512v2" */
+@@ -1451,7 +1452,6 @@ static const struct adreno_info a7xx_gpus[] = {
+ 			.gmu_chipid = 0x7050001,
+ 			.gmu_cgc_mode = 0x00020202,
+ 		},
+-		.address_space_size = SZ_256G,
+ 		.preempt_record_size = 4192 * SZ_1K,
+ 	}, {
+ 		.chip_ids = ADRENO_CHIP_IDS(0x43051401), /* "C520v2" */
+@@ -1484,7 +1484,6 @@ static const struct adreno_info a7xx_gpus[] = {
+ 				{ /* sentinel */ },
+ 			},
+ 		},
+-		.address_space_size = SZ_16G,
+ 		.preempt_record_size = 3572 * SZ_1K,
+ 	}
+ };
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index eeb8b5e582d5..129c33f0b027 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -2272,7 +2272,7 @@ a6xx_create_private_address_space(struct msm_gpu *gpu)
+ 		return ERR_CAST(mmu);
+ 
+ 	return msm_gem_address_space_create(mmu,
+-		"gpu", 0x100000000ULL,
++		"gpu", ADRENO_VM_START,
+ 		adreno_private_address_space_size(gpu));
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index 59cfed5acace..e80db01a01c0 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -236,14 +236,27 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+ u64 adreno_private_address_space_size(struct msm_gpu *gpu)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
++	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(&gpu->pdev->dev);
++	const struct io_pgtable_cfg *ttbr1_cfg;
+ 
+ 	if (address_space_size)
+ 		return address_space_size;
+ 
+-	if (adreno_gpu->info->address_space_size)
+-		return adreno_gpu->info->address_space_size;
++	if (adreno_gpu->info->quirks & ADRENO_QUIRK_4GB_VA)
++		return SZ_4G;
+ 
+-	return SZ_4G;
++	if (!adreno_smmu || !adreno_smmu->get_ttbr1_cfg)
++		return SZ_4G;
++
++	ttbr1_cfg = adreno_smmu->get_ttbr1_cfg(adreno_smmu->cookie);
++
++	/*
++	 * Userspace VM is actually using TTBR0, but both are the same size,
++	 * with b48 (sign bit) selecting which TTBRn to use.  So if IAS is
++	 * 48, the total (kernel+user) address space size is effectively
++	 * 49 bits.  But what userspace is control of is the lower 48.
++	 */
++	return BIT(ttbr1_cfg->ias) - ADRENO_VM_START;
+ }
+ 
+ void adreno_check_and_reenable_stall(struct adreno_gpu *adreno_gpu)
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index a1e2d9e87b75..2366a57b280f 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -57,6 +57,7 @@ enum adreno_family {
+ #define ADRENO_QUIRK_HAS_HW_APRIV		BIT(3)
+ #define ADRENO_QUIRK_HAS_CACHED_COHERENT	BIT(4)
+ #define ADRENO_QUIRK_PREEMPTION			BIT(5)
++#define ADRENO_QUIRK_4GB_VA			BIT(6)
+ 
+ /* Helper for formating the chip_id in the way that userspace tools like
+  * crashdec expect.
+@@ -104,7 +105,6 @@ struct adreno_info {
+ 	union {
+ 		const struct a6xx_info *a6xx;
+ 	};
+-	u64 address_space_size;
+ 	/**
+ 	 * @speedbins: Optional table of fuse to speedbin mappings
+ 	 *
+@@ -600,6 +600,8 @@ static inline int adreno_is_a7xx(struct adreno_gpu *gpu)
+ 	       adreno_is_a740_family(gpu);
+ }
+ 
++/* Put vm_start above 32b to catch issues with not setting xyz_BASE_HI */
++#define ADRENO_VM_START 0x100000000ULL
+ u64 adreno_private_address_space_size(struct msm_gpu *gpu);
+ int adreno_get_param(struct msm_gpu *gpu, struct msm_file_private *ctx,
+ 		     uint32_t param, uint64_t *value, uint32_t *len);
+-- 
+2.49.0
 
