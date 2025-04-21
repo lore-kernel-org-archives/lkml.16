@@ -1,142 +1,101 @@
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C36E1CAA92
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD97513AD1C
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745247664; cv=none; b=hmQ7w9U4mYPGmTEUtTJoYlbfIis5ntFnn2PhA2bsR4ZWH3vVnyXXEh2PHX3Qzat+RbIbySXsYpf6b8+yRBEq1iGaKk/+P1DWlis7/8rC76GMk7xh3iVifHW44SeXgrVpquRfXb8Dt1Qo2UjKAf4rhzh6aHGWCsVPXwNcsYmjepI=
+	t=1745247835; cv=none; b=uLxeLi99sD/HBY+it6CgwPjV40ju6vkCIkD6t8QcTy5uDx9MKl3CBhwfbVyW1/Hhd4dFuATG6icCuoXORF4GvrXXMZHzbQVR49sgnUUMk7XU2kBwlnAahXtVUJbtqq/cUcMpYCnGtwRTilJoukYWtNW6vsK65M+dqKw0vXlylL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745247664; c=relaxed/simple;
-	bh=cqLBh8RKoyai0rDZ0YwoYN2gy4BTTtKqU1IFkhEjhcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tRDJcEpL8Y9TEH4RcFjl4EmfXvtPpT7Y39AozPB4D+NizJB4c6H8meJWcJMXVopQ7rX8RvuQULxJiDlcmFfD+l5i/ckWu9QdWvkfEmGX75QzraF8Cu0Sz7UQNQ1RzVzZdk0NNE6b8RiCDGkkKD/yyBdIzJE3rCFs60qcpYpoZCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=TMDdinCe; arc=none smtp.client-ip=80.12.242.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1745247835; c=relaxed/simple;
+	bh=8MwjBcfr/1YzR8kz1rCpVRVduwHDyHObygHtOZaUxFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nBmQMkY0ML4UUm8w3uec7NyipVxRhh4niVM2UHk7nhYeQUvfYUUX69whbTDMLMbo5fboAM2RILEsbD1qityX7/7CAawIfzdhaUSnP7E9jmah5dIonM2EUSWIXyWM6jCyXX3zzZOY716iI2fF/CKI0EzlLAjlQLnHHyoAGMsF8hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cOsln+2/; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TMDdinCe"
-Received: from localhost.localdomain ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 6sdZuvbDkiSFB6sdouVInx; Mon, 21 Apr 2025 17:01:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1745247660;
-	bh=lDiD6i5z74Svk8ayjFfG3byf2okiGeHcsi0aPvSYhp4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=TMDdinCevHrGlNSotraIExhYUUGQae64ddIrEp6bd0XSCA1+Jk0m7bu3F9FznLspd
-	 y22+b3pTuyNWNdACISmjM9k3ZUa3BF0OP1kK5PQJ9Bcq8EKricbp/p1aM6WMKiAAtg
-	 XTfdIlF+Vz7/Zj48lwAl4z1ZjfH6Y8wbpGGBQFQhmSiXMaR9f9bSPjyoDmMC4Ow7Cf
-	 CGxOamH4eLNFL84D/KzE+HXEqAhDgMBh9RW9DPnEkzcuQgMja6tk68ORJc8iX7qoer
-	 ozv6aqr3iIBSAcibvCrDYp0/C8TYO+8d/HShNSpC2xz/+fAhKotH/kNBQG1xWHYD+O
-	 PECPhzQemEurQ==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 21 Apr 2025 17:01:00 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: lee@kernel.org,
-	krzk@kernel.org,
-	alim.akhtar@samsung.com,
-	s.nawrocki@samsung.com,
-	m.szyprowski@samsung.com,
-	ideal.song@samsung.com,
-	beomho.seo@samsung.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v2 3/3] mfd: exynos-lpass: Fix another error handling path in exynos_lpass_probe()
-Date: Mon, 21 Apr 2025 17:00:35 +0200
-Message-ID: <69471e839efc0249a504492a8de3497fcdb6a009.1745247209.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745247209.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1745247209.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cOsln+2/"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3f6ab1b8fc1so2558738b6e.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745247832; x=1745852632; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FY2XuIKhV/Sgo0Ecqc8Bv8Qk6YNHmgpAFdhrG1XHihs=;
+        b=cOsln+2/8nfmAJo5/zhkcmk1SBokRsehEn0Ujj3m/lZPlzfFetDW6MU4nzbGUADjH/
+         7yhhAslai2xhXWf0owiJ7uP1cz/Z8BhxJp+ftDIYzRzUh8DuDl3KF8Tqim2rrggPOy0y
+         Rvuxq/hF1HjSda7QmbEzqY/Pj0ooVX30Z2QVsanM+2BeZde/beYag0gMPCx+O1/EJiCN
+         msug9oTXe2ub5vkMGowGWUZT+wF/t8T/Ow4yWK3Jq9/gVu3KeuFr3p2iCqQp06S7f53q
+         7d8Jmcd6SZsYuN1CtUPsw58y/++ugleyKxNjjV3/Y9ptZqs0djJgTESOlbbuSPCHIRwb
+         CNng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745247832; x=1745852632;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FY2XuIKhV/Sgo0Ecqc8Bv8Qk6YNHmgpAFdhrG1XHihs=;
+        b=BMpMEJeGZt/0qC+0hMMUYexzxR5F/96nWTV2FSBriJ7+LDxvYQAZEcyOnp1+2xx5RR
+         ey+1WC+YW2MyfKV0g5O+zYfBR1xEqpYxS4vRgW7XGGDqzqk992E1ktBm54Erl4jo+dD2
+         EbLhvUIUz6jL+MoJUt4AvfeGQnvUCRFV0kIHu4xNDxNu5G2vqVYJHhhLgj9+7YZmf0DR
+         XnMRQbktBiM55MQ2h6AuxTgvwfBkxvn2NH6TSmM2go2g2nSZf4uZA5SxTx+PH6s+dnew
+         1Cx6F7NY12om7YbwVnrWmyWRegXvv/q3FeXpCQwrp0tcgVqwTEgHlpAjWc0LIIytBC8/
+         HYLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrFMCX61/q37zFJ18060O3+XN+SvB2rjt0UsdKElj0c1BPMhEtvO8QFy5Zl25dlw0/8+bG4/SPXAdc7oE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmp1EfC7333aI45CYI/+iiPuCGx3Fb9pGxcyA2iHwWB/3Ld+Jn
+	YnOhNxrSsnOuwmF/G5sIZ0ep6h538nRwrAw9UzuTO/YTfTLKDLcIFetD5LuNbfs=
+X-Gm-Gg: ASbGncsPRXy1ulYoNNDuzw5SQdEq3cctP2tda6f84H0Y6ZnWvjAxAK0pjraIjld+nmj
+	AdANODX2XsDL6CNlooPqo1wnq4W6swe0OQS+YWtQe+2jsdIwzvKIGkR4BaHjOWzm0p95Soavp/y
+	gFNJ3kmp0SpOZOeZsLi1+e8ZOwhqlX+6cj9FBwQCH0+Lw/qQQwj9OxMAbFV5zEOvHzysoWYELQX
+	shRSed6IoMNszN0ymjEO37V6oieHb6KEu4a6azyeGwxnh37jNSgxeN7V6PELmNXyuNgZWMBn6sD
+	SQbgND9aMVG1EqLvfgNXxA/2uQpD4VCovcL4nIX262t8fle5314/JKcsEuitwJbpM3phAZjPZ1/
+	DKyQBvEUUzzvZoCvZvQ==
+X-Google-Smtp-Source: AGHT+IEUiWQAh0/gbfks+29iIQLKuYGfNAiOaP+vS4xjC9mn5gHUdhe9qiJ3tqJ98liHXSBEqsOB3g==
+X-Received: by 2002:a05:6808:8302:b0:3fe:af0c:73b7 with SMTP id 5614622812f47-401c0a70ebdmr6506941b6e.19.1745247832741;
+        Mon, 21 Apr 2025 08:03:52 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:61f2:6de4:740e:804d? ([2600:8803:e7e4:1d00:61f2:6de4:740e:804d])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401bf081eafsm1574753b6e.35.2025.04.21.08.03.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Apr 2025 08:03:51 -0700 (PDT)
+Message-ID: <56f5c56e-1993-4bbd-bbce-b9c954fe8b8c@baylibre.com>
+Date: Mon, 21 Apr 2025 10:03:50 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+To: Jonathan Cameron <jic23@kernel.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+ <CAHp75VdcMoxoBU+fKQ5ex28N7YJNcEe96dOuq6hWFxpnn7UYyQ@mail.gmail.com>
+ <20250421140342.4097c0c4@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250421140342.4097c0c4@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-If devm_of_platform_populate() fails, some clean-up needs to be done, as
-already done in the remove function.
+On 4/21/25 8:03 AM, Jonathan Cameron wrote:
+> On Sun, 20 Apr 2025 07:36:18 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> 
+>> On Sat, Apr 19, 2025 at 1:59 AM David Lechner <dlechner@baylibre.com> wrote:
+>>>
 
-Add a new devm_add_action_or_reset() to fix the leak in the probe and
-remove the need of a remove function.
+...
 
-Fixes: c695abab2429 ("mfd: Add Samsung Exynos Low Power Audio Subsystem driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only.
-
-Changes in v2:
-  - Use a new devm_add_action_or_reset() to fix the leak in the probe
-    and remove the need of a remove function.
-  - Update the commit description accordingly
-
-v1: https://lore.kernel.org/all/d224865a16b50498279b044a819e1e187d01bb28.1743231856.git.christophe.jaillet@wanadoo.fr/
----
- drivers/mfd/exynos-lpass.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/mfd/exynos-lpass.c b/drivers/mfd/exynos-lpass.c
-index a2785ceea8bf..44797001a432 100644
---- a/drivers/mfd/exynos-lpass.c
-+++ b/drivers/mfd/exynos-lpass.c
-@@ -104,11 +104,22 @@ static const struct regmap_config exynos_lpass_reg_conf = {
- 	.fast_io	= true,
- };
- 
-+static void exynos_lpass_disable_lpass(void *data)
-+{
-+	struct platform_device *pdev = data;
-+	struct exynos_lpass *lpass = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+	if (!pm_runtime_status_suspended(&pdev->dev))
-+		exynos_lpass_disable(lpass);
-+}
-+
- static int exynos_lpass_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct exynos_lpass *lpass;
- 	void __iomem *base_top;
-+	int ret;
- 
- 	lpass = devm_kzalloc(dev, sizeof(*lpass), GFP_KERNEL);
- 	if (!lpass)
-@@ -134,16 +145,11 @@ static int exynos_lpass_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	exynos_lpass_enable(lpass);
- 
--	return devm_of_platform_populate(dev);
--}
--
--static void exynos_lpass_remove(struct platform_device *pdev)
--{
--	struct exynos_lpass *lpass = platform_get_drvdata(pdev);
-+	ret = devm_add_action_or_reset(dev, exynos_lpass_disable_lpass, pdev);
-+	if (ret)
-+		return ret;
- 
--	pm_runtime_disable(&pdev->dev);
--	if (!pm_runtime_status_suspended(&pdev->dev))
--		exynos_lpass_disable(lpass);
-+	return devm_of_platform_populate(dev);
- }
- 
- static int __maybe_unused exynos_lpass_suspend(struct device *dev)
-@@ -183,7 +189,6 @@ static struct platform_driver exynos_lpass_driver = {
- 		.of_match_table	= exynos_lpass_of_match,
- 	},
- 	.probe	= exynos_lpass_probe,
--	.remove	= exynos_lpass_remove,
- };
- module_platform_driver(exynos_lpass_driver);
- 
--- 
-2.49.0
-
+> 
+> Maybe we could add...
+> IIO_DECLARE_BUFFER_WITH_TS_FOR_DMA()
+> Might be worth it?
+> 
+After reading everyone's comments, that was my first instinct. We should have
+2 forms of the macro, one for DMA-safe and one for not.
