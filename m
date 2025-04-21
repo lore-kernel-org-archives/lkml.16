@@ -1,125 +1,124 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53D11D7984
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33196CA5E;
+	Mon, 21 Apr 2025 09:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745226598; cv=none; b=YNeRIvlscLqOid4Z7QGVYsTlZ1DGe1CRHWwrXqw+vtuODt2YBPXb4KJV9vmTrYAIKUZDxYANMm/1/s9lySBozV7l/MJWyCULucM/8CULftWjiuLQPsgn2+iM2j38I8MAnYbJUowtPxMjfL3kkn+X71J5tFMGWFQZl2vkrvNU3qs=
+	t=1745226649; cv=none; b=K47cBBSEnZnKCvyiuufYgr73h1ELzoPGsf4wjPETapj9fxqJEHpN1Baiew/IoK5qHZTzZQxDww8HCq3RS/M9158ejW/gxf5j/24sXxgGUunHcP9nZH8Pk3GBcGQUKM4311oLurywdBU75IQJ+1XXezKJbnThLnG+RNmqPJI+61Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745226598; c=relaxed/simple;
-	bh=jYfITdAy8llVjno19Ac2CzcMCZqR2AGhRl0UKubybFQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AFA7C9f+a6mjXv5P7whiFMBu5j6KwmTAm+2V+gvK2wm2QvSI0AmrroRJFNTABE3P2CRcYzaW5aJcprXY4I99ShcdnvPU6oT21klMWhjSeq8Jamn6fn3nek7h1uMYR2w3UotGvaW/25obvffIzIGK5UTbYtEaEFvub4R95ltm0YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ifrf0QRU; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745226649; c=relaxed/simple;
+	bh=kHdJISTOknZRXyvwHcOZ1+E+dOr0gE3qeLIKQ5XfQTY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=C4ruh6x1wCP0MHXhkykBXACsoznEA0BfubW+ZOybqwj0mRRTYQDtX5VNapvpoCVD5h0Jlzz/y+mu8LgykwNIiHjLO04FZhodF6+VPC1gucCgOb5aafKoWbfDkuCYQeFnKOkEAuTRm2YzL4s16jgh/pKrdXFK5+vpnCoERBuHKzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=SxHP2NZ0; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ifrf0QRU"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227a8cdd241so43795795ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745226596; x=1745831396; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xw8UIDvZBCcr83U5CXKVA2bqzTMOFGkmm5WFSkBADIc=;
-        b=ifrf0QRUSss3cnedRZ6j/eUymIc5z05KQgmQxrM2o7I69fLbR8d1EBadrQb4fZSlMc
-         96BaiQlPZDQML5tYrWb7T+Fc2KBtFTw9p1fUhMj0ZaQGsuANzQag0G+Y/KsFImCKlYaf
-         ikCvwamv3vKvw2x0IV7gYsBn94RMLoIEjuk/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745226596; x=1745831396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xw8UIDvZBCcr83U5CXKVA2bqzTMOFGkmm5WFSkBADIc=;
-        b=uFJDsQyOxTfGGYFXx4fJiR3Pec1Rzig62LNkknz65wbgbHqX1s5dxd9BntX+EJuNC5
-         HA7VOWajyycocsMvrTL9LeebJpQqob6+X/YR9Y7vPgP6IGdiqgmmYOBxL/naSA4wXbHp
-         Tutx9FB232FEaP0ajcovMLskDmkG/9ymQSBETZkiV+F+xFf0Wk4LIkGSZzymW8C0e4qE
-         wRiWghCj5f0tykEZwXL2kgaxKKtGO8QLMqclZAq/8MC2u3CvJyWhrm8mK4uH2VFGkLxX
-         zGTPNU+vCitsOhGSJ1PKg1q8/ij1XJLt7s6JPOE1CRNMaQ9Ny97nYuwv8+sCNTK8HoCN
-         hU+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXn9lVOHfLTGWWoPmnCeJwF8ubMVK3FnHkGJ0FG0S5A7GC2RhJY/ChiErMgNiXXYyPm8OewDTNQqdrAv88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygupPEi7YyyygyqLGYDiXgIH6UxpRS7k1h2FXZd5cYBjby6reS
-	jTQRkZCr/mot1a6j8Q+J8Dm2fR4HE8EhvvPFQRoWkY6/q3F7jLS1RzE51tahBg==
-X-Gm-Gg: ASbGnctBUa/9oJ/KZk/sikEeWYuDlP0i3Mlhmai59kNkkJW6+mSl48fnkxQtUwshBKh
-	r9NzsOcCEsrefHv5FA72FGK8GqzJjaulmXIgl3fhunG1Y6xzaQzmBBTz/yGyvC+WzqvYMhFEuGX
-	KrnOq7JYBBOCB67IBivF/wwIJlDmenyEkRahIwX129WAFdvOi/au3IfCDA6CF8zt5L9rv1ThUzm
-	T3icA34T0EuAK2isnKepKgRHC+YgwLURMTSHB27EQasaE8E6ZW246BTIqwoM3+Qo8G6dbvMpSlt
-	oH5TFT2HkDSHb+sIUeioGi2FJGKeyjzN9HZK/n9crsJ4HX/TGceMy03Qf8iQ2xDEP5DU9g==
-X-Google-Smtp-Source: AGHT+IHDl/Ex7FBzvgMFPAFFoh7YhHYfxUvKL5Gx49McL1TrmyCRhCWjmqZwJhpIy+Bel/jx902Q6g==
-X-Received: by 2002:a17:903:2ca:b0:224:1609:a747 with SMTP id d9443c01a7336-22c535cbfb0mr168110325ad.31.1745226596121;
-        Mon, 21 Apr 2025 02:09:56 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:7633:f42a:d31d:3f9c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e3d4asm6113079b3a.70.2025.04.21.02.09.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 02:09:55 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] pmdomain: mediatek: Add error messages for missing regmaps
-Date: Mon, 21 Apr 2025 17:09:50 +0800
-Message-ID: <20250421090951.395467-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="SxHP2NZ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1745226622; x=1745831422; i=markus.elfring@web.de;
+	bh=kHdJISTOknZRXyvwHcOZ1+E+dOr0gE3qeLIKQ5XfQTY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=SxHP2NZ0Qvrw2apTNNETWQi36hpPI6DwnjO0ssYZ751ASDkyDB5Y+NmQvkrX7VWY
+	 Tol7jUQQMpOmEmdTe12bihpvvRab8B/UAnMEsRmlaqcVZPYdpP+ao6hGUFUd6+4A8
+	 Uk7tz4zBCrBdGPbejSkQl+Fu/iNdhRyWevh4zIwAFK7/Z2GLCdmdUHwaJ/cgWSAob
+	 PeQteIzeorDREQFmmnPI35CPJA7/YSw3/vDtMPDdVo4mA72qUIPvNVpbehBCFupZ8
+	 I5aX3txjOKjIMriFBjLoOd4Z2meID5cSUKeLJxBQNgfV0VWnpdVuaqZDn4zMxVYDw
+	 d0bBeejjfUSgJSB1pA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.16]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3V26-1u6Ew80W26-00E3nF; Mon, 21
+ Apr 2025 11:10:22 +0200
+Message-ID: <ea9260c1-eca4-4b9a-88de-64c27f226a27@web.de>
+Date: Mon, 21 Apr 2025 11:10:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+ Mark Bloch <mbloch@nvidia.com>,
+ Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+ Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
+ Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
+References: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v7 0/2] net/mlx5: Fix NULL dereference and memory leak in
+ ttc_table creation
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aabuASyem9RhQYBPfwP7u98LFIGEfB2c/f5zmmKC6hcqQczLfa/
+ FXmuFPSf8711+CGjp2vCqjmP+RwYvnQxLYFdskB0jqeX4QuyH5tOxnn2Yn7k9h0H6FZaWyO
+ AZ68Sn6CLUVYs/O4bnIsKdQv9uGoCwN5t9sYIe088cfCMSMB41SqSCH7Sc+zMvMDBYDMEVa
+ m7hX2M4F4wdEgUhzxM7Mg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZfssjIIz9/Q=;yPKt2LsJVTtDcR7iA1sAQoassrA
+ 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
+ kMaI=
 
-A recent change to the syscon regmap API caused the MediaTek power
-controller drivers to fail, as the required regmap could no longer be
-retrieved. The error did not have an accompanying message, making the
-failure less obvious. The aforementioned change has since been reverted.
+> This patch series addresses two issues in =E2=80=A6
 
-Add error messages to all the regmap retrievals, thereby making all
-error paths in scpsys_add_one_domain() have visible error messages.
+Did you overlook the addition of patch version descriptions once more?
+https://lore.kernel.org/all/?q=3D%22This+looks+like+a+new+version+of+a+pre=
+viously+submitted+patch%22
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc3#n310
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- drivers/pmdomain/mediatek/mtk-pm-domains.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pmdomain/mediatek/mtk-pm-domains.c b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-index b866b006af69..22cdd34ed008 100644
---- a/drivers/pmdomain/mediatek/mtk-pm-domains.c
-+++ b/drivers/pmdomain/mediatek/mtk-pm-domains.c
-@@ -397,20 +397,26 @@ generic_pm_domain *scpsys_add_one_domain(struct scpsys *scpsys, struct device_no
- 
- 	pd->infracfg = syscon_regmap_lookup_by_phandle_optional(node, "mediatek,infracfg");
- 	if (IS_ERR(pd->infracfg))
--		return ERR_CAST(pd->infracfg);
-+		return dev_err_cast_probe(scpsys->dev, pd->infracfg,
-+					  "%pOF: failed to get infracfg regmap\n",
-+					  node);
- 
- 	smi_node = of_parse_phandle(node, "mediatek,smi", 0);
- 	if (smi_node) {
- 		pd->smi = device_node_to_regmap(smi_node);
- 		of_node_put(smi_node);
- 		if (IS_ERR(pd->smi))
--			return ERR_CAST(pd->smi);
-+			return dev_err_cast_probe(scpsys->dev, pd->smi,
-+						  "%pOF: failed to get SMI regmap\n",
-+						  node);
- 	}
- 
- 	if (MTK_SCPD_CAPS(pd, MTK_SCPD_HAS_INFRA_NAO)) {
- 		pd->infracfg_nao = syscon_regmap_lookup_by_phandle(node, "mediatek,infracfg-nao");
- 		if (IS_ERR(pd->infracfg_nao))
--			return ERR_CAST(pd->infracfg_nao);
-+			return dev_err_cast_probe(scpsys->dev, pd->infracfg_nao,
-+						  "%pOF: failed to get infracfg-nao regmap\n",
-+						  node);
- 	} else {
- 		pd->infracfg_nao = NULL;
- 	}
--- 
-2.49.0.805.g082f7c87e0-goog
-
+Regards,
+Markus
