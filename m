@@ -1,142 +1,112 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB7FFB652;
-	Mon, 21 Apr 2025 00:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E694400;
+	Mon, 21 Apr 2025 01:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745196737; cv=none; b=R7uH2uk5lcmaYPPPETawImriCRXbpkDrk8B49AepUDeKR1Gy3wz+7XLZztbcUZEdTO88mT/G/4eNfjuYxV9rasr1AkWlq7C+2rUc6UAtNM8McnG6FO2mNONBNk2jhXP98n0CYZso5AyYDXt8NoEujlgXEqe/QADCJmQkHHZkF6g=
+	t=1745197333; cv=none; b=kaeKKHKfWX33PQVm234xk9c+e+DTsbZRA+Raa4QlNVIDRdkKNgbRDr1BkJtCAu4udpvehd7LZ7qwhCu6HB+6zRVrAd0JUebOmcBr+9M/QT4Dc7wCOD3H8TMspqyxX/nP5P/TmTSTJm/NtyCwoCnSpc4bf0vsNW2cdH2tzeCwccA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745196737; c=relaxed/simple;
-	bh=Lv624GVjzZQJWZb5+uyT/JpL2YlsxWpae3WOCk6M7Bs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=sVw5mwTp2WPiEZVfert75BTGOBfgkB5udFrPJgL3vNs+gi+caSDerRnoQ3OrFJmz7kjWQfCOgA2FsvewN3XbO+LRQmASS8+1rJciOrucFNglsOpk87wrLCu8ifNW+jRvdoMPewlnlxYvL/vRsCPfjB6PaSZIaqEPGQvABrJGu9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8BxlmmzlgVoKSHDAA--.60571S3;
-	Mon, 21 Apr 2025 08:52:03 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMAxzxuulgVoepGNAA--.37780S3;
-	Mon, 21 Apr 2025 08:52:01 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Fixed multiple typos of KVM code
-To: WangYuli <wangyuli@uniontech.com>, Yulong Han <wheatfox17@icloud.com>,
- zhaotianrui@loongson.cn, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>
-Cc: loongarch@lists.linux.dev, Xianglai Li <lixianglai@loongson.cn>,
- Min Zhou <zhoumin@loongson.cn>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250420142208.2252280-1-wheatfox17@icloud.com>
- <B9FBAB180AE77BDB+52e0b4e7-58fa-4047-a35d-c2d00bc1f5bf@uniontech.com>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <59895b61-9d63-9d60-63da-5524b4dcfe2b@loongson.cn>
-Date: Mon, 21 Apr 2025 08:50:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745197333; c=relaxed/simple;
+	bh=+8krUSN/aTblTRTse2hskxk9rA9iZ5WkgdyBagYVGFg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oPHJLFqonSqD0MAuF9vl8b6Q6VIg0wM6CBlLFrpV38SuwPWv34mMpCuuFONuOxtz6JZC/e0LFW+RFih3mpzmhj8EHniTOqYawJyzLZmyuroz/G9ccy60zJWBIPJ6R8OleH5LjuSZrBgLVzaqbnyUrzrgXt8cRmeTMzy1WufXWWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVQfjsaz; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVQfjsaz"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e589c258663so2779638276.1;
+        Sun, 20 Apr 2025 18:02:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745197330; x=1745802130; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bFghJE0Wf69fQgKSMTxJiuzgx0DLEfewWc1jQGsTHzE=;
+        b=nVQfjsazOVQX1SD9voQu/Jgn1O893H1VPxDuXlpaoxTOjomlzNtQdFcpdWR+NsJNuP
+         pRi+l40JOruvQQ/+y5rpPDeI8V21wGdp7xkOf5+Vtnxfudwnl1b9vhowu0gj+AFRqzQs
+         k/rpiUP7kesfLDyhGtGJctqWx9XvT+go7smnMh/82waXewi00v+cvy1AVGh6TMauz5Qu
+         gqp6TyTBhYwjew7s3O0ZnBBwqpwohFv1/APOQ7zMObFGMCVBAtRm4PDJQ0gp7dHiuT/d
+         0u4K53VMGcw1PA1Z3VMcxelLn0dmlVk4TKMLBn0AuBah8Vru79IKMShuRulut19Ow68l
+         y8CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745197330; x=1745802130;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bFghJE0Wf69fQgKSMTxJiuzgx0DLEfewWc1jQGsTHzE=;
+        b=ZrBjLFl1qWlMdJ6SPR/TUuePzUr9p7UyJob/HITuN+vAFw7omeW/gbg67hEnLCTxGk
+         xrtGQ/bIEqkbVvaX6rfZThhxqtnq5GjroHz5DGi1j1CxK5gdzfepDnEFMxFe44W3oSu6
+         g1OQJpz8/hj0lIm+MqdMhZ2VP3hUQcxlzJizms7JdZyu4/gFdGbhobhoa1wt9lACiU79
+         Xa5W2XmbcCVZUt4XJAj1TPMeLweGusHt+WegN+tSUCCCZJ2ZtMAh52CV4jdp6qEeM5gO
+         ildA4appRKPhyDcA4jhXJ1QcJjedYKKZA91zuqYVbYT3XUDpjc3kywwatgT4gZ7ZfLZL
+         bkrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB1EeBnnK4veosGoxOVP1omZnJsSTaNRI+VrKpXUvfEpAXu9ZundPdg22LypVCnA7QjqPUZFMUxvs=@vger.kernel.org, AJvYcCXSlF7TeLDPkuUs50FkRDMvIOO393KMv+3a8h9S/+5YoFqptimHH7+I1BmOpXbMwDyDyD979x7RAusgT+Tw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUcu+UsYIeD72rKQkMGDUdvqOsTUtDvbi9ojVcYmUmKNKcDpGJ
+	DH5z5IE5apVSGReDquGYN91E9t/Y/ciDhmRzHgV/1Rna58YJHbjKWSB8elzb
+X-Gm-Gg: ASbGncvT5xyn3f/h+YqH0+0cmHprI/oEA2B6zvF75G498YOVj1FQLtZOiGqrAZUqiL6
+	RSV8mGM2uiVZSr9895VNCaMwPXPEYKTABc2hjBzghOqwZ6rCz4DAitMQEtyd5/sFkP5nTeYJLMR
+	f4ZkUm08u9gbVD7UshGWjrKHYiFUin637aRKRsjgCVAjnhPMGRHyazg2Tsx7LJcEkN9LfCPzafY
+	UjbDbaGpwGAOJFefLdzVWyU9+WDlkmerDzUb0h6deoo8x5p2RyOXrkMjNjqRh3MKLirmZGWc6DD
+	OC8r3XtXM4oGkT+c8kZXH90Whv33FHUjeiq4g2PZ1AUJ7SsZNiUkhnZgtHc=
+X-Google-Smtp-Source: AGHT+IF+UZBfUXn/UpvOy309rJXJqu1NXWiO9nxP1cHKFYoE9PfnMOKsTLo81UkXPFt7byXZpnZWNA==
+X-Received: by 2002:a05:6902:20c9:b0:e72:9612:f78f with SMTP id 3f1490d57ef6-e7297eae2e7mr12731645276.37.1745197329864;
+        Sun, 20 Apr 2025 18:02:09 -0700 (PDT)
+Received: from localhost ([64.234.79.138])
+        by smtp.gmail.com with UTF8SMTPSA id 3f1490d57ef6-e729589a6bfsm1564277276.26.2025.04.20.18.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Apr 2025 18:02:09 -0700 (PDT)
+From: kendrajmoore <kendra.j.moore3443@gmail.com>
+To: dmaengine@vger.kernel.org
+Cc: vkoul@kernel.org,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kendra Moore <kendra.j.moore3443@gmail.com>
+Subject: [PATCH] docs: dmaengine: add explanation for DMA_ASYNC_TX capability
+Date: Sun, 20 Apr 2025 21:02:05 -0400
+Message-Id: <20250421010205.84719-1-kendra.j.moore3443@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <B9FBAB180AE77BDB+52e0b4e7-58fa-4047-a35d-c2d00bc1f5bf@uniontech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxzxuulgVoepGNAA--.37780S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxCF1rAr45KryfAw1UJr4rtFc_yoW5ZFy5pr
-	1kAa4DArWrGr1kGr9rJw1UZFyUJry8tw18Xr1DJFyUCr42vr1vqrW0qryqgFn8Jw48Jr48
-	Xw1UJrnxZF1UJwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jepB-UUUUU=
 
-Yulong,
+From: Kendra Moore <kendra.j.moore3443@gmail.com>
 
-Sorry for the late response, I do not notice this until reply from Yuli.
-Thanks for patch.
+This patch replaces the TODO for DMA_ASYNC_TX in the DMA engine
+provider documentation. The flag is automatically set by the DMA
+framework when a device supports key asynchronous memory-to-memory
+operations such as memcpy, memset, xor, pq, xor_val, and pq_val.
 
-Reviewed-by: Bibo Mao <maobibo@loongson.cn>
+It must not be set by drivers directly.
 
+Signed-off-by: Kendra Moore <kendra.j.moore3443@gmail.com>
+---
+ Documentation/driver-api/dmaengine/provider.rst | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-On 2025/4/20 下午11:40, WangYuli wrote:
-> [ Expanded the recipient list.  ]
-> 
-> Hi Yulong,
-> 
-> On 2025/4/20 22:22, Yulong Han wrote:
->> Fixed multiple typos inside arch/loongarch/kvm.
->>
->> Signed-off-by: Yulong Han <wheatfox17@icloud.com>
->> ---
->>   arch/loongarch/kvm/intc/ipi.c | 4 ++--
->>   arch/loongarch/kvm/main.c     | 4 ++--
->>   2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/loongarch/kvm/intc/ipi.c 
->> b/arch/loongarch/kvm/intc/ipi.c
->> index 93f4acd44..fe734dc06 100644
->> --- a/arch/loongarch/kvm/intc/ipi.c
->> +++ b/arch/loongarch/kvm/intc/ipi.c
->> @@ -111,7 +111,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, 
->> gpa_t addr, uint64_t data)
->>           ret = kvm_io_bus_read(vcpu, KVM_IOCSR_BUS, addr, 
->> sizeof(val), &val);
->>           srcu_read_unlock(&vcpu->kvm->srcu, idx);
->>           if (unlikely(ret)) {
->> -            kvm_err("%s: : read date from addr %llx failed\n", 
->> __func__, addr);
->> +            kvm_err("%s: : read data from addr %llx failed\n", 
->> __func__, addr);
->>               return ret;
->>           }
->>           /* Construct the mask by scanning the bit 27-30 */
->> @@ -127,7 +127,7 @@ static int send_ipi_data(struct kvm_vcpu *vcpu, 
->> gpa_t addr, uint64_t data)
->>       ret = kvm_io_bus_write(vcpu, KVM_IOCSR_BUS, addr, sizeof(val), 
->> &val);
->>       srcu_read_unlock(&vcpu->kvm->srcu, idx);
->>       if (unlikely(ret))
->> -        kvm_err("%s: : write date to addr %llx failed\n", __func__, 
->> addr);
->> +        kvm_err("%s: : write data to addr %llx failed\n", __func__, 
->> addr);
->>       return ret;
->>   }
->> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
->> index d165cd38c..80ea63d46 100644
->> --- a/arch/loongarch/kvm/main.c
->> +++ b/arch/loongarch/kvm/main.c
->> @@ -296,10 +296,10 @@ int kvm_arch_enable_virtualization_cpu(void)
->>       /*
->>        * Enable virtualization features granting guest direct control of
->>        * certain features:
->> -     * GCI=2:       Trap on init or unimplement cache instruction.
->> +     * GCI=2:       Trap on init or unimplemented cache instruction.
->>        * TORU=0:      Trap on Root Unimplement.
->>        * CACTRL=1:    Root control cache.
->> -     * TOP=0:       Trap on Previlege.
->> +     * TOP=0:       Trap on Privilege.
->>        * TOE=0:       Trap on Exception.
->>        * TIT=0:       Trap on Timer.
->>        */
-> Reviewed-by: Yuli Wang <wangyuli@uniontech.com>
-> 
-> Please note that if you wish for a timely response to your patch, you 
-> should ensure that all maintainers output by ./scripts/get_maintainer.pl 
-> and the relevant open mailing lists are fully present in your recipient 
-> list.
-> 
-> Thanks,
-
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index 3085f8b460fa..aac2a18bd453 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -217,10 +217,12 @@ Currently, the types available are:
+ 
+ - DMA_ASYNC_TX
+ 
+-  - Must not be set by the device, and will be set by the framework
+-    if needed
++  - The device supports asynchronous memory-to-memory operations,
++    including memcpy, memset, xor, pq, xor_val, and pq_val.
+ 
+-  - TODO: What is it about?
++  - This capability is automatically set by the DMA engine
++    framework and must not be configured manually by device
++    drivers.
+ 
+ - DMA_SLAVE
+ 
+-- 
+2.39.5
