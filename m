@@ -1,303 +1,105 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4741E5B64;
-	Mon, 21 Apr 2025 16:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055671E0E1A;
+	Mon, 21 Apr 2025 16:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745253759; cv=none; b=VDHGnnP+QzbJoN7bpiRserFhSKYdcxadkWE52TcJi+sSgrEN6XhTl0dnp7lBGdHqZ4kcydtEeeBv8c2Zxgpsk/4JBY3OoMVLoZA/CcdzdBGLnsZhnNh39y9eLTS6PHokUKkgR7Xo37U0b3ZERg6/Wx9SgmDs0g5Fbdv17eAdoEU=
+	t=1745253763; cv=none; b=Rbdtskl0lAehD5esrLw08Yx8IRWdL+3z8iAhFg9/eR7g1nHR+nzn2yZqFcUHnqQYkP2lv9vmFFeaAuPnSeLn8JvC9T7jeOJTXgChAp/52zMfFbdwMOm4oVsOjHPdJlMDHCEBi3fYcKsur/Nc0RZ63T3WasuvfmwYVheVSbkfh84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745253759; c=relaxed/simple;
-	bh=BabJT8shFeooLOlaKbp3PTDt9xeyZZVe051+I5Kt8A8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s7LZjiLVmm+BjZOAub9GXt8reASHZaO73MwGJf8GfkFRY33tRRVBk/n9wFeOvq39b0103YaxtuHTCkPFespdPr2ncCPCQTbCsLUohloMsBYrwUXWquA36mKEE3/WBKGJssWJGt0HQadGC23J4w3qMXufie1ihDYZzSCpD+pZBJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jnhIPfVL; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745253763; c=relaxed/simple;
+	bh=m3m6glZ88p1UicyITupTeA+hfX/BSoFrF6K0y4udo00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=scTSEiOuSm2l69WwFzw7QlH70NIVt/WlYE6DE5gmwc/QeAeFL8ql+3ZiHDiGITGMFS5OnCee/1v4qlfH8Dd3jXdAolC8hRKWm0FuEKPRNi1FWqEMSVHBUOsdNIdW/+91o4/b+/gddsfSCblRl8Vg+MWwIPqq8hHsy54SUiTpDrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeKMtDRP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jnhIPfVL"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4769b16d4fbso22167901cf.2;
-        Mon, 21 Apr 2025 09:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745253756; x=1745858556; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8saFQNyFDcMMxSMO/2MuZCuMNf/4lANNbiDkrHm2aLE=;
-        b=jnhIPfVL53Vq65yx8DgBu3MbGoFAT/eXWzdUfSr06y2wcoutLdlnLTgJCQONV+Tud0
-         4g73Kl3YsBeB2sTqlWeN52wvy2AMSabmdslivJb30nPdQ8nqZ8TO6YsYlYMp2pXKkiRW
-         uw1sxybfa9gunoGXrDfwxbN7/rH4YyxDAmfT1CIiU+63MGK1Al7ZQM91qhWoNzGN+w0a
-         ouxYpqxRn0vn+Fs+hq1urBQQUQnKHHMQUtdUg+TgO5En6CeAANxjyzj/rrAZwP7pC/vU
-         nAr+TdZtb7YtZ9+RydK02hOSK17dQqtisIzKOdSnZc/WcUIqlrCz3gsZrSSE2iTCNUNU
-         imIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745253756; x=1745858556;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8saFQNyFDcMMxSMO/2MuZCuMNf/4lANNbiDkrHm2aLE=;
-        b=sSp+UqX1AXtrMSYL113cXq68+TSIqaFhJ9roCYGSFIchZBKPRh0E0xnXo3sxz6II5X
-         oB8O8tAzORfw0O5HJ8TeHqtUbbgCaqVzqQvji3JYj07Apf2v4N+PJa+MhTR6MYpnm1Cu
-         Ztrq3Wy72ovh+mCHDEDT0PSo4h5Wc5PH70Hr/6nqOOBzZQZDboO60uvlrp7+kzqvk0pf
-         uGKM8rxnJ8J//iEoROOgWYRSK+IRAkp83nhLvaeZ/e12yvwODzN5yJ+bjQTRz7jyQutu
-         /wZvbnuy7/r+2PxtAIIoMfVp1/JfTZU26trcil0OmeaMn6RLlc3xalZsAciYEJ2zi3kl
-         7H5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUceZ1mQ8fEn26ubOseT2JS87oZcIXqMAWkdTL1l2D0+3vnBj3ifw8v7lTN3xK7TNjYEACiqU3KgotFiTMygA==@vger.kernel.org, AJvYcCVpADDj+kL6SmDzVEzmShChBHI6QKGOMl8+hG3C7eH2OyNC3xTjIrwgXci+kpXlztCcxRQkWsP2phd7TtXW@vger.kernel.org, AJvYcCWP7CedXQ5ikzj1E6Uvt/dL68po5MjS2sLqjqRPaVDfZlJZJGElZSKFSZgTKhnhw3YKke6LUaO94bZ2@vger.kernel.org, AJvYcCXZxP4mWk5kiuWAxbP8WcpUO2XfNAxeXPoVblGhgULn5eyEZ7Kavmxc8i36XXApkHkRSvfg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuN0fr71wHsAxX8DXqqH6Kw3DtdUMfvD0QIDx7w6qwSeZ04xrW
-	uhwtkyY+JPWELW63zhpvgIchLpqE4QKa/GJIi+jWi/wv0ZEB4zDj/SQrKw==
-X-Gm-Gg: ASbGncte6o/AYZPntbwzhw56ECTvugWcrpcksX6GyNe8QEFRv7dn+PnFBmQ/tcdblgJ
-	bWrX3SEo3vrxLV5DoYdTHZw6YXdRuOLibe9vNPE3vJtYL17ThofZxp+MYNpXTweo+aC/Cd7ZL/a
-	AI0FUr4kyTkxjVinAmLWFX/c491OfmouapAi1eT/EmPNfEVCM6bYck0ENrguDJOrmjniMVfw+nN
-	yx9bwaRFWdbmexoLg/iQqY/NC+Kx0gybJN7xkOy1Psa7Tsbu6Lcvz12VPDzVSz4SCbg0MlAc7B0
-	IOeffgkbWaIErH3QIFYfH2rg72096SQ1TwCE2wuCQpXzMh4hjJkukbu7QogPX5RcF38Gs/Au1DV
-	GAf6XK210H59fXObuHpXMCGiBJG4efrI=
-X-Google-Smtp-Source: AGHT+IG9hxjtMqFn1bbKak24JtECxpwyBj4OMatGmTvxpRmezdZrvAyzLih6f/8OgHcFAKZl1xOKJg==
-X-Received: by 2002:a05:622a:3c7:b0:476:8ee8:d8a0 with SMTP id d75a77b69052e-47aec39232bmr231364961cf.2.1745253756248;
-        Mon, 21 Apr 2025 09:42:36 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9cf9f7dsm43825731cf.74.2025.04.21.09.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 09:42:35 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8A0CE1200043;
-	Mon, 21 Apr 2025 12:42:35 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Mon, 21 Apr 2025 12:42:35 -0400
-X-ME-Sender: <xms:e3UGaOJuPUX353U4Na-PAzbZ9_eIacaEv3koh8zvIRjobm3xRPCrmA>
-    <xme:e3UGaGJeFSnMgyj6zNUtSMbtIJXHeuvdtwp9TAj6T_MeENHbWqAruAqQ93VDJNYWE
-    vu-qbVleOnSgy5Gfw>
-X-ME-Received: <xmr:e3UGaOuTnaY5XLzrDRiQ0QT2mC3CTYlTkGnq8PVRrF-eVVQVuQvC2a9yKskx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedufeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
-    tdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeegleejiedthedvheeggfejveefjeejkefg
-    veffieeujefhueeigfegueehgeeggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepheeipdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrtghusehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhlvhhmsehlihhsthhsrdhlihhnuhigrdguvghvpd
-    hrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohep
-    ohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorh
-    esghhmrghilhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdr
-    tghomh
-X-ME-Proxy: <xmx:e3UGaDaJhO8GD_lQnoToaYj26JjNilDFxNwDLQ6bNgN-qVgELxslGw>
-    <xmx:e3UGaFa0wJzZsYsRDhRcsjONGl8dHJ1Y_vAU3JShAmFWyr_6wsDuQg>
-    <xmx:e3UGaPCoQDQXWJ_o80upbL9_LjOk8FMLA9XPixSIf_MqBhWcY-ByXA>
-    <xmx:e3UGaLYfLadt2fK-wQhq3YeZKE6J5l3QOXG4bLnDg1-jQ5REUv1FZw>
-    <xmx:e3UGaFrRLNGByuGgBUjbtTf5RdPVaRb4p2ucHW6NVTdCBbgVMV8FqkiL>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 21 Apr 2025 12:42:34 -0400 (EDT)
-From: Boqun Feng <boqun.feng@gmail.com>
-To: rust-for-linux@vger.kernel.org,
-	rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	llvm@lists.linux.dev,
-	lkmm@lists.linux.dev
-Cc: Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Nicholas Piggin <npiggin@gmail.com>,	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,	kent.overstreet@gmail.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,	elver@google.com,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	torvalds@linux-foundation.org,
-	linux-arm-kernel@lists.infradead.org,	linux-fsdevel@vger.kernel.org,
-	Trevor Gross <tmgross@umich.edu>,	dakr@redhat.com,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-riscv@lists.infradead.org
-Subject: [RFC v3 03/12] rust: sync: atomic: Add ordering annotation types
-Date: Mon, 21 Apr 2025 09:42:12 -0700
-Message-ID: <20250421164221.1121805-4-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250421164221.1121805-1-boqun.feng@gmail.com>
-References: <20250421164221.1121805-1-boqun.feng@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeKMtDRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661C9C4CEF0;
+	Mon, 21 Apr 2025 16:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745253762;
+	bh=m3m6glZ88p1UicyITupTeA+hfX/BSoFrF6K0y4udo00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FeKMtDRPmgXNmdhOA2xuD1QtibJmcPrU2MV3eJXwpFfhIQw+NCP/LjD+7WTJfTrLZ
+	 VyXdxSX6qP2Bb961hC0FJn3ZqerqqplYKwIhUnbAW8fLneHGm1lcA+vTlj4pmNBZhp
+	 +3EEg7d6NI6mryu6B9O8Cp7eFn12cu0iRgAAC+uFM1xIhY6Gv5A2BKlSC+bLkaWnoL
+	 PPoHHiDSmAJA6xr4IPmYwR3+nA69HxDAeJ93AMGLY+ERqa7oExNJXK+WjRWDZnXUFY
+	 /d3XLatgTugglsFLw5yzg2WQuJit58K9D3U1x89Z6fRLnAWYextGfQfV6KyM1lmGU2
+	 Lh0+VjqHWGzcA==
+Date: Mon, 21 Apr 2025 09:42:41 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
+Message-ID: <20250421164241.GD25700@frogsfrogsfrogs>
+References: <20250415121425.4146847-1-john.g.garry@oracle.com>
+ <20250415121425.4146847-12-john.g.garry@oracle.com>
+ <20250421040002.GU25675@frogsfrogsfrogs>
+ <2467484b-382b-47c2-ae70-4a41d63cf4fc@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2467484b-382b-47c2-ae70-4a41d63cf4fc@oracle.com>
 
-Preparation for atomic primitives. Instead of a suffix like _acquire, a
-method parameter along with the corresponding generic parameter will be
-used to specify the ordering of an atomic operations. For example,
-atomic load() can be defined as:
+On Mon, Apr 21, 2025 at 06:47:44AM +0100, John Garry wrote:
+> On 21/04/2025 05:00, Darrick J. Wong wrote:
+> > > @@ -843,6 +909,8 @@ xfs_file_dio_write(
+> > >   		return xfs_file_dio_write_unaligned(ip, iocb, from);
+> > >   	if (xfs_is_zoned_inode(ip))
+> > >   		return xfs_file_dio_write_zoned(ip, iocb, from);
+> > What happens to an IOCB_ATOMIC write to a zoned file?  I think the
+> > ioend for an atomic write to a zoned file involves a similar change as
+> > an outofplace atomic write to a file (one big transaction to absorb
+> > all the mapping changes) but I don't think the zoned code quite does
+> > that...?
+> 
+> Correct. For now, I don't think that we should try to support zoned device
+> atomic writes. However we don't have proper checks for this. How about
+> adding a xfs_has_zoned() check in xfs_get_atomic_write_{min, max, opt}()?
 
-	impl<T: ...> Atomic<T> {
-	    pub fn load<O: AcquireOrRelaxed>(&self, _o: O) -> T { ... }
-	}
+Well it turns out that was a stupid question -- zoned=1 can't be enabled
+with reflink, which means there's no cow fallback so atomic writes just
+plain don't work:
 
-and acquire users would do:
+$ xfs_info /mnt
+meta-data=/dev/sda               isize=512    agcount=4, agsize=32768 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=1
+         =                       reflink=0    bigtime=1 inobtcount=1 nrext64=1
+         =                       exchange=1   metadir=1
+data     =                       bsize=4096   blocks=131072, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1, parent=1
+log      =internal log           bsize=4096   blocks=16384, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =internal               extsz=4096   blocks=5061632, rtextents=5061632
+         =                       rgcount=78   rgsize=65536 extents
+         =                       zoned=1      start=131072 reserved=0
+$ xfs_io -c 'statx -r -m 0x10000' /mnt/a | grep atomic
+stat.atomic_write_unit_min = 0
+stat.atomic_write_unit_max = 0
+stat.atomic_write_segments_max = 0
+stat.atomic_write_unit_max_opt = 0
 
-	let r = x.load(Acquire);
+I /think/ all you'd have to do is create an xfs_zoned_end_atomic_io
+function that does what xfs_zoned_end_io but with a single
+tr_atomic_ioend transaction; figure out how to convey "this is an
+atomic out of place write" to xfs_end_ioend so that it knows to call
+xfs_zoned_end_atomic_io; and then update the xfs_get_atomic_write*
+helpers.
 
-relaxed users:
+--D
 
-	let r = x.load(Relaxed);
-
-doing the following:
-
-	let r = x.load(Release);
-
-will cause a compiler error.
-
-Compared to suffixes, it's easier to tell what ordering variants an
-operation has, and it also make it easier to unify the implementation of
-all ordering variants in one method via generic. The `IS_RELAXED` and
-`ORDER` associate consts are for generic function to pick up the
-particular implementation specified by an ordering annotation.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
----
- rust/kernel/sync/atomic.rs          |  3 +
- rust/kernel/sync/atomic/ordering.rs | 94 +++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
- create mode 100644 rust/kernel/sync/atomic/ordering.rs
-
-diff --git a/rust/kernel/sync/atomic.rs b/rust/kernel/sync/atomic.rs
-index 65e41dba97b7..9fe5d81fc2a9 100644
---- a/rust/kernel/sync/atomic.rs
-+++ b/rust/kernel/sync/atomic.rs
-@@ -17,3 +17,6 @@
- //! [`LKMM`]: srctree/tools/memory-mode/
- 
- pub mod ops;
-+pub mod ordering;
-+
-+pub use ordering::{Acquire, Full, Relaxed, Release};
-diff --git a/rust/kernel/sync/atomic/ordering.rs b/rust/kernel/sync/atomic/ordering.rs
-new file mode 100644
-index 000000000000..6cf01cd276c6
---- /dev/null
-+++ b/rust/kernel/sync/atomic/ordering.rs
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Memory orderings.
-+//!
-+//! The semantics of these orderings follows the [`LKMM`] definitions and rules.
-+//!
-+//! - [`Acquire`] and [`Release`] are similar to their counterpart in Rust memory model.
-+//! - [`Full`] means "fully-ordered", that is:
-+//!   - It provides ordering between all the preceding memory accesses and the annotated operation.
-+//!   - It provides ordering between the annotated operation and all the following memory accesses.
-+//!   - It provides ordering between all the preceding memory accesses and all the fllowing memory
-+//!     accesses.
-+//!   - All the orderings are the same strong as a full memory barrier (i.e. `smp_mb()`).
-+//! - [`Relaxed`] is similar to the counterpart in Rust memory model, except that dependency
-+//!   orderings are also honored in [`LKMM`]. Dependency orderings are described in "DEPENDENCY
-+//!   RELATIONS" in [`LKMM`]'s [`explanation`].
-+//!
-+//! [`LKMM`]: srctree/tools/memory-model/
-+//! [`explanation`]: srctree/tools/memory-model/Documentation/explanation.txt
-+
-+/// The annotation type for relaxed memory ordering.
-+pub struct Relaxed;
-+
-+/// The annotation type for acquire memory ordering.
-+pub struct Acquire;
-+
-+/// The annotation type for release memory ordering.
-+pub struct Release;
-+
-+/// The annotation type for fully-order memory ordering.
-+pub struct Full;
-+
-+/// The trait bound for operations that only support relaxed ordering.
-+pub trait RelaxedOnly {}
-+
-+impl RelaxedOnly for Relaxed {}
-+
-+/// The trait bound for operations that only support acquire or relaxed ordering.
-+pub trait AcquireOrRelaxed {
-+    /// Describes whether an ordering is relaxed or not.
-+    const IS_RELAXED: bool = false;
-+}
-+
-+impl AcquireOrRelaxed for Acquire {}
-+
-+impl AcquireOrRelaxed for Relaxed {
-+    const IS_RELAXED: bool = true;
-+}
-+
-+/// The trait bound for operations that only support release or relaxed ordering.
-+pub trait ReleaseOrRelaxed {
-+    /// Describes whether an ordering is relaxed or not.
-+    const IS_RELAXED: bool = false;
-+}
-+
-+impl ReleaseOrRelaxed for Release {}
-+
-+impl ReleaseOrRelaxed for Relaxed {
-+    const IS_RELAXED: bool = true;
-+}
-+
-+/// Describes the exact memory ordering of an `impl` [`All`].
-+pub enum OrderingDesc {
-+    /// Relaxed ordering.
-+    Relaxed,
-+    /// Acquire ordering.
-+    Acquire,
-+    /// Release ordering.
-+    Release,
-+    /// Fully-ordered.
-+    Full,
-+}
-+
-+/// The trait bound for annotating operations that should support all orderings.
-+pub trait All {
-+    /// Describes the exact memory ordering.
-+    const ORDER: OrderingDesc;
-+}
-+
-+impl All for Relaxed {
-+    const ORDER: OrderingDesc = OrderingDesc::Relaxed;
-+}
-+
-+impl All for Acquire {
-+    const ORDER: OrderingDesc = OrderingDesc::Acquire;
-+}
-+
-+impl All for Release {
-+    const ORDER: OrderingDesc = OrderingDesc::Release;
-+}
-+
-+impl All for Full {
-+    const ORDER: OrderingDesc = OrderingDesc::Full;
-+}
--- 
-2.47.1
-
+> Thanks,
+> John
