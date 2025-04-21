@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D9D1EE7B6
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:53:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC9A1F8743
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745261632; cv=none; b=bGrFFPL5xMFIv+xr9r8ljDfcON1LDxxQ/fj59tgjTL6or38KQIiW8c5DA53HAx+L/tuFZ3JEmKHeDIP0YJPWz01x9eDePwULSNKg867aD7kn/gQpYYpK93Sws1Oc7QSEOaotVsDli05dQj08bpg2DjMSHTSH+Hb5kiznp/21q08=
+	t=1745261634; cv=none; b=IHpKvZdraRxEi0blihenhZ+YJ22FiwpumtolT0bmBylWq4NzpZd0ncvZKZs8pjKCezr82ICtdQ0zIR7rnWYntgzky6XHFJNHSQH6MFXqg4LNWG4S8w2O8M7rs7uvt2o1epWJTlm7cIdWxym39Va0BAxoD2R2hg0f3vt3C+FfMxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745261632; c=relaxed/simple;
-	bh=+W2xcK4KRppKgZobQ6197LwwjgbCSohCG6OneLrFvBg=;
+	s=arc-20240116; t=1745261634; c=relaxed/simple;
+	bh=B8HMP545YkJOzLe4wuG1fHgGabFH4VxeskR4IeYCpYA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ewsykacwAbC7VhgEPw7yx2KmH6by8AcMyXREyoLnho/PRYcQsoLzSRcxdphoXwbnQEajD3XTu1uLjQeAdqPW7NQ07b8y6hbumtAsRiIx0s5Lp6yLiEszxb6LTtCqsie0ViS6onMuV8OYH6kl913UqhPFwEHfx0XDyCcijXjUalw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZW6j092e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V/AAdVNyPKJN7ODpRHPC6Oknr0urucjeQgFylb1NS70QltomydzVxrggmX9W9whgdMsNzFs0gJrh2/8J+vdAK7CwnOw5pVWC3jV3T7CIgqIcWK+U9e33CVWZ+BzByQkV80N9mQh9m1bDhc9PGN/F0VR/03b5OkrJfc/YB3Kg13c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6+7ZpVA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZW6j092e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037F2C4CEEC;
-	Mon, 21 Apr 2025 18:53:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6+7ZpVA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D75C4CEEA;
+	Mon, 21 Apr 2025 18:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745261631;
-	bh=+W2xcK4KRppKgZobQ6197LwwjgbCSohCG6OneLrFvBg=;
+	s=k20201202; t=1745261634;
+	bh=B8HMP545YkJOzLe4wuG1fHgGabFH4VxeskR4IeYCpYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZW6j092ecUjNK8cF5IYnvN1E1awBi0ymcmxTX3D47+cTVSRvmR6G7nQEejWDKICeT
-	 SOytESFySz+QE4EIjjhxbV3Mj88Crjz1GG5QCz5lQ+WD98ca3XMEGwZ2TqfKijezpB
-	 oDosCbN1qDMnSOV4zN6GuMiuC4UqrwKt+U936zIB6c9BujEI+iggq3NlywjxUdk9wG
-	 f45k9joBowS6oL8zO4r/phDl/fdyCACco8dUOHcTe1KiUgNXnm8bFcmFtwBbGILgWW
-	 0BkA4FtCORvWlj3Wu2STyvYvmnIAqiz1Kss+zbxkSRxWNarmUhvEuoRSxIMX2REZvI
-	 NrpPienY9q25g==
+	b=a6+7ZpVAAOMZRFWAhK31lw020B3qDg673F6xVlarCmQUv89TTG0nIkIXEay7VA3dT
+	 q+2caj8QrcbQ+mceatw0nWbbKnNBrmdKN6syBKKhh44eiIv9hUbbdi2ZnqvMsVhPcf
+	 MTimibYynBrB0cWpOa938Pe7vhp1XB1lKFSqywwhvp2aS4rH/k6TtPbpnKSGna+3uE
+	 BY/zfM+0d/Lo4Ht2P3IyrKLarYDZPjt3QGNWW/IeYCpjGetdaeHuAohl3tezKQSV2N
+	 8+jzV3YnWGDmCKcRtvEhPQCBNR3wMM1b3JC1k233or1D11LMEvYE3Lq3eSkqKAzG6K
+	 d4XBttcZDtM7g==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Andy Shevchenko <andy@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 22/29] x86/boot/e820: Rename gap_start/gap_size to max_gap_start/max_gap_start in e820_search_gap() et al
-Date: Mon, 21 Apr 2025 20:52:02 +0200
-Message-ID: <20250421185210.3372306-23-mingo@kernel.org>
+Subject: [PATCH 23/29] x86/boot/e820: Simplify & clarify __e820__range_add() a bit
+Date: Mon, 21 Apr 2025 20:52:03 +0200
+Message-ID: <20250421185210.3372306-24-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250421185210.3372306-1-mingo@kernel.org>
 References: <20250421185210.3372306-1-mingo@kernel.org>
@@ -55,12 +55,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PCI gap searching functions pass around pointers to the
-gap_start/gap_size variables, which refer to the maximum
-size gap found so far.
+Use 'entry_new' to make clear we are allocating a new entry.
 
-Rename the variables to say so, and disambiguate their namespace
-from 'current gap' variables.
+Change the table-full message to say that the table is full.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -71,72 +68,37 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/kernel/e820.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 24b2e8a93853..d0f9c544a14c 100644
+index d0f9c544a14c..e5a50aadc631 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -680,7 +680,7 @@ static void __init e820__update_table_kexec(void)
- /*
-  * Search for a gap in the E820 memory space from 0 to MAX_GAP_END (4GB).
-  */
--static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_size)
-+static int __init e820_search_gap(unsigned long *max_gap_start, unsigned long *max_gap_size)
+@@ -164,16 +164,19 @@ int e820__get_entry_type(u64 start, u64 end)
+ static void __init __e820__range_add(struct e820_table *table, u64 start, u64 size, enum e820_type type)
  {
- 	u64 last = MAX_GAP_END;
- 	int idx = e820_table->nr_entries;
-@@ -697,9 +697,9 @@ static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_s
- 		if (last > end) {
- 			unsigned long gap = last - end;
+ 	u32 idx = table->nr_entries;
++	struct e820_entry *entry_new;
  
--			if (gap > *gap_size) {
--				*gap_size = gap;
--				*gap_start = end;
-+			if (gap > *max_gap_size) {
-+				*max_gap_size = gap;
-+				*max_gap_start = end;
- 				found = 1;
- 			}
- 		}
-@@ -719,29 +719,29 @@ static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_s
-  */
- __init void e820__setup_pci_gap(void)
- {
--	unsigned long gap_start, gap_size;
-+	unsigned long max_gap_start, max_gap_size;
- 	int found;
- 
--	gap_size = 0x400000;
--	found  = e820_search_gap(&gap_start, &gap_size);
-+	max_gap_size = 0x400000;
-+	found  = e820_search_gap(&max_gap_start, &max_gap_size);
- 
- 	if (!found) {
- #ifdef CONFIG_X86_64
--		gap_start = (max_pfn << PAGE_SHIFT) + 1024*1024;
-+		max_gap_start = (max_pfn << PAGE_SHIFT) + 1024*1024;
- 		pr_err("Cannot find an available gap in the 32-bit address range\n");
- 		pr_err("PCI devices with unassigned 32-bit BARs may not work!\n");
- #else
--		gap_start = 0x10000000;
-+		max_gap_start = 0x10000000;
- #endif
+ 	if (idx >= ARRAY_SIZE(table->entries)) {
+-		pr_err("too many E820 table entries; ignoring [mem %#010llx-%#010llx]\n",
++		pr_err("E820 table full; ignoring [mem %#010llx-%#010llx]\n",
+ 		       start, start + size-1);
+ 		return;
  	}
  
- 	/*
- 	 * e820__reserve_resources_late() protects stolen RAM already:
- 	 */
--	pci_mem_start = gap_start;
-+	pci_mem_start = max_gap_start;
+-	table->entries[idx].addr = start;
+-	table->entries[idx].size = size;
+-	table->entries[idx].type = type;
++	entry_new = table->entries + idx;
++
++	entry_new->addr = start;
++	entry_new->size = size;
++	entry_new->type = type;
  
- 	pr_info("[gap %#010lx-%#010lx] available for PCI devices\n",
--		gap_start, gap_start + gap_size - 1);
-+		max_gap_start, max_gap_start + max_gap_size - 1);
+ 	table->nr_entries++;
  }
- 
- /*
 -- 
 2.45.2
 
