@@ -1,255 +1,146 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E6113AD1C
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F6F1A3150;
+	Mon, 21 Apr 2025 14:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745246201; cv=none; b=LtVVkhdz4E/O6Un919Y+rJp7PjEKx7VEMTvvnHo1nsHUOB6TYzxTH7R5F34i7qxBnZ67XFJGzaKmNLZZRu11HrEBMiVhG4RLHRtTV/D66nvifIfn3pVO4GCV+4/if0hCh/87LkGNqcFSHshIN8mqlh9OmQiYIKIRKsQEgsfjahM=
+	t=1745246203; cv=none; b=bTQ7dDrUOx7TH57H+4kUzuGeexqCSscIrWp8jPY2n704D7q5MQmtQrIH8T039uNV5njGJr1CRet8hBYxpUBboSCaM2PqE4EEUzOdP8rh+cqcJPwd59TSqSwuKqbXkUcPleAstKduJR4EUDnhI0ialrtzwONuJx9c3pKiaJYBkk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745246201; c=relaxed/simple;
-	bh=9NMCgPXMWqcwVbn9nvCNFGTuOp/p5VOnW2lVP6iy51U=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uwSQjTqXpqXyplqgYoETQP5iORvoLSJhNoJgD5G7Wj1XVQEd2h2gvIz+kpvXMrDANofaSw59jwKrsAhmcTs8z7bmTEvLxoXy5HfUsNYxs3U+Yv3vTFHaxAeAhYoe/732qKpCVIK7cHVlVCqcRCIjs0eq+2SMf30mcGzpmtdBtUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mB5pmiQc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qkOpN9im; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mB5pmiQc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qkOpN9im; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745246203; c=relaxed/simple;
+	bh=/2K7IVPpkiZRln/JiYfTiki7Tdib7ROz7ZBUlHe3nnc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l+JogfCQl6qR5NByP9WXXMN5wUIrskMpAuNsR539OALAjaK3ohSNg5EQ6QnFHldhlfGTZS2JrjS6lEYRK1HX/XRI+CmTx/01QnsMIdnMbw4rRJQZqxbiolp1WsSziuzhygydMR6e3mbVo7+NW+tV6l2O9GGsI19kPNdkkC3laVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B5wcgbML; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mB5pmiQc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qkOpN9im";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mB5pmiQc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qkOpN9im"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5FAB721200;
-	Mon, 21 Apr 2025 14:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745246191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdgkOOhZ7i98IOUO6H+ogiBUcPrXO/Q5S/x1s1hKcW8=;
-	b=mB5pmiQcDf2Sj2MiJIjzSpa7q2+nqUl1FjbKtb0xrbhpw7iHf6Ba6b6MPAgVAW6CgTpIn+
-	Vt+w2KR/Jvfx7ZbfcdBIzutJGSqJprRGQgAvoD2MLbzylkMRa+y/2dKCwdRrT3qD9KsUhR
-	mwY346vsKJS6Myis+2MxlF/vpXn4ouE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745246191;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdgkOOhZ7i98IOUO6H+ogiBUcPrXO/Q5S/x1s1hKcW8=;
-	b=qkOpN9imYW/3WrDDKdaxk4OOjqWyoUxi4a3u1qFXJIwgIPUsIXIIMqB2pigL/Nnlb7HhaE
-	/lziII47NBQCFmAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745246191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdgkOOhZ7i98IOUO6H+ogiBUcPrXO/Q5S/x1s1hKcW8=;
-	b=mB5pmiQcDf2Sj2MiJIjzSpa7q2+nqUl1FjbKtb0xrbhpw7iHf6Ba6b6MPAgVAW6CgTpIn+
-	Vt+w2KR/Jvfx7ZbfcdBIzutJGSqJprRGQgAvoD2MLbzylkMRa+y/2dKCwdRrT3qD9KsUhR
-	mwY346vsKJS6Myis+2MxlF/vpXn4ouE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745246191;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdgkOOhZ7i98IOUO6H+ogiBUcPrXO/Q5S/x1s1hKcW8=;
-	b=qkOpN9imYW/3WrDDKdaxk4OOjqWyoUxi4a3u1qFXJIwgIPUsIXIIMqB2pigL/Nnlb7HhaE
-	/lziII47NBQCFmAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3551213A3D;
-	Mon, 21 Apr 2025 14:36:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0dkMC+9XBmgvQgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 21 Apr 2025 14:36:31 +0000
-Date: Mon, 21 Apr 2025 16:36:30 +0200
-Message-ID: <878qnttwcx.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Hillf Danton <hdanton@sina.com>
-Cc: alsa-devel@alsa-project.org,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/9] ALSA: usb-audio: Fix possible race at sync of urb completions
-In-Reply-To: <20250421104343.4197-1-hdanton@sina.com>
-References: <20210929080844.11583-1-tiwai@suse.de>
-	<20210929080844.11583-3-tiwai@suse.de>
-	<20250418103533.4078-1-hdanton@sina.com>
-	<87a58dvia7.wl-tiwai@suse.de>
-	<20250418144518.4097-1-hdanton@sina.com>
-	<875xj0ve49.wl-tiwai@suse.de>
-	<20250419080410.4148-1-hdanton@sina.com>
-	<871ptnuvad.wl-tiwai@suse.de>
-	<87mscat1tq.wl-tiwai@suse.de>
-	<20250421104343.4197-1-hdanton@sina.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5wcgbML"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d8fc9dbce4so6393475ab.0;
+        Mon, 21 Apr 2025 07:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745246201; x=1745851001; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/2K7IVPpkiZRln/JiYfTiki7Tdib7ROz7ZBUlHe3nnc=;
+        b=B5wcgbMLIxOJLkMrEXRNj2/ZVejvvjIegwX15slJACmi0aGgdfpHWEaM8Ng5NvlyrI
+         Jx9gpizcLwEi5cR1y/xHuAcbkdmfCctTwApdMyRe6WYeuZMFyfLZyXAXT0bc5vtba5Tn
+         swm2reyHYgb8MSl8CWVwMinfVldz42RZq0zbzn7Q808iZNB7KOD7Xp3cin8sQwmaeClV
+         V4ghkD9/ZUkqo09yUpcq8NxWdQf3S3hPOpuHzW8R94iI84/GQajRJe92ZBm49A7WBhTt
+         /BZHGFMxSv7fSqncMpVoM8JLG8qCHYdsV6ABG5vIRYN5pnNUkYvMR4H7tmdEkY+KdW1K
+         C5yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745246201; x=1745851001;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/2K7IVPpkiZRln/JiYfTiki7Tdib7ROz7ZBUlHe3nnc=;
+        b=a6PrlbOSym0OgQ16oiNGOJuNPv3OqaCzlgiw4A7OfauSi28Lcx7f9GmAcJYYVY4o/u
+         2Ug/XSoD5CKTr2MfhbHhIk6m7FhuenRzhSF/y71f76reJwvWsxGBfYesGDBl8ewRfYtG
+         BI3bFJJEjQUFqplU36bCfagC7zkfICYP0xt0NXHNvPAfsIG4JEvpWLAM7PI/Y8fKKx8l
+         5KzZZBikYrqTI/RY36rPjQsWsf8+gDA5lXF4UgTv+VLb35cNxtNNclhrPLbp/XgM22wX
+         PSmcTEBc1B7iH08sbUKUR6sYYe20dpSl5TyZTr4EA/FW3YcqRHQ4gXlvSbOm3BNOJxrs
+         iY/g==
+X-Forwarded-Encrypted: i=1; AJvYcCULY+u8nPWzUMkvI3pwPt/f8vrVQ++6hJLAjfqzyxmt1g3M3oiXpXJHJZVpIwsibs9+WE0aUw20X3mP@vger.kernel.org, AJvYcCUXYGEQHG/6rdf11kIRHBol3SiOFzE2luDckqy8ijgQZjBZXjFrZRECzWXX//lcA9Jbegixs8PhvLjx@vger.kernel.org, AJvYcCVO1xXpluOAACN23J31g5wF5edP+HbZA2IhH1DBa+K6PFXMqqrlIb1NLprrSCAGkzkx86sQ6SGIHHPQz3hwWg==@vger.kernel.org, AJvYcCX+vk4jVEl4poqQ/BKdegISVMX35yw0tWCG67TH0OtBw01wygGoeNNn6IgEczBzUjPTeYU3XJcAymdCRsL7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7s50+VqSK+yJpIEnpXz3z/KaQnVaFQe4ry2qG1sWEhP77lFQz
+	YueTBU0dN2TNsC11+1dbG0JS0qcqNewGjQz0dMV75W1YjE+5Szf0w66tYu7m7//BpDNHPWjdfgG
+	R+jX+w67XoupgcFumwhIPnE29hes=
+X-Gm-Gg: ASbGncvhv3Thpy9W1zcIHqZO/faQIGmqpKaPKrqNY7evRBZrqDRwYF9JCgTXVliIhzL
+	t5SjVwmJ7XN6HEpi39SWxIOHAlYfJ1rXarqAa7F9YRQ7/WgpJyBwPq8N+Kzzy6D7v39c6rthMBg
+	k0/PPw22FvFARyfz0QHP8DBoGY+cz1jcbIrq++VYcJ+0f4yFlKti/f
+X-Google-Smtp-Source: AGHT+IHzxhf+U9PepZ/IDthCt00hJJp/yp/MeNIIWjESRtsobvwQIbW+O9TvwfEKUN0l8hvXgbPjNieg66LpQnwCv54=
+X-Received: by 2002:a05:6e02:1649:b0:3d1:84ad:165e with SMTP id
+ e9e14a558f8ab-3d821ea72f8mr109372935ab.7.1745246200649; Mon, 21 Apr 2025
+ 07:36:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[sina.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[alsa-project.org,gmail.com,vger.kernel.org];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -1.80
-X-Spam-Flag: NO
+MIME-Version: 1.0
+References: <20250120144152.11949-1-johan+linaro@kernel.org> <20250127002026.GA2534668-robh@kernel.org>
+In-Reply-To: <20250127002026.GA2534668-robh@kernel.org>
+From: Rob Clark <robdclark@gmail.com>
+Date: Mon, 21 Apr 2025 07:36:28 -0700
+X-Gm-Features: ATxdqUEWUGd6HHT0L1UvSEXAA_vQSQxLK3W6gP0ue6F-PKOCMrzm5vSh8JiNzhA
+Message-ID: <CAF6AEGsfke=x0p1b2-uNX6DuQfRyEjVbJaxTbVLDT2YvSkGJbg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100: enable rtc
+To: Rob Herring <robh@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Jonathan Marek <jonathan@marek.ca>, 
+	linux-arm-msm@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rob Clark <robdclark@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 21 Apr 2025 12:43:42 +0200,
-Hillf Danton wrote:
-> 
-> On Mon, 21 Apr 2025 09:23:45 +0200 Takashi Iwai wrote:
-> >On Mon, 21 Apr 2025 07:18:31 +0200, Hillf Danton wrote:
-> >> On Sun, 20 Apr 2025 09:49:46 +0200 Takashi Iwai wrote:
-> >> >On Sat, 19 Apr 2025 10:04:08 +0200, Hillf Danton wrote:
-> >> >> On Sat, 19 Apr 2025 08:50:46 +0200 Takashi Iwai wrote:
-> >> >> >On Fri, 18 Apr 2025 16:45:17 +0200, Hillf Danton wrote:
-> >> >> >> On Fri, 18 Apr 2025 13:08:32 +0200 Takashi Iwai wrote:
-> >> >> >> > On Fri, 18 Apr 2025 12:35:32 +0200 Hillf Danton wrote:
-> >> >> >> > > On Wed, 29 Sep 2021 10:08:37 +0200 Takashi Iwai wrote:
-> >> >> >> > > > USB-audio driver tries to sync with the clear of all pending URBs in
-> >> >> >> > > > wait_clear_urbs(), and it waits for all bits in active_mask getting
-> >> >> >> > > > cleared.  This works fine for the normal operations, but when a stream
-> >> >> >> > > > is managed in the implicit feedback mode, there is still a very thin
-> >> >> >> > > > race window: namely, in snd_complete_usb(), the active_mask bit for
-> >> >> >> > > > the current URB is once cleared before re-submitted in
-> >> >> >> > > > queue_pending_output_urbs().  If wait_clear_urbs() is called during
-> >> >> >> > > > that period, it may pass the test and go forward even though there may
-> >> >> >> > > > be a still pending URB.
-> >> >> >> > > > 
-> >> >> >> > > > For covering it, this patch adds a new counter to each endpoint to
-> >> >> >> > > > keep the number of in-flight URBs, and changes wait_clear_urbs()
-> >> >> >> > > > checking this number instead.  The counter is decremented at the end
-> >> >> >> > > > of URB complete, hence the reference is kept as long as the URB
-> >> >> >> > > > complete is in process.
-> >> >> >> > > > 
-> >> >> >> > > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> >> >> >> > > > ---
-> >> >> >> > > >  sound/usb/card.h     | 1 +
-> >> >> >> > > >  sound/usb/endpoint.c | 7 ++++++-
-> >> >> >> > > >  2 files changed, 7 insertions(+), 1 deletion(-)
-> >> >> >> > > > 
-> >> >> >> > > > diff --git a/sound/usb/card.h b/sound/usb/card.h
-> >> >> >> > > > index 3329ce710cb9..746a765b2437 100644
-> >> >> >> > > > --- a/sound/usb/card.h
-> >> >> >> > > > +++ b/sound/usb/card.h
-> >> >> >> > > > @@ -97,6 +97,7 @@ struct snd_usb_endpoint {
-> >> >> >> > > >  	unsigned int nominal_queue_size; /* total buffer sizes in URBs */
-> >> >> >> > > >  	unsigned long active_mask;	/* bitmask of active urbs */
-> >> >> >> > > >  	unsigned long unlink_mask;	/* bitmask of unlinked urbs */
-> >> >> >> > > > +	atomic_t submitted_urbs;	/* currently submitted urbs */
-> >> >> >> > > >  	char *syncbuf;			/* sync buffer for all sync URBs */
-> >> >> >> > > >  	dma_addr_t sync_dma;		/* DMA address of syncbuf */
-> >> >> >> > > >  
-> >> >> >> > > > diff --git a/sound/usb/endpoint.c b/sound/usb/endpoint.c
-> >> >> >> > > > index 29c4865966f5..06241568abf7 100644
-> >> >> >> > > > --- a/sound/usb/endpoint.c
-> >> >> >> > > > +++ b/sound/usb/endpoint.c
-> >> >> >> > > > @@ -451,6 +451,7 @@ static void queue_pending_output_urbs(struct snd_usb_endpoint *ep)
-> >> >> >> > > >  		}
-> >> >> >> > > >  
-> >> >> >> > > >  		set_bit(ctx->index, &ep->active_mask);
-> >> >> >> > > > +		atomic_inc(&ep->submitted_urbs);
-> >> >> >> > > >  	}
-> >> >> >> > > >  }
-> >> >> >> > > >  
-> >> >> >> > > > @@ -488,6 +489,7 @@ static void snd_complete_urb(struct urb *urb)
-> >> >> >> > > >  			clear_bit(ctx->index, &ep->active_mask);
-> >> >> >> > > >  			spin_unlock_irqrestore(&ep->lock, flags);
-> >> >> >> > > >  			queue_pending_output_urbs(ep);
-> >> >> >> > > 
-> >> >> >> > > 			smp_mb();
-> >> >> >> > > 
-> >> >> >> > > > +			atomic_dec(&ep->submitted_urbs); /* decrement at last */
-> >> >> >> > > 
-> >> >> >> > > Does it match the comment to add a mb?
-> >> >> >> > 
-> >> >> >> > How...?  I don't understand your intention.
-> >> >> >> > 
-> >> >> >> In addition to the UAF report [1], I saw a customer report of list
-> >> >> >> corruption of linux-6.1.99 on arm64 this week without reproducer.
-> >> >> >> 
-> >> >> >> 	list corruption
-> >> >> >> 	list_add_tail();
-> >> >> >> 	push_back_to_ready_list();
-> >> >> >> 	snd_complete_urb();
-> >> >> >> 
-> >> >> >> And after another look at this patch I wonder if the race can not be
-> >> >> >> erased without the certainty that ep will be no longer used after the
-> >> >> >> atomic decrement.
-> >> >> >
-> >> >> > But why adding more barrier if you perform the atomic op...?
-> >> >> >
-> >> >> Because atomic op != ordering, see 26fbe9772b8c ("USB: core: Fix hang 
-> >> >> in usb_kill_urb by adding memory barriers") for detail for example.
-> >> >> And c5b2cbdbdac5 ("ipc/mqueue.c: update/document memory barriers") as well.
-> >> >
-> >> > Still don't get it.  Which reads and writes are you trying to solve?
-> >> >
-> >> See a simpler UAF case IIUIC.
-> >> 
-> >> 	cpu1		cpu2
-> >> 			atomic_dec(&ep->submitted_urbs);
-> >> 
-> >> 	if (!atomic_read(&ep->submitted_urbs))
-> >> 		kfree(ep);
-> >> 
-> >> 			a = ep->xxx; // UAF
+On Sun, Jan 26, 2025 at 4:20=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
+>
+> On Mon, Jan 20, 2025 at 03:41:45PM +0100, Johan Hovold wrote:
+> > This series adds support for utilising the UEFI firmware RTC offset to
+> > the Qualcomm PMIC RTC driver and uses that to enable the RTC on all X
+> > Elite machines.
 > >
-> > That's what I don't get it.  Which place does this UAF happen, more
-> > specifically?  In the whole conversations, the context is missing, and
-> > you provided only a snippet of the patch.
+> > Included is also a patch to switch the Lenovo ThinkPad X13s over to
+> > using the UEFI offset.
 > >
-> I misread "Which reads and writes are you trying to solve?" though I
-> showed the read/write, but it is a bad case particulay with UAF.
-> 
-> Could you tell us what will happen if the race is not fixed? Could ep
-> be freed with in-flight urbs for example?
+> > The RTCs in many Qualcomm devices are effectively broken due to the tim=
+e
+> > registers being read-only. Instead some other non-volatile memory can b=
+e
+> > used to store an offset which a driver can take into account. On Window=
+s
+> > on Arm laptops, the UEFI firmware (and Windows) use a UEFI variable for
+> > storing such an offset.
+> >
+> > When RTC support for the X13s was added two years ago we did not yet
+> > have UEFI variable support for these machines in mainline and there wer=
+e
+> > also some concerns regarding flash wear. [1] As not all Qualcomm
+> > platforms have UEFI firmware anyway, we instead opted to use a PMIC
+> > scratch register for storing the offset. [2]
+> >
+> > On the UEFI machines in question this is however arguable not correct
+> > as it means that the RTC time can differ between the UEFI firmware (and
+> > Windows) and Linux.
+> >
+> > Now that the (reverse engineered) UEFI variable implementation has been
+> > merged and thoroughly tested, let's switch to using that to store the
+> > RTC offset also on Linux. The flash wear concerns can be mitigated by
+> > deferring writes due to clock drift until shutdown.
+> >
+> > Note that this also avoids having to wait for months for Qualcomm to
+> > provide a free PMIC SDAM scratch register for X1E and future platforms,
+> > and specifically allows us to enable the RTC on X1E laptops today.
+> >
+> > Rob had some concerns about adding a DT property for indicating that a
+> > machine uses UEFI for storing the offset and suggested that the driver
+> > should probe for this instead. Unfortunately, this is easier said than
+> > done given that UEFI variable support itself is probed for and may not
+> > be available until after the RTC driver probes.
+>
+> This information would be useful in the binding commit...
+>
+> Seems like something I would say, but this is v1 and I have no memory of
+> discussing this. I would also say probe ordering is not a DT problem,
+> but sounds like an OS problem. Aren't there other things needing EFI
+> variables earlyish too? Do you really want to have to update the DT to
+> enable this?
 
-Before the patch, wait_clear_urbs() might return earlier than actually
-all pending eps are finished, so it can be UAF.
+I was debugging why RTC offset was not working properly for me, and
+eventually realized it was exactly this problem (efivars not avail
+when rtc probes).
 
-> Is it still race if the wait loop in wait_clear_urbs() ends before the
-> urb complete callbace completes, given the last sentence in your commit
-> message? If nope, igore my noise please.
+Hacking up rtc-pm8xxx to return -EPROBE_DEFER "fixes" it
 
-Well, your concern about the missing barrier -- that would
-wait_clear_urbs() missing the refcount decrement, hence it would be
-rather to make the return delayed.  So it shouldn't lead to further
-UAF, but at most it might lead to an unnecessary delay.
+BR,
+-R
 
-That said, I'm willing to take a fix even for a theoretical issue if
-it clarifies what it really fixes.  But scratching a random surface
-isn't what we want.
-
-
-Takashi
+> OTOH, it's one property, meh.
+>
+> Rob
+>
