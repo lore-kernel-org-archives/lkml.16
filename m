@@ -1,118 +1,140 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218231EB1AF
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308AB1E9B1A;
+	Mon, 21 Apr 2025 19:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745263297; cv=none; b=DY2KooJzjQt8LDrn5RydtRWQM5XALEwcFFNVdi9TMAh6RU50tJ6wC8TdKV5IKsnPbOTbWcoYIO3XwLKUfIACApjpsOrTazcmXwzmZUYaYZuoCqOxSNOgrqWD0U+U0rPH9pPXoVjY6+OssrIaStKI/nQ2THBhdf8rmZXpVkLzYb0=
+	t=1745263327; cv=none; b=pw6x9aa7qpHaR/7JOdcxZ7QhjUpABqoZkoXnjufl+tkjfxLvrAQwjKTAxMFNhMKillPW2zslWz+9M0hEpkc1W6olfZXOZ+vRf8hfmd5sMgYuq5asp4Qg9RxBzXtkCicAOV3ai7+3w3BGnHgs+42EwrCZsPR93qQS7kLdvh2z10U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745263297; c=relaxed/simple;
-	bh=rk28eIe8cUsJd6JGPxM8wYcVeLlzBfqL2U6EcTaSL6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2EW05DdxTqDm3KNPnziFiL7ncxczmrtPrQbHpY1ZlYSivd8K2FPN0mAUsPmSNkVp9BHwJebXS4mhSXZ53iTVytGUcDAwd/kc2Rr/BoLtVRrdumrKOjoc85iQukJKT2ie8Euq9S5FVPLuVbe7iLuwkdBKjOOcUPSnqNHvf4S+G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KyR8DsOa; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745263327; c=relaxed/simple;
+	bh=NGCt/qFOAddy/Rt8qNrQ8XyhdO6JLq5G3d3sBCsFn30=;
+	h=Subject:To:Cc:From:Date:Message-Id; b=SQ+ke5QmMVQjldCsRTQEnV7ljGlm1OGUZqkOYXVg46WB4xbT1r6DmTA0woAyzu58f5gjrUWYxx9bUTiEs0xqEm27H4tyPLOlcUaxrv0kVWausJVNzrOuroVGAfS8+g5FdT7IgM+tYDIeqWdWWs3JcKiDHCBo9xcZqBvudZgBxFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4Jh238l; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KyR8DsOa"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LIgAXP013828
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=GuwNQL7COdR6K7Wu0mEB7jrt
-	g9au9uotOWdW3087MZk=; b=KyR8DsOa4kff5NLOokkO561Lhopgr669vN1aPhR7
-	7pr7YTCCqkYj/zBzgEIFKPzRptdapbJHATcqJLXdF06N/DD4msmgVatevDSiZYof
-	DIXP30+J+69GCmPj4nGoT+FGDX/OBsYWJVCHX5fnBp0lpa5D0YUF0cXlMzPfnE79
-	HhgJFNZrjKOUZPMhUuRJyb92JLH+v23SfAp8hbWANs4ZVgoT6K0QiazTnwnKHY3n
-	x9goIZs1sZD9DFIJmmhQBgYNinqQaSi3Y5vezPx7cH5aDnU0pShOwWRT+EBNr+GU
-	Hj8v7uC3nXEP3+2VXCYT2/CtGnIGcvjmYvH4lgGnULii0Q==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4643wwn5v1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:21:34 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e913e1cf4aso117783386d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 12:21:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745263294; x=1745868094;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GuwNQL7COdR6K7Wu0mEB7jrtg9au9uotOWdW3087MZk=;
-        b=me2xFisCJLkruvM4d8SaMz6TgOK2VDAkUEvt13f52D67Y5ym7Otgoz/sldwhcU42P/
-         pjp09nDop0pYSa1udZIgyssVoJGRragJYFCGzvx1ZEa3k9p4uItiMkhISlrJbPDbCTe+
-         wEwpLg/zZlBALAvtve8e28Hw/7RW7BuxHK21a33ETwiO9hoAPrktPWfJithvA/vZHsKf
-         HuAitMY6YrsHirdnywHqjoGNOchxzx8zojQn7zoN9DbIMlQk6B7eGG/QH1pvx5m0QKYi
-         UCxaI7yrb1lcdhQC9tmN2lPTNBGEQ6tQktvtZV3D97Oc+Ga/zi3T00IQUtd/vPxofX7F
-         sdZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLLV+yqmle5mwDQAasy7D5h4UfO3Fu3jXxmKKSn/77iPVVuf168scT57RUYqirBzUB79AyjXpbrymote8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHb52FNLfNA/acdchS1G9A5YQ+RlQ5gTcnZJ9J5m+wyNM2U3DG
-	LovzEjZs8UxqwKzjZNArqvSMfgu8oepSovyyApxb0uz2iYF/1/EVTolvCjGzXa7D1CjNpcSBCS6
-	uFfvnywwXs0sqMrVT2DwSXVma1c2vxe3D4P0IVqaf7q4IHrovyHFC+JHtUs8l3Cc=
-X-Gm-Gg: ASbGncvzxq1qwV+U4LNsy5vFUM0AJ4BbFLxCp2t9OUUCxAk1fdjPQDSbtFzhUw+4UbE
-	vyq40pNBJQFH/EzHgmCsKVUv1ldcSPob4FfdTtvgBCW0xH+35W1wpG/+0BaXbR8p90nfjL3pbGx
-	MX2KasWJR2FfuseOFDCfZ6afghwU373Hj6x10bnv0VyxpzJiWp1ZLdvmd3LJ0gwG9NcUxxcK7Dy
-	2FwnboanLJ7bF6vPyqBB166gcScz/Jjzkm9hgdyVjKPEqTzE11hZi63sG8FV3VYi8a0LDJzeJW+
-	rAZaLRnkBoURcoRZqcZtTh7fdc3Bab6EaITTEfk+DA9PhgeRpRmM9OIdbrXKNVE7W0rU2jFgIgs
-	=
-X-Received: by 2002:ad4:5d43:0:b0:6eb:2878:e1fa with SMTP id 6a1803df08f44-6f2c4688548mr234091486d6.45.1745263294088;
-        Mon, 21 Apr 2025 12:21:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHjCANftnq5MsyzBJlMsyrsIUVpzmaMDTame740xj5QASOSOvM3bIvntY44xJmDpLFkmTi5w==
-X-Received: by 2002:ad4:5d43:0:b0:6eb:2878:e1fa with SMTP id 6a1803df08f44-6f2c4688548mr234091156d6.45.1745263293737;
-        Mon, 21 Apr 2025 12:21:33 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109075f28dsm12536521fa.6.2025.04.21.12.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 12:21:32 -0700 (PDT)
-Date: Mon, 21 Apr 2025 22:21:31 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] interconnect: qcom: sm8650: add the MASTER_APSS_NOC
-Message-ID: <xtumjcqontja5nuaalh2xqij4g7e3bxhlqxdwkiwqxbaickppu@p33ym2w3qnbm>
-References: <20250415-topic-sm8650-upstream-icc-apss-noc-v1-0-9e6bea3943d8@linaro.org>
- <20250415-topic-sm8650-upstream-icc-apss-noc-v1-2-9e6bea3943d8@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4Jh238l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745263326; x=1776799326;
+  h=subject:to:cc:from:date:message-id;
+  bh=NGCt/qFOAddy/Rt8qNrQ8XyhdO6JLq5G3d3sBCsFn30=;
+  b=N4Jh238ldtm9Ep2EUm+O0FuDw465xinUagHi63Cg51eFSwWlxjGuwgCA
+   ShikNljj7hqJfs/lCVG12dw8bMuWtkJlvPnefTuTQ1ZwcleFilJOGyrkK
+   TeCpAvUep56xHIWaRVcmi/tIfoQsnulS4FimPINmZLbgYFXQm4acJW6op
+   T1afljhWhXTI3FqR+vnBFxIUysSweVVCIfn+r+D+VBStKTDgivmJQP6ZD
+   m8mQypUDsiRtyakrbliywvGMw3nXOZ7iiwpsLkefi+rHS9bBAOX5mnsKR
+   q/GSQzRueHCw4vgRnu+Ev7Xird7nQg2bNaJkmDZ5mnxkpD8HkmW++24iL
+   Q==;
+X-CSE-ConnectionGUID: xqu9rPUcQ5OG4H7EhVh91Q==
+X-CSE-MsgGUID: kkgnDOUWQwKXABnyJqW7/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="49468973"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="49468973"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 12:22:05 -0700
+X-CSE-ConnectionGUID: /je7+TMVQXK1po4JC+2KNQ==
+X-CSE-MsgGUID: WdZ6EfUeSZi2Vd1V5XfB1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="136951549"
+Received: from davehans-spike.ostc.intel.com (HELO localhost.localdomain) ([10.165.164.11])
+  by orviesa005.jf.intel.com with ESMTP; 21 Apr 2025 12:22:05 -0700
+Subject: [PATCH] Handle Ice Lake MONITOR erratum
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, andrew.cooper3@citrix.com, Dave Hansen <dave.hansen@linux.intel.com>, Len Brown <len.brown@intel.com>, Peter Zijlstra <peterz@infradead.org>, Rafael J. Wysocki <rafael.j.wysocki@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, stable@vger.kernel.org
+From: Dave Hansen <dave.hansen@linux.intel.com>
+Date: Mon, 21 Apr 2025 12:22:05 -0700
+Message-Id: <20250421192205.7CC1A7D9@davehans-spike.ostc.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415-topic-sm8650-upstream-icc-apss-noc-v1-2-9e6bea3943d8@linaro.org>
-X-Authority-Analysis: v=2.4 cv=IpEecK/g c=1 sm=1 tr=0 ts=68069abe cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=pi3gJ-yj7RBswzpYwZwA:9 a=CjuIK1q_8ugA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: brX_aWTRloiEUZvic6RI7NKiy9Hxtijy
-X-Proofpoint-ORIG-GUID: brX_aWTRloiEUZvic6RI7NKiy9Hxtijy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_09,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 adultscore=0 clxscore=1015 bulkscore=0 malwarescore=0
- suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=774
- impostorscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504210151
 
-On Tue, Apr 15, 2025 at 04:03:48PM +0200, Neil Armstrong wrote:
-> Add the MASTER_APSS_NOC interconnect node of the system NoC
-> and the associated QoS configuration.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/interconnect/qcom/sm8650.c | 19 +++++++++++++++++++
->  drivers/interconnect/qcom/sm8650.h |  1 +
->  2 files changed, 20 insertions(+)
-> 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
--- 
-With best wishes
-Dmitry
+Andrew Cooper reported some boot issues on Ice Lake servers when
+running Xen that he tracked down to MWAIT not waking up. Do the safe
+thing and consider them buggy since there's a published erratum.
+Note: I've seen no reports of this occurring on Linux.
+
+Add Ice Lake servers to the list of shaky MONITOR implementations with
+no workaround available. Also, before the if() gets too unwieldy, move
+it over to a x86_cpu_id array. Additionally, add a comment to the
+X86_BUG_MONITOR consumption site to make it clear how and why affected
+CPUs get IPIs to wake them up.
+
+There is no equivalent erratum for the "Xeon D" Ice Lakes so
+INTEL_ICELAKE_D is not affected.
+
+The erratum is called ICX143 in the "3rd Gen Intel Xeon Scalable
+Processors, Codename Ice Lake Specification Update". It is Intel
+document 637780, currently available here:
+
+	https://cdrdv2.intel.com/v1/dl/getContent/637780
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+
+---
+
+ b/arch/x86/include/asm/mwait.h |    3 +++
+ b/arch/x86/kernel/cpu/intel.c  |   17 ++++++++++++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
+
+diff -puN arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug arch/x86/kernel/cpu/intel.c
+--- a/arch/x86/kernel/cpu/intel.c~ICX-MONITOR-bug	2025-04-18 13:54:46.022590596 -0700
++++ b/arch/x86/kernel/cpu/intel.c	2025-04-18 15:15:19.374365069 -0700
+@@ -513,6 +513,19 @@ static void init_intel_misc_features(str
+ }
+ 
+ /*
++ * These CPUs have buggy MWAIT/MONITOR implementations that
++ * usually manifest as hangs or stalls at boot.
++ */
++#define MWAIT_VFM(_vfm)	\
++	X86_MATCH_VFM_FEATURE(_vfm, X86_FEATURE_MWAIT, 0)
++static const struct x86_cpu_id monitor_bug_list[] = {
++	MWAIT_VFM(INTEL_ATOM_GOLDMONT),
++	MWAIT_VFM(INTEL_LUNARLAKE_M),
++	MWAIT_VFM(INTEL_ICELAKE_X),	/* Erratum ICX143 */
++	{},
++};
++
++/*
+  * This is a list of Intel CPUs that are known to suffer from downclocking when
+  * ZMM registers (512-bit vectors) are used.  On these CPUs, when the kernel
+  * executes SIMD-optimized code such as cryptography functions or CRCs, it
+@@ -565,9 +578,7 @@ static void init_intel(struct cpuinfo_x8
+ 	     c->x86_vfm == INTEL_WESTMERE_EX))
+ 		set_cpu_bug(c, X86_BUG_CLFLUSH_MONITOR);
+ 
+-	if (boot_cpu_has(X86_FEATURE_MWAIT) &&
+-	    (c->x86_vfm == INTEL_ATOM_GOLDMONT ||
+-	     c->x86_vfm == INTEL_LUNARLAKE_M))
++	if (x86_match_cpu(monitor_bug_list))
+ 		set_cpu_bug(c, X86_BUG_MONITOR);
+ 
+ #ifdef CONFIG_X86_64
+diff -puN arch/x86/include/asm/mwait.h~ICX-MONITOR-bug arch/x86/include/asm/mwait.h
+--- a/arch/x86/include/asm/mwait.h~ICX-MONITOR-bug	2025-04-18 15:17:18.353749634 -0700
++++ b/arch/x86/include/asm/mwait.h	2025-04-18 15:20:06.037927656 -0700
+@@ -110,6 +110,9 @@ static __always_inline void __sti_mwait(
+  * through MWAIT. Whenever someone changes need_resched, we would be woken
+  * up from MWAIT (without an IPI).
+  *
++ * Buggy (X86_BUG_MONITOR) CPUs will never set the polling bit and will
++ * always be sent IPIs.
++ *
+  * New with Core Duo processors, MWAIT can take some hints based on CPU
+  * capability.
+  */
+_
