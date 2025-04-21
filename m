@@ -1,165 +1,175 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0610B21C167
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABEB1519B8;
+	Mon, 21 Apr 2025 22:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745273049; cv=none; b=B0cDLKj63FRW2u6ynz+YxiJpkr5Lu4Z9+Gcgh+1vs/Mk7agCFEL7B2PHc3AzCxotRKo0JfE/xETT/0/hBIWVVIapwsCFY3qNR2UKsvIQPv/2NLvuPJIKQ5/Hey1q8VR6YU8FF0zRujHkIeK9ccGjZLlolvVAflYOmxT0iHHduvU=
+	t=1745273218; cv=none; b=pJW/X5NVXnzDKXR5J2Zqpk5pviqCFPvYqx1fekcDMqltHI/ZMi3Mp/ey9lw1hXUIDJO13MJ3aTcdx2rTF7OFOR91Ebow+tLpaj4Qp8h9bnWlWTGx55+1hMFSuyfOhMRHlxyqln8MscV3C/fSbX/Uj2zXpUNTkYwSDIzSKmZydZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745273049; c=relaxed/simple;
-	bh=+muycKiBaV5UQqyraI1xwjnbIAioVU0Qup0KnvqWYU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VAAxUTad/NaM6hnk5lNi6twMDzbL67/wIcRLrOQMRAsDhiqYfMsACPDSbZ/rMC4w2S2Pbc2obmxz2yMRqnKlWEe4uDlTFwOuBNaWmoTDsmEdRiCuGjyO3nqRRFZPi7EB0jb6KCsJL/ZwtP+M9lj8R7vd0Ns9hh1AIZ5h0ssbLWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=TM0jYe6K; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1745273218; c=relaxed/simple;
+	bh=C6MfdvBXnlf2J+6yGEzRE1YhM0RK8Cy77oBywTDl/l8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nbKguFxgFohRe0Hu0M++nsFN0FkaC1jLjmPTRYHBBrf79gCyWuKaJ03+8rG8cyFw2fWAirpxKpqj8a8LgVakxj8DzSi5mLZKazF+gScHJ+m30Gj2ZDWBz1XMbXyv3FSdr0Hkxj9za3mmevlj1yhDQR+7LZjYTcyEQGVZatKRf/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lKOdDGuC; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="TM0jYe6K"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70433283ba7so37803247b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 15:04:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKOdDGuC"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e8484bb895so1324467a12.0;
+        Mon, 21 Apr 2025 15:06:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1745273046; x=1745877846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zJkBF2Iq9gEiEg9l+Unpndzsq5ns/iefqc51nXn2fRQ=;
-        b=TM0jYe6KZQyjxuohb24LcAj0BwGkJx71bYweV1zBZAi5uSods9LE7nYSYB1weQAJyA
-         Asb3SNeaVe0WNePwYwLlc587gtrepTlWlFyQI7UVxBJV6w4goVbXoPrJ0DFzCTjj3yT9
-         gfR7Oo7ioVNRFiJGTyzI0VvU8FKpw//ZJh9tYCUKeTlAvD+xzihdwZSTl7dig7sbgpVp
-         ZpM8Sd01p7AgiTdwukFEyS2IwOVYdrtBnZk98SewZ8NkMNAuq4Iio5UMOAA+xWWLJ7Sw
-         /r7LHhjsmDL9n9lv1o0MmTvFgCOzTZcDqqKACG77tU57Y3oHtX8pnnQALz81AvoNuz9G
-         fsbw==
+        d=gmail.com; s=20230601; t=1745273215; x=1745878015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h8mqZGYqLTN8UByiAa47rvRDWl5UdqqEdI10CNaV2Eg=;
+        b=lKOdDGuCG6RAS7b6Dj4iapRBx14YV1Q5jmXjcJgZvxNpjdYUMmznoDQNTUUNSCAiSy
+         OT/boczHm3qOWLfc+N+r7CVt9c4FdqgL+AQsgzEuQwNFoZBakHpugMrMSZvWY7435M7M
+         0rNky6atIUna+uS3u2P9lP322S/IJd24Lgcf27x8RD5Cap4qSyCRN8UYK/0IK75iL577
+         SM9rYYESceTDPOwdXK8RE/nF+DYDyap1puWK8vVKgwhoxDhrQr4OyXYYgHlpP2Vyh2vf
+         TXVJhjpr7I0TJi/KOtOyU6jaUo9KboxxBUMGiz030WpBWbMYp/xFmdEWozTBK1LOKH/I
+         8RxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745273046; x=1745877846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJkBF2Iq9gEiEg9l+Unpndzsq5ns/iefqc51nXn2fRQ=;
-        b=JMCCeNEAJxl1jn79scbRKyCaSi+NHuMJO0fooC/gHAmKCrWns12/s15j17Ah9Zq9E1
-         TIwZ0dzx/3lxBXbysFy5iC4FhkoYgSK5qS0w2W4QWfG88KcJO1BV1Vz1BVN3/dgd/GXX
-         98fB5yUZnuUbPsWQV/1mKUvC3/Yf4zShkCNm9ldiygNrBhn8KT84Y28J7+mDJEf+RQKC
-         28nJcYxd2L7n8pcaTX59au/1ItfNi3IiAJwxkdGRCgUMYkY5a7sJF/8xR5f8ssRLuUP9
-         tnZ+WHFl5m+nmxD189HKofNG2KvHTQE9h1OwgrqoXB5uhJiveSBKynfxuB26rb7H1R9v
-         ZoVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUy4LYIi2oV8JJxze1R1CrsIszSGwCXZgTQbMoGYmL8sKMCqFj9SJ9f7KikcnLRRwRprWVQkhiZfSXc8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7ewHQ5EjC8NS9LYLzfnEMDDVJzobnumvRMEgrnxpapGskTYnj
-	bxa9H/54IWBQUXgpo0dyOiNqalNBzQ4MKXng0boclk2H31p2q9hvcA5+hGTNsC5sq+R687gTMPM
-	JTeiFDPxGvEcLIAjruGIG9eYMoNhqvokpUJk3
-X-Gm-Gg: ASbGnctyabxJv9e2GRt0skEuLuILJvHQwZaye1s26Xvi26GJYAU3IWDBmMDtImEZzIK
-	EMSyWzj7gA9slij8B2lYszUgjs6jjU5Tn3vsVruoZudqHxiF9SKCJxvnwTV0iMtLzIAg9Dpk+ZL
-	t39bdoQu1ZAiUgVEoly45B9w==
-X-Google-Smtp-Source: AGHT+IFjErmdtD9yYgSCvg50nxSRhAaGxDl0MNp2zLoVowjSrOfaMAYKD0cmZ307fSWsTGOXpc7lz6KmktYrMh1O/kc=
-X-Received: by 2002:a05:690c:380a:b0:706:aedf:4d91 with SMTP id
- 00721157ae682-706cccfa7f8mr180651297b3.14.1745273045751; Mon, 21 Apr 2025
- 15:04:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745273215; x=1745878015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h8mqZGYqLTN8UByiAa47rvRDWl5UdqqEdI10CNaV2Eg=;
+        b=vmqCKM4zR/KqmmJ4MBDRRs+dUgqkM4u5f1RENVXlFLwoAOTn0IVYn8kPGCkrhg1Trh
+         2OTgftJWrIjMQ+sP1waRJKSQhHCuwOPsu36eOgMhMntOjwnb7sMNiFtoz95txgC7gnLI
+         xQnFb00/IsCXUtfTLnDu00WRFWzoD6OnJ7JYCVqIJl/vTtF4AOiY9l7kFwEwcvUF1FiA
+         4IRTcdPF8DeLqmvlt5mwSS26ON5h57qhu1zWQvUFpqzpoR/fq7V2FGiq4iet3d9Q4HdZ
+         1Y+XIRmOWQB3iSLC94+2zdONAwFqLL5Vfg0/OQxv19ofIWyrcp60oJIFfQOaXza0NrV8
+         dCrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWotr858wM1CwuxvkVMoEUUFxuDsGdJf0/u8gjLeeFvRd5Un/GY5QE6TdT34QSrYsQ97TfbJiFs0Gobig=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9s2itOwZoyogwNffjv8piq+9fQ6uiix1tYaeRbpjFy96OXAon
+	2xe7lnVjR0Y/0v6Cg7kYwp3b14Y1bBg92gURukrgHjL6E+2ELVCPJu1zZg==
+X-Gm-Gg: ASbGnctHDg7uVsXe/Z0fr6/fX2x5aldFTxGxxgRwyCFg+5NCwc3BJwwLCyE4rSvtTEf
+	CuJ4QEyj0BMnO4SQG2NYF41NpFUpbC98dk64EktesZdg9j6fv7TvRFMfKy1yOQA1/SyxZ5wpDgA
+	m0YxsGL6DJY5PJYOMOp0/VhU7HHk/yJZ5m9D+5Wcg57qYzzm7h4oI4bSIHp0Z6XFyiwk6HQlVPN
+	Hsg0QNLWhHrG3F79b7mU/sH0rcmOuHwfTDBW4cFrwqKZ1UtPLaSrbkNQXPnexcNeagWAKT+JBdo
+	1BwYa7fRekFGVvmD8MkVDDf4jspk71kjYmVocw8dG2u2E939z9/3pJToCgNK45sT4Ve2Yo9fEIx
+	zTbdTKhrsb3MSKQ5i2PQ=
+X-Google-Smtp-Source: AGHT+IHy1p3hn6RDvUg/ZxbOagVKSGgCbAQxyF7F5q5szk1Z8BUEgavvdsr8iUATe52ZvEL+2XlsrA==
+X-Received: by 2002:a17:906:6a0f:b0:ac3:66fb:b197 with SMTP id a640c23a62f3a-acb74ad333dmr342270566b.3.1745273214951;
+        Mon, 21 Apr 2025 15:06:54 -0700 (PDT)
+Received: from 0e1b0684397b.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acbb8d49fdasm80311666b.67.2025.04.21.15.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 15:06:54 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	eraretuya@gmail.com,
+	l.rubusch@gmail.com
+Subject: [PATCH v7 00/11] iio: accel: adxl345: add interrupt based sensor events
+Date: Mon, 21 Apr 2025 22:06:30 +0000
+Message-Id: <20250421220641.105567-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
- <87semdjxcp.fsf@microsoft.com> <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
- <87friajmd5.fsf@microsoft.com> <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
- <87a58hjune.fsf@microsoft.com> <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
- <87y0w0hv2x.fsf@microsoft.com> <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
-In-Reply-To: <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 21 Apr 2025 18:03:54 -0400
-X-Gm-Features: ATxdqUFcqFjq20jX5yxtvOH3DHCD3LQ0LRd6y2kU6Qtvx6XNCs0BPjy44J04_l4
-Message-ID: <CAHC9VhS0kQf1mdrvdrs4F675ZbGh9Yw8r2noZqDUpOxRYoTL8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
-	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	"David S. Miller" <davem@davemloft.net>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
-	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 4:13=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> On Wed, Apr 16, 2025 at 10:31=E2=80=AFAM Blaise Boscaccy
-> <bboscaccy@linux.microsoft.com> wrote:
-> >
-> > > Hacking into bpf internal objects like maps is not acceptable.
-> >
-> > We've heard your concerns about kern_sys_bpf and we agree that the LSM
-> > should not be calling it. The proposal in this email should meet both o=
-f
-> > our needs
-> > https://lore.kernel.org/bpf/874iypjl8t.fsf@microsoft.com/
+Add several interrupt based sensor detection events:
+- single tap
+- double tap
+- free fall
+- activity
+- inactivity
+- sample frequency
+- full frequency g range approach
+- documentation
 
-...
+All the needed parameters for each and methods of adjusting them, and
+forward a resulting IIO event for each to the IIO channel.
 
-> Calling bpf_map_get() and
-> map->ops->map_lookup_elem() from a module is not ok either.
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+v6 -> v7:
+- freefall: add a virtual channel, replace OR'ing the axis by AND'ing them
+- inactivity: add a virtual channel, replace OR'ing the axis by AND'ing them
 
-A quick look uncovers code living under net/ which calls into these APIs.
+v5 -> v6:
+- replace bool axis_en for tap and activity/inactivity
+- apply freefall bit mask
+- change `measure_en` to use `regmap_update_bits()` for POWER_CTL register
+- fix comments and update documentation, particularly on inactivity time
 
-> lskel doing skel_map_freeze is not solving the issue.
-> It is still broken from TOCTOU pov.
-> freeze only makes a map readonly to user space.
-> Any program can still read/write it.
+v4 -> v5:
+- read_config_value() and write_config_value() now use direct returns,
+  in case of a failure, measurement stays turned off
+- fifo evaluation returns 0 in case of success
+- axis enum turned into three different set of defines for tap, act and inact
+- turn the suppress bit into a separate define macro
+- variable naming, generally use axis_ctrl for similar variables
 
-When you say "any program" you are referring to any BPF program loaded
-into the kernel, correct?  At least that is my understanding of
-"freezing" a BPF map, while userspace is may be unable to modify the
-map's contents, it is still possible for a BPF program to modify it.
-If I'm mistaken, I would appreciate a pointer to a correct description
-of map freezing.
+v3 -> v4:
+- rename patch "add double tap suppress bit" to
+  "set the tap suppress bit permanently" to make it more comprehensive
+- added patch "cleanup regmap return values"
+- added patch "introduce adxl345_push_event function", as a solution
+  to the return value problem, group all int_stat evaluating pieces
+  in the same function
+- tap, act and inact axis enabling are using now regmap cache
+- activity enable depending on individual axis now, as the sensor offers
+  such feature
+- inactivity enable depending on individual axis now, as the sensor offers
+  such feature
+- fix bug in previous patch: separate axis direction in interrupt handler
+  sharing the same variable for tap and activity, if tap and activity
+  enabled together
+- refac of the direction identification of previous patch: only read
+  act/tap axis once now in interrupt handler if both is enabled
+- fix bug in previous patch: return value of pushed event in interrupt
+  handler
+- several cleanups
 
-Assuming the above is correct, that a malicious bit of code running in
-kernel context could cause mischief, isn't a new concern, and in fact
-it is one of the reasons why Hornet is valuable.  Hornet allows
-admins/users to have some assurance that the BPF programs they load
-into their system come from a trusted source (trusted not to
-intentionally do Bad Things in the kernel) and haven't been modified
-to do Bad Things (like modify lskel maps).
+v2 -> v3:
+- generally introduction of regmap cache for all directly stored 8-bit
+  values, specification of volatile regs and cleanup
+- moving thresholds, unchanged values and flags to regmap cache, in
+  consequence removal of corresponding member values of the state
+  instance
+- removal of intio and int_map member fields due to regmap cache, thus
+  split of set_interrupts() patches in two parts
+- rework documentation
+- rework of ac-bit comment
 
-> One needs to think of libbpf equivalent loaders in golang and rust.
-...
-> systemd is also using an old style bpf progs written in bpf assembly.
+v1 -> v2:
+- implementation of all events (but tap2 suppress bit) by means IIO ABI
+- add sample frequency / ODR configuration
+- add g ranges configuration
+- add activity/inactivity using auto-sleep and powersave
+- add dynamic adjustment of default values for
+  activity/inactivity thresholds and time for inactivity based on ODR
+  and g range (can be overwritten)
+- add sensor documentation
+---
+Lothar Rubusch (11):
+  iio: accel: adxl345: introduce adxl345_push_event function
+  iio: accel: adxl345: add single tap feature
+  iio: accel: adxl345: add double tap feature
+  iio: accel: adxl345: set the tap suppress bit permanently
+  iio: accel: adxl345: add freefall feature
+  iio: accel: adxl345: extend sample frequency adjustments
+  iio: accel: adxl345: add g-range configuration
+  iio: accel: adxl345: add activity event feature
+  iio: accel: adxl345: add inactivity feature
+  iio: accel: adxl345: add coupling detection for activity/inactivity
+  docs: iio: add documentation for adxl345 driver
 
-I've briefly talked with Blaise about the systemd issue in particular,
-and I believe there are some relatively easy ways to work around the
-ELF issue in the current version of Hornet.  I know Blaise is tied up
-for the next couple of days on another fire, but I'm sure the next
-revision will have a solution for this.
+ Documentation/iio/adxl345.rst    |  423 +++++++++
+ drivers/iio/accel/adxl345.h      |    2 +-
+ drivers/iio/accel/adxl345_core.c | 1413 +++++++++++++++++++++++++++++-
+ 3 files changed, 1792 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/iio/adxl345.rst
 
-> Introduction of lskel back in 2021 was the first step towards signing
-> (as the commit log clearly states).
-> lskel approach is likely a solution for a large class of bpf users,
-> but not for all. It won't work for bpftrace and bcc.
+-- 
+2.39.5
 
-As most everyone on the To/CC line already knows, Linux kernel
-development is often iterative.  Not only is it easier for the kernel
-devs to develop and review incremental additions to functionality, it
-also enables a feedback loop where users can help drive the direction
-of the functionality as it is built.  I view Hornet as an iterative
-improvement, building on the lskel concept, that helps users towards
-their goal of load time verification of code running inside the
-kernel.  Hornet, as currently described, may not be the solution for
-everything, but it can be the solution for something that users are
-desperately struggling with today and as far as I'm concerned, that is
-a good thing worth supporting.
-
---=20
-paul-moore.com
