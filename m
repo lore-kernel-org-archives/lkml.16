@@ -1,94 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E082D21A43C;
-	Mon, 21 Apr 2025 21:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EA31E9916;
+	Mon, 21 Apr 2025 21:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745271145; cv=none; b=BAfIDDRT/W7z0ajF/tl39fEwMMSnHJWwyrD3FBdIggwW2tQxnN124MPFyQu4dbIeOHgIMIW2nrXZXgdirz18Is1P21MH6r/f7hJ7I0a8SC2s93tOgyPuw0d8hwYkyx4jItZAHEr7BkrY1uM2lkTB/YbMrYa8wwNDU75VCdMSsd4=
+	t=1745271167; cv=none; b=G3cox29+NjynvJcECUe1BW735zxR19Pnli2A48xszgRySNIVmdgoiBY75iBC2XrrDYumOHC7dSJ+RC6+XpBFfBpz1WqFB2LZoDnotA22eoAr8bwKwgIUtKtL5H+XhGvqwWRJnAmuZog7hOsTH52Ai442QfspZnXVb67hKv72Y4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745271145; c=relaxed/simple;
-	bh=ce3ClsriXC8LZWlvmEpmiJgErfC2vJ+4DZ1F22z7qGs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P5OwGsuzppx9bVwgjHopDPRgAq/MhLG3y9S0SpPh/106Sc/BfkUmEJ+xSKu1e4x6+XIzzxUcgqadlG347RMurPEDhafpgQ+MbxQEPRc49PvDROcDvgQxEXQz1A15QBB3i9xc9CsbhGhhg837iM/p5v400spH38cz1hC8D1rhrag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eo9RYHb8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745271167; c=relaxed/simple;
+	bh=QLIGv6BbptEPQr0f4i4xGAOTh8BsPkZbgBrT/SzcXm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbEzlMU8unere9MK1KUkotKCncNRLXxZHKPfgeg/kVJCsTj7cmQpiRYTMBcZEA4osw4Rlg172R5U4Z7Kfu8lWJQ8aknVwoKet4kCNe595ZxJPYh0SO8n6xQCIZA9g+TL9mFAvRjJLbmTRbRNfHe6xAWGi3GUL08IaB2vMA2A8M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8ULaN64; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eo9RYHb8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8D06C4CEEA;
-	Mon, 21 Apr 2025 21:32:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8ULaN64"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF39DC4CEE4;
+	Mon, 21 Apr 2025 21:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745271144;
-	bh=ce3ClsriXC8LZWlvmEpmiJgErfC2vJ+4DZ1F22z7qGs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eo9RYHb8TpLMATn+OsvZHsObuPK9BShm+8CHk7OavKKZd7juoYHDNsxkxYFxf1pnO
-	 mwEn/BiTjm/W0WZ0qMDhJT3d3mIsCLvfEwvGYpv9YKeYdNM/jSkCf4RGWSF+gqMouZ
-	 uwYiJ2ib+GscW6VdW3LUo7uEHc8fk5X1RjJgOegxwEjcx/GdyfD+XOUm4aklGgmHag
-	 Cf63tELcDLC5VePIk1P8xIBS2KvGcJwkU51wco+JhNb8xr6qJ6gcXBlu4d8WJB0In4
-	 c03SIUZW10d/1FEt85HV4zgNSbBjRwR0ixulEDZY368N3zPtm0K59RvihAO0wwCUPd
-	 ESfr0GJVcQgbA==
-From: Mario Limonciello <superm1@kernel.org>
-To: Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kernel@vger.kernel.org (open list),
-	linux-input@vger.kernel.org (open list:AMD SENSOR FUSION HUB DRIVER),
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH v4 RESEND 2/2] HID: amd_sfh: Avoid clearing reports for SRA sensor
-Date: Mon, 21 Apr 2025 16:32:10 -0500
-Message-ID: <20250421213210.1160665-3-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250421213210.1160665-1-superm1@kernel.org>
-References: <20250421213210.1160665-1-superm1@kernel.org>
+	s=k20201202; t=1745271167;
+	bh=QLIGv6BbptEPQr0f4i4xGAOTh8BsPkZbgBrT/SzcXm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T8ULaN64PeXZQfBJisV9YtKLO1q59790zkrdA9tu9dIiLfgg8a5sgJL01BjAbTgZK
+	 EJZ0fgjVKs11DANCdMkauVLrzKoEZh/fE2+MS686/81nFOeTUpSOo2mojV/YRGHiXF
+	 7oIeOkTWu4ODnomiC6t0j1J4iHu8EEbGdd32b3coyVRUkkHPkZgfXM9+5aAoVptbvc
+	 ZAuYxJCf6Z/LHV1oGY3cbTBuiqH5IgEQph5bmbi3+glaNovUJf1mzWQ28RRMMZg8cG
+	 PiPNWNli+BQ234DC9YXPXt8WpPG2eZtEAs4ekMWpzZGxrSzisv2KAxg3wMJWp4/0MZ
+	 xY3Tm5tiaMxHg==
+Date: Mon, 21 Apr 2025 16:32:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: qcom,snps-eusb2-repeater: Add
+ more tuning overrides
+Message-ID: <20250421213244.GA2725065-robh@kernel.org>
+References: <20250416120201.244133-1-mitltlatltl@gmail.com>
+ <20250416120201.244133-2-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416120201.244133-2-mitltlatltl@gmail.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, Apr 16, 2025 at 08:02:00PM +0800, Pengyu Luo wrote:
+> In downstream tree, many registers need to be overridden, it varies
+> from devices and platforms, not only HS trasmit amplitude(0x51),
 
-SRA sensor doesn't allocate any memory for reports.  Skip
-trying to clear memory for that sensor in cleanup path.
+spelling
 
-Suggested-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v4:
- * One more case for amd_sfh_hid_client_deinit()
-v3:
- * Less changes as amd_sfh_hid_client_deinit() covers a lot
-v2:
- * New patch
----
- drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57). And
+> some devices require different overrides for different dr_mode. So
+> add property entries for host mode, original entries will be used
+> for device mode.
+> 
+> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+> ---
+>  .../phy/qcom,snps-eusb2-repeater.yaml         | 41 +++++++++++++++++--
+>  1 file changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml b/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
+> index d16a543a7..d0f5e770d 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
+> +++ b/Documentation/devicetree/bindings/phy/qcom,snps-eusb2-repeater.yaml
+> @@ -36,25 +36,60 @@ properties:
+>  
+>    qcom,tune-usb2-disc-thres:
+>      $ref: /schemas/types.yaml#/definitions/uint8
+> -    description: High-Speed disconnect threshold
+> +    description: High-Speed disconnect threshold for device mode
+>      minimum: 0
+>      maximum: 7
+>      default: 0
+>  
+>    qcom,tune-usb2-amplitude:
+>      $ref: /schemas/types.yaml#/definitions/uint8
+> -    description: High-Speed transmit amplitude
+> +    description: High-Speed transmit amplitude for device mode
+>      minimum: 0
+>      maximum: 15
+>      default: 8
+>  
+>    qcom,tune-usb2-preem:
+>      $ref: /schemas/types.yaml#/definitions/uint8
+> -    description: High-Speed TX pre-emphasis tuning
+> +    description: High-Speed TX pre-emphasis tuning for device mode
+>      minimum: 0
+>      maximum: 7
+>      default: 5
+>  
+> +  qcom,tune-usb2-squelch:
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description: Squelch detection threshold tuning for device mode
+> +    minimum: 0
+> +    maximum: 7
+> +    default: 3
+> +
+> +  qcom,tune-usb2-disc-thres-host:
 
-diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-index c1bdf1e0d44af..0a9b44ce4904e 100644
---- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-+++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_init.c
-@@ -83,6 +83,9 @@ static int amd_sfh_hid_client_deinit(struct amd_mp2_dev *privdata)
- 		case ALS_IDX:
- 			privdata->dev_en.is_als_present = false;
- 			break;
-+		case SRA_IDX:
-+			privdata->dev_en.is_sra_present = false;
-+			break;
- 		}
- 
- 		if (cl_data->sensor_sts[i] == SENSOR_ENABLED) {
-@@ -237,6 +240,8 @@ static int amd_sfh1_1_hid_client_init(struct amd_mp2_dev *privdata)
- cleanup:
- 	amd_sfh_hid_client_deinit(privdata);
- 	for (i = 0; i < cl_data->num_hid_devices; i++) {
-+		if (cl_data->sensor_idx[i] == SRA_IDX)
-+			continue;
- 		devm_kfree(dev, cl_data->feature_report[i]);
- 		devm_kfree(dev, in_data->input_report[i]);
- 		devm_kfree(dev, cl_data->report_descr[i]);
--- 
-2.43.0
+Put this and the others after each existing property (for device mode). 
+Ideally, these would all be in alphabetical order.
 
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description: High-Speed disconnect threshold for host mode
+> +    minimum: 0
+> +    maximum: 7
+> +    default: 0
+> +
+> +  qcom,tune-usb2-amplitude-host:
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description: High-Speed transmit amplitude for host mode
+> +    minimum: 0
+> +    maximum: 15
+> +    default: 8
+> +
+> +  qcom,tune-usb2-preem-host:
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description: High-Speed TX pre-emphasis tuning for host mode
+> +    minimum: 0
+> +    maximum: 7
+> +    default: 5
+> +
+> +  qcom,tune-usb2-squelch-host:
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description: Squelch detection threshold tuning for host mode
+> +    minimum: 0
+> +    maximum: 7
+> +    default: 3
+> +
+>  required:
+>    - compatible
+>    - reg
+> -- 
+> 2.49.0
+> 
