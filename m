@@ -1,107 +1,114 @@
-Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E0819ADA4;
-	Mon, 21 Apr 2025 11:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085DF1A304A;
+	Mon, 21 Apr 2025 11:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745234794; cv=none; b=UaLZHRR87X+jVgbAvyEak2dQkoJe8eNxlwu0rOqTwfMVQhL/42yARBKugbykexpKsQ5g/RRjtptc7CqzP3r75aPgcLs8MOSp49xF+8T83RpGtpBj4KWQEzR7MmSMvrrFCe3H4eGZkn+eczHBOdBlhZvwYy3T7SsyE9vpz7M56TE=
+	t=1745234980; cv=none; b=f27TDgragX4IIdwnxtkEb+eUO1/AVdjrdu4HQKDJJjzi+L+g3/NinRFIre35N7e4PcZCensJpLWF14W6PnlmXqy3xZWhGYT9vWDdvYcphoc+/Odhl/esXlXKyQxPY4MyxmkesI6MlPFbhdGJ0QMbC8iplRwjVnJm63+InO0zz5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745234794; c=relaxed/simple;
-	bh=S1Qr1gUL5Ck5kLLsTAgil/EFoYS6KR0lLR9WWXA4Jh4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pIU4Opw9KvDii/1sheHVRMAsoeyLtZfm8kT34wK6LBUBo5lLPp/QveKNTsUdor7+Cy734jq159BxAsM6+xNiKsKspbjKMedvCJBUYwlVEF8jPa0ECOD0orMXS6q/zNyVSPNFkBxGQtASTRt7bRvrWuUoRCyolFJBt0tLJ/k/S/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=ZDOdYN8V; arc=none smtp.client-ip=91.236.205.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	s=arc-20240116; t=1745234980; c=relaxed/simple;
+	bh=g5IvzHyEJg5MHCLERVymxwn0g2pW11ccDaWhsGQE7kE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yxrqm/244ZDdjOtCShzCjMah80m3mFVaROfdZKnt+Ob+uA0C29vIXAazABhQdH9AR07QvHq2iGT8Os5MWwUYMrlxBwOLN9q1d5aoM218Lpcs+JklDNpIClR5GXFwN4VJa05hOE6KKJ4/jjbZHuxU36HaAnVTPHq/tQV+/KRYE9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0TKfOF+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="ZDOdYN8V"
-Received: from mail.crpt.ru ([192.168.60.4])
-	by mail.crpt.ru  with ESMTP id 53LBQCGS005968-53LBQCGU005968
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Mon, 21 Apr 2025 14:26:12 +0300
-Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Mon, 21 Apr
- 2025 14:26:12 +0300
-Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
- ([192.168.60.4]) with mapi id 15.01.2507.044; Mon, 21 Apr 2025 14:26:12 +0300
-From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
-To: Sathya Prakash <sathya.prakash@broadcom.com>
-CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, "Sreekanth
- Reddy" <sreekanth.reddy@broadcom.com>, Suganath Prabu Subramani
-	<suganath-prabu.subramani@broadcom.com>, "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, "MPT-FusionLinux.pdl@broadcom.com"
-	<MPT-FusionLinux.pdl@broadcom.com>, "linux-scsi@vger.kernel.org"
-	<linux-scsi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] mpt3sas: Check if the variable 'nr_msix' is equal to zero
-Thread-Topic: [PATCH] mpt3sas: Check if the variable 'nr_msix' is equal to
- zero
-Thread-Index: AQHbsrAvDsbOz89l6UeuBq57+fZEBA==
-Date: Mon, 21 Apr 2025 11:26:12 +0000
-Message-ID: <20250421112605.97897-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX2.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 4/20/2025 10:00:00 PM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0TKfOF+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD13C4CEE4;
+	Mon, 21 Apr 2025 11:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745234979;
+	bh=g5IvzHyEJg5MHCLERVymxwn0g2pW11ccDaWhsGQE7kE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u0TKfOF+fxMGqlQVJA2CLpPDaabn7VmWlNQrMUCMxBmfZ1cZE8RSso7EAyM29LgfU
+	 QUd4Tx5aV+r3I6watOS31IKNsx3mCcc/NFQsxuLyjYclgb1DLpXBoL6jybQwXKuXA9
+	 XG1v1574R5zrmGxpCiPIHGfPRhEnJGhb5YxMYh4LNpRuf5V7vXTYgd7jiImuFwNVoV
+	 YlLju64pSHY/1JVfD6dZErCoM8PT/154ONUd2W/oNjItqpvEnM5I02K4nATDP6L/sB
+	 zYQSYNrzaxFO6vajRMreGx4Yi/eqYmTanGyvDNgpgtkOiuRLPG409RjfqEApvDigqc
+	 mDfAOUcZIUDGw==
+Date: Mon, 21 Apr 2025 12:29:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+ Michael.Hennerich@analog.com, sonic.zhang@analog.com, vapier@gentoo.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3 0/5] staging: iio: adc: ad7816: Fix channel handling
+Message-ID: <20250421122931.13202ca9@jic23-huawei>
+In-Reply-To: <cover.1745007964.git.gshahrouzi@gmail.com>
+References: <cover.1745007964.git.gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 192.168.60.4
-X-FE-Policy-ID: 2:4:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=chiOBI0NFnnFyHL+6QC07jGgZAG31p2S9fL2p3s5gJA=;
- b=ZDOdYN8V3cxXoTMVVjCd612smaX9GrTi+F3tbkIRgh+R2lM5mJV9skg2sdO6QwlLJDTNtQBbWDwZ
-	8meM5qkAVjCHFVvjkfM6RaWHBVKuBvJ4InImUEIQWm+EbYos0w5HZwyav7iqw/ogF3P1SUdQXQoN
-	Ys914/Fbm3YcmRCoiIfFS4HXJsjm2A+3llPtGMNKvkf/1opo4hpCO9hx8Ua45rGqjOTH6xdYEc4u
-	xL/0uSwAHYkQF0gEXUFGhjQRDs/v/M4OQKWiJfFKVB8O9fjCYMsqMqDtY0c2neQpLryuOqXNDmvw
-	qVXoufiyc1UQd2h8k5l4QQx1I+JlGCNCTcj8wg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+On Fri, 18 Apr 2025 16:47:34 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-The 'nr_msix' variable is checked for a zero after it is assigned a value.
-However, this variable is assigned a value one more time later. After the
-second assignment, the check for a zero value does not exist.
+> The original patch combined a functional fix (allowing channel 7) with
+> several refactoring steps (introducing chip_info, renaming structs,
+> improving validation). As requested, these have now been separated.
+> 
+> The series proceeds as follows:
+> 1. Fix: Allow diagnostic channel 7 for all device variants.
+> 2. Refactor: Rename the main state structure for clarity before introducing
+>    the new chip_info struct.
+> 3. Refactor: Introduce struct ad7816_chip_info to hold static per-variant
+>    data, update ID tables to store pointers, and switch to using
+>    device_get_match_data() for firmware-independent identification.
+>    This removes the old enum/id mechanism.
+> 4. Refactor: Add has_busy_pin to chip_info and use this flag to
+>    determine BUSY pin handling, replacing pointer comparisons.
+> 5. Refactor: Simplify channel validation logic using 
+>    chip_info->max_channels, removing strcmp() checks.
+> 
+> Regarding the 'fixes' tag: I've applied it only to the first commit
+> containing the core fix, primarily to make backporting easier. Is this
+> the standard practice, or should the tag typically be applied to
+> subsequent commits that build upon or are related to the fix as well?
+> 
+> Chainges in v3:
+> 	- Split the patch into smaller patches. Make the fix first
+> 	  followed by clean up.
+> 	- Include missing channel for channel selection.
+> 	- Address specific feedback regarding enums vs. chip_info data.
+> 	- Use device_get_match_data() for device identification.
+> 	- Move BUSY pin capability check into chip_info data.
+> 	- Simplify channel validation using chip_info data.
+> Changes in v2:
+>         - Refactor by adding chip_info struct which simplifies
+>           conditional logic.
 
-Add a check for this variable to ensure it is not zero in order to avoid
-division by zero.
+Hi Gabriel,
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-      =20
-Fixes: 91b265bf0b57 ("mpt3sas: Rework the MSI-X grouping code")
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
----
- drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
- 1 file changed, 2 insertions(+)
+Whilst I appreciate the enthusiasm. Generally slow down a little!
+If there is a fundamental issue like an accidental sending of the wrong
+version then please reply to the thread cover letter to say that.
+Otherwise, even in the presence of build bot reports, it is good
+for any non trivial series to wait a little for reviews to come in.
+Ideally a week, but a few days can be fine if you already have a lot
+of feedback from reviewers.
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt=
-3sas_base.c
-index bd3efa5b46c7..f9d5c3bfba53 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -3267,6 +3267,8 @@ _base_assign_reply_queues(struct MPT3SAS_ADAPTER *ioc=
-)
- fall_back:
- 	cpu =3D cpumask_first(cpu_online_mask);
- 	nr_msix -=3D (ioc->high_iops_queues - iopoll_q_count);
-+	if (!nr_msix)
-+		return;
- 	index =3D 0;
-=20
- 	list_for_each_entry(reply_q, &ioc->reply_queue_list, list) {
---=20
-2.43.0
+IIO is moderately high traffic and whilst we are good at hitting
+the button to mark a thread read, it still takes some time!
+
+Jonathan
+
+> 
+> Gabriel Shahrouzi (5):
+>   staging: iio: adc: ad7816: Allow channel 7 for all devices
+>   staging: iio: adc: ad7816: Rename state structure
+>   staging: iio: adc: ad7816: Introduce chip_info and use pointer
+>     matching
+>   staging: iio: adc: ad7816: Use chip_info for device capabilities
+>   staging: iio: adc: ad7816: Simplify channel validation using chip_info
+> 
+>  drivers/staging/iio/adc/ad7816.c | 94 ++++++++++++++++++--------------
+>  1 file changed, 54 insertions(+), 40 deletions(-)
+> 
+
