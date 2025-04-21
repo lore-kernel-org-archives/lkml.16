@@ -1,166 +1,155 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CCD38DE9;
-	Mon, 21 Apr 2025 14:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFD213A418;
+	Mon, 21 Apr 2025 14:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245137; cv=none; b=OGkxlDv9K8r4dhQVDDzzM7sjxMKJY+I6X8yu7MvzjkW7aRW2t0hW7XL+IRg+eLZqisKojUpW05nGiuxc0e2h0Ojsfn2YsblSxKqQfez5R5z8Z1ci7GdTjBkht8ny0tBX2CXDiuB6fahFGEF3OttpyxIis4t1bjPkZ3Q9rJHJ6GE=
+	t=1745245185; cv=none; b=jQDXtWcCUBdMY76WIOZuvn5SLLKJ1xzTUOGT9ULEUV3cQHzcficVR/ztqnkEBM3M0NSdzT+0JKSYUGwiJpIz8lakKa34LD7/NDpdFW7yLk2X0wuoMith1TVvTbsJYN7W7vap6eoMOwRBNUKBOM3fyfRnscDtDHjs+Bo1ic+NADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245137; c=relaxed/simple;
-	bh=uqPZ8pSWA+KC9OH2B0rYCnAcm3U6jLzNWKwsq1ZwBLA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XPV/twVOwsMUY0wkrHFnYXFtIqFl+PlWWhJR94oKTiWC50wF0jQYY6oTPC5SazPq3Mh7CLAPO6Y8m0TbJZ6JFGyVL8eG7jfSjSj/CUVVV/Ri72mGKZsocNRUkqRLXkIODE5Jro+GdCO1S5B7PMyqmUYIx6+EBw+QFVGybgm7AZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O80hEzTW; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745245185; c=relaxed/simple;
+	bh=Tr9+pqiq4D1eXz6CFkFBVMqYsvom8aBnfD6QBxYvocg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhanomHGxtcgxml67b4VsGrQ5VBqwOgnIOAq0C6rMuvXQaBLPBqMxGzFu2CFSKAXTXBgTtyKcmIUgV8a6/Dua4pJQxrQbVytBXZp7VYALQtgj62Wjh0Amvs6+IAkM4iOk5RzNIrKI47/po2/7HCYtJI6sOXGju/HTQmxFi1uVgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t3Jo7K93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O80hEzTW"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LA3wqL007572;
-	Mon, 21 Apr 2025 14:18:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FVXVAV
-	Bj9dt951RNAVxr15KnbP6+CzPRiqjlfAwfQ0U=; b=O80hEzTWZD+OojTOtaDHFb
-	kmnfSXPv7ucP6tFzwx5wt1hukvsPqkVjQH4F19oYqZBPsWJG7+lr9LzxzmZ/W22b
-	Jph91gyn4LfxFVoOFnp/h9fYYMVA7yNgs8hlN/usdM9mtYPzwTgaB133o0edN98e
-	CiKdPw4FA5xz6GoLtrbSo3dIHAc/18n9RfJDREM1PFFsZzKMNcNnFOQuy+JUuFNp
-	NQ/KR/vnCaK40smO2DUl9mkAgVdn5BRW+MkRKc41MxhiPJwsR9J7jpIxb6zFVKxu
-	uSCY2m/fbaBjKAakvfWPmMW2Tn69qTk09JOZYI1OxP0SP/7TXBJ7+M+rSA/puTEA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 465kxj8ybc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 14:18:26 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53LAl6iR032526;
-	Mon, 21 Apr 2025 14:18:24 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 464phyetsk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Apr 2025 14:18:24 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53LEINNN17891846
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 14:18:24 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CEFF258063;
-	Mon, 21 Apr 2025 14:18:23 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 127A358059;
-	Mon, 21 Apr 2025 14:18:22 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.21.104])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 21 Apr 2025 14:18:21 +0000 (GMT)
-Message-ID: <ef18ae186cd17431b9ff6b8a443b63fd6fb78b98.camel@linux.ibm.com>
-Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap
- segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>, steven chen <chenste@linux.microsoft.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Mon, 21 Apr 2025 10:18:21 -0400
-In-Reply-To: <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
-References: <20250416021028.1403-1-chenste@linux.microsoft.com>
-	 <20250416021028.1403-4-chenste@linux.microsoft.com>
-	 <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
-	 <dcde124baec01318e661f5430ce8a008a6d196c0.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t3Jo7K93"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51A95C4CEE4;
+	Mon, 21 Apr 2025 14:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745245185;
+	bh=Tr9+pqiq4D1eXz6CFkFBVMqYsvom8aBnfD6QBxYvocg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t3Jo7K93LVgH9rdJjTmiOPAouPdZfKVSSsI7tt0fE5/7NBNVaKUOx2TsqBgxaCnsx
+	 Z7XXaeoqdpcPl/j8zO29nasbGPGUeZReKOfPCG6Ag71sWYNoH69DrPvAqv6XHr5h4+
+	 c+8qagFwgMr0+CDx/i7qjqdHTkccn08kGgN1SR9suu+8LjldZMoLT4aNJ7bqJ5pfez
+	 XQFZ1fmQeeyR5vpQHfmuVM4+O+Tcys00pb6Xq31Y6QNAr4YSADBc0pEUsdetpE8Reo
+	 mWdp8kB+FdDO3RCPww9QmdbioUw8FXut2rQ1PvdJcPYRb7qQvxIZB0P1JAhK30yoyY
+	 nDS0mdRdLjsHw==
+Date: Mon, 21 Apr 2025 15:19:37 +0100
+From: Simon Horman <horms@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Wenjun Wu <wenjun1.wu@intel.com>, Ahmed Zaki <ahmed.zaki@intel.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next 06/14] libeth: add bookkeeping support for
+ control queue messages
+Message-ID: <20250421141937.GI2789685@horms.kernel.org>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <20250408124816.11584-7-larysa.zaremba@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cikbJN6PF9hmHh0Nsj6AtPTZQGoZiaoI
-X-Proofpoint-ORIG-GUID: cikbJN6PF9hmHh0Nsj6AtPTZQGoZiaoI
-X-Authority-Analysis: v=2.4 cv=HLDDFptv c=1 sm=1 tr=0 ts=680653b2 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=bLk-5xynAAAA:8 a=yMhMjlubAAAA:8 a=PtDNVHqPAAAA:8 a=20KFwNOVAAAA:8
- a=As6bdjLyCJmV0PnI7e4A:9 a=QEXdDO2ut3YA:10 a=zSyb8xVVt2t83sZkrLMb:22 a=BpimnaHY1jUKGyF_4-AF:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408124816.11584-7-larysa.zaremba@intel.com>
 
-On Mon, 2025-04-21 at 09:51 -0400, Mimi Zohar wrote:
-> On Fri, 2025-04-18 at 12:36 +0800, Baoquan He wrote:
-> > On 04/15/25 at 07:10pm, steven chen wrote:
-> > > From: Steven Chen <chenste@linux.microsoft.com>
-> >  ^^^^^^
->=20
-> As James Bottomley previously explained[1], if you haven't made any chang=
-es to
-> Tushar's patch, then the very first line of the patch description would b=
-e
-> "From: Tushar Sugandhi <tusharsu@linux.microsoft.com>" followed by a blan=
-k line.
-> If there is a minor change, you would add "<your email address>: explanat=
-ion".
-> For example:
->=20
-> Steven Chen <chenste@linux.microsoft.com>: modified patch description
+On Tue, Apr 08, 2025 at 02:47:52PM +0200, Larysa Zaremba wrote:
+> From: Phani R Burra <phani.r.burra@intel.com>
+> 
+> All send control queue messages are allocated/freed in libeth itself
+> and tracked with the unique transaction (Xn) ids until they receive
+> response or time out. Responses can be received out of order, therefore
+> transactions are stored in an array and tracked though a bitmap.
+> 
+> Pre-allocated DMA memory is used where possible. It reduces the driver
+> overhead in handling memory allocation/free and message timeouts.
+> 
+> Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+> Signed-off-by: Phani R Burra <phani.r.burra@intel.com>
+> Co-developed-by: Victor Raj <victor.raj@intel.com>
+> Signed-off-by: Victor Raj <victor.raj@intel.com>
+> Co-developed-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+> Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+> ---
+>  drivers/net/ethernet/intel/libeth/controlq.c | 578 +++++++++++++++++++
+>  include/net/libeth/controlq.h                | 169 ++++++
+>  2 files changed, 747 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/libeth/controlq.c b/drivers/net/ethernet/intel/libeth/controlq.c
 
-To clarify: This line would be included below with your Signed-off-by tag.
+...
 
->=20
-> [1]
-> https://lore.kernel.org/lkml/58e70121aaee33679ac295847197c1e5511b2a81.cam=
-el@HansenPartnership.com/
->=20
-> > >=20
-> > > Implement kimage_map_segment() to enable IMA to map the measurement l=
-og=20
-> > > list to the kimage structure during the kexec 'load' stage. This func=
-tion
-> > > gathers the source pages within the specified address range, and maps=
- them
-> > > to a contiguous virtual address range.
-> > >=20
-> > > This is a preparation for later usage.
-> > >=20
-> > > Implement kimage_unmap_segment() for unmapping segments using vunmap(=
-).
-> > >=20
-> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >   ^^^^^^
->=20
-> Neither "Author:" nor "From:" belong here.  Please remove.
->=20
-> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> >   ^^^^^^^
->=20
-> Having Tushar's "Signed-off-by" tag and yours below indicate that you mod=
-ified
-> the original author's patch.
+> +/**
+> + * libeth_ctlq_xn_deinit - deallocate and free the transaction manager resources
+> + * @xnm: pointer to the transaction manager
+> + * @ctx: controlq context structure
+> + *
+> + * All Rx processing must be stopped beforehand.
+> + */
+> +void libeth_ctlq_xn_deinit(struct libeth_ctlq_xn_manager *xnm,
+> +			   struct libeth_ctlq_ctx *ctx)
+> +{
+> +	bool must_wait = false;
+> +	u32 i;
+> +
+> +	/* Should be no new clear bits after this */
+> +	spin_lock(&xnm->free_xns_bm_lock);
+> +		xnm->shutdown = true;
 
-To clarify: "Just" having Tushar's "Signed-off-by" tag and yours below indi=
-cate
-that you modified the original author's patch.
+nit: The line above is not correctly indented.
 
->=20
-> > > Cc: Eric Biederman <ebiederm@xmission.com>
-> > > Cc: Baoquan He <bhe@redhat.com>=20
-> > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > Cc: Dave Young <dyoung@redhat.com>
-> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> >   ^^^^^
-> >=20
-> > The signing on this patch is a little confusing. I can't see who is the
-> > real author, who is the co-author, between you and Tushar. You may need
-> > to refer to Documentation/process/5.Posting.rst to make that clear.
-> >=20
-> > > Acked-by: Baoquan He <bhe@redhat.com>
+     Flagged by Smatch.
+
+> +
+> +	for_each_clear_bit(i, xnm->free_xns_bm, LIBETH_CTLQ_MAX_XN_ENTRIES) {
+> +		struct libeth_ctlq_xn *xn = &xnm->ring[i];
+> +
+> +		spin_lock(&xn->xn_lock);
+> +
+> +		if (xn->state == LIBETH_CTLQ_XN_WAITING ||
+> +		    xn->state == LIBETH_CTLQ_XN_IDLE) {
+> +			complete(&xn->cmd_completion_event);
+> +			must_wait = true;
+> +		} else if (xn->state == LIBETH_CTLQ_XN_ASYNC) {
+> +			__libeth_ctlq_xn_push_free(xnm, xn);
+> +		}
+> +
+> +		spin_unlock(&xn->xn_lock);
+> +	}
+> +
+> +	spin_unlock(&xnm->free_xns_bm_lock);
+> +
+> +	if (must_wait)
+> +		wait_for_completion(&xnm->can_destroy);
+> +
+> +	libeth_ctlq_xn_deinit_dma(&ctx->mmio_info.pdev->dev, xnm,
+> +				  LIBETH_CTLQ_MAX_XN_ENTRIES);
+> +	kfree(xnm);
+> +	libeth_ctlq_deinit(ctx);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(libeth_ctlq_xn_deinit, "LIBETH_CP");
+
+...
