@@ -1,170 +1,128 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C591C862B;
-	Mon, 21 Apr 2025 13:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CCF20C037
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745240431; cv=none; b=LqhDnKyX3esMirZnOQKcgZTIgksihEyRobHvgLjDKNlGl3XI2JkccNFQcFJxJp6ksdlo1xUnxvbr/ubLWboKQ/48oZ4iIiluMr9LTvWycZ293yt8kQzJrJrWRNu579F1oLrpEKNGAup56GgboDyOHkRxewPURLM2PmIMztTPuuQ=
+	t=1745240456; cv=none; b=acs2SJCMhfit1hiA5aArEp0Nf4dLKEmTH+wX/HsZ/bj47XQ1bTNZVGiv0n0szZQ8nj5YiN5GOU+Gy5xoNqJkoM/N7nAjVRBMDAF1naoNHUTPJlAjQTYin9Vry+XuN2iIKDki34vZQwVWXi+04PTd1s8pK2kZjEXOkrzavQo5UWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745240431; c=relaxed/simple;
-	bh=4UaHNppdWI88ytEG/iUUOZ9pHL0mN5nJbgb6u8r7EVQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t8CEyzTs0GQlQ/RLN+em+TR2GQPvT55RnPNFRXJ7hbQMTpnI1/ykUo4kI5dhusqVNzOl9LQh7NEsh/pH9H6QXfBxFA4y6eLidwnVTIcPQYDexqnJKKhU38vNNPaTcEGSPilh/YHRMDk3HgD17c5PxgUlqVJ0obpb6niP5vWz2tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQnO/FFW; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745240456; c=relaxed/simple;
+	bh=UdoBYXZDI6i91jbwfQE13A2pfJqNj28gRiPFYgsqjEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NUrptslEwOnQpARDlfMdzVbf4+cA5c69gcEn+pSLy7VYzij+46vEGWTdrRymWMXKK71aGbY2UcD2B5YtOXdMM0JwYCkBUz0gLc18XzP/ng5So+ICd2s6cIqWSYIX9/t3mGnsF0GdFZtjfZX+eNEyKk+lp2mfY+FV+mw9xTlxwUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=P+SboFVm; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQnO/FFW"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43690d4605dso31386435e9.0;
-        Mon, 21 Apr 2025 06:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745240428; x=1745845228; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4UaHNppdWI88ytEG/iUUOZ9pHL0mN5nJbgb6u8r7EVQ=;
-        b=BQnO/FFWOIH1ABYGC0bW+KFlOxZbafP3zRErGE3Yk4c9r5dxr1QFFZcK7Xa2sBhvHA
-         x0nyY0eflCJ+T8eksW0KenE7QVmS6dp857QkfirMBDgINSksk3AILqryEWK7EhomvCtw
-         e0f3j0ioidONk0Mn3Dw4NWjClsGQG7sIJ9RnfTf/Jrsh8sD7QA/YRpP6ywKUhqA8xjEa
-         TbYO8D5p8N3OMMrBJ4RFnGWzNXsdvkVUoh28RV2Ebhk7sy8XRuyt/o7HzSWytk4Yw6cg
-         hi3Iio3K9O7Yqs8E+oHQ5oFfMp5Szg19zC2g6XfXXu9bXUoaTXJiMOhyS1kJtie1QrVQ
-         8V2A==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="P+SboFVm"
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8A2F63FFE3
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 13:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1745240445;
+	bh=vQ6ou3tWqXEiNZ+OJ9V6Fm/EPrs0acywzCR64vd5LIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=P+SboFVmDBjMjpg9phP5s6RtXbandTWjQNrD7CSlHIMacS+0Xyj4cyO7wOxVKdIJw
+	 3EnhXjzXupUp7AVETcbNAndaluOJumHP8svu5UDRDmaU8IqI+yeKaftDIco58T9nAG
+	 vpwlFHZd27qtqSw6AQUwjTvXqOOsgRgKaQ6nvobnSquUdDQ04VtakyOrAJ2P/+jgR3
+	 HxcS0BhnWoLcB7RkhrDcdSdYNf6vaA3MvNQKvof+rHMCkkNzE1+bvMTp1YfzdVCwW0
+	 dnnrnAeXBwyx3mLlm4H0NVWmfNyQ1MrKrhmISBNvWmhmnLEDjyVbYaeW5M0GTGdLtf
+	 b2IVB6Y9b8kqw==
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-225505d1ca5so37699895ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:00:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745240428; x=1745845228;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4UaHNppdWI88ytEG/iUUOZ9pHL0mN5nJbgb6u8r7EVQ=;
-        b=MM9okAwJ2nxOXD5sFDeSpsBO73uXpVHtdyPtZ6j+xYEJbdYoO5o0FiTIhI9Mn6oZzh
-         jR32TX6qWYmSIcaZlSPuvnmUjBySAguORrUxMz8WWhROceRBtUfJuyLyMuNQwQT6k518
-         wcXrxR7eFBMcCNMhIAip95TQLKT/LtDL+qErJG5GJbcheYGYgGAxy0VD77kIu9Q/Pjsb
-         w2lqaMRsIUIerlsu/KINtdWGIVenUlOK2+X8j49nJYMGYoG6EbNXuW/Bq+SuB7hohGJU
-         Ot0txQ3iXVrOTLaatw06R/XufWW2z00/jMlEkbXoREqJQDhNnxsIapoyB19wO3oyfak5
-         7Ugg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJZdplo+ZIiyeWrAmnvE70yWgG1ywzImLn7/3ln90jkhc61Rf9mi+3+nQpvcEPaVgRluKOZuMzX2XoDGhn@vger.kernel.org, AJvYcCUkI0gCBp5mHR74PTmItcofLNSiumy6CRF0o5/L9sgSLbrnvBOBwizIZB+bWxj1tSBeycPKcSh+Kn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqlIzx3ZZx+soAMJeT83bVNL3vq/EOpvH7rNrP/voHFFn6jYHU
-	AUApFOX8wB3b3maEVXaVhrM8WiaFWeZiouB/uORFWwapc6fy4ny+
-X-Gm-Gg: ASbGncs7pLkHfPF8HyE4Xh14lbnTgP4LwWyI/h3sQVlWxrDu6AR5M9fcXH+6ciu+RiJ
-	iMlZM2W7f5LWfIKa5U2OSd0bdmCQRbsQ6VTxkb9DqcjGYUdKfG++980EqBi3g4lHJbxRIqWGcMP
-	kifBP/V9doC8eQUQkrGHyBFv0SO9ztFPJu7NUmJTGPX4gZVfZ8jbAm+SOag8uOWv+ypzvyxadyj
-	GFdmLyY/+hxM1YBlCWIT4b1EKC3rx6nWT/+ZJsU9tEkSUTmKGgk5Rp/P3IAAjzylkav2Oc5zjS6
-	fW1DAI8nVWRW4/GWmcW6xe1biealJb/kKxcRT32BqF/ge/ylX6/NLcTDPvNB+Ta8IoUkNlminBd
-	2azIph3mULK3o2LRtGwt3UoY=
-X-Google-Smtp-Source: AGHT+IGVMQ4ne24Nx7XbzWYVkRotu3FUR6ZU6Bl2LRSj3DyRkFGaC62VUPRqLgCmqX10YsN7ScjLwQ==
-X-Received: by 2002:a05:600c:1e88:b0:43d:10c:2f60 with SMTP id 5b1f17b1804b1-4406ac0a847mr85627525e9.24.1745240427705;
-        Mon, 21 Apr 2025 06:00:27 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44044508a7dsm121988085e9.1.2025.04.21.06.00.26
+        d=1e100.net; s=20230601; t=1745240444; x=1745845244;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vQ6ou3tWqXEiNZ+OJ9V6Fm/EPrs0acywzCR64vd5LIA=;
+        b=Kp48aMsFdYpwq6PJ+0tjIPx96ChzxEpHjXoAlSeNtL2q/BJHsKQdgFYLadMz4YfnR+
+         xR12T/83nSDscLqc7aRbZkDMd5FLcJrgug7KWVRz0J+moqjsWtqofzbM9jUqLbU1a/NE
+         inNrfeDO6QrmAFKBDaTL+K0KapgB4nmLRhoIuY3YGeu1FylFwKEZxcQQC3+8+ox76aJl
+         cvAqZ0L9EMJ9YgJc/L6rO240K1y5vZdF3q9tDEqoQsX5OaB7rmQEruyiP/xidLWRKSy6
+         m+XlIWlfGTpRSCWQ3ZPXFQVWTFAXqwohUvVHUTAOadNoBjUIyvzoJhQDEMrUT4kYtYXb
+         jO2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXKTHkGi1JOJcszfdD4hQB7W2kXrgIyLW5k2GqfF8uvU5ZvlHacfntr3Q2J3dPXjONo9RotTFcQD7oEPiI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFZH7kO6TnTtM91wdX5Men80oagBoC1aLrEQ8HbRZgf05ubpnx
+	2Qz8F0ConWuFuTEilmSUrJSZOZkaXTkVea+FiYPBdbvvBeXhhzlzbWK2HEZzAD0x1+PNWsnGWiA
+	2OQnbiZbN0bcAfoCsVMl0eAkP7OjNbh3fgd4EHMabw+C0rz8aXtjVLMNIe4xDGEZ+tDTyc+jz1Q
+	vQ7w==
+X-Gm-Gg: ASbGnctbMja5cbcuIm4uxan8VOQ5KbBi48/lPjvEX+ITJCIv8Jze3Nw6i5F7z0t93mO
+	773kArm53gLCLi7HsmLp0Tu1SqFfLtQkrQVj6RBTDtrxPe1M8rZTs0e611FdWxMzIAZcVbBMPj7
+	QPjDux60FnRE6qlSCpzJJr30Sz2bkS0rMG22rp1uFNITtmzTvXimGIsCq6RCz1T7s3Ux+D7wJTZ
+	v5qKTZlFd414JWLRmonKtZwr9TtoLH0vFeYcpSVs6uD+61hz4IKHsN3/D2gfFHxvUB74fYz49Js
+	7p4+ViXpbEvWt9ZF171IipIK950EHqdoEZT5ytA99hJqYvsek3Ccu+ak/fuepyATZHE=
+X-Received: by 2002:a17:902:cf12:b0:21a:8300:b9ce with SMTP id d9443c01a7336-22c53626fb6mr170043345ad.49.1745240443749;
+        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExX1Xc2vMU2pblQy0GGeMZoJV1lDHlig9j2h90ZQJ2QyMEyBmrDv5Jg0PlkH60VKL6UPlkuQ==
+X-Received: by 2002:a17:902:cf12:b0:21a:8300:b9ce with SMTP id d9443c01a7336-22c53626fb6mr170043015ad.49.1745240443473;
+        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
+Received: from rickywu0421-ThinkPad-X1-Carbon-Gen-11.cnshub.home ([182.233.178.56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bda7b3sm64758665ad.52.2025.04.21.06.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 06:00:27 -0700 (PDT)
-Message-ID: <3875da4e070f991484b8536f6066347615b0815a.camel@gmail.com>
-Subject: Re: [PATCH] iio: amplifiers: ada4250: use DMA-safe memory for
- regmap_bulk_read()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Antoniu Miclaus	
- <antoniu.miclaus@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>,  Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>, Mark Brown
- <broonie@kernel.org>
-Date: Mon, 21 Apr 2025 14:00:30 +0100
-In-Reply-To: <20250421115758.62c16f94@jic23-huawei>
-References: 
-	<20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v1-1-7e7bd6dad423@baylibre.com>
-		<CAHp75Vdxdbqu6qkbuo5y4jADOH_h9Re6m8icSj3Je4hnVsha0g@mail.gmail.com>
-		<ed5c4b46-0b3f-4278-ba8e-6f6977f18429@baylibre.com>
-		<aAO7Lw13xrEGmZLL@smile.fi.intel.com>
-		<9cdc7053-ae22-4ad5-801c-46df7398ebf9@baylibre.com>
-	 <20250421115758.62c16f94@jic23-huawei>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        Mon, 21 Apr 2025 06:00:43 -0700 (PDT)
+From: En-Wei Wu <en-wei.wu@canonical.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pmenzel@molgen.mpg.de
+Cc: quic_tjiang@quicinc.com,
+	chia-lin.kao@canonical.com,
+	anthony.wong@canonical.com
+Subject: [PATCH v4 0/2] btusb: fix NULL pointer dereference in QCA devcoredump handling
+Date: Mon, 21 Apr 2025 21:00:36 +0800
+Message-ID: <20250421130038.34998-1-en-wei.wu@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-04-21 at 11:57 +0100, Jonathan Cameron wrote:
-> On Sat, 19 Apr 2025 13:07:25 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
->=20
-> > On 4/19/25 10:03 AM, Andy Shevchenko wrote:
-> > > On Fri, Apr 18, 2025 at 02:09:04PM -0500, David Lechner wrote:=C2=A0=
-=20
-> > > > On 4/18/25 1:58 PM, Andy Shevchenko wrote:=C2=A0=20
-> > > > > =D0=BF=CA=BC=D1=8F=D1=82=D0=BD=D0=B8=D1=86=D1=8F, 18 =D0=BA=D0=B2=
-=D1=96=D1=82=D0=BD=D1=8F 2025=E2=80=AF=D1=80. David Lechner
-> > > > > <dlechner@baylibre.com=C2=A0<mailto:dlechner@baylibre.com>> =D0=
-=BF=D0=B8=D1=88=D0=B5:
-> > > > >=20
-> > > > > =C2=A0=C2=A0=C2=A0 Use DMA-safe memory instead of stack-allocated=
- memory for the call
-> > > > > to
-> > > > > =C2=A0=C2=A0=C2=A0 regmap_bulk_read() in the ada4250_init() funct=
-ion as this could be
-> > > > > used
-> > > > > =C2=A0=C2=A0=C2=A0 directly by a SPI controller.
-> > > > >=20
-> > > > > Sorry, but can you elaborate more on this? If driver doesn=E2=80=
-=99t override
-> > > > > the
-> > > > > callbacks the regmap SPI uses spi_write_then_read() which is supp=
-osed
-> > > > > to be
-> > > > > dma safe.=C2=A0=C2=A0=20
-> > > >=20
-> > > > Ah, I didn't dig that far down. Will send a new patch that just cle=
-ans
-> > > > up the
-> > > > unnecessary alignment and unaligned call.=C2=A0=20
-> > >=20
-> > > But do you have a real life issue with that? Coincidentally we discus=
-sed
-> > > similar case in another driver with colleague of mine, and he insists=
- that
-> > > it
-> > > might be still broken (somewhere).
-> > > =C2=A0=20
-> >=20
-> > Some drivers that use regmap with SPI implement their own read and writ=
-e
-> > callbacks if the default one doesn't work, so maybe something like that=
-?
-> >=20
->=20
-> I asked Mark about this long ago. Maybe the guidance has changed, but the
-> request
-> if my memory is correct was to treat bulk regmap accesses with the same c=
-are
-> wrt to
-> DMA safety that we treat direct use of the underlying bus accessors.
-> (unfortunately I have no idea what thread this was in!)
->=20
-> The reasoning I think was that it was an implementation detail whether
-> regmap copied the data or not for bulk accesses.=C2=A0 Back then I chased=
- through
-> the SPI case and couldn't find a path that didn't bounce the data (though=
- some
-> paths could have been made zero copy).
->=20
+This patch series fixes a NULL pointer dereference in skb_dequeue()
+during QCA devcoredump handling, and adds some safety checks to make the
+parsing more robust.
 
-Looking on the implementation, indeed it looks like that everything should =
-be
-fine... However, IMO, David's reasoning about potential drivers using their=
- own
-regmap_bus (or just overriding read and write) is perhaps justification eno=
-ugh
-for doing it.
+The first patch fixes the logic bug where dump packets were mistakenly
+passed to hci_recv_frame() and freed prematurely. This was caused by
+handle_dump_pkt_qca() returning 0 even when the dump was successfully
+handled. It also refactors dump packet detection into separate helpers
+for ACL and event packets.
 
-- Nuno S=C3=A1=20
+The second patch adds bounds checks and replaces direct pointer access
+with skb_pull() and skb_pull_data() to avoid accessing invalid memory
+on malformed packets.
 
-> Anyhow, +CC Mark as maybe I remembered that wrong or his view has
-> changed!
->=20
-> Jonathan
+Tested on WCN7851 (0489:e0f3) with devcoredump enabled. Crash no
+longer occurs and dumps are processed correctly.
+  
+Changes in v4:
+- Fix unused variable error in the first patch
+- Refine commit messages
+
+Changes in v3:
+- Use skb_pull_data() for safe packet header access
+- Split dump packet detection into separate ACL and event helpers
+
+Changes in v2:
+- Fixed typo in the title
+- Re-flowed commit message line to fit 72 characters
+- Added blank line before btusb_recv_acl_qca()
+
+En-Wei Wu (2):
+  Bluetooth: btusb: avoid NULL pointer dereference in skb_dequeue()
+  Bluetooth: btusb: use skb_pull to avoid unsafe access in QCA dump
+    handling
+
+ drivers/bluetooth/btusb.c | 120 +++++++++++++++++++++++---------------
+ 1 file changed, 74 insertions(+), 46 deletions(-)
+
+-- 
+2.43.0
+
