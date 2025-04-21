@@ -1,89 +1,81 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 7284E70830;
-	Mon, 21 Apr 2025 08:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0481B189B84;
+	Mon, 21 Apr 2025 08:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745225439; cv=none; b=uX3XB/uOoWgTRntq2o02J+og66VKHnN8CueM/QM/aw3evgAiPFLEUHCDkqTiAyRVtPMRDRgVWcHADxjkXY+Kl55t/kqNS+WDOtct1pn8AWN7mkV2obrGBqrA8Zt8DJNQj4d3JpNmoDajLem5I5d8ib/QldGi23oYh8Z73xoTwiQ=
+	t=1745225502; cv=none; b=RxfZJFlC8d22nvtoPFDtmvb2vlEBmJ2Ic6GuC6rO54a08zYATah7jlYgnl3XXa+CLB4V7kAx7F0HaF2sc2iqA66f/gNPJy0qgPc59Z+KGWm/ZaX8RBqLvnPECLilHV+mFrpIeqfJh0CgA8di7Oo6pCGWZlkEzzbwC/sevMO2Tok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745225439; c=relaxed/simple;
-	bh=xsonTwJHhHFspOne+zY7lEzLXKjSZ+d9ysyxg6qfREc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
-	 Content-Type; b=imDWImE/fyasaP6FLZ4z/lzEomKnMN2Jcmwv6940kA4j0NPkXooWLvpH0+B3ywAj9WpvlFT5LWulGoC328VzbMOSzd9Zz1jJ+ZoA6k1NGed4ouTyqVR1K+rxolry6lBHo+Nw1l+eJqF4+qQSi+j3ZIP9YNyhs/RFSPNXT5ZXBVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 4E02F602637EF;
-	Mon, 21 Apr 2025 16:50:31 +0800 (CST)
-Message-ID: <fe8468d5-7bb3-4acf-960f-fa23a0000faa@nfschina.com>
-Date: Mon, 21 Apr 2025 16:50:30 +0800
+	s=arc-20240116; t=1745225502; c=relaxed/simple;
+	bh=zJShDvas9o4kwADRZZXz3VeLI3YlnhE4uY/hWs9kiJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dbEewFqG/Uu3chi2PV+Q9kCZgB7DRg3+yu4y5aSpXqdTdjivcwCwXlNPpnIU/s2Qr5AKFTRKWduvQgiCExzHGG2e1IvwykR1134QEr7RitQrJJ67ijsp9/ijn7R7A1CVQMJukW4choy6vU2s4aFzjujdeySpxNktVTdqx3RWzAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=o0001Z8v; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="o0001Z8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0042CC4CEE4;
+	Mon, 21 Apr 2025 08:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745225501;
+	bh=zJShDvas9o4kwADRZZXz3VeLI3YlnhE4uY/hWs9kiJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o0001Z8vypGe599+bJD9siWiB4gPa+3L0luwFQlHRmj4wgNTPZvnZdgfl4F9aTJrv
+	 EqDk1WcvM7uIw3g+4G2gcltTiMYF+SXbq+f/n/LZmGkACLVvjPi22D4H3DXBSI/8+2
+	 Yw5PS1UOv27xv3L6l2IfKRscOQyc5pNG8X0x0CkM=
+Date: Mon, 21 Apr 2025 10:51:38 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] media: uvcvideo: Support large SuperSpeedPlus
+ isochronous endpoints
+Message-ID: <2025042101-coyness-vitality-e636@gregkh>
+References: <20250421095951.1e63824e@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-Content-Language: en-US
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, davem@davemloft.net,
- herbert@gondor.apana.org.au
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <efe80b82-4b64-46cb-97d6-4ae2f4d82b97@nfschina.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421095951.1e63824e@foxbook>
 
-On 2025/4/21 16:46, Su Hui wrote:
-> On 2025/4/21 16:32, Christophe JAILLET wrote:
->> Le 21/04/2025 à 09:43, Su Hui a écrit :
->>> On 2025/4/21 15:10, Christophe JAILLET wrote:
->>>> Le 21/04/2025 à 07:51, Su Hui a écrit :
->>>>> It's safer to use size_add() to replace open-coded aithmetic in 
->>>>> allocator
->>>>> arguments, because size_add() can prevent possible overflow problem.
->>>>>
->>>>> Signed-off-by: Su Hui <suhui@nfschina.com>
->>>>> ---
->>>>>   include/crypto/aead.h     | 3 ++-
->>>>>   include/crypto/akcipher.h | 4 +++-
->>>>>   include/crypto/kpp.h      | 3 ++-
->>>>>   3 files changed, 7 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/include/crypto/aead.h b/include/crypto/aead.h
->>>>> index 0e8a41638678..cf212d28fe18 100644
->>>>> --- a/include/crypto/aead.h
->>>>> +++ b/include/crypto/aead.h
->>>>> @@ -10,6 +10,7 @@
->>>>>     #include <linux/atomic.h>
->>>>>   #include <linux/container_of.h>
->>>>> +#include <linux/overflow.h>
->>>>
->>>> You could move this 1 line below, to keep alphabetical order.
->>>> And why do you say that it is redundant in your follow-up mail?
->>> Thanks for your suggestion, I didn't notice this alphabetical order 
->>> at first :( .
->>> Because I found that  <linux/crypto.h> includes <linux/slab.h>, and
->>> <linux/slab.h> includes <linux/overflow.h>, so this overflow.h is 
->>> redundant.
->>
->> It is usually considered best practice to include what is used, and 
->> not relying on indirect includes.
->>
->> Should these others includes change one day, then some apparently 
->> unrelated files will fails to built.
->>
-> I already send a v2 patch, too fast for this v2 sending :(.
-> v2: 
-> https://lore.kernel.org/all/20250421083116.1161805-1-suhui@nfschina.com/
->
-> I agreed with 'include what is used'.  So I guess v1 is enough and v2 
-> maybe a wrong patchset.
-> Sorry for the noise.
+On Mon, Apr 21, 2025 at 09:59:51AM +0200, Michal Pecio wrote:
+> USB 3.1 increased maximum isochronous bandwidth to 96KB per interval,
+> too much for 16 bits and the SuperSpeed Endpoint Companion descriptor.
+> A new SuperSpeedPlus Isochronous Endpoint Companion descriptor was
+> introduced to encode such bandwidths, see spec sections 9.6.7, 9.6.8.
+> 
+> Support the descriptor with code based on xhci_get_max_esit_payload()
+> and widen all 'psize' variables to 32 bits. Subsequent calculations
+> are 32 bit already and not expected to overflow, so this change ought
+> to suffice for proper alt setting selection on USB 3.x Gen 2 devices.
+> 
+> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+> ---
+> 
+> This change appears to be a strict necessity for supporting USB3 Gen2
+> isochronous devices meaningfully. Whether it's sufficient I don't know,
+> I don't have such HW. No regression seen on High Speed and SuperSpeed.
 
-Oh, I forget to keep alphabetical order, so v3 is needed if there is no 
-other suggestions.
+If you don't have the hardware, why make this change?
 
+>  drivers/media/usb/uvc/uvc_
+
+This line looks odd, because:
+
+>  drivers/media/usb/uvc/uvc_driver.c |  2 +-
+>  drivers/media/usb/uvc/uvc_video.c  | 13 +++++++++----
+>  drivers/media/usb/uvc/uvcvideo.h   |  4 ++--
+>  3 files changed, 12 insertions(+), 7 deletions(-)
+
+Only 3 files were changed.  What went wrong?
+
+thanks,
+
+greg k-h
