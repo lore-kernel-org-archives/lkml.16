@@ -1,142 +1,121 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A391DA62E;
-	Mon, 21 Apr 2025 09:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAF6FC08
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 09:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745228028; cv=none; b=YIliCSW+ztuEDDJBx9LoPvj60Eeat8WmwjJ8Z6BIdOqYwyrWcq6mw46g8pScj7LzzosmBbXZ6zTsbzeezQbUs4BN01uJt98WQz40enTaryq/dQs/xGICaW8g/xf30RzyQyIg4cCuujMlsb8oDd/zfDUkMmRK8/czqJAFtgKTFLM=
+	t=1745228132; cv=none; b=CAd2xJpRp7qmMGLMUUSJoZ0GQiu6dqL5k0+kwbZAz658Rm+4ezqelMtD6tPHI1tGPM+xTgpLifU52dtoxz4oIYHdypOEZczfNOBhkLdMlzl74Uvr3ilNf3Puz8ZeG9SGoSX9lQCFNedfRnkJT+zi2ZmWx9x7/ekxQgaijF27SCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745228028; c=relaxed/simple;
-	bh=AjiLQSurYGYFui7FZ4Kvgm5WBn3PPg41yRmc9IaTzas=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RTszs3Zqo6vr8QjS/Ii1UMZq24LvNM18GbQqknnH2vUkHHr00UCzVMVQxHSYlExOCptEjR291f0Wp3TczXpBJNRBjdGTvOYCVwSLoXIPF7NJn8qMhFOaLDPlXzkmw9VVskS9cUpXWu+5hoEx4/EbO+xFI22MTDT5VRg9RFJdIeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=ZNoe6BCl; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1745228132; c=relaxed/simple;
+	bh=bUKfKjum813rPN4vzZFzmrYZkvGsU7gI7x8EL6azOkQ=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=lcTvDlpPi+k++8HyYOrlPFSKfAcirhVgdipectvrnjSWzLLFR6gfFSy6ehVTnl3+uJxQuZbVnmtDRlVU/JQuT8e/dT8uUloT8IDO+RK3UdxrXzKSBuoh5cG3U9rKHoqtYdwVJZFjZkXMaPqHLWKPSy19YGzak+/VDmZ4FTEDbmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lidvml90; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="ZNoe6BCl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1745228024; bh=0fW+/UjdGfFnzd+EIbCwouM/Fsc8JmJBl2eRcLAaljY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=ZNoe6BClon1RARJg/EpFcIiTktCOgSbom2/RjSc35KJ5bEKxScaX3xLtqUPt6W7AS
-	 UH5oL6iZOW2a6Oz/5QsgBgCQgZmt3yb1CfKdpjBHmjEMWUZ0s2DLbvJZBwXQG7IAN9
-	 4CPCzwKc6FOm2oJrgUGAUW1Z7CNhjN66b4FKNSJ8Z23+Kh1aeTkvuiJE4B6vtFbMnP
-	 P0vDSqeT6JKTLsUkn27pW7BVZZAhT9w3m5UoS9bIPYX7/he4jsdjB4+h7do/W1v43Y
-	 f7jpakn0dcYHWXsXZAkiBve1N+4/WnEAaiWN9141VAdoGMB7IRmNPG7W1RywNgTugr
-	 s5LprqqNUoqew==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh0YN440yz8sm5;
-	Mon, 21 Apr 2025 11:33:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX18Mub6EG2EVYPnJoCjswmi392jCPxuiAAw=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh0YJ60Bwz8sgG;
-	Mon, 21 Apr 2025 11:33:40 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Cc: Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next v2 04/11] bpf: Return -EFAULT on internal errors
-Date: Mon, 21 Apr 2025 11:17:55 +0200
-Message-ID: <20250421091802.3234859-5-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250421091802.3234859-1-luis.gerhorst@fau.de>
-References: <20250421091802.3234859-1-luis.gerhorst@fau.de>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lidvml90"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745228127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bUKfKjum813rPN4vzZFzmrYZkvGsU7gI7x8EL6azOkQ=;
+	b=lidvml900hH8Avhw1iFfdjq39Gjf+wb19CFUBfv3KviezRu9fhjsJ975KCje+KSIvdmBJh
+	nVt7FmEC+mI8n7yQwiESEUpeuRFoEvkUYQnD6GmOiQW/OxzItmTtypgX6Q6ivNRUc84Sts
+	pqgP9AF0UjsUwNAS32eetj7ladT+V9k=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH V4 1/4] mm: add swappiness=max arg to memory.reclaim for
+ only anon reclaim
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
+Date: Mon, 21 Apr 2025 17:34:50 +0800
+Cc: akpm@linux-foundation.org,
+ hannes@cmpxchg.org,
+ mhocko@suse.com,
+ yosry.ahmed@linux.dev,
+ yuzhao@google.com,
+ linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <972CD38C-9084-4CC0-8AD7-127745CACCDF@linux.dev>
+References: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
+ <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 
-This prevents us from trying to recover from these on speculative paths
-in the future.
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
-Acked-by: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- kernel/bpf/verifier.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 55c1d7ada098..27d3bc97a9e0 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -11667,7 +11667,7 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
- 				verbose(env, "verifier internal error:");
- 				verbose(env, "func %s has non-overwritten BPF_PTR_POISON return type\n",
- 					func_id_name(func_id));
--				return -EINVAL;
-+				return -EFAULT;
- 			}
- 			ret_btf = btf_vmlinux;
- 			ret_btf_id = *fn->ret_btf_id;
-@@ -15261,12 +15261,12 @@ static int adjust_reg_min_max_vals(struct bpf_verifier_env *env,
- 	if (WARN_ON_ONCE(ptr_reg)) {
- 		print_verifier_state(env, vstate, vstate->curframe, true);
- 		verbose(env, "verifier internal error: unexpected ptr_reg\n");
--		return -EINVAL;
-+		return -EFAULT;
- 	}
- 	if (WARN_ON(!src_reg)) {
- 		print_verifier_state(env, vstate, vstate->curframe, true);
- 		verbose(env, "verifier internal error: no src_reg\n");
--		return -EINVAL;
-+		return -EFAULT;
- 	}
- 	err = adjust_scalar_min_max_vals(env, insn, dst_reg, *src_reg);
- 	if (err)
--- 
-2.49.0
+> On Apr 21, 2025, at 17:13, Zhongkun He <hezhongkun.hzk@bytedance.com> =
+wrote:
+>=20
+> With this patch 'commit <68cd9050d871> ("mm: add swappiness=3D arg to
+> memory.reclaim")', we can submit an additional swappiness=3D<val> =
+argument
+> to memory.reclaim. It is very useful because we can dynamically adjust
+> the reclamation ratio based on the anonymous folios and file folios of
+> each cgroup. For example,when swappiness is set to 0, we only reclaim
+> from file folios.
+>=20
+> However,we have also encountered a new issue: when swappiness is set =
+to
+> the MAX_SWAPPINESS, it may still only reclaim file folios.
+>=20
+> So, we hope to add a new arg 'swappiness=3Dmax' in memory.reclaim =
+where
+> proactive memory reclaim only reclaims from anonymous folios when
+> swappiness is set to max. The swappiness semantics from a user
+> perspective remain unchanged.
+>=20
+> For example, something like this:
+>=20
+> echo "2M swappiness=3Dmax" > /sys/fs/cgroup/memory.reclaim
 
+We already have this kind of style (mixing numbers and strings) within
+io.max under cgroup v2. As a result, I'm okay with this change.=20
+
+>=20
+> will perform reclaim on the rootcg with a swappiness setting of 'max' =
+(a
+> new mode) regardless of the file folios. Users have a more =
+comprehensive
+> view of the application's memory distribution because there are many
+> metrics available. For example, if we find that a certain cgroup has a
+> large number of inactive anon folios, we can reclaim only those and =
+skip
+> file folios, because with the zram/zswap, the IO tradeoff that
+> cache_trim_mode or other file first logic is making doesn't hold -
+> file refaults will cause IO, whereas anon decompression will not.
+>=20
+> With this patch, the swappiness argument of memory.reclaim has a new
+> mode 'max', means reclaiming just from anonymous folios both in =
+traditional
+> LRU and MGLRU.
+>=20
+> Here is the previous discussion:
+> =
+https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@byteda=
+nce.com/
+> =
+https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@byteda=
+nce.com/
+> =
+https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@byteda=
+nce.com/
+>=20
+> Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+
+Acked-by: Muchun Song <muchun.song@linux.dev>
+
+Thanks.=
