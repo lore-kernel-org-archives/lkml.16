@@ -1,135 +1,136 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6A31EB3E;
-	Mon, 21 Apr 2025 02:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0624510A3E
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745203456; cv=none; b=uLEtcou5IVfdf6IVkIPbSYdj+eGrwG3nQceEx0v0JnUwhcUmNsSCA5bfV+lyjqLniFSOFgpD5GsEVmZ8Hq8U0kJihddPVgT3YHZ/cl/64NQ/Jvhk0L3PFCRXxoIBSxwI6anb5VDFLeA7uVPTR7Sh0YeuFOq+Z+7hVYPxsKyzu5A=
+	t=1745203512; cv=none; b=StXw0LzPn530DLBuUcxGgDpIOP988VHXPe2R5517RZSkycU8MKo4jEYPGazZXYf+paQsSXn3XTj7l9juEEJYFNa/FP5SMUqGG4PYi8UkDOgjpJ6QNQyKBffnYImN2EPi/c7zq5NVEnadrUESwZzFws5cRnh2SaVr5EAx6KAj6JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745203456; c=relaxed/simple;
-	bh=pB7viRc1r2JGTE6pXLj5K8q7cEpzje4VepltOd+V8BI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tBLDN4z/1HxE9K4F/5v3Oi3qW5fqQ4Mg17ToAS15oiyYuK1ZrJEDo81MnU7Px7DBMuKrPD6A3Ejdaea9iFrpmM9NmaIYxKpGdGk+cvMPoamXcdcyOzYM63RqN+5EeOmrcqbqS93QRGLEvxx6AnEfM5fylcF3Q/n9SMXJfhDhqCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zgq2n35y2z4f3jY1;
-	Mon, 21 Apr 2025 10:25:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 47A121A018D;
-	Mon, 21 Apr 2025 10:25:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgA3m1+MrAVoFxZkKA--.3102S6;
-	Mon, 21 Apr 2025 10:25:28 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
+	s=arc-20240116; t=1745203512; c=relaxed/simple;
+	bh=ChmpkBWAcBUZ0isTg/2/kwH0+i+db/Z7zSyRokRGl4o=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XyOjChIO1GnRTbu9krlXtiYRwgszzucvDhaeGCQUd9I3Lfi4PwFDcrXQitY5U9lThZDG3l7SG+HJJ1MdKYn/if1kfnv9TdzqO3P7F89ZRKhidDx56+Oen4ExQLb10z/tUkCc74RbSY12ZW4r7jYxoaaYXB2foePH5CRPMGoKbJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eg2SNGqt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eg2SNGqt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745203509;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1rywFvr1FoN+KZUd9Jmk/NHuAzpjaZybpU9faUuHgMw=;
+	b=eg2SNGqtFhSQOjcXvxNGwajHCNnj29alLs5CGq0Gspn3t1rvhWV7PSDZ3k6nai6xHbWwNe
+	CxDoehOD1fZQ8XbkLLZtoaWKnaOMIl5pMp9cnI0bhXJkjB1+VTlEvAEHbs0qnm3WaWLQKa
+	UHnbJihR9NM3l3E0+mwYx/nQkcbv6bE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-XCJievbiMWCnaGosBWBuGw-1; Sun,
+ 20 Apr 2025 22:45:06 -0400
+X-MC-Unique: XCJievbiMWCnaGosBWBuGw-1
+X-Mimecast-MFC-AGG-ID: XCJievbiMWCnaGosBWBuGw_1745203505
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74A3E19560AB;
+	Mon, 21 Apr 2025 02:45:05 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.29])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F27D71801778;
+	Mon, 21 Apr 2025 02:45:00 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
 	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	tytso@mit.edu,
-	djwong@kernel.org,
-	john.g.garry@oracle.com,
-	bmarzins@redhat.com,
-	chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com,
-	brauner@kernel.org,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [RFC PATCH v4 02/11] nvme: set BLK_FEAT_WRITE_ZEROES_UNMAP if device supports DEAC bit
-Date: Mon, 21 Apr 2025 10:15:00 +0800
-Message-ID: <20250421021509.2366003-3-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
-References: <20250421021509.2366003-1-yi.zhang@huaweicloud.com>
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v9 0/4] vhost: Add support of kthread API
+Date: Mon, 21 Apr 2025 10:44:06 +0800
+Message-ID: <20250421024457.112163-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgA3m1+MrAVoFxZkKA--.3102S6
-X-Coremail-Antispam: 1UD129KBjvJXoW7ury8Ar4xJF4kuF15CrWUCFg_yoW8Cw4kpF
-	W3Xa42k348WF47C3sxXw47AFy3Gw1kGa4jgFn7K345Wr13A34Fgr1rKa43XFWkX3s3uayY
-	yFZ8G3s7Ca15XwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRNiSHDUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Zhang Yi <yi.zhang@huawei.com>
+In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),   
+the vhost now uses vhost_task and operates as a child of the   
+owner thread. This aligns with containerization principles.   
+However, this change has caused confusion for some legacy   
+userspace applications. Therefore, we are reintroducing   
+support for the kthread API. 
 
-When the device supports the Write Zeroes command and the DEAC bit, it
-indicates that the deallocate bit in the Write Zeroes command is
-supported, and the bytes read from a deallocated logical block are
-zeroes. This means the device supports unmap Write Zeroes, so set the
-BLK_FEAT_WRITE_ZEROES_UNMAP feature to the device's queue limit.
+In this series, a new UAPI is implemented to allow   
+userspace applications to configure their thread mode.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- drivers/nvme/host/core.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+Changelog v2:
+ 1. Change the module_param's name to enforce_inherit_owner, and the default value is true.
+ 2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index b502ac07483b..b2cece376f30 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2223,22 +2223,25 @@ static int nvme_update_ns_info_block(struct nvme_ns *ns,
- 	if (!nvme_init_integrity(ns->head, &lim, info))
- 		capacity = 0;
+Changelog v3:
+ 1. Change the module_param's name to inherit_owner_default, and the default value is true.
+ 2. Add a structure for task function; the worker will select a different mode based on the value inherit_owner.
+ 3. device will have their own inherit_owner in struct vhost_dev
+ 4. Address other comments
+
+Changelog v4:
+ 1. remove the module_param, only keep the UAPI
+ 2. remove the structure for task function; change to use the function pointer in vhost_worker
+ 3. fix the issue in vhost_worker_create and vhost_dev_ioctl
+ 4. Address other comments
+
+Changelog v5:
+ 1. Change wakeup and stop function pointers in struct vhost_worker to void.
+ 2. merging patches 4, 5, 6 in a single patch
+ 3. Fix spelling issues and address other comments.
+
+Changelog v6:
+ 1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
+ 2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM_OWNER
+ 3. reuse the function __vhost_worker_flush
+ 4. use a ops sturct to support worker relates function
+ 5. reset the value of inherit_owner in vhost_dev_reset_owner.
  
--	ret = queue_limits_commit_update(ns->disk->queue, &lim);
--	if (ret) {
--		blk_mq_unfreeze_queue(ns->disk->queue, memflags);
--		goto out;
--	}
--
--	set_capacity_and_notify(ns->disk, capacity);
--
- 	/*
- 	 * Only set the DEAC bit if the device guarantees that reads from
- 	 * deallocated data return zeroes.  While the DEAC bit does not
- 	 * require that, it must be a no-op if reads from deallocated data
- 	 * do not return zeroes.
- 	 */
--	if ((id->dlfeat & 0x7) == 0x1 && (id->dlfeat & (1 << 3)))
-+	if ((id->dlfeat & 0x7) == 0x1 && (id->dlfeat & (1 << 3))) {
- 		ns->head->features |= NVME_NS_DEAC;
-+		if (lim.max_write_zeroes_sectors)
-+			lim.features |= BLK_FEAT_WRITE_ZEROES_UNMAP;
-+	}
-+
-+	ret = queue_limits_commit_update(ns->disk->queue, &lim);
-+	if (ret) {
-+		blk_mq_unfreeze_queue(ns->disk->queue, memflags);
-+		goto out;
-+	}
-+
-+	set_capacity_and_notify(ns->disk, capacity);
- 	set_disk_ro(ns->disk, nvme_ns_is_readonly(ns, info));
- 	set_bit(NVME_NS_READY, &ns->flags);
- 	blk_mq_unfreeze_queue(ns->disk->queue, memflags);
+Changelog v7: 
+ 1. add a KConfig knob to disable legacy app support
+ 2. Split the changes into two patches to separately introduce the ops and add kthread support.
+ 3. Utilized INX_MAX to avoid modifications in __vhost_worker_flush
+ 4. Rebased on the latest kernel
+ 5. Address other comments
+ 
+Changelog v8: 
+ 1. Rebased on the latest kernel
+ 2. Address some other comments 
+ 
+Changelog v9:
+ 1. Rebased on the latest kernel. 
+ 2. Squashed patches 6‑7. 
+ 3. Squashed patches 2‑4. 
+ 4. Minor fixes in commit log
+   
+Tested with QEMU with kthread mode/task mode/kthread+task mode
+
+Cindy Lu (4):
+  vhost: Add a new parameter in vhost_dev to allow user select kthread
+  vhost: Reintroduce kthread mode support in vhost
+  vhost: add VHOST_FORK_FROM_OWNER ioctl and validate inherit_owner
+  vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
+
+ drivers/vhost/Kconfig      |  15 +++
+ drivers/vhost/vhost.c      | 219 +++++++++++++++++++++++++++++++++----
+ drivers/vhost/vhost.h      |  21 ++++
+ include/uapi/linux/vhost.h |  16 +++
+ 4 files changed, 252 insertions(+), 19 deletions(-)
+
 -- 
-2.46.1
+2.45.0
 
