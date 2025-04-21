@@ -1,178 +1,93 @@
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011029.outbound.protection.outlook.com [52.103.67.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4835726659A;
-	Mon, 21 Apr 2025 13:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745243955; cv=fail; b=mweAofnimapHPVxmCgsCiiAnYUOIdhnzFPqwy4Xxa2HYtSY2BKd0l8am80anN/srfF2fK/QCQcqO7ah1K8mCfLThgAcAAS9mzL6ojOw0aGhiYzYKsgFOOQHVDLaOL0DAhLp9tGWDgRWCfKj8/Mr4My1rkg/8gtfn086Yb4wRT/k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745243955; c=relaxed/simple;
-	bh=EBjBwqmU34SqU1xnQbYOWtOY9lqjGwKEk316exto4n0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BfK3PPf9fmKMwMpAVOGxUnIghqg0NTsSPfHCWRzb2NRhoPoSYIb1UewoYN8x1vY2yz9yR4brVpU9tWE5rslfxS0DkwdfEk5qIA/ejlhNbGBMrEZfUaQal90iH895xvApO7y0rfni0xkoMZx0xEB7FfszeIaufh8pQ4477z8it7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=iVDVlI5h; arc=fail smtp.client-ip=52.103.67.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0211A264FA6;
+	Mon, 21 Apr 2025 13:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745243983; cv=none; b=PW7WCLvPo8oDxoT7eIgdLOgDwXngKj7OUH4444bgupSIMqToGvKy5a7q3lKEySv+HoxEVksZFmS54LmhVsRhn3G77NrFNEvJpeBCHoCCx3ZyFERWh0EFYhbr9peQnA+5VZZfVrOrAQdK6bGrVEBDx8UMl0FSiMOmbi4cRBN8gW4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745243983; c=relaxed/simple;
+	bh=J7iTshs6CmOUgtoiSBVw1f3K2zMl0Vgv+zGSAmPjgtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SQhbYCOlMlGU4iQZMakRoaFqfxI41DnvOlxHYDsIvYZT6Rma3EyN76mVy30Vc8nfjU1EksR3Eq9p13J7MAAyllTfwFZLybJcLpOmHBa8jgSVlLMSukEaxqy5//4/0743fF9hmI8skuTwJ/ImNBa27LTxdhQs1s2V9NdYP4fDmGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJy+Kodz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="iVDVlI5h"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t4KjFIQ0yaevLevlroCgu/So2v/mxChMgHOcT7p5sGdW0EHbtSoC/celALmB6BeHTBe9YzkK7uWQfOjCBVLjR+EFPErfLaYIaUah16T8Cda+yJB8lkoX/T6jhHRlaPUSqvAkOGFwgqdaIXn//JvVWqs37GSKYDndoWBAMOJmvijL3VvzXAq9iESM46YSX0dmZyOodkVqiNwbtdl9g09KLuFysvbbCj/R17iYWgLyXizaSJzmkH6tTDExwqdpF5J4kEnVk0cO/xkb+aCTvkZ1J4Co47nA8aJPdHvaIl55sop+xltphKlq8xCf/0N/K6B4fp7RVM3g7wbRHdnWIrIxCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5edUkULIxDBGkxwPvPfNTJQzweslnoDBykoI0jgUB6A=;
- b=wbJ87LYTNKzvzmpp/dDSxyCvxgcY+Ua6CSs/xDjvMKYy7+tlQlfztbzCbdHZc0Js16op572alC9Q/QKdDx75UglzRGDgAN2ZwOAVhHjHl1UXOo5Yycx6cV5glqulnbnG7EkMTyKYU/DczjftVNZ5kG7Hw+cjBTD4Po77NMPaFaPeyt+NhjY/bA2lsEgDS8qDjP1f0M69VjrJ4Du8gVAIcYSEVAHdbbx6ZdGtYaxdVpqtGPeSjxY7xkX0B2uKwMIUdhUa7gtFppVMoy02590CYd95rrBendBJBT3rczWoCJx7ddc+QJQ/LaoC/ek+1v7wHafMUcjDRX4MpT8KxxhGGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5edUkULIxDBGkxwPvPfNTJQzweslnoDBykoI0jgUB6A=;
- b=iVDVlI5hKcbCjW1eJ2it09XE+fbzqJIytigAILvoXUjKrNsqSgm05KYdLuL6mA6IcPDvLXCHjKSD7rxMvuZMvBs13db2B/N2ztd8aUblwDBltbARn5k/xNW6bMZqfR74q4e7bTat0fRfIF+nC1SK83c2IqZ2G4P+yycmXIGP50uQCPo2k3TeE8E4bMScUD/0DD851EYCs0MfQ30wXuG/XdRE8qTxnQbU3g8tG7fYY0jEmyMoGwpXn7ZYP5xSpsap+89c4a2tP122Y3+4Md+wpsqoFYRr45y2ZwkgXSjxW13up5WD2Ofn0NYMeP5P4qKTkVIiRokC0RZj3o1aGAl+Tw==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by PN3PR01MB6998.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:a9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Mon, 21 Apr
- 2025 13:59:04 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8655.031; Mon, 21 Apr 2025
- 13:59:04 +0000
-Message-ID:
- <PN3PR01MB95976FC24DDF82A084079C37B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 21 Apr 2025 19:28:57 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc: Petr Mladek <pmladek@suse.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
- Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
- airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
- Steven Rostedt <rostedt@goodmis.org>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
- apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
- lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- Hector Martin <marcan@marcan.st>,
- Asahi Linux Mailing List <asahi@lists.linux.dev>
-References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB9597D506487C3133B0358CE5B8BC2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAY0hRvNCi0y6rlt@blossom>
- <PN3PR01MB95978C5635B676286A9F0EB7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAZDApE-Wm_NlbMx@blossom>
- <PN3PR01MB95977FDD2F4DF6D9E198C516B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB95976BAC455F10F6D75B9C84B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAZM0svrO2MiNAdg@blossom>
- <PN3PR01MB95973648BB4FECBB2E24C5C7B8B82@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <aAZOpLeqBeeZ-4mG@blossom>
-Content-Language: en-US
-From: Aditya Garg <gargaditya08@live.com>
-In-Reply-To: <aAZOpLeqBeeZ-4mG@blossom>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0092.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::10) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:f7::14)
-X-Microsoft-Original-Message-ID:
- <51809c2e-736d-4546-858a-6078ce7ebf91@live.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJy+Kodz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73FCC4CEE4;
+	Mon, 21 Apr 2025 13:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745243982;
+	bh=J7iTshs6CmOUgtoiSBVw1f3K2zMl0Vgv+zGSAmPjgtA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EJy+Kodz0gmjCgZ7HwUyChvh/DejzC0+EK7D/vx0CSS+wrZAwH8pf56ELPsC9e1xh
+	 BMHeEHYUYv2DXUSBxd6ykFGDjveHORcfn1z5jJh0mGveXGTYkIMY6LX2AB2Tn53FY1
+	 5NAzhKDW7zl+jf6od/eHRmxXdz/BVsuORt+MlfIiHzeJA3CJFpK3NMiJmFiojOl3Hd
+	 VCFRo27RlpXRVHguyOPA9encVuM8XGb9CdfoXDqqRhVNFQl9uQI+hjvLPymfMDQ2gw
+	 ckn8Yh5/nQFkZbqjGFSyUjUnT8CTHZVThfINCgm3IJO26r8J0pREDGjaH415s+VCE9
+	 x6cdUMKRBcaig==
+Date: Mon, 21 Apr 2025 14:59:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: lars@metafoo.de, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Michael.Hennerich@analog.com,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev,
+ marcelo.schmitt1@gmail.com, stable@vger.kernel.org
+Subject: Re: [PATCH] iio: adis16201: Correct inclinometer channel resolution
+Message-ID: <20250421145931.605df588@jic23-huawei>
+In-Reply-To: <20250421131539.912966-1-gshahrouzi@gmail.com>
+References: <20250421124915.32a18d36@jic23-huawei>
+	<20250421131539.912966-1-gshahrouzi@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN3PR01MB6998:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bda6d46-05c7-4e6e-c4b6-08dd80dcacf7
-X-MS-Exchange-SLBlob-MailProps:
-	ZotS1sRCahcQE+ArvG0tWvnrRD+SDs45Lwz4YEhrXzrwhCcyc6C4psYFCUkYsRDvHKmMFnUQi6dVmRmq7Cd/5WzTCncqikzv+IHwWG7jp6v9MIW1h131Gsmqy+z7+aywjvmy0mtBqIfUA2SAEC3wFEf6PUvTMOhqZpj9vFKqSpmdXsmCKjaNFAs1HfoUhMShlg0wwE7GSkQYZkZ3CmJcK5bxwLj8PRMABopHeWAyc4uBtRi9Wtu9eE9XaBEP/OvDq0NwWiV/XXtmklH2z3SrIvG9OpmmwkFvpfg9dSg/8/PKlQN9xq9w9vRi+ikMzfpLSIP4UnbWQsHAh0aR2EXj3ZoBzfnNVRliMcRvlcYvL54ENa6DjSd1PAOL6TUiuN4ytTx+3k27VF1O7e+As5UTRbmjkPWxyZIN8hYasNGvMmfd4o3wC9ytlkBDnwot9RTAQ0VrT+98N/ILVV4bt8KUEDVmgar25MG8TmpL8cU00a1P28E+meJ08g+l8NXIDiG/l2mpdPZWTclq2feaWCmoPEu6anlrgLTpMqpROrzsuizIpOnNwKxN9eAs0Ru5Fx9k0VpMqCMOzyKx+d7mrWH++9oQAGY89+sTx0hpD2z+A5gUIZdfX+DQ6BzasfdVsCt8ojB3roQXZD6ei1RJOBDjje4L8YgKVbGh
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|5072599009|19110799003|461199028|8060799006|15080799006|7092599003|440099028|3412199025|12091999003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cklTSWg2MGRYcmJTU1Q0eFowZkZYdnhTVVorQU1STU1zdlMxQmx5OThMaGkr?=
- =?utf-8?B?MnNLbHl4ZEtlTlIrTzNaWFE5Z2dXZ1VsNjU4S0g5Slh2MEcwdzRvTldtckRa?=
- =?utf-8?B?WWZDcU1RUG9TTUFLZmRMcnZhQ09FcjZFMHMwQWRLdTRtcFRWd09waEVTQkxF?=
- =?utf-8?B?dmN6cVpBVDl5ekJHWWxkekFUY2w3akZZTFoyeDMzYkd1ejRpb1htdWU1WFBM?=
- =?utf-8?B?SFZVOVE4Ukw0d1hlWmtpdklaZEdSNmNTQkNhOExuRVk3L09XWEZjemVmT1pl?=
- =?utf-8?B?YkNZNG5LRlNJZVVuc21wNWR5TDNqQnl5aTgxOUpON0VTN3FvVmtKOEljZWl4?=
- =?utf-8?B?UkNEZjFhbTZWSXFvWU9zU3JKMVAwNVBNNFprdk5WMTVBcURsd2NWOGlEdjhV?=
- =?utf-8?B?bnpCV2hNVFFQMEhoVURpLzRicUVSb0hpd3pDbmtDMkVHSCtmS2ZoRUZRNWxU?=
- =?utf-8?B?NkJRUGJSSEcrVlJVb2JiN2JMdjU5Mndud0hTTXFUcWxqeGVHTlpFUGRTY3kv?=
- =?utf-8?B?ZXNJaFI0eFMwb09yU3ljc21XeDdWMU85b2RpKzIxMStOUitCaWYrYXBURmFh?=
- =?utf-8?B?bElaM1lQcUJBanYwT2RnQUhITVorblZINjAxdGJKbFpUcTNXUERYa3BXOThw?=
- =?utf-8?B?U2dYWnlmSThyRnlSMTh4WlQ4WTZMUUM5VjFuVFN5U2NWWlVuUGZIUmlQaG1C?=
- =?utf-8?B?Rjl1c2pOc1hhZTdaUU4zMDh6L0ZiSzZTa0RtV1dYSDB1cm9UMjBNaG1ja1V5?=
- =?utf-8?B?RFpjbzZxSUF4ZDNmcWIyeVVDcDMyUUJWR25neGlycGxJY3lvb0ZNNWYycjNV?=
- =?utf-8?B?S2JENVJJek8vTjBVWS90dldnNEFoZFFYcGJ3SHY2MFptQXBTRThVMkhib2Jz?=
- =?utf-8?B?UCtzSmpST3NyZFlwRVBwbjREZzRjU2F2WFo0NFFWdERCV2RCbUhCUTNEM1di?=
- =?utf-8?B?S05kbldLeGluZ3VkY1VvWHJ4ak9xTTlFb1JYM2JuNFpudDhhMWNPRlJualdo?=
- =?utf-8?B?ZVlwSVpkQWtCcHlic000M3BxWTV2Z3BJai9tV3ppVy9LLzJLVGkxcmZpOXQ5?=
- =?utf-8?B?MUNXeWF5N25CNXRqQ3J5LzR2SVAwM0F6akNhMHBISjdNTktrelJNaW93aTZU?=
- =?utf-8?B?ajBVS2JYbDJUVTNzbUcxUm5aRmplelhRRFFkYjY4Rkl0eWVBV0wxS1BhQjBy?=
- =?utf-8?B?ajZKYzJtNHE2aGdLSGk4OUVhVXlKN1V3QTBsZFU5ZjROTUZubkxmVERyVHQ0?=
- =?utf-8?B?ak9kV0V6eTZ6NDVzWDUyN1dzczNkMTFRNHdVdDNmSHdJampCSnFabnErOVRB?=
- =?utf-8?B?Zi91NXAweklLT0U2TFplSGlpVCt5dWlWVXJ0OFk1eHFhRk1zYmtuZkpKdFRE?=
- =?utf-8?B?SEdIbVdHZVE1Uzh5em4waHQ1VFNFZUoxdW9ZU3FER0ZSY1lod1dROW1sY0pI?=
- =?utf-8?B?RytidVBaekZmbDNINExIV2tHaXlJS2dRMnRLdlZkV3dieXo1QjQ3Z2tEMXU4?=
- =?utf-8?B?Qkhwc3RkYVFNZHJRbExzYnlwVEZQTWE0RDVZR20yNUt0QTJFL2RPR2RoVkF1?=
- =?utf-8?Q?YlvIZ6q3YhaCKAfgNaY6Vaiys=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SitDTytodVVpOFFOTERiUWY4N2hWaFlTb0diVlhuTnJpSnJwb3F1S2ZmM0gw?=
- =?utf-8?B?azNDNmFQd3JOQks0eVRLc2NFcmxyemVDQ3o5WFIzKytRTitrY2ZINHRUQ0hT?=
- =?utf-8?B?MjRkV0k5dm9uOWdJbWxoT29JUTkrbVB3QzBaVUlMNVJ3c3oxTzQrRktQL1do?=
- =?utf-8?B?ZUJtSmZQTkVVUHFLdlh5enNDY3oxK3ZvWWkyNzloUG5BSUZ0bHIvSG5FbWFS?=
- =?utf-8?B?SlNsQlpsajdiTUxSc0dWRkpSZS9GTENjQjB0V3hWS3VvZ2RxV2RCWXZXc2Mz?=
- =?utf-8?B?S0doMG9QTDBvQWRKWmZUY1ozT0p0cEYyUVQ4dGpTeVViL3h3OFZwdk0wVE1H?=
- =?utf-8?B?OXU3RjVCRy9PbDJTN1hzNDRod1hsRU14d1g0UW1Dcko5K0FzYUxHdXc0TE8r?=
- =?utf-8?B?K3cydXc0bUtyZEVRU0xSRDJKR1hXVkFuTGZoTm1CbEFuQlhtUFJ1NDR2czJS?=
- =?utf-8?B?YmVNQmZxN1RCZjAwZGFaQjZtdlhYamJ3ZldSNkNqM0FCQitpaURXeGMvYWVF?=
- =?utf-8?B?OW9PanNKVW5laXR0Qm1FSm5UekI5SlYwZGxVTTVRdzhyVDlnc3FFYXBMbENO?=
- =?utf-8?B?a3Z0SlhqWDZaNnNTUnYvVDYwMFFKeWdqNDJNNkcrQVprREN6c29TRVBHck9u?=
- =?utf-8?B?WHVEcENIbk1VbURuSVp0dHQrOSszbWNhd254ZWhHUVFBUkMyMTRFR3QxaWxX?=
- =?utf-8?B?VVgxeGs5bVZsSUhrczROdFd5RG4vb3FzalBQdk9QOUNndmtGVU4zczgvbTZt?=
- =?utf-8?B?U2ZsNGFqbHhTaDhrU05YcnRVOWtnWnVqV0JuVy9QcUtGdllMNmJESzVScWQ3?=
- =?utf-8?B?ZG01eCtYMm5sZTRuNjg0aUtwZFhHU3JVSkN2L0p0SFFLUDl2dmFKMzd2dGJO?=
- =?utf-8?B?Vm5ScUF6MGN2TWU4UHJkTWlnWFI1YXJMUTJ6WDcxbElnaEFxbGpVakdTRS9M?=
- =?utf-8?B?ZnJlUmZPLzlyUHZkQ2JOSGVvcGZiaE45NFp2Q2FKSmVWTjdwek9JZGp2Rnpm?=
- =?utf-8?B?ZnZEMDFOOHdWV2pBWkg2K1VDRTJYb2FOSFZlV3VTa29pOC9TVXhTV1VVcnMz?=
- =?utf-8?B?UWtuUzQwWlBwZjFsWHJqWGFIWGNCWktNSDEwTzkrYWZQcitQbmN1RDBkWTNa?=
- =?utf-8?B?a3pQVlZwUEV4QjJ0OFBtc2k2M1F3VU1kUFNBcHY3S3VrQkk2Q2xNenQ3VmpW?=
- =?utf-8?B?VXFsK0tGZHZROFcwVHgrOXd5YUkvRW1xTkl6UnlCd085MGpRVjNVcm5yZGdW?=
- =?utf-8?B?aVhJNStaTG1MRCtKdGZBTU5WS0owR3V6SFo4ZUQ2a09sRDRONzhJK1ZLOUUx?=
- =?utf-8?B?T1R5VzJBNVZES1FCZEdiUkRWRXdJZDNhZjdVYndNUjcxdisyWkpaT2dGWXpN?=
- =?utf-8?B?Yi9ic3VBcjVaS21OM0phM2MvQjBSZHVXdmYvdmVNMXQvNzU5MkxzV0NKczdm?=
- =?utf-8?B?RmJ1SmJVc2dwZGwrV0xBOUhhcGlFVHpkOFRET3pwdHdPYmNJMi9sSWpKWlVH?=
- =?utf-8?B?UXVUOGVvZEw3aEhIUFdVci9LQkQxYmVRNFNRWHU2LzlDN3BxeVNLTEFuS3c5?=
- =?utf-8?B?MU1PcmltR1Z1OW1yM2RyMmdtTENtVFdDRW8xUWViU0xPT3pPR25INEIzWjVo?=
- =?utf-8?B?SDhoZmZ5UGNadDd6Vzl5aHVXaG9CYUJmQUpXcE9PQ3Y0M1hFcVB4VFpmK09E?=
- =?utf-8?B?clRXeHdCblJJdlI1SlkxcHEzWFliOXVCSnpJL0FGNXIrV1YvZkZzRWVrVmlK?=
- =?utf-8?Q?Es1QLO54JTbBvIe0ACNy4rkYclxWBpxvG9/ejSW?=
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bda6d46-05c7-4e6e-c4b6-08dd80dcacf7
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2025 13:59:04.1396
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB6998
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 21 Apr 2025 09:15:39 -0400
+Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
 
-
-On 21-04-2025 07:26 pm, Alyssa Rosenzweig wrote:
->> Any change needed or just because some other maintainer manages this? Although Tbh, I really don't care about backporting since T2 Mac users are still using patched kernels provided by us. I'd rather free my mind in getting this done.
+> The inclinometer channels were previously defined with 14 realbits.
+> However, the ADIS16201 datasheet states the resolution for these output
+> channels is 12 bits (Page 14, text description; Page 15, table 7).
 > 
-> I'm just too new to kernel to do nontrivial merges. Either I can queue
-> this series to drm-misc-next today (no backport no changes) or we can
-> wait for someone more experienced. Let me know which one.
+> Correct the realbits value to 12 to accurately reflect the hardware.
+> 
+> Fixes: f7fe1d1dd5a5 ("staging: iio: new adis16201 driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+If you post a new version, always add the version number.
 
-Merge it to drm-misc-next. I am totally ok with that.
+Anyhow, I was just asking for the fixes tag, but this is fine.
+
+Applied to the fixes-togreg branch of iio.git
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/accel/adis16201.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adis16201.c b/drivers/iio/accel/adis16201.c
+> index 982b33f6eccac..dcc8d9f2ee0f1 100644
+> --- a/drivers/iio/accel/adis16201.c
+> +++ b/drivers/iio/accel/adis16201.c
+> @@ -211,9 +211,9 @@ static const struct iio_chan_spec adis16201_channels[] = {
+>  			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+>  	ADIS_AUX_ADC_CHAN(ADIS16201_AUX_ADC_REG, ADIS16201_SCAN_AUX_ADC, 0, 12),
+>  	ADIS_INCLI_CHAN(X, ADIS16201_XINCL_OUT_REG, ADIS16201_SCAN_INCLI_X,
+> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+>  	ADIS_INCLI_CHAN(Y, ADIS16201_YINCL_OUT_REG, ADIS16201_SCAN_INCLI_Y,
+> -			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 14),
+> +			BIT(IIO_CHAN_INFO_CALIBBIAS), 0, 12),
+>  	IIO_CHAN_SOFT_TIMESTAMP(7)
+>  };
+>  
 
