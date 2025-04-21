@@ -1,272 +1,199 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1238020E310
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047752AE7F
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745223290; cv=none; b=PsLxhODhy2YvwjS5oWgZy/qvzythDnOm1sO5Hl0cu6WU53MRIsl5rUJ7LJjUXMyYjnFy8gbvD7nTLRThTneCgiZ5u7aT68oL5cIAY6eXqDBHpEi4ZW8XVS7fQBz/lSvCAmp2OvLLIgaDAjHDFYHQQwddEyP3DvyYhuYHvuTa+m4=
+	t=1745223322; cv=none; b=N8mfSBfDNaU2G7hztRXzHcHcJ36m9s8LGQL1PY46p46rgN2BugBRhmybM5KRdBGOGQvH7gnVJzDvRmaWFPoZW5VXl98ZrXOohyRhcRm8K7eepTNN2ju0QtPabsaL/NHJWx5COVH0NTTaeKwpvw+J/M7Yy1sPRokccW0vJLtWOC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745223290; c=relaxed/simple;
-	bh=N9DaZgYXK+0d/Nuiuh1IHz88k809DklA0+m3Vn2//40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Atu24Wfsg1Xe+fXnl2VZn/3EifNVWmwcZ33x8Yxpt2jalLnDC00kDEuo1CpRz5NO5Wqi+IoL6FYGQ3Wvad1UWsPjbX8EIpzy0y9ZwoEbms9yNBpZx94Ku0xuopA245H3EkOb5xni4R6NGYfCo+4qp4Va34ZWCMxoHCVHSEnrS1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=n5SV/fwI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745223322; c=relaxed/simple;
+	bh=wh2ZvJ0MpzyvSvb/71rDMCsRepQ7ZRPMAExEDL7P2Y0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bujYASptOgK3ro4TYZ/f2diggCmRjp9vxa7RjakLuzVALTiaovKWbOMdNxj/6CruF2kv7bMP4gLKlqDFAH3lA0UfOlu8AluvfRZj/5pCcgnm3m+1l8OEGnbXDnfbF08BhF/1yePduL/8A0iJkTGVwq9RNSiX9UiJ3Hs12X8KCmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EwXQDZvS; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="n5SV/fwI"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53KNus4N006614
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:14:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8oJBUh1wbVCHpxTY8vmU0g4yGRFNNfXgJ4JOTQRarZs=; b=n5SV/fwIMzTWSOJA
-	mHYvKZQlCemNMo7nYLA8BZynjKR1sDG8T7bJuxMBXyu8ezYCuemK+nfY7Go5HrhT
-	lQH/xy8qfoQv4R0OuION24Wi7YN6qJs5pp8sTmrePufVPYHSUmd8QG7DlGyQaMZW
-	tPXir/DrO+TbMrRseBGlEhY/50OibexnRGal6HnbIir2CFS92E19o9JTuj/1Bc9o
-	sd6tuf5D8tH6Arlas4eSz6efrRxJI73hS4FWFxZgl5aoJC41IKudHoW+nbgsdJpi
-	7Gwq5FymCQNcJSaV1e+pmXQ8/tKj0Dd1y1nu+3cxw7DBdQGWMn4X2AuSFBHtywpH
-	+OdoqA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46450pbc03-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 08:14:46 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e917965e3eso54238216d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:14:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EwXQDZvS"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4b7211badso5246327a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 01:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745223318; x=1745828118; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j8qJ55ToF3jTe+9KsGyg1OHhc22gynF+LRW6Ku4tCvk=;
+        b=EwXQDZvSd2LVyQiMCPmhCOo4WP8btFTpnn8jQ61bsUX9mGQyS2Fm5F+HLnV83uDo1E
+         YyfNdBLExg5ZL/N0MX3a/QCVqNl0Uf9hj6dMnAARpoqGKD/rhnmLZwJGA7+MVlx3JlLP
+         am4WmBrzen4WtvU9sjY2fmWtYu17Ew0dOL1/MdNU+7s363ov0Vj92Nd1LQN3THN+fDqu
+         bxvaareQdH9bi0Pl3GT7ChdMPq4FC+dFG8J5W4Ue1nK7of3osmaqutXai/SMSjWkuoOl
+         InWHK1IwKQ7X9qenVS6LRg+26hAWJaJkmTbLkpc0g+v0knqP2gUyAzT1fk3wXanjlEzH
+         Xggg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745223285; x=1745828085;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8oJBUh1wbVCHpxTY8vmU0g4yGRFNNfXgJ4JOTQRarZs=;
-        b=nqsqGTAkz5UQQefTTwE4Gnr8ism3CvYGMXEUoUFauhI1Q/kGM1u1NgWTWdL98UXryI
-         c7tHe0Er/OqmWfg9+Lt+QtrEbOyTbMtp962UxKUS2IIO1euDACHcOnVueZCaucR8S+bQ
-         OIEefTdf+5szPGoVUKkfHFjShBPkh0V382cYrCg3sNGKxQeBPYo+GzcxxrUasCPrl7rb
-         e09RmQG2cZVuBQRY16gjbpLYNdd12F8MVVv+TNYSKqBNytwHemcua/rMFdEAcmNJHnFI
-         apyi5Av1Ij0/AToHClv6vm3m0O0xKZIHouHOxXWNXAr2lVNmAKoX75+Yy9r6XFIhMdAT
-         Xmaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVph6rADSzl9B6vq0q1omhPsNl1PDuoqOitFqbV8vrsGo117+OBG41L1Dy6mVcGj8J7KETE0JY6Z6qj1us=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLMxF5b3GCihVZFG9p7GNXvuPnBwQyObcZW0vGjy59egsyKH99
-	EX23I2Clz6s44N2VeXT/lY2sVe+1Z5AX5/WWjwTRfqCN+nf+HT+JTQkk/r+svLksfdUHdel9cqI
-	+iwaCSdtk6Att5TyXrXzNLsbWC3TDMJ/SP0rIyVL6zVh3r9gkKsUAEha2e92znSw=
-X-Gm-Gg: ASbGncv5AGII1+f1qetTAoGrrILTGNvAgAMtl85RNRFAnfUyk17dErGs08HSOVGedXx
-	33803m9Udg0654o41+cu4v6n19uMrZBGwsl4B9rD6hoOrRpKBIUb2O0yPp4ZZSG6+C198grjapk
-	koE9LB20GkGzVSHhf7SrrQee83L/FNvogx1o8Plx+XwiX99T3oNWlWra7yXDxS4mCvzUZlpId4U
-	ZqHahLAe61smTfaP7y2Mygkw12ZA2eOB2jSHikCYjYhN+rJwzJe4MKEB6wI7q1Qvy2BvgsAjGwe
-	21/8hC64q14uZfEEnGUjl14Oy3ZWDyvOxvLCkcMrZazUOf1BqDHuECIK9LjUyTvaimrf+Vsgxek
-	=
-X-Received: by 2002:a05:6214:20a3:b0:6e4:4484:f354 with SMTP id 6a1803df08f44-6f2c4671b1cmr221132846d6.38.1745223285287;
-        Mon, 21 Apr 2025 01:14:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnRnpxjNkHm/HUpOalIjA+qNX95H0QB8/MMo2v2tSzcpgxrTX1ZwIeu+SYDh7cGkWGLZqgMQ==
-X-Received: by 2002:a05:6214:20a3:b0:6e4:4484:f354 with SMTP id 6a1803df08f44-6f2c4671b1cmr221132646d6.38.1745223284911;
-        Mon, 21 Apr 2025 01:14:44 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e4f06sm869887e87.166.2025.04.21.01.14.42
+        d=1e100.net; s=20230601; t=1745223318; x=1745828118;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j8qJ55ToF3jTe+9KsGyg1OHhc22gynF+LRW6Ku4tCvk=;
+        b=dTKUiyz0+wk7+oLprfWIPxuVx5MNhawrkS4cQL4PRW+m6yswFRyoZgDtRNJ+jnDncF
+         gY/HjX+f757lJxltCpNt+ewz3Paf5pdLIdbfFd6jba/+SOceYeuCW4QJ76MTXFOaGKpg
+         CIwHFOStwqzVZU3CWghrj1xAfChvwoFrAvLppHvyWeIaSochMhbqNUd8EfkKcyveBtXU
+         XdmnCqo/MvSGrTx02UcltxNshHLNBEnw/8kvqhALqB4Td1NKN9ydDlEldy5C7wUB6t/s
+         r/T3+YYlLYkhU8UBRL8h4lMLZaAuP75y5XPTlSGvUXSs6JQ70WmRIltUhfwy6bXOEugG
+         JKGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXx36q6/2hD6ZPkAko+0q1qkprw9MmvRUw6xNmcKh2TqTusMj8X60clo4+VVhFwldVUuDVYJxEnonOJH4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSYhNnxqO12zp76yCwG+lb/psWP5QHp8mtl2HUibTRyFgvXK3w
+	15QH7JGyIuK+9/FHz2jGRLxqzjBFdHxUKaAdn9m3GAunLTFRn88qc0ISs7EHcQQ=
+X-Gm-Gg: ASbGncuFZHrAvKc+GQfh2tB6k9w6PWCWKuI/k3MtL/78j+NaGBXDyiUPk3vbEvE7/EW
+	nlPrvIq8dMKsgIPJrvTmE1YeGqj9Dl8hKFXwVansLXqWIgR2vxRAdgv582KH3wSb30uCZUP+Teg
+	H7CckdeVeSV0gM+yxE35vqGSoc99k6QuxnNy2CTytqLnucmshkf74PMZen7yXGTcAscBcSKbvsh
+	FhxRisg4bCWBYV/i3mFaBWO51lAr7I0wrvZv93+JuGscwoRuEnJN447Af4BzVzy387MEQZ7iZcB
+	zyXuGfcNiwcie/7NWHMG/J17E80BM38c80HIkjkrU24O6g==
+X-Google-Smtp-Source: AGHT+IHl9ajmtuDkj5s00oPoVojYOBkZKIewBG+zW2Dai7berQhTSgtIulOKXTkdhuk7U3TNOYhilQ==
+X-Received: by 2002:a05:6402:50c8:b0:5e6:4ee9:f043 with SMTP id 4fb4d7f45d1cf-5f628603c66mr7983837a12.26.1745223318219;
+        Mon, 21 Apr 2025 01:15:18 -0700 (PDT)
+Received: from localhost ([2001:4091:a245:826e:c0c:4cef:7dd:26bd])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5f625a3e4bbsm4216959a12.72.2025.04.21.01.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 01:14:42 -0700 (PDT)
-Date: Mon, 21 Apr 2025 11:14:41 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Deepika Singh <quic_dsi@quicinc.com>
-Cc: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, quic_bkumar@quicinc.com,
-        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
-        dri-devel@lists.freedesktop.org, arnd@arndb.de
-Subject: Re: [PATCH v1 4/4] misc: fastrpc: Add debugfs support for fastrpc
-Message-ID: <iedvsuzaltuxyjp6ug7yt7oprnhnthmi4dz5i3biyjteebuvqj@4zpcthyu5rpl>
-References: <c3b285b0-33d1-4bfa-b8ab-6783ff5ed78d@quicinc.com>
- <cn7pqvhw4x4y7s5hbgzjpvyjnw4g6hoyepic4jai7x2fjdenxr@ikr4hkorbuwb>
- <365c4709-b421-4af8-b521-a195630242de@quicinc.com>
- <nsaq3zungvyhuikz35arvxmle2fovxh422jpyqxuleh57ufqnk@bekeh7qr7y76>
- <697e90db-6ecc-44ac-af86-6c7f910fc902@quicinc.com>
- <CAA8EJppbptPryu_O3G3YAapHT=Ai+MAdA38FtSU=YvWb+mqa1g@mail.gmail.com>
- <e1c23027-94c3-4fdf-b842-b154179aa2b8@oss.qualcomm.com>
- <a3addff2-1ee6-45aa-ac2c-693ffe804948@quicinc.com>
- <pczibldk4nzu2zvyca4ub4kxiyvismuy46a4rcxkqwy7ncaf4d@ktm2vpaejdmg>
- <57d58076-1d5c-41ee-b0ac-c2bc4658b96b@quicinc.com>
+        Mon, 21 Apr 2025 01:15:17 -0700 (PDT)
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+Subject: [PATCH 0/7] arm64: dts: ti: k3-am62: Add wakeup-sources for low
+ power modes
+Date: Mon, 21 Apr 2025 10:14:18 +0200
+Message-Id: <20250421-topic-am62-dt-partialio-v6-15-v1-0-6ced30aafddb@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <57d58076-1d5c-41ee-b0ac-c2bc4658b96b@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=Hd0UTjE8 c=1 sm=1 tr=0 ts=6805fe76 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KrD4l51AmWsE4oWeEdMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: rtpIniAdI8tnHMDapv4Q-6rJQjjMoaiz
-X-Proofpoint-ORIG-GUID: rtpIniAdI8tnHMDapv4Q-6rJQjjMoaiz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-21_03,2025-04-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504210063
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFr+BWgC/02Nyw6CMBBFf4XM2jG0vIRfMSxKO+hEodgWNCH8u
+ w24cHnuTc5ZwZNj8tAkKzha2LMdI4hTAvquxhshm8ggU1mkuSgw2Ik1qqGUaAJOygVWT7a4lBj
+ fTFbGiL4XlVEQHZOjnj+7/9oe7Og1x0w4RuiUJ9R2GDg0yVKeo8RpAf/9Jon1XKRp/asPWo34V
+ g+aJ/R2dpr2vMSLFqas60x05tIsFbTb9gUlg9dq4gAAAA==
+X-Change-ID: 20250415-topic-am62-dt-partialio-v6-15-327dd1ff17da
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Vishal Mahaveer <vishalm@ti.com>, 
+ Kevin Hilman <khilman@baylibre.com>, Dhruva Gole <d-gole@ti.com>, 
+ Sebin Francis <sebin.francis@ti.com>, Kendall Willis <k-willis@ti.com>, 
+ Akashdeep Kaur <a-kaur@ti.com>, 
+ Markus Schneider-Pargmann <msp@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4509; i=msp@baylibre.com;
+ h=from:subject:message-id; bh=wh2ZvJ0MpzyvSvb/71rDMCsRepQ7ZRPMAExEDL7P2Y0=;
+ b=owGbwMvMwCXWejAsc4KoVzDjabUkhgzWf+mHHmf8eNTUFh8i8uPM59+GinUpOuw9eteZzoS/v
+ S34TbKio5SFQYyLQVZMkaUzMTTtv/zOY8mLlm2GmcPKBDKEgYtTACZi+47hn/G249KnvmYE1vk8
+ E1aadJbRY9re+3O+3rV+f0778CkrtqsM/6y/W3QIpuz9tlAg76ntCxUxh/a9ryuTuJc0iF2QVHJ
+ 4ywEA
+X-Developer-Key: i=msp@baylibre.com; a=openpgp;
+ fpr=BADD88DB889FDC3E8A3D5FE612FA6A01E0A45B41
 
-On Mon, Apr 21, 2025 at 11:41:15AM +0530, Deepika Singh wrote:
-> 
-> 
-> On 4/14/2025 1:18 PM, Dmitry Baryshkov wrote:
-> > On Mon, Apr 14, 2025 at 12:41:47PM +0530, Deepika Singh wrote:
-> > > 
-> > > 
-> > > On 4/11/2025 1:55 PM, Ekansh Gupta wrote:
-> > > > 
-> > > > 
-> > > > On 12/3/2024 5:27 PM, Dmitry Baryshkov wrote:
-> > > > > On Tue, 3 Dec 2024 at 07:22, Ekansh Gupta <quic_ekangupt@quicinc.com> wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 12/2/2024 6:18 PM, Dmitry Baryshkov wrote:
-> > > > > > > On Mon, Dec 02, 2024 at 03:27:43PM +0530, Ekansh Gupta wrote:
-> > > > > > > > On 11/22/2024 12:23 AM, Dmitry Baryshkov wrote:
-> > > > > > > > > On Thu, Nov 21, 2024 at 12:12:17PM +0530, Ekansh Gupta wrote:
-> > > > > > > > > > On 11/18/2024 7:32 PM, Greg KH wrote:
-> > > > > > > > > > > On Mon, Nov 18, 2024 at 02:10:46PM +0530, Ekansh Gupta wrote:
-> > > > > > > > > > > > Add changes to support debugfs. The fastrpc directory will be
-> > > > > > > > > > > > created which will carry debugfs files for all fastrpc processes.
-> > > > > > > > > > > > The information of fastrpc user and channel contexts are getting
-> > > > > > > > > > > > captured as part of this change.
-> > > > > > > > > > > > 
-> > > > > > > > > > > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> > > > > > > > > > > > ---
-> > > > > > > > > > > >    drivers/misc/fastrpc/Makefile        |   3 +-
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_debug.c | 156 +++++++++++++++++++++++++++
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_debug.h |  31 ++++++
-> > > > > > > > > > > >    drivers/misc/fastrpc/fastrpc_main.c  |  18 +++-
-> > > > > > > > > > > >    4 files changed, 205 insertions(+), 3 deletions(-)
-> > > > > > > > > > > >    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > >    create mode 100644 drivers/misc/fastrpc/fastrpc_debug.h
-> > > > > > > > > > > > 
-> > > > > > > > > > > > diff --git a/drivers/misc/fastrpc/Makefile b/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > index 020d30789a80..4ff6b64166ae 100644
-> > > > > > > > > > > > --- a/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > +++ b/drivers/misc/fastrpc/Makefile
-> > > > > > > > > > > > @@ -1,3 +1,4 @@
-> > > > > > > > > > > >    # SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > > >    obj-$(CONFIG_QCOM_FASTRPC)      += fastrpc.o
-> > > > > > > > > > > > -fastrpc-objs    := fastrpc_main.o
-> > > > > > > > > > > > \ No newline at end of file
-> > > > > > > > > > > > +fastrpc-objs    := fastrpc_main.o \
-> > > > > > > > > > > > +                fastrpc_debug.o
-> > > > > > > > > > > Only build this file if debugfs is enabled.
-> > > > > > > > > > > 
-> > > > > > > > > > > And again, "debug.c"?
-> > > > > > > > > > I'll add change to build this only if debugfs is enabled. Going forward I have plans to add
-> > > > > > > > > > few more debug specific changes, maybe then I'll need to change the build rules again.
-> > > > > > > > > > > > diff --git a/drivers/misc/fastrpc/fastrpc_debug.c b/drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > > new file mode 100644
-> > > > > > > > > > > > index 000000000000..cdb4fc6845a8
-> > > > > > > > > > > > --- /dev/null
-> > > > > > > > > > > > +++ b/drivers/misc/fastrpc/fastrpc_debug.c
-> > > > > > > > > > > > @@ -0,0 +1,156 @@
-> > > > > > > > > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > > > > > > > > +// Copyright (c) 2024 Qualcomm Innovation Center.
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +#include <linux/debugfs.h>
-> > > > > > > > > > > > +#include <linux/seq_file.h>
-> > > > > > > > > > > > +#include "fastrpc_shared.h"
-> > > > > > > > > > > > +#include "fastrpc_debug.h"
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +#ifdef CONFIG_DEBUG_FS
-> > > > > > > > > > > Please put the #ifdef in the .h file, not in the .c file.
-> > > > > > > > > > Ack
-> > > > > > > > > > > > +void fastrpc_create_user_debugfs(struct fastrpc_user *fl)
-> > > > > > > > > > > > +{
-> > > > > > > > > > > > +        char cur_comm[TASK_COMM_LEN];
-> > > > > > > > > > > > +        int domain_id, size;
-> > > > > > > > > > > > +        char *debugfs_buf;
-> > > > > > > > > > > > +        struct dentry *debugfs_dir = fl->cctx->debugfs_dir;
-> > > > > > > > > > > > +
-> > > > > > > > > > > > +        memcpy(cur_comm, current->comm, TASK_COMM_LEN);
-> > > > > > > > > > > > +        cur_comm[TASK_COMM_LEN-1] = '\0';
-> > > > > > > > > > > > +        if (debugfs_dir != NULL) {
-> > > > > > > > > > > > +                domain_id = fl->cctx->domain_id;
-> > > > > > > > > > > > +                size = snprintf(NULL, 0, "%.10s_%d_%d_%d", cur_comm,
-> > > > > > > > > > > > +                                current->pid, fl->tgid, domain_id) + 1;
-> > > > > > > > > > > > +                debugfs_buf = kzalloc(size, GFP_KERNEL);
-> > > > > > > > > > > > +                if (debugfs_buf == NULL)
-> > > > > > > > > > > > +                        return;
-> > > > > > > > > > > > +                /*
-> > > > > > > > > > > > +                 * Use HLOS process name, HLOS PID, fastrpc user TGID,
-> > > > > > > > > > > > +                 * domain_id in debugfs filename to create unique file name
-> > > > > > > > > > > > +                 */
-> > > > > > > > > > > > +                snprintf(debugfs_buf, size, "%.10s_%d_%d_%d",
-> > > > > > > > > > > > +                        cur_comm, current->pid, fl->tgid, domain_id);
-> > > > > > > > > > > > +                fl->debugfs_file = debugfs_create_file(debugfs_buf, 0644,
-> > > > > > > > > > > > +                                debugfs_dir, fl, &fastrpc_debugfs_fops);
-> > > > > > > > > > > Why are you saving the debugfs file?  What do you need to do with it
-> > > > > > > > > > > that you can't just delete the whole directory, or look up the name
-> > > > > > > > > > > again in the future when removing it?
-> > > > > > > > > > fl structure is specific to a process using fastrpc driver. The reason to save
-> > > > > > > > > > this debugfs file is to delete is when the process releases fastrpc device.
-> > > > > > > > > > If the file is not deleted, it might flood multiple files in debugfs directory.
-> > > > > > > > > > 
-> > > > > > > > > > As part of this change, only the file that is getting created by a process is
-> > > > > > > > > > getting removed when process is releasing device and I don't think we
-> > > > > > > > > > can clean up the whole directory at this point.
-> > > > > > > > > My 2c: it might be better to create a single file that conains
-> > > > > > > > > information for all the processes instead of that. Or use fdinfo data to
-> > > > > > > > > export process / FD information to userspace.
-> > > > > > > > Thanks for your review. The reason of not having single file for all processes is that
-> > > > > > > > I can run 100s of iteration for any process(say calculator) and every time the properties
-> > > > > > > > of the process can differ(like buffer, session etc.). For this reason, I'm creating and
-> > > > > > > > deleting the debugfs files for every process run.
-> > > > > > > > 
-> > > > > > > > Do you see any advantage of using fdinfo over debugfs? I'm not sure if we can add all
-> > > > > > > > the information(like in debugfs) here.
-> > > > > > > Which information is actually useful / interesting for application
-> > > > > > > developers? If not for the fdinfo, I might still vote for a single file
-> > > > > > > rather than a pile of per-process data.
-> > > Let’s say I am trying to do debugfs read when 10+ or more sessions are
-> > > active per channel, then for pushing data of nth process in a single file, I
-> > > would have to wait for n-1 processes, by that time process data might get
-> > > changed. How do you suggest handling this?
-> > 
-> > I'm yet to see the response to my question, what kind of information are
-> > you outputting? What is actually relevant? Could you please provide an
-> > example from the running system, so that we don't have to guess?
-> > 
-> Debugfs would include information like userspace maps, kernel allocated
-> buffers, information regarding memory donated to DSP for session creation
-> etc. Other relevant information can be added in debugfs on need basis.
+Hi,
 
-Please look at debugfs/dri/0/gem, this file provides semantically more
-or less the same kind of information.
+This series adds devicetree changes needed for Partial-IO support
+on TI am62, am62a, and am62p SoCs. It defines system states for various
+low power modes and configures the wakeup-sources for devices in the CANUART
+group. Depending on the SoC and board details, some low power modes may not
+be available, so the wakeup-sources are described in the board files.
+The series also adds the necessary pinctrl settings required for proper
+wakeup functionality.
 
-Also, please be carefull with the "kernel allocated buffers". I'd be
-careful to not to overexpose kernel addresses to userspace.
+Partial-IO Overview
+------------------
+Partial-IO is a low power system state in which nearly everything is
+turned off except the pins of the CANUART group (mcu_mcan0, mcu_mcan1,
+wkup_uart0 and mcu_uart0). These devices can trigger a wakeup of the system
+on pin activity. Note that this does not resume the system as the DDR is
+off as well. So this state can be considered a power-off state with wakeup
+capabilities.
 
-> > > > > > I have tried to capture all the information that could be useful.
-> > > > > > 
-> > > > > > I can try changes to maintain single file for all active processes. Having this file specific
-> > > > > > to a channel should be fine, right? like fastrpc_adsp, fastrpc_cdsp, etc.? Each file will
-> > > > > > carry information of all processes using that remoteproc.
-> > > > > I think it's a better idea, yes.
-> > > > 
-> > > > Hi all,
-> > > > 
-> > > > I'm adding Deepika <quic_dsi@quicinc.com> to this thread who is reworking
-> > > > on this patch series.
-> > > > 
-> > > > //Ekansh
-> > > > 
-> > > > > > --ekansh
-> > > > > > > > --ekansh
-> > > > > 
-> > > > 
-> > > 
-> > 
-> 
+A documentation can also be found in section 6.2.4 in the TRM:
+  https://www.ti.com/lit/pdf/spruiv7
 
+Implementation Details
+----------------------
+The complete Partial-IO feature requires three coordinated series, each handling
+a different aspect of the implementation:
+
+1. m_can driver series: Implements device-specific wakeup functionality
+    for m_can devices, allowing them to be set as wakeup sources.
+    https://gitlab.baylibre.com/msp8/linux/-/tree/topic/mcan-wakeup-source/v6.15?ref_type=heads
+    https://lore.kernel.org/r/20250421-topic-mcan-wakeup-source-v6-12-v7-0-1b7b916c9832@baylibre.com
+
+2. This series (devicetree): Defines system states and wakeup sources in the
+    devicetree for am62, am62a and am62p.
+
+3. TI-SCI firmware series: Implements the firmware interface to enter Partial-IO
+    mode when appropriate wakeup sources are enabled.
+    https://gitlab.baylibre.com/msp8/linux/-/tree/topic/tisci-partialio/v6.15?ref_type=heads
+
+Devicetree Bindings
+-------------------
+This series depends on the dt-schema pull request that adds bindings for
+system-idle-states and updates the binding for wakeup-source:
+  https://github.com/devicetree-org/dt-schema/pull/150
+
+These new bindings allow us to define the system states and reference them
+from device wakeup-source properties.
+
+Testing
+-------
+A test branch is available here that includes all patches required to
+test Partial-IO:
+
+https://gitlab.baylibre.com/msp8/linux/-/tree/integration/am62-partialio/v6.15?ref_type=heads
+
+After enabling Wake-on-LAN the system can be powered off and will enter
+the Partial-IO state in which it can be woken up by activity on the
+specific pins:
+    ethtool -s can0 wol p
+    ethtool -s can1 wol p
+    poweroff
+
+I tested these patches on am62-lp-sk.
+
+Best,
+Markus
+
+Previous versions
+-----------------
+ - As part of the series "firmware: ti_sci: Partial-IO support"
+   https://lore.kernel.org/r/20250306-topic-am62-partialio-v6-12-b4-v5-0-f9323d3744a2@baylibre.com
+
+Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+---
+Markus Schneider-Pargmann (7):
+      arm64: dts: ti: k3-pinctrl: Add WKUP_EN flag
+      arm64: dts: ti: k3-am62: Define possible system states
+      arm64: dts: ti: k3-am62a: Define possible system states
+      arm64: dts: ti: k3-am62p: Define possible system states
+      arm64: dts: ti: k3-am62-lp-sk: Set wakeup-source system-states
+      arm64: dts: ti: k3-am62a7-sk: Set wakeup-source system-states
+      arm64: dts: ti: k3-am62p5-sk: Set wakeup-source system-states
+
+ arch/arm64/boot/dts/ti/k3-am62-lp-sk.dts | 60 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62.dtsi      | 22 +++++++++
+ arch/arm64/boot/dts/ti/k3-am62a.dtsi     | 27 ++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts  | 76 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62p.dtsi     | 27 ++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts  | 76 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-pinctrl.h      |  2 +
+ 7 files changed, 290 insertions(+)
+---
+base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
+change-id: 20250415-topic-am62-dt-partialio-v6-15-327dd1ff17da
+prerequisite-change-id: 20241009-topic-mcan-wakeup-source-v6-12-8c1d69931bd8:v7
+prerequisite-patch-id: 02b7142f56c849c9a3faab2d2871805febd647aa
+prerequisite-patch-id: 830b339ea452edd750b04f719da91e721be630cb
+prerequisite-patch-id: 56fd0aae20e82eb2dfb48f1b7088d62311a11f05
+prerequisite-patch-id: 41f55b96c0428240d74d488e3c788c09842a1753
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+Markus Schneider-Pargmann <msp@baylibre.com>
+
