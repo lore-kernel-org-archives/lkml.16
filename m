@@ -1,99 +1,98 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1D918D626;
-	Mon, 21 Apr 2025 14:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D215D18FDB9;
+	Mon, 21 Apr 2025 14:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745245349; cv=none; b=MvWTS+yl7mk5BfYjIoroZ7E36X8LiSz7Kj8JjV92GtLnjTbcTWH+UTXnp9hR0YWmtMV+sj3VgDK04VBawfXbk22QYd7Hy9njxvSrresSjhYnj2U+CbhFF6gvB5z9iiOkaMTTf8CuhOezdt/GREFzl49pgOrDRZ7OLzoGfHaF4z0=
+	t=1745245388; cv=none; b=CiNbTOzpAlbDgXBbdN0tWl0uuQZ4pPOL0JBZjJ+8PbCYO1z6U+CYHkkDi65FHim2H0YeC+5kZM2idDHBLKCa/5vAn6pfkI0PvZ1//4mX5v+5WP9F+3GDWXhkvQk3uhgbro27oU/ToRY/0iV3HkcyMV9m8ohumsWhowPn/GZQY64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745245349; c=relaxed/simple;
-	bh=tLOaeXQjamGXUmaO+khLO7IIPlnvyFm+641tHCVKG8g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EJh7Y3Uh6mcTC1qr419xeRUXxwjxrTlDC6VEQvl1kmS+NfL/GrV9Mu+Kneelaq1jbtFG6USZ4gEkIPXXMo03aLBoainQ4Yiu9nTRjQNVMu08eCod0FZN47PQQXPwGvM90vwDOczCHbVX81IH7blcdQsozf+mZzTkwjGInO6NKjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:8e8c:c49a:b330:a587])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id A85B654A1A;
-	Mon, 21 Apr 2025 14:22:24 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:8e8c:c49a:b330:a587) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: syzbot+0192952caa411a3be209@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	mchehab@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: syz test
-Date: Mon, 21 Apr 2025 16:22:19 +0200
-Message-ID: <20250421142219.158593-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <6805a24c.050a0220.4e547.000b.GAE@google.com>
-References: <6805a24c.050a0220.4e547.000b.GAE@google.com>
+	s=arc-20240116; t=1745245388; c=relaxed/simple;
+	bh=/UvmjxB5mlDWIFPWdct8ipmty768fSsHQ+TK4B982ik=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=V6L6l+Gh/9jiXx5NZqCyEtlB5/xLw3aGerwDrvt/ko9i8aorBAfs1ekeR7aEsfrvN//epRe3jBmUsYcje1j9TW5dFYKK3S3WDxvJGLewJaRz0iCRtlLvEFQP6sOzZs0IUOi4Yf1T9WmwTXySZaECBI2kV4fCiIlOK7SCe4pwDsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=orBiie4c; arc=none smtp.client-ip=131.188.11.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="orBiie4c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1745245384; bh=dHRKLKa57WaRcw3gsgSapFs5eoq+g/y962Gr8FAxtJ4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
+	 Subject;
+	b=orBiie4cvNrHVv1JbBWkrpOyYmyGmifj9slSFQzZ0sJetOlRXTDNVGexBpdHSLlCj
+	 cIRmDtYCELKKpt25P9o50N7Y+j9jsWe+aLzGb7aUsWJA9N64p44PwD8KSuAJ4OjZJB
+	 XZ/ImmqlxC4T3CkcYfAZJBcM3JIzvolN8AqEG1ESQtwmvQXdXlF0t9Lnu4dsv8XVMd
+	 dOj+KKY125Rtr8bCcieX7+VlKdKSQWGglObQaut+Mmr0zxuF1dr3qH1s8G40zgEohX
+	 itn/AJJ+UntW48id29kZH/dXMJJNuSAKYM4NQG3NbSOJdhyEJRv3pYs07IFq2UTGT0
+	 zumuzse94SOdg==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zh6zD2qDxzPjmG;
+	Mon, 21 Apr 2025 16:23:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3600:7e00:5b67:6b9c:caeb:75c
+Received: from localhost (unknown [IPv6:2001:9e8:3600:7e00:5b67:6b9c:caeb:75c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1+yS0Gm16sXrv8zOrS9nARAtw0fhZkEU8I=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zh6yw2GKwzPjsn;
+	Mon, 21 Apr 2025 16:22:48 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: kernel test robot <lkp@intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
+ <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Martin
+ KaFai Lau <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,
+  Song Liu <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,
+  John Fastabend <john.fastabend@gmail.com>,  KP Singh
+ <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao Luo
+ <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Puranjay Mohan
+ <puranjay@kernel.org>,  Xu Kuohai <xukuohai@huaweicloud.com>,  Catalin
+ Marinas <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Hari
+ Bathini <hbathini@linux.ibm.com>,  Christophe Leroy
+ <christophe.leroy@csgroup.eu>,  Naveen N Rao <naveen@kernel.org>,
+  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael Ellerman
+ <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,  Mykola
+ Lysenko <mykolal@fb.com>,  Shuah Khan <skhan@linuxfoundation.org>,
+  Henriette Herzog <henriette.herzog@rub.de>,  Saket Kumar Bhaskar
+ <skb99@linux.ibm.com>,  Cupertino Miranda <cupertino.miranda@oracle.com>,
+  Jiayuan Chen <mrpre@163.com>,  Matan Shachnai <m.shachnai@gmail.com>,
+  oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+ henriette.herzog@rub.de
+Subject: Re: [PATCH bpf-next v2 05/11] bpf, arm64, powerpc: Add
+ bpf_jit_bypass_spec_v1/v4()
+In-Reply-To: <202504212142.V3yjAcaI-lkp@intel.com> (kernel test robot's
+	message of "Mon, 21 Apr 2025 21:17:56 +0800")
+References: <20250421091802.3234859-6-luis.gerhorst@fau.de>
+	<202504212142.V3yjAcaI-lkp@intel.com>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Mon, 21 Apr 2025 16:22:47 +0200
+Message-ID: <87r01lzj9k.fsf@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174524534502.13352.15342260960621311676@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain
 
-#syz test
+kernel test robot <lkp@intel.com> writes:
 
---- a/drivers/media/usb/dvb-usb-v2/az6007.c
-+++ b/drivers/media/usb/dvb-usb-v2/az6007.c
-@@ -752,11 +752,18 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
-        int length;
-        u8 req, addr;
- 
-+       if(!usb_trylock_device(d->udev))
-+               return -EBUSY;
-+
-        if (mutex_lock_interruptible(&st->mutex) < 0)
-                return -EAGAIN;
- 
-        for (i = 0; i < num; i++) {
-                addr = msgs[i].addr << 1;
-+               if (msgs[i].len < 1 || msgs[i].len >= sizeof(st->data) - 6) {
-+                       ret = -EIO;
-+                       goto err;
-+               }
-                if (((i + 1) < num)
-                    && (msgs[i].len == 1)
-                    && ((msgs[i].flags & I2C_M_RD) != I2C_M_RD)
-@@ -788,10 +795,6 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
-                        if (az6007_xfer_debug)
-                                printk(KERN_DEBUG "az6007: I2C W addr=0x%x len=%d\n",
-                                       addr, msgs[i].len);
--                       if (msgs[i].len < 1) {
--                               ret = -EIO;
--                               goto err;
--                       }
-                        req = AZ6007_I2C_WR;
-                        index = msgs[i].buf[0];
-                        value = addr | (1 << 8);
-@@ -806,10 +809,6 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
-                        if (az6007_xfer_debug)
-                                printk(KERN_DEBUG "az6007: I2C R addr=0x%x len=%d\n",
-                                       addr, msgs[i].len);
--                       if (msgs[i].len < 1) {
--                               ret = -EIO;
--                               goto err;
--                       }
-                        req = AZ6007_I2C_RD;
-                        index = msgs[i].buf[0];
-                        value = addr;
-@@ -825,7 +824,7 @@ static int az6007_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
-        }
- err:
-        mutex_unlock(&st->mutex);
--
-+       usb_unlock_device(d->udev);
-        if (ret < 0) {
-                pr_info("%s ERROR: %i\n", __func__, ret);
-                return ret;
---
+> All warnings (new ones prefixed by >>):
+>
+>>> kernel/bpf/core.c:3037:13: warning: no previous prototype for 'bpf_jit_bypass_spec_v1' [-Wmissing-prototypes]
+>     3037 | bool __weak bpf_jit_bypass_spec_v1(void)
+>          |             ^~~~~~~~~~~~~~~~~~~~~~
+>>> kernel/bpf/core.c:3042:13: warning: no previous prototype for 'bpf_jit_bypass_spec_v4' [-Wmissing-prototypes]
+>     3042 | bool __weak bpf_jit_bypass_spec_v4(void)
+>          |             ^~~~~~~~~~~~~~~~~~~~~~
+
+That's because the prototypes in include/linux/bpf.h were in the #ifdef
+CONFIG_BPF_SYSCALL. I fixed this for v3 by moving the prototypes out of
+the ifdef.
