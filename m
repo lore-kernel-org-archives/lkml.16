@@ -1,114 +1,212 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572C322A4C5
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6781494CC
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 02:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745201371; cv=none; b=TniAaRIFJhypYxohKcJWB/xTOuf0DyhNfWUQqMwsvdU8lxeJC/2Zg0YeSuzK0QzLM24WKEizG2dpdEmBtt2RIqnPwR1z26XTytj12XKILtCAC5AmwRYVjHx0SH3jI/lAswkVHiQp+xb+6LbT0WvC+iM7S2+1ZXshxyMlZgruejk=
+	t=1745201371; cv=none; b=N0cOINLsgxF6g2biNGj5BHB0Jc6IKADFINXxE5z2/zxuDHaVRNh1lcqye0mXFtHN+/QH9JfX1VgGOjZcekQ3swZVXCg0ycsaEMJ612wWEHfsDCiyZ/Xf0/IkKTjC0ENS4Cm0Bzn7FZ1TXR4D+JKylt+CRLoJ6ODxBCrxPNiGDJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745201371; c=relaxed/simple;
-	bh=vQwPL41UhXSWhazxVBZ9yhLnlauIudYDFz+u76RyH7U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EUNjYu2m44T5tC8FYIEwdNShObaiYIXAGjYIuMdCFjKmvyb6T6d+RjuifjOawywfdjiJVpiG/G5/g0luHB4F1h3vupF9vhriBi5UH900qG4DpAPnwfIlI/0X5Z2WSnOp++s4wwfFqbEtpL1rgynyE3t+9fRqHZhFVSqr3YcM7rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G2ht85LP; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=8665lUcagk6SBaoe799Wqq8bT+Js0KNMGAIWgtHXrB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oqJIOZGRVdi07UAVzM84zy3pLuuuVPAdDBk/QOM+jF/5OeZkrcg1NM2de7Iz6CmC5CZiTgqDJ79Qpjx+hUuHCHliQgc6oF8KXrqJ/SSOVJj9IrwNQTxfK03VT5Y0XT6N0Z20GSN6gSumZ+exrspohBfRJujLGE/CB0RAtYzItH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/uveT18; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G2ht85LP"
-Message-ID: <ba5bb0ed-54e6-4655-ac52-0594acc3d9ea@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745201367;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/uveT18"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745201367;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BkvpI/QNH8sX2vc89J73S1BGYLDtEYPlsj2xsRPRVmc=;
-	b=G2ht85LPDq7ZDR6eziLKyEU9SpDkF7/mxdwUPBkHPi9fnliu01mm+LEGpICIR3qyR6tCeV
-	KCuomqISg7G8ZD939n16VGAQHIaDEofbqGpGlTw4WfVBISU+it6vQ9h2y8YXv1r8wTMe7m
-	YEveVruvceFOMuXF9V8shPCOYwzyhXE=
+	bh=656yZBycWTbOcI/QDkiraTK+o6zkkKhUlNx/4jNdMZQ=;
+	b=Q/uveT18ob0kT/xdNkWH4eSfrARBjiIncIQvZ75y7URBlFC2AI3J6wb5BkA4VDegU42UOT
+	vIcQToBMkcbb4ygjpT/UsWH6WjoVTSwjUTl6hn7HchS5haoYemCdSyIgH7myVcMQxWoJT4
+	47NP3e9goICVA9SSoTLosWDvviO60kA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-pYxh_6rgOYKb0DbUIMnJ8w-1; Sun,
+ 20 Apr 2025 22:09:22 -0400
+X-MC-Unique: pYxh_6rgOYKb0DbUIMnJ8w-1
+X-Mimecast-MFC-AGG-ID: pYxh_6rgOYKb0DbUIMnJ8w_1745201360
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 373B31800446;
+	Mon, 21 Apr 2025 02:09:20 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.5])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4A2B19560A3;
+	Mon, 21 Apr 2025 02:09:16 +0000 (UTC)
 Date: Mon, 21 Apr 2025 10:09:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v12 3/9] kexec: define functions to map and unmap segments
+Message-ID: <aAWoyExy0UMyxaoI@fedora>
+References: <20250416021028.1403-1-chenste@linux.microsoft.com>
+ <20250416021028.1403-4-chenste@linux.microsoft.com>
+ <aAHW4O9qAKzaoa+O@MiWiFi-R3L-srv>
+ <95d249ef-bfb3-431f-b633-8b3de383e067@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V2 3/3] net: stmmac: dwmac-loongson: Add new
- GMAC's PCI device ID support
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>,
- Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-4-chenhuacai@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250416144132.3857990-4-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <95d249ef-bfb3-431f-b633-8b3de383e067@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+On 04/20/25 at 05:30am, steven chen wrote:
+> On 4/17/2025 9:36 PM, Baoquan He wrote:
+> > On 04/15/25 at 07:10pm, steven chen wrote:
+> > > From: Steven Chen <chenste@linux.microsoft.com>
+> >   ^^^^^^
+> > > Implement kimage_map_segment() to enable IMA to map the measurement log
+> > > list to the kimage structure during the kexec 'load' stage. This function
+> > > gathers the source pages within the specified address range, and maps them
+> > > to a contiguous virtual address range.
+> > > 
+> > > This is a preparation for later usage.
+> > > 
+> > > Implement kimage_unmap_segment() for unmapping segments using vunmap().
+> > > 
+> > > From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> >    ^^^^^^
+> > > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> >    ^^^^^^^
+> > > Cc: Eric Biederman <ebiederm@xmission.com>
+> > > Cc: Baoquan He <bhe@redhat.com>
+> > > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > > Cc: Dave Young <dyoung@redhat.com>
+> > > Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> >    ^^^^^
+> > 
+> > The signing on this patch is a little confusing. I can't see who is the
+> > real author, who is the co-author, between you and Tushar. You may need
+> > to refer to Documentation/process/5.Posting.rst to make that clear.
+> 
+> Hi Baoquan,
+> 
+> From my understanding, if there is no change from the original author patch,
+> need to add
+> From tag and Signed-off-by tag; otherwise, if there are changes,
+> Signed-off-by can be used.
 
-在 4/16/25 10:41 PM, Huacai Chen 写道:
-> Add a new GMAC's PCI device ID (0x7a23) support which is used in
-> Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
-> so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
-> the new GMAC device still doesn't support flow control now.
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Tested-by: Henry Chen <chenx97@aosc.io>
-> Tested-by: Biao Dong <dongbiao@loongson.cn>
-> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+If you don't change a patch, you can add your Signed-off-by when
+posting. However, the From decides who is the real author. There's no
+way to have two From on one patch. My personal understanding.
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+> 
+> Steven
+> 
+> > > Acked-by: Baoquan He <bhe@redhat.com>
+> > > ---
+> > >   include/linux/kexec.h |  6 +++++
+> > >   kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+> > >   2 files changed, 60 insertions(+)
+> > > 
+> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > > index f0e9f8eda7a3..7d6b12f8b8d0 100644
+> > > --- a/include/linux/kexec.h
+> > > +++ b/include/linux/kexec.h
+> > > @@ -467,13 +467,19 @@ extern bool kexec_file_dbg_print;
+> > >   #define kexec_dprintk(fmt, arg...) \
+> > >           do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+> > > +extern void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
+> > > +extern void kimage_unmap_segment(void *buffer);
+> > >   #else /* !CONFIG_KEXEC_CORE */
+> > >   struct pt_regs;
+> > >   struct task_struct;
+> > > +struct kimage;
+> > >   static inline void __crash_kexec(struct pt_regs *regs) { }
+> > >   static inline void crash_kexec(struct pt_regs *regs) { }
+> > >   static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+> > >   static inline int kexec_crash_loaded(void) { return 0; }
+> > > +static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
+> > > +{ return NULL; }
+> > > +static inline void kimage_unmap_segment(void *buffer) { }
+> > >   #define kexec_in_progress false
+> > >   #endif /* CONFIG_KEXEC_CORE */
+> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > > index c0bdc1686154..a5e378e1dc7f 100644
+> > > --- a/kernel/kexec_core.c
+> > > +++ b/kernel/kexec_core.c
+> > > @@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+> > >   	return result;
+> > >   }
+> > > +void *kimage_map_segment(struct kimage *image,
+> > > +			 unsigned long addr, unsigned long size)
+> > > +{
+> > > +	unsigned long src_page_addr, dest_page_addr = 0;
+> > > +	unsigned long eaddr = addr + size;
+> > > +	kimage_entry_t *ptr, entry;
+> > > +	struct page **src_pages;
+> > > +	unsigned int npages;
+> > > +	void *vaddr = NULL;
+> > > +	int i;
+> > > +
+> > > +	/*
+> > > +	 * Collect the source pages and map them in a contiguous VA range.
+> > > +	 */
+> > > +	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
+> > > +	src_pages = kmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
+> > > +	if (!src_pages) {
+> > > +		pr_err("Could not allocate ima pages array.\n");
+> > > +		return NULL;
+> > > +	}
+> > > +
+> > > +	i = 0;
+> > > +	for_each_kimage_entry(image, ptr, entry) {
+> > > +		if (entry & IND_DESTINATION) {
+> > > +			dest_page_addr = entry & PAGE_MASK;
+> > > +		} else if (entry & IND_SOURCE) {
+> > > +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+> > > +				src_page_addr = entry & PAGE_MASK;
+> > > +				src_pages[i++] =
+> > > +					virt_to_page(__va(src_page_addr));
+> > > +				if (i == npages)
+> > > +					break;
+> > > +				dest_page_addr += PAGE_SIZE;
+> > > +			}
+> > > +		}
+> > > +	}
+> > > +
+> > > +	/* Sanity check. */
+> > > +	WARN_ON(i < npages);
+> > > +
+> > > +	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
+> > > +	kfree(src_pages);
+> > > +
+> > > +	if (!vaddr)
+> > > +		pr_err("Could not map ima buffer.\n");
+> > > +
+> > > +	return vaddr;
+> > > +}
+> > > +
+> > > +void kimage_unmap_segment(void *segment_buffer)
+> > > +{
+> > > +	vunmap(segment_buffer);
+> > > +}
+> > > +
+> > >   struct kexec_load_limit {
+> > >   	/* Mutex protects the limit count. */
+> > >   	struct mutex mutex;
+> > > -- 
+> > > 2.43.0
+> > > 
+> 
 
-
-Thanks,
-
-Yanteng
-
-> ---
->   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> index 57917f26ab4d..e1591e6217d4 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> @@ -66,7 +66,8 @@
->   					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
->   					 DMA_STATUS_MSK_COMMON_LOONGSON)
->   
-> -#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
-> +#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
-> +#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
->   #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
->   #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
->   #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
-> @@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
->   	/* Loongson GMAC doesn't support the flow control. Loongson GNET
->   	 * without multi-channel doesn't support the half-duplex link mode.
->   	 */
-> -	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
-> +	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
->   		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
->   	} else {
->   		if (ld->multichan)
-> @@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
->   			 loongson_dwmac_resume);
->   
->   static const struct pci_device_id loongson_dwmac_id_table[] = {
-> -	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
-> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
-> +	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
->   	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
->   	{}
->   };
