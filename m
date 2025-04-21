@@ -1,156 +1,151 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E21F20D51E
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC6D20DD51;
+	Mon, 21 Apr 2025 21:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745269261; cv=none; b=uJnfTXEOuO0+APlSFgF0faP7pjvbPs+CEjVfK6oPcreWGnpB+ppH6pbvvh3QiHqQrbfGW2+roPvkLsnW8Ny2DpKjx51hjVpguSq+mG/+0oDNCbFdcFTUdHwIjYHgzwSVzqD+NKvuzPH4YU8ob55ZAGSZ7n/kzV60hXHRO7hgQsU=
+	t=1745269622; cv=none; b=Ch7SH7cyxh70zauHzLp/FUXH8FdISC2c1LN0rV8mAwpK3R8jc2OuOlBYWYJKzSmMZytIexZxffGK1Lc9wG5ZJ6gQCVhdAUZkQCYSvZtmmxjXECoywEC56n0YUYP5SGN7089O9sPmeJVi7lK2Ruw0lyK2d0OSmTsmwNPgPjJNRVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745269261; c=relaxed/simple;
-	bh=t0reQejpEy+awsYTb53wJTJbKqsU4iiO5Emdqd80b5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C2gm3+VSqeqbuakKQXTL2niPzzUo8pJ5Yk1+jWT+eB5u/FwbvUM0F00c1Tvtd23MTl3ALHfSY320zaTug+XoRPHqUHG+uGfm7B0+IH4LApKiDdGOEZw2QO8nsGal0OGfrkGiKAiY8a7bNGQSPEc+eaVmL/4ulO2szUaRWffCbaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=dKecW/Vz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1745269622; c=relaxed/simple;
+	bh=zZ9QfTcAgGyVYVMs/hFgm2shARK8oqJFBREnc4yd/O8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E7977fMti+lGvdeeNwYoTurzxBvZpxHHlLxfKwxZRDz9Ljmp1Zuj31QmJgmcyGMI0rYoSWvuObjPP/9SagKrHNm02p20tXKRtoseW4jqHo80SM+8FmHc5y5EvKIezfiRfDNWLymxeY0iAHeGWYcspdKc1wDL957gJIPV4PHH5OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bzYJdNJg; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="dKecW/Vz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso52735455e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 14:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1745269258; x=1745874058; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=t0reQejpEy+awsYTb53wJTJbKqsU4iiO5Emdqd80b5Q=;
-        b=dKecW/VziLc/w0jqpdp4qJMXiFKlfT1BHWF+iC/hH3tcBd2ig16irXyNLZuA67QWKv
-         2rAmInde9YHDowejHpcfNjooGw0wIen65ek5zBw8wq8aEM3CHeUqKpZrmjBgQ4ONo+73
-         nOHSa8VdaMbfEVud/s+keIh7/cgsjITKplv6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745269258; x=1745874058;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t0reQejpEy+awsYTb53wJTJbKqsU4iiO5Emdqd80b5Q=;
-        b=Xc14YcVLTaGF6W6eTfU8Vz9Inc7kpXfG3YSoQavfNS44/AlHdsA7e0hZXAzeOocmcT
-         +mFjcAbFBOLlK95PudqpO6G4+fnE8Sgw4D4Kddmf4dmbX/ZwxvmcwcSMsHsw3qy7W8ue
-         HGS5FEDfvKjTRM/abDrh+U8kIKutdhFtD7BFGJ7mD7GVnB/WS4Zm8nD33qPmkp2RtuTx
-         jHYhboIvZBPMlGwiT/s4rAtik/OFa4lQhbKfZ4MFVkVY7iZR1I6Hy9NKcnNeDQa5FxQm
-         9EiE2x3gLQm3DJ+tUsdF7CKRXEC1mOEYw7z9jvDQner6zWFMj7oSyybfbW1a06pvjXL5
-         oS/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVruYQY7zxFTppF5W0QVFp9WY1hgMbJeCezWNq9tulYjfV2qmtcYMKGDOcTRczMy+ybuEdJy/YxfIEQ54c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy6yoZWXkLOlgv7rC3e3E+1lZpdUw8AfYVFfs3AzKMKH/xkl/Z
-	Bt7RbRUAM2RrDCCwOB9KSHU/JHXmWdJZjpSaXMOghYThxyM8yj/QA/YIyU0pBUs=
-X-Gm-Gg: ASbGncuS1+hvw/AZEUlbuDzt8QVpMgbdfmQxfqmIs2iwmt8jl9Vw2AjbHghSXUUcPIC
-	3Q+yeZWaAU2dbicrb6ysobL2VDR4x8EOfgIIpxHwiAARqik1edi2H9QpcJT1PLjnB/UxiTkPGtu
-	G9KS7Nieth2LmC17qrM+PlRA5lb9nywR2S5SYoUnSA9sfnyP+iGprztZN5F1UlyG8kHXwXbajZo
-	/JndkHOx2mV2yR1DvKO7HdOHWGrMGwzFS+UGxeqll4y2it14d9O4gk+0CqR6l6KsECI8wfPO55+
-	RIFAb8Cyp9wZcOq8RwSJb1PaxNHAANsr8xdzLdeXBP+bUCVWkPzn6A==
-X-Google-Smtp-Source: AGHT+IEqZcEurBsEwpQNvMEBz98hVptC58D9hX1qopJkxrFk/Vkqpzpoey4oDYw4HKljgsecLmBIZw==
-X-Received: by 2002:a05:600c:1c12:b0:43e:ee80:c233 with SMTP id 5b1f17b1804b1-4406ac20146mr103140445e9.32.1745269257767;
-        Mon, 21 Apr 2025 14:00:57 -0700 (PDT)
-Received: from [192.168.86.29] ([83.104.178.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acc5dsm150288735e9.9.2025.04.21.14.00.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 14:00:56 -0700 (PDT)
-Message-ID: <693a7733-0e03-4236-bdd1-13441b1ca3a5@citrix.com>
-Date: Mon, 21 Apr 2025 22:00:54 +0100
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bzYJdNJg"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7B066D6;
+	Mon, 21 Apr 2025 23:04:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745269492;
+	bh=zZ9QfTcAgGyVYVMs/hFgm2shARK8oqJFBREnc4yd/O8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bzYJdNJg/LuvQBr4OL4eciqJS2M7kpo4FXjah87Kf7KRD64nt+dZ34NKjUjp0i/c/
+	 RNz9SWLBw/TuFNcM9G+FcaTDoV5dyQNmdsvlTrT9YqCbNRuI0udA42xi88w5Dt08vj
+	 09s2rEjqY68jvRrSv4nHsMH/oVeQWNkPySkyIrfo=
+Date: Tue, 22 Apr 2025 00:06:55 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v4 03/13] media: nxp: imx8-isi: Remove unused offset in
+ mxc_isi_reg and use BIT() macro for mask
+Message-ID: <20250421210655.GM17813@pendragon.ideasonboard.com>
+References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
+ <20250408-8qxp_camera-v4-3-ef695f1b47c4@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: Dave Hansen <dave.hansen@intel.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250408-8qxp_camera-v4-3-ef695f1b47c4@nxp.com>
 
-On 21/04/2025 9:52 pm, Dave Hansen wrote:
-> On 4/21/25 09:26, Ross Philipson wrote:
->> The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
->> enhance the boot security and integrity in a unified manner.
-> Hey Folks,
->
-> It isn't immediately apparent what these 5,000 lines of code do which is
-> new, why they are important to users and who will use them. I've
-> wondered this from v1 and I was hoping it would have gotten better by
-> v14, but alas...
->
-> Purely from the amount of interest and review tags and the whole "v14"
-> thing, it doesn't look like this is very important to anyone. Not to be
-> to flippant about it, but if nobody else cares, why should I (or the
-> other x86 maintainers)?
+Hi Frank,
 
-The very-tl;dr is:
+Thank you for the patch.
 
-This is an implementation of Intel TXT which isn't a piece of
-abandonware with unaddressed CVEs (i.e. isn't tboot).
+On Tue, Apr 08, 2025 at 05:53:01PM -0400, Frank Li wrote:
+> Preserve clarity by removing the unused 'offset' field in struct mxc_isi_reg,
+> as it duplicates information already indicated by the mask and remains unused.
 
-AMD and ARM support of equivalent technologies will be coming next.
+The commit message line length limit is normally 72 characters. I can
+reflow when applying if no other change to the series is needed.
 
-~Andrew
+> 
+> Improve readability by replacing hex value masks with the BIT() macro.
+> 
+> No functional change.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 25 +++++++++++-----------
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  1 -
+>  2 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> index 1e79b1211b603..ecfc95882f903 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> @@ -3,6 +3,7 @@
+>   * Copyright 2019-2020 NXP
+>   */
+>  
+> +#include <linux/bits.h>
+>  #include <linux/clk.h>
+>  #include <linux/device.h>
+>  #include <linux/errno.h>
+> @@ -247,24 +248,24 @@ static void mxc_isi_v4l2_cleanup(struct mxc_isi_dev *isi)
+>  
+>  /* For i.MX8QXP C0 and i.MX8MN ISI IER version */
+>  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v1 = {
+> -	.oflw_y_buf_en = { .offset = 19, .mask = 0x80000  },
+> -	.oflw_u_buf_en = { .offset = 21, .mask = 0x200000 },
+> -	.oflw_v_buf_en = { .offset = 23, .mask = 0x800000 },
+> +	.oflw_y_buf_en = { .mask = BIT(19) },
+> +	.oflw_u_buf_en = { .mask = BIT(21) },
+> +	.oflw_v_buf_en = { .mask = BIT(23) },
+>  
+> -	.panic_y_buf_en = {.offset = 20, .mask = 0x100000  },
+> -	.panic_u_buf_en = {.offset = 22, .mask = 0x400000  },
+> -	.panic_v_buf_en = {.offset = 24, .mask = 0x1000000 },
+> +	.panic_y_buf_en = { .mask = BIT(20) },
+> +	.panic_u_buf_en = { .mask = BIT(22) },
+> +	.panic_v_buf_en = { .mask = BIT(24) },
+>  };
+>  
+>  /* For i.MX8MP ISI IER version */
+>  static const struct mxc_isi_ier_reg mxc_imx8_isi_ier_v2 = {
+> -	.oflw_y_buf_en = { .offset = 18, .mask = 0x40000  },
+> -	.oflw_u_buf_en = { .offset = 20, .mask = 0x100000 },
+> -	.oflw_v_buf_en = { .offset = 22, .mask = 0x400000 },
+> +	.oflw_y_buf_en = { .mask = BIT(18) },
+> +	.oflw_u_buf_en = { .mask = BIT(20) },
+> +	.oflw_v_buf_en = { .mask = BIT(22) },
+>  
+> -	.panic_y_buf_en = {.offset = 19, .mask = 0x80000  },
+> -	.panic_u_buf_en = {.offset = 21, .mask = 0x200000 },
+> -	.panic_v_buf_en = {.offset = 23, .mask = 0x800000 },
+> +	.panic_y_buf_en = { .mask = BIT(19) },
+> +	.panic_u_buf_en = { .mask = BIT(21) },
+> +	.panic_v_buf_en = { .mask = BIT(23) },
+>  };
+>  
+>  /* Panic will assert when the buffers are 50% full */
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> index 9c7fe9e5f941f..e7534a80af7b4 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> @@ -114,7 +114,6 @@ struct mxc_isi_buffer {
+>  };
+>  
+>  struct mxc_isi_reg {
+> -	u32 offset;
+>  	u32 mask;
+>  };
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
