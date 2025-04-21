@@ -1,60 +1,36 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6898262A6
-	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F942258CC9
+	for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 06:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745215640; cv=none; b=O3WvbJTCU0oy0RD0MEqXzc6npXl9JGJ8ptWNZo+t9orOPG8BS5eR6gXKTGrQYY26rqz0LwfVcU4ZzzRw/HiOo9L+yUCi0zd+Y4pd4Baa4FTWdeuqUFcLvJfml/7o3ABMNspflWoD7OOcQfsJiOQHhQfOEhuy3ejERsxMPDuQUdo=
+	t=1745215642; cv=none; b=imiYF6rEupzRK9nQf3IqM28HQNyllh+lM52wKGOVycZTEvsrquzsTGEPDhqriPFMG9RQSLUazVYPoZFOxgOqfaS3BfaGNfoqufZHduOJJeovfwvMwAM8fw3aUoRoubOa3I+5/ppqH0RfMOifn5CewSy4gZInh7j2tAXX4TNYz6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745215640; c=relaxed/simple;
-	bh=4A7w5MEl2IiAFTYv0/2hv0BbnfIX/S6t4QWDdgdmCWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oWcfWEwHwf8/HEPB1sCaYy9DY5LfviHl0YpIYRgYs2wViDDho1tm/Xkm5nu8aNkSFsu16AvL94DvM4eO5sWmVvL7eMSbX63yULDkDQ0+2OUsRRvGrspHUcPkgOfk8zHBkKazQOjNxxYEnrPxKaVm59kQOkUy+6J454aZgyJIzCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zg69PSnn; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745215642; c=relaxed/simple;
+	bh=njYq3IvVHIoztpuKkJsNyizxP05dXyJWwqc9F0uIHz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A5yhwuWJPkxHluh79fbnmbMOZRLi6dhYnommFkDN02xMjHUDsgHYTK4q/WaBNURlv4wFus8SWIRlPKupi/+2VVQmbcWk1mSg0hcSo52whtWvDgkobIbiEASdxr/68RelcbeT2VFsVHypHYbWMeKDiRr6anbRSSLJbt7Nz6qv6Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xhJLErIB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zg69PSnn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745215638; x=1776751638;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4A7w5MEl2IiAFTYv0/2hv0BbnfIX/S6t4QWDdgdmCWQ=;
-  b=Zg69PSnnEZY16ulfkJYXSHqjx2zicxGet+kjpo+cfnrVHXDs6lTGMFX8
-   oMQqSl3/8PSQPNXPSQFtC3mZs4314wQrf298tgUzhpacfR+33zIJfVrsB
-   nhLIx3r9yFMA4ClAY+Osxy9H00kd+Sp34DYG9gT6hZ/PZacZaSG0ug7PV
-   17VHCYwLGo0mMUdMaTFhX7QguoV+5T+c+c1YPmQsr1Hf2P5GYHojMnk7W
-   +0OcHodomW9bG/jh8lJNbv7ba8u8PZa49Cy9ndw+f2Mpb0pYaqNgY69KE
-   tuJyOn+F/7u84PoEQmcdhPMijYRJ5+gHHCN+WcCwVDABks8DZ7jBsaD/o
-   g==;
-X-CSE-ConnectionGUID: Who/QJuhRXaFI1mcgCO2tQ==
-X-CSE-MsgGUID: ePdiRLwFQImAybLH26la/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11409"; a="46913983"
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="46913983"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2025 23:07:17 -0700
-X-CSE-ConnectionGUID: YsdG6zmSS6WjtkSpiuXlwg==
-X-CSE-MsgGUID: YCyRiKxdSfOs5Ez/Thb18Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,227,1739865600"; 
-   d="scan'208";a="135722978"
-Received: from lkp-server01.sh.intel.com (HELO 9c2f37e2d822) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 20 Apr 2025 23:07:16 -0700
-Received: from kbuild by 9c2f37e2d822 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u6kJF-0000BR-22;
-	Mon, 21 Apr 2025 06:07:13 +0000
-Date: Mon, 21 Apr 2025 14:06:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yuli Wang <wangyuli@uniontech.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: lib/dhry_1.o: warning: objtool: dhry+0xc60: stack state mismatch:
- reg1[22]=-1+0 reg2[22]=-2-16
-Message-ID: <202504211328.qS7Z79wK-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xhJLErIB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BC2C4CEEC;
+	Mon, 21 Apr 2025 06:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745215641;
+	bh=njYq3IvVHIoztpuKkJsNyizxP05dXyJWwqc9F0uIHz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xhJLErIBAzeYZblqvhE9Y9VFR06IIFF6imhmAZhW3fmg6zhwUrYkGOzTgYzRjxuaJ
+	 qz4GSaKlXRdUS8rY4OQPw6clNBBFDybCUQRbWOWjjPndam4K3Qg2Pt4biJG3soI+Ix
+	 R5J0ipMquR/kk14jPNZd761REZQ8mNunFhQgJ/vc=
+Date: Mon, 21 Apr 2025 08:07:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: alexjlzheng@tencent.com, linux-kernel@vger.kernel.org, tj@kernel.org
+Subject: Re: [PATCH v2 0/2] kernfs: switch global locks to per-fs lock
+Message-ID: <2025042121-cranial-famished-c249@gregkh>
+References: <20250415153659.14950-1-alexjlzheng@tencent.com>
+ <20250420150244.127569-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,24 +39,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250420150244.127569-1-alexjlzheng@tencent.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9d7a0577c9db35c4cc52db90bc415ea248446472
-commit: 892a79634196d2729b81bb8e5b029d095704df63 LoongArch: Enable UBSAN (Undefined Behavior Sanitizer)
-date:   3 weeks ago
-config: loongarch-randconfig-r063-20250421 (https://download.01.org/0day-ci/archive/20250421/202504211328.qS7Z79wK-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250421/202504211328.qS7Z79wK-lkp@intel.com/reproduce)
+On Sun, Apr 20, 2025 at 11:02:44PM +0800, Jinliang Zheng wrote:
+> On Tue, 15 Apr 2025 23:36:57 +0800, Jinliang Zheng wrote:
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > 
+> > The kernfs implementation has big lock granularity so every kernfs-based
+> > (e.g., sysfs, cgroup) fs are able to compete the locks. This patchset
+> > switches the global locks to per-fs locks.
+> > 
+> > In fact, the implementation of global locks has not yet introduced
+> > performance issues. But in the long run, more and more file systems will
+> > be implemented based on the kernfs framework, so this optimization is
+> > meaningful.
+> > 
+> > There are three global locks now, kernfs_idr_lock, kernfs_rename_lock
+> > and kernfs_pr_cont_lock. We only switch kernfs_idr_lock and
+> > kernfs_rename_lock here, because kernfs_pr_cont_lock is on a cold path.
+> > 
+> > Changelog:
+> > v2: Only switch kernfs_idr_lock and kernfs_rename_lock to per-fs
+> > v1: https://lore.kernel.org/all/20250411183109.6334-1-alexjlzheng@tencent.com/
+> > 
+> > Jinliang Zheng (2):
+> >   kernfs: switch global kernfs_idr_lock to per-fs lock
+> >   kernfs: switch global kernfs_rename_lock to per-fs lock
+> > 
+> >  fs/kernfs/dir.c             | 28 +++++++++++++++-------------
+> >  fs/kernfs/kernfs-internal.h | 16 ++++++++++++----
+> >  2 files changed, 27 insertions(+), 17 deletions(-)
+> 
+> Ding Dong ~
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504211328.qS7Z79wK-lkp@intel.com/
+You ask this 5 days after submitting the last version, and that includes
+3 of those days being a national holiday here (4 if you include today).
 
-All warnings (new ones prefixed by >>):
+Please relax, I'll get to them "soon", only start to worry if it's been
+more than 2 weeks.
 
->> lib/dhry_1.o: warning: objtool: dhry+0xc60: stack state mismatch: reg1[22]=-1+0 reg2[22]=-2-16
+In the meantime, to help out, please take the time to review other patch
+submissions on the mailing lists.  To not do so and just expect others
+to only review yours is very unbalanced.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+thanks,
+
+greg k-h
