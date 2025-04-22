@@ -1,93 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD14921481B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F191321481B
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324027; cv=none; b=JdPPRgwYZDDcjG51G5Vb6Xoe3EGavzHolrES3X5m8vg1Epf1ub9eHEMOQqvuIHzJ/+76eWXatY/asVPaNrdwiUphbCBGK/qjiHGmoV9yNdsBFCd8pJEO0dPB6Tl7dkEzahUuEyV5mWty9653NZRcxqUVmjSpMUVedLekSVUcWvU=
+	t=1745324064; cv=none; b=XSTeo/59uYIOZv8StMAfTmYdNCQLKH4RoHuLTsYTcwhhUw9/G+sc6t6Gu4N3pJNSZK8niQrDUWBOm2RhxY8By7QZr3z9BTD6Yx4lWCC9PeXLacj8g2v6haQhiTjCZ19W0UT/0ya+3CoVeN1zO2pquPaoKeDIx+jR6sNx9wuC4ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324027; c=relaxed/simple;
-	bh=KIBOyy9o2vYaEZDYCQ3CTftLtE8scteEbCPAvFia0S0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W/uCpDbuhLA75CpB1k/aTldyt/TVHjul3jSFl/ITqgjVWZElFYF7fhfipilGDLqqGshudJ4yUqlAwlN9pueQHg5f68F2ETodE5WpJbYaItXH0Xyv7ND9T3i4JwJoabALiRx3C3hwVKKi4rqRLKezH7pJna0TaBQewD+hge2M1U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rnxSO6KM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rnxSO6KM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D54FC4CEE9;
-	Tue, 22 Apr 2025 12:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745324027;
-	bh=KIBOyy9o2vYaEZDYCQ3CTftLtE8scteEbCPAvFia0S0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rnxSO6KMgydloj1OQjYwX2LfjPzBwrhzBDGuRZt92i0XfCKlWX6vdQXTYaIj4cjzU
-	 qMwg/B/HIL1Q1HrCYQJ5TSUwLSn0Fa626MZzfnbXqkra3FjypCr4Rz/RZfT7o4Ndzl
-	 dfxBYZ97WPlKDbYLKTt7BoIJj2NoWKNDcu/8OXMeFHID8KWrAapUQRVoDrzJYr9Ai8
-	 6wT/T/GRzwwFWjRdXSOSNh4RJq8HeTdAK+1DvaHNnix+QKFhbgVRjU8zStj+7HBpBZ
-	 mPn9Os8inasb+4kr3QtTZP4Orldo+UPnd51AfqQWdtMkZLLvM3JGg+fPWVsFv5+RuE
-	 dy0eJEhUoKrdg==
-Date: Tue, 22 Apr 2025 14:13:43 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: duchangbin <changbin.du@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: remove orphan header file e820.h
-Message-ID: <aAeH969fgOx6R6rw@gmail.com>
-References: <20250421041419.3167094-1-changbin.du@huawei.com>
- <aAc9seuR4AMuO4qw@gmail.com>
- <4f2c331fc758402fa662ad5bf4a2293c@huawei.com>
+	s=arc-20240116; t=1745324064; c=relaxed/simple;
+	bh=g6oO19aYOA611QEIuV2b7I9kC2sJUiJiY2o1X0zVcdo=;
+	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
+	 In-Reply-To:Content-Type; b=VbrqjwHgZi5wJ++lElGBzm7CnEOY/AfHHlU8TE2XO+nE2g3l8UL7/78lCabMDO743UvNCogQrCACvJ2K83/G0muaq5NbYp4RxEZz79QkA3T4oCVTG+yz2wBBmNRATMM3POqdCGcWtPsOz83/y68q2cawO45fXYiXN83dXM93DgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Zhh3w19Fdz1j5w8;
+	Tue, 22 Apr 2025 20:14:04 +0800 (CST)
+Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1509B1402CE;
+	Tue, 22 Apr 2025 20:14:19 +0800 (CST)
+Received: from [10.67.121.2] (10.67.121.2) by kwepemd500014.china.huawei.com
+ (7.221.188.63) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 22 Apr
+ 2025 20:14:18 +0800
+Message-ID: <68078819.1050006@hisilicon.com>
+Date: Tue, 22 Apr 2025 20:14:17 +0800
+From: Wei Xu <xuwei5@hisilicon.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f2c331fc758402fa662ad5bf4a2293c@huawei.com>
+To: Sudeep Holla <sudeep.holla@arm.com>, "lihuisong (C)"
+	<lihuisong@huawei.com>
+CC: <xuwei5@huawei.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] soc: hisilicon: kunpeng_hccs: Simplify PCC shared memory
+ region handling
+References: <20250411112539.1149863-1-sudeep.holla@arm.com>	<0e34d68f-c5fb-4fdb-90bf-2ce005c7cf66@huawei.com> <20250415-cream-jackrabbit-of-psychology-57f038@sudeepholla>
+In-Reply-To: <20250415-cream-jackrabbit-of-psychology-57f038@sudeepholla>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd500014.china.huawei.com (7.221.188.63)
 
+Hi Sudeep,
 
-* duchangbin <changbin.du@huawei.com> wrote:
+On 2025/4/15 16:32, Sudeep Holla wrote:
+> On Tue, Apr 15, 2025 at 02:26:40PM +0800, lihuisong (C) wrote:
+>> +Wei who is Hisilicon SoC maintainer.
+>>
+>> 在 2025/4/11 19:25, Sudeep Holla 写道:
+>>> The PCC driver now handles mapping and unmapping of shared memory
+>>> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+>>> this Kunpeng HCCS driver did handling of those mappings like several
+>>> other PCC mailbox client drivers.
+>>>
+>>> There were redundant operations, leading to unnecessary code. Maintaining
+>>> the consistency across these driver was harder due to scattered handling
+>>> of shmem.
+>>>
+>>> Just use the mapped shmem and remove all redundant operations from this
+>>> driver.
+>>>
+>>> Cc: Huisong Li <lihuisong@huawei.com>
+>>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> Reviewed-by: Huisong Li <lihuisong@huawei.com>
+> 
+> Thanks and sorry for dropping it assuming you will pick it up.
+> The maintainers file just list you.
+> 
+> Wei,
+> 
+> Let me know if you want me to repost or if you can pick it from [1]
+> 
 
-> Hi, Ingo,
-> On Tue, Apr 22, 2025 at 08:56:49AM +0200, Ingo Molnar wrote:
-> > 
-> > * Changbin Du <changbin.du@huawei.com> wrote:
-> > 
-> > > The header arch/x86/include/uapi/asm/e820.h isn't used by any source file any
-> > > more. The e820 related items are defined in arch/x86/include/asm/e820/types.h.
-> > > So clean it up.
-> > > 
-> > > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > > ---
-> > >  arch/x86/include/uapi/asm/e820.h | 82 --------------------------------
-> > >  1 file changed, 82 deletions(-)
-> > >  delete mode 100644 arch/x86/include/uapi/asm/e820.h
-> > 
-> > This is part of the specification of the bootloader protocol between 
-> > bootloaders and the Linux kernel and thus should not be removed.
-> > 
-> > The kernel has its internal types that adhere to the same 
-> > specification, but that's not grounds to remove this header.
-> >
->
-> Regarding the e820 definitions used in the boot protocol, the main 
-> components involved are 'struct boot_params::e820_table' and the 
-> SETUP_E820_EXT node. Both of these utilize the 'struct 
-> boot_e820_entry' defined in arch/x86/include/uapi/asm/setup_data.h, 
-> which is also part of the UAPI.
+Applied to the Hisilicon driver tree.
+Thanks!
 
-True.
-
-> The header arch/x86/include/uapi/asm/e820.h is not referenced by boot 
-> protocol definitions. In this scenario, can the header file 
-> arch/x86/include/uapi/asm/e820.h be safely removed?
-
-Probably/possibly ...
-
-Thanks,
-
-	Ingo
+Best Regards,
+Wei
