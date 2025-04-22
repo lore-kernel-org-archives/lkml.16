@@ -1,127 +1,170 @@
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.66.161])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A801E5707;
-	Tue, 22 Apr 2025 06:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.182.66.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1615E19ADA6
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302438; cv=none; b=PHi8CpkUgTLMRO2Bj68QwHcaceOGA3+AtEImUaO4JC7PtxRFIwk8owtUQecKCR8o4yZT459rXNYixZPiXb13XlCFZmpuYlxdmTUZRKbChlCyy7k/WahTZ4l4EuH6jTX9CUsEDKYVHsjzkNHTuoOdhdwFpH6aXs/YVib/oIckAwY=
+	t=1745302468; cv=none; b=gjcIB/QHpgNG0fBujuImkdaZnorcGM9xp05+Od0c5ABFRMnW7yuIGxGarrzYgW4Uz4dT9cwm+2dujZjFXoReWDB6ZApFlTUysfYeZOX2UBssH6cJ7RN/vtaDp5ww1nXyQToviNGvZXJZTKyFNFWMFX1BPxJmVNwE2qbD8Lyw1ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302438; c=relaxed/simple;
-	bh=haRoeOk6LzW0VxiMtuKkFaS3hRndffn4xbn/cmXz4vQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oyI1CJsjCC+59miedN1A3armZTugY8tCGTm8lVGBGLyVjyLEqGqLUPktccfjLv8GzpK/g/l0p/Qcyluab/v62PQPjL0IlM5sS15QYJB+WTrjXq1RrCy1ay3ShRkiAbFdsi8xx6fbHbsT/CIywJMmToB2OAGFKLqcXe3S3WMDj24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=VNYBFmOg; arc=none smtp.client-ip=217.182.66.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1745302468; c=relaxed/simple;
+	bh=k76J4N3tpRxkQiTM9N5mJl9SvbCP7Rd+XDLyZnXS/k0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AjVjvY5kAOblKdBzYT1aj189EjfgSvV6KN+ZDjicvILkI9M9jWxZnxeJgcYjSoOxrvpij1j6f8w1JPIv432rqNXluIylhj62c3xG4jbnm8bxym/lfU+TzpsAVhGEES8VNv+WlG7Zms7P7ih8SWYmoytpH3FTGCa0U2MiYZLyEeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=KdMPXG0U; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="VNYBFmOg"
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id E2FE13E8FC;
-	Tue, 22 Apr 2025 06:13:48 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 8195F40074;
-	Tue, 22 Apr 2025 06:13:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1745302426; bh=haRoeOk6LzW0VxiMtuKkFaS3hRndffn4xbn/cmXz4vQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VNYBFmOgDIW3+FDDYkghTG/pZf8vnfCeqMx8EVPxSNpSiq78Zhq2ObIVHchp6GOVZ
-	 2w7oejMR3aMiHJBK8Fu69YnmewYfwsF3eUv0ldDezLFOmKKB02tsSzVoDx96O+W2DM
-	 oHaHReJ+oG3PbJVbYvFJZybuBO0gcuS9uKpHecgw=
-Received: from [198.18.0.1] (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 0E12B42AD7;
-	Tue, 22 Apr 2025 06:13:42 +0000 (UTC)
-Message-ID: <fb0b667a-ebea-4705-9f69-b3bb98399494@aosc.io>
-Date: Tue, 22 Apr 2025 14:13:38 +0800
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="KdMPXG0U"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 202504220614185f8f1ee7ff28a86811
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 22 Apr 2025 08:14:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=+UTSSsG+8WtOQHPmAJe+rsYM12ki9cccLWC6Gxd4wAI=;
+ b=KdMPXG0U80elzuYOOMqlaNeBjf5q504Ijr+lUFxVuAG4OCp/ir2QZefHfsj1sSHtlP1PT/
+ r7qMKLq+IDQb3OrXnpZwjcjvgDYoIfGgScR1Sea2HQb8PUdzHLCBthcYQ+oVjTTp2FEQnG/O
+ QZbfQ0TIuibSINNyXrj59wzGTk4HioQ+2dAu3kk6cOOZtc0MSmvqv50JTKJHwGOibP+SMUsQ
+ 7wrH/e4Y4b2TT7/vKgtiN/XsegA3DpuJV8GZpGgk+MBp9KPxIv6jZWU9szMebJs3tlBMdxUs
+ FQiKxVTXn2bjW52gppk5vO8hLm0KYrnaayI+rtkYDrdeK9dT8rkQRqzw==;
+From: huaqian.li@siemens.com
+To: helgaas@kernel.org
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	ssantosh@kernel.org,
+	vigneshr@ti.com
+Subject: [PATCH v8 0/8] soc: ti: Add and use PVU on K3-AM65 for DMA isolation
+Date: Tue, 22 Apr 2025 14:13:59 +0800
+Message-Id: <20250422061406.112539-1-huaqian.li@siemens.com>
+In-Reply-To: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
+References: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rtw-next] wifi: rtlwifi: disable ASPM for RTL8723BE with
- subsystem ID 11ad:1723
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Liangliang Zou <rawdiamondmc@outlook.com>,
- "John W. Linville" <linville@tuxdriver.com>,
- Larry Finger <Larry.Finger@lwfinger.net>,
- "open list:REALTEK WIRELESS DRIVER (rtlwifi family)"
- <linux-wireless@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-References: <20250422032132.348598-1-jeffbai@aosc.io>
- <1ab6f74b5b9d4f0d8023eb43d41906be@realtek.com>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <1ab6f74b5b9d4f0d8023eb43d41906be@realtek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8195F40074
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [0.00 / 10.00];
-	SUBJECT_RANDOM_CHARS_1(0.10)[];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[aosc.io,vger.kernel.org,outlook.com,tuxdriver.com,lwfinger.net];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
-Hi Ping-ke,
+From: Li Hua Qian <huaqian.li@siemens.com>
 
-在 2025/4/22 14:08, Ping-Ke Shih 写道:
-> Mingcong Bai <jeffbai@aosc.io> wrote:
->>
->> RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
->> subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
->> errors during and after boot up, causing heavy lags and at times lock-ups:
->>
->>    pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
->>    pcieport 0000:00:1c.5: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
->>    pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
->>    pcieport 0000:00:1c.5:    [ 0] RxErr
->>
->> Disable ASPM on this combo as a quirk.
->>
->> This patch is a revision of a previous patch (linked below) which
->> attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lake
->> PCIe bridges. I take a more conservative approach as all known reports
->> point to ASUSTek laptops of these two generations with this particular
->> wireless card.
->>
->> Please note, however, before the rtl8723be finishes probing, the AER
->> errors remained. After the module finishes probing, all AER errors would
->> indeed be eliminated, along with heavy lags, poor network throughput,
->> and/or occasional lock-ups.
->>
->> Cc: <stable@vger.kernel.org>
->> Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
-> 
-> This Fixes is weird to me. The subject is RTL8192CE, but you are adding this
-> for RTL8723BE. More, at that time, HARDWARE_TYPE_RTL8723BE isn't defined yet.
-> 
-> This might be more suitable?
-> 
-> Fixes: a619d1abe20c ("rtlwifi: rtl8723be: Add new driver")
+Changes in v8:
+ - remove patch 8 from this series to simplify the patchset
+ - fix dt_bindings_check warnings (patch 2), 'memory-region' must
+   not be a required property
 
-True. Sending v2.
+Changes in v7:
+ - add schema expressing dependency as suggested on pci-host bindings
+ - resolve review comments on pci-keystone driver
+ - add a new patch to make IO_TLB_SEGSIZE configurable
+ - improve patches based on checkpath.pl
 
-Best Regards,
-Mingcong Bai
+Changes in v6:
+ - make restricted DMA memory-region available to all pci-keystone
+   devices, moving property to unconditional section (patch 2)
+
+Changes in v5:
+ - resolve review comments on pci-host bindings
+ - reduce DMA memory regions to 1 - swiotlb does not support more
+ - move activation into overlay (controlled via firmware)
+ - use ks_init_vmap helper instead of loop in
+   rework ks_init_restricted_dma
+ - add more comments to pci-keystone
+ - use 2 chained TLBs of PVU to support maximum of swiotlb (320 MB)
+
+Changes in v4:
+ - reorder patch queue, moving all DTS changes to the back
+ - limit activation to IOT2050 Advanced variants
+ - move DMA pool to allow firmware-based expansion it up to 512M
+
+Changes in v3:
+ - fix ti,am654-pvu.yaml according to review comments
+ - address review comments on ti,am65-pci-host.yaml
+ - differentiate between different compatibles in ti,am65-pci-host.yaml
+ - move pvu nodes to k3-am65-main.dtsi
+ - reorder patch series, pulling bindings and generic DT bits to the front
+
+Changes in v2:
+ - fix dt_bindings_check issues (patch 1)
+ - address first review comments (patch 2)
+ - extend ti,am65-pci-host bindings for PVU (new patch 3)
+
+Only few of the K3 SoCs have an IOMMU and, thus, can isolate the system
+against DMA-based attacks of external PCI devices. The AM65 is without
+an IOMMU, but it comes with something close to it: the Peripheral
+Virtualization Unit (PVU).
+
+The PVU was originally designed to establish static compartments via a
+hypervisor, isolate those DMA-wise against each other and the host and
+even allow remapping of guest-physical addresses. But it only provides
+a static translation region, not page-granular mappings. Thus, it cannot
+be handled transparently like an IOMMU.
+
+Now, to use the PVU for the purpose of isolated PCI devices from the
+Linux host, this series takes a different approach. It defines a
+restricted-dma-pool for the PCI host, using swiotlb to map all DMA
+buffers from a static memory carve-out. And to enforce that the devices
+actually follow this, a special PVU soc driver is introduced. The driver
+permits access to the GIC ITS and otherwise waits for other drivers that
+detect devices with constrained DMA to register pools with the PVU.
+
+For the AM65, the first (and possibly only) driver where this is
+introduced is the pci-keystone host controller. Finally, this series
+provides a DT overlay for the IOT2050 Advanced devices (all have
+MiniPCIe or M.2 extension slots) to make use of this protection scheme.
+Application of this overlay will be handled by firmware.
+
+Due to the cross-cutting nature of these changes, multiple subsystems
+are affected. However, I wanted to present the whole thing in one series
+to allow everyone to review with the complete picture in hands. If
+preferred, I can also split the series up, of course.
+
+Jan
+
+Jan Kiszka (7):
+  dt-bindings: soc: ti: Add AM65 peripheral virtualization unit
+  dt-bindings: PCI: ti,am65: Extend for use with PVU
+  soc: ti: Add IOMMU-like PVU driver
+  PCI: keystone: Add support for PVU-based DMA isolation on AM654
+  arm64: dts: ti: k3-am65-main: Add PVU nodes
+  arm64: dts: ti: k3-am65-main: Add VMAP registers to PCI root complexes
+  arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices
+    behind PCI RC
+
+ .../bindings/pci/ti,am65-pci-host.yaml        |  28 +-
+ .../bindings/soc/ti/ti,am654-pvu.yaml         |  51 ++
+ arch/arm64/boot/dts/ti/Makefile               |   5 +
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  38 +-
+ ...am6548-iot2050-advanced-dma-isolation.dtso |  33 ++
+ drivers/pci/controller/dwc/pci-keystone.c     | 106 ++++
+ drivers/soc/ti/Kconfig                        |   4 +
+ drivers/soc/ti/Makefile                       |   1 +
+ drivers/soc/ti/ti-pvu.c                       | 500 ++++++++++++++++++
+ include/linux/ti-pvu.h                        |  32 ++
+ 10 files changed, 791 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,am654-pvu.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+ create mode 100644 drivers/soc/ti/ti-pvu.c
+ create mode 100644 include/linux/ti-pvu.h
+
+-- 
+2.34.1
+
