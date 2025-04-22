@@ -1,63 +1,61 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EE3125DF
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A7342AB4
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745285182; cv=none; b=EwBpzadem5KYJUjv9rs2aXVF+d7aVYFuXrqvgzZMliSTGhHlTzhFvAkmhPnb+roRnk0mRBSfBOye1uuQujNz27b+SXGsUdKGcivqzQDisxdiQvtpJMn2PQ6g7M6pc/1zBPPg8YaKVeFAuf0l5OD2icnbY35W2maP3cDG2afvHK4=
+	t=1745285184; cv=none; b=OQi4mlDv9spJKYuLzcKNsfreM/WoVXfWimwIK0kHEYBjpueTyEkVqJmcxQRjbgWiNdospbJfAl9iBhofeFhBUtHV66G9hONrjsuFRhaPJzITcP95Va71Z9jobTSwHOWQqoGRrGQBciIAAddRXjcBvdZK2Lw8TY3bAXBkM/sam2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745285182; c=relaxed/simple;
-	bh=ZXS1Ugxdib21vsYVjEPkJZvWOpqCDSOCHmByvy/LywQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GTo5L1BuTn7h3aZpQ3xt5Yk1Kp43KbT331CQbAmCTNmD5GjijE+jlhr0EDH+KdyqNurIvAzuUpus+PaqEweE4mqydUucYRtBdA9h890sbz0//icO8nOJJSbOHxW8r3Q4GTE7cBTqFNYQKDxUlbcAg9OKJIIc+9PiR03d24zB/E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jE58Wm2c; arc=none smtp.client-ip=209.85.219.43
+	s=arc-20240116; t=1745285184; c=relaxed/simple;
+	bh=5B16rGU+2k+wStQl5NGI8RjKMaLbRadkXKi9vkJ/oho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LHoS0SssIJ41lPhyQo6QPSsHIsiAsKxfU73KKA8tVzeWxFLa22jt0L1ZMxGpgVk7qgMP9FPcpFrqw0/C/o9srGu8iYBMBxaHlI/pFz6dsU+ZmDAT/u9FiqI0Mcw6UCUIqrZF+VfXD0KkcJDerZxvOwTd/gCZFyKDLQ9iICBFL9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uz26Yi3V; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jE58Wm2c"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f2b05f87bcso45788676d6.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:26:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uz26Yi3V"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f2b04a6169so49546066d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745285180; x=1745889980; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G1mPVA4cXPg0N1mX+v1sOAvzy+p3OvMqYnhewp9Uhag=;
-        b=jE58Wm2ciC9VU6K0JoSWEbV4Esf7PvCZ+G9e9AdyepwpGXq+0mT/SMTD8n4lO2XAWN
-         jVWvjDTLkPxX84hTNHAGNMdenDoPlCxxCHsbZao15Lpqdn8sV5KD0u55LOD4UF2ht+mK
-         Lkt5Z8e/FSpj+DRXYGqGM+6xUe+mR6tv8otKuNLrIHd7smQce5Hvg66D1PURFghgWiNi
-         YFvaPltZn+bkl6FCFzJekYdH7Es4ghrMmO0Zozhkx6k4RrI41vtYGUWQTuKETI5y4c5G
-         K/FGbRPwYTejaTpKoKchEhSpv1zKcP2tI60o7XyymrbEDoqmHDCwcJPxG73CCUwiHrPe
-         2Sxg==
+        d=gourry.net; s=google; t=1745285178; x=1745889978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ShM+OPRo4tkARwcyIJhuiyqycqSNpimqPcyhrf6R0T8=;
+        b=uz26Yi3V8UGsVpLfIRcKlQeM62t2W/URAKwJzgrGIBm/jGqkwOaJBdFBmafqZjrx30
+         B3mpsmFF0rZnwW3/QhAkfUQG8QWGbz0n5TClwXfbq+IUbgnPMTldRUDCsrxw/HswJboi
+         xJECqFft7B5zsyTm6Uic1RCkKfc+R6TX1bcekr37mzAzO1HnrahEED+JBNrM9l/afqUf
+         gzfZ5ksYOherYK4d9OD0HiB2Sarf7teCwi+5pCP3ETkyC92trAAWByN02TH5l1oyusbz
+         LR5FlWZOuOElRRuEq5CWGa8aKGvZ/qbQnoRD2/m+nDvIDcRjIbMVVTV25lIJesBPMtm/
+         IhLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745285180; x=1745889980;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G1mPVA4cXPg0N1mX+v1sOAvzy+p3OvMqYnhewp9Uhag=;
-        b=J9jGtjWYEa1mFpRUMf+U94g+R7IbsN70D9n53yXAGfd1E+aU2qttf/uGZkNuZpcW7B
-         1qixnhsTBdgqsm6r8JhIXJbf+8c5SRR9MsNkWTMO2v1+u42BLBsNAXnfY0x7UMGBRE+d
-         XETaha3LaMQ6Jq2wRIwqjL6b69Zu9Vpp2oh5Lh/yJPcrdJMiBkzgbc5u303f+9OuizNr
-         6sgszp7bNdJeIZC0Z0rhgabNQEM4DCkvmND/ArwMcsigHl6jAQbsPBqV8vOFH1tNzq9H
-         DLQGBxv28bCSkbjYei0Xvx2VMo0kG+8v7m88G3dyX1b2grzuwEjIXdGxTOqPy6VstjnT
-         FMLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUx142kXBluoZLU56OhQmFck/kvw41X8ndtyT20IZnDn62+dbo9LFOzPpmxk4ZcKg14B4Q0XSeqToCOxW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPj1NhCYvRNdgv+BliqE78iimwIkWSI2kLZaR1a6eymKjEeyLy
-	KMWHuh4Vxu2TlxEq2UcwLxP15FVcPTn5X2y466BMGsa8HZU0bavlEACrxJNQyAU=
-X-Gm-Gg: ASbGnct/yxLzTtdqYus8/bAgcF/t+4A9iMKwkKWkJ4gahbETsOwo+ML+BXEg/NuRyYg
-	vU3lVSDUXjEKFsomU5SXr0LYy2v//ZVbmM+wxGrZbbcLsLnR37KLWlMTZGFBOivPS6KJ8E0DXSx
-	atkeG53FFuYRkcXBrvRvxq2pv3kDaEMHChQZyyadF3W7W1/aXSLMajs71k/d3igru12SaM6bq00
-	lrn0VghA8fCu4X3RpLc1jB9CtwMFSKGodU52bxCJdycyuuQKnyWX2MgiW3K2j0zmKY8xQLixtYX
-	n6c0gwwpyu7xsk6gcFXlpJVkUFHJ6XkBkui75qZTbkrjjxpcAeGVOufMiRvJZ9chybsh6W35Gt9
-	rq8Rf+YAQ6Q2V4Rct6QzeRYViGZ0f
-X-Google-Smtp-Source: AGHT+IGPO18DH4WOgXP7cL3OCDqBNIt/HyTq16JBra9RvS5NgW2B0W0WDaXjFUz6XK3UscEHnrDmXg==
-X-Received: by 2002:a05:6214:5081:b0:6f2:b7d9:689b with SMTP id 6a1803df08f44-6f2c4687f17mr226624926d6.35.1745285179659;
-        Mon, 21 Apr 2025 18:26:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745285178; x=1745889978;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ShM+OPRo4tkARwcyIJhuiyqycqSNpimqPcyhrf6R0T8=;
+        b=Ar+QLlJbibQlvhaGwGLyZEA0sC6htYdrImp+45NHhg1uy4sFZxnNjxfkpN1fmP8/Fb
+         jpV1reBCOeBoUna+PRKfo5IJWXNME3WtYx8mseTninJipku/Q2Cg28i/azohaC2gqVWJ
+         HDeb5eGk8x+DCVXDgEId4HjpFy7JBDesFkFTfQ/ENFvgrlJzwP55/GH/Dfj+Z5G4UOtN
+         k32mvDUZILXJbkcRp/Ne6kwQs6LBpjpS5L3Ndq+TD26T47U2XQtkFxoXSzeNEnbCbSUl
+         GRi1LtfFCt62J8q8Qvi8+bHflMH1Xx+k1RmLTBiGEGBsVR5hK2pEdCeoMP690vg22DNx
+         rBAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoWt7aKRFY6nbjJ7dxT8ohCvW2JkytQBT3hX6+UcuG0dQB/11KFK2mq3YGCRvbSmXSyr4xuJyaNJ8WQLM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1lFa3jnWRz1XNWR4gabLeqSJUIf4F6uS8DpBBB0/QbcGE3uN5
+	U3d1/bLoz9JVn/fSYqM8b0DZ6MVyhSaOZsSTnGGTYp7T/23liT5m+INBwoodh78=
+X-Gm-Gg: ASbGncugU3aW4+gs3vGjiRTKfzsmh+EWYc1du8Z1wKWnvvKVcb3pRffeKCJARfIFo9j
+	eSkklWlF6EL+B98X/jCNujr7mFTGI2Q805qDb26YvtSWXVvga2jwE2OqUva3w/1cx8AIL/13I6+
+	0XfHz37vwaxMAvPEAX4d9sqMfL6OT91CQxHVmCPIw8dsj3CFxdkLp0Ct5CEkU/TvgOnU2kr3t71
+	iZDI/44oU1RXbE5QKn+o/JuKp7sg38dP6My3I1T23E+A7N6iNuzl4xdedrbO1ugobRnum9o8qRu
+	/8DovsrIr2wQv6k+DcdqzOOU668jkqMa98HstxO8oWY5a9dLmIDTCG5S5ytlQOazkZKy356jbag
+	K1SJVgIq8rGd0UOeNPfJEdPQoh1V3
+X-Google-Smtp-Source: AGHT+IHA09oLgmb2N1FkvGXbNK6Ei2QvTetwNGSUKWYaIIAktisNIJsenYqDkUExZvqsSRrL/Qzp4w==
+X-Received: by 2002:a05:6214:248a:b0:6d1:7433:3670 with SMTP id 6a1803df08f44-6f2c44e963cmr251526376d6.4.1745285178136;
+        Mon, 21 Apr 2025 18:26:18 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c00d78sm50985746d6.79.2025.04.21.18.26.18
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c00d78sm50985746d6.79.2025.04.21.18.26.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 18:26:19 -0700 (PDT)
+        Mon, 21 Apr 2025 18:26:17 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: cgroups@vger.kernel.org,
@@ -72,12 +70,10 @@ Cc: cgroups@vger.kernel.org,
 	tj@kernel.org,
 	mkoutny@suse.com,
 	akpm@linux-foundation.org
-Subject: [PATCH v4 1/2] cpuset: rename cpuset_node_allowed to cpuset_current_node_allowed
-Date: Mon, 21 Apr 2025 21:26:14 -0400
-Message-ID: <20250422012616.1883287-2-gourry@gourry.net>
+Subject: [PATCH v4 0/2] vmscan: enforce mems_effective during demotion
+Date: Mon, 21 Apr 2025 21:26:13 -0400
+Message-ID: <20250422012616.1883287-1-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422012616.1883287-1-gourry@gourry.net>
-References: <20250422012616.1883287-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,82 +82,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename cpuset_node_allowed to reflect that the function checks the
-current task's cpuset.mems.  This allows us to make a new
-cpuset_node_allowed function that checks a target cgroup's cpuset.mems.
+Change reclaim to respect cpuset.mems_effective during demotion when
+possible. Presently, reclaim explicitly ignores cpuset.mems_effective
+when demoting, which may cause the cpuset settings to violated.
 
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- include/linux/cpuset.h | 4 ++--
- kernel/cgroup/cpuset.c | 4 ++--
- mm/page_alloc.c        | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Implement cpuset_node_allowed() to check the cpuset.mems_effective
+associated wih the mem_cgroup of the lruvec being scanned. This only
+applies to cgroup/cpuset v2, as cpuset exists in a different hierarchy
+than mem_cgroup in v1.
 
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 835e7b793f6a..893a4c340d48 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -82,11 +82,11 @@ extern nodemask_t cpuset_mems_allowed(struct task_struct *p);
- void cpuset_init_current_mems_allowed(void);
- int cpuset_nodemask_valid_mems_allowed(nodemask_t *nodemask);
- 
--extern bool cpuset_node_allowed(int node, gfp_t gfp_mask);
-+extern bool cpuset_current_node_allowed(int node, gfp_t gfp_mask);
- 
- static inline bool __cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
- {
--	return cpuset_node_allowed(zone_to_nid(z), gfp_mask);
-+	return cpuset_current_node_allowed(zone_to_nid(z), gfp_mask);
- }
- 
- static inline bool cpuset_zone_allowed(struct zone *z, gfp_t gfp_mask)
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 0f910c828973..f8e6a9b642cb 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4090,7 +4090,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
- }
- 
- /*
-- * cpuset_node_allowed - Can we allocate on a memory node?
-+ * cpuset_current_node_allowed - Can current task allocate on a memory node?
-  * @node: is this an allowed node?
-  * @gfp_mask: memory allocation flags
-  *
-@@ -4129,7 +4129,7 @@ static struct cpuset *nearest_hardwall_ancestor(struct cpuset *cs)
-  *	GFP_KERNEL   - any node in enclosing hardwalled cpuset ok
-  *	GFP_USER     - only nodes in current tasks mems allowed ok.
-  */
--bool cpuset_node_allowed(int node, gfp_t gfp_mask)
-+bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
- {
- 	struct cpuset *cs;		/* current cpuset ancestors */
- 	bool allowed;			/* is allocation in zone z allowed? */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 5079b1b04d49..233ce25f8f3d 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3461,7 +3461,7 @@ get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags,
- retry:
- 	/*
- 	 * Scan zonelist, looking for a zone with enough free.
--	 * See also cpuset_node_allowed() comment in kernel/cgroup/cpuset.c.
-+	 * See also cpuset_current_node_allowed() comment in kernel/cgroup/cpuset.c.
- 	 */
- 	no_fallback = alloc_flags & ALLOC_NOFRAGMENT;
- 	z = ac->preferred_zoneref;
-@@ -4148,7 +4148,7 @@ gfp_to_alloc_flags(gfp_t gfp_mask, unsigned int order)
- 		/*
- 		 * Ignore cpuset mems for non-blocking __GFP_HIGH (probably
- 		 * GFP_ATOMIC) rather than fail, see the comment for
--		 * cpuset_node_allowed().
-+		 * cpuset_current_node_allowed().
- 		 */
- 		if (alloc_flags & ALLOC_MIN_RESERVE)
- 			alloc_flags &= ~ALLOC_CPUSET;
+This requires renaming the existing cpuset_node_allowed() to be
+cpuset_current_now_allowed() - which is more descriptive anyway - to
+implement the new cpuset_node_allowed() which takes a target cgroup.
+
+v4:
+- explicitly expect v1 instead of checking for empty effective_mems.
+  this was the case anyway since cpuset and mem_cgroup are in different
+  heirarchy in v1.
+- update docs to reflect this
+- rcu_read_lock instead of taking a global lock.
+- cpuset header fixup when compiled out.
+
+Gregory Price (2):
+  cpuset: rename cpuset_node_allowed to cpuset_current_node_allowed
+  vmscan,cgroup: apply mems_effective to reclaim
+
+ .../ABI/testing/sysfs-kernel-mm-numa          | 16 +++++---
+ include/linux/cpuset.h                        |  9 +++-
+ include/linux/memcontrol.h                    |  6 +++
+ kernel/cgroup/cpuset.c                        | 30 +++++++++++++-
+ mm/memcontrol.c                               |  6 +++
+ mm/page_alloc.c                               |  4 +-
+ mm/vmscan.c                                   | 41 +++++++++++--------
+ 7 files changed, 84 insertions(+), 28 deletions(-)
+
 -- 
 2.49.0
-
