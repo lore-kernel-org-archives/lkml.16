@@ -1,169 +1,320 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988C463D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B7963D;
+	Tue, 22 Apr 2025 04:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745297497; cv=none; b=tlyXmtpX+4VKFdfD/eDwVmPT630I+NDtjYEHKjLUbSHr3LkRodbukDQ8OeVGVZstJhvl+npobXPTaWg8xRNa38blvUZsu4ok++2TMEnwJ4qaNaBz8rG8hHHJT5LPzTm92zMnc5hwybT26jlYXh9y0Pz/OH98sLlnhHJJUTq+Xm4=
+	t=1745297659; cv=none; b=YB15MG3zBtUET088DC11AhGTJRBe48jcHTkjM0ZWNcHkMUmIWakPa283/m39MZjC9QLaKsfFxxbj21+d9ufLL/iBM6XdZkxYbmcQpZi8YlnP8l+bBsGGnCViS5dDDNjcFZkqCPn8vm9hZyy1VK1iQhD24OHOqdgS2aTifgLz1Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745297497; c=relaxed/simple;
-	bh=UwSfPxwjJ9jLRntTUt4a9S4xpczAqRh50MZ8jdWbp+A=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=myuhJZt6Ua2ttcXCLi/Xp1FzuHGXI9ST1hRQzCGv/zFg8w5OB5vSNRl9RnMpW9s3+68UsV8aUNRDIVLW9DpXYuqI3bZ3T9cqaybmnwZFllhRWQVWXU23nXoNV0iVSidLhfrHc/kj9iXzL9TdQ781qmDq8nkjz92e4zbafR/1CfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SVtwE/Bq; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745297659; c=relaxed/simple;
+	bh=OiOe63zZPBMZjqhiLlyFj1X0gvTXBrbbcwBzZKjDjKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+JMYd14KZa0m30t/aa15zJtwqt7H3YpgZbfclDDZ9pg41R+XhqEEaBHKq4xZUwfgPiEUg5ha0R7zUNowlrM2kngzYoXlAhDTkidLCxdVlnKSPznK2XOS8ZrNNWy+qfotce4DADVvf8K7158Kt5TiP31ras21DTXegrGsFO1hv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3ESszTb; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SVtwE/Bq"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53LNkv8F032319;
-	Tue, 22 Apr 2025 04:51:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=kWzUlK1mc0ow8mfqhy4TYwRqkl7s
-	StXHUVzyyC6kzdE=; b=SVtwE/BqtGMNXxZwPewLFBmbX3pwyIe4LHd4AQyZhgDv
-	GaL8J+tP2z4W1FLY/SysDKYEgTvgQE2P3DnIHVuV1pEH7PJPI1h4K8TWIJxjLetp
-	rTgnrlk6q54Lhb5xkkX9Qcdz27VDXptNJ/3pCIXzGXbTNUHqeoCkZs7cnjGSKVex
-	x9CfIJ02kuumtQvUYHtjp9frzFYJgNjml47KeE6Q0W+fCHS6CFsR6O+a4Xmf+CWQ
-	X4tsewoU9vl8VvUuziWEJGSDPPIsoBHNjjybgTxze72Z1hyq+OoUfU1Mspwuii8g
-	3gEVc598nbqvVYx3wRgtlGiildOWTSXhKgcN30vTXQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466000rv9q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 04:51:12 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53M4aXaC020853;
-	Tue, 22 Apr 2025 04:51:11 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466000rv9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 04:51:11 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53M3YglQ001563;
-	Tue, 22 Apr 2025 04:51:11 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rck133m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 04:51:11 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53M4p7ZQ30606004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 04:51:07 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 790155804B;
-	Tue, 22 Apr 2025 04:51:09 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 60F4A58059;
-	Tue, 22 Apr 2025 04:51:06 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.204.204.179])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 22 Apr 2025 04:51:06 +0000 (GMT)
-From: Venkat <venkat88@linux.ibm.com>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3ESszTb"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so61206636d6.3;
+        Mon, 21 Apr 2025 21:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745297656; x=1745902456; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KGENQjWPuyq6692BWp2yYX8JM06Bmz89ApO7LsOOn7I=;
+        b=R3ESszTb7jg6JRC8kiifcwGcaU0FJi0Py0OEZDzqPqXhA/fHMNY+0GglUZsrrGoP9A
+         GeaFUzZfDAMZ2JwMStg6Op3/5sAOqBJca7LYnJ8jLC0fhVrs+gdhDL2LMtJuWVBzkgIJ
+         4IIt6sNlprX/VzEWtnjanWkKgCxyUiwB0NIts9N0gR77LRZs//GERIVzCUjBqdufs/13
+         dZiUNJiS/vZY/P+l/Y+Wm/KctndgWTOe4ellWXtdd8vyrUljAeSF/zXWshKCHoiRsh+7
+         bI0fm67ujWlt1yLPMNPFlKQsIgPOlE4ki05gqusH57ULoafOfaSuPaznCh//KBTJftt4
+         3sWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745297656; x=1745902456;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KGENQjWPuyq6692BWp2yYX8JM06Bmz89ApO7LsOOn7I=;
+        b=ObEDDLdmbBNlHBa9h0Yr3W505txxfEvi2+ji29sU/1F997rPK4z9uyaQpC4SbfX88F
+         eI5MWqxLUCurZz3QUUTDgHOqoqE+ransedROg+XPsKfFcjFCX58EBsbaynAu0GGjBCQY
+         zVGnELIyTno2BJwzx1fWxEVvuw/SL3jagdP6lWp4gwB6BUdfMMwtTJjfu9xzXgOjoZG7
+         9pEJOOaAfk5NWRU/lAAtDD7LckCHusuyexeiLUC6SE/AZUAVTqAgb84J27apCil2LSx7
+         1wzLAjYNj/axkE25NYhsLqVuceHz7TtdlinPelfE5Ej+oC0bBSNBCHriKYKEgYZvqaYM
+         yRww==
+X-Forwarded-Encrypted: i=1; AJvYcCVyuYB52iWeNl/LKNRauVOIiAyT73m49KZlQOpsQOzjyKW+NR9G1iOCWzbE/RSEWhUWI+vNze7AKkejT3o=@vger.kernel.org, AJvYcCWTBcyvZ3h8dX78Ja+anIOKPio5FpTZhtGUXmejdX9hSOll792ODEskRQ0asDhEjPdJG0TBHJrFc4xQUml1xkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMP9O1NqT/IcFt5d92y+WUvNFHU3hsJ0aIUdIof+qqkfEQjLVP
+	d5m/sokJgPmAeDV2PCMYmCJi1zIosdMKuWGJiPXsR8lJ4WnHZul+
+X-Gm-Gg: ASbGncvP132JOY22aF/okFnIlFRzMHYJAVoP3LdP5vQP1b27wcyvlJE9G2pWGxH+wXh
+	4rUDxy2Dbx6lr+tfKibr2539I8GSKBPVwkPFUd8s1vtVJxChaPYz5PcT6KyXB2jSB2jpUzM5tek
+	u//kbZToEOdK8YcUKXC5P03r+TatYnIS6/7Mzt1ca4cIM1jVvHMyvn97iABZ7XTBkzdjspxgLOQ
+	GMA/B8c+waDfZdyr1/HfJ1y42yvmRPhfBX+v13v/OWTuhO7ate588WBuQnLehGc7oTLr+uSE2yp
+	VR7hBsWwBKGHUzxki81PUpYqBIsqz/akna7Pj/s0NqTy5xc8h6g3Kfy2yfWy72yAnhi7OR1I9AP
+	MAEmJOwhyVTLLmfsDsj92CWrxunrqyrw=
+X-Google-Smtp-Source: AGHT+IFxYH29fwW/ZdTUs00QXQYbWjvi8bS6UgHAq9WvRMU9S6wlexXGAIakAFHYM91W2HAnx5Vc6g==
+X-Received: by 2002:ad4:5ba7:0:b0:6e8:98a1:3694 with SMTP id 6a1803df08f44-6f2c44eb12fmr294143656d6.8.1745297655814;
+        Mon, 21 Apr 2025 21:54:15 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd5f1sm52886606d6.70.2025.04.21.21.54.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 21:54:15 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EF8881200068;
+	Tue, 22 Apr 2025 00:54:14 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 00:54:14 -0400
+X-ME-Sender: <xms:9iAHaJM443m0YtaI5hyf2HjP6Vyg44vceUodD4grU7BEvUT0GKNokQ>
+    <xme:9iAHaL9EDfRJBr-EHdjYvcelBnTtcsANHYqgXPdt9kdwU5J-mELP1vDMhFtoI9Cri
+    1OifjiXKPHvIAsPfA>
+X-ME-Received: <xmr:9iAHaIQ33s7vPYat6lRD_oWF2gm7-YQZ7ELaNnPk25KI-WBqU86Nvk2e>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedvkedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefftdeihfeigedtvdeuueffieetvedtgeej
+    uefhhffgudfgfeeggfeftdeigeehvdenucffohhmrghinhepghhithhhuhgsrdgtohhmne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtohepohhj
+    vggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesgh
+    hmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgt
+    phhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtth
+    hopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgt
+    vghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhrohhsshesuhhmih
+    gthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:9iAHaFunEaWyjWDWVNqH-vo-Fs-ZMkQ9FuNcYGirfFhnk0BnMIHygA>
+    <xmx:9iAHaBfIB5NC_9TZ3M9_bR_QXG0k3S9jBOmz4VHSlF504AUUbNCnoQ>
+    <xmx:9iAHaB14L4Bqt4_NjkwvGROYX2lK2wP8TsynB4bRXtx0z4oyTRjAsA>
+    <xmx:9iAHaN_DeY1Oq0fuKGkLUdbPvMu8OxTgJYUiy1xvhLU8EfjNpdcWYg>
+    <xmx:9iAHaM-MF58czEajaCzdDEVS2Jz-8bBjeRV8oP_HEU42G5bWoD3UlGNQ>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 22 Apr 2025 00:54:14 -0400 (EDT)
+Date: Mon, 21 Apr 2025 21:54:11 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>,
+	Christian Schrefl <chrisi.schrefl@gmail.com>,
+	Alban Kurti <kurti@invicto.ai>, Michael Vetter <jubalh@iodoru.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] rust: pin-init: add `MaybeZeroable` derive macro
+Message-ID: <aAcg86QfvlA0zAh4@Mac.home>
+References: <20250421221728.528089-1-benno.lossin@proton.me>
+ <20250421221728.528089-9-benno.lossin@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH] powerpc/pseries/msi: Avoid reading PCI device registers
- in reduced power states
-Message-Id: <3E89A76F-21AD-48BB-9333-1A43C04DB3B7@linux.ibm.com>
-Date: Tue, 22 Apr 2025 10:20:53 +0530
-Cc: christophe.leroy@csgroup.eu, LKML <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>, naveen@kernel.org,
-        npiggin@gmail.com, vaibhav@linux.ibm.com, venkat88@linux.ibm.com
-To: gautam@linux.ibm.com
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: z-4OhsSuDGxULhVEBR37XHiVRME4ggCf
-X-Proofpoint-ORIG-GUID: P8eONft-5Cpo1zNG2YdXomlPyi-AFG9n
-X-Authority-Analysis: v=2.4 cv=N6QpF39B c=1 sm=1 tr=0 ts=68072040 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=TGiKNIM0BPefvecU2IEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_02,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=249
- clxscore=1015 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504220033
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421221728.528089-9-benno.lossin@proton.me>
 
-Hello Gautam,
+On Mon, Apr 21, 2025 at 10:18:52PM +0000, Benno Lossin wrote:
+> This derive macro implements `Zeroable` for structs & unions precisely
+> if all fields also implement `Zeroable` and does nothing otherwise. The
+> plain `Zeroable` derive macro instead errors when it cannot derive
+> `Zeroable` safely. The `MaybeZeroable` derive macro is useful in cases
+> where manual checking is infeasible such as with the bindings crate.
+> 
 
-Makes sense to track this observation separately. I tried it on fedora41 =
-with kernel, 6.11.4-301.fc41.ppc64le, and this warning is there also.=20
-
-
-Traces:
-
-[  105.121663] ------------[ cut here ]------------
-[  105.121664] WARNING: CPU: 0 PID: 16 at =
-arch/powerpc/sysdev/xics/icp-hv.c:55 icp_hv_eoi+0xf8/0x120
-[  105.121683] Modules linked in: bonding tls nft_fib_inet nft_fib_ipv4 =
-nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 =
-nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 =
-nf_defrag_ipv4 rfkill nf_tables sunrpc ibmveth
-[  105.121719] PM: suspend exit
-[  105.121720]  pseries_rng vmx_crypto crct10dif_vpmsum fuse =
-dm_multipath loop nfnetlink zram vsock_loopback =
-vmw_vsock_virtio_transport_common vsock xfs ibmvscsi scsi_transport_srp =
-crc32c_vpmsum scsi_dh_rdac scsi_dh_emc scsi_dh_alua
-[  105.121790] CPU: 0 UID: 0 PID: 16 Comm: ksoftirqd/0 Not tainted =
-6.11.4-301.fc41.ppc64le #1
-[  105.121800] Hardware name: IBM,8375-42A POWER9 (architected) 0x4e0202 =
-0xf000005 of:IBM,FW950.A0 (VL950_144) hv:phyp pSeries
-[  105.121808] NIP:  c0000000000d5068 LR: c0000000000d5064 CTR: =
-c00000000011d810
-[  105.121811] REGS: c000000004c87a20 TRAP: 0700   Not tainted  =
-(6.11.4-301.fc41.ppc64le)
-[  105.121821] MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  =
-CR: 44004202  XER: 00000010
-[  105.121845] CFAR: c000000000246c2c IRQMASK: 1=20
-[  105.121845] GPR00: c0000000000d5064 c000000004c87cc0 c0000000021c0900 =
-000000000000003f=20
-[  105.121845] GPR04: 00000000ffffdfff 00000000ffffdfff c000000004c87ab8 =
-00000007f8e50000=20
-[  105.121845] GPR08: 0000000000000027 c0000007fc007190 0000000000000001 =
-0000000044004202=20
-[  105.121845] GPR12: c00000000011d810 c000000003f40000 c0000000001bf378 =
-c000000004f07640=20
-[  105.121845] GPR16: 0000000000000000 0000000004208040 c000000003d12a80 =
-c000000003242e80=20
-[  105.121845] GPR20: 00000000ffffb375 000000000000000a c0000000031b6980 =
-c0000000002532f0=20
-[  105.121845] GPR24: 0000000000000001 0000000000000000 0000000000000006 =
-0000000000000002=20
-[  105.121845] GPR28: c0000007fc006898 0000000000000000 00000000050a0002 =
-00000000050a0002=20
-[  105.121945] NIP [c0000000000d5068] icp_hv_eoi+0xf8/0x120
-[  105.121953] LR [c0000000000d5064] icp_hv_eoi+0xf4/0x120
-[  105.121961] Call Trace:
-[  105.121965] [c000000004c87cc0] [c0000000000d5064] =
-icp_hv_eoi+0xf4/0x120 (unreliable)
-[  105.121976] [c000000004c87d40] [c000000000254eac] =
-handle_fasteoi_irq+0x16c/0x350
-[  105.121987] [c000000004c87d70] [c0000000002533b0] =
-resend_irqs+0xc0/0x190
-[  105.121997] [c000000004c87db0] [c00000000018b690] =
-tasklet_action_common.isra.0+0x150/0x430
-[  105.122007] [c000000004c87e20] [c00000000018aafc] =
-handle_softirqs+0x17c/0x4f0
-[  105.122017] [c000000004c87f10] [c00000000018aed8] =
-run_ksoftirqd+0x68/0xb0
-[  105.122025] [c000000004c87f30] [c0000000001ca460] =
-smpboot_thread_fn+0x1e0/0x250
-[  105.122036] [c000000004c87f90] [c0000000001bf4a4] kthread+0x134/0x140
-[  105.122047] [c000000004c87fe0] [c00000000000ded8] =
-start_kernel_thread+0x14/0x18
-[  105.122056] Code: 48bc88c1 60000000 e9210068 4bffff9c 7c661b78 =
-3c82ff40 3c62ff85 7fc5f378 3884ca50 38637628 48171b85 60000000 =
-<0fe00000> 38210080 7be34622 e8010010=20
-[  105.122094] ---[ end trace 0000000000000000 ]=E2=80=94
-
+Hmm... seems we need a customized auto trait? How hard would that be?
 
 Regards,
-Venkat.=
+Boqun
+
+> Move the zeroable generics parsing into a standalone function in order
+> to avoid code duplication between the two derive macros.
+> 
+> Link: https://github.com/Rust-for-Linux/pin-init/pull/42/commits/1165cdad1a391b923efaf30cf76bc61e38da022e
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+> ---
+>  rust/pin-init/internal/src/lib.rs      |  5 +++
+>  rust/pin-init/internal/src/zeroable.rs | 27 +++++++++++-
+>  rust/pin-init/src/lib.rs               | 30 +++++++++++++
+>  rust/pin-init/src/macros.rs            | 59 ++++++++++++++++++++++++++
+>  4 files changed, 120 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/pin-init/internal/src/lib.rs b/rust/pin-init/internal/src/lib.rs
+> index 56aa9ecc1e1a..297b0129a5bf 100644
+> --- a/rust/pin-init/internal/src/lib.rs
+> +++ b/rust/pin-init/internal/src/lib.rs
+> @@ -47,3 +47,8 @@ pub fn pinned_drop(args: TokenStream, input: TokenStream) -> TokenStream {
+>  pub fn derive_zeroable(input: TokenStream) -> TokenStream {
+>      zeroable::derive(input.into()).into()
+>  }
+> +
+> +#[proc_macro_derive(MaybeZeroable)]
+> +pub fn maybe_derive_zeroable(input: TokenStream) -> TokenStream {
+> +    zeroable::maybe_derive(input.into()).into()
+> +}
+> diff --git a/rust/pin-init/internal/src/zeroable.rs b/rust/pin-init/internal/src/zeroable.rs
+> index acc94008c152..e0ed3998445c 100644
+> --- a/rust/pin-init/internal/src/zeroable.rs
+> +++ b/rust/pin-init/internal/src/zeroable.rs
+> @@ -6,7 +6,14 @@
+>  use crate::helpers::{parse_generics, Generics};
+>  use proc_macro::{TokenStream, TokenTree};
+>  
+> -pub(crate) fn derive(input: TokenStream) -> TokenStream {
+> +pub(crate) fn parse_zeroable_derive_input(
+> +    input: TokenStream,
+> +) -> (
+> +    Vec<TokenTree>,
+> +    Vec<TokenTree>,
+> +    Vec<TokenTree>,
+> +    Option<TokenTree>,
+> +) {
+>      let (
+>          Generics {
+>              impl_generics,
+> @@ -64,6 +71,11 @@ pub(crate) fn derive(input: TokenStream) -> TokenStream {
+>      if in_generic && !inserted {
+>          new_impl_generics.extend(quote! { : ::pin_init::Zeroable });
+>      }
+> +    (rest, new_impl_generics, ty_generics, last)
+> +}
+> +
+> +pub(crate) fn derive(input: TokenStream) -> TokenStream {
+> +    let (rest, new_impl_generics, ty_generics, last) = parse_zeroable_derive_input(input);
+>      quote! {
+>          ::pin_init::__derive_zeroable!(
+>              parse_input:
+> @@ -74,3 +86,16 @@ pub(crate) fn derive(input: TokenStream) -> TokenStream {
+>          );
+>      }
+>  }
+> +
+> +pub(crate) fn maybe_derive(input: TokenStream) -> TokenStream {
+> +    let (rest, new_impl_generics, ty_generics, last) = parse_zeroable_derive_input(input);
+> +    quote! {
+> +        ::pin_init::__maybe_derive_zeroable!(
+> +            parse_input:
+> +                @sig(#(#rest)*),
+> +                @impl_generics(#(#new_impl_generics)*),
+> +                @ty_generics(#(#ty_generics)*),
+> +                @body(#last),
+> +        );
+> +    }
+> +}
+> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+> index 774f8ca033bc..05a0cd6ad8f4 100644
+> --- a/rust/pin-init/src/lib.rs
+> +++ b/rust/pin-init/src/lib.rs
+> @@ -413,6 +413,36 @@
+>  /// ```
+>  pub use ::pin_init_internal::Zeroable;
+>  
+> +/// Derives the [`Zeroable`] trait for the given struct if all fields implement [`Zeroable`].
+> +///
+> +/// Contrary to the derive macro named [`macro@Zeroable`], this one silently fails when a field
+> +/// doesn't implement [`Zeroable`].
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// use pin_init::MaybeZeroable;
+> +///
+> +/// // implmements `Zeroable`
+> +/// #[derive(MaybeZeroable)]
+> +/// pub struct DriverData {
+> +///     id: i64,
+> +///     buf_ptr: *mut u8,
+> +///     len: usize,
+> +/// }
+> +///
+> +/// // does not implmement `Zeroable`
+> +/// #[derive(MaybeZeroable)]
+> +/// pub struct DriverData2 {
+> +///     id: i64,
+> +///     buf_ptr: *mut u8,
+> +///     len: usize,
+> +///     // this field doesn't implement `Zeroable`
+> +///     other_data: &'static i32,
+> +/// }
+> +/// ```
+> +pub use ::pin_init_internal::MaybeZeroable;
+> +
+>  /// Initialize and pin a type directly on the stack.
+>  ///
+>  /// # Examples
+> diff --git a/rust/pin-init/src/macros.rs b/rust/pin-init/src/macros.rs
+> index 332d7e08925b..935d77745d1d 100644
+> --- a/rust/pin-init/src/macros.rs
+> +++ b/rust/pin-init/src/macros.rs
+> @@ -1443,3 +1443,62 @@ fn ensure_zeroable<$($impl_generics)*>()
+>          };
+>      };
+>  }
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+> +macro_rules! __maybe_derive_zeroable {
+> +    (parse_input:
+> +        @sig(
+> +            $(#[$($struct_attr:tt)*])*
+> +            $vis:vis struct $name:ident
+> +            $(where $($whr:tt)*)?
+> +        ),
+> +        @impl_generics($($impl_generics:tt)*),
+> +        @ty_generics($($ty_generics:tt)*),
+> +        @body({
+> +            $(
+> +                $(#[$($field_attr:tt)*])*
+> +                $field_vis:vis $field:ident : $field_ty:ty
+> +            ),* $(,)?
+> +        }),
+> +    ) => {
+> +        // SAFETY: Every field type implements `Zeroable` and padding bytes may be zero.
+> +        #[automatically_derived]
+> +        unsafe impl<$($impl_generics)*> $crate::Zeroable for $name<$($ty_generics)*>
+> +        where
+> +            $(
+> +                // the `for<'__dummy>` HRTB makes this not error without the `trivial_bounds`
+> +                // feature <https://github.com/rust-lang/rust/issues/48214#issuecomment-2557829956>.
+> +                $field_ty: for<'__dummy> $crate::Zeroable,
+> +            )*
+> +            $($($whr)*)?
+> +        {}
+> +    };
+> +    (parse_input:
+> +        @sig(
+> +            $(#[$($struct_attr:tt)*])*
+> +            $vis:vis union $name:ident
+> +            $(where $($whr:tt)*)?
+> +        ),
+> +        @impl_generics($($impl_generics:tt)*),
+> +        @ty_generics($($ty_generics:tt)*),
+> +        @body({
+> +            $(
+> +                $(#[$($field_attr:tt)*])*
+> +                $field_vis:vis $field:ident : $field_ty:ty
+> +            ),* $(,)?
+> +        }),
+> +    ) => {
+> +        // SAFETY: Every field type implements `Zeroable` and padding bytes may be zero.
+> +        #[automatically_derived]
+> +        unsafe impl<$($impl_generics)*> $crate::Zeroable for $name<$($ty_generics)*>
+> +        where
+> +            $(
+> +                // the `for<'__dummy>` HRTB makes this not error without the `trivial_bounds`
+> +                // feature <https://github.com/rust-lang/rust/issues/48214#issuecomment-2557829956>.
+> +                $field_ty: for<'__dummy> $crate::Zeroable,
+> +            )*
+> +            $($($whr)*)?
+> +        {}
+> +    };
+> +}
+> -- 
+> 2.48.1
+> 
+> 
