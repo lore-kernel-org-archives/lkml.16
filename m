@@ -1,192 +1,129 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4AF1A76BB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83F0290BCA
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745349097; cv=none; b=s2g5ZCoZLXv0N2NgUD38SYrvtJcu8oxW2fP2FtFpbUvmuZL4+MaCQ974HbZykpLOXy7PVURcAvpKl6SgfNzDmKVO9hp882nAu1bAvOK6AQsKTqc7iL0kkXiw61oI/IYahVzRO3tSYc+ukIQgeTiw5FAn3pYXy+Xi/kHwp4v5BrA=
+	t=1745349254; cv=none; b=lnx9Jog0czsHNrY1dG0F6ZYrmjdx2/H2Gxb+Qmx0aGnYFEnCx7egwTjnOUyrThUTGdHmwl9rrhd1V+qfTQSBF87kZ5PNvtPfmFLKlRv6nxTAx9meaVSl15+3G1F8/r34iAhMGr2U74INwVirNV5K/hXaNyzcLIju8hwW0GaqtqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745349097; c=relaxed/simple;
-	bh=5XPctuWNebdP84Ia6t9RRx9Mez7WNt3sIk55SG+PIA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fjDi3kXb8zrHhMK/6E2h/CAT2/+2uPFLMUpspNRdeIu+bjg6LF8OFk7WitUWlSadKs1txBrKimIQcRPfI6pkVlsiGkT7hPmZ1AVYrWNvCay81+bZWW3R1nGbywIQ26Ddzh7/IF1KdrmtW7zE2BmSBPZVdLFg+dc5epkKYl/Ha0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8NaYJJ5; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745349254; c=relaxed/simple;
+	bh=ktElfp4y9jLiB76b0Lw+Bu81gNc+EGDgrxca1gyyqYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OK9GAk4Q1K48MN+SfM4mlY1XbDwPlEVIWCLInYUD9vGkx9yeWE0kkbS4Yj7Wnx9WhIOGLOPRCvQ5FesbOj5Sqeq1wxzdOnZXwQnnmHk1IswAcQbvagfQhRyalxRIq+R0T1CB07Y0yWDAjtaNL4bsjmEFISQf5ZqffG9Fu75vYzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AOk5D0rZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8NaYJJ5"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b98acaadso5336394b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745349095; x=1745953895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wKTihN516LJ0PJ64bQu6hhA9LAhCer0ZXXVQAo8No4Q=;
-        b=I8NaYJJ5J0ve37FEcHFc3kNrPdMr5BAj4U4LMqKAgIEYJFRJG79bH5AETOjBcxtSyI
-         dPVXE+IwRKGL4cpI1nvVZ0kg2Lrr6EEImZvbvHtrDnztgyD+9IW3Gt/fSQBOE+x9p4YK
-         PeL+uRZCy1HrOqkaymUtHrMae4AyLF2QZntHDE++O9apW4aFlk0KbA+h0RC4Ks3S10no
-         ZGJ0CrfPJ9LUaCMKArp1e1ynOEgay0/4WiOb04TKF8dVn6xhtLVjsG6XQz7uuLhVXieY
-         wzcDdSin9rDh3ZFD5/opJgetU5oSYYr73FLKxQQVrLjLNeV4LGC+vRTeahfq2+weJvsX
-         28fQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AOk5D0rZ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MI6pSX025002
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:14:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vDfBUzxdqcOodqK0x53+9B7Qwb91WQYtR62iZ46QXiI=; b=AOk5D0rZ8GXmkTGS
+	OTj0/lfCOFxNMK6SvsP0kJMxehSGUc0NnT0KYybKGvV4ScuIejqCb4j8mPlBS2rI
+	Aox8SXAC9p90WKSmW2geLKOFac/HW5/ox5X6ckOHiVskWuIqgcI1AZ/4GQF1fEWd
+	PpoSYprpXpZPeNMzlS99PlhMZsi57RvZXde9En5AZ2JhkMe/XJ0bRgtf2l1vZ+iA
+	S0nKczjlkspJohAj8QiANmAmkwPAWvSQD0ZV3+EivpDpvtv4BbftgRIT/K7Ke8Ns
+	B0Hi9LNG2zx3RgFSTgV+jm5sjWZGKS787lg//pP8C1MvrYY8qfMK/i6YcLMpO1SB
+	yx7UXw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426rp3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:14:11 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5466ca3e9so54435885a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:14:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745349095; x=1745953895;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wKTihN516LJ0PJ64bQu6hhA9LAhCer0ZXXVQAo8No4Q=;
-        b=B8M1TT1/UvomJJugRqSOvv1FYaSgqWdXVTLR9wnARQEo5PAj0dKIKSIPKRDviztXX2
-         kxbcluJRuibxB4MDevfSvWmRqhARxbKs516v40xDBFYxfoHYSUmQKe6EUuRv2jMRjS8U
-         WbOFeYvyt8gVKPb8LcpWQhNHB0a8fCeqHTeJZ0RX4ZTnIdiqFz6EJj8WJTQdBnVNUryt
-         kkYtonpS2OSHCf4ODqzwCAuwnn41rOw5Wxp8K8dD/yPbaVCNRNti8VvWBqzPjmDju8ab
-         0tbAixxWwO10X7i6w0zjK8sJGh2tKIGbPNqFAI3gQFQPXpfxnkz69eLEj34R3z3q7M/P
-         v6TQ==
-X-Gm-Message-State: AOJu0YzxOY6fDQxamjMQRIf/Fxi7W/70TdDyqYXWEg8k22pVqfUAaaW5
-	MaV6kzp+XfUchbGTw3cIPjjc9nhhawzWTQKzeaNgInzh166M0mI8NhDgOw==
-X-Gm-Gg: ASbGncs2RrriVNAMMgFa3qS1tTxdowPGPag4yBjzKKN+mWkeCHC3k3MbicJfb7Pn/c6
-	lB/bqaa1IGbB6kflKJPC7nNHFOstjPA4HR33MWDn3CsgpYcl0QPukzV9kZwcLwNH1TnD7WGMBA8
-	uMGn433t+iVCmsmkf7jk9OIBzPfwwi0jtrOVEUBG9xiDBVqjBQQfhrlStuF60rjpRW9s1Pjbeuk
-	Cyltd+lvr7MyfQGOlECumZVKc7sWFW+TqRt6gRpuTTaIjRAF4iDnvlBSRKGJiYOa7Obny4ZOsGh
-	3AfLgxpAPnZTDX8Mar6T9xpxoozN6SQrt4Cc6yaXl4WwV8gknQ0XLmc8U9G4Zntj9qhGqSCIK0H
-	vYv9ENrIlTqg3A6Yx1yRBPRfENkhNeiqAKnlF9Vae
-X-Google-Smtp-Source: AGHT+IELeYCox8pUMEvgPe7KvcZ5qh9tJ4MSDEqFRxHZRuMrXgnFrTLQ5vsxj1wEndQsJ2TPwFBM5A==
-X-Received: by 2002:a05:6a00:e05:b0:736:8c0f:774f with SMTP id d2e1a72fcca58-73dc15d6751mr20881055b3a.22.1745349094784;
-        Tue, 22 Apr 2025 12:11:34 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:d927:9b9c:264:e35])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13c1c40sm6150317a12.33.2025.04.22.12.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 12:11:34 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: handle error cases of memory donation
-Date: Tue, 22 Apr 2025 12:11:28 -0700
-Message-ID: <20250422191128.1346260-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+        d=1e100.net; s=20230601; t=1745349250; x=1745954050;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vDfBUzxdqcOodqK0x53+9B7Qwb91WQYtR62iZ46QXiI=;
+        b=swgAjl0Sd1KXGvXVphQZzY0982hQy49Kkig482DNX3t7V+snqoAeV0NMJveHiBS3aI
+         eDn7PszpVxNRJdw2Z0gOd0mRLpOgS0klgC9jRKNBQF7uMKtlx3ueapIZGfNCq/GKhwp4
+         dh1ET5d4msaYxVaXpUZHssUQWDKEHeQjk/wr8J/S0V2+rfzE8PItT7m6HgNYebzZ0/V/
+         q+ytfl6UDvL6oo6eGHzU/MEUtG0PVUrmKEokEHcqMKE8x2FV+2w0Dbbzh/pYQnsDFOa3
+         t45ooE57Pyhr+6rU2ePHxior05wsH/J+2PYLNBv+CO1mG402JR9VtI1UZ8N7fL1MAgkp
+         sB4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUAI76P+JrCeNd0kDU1MPxnQ/E1VwDq2Z4JsgdFi+/mGKTLdlnfa3jnGx6lQlD35zEdzOpD6AyADiT7S40=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc8K9n1ixEr+q73tkBpNyQ8JJfVUo7COXhSIOBatm91XNmKlWB
+	EMi1PW1lJLcljPIyffzLv4lQEJYZoW9Te0e4B3T7IYk72gK13m61gwj8yob9L4HwjaJOVDfKL+S
+	5vvF0wYxmnvZhw6U+a3fQx9k1kdMzreW8OHk866O29fXyS08csMhOyBLEkXBmXuQ=
+X-Gm-Gg: ASbGncuDTp/ijg7KU/2QvHF3nxlxfxd3Gb+ksyjolS4mRx6ZE19LmpFuxa7A9h4WQt7
+	mLGImPwkaBdA8bWmYn1zA2DYMMf/0sD6qZYKTKyhgAsCZQqhhwXjAgbd2MB4tJaG+cygFk+1tCL
+	hhTWt2nJiNin59LxoPkxGxSgVNaGeaSnJCiLUOZ38265bLA71l+fpT0EAHulGDaV422W62BQVpY
+	Hjfe/k1sCcoPD9GvTL8HgLnUax10Ju9zzymWn719BMgdWB/urHimbG9lqCXgALHaHj3fR5Expfk
+	kKfTJIg0n8iyha2AxEXT2l4nHnIla/3jBAVVG1wJP1WkH+tvFXWAqj1hUx2wtXIPm+g=
+X-Received: by 2002:a05:620a:4095:b0:7c5:687f:d79d with SMTP id af79cd13be357-7c94d29ade9mr27752485a.8.1745349250437;
+        Tue, 22 Apr 2025 12:14:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7HiqvOyIsraSAjIugd3xjXilpVZSiFuqvb5lB5h6IcYI3MvuV9H6EVgiP8btR3FsQ1k8Z9g==
+X-Received: by 2002:a05:620a:4095:b0:7c5:687f:d79d with SMTP id af79cd13be357-7c94d29ade9mr27749785a.8.1745349250048;
+        Tue, 22 Apr 2025 12:14:10 -0700 (PDT)
+Received: from [192.168.65.141] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625596138sm6572178a12.45.2025.04.22.12.14.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 12:14:09 -0700 (PDT)
+Message-ID: <1f36d303-fcfc-4aed-8d8d-01a3c4dae57e@oss.qualcomm.com>
+Date: Tue, 22 Apr 2025 21:14:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: msm8953: Add interconnects
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Vladimir Lypak <vladimir.lypak@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250420-msm8953-interconnect-v2-0-828715dcb674@lucaweiss.eu>
+ <20250420-msm8953-interconnect-v2-2-828715dcb674@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250420-msm8953-interconnect-v2-2-828715dcb674@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: rNFTEqTolfRhoA25NG3CdtchAWPPiYsz
+X-Proofpoint-GUID: rNFTEqTolfRhoA25NG3CdtchAWPPiYsz
+X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6807ea83 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=dlmhaOwlAAAA:8 a=EUspDBNiAAAA:8 a=Dw-YgVe96UOjDrfUO-cA:9
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=y4cfut4LVr_MrANMpYTh:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_09,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=989 spamscore=0
+ mlxscore=0 malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220144
 
-From: Daeho Jeong <daehojeong@google.com>
+On 4/20/25 5:12 PM, Luca Weiss wrote:
+> From: Vladimir Lypak <vladimir.lypak@gmail.com>
+> 
+> Add the nodes for the bimc, pcnoc, snoc and snoc_mm. And wire up the
+> interconnects where applicable.
+> 
+> Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> [luca: Prepare patch for upstream submission]
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
 
-In cases of removing memory donation, we need to handle some error cases
-like ENOENT and EACCES (indicating the range already has been donated).
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fs/f2fs/f2fs.h     |  1 +
- fs/f2fs/file.c     | 21 ++++++++++++++-------
- fs/f2fs/shrinker.c |  5 +++++
- 3 files changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f1576dc6ec67..e4b39550f380 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -821,6 +821,7 @@ enum {
- 	FI_ATOMIC_DIRTIED,	/* indicate atomic file is dirtied */
- 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
- 	FI_OPENED_FILE,		/* indicate file has been opened */
-+	FI_PAGE_DONATED,	/* indicate pages of file has been donated */
- 	FI_MAX,			/* max flag, never be used */
- };
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index abbcbb5865a3..0807f8e97492 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2464,19 +2464,20 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
- 	return ret;
- }
- 
--static void f2fs_keep_noreuse_range(struct inode *inode,
-+static int f2fs_keep_noreuse_range(struct inode *inode,
- 				loff_t offset, loff_t len)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	u64 max_bytes = F2FS_BLK_TO_BYTES(max_file_blocks(inode));
- 	u64 start, end;
-+	int ret = 0;
- 
- 	if (!S_ISREG(inode->i_mode))
--		return;
-+		return 0;
- 
- 	if (offset >= max_bytes || len > max_bytes ||
- 	    (offset + len) > max_bytes)
--		return;
-+		return 0;
- 
- 	start = offset >> PAGE_SHIFT;
- 	end = DIV_ROUND_UP(offset + len, PAGE_SIZE);
-@@ -2484,7 +2485,7 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 	inode_lock(inode);
- 	if (f2fs_is_atomic_file(inode)) {
- 		inode_unlock(inode);
--		return;
-+		return 0;
- 	}
- 
- 	spin_lock(&sbi->inode_lock[DONATE_INODE]);
-@@ -2493,7 +2494,10 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 		if (!list_empty(&F2FS_I(inode)->gdonate_list)) {
- 			list_del_init(&F2FS_I(inode)->gdonate_list);
- 			sbi->donate_files--;
--		}
-+			if (is_inode_flag_set(inode, FI_PAGE_DONATED))
-+				ret = -EACCES;
-+		} else
-+			ret = -ENOENT;
- 	} else {
- 		if (list_empty(&F2FS_I(inode)->gdonate_list)) {
- 			list_add_tail(&F2FS_I(inode)->gdonate_list,
-@@ -2505,9 +2509,12 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 		}
- 		F2FS_I(inode)->donate_start = start;
- 		F2FS_I(inode)->donate_end = end - 1;
-+		clear_inode_flag(inode, FI_PAGE_DONATED);
- 	}
- 	spin_unlock(&sbi->inode_lock[DONATE_INODE]);
- 	inode_unlock(inode);
-+
-+	return ret;
- }
- 
- static int f2fs_ioc_fitrim(struct file *filp, unsigned long arg)
-@@ -5236,8 +5243,8 @@ static int f2fs_file_fadvise(struct file *filp, loff_t offset, loff_t len,
- 	     f2fs_compressed_file(inode)))
- 		f2fs_invalidate_compress_pages(F2FS_I_SB(inode), inode->i_ino);
- 	else if (advice == POSIX_FADV_NOREUSE)
--		f2fs_keep_noreuse_range(inode, offset, len);
--	return 0;
-+		err = f2fs_keep_noreuse_range(inode, offset, len);
-+	return err;
- }
- 
- #ifdef CONFIG_COMPAT
-diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-index 9c8d3aee89af..1fa6619db40f 100644
---- a/fs/f2fs/shrinker.c
-+++ b/fs/f2fs/shrinker.c
-@@ -186,8 +186,13 @@ static unsigned int do_reclaim_caches(struct f2fs_sb_info *sbi,
- 
- 		len = fi->donate_end - fi->donate_start + 1;
- 		npages = npages < len ? 0 : npages - len;
-+
-+		inode_lock(inode);
- 		invalidate_inode_pages2_range(inode->i_mapping,
- 					fi->donate_start, fi->donate_end);
-+		set_inode_flag(inode, FI_PAGE_DONATED);
-+		inode_unlock(inode);
-+
- 		iput(inode);
- 		cond_resched();
- 	}
--- 
-2.49.0.805.g082f7c87e0-goog
-
+Konrad
