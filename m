@@ -1,96 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2E819F127;
-	Tue, 22 Apr 2025 02:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A781F03D1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288296; cv=none; b=T87AK2uCMhB9QeDtOiMTf0UNw8mFkL1SXLFs3HRXkLPnzDp2+kyphh30Y6L1EJciZ6w3mt2CSmdSKf+E1ERQzrqZ5JEA9gpCdGypmzJQ2CCv7OL6AItpqAowxQdUSNQao60cuej/WF/2+itJc+KrLWjzEyRS91Y06jv0Ops6RLo=
+	t=1745288297; cv=none; b=ZA7ayJ8avgMhkx4FyHUCR0l5yR8n2gGRW7AuNFaT6bjj5fOm008prRxAq/f/v//t2MSCqLOhPPWDGqExkYtTi77UPDUqpXUcTLqg3gYj0dfd5PAsVU0mLL/4ALCHitwOmE5DKfJuXjNds8uM4g+BtdZnYdGoIge5jbpVTVLOFaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288296; c=relaxed/simple;
-	bh=5K95LW8mhqTp8nfAUwGhOA144++w+oMsLcVdAirNAac=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I4Iq//4QhpCLiQ+oOqD/9G97TByAkDKkvxoOyDEd21DOtX7odC6QMwxaAfAa8TU777+Q4WueH2LE9BdjbrLZZXO35hu3TDBsFhYEMX1sND63w3JJBUmIn9tElDO7cRxeRu+zLw1pGsiLB1zLhnJSa2EvvUzfegxqf3qh9G6Yzws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGmG2dPs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745288297; c=relaxed/simple;
+	bh=zS84EJRGNrKADPfwFvwocethFfhlrJkXOo1x0ivuFUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aAkDDxIy8PYVdBwOa9kiYZD4Sz2pQo5O53Z4xtRSEKGwfkem4aQN1ZGTl3lrGy+Q5WeN3fhCE516hrITbyNBzeAemerc6AAsqFAk+d6RtY7DeBQVxuDpSYMOcwikHwCLehKUyrFny4M584iNznSv1upgB3rBRswtf55bJSw/XXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UnDU5pxG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGmG2dPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF72C4CEEC;
-	Tue, 22 Apr 2025 02:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288294;
-	bh=5K95LW8mhqTp8nfAUwGhOA144++w+oMsLcVdAirNAac=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dGmG2dPsfaz1S0iVhxrQHqOGoRlPAC1mIhsDG1XsEj47w7bjTx3wFhfSOXdz3DWU2
-	 TwsBLmCXbezLMzebjy9vh0Lk3ZMHV+EpmKY+TzJfg1NPsOCDjyle7uAyIAnBnY80ge
-	 vBZRebDfww6SeZ9bKHCUb/hia516eGXhXkPUX89wVLVqYQbMsYDL5QwGI9ZUL5ws31
-	 h7uDBDm3uD/ynXwbIjRJJuaCfCboBg9f8spaIb0pFnEiAq8MMmausVfxEv2zMZUL6s
-	 JAs2ScaebEisjRx/MITKZ5FCXmv5F1h5nLpIbewS5lbX/Tz75QJVBtUle7E7hWA7Ol
-	 UCzRdWB5lFgAw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Breno Leitao <leitao@debian.org>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	ldewangan@nvidia.com,
-	thierry.reding@gmail.com,
-	jonathanh@nvidia.com,
-	skomatineni@nvidia.com,
-	linux-tegra@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 08/15] spi: tegra210-quad: use WARN_ON_ONCE instead of WARN_ON for timeouts
-Date: Mon, 21 Apr 2025 22:17:52 -0400
-Message-Id: <20250422021759.1941570-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021759.1941570-1-sashal@kernel.org>
-References: <20250422021759.1941570-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnDU5pxG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745288294;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wz86lwydqt7W3jRCxo4XE1dASLEkdIRMGCMkG2qnxnk=;
+	b=UnDU5pxGTO2bmRqxDzT3fa6BqgLIsq3qDjYyqCv7kmHH1j3st3hRnfu/2qqhwZUkaOZyWq
+	wxJmzow4U6Xgf9lf2qDuriuMtff0/vExK3hm3By8us6flyaC33CH8nIo87igG+UB4fc20k
+	maWfC1tFjwqQJcsbT+AvZuuIuz1RDsA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-KVo2JgokMLuFbxVWZ4rEkg-1; Mon,
+ 21 Apr 2025 22:18:10 -0400
+X-MC-Unique: KVo2JgokMLuFbxVWZ4rEkg-1
+X-Mimecast-MFC-AGG-ID: KVo2JgokMLuFbxVWZ4rEkg_1745288289
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 880B01956094;
+	Tue, 22 Apr 2025 02:18:09 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.137])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B58701955F1B;
+	Tue, 22 Apr 2025 02:18:04 +0000 (UTC)
+Date: Tue, 22 Apr 2025 10:17:59 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ublk: factor out error handling in
+ __ublk_ch_uring_cmd
+Message-ID: <aAb8V8ApTc8qA0CD@fedora>
+References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
+ <20250421-ublk_constify-v1-4-3371f9e9f73c@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.87
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-ublk_constify-v1-4-3371f9e9f73c@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-From: Breno Leitao <leitao@debian.org>
+On Mon, Apr 21, 2025 at 05:46:43PM -0600, Uday Shankar wrote:
+> There is a tiny bit of error handling code in __ublk_ch_uring_cmd which
+> is repeated thrice. Factor it out of the switch statement.
+> 
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 
-[ Upstream commit 41c721fc093938745d116c3a21326a0ee03bb491 ]
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Some machines with tegra_qspi_combined_seq_xfer hardware issues generate
-excessive kernel warnings, severely polluting the logs:
 
-    dmesg | grep -i "WARNING:.*tegra_qspi_transfer_one_message" | wc -l
-    94451
-
-This patch replaces WARN_ON with WARN_ON_ONCE for timeout conditions to
-reduce log spam. The subsequent error message still prints on each
-occurrence, providing sufficient information about the failure, while
-the stack trace is only needed once for debugging purposes.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Link: https://patch.msgid.link/20250401-tegra-v2-1-126c293ec047@debian.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-tegra210-quad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-tegra210-quad.c b/drivers/spi/spi-tegra210-quad.c
-index d1afa4140e8a2..2abb54f9a9ba4 100644
---- a/drivers/spi/spi-tegra210-quad.c
-+++ b/drivers/spi/spi-tegra210-quad.c
-@@ -1117,7 +1117,7 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
- 					(&tqspi->xfer_completion,
- 					QSPI_DMA_TIMEOUT);
- 
--			if (WARN_ON(ret == 0)) {
-+			if (WARN_ON_ONCE(ret == 0)) {
- 				dev_err(tqspi->dev, "QSPI Transfer failed with timeout: %d\n",
- 					ret);
- 				if (tqspi->is_curr_dma_xfer &&
--- 
-2.39.5
+Thanks,
+Ming
 
