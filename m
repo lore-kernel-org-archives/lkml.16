@@ -1,65 +1,90 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 808E0EAFA;
-	Tue, 22 Apr 2025 03:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089991922C4;
+	Tue, 22 Apr 2025 03:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745291267; cv=none; b=p3jFmXf8uGZdW5fXCQXY9b5GGozP1D6sMe3o1uBxCY1YR/ggq9SQ7bSeomBCvS1ufry5EcPhQOE1IpKzPWZYZP/m2ejEyX5ccHisFkW/ikqKzJwYrAcFJdeeh+KaxoAprpeMhgAvctQp4cBd56WVoy/WwNRUNz0+EY+/HbdEQ0k=
+	t=1745291296; cv=none; b=p8S8odKd7erPFI+OaIoTQK+46KkgoDwfdWS80vDDu4wKslQe2X9Is65cKh10+8akG/hmtzAT+G9lCD+W/vLuiq/N2cZtH3biSCpy/z0HTPk5Xsqx/BBPkwVJHHaemA8MJhQIkXueMRjWdNaTEcPkWb1pQehtu5YtETGQ4S9s5gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745291267; c=relaxed/simple;
-	bh=hDLIaVfCxpkNARq3mDMRwM8hQH3+H+6ffO0Q6/SvR/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvogLW0vTftTbQ5YeleIkJJD9iVzSYcjCsYzzdeUXSP2S5TdDR2rZsJBufjKDd3XXlWEYipcwDp2Bmibwy0G7+tCvNzrz0h2guotTT71YNBUGwaq4Ii2SOkLHrnyK9sYSblKOTMXsWV8E/JodrfXt4abrNtGAAa68AXjQLJnK7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=WWBOz97n; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="WWBOz97n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=n/JvTCs/sCVXGz6hg3teVfW2as6Q4XHGy/um0GGV72Y=;
-	b=WWBOz97niOMrfuAQf948QNWtsLZb9k2XaXOOyu8avbFG4LiblVDbZQnmyDbBF+
-	TEzEtT4BJdWMlk0tF5t67UTUQFFVM2GrVC3dtXZUMDyi6q1m0ZQBKkE5GZvdC+E4
-	H+R5SViHRoN16UWNs4aptgkEw1WBKo77y+v4OvUtuBwPI=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgCXbUbXBwdoi1GrAw--.548S3;
-	Tue, 22 Apr 2025 11:07:05 +0800 (CST)
-Date: Tue, 22 Apr 2025 11:07:03 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: shawnguo@kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, krzk+dt@kernel.org, conor+dt@kernel.org,
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	frank.li@nxp.com, aisheng.dong@nxp.com, daniel.baluta@gmail.com,
-	laurentiu.mihalcea@nxp.com, shengjiu.wang@nxp.com,
-	iuliana.prodan@nxp.com, a.fatoum@pengutronix.de,
-	mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] Configure imx8mp dsp node for rproc usage
-Message-ID: <aAcH170yqRMMwVXe@dragon>
-References: <20250320121004.2542314-1-daniel.baluta@nxp.com>
+	s=arc-20240116; t=1745291296; c=relaxed/simple;
+	bh=7tPfO4YljEpw7kJklhNj2drCqG4KDq+vh0zUeK403dg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VGA+dYrJgGVTjI0Ffa9aZ/CT869Nc8hKrg1hf5KKJvXwSi3r5DhupeBtDMF/Hzg0UEssl8xKmIA+LMmEs4nuFWDgatHOhNC7qohn467tcHbKAK3xq6woPhDIhp5yoXd3iF5ygw7C3Wn7/Rld8pAxhlCq8SnUiOhB0e5/219Fg2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowAAXvv4ZCAdoFtICCw--.13305S2;
+	Tue, 22 Apr 2025 11:08:10 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: hverkuil@xs4all.nl,
+	mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] media: gspca: Add error handling for stv06xx_read_sensor()
+Date: Tue, 22 Apr 2025 11:07:39 +0800
+Message-ID: <20250422030739.2042-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320121004.2542314-1-daniel.baluta@nxp.com>
-X-CM-TRANSID:Mc8vCgCXbUbXBwdoi1GrAw--.548S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUTHGQDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBB83ZWgG2pu5jgACsT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAAXvv4ZCAdoFtICCw--.13305S2
+X-Coremail-Antispam: 1UD129KBjvJXoWrtw4xKrykGFy5tFW8AF18Krg_yoW8JF4rpF
+	WfWryFv3yjya17WF1UJw1v93W5t3ySyFW5Cr9Fqwn5Zw17JrsFvFyFy3W0vws7GF9xC3Wf
+	trn5KayUWas7AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8miiUU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYAA2gG6EyMVAAAsb
 
-On Thu, Mar 20, 2025 at 02:09:50PM +0200, Daniel Baluta wrote:
-> Daniel Baluta (5):
->   arm64: dts: imx8mp: Use resets property
->   arm64: dts: imx8mp: Add mu2 root clock
->   arm64: dts: imx8mp: Configure dsp node for rproc usage
->   arm64: dts: imx8mp: Add DSP clocks
->   arm64: dts: Enable DSP node for remoteproc usage
+In hdcs_init(), the return value of stv06xx_read_sensor() needs to be
+checked. A proper implementation can be found in vv6410_dump(). Add a
+check in loop condition and propergate error code to fix this issue.
 
-arm64: dts: imx8mp-evk: Enable DSP node for remoteproc usage
+Fixes: 4c98834addfe ("V4L/DVB (10048): gspca - stv06xx: New subdriver.")
+Cc: stable@vger.kernel.org # v2.6+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Changed the subject a bit and applied all, thanks!
+diff --git a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
+index 5a47dcbf1c8e..303b055fefea 100644
+--- a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
++++ b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
+@@ -520,12 +520,13 @@ static int hdcs_init(struct sd *sd)
+ static int hdcs_dump(struct sd *sd)
+ {
+ 	u16 reg, val;
++	int err = 0;
+ 
+ 	pr_info("Dumping sensor registers:\n");
+ 
+-	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH; reg++) {
+-		stv06xx_read_sensor(sd, reg, &val);
++	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH && !err; reg++) {
++		err = stv06xx_read_sensor(sd, reg, &val);
+ 		pr_info("reg 0x%02x = 0x%02x\n", reg, val);
+ 	}
+-	return 0;
++	return (err < 0) ? err : 0;
+ }
+-- 
+2.42.0.windows.2
 
