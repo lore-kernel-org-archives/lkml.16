@@ -1,67 +1,103 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCA225FA0B;
-	Tue, 22 Apr 2025 12:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4691527CCF3
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325872; cv=none; b=Dr32mhujuVKZs0vmTapiW3xB6xyMTmuZ/jNsai7sh2mxJbWsPC4qw6kYNIlpdn+GC8JkzsyF+FPUGiun361ZhgwUoTS31ewElvZMQXHE6PfMR9uSKmFGtzFIbiKS8tCSQ4nU3zSkk0SYq2kPCOiTq8ee8/LKYUs0x7LlKKV2vCw=
+	t=1745325904; cv=none; b=Gkv6Ynh4RedSCeuGYLpecvbYcBYRSSfr0I6s7yMa9pq7+Pg+Gki0SV7eFcHcoLk43NIamXHc2Z8WnASqjd4bw2Qp1F5WIoZUdnt7fN3nXTJ+bKReY61i9+31227fwU4LI8505uDYFO396yLYz5cEyOMwueiCqb8zOgvmcq2KRLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325872; c=relaxed/simple;
-	bh=fwjn2eAipGj8txUYSDvtnaSj4kpK0g4kALgLoZJzw2E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u18lCbz1zOLux6y0dNYboQjKc6coLXR+D7NjPn62bBCDdiUnLuMBrMr3phkMr4pUo27fRzA0E/oPX/yR6lJ3fsyH+Bs8807qR7uw76aRHRJPOhdmF1R46ucM45xMPyneQEkoAEO0m1VMus44LF45XHAS+SUnRTxI8EHmhqORGmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=b5WtlO1o; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1745325904; c=relaxed/simple;
+	bh=lvVUs2e8qcPQTdzhT6lkVZyLMX8afuB3KeEklSE+EdY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HjdZOBq3L5ZYeMgiVWTMY1wHJW6ZdX2Ux1HuDcboq9dbmtsVkN/UySyZQyhta5xwFldLZt+cIEj9M1b/1Sfkqw29JGV02UiFynJuRtO79WOHSZFvu52nScA3pEnfcprhsc1ZLVBsGjsGKZajjAXqCaSPe67dCvpCVSGN5GwG15U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fWmZqBKf; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="b5WtlO1o"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1745325338; bh=fwjn2eAipGj8txUYSDvtnaSj4kpK0g4kALgLoZJzw2E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=b5WtlO1oBw5UJXJaw02uReybBdy2NpssNOTcIVlk2S6IlIxrjbJ1KkNnhNkubM1PN
-	 RuiVU35hdXr+V1ZbtonPAY0NE5zCH/y9PtCu12kBbuMBC0wDD5T9zknXQK8x+4WVKf
-	 OdE6AXTM6SO9bDYeQcn3fLfZ+YEi8RuWp6rbw21ZLOVFVQEibMPwwOIWngveRlq42v
-	 +UudPgMZmh8G7ar+HkG0dHXuBN8C65IZLvuJ27BZHeCwlrtrdb9XUnCGo6YCyWWyu1
-	 f6hp7fpXyy3KVw4pkgVLSKH1HUJ4ivU2LqZ2VpUOxv5W3fRLFyat7Ib4qYBiPJlpvy
-	 h6+FqjY4xDpIA==
-To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] wifi: ath9k: ahb: do ioremap resource in one step
-In-Reply-To: <20250421040044.44887-1-rosenp@gmail.com>
-References: <20250421040044.44887-1-rosenp@gmail.com>
-Date: Tue, 22 Apr 2025 14:35:38 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87ldrsjrvp.fsf@toke.dk>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWmZqBKf"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af50f56b862so3593461a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745325902; x=1745930702; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qmv/eppcSNS/FFA0D45HtnI0orFklOBEuu+IeQXnzag=;
+        b=fWmZqBKfcVm9Zp/MwvaHYhnjmMUouOb8b5QDbOFiozNH+mQhQ4y4BETQeLOhDm7r0E
+         8JtBR3nouN+YzHSlPTm8oieEOqQPmz4rlC9747rrPqviTxNHW3tU1sHepxysWshSxpef
+         h9oz+YKITS0SAxIKKAP+mfn3wckbMuYRZZDEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745325902; x=1745930702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qmv/eppcSNS/FFA0D45HtnI0orFklOBEuu+IeQXnzag=;
+        b=gIRYqGZoSpVzxwupN9lPlrf/bfPWBbBH0NO8NSTOzcBkLzBAkIKvROkcIjPZ7Hi45d
+         I+mAOz+mSzWWnwTKhtinNHg1J/PL4zTisXz+zVOHpVnDxWZaACK+AymUbeROmGqR1SBJ
+         9iQVtkrP7LFfCf4Pl+tvdLB0xdxQP4vb4LsxkGXuQ/gD6nil1tDSkqHYdswoXg2FTykJ
+         EnXd9XK7IdOUWBu3w9Jq8Vs3DcQb4ESiy7WI/tHVp5cMm9W4NXOaI5uf9AqiT2D/rxiV
+         qrA+xmWxZUhWoNKl1ofNTaLzulH6IWDxqWzMQXbtN20eFnYLCmoe8ruPdPuzZwj0yZNy
+         BJtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbhfdpd80pgPl8CqAhceYN32w50yn1/NCaAgGS2g3dDg4zUdYlkAet3K1IzZdO0Av23UPGwL0n+oZa2yI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQUenEDR7TAwqoWVg2gb3vlaL+p5fcB33LVWGjc3/euJuKJy+s
+	mEy0s/IpHodMpXVOpF6S1kuCgFJ7IW2vBnm3O+ofBu8H6nxVorsrU9Dqq/gJ0thrvuZmf9wvTvz
+	AOW+iQ55+OVOW5lFA4bGsv1fO/GpNxQ2H1RxF
+X-Gm-Gg: ASbGncuH1XR3wZHQUibkfMVlGr3r/w3P9374cii8ZHWTbnNxmqh/f2gcWwAHpt+lKNk
+	SE50vyYiqWijOQDwfa9X1JU9GNn7mWtlFajx93w8mBsfQGtxhUIYF6wlAJViQrSb7/wJk6XgE6y
+	/I1LsxrV552E+bmxY9fVumQ36PfFWHHcGAKQ4bC4N7kJgq2L88
+X-Google-Smtp-Source: AGHT+IHdTmSx9iS8EFu6hmVr5iQxagekadUQmWy2iPg8Fc4WAFCXivKqI/RbGAfgFTHhUvSFDjFlF3H8NSEt9mNdC88=
+X-Received: by 2002:a17:90b:57e6:b0:301:1bce:c252 with SMTP id
+ 98e67ed59e1d1-3087bbbccb6mr20807109a91.27.1745325902515; Tue, 22 Apr 2025
+ 05:45:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <Z_44tOtmml89wQcM@stanley.mountain>
+In-Reply-To: <Z_44tOtmml89wQcM@stanley.mountain>
+From: Andrei Kuchynski <akuchynski@chromium.org>
+Date: Tue, 22 Apr 2025 14:44:51 +0200
+X-Gm-Features: ATxdqUHpL8I3vcFgpkU4A33HaV238Xv7lz1t0Ca9ja9K4i3LKe-c37qpW_-DVJY
+Message-ID: <CAMMMRMf0DtXaG4-qkUfAUNEB8sM-oV2Qg5E_3cPr=yjL3fLo4w@mail.gmail.com>
+Subject: Re: [PATCH next] usb: typec: class: Unlocked on error in typec_register_partner()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benson Leung <bleung@chromium.org>, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rosen Penev <rosenp@gmail.com> writes:
+On Tue, Apr 15, 2025 at 12:45=E2=80=AFPM Dan Carpenter <dan.carpenter@linar=
+o.org> wrote:
+> We recently added some locking to this function but this error path
+> was accidentally missed.  Unlock before returning.
+>
+> Fixes: ec27386de23a ("usb: typec: class: Fix NULL pointer access")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-> Simplifies probe slightly and adds extra error codes.
->
-> Switching from devm_ioremap to the platform variant ends up calling
-> devm_request_mem_region, which reserves the memory region for the
-> various wmacs. Per board, there is only one wmac and after some fairly
-> thorough analysis, there are no overlapping memory regions between wmacs
-> and other devices on the ahb.
->
-> Tested on a TP-Link Archer C7v2.
->
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Reviewed-by: Andrei Kuchynski <akuchynski@chromium.org>
 > ---
->  v2: remove wrong devm irq conversion.
->  drivers/net/wireless/ath/ath9k/ahb.c | 13 +++----------
->  1 file changed, 3 insertions(+), 10 deletions(-)
-
-Is there any benefit from this other than code simplification? Because,
-TBH, I'm not sure saving 7 lines of code is worth the risk of changing
-something we know works already...
-
--Toke
+>  drivers/usb/typec/class.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index 3df3e3736916..67a533e35150 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -1056,6 +1056,7 @@ struct typec_partner *typec_register_partner(struct=
+ typec_port *port,
+>         ret =3D device_register(&partner->dev);
+>         if (ret) {
+>                 dev_err(&port->dev, "failed to register partner (%d)\n", =
+ret);
+> +               mutex_unlock(&port->partner_link_lock);
+>                 put_device(&partner->dev);
+>                 return ERR_PTR(ret);
+>         }
+> --
+> 2.47.2
+>
