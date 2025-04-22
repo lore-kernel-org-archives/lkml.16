@@ -1,282 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594DA22AE49;
-	Tue, 22 Apr 2025 07:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305643; cv=fail; b=uzwFDTw7du7nmz51/WYLvXMTOHOjK/Y8HSM10MRvN66yopMSOZKylP6XDK4f7QX0/XX3xFBHLQ5xrlf1QIP7si75Lb5Owgdm6HHCyisMpTS27HzlvkSsb4Rx3HLFP1vcM1pTGTHcdeirMcvKQKG6+MrXom9sA6jaFHbxDO5dI+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305643; c=relaxed/simple;
-	bh=x+H+mqMX5COvRLcDlGxj1XaZhA20h/A7cJHgQMzLI1I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ttRvhoa6IPqVoJ65ljr9dnOHRCvwxWnS588KoHE1nMkaWC0f4oNsQPPUJiq9c6xSRHlHagZ2LXjSiDREsU+YhpHSi7DNVoNg6AAblFnRtnO7KqfJalkDSWtcYjW660pIacSIMDR5daXRCF3b+PE5H9KPd1YDr1q3Cvkp8QIDTNg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cevMaMAF; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381E7230D08
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745305669; cv=none; b=ZfrkxrefKLqkFJoT9nM7WwQ0BKydbLSshzfuyeaRWnNWdpCH+GS5mpYFGYyoSQMNsaK918y1zNzb8S8Ow6aLEvgMI9H8LsPJplaLVp9wugWcvISMyGgukBF582AIuGnsK82ua7xKWs3dcmHqWUMt3JbZIaNBbSzQNqv4J2kwaZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745305669; c=relaxed/simple;
+	bh=HjhLzE9Y/Q52iV3cqMbiQuwB2APqQ9fAC4HSJMOmcWI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=DkeqtKRz7sa4Fj2HCgVxA3PxYSoJoAYArY/o4AQKtjACz9xHKl2vBHDYx6RhgbhSvyI7KZIt/i+G+TxmEPqWOKkh6pBHo4Y5HikmXE8CZlQClxiE86fOQO7js4cC8JGj7yaiV4/OWD41s7IbhuuuAdATnHKo8cEd0LlQaeXAlWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tLCQbjNY; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cevMaMAF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745305642; x=1776841642;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=x+H+mqMX5COvRLcDlGxj1XaZhA20h/A7cJHgQMzLI1I=;
-  b=cevMaMAFvbQqC5sgJ5jruGPm4MjijJw9CmGu3O1Lsj8MKc+Cm5ifZrfW
-   yNyo0FIJo2rRXGaMePHIjSwL8W2lriBnDez87gsjAxnViLrKsEel0XfJk
-   APGTgHQGHm0lcrIXnitstD57mhpVC8A7PSxjBPNU/j56KQUhlrjyHHEOk
-   ehLKzTiZTbJmjb9dT9PI3eMMU4cKNYruQro6zyGXW3dP4nZAPcwk6RIi8
-   1ajY6l23FZV7nFZhjNBg3nKYd7/D9efUUObVtO0uXS003pTpqIyN3rkDg
-   GOJ5UagFVFTQJ0J5IPOG9rpv/2J154vs9v589IVHztG+NxpWvHEUhT/Hv
-   Q==;
-X-CSE-ConnectionGUID: +MTGX2D+QCeaIprb0YYxPA==
-X-CSE-MsgGUID: SikEqGn0R2CL3SqhSWtNfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="49513579"
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="49513579"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 00:07:20 -0700
-X-CSE-ConnectionGUID: OfGKSsG3Rrqe6Hr0z9Thyg==
-X-CSE-MsgGUID: cbKCCWYzQpW6KOkdeQ2qSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="137088436"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 00:07:19 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 22 Apr 2025 00:07:19 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 22 Apr 2025 00:07:19 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 22 Apr 2025 00:07:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kRJ+GafMl+OQ1l329egu0pjTTQbHGNHFivE1Bo963bErRqS+dcnzuSFjQq9FvxIgTr45CdjD1EqoBiluYqN/XHX03+vKJZeR2FZfmvzJ6mWn8NhZNVuxcjptgUt5rk+aFWWBjcaa9wV6OE4E2AYbksepV5cc7JHAgUl8jaFIANWJfEzbcHtxHgv689LcgnOvGIybSnXDSUBsEeMVxMljq7pW7gygNTw6SaXJy+wK0TqTF9ACLUnokqJS6E9QKV7jjRaO/M9DZawnMvgeS5YPMXRHciPMcdE3f1U2bki0K0ROHYuIeh6+576bia4ofFRi+Z1jX5GghE4+FZAwEgxT/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JFtThbmje2VpyKFouOIUEGI9xRydutTN+XTCOyuDaXU=;
- b=RjQWx25vif2hB6p87P6mUIRJcl7YIfCWhfyYE/sZHVDtni9z/CDdLtH6D/BnY0Jy92owiXldLuUxhYipFdm+0+xDiJdO2NSud1zUbYsK5RYAwAj5axCqIhRhmJDyqvzg7doSEiDYY+fScICfJfvPlLKpDDOFKjjxCZI0d8vKP8QXZT8pNUCb/9a33QA9u/W5ZZ4tlRMAl1Dv/4bJPD5vUwW3oIG/lt2xKVF6Z45nXLZ5n61OtcuAWVoOGVcvif8e7UzhUwo8Vd/G+n9wc5P3fxpBtv31KRwbzdYq1o1k8taKiT4gcAWRYzmMPg9EMTWfTYExI3bkEm2fskJDPMCHOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by CO1PR11MB5124.namprd11.prod.outlook.com (2603:10b6:303:92::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 07:06:16 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 07:06:16 +0000
-Date: Tue, 22 Apr 2025 15:06:06 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Jon Kohler <jon@nutanix.com>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 06/18] KVM: VMX: Wire up Intel MBEC enable/disable
- logic
-Message-ID: <aAc/3p2GyZNmYFUc@intel.com>
-References: <20250313203702.575156-1-jon@nutanix.com>
- <20250313203702.575156-7-jon@nutanix.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250313203702.575156-7-jon@nutanix.com>
-X-ClientProxiedBy: SI1PR02CA0058.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::9) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLCQbjNY"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so44066145e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745305665; x=1745910465; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i6a3BQRbJn5uKf8xLcqr/agF+8C8ycJ/35awjwM1MZ8=;
+        b=tLCQbjNYU4vONWrULizgRgx4kXgG4Q+cT54FK6XVHT4ILwOMdxMbgeCeICWXS/hkDu
+         xktrtHLHx1QZG8oyFVwMHGoiH9h5tedIIpxP8Alg+hUBAw79IkCD5KgwMlaDCytkcPHN
+         hsAKlIu8PDT17/fCtO5AkQQ4XEx9RSqEuZiWkXHBpHXoFCCyQFlE9DtIpYCP+MwKL4JY
+         tNPtj1BP04TEtyentwGET2ojANmWkfZB9ts+IRH/Xv+j4hXgIq2ccjMSXicFj7WonRF4
+         A2EEJjtjjlmySMFz9iDN0yDQKSOUKgMuT/f7F4IECcZT3n8dRdnO6d0VYE4ZU86dJHBu
+         fVww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745305665; x=1745910465;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=i6a3BQRbJn5uKf8xLcqr/agF+8C8ycJ/35awjwM1MZ8=;
+        b=Gp1j9HopKuWhFWtpK909YFrwEqq4m/WXM8rC1mclSwBC5ipt1BRdCFi3s9sNRqRkV9
+         JZDLfUBtzrjM26kjf/vLe5epJomX+MDwiX36X5u4wpdY5iwynmAdjmM8pODVhDhLbn29
+         +ED9LtHju2RAPyhuc6dpV+wf/40TY1bzpEzTz8Sm/xGK4xYIWvX5fmHkN7L3BQd/n8/C
+         7Akck9Df97uwoOp6XhsBCKVLz1AImKMFYhM73sYlHWNTAEc6e/iT6XXKsOP1rVLfectt
+         V5OsvodlCQWnx5bWSGi2//6Yo6QiNLRKBiK2nG1TcaUpd1xHMs/1MKF5xQwOJ2NW0JBq
+         WDSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6IGLWt07Xs69XPlqsYhJgZ3ZWO9bslOfDNRRMxIkRPmFfm6mZyvt1rqiPVFz2CDzKnZ+y+XQCCY19kEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAzL5mHh54CrBptw/ql/sIJTuJgatUsJWdEf8Q7IAk67KUEEUa
+	9clmyyZ6mkkLLyzEJ9wFsJsf1pQMf0WHT381gNGWV6MG4pViWZl0wDkXYjAYASI=
+X-Gm-Gg: ASbGncslreAfJ20G2kUZchmcWOCVgoHZTtr2YTJ4TaQR4oyG3LmjgAwajIJVxBIxlXW
+	vglpW7TZOLXoDWA/TdB+8UaImJ+kbhu1vWa6xIcWaGShWufFsWvhjiqJlj7ZUppQ68QMcGyO78J
+	6V8UJxIBzfDS6mfPtzgVkehC+goy0Xze83S4eOuJWnxTcBSpjZ3NsfwK8VKLJ+TPn3hrEaARnib
+	Dm2jWdGCxsZxJlkRQ6wu7fNVIa9xOWmNjJyTlZ3F6sffZTLLqbpBuHrAdEM/XsO0nRs9N/HtPCC
+	A8NFK/68N6Ub9Tdnz7XSFe5BuhLU42ifDaXYGUFookOGXBXBMmCCsN83+AgjVpzh0TMSFjuUyvw
+	sMx5tcFhoFkblQPTBow==
+X-Google-Smtp-Source: AGHT+IHoQqch/rixFWxT15tJy0SJvow1uQ/1aou3lnDMI0B3Bb0LfLM25ogmt9gQblE5yATucRyg5Q==
+X-Received: by 2002:a05:600c:1e0c:b0:43d:fa59:bcee with SMTP id 5b1f17b1804b1-4406ac1feebmr119671555e9.33.1745305665458;
+        Tue, 22 Apr 2025 00:07:45 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9e38sm165457015e9.2.2025.04.22.00.07.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 00:07:45 -0700 (PDT)
+Message-ID: <571b6484-d3ac-4aca-a055-c143f7e4a5dd@linaro.org>
+Date: Tue, 22 Apr 2025 09:07:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|CO1PR11MB5124:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ac0c438-5e1f-413c-33e4-08dd816c2c77
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uNhftRw4pPm/sELTN/2+g4aG+DnB6iOhu21FPXNsWfSlAvDNpeE3uQ2wc1Tx?=
- =?us-ascii?Q?pCiJ8yoL/rpTo2Oq9aL/c30458gJER+HJMUw+xAVX4+Aa4txbMk6UnCT/CTA?=
- =?us-ascii?Q?+v1usZi0MrBm8nrwIrXFu3ShMztPKUF4YKkOtpQF64DdTsNQCAWg0Ml+skov?=
- =?us-ascii?Q?o7lxIgvOzdCl0RnVivQfaITZFSW265NaZOIvmzMhe4jW8/p5B2d2ZlEjyGkb?=
- =?us-ascii?Q?qkZ0Mi4X6SLNo+o4pM6/hRvGdwjsB++N79gDkOnwS1urKvuRMCcHnPml4s6U?=
- =?us-ascii?Q?7Nz48O6T4Mrq6H9xKQzWJjZIORhmolU8ydQImtkZ6XYsw3rvBmlAyhguTuCW?=
- =?us-ascii?Q?SsS4BoKexPRUy4S050v8xrg5fAofuSpBAvqJhdAHv69VYO5xSVzk9IYhU67n?=
- =?us-ascii?Q?zx4riU43hbrfYptdgaXZwmGaGJqjX3cVRB+81iuBzHT5r3YPa/8PwL//msyy?=
- =?us-ascii?Q?mlqb4IDw2e1Fp3FSdKBSfdvjN5IRAsEA+ScMKLHok6OMkfIE3RUIUv88IBEW?=
- =?us-ascii?Q?N1kjWwRfNfUonr6XB3Hx8l1TdCKsUwpjhetUnH38VcbhGeg2Q3Vk0InfGZpG?=
- =?us-ascii?Q?q0sQl+w0/cE7F3JeoQAeUmuwnD5M8oSymNPb+2c5XqrShVapHH+9TaZmTMXn?=
- =?us-ascii?Q?VXG4ZjiW6TiRJ/j8nXYFMxmTRer8D3CMjnk/JTdO6I8tQX5p9+6Hsplfatkc?=
- =?us-ascii?Q?WKe4Uvr8EItkU/cnviBkOcIqgLQMocs3EK8yjKwlLBb83WRtZpPCfyNEcZHg?=
- =?us-ascii?Q?nxQrA6UnW1QC6R8h7pKTco0AoevYEv6oNBnbxc2WtPmtpp9ZT5f3XYazSGNT?=
- =?us-ascii?Q?54avA1jOWOBB/vXeXeoTNBlzQzcqwEwZ+V/ORV0o7C/3lk/6N6XQVOE1khVk?=
- =?us-ascii?Q?2NknkcQdVnsmtbUmegIPmCgvTvUtOjlZbllgCqtCX6oBY65KkEmfxLYIxHVl?=
- =?us-ascii?Q?mSBmUq38eS87DpGAcxZZbQu9Svxj1rViTw0TXdva51YNFyKKy96Bfeu8WxMv?=
- =?us-ascii?Q?emXP4UftfJrYopqYukwCO5N5PumVKKY4JfGw7B+EaHoKW7vnXYYQvnsNTBQf?=
- =?us-ascii?Q?o7xFiYLODV6KQ/7W3wUYPGzMzQboCQ1TArSwHhJYUg4/u8I6kAvMg9x9547z?=
- =?us-ascii?Q?W2X5H1zS9OQJTv94oPLc9SnCtxIm0IRgu55K1Xm78B2uh9jIRIVH7Iu7mSU8?=
- =?us-ascii?Q?Jmd83o3xE4dNP7CQWQo4dMzOtjFpdyhSkssTUPBbR0oaJFeNUQiaWL9QMg8p?=
- =?us-ascii?Q?PVyJinIi6PhkgMvQiKVAgPjqs30WmlYTRLI0qhDI+8A0YwChIjj5n/2JiAaj?=
- =?us-ascii?Q?ZrYNatwUfDW2nq7DnzenHf61yUVvN/hRKVlZrjek1laqXfLktWoAJTjl46GE?=
- =?us-ascii?Q?vDcMF0Vhs8RU8xDDHr60/wcQje9OuKtGmWBy1NzbuHLtz9Al0RuQVHdN4uQY?=
- =?us-ascii?Q?dl4OzS7/pgk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?J4thpisg3nNs0lAuBgN+FU3jNKY7ka7lALCiwkI3T0ok8BWS20GQSYkgYQwc?=
- =?us-ascii?Q?JV5k1VgM9r8q/mWsYDT/vwHvvkjoKt1O5PZg7abhxHUeChjJ5FXAbZE0rW1T?=
- =?us-ascii?Q?9RRx2gmB91/Levgw+ytbGIWgj8ERmlttLCmFWWi9zjpbyDzp9nBkMQg873GJ?=
- =?us-ascii?Q?GfscZNB5ZqZG55oX9aB9Aw0xDHSM93ZV8ZWPeiiXROnVBgwUuaYGg+3NAImI?=
- =?us-ascii?Q?iVyh33Nq637haXJ5qBE6FKUAGCXL8xom5kvfshAgx9htjDiv9/cyf10Jnlg2?=
- =?us-ascii?Q?S1v8XnbEWRyt42X1vq6ybBzxgDd9p1Pjq1zo6PBKlwlxYzk/g2y9tzbpA1x8?=
- =?us-ascii?Q?3CaikV7NkH8vqvZi8K0WLh4qWwj5OBNkbrin2hFwN2LXB1oUCEvQqLh/sPVv?=
- =?us-ascii?Q?a01lYQ8YaZMzLs/UptFZhsfQN71cM/VrWM4B1NgTujZOgVpPuWTSMaYPBUyB?=
- =?us-ascii?Q?/24BJhpe6I+C7Nmf8F0nN0rMNBnD/SgMK2N/E/DsiZl3GK8tlq3QRPSqcljx?=
- =?us-ascii?Q?8hF0qbNJ/+msuKWL9qyUM9OzRKxdikc+6SqmfP1Q/j99ojitXjY+DAiPl1Rw?=
- =?us-ascii?Q?l0mLNUXstQ4ejJHay4qj0V8YI2JxkTDFX77U7RHW1DQCC9gNnXa6te0f5ZMa?=
- =?us-ascii?Q?xU21AoTq58K5hJCmU4KC8ez5hXuhWMWFJQuav0QXD2nj9Hqo6a6ktCUFifQD?=
- =?us-ascii?Q?5t9vrtopP5oZG2VQ2ezj2RJ3f0csxaJLsvUrutuxMr7qtvpV9brJRdqdlhiK?=
- =?us-ascii?Q?ToYsID5nVSsVRT8YwUS5gYV8tQbtb7Cv3UqpTSUeU2JqHuqHUS6sQPi+Tn+n?=
- =?us-ascii?Q?M9h7FPs9sI4GGVoZOF/dIbMjyOY74vEfXs30QsYs+7oZkc7NBmf7X4/osIDm?=
- =?us-ascii?Q?gj8JqLG2by0aWB45xOQXJFyP+qoEMCaKt1kdCql/NTDFvIP8c9xvB3vP6feP?=
- =?us-ascii?Q?aH+KUZCMo9sUvLzGofWCXOhwiT13Y5XEkxZVYk0N4ldoFOftJzksfm4GgWIK?=
- =?us-ascii?Q?NdWxduxlbK8JqxJ41CpstMwFeDt915i+4CBY0yUvFn1HuSRM6kXy/Kte2Cw8?=
- =?us-ascii?Q?gHp67N+2xoRMvZu5F1dN1M2zvuHGVvbUcx1NBRJVRKVIomC9LhwXn1i599ae?=
- =?us-ascii?Q?fBsFueKgi6bRrm3cR75u96ghQFSWrVFpqSxtRK7/Q9wc+/9dWCkIeWaW9jL8?=
- =?us-ascii?Q?SIFHLfs86HhjvojK2EFjz9msIZSZq1jI3wePpMrLZKny0NL1P7sSHqSzlHsE?=
- =?us-ascii?Q?AJj3QJ3Grem0GQ5Hy2erRDT9NJ+vLBtdlrTlJBiphedGrgNO4q4T4EUzqNoC?=
- =?us-ascii?Q?Yzm9P5u9qDwFVGQxNc9X2QcZpIi98E3mzkYAU0L4AmeWIibj9VhyQwRyWMZp?=
- =?us-ascii?Q?8Ig8cH8V1wpE1ftavjqoAqe6+GH1Dia3oKglvHgbunw6rgDxN5a/SjOXW4jm?=
- =?us-ascii?Q?AaQ+d/C0SM1847m3wqcEKsvBy4nP4YCzKGR/fDzLaTq42JGvWD/yCID5YYkP?=
- =?us-ascii?Q?WSnFIKM5Z2lUVNLLS3rLDZCgp91V5/2zQ6zrWtfJ8WVSCoQq5czcMx0QRsCO?=
- =?us-ascii?Q?Ls+vn7nC/e3bGij2HIJj7lKOdUnseiuhM7eAbVWe?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac0c438-5e1f-413c-33e4-08dd816c2c77
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 07:06:16.0705
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MkHwCjbZ5BsTj57WbAPseYngIG4IZV95TusUTPVrRPo88BGOGmwAxNRlOsAwB7ZAkkDYY+c944ao9wcbBa14aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5124
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm8650: add iris DT node
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org>
+ <asfwnyn5grm426vq5qatrxfffv3wmbuzx6266rblanzqepffzx@7773dcxfaqe4>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <asfwnyn5grm426vq5qatrxfffv3wmbuzx6266rblanzqepffzx@7773dcxfaqe4>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025 at 01:36:45PM -0700, Jon Kohler wrote:
->Add logic to enable / disable Intel Mode Based Execution Control (MBEC)
->based on specific conditions.
->
->MBEC depends on:
->- User space exposing secondary execution control bit 22
+On 19/04/2025 01:05, Dmitry Baryshkov wrote:
+> On Fri, Apr 18, 2025 at 03:20:35PM +0200, Neil Armstrong wrote:
+>> Add DT entries for the sm8650 iris decoder.
+>>
+>> Since the firmware is required to be signed, only enable
+>> on Qualcomm development boards where the firmware is
+>> available.
+>>
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  5 ++
+>>   arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  5 ++
+>>   arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  5 ++
+> 
+> I'd say that these are 4 commits.
 
-The code below doesn't check this.
+I could make 10 and still be coherent, but do we really need 4 here ?
 
->- Extended Page Tables (EPT)
->- The KVM module parameter `enable_pt_guest_exec_control`
->
->If any of these conditions are not met, MBEC will be disabled
->accordingly.
->
->Store runtime enablement within `kvm_vcpu_arch.pt_guest_exec_control`.
->
->Signed-off-by: Jon Kohler <jon@nutanix.com>
->
->---
-> arch/x86/kvm/vmx/vmx.c | 11 +++++++++++
-> arch/x86/kvm/vmx/vmx.h |  7 +++++++
-> 2 files changed, 18 insertions(+)
->
->diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->index 7a98f03ef146..116910159a3f 100644
->--- a/arch/x86/kvm/vmx/vmx.c
->+++ b/arch/x86/kvm/vmx/vmx.c
->@@ -2694,6 +2694,7 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
-> 			return -EIO;
 > 
-> 		vmx_cap->ept = 0;
->+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
-> 		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
-> 	}
-> 	if (!(_cpu_based_2nd_exec_control & SECONDARY_EXEC_ENABLE_VPID) &&
->@@ -4641,11 +4642,15 @@ static u32 vmx_secondary_exec_control(struct vcpu_vmx *vmx)
-> 		exec_control &= ~SECONDARY_EXEC_ENABLE_VPID;
-> 	if (!enable_ept) {
-> 		exec_control &= ~SECONDARY_EXEC_ENABLE_EPT;
->+		exec_control &= ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
-> 		exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
-> 		enable_unrestricted_guest = 0;
-> 	}
-> 	if (!enable_unrestricted_guest)
-> 		exec_control &= ~SECONDARY_EXEC_UNRESTRICTED_GUEST;
->+	if (!enable_pt_guest_exec_control)
->+		exec_control &= ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
->+
-> 	if (kvm_pause_in_guest(vmx->vcpu.kvm))
-> 		exec_control &= ~SECONDARY_EXEC_PAUSE_LOOP_EXITING;
-> 	if (!kvm_vcpu_apicv_active(vcpu))
->@@ -4770,6 +4775,9 @@ static void init_vmcs(struct vcpu_vmx *vmx)
-> 		if (vmx->ve_info)
-> 			vmcs_write64(VE_INFORMATION_ADDRESS,
-> 				     __pa(vmx->ve_info));
->+
->+		vmx->vcpu.arch.pt_guest_exec_control =
->+			enable_pt_guest_exec_control && vmx_has_mbec(vmx);
+>>   arch/arm64/boot/dts/qcom/sm8650.dtsi    | 94 +++++++++++++++++++++++++++++++++
+>>   4 files changed, 109 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+>> index d0912735b54e5090f9f213c2c9341e03effbbbff..69db971d9d2d32cdee7bb1c3093c7849b94798a0 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
+>> @@ -894,6 +894,11 @@ &ipa {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&iris {
+>> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
+> 
+> You shouldn't need to specify this, it matches the default one.
 
-Is it possible for vmx->vcpu.arch.pt_guest_exec_control and
-enable_pt_guest_exec_control to differ?
+Hmm ok
 
-To me, the answer is no. So, why not use enable_pt_guest_exec_control
-directly?
+> 
+>> +	status = "okay";
+>> +};
+>> +
+>>   &gpu {
+>>   	status = "okay";
+>>   
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+>> index 76ef43c10f77d8329ccf0a05c9d590a46372315f..04108235d9bc6f977e9cf1b887b0c89537723387 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
+>> @@ -585,6 +585,11 @@ vreg_l7n_3p3: ldo7 {
+>>   	};
+>>   };
+>>   
+>> +&iris {
+>> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
+>> +	status = "okay";
+>> +};
+>> +
+>>   &lpass_tlmm {
+>>   	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
+>>   		pins = "gpio21";
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+>> index 71033fba21b56bc63620dca3e453c14191739675..58bdc6619ac55eda122f3fe6e680e0e61967d019 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
+>> @@ -824,6 +824,11 @@ &ipa {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&iris {
+>> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
+>> +	status = "okay";
+>> +};
+>> +
+>>   &gpu {
+>>   	status = "okay";
+>>   
+> 
 
-> 	}
-> 
-> 	if (cpu_has_tertiary_exec_ctrls())
->@@ -8472,6 +8480,9 @@ __init int vmx_hardware_setup(void)
-> 	if (!cpu_has_vmx_unrestricted_guest() || !enable_ept)
-> 		enable_unrestricted_guest = 0;
-> 
->+	if (!cpu_has_vmx_mbec() || !enable_ept)
->+		enable_pt_guest_exec_control = false;
->+
-> 	if (!cpu_has_vmx_flexpriority())
-> 		flexpriority_enabled = 0;
-> 
->diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->index d1e537bf50ea..9f4ae3139a90 100644
->--- a/arch/x86/kvm/vmx/vmx.h
->+++ b/arch/x86/kvm/vmx/vmx.h
->@@ -580,6 +580,7 @@ static inline u8 vmx_get_rvi(void)
-> 	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
-> 	 SECONDARY_EXEC_BUS_LOCK_DETECTION |				\
-> 	 SECONDARY_EXEC_NOTIFY_VM_EXITING |				\
->+	 SECONDARY_EXEC_MODE_BASED_EPT_EXEC |				\
-> 	 SECONDARY_EXEC_ENCLS_EXITING |					\
-> 	 SECONDARY_EXEC_EPT_VIOLATION_VE)
-> 
->@@ -721,6 +722,12 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
-> 		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
-> }
-> 
->+static inline bool vmx_has_mbec(struct vcpu_vmx *vmx)
->+{
->+	return secondary_exec_controls_get(vmx) &
->+		SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
->+}
->+
-> static inline bool vmx_need_pf_intercept(struct kvm_vcpu *vcpu)
-> {
-> 	if (!enable_ept)
->-- 
->2.43.0
->
+Thanks,
+Neil
+
