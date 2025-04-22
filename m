@@ -1,170 +1,143 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EA21624DF
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714161A2557
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745289419; cv=none; b=qucptFc65DK/JD57KA4S1+0+KLyL8klbaeNH05UFB6m5k5fMT682pI11VW6QnegjBsJPF2MNFpaRdPCzN+uHNoHArpilF8wG34tg/ANkAbDLLLnzrlFH28+0clp/P0zPnIwiysxoZMUDYXOWycxm+totGjdMSadCR1QNSBrrj0E=
+	t=1745289503; cv=none; b=ebgq09zMdNGMn4z2MrZfOJI32innGVFBQvHrz8kySR+gK4GJdNiKZk8Ed5MdSkn7CwFWZjXWc1dd0YyDuoWyVJ+pWCDmE3VEN8gFkdE1AqqhKCM3UbhkKQptmyw4GEEbeM5tNTxqUN6ME6zUtP6+F8Re7FEWAHM5OuNKwpU1FEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745289419; c=relaxed/simple;
-	bh=rZDEFDSJGeYqHUOh75OO0ircfG8oajzfkaU8hU0ShWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nXh6HN9eipcaxIkQN6hXh4iEnXJAa5k5Qb9V1Q8DxUvvGlHPSEuDY/8z1pPJsgg74IkKUgUK4Nk9cUo3D6R2opqzq/BeFz7XKiZlxoLYqGTqHNStEHtvbNQFEsD/DHtOO7stxbL7kjhZcZVnFmVj5Nu5bbV6YdTuort79TIeLpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Mon, 21 Apr 2025 22:36:46 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org
-Subject: [PATCH] kexec: Include kernel-end even without crashkernel
-Message-ID: <2025042122-inescapable-mandrill-8a5ff2@boujee-and-buff>
-Mail-Followup-To: linuxppc-dev@lists.ozlabs.org, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1745289503; c=relaxed/simple;
+	bh=m1yMCm5BRURQkTkthO160wuOl1r+JBDJ8JKG9mL70Ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jDg/fRWnKLJtzIjgGLMxSWUfCwpRyy2FD4bhETCqDw7R3tKign6JqPn8v9Tjw0Wf66W/NevAhcm5scPpWeTxIDfP4EGIa1zGlwf7/DQ35380UzcpDQCWTfbre1DfbKW09gySAAd8wOBxOVGtCZf1fZgLu8I7JpO9Pexn8S1Qc/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Tor8XHRm; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Tor8XHRm"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e573136107bso3698031276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1745289500; x=1745894300; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m7eAi0OH7b5xLzSVXwOwnWLVsbzyannU+ufJsFO8uuE=;
+        b=Tor8XHRmHO8OGMWZ1tYU9UXptIchkli1Ae/YISB0al4DpG0LpP/kjgdsNViQ1t9Ztw
+         sCK4KbAaZT7eP/t7zF6tXqinpqSBQ3BnatQTxJRfOoTs1hu5Rgg4WSm/1XA0OFk6usNc
+         zgxxbjZM9rLJjsY9NlVFSfVSqwrsCBvHBdMn0NpLeItEdyxVgoA2qo/nhwEAX7fNL4DE
+         ZTGCQtS1MZWdeYd5dfV6udH8EcuNjZCtzCzmCgTDGncF3UE+MpcHyCj9sRUVyjyE8NF4
+         JkZsUJ42yGLGuuQLJ9msb0lY9uJ0ynoViFZGne8rOikKoDKfeEjNd9IFzegsSxg+t8rc
+         gAlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745289500; x=1745894300;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m7eAi0OH7b5xLzSVXwOwnWLVsbzyannU+ufJsFO8uuE=;
+        b=pztZIUBz8q1dRiis9UPwA5aape5+jJlt8xoyvh2L3NkDyhI/gVFpvqFYmuwrrHsGGx
+         yGXwMxG7PtSpQhChJvekm1SzZtCWlYKPIOtCKBXtV9WdsdTcBs9H5mhfeI23L1ozyeNT
+         w4DNaf8AI5yRK304zPVqUgLJxQA1PUiGqsedt/DcoDlXL4eJuWci1tw/aeVnoWzZI8M6
+         6Wd9RhWwPyOxuOToKzMuirxLHgwizHjAaFxfpYOb+nDm/XKfaF6Na87bYjjz57Nqg40H
+         5uCIeo50+xzPthBW5x4hr+bFJKPIbzeHgD78T/5iPFrJyjGm7hJXrFAikBEx9O3RREc8
+         51Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVE9tYQH6aVlOi3hwSzjjTCvGCVkyHGtzMcwxGsQVaJo3vBqSzvpztoLmN5rkVfhCkJxyyAqjsrcaUXvN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy/sMpfZiT/Lp5Jjpqs3lse/ixaK/MqsK4LXW/EoIzC6JHO7n8
+	KE9p6DteLc9tPSXKu4Wr7Dj5kMEEU5sXdxmoPqHVfzJgzSzDLx7+tgQgBH/e0yPVCMCltLWREtw
+	nUIqe0kZ4x14+y9AWGS+3apUdVq95YLbmllk3
+X-Gm-Gg: ASbGnctc7REXwCco8mZl5rEKh5ckIhB6k7k1h+UXinWGYHuOJkgX02s4ZGt5OWnYJnj
+	TIcqI/rhdcLYsqf9iSHU2JS15y8G01+AKKhXKa7p26vJEzON56jeKNgHYHU9Mkqmq9diLObc6aR
+	01mv/0tahlAd1UntfAK9HSqRyWEKEP8BYI
+X-Google-Smtp-Source: AGHT+IEBsF+GdUC/ycqCwWJCqQEPIgxnxovCs8VulAPF24hG16HtUyXji535ndx9u4H0Zeebq7vBj70AA6oUc8NrXEc=
+X-Received: by 2002:a05:6902:1588:b0:e72:9562:7638 with SMTP id
+ 3f1490d57ef6-e7297eae346mr19133785276.39.1745289500228; Mon, 21 Apr 2025
+ 19:38:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nzde7snpamx2jdcs"
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
-
-
---nzde7snpamx2jdcs
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <87semdjxcp.fsf@microsoft.com> <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
+ <87friajmd5.fsf@microsoft.com> <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+ <87a58hjune.fsf@microsoft.com> <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
+ <87y0w0hv2x.fsf@microsoft.com> <CAADnVQKF+B_YYwOCFsPBbrTBGKe4b22WVJFb8C0PHGmRAjbusQ@mail.gmail.com>
+ <CAHC9VhS0kQf1mdrvdrs4F675ZbGh9Yw8r2noZqDUpOxRYoTL8Q@mail.gmail.com> <CAADnVQK7kyBso6bNEtNyC6zTBDuBv-K-c4a9KBVid+B405VX6Q@mail.gmail.com>
+In-Reply-To: <CAADnVQK7kyBso6bNEtNyC6zTBDuBv-K-c4a9KBVid+B405VX6Q@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 21 Apr 2025 22:38:09 -0400
+X-Gm-Features: ATxdqUG68qWAXIVdhOvLBjOhkCBCyDq8PvskWDE6YshFl7NEp_uX0oI69pZKXTU
+Message-ID: <CAHC9VhQE6xXQ1E1hmWzbrPNyVh_gKsp8U_GnPYr=0gS_RMATWQ@mail.gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, Jonathan Corbet <corbet@lwn.net>, 
+	David Howells <dhowells@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	keyrings@vger.kernel.org, 
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
+	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: [PATCH] kexec: Include kernel-end even without crashkernel
-MIME-Version: 1.0
 
-Certain versions of kexec don't even work without kernel-end being
-added to the device-tree. Add it even if crash-kernel is disabled.
+On Mon, Apr 21, 2025 at 7:48=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> On Mon, Apr 21, 2025 at 3:04=E2=80=AFPM Paul Moore <paul@paul-moore.com> =
+wrote:
+> > On Mon, Apr 21, 2025 at 4:13=E2=80=AFPM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > > On Wed, Apr 16, 2025 at 10:31=E2=80=AFAM Blaise Boscaccy
+> > > <bboscaccy@linux.microsoft.com> wrote:
+> > > >
+> > > > > Hacking into bpf internal objects like maps is not acceptable.
+> > > >
+> > > > We've heard your concerns about kern_sys_bpf and we agree that the =
+LSM
+> > > > should not be calling it. The proposal in this email should meet bo=
+th of
+> > > > our needs
+> > > > https://lore.kernel.org/bpf/874iypjl8t.fsf@microsoft.com/
+> >
+> > ...
+> >
+> > > Calling bpf_map_get() and
+> > > map->ops->map_lookup_elem() from a module is not ok either.
+> >
+> > A quick look uncovers code living under net/ which calls into these API=
+s.
+>
+> and your point is ?
 
-Signed-off-by: Ben Collins <bcollins@kernel.org>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/powerpc/kexec/core.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+Simply the observation that the APIs you've mentioned are currently
+being used by code living under net/; you're free to take from that
+whatever you will.
 
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index 00e9c267b912f..7b5958c37f702 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -22,6 +22,8 @@
- #include <asm/setup.h>
- #include <asm/firmware.h>
-=20
-+#define cpu_to_be_ulong __PASTE(cpu_to_be, BITS_PER_LONG)
-+
- #ifdef CONFIG_CRASH_DUMP
- void machine_crash_shutdown(struct pt_regs *regs)
- {
-@@ -136,17 +138,10 @@ int __init overlaps_crashkernel(unsigned long start, =
-unsigned long size)
- }
-=20
- /* Values we need to export to the second kernel via the device tree. */
--static phys_addr_t kernel_end;
- static phys_addr_t crashk_base;
- static phys_addr_t crashk_size;
- static unsigned long long mem_limit;
-=20
--static struct property kernel_end_prop =3D {
--	.name =3D "linux,kernel-end",
--	.length =3D sizeof(phys_addr_t),
--	.value =3D &kernel_end,
--};
--
- static struct property crashk_base_prop =3D {
- 	.name =3D "linux,crashkernel-base",
- 	.length =3D sizeof(phys_addr_t),
-@@ -165,8 +160,6 @@ static struct property memory_limit_prop =3D {
- 	.value =3D &mem_limit,
- };
-=20
--#define cpu_to_be_ulong	__PASTE(cpu_to_be, BITS_PER_LONG)
--
- static void __init export_crashk_values(struct device_node *node)
- {
- 	/* There might be existing crash kernel properties, but we can't
-@@ -190,6 +183,15 @@ static void __init export_crashk_values(struct device_=
-node *node)
- 	mem_limit =3D cpu_to_be_ulong(memory_limit);
- 	of_update_property(node, &memory_limit_prop);
- }
-+#endif /* CONFIG_CRASH_RESERVE */
-+
-+static phys_addr_t kernel_end;
-+
-+static struct property kernel_end_prop =3D {
-+	.name =3D "linux,kernel-end",
-+	.length =3D sizeof(phys_addr_t),
-+	.value =3D &kernel_end,
-+};
-=20
- static int __init kexec_setup(void)
- {
-@@ -200,16 +202,17 @@ static int __init kexec_setup(void)
- 		return -ENOENT;
-=20
- 	/* remove any stale properties so ours can be found */
--	of_remove_property(node, of_find_property(node, kernel_end_prop.name, NUL=
-L));
-+	of_remove_property(node, of_find_property(node, kernel_end_prop.name,
-+						  NULL));
-=20
- 	/* information needed by userspace when using default_machine_kexec */
- 	kernel_end =3D cpu_to_be_ulong(__pa(_end));
- 	of_add_property(node, &kernel_end_prop);
-=20
-+#ifdef CONFIG_CRASH_RESERVE
- 	export_crashk_values(node);
--
-+#endif
- 	of_node_put(node);
- 	return 0;
- }
- late_initcall(kexec_setup);
--#endif /* CONFIG_CRASH_RESERVE */
---=20
-2.49.0
+> Again, Nack to hacking into bpf internals from LSM,
+> module or kernel subsystem.
 
+I heard you the first time and rest assured I've noted your general
+objection regarding use of the BPF API.  I'm personally still
+interested in seeing a v3 before deciding on next steps as there were
+a number of other issues mentioned during the v2 review that need
+attention.  I would encourage you to continue to participate in future
+reviews of Hornet, but of course that is entirely up to you.  In the
+absence of any additional review feedback, I'll preserve your NACK if
+we ever get to a point that your comments are worth mentioning.
 
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---nzde7snpamx2jdcs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHAL4ACgkQXVpXxyQr
-Is/Rdw//aZ/gDOUiLOgJS8j1ko2eGjIzxYlBW03r8PuxmJYsvyE2NQafHwyBcZIW
-7LgYOCArrlqW8hJJN0bU9fPEqgb/pbsQZWdNlGQlgXL/Q6mmQCunEzdPiyXCuduf
-kZZKYy6J0h4uxcA3r9zlPbwfePgC279IS3cHWDhQW9+KX/1VatTgQCa9ouMaBuLm
-l4QZfLU8lBkZhUT6uZ9xk5977s0uUN++30VTNujVAgW8jFQmkmoScVuj40GsdnuL
-MMi1Q7PQSgsM9sjAtTczAo6b5VWysSc4cqZFbZYRPk72E+heGptKxngVo84It7a1
-jFozTTQycO9jp8x4k6ootp4xmn+yM2x5LqAfXy9lwE5QCRG1PjSQJsXupWGW3bMT
-URa3zqNySf3yhmCxi0pHXhU0ZNhUpFX7IwfMEouZR8qcqOCarZ9PXNXp7dordh/L
-Lpi9MEJx8HZG46+TxFAK1QGwv3hY7K1L7yAGwt7IPr/tR8dDXFn1FN0AJ+pPkmiN
-IJ7UGlNZliwvr4CzB7CjH2hwi528tXfoBgR2xp9cKUuEnweyFKXPtCpcYRI4Z6xq
-lDzmRTBk2u/Re/uXzziLOPciUUxjNTEl0lEuJ9pHNAtcHD+4dh0u07sGEopWlf6h
-oZtck4zNVZQh6ak+nvXuf44c5RDqvYaQkclumtE6GBzFpjZeh+g=
-=oqyi
------END PGP SIGNATURE-----
-
---nzde7snpamx2jdcs--
+--
+paul-moore.com
