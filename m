@@ -1,152 +1,142 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6CB283687
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AF927CCEB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342578; cv=none; b=ae3QxGPFcLBrL7c8ZTMNidZPomJcrrQx7Zs4JwBf5Euepta4YbafvSFyrpHeH+eoTr8zKsRf7/MXjXZpycyKyY+IFgIaSXi4UnO53c9us+p88VVtbgFBNadAcyDZnAdm5zvJm4C9Q1haM/72DWvhfBjadiRd3ZkeMhu/NJrshLI=
+	t=1745342698; cv=none; b=K/x7tiZ2uXcSqZghUOvVimla7xLjk3qFkSauQcEI3YHnt/DphwOTbj7xLYmkMqaMfAJAXDkU9JSxHQ55oxQDqNpU13bVPbIVWZY+jhXvmmcQWDpdar1OCN6RfNAc52TpXQqYibUe2GcRXiDcmHd46mJD+AGr6EM8UCMFmc/6BAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342578; c=relaxed/simple;
-	bh=Qr1Rn1Gw8HPlXNP84l9SBWdiWFex1cDl2x/hEm+oxLk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=o6Iv/Jo4v2pngG1tjX5ltaB6r9OHe13U9J3O3orA/zMweIDX6zomxsf6Ud0alAFoucDecv2bLqGv50a+A1ZlVEr7JuzrTvgTk8yxM1dPJr7FSuKWMVmhASksSA6m/v2OeqBK6szOPr1Jzhqp/j0cKl+ZksJgp7LdY1GEsr31Le8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N8rc310s; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745342698; c=relaxed/simple;
+	bh=G5zu0JSLIZnjygNaAbrN9TY+IzqeznYDI3lTQI9xByA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKTSTcC0Fp9OShLgUsBzWWkwGLtzLoK5L9V10rPbM07kkbzY/1rAJdUsoHfPJG8r97n9WeMzozjp9mwmencRTvIpwaFunUuKvFhmIFf2RVqS11AqL7yE2DDRMxoWyDFd9B3GlzjViCzhM6Y2EK6bp96YLzRAwsjE6gI1uDBmEx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bkqgBWMy; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N8rc310s"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so4293818a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745342576; x=1745947376; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+fbHIfH/VhDWabe05jkOaAOJ71KncMy1Sa68MUh9AoU=;
-        b=N8rc310s08uMsW6+gsmFNKpU3rA+vd+xPqrwJvBE2DyBnGRz9pfgwA11qAcpLBqHnG
-         Bl+si5YM+X1vWOeFV4eJ88mxYKCW6U7JsPMasPgHN9Boe0GuVs7KICeecNfiDU48jzr3
-         D40SnCZ2sMt7P9rrj2Nt+hENOfGcamwfQHU3YNBJxv8Vpy0hzNC/F7vbMVbkMrJPuL30
-         e/p8jmtjgXPRRCEQRZ2npWCO0dEBuNukGLE4Kb+4Tb8IMErzUrqxXX3HrFzqJGv7/K2I
-         FAWRZsK6E6XrNKChlINaQZ9Gtd1QXzA0a1aYxsb1I9LrsWpRe/1cMjJ0wNP31XsZ4yas
-         Vk4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745342576; x=1745947376;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+fbHIfH/VhDWabe05jkOaAOJ71KncMy1Sa68MUh9AoU=;
-        b=IT6OTKD7FyTqyAn38iFHgvgPWb5zus9QbWZRihDmn5m/5UQGzNDHEhxamgzk+IpcRZ
-         wU1YKfic1RvhL3ejc1RzYF+162deo+lhUY5bjyFqX8Dq4P8vq8eoBfsif0qoJDzwJ7/F
-         W8P8zayKKY97mEd8xxrGnKcbjyjuPqCVMqoj7592APEWK4LoTyAWSyCnJRanik5kOHoI
-         8RR5l2YJO3mS72OaWPBCGn6pRA4N5aneSUz3Nywmjr5XekkOnJkge/AsOiDMq7xNs+Ez
-         kq4xWV0ZRkw6I+GyWKGgcMlIg5OZGPpzbl94BAH+htiwU5P5QapyquHEjfHQdPsddZng
-         iJkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJMORtFOeMXgGy42OFPJzGwmmRpJqx9jcyl/hyZbkS9V3DuU3rcICZ2Pq4WtbuiXeW8WfG+F53sW3amQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+u8UtBTzoEj9n/8AQsmO6Vv3fbbZxh68qZFgWtZiCHDlyU3zN
-	Z76yoLdXYW74NPYdgtf93eEnQ6xBDHLlpvJ6CGQJlTFx+ejzgSVwGXPqy0YTpbGxWWjFcsSeDCT
-	1xw==
-X-Google-Smtp-Source: AGHT+IHa5jb9FZXUwvtLFklVwtHpef81Kg/RSVknMgwLGgrvFXB8MhtEF5SZSJEqndiks1m/qfXQMpTNKi4=
-X-Received: from pjm11.prod.google.com ([2002:a17:90b:2fcb:b0:308:65f7:9f24])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a4e:b0:301:1d9f:4ba2
- with SMTP id 98e67ed59e1d1-3087bbbd12cmr22675120a91.28.1745342576491; Tue, 22
- Apr 2025 10:22:56 -0700 (PDT)
-Date: Tue, 22 Apr 2025 10:22:54 -0700
-In-Reply-To: <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bkqgBWMy"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7570240E01ED;
+	Tue, 22 Apr 2025 17:24:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id lpktIz2xC9OV; Tue, 22 Apr 2025 17:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745342688; bh=fHUhRPQeLb6MEC9JiG1WS/e5XF0k0kr/nU/zoi8PWGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bkqgBWMyLJAzpDzQbOlz4ocgmddTEs49Ilbl2J4EtJWMbKS6M8L6/JuvkDQLnBXxI
+	 CuU6FOulP5wtOdbiRbI4z7MZu2CkKSDPfgiIX3b9/eAZNZAbc4xfnD7++vSoY+Kqwe
+	 0JhIJzupG/+yMyqcj6o/c0a5mgVUHW9xTdJe5QPESHAHTjo2zecWyFmJ3mn+j1Bo7d
+	 TWYhCLVnQyNqsERSgSlYO6Q1mCtxSpLqc3KIfyx1Maf7BFLztNz4aNgDlUq5G/8/DC
+	 zrukqaLrULhOTq22dtdye75l58EGAPVmlKs42WWxh9Bnl88DDTp0t4LkpH73PDcN5Q
+	 Pj7o7TyPYLmSrl4p1r0JVWL0DkKQPCT+I7YF46Zy39RZRWPW9VXS9CA7ZX5SNGrTxY
+	 KDmw6GgdRvVs48JXz5RpPkz/hB83htja80LhN+eQ6RXxHGmJ5nv5h2auzKSB9UBDTM
+	 h1h5B2SU7BwFnKUzZRol1vn/IonmVsd8sRqFPeAicQs9O/NrgPjsVG7h8267z+H2z2
+	 wwFpumpZYn5jSpNCbjdEKVPcBtX7w+Voqs/rHmJ2ugR/KoNxAIlwaReXb8rUqGZ2CU
+	 ySgWvSZB4JChzagYpq4bcP8sxDDlFLB6Ye8iweuzWGgdPhRvpBm675SRFsXuE7NfXE
+	 0Ro0fzoeg92Dfp11JmocslGM=
+Received: from rn.tnic (unknown [78.130.214.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id E0B3D40E01CF;
+	Tue, 22 Apr 2025 17:24:37 +0000 (UTC)
+Date: Tue, 22 Apr 2025 19:25:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 01/16] x86/bugs: Restructure MDS mitigation
+Message-ID: <20250422172537.GCaAfREUU_9RGUwtqK@renoirsky.local>
+References: <20250418161721.1855190-1-david.kaplan@amd.com>
+ <20250418161721.1855190-2-david.kaplan@amd.com>
+ <20250418204243.GQaAK5Q807BYWlABKV@fat_crate.local>
+ <LV3PR12MB9265B16CFC9D3E02C1159DEA94B92@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250422081901.GAaAdQ9aB5KTI5INO7@renoirsky.local>
+ <LV3PR12MB926519BA499E7648F97B569794BB2@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250331143710.1686600-1-sashal@kernel.org> <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz> <aAKJkrQxp5on46nC@google.com>
- <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local> <aAKaf1liTsIA81r_@google.com>
- <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
-Message-ID: <aAfQbiqp_yIV3OOC@google.com>
-Subject: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu: Don't clear X86_FEATURE_LAHF_LM
- flag in init_amd_k8() on AMD when running in a virtual machine
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>, 
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com, 
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com, 
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB926519BA499E7648F97B569794BB2@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-+Paolo
-
-On Fri, Apr 18, 2025, Borislav Petkov wrote:
-> On Fri, Apr 18, 2025 at 11:31:27AM -0700, Sean Christopherson wrote:
-> > IMO, this is blatantly a QEMU bug (I verified the behavior when using "kvm64" on AMD).
-> > As per QEMU commit d1cd4bf419 ("introduce kvm64 CPU"), the vendor + FMS enumerates
-> > an Intel P4:
-> > 
-> >         .name = "kvm64",
-> >         .level = 0xd,
-> >         .vendor = CPUID_VENDOR_INTEL,
-> >         .family = 15,
-> >         .model = 6,
-> > 
-> > Per x86_cpu_load_model(), QEMU overrides the vendor when using KVM (at a glance,
-> > I can't find the code that actually overrides the vendor, gotta love QEMU's object
-> > model):
+On Tue, Apr 22, 2025 at 02:32:07PM +0000, Kaplan, David wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
 > 
-> LOL, I thought I was the only one who thought this is madness. :-P
-
-Yeah, I've got backtraces and I still don't entirely understand who's doing what.
-
-> >     /*
-> >      * vendor property is set here but then overloaded with the
-> >      * host cpu vendor for KVM and HVF.
-> >      */
-> >     object_property_set_str(OBJECT(cpu), "vendor", def->vendor, &error_abort);
-> > 
-> > Overriding the vendor but using Intel's P4 FMS is flat out wrong.  IMO, QEMU
-> > should use the same FMS as qemu64 for kvm64 when running on AMD.
-> > 
-> >         .name = "qemu64",
-> >         .level = 0xd,
-> >         .vendor = CPUID_VENDOR_AMD,
-> >         .family = 15,
-> >         .model = 107,
-> >         .stepping = 1,
-> > 
-> > Yeah, scraping FMS information is a bad idea, but what QEMU is doing is arguably
-> > far worse.
+> > -----Original Message-----
+> > From: Borislav Petkov <bp@alien8.de>
+> > Sent: Tuesday, April 22, 2025 3:19 AM
+> > To: Kaplan, David <David.Kaplan@amd.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>; Peter Zijlstra <peterz@infradead.org>;
+> > Josh Poimboeuf <jpoimboe@kernel.org>; Pawan Gupta
+> > <pawan.kumar.gupta@linux.intel.com>; Ingo Molnar <mingo@redhat.com>; Dave
+> > Hansen <dave.hansen@linux.intel.com>; x86@kernel.org; H . Peter Anvin
+> > <hpa@zytor.com>; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v5 01/16] x86/bugs: Restructure MDS mitigation
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Sun, Apr 20, 2025 at 09:00:56PM +0000, Kaplan, David wrote:
+> > > I'm not sure this is right, it certainly diverges from upstream where
+> > > mds is only marked as mitigated if the CPU is actually vulnerable to
+> > > mds.  I also think that imo it generally does not make sense to mark a
+> > > bug as mitigated if the CPU isn't vulnerable (seems to increase risk
+> > > of future bugs in the logic).
+> >
+> > Hmm, it still looks weird to me. So let's imagine the CPU is NOT affected by MDS.
+> > The select function will leave it to OFF.
+> >
+> > Then, some other select function will set verw_mitigation_selected.
+> >
+> > Now, the mds_update_mitigation() comes in, X86_BUG_MDS is still NOT set so
+> > we leave mds_mitigation to OFF even though it *technically* gets mitigated?
+> >
+> > I guess the reporting aspect does make sense - we don't want to start reporting
+> > MDS-unaffected CPUs as being MDS mitigated because they're not
+> > - not really. We just use their mitigation to mitigate other vulns.
+> >
+> > Then this comment which explains the logic of verw_mitigation_selected:
+> >
+> >         /* If TAA, MMIO, or RFDS are being mitigated, MDS gets mitigated too. */
+> >
+> > should probably say that if the CPU is affected by MDS *in any way*
+> > - the BUG bit is set - then it gets full mitigation.
+> >
+> > And this should be the case for all inter-related VERW mitigations: if the CPU is in
+> > any way affected, it gets mitigated too. If it is not, then it gets only *reported* that it
+> > is not affected but the mitigation technique can be used for others.
+> >
+> > Does that make sense?
+> >
 > 
-> Ok, let's fix qemu. I don't have a clue, though, how to go about that so I'd
-> rely on your guidance here.
+> I think that's correct, although I'd argue the code makes that rather obvious because mds_update_mitigation() immediately returns if the CPU is not affected by MDS.  So you only get an mds mitigation if you are affected by the BUG bit.
 
-I have no idea how to fix the QEMU code.
+Right, ok.
 
+I'll add a link to this subthread when applying so that we have some
+reference to this.
 
-Paolo,
+Thx.
 
-The TL;DR of the problem is that QEMU's "kvm64" CPU type sets FMS to Intel P4,
-and doesn't swizzle the FMS to something sane when running on AMD.  This results
-in QEMU advertising the CPU as an ancient K8, which causes at least one *known*
-problem due software making decisions on the funky FMS.
+-- 
+Regards/Gruss,
+    Boris.
 
-My stance is that QEMU is buggy/flawed and should stuff a FMS that is sane for
-the underlying vendor for kvm64.  I'd send an RFC patch, but for the life of me
-I can't figure what that would even look like.
-
-> Because I really hate wagging the dog and "fixing" the kernel because something
-> else can't be bothered. I didn't object stronger to that fix because it is
-> meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
-> apparently not that awful-ish...
-
-FWIW, I think splattering X86_FEATURE_HYPERVISOR everywhere is quite awful.  There
-are definitely cases where the kernel needs to know if it's running as a guest,
-because the behavior of "hardware" fundamentally changes in ways that can't be
-enumerated otherwise.  E.g. that things like the HPET are fully emulated and thus
-will be prone to significant jitter.
-
-But when it comes to feature enumeration, IMO sprinkling HYPERVISOR everywhere is
-unnecessary because it's the hypervisor/VMM's responsibility to present a sane
-model.  And I also think it's outright dangerous, because everywhere the kernel
-does X for bare metal and Y for guest results in reduced test coverage.
-
-E.g. things like syzkaller and other bots will largely be testing the HYPERVISOR
-code, while humans will largely be testing and using the bare metal code.
+https://people.kernel.org/tglx/notes-about-netiquette
