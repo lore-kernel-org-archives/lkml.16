@@ -1,148 +1,120 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60438284B5C
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057295FB95
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745332911; cv=none; b=nkEeCruTZiupXPgCOtBZ64YAgNWJvFvjd5plWu32/wEaFTKI3XeJ119tfmzVovbhlNOpAbHkZo19bFIg1PtQKc5sf8Sc9Z4LCoMZy7RFuj7JUguyfsyfRQlSJQWYXmfj8QkDssjhgc2wgR/5G95npyqas9YTCyuoPLBkaHRzT7s=
+	t=1745333011; cv=none; b=L85nmUE5/dHsUdYmmEC8ky+k0vicUSBye7E7kApdszOjFUz9BV/cM6k0wT++u9lw+KM1MaxsorU0gRLFJbovNtqfSwB1gus7cUerWidcb1g3ExfYfKagTgr+55eqj7YW5Gi7Dc4XBwDbqxQrNs3zhx6qIVkX+fY5WvyStrsvaL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745332911; c=relaxed/simple;
-	bh=zHWh4uSIApkmGP5MhyX7KcUm0obTMv71a5TDLmbBQ2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpQ+/gkUDpyU3vvEXMvL6IRnPo5gUxW3ZtSgrFq0Y77PuVNpWS5MljtGvYrJOH4oVl22Xhy2Cdh5KPUgvReGgSVK0NOJ8HaGeBvYe++gJp2So2I/l4M3FDVgRgnIMNUp2vK/T7huqWPuoysjV38H3bhKa67Y+1TPlp3UaE96Ys0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KkmYdZRA; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745333011; c=relaxed/simple;
+	bh=LJ81ySCYhjh27+riOuL7JsTqHpiQvvFaxk4COY0scGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NQG5JU95QbGStFhBqIibddRvLKlj5apHbG7NnGTT7pKUfrCQaNja2Dvpo0KcZGh3FmcYRv/BD0ZKo1lE8cCXY+uC68aLVx+lgAqfpG4ZZtgIxe4KTprN22CFv2jbW+2TtKtNGc+8iECs25i3ytxdjIq+5a4eQrPY7mWF4+cz12o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DrBbjy/B; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KkmYdZRA"
-Date: Tue, 22 Apr 2025 07:41:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745332896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vyd+N7ix2s2qiHf7u+8PYPa1V/Nz2f9Sgk8z0rzIogw=;
-	b=KkmYdZRAY57gqhIHaTcv3T4asZSyWxp+41awkJRHBMwHupZ+Ny0P8O25Uj98mqp2/XNb5v
-	zgkEyJxfgTh7/dSUqRKZapHjKrUx8FURAEQcPkl1WQ4KndYhUNMmqHi1i1JsRoKRF6YSs7
-	hQ6pA4setMf7aM/il45tyGApQfXsNCY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, hughd@google.com, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, len.brown@intel.com,
-	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
-	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
-	pavel@kernel.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical
- swap slots
-Message-ID: <aAeqlE95yQA16HT3@Asmaa.>
-References: <20250407234223.1059191-1-nphamcs@gmail.com>
- <20250407234223.1059191-4-nphamcs@gmail.com>
- <20250408141555.GA816@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DrBbjy/B"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af590aea813so5849653a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:43:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745333009; x=1745937809; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6eckKDMmSuKFTzro6yB1ZcThs4CchkkZ6Dh7/jmsEGc=;
+        b=DrBbjy/BSPlJJr/GfhMad5hH/NT/Sg4n8KjmJSvlXTAZLEZ86Zfq1Va96OMyBRtmEf
+         hbkUvfMhCj8Ufv1M87yZxLi8ABJVPusq6CmociDWV2Dkbe2LgFAGD5f+ix92hlCXpNRs
+         FlzPLChHm7SFA9x+upgh1rdIrpnWs/06DHoROBFE8tqOX1edrU1p7Cb5YqheyCEXqsGE
+         YtOTmhrnRP+pnHm0K5A9xL8hvlbM0GYfK3a+jcNleCvz09hMYVkcp76Z7ch2ux+ehymq
+         8sF/AjxbefKyPt5s3nDiqLSMJ/TUPP7A+rb5KC2Wfq2W2cmpOv/SMXz9VmEjo4GEsfWb
+         QAeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745333009; x=1745937809;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6eckKDMmSuKFTzro6yB1ZcThs4CchkkZ6Dh7/jmsEGc=;
+        b=eydYsJbVYmLiAJwPK1Qi+J8mBccWA+uNc0BXwKZdnU803Ne6jHVFkc9I/C2OvFgg5h
+         fxvXvu1zDRRcHWza9fvtINWrebdfp/x6LFYBDl7xCZ8KPCJx6kZwkaG0sc97oWN5pfID
+         hOZZxYG8mKbCbFW9hQranVHbUlmMMvo1itaU+hqqIFTG+Fq7MgxRdLgV65s6+lAKTQqD
+         oPxsj8W+Qks8rv9QmUCUeV+mH2YAmuE5KNswurwnF7TngEJssD3vpvjZOTs1d637GjpQ
+         LbobTJgM7nbcRYhCRFF0fE/iyXiCQnKGDdR5ImbBCQXi1gNs76J9HxmBccKh/dXTjRSg
+         9IOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWv3NgkaKMTURkSOpXvFzmQVnuER+wJlAooKR7leg7HuX8iI1/3BoKpqFv2do1IZ6BwzvKYUwT8PKl0trU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbwC5X1VYqTvAhM00aTNs6QoqvCF3xM8AxGEJ+mfD72ey0yrs0
+	KWl9szEL5qMES9X1Elxb4GgMkXGGqddQxnqRv0SO+nTCXvrAFNrmFkqPxkCwzebrIWsk8OAcdTY
+	gAGfZLk5F2s7tM+HZk9Epg7y0Jx6YBuslKZEt
+X-Gm-Gg: ASbGncuoMChg4W0eVoP7fnsU5OvHYSStsdNW2IsoOklQc0AkAZkNg6bVoZUf4S6K7WM
+	gjnSUmV399TYopjtJOSCidMUAn04CnVBfSLt6rgbsEryw53xeEQ9PMUYho6NXSDrM6fVjR82INY
+	0FIz6cbEocgE8H2yLuzKntjEi+sDc3bOG+bE6id3X6nqGbZgxch3sSInnoz994Lpg=
+X-Google-Smtp-Source: AGHT+IEMBJHGqdBdhaSKOmXeGG1tXBALAWr21yAGW4a9jZMoK/NIGLNrkodjNR5e/EOkzdm1rmdlcQ4lveOWH29CAO4=
+X-Received: by 2002:a17:902:db02:b0:21f:58fd:d215 with SMTP id
+ d9443c01a7336-22c50cfaa36mr210689785ad.11.1745333009069; Tue, 22 Apr 2025
+ 07:43:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408141555.GA816@cmpxchg.org>
-X-Migadu-Flow: FLOW_OUT
+References: <6807876f.050a0220.8500a.000f.GAE@google.com> <20250422-flogen-firmieren-105a92fbd796@brauner>
+In-Reply-To: <20250422-flogen-firmieren-105a92fbd796@brauner>
+From: Marco Elver <elver@google.com>
+Date: Tue, 22 Apr 2025 16:42:52 +0200
+X-Gm-Features: ATxdqUFIFyu6PcnxydXd-sfMerWWJ7SU96EUcuRo5wELlKkcu-wX78VIJvj3cZU
+Message-ID: <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
+Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu / umount_tree
+To: Christian Brauner <brauner@kernel.org>
+Cc: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 08, 2025 at 10:15:55AM -0400, Johannes Weiner wrote:
-> On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
-> > In preparation for swap virtualization, add a new type to represent the
-> > physical swap slots of swapfile. This allows us to separates:
-> > 
-> > 1. The logical view of the swap entry (i.e what is stored in page table
-> >    entries and used to index into the swap cache), represented by the
-> >    old swp_entry_t type.
-> > 
-> > from:
-> > 
-> > 2. Its physical backing state (i.e the actual backing slot on the swap
-> >    device), represented by the new swp_slot_t type.
-> > 
-> > The functions that operate at the physical level (i.e on the swp_slot_t
-> > types) are also renamed where appropriate (prefixed with swp_slot_* for
-> > e.g). We also take this opportunity to re-arrange the header files
-> > (include/linux/swap.h and swapops.h), grouping the swap API into the
-> > following categories:
-> > 
-> > 1. Virtual swap API (i.e functions on swp_entry_t type).
-> > 
-> > 2. Swap cache API (mm/swap_state.c)
-> > 
-> > 3. Swap slot cache API (mm/swap_slots.c)
-> > 
-> > 4. Physical swap slots and device API (mm/swapfile.c).
-> 
-> This all makes sense.
-> 
-> However,
-> 
-> > @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
-> >  	return atomic_long_read(&nr_swap_pages);
-> >  }
-> >  
-> > -extern void si_swapinfo(struct sysinfo *);
-> > -swp_entry_t folio_alloc_swap(struct folio *folio);
-> > -bool folio_free_swap(struct folio *folio);
-> > -void put_swap_folio(struct folio *folio, swp_entry_t entry);
-> > -extern swp_entry_t get_swap_page_of_type(int);
-> > -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
-> > -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
-> > -extern void swap_shmem_alloc(swp_entry_t, int);
-> > -extern int swap_duplicate(swp_entry_t);
-> > -extern int swapcache_prepare(swp_entry_t entry, int nr);
-> > -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
-> > -extern void swapcache_free_entries(swp_entry_t *entries, int n);
-> > -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-> > +void si_swapinfo(struct sysinfo *);
-> > +swp_slot_t swap_slot_alloc_of_type(int);
-> > +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
-> > +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
-> > +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
-> >  int swap_type_of(dev_t device, sector_t offset);
-> > +sector_t swapdev_block(int, pgoff_t);
-> >  int find_first_swap(dev_t *device);
-> > -extern unsigned int count_swap_pages(int, int);
-> > -extern sector_t swapdev_block(int, pgoff_t);
-> > -extern int __swap_count(swp_entry_t entry);
-> > -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t entry);
-> > -extern int swp_swapcount(swp_entry_t entry);
-> > -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
-> > +unsigned int count_swap_pages(int, int);
-> > +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
-> >  struct backing_dev_info;
-> > -extern int init_swap_address_space(unsigned int type, unsigned long nr_pages);
-> > -extern void exit_swap_address_space(unsigned int type);
-> > -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
-> > +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot);
-> >  sector_t swap_folio_sector(struct folio *folio);
-> 
-> this is difficult to review.
-> 
-> Can you please split out:
-> 
-> 1. Code moves / cut-and-paste
-> 
-> 2. Renames
-> 
-> 3. New code
-> 
-> into three separate steps
+On Tue, 22 Apr 2025 at 15:43, 'Christian Brauner' via syzkaller-bugs
+<syzkaller-bugs@googlegroups.com> wrote:
+>
+> On Tue, Apr 22, 2025 at 05:11:27AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
+> > compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
+>
+> Benign, as this would be detected by the changed sequence count of
+> @mount_lock. I hope we won't end up with endless reports about:w
+> anything that we protect with a seqlock. That'll be very annoying.
 
-+1, I agree with the fundamental change (and is something that I
-attempted before), but it's really difficult to parse :)
+Seqlocks are generally supported, but have caused headaches in the
+past, esp. if the reader-side seqlock critical section does not follow
+the typical do-seqbegin-while-retry pattern, or the critical section
+is too large. If I read this right, the
 
-Also, weren't the swap slots scheduled for removal or is my brain making
-stuff up again?
+  struct dentry *mountpoint = m->mnt_mountpoint;
+
+is before the seqlock-reader beginning with "*seqp =
+read_seqcount_begin(&mountpoint->d_seq);" ?
+
+In fact, a lot of the special seqlock rules for KCSAN were conceived
+due to irregular seqlock patterns in fs/ - I wouldn't be surprised
+there still is the odd false positive here or there. There have also
+been recent improvements to KCSAN's seqlock handling, but 6.15-rc*
+should have those fixes already.
