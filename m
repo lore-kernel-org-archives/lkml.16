@@ -1,37 +1,37 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EDE284697;
-	Tue, 22 Apr 2025 13:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF2528CF5E;
+	Tue, 22 Apr 2025 13:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328303; cv=none; b=FbdXgxcvmMinsb3l7easiTrp2et02XeK9XoteKCSW3wXoVPm6b1q7W/VLD+yQh50nrXVYcGwK9JmXLx/p94dbFKvoeFT0N8X37tAU5LOUUkRYaAopuB1aGBGAIl2CQ76XsTEvDhz/wXeer6fmbGe6utMxi/NkNLMd/2kuQJHXtk=
+	t=1745328304; cv=none; b=gbRMiRcCcslu8dWqa2Ylz8uMNTOJhkhVDHI1GfcIsIUYNuk4Hxi8HUHhKTDT5hCjHivM6OWRtdorEe0pyPCRknyGTiSmx8IegasPwQbKh6lPmIuKG+EJSbJJojunv5FaW6Jr8bH+89B0pzCKojiZqnvJyDhhCx4tpG7dJTLGMes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328303; c=relaxed/simple;
-	bh=yOgvjUarO7rmEGYIRDabwo99UOdI5BoGN3q/fBYd0P0=;
+	s=arc-20240116; t=1745328304; c=relaxed/simple;
+	bh=urMTbZlNGsHBI5M2IFITv7N1SGHd3JWNjUImPd8kywA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sYf7BEglzMuLBwtoLPVoPNCQqkImqa9zePpwHQa2jGqQGWUQeOI5wYuQMBBTIUlVbwTJzs+PGGCxOWiENwOBcZYVi7ynIATRe6fERFC8CWbAaRFzsm9ocmY+h2+B3dddzkN5lxVDTyGT3ihKyD44CeKsCCOUmN6DgQE2IJNSb60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=t+33jZHA; arc=none smtp.client-ip=134.0.28.9
+	 MIME-Version; b=FICjK+CLmXId4Owi4Ym00I9AeTk1l7FHHbLya7/U+wf5bPH/+qjiM5p5aVnW0RxyoD4O63Afb0g8TXsQljp+7ObTzSglBThVPgsTp8pDzKC/lVxsFtLI1MRbcRzyomF4inv/w7bJd2FbvW5C1cSA98naN971Q+5BR8v0TfsYep0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=VqK3lDo8; arc=none smtp.client-ip=134.0.28.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="t+33jZHA"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="VqK3lDo8"
 Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout4.routing.net (Postfix) with ESMTP id BB7981005F7;
-	Tue, 22 Apr 2025 13:24:53 +0000 (UTC)
+	by mxout1.routing.net (Postfix) with ESMTP id 9154A3FEAB;
+	Tue, 22 Apr 2025 13:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1745328293;
+	s=20200217; t=1745328294;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5RcZIjIwx1s6Wcv16nJayJJUai7Sa7nACbdnFD1drq0=;
-	b=t+33jZHAliVR9d3XvK+repuuoaox4NEdkjDkAw8/cmKob5ZBzZ6R2zsFgJDhq1ZKLaOUAf
-	5HjfW0FrfQ9BqLBXEFKl2ZqIziRN/NuzCoBodkWoMYscXdN2k/tTP5NGMxGh2XaSCjlr0Y
-	oVoZxw3DzF6R5Vu2Vg4L3/Rz/uNJD+c=
+	bh=T4cXuAtgUs1MzeQPNLofj0xLDBzZAy2dVcqVMZRNRe8=;
+	b=VqK3lDo8PVhYpULBdkKMU4E6PXwrIZj4LSWhXDcNiP24772PkxdJqo9vQn9ZC4jmK2tw8g
+	f4qBw+UJHpRKnS+9BYifvFSGYysl+xCYp1FD22g4ZeZMdwnI+7K/lpQmkghWOKFAUaeWyd
+	bc1svMrCnNlPQYKu/lGtpVZXjJxoIVQ=
 Received: from frank-u24.. (fttx-pool-217.61.156.53.bambit.de [217.61.156.53])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id D86A980318;
-	Tue, 22 Apr 2025 13:24:52 +0000 (UTC)
+	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id ABAC6801F5;
+	Tue, 22 Apr 2025 13:24:53 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-phy@lists.infradead.org
-Subject: [PATCH v4 4/8] dt-bindings: phy: mtk-xs-phy: support type switch by pericfg
-Date: Tue, 22 Apr 2025 15:24:27 +0200
-Message-ID: <20250422132438.15735-5-linux@fw-web.de>
+Subject: [PATCH v4 5/8] dt-bindings: mfd: syscon: Add mt7988-topmisc
+Date: Tue, 22 Apr 2025 15:24:28 +0200
+Message-ID: <20250422132438.15735-6-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250422132438.15735-1-linux@fw-web.de>
 References: <20250422132438.15735-1-linux@fw-web.de>
@@ -64,47 +64,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: e0e4b4d5-9fca-452c-b776-a545c7a43a4d
+X-Mail-ID: b8e8432c-90f6-4c86-b7f0-98af8c167af7
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add support for type switch by pericfg register between USB3/PCIe.
+Add compatible for Mediatek mt7988 topmisc syscon.
+This hardware block contains 2 functional blocks
+
+- a powercontroller which is not needed (switched by atf)
+- a multiplexer for high-speed Combo-Phy
+
+This compatible is only for the multiplexer part.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
-v4:
-- changes based on comments from Krzysztof
-- change to phy type configuration controller/register
----
- .../devicetree/bindings/phy/mediatek,xsphy.yaml   | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
-index 3b5253659e6f..0bed847bb4ad 100644
---- a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
-@@ -151,6 +151,21 @@ patternProperties:
-         minimum: 1
-         maximum: 31
- 
-+      mediatek,syscon-type:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        description:
-+          A phandle to syscon used to access the register of type switch,
-+          the field should always be 3 cells long.
-+        items:
-+          - items:
-+              - description:
-+                  Phandle to phy type configuration system controller
-+              - description:
-+                  Phy type configuration register offset
-+              - description:
-+                  Index of config segment
-+                enum: [0, 1, 2, 3]
-+
-     required:
-       - reg
-       - clocks
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index c6bbb19c3e3e..4f3d522bc3de 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -84,6 +84,7 @@ select:
+           - mediatek,mt2701-pctl-a-syscfg
+           - mediatek,mt2712-pctl-a-syscfg
+           - mediatek,mt6397-pctl-pmic-syscfg
++          - mediatek,mt7988-topmisc
+           - mediatek,mt8135-pctl-a-syscfg
+           - mediatek,mt8135-pctl-b-syscfg
+           - mediatek,mt8173-pctl-a-syscfg
+@@ -187,6 +188,7 @@ properties:
+           - mediatek,mt2701-pctl-a-syscfg
+           - mediatek,mt2712-pctl-a-syscfg
+           - mediatek,mt6397-pctl-pmic-syscfg
++          - mediatek,mt7988-topmisc
+           - mediatek,mt8135-pctl-a-syscfg
+           - mediatek,mt8135-pctl-b-syscfg
+           - mediatek,mt8173-pctl-a-syscfg
 -- 
 2.43.0
 
