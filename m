@@ -1,384 +1,462 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2081.outbound.protection.outlook.com [40.107.92.81])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A639A1FC0E6;
-	Tue, 22 Apr 2025 09:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313994; cv=fail; b=VR2j1lFWHtUfS82X3mtsoPjb6xvdWvOQpWTE1Ky8zzf51mcH0+E1Sq72HpMb5CCqEBt1uj6tzh69gjJcvR8Or7cASu9mS+IRpH5Afy+tSrfzte101rTcdW1xSDfmPe+XkZeCmMHLO8tRYD/daceXlSaPcXpbHdxWGhjkLCrju0w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313994; c=relaxed/simple;
-	bh=WvSmCmATlv/IvB3jY+YouK6FRwwSYGva4E/S2FiwsuU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FWREVN9C/CzHS2u1j/G2FCDp1BXKLFlutyon64kmkMJwGIj2PAfu4RbaDOqNLkfuWCyaYZlT5es0rOCT04lSqCHj7QjXKshkswWHTyODiPjR4I/GEpUVvG7XUrppNUOuR+b6GfoX3Sh67aUh6uk/JX4P5xoBzJsJ0jIiRG/AURg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KD6oHFUi; arc=fail smtp.client-ip=40.107.92.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F214F1D515A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745314075; cv=none; b=DfQXX9+HXcp2Kn6ynRB3KcGS+wavrsE9vIujebuzhjTv7DFNweQl4wae2omzyHJd3GrJcslZfdDkd10Z88ACYBZ09zviprEB7dbw96DT6NKuyo7bmfcTiW3IHhMSQtpLUEzi6KeIvb0+o8T6PMTHd+cZoGcx73D7wm+q4L8J5MU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745314075; c=relaxed/simple;
+	bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=X8AYLPSz4LkhpIefwRc74VtVay9zuegpP25PZrVDgqx+Vt1XH9r4B4ewqNlDQ5ORC+YQo+eTtsyQ2b+o4iWk1rYmDPlnoJjQLwKICgxSkA3kof34i8VIS85fnkFngZ+Xd6mF3rKse0GeqMCek8Mk5iYT7C/krinqgkgOftcu0jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEbB3LV9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KD6oHFUi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QW3u7Koy7aK9LAghWixDj+vG/BQBRcrcYquleHCCh1wFf4bQHlDM1VX+/Ek/7u+YMWEUkPno47H8eb8agn5krxha5kmDZctNL0d1NzYq8wmkCU8ydMEQtbD6mC9POSDB25LohXCWh2af/L1opmziyJtf9cjrJrVALvdKGJK1YGRP/VMjpJw3xNEYkZEPaV5b9qQ9dOZgSW4rEJDCQGaLRPvCIjG8/WXW0FhThLkgmaCnyV8AYzlebgTwTe+GR44+/Q7j4FfsW/yOBQB0gJQfWJiEVPxnD5QYu5f2jeUIAK/UBDIYhkafkNhG77eS4Z8HGBwiNuADhHT55UL6Dh+TJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xg4pNtyqaNKnTtSpf+biT+9xET/FnSHRQO5Xog8MaPo=;
- b=La83+VbHaP/l9Ne0nKmkPXVnOS7wrmcnqw7a9zOhdOPBkiyzVWYYlG/UKVOgda9dGLAwwpX+Cz0DfsCjNTmuKiTXpfGCBccH5ufIValnOehGoWfzXVUkfFOU5RRLPkKe6WI9QAFr5ykHWObppjF/7At5Ox25geRTiNVZIBBfmju0Gr7Ls8aIa6ZyJRrIfM59wS5IeIpOSyK7PVhWt/N5WNBPxF8flPrBqt7ZBUlkzkSqtF8XaZkDv3idwwsFM0IlH7V1euMZy54kY5uoY+zzZRRFDhCVS34QG+cQREfDi4WmJv+dXvbm+3oX3akmP5vgtlpxmgK+bqUD6HodufTAcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xg4pNtyqaNKnTtSpf+biT+9xET/FnSHRQO5Xog8MaPo=;
- b=KD6oHFUiotDQB27W+l+lNx1rX7uZMIaNhN4biuBBgQ7jpq/YfU3iRbDAXyz7PrrelCF0Q736Obu38sL5sHwFIIvn8ugy+67Tbkhmxs7k0+rnmUJP6bxvCkKZlqaxXDBNAwqY86AkbU75i4+3FS95Nx9rDQafZ/lJ3/s6bSm/VyjLdZ8Niv5OXMRnza+k23JvPsI0hvWFDt7/YH092jNgaHsSLri8GcF/lPfoyjxvNeyl7+/SAWogA0/x4nnz84q36bOLHDw3n3J8nMneFx7preauUgOzeS4Sp37TqqdW2kIXZP2Y/EEtxM9DyQ7NIbg0pSCjALNThUZgH/+o7ah1bg==
-Received: from BYAPR01CA0030.prod.exchangelabs.com (2603:10b6:a02:80::43) by
- IA0PR12MB8716.namprd12.prod.outlook.com (2603:10b6:208:485::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 09:26:27 +0000
-Received: from CO1PEPF000044F5.namprd05.prod.outlook.com
- (2603:10b6:a02:80:cafe::99) by BYAPR01CA0030.outlook.office365.com
- (2603:10b6:a02:80::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Tue,
- 22 Apr 2025 09:26:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1PEPF000044F5.mail.protection.outlook.com (10.167.241.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Tue, 22 Apr 2025 09:26:27 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 22 Apr
- 2025 02:26:03 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 22 Apr
- 2025 02:26:03 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.10)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Tue, 22
- Apr 2025 02:26:00 -0700
-From: Mark Bloch <mbloch@nvidia.com>
-To: "David S . Miller" <davem@davemloft.net>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
-	<edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>
-CC: Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
-	"Leon Romanovsky" <leon@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Vlad Dogaru
-	<vdogaru@nvidia.com>, Yevgeny Kliteynik <kliteyn@nvidia.com>, Mark Bloch
-	<mbloch@nvidia.com>
-Subject: [PATCH net-next 3/3] net/mlx5: HWS, Disallow matcher IP version mixing
-Date: Tue, 22 Apr 2025 12:25:40 +0300
-Message-ID: <20250422092540.182091-4-mbloch@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422092540.182091-1-mbloch@nvidia.com>
-References: <20250422092540.182091-1-mbloch@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEbB3LV9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745314071;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
+	b=iEbB3LV9o2YYQpg0OIbdjzLtxygTyL+IN58GrwlIAsgj4GW1rt22KiJNJSxrmansBiufX3
+	VDugD7sNUi6NBCG5vqqNRXxasv9WwIrk1zV0rwr80OTUSRo6gowmvy5d+JEx+47YtHD5h1
+	PGarY3j9DOICU1kbpFr7icdokWg7Pgg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-649-GnGYuPhbNPGoXSR0Sm4DOQ-1; Tue, 22 Apr 2025 05:27:47 -0400
+X-MC-Unique: GnGYuPhbNPGoXSR0Sm4DOQ-1
+X-Mimecast-MFC-AGG-ID: GnGYuPhbNPGoXSR0Sm4DOQ_1745314066
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39130f02631so1720522f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:27:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745314066; x=1745918866;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
+        b=wdQow/Y2PpxwXfCspgUpkmciMdmkbb8+Swhq1MQl46kmeEyXp4uo7OLFJ17X6hVoxz
+         +VI3kI8C//4XzkWfRiQXGecBiu15N78fpGhXWS8KlCEkKASxvDcuYSHv+pHcYw2jZ0te
+         B9gVtjhv7xTlVCkaXAkQdLKuRW2EKiENXnZF8HYpkFWdlymbp8NF3pSuOPPsmTB+P3Ag
+         yHm1gezIY+spu9ayp5N2dRNOl/3BQxl4ICrU8hMZzF3UWxI/YrooZiGqNu39TfrYxbkl
+         /Qvf2sgnGc7K/zZzB8BGaM2cmhkaRS8VKwCwzarted5pGBWhJAwWxKjYTXmKS6YGRPJF
+         iyLw==
+X-Gm-Message-State: AOJu0YwjOwOqnHbwQhY4xmP6DCU3sMQDw8MGmayXTlgb7UWRJXv6NfgL
+	Zmn+WvG9osSSJWMgdFr3dAboXt+W4m20yx+FE2MEri7SyA0Z7y2lHFPJsVrcYOdn5q5MqKpOeWd
+	rIC4bjuAacD2H3DBwUHOl3ZtjfVc+uzYe7XFFJx1oYtld1MyvyKvlDHwsEjhydg==
+X-Gm-Gg: ASbGncuP6bivmHnbGiTn7IHJYhHOFiSPayDnmtepvRvpyW96ZZKshW1gpDY8qHE7ISe
+	XuqxvTf8if4TS7IQc5el9uDnWpszR8lsJumpIGINAmpPOJprChFeOpjp3nP5kgT1ebN3HPyWEPL
+	kNEdOG+KnNR+a3tOcxC0DEr4gmkIYMcDMbTK4dm3i+plBTHa8gUNA0Qw38kF09N7f3W5N7DgO8A
+	fLEv30/Lpk7L14WCbcSs+YPb46S5Ar4tMCfmhi49/pXqcOFrKWqK7vlgivPoNz2u8eLxejiC+WD
+	trzT+tiH
+X-Received: by 2002:a05:6000:1889:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39efbb054b2mr11272983f8f.47.1745314065981;
+        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFlrO0/BemrlI+HwSI9V3QCIZZPBWjXZPma6UnqXroTYFqw4EQ3K2XsXGErxB2ITZyW7Q7wfQ==
+X-Received: by 2002:a05:6000:1889:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39efbb054b2mr11272949f8f.47.1745314065481;
+        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
+Received: from [127.0.0.1] ([195.174.135.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493145sm14454784f8f.71.2025.04.22.02.27.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
+Date: Tue, 22 Apr 2025 09:27:42 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Message-ID: <f5ded505-6df3-4a70-a41c-7333c50fed4e@redhat.com>
+In-Reply-To: <e53ac875-da6a-42ce-8714-d74f77775279@efficios.com>
+References: <20250414123630.177385-5-gmonaco@redhat.com> <20250414123630.177385-7-gmonaco@redhat.com> <e53ac875-da6a-42ce-8714-d74f77775279@efficios.com>
+Subject: Re: [PATCH v13 2/3] sched: Move task_mm_cid_work to mm work_struct
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F5:EE_|IA0PR12MB8716:EE_
-X-MS-Office365-Filtering-Correlation-Id: 443b4696-4569-4fd9-0f67-08dd817fc1ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?c96UdojOAtOl3LYHdQToERdqurkevynk0ihJoATX0yMw1KVFICTGIyqNVXYy?=
- =?us-ascii?Q?D8w2Hywl+QmkaeRGEvDwpv8PD3O3EdS/RFSZMfaUJAMpKaF6wiTL1OJrzG++?=
- =?us-ascii?Q?XgSRHvffnx0v5wGRfom6OZuj2Gp6BhZ5WYtz8ufYFaie0UOnOUUr0Yif1cMw?=
- =?us-ascii?Q?QnaT8StErF3RjtWXtVDmvukUlzmXDNH3uIprf0eFgurFqKnY7X0vcpPZJmre?=
- =?us-ascii?Q?9yOqi8KTHNGCC/njOIKVL1fpPFLRmqPdi7On/PMXzqCyHam6ddW3CuuuLFH4?=
- =?us-ascii?Q?Xl1cNBD+/wDJ8sXb9th6K2qtP4VWjhQRMu2Y1kL6+iDSI7sAFXKuWScTFVRD?=
- =?us-ascii?Q?HvpJwseBqvVcAZzlVWulYHcBvluX9P6vEwYbLv3yYK6jRS2r16wgngwcieS7?=
- =?us-ascii?Q?Io86Vorsj/3Ac+gyNlh4xrLFZP5H/d2dP666zp6STKLfP5WhlLJcQM5UPtJj?=
- =?us-ascii?Q?VEsJqwVXs1qhzs7AIb6qST4nDwLdZhVKI/HDnbGod203SvpO65+ieCo2VNgG?=
- =?us-ascii?Q?aCEuLcJdQCn1tnu9I5RwqUJhgdP7XC2olfXMZaCpRY966cIyCuc9sSHUw8sT?=
- =?us-ascii?Q?cLBgSlFBJfSxFyaNeY5CpkXiLynYDNt0XoXMKmdcVmxZog1705iYXBXpcJ1s?=
- =?us-ascii?Q?w7HsUDaSr+aZKZeisleVU48Lx79WQpGYoJVqJSsZS1/ZT2gDr/fwTnhq59UE?=
- =?us-ascii?Q?j8F3v/t4lUMkRNmj0+jIA3T5BYlNWVyGxe8JiIa7hpDM7RnaZ4C4wrvlmVL1?=
- =?us-ascii?Q?hSHDnwIU4Lm3nXNd/2Uc4bPBsXSHeZqsgEDPaIaywLPR8WPHIjAAUCeciERW?=
- =?us-ascii?Q?3MnjosDMsUNPLSPI7nhpSuy0RqbkGCVwxDH47vXueZQEbIx03y8K2wj6FMlE?=
- =?us-ascii?Q?b5I2BMq1ath+s9IJYV9vV8lmp48wpmXuocqvgefA7mztn4i1DSLe4eWnQKJI?=
- =?us-ascii?Q?PXwgy19HkAnNXYOiFYu0oljqByfa2eh4/gv3IfI0NZORb5SENKb0nxQqlqrj?=
- =?us-ascii?Q?Vrb50zLZXUFYNkSqOkKm60vf8L47EtYBqXBKNg6aQ4dCQtI0j3LgNvPPt5m7?=
- =?us-ascii?Q?UeHMjU82dipvuF6mOiEdZzlzKX8dyK5rDTUt0fBMnkUHSsvdKyV7Znc3Wxqh?=
- =?us-ascii?Q?kyFrXOrv25uL4pbkRF55NcVqWAoYTBoolQJKnWwyh0CI023tUItja11tqqgz?=
- =?us-ascii?Q?NP6eOFEntJ5a7oDc+2uY6xjqTE5+GnoukEKME4J4rVXs+BhL9qEaFfHPzRX/?=
- =?us-ascii?Q?GYbbMSYTMRKpJAdvsHtdL85P996bmwXVxQW7ECD6xa2jslDTT/Zw4WJWywfv?=
- =?us-ascii?Q?i1UWNrvjlVhrHqCerhU/cNDgGUSx1t/LbavogqI8YkrkJXg47nTfCkwzEUTI?=
- =?us-ascii?Q?UEXhNV8nyA2jcHD4tz36HQ88Fn6NDPCOzTGxUKHWAN44appRbbuXBdPZ73gs?=
- =?us-ascii?Q?pmpUGKvKffJOWsqsb2f1HemNNZrNfflZQe/gbQl1VUDzZcuZ8+n+3NKFC+sF?=
- =?us-ascii?Q?EljRbt5PBmn1CuLjoLzyWk9PnJLmSZpLPCUl?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 09:26:27.0040
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 443b4696-4569-4fd9-0f67-08dd817fc1ef
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F5.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <f5ded505-6df3-4a70-a41c-7333c50fed4e@redhat.com>
 
-From: Vlad Dogaru <vdogaru@nvidia.com>
+2025-04-14T15:28:34Z Mathieu Desnoyers <mathieu.desnoyers@efficios.com>:
 
-Signal clearly to the user, via an error, that mixing IPv4 and IPv6
-rules in the same matcher is not supported. Previously such cases
-silently failed by adding a rule that did not work correctly.
+> On 2025-04-14 08:36, Gabriele Monaco wrote:
+>> Currently, the task_mm_cid_work function is called in a task work
+>> triggered by a scheduler tick to frequently compact the mm_cids of each
+>> process. This can delay the execution of the corresponding thread for
+>> the entire duration of the function, negatively affecting the response
+>> in case of real time tasks. In practice, we observe task_mm_cid_work
+>> increasing the latency of 30-35us on a 128 cores system, this order of
+>> magnitude is meaningful under PREEMPT_RT.
+>> Run the task_mm_cid_work in a new work_struct connected to the
+>> mm_struct rather than in the task context before returning to
+>> userspace.
+>> This work_struct is initialised with the mm and disabled before freeing
+>> it. The queuing of the work happens while returning to userspace in
+>> __rseq_handle_notify_resume, maintaining the checks to avoid running
+>> more frequently than MM_CID_SCAN_DELAY.
+>> To make sure this happens predictably also on long running tasks, we
+>> trigger a call to __rseq_handle_notify_resume also from the scheduler
+>> tick if the runtime exceeded a 100ms threshold.
+>> The main advantage of this change is that the function can be offloaded
+>> to a different CPU and even preempted by RT tasks.
+>> Moreover, this new behaviour is more predictable with periodic tasks
+>> with short runtime, which may rarely run during a scheduler tick.
+>> Now, the work is always scheduled when the task returns to userspace.
+>> The work is disabled during mmdrop, since the function cannot sleep in
+>> all kernel configurations, we cannot wait for possibly running work
+>> items to terminate. We make sure the mm is valid in case the task is
+>> terminating by reserving it with mmgrab/mmdrop, returning prematurely if
+>> we are really the last user while the work gets to run.
+>> This situation is unlikely since we don't schedule the work for exiting
+>> tasks, but we cannot rule it out.
+>
+> The implementation looks good to me. Peter, how does it look from your en=
+d ?
+>
 
-Rules can specify an IP version by one of two fields: IP version or
-ethertype. At matcher creation, store whether the template matches on
-any of these two fields. If yes, inspect each rule for its corresponding
-match value and store the IP version inside the matcher to guard against
-inconsistencies with subsequent rules.
+Peter, what do you think about this version? Can we bring it in?
 
-Furthermore, also check rules for internal consistency, i.e. verify that
-the ethertype and IP version match values do not contradict each other.
+Thanks,
+Gabriele
 
-The logic applies to inner and outer headers independently, to account
-for tunneling.
-
-Rules that do not match on IP addresses are not affected.
-
-Signed-off-by: Vlad Dogaru <vdogaru@nvidia.com>
-Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-Signed-off-by: Mark Bloch <mbloch@nvidia.com>
----
- .../mellanox/mlx5/core/steering/hws/matcher.c |  26 ++++
- .../mellanox/mlx5/core/steering/hws/matcher.h |  12 ++
- .../mellanox/mlx5/core/steering/hws/rule.c    | 122 ++++++++++++++++++
- 3 files changed, 160 insertions(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.c
-index 716502732d3d..5b0c1623499b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.c
-@@ -385,6 +385,30 @@ static int hws_matcher_bind_at(struct mlx5hws_matcher *matcher)
- 	return 0;
- }
- 
-+static void hws_matcher_set_ip_version_match(struct mlx5hws_matcher *matcher)
-+{
-+	int i;
-+
-+	for (i = 0; i < matcher->mt->fc_sz; i++) {
-+		switch (matcher->mt->fc[i].fname) {
-+		case MLX5HWS_DEFINER_FNAME_ETH_TYPE_O:
-+			matcher->matches_outer_ethertype = 1;
-+			break;
-+		case MLX5HWS_DEFINER_FNAME_ETH_L3_TYPE_O:
-+			matcher->matches_outer_ip_version = 1;
-+			break;
-+		case MLX5HWS_DEFINER_FNAME_ETH_TYPE_I:
-+			matcher->matches_inner_ethertype = 1;
-+			break;
-+		case MLX5HWS_DEFINER_FNAME_ETH_L3_TYPE_I:
-+			matcher->matches_inner_ip_version = 1;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+}
-+
- static int hws_matcher_bind_mt(struct mlx5hws_matcher *matcher)
- {
- 	struct mlx5hws_context *ctx = matcher->tbl->ctx;
-@@ -401,6 +425,8 @@ static int hws_matcher_bind_mt(struct mlx5hws_matcher *matcher)
- 		}
- 	}
- 
-+	hws_matcher_set_ip_version_match(matcher);
-+
- 	/* Create an STE pool per matcher*/
- 	pool_attr.table_type = matcher->tbl->type;
- 	pool_attr.pool_type = MLX5HWS_POOL_TYPE_STE;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.h b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.h
-index bad1fa8f77fd..8e95158a66b5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/matcher.h
-@@ -50,6 +50,12 @@ struct mlx5hws_matcher_match_ste {
- 	struct mlx5hws_pool *pool;
- };
- 
-+enum {
-+	MLX5HWS_MATCHER_IPV_UNSET = 0,
-+	MLX5HWS_MATCHER_IPV_4 = 1,
-+	MLX5HWS_MATCHER_IPV_6 = 2,
-+};
-+
- struct mlx5hws_matcher {
- 	struct mlx5hws_table *tbl;
- 	struct mlx5hws_matcher_attr attr;
-@@ -61,6 +67,12 @@ struct mlx5hws_matcher {
- 	u8 num_of_action_stes;
- 	/* enum mlx5hws_matcher_flags */
- 	u8 flags;
-+	u8 matches_outer_ethertype:1;
-+	u8 matches_outer_ip_version:1;
-+	u8 matches_inner_ethertype:1;
-+	u8 matches_inner_ip_version:1;
-+	u8 outer_ip_version:2;
-+	u8 inner_ip_version:2;
- 	u32 end_ft_id;
- 	struct mlx5hws_matcher *col_matcher;
- 	struct mlx5hws_matcher *resize_dst;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/rule.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/rule.c
-index 9e6f35d68445..5342a4cc7194 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/rule.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/rule.c
-@@ -655,6 +655,124 @@ int mlx5hws_rule_move_hws_add(struct mlx5hws_rule *rule,
- 	return 0;
- }
- 
-+static u8 hws_rule_ethertype_to_matcher_ipv(u32 ethertype)
-+{
-+	switch (ethertype) {
-+	case ETH_P_IP:
-+		return MLX5HWS_MATCHER_IPV_4;
-+	case ETH_P_IPV6:
-+		return MLX5HWS_MATCHER_IPV_6;
-+	default:
-+		return MLX5HWS_MATCHER_IPV_UNSET;
-+	}
-+}
-+
-+static u8 hws_rule_ip_version_to_matcher_ipv(u32 ip_version)
-+{
-+	switch (ip_version) {
-+	case 4:
-+		return MLX5HWS_MATCHER_IPV_4;
-+	case 6:
-+		return MLX5HWS_MATCHER_IPV_6;
-+	default:
-+		return MLX5HWS_MATCHER_IPV_UNSET;
-+	}
-+}
-+
-+static int hws_rule_check_outer_ip_version(struct mlx5hws_matcher *matcher,
-+					   u32 *match_param)
-+{
-+	struct mlx5hws_context *ctx = matcher->tbl->ctx;
-+	u8 outer_ipv_ether = MLX5HWS_MATCHER_IPV_UNSET;
-+	u8 outer_ipv_ip = MLX5HWS_MATCHER_IPV_UNSET;
-+	u8 outer_ipv, ver;
-+
-+	if (matcher->matches_outer_ethertype) {
-+		ver = MLX5_GET(fte_match_param, match_param,
-+			       outer_headers.ethertype);
-+		outer_ipv_ether = hws_rule_ethertype_to_matcher_ipv(ver);
-+	}
-+	if (matcher->matches_outer_ip_version) {
-+		ver = MLX5_GET(fte_match_param, match_param,
-+			       outer_headers.ip_version);
-+		outer_ipv_ip = hws_rule_ip_version_to_matcher_ipv(ver);
-+	}
-+
-+	if (outer_ipv_ether != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    outer_ipv_ip != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    outer_ipv_ether != outer_ipv_ip) {
-+		mlx5hws_err(ctx, "Rule matches on inconsistent outer ethertype and ip version\n");
-+		return -EINVAL;
-+	}
-+
-+	outer_ipv = outer_ipv_ether != MLX5HWS_MATCHER_IPV_UNSET ?
-+		    outer_ipv_ether : outer_ipv_ip;
-+	if (outer_ipv != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    matcher->outer_ip_version != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    outer_ipv != matcher->outer_ip_version) {
-+		mlx5hws_err(ctx, "Matcher and rule disagree on outer IP version\n");
-+		return -EINVAL;
-+	}
-+	matcher->outer_ip_version = outer_ipv;
-+
-+	return 0;
-+}
-+
-+static int hws_rule_check_inner_ip_version(struct mlx5hws_matcher *matcher,
-+					   u32 *match_param)
-+{
-+	struct mlx5hws_context *ctx = matcher->tbl->ctx;
-+	u8 inner_ipv_ether = MLX5HWS_MATCHER_IPV_UNSET;
-+	u8 inner_ipv_ip = MLX5HWS_MATCHER_IPV_UNSET;
-+	u8 inner_ipv, ver;
-+
-+	if (matcher->matches_inner_ethertype) {
-+		ver = MLX5_GET(fte_match_param, match_param,
-+			       inner_headers.ethertype);
-+		inner_ipv_ether = hws_rule_ethertype_to_matcher_ipv(ver);
-+	}
-+	if (matcher->matches_inner_ip_version) {
-+		ver = MLX5_GET(fte_match_param, match_param,
-+			       inner_headers.ip_version);
-+		inner_ipv_ip = hws_rule_ip_version_to_matcher_ipv(ver);
-+	}
-+
-+	if (inner_ipv_ether != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    inner_ipv_ip != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    inner_ipv_ether != inner_ipv_ip) {
-+		mlx5hws_err(ctx, "Rule matches on inconsistent inner ethertype and ip version\n");
-+		return -EINVAL;
-+	}
-+
-+	inner_ipv = inner_ipv_ether != MLX5HWS_MATCHER_IPV_UNSET ?
-+		    inner_ipv_ether : inner_ipv_ip;
-+	if (inner_ipv != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    matcher->inner_ip_version != MLX5HWS_MATCHER_IPV_UNSET &&
-+	    inner_ipv != matcher->inner_ip_version) {
-+		mlx5hws_err(ctx, "Matcher and rule disagree on inner IP version\n");
-+		return -EINVAL;
-+	}
-+	matcher->inner_ip_version = inner_ipv;
-+
-+	return 0;
-+}
-+
-+static int hws_rule_check_ip_version(struct mlx5hws_matcher *matcher,
-+				     u32 *match_param)
-+{
-+	int ret;
-+
-+	ret = hws_rule_check_outer_ip_version(matcher, match_param);
-+	if (unlikely(ret))
-+		return ret;
-+
-+	ret = hws_rule_check_inner_ip_version(matcher, match_param);
-+	if (unlikely(ret))
-+		return ret;
-+
-+	return 0;
-+}
-+
- int mlx5hws_rule_create(struct mlx5hws_matcher *matcher,
- 			u8 mt_idx,
- 			u32 *match_param,
-@@ -665,6 +783,10 @@ int mlx5hws_rule_create(struct mlx5hws_matcher *matcher,
- {
- 	int ret;
- 
-+	ret = hws_rule_check_ip_version(matcher, match_param);
-+	if (unlikely(ret))
-+		return ret;
-+
- 	rule_handle->matcher = matcher;
- 
- 	ret = hws_rule_enqueue_precheck_create(rule_handle, attr);
--- 
-2.34.1
+> Thanks,
+>
+> Mathieu
+>
+>> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm=
+_cid")
+>> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+>> ---
+>> =C2=A0 include/linux/mm_types.h | 26 ++++++++++++++
+>> =C2=A0 include/linux/sched.h=C2=A0=C2=A0=C2=A0 |=C2=A0 8 ++++-
+>> =C2=A0 kernel/rseq.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+>> =C2=A0 kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 75 ++++++++++=
+++++++++++++++++--------------
+>> =C2=A0 kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++--
+>> =C2=A0 5 files changed, 89 insertions(+), 28 deletions(-)
+>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>> index 56d07edd01f91..e4ae9295508cf 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -982,6 +982,10 @@ struct mm_struct {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * mm nr_cpus_allowed up=
+dates.
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spinlock_t cpus_allowed_l=
+ock;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * @cid_work: Work item to ru=
+n the mm_cid scan.
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct work_struct cid_work;
+>> =C2=A0 #endif
+>> =C2=A0 #ifdef CONFIG_MMU
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_long_t pgtables_bytes;=
+=C2=A0=C2=A0 /* size of all page tables */
+>> @@ -1282,6 +1286,8 @@ enum mm_cid_state {
+>> =C2=A0=C2=A0=C2=A0 MM_CID_LAZY_PUT =3D (1U << 31),
+>> =C2=A0 };
+>> =C2=A0 +extern void task_mm_cid_work(struct work_struct *work);
+>> +
+>> =C2=A0 static inline bool mm_cid_is_unset(int cid)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0 return cid =3D=3D MM_CID_UNSET;
+>> @@ -1354,12 +1360,14 @@ static inline int mm_alloc_cid_noprof(struct mm_=
+struct *mm, struct task_struct *
+>> =C2=A0=C2=A0=C2=A0 if (!mm->pcpu_cid)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> =C2=A0=C2=A0=C2=A0 mm_init_cid(mm, p);
+>> +=C2=A0=C2=A0 INIT_WORK(&mm->cid_work, task_mm_cid_work);
+>> =C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>> =C2=A0 #define mm_alloc_cid(...) alloc_hooks(mm_alloc_cid_noprof(__VA_AR=
+GS__))
+>> =C2=A0=C2=A0=C2=A0 static inline void mm_destroy_cid(struct mm_struct *m=
+m)
+>> =C2=A0 {
+>> +=C2=A0=C2=A0 disable_work(&mm->cid_work);
+>> =C2=A0=C2=A0=C2=A0 free_percpu(mm->pcpu_cid);
+>> =C2=A0=C2=A0=C2=A0 mm->pcpu_cid =3D NULL;
+>> =C2=A0 }
+>> @@ -1381,6 +1389,16 @@ static inline void mm_set_cpus_allowed(struct mm_=
+struct *mm, const struct cpumas
+>> =C2=A0=C2=A0=C2=A0 WRITE_ONCE(mm->nr_cpus_allowed, cpumask_weight(mm_all=
+owed));
+>> =C2=A0=C2=A0=C2=A0 raw_spin_unlock(&mm->cpus_allowed_lock);
+>> =C2=A0 }
+>> +
+>> +static inline bool mm_cid_needs_scan(struct mm_struct *mm)
+>> +{
+>> +=C2=A0=C2=A0 return mm && !time_before(jiffies, READ_ONCE(mm->mm_cid_ne=
+xt_scan));
+>> +}
+>> +
+>> +static inline bool mm_cid_scan_pending(struct mm_struct *mm)
+>> +{
+>> +=C2=A0=C2=A0 return mm && work_pending(&mm->cid_work);
+>> +}
+>> =C2=A0 #else /* CONFIG_SCHED_MM_CID */
+>> =C2=A0 static inline void mm_init_cid(struct mm_struct *mm, struct task_=
+struct *p) { }
+>> =C2=A0 static inline int mm_alloc_cid(struct mm_struct *mm, struct task_=
+struct *p) { return 0; }
+>> @@ -1391,6 +1409,14 @@ static inline unsigned int mm_cid_size(void)
+>> =C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>> =C2=A0 static inline void mm_set_cpus_allowed(struct mm_struct *mm, cons=
+t struct cpumask *cpumask) { }
+>> +static inline bool mm_cid_needs_scan(struct mm_struct *mm)
+>> +{
+>> +=C2=A0=C2=A0 return false;
+>> +}
+>> +static inline bool mm_cid_scan_pending(struct mm_struct *mm)
+>> +{
+>> +=C2=A0=C2=A0 return false;
+>> +}
+>> =C2=A0 #endif /* CONFIG_SCHED_MM_CID */
+>> =C2=A0=C2=A0=C2=A0 struct mmu_gather;
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index f96ac19828934..3ffdb96ef6b0a 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1424,7 +1424,7 @@ struct task_struct {
+>> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 last_mm_cid;=C2=A0=C2=A0=C2=A0 /* Most recent cid =
+in mm */
+>> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 migrate_from_cpu;
+>> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_active;=C2=A0 /* Whether cid bitmap is acti=
+ve */
+>> -=C2=A0=C2=A0 struct callback_head=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 cid_work;
+>> +=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 last_cid_reset; /* Time of last reset in jiffies */
+>> =C2=A0 #endif
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tlbflush_unmap_batch t=
+lb_ubc;
+>> @@ -2281,4 +2281,10 @@ static __always_inline void alloc_tag_restore(str=
+uct alloc_tag *tag, struct allo
+>> =C2=A0 #define alloc_tag_restore(_tag, _old)=C2=A0=C2=A0=C2=A0=C2=A0 do =
+{} while (0)
+>> =C2=A0 #endif
+>> =C2=A0 +#ifdef CONFIG_SCHED_MM_CID
+>> +extern void task_queue_mm_cid(struct task_struct *curr);
+>> +#else
+>> +static inline void task_queue_mm_cid(struct task_struct *curr) { }
+>> +#endif
+>> +
+>> =C2=A0 #endif
+>> diff --git a/kernel/rseq.c b/kernel/rseq.c
+>> index b7a1ec327e811..383db2ccad4d0 100644
+>> --- a/kernel/rseq.c
+>> +++ b/kernel/rseq.c
+>> @@ -441,6 +441,8 @@ void __rseq_handle_notify_resume(struct ksignal *ksi=
+g, struct pt_regs *regs)
+>> =C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0 if (unlikely(rseq_update_cpu_node_id(t)))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto error;
+>> +=C2=A0=C2=A0 if (mm_cid_needs_scan(t->mm))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 task_queue_mm_cid(t);
+>> =C2=A0=C2=A0=C2=A0 return;
+>> =C2=A0=C2=A0=C2=A0 error:
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index c81cf642dba05..02b18649e6a09 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -10566,22 +10566,16 @@ static void sched_mm_cid_remote_clear_weight(s=
+truct mm_struct *mm, int cpu,
+>> =C2=A0=C2=A0=C2=A0 sched_mm_cid_remote_clear(mm, pcpu_cid, cpu);
+>> =C2=A0 }
+>> =C2=A0 -static void task_mm_cid_work(struct callback_head *work)
+>> +void task_mm_cid_work(struct work_struct *work)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0 unsigned long now =3D jiffies, old_scan, next_scan;
+>> -=C2=A0=C2=A0 struct task_struct *t =3D current;
+>> =C2=A0=C2=A0=C2=A0 struct cpumask *cidmask;
+>> -=C2=A0=C2=A0 struct mm_struct *mm;
+>> +=C2=A0=C2=A0 struct mm_struct *mm =3D container_of(work, struct mm_stru=
+ct, cid_work);
+>> =C2=A0=C2=A0=C2=A0 int weight, cpu;
+>> =C2=A0 - WARN_ON_ONCE(t !=3D container_of(work, struct task_struct, cid_=
+work));
+>> -
+>> -=C2=A0=C2=A0 work->next =3D work;=C2=A0 /* Prevent double-add */
+>> -=C2=A0=C2=A0 if (t->flags & PF_EXITING)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> -=C2=A0=C2=A0 mm =3D t->mm;
+>> -=C2=A0=C2=A0 if (!mm)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +=C2=A0=C2=A0 /* We are the last user, process already terminated. */
+>> +=C2=A0=C2=A0 if (atomic_read(&mm->mm_count) =3D=3D 1)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
+>> =C2=A0=C2=A0=C2=A0 old_scan =3D READ_ONCE(mm->mm_cid_next_scan);
+>> =C2=A0=C2=A0=C2=A0 next_scan =3D now + msecs_to_jiffies(MM_CID_SCAN_DELA=
+Y);
+>> =C2=A0=C2=A0=C2=A0 if (!old_scan) {
+>> @@ -10594,9 +10588,9 @@ static void task_mm_cid_work(struct callback_hea=
+d *work)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 old_s=
+can =3D next_scan;
+>> =C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0 if (time_before(now, old_scan))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
+>> =C2=A0=C2=A0=C2=A0 if (!try_cmpxchg(&mm->mm_cid_next_scan, &old_scan, ne=
+xt_scan))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
+>> =C2=A0=C2=A0=C2=A0 cidmask =3D mm_cidmask(mm);
+>> =C2=A0=C2=A0=C2=A0 /* Clear cids that were not recently used. */
+>> =C2=A0=C2=A0=C2=A0 for_each_possible_cpu(cpu)
+>> @@ -10608,6 +10602,8 @@ static void task_mm_cid_work(struct callback_hea=
+d *work)
+>> =C2=A0=C2=A0=C2=A0=C2=A0 */
+>> =C2=A0=C2=A0=C2=A0 for_each_possible_cpu(cpu)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched_mm_cid_remote_clear_wei=
+ght(mm, cpu, weight);
+>> +out_drop:
+>> +=C2=A0=C2=A0 mmdrop(mm);
+>> =C2=A0 }
+>> =C2=A0=C2=A0=C2=A0 void init_sched_mm_cid(struct task_struct *t)
+>> @@ -10620,23 +10616,52 @@ void init_sched_mm_cid(struct task_struct *t)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mm_users =3D=3D 1)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm->m=
+m_cid_next_scan =3D jiffies + msecs_to_jiffies(MM_CID_SCAN_DELAY);
+>> =C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0 t->cid_work.next =3D &t->cid_work;=C2=A0=C2=A0=C2=A0 /* Pr=
+otect against double add */
+>> -=C2=A0=C2=A0 init_task_work(&t->cid_work, task_mm_cid_work);
+>> =C2=A0 }
+>> =C2=A0 -void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
+>> +void task_tick_mm_cid(struct rq *rq, struct task_struct *t)
+>> =C2=A0 {
+>> -=C2=A0=C2=A0 struct callback_head *work =3D &curr->cid_work;
+>> -=C2=A0=C2=A0 unsigned long now =3D jiffies;
+>> +=C2=A0=C2=A0 u64 rtime =3D t->se.sum_exec_runtime - t->se.prev_sum_exec=
+_runtime;
+>> =C2=A0 - if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 work->next !=3D work)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> -=C2=A0=C2=A0 if (time_before(now, READ_ONCE(curr->mm->mm_cid_next_scan)=
+))
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+>> +=C2=A0=C2=A0 /*
+>> +=C2=A0=C2=A0=C2=A0 * If a task is running unpreempted for a long time, =
+it won't get its
+>> +=C2=A0=C2=A0=C2=A0 * mm_cid compacted and won't update its mm_cid value=
+ after a
+>> +=C2=A0=C2=A0=C2=A0 * compaction occurs.
+>> +=C2=A0=C2=A0=C2=A0 * For such a task, this function does two things:
+>> +=C2=A0=C2=A0=C2=A0 * A) trigger the mm_cid recompaction,
+>> +=C2=A0=C2=A0=C2=A0 * B) trigger an update of the task's rseq->mm_cid fi=
+eld at some point
+>> +=C2=A0=C2=A0=C2=A0 * after recompaction, so it can get a mm_cid value c=
+loser to 0.
+>> +=C2=A0=C2=A0=C2=A0 * A change in the mm_cid triggers an rseq_preempt.
+>> +=C2=A0=C2=A0=C2=A0 *
+>> +=C2=A0=C2=A0=C2=A0 * A occurs only once after the scan time elapsed, un=
+til the next scan
+>> +=C2=A0=C2=A0=C2=A0 * expires as well.
+>> +=C2=A0=C2=A0=C2=A0 * B occurs once after the compaction work completes,=
+ that is when scan
+>> +=C2=A0=C2=A0=C2=A0 * is no longer needed (it occurred for this mm) but =
+the last rseq
+>> +=C2=A0=C2=A0=C2=A0 * preempt was done before the last mm_cid scan.
+>> +=C2=A0=C2=A0=C2=A0 */
+>> +=C2=A0=C2=A0 if (t->mm && rtime > RSEQ_UNPREEMPTED_THRESHOLD) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mm_cid_needs_scan(t->mm) && !m=
+m_cid_scan_pending(t->mm))
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rseq_set_n=
+otify_resume(t);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (time_after(jiffies, t->la=
+st_cid_reset +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msecs_to_jiffies(MM_CID=
+_SCAN_DELAY))) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int old_ci=
+d =3D t->mm_cid;
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!t->mm=
+_cid_active)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 return;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_sna=
+pshot_time(rq, t->mm);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_put=
+_lazy(t);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 t->last_mm=
+_cid =3D t->mm_cid =3D mm_cid_get(rq, t, t->mm);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (old_ci=
+d !=3D t->mm_cid)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 rseq_preempt(t);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0 }
+>> +}
+>> =C2=A0 - /* No page allocation under rq lock */
+>> -=C2=A0=C2=A0 task_work_add(curr, work, TWA_RESUME);
+>> +/* Call only when curr is a user thread. */
+>> +void task_queue_mm_cid(struct task_struct *curr)
+>> +{
+>> +=C2=A0=C2=A0 /* Ensure the mm exists when we run. */
+>> +=C2=A0=C2=A0 mmgrab(curr->mm);
+>> +=C2=A0=C2=A0 queue_work(system_unbound_wq, &curr->mm->cid_work);
+>> =C2=A0 }
+>> =C2=A0=C2=A0=C2=A0 void sched_mm_cid_exit_signals(struct task_struct *t)
+>> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+>> index 47972f34ea701..c0f8fd4c575c3 100644
+>> --- a/kernel/sched/sched.h
+>> +++ b/kernel/sched/sched.h
+>> @@ -3582,13 +3582,14 @@ extern const char *preempt_modes[];
+>> =C2=A0=C2=A0=C2=A0 #define SCHED_MM_CID_PERIOD_NS=C2=A0 (100ULL * 100000=
+0)=C2=A0 /* 100ms */
+>> =C2=A0 #define MM_CID_SCAN_DELAY 100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 /* 100ms */
+>> +#define RSEQ_UNPREEMPTED_THRESHOLD SCHED_MM_CID_PERIOD_NS
+>> =C2=A0=C2=A0=C2=A0 extern raw_spinlock_t cid_lock;
+>> =C2=A0 extern int use_cid_lock;
+>> =C2=A0=C2=A0=C2=A0 extern void sched_mm_cid_migrate_from(struct task_str=
+uct *t);
+>> =C2=A0 extern void sched_mm_cid_migrate_to(struct rq *dst_rq, struct tas=
+k_struct *t);
+>> -extern void task_tick_mm_cid(struct rq *rq, struct task_struct *curr);
+>> +extern void task_tick_mm_cid(struct rq *rq, struct task_struct *t);
+>> =C2=A0 extern void init_sched_mm_cid(struct task_struct *t);
+>> =C2=A0=C2=A0=C2=A0 static inline void __mm_cid_put(struct mm_struct *mm,=
+ int cid)
+>> @@ -3798,6 +3799,7 @@ static inline int mm_cid_get(struct rq *rq, struct=
+ task_struct *t,
+>> =C2=A0=C2=A0=C2=A0 cid =3D __mm_cid_get(rq, t, mm);
+>> =C2=A0=C2=A0=C2=A0 __this_cpu_write(pcpu_cid->cid, cid);
+>> =C2=A0=C2=A0=C2=A0 __this_cpu_write(pcpu_cid->recent_cid, cid);
+>> +=C2=A0=C2=A0 t->last_cid_reset =3D jiffies;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return cid;
+>> =C2=A0 }
+>> @@ -3857,7 +3859,7 @@ static inline void switch_mm_cid(struct rq *rq,
+>> =C2=A0 static inline void switch_mm_cid(struct rq *rq, struct task_struc=
+t *prev, struct task_struct *next) { }
+>> =C2=A0 static inline void sched_mm_cid_migrate_from(struct task_struct *=
+t) { }
+>> =C2=A0 static inline void sched_mm_cid_migrate_to(struct rq *dst_rq, str=
+uct task_struct *t) { }
+>> -static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *=
+curr) { }
+>> +static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *=
+t) { }
+>> =C2=A0 static inline void init_sched_mm_cid(struct task_struct *t) { }
+>> =C2=A0 #endif /* !CONFIG_SCHED_MM_CID */
+>> =C2=A0
+>
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
 
