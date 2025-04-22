@@ -1,158 +1,87 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23231DE8B3;
-	Tue, 22 Apr 2025 06:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E0178C91;
+	Tue, 22 Apr 2025 06:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302165; cv=none; b=Dcne53oAGkWdCrcfFYlMW0COCpC4PC8Nb4sYDv1iHVFMRCWF7ZBmBZINIk3E2tbIwn0yi0YB9X0DZxwYVR8ZmnnbRF+rKK9c834nX2YGFrozEZ18sFwZv0/MZsY7QXWEyXLXJsv473hEEzsb9negbXNisSDV6bYQ92R/BIGMHQs=
+	t=1745302320; cv=none; b=aRdwBMXoLAzOxd9a+sl/gcX6kH//tPRLdb+VgYYfPgy30MnmYpK7c7ROyw6FIJ5aaK/jbj3nJsi+8ZMTkV6aTeDXzsSy+foXhfnYvUIS1iNI1hojlMha2I5jofPRiSghuEz5X6eWjnGOhe88OQkokO16+sKcqh2VJa/L44syATs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302165; c=relaxed/simple;
-	bh=IwA39pqV6CL+2rcWfGOdsnRR0Msq/kLwxa8WtIp/xQM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZUVCqNt5okSCspDkIhDwDscbDcTBqU0ZKh5V3cv/d1YTAIso1u4KjjAKwQAFkFeTI+fjazO+d1WaNLCZRMvfwgeC137veRN5zcZsDp4ZEbtgrDsys38q0pdX7QGTNEOHR8WVWY70neSy0DxBDXcIKGqiZTTknpeCNbefnKv2t5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=BdLIPs3M; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745302320; c=relaxed/simple;
+	bh=3U6SSAwI++1mMarBQrCnXaUsz8plHo4CysXh50ykFH4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lj6MWyIFkyqxZWS7FBFjkF+LyJlh4RMwQ2O1fbEDKweuJYA0xuPt9VQqg1ruyJK0u+rQb/y680fvP5gWTCAb+Sg6VnH8QyBPzM5k4KRB0xjpqp2vvi5mtxGYMtSY16LFHkDb6ZuNZ0cvJkUqE7lCLMa+gOjuTaznej6qH8yPWtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IfJgyzCR; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="BdLIPs3M"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53M68KPJ0085015, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745302101; bh=IwA39pqV6CL+2rcWfGOdsnRR0Msq/kLwxa8WtIp/xQM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=BdLIPs3MgCEHKfbl9AXuW+Cu+GE59wmxlB1CncZCBr/XmZZN5KEkyQhSMkxvm2F93
-	 vHmtW9xtoed9jf/g0jOYd4bFleoVhdFl/N9+9d9unNLssEmg8ryEGtMFRyOVgtDf6X
-	 TN2EgW3r6X/scQmyqTZSdoUtCiiFIZKVXprQWweRWoUFUBJvxQUQJZbSASnBIe8iDZ
-	 W2h4Po6CDFjz/+bmTs92m3kEoDJQ79VKCPbIWjfojecTcmUYG0ZervkLkhAbc+1HSa
-	 b9nSBQ7YLMIWl8PRqZBy6h0CLatBJey9qWky8M8qd1Nf4Dr2TKHbf1nhwLp+H3yB2m
-	 qKrn9CDUvIkcg==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53M68KPJ0085015
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 14:08:21 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 22 Apr 2025 14:08:21 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 22 Apr 2025 14:08:21 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 22 Apr 2025 14:08:21 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Mingcong Bai <jeffbai@aosc.io>
-CC: Kexy Biscuit <kexybiscuit@aosc.io>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-        Liangliang Zou <rawdiamondmc@outlook.com>,
-        "John W.
- Linville" <linville@tuxdriver.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "open list:REALTEK WIRELESS DRIVER (rtlwifi family)"
-	<linux-wireless@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH rtw-next] wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
-Thread-Topic: [PATCH rtw-next] wifi: rtlwifi: disable ASPM for RTL8723BE with
- subsystem ID 11ad:1723
-Thread-Index: AQHbszW7c9+Tjxh0Ckyy3/cPdXvVgrOvByag
-Date: Tue, 22 Apr 2025 06:08:20 +0000
-Message-ID: <1ab6f74b5b9d4f0d8023eb43d41906be@realtek.com>
-References: <20250422032132.348598-1-jeffbai@aosc.io>
-In-Reply-To: <20250422032132.348598-1-jeffbai@aosc.io>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IfJgyzCR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=i9IDz0JyHUWXPtjTKZlN6b5bZEngPXaM8Z/wmtOSlTc=; b=IfJgyzCRY3hexpQwQo3ixEoWxK
+	/1LEeNL6/goAyEsYXJZAbBev1+aHqotUrm7a7BhLKJf3iUSS/ieq+qXhNpOo2p+/fwqN9oiMUjFmY
+	zn4owcYOy9LwGIeVYYx0PQ4oD6vNIAgW+N19UTNCjhic8NNYpSzw2L8qbbbxIhQ9HgBbaCIWa9MYj
+	h2f6u6/TMpt53ZqgT3xrq5Mjp8EdM7XDk473nrJ+b2fShwDOTd5+5MQf074BUnVG7Scdug5X6PoW1
+	5UsUEJP4sVyq2G5YWvSt/NUNAFVYsXf4x5RAUDS6aoATjL+ptGY2s9dLcBPFCtO55FvEl4Ea4G/G3
+	t7GpDpCg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u76rH-00000005vDV-1Qlj;
+	Tue, 22 Apr 2025 06:11:51 +0000
+Date: Mon, 21 Apr 2025 23:11:51 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk, xni@redhat.com,
+	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+	song@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+	nadav.amit@gmail.com, ubizjak@gmail.com, cl@linux.com,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH v2 1/5] block: cleanup and export bdev IO inflight APIs
+Message-ID: <aAczJzofvwrCUUNa@infradead.org>
+References: <20250418010941.667138-1-yukuai1@huaweicloud.com>
+ <20250418010941.667138-2-yukuai1@huaweicloud.com>
+ <aAYzPYGR_eF7qveO@infradead.org>
+ <f01cb2d7-d69c-1565-d3e4-09c4b70856f6@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f01cb2d7-d69c-1565-d3e4-09c4b70856f6@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Mingcong Bai <jeffbai@aosc.io> wrote:
->=20
-> RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
-> subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
-> errors during and after boot up, causing heavy lags and at times lock-ups=
-:
->=20
->   pcieport 0000:00:1c.5: AER: Correctable error message received from 000=
-0:00:1c.5
->   pcieport 0000:00:1c.5: PCIe Bus Error: severity=3DCorrectable, type=3DP=
-hysical Layer, (Receiver ID)
->   pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=3D0000000=
-1/00002000
->   pcieport 0000:00:1c.5:    [ 0] RxErr
->=20
-> Disable ASPM on this combo as a quirk.
->=20
-> This patch is a revision of a previous patch (linked below) which
-> attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lak=
-e
-> PCIe bridges. I take a more conservative approach as all known reports
-> point to ASUSTek laptops of these two generations with this particular
-> wireless card.
->=20
-> Please note, however, before the rtl8723be finishes probing, the AER
-> errors remained. After the module finishes probing, all AER errors would
-> indeed be eliminated, along with heavy lags, poor network throughput,
-> and/or occasional lock-ups.
->=20
-> Cc: <stable@vger.kernel.org>
-> Fixes: 0c8173385e54 ("rtl8192ce: Add new driver")
+On Mon, Apr 21, 2025 at 09:13:57PM +0800, Yu Kuai wrote:
+> > I'm not sure why this is needed or related, or even what additional
+> > distinction is added here.
+> 
+> Because for rq-based device, there are two different stage,
+> blk_account_io_start() while allocating new rq, and
+> blk_mq_start_request() while issuing the rq to driver.
+> 
+> When will we think the reqeust is inflight? For iostat, my anser is the
+> former one, because rq->start_time_ns is set here as well. And noted in
+> iostats api diskstats_show（/proc/diskstats) and part_stat_show
+> (/sys/block/sda/stat), inflight is get by part_in_flight, which is
+> different from disk sysfs api(/sys/block/sda/inflight).
 
-This Fixes is weird to me. The subject is RTL8192CE, but you are adding thi=
-s
-for RTL8723BE. More, at that time, HARDWARE_TYPE_RTL8723BE isn't defined ye=
-t.
+Trying to express this in a not very obvious function name isn't
+going to work very well.  Documenting your findings in comments is
+much better.
 
-This might be more suitable?
+> > 
+> > I'd just change this helper to call blk_mq_count_in_driver_rw for
+> > blk-mq devices and remove the conditional from the sysfs code instead.
+> > That gives us a much more robust and easier to understand API.
+> 
+> Ok, and another separate patch, right?
 
-Fixes: a619d1abe20c ("rtlwifi: rtl8723be: Add new driver")
-
-> Reported-by: Liangliang Zou <rawdiamondmc@outlook.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D218127
-> Link: https://lore.kernel.org/lkml/05390e0b-27fd-4190-971e-e70a498c8221@l=
-wfinger.net/T/
-> Tested-by: Liangliang Zou <rawdiamondmc@outlook.com>
-> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-> ---
->  drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wir=
-eless/realtek/rtlwifi/pci.c
-> index 0eafc4d125f9..898f597f70a9 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/pci.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
-> @@ -155,6 +155,16 @@ static void _rtl_pci_update_default_setting(struct i=
-eee80211_hw *hw)
->             ((u8)init_aspm) =3D=3D (PCI_EXP_LNKCTL_ASPM_L0S |
->                                 PCI_EXP_LNKCTL_ASPM_L1 | PCI_EXP_LNKCTL_C=
-CC))
->                 ppsc->support_aspm =3D false;
-> +
-> +       /* RTL8723BE found on some ASUSTek laptops, such as F441U and
-> +        * X555UQ with subsystem ID 11ad:1723 are known to output large
-> +        * amounts of PCIe AER errors during and after boot up, causing
-> +        * heavy lags, poor network throughput, and occasional lock-ups.
-> +        */
-> +       if (rtlpriv->rtlhal.hw_type =3D=3D HARDWARE_TYPE_RTL8723BE &&
-> +           (rtlpci->pdev->subsystem_vendor =3D=3D 0x11ad &&
-> +            rtlpci->pdev->subsystem_device =3D=3D 0x1723))
-> +               ppsc->support_aspm =3D false;
->  }
->=20
->  static bool _rtl_pci_platform_switch_device_pci_aspm(
-> --
-> 2.49.0
->=20
+Yes.
 
