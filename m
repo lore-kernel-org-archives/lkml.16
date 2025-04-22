@@ -1,111 +1,74 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637861EB1AB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE737CA64;
+	Tue, 22 Apr 2025 07:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307786; cv=none; b=G4UdQy7SqJo3G/++9Hpgq9XdjIdoCmlNJ4GqV9wrhhd7KZA4jg2tdrxrVt24m9i194Km3vJ5ukitEWkXJgLAhLw3xq6XBPQI5B0CItl0URHDZySx/DU2bkkKzaZ9fYn58NldVkAolVP7ohbHcCYKyjHmIXn7W1CEieQ7vtINgbg=
+	t=1745307824; cv=none; b=bQV73ImKmN65ipSIBdDS3doPXNugEjhbxNtZpb4ayiiFaF4mwj97e4adTs4UQFtJNBe+v2aWNq6LXNBs2f/XQKl/G8KDVrjBUUR81ivHrvWYcq69ChNK6YZWcFinaDUqiCt9TP1xMsaZtYzocHuQ7QN6/KbdpaHBd3d/ormn9H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307786; c=relaxed/simple;
-	bh=O9JdbRWaeCBz+RHOzJxD4pGeS7rOOvKN9vc4OCnEDKw=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:Content-Type; b=ccc342veQ4kUEwWTtLUfpeeSRdYOe7ozn06QXIdvjJnG9uXUZJfPEiZw8lNkBbYUcZaTVXxjWdJowJdxcmeLrEOf/qARZUozsk5x+63T7kO8MMWSPjSq25vKifzXcYriaeW/+dzO+UNJTsXNewtM7gPul8TXmYNg6+jXdXnlNhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=BSqItFQJ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1745307824; c=relaxed/simple;
+	bh=R5SFfORZyHAzVkPV76H8wV6285XhlcAIVYEAw7yOVvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t9HdzlxvA4Y65q3sNeq4hnEkrBg+G5/HDOGaywQSe79CGPlGzHIcjlPJZ4TRTr966sEFN2X899vvL+PAfaUjIl9ydIBtlSRWLg5QgPqREEQJKLBRnHWf0V6T/8jInTxukwg+9/e/8OmKsLONMXqGS3zPJlVOOSLauwoVHWztOzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XdSGTa6W; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="BSqItFQJ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb5ec407b1so648985466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1745307782; x=1745912582; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:content-language:subject:user-agent
-         :mime-version:date:message-id:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HvtvMwkTmpPueoBszMdXY/zEz71N9wRSKLK+XNFELU0=;
-        b=BSqItFQJaahgrs+pggrd9qENAnwBj7LLeiDUS605X2c9JWiExb/MEQlC8faHbLdvzJ
-         qyAROUx66zaTF/ri4S8ffYx9qQPUwWbSnRl+IEbbQ191+bquLYUvC9QA4g8GnLdxw2sP
-         i4zREDxEcxhxlh9KoGIlZRNmmFqo8Ok9cY4A0HeSV00NTd4AKCIKIBY0dR+4YtVxDXm7
-         EQE16fZ1fZiMd71Uk1kUpm0fi1d4B7NA4GsN9lqv+g5xwkfwaHmtlU74hklxbZU4vIjj
-         +mZzE2+eY9iQIE2ajOah7CYz84b2M5uQSQPcuGot2kZ3+pc7Om+T+he5wxXK1zXeYtGu
-         9oFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745307782; x=1745912582;
-        h=content-transfer-encoding:cc:to:content-language:subject:user-agent
-         :mime-version:date:message-id:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HvtvMwkTmpPueoBszMdXY/zEz71N9wRSKLK+XNFELU0=;
-        b=jU04FPWut+Zgt/3r7hoaC27ndg2DXQAYzmGvZe7DTPykX2s3C9uT9unDzzQl+hwypO
-         Mjo4oj5mdSnoyUsbZcQFCxXRv5jWbAYEcJ5gq4jCxCeIty67MX66QZoVmbnLKyBRl+V7
-         gUgPuGmSb6yJndykxYb8Znr57gaWfsRoJBbGWRaWYPd/+UZszoML8h4r3N5CRJ5ikU8h
-         zMFM8R9IMhYIT9vRPK5JYkJmZBuwjQo4BW59T8z21F3nNftX2d/CLWIsHsjkCR24iFby
-         IyzbLKl+gQoEWG7nBiIKdjGzAoiryqCFgj1Dh6sfCpIWRQfdUz1NeyYxVhg5xaJ7e9sH
-         UiRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUC1Tq7fULe/XXpRp02E7eh/g1zu7iJf7g7Ol4ETOq+9h/PbsxY58tGweF/FSwI0Y5CNG92R1cLRWZZg5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFn4a1pH6Reh7KIyYtxsifFR55WNoheAboMBbOB50mU2iCz1jn
-	1iooLjF3DlEdNRbd2c20XIogrHtOrsuFGUq4ydPML2y5SsbkOTwfdDYVL+xdrw==
-X-Gm-Gg: ASbGnctTTBPL7QC3CDK5Wrt6EK9Rc7xGODMuJWJjM1N4++gXdJvh6JQw45LnEoJDdbG
-	h4mfUe2lam/PHpXQRfgCib56ke+tP16/hGRc/c6umRkRdU18agr1OQFOcqC8uSLTCxnbnDmViTW
-	0j7Zr50Aa0UOFAEayQcRUFjfvawmhDIsgS3PXK6fkE3rv6MTOOJYvULT2ZUDDgY1cko7ZWGx8UP
-	HJU14qhJRaQmbOjXWavPiP32CXloEKvHvaEYjmbt9IFZAb6R0/b8/fAgK5oXwlBp32rrpJnzJxl
-	fIpjcCZCrXYRvB87lZ4kUXsQMErd2kvndYdApJ0=
-X-Google-Smtp-Source: AGHT+IGeWOF7rvAQVW49ssEllGvauDTfczcnSBjqrSKrwBLr+txCO9/Ai5Axu/MLfDHRRPf7+rlXcg==
-X-Received: by 2002:a17:907:d7cb:b0:ac8:17a1:e42 with SMTP id a640c23a62f3a-acb74b1ddbamr1344361966b.22.1745307782452;
-        Tue, 22 Apr 2025 00:43:02 -0700 (PDT)
-Received: from [10.2.1.132] ([194.53.194.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4235asm615437066b.39.2025.04.22.00.43.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:43:02 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
-Date: Tue, 22 Apr 2025 09:43:01 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XdSGTa6W"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745307807;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OudTtl9ifhGoOWeWZyumebbyu3fyKvkdq2X/syYruzc=;
+	b=XdSGTa6WnFgv860U++wFbXqW6yV3Z+iN1/kEXX8RQsqavIEFXgbncR4hKZdtl6uzYwWZE6
+	hAXU8oAND2S72L4qw9R/1J0N06ycSVmbajeOyjahnw/GhIhVsnFlIMKBVlhAg9ZWMdfGrA
+	AiV29uU+BFWdvXqZeDHcKaPFad/I5QA=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in board_prom_init()
+Date: Tue, 22 Apr 2025 09:42:55 +0200
+Message-ID: <20250422074257.544016-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] e1000e: disregard NVM checksum on tgp when valid checksum
- mask is not set
-Content-Language: en-US
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Some Dell Tiger Lake systems have incorrect NVM checksum. These also
-have a bitmask that indicates correct checksum set to "invalid".
+strcpy() is deprecated; use strscpy() instead.
 
-Because it is impossible to determine whether the NVM write would finish
-correctly or hang (see https://bugzilla.kernel.org/show_bug.cgi?id=213667)
-it makes sense to skip the validation completely under these conditions.
-
-Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
-Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM checksum")
-Cc: stable@vger.kernel.org
+Link: https://github.com/KSPP/linux/issues/88
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-  drivers/net/ethernet/intel/e1000e/ich8lan.c | 2 ++
-  1 file changed, 2 insertions(+)
+ arch/mips/bcm63xx/boards/board_bcm963xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-index 364378133526..df4e7d781cb1 100644
---- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-+++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-@@ -4274,6 +4274,8 @@ static s32 e1000_validate_nvm_checksum_ich8lan(struct e1000_hw *hw)
-  			ret_val = e1000e_update_nvm_checksum(hw);
-  			if (ret_val)
-  				return ret_val;
-+		} else if (hw->mac.type == e1000_pch_tgp) {
-+			return 0;
-  		}
-  	}
-  
+diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+index 9cc8fbf218a5..c5617b889b1c 100644
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -764,7 +764,7 @@ void __init board_prom_init(void)
+ 			snprintf(cfe_version, 12, "%s", (char *) &cfe[4]);
+ 		}
+ 	} else {
+-		strcpy(cfe_version, "unknown");
++		strscpy(cfe_version, "unknown");
+ 	}
+ 	pr_info("CFE version: %s\n", cfe_version);
+ 
 -- 
-2.39.5
+2.49.0
+
