@@ -1,268 +1,207 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066E629008A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A502900B8
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333966; cv=none; b=AG6kU1M+QO3o2EnSmDHELj7dWIsi73esEzfrME4WK3NsTp98uAJH1h5Oks1ERq82y9VL+UO0dQGJnpbmLF2YPEO9QW+JZlw3XM9ScBr8WML/aegPfueSliF+HOqsTJh214br6+VYpMZ/UphqdojAXxvPTWG7EqeKBcWP/LrmT1U=
+	t=1745333971; cv=none; b=r8VmK3irc2Ne2GC2Cye3D0WIFA12s9yqfeWAed9GpPWde6x29k9vyoK/sKT21rQQ/fM+5nDlIZ38KuTGOxNnPVcyQ8RjJOs4Acm3CQeeR5vbzOboBXCxPqYJ1xsB/4GolxC4Wfnz8PtpetY0pzBO3mZDAVMC+/jjQ5gRvTQVAu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333966; c=relaxed/simple;
-	bh=cjmhCdjX5S99zSAjWNy78nsxXHO3iUtXCl1SScMKKec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NyUr9bAyZcFCrPnGIzNfalEWzCdzDnPwJInh0EngnQ658PQ3wBnncd5KHmwZwa1R/Itkqr+GjmXcYBldy7DGy7h3z4XqstXhq0Zcr//GmP0mVq2TJv16Ad8T+g85vprVCtmARzeYjslLn8IIUjsk7MZUnS0aJ+521SplR3JofiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=UNE5zRVM; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=UNE5zRVM; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745333971; c=relaxed/simple;
+	bh=QWsuGSrV0jBviRJ5z4yTu4Oqodj0PgaVYZ4TbaGeH84=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=crzhkDwisWiba7jWti7NUwq99+VFrMfcFyd7Wqghvj2pfCNTxol1rwh4HUHMZ5e711fPk3G3i8N7+SgxJF8OhKwxZA4koqF5cCa15BUptCGS/m2+FMvm5jXAZ6QUTkmayMZb0/AZ8DIKmOu50D8Jyv7jtCkEYnF3+vCxP1aZf+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=gdUEso98; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="UNE5zRVM";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="UNE5zRVM"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2AD79211B8;
-	Tue, 22 Apr 2025 14:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745333963; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=cjmhCdjX5S99zSAjWNy78nsxXHO3iUtXCl1SScMKKec=;
-	b=UNE5zRVMYIKYycGv3s+/StKRd8CkMwGFWj3LvGpf26yP+HVn0tQPupk7jSyXOzBKj8E7zm
-	3psAbpXKWB+lUGCoMKSJ6Ce881zFWOQbELRGBEzwahlKaSgWx7LpMCkXlaI2lXr1X1ZxZU
-	sX66KNGfvQ4vCC5WsKNPDjzMPmCh370=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=UNE5zRVM
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745333963; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=cjmhCdjX5S99zSAjWNy78nsxXHO3iUtXCl1SScMKKec=;
-	b=UNE5zRVMYIKYycGv3s+/StKRd8CkMwGFWj3LvGpf26yP+HVn0tQPupk7jSyXOzBKj8E7zm
-	3psAbpXKWB+lUGCoMKSJ6Ce881zFWOQbELRGBEzwahlKaSgWx7LpMCkXlaI2lXr1X1ZxZU
-	sX66KNGfvQ4vCC5WsKNPDjzMPmCh370=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D5E1F137CF;
-	Tue, 22 Apr 2025 14:59:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7GLdMMquB2i+VQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 22 Apr 2025 14:59:22 +0000
-Message-ID: <801d663a-d448-401d-a957-c9825aca06c3@suse.com>
-Date: Tue, 22 Apr 2025 16:59:21 +0200
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gdUEso98"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22403c99457so8623495ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:59:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745333968; x=1745938768; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=izolhSLfhzwZrQK7PfhoIMtyHLECubQLEJRViHMUUBg=;
+        b=gdUEso98MCJfA+fLdLEMpyS4kqLEI3INTJ/n5LB5GUmMzhpw4OsY2LRWcJWrxbZK/y
+         kMPyoM9oMG6jh8/76OJ4ZvaZlOJvIfA35joDvGLPb7uc7apK2NnyyQHjOWIpuUngY1QA
+         /CNVdgU0maiYSJd7DAFfBBzndGyRCU9PHW8X82dvtld6lZ5CDK+tMSyA0nf/A4gL78ps
+         LUMrViAontv3+ewD2yMZUhlcnvQkkWkObRIuA69UJlWKyHh7dYCjX8feRGj1zUmBziH6
+         tkte1d9H7KtDoY9PJ/IY333xABFd4vteqzot6yfV4D1uR33t116RCHTf6j8jnvppnD9c
+         7bKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745333968; x=1745938768;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=izolhSLfhzwZrQK7PfhoIMtyHLECubQLEJRViHMUUBg=;
+        b=ptodiFN6Je7L1fV8TIgffhbAbNuzTxp9Zd3PH/Xewjfi0oh/YYJuLxoTL84RXVdu+L
+         5wyyeFi+NgemCb5Ns4t55I9IejbEa2HoSiqlJU9gLzSUSByxJXmqcL4oP7ZxHqHD2+UN
+         vYmEcttOQ7zyIOQNhvHqaHkQUUn7ML2nXFzG4axCS3oDtVOHPL6csLaf1t6eFkhuzj9n
+         KNywaQvjRzC/VMZ8d3tksFhFR5HxkbLtnGT1fceNWNMPIGRcjDkc/CwlZDbhI1CL6d6A
+         MHMuowxRtJPOIPojd2E5Iw9npm5RSHsdNiKnJ4eAW6PN858pVMndWgYprj91mMpW6fC2
+         m2Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWh6G8hw2Dq6XZ3tpdgImwztnQoK3iqeHLnTvd/0R3PxJvJtVb9hTLabnv6q3P7RcLq5rXURMRt+49rMFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjBMZb763Fu/Y9vT1DX1kETCZ/ce4QDuMcVTqignsxyx006YqS
+	7Yue4ZdaSlqkg4f8jSGEIZ8OLCZr5xtfSBgo4KbPI/hZT9S9QF8oagey/WfS2eMRocS1ycKLsI4
+	r3N/wWeYyO06lWgD7DhGwiiBu6g492W5hit7L8A==
+X-Gm-Gg: ASbGncuKtG1VltBB6Xnz/Lrg015R64WIsDdabE3qsAyazM99pBy9QG62i8m3I/7EMG0
+	liIxxnvtSMqWvqxK4VOLASGlS1IvQzoPrNfkZXy8+JUBRP5mKaKaC4fvphx+PLgtnscm41WmfRj
+	TFFS2EdlEsU4jkIdus9caO
+X-Google-Smtp-Source: AGHT+IFUBS5IUsBu+10X4ca16j0Ntg3JLwzmjLbsVTHDlU6zPvzWH8OTHReFUT3I2Aj8cS1yr9Q2aEROrGRTkMy2Jnc=
+X-Received: by 2002:a17:903:22d1:b0:21f:1365:8bcf with SMTP id
+ d9443c01a7336-22c53605b60mr86126535ad.10.1745333968421; Tue, 22 Apr 2025
+ 07:59:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: MSR access API uses in KVM x86
-To: Sean Christopherson <seanjc@google.com>, Xin Li <xin@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
-References: <a82f4722-478f-4972-a072-80cd13666137@zytor.com>
- <aAeqRk8fk8mvutw2@google.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <aAeqRk8fk8mvutw2@google.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------w66X6YdQOmQ4uTHDxY9vXxOD"
-X-Rspamd-Queue-Id: 2AD79211B8
-X-Spam-Score: -6.41
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.41 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	HAS_ATTACHMENT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------w66X6YdQOmQ4uTHDxY9vXxOD
-Content-Type: multipart/mixed; boundary="------------6Kzqkpfo0G04mC9NQA0OA00Z";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Sean Christopherson <seanjc@google.com>, Xin Li <xin@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
-Message-ID: <801d663a-d448-401d-a957-c9825aca06c3@suse.com>
-Subject: Re: MSR access API uses in KVM x86
-References: <a82f4722-478f-4972-a072-80cd13666137@zytor.com>
- <aAeqRk8fk8mvutw2@google.com>
-In-Reply-To: <aAeqRk8fk8mvutw2@google.com>
-
---------------6Kzqkpfo0G04mC9NQA0OA00Z
-Content-Type: multipart/mixed; boundary="------------YGgMTjLMaXyiPa7UpTSb4gcO"
-
---------------YGgMTjLMaXyiPa7UpTSb4gcO
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjIuMDQuMjUgMTY6NDAsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+IE9uIE1v
-biwgQXByIDIxLCAyMDI1LCBYaW4gTGkgd3JvdGU6DQo+PiBJdCBsb29rcyB0byBtZSB0aGF0
-IE1TUiBhY2Nlc3MgQVBJIHVzZXMgaW4gS1ZNIHg4NiBhcmUgTk9UIGNvbnNpc3RlbnQ7DQo+
-PiBzb21ldGltZXMge3dyLHJkfW1zcmwoKSBhcmUgdXNlZCBhbmQgc29tZXRpbWVzIG5hdGl2
-ZV97d3IscmR9bXNybCgpIGFyZQ0KPj4gdXNlZC4NCj4+DQo+PiBXYXMgdGhlcmUgYSByZWFz
-b24gdGhhdCBob3cgYSBnZW5lcmljIG9yIG5hdGl2ZSBNU1IgQVBJIHdhcyBjaG9zZW4/DQo+
-IA0KPiBJIGRvdWJ0IGFueW9uZSBrbm93cyBmb3Igc3VyZTsgdGhhdCdkIGxpa2VseSByZXF1
-aXJlIGEgdGltZSB0cmF2ZWxsaW5nIGRldmljZQ0KPiBhbmQvb3IgdGVsZXBhdGhpYyBhYmls
-aXRpZXMgOi0pDQo+IA0KPj4gSW4gbXkgb3BpbmlvbiBLVk0gc2hvdWxkIHVzZSB0aGUgbmF0
-aXZlIE1TUiBBUElzLCB3aGljaCBjYW4gc3RyZWFtbGluZQ0KPj4gb3BlcmF0aW9ucyBhbmQg
-cG90ZW50aWFsbHkgaW1wcm92ZSBwZXJmb3JtYW5jZSBieSBhdm9pZGluZyB0aGUgb3Zlcmhl
-YWQNCj4+IGFzc29jaWF0ZWQgd2l0aCBnZW5lcmljIE1TUiBBUEkgaW5kaXJlY3QgY2FsbHMg
-d2hlbiBDT05GSUdfWEVOX1BWPXkuDQo+IA0KPiBBcyBKw7xyZ2VuIHBvaW50ZWQgb3V0LCB0
-aGV5IGFyZW4ndCBpbmRpcmVjdCBjYWxscy4gIFRob3VnaCBJSVVDLCB0aGVyZSBpcyBzdGls
-bA0KPiBhIGRpcmVjdCBDQUxMIGFuZCB0aHVzIGEgUkVUIHdoZW4gUEFSQVZJUlRfWFhMPVku
-DQo+IA0KPiBJIGFncmVlIHRoYXQgdXNpbmcgUFYgQVBJcyBpbiBLVk0gZG9lc24ndCBtYWtl
-IG11Y2ggc2Vuc2UsIGFzIHJ1bm5pbmcgS1ZNIGluIGENCj4gWEVOIFBWIGd1ZXN0IGRvZXNu
-J3Qgc2VlbSBsaWtlIHNvbWV0aGluZyB3ZSBzaG91bGQgb3B0aW1pemUgZm9yLCBpZiBpdCdz
-IGV2ZW4NCj4gc3VwcG9ydGVkLg0KDQpTaHVkZGVyLiA6LUQNCg0KTm8sIGRlZmluaXRlbHkg
-bm90IHN1cHBvcnRlZC4NCg0KDQpKdWVyZ2VuDQo=
---------------YGgMTjLMaXyiPa7UpTSb4gcO
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+References: <20250421165525.1618434-1-csander@purestorage.com>
+ <20250421165525.1618434-3-csander@purestorage.com> <4cf8af38-419e-4d7c-95f7-7248faf3c7bb@grimberg.me>
+In-Reply-To: <4cf8af38-419e-4d7c-95f7-7248faf3c7bb@grimberg.me>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Tue, 22 Apr 2025 07:59:16 -0700
+X-Gm-Features: ATxdqUFa7hpMhqNeBArzW1f7_U-MXLOc0R42TakRSbVP4GANnHTXCxIfw7jUpCY
+Message-ID: <CADUfDZoJixufDq4wfdtmNpqNOxmByj6Tekw=e-5G_Yc5y5XaBw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] nvme/pci: make PRP list DMA pools per-NUMA-node
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On Tue, Apr 22, 2025 at 4:48=E2=80=AFAM Sagi Grimberg <sagi@grimberg.me> wr=
+ote:
+>
+>
+>
+> On 21/04/2025 19:55, Caleb Sander Mateos wrote:
+> > NVMe commands with more than 4 KB of data allocate PRP list pages from
+> > the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+> > to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock=
+.
+> > These device-global spinlocks are a significant source of contention
+> > when many CPUs are submitting to the same NVMe devices. On a workload
+> > issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA node=
+s
+> > to 23 NVMe devices, we observed 2.4% of CPU time spent in
+> > _raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
+> >
+> > Ideally, the dma_pools would be per-hctx to minimize
+> > contention. But that could impose considerable resource costs in a
+> > system with many NVMe devices and CPUs.
+> >
+> > As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+> > nvme_queue to the set of DMA pools corresponding to its device and its
+> > hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+> > about half, to 1.2%. Preventing the sharing of PRP list pages across
+> > NUMA nodes also makes them cheaper to initialize.
+> >
+> > Link: https://lore.kernel.org/linux-nvme/CADUfDZqa=3DOOTtTTznXRDmBQo1Wr=
+FcDw1hBA7XwM7hzJ-hpckcA@mail.gmail.com/T/#u
+> > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> > ---
+> >   drivers/nvme/host/pci.c | 144 +++++++++++++++++++++++----------------=
+-
+> >   1 file changed, 84 insertions(+), 60 deletions(-)
+> >
+> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > index 642890ddada5..7d86d1ec989a 100644
+> > --- a/drivers/nvme/host/pci.c
+> > +++ b/drivers/nvme/host/pci.c
+> > @@ -16,10 +16,11 @@
+> >   #include <linux/kstrtox.h>
+> >   #include <linux/memremap.h>
+> >   #include <linux/mm.h>
+> >   #include <linux/module.h>
+> >   #include <linux/mutex.h>
+> > +#include <linux/nodemask.h>
+> >   #include <linux/once.h>
+> >   #include <linux/pci.h>
+> >   #include <linux/suspend.h>
+> >   #include <linux/t10-pi.h>
+> >   #include <linux/types.h>
+> > @@ -110,21 +111,24 @@ struct nvme_queue;
+> >
+> >   static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown);
+> >   static void nvme_delete_io_queues(struct nvme_dev *dev);
+> >   static void nvme_update_attrs(struct nvme_dev *dev);
+> >
+> > +struct nvme_prp_dma_pools {
+> > +     struct dma_pool *large;
+> > +     struct dma_pool *small;
+> > +};
+> > +
+> >   /*
+> >    * Represents an NVM Express device.  Each nvme_dev is a PCI function=
+.
+> >    */
+> >   struct nvme_dev {
+> >       struct nvme_queue *queues;
+> >       struct blk_mq_tag_set tagset;
+> >       struct blk_mq_tag_set admin_tagset;
+> >       u32 __iomem *dbs;
+> >       struct device *dev;
+> > -     struct dma_pool *prp_page_pool;
+> > -     struct dma_pool *prp_small_pool;
+> >       unsigned online_queues;
+> >       unsigned max_qid;
+> >       unsigned io_queues[HCTX_MAX_TYPES];
+> >       unsigned int num_vecs;
+> >       u32 q_depth;
+> > @@ -160,10 +164,11 @@ struct nvme_dev {
+> >       struct nvme_host_mem_buf_desc *host_mem_descs;
+> >       void **host_mem_desc_bufs;
+> >       unsigned int nr_allocated_queues;
+> >       unsigned int nr_write_queues;
+> >       unsigned int nr_poll_queues;
+> > +     struct nvme_prp_dma_pools prp_pools[];
+> >   };
+> >
+> >   static int io_queue_depth_set(const char *val, const struct kernel_pa=
+ram *kp)
+> >   {
+> >       return param_set_uint_minmax(val, kp, NVME_PCI_MIN_QUEUE_SIZE,
+> > @@ -189,10 +194,11 @@ static inline struct nvme_dev *to_nvme_dev(struct=
+ nvme_ctrl *ctrl)
+> >    * An NVM Express queue.  Each device has at least two (one for admin
+> >    * commands and one for I/O commands).
+> >    */
+> >   struct nvme_queue {
+> >       struct nvme_dev *dev;
+> > +     struct nvme_prp_dma_pools prp_pools;
+> >       spinlock_t sq_lock;
+> >       void *sq_cmds;
+> >        /* only used for poll queues: */
+> >       spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
+> >       struct nvme_completion *cqes;
+> > @@ -395,18 +401,67 @@ static int nvme_pci_npages_prp(void)
+> >       unsigned max_bytes =3D (NVME_MAX_KB_SZ * 1024) + NVME_CTRL_PAGE_S=
+IZE;
+> >       unsigned nprps =3D DIV_ROUND_UP(max_bytes, NVME_CTRL_PAGE_SIZE);
+> >       return DIV_ROUND_UP(8 * nprps, NVME_CTRL_PAGE_SIZE - 8);
+> >   }
+> >
+> > +static struct nvme_prp_dma_pools *
+> > +nvme_setup_prp_pools(struct nvme_dev *dev, unsigned numa_node)
+> > +{
+> > +     struct nvme_prp_dma_pools *prp_pools;
+> > +     size_t small_align =3D 256;
+> > +
+> > +     prp_pools =3D &dev->prp_pools[numa_node < nr_node_ids ? numa_node=
+ : 0];
+>
+> I'm assuming you are checking numa_node =3D=3D NUMA_NO_NODE ?
+> Perhaps it is better to check that explicitly?
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+Yeah, I wasn't sure whether that was a possible value of
+hctx->numa_node. The field is defined as an unsigned and NUMA_NO_NODE
+is defined as -1, so I guess it shouldn't ever be set to NUMA_NO_NODE?
+I can replace this with just numa_node.
 
---------------YGgMTjLMaXyiPa7UpTSb4gcO--
-
---------------6Kzqkpfo0G04mC9NQA0OA00Z--
-
---------------w66X6YdQOmQ4uTHDxY9vXxOD
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHrsoFAwAAAAAACgkQsN6d1ii/Ey+9
-4ggAiLzknjzYIwe9GJPqAY5tfSMeiT4hL2y5/8vog2S1FzA8zuvKZVyMYopPvHvpf6AV+/wvAoqx
-GXUSF7ntNybIvPI9B7vN3+QcKrc8SiE4DuP7/1KStS04Iv73rD+6oYg8QxP4FDWt6orRpL/vZnht
-2UFdWPZAC9+k56KRK4qKtTuJLjItOxpuWcbSoaatSPdqeXRoYhEnRBVJFK6yZVtRYN6STPfyllnU
-VNbT7eXFfj2vP9PGrTDrV8sILbsfa0bsZH1D8Z1Gw3BbTpfBh6qtyoIMNy+13ScMkPdJAA8KiQWF
-GXaFMXLuo1KSLioqTdxVDonsIj40HE7NgT3YzoFaJw==
-=5exk
------END PGP SIGNATURE-----
-
---------------w66X6YdQOmQ4uTHDxY9vXxOD--
+Thanks,
+Caleb
