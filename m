@@ -1,191 +1,381 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2087.outbound.protection.outlook.com [40.107.101.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C275242D6B;
-	Tue, 22 Apr 2025 22:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362583; cv=fail; b=UH8Om8wcHanpr/NWqccJxYUovQBX5DY1u4dIMqgm+zGcgB3CmiwU0oPueWxVCYe5dg3CGhAcSf8Ug0/QP2J1tCG5XYLWEDU5fk/HPXtW4TioIAmjZr0tKgHlWJB48jhuBMURAl6Pm5x9QwkPE4OhCdaN1I5fa59l5I0jE9ZAZys=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362583; c=relaxed/simple;
-	bh=rcOGsKjmEbVFSwAVxc9KW1BPr1a8tbbIcVHCf1NRGuE=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=krlpSzT2gdVcr3FJgqYzYQuWSahQAbdL7pXZILNoCNzpi4XrDoQgiNdy6ixsQIFke5v//c2X773K/PqTS8D2Pd9OWCTzbd5tuV6C/SlbViS7iswzS7WVnMyfPSC9I8B9pYfmc0saUMXLD42oTpmbP2U3hlP2F5CI8ABlVwFmhNw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RGC8iBv5; arc=fail smtp.client-ip=40.107.101.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B783B1EE7DD
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745362715; cv=none; b=Kej08la5o7w3H1P34Prudha3l+qYBtLq91vIidrdjBH7252vb95UfM2LmCO2vq11aZSFpi0dZ+p7LNGg/d/nMEEw5kyYFRuHHIj/e/oBgIKua0hqky+1s7KIS3zhmLTepR97ujDQDJnWSTUAjtbBLu93A7QE+5eF7BuhuHGTX9Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745362715; c=relaxed/simple;
+	bh=Pa+ElDku3HZEpn1QYArw6VW4kZniyFsCxLJncEg08Fw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GTK/FRO6CK/dqdwpUy+TwGJSmvtDIB6ik1UpRn1hPOUIOz54E4gmWLgJ2mQ55YXhj+XOQ2IwodiyFcBETyW+CfHRxqUQxJe/zHZKYl3IBBOJknn4qh6C0Grgjb0GAGMuI+/wlm/vofLYcOu0q3AxsOpmogszEiytI9gFpVJI4OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gBk85uVK; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RGC8iBv5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KnBW6olN+48TUQLHMKrW6j3ViupIZqyXbLtgO0ql7qpdTDIyUyFxtcuUd5enrj8iSPlS60pt4tvzHw2Sxzn043BHMczbDb2cssLJt7BGAIZWZRlqEgQ9N67zNpbMZkl2BZ3H8bnKJGWeag3WH325xDPrzv9mcyOA1GPWiiB0AieKHX4pC7pw4Ls72cM2HgKUUlthwqPrtZoFwAE/cSSH2r0fWzG47MtIUud5Q0nKlhkjYz4/np/2CmYr1MicmiDDOnIxZJQnYjtcS7YHLDFdOpsPdD3P81fyZlZ8j5J2alno5EH42gxNUzfOsuhww/RKr9E/Uu+IIeSd+H2itSGQZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gHHCFhEXHfXV7LPalxRQ2KUU71JtAZiXfANN02NVOk0=;
- b=TqrbON5/KwjmmgktlpVUkBgNzyt8N2uv/F8jFrg3WsGeFwh0BL1dRcIe5Q3VyBlp747Vyvkj1Jm0JxBDZ6jj+banldOTSsUobXa92+9NWD4lUQ9qKIargQc/fh2vfeSkgQfgWa6V9tSPbXhPdBUUPcVz5m3RflwE6a73jG2rR4CbRtQAr/VbXI4D3v6zHbF7Bn1hk0/pnwhqhGlsk9Mscec+OIS7cPs6fB1FFpB3sav9sNoDdPoZXBHuI13sTcxXfzFvjzoZyHBtMdO7AYwz0KDyACePUPwCp33vBZYtxSu1trN8MVM0/L9bsxxYOq6XREVWgNouz7zk8ADID7QgLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gHHCFhEXHfXV7LPalxRQ2KUU71JtAZiXfANN02NVOk0=;
- b=RGC8iBv5moSTco7lNr6PIUS6NX8O6dO5B9Az6V2ED4N1wEVcNtXX3RWlAT0iDIagZeAmKs4lCWJXdtJS1BpZiotPhskesIepspBhQUysXoojUy9vmmARIPEr0KSONzxM70XiI2jaenE+0hNtPKdFwZLlqOfQbhPqlN7yhILTiFJK7jYoY3BZMkEZMx9o4TV4A7uAD6ZVLhCZU93wvThhMnpf0qulSDSZ7aZqnLRSkLzf3EU3f3JMHyS+pO4cJ3b2gz7w/+ukW5rZkVZh/wFZ7P8L9cmJLiHuWRUMD/y9CFaYwnMKlgwJKMOhXQooyqIpR+Z2jYD/S6bjjHPRTpF0SA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by PH0PR12MB5607.namprd12.prod.outlook.com (2603:10b6:510:142::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.34; Tue, 22 Apr
- 2025 22:56:18 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 22:56:18 +0000
-Message-ID: <fd718b41-a812-43a3-973b-b07a1381f062@nvidia.com>
-Date: Tue, 22 Apr 2025 18:56:17 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/memory-model/Documentation: Fix SRCU section in
- explanation.txt
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: paulmck@kernel.org, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>, RCU <rcu@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
- Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-References: <20250422173830.90647-1-urezki@gmail.com>
- <1497ef3c-b1fc-4723-949b-28d92a3afb6b@paulmck-laptop>
- <1a9388fb-83ff-4345-ab2b-6c1825913d71@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <1a9388fb-83ff-4345-ab2b-6c1825913d71@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN0PR04CA0060.namprd04.prod.outlook.com
- (2603:10b6:408:e8::35) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBk85uVK"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6672259e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745362711; x=1745967511; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4OQnvOrFidtEMyDdERF9VPf0SoeIDAXalyxRVjsmzwk=;
+        b=gBk85uVKG6pUmaAUOEyQrp9VtzN3ZSxNf4oa0j2TbV2lA5tO1CpSmGCaAalApAeQgY
+         a1s+rt9vLn6jfvyalS+Y/t5MoNuNLXOg7dIOew7qCYdZQkuaKzVapwporC2xaPxcOXcp
+         1cfHYHFbi+HW7lNFHLOTU7psX63d9lJ59ayE4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745362711; x=1745967511;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4OQnvOrFidtEMyDdERF9VPf0SoeIDAXalyxRVjsmzwk=;
+        b=sZNGM760+wsN5+2ZBXfHSC+Zbx5GMqi70OSrHlWiOy7f2v5uUVVjWmg0NhqMaYvONb
+         vn7P6RtblO6Ym3AdSq5o5S8qUIr1/TWCZ3iu4HufatSqZfQRc8eVN+i8jd8dPo/xYWhc
+         FyZfdLpUHi4tetUtDpFIfqxNEzSOz8HEn1q6BtH/rshEFbmpZZQjXrmcO1IfuvnRoE50
+         /S9n6xRgDhxS24ncl0rSZyDwrnMXDkqX0Oyxm3lVzzxCyi+qRj1QS8nrEAY0RZeUrtcg
+         TFJI2inRXy1pJGyp6ZJ+dZjeAXMIQp1kJQcPZQvicBsRkB9+kBZyraD8yegZjU4M2UKC
+         O27w==
+X-Forwarded-Encrypted: i=1; AJvYcCV0QNHIy+YNbhXTuFHHTgy6VPFsAl6uI9uhgpibNFJIsz0qBhP1QtG2JdTtzYPRB8gVk65uBFBv/49JylM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqVqLr0NQS4lv9sIyYqoRSr4LWVy5nddJgyQt1NhzWL3XCL3zq
+	N1DLTq+a7GcuuxwAY63Zj16aKkcM0ehFn4/Fy476tECUjNll/wPR+04au0cqvIvCw5i0zOGUU5P
+	FFw==
+X-Gm-Gg: ASbGncty5VKsxyg1LcfhOiFa0drraB6Xb/xqCOgoq762vLaVzViVkMSVqObYXAQwwek
+	S8Dqgo/kD2D21GGeLFfVrMrMX/D9za2ymoVdLk6o5lQ+28d6W6kgtSewUTMfj+oDSDr37P/zSAc
+	qiMRXIraKmMME/THr4p+kfMqAaB2C44Hb/OXL5x93NX0LLRqSGeem48LOsOs2zGJ8MG/D2f7Sls
+	7vTwn3CWV6mJ8ueUkmrQ1UUYWyn6oKmWMZr29jsNZ5+FYutZ3EjF4g9lYXwP1OmeLB97YHE2Vfi
+	8nd/DUaTrIw1cR4gTy7NdBcHjKvY8zsVk4+qWgBSmc8lDACmewsQ1BeelLEaYKmWAuwf5WFRgkO
+	jF6oNGq4=
+X-Google-Smtp-Source: AGHT+IFfCzgdpWvf+WS00Io4kUZTkpnYftGak6EFSIB1uCqlm94E0Hrudh5r34xfZKhrSydemzV25g==
+X-Received: by 2002:a05:6512:b28:b0:549:8f21:bc0f with SMTP id 2adb3069b0e04-54d6e635c64mr4696342e87.30.1745362710997;
+        Tue, 22 Apr 2025 15:58:30 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5f605bsm1330163e87.231.2025.04.22.15.58.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 15:58:30 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30db1bc464dso55553331fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:58:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXQ1uJeobOR20RMSPa2ayEmr7RbmAQzsvFQIJh6busmV6qBTJICGRkESIsCnwjrX9BaIBvBt4QHSPXpe8U=@vger.kernel.org
+X-Received: by 2002:a2e:bc8a:0:b0:30b:c91d:35cd with SMTP id
+ 38308e7fff4ca-310904dac6cmr53318841fa.11.1745362709454; Tue, 22 Apr 2025
+ 15:58:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|PH0PR12MB5607:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9afa87d8-c23d-4bb2-cc9e-08dd81f0e492
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NXdpN1RWMU5GVFZiMnFlcDloWXV4Q2RuZVdOUXk2cERDNldOSGRPMGlZeFg3?=
- =?utf-8?B?SU5hSU1mT0R6TFFlTG5tdnJqMGhDT3hXNDRRbXEyc1dTOHoxRmdCYmQ2WUxj?=
- =?utf-8?B?QzBtUHpsOFdGZ0Q2bXEvZ25ZU2o0WFA4cG5GSWxKZ3NJWEkzbW03Mjk2cVAz?=
- =?utf-8?B?OVY2VnhSbG9yd3hyUDdMNnV3eGI5QnFsazJUNFZTeFYya3V4Wml2VXNVbXM4?=
- =?utf-8?B?SlE1dUpjV2tUMmsvaHEwQXN6RDE2U1EyL1ozQXhXbXFEN0NNVll3YWo1bitz?=
- =?utf-8?B?ODZRSW9iTVU4YWMrZzdjanlWQ1hxOXM0TndwRmtkRWdBbWlNekhKaTAzRndJ?=
- =?utf-8?B?R3FZbHhGU3hXU215NDlVVXdIeWpubkZqV1JRTy8yOUluMkMyOTZrTldWQlh1?=
- =?utf-8?B?SEg1YURPMVAwR0hmNmlkdlFMdTRoVm53WExnMEMwUlFpTjdFei9QZXdFcEs3?=
- =?utf-8?B?RFc1VmpUblJDZ0RwdVpyMUYyY3NXV2grQStHeDNONEdmM2ZPMFQ2SHhGWU1M?=
- =?utf-8?B?Vk1HVThqeHBCTW9DN0V0Kzhxcjh6TVNKc1dEYmZOK2M3cVhHbk9TYXlEdmJI?=
- =?utf-8?B?a1N2ZFplbG5Jczh3RmtSSU5GK255UzR5MVFmSU1FYzlLL0xtZTgyaVlvaWpi?=
- =?utf-8?B?SDMwK21kckZOalphWGE5Z1FhTHRzZFhPMXNWTzBhSjRoM1hza2tEL1BvYm5j?=
- =?utf-8?B?eHpiZGpWYlNuRWozOFg5VzlBY3ppd0VzTHVQdHBZS2cydjZiY3RXd29lNzVR?=
- =?utf-8?B?MGdwTlU3WVJPbkZYeVdQQjlkYmR4QUFKOVd3dEFjblIwVGF1cEsyV0IvMWV1?=
- =?utf-8?B?VndzcndaTFJuRDIzM3I2UzdBSlZJUDVzak1ERnQrdVBoMFRVSFZyMHZmQ2wv?=
- =?utf-8?B?QzFhMHVvakdwcVpqVzhhTzBUTjNNM01aTUczbnpRcXh2Y3oycnBZYlZ4UzAv?=
- =?utf-8?B?Z2g2bGQ2M1BGODhIL1ZlamFxRXFEYnJrdXF5YzJFM1lFMjV2THdBOVZnRjRm?=
- =?utf-8?B?K3RLWVNqQzdJVFpsMUdDTk00dFhwR3lRYVlRYXVmZm5YVytYTDdvUDdDTUpG?=
- =?utf-8?B?UHQrclNPeW8vM0xUNEo4Z2VWWlhVVXhpcFdqYnlSVHl2bFlZbjJLNW1NZDFn?=
- =?utf-8?B?WEpxb0F5RG9WcWVwNVJKQ0F5TnJLQ2l3OUp0NVYwZzZJR0lac09hQ3pBQkIx?=
- =?utf-8?B?SDMzQmRGdWJWVlh1VHNxOWxTZVhCclJmZ0lHK01XSWtzWnVKd09yVmFydW4y?=
- =?utf-8?B?YW50RWprSCs4Z3l4RVBNVjhUVmpLb2NDVXZiT01wbHNTaXBlSmpqc3pKYTFV?=
- =?utf-8?B?Yk14Z0NvMmMrUFVNL00vdEEwSGF1UGlVKzFhbWV3blJCUTJMUW0weWdYL0J6?=
- =?utf-8?B?ZmIrd0VTZU54dG9HZHZoTGJhalhTWWVRZkNxZlJRQSttOG54c2pHa2J0T0Nz?=
- =?utf-8?B?LytUUHk5bEgyN01KUWxSR09ROXE3NUF0eklId1BFay9QQnZFSjhKMXloMkU5?=
- =?utf-8?B?TWVFVEtQcUw3SDFpVXJKS1Y3QWJ3T1RYcXlySk5BZGpHU1lKRURiM1BnK1pR?=
- =?utf-8?B?R3ByS0hRaWc3b1M3NUovOHB4ODFFNUZqdXRDeWpUT2V4QlZYVFBqTkxZTzdk?=
- =?utf-8?B?NjJuck1adzR1TlRObFhmL2FFTzhjMzRoK1d2UjZBa0tHeUVCeXNncVNtM1J0?=
- =?utf-8?B?VGZNbXkzWWJYZy9Tejlsc2d1YlZXMVNEM3lWek1kcE9vcGc0MzcwMU9MYTQy?=
- =?utf-8?B?M1VWVmV4Z29CTHQvNVhTbnpZWDZNclQwd2RGVDZxcEowQU9qL1B0TWJsMHN0?=
- =?utf-8?B?anE2eXlPSVdRb3RvaWxSa1AzdEIzek9KRzllUUhWYW1RblFLb1VrQ0FDTEQr?=
- =?utf-8?B?WHBkc3hST2pjQ1lnTU5YTkp3OU5ReUNMQU5IcGtrR2ZHdkE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUJyVjFKd25ZVkRvVkpXSFN1U3VXY25iNnR2ZzZqY3haYlM1UXJ5WTYxTnJ0?=
- =?utf-8?B?TnpCNWp5RFpJa3FCVVhTQ2M3NWovYitNUFpGUWFzZHlJZ1Z4NG95MGU3dVN3?=
- =?utf-8?B?TDR0SmJIdXkzbW5rVXVnMWNHNnNzMlM4Rjk5cXk5U0R6K0tWM2hKa1J5MWgy?=
- =?utf-8?B?VnlTSUwydWZyYWVZZE1FdXFJN09hRkYwYlFtS1FvNU1yV1VNU2Zma0xDbFhB?=
- =?utf-8?B?Vi9HRGdVRUhXVVpPRVVmZENwd2FTWHNHRHdaZlVBamhrRlExSGVJNTM0bUpK?=
- =?utf-8?B?dkw5R3UrQ1VMTmd4Y3hJWlRFZGt4ZVB2VzlWeW1FMi9lV1BCdmdqNmJUaHYy?=
- =?utf-8?B?YS9IV2xuYXVaRzdQVDMwclVTa3FVbXFjNHZrakZma0hNQWxyR3pIWW5ET0dB?=
- =?utf-8?B?bW9JRlJ6R2lMVlhNaFo4UjlBd3RpbmVjNUY1TktkWHlCLzROazhqbmFvV0Y2?=
- =?utf-8?B?MkcwZ2tVNGl0alBER1dCajU4VjFkelR1bm9Qd3R6NzdDVis2YXFXeDJFWm44?=
- =?utf-8?B?bGh4SXBzenpqL0FmaGJyQlpRWE1PeHhKek44ZGNnZkEwVnVmTTdKSW9KTFUw?=
- =?utf-8?B?QzlTRklhdjJDNHNFZmk4NEpWVDRxaElFNm1ramVwNHFSTzdRZDhTWTNjWTFs?=
- =?utf-8?B?UlNrMTBvTHJpWFZldVZqZlpBTUhsUUNTSWRrVlMvSXh5MWhDc3pKNHo1Q0ZK?=
- =?utf-8?B?WkZMSDRiQXpBT2VJeHpoY2g5RGIxZTY4TUpWNUwydEF0bnlCRDFSZXQ0YzB2?=
- =?utf-8?B?aERWdmxOME1uTUpPT3JqR2pqUVlEQlBUb0FoS0VMV21GWEZoVjNJaXFyMmh4?=
- =?utf-8?B?Q1JQaGMwZkVucitaNGF0NlJaYjhGeDZ3anpPUktvdWJTNjNSbStFOGozMCtw?=
- =?utf-8?B?VEpzT0l3eCtvcnF6bUJCWFVmeGRnYzFSdHJ2MlBuZ1RWcGFjVmNMdUlZZVRW?=
- =?utf-8?B?TXkyTnRkNWtOU0R0eTRGZjJFaGNlcDJoQnV0a1pyeWRucW5jSWdyUVI0d1Yv?=
- =?utf-8?B?RmhyQndDQitjUFB0clQ0RUQycGEwK1d3UmRuZVU3cFhOUlEwem5hT3RpZTly?=
- =?utf-8?B?UjRVUFFlYzc4di9YYVVuOE9GVXFzWDVrRFcwbHQyY2RNZ2Q5eFRuTUlSM1VZ?=
- =?utf-8?B?RDJENmJnWVI0RHJtMWlKSW9Cczg1cE5KNmt6WG5EYmtqdkw3U0toZ2M0T2FL?=
- =?utf-8?B?blRnQmM3SHNLdXhIdG4zTFdGZmNJdEVBMjlvTHJ5TTRsUnpiVnU5dnlNZHk1?=
- =?utf-8?B?RWM1Nk5XUEVzMVFvSVZUVko3VG5Wcm4rMEFVeFdteUZoNHdndXNTM1RpNlhK?=
- =?utf-8?B?dzFWTkhyMkk2aU1ZakRON3NFUEluOXJaYkROc0hINGdMam41K3pENGNmOWVn?=
- =?utf-8?B?Zi9KQ0lyNE5Zemh1OGExcWRQQ0UrVkJMeGViYndTdGxRNkdzL2NacFYrUDd0?=
- =?utf-8?B?UGIyVzJELzR5NmhwalhzcXViVVFtYjJseWJDYWxIek5QOEJ6Ym0zdWJkdm1Z?=
- =?utf-8?B?dGN2NU01NGFxdkhZSlVlRWpzVmdWQVBDam9IZEw1bEVDZE1qblRSMGpYRDd5?=
- =?utf-8?B?T1IrT0VtTGY0QkF3NDlsWFlBV3ZOTzNOTlNVZ0RGK1h5S1BsbllEcEdoRHR3?=
- =?utf-8?B?SmtYYUsvclRQcFMrd2VXRE1pRjdNYUFPc1FMS2htWGVJRDhMSU5sMmxSbS9O?=
- =?utf-8?B?a2czM25vYjFGaWQ2cXZXdWY4SkJqQzdwUjVCZkJaNC9DSEtmU2QvN3NEdDlC?=
- =?utf-8?B?a2cvWUMvbUd6Q1dKZXZhS0pwbmV4bi9EUkZNTHQvSzBDaGQ1Z3Q2b3FmWHBJ?=
- =?utf-8?B?Mk5Ebm1haEhrbndYTlUvbUVRbm54ZHNZcWVHbkFaLzMwOWQ5N1dEWkEreHNW?=
- =?utf-8?B?ZUo3UUg0SUU3U2dkZEt3UmNnSDNmdnhjMlBmNXBkRWRBZkI4WG5mVDBVWW1F?=
- =?utf-8?B?c2tiRVFXZTB5dzdFZ1IvZld0R2V3TVJDcUdHa2pTekF5eHExTUlmblpzUXJr?=
- =?utf-8?B?L0c4QU5kV25oRFB0RXVWUlBmaTNkR1Y1SjBNc3Z0Wmx5dTg5eGhRSnJTOC9Y?=
- =?utf-8?B?Qm9kMkhUbXNDQVNlS1BuRVhjL2R5MUpoNWx6dDBRTCtxQWNsNTB4bVpaMWpG?=
- =?utf-8?Q?e6rxrUYIahe4xMTFLz6xeYxl3?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9afa87d8-c23d-4bb2-cc9e-08dd81f0e492
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 22:56:18.5030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8ooBKt3qKp0D+ILzi4YcM37n6AeRJe+qQ+rn/DoeAa0NgH79rrZMleAtO9iw1pxaIGRst6n1DpQDrN0rO+lzoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5607
+References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
+ <20250327-uvc-granpower-ng-v6-3-35a2357ff348@chromium.org> <20250422203753.GM17813@pendragon.ideasonboard.com>
+In-Reply-To: <20250422203753.GM17813@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 23 Apr 2025 06:58:13 +0800
+X-Gmail-Original-Message-ID: <CANiDSCumGeLf8qsWbnrJ2bjQEkQNM_-fD66ZDMG_ig-7XmvWcw@mail.gmail.com>
+X-Gm-Features: ATxdqUG6Xg-z7IHemIoj9htdad3raPnhd_FVHcJFOflmS9hQbocKBKA2_rkMOwE
+Message-ID: <CANiDSCumGeLf8qsWbnrJ2bjQEkQNM_-fD66ZDMG_ig-7XmvWcw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] media: uvcvideo: Increase/decrease the PM counter
+ per IOCTL
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+
+On Wed, 23 Apr 2025 at 04:37, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Thu, Mar 27, 2025 at 09:05:29PM +0000, Ricardo Ribalda wrote:
+> > Now we call uvc_pm_get/put from the device open/close. This low
+> > level of granularity might leave the camera powered on in situations
+> > where it is not needed.
+> >
+> > Increase the granularity by increasing and decreasing the Power
+> > Management counter per ioctl. There are two special cases where the
+> > power management outlives the ioctl: async controls and streamon. Handle
+> > those cases as well.
+> >
+> > In a future patch, we will remove the uvc_pm_get/put from open/close.
+> >
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 37 +++++++++++++++++++++++++++----------
+> >  drivers/media/usb/uvc/uvc_v4l2.c | 39 +++++++++++++++++++++++++++++++++++++--
+> >  2 files changed, 64 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index cbf19aa1d82374a08cf79b6a6787fa348b83523a..3fad289e41fd5a757f8dcf30a6238c694fc4250c 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -1812,38 +1812,49 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
+> >       uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
+> >  }
+> >
+> > -static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> > -                             struct uvc_fh *new_handle)
+> > +static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> > +                            struct uvc_fh *new_handle)
+> >  {
+> >       lockdep_assert_held(&handle->chain->ctrl_mutex);
+> >
+> >       if (new_handle) {
+> > +             int ret;
+> > +
+> >               if (ctrl->handle)
+> >                       dev_warn_ratelimited(&handle->stream->dev->udev->dev,
+> >                                            "UVC non compliance: Setting an async control with a pending operation.");
+> >
+> >               if (new_handle == ctrl->handle)
+> > -                     return;
+> > +                     return 0;
+> >
+> >               if (ctrl->handle) {
+> >                       WARN_ON(!ctrl->handle->pending_async_ctrls);
+> >                       if (ctrl->handle->pending_async_ctrls)
+> >                               ctrl->handle->pending_async_ctrls--;
+> > +                     ctrl->handle = new_handle;
+> > +                     handle->pending_async_ctrls++;
+>
+> As commented previously, your usage of the handle variable is confusing.
+>
+>                         ctrl->handle->pending_async_ctrls++;
+
+I believe what makes it confusing is the function arguments.
+
+Would you mind if I send a new patch introducing:
+uvc_ctrl_set_handle() and uvc_ctrl_clear_handle().
 
 
 
-On 4/22/2025 6:55 PM, Joel Fernandes wrote:
-> 
-> 
-> On 4/22/2025 1:56 PM, Paul E. McKenney wrote:
->> On Tue, Apr 22, 2025 at 07:38:30PM +0200, Uladzislau Rezki (Sony) wrote:
->>> The SRCU read-side critical sections describes the difference between
->>> srcu_down_read()/srcu_up_read() and srcu_read_lock()/srcu_read_unlock()
->>> in a way that a last pair must occur on the same CPU.
->>>
->>> This is not true, the srcu_read_unlock() can happen on any CPU, but it
->>> must be performed by the same task that invoked srcu_read_lock().
->>>
->>> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
->>
->> Good catch!
->>
->> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> Applied, thanks.
-> 
+>
+> > +                     return 0;
+> >               }
+> >
+> > +             ret = uvc_pm_get(handle->chain->dev);
+> > +             if (ret)
+> > +                     return ret;
+> > +
+> >               ctrl->handle = new_handle;
+> >               handle->pending_async_ctrls++;
+>
+>                 ctrl->handle->pending_async_ctrls++;
+>
+> > -             return;
+> > +             return 0;
+> >       }
+> >
+> >       /* Cannot clear the handle for a control not owned by us.*/
+> >       if (WARN_ON(ctrl->handle != handle))
+> > -             return;
+> > +             return -EINVAL;
+> >
+> >       ctrl->handle = NULL;
+> >       if (WARN_ON(!handle->pending_async_ctrls))
+> > -             return;
+> > +             return -EINVAL;
+> >       handle->pending_async_ctrls--;
+> > +     uvc_pm_put(handle->chain->dev);
+> > +     return 0;
+> >  }
+> >
+> >  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+> > @@ -2137,15 +2148,16 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+> >
+> >               ctrl->dirty = 0;
+> >
+> > +             if (!rollback && handle && !ret &&
+> > +                 ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> > +                     ret = uvc_ctrl_set_handle(handle, ctrl, handle);
+> > +
+> >               if (ret < 0) {
+> >                       if (err_ctrl)
+> >                               *err_ctrl = ctrl;
+> >                       return ret;
+> >               }
+> >
+> > -             if (!rollback && handle &&
+> > -                 ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
+> > -                     uvc_ctrl_set_handle(handle, ctrl, handle);
+> >       }
+> >
+> >       return 0;
+> > @@ -3222,6 +3234,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >  {
+> >       struct uvc_entity *entity;
+> > +     int i;
+> >
+> >       guard(mutex)(&handle->chain->ctrl_mutex);
+> >
+> > @@ -3236,7 +3249,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >               }
+> >       }
+> >
+> > -     WARN_ON(handle->pending_async_ctrls);
+> > +     if (!WARN_ON(handle->pending_async_ctrls))
+> > +             return;
+> > +
+> > +     for (i = 0; i < handle->pending_async_ctrls; i++)
+> > +             uvc_pm_put(handle->stream->dev);
+> >  }
+> >
+> >  /*
+> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> > index 1d5be045d04ecbf17e65e14b390e494a294b735f..8bccf7e17528b62f2594c0dad99405034532973d 100644
+> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> > @@ -697,6 +697,9 @@ static int uvc_v4l2_release(struct file *file)
+> >       if (uvc_has_privileges(handle))
+> >               uvc_queue_release(&stream->queue);
+> >
+> > +     if (handle->is_streaming)
+> > +             uvc_pm_put(stream->dev);
+> > +
+> >       /* Release the file handle. */
+> >       uvc_dismiss_privileges(handle);
+> >       v4l2_fh_del(&handle->vfh);
+> > @@ -862,6 +865,11 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+> >       if (ret)
+> >               return ret;
+> >
+> > +     ret = uvc_pm_get(stream->dev);
+>
+> Shouldn't this be done before calling uvc_queue_streamon() ? There's
+> another PM reference being held by the ioctl handler, but if the code is
+> refactored later, it would be good to make sure we resume the device
+> before starting streaming.
 
-Oops, though this is memory model and not RCU per-se. Paul do you want to take
-it or should I? ;)
+I was trying to simplify the error handling and, as you say, the ioctl
+handler already holds a reference. I do not mind sending a follow-up
+patch changing the order.
 
- - Joel
+>
+> > +     if (ret) {
+> > +             uvc_queue_streamoff(&stream->queue, type);
+> > +             return ret;
+> > +     }
+> >       handle->is_streaming = true;
+> >
+> >       return 0;
+> > @@ -879,7 +887,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+> >       guard(mutex)(&stream->mutex);
+> >
+> >       uvc_queue_streamoff(&stream->queue, type);
+> > -     handle->is_streaming = false;
+> > +     if (handle->is_streaming) {
+> > +             handle->is_streaming = false;
+> > +             uvc_pm_put(stream->dev);
+> > +     }
+> >
+> >       return 0;
+> >  }
+> > @@ -1378,9 +1389,11 @@ static int uvc_v4l2_put_xu_query(const struct uvc_xu_control_query *kp,
+> >  #define UVCIOC_CTRL_MAP32    _IOWR('u', 0x20, struct uvc_xu_control_mapping32)
+> >  #define UVCIOC_CTRL_QUERY32  _IOWR('u', 0x21, struct uvc_xu_control_query32)
+> >
+> > +DEFINE_FREE(uvc_pm_put, struct uvc_device *, if (_T) uvc_pm_put(_T))
+> >  static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >                    unsigned int cmd, unsigned long arg)
+> >  {
+> > +     struct uvc_device *uvc_device __free(uvc_pm_put) = NULL;
+> >       struct uvc_fh *handle = file->private_data;
+> >       union {
+> >               struct uvc_xu_control_mapping xmap;
+> > @@ -1389,6 +1402,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >       void __user *up = compat_ptr(arg);
+> >       long ret;
+> >
+> > +     ret = uvc_pm_get(handle->stream->dev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     uvc_device = handle->stream->dev;
+>
+> Ouch... That's not nice very :-/
 
+IIt is nicer than changing the returns with breaks, believe me I tried
+:), and it is more prone to errors.
+
+I thought about the CLASS, but it is not worth it with a single user.
+I believe the current code is a good compromise, but I might be
+biased.
+
+>
+> If you want to use the cleanup API, I think we could use guards with an
+> init function such as
+>
+> struct uvc_device *__uvc_pm_get_init(struct uvc_device *dev, int *ret)
+> {
+>         *ret = uvc_pm_get(dev);
+>         return *ret ? NULL : dev;
+> }
+>
+> You can use DEFINE_CLASS() instead of DEFINE_GUARD() to control the
+> arguments to the init function. Users of the guard could do
+>
+>         int ret;
+>
+>         guard(uvc_pm)(dev, &ret);
+>         if (ret)
+>                 return ret;
+>
+>         ...
+>
+> Another, simpler option would be to replace returns with breaks in
+> uvc_v4l2_compat_ioctl32(). I'm tempted to do that in this patch, and
+> switching to the cleanup API as a patch on top if desired.
+>
+> > +
+> >       switch (cmd) {
+> >       case UVCIOC_CTRL_MAP32:
+> >               ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
+> > @@ -1423,6 +1442,22 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >  }
+> >  #endif
+> >
+> > +static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> > +                                 unsigned int cmd, unsigned long arg)
+> > +{
+> > +     struct uvc_fh *handle = file->private_data;
+> > +     int ret;
+> > +
+> > +     ret = uvc_pm_get(handle->stream->dev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret = video_ioctl2(file, cmd, arg);
+> > +
+> > +     uvc_pm_put(handle->stream->dev);
+> > +     return ret;
+> > +}
+> > +
+> >  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
+> >                   size_t count, loff_t *ppos)
+> >  {
+> > @@ -1507,7 +1542,7 @@ const struct v4l2_file_operations uvc_fops = {
+> >       .owner          = THIS_MODULE,
+> >       .open           = uvc_v4l2_open,
+> >       .release        = uvc_v4l2_release,
+> > -     .unlocked_ioctl = video_ioctl2,
+> > +     .unlocked_ioctl = uvc_v4l2_unlocked_ioctl,
+> >  #ifdef CONFIG_COMPAT
+> >       .compat_ioctl32 = uvc_v4l2_compat_ioctl32,
+> >  #endif
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
+-- 
+Ricardo Ribalda
