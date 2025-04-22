@@ -1,120 +1,130 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057295FB95
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502855FB95;
+	Tue, 22 Apr 2025 14:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333011; cv=none; b=L85nmUE5/dHsUdYmmEC8ky+k0vicUSBye7E7kApdszOjFUz9BV/cM6k0wT++u9lw+KM1MaxsorU0gRLFJbovNtqfSwB1gus7cUerWidcb1g3ExfYfKagTgr+55eqj7YW5Gi7Dc4XBwDbqxQrNs3zhx6qIVkX+fY5WvyStrsvaL8=
+	t=1745333038; cv=none; b=OS81gdXBwVL3G9+g8O8i5EQ51EimdW1b3VqvrLAeU8mRlTa/C0R9fnMIkbe5JFKSTLXOilOG5lf22b2BTfZwg5eoDJwhIKc06X8qEI1ezxDIqB3tghLtLJoC7iMyLxQob+uTUU+5qvSaLKVBOa66RsZMQ5sI1oo04YpPKVRU52U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333011; c=relaxed/simple;
-	bh=LJ81ySCYhjh27+riOuL7JsTqHpiQvvFaxk4COY0scGc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NQG5JU95QbGStFhBqIibddRvLKlj5apHbG7NnGTT7pKUfrCQaNja2Dvpo0KcZGh3FmcYRv/BD0ZKo1lE8cCXY+uC68aLVx+lgAqfpG4ZZtgIxe4KTprN22CFv2jbW+2TtKtNGc+8iECs25i3ytxdjIq+5a4eQrPY7mWF4+cz12o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DrBbjy/B; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745333038; c=relaxed/simple;
+	bh=Cu0o5lEd9h4Wn/ZUEUPVlDg8GzdHiw+Q6L11D/K3XRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LCV+6nccBw9WO3vdx2c+7TetsNbmr9waNN61Qg6Rzl1YwMCiS493x3vwn8oHpZv9FKEeryeW7//3KaKhjNlKxlA7iTMQlN660Ef8KoWZfw4H/EX6kzsQdvqJpAP3f7pJE81mMsqpT4w9tcyhkki6kHHlyfHceyG/XVyEfWhLy0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=m8wyn1wl; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DrBbjy/B"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af590aea813so5849653a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745333009; x=1745937809; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6eckKDMmSuKFTzro6yB1ZcThs4CchkkZ6Dh7/jmsEGc=;
-        b=DrBbjy/BSPlJJr/GfhMad5hH/NT/Sg4n8KjmJSvlXTAZLEZ86Zfq1Va96OMyBRtmEf
-         hbkUvfMhCj8Ufv1M87yZxLi8ABJVPusq6CmociDWV2Dkbe2LgFAGD5f+ix92hlCXpNRs
-         FlzPLChHm7SFA9x+upgh1rdIrpnWs/06DHoROBFE8tqOX1edrU1p7Cb5YqheyCEXqsGE
-         YtOTmhrnRP+pnHm0K5A9xL8hvlbM0GYfK3a+jcNleCvz09hMYVkcp76Z7ch2ux+ehymq
-         8sF/AjxbefKyPt5s3nDiqLSMJ/TUPP7A+rb5KC2Wfq2W2cmpOv/SMXz9VmEjo4GEsfWb
-         QAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745333009; x=1745937809;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6eckKDMmSuKFTzro6yB1ZcThs4CchkkZ6Dh7/jmsEGc=;
-        b=eydYsJbVYmLiAJwPK1Qi+J8mBccWA+uNc0BXwKZdnU803Ne6jHVFkc9I/C2OvFgg5h
-         fxvXvu1zDRRcHWza9fvtINWrebdfp/x6LFYBDl7xCZ8KPCJx6kZwkaG0sc97oWN5pfID
-         hOZZxYG8mKbCbFW9hQranVHbUlmMMvo1itaU+hqqIFTG+Fq7MgxRdLgV65s6+lAKTQqD
-         oPxsj8W+Qks8rv9QmUCUeV+mH2YAmuE5KNswurwnF7TngEJssD3vpvjZOTs1d637GjpQ
-         LbobTJgM7nbcRYhCRFF0fE/iyXiCQnKGDdR5ImbBCQXi1gNs76J9HxmBccKh/dXTjRSg
-         9IOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWv3NgkaKMTURkSOpXvFzmQVnuER+wJlAooKR7leg7HuX8iI1/3BoKpqFv2do1IZ6BwzvKYUwT8PKl0trU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbwC5X1VYqTvAhM00aTNs6QoqvCF3xM8AxGEJ+mfD72ey0yrs0
-	KWl9szEL5qMES9X1Elxb4GgMkXGGqddQxnqRv0SO+nTCXvrAFNrmFkqPxkCwzebrIWsk8OAcdTY
-	gAGfZLk5F2s7tM+HZk9Epg7y0Jx6YBuslKZEt
-X-Gm-Gg: ASbGncuoMChg4W0eVoP7fnsU5OvHYSStsdNW2IsoOklQc0AkAZkNg6bVoZUf4S6K7WM
-	gjnSUmV399TYopjtJOSCidMUAn04CnVBfSLt6rgbsEryw53xeEQ9PMUYho6NXSDrM6fVjR82INY
-	0FIz6cbEocgE8H2yLuzKntjEi+sDc3bOG+bE6id3X6nqGbZgxch3sSInnoz994Lpg=
-X-Google-Smtp-Source: AGHT+IEMBJHGqdBdhaSKOmXeGG1tXBALAWr21yAGW4a9jZMoK/NIGLNrkodjNR5e/EOkzdm1rmdlcQ4lveOWH29CAO4=
-X-Received: by 2002:a17:902:db02:b0:21f:58fd:d215 with SMTP id
- d9443c01a7336-22c50cfaa36mr210689785ad.11.1745333009069; Tue, 22 Apr 2025
- 07:43:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="m8wyn1wl"
+Date: Tue, 22 Apr 2025 07:43:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745333024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eGqWvARWPbzlJGTq79GPwsMrSwFqx/NHQqtKgiIKvSM=;
+	b=m8wyn1wlQGqXXwq/vo89jTgaUiWlR+8kWRJf6auVIYA5RKwT5xpx3fcS7ggvw/01cD/xS6
+	GR3o024+UL948xQMC/o26bfT1yU8NgmULUOShTAvVdsdkcWYAX6fnrAZCm9MgV4lIbgn5O
+	wDofZVNbVeu4BnjNVq8svdEuy+RQr4c=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, hannes@cmpxchg.org, hughd@google.com,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, len.brown@intel.com,
+	chengming.zhou@linux.dev, chrisl@kernel.org,
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
+	pavel@kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+Message-ID: <aAerGq2nW3D0jDaV@Asmaa.>
+References: <20250407234223.1059191-1-nphamcs@gmail.com>
+ <CAMgjq7CdARdTEZB3ik4X9cAzNUFa6GRqjT61brygihGUYFBAeQ@mail.gmail.com>
+ <CAKEwX=M5y4yoW62U5GkHTxaDaD7UOJu_sgkkwNXJ5Hn4Gvot9g@mail.gmail.com>
+ <CAMgjq7D9Z=u2J18DExmzeU8fRbvqNwyC3tem2aykAsm79=QGEA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6807876f.050a0220.8500a.000f.GAE@google.com> <20250422-flogen-firmieren-105a92fbd796@brauner>
-In-Reply-To: <20250422-flogen-firmieren-105a92fbd796@brauner>
-From: Marco Elver <elver@google.com>
-Date: Tue, 22 Apr 2025 16:42:52 +0200
-X-Gm-Features: ATxdqUFIFyu6PcnxydXd-sfMerWWJ7SU96EUcuRo5wELlKkcu-wX78VIJvj3cZU
-Message-ID: <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
-Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu / umount_tree
-To: Christian Brauner <brauner@kernel.org>
-Cc: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7D9Z=u2J18DExmzeU8fRbvqNwyC3tem2aykAsm79=QGEA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 22 Apr 2025 at 15:43, 'Christian Brauner' via syzkaller-bugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> On Tue, Apr 22, 2025 at 05:11:27AM -0700, syzbot wrote:
-> > Hello,
+On Wed, Apr 09, 2025 at 12:59:24AM +0800, Kairui Song wrote:
+> On Wed, Apr 9, 2025 at 12:48 AM Nhat Pham <nphamcs@gmail.com> wrote:
 > >
-> > syzbot found the following issue on:
+> > On Tue, Apr 8, 2025 at 9:23 AM Kairui Song <ryncsn@gmail.com> wrote:
+> > >
+> > >
+> > > Thanks for sharing the code, my initial idea after the discussion at
+> > > LSFMM is that there is a simple way to combine this with the "swap
+> > > table" [1] design of mine to solve the performance issue of this
+> > > series: just store the pointer of this struct in the swap table. It's
+> > > a bruteforce and glue like solution but the contention issue will be
+> > > gone.
 > >
-> > HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
-> > compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+> > Was waiting for your submission, but I figured I should send what I
+> > had out first for immediate feedback :)
 > >
-> > Unfortunately, I don't have any reproducer for this issue yet.
+> > Johannes actually proposed something similar to your physical swap
+> > allocator for the virtual swap slots allocation logic, to solve our
+> > lock contention problem. My apologies - I should have name-dropped you
+> > in the RFC cover as well (the cover was a bit outdated, and I haven't
+> > updated the newest developments that came from the LSFMMBPF
+> > conversation in the cover letter).
 > >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
+> > >
+> > > Of course it's not a good approach, ideally the data structure can be
+> > > simplified to an entry type in the swap table. The swap table series
+> > > handles locking and synchronizations using either cluster lock
+> > > (reusing swap allocator and existing swap logics) or folio lock (kind
+> > > of like page cache). So many parts can be much simplified, I think it
+> > > will be at most ~32 bytes per page with a virtual device (including
+> > > the intermediate pointers).Will require quite some work though.
+> > >
+> > > The good side with that approach is we will have a much lower memory
+> > > overhead and even better performance. And the virtual space part will
+> > > be optional, for non virtual setup the memory consumption will be only
+> > > 8 bytes per page and also dynamically allocated, as discussed at
+> > > LSFMM.
 > >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
+> > I think one problem with your design, which I alluded to at the
+> > conference, is that it doesn't quite work for our requirements -
+> > namely the separation of zswap from its underlying backend.
 > >
-> > ==================================================================
-> > BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
->
-> Benign, as this would be detected by the changed sequence count of
-> @mount_lock. I hope we won't end up with endless reports about:w
-> anything that we protect with a seqlock. That'll be very annoying.
+> > All the metadata HAVE to live at the virtual layer. For once, we are
+> > duplicating the logic if we push this to the backend.
+> >
+> > But more than that, there are lifetime operations that HAVE to be
+> > backend-agnostic. For instance, on the swap out path, when we unmap
+> > the page from the page table, we do swap_duplicate() (i.,e increasing
+> > the swap count/reference count of the swap entries). At that point, we
+> > have not (and cannot) make a decision regarding the backend storage
+> > yet, and thus does not have any backend-specific places to hold this
+> > piece of information. If we couple all the backends then yeah sure we
+> > can store it at the physical swapfile level, but that defeats the
+> > purpose of swap virtualization :)
+> 
+> Ah, now I get why you have to store the data in the virtual layer.
+> 
+> I was thinking that doing it in the physical layer will make it easier
+> to reuse what swap already has. But if you need to be completely
+> backend-agnostic, then just keep it in the virtual layer. Seems not a
+> foundunmentail issue, it could be worked out in some way I think. eg.
+> using another table type. I'll check if that would work after I've
+> done the initial parts.
 
-Seqlocks are generally supported, but have caused headaches in the
-past, esp. if the reader-side seqlock critical section does not follow
-the typical do-seqbegin-while-retry pattern, or the critical section
-is too large. If I read this right, the
-
-  struct dentry *mountpoint = m->mnt_mountpoint;
-
-is before the seqlock-reader beginning with "*seqp =
-read_seqcount_begin(&mountpoint->d_seq);" ?
-
-In fact, a lot of the special seqlock rules for KCSAN were conceived
-due to irregular seqlock patterns in fs/ - I wouldn't be surprised
-there still is the odd false positive here or there. There have also
-been recent improvements to KCSAN's seqlock handling, but 6.15-rc*
-should have those fixes already.
+Watching from the sidelines, I am happy to see Nhat's proposal
+materializing, and think there is definitely room for collaboration here
+with Kairui's. Overall, both proposals seem to be complimentary
+concepts, and we just need to figure out the right way to combine them
+:)
