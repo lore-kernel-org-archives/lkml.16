@@ -1,34 +1,36 @@
-Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
+Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB2C28CF50;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E74428B4EC;
 	Tue, 22 Apr 2025 15:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335639; cv=none; b=ALamL/OEfBYxC0e1TzVoGDSrehRk+G1P8BaAvfCFhEi1cZVwlm6qjoa54UaxmCD3g9+H3xeybm807SY9WrBK1MTksRVluxpCyHzr8MYn64C3qNNXt1fnSCwRAAdogCJ81/vkKIlVMnBibWUbhpNbrRDXFvkbMKT2nJdIGyC68O0=
+	t=1745335639; cv=none; b=rB9NuI5w8aljpleG8QbxstNjIcBZf7lM7MVtkq1/FtNmgsZBAYtNgDMu8l+KBLz212cFqWx0hcPUE12JsnsAFKkLVpEepYD5qsmFLiB5oQY2phtseOZxkND+P1j0AD1QzghG6Pl6iyw6GFyCeS0dEywwel9ESW2X7a+eFGV2+hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745335639; c=relaxed/simple;
-	bh=osF8SRCtVm7uYw0wV8+zhPfygDG1r4KTYhsXoYexelE=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=uafJcjq0hVjfZHlDZp9rqTtOMbATJTliUd3Urr+1YjT/L4jXDo3a0LkVxdWrma6oVabdFxV/jAqzSdTAAKJhu1y/HJS3/BAtfiG5oU2vcc4fxjOjFl4GpVOFy1b78Xb/z4T3mlRFU4xeDIdGejGINKYBYB95ox+uqv3TBzAT7wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=O7wPBaYt; arc=none smtp.client-ip=91.207.212.86
+	bh=P7IIgBL2DEBvjkm96hBWzGVttjPfHoYpgW7BhMP5XtM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=PKo9y3J1syoOWHGoYaAqf6w/jT5jFx74ekcjKL9WX8SVyEeQ6HkpmOu+HkLBNSdAcIx4TsPFpmCq8hoOGSgjtnSR462rnZUFeGO6ame8BD2AMmvQaj37hhOgllVZc4bXkTbOfTDy5ikABed/Z4AtU31NHyf0MSl2yPVBMjkwdTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=KSTTiAMy; arc=none smtp.client-ip=185.132.180.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="O7wPBaYt"
-Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M7sLlD009013;
-	Tue, 22 Apr 2025 16:26:51 +0100
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="KSTTiAMy"
+Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M6JMlC025210;
+	Tue, 22 Apr 2025 16:26:52 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=dk201812; bh=2oGiXeRJ3zc5ZF+d499Pf2V
-	ijeVDbIWsPwwy9McpzxY=; b=O7wPBaYtqRicm1+wJJKjQVjjU16RhdwbKObb2D0
-	H7GJeCuq+73Kg9f/zFQ2LgkAe4BJw1JKYVCizI9ZQff8B7OrEbGCW5NrNYVSxdFw
-	lfEglHuSoWuIjrYV8RPuaJdQT+PjVcBBl4HJ1dQR5Il84bGAPkLWLmKmrXeqaRo8
-	HfAaETmfJ7++BJ5+sGaVKrj+RZcDvB2IcsWwj8B5jw9nth4GovjS/cKSI65p8smU
-	InY1Ix4lfOnm2F26kojmSz4JfPWYe8dsBxIR4ICPDmzaDUiCApUyhbIFGhAzoBqm
-	PPpgc8ms0XPaUfTYZ8r++9w3GPJrmmbPXpybXcqAYUIrykA==
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=B
+	SGEQwMZjYIpuTN5ro8M8TjOKKvoSv9pOa+hAkQBQT0=; b=KSTTiAMyeovDtZ63C
+	o41FpqT8JDXqWO1yp0xe4Xs5yEEofBYvLNeYvOWQX1m2WvACOuLORkveMQ+j8wqC
+	xD4yRreQELAEFy6nAyW3CVuC6PZ4jRCW3dR819RWO9fUagSE/APKn/FFHahbIpSs
+	SOPvcFuJwTW8vuo7Jt8BCc91LO/R8EbtDMWL3XTbQ5Rh1W7Ev0MWMByyJ8SIicWx
+	UKM5cb+Dpf6uMoz09/vOu5xcmAp9HvyVZbF+qcK9HFvgqWkYrzoAQv8mn5mVrta3
+	gvbDTCpZtcLW3HCJFSn6MCGs1nBizE0KfxgE5US0YliX0dM6gSDzekkMc4TxrWpR
+	hW1vw==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 46423t1u0t-1
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 4643ww22a3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
 	Tue, 22 Apr 2025 16:26:51 +0100 (BST)
 Received: from
@@ -37,9 +39,8 @@ Received: from
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.2507.44; Tue, 22 Apr 2025 16:26:50 +0100
 From: Matt Coster <matt.coster@imgtec.com>
-Subject: [PATCH v3 0/2] Imagination BXS-4-64 MC1 GPU support (DTS changes)
-Date: Tue, 22 Apr 2025 16:26:40 +0100
-Message-ID: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
+Date: Tue, 22 Apr 2025 16:26:41 +0100
+Subject: [PATCH v3 1/2] arm64: dts: ti: k3-am62: New GPU binding details
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,11 +49,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADC1B2gC/3XMSw6CMBSF4a2QO/aavgFH7sM4wD6gA8C0TYMh7
- N3CSE0cnpN8/wrRBm8jXKoVgs0++nkqg58q0EM39Ra9KRsYYZIIKvGxRBSoBJoUUbeNMKSplZQ
- KCnkG6/xy5G73sgcf0xxeRz3T/f0TyhQJutpw1xGlmDRXP/bJ6rOeR9hLmX3q+kezolvXaNIyz
- ikVX3rbtjdrsbSM5wAAAA==
-X-Change-ID: 20250415-bxs-4-64-dts-c984d0876556
+Message-ID: <20250422-bxs-4-64-dts-v3-1-ec6657bde135@imgtec.com>
+References: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
+In-Reply-To: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         "Tero
  Kristo" <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -69,55 +68,67 @@ CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         Matt Coster
 	<matt.coster@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1296;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1639;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=osF8SRCtVm7uYw0wV8+zhPfygDG1r4KTYhsXoYexelE=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMWSwb7V8Njn2rNGfQ/v3hfRqu20R2tibu5L7fvEevxXRC
- +OWyF462VHKwiDGwSArpsiyY4XlCrU/aloSN34Vw8xhZQIZwsDFKQATMWxi+Gda5n/T/8eX2++/
- LWe0/7XFbnP1KxEh1Tfdbq2C6td+pUcwMkxQLwn5kXk/Ne1+4t6dYdLixwtWFm7//279381WBjL
- FtUwA
+ bh=P7IIgBL2DEBvjkm96hBWzGVttjPfHoYpgW7BhMP5XtM=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMWSwb7W8EF8+teSl1pu7U39NMTYRm+e/tOnrkRtlx3IDz
+ 8VtU3Z60VHKwiDGwSArpsiyY4XlCrU/aloSN34Vw8xhZQIZwsDFKQAT8WpjZHh/U+dv9t7F/PJ7
+ K13FDD4aMahePhHvpLzvVcIno33GQt2MDOs//7oSEnfy/tu/Gju7Ze/I27NcnphT87JU6m5f0du
+ uKewA
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=L60dQ/T8 c=1 sm=1 tr=0 ts=6807b53b cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=6pm0VhuFVbIA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=sozttTNsAAAA:8
- a=_yRp58ONHCnQFu2M2WYA:9 a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-ORIG-GUID: pd8aAIL72NSechMn-Ap2aj1T9LbpDTOQ
-X-Proofpoint-GUID: pd8aAIL72NSechMn-Ap2aj1T9LbpDTOQ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDExNyBTYWx0ZWRfXxbe5BKxbbxwi pkYBnpcgrtnbSxWQa8pFhkUmcM9LlTcEIiJDrW5QlDlIbtRHnq8Wlp2Mit3gYpk8GqCphMGM94R TGfVGKPNswwqy3uRevzYgVvNB0NYJ5qa3oaQ+ID3capvn8kqP+BpafxGqIadDccPMzn4LRMSMzB
- PRja5kHKjxo+0zkmba4aAke7rg5CDQfaFUwG+FqHi5M0U73JC1Qhg30loWD9LtHANhKS//5vr7A ldb0YIvUWHac5S9UBsdpuLYQmPaOWOmNTude+HLOO7iyMrT38zySPFX7RWsgHlpc22+FDQGA8OZ QQ+TmlcOnagQF4PiGabjYxRWmlftsqZqPZdWzNNInDXpUTHAHvYzKZ8UtSEIZAh41Eg9yDAgSbr
- AV5uaMjV9tcMp/JcsjZzKElj+xY9AOeUylCv9icqJeCO4gJAhKvIKNxpnK+imiMVvRhcRwqI
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDExNyBTYWx0ZWRfX4O+2/RR6iD+9 8r1/rsAfM1EUbp5CxHVBZbrAVGYwFBlgRLMTxgSAEEEhVOcPdrOaZGMmFZIA+y3+W8s2B6kKSnf 2q4vwBE5On+vVczWAX+lD8bL6jMlke2Q2PwaAVc7bsUdw5uEMdcm5l7QJVeCq4GNVBSxqzWO1Xv
+ F8D43LnHMyRL2R8FHx54qCPpA5Ck47C+fOPYqGuBG6N7iJZ+J7UIqNcmZcmLnRvIgtQgMnsiD+k 5VHZjsp9WQ+6g1BBDn6KklT1cu0pXL8DwXaOMlBLWcEnux9xyLFRHEZtn2uZFVVB5VbD8boA4WH TYHyrIwzaAgreJOPKo2lwiIhOTstJWU7VArxYelUxaXPJ2epcTrqOwNMzRUArOR94K3ns2RZSMi
+ rquIX6FgNngk+EI4csg92w4qDWjsCRifA+UAYRbU12Gr4sWEhLVoSmxc8QpxigHVtx7RrDUW
+X-Authority-Analysis: v=2.4 cv=ApTu3P9P c=1 sm=1 tr=0 ts=6807b53b cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=6pm0VhuFVbIA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=sozttTNsAAAA:8
+ a=PTNHAAa5d5l9TNYsNX4A:9 a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-GUID: TUJ0X56Mq9jR5OjvRPC2TtTCyBLUHZzV
+X-Proofpoint-ORIG-GUID: TUJ0X56Mq9jR5OjvRPC2TtTCyBLUHZzV
 
-Now that the binding and driver changes to support the Imagination
-BXS-4-64 [1] have landed in a DRM tree, here are the corresponding DTS
-changes without the [DO NOT MERGE] tag.
+Use the new compatible string and power domain name as introduced in
+commit 2c01d9099859 ("dt-bindings: gpu: img: Future-proofing
+enhancements")[1].
 
-This GPU is found in the TI AM68 family of SoCs, with initial support
-added to the k3-j721s2 devicetree and tested on a TI SK-AM68 board.
-
-[1]: https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com
+[1]: https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-1-eda620c5865f@imgtec.com
 
 Reviewed-by: Randolph Sapp <rs@ti.com>
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-
 ---
 Changes in v3:
-- Use assigned-clocks to pre-load the frequency of the core clock (P2)
-- Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-0-9f8c09233114@imgtec.com
-
+- None
+- Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-1-9f8c09233114@imgtec.com
 Changes in v2:
-- Add details of the source of the interrupt index (P2)
 - Add Randolph's Rb
-- Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-0-f7d3fa06625d@imgtec.com
+- Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-1-f7d3fa06625d@imgtec.com
 
+This patch was previously sent as [DO NOT MERGE]:
+https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-17-eda620c5865f@imgtec.com
 ---
-Matt Coster (2):
-      arm64: dts: ti: k3-am62: New GPU binding details
-      arm64: dts: ti: k3-j721s2: Add GPU node
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- arch/arm64/boot/dts/ti/k3-am62-main.dtsi   |  4 +++-
- arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 14 ++++++++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
----
-base-commit: dcbd5dcc956e2331414fd7020b4655df08deeb87
-change-id: 20250415-bxs-4-64-dts-c984d0876556
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 7d355aa73ea2116723735f70b9351cefcd8bc118..d17b25cae196b08d24adbe7c913ccaba7eed37eb 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -691,12 +691,14 @@ ospi0: spi@fc40000 {
+ 	};
+ 
+ 	gpu: gpu@fd00000 {
+-		compatible = "ti,am62-gpu", "img,img-axe";
++		compatible = "ti,am62-gpu", "img,img-axe-1-16m", "img,img-axe",
++			     "img,img-rogue";
+ 		reg = <0x00 0x0fd00000 0x00 0x20000>;
+ 		clocks = <&k3_clks 187 0>;
+ 		clock-names = "core";
+ 		interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 		power-domains = <&k3_pds 187 TI_SCI_PD_EXCLUSIVE>;
++		power-domain-names = "a";
+ 	};
+ 
+ 	cpsw3g: ethernet@8000000 {
+
+-- 
+2.49.0
 
