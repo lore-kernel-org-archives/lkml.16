@@ -1,45 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF0E28F939;
-	Tue, 22 Apr 2025 15:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FAF28F92E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336257; cv=none; b=Tuzp2Z1YqD+dkdLOnbE8HLP+zYCjagS3cuYOWM/C5ZFt6mtis+Wszzht/lAT+7UjTSYrvm+CileCccPtuVitX4URK8i1HxZ4ookDsoHglp4yZa/wV68cqXfUbZGynwEH3I0+b3B01ruhP/kCC4wS//IaiinoOkIHWoJyRG4XQWQ=
+	t=1745336277; cv=none; b=CBdhjh0MWMMmO9neUmRDykYmq6gm4qTdXR3aaeLYOT1LtHa+iwEifJQI2GzhYr006GtRIGCxw6DpUVODWm7tQDtIxt5kZLDITXE9UqKK5viryBFS09jY2Nv1d7Rc33DBPpEm+qI0mu6n+8KzVq+5tnYedoQvmCz6aJFyLMfj6wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336257; c=relaxed/simple;
-	bh=Jw42RzPTFH1JXQNle4D+HMuCHvBjjQsEcqF8GaNCQ+Y=;
+	s=arc-20240116; t=1745336277; c=relaxed/simple;
+	bh=jFZ1V84giT+YUQdEZUVPilmzVULgCGOUEFQfGNQ4RSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbPcCY/s+EVhRSP6/VjSqHj1cn6I8fOvIp+PV9PNEleY1dE/A8zoW8VJcbs4rc4zOdcB10rWTV1KrcpvilrYS9MrgPK1HMt5rAXvwDecl4SDjieDxvOjJ8arkt0WOT5RR1syp+iNTwT7WAWzFMYCbUOmqd/ArBkRNcaTn3fGGqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=elv0NarH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KrTsmwPnXIBUFfiSmk6MdvpYV0duB12aZ7QVRfDzbr8lLZPCRG38fdLDE0VkUsFksRJsNMNdKhxRzUndh+X/fRcgil+dEHfiRwM56UDH1YtbhmggUoCCgpLQlTOKIIG0yPMzY4sXxC6dmHJRSW/Ms1W11fBLo6eqwM30kHlop1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FmFlPWNH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="elv0NarH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3D4C4CEE9;
-	Tue, 22 Apr 2025 15:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336256;
-	bh=Jw42RzPTFH1JXQNle4D+HMuCHvBjjQsEcqF8GaNCQ+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=elv0NarH2n/lq8UrYUtfHAlnPf/1/3aBSPh+fAApFr3vHAJBaMeEaCOxedR7X/eHA
-	 0O1Hp2gsWiNi6sOI1WpYiBrepayRN645FUwnridGqWldpYqc/VpUTyaUrQf4iPZiC9
-	 ivQwg2KLIEre4q0vhgfCQUu0UZhLoay4HDly3YasZfChJn1OE9wqYECrxfwqsgPYsg
-	 msT8SMAXytrt1XFbsu27m02zH3kGZKGMaHLbeJvAsiA/BUCqZdcVwj8uWi2unO4cli
-	 z37W7wGYgvugjyC1gt88O381NfaoHOxNdokEKSS8oxH4C6S43dzWJMrS+ccrJIdcGg
-	 Mns5sDlNhK4Uw==
-Date: Tue, 22 Apr 2025 17:37:31 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] rust: alloc: allow coercion from `Box<T>` to `Box<dyn
- U>` if T implements U
-Message-ID: <aAe3u_HHQUOmH0KS@cassiopeiae>
-References: <20250412-box_trait_objs-v3-1-f67ced62d520@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmFlPWNH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745336274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kcu1mJHODKObLksxc4A59swiNVK6LroG71Dl9SlbtDA=;
+	b=FmFlPWNHWLDDPn+bdACWk8pKqo/u2NHHx2CwokoncvNHkdoV5nhaZlgq38srfOFtsPMEb2
+	btrgjbYAQaoDqnLcbrRfCpmP30rv5Fao8iqg99nT5jDSRubI6eSy/hBv7vOgoerjyQudkO
+	yLFnHsXwk/pznlL3ZrtgqAk7s7km+Ew=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-hp0aCYEXNbOBG2kQPca4kw-1; Tue,
+ 22 Apr 2025 11:37:46 -0400
+X-MC-Unique: hp0aCYEXNbOBG2kQPca4kw-1
+X-Mimecast-MFC-AGG-ID: hp0aCYEXNbOBG2kQPca4kw_1745336265
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD11A1955DCC;
+	Tue, 22 Apr 2025 15:37:44 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.22.74.8])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B458B19560AB;
+	Tue, 22 Apr 2025 15:37:41 +0000 (UTC)
+Date: Tue, 22 Apr 2025 11:37:38 -0400
+From: Richard Guy Briggs <rgb@redhat.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
+	LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org,
+	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
+	Eric Paris <eparis@parisplace.org>
+Subject: Re: [PATCH v2] audit,module: restore audit logging in load failure
+ case
+Message-ID: <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
+References: <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
+ <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,15 +61,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412-box_trait_objs-v3-1-f67ced62d520@nvidia.com>
+In-Reply-To: <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Sat, Apr 12, 2025 at 03:29:13PM +0900, Alexandre Courbot wrote:
-> This enables the creation of trait objects backed by a Box, similarly to
-> what can be done with the standard library.
+On 2025-04-11 14:23, Paul Moore wrote:
+> On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
+> > 
+> > The move of the module sanity check to earlier skipped the audit logging
+> > call in the case of failure and to a place where the previously used
+> > context is unavailable.
+> > 
+> > Add an audit logging call for the module loading failure case and get
+> > the module name when possible.
+> > 
+> > Link: https://issues.redhat.com/browse/RHEL-52839
+> > Fixes: 02da2cbab452 ("module: move check_modinfo() early to early_mod_check()")
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> > Changelog:
+> > v2
+> > - use info->name for both audit_log_kern_module() calls and add const
+> > ---
+> >  include/linux/audit.h | 9 ++++-----
+> >  kernel/audit.h        | 2 +-
+> >  kernel/auditsc.c      | 2 +-
+> >  kernel/module/main.c  | 6 ++++--
+> >  4 files changed, 10 insertions(+), 9 deletions(-)
 > 
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> Agree with Petr's previous comment about the URL in the commit
+> description, if it isn't publicly accessible please don't include it in
+> the commit description; I'm going to remove it.
 
-Applied to alloc-next, thanks!
+Sorry, I thought I had checked it more than once to make sure it was
+visible.  It should be now.  Please re-add the link.
+
+> > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > index 1fb9ad289a6f..efa62ace1b23 100644
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+> >  
+> >  	module_allocated = true;
+> >  
+> > -	audit_log_kern_module(mod->name);
+> > +	audit_log_kern_module(info->name);
+> >  
+> >  	/* Reserve our place in the list. */
+> >  	err = add_unformed_module(mod);
+> > @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
+> >  	 * failures once the proper module was allocated and
+> >  	 * before that.
+> >  	 */
+> > -	if (!module_allocated)
+> > +	if (!module_allocated) {
+> > +		audit_log_kern_module(info->name ? info->name : "(unavailable)");
+> 
+> In keeping with audit tradition, wouldn't we want this to be "?" instead
+> of "(unavailable)"?
+> 
+> >  		mod_stat_bump_becoming(info, flags);
+> > +	}
+> >  	free_copy(info, flags);
+> >  	return err;
+> >  }
+> > -- 
+> > 2.43.5
+> 
+> --
+> paul-moore.com
+> _______________________________________________
+> Linux-audit mailing list -- linux-audit@lists.linux-audit.osci.io
+> To unsubscribe send an email to linux-audit-leave@lists.linux-audit.osci.io
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+Upstream IRC: SunRaycer
+Voice: +1.613.860 2354 SMS: +1.613.518.6570
+
