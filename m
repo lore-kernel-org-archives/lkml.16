@@ -1,141 +1,90 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBC98828
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2EA186E40;
+	Tue, 22 Apr 2025 04:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296527; cv=none; b=n3BcpGgV3N2bR2Bi39N4MupvBEKOmXulvrbcp8PNywV0J8ReNeQMgTDghnWc7kbx81cibWRJpp9CpeWqO19IW6D17hnArP4PxVURGVWfDMZp5Rwas+vbHGbw9p8KqhxUeyVp24GIlWcXwODFlt6VFeSzrSmfsoolMfZIR/+CVkA=
+	t=1745296806; cv=none; b=oc4JqcOKb3zNuf/eqzKihL5YU/6lXYPm2P5hB+AlIAT1mRT51q/5hq5fgk193cbOwLQ/mJ16NU2SSVXM1vO+rwSJ/HIK4vLfQeClPLQYH4XZQeFnMB/SY+f9QWmTbw4yLtRxU22wPAL5yDg6RakLUOmn4S11CZkGAwDv3UlJmwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296527; c=relaxed/simple;
-	bh=qLYJYeZ4EefTD1QL0PqRJShFjKw7T0uE0yUqE8upZWU=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=gMM1fRH86aU0d3bCdasM5bXeWZS5c7KM4zi4mSC0qNo8/8UVYQziJdiQkLm9H0B41QU/T5QkAVT2RBZZC19fh+4LF67vHsrx2jMFgdBrU6uNQvfQOFiZjOC6NoGiSN77USxSWFdmdG7d4iBkLQy1YnGUIxRS3L8oMvUYWXtYOeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oBfoJJdr; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oBfoJJdr"
+	s=arc-20240116; t=1745296806; c=relaxed/simple;
+	bh=CpQQRZuyWfvKRbSY9l+oYTtKKd/SUjT2q+YM4GZSr6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QELs/JkBS25XsACH7L6moom0efRANZONpE/sNyhs2g8WYIAem/geWK0P0z/QSO86zX1HjujNjxA9Bpf2dfa7JUc4wt+XcGWpOkgqCYBec/F8ulZF8KQzUxMtRntvxAP08gujIS/qsBeMG4bprh+U87mJGS8FJqu6kZEcVvaXv08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 89EBF68BFE; Tue, 22 Apr 2025 06:39:56 +0200 (CEST)
+Date: Tue, 22 Apr 2025 06:39:56 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nitesh Shetty <nj.shetty@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
+Message-ID: <20250422043955.GA28077@lst.de>
+References: <cover.1744825142.git.leon@kernel.org> <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745296517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qfm/xW4Ogh3To9+LnQW2Co4714wv98el26JPYuLacLQ=;
-	b=oBfoJJdrG69JOiyKYXNFzMQ5DjWWwY/TkWUu+bBv+LRMKgylBSodgjGIzhE+q++AuJApKo
-	NMuqQZdHIRc95gl8+McmerUrh0JidKUP7gCDhe4lUveJjm5imAUcwBOeEQ1svyFQiL5732
-	NqRJOLRSdgoSoZ+mt6JO7CfRoan7WgQ=
-Date: Tue, 22 Apr 2025 04:35:14 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Lance Yang" <lance.yang@linux.dev>
-Message-ID: <f091c3e4183e6d6384f645e609aeed926b320818@linux.dev>
-TLS-Required: No
-Subject: Re: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for
- folio_test_large_maybe_mapped_shared()
-To: "Andrew Morton" <akpm@linux-foundation.org>, "David Hildenbrand"
- <david@redhat.com>
-Cc: mingzhe.yang@ly.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- "Lance Yang" <ioworker0@gmail.com>
-In-Reply-To: <20250421122239.710f5d63487853556cb8f57e@linux-foundation.org>
-References: <20250418152228.20545-1-lance.yang@linux.dev>
- <20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
- <641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
- <20250421122239.710f5d63487853556cb8f57e@linux-foundation.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-April 22, 2025 at 3:22 AM, "Andrew Morton" <akpm@linux-foundation.org> wr=
-ote:
+On Fri, Apr 18, 2025 at 09:47:54AM +0300, Leon Romanovsky wrote:
+> From: Kanchan Joshi <joshi.k@samsung.com>
+> 
+> blk_rq_dma_map API is costly for single-segment requests.
+> Avoid using it and map the bio_vec directly.
 
+This needs to be folded into the earlier patches or split prep patches
+instead of undoing work done earlier, preferably combined with a bit
+of code movement so that the new nvme_try_setup_prp_simple stays in
+the same place as before and the diff shows it reusing code.
 
+E.g. change
 
->=20
->=20On Mon, 21 Apr 2025 05:13:03 +0000 "Lance Yang" <lance.yang@linux.dev=
-> wrote:
->=20
->=20>=20
->=20> Can we just slap "#ifdef CONFIG_MM_ID" around the whole function? I=
-t
-> >=20
->=20>=20=20
->=20>=20
->=20>  should have no callers, right? If the linker ends up complaining t=
-hen
-> >=20
->=20>=20=20
->=20>=20
->=20>  something went wrong.
-> >=20
->=20>=20=20
->=20>=20
->=20>  The reason we can't simply add #ifdef CONFIG_MM_ID around folio_te=
-st_large_maybe_mapped_shared()
-> >=20
->=20>  is because its caller folio_maybe_mapped_shared() relies on IS_ENA=
-BLED(CONFIG_MM_ID).
-> >=20
->=20>=20=20
->=20>=20
->=20>  If we do, with CONFIG_TRANSPARENT_HUGEPAGE=3DN, we'll hit compilat=
-ion errors like:
-> >=20
->=20>=20=20
->=20>=20
->=20>  ./include/linux/mm.h: In function =E2=80=98folio_maybe_mapped_shar=
-ed=E2=80=99:
-> >=20
->=20>  ./include/linux/mm.h:2337:16: error: implicit declaration of funct=
-ion =E2=80=98folio_test_large_maybe_mapped_shared=E2=80=99; did you mean =
-=E2=80=98folio_maybe_mapped_shared=E2=80=99? [-Werror=3Dimplicit-function=
--declaration]
-> >=20
->=20>  2337 | return folio_test_large_maybe_mapped_shared(folio);
-> >=20
->=20>  | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >=20
->=20>  | folio_maybe_mapped_shared
-> >=20
->=20>  cc1: some warnings being treated as errors
-> >=20
->=20
-> That's OK - provide a declaration of folio_maybe_mapped_shared() but no
->=20
->=20definition. So the compiled-out code can be compiled and the linker
->=20
->=20will confirm that it's never actually called.
->
+"nvme-pci: use a better encoding for small prp pool allocations" to
+already use the flags instead of my boolean, and maybe include 
+abort in the flags instead of using a separate bool so that we
+don't increase hte iod size.
 
-Got it, that works as well ;)
+Slot in a new patch after that that dropping the single SGL segment
+fastpath if we think we don't need that, although if we need the PRP
+one I suspect that one would still be very helpful as well.
 
-So if David is cool with it, I'll send out the new version like this:
+Add a patch if we want the try_ version of, although when keeping
+the optimization for SGLs as well that are will look a bit different.
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index d3909cb1e576..a762e4b4eab4 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -1230,10 +1230,15 @@ static inline int folio_has_private(const struct =
-folio *folio)
- 	return !!(folio->flags & PAGE_FLAGS_PRIVATE);
- }
-
-+#ifdef CONFIG_MM_ID
- static inline bool folio_test_large_maybe_mapped_shared(const struct fol=
-io *folio)
- {
- 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
- }
-+#else
-+bool folio_test_large_maybe_mapped_shared(const struct folio *folio);
-+#endif
-+
-
-Thanks,
-Lance
+I'm happy to give away my patch authorship credits if that helps with
+the folding.
