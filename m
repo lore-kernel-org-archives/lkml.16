@@ -1,149 +1,214 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8938810A3E
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1A02D7BF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305392; cv=none; b=UUg/ONXyh6PDvVmVtY5iis0H31OUsdZlRdHhd2KLgW82IT6U2AXigNqmuhhEF7VPqgyUoPwfW6dCGKjUazXpBKZWE5Et7cXQFyv5mUmTnDAk/W85PrUTnY4G7aKv29RzZEyTOB+/ocw8ypV7S+tEbMUff7mLnDbiZ0ifqie5o00=
+	t=1745305404; cv=none; b=Q0B/XILqEIo5nRlKhvMdIYfxSruHhq9AnzlhPPyCv+9wukvlbAaonvU0bqPQHeu0ldvy6onZ7mHpvX8EnwLQACCiss3dsbhHesbNG/uiW5ZC2HT7pj5ZB+g2g48dCc6PZGLJxZrE7CrjEHn1YR+FuEWpyFTVlXZYc56RlVPwNuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305392; c=relaxed/simple;
-	bh=46kyhEqphEQE7F/TPHVsZNyk/z1K0PgJAjcPqUH4CdY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UXdLuYojxHsSMbGQ8oeq+yT5H3lyJd9QnKpr7om04mNLiWPckXDRhduABj9rxonJYSoMT0AhSCDzQW77uLDre6E8KQcsP+Q2HXoq6t7wGqz8xcFKIOPlq9M2N9VFJLNrqmNRhlMmTzCsZSzs2wZviRValX8e/eZBWya48qQHXL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5ZvBwBn; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745305404; c=relaxed/simple;
+	bh=LxEMLyPQ73fG9lIO06/X1CO1m6w/U4PQMOW7fYfmYJc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nEV22Ly3zi11UZtvfjj+6taZofy6goXrl1AbGp88oaFNx92g2lIK+jH/jSczkIyMl6YoOXP4QaaOSi/bsp+G2pdihLIZAt7cw5astrwhdn/a+9c9ukuOfZHDItrIlItD2p0aah5uKMAH0P+YbyCgEZbhpSdlxbxK1DsC2/SjQV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NsRNPcul; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NGE7oubV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E0iXbANk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sd/KqWJn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5ZvBwBn"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso4609142f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745305389; x=1745910189; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+EW9WOjwKhGKY0mSAGuVe1/yMsQLEVZGpaUvajrqIQo=;
-        b=s5ZvBwBnqfxw+ZdxMzo8gT66zWvTSk57B5DpifUydK9F6bYGiwEab61RRcZdugViXE
-         aA3MAguottH5VtIjtAB9s5bCEfruT62pXudAIVcag904U016XKIP6o6TiLAig8ZGnB3x
-         Of49LwreUWky2fNYcjCXLe/AYWEtklmhKzpRRQI/L/iJqxs9Oi4s2QtYQWJuPqVHoJbH
-         2SMiExJfMEBjghWuu6bwz59h17OhGXjakqXw1gxd37tu4ydKMlRuqE5vVIOQmmhQWgK3
-         djtUcdn6lFGs6G7LZisDzugI8yh3eb5JU1f6u47LYRqcfP8oGDvSjHlxfjgC6Si/OGsg
-         bb7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745305389; x=1745910189;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+EW9WOjwKhGKY0mSAGuVe1/yMsQLEVZGpaUvajrqIQo=;
-        b=Z8s3KvA9TEXvamxSCcwaDUjYvFB3CohoK0JufqUemDL0OXHyJxoecPBn1P15kImmk9
-         5oGPA1314AyeqmiZ90goAjV3SNDLZUhH+n85s1c4KakKNubFfVbd6pbxTRbLKCzsXW1u
-         WiYrvwHw+jENT9BbY3YxuTNsFYu/4Zx78w/e8Z6WeV93VgOlwqeozI46+rsPSkhzq25M
-         0Q7W91gISR+yOWctQTaQeMv3CRAEzSDlr4gi3GoM3+WZD5/xSYr0J+huGt2QdFy6B2AP
-         7rf7FoBwCe/9iQGN9co0ykaOD0KL8o/G4I8CoR2lohTI6UaGtjY9chhtzH0hbqSrxc2t
-         1zMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpBxDbQ2ZQO2WwssR7mS9mJh6tdeIVOXnbDYowxHgKhc0ctGE3TLhEmpiuLb8ABb+dcMQofcn/rZ1aj3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybveaLv84ECMApEFSaMX6PSurMfq14M2jBYGNVkl92wDvpU9gg
-	d+GDGZmzfRvdT9DJ5il/gglfRt+K38ZopsepY+kaj4YgIVMz1Rq7KAYP9TQ5pQKNrSvaaVLF650
-	4
-X-Gm-Gg: ASbGncvKgI2fZc+In1gBAUJ9V+nWE6w9xE1qpq+5ZC1gBiy51HMBb/7v3GfazNtcHj9
-	alKrMfKHZZIdaE5ZpZ9wrIaYZXN7SEa0xJIHtzym5AghOEN7v2KqUtwvG8pKI8GI8yEut6g/C7b
-	/7YvqbR/O8kgqcon7tFXdC95F2snyDxT2mb5sfT7JntMYlb/o0Z+viLkoS2FLIjh0cHAzaBHopV
-	Y21jJo32QjwlEBwVeZJIJ8tTxoNH3Mf4tyUj8B3G1TSINzUd95d+nu6UpYaZhxufYC9oE5+vMiA
-	JBHbfBEPY8YSYPlxnR81bFrJ6B7UlRZTwVO0xD3c5L4urgZWX6U4TY/3Eiy6wKmk/ktjGeakMt5
-	FBwgvrEUSb14ZsX+HcA==
-X-Google-Smtp-Source: AGHT+IE3A44CHRZT4LFqIN9Z4MWfOqywDl3gBVdthcSxAs8gC51/XERlOdOoQsF0+0M1L1XTm+SLEQ==
-X-Received: by 2002:a5d:6da6:0:b0:39e:cbd2:9129 with SMTP id ffacd0b85a97d-39efba2acd7mr10294748f8f.10.1745305388778;
-        Tue, 22 Apr 2025 00:03:08 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4c37sm14496017f8f.98.2025.04.22.00.03.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:03:08 -0700 (PDT)
-Message-ID: <b88bfe5a-9256-4de0-822b-b22d74dfdec0@linaro.org>
-Date: Tue, 22 Apr 2025 09:03:04 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NsRNPcul";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NGE7oubV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E0iXbANk";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sd/KqWJn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DDA692124C;
+	Tue, 22 Apr 2025 07:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745305401; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xrtPbid4FDSsTkJYjZhOuQ0DFTDDsbBQ/VbjS7sQ97Q=;
+	b=NsRNPculeM3m0hpZwsJKd4G5Ds7/1L4wUS4B+hW6ZCfQ88hz9CT/CJZwXNTf6tNOZUlYwA
+	VjnOIPEOjtEKUy7gRMCWUWxRdy8ZrWWyY+PYyg43urp404MwfjvnRBD63gRm48K+ZIjkcm
+	JQF4FWV5yQFtjKyXE3vLQCTuR/ZztHM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745305401;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xrtPbid4FDSsTkJYjZhOuQ0DFTDDsbBQ/VbjS7sQ97Q=;
+	b=NGE7oubVus6DbGtO4KNpPy/4/OGdHv+26MdkdIDYoZLe2nia7TSB2Yq/0T4MJiOl72ym6b
+	n8GVNOhpgsYIOaDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E0iXbANk;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="sd/KqWJn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745305400; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xrtPbid4FDSsTkJYjZhOuQ0DFTDDsbBQ/VbjS7sQ97Q=;
+	b=E0iXbANkozczCxrjIRZfnzehGy7XxRwkxPaTIGb7rr8xGvJpuAgFWOOnxEPoVNfxKNYBN/
+	kGWLzSe52MI0sGiJ7Fy+OT5/B3pw8TlYHnQtY7uzJbp0yvc0vmiL0k9nGTLnChVL6dbneA
+	DLvqjDDaI8HceK8okdx+qvLj8yyNFr0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745305400;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xrtPbid4FDSsTkJYjZhOuQ0DFTDDsbBQ/VbjS7sQ97Q=;
+	b=sd/KqWJngiZhCnOxzErXVXCZ/+WjDzvNBwkKH+nPqdaCXZsdBqLpL/tzIg2q0ci9UW5hCl
+	jjIto27uuuHuggCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B4FF9137CF;
+	Tue, 22 Apr 2025 07:03:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3C1cKjg/B2iOMgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 22 Apr 2025 07:03:20 +0000
+Date: Tue, 22 Apr 2025 09:03:20 +0200
+Message-ID: <875xiwu18n.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Hillf Danton <hdanton@sina.com>
+Cc: alsa-devel@alsa-project.org,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/9] ALSA: usb-audio: Fix possible race at sync of urb completions
+In-Reply-To: <20250421233900.4221-1-hdanton@sina.com>
+References: <20210929080844.11583-1-tiwai@suse.de>
+	<20210929080844.11583-3-tiwai@suse.de>
+	<20250418103533.4078-1-hdanton@sina.com>
+	<87a58dvia7.wl-tiwai@suse.de>
+	<20250418144518.4097-1-hdanton@sina.com>
+	<875xj0ve49.wl-tiwai@suse.de>
+	<20250419080410.4148-1-hdanton@sina.com>
+	<871ptnuvad.wl-tiwai@suse.de>
+	<87mscat1tq.wl-tiwai@suse.de>
+	<20250421104343.4197-1-hdanton@sina.com>
+	<878qnttwcx.wl-tiwai@suse.de>
+	<20250421233900.4221-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC v2 0/2] drm/meson: vclk: revert and re-fix vclk
- calculations
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org
-Cc: christianshewitt@gmail.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: DDA692124C
+X-Spam-Score: -2.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[sina.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
+	FREEMAIL_CC(0.00)[alsa-project.org,gmail.com,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 21/04/2025 22:12, Martin Blumenstingl wrote:
-> This is a successor of a previous patchset by Christian [0]
+On Tue, 22 Apr 2025 01:38:59 +0200,
+Hillf Danton wrote:
 > 
-> Patch 1 reverts a previous fix for loss of HDMI sync when playing YUV420
-> @ 59.94 media. The patch does resolve a calculation issue. It also makes
-> all fractional rates invalid which is a bigger problem.
+> On Mon, 21 Apr 2025 16:36:30 +0200 Takashi Iwai wrote:
+> > On Mon, 21 Apr 2025 12:43:42 +0200, Hillf Danton wrote:
+> > > I misread "Which reads and writes are you trying to solve?" though I
+> > > showed the read/write, but it is a bad case particulay with UAF.
+> > > 
+> > > Could you tell us what will happen if the race is not fixed? Could ep
+> > > be freed with in-flight urbs for example?
+> > 
+> > Before the patch, wait_clear_urbs() might return earlier than actually
+> > all pending eps are finished, so it can be UAF.
+> > 
+> Got it.
 > 
-> Patch 2 changes the whole drm/meson driver to use Hz as unit for clocks/
-> frequencies. And importantly it uses the relevant 64-bit maths helpers so
-> the code can still be compiled using for 32-bit ARM.
-> Maxime previously suggested using drm_hdmi_compute_mode_clock(). That's
-> still something to implement with future patches.
+> > > Is it still race if the wait loop in wait_clear_urbs() ends before the
+> > > urb complete callbace completes, given the last sentence in your commit
+> > > message? If nope, igore my noise please.
+> > 
+> > Well, your concern about the missing barrier -- that would
+> > wait_clear_urbs() missing the refcount decrement, hence it would be
+> > rather to make the return delayed.  So it shouldn't lead to further
+> > UAF, but at most it might lead to an unnecessary delay.
+> > 
+> > That said, I'm willing to take a fix even for a theoretical issue if
+> > it clarifies what it really fixes.  But scratching a random surface
+> > isn't what we want.
+> > 
+> Thank you for shedding light on the race, given
+> a) the mb in 26fbe9772b8c ("USB: core: Fix hang in usb_kill_urb by adding memory barriers")
+> b) the urb complete callback is invoked in giveback, see __usb_hcd_giveback_urb()
 > 
-> Neil, I'd like to hear your feedback on this approach.
-> 
-> 
-> [0] https://lore.kernel.org/linux-amlogic/20250110074458.3624094-1-christianshewitt@gmail.com/
-> 
-> 
-> Christian Hewitt (1):
->    Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
-> 
-> Martin Blumenstingl (1):
->    drm/meson: use unsigned long long / Hz for frequency types
-> 
->   drivers/gpu/drm/meson/meson_drv.c          |   2 +-
->   drivers/gpu/drm/meson/meson_drv.h          |   2 +-
->   drivers/gpu/drm/meson/meson_encoder_hdmi.c |  29 +--
->   drivers/gpu/drm/meson/meson_vclk.c         | 195 +++++++++++----------
->   drivers/gpu/drm/meson/meson_vclk.h         |  13 +-
->   5 files changed, 126 insertions(+), 115 deletions(-)
-> 
+> use the urb routines instead to close the race.
 
-Thanks for re-spinning, will apply.
+I'm afraid that it can break things as of this form; the stopped
+stream might be restarted without reinitializing URBs.  That is, this
+isn't called only from disconnect or close, but also just for stopping
+the stream in the middle, too.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Thanks !
+Takashi
+
+> 
+> Note the one second timeout is also cut.
+> 
+> 	Hillf
+> 
+> --- x/sound/usb/endpoint.c
+> +++ y/sound/usb/endpoint.c
+> @@ -996,24 +996,14 @@ void snd_usb_endpoint_suspend(struct snd
+>   */
+>  static int wait_clear_urbs(struct snd_usb_endpoint *ep)
+>  {
+> -	unsigned long end_time = jiffies + msecs_to_jiffies(1000);
+> -	int alive;
+> -
+>  	if (atomic_read(&ep->state) != EP_STATE_STOPPING)
+>  		return 0;
+>  
+> -	do {
+> -		alive = atomic_read(&ep->submitted_urbs);
+> -		if (!alive)
+> -			break;
+> -
+> -		schedule_timeout_uninterruptible(1);
+> -	} while (time_before(jiffies, end_time));
+> +	for (int i = 0; i < ep->nurbs; i++) {
+> +		struct snd_urb_ctx *u = &ep->urb[i];
+>  
+> -	if (alive)
+> -		usb_audio_err(ep->chip,
+> -			"timeout: still %d active urbs on EP #%x\n",
+> -			alive, ep->ep_num);
+> +		usb_kill_urb(u->urb);
+> +	}
+>  
+>  	if (ep_state_update(ep, EP_STATE_STOPPING, EP_STATE_STOPPED)) {
+>  		ep->sync_sink = NULL;
