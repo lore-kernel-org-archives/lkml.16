@@ -1,198 +1,120 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D251EDA2A;
-	Tue, 22 Apr 2025 23:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F89821C18A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745366120; cv=none; b=BPT9Bthgyw4aQwMGirHn1zgaAT1uhHu/MsY4nvExQS2ANm/baZWOfe9xY1jIXGphPQnfxP1hnVErrn3oZ3DkbfjZglRjoIymRa8CbmH9WGXyKXsnW7jBvGO9SGbgxdZWc45w/UJZcNmt2EVh1BsJ/L5YpJJmRDKFOHVrF6du6JQ=
+	t=1745366134; cv=none; b=pXE5eO+eeV1ZHTE4oXSiWWSvJG+HgpMQBHpl9hVd+XUh2i1yL5OKy7ygNUcR8S4O+arncmCr3JEFH5DEEtqObLFyi/GMrvCjMBAPCtJHbHc8NruXfxD9Mw72IL3Ie9pPq6NjCiUp6a0i23R/cBzaUDGC8YT4rsrBpuyF/qzJ58U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745366120; c=relaxed/simple;
-	bh=/xZOT/wI5uKTXB/Q0uxr9OLfSc9UE/L+joozHYy1pNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HgD7sM7RIZo3/43/xoEes2DWKjYFfFo3WRrKqMESLjM56U3QxsrIzZvDziUBN0njcB3yf7gwzMSxgufp/DMwc6yskQiDYrTMlnm/H7NNKf1yxqaoHb17KZ6nbfG5+D8Xu/HiijtchFdsqZOIgjVmR8r1qDYOyRPXW8Cg0LlRAU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=B3eSBniX; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745366134; c=relaxed/simple;
+	bh=1uXwF1nWfvBIYeAK4gSOok5hMVJKS76PKakAup+bCLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G+DHZZzMueIpT3lPN8h+sQSoFtGeXVmO9z7fGR0h/BSj7z6+aJgQswBQQ1Ohgccfzd2NGTb+UCsvIdRSwMa84KUIjeJVDmtqYHtZX4J2/S4APFEaH4hTcld3/3plRPOg7zvVho8HbGLm/o3WjfFW9gCwYLQKNNcqsmOApXl7/08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZC8qoxc7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="B3eSBniX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745366103;
-	bh=Vmc9NHkz4RY/6taVVWGwEa9a1g7KMOwy7Ph0jl6f2lY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B3eSBniXeCZmpq6ONJXT9RMfNXG5Cr8vbAI3zw6ApI0YUW2yrbUYVz2TeW/ZDIMBD
-	 ePl/QHtbraeUFCTu3YSsiRgmhhIC2/HXyBhdAx8sLDAigwIHX5LAOt0bCU7Lo6COdc
-	 1LiUGCIv4JXJgDpWjsvz1nv0RhxymvHy7T8PxAoRoKMih9rC7aCNuNyU+r1q2hqXg0
-	 YudR3T0O3iwvw/+tpJiGNtlJcVQY8qB2mkD0djn5SlAVZ3BuXmL32nvko6dHSkNpq3
-	 brBIXu+Ou/gpBVvRQOK07rqfyDe9PEuyibfmySM/klb6jUGXe7ISXv5WX674+e+ghd
-	 ynkUxWb20aP+g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhzcl5d00z4wcy;
-	Wed, 23 Apr 2025 09:55:03 +1000 (AEST)
-Date: Wed, 23 Apr 2025 09:55:03 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of Linus' tree
-Message-ID: <20250423095503.638eb761@canb.auug.org.au>
-In-Reply-To: <CAHk-=wjsMVpEvwq=+wAx20RWe_25LDoiMd34Msd4Mrww_-Z3Fw@mail.gmail.com>
-References: <20250422204718.0b4e3f81@canb.auug.org.au>
-	<CAHk-=wjsMVpEvwq=+wAx20RWe_25LDoiMd34Msd4Mrww_-Z3Fw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZC8qoxc7"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MKppsY026487
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:55:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4SibCIoJLPofORnNhgtOkaJm+Ip5k/Pjt+gz3fvgMRA=; b=ZC8qoxc7CQdP2CNZ
+	gjEvDtH4JxQAupCMm8zmFo0A9OnDxqQcN9EQhmxlNjq18u8eyl+1FLs9JVM2tTnW
+	1Ed5xjXSFE11Hee/kETgt/S+iE+HKbjv7y4C0AF8fnPf0cHPaNxBhDiVOMUZZXOR
+	YdN6sJAm5Ar3H2hNPXztuj6BCd52JFYdZXZP4pS/+mTG9cNtuyrVHVUCum7f5Fgm
+	4qLouDg3BhBDzZycpLRgEIxHv/b7lpHAAR1gjJdhTEwzujwyP1JIDLJ8+C9KXAil
+	/RnX/8LAIKXK+zVr4nXBEbw6XmQrd3w+IiaOcb8fAhiR9dhaX+oc1vyCt4UZy0VG
+	JuU/cg==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3ga50-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:55:31 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-476786e50d9so14159181cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:55:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745366130; x=1745970930;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4SibCIoJLPofORnNhgtOkaJm+Ip5k/Pjt+gz3fvgMRA=;
+        b=ccpjUFQjTCkdxjUvpXWtf1h5BZQ01IEfVQtB08l77zlMNapkU3lHYiTKb1EFuCZp1O
+         x8/vFL5VAoemeSfAHjeWztohA58YNI5p7Nu8tccq4pf0GZtOqLd6cjL6HOV/X9I1bgA8
+         xdj6y/wArmpgh+TkYa9X3P1cmJAPsIoGUxh2mnsTTXpG3URYJ4Yq/9r+3EWVE40ByqEW
+         08XAnXgveqA7YC/u8s0lwewX4RNMwOffKBGRk5r1MeqyrAMQwnfj3ejNJIBr5jnfAsWv
+         Zccz3HZl+iCQ9MDaJmRPegvXzFUmeCN1oY8yvFwsk2p/jTmDfI2ugrN9o3P8JwNjBS5c
+         /bnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtMLGTiPH4Mdqth0xHlr4lUXKgBx12PwdQEdkcD+VpFUYzv2wqkNVr7T6kI0bnmvpYxZYlfCLmzABT25s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza8yjmDQZwgUXdRFZ/QWhwUx2FFRcyrV49vPNGUUaWPlMfNj4o
+	ZD4M5lD21UC+eHFs0HOzWqCHSMPzeDAtSnAeH872+o0fse2bdkt6Hyo7lCKDNFGPJJjqGR0y3W4
+	CdkXB+A8YUnLb0lkA/27fD5HP6zR1Idg0Jsv+hTSGpsjNI9JL3GKyxymw0TB7Imw=
+X-Gm-Gg: ASbGncuVhJwlr63MQ3Sdlfpi0ayxHsyrVn8UN4hXO++YgpQO24kG3ynvoecuXSX4tcO
+	vGUbNpBKMjKi4I1xDt0FAR2M1lMT+SU8kcMI4z5oTONV7OI64nX9yWfSJM0zNiO8t4sJZJoc09Q
+	rkVNdkDA4126bC1v52TSjw/CRWyG5QFU5ehOMdCKyajcjzv2YXrQl/bTH+JS1uNRGRBKmvMMzwL
+	uNEu/gaoGvQaJB0tWcsozHz58oiRNixNg8jMmEO5mUzVuQGiHXdsbDrrgPMy+3TkJ1pCzFq/JIB
+	/UH0fifTC1bM94Af3JYBnJCjIaPo8X1a9L/O7b39wFmf1w4VHQmiylUBrvoPcK7KKDg=
+X-Received: by 2002:ac8:7dc5:0:b0:471:ea1a:d9e with SMTP id d75a77b69052e-47d1d9cd5cfmr5273031cf.12.1745366130613;
+        Tue, 22 Apr 2025 16:55:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGR8WOuTeaBqmC8HY7gKGm3GRXoWCrCxlpeSTPYTgdFKgYeceHJhp2S7nDIq6tfwkx7ivcQ5Q==
+X-Received: by 2002:ac8:7dc5:0:b0:471:ea1a:d9e with SMTP id d75a77b69052e-47d1d9cd5cfmr5272961cf.12.1745366130332;
+        Tue, 22 Apr 2025 16:55:30 -0700 (PDT)
+Received: from [192.168.65.141] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6258342fbsm6701884a12.49.2025.04.22.16.55.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 16:55:29 -0700 (PDT)
+Message-ID: <8c0c0740-3f75-47dd-8f11-c03fbf8b1583@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 01:55:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f90U5SWddWLgm2UOu+4dy17";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Add support for Sony Xperia Z Ultra (togari)
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Kevin Widjaja <kevin.widjaja21@gmail.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250419-togari-v1-0-45840c677364@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: BxvEIt_FEVKwp7eWRmytQes5Bbx_71l-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDE3OSBTYWx0ZWRfXycxGYaxl0XhA LAgh+3s7C5uaeCUZk78ALi8DvrdyYGgRtYvIwKE26JlTsXTswk9xhKXd/6OEYfr8fH++ZKfsxvs snTb7RYPW9ki96lH8OWnlno7jI0RAfQcL7PXqR3DOYKbkIt/UssozeYdc8s3osfuPXR5bKrUqF6
+ 73oGKDoY0teTzflX4VcNMT1cOsRYEgy3uov5R+BvcE8VpvOOqDHVdOFKRnvck5QQeJiB72u/0OW UTiJfN+ST7ZCY4bhO4UK2SDOKpgLBsO8lzr9UKl8V10nH/7IP9YSaRILMm5qkzGC4nXPdGPZyaB k8FkMsaYeD+jF6SyTU6F2YT5ev4koDV2uRjjQRwyzkT45bpyrfsZTy/0P7W/lNQZG22EwI+dTyC
+ A54cPrhmL283a0GBZusuJJjI5IaeQQjfE4K6+skXKnVFg6gA8CPGuoJotEkw5Z8m1AXX7EQ8
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=68082c73 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=dlmhaOwlAAAA:8 a=Kb3nHg1V0brCK_6dO4AA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22 a=y4cfut4LVr_MrANMpYTh:22
+X-Proofpoint-GUID: BxvEIt_FEVKwp7eWRmytQes5Bbx_71l-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_11,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504220179
 
---Sig_/f90U5SWddWLgm2UOu+4dy17
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/19/25 11:00 AM, Luca Weiss wrote:
+> Do some tweaks to the common file for the devices in the 'rhine' family
+> of Sony devices, and add a dts for togari.
+> 
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
 
-Hi Linus,
+I don't really know for sure, but maybe this driver could be suitable
+for its touchscreen
 
-On Tue, 22 Apr 2025 08:59:00 -0700 Linus Torvalds <torvalds@linux-foundatio=
-n.org> wrote:
->
-> On Tue, 22 Apr 2025 at 03:47, Stephen Rothwell <sfr@canb.auug.org.au> wro=
-te:
-> >
-> > These builds were done with a gcc 11.1.0 cross compiler. =20
->=20
-> That sounds like there might be some issue with the cross-compiler
-> logic somewhere, because the Makefile logic is using the standard
->=20
->     KBUILD_CFLAGS +=3D $(call cc-option, xyzzy)
->=20
-> pattern.  We literally have seven other occurrences of that same logic
-> just in that same Makefile above it (and many more in other
-> makefiles).
->=20
-> IOW, it's *supposed* to only actually use the flag if the compiler
-> supports it, so having the compiler then say "I don't recognize that
-> option" is kind of odd. We've explicitly tested that the compiler
-> supports it.
+drivers/input/touchscreen/atmel_mxt_ts.c
 
-Yeah, I thought it was strange.
-
-> Does the warning happen for all files that get built, or just some
-> specific ones? I wonder if we have some issue where we end up using
-> two different compilers (I'd assume native and cross-built), and we
-> use KBUILD_CFLAGS for the wrong compiler (or we use cc-option with the
-> wrong compiler, but I'd expect that to affect *everything* - that
-> 'cc-option' thing is not some kind of unusual pattern).
-
-It happens only for a couple of files.  Here is the full sparc64 build
-log:
-
-------------------------------------------------------------------------
-<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
-cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
-alization' may have been intended to silence earlier diagnostics
-/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:274:1: warning: no pre=
-vious prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
-  274 | __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec =
-*ts)
-      | ^~~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:302:1: warning: no pre=
-vious prototype for '__vdso_clock_gettime_stick' [-Wmissing-prototypes]
-  302 | __vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_tim=
-espec *ts)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:327:1: warning: no pre=
-vious prototype for '__vdso_gettimeofday' [-Wmissing-prototypes]
-  327 | __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezon=
-e *tz)
-      | ^~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:363:1: warning: no pre=
-vious prototype for '__vdso_gettimeofday_stick' [-Wmissing-prototypes]
-  363 | __vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct t=
-imezone *tz)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~
-cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
-alization' may have been intended to silence earlier diagnostics
-In file included from /home/sfr/next/next/arch/sparc/vdso/vdso32/vclock_get=
-time.c:22:
-/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:274:1: warni=
-ng: no previous prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
-  274 | __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec =
-*ts)
-      | ^~~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:302:1: warni=
-ng: no previous prototype for '__vdso_clock_gettime_stick' [-Wmissing-proto=
-types]
-  302 | __vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_tim=
-espec *ts)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:327:1: warni=
-ng: no previous prototype for '__vdso_gettimeofday' [-Wmissing-prototypes]
-  327 | __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezon=
-e *tz)
-      | ^~~~~~~~~~~~~~~~~~~
-/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:363:1: warni=
-ng: no previous prototype for '__vdso_gettimeofday_stick' [-Wmissing-protot=
-ypes]
-  363 | __vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct t=
-imezone *tz)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~
-cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
-alization' may have been intended to silence earlier diagnostics
-/home/sfr/next/next/kernel/fork.c: In function '__do_sys_clone3':
-/home/sfr/next/next/kernel/fork.c:3150:2: warning: #warning clone3() entry =
-point is missing, please fix [-Wcpp]
- 3150 | #warning clone3() entry point is missing, please fix
-      |  ^~~~~~~
-/home/sfr/next/next/kernel/fork.c: At top level:
-cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
-alization' may have been intended to silence earlier diagnostics
-/home/sfr/next/next/kernel/fork.c:3150:2: warning: #warning clone3() entry =
-point is missing, please fix [-Wcpp]
- 3150 | #warning clone3() entry point is missing, please fix
-      |  ^~~~~~~
-cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
-alization' may have been intended to silence earlier diagnostics
-WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation fail=
-ed, symbol will not be versioned.
-Is "_mcount" prototyped in <asm/asm-prototypes.h>?
-------------------------------------------------------------------------
-
-However:
-
-$ /opt/cross/gcc-11.1.0-nolibc/sparc64-linux/bin/sparc64-linux-gcc -Werror =
--Wno-unterminated-string-initialization -c -x c /dev/null
-$ echo $?
-0
-$ /opt/cross/gcc-11.1.0-nolibc/sparc64-linux/bin/sparc64-linux-gcc -Werror =
--Wunterminated-string-initialization -c -x c /dev/null
-sparc64-linux-gcc: error: unrecognized command-line option '-Wunterminated-=
-string-initialization'
-$ echo $?
-1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/f90U5SWddWLgm2UOu+4dy17
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgILFcACgkQAVBC80lX
-0GzeUwgAldqm2L0CmmCKA1wLqCFGkfnsZKM4pdUqSNlXEJtygGGE+ob/TULT2Az4
-dZPX6U2J/E4Js/1hkLFdiHsILwOurAqZKYzRUuX2t3MrorcS7ujUBJDIoBzh+oIa
-D12JN0luzalWIVpT07zBmGMklbX0s74n77tpTJP6R0/eyBPLsZExTMTddJO1TQNu
-wafOas2ktF9r+7/ZwP1AEDYIH/T+LdwhnMSexrQdh+k8fMXSgIQDdAXUxb6FxEMy
-p8398jdkDjaqPvc3DZNpQ+BylML4dB74YhAGEC5/PCA1ziJyCw2fQ/PKFR1R7Iuz
-F8mXuH/dKo1GTex+MeNOn3rnn0b0iA==
-=TmCE
------END PGP SIGNATURE-----
-
---Sig_/f90U5SWddWLgm2UOu+4dy17--
+Konrad
