@@ -1,127 +1,90 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA33CA64;
-	Tue, 22 Apr 2025 09:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111431F4C8B;
+	Tue, 22 Apr 2025 09:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315068; cv=none; b=ToaddV7KsndIg84IEZtQXSVKUNogYbiyENY7dF0r7l172dC9Lzd3dAZYpr9/iMZINmLfBTG22EQEzKXA6oqzgWJC6kEGpTo/9/ENBGCy2b6Jw6Axzy7xv0Y7S+V2xZ5NFPGyuUzNf2g2TKHjt/mvQL3gwjxyXGBQezMiVy5gg4A=
+	t=1745315108; cv=none; b=kXzRqFVV7oqgx8wX2aCzlgD2aOYlWS1qt4c46zYG18HZyjKIOtoDtpBFBzm7MhbS5ToyMLsMFn8T7JrgiVqzcm+rwBnyR2yaP0kg7U3gHfDYIkcFlfNVCr4x6f5+aFtffSphgBBZ/g7oocdWJPTjPHS1Lnx0y1Fc78gU9ghrauE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315068; c=relaxed/simple;
-	bh=oE5GrOEZEQBZhOL5FiYD1yV7nLx+NTx0xzcMqnXHZ4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ad+9fu1czOzYyRHkxS0l2JBmkGAghKLU29rcCg1RCuW5NNVzFODlmiQ38YkiEAKhN03SAgWOt+UnpEQLripzaK9J/ntjFeQpFIxsYI0dK24W9fiilnV0ZKul4BVf3Iy1u8NeIvULwE3cX8mYaYc3E6tb0tSw0qaeeOvs+mgbT5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T5UQ3UXL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745315108; c=relaxed/simple;
+	bh=hH0dreYNum7mKNpFtt6wjx9Vm8e8L0GFW+jPB+vVQto=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZJYzEB7++AHgLW977AKOjofO5ijWpe7w7UmDPq9+1GsPjeLh1oe70iw3Xy9akBy7StkFr57pKHUds5bfxkS36vOcBO9i4f2YsHcOwKxCWFhc4oM1Kap1HKZQIidq+0JYkcVTaAwQwqhalzeErVIBq4RKciSq6/eYuMAcnCGG6dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DBuOcqoA; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5UQ3UXL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=mGbqpudR0f2iSYHQuMr6RO+VDWZ/K/atXWkQYmqqhDA=; b=T5UQ3UXLQpNmK7rF6aWvOm0hqj
-	L/2+7nQcxtJqOXFVasHCfAEvHz7YhOnWbtmvIRsdJ4Upjhxk4hAwr7LcCTUkdY64AH3Rv0laU6kQH
-	uWFPiWaF9/BDGJAbWVoSd1p3hzatqnKcIRNCSStg/oeRoHYpDqnLJ+6pcKC9e7Tk9pb+Rpih3XJ/o
-	PDQz/8vzf0yCCaC+0XZPG7frxwN5i7npXUwpMeReUh1NYfax/PV4asf0du/xOgivmIkObzpWX5C8z
-	rswplBGTlhRZbDWnfCZAqu3DeI2IUcTGk6Ty/EFnlgTU9qLMYxNkdJEf3JNlps+Jcn4DSplBMY5eE
-	I6dKzO0Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7AAt-00000004KFU-41jO;
-	Tue, 22 Apr 2025 09:44:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6AE3D3003C4; Tue, 22 Apr 2025 11:44:19 +0200 (CEST)
-Date: Tue, 22 Apr 2025 11:44:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: Alexandre Ghiti <alex@ghiti.fr>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan <shuah@kernel.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH 1/5] riscv: misaligned: factorize trap handling
-Message-ID: <20250422094419.GC14170@noisy.programming.kicks-ass.net>
-References: <20250414123543.1615478-1-cleger@rivosinc.com>
- <20250414123543.1615478-2-cleger@rivosinc.com>
- <ba11b910-9959-4845-b3a3-dd9a52466823@ghiti.fr>
- <2c4f4422-d9c9-4d36-b0ef-f68779b91ee9@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DBuOcqoA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745315101;
+	bh=Deqanv33ljMC6VXBWZg7FJFey5jcrqITvw4fQTXM7Rk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DBuOcqoAhh9/b15AH9O9zf/coPp3CedAQL/+7qP44AAJMEizlOG/PV/yi+9TmR66v
+	 f8qMFK1ApbAmL3DiOqN71BZk2kTHFOWlSndSUAZZdHviECOK19pzQlQfKO3zeKxmN5
+	 Y+dC+QhaTJInW8Hzw1s/k2Ov2I7MVoyI62Aosoj1SqDdxZ72Ot3us94OcXEuR6ljpW
+	 FncauT3l14TkhQ8/pDkfC9jhZnRj/F0GPZQdOTXBoAmbjSOvPoz1dd2lX02T70TvS6
+	 vZBWlDDTOT58GO9YyJm7fg64aYKBMH6xbhiCJb/PmHmxgxc1xXCL0K2SSU274BPilT
+	 GTVZi5rSQexug==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhclw3nXNz4wcr;
+	Tue, 22 Apr 2025 19:45:00 +1000 (AEST)
+Date: Tue, 22 Apr 2025 19:44:58 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kees Cook <kees@kernel.org>, Greg KH <greg@kroah.com>, Arnd Bergmann
+ <arnd@arndb.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the kspp tree
+Message-ID: <20250422194458.074ed355@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2c4f4422-d9c9-4d36-b0ef-f68779b91ee9@rivosinc.com>
+Content-Type: multipart/signed; boundary="Sig_/tLWYzblcTwYeVc+oS5sIuw6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Apr 22, 2025 at 09:57:12AM +0200, Clément Léger wrote:
-> 
-> 
-> On 21/04/2025 09:06, Alexandre Ghiti wrote:
-> > Hi Clément,
-> > 
-> > 
-> > On 14/04/2025 14:34, Clément Léger wrote:
-> >> misaligned accesses traps are not nmi and should be treated as normal
-> >> one using irqentry_enter()/exit().
-> > 
-> > 
-> > All the traps that come from kernel mode are treated as nmi as it was
-> > suggested by Peter here: https://lore.kernel.org/linux-riscv/
-> > Yyhv4UUXuSfvMOw+@hirez.programming.kicks-ass.net/
-> > 
-> > I don't know the differences between irq_nmi_entry/exit() and irq_entry/
-> > exit(), so is that still correct to now treat the kernel traps as non-nmi?
-> 
-> Hi Alex,
-> 
-> Actually, this discussion was raised on a previous series [1] by Maciej
-> which replied that we should actually reenable interrupt depending on
-> the state that was interrupted. Looking at other architecture/code, it
-> seems like treating misaligned accesses as NMI is probably not the right
-> way. For instance, loongarch treats them as normal IRQ using a
-> irqentry_enter()/exit() and reenabling IRQS if possible.
+--Sig_/tLWYzblcTwYeVc+oS5sIuw6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-So, a trap that happens in kernel space while IRQs are disabled, SHOULD
-really be NMI-like.
+Hi all,
 
-You then have a choice, make all such traps from kernel space NMI-like;
-this makes it easy on the trap handler, since the context is always the
-same. Mistakes are 'easy' to find.
+The following commit is also in the char-misc tree as a different commit
+(but the same patch):
 
-Or,.. do funny stuff and only make it NMI like if IRQs were disabled.
-Which gives inconsistent context for the handler and you'll find
-yourself scratching your head at some point in the future wondering why
-this one rare occasion goes BOOM.
+  e166ec7e7164 ("misc: bcm-vk: avoid -Wflex-array-member-not-at-end warning=
+")
 
-x86 mostly does the first, any trap that can happen with IRQs disabled
-is treated unconditionally as NMI like. The obvious exception is
-page-fault, but that already has a from-non-preemptible-context branch
-that is 'careful'.
+This is commit
 
-As to unaligned traps from kernel space, I would imagine they mostly BUG
-the kernel, except when there's an exception entry for that location, in
-which case it might do a fixup?
+  e1ee28b12675 ("misc: bcm-vk: avoid -Wflex-array-member-not-at-end warning=
+")
 
+in the char-misc tree.
 
-Anyway, the reason these exceptions should be NMI like, is because
-interrupts are not allowed to nest. Notably something like:
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/tLWYzblcTwYeVc+oS5sIuw6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-  raw_spin_lock_irqsave(&foo);
-  <IRQ>
-    raw_spin_lock_irqsave(&foo);
-    ...
+-----BEGIN PGP SIGNATURE-----
 
-Is an obvious problem. Exceptions that can run while IRQs are disabled,
-must not use locks -- treating them as NMI-like (they are non-maskable
-after all), ensures this.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHZRoACgkQAVBC80lX
+0GyiSQf/TimI1Wx2g5ZwOQHSXhbWU2UQM9qXaKXWLguMxZAW8bNhSxkwbFSZPyju
+MLA8c0v2Vi9FwJ8QWYFjIq3MwBFQAahlG+RtYW7i7Z62nYX02t8KoRwJhUUKii3t
+g83o+tLfp7qCabAHoeeuhraMHQjh1DvdYdS1UevJv6mchqg+82ZjxIdZja2O/OdB
+hq0jECa1fKtc+qJj3M+Z1325HC+OZimV9dvSLO1jWVzwOh2vjLzRCQmVcGJja73T
+ZJwvdyvucCB3+VJN4V8wbLRzIjJcDhNhOHj045+VyeJQ7EoHswEFI+bMwdq4aBOg
+A1pxt+6xtWlK9gS+w8H9pbQ3mB1CdA==
+=VkOE
+-----END PGP SIGNATURE-----
+
+--Sig_/tLWYzblcTwYeVc+oS5sIuw6--
