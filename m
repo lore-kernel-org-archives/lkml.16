@@ -1,132 +1,129 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9582BEC5F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07EC19F13F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745360504; cv=none; b=QgHK5xDXB3qE0WKUZWVZHqjqVUp9y9caiA7BXNo9BuV/lX83GjrE/AnKijN7kFJjtmCZR13plinH+972/bhtTLsTmsjdkOMITrgHnz7DPsfXzVMm7th68nQHG/rOyxER8BHv8HDVRidZ957Icbz/armMHZjuTfgYZ9/BYd9KNBo=
+	t=1745360511; cv=none; b=ZRcpLTLg/0vits7FZBfNzh2vmMqLPdS7l3ebhDUvYZ2Y5s6HKEiXMZxS1rI7guuaYj9CbiwgGKE5YD5G9UJEVo2aSZWBRrtL7EDVyEMX+7PJ74QlADXhTI3iqM4DvbxHz6NaaJ0rdlEgnEKG49fDbokbzPUqXCz87wZLXNTsCD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745360504; c=relaxed/simple;
-	bh=OMajJGOYOM80T8XOi8EmEsK5+/OYko020cjWF3DYVFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hU8aJl3AS7OF7WdUP5jeAjs0deIjpp6vPCpLxBmpq8upIQm+L7/1/QP67UQ+0pvO+3CIso63ZpIlmQFIj2/WFCb90Z8nSAoTSpGlF4WErpCdWGDLlKUJ3j6VA7ZUIy7+H3i7etqrLvDgJF6urDw0ICfq7C86bppOangbIPDJYeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OYw7mRRn; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745360511; c=relaxed/simple;
+	bh=UsjQTI9DWmo6U6QiJHMG3Ibvb6nvqmDeHDkJXkSvevI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E76MNtj8TEFEP6tPKoiRvWA2/CzUTEwVtC41mlp0n5atNee344bNgUR0OclaHCAGd5r87ZXH8nZ0o1ByunU6bdfw0QykhnRzd1+ksIheBoLZluJE5BTegLDJ4l5R60t7Bcv5MLfnKlTvj/N6UOxKjBk8D/IyozYQSv366ZcT9iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YHWN2RQt; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OYw7mRRn"
-Date: Tue, 22 Apr 2025 18:21:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745360498;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kjDPiTvtrUS828kXClEO+meshTtGoc7Lw5B1i+KsT4=;
-	b=OYw7mRRnyhGu94Y30UFMbMR+XjM8+Q/9gIeWcdXGKDL63oxVaeWij5Tr1MoYhvxQb+2Eam
-	m/gGTcGPetWw67JTRjIHukoRM2dFhtS7WAMns0Brqy8FkKeN9BJRS6ZGG0wryHBzi7EL2a
-	usVjI0h7YYuGiv0FHu3O3VO0OKRKtlc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <ben.collins@linux.dev>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>, 
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] fsl_pamu: Use 40-bits for addressing where appropriate
-Message-ID: <2025042218-beneficial-wildcat-77dd3e@boujee-and-buff>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <2025042122-prudent-dogfish-eac6bf@boujee-and-buff>
- <20250422190921.GB1213339@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YHWN2RQt"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MKpNIm026844
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:21:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QFVnrpWb050fxv5AMU0KXMBJxaS68SUI9iug+FP01ew=; b=YHWN2RQtHNBMCJyD
+	EYzx9fM5u9uwFTy6s+Nsav9rJpeYHPqbqLNF7mlqS8ucurabTU06FST6MJo02txz
+	MdFM1bpQuAsNBtrvW1gb3XcfpvWr+owKEZzFUX2FudDC7Ko+eWpsfosaX1/RXAa/
+	IcawMPcfhbAQlDw4eF44JMjm6Hcrfe2zaNo/Pp8RoeN6gAp1gfOgL6KoNa4SBf5r
+	rf9IkTd5oMZjDlSEDUUHR2u3Tho0wQGH8VZmdrSX7Sw3O7UX6HND7Bmvwgyjc4tl
+	ysJLLbLMA1WBH18a52TlT9DZYKEgX5zysNd8kbTIw88XuK+i5yjfuQ7FYO4g5EPu
+	1Q+tYA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh005jm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:21:48 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5750ca8b2so809600785a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:21:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745360508; x=1745965308;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QFVnrpWb050fxv5AMU0KXMBJxaS68SUI9iug+FP01ew=;
+        b=cao/15kA+KHu4egPAkzbU6LJBzfgDxsD5/AftO34jZBwn9ELsjYWdlL2n2b5cPGm+a
+         rGcHNw/gcWzJr/RFXkm/oEk1/88eAsBc78JKZhPJK0hVueZ3xr6id23Zch9BjFd2RIL1
+         kzyL2sfjFeCpkYXnumLdoeqKrGZlWoisjlBbiTvYBi11tXD+UTb3ZADsxwm20ZhTRWrW
+         rn2AQIeOBEGx4X4i5mU+UkNnyhK070wTbKoWB4GtQU5bFkB3G8eODMpwx+TIMURdNXQC
+         1ICN9QrXaG/nsLK9Mt50lofxFOK6uPZ6eKYK5jS7lJAD5r+pvyoWGj6MZtD0egoAL9hy
+         F6AA==
+X-Gm-Message-State: AOJu0YxAxdOoNdTrVJH0kjXIO/6H6W9KoFZNWghw1V16nDCBuwDWIlsh
+	QEM4b16iESqDwZ1/E2FZMOWAY7xt78W5+u/9jAbXOKO9vW54VdTz0JvJUrQFjgnCfp+60r03usJ
+	IyEkj8n4Z8Vv25/DsRU/romrEuwUcRIO77YnMQWdTdLsqyiXTb+NAtf3uBDUxbXI=
+X-Gm-Gg: ASbGnctocazTn4eM2x5RTzqhskMPmhbyfjfDenGIJDpnhC64GcwsnJ/iVg55yuWDYgw
+	93fY19vX/b/fzB7WhjVunWkbUx1bPFafzLt1l5FZM79Q7rYPiKN0Ptlg+OGbbmnRIOpdfBqQUtD
+	H7/7jm5fSUundaKxw6qzdToLqFgdTZcIAQc2i7vo7jXOANsW61dnL1KesKHigUUZLT7miHMskhI
+	TSO1/Q5A5bzDO+MMLfs8/irmQkt9ehCXzdM0GQSVLa8E1wGlXR0iBEb4cMP8itiRbNsSVyFlWAn
+	M0p7TkSkDmVJkYXY86gkX/R0IgEXuUuP12nlTgKHpOlglC72mpmICV8WV8V0dqLxpkP9W/qMkwP
+	FNujPvDTRyQKNjnzbVRdaW8ea
+X-Received: by 2002:a05:620a:2586:b0:7c5:96b4:f5e5 with SMTP id af79cd13be357-7c927f849a9mr2413025685a.13.1745360507820;
+        Tue, 22 Apr 2025 15:21:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOiwKU9TBLfD8mAj6HNCGwIQ6VsntnnuJ4wlLR80zdOsb9Oy9RmdN6FhXt95pYuyHYSfsmlg==
+X-Received: by 2002:a05:620a:2586:b0:7c5:96b4:f5e5 with SMTP id af79cd13be357-7c927f849a9mr2413022085a.13.1745360507403;
+        Tue, 22 Apr 2025 15:21:47 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-31090822ecdsm16630271fa.85.2025.04.22.15.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 15:21:46 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>, Dmitry Baryshkov <lumag@kernel.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2] drm/bridge: lt9611uxc: Fix an error handling path in lt9611uxc_probe()
+Date: Wed, 23 Apr 2025 01:21:45 +0300
+Message-Id: <174536050030.3678509.7013496889543262628.b4-ty@oss.qualcomm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <f167608e392c6b4d7d7f6e45e3c21878feb60cbd.1744958833.git.christophe.jaillet@wanadoo.fr>
+References: <f167608e392c6b4d7d7f6e45e3c21878feb60cbd.1744958833.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="plgvsw3l3hufgtb4"
-Content-Disposition: inline
-In-Reply-To: <20250422190921.GB1213339@ziepe.ca>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDE2NyBTYWx0ZWRfX2FzcIhZQ5058 McsoHNbfVPBrjW0bbPulZjg0cc2RnMLfgeLOaR8F8jXGeKSDF09UhoUlwhk+5FLNLzW75cs6Ezz K5oZitH4A3awk+a5KhATGRnQBft/1gyO6lIvLQGEeF7bLKF1/s3fLqJTWn8/bQZvbcZEQzmDTw2
+ MGPu1FZkF7ydeFDdiQX7JPk1b8UhqrPjjsynXtjJkdplUUyY4hWaQ41kkmxzelmgytF7farc/kr 3RAV5yHWRv5Gt7yam/8YYvTSeMRNQwuXAxEoC85jAgymq9q+0NTZR5SK13GqpRxKuNhlSN9Kr9V 9yq0zbftKWYrQ+xBb/DZiE28JaBLXZ8uecG8D4lH98URmzVrnwHIMHWMrvs0xqBeD5ezt5Z9sHY
+ +oNAzIi7iVmSMS6cWOHGB8wPm/Q0Zhtu7yE2StQXV8GweF4+KBm6aSqypgnAO7QNqwch/1na
+X-Proofpoint-GUID: BCIVD8FfrJFnlNZw4mURJZO0-j4XBNz_
+X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=6808167c cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=Epe2dFrVDL3RtkqF-aAA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: BCIVD8FfrJFnlNZw4mURJZO0-j4XBNz_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_10,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504220167
 
 
---plgvsw3l3hufgtb4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fsl_pamu: Use 40-bits for addressing where appropriate
-MIME-Version: 1.0
+On Fri, 18 Apr 2025 08:48:16 +0200, Christophe JAILLET wrote:
+> If lt9611uxc_audio_init() fails, some resources still need to be released
+> before returning the error code.
+> 
+> Use the existing error handling path.
+> 
+> 
 
-On Tue, Apr 22, 2025 at 04:09:21PM -0500, Jason Gunthorpe wrote:
-> On Mon, Apr 21, 2025 at 10:46:19PM -0400, Ben Collins wrote:
-> > diff --git a/drivers/iommu/fsl_pamu_domain.c b/drivers/iommu/fsl_pamu_d=
-omain.c
-> > index 30be786bff11e..a4bc6482a00f7 100644
-> > --- a/drivers/iommu/fsl_pamu_domain.c
-> > +++ b/drivers/iommu/fsl_pamu_domain.c
-> > @@ -214,9 +214,10 @@ static struct iommu_domain *fsl_pamu_domain_alloc(=
-unsigned type)
-> >  	INIT_LIST_HEAD(&dma_domain->devices);
-> >  	spin_lock_init(&dma_domain->domain_lock);
-> > =20
-> > -	/* default geometry 64 GB i.e. maximum system address */
-> > +	/* Set default geometry based on physical address limit. */
-> >  	dma_domain->iommu_domain. geometry.aperture_start =3D 0;
-> > -	dma_domain->iommu_domain.geometry.aperture_end =3D (1ULL << 36) - 1;
-> > +	dma_domain->iommu_domain.geometry.aperture_end =3D
-> > +		(1ULL << PAMU_MAX_PHYS_BITS) - 1;
-> >  	dma_domain->iommu_domain.geometry.force_aperture =3D true;
->=20
-> What on earth does this even do? There is no map_range() callback in
-> this driver, so nothing should be reading geometry..
+Applied, thanks!
 
-I dunno, but your "FIXME this is broken" comments are all over it from a
-year and a half ago:
+[1/1] drm/bridge: lt9611uxc: Fix an error handling path in lt9611uxc_probe()
+      commit: b848cd418aebdb313364b4843f41fae82281a823
 
-Author: Jason Gunthorpe <jgg@ziepe.ca>
-Date:   Wed Sep 13 10:43:38 2023 -0300
-
-    iommu/fsl_pamu: Implement a PLATFORM domain
-
-       /*
-        * FIXME: This isn't creating an unmanaged domain since the
-        * default_domain_ops do not have any map/unmap function it doesn't =
-meet
-        * the requirements for __IOMMU_DOMAIN_PAGING. The only purpose seem=
-s to
-        * allow drivers/soc/fsl/qbman/qman_portal.c to do
-        * fsl_pamu_configure_l1_stash()
-        */
-
-The logic hasn't really been touched in 10 years.
-
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---plgvsw3l3hufgtb4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgIFmwACgkQXVpXxyQr
-Is+CzRAAq4Doy76vP/uvrf7LUhsshA5BRHPEh895UKM7rKUTz85JnB71LPZMOFvY
-tPQ5Eb+LCiFfLS4tz+0TvTxsNQkTIoD8nPslbzW7HYOphrvJsetEmK/MzFtJD03M
-JBRM4gGZzAxDZ1la8k7Jy2AUHhYbHGareuy84OU99Vb45rtMdXJ9maontA+kuPkT
-uqjyAN5R86A1rG5DQWkIHQ500AN3+OR0BnZJPlYY2ehp0c3HpCSNPC7/hntoOCrl
-MlMMF+WxsZ3PVnA9Ym4/fzzhQ+9fDkiqd7+wXqaLTGocfY7L3CAxQz4xphhuxBQd
-SOO9Fk0mKaRt/bTfl39Yq/xYewLLvRT1yVD2dWEhwV7PVqG4oHL3fQBjaoBVxrdY
-4sBjdevOxpwEujcSc10H4cNuFvUuHjpfN6QOnbwo9AOzEppQsxwbReXYpSiWCtgx
-uG8MWTUyLLEJqe1q+eIioE0BuVLigduyuBLZzOKkbA1N1QRb9IOoE8+dUbmDLdHS
-Ty0QMK1xQpdmhit6qUzR3wU4m+PGj7yVR6MR6eERzjt4WL418MdSg+H0YfjLiEFF
-ZzIuJrvKeP9hxfaZ65tyqecjcm7CoO0MD8npjO7D1zuj8CAcAezSrxgrawCXBX5P
-reBSfzP/zFm1Cy6Ps5GtW38eMzK/AOyE2T3K0u9Bm/cGFG3qqR4=
-=cpPe
------END PGP SIGNATURE-----
-
---plgvsw3l3hufgtb4--
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
