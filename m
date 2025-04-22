@@ -1,193 +1,152 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDD82AE68;
-	Tue, 22 Apr 2025 14:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E142AE68
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333572; cv=none; b=uKmg6vzoK2jlpw1ptcMKwRjfl/Z8w37ZG+OH5DuQB+oQt+ZtsrBkCy5bO4qzWyQWHL2M3qh4E3YHQt7CE4fQsE2vryo5FUfoX+uMZ6S/DPgdETdP3Lr2bB3c6KJ4Wvmv2x7PGh5msWYUGa0Kxb8WunwezskPNdDUZ+3R1sC6g7w=
+	t=1745333579; cv=none; b=O3MLVbWG6Isaktasb2iTfkNgeoe+2KsV+6F4QAY/75QzaS9lCvYxEvkc82WSStcAeDYC3FmaN2gGNc0jNb0jseaxfg8X0ER1lrut0Jj6dxm/9Ri0jwrWU8pIwkuiKw4QbSFzoMKU3nZ7Okt5gWa9hlCgz7FLmM8maArLQ57HhTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333572; c=relaxed/simple;
-	bh=QTtMhN+qUIN28sTfIHm6cAZpcMSYeG7RgKue75sEfOs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MwUvlhZrCAxi9+Kw1Rn20dWVmsXMkt/nvfEFYBxPMWN3UWf47J+NHI9KhYjJBZjZRE1CcxaM3/cWSt5J8gGmC312KQvYaKwapnsfBkUxCtTyjba6SwHjV9SLWFaIQhWss8pmISrZB+Z/9CfGgB51oQIRMyv6o/Hoquoe57xmWdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eIVvTvYR; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745333579; c=relaxed/simple;
+	bh=018saJNBRs7zemO9fzSOBQxHo1poUiqtBOtAUljjlY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+meQT1zfpSQehFdkgLXwM4hjfhiVtgzFPmboOAGGCWILFZQsLAj2Nc84oYxjfTyJC/wnS7H4fgTDtQRhw6Fgn/nRz4ddE1YU7rs9Bzhu4lUrjXlk0PONfGd42BNHsJ3krH2VXNgco2L8Dvzk13Ijj/H9mjtb0quIe2pYheX4lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUX/PHzi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIVvTvYR"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acb39c45b4eso772089466b.1;
-        Tue, 22 Apr 2025 07:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745333568; x=1745938368; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ne0UrOQ10ywUV4yIx/6vzg9wa/Lu7VvCl++7DoTSGgQ=;
-        b=eIVvTvYR6WD1RCVQqtvGuj3aVfMgu+pxrNPAJrbim6sr3NGF+hDbo89PhaQ3xx9Szf
-         rZD5MUTNTDjafQvSAm9kOdSj98dMTpx0Qmxw+z4KHIVQYgMCgU0CJzQSlZuhSy1Lm9ZY
-         AwnIlj0+eJxWkkQhBC8b5pPjObOcrDw9iwqB5ZrKRWNnwKi5SOI+QBXyyhCQ/ttn/ONA
-         T919e/nh+kKDy6vgY5huFISfe9GXSyE2KT8EV7VcCK+so+0YOt7jG9IZ1ZqHfAcH3TiT
-         vW+TmUdzFAdl4DYXT44WToqzqLosnXMJXTNGi5j+39oH9WZqTSETd/xLIHXhcBKC8AYW
-         FczA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745333568; x=1745938368;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ne0UrOQ10ywUV4yIx/6vzg9wa/Lu7VvCl++7DoTSGgQ=;
-        b=TOTP7gKmtyD4/FpChMfqgZ5sF4ZdPzMHMcNeLF8gsXdHWPN3+2wEWjybFbiRDZMMm7
-         wYMhrJLTgJiz4x9ZgLq79xcLPcQDdLmVLMvuB1m6J8yetrlNW8CLOKWQ5P6djX1PbO7N
-         7NlEnfok2JSyKTAzYPHoZc6IA9bBm3pErqWpBxQsGNR3p2sEZM/6Fr3Ks/yDjAwusZHA
-         VmOvCKPV2qVbnB1vmstMT/rIxtEiqaHcndwKsVT+Xdf7ONH0q5EzNy8Sx/YLdmULOuKz
-         8nvA/rzUpw5CvMvwTGeBX7kU+hnclJVR+nlrvsipfjw6Ne2htJzRF7OHGISf1DZ9tmXl
-         G2oA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqTNQ2ctHFVnSwuP4/3Zk44NdfGleb7gxASu244IaQF8lTH2cIeGdNxNjPUG99FWVhPfpH1DJFwbeYyb0=@vger.kernel.org, AJvYcCXUvGonwvvhKL+Y69rJ6Zl6xjaeMhXlde31mXicyo9Y0xyE3wpxzeX9qQ5H935vZ/i5f778X4dHXBuF2UE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbNkdeCIfqMSKMTHvbhbh1fQuFrC0Fl9nD7has9U9qW/EGSyvP
-	U+b/5TM3BSWadXeno/UtTAomEjdjCTIM9EdiND2cars/10uyIxT3
-X-Gm-Gg: ASbGncuuk1uxxUP1PfgtulOerkI24LOEyPjsc32N0rUZc8niGtFrlTcdbfwKy6n9FsJ
-	1fCfT8sAeT9a1pokTEP2zR/779sU+BJ+8wfU5Ol9vmhCUHHIngjwbynf6ghFPtO6VPc6EW2oLoB
-	7uSo+jc3WWgalJMEbT/T6OZ3m3JbrRp1wy/EeVAER5i/geMYCRmy/tTzP8NFufTSU2lPI17wOrq
-	ZfHOzao/XT/cBLWbqy+i77PkZ5hwyIDIB2rg9/KJdV1YBYPtAtMZby6YqVfMnk3Zb8739IOC6gN
-	b+NjCGLw1wVzBFG+J3tQ8V/2wmZGIi/dsBdMO1rMvy8=
-X-Google-Smtp-Source: AGHT+IGb9MBfCkRoB/jqq7loWg9l+w4QKcOEEXBWwwBNICQDiX2ECXBkrt0pwz/SUpiy+0yG92zd4A==
-X-Received: by 2002:a17:906:6a1e:b0:aca:c924:c14 with SMTP id a640c23a62f3a-acb74b34dbemr1383647666b.17.1745333568369;
-        Tue, 22 Apr 2025 07:52:48 -0700 (PDT)
-Received: from [192.168.1.101] ([212.106.161.104])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef9e7e6sm657013966b.162.2025.04.22.07.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 07:52:47 -0700 (PDT)
-Message-ID: <d0da9dbd-7ea7-4047-bab3-22f416c45938@gmail.com>
-Date: Tue, 22 Apr 2025 16:52:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUX/PHzi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976CEC4CEE9;
+	Tue, 22 Apr 2025 14:52:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745333579;
+	bh=018saJNBRs7zemO9fzSOBQxHo1poUiqtBOtAUljjlY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RUX/PHzinyM9Br2ohsV5psWHr9HC30mW4Qfvv0nJlSi/a8EoPfm59C+m58wvtX1e8
+	 iBpR+fxYxQITB6uIRouvyd40V6zf6X5no5959gFexwuy1k7KY4xKidKnOsogmRP2jG
+	 dK6+kodnftT/o4Yn4apZC7fKIX9gRMZ9blNUqAkZjVaeGHLP5Z6wkjuFMUxidsB2Ns
+	 3VLudYWHplEtA48QEQBhn/wycwXaXkOTCFzES4dRCu4+Fr0tro5Nv/9oB7UYA1G19h
+	 8by4A+JPsBOJNEbg80DHrihnJAl42rGL641kOQKBtLjwtbT6dzT0lqAOlbAAjr3RGL
+	 Z6AJRZ7Da57vQ==
+Date: Tue, 22 Apr 2025 16:52:54 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: phasta@kernel.org
+Cc: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+Message-ID: <aAetRm3Sbp9vzamg@cassiopeiae>
+References: <aAEUwjzZ9w9xlKRY@cassiopeiae>
+ <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
+ <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
+ <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
+ <aAd54jUwBwgc-_g2@cassiopeiae>
+ <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
+ <aAeMVtdkrAoMrmVk@cassiopeiae>
+ <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
+ <aAeiwZ2j2PhEwhVh@cassiopeiae>
+ <f0ae2d411c21e799491244fe49880a4acca32918.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: tegra: Enable PWM fan on the Jetson TX1 Devkit
-To: webgeek1234@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
-Content-Language: en-US, pl-PL
-From: Tomasz Maciej Nowak <tmn505@gmail.com>
-In-Reply-To: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f0ae2d411c21e799491244fe49880a4acca32918.camel@mailbox.org>
 
-Hi.
-
-W dniu 21.04.2025 oÂ 00:42, Aaron Kling via B4 Relay pisze:
-> From: Aaron Kling <webgeek1234@gmail.com>
+On Tue, Apr 22, 2025 at 04:16:48PM +0200, Philipp Stanner wrote:
+> On Tue, 2025-04-22 at 16:08 +0200, Danilo Krummrich wrote:
+> > On Tue, Apr 22, 2025 at 02:39:21PM +0100, Tvrtko Ursulin wrote:
 > 
-> This is based on 6f78a94, which enabled added the fan and thermal zones
-> for the Jetson Nano Devkit. The fan and thermal characteristics of the
-> two devkits are similar, so usng the same configuration.
-
-Does this work on Your DevKit? Doesn't on mine, the fan won't budge. Maybe the
-revision difference? What I'm using ATM is [1] and [2]. Because inverted polarity
-of PWM, not submitted since that'll need the driver changes [3],[4].
-
-1. https://github.com/tmn505/linux/commit/a78c520ec94aeab2c9dc8e1f46597c4174ff957d
-2. https://github.com/tmn505/linux/commit/99beee4f0cd5d3a6f30e1829d823c11cb8b54bac
-3. https://libera.irclog.whitequark.org/tegra/2024-07-19#36707118;
-4. https://libera.irclog.whitequark.org/tegra/2024-10-14#37145211;
-
-Regards
-
+> > > Sorry I don't see the argument for the claim it is relying on the
+> > > internals
+> > > with the re-positioned drm_sched_fini call. In that case it is
+> > > fully
+> > > compliant with:
+> > > 
+> > > /**
+> > >  * drm_sched_fini - Destroy a gpu scheduler
+> > >  *
+> > >  * @sched: scheduler instance
+> > >  *
+> > >  * Tears down and cleans up the scheduler.
+> > >  *
+> > >  * This stops submission of new jobs to the hardware through
+> > >  * drm_sched_backend_ops.run_job(). Consequently,
+> > > drm_sched_backend_ops.free_job()
+> > >  * will not be called for all jobs still in
+> > > drm_gpu_scheduler.pending_list.
+> > >  * There is no solution for this currently. Thus, it is up to the
+> > > driver to
+> > > make
+> > >  * sure that:
+> > >  *
+> > >  *  a) drm_sched_fini() is only called after for all submitted jobs
+> > >  *     drm_sched_backend_ops.free_job() has been called or that
+> > >  *  b) the jobs for which drm_sched_backend_ops.free_job() has not
+> > > been
+> > > called
+> > >  *
+> > >  * FIXME: Take care of the above problem and prevent this function
+> > > from
+> > > leaking
+> > >  * the jobs in drm_gpu_scheduler.pending_list under any
+> > > circumstances.
+> > > 
+> > > ^^^ recommended solution b).
+> > 
+> > This has been introduced recently with commit baf4afc58314
+> > ("drm/sched: Improve
+> > teardown documentation") and I do not agree with this. The scheduler
+> > should
+> > *not* make any promises about implementation details to enable
+> > drivers to abuse
+> > their knowledge about component internals.
+> > 
+> > This makes the problem *worse* as it encourages drivers to rely on
+> > implementation details, making maintainability of the scheduler even
+> > worse.
+> > 
+> > For instance, what if I change the scheduler implementation, such
+> > that for every
+> > entry in the pending_list the scheduler allocates another internal
+> > object for
+> > ${something}? Then drivers would already fall apart leaking those
+> > internal
+> > objects.
+> > 
+> > Now, obviously that's pretty unlikely, but I assume you get the idea.
+> > 
+> > The b) paragraph in drm_sched_fini() should be removed for the given
+> > reasons.
+> > 
+> > AFAICS, since the introduction of this commit, driver implementations
+> > haven't
+> > changed in this regard, hence we should be good.
+> > 
+> > So, for me this doesn't change the fact that every driver
+> > implementation that
+> > just stops the scheduler at an arbitrary point of time and tries to
+> > clean things
+> > up manually relying on knowledge about component internals is broken.
 > 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 60 ++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
+> To elaborate on that, this documentation has been written so that we at
+> least have *some* documentation about the problem, instead of just
+> letting new drivers run into the knife.
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> index 83ed6ac2a8d8f403fb588edce83dc401065c162f..bc02f2eb14bcbd99627c58b398bbf43061c8110b 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> @@ -1623,6 +1623,14 @@ key-volume-up {
->  		};
->  	};
->  
-> +	fan: pwm-fan {
-> +		compatible = "pwm-fan";
-> +		pwms = <&pwm 3 45334>;
-> +
-> +		cooling-levels = <0 64 128 255>;
-> +		#cooling-cells = <2>;
-> +	};
-> +
->  	vdd_sys_mux: regulator-vdd-sys-mux {
->  		compatible = "regulator-fixed";
->  		regulator-name = "VDD_SYS_MUX";
-> @@ -1778,4 +1786,56 @@ vdd_usb_vbus_otg: regulator-vdd-usb-vbus-otg {
->  		enable-active-high;
->  		vin-supply = <&vdd_5v0_sys>;
->  	};
-> +
-> +	thermal-zones {
-> +		cpu-thermal {
-> +			trips {
-> +				cpu_trip_critical: critical {
-> +					temperature = <96500>;
-> +					hysteresis = <0>;
-> +					type = "critical";
-> +				};
-> +
-> +				cpu_trip_hot: hot {
-> +					temperature = <70000>;
-> +					hysteresis = <2000>;
-> +					type = "hot";
-> +				};
-> +
-> +				cpu_trip_active: active {
-> +					temperature = <50000>;
-> +					hysteresis = <2000>;
-> +					type = "active";
-> +				};
-> +
-> +				cpu_trip_passive: passive {
-> +					temperature = <30000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +			};
-> +
-> +			cooling-maps {
-> +				cpu-critical {
-> +					cooling-device = <&fan 3 3>;
-> +					trip = <&cpu_trip_critical>;
-> +				};
-> +
-> +				cpu-hot {
-> +					cooling-device = <&fan 2 2>;
-> +					trip = <&cpu_trip_hot>;
-> +				};
-> +
-> +				cpu-active {
-> +					cooling-device = <&fan 1 1>;
-> +					trip = <&cpu_trip_active>;
-> +				};
-> +
-> +				cpu-passive {
-> +					cooling-device = <&fan 0 0>;
-> +					trip = <&cpu_trip_passive>;
-> +				};
-> +			};
-> +		};
-> +	};
->  };
+> The commit explicitly introduced the FIXME, marking those two hacky
+> workarounds as undesirable.
 > 
-> ---
-> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-> change-id: 20250420-tx1-therm-9fb3c30fa43f
-> 
-> Best regards,
--- 
-TMN
+> But back then we couldn't fix the problem quickly, so it was either
+> document the issue at least a bit, or leave it completely undocumented.
 
+Agreed, but b) really sounds like an invitation (or even justification) for
+doing the wrong thing, let's removed it.
