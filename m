@@ -1,44 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C28280A38;
-	Tue, 22 Apr 2025 13:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C200428A415
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328516; cv=none; b=P+6HMVWFO7WsNYDuOYmCtxzCqHPSjlQVYJVNELNeLw/SWZNDxAQzst+WwE5qGo8kpxcesSFaE9zsETPAFvpVmHQJVBGD/Zvh3EybDlyv70kldJ4AupfinOHUok9CA7X0cKBM5bfwkqAHcMlY1K4PNDyxHWJMrsChEO//v59IKYg=
+	t=1745328526; cv=none; b=nIDndoVbah//YLZHMbAJ2tpHjUsewXyQKrEx1hrAfV8tY5xLFaK4/p4Abc0NxxDVuOW8iLFZMIp01BuVLZ3tlLjCvVgWhijsKNjSwksXrDiw0/7BJIS6exTiR+VLFvOuS39afny2BPt+tt7g8EQm9hyHqj18TE4n1sLmF7e2kyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328516; c=relaxed/simple;
-	bh=dLXcRB/G/Ji0x4++XcAw2dvj/d2F8U/NvXO42ZHV6iQ=;
+	s=arc-20240116; t=1745328526; c=relaxed/simple;
+	bh=ViyHovAi2SEzHa4yd1kygd9djfXSry24UVYbk29LzYU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EnAQXulX93unPxYyHEp2D+0mu2HaidUbVClJ18OoSUIhxotNFDU4l1r3vCF4MixLw8hUQC79nK8HNV9/qXHUC9znd5JGaLcwzGGJftwiCCGehO/4tVIE2qFuaI2g2HtxwxH7PpViJkAS7RrB3nfk3D4mx/ku1KVLoxVGtwaP5cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONrsyMpx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ml1jCCkcBTS9uxTIs/javwZa108+YGkFfSh8VaKJfScjWmrLydec2FksxsioAwMhKV2SBIO+/t7kve7x1vzp7jrXIxkupxLCjmkjCyslUZI0YZjIhWPIrwuRhaXwj9w3TdVi4eQAZbcmowNUwGdFnB9yD4XAjKF0g3ZB1QLPT5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cEygV0Vh; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONrsyMpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80EAC4CEE9;
-	Tue, 22 Apr 2025 13:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328516;
-	bh=dLXcRB/G/Ji0x4++XcAw2dvj/d2F8U/NvXO42ZHV6iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ONrsyMpx9rGFRyJxq00IrqarfqVDTXRBblDWpY/BLB1HoBfjLC6O6CtmVDz43QWaN
-	 9Rp8VOKYydLusWySu9z4gE5Q7b6bzrdxZpg44FU6ioCvT4SknOblZnk0FsiJQ0YEtm
-	 hNEJi8ILkzsHDPCo/uOf5N+pQAM3qGc9nHQU1hV0OoaoXiMZxdtnZC7UER1emU4zf0
-	 76OvRfs756wB1NVa0L2szb/l+/i0mAWsG12XU7MCTXjpEsmMO96gw6fyOub77EHWzk
-	 KyrgroZTmNTpKKaLKrn9RT3BrLYr2Xs+afiZHTqiBLf/Q34JqemnqIJRzL3MajTVYG
-	 qGzbyko82Xg7A==
-Date: Tue, 22 Apr 2025 14:28:31 +0100
-From: Simon Horman <horms@kernel.org>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, andrew+netdev@lunn.ch,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pkshih@realtek.com, larry.chiu@realtek.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	David Laight <david.laight.linux@gmail.com>
-Subject: Re: [PATCH net v3 3/3] rtase: Fix a type error in min_t
-Message-ID: <20250422132831.GH2843373@horms.kernel.org>
-References: <20250417085659.5740-1-justinlai0215@realtek.com>
- <20250417085659.5740-4-justinlai0215@realtek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cEygV0Vh"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac339f53df9so880621966b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:28:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745328523; x=1745933323; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zJrR2JxkMMZwCpTNb/tpAEcXKA5Fk1cxT8LzYQjHkvI=;
+        b=cEygV0VhiRrFgEb55teIQdho0agfPekqntBYy/gt2d1h/cMYxBXTZcyHgqGsIerG9O
+         X/BWFWvFBY3chXiX57JdzRkpKE4jPV2ZN1owIWaVMMX7mc0YcQz5dRkPyyAD2NFq3EnZ
+         MihYXJZVR4G47EH1KkzxLVRl2la/OaRs/Hu6uKrerxX9jMn0RqSTcdKMapFyyKcx4781
+         Re2pUuF+x0pgiUGKFIzMLqmLfQxcPmLbvAF1AYqp61YP/TaMglPiSDeB162/3N/k1JWL
+         IZElrEdBADoSa+ufmV7gsaK7eVtxj+LKkEDVeYS3Cj0e9WwizZxE8gRrevAQGBoxc11y
+         d3ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745328523; x=1745933323;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJrR2JxkMMZwCpTNb/tpAEcXKA5Fk1cxT8LzYQjHkvI=;
+        b=XXqddWCN5A1ntb2O+khM03d9JjyacYYnaF4EPTsVZTGRF/fK9UB5wZTLc8bLkw0ede
+         /UrcEs1K8BRfRLbJGeX6ikgbzq7PnjGjRsG5NYTOz7EdCQ6hAMdNHMdUK0A7c23oaNYD
+         fvxH2LTh18zCh1DS94fJJzhXpvI4Qgo5DOFkRPORzqxSsyBw6ckr26pLLc/LOk4yR0hJ
+         27EGmHurPoJqRdNY9PIt/N/E877u2G9dKteJh5S19X3okUtOUFG40LTYsBqqhtG6knHc
+         uXfqIbQTW9vEogqaW36TBWwn2jtVfzyIDOGrpJY3zbOnDQzDpMZyrHvCcJYHyR86nyNG
+         aA3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUFcoztn/eKIRx+EuuyyKzAwYRcYeTaKF+w8b8X3iv6mTqHUvdyMDuinrdZotmCXNPiTMhIYQqTRhd0qPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yztsnmo5in8k0dZhjseD7LususB0MqwgeJ9gC0tA76lnFy34/fp
+	o92KcO4b0cB4A4KGM9zr3cxoxnAyg4rMymIQV9ERLzU5Kl02Lmi9YeeDQ+v/5MU=
+X-Gm-Gg: ASbGncswSrO/K7epaXZpFbwmKGHIV1GxYhvqx765SuXNwQ/JK2y9LbnXl3qo5l3TsFv
+	vqFvM6Ld8vKF3rr8wEVAFMWhNZ2jfvQR7ytO2t8Dxq57MJ53j1fGUi9BwCgJAi+GwlVnZbRsM8g
+	wEVHQw37v5O7UJEP5rq9SwLTAaE89f7qtCIXHAsvoUFq2IfnvqH1ycVfDLxVyKmn0iLOLu0FQHu
+	vGiUN7f1YGa9Yy4n9YMW8rE1nMbg6SQ62sqO9LsTFuLcfynEN4jt7uK/kUOGu2inWqh94otWXBe
+	eDNwEFRfSBnHVCKhc6pocmQA0+iU4xDwlvIv3Q==
+X-Google-Smtp-Source: AGHT+IGBZS9qAdq9W3YkRDXdH/Hs9bjK7HcuVeE81Ft+GPykI97oKk1Nc4VkNoyA40tEDn0sMITw8A==
+X-Received: by 2002:a17:907:da3:b0:ac4:76d:6d2c with SMTP id a640c23a62f3a-acb74dba1e2mr1407490766b.40.1745328523115;
+        Tue, 22 Apr 2025 06:28:43 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace3175d95esm78875166b.173.2025.04.22.06.28.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 06:28:42 -0700 (PDT)
+Date: Tue, 22 Apr 2025 16:28:40 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Johan Hovold <johan@kernel.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/11] pmdomain: core: Simplify return statement in
+ genpd_power_off()
+Message-ID: <aAeZiIE9URMmf3JE@linaro.org>
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-3-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,69 +83,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417085659.5740-4-justinlai0215@realtek.com>
+In-Reply-To: <20250417142513.312939-3-ulf.hansson@linaro.org>
 
-+ David Laight
-
-On Thu, Apr 17, 2025 at 04:56:59PM +0800, Justin Lai wrote:
-> Fix a type error in min_t.
+On 25-04-17 16:25:00, Ulf Hansson wrote:
+> Rather than using two if-clauses immediately after each to check for
+> similar reasons to prevent the power-off, let's combine them into one
+> if-clause to simplify the code.
 > 
-> Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+
 > ---
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/pmdomain/core.c | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> index 55b8d3666153..bc856fb3d6f3 100644
-> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
->  	u8 msb, time_count, time_unit;
->  	u16 int_miti;
+> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> index 574a0de1696a..34a85bf347ad 100644
+> --- a/drivers/pmdomain/core.c
+> +++ b/drivers/pmdomain/core.c
+> @@ -917,20 +917,14 @@ static void genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
 >  
-> -	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> +	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
-
-Hi Justin, Andrew, David, all,
-
-I may be on the wrong track here, but near the top of minmax.h I see:
-
-/*
- * min()/max()/clamp() macros must accomplish several things:
- *
- * - Avoid multiple evaluations of the arguments (so side-effects like
- *   "x++" happen only once) when non-constant.
- * - Perform signed v unsigned type-checking (to generate compile
- *   errors instead of nasty runtime surprises).
- * - Unsigned char/short are always promoted to signed int and can be
- *   compared against signed or unsigned arguments.
- * - Unsigned arguments can be compared against non-negative signed constants.
- * - Comparison of a signed argument against an unsigned constant fails
- *   even if the constant is below __INT_MAX__ and could be cast to int.
- */
-
-So, considering the 2nd last point, I think we can simply use min()
-both above and below. Which would avoid the possibility of
-casting to the wrong type again in future.
-
-Also, aside from which call is correct. Please add some colour
-to the commit message describing why this is a bug if it is
-to be treated as a fix for net rather than a clean-up for net-next.
-
+>  	/*
+>  	 * Do not try to power off the domain in the following situations:
+> -	 * (1) The domain is already in the "power off" state.
+> -	 * (2) System suspend is in progress.
+> +	 * The domain is already in the "power off" state.
+> +	 * System suspend is in progress.
+> +	 * The domain is configured as always on.
+> +	 * The domain has a subdomain being powered on.
+>  	 */
+> -	if (!genpd_status_on(genpd) || genpd->prepared_count > 0)
+> -		return;
+> -
+> -	/*
+> -	 * Abort power off for the PM domain in the following situations:
+> -	 * (1) The domain is configured as always on.
+> -	 * (2) When the domain has a subdomain being powered on.
+> -	 */
+> -	if (genpd_is_always_on(genpd) ||
+> -			genpd_is_rpm_always_on(genpd) ||
+> -			atomic_read(&genpd->sd_count) > 0)
+> +	if (!genpd_status_on(genpd) || genpd->prepared_count > 0 ||
+> +	    genpd_is_always_on(genpd) || genpd_is_rpm_always_on(genpd) ||
+> +	    atomic_read(&genpd->sd_count) > 0)
+>  		return;
 >  
->  	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
->  		msb = fls(time_us);
-> @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
->  	u8 msb, pkt_num_count, pkt_num_unit;
->  	u16 int_miti;
->  
-> -	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> +	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
->  
->  	if (pkt_num > 60) {
->  		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+>  	/*
 > -- 
-> 2.34.1
+> 2.43.0
 > 
