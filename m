@@ -1,143 +1,83 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052684C85;
-	Tue, 22 Apr 2025 13:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5A91EE7BC;
+	Tue, 22 Apr 2025 13:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329661; cv=none; b=pbDeGSSCBUnEGKXQQgmaGpw7i2WotgstLoL9y+cJqe0LkqAFacOXK0m14fL2ZCZBay/fvzVICTHhY3X9dT9FEd1Al655SAV9vMasmeV/2gpO25NKI8VZtl5YukjWkJ0N+dnQUpFKmTTh+oxAAPl07P7Adz9M4oq3R/y1PnJlu14=
+	t=1745329668; cv=none; b=ioE+kZ7U6x/l3dzhGyj/lBwmiqcZ6heHrpPI8oy5xEUuhnvY5Tv5R9qqgqre6dqzYtx9mlBX8v/QnEk4LoXjMq5ALeC44a6QQJ9rIRfl0iFlhB/GskQQqx+TOkUuqfZLY7aBDhGxru4a24rtmlVxpdWe2geU5cxcpBLyVAqFu5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329661; c=relaxed/simple;
-	bh=kDo4HRvvA558Eov+TuiccC+GY9aXbLYZP8MmS1f1QcM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C0p3E8yiL4H/zAdogyBkuNF6htUvM1TqBswSrj0zqb6ap521AR3AxrcM0FBnEEDKxX+xOzzVIUH+vN2hYteDDroxWfLGbhqIagqgH8gA5M+9Su2ncwc9TG00JWorM4B+HqBfBGNJhBN1FQqy/nTY0wXpVqEzLx6rXSZfigVKYP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvPc9hDC; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745329668; c=relaxed/simple;
+	bh=r/2jQ92IbgEzNppnARIsVhMwo1Q4nrZsUcwAE/C6P9k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sEdmKrktxtz7nVravj9JZOs4efZwop0YMuO/5YtiBIqcZcUrN70FAWD1UWWcb0l1Yx+xQfzNFDlfs2zS1xmXhreKQjLYgBLkMavsEmCRrWBKsjRlYuRBq+aYwRFN4Ieq3remkyvDymZCsemfVvQy01afcKbzL2IEOu2I35q6SwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T/j40Mmi; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvPc9hDC"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301317939a0so692544a91.2;
-        Tue, 22 Apr 2025 06:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745329659; x=1745934459; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpufMGO9Eqf6bR83oPmEFAFsbu9LRNEFz1I7COzMFeM=;
-        b=YvPc9hDCzm//awY17rmlxLps0UvDHc6HeZpItngBXKzo2OL/jxPhY/0UfXgTwHEJDS
-         zLpBkPHuvl+Fl7sSPvZfy5IONKIkvMUTbi84l5HhW1GJkblClSRwQGTmZEFF+e497E09
-         MIhJdApB0t8or5R88aMirdS4twV8jdKJMRMSbLmdZl/4jMbmjiPVTSLFK0YnuF9Uk47u
-         ovTm6SsSPlmHsJnvRAJ2C7a6icyA42TiJeJh96D83E/TNm+Z5A0at+7Eu1SyE8Vqc8JT
-         GsoOnzuyUEGI87JWdJsWxH2skXZrOy2iYPQkXyF6Zaw2qWL1CgciZG2gt2zpzZ1mWUNa
-         c12Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329659; x=1745934459;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZpufMGO9Eqf6bR83oPmEFAFsbu9LRNEFz1I7COzMFeM=;
-        b=m2V0ClaMFjx6olAlWrZ2kGd23+JqdPhioFadgEsa45zczbhharnm84Mx8KB4rrpPTf
-         gYHQpxHkcIKLk4N5wpCFH0yD1SkER5SNlNkeRXHNPfzDB5SeJqSumpNdYGy81b4sKl8F
-         V7/+knVXVmdYbMb4sJO9xGajCx8zqra+ntNVSKUC9bVGcvhDpioYfFFEjN0DCXk5evGG
-         aywEPPyMAGKx/sjZ0gcWWDEQGtYB5kFUl6rPSGlN9EjXnLUGqM5XNO25yPipizEutcan
-         1Ig3gAWQCn6ypolb3D76t27+A9E7AWqZeJnPWzjTvlNzOaMWQJKfY+HRdc4zL1HS49AG
-         y0GA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYXlti4yQ1NUANVcQy8iANUvqsVg7Rpux7rispZBIYyRMVx/SVh0yfcalYCO//bAeUSdFA+xnMrVuCsMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPIA/SG2c7X5gXqjtGStGXau551y3nq8Hj2m0msKLKifWzk0mx
-	Uw0qo9nSjCBfLXxRjoQK2OoSs6bZf7ehRapk4aPfS5iSiUCkBJkyxsD7XptLBD4=
-X-Gm-Gg: ASbGncsSXLjvDTpEKUVIu7bx3gCizd3u1UMbzkIY6cgYs55XYGrxq6DBAIQ1JJq6GO7
-	om/KwrEP85JoKAZRli+7ZC7n/u56WMGz5qpyuJoqBlXfp8+EhOYjosYba3f2j29wv+YK3hWKjp7
-	agy0Yhc11SOFBIA63Bj/N2cfStMrtiM+Mi9f02icq04zUwR7YmrWcAza2aLh8fpguwlfwpxGPb5
-	Y31hK2pPgbrtuJUAg6ewVoJyvMlz/3PZltcit6jcL8NeT3iQZIEcR149lGwnFYBzoaY0PhHgIUY
-	UriPFnW2ZcLmU05vtYZY+27lQPYzoM2CSjm41zzkkOKXkqFWLpcMy9dIBU/SW28=
-X-Google-Smtp-Source: AGHT+IERpLlhSwaO5nZq8Gw4Gty+WPbaQff7djZpLBz85L/dQ/SkciYvXABq8QRnCmaICpmS1/hDTw==
-X-Received: by 2002:a17:90b:1b44:b0:2fe:b972:a2c3 with SMTP id 98e67ed59e1d1-3087ba5ea96mr8687983a91.0.1745329658872;
-        Tue, 22 Apr 2025 06:47:38 -0700 (PDT)
-Received: from MGG23TF6W0.corp.ebay.com ([202.76.247.146])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3087e05b2bbsm8695214a91.42.2025.04.22.06.47.32
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 22 Apr 2025 06:47:38 -0700 (PDT)
-From: Jianlin Lv <iecedge@gmail.com>
-X-Google-Original-From: Jianlin Lv <jianlv@ebay.com>
-To: bpf@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	linux-kernel@vger.kernel.org,
-	iecedge@gmail.com,
-	jianlv@ebay.com
-Subject: [RFC PATCH  bpf-next 0/2] Eliminate IRQ Time from BPF Program Running Duration
-Date: Tue, 22 Apr 2025 21:47:25 +0800
-Message-Id: <cover.1745250534.git.iecedge@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T/j40Mmi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745329663;
+	bh=r/2jQ92IbgEzNppnARIsVhMwo1Q4nrZsUcwAE/C6P9k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=T/j40MmimszjMC5SdsG/9amraFDtsO0jL7pw4tU4CEzqr3yFaUPSBlvzAnwYF5A8t
+	 N7eXubSLtoif2uoNOqf74HjjMqsaPjBxox34EF3AqGW3Amip0AqVXaBusCC2bOP3ma
+	 2hiE9XOIQNRSrjEO7Etg2wfanBNPNtUCqq0fu7wYSDhvNuB7iMkXuG1ptuqrIHR46B
+	 d768fchLO93JZPWY4ug0gNvathrfDL+FEZW/TEfOu3wfcOn+hHPGKT2w04d3Jfagoc
+	 Ex0yntyehehm0VhJdjcTjmvW8dhVvRKG2nHOrCAhMMzXrNHbtq7oXjbEXu5bF22JMO
+	 ZUlKOlENt954A==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A98DA17E078A;
+	Tue, 22 Apr 2025 15:47:42 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Tinghan Shen <tinghan.shen@mediatek.com>, 
+ Olivia Wen <olivia.wen@mediatek.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Cc: kernel@collabora.com, linux-remoteproc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Jason Chen <jason-ch.chen@mediatek.corp-partner.google.com>
+In-Reply-To: <20250421-scp-dual-core-mt8390-v2-0-c84117a959a9@collabora.com>
+References: <20250421-scp-dual-core-mt8390-v2-0-c84117a959a9@collabora.com>
+Subject: Re: (subset) [PATCH v2 0/5] Describe MT8188's SCP as dual-core
+Message-Id: <174532966260.97079.6264214242905276667.b4-ty@collabora.com>
+Date: Tue, 22 Apr 2025 15:47:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.14.2
 
-From: Jianlin Lv <iecedge@gmail.com>
+On Mon, 21 Apr 2025 16:49:03 -0400, Nícolas F. R. A. Prado wrote:
+> This series updates the MT8188 SCP description to dual-core and prepares
+> its usage. Patch 4 updates the MT8188 DT to describe the SCP as a dual
+> core cluster and patch 5 adds the firmware-name property so the firmware
+> can be loaded. Patches 1 through 3 are dt-binding fixes for the SCP.
+> 
+> 
 
-Motivation:
-===========
-This proposal aims to enhance the __bpf_prog_run function by eliminating
-IRQ time from the BPF program running duration. When a BPF program is
-attached to a kernel function running in user context, any interrupts that
-occur can lead to the BPF program's execution duration including the time
-spent in interrupt handling. This results in an observed increase in CPU
-usage attributed to eBPF.
+Applied to v6.15-next/dts64, thanks!
 
-Design:
-=======
-The elimination of IRQ time is built upon enabling 
-CONFIG_IRQ_TIME_ACCOUNTING. Before a BPF program runs in user context,
-call irq_time_read to record current total IRQ time for the CPU. After the
-BPF program execution, call irq_time_read again to record the total IRQ
-time. The difference between these two readings gives the IRQ handling
-time for this BPF call. Then subtract the IRQ handling time from the
-total BPF processing duration.
+[4/5] arm64: dts: mediatek: mt8188: Describe SCP as a cluster with two cores
+      commit: b1e157c61db5e6f8d9c35e8ebc714ab6ce02ee41
+[5/5] arm64: dts: mediatek: mt8390-genio-common: Add firmware-name for scp0
+      commit: 2f0066dae66f30386ecd6408410e27a4d6818c15
 
-Currently, the irq_time_read function is defined as static, preventing its
-use by other modules. This proposal suggests exporting irq_time_read for
-use by the BPF module.
+Cheers,
+Angelo
 
-TODOs:
-======
-- Support elimination of IRQ time for BPF trampoline.
-- Add selftests to validate the functionality.
-
-this mail is mainly to get feedback on the design and implementation
-approach. TODO item will be added in subsequent updates once we gather
-input on the proposal.
-
-Jianlin Lv (2):
-  Enhance BPF execution timing by excluding IRQ time
-  Export irq_time_read for BPF module usage
-
- include/linux/filter.h | 24 ++++++++++++++++++++++--
- include/linux/sched.h  |  4 ++++
- kernel/sched/core.c    | 22 ++++++++++++++++++++++
- kernel/sched/sched.h   | 19 -------------------
- 4 files changed, 48 insertions(+), 21 deletions(-)
-
--- 
-2.34.1
 
