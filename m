@@ -1,55 +1,55 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE6720C03F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ED620E018
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315565; cv=none; b=VhUijBQ8OO/OSDoGHCoSoV6BTrT2lWtnoXxTlL0nmnkCvr8MEyDPwIHGApb6cv5I0a8L5q0a7NIQQrN1tpspH73+Xg0fkxI150xKOjc4a5kDAO8aKczLrx2mSD2msGDlVzJkJjvWps/i9FsfMRgnWyyjlIfbn9ExuaHgrt310oU=
+	t=1745315567; cv=none; b=cKg2yKV1js1SbPFIFOrlis+vY3Ts0fRmkJIR+pa0P3AQLb1ekKecFe8eYLKdghYsafJAhepWA0KyRAdeuKEUdFpY1MlcNr5+Px71WOgO7lGJ6S0EGczzWkbt6B+o3XFW0JVnKZr24o1Xc7SRldkCkD24WqOmBbA9heC5NUMgEG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315565; c=relaxed/simple;
-	bh=Svvb6G9RffI3Cl0nzUci32sxhHJsb8RTcvqHt6zeN7A=;
+	s=arc-20240116; t=1745315567; c=relaxed/simple;
+	bh=8ZUC3gqd3uqi13g9pBjPEPnu/V1zgisqYYMN8IZqCUQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bwDFMEm6karHrhHTIX2EqsnXKKqwchK8yjrvWDKKzglPe0qs10VIiXLp4AlgZz1ABmhYthONMTdt7MYJG8hhJUrDz+shHy+SAFbp/vxb/YPJGsObqC8r3nds8UYSljxwBp2sm8xB9iwzLSYg1b9DDRimXLFD9rB+vPxyqqm7npo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U+RIQXYL; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=gLHnIErd9/N9Sg+w+ANf+Vezd+wJUf5XGXdg1MYOV8Szp85t8XqF97qPMltitGuWZRBBCb9DMHAuYE03sWvk90CpMqFqKnpVgTTA1acm9YvugJq/9SInzv2t6ylrvKCVJBSMYm4H11YGumqBpW4fIbnqSZ0NbPvLTwKaGab2Etk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ss5WTxRM; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U+RIQXYL"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39135d31ca4so2055371f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:52:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ss5WTxRM"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so26648405e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745315561; x=1745920361; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745315564; x=1745920364; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W8CL1yXQxtA+pJZQvwCMlCRVvSsYDtyq7QmVaWssZTI=;
-        b=U+RIQXYLXnzlWEr+eBUzz9jNZnhISDqrMtfYRrb4ohFf7ER9AqLcH8JUUQLMk5nKw8
-         ZMD6Gp3W8tFexagHsy7fku5dWZhLqm1CwXRQrB5bQtRx8MP5iwi/7da2WTqg4nIvB/uP
-         mXO4zfZuMMbCXtLUbByQVUJZ8MbE3HmEEfH/8MOijVrQe0S70MSqrAuPRgPMvRnR3fGE
-         wsxhQE+z5MQH39G47uipXHhcn5NM86S6QxmYPQ18zI+ybMTeY8ocrSmmJ+62DP4w35AD
-         y97lN/frjEXHBMi7hGDY75irB+rmttn2xPlIi2eJ/A/0A0Y8QzyjT4vvAn0Vthf8w4pb
-         OUYg==
+        bh=0SJu7Tdk7cfiE89XShkLgjmmcC+lkao0tEu4y6mvgi0=;
+        b=Ss5WTxRM+gm2xXKNszSsEP8PJUbUN4cJrCp78/M0DFeR6z0LL86geOQMUxMUl/Q7fy
+         sBSLoY4zpOx2YdqnIoGsjyjQvW9KsGR7jZ3K6hJtEb1kIBgwQDmW/c4/geLgVtd7cSMM
+         +0kiaz6ZUYg132HZA8p7S6Qux1/rL2QFKaXZHv5O0zeqMlu2zp7KuljOnS+cQe2+//ap
+         YRU3kZ3qZt6XYZ1otIDxfYMBTd5HAXhhDn3lwCpEEUoLF9uPtlVUHR9fCOsBWCS6Jx9y
+         9n+OGR6WHXXdJqOD1zDoHTxWbSe0fgPVhoF1CLpnr2uufPpRTSs6owEZ+8QGDzZprLBz
+         ooGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315561; x=1745920361;
+        d=1e100.net; s=20230601; t=1745315564; x=1745920364;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W8CL1yXQxtA+pJZQvwCMlCRVvSsYDtyq7QmVaWssZTI=;
-        b=RabtPnC07rH9G1hj8AnCqMWMRnIW2kQML4XslaQOR0JqpAGbfjnf1Xtp7OC7I9ucIN
-         ZCDWVCQ62/JnTtXVjBhMrlG3hXqIhxQY0anwjBX7XavEFhTRdxWSGI/jgJSc3HaomYM1
-         hitEdoPAZjmsOorkqN+q3/UBY3Fcy0RHucS0P56M6vC3g7o4ER530CLSuJxKLb+wDpxE
-         GMXgY3SQ8oTHurFEn5hMTtYTmeJjD8KqL2soy1/OEHqDJgVOlHQPPm8/DiDckqTzYeLL
-         FBxdoYbwxci2CJrUUK0O1iDrhqByImzuasUSZ/D/j8TZxwQTZ8LiA3Xb+S+YB6ghuLOa
-         X5tw==
-X-Forwarded-Encrypted: i=1; AJvYcCX154Te3fpxhVF1fuaAXUVBE/MhizOFYFcOul0SNX+J33X5SnvmlVPMWHgAX1/A+o7Ahs24IpZO4XUcX3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy32PjkTdNOSZUO8dBEgMJln6To8iVCH4Xx+v++hVozHNQrqljP
-	PXcdfo4sHHS32F47S5s4qvepGNo0Xyuq/uyCjQZDS2RXlg5hiOfaj3y09K8LglqhXgFO9uhI85m
-	VCCuvxHVW/HAasg==
-X-Google-Smtp-Source: AGHT+IFRbE7AmbHyodmXbb8GFc9/L/JqiwoJ4fe/wsfpmnT9qV+y8d/ZjbqvIcLCZBxx8Vq/Fe32tK7Itj4ll04=
-X-Received: from wrsg12.prod.google.com ([2002:a5d:46cc:0:b0:39a:cd99:1be0])
+        bh=0SJu7Tdk7cfiE89XShkLgjmmcC+lkao0tEu4y6mvgi0=;
+        b=e/pkycIyTllCwmMgjhoYeX6K8OiA04aq/PCauMfBWhTxG730kK9Z01VMvLTCv8pwG4
+         fPWQGxIHdTjw5pgRlQLdQNvcLSTv/pVA2/UH7edf5CSkaQy54HsV6WBN3GW04ZCS4x2p
+         9jNVUrZpWZnePdF9/TE5MvImCdWfyUmAp+fdVCabbrnHq6Y7oc1Ahzhs+03Irxmfrylp
+         a+qn1NwYcq8YjI5aZFpf2WIjt0RuX5fMcQXFFLz8F69XcsnrKx6lEaMu5LYnPXLRAqhD
+         T/PFYPi02Tt1HQnX5QV3kBksm2QWx/YakLPJksFs5Lal1mzEsr9b/5rTe17EXQ2YVLQA
+         lnKg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8Cv7JPBtb3j2p73VVCs+tUDIthjxeStLxJ1vIfAq1+NgMcckVcG2cIgDtVTdPw3b8esnLkHDwCOl69sA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5U7Dk0S6IE5c4CJAOLQ7r8tkbRL5em7byJ3BZlXze+xyaThl8
+	Us4HIPUoiE7IwBuCJth/SIgFLCEQlDy3PJbBHuQlWvBKjLHYQzOtYtXWkKwiapzR1Uix186zmDo
+	rB25PFvGV4mDJLQ==
+X-Google-Smtp-Source: AGHT+IG8W+nUL5hyzHTDe2B9WWJOa3ITmAj7UJ1292j7J5WdiwVt7gfqUfJOJaiuqBKywNJpbK45nwF+fc4Z7dc=
+X-Received: from wmhu12.prod.google.com ([2002:a05:600c:a36c:b0:43d:847a:8ccc])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:400f:b0:39c:1f02:44d8 with SMTP id ffacd0b85a97d-39efbd5a27fmr11349108f8f.4.1745315561655;
- Tue, 22 Apr 2025 02:52:41 -0700 (PDT)
-Date: Tue, 22 Apr 2025 09:52:18 +0000
+ 2002:a05:600c:cc4:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-4406ac0fcd2mr143221025e9.30.1745315563935;
+ Tue, 22 Apr 2025 02:52:43 -0700 (PDT)
+Date: Tue, 22 Apr 2025 09:52:19 +0000
 In-Reply-To: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,102 +59,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3164; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=Svvb6G9RffI3Cl0nzUci32sxhHJsb8RTcvqHt6zeN7A=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoB2bfqUvKvbba5UFmw6yfUXkD5n17ruk/4uKwb
- +O/ziGnYveJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaAdm3wAKCRAEWL7uWMY5
- RmoFEAC2L84f89HGHLg0Lz1dyzkaJPXPEYHxX4wOHFdpmeni3UVoieE6QvDncQdVdY7fxZHvshT
- GgO0XLLXzcKrx8LlVXXH/t05lPz7zDgWKrr+Ly06G1lakTDdzCfYnKMc6Lpl9Z5RCNVRG6lq0My
- PeAJUz71y0Gkg5J0WONTZegW0vxyNudyP6qpkQDs8TXu/JQdp4Z8QMJv/H5oJ8k5fYWfeJgN5Bw
- r5y79cJ/JIPC4yndeQqEFhu75Hb01ey+mzuPclEQc98Kl54UojIxXAyUXlxJMbbFsEzv22I1yAP
- Cnli7Cu0AQDZCkcBDD6d4LVlOEfB/c+ETKEGlDYlA216+Bt2/T2zwSkE6qpvb7RWMqrXVJqnXc2
- PILw+JkrNssRUeyjIDM5FKQdId+fzc1GXsODJvbUf2J8BRBrdimGbSdscHa2pB0qhOHbGbFSPCS
- GY5IF4HoEm2S8Z3OMf3X0ilLUUp5hve78b5oHLcFyjjdM0LWuzFUWisoKz4ZsFFkqlo9K5r5vkI
- A1RQ/ibIRTaWY86WuHeBhkyvEjlfULiKxcX7YywJWhc0OBa1MnedqpXdHt+cn+zJMXU9avSg6AW
- NUGvCMsEXGOlOfVt3X1c+qofNgg1mt8A20Rnzq3aAEn9Ip9kpWuJv9jXfaq9GNsxU9/LbtL4Uy/ hjCO1xwKZeiHgrA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3038; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=8ZUC3gqd3uqi13g9pBjPEPnu/V1zgisqYYMN8IZqCUQ=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoB2bgJuzKXnvdoDlLRCw8v5UFwwu/GItjknRS1
+ BIqHMeciLyJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaAdm4AAKCRAEWL7uWMY5
+ RobQEACIr6+P52rGsnxOYwogdzlcq5zYTAbzx/Vl9ibzzTkdm1PpVUJ/KJI0Icp596xBk+4Z4Z9
+ 5/pyvQeBaT1MJcLLbjXLHN2mcOTXdZc8ZyHLLzZv8lzw1ftdnC9xUJbiGMdOnwzVF0v4b736ZW7
+ q0PnQ3WEVZKQTgdpfB3zMzgImObxRnyg0Y5zk5iuhB/MqupWb+1WDYo7ZTPPwCpzFQxWuLTbbIk
+ RCyodJ4h7/wwuUMozriIAH8aHWPUsE59MfpYX3Di6EV8qs7fW4XbzW7OpitKOUc/vXa6QaPACGL
+ U9m7TRxhUaM6gKdu+1SkFmhbG/aNQ+gZxiqGxa+6VbzVGKZxBkHWH42OhuONky6O1sNTH541DKo
+ Qnu/KghMvHIa2cqjVUvWZ3P5lIRb7uUR7ENBH8vf0GvzgOvyhIA/iD3EfAzpT7IC3UPsmPfEOwO
+ lkS6pREpXGWaPGIWmRMYDIxL2WFXS6I+aZdMKtJ/sQBhSh/BJgemhZH1QUutkpEVOqGqewrFzeI
+ vmlHI44iDD1Eny5e/tQZSMYEeg67i9NC84DevdRCkl8hqg8hoKg3tveMcIlQXNIo3MpQYJ5MpMo
+ B1vOAgmmXaCePm3pC2TG68G38x0vVt4Nb/eYyT8YaP20zBjHdUZKsh8f3zOrtk89SjBgt72Fwq/ vbPeCklS0ZBos+A==
 X-Mailer: b4 0.14.2
-Message-ID: <20250422-vec-methods-v3-3-deff5eea568a@google.com>
-Subject: [PATCH v3 3/7] rust: alloc: add Vec::push_within_capacity
+Message-ID: <20250422-vec-methods-v3-4-deff5eea568a@google.com>
+Subject: [PATCH v3 4/7] rust: alloc: add Vec::drain_all
 From: Alice Ryhl <aliceryhl@google.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-This introduces a new method called `push_within_capacity` for appending
-to a vector without attempting to allocate if the capacity is full. Rust
-Binder will use this in various places to safely push to a vector while
-holding a spinlock.
+This is like the stdlib method drain, except that it's hard-coded to use
+the entire vector's range. Rust Binder uses it in the range allocator to
+take ownership of everything in a vector in a case where reusing the
+vector is desirable.
 
-The implementation is moved to a push_within_capacity_unchecked method.
-This is preferred over having push() call push_within_capacity()
-followed by an unwrap_unchecked() for simpler unsafe.
+Implementing `DrainAll` in terms of `slice::IterMut` lets us reuse some
+nice optimizations in core for the case where T is a ZST.
 
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/alloc/kvec.rs | 41 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 38 insertions(+), 3 deletions(-)
+ rust/kernel/alloc/kvec.rs | 59 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index ebca0cfd31c67f3ce13c4825d7039e34bb54f4d4..a005a295262cb1e8b7c118125ffa07ae252e257c 100644
+index a005a295262cb1e8b7c118125ffa07ae252e257c..4a29ca6e7dedc3e93a58830938f3a51619c270ed 100644
 --- a/rust/kernel/alloc/kvec.rs
 +++ b/rust/kernel/alloc/kvec.rs
-@@ -307,17 +307,52 @@ pub fn spare_capacity_mut(&mut self) -> &mut [MaybeUninit<T>] {
-     /// ```
-     pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
-         self.reserve(1, flags)?;
-+        // SAFETY: The call to `reserve` was successful, so the capacity is at least one greater
-+        // than the length.
-+        unsafe { self.push_within_capacity_unchecked(v) };
-+        Ok(())
-+    }
+@@ -583,6 +583,30 @@ pub fn truncate(&mut self, len: usize) {
+             unsafe { ptr::drop_in_place(ptr) };
+         }
+     }
 +
-+    /// Appends an element to the back of the [`Vec`] instance without reallocating.
-+    ///
-+    /// Fails if the vector does not have capacity for the new element.
++    /// Takes ownership of all items in this vector without consuming the allocation.
 +    ///
 +    /// # Examples
 +    ///
 +    /// ```
-+    /// let mut v = KVec::with_capacity(10, GFP_KERNEL);
-+    /// for i in 0..10 {
-+    ///     v.push_within_capacity(i).unwrap();
++    /// let mut v = kernel::kvec![0, 1, 2, 3]?;
++    ///
++    /// for (i, j) in v.drain_all().enumerate() {
++    ///     assert_eq!(i, j);
 +    /// }
 +    ///
-+    /// assert!(v.push_within_capacity(10).is_err());
-+    /// # Ok::<(), Error>(())
++    /// assert!(v.capacity() >= 4);
 +    /// ```
-+    pub fn push_within_capacity(&mut self, v: T) -> Result<(), T> {
-+        if self.len() < self.capacity() {
-+            // SAFETY: The length is less than the capacity.
-+            unsafe { self.push_within_capacity_unchecked(v) };
-+            Ok(())
-+        } else {
-+            Err(v)
++    pub fn drain_all(&mut self) -> DrainAll<'_, T> {
++        let len = self.len();
++        // SAFETY: The length is not greater than the length.
++        let elems = unsafe { self.dec_len(len) };
++        // INVARIANT: The first `len` elements of the spare capacity are valid values, and as we
++        // just set the length to zero, we may transfer ownership to the `DrainAll` object.
++        DrainAll {
++            elements: elems.iter_mut(),
 +        }
 +    }
+ }
  
-+    /// Appends an element to the back of the [`Vec`] instance without reallocating.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The length must be less than the capacity.
-+    pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
-         let spare = self.spare_capacity_mut();
- 
-         // SAFETY: The call to `reserve` was successful so the spare capacity is at least 1.
-         unsafe { spare.get_unchecked_mut(0) }.write(v);
- 
-         // SAFETY: We just initialised the first spare entry, so it is safe to increase the length
--        // by 1. We also know that the new length is <= capacity because of the previous call to
--        // `reserve` above.
-+        // by 1. We also know that the new length is <= capacity because the caller guarantees that
-+        // the length is less than the capacity at the beginning of this function.
-         unsafe { self.inc_len(1) };
--        Ok(())
+ impl<T: Clone, A: Allocator> Vec<T, A> {
+@@ -1070,3 +1094,38 @@ fn into_iter(self) -> Self::IntoIter {
+         }
      }
- 
-     /// Removes the last element from a vector and returns it, or `None` if it is empty.
+ }
++
++/// An iterator that owns all items in a vector, but does not own its allocation.
++///
++/// # Invariants
++///
++/// Every `&mut T` returned by the iterator references a `T` that the iterator may take ownership
++/// of.
++pub struct DrainAll<'vec, T> {
++    elements: slice::IterMut<'vec, T>,
++}
++
++impl<'vec, T> Iterator for DrainAll<'vec, T> {
++    type Item = T;
++
++    fn next(&mut self) -> Option<T> {
++        let elem: *mut T = self.elements.next()?;
++        // SAFETY: By the type invariants, we may take ownership of this value.
++        Some(unsafe { elem.read() })
++    }
++
++    fn size_hint(&self) -> (usize, Option<usize>) {
++        self.elements.size_hint()
++    }
++}
++
++impl<'vec, T> Drop for DrainAll<'vec, T> {
++    fn drop(&mut self) {
++        if core::mem::needs_drop::<T>() {
++            let iter = core::mem::take(&mut self.elements);
++            let ptr: *mut [T] = iter.into_slice();
++            // SAFETY: By the type invariants, we own these values so we may destroy them.
++            unsafe { ptr::drop_in_place(ptr) };
++        }
++    }
++}
 
 -- 
 2.49.0.805.g082f7c87e0-goog
