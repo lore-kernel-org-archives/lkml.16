@@ -1,126 +1,399 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031BD2857F5;
-	Tue, 22 Apr 2025 15:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF7B284B5D;
+	Tue, 22 Apr 2025 15:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335970; cv=none; b=XEnTp6yXipXRVqMvD8Ors0fgpftzyIG5cKlgokrR9CoQMO253OW2Fe5WcFXOvZHyb7SKi+T1/SxAKND1dSqgOyOT9I9eN1Af3gcOC2/C8FYkjQ9/XHM+eW0Jhgt8sKAdL6MzBoB3owbhC3dZtxme5YM/2ohfSlwDOvf1HQiX0AU=
+	t=1745336230; cv=none; b=SJ0ip320cEvdvKj9mrOV/XF0pOwjrNBrTLXrmEWcksgdCg5nhM7D0JAqE6PtrHw5A6QlFV88Y40eIM7i7eQbohYiO/w8G7DIqKxDPLDil2eWFRzpg1S6DdY1mlEEN16DeBupp3LGeb9BEXOquDzyAYrLdkN6pRa0mx0sxmTcIPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335970; c=relaxed/simple;
-	bh=neen4h+Sr7UzQXr/KVLWuYqZab7QgjUeYkFx+38UhR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EvIgCumgFk3LDUdMWFPNu/07is4LoMVegxHAGGWscvPAgqKIVnnw/RMC/nTC8NIyEisFdypM82dFXwZrNgK2sAD5nsw54Jqr7HnU6ZHiVLcaw5inBQwwVkAl1OvA13zWufUp5S/GZJ1K60HJlKWR+NLqzI82rlHpZn2FpS6mA7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0iJ2KOk; arc=none smtp.client-ip=209.85.215.179
+	s=arc-20240116; t=1745336230; c=relaxed/simple;
+	bh=hQUaPUMdtvoSyTvGKmf5Oovdbos2wVlpP3qjWWIS4bI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mCFqF7HbBBLdh2Mx0CpVoOfyFBs3On5/VNfsERk+dxX61YnGxgsz40bOxFBVPi7nuXVcQImVcGCSGwQ/JEgCw7TgQ4ZKXbh2mQZ583XRp6OLfS5lf2TovgLJPoDgLZszNLjFFihkXtKLCiSelKEJNXeFwpm644dzKbah/EQ1zgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jurSQIMr; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0iJ2KOk"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af5f28ecbcaso465711a12.0;
-        Tue, 22 Apr 2025 08:32:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jurSQIMr"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736b98acaadso5052095b3a.1;
+        Tue, 22 Apr 2025 08:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745335968; x=1745940768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=neen4h+Sr7UzQXr/KVLWuYqZab7QgjUeYkFx+38UhR4=;
-        b=C0iJ2KOkVRKySklagBbh06EAFQRZdH1Fm6HzzMumn9ezSAkW804tXHVH6z6y55IHbL
-         v3IHO+WExLyhs1uPHLbvhSgPLyrWtmHNx4GhEkX1dI0WrZf9qZx2q02fRdYvbhPtyeUu
-         O4PZbS+4egI8GK0AeaG/36X7jicksPTiwK/RxD9crZaEcaLNzcI47tGqzkziJQrvcdzY
-         8idINGtPAjtkYda1IIMlDkq2CvIe2sKWUU6vGAfHHwcBZycfzBCyNdzN7KdMdnCUsstM
-         t+v2XL6dpS5Jt45fdGTatcw54a1o6YlIbOwV9LOvllLnhoUVqoBkW+wQ/eh97YQDQ02x
-         k3Ng==
+        d=gmail.com; s=20230601; t=1745336228; x=1745941028; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKsyNnHm6WNv4FtZs7UDZw4ADCulN+mYo2PfkLKWdjQ=;
+        b=jurSQIMr8fyPrrDR5Li0bEGqIE2gEhk9A3ASOsOGAvyhtPfigX1LAUal1H1ZLGWdMX
+         Wfv8G57hMxIeTXWV5ptr6W0//uJjRH3DCutwtIev/jmpE1KdEpk2sNoTDa2hp1rlLPuE
+         ie7WjGuz4rbE0zhI0pjbvkGqEXqdaBWD2fjceSShG4ND/vaNNxlIUAQZrymC5OqOTR4A
+         jY6PWqdwbQFiBpg3a8ca3y/xqcASVLAxiDBQXbo+LGn8b+R7kiCNmuXcrbrxahNjFgPI
+         EalC+IwRjoJTLvRnL3/uE4carCQZK3/J7D25vHnLivkUF1lXMYps76l6Nr+kFfGzl1J4
+         BiEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745335968; x=1745940768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=neen4h+Sr7UzQXr/KVLWuYqZab7QgjUeYkFx+38UhR4=;
-        b=Y7plJLmo8MEsNa9PdaN8me9Hi1f5UJcCp9r6eeN8/Ao1befO1Yf2D1gVj9mOgrBwv9
-         G5J5MVtYRiyDl/912wIIIRN/OghTu/kS2TbsAqgelG94Y31oNeVgq+lzri+euQzCCRup
-         amDU2IRVpg2wKNJqvy4iJTaJsBK+ucOcrzWZX1ZESUAlsglEJA/jfwazRNEfqcIcYU13
-         WcMhfpGB5l8hZUJ+bhzwL2Ha+TFRkbRERW0qp5mj8aXHoaW1Xf73QEhMCTgzpzYuio5b
-         aNffR217aOM4sY+XQ7axUvxr4HIxYlx3u+NhRXFkFpY12CJyDwO0OA8Ahb1UfYIDtfuo
-         BkFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKoC85vZJB7G3SVUXm7zbGsY1vBSI49kXIGeD0adiO/b9tVpHGZjVBzw+fZcEnFTw5GHV5nlrYHNvXalc=@vger.kernel.org, AJvYcCXr4WZQBBB/d2TgNPo0ikzWoIFrrfnhbLKPBA9xk0pFuyXmKtCNfzMyNSVYvzHUE01RiAaiTC319lt415sGJ38=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3hBLBas41DVHms+4D2abJN6yErReTEg2EcbhXXFaNTjq+p/+F
-	x97qw35/9mtcGz7IOmsNHPgjPF3E5F976Fm/aP7hB9fr7vVM9AJRl4D8sSIVxfjEx+dFzlUakgM
-	zP/1oKTuMW+xnPe1RZdCUX+LAx9Y=
-X-Gm-Gg: ASbGncuuQg1BPehUxC6fRp3k6XG4xTmEstgQ0Y1KkKifzxnX09KAr+/v65NIWjQ04G9
-	KuNg+jRw45eTPoMlnAwn9FC2RkroU/HXxc9x9n3ykw3N11ijOdCdQwwYBbxcMyWIIU3JojaGA37
-	+0kdhI6kDvTPHijIG3mJFfsw==
-X-Google-Smtp-Source: AGHT+IE4k3qmenB2kafCYTV14I6rIbjlGAOhs2dY1THietnVOi9X9wnempMQ5qfY8fdWb6E9LzDysHlOZ2hKTE3pwvs=
-X-Received: by 2002:a17:90b:1c0a:b0:2ff:5759:549a with SMTP id
- 98e67ed59e1d1-3087bb3f364mr8784892a91.1.1745335968072; Tue, 22 Apr 2025
- 08:32:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745336228; x=1745941028;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TKsyNnHm6WNv4FtZs7UDZw4ADCulN+mYo2PfkLKWdjQ=;
+        b=nC35K4tI8Pn0s+4geTsHhy7Dr/xISVDGWk9Mv5HAbSbHOomXijI9fXr78Kl7kbOp/R
+         mx59UoE8+4Iuc4PrlGmquB/Zg5S/I2o9qzwEQDvaZlO1wHOipsQlvzRpxry+fkEkOgGV
+         Nm/58dkFYKVvwIFoUuNFBLFqkhoklkx+/jBPlqinC5BvuAG5FxJSyjQu9/E+1qWn5Wsb
+         qKEEHUoTqBTU69bgbYo/NUX/jSfiwMq1GUhp0/jUSYqYufBMVDF3fmWweb6TrOMg+Sny
+         5ZPK46dri+VhTy/VKG13itqEDuKZpUSHiX6sbS406mGzayk0ZdW1eRgHDU2Zy2DMLVRM
+         tqqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlNTzcxTc9ht4v0PwQEs28i1D+6m/+jUCZKmOVFjnfaALlXFJ5TrvpGXohGrcfbeAWFvon4uoG8dw=@vger.kernel.org, AJvYcCX75T6dvtE3wmwh1eUOcMDOPpiDDKlumtjRFFZPBac2VCEc8TWni7MX6CUkUi5iVgJOuq7ceii9OG7Zu/bo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj5vR2k/kLAbQrGRvPW+PAtV7pgY+068L52SdDyUaeCFtBATZj
+	8nD9CuGIuZWb+jFsQrnCm2ZYxY/k0P/YdZtzSpmkFNoEm5vaQgGN
+X-Gm-Gg: ASbGncuNleK1YZjM4n2EyCAnXRQ0gz8xQmf3/pqzlqW8KOxUqVCm+1fddN1jCERbOrG
+	TE1TD0wuFX//gzutFmiBLY7iROjjrhzvWwevdhurEOSlJHUG9QEkIm0dheXB7a/ItFIXHovNV1h
+	HoRBlyJMg5rD1aLGceUEbRV6S23Q0GrK90sU7SD11ncQqmzC/wkIJ17l8VRFqzbCgTWws5Lrux2
+	MZE72a0Uc/dGjALFIh92MdQvz6cAkbXtQVwgbeKG238Z/4HzIWfpbVtk7IysVINw7kJ15fhyoxy
+	oiRP5ctCAId3onhffQwx19Zz7DvUaFgx4boJYuM06VG3gDrcnmlmsllWFDwU
+X-Google-Smtp-Source: AGHT+IEHehU2+04/+vibvXrOevuVLY/ujdBzRKmaVBT6ru2KAnGZbRPUGfgWHd6tZHraor8YOnZxmA==
+X-Received: by 2002:a05:6a21:6d84:b0:1f5:7ea8:a791 with SMTP id adf61e73a8af0-203cbc51b0emr22346506637.10.1745336228123;
+        Tue, 22 Apr 2025 08:37:08 -0700 (PDT)
+Received: from localhost.localdomain ([2409:40f2:2090:5195:af7e:b86:9290:86c3])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db14488casm7521240a12.56.2025.04.22.08.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 08:37:07 -0700 (PDT)
+From: saivishnu725@gmail.com
+To: mchehab@kernel.org
+Cc: corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sai Vishnu M <saivishnu725@gmail.com>
+Subject: [PATCH] add --interactive feature
+Date: Tue, 22 Apr 2025 21:05:56 +0530
+Message-Id: <20250422153555.85219-1-saivishnu725@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422125633.30413-1-contact@arnaud-lcm.com>
- <20250422125824.30525-1-contact@arnaud-lcm.com> <CANiq72n41Oj4K-yZCWbNXJQEEjTqjXHYgrkffAg_mUg8dKLWQg@mail.gmail.com>
- <06dde2dd-5d88-49d4-9e46-72a2e12ab1c2@arnaud-lcm.com>
-In-Reply-To: <06dde2dd-5d88-49d4-9e46-72a2e12ab1c2@arnaud-lcm.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 22 Apr 2025 17:32:36 +0200
-X-Gm-Features: ATxdqUGLGad79DCYWTc2GUf7UvBVG5jfl201Q-Z7BM1Apnk-7A7USXEN5LtVCAU
-Message-ID: <CANiq72=UOOyf-esnRUCR0_gxFptdpNOymCz02vgesdNL7zTvHg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] checkpatch.pl: warn about // comments on private
- Rust items
-To: Arnaud Lecomte <contact@arnaud-lcm.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 4:37=E2=80=AFPM Arnaud Lecomte <contact@arnaud-lcm.=
-com> wrote:
->
-> As mentioned earlier, we can reduce the score of any heuristic which
-> could lead to any important false positive.
-> In my opinion, as long as the heuristic is relevant, we always have the
-> possibility to diminish the score associated with the heuristic, hence
-> preventing unnecessary false positives.
+From: Sai Vishnu M <saivishnu725@gmail.com>
 
-Definitely (my comment above for this one was just a note, i.e. there
-may be nothing to change -- I just thought the commit message referred
-to just checking "Return" and not "Returns", since it said
-"imperative").
+This patch introduces an interactive mode to the sphinx-pre-install script
+that guides users through missing dependency installation for convenience.
 
-> I think that you are definitely more experienced with what's done
-> commonly in rust code. Let's maybe change this heuristic definition with
-> @ related to types or some other annotation. Do you have some example I
-> could have a look to come in the next version with a relevant list of @
-> we can encounter.
+- Adds `--interactive` flag to trigger prompt-based guidance
+- Handles cases where stdin is not available
+- Implements default behavior for invalid or no input
+- Improves messages for unknown distros and errors
 
-What does "references" mean in that heuristic? If you mean external
-links to some URL, then we typically use Markdown for those. The
-inline ones like `<https://...>`happen in both comments and docs. The
-`[...]: https://...` ones are way less common in comments I think (I
-can't find one).
+RFC: https://lore.kernel.org/linux-doc/20250410155414.47114-1-saivishnu725@gmail.com/T/#u
+Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
+---
+ scripts/sphinx-pre-install | 185 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 160 insertions(+), 25 deletions(-)
 
-As for `@`, if you mean the actual character, I grepped for it in Rust
-files with the /.*@ regex and found just ~13 matches, and all were the
-emails and disambiguators I mentioned. So I don't think we really use
-it for "references" (assuming I understand what that means).
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index ad9945ccb0cf..a3fbe920bb44 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -42,6 +42,7 @@ my $latest_avail_ver;
+ my $pdf = 1;
+ my $virtualenv = 1;
+ my $version_check = 0;
++my $interactive = 0;
+ 
+ #
+ # List of required texlive packages on Fedora and OpenSuse
+@@ -338,12 +339,96 @@ sub which($)
+ 	return undef;
+ }
+ 
++sub run_if_interactive($)
++{
++	my $command = shift;
++	printf("\n\t$command\n");
++
++	if($interactive) {
++		printf("Run the command now? [Y/n, default:Y]: ");
++		my $user_input = <STDIN>;
++		chomp $user_input;
++		# Default = Y
++		if ($user_input eq '' or $user_input =~ /^y(es)?$/i) {
++			system($command) == 0 or warn "Failed to run the command";
++		}
++	}
++}
++
++sub fallback_unknown_distro()
++{
++	# Fall-back to generic hint code for other distros
++	# That's far from ideal, specially for LaTeX dependencies.
++	my %map = (
++		"sphinx-build" => "sphinx"
++	);
++	check_missing_tex(2) if ($pdf);
++	check_missing(\%map);
++	print "I don't know distro $system_release.\n";
++	print "So, I can't provide you a hint with the install procedure.\n";
++	print "There are likely missing dependencies.\n";
++}
++
++# checks if a package exists in path
++sub is_in_path($)
++{
++    my $cmd = shift;
++    for my $dir (split /:/, $ENV{PATH}) {
++        return 1 if -x "$dir/$cmd";
++    }
++    return 0;
++}
++
++# adding a check in --interactive
++# Reason: Selecting an incorrect distribution in cases where the user's distribution is unrecognized may lead to unexpected behavior.
++sub check_user_choice($)
++{
++	my $package_manager = shift;
++	if ($interactive) {
++		# checks if the package manager exists. hence, confirming the distribution
++		if (!is_in_path($package_manager)) {
++			print "$package_manager not found\n";
++			fallback_unknown_distro();
++			return 0;
++		}
++		return 1; # package_manager found
++	}
++	return 1; # non-interactive
++}
++
++# checks if either of the package manager exists
++sub check_user_choice_two($$)
++{
++	my ($pm1, $pm2) = @_;
++	if ($interactive) {
++		my $found = 0;
++		# checks if either of the package managers exists. hence, confirming the distribution
++		if(is_in_path($pm1)) {
++			$found = 1;
++		}
++		if(is_in_path($pm2)) {
++			$found = 1;
++		}
++		if(!$found) {
++			print "both $pm1 and $pm2 not found\n";
++			fallback_unknown_distro();
++			return 0; # package_manager not found
++		}
++		return 1; # package_manager found
++	}
++	return 1; # non-interactive
++}
++
+ #
+ # Subroutines that check distro-specific hints
+ #
+ 
+ sub give_debian_hints()
+ {
++	if (!check_user_choice("apt-get")) {
++		return;
++	}
++
+ 	my %map = (
+ 		"python-sphinx"		=> "python3-sphinx",
+ 		"yaml"			=> "python3-yaml",
+@@ -374,11 +459,16 @@ sub give_debian_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo apt-get install $install\n");
++	my $command = "sudo apt-get install $install";
++	run_if_interactive($command);
+ }
+ 
+ sub give_redhat_hints()
+ {
++	if (!check_user_choice_two("dnf", "yum")) {
++		return;
++	}
++
+ 	my %map = (
+ 		"python-sphinx"		=> "python3-sphinx",
+ 		"yaml"			=> "python3-pyyaml",
+@@ -452,16 +542,21 @@ sub give_redhat_hints()
+ 	if (!$old) {
+ 		# dnf, for Fedora 18+
+ 		printf("You should run:\n") if ($verbose_warn_install);
+-		printf("\n\tsudo dnf install -y $install\n");
++		my $command = "sudo dnf install -y $install";
++		run_if_interactive($command);
+ 	} else {
+ 		# yum, for RHEL (and clones) or Fedora version < 18
+ 		printf("You should run:\n") if ($verbose_warn_install);
+-		printf("\n\tsudo yum install -y $install\n");
++		my $command = "sudo yum install -y $install";
++		run_if_interactive($command);
+ 	}
+ }
+ 
+ sub give_opensuse_hints()
+ {
++	if (!check_user_choice("zypper")) {
++		return;
++	}
+ 	my %map = (
+ 		"python-sphinx"		=> "python3-sphinx",
+ 		"yaml"			=> "python3-pyyaml",
+@@ -505,11 +600,16 @@ sub give_opensuse_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo zypper install --no-recommends $install\n");
++	my $command = "sudo zypper install --no-recommends $install";
++	run_if_interactive($command);
++
+ }
+ 
+ sub give_mageia_hints()
+ {
++	if (!check_user_choice_two("dnf", "urpmi")) {
++		return;
++	}
+ 	my %map = (
+ 		"python-sphinx"		=> "python3-sphinx",
+ 		"yaml"			=> "python3-yaml",
+@@ -538,7 +638,6 @@ sub give_mageia_hints()
+ 		$noto_sans = "google-noto-sans-cjk-ttc-fonts";
+ 	}
+ 
+-
+ 	if ($pdf) {
+ 		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
+ 				    "/usr/share/fonts/TTF/NotoSans-Regular.ttf"],
+@@ -550,11 +649,17 @@ sub give_mageia_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo $packager_cmd $install\n");
++	my $command = "sudo $packager_cmd $install";
++	run_if_interactive($command);
++
+ }
+ 
+ sub give_arch_linux_hints()
+ {
++	if (!check_user_choice("pacman")) {
++		return;
++	}
++
+ 	my %map = (
+ 		"yaml"			=> "python-yaml",
+ 		"virtualenv"		=> "python-virtualenv",
+@@ -581,11 +686,16 @@ sub give_arch_linux_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo pacman -S $install\n");
++	my $command = "sudo pacman -S $install";
++	run_if_interactive($command);
+ }
+ 
+ sub give_gentoo_hints()
+ {
++	if (!check_user_choice("emerge")) {
++		return;
++	}
++
+ 	my %map = (
+ 		"yaml"			=> "dev-python/pyyaml",
+ 		"virtualenv"		=> "dev-python/virtualenv",
+@@ -617,14 +727,15 @@ sub give_gentoo_hints()
+ 	my $portage_cairo = "/etc/portage/package.use/graphviz";
+ 
+ 	if (qx(grep imagemagick $portage_imagemagick 2>/dev/null) eq "") {
+-		printf("\tsudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'\n")
++		my $imagemagick_command = "sudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'";
++		run_if_interactive($imagemagick_command);
+ 	}
+ 	if (qx(grep graphviz $portage_cairo 2>/dev/null) eq  "") {
+-		printf("\tsudo su -c 'echo \"$cairo\" > $portage_cairo'\n");
++		my $portage_command = "sudo su -c 'echo \"$cairo\" > $portage_cairo'";
++		run_if_interactive($portage_command);
+ 	}
+-
+-	printf("\tsudo emerge --ask $install\n");
+-
++	my $command = "sudo emerge --ask $install";
++	run_if_interactive($command);
+ }
+ 
+ sub check_distros()
+@@ -678,19 +789,35 @@ sub check_distros()
+ 		give_gentoo_hints;
+ 		return;
+ 	}
++	# if the distro is not recognised
++	# but it is derived from the available options
++	if ($interactive) {
++		my @distros = (
++			{ name => "Debian/Ubuntu", func => \&give_debian_hints },
++			{ name => "RedHat/CentOS/Fedora", func => \&give_redhat_hints },
++			{ name => "OpenSUSE", func => \&give_opensuse_hints },
++			{ name => "Mageia", func => \&give_mageia_hints },
++			{ name => "Arch Linux", func => \&give_arch_linux_hints },
++			{ name => "Gentoo", func => \&give_gentoo_hints },
++		);
++		print "Which distro is your OS based on?\n";
++		for my $i (0 .. $#distros) {
++			printf("[%d] %s\n", $i + 1, $distros[$i]->{name});
++		}
++		print "[0] Others\n";
+ 
+-	#
+-	# Fall-back to generic hint code for other distros
+-	# That's far from ideal, specially for LaTeX dependencies.
+-	#
+-	my %map = (
+-		"sphinx-build" => "sphinx"
+-	);
+-	check_missing_tex(2) if ($pdf);
+-	check_missing(\%map);
+-	print "I don't know distro $system_release.\n";
+-	print "So, I can't provide you a hint with the install procedure.\n";
+-	print "There are likely missing dependencies.\n";
++		print "Select a number: ";
++		my $choice = <STDIN>;
++		chomp $choice;
++
++		if ($choice =~ /^\d+$/ && $choice >= 1 && $choice <= scalar(@distros)) {
++			$distros[$choice - 1]->{func}->();
++		} else {
++			fallback_unknown_distro();
++		}
++	} else {
++		fallback_unknown_distro();
++	}
+ }
+ 
+ #
+@@ -1002,12 +1129,20 @@ while (@ARGV) {
+ 		$pdf = 0;
+ 	} elsif ($arg eq "--version-check"){
+ 		$version_check = 1;
++	} elsif ($arg eq "--interactive") {
++		# check if the user can interact with the script
++		if (-t STDIN) {
++			$interactive = 1;
++		} else {
++    		print "Non-interactive environment\n";
++		}
+ 	} else {
+ 		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
+ 		print "Where:\n";
+ 		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
+ 		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
+-		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
++		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n";
++		print "\t--interactuve\t- Ask to intsall missing dependencies\n\n";
+ 		exit -1;
+ 	}
+ }
+-- 
+2.34.1
 
-I guess you already looked in some `rust/kernel/` files -- some of
-those are really the best examples of how docs and comments should
-generally be written.
-
-Thanks!
-
-Cheers,
-Miguel
