@@ -1,436 +1,226 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E9B1F09B1;
-	Tue, 22 Apr 2025 22:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54EC1F09B1;
+	Tue, 22 Apr 2025 22:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362115; cv=none; b=foNcHNvD4xt22/Zi9LXujdF9yhawhLAG9vrP0ImVJVgiUknjMBK+Vo8ba3SVBYCjf0/1drvmr0u5maHpoRO0rLNUvNep4eDOzTfAfrnpZomeMWfvZP9fxe73SFTiFuPlfCt4hyjNAm4H80FwX/C9sV6t/lf8HbgN7GDD1+5Y+Tk=
+	t=1745362147; cv=none; b=NQbka/QPKek0aDXTfom+aaQOk0p2SfGtee26ECeY+eL6Rww8If6NT16Zv6Jiqors+2zrA1axF8qDnS1ayGkOgDR5yGPXOvHheccimszCS9q1eVO8S+1MNXSccVR4Rp06b5fMPaIFG3piZfFzRcJOykJgbevK2fNkuodrkuUDwYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362115; c=relaxed/simple;
-	bh=cblurXyNs5p9nq/oBfqH6Q+zrb2Sr+dHkppy2q4+ZlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I7ROuUHkoY5oGLso/g7Wa36SIMi4wLcYVmt67WUC3mhOIJ76kED6c+pI60IUJECEmh3sE1iHaVdmq+oVwok8sB/xA7M55yABiSWWblsAmIuGw0K9Jwe4Ilwsv6ZHP1ZUNVq6q7bMrxTkuss5Z203qPJV5ytlmc0Cqv+8EkCJzMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=j98erW1W; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745362147; c=relaxed/simple;
+	bh=BTr87Fgzo1JalzQRSpB9bFJSGNfR8KB/0vLhjYFtx24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EHfFV5D1B3cD6K2MjsQf5eZ31P4mRYGRUUl8BfO27PCgCa6tB0spzxu3SZhk2UYchQ5Twc8v2SrsbdIYj4RIuRFdzm4IdLipY5a3vFaGZjbmQLNIPSHBr3wvaKpvlIvwVpAxw0VH/D9scxa/OlxLAz7m+I/sfFShwPhld6ZXi5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PR6vj2B/; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j98erW1W"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8061A16A;
-	Wed, 23 Apr 2025 00:48:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745362109;
-	bh=cblurXyNs5p9nq/oBfqH6Q+zrb2Sr+dHkppy2q4+ZlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j98erW1Wo9O2ICi2JHd4nx7fVJwU78MiYPbny3dakqz0nr3rMD3QcVvcWZJr1MIG3
-	 azjDUfnyeO91ttZHf1htpcNJhA9H2xeS7lNw4eXsLjMMPcIgVvjfwtphjo6EOo7Q9U
-	 aL8fqqqrHqdEgh05jlAwUwmx603rV33+UzhEoiAs=
-Date: Wed, 23 Apr 2025 01:48:27 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 6/8] media: uvcvideo: Factor out gpio functions to its
- own file
-Message-ID: <20250422224827.GW17813@pendragon.ideasonboard.com>
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-6-1a0cc595a62d@chromium.org>
- <20250422212824.GQ17813@pendragon.ideasonboard.com>
- <CANiDSCuOaZ9bnd20tGLWzOA7cGA2q+oKdGktvouT-8+cUkHF1w@mail.gmail.com>
- <20250422222517.GU17813@pendragon.ideasonboard.com>
- <CANiDSCv3om=6puzMVC0OYAqsKGdH+JJQ-unmizhRmYLyTfKxkQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR6vj2B/"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b03bc416962so4170962a12.0;
+        Tue, 22 Apr 2025 15:49:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745362145; x=1745966945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b87Z6hdoHcNORRcYRXz71HmcfEiLW2krrwaT/icFFxI=;
+        b=PR6vj2B/HibkDrY0vvArdNEecpcEJv0Qc6WnJWq5Y4J0Mnzz1LjRSRUMLJwPXNFETd
+         Yt/HtBGsEx+T4SDnPuf9yZoVoNhrXi2bMJv0gE/hSV4aW3Fkct6Px0AWBbrNpBsCXPUk
+         hjvQD7HdmHMyCWCfDPaklL+dUGDyXi4ATMfBZrhMVxaR1Bs4MqTA1Qm/Ng53N2cHXm4t
+         0UBD9RvKxmy5lBd8FBnQUhD6brd7qyXl7AKku02GejOmEMLtz9csxRk8H4Mu6SeQoYnM
+         pzNtDprzlJ+QZnS0N5sRIEykkhZbCtTcBIMp9VPhj/HWzZR985e/fyClQVOIUpMLoT8T
+         hOdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745362145; x=1745966945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b87Z6hdoHcNORRcYRXz71HmcfEiLW2krrwaT/icFFxI=;
+        b=wq0dl2zphv9cnteOWp002XJy0DgcLnxKpF88tUHxCFWSoYk366agi5WY0mUYwdzeOE
+         F+6nWgYryee7+icxgRUhnfvKnBQAtQP/rPCb+q7UHfFBQRbJMtL3bcUVndSh9XSngawy
+         KEKuQ7TtyqGUKQ2zufGxf4dm5h3awPwg9zMCU5RcOBiVkNpLTv3gk/TjQNDvBJlj+9ss
+         zwsZz1QBxWshXY8dxFoX9FP9eu9VmqNgYL05Q9IpWgsN+d8ov3/pYCZccnX3bYLRoXnB
+         MH4dY3c/Iy+fOvWdCzhQ1LpAAlteNrAubMlCqrD1PTibalFG4xdsmv6CMxMagY2ZOYuw
+         ookQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHq6epSRXTOAC2Bu2zpAmOmQ7agaBTXjujR49/vtCXUaAT7+PSlFZPrbIyLRe3XxF+ODpe8Wyv/sNo9EehwL/w@vger.kernel.org, AJvYcCUJul5zE+yct07rsNZZmijEhIWdqDFIykimyIn0ak2UeVtDkB9NFNa2uf6vvxBJWtYWvsk39/k6zRt1U+c6@vger.kernel.org, AJvYcCV6EJ3BMgY15k4DPd6ivPPX+qumyJIq1An2dUqkt+Tjs0HsLMXSre6t88qrSv4xkAN59kKuTaJAK+qRLzVH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdbddjwI9xczcODCPVkHoaKFUtF7U6WPKoVu6FpFvmbqn27OXn
+	UbqHQyP3qzurBMxIoID6Mqh1upMmr41VxW89s/zLPApAPkr8JM01QvubpGhkVTpnXUCEdp1Au3Q
+	Lf97c3Fvj+2ldwYruTIoRdUa/JJY=
+X-Gm-Gg: ASbGncsTLN80StHLujhydEDDuKlXAYaFk9fpd+fE5ODM7VNrOgr9PAhK1FCZcPJo6e3
+	wNl9lmi9yupvY7UMPQmX2ei6vwGl/krZw5dctluAeklaFExXwpsuRQjWbHyodNta3c33wWdvIZ6
+	isMnLaKgbOeKldAMAj9WqAHvvVvXYkkXszKmUp4A==
+X-Google-Smtp-Source: AGHT+IEaXVqyjeo1USfmvtnc/v5tnImw/+t4sFUD76JPWeBRBPX+uZBJiLyql0KdJsA4I9vGgTzuEP00QGXPqvZHShw=
+X-Received: by 2002:a17:90b:4ecf:b0:2ee:693e:ed7a with SMTP id
+ 98e67ed59e1d1-3087bccc3a5mr24129038a91.35.1745362144838; Tue, 22 Apr 2025
+ 15:49:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiDSCv3om=6puzMVC0OYAqsKGdH+JJQ-unmizhRmYLyTfKxkQ@mail.gmail.com>
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+In-Reply-To: <20250418174959.1431962-8-surenb@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 22 Apr 2025 15:48:52 -0700
+X-Gm-Features: ATxdqUG4dz3OGN13sHC4CHKb-O7jfQGss6KMOy-5UBi2V9AZVLsJCVhdcja1Qzc
+Message-ID: <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 06:35:08AM +0800, Ricardo Ribalda wrote:
-> On Wed, 23 Apr 2025 at 06:25, Laurent Pinchart wrote:
-> > On Wed, Apr 23, 2025 at 06:20:09AM +0800, Ricardo Ribalda wrote:
-> > > On Wed, 23 Apr 2025 at 05:28, Laurent Pinchart wrote:
-> > > >
-> > > > Hi Ricardo,
-> > > >
-> > > > Thank you for the patch.
-> > > >
-> > > > Hans raised an issue on "[PATCH v3 2/8] media: uvcvideo: Factor out gpio
-> > > > functions to its own file" (part of "[PATCH v3 0/8] media: uvcvideo:
-> > > > Implement the Privacy GPIO as a evdev"), asking if GPIO handling should
-> > > > still use a uvc_entity if it moves to a evdev. There are implications on
-> > > > this series too. Unless I'm mistaken, I haven't seen a reply from you to
-> > > > my last e-mail. Can we please first finish that discussion ?
-> > >
-> > > Are you referring to:
-> > > https://lore.kernel.org/all/0dfb780b-f2dc-43ed-a67d-afd5f50bb88f@redhat.com/
-> > > ?
-> >
-> > I was referring to https://lore.kernel.org/all/20241125214523.GW19381@pendragon.ideasonboard.com/
-> 
-> I believe the three of us agreed to remove the entity. Am I missing something?
+On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+>
+> With maple_tree supporting vma tree traversal under RCU and vma and
+> its important members being RCU-safe, /proc/pid/maps can be read under
+> RCU and without the need to read-lock mmap_lock. However vma content
+> can change from under us, therefore we make a copy of the vma and we
+> pin pointer fields used when generating the output (currently only
+> vm_file and anon_name). Afterwards we check for concurrent address
+> space modifications, wait for them to end and retry. While we take
+> the mmap_lock for reading during such contention, we do that momentarily
+> only to record new mm_wr_seq counter. This change is designed to reduce
 
-I'll re-read the mail thread.
+This is probably a stupid question, but why do we need to take a lock
+just to record this counter? uprobes get away without taking mmap_lock
+even for reads, and still record this seq counter. And then detect
+whether there were any modifications in between. Why does this change
+need more heavy-weight mmap_read_lock to do speculative reads?
 
-> > > Is it an open discussion? I believe we agreed to remove the uvc_entity.
-> > >
-> > > I posted v4 back in november. In that version I remove completely the
-> > > uvc_entity:
-> > > https://patchwork.linuxtv.org/project/linux-media/patch/20241125-uvc-subdev-v4-6-51e040599f1a@chromium.org/
-> >
-> > Should I review that series first ?
-> 
-> It would be nicer if you follow the order of what Hans already merged
-> in the uvc tree. And if we *need* a change, post it on top of it
-> (unless it is a bug).
-> 
-> HdG and I have gone through multiple revisions, tested it, solved
-> conflicts, and reviewed merges.  CodeStyles and nice-to-have are
-> *very* painful to handle this late in the review cycle.
+> mmap_lock contention and prevent a process reading /proc/pid/maps files
+> (often a low priority task, such as monitoring/data collection services)
+> from blocking address space updates.
+> Note that this change has a userspace visible disadvantage: it allows
+> for sub-page data tearing as opposed to the previous mechanism where
+> data tearing could happen only between pages of generated output data.
+> Since current userspace considers data tearing between pages to be
+> acceptable, we assume is will be able to handle sub-page data tearing
+> as well.
+>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  fs/proc/internal.h        |   6 ++
+>  fs/proc/task_mmu.c        | 170 ++++++++++++++++++++++++++++++++++----
+>  include/linux/mm_inline.h |  18 ++++
+>  3 files changed, 177 insertions(+), 17 deletions(-)
+>
+> diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+> index 96122e91c645..6e1169c1f4df 100644
+> --- a/fs/proc/internal.h
+> +++ b/fs/proc/internal.h
+> @@ -379,6 +379,12 @@ struct proc_maps_private {
+>         struct task_struct *task;
+>         struct mm_struct *mm;
+>         struct vma_iterator iter;
+> +       bool mmap_locked;
+> +       loff_t last_pos;
+> +#ifdef CONFIG_PER_VMA_LOCK
+> +       unsigned int mm_wr_seq;
+> +       struct vm_area_struct vma_copy;
+> +#endif
+>  #ifdef CONFIG_NUMA
+>         struct mempolicy *task_mempolicy;
+>  #endif
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index b9e4fbbdf6e6..f9d50a61167c 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -127,13 +127,130 @@ static void release_task_mempolicy(struct proc_map=
+s_private *priv)
+>  }
+>  #endif
+>
+> -static struct vm_area_struct *proc_get_vma(struct proc_maps_private *pri=
+v,
+> -                                               loff_t *ppos)
+> +#ifdef CONFIG_PER_VMA_LOCK
+> +
+> +static const struct seq_operations proc_pid_maps_op;
+> +
+> +/*
+> + * Take VMA snapshot and pin vm_file and anon_name as they are used by
+> + * show_map_vma.
+> + */
+> +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_ar=
+ea_struct *vma)
+> +{
+> +       struct vm_area_struct *copy =3D &priv->vma_copy;
+> +       int ret =3D -EAGAIN;
+> +
+> +       memcpy(copy, vma, sizeof(*vma));
+> +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
+> +               goto out;
+> +
+> +       if (!anon_vma_name_get_if_valid(copy))
+> +               goto put_file;
 
-Could you please reply to the review comments ? As I wrote in a separate
-e-mail, we can minimize the need for respins, possibly with patches on
-top for some of the issues, but I'd like to know what problems need to
-be fixed.
+Given vm_file and anon_vma_name are both RCU-protected, if we take
+rcu_read_lock() at m_start/m_next before fetching VMA, we shouldn't
+even need getting/putting them, no?
 
-> > > > On Thu, Apr 03, 2025 at 07:16:17PM +0000, Ricardo Ribalda wrote:
-> > > > > This is just a refactor patch, no new functionality is added.
-> > > > >
-> > > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > > ---
-> > > > >  drivers/media/usb/uvc/Makefile     |   3 +-
-> > > > >  drivers/media/usb/uvc/uvc_driver.c | 121 +-----------------------------------
-> > > > >  drivers/media/usb/uvc/uvc_gpio.c   | 123 +++++++++++++++++++++++++++++++++++++
-> > > > >  drivers/media/usb/uvc/uvcvideo.h   |   6 ++
-> > > > >  4 files changed, 133 insertions(+), 120 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/media/usb/uvc/Makefile b/drivers/media/usb/uvc/Makefile
-> > > > > index 4f9eee4f81ab6436a8b90324a688a149b2c3bcd1..85514b6e538fbb8284e574ca14700f2d749e1a2e 100644
-> > > > > --- a/drivers/media/usb/uvc/Makefile
-> > > > > +++ b/drivers/media/usb/uvc/Makefile
-> > > > > @@ -1,6 +1,7 @@
-> > > > >  # SPDX-License-Identifier: GPL-2.0
-> > > > >  uvcvideo-objs  := uvc_driver.o uvc_queue.o uvc_v4l2.o uvc_video.o uvc_ctrl.o \
-> > > > > -               uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o
-> > > > > +               uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o \
-> > > > > +               uvc_gpio.o
-> > > > >  ifeq ($(CONFIG_MEDIA_CONTROLLER),y)
-> > > > >  uvcvideo-objs  += uvc_entity.o
-> > > > >  endif
-> > > > > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > > > > index da24a655ab68cc0957762f2b67387677c22224d1..b52e1ff401e24f69b867b5e975cda4260463e760 100644
-> > > > > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > > > > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > > > > @@ -8,7 +8,6 @@
-> > > > >
-> > > > >  #include <linux/atomic.h>
-> > > > >  #include <linux/bits.h>
-> > > > > -#include <linux/gpio/consumer.h>
-> > > > >  #include <linux/kernel.h>
-> > > > >  #include <linux/list.h>
-> > > > >  #include <linux/module.h>
-> > > > > @@ -792,8 +791,8 @@ static const u8 uvc_media_transport_input_guid[16] =
-> > > > >       UVC_GUID_UVC_MEDIA_TRANSPORT_INPUT;
-> > > > >  static const u8 uvc_processing_guid[16] = UVC_GUID_UVC_PROCESSING;
-> > > > >
-> > > > > -static struct uvc_entity *uvc_alloc_entity(u16 type, u16 id,
-> > > > > -             unsigned int num_pads, unsigned int extra_size)
-> > > > > +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> > > > > +                                 unsigned int extra_size)
-> > > > >  {
-> > > > >       struct uvc_entity *entity;
-> > > > >       unsigned int num_inputs;
-> > > > > @@ -1242,122 +1241,6 @@ static int uvc_parse_control(struct uvc_device *dev)
-> > > > >       return 0;
-> > > > >  }
-> > > > >
-> > > > > -/* -----------------------------------------------------------------------------
-> > > > > - * Privacy GPIO
-> > > > > - */
-> > > > > -
-> > > > > -static void uvc_gpio_event(struct uvc_device *dev)
-> > > > > -{
-> > > > > -     struct uvc_entity *unit = dev->gpio_unit;
-> > > > > -     struct uvc_video_chain *chain;
-> > > > > -     u8 new_val;
-> > > > > -
-> > > > > -     if (!unit)
-> > > > > -             return;
-> > > > > -
-> > > > > -     new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
-> > > > > -
-> > > > > -     /* GPIO entities are always on the first chain. */
-> > > > > -     chain = list_first_entry(&dev->chains, struct uvc_video_chain, list);
-> > > > > -     uvc_ctrl_status_event(chain, unit->controls, &new_val);
-> > > > > -}
-> > > > > -
-> > > > > -static int uvc_gpio_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
-> > > > > -                         u8 cs, void *data, u16 size)
-> > > > > -{
-> > > > > -     if (cs != UVC_CT_PRIVACY_CONTROL || size < 1)
-> > > > > -             return -EINVAL;
-> > > > > -
-> > > > > -     *(u8 *)data = gpiod_get_value_cansleep(entity->gpio.gpio_privacy);
-> > > > > -
-> > > > > -     return 0;
-> > > > > -}
-> > > > > -
-> > > > > -static int uvc_gpio_get_info(struct uvc_device *dev, struct uvc_entity *entity,
-> > > > > -                          u8 cs, u8 *caps)
-> > > > > -{
-> > > > > -     if (cs != UVC_CT_PRIVACY_CONTROL)
-> > > > > -             return -EINVAL;
-> > > > > -
-> > > > > -     *caps = UVC_CONTROL_CAP_GET | UVC_CONTROL_CAP_AUTOUPDATE;
-> > > > > -     return 0;
-> > > > > -}
-> > > > > -
-> > > > > -static irqreturn_t uvc_gpio_irq(int irq, void *data)
-> > > > > -{
-> > > > > -     struct uvc_device *dev = data;
-> > > > > -
-> > > > > -     uvc_gpio_event(dev);
-> > > > > -     return IRQ_HANDLED;
-> > > > > -}
-> > > > > -
-> > > > > -static int uvc_gpio_parse(struct uvc_device *dev)
-> > > > > -{
-> > > > > -     struct uvc_entity *unit;
-> > > > > -     struct gpio_desc *gpio_privacy;
-> > > > > -     int irq;
-> > > > > -
-> > > > > -     gpio_privacy = devm_gpiod_get_optional(&dev->intf->dev, "privacy",
-> > > > > -                                            GPIOD_IN);
-> > > > > -     if (!gpio_privacy)
-> > > > > -             return 0;
-> > > > > -
-> > > > > -     if (IS_ERR(gpio_privacy))
-> > > > > -             return dev_err_probe(&dev->intf->dev,
-> > > > > -                                  PTR_ERR(gpio_privacy),
-> > > > > -                                  "Can't get privacy GPIO\n");
-> > > > > -
-> > > > > -     irq = gpiod_to_irq(gpio_privacy);
-> > > > > -     if (irq < 0)
-> > > > > -             return dev_err_probe(&dev->intf->dev, irq,
-> > > > > -                                  "No IRQ for privacy GPIO\n");
-> > > > > -
-> > > > > -     unit = uvc_alloc_entity(UVC_EXT_GPIO_UNIT, UVC_EXT_GPIO_UNIT_ID, 0, 1);
-> > > > > -     if (!unit)
-> > > > > -             return -ENOMEM;
-> > > > > -
-> > > > > -     unit->gpio.gpio_privacy = gpio_privacy;
-> > > > > -     unit->gpio.irq = irq;
-> > > > > -     unit->gpio.bControlSize = 1;
-> > > > > -     unit->gpio.bmControls = (u8 *)unit + sizeof(*unit);
-> > > > > -     unit->gpio.bmControls[0] = 1;
-> > > > > -     unit->get_cur = uvc_gpio_get_cur;
-> > > > > -     unit->get_info = uvc_gpio_get_info;
-> > > > > -     strscpy(unit->name, "GPIO", sizeof(unit->name));
-> > > > > -
-> > > > > -     list_add_tail(&unit->list, &dev->entities);
-> > > > > -
-> > > > > -     dev->gpio_unit = unit;
-> > > > > -
-> > > > > -     return 0;
-> > > > > -}
-> > > > > -
-> > > > > -static int uvc_gpio_init_irq(struct uvc_device *dev)
-> > > > > -{
-> > > > > -     struct uvc_entity *unit = dev->gpio_unit;
-> > > > > -     int ret;
-> > > > > -
-> > > > > -     if (!unit || unit->gpio.irq < 0)
-> > > > > -             return 0;
-> > > > > -
-> > > > > -     ret = request_threaded_irq(unit->gpio.irq, NULL, uvc_gpio_irq,
-> > > > > -                                IRQF_ONESHOT | IRQF_TRIGGER_FALLING |
-> > > > > -                                IRQF_TRIGGER_RISING,
-> > > > > -                                "uvc_privacy_gpio", dev);
-> > > > > -
-> > > > > -     unit->gpio.initialized = !ret;
-> > > > > -
-> > > > > -     return ret;
-> > > > > -}
-> > > > > -
-> > > > > -static void uvc_gpio_deinit(struct uvc_device *dev)
-> > > > > -{
-> > > > > -     if (!dev->gpio_unit || !dev->gpio_unit->gpio.initialized)
-> > > > > -             return;
-> > > > > -
-> > > > > -     free_irq(dev->gpio_unit->gpio.irq, dev);
-> > > > > -}
-> > > > > -
-> > > > >  /* ------------------------------------------------------------------------
-> > > > >   * UVC device scan
-> > > > >   */
-> > > > > diff --git a/drivers/media/usb/uvc/uvc_gpio.c b/drivers/media/usb/uvc/uvc_gpio.c
-> > > > > new file mode 100644
-> > > > > index 0000000000000000000000000000000000000000..30e3e6dd22cbc9cfee420dde7f7f64dbdce499b9
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/media/usb/uvc/uvc_gpio.c
-> > > > > @@ -0,0 +1,123 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > > > > +/*
-> > > > > + *      uvc_gpio.c  --  USB Video Class driver
-> > > > > + *
-> > > > > + *      Copyright 2025 Google LLC
-> > > > > + */
-> > > > > +
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/gpio/consumer.h>
-> > > > > +#include "uvcvideo.h"
-> > > > > +
-> > > > > +static void uvc_gpio_event(struct uvc_device *dev)
-> > > > > +{
-> > > > > +     struct uvc_entity *unit = dev->gpio_unit;
-> > > > > +     struct uvc_video_chain *chain;
-> > > > > +     u8 new_val;
-> > > > > +
-> > > > > +     if (!unit)
-> > > > > +             return;
-> > > > > +
-> > > > > +     new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
-> > > > > +
-> > > > > +     /* GPIO entities are always on the first chain. */
-> > > > > +     chain = list_first_entry(&dev->chains, struct uvc_video_chain, list);
-> > > > > +     uvc_ctrl_status_event(chain, unit->controls, &new_val);
-> > > > > +}
-> > > > > +
-> > > > > +static int uvc_gpio_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
-> > > > > +                         u8 cs, void *data, u16 size)
-> > > > > +{
-> > > > > +     if (cs != UVC_CT_PRIVACY_CONTROL || size < 1)
-> > > > > +             return -EINVAL;
-> > > > > +
-> > > > > +     *(u8 *)data = gpiod_get_value_cansleep(entity->gpio.gpio_privacy);
-> > > > > +
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int uvc_gpio_get_info(struct uvc_device *dev, struct uvc_entity *entity,
-> > > > > +                          u8 cs, u8 *caps)
-> > > > > +{
-> > > > > +     if (cs != UVC_CT_PRIVACY_CONTROL)
-> > > > > +             return -EINVAL;
-> > > > > +
-> > > > > +     *caps = UVC_CONTROL_CAP_GET | UVC_CONTROL_CAP_AUTOUPDATE;
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static irqreturn_t uvc_gpio_irq(int irq, void *data)
-> > > > > +{
-> > > > > +     struct uvc_device *dev = data;
-> > > > > +
-> > > > > +     uvc_gpio_event(dev);
-> > > > > +     return IRQ_HANDLED;
-> > > > > +}
-> > > > > +
-> > > > > +int uvc_gpio_parse(struct uvc_device *dev)
-> > > > > +{
-> > > > > +     struct uvc_entity *unit;
-> > > > > +     struct gpio_desc *gpio_privacy;
-> > > > > +     int irq;
-> > > > > +
-> > > > > +     gpio_privacy = devm_gpiod_get_optional(&dev->intf->dev, "privacy",
-> > > > > +                                            GPIOD_IN);
-> > > > > +     if (!gpio_privacy)
-> > > > > +             return 0;
-> > > > > +
-> > > > > +     if (IS_ERR(gpio_privacy))
-> > > > > +             return dev_err_probe(&dev->intf->dev,
-> > > > > +                                  PTR_ERR(gpio_privacy),
-> > > > > +                                  "Can't get privacy GPIO\n");
-> > > > > +
-> > > > > +     irq = gpiod_to_irq(gpio_privacy);
-> > > > > +     if (irq < 0)
-> > > > > +             return dev_err_probe(&dev->intf->dev, irq,
-> > > > > +                                  "No IRQ for privacy GPIO\n");
-> > > > > +
-> > > > > +     unit = uvc_alloc_entity(UVC_EXT_GPIO_UNIT, UVC_EXT_GPIO_UNIT_ID, 0, 1);
-> > > > > +     if (!unit)
-> > > > > +             return -ENOMEM;
-> > > > > +
-> > > > > +     unit->gpio.gpio_privacy = gpio_privacy;
-> > > > > +     unit->gpio.irq = irq;
-> > > > > +     unit->gpio.bControlSize = 1;
-> > > > > +     unit->gpio.bmControls = (u8 *)unit + sizeof(*unit);
-> > > > > +     unit->gpio.bmControls[0] = 1;
-> > > > > +     unit->get_cur = uvc_gpio_get_cur;
-> > > > > +     unit->get_info = uvc_gpio_get_info;
-> > > > > +     strscpy(unit->name, "GPIO", sizeof(unit->name));
-> > > > > +
-> > > > > +     list_add_tail(&unit->list, &dev->entities);
-> > > > > +
-> > > > > +     dev->gpio_unit = unit;
-> > > > > +
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +int uvc_gpio_init_irq(struct uvc_device *dev)
-> > > > > +{
-> > > > > +     struct uvc_entity *unit = dev->gpio_unit;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     if (!unit || unit->gpio.irq < 0)
-> > > > > +             return 0;
-> > > > > +
-> > > > > +     ret = request_threaded_irq(unit->gpio.irq, NULL, uvc_gpio_irq,
-> > > > > +                                IRQF_ONESHOT | IRQF_TRIGGER_FALLING |
-> > > > > +                                IRQF_TRIGGER_RISING,
-> > > > > +                                "uvc_privacy_gpio", dev);
-> > > > > +
-> > > > > +     unit->gpio.initialized = !ret;
-> > > > > +
-> > > > > +     return ret;
-> > > > > +}
-> > > > > +
-> > > > > +void uvc_gpio_deinit(struct uvc_device *dev)
-> > > > > +{
-> > > > > +     if (!dev->gpio_unit || !dev->gpio_unit->gpio.initialized)
-> > > > > +             return;
-> > > > > +
-> > > > > +     free_irq(dev->gpio_unit->gpio.irq, dev);
-> > > > > +}
-> > > > > +
-> > > > > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > > > > index b4ee701835fc016474d2cd2a0b67b2aa915c1c60..aef96b96499ce09ffa286c51793482afd9832097 100644
-> > > > > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > > > > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > > > > @@ -683,6 +683,8 @@ do {                                                                      \
-> > > > >   */
-> > > > >
-> > > > >  struct uvc_entity *uvc_entity_by_id(struct uvc_device *dev, int id);
-> > > > > +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> > > > > +                                 unsigned int extra_size);
-> > > > >
-> > > > >  /* Video buffers queue management. */
-> > > > >  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type);
-> > > > > @@ -829,4 +831,8 @@ void uvc_debugfs_cleanup_stream(struct uvc_streaming *stream);
-> > > > >  size_t uvc_video_stats_dump(struct uvc_streaming *stream, char *buf,
-> > > > >                           size_t size);
-> > > > >
-> > > > > +/* gpio */
-> > > > > +int uvc_gpio_parse(struct uvc_device *dev);
-> > > > > +int uvc_gpio_init_irq(struct uvc_device *dev);
-> > > > > +void uvc_gpio_deinit(struct uvc_device *dev);
-> > > > >  #endif
-> > > > >
+I feel like I'm missing some important limitations, but I don't think
+they are spelled out explicitly...
 
--- 
-Regards,
+> +
+> +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
+> +               return 0;
+> +
+> +       /* Address space got modified, vma might be stale. Re-lock and re=
+try. */
+> +       rcu_read_unlock();
 
-Laurent Pinchart
+Another question I have is whether we really need to copy vma into
+priv->vma_copy to have a stable snapshot? Can't we just speculate like
+with uprobes under assumption that data doesn't change. And once we
+are done producing text output, confirm that speculation was
+successful, and if not - retry?
+
+We'd need an API for seq_file to rollback to previous good known
+location for that, but that seems straightforward enough to do, no?
+Just remember buffer position before speculation, write data, check
+for no mm modifications, and if something changed, rollback seq file
+to last position.
+
+
+> +       ret =3D mmap_read_lock_killable(priv->mm);
+> +       if (!ret) {
+> +               /* mmap_lock_speculate_try_begin() succeeds when holding =
+mmap_read_lock */
+> +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_seq)=
+;
+> +               mmap_read_unlock(priv->mm);
+> +               ret =3D -EAGAIN;
+> +       }
+> +
+> +       rcu_read_lock();
+> +
+> +       anon_vma_name_put_if_valid(copy);
+> +put_file:
+> +       if (copy->vm_file)
+> +               fput(copy->vm_file);
+> +out:
+> +       return ret;
+> +}
+> +
+> +static void put_vma_snapshot(struct proc_maps_private *priv)
+> +{
+> +       struct vm_area_struct *vma =3D &priv->vma_copy;
+> +
+> +       anon_vma_name_put_if_valid(vma);
+> +       if (vma->vm_file)
+> +               fput(vma->vm_file);
+> +}
+> +
+
+[...]
