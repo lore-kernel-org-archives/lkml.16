@@ -1,100 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9151EB1AA;
-	Tue, 22 Apr 2025 11:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187DE27CB01;
+	Tue, 22 Apr 2025 11:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321735; cv=none; b=k0bdF0tcfPw1INbrtMHRO6jnFeGl01k/OoNyg9380kLHsfnzTh311NAhTh45dCfpyE/kt9CFK4Fz0YyynNaIWvwlWA2vk8amRV+9ZBI8R7ZIBfJQ606XujQw8ZeGi6cjMg6FNcT4m/oLDxqWJdL9Nbh13C3hQ4PnsJTLtoucrNQ=
+	t=1745321738; cv=none; b=G9Hvd2+eP1m+y5QWGbblsqR5F0bFGE5urZW0TZASehSJrZQPhsSrY1EJam3+jLIQqtuDADkc7DT9RsAnW/EYh4/q2JgpLOXK7xOPhA6FiVm7msBUfPlB+c+1oWKK1qYLbSv2m2reCETXKf3QvacAJHHJC9iPYoon13/6j+U3OnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321735; c=relaxed/simple;
-	bh=iyIAAmPJNlz3e5gWT5Kk9P9NWMtpV70iP2nADcdxgfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SFe9Vu0XcaAB6IIPc13Sl5UEYmYd1j669tLDv1kA5T/pTjOhz6+NxosWegR0Q+LLw1aD1lK4yfEC6kATPP9uO05y3fxl0rzWXXm+va8l+6QxVjxOpbsYz/saMcTltyF1Kd0d1xwoDwmkf8AADWHfMaGc02Ih/mpC6YwgA/ayOLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qsd2/Oj8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745321738; c=relaxed/simple;
+	bh=TPF6Yw0kE744Z7BBYS2QEDueGGJOuHShE1E+wwdptnY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=c8zy716eZ6Iqg8UyQ9hAKEkznu85EaIyOceDuST5xiog8Pl+UK8hiCTdsDKsQc9klhCu/dWN0AqJKBA+U0LVvZ8qZrazDTrQ1TCsx6B5xfLZLLLSeyrFUqrxgqU40wZS+O/IRTK8K7sIlsXb7C0mubwkaHum7fXTliew2bkK8Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=06pw2mYZ; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qsd2/Oj8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438DDC4CEEC;
-	Tue, 22 Apr 2025 11:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745321734;
-	bh=iyIAAmPJNlz3e5gWT5Kk9P9NWMtpV70iP2nADcdxgfw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Qsd2/Oj84sxfH8BnbFIuKLhjSmYzFcLJOdoqyUbluLNb/RkJUVIgOpjMvG+7KJyh6
-	 sq0cn+MAvwZz4jEl7Lw78rU9TieE+Mhd/wX5KgDiCqP88ymO7ExiCT2r+1DVd+H/zu
-	 5+ApLuxwmsphup3ib4DhazauAYACtlis1FE6flSHCxH+PS3C49VwAL/Z53tQxrNlfx
-	 OgOTleJOXuFl4brJSwlda6PBP7wKaXMqd2cv5r0zbTnvNBy7WXZ4+nBNG4ZHdxfUn6
-	 kJubSLHhTVj58Qx84dWEzw2fdCzRv8VaD30Yn8F8wKfgnGtzWEiGDfuEWEkn6k5bvP
-	 1vYK/nFCz6hfg==
-Date: Tue, 22 Apr 2025 06:35:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jensen Huang <jensenhuang@friendlyarm.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Anand Moon <linux.amoon@gmail.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-Message-ID: <20250422113532.GA321792@bhelgaas>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="06pw2mYZ"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MAHnTa021966;
+	Tue, 22 Apr 2025 07:35:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=xCYWF
+	yld7moiL86cRB/FqLC/2Ow1Lj7odmKSjlXGeow=; b=06pw2mYZQWofbKGV6AU2H
+	2Q2uemP3wjrkY1RkhFE5eXeD5I53wUgDNr0Gwah0THn7736NIJzC0LcR1oC1lqAL
+	+gK05/BCkJ3ey9Ffh+iXkVrm9axIwU6mVvqCnuSPJRocxpZ5mUQxH+6I/S3J7hto
+	/wWFdQbA88dZ7BzzCUpFKhc1IKoM7NX3VV03qsLbj8ZHTVvZTtcwbK9pH6mfnMJc
+	+Hpg0+cnPqmstpdO/+zsuyNyp2l9YXMW2r4lWKdJbI1qn8xUHtAL9Oc9NEWPY2dv
+	mvj7AMUajY+xmf8niDbXDKQ3jS4vpDMdG9d+CPHn4hza5njlFIMOfS49eFKwPIh5
+	Q==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4645p7q8rq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 07:35:22 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 53MBZLoC057912
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 07:35:21 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 22 Apr
+ 2025 07:35:21 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 22 Apr 2025 07:35:21 -0400
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.55])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53MBZ4Qp024350;
+	Tue, 22 Apr 2025 07:35:14 -0400
+From: Jorge Marques <jorge.marques@analog.com>
+Date: Tue, 22 Apr 2025 13:34:47 +0200
+Subject: [PATCH v2 2/5] iio: code: mark iio_dev as const in
+ iio_buffer_enabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250422-iio-driver-ad4052-v2-2-638af47e9eb3@analog.com>
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+In-Reply-To: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        David Lechner
+	<dlechner@baylibre.com>,
+        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+        Andy
+ Shevchenko <andy@kernel.org>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+	<ukleinek@kernel.org>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, Jorge Marques <jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745321704; l=1550;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=TPF6Yw0kE744Z7BBYS2QEDueGGJOuHShE1E+wwdptnY=;
+ b=SHB/YIAswwLn6uqAO1+GKmRhhkFuy4bRiKdJGIArBOnTzWKr43CUWt1Mp62RHJBFMp8DMrsmT
+ Uw9hAFNUmN8AEi3qraBY/iTerNC+spMmRcVnoY/bCiDCvmffD1cvJeX
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=D4VHKuRj c=1 sm=1 tr=0 ts=68077efa cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=5tS4fjQXojCEwv7GM0AA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: nymIAMSUyUu96HZzJV-UL5mSho6dDLZT
+X-Proofpoint-ORIG-GUID: nymIAMSUyUu96HZzJV-UL5mSho6dDLZT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 suspectscore=0 spamscore=0 clxscore=1011
+ priorityscore=1501 adultscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220087
 
-On Fri, Mar 28, 2025 at 06:58:22PM +0800, Jensen Huang wrote:
-> The order of rockchip_pci_core_rsts follows the previous comments suggesting
-> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
-> reverse, which may lead to the link downgrading to 2.5 GT/s.
-> 
-> This patch restores the deassert order and comments for core_rsts, introduced in
-> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
-> 
-> Tested on NanoPC-T4 with Samsung 970 Pro.
-> 
-> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
-> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
+The iio_dev struct is never modified inside the method, mark it as
+const.
+This allows to be called from get_current_scan_type, and is useful
+when the scan_type depends on the buffer state.
 
-Thanks for the fix!  It looks like 18715931a5c0 appeared in v6.14, so
-we should probably add a stable tag so it gets backported there?
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+ drivers/iio/industrialio-core.c | 2 +-
+ include/linux/iio/iio.h         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/pci/controller/pcie-rockchip.h | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index 11def598534b..4f63a03d535c 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -320,11 +320,15 @@ static const char * const rockchip_pci_pm_rsts[] = {
->  	"aclk",
->  };
->  
-> +/*
-> + * Please don't reorder the deassert sequence of the following
-> + * four reset pins.
-> + */
->  static const char * const rockchip_pci_core_rsts[] = {
-> -	"mgmt-sticky",
-> -	"core",
-> -	"mgmt",
->  	"pipe",
-> +	"mgmt",
-> +	"core",
-> +	"mgmt-sticky",
->  };
->  
->  struct rockchip_pcie {
-> -- 
-> 2.49.0-1
-> 
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 178e99b111debc59a247fcc3a6037e429db3bebf..bc6a2ac6415eccf201e148ea98c0b5982787eb6d 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -212,7 +212,7 @@ EXPORT_SYMBOL_GPL(iio_device_id);
+  *
+  * Returns: True, if the buffer is enabled.
+  */
+-bool iio_buffer_enabled(struct iio_dev *indio_dev)
++bool iio_buffer_enabled(const struct iio_dev *indio_dev)
+ {
+ 	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 638cf2420fbd85cf2924d09d061df601d1d4bb2a..88569e1a888bde4d2bfb5b9f030096af1c15d68d 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -629,7 +629,7 @@ struct iio_dev {
+ 
+ int iio_device_id(struct iio_dev *indio_dev);
+ int iio_device_get_current_mode(struct iio_dev *indio_dev);
+-bool iio_buffer_enabled(struct iio_dev *indio_dev);
++bool iio_buffer_enabled(const struct iio_dev *indio_dev);
+ 
+ const struct iio_chan_spec
+ *iio_find_channel_from_si(struct iio_dev *indio_dev, int si);
+
+-- 
+2.49.0
+
