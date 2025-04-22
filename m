@@ -1,95 +1,85 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8252D1A23BE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05895A59;
+	Tue, 22 Apr 2025 18:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745346126; cv=none; b=WqlMJ3p6FPNy98yBHbqp2DWm/DAIlHWAJFSaQqBGTnix3dqbGA87o2rFx7z+DJ0G7Uwk8WyHj2ajyMMrgtXHQAh9EGWJwXrpOaa82XU9G6wQcJxW9oKf4/2/Tn8idQw4H+uuLm80lbCQ4ZAVWIyiz1oiTa6iN+OzReZSSTkr+oM=
+	t=1745346155; cv=none; b=jHhYSuOR1z3SvEpIVWyo+R9MObz/2fuLVFQIQaHbWLMULC41NwsMG7dBAdY+AUcYBSNN9Kk4nfsvB/6VGbuTZacpAevGjwzR+1ZJalvNno6l5XrXUdXY2NqmZwQLlh4dfziRgHuBlOaSxwNsgHqm2mtU0cvfam0VqJMVrXdqB+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745346126; c=relaxed/simple;
-	bh=o6Rvwt3bk2muPLUKaZfPpXSAbeEMTyhE7PJSmQryzEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qDthD7cW60TMyJ0pDB9vJYWHBiFdn2IH3BIn74zGbaX4XHYYjUcV55ueDwZ+KARCK+0yzFK2ev9UuxBCxb6mrfCq0FkRy8nDbIrNp8L3GTIIfqRahOgR/ERXu9vgk6b3jFEgACAR61FhrNKvg7XnYMThWtN5NcSXZ4WGfikjF0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=V+autGDw; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1745346155; c=relaxed/simple;
+	bh=/6sathbH+7Jnbu9E149HuRG6rgSEuyc64VSGjuU8MWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDXz/eMddwrZpO/gweD1WwGHJ7rZi1BbS8H9Ev/LAEjlHCmVZwqJJ2CdaJP61rSxqMpJYkalqXXOkFrhOCD1ZmXq0JSNoI/i2ETN7SvLh+7fkMk5BPut3NNvclhWiDWtE27Q+hRehhUl7Y2+F48xQRrxnLGDhiuVukakArkhDHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8roIy1r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="V+autGDw"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so8314266a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1745346123; x=1745950923; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3ll63VqG9vTlmspUuUyoyOk/C7C+03/O1xhGVXIUMI=;
-        b=V+autGDwytmYBZ0zceA4dGFGsFyu30Od+opQZShwJI6Fzzt7/NN2Ru52k2OWsXtkRr
-         HXwWZ+D7UIErSbLDlLyfVHwyatVZi/o/hGQt1KwLGmoI/aRdbtc8SVTnitJ1D4NDzrQx
-         1NI9YqSYxFFa/tYLCpjtNLV1nSm7ghWBoDwZ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745346123; x=1745950923;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j3ll63VqG9vTlmspUuUyoyOk/C7C+03/O1xhGVXIUMI=;
-        b=VCoTaZHWEB/FDRipwq0+Xn0ljIQwof8CTe22jHOhDl+JMHIzAcQi7UfyuPyW9xMGp3
-         QiUIOVjMIFC08VEA1Gnd65CipABdndKI+Gtx09I0Bqf3vY4vyvk447fou6doHBPqmJj/
-         XQH9hElA0VXlcfItce+rimrQwvpdoAOi+hblNGhrrDV4PI3au6vA8//WY3smA4Ma9iX5
-         XsWQ1yQ3rF6JDMEuhGwzjCAh/HxpPuIP0VyDXt3F2kif3NXGGcfpiQ4O+1JagWDjy5EU
-         rTazOY2+mK5fPLFBmwTjOjg2XSwrd/yOAN4xy0AXBkvCGi87fPyo1jOY/84bSeIIXcM3
-         Vl6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVp5dFTjsxwoMwmdnNtcNMrpE+psz51unZMKA9CncIFpceZr7heX8ymZEWzZxc+eF5mKAw3vo+nohW0oEM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbxAUTjRCXv7lTIjvcCl8gNQaf8uqJOtGQT9vGZnSnfW4t0PZ7
-	4Zwk//JCKRdM4RlaY7xmirEZkDyxadr+t7wjncMtu+sNa44h0g8cOGkQGLMINr8yZOuNy36OOsU
-	4Y1w=
-X-Gm-Gg: ASbGncu04fK59hZe0L3VsahWmBFmMnWCaQJxsrPEgLzVsu6hmkmTtFRUxv1Dd1d7XD2
-	i7LeOFlVysCJHr1VJFliuvHULaVNj2jFaM5iDNMBnvd+CKDA6D9KeVmR4PJAC+8+FkIB/WofRrT
-	R9plp3gLuVrA5PLRQDN45rFTJX00ltJQX0awMOJlVviAaEN3ezXRymppsEp2VR8yxskhdPhlqd5
-	JPzWOFGOAxW4TtWMOhMWVyN1sTQ240RcWDR6vhWENA0vS1SONyE6Om6/kRwoh7X1IEMFEuFfc7j
-	weFIiTzK0QNXalzHdXeVEOJBxgHXMwlnGLAMJ34NPjZ0DVVohJfVvxFR6m1tMR0zbS7ByrqVLFp
-	w8WTb1NPlaaTwV3mu63kM2ulzQg==
-X-Google-Smtp-Source: AGHT+IEj007okLVRuqiSKdHwxUmWzUnCiE4s7wqaA26b3DUQYarZgUaj+JMz47WRDdG+lukAoEXz3Q==
-X-Received: by 2002:a05:6402:234d:b0:5f6:20c4:3b0e with SMTP id 4fb4d7f45d1cf-5f6285236acmr14192669a12.8.1745346122608;
-        Tue, 22 Apr 2025 11:22:02 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625a3e212sm6255434a12.78.2025.04.22.11.22.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 11:22:01 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so8314225a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:22:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVtAulQ7aPY0tm4W4DsNkjPq5e3arcfV1tPpHkudiCY4oXrRsRnUlnmBdjcsyDTyMzUDbWjQ5rS4OmfRfA=@vger.kernel.org
-X-Received: by 2002:a17:906:dc89:b0:aca:c7c5:f935 with SMTP id
- a640c23a62f3a-acb74ea8f76mr1249698766b.61.1745346121461; Tue, 22 Apr 2025
- 11:22:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8roIy1r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101F9C4CEE9;
+	Tue, 22 Apr 2025 18:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745346154;
+	bh=/6sathbH+7Jnbu9E149HuRG6rgSEuyc64VSGjuU8MWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T8roIy1rX0xwCewCA2r4BONAjYm1LP5vatify1W7MnN3e4fWvB63tXJJWw6wcx7M/
+	 CNaIxICJ3oIZl0Wlfp1QDQzFdoejE9iF1g8CFUQanPVpmdsznhUgGaGXh2ycbp3e5N
+	 AkQEltIkUgrKXrvwmchbWbmekyA7NQla8eFl4OcP3cQg+cgwDFSpockBues3RX7xDs
+	 o0qWUZRYfNs6rj1gEmrkqhw+NDr+xDIRkyntJzjBN1J4w2lfIjqPw3E0rx03BLADCD
+	 B5HGcpahcylTXXaZeIsQ/3J3UQNex/zRwXlY4eyJN+U+T5Q5l98WOcSG2vtXpu8keN
+	 WKCVbg2vMLeXQ==
+Date: Tue, 22 Apr 2025 19:22:29 +0100
+From: Simon Horman <horms@kernel.org>
+To: linux@treblig.org
+Cc: dhowells@redhat.com, marc.dionne@auristor.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	corbet@lwn.net, linux-afs@lists.infradead.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] rxrpc: Remove deadcode
+Message-ID: <20250422182229.GM2843373@horms.kernel.org>
+References: <20250417153232.32139-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a3c81bdf-29dc-4d57-8cc7-138cd16e9d5c@oracle.com>
-In-Reply-To: <a3c81bdf-29dc-4d57-8cc7-138cd16e9d5c@oracle.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 22 Apr 2025 11:21:44 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh3Q+U78dz7M6R_qzbH41N=3h-2-KAw8-DY4a8vpDhR-A@mail.gmail.com>
-X-Gm-Features: ATxdqUE77Jwim4HrfFpj9Zre0DTQC3Qu3HHFOhYdf69FlBWE_EOrxga_NS91jGY
-Message-ID: <CAHk-=wh3Q+U78dz7M6R_qzbH41N=3h-2-KAw8-DY4a8vpDhR-A@mail.gmail.com>
-Subject: Re: 4b4bd8c50f48 ("gcc-15: acpi: sprinkle random '__nonstring'
- crumbles around")
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417153232.32139-1-linux@treblig.org>
 
-On Tue, 22 Apr 2025 at 11:10, Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> Hi -
->
-> I'm seeing this new warning fire with v6.15-rc3:
+On Thu, Apr 17, 2025 at 04:32:32PM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> Remove three functions that are no longer used.
+> 
+> rxrpc_get_txbuf() last use was removed by 2020's
+> commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
+> local processor work")
+> 
+> rxrpc_kernel_get_epoch() last use was removed by 2020's
+> commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
+> ambiguous")
+> 
+> rxrpc_kernel_set_max_life() last use was removed by 2023's
+> commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
+> granted a channel")
+> 
+> Both of the rxrpc_kernel_* functions were documented.  Remove that
+> documentation as well as the code.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Yup. See commit 9d7a0577c9db ("gcc-15: disable
-'-Wunterminated-string-initialization' entirely for now") right after
-I made rc3. Oops.
+Hi David,
 
-             Linus
+This patch doesn't apply to net-next.  Probably because of commit
+23738cc80483 ("rxrpc: Pull out certain app callback funcs into an ops
+table"). So please rebase and repost.
+
+But other than that, this patch looks good to me.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+...
+
+-- 
+pw-bot: changes-requested
