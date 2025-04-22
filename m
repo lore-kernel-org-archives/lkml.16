@@ -1,102 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1507E2D3A86;
-	Tue, 22 Apr 2025 21:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E53D2C1797
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745355922; cv=none; b=I+j2tC4DuQR/gcmc3DDNMaAp/7ObZbD3tlTzr9t9LW3OluF43hp5vRdIKrmtIfYRe0SAGC9T4cOezUJbCNH3R1JO4Oh8jOXQE2CL1/hktNqLzZ8cnxAuOokQp+d0zS4sE3dupInOBKvCYRH8bFofVLqjAq/GDJnEfgqAlwJMICQ=
+	t=1745355922; cv=none; b=fH4P7KR9aM4hQeI/99N/fiomM2FGpDQb98TdJfkDBFWSGGmClzH2VN7eLZo76JMnn3p/CiSpK+JHwc2WJmgPXzmtc55q7AZ/ziKwprnYq+Mndh2Bboa2RvccQkKkseYdj/iy7bu7PZLKKReApAPMr1fD0gNO/yp+If55RMIhpUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745355922; c=relaxed/simple;
-	bh=QewQgT4zxjt168k0wJQ0OCYW49XgLV/VkID/jwaA6ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ex1oqbld4dGE/xy1w6qk5fnoosS020w75nHDjpNb40O/mRB32oEKLN173OWOCqzIlefPdckG2KiHyl79RxDReY8McMopP/7TWIkAbR3ZgdrnovR6WnzRRIjvYmD04jSxV7AKJ9mXRpE7CI5X3T6VcZMY8b2crQHeEdwN3mro+Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGbBmwGl; arc=none smtp.client-ip=10.30.226.201
+	bh=v+uRwsLHOmfzDIF0pS527DuRyohTPzs55tPRSQDz0WU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=A9r8pzySuVeNSz36UCdbS4QyLF8wc0397FoRMs8jI6XOt0O/A4KhMOc1Gh+84A/TKfuL6jBYg7He9fZSZGyTOd5sTNiU8eYBkKrwKqw88W3e5088n4m6hGO9N7xocs/aZ/pPd3misbl2GgY7Kwa95Fnw0EfsZOxoAmxXsLJmx7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B6nJ2SWE; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGbBmwGl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1904FC4CEED;
-	Tue, 22 Apr 2025 21:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745355921;
-	bh=QewQgT4zxjt168k0wJQ0OCYW49XgLV/VkID/jwaA6ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sGbBmwGlPYn3e0D0/BRhlnZ5b2jTLkmKgupV0fZH5NxO11qJT17bbcEG4ZFYCNr4T
-	 //tsqPnNhkMboYw+u8ZhPmz+sLwJi+5M3QyUNMYxGNG7p2mviVhacWxr4Gv+aEWgdA
-	 koafPw613f7FHSRmOCZ6BSNBV1A2zgkUgfwP6DSC56rplZf1emW/cpZpeLznPx1Hdb
-	 L014OWOuLblLF7q+u/JQcKoHgW3v8doUjklsOgTkKZxxcaMxY/uuPQrSK7vjmPf6kh
-	 j2L+vkNWuran0Ce2H4taUBD2F+yGFTXRMZ2MedoLpygQs28xOkJYPwFeG49w3igBOQ
-	 KFUWVW1kDZPHw==
-Date: Tue, 22 Apr 2025 15:05:18 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2][next] overflow: Add STACK_FLEX_ARRAY_SIZE() helper
-Message-ID: <83d53744e11c80eb3f03765238cbe648855f4168.1745355442.git.gustavoars@kernel.org>
-References: <cover.1745355442.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6nJ2SWE"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so42245235e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745355919; x=1745960719; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n3xzr97fcLCVm/TFf8Ltlpp7pDJFo4k3zJ++YTMvpc4=;
+        b=B6nJ2SWEw0n3+FxtyGenxh7//MA2sDzSvc/cxmQ+t1w0MfRab+juMmOwIYEYJRldZU
+         c8YtLmBucazVuNJfp8gXGvZ9ZqeeLDakD40e/GUX5KTxW7m3zNe1m3ydYh3sGKcaqAW0
+         2svj9glutHtKEo6jJJO7tkJHr1ElRtfefPVPWuPNoOmyr2c3aIZtvyjpTushmRISmjZv
+         ohU6PHbDMgZK7dwnbebEfaaTEb7bmVqLpSrhwE2frk/fesI2yjfoaHF6YZCeSyt+xuec
+         WoL3pCj+eaZvw3TQwwnzwd0jfkrSRwefTykjtkDXfTBULOKdhiGDYQRrYf7VZvX3pOU9
+         HUSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745355919; x=1745960719;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=n3xzr97fcLCVm/TFf8Ltlpp7pDJFo4k3zJ++YTMvpc4=;
+        b=EZp4HxB6hzzpASp17Nyy87YEv8pyBjXjbUdCf/VAJ48RBfkdD/28/GWcSBdACxhsf6
+         7TEjjP6vNdDMr/yPzvLlI4ZcD2ERuoRmRU5w9qZ7kLHDW3iym9CWjWaOB+9oI52H0irE
+         aiRACQrF4m1imwEn92xmid7vW8d0ik9dGE/LABfqTE6n7y0Y8EkdHKRz3eI8xMWFvqUH
+         rfzkmBN7jMUV+90jk6e+69vUH82d9EU8jBcjyALqlyhFWhAGeuL4vfaWHUkeH+8JkB7f
+         EYg5l8OG3J9PPlaUak3apZlS1N8BnAlWZ7TltB3zlv3slAWUNA4dIQRGFnyOCNupqK9l
+         Bq0g==
+X-Gm-Message-State: AOJu0Ywas1cOitB6Gaz2N1CqHkjA4FCdNwyFU/5zcVl3CkGL3IeBrO5D
+	hctTYHPOpkCFU80T2VOPhQuPVoHYJFM1GBZPhxgRtsyYFkhoR/sZh2t35NKfW1XKsFl6Bge4HPT
+	DEDXybt5N0sy/yBnJ09HxbivtA6P9W4I+IpGkRoVgU54gyi7a3lZelTSSxuxoa/5BU3WR0aW7fi
+	qAIooJ/ztL8tULwi92PqDWmKvqexzh5A==
+X-Google-Smtp-Source: AGHT+IEbPr6RfYyB6bDIsqR5ctTWIiR1x5gwGJliOycccBzchng1hfEmpr+1CfRO1M1GeUqnfz2YJHoU
+X-Received: from wmbfo18.prod.google.com ([2002:a05:600c:6912:b0:43c:ebbe:4bce])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3107:b0:43c:f64c:447f
+ with SMTP id 5b1f17b1804b1-4406ac163bemr114862075e9.29.1745355918724; Tue, 22
+ Apr 2025 14:05:18 -0700 (PDT)
+Date: Tue, 22 Apr 2025 23:05:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1745355442.git.gustavoars@kernel.org>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1715; i=ardb@kernel.org;
+ h=from:subject; bh=v7Nzmlu0nL1IVS/E9VJILt/bwvWjc5W8Q425XyUylHY=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYODpV1+x41zPoJv/pRK3okt3bQp0KTygdupeqE//7Ieh
+ r+ekryxo5SFQYyDQVZMkUVg9t93O09PlKp1niULM4eVCWQIAxenAExkawXD/5Tyl1P0Jrm9S704
+ 6fvXo9G8Ra/MExcae8r/7qg+OC+IIYDhv8eXaMnf1ySzektn2jDJX/mTVDGpcv6hp3KO/oei/db u4wYA
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250422210510.600354-2-ardb+git@google.com>
+Subject: [PATCH] x86/boot: Disable jump tables in PIC code
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-efi@vger.kernel.org, mingo@kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add new STACK_FLEX_ARRAY_SIZE() helper to get the size of a
-flexible-array member defined using DEFINE_FLEX()/DEFINE_RAW_FLEX()
-at compile time.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-This is essentially the same as ARRAY_SIZE() but for on-stack
-flexible-array members.
+objtool already struggles to identify jump tables correctly in non-PIC
+code, where the idiom is something like
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+  jmpq  *table(,%idx,8)
+
+and the table is a list of absolute addresses of jump targets.
+
+When using -fPIC, both the table reference as well as the jump targets
+are emitted in a RIP-relative manner, resulting in something like
+
+  leaq    table(%rip), %tbl
+  movslq  (%tbl,%idx,4), %offset
+  addq    %offset, %tbl
+  jmpq    *%tbl
+
+and the table is a list of offsets of the jump targets relative to the
+start of the entire table.
+
+Considering that this sequence of instructions can be interleaved with
+other instructions that have nothing to do with the jump table in
+question, it is extremely difficult to infer the control flow by
+deriving the jump targets from the indirect jump, the location of the
+table and the relative offsets it contains.
+
+So let's not bother and disable jump tables for code built with -fPIC
+under arch/x86/boot/startup.
+
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
-Changes in v2:
- - Use "number of elements" instead of "size of" in kernel-doc blocks.
+ arch/x86/boot/startup/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/8f9ab8fcd26ce59c0e0e25e095b446a77849c08e.1745342381.git.gustavoars@kernel.org/
-
- include/linux/overflow.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 6ee67c20b575..f33d74dac06f 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -420,6 +420,8 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
-  * flexible array member.
-  * Use __struct_size(@name) to get compile-time size of it afterwards.
-  * Use __member_size(@name->member) to get compile-time size of @name members.
-+ * Use STACK_FLEX_ARRAY_SIZE(@name, @member) to get compile-time number of
-+ * elements in array @member.
-  */
- #define DEFINE_RAW_FLEX(type, name, member, count)	\
- 	_DEFINE_FLEX(type, name, member, count, = {})
-@@ -438,8 +440,21 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
-  * flexible array member.
-  * Use __struct_size(@NAME) to get compile-time size of it afterwards.
-  * Use __member_size(@NAME->member) to get compile-time size of @NAME members.
-+ * Use STACK_FLEX_ARRAY_SIZE(@name, @member) to get compile-time number of
-+ * elements in array @member.
-  */
- #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
- 	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+index e5f77e65c083..4062582144f6 100644
+--- a/arch/x86/boot/startup/Makefile
++++ b/arch/x86/boot/startup/Makefile
+@@ -5,6 +5,7 @@ KBUILD_CFLAGS		+= -D__DISABLE_EXPORTS -mcmodel=small -fPIC \
+ 			   -Os -DDISABLE_BRANCH_PROFILING \
+ 			   $(DISABLE_STACKLEAK_PLUGIN) \
+ 			   -fno-stack-protector -D__NO_FORTIFY \
++			   -fno-jump-tables \
+ 			   -include $(srctree)/include/linux/hidden.h
  
-+/**
-+ * STACK_FLEX_ARRAY_SIZE() - helper macro for DEFINE_FLEX() family.
-+ * Returns the number of elements in @array.
-+ *
-+ * @name: Name for a variable defined in DEFINE_RAW_FLEX()/DEFINE_FLEX().
-+ * @array: Name of the array member.
-+ */
-+#define STACK_FLEX_ARRAY_SIZE(name, array)						\
-+	(__member_size((name)->array) / sizeof(*(name)->array) +			\
-+						__must_be_array((name)->array))
-+
- #endif /* __LINUX_OVERFLOW_H */
+ # disable ftrace hooks and LTO
+
+base-commit: ff4c0560ab020d34baf0aa6434f66333d25ae524
 -- 
-2.43.0
+2.49.0.805.g082f7c87e0-goog
 
