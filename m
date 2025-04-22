@@ -1,97 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0528C5C3;
-	Tue, 22 Apr 2025 15:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95FBC8DC
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336616; cv=none; b=tbCSfU6aubtUWVXFyPIeRN+6J6hKfyD/bpxN2vuq/+uoaJgg+TVRVU+ktTE7qqx+1Bc4f9fJ3e0MYiscF4uS9znAA3tvvRQnqAJotUKPt5Swilhg/gXxQbmpucSH+AqvH0octA1IHZCCvpkkI9wQsaJ1vlLpBrp19WhsnEvf7+Y=
+	t=1745336689; cv=none; b=aLe4mgGSracbiNmdBPAhmRcjwPuqDRgU6ralvNF8lqXXswm/2rxGYem1A/khjvP7kGae7rul8MSVLRfb0Y8u6JpsN6rPdSLt70aFGDpoeEbC0kIe00AtA8yt5O6Dc+09cpjuGTxBecwbONhKqwQH962hAwhFzY9iSeB7zO3StZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336616; c=relaxed/simple;
-	bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cE/+ILS98TJY5FS9h98M5+EN5Ea9TOe39qwMuhFAEgbyMSoAQfBtJZh7S5dmGpF5dVsBK5aiV033b6VTCRLJgs9mNTTUiSAppCW9acR9fXUf9qob/d9smwEFefygcpi+0tZmCsOTmFvHmd+HJ5/dBHSJPYcTSUf9KYzoLuTEBvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBnuiR+1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745336689; c=relaxed/simple;
+	bh=6qWLggXJPCM0HeOHIa65h9aywtSvV/SIK/9zjhWaRL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lnRdFMgEJe9eQZhkPYmKU0OhS86P03jWt70O0/UgCVQOW3UNWI4XGnRhefIn1O2ap1AIN4JATd32bEu+LYdLyoGWQLlVjQUNHgM90/+BInEcetLRWzfubXx/3M8dSWysxve23Ox90ldfb3pDyG5i6GiKVo4luZwRmUwzQeEvVQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wHzEBB+1; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBnuiR+1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D36C4CEEC;
-	Tue, 22 Apr 2025 15:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336615;
-	bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
-	h=From:Date:Subject:To:Cc:From;
-	b=qBnuiR+1qVWakHKLRBmgCfgs0jQJWOrcAu6KAyUpFf9tdCd7idnL1qDf9+iFuxIo/
-	 enCBRDaANoVJM6L/O5moXNjuj3zRl8x+FNaUlWOthTqEAxOlqXIRU3lpjUtrsj5sPE
-	 n1nZmPh62sPtve4kMTOOonw6UaKdszBTGq8nRUP/t+3lQF2fewgm38A7Pk0dou0yil
-	 g56jxzXrOyShyVV6W9Y4+7ZHTPThNaJt8HKnwwaZlDUWicnX3qItyzgh+YPuNIqKOJ
-	 2Am7pnAdiIRAeezep+gKvWYiLCD2LMMs4Xwys8EAJ5wRxbS0emObz6bOxzghs0P+8D
-	 b4sYzPDf1ZDOQ==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 22 Apr 2025 16:43:29 +0100
-Subject: [PATCH] lib: Ensure prime numbers tests are included in KUnit test
- runs
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wHzEBB+1"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7040ac93c29so49939097b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745336686; x=1745941486; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K9ngDNGkZRiVWGtgvkMRHPkUgF6S7Nt/Bo4JqOL13oI=;
+        b=wHzEBB+1kPHLOrimzfhjPKlF+K3jPwVA1atnc1A/1Qp7le3WyLqdfB7nIhFGu3vVfZ
+         TWAzA4c8MIv7hJXsb+XRWhKKUgmvehMcm2pS5Hfrx4kecITacbKFPD8eLpfzEN5iWXl3
+         tusm7r98rhlVVwf4Cl2hZyQTuChhUAB8JvXorPIdqMaI76fJHTr2XkO7+HNAY84ONnWA
+         ix0Y7oRPEqFg5JIEe5EVPJaeMhO35OHOTqGvcvunkBUF4wTfTubT0Ws8jB7F4c6u7Lyu
+         hClKhCL3iqyhvaSSNQDDnpBPURKNn4+SAVD3LJdfhqy+QV9o1E3iLErPWdyK6ivoc1eo
+         tsMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745336686; x=1745941486;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K9ngDNGkZRiVWGtgvkMRHPkUgF6S7Nt/Bo4JqOL13oI=;
+        b=mtObxJJ912coQGfKFUVilvc1o4vsV0bnshgbadP4kXlI24sMlD3kYdJvh//rT9UJFI
+         MnxQ8cHcNE/BlwrQoXDKO0YlnhZ+fNooWMXIkNmyO93cJjBZDu2JndJud+5WNNE11enQ
+         rz4+sd7yo+zhuk87X6Fd7vw2SddECiXTXDYed5S20MD0BLU/ItanUWWe+Aw2a9h3aCxu
+         8e+HfHV02BZfU839XTFO9BxRvR9RI7zQ7FbJ9jN2phlAbJhhsM3qUyKG7Np/0Y9Vntg5
+         vgJN5+S9eYVEOlwAjrcRol+V4wpoTzz/FSGFfUGGlws7okqu8AeRlAUplebd7dgewT5L
+         W2Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJCpN31yDV5CloboEmnYLvX908X6F2CVEUQDil+I8JPj1xSGlIA798cxn+x+nAqUIQLHyobv2z6vv7tuU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8HIcU2BL1HTA355wIs/Yqf2cXBBFwluGstZbXCE8otd/tMfu0
+	/H+Bx0mKSvsykpjFebbXaf+AM+uvuV+PhpvecYvG3T7CRuNGi1qVPzHwbCbk27Bwr+IoH0yunI2
+	D+tIelAGKJA9opA2bp0Et9+cedlKa7Pcd8pqRQg==
+X-Gm-Gg: ASbGncuXZ86KZUxkWs9UZb+qTaAXVxfm22b3+BDKx297DX69zwjq2O3SjCh25wJBkgh
+	S/pH/H27yc94wrLOk/lQMr3zo/tk5yKf7EfdAuHphO/SLBlrmc+p76EfsMGa5TZzm+yGXVekKrg
+	5tGo0sQ+d/YssJ5uVVNsqo+1c=
+X-Google-Smtp-Source: AGHT+IE3NCo/U+OdWL0RzxeIBOTKrxCpneJJYIv5a9wSEqVGqkMe/Lxmi2wisNM7ZZMHxbrfn2WvD6fXWik7UjeBc4U=
+X-Received: by 2002:a05:690c:6e0d:b0:6f6:d0a8:8d65 with SMTP id
+ 00721157ae682-706cce25937mr208437997b3.28.1745336685661; Tue, 22 Apr 2025
+ 08:44:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-lib-fix-prime-numbers-kunit-v1-1-4278c1d4a4ae@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACC5B2gC/x3M3QpAQBBA4VfRXJti/BSvIheswYSlWSsl725z+
- dXpPOBYhR3U0QPKlzjZbUAaR2Dmzk6MMgQDJVQkORGu0uMoNx4qG6P1W8/qcPFWTswoK4vKkBm
- ZIBwO5ZD+96Z93w8JFAn2bQAAAA==
-X-Change-ID: 20250422-lib-fix-prime-numbers-kunit-323659c2cfe2
-To: Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Tamir Duberstein <tamird@gmail.com>, Kees Cook <kees@kernel.org>, 
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1131; i=broonie@kernel.org;
- h=from:subject:message-id; bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoB7kkKPucI26n3DDxnJ6mefpWWgcg7tZBAr+FuiLY
- 8pB21kiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaAe5JAAKCRAk1otyXVSH0PFFB/
- 9Mkc101Mi0MUX8nYqI0cZoQgQYFcTtvs3yNYhNHbJZMJW0awYebJvxsYjXbPzKYZQfMQQ0Xxhw1cqD
- KJ4d+2Z6R7OJA6gJLKsOsSvZWwRehpFSPkFeYq+56AwEQGWsweKy8FHNqJyP2v8ck1VUEJLvUSXTTm
- 6KNpP5sykVlpk6fbogmAqBPPPE293V/Tbb53VUxEIz3uqOW5Jp+K3yHbQctHdXcrvYS+qHQZEHE0px
- tPQp3Gvxs7WnUVfZhj5Byv55uYv/KxdESHVF0/N9P5Wz6EvI4ofalSnxYeY7r8f/JZk53L5r5Mf24D
- ETd5bEfBdenUaMMFSwSQf7xRdmx/9M
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20250409072604.3410459-1-ziniu.wang_1@nxp.com> <ac3546ef-bffa-47ac-9c65-c3250da5387d@intel.com>
+In-Reply-To: <ac3546ef-bffa-47ac-9c65-c3250da5387d@intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 22 Apr 2025 17:44:10 +0200
+X-Gm-Features: ATxdqUFxVnXPCSEBPjHmKlVJnatv7iIefwywUip8-eI--PGoBu-PH0qykz7ZccM
+Message-ID: <CAPDyKFpmK3ZGyqgXFsZ43aU_JG8JG-mw751Lcbk3PZ1_9xLnyQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhci-esdhc-imx: calculate data timeout value
+ based on clock
+To: ziniu.wang_1@nxp.com, Adrian Hunter <adrian.hunter@intel.com>
+Cc: haibo.chen@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev, 
+	linux-mmc@vger.kernel.org, s32@nxp.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When the select of PRIME_MUMBERS was removed from it's KUnit test
-Kconfig nothing was added to the KUnit configs, meaning that when run
-via the KUnit runner the tests are neither built nor run.  Add
-PRIME_NUMBERS to all_tests.config so they are enabled when the KUnit
-runner builds the kernel.
+On Tue, 22 Apr 2025 at 12:24, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 9/04/25 10:26, ziniu.wang_1@nxp.com wrote:
+> > From: Luke Wang <ziniu.wang_1@nxp.com>
+> >
+> > Calculate data timeout value based on clock instead of using max value.
+> >
+> > Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
+>
+> We overlooked that Haibo wanted the "bit[23]" comment dropped,
+> but nevertheless:
 
-Fixes: 3f2925174f8b ("lib/prime_numbers: KUnit test should not select PRIME_NUMBERS")
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/kunit/configs/all_tests.config | 2 ++
- 1 file changed, 2 insertions(+)
+I have dropped the comment when applying, no need for a re-send. I
+also added Haibo's reviewed-by tag.
 
-diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
-index cdd9782f9646..7bb885b0c32d 100644
---- a/tools/testing/kunit/configs/all_tests.config
-+++ b/tools/testing/kunit/configs/all_tests.config
-@@ -43,6 +43,8 @@ CONFIG_REGMAP_BUILD=y
- 
- CONFIG_AUDIT=y
- 
-+CONFIG_PRIME_NUMBERS=y
-+
- CONFIG_SECURITY=y
- CONFIG_SECURITY_APPARMOR=y
- CONFIG_SECURITY_LANDLOCK=y
+>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
----
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250422-lib-fix-prime-numbers-kunit-323659c2cfe2
+Applied for next, thanks!
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+Kind regards
+Uffe
 
+
+>
+> > ---
+> > v1->v2:
+> >  * Added SDHCI_TIMEOUT_CONTROL to esdhc_writeb_le()
+> >  * Removed esdhc_set_timeout() to use common __sdhci_set_timeout().
+> > ---
+> >  drivers/mmc/host/sdhci-esdhc-imx.c | 24 ++++++++++++------------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> > index ff78a7c6a04c..a34cabee5916 100644
+> > --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> > +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> > @@ -870,6 +870,16 @@ static void esdhc_writeb_le(struct sdhci_host *host, u8 val, int reg)
+> >
+> >               esdhc_clrset_le(host, mask, new_val, reg);
+> >               return;
+> > +     case SDHCI_TIMEOUT_CONTROL:
+> > +             /*
+> > +              * ESDHC_SYSTEM_CONTROL bit[23] used to control hardware reset
+> > +              * pin of the card. Write 0 to bit[23] will reset the card.
+> > +              * Only write DTOCV field here.
+> > +              */
+> > +             esdhc_clrset_le(host, ESDHC_SYS_CTRL_DTOCV_MASK,
+> > +                             FIELD_PREP(ESDHC_SYS_CTRL_DTOCV_MASK, val),
+> > +                             ESDHC_SYSTEM_CONTROL);
+> > +             return;
+> >       case SDHCI_SOFTWARE_RESET:
+> >               if (val & SDHCI_RESET_DATA)
+> >                       new_val = readl(host->ioaddr + SDHCI_HOST_CONTROL);
+> > @@ -1385,17 +1395,6 @@ static unsigned int esdhc_get_max_timeout_count(struct sdhci_host *host)
+> >       return esdhc_is_usdhc(imx_data) ? 1 << 29 : 1 << 27;
+> >  }
+> >
+> > -static void esdhc_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+> > -{
+> > -     struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > -     struct pltfm_imx_data *imx_data = sdhci_pltfm_priv(pltfm_host);
+> > -
+> > -     /* use maximum timeout counter */
+> > -     esdhc_clrset_le(host, ESDHC_SYS_CTRL_DTOCV_MASK,
+> > -                     esdhc_is_usdhc(imx_data) ? 0xF0000 : 0xE0000,
+> > -                     ESDHC_SYSTEM_CONTROL);
+> > -}
+> > -
+> >  static u32 esdhc_cqhci_irq(struct sdhci_host *host, u32 intmask)
+> >  {
+> >       int cmd_error = 0;
+> > @@ -1432,7 +1431,6 @@ static struct sdhci_ops sdhci_esdhc_ops = {
+> >       .get_min_clock = esdhc_pltfm_get_min_clock,
+> >       .get_max_timeout_count = esdhc_get_max_timeout_count,
+> >       .get_ro = esdhc_pltfm_get_ro,
+> > -     .set_timeout = esdhc_set_timeout,
+> >       .set_bus_width = esdhc_pltfm_set_bus_width,
+> >       .set_uhs_signaling = esdhc_set_uhs_signaling,
+> >       .reset = esdhc_reset,
+> > @@ -1777,6 +1775,8 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+> >                * to distinguish the card type.
+> >                */
+> >               host->mmc_host_ops.init_card = usdhc_init_card;
+> > +
+> > +             host->max_timeout_count = 0xF;
+> >       }
+> >
+> >       if (imx_data->socdata->flags & ESDHC_FLAG_MAN_TUNING)
+>
