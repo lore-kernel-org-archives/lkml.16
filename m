@@ -1,307 +1,143 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EDC283684;
-	Tue, 22 Apr 2025 13:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329619; cv=fail; b=VXvwfQRR+YSZVUoLLGSviCEOEe2nRH2L28xH/KVfSYlzuPjQvB++GSYBlAG/2o9GbpHDOPsXVHGaLEEUaj0BwltVDfs9+ueHbiaopyAF9JYhcwk9mBvMr60NF4nRVa8NPGGNNXYPVMQJuAjXrIKaC99eckTgXbkJeK4i5WhQ7bY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329619; c=relaxed/simple;
-	bh=8Z9pX/dHCIddSsAnII+KWqMBEJZ2b0B7sFHgqqeEpjI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bViOIDoLZ3p8AkArpjrmlxnyw8TpaRNOuksnH+mRIbZqPsAnULyuRNj8wA0+Dl8Fd/yqaZm3+bLnej1wLGHbNy//KPNN2euZY/ADb9Tx8p7R+p7aRx3hl3Q2jVbKMfYq6afvc0W2n6RhIoxaFPR0okIrrYIJHmQSAyGXxCVBVd4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MfhS2bfU; arc=fail smtp.client-ip=40.107.243.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052684C85;
+	Tue, 22 Apr 2025 13:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745329661; cv=none; b=pbDeGSSCBUnEGKXQQgmaGpw7i2WotgstLoL9y+cJqe0LkqAFacOXK0m14fL2ZCZBay/fvzVICTHhY3X9dT9FEd1Al655SAV9vMasmeV/2gpO25NKI8VZtl5YukjWkJ0N+dnQUpFKmTTh+oxAAPl07P7Adz9M4oq3R/y1PnJlu14=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745329661; c=relaxed/simple;
+	bh=kDo4HRvvA558Eov+TuiccC+GY9aXbLYZP8MmS1f1QcM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C0p3E8yiL4H/zAdogyBkuNF6htUvM1TqBswSrj0zqb6ap521AR3AxrcM0FBnEEDKxX+xOzzVIUH+vN2hYteDDroxWfLGbhqIagqgH8gA5M+9Su2ncwc9TG00JWorM4B+HqBfBGNJhBN1FQqy/nTY0wXpVqEzLx6rXSZfigVKYP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvPc9hDC; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MfhS2bfU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WPGtYEB8d9p3RAm27HVl+Bp2rQWxcFe42CebL9/uVzPBPVqFq6nAWaQvR4nlnQFiXBOqcggL405ibXNOKd5f1XPyg+LK1UhRwdJUl/WgnhqVkCn5HmOR7LUAxdVivvRluPVF+yyWbvIgAbM2U28ArU72CndwoG+/W+M2KH141WGi7k8pSqS13RsrFanMAv6VmHDjC/5g6006L2nvH5PK1OqQ7dltpcSvEafnabQyCtwTc4XyLEEoCMcT4hEQAu58oaqzBTazpKJjE2u2PR68MOMyUR9zjmlEsUU4Ginoh5onCxLEGXufdk4PdTBvqUUHJri1yqRb7Hc3Z0IN/XYD9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O8de03LeTQ+AHF0P1rB250RSTAbXeujfow3zEkl1vJ0=;
- b=blrHdyRfZON0U5TH9G9nsCrv4Ovl7IY1OVCY7ySzCDHpofbHUmCjnE1s4St2uoABmbW+J60V/t0QTj55Lk4sfFmrmI/S3wFz5pa60urN45n6gp3RgVQEkSuc0Hb8Gk/eOGF0rykhfpHVjx6ksX7teU3TGLGO5D3njYOivmrAIpm8MhTOecIXipbi7eVbX5UXMd7opdzCjL+uCKayAXz81th5KXdis7jvky6shP/Z7B0ik+tuf38VjQt5AISlNytkr0pt75izb5wKz58KQlO692LOhnVh2nGgrJpsofYQvbKlSfuFHlqR6DXhUfirE9nDpGYjYznCgm5l+czfbo5Z3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8de03LeTQ+AHF0P1rB250RSTAbXeujfow3zEkl1vJ0=;
- b=MfhS2bfU8yryuqjXkm++AJfPEprXl7/CBl7z5TjweB8cQ/7SCrrSYjsCk3VKFhxg6m5YD2HuzWFqTPg+m7dpXsz07mhEmMP3ZH886293DhM26q+whbCC1tIOwgW4avtNm9DGMxbzbkocgzwdtcwjTc9NL1j5D9oLpr57ypvXJ0CvNtcERUn9baCNHC4diSVM0q8Xpgiz/oH7nUV6I+uad1uOpZDi074KZEErRRRe9zXB/M9RLHJF0FVdOdOM/QJ8d0Fto8fkxvRjuWkAVU3yXC819bKGL/2xZ2K2aDbRkrOxjEyebt8hpKOsCTjqpVNmHNrtyLYtxxdlaKOUmdm8/A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CY5PR12MB6552.namprd12.prod.outlook.com (2603:10b6:930:40::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 13:46:53 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 13:46:53 +0000
-Message-ID: <108225ba-5d8c-459b-97aa-6b57affd5b87@nvidia.com>
-Date: Tue, 22 Apr 2025 09:46:48 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/16] gpu: nova-core: wait for GFW_BOOT completion
-To: Alexandre Courbot <acourbot@nvidia.com>,
- Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
- <20250420-nova-frts-v1-8-ecd1cca23963@nvidia.com>
- <64d869aa-587f-49c6-8626-d2085441bb3b@nvidia.com>
- <aAd9ZlV5_qokiFYn@cassiopeiae> <D9D6UCL4PMJY.1MBEFIIHWT5F5@nvidia.com>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <D9D6UCL4PMJY.1MBEFIIHWT5F5@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR15CA0035.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::48) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvPc9hDC"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301317939a0so692544a91.2;
+        Tue, 22 Apr 2025 06:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745329659; x=1745934459; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZpufMGO9Eqf6bR83oPmEFAFsbu9LRNEFz1I7COzMFeM=;
+        b=YvPc9hDCzm//awY17rmlxLps0UvDHc6HeZpItngBXKzo2OL/jxPhY/0UfXgTwHEJDS
+         zLpBkPHuvl+Fl7sSPvZfy5IONKIkvMUTbi84l5HhW1GJkblClSRwQGTmZEFF+e497E09
+         MIhJdApB0t8or5R88aMirdS4twV8jdKJMRMSbLmdZl/4jMbmjiPVTSLFK0YnuF9Uk47u
+         ovTm6SsSPlmHsJnvRAJ2C7a6icyA42TiJeJh96D83E/TNm+Z5A0at+7Eu1SyE8Vqc8JT
+         GsoOnzuyUEGI87JWdJsWxH2skXZrOy2iYPQkXyF6Zaw2qWL1CgciZG2gt2zpzZ1mWUNa
+         c12Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745329659; x=1745934459;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZpufMGO9Eqf6bR83oPmEFAFsbu9LRNEFz1I7COzMFeM=;
+        b=m2V0ClaMFjx6olAlWrZ2kGd23+JqdPhioFadgEsa45zczbhharnm84Mx8KB4rrpPTf
+         gYHQpxHkcIKLk4N5wpCFH0yD1SkER5SNlNkeRXHNPfzDB5SeJqSumpNdYGy81b4sKl8F
+         V7/+knVXVmdYbMb4sJO9xGajCx8zqra+ntNVSKUC9bVGcvhDpioYfFFEjN0DCXk5evGG
+         aywEPPyMAGKx/sjZ0gcWWDEQGtYB5kFUl6rPSGlN9EjXnLUGqM5XNO25yPipizEutcan
+         1Ig3gAWQCn6ypolb3D76t27+A9E7AWqZeJnPWzjTvlNzOaMWQJKfY+HRdc4zL1HS49AG
+         y0GA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXlti4yQ1NUANVcQy8iANUvqsVg7Rpux7rispZBIYyRMVx/SVh0yfcalYCO//bAeUSdFA+xnMrVuCsMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPIA/SG2c7X5gXqjtGStGXau551y3nq8Hj2m0msKLKifWzk0mx
+	Uw0qo9nSjCBfLXxRjoQK2OoSs6bZf7ehRapk4aPfS5iSiUCkBJkyxsD7XptLBD4=
+X-Gm-Gg: ASbGncsSXLjvDTpEKUVIu7bx3gCizd3u1UMbzkIY6cgYs55XYGrxq6DBAIQ1JJq6GO7
+	om/KwrEP85JoKAZRli+7ZC7n/u56WMGz5qpyuJoqBlXfp8+EhOYjosYba3f2j29wv+YK3hWKjp7
+	agy0Yhc11SOFBIA63Bj/N2cfStMrtiM+Mi9f02icq04zUwR7YmrWcAza2aLh8fpguwlfwpxGPb5
+	Y31hK2pPgbrtuJUAg6ewVoJyvMlz/3PZltcit6jcL8NeT3iQZIEcR149lGwnFYBzoaY0PhHgIUY
+	UriPFnW2ZcLmU05vtYZY+27lQPYzoM2CSjm41zzkkOKXkqFWLpcMy9dIBU/SW28=
+X-Google-Smtp-Source: AGHT+IERpLlhSwaO5nZq8Gw4Gty+WPbaQff7djZpLBz85L/dQ/SkciYvXABq8QRnCmaICpmS1/hDTw==
+X-Received: by 2002:a17:90b:1b44:b0:2fe:b972:a2c3 with SMTP id 98e67ed59e1d1-3087ba5ea96mr8687983a91.0.1745329658872;
+        Tue, 22 Apr 2025 06:47:38 -0700 (PDT)
+Received: from MGG23TF6W0.corp.ebay.com ([202.76.247.146])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3087e05b2bbsm8695214a91.42.2025.04.22.06.47.32
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 22 Apr 2025 06:47:38 -0700 (PDT)
+From: Jianlin Lv <iecedge@gmail.com>
+X-Google-Original-From: Jianlin Lv <jianlv@ebay.com>
+To: bpf@vger.kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	linux-kernel@vger.kernel.org,
+	iecedge@gmail.com,
+	jianlv@ebay.com
+Subject: [RFC PATCH  bpf-next 0/2] Eliminate IRQ Time from BPF Program Running Duration
+Date: Tue, 22 Apr 2025 21:47:25 +0800
+Message-Id: <cover.1745250534.git.iecedge@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CY5PR12MB6552:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3fb6a9a-669f-4871-2674-08dd81a42380
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y1RDM1FPSy9IZFNtcjkyeHd5Z0k3UVV5aEtJZENCc21pMTFXUVhGNjExWmpv?=
- =?utf-8?B?RStrdW1oZHNiQkw3cTFqcFBPUU5QOEJtcE5nN2gyeFRuQ0k2TEQrNHZIaVEy?=
- =?utf-8?B?c29zWThUUVJaci9HaVY4MDFwZ1VsZllLSjNNZE9sRmFWQ0ZQNm5VZjdpMDFT?=
- =?utf-8?B?Mzc3YlpIUFlrRXU5MjVyWWVtZlNtMHBNdEJPemNjN2VPSS9jYW12RXNzUXY3?=
- =?utf-8?B?cmx4Zlo2TnJ5bFNnQTkvOUFwTFRRNXZBOXY2Wmw2N3BhTGFVMDhJUlkyclRZ?=
- =?utf-8?B?Q2dMeE5RV1FEVGhFSGIxZXRVVHJHcEl6YWpwK296dHZvNUlscVRjZjBFcG5N?=
- =?utf-8?B?c2t3dTc4eWNKbmRDeUZvWjhwd0M0VS94Wm9wSGlRSXR0Vzc2ekVYUTJVRzEx?=
- =?utf-8?B?UGVMK2Q3cmFOZUgwVnRaS1M5YXdUVW1TQzg5cXpVSWdoN0FabWR1MnJGNXNx?=
- =?utf-8?B?WWwySFhLekplZWtRM2RnWjltbnZaZlVycDFTbndEMGxSSnMzNlU5eVlyOHVY?=
- =?utf-8?B?VDdPQjhOb0t3VEFLbUNOREVEZlZUV2lpZndrYWVVaHpGUEVhMXhSbThpdTV1?=
- =?utf-8?B?RDYraGQrYk55ODhKRTFZRS9jSzFMc1NBMVc2WFdLVFNCcXdPcm1EdEhMRkRo?=
- =?utf-8?B?SEE0QTYyWmQ4UXlzTXVWRlhCcEVpeFlnbkFyc0pJMm5ZZFpDMUFvNGsrc0Fj?=
- =?utf-8?B?K216K01RSmtuazk5eHZXYktudTdHdFUrcXBhWG15ckpadXN4VDFaM2JlaFJp?=
- =?utf-8?B?RUJxWml6UGJ6c2VJME93S3QvNnZpNGhRdGFybjcrNWJ3VGNZZUhuNVM5ZDVx?=
- =?utf-8?B?ajhKWU1HUDNlZFhkZ0xLOGFMQUxkRG5XY0Q5L1dGbmJrVnZoazZNN2FhNjRX?=
- =?utf-8?B?WlV0Ni9VSHhTOERmeU4yOXNDTXF5bUI2eVcrRXFuWmdLSENxZUdlditYMk5E?=
- =?utf-8?B?SXRJQTRXUFdBaGVILzkyVFA4MUhwKzNEbVE1TDBNVzRwSDg1YldLdmNXeFp0?=
- =?utf-8?B?Z0orSjd5MlJiT1BTYzh5emNlYm5VTk5pQnRXTmJoc1JNM3NuamxDV2RqejNo?=
- =?utf-8?B?VTJsWHFUVk9pbXNOMUUvQ0JidDNWSEZBWGl5OEU0MUdDbnE2MG1WYTRScU8r?=
- =?utf-8?B?cmVpbWV1c1JNM3JGcm1uWmZGZm16S2FYNFYvREt1ZWlOZ3FBMGFLUDNEVUxX?=
- =?utf-8?B?ZFhFVDJrbWtLbHhKdDRxL2VQOVdrQnpQRExNSVphWmN5WjNMWkl1elNjWTFq?=
- =?utf-8?B?U3hoeFQrSVQrWkZDaTNZV0ZTV1p3MFo4Z2Y0UHdzNHZFY3BrdElZZHhURHR2?=
- =?utf-8?B?L21zRkZNSms5am95QWIzdVQrOUFuS2pmSWhISlNkZWVMNjZLL3J1VU04WUVE?=
- =?utf-8?B?M1lyZE1WKy80bEhGQmxvcENXLzMvS3JCNzNoTnBzUTNpZjVtakhOZ0ZGbHpo?=
- =?utf-8?B?NmQvRW1QQUxOYlZzbkFwcTlyek1GSGxIU1N4b0dMRWRoYzk1NTBHbmpaTFpB?=
- =?utf-8?B?RmdkQy9NdXlOdzNzL0RrdkE2V3JBalBkemFGbXNURDVVR2FvaGNCUDlOWXFD?=
- =?utf-8?B?OW9NYUxlcjVHZkowelp4OFozQWFnUEN2NnY0L203TWhhbUcvYlNMZC9hVVRR?=
- =?utf-8?B?aXM2OGVQY2tCRjVnZWx0SHpnODZ5b2t3eWt1UFdsdE01RFVvMEtpTnpqeFhX?=
- =?utf-8?B?NGJaSmpZQTg4V3cxbVhqVGZ4a09EcnZsY0V4V3dRTXh6bmpEQWhQYXlzeE9u?=
- =?utf-8?B?eG1PSDBJRGoyc1JtY2ZaN1NvTXY2alNtNGxOV3kwb29UZEJZRjZ1N1c5bVlz?=
- =?utf-8?B?QVFhU2hER3FyRGpJdjNyVUdFVlRScS9sbGw1S01CcjM3Z1U5WHptWFpkTzRV?=
- =?utf-8?B?RFRpaEF0UVpObXhWU25XY0hnMzhYZnAvbnhnY3o3Y3pQZGE2Rkt3ZEUwa2Rp?=
- =?utf-8?Q?c/xD1SHCV5A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjN3MzBVeHRMYThuZUs2T2pra1o1Zk1SL3FKL3BzU3ZjL25lbTFjOEVqdk8w?=
- =?utf-8?B?WUZkY2pNajFBbi9QNXVCbzA3YU1VZlBRQksyQitxb3Z2OVlvR1dTeWdHZWpt?=
- =?utf-8?B?RFVIc1BoNnBLdVN6TFlhclVCRFUzczZDMFoyeGRNNnI0Qm9QcDNsMFlnbFIz?=
- =?utf-8?B?Q3QyZU43eUZBRVI2Q1hOUmdUR0dTQVJjWkFCUDBvc0dNUGtUZHg5aU5QYkc4?=
- =?utf-8?B?MThJcy9NblY0elNubW1ZdnZJZW1sU2JqNVBXTTJnaFpRM0ZxWlZRVjZkdi8z?=
- =?utf-8?B?eVQvVk4wTUdibXVoL0huVFhiRThwS0MrWmhKZklWRDJCM2k2dzdVNDR0V1ZS?=
- =?utf-8?B?RnVVZHpibER1UmJwcFlINXM3NjFmZzAzdHNjd1NqNGZZUDZGV1dFSUdmRXRm?=
- =?utf-8?B?am1xL3JEVXp2Q3gvK3EwR04rUW1meTd3WExWNk1hSmwrM2JsOSthcmlNUlds?=
- =?utf-8?B?VXFiUitFT0cxTG9ac2RBV3hMSDdpYmVmclZmYkc5UTVvMEVYakNRK292QXJU?=
- =?utf-8?B?Y3poRkd4dVNVVngxQW1JMGZHeVk2Q0JBd3piNUM5bFNvcTBUeDlyWXB3QXlk?=
- =?utf-8?B?RGV0b2NWQjgxWXU2LzBvN1VXaDJGWG1VWGZJKzVPM1pHVWgxZW04amcxQlF4?=
- =?utf-8?B?YzVDWXJHNG5Od3ZDVUtRb1RNcjZ5dlJrTWwxMll6TTNXWFhVSHl5SURIZW41?=
- =?utf-8?B?dWVkd0J4aDkzVHRPQ2FEK1pUUnVRVFlhd0Vua3dBZDdEZ25Db2R6eExWNUZk?=
- =?utf-8?B?eE9DcTBOWm1mblUvK2tFNVRRK3FPZVV3NE5TMEp6U2FiazFIRUdFdXlrZ25Q?=
- =?utf-8?B?SkIvOEVGSENlV2QvRUxFYXRHUUhjakNnU25PQU1kNGNITEE1VURzdUN6Z0dl?=
- =?utf-8?B?c3RiYnI2V0sxV25hVXpjQXJzeHlSaFVOM0VaZ25SckRvc05UTzZXU1N5UW9H?=
- =?utf-8?B?ekZvOFVmOEl3Q3hWdFlKS1BDc01sNWpjY2tYdHFMNCs4SG9YWmc4NFFkbW5t?=
- =?utf-8?B?THJBT3ZNU2ZJVVdVQ0hzTElQWGtlQmdMOHRpNzhoYWF2VHpqK0NXdFMyak1P?=
- =?utf-8?B?Q1BodG9BY29nb0pzM2V3YXd5NzdUQXBPOWNyTUR6cXNQNWg2Q3UxaFhsVm9U?=
- =?utf-8?B?NFR4T0JtRytiTG1KRjVlODZDN2k2VmRtVTM2NXgvVmxNemNDRnhtVlNmbDNB?=
- =?utf-8?B?ZFhwa1N4QkV2RUN2T3dmQ09qYjZ2M1BhcmlOS241am0zYm9zNHYyUndvMGVi?=
- =?utf-8?B?bTBWSHJGUEVSckxxK1E4VWwyWHN2KzRhU2Ixd0prcm9PUjNLaEVRQ0hRZGNq?=
- =?utf-8?B?dCtlVW1iU0NMMnpYVXFEemVxRGlyUFE0MEUxK2cvd3Bnc2NiZ3doMUpOV1hh?=
- =?utf-8?B?UkdDUDZ5UGRTY2duRXM2REdlTVlyc09EdU1FYXpCamJMNTN6THlhVU02SXVT?=
- =?utf-8?B?NWUzVzVFdC9Tc3NpcnpSR1pHLzZuME9ndUt0bGdRazVrV0R3MmZBNmZVc1d2?=
- =?utf-8?B?TkJRS2dzOEFlcTJRQjMxTnY3SlhtWXJjZE9FOURSaU4reHZKVXBFSXBNMDRL?=
- =?utf-8?B?aVdVSGwwdWcwRWdNVXhjNHdJV0UydVgybnIveUFjcVBKZGtoNXJVc3ZFUEFN?=
- =?utf-8?B?aUJlbHN3b0s1bUNhaThTZEtvWjRFSndGTnVhUk9tOVp6VzhKcjhSRDR3SkFE?=
- =?utf-8?B?WUxJL1FlaFkvOE1qWDBpZTZ3MGhDbkFieVJUODJkL3U3UkJxTDhSd1E1V1p5?=
- =?utf-8?B?bWlEOGlhbUd5bFJSRmladndUUU5TRHJxMXIzNzVYbDZueUhzMnRZYVB3REt0?=
- =?utf-8?B?WnJnOUtEbllyVmNsbEpiaTMrWGp4SWYvVUtKZTFQVWZ6TW9NNis0MElZNXZ6?=
- =?utf-8?B?SkEyVERrQUdhTEwrZkRkRjMxT2xvbzRrbFd3c21OMGhUbEtwMitweEZ6M1JU?=
- =?utf-8?B?a3lla0N6OERnQkV3Ny95dXZLWS9WYVdsSXRDb0dxd2pFcFUwOFlXTG1OUWpi?=
- =?utf-8?B?SHBhS3RKamc4QUZUOENvU1kxMFRPNEYwS0loZlo4UnljZ2IvMmdJU05samJJ?=
- =?utf-8?B?c01yRWNPTEJ3dmdBR3QzbEtVWTlqYTF5ZW5TSHBmdmFHdno1MDB1WGhiYStY?=
- =?utf-8?Q?b0za1vm897LTwxQvMvVR3CfqG?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3fb6a9a-669f-4871-2674-08dd81a42380
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 13:46:52.9326
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aIsDnysBjOYxuyhCylbCzhthwBzmrJzIQZmn1gprJ6Nox0MkQPwKCAgsJ3MT5Q07lqvOrbLYqPbPK7VJyBhJiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6552
+Content-Transfer-Encoding: 8bit
 
-On 4/22/2025 9:06 AM, Alexandre Courbot wrote:
-> On Tue Apr 22, 2025 at 8:28 PM JST, Danilo Krummrich wrote:
->> On Mon, Apr 21, 2025 at 05:45:33PM -0400, Joel Fernandes wrote:
->>> On 4/20/2025 8:19 AM, Alexandre Courbot wrote:
->>>> diff --git a/drivers/gpu/nova-core/devinit.rs b/drivers/gpu/nova-core/devinit.rs
->>>> new file mode 100644
->>>> index 0000000000000000000000000000000000000000..ee5685aff845aa97d6b0fbe9528df9a7ba274b2c
->>>> --- /dev/null
->>>> +++ b/drivers/gpu/nova-core/devinit.rs
->>>> @@ -0,0 +1,40 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +
->>>> +//! Methods for device initialization.
->>>
->>> Let us clarify what devinit means.
->>>
->>> devinit is a sequence of register read/writes after reset that performs tasks
->>> such as:
->>> 1. Programming VRAM memory controller timings.
->>> 2. Power sequencing.
->>> 3. Clock and PLL configuration.
->>> 4. Thermal management.
->>> 5. Performs VRAM memory scrubbing (ECC initialization) - on some GPUs, it scrubs
->>> only part of memory and then kicks of 'async scrubbing'.
->>>
->>> devinit itself is a 'script' which is interpreted by the PMU microcontroller of
->>> of the GPU by an interpreter program.
->>>
->>> Note that devinit also needs to run during suspend/resume at runtime.
->>
->> Thanks for writing this up. I fully agree that those things have to be
->> documented.
+From: Jianlin Lv <iecedge@gmail.com>
 
-Thanks.
+Motivation:
+===========
+This proposal aims to enhance the __bpf_prog_run function by eliminating
+IRQ time from the BPF program running duration. When a BPF program is
+attached to a kernel function running in user context, any interrupts that
+occur can lead to the BPF program's execution duration including the time
+spent in interrupt handling. This results in an observed increase in CPU
+usage attributed to eBPF.
 
->>> I talked with Alex and I could add a new patch on top of this patch to add these
->>> clarifying 'doc' comments as well. I will commit them to my git branch and send
->>> on top of this as needed, but Alex can feel free to decide to squash them as well.
->>
->> Fine with both, whatever you guys prefer.
-> 
-> If that works with you, I will put Joel's patches improving the
-> documentation right after mines adding the code in the next revision. I
-> know this ideally should be a single patch, but researching this stuff
-> (and producing a proper writeup) is quite involved and a separate kind
-> of task from the quickly-translate-code-while-peeking-at-OpenRM work
-> that I did. 
+Design:
+=======
+The elimination of IRQ time is built upon enabling 
+CONFIG_IRQ_TIME_ACCOUNTING. Before a BPF program runs in user context,
+call irq_time_read to record current total IRQ time for the CPU. After the
+BPF program execution, call irq_time_read again to record the total IRQ
+time. The difference between these two readings gives the IRQ handling
+time for this BPF call. Then subtract the IRQ handling time from the
+total BPF processing duration.
 
-From my side, this makes sense to me.
+Currently, the irq_time_read function is defined as static, preventing its
+use by other modules. This proposal suggests exporting irq_time_read for
+use by the BPF module.
 
->>>> +
->>>> +use kernel::bindings;
->>>> +use kernel::devres::Devres;
->>>> +use kernel::prelude::*;
->>>> +
->>>> +use crate::driver::Bar0;
->>>> +use crate::regs;
->>>> +
->>>> +/// Wait for devinit FW completion.
->>>> +///
->>>> +/// Upon reset, the GPU runs some firmware code to setup its core parameters. Most of the GPU is
->>>> +/// considered unusable until this step is completed, so it must be waited on very early during
->>>> +/// driver initialization.
->>>> +pub(crate) fn wait_gfw_boot_completion(bar: &Devres<Bar0>) -> Result<()> {
->>>
->>> To reduce acronym soup, we can clarify gfw means 'GPU firmware', it is a broad
->>> term used for VBIOS ROM components several of which execute before the driver
->>> loads. Perhaps that part of comment can be 'the GPU firmware (gfw) code'.
->>
->> Yes, we should absolutely explain acronyms as well as use consistent and defined
->> terminology when referring to things.
->>
->> I think we should put both into Documentation/gpu/nova/ and add the
->> corresponding pointers in the code.
-> 
-> SGTM.
+TODOs:
+======
+- Support elimination of IRQ time for BPF trampoline.
+- Add selftests to validate the functionality.
 
-Ack.
+this mail is mainly to get feedback on the design and implementation
+approach. TODO item will be added in subsequent updates once we gather
+input on the proposal.
 
->>> I find this Rust convention for camel casing long constants very unreadable and
->>> troubling: Pgc6AonSecureScratchGroup05. I think we should relax this requirement
->>> for sake of readability. Could the Rust community / maintainers provide some input?
->>>
->>> Apart from readability, it also makes searching for the same register name a
->>> nightmare with other code bases written in C.
->>>
->>> Couple of ideas discussed:
->>>
->>> 1. May be have a macro that converts
->>> REG(NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK) ->
->>> regs::Pgc6AonSecureScratchGroup05 ?
->>> But not sure what it takes on the rust side to implement a macro like that.
->>>
->>> 2. Adding doc comments both in regs.rs during defining the register, and
->>> possibly at the caller site. This still does address the issue fully.
->>
->> If that addresses your concern, it sounds totally reasonable to me.
-> 
-> Sorry, I'm having trouble understanding what you guys are agreeing on.
-> :)
-> 
-> The most radical option would be to define the registers directly as
-> capital snake-case (NV_PGC6_...), basically a 1:1 match with OpenRM.
-> This would be the easiest way to cross-reference, but goes against the
-> Rust naming conventions. If we go all the way, this also means the field
-> accessors would be capital snake-case, unless we figure out a smart
-> macro to work this around...
+Jianlin Lv (2):
+  Enhance BPF execution timing by excluding IRQ time
+  Export irq_time_read for BPF module usage
 
-I think the accessors can still be lower case, because we can do something like:
+ include/linux/filter.h | 24 ++++++++++++++++++++++--
+ include/linux/sched.h  |  4 ++++
+ kernel/sched/core.c    | 22 ++++++++++++++++++++++
+ kernel/sched/sched.h   | 19 -------------------
+ 4 files changed, 48 insertions(+), 21 deletions(-)
 
-pgc6_reg = NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK;
-
-pgc6_reg.field_accessor();
-
-?
-
-Since rust convention already allows capital snake-case for statics and
-constants, I think we should aim for this exception for Nova register defs
-before discussing other options (i.e. directly replacing the definition of the
-register from camel case to capital snake case) as is consistent with Nouveau,
-Open RM etc. I think it will make things so much easier (and probably less
-error-prone and maintainable) such as translation of GSP headers to Rust, string
-search across Nouveau, Open RM repositories etc.
-
-Thoughts?
-
-thanks,
-
- - Joel
-
-
-
+-- 
+2.34.1
 
