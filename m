@@ -1,140 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7FA2989B0
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2B298CC7
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351884; cv=none; b=b/XSeaHPRxzvUutgHbOhvLdu0W9Zqwu+R0s7DmNWfb/i2ZbwbEDSIWioq+rqQPlWrXdAojsm+l+P24FVcjrdzp3f20/HY2wmQ7F24r6D5At4N3YM/b8/fRZgGCJPo4lz0wGWUb5LpP2UEkte2nXLBwujlq3xMiX5cwXSv99cays=
+	t=1745351887; cv=none; b=bRjugdZuc5Sg9ydxI8iPCUtf+vDzohIjgSPj19H6ZEOSSD1kWd8ks16+Grka1I9dMknMJ9pQ81rIh+5ygtb0URgs1ArKIGMG37XtL+DqXTjVII6BHbegs+4+7jk0bsOynXkrsFy+JZS0AKb1SxSWrl6fKSG5U5/6MARbUWSKeao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351884; c=relaxed/simple;
-	bh=wsFk7SmZMk84qBZqNh0ZMgVjRpY1xXUEU2RlfQzOwNw=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pvc7s10+fEViolFAo9pUhKjTf941+0GT8JMmu0LV/5ZJQIE5kzNNilL+fQU+qv2urk0+iat5xD3XegCRfT5CtE4momDFNJLIRK2h8k5X55X2qBsO2PPVj+BvrXKVmP79pTQ8YoxFzfOVkll88W5jO845C5Yx1hio43toFaSaF1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NFNfeiwt; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745351887; c=relaxed/simple;
+	bh=UCc9IenOlRQt7veSnMNvgDmw1rTTzCVeI7tkZWg+g0g=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=td91mroZLiyvqImV6MSrd2sU7YnmHPJPrAK8lzJ03iw/SckM+aH0SfP6TcU1mFSFHyJv+aTAK6rPswrsc8r/nzEsGh0TrIEciUr7IpXMOcPvnKqKxsWsA7yQtjxsGOo3xu2hqU+QdRBy9d8MvfmvsgwRhl8Uy40WVpKlRgpk26k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=K62lC8az; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFNfeiwt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745351882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZUY+s/OQUXFXP8L09NRnyD2RvAyHXBwWpTAF7YObAcU=;
-	b=NFNfeiwtWNgzChELbV21yWXgbm3pC7QIiDQqTBqklApy3fLm2cLtdh1g+ExkzyfneOMqd7
-	5wNfezCbXTPIVDJ89IemA65t/9U/JXznqAIVfrVJENHb6MNIbPCK/yz5f2DXFD0oKc9Dqk
-	T3T0hqR2NLTYSUFwmsQvr7lLbJ6NGLM=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-tW5_l9dNPb2pEodxgCSGmA-1; Tue, 22 Apr 2025 15:58:00 -0400
-X-MC-Unique: tW5_l9dNPb2pEodxgCSGmA-1
-X-Mimecast-MFC-AGG-ID: tW5_l9dNPb2pEodxgCSGmA_1745351880
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4767bab171dso55136161cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:58:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="K62lC8az"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4769bbc21b0so54426911cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745351885; x=1745956685; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wi0XCQ0wIgKNjQqJTUBlgswWdaLbIuH1pbfLDZVamA8=;
+        b=K62lC8azJ9dU8MYX4L1lNETjpRr6r9ikSRLWKInE8I+n/HDK/BfKvpSm+hB61EO+9b
+         ij89z9bQ6weItF5IFj1vYPdy+4u/lTQ5gl+7sBSsvrQG2XjPtCPhBQ1fr8c//U2E23re
+         7XjRc5/gfJnvQyZEJlrW9TVIwxgQwM4cNi8TUdxwppHon0RT+eI4UPtrc5LO0kxTZoeG
+         7ho4Qf3BiHuTVN7+ImE7o7XS8QflvyGmNlHiAqWMYL+IZaVIn+fRr95UQxJvSnTj2aYu
+         zGtXVzVepKsKezfq6duCTpFoFAEGUt61kH9pcbIGRbh90UBju/g/rkk6wrmzMQqC58LZ
+         vtlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351880; x=1745956680;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUY+s/OQUXFXP8L09NRnyD2RvAyHXBwWpTAF7YObAcU=;
-        b=cGMth/vZvGkLMkOQWxpp2MKrqc54MUInhjfOiQUKlhslvdkhmtpE48PL6Asj3u0R28
-         2l4FTI0LohdRfo/6b32eyQKz2QzWpUtysE/H3P+UEC7GY4UPP+lOuXWYtyePjEURtgby
-         S0ADwWzt9nqwaCf2DIdO1ph168MC608scbQxh8eFfi5Fovon909rL7Ir9MWl16qICrdl
-         siJTcqIP2zC2ePMOdTrbbv4RbSgRBRwFV4ke5qa4o5scUjfYenXUoyVkOS8/qgv3pxMI
-         9XOu/pE/TkxHwe6jd0Cf1dtoS+w61Z5pNMJx6sm1Sc1Bd4NoRyoSggEk7m/hBcyT8f/A
-         FFPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWco7Ypc8Np+64qmmX5pz5DOCQWCrfOLG1gJSi5i1opBlnIaYcVYNBkmQhsX14Cp0SJIMAx2ApfCXOsAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGZQoqT0gXbqwUCqXJkMTLldo8FmukZvKrmOKCARl0/+UfqqkS
-	O5/2Di/a+IR88LbJ31Ow9+K+kZMk/jdBhnm4WamhwMQ1lczVY//84lNT4eepqlrgCww1DzFRvNa
-	z2AvIFPkoU19yLVQUv8ttrkIjBhSTlVsaRDeQ3oOfVA2l0SRucjDIAdbVOvsxmg==
-X-Gm-Gg: ASbGncu2dWIbyyHlXykrdfE6YcGMfoQ0n6jrry4fAmtoyqJ5SsuX2e+xDm2ED2b4YDu
-	cz3eZQgRCA8g6ZnEqJwrB+sgJuZbbrUBsBHzAVROyoB877NkDgmmqxre68SNjUPh/ilNu0LruKu
-	o7HiUO0FVtsHlBRgmeuRZ/NFvycY637WiJSR7LOlIrRbzGmGwZHsb9F1igYF368m6uNOiDYsCYw
-	N8KXW2xbUjPWu/RooAerzL4pYeYY5V1RfHaRxblRXshp2tIccXBiSiOn1GyLOhKuiQoYp4mHV83
-	EdlQzYovxAlcKA3X9Kj8asEszSUn/KtoSB2zDQmU1tSaezcHOXxcunU2PA==
-X-Received: by 2002:a05:622a:3c7:b0:476:8ee8:d8a0 with SMTP id d75a77b69052e-47aec39232bmr307223321cf.2.1745351879755;
-        Tue, 22 Apr 2025 12:57:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHd7hAQKx+/wNns5UwdTf6osByvR4cMbQCvwsh66hbH0j+pw3ra8yVAyn4cmmasa59/fdUmHQ==
-X-Received: by 2002:a05:622a:3c7:b0:476:8ee8:d8a0 with SMTP id d75a77b69052e-47aec39232bmr307223011cf.2.1745351879485;
-        Tue, 22 Apr 2025 12:57:59 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9ce265esm59111901cf.61.2025.04.22.12.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 12:57:59 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <ded4c23a-fecf-40ff-94ac-0d121a421297@redhat.com>
-Date: Tue, 22 Apr 2025 15:57:57 -0400
+        d=1e100.net; s=20230601; t=1745351885; x=1745956685;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wi0XCQ0wIgKNjQqJTUBlgswWdaLbIuH1pbfLDZVamA8=;
+        b=I2b04zzXS2tBygo1GLfcbwTJIibdt/jeEnlnsO82Xfnx9SJ6XkAUkTbSNeEPg5U7KE
+         sbyqW7JQMnLjhSZR3UzqGHUMNHJpPiOPu7LR1Yd1tbjhwR6GcSd4C8YwjfGHZk7fDbEt
+         7E+02O1gi8BOHfxb1wHFkmsqIj4OpPO6oGtWZ2AF1C3byGytwpE1fQ8fCdHv1TEyIt+d
+         BRShSPH46xCdKwQzxf7A7Dfbv4MUoI1GYeiQNcxFXSWptB+ETFsm0X3Vnyb6widMxaNZ
+         NGKZWmmfXta3qwzOWqBbEPd3Bo+ack0/6tB9hPtNX3I6cPNd3zpw6hBjh178DjxZfqwR
+         RsUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIUETAEZWMaj1lcyfH+xCXuN8EOWcYlmplb2LJM+Xk89cCIM+eodNLacSyOXURXx2rpsDZOMpkPThCbhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkVZTVT4qmysn/6qV9eFOhe8qN9ZRk16UCqYFw8sDQBjhScx+M
+	qQb+YwhD5GD3TmBiMQE05mHArhRpXdMT5lRqQoOzx4e/WzJCP5JxMRaoIZWcX+E=
+X-Gm-Gg: ASbGncsfeNOeTG+qE62AgxBaYsp3mJEM7j2tHJ0ncXTiHK7uCJ/7+EXigOWuo4kifIg
+	RqRQAZeny5iTAdHIVAdNdfSEVMwPCifnbAtqoL7ueKsLwr1X/A0SGAgazvhfOVPJfJQDWA0wznG
+	XsRQp1Fuk9lt0ZzX5migYBzNL9dX1mveespqW6iSyF6nnU2fFIj2ViL4RFGeYjOu66Gumcz95MM
+	R6TiXtg8f5DekYpUA7kzO25ibjwIp/ClM8/zG6WF7VzONLXv/mMvyTW4zlUD49M3Y3CBWuropkO
+	xeu6owH6o6gW9gUYS+pq05kgvrZH2TD/JtQcmFZvOAPXpQ==
+X-Google-Smtp-Source: AGHT+IF7avo9uEX7A3mW4T8l6RGnGWjnOiUes3AEZlicK2QwGeYThk0IGDXmi5oRWeE+79xJPQKX3w==
+X-Received: by 2002:a05:6214:19c8:b0:6e8:fad9:c688 with SMTP id 6a1803df08f44-6f2c4552a03mr278764626d6.16.1745351884909;
+        Tue, 22 Apr 2025 12:58:04 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af1433sm61506056d6.19.2025.04.22.12.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:58:04 -0700 (PDT)
+Message-ID: <529a9804d5b14322b2be78ea6f98677db9c23c33.camel@ndufresne.ca>
+Subject: Re: [PATCH v3 3/3] media: verisilicon: postproc: 4K support
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Hugues Fruchet <hugues.fruchet@foss.st.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>, Ricardo Ribalda <ribalda@chromium.org>, 
+ Erling Ljunggren <hljunggr@cisco.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Jacopo Mondi
+ <jacopo.mondi@ideasonboard.com>, Jean-Michel Hautbois
+ <jeanmichel.hautbois@ideasonboard.com>,  Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-rockchip@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Date: Tue, 22 Apr 2025 15:58:02 -0400
+In-Reply-To: <20241121131904.261230-4-hugues.fruchet@foss.st.com>
+References: <20241121131904.261230-1-hugues.fruchet@foss.st.com>
+	 <20241121131904.261230-4-hugues.fruchet@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpuset: relax locking on cpuset_node_allowed
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, hannes@cmpxchg.org, mhocko@kernel.org,
- roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
- tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
-References: <20250422012616.1883287-3-gourry@gourry.net>
- <20250422043055.1932434-1-gourry@gourry.net>
-Content-Language: en-US
-In-Reply-To: <20250422043055.1932434-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/22/25 12:30 AM, Gregory Price wrote:
-> The cgroup_get_e_css reference protects the css->effective_mems, and
-> calls of this interface would be subject to the same race conditions
-> associated with a non-atomic access to cs->effective_mems.
->
-> So while this interface cannot make strong guarantees of correctness,
-> it can therefore avoid taking a global or rcu_read_lock for performance.
->
-> Drop the rcu_read_lock from cpuset_node_allowed.
->
-> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-> Suggested-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+Hi,
+
+Le jeudi 21 novembre 2024 =C3=A0 14:19 +0100, Hugues Fruchet a =C3=A9crit=
+=C2=A0:
+> Support input larger than 4096x2048 using extended input width/height
+> fields of swreg92.
+> This is needed to decode large WebP or JPEG pictures.
+>=20
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
+
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
 > ---
->   kernel/cgroup/cpuset.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index c52348bfd5db..1dc41758c62c 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4181,10 +4181,20 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
->   	if (!css)
->   		return true;
->   
-> +	/*
-> +	 * Normally, accessing effective_mems would require the cpuset_mutex
-> +	 * or RCU read lock - but node_isset is atomic and the reference
-> +	 * taken via cgroup_get_e_css is sufficient to protect css.
-> +	 *
-> +	 * Since this interface is intended for use by migration paths, we
-> +	 * relax locking here to avoid taking global locks - while accepting
-> +	 * there may be rare scenarios where the result may be innaccurate.
-> +	 *
-> +	 * Reclaim and migration are subject to these same race conditions, and
-> +	 * cannot make strong isolation guarantees, so this is acceptable.
-> +	 */
->   	cs = container_of(css, struct cpuset, css);
-> -	rcu_read_lock();
->   	allowed = node_isset(nid, cs->effective_mems);
-> -	rcu_read_unlock();
->   	css_put(css);
->   	return allowed;
->   }
-
-Except for mislabeling RCU read lock instead of callback_lock as pointed 
-out by Johannes, the change looks good to me.
-
-Reviewed-by: Waiman Long <longman@redhat.com>
-
+> =C2=A0drivers/media/platform/verisilicon/hantro.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 ++
+> =C2=A0drivers/media/platform/verisilicon/hantro_g1_regs.h=C2=A0 | 2 +-
+> =C2=A0drivers/media/platform/verisilicon/hantro_postproc.c | 6 +++++-
+> =C2=A03 files changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/verisilicon/hantro.h b/drivers/media/=
+platform/verisilicon/hantro.h
+> index 811260dc3c77..d1337f7742e4 100644
+> --- a/drivers/media/platform/verisilicon/hantro.h
+> +++ b/drivers/media/platform/verisilicon/hantro.h
+> @@ -321,6 +321,8 @@ struct hantro_postproc_regs {
+> =C2=A0	struct hantro_reg output_fmt;
+> =C2=A0	struct hantro_reg orig_width;
+> =C2=A0	struct hantro_reg display_width;
+> +	struct hantro_reg input_width_ext;
+> +	struct hantro_reg input_height_ext;
+> =C2=A0};
+> =C2=A0
+> =C2=A0struct hantro_vp9_decoded_buffer_info {
+> diff --git a/drivers/media/platform/verisilicon/hantro_g1_regs.h b/driver=
+s/media/platform/verisilicon/hantro_g1_regs.h
+> index e7d4db788e57..f6e5bbeb1914 100644
+> --- a/drivers/media/platform/verisilicon/hantro_g1_regs.h
+> +++ b/drivers/media/platform/verisilicon/hantro_g1_regs.h
+> @@ -351,7 +351,7 @@
+> =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0 G1_REG_PP_CONTROL_OUT_WIDTH(v) (((v=
+) << 4) & GENMASK(14, 4))
+> =C2=A0#define G1_REG_PP_MASK1_ORIG_WIDTH	G1_SWREG(88)
+> =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0 G1_REG_PP_ORIG_WIDTH(v)	(((v) << 23=
+) & GENMASK(31, 23))
+> -#define G1_REG_PP_DISPLAY_WIDTH		G1_SWREG(92)
+> +#define G1_REG_PP_DISPLAY_WIDTH_IN_EXT	G1_SWREG(92)
+> =C2=A0#define G1_REG_PP_FUSE			G1_SWREG(99)
+> =C2=A0
+> =C2=A0#endif /* HANTRO_G1_REGS_H_ */
+> diff --git a/drivers/media/platform/verisilicon/hantro_postproc.c b/drive=
+rs/media/platform/verisilicon/hantro_postproc.c
+> index 232c93eea7ee..84c8e287470d 100644
+> --- a/drivers/media/platform/verisilicon/hantro_postproc.c
+> +++ b/drivers/media/platform/verisilicon/hantro_postproc.c
+> @@ -49,7 +49,9 @@ static const struct hantro_postproc_regs hantro_g1_post=
+proc_regs =3D {
+> =C2=A0	.input_fmt =3D {G1_REG_PP_CONTROL, 29, 0x7},
+> =C2=A0	.output_fmt =3D {G1_REG_PP_CONTROL, 26, 0x7},
+> =C2=A0	.orig_width =3D {G1_REG_PP_MASK1_ORIG_WIDTH, 23, 0x1ff},
+> -	.display_width =3D {G1_REG_PP_DISPLAY_WIDTH, 0, 0xfff},
+> +	.display_width =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 0, 0xfff},
+> +	.input_width_ext =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 26, 0x7},
+> +	.input_height_ext =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 29, 0x7},
+> =C2=A0};
+> =C2=A0
+> =C2=A0bool hantro_needs_postproc(const struct hantro_ctx *ctx,
+> @@ -103,6 +105,8 @@ static void hantro_postproc_g1_enable(struct hantro_c=
+tx *ctx)
+> =C2=A0	HANTRO_PP_REG_WRITE(vpu, output_height, ctx->dst_fmt.heighat);
+> =C2=A0	HANTRO_PP_REG_WRITE(vpu, orig_width, MB_WIDTH(ctx->dst_fmt.width))=
+;
+> =C2=A0	HANTRO_PP_REG_WRITE(vpu, display_width, ctx->dst_fmt.width);
+> +	HANTRO_PP_REG_WRITE(vpu, input_width_ext, MB_WIDTH(ctx->dst_fmt.width) =
+>> 9);
+> +	HANTRO_PP_REG_WRITE(vpu, input_height_ext, MB_HEIGHT(ctx->dst_fmt.heigh=
+t >> 8));
+> =C2=A0}
+> =C2=A0
+> =C2=A0static int down_scale_factor(struct hantro_ctx *ctx)
