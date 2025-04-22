@@ -1,206 +1,134 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA348634F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E50B8634F;
+	Tue, 22 Apr 2025 22:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362230; cv=none; b=kRKtM0vl4/fUHdoZ/rmQBzMXvrDH1kM1iM+oOHv54XFb67ko63AFjFfEmkllNfQGELEa4izXCyDBEQ0PB/DTxKcwtMsnE7/ROYXxsG8FUoJddgG//EA8s13fLnteertelpiSyRRtxVyMhNmuoKHOZtnimVLlmNYOfR1DNoj4JpY=
+	t=1745362256; cv=none; b=S/ZpiEDKI9ETWNw7OrR+D+viR7+OEGv9hnyF6BvdwYryfQQ8SKa8jqyGjkjAtbr20vkIsiUcMKsnWq/aRvJ6qXo2Jt2gZ/NT2nBHPVV9mg9WQR6gxOQ+2WvTSQ6NH2unP5oCD76Ni+edVsYcTcYUlWowdE4G9j/pWgcMySvhxQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362230; c=relaxed/simple;
-	bh=a4EcOav03n+HBGzNSNuTxKZNDu09J/N3p9II0SkD8xQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfazYyLWpEgRKI/cMjDi+cyo7eAVm1VFYP2EUSpi8JXnKBa12zlChNam1h2F4cn8BQQ+JZ+jcZxaL/I0Xkss5/zq6nhG9dbuZFl+UxWS+FP6nO8oV1UJYefAZ6dqNecyfD5bBO/7t9F+U573WtORXxSRIUuMa3HXvz8iz4Zf4yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VkRbpU87; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745362256; c=relaxed/simple;
+	bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HsN5Rvhn9DiYfojHq7xEYtQmX8ONxr9dVoBASQNL/jMN74iiSnMQp/IhyfZHhxEyKBnCtehPEhUbtsJRulDSdncXQRIF5u/IH12sHaOxHzdvrzgmAFdSYMaV6ICl3M8P/EM/O7s/XeoqUlbAfZHkw9HqTZSrNMDPEEAWa+X0XOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gst9f3o0; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VkRbpU87"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso56293831fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745362226; x=1745967026; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oZCFkPT9VQDSYU37yasnvmuyi6JQuptLSL8TbX1/xkM=;
-        b=VkRbpU87IB2WUGmVLF6WAabnc3Ak9eNMrbJuNyMMR+8nRfcAqx+YXAKMYN1cZZXzBo
-         W3HlkC02O9167AJjF4zLhr3Pq/Xpgd0heanHwuPh/HXhZvNN9zrXazgNFrkfPnnfk6A0
-         Cru87A0Y4r9vlXNb0iPercg1N+A/vsq85IFLk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745362226; x=1745967026;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oZCFkPT9VQDSYU37yasnvmuyi6JQuptLSL8TbX1/xkM=;
-        b=iUZNnr+digB/qEqYxf7VDA/6Rf6Xi5NYeVL4JpiwxggVlESZ0Ndi4O/sHR6eA9Fpe8
-         8wkFGNDeR/k9wn6nFpjscqAj3H4c0kgEPcSYBdooco82hCxjQuu5mkrB6LatlK3aFIZs
-         i9gGoBrUq7p98EVJbMPTXph+L1QiNUpnsgrrdvIP2cnDjCX29Y6U+6MqPgQAKKjnpAjT
-         P89Iq/yVnvAJ0DHjjupcdbATaERiMoY2snrEKERRZThTeJ5/AbaIVDIaCEC5FUDpXWoo
-         XWnQQsuhf9XlySP5k7oE47LNIStgrg8E6xCiiCN8vP0lf8Wzua9zwkyIIIgBhg03oNc0
-         k+Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCWejszhHNSErzjEzC5AMjMVD58hRthfWUld08kHGNCOPxdTwtkn8bLiihCpxfuoLSdOaLuByuWWohwdx2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI4WActGTpFriB3jGpUjQ4A+u4J5IZysjljUCQEZXVFw5YgFtT
-	WaWKbAUhtWHnLm/BZRJPPosGeMIzTiCqRkC40xhc9nTiQoFLdXYseDpzeUeMKNCjvUCIPPZwTgC
-	quw==
-X-Gm-Gg: ASbGncvcRePHVYN7ZckTRQn7MjKPDIT/AIRxjrGSjSaYlr7UveJiZ+itDf9OeIydYdY
-	FFnanOfoA1jjX44t8lgvborm5vg9LYp0pFW8tppYvg4PbZUgafDS91jsLULeNUxUrWTitYtFRnN
-	Ep28KfE9u1fGXbiPGz3q8GsM4w6TyVHWKWqSMztwmw/2UePu5F7FjEaj4bHVGq55UlEJRFXmhr9
-	tUZ8wJD4LARLarRFCSwO7s51HC5fFfK2gkZkyFggTj0yLXy8/EN13RZFkmQNveqim2zLx7LjXu3
-	JPQtUB9VD5RYB6PKu7fZbNHn89KeUiaBA4RlOSVuSzJbB3vQW16fHDzhUvnB/g6R4D689JjOkpU
-	mGnhWDhs=
-X-Google-Smtp-Source: AGHT+IHXnN3J5wzvGOEHLLsyuXVgbaQ+0Nkg3SKsAVx+qGdI2ALjsuPABqlSZIEAx7imJP8nBAZ6yw==
-X-Received: by 2002:a05:651c:1511:b0:30b:bdb0:f09d with SMTP id 38308e7fff4ca-31090553ee1mr60553171fa.32.1745362225951;
-        Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109084d4aasm16312991fa.90.2025.04.22.15.50.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso56293571fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXxwVcTEeLKDaj0KrGTX9JLSU1cgrALbnd9qd4KcneHpwZEkpC1JJOdgpMr8BKbUtaR885exiTJwmgd8J0=@vger.kernel.org
-X-Received: by 2002:a05:651c:220e:b0:30d:e104:b594 with SMTP id
- 38308e7fff4ca-31090579a68mr48817081fa.40.1745362224964; Tue, 22 Apr 2025
- 15:50:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gst9f3o0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745362255; x=1776898255;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
+  b=gst9f3o0e7JLwVHy+suQ6sVMjrWWR9qLbDanT7Yaa33kxnyfjV/OQx7p
+   TdvfrQ4Uvthl6z2Vy+FUKM79gTYjF/XIfQe9jm1CygFyQMJQYwcUIXBAQ
+   CAP7qJuTbU011dDLb6C6twFLaL189PMozPMDIO7E/6xB6bJyfjIN0q5Ed
+   FEEbllr+Eijlhhb+K8Y2+Sb48VwGzQ5gQXshfzXKoshpmp33CpOcjxMKH
+   lrOqwshZ6/k0LYTAln7mhapfzdVByiuKg7r1zdF0JWAUS93gkOCAdjbbU
+   IZ2JrV0dYFRcWzOLtAa/FKAm4sIdSKQRGwwt2u9UvfSRuB8eQr/xr0lSs
+   w==;
+X-CSE-ConnectionGUID: ltSHvNIJQ26d2PxBQAWWtw==
+X-CSE-MsgGUID: eRcrbDC8TcuVdE3KwSPiRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46816880"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="46816880"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
+X-CSE-ConnectionGUID: n7TL10sURoCXgOxgB+IyBA==
+X-CSE-MsgGUID: WhMNARUHSzqW4R8DxoGfLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="137006997"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0C69220B5736;
+	Tue, 22 Apr 2025 15:50:51 -0700 (PDT)
+Message-ID: <34bcfac9-86df-42d8-adef-9ccedc3a322a@linux.intel.com>
+Date: Tue, 22 Apr 2025 18:50:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313-uvc-eprobedefer-v3-0-a1d312708eef@chromium.org>
- <20250313-uvc-eprobedefer-v3-1-a1d312708eef@chromium.org> <20250422180630.GJ17813@pendragon.ideasonboard.com>
-In-Reply-To: <20250422180630.GJ17813@pendragon.ideasonboard.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 23 Apr 2025 06:50:10 +0800
-X-Gmail-Original-Message-ID: <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHelesrjtdLbpQ4wqs-_HLIDR_oOasDUe41GrOFPkA28vVRIy-nBpD1INE
-Message-ID: <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] media: uvcvideo: Fix deferred probing error
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Douglas Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-
-On Wed, 23 Apr 2025 at 02:06, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Ricardo,
->
-> Thank you for the patch.
->
-> On Thu, Mar 13, 2025 at 12:20:39PM +0000, Ricardo Ribalda wrote:
-> > uvc_gpio_parse() can return -EPROBE_DEFER when the GPIOs it depends on
-> > have not yet been probed. This return code should be propagated to the
-> > caller of uvc_probe() to ensure that probing is retried when the required
-> > GPIOs become available.
-> >
-> > Currently, this error code is incorrectly converted to -ENODEV,
-> > causing some internal cameras to be ignored.
-> >
-> > This commit fixes this issue by propagating the -EPROBE_DEFER error.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 2886477ff987 ("media: uvcvideo: Implement UVC_EXT_GPIO_UNIT")
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/usb/uvc/uvc_driver.c | 27 +++++++++++++++++++--------
-> >  1 file changed, 19 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > index deadbcea5e227c832976fd176c7cdbfd7809c608..e966bdb9239f345fd157588ebdad2b3ebe45168d 100644
-> > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > @@ -2231,13 +2231,16 @@ static int uvc_probe(struct usb_interface *intf,
-> >  #endif
-> >
-> >       /* Parse the Video Class control descriptor. */
-> > -     if (uvc_parse_control(dev) < 0) {
-> > +     ret = uvc_parse_control(dev);
-> > +     if (ret < 0) {
-> > +             ret = -ENODEV;
->
-> Why do you set ret to -ENODEV here...
->
-> >               uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
-> >               goto error;
-> >       }
-> >
-> >       /* Parse the associated GPIOs. */
-> > -     if (uvc_gpio_parse(dev) < 0) {
-> > +     ret = uvc_gpio_parse(dev);
-> > +     if (ret < 0) {
-> >               uvc_dbg(dev, PROBE, "Unable to parse UVC GPIOs\n");
-> >               goto error;
-> >       }
-> > @@ -2263,24 +2266,32 @@ static int uvc_probe(struct usb_interface *intf,
-> >       }
-> >
-> >       /* Register the V4L2 device. */
-> > -     if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
-> > +     ret = v4l2_device_register(&intf->dev, &dev->vdev);
-> > +     if (ret < 0)
->
-> ... but not here ? The code below is also not very consistant.
-
-For all the "external" functions I was looking into populating their
-error code to probe(). Other drivers (check vivid for example) do
-exactly this.
-
-There is more value in returning the real cause of the error (ENOMEM,
-EINVAL) that the plain ENODEV.
-
->
-> >               goto error;
-> >
-> >       /* Scan the device for video chains. */
-> > -     if (uvc_scan_device(dev) < 0)
-> > +     if (uvc_scan_device(dev) < 0) {
-> > +             ret = -ENODEV;
-> >               goto error;
-> > +     }
-> >
-> >       /* Initialize controls. */
-> > -     if (uvc_ctrl_init_device(dev) < 0)
-> > +     if (uvc_ctrl_init_device(dev) < 0) {
-> > +             ret = -ENODEV;
-> >               goto error;
-> > +     }
-> >
-> >       /* Register video device nodes. */
-> > -     if (uvc_register_chains(dev) < 0)
-> > +     if (uvc_register_chains(dev) < 0) {
-> > +             ret = -ENODEV;
-> >               goto error;
-> > +     }
-> >
-> >  #ifdef CONFIG_MEDIA_CONTROLLER
-> >       /* Register the media device node */
-> > -     if (media_device_register(&dev->mdev) < 0)
-> > +     ret = media_device_register(&dev->mdev);
-> > +     if (ret < 0)
-> >               goto error;
-> >  #endif
-> >       /* Save our data pointer in the interface data. */
-> > @@ -2314,7 +2325,7 @@ static int uvc_probe(struct usb_interface *intf,
-> >  error:
-> >       uvc_unregister_video(dev);
-> >       kref_put(&dev->ref, uvc_delete);
-> > -     return -ENODEV;
-> > +     return ret;
-> >  }
-> >
-> >  static void uvc_disconnect(struct usb_interface *intf)
->
-> --
-> Regards,
->
-> Laurent Pinchart
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
+ <20250415135323.GC4031@noisy.programming.kicks-ass.net>
+ <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+ <20250416153226.GC17910@noisy.programming.kicks-ass.net>
+ <e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com>
+ <20250416195610.GC38216@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250416195610.GC38216@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
--- 
-Ricardo Ribalda
+On 2025-04-16 3:56 p.m., Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 03:45:24PM -0400, Liang, Kan wrote:
+> 
+>> I see. I think we can check the constraint table and update the overlap
+>> bit accordingly. Similar to what we did in the
+>> intel_pmu_check_event_constraints() for the fixed counters.
+>>
+>> I'm thinking something as below (Just a POC, not tested.)
+> 
+> I'll try and digest in more detail tomorrow, but having overlap it *not*
+> a good thing. Which is why I've always asked to make sure this
+> doesn't happen :/
+>
+
+I've checked all the existing event_constraints[] tables and features,
+e.g., auto counter reload.
+On the Lion Cove core, the MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a
+constraint mask of 0x3fc. The counter mask for the auto counter reload
+feature is 0xfc. On the Golden Cove, the
+MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a constraint mask of 0xfe.
+
+Other constraints (except the one with weight 1) are 0x3, 0xf, 0xff, and
+0x3ff.
+
+But I don't think it can trigger the issue which mentioned in the commit
+bc1738f6ee83 ("perf, x86: Fix event scheduler for constraints with
+overlapping counters"). Because the scheduler always start from 0. The
+non-overlapping bits are always scheduled first.
+For example, 0xf and 0x3fc. The events with 0xf (has low weights) must
+be scheduled first, which occupy the non-overlapping counter 0 and
+counter 1. There is no scheduling problem for the events with 0x3fc then.
+
+I think we are good for the static constraints of the existing platforms.
+
+> At the very least we should WARN if we find the dynamic constraint gets
+> us there.
+> 
+So the problem is only with the dynamic constraint.
+
+It looks like only checking the weight and subset is not enough. (It may
+trigger false positive for the 0xf and 0x3fc case.)
+I think the last bit of the mask should be taken into account as well.
+
+WEIGHT(A) <= WEIGHT(B) &&
+A | B != B &&
+LAST_BIT(A) > LAST_BIT(B)
+
+Thanks,Kan
