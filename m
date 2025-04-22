@@ -1,85 +1,44 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7826627CB15
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA99B27BF69
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322488; cv=none; b=kb/MIVnnEEOZndRP+rgAbiLryar2QeqpJOZeZTRWeQjr9vpo2HmoIHeaLXei9dlU0HC2ENeqNV011mfN3qzXHKZL/KE39sU1B2+uL+dCmQiRFNCehp2f+0aqI/b4gDv11sjmQXJNnxCRlZCXGZCAcJ8NsX94eq61xEmEY2v/aqs=
+	t=1745322490; cv=none; b=hYVX6NOCM0aC2+Hx1D2oDR2D8r07UIX9RRVvUisWrI01eJBpj1tZ4a8W/vJpZ1SOPTJIWlGJvFknL4z56xpopCFHTnWfcdaNctuPJWo2NJQO+mHvWgbPWyKTlGKGdrR3JuBv0Pdanc2/apz/Kx6Td/Pb2SFxocr74YC2LVO/+EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322488; c=relaxed/simple;
-	bh=mLZAKTqsts6ksQsJg0bZxf24qseksmOq76jaz9P1iSk=;
+	s=arc-20240116; t=1745322490; c=relaxed/simple;
+	bh=vvbSXOpv2PWldlCkgMw68EbwtInhF3Q/a+9cSwsTqWU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QhB2mEz408USdPPRL8WIsIUXk05JvagiB0Wxt0JTPCqNcB47lyP2mDzuYc1HM0LXHQCtfTNmlaJhwIQZ/vdU5f+d5W5W/bbwhBhv1e7T54x4uq1HQgXbTk19vRCKnWnMU4CPPnqlM73LiccJycw3KiQtb/mF/Qh/EPBwiZ8WSoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zdWqEfYl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sIm8ITGf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zdWqEfYl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sIm8ITGf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=cWtcEEYny2CkVIV3qQFO3Bk/cBiiBaXkU9XizF3QjgF92BzUfjX0wdemAedOQuMny4ZNjY7ViowS9noi8PbMFeuihUcOEM4DdOxcRldql1x6btK4h5sXvLBsQsv77+n9DcpNBLIr1w8+DugEShlbxt4rtMb1CCSWYXCM5GhNZZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F95sxA5l; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zdWqEfYl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sIm8ITGf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zdWqEfYl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sIm8ITGf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A35911F444;
-	Tue, 22 Apr 2025 11:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745322484;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F95sxA5l"
+Date: Tue, 22 Apr 2025 04:47:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745322485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
-	b=zdWqEfYlVoTC3aAZu2dAi+TfzxCki3KwIlKaMyDFb38rCk+G275ZTOhTFpcQcAZymYmfBU
-	UwIWEGproE1zY22GPLGg40kewOS4epddjYfIGl/CZbHZlGtHeGj7BoIQM62f7NHWOJOpmu
-	RBNM8Fhpi+gtZrtu75g4ghaL7b4UDBw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745322484;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
-	b=sIm8ITGfyw1GQ5IKjWInxDZvKUoOB46M+WgQ1SniYHWp8/zTxVVE3efe7NNFEj+jqjc72R
-	aX03dX10wG7pKIBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745322484;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
-	b=zdWqEfYlVoTC3aAZu2dAi+TfzxCki3KwIlKaMyDFb38rCk+G275ZTOhTFpcQcAZymYmfBU
-	UwIWEGproE1zY22GPLGg40kewOS4epddjYfIGl/CZbHZlGtHeGj7BoIQM62f7NHWOJOpmu
-	RBNM8Fhpi+gtZrtu75g4ghaL7b4UDBw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745322484;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
-	b=sIm8ITGfyw1GQ5IKjWInxDZvKUoOB46M+WgQ1SniYHWp8/zTxVVE3efe7NNFEj+jqjc72R
-	aX03dX10wG7pKIBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8ECCA139D5;
-	Tue, 22 Apr 2025 11:48:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NBemIvSBB2iIEwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 22 Apr 2025 11:48:04 +0000
-Date: Tue, 22 Apr 2025 13:48:03 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
-Message-ID: <20250422114803.GD3659@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250417142655.1284388-1-frank.li@vivo.com>
+	bh=DlOy5pgOMDLNOF17VOxP0jw2ph04ic2bIH7kzzlbOHI=;
+	b=F95sxA5lw7P8QmrrzD85lNvmnPmm9bJbaQFbZRyO8zsokGbePISBD4Zp2xa9m5HmyD4pZi
+	9InQKq9XKutv7roD05XGKcJvwpyyuBneY5YHZEVxT6DRVOviq6Q3intImd7OuS9jgn5B4l
+	YARCPhgTzAhhOduK1xEbRW0uCv5FvYk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
+	sj@kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, gourry@gourry.net,
+	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
+	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+	minchan@kernel.org, senozhatsky@chromium.org
+Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
+ compressed data
+Message-ID: <aAeBx9fJliZldLQO@Asmaa.>
+References: <20250402204416.3435994-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,47 +47,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417142655.1284388-1-frank.li@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:email,suse.cz:replyto];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 17, 2025 at 08:26:49AM -0600, Yangtao Li wrote:
-> Commit b28b1f0ce44c ("btrfs: delayed-ref: Introduce better documented
-> delayed ref structures") introduced BTRFS_REF_LAST, which can be used
-> for sanity checking.
+On Wed, Apr 02, 2025 at 01:44:16PM -0700, Nhat Pham wrote:
+> Currently, zsmalloc, zswap's and zram's backend memory allocator, does
+> not enforce any policy for the allocation of memory for the compressed
+> data, instead just adopting the memory policy of the task entering
+> reclaim, or the default policy (prefer local node) if no such policy is
+> specified. This can lead to several pathological behaviors in
+> multi-node NUMA systems:
 > 
-> In btrfs_ref_type() there was an assertion
+> 1. Systems with CXL-based memory tiering can encounter the following
+>    inversion with zswap/zram: the coldest pages demoted to the CXL tier
+>    can return to the high tier when they are reclaimed to compressed
+>    swap, creating memory pressure on the high tier.
 > 
-> ASSERT(ref->type == BTRFS_REF_DATA || ref->type == BTRFS_REF_METADATA);
+> 2. Consider a direct reclaimer scanning nodes in order of allocation
+>    preference. If it ventures into remote nodes, the memory it
+>    compresses there should stay there. Trying to shift those contents
+>    over to the reclaiming thread's preferred node further *increases*
+>    its local pressure, and provoking more spills. The remote node is
+>    also the most likely to refault this data again. This undesirable
+>    behavior was pointed out by Johannes Weiner in [1].
 > 
-> to validate the value. 
+> 3. For zswap writeback, the zswap entries are organized in
+>    node-specific LRUs, based on the node placement of the original
+>    pages, allowing for targeted zswap writeback for specific nodes.
 > 
-> And there is currently no enum or switch to use the upper limit,
-> so let's remove it.
+>    However, the compressed data of a zswap entry can be placed on a
+>    different node from the LRU it is placed on. This means that reclaim
+>    targeted at one node might not free up memory used for zswap entries
+>    in that node, but instead reclaiming memory in a different node.
 > 
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> All of these issues will be resolved if the compressed data go to the
+> same node as the original page. This patch encourages this behavior by
+> having zswap and zram pass the node of the original page to zsmalloc,
+> and have zsmalloc prefer the specified node if we need to allocate new
+> (zs)pages for the compressed data.
+> 
+> Note that we are not strictly binding the allocation to the preferred
+> node. We still allow the allocation to fall back to other nodes when
+> the preferred node is full, or if we have zspages with slots available
+> on a different node. This is OK, and still a strict improvement over
+> the status quo:
+> 
+> 1. On a system with demotion enabled, we will generally prefer
+>    demotions over compressed swapping, and only swap when pages have
+>    already gone to the lowest tier. This patch should achieve the
+>    desired effect for the most part.
+> 
+> 2. If the preferred node is out of memory, letting the compressed data
+>    going to other nodes can be better than the alternative (OOMs,
+>    keeping cold memory unreclaimed, disk swapping, etc.).
+> 
+> 3. If the allocation go to a separate node because we have a zspage
+>    with slots available, at least we're not creating extra immediate
+>    memory pressure (since the space is already allocated).
+> 
+> 3. While there can be mixings, we generally reclaim pages in
+>    same-node batches, which encourage zspage grouping that is more
+>    likely to go to the right node.
+> 
+> 4. A strict binding would require partitioning zsmalloc by node, which
+>    is more complicated, and more prone to regression, since it reduces
+>    the storage density of zsmalloc. We need to evaluate the tradeoff
+>    and benchmark carefully before adopting such an involved solution.
+> 
+> [1]: https://lore.kernel.org/linux-mm/20250331165306.GC2110528@cmpxchg.org/
+> 
+> Suggested-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-Added to for-next, thanks.
+For the zswap/zsamlloc bits:
+Acked-by: Yosry Ahmed <yosry.ahmed@linux.dev>
