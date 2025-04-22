@@ -1,116 +1,107 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197C01EB5F6;
-	Tue, 22 Apr 2025 07:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C261EDA2F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307150; cv=none; b=cQXYnRLy2uwAOzQU3Em4Wx5JQiO6H1j6Z3w1thoQj9qhJ3kjIvPwI+HZ+PvjfckoJlzRlQlaUQTaUD2YnxGLRqvbiZ73QB0s4yO3NaxVoSareKk2nYY7L4hKN5JOcllqqqdOqR50ze7t8GH9NA6FsqSLU3fyrXDymJ+jCX6I+WA=
+	t=1745307155; cv=none; b=J5Y7+GfV6qMVQJYdSW56zwgEAwad6oe3dRgWojwVPW+czJv5i0p++FNmyQOHkuNTGCQhL6WJ/p7VBATERD1Y9KVjZr7yGlPWDpdB/haEqbVWsPTgF5FXg2sWaOkt+FZXLSuiFUFWtI9OOCRdeT9LoN3cGB9DgDDxHxycNTVw1RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307150; c=relaxed/simple;
-	bh=Keqxor1ODBLPmVawW5vsbj3/9Z2VBK6VDWsYSbORC00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/OWHgbjwX6015ma4TJHRG4iXwD28vIrqfbTa0RTThOjCXqnnypfqPxbYMSM8HWNzFZhEkOE9zG11nKL7ydX3/ZYf/4iLLpSS/Vy8aOxKZJVEkR1c5Z3cWcQOqE1uEOGW9paN5tdxU5btC+ImZ9cshZBoHid/aZxnyNjLDXF9NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 0CE9D68AA6; Tue, 22 Apr 2025 09:32:22 +0200 (CEST)
-Date: Tue, 22 Apr 2025 09:32:21 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v8 23/24] nvme-pci: convert to blk_rq_dma_map
-Message-ID: <20250422073221.GA31688@lst.de>
-References: <cover.1744825142.git.leon@kernel.org> <f06a04098cb14e1051bddec8a7bdebe1c384d983.1744825142.git.leon@kernel.org> <20250422050050.GB28077@lst.de> <20250422072606.GC48485@unreal>
+	s=arc-20240116; t=1745307155; c=relaxed/simple;
+	bh=7Bk81mVUspbCCClBXouTuIH87HJRUhR0JL6gTSLiWO4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sIVIIh6xqm/53t8lTxbktCyWwK2vIUdayj+tHPla0xZjWkSKLRbv1CVgNZhv4P8FaMrvwBBdD0V0wPubgrDggUXVGWbhxyap6+crHxDzQGobwwS06U+BUILqJ5Q5b8121T17VI92JIUCAzAqhvYbIWLJmL2CVDcE/i2ubZd/5W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wZouJB1d; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wZouJB1d"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso2782568f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745307152; x=1745911952; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1gFPbHcslBrShPBfeniLTCdmwDJynv5JMNyf9loIAkY=;
+        b=wZouJB1dgu5gvYM4iiQ7c4tieBaP1OH1SUZpRKBBmbD/zR0RhUV1KnfPdc44PLgHAw
+         ihI9LeMT3HBF+t1pcUCByalalagoiMkpTnh0JiCT2WWKHHrvzEj1qPXAaZ/dgQkhCb2+
+         ylqylGeKE4shZMT7/Dl9GpCvC2zgn4V7xW7GaR0XsEdLw9DiqFq7EjR0AHa4LcbGMxX7
+         sZW1CDgcDvpYmcgxJTEwPzKLK1p5EGsf1k9wg1y1t/PtRGzhQgvubSrZCRm31od5xeqz
+         mL1iu2IW/PwEBB5c901FgY7T42xw5VefttK09oM+OnWK+dzfDKBHzxTIfKJuzjun1zNn
+         ZOwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745307152; x=1745911952;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1gFPbHcslBrShPBfeniLTCdmwDJynv5JMNyf9loIAkY=;
+        b=KgEb9p4q2XyOBX4E38YC96c9pSou/04td8aFDxtAtS/i3gy+IYHleHPDH87oa3mZAv
+         58A+jnhdVx6vPWvs90SwE8OHuq4Hdo8EuShSNfdF19pLgg7hrkn5q/Xz29aN0/dou7ME
+         U9SRCLqw6iwGagq8SgCYXDzgvUajguWH3oXXAcX5Ha6NKsuiEFrrCQPDaHYVHpUSYdJr
+         mt8V1VcmKqCFUdex0btuIRpcsBuJ5Rp+YhLhvPbTQS+2nc5PMNeEUF3l98mgyCre4iE8
+         cxYIQtpkQAE8/rzqyzJQddA4qv2Q6BbcHh7BtfViB/rIm5YtxAx8JNNRHFQu/oTqGVXw
+         NK/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX51toX2eg8BFjZwum5bZv9mBpTEVyssevuU3SHq/t/VPmJ/E2gAGq3awux0ZIvMStNKdwlE0lorFu4m+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRPzctC9LWLaHi7iCAyyBC2PJ9/MeOUaVwrbEQuwgCNN3lOxsK
+	Z/DWIWkiSzKc1l8qQJ9/EZsFWtwhc6CW/B2zIKAyO9KP5WF3Dy9FptuhOrxqAjU=
+X-Gm-Gg: ASbGncvKmOfcQbNl+c3m+a/fQMtOj91qeacpzErWpYSa8SnEiG5iyPoVhKjgdANNboA
+	AM0mYZFgxefw0TR30FYA0hq4hgSqICp9WqTeh2viXBzcJslnwp5wUvSHahW4Tv8pnaLBLzBMxB8
+	JRs8sqZD1TTlafIjQPbAc1wXAwlR2jxIi07fFxrv7efiNByzGZQG2FL4W290kmihQAjlgPUTamu
+	8pQbgdmLqRDvkNaS/b7+gSmtteAqMzGQx4Wma1lTNLQ6u6Uy5W/73pw9mo9YgEVG1QYItjqpXLV
+	3s1SNP6Ctu7ewu7pw0Y3StIz7kqQFQDSkmMak13GppewsJEShoUqTar/h0yrxg==
+X-Google-Smtp-Source: AGHT+IFclT1+OQXEDIxxx/AMqrjY/N1Yvy1xLXDrMHQkl58h0kU69MTBU2hwvhAytgvH99PcAzfK0g==
+X-Received: by 2002:a5d:648c:0:b0:39c:1f02:449f with SMTP id ffacd0b85a97d-39efba26220mr11676730f8f.2.1745307152441;
+        Tue, 22 Apr 2025 00:32:32 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43c079sm14450855f8f.50.2025.04.22.00.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 00:32:32 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: christianshewitt@gmail.com, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
+References: <20250421201300.778955-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH RFC v2 0/2] drm/meson: vclk: revert and re-fix vclk
+ calculations
+Message-Id: <174530715197.2805907.16376775353354108716.b4-ty@linaro.org>
+Date: Tue, 22 Apr 2025 09:32:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422072606.GC48485@unreal>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Tue, Apr 22, 2025 at 10:26:06AM +0300, Leon Romanovsky wrote:
-> On Tue, Apr 22, 2025 at 07:00:50AM +0200, Christoph Hellwig wrote:
-> > > +	dma_len = min_t(u32, length, NVME_CTRL_PAGE_SIZE - (dma_addr & (NVME_CTRL_PAGE_SIZE - 1)));
-> > 
-> > And overly long line slipped in here during one of the rebases.
-> > 
-> > > +		/*
-> > > +		 * We are in this mode as IOVA path wasn't taken and DMA length
-> > > +		 * is morethan two sectors. In such case, mapping was perfoormed
-> > > +		 * per-NVME_CTRL_PAGE_SIZE, so unmap accordingly.
-> > > +		 */
-> > 
-> > Where does this comment come from?  Lots of spelling errors, and I
-> > also don't understand what it is talking about as setors are entirely
-> > irrelevant here.
+Hi,
+
+On Mon, 21 Apr 2025 22:12:58 +0200, Martin Blumenstingl wrote:
+> This is a successor of a previous patchset by Christian [0]
 > 
-> I'm trying to say when this do {} while is taken and sector is a wrong
-> word to describe NVME_CTRL_PAGE_SIZE. Let's remove this comment.
-
-Yes, I'd say drop it.
-
-> > With the addition of metadata SGL support this also needs to check
-> > NVME_CMD_SGL_METASEG.
-> > 
-> > The commit message should also really mentioned that someone
-> > significantly altered the patch for merging with latest upstream,
-> > as I as the nominal author can't recognize some of that code.
+> Patch 1 reverts a previous fix for loss of HDMI sync when playing YUV420
+> @ 59.94 media. The patch does resolve a calculation issue. It also makes
+> all fractional rates invalid which is a bigger problem.
 > 
-> Someone :), I thought that adding my SOB is enough.
+> Patch 2 changes the whole drm/meson driver to use Hz as unit for clocks/
+> frequencies. And importantly it uses the relevant 64-bit maths helpers so
+> the code can still be compiled using for 32-bit ARM.
+> Maxime previously suggested using drm_hdmi_compute_mode_clock(). That's
+> still something to implement with future patches.
+> 
+> [...]
 
-Well, it also has Chaitanya's, so it must have passed through both of
-you at least.  Usually you want to add a little line explaining what you
-changed for non-trivial changes when changing it.
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
 
->         if (!blk_rq_dma_unmap(req, dev->dev, &iod->dma_meta_state,
->                               iod->total_meta_len)) {
-> -               if (entries == 1) {
-> +               if (iod->cmd.common.flags & NVME_CMD_SGL_METASEG) {
-> +                       unsigned int i;
-> +
-> +                       for (i = 0; i < entries; i++)
-> +                               dma_unmap_page(dev->dev,
-> +                                      le64_to_cpu(sg_list[i].addr),
-> +                                      le32_to_cpu(sg_list[i].length), dir);
-> +               } else {
->                         dma_unmap_page(dev->dev, iod->meta_dma,
-> -                                      rq_integrity_vec(req).bv_len,
-> -                                      rq_dma_dir(req));
-> +                                      rq_integrity_vec(req).bv_len, dir);
->                         return;
+[1/2] Revert "drm/meson: vclk: fix calculation of 59.94 fractional rates"
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/f37bb5486ea536c1d61df89feeaeff3f84f0b560
+[2/2] drm/meson: use unsigned long long / Hz for frequency types
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/1017560164b6bbcbc93579266926e6e96675262a
 
-It would be nice if we could share a bit of code with the data
-mapping, but I'm not sure that's possible.  I'll try to look into
-it and review things more carefully once I've reduced my backlog.
+-- 
+Neil
 
