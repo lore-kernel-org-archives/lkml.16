@@ -1,154 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438712D8DC2
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DC6253B66;
+	Tue, 22 Apr 2025 20:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354695; cv=none; b=aOPmZWh64e208P4MhcTZ4m6R354bDZ8tyVGHLlsEkewEb72NdOxn6PQgzZTbnnv7pCov+TJSmBuspLsXIDW2rnhC+uWJ8iem4rbIENRPJm4sakTchKagURVWHYfvoW4zsQRA9s/g/u9uuvIDV/awUh7oH9L4HwSbWYmO00TlKII=
+	t=1745354742; cv=none; b=nJxhbE+Ud1SNg/7/zUf368qjeZiDWarahmLSjT2CJ4su7z0Bozbrim6aWuyLN4dxBBgS86spYzKPFCiWrHgWd2RJd+5kiOmqF+5SIfHhA79insmKvdJJck5q0ojQM0lB03FR/KPyX5feQcEIVJMddWjqWRA7iuxNQucByHOaheo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354695; c=relaxed/simple;
-	bh=7VhY4PjIf81EWoXWHrFKIc936ZjMX/5D5dOVZdis28A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kCNy7EBiA2ZqQLJGponD/v7uauxzYm2pHCuivahpXfngpR4VTWLmsNnfRr83H8FINDNyhSzybsS/Jh4R3HadQTBXJBQbtkAC7wizi5yjInzF/0eRdMtnR3tzdRptSJBXOAlgyFB4tzExk7EgO9IYb42WH5Rux4JTHJ4XM7NgNxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zn+E87G0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745354742; c=relaxed/simple;
+	bh=MJ5S+KQLxIB48vX0Ihl/KfPtakrlHzBZwn8kDNqlnnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8wgGyJ3PzOmZjL5x7+KPeXHgixEatSJ6i1oKyy4gAquGOWGRLItDkbI7SRejW8BwxnnWcqEznKDsg3Z3D10YJCkrTrOeZPI5Oyh2MlyToB0uVqwSvQSQurs+zEe5wZxudghJkyfAKttcavkd6rWflZ8CE1VmPLvhGuzQOF1uGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsVPy6sn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zn+E87G0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745354691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S+hOL6iZRO1BIU3i23We9soIGz6Aij367ODuBHv8NHI=;
-	b=Zn+E87G0ymOYM8s1UVFq1KA0xseS0Akz8ax+BzoAGZRx2Fji9Vu1wA9S1v2cGt9M87kUh7
-	61uRfrPSHdYDeC27z6Dr5L/+n1z+MwflWTGWo70+SuQWgWgJjozH0w9RXsuw0gMpLxwppX
-	PkBLEws/yDcoAuQZdOBMFUqYexCjKxc=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-JcyJRqaQPXikpD9ghI48_Q-1; Tue,
- 22 Apr 2025 16:44:47 -0400
-X-MC-Unique: JcyJRqaQPXikpD9ghI48_Q-1
-X-Mimecast-MFC-AGG-ID: JcyJRqaQPXikpD9ghI48_Q_1745354686
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D46541955DCC;
-	Tue, 22 Apr 2025 20:44:45 +0000 (UTC)
-Received: from x2.localnet (unknown [10.22.65.240])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D409D18001DA;
-	Tue, 22 Apr 2025 20:44:43 +0000 (UTC)
-From: Steve Grubb <sgrubb@redhat.com>
-To: Richard Guy Briggs <rgb@redhat.com>, linux-audit@lists.linux-audit.osci.io
-Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
- LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org,
- Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
- Eric Paris <eparis@parisplace.org>, Paul Moore <paul@paul-moore.com>
-Subject:
- Re: [PATCH v2] audit,module: restore audit logging in load failure case
-Date: Tue, 22 Apr 2025 16:44:41 -0400
-Message-ID: <2755922.lGaqSPkdTl@x2>
-Organization: Red Hat
-In-Reply-To:
- <CAHC9VhRhr0GMQB59DZ4-xJ788yEgAsUMBLNdYFL2UxioBUPhGQ@mail.gmail.com>
-References:
- <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
- <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
- <CAHC9VhRhr0GMQB59DZ4-xJ788yEgAsUMBLNdYFL2UxioBUPhGQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsVPy6sn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28B0C4CEE9;
+	Tue, 22 Apr 2025 20:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745354740;
+	bh=MJ5S+KQLxIB48vX0Ihl/KfPtakrlHzBZwn8kDNqlnnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GsVPy6snjMDSqhZymlQ62f7cXJ3/O43N4/ajb2HAu4fmj4Xe9G3IXnXmVNJikHgUF
+	 Cv/Qoq0L5TdNk94EADlNyPXNO0H6jqo7l/N/aT4uWAeEs5ojaeNG6GGkidZO/XYC0P
+	 kforbtCfjMUOrXpcxMkyCz2QExsfWkEZZvmd2t7b2Tq2mbmayf1PaiZygkBt5r7zGh
+	 cjwkamQWlj4rWFcoVsXAjTOkox6owNw0H6RB80itISc/ZXDO/ToYXEJ7uOc+xwNU1w
+	 CzdVSz/NSwqatLsFV6xsrztiTIoPDmwkJZGNuiowT3WnCDKfEVWSrobC/+jJ9+lru2
+	 lZ/++QfT886sg==
+Date: Tue, 22 Apr 2025 22:45:31 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
+Message-ID: <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-23-jolsa@kernel.org>
+ <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
+ <aAehVOlj-W5kVyW3@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qmtdhiidifqdy7ta"
+Content-Disposition: inline
+In-Reply-To: <aAehVOlj-W5kVyW3@krava>
+
+
+--qmtdhiidifqdy7ta
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-23-jolsa@kernel.org>
+ <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
+ <aAehVOlj-W5kVyW3@krava>
+MIME-Version: 1.0
+In-Reply-To: <aAehVOlj-W5kVyW3@krava>
 
-On Tuesday, April 22, 2025 12:30:01=E2=80=AFPM Eastern Daylight Time Paul M=
-oore=20
-wrote:
-> On Tue, Apr 22, 2025 at 11:37=E2=80=AFAM Richard Guy Briggs <rgb@redhat.c=
-om>
-> wrote:
-> > On 2025-04-11 14:23, Paul Moore wrote:
+Hi Jiri,
+
+On Tue, Apr 22, 2025 at 04:01:56PM +0200, Jiri Olsa wrote:
+> > > +is an alternative to breakpoint instructions
+> > > +for triggering entry uprobe consumers.
 > >=20
-> > > On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
+> > What are breakpoint instructions?
 >=20
->=20
-> ...
->=20
->=20
-> > > > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > > > index 1fb9ad289a6f..efa62ace1b23 100644
-> > > > --- a/kernel/module/main.c
-> > > > +++ b/kernel/module/main.c
-> > > > @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info,
-> > > > const char __user *uargs,
-> > >
-> > > >
-> > > >
-> > > >     module_allocated =3D true;
-> > > >
-> > > >
-> > > >
-> > > > -   audit_log_kern_module(mod->name);
-> > > > +   audit_log_kern_module(info->name);
-> > > >
-> > > >
-> > > >
-> > > >     /* Reserve our place in the list. */
-> > > >     err =3D add_unformed_module(mod);
-> > > >=20
-> > > > @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *inf=
-o,
-> > > > const char __user *uargs,
-> > >=20
-> > > >      * failures once the proper module was allocated and
-> > > >      * before that.
-> > > >      */
-> > > >=20
-> > > > -   if (!module_allocated)
-> > > > +   if (!module_allocated) {
-> > > > +           audit_log_kern_module(info->name ? info->name :
-> > > > "(unavailable)");
-> >
-> > > In keeping with audit tradition, wouldn't we want this to be "?"
-> > > instead of "(unavailable)"?
->=20
-> Any comment on the above?  This is more important than the non-public link
-> ...
+> it's int3 instruction to trigger breakpoint (on x86_64)
 
-It would save some disk space and stay similar to all other events. I also=
-=20
-think it should be "?".
+I guess it's something that people who do that stuff understand.
+I don't, but I guess your intended audience will be okay with it.  :)
 
-=2DSteve
+> > The pages are almost identical.  Should we document both pages in the
+> > same page?
+>=20
+> great, I was wondering this was an option, looks much better
+> should we also add uprobe link, like below?
 
-> > > >             mod_stat_bump_becoming(info, flags);
-> > > >=20
-> > > > +   }
-> > > >=20
-> > > >     free_copy(info, flags);
-> > > >     return err;
-> > > > =20
-> > > >  }
-> > > >=20
-> > > > --
-> > > > 2.43.5
->=20
->=20
-> --=20
-> paul-moore.com
-> _______________________________________________
-> Linux-audit mailing list -- linux-audit@lists.linux-audit.osci.io
-> To unsubscribe send an email to linux-audit-leave@lists.linux-audit.osci.=
-io
+Yep, sure.  Thanks for the reminder!
 
 
+Have a lovely night!
+Alex
 
+--=20
+<https://www.alejandro-colomar.es/>
 
+--qmtdhiidifqdy7ta
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgH/+MACgkQ64mZXMKQ
+wqlMwQ//U7jqY0ACZbbASQiYf/M/8TTZb4gnLDYB3NTU5OiuEOnRuMbB/OMZOQju
+W6nUOJJXszsJ2a/GjDA6bhWe0Z64UoVpqRzQGXxLOVk31c8OlztiVgu40+jqaCbw
+syhUGyTAkYeT/wFK6mpU0bEo1Nr5TQotr0hBaqg8qwtdkAprI1jjSyJF4/R+33ou
+xj5+hMX2HGbsnc5xymVIJ4MFhlEdpVqoEHQe2JvBXmHzUoWGByv0x1yKIiDANgrJ
+rzq20V9uSVIGBQvjxr+GU22kz5LiLtyvaMnslwH+M6JabrYzr6Y+GfnforlGpmSP
+2L5iBrYHjVHAOAvhCUZo+F6q5XuGm642sSpu4U3vKwkgLpsdOiZvCrLNR5+qUXss
+LDbUErFKjSAGuKGYMBYXuiXHcZwdUtAPrGouQoRRO2erMpJZy9M/tYS8Gru/tFPa
+92JsnhsClRax8Vo/1L25HpcSvBXu46uQDgttKaU+5zMwAqAkWbGjy8UJWiNt30y/
+nR28GPuKkWfIQasIPypXL+j2MaQrV62i2CFuttHuQay11ItDjy37Hi8ah+kKYny6
+ZOn5rphEcVdT4MHW5soU9ggRVgJa5iv1t69KKIXMquj5GOFdr9iG+dsAR3+J5Gfd
+B1lJ+J8IY9fHTHHYzZelwVb4Y0WEIHaLSK7UjN13dxPjfQZGsuU=
+=mzRW
+-----END PGP SIGNATURE-----
+
+--qmtdhiidifqdy7ta--
