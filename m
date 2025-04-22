@@ -1,40 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287E5196;
-	Tue, 22 Apr 2025 06:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599E02192F5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303432; cv=none; b=Kt1UM53WuQuulwcKo+vxNIzAyEYTunqXiolwEBn3z1YdH7oCQOwAt7S4iTTDINaD9qKu3u+BhbHZh+mRHr29fUcQPHZgaboj91d6Co9LoCUBj+NpNJai+j1Osd4hB0/9kyR8mc13w6DV8hvO3dCaJUmj2gCJbaq/Ne7SPomUQoU=
+	t=1745303496; cv=none; b=eYbP55Si0st57VvkhVYLn4F+KtZ1nQPo+1U48GIOrZomd4yQgOozmV0ONU5CkgyPI3TUCHSuy4zqI9koExjNiQOTr+Zxi3Xc2W/foOe+SXVCQoQxuw/2dDo078hB8/NIFsdWpR3+i2ZqQhjWYGB70f22bAF9FmKkifQAsGm0HCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303432; c=relaxed/simple;
-	bh=6oEcP68OY46EgBJ0bqRJ0eLQMoG6KqgYe8EFBOXyEzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qWOG0SfiG2kXne+UkrXh4TFciqHduGugdUef2ADS8eZi7mDSp+E2aRXZRLOjtd6DKL/zLqcc+XshqyZR+bfc1OvOZD31kwMuEFDF8AF1NdCGxo2BxIPLhtN/HCGNU8n2ZFCZ21ewHl0O7PtBZLJTL5SDis9lzNyuvnbV2H93KUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfRP6yhp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfRP6yhp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD7CC4CEE9;
-	Tue, 22 Apr 2025 06:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745303431;
-	bh=6oEcP68OY46EgBJ0bqRJ0eLQMoG6KqgYe8EFBOXyEzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HfRP6yhpeg2i1/M5DNaoMhU8MgBJzHJNzA7lAWBY9uLqwKkdfI1rDfS9hpBG0o+2/
-	 J8TtdJtDnqLt0GggiOafKv47ult25K27PsQzzOx28IaXRBhzavKtIbToNKvxPqKeMh
-	 RufxoWBUDqtU/29qgzjxtJtK6a6NK96HwS70iIqPQjbC7ai9zAeTT66sB0urHIX32D
-	 AcuCJHHXn+zM/s00C8l2TTIZzq/tA7n5j4OQnGe6hFK3tRSo7WuEKA1RS4FbsbPSB2
-	 E6ka43M1iG8GF168qXqjyPq2FpfPqmlV8YFsLqVbgwVctr0stOkAr0maB6s84JwFst
-	 13lu3kUn6oWbw==
-Date: Tue, 22 Apr 2025 08:30:28 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Subject: Re: [tip: x86/microcode] x86/cpu: Help users notice when running old
- Intel microcode
-Message-ID: <aAc3hCVAnNLVo-Xh@gmail.com>
-References: <174526703555.31282.4002502301046834125.tip-bot2@tip-bot2>
+	s=arc-20240116; t=1745303496; c=relaxed/simple;
+	bh=2MaNizg3Uc+LkcxE/GMJMW3ZgFviKL4sEPfJZtzcaFY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hOFKCuE2aoCxfAqYcG36SczSpES3ofo6GclnUfuupywzu7utD+IJB/XadtYfqagq/L/MQTO4ePoOz/7eQlVkgnkjoGzL5qT27Ivm34FH2FtWTtTe6ahVR2URuOycn7i0sJff0UzpWBL0jca2lot+mEZfeWkbJNEHRx3/S911x7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 6e4ddbf5-1f43-11f0-ac3c-005056bd6ce9;
+	Tue, 22 Apr 2025 09:31:32 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 22 Apr 2025 09:31:31 +0300
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 08/29] x86/boot/e820: Print E820_TYPE_RAM entries as ...
+ RAM entries
+Message-ID: <aAc3wxUI2Jvqj2xx@surfacebook.localdomain>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-9-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,58 +44,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174526703555.31282.4002502301046834125.tip-bot2@tip-bot2>
+In-Reply-To: <20250421185210.3372306-9-mingo@kernel.org>
 
-
-* tip-bot2 for Dave Hansen <tip-bot2@linutronix.de> wrote:
-
-> The following commit has been merged into the x86/microcode branch of tip:
+Mon, Apr 21, 2025 at 08:51:48PM +0200, Ingo Molnar kirjoitti:
+> So it is a bit weird that the actual RAM entries of the E820 table
+> are not actually called RAM, but 'usable':
 > 
-> Commit-ID:     377781ebaa7c35ab3e91af29074d5f39100372f2
-> Gitweb:        https://git.kernel.org/tip/377781ebaa7c35ab3e91af29074d5f39100372f2
-> Author:        Dave Hansen <dave.hansen@linux.intel.com>
-> AuthorDate:    Mon, 21 Apr 2025 12:56:59 -07:00
-> Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-> CommitterDate: Mon, 21 Apr 2025 12:59:29 -07:00
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB usable
 > 
-> x86/cpu: Help users notice when running old Intel microcode
+> 'usable' is pretty passive-aggressive in that context and ambiguous,
+> most E820 entries denote 'usable' address ranges - reserved ranges
+> may be used by devices, or the platform.
 > 
-> Changes from v4:
->  - Update list from commit: 8ac9378 microcode-20241112 Release
+> Clarify and disambiguate this by making the boot log entry
+> explicitly say 'kernel usable RAM':
 > 
-> Changes from v3:
->  - Update changelog and documentation to clarify behavior when
->    microcode is updated at runtime.
-> 
-> Changes from v2:
->  - Make cpu_latest_microcode[] static
->  - Add a pr_info() when the CPU is not in the microcode version list
-> 
-> Changes from v1:
->  - Flesh out changelog
->  - Add Documentation/
->  - add_taint() and pr_warn() in addition to vulnerabilities/ file
->  - Add checks for running under VMMs. Do not taint and
->    report vulnerability as unknown.
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
 
-These should not be part of a commit log.
+Can't user space use that RAM?
 
-> From: Dave Hansen <dave.hansen@linux.intel.com>
+Shouldn't we rather refer to "OS usable RAM"?
 
-> +	/* Give new microocode a pass: */
-> +	if (boot_cpu_data.microcode >= m->driver_data)
-> +		return false;
 
-Typo:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  s/microocode
-   /microcode
 
-I've amended the commit in tip:x86/microcode accordingly, please let me 
-know if this version is fine to you too:
-
-  9127865b15eb ("x86/cpu: Help users notice when running old Intel microcode")
-
-Thanks,
-
-	Ingo
