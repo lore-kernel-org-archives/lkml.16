@@ -1,142 +1,100 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90C91F130F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B01E570E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302820; cv=none; b=YofYA75DBsgqgM7Tx1eT9OnB1UxuRNQ8+jj/GJK0JIPkpsbw1uOzkk/bAm6UeoXt/Aea4hPsgdb5YrGQ/Jpkqx8Af7tnf3b8cr3JLn9JRNG8LaaazhPRWY+WfElUvsBHO2KJcEM+4aIccwJxkTBq8PAfU+gostP1gMifrR0deIo=
+	t=1745302900; cv=none; b=FHGTW1jz5FBvZHKbb7ACatpnCERJ2KBnpiCUFf1ScQfKXDhsyC9Z+vpnyXQVW/bq1LNOeCcDAUt4lGvuB7NirVuLOyDpAE+PINF03EYGdPnxBMtUW8nRfY1vYTIMEKHBlXxthBxex+0TVSMd1AVIh2i4Yi0F7qTZdeYmXJ+FUgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302820; c=relaxed/simple;
-	bh=0s09EqLIwlM2iekdxdYJbToy4ZOVTiwzqJVwtbYQlC0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=XF9hKvdVgU04+3efqjJXSYZhjCGvIgVDfzjdt3pcespK2rSznABgOBrHEyYkVAm9hsAV2Ag2z9yEm5tfajAhdvxoTRFHmG6Ui64G1rS6CcvZTynQC5ldZjuHWm5fSzyqSNEJ+EvlPQliUGOKSBHS3JIrmaNiw3QlCd6K4dQFqHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RNYY25D5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lLql2wRh; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745302900; c=relaxed/simple;
+	bh=cAw1KiHXJS8Y5Pay+EoJvDyaaQNF23TRcKQ2PCc7VbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QZutri/h1kNUrH4tTF8MvUviDTnDGraNZRzxU+pz1EirpopXlwEgNRC0lcxB1hpmo5RY1WyOmUjZwTxKYBC80lL+On2C7Iy3TGmTjRqqHqjwVy3M/YAqli12u0vHL7Z8a5I0Bd/hQznA+yNOjvSjgNGzwmeJUWTDX+n8EhoaUK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J1cmNaA2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RNYY25D5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lLql2wRh"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 5BB921140190;
-	Tue, 22 Apr 2025 02:20:16 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 02:20:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745302816;
-	 x=1745389216; bh=EOJBzyuwNNLXuvDG/kOJMfmJJBgisqKl2nfidKYzGqE=; b=
-	RNYY25D5qj/fGot1ngHfauIWEu2pyFUYTrt3Ih81sDeW1Li9e3uiLkOWrZRw81lS
-	aup96vJS1KJU/9A8H050S+E84Vf0R+zlCL5wlemp56EvyjBi7oGAZMiTlKtLO4fk
-	Fe+nZCnYoYMdHQsQIY52q6zgJsciIZDU6Nu8aNf8x4DiJMSLYM9OQro4um8X3S9g
-	x0F7jTiY686Fxo9QHqQr1fBkePTSC5DvZ2bmNakkCXgDRXYXiaNCnYe5/jKFeWE9
-	/O3z/UhaNAUSxyZoVSlo7OAZWdlAW3ep8fXyqsBeDyraRtgKXxVWfILJaNdePAe2
-	HhvGKfFUeuYclwa/KRW8LQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745302816; x=
-	1745389216; bh=EOJBzyuwNNLXuvDG/kOJMfmJJBgisqKl2nfidKYzGqE=; b=l
-	Lql2wRhjkw3buoCuP+M4aDcX2f+WUwjDWo0XJeoo6rI4swU32sdBB0Tc8FXOHybM
-	2EeYBLdjDBuPGmGE4pg0h27u6bT+PHh+zKP15nOPMLz+/0qEE34eKBkR3pIlg7t7
-	IBvybioI5/OZUu9FBI3sWR0qPZowzkIK8AQdH2vOHvxcIFb70lO6ts44u/PPszxP
-	qSa1mc72IdUiWFe1eLtfOIyNsoosoP6BnGeNKkcYa9tIvOvH1Fn+GU4FQB3Jo5Be
-	ddLxIqD3JAYkK1J4VzztEveplfS0aUnB97yXO+lNde5176w0WEnAkarYXZuwpcud
-	Bcs+dC7r9uZGaOv0wM+VA==
-X-ME-Sender: <xms:HzUHaNfuFbSbij5etfbjEpAk7Be7U6hYlV_5fbp8vZkQEn3lc_GvXg>
-    <xme:HzUHaLP3FUoz0tfLQETVidxItKwcHEiGrP-mdIgEO8ADIapeSMFYSGipjykNxWmPs
-    aGpdsbb9Wl0zKLywQU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeftddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughpvghnkhhlvghrsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtohepmhgrrhifihhnhhhorhhmihiisehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohepnhhihhgrrhgthhgrihhthhgrnhihrgesghhmrghilhdrtghomhdprh
-    gtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphht
-    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
-    hopehlihhnuhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghp
-    thhtohepmhgrthgthhhsthhitghksehnvghvvghrthhhvghrvgdrohhrghdprhgtphhtth
-    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:HzUHaGihSdI_bb6eutYGdjxqc7VOvJOYJWUGvnpZzBGUl6DZ1xoenQ>
-    <xmx:HzUHaG-VIPGKnxEZf9WqkhNo_0MFKU_OHwXGPm8rL6EkQ-5QSkoF5Q>
-    <xmx:HzUHaJseuTHdgnNDcz5cqICLQ-tBeBENqlbPuR6hVizc_b5X0fJwDA>
-    <xmx:HzUHaFHmG59ApiBigsWIuBeEh5gJAf9PNVZKCNlXj-3wbkMc0ne8Zw>
-    <xmx:IDUHaOnjvzC3bauQfieDKF5ec5clZrpfHZcSSAefXFwglUpfjrgSnB67>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A51822220074; Tue, 22 Apr 2025 02:20:15 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J1cmNaA2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745302897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XlhC5ER/uZjdQRn1SDme5yjK3b4NzyHUHmBD4jzLIJs=;
+	b=J1cmNaA2VwLOtn2Pza29VQd5JTdcGP8JoPSj16msX5638MdFA9wcjYvOcWtNrhiSrSjKMw
+	TXEjAo83dhF6TT4+qE/diowQqycF45hh7GuEmj9GgQ/qUPLdqb95X0G6893SWdkNBc1pcE
+	pRjN/ikm1YzQ9Sx0LCPuq43rBwfrf+k=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-18-9d5JeT7aNzK4_RGk2FtZHg-1; Tue,
+ 22 Apr 2025 02:21:33 -0400
+X-MC-Unique: 9d5JeT7aNzK4_RGk2FtZHg-1
+X-Mimecast-MFC-AGG-ID: 9d5JeT7aNzK4_RGk2FtZHg_1745302891
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AC2A180048E;
+	Tue, 22 Apr 2025 06:21:31 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.44.32.45])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 600E71800367;
+	Tue, 22 Apr 2025 06:21:29 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id 2100B18003A9; Tue, 22 Apr 2025 08:21:27 +0200 (CEST)
+Date: Tue, 22 Apr 2025 08:21:27 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org, 
+	Eric Auger <eric.auger@redhat.com>, Eric Auger <eauger@redhat.com>, 
+	Jocelyn Falempe <jfalempe@redhat.com>, David Airlie <airlied@redhat.com>, 
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
+Message-ID: <f7yzgdhzc4w7j5zt74muisvh3efpvlag7es23c6nvsg25q5puu@o37kylmbkfad>
+References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
+ <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
+ <20250415095922-mutt-send-email-mst@kernel.org>
+ <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+ <d6315206-6ef5-4c44-8450-85aac01946c9@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc63700f27876af87
-Date: Tue, 22 Apr 2025 08:19:55 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Marwin Hormiz" <marwinhormiz@gmail.com>,
- "Dave Penkler" <dpenkler@gmail.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Dan Carpenter" <dan.carpenter@linaro.org>, matchstick@neverthere.org,
- "Nihar Chaithanya" <niharchaithanya@gmail.com>,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Message-Id: <eb79a1fc-080d-4be7-9d72-5fa248f48fee@app.fastmail.com>
-In-Reply-To: <20250421184144.220972-1-marwinhormiz@gmail.com>
-References: <20250421184144.220972-1-marwinhormiz@gmail.com>
-Subject: Re: [PATCH 1/1] staging: gpib: gpio: Fix memory allocation style in
- gpib_bitbang.c
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d6315206-6ef5-4c44-8450-85aac01946c9@suse.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 21, 2025, at 20:41, Marwin Hormiz wrote:
-> Change kzalloc() to use sizeof(*variable) instead of sizeof(struct type)
-> to improve code maintainability. This follows the kernel coding style
-> recommendation for memory allocations.
->
-> Signed-off-by: Marwin Hormiz <marwinhormiz@gmail.com>
-
-The build bot reply already shows that you did not even build test
-the patch. :(
-
-> @@ -46,10 +46,10 @@
->  			dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
->  	while (0)
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > index e32e680c7197..71c6ccad4b99 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+> >   static void virtio_gpu_shutdown(struct virtio_device *vdev)
+> >   {
+> > -	/*
+> > -	 * drm does its own synchronization on shutdown.
+> > -	 * Do nothing here, opt out of device reset.
+> > -	 */
+> > +	struct drm_device *dev = vdev->priv;
+> > +
+> > +	/* stop talking to the device */
+> > +	drm_dev_unplug(dev);
+> >   }
 > 
-> -#define LINVAL gpiod_get_value(DAV),		\
-> +#define LINVAL (gpiod_get_value(DAV),		\
->  		gpiod_get_value(NRFD),		\
->  		gpiod_get_value(NDAC),		\
-> -		gpiod_get_value(SRQ)
-> +		gpiod_get_value(SRQ))
->  #define LINFMT "DAV: %d	 NRFD:%d  NDAC: %d SRQ: %d"
+> It's the correct approach but also requires drm_dev_enter() and
+> drm_dev_exit() around all of the driver's hardware access.
 
-This change is completely unrelated to the rest of the patch
-and not described, aside from being broken. The macro is clearly
-confusing, so if you want to imprve this, I would suggest removing
-it and instead open-coding the contents.
+The functions adding requests to the virtio rings use
+drm_dev_enter+drm_dev_exit already.
 
-> @@ -1063,7 +1063,7 @@ static int bb_line_status(const struct gpib_board *board)
-> 
->  static int allocate_private(struct gpib_board *board)
->  {
-> -	board->private_data = kzalloc(sizeof(struct bb_priv), GFP_KERNEL);
-> +	board->private_data = kzalloc(sizeof(*board->private_data), GFP_KERNEL);
->  	if (!board->private_data)
->  		return -1;
->  	return 0;
+take care,
+  Gerd
 
-When you do this type of change, you have to check that the
-types are actually the same. The original code makes sense,
-your change is broken because 'private_data' as usual refers to
-a opaque pointer.
-
-     Arnd
