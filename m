@@ -1,190 +1,111 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AEF1D5151
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035C7201262
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316271; cv=none; b=dsx+K67rgzll4KCR7b2Xee7sWPVStQDDlsR0RHdp1ToiSYDAk49u2w3Y664oB4ak5fged3uvkLp1e66vSqIAGah1VT3kmxqT23V12sjG/7bLkc3XNqU1OQx3ii3+YluH/y3FT7VVKyfGWpqj4Wp9QRP/7wpCxVB+pVTB1CYaJ9k=
+	t=1745316299; cv=none; b=lyaLv3Ii5QTEIy+cqyW5LfUO4anU/17UiFWwD1vOSEJogZnZ4NYovRqeYOufT1y5hXq7lKXZJzhWAAfiR6cMcAIcHrq72AIcns/mJ+LVWY9HhrBmQyb4/qdpeb8uixHfTFFOTepvbz8MxpjoIR/WoWdqPeh+r5ABSw1ecNZq6hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316271; c=relaxed/simple;
-	bh=7lYgGV+kVZpFE7CtLbwBBvPR+oiIuKgqFz7vDrunuJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BYIsTPb4lNNjFFswIKdGUlXIl51Ccs5Lm+stoxB/9LMFojzYT3HFE1ocm9yTe5jJmrrCRhfvpUMoBDADoXZVcIwR32Wb+22w19Ds0UNZjYuoNQU14NZHHJ684/m7K2/SYEvRTNjpJlhY0N5zGyYUHvSS3npfbXMO7Uw8fqcnnAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PPWsPL6U; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745316299; c=relaxed/simple;
+	bh=CdPcvhf/ahPmKmIC1CmEeJxNI7czNB0FGTHZ5c1mbVs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kk2TJEuWaHW/QZAodOuDSR/3o9yPYtw2dkCwQ6epLkaP/uS/sSZsEda7SwXCPdZ3YQU6n3hOxnqOv6hqjGJL1FAoM06LwGA9Lw6OTfeXZUfzbBqQmRSx5AWfnWYkRKZIG3Yz+ny2NViGPkXNb+QyA3ytH8rfgnN5hxONeoJs944=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DvMJRwDT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PPWsPL6U"
-Date: Tue, 22 Apr 2025 03:04:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745316266;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DvMJRwDT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745316296;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sLvf3k1xS4oMdL7x+BMCStKTo3P8Sq3mlNgTCG4VAts=;
-	b=PPWsPL6Ul1kr4lt6gN0DPH73O7NYtDA94DLJM8vvd/QfNi2lQUdR5kW0vQ/4MpIEkrQ/iY
-	DbWA8deiDrY839n0fmScKPktYw25w87rubGvX7hph9ORt8kXfZrZ1Dq/ZdHIOUK4cU4mb9
-	kZ8voQXcoKkULj1FzfFtOY/hd9lmqYc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jim Mattson <jmattson@google.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 13/24] KVM: nSVM: Parameterize svm_flush_tlb_asid()
- by is_guest_mode
-Message-ID: <aAdpp_xAuKMLR0vx@Asmaa.>
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
- <20250326193619.3714986-14-yosry.ahmed@linux.dev>
- <a910ebd37e05091ec59ba7e731f10f6f7b9b97bc.camel@redhat.com>
+	bh=CdPcvhf/ahPmKmIC1CmEeJxNI7czNB0FGTHZ5c1mbVs=;
+	b=DvMJRwDTetzN9slqQeTdtJn653dVKzOtiXuGrjQGp8rljQVBPc326+XuH48sgNmLUagTBp
+	pXQxhj3IYYcoAWk8w4/wjwQWZLLGH4YYFn5/PjpS2Mj9mtnDNmvIA+Vd3ZFKckot3nSBaj
+	oGi8kcAOtx3b+DHaWW3viQrigGeK7dk=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-347-PiMt-4-TOCyV6SugMz3YxQ-1; Tue, 22 Apr 2025 06:04:55 -0400
+X-MC-Unique: PiMt-4-TOCyV6SugMz3YxQ-1
+X-Mimecast-MFC-AGG-ID: PiMt-4-TOCyV6SugMz3YxQ_1745316294
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acb23361d73so215377466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:04:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745316294; x=1745921094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CdPcvhf/ahPmKmIC1CmEeJxNI7czNB0FGTHZ5c1mbVs=;
+        b=PbGusi0U5OAiZnZD8Lhj+QwDpA7NumkESWA0fEEV0hlTZOW0i2dWHq4i9EXJGH6MD+
+         CfdEXP0UbrizcxZlEZ2LuX1XtzR3ng4wjXS5+MZUxVJu/Rr1mYkaPfY8affUCXoiLcAe
+         10QV+63DvRexTzlmtAAn5QTSR/aSXwEL0f72WNxqKcOZ6Iq1XoCFG8ANL3MbUB0xDkOJ
+         ray93bNb80NuMtYxl9KXGjXLw4vN8nec+pOudXjmRvARWdKuAgUcLah4X684u1obU+QQ
+         63DzKEKuDk8WaZi0HdIyXf3gXXAc7W23c1n96wMNY5hkahPMuxqXveA0/JfE2D2f9bsT
+         jv6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUu3vSiyLA1MeJZlahgy72F4E3QeI4VkJitHv2wcWrs7d2b0onGtxriOXPXP9AVzej1cnPMLlUwYpnehCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM9kIzq1zZpsiMvKM1010fJihFpsyrdbUBzbdkKThuCrOzP4qR
+	zNRNOqhpq1YDm5CfuoTYa8c7qBPpMobxXwOe2xkd9bSQ+cKQZBGUAIdQ06pw5pcXLmNPDChHnbo
+	PFYQc3Y8i1jzKPfkF4s3QPm1ywahpwxVDx/p99mdAt86WwL6xM0epvkwBu3xQy04N85Lumi+OwF
+	IIdc8OzJt/fEK2o/j1jHfgTYrqtH7Xw4t6dt4i
+X-Gm-Gg: ASbGncuy+YEhFe7MTzYMK/awLx3gxzGiH14W4x002NfaWYwIbK3oHN1UJWNhMKGaMRX
+	FMjo3T474fbc4rZRs0vQBlxEugecb3BWs8GuuNS+bLgjyy4MDQiR7tZL/wZEx6fWhpqA=
+X-Received: by 2002:a17:907:da5:b0:ac6:f5b5:36e0 with SMTP id a640c23a62f3a-acb6ee25062mr1472998766b.19.1745316294158;
+        Tue, 22 Apr 2025 03:04:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEocv/L0nToQ7kYM3gB28uBuFBeg8ALFgkKHZKEf3amBvzaQqbbtvC9G/XmbyN3ShDIskp2cRqNYtv1TgpjpYU=
+X-Received: by 2002:a17:907:da5:b0:ac6:f5b5:36e0 with SMTP id
+ a640c23a62f3a-acb6ee25062mr1472995866b.19.1745316293811; Tue, 22 Apr 2025
+ 03:04:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a910ebd37e05091ec59ba7e731f10f6f7b9b97bc.camel@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250417185757.2194541-1-costa.shul@redhat.com>
+In-Reply-To: <20250417185757.2194541-1-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 22 Apr 2025 12:04:42 +0200
+X-Gm-Features: ATxdqUHcspjbOIWY14j0F-oPXOZj_P8-oMYmXO0yXpJlZ0dsTkm6nnAn_YYmvic
+Message-ID: <CAP4=nvSf=iBs-nLQj3RVm+xeQyh6_5++qeb0+M4W=0Pqzcu6bw@mail.gmail.com>
+Subject: Re: [PATCH v2] rtla: Set distinctive exit value for failed tests
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	John Kacur <jkacur@redhat.com>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, 
+	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Jan Stancek <jstancek@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 04:10:06PM -0400, Maxim Levitsky wrote:
-> On Wed, 2025-03-26 at 19:36 +0000, Yosry Ahmed wrote:
-> > svm_flush_tlb_asid() currently operates on the current VMCB. In
-> > preparation for properly tracking TLB flushes for L1 and L2 ASIDs,
-> > refactor it to take is_guest_mode and find the proper VMCB. All existing
-> > callers pass is_guest_mode(vcpu) to maintain existing behavior for now.
-> > 
-> > Move the comment about only flushing the current ASID to
-> > svm_flush_tlb_all(), where it probably should have been anyway, because
-> > svm_flush_tlb_asid() now flushes a given ASID, not the current ASID.
-> > 
-> > Create a svm_flush_tlb_guest() wrapper to use as the flush_tlb_guest()
-> > callback.
-> > 
-> > No functional change intended.
-> > 
-> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> > ---
-> >  arch/x86/kvm/svm/svm.c | 39 +++++++++++++++++++++++++--------------
-> >  1 file changed, 25 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index 865c5ce4fa473..fb6b9f88a1504 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -4016,25 +4016,24 @@ static void svm_enable_nmi_window(struct kvm_vcpu *vcpu)
-> >  	svm->vmcb->save.rflags |= (X86_EFLAGS_TF | X86_EFLAGS_RF);
-> >  }
-> >  
-> > -static void svm_flush_tlb_asid(struct kvm_vcpu *vcpu)
-> > +static struct vmcb *svm_get_vmcb(struct vcpu_svm *svm, bool is_guest_mode)
-> > +{
-> > +	return is_guest_mode ? svm->nested.vmcb02.ptr : svm->vmcb01.ptr;
-> > +}
-> 
-> Not sure 100% about this helper, it name might be a bit confusing because
-> we already have a current vmcb. Maybe add a comment above stating this
-> this is to get vmcb which might not be currently active?
+=C4=8Dt 17. 4. 2025 v 20:58 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
+>
+> A test is considered failed when a sample trace exceeds the threshold.
+> Failed tests return the same exit code as passed tests, requiring test
+> frameworks to determine the result by searching for "hit stop tracing"
+> in the output.
+>
+> Assign a distinct exit code for failed tests to enable the use of shell
+> expressions and seamless integration with testing frameworks without the
+> need to parse output.
+>
+> Add enum type for return value.
+>
+> Update `make check`.
+>
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+>
+> ---
+> v2: Expanded the patch description as requested by Tomas
+>
 
-Yeah I spent some time trying to come up with an elaborate name then
-convinced myself that the is_guest_mode parameter will make it clear
-that the caller specifies which VMCB it wants, regardless of which VMCB
-is current.
+Thank you, looks good to me now.
 
-I can add a comment to make it clearer.
+Reviewed-by: Tomas Glozar <tglozar@redhat.com>
 
-> 
-> > +
-> > +static void svm_flush_tlb_asid(struct kvm_vcpu *vcpu, bool is_guest_mode)
-> >  {
-> >  	struct vcpu_svm *svm = to_svm(vcpu);
-> > +	struct vmcb *vmcb = svm_get_vmcb(svm, is_guest_mode);
-> >  
-> >  	/*
-> >  	 * Unlike VMX, SVM doesn't provide a way to flush only NPT TLB entries.
-> >  	 * A TLB flush for the current ASID flushes both "host" and "guest" TLB
-> >  	 * entries, and thus is a superset of Hyper-V's fine grained flushing.
-> >  	 */
-> > -	kvm_hv_vcpu_purge_flush_tlb(vcpu, is_guest_mode(vcpu));
-> > -
-> > -	/*
-> > -	 * Flush only the current ASID even if the TLB flush was invoked via
-> > -	 * kvm_flush_remote_tlbs().  Although flushing remote TLBs requires all
-> > -	 * ASIDs to be flushed, KVM uses a single ASID for L1 and L2, and
-> > -	 * unconditionally does a TLB flush on both nested VM-Enter and nested
-> > -	 * VM-Exit (via kvm_mmu_reset_context()).
-> > -	 */
-> > -	vmcb_set_flush_asid(svm->vmcb);
-> > +	kvm_hv_vcpu_purge_flush_tlb(vcpu, is_guest_mode);
-> > +	if (vmcb)
-> > +		vmcb_set_flush_asid(vmcb);
-> >  }
-> >  
-> >  static void svm_flush_tlb_current(struct kvm_vcpu *vcpu)
-> > @@ -4050,7 +4049,7 @@ static void svm_flush_tlb_current(struct kvm_vcpu *vcpu)
-> >  	if (svm_hv_is_enlightened_tlb_enabled(vcpu) && VALID_PAGE(root_tdp))
-> >  		hyperv_flush_guest_mapping(root_tdp);
-> >  
-> > -	svm_flush_tlb_asid(vcpu);
-> > +	svm_flush_tlb_asid(vcpu, is_guest_mode(vcpu));
-> >  }
-> >  
-> >  static void svm_flush_tlb_all(struct kvm_vcpu *vcpu)
-> > @@ -4065,7 +4064,14 @@ static void svm_flush_tlb_all(struct kvm_vcpu *vcpu)
-> >  	if (WARN_ON_ONCE(svm_hv_is_enlightened_tlb_enabled(vcpu)))
-> >  		hv_flush_remote_tlbs(vcpu->kvm);
-> >  
-> > -	svm_flush_tlb_asid(vcpu);
-> > +	/*
-> > +	 * Flush only the current ASID even if the TLB flush was invoked via
-> > +	 * kvm_flush_remote_tlbs().  Although flushing remote TLBs requires all
-> > +	 * ASIDs to be flushed, KVM uses a single ASID for L1 and L2, and
-> > +	 * unconditionally does a TLB flush on both nested VM-Enter and nested
-> > +	 * VM-Exit (via kvm_mmu_reset_context()).
-> > +	 */
-> > +	svm_flush_tlb_asid(vcpu, is_guest_mode(vcpu));
-> >  }
-> >  
-> >  static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
-> > @@ -4075,6 +4081,11 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
-> >  	invlpga(gva, svm_get_current_asid(svm));
-> >  }
-> >  
-> > +static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
-> > +{
-> > +	svm_flush_tlb_asid(vcpu, is_guest_mode(vcpu));
-> > +}
-> > +
-> >  static inline void sync_cr8_to_lapic(struct kvm_vcpu *vcpu)
-> >  {
-> >  	struct vcpu_svm *svm = to_svm(vcpu);
-> > @@ -5187,7 +5198,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
-> >  	.flush_tlb_all = svm_flush_tlb_all,
-> >  	.flush_tlb_current = svm_flush_tlb_current,
-> >  	.flush_tlb_gva = svm_flush_tlb_gva,
-> > -	.flush_tlb_guest = svm_flush_tlb_asid,
-> > +	.flush_tlb_guest = svm_flush_tlb_guest,
-> >  
-> >  	.vcpu_pre_run = svm_vcpu_pre_run,
-> >  	.vcpu_run = svm_vcpu_run,
-> 
-> 
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Tomas
 
-Thanks!
-
-> 
-> 
-> Best regards,
-> 	Maxim Levitsky
-> 
-> 
-> 
-> 
-> 
