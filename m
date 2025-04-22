@@ -1,97 +1,132 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB822918FF;
-	Tue, 22 Apr 2025 16:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745339027; cv=pass; b=jgpEyKpeOedol//jWfOT642Ux+QCbFqyDTDDvc1W0e07FrGILsSEnn/rcOeK1t8DfyAdDvIfJ2eayPZNPHddDAi1VWFqHm9Apfjmuc88JCEcIZtMVMLOWBmd8LXu9h2nzGuFdGWQtiHqCe2eT5P99asqLYnViBUBYhbPWCUkjKA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745339027; c=relaxed/simple;
-	bh=vJLo1SAXOEL8jJq2shI0SXXGScBhN8GY9w5yBhm7w5Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bDZTxRzN8pYtZOMCyGo9HlvMq0FidZsVCJjayWeimPLEG28gFIF4QH5YQHOyxdrZL63UzOA22JAncyeRQ+qHuncN2RJMZ6Fo5vwmHdU4AmfJnBsoSz9FkIAyeswO8CkcHy5pqBshhXNwdR5syaI/zzDZ+GYfKB9f6UROCqyXszk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=Pv+e9eH3; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D454290BDA
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745339033; cv=none; b=LtzZcFXv30EQBrzuvJX6lrcTdiwcJf1HVQhZcR0zsi2QjwqCrwqirXxSxPzLu4H2TsuKR2GD3/HrT/92TIfGQS404HXclObVJU4umWYfWAhZSDsYLcCdjfeVZfQ7mN9WOhlugfAHKig6iHi7DBYmqFnlp4hQagzRwa/e9f6fc/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745339033; c=relaxed/simple;
+	bh=V1few9iADl3Jql37d2sSjWVyST8COex3O6hgsGvnL9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WSzov7rDT1Mx65RqrQ797AnQAarC8vvTmWYn27JuGNJytoArlHQrqMIQ368pnujxo5xTJ/mnIme6ZvtCCefIOJF6G5jjVO/jhzWmOGiVrm6Q7FeXILhtSKbxSU6RjhcvVPOIZQdVSPMBt+1/4K/FSgbOHom2g3Qb6RbpWK4THtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=MX8rfLpZ; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="Pv+e9eH3"
-ARC-Seal: i=1; a=rsa-sha256; t=1745339009; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=TYyfRxCdzIpIgWKgNSE+gRu2Yx+DLe3sMn33GgGr7AvTLi39f/YcFH9wMs7flSeImNqsRg+QAqT/2Cy0H6ZK9zlmhRkTy45r2XSmaWaYLC8oR32FW2u2MaylctzMY6DgG0yMoFUjjaLRRe5dilad2nVIcTQz3btTgTcXhdF37IA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745339009; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=rEwnOtEV8d3LGVq1BDTwLd40sKEfTcqEpmUBhVrools=; 
-	b=NtIpdsDq+AjI12Pb+9xq/hCRbdYvsHXfKfLpM6qGjM+y9y7T+kKkjjPZcqjmx27vz7bElJU3KA/0grQW9lAvT4DH7/7Q+YDSsxPvtX7dpvr59y0aBxTGljjQqSxCzXc85JBIbUR1Gi6kxGI00S8f34UICQso4OvCGcRORLlxLhk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745339009;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=rEwnOtEV8d3LGVq1BDTwLd40sKEfTcqEpmUBhVrools=;
-	b=Pv+e9eH3EKh6j7+yRLxi5l7fqBCBEL7K738huaCFwLg6uf7TaeahOeurbxGaKpT8
-	iaK6RoJbFplwI8A0hkGIxNGZ1eberti/pPZjTQo+816vwTKyptrOcIn0bCpJSQkj+vm
-	0dcjkXDRzFgPJbuKKP/5uwmM/D6FSmKdnYi8eXLXxH46dcbcKgwz8jhZUmsa4RE1U1o
-	uxjahZGw03JQhM14uE6FVkkB8Drh8eprvhh5cauxrxewWctmG66ro1GqS/r/4eujvT+
-	ZxFWiEiRp/SgJl5u3Z/P/Mk5YLG1gLbcCVG3DD9RuFVxDCwhTB2ECAT0z12X0H1SY6y
-	iGK4zVfquQ==
-Received: by mx.zohomail.com with SMTPS id 1745339006390925.2438196310163;
-	Tue, 22 Apr 2025 09:23:26 -0700 (PDT)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [RFC PATCH 3/3] riscv: dts: starfive: jh7110-pine64-star64: force no USB overcurrent
-Date: Wed, 23 Apr 2025 00:22:50 +0800
-Message-ID: <20250422162250.436169-4-uwu@icenowy.me>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="MX8rfLpZ"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b0c68092so4576406b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745339030; x=1745943830; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k21lSdGFw1ABvj7WqNf9xvlJy5uS9lN5lvHH4c8/sSI=;
+        b=MX8rfLpZHlPbpZJhzgmC0WuqaXi5gxGij7pWSEGOirRq98iMFMu2Hv+p4PAiluJiFi
+         /HcLY6neH9zdv2SLPPxxVwaONKT+i7rGXlyYE9PTb2CmODuKukgmQPz9mGpJYS0QgJGl
+         btDD2N8z6z05fNwJ++UYUr5RjcvFVMYs5OMBnjShQ2kHoznC5xLTdDfb+Dh4JUZxrVG+
+         v1mheup4GYh1v0IdcyeUH6ERa8ng8Bj9v6gLdDnm81UOw1rC985JT8bYBYKOC25YTNeI
+         VWI0ZUKj+APOg66+a8+R3aAoA94MwiEyoBEuW3RVayt9QIBkxOZmSXejSsjxt69qiXyM
+         UrMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745339030; x=1745943830;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k21lSdGFw1ABvj7WqNf9xvlJy5uS9lN5lvHH4c8/sSI=;
+        b=isGOBQj6/4Z3B1itM1HZBkat8XBAKgIyEktKrXyNyX/d2dwaTnaSx1UjwVgniMhYKU
+         Q0l9ZbKIQvV1jmlfF6QdDum2fbRHanobZI7sZeka7bZUWfuUego3ZaVo0hokwp8l4bil
+         dfO9ESrOGbxdzyalsjhOPjFQfAxEfRI+AkOy5jhoI7vGM4WXFX9bwCHqguezN6CwW69J
+         gF7K1SOgkcK0QY5MhjK5kqgaGxORvxg03FGREk6plWEP1fpT/ePrlws0lJRdTeqfcpG+
+         JHoD13LrEeHdTvTF4K6H9dS9z58rovRM99/sklyE/5YcpgkLbEhFUIdi2r7Hzc4wDwnv
+         vZSA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+FnPIKPInnOL63fVjKht9GVQ8Vo5PRvkctncBJwfRUMrqn8sb7ufM/7e27XIBT89stbQ8PnB34O81a1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1N+YsaTulQv9pPeIDUvi32gNxefRprRCJgTlRUGzbPsS9j//O
+	fYz+EtSLHD/4xNJnrGr43T4BI3yCnvbawPttizPEjBkVEkQ0QXZyHrU0LqlRFBVpZ4fv2VHujsj
+	A1tw=
+X-Gm-Gg: ASbGncs8mo2HEONPOrqLI6YTc7M1uQuj4cF2sj6O/aDEF+3IrCXMHcKAfRSBJqxOUHf
+	LTFOQsqwvAi3k84PrFP1rTplNFXDT+pdU6XPTsl5d3y72oBj29nHOj4rmmywvSWQAU9S9Qtw4X7
+	ntBR9ipjxnjGVVnZOaEFI7DUcOTbyp4KJ10Nyq3zrG6A89mwIJdvnGH/jtjb1w5bLiN6o9z1B1L
+	hHRDybXlhGC8pRLkwYqhIJSdOeXPz7zdZ5iXuEMC5hyZc39bFjXnhd6D+62s1UKqu04v39bftGi
+	rJHTC7BdZk85SaFLs3rO5Q/dkWswJqao/l7nI631vjoeO87WKS6c
+X-Google-Smtp-Source: AGHT+IGBaYB+zcFYNZod6Dyq/XeUaZqkUk/RN2FexFvjQuv/xDbjUf/BD8XILM+dfMbhssRMX5dz+g==
+X-Received: by 2002:a05:6a00:b4e:b0:736:5504:e8b4 with SMTP id d2e1a72fcca58-73dc156b0c4mr22113079b3a.19.1745339030561;
+        Tue, 22 Apr 2025 09:23:50 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e13e1sm8850825b3a.46.2025.04.22.09.23.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 09:23:49 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE),
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Shuah Khan <shuah@kernel.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v2 0/5] riscv: misaligned: fix interruptible context and add tests
+Date: Tue, 22 Apr 2025 18:23:07 +0200
+Message-ID: <20250422162324.956065-1-cleger@rivosinc.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422162250.436169-1-uwu@icenowy.me>
-References: <20250422162250.436169-1-uwu@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-The Star64 board has no GPIOs to indicate USB overcurrent, however the
-USB controller would stop to work if the overcurrent_n signal it gets is
-low (which means overcurrent situations happening because of the _n).
+This series fixes misaligned access handling when in non interruptible
+context by reenabling interrupts when possible. A previous commit
+changed raw_copy_from_user() with copy_from_user() which enables page
+faulting and thus can sleep. While correct, a warning is now triggered
+due to being called in an invalid context (sleeping in
+non-interruptible). This series fixes that problem by factorizing
+misaligned load/store entry in a single function than reenables
+interrupt if the interrupted context had interrupts enabled.
+In order for misaligned handling problems to be caught sooner, add a
+kselftest for all the currently supported instructions .
 
-Use the pin controller to force the overcurrent_n signal to be high in
-order to ensure stable behavior of the USB controller.
+Note: these commits were actually part of another larger series for
+misaligned request delegation but was split since it isn't directly
+required.
 
-Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
----
- arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts | 2 ++
- 1 file changed, 2 insertions(+)
+V2:
+ - Use an array of struct to simplify misaligned load/store selection
+ - Revert use of irqentry_enter()/exit() to irqentry_nmi_enter() for
+   kernel space.
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-index 31e825be2065a..dab0e0054e648 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-+++ b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
-@@ -81,6 +81,8 @@ &spi0 {
- };
- 
- &sysgpio {
-+	starfive,force-high-inputs = <GPI_SYS_USB_OVERCURRENT>;
-+
- 	usb0_pins: usb0-0 {
- 		vbus-pins {
- 			pinmux = <GPIOMUX(25,  GPOUT_SYS_USB_DRIVE_VBUS,
+Clément Léger (5):
+  riscv: misaligned: factorize trap handling
+  riscv: misaligned: enable IRQs while handling misaligned accesses
+  riscv: misaligned: use get_user() instead of __get_user()
+  Documentation/sysctl: add riscv to unaligned-trap supported archs
+  selftests: riscv: add misaligned access testing
+
+ Documentation/admin-guide/sysctl/kernel.rst   |   4 +-
+ arch/riscv/kernel/traps.c                     |  64 +++--
+ arch/riscv/kernel/traps_misaligned.c          |   2 +-
+ .../selftests/riscv/misaligned/.gitignore     |   1 +
+ .../selftests/riscv/misaligned/Makefile       |  12 +
+ .../selftests/riscv/misaligned/common.S       |  33 +++
+ .../testing/selftests/riscv/misaligned/fpu.S  | 180 +++++++++++++
+ tools/testing/selftests/riscv/misaligned/gp.S | 103 +++++++
+ .../selftests/riscv/misaligned/misaligned.c   | 254 ++++++++++++++++++
+ 9 files changed, 623 insertions(+), 30 deletions(-)
+ create mode 100644 tools/testing/selftests/riscv/misaligned/.gitignore
+ create mode 100644 tools/testing/selftests/riscv/misaligned/Makefile
+ create mode 100644 tools/testing/selftests/riscv/misaligned/common.S
+ create mode 100644 tools/testing/selftests/riscv/misaligned/fpu.S
+ create mode 100644 tools/testing/selftests/riscv/misaligned/gp.S
+ create mode 100644 tools/testing/selftests/riscv/misaligned/misaligned.c
+
 -- 
 2.49.0
 
