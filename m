@@ -1,60 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from send174.i.mail.ru (send174.i.mail.ru [95.163.59.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B5C25CC59;
-	Tue, 22 Apr 2025 21:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D21829A3EE;
+	Tue, 22 Apr 2025 21:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.163.59.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357692; cv=none; b=q1pFRPw3kKXdxp7vEwYle9sgMDPeKve5k8BkkSv/PWSA77qGfmnnpM6rKFPM499eSMCmyvUfcqT1QnCKCF7NFiCRUyp5o4aNweg56WD6GxK5ZOVpV3gUrz7BzEc+4MABNgnOdB67v8PWYi3upkJ8VYpiC8lcQIXPPcSs5vt/uIY=
+	t=1745357757; cv=none; b=A41wWxHlsh1upIVIoRibiRPxzP46eEq980Q52SpExx9liX8jsVz0aoab0RdLzTEe5QiIl8Eu8CgUcLdam/oT6Q/sti6zDB1jIL0z0opkiQI/WvMZ8YNE6JgNU/RntLwmg7dLyuDFg16+hXRfXp6z+/yFsSTJarUm3qzRv3/uK7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357692; c=relaxed/simple;
-	bh=Lsz0SmSLHBuNAOhBY+Z7GEFPJPrtXYFlVmulYacxyns=;
+	s=arc-20240116; t=1745357757; c=relaxed/simple;
+	bh=msVimTUvFbIShkv6CnxpHZrC0Ol/XH1r4gnOMBpoiVM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GvpHmnaEQst2lWd9zpZi+a1jgDAzY+SnfsohTwl3gzqr4u/QfJuj75HH/LYewbxus1q3/l07DsUIQ2rL8NSblSDjN3CD34Bxlo/kNd4qI0sg9zkrS3iZ5TNv72LSHYT4BNJO553v7V5or7UgGefBAQrKxBr6AMd/CymnTO50QB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RpJd7j2w; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version; b=IlHRRx7TAvM5+u8fcVZBaV51AOovvBGlrpew8IRsZWRE8Ml2VBQ1UAuV4kpWUbNhSP+M94mqeu5yT/AH2+GkgeYqqgJA9FD9ETY0VYs9pcwvego/UmrkVvdKtJheKx1bCb2momdTZObew42nA3DKzNwcVBtRocZoWfyGpEufhxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=VOZiaRd6; arc=none smtp.client-ip=95.163.59.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RpJd7j2w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745357689; x=1776893689;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Lsz0SmSLHBuNAOhBY+Z7GEFPJPrtXYFlVmulYacxyns=;
-  b=RpJd7j2wfpmDHFy09wSh6MIYglgEaHlSPgNuFyW+BiSx4ZdYHnO8oFLa
-   8LtsjwP3zd2nPicu4QF9FvuRx+lsflGp25Ud8dWfGuVzZnOByvNwySFkN
-   +xSy135c1XRiPXbUrde1xAcs4QFwVe/vvfpv82RQ3zownutkDW558dLOX
-   +/pjqP4FsSp+DtKQuYU7hRQgMScN4UwV2kRe+bweUeS4LKIf/7Hmnp9mb
-   mN/oYllL1jFeV97sffzNUWdzmEZL3JSaFfuHkW/fVHkN3fiAIh/zE0lDD
-   VlMaW7HI2urRyMukac0KeYHCHYC5OkMG9GUzet8Vmly7E/O7V9JnkuLIw
-   A==;
-X-CSE-ConnectionGUID: PdHx6LhUSD6cLEXir8jCzg==
-X-CSE-MsgGUID: II1W1QLqTyyPOjFFf8dgUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46053990"
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="46053990"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 14:34:44 -0700
-X-CSE-ConnectionGUID: ZZ/6caK2SeyVT2FnRkQcMg==
-X-CSE-MsgGUID: LEtV1NOXToucSih3/zmnhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="133070685"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by orviesa008.jf.intel.com with ESMTP; 22 Apr 2025 14:34:43 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="VOZiaRd6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=y07PAh3BLlv2HQ1gSCyzqMUYGkS88zHMrjyVOGu4yu8=; t=1745357755; x=1745447755; 
+	b=VOZiaRd6FL4WkTSQiG/obgfkH8WKfFP+A7/BJxLzMEgKD5/QFIkbAz200JL/oBXF8hLWlgEwjKg
+	D+ZJgvHniKEBx8+fIQu+XB4550xMG9R8przv2BCvj/+rHnRNuVW7I3fCQr8rbK3SHUIoVdurW0y2i
+	oH5V+3pADWqdtj2m00w=;
+Received: by exim-smtp-77d8cdf77b-wlhm8 with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1u7LHL-00000000BOp-2Oze; Wed, 23 Apr 2025 00:35:44 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
+	Lee Jones <lee@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alex Elder <elder@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Andy Gross <agross@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	Loic Poulain <loic.poulain@oss.qualcomm.com>,
+	Robert Foss <rfoss@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Kees Cook <kees@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	David Wronek <david@mainlining.org>,
+	Jens Reidel <adrian@mainlining.org>
+Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 3/5] platform/x86/intel: power-domains: Add interface to get Linux die ID
-Date: Tue, 22 Apr 2025 14:34:25 -0700
-Message-ID: <20250422213427.1943328-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
-References: <20250422213427.1943328-1-srinivas.pandruvada@linux.intel.com>
+	linux-pm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	linux-mmc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	linux-remoteproc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org,
+	linux@mainlining.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 20/33] dt-bindings: i2c: qcom-cci: Add the SM7150 compatible
+Date: Wed, 23 Apr 2025 00:31:24 +0300
+Message-ID: <20250422213137.80366-4-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422213137.80366-1-danila@jiaxyga.com>
+References: <20250422213137.80366-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,111 +130,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Authentication-Results: exim-smtp-77d8cdf77b-wlhm8; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-4EC0790: 10
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD985535D2C87FE65BB97DD4303B9AD225130C860A3DF32F5F900894C459B0CD1B97BB5A07D2AA7A60433594132A326AF8BF6BEDB69781F65E6726B236C0A6ED22E2208A4954BE01924
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7F9D3BE5B596754B8C2099A533E45F2D0395957E7521B51C2CFCAF695D4D8E9FCEA1F7E6F0F101C6778DA827A17800CE789066434B85BF7C7EA1F7E6F0F101C67CDEEF6D7F21E0D1D9295C2E9FA3191EE1B59CA4C82EFA6585F2ED231F9B98A558D1BBA29F9A7A3F74779480A6B9F6043117882F4460429724CE54428C33FAD305F5C1EE8F4F765FCECADA55FE5B58BB7A471835C12D1D9774AD6D5ED66289B52BA9C0B312567BB23117882F44604297287769387670735201E561CDFBCA1751F6FD1C55BDD38FC3FD2E47CDBA5A96583BA9C0B312567BB2376E601842F6C81A19E625A9149C048EE0AC5B80A05675ACD985B8ACC81218E19D8FC6C240DEA76429C9F4D5AE37F343AA9539A8B242431040A6AB1C7CE11FEE3DA7BFA4571439BB2040F9FF01DFDA4A8C4224003CC836476E2F48590F00D11D6E2021AF6380DFAD1A18204E546F3947CB11811A4A51E3B096D1867E19FE1407959CC434672EE6371089D37D7C0E48F6C8AA50765F7900637AD0424077D726551EFF80C71ABB335746BA297DBC24807EABDAD6C7F3747799A
+X-C1DE0DAB: 0D63561A33F958A5D49362BF98D1FE035002B1117B3ED6961C0C1FEA2073AC9A14DB8790748E3E77823CB91A9FED034534781492E4B8EEADC8D8B8CB12567299C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF3FED46C3ACD6F73ED3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFC4AFD8C2BC22464C808A79B66DB6D97FBE88CBD0636E26826671FC92FC799F8B192AF36DABE8584568A835CA8743990B79266EB102E5D1C1D59B53E1D0EAB012CE43DF8B8437DD6DEFF8118B638B08AA02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+ObcCpyrx6l7KImUglyhkEat/+ysWwi0gdhEs0JGjl6ggRWTy1haxBpVdbIX1nthFXMZebaIdHP2ghjoIc/363UZI6Kf1ptIMVS+uSU+BUhgvghW43qVva/M=
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F9AF3E6DDD6D95881582B80AE0CC324097FD9F80C453DF64D66C39E7DD362DEB22C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
-The die ID in the Linux topology sysfs is a logical identifier that
-differs from the one presented in CPUID leaf 0x1F or via MSR 0x54.
+Add the SM7150 CCI device string compatible.
 
-Introduce an interface that returns the Linux CPU die ID based on a
-given package ID and power domain ID. This mapping is stored during the
-CPU online callback in an array.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 ---
- .../platform/x86/intel/tpmi_power_domains.c   | 34 ++++++++++++++++---
- .../platform/x86/intel/tpmi_power_domains.h   |  1 +
- 2 files changed, 31 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.c b/drivers/platform/x86/intel/tpmi_power_domains.c
-index 2f01cd22a6ee..9aaebd74a2af 100644
---- a/drivers/platform/x86/intel/tpmi_power_domains.c
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.c
-@@ -74,6 +74,8 @@ static enum cpuhp_state tpmi_hp_state __read_mostly;
- 
- static cpumask_t *tpmi_power_domain_mask;
- 
-+static u16 *domain_die_map;
-+
- /* Lock to protect tpmi_power_domain_mask and tpmi_cpu_hash */
- static DEFINE_MUTEX(tpmi_lock);
- 
-@@ -152,6 +154,15 @@ cpumask_t *tpmi_get_power_domain_mask(int cpu_no)
- }
- EXPORT_SYMBOL_NS_GPL(tpmi_get_power_domain_mask, "INTEL_TPMI_POWER_DOMAIN");
- 
-+int tpmi_get_linux_die_id(int pkg_id, int domain_id)
-+{
-+	if (pkg_id >= topology_max_packages() || domain_id >= MAX_POWER_DOMAINS)
-+		return -EINVAL;
-+
-+	return domain_die_map[pkg_id * MAX_POWER_DOMAINS + domain_id];
-+}
-+EXPORT_SYMBOL_NS_GPL(tpmi_get_linux_die_id, "INTEL_TPMI_POWER_DOMAIN");
-+
- static int tpmi_get_logical_id(unsigned int cpu, struct tpmi_cpu_info *info)
- {
- 	u64 data;
-@@ -189,6 +200,9 @@ static int tpmi_cpu_online(unsigned int cpu)
- 	cpumask_set_cpu(cpu, &tpmi_power_domain_mask[index]);
- 	hash_add(tpmi_cpu_hash, &info->hnode, info->punit_core_id);
- 
-+	domain_die_map[info->pkg_id * MAX_POWER_DOMAINS + info->punit_domain_id] =
-+			topology_die_id(cpu);
-+
- 	return 0;
- }
- 
-@@ -212,17 +226,28 @@ static int __init tpmi_init(void)
- 	if (!tpmi_power_domain_mask)
- 		return -ENOMEM;
- 
-+	domain_die_map = kcalloc(size_mul(topology_max_packages(), MAX_POWER_DOMAINS),
-+				 sizeof(*domain_die_map), GFP_KERNEL);
-+	if (!domain_die_map)
-+		goto free_domain_mask;
-+
- 	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
- 				"platform/x86/tpmi_power_domains:online",
- 				tpmi_cpu_online, NULL);
--	if (ret < 0) {
--		kfree(tpmi_power_domain_mask);
--		return ret;
--	}
-+	if (ret < 0)
-+		goto free_domain_map;
- 
- 	tpmi_hp_state = ret;
- 
- 	return 0;
-+
-+free_domain_map:
-+	kfree(domain_die_map);
-+
-+free_domain_mask:
-+	kfree(tpmi_power_domain_mask);
-+
-+	return ret;
- }
- module_init(tpmi_init)
- 
-@@ -230,6 +255,7 @@ static void __exit tpmi_exit(void)
- {
- 	cpuhp_remove_state(tpmi_hp_state);
- 	kfree(tpmi_power_domain_mask);
-+	kfree(domain_die_map);
- }
- module_exit(tpmi_exit)
- 
-diff --git a/drivers/platform/x86/intel/tpmi_power_domains.h b/drivers/platform/x86/intel/tpmi_power_domains.h
-index e35750dd9273..2fd0dd7afbd2 100644
---- a/drivers/platform/x86/intel/tpmi_power_domains.h
-+++ b/drivers/platform/x86/intel/tpmi_power_domains.h
-@@ -14,5 +14,6 @@ int tpmi_get_linux_cpu_number(int package_id, int die_id, int punit_core_id);
- int tpmi_get_punit_core_number(int cpu_no);
- int tpmi_get_power_domain_id(int cpu_no);
- cpumask_t *tpmi_get_power_domain_mask(int cpu_no);
-+int tpmi_get_linux_die_id(int pkg_id, int domain_id);
- 
- #endif
+diff --git a/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml b/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
+index 73144473b9b2..b5c62db46870 100644
+--- a/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
++++ b/Documentation/devicetree/bindings/i2c/qcom,i2c-cci.yaml
+@@ -30,6 +30,7 @@ properties:
+               - qcom,sdm670-cci
+               - qcom,sdm845-cci
+               - qcom,sm6350-cci
++              - qcom,sm7150-cci
+               - qcom,sm8250-cci
+               - qcom,sm8450-cci
+               - qcom,sm8550-cci
+@@ -185,6 +186,7 @@ allOf:
+           contains:
+             enum:
+               - qcom,sc7280-cci
++              - qcom,sm7150-cci
+               - qcom,sm8250-cci
+               - qcom,sm8450-cci
+     then:
 -- 
-2.48.1
+2.49.0
 
