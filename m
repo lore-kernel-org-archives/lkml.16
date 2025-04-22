@@ -1,101 +1,142 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FE21EF376
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90C91F130F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302731; cv=none; b=Gb0pjv4dwZjhaJwaFHS3RKn5+48M9+gkx8HgDrnwp1EfFLs8MoxT7PkOwWizi/01J2FM9AFGKWNdjrJm+u+2959DySwK2i/iJFH3BoRn1BJdMiUUgrnzjqUnri5wtVPZKC23mFNHKCQqI2W2wFvtOypMExJRm+acBDhJYrkHCHg=
+	t=1745302820; cv=none; b=YofYA75DBsgqgM7Tx1eT9OnB1UxuRNQ8+jj/GJK0JIPkpsbw1uOzkk/bAm6UeoXt/Aea4hPsgdb5YrGQ/Jpkqx8Af7tnf3b8cr3JLn9JRNG8LaaazhPRWY+WfElUvsBHO2KJcEM+4aIccwJxkTBq8PAfU+gostP1gMifrR0deIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302731; c=relaxed/simple;
-	bh=sBRmjEzYRYe3MVAvk37PmL48oVOPVKRgYDtyvxADTrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z/jKbIcXqRzaRhbhqaCl07L5oHJtFy8qwbo75CCBNO7XuBhxV3a1nWSVWgVlKdHNRDGWOdBQV6tL2r19U/lvwKZO42BekwIy39vKHVnc6GMJw/Lo063r0L6GDJRQQGviUM4q9q/Bm35wja8KtW+Cp4iCT+7Zy6E+Ibf0Dm/JHLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Gwt+6vWK; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1745302820; c=relaxed/simple;
+	bh=0s09EqLIwlM2iekdxdYJbToy4ZOVTiwzqJVwtbYQlC0=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=XF9hKvdVgU04+3efqjJXSYZhjCGvIgVDfzjdt3pcespK2rSznABgOBrHEyYkVAm9hsAV2Ag2z9yEm5tfajAhdvxoTRFHmG6Ui64G1rS6CcvZTynQC5ldZjuHWm5fSzyqSNEJ+EvlPQliUGOKSBHS3JIrmaNiw3QlCd6K4dQFqHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=RNYY25D5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lLql2wRh; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Gwt+6vWK"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b1095625dso5579358e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1745302728; x=1745907528; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sBRmjEzYRYe3MVAvk37PmL48oVOPVKRgYDtyvxADTrw=;
-        b=Gwt+6vWK4OsZhJ34Wc6woUZwwf/HCZGj/cO/NSgMoO2Y7v96dFlWLTEENh4VKafC7z
-         YdsqlFP+tGt3FUgBKG94x+5e7EqJJ33b/VauSlFmB0OP0kPmFXRLKkpbhNX00nc/bg4O
-         3J0lv65uLVz6/jyp4PFmvG2DiXVI9bp859qoy+5mkMzp0OdSQFMb2jdVp7sL+lFblWoh
-         ZO0OMpouQex+vjd+q6p9hkG5/hSkv2sczbL5V6VX7CSOxhKW3BNRmklr9iZdyOEZv3OV
-         Q1ZH/fYVB52Kv/332wKRY+s4JCNXr1yzV+xIseJrjwheV6waHz2RdODkR1zD0rXiLK/R
-         gB6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745302728; x=1745907528;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sBRmjEzYRYe3MVAvk37PmL48oVOPVKRgYDtyvxADTrw=;
-        b=uFKq38XrHF6k6CKR0mVo4Avvy4J8I3XD4uiNx0Ke5m4dZm6Pv917E/sqEiIO5nc3Re
-         5iW8F7KKXUHp03WGIIKsUikv0Tapge6c1t/iuChdGfXlHe3Al0b/dXyDWW4jV/cj61+X
-         2kFLmEMjeA6lgI+Okzc4szQ22QVurPCWx3FydtCPhgYVvPRuaaHk0b7fJ2vGyAv8TEBA
-         E4ebMaS205A7DEKnLA1YejIXv2wYEX4D+JKFrkz4x2xqg4itYs5cnGZBuNqe9d4iV3d/
-         jjDK4YlFk3kFkQB6eE/4UNjZpnOC4r3mH9B+DmYJYZ4Ibl6DDpBu9QbF1LoVHyaMexmT
-         udyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUuXcr53b59wyPn5k269vDzaxWe4nU+NpnNJhhWd73MLSOMuTYxDl8J7OwbxdF9H3yx+pqd0JrZASUGtc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEY81nQ7MB+dpUlEsYrW02Oxks71D9fqce7yyLjafXZaPx/gDJ
-	wC7UYeapsexu+q32gkeCdzknRIUdLBaO1I3Jv0BhtT1SSm7llkEvBiHkfQRjVuX2dpsEcFJT79l
-	kGIMwB2hS0lekZlNONo0gnrYMyhQV3YhYngfKuQ==
-X-Gm-Gg: ASbGnct+26QaymUNN46KsY3k8skOezafCdZqFBYgs0RDF6a2f95LY+uVtH0PmyyGvZ+
-	cVyN7fTjaI6zzckCXSyGUYZhVFGojDxdGznxKg367AQfOgeARWppExTD7fNB5El2+kP71oBAz+z
-	4YmJT+efbZuKyCEdybaJDhs+BDQMXNd3aIy9zLHTMJZCj7Lw==
-X-Google-Smtp-Source: AGHT+IF32NbxgPLQ2pEgrkJHmhNMNMAllPkdXxAjWFiv5lA+YKb6EJH3HqZ8hTEr1BOtAd274vNsJg62NN9mIEXVPRg=
-X-Received: by 2002:a05:6512:2213:b0:549:9044:94a9 with SMTP id
- 2adb3069b0e04-54d6e635c59mr3110785e87.25.1745302727514; Mon, 21 Apr 2025
- 23:18:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="RNYY25D5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lLql2wRh"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5BB921140190;
+	Tue, 22 Apr 2025 02:20:16 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 02:20:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745302816;
+	 x=1745389216; bh=EOJBzyuwNNLXuvDG/kOJMfmJJBgisqKl2nfidKYzGqE=; b=
+	RNYY25D5qj/fGot1ngHfauIWEu2pyFUYTrt3Ih81sDeW1Li9e3uiLkOWrZRw81lS
+	aup96vJS1KJU/9A8H050S+E84Vf0R+zlCL5wlemp56EvyjBi7oGAZMiTlKtLO4fk
+	Fe+nZCnYoYMdHQsQIY52q6zgJsciIZDU6Nu8aNf8x4DiJMSLYM9OQro4um8X3S9g
+	x0F7jTiY686Fxo9QHqQr1fBkePTSC5DvZ2bmNakkCXgDRXYXiaNCnYe5/jKFeWE9
+	/O3z/UhaNAUSxyZoVSlo7OAZWdlAW3ep8fXyqsBeDyraRtgKXxVWfILJaNdePAe2
+	HhvGKfFUeuYclwa/KRW8LQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745302816; x=
+	1745389216; bh=EOJBzyuwNNLXuvDG/kOJMfmJJBgisqKl2nfidKYzGqE=; b=l
+	Lql2wRhjkw3buoCuP+M4aDcX2f+WUwjDWo0XJeoo6rI4swU32sdBB0Tc8FXOHybM
+	2EeYBLdjDBuPGmGE4pg0h27u6bT+PHh+zKP15nOPMLz+/0qEE34eKBkR3pIlg7t7
+	IBvybioI5/OZUu9FBI3sWR0qPZowzkIK8AQdH2vOHvxcIFb70lO6ts44u/PPszxP
+	qSa1mc72IdUiWFe1eLtfOIyNsoosoP6BnGeNKkcYa9tIvOvH1Fn+GU4FQB3Jo5Be
+	ddLxIqD3JAYkK1J4VzztEveplfS0aUnB97yXO+lNde5176w0WEnAkarYXZuwpcud
+	Bcs+dC7r9uZGaOv0wM+VA==
+X-ME-Sender: <xms:HzUHaNfuFbSbij5etfbjEpAk7Be7U6hYlV_5fbp8vZkQEn3lc_GvXg>
+    <xme:HzUHaLP3FUoz0tfLQETVidxItKwcHEiGrP-mdIgEO8ADIapeSMFYSGipjykNxWmPs
+    aGpdsbb9Wl0zKLywQU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeftddtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepughpvghnkhhlvghrsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtohepmhgrrhifihhnhhhorhhmihiisehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepnhhihhgrrhgthhgrihhthhgrnhihrgesghhmrghilhdrtghomhdprh
+    gtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphht
+    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhsthgrghhinhhgsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghp
+    thhtohepmhgrthgthhhsthhitghksehnvghvvghrthhhvghrvgdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:HzUHaGihSdI_bb6eutYGdjxqc7VOvJOYJWUGvnpZzBGUl6DZ1xoenQ>
+    <xmx:HzUHaG-VIPGKnxEZf9WqkhNo_0MFKU_OHwXGPm8rL6EkQ-5QSkoF5Q>
+    <xmx:HzUHaJseuTHdgnNDcz5cqICLQ-tBeBENqlbPuR6hVizc_b5X0fJwDA>
+    <xmx:HzUHaFHmG59ApiBigsWIuBeEh5gJAf9PNVZKCNlXj-3wbkMc0ne8Zw>
+    <xmx:IDUHaOnjvzC3bauQfieDKF5ec5clZrpfHZcSSAefXFwglUpfjrgSnB67>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A51822220074; Tue, 22 Apr 2025 02:20:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
- <65181f7745d657d664d833c26d8a94cae40538b9.1745225696.git.hezhongkun.hzk@bytedance.com>
- <DB64B965-2E54-401E-86F9-8F79C50B21C9@linux.dev>
-In-Reply-To: <DB64B965-2E54-401E-86F9-8F79C50B21C9@linux.dev>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Tue, 22 Apr 2025 14:18:10 +0800
-X-Gm-Features: ATxdqUGSiKYz7-DBCcl-vn5QD0jxOKI-QTRnLo_Cb8Oqzykd2WgsUo_H5ecwSUg
-Message-ID: <CACSyD1MCfAAJ5R0y3Kn5u_a7RyhgZhiBwCF14uEKGAzs-7BbMQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH V4 3/4] mm: add max swappiness arg to
- lru_gen for anonymous memory only
-To: Muchun Song <muchun.song@linux.dev>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@suse.com, 
-	yosry.ahmed@linux.dev, yuzhao@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Tc63700f27876af87
+Date: Tue, 22 Apr 2025 08:19:55 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Marwin Hormiz" <marwinhormiz@gmail.com>,
+ "Dave Penkler" <dpenkler@gmail.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Dan Carpenter" <dan.carpenter@linaro.org>, matchstick@neverthere.org,
+ "Nihar Chaithanya" <niharchaithanya@gmail.com>,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <eb79a1fc-080d-4be7-9d72-5fa248f48fee@app.fastmail.com>
+In-Reply-To: <20250421184144.220972-1-marwinhormiz@gmail.com>
+References: <20250421184144.220972-1-marwinhormiz@gmail.com>
+Subject: Re: [PATCH 1/1] staging: gpib: gpio: Fix memory allocation style in
+ gpib_bitbang.c
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 21, 2025 at 5:36=E2=80=AFPM Muchun Song <muchun.song@linux.dev>=
- wrote:
+On Mon, Apr 21, 2025, at 20:41, Marwin Hormiz wrote:
+> Change kzalloc() to use sizeof(*variable) instead of sizeof(struct type)
+> to improve code maintainability. This follows the kernel coding style
+> recommendation for memory allocations.
 >
->
->
-> > On Apr 21, 2025, at 17:13, Zhongkun He <hezhongkun.hzk@bytedance.com> w=
-rote:
-> >
-> > The MGLRU already supports reclaiming only from anonymous memory
-> > via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
-> > also supports the swappiness=3Dmax parameter to enable reclaiming
-> > solely from anonymous memory. To unify the semantics of proactive
-> > reclaiming from anonymous folios, the max parameter is introduced.
-> >
-> > Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
->
-> Acked-by: Muchun Song <muchun.song@linux.dev>
->
+> Signed-off-by: Marwin Hormiz <marwinhormiz@gmail.com>
 
-Thanks.
+The build bot reply already shows that you did not even build test
+the patch. :(
 
-> Thanks.
->
+> @@ -46,10 +46,10 @@
+>  			dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+>  	while (0)
+> 
+> -#define LINVAL gpiod_get_value(DAV),		\
+> +#define LINVAL (gpiod_get_value(DAV),		\
+>  		gpiod_get_value(NRFD),		\
+>  		gpiod_get_value(NDAC),		\
+> -		gpiod_get_value(SRQ)
+> +		gpiod_get_value(SRQ))
+>  #define LINFMT "DAV: %d	 NRFD:%d  NDAC: %d SRQ: %d"
+
+This change is completely unrelated to the rest of the patch
+and not described, aside from being broken. The macro is clearly
+confusing, so if you want to imprve this, I would suggest removing
+it and instead open-coding the contents.
+
+> @@ -1063,7 +1063,7 @@ static int bb_line_status(const struct gpib_board *board)
+> 
+>  static int allocate_private(struct gpib_board *board)
+>  {
+> -	board->private_data = kzalloc(sizeof(struct bb_priv), GFP_KERNEL);
+> +	board->private_data = kzalloc(sizeof(*board->private_data), GFP_KERNEL);
+>  	if (!board->private_data)
+>  		return -1;
+>  	return 0;
+
+When you do this type of change, you have to check that the
+types are actually the same. The original code makes sense,
+your change is broken because 'private_data' as usual refers to
+a opaque pointer.
+
+     Arnd
