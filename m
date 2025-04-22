@@ -1,151 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DC054652
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3418467
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745282355; cv=none; b=gdwJQehs+qGIcoW4IeI0THXD4vvh+WA/6sdx5x7XJ59EFTjWkJSDzXNcufZ5vjVMt/C0HZwieiSLlQ5uWOmfJf5QbAHVO/NlSfJhZMN1ekVGKFd4bvasQqYXQmOgU+9gdCsrES7qppjunrkERg53lIIyQ1cjs3DsAI/12mFAwIY=
+	t=1745282810; cv=none; b=IjTuWaZVBIIfnXloKwn4FmdNunwRciWZreJciN4hALhNXlUdVqXSFx7Jj+v331LLcVi1TAMKSBezWbOvUPxllD7Dw54F4xuDrZldoIJqNrvbUF6ojuSZILGMO4ZpSSmtLW+aGSO5utl734s1oyPZD0z0uVl1yjg3iokOj5JGuNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745282355; c=relaxed/simple;
-	bh=9nCMMQLJpK6c0lV3dqhWlu/qEajMZFeZe5Za394C9fQ=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=GU4gchY/NR6d2IoWWSwP6YPHoTr3tNbFYRFTQptdqJzeImgd58JubbrMAB2MUquS0V+6M4jWc5Y6sVG+4btr1gKutOneB6jv99OzaDp4jObdNF4iN6SCsxADoCPceRnd/x1M+ZdFnoJCxEiykbRgoEKvXvQBMWFozieMNESu00I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e0ek+l7v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745282810; c=relaxed/simple;
+	bh=vTY6LT8I7a4anz4QeeLwR5HKGUj/trf02eQvmzZTnfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=su8Ct+3Oe5tNF7Gy6qaVyu9aB0vTCembSbvKLu3nCoIT5ceyM8X1VRcj8ozsgzEgLx+a9UhpSvV/pN09TgevVUMeURbgC8P2TOUp6ditPduDop2SAtjAiHNEYzitH4adbJ2H7Q1cM4NyFhLzHtYwzp7KbZkhUmfovDEu9nsVeRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m3BESd99; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e0ek+l7v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745282352;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TarlKnUcZO8PV4fqN8FxnGE8oYyXnSPQXk43IPmYj64=;
-	b=e0ek+l7v15ckovXBc9RKbF0G/xky1uX0sHkRe6TEToAt1/6yk6/o8q3YV4Tv7eQ/8Bt/Q4
-	rRNczrwhqo4Bvb+m9qQhNH1c1hYbPAHDGLSfsgtOjYB98xmDwrPfWVY65zk7tPs4g5IBy+
-	VypGHC+Hhp2Y26V7GgHZLHsTkWc7oi4=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-601-a0CRC5R4OJSUlvbhpgc1Ag-1; Mon, 21 Apr 2025 20:39:07 -0400
-X-MC-Unique: a0CRC5R4OJSUlvbhpgc1Ag-1
-X-Mimecast-MFC-AGG-ID: a0CRC5R4OJSUlvbhpgc1Ag_1745282346
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c9abdbd3so405192685a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:39:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m3BESd99"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-739be717eddso3385533b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745282808; x=1745887608; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DESd6kACTnQKmLSbi0O5NrgwAZmaHVMz5BjPH0vRm/Y=;
+        b=m3BESd99riFlJB9sBQuB4GqQz2+zRTJs+7OF1t7Nj1lcAHVUcaEQIC6S+SFCmJW97O
+         ptRcgRMKfuVJIlaa7n/AsULPpNo1GyUpCiNQ5fuJC6dRWSOfKElH+97Z7Zrxzevs/tN+
+         cZC6/1LPYjrb2Rmnk2WROScW5We9huWAnqlP8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745282346; x=1745887146;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TarlKnUcZO8PV4fqN8FxnGE8oYyXnSPQXk43IPmYj64=;
-        b=acW5MOfIp3Z8npWX5LJ2z273WOUk8z+XmUdOv73/NV876HnrGGJvsOKmDw67l983C0
-         kxVYvPvfW4WB0P7l/LCNyvwI0BWt4am5bmgGPaGe/vUKLvtliUYaqdD50Ap/38LB3kgw
-         P5vnEFSQDv2pDDijMLoUIb2GxnY4tNXYy1UPmS5v9SLBkKexLz3XD6Vk//rxD6Myv4ij
-         uCpJPOdnk9T9uNRKLbHlVhmjqorBjnvDyzUFbvmoOvlaVeuysjry9u/47yRfueC1T5WB
-         yayoNd8fWIfSRCxlM1RPfRGno6qortylCUK4JGjCKzs76F8jN1xlkAXj4XHY5/0lVAIB
-         FaQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6UxnM88BSQ69+ko2mTRzab5YxrEleb+2a+OZ9YjYkDFcDxEkvabQjh5t57WCQ1vBn4S9GvtDBVQpI2j0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYapHGVRDaMagBGnCKeIH3ceknrjE7R5EWyYgAeNCVxHurgXbK
-	CdvrbC97MN+ki4ycYsQolQfgBELaiD6cub2j6OsqzbEqsdnA6/JSAHPzZX1uLWmtsmMHwuSY0Pl
-	bsokDIXah9MNuJLcYAUIiW4/MKtBUAbS+j/vvqVKwvAFghFNqEPj5t7AmzUPiFQ==
-X-Gm-Gg: ASbGnctJY8YiCHBB5BuRHxwKT9zBJPOw2QJxU/MieF6bZ6UByBsL2t7IujozlaINZ8c
-	u8zSenRVf3Jq536FGedyPLxirrPGXDFlcq43MeFO8oe+1ByWKUBbUKujXIMmyei9l/cDMhsC7fU
-	m75lO1dIScV32oy8b0O7bCxML99OFHqu9D4m/zqjcAqCuAcpgw0Ucn7mgvGkSUJghgFpMlqTc04
-	kXd3jAAVO+ILycfaqml4fpvcbYDwqYpoDFczzdKPpycElsIXUTLpWSa27gACC0xIW+UE/o89vCm
-	EOSVpUczf5A/Or54XZuDGkEm0Bxm1idGyjRg02LInay3J/0jlzNN0nk47w==
-X-Received: by 2002:a05:620a:a013:b0:7c9:29c1:44c6 with SMTP id af79cd13be357-7c929c14528mr1727597385a.13.1745282346450;
-        Mon, 21 Apr 2025 17:39:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF1QQkazOT+mrLpvzDdJwI97feDpglYNAei5MDp+NQ9Ze0fmHlyU20BawmqIh9ayhjTiFe6EA==
-X-Received: by 2002:a05:620a:a013:b0:7c9:29c1:44c6 with SMTP id af79cd13be357-7c929c14528mr1727594485a.13.1745282346049;
-        Mon, 21 Apr 2025 17:39:06 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9ce292esm48515801cf.63.2025.04.21.17.39.04
+        d=1e100.net; s=20230601; t=1745282808; x=1745887608;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DESd6kACTnQKmLSbi0O5NrgwAZmaHVMz5BjPH0vRm/Y=;
+        b=gU2vPUyhvVrwwgPcf2YVarTIQv+GlaiJIswV9hP4zSRs1pIgUXsE3wtfoUOQVp93Fc
+         m0ba5CBwXaRMLrIBxG+L2SBWNT9sZPgBO3PX5hY+Jru0JLhS7liUpJ9JTDYhvJHryhID
+         95QO+xlZOOsVp4OVkb2TcWS8smv4wWAszRHltj06Dy2yICpsCIIiI+8p2t8Dimu4THS/
+         gTTtCh+qXSqp5+TjUgzh1fDbEMKjoq9y3VWM85Fg8pVjHy0IYs1/dQviiHYVeo4X77Xd
+         I5tG3Hu/PoZZPP8EXyrDiSzbAW8CFsDPVoz7m07MN0BywrcpcRjLRnpwZhN5vqBD5n4b
+         rvtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQJiWrPL/XKav9y/sqZm5jK8oWMU/OBtExIpdD5XVsHErxTJrHkdlIjpiP/Q6/2GLHubezmpoFeGlm4Fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdj/h7HEd10wdmyHRwyAKulJtbcpLAmZ3AyTfv0Bg+Y6zERCQJ
+	nLcoN4jre+Z8DJD3bvvmeXDp6tIEjhLt+4WH3KzjE5kTh2uB3atutgrE2zR4qA==
+X-Gm-Gg: ASbGncu3MngC04Mnstt3uDLydSajR4hAgSCFqBDdNh/aQZxj8KBPvw6vIQNoUiITj2Q
+	EAJxCBKfoKlwaJZKQAGfcXIHLccG/ii1lmvKSQ3Jru8VYVBXAuoSEoSO4vOZjCHehDKH1rtk1AS
+	NcYuQFRBrLF0fR51GtSFry7uocgsU115SlDxD08BPPSaWq2OjdsgESwdzpv+rEE4bR9ZruhfA9U
+	b6Gw65P5+FnDUFos8J7eSubBmJ3jsvJ7GRrv+8DydKlx9DnvSG706WkIDof8wHjNa5XdgdGywdF
+	6xLVYNioCG2F6oPRg+puulnUZQ16A/tqGFN6mf0JihM3Zjaih+yc3vNt6+cAJlrOnF0gfsuKNyg
+	Cc70=
+X-Google-Smtp-Source: AGHT+IHpmV5qAalHsZLfGW7snz5zVoC49bLUHJDnuf1xQk+zbKalF+g+4dAFedrgrA/YYjldiv8U2g==
+X-Received: by 2002:a05:6a00:2443:b0:736:32d2:aa8e with SMTP id d2e1a72fcca58-73dc14ad1b3mr17055309b3a.6.1745282808205;
+        Mon, 21 Apr 2025 17:46:48 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:a29d:cdf7:a2a6:e200])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73dbf8e4622sm7566279b3a.67.2025.04.21.17.46.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 17:39:05 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <48a24cb3-16dd-4fb9-9e52-ed82a68041e8@redhat.com>
-Date: Mon, 21 Apr 2025 20:39:04 -0400
+        Mon, 21 Apr 2025 17:46:47 -0700 (PDT)
+Date: Mon, 21 Apr 2025 17:46:45 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Jeff Chen <jeff.chen_1@nxp.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	johannes@sipsolutions.net, francesco@dolcini.it,
+	tsung-hsien.hsieh@nxp.com, s.hauer@pengutronix.de
+Subject: Re: [PATCH] wifi: mwifiex: Use "scan_plans->iterations" for bgscan
+ repeat count
+Message-ID: <aAbm9W3yAxMc_C1l@google.com>
+References: <20250416155425.4070888-1-jeff.chen_1@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
-To: Shakeel Butt <shakeel.butt@linux.dev>, Gregory Price <gourry@gourry.net>
-Cc: Waiman Long <llong@redhat.com>, linux-mm@kvack.org,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
- hannes@cmpxchg.org, mhocko@kernel.org, roman.gushchin@linux.dev,
- muchun.song@linux.dev, tj@kernel.org, mkoutny@suse.com,
- akpm@linux-foundation.org
-References: <20250419053824.1601470-1-gourry@gourry.net>
- <20250419053824.1601470-3-gourry@gourry.net>
- <ro3uqeyri65voutamqttzipfk7yiya4zv5kdiudcmhacrm6tej@br7ebk2kanf4>
- <babdca88-1461-4d47-989a-c7a011ddc2bd@redhat.com>
- <7dtp6v5evpz5sdevwrexhwcdtl5enczssvuepkib2oiaexk3oo@ranij7pskrhe>
- <aAbNyJoi_H5koD-O@gourry-fedora-PF4VCD3F>
- <ekug3nktxwyppavk6tfrp6uxfk3djhqb36xfkb5cltjriqpq5l@qtuszfrnfvu6>
- <aAbbtNhnuleBZdPK@gourry-fedora-PF4VCD3F>
- <i42lfs6xwncozzn7ruhpx7kuplqkpbnvniib7s6t52yytfhpaj@fc3a7mgkeilj>
-Content-Language: en-US
-In-Reply-To: <i42lfs6xwncozzn7ruhpx7kuplqkpbnvniib7s6t52yytfhpaj@fc3a7mgkeilj>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416155425.4070888-1-jeff.chen_1@nxp.com>
 
+On Wed, Apr 16, 2025 at 11:54:25PM +0800, Jeff Chen wrote:
+> Updated the "mwifiex_cfg80211_sched_scan_start" function to assign
+> "bgscan_cfg->repeat_count" based on "scan_plans->iterations"
+> provided in the sched_scan settings instead of the default
+> "MWIFIEX_BGSCAN_REPEAT_COUNT". This change ensures that the repeat
+> count aligns with the iterations specified in the schedule scan
+> plans.
+> 
+> Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> index a099fdaafa45..be28c841c299 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+> @@ -2833,7 +2833,7 @@ mwifiex_cfg80211_sched_scan_start(struct wiphy *wiphy,
+>  				request->scan_plans->interval :
+>  				MWIFIEX_BGSCAN_INTERVAL;
+>  
+> -	bgscan_cfg->repeat_count = MWIFIEX_BGSCAN_REPEAT_COUNT;
 
-On 4/21/25 8:10 PM, Shakeel Butt wrote:
-> On Mon, Apr 21, 2025 at 07:58:44PM -0400, Gregory Price wrote:
->> On Mon, Apr 21, 2025 at 04:15:49PM -0700, Shakeel Butt wrote:
->>> On Mon, Apr 21, 2025 at 06:59:20PM -0400, Gregory Price wrote:
->>>> On Mon, Apr 21, 2025 at 10:39:58AM -0700, Shakeel Butt wrote:
->>>>> On Sat, Apr 19, 2025 at 08:14:29PM -0400, Waiman Long wrote:
->>>>>> On 4/19/25 2:48 PM, Shakeel Butt wrote:
->>>>>>> On Sat, Apr 19, 2025 at 01:38:24AM -0400, Gregory Price wrote:
->>>>>>>> +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
->>>>>>>> +{
->>>>>>>> +	struct cgroup_subsys_state *css;
->>>>>>>> +	unsigned long flags;
->>>>>>>> +	struct cpuset *cs;
->>>>>>>> +	bool allowed;
->>>>>>>> +
->>>>>>>> +	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
->>>>>>>> +	if (!css)
->>>>>>>> +		return true;
->>>>>>>> +
->>>>>>>> +	cs = container_of(css, struct cpuset, css);
->>>>>>>> +	spin_lock_irqsave(&callback_lock, flags);
->>>>>>> Do we really need callback_lock here? We are not modifying and I am
->>>>>>> wondering if simple rcu read lock is enough here (similar to
->>>>>>> update_nodemasks_hier() where parent's effective_mems is accessed within
->>>>>>> rcu read lock).
->>>>>> The callback_lock is required to ensure the stability of the effective_mems
->>>>>> which may be in the process of being changed if not taken.
->>>>> Stability in what sense? effective_mems will not get freed under us
->>>>> here or is there a chance for corrupted read here? node_isset() and
->>>>> nodes_empty() seems atomic. What's the worst that can happen without
->>>>> callback_lock?
->>>> Fairly sure nodes_empty is not atomic, it's a bitmap search.
->>> For bitmaps smaller than 64 bits, it seems atomic and MAX_NUMNODES seems
->>> smaller than 64 in all the archs.
->> Unfortunately, it's config-defined on (NODES_SHIFT) and the max is 1024.
->>
->> Is there an argument here for ignoring v1 and just doing the bit-check
->> without the lock?  Is there an easy ifdef way for us to just return true
->> if it's v1?
->>
-> It is !(cgroup_subsys_on_dfl(cpuset_cgrp_subsys)) and I see cpuset_v2()
-> and is_in_v2_mode() in kernel/cgroup/cpuset.c.
+Drop the MWIFIEX_BGSCAN_REPEAT_COUNT definition from main.h, now that
+it's unused.
 
-The is_in_v2_mode() function covers cpuset2 and cpuset1 with 
-cpuset_v2_mode mount option, while the cpuset_v2() will only be true for 
-cpuset2 and allowing compiling code out in case CPUSETS_V1 isn't set.
+> +	bgscan_cfg->repeat_count = request->scan_plans->iterations;
 
-Cheers,
-Longman
+Are you sure you want to take the provided value as-is? For one, the
+request field is 32 bits wide, and your FW interface is 16 bits, so we
+definitely to make some size checks at a minimum.
 
->
+It seems like we should be setting wiphy->max_sched_scan_plan_iterations
+somewhere...
 
+Additionaly, what about the described behavior for 0 in cfg80211.h?
+
+ * @iterations: number of scan iterations in this scan plan. Zero means
+ *      infinite loop.
+ *      The last scan plan will always have this parameter set to zero,
+ *      all other scan plans will have a finite number of iterations.
+
+Is that how FW treats a value of 0? Or is there some other sentinel
+value?
+
+And, why did we have "6" here previously? Is that an important default?
+Or was it just a guess, and it's really OK to just have 0 (infinite)
+default? This could be a user-noticeable change, but maybe that's OK.
+You should at least acknowledge how and why this will change things in
+real terms.
+
+All in all, it feels like you haven't given me much reasoning to say,
+"yes, this is correct and a good idea."
+
+Brian
+
+>  	bgscan_cfg->report_condition = MWIFIEX_BGSCAN_SSID_MATCH |
+>  				MWIFIEX_BGSCAN_WAIT_ALL_CHAN_DONE;
+>  	bgscan_cfg->bss_type = MWIFIEX_BSS_MODE_INFRA;
+> 
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> -- 
+> 2.34.1
+> 
