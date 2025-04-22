@@ -1,114 +1,156 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87A6224AF7;
-	Tue, 22 Apr 2025 06:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5006622D7B3
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302510; cv=none; b=U5UDW/fJGffPWmyFSb3mXFGdiqJA9dNvcrG/A1gW+tg4V2GbzI2yJ3+Dnx/I3BZsaFgQgSQdoCC+Ag/WNRVJKsZvhYLeg/YVktqhNXqkoX2mKt1oOxRHhUezSEpfyoIizP2oDkJSQXmmNcMjuskjhiMsUi0CKAmlj+UNt1kZEZs=
+	t=1745302515; cv=none; b=e8zzee7eiszTnzgow9gA5brMFWks08zxOOS1iQ/tpbp4lDKKGrwYTydUKMwzQnQiGlgj0fWr2yo1rMYbnrVLSzYkyFWR/4doUP5ia0lBIYrW01iBhOZ+usv0eJu41EF+k7H4XTQcJ3F2YoF3SFTuCq5Zo52GzcBdBiT2ojFxeDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302510; c=relaxed/simple;
-	bh=3FqMuZ8H4o8gXtTMpAKFMMSwC0UYu/eXoUqpQ0bTHko=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hv/K2NGal6o3EvtFYBtrwtrfXDuwwOwl47DRplqedXCEikrNoPdTP+hZgNUkJDcS7xtGnWbQYEMM007kkCJoMqx8hWRMOofqZP/btXhH6pTHiBX7ILxkuHYBU43yu1v7/2RbNcvPFmLEJ2NBgGAlABP1NFw+J80QPcekSJd9lQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RXZXDkJC; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745302515; c=relaxed/simple;
+	bh=RkCsTaz9CwM+ptsTdulur4tyDQBKXuz7vnqvgyJ++yk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ky2+joSGzsAmqZp6rkZ2apLN75KHq4JWTGZ8dBSS4rsZe7J9nZZbArSvfrsKZC0bMThoTDOSRPQ/ZRsceVoHcLcRZAttQlCkAsaOJdK0NpgF8630wrIy858bIo3TvTI4kO62PXXoc/jf9p2aBak4D/X3NZxUPP9+rYqifaOkqpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b=PPSsELLx; arc=none smtp.client-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RXZXDkJC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745302502;
-	bh=QVMRFF0HnMuDauG9BiETyBoIinlRhjQP+PxMeCLIYbI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RXZXDkJCnkxwhFREEgoM2mg/PU1Pi/fAuGIKjAwNXwuPu3L4atBbJuZV7OdQtYhyz
-	 2o44gNrYrEmG5fBVXq+ccO2Dd8SpMgK/1TQzJWoYMh26K21q4M5En/fR50S3PKsDDV
-	 QMxwH5Z+3duIJSyh9OLAR7nuqEnturc22mciADKXO7npoPuT/SkN03snfvI/NXrnLL
-	 xFHPGplB83pQQv6oh6zuxFXU9puKO32S/1GHHQ0KrJkuUdBbhBaD1FpHQ3N6mlZ4Tf
-	 NTlMYGG9Parf1oW4gT6qv9Ex+BD341XrM5Pn7F06NebIqf4Pjghlk2ULQlUYPA8OEv
-	 rQKe+6TLG+5Qw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhX5f24ycz4wcj;
-	Tue, 22 Apr 2025 16:15:02 +1000 (AEST)
-Date: Tue, 22 Apr 2025 16:15:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, PowerPC
- <linuxppc-dev@lists.ozlabs.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build warnings after merge of the powerpc-fixes
- tree
-Message-ID: <20250422161501.306c2712@canb.auug.org.au>
-In-Reply-To: <157256be-d77d-427e-8feb-77d1373b0c00@linux.ibm.com>
-References: <20250422114720.480cea29@canb.auug.org.au>
-	<157256be-d77d-427e-8feb-77d1373b0c00@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=huaqian.li@siemens.com header.b="PPSsELLx"
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 20250422061505feb7742c1918f026c1
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 22 Apr 2025 08:15:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=huaqian.li@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=m+k4R1ykPx7LroqQFw7M5Rgek5SdYdedbJKCoZJkpKk=;
+ b=PPSsELLxz40I+fKKy5gLlmgtoxX28eTjkKMrywiLOXmYx+er7Z7hMfKcAda34cLuCbty7I
+ mBHsPeU3QMrPTFmKhpmDrhQDyWEYdC9Mo0LsvRIcbGHO4tkt6X9D8JzDevoqiVOKVJ8wEJLz
+ 7ilRiwGoAtmW2TuWmWh3kKWB/klaWqLIvuNAiU3DUGtK5bWeAk/iiXyIzjeWRnqIc6Mv8wii
+ 0uJflCWv/QrjYpIjeZP92k8mQZX4E+C2osOqU515Fxgn2wxBpeE3ohDFzc7mz3tQJFTI5Lca
+ GBzuVYs9Ul/pKp2pSnIrdGSudBHgf0S5AHrLfQY+GYuC05Jrcav589JQ==;
+From: huaqian.li@siemens.com
+To: helgaas@kernel.org
+Cc: baocheng.su@siemens.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	diogo.ivo@siemens.com,
+	huaqian.li@siemens.com,
+	jan.kiszka@siemens.com,
+	kristo@kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	nm@ti.com,
+	robh@kernel.org,
+	s-vadapalli@ti.com,
+	ssantosh@kernel.org,
+	vigneshr@ti.com
+Subject: [PATCH v8 7/7] arm64: dts: ti: iot2050: Add overlay for DMA isolation for devices behind PCI RC
+Date: Tue, 22 Apr 2025 14:14:06 +0800
+Message-Id: <20250422061406.112539-8-huaqian.li@siemens.com>
+In-Reply-To: <20250422061406.112539-1-huaqian.li@siemens.com>
+References: <aa3c8d033480801250b3fb0be29adda4a2c31f9e.camel@siemens.com>
+ <20250422061406.112539-1-huaqian.li@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+i4FXKqrriw4fU2=CB0IMrR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-959203:519-21489:flowmailer
 
---Sig_/+i4FXKqrriw4fU2=CB0IMrR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-Hi Madhavan,
+Reserve a 64M memory region and ensure that all PCI devices do their DMA
+only inside that region. This is configured via a restricted-dma-pool
+and enforced with the help of the first PVU.
 
-On Tue, 22 Apr 2025 11:20:38 +0530 Madhavan Srinivasan <maddy@linux.ibm.com=
-> wrote:
->
-> I cant recreate this in both my x86_64 cross build and ppc64 build with d=
-ash.
-> I tried both ppc64_defconfig and pseries_le_defconfig compilation.
->=20
-> x86_64 dash version : dash-0.5.12-3.fc40.x86_64
-> powerpc dash version : dash-0.5.12-4.fc41.ppc64le
->=20
-> Can you share the dash version=20
+Applying this isolation is not totally free in terms of overhead and
+memory consumption. It  makes only sense for variants that support
+secure booting, and generally only when this is actually enable.
+Therefore model it as overlay that can be activated on demand. The
+firmware will take care of this via DT fixup during boot and will also
+provide a way to adjust the pool size.
 
-I am running Debian Testing on ppc64el and the dash version is
-0.5.12-12.
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Signed-off-by: Li Hua Qian <huaqian.li@siemens.com>
+---
+ arch/arm64/boot/dts/ti/Makefile               |  5 +++
+ ...am6548-iot2050-advanced-dma-isolation.dtso | 33 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
 
-Try this:
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 03d4cecfc001..12c2cee955f2 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -73,8 +73,10 @@ k3-am654-gp-evm-dtbs := k3-am654-base-board.dtb \
+ k3-am654-evm-dtbs := k3-am654-base-board.dtb k3-am654-icssg2.dtbo
+ k3-am654-idk-dtbs := k3-am654-evm.dtb k3-am654-idk.dtbo k3-am654-pcie-usb2.dtbo
+ k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
++	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
+ 	k3-am6548-iot2050-advanced-m2-bkey-ekey-pcie.dtbo
+ k3-am6548-iot2050-advanced-m2-bkey-usb3-dtbs := k3-am6548-iot2050-advanced-m2.dtb \
++	k3-am6548-iot2050-advanced-dma-isolation.dtbo \
+ 	k3-am6548-iot2050-advanced-m2-bkey-usb3.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-am6528-iot2050-basic-pg2.dtb
+@@ -261,7 +263,10 @@ DTC_FLAGS_k3-am62p5-sk += -@
+ DTC_FLAGS_k3-am642-evm += -@
+ DTC_FLAGS_k3-am642-phyboard-electra-rdk += -@
+ DTC_FLAGS_k3-am642-tqma64xxl-mbax4xxl += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced += -@
+ DTC_FLAGS_k3-am6548-iot2050-advanced-m2 += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced-pg2 += -@
++DTC_FLAGS_k3-am6548-iot2050-advanced-sm += -@
+ DTC_FLAGS_k3-am68-sk-base-board += -@
+ DTC_FLAGS_k3-am69-sk += -@
+ DTC_FLAGS_k3-j7200-common-proc-board += -@
+diff --git a/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+new file mode 100644
+index 000000000000..dfd75d2dc245
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-dma-isolation.dtso
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * IOT2050, overlay for isolating DMA requests via PVU
++ * Copyright (c) Siemens AG, 2024
++ *
++ * Authors:
++ *   Jan Kiszka <jan.kiszka@siemens.com>
++ */
++
++/dts-v1/;
++/plugin/;
++
++&{/reserved-memory} {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	pci_restricted_dma_region: restricted-dma@c0000000 {
++		compatible = "restricted-dma-pool";
++		reg = <0 0xc0000000 0 0x4000000>;
++	};
++};
++
++&pcie0_rc {
++	memory-region = <&pci_restricted_dma_region>;
++};
++
++&pcie1_rc {
++	memory-region = <&pci_restricted_dma_region>;
++};
++
++&ti_pvu0 {
++	status = "okay";
++};
+-- 
+2.34.1
 
-$ make -p 2>/dev/null | grep -w SHELL
-SHELL =3D /bin/sh
-$ ls -l /bin/sh
-lrwxrwxrwx 1 root root 4 Feb  5 00:14 /bin/sh -> dash
-$ dash -c '[ $(ld -v --no-warn-rwx-segments &>/dev/null; echo $?) -eq 0 ]'
-dash: 1: [: 0: unexpected operator
-$ dash -c 'x=3D$(ld -v --no-warn-rwx-segments &>/dev/null; echo $?); echo "=
-$x"'
-0
-GNU ld (GNU Binutils for Debian) 2.44
-
-i.e. the $( ... ) returns 2 lines of output because the "ld ..." part is
-backgrounded by the '&'.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+i4FXKqrriw4fU2=CB0IMrR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHM+UACgkQAVBC80lX
-0Gz/IQf/SN+x+1J7VFJkonKWzmhQA5zThWUQzzAs+Cm+Xn83+RnwmmInYBhzYJK8
-vywIDDEUsGgyreJJyhb9PP8Je6g2vMi1pXCGkaXv5ZbttJUL2QIvVKCkgrVExrvN
-YUPJe/JmG7s+Oao97lFoqI5bEgI1ITfGO4MnyNmr5QQjgt4O49UQCNwzepTDtfco
-1dXANjEFpcPEz2YvrzZW/7XUWY+WvnfRXN0Gy6iRW4JuUhPGKAWIi1yhH2C9W0sa
-+IAa7W5rWVO8yyBXXvGtCoRjIEuRZRTZ/r32v+lLqAfcAw2ppBJxRAbLLFXxWr3p
-m1wcbdFi5Is799Ju2kXaDo9V2XOuPQ==
-=xhpS
------END PGP SIGNATURE-----
-
---Sig_/+i4FXKqrriw4fU2=CB0IMrR--
