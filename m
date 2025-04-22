@@ -1,85 +1,69 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F1E2701BA;
-	Tue, 22 Apr 2025 22:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45261339A1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745361871; cv=none; b=nPDidTvyetekuPhw5C4XrBX6C9ZY7TRLN/Os39weqFqJSolN1ED/Jw0EurVlgDYKB+bT9+uWc9ovvYC4OSqzyPvDkhlwgf2OV/YiJq/+TCUVN6BcyuO8Nta0Pntj55EIk1f/YMbfoOt9QHHPyMMICYvyuc0zS9GQ8/7s4wiRZs8=
+	t=1745361968; cv=none; b=K0U7O7qNrY/xHEjcohgSlV8lzVn8DnwFSA4EuezmlCm2/fZnaRkbvs7QckOkbdymz8Pitcc8w4YvI2GXerm/4JV5ZtDpkoNuz8LGJXTJwv3hhJhLOEhGJiCOzEaAWiEzCeWbTn0HKw5E35CuxZT5+Wa6lRC1SvbteDVVzpUpy1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745361871; c=relaxed/simple;
-	bh=guPAke1V+WQyKscbwPiUwiyuxKsFDDcsB/IBahVD0Ws=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UB4riAPPg0M3P91nzIr07OUBO0/X475JN0MnrGWBcRZuS8eshe/M5CqVblLnrqrEoxUJXfix6QUkIPE9U1s51dHKKYy2Lma+tbtPo/8H5p7xkBUoIlb5Cl/CFdb99Pkfz3QJcMQ0h7ZrKDjOuQz/6J86UpyT22eV2k52QVvreuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TaG7exrA; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745361968; c=relaxed/simple;
+	bh=BId8HiyXpSR3+LAxEsu8bktos8SGaOD3Ki0Fi2jQWwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qNxBtWO6BwHgH9IQpTAR767bsAOi+/rgLNnrn1XzGxMrhkMiU5UeLAC67Kk6BLqzvL5vbcMD1R6R+5MXAMNRM0tlq9iH1Yre56TxqgMfIfIAxpxNIZA3dpbmJQOcoq17k6qttfyFPMyTGYGZxIdl1plb0HVVgSLqfQwp9raDv2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c8QsQei1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TaG7exrA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745361866;
-	bh=z2qUei8K82qJlmxVydXr1gwmqN3VhQSEpDzokXjw+ho=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TaG7exrAUQWnh5SjrUOjqHx2cdlRjQegI/QdWyGT3eAEI5qdXhnFJEPQfAGmmUA59
-	 yHJO/4qyYhA/pxm61Eacssdoycqlptt9WwaJwr5NV3byIYJ+nPfVnJlp/3zUbTiZs0
-	 4j2XDViDfQ6QgBhcnt5BEXA+3VF1hJBHt0clfp2ne8BmPXjBlJhNhh81Ua9rRqoXkH
-	 3IRGYJq+AkR27M9/3LY3CrZe1NesQvMkecTzbfO+knqoFf3hr8Gu8Aon8oh39EfXwo
-	 J05k5ihV0lEkwevFUTNBjUB5ckZni3JFFXctG6vnErbdats7rCHWMGHzndkcS+A8aW
-	 7G6293OSM8o4A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhy3F6YXGz4wnp;
-	Wed, 23 Apr 2025 08:44:25 +1000 (AEST)
-Date: Wed, 23 Apr 2025 08:44:25 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Rob Herring <robh@kernel.org>
-Cc: Liya Huang <1425075683@qq.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the devicetree tree
-Message-ID: <20250423084425.1fc9fb24@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c8QsQei1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB4DC4CEE9;
+	Tue, 22 Apr 2025 22:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745361967;
+	bh=BId8HiyXpSR3+LAxEsu8bktos8SGaOD3Ki0Fi2jQWwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c8QsQei1TFwlKl01mmg2EFG8y1LeNjpISFY60CTi2eBxktvrL2dNC5eRo7edOrC6W
+	 PoNmDjoomhquPAKSolzJOvaP3nmSe5/4Xy6fIuOkj3rlmUSWjlkBBzbKSc/LMiaqtG
+	 skpyHe6OPgoDlmiHpH2VcxJWHKU6fdLBRtsXrCvJmr8LM8WCa4RkPq0mk67TJc9/gp
+	 rQwcvbr8NQt6ao4y7AOrI1FblBHdBzFRZmqJDi8JA9/dMv5098UWAxHNdzRHVI6qE7
+	 BZzGSTuBJ0/q9rlMmi/nfjkh4URRIbfXkpybrVpZ/voigBIrnCDUIo1HoJ3fwJvExP
+	 ufNj6fglltoaw==
+Date: Tue, 22 Apr 2025 16:46:05 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] nvme/pci: PRP list DMA pool partitioning
+Message-ID: <aAgcLf-X_kWTPRGZ@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250422161959.1958205-1-csander@purestorage.com>
+ <aAfWUGAMTpwsHf2b@kbusch-mbp.dhcp.thefacebook.com>
+ <CADUfDZr5nq9fAvxSZJwUmuZKry6pHqLrucLtJLmV8cAvZ6O6eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wi51BH4pgK5R2nEaScw+b=m";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADUfDZr5nq9fAvxSZJwUmuZKry6pHqLrucLtJLmV8cAvZ6O6eg@mail.gmail.com>
 
---Sig_/wi51BH4pgK5R2nEaScw+b=m
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 22, 2025 at 03:04:37PM -0700, Caleb Sander Mateos wrote:
+> On Tue, Apr 22, 2025 at 10:48 AM Keith Busch <kbusch@kernel.org> wrote:
+> >
+> > On Tue, Apr 22, 2025 at 10:19:57AM -0600, Caleb Sander Mateos wrote:
+> > > This reduces the _raw_spin_lock_irqsave overhead by about half, to
+> > > 1.2%.
+> >
+> > Could you try this atop your series? I hope to see if we can squeeze a
+> > little more out by keeping the spinlock and list links local to the node
+> > using them.
+> 
+> That does help save some CPU time in dma_pool_alloc too. It's down
+> from 0.87% of CPU time to 0.52% while doing 5% more IOPS. I'll include
+> your patch (with a few tweaks) in a v5 of this series. Hopefully
+> you're okay if I include your Signed-off-by.
 
-Hi all,
-
-Commit
-
-  8b176c1dcd6c ("of: Build warn for missing fn() in _OF_DECLARE")
-
-is missing a Signed-off-by from its author.
-
-The email linked to has a '---' in the middle :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wi51BH4pgK5R2nEaScw+b=m
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgIG8kACgkQAVBC80lX
-0GwfUggAimuPQw0wZ7WhD9XfEEqtHaHy5RUIr4dwrJrxi10OFgieaaOlBdaTiVHY
-YM3ETC2NmMd4HryODjpw9+XvuRjUJtwErfwT+/tEYAuEnxDkBKv5bxkB+JKAAxno
-v/bxwS216eU+MzfA/sDxH9sEPeNoXmAioR2eaTMiVFkvy+WaQJLuqsNJtetZxVc0
-g/w1iXkHQ5FRyosa2XGTtxANkUHp/sUuXhucamWVpS87XpKAza9FzOfnMyP1rvuA
-jeSlCJIr7kKwuVsUfJY7IENHwGmlvOScnE6Gbjwn+xlPrtnU9IYMQ3eWkbubTwuK
-b8hiFlUCveWcqD6lYbDnVA5Whl3zQQ==
-=WGVq
------END PGP SIGNATURE-----
-
---Sig_/wi51BH4pgK5R2nEaScw+b=m--
+Awesome! And yes, totally okay with me to fold the patch into your
+series.
