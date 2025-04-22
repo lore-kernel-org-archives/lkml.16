@@ -1,147 +1,115 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6F2242D9D;
-	Tue, 22 Apr 2025 20:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD0B244684;
+	Tue, 22 Apr 2025 20:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354543; cv=none; b=pOuFWrKOnHc3JwcW2uOOqi/UyavjPKZcJAqNPxC3VUHXPHcsHBJe1mzuleT10GYk7KnwFdYNEGxp+kyrmYHzWsbqlQnON7HKXqgCc10Mg9Jweldh7cG1XVhxRZ3AM2drEwiEQpmqLH8FWGujFXUZIujkupTVzbZ+wkNF053E1rY=
+	t=1745354676; cv=none; b=U4z1Pq7EPQ4uCRH8pOq150ytynZAJqRN0tY8gwt3ZwbfevFt6ywUI0JSRq3PWL5LJX6a6icmd+bZ/nnt7Z/7Jf5zAYBaSGxlcg7bF9BOxh4yZPTGl8bRSUHW3g8IrgeaTxH8S4rHUbzhXDw2ubIXp7d3JzL7vZ/cC5G540S7zI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354543; c=relaxed/simple;
-	bh=iykaHhBnl9JNM7hxvi+qM8kwPweNLcLOO2zElA+Pdjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GB04spbu04sHivPUNNR+gbrwn+tXztPii9PXBuaxCvxsLjdw+4XY7n6C6Ih2Zg5sKHGeyLenXLm447QexEEJ3aaDCNDu9F5DntGRnZBrxyjpc5gROI3YVPwJCGFSdvzjVoQvmFwfo/x1Dji1mgbFiDLpEwnGahsTbONbe20zVQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhqJns9B; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745354676; c=relaxed/simple;
+	bh=7UhV5M7N6WMuUJtg+Ac2IlfdfF0Q0K73JxJC+wAiqCw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZpHYtToegdurYjmGbu5RyW/n+rcA2jnkeWBB6IKUy5ONT6um7keFpo26CUv/IL1cCukkxF7fTGoi54SWcmlJsT5l2Hir/82NJzlkiBH13b3qe7jUpxZKDsBP1Y5V+j6N0uo8IAI01+FXPKGUob1qwDXzZlcKOHpjF4rXAlHNvOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ODB9f3DN; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhqJns9B"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224019ad9edso80352925ad.1;
-        Tue, 22 Apr 2025 13:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745354541; x=1745959341; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CaIOmdrt13KU/miHWyqAdd2EpE7lQ4kV1HkCuMBXWOk=;
-        b=ZhqJns9BvWvcgVJUHiHR2pDfWn99+MVKQW3GZw5CS4WVG0tDPdhxbjprPn0KIUvm1L
-         ZhWW50MVbOkURzWsd20Mzt38p9EDwV+R84dNHXNdwawwyPqCUpBsenzNOFTBS5vQs4mn
-         8a6z4Cyq88VfluTaOlIkxc5frL5vHr5VobFm8Xqx4rVCrvfLjFTdY9XxPGJMuVkaOoD3
-         eQvb/le/2ajXDj+f+InBEpckhXg7hqm909hat4WFsQr2W1lFj7VmJZL5rSRr3Ye1cKaH
-         KaEEDpHQvXYgoWPxEvWi35wwNO7Drxhs1NS38HpSPWWSJ4tC9shHPhln/Z9xxKy1+R83
-         KSZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745354541; x=1745959341;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CaIOmdrt13KU/miHWyqAdd2EpE7lQ4kV1HkCuMBXWOk=;
-        b=fA+63ZEuJRoE2fy46OIlidppAsp5pphN4In+F3EkKxg1gcgPxLtmlU3kOiS2Wblr0C
-         pwy4hOssMez3XJDFb0Tv2Vbu7PlSHV21UbohPQGDiLXfRkvmn0R8Bm6vB8Js2Ayvj+cN
-         bKgP4hd8cHDh7cUyPZo+37vWQC+j+sEK4Rb2hSm/YiEE8STOFBjl+ORj1R6z6nuMze9Q
-         4UC9n6dk4qTP8JYFEXWhnhRNsotMhawGfnIsRzpsUh+uusPbJh19MEOvKQdRoQT3Hvwf
-         6BpCsqKaLx0ACrh+zIFhT7rSA2iNTPp2YXS33G7C5REApR5Q2NqdJS8cr4KOhUqYT7GP
-         PrmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMftQYY0bJxdZt9bWur6uyFBHMAqMhHOxKX/D30Zn648+1w7tHKi3AUINTlS/emdHUhQsk4Vc0@vger.kernel.org, AJvYcCV+vL80nZfJ+Hn1GE5Q7iZyEPuk07TwRffeKRQLgDPc4CxdAkyHfH1MYT3dXZZWWlonmgWr3Qt/@vger.kernel.org, AJvYcCXi6oPuP1+399821BdRD288fattxu4BZxLFFzV/zCdAAfcBDzsbbtE5Moljd2H+6WVmOZt3Meo0/snABi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyOwuO+kHMeIs5JohL5ObLFStg71LCD2QF2peXJTHAj54WhqBs
-	WLed6ZFmouWpyYBSPdtcd9bG/vXVVLk7+E2QzeVbPK7ZEsMlGWVQ
-X-Gm-Gg: ASbGncvf9dpVvVl84T9ePPSOaUxrsFVsCpGzAhUFBsY+I96QmppQ7tv9sjguvcIfrWZ
-	XvAH5rycO05mu8GzWaxJx71wL7/58tR49c3uVKzVSF21g/b+c4r3JW8X159aF1uBx5qR/v2hW78
-	hF3ezK3HCYRxYZf5K7jQwdfh1ZSrDoVDWulQX594Txm9CNslnccvl8oDITmd++abn7u9cKIykgU
-	zwGtJ/QaiU3g6+ORITktCnP3hu+9/k2AawbPUXnwqPL0YXI2/wMw+Rc/8pCAZ+Kwoa6xsD9/cwU
-	Y5klX2HZfa7OrYPeuEnKxlNT2kKCy19zGWUGfzh8IZFg
-X-Google-Smtp-Source: AGHT+IGBlLoRB1xhv3Q/YgrhOc0DfgkasA/12Oe3DR29IJaqjESvijQ/+eEb2nRJAHl8NBi8VItuGw==
-X-Received: by 2002:a17:903:2f88:b0:223:65a9:ab86 with SMTP id d9443c01a7336-22c535a4b55mr257118285ad.12.1745354541235;
-        Tue, 22 Apr 2025 13:42:21 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdbf00sm89438705ad.225.2025.04.22.13.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 13:42:20 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:42:19 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
-Cc: "Alan J. Wylie" <alan@wylie.me.uk>, Jamal Hadi Salim <jhs@mojatatu.com>,
-	regressions@lists.linux.dev, Jiri Pirko <jiri@resnulli.us>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Octavian Purdila <tavip@google.com>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <aAf/K7F9TmCJIT+N@pop-os.localdomain>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
- <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
- <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
- <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
- <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
- <20250421210927.50d6a355@frodo.int.wylie.me.uk>
- <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
- <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ODB9f3DN"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MKiEdr1992457
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 15:44:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745354654;
+	bh=zcYMv7ggKAyiW015uopgtq2tD/sZdZ+LxTka+zsTdkE=;
+	h=From:To:CC:Subject:Date;
+	b=ODB9f3DNdMsSQXuD/PUb+vEq7Vc1mREH8AWwcCg3cKk3ZZCcOOiLaP1PQHMpvXmMW
+	 hbT3WBuAhPs4rsqgwiPaKpuVW997XbL1S4GxXHEGd42u5QflwAJDeWuSXAAiHd+MVh
+	 i4DVFFUznadNI9/qWeGGvANGzUfgJ2o+rmwIlCkk=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MKiE67024616
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 15:44:14 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 15:44:13 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 15:44:13 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MKiDWh061619;
+	Tue, 22 Apr 2025 15:44:13 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth
+ Menon <nm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Hiago De Franco
+	<hialgofranco@gmail.com>
+Subject: [PATCH v3 0/3] Add ti,suppress-v1p8-ena
+Date: Tue, 22 Apr 2025 15:44:10 -0500
+Message-ID: <20250422204413.272679-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffstätte wrote:
-> (cc: Greg KH)
-> 
-> On 2025-04-22 18:51, Alan J. Wylie wrote:
-> > On Mon, 21 Apr 2025 21:09:27 +0100
-> > "Alan J. Wylie" <alan@wylie.me.uk> wrote:
-> > 
-> > > On Mon, 21 Apr 2025 21:47:44 +0200
-> > > Holger Hoffstätte <holger@applied-asynchrony.com> wrote:
-> > > 
-> > > > > I'm afraid that didn't help. Same panic.
-> > > > 
-> > > > Bummer :-(
-> > > > 
-> > > > Might be something else missing then - so for now the only other
-> > > > thing I'd suggest is to revert the removal of the qlen check in
-> > > > fq_codel.
-> > > 
-> > > Like this?
-> > > 
-> > > $ git diff  sch_fq_codel.c
-> > > diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-> > > index 6c9029f71e88..4fdf317b82ec 100644
-> > > --- a/net/sched/sch_fq_codel.c
-> > > +++ b/net/sched/sch_fq_codel.c
-> > > @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
-> > > Qdisc *sch) qdisc_bstats_update(sch, skb);
-> > >          flow->deficit -= qdisc_pkt_len(skb);
-> > > -       if (q->cstats.drop_count) {
-> > > +       if (q->cstats.drop_count && sch->q.qlen) {
-> > >                  qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
-> > >                                            q->cstats.drop_len);
-> > >                  q->cstats.drop_count = 0;
-> > > $
-> > > 
-> > 
-> > It's been about 21 hours and no crash yet. I had an excellent day down
-> > a cave, so there's not been as much Internet traffic as usual, but
-> > there's a good chance the above patch as at least worked around, if not
-> > fixed the issue.
-> 
-> Thought so .. \o/
-> 
-> I guess now the question is what to do about it. IIUC the fix series [1]
-> addressed some kind of UAF problem, but obviously was not applied
-> correctly or is missing follow-ups. It's also a bit mysterious why
-> adding the HTB patch didn't work.
-> 
-> Maybe Cong Wang can advise what to do here?
+There are MMC boot failures seen with V1P8_SIGNAL_ENA on Kingston eMMC
+and Microcenter/Patriot SD cards on Sitara K3 boards due to the HS200
+initialization sequence involving V1P8_SIGNAL_ENA. Since V1P8_SIGNAL_ENA
+is optional for eMMC, do not set V1P8_SIGNAL_ENA by default for eMMC.
+For SD cards we shall parse DT for ti,suppress-v1p8-ena property to
+determine whether to suppress V1P8_SIGNAL_ENA. Add new ti,suppress-v1p8-ena
+to am62x, am62ax, and am62px SoC dtsi files since there is no internal LDO
+tied to sdhci1 interface so V1P8_SIGNAL_ENA only affects timing.
 
-I guess my patch caused some regression, I am still decoding the crashes
-reported here.
+This fix was previously merged in the kernel, but was reverted due
+to the "heuristics for enabling the quirk"[0]. This issue is adressed
+in this patch series by adding optional ti,suppress-v1p8-ena DT property
+which determines whether to apply the quirk for SD.
 
-Meanwhile, if you could provide a reliable (and ideally minimum)
-reproducer, it would help me a lot to debug.
+Changes since v2:
+- Include patch 3/3
+- Reword cover letter
+- Reword binding patch description
+- Add fixes/cc tags to driver patch
+- Reorder patches according to binding patch first
 
-Thanks!
+Link to v2:
+https://lore.kernel.org/linux-mmc/20250417182652.3521104-1-jm@ti.com/
+Link to v1:
+https://lore.kernel.org/linux-mmc/20250407222702.2199047-1-jm@ti.com/
+
+[0] https://lore.kernel.org/linux-mmc/20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com/
+
+Judith Mendez (3):
+  dt-bindings: mmc: sdhci-am654: Add ti,suppress-v1p8-ena
+  mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch
+  arm64: dts: ti: k3-am62*: add ti,suppress-v1p8-ena
+
+ .../devicetree/bindings/mmc/sdhci-am654.yaml  |  5 +++
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi      |  1 +
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi     |  1 +
+ .../dts/ti/k3-am62p-j722s-common-main.dtsi    |  1 +
+ drivers/mmc/host/sdhci_am654.c                | 32 +++++++++++++++++++
+ 5 files changed, 40 insertions(+)
+
+
+base-commit: 1be38f81251f6d276713c259ecf4414f82f22c29
+-- 
+2.49.0
+
