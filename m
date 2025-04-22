@@ -1,36 +1,31 @@
-Received: from dd44826.kasserver.com (dd44826.kasserver.com [85.13.151.91])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9F725F96F;
-	Tue, 22 Apr 2025 11:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.13.151.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDD925F96F;
+	Tue, 22 Apr 2025 11:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320942; cv=none; b=spi6TwDPehnTlp8EiZOsb2t2RCcyWydrV2VhQkmqDwxxgeC77x06evv5072iFMbMihXKOT/tlvATdOQNoD69uXzZ3Rrs9/yQQimAC83AD8TvBE7dEdeuW4qo7cpoTkxEirHoSo3uMNyEqji7j1lXUYcG4RqnLtP8qeE2gX0UXPQ=
+	t=1745320977; cv=none; b=D5I6GIvOpR83Ie6P1ZSFYYs2Xrg1hh61FViZ04QHmigdBXaugMS3JHP0d3o9BTngQgDhwR6i0FWnxa0MS3+NFvC8BEax9edJaNQdKfv/espMU13xdHDvXvVbqDKH6BFh8SvDV965fE0kFnwgh+z+IFC0lAbmljPKHNoTjO+5394=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320942; c=relaxed/simple;
-	bh=GLcpMPy7md/nAw3qC1GMlS20q+b2Xd+N/J4eoHnOFFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qleeXDd4EFyYmKvcSTGrSDfxUn4FYKjcEflJnnarmV4NxQK+z9Zc96mWye2rFt8meWILIGLoDjV97+dLFBV2QhCfYoU+SYzA73mKDIeC6F5/aVWhqPlVz6yNyFe/Bj2QcKRZVMqDsY5MvGFbc2vPPsAxhR/GqLnhTSJLqcQL4eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=o1oo11oo.de; spf=pass smtp.mailfrom=o1oo11oo.de; dkim=pass (2048-bit key) header.d=o1oo11oo.de header.i=@o1oo11oo.de header.b=B1BxVoGc; arc=none smtp.client-ip=85.13.151.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=o1oo11oo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o1oo11oo.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=o1oo11oo.de header.i=@o1oo11oo.de header.b="B1BxVoGc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o1oo11oo.de;
-	s=kas202503061048; t=1745320928;
-	bh=ycqs7QdKcMOuNbzmqf4ft41vq1eZBegNFxvwwMj7CAM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B1BxVoGc+hAHvsdJiIiv606xD3SyiQ1Df9bLXhuMMPwJ8jR6xJr7DWq3zlsX3WzJd
-	 fGXcVw9w2H9nFlClZfAtwRv1oEvsHWCu/Fywls8IS8geyiymDFhkYTCs4x5nup33HN
-	 nqULL0uOrpkrjEIy57P0+HF+aLE2LBWuCKn2S1xwZUbAfWXRc9iOpgolUGzjLZyrDG
-	 q2/+b72/7qTpkR14qkwlC4lZ4lJhbwB60h2uHQd6vw2Eemg27LMsIt4ZhMwd3rCrr1
-	 ZHQDIyJQf1nfc7uSh9CdsauuWQL5a11uH6M7LQ+3IJnfi6Ma5+koWuN4k+8+CMwKrh
-	 FDCaQfecImGEQ==
-Received: from [141.24.109.69] (wl-r6-69.rz.tu-ilmenau.de [141.24.109.69])
-	by dd44826.kasserver.com (Postfix) with ESMTPSA id CA877B6E01A9;
-	Tue, 22 Apr 2025 13:22:07 +0200 (CEST)
-Message-ID: <c1eb852b-f8aa-4ab0-9579-19eb0d383cb9@o1oo11oo.de>
-Date: Tue, 22 Apr 2025 13:22:06 +0200
+	s=arc-20240116; t=1745320977; c=relaxed/simple;
+	bh=zTL90bad/j/J03MNrk8iChcdy57GihnCjKQVaL4RKTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=m/jvWasnKwRuHiPUtUSGF+1doyRyVRI6fzvYSTpwo0KTWuYdKHV39WmNLDvUyfMOGVVxvGpbNuVgCnVbERmo1yWtOFZZ/9Fm83420FEMVDp4+XXM+rMMXkmbIROufyAMlJ4S/pRu2tnFTYI6TSMSWO5uijAmPmnAleJyzCFwXtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zhfr23R0RzvWrs;
+	Tue, 22 Apr 2025 19:18:42 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 395C9180087;
+	Tue, 22 Apr 2025 19:22:51 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 22 Apr 2025 19:22:50 +0800
+Message-ID: <cd6db77d-fcb4-44d9-8f1b-61749b411c33@huawei.com>
+Date: Tue, 22 Apr 2025 19:22:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,58 +33,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] lsm: Add Rust bindings with example LSM
-To: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-References: <20250416213206.26060-2-kernel@o1oo11oo.de>
- <CAHC9VhS=jWEZqb3MqCtUAJhY9ci8d_N4H6CqWsYU0YmEG=8_yA@mail.gmail.com>
-From: Lukas Fischer <kernel@o1oo11oo.de>
-In-Reply-To: <CAHC9VhS=jWEZqb3MqCtUAJhY9ci8d_N4H6CqWsYU0YmEG=8_yA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
+ full-featured API
+To: Leon Romanovsky <leon@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
+ Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
+	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
+ Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff
+ Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+	<okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+	<tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
+ Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
+	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<netdev@vger.kernel.org>
+References: <20250414120819.3053967-1-linyunsheng@huawei.com>
+ <20250420112110.GA32613@unreal>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20250420112110.GA32613@unreal>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 21.04.25 21:09, Paul Moore wrote:
-> Thanks for sharing this Lukas.  My Rust knowledge is still far too
-> basic to offer any constructive review of the Rust code, but I'm happy
-> to see some effort being put into looking at what would be required to
-> support a LSM written in Rust.
+On 2025/4/20 19:21, Leon Romanovsky wrote:
 
-Hi Paul,
+...
 
-that's alright, I was mainly asking the Rust for Linux contributors for feedback
-on that, but I wanted to keep you in the loop as well.
-
-> It isn't clear to me if this is simply an exercise in seeing what
-> Rust/C interfaces would be needed to implement a Rust based LSM, or if
-> you ultimately have a LSM you would like to submit upstream and this
-> is the necessary groundwork so you can implement it in Rust.  Unless
-> it is the latter, I'm not sure this is something that is a candidate
-> for merging into the upstream Linux kernel as we don't merge "demo"
-> type LSMs.  If you are intending to develop a proper LSM, we do have
-> some guidelines that may help explain what is expected:
+>>
+>> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
+>> index 11eda6b207f1..fb094527715f 100644
+>> --- a/drivers/vfio/pci/mlx5/cmd.c
+>> +++ b/drivers/vfio/pci/mlx5/cmd.c
+>> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
+>>  		if (ret)
+>>  			goto err_append;
+>>  		buf->allocated_length += filled * PAGE_SIZE;
+>> -		/* clean input for another bulk allocation */
+>> -		memset(page_list, 0, filled * sizeof(*page_list));
+>>  		to_fill = min_t(unsigned int, to_alloc,
+>>  				PAGE_SIZE / sizeof(*page_list));
 > 
-> * https://github.com/LinuxSecurityModule/kernel/blob/main/README.md
-thanks for the feedback, I guess I was missing some context in the initial mail.
-The LSM I'm using it for in my thesis is more of a research testbed (or "demo"),
-so I never intended to upstream that. Since I still needed to create bindings to
-implement that in Rust, I figured I would post them to the lists to get some
-feedback and to get things started in case someone wants to implement an actual
-upstreamed LSM in Rust in the future. This is why I marked this "RFC PATCH", it
-is not intended for upstreaming, only for feedback.
+> If it is possible, let's drop this hunk to reduce merge conflicts.
+> The whole mlx5vf_add_migration_pages() is planned to be rewritten.
+> https://lore.kernel.org/linux-rdma/076a3991e663fe07c1a5395f5805c514b63e4d94.1744825142.git.leon@kernel.org/
 
-If there is interest in it, I might polish the bindings after the thesis, so
-that they can be properly used for an actual LSM. In the state they are
-currently in they do allow writing an LSM in Rust, but not in a way a safe Rust
-abstraction should.
+It seems mlx5vf_add_migration_pages() is changed to use the pattern
+of passing 'page_array + allocated' and 'nr_pages - allocated' in the
+above patch, so I think it is ok to drop the above hunk.
 
-Thanks,
-Lukas
+Hi, Andrew
+Do you want me to resend this patch without the above hunk or it is
+possible that you can drop the above hunk when committing if there
+is no other comment need fixing?
+
+> 
+> Thanks
+> 
+> 
+
