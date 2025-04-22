@@ -1,61 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1301E87B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF4290086;
+	Tue, 22 Apr 2025 15:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745337027; cv=none; b=s10RXTRaDck/fVCsF1Np3ug2wIYoTMwH1OM19m8RQPEmnaeNMAsr32dn99p5GpXVdePUFy3OZq6sMnjbessvT/XiWtUqbE59fWaS34dRxl+B4JrnymjBafPMnUyhwUjPJRrwL+ESux153KqtSufUvyiIS2nkt2DnXwfFvXbGROU=
+	t=1745337032; cv=none; b=b/hoQma2r28pJfbxBdYBtFv5nJx7GR24AYtl5dap5kROvt7G3WNlh5Q5eIrAKAQh10N0BQlPprfZoVCaDn0DyrEHJuPD8b3t7Ma6Y8ogdlL0hbXF0TlsZhjYVhATLnGWx5fiPruElwvu/MJEufRdZXpYaHZ++I38GioNx9PxhVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745337027; c=relaxed/simple;
-	bh=mIhBxYbG+pmDSE5aCrley4crIb2diwH7C1G03e2Hk6U=;
+	s=arc-20240116; t=1745337032; c=relaxed/simple;
+	bh=X/Jm8EpGyPPW/TPBD8j9CgUl3gKs8re5bMeAjVZN3NQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQWkCfv2rvHcnPfvZFIebgi79ZP+/VVaAIVtYM1NK09NppcEy+bfCqvcDK1gu/qOrHOawCza5WHi7tGB1ILE+4ncWrfHRl9NUonSmr5abdqv+K5dFNOSOCjsvGWt59AhsQL9XICDS3kyUiuFf02RnuFX81kjEzq4LKLk/5QTDeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZeW46uI9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZeW46uI9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745337024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L0OrTzSyXcOQ/sG0Ok5H6s6X1DlUx1r4W6qvigJ8iSw=;
-	b=ZeW46uI9IF8i6JIvF4UYIIfYTslxFhK5ICKAD6OVRgg9drBkreznS+SJBdxnjjdGSqRP6e
-	L3DNVk+SXklvb+TH7ahnh1cUEZskZ+hlnL0dRKtnAlAb5OSKdLLaMjxmZLJFfnnPfZT3zh
-	ZZv6ZfiMPkVfwkjPEeG/2yhSh6GL93M=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-g2ARZujmPqKh2thGUbLH4A-1; Tue,
- 22 Apr 2025 11:50:20 -0400
-X-MC-Unique: g2ARZujmPqKh2thGUbLH4A-1
-X-Mimecast-MFC-AGG-ID: g2ARZujmPqKh2thGUbLH4A_1745337018
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0CE6180010A;
-	Tue, 22 Apr 2025 15:50:17 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.145])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E73D818001DD;
-	Tue, 22 Apr 2025 15:50:07 +0000 (UTC)
-Date: Tue, 22 Apr 2025 12:50:06 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
-	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, 
-	Crystal Wood <crwood@redhat.com>, linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Valentin Schneider <vschneid@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, lclaudio00@gmail.com
-Subject: Re: [PATCH v4] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-Message-ID: <ucooiludwnen2gxm6pjypzloif23w4t37vrpml75egpkifbc4z@tmrs462ju7om>
-References: <Z_gLsK6rOjV3KElO@uudg.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7MjQjZg5ICV9FMPU9S3vADcZF7WQCnOCpHe9ijDIpVqwziksG9jXyhYcUMioxfFuMQjI4fQJMWjzFryObDAtnOrlj/3Qa63x6cIPCXU3+btISR35jzDq7tBT+Ynsb4h3G2FhskgjUg/KCHNRtlxHlG99YygvFRZG7Vjb4viMfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: nS2QrUHeQR6B1ayodn4d1Q==
+X-CSE-MsgGUID: 2AyZxiO7SkquyZ5YFhZK1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="58267022"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="58267022"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:50:31 -0700
+X-CSE-ConnectionGUID: jNzoMomCR2iiPXpLQhUytw==
+X-CSE-MsgGUID: qt0fV3ONStmkyAJZsMGD8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="132594964"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:50:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u7Ft6-0000000EloN-0apC;
+	Tue, 22 Apr 2025 18:50:20 +0300
+Date: Tue, 22 Apr 2025 18:50:19 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+Message-ID: <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
+References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
+ <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,82 +61,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_gLsK6rOjV3KElO@uudg.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 10, 2025 at 03:19:28PM -0300, Luis Claudio R. Goncalves wrote:
-> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
-> with a mutex enqueued. That could lead to this sequence:
+On Tue, Apr 22, 2025 at 01:34:46PM +0200, Jorge Marques wrote:
+> Some devices have an internal clock used to space out the conversion
+> trigger for the oversampling filter,
+> Consider an ADC with conversion and data ready pins topology:
 > 
->         rt_mutex_adjust_prio_chain()
->           put_task_struct()
->             __put_task_struct()
->               sched_ext_free()
->                 spin_lock_irqsave()
->                   rtlock_lock() --->  TRIGGERS
->                                       lockdep_assert(!current->pi_blocked_on);
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   ++++    ++++    ++++    ++++    ++++
+>   ADC data ready      *       *       *       *       *
 > 
-> Fix that by unconditionally resorting to the deferred call to
-> __put_task_struct() if PREEMPT_RT is enabled.
+> With the oversampling frequency, conversions are spaced:
 > 
-> Suggested-by: Crystal Wood <crwood@redhat.com>
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> ---
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   + + + + + + + + + + + + + + + + + + + +
+>   ADC data ready         *       *       *       *       *
 > 
-> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
->     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
-> v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
-> v4: Fix the implementation of what was requested on v3.
+> In some devices and ranges, this internal clock can be used to evenly
+> space the conversions between the sampling edge.
+> In other devices the oversampling frequency is fixed or is computed
+> based on the sampling frequency parameter, and the parameter is
+> read only.
 > 
->  include/linux/sched/task.h |   17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 0f2aeb37bbb04..51678a541477a 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
->  	if (!refcount_dec_and_test(&t->usage))
->  		return;
->  
-> -	/*
-> -	 * In !RT, it is always safe to call __put_task_struct().
-> -	 * Under RT, we can only call it in preemptible context.
-> -	 */
-> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> +	/* In !RT, it is always safe to call __put_task_struct(). */
-> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
->  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
->  
->  		lock_map_acquire_try(&put_task_map);
-> @@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
->  	}
->  
->  	/*
-> -	 * under PREEMPT_RT, we can't call put_task_struct
-> +	 * Under PREEMPT_RT, we can't call __put_task_struct
->  	 * in atomic context because it will indirectly
-> -	 * acquire sleeping locks.
-> +	 * acquire sleeping locks. The same is true if the
-> +	 * current process has a mutex enqueued (blocked on
-> +	 * a PI chain).
->  	 *
-> -	 * call_rcu() will schedule delayed_put_task_struct_rcu()
-> +	 * call_rcu() will schedule __put_task_struct_rcu_cb()
->  	 * to be called in process context.
->  	 *
->  	 * __put_task_struct() is called when
-> @@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
->  	 *
->  	 * delayed_free_task() also uses ->rcu, but it is only called
->  	 * when it fails to fork a process. Therefore, there is no
-> -	 * way it can conflict with put_task_struct().
-> +	 * way it can conflict with __put_task_struct().
->  	 */
->  	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
->  }
-> 
+> Devices with this feature are max1363, ad7606, ad799x, and ad4052.
+> The max1363 driver included the events/sampling_frequency in
+> commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
+> and ad799x in
+> commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
+> hysteresis")
+> but went undocumented so far.
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+So, it was no documentation for the nodes this change describes, right?
+
+...
+
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+> +KernelVersion:	6.15
+
+Then why don't you put the real version of the first release that has it?
+
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Some devices have internal clocks for oversampling.
+> +		Sets the resulting frequency in Hz to trigger a conversion used by
+> +		the oversampling filter.
+> +		If the device has a fixed internal clock or is computed based on
+> +		the sampling frequency parameter, the parameter is read only.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+> +KernelVersion:	6.15
+
+Ditto.
+
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Hardware dependent values supported by the oversampling
+> +		frequency.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
