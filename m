@@ -1,169 +1,82 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7405F2777E1;
-	Tue, 22 Apr 2025 11:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2518627BF60
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320886; cv=none; b=Bmo6wcqp4isXT9qYigbAdz0qJ/mNeVNWZ1y+XEG3u6lrul/fFvAwZolr2B3tQyMxhXanupBFd74gwY5ApLJ3h3ojP/W/IVJjanwW8o/56Ws6cvahinr8J1oBh248KHzLzofBKxoQ0PugqEtegkz23lcn13MeF4kCUIf31aoAbLQ=
+	t=1745320896; cv=none; b=X8pcldEqP31qLW4khUZg6IVJUBReuiIot8qiECE4atPUIYcU6zlpenXOwSZgwHpxVCm4hRYRwBcKms+pPFeo/KhovJOMc1I3H7Q7VZEtTCwrRZkgSPdCwwo7proln8RpGeUDqoOJvpdjGeepiwXznTBkwD7O3x9Y4gUlBVKKYig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320886; c=relaxed/simple;
-	bh=nmR4TdV4+M08iCOThs59/0QH8E7V51DggdtN2U37lq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=brB/rZfflCcGIt6rFdZkJVHjBgwdDOJZGoV7P3EiHrXdAZlqQgxjKwZMxwC+aJtXcOOw50K4fRvMH/JwMV5xLvf7GTXrpHZVRSYN2FW0KSXl3gNEOyyxz48+4H345kNEpRNadfPlRAGStplDqC28K9z3I5V/15hTvzNiNkJvyVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EOuKw/Og; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745320896; c=relaxed/simple;
+	bh=A1WBS2ArbcM4mlKZIrV6S7/gv9XcNRksqQmJ3gWkmK8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MbQzGSugzDmMKMI5LB8F60W9/ou8X5Ca2KmCjZLrPgJxDxw9Oxa6/fenc9Wf+DsBe1CgG6bGab6hjJr+xrIwKZIzdr92ZOzha9XYCKywA044F4w86yoGlSM8DI8LxH2e4ehElqoqoyf6E+g6Qkk/9RKCRDc0nBdIL5wMUR8S4dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=F7rvbYW1; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EOuKw/Og"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4OlZa006174;
-	Tue, 22 Apr 2025 11:21:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	M4nBCRh0WFy4RUD4NZmrTdHCdTJnYmLhpp2J6H/klno=; b=EOuKw/OgGQVVRJBt
-	lfBnVRBq/o/K4/CPggde60dMSZBY9jtHWTwI+1geBtVVPvXXF9O4MGTo7/JPb5ol
-	e2NfLwL0Z+KgcwkQh/QoTKKyBuhHie3LGntDNdS10THN9WVg7afaSMKoHnKpPdGb
-	rYQiWWLCkZCYzb/vvhZTdmQ8Jzw97XG48feOEa82HFmcHBE/SV/W95Hp11U1Gwxs
-	e759pkf2qsxRUDW4SfgA1aFBHR5AVByTmP/4/3wLrLPbXiVnbz59HG/1LJoUu45V
-	DtZPNpmbKmNHkv4QHdicaYfTgcsUFhw2DkyH2pFOfaCX3d7nYJQAlczu4UOKOS84
-	eAm4JQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jf8xc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 11:21:20 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53MBLJkr013888
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 11:21:19 GMT
-Received: from [10.50.21.133] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 04:21:15 -0700
-Message-ID: <ed284074-d12a-497d-b8c3-de913bcffb6a@quicinc.com>
-Date: Tue, 22 Apr 2025 16:51:12 +0530
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="F7rvbYW1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1745320891; x=1745580091;
+	bh=koDqDhzrpOrfQ3ZFK3sNuNKKWYvOUisTZDxVWQODIIs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=F7rvbYW18YiCaHo0dvPGTruj8GRxHPeyZTX1rpzf1MsuiLlL2qdLObWX7C1pKVUJr
+	 DwXNN2z9ku1pryX/lehsUO1PeBZVQckJGyuIEvEBC7I/saxeT2YxJ/7wqkxyYJnjVc
+	 WAkU2BmiM7z6dag8d7EwlkIXUiJNyChF2a7MgEPToMYkJrpArsDVKkwUnBUPmi9taG
+	 vv/2Hypy8m7EoJP/q8BLvtLLVDJ1jHHn4Q0/qo94FOTH1EjFm3wQ6jQU2uBX4i2C+B
+	 ywaQ60WnuoUb3my8/Q5wvLgEJQFFLHnr2tCKDNQ41hdWVsk1ALakYWqlF08mr2GRiR
+	 QFaoGb60wgDWg==
+Date: Tue, 22 Apr 2025 11:21:25 +0000
+To: Christian Schrefl <chrisi.schrefl@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/8] rust: pin-init: Implement `Wrapper` for `UnsafePinned` behind feature flag.
+Message-ID: <D9D4M8XF14X9.1YUVFH9EW0IMX@proton.me>
+In-Reply-To: <4df4e3a0-9caa-4253-bf65-66c238bf0291@gmail.com>
+References: <20250421221728.528089-1-benno.lossin@proton.me> <20250421221728.528089-4-benno.lossin@proton.me> <4df4e3a0-9caa-4253-bf65-66c238bf0291@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 33f605292d9a927cceb5cd8455337a1280f52e39
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 RESEND] arm64: dts: qcom: sa8775p: Add default pin
- configurations for QUP SEs
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
-References: <20250416101411.1444248-1-quic_vdadhani@quicinc.com>
- <pxywhhhtraaykx32z7aifyd63gxydwrf4byuanv4zbfeqhk2fx@h6lyn7btyrtz>
-Content-Language: en-US
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <pxywhhhtraaykx32z7aifyd63gxydwrf4byuanv4zbfeqhk2fx@h6lyn7btyrtz>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=68077bb0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=_55ISlHlL2tq_TlyrwIA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: vS9HXyPTtFfcn-WsfgnPcCH88VJzi26w
-X-Proofpoint-ORIG-GUID: vS9HXyPTtFfcn-WsfgnPcCH88VJzi26w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220086
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Tue Apr 22, 2025 at 11:42 AM CEST, Christian Schrefl wrote:
+> On 22.04.25 12:18 AM, Benno Lossin wrote:
+>> @@ -1557,3 +1561,11 @@ fn pin_init<E>(value_init: impl PinInit<T, E>) ->=
+ impl PinInit<Self, E> {
+>>          unsafe { cast_pin_init(value_init) }
+>>      }
+>>  }
+>> +
+>> +#[cfg(all(feature =3D "unsafe-pinned", CONFIG_RUSTC_HAS_UNSAFE_PINNED))=
+]
+>> +impl<T> Wrapper<T> for core::pin::UnsafePinned<T> {
+>> +    fn pin_init<E>(init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+>> +        // SAFETY: `UnsafePinned<T>` has a compatible layout to `T`.
+>> +        unsafe { cast_pin_init(init) }
+>> +    }
+>> +}
+>
+> I've realized that for us to use `UnsafePinned` in `Opaque` internally=20
+> we need to have a `T: ?Sized` for this implementation. `cast_pin_init`
+> won't work for that since we can't cast pointers between different DSTs.
+> We could add something similar that uses a closure to convert a
+> `*mut T` to `*mut U`.
 
+I don't follow, which types do you need to wrap in `Opaque` that are not
+sized?
 
-On 4/20/2025 10:40 PM, Bjorn Andersson wrote:
-> On Wed, Apr 16, 2025 at 03:44:11PM +0530, Viken Dadhaniya wrote:
->> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
->> Serial Engines (SEs) are missing in the SoC device tree. These
->> configurations are required by client teams when enabling any SEs as I2C,
->> SPI, or Serial protocols.
->>
->> Add default pin configurations for Serial Engines (SEs) for all supported
->> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
->> change facilitates slave device driver clients to enable usecase with
->> minimal modifications.
->>
->> Remove duplicate pin configurations from target-specific file as same pin
->> configuration is included in the SoC device tree.
->>
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
->> v1 -> v2:
->>
->> - Drop drive-strength and bias property from soc dtsi.
->> - Update commit log.
->>
->> v1 Link: https://lore.kernel.org/lkml/20250225154136.3052757-1-quic_vdadhani@quicinc.com/
->> ---
->> ---
->>   arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |   7 -
->>   arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 750 +++++++++++++++++++++
->>   2 files changed, 750 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 967913169539..17c3f662d14b 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -712,11 +712,6 @@ ethernet0_mdio: ethernet0-mdio-pins {
->>   		};
->>   	};
->>   
->> -	qup_uart10_default: qup-uart10-state {
->> -		pins = "gpio46", "gpio47";
->> -		function = "qup1_se3";
->> -	};
->> -
->>   	qup_spi16_default: qup-spi16-state {
->>   		pins = "gpio86", "gpio87", "gpio88", "gpio89";
->>   		function = "qup2_se2";
->> @@ -917,8 +912,6 @@ &remoteproc_gpdsp1 {
->>   
->>   &uart10 {
->>   	compatible = "qcom,geni-debug-uart";
->> -	pinctrl-0 = <&qup_uart10_default>;
->> -	pinctrl-names = "default";
->>   	status = "okay";
->>   };
->>   
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-> [..]
->> +			qup_spi16_default: qup-spi16-state {
->> +				pins = "gpio86", "gpio87", "gpio88", "gpio89";
->> +				function = "qup2_se2";
->> +			};
-> 
-> Now we have qup_spi16_default in both sa8775p-ride.dtsi and sa8775p.dtsi
-> 
-> I presume you forgot to clean that up?
+Since `Opaque` uses `MaybeUninit` under the hood, it cannot support
+`!Sized` types anyways, so I'm a bit confused.
 
-Sure will update in next patch.
+---
+Cheers,
+Benno
 
-> 
-> 
-> PS. I don't know why the word "RESEND" is present in $subject. Why was
-> this resent?
-> 
-
-Hi Bjorn,
-
-I apologize, but I'm not entirely sure if there has been any approval or 
-if the patch will be accepted. Since it's been over three weeks, I 
-thought it might be a good idea to resend it.
-
-I apologize for any confusion caused by resending the patch.
-
-> Regards,
-> Bjorn
