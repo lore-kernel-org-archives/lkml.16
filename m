@@ -1,110 +1,104 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FCD214A8F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A28814BFA2;
+	Tue, 22 Apr 2025 13:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745327703; cv=none; b=Yn/YCllJEK1RS+1GFDhzR8JinN8FnaDA4pmp+/ban7PiJu90ELgpvDvvQFZZnXXrOVhuZovv2Covo1b45wQOVFeHk+BktRm+qMEpkMlQaIegMIqEC2L9WqInPspECj6zkbgeJMf9cBkdXaIQEooO3OpUHI5mVWwrTPdfpA0bPks=
+	t=1745327789; cv=none; b=DRNmUO9Ulo+7wHRNZvrT2LdVE1lsKb+EP6GsWP63gSHmfc46wyrDc5BUot5LLM3HS1wkOZ9tISBDFahHESTk4vrNmBglMsOG/TwVFx7ho3eQ4rYUa6ON5aFY9SlJ6Cw8SByh3FMkmaT37n/gTi7GEhx2EdBqXaOqPwKBHvy7RaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745327703; c=relaxed/simple;
-	bh=fL/yp1WdeSIx7QNu1lKSNKNnEMcCk+px2J5jWYgn4yQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B+kVGILFRezRazrAzHhPsutQfXLI3Z2DFl97F5GlWkIaFQqQCvVbSs1TkBFaTfuRDindPPoYMYbmrhPsYua3VV8tUMI/yF9PYWiKD8OzW/IzOaFY3dAtDLHpxvcumZH8AwvZqWsP8ScBezLRdzyNnoHB+Q1jDnGyfzdg02KOS3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+0+Wf6N; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745327789; c=relaxed/simple;
+	bh=6tmGmklnwN8vx0n4rAj1N5XTQGSDE0iGYL1o4MkaNLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+OGm97HqI4JeYOjzpZ/lxSa2V1EoM+M+iiKoACSatqE1+qznwBVM/rpbaAjepOPzZD438Zzo/yiTTVLZXHrfzYnSFqBHUU2qTn1L5eLCbXQf7zJpLImZzw3PXZ+oJtYcy3aqLuTzPodByZnJ5hd8nl0dTIPCMXAcozE+3WjYhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bIs5bTuJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+0+Wf6N"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso7290950a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:15:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745327700; x=1745932500; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvkW2QYEsSaLwERWuQdz+pmfthFFjasiuRXf1DERhYo=;
-        b=a+0+Wf6NhUUVKV4bkR4i7P41pTRE31gQZOmu1+9mdLvscF75ERc6OsTJcOEbiHvqdZ
-         AYeZ1fgCvnEtw0BapmEJhG5QI9jUdt5+kCL+9kQZd5GyF/Rx2vQAUXcq3YEDgqmksg1E
-         1lyVTPjyciSrooan84XM5EISW+LdNWrzZJ9uP7KeB6Ye/3GwMIgdVF1UWwIAbz/229Te
-         cHFfcHVJYCsIbFiYpMkN5qjlZ+cJXsDWbk27QyoKuG6pg6Wl+zLDXKIWfQeHihbi3dt8
-         7ea9bFSUEkZk3tpu4KWCVVnRcxu2TwP0mwCbsQ6awEOUl0Zv3efsnu2H7JN/9LZfURCr
-         87Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745327700; x=1745932500;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xvkW2QYEsSaLwERWuQdz+pmfthFFjasiuRXf1DERhYo=;
-        b=jl9syFZb5g5MWXu868cpifiB0Yw87RzCxCxRYq+dgDpUVO5Fx7Zx7ZPjttpzHI+6oz
-         /HufKy8JSiQdzl+sdGveepcCnBL/tIYh70+qwPKatQRj668Xi0z41HDxxLr/KZDv+n/G
-         eb1zO8zbpX1b4YYFGPs3P8dlSvT0gNx0E6lcmZun6QdmYlL5PpWHJ9KD66GEYg8Wb+ah
-         SOD2wanbb07gab0CZjqcPse3SxtKX8VW5jKKpUa0e+jEN3LTe6j3krK/pTVasi8UYA2f
-         4lEYL5FVhNZj6r1sdp92LkwwuN0QAuHdBNz1wbxsE37GjKQHRVZ4lR3MJtX1foM3RTxJ
-         QA6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUycQHp3tw/nFsu6KpZu5ONmr8BzCZ9+pKxJ65mveNgvhxv7+WWKfzRYKOag0ZP/p3RFlGdiBc7z2NgosQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSGBdrd1UYBtO0Nnm+KjgwUedvQf1LjtdhjeUpbSew2vmyZQX9
-	uZmiuKe4vzSl71ve7cvzfPgNyqD+wGZ8Br+vuIDSXYLIqW3vOBp7
-X-Gm-Gg: ASbGnct36Pur4lezYKZvNb+tDNE9TAd4Uc/kSa4AEPEYUp9xyOb0hPC1jt0Igzh67xM
-	aJDyYQULgw9Zp7Ju+SZqLt1NECjBhMBG/yBMkZzWkJTMcASRJwelTBaRI/ZET/m/Dt/YQF3pmZX
-	nkY4yFkvFPMtOVeh1jmHn3IxzjKTa2FUjebHnISJ0fNjRDpV/9zEV8UgxElYUB1ux9VMmSyTS4o
-	GlP49t3OurKE/wA3pYsw0tLB6B3bAWC0oicztPuGEeQTeTU+yHLlbu68mwYdx+UrwfeY/QTR4hu
-	o5b+ju7VBArQpTxGuxcS+PvyObsoz6g4so4VYmpm9y3jWTX//93WYG4=
-X-Google-Smtp-Source: AGHT+IF2m4DSYZeB1gfK1GHbKOzs1Wseci5l7jt886dSGFln60vGUq8pwcCfErNmrLsd8tCI+AupTA==
-X-Received: by 2002:a17:907:2d1f:b0:ac3:26ff:11a0 with SMTP id a640c23a62f3a-acb74dd05c6mr1456346866b.38.1745327699438;
-        Tue, 22 Apr 2025 06:14:59 -0700 (PDT)
-Received: from msi-laptop.thefacebook.com ([2620:10d:c092:500::4:5298])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef4799bsm659441366b.149.2025.04.22.06.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 06:14:59 -0700 (PDT)
-From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	andrii@kernel.org,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org
-Cc: Mykyta Yatsenko <yatsenko@meta.com>
-Subject: [PATCH v2] maccess: fix strncpy_from_user_nofault empty string handling
-Date: Tue, 22 Apr 2025 14:14:49 +0100
-Message-ID: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bIs5bTuJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 786EAC4CEEC;
+	Tue, 22 Apr 2025 13:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745327789;
+	bh=6tmGmklnwN8vx0n4rAj1N5XTQGSDE0iGYL1o4MkaNLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bIs5bTuJvCfBmMKpxZc5Tm7AdYWPFbFzUlulT0XmxotWEMOM0WZlwAB2jVTywkcE6
+	 oz01+0jHJ4Zi7TwAU225as4iIeuOMdhPaROhk1ewBAgQNGHLy6R1a1Gx3Qumz7I/8m
+	 7yQ1ZTtjaXx88GTEWOv7M8flVGNribf+XGC7oyk4=
+Date: Tue, 22 Apr 2025 15:16:21 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Ryo Takakura <ryotkkr98@gmail.com>, alex@ghiti.fr,
+	aou@eecs.berkeley.edu, bigeasy@linutronix.de,
+	conor.dooley@microchip.com, jirislaby@kernel.org,
+	john.ogness@linutronix.de, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pmladek@suse.com,
+	samuel.holland@sifive.com, u.kleine-koenig@baylibre.com,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] serial: sifive: lock port in startup()/shutdown()
+ callbacks
+Message-ID: <2025042252-geology-causation-a455@gregkh>
+References: <20250405043833.397020-1-ryotkkr98@gmail.com>
+ <20250405044338.397237-1-ryotkkr98@gmail.com>
+ <2025040553-video-declared-7d54@gregkh>
+ <397723b7-9f04-4cb1-b718-2396ea9d1b91@suse.cz>
+ <2025042202-compare-entrap-0089@gregkh>
+ <a7cf9864-6810-43d8-a7f6-f71cc1ee081c@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7cf9864-6810-43d8-a7f6-f71cc1ee081c@suse.cz>
 
-From: Mykyta Yatsenko <yatsenko@meta.com>
+On Tue, Apr 22, 2025 at 03:07:54PM +0200, Vlastimil Babka wrote:
+> On 4/22/25 12:50, Greg KH wrote:
+> > On Tue, Apr 22, 2025 at 12:20:42PM +0200, Vlastimil Babka wrote:
+> >> 
+> >> I admit it's surprising to see such a request as AFAIK it's normally done to
+> >> mix stable fixes and new features in the same series (especially when the
+> >> patches depend on each other), and ordering the fixes first and marking only
+> >> them as stable should be sufficient. We do that all the time in -mm. I
+> >> thought that stable works with stable marked commits primarily, not series?
+> > 
+> > Yes, but when picking which "branch" to apply a series to, what would
+> > you do if you have some "fix some bugs, then add some new features" in a
+> > single patch series?  The one to go to -final or the one for the next
+> > -rc1?
+> 
+> As a maintainer I could split it myself.
 
-strncpy_from_user_nofault should return the length of the copied string
-including the trailing NUL, but if the argument unsafe_addr points to
-an empty string ({'\0'}), the return value is 0.
+You must not have that many patches to review, remember, some of us get
+a few more than others ;)
 
-This happens as strncpy_from_user copies terminal symbol into dst
-and returns 0 (as expected), but strncpy_from_user_nofault does not
-modify ret as it is not equal to count and not greater than 0, so 0 is
-returned, which contradicts the contract.
+> > I see a lot of bugfixes delayed until -rc1 because of this issue, and
+> > it's really not a good idea at all.
+> 
+> In my experience, most of the time these fixes are created because a dev:
+> 
+> - works on the code to implement the feature part
+> - while working at the code, spots an existing bug
+> - the bug can be old (Fixes: commit a number of releases ago)
+> - wants to be helpful so isolates the fix separately as an early patch of
+> the series and marks stable because the bug can be serious enough in theory
+> - at the same time there are no known reports of the bug being hit in the wild
+> 
+> In that case I don't see the urgency to fix it ASAP (unless it's e.g.
+> something obviously dangerously exploitable) so it might not be such a bad
+> idea just to put everything towards next rc1.
 
-Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
----
- mm/maccess.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, but then look at the huge number of "bugfixes" that land in -rc1.
+Is that ok or not?  I don't know...
 
-diff --git a/mm/maccess.c b/mm/maccess.c
-index 8f0906180a94..831b4dd7296c 100644
---- a/mm/maccess.c
-+++ b/mm/maccess.c
-@@ -196,7 +196,7 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
- 	if (ret >= count) {
- 		ret = count;
- 		dst[ret - 1] = '\0';
--	} else if (ret > 0) {
-+	} else if (ret >= 0) {
- 		ret++;
- 	}
- 
--- 
-2.49.0
+> This very thread seems to be a good example of the above. I see the later
+> version added a
+> Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+> which is a v5.2 commit.
 
+Agreed, but delaying a known-fix for weeks/months feels bad to me.
+
+thanks,
+
+greg k-h
