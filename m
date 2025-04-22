@@ -1,146 +1,71 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7016328FFC9
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2482900BF;
+	Tue, 22 Apr 2025 15:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336698; cv=none; b=WCmyk11AiI2oHhnxIPdxg7Gr/nj7ZdbthyVwkrykxXddDhozEoyoQ5of1gInlaYOjopqCXk39kLtBvipVUZbyv/bJgJleXrk7viidRUloofuVopUl4E1tJ9bLtjE9JXR9uoLudRck41KqogHP719nxCwONMrVlPf+EDfoLew10s=
+	t=1745336700; cv=none; b=m/W//uNEs70fEUYa/llhsElHssVX6UJxcpIdj0agp9oVYct40fpsDoovFGHOz2O6d8PChpaj/o1u3+ykzoj+MhMcHxE1PmLQcuI7Ot3/b7zCk8g73k+vKn3lFkwa3rD8+N+XoXRpLB2lsFfHjt5mvs8L3QTEOAPFQfxP1/5I9RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336698; c=relaxed/simple;
-	bh=0uC9hDvG6Lild9gA1LK9DD8f+xmCy87GoAULaus/E60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KZyqnIGkS7x1Qirf1+apJHel9KGUw/+xN7bTkLDFDXD3qW1B+ogJfKec/+R9O9rr4meW8EDhzshuLTwrdVCWfD3nBmpjy2WGx20kHkUdUO5+D8yac0nL4MCasOTjanL2e3ioQxgj3q2vsVr9TwQIcCqbsUmvh5TrJMCStOLBLWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=reHsgTtl; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745336700; c=relaxed/simple;
+	bh=BbtwK2smXn0Op0m1KEOnNdTqhkRUWhYr3xZpX7mRyNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=i43mpsMQDh2Z7aHROW0al8OHdQk+nMM/bpWTxjRUlEXNNhGS29t482LmCjTH3A14fg5xYYlafq1VvZkne87F4AK+mdH2sOS8dnptNOayYnU+T+bWKPVHmT26l+h7fa9eb3X73eDuq2o/YQzcKSlIyfO+4I7Lu9ShI1oTuo8yAVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrYwLEmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="reHsgTtl"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6fee50bfea5so42301107b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745336695; x=1745941495; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BgYWZLFi0BzqpeykX3IbiFarxM1CV0Y1YZ98qOBQX4=;
-        b=reHsgTtlJukJyqwhf5YeI19Lo7MHy+Exvp8yy02qe/1er3A91+bDSn5d7IF5aGtYI/
-         nwNndeB+pHeWylZ1y0d7bloyDOahcY6nbUMeDCsdLL5jrIE24prpzAbBe8+AXbL6/2dY
-         seDY5dXWb3GzwzZMbxPAd60NWwmHoplPdtg8ZTAxzRcd2okjJVnYAbOWNXIOFCjrUCjZ
-         tL7QkXh/VjAAGWmhlluONvj8wY2BTf6wH08Stk4G9ABClN3p4qB9uYEh6NeO6VoPp5A6
-         ZBijSk4UgIIPZvqn8cPP4Q4ASTQUZHemFS/l8ahTP3fQ/vZ2nEUvAVY48Zr60Zq1MXvF
-         VhTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745336695; x=1745941495;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2BgYWZLFi0BzqpeykX3IbiFarxM1CV0Y1YZ98qOBQX4=;
-        b=HV9V7Jc6hhpRKrFzksJovk06KlVbFs9bc8RZ64WuyAvU7p9eXfYqP7cw7MW/O89JPK
-         Cykzivm1iNyNGW3nRJA/Tjz82jJxYDLMbaf7/4gZ33KJl9r9JrzczW8E6ZHYe/I+SLZ0
-         aRD/uPX1+ClVPVedyoR6C5ji8vkzfWRq0px33LOX8TsgYwVZ2DitUKwk6LJFjGASpGPH
-         3LRs7Y/lrO/XtO4MAQ9mqfHLbMQ+4epNVOn8cjn8aUH09278CQN0KksAb9BN4LG1hBjn
-         gyhkreIlkjV4wNtApq82rF4fugO9JU/Gyc1mgJ/apUNs2jI9VcJTpa5V6fj9Q1dRFo1C
-         HoIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ZPBjf+2ivXTAaCwwdBFF/DxpI0RhHXkQFH11gEhuHkWF6S/vRaNxE4TNNTVOo721bet0SLRemdAVOd8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf+hgxYmlYIvb0fv3GKTOzAiwJfwuubZ5AV99T+xlA6SkuT90v
-	SVlbg9eh8AI7ZdWdExWvApOjKJWlJShoMSTHoNixSgS7rRi45C/sfiBKqmlviuuKlhb2JsemX4V
-	r3aJXCBDO5Qhqz1Nd68nudKXSeCGZBODdqnRcpw==
-X-Gm-Gg: ASbGnctjJettXcxRULIyjSiJx/UpYwhmaTdLdtM4K43cC+pcaw1341H6oxm7z9fXdJq
-	WWJ+nouM6hOzmroIuI8XbdihfOEwDfsGnMRC2j/EM4M6yRtMVGCnlGk93jcVVwcSqjrVKcnsuRV
-	OOLQyZMXi/7okc4nCwejhowM0=
-X-Google-Smtp-Source: AGHT+IFSpOs8RAYN+sIgp07pZ/zas3zROHM0EL+kdxewAnv20qaOE/aRuCgf16SXsDNXFuvyxiQZthMFR3MfKhf0i8Y=
-X-Received: by 2002:a05:690c:9a93:b0:6fe:aa66:5d82 with SMTP id
- 00721157ae682-706ccd391e4mr206503327b3.19.1745336695245; Tue, 22 Apr 2025
- 08:44:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrYwLEmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB6DAC4CEE9;
+	Tue, 22 Apr 2025 15:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745336699;
+	bh=BbtwK2smXn0Op0m1KEOnNdTqhkRUWhYr3xZpX7mRyNc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FrYwLEmNiG6+bWdHnb47cgV6A6v8/yVyaKvcFT8LkzBrmT20VrlRVND8yFW5fGLma
+	 c6NY9IGNVWmqNofE8u/Ykbfeku+fcKYuY3lflMaVySJUCmcX4oeLHLRJtDvnj0XaJ7
+	 TyzkHod0S2u0d51M4nvjGni+0RBiSMHyyWm/Vg5eGmLrgh0dfEV+xbUkDDJ9dmOSkD
+	 dXp5uY73cVjS+noZxxoum00SyJSMQcjdidj/WqgHKshhixOnIQDIQMdiEjMC+/pO+W
+	 A7RZtw60P7lJQXlE44mDbROjHe4x/eKqhRdkI+CQV8ywkRTbsowmb6UVIdgCo+SXZg
+	 VP/SukavonrQw==
+Date: Tue, 22 Apr 2025 09:44:56 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau: disp: Use __member_size() helper
+Message-ID: <aAe5eNDnRyGnxLMX@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411054134.31822-1-axe.yang@mediatek.com>
-In-Reply-To: <20250411054134.31822-1-axe.yang@mediatek.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 22 Apr 2025 17:44:19 +0200
-X-Gm-Features: ATxdqUFCHfbNl6lm_6jR4t8XeT2NGUGpC0QBxnoaIFI_lKX3UJ03xh81cx0l_ZI
-Message-ID: <CAPDyKFrWJBswaAE2_ydswWa9EUw8Lsd_=mCN7gm8ou1_XAcMfQ@mail.gmail.com>
-Subject: Re: [RESEND v2] mmc: mtk-sd: Add condition to enable 'single' burst type
-To: Axe Yang <axe.yang@mediatek.com>
-Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, yong.mao@mediatek.com, 
-	qingliang.li@mediatek.com, andy-ld.lu@mediatek.com, 
-	Wenbin Mei <wenbin.mei@mediatek.com>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, 11 Apr 2025 at 07:41, Axe Yang <axe.yang@mediatek.com> wrote:
->
-> This change add a condition for 'single' burst type selection.
->
-> Read AXI_LEN field from EMMC50_CFG2(AHB2AXI wrapper) register, if the
-> value is not 0, it means the HWIP is using AXI as AMBA bus, which do
-> not support 'single' burst type.
->
-> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Axe Yang <axe.yang@mediatek.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Use __member_size() to get the size of the flex-array member at compile
+time, instead of the convoluted expression `__struct_size(p) - sizeof(*p)`
 
-Applied for next, thanks!
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kind regards
-Uffe
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 725331638a15..9bed728cb00e 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -776,7 +776,7 @@ nv50_hdmi_enable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc,
+ 	const u8 rekey = 56; /* binary driver, and tegra, constant */
+ 	u32 max_ac_packet;
+ 	DEFINE_RAW_FLEX(struct nvif_outp_infoframe_v0, args, data, 17);
+-	const u8 data_len = __struct_size(args) - sizeof(*args);
++	const u8 data_len = __member_size(args->data);
+ 	int ret, size;
+ 
+ 	max_ac_packet  = mode->htotal - mode->hdisplay;
+-- 
+2.43.0
 
-
-> ---
-> This change dependents on 'mmc: mtk-sd: Cleanups for register R/W':
->
-> https://patchwork.kernel.org/project/linux-mediatek/cover/20250325110701.52623-1-angelogioacchino.delregno@collabora.com/
-> ---
->  drivers/mmc/host/mtk-sd.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index ceeae1aeac94..2e4bd5166c17 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -84,6 +84,7 @@
->  #define EMMC51_CFG0     0x204
->  #define EMMC50_CFG0      0x208
->  #define EMMC50_CFG1      0x20c
-> +#define EMMC50_CFG2      0x21c
->  #define EMMC50_CFG3      0x220
->  #define SDC_FIFO_CFG     0x228
->  #define CQHCI_SETTING   0x7fc
-> @@ -306,7 +307,10 @@
->  /* EMMC50_CFG1 mask */
->  #define EMMC50_CFG1_DS_CFG        BIT(28)  /* RW */
->
-> -#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)  /* RW */
-> +/* EMMC50_CFG2 mask */
-> +#define EMMC50_CFG2_AXI_SET_LEN   GENMASK(27, 24) /* RW */
-> +
-> +#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)   /* RW */
->
->  #define SDC_FIFO_CFG_WRVALIDSEL   BIT(24)  /* RW */
->  #define SDC_FIFO_CFG_RDVALIDSEL   BIT(25)  /* RW */
-> @@ -1917,9 +1921,13 @@ static void msdc_init_hw(struct msdc_host *host)
->         pb1_val |= FIELD_PREP(MSDC_PATCH_BIT1_CMDTA, 1);
->         pb1_val |= MSDC_PB1_DDR_CMD_FIX_SEL;
->
-> -       /* Set single burst mode, auto sync state clear, block gap stop clk */
-> -       pb1_val |= MSDC_PB1_SINGLE_BURST | MSDC_PB1_RSVD20 |
-> -                  MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
-> +       /* Support 'single' burst type only when AXI_LEN is 0 */
-> +       sdr_get_field(host->base + EMMC50_CFG2, EMMC50_CFG2_AXI_SET_LEN, &val);
-> +       if (!val)
-> +               pb1_val |= MSDC_PB1_SINGLE_BURST;
-> +
-> +       /* Set auto sync state clear, block gap stop clk */
-> +       pb1_val |= MSDC_PB1_RSVD20 | MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
->
->         /* Set low power DCM, use HCLK for GDMA, use MSDC CLK for everything else */
->         pb1_val |= MSDC_PB1_LP_DCM_EN | MSDC_PB1_RSVD3 |
-> --
-> 2.46.0
->
