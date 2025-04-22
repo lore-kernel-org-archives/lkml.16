@@ -1,106 +1,117 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAE11FECD4;
-	Tue, 22 Apr 2025 22:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26832BCF52;
+	Tue, 22 Apr 2025 22:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745359597; cv=none; b=kty3rIbeYqSKUpVgbUgljbAj6eim3Lft2zOMeDPKFuRIBFdDbw/bLv/HYET5zc+oAXZxlaUgU8hH9SaCRYDLaehexQSH+Ggfnf6wxlb7L1GJWYD6AYmZF9YriaeDAGC0Jx4jVCYR6s5NVra7LDPBUQB3jbpngVcYbi5rF4kkhsM=
+	t=1745359643; cv=none; b=XAB9Vw17iC9mIlspBLZ2nqsWA0+1MT3O4KB3m3EXYYVFkDCO9zOwEaRPrFULwoEACwq/yuywHcLvxPw/vq+5vvxHHG0uQTW9qPUjIJcCA4K1FveYyHxmvvKRyU0kOAgWTIZRHNUkEvIxbxQaRxQg8A1pyNBJwUaFCHe9DBk+kd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745359597; c=relaxed/simple;
-	bh=tuZFH+YPbz0RM6eaajURU9+Pku8ZR4mHrVLcvtwZPFE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cHWeeW0emSNN+bytNqmdg0n0oXSVW3R7CqpJn0eOYUbBO3UzkwKnFFZvsss4Jr/EW2ceqAiCqiwksGCXBicFJRzITs91frtHAzYK+jJ9T8MrbOiMxWUn3atxuVubdP68FhNEAnwVqQ2gAId6qrozaaN+IqMDwbm24CcoSQlWsC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PM/Eidah; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745359643; c=relaxed/simple;
+	bh=HHAqqniu+70PkZcui0L6q6BNnIsbNpEmqB6CAF2ooZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ufc+2Pyw4senbsog8fF/XdV/me0C+CyriWirFpP9Zxal+SJOt3CidW+YbJUgjQUyDssthwENe7/mE6jo6j4t7Fyw6QydBwJBvWeiQbTRBZCZniaEtKnGF/BUZnCjgxLvaryd0bQOiKF9qkWG39o5KWN/aCeQ0DF/BVF+KDnzNK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aYPUA556; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PM/Eidah"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so3819498f8f.2;
-        Tue, 22 Apr 2025 15:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745359594; x=1745964394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YB1xGX6pFG9S33G4DkDnszbCcY9UyskbeFRbPxNa7a8=;
-        b=PM/Eidahx44lS+gRr/0Eenv/3sUG4UN28FXEMdqM4iT14AgFHTJyBEqbqf1ixGiSgD
-         3VarNT6XZcrJJQNWEVrSS9i1TLaEULHMvHcbTjyfh1CsTz3P1+VaRSZhij3XDgfdD/Gn
-         ec1NDygz+1iM9k9v4zsy6aJSsxZXBOE+dVrqq3iWV4f9Kc6xujDVEvFjCCSQW3jztOel
-         o2lw36hkoM+97eCW7uQa8jF9QPY2KJ9tCkNed40zTk49fE5fLS+idYbY+Zo5/9etECtv
-         1hA+nsTne+0iJpdS8MJTcjFYJSQQIoEFO2E/+BgyFrGIHWa0SddPr0tzsFJ58Zle+JVg
-         zZ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745359594; x=1745964394;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YB1xGX6pFG9S33G4DkDnszbCcY9UyskbeFRbPxNa7a8=;
-        b=r5BLPJ4RcxPIu220H3g2bYocyOWJJQ7FsSc9Mnzl3J8yLDPniOZo/p94ii2SwTna+Y
-         U6uV/68Gf+gug8U9YQo7NjUUzVf+72ip+sVwXW4jbo4d5goenBehZEhnXKXSbUMJ1GeF
-         ga3cQWrFP7di7szrlX/OclAS1wVsAoW5dcnx7mV9RCni0SumYLxF+8gCmx5Xvl27elbF
-         DyQ8YxXfLA1Jn8NiM9FqOWKvjfrZRhxXsivtqaNbqNRCwoFC1j0Up5vY7NFuIklKuF6v
-         BMTkw5OGR7qWERwaGRLU8W5dBX+bbDSLl5GZ50SB1Ti6jLgy9kEW77cvI5NZzEArU1RM
-         1aug==
-X-Forwarded-Encrypted: i=1; AJvYcCXKGNdSoJZqaa3Cr5I0M37KgWbFE7eks2wJrOFSJ1q1doEMwONVLcirsw+EEkbHpjpHjHcI7RZZqdg3g6o=@vger.kernel.org, AJvYcCXb9LOI9Z4UQHNkn2d6kdmXdhMvMyJ2ZVnm8OjzNSvg5GwZYI9yKCZ9wOK/XNTVK5gQeRfhR7m4ueWWXJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIPr7thwoqptWaHxvU9MYRqBzW3yOjdd4Rm2GTHabgYM3b8IM9
-	SnsF6GkHwpUM8zgrwKJ083NCAVNa+ChqpBAR8XKE5czKaXDnBa6b
-X-Gm-Gg: ASbGncsCfscWYwolrmYe+HmSAlu3ndnxlZI7xjE2VTVu28l4bXwAJRpWvDNVULTm/D+
-	SRhH/RzPdUsq3ni4NdzPizFTs0lw0F9YNa3K23TVLE5LP3ESnpYObAL7zmhLNiH44biIJE573mA
-	C9GIMpoal8c3jMtZBdFsvBUWMcSXA/TyJpvV273hzcryRi6n99/3DlAGCNBefBqMIjgZIB2tBLl
-	6dJCKcymRms/te/pwFt5KoLAF/8vwlOd98eey6/QHAzg/mXEj2+tfqsjf3fbbaNd1toxClphsE7
-	axoh91UsqsmyJWsNCH9iHegUxWw91WPi/zqiM5x/vw==
-X-Google-Smtp-Source: AGHT+IH2d7yNdQ11WUghNAhzaCdxOoKDBGRwo65j4Mt/Dnv6ia1u3FQoAdvO8VkKfmMezO5hiFWzuw==
-X-Received: by 2002:a05:6000:2509:b0:39e:e75b:5cd with SMTP id ffacd0b85a97d-39efba2c98emr14484631f8f.3.1745359594331;
-        Tue, 22 Apr 2025 15:06:34 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4207afsm16716557f8f.12.2025.04.22.15.06.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 15:06:34 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] dma-buf/sw_sync: remove redundant error check on variable err
-Date: Tue, 22 Apr 2025 23:06:27 +0100
-Message-ID: <20250422220627.89077-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aYPUA556"
+Received: from [172.20.123.187] (xdsl-87-78-95-159.nc.de [87.78.95.159])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 1EF7FBBAD3;
+	Tue, 22 Apr 2025 22:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1745359633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YLEEL3ypzQdRJMrQunu4Ob1ubXvJsyBO7YBIDjBB4wU=;
+	b=aYPUA5566zjczjEjArLW66jjsriNlPgp6SQiT7uVTqwQqgamaiz0k45Auni253BVuHh16S
+	CqN2J4LtKXDGNhiHn3aed4fwkpI/vF+kMaqu4W8lbpkHJ47QdpLuVvtZh1oGE3yhGDRpvI
+	y074nW8X0DpRne03mB1m14dzH0yLP6k+rz/P7sF4XAX6JaZKpFXkvQEWWZaxdfdnuG/uB9
+	gBYioNo9HrCW8TdQY0XNx9EKFK7Zqzkvlu30mbbob+Jr3EeG+gdVSt4GayedAsE76Ln3qb
+	NDsUpLVqYKEobnpwuKMddQcCCUlTjcTQlHXpjGu07eWz2p3SmoB2VlLjKF1s7Q==
+Message-ID: <2ca2b774-fd7f-4612-b38d-f60e32ff6f9a@mainlining.org>
+Date: Wed, 23 Apr 2025 00:07:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
+ Google Pixel 4a
+To: Danila Tikhonov <danila@jiaxyga.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, Rajendra Nayak <quic_rjendra@quicinc.com>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
+ Andy Gross <agross@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Georgi Djakov <djakov@kernel.org>,
+ Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss
+ <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
+ Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ David Wronek <david@mainlining.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-hardening@vger.kernel.org, linux@mainlining.org,
+ ~postmarketos/upstreaming@lists.sr.ht, Connor Mitchell <c.dog29@hotmail.com>
+References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+Content-Language: en-US
+From: Jens Reidel <adrian@mainlining.org>
+In-Reply-To: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The variable err is always zero at the point where it is being
-non-zero checked for an error. The check and error return path
-are redundant and can be removed. Issue detected by Coverity Scan
-static analysis.
+Hi everyone,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/dma-buf/sw_sync.c | 3 ---
- 1 file changed, 3 deletions(-)
+apologies for the mess this created. Danila's mail provider ratelimited 
+him halfway through sending the series and the attempt to re-try sending 
+the second half an hour later ended up with a new message ID (I think 
+due to not using --in-reply-to).
+He asked me to let you know that this will be resolved later and the 
+whole series will be re-sent once the problems are resolved.
 
-diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
-index 4f27ee93a00c..ef3fda792749 100644
---- a/drivers/dma-buf/sw_sync.c
-+++ b/drivers/dma-buf/sw_sync.c
-@@ -437,9 +437,6 @@ static int sw_sync_ioctl_get_deadline(struct sync_timeline *obj, unsigned long a
- 
- 	dma_fence_put(fence);
- 
--	if (ret)
--		return ret;
--
- 	if (copy_to_user((void __user *)arg, &data, sizeof(data)))
- 		return -EFAULT;
- 
--- 
-2.49.0
-
+Best regards,
+Jens
