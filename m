@@ -1,156 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3944C27D78A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9133E27E1CF;
+	Tue, 22 Apr 2025 12:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325148; cv=none; b=O0oYXZoXzUWUPqRSw0mk+4bVsYi4sHj6vwr5irgFIOeRpGESGvCGb5cHVZZ66NXI8QWGM6wPiPefbKteo2xvc6Y4fHIZrNtQFRpzCEZ65NT4Tc2yghB28rp17nUcHbR0xL8ZNdxYBwy15PYz5VqdjzoGE4EgNt65CHELOS0owkc=
+	t=1745325152; cv=none; b=bs1cPFUXdF1xoWfe7bFzGDisr9d81fsOph2a2RKHC4+UQ3kGQemwn2Au3fne93LhjxDhR1BrdbGJwneJsTNBPFiiZipQXy2BXThGhVdpd6sUsGIwh0DDTNjYcVhhhJSITk/MfiGWeuvjz8ZM9lzGNkD+H43w+NKm4ITsSLtakmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325148; c=relaxed/simple;
-	bh=ezoVuyjRdCYau8pGkO7iCSZWW0prD2xC5WFm1SyfQlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fsOPziWnus6HFcwxiwba3D/SWCo3RhLua/vZ46NHnLNOA65hUh04YUCDYy/YutIaLfGcoNkAwVfzds2YCcWN/BH22rY5vQM+FZwms7yqQU7fitM4EV/moGp4JcUlJDeIWLJAm0lc5U4b+5iUmAih+UQ/LMrmz7KcHeP41ClW218=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4Ev6cvr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4Ev6cvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 050B5C4CEE9;
-	Tue, 22 Apr 2025 12:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745325147;
-	bh=ezoVuyjRdCYau8pGkO7iCSZWW0prD2xC5WFm1SyfQlM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z4Ev6cvrvR6w5mKRckGr7R1Ozh2jaQUlZ03WoKN79kVRaX6wd62pccB/yXdf0eOTX
-	 Wo0EUKxCWjl/Iv4wYvzZK+KbQ9Ye8vhKQZo5Ob+l3s7Cd9mCRmln+fZuswaPQKhoPi
-	 dv5eFN77kMd3iSqAZm9gDjCujUuNBmJbPCvw6q7mpcNxPrK687yjb8eR5/VUfKPD+L
-	 ZnmkC6FMzGOmRi/13Pyo08DfCoOwyWvvsFts2BbTaKRcwdhfKnZOTMwnLWbCV6T0HK
-	 4HnoF6FNrFMxwKi2iQxfitxp01zIpiSuLyq7DfVD+l5z2qxquBDEtzeHnTy1kRwI7f
-	 eonJJhjzfElFg==
-Date: Tue, 22 Apr 2025 14:32:22 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-Message-ID: <aAeMVtdkrAoMrmVk@cassiopeiae>
-References: <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
- <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com>
- <aADv4ivXZoJpEA7k@pollux>
- <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
- <aAEUwjzZ9w9xlKRY@cassiopeiae>
- <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
- <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
- <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
- <aAd54jUwBwgc-_g2@cassiopeiae>
- <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
+	s=arc-20240116; t=1745325152; c=relaxed/simple;
+	bh=7ybQb+1fYQ9nDV2w2AqFUb1y78jzKoQw4hSaMH4Zke0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eV90CYJDNYT8Q24qF8HSmuVh1mn7Q2C89zXY3tRPfGW2kO0EiaQ4+0bqlo8pAbjQxj+aNZI2GhtPRhqAt84/BQrWlZIJunR0em+k5DWy38e4gXAeAtg2bUvKxoHfxY0YJ1NdOmRH5nKf21C/DI5YxzXPseTecztfQb2QIC4yrAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.238])
+	by gateway (Coremail) with SMTP id _____8Axz3NcjAdo7gbEAA--.61750S3;
+	Tue, 22 Apr 2025 20:32:28 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.238])
+	by front1 (Coremail) with SMTP id qMiowMAxTRszjAdoEPePAA--.4685S4;
+	Tue, 22 Apr 2025 20:32:26 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	R Nageswara Sastry <rnsastry@linux.ibm.com>,
+	Neal Gompa <neal@gompa.dev>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1&6.6 V4 2/3] sign-file,extract-cert: avoid using deprecated ERR_get_error_line()
+Date: Tue, 22 Apr 2025 20:31:34 +0800
+Message-ID: <20250422123135.1784083-3-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250422123135.1784083-1-chenhuacai@loongson.cn>
+References: <20250422123135.1784083-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxTRszjAdoEPePAA--.4685S4
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGFyDGFW3Ar1kCr15Jw18JFc_yoW5KrWkpa
+	1xXwn7trykXFZ8Gr9rAFy0g3Wj9F4vkr4jvFnrG39xZF1DX3yIgw1Sq3Wa9348ZF95J3W3
+	AFn8X340kr48C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8pWlPUUUUU==
 
-On Tue, Apr 22, 2025 at 01:07:47PM +0100, Tvrtko Ursulin wrote:
-> 
-> On 22/04/2025 12:13, Danilo Krummrich wrote:
-> > On Tue, Apr 22, 2025 at 11:39:11AM +0100, Tvrtko Ursulin wrote:
-> > > Question I raised is if there are other drivers which manage to clean up
-> > > everything correctly (like the mock scheduler does), but trigger that
-> > > warning. Maybe there are not and maybe mock scheduler is the only false
-> > > positive.
-> > 
-> > So far the scheduler simply does not give any guideline on how to address the
-> > problem, hence every driver simply does something (or nothing, effectively
-> > ignoring the problem). This is what we want to fix.
-> > 
-> > The mock scheduler keeps it's own list of pending jobs and on tear down stops
-> > the scheduler's workqueues, traverses it's own list and eventually frees the
-> > pending jobs without updating the scheduler's internal pending list.
-> > 
-> > So yes, it does avoid memory leaks, but it also leaves the schedulers internal
-> > structures with an invalid state, i.e. the pending list of the scheduler has
-> > pointers to already freed memory.
-> > 
-> > What if the drm_sched_fini() starts touching the pending list? Then you'd end up
-> > with UAF bugs with this implementation. We cannot invalidate the schedulers
-> > internal structures and yet call scheduler functions - e.g. drm_sched_fini() -
-> > subsequently.
-> > 
-> > Hence, the current implementation of the mock scheduler is fundamentally flawed.
-> > And so would be *every* driver that still has entries within the scheduler's
-> > pending list.
-> > 
-> > This is not a false positive, it already caught a real bug -- in the mock
-> > scheduler.
-> 
-> To avoid furher splitting hairs on whether real bugs need to be able to
-> manifest or not, lets move past this with a conclusion that there are two
-> potential things to do here:
+From: Jan Stancek <jstancek@redhat.com>
 
-This is not about splitting hairs, it is about understanding that abusing
-knowledge about internals of a component to clean things up is *never* valid.
+commit 467d60eddf55588add232feda325da7215ddaf30 upstream.
 
-> First one is to either send separately or include in this series something
-> like:
-> 
-> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> index f999c8859cf7..7c4df0e890ac 100644
-> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> @@ -300,6 +300,8 @@ void drm_mock_sched_fini(struct drm_mock_scheduler
-> *sched)
->                 drm_mock_sched_job_complete(job);
->         spin_unlock_irqrestore(&sched->lock, flags);
-> 
-> +       drm_sched_fini(&sched->base);
-> +
->         /*
->          * Free completed jobs and jobs not yet processed by the DRM
-> scheduler
->          * free worker.
-> @@ -311,8 +313,6 @@ void drm_mock_sched_fini(struct drm_mock_scheduler
-> *sched)
-> 
->         list_for_each_entry_safe(job, next, &list, link)
->                 mock_sched_free_job(&job->base);
-> -
-> -       drm_sched_fini(&sched->base);
->  }
-> 
->  /**
-> 
-> That should satisfy the requirement to "clear" memory about to be freed and
-> be 100% compliant with drm_sched_fini() kerneldoc (guideline b).
-> 
-> But the new warning from 3/5 here will still be there AFAICT and would you
-> then agree it is a false positive?
+ERR_get_error_line() is deprecated since OpenSSL 3.0.
 
-No, I do not agree.
+Use ERR_peek_error_line() instead, and combine display_openssl_errors()
+and drain_openssl_errors() to a single function where parameter decides
+if it should consume errors silently.
 
-Even if a driver does what you describe it is not the correct thing to do and
-having a warning call it out makes sense.
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ certs/extract-cert.c |  4 ++--
+ scripts/sign-file.c  |  6 +++---
+ scripts/ssl-common.h | 23 ++++++++---------------
+ 3 files changed, 13 insertions(+), 20 deletions(-)
 
-This way of cleaning things up entirely relies on knowing specific scheduler
-internals, which if changed, may fall apart.
+diff --git a/certs/extract-cert.c b/certs/extract-cert.c
+index 8e7ba9974a1f..61bbe0085671 100644
+--- a/certs/extract-cert.c
++++ b/certs/extract-cert.c
+@@ -99,11 +99,11 @@ int main(int argc, char **argv)
+ 		parms.cert = NULL;
+ 
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
+diff --git a/scripts/sign-file.c b/scripts/sign-file.c
+index 39ba58db5d4e..bb3fdf1a617c 100644
+--- a/scripts/sign-file.c
++++ b/scripts/sign-file.c
+@@ -114,11 +114,11 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
+ 		ENGINE *e;
+ 
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
+@@ -273,7 +273,7 @@ int main(int argc, char **argv)
+ 
+ 		/* Digest the module data. */
+ 		OpenSSL_add_all_digests();
+-		display_openssl_errors(__LINE__);
++		drain_openssl_errors(__LINE__, 0);
+ 		digest_algo = EVP_get_digestbyname(hash_algo);
+ 		ERR(!digest_algo, "EVP_get_digestbyname");
+ 
+diff --git a/scripts/ssl-common.h b/scripts/ssl-common.h
+index e6711c75ed91..2db0e181143c 100644
+--- a/scripts/ssl-common.h
++++ b/scripts/ssl-common.h
+@@ -3,7 +3,7 @@
+  * SSL helper functions shared by sign-file and extract-cert.
+  */
+ 
+-static void display_openssl_errors(int l)
++static void drain_openssl_errors(int l, int silent)
+ {
+ 	const char *file;
+ 	char buf[120];
+@@ -11,28 +11,21 @@ static void display_openssl_errors(int l)
+ 
+ 	if (ERR_peek_error() == 0)
+ 		return;
+-	fprintf(stderr, "At main.c:%d:\n", l);
++	if (!silent)
++		fprintf(stderr, "At main.c:%d:\n", l);
+ 
+-	while ((e = ERR_get_error_line(&file, &line))) {
++	while ((e = ERR_peek_error_line(&file, &line))) {
+ 		ERR_error_string(e, buf);
+-		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++		if (!silent)
++			fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++		ERR_get_error();
+ 	}
+ }
+ 
+-static void drain_openssl_errors(void)
+-{
+-	const char *file;
+-	int line;
+-
+-	if (ERR_peek_error() == 0)
+-		return;
+-	while (ERR_get_error_line(&file, &line)) {}
+-}
+-
+ #define ERR(cond, fmt, ...)				\
+ 	do {						\
+ 		bool __cond = (cond);			\
+-		display_openssl_errors(__LINE__);	\
++		drain_openssl_errors(__LINE__, 0);	\
+ 		if (__cond) {				\
+ 			errx(1, fmt, ## __VA_ARGS__);	\
+ 		}					\
+-- 
+2.47.1
 
-> Secondly, the series should modify all drivers (including the unit tests)
-> which are known to trigger this false positive.
-
-Again, there are no false positives. It is the scheduler that needs to call
-free_job() and other potential cleanups. You can't just stop the scheduler,
-leave it in an intermediate state and try to clean it up by hand relying on
-knowledge about internals.
-
-Consequently, when the pending list isn't empty when drm_sched_fini() is called,
-it *always* is a bug.
