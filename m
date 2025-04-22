@@ -1,92 +1,105 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685F919ABD1;
-	Tue, 22 Apr 2025 07:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BA81EE7B7
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308347; cv=none; b=XH351omISjbGSiPXiNnzpikz64HYIfbZKI+wCfJjz5MujVpng/O3Thj5AWdmzCsOvLJD4xjb4I6U73QhUQyzMzx6T3TCoYk5QosX41oTYdQSMD7WtWj9NOoWbUazFs7ny3QxgL94L724uAk27dr1PSinN9VR1F1BRAvOMN9bBnk=
+	t=1745308356; cv=none; b=XI2jt0fDCF8qE0vPTxv1Rip1l9Emrn5A107z4ORcNKS/LaxRufFkldlR0Zo8+Lz3zDW3pTv7/KgNmqeixN+NP8ITHurLLlyn6zJn/ecvpqy0Xkd14AQ1h2Mw9qxbrxCfJaexHX4//YIfpaUIYVPmA+W8l5rREPpYrbSX9Cye248=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308347; c=relaxed/simple;
-	bh=73QEDgjQtDaOMfPuvNXQ13bS9xl5lQF9NMQ9ptIhDUs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aiWr8Py6PhWoW6SasbL4nPe5RyhTjN3iRjV2v9SUJelp1s3qSQJ3YosPEUl356+RqHJzMBA9vkWd5+SLzz5PS9L+yxNWBiYp/8Odf03nVrx5Z2tsayltVPQfoZltLxBZ7cayt2y5k1Cfdxj/Iod44xY6blSjrUWHqiJavrIv3Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ls4HyZyH; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1745308356; c=relaxed/simple;
+	bh=mdja1zPwi11rl3j2lP+FosY/etFHJecqSbnzsbEbdzg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QrUK2DLHem4pj7Z2Ai5V7LpxKULjdd/HEop8FTnuDWdmNL7zYpZPXNnuYwlovQe/6T6et3JIYWspEkB8pKpXfPRjo4vb2evssULHhLf1dXu3h/ZZt3j3QQIDIMywcI+RtejzCbT2+Jz9cuBadwGr6ky98yd3JCUnxy/ezDJBw20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YrW6QqHY; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ls4HyZyH"
-X-UUID: b7f5dbbc1f4e11f0980a8d1746092496-20250422
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=8F/fzi5o4xXOQuFtsasXHqy2c/Cy60RBpX6xtlod2Ho=;
-	b=ls4HyZyHu+xEsdJRW14hBoAVAUyuZbq8mpp6ulO+VKe6C68w9mmQVNLdCKZvCDqrwrtV6Ec7q9Y9dFtuCxZK7l9zQeV1HnJRp1w2cl/f/ZTaOn00PwKHs/sA2ygC6wHr4R4BpC+TAZyENAIOH++P5g6pAdnG72+/9pyq80eOCGc=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:8150a6bb-65af-4492-997a-4d45ff9e7cb2,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:7c0e5da6-c619-47e3-a41b-90eedbf5b947,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b7f5dbbc1f4e11f0980a8d1746092496-20250422
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <ot_chhao.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1039915896; Tue, 22 Apr 2025 15:52:20 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 22 Apr 2025 15:52:19 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 22 Apr 2025 15:52:18 +0800
-From: Hao Chang <ot_chhao.chang@mediatek.com>
-To: Sean Wang <sean.wang@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>,
-	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen
-	<hanks.chen@mediatek.com>, Chunhui Li <chunhui.li@mediatek.com>,
-	<linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Hao
- Chang" <ot_chhao.chang@mediatek.com>
-Subject: [PATCH] pinctrl: mediatek: Fix new design debounce issue
-Date: Tue, 22 Apr 2025 15:52:05 +0800
-Message-ID: <20250422075216.14073-1-ot_chhao.chang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YrW6QqHY"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54acc04516fso5123534e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745308352; x=1745913152; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wr8zkHOcjJp8JH/D5R9zZ1N0PkwxRBvn2f61DwoqQx4=;
+        b=YrW6QqHYMSXMXFG4BFWLnIMOusSnNpuwDIwYfVs7Q1qTT/7KAmFWl9i4XO2EOJjXoQ
+         yBHSxtTxYr1wTtZB5oJBGG7eh38na1b+0fegCbUX/MLNxhTBwZFcHZFzRh+gAShkeyHX
+         cKWwOkktdQh4qMuafKJhk0l2wXP+rv0AY+26A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745308352; x=1745913152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wr8zkHOcjJp8JH/D5R9zZ1N0PkwxRBvn2f61DwoqQx4=;
+        b=NAhaYZBk60kvR6CgNQl3EMzACNRtTHPIbn8S8YwSJlXXYHExHaw8LULiKjQwCpUVEN
+         tpGXlcdFc0HoVgn3T/vtyTXhgQZ1Sh/wOXhNb9WmYaYyPMIltCEPCLJeMzBrD4UpvfYV
+         b19n+xxdkJoIYuR+5KAXdNfZDDvO2Y86xBxWixlaZczarD5aT+qYhtTgcmWO8hHJ6rng
+         salpGiYOFC/eYlZijOFNVk+qYQ26ffJit/5pJ1URs/pdSPMUZluEC58lkOQdO6Tjnp/6
+         9nTioaSC7AjHQ0u34g8FSckbFU7oDIF/gDUWCD3++vP9HMfD5OSW0n/7ok4JFF2YPh3U
+         9xJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfNMJBiO5CnBA6greqz6tXZ9hVxktI2H7o9W4oeMODIdJQ+2jpgx/qDOBboQOjykMhunFh4niivRSHvqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygEVoliFv0LsClTXnrsalRWPgoXwL5A0G6MNWl11QuBjRAI53u
+	QlOnh7WVAsJjmRRwNsDzdNJ681EWC9rsnQrNccN6/ZLOeYS9Wrt4Wz7xlcNcJUCcMLq9mwRii6B
+	kRUtomqYD47pSxBGEUE18Hx897n0KwRfCZsS7
+X-Gm-Gg: ASbGncteZ0OiXf1Q9APYDc+JA/JI1GYtxXTNfyCkua8lvyVVLJZu5EQ3TjdJi2Vc4so
+	VvA1BzdG6sLHzujZilTqmIraQoJ4PJX9BUe9HTSP3ugRdZTVuBQy8YRbI7w+PuUsa9mPpGqZdz3
+	WLD/KQETV3vlNLCB7Q9y/TCw==
+X-Google-Smtp-Source: AGHT+IFJ6lcJHhs4les/hHMElmGqx/Gs/phTM805DYAJAK3V4MGWnxBI1/ZYxVFXtSykbjyfqSGPHxrZlSGhtLEvNSA=
+X-Received: by 2002:a05:6512:398a:b0:54d:6989:919d with SMTP id
+ 2adb3069b0e04-54d6e66c955mr3838846e87.54.1745308351721; Tue, 22 Apr 2025
+ 00:52:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20250417002005.2306284-1-dualli@chromium.org> <20250417002005.2306284-2-dualli@chromium.org>
+ <20250421151807.GQ2789685@horms.kernel.org>
+In-Reply-To: <20250421151807.GQ2789685@horms.kernel.org>
+From: Li Li <dualli@chromium.org>
+Date: Tue, 22 Apr 2025 00:52:20 -0700
+X-Gm-Features: ATxdqUGEbodkKiKzPD66g6rMQ0PQiXs-yAUyfR5qae67BGBgscO6cW8-1gvL2Ck
+Message-ID: <CANBPYPi9+JvWOAPgOZLxq9dM9PX3-7Tz+_GnUR_xOKbtjdu8yQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v17 1/3] lsm, selinux: Add setup_report permission
+ to binder
+To: Simon Horman <horms@kernel.org>
+Cc: dualli@google.com, corbet@lwn.net, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	donald.hunter@gmail.com, gregkh@linuxfoundation.org, arve@android.com, 
+	tkjos@android.com, maco@android.com, joel@joelfernandes.org, 
+	brauner@kernel.org, cmllamas@google.com, surenb@google.com, 
+	omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de, masahiroy@kernel.org, 
+	bagasdotme@gmail.com, tweek@google.com, paul@paul-moore.com, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	netdev@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, hridya@google.com, 
+	smoreland@google.com, ynaffit@google.com, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Calculate the true offset of eint according to index.
+On Mon, Apr 21, 2025 at 8:18=E2=80=AFAM Simon Horman <horms@kernel.org> wro=
+te:
+>
+> On Wed, Apr 16, 2025 at 05:20:02PM -0700, Li Li wrote:
+> > From: Thi=C3=A9baud Weksteen <tweek@google.com>
+> >
+> > Introduce a new permission "setup_report" to the "binder" class.
+> > This persmission controls the ability to set up the binder generic
+>
+> nit: permission
+>
+>     Flagged by checkpatch.pl --codespell
+>
 
-Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
-Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
-Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
----
- drivers/pinctrl/mediatek/mtk-eint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Would fix this typo along with other changes in the next version.
+Thank you for catching this!
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 557dec75fa03..be12ef1fd6b0 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -449,7 +449,7 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
- 		return -EOPNOTSUPP;
- 
- 	virq = irq_find_mapping(eint->domain, eint_num);
--	eint_offset = (eint_num % 4) * 8;
-+	eint_offset = (idx % 4) * 8;
- 	d = irq_get_irq_data(virq);
- 
- 	set_offset = (idx / 4) * 4 + eint->regs->dbnc_set;
--- 
-2.46.0
-
+> > netlink driver to report certain binder transactions.
+> >
+> > Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
+> > Signed-off-by: Li Li <dualli@google.com>
+>
+> ...
