@@ -1,60 +1,49 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B264E7603F;
-	Tue, 22 Apr 2025 05:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C72B1E1022;
+	Tue, 22 Apr 2025 05:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745301068; cv=none; b=WrzZHyDSC3mcXw7wFdATH3eWJqAaAsWmKhCGTbw4atwCiRt1JVKccmHep/jb+08Gry5MUSDtD4JKB4uOsb1LeqX/deiHAe9hsqMD/iISY7M9HphtlUXI3xqq4f36B8NpbktFgxf4o6riUi18zjo+mVAnxqYnqDG20k+GHNCDvyA=
+	t=1745301232; cv=none; b=ctOS4PWSxDEjw9gPWGW5NLFBtuFP/SLkWOc3P91/iJQkQflXG5BF6YG06u5Ol/x533wr8UXWQ72Qa8tr+Zkfymmf0aD6uzxAJGYc4z4nkS/M2vpJIxhU/aRBbTQi0+scZ5VYllE7ovcd5H53BV3vO8o90VJsMGuPVJyDjXkTwpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745301068; c=relaxed/simple;
-	bh=iJCqUJkW8D6OFp6xKXydkggM3cqITguTKW2WleMle/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G3Q85U4jiBgZP5ZtkTGiLPddRpiykLMBr6RDSyfNIU6/UZDKqeuJE86IAWYMmPUBv5M+6c3HAdsNrQbMg8ofWqTwwMgWaodaXnWusCoI3i/sv/40fJjIpdvWj6/O6CSAZPrigg0Raye54r/XIBu1XLl7gAd7ezmC7Y8cHMovge0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jSszM141; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745301232; c=relaxed/simple;
+	bh=Esw6LY9Vh5xfD0Hv2KNBjNOZzKwwCJ0iUCQnEcQuKIY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PO65C7A5ZbFIp7j+nTQkYxCSGPD7e01kaSrMuKOwhsRCDEUYVhSNDbfB4hRscSv9dxWe6Jc6FXBcGbQSnSfFITfQzTzjLXMxTVPVAlTMr4DC2Y280t1TRXOtNKcY7126lTQw30lDaUxBsvzhzFJGO0Jx/4pZZXo3+yeqlkpkTKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=y6hxLIAf; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jSszM141"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M3c96M012729;
-	Tue, 22 Apr 2025 05:50:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=enDXSh
-	NfnEmJVkGX61Z+kj65b/uMcCnQ7YFwYBBahVg=; b=jSszM141aPJt1B263R5h+j
-	N8lfXRFxVU48/J+JuyYgMxmdgstTNbvEwWARAYUrafiCOIh58BNpcsykZKtwue+2
-	XmaH+8oJ/Ta9OZIZMbopfVhZ/apjKedjovBJYs0llJ51Hj3OHuIa3euazPfsyrpG
-	LlGdE21k0Lr7o49t20Z2sbFProvTGizvrNV7eKdLik95YEfXwnL9c5oUF+f1tQv0
-	qL4eStRg/DNJbxx4oAOigMWYK4Pg6SV7ywlAmAbTI6udtVm+0l74WBwek+lqBW0s
-	O6EpyPc4g9sbqD9kxmG0qeEJ36b/KyuTjnrJa3rAMD/DvCIeRQVLwW1j8fFQIqug
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4663c40dyu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 05:50:46 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4CeSY027827;
-	Tue, 22 Apr 2025 05:50:45 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv2153b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 05:50:45 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53M5oi8U31130218
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 05:50:45 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CBC7C5805C;
-	Tue, 22 Apr 2025 05:50:44 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55C9E5805A;
-	Tue, 22 Apr 2025 05:50:41 +0000 (GMT)
-Received: from [9.43.89.251] (unknown [9.43.89.251])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 22 Apr 2025 05:50:40 +0000 (GMT)
-Message-ID: <157256be-d77d-427e-8feb-77d1373b0c00@linux.ibm.com>
-Date: Tue, 22 Apr 2025 11:20:38 +0530
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y6hxLIAf"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53M5reo71835630
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 00:53:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745301220;
+	bh=Esw6LY9Vh5xfD0Hv2KNBjNOZzKwwCJ0iUCQnEcQuKIY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=y6hxLIAfkCqSKRPVW5uCbzm3op0B9garM5Rp+uoqRLkRf16DpDZV4VOjDVsIK2a30
+	 ePNs+es1tLqO2azMAfLpx2e7s9ZswVV/j0FD3iKa4X8xPeFSmHlDBdJiyTdcNACZ1E
+	 sZqNMN0Qvi+vDBrOSsowdoYXmvow3jVxioUov3aQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53M5renx034320
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 00:53:40 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 00:53:39 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 00:53:39 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53M5rZZl045681;
+	Tue, 22 Apr 2025 00:53:36 -0500
+Message-ID: <f34d7439-fa13-4359-ae20-e88449591d4b@ti.com>
+Date: Tue, 22 Apr 2025 11:23:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,65 +51,206 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build warnings after merge of the powerpc-fixes tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250422114720.480cea29@canb.auug.org.au>
+Subject: Re: [PATCH v10 15/33] remoteproc: k3: Refactor rproc_reset()
+ implementation into common driver
+To: Andrew Davis <afd@ti.com>, <andersson@kernel.org>,
+        <mathieu.poirier@linaro.org>
+CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250417182001.3903905-1-b-padhi@ti.com>
+ <20250417182001.3903905-16-b-padhi@ti.com>
+ <00ba399d-7a26-4ced-8f77-334839bb54c6@ti.com>
 Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <20250422114720.480cea29@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: x8ti_XGGpedLplUvLhkXPCn81AHLR7MB
-X-Proofpoint-ORIG-GUID: x8ti_XGGpedLplUvLhkXPCn81AHLR7MB
-X-Authority-Analysis: v=2.4 cv=HeEUTjE8 c=1 sm=1 tr=0 ts=68072e36 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=UQvLyEPbrtOJaqGAD5MA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_03,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- clxscore=1011 adultscore=0 suspectscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 malwarescore=0
- bulkscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220041
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <00ba399d-7a26-4ced-8f77-334839bb54c6@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi Andrew,
+
+On 21/04/25 20:12, Andrew Davis wrote:
+> On 4/17/25 1:19 PM, Beleswar Padhi wrote:
+>> The rproc_reset() implementations in TI K3 DSP and M4 remoteproc drivers
+>> assert reset in the same way. Refactor the above function into the
+>> ti_k3_common.c driver as k3_rproc_reset() and use it throughout DSP and
+>> M4 drivers for resetting the remote processor.
+>>
+>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>> ---
+>> v10: Changelog:
+>> 1. Split [v9 12/26] into [v10 14/33] and [v10 15/33] patches.
+>>
+>> Link to v9:
+>> https://lore.kernel.org/all/20250317120622.1746415-13-b-padhi@ti.com/
+>>
+>>   drivers/remoteproc/ti_k3_common.c         | 25 ++++++++++++++++++++
+>>   drivers/remoteproc/ti_k3_common.h         |  1 +
+>>   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 ++---------------------
+>>   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 16 +++----------
+>>   4 files changed, 31 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
+>> index aace308b49b0e..19bb6c337af77 100644
+>> --- a/drivers/remoteproc/ti_k3_common.c
+>> +++ b/drivers/remoteproc/ti_k3_common.c
+>> @@ -105,5 +105,30 @@ void k3_rproc_kick(struct rproc *rproc, int vqid)
+>>   }
+>>   EXPORT_SYMBOL_GPL(k3_rproc_kick);
+>>   +/* Put the remote processor into reset */
+>> +int k3_rproc_reset(struct k3_rproc *kproc)
+>> +{
+>> +    struct device *dev = kproc->dev;
+>> +    int ret;
+>> +
+>> +    if (kproc->data->uses_lreset) {
+>> +        ret = reset_control_assert(kproc->reset);
+>> +        if (ret)
+>> +            dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
+>> +        return ret;
+>> +    }
+>> +
+>> +    ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>> +                            kproc->ti_sci_id);
+>> +    if (ret) {
+>> +        dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
+>> +        if (reset_control_deassert(kproc->reset))
+>> +            dev_warn(dev, "local-reset deassert back failed\n");
+>> +    }
+>> +
+>> +    return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(k3_rproc_reset);
+>> +
+>>   MODULE_LICENSE("GPL");
+>>   MODULE_DESCRIPTION("TI K3 common Remoteproc code");
+>> diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
+>> index 6ae7ac4ec5696..f3400fc774766 100644
+>> --- a/drivers/remoteproc/ti_k3_common.h
+>> +++ b/drivers/remoteproc/ti_k3_common.h
+>> @@ -90,4 +90,5 @@ struct k3_rproc {
+>>     void k3_rproc_mbox_callback(struct mbox_client *client, void *data);
+>>   void k3_rproc_kick(struct rproc *rproc, int vqid);
+>> +int k3_rproc_reset(struct k3_rproc *kproc);
+>>   #endif /* REMOTEPROC_TI_K3_COMMON_H */
+>> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> index 0a8c9e61393d2..f8a5282df5b71 100644
+>> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>> @@ -24,30 +24,6 @@
+>>     #define KEYSTONE_RPROC_LOCAL_ADDRESS_MASK    (SZ_16M - 1)
+>>   -/* Put the DSP processor into reset */
+>> -static int k3_dsp_rproc_reset(struct k3_rproc *kproc)
+>> -{
+>> -    struct device *dev = kproc->dev;
+>> -    int ret;
+>> -
+>> -    if (kproc->data->uses_lreset) {
+>> -        ret = reset_control_assert(kproc->reset);
+>> -        if (ret)
+>> -            dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
+>> -        return ret;
+>> -    }
+>> -
+>> -    ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>> -                            kproc->ti_sci_id);
+>> -    if (ret) {
+>> -        dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
+>> -        if (reset_control_deassert(kproc->reset))
+>> -            dev_warn(dev, "local-reset deassert back failed\n");
+>> -    }
+>> -
+>> -    return ret;
+>> -}
+>> -
+>>   /* Release the DSP processor from reset */
+>>   static int k3_dsp_rproc_release(struct k3_rproc *kproc)
+>>   {
+>> @@ -201,7 +177,7 @@ static int k3_dsp_rproc_stop(struct rproc *rproc)
+>>   {
+>>       struct k3_rproc *kproc = rproc->priv;
+>>   -    k3_dsp_rproc_reset(kproc);
+>> +    k3_rproc_reset(kproc);
+>>         return 0;
+>>   }
+>> @@ -565,7 +541,7 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+>>                   return dev_err_probe(dev, ret, "failed to get reset status\n");
+>>               } else if (ret == 0) {
+>>                   dev_warn(dev, "local reset is deasserted for device\n");
+>> -                k3_dsp_rproc_reset(kproc);
+>> +                k3_rproc_reset(kproc);
+>>               }
+>>           }
+>>       }
+>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> index 8a6917259ce60..7d5b75be2e4f8 100644
+>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>> @@ -65,11 +65,9 @@ static int k3_m4_rproc_prepare(struct rproc *rproc)
+>>        * Ensure the local reset is asserted so the core doesn't
+>>        * execute bogus code when the module reset is released.
+>>        */
+>> -    ret = reset_control_assert(kproc->reset);
+>> -    if (ret) {
+>> -        dev_err(dev, "could not assert local reset\n");
+>> +    ret = k3_rproc_reset(kproc);
+>> +    if (ret)
+>>           return ret;
+>> -    }
+>>         ret = reset_control_status(kproc->reset);
+>>       if (ret <= 0) {
+>> @@ -374,16 +372,8 @@ static int k3_m4_rproc_start(struct rproc *rproc)
+>>   static int k3_m4_rproc_stop(struct rproc *rproc)
+>>   {
+>>       struct k3_rproc *kproc = rproc->priv;
+>> -    struct device *dev = kproc->dev;
+>> -    int ret;
+>>   -    ret = reset_control_assert(kproc->reset);
+>> -    if (ret) {
+>> -        dev_err(dev, "local-reset assert failed, ret = %d\n", ret);
+>> -        return ret;
+>> -    }
+>> -
+>> -    return 0;
+>> +    return k3_rproc_reset(kproc);
+>
+> This doesn't feel right. The new common k3_rproc_reset() function
+> matches what ti_k3_dsp_remoteproc.c did for reset, you made it that
+> way in the previous patch [14/33]. But it doesn't match what this
+> M4 version does (yes I know logically they are the same as `uses_lreset`
+> will be always true for M4). Maybe you want to do the same as you
+> did for DSP to the M4 driver first, before you make this change so
+> it is 100% clear the code is the same (and so bisect lands on the
+> right patch should someday this be an issue).
 
 
+Sure, I can make that change in next revision...
 
-On 4/22/25 7:17 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the powerpc-fixes tree, today's linux-next build
-> (powerpc_ppc64_defconfig) produced these warnings:
-> 
-> arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-> ld: warning: arch/powerpc/boot/zImage.epapr has a LOAD segment with RWX permissions
-> arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-> ld: warning: arch/powerpc/boot/zImage.pseries has a LOAD segment with RWX permissions
-> arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-> ld: warning: arch/powerpc/boot/zImage.pmac has a LOAD segment with RWX permissions
-> arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-> ld: warning: arch/powerpc/boot/dtbImage.ps3 has a LOAD segment with RWX permissions
-> 
+>
+> Also, the common k3_rproc_reset() calls put_device() unconditionally.
+> Something that wasn't done at all here in the M4 prepare() and stop()
+> functions.
 
-I cant recreate this in both my x86_64 cross build and ppc64 build with dash.
-I tried both ppc64_defconfig and pseries_le_defconfig compilation.
 
-x86_64 dash version : dash-0.5.12-3.fc40.x86_64
-powerpc dash version : dash-0.5.12-4.fc41.ppc64le
+There is a 'return ret' in the 'if (kproc->data->uses_lreset)' condition flow in k3_rproc_reset().
 
-Can you share the dash version 
+put_device() should not be unconditional...
 
-Maddy
+>
+> These two changes make this patch not strictly a pure "refactor"
+> patch, which IMHO should in no way change the calls being made nor
+> the logical flow, only the code structure.
 
-> Introduced by commit
-> 
->   b2accfe7ca5b ("powerpc/boot: Check for ld-option support")
-> 
-> POSIX shell (in particular dash) does not recognise "&>" - you need to
-> use ">/dev/null 2>&1".  (My /bin/sh is /bin/dash)
-> 
 
+Got it. Will address in revision. Will wait for more reviews (if any) before re-spinning.
+
+Thanks,
+Beleswar
+
+>
+> Andrew
+>
+>>   }
+>>     /*
