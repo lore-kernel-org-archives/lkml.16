@@ -1,158 +1,274 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2073.outbound.protection.outlook.com [40.107.21.73])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F160422578A;
-	Tue, 22 Apr 2025 06:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303815; cv=fail; b=A0j2WboD8XCaZ6hi2cd021vA1g6zgyAw2polir8N/LCuOixD3MGVy5jZIkxnnkQkeJtn8P2yyAD6FjHdhMnY1Gsj/0QyxAtFOVKbZmWSUgizoBBdytIOZ25x9rCqS8yL1H85UW8x05PLQprQu6nleEUgck9Nd6flguah2A0GFMI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303815; c=relaxed/simple;
-	bh=gp8R6eFHVJqcRBtt6jBNBr6HxvBVour7lkmvQILVMFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jn4vwaLoMmgmnHKbkQARNUjJeEKurw8REk3KzXab0Kq3iUpP9hFyLDC/SVZ9A+W3OCp21iWVjvjluH5Fs0m/a16wHw9Rgg1GpqQ2mKv6MjnRxaD2nrgLHF/f2ngBsd++ZxyU586fnvm+PUKW1DjDxTijTnlM6Eyw5JGSnXMwAJo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=rrOboXWd; arc=fail smtp.client-ip=40.107.21.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08A62367B5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745303827; cv=none; b=LTSqfUkn+twneWDxtB3mTAvCqB3ZKP9FvStYWGCNBQJSWdwMi2ZSgHZnyJOrdP2SvHE2YCHSou1oM73DJVqWZMX3soW+wb7u8Pg3JQyciTrcAlFJ0Di0f2o8CkzFv0NEDQT9FT5WnlVsF/7k0Dlb5LnfiFq5SGiUINwbiQ/kO7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745303827; c=relaxed/simple;
+	bh=zBO3cHLiclV36iHkjy3oMjCqNLjeZzA8xzmJ0uI8Ooc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dtmNc0ZVTcvpKWgqDkd4r0hXdq9O28EE7cgMUfeCZNxVhUBk3OeBFXJXnUtgT6JCepGiqJLDPH5s5d77EGDx3bTQn289hAeLDVEroTFGdaYeADo2bipGUsTwfss9CAgkNxDO1L+pNNU8OaA1z1Er1/6cb07CZ2tniW6qH0sj+ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QqakaDrW; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="rrOboXWd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SHqPtx+mlw1Ex6ZpZlVwpbz1r9quxhmI7iVwSxFb7tCuRMaPNYo+gAeo4FqPlDULdizRnMJsKEzAL5QqtPClTmxBlLiN/xsJ2VBl8UKtyzPXMT+9TgqURH7ipn1TQSc0X1SV09w4Lv4IpNsbEqNH+O+bfJvWqd7TOrawAexP7X00Jey5sKxQWnbYCIXS9wmz43Z2idw+9PR/7Eiz6QjeVWlFLA70i4RYxbzFFnGjZ1/xqWHL8ZhCIrhA5hASSz/lnLsRlR1wOtJOJCl0Bl07G2V6s6cdDrcNoVr/+Lu2XTliMGP61tiJQTHdJqsALBkh9wuaRemUzXYVvTs3zz3+UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zHKOC/dlAJLu3UefjiHBDxiBZiV2VUgFoWdyLQLq1/I=;
- b=OejwC2eNXBKS41yYQCelvO1Xn8rRs5VNmnYfcBl9lCEoIkWD9lHpfbtgiZinUivAqwGOOtZ4TPSTWACGNyfJF0Prdf5IpKSwn/SsdbwRvHEYhbtp+8zjerw7SXnAyNOmd+yDQQ2eqVspNq/P1Gag2REiQoLbE1NApSKRWbBGs9F0y9XPulsN1EnnKF/wER/usL4t6veoaXGGugKVsrwZylumc5GvTSaNjsjchVnZxkhUDwvUGGQgCyw9q8XZsT2etxo4TMRgALTTjBsLaavuEn9iH6c8te6sNuDSE/DGDkSOU7MkWHMQoHBtR6jDr2Rtsq2Qp1EXxpfeuYf83hPKsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=leica-geosystems.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHKOC/dlAJLu3UefjiHBDxiBZiV2VUgFoWdyLQLq1/I=;
- b=rrOboXWdOdz4otnt81PVHFgr0VBloIYfFWReUB/VAqoZuO+rYJvIgV/IpVyPl02V2LmLI8YjMwCEnGZpiEnhuXPVXxvXHYte6N9c91kNaWfeBJBoAQyfx+xAPFvRooz5NjDXWqrlFsKZSnl1lF0yeHeVryk792m0Qo+6XPML8O0=
-Received: from DUZPR01CA0090.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:46a::8) by VI1PR06MB6653.eurprd06.prod.outlook.com
- (2603:10a6:800:184::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 06:36:51 +0000
-Received: from DB3PEPF0000885A.eurprd02.prod.outlook.com
- (2603:10a6:10:46a:cafe::38) by DUZPR01CA0090.outlook.office365.com
- (2603:10a6:10:46a::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Tue,
- 22 Apr 2025 06:36:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
- smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
-Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
- designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.8.40.94; helo=hexagon.com; pr=C
-Received: from hexagon.com (193.8.40.94) by
- DB3PEPF0000885A.mail.protection.outlook.com (10.167.242.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Tue, 22 Apr 2025 06:36:50 +0000
-Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
-	 Tue, 22 Apr 2025 08:36:50 +0200
-From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
-To: dmurphy@ti.com
-Cc: andrew@lunn.ch,
-	davem@davemloft.net,
-	f.fainelli@gmail.com,
-	hkallweit1@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@armlinux.org.uk,
-	michael@walle.cc,
-	netdev@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com,
-	Johannes Schneider <johannes.schneider@leica-geosystems.com>
-Subject: [PATCH net] net: dp83822: Fix OF_MDIO config check
-Date: Tue, 22 Apr 2025 08:36:38 +0200
-Message-Id: <20250422063638.3091321-1-johannes.schneider@leica-geosystems.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqakaDrW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745303823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hfIwSQHpPbbjZ79uxCsh57KYVS3IPmjvnfmuDlU/GrM=;
+	b=QqakaDrWFKRy87pX2wOMXfO+dyuICPDacvDdDTUZgaH9ZFcw7eieJ598JtEFzml/2QaDtP
+	JOzA1dfkL+X/3oDEfA+a02LXKs7nfHIP3fJcJ3sh6sdUA1uQgo8LrLPcSOxreQGLPnqHmL
+	Wlfgsgw495RTjcptmQRCCln0q22ePiY=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-dfkryJ6RMBOUHv1PkNtAIw-1; Tue, 22 Apr 2025 02:36:59 -0400
+X-MC-Unique: dfkryJ6RMBOUHv1PkNtAIw-1
+X-Mimecast-MFC-AGG-ID: dfkryJ6RMBOUHv1PkNtAIw_1745303816
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5498d2a8b88so2016737e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:36:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745303815; x=1745908615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hfIwSQHpPbbjZ79uxCsh57KYVS3IPmjvnfmuDlU/GrM=;
+        b=J1CIzNZ+u7y9kTOSJz+cw0AQ2K9ycwZOGg1FMrEcBRTJd37ak6xtt57sWBXl7iCjUV
+         c6CZ472g6+xrhXpFM079+zZFL4ZzapWVXDUz8Jdob1pCbjhQyCmIUoEaLNXHR2ivn9uL
+         F6k5KSQmwKu0chXeR5Kd0paPnEfbP73a5rS++7Ef7pYYu4EK1Pdtyr9UQQE491VSbQUh
+         9ZtBLrzMgfpSCL3MHcxprKQ7kBw/p8LvHZrqH/tPvD2WXrqMmMCaM6x7cgKO0/fjdTjs
+         mY0fswdJU9/SR9AanT3LfXAW0cwmen7c7Wpj+YGm7bcGUjZUfmAWfhyMEw55XEOWWJ8a
+         bRjg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0qHvUUUn55+fyvg5R7fFPfsFngM/7K8qujja7LQy4gkEbXP6kDVVDAW4T4d/Vv5eKZp1LKSECeRFuJxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFTMrtbu9LReTpzCq2ANBvFElSWprd6Gc8wO377nn7js1HAcXh
+	9Ru/dFOr5faRPeknnmrt+qvk868yIpHoRcKq2Du85HC+NncYLg+npdGAb8cn3/B1MbcMGh2f3fr
+	jIWJvjpr/h/zdPJ/L1+Vw7wAL4Oxy9kf53f/x+4FUmGkweYapS6ZU3omTlrE8nFBsT5YjdEYAUr
+	XS4dM+GN3KSwGysbCG0Pi6JWObfiQiEhNV5ayd
+X-Gm-Gg: ASbGncusG8kvIDh9AUxfMf6O06U2UUmL0wj8p/JYwHtpISYuHgODTjgd5ACsIlS08Tw
+	2bfRWvfDaQYdeSZg2EBcNtT+BVqjvdbP+XBgeKsex1aatL6Itiooa9RUQbGu3DZ1gn8tZrg==
+X-Received: by 2002:a05:6512:2213:b0:545:4d1:64c0 with SMTP id 2adb3069b0e04-54d6e635993mr2725361e87.27.1745303815508;
+        Mon, 21 Apr 2025 23:36:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGsV2iKdntyWD/PlIwdej6iLCJiyJyLNOfrenMmofROOrUiJsbOhpMOVsC7xc8mcg9b4+o+jSpP+wEhNJU3zTY=
+X-Received: by 2002:a05:6512:2213:b0:545:4d1:64c0 with SMTP id
+ 2adb3069b0e04-54d6e635993mr2725339e87.27.1745303815071; Mon, 21 Apr 2025
+ 23:36:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 22 Apr 2025 06:36:50.0557 (UTC) FILETIME=[EDC72AD0:01DBB350]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB3PEPF0000885A:EE_|VI1PR06MB6653:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 882fc57a-f8e2-4590-fdd6-08dd8168107b
-X-SET-LOWER-SCL-SCANNER: YES
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ScCmo7Qj5vdN/kLRciLhh7p3iYs3ny3lhAn/P4jbe1kSUDilCNHqVUU1tscW?=
- =?us-ascii?Q?jp8rlVZzwPmc6TMzuw8ovjlkuiUuxMiuMuKfYLhLNZK+LEPBPDM7PhHdx7Id?=
- =?us-ascii?Q?CxumzxBsTni/GzEFXsSBnNkaJqo0A0H4wrVdErmvmL0Z854mrYeXNNDpKOvW?=
- =?us-ascii?Q?s11phnBwv+cDePTKKvDx0lpZATz+lUovoG8pzlXvY9udITX4VFQwH1yoqAfD?=
- =?us-ascii?Q?HM/Uv2Vku7E/kl4isGtrQ+m2rcxVngOQxtzf1wqmO71qWS8tgrgTEe6Q4Idt?=
- =?us-ascii?Q?ff4bLn/jtVKXT4mY7JAPZzkrZXANqAxes9HC4yC1KEPWAeLyowOUxktuVtWE?=
- =?us-ascii?Q?XVK+MTYfnQLb6dmz2HPDG7CgLJ45qYG8JEtEvpyTxPDVdM9+fQvIKUP5ZNTN?=
- =?us-ascii?Q?0VEfLOtmfLQTnJ0tOXgpw5P4Q++m7MmFhaoPxoWgPD7u6fxI/tQ/4xq4HC7F?=
- =?us-ascii?Q?ghYTfptJA/sizKVhCDr+O8myEYAG6xGUIw6JALXKSLKyaHXL4lZVV2ZK1YSV?=
- =?us-ascii?Q?OaDsMOJPpq5s41kQIZOMs7vQ2ukFeEOeM5x25z9Ki1sLwrTMaJCyMzMGRa/t?=
- =?us-ascii?Q?CjUnHgXmhBdgbSilm3qBOZxF53LKMzdH+/94xlVVofoUDbwHubZu0WSfRTXe?=
- =?us-ascii?Q?2cf5YnWkjoOHeT7D1Y0w3a7RZaBHlXtZmQC1js9BZ0qQLKWN5BZccl9g+HsP?=
- =?us-ascii?Q?IESZoXAdRLmax1LMiw+PcWmTJ1BWNBO1CC+7lSX0aBfVPlrs8sXlRnZ01zBS?=
- =?us-ascii?Q?LGGregLdcwr0mMcUaHxo0NBTbh1m/hPjx7b62Athvy3aIWHxc6ocf8PQ2VyW?=
- =?us-ascii?Q?q9Oi7MRQBB4oAJzcJBPZNs9yeAZOLVZKF/ax+S/ZgKILae3WxuGLjon+XDxg?=
- =?us-ascii?Q?RcR/XBbyF+ZsDIcVSMWaDCqeXeIGYPtWIu6MIiLxL/mFhHgw8v92jY8I8ozi?=
- =?us-ascii?Q?wIE+RG4G6an7EKKd7mHFpanjXLCgoiSmbN6xPwAXVzakHcXewMhmfzuBKtRB?=
- =?us-ascii?Q?HHhe1HRNKQ2YmDs8RNoderpUCGMIWzvTGTTUCKmpNn2Ml5wLYlHFk3WCQ0Nx?=
- =?us-ascii?Q?HIrVgOXn2KO4CEwLLPyugVrZOgdORJZzuHPagVen2C9g6rHqyhQRKFbNXVKY?=
- =?us-ascii?Q?1eHJ3LC1binI5aLBZVN/qbNa9zTWJvZGAt64ELX41R04RrM/E1MscDKbbGh7?=
- =?us-ascii?Q?TvYvFlN6DioHkZPwD8DGIwgIK9VBN8OCpEMJ37bDBg0kLghx5ZskZ7vFnBlC?=
- =?us-ascii?Q?A+og/ISN+u0IknVS+tLhoXqlK5kf85wajt+qRDoOAhwC0/T9cI9mk5Pmlw/4?=
- =?us-ascii?Q?m1pknI5W+x6XgTajgVoEneAavC0a6nfO+ZNSqEWQhgAIGv58QWHAhQCRf5bM?=
- =?us-ascii?Q?FIzD22D5APskqIKEG9LKjwrvGvSAjjDIKto48+YfrRlwBFd9XlLFxpO1tNEc?=
- =?us-ascii?Q?XxJKxk1iEfc0cEmZOj+YboW3tZ4HhqVZ6gdEiprMWTkq058moXgP8mcomiEN?=
- =?us-ascii?Q?MyrIxEtNil1XjE70mlJijVghtHLZDzKj2cmP?=
-X-Forefront-Antispam-Report:
-	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 06:36:50.8233
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 882fc57a-f8e2-4590-fdd6-08dd8168107b
-X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB3PEPF0000885A.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR06MB6653
+References: <20250418010941.667138-1-yukuai1@huaweicloud.com> <20250418010941.667138-6-yukuai1@huaweicloud.com>
+In-Reply-To: <20250418010941.667138-6-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Tue, 22 Apr 2025 14:36:42 +0800
+X-Gm-Features: ATxdqUFS0VYNC-vDgIRo-qzVHjqRjAfEYxMXTx6b8XG9gBvuL_2101HF5aUyueA
+Message-ID: <CALTww28DOGXMHXfofCh8SRK7GBJSwHoPaCJHGKAt5BjfoN-S7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] md: cleanup accounting for issued sync IO
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, 
+	song@kernel.org, yukuai3@huawei.com, viro@zeniv.linux.org.uk, 
+	akpm@linux-foundation.org, nadav.amit@gmail.com, ubizjak@gmail.com, 
+	cl@linux.com, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When CONFIG_OF_MDIO is set to be a module the code block is not
-compiled. Use the IS_ENABLED macro that checks for both built in as
-well as module.
+On Fri, Apr 18, 2025 at 9:17=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> It's no longer used and can be removed, also remove the field
+> 'gendisk->sync_io'.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md.h        | 11 -----------
+>  drivers/md/raid1.c     |  3 ---
+>  drivers/md/raid10.c    |  9 ---------
+>  drivers/md/raid5.c     |  8 --------
+>  include/linux/blkdev.h |  1 -
+>  5 files changed, 32 deletions(-)
+>
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 1d51c2405d3d..07b40a55ed5f 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -717,17 +717,6 @@ static inline int mddev_trylock(struct mddev *mddev)
+>  }
+>  extern void mddev_unlock(struct mddev *mddev);
+>
+> -static inline void md_sync_acct(struct block_device *bdev, unsigned long=
+ nr_sectors)
+> -{
+> -       if (blk_queue_io_stat(bdev->bd_disk->queue))
+> -               atomic_add(nr_sectors, &bdev->bd_disk->sync_io);
+> -}
+> -
+> -static inline void md_sync_acct_bio(struct bio *bio, unsigned long nr_se=
+ctors)
+> -{
+> -       md_sync_acct(bio->bi_bdev, nr_sectors);
+> -}
+> -
+>  struct md_personality
+>  {
+>         struct md_submodule_head head;
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index de9bccbe7337..657d481525be 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -2382,7 +2382,6 @@ static void sync_request_write(struct mddev *mddev,=
+ struct r1bio *r1_bio)
+>
+>                 wbio->bi_end_io =3D end_sync_write;
+>                 atomic_inc(&r1_bio->remaining);
+> -               md_sync_acct(conf->mirrors[i].rdev->bdev, bio_sectors(wbi=
+o));
+>
+>                 submit_bio_noacct(wbio);
+>         }
+> @@ -3055,7 +3054,6 @@ static sector_t raid1_sync_request(struct mddev *md=
+dev, sector_t sector_nr,
+>                         bio =3D r1_bio->bios[i];
+>                         if (bio->bi_end_io =3D=3D end_sync_read) {
+>                                 read_targets--;
+> -                               md_sync_acct_bio(bio, nr_sectors);
+>                                 if (read_targets =3D=3D 1)
+>                                         bio->bi_opf &=3D ~MD_FAILFAST;
+>                                 submit_bio_noacct(bio);
+> @@ -3064,7 +3062,6 @@ static sector_t raid1_sync_request(struct mddev *md=
+dev, sector_t sector_nr,
+>         } else {
+>                 atomic_set(&r1_bio->remaining, 1);
+>                 bio =3D r1_bio->bios[r1_bio->read_disk];
+> -               md_sync_acct_bio(bio, nr_sectors);
+>                 if (read_targets =3D=3D 1)
+>                         bio->bi_opf &=3D ~MD_FAILFAST;
+>                 submit_bio_noacct(bio);
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index ba32bac975b8..dce06bf65016 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -2426,7 +2426,6 @@ static void sync_request_write(struct mddev *mddev,=
+ struct r10bio *r10_bio)
+>
+>                 atomic_inc(&conf->mirrors[d].rdev->nr_pending);
+>                 atomic_inc(&r10_bio->remaining);
+> -               md_sync_acct(conf->mirrors[d].rdev->bdev, bio_sectors(tbi=
+o));
+>
+>                 if (test_bit(FailFast, &conf->mirrors[d].rdev->flags))
+>                         tbio->bi_opf |=3D MD_FAILFAST;
+> @@ -2448,8 +2447,6 @@ static void sync_request_write(struct mddev *mddev,=
+ struct r10bio *r10_bio)
+>                         bio_copy_data(tbio, fbio);
+>                 d =3D r10_bio->devs[i].devnum;
+>                 atomic_inc(&r10_bio->remaining);
+> -               md_sync_acct(conf->mirrors[d].replacement->bdev,
+> -                            bio_sectors(tbio));
+>                 submit_bio_noacct(tbio);
+>         }
+>
+> @@ -2583,13 +2580,10 @@ static void recovery_request_write(struct mddev *=
+mddev, struct r10bio *r10_bio)
+>         d =3D r10_bio->devs[1].devnum;
+>         if (wbio->bi_end_io) {
+>                 atomic_inc(&conf->mirrors[d].rdev->nr_pending);
+> -               md_sync_acct(conf->mirrors[d].rdev->bdev, bio_sectors(wbi=
+o));
+>                 submit_bio_noacct(wbio);
+>         }
+>         if (wbio2) {
+>                 atomic_inc(&conf->mirrors[d].replacement->nr_pending);
+> -               md_sync_acct(conf->mirrors[d].replacement->bdev,
+> -                            bio_sectors(wbio2));
+>                 submit_bio_noacct(wbio2);
+>         }
+>  }
+> @@ -3757,7 +3751,6 @@ static sector_t raid10_sync_request(struct mddev *m=
+ddev, sector_t sector_nr,
+>                 r10_bio->sectors =3D nr_sectors;
+>
+>                 if (bio->bi_end_io =3D=3D end_sync_read) {
+> -                       md_sync_acct_bio(bio, nr_sectors);
+>                         bio->bi_status =3D 0;
+>                         submit_bio_noacct(bio);
+>                 }
+> @@ -4880,7 +4873,6 @@ static sector_t reshape_request(struct mddev *mddev=
+, sector_t sector_nr,
+>         r10_bio->sectors =3D nr_sectors;
+>
+>         /* Now submit the read */
+> -       md_sync_acct_bio(read_bio, r10_bio->sectors);
+>         atomic_inc(&r10_bio->remaining);
+>         read_bio->bi_next =3D NULL;
+>         submit_bio_noacct(read_bio);
+> @@ -4940,7 +4932,6 @@ static void reshape_request_write(struct mddev *mdd=
+ev, struct r10bio *r10_bio)
+>                         continue;
+>
+>                 atomic_inc(&rdev->nr_pending);
+> -               md_sync_acct_bio(b, r10_bio->sectors);
+>                 atomic_inc(&r10_bio->remaining);
+>                 b->bi_next =3D NULL;
+>                 submit_bio_noacct(b);
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 6389383166c0..ca5b0e8ba707 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -1240,10 +1240,6 @@ static void ops_run_io(struct stripe_head *sh, str=
+uct stripe_head_state *s)
+>                 }
+>
+>                 if (rdev) {
+> -                       if (s->syncing || s->expanding || s->expanded
+> -                           || s->replacing)
+> -                               md_sync_acct(rdev->bdev, RAID5_STRIPE_SEC=
+TORS(conf));
+> -
+>                         set_bit(STRIPE_IO_STARTED, &sh->state);
+>
+>                         bio_init(bi, rdev->bdev, &dev->vec, 1, op | op_fl=
+ags);
+> @@ -1300,10 +1296,6 @@ static void ops_run_io(struct stripe_head *sh, str=
+uct stripe_head_state *s)
+>                                 submit_bio_noacct(bi);
+>                 }
+>                 if (rrdev) {
+> -                       if (s->syncing || s->expanding || s->expanded
+> -                           || s->replacing)
+> -                               md_sync_acct(rrdev->bdev, RAID5_STRIPE_SE=
+CTORS(conf));
+> -
+>                         set_bit(STRIPE_IO_STARTED, &sh->state);
+>
+>                         bio_init(rbi, rrdev->bdev, &dev->rvec, 1, op | op=
+_flags);
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index e39c45bc0a97..f3a625b00734 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -182,7 +182,6 @@ struct gendisk {
+>         struct list_head slave_bdevs;
+>  #endif
+>         struct timer_rand_state *random;
+> -       atomic_t sync_io;               /* RAID */
+>         struct disk_events *ev;
+>
+>  #ifdef CONFIG_BLK_DEV_ZONED
+> --
+> 2.39.2
+>
 
-Fixes: 5dc39fd ("net: phy: DP83822: Add ability to advertise Fiber connection")
-Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
----
- drivers/net/phy/dp83822.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 6599feca1967..f1179881abb4 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -719,7 +719,7 @@ static int dp83822_phy_reset(struct phy_device *phydev)
- 	return phydev->drv->config_init(phydev);
- }
- 
--#ifdef CONFIG_OF_MDIO
-+#if IS_ENABLED(CONFIG_OF_MDIO)
- static int dp83822_of_init_leds(struct phy_device *phydev)
- {
- 	struct device_node *node = phydev->mdio.dev.of_node;
--- 
-2.34.1
+Looks good to me. Reviewed-by: Xiao Ni <xni@redhat.com>
 
