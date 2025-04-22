@@ -1,138 +1,119 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C735527CB1F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A5D27CB1F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745323890; cv=none; b=KUbwfJhfRrooS/MuEsILGt7FLwhV2jNba8poZAUDxEJQnCbw5AfogGckGmCW08RypYJKna5ANk1hOGhy2y+KRJQ630pb4nCuHPlHl0nDoQMlN0L0df1AJHXpurK6/+URn9JZlxj6EWlUXuJPB03MJcaK9ycc4YBqKsn7+OAf3Tg=
+	t=1745323897; cv=none; b=eWa2yx1ohOAmIGVlWEqg83gcq5u4ISO3OArtKC39qQNVaRsXNQ6dqLiAh7oajlKJU0gEYcGXD3da4bookXs5BMwgfjHTF4IR+B5OPQlZWcp5NfUsh/oWnv3KBEGqMeOGlMHPOCC3T3iIFSEf/zIBUHgP/FwQJxS8J4nW2FSm4gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745323890; c=relaxed/simple;
-	bh=v+QGk9aZpsAsGScTaJ03a6+SiReqDBbzR8DgGCECRiM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=DXt4t4S8h1hiVEawBQvrPgBK+tLTZZ1tX+doLY5fqOhBJseQv9B1IYd/6SSjJmdAajE9R0TGQOp+02FeShmYEKZnAEBU3CWedgWg7761N1PIAxsHcmowEGzivQ2nU59fJeGIkSuw0PpwgO1B/My9goviKutUwcJCbF+9ABaH/ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d81d99e4e6so43656215ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:11:28 -0700 (PDT)
+	s=arc-20240116; t=1745323897; c=relaxed/simple;
+	bh=Q/0eQ4z6xF/rZSS6yNW+QOVGiNYbzpf0j7hh9npWX94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XR1EcwCrmuAj1IrB+ytXCTcELggvP8LUoyIjCelE425qDSml2N5TQPwDJUvnsirzSkCThojpp2XgGVj8xW9zoNi/2wj450Qs11EB0fqkj5DeVfVMCUkzf4qP/irCrl6oVhPJMF9nnT96dCxdRwIcw+YKoqiKMwK8532vlAtd2mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KH1OViQG; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KH1OViQG"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so7764424a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745323894; x=1745928694; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KT1JxRWSPsmY8fesz3r5b2lILhpBpQyPhmAe3rmQpu8=;
+        b=KH1OViQGN/9Izj1jLQ6iOqU8f1rpU4HpLRSKlHxG+hpwZ0RTgkdnUlnydB/Je2YhMN
+         AUYbcyFbCMFK/aq6y+GMjpWunX/jJ+sYUpULEXUvbh9QIWZSJmXd9oN2AvmD+z45kJnm
+         KLOtqrODJ+Q6PBRgq34JwMSttRarvpTO41Bzjf/FnLJiGNSDhVGu0XEJ51gRi2F7X/kT
+         yvSg27sjlI8t0dT2ixjAgyQVPeloMRLtsqpU4PGzcVXl2f0yeWX+DohxBfLbTE/WMI0R
+         Y97tCfDVKys4eelK/2fCfefHNBjjxc25LN+fJ7WCXXfqSDYRMvkSqNXWWW41Lo9dzPGn
+         Yy1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745323888; x=1745928688;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=msWtidcZBgXXJ+183U0Y5v1GiY5Yg9JwQ4JAAakzZbI=;
-        b=AbxP9Dn2dj0bEKY1ZGr36X5gAmehQ7o4S1KSY0Ub1bRy0BJkjVv+hGFPZl2WnmAIZC
-         yRIpwYjb1F0yYU+LEbYJL7AENMMjkRDj7jiSMLfHIH60xGhRPmjpHxbFE1sDz1pIL70p
-         g9eLhDSOUc6B4mmEyMDuiVRrVNGzgWLe0iOsugrAALRy0S1OihfScihqoQjNkGNGyS5E
-         9DCt2RtcqqTWvtOm4cSfXaaIHfPzwW5wD38cF0DDkZcvw324RqtGlasxdL/U0QEI/ILL
-         slxusWegiFzTLuMKuUVC4D04cA612+WazPij27YJRJnXWw6zbMKOZoZnF/94EnOWSfdj
-         BQ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXgza9MsDDdCoer6mQCenyTptHDI+t64IWcBYQJLwkzJB/GgALWLfSQ+5uauqEmRY1wdx50s/Vt94lxZa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWc6Pd0MCDiDqXmGoGcnAfGpNQwD7Idqjf9608wykx9Svh/cME
-	nfKqzwiZrtuWahf9OqimSYPFoCdH4WqhWM0TttMAMGrPtzby08cEgVQpp4g3rsmfTud0QkqR32l
-	zYXv9IRnclJ4DT0g1+5L3ND7C2ycu1V72W8CI0yHfZqlvEcrUp4tkg00=
-X-Google-Smtp-Source: AGHT+IEMFb8JU/M7kVuJoJS8TIxiLrbjAhQDbP3f3uGhmZLC41LA0ZmwIkm5GudqZ0a7Imt9SF7LapTDu37yzsZXoBtStblPMwSL
+        d=1e100.net; s=20230601; t=1745323894; x=1745928694;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KT1JxRWSPsmY8fesz3r5b2lILhpBpQyPhmAe3rmQpu8=;
+        b=qV7Hng0cx+0/h0HW8hB+CMW1Wx50ox3z5McdtgmlKdhCZmtVdG+OIylBH/DX3xwIJM
+         DZTuJP690EVJFIwQjLIL4EEsW7FLG2SWQPf/lcm7DAbv3GB2wKi89rU10ZqPyuNY5h6g
+         ZCHWSsaxA0NjfvGjuNSDN/znzeoyHDAMXu8bVeZxYeN6dGSUYuxQ9yrxFpM7+6wCyLwB
+         7wp7rwQ/NNIVrgImBIii8oKL1B24mwCrPYHw1NH744AEg8GJqQhBT/5qD4siHAJP519r
+         atvPuo3fcnX2kPUfp7fJjeGtzsWNAYynO2UavkQWafF1CzK+U6+bWSaovSKuKZ9XkL6F
+         kMrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMHGaUm/WqesFUUDetqJc5yfSierzr5ilvjeLizcDeBSiNWxatjDDOIsvyawepy+hKcWQS/vKvYUb5wKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCzHWeR9x4serqAVTaKCPlIHr9DSgEazRo03uGAfyZMzFAcNyy
+	VdYrVTNiS2V4d4ZQUo6bFp9ePYRngjgVyyyhSB+/0fHL2q0KCi7jJeJQnOsk7yQ=
+X-Gm-Gg: ASbGncvNEMqdjyZeZvnDD1qpt0arqC+w1Ye2VxBZjE49uwD89E7b1fej3JOiVXRktm5
+	VJQOrs0B2MhPOUKlgq/OmDWVg+NKemVUuaj1pNVPFIwfL5bOH4zmo37tE+FzWFO3cG9rKF6+4pA
+	OjWex+ie1HAxFnawPqqGFV2Pn9DZcPO7cquybi/YViD1Lt0qZX8YuiZWZFpfQPskg6EHvyKI+0x
+	flDMUi+tHvubvGyymwEA4eu94kl9NvvccxqSmBvwJV4IvNR3DKL7TypsDlbG4W/OQVIIHDSzDH+
+	BH1gN3oeEtW6ue17+LskUicGXnlZ/jwXS+OPB2ufDNU=
+X-Google-Smtp-Source: AGHT+IFyYmcZlvcAITMghOEvilutpzLwoU5xPOnInSRoTQAJsg2jq3a94IEVeo4CoWvMA1NEnQNxKw==
+X-Received: by 2002:a17:907:96a4:b0:abf:19ac:771 with SMTP id a640c23a62f3a-acb74adabfdmr1382972966b.2.1745323893733;
+        Tue, 22 Apr 2025 05:11:33 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef4ac41sm644389366b.152.2025.04.22.05.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 05:11:33 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:11:16 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <llong@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+Message-ID: <h64z4wl6mw3qxfwmqsvlddsie62ehkoag47lm2in3nda7dhloq@rjxpkggawqem>
+References: <20250415210415.13414-1-longman@redhat.com>
+ <20250415210415.13414-2-longman@redhat.com>
+ <psbduszek3llnvsykbm3qld22crppq4z24hyhsp66ax3r2jji5@xhklroqn2254>
+ <0033f39f-ff47-4645-9b1e-f19ff39233e7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4417:10b0:3d9:24d8:8d4f with SMTP id
- e9e14a558f8ab-3d924d88fb1mr4028095ab.16.1745323887958; Tue, 22 Apr 2025
- 05:11:27 -0700 (PDT)
-Date: Tue, 22 Apr 2025 05:11:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6807876f.050a0220.8500a.000f.GAE@google.com>
-Subject: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu / umount_tree
-From: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>
-To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
-dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
-
-write to 0xffff888108512d98 of 8 bytes by task 21705 on cpu 1:
- unhash_mnt fs/namespace.c:1050 [inline]
- umount_mnt fs/namespace.c:1064 [inline]
- umount_tree+0x6f0/0xb10 fs/namespace.c:1922
- do_umount fs/namespace.c:-1 [inline]
- path_umount+0x9c1/0xa40 fs/namespace.c:2144
- ksys_umount fs/namespace.c:2167 [inline]
- __do_sys_umount fs/namespace.c:2172 [inline]
- __se_sys_umount fs/namespace.c:2170 [inline]
- __x64_sys_umount+0xb7/0xe0 fs/namespace.c:2170
- x64_sys_call+0x2883/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:167
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xc9/0x1a0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-read to 0xffff888108512d98 of 8 bytes by task 21704 on cpu 0:
- choose_mountpoint_rcu+0x3d/0x130 fs/namei.c:1386
- follow_dotdot_rcu fs/namei.c:2020 [inline]
- handle_dots+0x559/0x790 fs/namei.c:2095
- walk_component fs/namei.c:2132 [inline]
- link_path_walk+0x5f6/0x840 fs/namei.c:2503
- path_lookupat+0x6c/0x2a0 fs/namei.c:2659
- filename_lookup+0x14b/0x340 fs/namei.c:2689
- filename_setxattr+0x59/0x2b0 fs/xattr.c:660
- path_setxattrat+0x28a/0x320 fs/xattr.c:713
- __do_sys_setxattr fs/xattr.c:747 [inline]
- __se_sys_setxattr fs/xattr.c:743 [inline]
- __x64_sys_setxattr+0x6e/0x90 fs/xattr.c:743
- x64_sys_call+0x28e7/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:189
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xc9/0x1a0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0xffff888116147cc0 -> 0xffff8881065c23c0
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 21704 Comm: syz.6.5865 Not tainted 6.15.0-rc3-syzkaller-00008-ga33b5a08cbbd #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-==================================================================
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="sq3j7fc2pogean7z"
+Content-Disposition: inline
+In-Reply-To: <0033f39f-ff47-4645-9b1e-f19ff39233e7@redhat.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--sq3j7fc2pogean7z
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v7 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+MIME-Version: 1.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On Sun, Apr 20, 2025 at 05:48:15PM -0400, Waiman Long <llong@redhat.com> wrote:
+> I was referring to the suggestion that the setting of memory_recursiveprot
+> mount option has a material impact of the child 2 test result. Roman
+> probably didn't have memory_recursiveprot set when developing this selftest.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+The patch in its v7 form is effectively a revert of
+	1d09069f5313f ("selftests: memcg: expect no low events in unprotected sibling")
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+i.e. this would be going in circles (that commit is also a revert) hence
+I suggested to exempt looking at memory.events:low entirely with
+memory_recursiveprot (and check for 0 when !memory_recursiveprot) --
+which is something new (and hopefully universally better :-)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+Michal
 
-If you want to undo deduplication, reply with:
-#syz undup
+--sq3j7fc2pogean7z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaAeHYgAKCRAt3Wney77B
+STU8AQDtPchwdDd7GvYG9/lftHphnD62oj3o0m0hpo2aWJjY4gEAjv+IF2GZLFKQ
+73DPixoPDX77bf3ZdvlqpW53y0lI8wo=
+=3Mvf
+-----END PGP SIGNATURE-----
+
+--sq3j7fc2pogean7z--
