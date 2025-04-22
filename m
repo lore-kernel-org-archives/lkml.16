@@ -1,146 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D771A0BC5
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF72900AC;
+	Tue, 22 Apr 2025 17:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745341314; cv=none; b=iwtvzUgSZOC222vOzJ1vZJHbI9bm6s9EPXAKY/vEjX+l6N1EtHalsLkpha0y7smNo/oZ5L0ULfKj12Bq603B5GOwtH37ssIhBRyyAsSAi8KtxHGJ229AqteuIuuPcStmoqHZ1RY0d2O1nVTyO1A7nTgfYdDlF2WrgmM6srOCPv4=
+	t=1745341324; cv=none; b=XvjP1HsKvo7/O70BT+cgoPFYS/eBy4xMBMYEZYTirzOmKuuvRQLqzxLVOqLWv9S2vOLOj0z9s/hL8DQBm6NRBrKKGs3wQVU/nfqe7S3SM8pWB6aE3zrjBxieROVYxAdY4OxaDMjZCFuHpuyloeoF6s5N/XWpC42jG3bVWdACnMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745341314; c=relaxed/simple;
-	bh=JO2KtBBUzB9kmwalO8oEasZFihssbjQC46p9OUxDhcM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agD+wcyNuQnQYNZwIFycSdWf/h1OBUutsRY+5xbQFzBq/KAiyrPIR70ZSSZb0Pymx9/nce3b7VaflwZjfb+wNud30bQYBdyzfyNJJ/S5cgIrEQVtnSimtRuzjGLX1ruWPVM+AALdxEhrFysZSj/HyQQH1udw+txuh8xrdi5/f2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ct1POQ3y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745341324; c=relaxed/simple;
+	bh=tz697PeimqwwKDXfJs0BPD/016iKLpVR0s6NEmZvSyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=pLjoQEF7DH1F//noj5R9TtOCvLiS52aj67S9cY6tWLbToP8VtJZ7jwvTANCaeZbH4f+DqNrvKuM3c5BcqPOkV5oWd0vrx/2XobKWrVYQOttwE+Q1TwnTvgbv6RkzLGhygblrs6HfxoZyBBnO0nntVdfmnT822aPoLboLPM1Ruvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5quNiPT; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ct1POQ3y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745341312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=szHYQ7G5Qg0pCM7SYXZ8+VGj8lOfryQyJTB2Zk1s5kU=;
-	b=Ct1POQ3y8GAyuFTw4oNke+cMO2BpOeR1/MR8kTIyqKgDOQPHIQAtikkVqNMJGLOc+0adQu
-	Ag49QPbx9WCSQcpyEf6O8oXcF63RwupKDqVOr+tfHcHU/2BemVABDc153TjmbHcJCH1cpX
-	OmrvA5HpduElcnHvzLHpqbF5i01FaOs=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-ItTHBgBYM0-VyaQqx1ZLAQ-1; Tue,
- 22 Apr 2025 13:01:47 -0400
-X-MC-Unique: ItTHBgBYM0-VyaQqx1ZLAQ-1
-X-Mimecast-MFC-AGG-ID: ItTHBgBYM0-VyaQqx1ZLAQ_1745341305
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CBA7919560A5;
-	Tue, 22 Apr 2025 17:01:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.24])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F40E2195608D;
-	Tue, 22 Apr 2025 17:01:38 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 22 Apr 2025 19:01:06 +0200 (CEST)
-Date: Tue, 22 Apr 2025 19:01:00 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Dave Hansen <dave@sr71.net>, Brian Gerst <brgerst@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Chang S . Bae" <chang.seok.bae@intel.com>
-Subject: question about switch_fpu_prepare/switch_fpu_finish
-Message-ID: <20250422170059.GB1676@redhat.com>
-References: <20250409211127.3544993-1-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5quNiPT"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so8347499a12.3;
+        Tue, 22 Apr 2025 10:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745341321; x=1745946121; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xmsdnMqf5xlO7k6+QnwIpLTJU73C+ck4BW6kSugTHUQ=;
+        b=A5quNiPTKKdWl9uN7QRJrJaNsvP7SpGsTVc3ei/Wk+bYUIE4awrtfnD1sD/dANn7Sh
+         EjxVmxKO7IGWtKDepICkzchIcU9utQqZHOk/+SPBc311gUUozjL1XBxrP4qWOPjiaZE6
+         6RhRsLWjCVg9QlhPP3VRRZ+yOlzBkcM2OTcelJVOJ0jDlrNYEPbEeGWkkQi3zJaTPVsI
+         7d5Re7ypbzQCTx7WRiZrtSWNsddcv1T55fpwz0KAeMriWTAvAAzDRdq+vzo4U6SnjZIk
+         g+cGujD1E/Smpc4dvDt58OjfCbUGe4E0Lo0n7SlYfzkqdQGcGFqNrKxtnmA9xobJJXBG
+         LJmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745341321; x=1745946121;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xmsdnMqf5xlO7k6+QnwIpLTJU73C+ck4BW6kSugTHUQ=;
+        b=GWzo6rZ/eCfjimaVKHEFdcBoOaexVZWoZn9SxYhBU6xElDYtugwXCW8fD2a9m8q0cG
+         eSh5nieZ5L3YgZznfY+yTo6TJjVV7LJDOIIw01k+H3Y0NEuOdcKsD/nKkV2RQhimO7S+
+         bVTwdB7b+hApB7tGAq36yeDVG0mkB5TCJUkpUKbug+ig0EtPXodzpfqlQgPTP4XSP77Y
+         KupxSBRz5gajDFFq64KRm2wMFDdSa5etRG0oWQageeABZWaBXKeQHHuWYVwvIUyREFBx
+         yaJQyvCI//lPtEmuw5k7cRyKemC2Ie2g92uArOPNWDOu4YpjJvOO70/kwZENUXllJvp/
+         MBdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6W91RyiSNns4MrpxkghO4QDFCC3bJUHn0htn7kjVcaiZOL/6qAKlG/PbNRoFumoNbzH4YOxyb26Av5DXUMY=@vger.kernel.org, AJvYcCW82dRb2KzuNsl+1cmLJBR5QFMfLcTB62PnOCVFCM7ejloapt+giSaahalzT2Osq+V5bpgGovo42k0gb1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJlgQVGNeJugSc1cvSU1lUAHIqpQAkoE05ld32rmwfm51JUWRi
+	+htnrAWyDhWb4WaupdVnoIlVb8AiLag03OboXiVZWICoxVmHh26wa/X1CbMQlQMOpmeK9LZ7l+s
+	kF7ORbfihpwM6TlpwVNDJNddecJQ=
+X-Gm-Gg: ASbGncum623PhtD+0pvTwRqJD20YeNacFKJ+n+CekJDeOQYgxQ+fAL5G6cjUwfy0JUo
+	007wOzUd12HjEezDrkV7+wdpW146rl8EENgf9UoBUfcRDXoZdKNhifUGxX4stsGmHPdBvdgLW1s
+	fxPAKgxaqITqQ6dlNwaQv9bzW2tZt6TdmRGbuT
+X-Google-Smtp-Source: AGHT+IHd2N9D1ZrJXInnFHsaJpiRrGdvZOEoz2WndD7gmxPUbmQCpZ/3gUmK1m/ge8Qp9ZnPcHOvzzMo3WOgXfkexnE=
+X-Received: by 2002:a17:906:dc90:b0:ac6:e33e:9ef8 with SMTP id
+ a640c23a62f3a-acb74ad97bamr1143411466b.2.1745341320895; Tue, 22 Apr 2025
+ 10:02:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409211127.3544993-1-mingo@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+References: <CABTDG886JyTFu0dUWgZAT89Dmxjm78VNk0TXcgf=1yABBRN5XQ@mail.gmail.com>
+In-Reply-To: <CABTDG886JyTFu0dUWgZAT89Dmxjm78VNk0TXcgf=1yABBRN5XQ@mail.gmail.com>
+From: Hank Barta <hbarta@gmail.com>
+Date: Tue, 22 Apr 2025 12:01:49 -0500
+X-Gm-Features: ATxdqUHnhdxkjiue3m4U7BvSmKftALxNk06SRc-rmx9Be7QM4KMDNVlJDk1pDLs
+Message-ID: <CABTDG8-A7A7WJUSHio85vVPCKM02nuwcYPhbYju6bQacbteQUg@mail.gmail.com>
+Subject: Re: Stack dump, Pi 4B, Debian Bookworm (not RpiOS)
+To: arend.vanspriel@broadcom.com, linux-wireless@vger.kernel.org, 
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I must have missed something, but I can't understand this logic, it
-seems unnecessarily complicated today.
+I should have mentioned that I'm also running Tailscale and Docker on
+this host so there's a lot of "networking" going on. Following a
+reboot, I see what I think is the same stack dump. In addition there
+are a lot of messages on the console like
 
-1. Now that switch_fpu_finish() doesn't load the FPU state, I think it
-   can be folded into switch_fpu_prepare().
+[  242.666852] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+Frame: category 0x5, action 0x1
+[  251.665022] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+Frame: category 0x5, action 0x1
+[  260.716149] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+Frame: category 0x5, action 0x1
+[  269.670253] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+Frame: category 0x5, action 0x1
+[  278.673598] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+Frame: category 0x5, action 0x1
 
-2. But the main question is that I fail to understand why
-   __switch_to() -> switch_fpu_finish() uses the "next" task to set
-   TIF_NEED_FPU_LOAD.
+In spite of that, WiFi and Ethernet seem to be working.
 
-   I think that set_tsk_thread_flag(prev_p, TIF_NEED_FPU_LOAD) makes
-   more sense.
+best,
 
-   Just in case, note that fpu_clone() sets TIF_NEED_FPU_LOAD, so
-   we should not worry about the 1st __switch_to(next_p).
+On Tue, Apr 22, 2025 at 11:52=E2=80=AFAM Hank Barta <hbarta@gmail.com> wrot=
+e:
+>
+> Good morning, I encountered the following while attempting to connect
+> to a WiFi AP using iwd. Another user on the Raspberry Pi IRC
+> (ukleinek) suggested I forward that to this group.
+>
+> hbarta@olive:~/MkDocs/my-notes/docs/hosts/Raspberry-Pi/4/allegan$ cat
+> iwd.crash.txt
+> [565142.844103] NET: Registered PF_ALG protocol family
+> [565142.895121] alg: No test for hmac(md4) (hmac(md4-generic))
+> [565255.271588] ------------[ cut here ]------------
+> [565255.278557] memcpy: detected field-spanning write (size 72) of
+> single field "&mgmt_frame->u" at
+> drivers/net/wireless/broadcom/brcm80211/brcmfm
+> ac/p2p.c:1469 (size 26)
+> [565255.295948] WARNING: CPU: 1 PID: 1135280 at
+> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1469
+> brcmf_p2p_notify_action_frame_rx+0x30c
+> /0x440 [brcmfmac]
+> [565255.312770] Modules linked in: ghash_generic ghash_ce gf128mul gcm
+> ccm algif_aead des_generic libdes ecb algif_skcipher md4 algif_hash
+> af_alg
+> nf_conntrack_netlink xt_nat veth xt_conntrack bridge stp llc xt_set
+> ip_set xt_addrtype xfrm_user xfrm_algo overlay xt_MASQUERADE xt_tcpudp
+> xt_mark
+> nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
+> nf_defrag_ipv4 tun qrtr binfmt_misc hid_logitech_hidpp joydev hci_uart
+> btqca btrtl bt
+> bcm btintel btsdio bluetooth jitterentropy_rng sha512_generic evdev
+> bcm2835_v4l2(C) hid_logitech_dj sha512_arm64 bcm2835_mmal_vchiq(C)
+> videobuf2_v
+> malloc videobuf2_memops videobuf2_v4l2 cpufreq_dt videobuf2_common
+> videodev aes_neon_bs snd_bcm2835(C) mc aes_neon_blk vc4 zfs(POE)
+> snd_soc_hdmi_c
+> odec snd_soc_core raspberrypi_cpufreq drbg snd_pcm_dmaengine
+> ansi_cprng snd_pcm brcmfmac snd_timer zunicode(POE) brcmutil
+> ecdh_generic pwm_bcm2835
+> snd zzstd(OE) ecc nls_ascii zlua(OE) iproc_rng200 soundcore nls_cp437
+> cec bcm2835_wdt vfat fat rc_core bcm2711_thermal vchiq(C)
+> [565255.313189]  drm_display_helper v3d zcommon(POE) znvpair(POE)
+> hid_generic gpu_sched drm_dma_helper zavl(POE) drm_shmem_helper
+> drm_kms_helper i
+> cp(POE) leds_gpio spl(OE) sg cfg80211 rfkill nf_tables libcrc32c
+> nfnetlink loop fuse drm efi_pstore dm_mod dax configfs ip_tables
+> x_tables autofs4
+> usbhid hid ext4 crc16 mbcache jbd2 crc32c_generic sd_mod t10_pi
+> crc64_rocksoft crc64 crc_t10dif crct10dif_generic uas usb_storage
+> scsi_mod scsi_c
+> ommon xhci_pci dwc2 xhci_hcd broadcom udc_core bcm_phy_ptp bcm_phy_lib
+> reset_raspberrypi roles i2c_bcm2835 usbcore genet sdhci_iproc
+> mdio_bcm_unim
+> ac of_mdio usb_common fixed_phy fwnode_mdio crct10dif_ce
+> crct10dif_common sdhci_pltfm libphy fixed sdhci gpio_regulator
+> phy_generic
+> [565255.489912] CPU: 1 PID: 1135280 Comm: kworker/1:3 Tainted: P
+>   C OE      6.1.0-33-arm64 #1  Debian 6.1.133-1
+> [565255.489934] Hardware name: Raspberry Pi 4 Model B Rev 1.5 (DT)
+> [565255.489941] Workqueue: events brcmf_fweh_event_worker [brcmfmac]
+> [565255.490001] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTY=
+PE=3D--)
+> [565255.490013] pc : brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfm=
+ac]
+> [565255.490058] lr : brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfm=
+ac]
+> [565255.490100] sp : ffff80000c8d3c20
+> [565255.490105] x29: ffff80000c8d3c20 x28: ffff145a4bc40810 x27:
+> 0000000000000048
+> [565255.490123] x26: ffff145a7c9ed560 x25: 0000000000000048 x24:
+> ffff145a49cd8900
+> [565255.490139] x23: ffff145a07b6aa98 x22: 0000000000000058 x21:
+> ffff145a07b6aa80
+> [565255.490154] x20: ffff80000c8d3d78 x19: ffff145a48e139c0 x18:
+> 0000000000000006
+> [565255.490169] x17: 010300080103060e x16: 0000000000000010 x15:
+> 0000000000000001
+> [565255.490184] x14: 0000000020000000 x13: 0000000000000002 x12:
+> 0000000000000000
+> [565255.490199] x11: 00000000ffffefff x10: ffffd291cf1109c8 x9 :
+> ffffd291cd61d33c
+> [565255.490214] x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 :
+> 0000000000000001
+> [565255.490229] x5 : ffff145a7fb74ad0 x4 : ffff145a7fb74ad0 x3 :
+> ffff145a7fb80c70
+> [565255.490243] x2 : 0000000000000000 x1 : 0000000000000000 x0 :
+> ffff145a46768000
+> [565255.490258] Call trace:
+> [565255.490264]  brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfmac]
+> [565255.490309]  brcmf_fweh_call_event_handler+0x44/0xc0 [brcmfmac]
+> [565255.490352]  brcmf_fweh_event_worker+0x190/0x490 [brcmfmac]
+> [565255.490395]  process_one_work+0x1f4/0x460
+> [565255.490416]  worker_thread+0x188/0x4e0
+> [565255.490429]  kthread+0xe0/0xe4
+> [565255.490441]  ret_from_fork+0x10/0x20
+> [565255.490455] ---[ end trace 0000000000000000 ]---
+> [565658.710117] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+> Frame: category 0x5, action 0x4
+> [565658.721227] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+> [565704.491659] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
+> Frame: category 0x5, action 0x1
+> root@cheshire:/home/hbarta#
+>
+> This was captured from dmesg output after I connected an Ethernet
+> cable because I experienced it while using the console.
+>
+> I was running iwctl interactively and had entered (to the best of my
+> recollection) commands to scan (nothing reported) and list (reported
+> list of visible APs which seemed incomplete) and connect [AP Name].
+> The last command prompted for the pass phrasxe and when I entered it
+> and hit return, the stack dump appeared.
+>
+> (Stack dumpo also at https://pastebin.com/CtEMNFxf for 6 months.)
+>
+> The back story on this is that NetworkManager + wpa_supplicant is not
+> reliably maintaining a consistent connection so I am exploring other
+> configurations hoping to improve that.
+>
+> best
+>
+> Edit: I just enabled iwd (systemctl start iwd) and got another stack
+> dump on the console. I've added it to the pastebin.
+>
+> --
+> Beautiful Sunny Winfield
 
-IOW, can you explain why the (untested) patch below could be wrong?
 
-We can even remove the PF_KTHREAD check in switch_fpu_prepare(), kthreads
-should never clear TIF_NEED_FPU_LOAD...
 
-Oleg.
----
-
-diff --git a/arch/x86/include/asm/fpu/sched.h b/arch/x86/include/asm/fpu/sched.h
-index 5fd12634bcc4..cdd60f434289 100644
---- a/arch/x86/include/asm/fpu/sched.h
-+++ b/arch/x86/include/asm/fpu/sched.h
-@@ -54,18 +54,10 @@ static inline void switch_fpu_prepare(struct task_struct *old, int cpu)
- 		 */
- 		old_fpu->last_cpu = cpu;
- 
-+		set_tsk_thread_flag(old, TIF_NEED_FPU_LOAD);
-+
- 		trace_x86_fpu_regs_deactivated(old_fpu);
- 	}
- }
- 
--/*
-- * Delay loading of the complete FPU state until the return to userland.
-- * PKRU is handled separately.
-- */
--static inline void switch_fpu_finish(struct task_struct *new)
--{
--	if (cpu_feature_enabled(X86_FEATURE_FPU))
--		set_tsk_thread_flag(new, TIF_NEED_FPU_LOAD);
--}
--
- #endif /* _ASM_X86_FPU_SCHED_H */
-diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
-index 4636ef359973..b398a6ef2923 100644
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -208,8 +208,6 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 
- 	raw_cpu_write(current_task, next_p);
- 
--	switch_fpu_finish(next_p);
--
- 	/* Load the Intel cache allocation PQR MSR. */
- 	resctrl_sched_in(next_p);
- 
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index 7196ca7048be..e8262e637ea4 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -671,8 +671,6 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
- 	raw_cpu_write(current_task, next_p);
- 	raw_cpu_write(cpu_current_top_of_stack, task_top_of_stack(next_p));
- 
--	switch_fpu_finish(next_p);
--
- 	/* Reload sp0. */
- 	update_task_stack(next_p);
- 
-
+--=20
+Beautiful Sunny Winfield
