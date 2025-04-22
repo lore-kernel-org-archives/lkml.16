@@ -1,42 +1,47 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D16231F09B3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7821FDA94;
+	Tue, 22 Apr 2025 12:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324663; cv=none; b=M66hX2UOWjqh/NzRqzNseUxiHHLM/y8WdR+waqdMgnube0hqsUrLGZulpYAt/XbRKFCsD8uk7zbLKrKZXqMoaChN4rl8o5vGAWCuW7bd7pteWdIjBxW0r3JtlRU+FCs/ifCz5PgMQl1jCMFL/jV8kJfycKxr1omiKzy4isTygt8=
+	t=1745324662; cv=none; b=f7DoVa4/PMYvHPsl9+i5A4rNaGaL1V5W7sG6/Qg1InVGxEgrs0PMFOrriaDDwFTE+Dh7Jb4rGQv94TSweDJiQEDFg8JosrG0wVnGiF+tgmpTEt7gZZr9vcgf6mMWw8BuDwji2kIfyRfEztNAYot6Z7P2vUCcZpbxCCTohx6+HZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324663; c=relaxed/simple;
-	bh=FUiDZogOER7yzF8/Lv/KRDCXDBSNMP+t80MM4xnehwQ=;
+	s=arc-20240116; t=1745324662; c=relaxed/simple;
+	bh=6lAJVPvmo2XgWRsTDsBUFYz7y/erMMDcUT4+f0mJuRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gSQorz1t7AxKi1Sjw5bC0P647vQOT9cpxjlsWeTSaXus09lRTfbAHHb9GyATPLKf4f+fb1FpAphHq7eeU/0QI/xwlVXRo8xSw9JW5xcvyT+EdLqgHfidvTojE1aLTR+WeTUcuupfWzUaciY64tSe1tDgWVj5dMMjlRSYmmOHYmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91281152B;
-	Tue, 22 Apr 2025 05:24:15 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 747503F66E;
-	Tue, 22 Apr 2025 05:24:19 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:24:14 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v1 5/9] coresight: Avoid enable programming clock
- duplicately
-Message-ID: <20250422122414.GE28953@e132581.arm.com>
-References: <20250327113803.1452108-1-leo.yan@arm.com>
- <20250327113803.1452108-6-leo.yan@arm.com>
- <5a8aaa17-cc36-4e03-95b3-24c3a16dd987@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RV4HD/5vOTZWyoOQZ9FfWAjGeo7KNec+IFUQ5qHst7r6E0zZyWQZAtLrTHPLIuRYAHc0IsCYkrN/G9gXunxvxpIZyYKgdDKEUx1EsKKQ3r56Nt76W07QTusgdun5wsegKwNXUFRO1sMBooJWvQ7upB/IliZ2g0L9gP3fwC2uozI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/m/uQvR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/m/uQvR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D802C4CEE9;
+	Tue, 22 Apr 2025 12:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745324661;
+	bh=6lAJVPvmo2XgWRsTDsBUFYz7y/erMMDcUT4+f0mJuRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r/m/uQvRqVetV4Wbr86FwQTCQCXiFVajeQr/1G7gINX+6c4hqaBo3jYN9hsvFg2Yi
+	 Lry3kUT+H4E4quTSiaXZWQfcyjfBfEOULifEGrQIUkNYovEpD39EomESvEih2na2Ju
+	 dEH9il/JO71ioD/9QZYKvISd2R+at9e4sVIoIpZvc7/CSnFdrHebzeP2X7/VcYTqm0
+	 lQ46+RhSwOQ7bLN1w75FLKBFIwp/wgv4FPfCrEaCxleY23ZPvNF9xo4IiHuL91OuQw
+	 2o5WOfuw1AlT8Sunjnk5Ir4ltfK22LUqJJTNtZ2tGLJoWsySvNQntcbO7LqaMunQUM
+	 GFvhCTW/eUh6Q==
+Date: Tue, 22 Apr 2025 14:24:16 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 3/3] PCI: dw-rockchip: Unify link status checks with
+ FIELD_GET
+Message-ID: <aAeKcEfyDS1ImynJ@ryzen>
+References: <20250422112830.204374-1-18255117159@163.com>
+ <20250422112830.204374-4-18255117159@163.com>
+ <aAeAAhb4R8ya_mBO@ryzen>
+ <7716b76f-be79-4ed1-b8d2-29258cb250ab@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,74 +50,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5a8aaa17-cc36-4e03-95b3-24c3a16dd987@arm.com>
+In-Reply-To: <7716b76f-be79-4ed1-b8d2-29258cb250ab@163.com>
 
-On Thu, Apr 03, 2025 at 12:18:56PM +0530, Anshuman Khandual wrote:
-> On 3/27/25 17:07, Leo Yan wrote:
-> > The programming clock is enabled by AMBA bus driver before a dynamic
-> > probe.  As a result, a CoreSight driver may redundantly enable the same
-> > clock.
-> > 
-> > To avoid this, add a check for device type and skip enabling the
-> > programming clock for AMBA devices.  The returned NULL pointer will be
-> > tolerated by the drivers.
-> > 
-> > Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >  include/linux/coresight.h | 11 +++++++----
-> >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> > index b888f6ed59b2..26eb4a61b992 100644
-> > --- a/include/linux/coresight.h
-> > +++ b/include/linux/coresight.h
-> > @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
-> >   * Returns:
-> >   *
-> >   * clk   - Clock is found and enabled
-> > + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
-> >   * ERROR - Clock is found but failed to enable
-> >   */
-> >  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
-> >  {
-> > -	struct clk *pclk;
-> > +	struct clk *pclk = NULL;
-> >  
-> > -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> > -	if (IS_ERR(pclk))
-> > -		pclk = devm_clk_get_enabled(dev, "apb");
-> > +	if (!dev_is_amba(dev)) {
-> > +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> > +		if (IS_ERR(pclk))
-> > +			pclk = devm_clk_get_enabled(dev, "apb");
-> > +	}
-> >  
-> >  	return pclk;
-> >  }
+On Tue, Apr 22, 2025 at 07:50:50PM +0800, Hans Zhang wrote:
 > 
-> coresight_get_enable_apb_pclk() mostly gets called in the platform driver
-> probe paths but they are also present in some AMBA probe paths. Hence why
-> cannot the callers in AMBA probe paths get fixed instead ?
-
-With this approach, clocking operations are different in static probe
-and dynamic probe.  This causes complexity for CoreSight drivers.
-
-After consideration, we decided to use a central place for clock
-initialization.  Patch 09 follows the idea to encapsulate pclk and atclk
-operations in the coresight_get_enable_clocks() function.
-
-> Besides return
-> value never gets checked for NULL, which would have to be changed as well
-> if coresight_get_enable_apb_pclk() starts returning NULL values for AMBA
-> devices.
 > 
-> 	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
-> 	if (IS_ERR(drvdata->pclk))
-> 		return -ENODEV;
+> On 2025/4/22 19:39, Niklas Cassel wrote:
+> > On Tue, Apr 22, 2025 at 07:28:30PM +0800, Hans Zhang wrote:
+> > > Link-up detection manually checked PCIE_LINKUP bits across RC/EP modes,
+> > > leading to code duplication. Centralize the logic using FIELD_GET. This
+> > > removes redundancy and abstracts hardware-specific bit masking, ensuring
+> > > consistent link state handling.
+> > > 
+> > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 +++++----------
+> > >   1 file changed, 5 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > index cdc8afc6cfc1..2b26060af5c2 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > @@ -196,10 +196,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
+> > >   	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> > >   	u32 val = rockchip_pcie_get_ltssm(rockchip);
+> > > -	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
+> > > -		return 1;
+> > > -
+> > > -	return 0;
+> > > +	return FIELD_GET(PCIE_LINKUP_MASK, val) == 3;
+> > 
+> > While I like the idea of your patch, here you are replacing something that
+> > is easy to read (PCIE_LINKUP) with a magic value, which IMO is a step in
+> > the wrong direction.
+> > 
+> 
+> Hi Niklas,
+> 
+> Thank you very much for your reply. How about I add another macro
+> definition?
+> 
+> #define PCIE_LINKUP 3
 
-I confirmed CoreSight drivers have used this condition, so it is safe
-to return NULL pointer from coresight_get_enable_apb_pclk().
+Yes, adding another macro for it is what I meant.
 
-Thanks,
-Leo
+
+Kind regards,
+Niklas
