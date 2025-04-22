@@ -1,164 +1,116 @@
-Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27F223DF1;
-	Tue, 22 Apr 2025 20:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04B02C1E0D
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354852; cv=none; b=pVse8+vrwT2RJaKtISvrEUNKsP9FfD0FxuyjXaoPTj/xyXeVxpbl7MROU61hVpMDvvd01yLy6iSOvB0Bq+qG6ZEYFvyf41xVAsZSJzE1mau3oD/v256Gkt4bLZ3kYhPa+fbn75uxJ8jD4jAbh3c5B/mApDJcf8C97uD9iB0elfM=
+	t=1745354914; cv=none; b=Tl8yVvv2gTCSox7xku0zD4nRG017qwR4DPZEk15X6pLCDhN2LvN+Wb4jDuZv53cx3kmxyKkplJgCD8v8WHukffvB5WqHz9M0PB09oaUzpXXjk6aEnAPsguQvkJkpFlManhpNIDBC2O/6oLvilT6cQwLGnKjjiem9M9a8gHb7lQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354852; c=relaxed/simple;
-	bh=jI6WvZRTjseleXVwj2r4KXdhlz//nry7SMVNn90CJK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lg+UVDDoVpZx9W3dY2Hlg6ef9tkA9AZcjUCZQ0OdetDTCXDiP7GqR7q9N/ogUFyjwIjhWympL/WVw9RQ1FUTtN8B//oMhVqVNdL1yIg90KWdf41HCxA5nkhKApijmm5Js93LxPNmloFUI4C02RCQjDTWb28GTffIpnj3tyI9C/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=ULO8Hh2a; arc=none smtp.client-ip=82.68.155.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+	s=arc-20240116; t=1745354914; c=relaxed/simple;
+	bh=1PMa1GtjPwOhkh5xt3apZJJy6KX7lzmKPmF/1MnQ4LE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EH1u1V74zNtYUABgbKVwB2MuigPU3WECAP50ltMUT9uvkwv4dsvQcFtpJu/+ZBqy4Ga1TYwBiECcxYAFMVVOvxjAPm/o7yBHmUJEIf1nv9JbsYFrEsot4SCyikDla1jtZrW1phQjBEpjgI7b6OXnFPQ88Gc5ULlZSuZq1kCGlWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Wm/+baGi; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="ULO8Hh2a"
-Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
-	by wylie.me.uk (Postfix) with ESMTP id 78EA0120801;
-	Tue, 22 Apr 2025 21:47:17 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
-	s=mydkim006; t=1745354837;
-	bh=jI6WvZRTjseleXVwj2r4KXdhlz//nry7SMVNn90CJK0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ULO8Hh2aQDgzFQqB3l5JjlzWKsXf9iEEpPxZF+9BrhHF3VZMQYmQvi1M/QFP59P1r
-	 WlPgp9XcNhxA5ko/bwOTIIVEyTcqnYonfBWxHFzhDh850931xi3LFslUI7ifcEgjmV
-	 NMZ0xROAlD89vjgG0b/83F5zNWVhSTv4C2q5CjWhQp+rbtpsocWF2KGgnUcZWLihIb
-	 rYjPNns24elRXWhe5NYGx51uC+rKR4R+hmmB0WBlovtMjXf1GqNK4Lf9H66aacgTAB
-	 kJzelemb24BywXoZava1XEdVYhTfOS7Ja36O/wDDPNb7DdV+7lBHWRDV2FUJY8WdI/
-	 LWt7W6xi/gO7g==
-Date: Tue, 22 Apr 2025 21:47:16 +0100
-From: "Alan J. Wylie" <alan@wylie.me.uk>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>,
- Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Jiri
- Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>, Toke
- =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
- stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
- htb_dequeue
-Message-ID: <20250422214716.5e181523@frodo.int.wylie.me.uk>
-In-Reply-To: <aAf/K7F9TmCJIT+N@pop-os.localdomain>
-References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
-	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
-	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
-	<20250421200601.5b2e28de@frodo.int.wylie.me.uk>
-	<89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
-	<20250421210927.50d6a355@frodo.int.wylie.me.uk>
-	<20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
-	<4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
-	<aAf/K7F9TmCJIT+N@pop-os.localdomain>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
-X-Clacks-Overhead: GNU Terry Pratchett
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Wm/+baGi"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id 7BIBuUTmqVkcR7KXZuq5YW; Tue, 22 Apr 2025 20:48:25 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 7KXYuyxO1h9Zx7KXZuaLLR; Tue, 22 Apr 2025 20:48:25 +0000
+X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=68080099
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=DefJii25N9YVshmqbOOoLg==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=23CoqXQl36Z2fpCMmvIA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=KI0PP+6EV2eaVRZJdCLayQWjV4cEDbdXMHWY2GBxKW0=; b=Wm/+baGiTsQWqiYdaFX+w/QNL0
+	fCPKk8W4MTU5MFe4EcZ/hb9xpM/b5NituU2IfrtVzBAGJeFajnhqmK3EtRna3LQvb0HbwMdErY6BZ
+	xmshg1VRZ9qQOiAxEicbDdNDrTHXxO5Ncz5wLCdDmrMNRXn+Mx374mtIcC2IqJkkZknrz+0AQsGGP
+	tm3Rc865Y3xiZY/lxrUQ3pDUJugQqW/zg1NXUiWQwt5lfzv+0xsi9CBbW7HzvUNtREDWOhruUNRLc
+	Cn5t2abklVWiMbTZj0kCHDPkkOJZ6cIyPs6/V/r9NQZzDRr8btlu5ZzRF40hsA8Xjv/VdQT6l87uC
+	ewdB3Oew==;
+Received: from [201.172.174.139] (port=36052 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1u7KXX-00000001GYy-3AYh;
+	Tue, 22 Apr 2025 15:48:24 -0500
+Message-ID: <90038621-0c42-404e-b9e5-0c2b8ea53b5a@embeddedor.com>
+Date: Tue, 22 Apr 2025 14:48:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 22 Apr 2025 13:42:19 -0700
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
-
-> On Tue, Apr 22, 2025 at 07:20:24PM +0200, Holger Hoffst=C3=A4tte wrote:
-> > (cc: Greg KH)
-> >=20
-> > On 2025-04-22 18:51, Alan J. Wylie wrote: =20
-> > > On Mon, 21 Apr 2025 21:09:27 +0100
-> > > "Alan J. Wylie" <alan@wylie.me.uk> wrote:
-> > >  =20
-> > > > On Mon, 21 Apr 2025 21:47:44 +0200
-> > > > Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
-> > > >  =20
-> > > > > > I'm afraid that didn't help. Same panic. =20
-> > > > >=20
-> > > > > Bummer :-(
-> > > > >=20
-> > > > > Might be something else missing then - so for now the only
-> > > > > other thing I'd suggest is to revert the removal of the qlen
-> > > > > check in fq_codel. =20
-> > > >=20
-> > > > Like this?
-> > > >=20
-> > > > $ git diff  sch_fq_codel.c
-> > > > diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
-> > > > index 6c9029f71e88..4fdf317b82ec 100644
-> > > > --- a/net/sched/sch_fq_codel.c
-> > > > +++ b/net/sched/sch_fq_codel.c
-> > > > @@ -316,7 +316,7 @@ static struct sk_buff
-> > > > *fq_codel_dequeue(struct Qdisc *sch) qdisc_bstats_update(sch,
-> > > > skb); flow->deficit -=3D qdisc_pkt_len(skb);
-> > > > -       if (q->cstats.drop_count) {
-> > > > +       if (q->cstats.drop_count && sch->q.qlen) {
-> > > >                  qdisc_tree_reduce_backlog(sch,
-> > > > q->cstats.drop_count, q->cstats.drop_len);
-> > > >                  q->cstats.drop_count =3D 0;
-> > > > $
-> > > >  =20
-> > >=20
-> > > It's been about 21 hours and no crash yet. I had an excellent day
-> > > down a cave, so there's not been as much Internet traffic as
-> > > usual, but there's a good chance the above patch as at least
-> > > worked around, if not fixed the issue. =20
-> >=20
-> > Thought so .. \o/
-> >=20
-> > I guess now the question is what to do about it. IIUC the fix
-> > series [1] addressed some kind of UAF problem, but obviously was
-> > not applied correctly or is missing follow-ups. It's also a bit
-> > mysterious why adding the HTB patch didn't work.
-> >=20
-> > Maybe Cong Wang can advise what to do here? =20
->=20
-> I guess my patch caused some regression, I am still decoding the
-> crashes reported here.
->=20
-> Meanwhile, if you could provide a reliable (and ideally minimum)
-> reproducer, it would help me a lot to debug.
->=20
-> Thanks!
-
-Sorry. No reproducer. The crashes seemed to be totally random.
-
-I posted the script I use to set up tc in my initial report.
-
-FYI, here's the resulting config.
-
-# tc qdisc show
-qdisc noqueue 0: dev lo root refcnt 2=20
-qdisc fq_codel 0: dev enp3s0 root refcnt 2 limit 10240p flows 1024 quantum =
-6014 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc fq_codel 0: dev enp4s0 root refcnt 2 limit 10240p flows 1024 quantum =
-1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc fq_codel 0: dev enp5s6f0 root refcnt 2 limit 10240p flows 1024 quantu=
-m 1514 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc noqueue 0: dev wlp5s7 root refcnt 2=20
-qdisc noqueue 0: dev brdmz root refcnt 2=20
-qdisc noqueue 0: dev heipv6 root refcnt 2=20
-qdisc fq_codel 0: dev tun0 root refcnt 2 limit 10240p flows 1024 quantum 14=
-64 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc htb 1: dev ppp0 root refcnt 2 r2q 10 default 0x11 direct_packets_stat=
- 0 direct_qlen 3
-qdisc fq_codel 824c: dev ppp0 parent 1:11 limit 10240p flows 1024 quantum 3=
-00 target 5ms interval 100ms memory_limit 32Mb drop_batch 64=20
-qdisc ingress ffff: dev ppp0 parent ffff:fff1 ----------------=20
-qdisc fq_codel 0: dev tun1 root refcnt 2 limit 10240p flows 1024 quantum 15=
-00 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-qdisc htb 1: dev ppp0ifb0 root refcnt 2 r2q 20 default 0x11 direct_packets_=
-stat 0 direct_qlen 32
-qdisc fq_codel 824b: dev ppp0ifb0 parent 1:11 limit 10240p flows 1024 quant=
-um 300 target 5ms interval 100ms memory_limit 32Mb ecn drop_batch 64=20
-#=20
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2][next] kunit/overflow: Add tests for
+ STACK_FLEX_ARRAY_SIZE() helper
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1745342381.git.gustavoars@kernel.org>
+ <8cf48c3f9d8ef9b999d87cc0a822ffe539bf7a64.1745342381.git.gustavoars@kernel.org>
+ <202504221339.65ED2943C@keescook>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202504221339.65ED2943C@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.139
+X-Source-L: No
+X-Exim-ID: 1u7KXX-00000001GYy-3AYh
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.174.139]:36052
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLb4rvYEyl7Zzs67i5IaNyeo6btSB0CGMleSIdcpIgISct6M1jG369SzPvtD83KaJKf9gAFDgYzc+kavi6PQqPFPkVLMcgzMCJN/8on+/1A+3Gu45sHT
+ TZrd/zghujld8xINrKatO2+f2WZwwrn9JDEF/ym6BG/yXuCMb9FM5AaBPhJOsVmowK9sD1Zif+i7PlExM83tIpPNe7YPacQbkL5ImBIFG01yO62vIb+5GY6G
 
 
 
---=20
-Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
+On 22/04/25 14:39, Kees Cook wrote:
+> On Tue, Apr 22, 2025 at 11:22:08AM -0600, Gustavo A. R. Silva wrote:
+>> Add a couple of tests for new STACK_FLEX_ARRAY_SIZE() helper.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   lib/tests/overflow_kunit.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/lib/tests/overflow_kunit.c b/lib/tests/overflow_kunit.c
+>> index 894691b4411a..3beb497a44be 100644
+>> --- a/lib/tests/overflow_kunit.c
+>> +++ b/lib/tests/overflow_kunit.c
+>> @@ -1210,6 +1210,9 @@ static void DEFINE_FLEX_test(struct kunit *test)
+>>   	KUNIT_EXPECT_EQ(test, __struct_size(empty->array), 0);
+>>   	KUNIT_EXPECT_EQ(test, __member_size(empty->array), 0);
+>>   
+>> +	KUNIT_EXPECT_EQ(test, STACK_FLEX_ARRAY_SIZE(two, array), 2);
+>> +	KUNIT_EXPECT_EQ(test, STACK_FLEX_ARRAY_SIZE(eight, array), 8);
+> 
+> Nice! Can you add a 0 test for "empty" as well?
 
-Dance like no-one's watching. / Encrypt like everyone is.
-Security is inversely proportional to convenience
+Sure thing. I had actually added it, but for some reason I removed at the last
+minute.
+
+-Gustavo
