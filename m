@@ -1,86 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A2B1D63C2;
-	Tue, 22 Apr 2025 17:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F01DA63D;
+	Tue, 22 Apr 2025 17:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343718; cv=none; b=tjs3L17Pn0zH1sym8resLXGKS0i82XqW7e+F6KzwJbM7gzdeBdTVzubJ2Hox3j6Jb4OclZkgO8buaMaHjQ/iPmv/+yRkIlcJ9nfgEyH4gMdiWo/91vGn5grqN2eDty/Z0UK/t4IGl3Zsucv1csLzvOqBWWbbwI+i+C8CVoOsp5E=
+	t=1745343734; cv=none; b=O1ujKiJnm/u8Xy+XNVvlGtwyvNQGPyQoLMVXVIrhs5vUIz0CdEj5boN8LaooytkH/yW5PUKsJhVg5wwccF2rhG0K27ehv3hYXODuFk4yrBwRR3tsFwx+nUO8wAHQ+oPn+nSOOdbrbxhGuwL2K1zd0Q8vMp+NhoAHV0AOK2x3nIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343718; c=relaxed/simple;
-	bh=uq0jfSz7h0BjZ8ZpTqc6CuX5FFVkIxfTxureh4fqZro=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=anol45xnf7odKxS2Z3oSDX2t9UrYyEHYjNdfDD0Cuy4WWot4U3bCILLF+6OQpYyY589pEXEPR6w4a7wxKYAFGxvJHlrFgcXeYgOZCSQKd1ZGUvZb98TltgQ5blaFOr6TtSjl3oXLbjqP8/jky7lq8Z4KUnaHB/2jhN9kXWUTGB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEy8WRQF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEy8WRQF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E667CC4CEEB;
-	Tue, 22 Apr 2025 17:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745343718;
-	bh=uq0jfSz7h0BjZ8ZpTqc6CuX5FFVkIxfTxureh4fqZro=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=EEy8WRQF134ZRnLUMOw1REGAnSr4h7t7LjozRR5uQeOga6pLqJEu1PNtpK8GPajFl
-	 9Ms6+eK1MG0lhpVUfrsu6XvmlV0spw7EkWxSWHzFeS/9AROv/bwK9hWOAQbh9TMkPF
-	 wLLNeRjdwbYllVfX2HhxzMFR4xjJtIOkcRWFSkwiet3LrnUydheQeTT4x2cBvz9stP
-	 7nTq13b2DziCDxdrS24IX4ym45xns+8p3Qc0zSTiQBMYZyN0qtEZRuMYzDasCWgPyA
-	 nKw7Mm9mm9Fx5JJsfl69eBCH5LZwjPAJL9Drv3ToeU2X5r350VTnL6Aha7Q0ZxBCMF
-	 JljBFb4XcfggA==
-Date: Tue, 22 Apr 2025 12:41:56 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Janne Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: Re: [PATCH v3 07/13] PCI: apple: Move away from INTMSK{SET,CLR} for
- INTx and private interrupts
-Message-ID: <20250422174156.GA344533@bhelgaas>
+	s=arc-20240116; t=1745343734; c=relaxed/simple;
+	bh=QaEXmCGSZOW0nPSYRQqYZLcN6XSKT+AUR8R/rRFsWb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TjOaooRCjnHo//LPBwnu/EeUsuQZPmDu1l4/o6C8p5C9yyupWUksLQ+Ouz07d845aoEpdN/SDt+zLyTN9mPBTSPWgtpuARSNjPW9GTdMu3I8I0XI8vZpHXF2SOAM+yVh8jEXFibdlqdhPQztZgXK9cwpofvXQx/WUQ6GyuCHkbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AC0C4CEE9;
+	Tue, 22 Apr 2025 17:42:11 +0000 (UTC)
+Date: Tue, 22 Apr 2025 13:44:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
+ <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v4 09/39] x86/vdso: Enable sframe generation in VDSO
+Message-ID: <20250422134401.55178c36@gandalf.local.home>
+In-Reply-To: <20250124164332.gqgzimfix3vk4bsw@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+	<c93fbd53f01c2c86f747af27040ac11f16dee032.1737511963.git.jpoimboe@kernel.org>
+	<cde90a82-6bdd-4a12-872a-7b39edf3eac8@linux.ibm.com>
+	<20250124164332.gqgzimfix3vk4bsw@jpoimboe>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401091713.2765724-8-maz@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 10:17:07AM +0100, Marc Zyngier wrote:
-> T602x seems to have dropped the rather useful SET/CLR accessors
-> to the masking register.
+On Fri, 24 Jan 2025 08:43:32 -0800
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+
+> On Fri, Jan 24, 2025 at 05:00:27PM +0100, Jens Remus wrote:
+> > On 22.01.2025 03:31, Josh Poimboeuf wrote:  
+> > > diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+> > > index b195b3c8677e..1c354f648505 100644
+> > > --- a/arch/x86/include/asm/dwarf2.h
+> > > +++ b/arch/x86/include/asm/dwarf2.h
+> > > @@ -12,8 +12,11 @@
+> > >   	 * For the vDSO, emit both runtime unwind information and debug
+> > >   	 * symbols for the .dbg file.
+> > >   	 */
+> > > -  
+> > 
+> > Nit: Deleted blank line you introduced in "[PATCH v4 05/39] x86/asm:
+> > Avoid emitting DWARF CFI for non-VDSO".  
 > 
-> Instead, let's use the mask register directly, and wrap it with
-> a brand new spinlock. No, this isn't moving in the right direction.
+> Indeed.
 
-> @@ -261,14 +262,16 @@ static void apple_port_irq_mask(struct irq_data *data)
->  {
->  	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
->  
-> -	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKSET);
-> +	guard(raw_spinlock_irqsave)(&port->lock);
-> +	rmw_set(BIT(data->hwirq), port->base + PORT_INTMSK);
+Note, I'm getting ready to send out an update of Josh's patches.
 
-sparse v0.6.4-39-gce1a6720 complains about this (and similar usage
-elsewhere):
+This particular nit isn't really an issue, as #ifdef's do sometimes replace
+blank lines.
 
-  $ make C=2 drivers/pci/
-  drivers/pci/controller/pcie-apple.c:311:13: warning: context imbalance in 'apple_port_irq_mask' - wrong count at exit
-  drivers/pci/controller/pcie-apple.c:319:13: warning: context imbalance in 'apple_port_irq_unmask' - wrong count at exit
+Just mentioning this so you don't think I'm ignoring it, when I post patches.
 
-But I guess we just have to live with this for now until somebody
-makes sparse smarter:
-
-https://lore.kernel.org/linux-sparse/CAHk-=wiVDZejo_1BhOaR33qb=pny7sWnYtP4JUbRTXkXCkW6jA@mail.gmail.com/
-
-Nothing to do, just "huh".
-
-Bjorn
+-- Steve
