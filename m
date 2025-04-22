@@ -1,129 +1,97 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274BF27C159
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C585277809
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745330622; cv=none; b=fmIFzw6tpu2BMQ1O6k1YmnxdJoLrHODhyt21gf3WM3RKzYRhUMgaUhTcstuLh0QRCEHjQTgOeaimP2msdvyBUgscfs87/W0LC0I4/r56vsgrFqSRPgLLL9Brs22kM1gESOXzpOmVPlZMrqXaQhH02fBjMYhMxgEfMVuInLiqIXU=
+	t=1745330700; cv=none; b=V4kd/MJRlojf/a2+CFK97NR0/QzOgSVjRJZqapf+BV6M2/7HycZ/YUkdeNOigwhSaQN7uYKnahj+k69SdCjNdUjVUEw1vtWc/qJzYuPILdiMTYS2vPpXIbyE/GOQd2leameSDVRlmf+nCyr/pz3KviBVVAo2Ni7o18AFCR+y9u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745330622; c=relaxed/simple;
-	bh=DI5wbiqZFhNjcg4g07wsE2rRpyR+Bg6kHqEcrbHze4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iY4cBDbujO+Nes4MsZboMvTUdbOvh9Zmds2NldWNaozShYXrDh1kkGlpfTFO1dn2JB80MoH9zOv22qbuTgIdrHhbben9l5qxMwRF6E6S6WqK7Z5EVebbN7yCNqcElgyvAm827sQ4pSB35X+VCIJJyGMyS1GKPqIQ7aDLD5ZoC2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=diHRM3SS; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745330700; c=relaxed/simple;
+	bh=CnFn6dl7idbTdtr/X4Lf3KXnyHFj+WX4URvdrrUx2FA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0+vVveOQ5/9CKX9eyLpGMkvKyyBgLeFrwbnxPbK+huj+XwQhOCQSQU+u86cdQvqaP5h/r551bopEZLZ4w8JjIe7Dy4UdU1KGrfPtVgfoEzMIf/WWSwnoffSwfcBJWWR7vqYfGUyTGrO86z1BRglxCluGLg+GUAYZ4br6HEfV9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k4/oToVw; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="diHRM3SS"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so182695ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:03:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k4/oToVw"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso950866766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745330620; x=1745935420; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wxtxQ2q5f2CesvMzHl2K/43Dvf+KKs8Sp+BtzyImVRI=;
-        b=diHRM3SSYX1rhVTrFh85dMgmHNY8sO2ecyPwPFFxn5sQbKf8uyHGCTCokaasiZyg6F
-         VKxRmeoGqd8z3gNfYfdYx9nRIt0sO2m4rZspMiU89vOTce8M36DF/iBjf+yUOw63OKP3
-         hITordz6p0dyt9ILX6PjDqmdftBpNagsZ2+9Q43sianlor0YDckrxv6UHr73LrRP40nl
-         0RhaPUqvIJhdfxVTKdVpFekbtxJ6p6mBz3v5CgPtgZJFLkFtAW0VeT+gmLV9s0iEgJ0l
-         8gyzbdup2vQ5J4dKQketbtzn+Miv5FOylJYS/7yQo/70s3oaoMk8nilN940PIjwG8SKq
-         /+mg==
+        d=linaro.org; s=google; t=1745330697; x=1745935497; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HPj38otgPfg1CUWLGvk15FrHBLxa1jnnTKS9SOSBOj4=;
+        b=k4/oToVwUcwVUigqZAQ3uQswidA8klvJCr/7shMqoyq5U44IAPEeFXzAQgZt+1cYkx
+         evum5XN7R3TCQrPgbqQ6LjZPA9XVkL+EJCk8Z8Kh/38vcE624uA6VjtcXyHUuvfOUfej
+         /oeEDCpNOfnwgHL4ityY8hfGRydywpykytbZ93kxehyA4ScJN/wggIgHfecY7mdHIlKz
+         Ad+z3G869rNHYJnMhz6xhuCyRM2c3aHfS1N0ua0aFLNRkAPAIkmK+u25qGMbWO0Ww+CY
+         QJZq5sKfgKGsjJytpQqK0FSW++vw9HcWf8YLcl2bViqMgzhw1hC3kbA1mc20gbvTlHnB
+         L9+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745330620; x=1745935420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wxtxQ2q5f2CesvMzHl2K/43Dvf+KKs8Sp+BtzyImVRI=;
-        b=N1Cy40zAxoXDXCIu5+RwV0uME66HdDb/B1/RbFRt9BmCxa/XpLnncoPigbXxqlTd93
-         KMi7NeDzE6iMMte5PW3nG1dFvHSdayb1wmetkQSJHM/gNFQ55vJ9nrplfMOD3ghIRnha
-         dxsGioHOjW15vcghL/te/6IiE4x7rt0zsGoPMrqsNLYnAXWNg8XWTJJKHkKhlzfsCXK+
-         lUDbBKbKfLASuVa6x/w2u7vK32VldKSNJHgwPgvYfTo/1KT/K/Q0KzbcnklBPjDk+rXG
-         CeiGPf6NriEx0xCmGToYCYOFgWCCYf2UZp5dhCWspb27eiHa88BMI30tF/rPdaf+q0zc
-         Zlkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGMoBTY/fa6iyzPkIJdCWyuRNBjEBoo84NDQeNH98UvNhK2VV8FIA9JTZH1y+ol84qyQ4/eu1HLmK7paY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeiZunfmWnK8KZkvPfQmeXl/vI3WR0pa+JK8W/fbvsYRKTMYSY
-	zu0hhIGvx0Cre/JBXtJYqYt+uHC/U7mypRa5MefbDN9EoN5LNE92jMwBQyFPRvs6lysKs++zK9H
-	gi9xXl7KJtYgpfe22gacmDcg9av/Vi2dSDXZn
-X-Gm-Gg: ASbGncssEC+TmQowkc1GHk50+1DmxytUMv2EBwFUd1ir+4JcyWIMUEQ3nRL5mTfqsYc
-	nUkNxulDKlPM00UAgzcd1aj382BFHTfD3iZC/6youuzX6mIwmkxqTGx/PmkRYa58CJchabyZaDs
-	0YE1iPBOuucKX0DwhI02VcUKyfFwlQZTmPig==
-X-Google-Smtp-Source: AGHT+IG0i+651pdR53K0l/n7uIQCSuRiQEGLD3Fi7ND1TmWV2npssXiwnzzo30HBpgP42jyUy2IALw8wxWFt/Kz8RzE=
-X-Received: by 2002:a17:902:ebc3:b0:22c:33b4:c2ed with SMTP id
- d9443c01a7336-22c52a93c28mr10089535ad.26.1745330619867; Tue, 22 Apr 2025
- 07:03:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745330697; x=1745935497;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HPj38otgPfg1CUWLGvk15FrHBLxa1jnnTKS9SOSBOj4=;
+        b=kOIB4HzpGc6TsoFZxE/3X7+/OIFSq7p8o8MtRjNZAR+XZxwsvOgMIPuK3+8uEILYJX
+         kpD+vq6NBlIJgFg7YXeUQbsKljP8jvDCEHQxI9MDwEXC1tyXMKhUf4w/v2pxsyM60Ie1
+         BIVaAwrBM/0ItJcGISwX2kdCHJ07UHBwZ+lGQfnHGktANzU1X/x42NBO/DT9DPUYgd/D
+         zj/F27Zt213ZEazfupsl+U+r+qMQ9oAe63ut/D/gjfL6SCaB9NDMfqoGE722w5uzyO25
+         2fTRxlz/D7JP76PfGORvfFBXGr199vrSaapdVM/n7dt4DVDA9FgKcDGNWVv6Aqo0NEOq
+         vUEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZsWjhwAPOayJxRNZ29N9j5C9qLDgVqjqETOssEgxuf7WB7FiX8rZn5t36AgMK1VABCJCPWY/d/41iOO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzQW/5EYpcIpBrPfuqYhgykSc0zSnW+dgLTVjHLwyKoHp5CIJQ
+	y6x8ti0N4OJSaXUCjBB+DxUMWy07o+UuEZ2VlCjywpFy70u21KL4Xqv0/finWq4=
+X-Gm-Gg: ASbGncv/uMlO/PBsxRtrqYwS6a6cg5ZRLFrf0+DeLN0iqSaqBa9WhPI/hx9hgl6uJiC
+	csYNFKaAN1VJfSWbQ+alV1Q7j1qVTB6F5pPFUATT2rpNDQtYmU+7UcsWA1Nz7kFEgdWdUjOKYKa
+	3HhYg0EajCNnFrn4o73XrwBr4bK2oRSnsNbcw3ZDsasWUxS31v2Eb2BZjMSspQtV3Jw41lOTIwt
+	cybU/MwoDuD/Y+ikQM90Y1FZHzWIUpyzfA/cTTlffKoDmXVP/mRbamHWhDTa5xAXmiHKuFPXTza
+	MDECPYUu2foaJjCYadOk3OD6pn3S8oOr/FuTDw==
+X-Google-Smtp-Source: AGHT+IHdC+QkLw/63IGYXQS6q7rBVNNk2potXnQUurnAaNgoQ1+GXHaWxq0i9ui980YqMIhNIDyKmw==
+X-Received: by 2002:a17:906:4fcc:b0:ac2:87b0:e4a5 with SMTP id a640c23a62f3a-acb74ac51f7mr1244467966b.2.1745330697218;
+        Tue, 22 Apr 2025 07:04:57 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefcf76sm669687666b.100.2025.04.22.07.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:04:56 -0700 (PDT)
+Date: Tue, 22 Apr 2025 17:04:53 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Johan Hovold <johan@kernel.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/11] pmdomain: core: Use device_set_node() to assign
+ the fwnode too
+Message-ID: <aAeiBbnWgHUkt/HE@linaro.org>
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-6-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417231540.2780723-1-almasrymina@google.com>
- <20250417231540.2780723-2-almasrymina@google.com> <f7a96367-1bb0-4ed2-8fbf-af7558fccc20@gmail.com>
-In-Reply-To: <f7a96367-1bb0-4ed2-8fbf-af7558fccc20@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 22 Apr 2025 07:03:26 -0700
-X-Gm-Features: ATxdqUHgiM0jEZwKYWOLJlVXJ7i1N-PNg4kE-n9ns-g62S6RZ7kqQTTDhmeVqPw
-Message-ID: <CAHS8izMFxDG5E07ZdqnDH_2D_g1fW8X0M7u3gGyV8efzxDNZbg@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 1/9] netmem: add niov->type attribute to
- distinguish different net_iov types
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Victor Nogueira <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, 
-	Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417142513.312939-6-ulf.hansson@linaro.org>
 
-On Tue, Apr 22, 2025 at 1:16=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
->
-> On 4/18/25 00:15, Mina Almasry wrote:
-> > Later patches in the series adds TX net_iovs where there is no pp
-> > associated, so we can't rely on niov->pp->mp_ops to tell what is the
-> > type of the net_iov.
->
-> That's fine, but that needs a NULL pp check in io_uring as well,
-> specifically in io_zcrx_recv_frag().
->
+On 25-04-17 16:25:03, Ulf Hansson wrote:
+> Rather than just assigning the dev->of_node for the genpd's device, let's
+> use device_set_node() to make sure the fwnode gets assigned too. This is
+> needed to allow fw_devlink to work correctly, for example.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-I think you mean this update in the code:
+With Saravana's comments addressed, this LGTM:
 
-if (!niov->pp || niov->pp->mp_ops !=3D &io_uring_pp_zc_ops ||
-    io_pp_to_ifq(niov->pp) !=3D ifq)
-return -EFAULT;
-
-Yes, thanks, will do.
-
-> You can also move it to struct net_iov_area and check niov->owner->type
-> instead. It's a safer choice than aliasing with struct page, there is
-> no cost as you're loading ->owner anyway (e.g. for
-> net_iov_virtual_addr()), and it's better in terms of normalisation /
-> not unnecessary duplicating it, assuming we'll never have niovs of
-> different types bound to the same struct net_iov_area.
->
-
-Putting it in niov->owner->type is an alternative approach. I don't
-see a strong reason to go with one over the other. I'm thinking there
-will be fast code paths that want to know the type of the frag or skb
-and don't need the owner, so it will be good to save loading another
-cacheline. We have more space in struct net_iov than we know what to
-do with anyway.
-
-
---
-Thanks,
-Mina
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
