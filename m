@@ -1,98 +1,204 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E0283C8D;
-	Tue, 22 Apr 2025 15:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D8E288CA7
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336991; cv=none; b=O1mZfputBR1IV+meNMBo8+auzz3kcRNZGNbJq48+6CvXKR0M9A7MDHOAKGbmW1E80uzy6pS+xOpg6hUZcrXQTOj1hUY9Ro3mbUdIs9cZenRsLLVdm6jnzV9k9argwZYKHneHn3dg2wwoMtspl1IFqvwUQhpSkT/VX2Kr7HuITrM=
+	t=1745337003; cv=none; b=LnzxrPah+n8DqAv6kJsXp4v8C4m9t3yXbHTBc2wU8mWVjKE0JuG77p9mVidlYlokSjT6YSq1jG2MvHwr9Rpn0cW75Tm2t/FtQWL2aK03avuWLjyrfa2NesNgUUMSEZFS5L1GJ1BHEygANSdGqtGppWUFI5HqqEYW5KRQ71P3Kuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336991; c=relaxed/simple;
-	bh=RVXgkiRxKfMs3u9+YyC/xVKrAOVb5kTrbP3f1okq8e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i0BcDVRcQ/kXFK/KgWhIcc1XodHz0f8lR/uiAFHWGhj6/oXgYGahtQ1/uNBnhgBtOHkkKen4wfTMEORhguDQZldlMCPMW9jL9PvdlbWJVDwj/Xmvac4Av3doGvAGyD8a4mPhUtwd/O4TuXvKAtK3Vt5PJ6gqn0g9RqQsZHsCUPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Gr4x62qV; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745337003; c=relaxed/simple;
+	bh=VR2wSZLLUzPL+4k8PCQs4hb25e/cLPSyEI4SSh424OQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZpJBwQCdbsJHq8UBhgON9PJE+0Z5yC3bj1tGSji6qhTn+rgrareAznMghXY5d/WE5yIl1nhMbL/1V0JnwCHSrkXYm/YGSs8q211dPfA0uy6X89HJ1oci8/bIstisJOosj5jkjM36zwbhp3eje/XkD3ZLWsMCF//V5nssCeDth7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=YspOb0Vy; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Gr4x62qV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 645A943B46;
-	Tue, 22 Apr 2025 15:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745336979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jh3TOfjfjJtUvON3fbrchsnqfDrRlyCdWG8ags+8rQM=;
-	b=Gr4x62qVWVJAZOqxoX06AnZysciGvSzFdSjOhSqxWDVbTqMV3wEPeM8pJOQb/10fNgs+si
-	0W7YhwBA4ilB5Sf0PRqfH9opH8lhnhU6wWYmn2qhGX/6tF0cGySV0BVYC4CVSULmXeiU6X
-	gIDGrw3ckqcCGZdlz08ChE5MRZkKGI3mpziwQvDZaQuXOl1fzQ3i/Yb1OVSlRxMxuvb9sp
-	vyQAyeSpZHSeJ7SndnFO7nQ06vCF3H+Xe3NSRPvmSE35nq1G3gtbQnEcWMdBAjmFOf8zUl
-	31ad9KcVgBAAppNYiHbTaJxPx48CMed1UcF9jPVYLKVvPQiE4rcXJublK+/SUA==
-Date: Tue, 22 Apr 2025 17:49:34 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Alexis Lothore <alexis.lothore@bootlin.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Richard Cochran <richardcochran@gmail.com>,
- Daniel Machon <daniel.machon@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "Russell King (Oracle)" <linux@armlinux.org.uk>
-Subject: Re: [PATCH net 1/2] net: stmmac: fix dwmac1000 ptp timestamp status
- offset
-Message-ID: <20250422174934.309a1309@fedora.home>
-In-Reply-To: <20250422-stmmac_ts-v1-1-b59c9f406041@bootlin.com>
-References: <20250422-stmmac_ts-v1-0-b59c9f406041@bootlin.com>
-	<20250422-stmmac_ts-v1-1-b59c9f406041@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="YspOb0Vy"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so4943745ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745337000; x=1745941800; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PWtCOErAPdviJAPXqAg1WYEhucNuXZisNIO11WL+WKM=;
+        b=YspOb0VyuVey+MJy+Spdgbf7qfo+NGvaUjU/P3hTqoa2DGUucfQ68atqUg9DaaGKlB
+         Xu8VWxouAIHPjdBUoGdeQWZBepuaF5KT6rMgpxBAqYRsXH0PubDj3gsfclg2SmEHozg9
+         mmbV2wl8AKiau1eUSDpTLEGjYNz/l92dIXbl8sH7uE9ALKKFyIFLgvEKSk/hwh9XGr0X
+         3EoX+QoWwk7vTkPhTfPJlDBCLKJXA2OqB5RmqTSIkWzDHnFOOBl1Ynu9EdUPzSLcI8v6
+         4Wvhv7A7gybW3cWOCRrhUnpLfyDKnScegKOtqSipIp7J1DbtCI62YTP6RPoxsNrzQHmY
+         tARw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745337000; x=1745941800;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWtCOErAPdviJAPXqAg1WYEhucNuXZisNIO11WL+WKM=;
+        b=OM/Zkp2V1PKKD5QKwv+s7GWQC1Gsx4+6/P74d9/xw73iv+RfMoUIoLUMaeX/iurnWB
+         uXadmxN1ufZLtbpY8NFZHOlKOu5MUmPekL8qWBn7u7vLyJrqYzIo+i4INSHTQO95ppLu
+         DoyLKz3ApriRd15UYjYkBLReL19TsXuKO8IN+H/z+dUoky7B2G1rDZ6CjGy9TEqcHuBK
+         zHWRN0NzpRHIXwgSocrmCsyvM+5RZsKSo7lHEFhpyfanDyZ2SPy/nMY45dCVWNZv0kVx
+         mXg0TfgWZPZ0zpFPdvc5A1cq2N7R4AukcnTx7/URzKPOyyk8CD0ypgJ7KsnaeT6X4BzK
+         PF/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWf0BuTArkP4bfsvBOiNS/QsAQcgv+uv3vv8ZtqgYs6721Q2my1c8dH5yA25d9xzPgZRy8nFtvYJvbMNek=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy41eEVeilx8FPJqSD45de7kFlAvVScPa1zs7iVpzqcRJDNAihv
+	zmDE/BfcaI5fh9HGh/mBGuvkcfxWJt4kaNjN2s1AUzNnApnPXjIx+qhanA8vmpc=
+X-Gm-Gg: ASbGncspVPYTT8jVRtXfSFNSZmzysn1XLmaYzSy4IZfJwDzSjyyqLmc7FEVI63HOnDX
+	wYTKMxvJbgF6J55ij6Q4IhdHvTqpD5N6Dx91qvoGtsFVqr8p72948k+UlBDYnFrVGvozAO7L3m1
+	ypJmefgjGD9qkddEx5eE/ZMa1s0YS22tNb82ySPsKZJSDC5gXKBI4IPa1bLUJSSd44MwDpWVARD
+	ZAuBsMjftP+yBX4bgZaNvZxLzYTzz//pL1vNA6YAUSAEvmN/Q3cwGGwUMidYEn7woSx/O6chaAL
+	Pl9xY53vs1ALE36kafuqEUAEciFeLaAnpKNcBQ==
+X-Google-Smtp-Source: AGHT+IGAwwrMjNk9FpLKU7sspnSpBBOnFfhAwVWOfWP0g5H8a8AXj4k2N3R/0L2Z+lNpCM0/XNeMOw==
+X-Received: by 2002:a05:6e02:338f:b0:3d8:1e50:1d55 with SMTP id e9e14a558f8ab-3d88eda9aebmr146286335ab.11.1745336999867;
+        Tue, 22 Apr 2025 08:49:59 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d821ec204dsm23495105ab.53.2025.04.22.08.49.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 08:49:59 -0700 (PDT)
+Message-ID: <b5a8dbda-8555-4b43-9a46-190d4f1c7519@kernel.dk>
+Date: Tue, 22 Apr 2025 09:49:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
+From: Jens Axboe <axboe@kernel.dk>
+To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20250422104545.1199433-1-qq282012236@gmail.com>
+ <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
+ <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
+ <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
+ <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
+ <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghml
- hhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Alexis,
-
-On Tue, 22 Apr 2025 17:07:22 +0200
-Alexis Lothore <alexis.lothore@bootlin.com> wrote:
-
-> When a PTP interrupt occurs, the driver accesses the wrong offset to
-> learn about the number of available snapshots in the FIFO for dwmac1000:
-> it should be accessing bits 29..25, while it is currently reading bits
-> 19..16 (those are bits about the auxiliary triggers which have generated
-> the timestamps). As a consequence, it does not compute correctly the
-> number of available snapshots, and so possibly do not generate the
-> corresponding clock events if the bogus value ends up being 0.
+On 4/22/25 8:29 AM, Jens Axboe wrote:
+> On 4/22/25 8:18 AM, ??? wrote:
+>> On Tue, Apr 22, 2025 at 10:13?PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>
+>>> On 4/22/25 8:10 AM, ??? wrote:
+>>>> On Tue, Apr 22, 2025 at 9:35?PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>>
+>>>>> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
+>>>>>> In the Firecracker VM scenario, sporadically encountered threads with
+>>>>>> the UN state in the following call stack:
+>>>>>> [<0>] io_wq_put_and_exit+0xa1/0x210
+>>>>>> [<0>] io_uring_clean_tctx+0x8e/0xd0
+>>>>>> [<0>] io_uring_cancel_generic+0x19f/0x370
+>>>>>> [<0>] __io_uring_cancel+0x14/0x20
+>>>>>> [<0>] do_exit+0x17f/0x510
+>>>>>> [<0>] do_group_exit+0x35/0x90
+>>>>>> [<0>] get_signal+0x963/0x970
+>>>>>> [<0>] arch_do_signal_or_restart+0x39/0x120
+>>>>>> [<0>] syscall_exit_to_user_mode+0x206/0x260
+>>>>>> [<0>] do_syscall_64+0x8d/0x170
+>>>>>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
+>>>>>> The cause is a large number of IOU kernel threads saturating the CPU
+>>>>>> and not exiting. When the issue occurs, CPU usage 100% and can only
+>>>>>> be resolved by rebooting. Each thread's appears as follows:
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
+>>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
+>>>>>>
+>>>>>> I tracked the address that triggered the fault and the related function
+>>>>>> graph, as well as the wake-up side of the user fault, and discovered this
+>>>>>> : In the IOU worker, when fault in a user space page, this space is
+>>>>>> associated with a userfault but does not sleep. This is because during
+>>>>>> scheduling, the judgment in the IOU worker context leads to early return.
+>>>>>> Meanwhile, the listener on the userfaultfd user side never performs a COPY
+>>>>>> to respond, causing the page table entry to remain empty. However, due to
+>>>>>> the early return, it does not sleep and wait to be awakened as in a normal
+>>>>>> user fault, thus continuously faulting at the same address,so CPU loop.
+>>>>>> Therefore, I believe it is necessary to specifically handle user faults by
+>>>>>> setting a new flag to allow schedule function to continue in such cases,
+>>>>>> make sure the thread to sleep.
+>>>>>>
+>>>>>> Patch 1  io_uring: Add new functions to handle user fault scenarios
+>>>>>> Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
+>>>>>>
+>>>>>>  fs/userfaultfd.c |  7 ++++++
+>>>>>>  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
+>>>>>>  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
+>>>>>>  3 files changed, 68 insertions(+), 41 deletions(-)
+>>>>>
+>>>>> Do you have a test case for this? I don't think the proposed solution is
+>>>>> very elegant, userfaultfd should not need to know about thread workers.
+>>>>> I'll ponder this a bit...
+>>>>>
+>>>>> --
+>>>>> Jens Axboe
+>>>> Sorry,The issue occurs very infrequently, and I can't manually
+>>>> reproduce it. It's not very elegant, but for corner cases, it seems
+>>>> necessary to make some compromises.
+>>>
+>>> I'm going to see if I can create one. Not sure I fully understand the
+>>> issue yet, but I'd be surprised if there isn't a more appropriate and
+>>> elegant solution rather than exposing the io-wq guts and having
+>>> userfaultfd manipulate them. That really should not be necessary.
+>>>
+>>> --
+>>> Jens Axboe
+>> Thanks.I'm looking forward to your good news.
 > 
-> Fix clock events generation by reading the correct bits in the timestamp
-> register for dwmac1000.
+> Well, let's hope there is! In any case, your patches could be
+> considerably improved if you did:
 > 
-> Fixes: 19b93bbb20eb ("net: stmmac: Introduce dwmac1000 timestamping operations")
+> void set_userfault_flag_for_ioworker(void)
+> {
+> 	struct io_worker *worker;
+> 	if (!(current->flags & PF_IO_WORKER))
+> 		return;
+> 	worker = current->worker_private;
+> 	set_bit(IO_WORKER_F_FAULT, &worker->flags);
+> }
+> 
+> void clear_userfault_flag_for_ioworker(void)
+> {
+> 	struct io_worker *worker;
+> 	if (!(current->flags & PF_IO_WORKER))
+> 		return;
+> 	worker = current->worker_private;
+> 	clear_bit(IO_WORKER_F_FAULT, &worker->flags);
+> }
+> 
+> and then userfaultfd would not need any odd checking, or needing io-wq
+> related structures public. That'd drastically cut down on the size of
+> them, and make it a bit more palatable.
 
-Looks like the commit hash is wrong, should be :
+Forgot to ask, what kernel are you running on?
 
-477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping operations")
-
-Other than that I agree with the change, these offset are the right
-ones, thanks...
-
-With the Fixes tag fixed,
-
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-
-Maxime
-
+-- 
+Jens Axboe
