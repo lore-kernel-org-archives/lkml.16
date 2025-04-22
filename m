@@ -1,138 +1,107 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76E8280CE4;
-	Tue, 22 Apr 2025 08:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC1222A1ED;
+	Tue, 22 Apr 2025 08:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311023; cv=none; b=TatJ2sLYSYxQ3xF7P7BUiulN3rF6zo7mR38LWp2bhMS+5s8iiVaCqvg76GQ/17kEm2dJWK4h9KZ8sosjM1cg8LsNIxWtbjBsGHHKVcCcFsxXYjhmlURBZnSqanhQOpW2zZY1y9Wf2xlsbPPOc8uDYcCeQvAmqA8gauYsSu8R1yA=
+	t=1745311102; cv=none; b=JI3UOSKW9c3A9tdjhOu0fHJvgteWHuQKowqCasdKm7ZNOtJ4A3ti0FA3xh2fIAuPve9QIrVo3mno5qEtK5Ju+ZO8fio2S3fG32QN4uXEuxUL56UaNjxpQLvPBAfSXO0Dm1PGIkCEO6UuhGWO7sx4EwZOBmefK7gHw3MRSeODiKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311023; c=relaxed/simple;
-	bh=9nVtJDWo1D6O2kwPTFwcqfZG5VNM50pQxF6ze3uZES0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pB0P/7E2gydQAU1LtFPA+j4AC/hNh0kfLyOkvHRwNJg1ktWYQ2Z+sneuR6GhMaU+nmmnlpUpANzJgt5wkP6Zm9T0NVSiBmAz22qolu5vh3VGDHWC8IB8s4M6lf3ABxqjqNpYrzJ5UESn6sRA1QSlcw12EYna51V0LX4Krh1HMM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ZXpC/fPc; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745311102; c=relaxed/simple;
+	bh=p8VDFnBBLQB+c84WukX9np3V2pQTHpPbephzaUIJxy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rTQbBDfTAqfSdgzqAkaa0iCnb4MrpmqG5+RQpDFJ7lGuIp72RTXaFZt/Fm1zz04vEn/EzyJr+uvFTluiEDHQSSGAYnA+MSguPGY5bZ3xHAED3A9HWqmvkU20YJB0y2qlHO9D/133840/mk1B/JXIHWLSOKJKe9ND8TYQcNywSEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pY1FOnwL; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ZXpC/fPc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745310926;
-	bh=JU0RHM3LhfHpd/Z5hHY05Fgimq/QoxL5zXExBc+3S9E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ZXpC/fPctka+9qXUBdjclQbhACdJTYhapimN3OqCiTNs2F6lJDkRkxGLgdZBqVsbE
-	 0XOJQTSQM9Lrgx/TEx59K8DoxYUkLK5pFt8Cj/k5QfUhd2o+ModbkFkOuujd4oEIV5
-	 uy4HbmJI46RFo/Oeok3MrvdDA4WrG5ifrtwpnlVg=
-X-QQ-mid: zesmtpip3t1745310920t8b1bb162
-X-QQ-Originating-IP: xDaMskdxdpmttZVyDVx0vXx2WDh0zl++cOZsOP5r3rE=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 16:35:18 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 7588482841693843882
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: james.smart@broadcom.com,
-	hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	WangYuli <wangyuli@uniontech.com>,
-	Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 6.12/6.14] nvmet-fc: Remove unused functions
-Date: Tue, 22 Apr 2025 16:34:31 +0800
-Message-ID: <56AA32057D5B8285+20250422083431.96652-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pY1FOnwL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=o0w6pamxCxDKHzVZmfTHs/uYuK6PeXKb0434M6fEc3M=; b=pY1FOnwL/S8J3yGEKh1QZZ5tZL
+	Vp5eQoQWU2/fdqKvavzm9zcqh0HuU5etRNXQGprVs9hiAsBfNYdPqrgId2x5g/Xe0bKHniIm2xhvE
+	8qg3NSfGSBE/rkWYZks9XUrVuCuPYpQP1SMdO3Ip+CZZ50Utq3eo9em0yld9lfynz3LfK+NJMuc+A
+	ZqdNlAzkl5OT2o8YyCKMhreS5amF8eK3LuM7nR4+SHjRhbC9YRoQ1WMob9krsSoaaSnHEVBf1u6/r
+	YxqplweIaUZVt50eYcclgDhxG7A5F7pkPpGykSHp04WnpNU8QIqCrDU0sf7ITae99C+JYPuZxBI4C
+	vfDNrPJw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42670)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u798f-00042g-1a;
+	Tue, 22 Apr 2025 09:37:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u798X-0007KW-2n;
+	Tue, 22 Apr 2025 09:37:49 +0100
+Date: Tue, 22 Apr 2025 09:37:49 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <aAdVXQhR7-mYl783@shell.armlinux.org.uk>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MtJoEQFRGvIzFftxGMkZ/AEm+5UDCmqNmKwWbuiBZy2fJTtEfcgljhf3
-	OKuNR89Oir+i1EI7OSwRiki0hOAN48+UEaFqwYk7wcC4CjbAAo8zCi2yNkvsNGpPS+ZDT+M
-	j0NYmn8p8htVLqN5h6lSCnYB/U8Z7GfJnOVHS/Df4wUXfo1b3NukB2YlhD3xlbfPJdA+joD
-	jLX0NAcQm4bqN/wbc+31Lf8JTb3plKQMqITgdrJQy+a51bcrFTY8nTEr2YDLwJRHxgUWNVO
-	/ADPLKSiQi6DdIliBYWCVVWr9VAv9kWuUdMbp3flBNsnbI0wIkCPuN6EkrrVICz2GVtYlE4
-	8OAYGTfwu9pmtmuyNUsDYi/RXdTxYH6Bttaid7NE6DvSaJuOfnJnIuv45sVDvhTDpLKSYZI
-	l75wmR4cmgjX35mqL5cpOAUPjXwgwnJR66h/eX37/e1Mk7TzdBzxFOJlr2JPV42UDmtW7yB
-	Q2ph7EQZJKsV7NwHzTBdiCPTKM7PIi8GdYZoZYnKKoCcbiAMK0iQ+zhnj05uWhmtUGSgmEl
-	kBT7d0kTbfcM6K8AT89DvVRhmanjCakhKyc+VFdZD751tRkUI5BouYpWbIBqkyLWv3Or5uQ
-	em2VDnV8LZkHw5vjUzrajp5VHTEawrGaZNkoahZ7I9lqcupqPTH8ydpFsRswHwesyWbUUft
-	uniwveDjxAIzmMWjxDsFO13RWq0+ksiTsuqECQjR/R6kPzXU0rD5ktX3wud1x/y5RPDV7d0
-	6oDdoWPPjsSK/8FeEyfBQ8zYYNdSfzBClSlkXDOHpTdZus8xy+kX+3+CQ15LtOuq8ZvlN8+
-	UrVKgklOjr+k60lVaDkgOrIIXmnwqJwH4cjpcTc6cKdsVa21r+mkKtiRZEGPElDo0yH9X8c
-	StUW/FfP2/IFGDE1IIvYOzqGG1ZXH4j3dIYqdCNnSafVuiCYmHXf6NJ1w0joLXIVfHo3RT0
-	bb8vGfPSTH3QkiIMJqXWOPyxZfXBJlNdQsJ/97KgZ7sWVpS04QknHjfv8YSCUOGO7BKnhRD
-	u6gOFKdg==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-[ Upstream commit 1b304c006b0fb4f0517a8c4ba8c46e88f48a069c ]
+On Tue, Apr 15, 2025 at 04:06:31PM +0530, Siddharth Vadapalli wrote:
+> On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
+> > As discussed [1], the comments for the different rgmii(-*id) modes do not
+> > accurately describe what these values mean.
+> > 
+> > As the Device Tree is primarily supposed to describe the hardware and not
+> > its configuration, the different modes need to distinguish board designs
+> 
+> If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
+> with CPSW Ethernet Switch), and, given that "phy-mode" is a property
+> added within the device-tree node of the MAC, I fail to understand how
+> the device-tree can continue "describing" hardware for different board
+> designs using the same SoC (unchanged MAC HW).
+> 
+> How do we handle situations where a given MAC supports various
+> "phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
+> descibe the HW? Even if we set aside the "rgmii" variants that this
+> series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
+> and "usxgmii/xfi" as well.
 
-The functions nvmet_fc_iodnum() and nvmet_fc_fodnum() are currently
-unutilized.
+phy-mode is quite simply the operating mode for the link between the PHY
+and the MAC, and depends how the PHY is wired to the MAC.
 
-Following commit c53432030d86 ("nvme-fabrics: Add target support for FC
-transport"), which introduced these two functions, they have not been
-used at all in practice.
+The list of modes that a MAC supports is dependent on its hardware
+design and is generally known by the MAC driver without need to specify
+it firmware.
 
-Remove them to resolve the compiler warnings.
-
-Fix follow errors with clang-19 when W=1e:
-  drivers/nvme/target/fc.c:177:1: error: unused function 'nvmet_fc_iodnum' [-Werror,-Wunused-function]
-    177 | nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
-        | ^~~~~~~~~~~~~~~
-  drivers/nvme/target/fc.c:183:1: error: unused function 'nvmet_fc_fodnum' [-Werror,-Wunused-function]
-    183 | nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
-        | ^~~~~~~~~~~~~~~
-  2 errors generated.
-  make[8]: *** [scripts/Makefile.build:207: drivers/nvme/target/fc.o] Error 1
-  make[7]: *** [scripts/Makefile.build:465: drivers/nvme/target] Error 2
-  make[6]: *** [scripts/Makefile.build:465: drivers/nvme] Error 2
-  make[6]: *** Waiting for unfinished jobs....
-
-Fixes: c53432030d86 ("nvme-fabrics: Add target support for FC transport")
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- drivers/nvme/target/fc.c | 14 --------------
- 1 file changed, 14 deletions(-)
-
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index 3ef4beacde32..7318b736d414 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -172,20 +172,6 @@ struct nvmet_fc_tgt_assoc {
- 	struct work_struct		del_work;
- };
- 
--
--static inline int
--nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
--{
--	return (iodptr - iodptr->tgtport->iod);
--}
--
--static inline int
--nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
--{
--	return (fodptr - fodptr->queue->fod);
--}
--
--
- /*
-  * Association and Connection IDs:
-  *
 -- 
-2.49.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
