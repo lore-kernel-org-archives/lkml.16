@@ -1,208 +1,198 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CA726159B;
-	Tue, 22 Apr 2025 08:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7132725FA1F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311491; cv=none; b=ZlBN2uAUEZMttbWJRpW5QdslxYJ2ef6PDPX4or5ac/eyqFrd19pYAOmucFtQmRNTBuApEILUhBADNaPWh8DMzyggqAslxLjhDI2EfgYLjFPrYq2GE7FPgMBebhbcmnIf8xbHcpApczu3vm9A/govyC4yzsNxldp1c4q3h1MLY9g=
+	t=1745311489; cv=none; b=W9hkOdC+B5Sq3TFHpepX63nIoAEa+H73cbFgZ5lN5v2K2IOxYp15qnnY66w6oe4FdLGYxrPm///9tpZItLTpEZhMVUaFkmaScyitsnvBgrAwgQOjuA187aDC6qgp3aruMlG4RUCBwRwdIQOQFbMLDJ8qzkrbH7wZTAXOjBDLXGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311491; c=relaxed/simple;
-	bh=I86OdE3kOZHcryMKY1mnL6NG++435v7MmEkzYpOOFJo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=okTtF8F90IJDws/B6DPGXOR4s8Z3p+5hEaA1THmwpDrybHErOi46vl0G/qLZe1gh3KK5OiLExEeR+eqcEBBYbmXzYXBF/vnkKDwFaO9T6Nq7PxIzDmRFkF8Z30bXlQp9ocORujOtx+B0biAWlgLb6dT9NNqkfsDrQRnEIrBJdME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZhbKD3xXpz6K9Nf;
-	Tue, 22 Apr 2025 16:40:16 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 54833140594;
-	Tue, 22 Apr 2025 16:44:47 +0800 (CST)
-Received: from a2303103017.china.huawei.com (10.47.65.221) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 22 Apr 2025 10:44:46 +0200
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: <devicetree-spec@vger.kernel.org>
-CC: <robh@kernel.org>, <mark.rutland@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<linuxarm@huawei.com>
-Subject: [PATCH v1 2/5] arm64: of: handle multiple threads in ARM cpu node
-Date: Tue, 22 Apr 2025 09:43:37 +0100
-Message-ID: <20250422084340.457-3-alireza.sanaee@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422084340.457-1-alireza.sanaee@huawei.com>
-References: <20250422084340.457-1-alireza.sanaee@huawei.com>
+	s=arc-20240116; t=1745311489; c=relaxed/simple;
+	bh=P47QWwCm1v9g4MBFhGt7X6yWDzEz0lF1K9o6O8AqT60=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=guvJmDbRID/Ecvra1K9T0JN6pYXeRwpMj+AbrQxqUxslI6yk4rK5iD+k9Fa/e9ElRu7eDXlgkGtEuzNPvNYA9/teN8Wp+3+v9t0PWNbN+ConGwQiYmKAqbUjgIsAck1mxhdIlRADl3t2TNTGWMNRiimeV+HlMBsbC9R00Nt47Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S8T5zhGO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S8T5zhGO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745311486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0+RdOtqSYZgJN9V7ZhicuRS1n/wY7Pa3OON81X9wpN0=;
+	b=S8T5zhGOZZaxplduP/1AZHsikS2KHCI7oHeI6DK5o7W5Uezc5ABgFphHzZdD/ZQP8DsGin
+	0n/QFQua80jAqIiLabOVWi8KbW8qfdRLzmpOCPgo8cro4anZUgP17SZeHVAIqYDhfUnEzK
+	VWr7RE844gZC6clZl3/ErUaoRbAZ4XE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-WHWjl4qQOCui0QfkU6Hpuw-1; Tue, 22 Apr 2025 04:44:44 -0400
+X-MC-Unique: WHWjl4qQOCui0QfkU6Hpuw-1
+X-Mimecast-MFC-AGG-ID: WHWjl4qQOCui0QfkU6Hpuw_1745311483
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-acbbb00099eso82666866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:44:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745311483; x=1745916283;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0+RdOtqSYZgJN9V7ZhicuRS1n/wY7Pa3OON81X9wpN0=;
+        b=qoW+GziJHe3fSxZvDeRJM0YHH9WhzFEvQvkuMiMfBqCf1iYA4DblO3sLLAh2DReqP2
+         ie45KGF7NqH8ViHLViu071Krjdje8uZ8gmph29sdO80rrJcfCYb169QSVwRhqmpE6pHH
+         BewW/SFxbOOSdGuRZHaK6Yo+6nZfXeYNRCOEtJW9va34mvZyrKDiUpSv9ss49X0FRRdW
+         QlWuthubLye9DAXvyhHe7V3M1ZikkSRK5hZRgaRVgx1jMg7QMWhZPVWRp6auIzh9eEjp
+         Gwr999JQv3MFEBFthR2rpBgpYdAA0P93ZT6MkExgo6c2LgIl78ayIdTWNecN7CTzd24X
+         okRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSUPUNZF7Edy8ODYxPBiSZFLobEtJywuTU3uPdhRQcluopsQOaAyvo1b09ZrHe5kCVFO7sX0bGi2r2qwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynqNPds9t/3G4Tyq5uz5w3d62hmlSwUsoz9A2cIxEPMK4Ixl1l
+	xAxEHGx6RjhFdp5nnEPwIZBTb3WQCit8Ryay84kvmic2VTdsc+bij1RqGveoFL6ogGeybGFtFie
+	52WQAQW0KqJ7cq9gRbx9mNge13DwwAVPWUD67qbMUfkiXirCuQ6Y419fNt7dQrA==
+X-Gm-Gg: ASbGncvOikDKtUwst3BPa25CFCVTDvTUDrq1z0iv90bC6nvHW/h8dkjA8aXEjLLL+qi
+	03NAgHP9U+KuQ8HR9MaYvEdJRaudIrsfBCShHLnnxoBXLSG0plItWZhkgpgRJNKy9czaMnwyWmV
+	r+jaHmBmwrScGAVLHaPnirGHJDAQpMSNHCtr+/SO6M+aZjbwBSjpkMgH2teTV637AcysZFMyeqv
+	ATMfRh756+Yc/26hj6h5i52Q9QCYoZx6SSQFRKgmvForyDw2e7pIr13CAJvPECX2N/Iz6ss/NdA
+	b8SaB7GbgIRrKYLAHXzF4s5LMg2Gf3R3mLm+kmok87FhtETgdAyb/3j29OrXSgVBcz57E8XrCG7
+	EgfIi4KUk+NX1tKpcUObDrQe743SvtDqnqm2laVSzQ0mN5WzFSOdslT0cycHqCg==
+X-Received: by 2002:a17:906:5048:b0:acb:8aa6:5455 with SMTP id a640c23a62f3a-acb8aa666bbmr673102666b.19.1745311482863;
+        Tue, 22 Apr 2025 01:44:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpgdWV71E14QWV9s59BE4ul4PG5ma83tK012XEEsIaRAbQGVP1sxKldI3T51XJVDSQc/mtRQ==
+X-Received: by 2002:a17:906:5048:b0:acb:8aa6:5455 with SMTP id a640c23a62f3a-acb8aa666bbmr673100066b.19.1745311482404;
+        Tue, 22 Apr 2025 01:44:42 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec5160csm635268866b.63.2025.04.22.01.44.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 01:44:41 -0700 (PDT)
+Message-ID: <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com>
+Date: Tue, 22 Apr 2025 10:44:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for
+ v4l2_fwnode_device_parse
+To: Ricardo Ribalda <ribalda@chromium.org>, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
+ <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org>
+ <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
+ <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- frapeml500003.china.huawei.com (7.182.85.28)
 
-Update `of_parse_and_init_cpus` to parse reg property of CPU node as
-an array based as per spec for SMT threads.
+Hi Ricardo,
 
-Spec v0.4 Section 3.8.1:
-The value of reg is a <prop-encoded-**array**> that defines a unique
-CPU/thread id for the CPU/threads represented by the CPU node.  **If a CPU
-supports more than one thread (i.e.  multiple streams of execution) the
-reg property is an array with 1 element per thread**.  The address-cells
-on the /cpus node specifies how many cells each element of the array
-takes. Software can determine the number of threads by dividing the size
-of reg by the parent node's address-cells.
+On 22-Apr-25 2:23 AM, Ricardo Ribalda wrote:
+> Hi Sakari
+> 
+> On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+>>
+>> Hi Ricardo,
+>>
+>> Thanks for the patch.
+>>
+>> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
+>>> This patch modifies v4l2_fwnode_device_parse() to support ACPI devices.
+>>>
+>>> We initially add support only for orientation via the ACPI _PLD method.
+>>>
+>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>>> ---
+>>>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++++++++++----
+>>>  1 file changed, 52 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1c96f2a5ede3fa9d64dab3 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+>>> @@ -15,6 +15,7 @@
+>>>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+>>>   */
+>>>  #include <linux/acpi.h>
+>>> +#include <acpi/acpi_bus.h>
+>>>  #include <linux/kernel.h>
+>>>  #include <linux/mm.h>
+>>>  #include <linux/module.h>
+>>> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
+>>>
+>>> -int v4l2_fwnode_device_parse(struct device *dev,
+>>> -                          struct v4l2_fwnode_device_properties *props)
+>>> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
+>>> +                                      struct v4l2_fwnode_device_properties *props)
+>>> +{
+>>> +     struct acpi_pld_info *pld;
+>>> +     int ret = 0;
+>>> +
+>>> +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
+>>> +             dev_dbg(dev, "acpi _PLD call failed\n");
+>>> +             return 0;
+>>> +     }
+>>
+>> You could have software nodes in an ACPI system as well as DT-aligned
+>> properties. They're not the primary means to convey this information still.
+>>
+>> How about returning e.g. -ENODATA here if _PLD doesn't exist for the device
+>> and then proceeding to parse properties as in DT?
+> 
+> Do you mean that there can be devices with ACPI handles that can also
+> have DT properties?
 
-An accurate example of 1 core with 2 SMTs:
+Yes it is possible to embed DT properties in ACPI, but I don't
+think that is really applicable here.
 
-	cpus {
-		#size-cells = <0x00>;
-		#address-cells = <0x01>;
+But we also have secondary software-fwnodes which are used
+extensively on x86 to set device-properties on devices by
+platform code to deal with ACPI tables sometimes having
+incomplete information.
 
-		cpu@0 {
-			phandle = <0x8000>;
-			**reg = <0x00 0x01>;**
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
-	};
+For example atm _PLD is already being parsed in:
 
-Instead of:
+drivers/media/pci/intel/ipu-bridge.c and that is then used to add
+a standard "orientation" device-property on the sensor device.
 
-	cpus {
-		#size-cells = <0x00>;
-		#address-cells = <0x01>;
+This is actually something which I guess we can drop once your
+patches are in, since those should then do the same in a more
+generic manner.
 
-		cpu@0 {
-			phandle = <0x8000>;
-			reg = <0x00>;
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
+> What shall we do if _PLD contradicts the DT property? What takes precedence?
 
-		cpu@1 {
-			phandle = <0x8001>;
-			reg = <0x01>;
-			enable-method = "psci";
-			compatible = "arm,cortex-a57";
-			device_type = "cpu";
-		};
-	};
+As for priorities, at east for rotation it seems that we are going
+to need some quirks, I already have a few Dell laptops where it seems
+that the sensor is upside down and parsing the rotation field in
+the IPU6 specific SSDB ACPI package does not yield a 180° rotation,
+so we are going to need some quirks.
 
-which is **NOT** accurate.
+I expect these quirks to live in the bridge code, while your helper
+will be called from sensor drivers, so in order to allow quirks to
+override things, I think that first the "orientation" device-property
+should be checked (which the ACPI glue code we have can set before
+the sensor driver binds) and only then should _PLD be checked.
 
-Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
----
- arch/arm64/kernel/smp.c | 74 +++++++++++++++++++++++------------------
- 1 file changed, 41 insertions(+), 33 deletions(-)
+IOW _PLD should be seen as the fallback, because ACPI tables are
+often a copy and paste job so it can very well contain wrong info
+copy-pasted from some example ACPI code or from another hw model.
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 3b3f6b56e733..8dd3b3c82967 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -689,53 +689,61 @@ static void __init acpi_parse_and_init_cpus(void)
- static void __init of_parse_and_init_cpus(void)
- {
- 	struct device_node *dn;
-+	u64 hwid;
-+	u32 tid;
- 
- 	for_each_of_cpu_node(dn) {
--		u64 hwid = of_get_cpu_hwid(dn, 0);
-+		tid = 0;
- 
--		if (hwid & ~MPIDR_HWID_BITMASK)
--			goto next;
-+		while (1) {
-+			hwid = of_get_cpu_hwid(dn, tid++);
-+			if (hwid == ~0ULL)
-+				break;
- 
--		if (is_mpidr_duplicate(cpu_count, hwid)) {
--			pr_err("%pOF: duplicate cpu reg properties in the DT\n",
--				dn);
--			goto next;
--		}
-+			if (hwid & ~MPIDR_HWID_BITMASK)
-+				goto next;
- 
--		/*
--		 * The numbering scheme requires that the boot CPU
--		 * must be assigned logical id 0. Record it so that
--		 * the logical map built from DT is validated and can
--		 * be used.
--		 */
--		if (hwid == cpu_logical_map(0)) {
--			if (bootcpu_valid) {
--				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
--					dn);
-+			if (is_mpidr_duplicate(cpu_count, hwid)) {
-+				pr_err("%pOF: duplicate cpu reg properties in the DT\n",
-+				       dn);
- 				goto next;
- 			}
- 
--			bootcpu_valid = true;
--			early_map_cpu_to_node(0, of_node_to_nid(dn));
--
- 			/*
--			 * cpu_logical_map has already been
--			 * initialized and the boot cpu doesn't need
--			 * the enable-method so continue without
--			 * incrementing cpu.
-+			 * The numbering scheme requires that the boot CPU
-+			 * must be assigned logical id 0. Record it so that
-+			 * the logical map built from DT is validated and can
-+			 * be used.
- 			 */
--			continue;
--		}
-+			if (hwid == cpu_logical_map(0)) {
-+				if (bootcpu_valid) {
-+					pr_err("%pOF: duplicate boot cpu reg property in DT\n",
-+					       dn);
-+					goto next;
-+				}
-+
-+				bootcpu_valid = true;
-+				early_map_cpu_to_node(0, of_node_to_nid(dn));
-+
-+				/*
-+				 * cpu_logical_map has already been
-+				 * initialized and the boot cpu doesn't need
-+				 * the enable-method so continue without
-+				 * incrementing cpu.
-+				 */
-+				continue;
-+			}
- 
--		if (cpu_count >= NR_CPUS)
--			goto next;
-+			if (cpu_count >= NR_CPUS)
-+				goto next;
- 
--		pr_debug("cpu logical map 0x%llx\n", hwid);
--		set_cpu_logical_map(cpu_count, hwid);
-+			pr_debug("cpu logical map 0x%llx\n", hwid);
-+			set_cpu_logical_map(cpu_count, hwid);
- 
--		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
-+			early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
- next:
--		cpu_count++;
-+			cpu_count++;
-+		}
- 	}
- }
- 
--- 
-2.43.0
+Regards,
+
+Hans
+
 
