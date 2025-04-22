@@ -1,78 +1,60 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A844B28CF77;
-	Tue, 22 Apr 2025 13:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64272283CB2;
+	Tue, 22 Apr 2025 13:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745330246; cv=none; b=qSHaZDT5QJrQFl1aIR/d4FPrXlFTi2T5FodXgnGS4iJFRVNYhAuGNVCVz9yeSWf2BSzvcU2hpV4grr+v1NCLhhJMc8fFqWCSBdhoeeItfEnmeGZybRySi9mlaXEsqKJFcmor2EMcInDQOnAwDigT0R8/cBLiTIcPFtkUXOgRR9s=
+	t=1745330277; cv=none; b=STvMsqJ4MCf3DI7ZFen7KvHkINNhxFd7T07Wqp9H2ph0U9tx0EHwaSea0yad+8haxNiQxyhxDWJ13WM6BY1FN8KMamRY4TwS7EWSmBwB75hcK2OBlvK2Bx0Xq/9qZxEREbwTPCzG8PeMb9KP5FV94O6WMCD+Af+jiRqM9Pb0j5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745330246; c=relaxed/simple;
-	bh=g7WNVJHclvSj1E2AwbocpEvXvRSkv9UNMU2PgjrPJOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RCyYTFscivnb3eb8cH+lO4zB+2YeswvgARwOET9yCfHi11J0aZX0I0U4XFfF4YoEBfzszQpkt5kFJzSrCtDMAReqzyoR0wyxy5OcnIA0s4MW8M7CpQeVNxjOPL6RcG3O80ZJ98uFrwMDI+Joldl5sAdZIuFBAdi7eUf1vPSC5ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MWo+vVJY; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745330277; c=relaxed/simple;
+	bh=lbd4EVnXouia2uzORsnINqHx0ONzqV4J7Riq6tAAL0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEKh+ihoP6gUwxmANKgD/JTNCMeyfgvIHAd9RoBr2dorXebRsV7byiPK/DGqgVFOJ23GRrrfLA+56Hgqsq4t9uVR6MniI9N3oI9twRsURe4PnErrfWjzGMZR/jsQSCZYc1UjtEBMwc7CurIQug373i7mN0KRX9qgI7Upf2tl8qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WfVAL+vh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MWo+vVJY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745330243;
-	bh=g7WNVJHclvSj1E2AwbocpEvXvRSkv9UNMU2PgjrPJOc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MWo+vVJYRfk7c9rAarBXaDJbhgJAw6zdNajEpHhQtIXVfuaS7FfN3H/8FEjrycj1o
-	 4FtlL+sU1iHJgH6MVb57VNzAoBQknaxje3CalTenCHPmNDe4W63jz8sUFqB2vokBC4
-	 9VoeSm1aoCRsvH6+sMlU+vYFeMX/6/sQBqETv+T5srm9PLXSj1txRcLrAC+6L1S/Kt
-	 42J+Wb2csC0ReauZ5w4RXI70XRlhwvRkpPxaEECnC24fBl6NBeYoYsFAKnY4zw7syr
-	 Q8AaSxemKQMBcbtPlN0+0j73SyM91DU05UiZD0MJoUDAdFFHU/TMYax2dQx7BbbRQI
-	 1Xfmc0eUnm2yw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8068417E157E;
-	Tue, 22 Apr 2025 15:57:22 +0200 (CEST)
-Message-ID: <26b9b027-b880-4880-9c12-844bd36bcd44@collabora.com>
-Date: Tue, 22 Apr 2025 15:57:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WfVAL+vh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFD4C4CEEA;
+	Tue, 22 Apr 2025 13:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745330276;
+	bh=lbd4EVnXouia2uzORsnINqHx0ONzqV4J7Riq6tAAL0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WfVAL+vhTAPu3EDwsHI7ODIk3uAZa9/mxkgv28/Cb9UQPkLEeEl+1K6XcWGJEmEna
+	 JU9rDjxqdMG3O/RPJwfeLCs45cMKg/0D/6O6w/vZUtpFsh0DkV2Hif7Fx+BnKOreDS
+	 ii/C68qvU5YUBW8pFlvd8UvUxF7KYz4pdpbENNdb77kTJFOljesMwO/wzYsbZChiKJ
+	 hzloX3GIYySM24Ew814nMPvHVD0MQy4tIMvIRT6vi6NukrLQr3lhV848aickRb0pUf
+	 Y6oNrx5hxCNxXZJSQevoLHW49Q7Rd0EH6uKi9XD1MEf/KN2XD6ngZCzX8xN0bJWqpd
+	 ilXkzbaGqE8jg==
+Date: Tue, 22 Apr 2025 08:57:54 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: broonie@kernel.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+	devicetree@vger.kernel.org, krzk+dt@kernel.org,
+	linux-sound@vger.kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH] ASoC: dt-bindings: fsl,mqs: Document audio graph port
+Message-ID: <174533027316.1138988.868442565020756721.robh@kernel.org>
+References: <20250418053050.2755249-1-shengjiu.wang@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] dt-bindings: arm: mediatek: Merge MT8186 Voltorb
- entries
-To: Chen-Yu Tsai <wenst@chromium.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- chrome-platform@lists.linux.dev, linux-input@vger.kernel.org,
- Douglas Anderson <dianders@chromium.org>
-References: <20250421101248.426929-1-wenst@chromium.org>
- <20250421101248.426929-3-wenst@chromium.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250421101248.426929-3-wenst@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418053050.2755249-1-shengjiu.wang@nxp.com>
 
-Il 21/04/25 12:12, Chen-Yu Tsai ha scritto:
-> There are only two different SKUs of Voltorb, and the only difference
-> between them is whether a touchscreen is present or not. This can be
-> detected by a simple I2C transfer to the address, instead of having
-> separate compatible strings and device trees.
+
+On Fri, 18 Apr 2025 13:30:50 +0800, Shengjiu Wang wrote:
+> This device can be used in conjunction with audio-graph-card to provide
+> an endpoint for binding with the other side of the audio link.
 > 
-> Drop the SKU-specific compatible strings and just keep the generic
-> "google,voltorb" one.
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/sound/fsl,mqs.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
