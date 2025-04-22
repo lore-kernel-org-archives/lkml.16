@@ -1,180 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEE12900A9
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5061A296175;
+	Tue, 22 Apr 2025 16:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340562; cv=none; b=KKv/VWXzYdco1j+CUa9K7A4AAj1gDa2epuz8yo7OE1jnLdnPYG5kkf4BVd3HxXbj7R0MUrpSD3uNEUZwRAfjRy0ewlzWjbS/+0BmjjNoCtCC7n3PngFfmEfUe4tnOtOsLhpWVXeX3LJoeQ1xH5WOPxe5pv2rxAzeRqFqpkpZMOE=
+	t=1745340576; cv=none; b=L9WNJJHB7DXPVE/blUc1Zr6V4ukoGQqJI0LRZQkUGAp2BM8qxxqk2f1EvnWv6C9Z8mUrB0z2gvs1kDaq8bKTnyIfRaxPjtJwu1LN7Y8GpQ5CYs82yYUKq7w7c8eJB3XgX+z51Rju/pBq/yrm+iuerrRPZqu5OXFWFVq0AZ441NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340562; c=relaxed/simple;
-	bh=1zm/ifLFoyueirmbO4F+dQ+4rpCflNI54FJ6BvufTFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MRKM4K9wlM8ia7UKTbyTLhwdxV5rc74ZCifNcebJn4QqVycClSgciQCsFOSkSIar5nDIKxW93OzsUyuyv1O54mNecmmBCApaaPt3RJ+J/hCXL+bWgBabRi4KA4jGvX9Fg0NADSZ5ipQOBVJ4/8Wx2080NgfkNxqm5xhHX341tog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WmOnqjPG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745340576; c=relaxed/simple;
+	bh=s9kMwJjDJ2rcuOzb9LFbxhZCz0C30M7jGjVo/6qeYK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lN1DcvFzqCRJ+nw/X51W33ne3iQz9t6ed415jw+WszqytSRVRChM/gN/Ksd+2VifNiie9igFEHkWK40NQuFMYNs9CoQK0GWpQceWH0j1OJbTomfsiahC8p5H9BlbeWFDzqVCeHAUx30GMOjw8jAaoM4xHs1nWWg+u04j8LV20Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ae9PaHLI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmOnqjPG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745340560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lHSkROXmhzxaxiTJB2Sts+hoXg6Enh4N97MVVPj8jow=;
-	b=WmOnqjPGVzWbnJPowlkSPUgG6iyBsT77pl4jPU9QSdEHvrX2wSmvfejG11qdxsMvzm9tRL
-	1mSmTcECkPRpQc+nt+84YfnGem+Gdy7KcqR+sDvVZ97mmF8LvzpPhEjQmLrNdg/vkbJmoC
-	FpWbORfBy2vku7/bYfcj5/pnPqyMR0A=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-418-z6nNMH2sOyaXRRNHOt8DpA-1; Tue, 22 Apr 2025 12:49:18 -0400
-X-MC-Unique: z6nNMH2sOyaXRRNHOt8DpA-1
-X-Mimecast-MFC-AGG-ID: z6nNMH2sOyaXRRNHOt8DpA_1745340557
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913aaf1e32so2442064f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:49:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745340557; x=1745945357;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lHSkROXmhzxaxiTJB2Sts+hoXg6Enh4N97MVVPj8jow=;
-        b=voqKBPnHOT3TcfD0klFkhqtjdSPsO7IHAIheebBBJNJ3/XLs0+4l669xf01fumM08S
-         1V/N+ZBrwXE73HdxU5Ti4sYtRY/RQ7lLb1OatfT6W1K2CNxT6gqGMI09ckSbzIHY9jNw
-         8n24MhghU4gEFh4bPh5x/RqcGilD0k/p7qCVOrUy37pJ8W0sH1FWwVDIEgXGZiZTm5f5
-         5tXMPVtRmOgHBX5i7VbZO0JSxzzLQbnPQKkVK7fcol3mkU269BF/q4ISfvt4eQfybhIF
-         JeFQlroePogdv/yq6j/4uxq7jBFgRku35xn/3Qon0T+Jijyp5WM0Djxadjd6CDXYDJEA
-         q5CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVse6k+BHlkud8D7I2cwYsunlv7HncZmPZU7VdD76iWHvZPGE3T6VMxDUKmq9AJk/ijHfsROvpAEqfAPww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJmzZtOGatnyT4lbJBAX3t8+aJh+zXofq7fY6GfoeFozrR2gze
-	Xw8am9C3YwMFkOqn7S4YZjs1v+zumjhj+UhVqD+sy4qT0+ppLHitOPD4oBztDEgHBkywGcGUTAP
-	c4JJXqhGzbeL5fEOqCbzJQWL/DFba8Lj1zE8gu8vrNbhvUI008mQT0TpBQZ+BWQ==
-X-Gm-Gg: ASbGncsylyJvPIZqAErwOK5o1DQ7qDH1WjtjrilsQTcv6NpLagyIm9w4468uJwRY5jF
-	h6E8ezyN6WJK40uDfg4N/2gS4rqZMgBfzQenF8x7GIN9vfEs4uf0NslK5hv0KOuwfASGfSiX0ru
-	nxZImMo4gAswGnN47DnW3umZ2D1jOdxLnPyMXNthUC8wHSQuSyQE1PknCUHQi/edlq5m3oKjFkz
-	uXDCTIwOqudtK1biAE7w2cKSTvedcJs+nXnpMaxAjfNZhXSHFCGTGMbVYIr2QvKUdOzx83Isc5A
-	zedRs3pjAuzbiNM1uf59l1cG76T0Q6Teesk6qN1V
-X-Received: by 2002:a05:6000:381:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-39efbad7f42mr14397226f8f.47.1745340557497;
-        Tue, 22 Apr 2025 09:49:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGDoEgp+mnqvCe0AHRP0Rn4FhZOt0+ug+zdFUDxNDueLDOx4k3ra4nj9Co+7VRKKBDx5ofTWw==
-X-Received: by 2002:a05:6000:381:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-39efbad7f42mr14397208f8f.47.1745340557066;
-        Tue, 22 Apr 2025 09:49:17 -0700 (PDT)
-Received: from [192.168.3.141] (p5b0c62cd.dip0.t-ipconnect.de. [91.12.98.205])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4330bfsm15769041f8f.23.2025.04.22.09.49.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 09:49:16 -0700 (PDT)
-Message-ID: <1bee5078-5cc4-43b7-993c-f1e57a9bf534@redhat.com>
-Date: Tue, 22 Apr 2025 18:49:14 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ae9PaHLI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940C1C4CEE9;
+	Tue, 22 Apr 2025 16:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745340575;
+	bh=s9kMwJjDJ2rcuOzb9LFbxhZCz0C30M7jGjVo/6qeYK4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ae9PaHLIH2pXGK2vvhTyEi/fVGiLgSKV4bCaKMpxmdsSaiLLWnZqNuS4RAWP3Ppc1
+	 czwixz4vaqciUviy4ZyA5cTYsFXWnFNkvVLSdc96cu84GvEpu5vZFRPCS6j4nx1WOJ
+	 s7rH2IZeDPUtON+2lVgPeSoIAQpvH3FV0AucL6BANOrTyIhrVv5NvD8KwjR2fZ4JEj
+	 m1j7NI9i/5kGbRWvlvrcB6IUMKSY/thPOJc09MpEGq15sUqADWF7keSXCuXbBaHCP5
+	 UrvpBGwig4QBQYxOJHvAs4ehuBg0gVVnzDgfGFfWNllCDiSk0EnVLm/amLooatEfVi
+	 3VdUuE8Fz+rBw==
+Date: Tue, 22 Apr 2025 11:49:34 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, vigneshr@ti.com,
+	kishon@kernel.org, 18255117159@163.com, cassel@kernel.org,
+	wojciech.jasko-EXT@continental-corporation.com,
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH v4 2/4] PCI: cadence-host: Introduce
+ cdns_pcie_host_disable helper for cleanup
+Message-ID: <20250422164934.GA333709@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v7 3/8] security: Export
- security_inode_init_security_anon for KVM guest_memfd
-To: Shivank Garg <shivankg@amd.com>, Paul Moore <paul@paul-moore.com>
-Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
- akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
- ackerleytng@google.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz,
- bfoster@redhat.com, tabba@google.com, vannapurve@google.com,
- chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
- yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
- michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com,
- peterx@redhat.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-coco@lists.linux.dev
-References: <20250408112402.181574-1-shivankg@amd.com>
- <20250408112402.181574-4-shivankg@amd.com>
- <CAHC9VhRFBOC=cZB+Dm00cshwBSBaK6amv+=XFLPF0Bub0gHN+Q@mail.gmail.com>
- <b98f7b78-1834-4fa0-b79c-d5ac562e4809@amd.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <b98f7b78-1834-4fa0-b79c-d5ac562e4809@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417124408.2752248-3-s-vadapalli@ti.com>
 
-On 11.04.25 08:07, Shivank Garg wrote:
-> Hi Paul,
+On Thu, Apr 17, 2025 at 06:14:06PM +0530, Siddharth Vadapalli wrote:
+> Introduce the helper function cdns_pcie_host_disable() which will undo
+> the configuration performed by cdns_pcie_host_setup(). Also, export it
+> for use by existing callers of cdns_pcie_host_setup(), thereby allowing
+> them to cleanup on their exit path.
+
+For the merge commit log and eventual pull request, can you give me a
+hint about the motivation for this?  Based on the other patches in
+this series, my guess is that this is required for making the j721e
+driver buildable as a module and removable?
+
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 > 
-> On 4/10/2025 1:49 AM, Paul Moore wrote:
->> On Tue, Apr 8, 2025 at 7:25 AM Shivank Garg <shivankg@amd.com> wrote:
->>>
->>> KVM guest_memfd is implementing its own inodes to store metadata for
->>> backing memory using a custom filesystem. This requires the ability to
->>> initialize anonymous inode using security_inode_init_security_anon().
->>>
->>> As guest_memfd currently resides in the KVM module, we need to export this
->>> symbol for use outside the core kernel. In the future, guest_memfd might be
->>> moved to core-mm, at which point the symbols no longer would have to be
->>> exported. When/if that happens is still unclear.
->>
->> Can you help me understand the timing just a bit more ... do you
->> expect the move to the core MM code to happen during the lifetime of
->> this patchset, or is it just some hand-wavy "future date"?  No worries
->> either way, just trying to understand things a bit better.
+> v3 patch is at:
+> https://lore.kernel.org/r/20250410104426.463453-3-s-vadapalli@ti.com/
+> No changes since v3.
 > 
-> I am not sure about it, any ideas David?
-
-Sorry for the late reply.
-
-Hand-wavy future date after this series. Elliot was working on this, but 
-IIRC he now has a new job and might no longer be able to work on this.
-
-Ackerley+Patrick started looking into this, and will likely require it 
-for other guest_memfd features (hugetlb support, directmap removal).
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Regards,
+> Siddharth.
+> 
+>  .../controller/cadence/pcie-cadence-host.c    | 104 ++++++++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h |   5 +
+>  2 files changed, 109 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 96055edeb099..741508738f88 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -152,6 +152,14 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>  	return ret;
+>  }
+>  
+> +static void cdns_pcie_host_disable_ptm_response(struct cdns_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_PTM_CTRL);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_PTM_CTRL, val & ~CDNS_PCIE_LM_TPM_CTRL_PTMRSEN);
+> +}
+> +
+>  static void cdns_pcie_host_enable_ptm_response(struct cdns_pcie *pcie)
+>  {
+>  	u32 val;
+> @@ -177,6 +185,26 @@ static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+>  	return ret;
+>  }
+>  
+> +static void cdns_pcie_host_deinit_root_port(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	u32 value, ctrl;
+> +
+> +	cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, 0xffff);
+> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0xff);
+> +	cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0xff);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, 0xffffffff);
+> +	cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, 0xffff);
+> +	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
+> +	value = ~(CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
+> +		CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS);
+> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +}
+> +
+>  static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -393,6 +421,32 @@ static int cdns_pcie_host_dma_ranges_cmp(void *priv, const struct list_head *a,
+>          return resource_size(entry2->res) - resource_size(entry1->res);
+>  }
+>  
+> +static void cdns_pcie_host_unmap_dma_ranges(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	enum cdns_pcie_rp_bar bar;
+> +	u32 value;
+> +
+> +	/* Reset inbound configuration for all BARs which were being used */
+> +	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++) {
+> +		if (rc->avail_ib_bar[bar])
+> +			continue;
+> +
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR0(bar), 0);
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_RP_BAR_ADDR1(bar), 0);
+> +
+> +		if (bar == RP_NO_BAR)
+> +			continue;
+> +
+> +		value = ~(LM_RC_BAR_CFG_CTRL_MEM_64BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_PREF_MEM_64BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_MEM_32BITS(bar) |
+> +			  LM_RC_BAR_CFG_CTRL_PREF_MEM_32BITS(bar) |
+> +			  LM_RC_BAR_CFG_APERTURE(bar, bar_aperture_mask[bar] + 2));
+> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+> +	}
+> +}
+> +
+>  static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -430,6 +484,29 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+>  	return 0;
+>  }
+>  
+> +static void cdns_pcie_host_deinit_address_translation(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(rc);
+> +	struct resource_entry *entry;
+> +	int r;
+> +
+> +	cdns_pcie_host_unmap_dma_ranges(rc);
+> +
+> +	/*
+> +	 * Reset outbound region 0 which was reserved for configuration space
+> +	 * accesses.
+> +	 */
+> +	cdns_pcie_reset_outbound_region(pcie, 0);
+> +
+> +	/* Reset rest of the outbound regions */
+> +	r = 1;
+> +	resource_list_for_each_entry(entry, &bridge->windows) {
+> +		cdns_pcie_reset_outbound_region(pcie, r);
+> +		r++;
+> +	}
+> +}
+> +
+>  static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -487,6 +564,12 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>  	return cdns_pcie_host_map_dma_ranges(rc);
+>  }
+>  
+> +static void cdns_pcie_host_deinit(struct cdns_pcie_rc *rc)
+> +{
+> +	cdns_pcie_host_deinit_address_translation(rc);
+> +	cdns_pcie_host_deinit_root_port(rc);
+> +}
+> +
+>  int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>  {
+>  	int err;
+> @@ -499,6 +582,14 @@ int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
+>  }
+>  EXPORT_SYMBOL_GPL(cdns_pcie_host_init);
+>  
+> +static void cdns_pcie_host_link_disable(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +
+> +	cdns_pcie_stop_link(pcie);
+> +	cdns_pcie_host_disable_ptm_response(pcie);
+> +}
+> +
+>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -524,6 +615,19 @@ int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+>  }
+>  EXPORT_SYMBOL_GPL(cdns_pcie_host_link_setup);
+>  
+> +void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
+> +{
+> +	struct pci_host_bridge *bridge;
+> +
+> +	bridge = pci_host_bridge_from_priv(rc);
+> +	pci_stop_root_bus(bridge->bus);
+> +	pci_remove_root_bus(bridge->bus);
+> +
+> +	cdns_pcie_host_deinit(rc);
+> +	cdns_pcie_host_link_disable(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(cdns_pcie_host_disable);
+> +
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct device *dev = rc->pcie.dev;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 4b7f295e24e7..0b6bed1ac146 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -523,6 +523,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+>  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
+>  int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+> +void cdns_pcie_host_disable(struct cdns_pcie_rc *rc);
+>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  			       int where);
+>  #else
+> @@ -541,6 +542,10 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	return 0;
+>  }
+>  
+> +static inline void cdns_pcie_host_disable(struct cdns_pcie_rc *rc)
+> +{
+> +}
+> +
+>  static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  					     int where)
+>  {
+> -- 
+> 2.34.1
+> 
