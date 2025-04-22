@@ -1,48 +1,67 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2481A5B86;
-	Tue, 22 Apr 2025 06:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4BF1A5B86
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305128; cv=none; b=UPfsxSp/lmV80I5MGx5uh3ZUzSunniQfJi539rWGN6aKUkJfhlPKv8Z/EfEuz2xwE3+noISE84wvHF24tutStWtAmRcgB40WmXue0rOxwQvATvu0DQaLOwiMiQBWrST9iT/yDLsJS3vxCp7fGl6xBqGBDGbaN6MXO+e/W+1YVjU=
+	t=1745305139; cv=none; b=nf96qK26yfY2IK+WXBfYrfE1NTJ005D3lK1EwNYA2V6IsaU0GEPl8+xZBwmvNUF5iaEpJRvafzn540JReWpHs98qzKnaWMntWduYAhfWFhshxjgPEBjpw9ISL9jBJWuY/Mp3VDEsPPfc+tuurlrwKKGfxNpPSv/5O7NXfREKdSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305128; c=relaxed/simple;
-	bh=uMq9Yaaidygfns+/1ADH1JZ8AsHopf6/JsvpjUR1rYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DkpsTxRmXKX0D1W/frxwzc3spsDp16N6A80+l+6gHNWBCU5I1oMyZ/ru85i2U/QoFBIfbDO3hXElrw8AoYzWgSbYfo2BF8rbnr4s9aG0y1zPxlqXkoDZWEvkZmqzG0RyLiLCw28sExKe0SKJdWlpBMeblnVSZ4rmi9D0pSVzc0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jgxllVWd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745305139; c=relaxed/simple;
+	bh=Zl/rHjQPYoFedXIJt6pPIlPvjvilC8CB38FGZiHgqGo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=LaR4tWsrtyPFDRyamom5dX/ItdGWSqt29Clym10uWoi/QtaPtvqae6oXt1TvgHAQIlFHpn4nqjG4XsMW+0bjTHe2dTPwzr74A1YZONtcOVBuqDErDFPd4V+ZpooJs7nsW6gvGyGUOEFcEPOX3AlT1FilHEGbvTdu98DYY5Q7zpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jWni3Z+X; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jgxllVWd"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4Oohx019535;
-	Tue, 22 Apr 2025 06:58:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZmNhp6IS4qDHzzExCOLDgWRkIsbXzXs/M/jKX/6Spns=; b=jgxllVWd1gWzzvIT
-	NiwQOBOqNldOXHhGhrYh4oZa26K2B5XoPZI19+vEzHO5fK0FRNjnP2PbDClAvqYX
-	M1TZ5EencLowilJR2uxbi15ZdbPLuNv5qd8XpH6Mmz2QQgO/khfMQZ1OWeXU37dv
-	iz6Dzo1tF3pVUSNH7eS4DKcclZmhOSMeHvChRvbDVLk98TuncPzVcUZ7W6VWai6s
-	HZtpRBGzI8StiqoWm5tVUYmBh5tf8rf5qe6w3Bj5AUFFaAdePe+Yo5St6Mi+5cR+
-	Y3ASoECGPFxSCYFBONmsgf4Rf3TzbPizXnoElhjo8XJgJXNjV39YC8srUTt4hvl9
-	7SymOQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bpc94-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 06:58:31 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53M6wU1B002047
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 06:58:30 GMT
-Received: from [10.206.97.61] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 21 Apr
- 2025 23:58:23 -0700
-Message-ID: <d77353b0-94e6-4461-bd34-44c8cb80eb07@quicinc.com>
-Date: Tue, 22 Apr 2025 12:28:20 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jWni3Z+X"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso3721632f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745305135; x=1745909935; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xd3/3q1AYSo/JYqDVTQPa8vVX/K5QL5ZbX5wE8VPDqY=;
+        b=jWni3Z+Xj38s1rJMTdQHy6G7c+W1Sr1JMcFZovRYgha5BXZYEy+p2bd2QYFQyxJjkm
+         z6duTEq3fHWNaOJAgvfX3AR9bAPYBiNc7Mt/WXaytW8GgBSBuFGyPJMQO1A9uQ+QdKAa
+         aoIKYodZjBJ24pr11UW49cCnsv1Eawo4xL85IGKaUD6uZtOkNBdluivGKmZBNjXN2I1q
+         lwPcwKihg5wcfmfK5VKNcWajv0gauRj0OZipbGHZHGwprOC3QArmHxm+T4y3pLGii/Sz
+         Ci2peTN7LARceUxmIYNaAUNtVUyNmZ0SpFB2JRGXYPDOGth71XmGJXji+aSZA4VeHAVY
+         lHFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745305135; x=1745909935;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Xd3/3q1AYSo/JYqDVTQPa8vVX/K5QL5ZbX5wE8VPDqY=;
+        b=D+p2WPnn94SNKetIPLCjdIp2kTQg39VyIxWJRTiZ/fGvyBNfrhdyG/99qBn6DeUFYA
+         ZoHLoheI6IJQ/vXubn42bsFfroJs7JRVF3OpVtYZ6pGYnFgmBSU/SOwZWlqWE+FuP/K/
+         hZukqWSX1RR7kk9hJOfe722ebikEeGKSSYDANsfwJf2o4LK47L5W49JDH/FjjOd+ewww
+         bskydbi/qJJdcyAfLxYaexP6+XmNuarWYbm8iVi3Ay8yQwUP8fbjCt4Fx+hnOLQJ6G9s
+         6WHrMxbfiQrM2PWpEEbx5zJIQcbGX3PwJe/ymfET5raBx3dfJvd+Whjzn3CTqCQfepSC
+         PMAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTrOd/Gx6qjMjdEdw8nhfe9uZ6z26jCOH9XltK2VQQJKtBuMRuvbn02Z1IG9l98BURfvwT44znfVpIBfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK02c4nyLpJbU/jPOoM0mO/IvfD8aX1XATX1Xwn06GTPvxt945
+	fT9CQcLUt+aKkztj/qfzVrwWVCMHkDaGzaHW+vUbI1D77YUVZjPkHja5l0wmD38=
+X-Gm-Gg: ASbGncuN84l9N9pGmVSn3gM6kLuF88hr4b9JpAhmhEnpMbcYRSpBgbkNBx/CPuugknS
+	6t8r2mgvfBM33s8QSMhhpN0dE00c5JW0/7txKxqBQ3hdi63c2KHQ03wk9cqX9+6O5ImDG71RJw5
+	82HPAWffU1MCx50BD4W3+56eFuH9LJ1NGmCkIY9mpiJHlBJoq+5LCJ8IHuqgH9MaaDVvQbq6IyO
+	DrHbe3lhkTvuWuwfUmtHTSaZFttG2bcx84Dx6RZtg89UhG/jzfH92B1ckc3vuucNBPXB0ibs+E5
+	Dt1EhwFGtPIUuDtqflwlgjnl1Lw0W42iR9EPBGGonP18Ym0fuKjjcdDGzeIc0Y6u1s6IjfQFM0i
+	JCZw9e+LvbuxEhzy8fA==
+X-Google-Smtp-Source: AGHT+IHbDFXF+5+LP6/HjCP1JYYnUemqwmt6GGZ6W0Gq5gWqraVlFDfoGiHhFNvQf1N0siWjoeAirw==
+X-Received: by 2002:a05:6000:184f:b0:39b:f44b:e176 with SMTP id ffacd0b85a97d-39ef9466f36mr12081694f8f.24.1745305135539;
+        Mon, 21 Apr 2025 23:58:55 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d07csm14396780f8f.58.2025.04.21.23.58.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Apr 2025 23:58:55 -0700 (PDT)
+Message-ID: <5c0e86f4-b40b-4f43-a97d-a166f41737a4@linaro.org>
+Date: Tue, 22 Apr 2025 08:58:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,150 +69,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/11] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Ayushi Makhija
-	<amakhija@qti.qualcomm.com>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
-        <sean@poorly.run>, <marijn.suijten@somainline.org>,
-        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
-        <krzk+dt@kernel.org>, <konradybcio@kernel.org>, <conor+dt@kernel.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
-        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
-References: <20250417053909.1051416-1-amakhija@qti.qualcomm.com>
- <20250417053909.1051416-8-amakhija@qti.qualcomm.com>
- <qnhfnxvdsgnw5jh4xxaqz3p2x67qcrr7kn3vwdnyz5huchdtzy@aagflznjrvly>
-Content-Language: en-US
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <qnhfnxvdsgnw5jh4xxaqz3p2x67qcrr7kn3vwdnyz5huchdtzy@aagflznjrvly>
-Content-Type: text/plain; charset="UTF-8"
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v1 0/4] dts: amlogic: fix FCLK{3,4} clocks for new PWM
+ controller binding
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org
+Cc: jbrunet@baylibre.com, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ christianshewitt@gmail.com
+References: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250420164801.330505-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=68073e17 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=174sz1Ju-uvedw1KsVAA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 90qiLFkghPTaMIsNlUuo9KD-nYnuIL4g
-X-Proofpoint-GUID: 90qiLFkghPTaMIsNlUuo9KD-nYnuIL4g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_03,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220052
 
-On 4/17/2025 4:10 PM, Dmitry Baryshkov wrote:
-> On Thu, Apr 17, 2025 at 11:09:05AM +0530, Ayushi Makhija wrote:
->> From: Ayushi Makhija <quic_amakhija@quicinc.com>
->>
->> Add anx7625 DSI to DP bridge device nodes.
->>
->> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 180 +++++++++++++++++++++
->>  1 file changed, 180 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 175f8b1e3b2d..d5b2dabe927d 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -28,6 +28,13 @@ chosen {
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> +	vph_pwr: vph-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vph_pwr";
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->>  	vreg_conn_1p8: vreg_conn_1p8 {
->>  		compatible = "regulator-fixed";
->>  		regulator-name = "vreg_conn_1p8";
->> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
->>  			};
->>  		};
->>  	};
->> +
->> +	dp-dsi0-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI0";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi0_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge0_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	dp-dsi1-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI1";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi1_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge1_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>  
->>  &apps_rsc {
->> @@ -519,7 +550,107 @@ &i2c18 {
->>  	clock-frequency = <400000>;
->>  	pinctrl-0 = <&qup_i2c18_default>;
->>  	pinctrl-names = "default";
->> +
->>  	status = "okay";
->> +
->> +	io_expander: gpio@74 {
->> +		compatible = "ti,tca9539";
->> +		reg = <0x74>;
->> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
+On 20/04/2025 18:47, Martin Blumenstingl wrote:
+> Christian has reported Bluetooth issues on some of his boards, for
+> example on a (GXBB) WeTek Play 2:
+>    # dmesg | grep -i blue
+>    Bluetooth: Core ver 2.22
+>    NET: Registered PF_BLUETOOTH protocol family
+>    Bluetooth: HCI device and connection manager initialized
+>    Bluetooth: HCI socket layer initialized
+>    Bluetooth: L2CAP socket layer initialized
+>    Bluetooth: SCO socket layer initialized
+>    Bluetooth: HCI UART driver ver 2.3
+>    Bluetooth: HCI UART protocol H4 registered
+>    Bluetooth: HCI UART protocol Three-wire (H5) registered
+>    Bluetooth: HCI UART protocol Broadcom registered
+>    Bluetooth: HCI UART protocol QCA registered
+>    Bluetooth: HCI UART protocol AML registered
+>    Bluetooth: null: hu 0000000023fa9791
+>    Bluetooth: hci0: hu 0000000023fa9791
+>    Bluetooth: hci0: hu 0000000023fa9791 skb 000000003f7acf2f
+>    Bluetooth: hci0: command 0x0c03 tx timeout
+>    Bluetooth: hci0: BCM: Reset failed (-110)
+>    Bluetooth: hci0: hu 0000000023fa9791
+>    Bluetooth: hci0: hu 0000000023fa9791
 > 
-> No reset-gpios? Is the expander being used by something else so that we
-> don't want it to be reset during the bootup?
+> It turns out there's a typo in the references to the untested/unknown
+> clock input that made it into the already applied series
+> "dts: amlogic: switch to the new PWM controller binding" [0]
 > 
-Hi Dmitry,
-
-Please, ignore the previous reply.
-
-This io_expander is used by anx7625 bridge only. I have defined the gpio in pinctrl setting and so far it was helping out indirectly to bring io_expander out
-of the reset. The reset-gpios is optional for tca9539, because of which the io_expander driver didn't throw an error and I never realize that I should add this property.
-
-I tested by adding the reset-gpios entry and it's working fine. I will update in the next patchset.
-
-+ reset-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>; 
-
-Thanks again, for pointing it out.
-
-Thanks,
-Ayushi
-
->> +
->> +		pinctrl-0 = <&io_expander_intr_active>,
->> +			    <&io_expander_reset_active>;
->> +		pinctrl-names = "default";
->> +	};
->> +
+> The original goal was to skip this input. This can be achieved by
+> specifying a clock input as <0> (which this series does). When using
+> <> (note the lack of 0) the clock is completely ignored when parsing
+> the .dtb, resulting in a shift in index of the FCLK DIV4 / DIV3 inputs.
+> This then results in the PWM controller driver calculating the
+> frequencies for a different clock compared to what the actual hardware
+> uses.
 > 
-> The rest LGTM
+> Neil, please apply this as a fix for the next 6.15-rc.
+> 
+> 
+> [0] https://lore.kernel.org/linux-amlogic/20241227212514.1376682-1-martin.blumenstingl@googlemail.com/
+> 
+> 
+> Martin Blumenstingl (4):
+>    ARM: dts: amlogic: meson8: fix reference to unknown/untested PWM clock
+>    ARM: dts: amlogic: meson8b: fix reference to unknown/untested PWM
+>      clock
+>    arm64: dts: amlogic: gx: fix reference to unknown/untested PWM clock
+>    arm64: dts: amlogic: g12: fix reference to unknown/untested PWM clock
+> 
+>   arch/arm/boot/dts/amlogic/meson8.dtsi             | 6 +++---
+>   arch/arm/boot/dts/amlogic/meson8b.dtsi            | 6 +++---
+>   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 6 +++---
+>   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi       | 6 +++---
+>   arch/arm64/boot/dts/amlogic/meson-gxl.dtsi        | 6 +++---
+>   5 files changed, 15 insertions(+), 15 deletions(-)
 > 
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
