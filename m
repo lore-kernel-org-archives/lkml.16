@@ -1,283 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2E825C801;
-	Tue, 22 Apr 2025 21:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3A321FF2B;
+	Tue, 22 Apr 2025 21:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745358167; cv=none; b=qstLJ19N9+md6kxG8rX+LSvLsblhpJKVwEKJVS5gbBpTuUsm/q2tSKDPZ3KpYQPHBKsYhcbmHWOWcLJmTg+hONUC5t2t/5vq+itwPoWnpFGtaeQrXJRA/4ZM44pkGr2E4MxVe1pE9iFTn1EKZr4VzDFheWOV0IAebjlEnDc0Eqw=
+	t=1745358571; cv=none; b=m08hCOZxre6kx4ad7O1MfVAJceM8Ni2Fu/1typfzKP1ajGDj1hxDtY/qor9NNvxxgjwT7DFbcOfjwVfud5Uthu8j0L0ucDs0eGMSs8qLNCtUz6ilWCwgu+AQzaEEL1tbNzrGICjGjMo0SNi1irGfCHycYaamzGArRVFKi4HMWQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745358167; c=relaxed/simple;
-	bh=XSAHz7JbAhLf+gT0Q13MkajgK7jceJ56hzcCBjL9Ho0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KFLxs0pPrmWTCV41iBNki6EQKtdBRc5I9GszX8Ya5bKdNIYla+EfQg6nNDLRlK94tjTqhctweC98FVGcGph62Zc9w8byhpUigVyuc8L+hBxN/EmsCA31cFG4TQTPgVdr8ZBgQXz/f1cui8/frld+mdKBEDk+Qeh5yHaNk6tyyQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VR0N0n3F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745358571; c=relaxed/simple;
+	bh=sG7YJMva/w4l3cfCNfOiczfRXXTwbAHBKnI5Bzj7KRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otJKMPVsGpXy6h2v9IRLfgWgeJC5TYqgWsMdbU1j1Ud+8xE/IoaLJXbaPqMrJg4VrxEmSPYdcm1zyNd1J6GO6OetYR822Gm900FRGk6SsOYIGGkfd1o7G/kKkkrL3e5u6FunzFiKlssuee+fa63CfufJSsQ4q3JmU4NCYSukRqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDDlYEfK; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VR0N0n3F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22BBC4CEEF;
-	Tue, 22 Apr 2025 21:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745358167;
-	bh=XSAHz7JbAhLf+gT0Q13MkajgK7jceJ56hzcCBjL9Ho0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VR0N0n3FMmK9XnJ7znKrRU+RSxuPqj/2SHbgssZ4EVDF8q9GcN7OwY8W4zx9VJNSe
-	 oT55sUlJiOarupjVwu644RbcpGuoyeKdzDt1ekLKuWa2uI4c75oIWPE6Mj7NG+Xhq1
-	 6+qgHr7S8rVvdMsIzNA9WtYgh2PsyStswqMmc5WXpZF7U4DhoOqanutDx5IpCLgh7b
-	 a7XkZ3UCIk8lhi7CQ75ctHdadyoGZY+rwYOjQXIy/Z/FLTJ/bof9F9GYiUjehK1wYS
-	 m6AuP4L+asbwtBZrRPwF/DNztFIym2p/B6hR45aY1Jm5wBAOsuJkXXTZSLByzel+Jf
-	 ax7xK5lKEEwQg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: dm-devel@lists.linux.dev,
-	Alasdair Kergon <agk@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>,
-	Mikulas Patocka <mpatocka@redhat.com>
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fscrypt@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Gaurav Kashyap <quic_gaurkash@quicinc.com>
-Subject: [PATCH 2/2] dm: pass through operations on wrapped inline crypto keys
-Date: Tue, 22 Apr 2025 14:42:11 -0700
-Message-ID: <20250422214211.242382-3-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422214211.242382-1-ebiggers@kernel.org>
-References: <20250422214211.242382-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDDlYEfK"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so4856302a12.2;
+        Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745358569; x=1745963369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
+        b=bDDlYEfKHrybz4D5fziRdAbnlktSssaGIjF7SJWhWbTXclq8u9Dv/LWcCgdrUicvi6
+         S4eTJ4+2RdT+6odU6o/DTc6229rvFfd85dqZecwoYftyGT1iemnGFFqD/5qYKODAP3u5
+         2VtYxvWCXyuZ38xmYhl8CRnGSSKiDRUHBtJLuDQR5URSrPnvTexjFquqpeG6/CwWeRf1
+         +MU7DrkbWQ3rTZ1nhI4hHBqjIIbosADE6JAHsb0lszCPlJrRTFf+2846DDHfdsjl0EkQ
+         vW8exvRcFWNEnn2RphjGK5JHHSYBhxHgud0utI3TYtsXgGbALQ8QAH7jlkFSwZLNs1hN
+         Bxtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745358569; x=1745963369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9dYvt2Xcrh+kbYqRYnlS/5tyT+BexXkaGSTJNxwW1ck=;
+        b=dErwHoEzJVCMceAQDKc5+Rvomgd9AIWBTezjn458R9DJAZ4ngqEYkHxZcNSO1yBu2d
+         0uiM1iSrzBTSmPZwyOheAb2+e5hcf0tmqecGWpA7X1gnVZrf5Q176eD6+DpDysSo3asx
+         5yaBuYVpoIO7hG/eOVCrDxDFOkUUJbRzzJBC9TKoIhUW3HTFrBlqPV3BU1SL2j/0Qnbl
+         YEsBUhjFLSFIXbAnE8R2Agjl6gmPd5WpwS40F80QM96YnUevGzVGgmbUlUQBrYlUnUXG
+         m4HMFTnd0QKxFzQi+j+BZIxRdk6mfxKNKYtCIX1SyacLgm/OO05iBzmdDck8KmB2g+RY
+         STFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuh3tlBLlv23s09zdZPOIshP4sf2+0jMYlZDsWiibYl2zDb8jNn4zIUiNluSAWAnoYOxD31Ahf@vger.kernel.org, AJvYcCVLOqICqgf6j6ZampLk5Jl+JXKDq0rq2CmrQlReU4nwylS530rnADKrsEWBnvX0XE0QkMSYwRZf@vger.kernel.org, AJvYcCWn86Mq6k4v80TXf+XDO7Y6EKBqR/KNQClwWoLDJY3OTPM5az2V7BZrXzKh3sgLMUqmF7RKedrbYw/k6RQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdAojUkFQE/BguChfpn9hzNQ+gFGIVWhM6r8W2X9tM/1QfVPyE
+	puZ3I34QjCbTxmXfkUU9HSicTi2Iq+mcjyc8dfSIMEDCpl58sDCO
+X-Gm-Gg: ASbGnctTqT4mPh+i5LqqL7wjLW7AEwEhcVBFpg1kFqyndf8YXpYoe0TptYzkpeTm9S2
+	jWPq+eYsfI+vBLDD3NdNkASMtgs2r/SaHVAe4tTuPYlUg/aoCxHbPi1KGsTqzmMxAQc0pKteTIy
+	0pkeu6Ja6tGGIl6dM7ubL+pbKtl3cYtAR9fxjfTptqZRMWPG4zjqoJWHkCsfDTk6dplrKWvgY43
+	W1rTocmL4hJJufgPd0li/Wunv8ShRY41wK9RlN06u9OmCuhzlEVUoYlPAzlqI1RGiqgeQIzwh4f
+	OET32/vjgMt4TxOx7zr3NdKUKPIMDFRg+odFbOV27qmAtsrncafUBsk=
+X-Google-Smtp-Source: AGHT+IEa5UJBk8pFAAEn17DT7zrqf9LgrhW1yVg3/4Nr/d7c82A8poo6UJuKjfvQ33n45llJ3lLYzw==
+X-Received: by 2002:a17:90a:f945:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-3087bb57aa9mr27886530a91.12.1745358569302;
+        Tue, 22 Apr 2025 14:49:29 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4a46sm90649335ad.147.2025.04.22.14.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 14:49:28 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:49:27 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: "Alan J. Wylie" <alan@wylie.me.uk>
+Cc: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev,
+	Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Octavian Purdila <tavip@google.com>,
+	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+	stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <aAgO59L0ccXl6kUs@pop-os.localdomain>
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+ <6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+ <20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+ <20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+ <89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+ <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+ <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+ <4e2a6522-d455-f0ce-c77d-b430c3047d7c@applied-asynchrony.com>
+ <aAf/K7F9TmCJIT+N@pop-os.localdomain>
+ <20250422214716.5e181523@frodo.int.wylie.me.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422214716.5e181523@frodo.int.wylie.me.uk>
 
-From: Eric Biggers <ebiggers@google.com>
+Hi, Alan
 
-Make the device-mapper layer pass through the derive_sw_secret,
-import_key, generate_key, and prepare_key blk-crypto operations when all
-underlying devices support hardware-wrapped inline crypto keys and are
-passing through inline crypto support.
+Although I am still trying to understand the NULL pointer, which seems
+likely from:
 
-Commit ebc4176551cd ("blk-crypto: add basic hardware-wrapped key
-support") already made BLK_CRYPTO_KEY_TYPE_HW_WRAPPED be passed through
-in the same way that the other crypto capabilities are.  But the wrapped
-key support also includes additional operations in blk_crypto_ll_ops,
-and the dm layer needs to implement those to pass them through.
-derive_sw_secret is needed by fscrypt, while the other operations are
-needed for the new blk-crypto ioctls to work on device-mapper devices
-and not just the raw partitions.
+ 478                         if (p->inner.clprio[prio].ptr == cl->node + prio) {
+ 479                                 /* we are removing child which is pointed to from
+ 480                                  * parent feed - forget the pointer but remember
+ 481                                  * classid
+ 482                                  */
+ 483                                 p->inner.clprio[prio].last_ptr_id = cl->common.classid;
+ 484                                 p->inner.clprio[prio].ptr = NULL;
+ 485                         }
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Does the following patch work? I mean not just fixing the crash, but
+also not causing any other problem.
+
+Please give it a try.
+
+Thanks!
+
 ---
 
-I've tried to share code between the different operations, but it was a
-little difficult since currently dm device iteration is callback-based.
-Hopefully the current patch is okay, but we can also duplicate the
-iteration code for each operation if that's preferred.
-
- drivers/md/dm-table.c | 175 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 175 insertions(+)
-
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 35100a435c88b..9922607a25ddc 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1188,10 +1188,178 @@ static int dm_keyslot_evict(struct blk_crypto_profile *profile,
- 
- 	dm_put_live_table(md, srcu_idx);
- 	return 0;
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index 4b9a639b642e..0cdc778fddef 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -348,7 +348,8 @@ static void htb_add_to_wait_tree(struct htb_sched *q,
+  */
+ static inline void htb_next_rb_node(struct rb_node **n)
+ {
+-	*n = rb_next(*n);
++	if (*n)
++		*n = rb_next(*n);
  }
  
-+enum dm_wrappedkey_op {
-+	DERIVE_SW_SECRET,
-+	IMPORT_KEY,
-+	GENERATE_KEY,
-+	PREPARE_KEY,
-+};
-+
-+struct dm_wrappedkey_op_args {
-+	enum dm_wrappedkey_op op;
-+	int err;
-+	union {
-+		struct {
-+			const u8 *eph_key;
-+			size_t eph_key_size;
-+			u8 *sw_secret;
-+		} derive_sw_secret;
-+		struct {
-+			const u8 *raw_key;
-+			size_t raw_key_size;
-+			u8 *lt_key;
-+		} import_key;
-+		struct {
-+			u8 *lt_key;
-+		} generate_key;
-+		struct {
-+			const u8 *lt_key;
-+			size_t lt_key_size;
-+			u8 *eph_key;
-+		} prepare_key;
-+	};
-+};
-+
-+static int dm_wrappedkey_op_callback(struct dm_target *ti, struct dm_dev *dev,
-+				     sector_t start, sector_t len, void *data)
-+{
-+	struct dm_wrappedkey_op_args *args = data;
-+	struct block_device *bdev = dev->bdev;
-+	struct blk_crypto_profile *profile =
-+		bdev_get_queue(bdev)->crypto_profile;
-+	int err = -EOPNOTSUPP;
-+
-+	if (!args->err)
-+		return 0;
-+
-+	switch (args->op) {
-+	case DERIVE_SW_SECRET:
-+		err = blk_crypto_derive_sw_secret(
-+					bdev,
-+					args->derive_sw_secret.eph_key,
-+					args->derive_sw_secret.eph_key_size,
-+					args->derive_sw_secret.sw_secret);
-+		break;
-+	case IMPORT_KEY:
-+		err = blk_crypto_import_key(profile,
-+					    args->import_key.raw_key,
-+					    args->import_key.raw_key_size,
-+					    args->import_key.lt_key);
-+		break;
-+	case GENERATE_KEY:
-+		err = blk_crypto_generate_key(profile,
-+					      args->generate_key.lt_key);
-+		break;
-+	case PREPARE_KEY:
-+		err = blk_crypto_prepare_key(profile,
-+					     args->prepare_key.lt_key,
-+					     args->prepare_key.lt_key_size,
-+					     args->prepare_key.eph_key);
-+		break;
-+	}
-+	args->err = err;
-+
-+	/* Try another device in case this fails. */
-+	return 0;
-+}
-+
-+static int dm_exec_wrappedkey_op(struct blk_crypto_profile *profile,
-+				 struct dm_wrappedkey_op_args *args)
-+{
-+	struct mapped_device *md =
-+		container_of(profile, struct dm_crypto_profile, profile)->md;
-+	struct dm_target *ti;
-+	struct dm_table *t;
-+	int srcu_idx;
-+	int i;
-+
-+	t = dm_get_live_table(md, &srcu_idx);
-+	if (!t)
-+		return -EOPNOTSUPP;
-+
-+	/*
-+	 * blk-crypto currently has no support for multiple incompatible
-+	 * implementations of wrapped inline crypto keys on a single system.
-+	 * It was already checked earlier that support for wrapped keys was
-+	 * declared on all underlying devices.  Thus, all the underlying devices
-+	 * should support all wrapped key operations and they should behave
-+	 * identically, i.e. work with the same keys.  So, just executing the
-+	 * operation on the first device on which it works suffices for now.
-+	 */
-+	args->err = -EOPNOTSUPP;
-+	for (i = 0; i < t->num_targets; i++) {
-+		ti = dm_table_get_target(t, i);
-+		if (!ti->type->iterate_devices)
-+			continue;
-+		ti->type->iterate_devices(ti, dm_wrappedkey_op_callback, args);
-+		if (!args->err)
-+			break;
-+	}
-+	dm_put_live_table(md, srcu_idx);
-+	return args->err;
-+}
-+
-+static int dm_derive_sw_secret(struct blk_crypto_profile *profile,
-+			       const u8 *eph_key, size_t eph_key_size,
-+			       u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE])
-+{
-+	struct dm_wrappedkey_op_args args = {
-+		.op = DERIVE_SW_SECRET,
-+		.derive_sw_secret = {
-+			.eph_key = eph_key,
-+			.eph_key_size = eph_key_size,
-+			.sw_secret = sw_secret,
-+		},
-+	};
-+	return dm_exec_wrappedkey_op(profile, &args);
-+}
-+
-+static int dm_import_key(struct blk_crypto_profile *profile,
-+			 const u8 *raw_key, size_t raw_key_size,
-+			 u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	struct dm_wrappedkey_op_args args = {
-+		.op = IMPORT_KEY,
-+		.import_key = {
-+			.raw_key = raw_key,
-+			.raw_key_size = raw_key_size,
-+			.lt_key = lt_key,
-+		},
-+	};
-+	return dm_exec_wrappedkey_op(profile, &args);
-+}
-+
-+static int dm_generate_key(struct blk_crypto_profile *profile,
-+			   u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	struct dm_wrappedkey_op_args args = {
-+		.op = GENERATE_KEY,
-+		.generate_key = {
-+			.lt_key = lt_key,
-+		},
-+	};
-+	return dm_exec_wrappedkey_op(profile, &args);
-+}
-+
-+static int dm_prepare_key(struct blk_crypto_profile *profile,
-+			  const u8 *lt_key, size_t lt_key_size,
-+			  u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
-+{
-+	struct dm_wrappedkey_op_args args = {
-+		.op = PREPARE_KEY,
-+		.prepare_key = {
-+			.lt_key = lt_key,
-+			.lt_key_size = lt_key_size,
-+			.eph_key = eph_key,
-+		},
-+	};
-+	return dm_exec_wrappedkey_op(profile, &args);
-+}
-+
- static int
- device_intersect_crypto_capabilities(struct dm_target *ti, struct dm_dev *dev,
- 				     sector_t start, sector_t len, void *data)
- {
- 	struct blk_crypto_profile *parent = data;
-@@ -1262,10 +1430,17 @@ static int dm_table_construct_crypto_profile(struct dm_table *t)
- 		ti->type->iterate_devices(ti,
- 					  device_intersect_crypto_capabilities,
- 					  profile);
- 	}
- 
-+	if (profile->key_types_supported & BLK_CRYPTO_KEY_TYPE_HW_WRAPPED) {
-+		profile->ll_ops.derive_sw_secret = dm_derive_sw_secret;
-+		profile->ll_ops.import_key = dm_import_key;
-+		profile->ll_ops.generate_key = dm_generate_key;
-+		profile->ll_ops.prepare_key = dm_prepare_key;
-+	}
-+
- 	if (t->md->queue &&
- 	    !blk_crypto_has_capabilities(profile,
- 					 t->md->queue->crypto_profile)) {
- 		DMERR("Inline encryption capabilities of new DM table were more restrictive than the old table's. This is not supported!");
- 		dm_destroy_crypto_profile(profile);
--- 
-2.49.0
-
+ /**
