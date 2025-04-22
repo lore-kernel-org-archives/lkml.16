@@ -1,223 +1,214 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2079.outbound.protection.outlook.com [40.107.223.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BF72900AC;
-	Tue, 22 Apr 2025 17:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745341324; cv=none; b=XvjP1HsKvo7/O70BT+cgoPFYS/eBy4xMBMYEZYTirzOmKuuvRQLqzxLVOqLWv9S2vOLOj0z9s/hL8DQBm6NRBrKKGs3wQVU/nfqe7S3SM8pWB6aE3zrjBxieROVYxAdY4OxaDMjZCFuHpuyloeoF6s5N/XWpC42jG3bVWdACnMA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745341324; c=relaxed/simple;
-	bh=tz697PeimqwwKDXfJs0BPD/016iKLpVR0s6NEmZvSyk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=pLjoQEF7DH1F//noj5R9TtOCvLiS52aj67S9cY6tWLbToP8VtJZ7jwvTANCaeZbH4f+DqNrvKuM3c5BcqPOkV5oWd0vrx/2XobKWrVYQOttwE+Q1TwnTvgbv6RkzLGhygblrs6HfxoZyBBnO0nntVdfmnT822aPoLboLPM1Ruvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5quNiPT; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5C12918F0
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745341412; cv=fail; b=kRm7oma18GamgKcXrpkeOG+MxV56UOMgsW4VSLVAcAoGpQDNKDma3eJaqwztzQHF+Qsp/xbcXEvhKFUMlunoeEY4TRgo0rkKe9D69R8lAs7BkQeoIJD5EaWEo1qq31EfSLDMOkf4rRtZrEhwezfpio6/5ttOSH8Sn6e7OPvk/f8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745341412; c=relaxed/simple;
+	bh=vO+iKB9aX3BTiVJ8my+ui44avKRN9fszyYpM9Jfl9oQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WD9GiHM1XA6TaVpkj50LeEOonGy2s/sEjj7byOtb4jYOahG/1ZwWoPhLscCV8EmJ9a4gzVTPRCMF1Cd+3Qkb4kexIBKJZ80XiUw0KYuwBJuVdAKfycipOx1/U5souNg5W5f7HxntOPPB6YBc5dV8qdXCWUuRRxJThghTsZ6+Fh8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=suH50vtC; arc=fail smtp.client-ip=40.107.223.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5quNiPT"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e63162a0so8347499a12.3;
-        Tue, 22 Apr 2025 10:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745341321; x=1745946121; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xmsdnMqf5xlO7k6+QnwIpLTJU73C+ck4BW6kSugTHUQ=;
-        b=A5quNiPTKKdWl9uN7QRJrJaNsvP7SpGsTVc3ei/Wk+bYUIE4awrtfnD1sD/dANn7Sh
-         EjxVmxKO7IGWtKDepICkzchIcU9utQqZHOk/+SPBc311gUUozjL1XBxrP4qWOPjiaZE6
-         6RhRsLWjCVg9QlhPP3VRRZ+yOlzBkcM2OTcelJVOJ0jDlrNYEPbEeGWkkQi3zJaTPVsI
-         7d5Re7ypbzQCTx7WRiZrtSWNsddcv1T55fpwz0KAeMriWTAvAAzDRdq+vzo4U6SnjZIk
-         g+cGujD1E/Smpc4dvDt58OjfCbUGe4E0Lo0n7SlYfzkqdQGcGFqNrKxtnmA9xobJJXBG
-         LJmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745341321; x=1745946121;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xmsdnMqf5xlO7k6+QnwIpLTJU73C+ck4BW6kSugTHUQ=;
-        b=GWzo6rZ/eCfjimaVKHEFdcBoOaexVZWoZn9SxYhBU6xElDYtugwXCW8fD2a9m8q0cG
-         eSh5nieZ5L3YgZznfY+yTo6TJjVV7LJDOIIw01k+H3Y0NEuOdcKsD/nKkV2RQhimO7S+
-         bVTwdB7b+hApB7tGAq36yeDVG0mkB5TCJUkpUKbug+ig0EtPXodzpfqlQgPTP4XSP77Y
-         KupxSBRz5gajDFFq64KRm2wMFDdSa5etRG0oWQageeABZWaBXKeQHHuWYVwvIUyREFBx
-         yaJQyvCI//lPtEmuw5k7cRyKemC2Ie2g92uArOPNWDOu4YpjJvOO70/kwZENUXllJvp/
-         MBdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUN6W91RyiSNns4MrpxkghO4QDFCC3bJUHn0htn7kjVcaiZOL/6qAKlG/PbNRoFumoNbzH4YOxyb26Av5DXUMY=@vger.kernel.org, AJvYcCW82dRb2KzuNsl+1cmLJBR5QFMfLcTB62PnOCVFCM7ejloapt+giSaahalzT2Osq+V5bpgGovo42k0gb1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJlgQVGNeJugSc1cvSU1lUAHIqpQAkoE05ld32rmwfm51JUWRi
-	+htnrAWyDhWb4WaupdVnoIlVb8AiLag03OboXiVZWICoxVmHh26wa/X1CbMQlQMOpmeK9LZ7l+s
-	kF7ORbfihpwM6TlpwVNDJNddecJQ=
-X-Gm-Gg: ASbGncum623PhtD+0pvTwRqJD20YeNacFKJ+n+CekJDeOQYgxQ+fAL5G6cjUwfy0JUo
-	007wOzUd12HjEezDrkV7+wdpW146rl8EENgf9UoBUfcRDXoZdKNhifUGxX4stsGmHPdBvdgLW1s
-	fxPAKgxaqITqQ6dlNwaQv9bzW2tZt6TdmRGbuT
-X-Google-Smtp-Source: AGHT+IHd2N9D1ZrJXInnFHsaJpiRrGdvZOEoz2WndD7gmxPUbmQCpZ/3gUmK1m/ge8Qp9ZnPcHOvzzMo3WOgXfkexnE=
-X-Received: by 2002:a17:906:dc90:b0:ac6:e33e:9ef8 with SMTP id
- a640c23a62f3a-acb74ad97bamr1143411466b.2.1745341320895; Tue, 22 Apr 2025
- 10:02:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="suH50vtC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZzDQzHzHcTsV/vu42XXE1aDzlR/hBhfhRhxFrHHU3WhRNA9DWh3ZB1fxh5Gyy99LHYhxS3GItkyYTeEMyIbcWy10hkm7X7YR2brooJaCVZHtoFWeCmv6+sup1H3ruZV44f4gG6i0V3WwHyBwD4+M34XexZ+D9WaUJCKHIwZlQAjDwhIiPFNx7qnb7/1uHMQXdWve6u//3tWuAYX6AwmF2q2ls2u3hfbfEx8mh9mKb6MYKsLpLnfCe92Mc4Wxcr9zYDw3JaklZssCRme8tMI3RENrWYWfDEdMu2Hlu1oQacDxn9ub8LIRP2I+PxkioZ/wNFsPIsrcLbdqDb7L8HxDJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vO+iKB9aX3BTiVJ8my+ui44avKRN9fszyYpM9Jfl9oQ=;
+ b=ML7s3SVnoHpBuJlwSwUACXiSWcFMKtreTcmn9NWh+v1gku8PggYvMQ2CsS9lrh6irtWWF7RK3IaKH5v6s9z0Nv2ol5WE5CSBaxMrCbAFh3HWttlRSZSy2Z8EzOO+GmpNTge7W1DxsE+fO9JP+hC5sf6dEBpniHJklPGEgHy1cfRDChPuYcyRDoBNHluRhN+jh1sSK8DL9wxdoesUwe4gMsbD4Tmb4x3PcjD3jASNgzR41ja6JpW/TJrRRMo41gd7zZQFxT1Dno5k95+or9xu2iIywKZYCxlr/5cSIx5KtZOF2npSjDVxMfljrx+jyJ8FvrAQBzSUi4bRWzy1lkA+ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vO+iKB9aX3BTiVJ8my+ui44avKRN9fszyYpM9Jfl9oQ=;
+ b=suH50vtCmPHAsOU556oOS3IP9tbD7KXUqjXHqI13tN32NfeaeSI5DXWC4ryVsivSrkCTPbN2kukSP33pjZkFilz8k/mJz8gqjdS7Af/Cez7D5KqqlTmRlqqs8gFpsGjc9u3/Lsy+SM+TARBs+QODtaO3yylFafoyqV0q2h6hiZzzvOWh4otCmGMCEe3Ei1/E9c699TP6s8cELL+gbccFTaLs5f8ti+kZnc1CzL79J/rOZvWR3nzYqMuORn6/AqawKyOp4ymUqOY5t+FsPBBpnhkS4pTf+VUVExxORAslAR2k6ZbPfri5VBjWaMDVy6CmyY34wY/zRJCJeCgS1dBXlQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SA1PR12MB5658.namprd12.prod.outlook.com (2603:10b6:806:235::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.26; Tue, 22 Apr
+ 2025 17:03:26 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8632.030; Tue, 22 Apr 2025
+ 17:03:25 +0000
+Date: Tue, 22 Apr 2025 14:03:24 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Message-ID: <20250422170324.GB1645809@nvidia.com>
+References: <86wmcbllg2.wl-maz@kernel.org>
+ <Z-RGYO3QVj5JNjRB@google.com>
+ <20250331145643.GF10839@nvidia.com>
+ <Z_PtKWnMPzwPb4sp@google.com>
+ <20250407161540.GG1557073@nvidia.com>
+ <Z_QAxiEWEyMpfLgL@google.com>
+ <SA1PR12MB719976799AD7F9FC4407A5A9B0BD2@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <aAdKCGCuwlUeUXKY@linux.dev>
+ <20250422135452.GL823903@nvidia.com>
+ <aAfI2GR1__-1KQHn@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAfI2GR1__-1KQHn@arm.com>
+X-ClientProxiedBy: LV3P220CA0026.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:408:234::27) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABTDG886JyTFu0dUWgZAT89Dmxjm78VNk0TXcgf=1yABBRN5XQ@mail.gmail.com>
-In-Reply-To: <CABTDG886JyTFu0dUWgZAT89Dmxjm78VNk0TXcgf=1yABBRN5XQ@mail.gmail.com>
-From: Hank Barta <hbarta@gmail.com>
-Date: Tue, 22 Apr 2025 12:01:49 -0500
-X-Gm-Features: ATxdqUHnhdxkjiue3m4U7BvSmKftALxNk06SRc-rmx9Be7QM4KMDNVlJDk1pDLs
-Message-ID: <CABTDG8-A7A7WJUSHio85vVPCKM02nuwcYPhbYju6bQacbteQUg@mail.gmail.com>
-Subject: Re: Stack dump, Pi 4B, Debian Bookworm (not RpiOS)
-To: arend.vanspriel@broadcom.com, linux-wireless@vger.kernel.org, 
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SA1PR12MB5658:EE_
+X-MS-Office365-Filtering-Correlation-Id: 011922c8-215f-42d3-d587-08dd81bf9872
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?H4irA2XIVHBzdn1GZVeu3+E64+zt+IchPlJOp9l9x2JNaIxo7X8MAnTa/ppN?=
+ =?us-ascii?Q?T93EhkFjc/Om14++M+DpU1IlVpEkdgSt0Dc+w1q2ddGTn2qmnDyW7eXn/hCK?=
+ =?us-ascii?Q?px3xtlbACjLuiTZOUVrIhZlAqoEJ7Fkxdfzgm8JGrDhN5uBKeoskbOCa1ed+?=
+ =?us-ascii?Q?zDK/JC013geiGK9tjG10z/YTnlzQ3X/Pbp6ZUypiqSxsXDFuSkYAjewpCeNK?=
+ =?us-ascii?Q?e4avI/e/loFQuWE625wUx4neuDZbpR1v6kfKGQuN5ZF2szf5BNzcfPupGZ1S?=
+ =?us-ascii?Q?+r0naNuctK9BKkNBOth7TrU4Ru4s1wQQo/RFBEXBOTDAZ8Z0qSAXiOo/+rQx?=
+ =?us-ascii?Q?FP/e/7jNx45kE/NEiqelOdkGeaNVArmZuU69r7bPkTRZOMFkLJJuVbOg3Uwg?=
+ =?us-ascii?Q?z4VaWeakPLmhDWvscQ1dKI3GP91vgILjj+g0K7ETKBvXu/U6H9GPCzPzCWzO?=
+ =?us-ascii?Q?qgGnz2KQ6/OXO/dbzQnrrMC+RFpnC935LqTntbWFkR41OliDZe5XwrdhuhaC?=
+ =?us-ascii?Q?wgraEOOHNbLl2iTMx09K35VkCXOqJed8PoTu/N0m7Mfx16gLb1/g3Vg2BlsP?=
+ =?us-ascii?Q?uAyEhnx4k+Ux3YEEgBMnB7Jy+wRjF4tCU1qx1ufuxFfA/cPDcAtC7dhgYYo3?=
+ =?us-ascii?Q?lRwi0Lpq2vl1rsZn/eriOFBpRFb2+XqKIj8Zi1yZ6j0GYy+rourNWb7eJnm0?=
+ =?us-ascii?Q?P0IK+NMxwX3jxxmxUJ3tTRM9wH1ouVOf+v/3BtEvcJ8NiCD3U+3txrHtd48a?=
+ =?us-ascii?Q?ES7qVHS4jrGrAkxeAqmrwy+HhvNhFoVZ+RcllM+yxngL09t1gp4ZcfSRjUaa?=
+ =?us-ascii?Q?dqYOA2X82EJ5ZiJxjtEXaCGiWhjcb3PHlRrppbDNx8y2oQTLVByar4WF6c5h?=
+ =?us-ascii?Q?Ev1z5omP6aOorzcF11O4eTvUrYIGinvEVu0Q1o0xPOMawM3grYpF7EivSYHF?=
+ =?us-ascii?Q?TfKisQG/IP95Uqu4L++ZFchDlQ6d6s8ZJF5sL3/LMbuncbtqhEYOnZE5DdKp?=
+ =?us-ascii?Q?knTzbdbYDDGWsSyYOLD0CYqk/8o7v8LHZIRx4MV52Yb6zing91Pw3PtyVjeV?=
+ =?us-ascii?Q?nobgpSVqU/m3asQ96V1TnkGeDMoC6r6SNlHF+G1M2UVh9hsqsEmCoRZyYp8H?=
+ =?us-ascii?Q?ViS7QyxUbK+1/yQBuUYky3rOOUHrBmEDxjUPT9NwzL56HCpzkcI+yM8p/V9B?=
+ =?us-ascii?Q?DqqY1hQhyA5+oNNnMt1BP+5CTl0o9PJ/vXjqspK/Jv0zK5rsIf1XHZQ7skYA?=
+ =?us-ascii?Q?T32nZK96sxxOVKtSg7u8VqBF+3GVMMmbyl+vGT+iRAy8TiVHNNmZN/v+hm6/?=
+ =?us-ascii?Q?k3xF2CYqjUunsrh0QaTo8h4CfHxFyHehjlwXaB6lBtg+sW900shRWjEbX2B5?=
+ =?us-ascii?Q?x3nAC6OEOz2y+61b7gmpKL8djSFHdR14d/wWUo2uKWYG1rwYjAWkB4T9j7Um?=
+ =?us-ascii?Q?vMVVe/zApIE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?s9mECcBgtptrUvxBdy3kSZWdkseoy4pvd3kvi3QfAlKhODT6dhY/sjJRtaWI?=
+ =?us-ascii?Q?VwtimLwlK7kqTI16cSKhafhQtkegwB6ZQdqcNbBLpfF0IsL420dRiJcGlr8Q?=
+ =?us-ascii?Q?3Ciab7gdkF+TbmqbAmrcJbVYvfrVjYkSx10M+qS9uoK8YH0wkbNkiypCGX55?=
+ =?us-ascii?Q?L87PjrrkMlAHJMUh47Dio6DY36e+0hJqEIWUxh0l5lq+lc11jUfvZom3HetF?=
+ =?us-ascii?Q?DFHjo0WaGHlWxAsWmRrqJyEu4brNRfosXOrgpgxNj1bJDqLj5QQhuNGIOF2a?=
+ =?us-ascii?Q?2hkFeC+XEr8lqOjPyq9+z1l9FSN3JsePfdariAZMnF+4im41UKMnKw0BkNbV?=
+ =?us-ascii?Q?MOYULjMz1tS0bXItaDdPt1VrvHJ5Uln+u2phwJ4zHhhluqfslihGhiF7nOO6?=
+ =?us-ascii?Q?xxLdvTD+f7Hd9dckhtcZ4wAUxqZAsgl3wr4aaSjTKUyXInWlZWfei9Q92eIU?=
+ =?us-ascii?Q?T/D3EEML+mt/Pc1sdxnK2IgoAsmfGGguYsvvX68atv/bXXvASmofbd0X81IQ?=
+ =?us-ascii?Q?0fJzfDO7UQwhLVUSF3YpZOJ3r3QxQGzBwb7kVATMQwqZ81KWWlEVu8eQlFTs?=
+ =?us-ascii?Q?cIjCIDOskXseCAIdlhJrWC/r5U0Yh7ToKF34x/g3VAH589zaYJdxFb+1yp4S?=
+ =?us-ascii?Q?uxAYUdXkSiaC+0Vruy/31j+YIhLX22+DVp0jMxshZt5VIoxNXMktkRgal8Q5?=
+ =?us-ascii?Q?qeIzgfA922vTWUbMdP2td5DUAoTgkMCEPZ0KJyAV7oprzl6n1nId8n8ruL6T?=
+ =?us-ascii?Q?W4xbO/ZLwF7aOT6DeQNeDEVY3YVZQPDINNE/wBOUcf/i61K1zKpLbvnV6OUR?=
+ =?us-ascii?Q?xre2/vFRtcKvapLF/YW0btoVOf+zCCk4vNqP6HnStvWSvC04p1aTxLYazxLV?=
+ =?us-ascii?Q?k1jTcTVCtIX24QZtgs3bOqkFbj05FlE5AOeqi2yZRTJSUnhjrDewyRw9iE01?=
+ =?us-ascii?Q?It7poJ6NJGI4a+LjwY5IZT5fDihEir/z/lqBsH8mClWbC0S2TMfa0aeBW6B/?=
+ =?us-ascii?Q?NsnUVgWChJVyqtoYAvAkhGlJcksG0r0QVTrgPeQTyFtAy5cbsnezBYM56EYc?=
+ =?us-ascii?Q?to0vFlSwLh1rvQodKMPubwaMstALK1ixVKTHPMJyz5GM1rP3OUBN60+ftEAm?=
+ =?us-ascii?Q?tybCC2ki7YhE5S5BImWx8MY3fgjQoqPWKPVLSCDFrkp1xZHoEbeEXS5OOIyf?=
+ =?us-ascii?Q?dvksFpW3110YvMFu764BYD9t+sFmaKeBwoFogWcCCQVOhkDJE012RFkdllzX?=
+ =?us-ascii?Q?aDUel6ck4W5cbY9RmUigifpJPhAbhFDWw4WLYQKPqzpcCfMceibKG0zCKA4R?=
+ =?us-ascii?Q?5fvjMxwRO4rXaISb1ixmbtLSOrZtwwcU+itMrjkAG8yxvBjTaW/Gcf9WkweE?=
+ =?us-ascii?Q?EjBISxl6o09VlglGR5npwFDuFWVgZPx1V0BAYZRyk5mbq3tBLXq7fIjHgfGR?=
+ =?us-ascii?Q?z5v798ASR0vncXYT9rRIQMx1fM3n+yyz0s2C+UAJfKX/EB6nI1jSv6UPJEb6?=
+ =?us-ascii?Q?bXIhZjuTZML3hlWnQ5lkC3UKaCnBEbWYCTCW6eI1AVc+dnX597gc2Ex0ZNcX?=
+ =?us-ascii?Q?qasPnVrDcimYXqRRYZWFUoaZDdPlis9eSYVtO+Zx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 011922c8-215f-42d3-d587-08dd81bf9872
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 17:03:25.6006
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gRE4t7fWxLvvwe8IosZjeqUHYF0HmNqSA68VWLiW4GTuLyHXmy1R+sna2saUatO1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB5658
 
-I should have mentioned that I'm also running Tailscale and Docker on
-this host so there's a lot of "networking" going on. Following a
-reboot, I see what I think is the same stack dump. In addition there
-are a lot of messages on the console like
+On Tue, Apr 22, 2025 at 05:50:32PM +0100, Catalin Marinas wrote:
 
-[  242.666852] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-Frame: category 0x5, action 0x1
-[  251.665022] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-Frame: category 0x5, action 0x1
-[  260.716149] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-Frame: category 0x5, action 0x1
-[  269.670253] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-Frame: category 0x5, action 0x1
-[  278.673598] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-Frame: category 0x5, action 0x1
+> So, for the above, the VMM needs to know that it somehow got into such
+> situation. If it knows the device (VFIO) capabilities and that the user
+> mapping is Cacheable, coupled with the new KVM CAP, it can infer that
+> Stage 2 will be S2FWB, no need for a memory slot flag.
 
-In spite of that, WiFi and Ethernet seem to be working.
+So long as the memslot creation fails for cachable PFNMAP without
+S2FWB the VMM is fine. qemu will begin its first steps to startup the
+migration destination and immediately fail. The migration will be
+aborted before it even gets started on the source side.
 
-best,
+As I said before, the present situation requires the site's
+orchestration to manage compatibility for live migration of VFIO
+devices. We only expect that the migration will abort early if the
+site has made a configuration error.
 
-On Tue, Apr 22, 2025 at 11:52=E2=80=AFAM Hank Barta <hbarta@gmail.com> wrot=
-e:
->
-> Good morning, I encountered the following while attempting to connect
-> to a WiFi AP using iwd. Another user on the Raspberry Pi IRC
-> (ukleinek) suggested I forward that to this group.
->
-> hbarta@olive:~/MkDocs/my-notes/docs/hosts/Raspberry-Pi/4/allegan$ cat
-> iwd.crash.txt
-> [565142.844103] NET: Registered PF_ALG protocol family
-> [565142.895121] alg: No test for hmac(md4) (hmac(md4-generic))
-> [565255.271588] ------------[ cut here ]------------
-> [565255.278557] memcpy: detected field-spanning write (size 72) of
-> single field "&mgmt_frame->u" at
-> drivers/net/wireless/broadcom/brcm80211/brcmfm
-> ac/p2p.c:1469 (size 26)
-> [565255.295948] WARNING: CPU: 1 PID: 1135280 at
-> drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1469
-> brcmf_p2p_notify_action_frame_rx+0x30c
-> /0x440 [brcmfmac]
-> [565255.312770] Modules linked in: ghash_generic ghash_ce gf128mul gcm
-> ccm algif_aead des_generic libdes ecb algif_skcipher md4 algif_hash
-> af_alg
-> nf_conntrack_netlink xt_nat veth xt_conntrack bridge stp llc xt_set
-> ip_set xt_addrtype xfrm_user xfrm_algo overlay xt_MASQUERADE xt_tcpudp
-> xt_mark
-> nft_compat nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
-> nf_defrag_ipv4 tun qrtr binfmt_misc hid_logitech_hidpp joydev hci_uart
-> btqca btrtl bt
-> bcm btintel btsdio bluetooth jitterentropy_rng sha512_generic evdev
-> bcm2835_v4l2(C) hid_logitech_dj sha512_arm64 bcm2835_mmal_vchiq(C)
-> videobuf2_v
-> malloc videobuf2_memops videobuf2_v4l2 cpufreq_dt videobuf2_common
-> videodev aes_neon_bs snd_bcm2835(C) mc aes_neon_blk vc4 zfs(POE)
-> snd_soc_hdmi_c
-> odec snd_soc_core raspberrypi_cpufreq drbg snd_pcm_dmaengine
-> ansi_cprng snd_pcm brcmfmac snd_timer zunicode(POE) brcmutil
-> ecdh_generic pwm_bcm2835
-> snd zzstd(OE) ecc nls_ascii zlua(OE) iproc_rng200 soundcore nls_cp437
-> cec bcm2835_wdt vfat fat rc_core bcm2711_thermal vchiq(C)
-> [565255.313189]  drm_display_helper v3d zcommon(POE) znvpair(POE)
-> hid_generic gpu_sched drm_dma_helper zavl(POE) drm_shmem_helper
-> drm_kms_helper i
-> cp(POE) leds_gpio spl(OE) sg cfg80211 rfkill nf_tables libcrc32c
-> nfnetlink loop fuse drm efi_pstore dm_mod dax configfs ip_tables
-> x_tables autofs4
-> usbhid hid ext4 crc16 mbcache jbd2 crc32c_generic sd_mod t10_pi
-> crc64_rocksoft crc64 crc_t10dif crct10dif_generic uas usb_storage
-> scsi_mod scsi_c
-> ommon xhci_pci dwc2 xhci_hcd broadcom udc_core bcm_phy_ptp bcm_phy_lib
-> reset_raspberrypi roles i2c_bcm2835 usbcore genet sdhci_iproc
-> mdio_bcm_unim
-> ac of_mdio usb_common fixed_phy fwnode_mdio crct10dif_ce
-> crct10dif_common sdhci_pltfm libphy fixed sdhci gpio_regulator
-> phy_generic
-> [565255.489912] CPU: 1 PID: 1135280 Comm: kworker/1:3 Tainted: P
->   C OE      6.1.0-33-arm64 #1  Debian 6.1.133-1
-> [565255.489934] Hardware name: Raspberry Pi 4 Model B Rev 1.5 (DT)
-> [565255.489941] Workqueue: events brcmf_fweh_event_worker [brcmfmac]
-> [565255.490001] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTY=
-PE=3D--)
-> [565255.490013] pc : brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfm=
-ac]
-> [565255.490058] lr : brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfm=
-ac]
-> [565255.490100] sp : ffff80000c8d3c20
-> [565255.490105] x29: ffff80000c8d3c20 x28: ffff145a4bc40810 x27:
-> 0000000000000048
-> [565255.490123] x26: ffff145a7c9ed560 x25: 0000000000000048 x24:
-> ffff145a49cd8900
-> [565255.490139] x23: ffff145a07b6aa98 x22: 0000000000000058 x21:
-> ffff145a07b6aa80
-> [565255.490154] x20: ffff80000c8d3d78 x19: ffff145a48e139c0 x18:
-> 0000000000000006
-> [565255.490169] x17: 010300080103060e x16: 0000000000000010 x15:
-> 0000000000000001
-> [565255.490184] x14: 0000000020000000 x13: 0000000000000002 x12:
-> 0000000000000000
-> [565255.490199] x11: 00000000ffffefff x10: ffffd291cf1109c8 x9 :
-> ffffd291cd61d33c
-> [565255.490214] x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 :
-> 0000000000000001
-> [565255.490229] x5 : ffff145a7fb74ad0 x4 : ffff145a7fb74ad0 x3 :
-> ffff145a7fb80c70
-> [565255.490243] x2 : 0000000000000000 x1 : 0000000000000000 x0 :
-> ffff145a46768000
-> [565255.490258] Call trace:
-> [565255.490264]  brcmf_p2p_notify_action_frame_rx+0x30c/0x440 [brcmfmac]
-> [565255.490309]  brcmf_fweh_call_event_handler+0x44/0xc0 [brcmfmac]
-> [565255.490352]  brcmf_fweh_event_worker+0x190/0x490 [brcmfmac]
-> [565255.490395]  process_one_work+0x1f4/0x460
-> [565255.490416]  worker_thread+0x188/0x4e0
-> [565255.490429]  kthread+0xe0/0xe4
-> [565255.490441]  ret_from_fork+0x10/0x20
-> [565255.490455] ---[ end trace 0000000000000000 ]---
-> [565658.710117] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-> Frame: category 0x5, action 0x4
-> [565658.721227] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
-> [565704.491659] ieee80211 phy0: brcmf_p2p_send_action_frame: Unknown
-> Frame: category 0x5, action 0x1
-> root@cheshire:/home/hbarta#
->
-> This was captured from dmesg output after I connected an Ethernet
-> cable because I experienced it while using the console.
->
-> I was running iwctl interactively and had entered (to the best of my
-> recollection) commands to scan (nothing reported) and list (reported
-> list of visible APs which seemed incomplete) and connect [AP Name].
-> The last command prompted for the pass phrasxe and when I entered it
-> and hit return, the stack dump appeared.
->
-> (Stack dumpo also at https://pastebin.com/CtEMNFxf for 6 months.)
->
-> The back story on this is that NetworkManager + wpa_supplicant is not
-> reliably maintaining a consistent connection so I am exploring other
-> configurations hoping to improve that.
->
-> best
->
-> Edit: I just enabled iwd (systemctl start iwd) and got another stack
-> dump on the console. I've added it to the pastebin.
->
-> --
-> Beautiful Sunny Winfield
+> have such information, maybe a new memory slot flag can be used to probe
+> what Stage 2 mapping is going to be: ask for KVM_MEM_PFNMAP_WB. If it
+> fails, Stage 2 is Device/NC and can attempt again with the WB flag.
+> It's a bit of a stretch for the KVM API but IIUC there's no option to
+> query the properties of a memory slot.
 
+I don't know of any use case for something like this. If VFIO gives
+the VMM a cachable mapping there is no fallback to WB.
 
+The operator could use a different VFIO device, one that doesn't need
+cachable, but the VMM can't flip the VFIO device between modes on the
+fly.
 
---=20
-Beautiful Sunny Winfield
+Jason
