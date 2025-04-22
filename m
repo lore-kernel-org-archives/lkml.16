@@ -1,51 +1,40 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF441FDA94
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD2A27CCD9;
+	Tue, 22 Apr 2025 12:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324444; cv=none; b=C2Gmh7wFVKR/Fh7JtGtT08AUY5D/BuFu2xEkTOzXBPmEL7EoTcIGv1QdVdFbW64KkAXMTPTMwTaTi4VHreGy89GuQ6h55+bPYYEjRp1dKdpndMfiPcfAEChaklqMzxlHkH60dyRh+U8TQmfNWFag5YhXW4MfcjJ28ZYHNFy1Mo0=
+	t=1745324461; cv=none; b=Mxmqvw/oNqHwhlr0OEESZQUqzPtm5uLB+jBDlLfKhnhryc0DXHtT6Rf/LT6OAFsnNHCOleG36MvE01fVrG2JmKpMUhKRSH4LVW3zuyYwYJ2j63mL7FLoyqMuDNgQYGwqTjrLll0itmPjHkdkSYCJL11e4qST4D6lxwSxBkr00R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324444; c=relaxed/simple;
-	bh=0agyOukoGRm94VWNyqLFSBxmZlyVUx0kX7jQMQPjlZs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MNOn0rGQPaMYgsMPNm6LUCxiGSiG9IVu7u5y2Rf3aP1v992EafK2w0uA+f9XWJZoe4eGEicvRuaKEb708IkJNMD6mXjB+g+27sMoa6NUHMwpmNeyKOy5QZyguT5ht0o39h7glnBAI9pr1EakRuNp/wj4oQXby6gxGH8ONT1NI2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YeERTYnr; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745324461; c=relaxed/simple;
+	bh=7lH35Md+Fot7UL9DGAXTqi++xW7U60PpYcKhID8f2Z0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jEAW/vOFGWFs4uIi5EIX2/dJq73BpIw2WjUJiTNhGUNT8m3WS3AiBab2wi//LV3Msj/9Wc3t6QAFs3rLfm6qubERGflXR/sQmbJgXyBRYVfk1+ttXxupFDt0xknwYwBM7t551qYHdV36psgUQyFckbp0KFqqDOZQV3YE59LejJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NSkzP5ny; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YeERTYnr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745324318;
-	bh=5SCNpT7fxknXxFl2jrf1TuKGByQegnZorIene7qFnoQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=YeERTYnr0iPBwxxu585clwjh6tne9u4UQOglhCHm7R0UmmJ/e2yRmV/kyLl0a+3/P
-	 pZ+pyWJvGsKBWJ5HykWHiiK18r+D20E3JiswMrxfcZmo+jHjyW3XO2p+aApJsfG5uI
-	 wJ1I6zDmaEUaaS8gFe1mCsyHRqoatyijJHKbnxXU=
-X-QQ-mid: zesmtpip4t1745324305t656bd8bb
-X-QQ-Originating-IP: hg4RPvjNFuLrioiProjFSc49eEpyxOtoEar038BepTs=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 20:18:23 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10097217200537655222
-EX-QQ-RecipientCnt: 10
-From: WangYuli <wangyuli@uniontech.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] drivers/nvme: Add quirks for device 126f:1001
-Date: Tue, 22 Apr 2025 20:17:25 +0800
-Message-ID: <5AE9DE3EEA7F8772+20250422121725.162229-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NSkzP5ny"
+Received: from Monstersaurus.hippo-penny.ts.net (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 39CC1250;
+	Tue, 22 Apr 2025 14:18:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745324331;
+	bh=7lH35Md+Fot7UL9DGAXTqi++xW7U60PpYcKhID8f2Z0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=NSkzP5nyuh9z8/qXuJHwrGJuKVBt2WVxKqRWv4WFx1LylcW0WSAOW0MpneoCAlJ5U
+	 6UExbpMuFOeaoajKGQJ53SKbnKbUjVkJvyz7dD8eq+LMmtJ3vv3D8s8+apn8Z3b6YO
+	 QWRitnCECGPnsMSxNrEHJNQkG9CJaJxDzahfCgqk=
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: sakari.ailus@iki.fi,
+	linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: [PATCH] media: imx335: Use correct register width for HNUM
+Date: Tue, 22 Apr 2025 13:20:52 +0100
+Message-ID: <20250422122052.12601-1-kieran.bingham@ideasonboard.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,63 +42,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NSFPwCZBl/JL32ntyGBy9Q3mW9UddCZTUV5t+1cCxs4qJ99NqCD2k8LO
-	tQADOJH/tTvmcQ9bi7Fi8Im9BJP4vYVLgoVYyZ20bgmm+Yqe+1zkD7+RxwpSQYReuzgkexZ
-	26ZUrue3/gyvmijbnakwcMlWVRPlNVY/KV4H3WF24oWLYkZDu5g+m1aOkRdbb5whsnYJE2C
-	Sp6zi3sfQTHtJ7TspJu3YuxsaeueLyuQNjyLWYykr/7CiKv2byJGW/3cFwEMyf5sSMQbS/X
-	KQBioXB3pSGRNQuXgXPas0wSg1a6cGwd77Zp0bWUDd5gxc62ppIBpkMUXx+KBenVK8cNK1R
-	4DvARuYhxvHbOBe34xV5v6U3E6fnSlfp68qT9J8kJDm+tgnkZ6x5CkjLBuO/M71G/aYVfmT
-	u8bz1DFh0ve6iSXv6lHAGnwpJlY/mQ3SgRAke9YIXOg4QJNvvdmBeYt6OeQlL2BzC10XZIO
-	9v7zpcdEjoB/F1O2duMgTDIugSLIDLSQgTpAWPyLN8nyAgB5VFLK7Y8cS7XPQzSmPX/PF5i
-	ecpSPC2yFJE+Hqf+qV4MGKVc+vlGtRkccwxt8EQMJLy+EEcrVIJo+qfkf3tr12BUjgK96DK
-	TNG5HYBM/JL2V6nhw+mqaKdkV0UHglQpMK2r3aBmG2nRv7L8aW70J36N0n41L8/kr5lX70u
-	WsP4bwef4Y2/Ni+symA0C5gQAFJPehsNkGuWgXAa8btFgoszNsQpXAp7wcdv+ZWEA8zDahl
-	DRZHq6jzaAt/Y65WiT+57Ocxu0slge342+m1oXAKisAQbY0y8Rj7dDYGFcqNhVigTCnujoW
-	W8B89CuiW7+IcUbQQUcyatOlwhIr5mmrEYDA90JbgcH5MPO3ldK6MSUH/sSgBhtq+Zm8EdT
-	RIKtkHTFSPjm2CZKRxKilmis3YMzQjYdjHiSX6jebxcfKvtu2oju5uPhfMoczJddT0nFVoV
-	1L6aI2h7akpCkKlGky492wk6WgyUUpkxBJ4qHq0UaWDmydIa1cyP++JbmHpK9lVB9gZX3x9
-	h0fC56/Jji/Ou/xocvch+8ZLZwwQqrOcmo0no+89vEnjrfGUQ28UyInYdgN98=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
 
-From: Wentao Guan <guanwentao@uniontech.com>
+From: Umang Jain <umang.jain@ideasonboard.com>
 
-This commit adds NVME_QUIRK_NO_DEEPEST_PS and NVME_QUIRK_BOGUS_NID for
-device [126f:1001].
+CCI_REG_HNUM should be using CCI_REG16_LE() instead of CCI_REG8()
+as HNUM spans from 0x302e[0:7] to 0x302f[0:3].
 
-It is similar to commit e89086c43f05 ("drivers/nvme: Add quirks for
-device 126f:2262")
-
-Diff is according the dmesg, use NVME_QUIRK_IGNORE_DEV_SUBNQN.
-
-dmesg | grep -i nvme0:
-  nvme nvme0: pci function 0000:01:00.0
-  nvme nvme0: missing or invalid SUBNQN field.
-  nvme nvme0: 12/0/0 default/read/poll queues
-
-Link:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e89086c43f0500bc7c4ce225495b73b8ce234c1f
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 ---
- drivers/nvme/host/pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/media/i2c/imx335.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index b178d52eac1b..de0ab1da99c8 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3623,6 +3623,9 @@ static const struct pci_device_id nvme_id_table[] = {
- 		.driver_data = NVME_QUIRK_BOGUS_NID, },
- 	{ PCI_DEVICE(0x1217, 0x8760), /* O2 Micro 64GB Steam Deck */
- 		.driver_data = NVME_QUIRK_DMAPOOL_ALIGN_512, },
-+	{ PCI_DEVICE(0x126f, 0x1001),	/* Silicon Motion generic */
-+		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
-+				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
- 	{ PCI_DEVICE(0x126f, 0x2262),	/* Silicon Motion generic */
- 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
- 				NVME_QUIRK_BOGUS_NID, },
+diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+index db424b178e98..0418875e996c 100644
+--- a/drivers/media/i2c/imx335.c
++++ b/drivers/media/i2c/imx335.c
+@@ -31,7 +31,7 @@
+ #define IMX335_REG_CPWAIT_TIME		CCI_REG8(0x300d)
+ #define IMX335_REG_WINMODE		CCI_REG8(0x3018)
+ #define IMX335_REG_HTRIMMING_START	CCI_REG16_LE(0x302c)
+-#define IMX335_REG_HNUM			CCI_REG8(0x302e)
++#define IMX335_REG_HNUM			CCI_REG16_LE(0x302e)
+ 
+ /* Lines per frame */
+ #define IMX335_REG_VMAX			CCI_REG24_LE(0x3030)
 -- 
-2.49.0
+2.48.1
 
