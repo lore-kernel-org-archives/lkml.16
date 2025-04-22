@@ -1,74 +1,41 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B6A293B67
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B06985931
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745344022; cv=none; b=PuYVXtMDzq6N7PEY/sM/azg4c1bvs3DAvO1gUOkS6tvEoAQz982mVjTdteh0bwCgzv8145ZdUydjNlhnlkyzHIoz8LGTWfZCHP5PNdEArRqUwNRuIUKqs1URj0zBLi+eXKBEQqBWv1r2iiVRZa6NzIBUoapRZfNA/4TM1xSywsc=
+	t=1745344083; cv=none; b=mZvaMh3vYtYbjQrPwf5CPoCtXgtJpXVlV+xVQG05KyY/aeCN01s5fLWZmWCaUPilvpWtlPxHodLHllal31y350fopebmq6VobyXy1b53m0SyMwIpvJyfE1o7aNPrrTK/i0wswrI6r6bwr1+q/2dLoZkMlilTXXmTkdX6X6/Z+ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745344022; c=relaxed/simple;
-	bh=wbD5RZ5SZDo3XaLXUPNWQ8D+urq+eTsm3HGrZa3mm8I=;
+	s=arc-20240116; t=1745344083; c=relaxed/simple;
+	bh=9R+Cf90mu3T0JORLd0H9EtQSXnYP+uLphYhUM+1N30g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PDBFTBf+jWMMeMA4x2mj+nKutGlgEcOdlsJMu4eyH3sY2QhvZTPCyPVLxSebhUf9LNO58CzzClXYhPzRN4CUncg2Iu2Q/VvITqvhgbSVU8cHVKiqH0B7K3djwgs6ESeSliVcRQXUnhnbyZQlHY2/L9LRTu8qZgyABmdbEWMPmvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=a+DbMgbC; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RcJmeY1/zuRtVV7yi5MI2gLeD9jp8ec1LQAVCfUASRilObPLB32tGRzN6YaH9s5/Pv0ADx6DSF/0Pl71OleoOqq2+IsJo3uNZfFYpYgLwTfOPeiXO59TybAXAEOdrtSfmYxvFJnoHYESqIIEGoPKz/IgPbvcx9kNO+G1BV5mWsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SotAurz+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="a+DbMgbC"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ae781d21so57694001cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745344019; x=1745948819; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JpSUt/W7rzxG5ba1nOA8p416bP5hsdNLtoV24xeN0Vc=;
-        b=a+DbMgbCdjAASwE8rxE5jgtXkxTOXHutxrUP9+AoZPTxFS0ZzN48U13TDLHNeJEQ0A
-         FtY6JsQoeLK1WaMxE94VxrtSWUNhxXMcao6s4tP+hmbG+JqB2/XaORMl5PeCBIj/2TSW
-         i2rPKBcmOGCreIR3ZTtuDLaHuqXjS2IublcjzcxmenMLjUZuJIKdeYWNPKNWUNWgSE6y
-         cfEInbAhsA1Vg43MVWpWnCECRNxMdqb11zHCVqtcQlklMoOrUhfmEWzrRsIDvg9WtSiJ
-         Vm+LS6rByMYb8sVHLm1V36VZQX4CjVrKdsKmvZaQtggc7bhlwrQnSn3iGum4htEQvF4r
-         sUJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745344019; x=1745948819;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JpSUt/W7rzxG5ba1nOA8p416bP5hsdNLtoV24xeN0Vc=;
-        b=rObC+sl8s6TdcLoxzUp/vBYRriLgr7FfkbpVneNy9VmnSSaQfX66ViCrmGkw32lHL3
-         VDR0a0kXL1BlBYSLwCVPMJqEiPSg7UcD0XXYscjCfD3NrLigf30Acuc9CzJjE0tQzKBw
-         XOVR5NVJ62BbetB0ulQpHj2OezH6f0zXf6Jt5Vj+YlBmew1IrFciRRgLSsTzeD8Rq2EC
-         Hh0ZCeWNHjNi5MLDQiKe1gOTgVaY1CGbLF2w725Mh8vEay3I+EyoT7dpqkk/gEyYVW30
-         SKuHgylQJZA7sMDDTSHW6VfsolPqoqd6BLZRaGPaOwDkh45FXeqqGPxEJ6tFPLXlwYbN
-         MwRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdIn0/cBNjzES7yRaRdYjxB+LhQiCv64ttHFAV+Lz463Wg9eG9GgfmXqKW0fn045V+z+dYVIlybdrZKw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV3Qe8LBPaOAymlvthKzIex58SoJAat/V5c7/LmwoCQqyBcUe5
-	OmmmrE5YhL4fncSY6iapGVnQmFtkUr/60lufnTLoPhRJWX6c87flAmRLWoCQbU3wCbxKI682AE/
-	h7tc=
-X-Gm-Gg: ASbGncsIt2LEkz8cBVeHg2eSWo7cysWv9sb6+lplzo/TXm+V8BGkvSa1WCoBV0vZWxh
-	wOdpoRxyHhy3rzbATxyjclTPOYlcrgf0rjQx1xzZQ3DY5WMS02uVwXd3Bc/orSefqV4Sn18KR2E
-	fEZr/1IaiPakpvVAahrpynSWpTMIZVBA0bG8CDWf3hBejAYJ/H7PECNZSJlkITZe40FeB1/R5Eo
-	5lN0YgnxXFhZ9etsre3n+fmeFfxIbdYeqx0O2QPCvQxTJkPe0hwiKAkezHRTFA1JsvWUxGbcgYx
-	R0uS05JhTOdq38Kr/TRcp63mYZJiVuy8KuPZa5MkKwpOy26v5Q==
-X-Google-Smtp-Source: AGHT+IFDMianZxQRcH0bw5Lmh7bTgr34wYKo3F4wCNpAKa7ksVo4bSSqVBtt2MR3jcNS2ouH63sd8g==
-X-Received: by 2002:ac8:57ce:0:b0:476:6625:eed4 with SMTP id d75a77b69052e-47aec4c5881mr295092471cf.38.1745344019069;
-        Tue, 22 Apr 2025 10:46:59 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47ae9c16ba0sm57824681cf.4.2025.04.22.10.46.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 10:46:58 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:46:57 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	longman@redhat.com, mhocko@kernel.org, roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev, muchun.song@linux.dev, tj@kernel.org,
-	mkoutny@suse.com, akpm@linux-foundation.org
-Subject: Re: [PATCH] cpuset: relax locking on cpuset_node_allowed
-Message-ID: <20250422174657.GD1853@cmpxchg.org>
-References: <20250422012616.1883287-3-gourry@gourry.net>
- <20250422043055.1932434-1-gourry@gourry.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SotAurz+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A223C4CEE9;
+	Tue, 22 Apr 2025 17:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745344082;
+	bh=9R+Cf90mu3T0JORLd0H9EtQSXnYP+uLphYhUM+1N30g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SotAurz+nkXj5Gf6vpop4SQSYFnlC3FI5agC0HNCqyf27ygMtyk1qtXJp+DIlrS8N
+	 zfJyAnwU/yhUlK0TogsF04JexILmPcpXslwlfyVcRM4QmTHt7gcZQKrhblaxqG1tE+
+	 zjHB9kjn/AHw0V2ecLgY/QtIi9C7z6fhE6yzaIDYlq6JYu3D4FKErm+NKysY2I/aXf
+	 pqkuao4WPADk792tpFDLVtSmS165joyX+E51PYIJYz+/DLP5HBX++KgcCE7A3Dqy5P
+	 qKQR7iZf4A812KMg4EcUE1s7Hn4awc3qccqEhSK/ERj6RZzTdobRzOiD7aaqmXRlUE
+	 qxTbJgtvN89lA==
+Date: Tue, 22 Apr 2025 11:48:00 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] nvme/pci: PRP list DMA pool partitioning
+Message-ID: <aAfWUGAMTpwsHf2b@kbusch-mbp.dhcp.thefacebook.com>
+References: <20250422161959.1958205-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,42 +44,141 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422043055.1932434-1-gourry@gourry.net>
+In-Reply-To: <20250422161959.1958205-1-csander@purestorage.com>
 
-On Tue, Apr 22, 2025 at 12:30:55AM -0400, Gregory Price wrote:
-> The cgroup_get_e_css reference protects the css->effective_mems, and
-> calls of this interface would be subject to the same race conditions
-> associated with a non-atomic access to cs->effective_mems.
-> 
-> So while this interface cannot make strong guarantees of correctness,
-> it can therefore avoid taking a global or rcu_read_lock for performance.
-> 
-> Drop the rcu_read_lock from cpuset_node_allowed.
-> 
-> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-> Suggested-by: Waiman Long <longman@redhat.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->  kernel/cgroup/cpuset.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index c52348bfd5db..1dc41758c62c 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4181,10 +4181,20 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
->  	if (!css)
->  		return true;
->  
-> +	/*
-> +	 * Normally, accessing effective_mems would require the cpuset_mutex
-> +	 * or RCU read lock - but node_isset is atomic and the reference
+On Tue, Apr 22, 2025 at 10:19:57AM -0600, Caleb Sander Mateos wrote:
+> This reduces the _raw_spin_lock_irqsave overhead by about half, to
+> 1.2%.
 
-              ^^^^^^^^^^^^^
+Could you try this atop your series? I hope to see if we can squeeze a
+little more out by keeping the spinlock and list links local to the node
+using them.
 
-This should be callback_lock. rcu_read_lock() was intended for css
-lifetime - which is ensured by css_get_e_css() - not a stable mask.
-
-Otherwise looks good, makes sense to lampshade the lockless access.
-
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index cbd7734922f91..08a1488155084 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -412,9 +412,10 @@ nvme_setup_prp_pools(struct nvme_dev *dev, unsigned numa_node)
+ 	if (prp_pools->small)
+ 		return prp_pools; /* already initialized */
+ 
+-	prp_pools->large = dma_pool_create("prp list page", dev->dev,
++	prp_pools->large = dma_pool_create_node("prp list page", dev->dev,
+ 						NVME_CTRL_PAGE_SIZE,
+-						NVME_CTRL_PAGE_SIZE, 0);
++						NVME_CTRL_PAGE_SIZE, 0,
++						numa_node);
+ 	if (!prp_pools->large)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -422,8 +423,9 @@ nvme_setup_prp_pools(struct nvme_dev *dev, unsigned numa_node)
+ 		small_align = 512;
+ 
+ 	/* Optimisation for I/Os between 4k and 128k */
+-	prp_pools->small = dma_pool_create("prp list 256", dev->dev,
+-						256, small_align, 0);
++	prp_pools->small = dma_pool_create_node("prp list 256", dev->dev,
++						256, small_align, 0,
++						numa_node);
+ 	if (!prp_pools->small) {
+ 		dma_pool_destroy(prp_pools->large);
+ 		prp_pools->large = NULL;
+diff --git a/include/linux/dmapool.h b/include/linux/dmapool.h
+index f632ecfb42384..36cb5f66111c6 100644
+--- a/include/linux/dmapool.h
++++ b/include/linux/dmapool.h
+@@ -18,8 +18,16 @@ struct device;
+ 
+ #ifdef CONFIG_HAS_DMA
+ 
+-struct dma_pool *dma_pool_create(const char *name, struct device *dev, 
+-			size_t size, size_t align, size_t allocation);
++struct dma_pool *dma_pool_create_node(const char *name, struct device *dev,
++			size_t size, size_t align, size_t allocation, int node);
++
++static inline struct dma_pool *dma_pool_create(const char *name,
++			struct device *dev, size_t size, size_t align,
++			size_t allocation)
++{
++	return dma_pool_create_node(name, dev, size, align, allocation,
++				    NUMA_NO_NODE);
++}
+ 
+ void dma_pool_destroy(struct dma_pool *pool);
+ 
+@@ -35,6 +43,10 @@ struct dma_pool *dmam_pool_create(const char *name, struct device *dev,
+ void dmam_pool_destroy(struct dma_pool *pool);
+ 
+ #else /* !CONFIG_HAS_DMA */
++static inline struct dma_pool *dma_pool_create_node(const char *name,
++	struct device *dev, size_t size, size_t align, size_t allocation,
++	int node);
++{ return NULL; }
+ static inline struct dma_pool *dma_pool_create(const char *name,
+ 	struct device *dev, size_t size, size_t align, size_t allocation)
+ { return NULL; }
+diff --git a/mm/dmapool.c b/mm/dmapool.c
+index f0bfc6c490f4e..e07242b18c576 100644
+--- a/mm/dmapool.c
++++ b/mm/dmapool.c
+@@ -56,6 +56,7 @@ struct dma_pool {		/* the pool */
+ 	unsigned int size;
+ 	unsigned int allocation;
+ 	unsigned int boundary;
++	int node;
+ 	char name[32];
+ 	struct list_head pools;
+ };
+@@ -199,12 +200,13 @@ static void pool_block_push(struct dma_pool *pool, struct dma_block *block,
+ 
+ 
+ /**
+- * dma_pool_create - Creates a pool of consistent memory blocks, for dma.
++ * dma_pool_create_node - Creates a pool of consistent memory blocks, for dma.
+  * @name: name of pool, for diagnostics
+  * @dev: device that will be doing the DMA
+  * @size: size of the blocks in this pool.
+  * @align: alignment requirement for blocks; must be a power of two
+  * @boundary: returned blocks won't cross this power of two boundary
++ * @node: NUMA node to use when allocating structs 'dma_pool' and 'dma_page'
+  * Context: not in_interrupt()
+  *
+  * Given one of these pools, dma_pool_alloc()
+@@ -221,8 +223,8 @@ static void pool_block_push(struct dma_pool *pool, struct dma_block *block,
+  * Return: a dma allocation pool with the requested characteristics, or
+  * %NULL if one can't be created.
+  */
+-struct dma_pool *dma_pool_create(const char *name, struct device *dev,
+-				 size_t size, size_t align, size_t boundary)
++struct dma_pool *dma_pool_create_node(const char *name, struct device *dev,
++			size_t size, size_t align, size_t boundary, int node)
+ {
+ 	struct dma_pool *retval;
+ 	size_t allocation;
+@@ -251,13 +253,14 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
+ 
+ 	boundary = min(boundary, allocation);
+ 
+-	retval = kzalloc(sizeof(*retval), GFP_KERNEL);
++	retval = kzalloc_node(sizeof(*retval), GFP_KERNEL, node);
+ 	if (!retval)
+ 		return retval;
+ 
+ 	strscpy(retval->name, name, sizeof(retval->name));
+ 
+ 	retval->dev = dev;
++	retval->node = node;
+ 
+ 	INIT_LIST_HEAD(&retval->page_list);
+ 	spin_lock_init(&retval->lock);
+@@ -335,7 +338,7 @@ static struct dma_page *pool_alloc_page(struct dma_pool *pool, gfp_t mem_flags)
+ {
+ 	struct dma_page *page;
+ 
+-	page = kmalloc(sizeof(*page), mem_flags);
++	page = kmalloc_node(sizeof(*page), mem_flags, pool->node);
+ 	if (!page)
+ 		return NULL;
+ 
+--
