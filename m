@@ -1,155 +1,149 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CA81F03C9;
-	Tue, 22 Apr 2025 11:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6294221481B;
+	Tue, 22 Apr 2025 11:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322668; cv=none; b=V19Zt9TXsChURvbykcvPdbgucNTKWD9IeqcyPe8okpG0rdssRTodSExRVy2qnKMmr0quE5iNudcDUUoVA5Qa1595oA3iLWmChc1sJaUIgHGHU3Qxf9EfqGqU6FHwiQgYYLVYXlCavgXuS/4xYcZCR0+9erEQcbvGMb/3pTbQkBs=
+	t=1745322695; cv=none; b=dGziZkV9NstC47Yst2H0IgZUFWjqKNGxgnY1PuL2+hqnxTDToK+dkXNmSAIBz68gfzUr79Cuxp0nOi9t7JkLsa4PE9AHjyxtqt0LmHwAYU8XwN85EfEeisG9gRvxfO7ZJU68OBnKEeGEBq3GpXYqGDQ5WG5yqI90OHzrUJd8eAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322668; c=relaxed/simple;
-	bh=VEhajbJhenyOwhDiqNi6r8q5OP8gwjnJXRhckqsJOpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GRZM0O8tgk0bW50yEOaZvk1s8cClYQoWBPgof+vMyPx+E1K/9XFyloC2Mj/a/jKmaSyo6DeIstGsCfRxsalylVidiE3+U4Y0H7Ng03dCr2rM/yzZC4CggD3z6Omr5OMX6fjIUPGk/69Tx9XWBSIAYqTZgXdrCwAILqV1BD5xdTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bDZmkUj0; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745322695; c=relaxed/simple;
+	bh=kH7Bu98CXyFDWfRtCbE6jVTFUkeXdMMl89atMiI6+EA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nnUGfcGykNK9Yl7rmGG3HGQRCKIwZSNxFB40Y4Za25lkOb2nyFz1dQEG6m8fkKdwSmPTpov3ysRqX/lwHa2cJHAkg/t/0nwkX0GPUf+IblJLX+5WXzXr6ysacaYY1FdoGUUQ3GbbmV0g4rQYAxxH9WkLyWipCwWXoVoDG9QubsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cQhyIger; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bDZmkUj0"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913b539aabso3041267f8f.2;
-        Tue, 22 Apr 2025 04:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745322664; x=1745927464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xm+C1Hrf5PZav1kH12OZ68FgqFY1vN+rQWTlgliz2cs=;
-        b=bDZmkUj0LVox8L2Eq66Z7NNMC7GdMSCvQjmnBaM0WA5Fe7E6vu7GsADfRMfZSYeBGq
-         vPOtZ3Dzsy0zjFrQ8eXFXtkZumCE/YwI8ioESM9L25BmRTQJ26iJq68ryjLDiVR65nIr
-         2Dir9y/MQ1ozXC7/60t531hdjkPjX7IchMWbY5xQ43Fyq7qQWocset2lg3xZm5dixAjK
-         8i57UxD732oqwFUNsMCsPP6pNH1jEGKo49K7CXDV+iZJVxwpTJmvOpt6HleTzoXO2eYq
-         tApT/WlJ3BNf1m6orN9ulsemICfUmuZDa8dWG7SMQxHBdTJocUAhZW/vuUeeXFtBmsYL
-         bWbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745322664; x=1745927464;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xm+C1Hrf5PZav1kH12OZ68FgqFY1vN+rQWTlgliz2cs=;
-        b=E1FVbgRJA6lBQ2tmjKkIDhcOpaNDs9rqUBbQ7cIOxhoqL7sbEuS/LLtHiBcVK8dkSM
-         HTDGhXELKIKfi18o5j8/cT9WhVS7S+Hj1IktbJP7qn3H4U4sf3NLAzSjNBO8t/moYhpM
-         BdpzxG+KAzsq3z1ZgxkI5hGlHDHCCeN0Igw08f/H9MA/ZD9mtQ0cZNe6eMkKCqBa0Gan
-         Mg0fx3EI5YVUstA4GGAB4/LWFFcZrEZGQDiPsb1f2ynPzqyTGqCFxjjBw2ARC1vAWoLt
-         kBRHG3UKerOU3a7Ygrf32nXPLIB3iI8cLlP5EE5oocZd/gQ8pXv2AqiArtFM37Afg2Dq
-         yuWA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Eq7Om7DSuaKN+D1IupLXGW1+/97YdGhv0GbUcBJTeW0QuGMwEbLpWVHVMUNZ1cqqtlzkOIvJjS55@vger.kernel.org, AJvYcCWrn3EGrqKxOZZOVzsOXzMUW9RM5iGjA5L2B6dSIv1vtbUTKzLcPv8CxJ4ttBbfm/dANXw2p1Pp1GmHI0ir@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw69szsrsmNYX3s2Z38KAyN5tod/m/ObVb1UBh/laluwKaTaQ+b
-	QK6U5DaZa+1/iwUS/7Z7LIljwTOlGTMS4MqpypaLqUwUupS7LG6i
-X-Gm-Gg: ASbGncvrtTGPDbTeSr4Bn+24vRKPngga4hPEqsn4cTNY5cWuCx+YwZzNwGkCmrkrjnv
-	TTS8rQKW83bIiYaX5G/Xkiadd3FDzc3QKBgVcs/FnoLkoKQv5aFCHOWshwENc0Q+y3vS0N9DhxL
-	cBmFxF97TWQKWC3pgAOGUY9x/99DPvmu3PrdGUc8lnYOEAh907N9/DMhoFcaJYVkLJIhxAoo51C
-	b0lS/rhaiLztV7KhXl4mSDUuv06AqMExShN7Fq+/ZmmkDsZl3Fx8DHY4qiVZ/P6QNFt7jdQRgRn
-	WZGFwCYz/l0nd7PRl26B1TkNryZU8NT13V3U2t4iIR8ZgN1cySDlo2SShqoLDhRCcg2PTrjl5S3
-	xUy80L4il
-X-Google-Smtp-Source: AGHT+IEDjgGNVWbzB6Xc4tHbi6ZRWUATDYuf4z8WnnwDr13qOhSHxOiNofBtLV/8u9BXBgZvL8GMGw==
-X-Received: by 2002:a5d:6da5:0:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-39efbb09d5bmr12222914f8f.52.1745322664453;
-        Tue, 22 Apr 2025 04:51:04 -0700 (PDT)
-Received: from toolbox.int.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa5a2300sm14767410f8f.101.2025.04.22.04.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 04:51:04 -0700 (PDT)
-From: max.oss.09@gmail.com
-To: max.krummenacher@toradex.com
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: imx8-colibri: Add PCIe support
-Date: Tue, 22 Apr 2025 13:50:49 +0200
-Message-ID: <20250422115051.1867349-1-max.oss.09@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cQhyIger"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=gcRt9ezSoUZXl+ybi8UTJwVtL/3rgcw0CTAfTjkR8vY=;
+	b=cQhyIgerv2t2OKWa813hjNs6p7T9rVSVSVozFET0uogARuoQqizRWoSbEXtofZ
+	8AdjWXAYVdgOJ2L7dCvNDJ/eodZDcvcfdznwcTF3ZdYHsIf8t0mwen7QwoaqJ5AU
+	xUyMz+DnmwgZ5Lo3PmSHbJmQFCkGjdUCB5e0wE9VmBudo=
+Received: from [192.168.142.52] (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDnQ1Gaggdo6FbJAQ--.7526S2;
+	Tue, 22 Apr 2025 19:50:52 +0800 (CST)
+Message-ID: <7716b76f-be79-4ed1-b8d2-29258cb250ab@163.com>
+Date: Tue, 22 Apr 2025 19:50:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] PCI: dw-rockchip: Unify link status checks with
+ FIELD_GET
+To: Niklas Cassel <cassel@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250422112830.204374-1-18255117159@163.com>
+ <20250422112830.204374-4-18255117159@163.com> <aAeAAhb4R8ya_mBO@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aAeAAhb4R8ya_mBO@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:QCgvCgDnQ1Gaggdo6FbJAQ--.7526S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWUGr47GF4DAr4rJF43Jrb_yoW5trWxpa
+	yDJFWqkF48GrWI9F1kCa98XFWFvFsI9ayUCrn7Ka4xWasFyr1DG3Wj9r9xtr1xAr47CFyS
+	kw48ta47Xr43ZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U33ktUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwA3o2gHfn+KJwAAsM
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
 
-The needed drivers to support PCIe for i.MX 8QXP have been
-added.
-Configure PCIe for the Colibri iMX8X SoM.
 
-The pcieb block is connected to the on module Wi-Fi/BT module.
+On 2025/4/22 19:39, Niklas Cassel wrote:
+> On Tue, Apr 22, 2025 at 07:28:30PM +0800, Hans Zhang wrote:
+>> Link-up detection manually checked PCIE_LINKUP bits across RC/EP modes,
+>> leading to code duplication. Centralize the logic using FIELD_GET. This
+>> removes redundancy and abstracts hardware-specific bit masking, ensuring
+>> consistent link state handling.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 +++++----------
+>>   1 file changed, 5 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index cdc8afc6cfc1..2b26060af5c2 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -196,10 +196,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
+>>   	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+>>   	u32 val = rockchip_pcie_get_ltssm(rockchip);
+>>   
+>> -	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
+>> -		return 1;
+>> -
+>> -	return 0;
+>> +	return FIELD_GET(PCIE_LINKUP_MASK, val) == 3;
+> 
+> While I like the idea of your patch, here you are replacing something that
+> is easy to read (PCIE_LINKUP) with a magic value, which IMO is a step in
+> the wrong direction.
+> 
 
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
+Hi Niklas,
 
----
+Thank you very much for your reply. How about I add another macro 
+definition?
 
- .../boot/dts/freescale/imx8x-colibri.dtsi     | 29 ++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+#define PCIE_LINKUP 3
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi b/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-index ecb35c6b67f5..e602d147e39b 100644
---- a/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8x-colibri.dtsi
-@@ -52,6 +52,15 @@ reg_module_vref_1v8: regulator-module-vref-1v8 {
- 		regulator-name = "vref-1v8";
- 	};
- 
-+	reg_module_wifi: regulator-module-wifi {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio_expander_43 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+		regulator-name = "Wi-Fi_PDn";
-+		startup-delay-us = <2000>;
-+	};
-+
- 	reg_usbh_vbus: regulator-usbh-vbus {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -261,6 +270,16 @@ ethphy0: ethernet-phy@2 {
- 	};
- };
- 
-+&hsio_phy {
-+	fsl,hsio-cfg = "pciea-x2-pcieb";
-+	fsl,refclk-pad-mode = "input";
-+	status = "okay";
-+};
-+
-+&hsio_refb_clk {
-+	enable-gpios = <&gpio_expander_43 3 GPIO_ACTIVE_HIGH>;
-+};
-+
- /* Colibri SPI */
- &lpspi2 {
- 	pinctrl-names = "default";
-@@ -454,7 +473,15 @@ &mu1_m0 {
- 
- /* TODO MIPI DSI with DSI-to-HDMI bridge lt8912 */
- 
--/* TODO on-module PCIe for Wi-Fi */
-+/* On-module PCIe for Wi-Fi */
-+&pcieb {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcieb>;
-+	phys = <&hsio_phy 0 PHY_TYPE_PCIE 0>;
-+	phy-names = "pcie-phy";
-+	reset-gpios = <&lsio_gpio4 0 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
- 
- /* On-module I2S */
- &sai0 {
--- 
-2.42.0
+
+If not, I'll restore it. At least the following can use the 
+rockchip_pcie_get_ltssm function to avoid duplicate code.
+
+Best regards,
+Hans
+
+> 
+>>   }
+>>   
+>>   static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+>> @@ -499,7 +496,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>>   	struct dw_pcie *pci = &rockchip->pci;
+>>   	struct dw_pcie_rp *pp = &pci->pp;
+>>   	struct device *dev = pci->dev;
+>> -	u32 reg, val;
+>> +	u32 reg;
+>>   
+>>   	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+>>   	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+>> @@ -508,8 +505,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>>   	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
+>>   
+>>   	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+>> -		val = rockchip_pcie_get_ltssm(rockchip);
+>> -		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+>> +		if (rockchip_pcie_link_up(pci)) {
+>>   			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+>>   			/* Rescan the bus to enumerate endpoint devices */
+>>   			pci_lock_rescan_remove();
+>> @@ -526,7 +522,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>>   	struct rockchip_pcie *rockchip = arg;
+>>   	struct dw_pcie *pci = &rockchip->pci;
+>>   	struct device *dev = pci->dev;
+>> -	u32 reg, val;
+>> +	u32 reg;
+>>   
+>>   	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+>>   	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+>> @@ -540,8 +536,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>>   	}
+>>   
+>>   	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+>> -		val = rockchip_pcie_get_ltssm(rockchip);
+>> -		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+>> +		if (rockchip_pcie_link_up(pci)) {
+>>   			dev_dbg(dev, "link up\n");
+>>   			dw_pcie_ep_linkup(&pci->ep);
+>>   		}
+>> -- 
+>> 2.25.1
+>>
 
