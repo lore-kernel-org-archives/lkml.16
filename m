@@ -1,144 +1,513 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52921F0E49
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D3720C03F;
+	Tue, 22 Apr 2025 10:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317751; cv=none; b=T/psRJOwV15XrxpuibuYhQbu9k0xvTubrttIKvHyORwowLFQgN5Mp6yqZVvEd2NWA0ED8zJXgqvrWGwuWCAnm4HM9FYcxdq4g2Gx5lIeOjibt/Ew8/Y/IPf65h4QdZc0T46S9iF3yNiqpT33lPZEd6G0d30mDa5i2B94yz7wKiU=
+	t=1745317757; cv=none; b=Vs3gDoOsYGk7dWwqBJZHpF7BvtZx05gXUFDJbmFtQG8rn9ylyuEwQHKL6q0KxV8fskZYKeBwRVMc7x+m5uvc/+1X99m84co92zLlVBFplZ5lPfBKtGCnTBpRkFb6aRZznVFLE+oZMa9dJm6cOFHmRFaAq3XoBB1GNsL9+ny1Ak0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317751; c=relaxed/simple;
-	bh=OtKUFMsCCXQuyXdiECTB3D04cRKpceApukek+qlG2Xk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l0Cy2ukTBjk9dE8auNMqkx+gnYu9a0UCyy8OVug7dK/xWGCmjgujdzYE6Ir8JtFGPG4F5TwE2EmvntiMB9c87MuZUXRneF9WpuQ83IRtN4nHQ51iE87N6Le+DhxC4/0LOtWavzXHAgHZhVIjZb7TexKKq7Pv8l6dRv2OymGWvoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=QKymG9BT; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
+	s=arc-20240116; t=1745317757; c=relaxed/simple;
+	bh=OFAd4pLJeK+Mq0F7F6qfF5355bPoI9VG3dxk3BPrGhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+K0URPTE4Cd3J91675KF8qILwEsP4J11RNkF4q/n4wVNHhg6Dfwk/GhouVb6uVcuCkW5eUeu9xiYKMoM9dAsIg/n/15qy7G4HrLzBN7Mb9LOQ/ta1+A+6XsNsbwQmMwjlyA4uXhb6n4gXd0SzlZHRsaMmghBDi59tzG8ILVSuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzMcnO7/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="QKymG9BT"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5171303b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:29:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=inventec.com; s=google; t=1745317746; x=1745922546; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
-        b=QKymG9BTaQM/G9cl6fJZmX1DLUhOVviZlTuu7TEKn/JLEzF1C1oBOCeG7qYH7i9fmv
-         CX1ciJbvdYkLqUj2qDmGnQjr/NjYTseiG3TQs9jDGD1q75jhbpXyx+IVe9hLIyKAJuPN
-         2Wmrxxc+WlY4HnZnm3acXCvQpv+RaD8MA9EbNzCN0tDgwmdZa+b260/7OkQGncMoh8Jg
-         diTGNiXX/w5uoOpGcerSSWr49haDExVjHl4FRYMKUc6ZXU8WMHjnuGMPxFEUJCJcTPq5
-         N2tAJjHRQg1uuUoaPIapfIOu4YcmWjvHdyCZIFwGMwu68SfMqasogjvnZPE6J5s3Nh1E
-         yjIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745317746; x=1745922546;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
-        b=OJUq23ayoR6X4UU5o8QA8MkTnJ61WopiGav02m9a7VuJ2eXYIdgnixner6sjlcEj4/
-         3JMpL4eZ3fni5A60NJGvuzTd+p83HJvVCizgsnCQuTGvyqP2RoiH5PqcnvI/pgxtxfA2
-         pHDwnhZv95O6eKVs3bfIa57MNolR5O1NpiJTUJcZ6yliWWaFyqlEBIVrkjzzOMpqZgFZ
-         GxbeawX/MOV6tg/RyLgb0a1fJkgQgxokc4OjGqO5QzAIpSe0nTmpUNIF8k1AuXIE+wDx
-         AO6duZMrpj6IkxuhGTBGHb+JgaYfvK00K9TE1TUwwKjMM279FkhkUiz3cEC87pxnLvnX
-         ESLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWg/WCWX1kf6DWbsWQ/yx7hB51mEXg8vYj0KrmYd0py2PR8fZcylv8rm5ZTJDtFYgRsF0eMfwjxYwEx4OQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+sK3zzEOBaT2mNi3FVt7N+j6nKV71lrKU90jypraOVKiYS8D3
-	IQBC4KupREoc9LvzuGY0quyn2ihgCOixtHaWaBnAWClxMweSu8/kSPaKK+De5fA=
-X-Gm-Gg: ASbGncsXTufrwumwQXfid+5MNmMGUN7Q2eyhlvjKPOMZKYBJab8m6NbfWt4ezTy69CQ
-	NPAa1rtpTd14WcMtyUH8e4VuzemV3xEG3u7UEfgKyyaZd7LwDKYUPcXjMzzHtvXHXJLmDMYfWqt
-	0fTI8V5jYysTYQRW0p2y51b5JMN0F+hakeeTSihpgSa2+zakZtMIIXb5wG4zo6za9utDTMyGrz7
-	0LYJjGL9fDHJqw+NoJZknOWIDFYIcY4nOeMAlXjZaVEbhRLxMHRC0sk22JwKzyH7kxCKcojtpRL
-	3qUoVHBk3SQYUcPLw2wxBmsS133nc0sTHQZBRGOM0jtOtcipT2Vn/btwAJkmfUTitD/DhP86qwX
-	+5HHmSMh1crWE4H4KY7AIa9dezWWlGrG335NCMAfv8mNqSO9f+t8LVKO5oog=
-X-Google-Smtp-Source: AGHT+IGWvQiFpLLb/JnK+vxMBI1uFfmAhPCio9warje9sSHRSfH/F8j7WFctbSygpqJcvFqmOTJrmg==
-X-Received: by 2002:a05:6a21:3a83:b0:1e1:9e9f:ae4 with SMTP id adf61e73a8af0-203cc6e03e3mr20985847637.13.1745317745940;
-        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
-Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13c1c40sm5541763a12.33.2025.04.22.03.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
-From: Chiang Brian <chiang.brian@inventec.com>
-X-Google-Original-From: Chiang Brian <chiang.brian@inventec.corp-partner.google.com>
-To: linux@roeck-us.net
-Cc: chiang.brian@inventec.com,
-	gnoack@google.com,
-	gpiccoli@igalia.com,
-	jdelvare@suse.com,
-	kees@kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	mic@digikod.net,
-	tony.luck@intel.com
-Subject: Re: [PATCH v5] hwmon: (pmbus/tps53679) Add support for TPS53685
-Date: Tue, 22 Apr 2025 18:20:57 +0800
-Message-Id: <20250422102057.2846899-1-chiang.brian@inventec.corp-partner.google.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
-References: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzMcnO7/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFF9C4CEEA;
+	Tue, 22 Apr 2025 10:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745317757;
+	bh=OFAd4pLJeK+Mq0F7F6qfF5355bPoI9VG3dxk3BPrGhs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IzMcnO7/hnMIUrVPk0IUzgI/Vkz11j+5SMzE8iDicQSN9D7ciAKD9+epS1JmSauW5
+	 La4vinMdGWPRqy9r2Ghd+I7rnoEeqBqo0SX5VnqKlld3jHSwdQ90MbrdHXmXC3XWwr
+	 IQJi+JYwOD4NgxoU0kG0c+t0dFcLNN9bDt9oLLRk5AwlCnxrfasXaux6gp4ct8O0LI
+	 h86c5lie0vVAH42fPij467wL1CsUVOesDGRcVf5HV0xESP08o4fcVoLcDb2+5lvlH+
+	 OCwRhCQO1+E8KQz4Qvbd7ffw6nSVpwjs2XU0HhLLy5Iys9MX0ihLboTp8YBFnf7N1O
+	 9AuMsJGmHb0nA==
+Date: Tue, 22 Apr 2025 12:29:09 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 06/16] gpu: nova-core: define registers layout using
+ helper macro
+Message-ID: <aAdvdczmQYBAS7vs@cassiopeiae>
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-6-ecd1cca23963@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420-nova-frts-v1-6-ecd1cca23963@nvidia.com>
 
-On 3/14/25 10:44, Guenter Roeck wrote:
-> On 3/13/25 20:30, Chiang Brian wrote:
-> > The TPS53685 is a fully AMD SVI3 compliant step down
-> > controller with trans-inductor voltage regulator
-> > (TLVR) topology support, dual channels, built-in
-> > non-volatile memory (NVM), PMBus interface, and
-> > full compatible with TI NexFET smart power
-> > stages.
-> > Add support for it to the tps53679 driver.
-> > 
-> > Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
-> > ---
-> > v4 -> V5:
-> >      1. document the compatible of tps53685 into dt-bindings
-> > 	2. add the buffer length as argument for %*ph
-> > 	3. Add Changelog
-> > v3 -> V4:
-> >      1. Add length comparison into the comparison of "id",or it may be true when
-> > 	   the substring of "id" matches device id.
-> > 	2. Restore `return 0;` in `tps53679_identify_chip()`
-> > V2 -> V3:
-> >      1. Remove the length comparsion in the comparison of "id".
-> > V1 -> V2:
-> > 	1. Modify subject and description to meet requirements
-> > 	2. Add "tps53685" into enum chips with numeric order
-> > 	3. Modify the content of marco "TPS53681_DEVICE_ID" from 0x81 to "\x81"
-> > 	   Add marco "TPS53685_DEVICE_ID" with content "TIShP"
-> > 	4. Modify the type of "id" from u16 to char* in `tps53679_identify_chip()`
-> > 	5. Modify the comparison of "id". It will be true if the string "id" matches
-> > 	   device ID and compare with type char*,
-> > 	6. Add the length comparsion into the comparison of "id".
-> > 	7. Modify "len" as return code in `tps53679_identify_chip()`
-> > 	8. Output device error log with %*ph, instead of 0x%x\n"
-> >      9. Use existing tps53679_identify_multiphase() with argument
-> > 	   "TPS53685_DEVICE_ID" in tps53685_identify() rather than creating one
-> > 	   tps53685_identify_multiphase()
-> > 
-> > boot-log:
+On Sun, Apr 20, 2025 at 09:19:38PM +0900, Alexandre Courbot wrote:
+> Add the register!() macro, which defines a given register's layout and
+> provide bit-field accessors with a way to convert them to a given type.
+> This macro will allow us to make clear definitions of the registers and
+> manipulate their fields safely.
 > 
-> This is completely useless noise.
+> The long-term goal is to eventually move it to the kernel crate so it
+> can be used my other drivers as well, but it was agreed to first land it
+> into nova-core and make it mature there.
+> 
+> To illustrate its usage, use it to define the layout for the Boot0
+> register and use its accessors through the use of the convenience
+> with_bar!() macro, which uses Revocable::try_access() and converts its
 
-Sorry for the delay, I've got the approval for posting the boot-log from our 
-customer. I was afraid that there's any confidential information in the boot-log
-of our project. So, I decided to post a boot-log with my laptop then, and I'll 
-append a new one once new patch has been finished and uploaded. 
+s/try_access/try_access_with/
 
-And thanks for the suggestion of adding a buffer length for %*ph.
-The kernel crashes and keeps rebooting without adding that.
+> returned Option into the proper error as needed.
 
-In addition, should I in-reply-to the existing thread or create a new one 
-since the dt-bindings should be included in the same thread as well?
+Using try_access_with() / with_bar! should be a separate patch.
 
-Thank you.
+> diff --git a/Documentation/gpu/nova/core/todo.rst b/Documentation/gpu/nova/core/todo.rst
+> index 234d753d3eacc709b928b1ccbfc9750ef36ec4ed..8a459fc088121f770bfcda5dfb4ef51c712793ce 100644
+> --- a/Documentation/gpu/nova/core/todo.rst
+> +++ b/Documentation/gpu/nova/core/todo.rst
+> @@ -102,7 +102,13 @@ Usage:
+>  	let boot0 = Boot0::read(&bar);
+>  	pr_info!("Revision: {}\n", boot0.revision());
+>  
+> +Note: a work-in-progress implementation currently resides in
+> +`drivers/gpu/nova-core/regs/macros.rs` and is used in nova-core. It would be
+> +nice to improve it (possibly using proc macros) and move it to the `kernel`
+> +crate so it can be used by other components as well.
+> +
+>  | Complexity: Advanced
+> +| Contact: Alexandre Courbot
 
-Best Regards,
-Brian Chiang
+This is good -- thanks for adding it.
+
+> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+> index b1a25b86ef17a6710e6236d5e7f1f26cd4407ce3..e315a3011660df7f18c0a3e0582b5845545b36e2 100644
+> --- a/drivers/gpu/nova-core/regs.rs
+> +++ b/drivers/gpu/nova-core/regs.rs
+> @@ -1,55 +1,15 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+> -use crate::driver::Bar0;
+> +use core::ops::Deref;
+> +use kernel::io::Io;
+>  
+> -// TODO
+> -//
+> -// Create register definitions via generic macros. See task "Generic register
+> -// abstraction" in Documentation/gpu/nova/core/todo.rst.
+> +#[macro_use]
+> +mod macros;
+>  
+> -const BOOT0_OFFSET: usize = 0x00000000;
+> +use crate::gpu::Chipset;
+>  
+> -// 3:0 - chipset minor revision
+> -const BOOT0_MINOR_REV_SHIFT: u8 = 0;
+> -const BOOT0_MINOR_REV_MASK: u32 = 0x0000000f;
+> -
+> -// 7:4 - chipset major revision
+> -const BOOT0_MAJOR_REV_SHIFT: u8 = 4;
+> -const BOOT0_MAJOR_REV_MASK: u32 = 0x000000f0;
+> -
+> -// 23:20 - chipset implementation Identifier (depends on architecture)
+> -const BOOT0_IMPL_SHIFT: u8 = 20;
+> -const BOOT0_IMPL_MASK: u32 = 0x00f00000;
+> -
+> -// 28:24 - chipset architecture identifier
+> -const BOOT0_ARCH_MASK: u32 = 0x1f000000;
+> -
+> -// 28:20 - chipset identifier (virtual register field combining BOOT0_IMPL and
+> -//         BOOT0_ARCH)
+> -const BOOT0_CHIPSET_SHIFT: u8 = BOOT0_IMPL_SHIFT;
+> -const BOOT0_CHIPSET_MASK: u32 = BOOT0_IMPL_MASK | BOOT0_ARCH_MASK;
+> -
+> -#[derive(Copy, Clone)]
+> -pub(crate) struct Boot0(u32);
+> -
+> -impl Boot0 {
+> -    #[inline]
+> -    pub(crate) fn read(bar: &Bar0) -> Self {
+> -        Self(bar.read32(BOOT0_OFFSET))
+> -    }
+> -
+> -    #[inline]
+> -    pub(crate) fn chipset(&self) -> u32 {
+> -        (self.0 & BOOT0_CHIPSET_MASK) >> BOOT0_CHIPSET_SHIFT
+> -    }
+> -
+> -    #[inline]
+> -    pub(crate) fn minor_rev(&self) -> u8 {
+> -        ((self.0 & BOOT0_MINOR_REV_MASK) >> BOOT0_MINOR_REV_SHIFT) as u8
+> -    }
+> -
+> -    #[inline]
+> -    pub(crate) fn major_rev(&self) -> u8 {
+> -        ((self.0 & BOOT0_MAJOR_REV_MASK) >> BOOT0_MAJOR_REV_SHIFT) as u8
+> -    }
+> -}
+> +register!(Boot0@0x00000000, "Basic revision information about the GPU";
+> +    3:0     minor_rev => as u8, "minor revision of the chip";
+> +    7:4     major_rev => as u8, "major revision of the chip";
+> +    28:20   chipset => try_into Chipset, "chipset model"
+
+Should we preserve the information that this is the combination of two register
+fields?
+
+> +);
+> diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core/regs/macros.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fa9bd6b932048113de997658b112885666e694c9
+> --- /dev/null
+> +++ b/drivers/gpu/nova-core/regs/macros.rs
+> @@ -0,0 +1,297 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Types and macros to define register layout and accessors.
+> +//!
+> +//! A single register typically includes several fields, which are accessed through a combination
+> +//! of bit-shift and mask operations that introduce a class of potential mistakes, notably because
+> +//! not all possible field values are necessarily valid.
+> +//!
+> +//! The macros in this module allow to define, using an intruitive and readable syntax, a dedicated
+> +//! type for each register with its own field accessors that can return an error is a field's value
+> +//! is invalid. They also provide a builder type allowing to construct a register value to be
+> +//! written by combining valid values for its fields.
+> +
+> +/// Helper macro for the `register` macro.
+> +///
+> +/// Defines the wrapper `$name` type, as well as its relevant implementations (`Debug`, `BitOr`,
+> +/// and conversion to regular `u32`).
+> +macro_rules! __reg_def_common {
+> +    ($name:ident $(, $type_comment:expr)?) => {
+> +        $(
+> +        #[doc=$type_comment]
+> +        )?
+> +        #[repr(transparent)]
+> +        #[derive(Clone, Copy, Default)]
+> +        pub(crate) struct $name(u32);
+> +
+> +        // TODO: should we display the raw hex value, then the value of all its fields?
+
+To me it seems useful to have both.
+
+> +        impl ::core::fmt::Debug for $name {
+> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> +                f.debug_tuple(stringify!($name))
+> +                    .field(&format_args!("0x{0:x}", &self.0))
+> +                    .finish()
+> +            }
+> +        }
+> +
+> +        impl core::ops::BitOr for $name {
+> +            type Output = Self;
+> +
+> +            fn bitor(self, rhs: Self) -> Self::Output {
+> +                Self(self.0 | rhs.0)
+> +            }
+> +        }
+> +
+> +        impl From<$name> for u32 {
+
+Here and in a few more cases below: This needs the full path; also remember to
+use absolute paths everwhere.
+
+> +            fn from(reg: $name) -> u32 {
+> +                reg.0
+> +            }
+> +        }
+> +    };
+> +}
+> +
+> +/// Helper macro for the `register` macro.
+> +///
+> +/// Defines the getter method for $field.
+> +macro_rules! __reg_def_field_getter {
+> +    (
+> +        $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $comment:expr)?
+> +    ) => {
+> +        $(
+> +        #[doc=concat!("Returns the ", $comment)]
+> +        )?
+> +        #[inline]
+> +        pub(crate) fn $field(self) -> $( $as_type )? $( $bit_type )? $( $type )? $( core::result::Result<$try_type, <$try_type as TryFrom<u32>>::Error> )? {
+
+Please make sure to wrap lines with a length > 100.
+
+> +            const MASK: u32 = ((((1 << $hi) - 1) << 1) + 1) - ((1 << $lo) - 1);
+> +            const SHIFT: u32 = MASK.trailing_zeros();
+> +            let field = (self.0 & MASK) >> SHIFT;
+> +
+> +            $( field as $as_type )?
+> +            $(
+> +            // TODO: it would be nice to throw a compile-time error if $hi != $lo as this means we
+> +            // are considering more than one bit but returning a bool...
+
+Would the following work?
+
+	const _: () = {
+	   build_assert!($hi != $lo);
+	   ()
+	};
+
+Though I guess, the above definition of MASK already guarantees that $hi and $lo
+are known on compile time.
+
+> +            <$bit_type>::from(if field != 0 { true } else { false }) as $bit_type
+> +            )?
+> +            $( <$type>::from(field) )?
+> +            $( <$try_type>::try_from(field) )?
+> +        }
+> +    }
+> +}
+> +
+> +/// Helper macro for the `register` macro.
+> +///
+> +/// Defines all the field getter methods for `$name`.
+> +macro_rules! __reg_def_getters {
+> +    (
+> +        $name:ident
+> +        $(; $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $field_comment:expr)?)* $(;)?
+> +    ) => {
+> +        #[allow(dead_code)]
+> +        impl $name {
+> +            $(
+> +            __reg_def_field_getter!($hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)?);
+> +            )*
+> +        }
+> +    };
+> +}
+> +
+> +/// Helper macro for the `register` macro.
+> +///
+> +/// Defines the setter method for $field.
+> +macro_rules! __reg_def_field_setter {
+> +    (
+> +        $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $comment:expr)?
+> +    ) => {
+> +        kernel::macros::paste! {
+> +        $(
+> +        #[doc=concat!("Sets the ", $comment)]
+> +        )?
+> +        #[inline]
+> +        pub(crate) fn [<set_ $field>](mut self, value: $( $as_type)? $( $bit_type )? $( $type )? $( $try_type)? ) -> Self {
+> +            const MASK: u32 = ((((1 << $hi) - 1) << 1) + 1) - ((1 << $lo) - 1);
+> +            const SHIFT: u32 = MASK.trailing_zeros();
+> +
+> +            let value = ((value as u32) << SHIFT) & MASK;
+> +            self.0 = (self.0 & !MASK) | value;
+> +            self
+> +        }
+> +        }
+> +    };
+> +}
+> +
+> +/// Helper macro for the `register` macro.
+> +///
+> +/// Defines all the field setter methods for `$name`.
+> +macro_rules! __reg_def_setters {
+> +    (
+> +        $name:ident
+> +        $(; $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $field_comment:expr)?)* $(;)?
+> +    ) => {
+> +        #[allow(dead_code)]
+> +        impl $name {
+> +            $(
+> +            __reg_def_field_setter!($hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)?);
+> +            )*
+> +        }
+> +    };
+> +}
+> +
+> +/// Defines a dedicated type for a register with an absolute offset, alongside with getter and
+> +/// setter methods for its fields and methods to read and write it from an `Io` region.
+> +///
+> +/// Example:
+> +///
+> +/// ```no_run
+> +/// register!(Boot0@0x00000100, "Basic revision information about the chip";
+> +///     3:0     minor_rev => as u8, "minor revision of the chip";
+> +///     7:4     major_rev => as u8, "major revision of the chip";
+> +///     28:20   chipset => try_into Chipset, "chipset model"
+> +/// );
+> +/// ```
+> +///
+> +/// This defines a `Boot0` type which can be read or written from offset `0x100` of an `Io` region.
+> +/// It is composed of 3 fields, for instance `minor_rev` is made of the 4 less significant bits of
+> +/// the register. Each field can be accessed and modified using helper methods:
+> +///
+> +/// ```no_run
+> +/// // Read from offset 0x100.
+> +/// let boot0 = Boot0::read(&bar);
+> +/// pr_info!("chip revision: {}.{}", boot0.major_rev(), boot0.minor_rev());
+> +///
+> +/// // `Chipset::try_from` will be called with the value of the field and returns an error if the
+> +/// // value is invalid.
+> +/// let chipset = boot0.chipset()?;
+> +///
+> +/// // Update some fields and write the value back.
+> +/// boot0.set_major_rev(3).set_minor_rev(10).write(&bar);
+> +///
+> +/// // Or just update the register value in a single step:
+> +/// Boot0::alter(&bar, |r| r.set_major_rev(3).set_minor_rev(10));
+> +/// ```
+> +///
+> +/// Fields are made accessible using one of the following strategies:
+> +///
+> +/// - `as <type>` simply casts the field value to the requested type.
+> +/// - `as_bit <type>` turns the field into a boolean and calls `<type>::from()` with the obtained
+> +///   value. To be used with single-bit fields.
+> +/// - `into <type>` calls `<type>::from()` on the value of the field. It is expected to handle all
+> +///   the possible values for the bit range selected.
+> +/// - `try_into <type>` calls `<type>::try_from()` on the value of the field and returns its
+> +///   result.
+> +///
+> +/// The documentation strings are optional. If present, they will be added to the type or the field
+> +/// getter and setter methods they are attached to.
+> +///
+> +/// Putting a `+` before the address of the register makes it relative to a base: the `read` and
+> +/// `write` methods take a `base` argument that is added to the specified address before access,
+> +/// and adds `try_read` and `try_write` methods to allow access with offsets unknown at
+> +/// compile-time.
+> +///
+> +macro_rules! register {
+> +    // Create a register at a fixed offset of the MMIO space.
+> +    (
+> +        $name:ident@$offset:expr $(, $type_comment:expr)?
+
+Can we use this as doc-comment?
+
+> +        $(; $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $field_comment:expr)?)* $(;)?
+> +    ) => {
+> +        __reg_def_common!($name);
+> +
+> +        #[allow(dead_code)]
+> +        impl $name {
+> +            #[inline]
+> +            pub(crate) fn read<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(bar: &T) -> Self {
+
+Not necessarily a PCI bar, could be any I/O type.
+
+> +                Self(bar.read32($offset))
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn write<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(self, bar: &T) {
+> +                bar.write32(self.0, $offset)
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn alter<const SIZE: usize, T: Deref<Target=Io<SIZE>>, F: FnOnce(Self) -> Self>(bar: &T, f: F) {
+> +                let reg = f(Self::read(bar));
+> +                reg.write(bar);
+> +            }
+> +        }
+> +
+> +        __reg_def_getters!($name; $( $hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)? );*);
+> +
+> +        __reg_def_setters!($name; $( $hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)? );*);
+> +    };
+> +
+> +    // Create a register at a relative offset from a base address.
+> +    (
+> +        $name:ident@+$offset:expr $(, $type_comment:expr)?
+> +        $(; $hi:tt:$lo:tt $field:ident
+> +            $(=> as $as_type:ty)?
+> +            $(=> as_bit $bit_type:ty)?
+> +            $(=> into $type:ty)?
+> +            $(=> try_into $try_type:ty)?
+> +        $(, $field_comment:expr)?)* $(;)?
+> +    ) => {
+
+I assume this is for cases where we have multiple instances of the same
+controller, engine, etc. I think it would be good to add a small example for
+this one too.
+
+> +        __reg_def_common!($name);
+> +
+> +        #[allow(dead_code)]
+> +        impl $name {
+> +            #[inline]
+> +            pub(crate) fn read<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(bar: &T, base: usize) -> Self {
+> +                Self(bar.read32(base + $offset))
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn write<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(self, bar: &T, base: usize) {
+> +                bar.write32(self.0, base + $offset)
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn alter<const SIZE: usize, T: Deref<Target=Io<SIZE>>, F: FnOnce(Self) -> Self>(bar: &T, base: usize, f: F) {
+> +                let reg = f(Self::read(bar, base));
+> +                reg.write(bar, base);
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn try_read<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(bar: &T, base: usize) -> ::kernel::error::Result<Self> {
+> +                bar.try_read32(base + $offset).map(Self)
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn try_write<const SIZE: usize, T: Deref<Target=Io<SIZE>>>(self, bar: &T, base: usize) -> ::kernel::error::Result<()> {
+> +                bar.try_write32(self.0, base + $offset)
+> +            }
+> +
+> +            #[inline]
+> +            pub(crate) fn try_alter<const SIZE: usize, T: Deref<Target=Io<SIZE>>, F: FnOnce(Self) -> Self>(bar: &T, base: usize, f: F) -> ::kernel::error::Result<()> {
+> +                let reg = f(Self::try_read(bar, base)?);
+> +                reg.try_write(bar, base)
+> +            }
+> +        }
+> +
+> +        __reg_def_getters!($name; $( $hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)? );*);
+> +
+> +        __reg_def_setters!($name; $( $hi:$lo $field $(=> as $as_type)? $(=> as_bit $bit_type)? $(=> into $type)? $(=> try_into $try_type)? $(, $field_comment)? );*);
+> +    };
+> +}
+> 
+> -- 
+> 2.49.0
+> 
