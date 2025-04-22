@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834FD22ACE3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5691EB9FA;
+	Tue, 22 Apr 2025 08:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310924; cv=none; b=e0n1DjtHog5qElemHfYyYugJNxKrsX3cfeCeBTf3LFz2raJ3FFbFz4GGrM3d0x46OPW7jCOIqcDP9QUnNFX3AkFr/KTtxyGLLD5c3kf+Z/FsIC9wPcGscaCQWL1Yiq+M3jUTtUd1Vj4X85j9N2pOvZsA1/1zQFebHXZiD1L1SVQ=
+	t=1745310951; cv=none; b=Bgbr5WlkdJud9sHX3QFzsSGnyXWlT0l42pyidHxuegle9WdKTUEXt9gw++BMHxS72Iz0nWdywp/XniSBTvNjGU3MjXC9tHZvxJdwAo0IjqLBzk58KlFf+xyB/CL14PX3CbqMju90C5t3OhWyZJ/ntiofUbZbH+4OD1TKUIYCcHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310924; c=relaxed/simple;
-	bh=tkcz3fDoQtNMo4Zmg+sngA67GADtQkWp13qhVcacadk=;
+	s=arc-20240116; t=1745310951; c=relaxed/simple;
+	bh=hKd3sovezTE4oI9gLuxz2U+vzWmyXW67MNxppVUKeTM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iF/Ec9AhWwy457iwPSULnLlw+HvtfAKfGJrxJuHnuePToT1a7N2oOULKjfEHVMjX5AQSmWpow0lCuwCljmHuDhC293RvrblfLaYz96B+wYqoO+FYZMjR65QziT8uA2gB7NXLxAYQz7Y5xJH2BAEYMa+ovPa9TseNrsJgNhgm/0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7+8ljZa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWpdso2Vw+ffqZrRsH62vqJblXhRom8r2RCPE06bQqt6oVzGOSBkVG9R0HfnOGVyK7j2FJgutK0mYUST3+m8fKMHdMCRRKJ5sPXLUG3XrhUfMzcdIVqqtNIP1peYaBvJVF5Kk7XPpcfq2vemjTC6/k2Hy1nb6aXAdZ/NCl4EPaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGHE5gk1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7+8ljZa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 457E8C4CEEA;
-	Tue, 22 Apr 2025 08:35:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGHE5gk1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3F0C4CEE9;
+	Tue, 22 Apr 2025 08:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745310924;
-	bh=tkcz3fDoQtNMo4Zmg+sngA67GADtQkWp13qhVcacadk=;
+	s=k20201202; t=1745310950;
+	bh=hKd3sovezTE4oI9gLuxz2U+vzWmyXW67MNxppVUKeTM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X7+8ljZag9MrMdygB/e5mTshdnVjmpMziL5L0xJEcDaZY8DYtpt7fNbFPgA/SVWxt
-	 2Yh0hgP7jPhR4y4DTAfUd7sG7e6+xC2ORhALpoGls/i+F1610naxJf2JBqPnsH0vRo
-	 3TI5FZu+7LSxVki7fAOtVyXq5W/yD/oiOLIoDrLDpIHtlv2u2BWt0N6DCLcXSWqZLf
-	 HFdXaNg1GpqjOxf3kjwOKadK3E2omKDA/UhFkZQPHIyvJUbuUdf1ddUoYVIB6g2X3x
-	 KtPOM60g96iMDCSmVxW/UHsImBJvRfb6qGIuTwccVssytmjoNmwxqxyfnb2ncw3Q+5
-	 pZXUfVZwnSGlA==
-Date: Tue, 22 Apr 2025 11:35:17 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Dave Hansen <dave.hansen@intel.com>, x86-ml <x86@kernel.org>
-Subject: Re: Kernel 6.15-rc2 unable to boot on 32bit x86 with PAE
-Message-ID: <aAdUxY8i4TV3q9Lt@kernel.org>
-References: <4599013d-bc74-4f81-9db7-070806ea9162@gmx.com>
- <20250418160515.GAaAJ4O2HnktVgmZ1v@fat_crate.local>
- <aAc-h1TJV7do7JXa@gmail.com>
- <ecca749e-9c84-40ef-ae2a-d630a249b764@gmx.com>
+	b=jGHE5gk19LSSenv+CK3/g90CC/FxG+lXLLqmuUeXoKymLlBKHH20LJXWpitIpXxnv
+	 S6bbslIxGT4Clf128FO4v1VXePcu2SWPBcrBzRge5/yih5HjeWYUFWGieuQcHiz/cM
+	 H+odr75lTSBDEpqRusyl01Kteu66O7zpzAbqcCfC3m2DLkzTWquq4qY2gTolVPhE6r
+	 F528iBFdnvQNkNwRqI1jWyLmi6OLj/9pRpD5XF2g5ub9ltfH9md1m4c0exnJdz1Nz9
+	 Gx1L8IJx2UoVXBwGAZBIe8CrARh3szphl4Pf8IICqI1sFFD2SMXri+pagoVBMwj3la
+	 5OrZAGuOe7egA==
+Date: Tue, 22 Apr 2025 10:35:46 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nam Tran <trannamatk@gmail.com>
+Cc: pavel@kernel.org, lee@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
+	conor+dt@kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] dt-bindings: leds: add TI/National Semiconductor
+ LP5812 LED Driver
+Message-ID: <20250422-winged-naughty-porpoise-645d0b@kuoka>
+References: <20250419184333.56617-1-trannamatk@gmail.com>
+ <20250419184333.56617-2-trannamatk@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,61 +45,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ecca749e-9c84-40ef-ae2a-d630a249b764@gmx.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250419184333.56617-2-trannamatk@gmail.com>
 
-On Tue, Apr 22, 2025 at 05:02:55PM +0930, Qu Wenruo wrote:
-> 
-> 
-> 在 2025/4/22 16:30, Ingo Molnar 写道:
-> > 
-> > * Borislav Petkov <bp@alien8.de> wrote:
-> > 
-> > > On Fri, Apr 18, 2025 at 08:31:23PM +0930, Qu Wenruo wrote:
-> > > > Hi,
-> > > > 
-> > > > Recently I'm testing a situation where highmem is involved, thus I'm
-> > > > building the latest 32bit x86 with HIGHMEM and PAE, and run it inside a qemu
-> > > > VM.
-> > > 
-> > > Does that fix it:
-> > > 
-> > > https://git.kernel.org/tip/1e07b9fad022e0e02215150ca1e20912e78e8ec1
-> > > 
-> > > ?
-> > 
-> > That commit caused other problems - the best fix we have right now is:
-> > 
-> > 	https://git.kernel.org/tip/83b2d345e1786fdab96fc2b52942eebde125e7cd
-> 
-> Thanks, I'll take a try again.
-> 
-> But considering how rare 32bit + highmem systems are nowadays, I still have
-> one questions/concern:
-> 
-> - How to make sure we really got highmems?
->   The kernel docs only mention that highmems need temporary mapping,
->   and proper kmap/kunmap() handling.
-> 
->   But I still didn't have a straightforward idea of how to verify,
->   without adding manual ftrace events when a highmem page is hit.
-> 
->   E.g. free only shows 3GB memory even if I enabled highmem + PAE.
+On Sun, Apr 20, 2025 at 01:43:29AM GMT, Nam Tran wrote:
+> The LP5812 is a 4=C3=973 RGB LED driver with an autonomous animation engi=
+ne
+> and time-cross-multiplexing (TCM) support for up to 12 LEDs.
+> It supports both analog (256 levels) and PWM (8-bit) dimming,
+> including exponential PWM for smooth brightness control.
+>=20
+> Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> ---
+>  .../devicetree/bindings/leds/ti,lp5812.yaml   | 46 +++++++++++++++++++
+>  MAINTAINERS                                   |  6 +++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
 
-Without HIGHMEM it would be less than 900M.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-You can look for "HIGHMEM available" and "Memory: n/m available" in the
-kernel log to see how much highmem is there. 
- 
->   Since HIGHMEM64G is removed, I'd expect to get some values more like
->   4G instead?
+---
 
-There are some gaps under 4G, so it's surely less that 4G of usable memory
-there.
- 
-> Thanks,
-> Qu
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
 
--- 
-Sincerely yours,
-Mike.
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions of patchset, under or above your Signed-off-by tag, unless
+patch changed significantly (e.g. new properties added to the DT
+bindings). Tag is "received", when provided in a message replied to you
+on the mailing list. Tools like b4 can help here. However, there's no
+need to repost patches *only* to add the tags. The upstream maintainer
+will do that for tags received on the version they apply.
+
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/sub=
+mitting-patches.rst#L577
+</form letter>
+
+Best regards,
+Krzysztof
+
