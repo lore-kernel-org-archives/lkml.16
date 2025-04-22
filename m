@@ -1,138 +1,162 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF36A1C6BE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B59277819;
+	Tue, 22 Apr 2025 12:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745323223; cv=none; b=PUNTA+4bOqGhPXUYKuEPE9JXf3CXMNIq3/cjwF/pNJhkyY46ay159UhOne78RVAnYB51loDJJ3DyStAIAKTuwIs8ebV4WQ3zXst1wqS2ORKCLxwoulWNpV1XT03ph//K21qwHhlfzUfizT3TI0KER0t8U78sCLu2EszBwq+CwLA=
+	t=1745323238; cv=none; b=J66aHpPUFHi3PdCHTkvRu4qvPH/GUAm6/t0ZFxGGKkyNSNvyYSf0kaLLA3dWa2QwnnBdAliMjhzsemgJljcRWpRVtv2FJkBJfuSI3+mmoEYZeJq7TUeSYUNgybE3SGctqn5FF5Nd+AzD+CnAIEaRd//GbcC51SZWxtXOATSZWWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745323223; c=relaxed/simple;
-	bh=1vpYm+GQxhLlWhb6ifByWLEltnQPSlybhasf4ERMH8Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=knLtsdhstgVyXroSkK28TqXHtt+GUEUc7vY+DQ9s9HUWEAqJii514JJySr1tEgZ0rK2H1/JxIlaix+zlZehIR972uoO5M1/eYX7cBWmuav51wslDvtRzP7nAiMJ4S9xbGhUyge8heWJT4e3oka67RSdrjYci5e50Gc5jWMZb9uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=q+PykJF0; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1745323238; c=relaxed/simple;
+	bh=PE32aOICxpf9Il971tWVYUOauqB5/VNm8nNUXdWIFZU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=bX6IB1r32ke51NUX5qyW0628CAdH6F+Z9i9Opw8eaQ9793xFlAp/keRrTvm1YmmZTIN1YDkrsLAJjs2Lh8sBIQ4vgeczMmjt0e+iF+728enAuHNnoUO/a8sXa6aZ4dMxcLuDi0/peGsXuEAefDDrC6L9P6U10ndQBcfUHIk7Zxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FCtdW4K7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mWK2dk0L; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="q+PykJF0"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zhgm16Xl5z9tQY;
-	Tue, 22 Apr 2025 14:00:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1745323218; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1vpYm+GQxhLlWhb6ifByWLEltnQPSlybhasf4ERMH8Q=;
-	b=q+PykJF0H2r6JiN/VNCR1+a218ywnoE6PZ226N3JwQaNyjuwRz4fAT6XKX3pyflIz4HoME
-	rbRL2GVEz0rbAmX7yH6J4ksvagXPGG8V8pWJDPjJmG/UCni3uBQ9pF7dxnc3zE7Y0PgSp1
-	geQjVuk4jtftJ4tzLhKujml6kqfkuT50KgaEPJ5JEof2MoOXZf0eTAVSLvQPE0FfpgaATu
-	QEb58Ly1Z7Sjm1MC+IWZFBchEal9sgWhuFyzTPzYp2Wlkr1Uzp/NF5E600OwgVDTECI2Q+
-	IlITcPQyB1KXHifWKHx8D03jHd13EdMpOYiATDl8Z/xv3rlikLbkvpRdKEoNRA==
-Message-ID: <649c7fe3469c39496db89de6951d9f2b61c36576.camel@mailbox.org>
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Danilo Krummrich <dakr@kernel.org>, Tvrtko Ursulin
-	 <tvrtko.ursulin@igalia.com>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
- <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org,  linux-kernel@vger.kernel.org
-Date: Tue, 22 Apr 2025 14:00:11 +0200
-In-Reply-To: <aAd54jUwBwgc-_g2@cassiopeiae>
-References: <20250407152239.34429-2-phasta@kernel.org>
-	 <20250407152239.34429-5-phasta@kernel.org>
-	 <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
-	 <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
-	 <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
-	 <aAEUwjzZ9w9xlKRY@cassiopeiae>
-	 <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
-	 <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
-	 <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
-	 <aAd54jUwBwgc-_g2@cassiopeiae>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FCtdW4K7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mWK2dk0L"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id CD0161140251;
+	Tue, 22 Apr 2025 08:00:34 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 08:00:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745323234;
+	 x=1745409634; bh=8nthwYMKR4aOFINu9xZgH8QRFGdfF9jUoUvoZlCSYU4=; b=
+	FCtdW4K7I5zRyUQp1mclIzfaXPPDcsgT0G2XsPEkSGSS8BJ40XFJNF2l/bzcVak8
+	PJLftEKTePKlehKHr+AnSvI7TJIxO7SmiCXgJsU8scKoUhwtBOBCWVCKyZ2jO5Dl
+	rBxjlwr3fQORHFVrP9KtM8XvSwYXecX888kwoZr3ZjMZWPbq5U+GcaDO9fA15UkU
+	mmCcRxJwJkrWzHG54q5ElF+wJVS2G3JqYc3Jw0U2WG7ocF+5lNFPTeG9rvmuWCsi
+	njglbjyrOiOLj2cIiTM3373DP7mgJGa16rLBBiZx6hT1WzvvUHLFcDBFtrF6P71X
+	yXIm2hKpVmQmddjLM2RTVA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745323234; x=
+	1745409634; bh=8nthwYMKR4aOFINu9xZgH8QRFGdfF9jUoUvoZlCSYU4=; b=m
+	WK2dk0L1aVa94+bunBhLx17FVJznnvK/AdKm8nEPfZUUS7IgF0ziI7PzIWNBofEQ
+	8CZP7gBY7bFYlNyj5QRhlUrNMvKSkF1nUwZOM7WaUPvrmIdCKqTGDpIZ9FJRrMrs
+	rY0dJK3JYP7Dr0c16X1Bp+SqDKHx6gHlSLl7FwmrAry9AEdQl7UZOnjQKjYZj+B6
+	vvrboj+7geoKTlI3tPb17BOxBo5pSKE6uOpB5ryVL8Hvhcip4IQ4CnrOLRyuJokn
+	nRUzuu1LC2c51effPU6RF18xX6fkizjG8VKovi8vuJXpvIaMldvoBAgALUzx2XUW
+	Fu8/l8WsLkMTIO1/RIRvQ==
+X-ME-Sender: <xms:4IQHaIwwAg2ARtGf3jGlqMBsIagJvBoGj0v_BftaGeTLZUA9fgBI2A>
+    <xme:4IQHaMSPkvJvmtb0CK21vKbtTwBPmE5CK5CbIBK6vPn0gPn4v1aYB4jF5XJoOGGAX
+    T6MbIL_0gzIP5Ud60k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefieejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedv
+    vdegjedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    gedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrg
+    hnsegrmhgurdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdr
+    tghomhdprhgtphhtthhopehpvggurgesrgigvghnthhirgdrshgvpdhrtghpthhtohepmh
+    htuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehhvghrvhgv
+    rdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrh
+    gvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvght
+    rgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepghgvvghrthdorhgvnh
+    gvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegujhhrshgtrghllhihsehgmhgr
+    ihhlrdgtohhm
+X-ME-Proxy: <xmx:4IQHaKWmoW2di_TlBk_3LC0bIqSqcvphy6ets2e-rndyOqir4PbyCA>
+    <xmx:4IQHaGiei-Ql0GRpXERiVlv65LxFK-7j6r-KkvhG1fj3vn-8NEFwVQ>
+    <xmx:4IQHaKCm5zPJpibs-8kVLkqGWNg8UD2hn4Z8TqFJIGHP--QssqYrRg>
+    <xmx:4IQHaHJOvBUka2beZuMcFi1smo_KB-gJx9FuTpNKCqV5ylIZza69NQ>
+    <xmx:4oQHaJYK6LHO-f8uu6Lf4HNT_VDikvi48Yp8jo6RBxgTdQ2SDj7VOZ4o>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id D0CBA2220073; Tue, 22 Apr 2025 08:00:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 4c04011615e20bdd267
-X-MBO-RS-META: n61eesopsdmkks4z8prq1n7h8hkk6wg4
+X-ThreadId: T51aa6c607dc631ce
+Date: Tue, 22 Apr 2025 14:00:12 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Herve Codina" <herve.codina@bootlin.com>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Fabio Estevam" <festevam@gmail.com>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Andi Shyti" <andi.shyti@kernel.org>,
+ "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
+ "Peter Rosin" <peda@axentia.se>,
+ "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
+ "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
+ "Rob Herring" <robh@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>, "Mark Brown" <broonie@kernel.org>,
+ "Len Brown" <lenb@kernel.org>, "Daniel Scally" <djrscally@gmail.com>,
+ "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+ "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+ "Wolfram Sang" <wsa@kernel.org>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org,
+ "Allan Nielsen" <allan.nielsen@microchip.com>,
+ "Horatiu Vultur" <horatiu.vultur@microchip.com>,
+ "Steen Hegelund" <steen.hegelund@microchip.com>,
+ "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
+ "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+Message-Id: <68b23799-29c2-4309-b55a-87d83dc6fbe9@app.fastmail.com>
+In-Reply-To: <20250408154925.5653d506@bootlin.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-12-herve.codina@bootlin.com>
+ <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com> <20250408154925.5653d506@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support for x86
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-22 at 13:13 +0200, Danilo Krummrich wrote:
-> On Tue, Apr 22, 2025 at 11:39:11AM +0100, Tvrtko Ursulin wrote:
-> > Question I raised is if there are other drivers which manage to
-> > clean up
-> > everything correctly (like the mock scheduler does), but trigger
-> > that
-> > warning. Maybe there are not and maybe mock scheduler is the only
-> > false
-> > positive.
+On Tue, Apr 8, 2025, at 15:49, Herve Codina wrote:
+> On Mon, 7 Apr 2025 18:36:28 +0300
+>> On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
+>>=20
+>> This is incorrect, they never had ACPI to begin with. Also there is t=
+hird
+>> platform that are using DT on x86 core =E2=80=94 SpreadTrum based pho=
+nes.
+>
+> I will rework the commit log to avoid 'mixing ACPI and device-tree'
+>
+> For "SpreadTrum based phones", do you have an idea about the Kconfig s=
+ymbol
+> I could use to filter our this x86 systems?
+>
+> Anything I find upstream related to SpreadTrum seems base on ARM cpus.
+> I probably miss something.
 
-For clarification:
+This is the Intel SOFIA platform with chips from both Spreadtrum (now
+Unisoc) and Rockchips, using a port of the arch/arm/ code DT on x86,
+about 10 years ago.
 
-I messed up the comment from the cover letter.
+That code was never upstreamed, and is long abandoned by everyone.
 
-What I did was run the *old* unit tests (v5 IIRC) from Tvrtko that
-still had the memory leaks. Those then trigger the warning print, as is
-expected, since they don't provide fence_context_kill().
+>> And not sure about AMD stuff (Geode?).
+>
+> Same here, if some AMD devices need to be filtered out, is there a spe=
+cific
+> Kconfig symbol I can use ?
 
-The current unit tests are fine memory-leak-wise.
+The only one I can think of is CONFIG_OLPC, the XO-1 was a Geode LX,
+while XO-1.5 used a VIA C7, both with actual open firmware (not just
+fdt).
 
-IOW, both with Nouveau and the unit tests, everything behaves as
-expected, without issues.
-
-Sorry for the confusion.
-
-P.
-
->=20
-> So far the scheduler simply does not give any guideline on how to
-> address the
-> problem, hence every driver simply does something (or nothing,
-> effectively
-> ignoring the problem). This is what we want to fix.
->=20
-> The mock scheduler keeps it's own list of pending jobs and on tear
-> down stops
-> the scheduler's workqueues, traverses it's own list and eventually
-> frees the
-> pending jobs without updating the scheduler's internal pending list.
->=20
-> So yes, it does avoid memory leaks, but it also leaves the schedulers
-> internal
-> structures with an invalid state, i.e. the pending list of the
-> scheduler has
-> pointers to already freed memory.
->=20
-> What if the drm_sched_fini() starts touching the pending list? Then
-> you'd end up
-> with UAF bugs with this implementation. We cannot invalidate the
-> schedulers
-> internal structures and yet call scheduler functions - e.g.
-> drm_sched_fini() -
-> subsequently.
->=20
-> Hence, the current implementation of the mock scheduler is
-> fundamentally flawed.
-> And so would be *every* driver that still has entries within the
-> scheduler's
-> pending list.
->=20
-> This is not a false positive, it already caught a real bug -- in the
-> mock
-> scheduler.
->=20
-> - Danilo
-
+       Arnd
