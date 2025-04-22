@@ -1,236 +1,186 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2056.outbound.protection.outlook.com [40.107.100.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4EF5477F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745281452; cv=none; b=hGD+AjmCynQ2fxSATrP0OAKCPZJGFYje39sltTVkb9sWLBeg4wubdoneQ7Tza2PUWvEDhWx69qrE0We5K8a3ybYmzvc6fW1zPlBZLvkD8G+v8A+CBfMdgw28NgTSW0SRcXe7/UWVyNfeAsuY8p/tN5BX9agzgDWbcJ6UrCTz2/c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745281452; c=relaxed/simple;
-	bh=u52bVrB/pZ0lfovnX74KF6WwBxpQoIaVYqukYlfqcMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rVYOWdGoEpJ0by8yM7ZXVwjV4OAGizaIj8WuG5CWz2eFTzMAiH9Il7l6sVNuCPr8Mc+G1N1QR2RsPXTroaVAy9Xn3wQDAAJD+vXb5iY+jUn5i84sbIpzQ6ZuHloYhNMwj7R59VPahnsq9eg4iMSAGtII/vR5HDo04iv7NooHOk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IJkuwugS; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2914578F5F;
+	Tue, 22 Apr 2025 00:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745281463; cv=fail; b=Mp6zOQjIHqFgGAukaORP4x0FMZsLFq96YX8sZxtd1nTQcnWtO8D4xqh5pNZ62ypkb3BmN09eUpT5GY6hhQxU+PDqYIIalzscmQPmKOFnwo6amf7PfDtqSos6PnG2n8kV+/5GYn3dFQQ3xQoGdlHFFB8YbBchy9SK4fg+eN7Iva0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745281463; c=relaxed/simple;
+	bh=Z0fveAUtE+wvo7dlJbKAp9Ww90G72z7QgcrKwQQhKQs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oCDi5i+7hJY3dPfmuqm30VhKBS7CcnfWifqNN1I7lmzXFvJ9lSkdEK57l0XMixs7nEaub4v4FU5n0C+giJO3RUvnT/3m71hBNEWrdokHsIOHeVBC1yPhlIiSNlGZYNzP+w82ZsyX/5wdH7Rinw1V5bOkfiYNqooehUwykUtT9u0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RElzo4uH; arc=fail smtp.client-ip=40.107.100.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IJkuwugS"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54af20849adso4357812e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745281448; x=1745886248; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hfCnlXym9eZAbX+zdYaRO3WcEjSZxfzTyz2pRkP+wp4=;
-        b=IJkuwugSTnesjMEO730y97podEUNN1hDhZ/zzMIimojY7gEwNtDI8/7VVWUeGsEKa4
-         NKzm6PVGAGl0nw/ybuQ/9J+TCI98DwTuTQiZl3dAtlj66ScWVxmDqfvppxT5aQtZc/w8
-         9mqTN5wIYawAu/2md9PD3EVuXiMYu6a6VgFBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745281448; x=1745886248;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hfCnlXym9eZAbX+zdYaRO3WcEjSZxfzTyz2pRkP+wp4=;
-        b=Zr6Sq//kqYBwDydtVo0AwXP36zO+ysLt7LDTuoMBo4ySTbUSYMPpzxFd262h3//Sji
-         W9iFDYkgJU3AcafbdX7aI9UdgoSt2IW02MRHEKhDOVCY1vdSCZiJ0zo5/h8hkYMkpBDW
-         NQOFDM7enxmokUvJnRP7mAhlEInPVxJEShu3beHxDGGpN2Vqg3OIM8z9kLUT3/If2u3m
-         nh1hILVq2t0TdZcCDDyQzfECzb8l5eb/9hGMYqDsh4GB+DDBm6xfqmLjnEcKtF/cmg1v
-         6DiHc5qHinLHH/Hj802SrRxATfVVWaZBdrIVmPtoBMOOGvEez3iZ/kP66ZWkjrvg2TwX
-         9siQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtvmdGIZmOtX6KgDusEvjN/i3SqVXbPN5LaC+YHSceJXy6Aao8e09sabM7fBa41dz4826FuasvCHFPgZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOFl9xru0vxL4qe9AtiiRlgeOGE7Q4iTjNbi5s2vCuQDCz/4w8
-	+20ixhTxEvoE9Uqji84m3s/FCzSaG84iw0m2qo9Usa9JeZsTi6+CiuBn/9WvsrryQI65YzPJwSk
-	=
-X-Gm-Gg: ASbGncvkcceCB7fFVwl2OSLZR/JSQEFyDqkFHGCAkMLx0krpbz++p5imNtLR3D8DM8i
-	LtobTJq4V1G+OasrUNaWsOh11O5nIbaZ1UPnpFCcAda29bUYRFeNR9xNvaZ4lWU9k/oiMWIUvQH
-	QjZGKXR62V6HEabQelP5MmAbWIr8t7Ndky1AGzSqnUDeAvd3mKbxCum4/uZ0+Ldi/uezGQrKfdw
-	LmQzkDgGdbUwNd3AN4hNaH3vLkKohrciosEsjSYJ8gWmwgRC0KwAXdrtCfWVBZ30YoNIuVQPkk/
-	W3NtaQ8zW9ElG45L+ySa5DlR7MfgIYOLsd8XCX3xz80PlO3I2dW5ldLOd2L8nj08l56GPPU5sMZ
-	EEF5tIQz2RKO0jg==
-X-Google-Smtp-Source: AGHT+IGfO+zD9k8Bx1AJuL3kqdvG66KZfor3hqk8IJbtxcvXeAbFFu9ZS/uVpyv//A6Qk8W5Bfmq2w==
-X-Received: by 2002:a05:6512:15a5:b0:548:878b:ccb3 with SMTP id 2adb3069b0e04-54d6e7f267amr3552888e87.25.1745281448524;
-        Mon, 21 Apr 2025 17:24:08 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540d3bsm1059403e87.72.2025.04.21.17.24.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 17:24:07 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54b10956398so5317515e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:24:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUD6B9SijqFo741m7dn5/2yalaplRa0IZG6F3yVlZjzEo8OJ6wAUV0SoR1qOFPVnIYcxquCPr3SXHQP2MM=@vger.kernel.org
-X-Received: by 2002:a05:6512:3995:b0:54a:cc10:1050 with SMTP id
- 2adb3069b0e04-54d6e789b2bmr3360285e87.15.1745281447045; Mon, 21 Apr 2025
- 17:24:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RElzo4uH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=avSl/0x4jzqIdk30pVTLrW4SvNwXZL4gK5TtxLayGHunNrhcEFEb0whEePsiwSWDHGLAIuEkBxHqVeDahQOXB4/BTxAecJDhW3XSsO1e8dZdirzzp/ZWe9Bp9r+dtjH9TjOWJLN5jItAVZnB+/kpUXE2pAnRYlRr52oog4KuOEKAyX7IfZju+hRWKNH/bm/NM7vnoMXURTQoIvOM8bTkCMcwtHB7PFNCYp4E9tP2iQpihE2owLLeIvta/L98sBf/yod3PgTzAfLM52+9sM5OAE99aQQ/r+rWdlivf2vHtUe5hH23sDgn+hOVAUwCZS+CXtXIUfukMBoDNEnsmowLcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A5c3jD0089Q2jyh1hb18+K2i5WjzHT3HqYiqbSlfr58=;
+ b=ZvJv4N8QaTvbEx8kKnHSFYo9QYgD9kbdhldL9e3BUYBgpljGeVp9/2NIq4w80pEryRzTT5C/GuI7AW3hnjsvThk8hoj+cxEjzXpGvCBARM3ywkOqgZ/BCnF0RAWa1oZ20bRYiCB475EMT4wYMGk9xnoa8JiFJKJgEKDDT9QyjcuInttdgcz9VzuV2ZAT2qbZrg+qgJ7p9f2kMAFRuU4jCZl0d2+rMqt5dqCs9jBQ5l/vWgrTfjO0WfPfjFuuFGere4de6t3oq+WWb01dm5FGOTjUFUmNs0yxeF2Ea6bb6BGe3//gFIDFrRK/AMaV8YrFtDEF4cTcZL5JNkXZRnL9gg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A5c3jD0089Q2jyh1hb18+K2i5WjzHT3HqYiqbSlfr58=;
+ b=RElzo4uHQNiH2uuPAAPhorscZleDutGFYmPfhnBkDSxIHuv5OJd42Ld/r2PUdrnsVtT1+sUbVnAPCdlrzPkygCxLW61LLn5zLD+jOvRLrlSeiSlz2x4YRLfIS3U+Az6Ezqcgv4OFvbBXD+hlvycl9sR+iHusqo5OU1ATUNJzBUc=
+Received: from MN2PR06CA0007.namprd06.prod.outlook.com (2603:10b6:208:23d::12)
+ by CY8PR12MB7196.namprd12.prod.outlook.com (2603:10b6:930:58::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
+ 2025 00:24:15 +0000
+Received: from BN3PEPF0000B06E.namprd21.prod.outlook.com
+ (2603:10b6:208:23d:cafe::18) by MN2PR06CA0007.outlook.office365.com
+ (2603:10b6:208:23d::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
+ 22 Apr 2025 00:24:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B06E.mail.protection.outlook.com (10.167.243.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.1 via Frontend Transport; Tue, 22 Apr 2025 00:24:14 +0000
+Received: from purico-ed09host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
+ 2025 19:24:12 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <herbert@gondor.apana.org.au>
+CC: <x86@kernel.org>, <john.allen@amd.com>, <davem@davemloft.net>,
+	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Subject: [PATCH v3 0/4] Add SEV-SNP CipherTextHiding feature support
+Date: Tue, 22 Apr 2025 00:24:00 +0000
+Message-ID: <cover.1745279916.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org> <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
-In-Reply-To: <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 22 Apr 2025 08:23:52 +0800
-X-Gmail-Original-Message-ID: <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
-X-Gm-Features: ATxdqUGV9UNm6rsWa1b6fT7zaIeRsrhtYZHR863_Li8k5tC_mUahvNyGq--RUEU
-Message-ID: <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
-Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for v4l2_fwnode_device_parse
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06E:EE_|CY8PR12MB7196:EE_
+X-MS-Office365-Filtering-Correlation-Id: d167b89c-c221-40b1-0b72-08dd8134031e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ue4O5sI4YkED1biupsrZMbWXlrhicS8mdpyU5gOCf8Pi9pJTZzV5tjouDHiw?=
+ =?us-ascii?Q?NiEAEjCpX8ptr+Ls9o5DfVIiTck3jGa2IvCMqWj8hjpcT5FrfcxeqU4TVxJE?=
+ =?us-ascii?Q?3h1bhsht9z1OvkBk2Eh60simNgDg7ybRAH9qn0w7ctxadj7RRqBUePAVBV53?=
+ =?us-ascii?Q?yPMho6m4h53qN/ctkBXbYe+8+nJ60uTq/4CHBMw0lNWJdw7MpezPRMLrxAYc?=
+ =?us-ascii?Q?7P0gmavZAYtRrOhIL+tj5hMQuqeo06i5QPRvIBqBVxQH6Dgc5rFI4E4KOj2/?=
+ =?us-ascii?Q?R3RO4OKsUuEeB5+9frHmICMvRULK7cjerE5bBT8L1IoLzUF8AIWXvnfDngdw?=
+ =?us-ascii?Q?C2H42SPSvrGD7+FiNhr/J4J1dtA0b0xnm9DMHk2PYOgkJJiv3nJx+PijEsBR?=
+ =?us-ascii?Q?hvmjCbkB+BHT9a51eB5F3VSG/YGcdep9OJb3YyVCCFAcUlDA5PLzYHy4UBe6?=
+ =?us-ascii?Q?PfVxccFAotn8C/wXeDd73urpM3/JUtj9QMwXWKv9CrMjui2En8Lou3ubrLkO?=
+ =?us-ascii?Q?mYR35b7zsyReMKLyfg+QnG0tV33jxXmj+3RnTRc8jPMOy6GbWOWXYn6/XEOX?=
+ =?us-ascii?Q?nUHO6TO7AE4KUt0VE0uhVCdjHnvDYJgdoL+ssi711RAm8T4bQmxMIAZ5XLhb?=
+ =?us-ascii?Q?bB1okP13QUYeBEgMBnSGyoPtWheiSJ8eHLlrhsx/KS50/Mv+3ekAjZ4q9Khw?=
+ =?us-ascii?Q?E7PI6CyaxSQTF5d8XdUqtLx0QTwv+9u3Ra26KdxlzOj1r818YnSk33tXZXIG?=
+ =?us-ascii?Q?Q/HL6wV/pFn/++Fn6cXiUN/sHBxSE+/I7NRCD5hCdmqckDwmsNNGgdiIvz6m?=
+ =?us-ascii?Q?p6Us8LwZzOePLvCISxZ7KUMGtGADECen8/EzD154lljgizLCU5347WtpGHC0?=
+ =?us-ascii?Q?aodFsAWlUFV5HqolXY/XdPbvlF34MifdENqme5KFVllGPwZoToik3J+/rPfA?=
+ =?us-ascii?Q?o5/RNBck2M4IWQMLipm1ODjY6m2KZUEIGghVPdotQBXmTbyymhjg8xcHBbI6?=
+ =?us-ascii?Q?d1xDAJ5Wu5qObE+9AfzcKBWsDiHeadVNi6M0ddEFnbiY7KDP55nvXCp1WLx3?=
+ =?us-ascii?Q?Ltg4F7vjw2tpeYE0cbK4RDgd9bzll396HGiuYy0D085p4TV6znN3eXzxdk9I?=
+ =?us-ascii?Q?dnZfWmT0MECI6hY9+l69Blxjzb0jN7NdQ/HWJFxnebaMbf9sVyGg+bMHbQI2?=
+ =?us-ascii?Q?2oC6v44blsVuxgakMDthf0R5WaWRmOLy64vmHZqaBzcHwzsHyL1uVh8LTQHV?=
+ =?us-ascii?Q?0akZv8O/KRbOpplT3SxNaEXiZ8V6L36tVTcWL88DFiaa9U8PWVxCQSduq7ka?=
+ =?us-ascii?Q?v42IliPpBVM77FQwyEv2BdL+SajSr5DT/z5YdQl3vapVMfQjKRHUinHqVm8f?=
+ =?us-ascii?Q?eCWxYkYs6cDeCvXcZrtl6+I++9eI7Nl2QuPo2an2ZkZtvYY4wFcwdp4i9mn6?=
+ =?us-ascii?Q?uibKuPNi4W8uiAM8XibsOqovq0KVw33BwfQ6ZKPfgGzCYBzA1x77atOzpBo6?=
+ =?us-ascii?Q?7gFssWDWMI/APVwnPVE1M6YwQ6Vpd2vtt6R3?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 00:24:14.6633
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d167b89c-c221-40b1-0b72-08dd8134031e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B06E.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7196
 
-Hi Sakari
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Ricardo,
->
-> Thanks for the patch.
->
-> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
-> > This patch modifies v4l2_fwnode_device_parse() to support ACPI devices.
-> >
-> > We initially add support only for orientation via the ACPI _PLD method.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++++++++++----
-> >  1 file changed, 52 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1c96f2a5ede3fa9d64dab3 100644
-> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> > @@ -15,6 +15,7 @@
-> >   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> >   */
-> >  #include <linux/acpi.h>
-> > +#include <acpi/acpi_bus.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/module.h>
-> > @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
-> >  }
-> >  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
-> >
-> > -int v4l2_fwnode_device_parse(struct device *dev,
-> > -                          struct v4l2_fwnode_device_properties *props)
-> > +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> > +                                      struct v4l2_fwnode_device_properties *props)
-> > +{
-> > +     struct acpi_pld_info *pld;
-> > +     int ret = 0;
-> > +
-> > +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
-> > +             dev_dbg(dev, "acpi _PLD call failed\n");
-> > +             return 0;
-> > +     }
->
-> You could have software nodes in an ACPI system as well as DT-aligned
-> properties. They're not the primary means to convey this information still.
->
-> How about returning e.g. -ENODATA here if _PLD doesn't exist for the device
-> and then proceeding to parse properties as in DT?
+Ciphertext hiding prevents host accesses from reading the ciphertext
+of SNP guest private memory. Instead of reading ciphertext, the host
+will see constant default values (0xff).
 
-Do you mean that there can be devices with ACPI handles that can also
-have DT properties?
+Ciphertext hiding separates the ASID space into SNP guest ASIDs and 
+host ASIDs. All SNP active guests must have an ASID less than or
+equal to MAX_SNP_ASID provided to the SNP_INIT_EX command.
+All SEV-legacy guests must be greater than MAX_SNP_ASID.
 
-Wow that is new to me :).
+This patch-set adds two new module parameters to the KVM module
+to enable SNP CipherTextHiding support and user configurable
+MAX_SNP_ASID to define the system-wide maximum SNP ASID value.
+If this value is not set, then the ASID space is equally divided
+between SEV-SNP and SEV-ES guests.
 
-What shall we do if _PLD contradicts the DT property? What takes precedence?
+v3:
+- rebase to linux-next.
+- rebase on top of support to move SEV-SNP initialization to
+KVM module from CCP driver.
+- Split CipherTextHiding support between CCP driver and KVM module
+with KVM module calling into CCP driver to initialize SNP with
+CipherTextHiding enabled and MAX ASID usable for SNP guest if
+KVM is enabling CipherTextHiding feature.
+- Move module parameters to enable CipherTextHiding feature and
+MAX ASID usable for SNP guests from CCP driver to KVM module
+which allows KVM to be responsible for enabling CipherTextHiding
+feature if end-user requests it.
 
->
-> > +
-> > +     switch (pld->panel) {
-> > +     case ACPI_PLD_PANEL_FRONT:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_FRONT;
-> > +             break;
-> > +     case ACPI_PLD_PANEL_BACK:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_BACK;
-> > +             break;
-> > +     case ACPI_PLD_PANEL_TOP:
-> > +     case ACPI_PLD_PANEL_LEFT:
-> > +     case ACPI_PLD_PANEL_RIGHT:
-> > +     case ACPI_PLD_PANEL_UNKNOWN:
-> > +             props->orientation = V4L2_FWNODE_ORIENTATION_EXTERNAL;
-> > +             break;
->
-> How about the rotation in _PLD?
+v2:
+- Fix and add more description to commit logs.
+- Rename sev_cache_snp_platform_status_and_discover_features() to 
+snp_get_platform_data().
+- Add check in snp_get_platform_data to guard against being called
+after SNP_INIT_EX.
+- Fix comments for new structure field definitions being added.
+- Fix naming for new structure being added.
+- Add new vm-type parameter to sev_asid_new().
+- Fix identation.
+- Rename CCP module parameters psp_cth_enabled to cipher_text_hiding and 
+psp_max_snp_asid to max_snp_asid.
+- Rename max_snp_asid to snp_max_snp_asid. 
 
-If we agree on the orientation part I will extend it to support
-rotation. It should not be a complicated change.
+Ashish Kalra (4):
+  crypto: ccp: New bit-field definitions for SNP_PLATFORM_STATUS command
+  crypto: ccp: Add support for SNP_FEATURE_INFO command
+  crypto: ccp: Add support to enable CipherTextHiding on SNP_INIT_EX
+  KVM: SVM: Add SEV-SNP CipherTextHiding support
 
->
-> > +     default:
-> > +             dev_dbg(dev, "Unknown _PLD panel val %d\n", pld->panel);
-> > +             ret = -EINVAL;
-> > +             break;
-> > +     }
-> > +
-> > +     ACPI_FREE(pld);
-> > +     return ret;
-> > +}
-> > +
-> > +static int v4l2_fwnode_device_parse_dt(struct device *dev,
-> > +                                    struct v4l2_fwnode_device_properties *props)
-> >  {
-> >       struct fwnode_handle *fwnode = dev_fwnode(dev);
-> >       u32 val;
-> >       int ret;
-> >
-> > -     memset(props, 0, sizeof(*props));
-> > -
-> > -     props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
-> >       ret = fwnode_property_read_u32(fwnode, "orientation", &val);
-> >       if (!ret) {
-> >               switch (val) {
-> > @@ -833,7 +865,6 @@ int v4l2_fwnode_device_parse(struct device *dev,
-> >               dev_dbg(dev, "device orientation: %u\n", val);
-> >       }
-> >
-> > -     props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
-> >       ret = fwnode_property_read_u32(fwnode, "rotation", &val);
-> >       if (!ret) {
-> >               if (val >= 360) {
-> > @@ -847,6 +878,21 @@ int v4l2_fwnode_device_parse(struct device *dev,
-> >
-> >       return 0;
-> >  }
-> > +
-> > +int v4l2_fwnode_device_parse(struct device *dev,
-> > +                          struct v4l2_fwnode_device_properties *props)
-> > +{
-> > +     struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > +
-> > +     memset(props, 0, sizeof(*props));
-> > +
-> > +     props->orientation = V4L2_FWNODE_PROPERTY_UNSET;
-> > +     props->rotation = V4L2_FWNODE_PROPERTY_UNSET;
-> > +
-> > +     if (is_acpi_device_node(fwnode))
-> > +             return v4l2_fwnode_device_parse_acpi(dev, props);
-> > +     return v4l2_fwnode_device_parse_dt(dev, props);
-> > +}
-> >  EXPORT_SYMBOL_GPL(v4l2_fwnode_device_parse);
-> >
-> >  /*
-> >
->
-> --
-> Kind regards,
->
-> Sakari Ailus
-
-
+ arch/x86/kvm/svm/sev.c       | 50 ++++++++++++++++++++---
+ drivers/crypto/ccp/sev-dev.c | 78 ++++++++++++++++++++++++++++++++++--
+ drivers/crypto/ccp/sev-dev.h |  3 ++
+ include/linux/psp-sev.h      | 47 +++++++++++++++++++++-
+ include/uapi/linux/psp-sev.h | 10 ++++-
+ 5 files changed, 177 insertions(+), 11 deletions(-)
 
 -- 
-Ricardo Ribalda
+2.34.1
+
