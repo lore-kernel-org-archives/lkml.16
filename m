@@ -1,100 +1,554 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F2C63CB;
-	Tue, 22 Apr 2025 02:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD35250EC
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745289193; cv=none; b=cCSJGSgs3D6sfA/TtRgeM18HTqR7jHO9yyAGnchvSBKtZip+/Vx1BBQicpLVpd70KxSFuPPFNcIsNGAn8xSn8gjxRZ+Z00YjsWeYRV8UFMuOIJtUyOIFPy78+gNG6zP5tVHPPZtfhoiM2VfIAzKsk4wXjGf3m1e6dwCW4aaLc3w=
+	t=1745289342; cv=none; b=RD24VN5uFQvSv2/ZX6mwp5p0Lo/erUItsYxYC7bMWvTvi5at51v15F9XQn4LaZG94bwi6G+a6X/8tuejjzlKQF46+n7LxkYqMxpr5+Be9fdwV4esuoloiwI3WzhJJatmnyLxZsRCitntupdUV/ttK3rSiI+DRwxo00OrZiGgV6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745289193; c=relaxed/simple;
-	bh=3CMcARXpGUUmojvbSQDkeLpdlzz+J7hS6Fy6CnPgn8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qys7T6cDn9CAfhOiEn+ElB24meqqLsMX0YUk3N24NXWCtksnKSqmxquHZVjmBM+NNsARlHlXYmdM9m6pmVHdH3pLpGl3f707dSJ0hYDx0ZV62sqOLRnniXCLrsPoZB/uSqZvBsMMKmt1iDVmD+eJwkZ15ffm0o782vYJWPYlrvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowADXfP3h_wZoi3kBCw--.13238S2;
-	Tue, 22 Apr 2025 10:33:07 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: miriam.rachel.korenblit@intel.com,
-	kvalo@kernel.org
-Cc: johannes.berg@intel.com,
-	emmanuel.grumbach@intel.com,
-	golan.ben.ami@intel.com,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v2 RESEND] wifi: iwlwifi: mvm: Add error logging for iwl_finish_nic_init()
-Date: Tue, 22 Apr 2025 10:32:34 +0800
-Message-ID: <20250422023234.1992-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1745289342; c=relaxed/simple;
+	bh=NeqpG/ma1/BN7dzxQouQeynXJFB6sKKYCTkPxJLLIVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=qHtlLwixSkbb+tDEz4NYI7UAMdEI0OZjqe8Fa26zcab5KzCtfkATH0AF6hwAva5mHOCON3Z7oGNIvvyLjvz6jr6wVf91Zo6t83aTolrjQcoqUhfucYO1/Q+M4D2BYegPAS95ue+/g1Vet9mNRLtIjOaJN7llihqgMyXIdmZMayk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Mon, 21 Apr 2025 22:35:32 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org
+Subject: [PATCH] fsl_msi: Translate bitmap to hwirq on fsl,mpic
+Message-ID: <2025042122-cute-skua-c6de4a@boujee-and-buff>
+Mail-Followup-To: linuxppc-dev@lists.ozlabs.org, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADXfP3h_wZoi3kBCw--.13238S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7try7ur18tF48tw4kGw15Jwb_yoW8WFy3pF
-	4UGFW2krZ5K397Ca48Ja1IyF98ta1Fk3yDKF92kws5urs7Jr98tF95XFy5ta40g3yrXa4S
-	gF1jka4xGr1DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYAA2gG6ExnCQAAst
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7mrpmxef3ve3htry"
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-The function iwl_pci_resume() calls the function iwl_finish_nic_init(),
-but does not check their return values.
 
-Log a detailed error message with the error code to aid in diagnosing
-root causes if encountering irreparable errors. While this does not fix
-the underlying problem, it assist debugging by making the failure
-visible in logs.
+--7mrpmxef3ve3htry
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] fsl_msi: Translate bitmap to hwirq on fsl,mpic
+MIME-Version: 1.0
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+On PPC_32 QorIQ, the hwirq bitmap is done with the cascade being the most
+significant bits and the srs on the cascade being the least. This has the
+effect of filling up one cascade before the next.
+
+Since each cascade has 32 srs and is tied to a single CPU and interrupt,
+this means no load balancing of MSIs.
+
+Rework this case to translate between the bitmap and hwirq so that MSIs
+are allocated across the cascades round-robin to achieve load balancing.
+
+Also, to avoid holes in the bitmap, allocate it for exactly what the
+hardware supports.
+
+Tested on P4080 (which had the problem) and T4240 (which did not, but
+also no regressions).
+
+Signed-off-by: Ben Collins <bcollins@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-kernel@vger.kernel.org
 ---
-v2: Fix improper code.
+ arch/powerpc/sysdev/fsl_msi.c | 232 ++++++++++++++++++++++++----------
+ arch/powerpc/sysdev/fsl_msi.h |   7 +-
+ 2 files changed, 167 insertions(+), 72 deletions(-)
 
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index 8fb2aa282242..34a7a3e4f7c0 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -1616,6 +1616,7 @@ static int _iwl_pci_resume(struct device *device, bool restore)
- 	struct iwl_trans *trans = pci_get_drvdata(pdev);
- 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
- 	bool device_was_powered_off = false;
-+	int err;
- 
- 	/* Before you put code here, think about WoWLAN. You cannot check here
- 	 * whether WoWLAN is enabled or not, and your code will run even if
-@@ -1647,7 +1648,11 @@ static int _iwl_pci_resume(struct device *device, bool restore)
- 		 * won't really know how to recover.
- 		 */
- 		iwl_pcie_prepare_card_hw(trans);
--		iwl_finish_nic_init(trans);
-+		err = iwl_finish_nic_init(trans);
-+		if (err)
-+			IWL_ERR(trans,
-+				"NIC initialization failed after power-off (error %d).",
-+				err);
- 		iwl_op_mode_device_powered_off(trans->op_mode);
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index 7b9a5ea9cad9d..37f2143187ee1 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -29,17 +29,63 @@
+ #include "fsl_pci.h"
+=20
+ #define MSIIR_OFFSET_MASK	0xfffff
++
+ #define MSIIR_IBS_SHIFT		0
+ #define MSIIR_SRS_SHIFT		5
++#define MSIIR_SRS_MASK		0x7
++
+ #define MSIIR1_IBS_SHIFT	4
+ #define MSIIR1_SRS_SHIFT	0
+-#define MSI_SRS_MASK		0xf
++#define MSIIR1_SRS_MASK		0xf
++
+ #define MSI_IBS_MASK		0x1f
+=20
+-#define msi_hwirq(msi, msir_index, intr_index) \
+-		((msir_index) << (msi)->srs_shift | \
++#define MSI_MPIC_SIZE		0x10
++#define MSI_IPIC_SIZE		0x04
++
++#define msi_to_hwirq(msi, msir_index, intr_index) \
++		(((msir_index) << (msi)->srs_shift) | \
+ 		 ((intr_index) << (msi)->ibs_shift))
+=20
++static inline int msi_to_bit(struct fsl_msi *msi, int msir_index, int intr=
+_index)
++{
++	if (!msi->srs_shift)
++		return msi_to_hwirq(msi, msir_index, intr_index);
++
++	return msir_index | (intr_index << hweight32(msi->srs_mask));
++}
++
++static inline int bit_to_hwirq(struct fsl_msi *msi, int bit)
++{
++	int hwirq;
++
++	if (!msi->srs_shift)
++		return bit;
++
++	hwirq  =3D (bit & msi->srs_mask) << msi->srs_shift;
++	hwirq |=3D  bit >> hweight32(msi->srs_mask);
++
++	return hwirq;
++}
++
++static inline int hwirq_to_bit(struct fsl_msi *msi, int hwirq)
++{
++	int bit;
++
++	if (!msi->srs_shift)
++		return hwirq;
++
++	bit  =3D (hwirq >> msi->srs_shift) & msi->srs_mask;
++	bit |=3D (hwirq & MSI_IBS_MASK) << msi->srs_shift;
++
++	return bit;
++}
++
++#define hwirq_to_srs(msi, hwirq) \
++		(((hwirq) >> (msi)->srs_shift) & (msi)->srs_mask)
++#define hwirq_to_ibs(msi, hwirq) \
++		(((hwirq) >> (msi)->ibs_shift) & MSI_IBS_MASK)
++
+ static LIST_HEAD(msi_head);
+=20
+ struct fsl_msi_feature {
+@@ -72,7 +118,7 @@ static void fsl_msi_print_chip(struct irq_data *irqd, st=
+ruct seq_file *p)
+ 	irq_hw_number_t hwirq =3D irqd_to_hwirq(irqd);
+ 	int cascade_virq, srs;
+=20
+-	srs =3D (hwirq >> msi_data->srs_shift) & MSI_SRS_MASK;
++	srs =3D hwirq_to_srs(msi_data, hwirq);
+ 	cascade_virq =3D msi_data->cascade_array[srs]->virq;
+=20
+ 	seq_printf(p, "fsl-msi-%d", cascade_virq);
+@@ -107,8 +153,9 @@ static const struct irq_domain_ops fsl_msi_host_ops =3D=
+ {
+ static int fsl_msi_init_allocator(struct fsl_msi *msi_data)
+ {
+ 	int rc, hwirq;
++	int num_irqs =3D msi_data->nr_msi_regs * IRQS_PER_MSI_REG;
+=20
+-	rc =3D msi_bitmap_alloc(&msi_data->bitmap, NR_MSI_IRQS_MAX,
++	rc =3D msi_bitmap_alloc(&msi_data->bitmap, num_irqs,
+ 			      irq_domain_get_of_node(msi_data->irqhost));
+ 	if (rc)
+ 		return rc;
+@@ -117,7 +164,7 @@ static int fsl_msi_init_allocator(struct fsl_msi *msi_d=
+ata)
+ 	 * Reserve all the hwirqs
+ 	 * The available hwirqs will be released in fsl_msi_setup_hwirq()
+ 	 */
+-	for (hwirq =3D 0; hwirq < NR_MSI_IRQS_MAX; hwirq++)
++	for (hwirq =3D 0; hwirq < num_irqs; hwirq++)
+ 		msi_bitmap_reserve_hwirq(&msi_data->bitmap, hwirq);
+=20
+ 	return 0;
+@@ -135,7 +182,8 @@ static void fsl_teardown_msi_irqs(struct pci_dev *pdev)
+ 		irq_set_msi_desc(entry->irq, NULL);
+ 		irq_dispose_mapping(entry->irq);
+ 		entry->irq =3D 0;
+-		msi_bitmap_free_hwirqs(&msi_data->bitmap, hwirq, 1);
++		msi_bitmap_free_hwirqs(&msi_data->bitmap,
++				       hwirq_to_bit(msi_data, hwirq), 1);
  	}
- 
--- 
-2.42.0.windows.2
+ }
+=20
+@@ -171,44 +219,41 @@ static void fsl_compose_msi_msg(struct pci_dev *pdev,=
+ int hwirq,
+ 	else
+ 		msg->data =3D hwirq;
+=20
+-	pr_debug("%s: allocated srs: %d, ibs: %d\n", __func__,
+-		 (hwirq >> msi_data->srs_shift) & MSI_SRS_MASK,
+-		 (hwirq >> msi_data->ibs_shift) & MSI_IBS_MASK);
++	pr_debug("%s: allocated srs: %i, ibs: %i\n", __func__,
++		 hwirq_to_srs(msi_data, hwirq),
++		 hwirq_to_ibs(msi_data, hwirq));
+ }
+=20
++#ifdef CONFIG_EPAPR_PARAVIRT
++static const char * const of_msi_match[] =3D {
++	"fsl,vmpic-msi",
++	"fsl,vmpic-msi-v4.3",
++	NULL,
++};
++#endif
++
+ static int fsl_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ {
+ 	struct pci_controller *hose =3D pci_bus_to_host(pdev->bus);
+ 	struct device_node *np;
+-	phandle phandle =3D 0;
+-	int rc, hwirq =3D -ENOMEM;
++	int n_bit, bit =3D -ENOMEM;
+ 	unsigned int virq;
+ 	struct msi_desc *entry;
+ 	struct msi_msg msg;
+ 	struct fsl_msi *msi_data;
+=20
+-	if (type =3D=3D PCI_CAP_ID_MSI) {
+-		/*
+-		 * MPIC version 2.0 has erratum PIC1. For now MSI
+-		 * could not work. So check to prevent MSI from
+-		 * being used on the board with this erratum.
+-		 */
+-		list_for_each_entry(msi_data, &msi_head, list)
+-			if (msi_data->feature & MSI_HW_ERRATA_ENDIAN)
+-				return -EINVAL;
+-	}
+-
++#ifdef CONFIG_EPAPR_PARAVIRT
++	phandle ph =3D 0;
+ 	/*
+ 	 * If the PCI node has an fsl,msi property, then we need to use it
+-	 * to find the specific MSI.
++	 * to find the specific MSI. This is deprecated on physical hardware
++	 * and only used by ePAPR to restrict use of PAMU registered devices.
+ 	 */
+ 	np =3D of_parse_phandle(hose->dn, "fsl,msi", 0);
+ 	if (np) {
+-		if (of_device_is_compatible(np, "fsl,mpic-msi") ||
+-		    of_device_is_compatible(np, "fsl,vmpic-msi") ||
+-		    of_device_is_compatible(np, "fsl,vmpic-msi-v4.3"))
+-			phandle =3D np->phandle;
+-		else {
++		if (of_device_compatible_match(np, of_msi_match)) {
++			ph =3D np->phandle;
++		} else {
+ 			dev_err(&pdev->dev,
+ 				"node %pOF has an invalid fsl,msi phandle %u\n",
+ 				hose->dn, np->phandle);
+@@ -217,54 +262,73 @@ static int fsl_setup_msi_irqs(struct pci_dev *pdev, i=
+nt nvec, int type)
+ 		}
+ 		of_node_put(np);
+ 	}
++#endif
+=20
++	/*
++	 * fsl_teardown_msi_irqs() will cleanup already allocated descriptors if
++	 * we return an error. Hence the lack of cleaning up previous
++	 * iterations.
++	 */
++	n_bit =3D 0;
+ 	msi_for_each_desc(entry, &pdev->dev, MSI_DESC_NOTASSOCIATED) {
++		int hwirq;
++
++		if (n_bit >=3D nvec)
++			break;
++
+ 		/*
+-		 * Loop over all the MSI devices until we find one that has an
++		 * Loop over all the MSI devices until we find one that has the
+ 		 * available interrupt.
+ 		 */
+ 		list_for_each_entry(msi_data, &msi_head, list) {
+ 			/*
+-			 * If the PCI node has an fsl,msi property, then we
+-			 * restrict our search to the corresponding MSI node.
+-			 * The simplest way is to skip over MSI nodes with the
+-			 * wrong phandle. Under the Freescale hypervisor, this
+-			 * has the additional benefit of skipping over MSI
+-			 * nodes that are not mapped in the PAMU.
++			 * MPIC version 2.0 has erratum PIC1. For now MSI could not
++			 * work. So check to prevent MSI from being used on the board
++			 * with this erratum.
+ 			 */
+-			if (phandle && (phandle !=3D msi_data->phandle))
++			if (type =3D=3D PCI_CAP_ID_MSI &&
++			    msi_data->feature & MSI_HW_ERRATA_ENDIAN)
+ 				continue;
+=20
+-			hwirq =3D msi_bitmap_alloc_hwirqs(&msi_data->bitmap, 1);
+-			if (hwirq >=3D 0)
++#ifdef CONFIG_EPAPR_PARAVIRT
++			/* Check for phandle on ePAPR */
++			if (ph && (ph !=3D msi_data->phandle))
++				continue;
++#endif
++
++			bit =3D msi_bitmap_alloc_hwirqs(&msi_data->bitmap, 1);
++			if (bit >=3D 0)
+ 				break;
+ 		}
+=20
+-		if (hwirq < 0) {
+-			rc =3D hwirq;
+-			dev_err(&pdev->dev, "could not allocate MSI interrupt\n");
+-			goto out_free;
++		if (bit < 0) {
++			dev_err(&pdev->dev,
++				"could not allocate MSI interrupt\n");
++			return bit;
+ 		}
+=20
++		hwirq =3D bit_to_hwirq(msi_data, bit);
++
+ 		virq =3D irq_create_mapping(msi_data->irqhost, hwirq);
+=20
+ 		if (!virq) {
+-			dev_err(&pdev->dev, "fail mapping hwirq %i\n", hwirq);
+-			msi_bitmap_free_hwirqs(&msi_data->bitmap, hwirq, 1);
+-			rc =3D -ENOSPC;
+-			goto out_free;
++			dev_err(&pdev->dev, "failed to map hwirq %i\n", hwirq);
++			msi_bitmap_free_hwirqs(&msi_data->bitmap, bit, 1);
++			return -ENOSPC;
+ 		}
++
+ 		/* chip_data is msi_data via host->hostdata in host->map() */
+ 		irq_set_msi_desc(virq, entry);
+=20
+ 		fsl_compose_msi_msg(pdev, hwirq, &msg, msi_data);
+ 		pci_write_msi_msg(virq, &msg);
++
++		n_bit++;
+ 	}
+-	return 0;
+=20
+-out_free:
+-	/* free by the caller of this function */
+-	return rc;
++	WARN_ON(n_bit !=3D nvec);
++
++	return 0;
+ }
+=20
+ static irqreturn_t fsl_msi_cascade(int irq, void *data)
+@@ -284,10 +348,11 @@ static irqreturn_t fsl_msi_cascade(int irq, void *dat=
+a)
+ 	switch (msi_data->feature & FSL_PIC_IP_MASK) {
+ 	case FSL_PIC_IP_MPIC:
+ 		msir_value =3D fsl_msi_read(msi_data->msi_regs,
+-			msir_index * 0x10);
++					  msir_index * MSI_MPIC_SIZE);
+ 		break;
+ 	case FSL_PIC_IP_IPIC:
+-		msir_value =3D fsl_msi_read(msi_data->msi_regs, msir_index * 0x4);
++		msir_value =3D fsl_msi_read(msi_data->msi_regs,
++					  msir_index * MSI_IPIC_SIZE);
+ 		break;
+ #ifdef CONFIG_EPAPR_PARAVIRT
+ 	case FSL_PIC_IP_VMPIC: {
+@@ -308,18 +373,31 @@ static irqreturn_t fsl_msi_cascade(int irq, void *dat=
+a)
+ 		intr_index =3D ffs(msir_value) - 1;
+=20
+ 		err =3D generic_handle_domain_irq(msi_data->irqhost,
+-				msi_hwirq(msi_data, msir_index,
++				msi_to_hwirq(msi_data, msir_index,
+ 					  intr_index + have_shift));
+ 		if (!err)
+ 			ret =3D IRQ_HANDLED;
+=20
+-		have_shift +=3D intr_index + 1;
+-		msir_value =3D msir_value >> (intr_index + 1);
++		have_shift  +=3D intr_index + 1;
++		msir_value >>=3D intr_index + 1;
+ 	}
+=20
+ 	return ret;
+ }
+=20
++static ssize_t irq_bitmap_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct fsl_msi *msi =3D dev_get_drvdata(dev);
++
++	if (msi->bitmap.bitmap =3D=3D NULL)
++		return 0;
++
++	return bitmap_print_to_pagebuf(false, buf, msi->bitmap.bitmap,
++				       msi->bitmap.irq_count);
++}
++static DEVICE_ATTR_RO(irq_bitmap);
++
+ static void fsl_of_msi_remove(struct platform_device *ofdev)
+ {
+ 	struct fsl_msi *msi =3D platform_get_drvdata(ofdev);
+@@ -327,7 +405,10 @@ static void fsl_of_msi_remove(struct platform_device *=
+ofdev)
+=20
+ 	if (msi->list.prev !=3D NULL)
+ 		list_del(&msi->list);
+-	for (i =3D 0; i < NR_MSI_REG_MAX; i++) {
++
++	device_remove_file(&ofdev->dev, &dev_attr_irq_bitmap);
++
++	for (i =3D 0; i < msi->nr_msi_regs; i++) {
+ 		if (msi->cascade_array[i]) {
+ 			virq =3D msi->cascade_array[i]->virq;
+=20
+@@ -382,14 +463,16 @@ static int fsl_msi_setup_hwirq(struct fsl_msi *msi, s=
+truct platform_device *dev,
+ 	}
+=20
+ 	/* Release the hwirqs corresponding to this MSI register */
+-	for (i =3D 0; i < IRQS_PER_MSI_REG; i++)
++	for (i =3D 0; i < IRQS_PER_MSI_REG; i++) {
+ 		msi_bitmap_free_hwirqs(&msi->bitmap,
+-				       msi_hwirq(msi, offset, i), 1);
++				       msi_to_bit(msi, offset, i), 1);
++	}
+=20
+ 	return 0;
+ }
+=20
+ static const struct of_device_id fsl_of_msi_ids[];
++
+ static int fsl_of_msi_probe(struct platform_device *dev)
+ {
+ 	struct fsl_msi *msi;
+@@ -412,8 +495,27 @@ static int fsl_of_msi_probe(struct platform_device *de=
+v)
+ 	}
+ 	platform_set_drvdata(dev, msi);
+=20
++	if (device_create_file(&dev->dev, &dev_attr_irq_bitmap)) {
++		dev_err(&dev->dev,
++			"couldn't create device file for irq_bitmap\n");
++	}
++
++	if (of_device_is_compatible(dev->dev.of_node, "fsl,mpic-msi-v4.3") ||
++	    of_device_is_compatible(dev->dev.of_node, "fsl,vmpic-msi-v4.3")) {
++		msi->nr_msi_regs =3D NR_MSI_REG_MSIIR1;
++		msi->ibs_shift   =3D MSIIR1_IBS_SHIFT;
++		msi->srs_mask    =3D MSIIR1_SRS_MASK;
++		msi->srs_shift   =3D MSIIR1_SRS_SHIFT;
++	} else {
++		msi->nr_msi_regs =3D NR_MSI_REG_MSIIR;
++		msi->ibs_shift   =3D MSIIR_IBS_SHIFT;
++		msi->srs_mask    =3D MSIIR_SRS_MASK;
++		msi->srs_shift   =3D MSIIR_SRS_SHIFT;
++	}
++
+ 	msi->irqhost =3D irq_domain_add_linear(dev->dev.of_node,
+-				      NR_MSI_IRQS_MAX, &fsl_msi_host_ops, msi);
++					msi->nr_msi_regs * IRQS_PER_MSI_REG,
++					&fsl_msi_host_ops, msi);
+=20
+ 	if (msi->irqhost =3D=3D NULL) {
+ 		dev_err(&dev->dev, "No memory for MSI irqhost\n");
+@@ -440,8 +542,6 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+ 				dev->dev.of_node);
+ 			goto error_out;
+ 		}
+-		msi->msiir_offset =3D
+-			features->msiir_offset + (res.start & 0xfffff);
+=20
+ 		/*
+ 		 * First read the MSIIR/MSIIR1 offset from dts
+@@ -475,10 +575,7 @@ static int fsl_of_msi_probe(struct platform_device *de=
+v)
+=20
+ 	p =3D of_get_property(dev->dev.of_node, "msi-available-ranges", &len);
+=20
+-	if (of_device_is_compatible(dev->dev.of_node, "fsl,mpic-msi-v4.3") ||
+-	    of_device_is_compatible(dev->dev.of_node, "fsl,vmpic-msi-v4.3")) {
+-		msi->srs_shift =3D MSIIR1_SRS_SHIFT;
+-		msi->ibs_shift =3D MSIIR1_IBS_SHIFT;
++	if (msi->nr_msi_regs =3D=3D NR_MSI_REG_MSIIR1) {
+ 		if (p)
+ 			dev_warn(&dev->dev, "%s: dose not support msi-available-ranges property=
+\n",
+ 				__func__);
+@@ -494,9 +591,6 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+ 		static const u32 all_avail[] =3D
+ 			{ 0, NR_MSI_REG_MSIIR * IRQS_PER_MSI_REG };
+=20
+-		msi->srs_shift =3D MSIIR_SRS_SHIFT;
+-		msi->ibs_shift =3D MSIIR_IBS_SHIFT;
+-
+ 		if (p && len % (2 * sizeof(u32)) !=3D 0) {
+ 			dev_err(&dev->dev, "%s: Malformed msi-available-ranges property\n",
+ 				__func__);
+diff --git a/arch/powerpc/sysdev/fsl_msi.h b/arch/powerpc/sysdev/fsl_msi.h
+index e2a1bfc7c2377..0515030af9acb 100644
+--- a/arch/powerpc/sysdev/fsl_msi.h
++++ b/arch/powerpc/sysdev/fsl_msi.h
+@@ -15,7 +15,6 @@
+ #define NR_MSI_REG_MSIIR1	16 /* MSIIR1 can index 16 MSI registers */
+ #define NR_MSI_REG_MAX		NR_MSI_REG_MSIIR1
+ #define IRQS_PER_MSI_REG	32
+-#define NR_MSI_IRQS_MAX	(NR_MSI_REG_MAX * IRQS_PER_MSI_REG)
+=20
+ #define FSL_PIC_IP_MASK   0x0000000F
+ #define FSL_PIC_IP_MPIC   0x00000001
+@@ -32,11 +31,13 @@ struct fsl_msi {
+ 	unsigned long cascade_irq;
+=20
+ 	u32 msiir_offset; /* Offset of MSIIR, relative to start of CCSR */
+-	u32 ibs_shift; /* Shift of interrupt bit select */
+-	u32 srs_shift; /* Shift of the shared interrupt register select */
++	u32 ibs_shift;    /* Shift of interrupt bit select */
++	u32 srs_mask;     /* Mask of the shared interrupt register select */
++	u32 srs_shift;    /* Shift for shared interrupt register select */
+ 	void __iomem *msi_regs;
+ 	u32 feature;
+ 	struct fsl_msi_cascade_data *cascade_array[NR_MSI_REG_MAX];
++	u32 nr_msi_regs;
+=20
+ 	struct msi_bitmap bitmap;
+=20
+--=20
+2.49.0
 
+
+--=20
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
+
+--7mrpmxef3ve3htry
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHAGUACgkQXVpXxyQr
+Is9Tag/8DDm8htyYA3qZgteSn7ucSdSiD5QAsGzIh0ngwe+Be0QKqRxZ43969Qzw
+9DNhkXbr66WK0AxvDeEi66REWwWtMXvGLGjCQfMgkQvquwSN+9eL/gMvDxAmhZrg
+zoiihOhyx1TtSj3qed/XHX4rrkHLRAGT6bo4Y8La1M+5KKxdyizKSCztenYeUjH8
+h/T+EduPqZTLaTUZuoQVh/zfjvUR9nrnWrm9yhlfjeqTO+esWCsPl9ba8Kr0Sg0E
+ohuvYYD29rmaeJtjCMGPyGt7E9htFlq9JEaDkS3xtt4wVWah/2ijnQ3k7S612DE1
+7Ua6BPbm+SrIRs+1Uuf/qHkv9HNCA+1rnCTi8HaAn3BI0bMFn58CH8JkagOYTuDI
+YPtjOpJb/kWwUbG/1el0dCsh2Q6J/ZeO4x/fBMRvxKe3xNLFWVjhq8eFkc0b5vrN
+ei2HYtMKPL6MwqffngSHRPkFKKf5PYpixS2GASqRTS/TtewkfRKaxgyhC3uiprEE
+nMuvNECuBUqpeKoAteWdQVirw/m46R8+hggWrDsk/g21oxlrUXvhn4SNvZY5NcVo
+GfqgOIgsiZrAUMied7Jzcs8l9GaES8CgoHQjQCwzGg7D6EFNNYEe1ZYaQxwfl4x+
+C6lHIZbAAGQBes2bEUUF2SILdiVTbNZQqQlpVPw+egdJ/3wEE9U=
+=PNEl
+-----END PGP SIGNATURE-----
+
+--7mrpmxef3ve3htry--
