@@ -1,316 +1,177 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from fallback1.i.mail.ru (fallback1.i.mail.ru [79.137.243.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47932BF3D6;
-	Tue, 22 Apr 2025 20:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D8021FF5A;
+	Tue, 22 Apr 2025 20:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354280; cv=none; b=ODwA8HBIz1pL7DgQIC8p5UndK+V30bQcaVH/x2WbONpe6H3rNjwUfyFIb0pRneienAqJxJbVFEOAHNQX5AzU7Ham/ooKy4W6BvJRmnG6jujEqr5KDDpNIu5EhATvGvcUVy2GN/Ix424xyV9HstgB+dXYO7OND1IJEFSZRhgyqEQ=
+	t=1745354329; cv=none; b=mUITb3RvEY4E/tpGdeWSwguOaYMRecNK7paP4inuDiH96jTimhdJD+dDJIn53M6YGE25MoHsNLVF5n8Y2+kdb8mRL/S4AJji7gKvtpsidww6hPKHDepAqJYoeWs+vUnHOZvNx1ogNpdkY7BiERLxuW4Tyehy3haNAcAfxz/vWNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354280; c=relaxed/simple;
-	bh=KWfGF05REUEw1tIqyyANSl6LSB5a2FrYHtC9nacIlhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqIeWH4f/Lv6BYScOO/BhEazZaImFDhDkmOrD4Vq0JgmVN/XZliXBZzdTAGOSEs+UBLCWK9NIQ1OY+ORL0Bu2jgfhVakcRbyoxQatqFJYzW65FeQvU42XW6wl//xCh+jmLDlkMwQcunxIR2OH5QBUeBczVYPfdooLreVIPKfsRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=TucAG4h6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745354329; c=relaxed/simple;
+	bh=uoP2QCNM4Q6sWDGVHMXImRpVR/jx1dA9dorEsLmv4mw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ofk9W191KiFFmEKCiDR5qyOrg0TX5gHngIe/RtppBvGCl+1xftToKWvGMOMv5C4jBDoLTyWRB3h0ZvClx7QbxtbFKbvsly+NvuhZ0e5EqpfXhq6MaVgac2pZU1MCBo4Zqq7GinN9YQcLKdcq39Lvk+6AkBIJz29IOUc4bohkR7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=gvLlPjMK; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=OOgjQKir; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=hhOI/n/g; arc=none smtp.client-ip=79.137.243.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TucAG4h6"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A2AD610D;
-	Tue, 22 Apr 2025 22:37:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745354275;
-	bh=KWfGF05REUEw1tIqyyANSl6LSB5a2FrYHtC9nacIlhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TucAG4h6omXkU+ZxeI+bKA2sRd74Gv4kOKWDu81kMLVz4ha46yz97rwyDvFlqxThJ
-	 nUW771WZUDWbPzjYX8IZAvgmbf+TC5/ov8k7A6T9xBB0CpeCOQ8NQyyuciHVByNyYz
-	 ORMtD3Eu0SdXS8fHbSTw5Zo0DYR82qCPIEPGIv1o=
-Date: Tue, 22 Apr 2025 23:37:53 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v6 3/5] media: uvcvideo: Increase/decrease the PM counter
- per IOCTL
-Message-ID: <20250422203753.GM17813@pendragon.ideasonboard.com>
-References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
- <20250327-uvc-granpower-ng-v6-3-35a2357ff348@chromium.org>
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="gvLlPjMK";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="OOgjQKir";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="hhOI/n/g"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
+	h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=mg5/p1joMOMVa+LT6Lmsk/+FmLR2cplhRefA/5qMl2M=;
+	t=1745354327;x=1745444327; 
+	b=gvLlPjMKsy7Cev/KKJJfKn61nnB3mHmsk6MpxnAjeZcwclVYAATDk0Fm3AdcqDlDIgRkrnYFaN/wSMoLno5+Rg1lDKlyhYHU6fjW2NCSLwjbhJY6iSLJDX8wWR03XPYozTvPnFgfpO8Sea//DmhEJCjGbDGyU2Iw+q32Gz5dhS4=;
+Received: from [10.113.104.145] (port=37424 helo=send100.i.mail.ru)
+	by fallback1.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1u7K5Z-002erS-5M; Tue, 22 Apr 2025 23:19:29 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive:X-Cloud-Ids;
+	bh=mg5/p1joMOMVa+LT6Lmsk/+FmLR2cplhRefA/5qMl2M=; t=1745353169; x=1745443169; 
+	b=OOgjQKirYVlbfdU59RND19bSU9gt8Qlr0jdH4XJ9vGG4kOcZe3SeOL1m8bsJ362GVQC8yZJABql
+	P/yNLD6zKxNs4wtziYd8nCLdIOfesRT26Q1Y0v0Ap5L7f/Kb/XGMNkSF3SZ/4LuwPYjYlZNxqWdj/
+	DY0EPz4AXa1/O1dvufs=;
+Received: from [10.113.123.72] (port=43200 helo=send149.i.mail.ru)
+	by exim-fallback-5f8f9b6d5b-zzjxx with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1u7K5O-00000000Ayb-0tki; Tue, 22 Apr 2025 23:19:18 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:From:
+	Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=mg5/p1joMOMVa+LT6Lmsk/+FmLR2cplhRefA/5qMl2M=; t=1745353158; x=1745443158; 
+	b=hhOI/n/gqCRIG79t/1HDCIVFhf4ZT1UrORamxDEZ9/FvKoHDlGZrHfVMJ1LybhmEVKEGmkm526m
+	kLYa/YnDaR5lNkw9kd55bhxknRyvN+qWL67iOGhVpA4TWHuJjcmtUmlnIS874ku8Ejco4q4YoybVR
+	Nmm2F0abJyLkXV6ZGyY=;
+Received: by exim-smtp-77d8cdf77b-httmk with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1u7K50-00000000Adc-3bg2; Tue, 22 Apr 2025 23:18:55 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+Date: Tue, 22 Apr 2025 23:17:02 +0300
+Subject: [PATCH 01/33] dt-bindings: arm: cpus: Add Kryo 470 CPUs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250327-uvc-granpower-ng-v6-3-35a2357ff348@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-sm7150-upstream-v1-1-bf9a9081631d@jiaxyga.com>
+References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+In-Reply-To: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Rajendra Nayak <quic_rjendra@quicinc.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, 
+ Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+ Andy Gross <agross@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Georgi Djakov <djakov@kernel.org>, 
+ Loic Poulain <loic.poulain@oss.qualcomm.com>, 
+ Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
+ Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Imran Shaik <quic_imrashai@quicinc.com>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ David Wronek <david@mainlining.org>, Jens Reidel <adrian@mainlining.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-hardening@vger.kernel.org, linux@mainlining.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, Danila Tikhonov <danila@jiaxyga.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745353049; l=757;
+ i=danila@jiaxyga.com; s=20250422; h=from:subject:message-id;
+ bh=uoP2QCNM4Q6sWDGVHMXImRpVR/jx1dA9dorEsLmv4mw=;
+ b=Yki/xd+oEpu4rg0TYgOD4qc3pKtx5z7WRFjP68vg0IwyVnXwUeiAPhp6KuE+ztGB88p+zzdNV
+ 0Z3WZqO8DFxC7VrHQl1y8mz4dKJJdlWrWuefFjVUJYG5VcwJMnM+oGs
+X-Developer-Key: i=danila@jiaxyga.com; a=ed25519;
+ pk=kkU4G47tvpSEUdBQEkXuWvTk/3WmGrVrdzZiKAKjBJo=
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD985535D2C87FE65BB21A9B097F84F02A1685867873C79256C00894C459B0CD1B941292938451FA0C3C591814E25D11F9FD45AB514B7FA6670D04E7F5D00D4760035340226AAA953E0
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE78981306C6E927004EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637F88016AB904663428638F802B75D45FF914D58D5BE9E6BC1A93B80C6DEB9DEE97C6FB206A91F05B2D75E931C4E7B39C52E070BE324C7D3C4F1DBF149EAE25835F6B57BC7E64490618DEB871D839B73339E8FC8737B5C22490417BEADF48D1460CC7F00164DA146DAFE8445B8C89999729449624AB7ADAF37F6B57BC7E64490611E7FA7ABCAF51C92176DF2183F8FC7C06FD1C55BDD38FC3FD2E47CDBA5A96583BA9C0B312567BB2376E601842F6C81A19E625A9149C048EE4B6963042765DA4BE0F2381F647739FAD8FC6C240DEA76429C9F4D5AE37F343AA9539A8B242431040A6AB1C7CE11FEE3B5C78E0E843E24DA6136E347CC761E07C4224003CC836476E2F48590F00D11D6E2021AF6380DFAD1A18204E546F3947CB11811A4A51E3B096D1867E19FE1407959CC434672EE6371089D37D7C0E48F6C8AA50765F7900637021B7B85925F8E35EFF80C71ABB335746BA297DBC24807EABDAD6C7F3747799A
+X-C1DE0DAB: 0D63561A33F958A5B5754DBE8E9ABCC55002B1117B3ED69686119FA96A396C45E99897350C7C491E823CB91A9FED034534781492E4B8EEAD69BF13FED57427F1C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF648DCBC2C602447892BC847CE4C972CD424A234CAFFFD94038FF84466303282406D2A967A71B238068A835CA8743990B5DFAB4BFC14813DE0E280A9F3BCC449B25A8D66261DB66C0EFF8118B638B08AA02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+ObcCpyrx6l7KImUglyhkEat/+ysWwi0gdhEs0JGjl6ggRWTy1haxBpVdbIX1nthFXMZebaIdHP2ghjoIc/363UZI6Kf1ptIMVS+uSU+BUhgv+JXvyc9YPWA=
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F86CF29D712F2246CF6A6F50B1491C0353959A243A0D4C4C0DEFF5B9968892AF32C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-Mailru-Src: fallback
+X-7564579A: B8F34718100C35BD
+X-77F55803: 6242723A09DB00B4F4CF43BFC943A605C6C1A77FDB0143BEDCAB612C665EE96668F3CF0E9FE49B693D0DD15183EF2CA686E6AD4DB8C601B89F74527454FF6A9143D8A23AA0E7B254127075E3D9C4685A
+X-87b9d050: 1
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+OYcBso8Zm+oliTz8oZwnDrFsY77LZRcHyw5ht0smWrfSeTW5FiI8avd9v29gUBslpEZ9wIMwqVP4jLQVQ+dVm7x9BpDHadBV9RMjI809PraZxCvlsRkEy1gbDILL1DecLg==
+X-Mras: Ok
+X-7564579A: B8F34718100C35BD
+X-77F55803: 6242723A09DB00B4F4CF43BFC943A605C6C1A77FDB0143BE94EA45A41698E33D68F3CF0E9FE49B693D0DD15183EF2CA60FF19A8DAF60E94FC58653BB7738628CAA6F705FBFAF07F0
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+OYcBso8Zm+oliTz8oZwnDrFsY77LZRcHyw5ht0smWrfSeTW5FiI8avd9v29gUBslpEZ9wIMwqVP4jLQVQ+dVm7x9BpDHadBV9RMjI809PraZxCvlsRkEy1hOai/8RbPKag==
+X-Mailru-MI: 20000000000000800
+X-Mras: Ok
 
-Hi Ricardo,
+Document Kryo 470 CPUs found in Qualcomm Snapdragon 730/730G/732G
+(SM7150).
 
-Thank you for the patch.
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, Mar 27, 2025 at 09:05:29PM +0000, Ricardo Ribalda wrote:
-> Now we call uvc_pm_get/put from the device open/close. This low
-> level of granularity might leave the camera powered on in situations
-> where it is not needed.
-> 
-> Increase the granularity by increasing and decreasing the Power
-> Management counter per ioctl. There are two special cases where the
-> power management outlives the ioctl: async controls and streamon. Handle
-> those cases as well.
-> 
-> In a future patch, we will remove the uvc_pm_get/put from open/close.
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_ctrl.c | 37 +++++++++++++++++++++++++++----------
->  drivers/media/usb/uvc/uvc_v4l2.c | 39 +++++++++++++++++++++++++++++++++++++--
->  2 files changed, 64 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index cbf19aa1d82374a08cf79b6a6787fa348b83523a..3fad289e41fd5a757f8dcf30a6238c694fc4250c 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -1812,38 +1812,49 @@ static void uvc_ctrl_send_slave_event(struct uvc_video_chain *chain,
->  	uvc_ctrl_send_event(chain, handle, ctrl, mapping, val, changes);
->  }
->  
-> -static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> -				struct uvc_fh *new_handle)
-> +static int uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> +			       struct uvc_fh *new_handle)
->  {
->  	lockdep_assert_held(&handle->chain->ctrl_mutex);
->  
->  	if (new_handle) {
-> +		int ret;
-> +
->  		if (ctrl->handle)
->  			dev_warn_ratelimited(&handle->stream->dev->udev->dev,
->  					     "UVC non compliance: Setting an async control with a pending operation.");
->  
->  		if (new_handle == ctrl->handle)
-> -			return;
-> +			return 0;
->  
->  		if (ctrl->handle) {
->  			WARN_ON(!ctrl->handle->pending_async_ctrls);
->  			if (ctrl->handle->pending_async_ctrls)
->  				ctrl->handle->pending_async_ctrls--;
-> +			ctrl->handle = new_handle;
-> +			handle->pending_async_ctrls++;
-
-As commented previously, your usage of the handle variable is confusing.
-
-			ctrl->handle->pending_async_ctrls++;
-
-> +			return 0;
->  		}
->  
-> +		ret = uvc_pm_get(handle->chain->dev);
-> +		if (ret)
-> +			return ret;
-> +
->  		ctrl->handle = new_handle;
->  		handle->pending_async_ctrls++;
-
-  		ctrl->handle->pending_async_ctrls++;
-
-> -		return;
-> +		return 0;
->  	}
->  
->  	/* Cannot clear the handle for a control not owned by us.*/
->  	if (WARN_ON(ctrl->handle != handle))
-> -		return;
-> +		return -EINVAL;
->  
->  	ctrl->handle = NULL;
->  	if (WARN_ON(!handle->pending_async_ctrls))
-> -		return;
-> +		return -EINVAL;
->  	handle->pending_async_ctrls--;
-> +	uvc_pm_put(handle->chain->dev);
-> +	return 0;
->  }
->  
->  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
-> @@ -2137,15 +2148,16 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
->  
->  		ctrl->dirty = 0;
->  
-> +		if (!rollback && handle && !ret &&
-> +		    ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
-> +			ret = uvc_ctrl_set_handle(handle, ctrl, handle);
-> +
->  		if (ret < 0) {
->  			if (err_ctrl)
->  				*err_ctrl = ctrl;
->  			return ret;
->  		}
->  
-> -		if (!rollback && handle &&
-> -		    ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
-> -			uvc_ctrl_set_handle(handle, ctrl, handle);
->  	}
->  
->  	return 0;
-> @@ -3222,6 +3234,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
->  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
->  {
->  	struct uvc_entity *entity;
-> +	int i;
->  
->  	guard(mutex)(&handle->chain->ctrl_mutex);
->  
-> @@ -3236,7 +3249,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
->  		}
->  	}
->  
-> -	WARN_ON(handle->pending_async_ctrls);
-> +	if (!WARN_ON(handle->pending_async_ctrls))
-> +		return;
-> +
-> +	for (i = 0; i < handle->pending_async_ctrls; i++)
-> +		uvc_pm_put(handle->stream->dev);
->  }
->  
->  /*
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 1d5be045d04ecbf17e65e14b390e494a294b735f..8bccf7e17528b62f2594c0dad99405034532973d 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -697,6 +697,9 @@ static int uvc_v4l2_release(struct file *file)
->  	if (uvc_has_privileges(handle))
->  		uvc_queue_release(&stream->queue);
->  
-> +	if (handle->is_streaming)
-> +		uvc_pm_put(stream->dev);
-> +
->  	/* Release the file handle. */
->  	uvc_dismiss_privileges(handle);
->  	v4l2_fh_del(&handle->vfh);
-> @@ -862,6 +865,11 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
->  	if (ret)
->  		return ret;
->  
-> +	ret = uvc_pm_get(stream->dev);
-
-Shouldn't this be done before calling uvc_queue_streamon() ? There's
-another PM reference being held by the ioctl handler, but if the code is
-refactored later, it would be good to make sure we resume the device
-before starting streaming.
-
-> +	if (ret) {
-> +		uvc_queue_streamoff(&stream->queue, type);
-> +		return ret;
-> +	}
->  	handle->is_streaming = true;
->  
->  	return 0;
-> @@ -879,7 +887,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
->  	guard(mutex)(&stream->mutex);
->  
->  	uvc_queue_streamoff(&stream->queue, type);
-> -	handle->is_streaming = false;
-> +	if (handle->is_streaming) {
-> +		handle->is_streaming = false;
-> +		uvc_pm_put(stream->dev);
-> +	}
->  
->  	return 0;
->  }
-> @@ -1378,9 +1389,11 @@ static int uvc_v4l2_put_xu_query(const struct uvc_xu_control_query *kp,
->  #define UVCIOC_CTRL_MAP32	_IOWR('u', 0x20, struct uvc_xu_control_mapping32)
->  #define UVCIOC_CTRL_QUERY32	_IOWR('u', 0x21, struct uvc_xu_control_query32)
->  
-> +DEFINE_FREE(uvc_pm_put, struct uvc_device *, if (_T) uvc_pm_put(_T))
->  static long uvc_v4l2_compat_ioctl32(struct file *file,
->  		     unsigned int cmd, unsigned long arg)
->  {
-> +	struct uvc_device *uvc_device __free(uvc_pm_put) = NULL;
->  	struct uvc_fh *handle = file->private_data;
->  	union {
->  		struct uvc_xu_control_mapping xmap;
-> @@ -1389,6 +1402,12 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  	void __user *up = compat_ptr(arg);
->  	long ret;
->  
-> +	ret = uvc_pm_get(handle->stream->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	uvc_device = handle->stream->dev;
-
-Ouch... That's not nice very :-/
-
-If you want to use the cleanup API, I think we could use guards with an
-init function such as
-
-struct uvc_device *__uvc_pm_get_init(struct uvc_device *dev, int *ret)
-{
-	*ret = uvc_pm_get(dev);
-	return *ret ? NULL : dev;
-}
-
-You can use DEFINE_CLASS() instead of DEFINE_GUARD() to control the
-arguments to the init function. Users of the guard could do
-
-	int ret;
-
-	guard(uvc_pm)(dev, &ret);
-	if (ret)
-		return ret;
-
-	...
-
-Another, simpler option would be to replace returns with breaks in
-uvc_v4l2_compat_ioctl32(). I'm tempted to do that in this patch, and
-switching to the cleanup API as a patch on top if desired.
-
-> +
->  	switch (cmd) {
->  	case UVCIOC_CTRL_MAP32:
->  		ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
-> @@ -1423,6 +1442,22 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
->  }
->  #endif
->  
-> +static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> +				    unsigned int cmd, unsigned long arg)
-> +{
-> +	struct uvc_fh *handle = file->private_data;
-> +	int ret;
-> +
-> +	ret = uvc_pm_get(handle->stream->dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = video_ioctl2(file, cmd, arg);
-> +
-> +	uvc_pm_put(handle->stream->dev);
-> +	return ret;
-> +}
-> +
->  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
->  		    size_t count, loff_t *ppos)
->  {
-> @@ -1507,7 +1542,7 @@ const struct v4l2_file_operations uvc_fops = {
->  	.owner		= THIS_MODULE,
->  	.open		= uvc_v4l2_open,
->  	.release	= uvc_v4l2_release,
-> -	.unlocked_ioctl	= video_ioctl2,
-> +	.unlocked_ioctl	= uvc_v4l2_unlocked_ioctl,
->  #ifdef CONFIG_COMPAT
->  	.compat_ioctl32	= uvc_v4l2_compat_ioctl32,
->  #endif
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 3d61313ca00ea4fc50f07f1e353be49ddc2377fa..005608ff3cf70dc9792f5a3c6c78cfbe6de41b9e 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -200,6 +200,7 @@ properties:
+       - qcom,kryo385
+       - qcom,kryo465
+       - qcom,kryo468
++      - qcom,kryo470
+       - qcom,kryo485
+       - qcom,kryo560
+       - qcom,kryo570
 
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
