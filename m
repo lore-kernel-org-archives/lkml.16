@@ -1,89 +1,87 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B954F20CCDA;
-	Tue, 22 Apr 2025 10:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D752D1D799D;
+	Tue, 22 Apr 2025 10:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317524; cv=none; b=q9liKLHr7ERhGWf+06ApF1PM1vUNpvagQdxgh1tsn5/L50PeDwi/fSkEz1z0yjmZ8jDaLWSgNWncZN5z9NFj8cyya2vWO6gNbwrtY8TFdBWbGa1rPsOKrAtl+qnOr8cyHJXryDJ65n8i3ntfP3WEsYuWVImo/Mqd8JmGWCl8w4M=
+	t=1745317590; cv=none; b=MIja9+Epeog0zZf2T3FMPnzV+tbDv3pkt+7ELc3Af9z1KJYOGhl9Xu0SRGTqz4GuMO6Jzq114QHoo7cdVJg3CXMkhk0kjCghoC5j2CNgRtPvZPDZXsKXTtFQ/rRvNVV6zY1QdFsaAGWENEMYEqMpiIny5/J0wmBlEgmavO+WGQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317524; c=relaxed/simple;
-	bh=5VjwBewgsMA8YlkWMLT7blnb88jiiXJudYGoZ/411yQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=L1wYGyqIdLARE07L4mDCK+ZzP54ignYvWfhQDcOiK4M3MhlxKTp137JLg9L0Qcy6qevUAKXvv5M2QFEmkIYwZRFChjWagVdp3+4s4yjPw8zSTvfrZt8Q5fqLJOG/0OEy8DZeVgfZKBGPWlPKGL9mxx+Jffp6IbQviscDPSU6kdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pgHMchKt; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745317590; c=relaxed/simple;
+	bh=a48T1W6ayZnSmBTLl9Hby5irJfOBZFiPxukJ54xS6Yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRtA2b8UMorhq2Bt9XKORXjdUmbiAcpMyscC1YfYKSThh0rRKX8PK6UHlUeQyzwla4kncuudr5zmYdJ3FBmFUU5Z4LvkKOsmRbFIRGp7R9UmZIVBSeePn3ejd243PKxXySuRoNGeRJqGb2h10LHGB8mF/TrSGiStxz1NJ837gK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAhfaXt4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pgHMchKt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745317519;
-	bh=wB/Ir2ZMz7S3y0buM0PVv9FIb5+lUQ7umgVqYMexXPM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pgHMchKtQWLvZAoDbUZLl09Evt2AwHipu10Kdm1Z5sjePb6wzg0nH73KMCPk+GJw9
-	 H+Kfua20B6QFMQDZprnsIb79o1us2fnj0sriVokrOkq9HpNB9eGIX0MwJ+tBSt+pir
-	 bV9qs5pGWPpOeIhVpvx7dAdyt4ltBE8FAlzz++wlS2Ln+aIMdebXCk4j5K01rB9S2b
-	 LDSaqdHQY0TDSeqOhSe7HJa1Hpr/IcvGuB41suWspcSrnVTckjIOhQqPBo/qSRfiSB
-	 ZBDe4mYgW19T2NE7rfT/4Xv+UFT4XLsNYW6hQ0APVziImiT9TQvrqUuB/LqcYGA0Dg
-	 5YJ4MA8L6gA0g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhdfQ2RV3z4wcj;
-	Tue, 22 Apr 2025 20:25:18 +1000 (AEST)
-Date: Tue, 22 Apr 2025 20:25:17 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Chinner <david@fromorbit.com>, Carlos Maiolino <cem@kernel.org>,
- <linux-xfs@vger.kernel.org>
-Cc: Hans Holmberg <Hans.Holmberg@wdc.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the xfs tree
-Message-ID: <20250422202517.4f224463@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAhfaXt4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881A5C4CEE9;
+	Tue, 22 Apr 2025 10:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745317589;
+	bh=a48T1W6ayZnSmBTLl9Hby5irJfOBZFiPxukJ54xS6Yc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GAhfaXt4FivY0Ggc8JbjcyVTm5fBgEgFFJ+HJs2jmAcmeivMjfAOuuhJn0rIgcbfD
+	 KxP6kQdwbjsGzKn6/6WOUVKSywylazAXEAcMHA7oGsA8Y0I57BdQEMWNp875LvvfNc
+	 IV+z7n4+Gopkt4J83v90H2/w514iwInHmnfkTf45b5o9xYaVd7gqAwcqojzCLVQuqK
+	 Pq0WCBUWD5Zj3uaeDzuH3ORbFZuD80XBg8GJGQyd6rcsTubFbANc/hl3K71Iu7a6qO
+	 p9XQy2QBswSu6Xc9yW13ZN7KhD5YI5PprLcEAWIc124ZZhklfAM/GQeN7Yg56ELQBt
+	 JYFYJ7VKBtVVw==
+Date: Tue, 22 Apr 2025 12:26:24 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Diederik de Haas <didi.debian@cknow.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] PCI: dw-rockchip: Fix function call sequence in
+ rockchip_pcie_phy_deinit
+Message-ID: <aAdu0ODyj7FkVarb@ryzen>
+References: <20250417142138.1377451-1-didi.debian@cknow.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4LlfqYE8s9cDthMW1Js_6QX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417142138.1377451-1-didi.debian@cknow.org>
 
---Sig_/4LlfqYE8s9cDthMW1Js_6QX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 17, 2025 at 04:21:18PM +0200, Diederik de Haas wrote:
+> The documentation for the phy_power_off() function explicitly says
+> 
+>   Must be called before phy_exit().
+> 
+> So let's follow that instruction.
+> 
+> Fixes: 0e898eb8df4e ("PCI: rockchip-dwc: Add Rockchip RK356X host controller driver")
+> Cc: stable@vger.kernel.org	# v5.15+
+> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index c624b7ebd118..4f92639650e3 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -410,8 +410,8 @@ static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+>  
+>  static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
+>  {
+> -	phy_exit(rockchip->phy);
+>  	phy_power_off(rockchip->phy);
+> +	phy_exit(rockchip->phy);
+>  }
+>  
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+> -- 
+> 2.49.0
+> 
 
-Hi all,
-
-After merging the xfs tree, today's linux-next build (htmldocs) produced
-this warning:
-
-Documentation/admin-guide/xfs.rst:576: WARNING: duplicate label admin-guide=
-/xfs:zoned filesystems, other instance in Documentation/admin-guide/xfs.rst=
- [autosectionlabel.admin-guide/xfs]
-
-Introduced by commit
-
-  c7b67ddc3c99 ("xfs: document zoned rt specifics in admin-guide")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4LlfqYE8s9cDthMW1Js_6QX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHbo0ACgkQAVBC80lX
-0GwKawf/dJJ5IWDWxeACkX2UFr27XwWl+QyJsFtgDsZ6elsjPRZN6LMQsf76lt/i
-aj8xi2w2ILd9ZThkmvuR02uE8sgI5Ol0qb8g0K9JE3EKpGAa8VaOIvrjTigYcsLY
-dwpGtISWNVHhCD3wHO/BOYKrikn3RQoxh4tUpBma2NJh5fpQZC1TZ2r7cm570lkG
-mUPxesZudRcZB95VYAUCDlASh2RRgJ42K6Dn5xSlepZdnyqS6tvwJ4tZTOOoZoLd
-pGNKAKIYHgRhPX/l3TxSWlYMlHEq4gQM3iVeGVe7Kp0+WnhPvq54vj48kxAP0gM7
-MmcPrZXPtNeU6GYn7L/DAWh2v55s5Q==
-=6JT1
------END PGP SIGNATURE-----
-
---Sig_/4LlfqYE8s9cDthMW1Js_6QX--
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
