@@ -1,236 +1,143 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEB527BF80
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAD4278155;
+	Tue, 22 Apr 2025 11:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320907; cv=none; b=KvKMNRjhdrU96hgNdKlEx3MSmlf1K6+t5iCoXFpq5UIIkovPE2Bo1twNxwi7guc+tCE5IWo+S58llDZS/UP4hglacE8GF4i/zTXAP40LqNt7V9YgFkAjliz7v+ixQlubEXNmsUxhJVlgpF6fsAA5EaQ2V2NcdSGf8vZ4eZiZXss=
+	t=1745320917; cv=none; b=OsuptOec+JdqrvYO1zFa+rOiEnKTVAlGS6c3W5X4MWhC5dTsiRl/02ZPnxVlhF84TWeoITv0Kx/GJkDhFGNMtstfLVRt3WiQ/G038K8aHC99IAP1mgJuw1crut+HgEHLuFlfgUAj16cWuYA9jT6FnwdvSqaB2RcziYaM24o+BMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320907; c=relaxed/simple;
-	bh=WiiZl3gUW2Kc/bxNmFW2nM46LR9b5lgB1H/oOxRHse8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dd8Beo5AsWXDrHJwxSurDgkM/JpuY1FnpN0WDESf7Esfw+Fe6YivpdU8SAVTHGrfuwJbXG+BMMf67+b+NCu+Fckf+/esLiZSO1rAQf7B9TkMqPhDkgVznW1AlGgTx5uEg+iTF7d6l99OOWQk5ZUqnNuc3Z58Rz9nUJiEuvT40MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=J5M+1CcI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=OT5DlPDn; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yxKv83Ya; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G1K4y4+c; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745320917; c=relaxed/simple;
+	bh=TNRSUrc5TE9XXI3xP8fPvpIyV+t/AfWY9OXp4kzcbJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UtegIhsn2QjoYQH8E8ChW06m8sP3u5q1JcnziRyJFH0La3rGQ0xEigQiY/hKB/7qAZ0E8Wh23l0vbLWnplQE/TQnzgcTxUh9uvgdlLjqpAVF2WIi+Ec7FP79tpg1kbzm3lkMx5Q9TNug0NNjVokSmrbl4oncsiiiqb5CQlEjWpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3s4GwlH; arc=none smtp.client-ip=209.85.210.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="J5M+1CcI";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OT5DlPDn";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yxKv83Ya";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G1K4y4+c"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E1EEB1F38E;
-	Tue, 22 Apr 2025 11:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745320903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rRxRCM/jou9XRqkHvYeAadFDhU1eJ+igOntodp1BQew=;
-	b=J5M+1CcI/zjyytOI+g8x2nQS6S4cX39bjqK6B4B2BdOjRnGtgIxyiED5TBn7+S5xm7Btqx
-	2ghbWvL9lak1yII5Ift140Eo3BMM77JsHY90Y19IQbKReL/oHNHbIyNoVlMtnUc8ozUdcA
-	wVdVq0s0YjCCW1wQ56tw/k66lukueG8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745320903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rRxRCM/jou9XRqkHvYeAadFDhU1eJ+igOntodp1BQew=;
-	b=OT5DlPDnukxo43o5Xm9p5A8hW0c1nV3ACvxHgJLHU9WTKZIl/9/6+HgFsZsOLu0oB59iYA
-	8dyXkwXGmH9T73Dg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745320902;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rRxRCM/jou9XRqkHvYeAadFDhU1eJ+igOntodp1BQew=;
-	b=yxKv83YaecAmRflpMi0DCGx4WcuaAuAExW6k71JmmRJfH1Z4Gq78BUrZ2K2hzqTceQCUwy
-	c93VoAXk2cZoFPEywW6YhwzEkjJIXx/NaenaEr00kLEvxizlcLM3upNm5aSWuYwo0OiCh7
-	7tf3IENLcVB6zWagYPtyBYugZbA+vx4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745320902;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rRxRCM/jou9XRqkHvYeAadFDhU1eJ+igOntodp1BQew=;
-	b=G1K4y4+caExD+bjh1IDbDXzAaANOyYfIV/twLMSBRhpBrR/PWZ604l5+PqOr69IuHe5xMe
-	XIr8o3gaMsNWlwCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BC540139D5;
-	Tue, 22 Apr 2025 11:21:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BOjELcZ7B2gHCgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 22 Apr 2025 11:21:42 +0000
-Date: Tue, 22 Apr 2025 13:21:37 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/13] btrfs: update btrfs_insert_inode_defrag to to use
- rb helper
-Message-ID: <20250422112137.GA3659@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250422081504.1998809-1-frank.li@vivo.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3s4GwlH"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-7399838db7fso4735947b3a.0;
+        Tue, 22 Apr 2025 04:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745320915; x=1745925715; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ay6j05mfURnqC8saoeMr6ogRVsWqq76E2aDXfyh7ZmE=;
+        b=Y3s4GwlH4S3rl4+Vet1dT0ofu3r46W0/rhdxISXj1Myut9LxV0cdrKqmy3XtQZLH+m
+         un4NBVyvGkz4ffPdK0IkdHP1UozODMz1pmry5ziMesFHrKSlI6Kn3WyBKRaPskQFw3ti
+         w/AqdpRiuI1AVniI6ijkLZMclHz7gY6GnvxZrq8xjXTSThQ7iBXxcTASC5UXnn3fkW//
+         EHhEzXYPXu8GeHG8LSgUwL2YPVTKvL4FTlvEn7Th4Zgue5B/DlnYschcT3TRGxSjwJjS
+         0b3Qqxq3HlOHuhSVu7dixFzq8DVWm4TrKU5UinVv2pevqc3BbBv22wKIpZQ1cK53vSdH
+         oZvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745320915; x=1745925715;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ay6j05mfURnqC8saoeMr6ogRVsWqq76E2aDXfyh7ZmE=;
+        b=OEE8eDdBMVc32/RASuRG0ErL7B4q4N+4i95tB8YNA0hRbA0pANBgcKZgFWG7+mzuUi
+         9H+xGZHvPWw6V6t6nryWHZ63vsIkq3qdQrNfkaShabblR2gVUPDQHSJdm+JBq4gMqrQ8
+         FTelQpu5rO5c26MdCDfe5fqpaIAawCJDPHUSfta5Mo0yw0UEQvcdftsSpxbdwQoi0V95
+         lTTqEr9obkzsrv1ODlnEzzbR2h8zn6DlYiR8oisSCZw+w3OTAchN1VUsRVrA9cwYiWMQ
+         0zwkVDxPaOL3MnvwaEG+x6xNnQS4l8Sac+hQ/2yvnA5L/ktDMrQLTrOVkw3Y2qt3qXFT
+         NeiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVV/oGORL56HULADHySaBmGlwanTky5QnK7t5UvHrDQ964vwKfcvoa+PxoMJLbBGiEweBvgJ4DVEWLo63jE@vger.kernel.org, AJvYcCWazQmigkX4Y9iQSY2O5c7X3zAfBW3YQwf8tu3uIx/a474v/KXPVWRL9wHsRjO+LD9F1Vv9tKARWnb8Skhc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJukqRR53UZ9BeMNXb7V8hrf2iWUe6miMd9QtVZyMQIkmi0Hzl
+	mKYIvU8kSy2SYPpQhk+SuNO1jl3XfvdF/wMxiCvpPwmmEG3yIcof
+X-Gm-Gg: ASbGncurn+zon+LGcOq1p5a5I5XS9wrUdkWReTm5hvVgZwEYaKZt5IAFRcftlhWdbWL
+	3D3y21+Bcrj60iejJNL/hxeVBK5y1bsVvwmyuYDaIqrcZVXb3s9ypnMWpKaubjkEs42Y8/1IdoK
+	a/SmlqAHrGiSr40xDej5eIdcFuHMtXxygvVvDTxxyYhQ2fJqOQvQurd8E9r+AFtEqwtC3W7xHcw
+	m3QR6TqlNA64/hsahq0M9+TXg5tgR2K8MjK4wC7yeboCNPCYh9zhC44CMXJTwtm9rAmDPUveqPJ
+	trsEDWXhuaj3P/zS7if7saKHdxBQAqvXxXu3lKo7BsPoIDo9arSF9A==
+X-Google-Smtp-Source: AGHT+IElSNYl0pqZodwt89usz0QznAvphdRaPmB4R7NXi4Ccq2spidwCw2TN/zF+md2MEsHlG+yqBA==
+X-Received: by 2002:a05:6a00:6c92:b0:732:56a7:a935 with SMTP id d2e1a72fcca58-73dbe638b2bmr25405958b3a.12.1745320914872;
+        Tue, 22 Apr 2025 04:21:54 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db145a6e5sm7117508a12.57.2025.04.22.04.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 04:21:54 -0700 (PDT)
+From: xu xin <xu.xin.sc@gmail.com>
+X-Google-Original-From: xu xin <xu.xin16@zte.com.cn>
+To: xu.xin16@zte.com.cn
+Cc: akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	wang.yaxin@zte.com.cn,
+	yang.yang29@zte.com.cn
+Subject: [PATCH RESEND 4/6] memcontrol-v1: add ksm_zero_pages in cgroup/memory.ksm_stat
+Date: Tue, 22 Apr 2025 11:21:49 +0000
+Message-Id: <20250422112149.3231488-1-xu.xin16@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
+References: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422081504.1998809-1-frank.li@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:replyto,suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-Please post the series with a cover letter so comments that apply to the
-whole series can be posted there.
+Users can obtain ksm_zero_pages of a cgroup just by:
 
-The series looks good, tests are running OK so far, I have mostly coding
-style comments.
+/ # cat /sys/fs/cgroup/memory.ksm_stat
+ksm_rmap_items 76800
+ksm_zero_pages 0
 
-- rephrase the subject line to
+Current implementation supports cgroup v1 temporarily; cgroup v2
+compatibility is planned for future versions.
 
-"btrfs: use rb_find_add() in btrfs_insert_inode_defrag(I)
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+---
+ mm/memcontrol-v1.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-here mentioning the rb helper also suggests what the patch does and is
-obvious so it does not need a long description.
+diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
+index fa57a5deb28c..9680749f4eef 100644
+--- a/mm/memcontrol-v1.c
++++ b/mm/memcontrol-v1.c
+@@ -11,6 +11,7 @@
+ #include <linux/sort.h>
+ #include <linux/file.h>
+ #include <linux/seq_buf.h>
++#include <linux/ksm.h>
+ 
+ #include "internal.h"
+ #include "swap.h"
+@@ -1824,6 +1825,7 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+ #ifdef CONFIG_KSM
+ struct memcg_ksm_stat {
+ 	unsigned long ksm_rmap_items;
++	long ksm_zero_pages;
+ };
+ 
+ static int evaluate_memcg_ksm_stat(struct task_struct *task, void *arg)
+@@ -1834,6 +1836,7 @@ static int evaluate_memcg_ksm_stat(struct task_struct *task, void *arg)
+ 	mm = get_task_mm(task);
+ 	if (mm) {
+ 		ksm_stat->ksm_rmap_items += mm->ksm_rmap_items;
++		ksm_stat->ksm_zero_pages += mm_ksm_zero_pages(mm);
+ 		mmput(mm);
+ 	}
+ 
+@@ -1847,9 +1850,13 @@ static int memcg_ksm_stat_show(struct seq_file *m, void *v)
+ 
+ 	/* Initialization */
+ 	ksm_stat.ksm_rmap_items = 0;
++	ksm_stat.ksm_zero_pages = 0;
++
+ 	/* summing all processes'ksm statistic items of this cgroup hierarchy */
+ 	mem_cgroup_scan_tasks(memcg, evaluate_memcg_ksm_stat, &ksm_stat);
++
+ 	seq_printf(m, "ksm_rmap_items %lu\n", ksm_stat.ksm_rmap_items);
++	seq_printf(m, "ksm_zero_pages %ld\n", ksm_stat.ksm_zero_pages);
+ 
+ 	return 0;
+ }
+-- 
+2.39.3
 
-On Tue, Apr 22, 2025 at 02:14:52AM -0600, Yangtao Li wrote:
-> Update btrfs_insert_inode_defrag() to use rb_find_add().
 
-The following text can be used in most patches (adjusted accordingly)
-
-"Use the rb-tree helper so we don't open code the search and insert
-code."
-> 
-> Suggested-by: David Sterba <dsterba@suse.com>
-
-Please drop this tag.
-
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/defrag.c | 52 +++++++++++++++++++++++------------------------
->  1 file changed, 25 insertions(+), 27 deletions(-)
-> 
-> diff --git a/fs/btrfs/defrag.c b/fs/btrfs/defrag.c
-> index d4310d93f532..d908bce0b8a1 100644
-> --- a/fs/btrfs/defrag.c
-> +++ b/fs/btrfs/defrag.c
-> @@ -60,6 +60,16 @@ static int compare_inode_defrag(const struct inode_defrag *defrag1,
->  		return 0;
->  }
->  
-> +static int inode_defrag_cmp(struct rb_node *new, const struct rb_node *exist)
-
-This is a bit confusing name because there's also compare_inode_defrag()
-but I don't have a better suggestion.
-
-> +{
-> +	const struct inode_defrag *new_defrag =
-> +		rb_entry(new, struct inode_defrag, rb_node);
-> +	const struct inode_defrag *exist_defrag =
-> +		rb_entry(exist, struct inode_defrag, rb_node);
-> +
-> +	return compare_inode_defrag(new_defrag, exist_defrag);
-> +}
-> +
->  /*
->   * Insert a record for an inode into the defrag tree.  The lock must be held
->   * already.
-> @@ -71,37 +81,25 @@ static int btrfs_insert_inode_defrag(struct btrfs_inode *inode,
->  				     struct inode_defrag *defrag)
->  {
->  	struct btrfs_fs_info *fs_info = inode->root->fs_info;
-> -	struct inode_defrag *entry;
-> -	struct rb_node **p;
-> -	struct rb_node *parent = NULL;
-> -	int ret;
-> +	struct rb_node *exist;
-
-Please use 'node' for the rb_nodes.
-
->  
-> -	p = &fs_info->defrag_inodes.rb_node;
-> -	while (*p) {
-> -		parent = *p;
-> -		entry = rb_entry(parent, struct inode_defrag, rb_node);
-> +	exist = rb_find_add(&defrag->rb_node, &fs_info->defrag_inodes, inode_defrag_cmp);
-> +	if (exist) {
-> +		struct inode_defrag *entry;
->  
-> -		ret = compare_inode_defrag(defrag, entry);
-> -		if (ret < 0)
-> -			p = &parent->rb_left;
-> -		else if (ret > 0)
-> -			p = &parent->rb_right;
-> -		else {
-> -			/*
-> -			 * If we're reinserting an entry for an old defrag run,
-> -			 * make sure to lower the transid of our existing
-> -			 * record.
-> -			 */
-> -			if (defrag->transid < entry->transid)
-> -				entry->transid = defrag->transid;
-> -			entry->extent_thresh = min(defrag->extent_thresh,
-> -						   entry->extent_thresh);
-> -			return -EEXIST;
-> -		}
-> +		entry = rb_entry(exist, struct inode_defrag, rb_node);
-> +		/*
-> +		 * If we're reinserting an entry for an old defrag run,
-> +		 * make sure to lower the transid of our existing
-> +		 * record.
-
-Please reformat the comment to 80 columns.
-
-> +		 */
-> +		if (defrag->transid < entry->transid)
-> +			entry->transid = defrag->transid;
-> +		entry->extent_thresh = min(defrag->extent_thresh,
-> +					   entry->extent_thresh);
-> +		return -EEXIST;
->  	}
->  	set_bit(BTRFS_INODE_IN_DEFRAG, &inode->runtime_flags);
-> -	rb_link_node(&defrag->rb_node, parent, p);
-> -	rb_insert_color(&defrag->rb_node, &fs_info->defrag_inodes);
->  	return 0;
->  }
->  
-> -- 
-> 2.39.0
-> 
