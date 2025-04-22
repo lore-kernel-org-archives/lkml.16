@@ -1,111 +1,103 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-106109.protonmail.ch (mail-106109.protonmail.ch [79.135.106.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204B0EEBB;
-	Tue, 22 Apr 2025 15:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427EEEEBB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745334931; cv=none; b=OFt6RvxrgBAK1d1uH5ZuXbFMb7Pu1NRlLjSDGhtbqX82u9aRc8u4+oFCrW6oK4x5sdZI7bsjOqmaue8Rk6MdbD48UEK02BZ4ZmuBFJ9wiLUpWUl9wSUUF5Ri3IbcYwzki3c5l374K0uugZngZkqJV7ZOV6kxfQ/SIagb2UZOzbk=
+	t=1745334936; cv=none; b=s4rT1Egbl9PvWjK0FwERSqSeC/NH5zLv+DHHAsNRNhyo3RtUGtdE4BNMrBhgjBbUMiuQrl0ZQ4yOwr0Lf6Kpt6+5FqGQTpfIKP6g6sKdNqH8QVj2SkqG8qQwkubmN5X51Re1ZJHYeMsxWOIVC7EI+lS7Nneh2reMEjbNiEuu2p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745334931; c=relaxed/simple;
-	bh=zZKF9nOH8sEPJErHTOsvwYFx9dUfb3L1BJmkI6VuiUo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NQsLCmduvc+NTPoXud6xxbT3R6pkkO68nC2hEx3SnQz9w4JWDCgjHAtHxxf8Jzs71jbbgl5k11KiX+Xb+/Wz98N0WXbXr2Jnw0iQPqn1DrafS+kqIWm9MGXMi1vBDdimz7CFARG+2fKbzaw4POGZ2Qm+5GwKMBO7dD1WfCFN0pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1seoP+A; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745334936; c=relaxed/simple;
+	bh=XrDdZMiQCYZWtkyVR+1sBXNNGQPlKxsaHf0T2Hnlrwg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=BO5nU+2f6f+6IVp24YmjsPv17wIxOaeCbnJRgnGqfQarW0hcl2hC9eM1rYCVAV97si8G09iRlXXlwpFDP0C8NW8fTCVtlazwPgR00raXkyJ52FA4wx4GpLX4x6Zd2dVcJWHP9BL0IvLNNKySAiC85j+NT2aK7j691h4TKt3xU8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=EYZ3kgqU; arc=none smtp.client-ip=79.135.106.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1seoP+A"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af8cb6258bcso239816a12.3;
-        Tue, 22 Apr 2025 08:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745334929; x=1745939729; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zZKF9nOH8sEPJErHTOsvwYFx9dUfb3L1BJmkI6VuiUo=;
-        b=Z1seoP+AZVnbXBhyUfCB5LcGeR/jQwabr+dVjCbLXVgwwBtYX3fHEbWVrxb+z/VIor
-         /1KXQkom5I1Mqmzupqc7HjQr5Sg7ISLOO+YTkUboHFAatku/Li1/+XUEHh0cw4iev5I7
-         PS9yMJGIa7HF4+A8WxdaQipy/OtcpWE2HmytJSID++6qHYjDRqjX+W9nX2Dzw7e21H7v
-         3iokcj/DJ2ezKxBY2zidC+eHC20IgmAdc4Xh8hOG1VMgw15VYU6ILbHkBKt1IcMQC19r
-         tQEHi0rH8dQQ3Maa0OGycOcan6FwnNSIOqo/DJH7aS7PjMSkTdaJ5flA7THRVlM0aBx1
-         J9+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745334929; x=1745939729;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zZKF9nOH8sEPJErHTOsvwYFx9dUfb3L1BJmkI6VuiUo=;
-        b=r+DCZHJixW1FxhfWCpLsiremgsGnIf3NWJptAqcVdt6CktPMODu92KveFQjcc8wzjO
-         SAmRzk9bSimYGFSrcT5U/3p3dKi9I/NRy0AgQMKuFQdtk4hPM92Nv6z2dBf67YYGR9d7
-         pZvXaqEoPXM5rVUR2RRFeE446szAtvwV0KVF7Q460F3COq0oSr1bNTnl/hGjRtHw+6/I
-         l8v4BGTiRAVmBs0FE0/LGMMyZLf/yuyf6J72FpRnzC8gDkZ1lC3hxon45+t4/2+mBH2a
-         8f72ZRYP4tuktIwrqKPgHRm1JD47PR3TYXHkFytOvTkaJRxrVHF31Z6H9mYDrwKNCUcn
-         3WeA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8WoPXH7Ly5lHdsjLzD3BjhUdiLkXNiSIvRIxY/JvSpFo+kPMoDiCJXGeOSx+rCYre1tAgg4IRnBjCtrCb@vger.kernel.org, AJvYcCUbk6jUOADrQWGooGnCdGaowN/f52dCs0sm8u6u1dSIRnffBuxI+uq9YUVa3RcLtaBqgZw1IJ3xMirIZjE3CjTV@vger.kernel.org, AJvYcCUevxR7Ij5CySBz9r95QYMaQxRCQDeF5ld0jnxwO0Gb059dwTQk8Cn/E3roybov1VKMYHWFpPMDfU1A6bA=@vger.kernel.org, AJvYcCVtqx1wSdGvEaZrAQK+R1ZeaCxsQQUfli3Nm09aldhyTQ44ATI2X1In8HbC3by/CTtbc83gOvBiS/sD@vger.kernel.org, AJvYcCVymSz5SKJXWKsHsTdJlNS0fxYADwqvkKAwaFqOVw5tUrmrgekxF6XIgEouKytlrqOC+sKuBZhNvubBfBhuskA=@vger.kernel.org, AJvYcCWKgGM6Z007qiWPCPjpzMN9VDbE4tSoMbsc4msQgiWQ6uKcT9f8nosUyH2nCI9ENcJgBevrpsv1JTBz@vger.kernel.org, AJvYcCWOH0OKf/VsJ4z6o3vufLSv+qRFC2UNL8/pJJ5M+GDc6WX8caXYytMb1Ttz09eopP5Cj9BIFBmpfXHUytwM@vger.kernel.org, AJvYcCXViCqsSfu1rijaOTBgaKmZqlGH3yjGiWUFadRzCF49g1UON8ESzM/xf9yTPUlY0XlAC/6sZfuH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+lng6FjWA2ZOhYq7FnlJ1f2Wzgyb7voiCOODwmVWV8sfO/IWw
-	+U7z30+fE1/GJCEkxtIyLznKS1+hWB7534AHVH8tzP1MxwLGQHoJ5W66iJwSQB7ucIdrgAaD4I9
-	nKpNTY8NCBb26hMK3TkB8qP2ECYo=
-X-Gm-Gg: ASbGncuxu90GAftl1muSeiY+m6S59aO7p3e9MnfY78sEvaDHab+uDTTo/7OTRAApnHM
-	pOHa4/BkMN3vMVoP/x/Nhl/OVgfrbHLTjsgIKW9VvUV+I6LtuO7D4Krv1grES0TJDd3JnZ1G/2U
-	F3pgHvzQaBWQGayHsoN6prGQ==
-X-Google-Smtp-Source: AGHT+IEuT6KxYsdhSw5cCeMrUaqYdXW9YE/wChmli/G+cfCYNzLRiA7m7gmwaKew+OoBnqvuuEbFo8HJGHR2tvaOM7M=
-X-Received: by 2002:a17:90b:3501:b0:2ff:7970:d2b6 with SMTP id
- 98e67ed59e1d1-3087bde06ddmr9204562a91.5.1745334929331; Tue, 22 Apr 2025
- 08:15:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="EYZ3kgqU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail; t=1745334916; x=1745594116;
+	bh=qinWNI4zrP64TYceXuUBsDjhYtu4GSfZQrgajmm4aQw=;
+	h=From:Date:Subject:Message-Id:References:In-Reply-To:To:Cc:From:To:
+	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=EYZ3kgqUpN8wRIfAfRGNEicZc/qp/G9fVH11TKXb9eaUL0YAvTdSRMG949zvZL0Ka
+	 6ihSJi11JveIIUzPHL9Al3v+zwFBwkcrKgf/EC6lxm6pzyl2i8oqAD6/6pUsQmwv83
+	 N/I36hFak0XM9AMpVI4DpKI3OjslQEmTTLj2cFTmqXgHqriiJBTaF5qDSvGRmYg2tf
+	 9W0V4JskVgHFMi2oxyDEZ59gRinqnG7dHCZwg2KbWy+pylale8d1lZmUnsQ/gb5dpy
+	 peUgnAYgY0elncEAyoguqlstkf8YKTwMGBy9mIB3UXz6Flw0FvcHJozp8drD53zPK/
+	 HkCnqnDNiwqzg==
+X-Pm-Submission-Id: 4Zhm4z0y89z4wx9h
+From: Esben Haabendal <esben@geanix.com>
+Date: Tue, 22 Apr 2025 17:15:03 +0200
+Subject: [PATCH 2/2] Input: goodix - Allow DT specification of missing
+ reset pull-up
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
- <20250416-ptr-as-ptr-v9-4-18ec29b1b1f3@gmail.com> <68014084.0c0a0220.394e75.122c@mx.google.com>
- <CAJ-ks9muaNU9v2LZ5=cmfXV6R5AO+joNOoPP=+hs-GJN=APfKQ@mail.gmail.com>
- <680160b8.050a0220.223d09.180f@mx.google.com> <CAJ-ks9=TXjk8W18ZMG4mx0JpYvXr4nwnUJqjCnqvW9zu2Y1xjA@mail.gmail.com>
- <aAJrOV88S-4Qb5o0@Mac.home>
-In-Reply-To: <aAJrOV88S-4Qb5o0@Mac.home>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 22 Apr 2025 17:15:16 +0200
-X-Gm-Features: ATxdqUEzkXpfnBhiY7k29QsDY3HizJvfa3BhU5YB5Skka6eAvbENy4JVzwfqVy4
-Message-ID: <CANiq72meaJr5noasX+4p7r5BM1H4tCa33eLrsta00Vpk-cF7VQ@mail.gmail.com>
-Subject: Re: [PATCH v9 4/6] rust: enable `clippy::as_underscore` lint
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-goodix-no-reset-pull-up-v1-2-3983bb65a1bf@geanix.com>
+References: <20250422-goodix-no-reset-pull-up-v1-0-3983bb65a1bf@geanix.com>
+In-Reply-To: <20250422-goodix-no-reset-pull-up-v1-0-3983bb65a1bf@geanix.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Esben Haabendal <esben@geanix.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745334911; l=1750;
+ i=esben@geanix.com; s=20240523; h=from:subject:message-id;
+ bh=XrDdZMiQCYZWtkyVR+1sBXNNGQPlKxsaHf0T2Hnlrwg=;
+ b=jRW+MrsUzdfwfOoQGvfpiB9UjYWL0lEg42ggfjTprYEFFJoNGZKSePA0VQOholEEcth9FEuNx
+ XgRFhA0zOE/ALCVNY//VNmN+XoPjN1LEqZuJ/OnYIzHQUTeXExz8XVQ
+X-Developer-Key: i=esben@geanix.com; a=ed25519;
+ pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 
-On Fri, Apr 18, 2025 at 5:09=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> I'm leaning towards to 2 and then 3, because using `as` can sometimes
-> surprise you when you change the type. Thoughts?
+In commit a2fd46cd3dbb ("Input: goodix - try not to touch the reset-pin on x86/ACPI devices")
+a fix for problems on various x86/ACPI devices where external
+pull-up is missing were added. The same type of problem can exist on
+device-tree platforms, and the fix can be activated by adding the
+no-reset-pull-up device-tree property.
 
-Having explicit functions sounds good to me, and would also help
-migrating later easily to anything else (because all cases are
-explicitly tagged and easy to grep for).
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ drivers/input/touchscreen/goodix.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Cheers,
-Miguel
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index a3e8a51c91449533b4d5185746df6b98676053dd..3a55b0f8e5132a5e1fe77bd27de74e058a4afdaf 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -775,7 +775,8 @@ int goodix_reset_no_int_sync(struct goodix_ts_data *ts)
+ 	 * power. Only do this in the non ACPI case since some ACPI boards
+ 	 * don't have a pull-up, so there the reset pin must stay active-high.
+ 	 */
+-	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO) {
++	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_GPIO &&
++	    ts->gpiod_rst_flags == GPIOD_IN) {
+ 		error = gpiod_direction_input(ts->gpiod_rst);
+ 		if (error)
+ 			goto error;
+@@ -969,6 +970,13 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ 	 */
+ 	ts->gpiod_rst_flags = GPIOD_IN;
+ 
++	/*
++	 * Devices that does not have pull-up on reset signal should not be
++	 * changed to input
++	 */
++	if (device_property_read_bool(dev, "no-reset-pull-up"))
++		ts->gpiod_rst_flags = GPIOD_ASIS;
++
+ 	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
+ 	if (IS_ERR(ts->avdd28))
+ 		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
+
+-- 
+2.49.0
+
