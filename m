@@ -1,62 +1,126 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329CD196;
-	Tue, 22 Apr 2025 02:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEFF8635E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745290115; cv=none; b=uw84f/illIvGJPvCLkDBKzUEfr9PPthbfjPKX9TJv73So8SAq10HLLDxLBCqwZlh2Ghf+dWMM5Skoms0bEr5qi1BATOUKv1nmWH36dUlJ/tz8trsayebymGKt7dduaiuUk5QgNz7q3wEVY2lkeF1Ea7SjRHWguckXKeH/wBXao8=
+	t=1745290196; cv=none; b=OL059+QZIlFMBhlJ9W0qZL9w0u3JbHyeCm7T5lGq85Zp+YHhRXjaJ8a4XoBItOPqswFxXfgs19BBrwiRKYDLlPyt++us63qfHBa1i2nQnR5S1D7cyf18ZnLROgb5TRq5AIrHiSj+XLVCTYwVRfMv/8w/6qqB/41cEeYfFqF5oBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745290115; c=relaxed/simple;
-	bh=8Oi/7h1l6BwvkLMdRM7TN5xBdft1n/bpQEmit7jQzwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rw0MItGzs7FmX0/3p/lnEizYUXSNH4FXnVh02U89e7NKqTUf3dzNjkgyW6syTFJInFrjfX0r879UyeTyA7Tocp8nuINNrtky4Vpo3hkhC7JkDdWtJlMyPUPhRK4o6mvH0SkZa3Z7ZgsgYrx+0roefw3DMmwhVghdgM4C131lBhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=TkTpbH+K; arc=none smtp.client-ip=220.197.32.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="TkTpbH+K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=iYJPrUWUZYghHqO5DdKs7mZT6xUZJXtvop8ZZkPf7T8=;
-	b=TkTpbH+K5yOkEdzap3zS5GUTC/2ZYBl/NYQEJ6K4dMYepqC1ud8Erl9OXNw+DR
-	anO2rS0YhEHhi6RkRHuDPJym1TES3HguTXpnX0Rk68Hua/N9tFvIKAgIWaDHWXCq
-	dMLzlbL9o03513N8Ua+jJ3mWAVVi7c7yWhK9i/yFGx/no=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgC3Z0tYAwdoG4yjAw--.32361S3;
-	Tue, 22 Apr 2025 10:47:54 +0800 (CST)
-Date: Tue, 22 Apr 2025 10:47:52 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: nxp: Align NAND controller node name with
- bindings
-Message-ID: <aAcDWI/ehg2v8kgd@dragon>
-References: <20250317111853.43708-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1745290196; c=relaxed/simple;
+	bh=xYYP3tYhRP+JX4hNQNmmXMiWv8XMH4tFKOYL6r+tr2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=qlKVyZIay0kZKHQLjSNudCoAmFT2jHu9JvaEYT9Eie5dHLYHBmS553yRph+ZrIVJyVtE8Va9Q2DjMKqnPgpDMNt1MW8CMF94M+2ZXI+Knbju92p9hsUySzJSbiHkXcCY0AnVpajbId7KwtY+XhZVxY/0cgvd99Uv0MLqKQlZ/Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Mon, 21 Apr 2025 22:49:49 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: dmaengine@vger.kernel.org
+Cc: Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Message-ID: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+Mail-Followup-To: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ufg4z4oabgkqbv5p"
 Content-Disposition: inline
-In-Reply-To: <20250317111853.43708-1-krzysztof.kozlowski@linaro.org>
-X-CM-TRANSID:M88vCgC3Z0tYAwdoG4yjAw--.32361S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUa0tCUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiBB83ZWgG2pu5jgAAsR
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 17, 2025 at 12:18:53PM +0100, Krzysztof Kozlowski wrote:
-> Bindings expect NAND controller device nodes to be named
-> "nand-controller".
-> 
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Applied, thanks!
+--ufg4z4oabgkqbv5p
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+MIME-Version: 1.0
 
+On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
+and memory configurations > 64GiB. The fsldma driver is limiting itself
+to only 64GiB in all Elo configurations.
+
+Setup fsldma driver to make use of the full 40-bit addressing space,
+specifically on the e5500 and e6500 CPUs.
+
+Signed-off-by: Ben Collins <bcollins@kernel.org>
+Cc: Zhang Wei <zw@zh-kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/dma/fsldma.c | 2 +-
+ drivers/dma/fsldma.h | 7 +++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index b5e7d18b97669..8c01963ad47d8 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -1254,7 +1254,7 @@ static int fsldma_of_probe(struct platform_device *op)
+ 	fdev->common.directions =3D BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	fdev->common.residue_granularity =3D DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+=20
+-	dma_set_mask(&(op->dev), DMA_BIT_MASK(36));
++	dma_set_mask(&(op->dev), DMA_BIT_MASK(ELO_MAX_PHYS_BITS));
+=20
+ 	platform_set_drvdata(op, fdev);
+=20
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 308bed0a560ac..1e7bd37208412 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -13,6 +13,13 @@
+ #include <linux/dmapool.h>
+ #include <linux/dmaengine.h>
+=20
++/* Physical addressing capability */
++#if defined(CONFIG_E6500_CPU) || defined(CONFIG_E5500_CPU)
++#define ELO_MAX_PHYS_BITS	40
++#else
++#define ELO_MAX_PHYS_BITS	36
++#endif
++
+ /* Define data structures needed by Freescale
+  * MPC8540 and MPC8349 DMA controller.
+  */
+--=20
+2.49.0
+
+
+--=20
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
+
+--ufg4z4oabgkqbv5p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHA80ACgkQXVpXxyQr
+Is9JeQ/8Dko2O5Urq432buc/7ynFHW0W1g3CqE4IA+G6+v1Cxo9qzCL4+vprFp/m
+zXuzz+9pWxlM/rwuq/YWe0ZaAaaqas/501/G8E9hxnIuPrtnzLhu5vJlRy2pvcvI
+ArbCZR+oz8fxPu/DspUMMJ1L4yQBKWxzHBnwP/R//iHNQYnyTftf8baSk5A+u0Z+
+L/SFJUDDuMEY/4duUNciKLSUVSdCOcQJoiBemG0ZcSXAAweiJCKYTuqYDbcd3tNB
+8k/Qq8MOE5+5Y6lxmACRM4rRz80x21MomBcJSkoQYdiHF2jQcJtAr8GNSCYKXqJt
+Zu93agKXbjCyPuc+GQwtFbVVE5VPqHgPoEiCTi6OVGBejkFJ9W+IctpSNrRm7ufv
+UMWq2oXbu1h8lXp23WhV1Up03oMAaaQ9EQlu1bsMwfnS0tc8OJyXo2GcqSbAP/C8
+bM86k0NWYnUDdFUbwfhyVAtcjGmukL0uqe5RLpQULmM7U3kNpm8QQirJpIKZBlJ3
+UWYCRlxSO3ol15bQFMhIOVvHwl4Z7Zlm8WP4beTwicy8diA2j7Ij6JTTbMxP+5Qi
+wbma1y2UqUyfq/QaRhOvqpYlxXaGDiohYziTrHPph2rlWYsaM/70VdwJT9CUKXmP
+6tZu38Fj3IT5Ozhu9pnfXpjfNiBEXMu4gED/bfMoBFN2UHKdbF8=
+=KEhy
+-----END PGP SIGNATURE-----
+
+--ufg4z4oabgkqbv5p--
