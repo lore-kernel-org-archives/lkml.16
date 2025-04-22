@@ -1,93 +1,114 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9532701AE;
-	Tue, 22 Apr 2025 22:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A9E41C69;
+	Tue, 22 Apr 2025 22:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745360976; cv=none; b=ra+fAOFBIBX8UCebE5tMe0DI7onLnqGYhJunhL4WcSyenrwV+UZbrIhPdSELy6acSLmlvlxLxfV9KEjhdXgVNtMbKYgk6aymgCOSmPFYOVvA+7UqD8x6mTBSVcZMXQKP27uZiUOiMgnu7Xx5U4qNjwFtW3SlcwqVeH9ylQXI/7s=
+	t=1745361057; cv=none; b=fh4P7V2yNBXV62lqGGRvcn+uASAYYs6t506McAchYYcLTbztfOevpUvpPG11ZHvIJkYBio4VaZAg/qTAESgdOSi1p/rwm4TuzUxOEijwuYjfgVLRCT+nnXLeBuPZC8Mh5ZU0q8bkUz1ur2BQTLAC/nOPSiSSJu/LtM71UY7TM/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745360976; c=relaxed/simple;
-	bh=pm7cUXM8y3awphCsbCHGxlGDv2cLWuP5LQ5ih7JfLmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sUQek7zRzdgub6TCBDy2VGlvOu46ns04EuD9GN6yUbtZ6v+Uk48UNOCw1Lvt0DHN9uB5yDjUSUWcOr3O3atl6SCn4ktW+EKkyWF68CAncbXKcXqx16LumawvOCDgD8eGGcO6yPRUifvzt3tu0mDn+b+M8oKWT49EVpFU/YvrtmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=hmXPbR2O; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745361057; c=relaxed/simple;
+	bh=yqqf7SXgxooT45kd9Pexv9Aea9WDtDR0VWw7cmnYKUM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lbtV0M34Qt18wrvwyHcg1Sm6z+I4Fj2nRXEj6ZilCvZVgPbToRUqoiuGf1e7Hsi0352Taa1RX8E6cgAdxeZhXjpb95oQozdAisdanSwn8U/Ta2zYoeAjp5krV7KcE5hKsHtVEf6+Pwnxd1NIIGOLpqs6PxUm8Mpkj4+Sa+1EeAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jY2jFXu8; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hmXPbR2O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745360966;
-	bh=5G7v2xzO674mCNoDJCXPmF2yZDjwwg8vGbTAmGr9Nww=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hmXPbR2OhpcFUOZe0Atd7bKeQW0/xN04O3GykCypRDxVLlxOHy4UgcW39MAgST6kS
-	 fYI2vg7O1hnexQcUm2DMDvtbrtSDTbSLzx1rncySZe3LWeCPcmFhmPEB7pTztPCGsS
-	 eCu7qzygcceqfX1paDH/icj+uLv/19Z9Q1TKI0WV39JHWX56lCi4ZgMRCkcSdMkUEt
-	 n+Q4TA9J3N51ljRhwvlPAZsZOWwGJMKUBhbjBdFUSPDJ/ddidTmKfWAoMvVIv9DBFS
-	 AXa0gHHteoU1z7LHlkAg8cyA+WJAP+CGiTZEHwzumN2XdBvC33w1dTyZp09fjH9yv1
-	 7TbQL9EMV/pPQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhxjy0Y9Lz4wnp;
-	Wed, 23 Apr 2025 08:29:25 +1000 (AEST)
-Date: Wed, 23 Apr 2025 08:29:24 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the btrfs tree
-Message-ID: <20250423082924.0304a186@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jY2jFXu8"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so954603366b.1;
+        Tue, 22 Apr 2025 15:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745361054; x=1745965854; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TzNCI1euiML81T+O/Mxg+dH4/vZAirx+HsgT3Ub2AsQ=;
+        b=jY2jFXu82PAEBm4lpftNIEfSRehO9IJsvhN18a3UkIoWW0sE/QgzTUaPdRrZyBl6+h
+         UxLmzt9OV7KaSRHKrevxLuRthzbJMvKK5POUxCtClCPuLBg6qsi8J5L0PndutLdWFmRW
+         32F9YEqdRzeyWWv2yMHbuSpRLkDnAPxyNPfhIFTl6D/mmOzKsDarirWAn62+LjxPdAmV
+         0UVKeCUNYSfczcWIXTEbsc/ai+Yy2XOz6WLhkk3lCzmW4JHyIqqEGvhByuEEm5d7Dzlq
+         nHeslsP4UlI1tzSQl+ta74rWQtHoZM/YSB99zOEpd35CQLpQ+BBXCwB3evnkvHAPRI5k
+         Mcyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745361054; x=1745965854;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TzNCI1euiML81T+O/Mxg+dH4/vZAirx+HsgT3Ub2AsQ=;
+        b=lZy5E/hQb+4HE9+hp705ATfs/LRqwZhKcAZY1kQAscyk5/f0BHlxKVKtlSXRnA4moh
+         OA9h24YNEFJdKgsQGAaYcu1e0Ttj++s7QxvuO1C81T9qQA+eKtezFlfHqJ9A0oO/FwIy
+         2sIhU+u+U6l8z71JLvE0xYMSAUHkpPSGgNeDEQiS4lKhSiw/4vNaZjDR5LhjLzT4cEAM
+         gRnXnHlsjZ/Esx8BhvF0t6Kc+l+5RFLzIjoEIIHpRHX5WAd1o75GN7kAeK9f0DsFhwrx
+         7j0s13JJJWkXrbUoD0LF/0DHxycb0nD9t8GEshifPtisu84VSbMW5OvxWW3WvyfsLTnP
+         HxYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVntsgSfjFWBhsJzbeXUgsVsuHk2br2PhzU3b4EADVIUW9mjysg2TVlxLLPtLJ78VX5QaqJ4ZLphk0O5l0k@vger.kernel.org, AJvYcCXE2pNc7+Z/DwJbVfaEUDVxYNg/waZQJLEsi4Z+QnPd8GKTbcV6iFkBpm/ZCpneyBCLjZXf4Bc/3vc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZA29b20O7aBQEw88/IcxiVzrgCuJ3f9JKO5ve7iTAdfxsndtT
+	gLa/hIm2fNwK4BdLM3DMlBO0u/BElh/z4coy5S3lfyHhRszvDIUwds0c03XnKA+lxgz29vnFSLF
+	EfLVECANoG2bEkHbUDdkDDpChhtU=
+X-Gm-Gg: ASbGncvzMg6OeX08QIEPjYsYCrtW6EhYVamcmObdcTSZwVrRS+6kijl3XhUWEiTenVz
+	qTlU7LmKhWWusnytQBX2ZC5MW6PvgyGW5BZyLE9XGQx1p7XxvQLq7myk8K6cflhq6hfvme8n424
+	pMcDwi8k4fmTqU6AFw/mvOZQ==
+X-Google-Smtp-Source: AGHT+IE3998SOoM5TQwHkEiv9/r4ac5IEpqWhP34QWkVmaptlSFgMZv97T7hlOYNeYrjUabrHKcmyKVktjZdI8yC4gE=
+X-Received: by 2002:a17:907:3fa1:b0:ac2:c1e:dff0 with SMTP id
+ a640c23a62f3a-acb74b4ccd4mr1141325966b.19.1745361053675; Tue, 22 Apr 2025
+ 15:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/y5aFDOoYDbkyCfrjJr5pH7+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/y5aFDOoYDbkyCfrjJr5pH7+
-Content-Type: text/plain; charset=US-ASCII
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+ <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 23 Apr 2025 01:30:17 +0300
+X-Gm-Features: ATxdqUF9L-QdkcRUaS4VEbEYroG2Kvz6r19047Y4gFd893gEmo8RVU6ynKAGZL8
+Message-ID: <CAHp75VeuNhfJrNAZZwY2tEHte=UPHLOPNUz7y_J20xv2+_Zdeg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, Apr 23, 2025 at 1:08=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> Add new macros to help with the common case of declaring a buffer that
+> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+> to do correctly because of the alignment requirements of the timestamp.
+> This will make it easier for both authors and reviewers.
+>
+> To avoid double __align() attributes in cases where we also need DMA
+> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
 
-The following commits are also in Linus Torvalds' tree as different
-commits (but the same patches):
+...
 
-  0343f88be454 ("btrfs: subpage: access correct object when reading bitmap =
-start in subpage_calc_start_bit()")
-  308a921d5c45 ("btrfs: zoned: return EIO on RAID1 block group write pointe=
-r mismatch")
-  39b4c6395e2a ("btrfs: fix invalid inode pointer after failure to create r=
-eloc inode")
-  4853650cc31d ("btrfs: fix the ASSERT() inside GET_SUBPAGE_BITMAP()")
-  4a50116e0850 ("btrfs: tree-checker: adjust error code for header level ch=
-eck")
-  53dda1b821c4 ("btrfs: avoid page_lockend underflow in btrfs_punch_hole_lo=
-ck_range()")
-  5605a0903ce1 ("btrfs: zoned: skip reporting zone for new block group")
-  982446a056f3 ("block: introduce zone capacity helper")
+> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> +       type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64=
+) / sizeof(type)]
+
+Single leading underscore seems to me not so usual, I saw people use
+double underscores to make sure that it will be visible that it's an
+internal one (kinda).
+
+...
+
+> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) =3D=3D 0,
+
+Why not static_assert() ? Because of the message? But static_assert()
+supports messages AFAICS.
+
+> +       "macros above assume that IIO_DMA_MINALIGN also ensures s64 times=
+tamp alignment");
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/y5aFDOoYDbkyCfrjJr5pH7+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgIGEQACgkQAVBC80lX
-0GxKVQf/Q1l5Xe754s5EDPOmfWowoPVgYFiG2gm2Y8e+V/GRVwVfpSUWX7HyXvz4
-p92uFVKfUQvLwpFf2U2V10EvAYAbQbNKVXyvxTj/W0Az+pjZEyNUMiNHP+66yu+v
-+XNOqq/iWhZ35qEl8ERgyGisI/QwZBlJipJjeKYT3gEXfWzL7Kh4/wD2Pcf88T1Z
-cEPEHD/sgXEIQWQPwhevcYZmlnZzcTlw4qpjE+Rs6p8AULKaFoASPUlc35RWN53T
-El4gpNRj9oqJEthWEX6Se+xbNbx4O1Z/W+NT5Xcm4L30znm0dAdBHR4QOcI4KIFu
-eBYO4F3A8im2ZitOmGpherJKszGpXA==
-=eUZq
------END PGP SIGNATURE-----
-
---Sig_/y5aFDOoYDbkyCfrjJr5pH7+--
+With Best Regards,
+Andy Shevchenko
