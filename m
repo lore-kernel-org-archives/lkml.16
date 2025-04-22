@@ -1,36 +1,36 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D6E2116EB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1A91EDA2C;
 	Tue, 22 Apr 2025 10:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317456; cv=none; b=g8feHiCcGKK7Iz0oZxINvlJFH31CqXPjPXCsHv6hn/wnfKfBPeoY5+XpdjZdS/sK/qQemmZS5cyr1F/OxXe8FsMJUl8g0KgGfBNRmKL8VMjQ2susGxgmuIYJgGuu0SfCjXkCX38FID1oY1jjnWzYfbDeSBR8MUAPU1SbfY4JGTc=
+	t=1745317459; cv=none; b=i7/75W9u94E4BcxGF+V8eEsWf35iss25y53ZhlosXAkZZjU+D5xKOGwISeCe1FCM2CAGQ4o0xG+UEoOIs4d5oeXlir4X3bqxSE6rIYRUiGqikLST7JwU8+qD8zvN4SzrdM0pii5uPL3ui00I23A93mxLZn4z6uwR9f6+A3S8iMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317456; c=relaxed/simple;
-	bh=DwnHJKjSRTcNroFg/p73E0l/JHIa6S8hPby+gFI9qpQ=;
+	s=arc-20240116; t=1745317459; c=relaxed/simple;
+	bh=gjmegUE8nkvnqYGAzoqCkp0JHDCzhgmR/Pn3cCV+J30=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=alHPgJB2icgzaj2LUenpe4xQf9ODNk9fLMSTXlbug1Pa+7cE1VP0yUuFa0KawqbCUHVR4SmhvWZE9sp8wzIOoJr2FiT1M6osxuJeee+rkevO0mwao1XpDot2cd2ubD28ONHd0OJLrdDg6KEZje1XehNAsH1PhOAa5fG2BzKcv5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Vq+IwI1+; arc=none smtp.client-ip=54.206.34.216
+	 MIME-Version; b=SF3COSt6Gm0nMj/62nVhOPrf/GtOEfXUkw5wdqWstnYHzw8cZ3Vp0g4rE3pxet0TmpBdcfYOk+XwO99EeY0FEfy89GUB1RCELjMCHb1r7o1Q/ehSx4Z9Ktu1MeYFf3D5QaidplL2+i1AvcrPU7u90WvxhvVeagGVa+b+20Fktwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=etRAOVNW; arc=none smtp.client-ip=18.169.211.239
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Vq+IwI1+"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="etRAOVNW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745317443;
-	bh=/kCJEwIi51vpS2czRIPch3YPYBe5K2hVZT8aTmupNNc=;
+	s=onoh2408; t=1745317426;
+	bh=p13p1deBOhuoKBgpdie+NXcLOjyEkv+MI/7mj2NH+KU=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Vq+IwI1+QZnq4aI3jWuCzmCbbb0chMcG+Kc5FSX/WdIFq3+Xo1lCqshdEb+rATwt+
-	 fko10VuHRcCjATiEuePR+pIMjUlsL3S3Okn7lipPoj0bz9ucPYRzO0gwTcWbZws44r
-	 QcePHnS6APk6zyvuHjxTZbfhVXeFJp3nkV3OR1gM=
-X-QQ-mid: zesmtpip4t1745317404t5b5a4381
-X-QQ-Originating-IP: S0t1emq2KGXtxj+2JIdNqT7E9gubmHp4di/k3CSucoY=
+	b=etRAOVNWpcQMSe6kfltvgiXywzE1gZ7vczheoe9UxbuHoCwRWLFHo05GrMTRI+o/I
+	 aHR+DlAtBDq5TD7ilpRgQsEiV6ToMbg6is/IlQB7QqUpsEH7/c2KAxGMCE/+SEPvrB
+	 bY0EKfzKXN5dvmEmVQM8hz7aTnV2OU61eUBU1tnY=
+X-QQ-mid: zesmtpip4t1745317385t99dfa428
+X-QQ-Originating-IP: fUrGjttCi44eEZnGCNZku/HmudvD3QI6pVKyD2F0rW4=
 Received: from localhost.localdomain ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 18:23:22 +0800 (CST)
+	id ; Tue, 22 Apr 2025 18:23:03 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8795362617588376660
+X-BIZMAIL-ID: 9625508605425131605
 EX-QQ-RecipientCnt: 8
 From: WangYuli <wangyuli@uniontech.com>
 To: wangyuli@uniontech.com
@@ -41,9 +41,9 @@ Cc: guanwentao@uniontech.com,
 	niecheng1@uniontech.com,
 	tsbogend@alpha.franken.de,
 	zhanjun@uniontech.com
-Subject: [PATCH v2 5/6] MIPS: decstation_64_defconfig: Update configs dependencies
-Date: Tue, 22 Apr 2025 18:22:52 +0800
-Message-ID: <566F2D64350C960C+20250422102253.137944-5-wangyuli@uniontech.com>
+Subject: [PATCH v2 2/6] MIPS: Eliminate Redundant KBUILD_SYM32 Checks
+Date: Tue, 22 Apr 2025 18:22:49 +0800
+Message-ID: <5D20D311FB1FCDF1+20250422102253.137944-2-wangyuli@uniontech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
 References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
@@ -56,148 +56,47 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MvUCj+jJbjsSURhWTNu2YlJFciUNDpBoc1mQEO9goJzhtElPaBVqfmG4
-	uf/U4rzgizlgPh0E27qM97ob4qIUcshhtW6V/0I1GN+rxHnj40alBVhUSa+Oj7szuymcVpn
-	LMIQNlVRZG/230cPM4m2vkLe6iNLSDz6Vp2pIL/2RnEAHzklcwMlVzCHuDBQxNbBUa3jioA
-	Z88qMVW0gsmXoGkEY4DLUMkJbHP080UCpC4GH9djt4d7ZM238Tr/fGoAoo13QwOe6yyO3F1
-	IRHhVcflyiCMxtaR6gGjgGh1hQP+jbiP6HnC/vWqjpHOg1Lid1/+3+yYpTs3RJn3Gpme48v
-	ZJBqXmtO8re3KVsOlYPBYT/wB0mCLJjaH1GG8KwJQ8xlgAKRHkxiLJ6gQx4Q2IbkTGObEhm
-	gG83BaqdOkJSd5rkSf3872wutl+3hm9rjhx1BbruloEIUxys8phP5mh9cYQRAHV/pLzbTIm
-	d0Ngj+WFVx8is+7vYKakXdquQZXgHvGY/VDf1Sv3YDNXJs2vvveV5w0P8TXI5qjxN54iJUh
-	QTRUVvstI3e/1viIiiD8QMqsKKwVqSlzIs9PkKmQN/dRL5J9Ku4cYwBzuoUg13m+YdISozP
-	m4IYERequYXbkZCqULj8InZFccBwsynA/0AWsAF2sivWci8JSs3oi61NySdeRFvqaYJ9Fvb
-	BjvNmyaRSe0qpKRB3cRg0KdeT3xKhUq2GEcOSYM+tp1SvkFDWFEyxpOC+hrv+cGUBDbYU8x
-	6dS6q++gZjSrN3FFwLxQBgLtMed5iOEy9sjgY24xp1ppFJJi9/Jx/PcxFXeX+O3Vhul8JR/
-	/TmjhIqrfRKCUwCatWgq9U7oe8rA5UfQb6wOmLCksVvvfq/UT8qbEmYj/NVzmWxS5ebs0dp
-	e7P+Zg57BRaNzV2n2g/gcEK0eLsUe5i25+rIHorwW7E0h2tmCdtJjE7rhGXRb8Bz+Yd8c3n
-	4YUzrj3aj0K2JFMSobsQzoS8PbXiVJS1UxjKqUezUWRHmlRWhqFJi88iq/QalyafBoB8zrs
-	JHLsW6wNx3OGb2UTLj+X2ZQKe3H6pepw0guxTH4VPxCH2hXlEWpCMm511cF2U=
+X-QQ-XMAILINFO: Np+/JNR9oCIP6eIBrtHRZQ4VzIYzIVjpRNQObTetPVIiFtb0+G3L7g8u
+	CiS6fuXXGwZy9EVqsGcn4Isjw/pNPmQabRn8QMJ07rpfuvCbojuHqO2mCM8RJWjnnPgEay+
+	KalQSm+h6/ioXoMPcngZSCw/reNIb1d+Rs+Ki+QnIT2cDe+Nfezkqdh7UZ0KkmvBmA+8wWH
+	qgfjrhXqNWDMuFBCZiCtSEEs5cRRRD230+JCC/QCkRcWN6FF03rnw4HrVXlgx9Dk5QCAV8a
+	Z4HiOTZ0OJvOe5vf9H9SP9s2BO/p8VNi3KWlgz06U/lpNMf2vVlnalWG3et1DlclHAXtI1S
+	OA8Rp/81gaboLfWlrl5thIQSyCrWW9TknSU9SoNqdFdiFZDfH8u0bQqLe1+AdQQaOxbEHaA
+	0B98IwUjUYFuTqHJHXmTEitiNONgjxJsvbKK6Yb6u4QJMRaWyYsZA+Gm80koqjPUDIC+Urg
+	sjc5j1UiflEUG7csFEd4vuRKp5XKDjqkRDmAhSJqXsWptJliaQCiX/ck27Hq21j+Uz3Z32D
+	5rxAmfUfAgCmpzybRLU1nmg2wnxRnHlO4G2BYhe/QwAqKRDkqhIyiXpEphc5gWgecyO20KI
+	WbHWtxGhMZI/Jkliz7+h83HkByjzdtYyzr8KFHDZ9quRDrjHBb0HTs3rHWk89/6vbuEaN/W
+	A1AjLTOkdVIReH15K1UAloHKgloSwl7q58ywaFIZLkkeQeX5gYNiZ9FaXY4n8ULwhsC2PU4
+	v7EkFCAcPudxmwAlRyKI7wLESk+HSadbPZu7aGrxWv8L3QXXO/nZiGgfCB9aveg3u6QLBNK
+	xJKne2g2zG/SCG02sSsPrT0W1TSwj23Id2MvHbMgAeDlqWH5+uIOq2vzaxFsAbyv2m4LC8i
+	dFYQheIF8iQJeQ8G5iImcXvpqJ7MD9RnvDk1t8sot343+e05GJzxHzuDvmmWWvNzfbkr2Py
+	IVTicdnyFvSm63UoEReUXlsigsGZa6N9nOClsUNM+nYikDuVZKgrQJydJB9eciXUR+wrOQo
+	3fkLfkCl3lLxnArvxcOpIAJfhdsLw3ZjNf4OWO6IBiwu+T7m67kmXVrTnfeRTjzy0e2zOFZ
+	VvXgltYipH7PO04UlfGyXs=
 X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 X-QQ-RECHKSPAM: 0
 
-Due to long-term changes in kernel build configurations,
-run 'make savedefconfig' to update the build configuration
-dependencies.
-
-This commit does not affect the actual .config file content,
-in preparation for future modifications to decstation_64_defconfig.
+Given that KBUILD_SYM32=y is a prerequisite for this statement to be
+executed, it's logically redundant to verify KBUILD_SYM32 is y again.
 
 Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- arch/mips/configs/decstation_64_defconfig | 42 +++++++++--------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+ arch/mips/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/configs/decstation_64_defconfig b/arch/mips/configs/decstation_64_defconfig
-index 9655567614aa..bf579866cf4b 100644
---- a/arch/mips/configs/decstation_64_defconfig
-+++ b/arch/mips/configs/decstation_64_defconfig
-@@ -1,27 +1,27 @@
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
- CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_BPF_SYSCALL=y
- CONFIG_BSD_PROCESS_ACCT=y
- CONFIG_BSD_PROCESS_ACCT_V3=y
- CONFIG_LOG_BUF_SHIFT=15
- CONFIG_EXPERT=y
- # CONFIG_SGETMASK_SYSCALL is not set
- # CONFIG_SYSFS_SYSCALL is not set
--CONFIG_BPF_SYSCALL=y
--# CONFIG_COMPAT_BRK is not set
- CONFIG_MACH_DECSTATION=y
- CONFIG_64BIT=y
--CONFIG_PAGE_SIZE_16KB=y
- CONFIG_TC=y
- CONFIG_MIPS32_O32=y
- CONFIG_MIPS32_N32=y
- # CONFIG_SUSPEND is not set
-+CONFIG_PAGE_SIZE_16KB=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- CONFIG_MODULE_SRCVERSION_ALL=y
- CONFIG_PARTITION_ADVANCED=y
- CONFIG_OSF_PARTITION=y
- # CONFIG_EFI_PARTITION is not set
-+# CONFIG_COMPAT_BRK is not set
- CONFIG_TRANSPARENT_HUGEPAGE=y
- CONFIG_NET=y
- CONFIG_PACKET=y
-@@ -49,7 +49,6 @@ CONFIG_NETWORK_SECMARK=y
- CONFIG_IP_SCTP=m
- CONFIG_VLAN_8021Q=m
- # CONFIG_WIRELESS is not set
--# CONFIG_UEVENT_HELPER is not set
- # CONFIG_FW_LOADER is not set
- # CONFIG_ALLOW_DEV_COREDUMP is not set
- CONFIG_MTD=m
-@@ -83,9 +82,9 @@ CONFIG_DECLANCE=y
- # CONFIG_NET_VENDOR_MICREL is not set
- # CONFIG_NET_VENDOR_MICROCHIP is not set
- # CONFIG_NET_VENDOR_MICROSEMI is not set
-+# CONFIG_NET_VENDOR_NI is not set
- # CONFIG_NET_VENDOR_NATSEMI is not set
- # CONFIG_NET_VENDOR_NETRONOME is not set
--# CONFIG_NET_VENDOR_NI is not set
- # CONFIG_NET_VENDOR_QUALCOMM is not set
- # CONFIG_NET_VENDOR_RENESAS is not set
- # CONFIG_NET_VENDOR_ROCKER is not set
-@@ -114,7 +113,6 @@ CONFIG_FB_TGA=y
- CONFIG_FB_PMAG_AA=y
- CONFIG_FB_PMAG_BA=y
- CONFIG_FB_PMAGB_B=y
--# CONFIG_VGA_CONSOLE is not set
- CONFIG_DUMMY_CONSOLE_COLUMNS=160
- CONFIG_DUMMY_CONSOLE_ROWS=64
- CONFIG_FRAMEBUFFER_CONSOLE=y
-@@ -167,36 +165,28 @@ CONFIG_NLS_ISO8859_13=m
- CONFIG_NLS_ISO8859_14=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
--CONFIG_CRYPTO_RSA=m
- CONFIG_CRYPTO_MANAGER=y
--CONFIG_CRYPTO_CCM=m
--CONFIG_CRYPTO_GCM=m
--CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_RSA=m
-+CONFIG_CRYPTO_BLOWFISH=m
-+CONFIG_CRYPTO_CAMELLIA=m
-+CONFIG_CRYPTO_CAST5=m
-+CONFIG_CRYPTO_CAST6=m
-+CONFIG_CRYPTO_FCRYPT=m
-+CONFIG_CRYPTO_SERPENT=m
-+CONFIG_CRYPTO_TWOFISH=m
- CONFIG_CRYPTO_CTS=m
- CONFIG_CRYPTO_LRW=m
--CONFIG_CRYPTO_OFB=m
- CONFIG_CRYPTO_PCBC=m
- CONFIG_CRYPTO_XTS=m
-+CONFIG_CRYPTO_CHACHA20POLY1305=m
-+CONFIG_CRYPTO_CCM=m
- CONFIG_CRYPTO_CMAC=m
--CONFIG_CRYPTO_XCBC=m
--CONFIG_CRYPTO_CRC32=m
- CONFIG_CRYPTO_MD4=m
- CONFIG_CRYPTO_MICHAEL_MIC=m
- CONFIG_CRYPTO_RMD160=m
--CONFIG_CRYPTO_SHA512=m
- CONFIG_CRYPTO_WP512=m
--CONFIG_CRYPTO_ANUBIS=m
--CONFIG_CRYPTO_ARC4=m
--CONFIG_CRYPTO_BLOWFISH=m
--CONFIG_CRYPTO_CAMELLIA=m
--CONFIG_CRYPTO_CAST5=m
--CONFIG_CRYPTO_CAST6=m
--CONFIG_CRYPTO_FCRYPT=m
--CONFIG_CRYPTO_KHAZAD=m
--CONFIG_CRYPTO_SEED=m
--CONFIG_CRYPTO_SERPENT=m
--CONFIG_CRYPTO_TEA=m
--CONFIG_CRYPTO_TWOFISH=m
-+CONFIG_CRYPTO_XCBC=m
-+CONFIG_CRYPTO_CRC32=m
- CONFIG_CRYPTO_LZO=m
- CONFIG_CRYPTO_842=m
- CONFIG_CRYPTO_LZ4=m
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index 1fffc6cf8b52..ad06e81f50fb 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -299,7 +299,7 @@ ifdef CONFIG_64BIT
+   endif
+ 
+   ifeq ($(KBUILD_SYM32), y)
+-    cflags-$(KBUILD_SYM32) += -msym32 -DKBUILD_64BIT_SYM32
++    cflags-y += -msym32 -DKBUILD_64BIT_SYM32
+   else
+     ifeq ($(CONFIG_CPU_DADDI_WORKAROUNDS), y)
+       $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
 -- 
 2.49.0
 
