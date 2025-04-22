@@ -1,372 +1,81 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8F11EB1BC
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30C1EEA27;
+	Tue, 22 Apr 2025 10:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745318384; cv=none; b=SQUCSMUNvAI57wLC4YyOZrNj83CNJH/zVPml3fc7qS7JQtO2TezxxYBHzoUApnkDkFx989gj6+M3YJopk5jwDJZfwwGu/pIW4t/UkuPUkKXXD+wdZAU/exaZEFUVtAhyCYeYbEmpKVIYzXmO0B3CUjDQlL5y+JjhactrwxygHrI=
+	t=1745318401; cv=none; b=UueEy4tHiU3nYbd3fK4OP4cbsGgJ79hUR1wAqEpTkSszSR7dJ6lt5uZWQqCUAFdNaUUYWXvw+bSOjKb0VndZv9x2F3uNt3oMQN3ocb7CWWW254EwrWZoOlkI3BWc2YKbU0JrIbWd7Enp2ufwNiQOJjRzN7Z7EknBmie5z/tkNXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745318384; c=relaxed/simple;
-	bh=wKORoBaCdBPdmwjkyuysWIqkxqx1VUE+Ytf7w3em1W4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QpgRcPi7mY4O6rxNQIP9A1+ShEcZ/B5RiLeyAaBBBkhMTb8Ptzf6I8xmpJopcLtFJ23iDRWg37AR87z0xjolBg8qBSorRbUhqoWccPSpHCz7xJTe5MB3Mdp3DimzEC8wxA30AjCPkLyvm/hIF6IG27Xc+8yKTh0m3YKvydfVf4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=prIVznZR; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1745318401; c=relaxed/simple;
+	bh=4LnIRp9D/8OmSuE1d+taUXVsOhdHN5TkiGn8ODV+s9Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DSC8yiawuf2eF5n+bz6VTX/kbZpSeugLgaPmIkuqFZOt4QWXaYa4wLokvpyZwL4jXdNgjqqzda/j4MLZDRZniQhq80FZ1ZX0xI8ks3oMKhIagbBxlIABMzZVFlX+X/upHyY/fJQgWxzHqmtUsIHknCQVcDki08o81kgsEBJYkE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBDEcvgd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="prIVznZR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Mzk7mcruO5HeZYvBTq7aonzLNaAySlujPuW7UbyHCkI=; b=prIVznZRPAkDF62Erg0DZ8DKZB
-	xfaczg27XbPq2kn9bCkbrXz7sUdfraEEc8wZ4prXvaUC7eJDjNn27RthwUUWhSKmQsh/K1B4BVXj3
-	tNJh+Uwd0DdGhXz9htCkrr2GU5bf5uPweWIyxHnadFQRTmEnaQl4n4eFfj5CrhXrKARH+cp/rZNvq
-	P2rXyqIc2ZCKra/zFkR5O6r/AQ/pDZhVHm53/R9yK8BoLfwH/3MdB4uHzQXS0Y6S6T/5LAKDAAgb6
-	XV3lmRteTmHjkEG6pDXj/8q7mqsT9JVFI564xBfNlnwKWMnXoYhYAr5N/6FEA3w2xdbLpCHo69bAr
-	XslsqP2w==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u7B20-006Ory-BT; Tue, 22 Apr 2025 12:39:12 +0200
-Message-ID: <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
-Date: Tue, 22 Apr 2025 11:39:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBDEcvgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608A1C4CEE9;
+	Tue, 22 Apr 2025 10:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745318400;
+	bh=4LnIRp9D/8OmSuE1d+taUXVsOhdHN5TkiGn8ODV+s9Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hBDEcvgd5VXKShzvaTtYa/7AzFo40E5wesQ2yKRP5YItM+Z+vtHMqBBbQ3qUb3TJ1
+	 J+gNKOEGl6PQ5LUtpZj9tkBvePxeFySw/gPJhVGoe3EGOGC+g6YATA2BjNU9yXm4tn
+	 VxMto+PeB4e777G35kCjb8aKh5jEJazLbMKKCdpS+Tzz95UvLHZAN6jYrO7vhcJRc/
+	 n7ezwrBPzourSzPJbJIf/84pAWc/19MKzkzPBiMyOuEbsBi3o1dmY0XCjxn7Sh7AcI
+	 /YQ43YUm6JcKO5l2dehp6sOW48e39zxffFB7JID1YbJyHQvMV3UpkgzSqp9cOiFEtH
+	 KYRuteD2FNW0w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EC66B380CEF4;
+	Tue, 22 Apr 2025 10:40:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-To: phasta@kernel.org, Danilo Krummrich <dakr@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250407152239.34429-2-phasta@kernel.org>
- <20250407152239.34429-5-phasta@kernel.org>
- <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
- <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
- <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
- <aAEUwjzZ9w9xlKRY@cassiopeiae>
- <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
- <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net-next 0/3] ionic: support QSFP CMIS
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174531843876.1515168.2615748033975707416.git-patchwork-notify@kernel.org>
+Date: Tue, 22 Apr 2025 10:40:38 +0000
+References: <20250415231317.40616-1-shannon.nelson@amd.com>
+In-Reply-To: <20250415231317.40616-1-shannon.nelson@amd.com>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, brett.creeley@amd.com
 
+Hello:
 
-On 22/04/2025 07:06, Philipp Stanner wrote:
-> On Thu, 2025-04-17 at 17:08 +0100, Tvrtko Ursulin wrote:
->>
->> On 17/04/2025 15:48, Danilo Krummrich wrote:
->>> On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
->>>>
->>>> On 17/04/2025 13:11, Danilo Krummrich wrote:
->>>>> On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
->>>>>>
->>>>>> On 17/04/2025 08:45, Philipp Stanner wrote:
->>>>>>> On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
->>>>>>
->>>>>> Problem exactly is that jobs can outlive the entities and the
->>>>>> scheduler,
->>>>>> while some userspace may have a dma fence reference to the
->>>>>> job via sync
->>>>>> file. This new callback would not solve it for xe, but if
->>>>>> everything
->>>>>> required was reference counted it would.
->>>>>
->>>>> I think you're mixing up the job and the dma_fence here, if a
->>>>> job outlives the
->>>>> scheduler, it clearly is a bug, always has been.
->>>>>
->>>>> AFAIK, Xe reference counts it's driver specific job structures
->>>>> *and* the driver
->>>>> specific scheduler structure, such that drm_sched_fini() won't
->>>>> be called before
->>>>> all jobs have finished.
->>>>
->>>> Yes, sorry, dma fence. But it is not enough to postpone
->>>> drm_sched_fini until
->>>> the job is not finished. Problem is exported dma fence holds the
->>>> pointer to
->>>> drm_sched_fence (and so oopses in
->>>> drm_sched_fence_get_timeline_name on
->>>> fence->sched->name) *after* job had finished and driver was free
->>>> to tear
->>>> everything down.
->>>
->>> Well, that's a bug in drm_sched_fence then and independent from the
->>> other topic.
->>> Once the finished fence in a struct drm_sched_fence has been
->>> signaled it must
->>> live independent of the scheduler.
->>>
->>> The lifetime of the drm_sched_fence is entirely independent from
->>> the scheduler
->>> itself, as you correctly point out.
->>
->> Connection (re. independent or not) I made was *if* drm_sched would
->> be
->> reference counted, would that satisfy both the requirement to keep
->> working drm_sched_fence_get_timeline_name and to allow a different
->> flavour of the memory leak fix.
->>
->> I agree drm_sched_fence_get_timeline_name can also be fixed by
->> removing
->> the fence->sched dereference and losing the (pretty) name.
->> Historically
->> there has been a lot of trouble with those names so maybe that would
->> be
->> acceptable.
->>
->> Revoking s_fence->sched on job completion as an alternative does not
->> sound feasible.
->>
->> To further complicate matters, I suspect rmmod gpu-sched.ko is also
->> something which would break exported fences since that would remove
->> the
->> fence ops. But that is solvable by module_get/put().
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 15 Apr 2025 16:13:13 -0700 you wrote:
+> This patchset sets up support for additional pages and better
+> handling of the QSFP CMIS data.
 > 
-> Is it a common kernel policy to be immune against crazy people just
-> calling rmmod on central, shared kernel infrastructure?
+> v2:
+>  - removed unnecessary index range checks
+>  - return EOPNOTSUPP for unavailable page
+>  - removed obsolete ionic_get_module_info and ionic_get_module_eeprom
 > 
-> We cannot protect people from everything, especially from themselves.
+> [...]
 
-I would say if DRM supports driver unbind, and it does, then we need to 
-decide on the module unload. Otherwise it is possible and allows for bad 
-things to happen.
+Here is the summary with links:
+  - [v2,net-next,1/3] ionic: extend the QSFP module sprom for more pages
+    https://git.kernel.org/netdev/net-next/c/c51ab838f532
+  - [v2,net-next,2/3] ionic: support ethtool get_module_eeprom_by_page
+    https://git.kernel.org/netdev/net-next/c/9c2e17d30b65
+  - [v2,net-next,3/3] ionic: add module eeprom channel data to ionic_if and ethtool
+    https://git.kernel.org/netdev/net-next/c/0651c83ea96c
 
-Even if solution might be to just perma-raise the module refcount, or 
-something. It does not feel valid to dismiss the discussion straight 
-away. Hence I have sent 
-https://lore.kernel.org/dri-devel/20250418164246.72426-1-tvrtko.ursulin@igalia.com/ 
-to discuss on this topic separately.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
->>> Starting to reference count things to keep the whole scheduler etc.
->>> alive as
->>> long as the drm_sched_fence lives is not the correct solution.
->>
->> To catch up on why if you could dig out the links to past discussions
->> it
->> would be helpful.
->>
->> I repeat how there is a lot of attractiveness to reference counting.
->> Already mentioned memory leak, s_fence oops, and also not having to
->> clear job->entity could be useful for things like tracking per entity
->> submission stats (imagine CFS like scheduling, generic scheduling DRM
->> cgroup controller). So it would be good for me to hear what pitfalls
->> were identified in this space.
-> 
-> Reference counting does _appear_ attractive, but our (mostly internal)
-> attempts and discussions revealed that it's not feasable.
-> 
-> There was an RFC by me about it last year, but it was incomplete and
-> few people reacted:
-> 
-> https://lore.kernel.org/dri-devel/20240903094531.29893-2-pstanner@redhat.com/
-> 
-> When you try to implement refcounting, you quickly discover that it's
-> not enough if submitted jobs refcount the scheduler.
-
-Right, I did imply in my initial reply that "everything" would need to 
-be reference counted.
-
-> If the scheduler is refcounted, this means that it can now outlive the
-> driver. This means that it can continue calling into the driver with
-> run_job(), free_job(), timedout_job() and so on.
-> 
-> Since this would fire 500 million UAFs, you, hence, now would have to
-> guard *all* drivers' callbacks in some way against the driver being
-> unloaded. You might even end up having to refcount thinks like entire
-> modules, depending on the driver.
-> 
-> 
-> So effectively, with refcounting, you would fix a problem in central
-> infrastructure (the scheduler) in all users (the driver) – therefore,
-> you would not fix the problem at all, but just work around the
-> scheduler being broken in the drivers. IOW, everything would be exactly
-> as it is now, where everyone works around the problem in their own way.
-> Nouveau uses its redundant pending list, Xe refcounts and amdgpu does……
-> IDK, things.
-
-Xe _fails_ to handle it as demonstrated in the above linked RFC. I don't 
-think any driver can actually handle it on their own. Hence what I am 
-discussing is completely opposite of "not fixing the problem at all" - 
-it is about what if anything can we do to fix it robustly.
-
-> Another problem is the kernel workflow and kernel politics. The
-> solution I propose here allows for phasing the problem out, first in
-> Nouveau, then step by step others. It's the only minimalist backward-
-> compatible solution I can see.
-
-It is two separate things. Memory leaks in this series and the ref 
-counting angle as a potential fix for _both_ memory leaks _and_ use 
-after free problems.
-
-> That said, if you have the capacity to look deeper into a refcount
-> solution, feel free to go for it. But you'd have to find a way to solve
-> it in a centralized manner, otherwise we could just leave everything
-> be.
-
-I will leave discussion for my linked RFC.
-
->>>>> Multiple solutions have been discussed already, e.g. just wait
->>>>> for the pending
->>>>> list to be empty, reference count the scheduler for every
->>>>> pending job. Those all
->>>>> had significant downsides, which I don't see with this
->>>>> proposal.
->>>>>
->>>>> I'm all for better ideas though -- what do you propose?
->>>>
->>>> I think we need to brainstorm both issues and see if there is a
->>>> solution
->>>> which solves them both, with bonus points for being elegant.
->>>
->>> The problems are not related. As mentioned above, once signaled a
->>> drm_sched_fence must not depend on the scheduler any longer.
->>>
->>>>>>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> b/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> index 6b72278c4b72..ae3152beca14 100644
->>>>>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>>>>>> @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct
->>>>>>>> drm_gpu_scheduler
->>>>>>>> *sched)
->>>>>>>>       sched->ready = false;
->>>>>>>>       kfree(sched->sched_rq);
->>>>>>>>       sched->sched_rq = NULL;
->>>>>>>> +
->>>>>>>> + if (!list_empty(&sched->pending_list))
->>>>>>>> + dev_err(sched->dev, "%s: Tearing down scheduler
->>>>>>>> while jobs are pending!\n",
->>>>>>>> + __func__);
->>>>>>
->>>>>> It isn't fair to add this error since it would out of the
->>>>>> blue start firing
->>>>>> for everyone expect nouveau, no? Regardless if there is a
->>>>>> leak or not.
->>>>>
->>>>> I think it is pretty fair to warn when detecting a guaranteed
->>>>> bug, no?
->>>>>
->>>>> If drm_sched_fini() is call while jobs are still on the
->>>>> pending_list, they won't
->>>>> ever be freed, because all workqueues are stopped.
->>>>
->>>> Is it a guaranteed bug for drivers are aware of the
->>>> drm_sched_fini()
->>>> limitation and are cleaning up upon themselves?
->>>
->>> How could a driver clean up on itself (unless the driver holds its
->>> own list of
->>> pending jobs)?
->>>
->>> Once a job is in flight (i.e. it's on the pending_list) we must
->>> guarantee that
->>> free_job() is called by the scheduler, which it can't do if we call
->>> drm_sched_fini() before the pending_list is empty.
->>>
->>>> In other words if you apply the series up to here would it
->>>> trigger for
->>>> nouveau?
->>>
->>> No, because nouveau does something very stupid, i.e. replicate the
->>> pending_list.
->>
->> Ah okay I see it now, it waits for all jobs to finish before calling
->> drm_sched_fini(). For some reason I did not think it was doing that
->> given the cover letter starts with how that is a big no-no.
->>
->>>> Reportedly it triggers for the mock scheduler which also has no
->>>> leak.
->>>
->>> That sounds impossible. How do you ensure you do *not* leak memory
->>> when you tear
->>> down the scheduler while it still has pending jobs? Or in other
->>> words, who calls
->>> free_job() if not the scheduler itself?
->>
->> Well the cover letter says it triggers so it is possible. :)
-> 
-> Where does it say that?
-
-"""
-Tvrtko's unit tests also run as expected (except for the new warning
-print in patch 3), which is not surprising since they don't provide the
-callback.
-"""
-
-> I mean, the warning would trigger if a driver is leaking jobs, which is
-> clearly a bug (and since a list is leaked, it might then even be a
-> false-negative in kmemleak).
-> 
-> It's actually quite simple:
->     1. jobs are being freed by free_job()
->     2. If you call drm_sched_fini(), the work item for free_job() gets
->        deactivated.
->     3. Depending on the load (race), you leak the jobs.
-> 
-> That's not that much of a problem for hardware schedulers, but firmware
-> schedulers who tear down scheduler instances all the time could leak
-> quite some amount of memory over time.
-> 
-> I can't see why a warning print would ever be bad there. Even Christian
-> wants it.
-
-Question I raised is if there are other drivers which manage to clean up 
-everything correctly (like the mock scheduler does), but trigger that 
-warning. Maybe there are not and maybe mock scheduler is the only false 
-positive.
-
-Regards,
-
-Tvrtko
-
->> Mock scheduler also tracks the pending jobs itself, but different
->> from
->> nouveau it does not wait for jobs to finish and free worker to
->> process
->> them all, but having stopped the "hw" backend it cancels them and
->> calls
->> the free_job vfunc directly.
->>
->> Going back to the topic of this series, if we go with a solution
->> along
->> the lines of the proposed, I wonder if it would be doable without
->> mandating that drivers keep a list parallel to pending_list. Instead
->> have a vfunc DRM scheduler would call to cancel job at a time from
->> *its*
->> pending list. It would go nicely together with
->> prepare/run/timedout/free.
->>
->> Would it allow getting rid of the new state machinery and just
->> cancelling and freeing in one go directly from drm_sched_fini()?
->>
->> Regards,
->>
->> Tvrtko
->>
->>>> Also, I asked in my initial reply if we have a list of which of
->>>> the current
->>>> drivers suffer from memory leaks. Is it all or some etc.
->>>
->>> Not all, but quite some I think. The last time I looked (which is
->>> about a year
->>> ago) amdgpu for instance could leak memory when you unbind the
->>> driver while
->>> enough jobs are in flight.
->>
-> 
 
