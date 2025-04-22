@@ -1,112 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f225.google.com (mail-pf1-f225.google.com [209.85.210.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C7E28CF6A;
-	Tue, 22 Apr 2025 16:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD5C199252
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338813; cv=none; b=YnCa3Sf0Q/03bChXshXADAZER0x0XDtGXN7qV/kzalpdKXWRrfDUnhUUl5/3uhzQMtIn3fhyysAZcRaLbCNdMlnbzrcLPAuh/MchfBnneKKz0FSd/jLSN87rzsPxwPBTfn0RW0vDK/Y7UbHiXid/9zZF3LdmfG72yoyCz5H+MEk=
+	t=1745338815; cv=none; b=XdyRRpEp7l1mNDonclu/XkK5joY+A25mpRMEWFYAPTVhmR1xAEgfyqCLVsi2yDl/zjEQqlN+ZG5oS9Bu5DuqKz5TP+M9esL+A+hkbtOCvNT7cxK9/zdtT5j7RacpWiuKrkFMNfO2ZviiVnCkHORZNMk2GU5nJX3kiUI+YCrrB+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338813; c=relaxed/simple;
-	bh=AjR65iK/w82Yd0ONt9sy6wBZZcPLPWcTXlsg5w2lefk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=NlcxOzKXCGVJKfX2wN6uVf3QEJKu1ZIzTmSFz3gpGWYKMjm17HGz6JC7Vl2xeEHrN+KjeY6ut2EmFMUPy0ZN6jzwp3enJo1ZPqpTGiQEsF/nzXTFQMLxK7ocETJHbF3DUVnYawO+/XiEbK8hly7qf2deo0voCJ2LX/OeWA03gdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cSPvgvY3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745338815; c=relaxed/simple;
+	bh=aePUfguoagPSxYwq1nJdQs+Esxkqrsl7O2KGFmJ5r3E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PaCwXnJI48K8uJ1Pq0ZxWWnJJb07TRQ1kh0vZfv4pDWDpmhk2Zy8OXW/XD8usZrOEYHYWif5yEBe94HO4xYSrcbvHb70GSMCzLItXQRhe4frLBwDqU0xPetHPFbJHerD/zHsUPV/8vmdQVeLj1a1dCLdc5ngxanN9IynN6G2cgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Rlq/SytP; arc=none smtp.client-ip=209.85.210.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cSPvgvY3"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MCVMAT006547;
-	Tue, 22 Apr 2025 16:20:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AjR65iK/w82Yd0ONt9sy6wBZZcPLPWcTXlsg5w2lefk=; b=cSPvgvY3JBS5hOTL
-	n8U0oYMmblnF6dZ6nRdzhvC8Dq2XdjUPBo5pG9LhrRzwWKqFYiEwrkXK8TabPsL5
-	Mlge37M2ouYiL2ShTmeD3wYQ0vmWOiyf3Cnn6XV8AecbXdip+Lqg2Ui0rkea/fiA
-	wHKIu3IFlPEKKj3OtS24Nx/0YY1WRkwLHvmluGKSoqarhSEdmm1bipA7il/6tbOH
-	FWkv17nu5sfOynqJTj/ln6Q/BL4W3pCQe96myU4YpgVvVKIsmZfqzqAUyp59cy68
-	MfwdO+jQGVXbpMg3+BUhUCp+N0iEdDhfX0NGBiScxleFxSSRWBozrt/i3brRN5qC
-	ZGGFHQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426r6fs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 16:20:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53MGK4XT027719
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 16:20:04 GMT
-Received: from [10.216.4.61] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 09:19:59 -0700
-Message-ID: <9dba191e-90a9-4a86-bbe1-a31bd17d73af@quicinc.com>
-Date: Tue, 22 Apr 2025 21:49:56 +0530
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Rlq/SytP"
+Received: by mail-pf1-f225.google.com with SMTP id d2e1a72fcca58-73b71a9a991so345349b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:20:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1745338812; x=1745943612; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNVBb0MqY9bnizbNO6iQSnsW/ylB3mD8UiOtg+2Ac/Q=;
+        b=Rlq/SytPxa6OEav5H5mpRYhtYL9+Q/noji1DV58EvzP60QmtNCrSHfAVuxosDf3yt0
+         mj+IXqPntqlHQ/ePaiV/wPMDb38aV50RJAt2uOZJ9hYIN5m9oQMKJ8x5ijRoOwoKk7K6
+         Mf2q0giCaP5mRhC+zbcE3C7IBnw38iAZ2KtvSiTnnenXppW6y5T+HIVASNp5U/Y+dJZr
+         l657FJ7RtWVfnCtnnkSeqY8cGZTpPbvlTAi44ayuTWYHdZ8xA92EOdL0Syg3yoWDqScK
+         NnR/3EmadXKfIHwjzzGsQ4MZyNJ/ByAfWEJlBOn6I/YKSXywXFobXOuuAajitspJdFtL
+         BbPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745338812; x=1745943612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oNVBb0MqY9bnizbNO6iQSnsW/ylB3mD8UiOtg+2Ac/Q=;
+        b=jKK8XwtxWNuFAJdkXMC3+UND5IjJrVQdfa98fm7a66MUnNPz2Yqm4yfCZQ84mZyLJC
+         LAik5o9A397WyM1TysVlKn3m+ADNl58nolKBZSI3h50q3NBG6O4t5JWExwWMyjEHGIoj
+         0XayEPWPNGcwP+2g332pVVSKr6nwJLK9tZZ9RQUP8NTcdDE3q+1iSMz+Aw9fwGmYDJ7I
+         /FSsmAwS/Pp125uY/Tgo7m3zCFMttQT2JTGPyhqKR+yLs+2nHpQjHfrMb3vNOlKcFV+L
+         w9rP2YnHb38A8mGt16K91efeZhEeXCI3x5N7FZhqqjJZOH1TqTqotG3mfC1k177Rxt7t
+         4NPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwWFsjtfKe/sRdlmaT2DyUKLaJjiI2dQKFjWikj8dDUR8te7aXBVNfW1ioQ2tOYLDYVsqzMisRxA96IYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx4GAxHBx4hXSxxMc0FRweRic1OrYXBbVUvOY0Co9GOOAwQHY5
+	eGzJ9zGw8UJduwcSiX7DtrgzKWO65rxe3vyEz+rcBDJXtbrlI6lIeePlaXalpQSTFn3wA6EA8f5
+	prifI6/X03V3gUabZgEIakINOrho+9DwTjssns6+KA2ptFXKy
+X-Gm-Gg: ASbGnct+/0xPaJW9nxWpW6aJkZFCWy5V3oi87tGdA0TWwnKy14JWciFvIWPdDOtcMnW
+	/ioR1xFwO/pBysto1SCSGwOisdSq4TCDYDusavoEfe6zZ0/e9GSaj5kr6ecuO6fPXyfYNx5NrSR
+	mAAfmYaWWpXPsHQkx/CTuhyESbLHhdi1BL0CO0AJtFXGRN2nWF7UWW078k+WmDIrP05ufhJYYJf
+	U3FqRSO4rKcjpSLdaziiZtwVpnv9Wwm+QRW1yzqUarSAGz9FwIidQbAgKDJOiMRslb3OOSaDJjj
+	RSK8sw7mVX+vTXTdL5YJirxKzT4P4A==
+X-Google-Smtp-Source: AGHT+IFqneHEUyLWKxuV3RY8bdak0hnOR4vOHEeFKusLA5+sXmlOc6nAnL/VHqjyoo2JhAD3vCqEFwmeSZnZ
+X-Received: by 2002:aa7:88cc:0:b0:736:442d:6310 with SMTP id d2e1a72fcca58-73dc1610237mr7975003b3a.6.1745338812486;
+        Tue, 22 Apr 2025 09:20:12 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d2e1a72fcca58-73dbf8c0b4fsm513932b3a.2.2025.04.22.09.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 09:20:12 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id C11E8340363;
+	Tue, 22 Apr 2025 10:20:11 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id BB140E41D06; Tue, 22 Apr 2025 10:20:11 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Kanchan Joshi <joshi.k@samsung.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v4 0/2] nvme/pci: PRP list DMA pool partitioning
+Date: Tue, 22 Apr 2025 10:19:57 -0600
+Message-ID: <20250422161959.1958205-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Subject: Re: [PATCH v1 1/8] arm64: dts: qcom: sc7280: Add gpr node
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250317054151.6095-1-quic_pkumpatl@quicinc.com>
- <99Kmw5-BXfX05ZwNUzOT9v3wiUXyJRCIyH_U5oOlBvz6-3i6cCbHAnDSD2431sH3adMtdNWeAwbc-05oPm405Q==@protonmail.internalid>
- <20250317054151.6095-2-quic_pkumpatl@quicinc.com>
- <bd73de09-bf5f-43af-bdfa-70b3c9d82698@linaro.org>
-Content-Language: en-US
-In-Reply-To: <bd73de09-bf5f-43af-bdfa-70b3c9d82698@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: GdvcIemxKx6bBALMlDO0jPt2ouIsEzA5
-X-Proofpoint-GUID: GdvcIemxKx6bBALMlDO0jPt2ouIsEzA5
-X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6807c1b5 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=nRkKSLIZbybYfZE8hccA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_08,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=573 spamscore=0
- mlxscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220122
+Content-Transfer-Encoding: 8bit
 
+NVMe commands with more than 4 KB of data allocate PRP list pages from
+the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock.
+These device-global spinlocks are a significant source of contention
+when many CPUs are submitting to the same NVMe devices. On a workload
+issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA nodes
+to 23 NVMe devices, we observed 2.4% of CPU time spent in
+_raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
 
-On 3/27/2025 4:21 AM, Bryan O'Donoghue wrote:
-> On 17/03/2025 05:41, Prasad Kumpatla wrote:
->> Add GPR node along with APM(Audio Process Manager) and PRM(Proxy
->> resource Manager) audio services.
->
-> Nitpick.
->
-> You've defined APM and RPM but not GPR.
->
-> Your triumvirate of TLAs is missing 1/3 !
->
-> Please add.
+Ideally, the dma_pools would be per-hctx to minimize
+contention. But that could impose considerable resource costs in a
+system with many NVMe devices and CPUs.
 
-Ack, Will update in next patchset version.
+As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+nvme_queue to the set of DMA pools corresponding to its device and its
+hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+about half, to 1.2%. Preventing the sharing of PRP list pages across
+NUMA nodes also makes them cheaper to initialize.
 
-Thanks,
-Prasad
+Caleb Sander Mateos (2):
+  nvme/pci: factor out nvme_init_hctx() helper
+  nvme/pci: make PRP list DMA pools per-NUMA-node
 
->
-> ---
-> bod
+ drivers/nvme/host/pci.c | 170 +++++++++++++++++++++++-----------------
+ 1 file changed, 97 insertions(+), 73 deletions(-)
+
+v4:
+- Drop the numa_node < nr_node_ids check (Kanchan)
+- Add Reviewed-by tags
+
+v3: simplify nvme_release_prp_pools() (Keith)
+
+v2:
+- Initialize admin nvme_queue's nvme_prp_dma_pools (Kanchan)
+- Shrink nvme_dev's prp_pools array from MAX_NUMNODES to nr_node_ids (Kanchan)
+
+-- 
+2.45.2
+
