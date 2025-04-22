@@ -1,41 +1,40 @@
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8321F4171
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287E5196;
+	Tue, 22 Apr 2025 06:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303352; cv=none; b=CbB/mJIj/Mq96LXTEuhP1kiJq+lqFcwGqAsL7TnT4lZrZCsskUBfCh89B0AuokDWfSQDQgOmvu0YPIB3QjWKiAOROG8Cs5jHr820Tn5sjGCPrWUsobyLIaf+ywUMzJ5tzoGZHIqmaLKZVjT8LvUNuoOe17Xyisy2xICnpFRoNNE=
+	t=1745303432; cv=none; b=Kt1UM53WuQuulwcKo+vxNIzAyEYTunqXiolwEBn3z1YdH7oCQOwAt7S4iTTDINaD9qKu3u+BhbHZh+mRHr29fUcQPHZgaboj91d6Co9LoCUBj+NpNJai+j1Osd4hB0/9kyR8mc13w6DV8hvO3dCaJUmj2gCJbaq/Ne7SPomUQoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303352; c=relaxed/simple;
-	bh=lrR7Z8avgqYU9c+BPlVtVNEtth3qUmeM5ogYYTQ240A=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cfb6pf+Z87JjrbHztXbZwGytBqUXsOig35h83fu5H2i4y3O0DHGpcv4wp9mPyNvcJBCYIxSZYTa1ycjGYDcAgQqcuoH5AHFg3xLhmsUK9kRSVLoDW5JcvwyHaRZFPWKzsGksl4M8EVEGOJf1AmyA2szafynuIR9gFQ8fCxOw7Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 13ac9f14-1f43-11f0-8efd-005056bdfda7;
-	Tue, 22 Apr 2025 09:29:01 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 22 Apr 2025 09:29:00 +0300
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 03/29] x86/boot/e820: Simplify the PPro Erratum #50
- workaround
-Message-ID: <aAc3LGfa7HTBJqWx@surfacebook.localdomain>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-4-mingo@kernel.org>
+	s=arc-20240116; t=1745303432; c=relaxed/simple;
+	bh=6oEcP68OY46EgBJ0bqRJ0eLQMoG6KqgYe8EFBOXyEzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qWOG0SfiG2kXne+UkrXh4TFciqHduGugdUef2ADS8eZi7mDSp+E2aRXZRLOjtd6DKL/zLqcc+XshqyZR+bfc1OvOZD31kwMuEFDF8AF1NdCGxo2BxIPLhtN/HCGNU8n2ZFCZ21ewHl0O7PtBZLJTL5SDis9lzNyuvnbV2H93KUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfRP6yhp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfRP6yhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD7CC4CEE9;
+	Tue, 22 Apr 2025 06:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745303431;
+	bh=6oEcP68OY46EgBJ0bqRJ0eLQMoG6KqgYe8EFBOXyEzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HfRP6yhpeg2i1/M5DNaoMhU8MgBJzHJNzA7lAWBY9uLqwKkdfI1rDfS9hpBG0o+2/
+	 J8TtdJtDnqLt0GggiOafKv47ult25K27PsQzzOx28IaXRBhzavKtIbToNKvxPqKeMh
+	 RufxoWBUDqtU/29qgzjxtJtK6a6NK96HwS70iIqPQjbC7ai9zAeTT66sB0urHIX32D
+	 AcuCJHHXn+zM/s00C8l2TTIZzq/tA7n5j4OQnGe6hFK3tRSo7WuEKA1RS4FbsbPSB2
+	 E6ka43M1iG8GF168qXqjyPq2FpfPqmlV8YFsLqVbgwVctr0stOkAr0maB6s84JwFst
+	 13lu3kUn6oWbw==
+Date: Tue, 22 Apr 2025 08:30:28 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Subject: Re: [tip: x86/microcode] x86/cpu: Help users notice when running old
+ Intel microcode
+Message-ID: <aAc3hCVAnNLVo-Xh@gmail.com>
+References: <174526703555.31282.4002502301046834125.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,26 +43,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250421185210.3372306-4-mingo@kernel.org>
+In-Reply-To: <174526703555.31282.4002502301046834125.tip-bot2@tip-bot2>
 
-Mon, Apr 21, 2025 at 08:51:43PM +0200, Ingo Molnar kirjoitti:
-> No need to print out the table - users won't really be able
-> to tell much from it anyway and the messages around this
-> erratum are unnecessarily obtuse.
+
+* tip-bot2 for Dave Hansen <tip-bot2@linutronix.de> wrote:
+
+> The following commit has been merged into the x86/microcode branch of tip:
 > 
-> Instead clearly inform the user that a 256 kB hole is being
-> punched in their memory map at the 1.75 GB physical address.
+> Commit-ID:     377781ebaa7c35ab3e91af29074d5f39100372f2
+> Gitweb:        https://git.kernel.org/tip/377781ebaa7c35ab3e91af29074d5f39100372f2
+> Author:        Dave Hansen <dave.hansen@linux.intel.com>
+> AuthorDate:    Mon, 21 Apr 2025 12:56:59 -07:00
+> Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+> CommitterDate: Mon, 21 Apr 2025 12:59:29 -07:00
 > 
-> Not that there are many PPro users left. :-)
+> x86/cpu: Help users notice when running old Intel microcode
+> 
+> Changes from v4:
+>  - Update list from commit: 8ac9378 microcode-20241112 Release
+> 
+> Changes from v3:
+>  - Update changelog and documentation to clarify behavior when
+>    microcode is updated at runtime.
+> 
+> Changes from v2:
+>  - Make cpu_latest_microcode[] static
+>  - Add a pr_info() when the CPU is not in the microcode version list
+> 
+> Changes from v1:
+>  - Flesh out changelog
+>  - Add Documentation/
+>  - add_taint() and pr_warn() in addition to vulnerabilities/ file
+>  - Add checks for running under VMMs. Do not taint and
+>    report vulnerability as unknown.
 
-...
+These should not be part of a commit log.
 
-> +		e820__range_update(0x70000000ULL, 0x40000ULL, E820_TYPE_RAM, E820_TYPE_RESERVED);
+> From: Dave Hansen <dave.hansen@linux.intel.com>
 
-Perhaps, 0x40000ULL --> SZ_256K ?
+> +	/* Give new microocode a pass: */
+> +	if (boot_cpu_data.microcode >= m->driver_data)
+> +		return false;
 
--- 
-With Best Regards,
-Andy Shevchenko
+Typo:
 
+  s/microocode
+   /microcode
 
+I've amended the commit in tip:x86/microcode accordingly, please let me 
+know if this version is fine to you too:
+
+  9127865b15eb ("x86/cpu: Help users notice when running old Intel microcode")
+
+Thanks,
+
+	Ingo
