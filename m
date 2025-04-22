@@ -1,230 +1,310 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8A91F099A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342086; cv=fail; b=EpkVFAom7ghW177oolxOo11uMP21HZt+ZUd/hIGhiBokQSFxE/uj10uTTpjoubcCxGqGm4qcFxhduUW+onZhVq7bAWC0iNfMz+tERH8ZImo4rmgcbmzM5dG688nW27gLFL7LxzOFvpnQwMESXdFqtNwINWcjRy20hlQzW2ujYTk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342086; c=relaxed/simple;
-	bh=hYYeKU5ea/Bba7HEUVzUhbQe/tbheRNOu5osLdAFZYQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=McGtpIQB4ZaYcOXbhuBMqZzrKPta90Hwg7dZ0H1ZPgamxEk0tLTbgvX+Mp6nTxj7hDrKz1D5+3ekcERIDhVewRFI/+TizAkDKNUKjm6D31mSfVfTY8jYOCBNOIw20wmez+vHpU0jmjYDWrVTiXpyb5jKhIdJvXcg21Wjs6JZ6m8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyzu1Onz; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7AA249E5;
+	Tue, 22 Apr 2025 17:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745342134; cv=none; b=QmWrJVTaMnRk+1dcYeF3ip2uSjApVQzuLNnagJnezsrQ3UsCtS+WlxxUi9IU/uIggCtt8cQ0o6l3YoOfhq/EsC/Bz86ESLDHMz2DJoB++zsDGxXCI9bJw1o3gEHAU1hWrtkNgDsZEliVS1R6b6PGDiJRW9WfwyquQL8X/2ahzEU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745342134; c=relaxed/simple;
+	bh=PaeBGlBvF9nDkPcWLwiObJ4+kdonbZlRt55Q1k9iOjY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J6H+0Nr0+Q8iz3PFn3Tkf92wsXv8EBXmVMWrWmEJSbugMgLEodbkOyXMP5afIpXqbM1iqvZz3ik0QFYnreOeMx8KhXXDfDS/alevA+z6fnWVz/1FAZHJ6eAnJTapIXUc3+L32aCg9j3Nlj410SlWNMqhqUPJJpBgNc88xUTqhm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwM/9LTE; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyzu1Onz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745342085; x=1776878085;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=hYYeKU5ea/Bba7HEUVzUhbQe/tbheRNOu5osLdAFZYQ=;
-  b=hyzu1OnzGdvV0BCv5RAGFl6ti59N7g1RSFLXjtvglzaD5GCJOJ1lCG1A
-   odDtEaXQ71o1xrD6YYyAi258xqdSY0ePAsQ9Af2ap3o1zd1KoStpF1W3q
-   g5pPiBvtxXsb0+QWQF7u1PwQEUR+NfmvPHxGTSyT+eDae3guZalb3rKW9
-   aoc6ixa/LDvSCpeCbDNcd958jBz8GTdA/3BL7QhCN+0fULrRF91scPulF
-   eYEiPgzVIQhglcpo9lbx3xHSEx16WG19uNrkIj0ico87iFPJrWa2MrEl2
-   XOV2byaiYn7V1qVG8l9gk10v9XdGixVO00BYAd2ZvAw9g1wDhAbOSmIL6
-   g==;
-X-CSE-ConnectionGUID: isRgeDrUS1+zvjsNHEairw==
-X-CSE-MsgGUID: iDJX9eE2QUmtmkybo+kmvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="47013304"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="47013304"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 10:14:44 -0700
-X-CSE-ConnectionGUID: 2s9FBN43Rwy2YFkYDEZCag==
-X-CSE-MsgGUID: TBqC1A8qTQevktP2FfEOSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="132391573"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 10:14:43 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 22 Apr 2025 10:14:42 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 22 Apr 2025 10:14:42 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.43) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 22 Apr 2025 10:14:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=or91lmqWjb9b+CDnHqvWB27kKx6tjCD9eP7MufBcwKBpY8Wq3/J3/1YdfHz18NkLUOfvshmuwwTWSM5xLwcECKjTrErVAK7Rkg/st+AyfgBn5PQK8GevCGYgbT51X1feJ6gEg+YkRV3pSLFvZzlQbUN1K0ScWMaR0eqzvmq3ytIG2HMJFs5Uzbjoi0+3eeQN3K0ifV82Rg+lQUsKvYCH9z6mkOn16p5gCw4En7C0BoroOco/QnJtgoCFlOQYbRATwLIsIcVtNA1IxrPryCyVmcw56zm1H5RQGbzKDEsPYC6b9L3BZudInHh4GCU7Dxniw9NRFD/adaNXUJ2ugKSggQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hYYeKU5ea/Bba7HEUVzUhbQe/tbheRNOu5osLdAFZYQ=;
- b=NA0Ji0yrwVdmJHjYtZG8vGLP7w+v7UHCEQS4ZzO7Eu11XP1di9U4JaDSG1mhNnOv9cU4fq6oSVDzyYu3m5zuhz1aN0y7xr1H2cux1G0l0NIY5Utvsz7pPSpPe8Ak7qRm7nDlCQi8jt41O9qUpWxSkuT/Xvi0Nj3LziO1BPlBe8kNSCBPIRSsUL/KfxaZfcCga27WTTbR0IfXpsn5HVsHO88hIMrxMq95AyzEc8JyoWYQs6Eq7LfK4ebpoegqwptjs0gABjSfXXLE85Nbd8cPYa+zRtldHKU6oAOcZ1UJxzZBP5ZGMAh8z7s94raA+tIimRlbiaCL5a8+8htIn+flIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS7PR11MB6077.namprd11.prod.outlook.com (2603:10b6:8:87::16) by
- PH7PR11MB8569.namprd11.prod.outlook.com (2603:10b6:510:304::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 17:14:40 +0000
-Received: from DS7PR11MB6077.namprd11.prod.outlook.com
- ([fe80::509c:f906:cc6:2bec]) by DS7PR11MB6077.namprd11.prod.outlook.com
- ([fe80::509c:f906:cc6:2bec%6]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 17:14:40 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-To: "Moger, Babu" <bmoger@amd.com>, James Morse <james.morse@arm.com>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "Chatre, Reinette" <reinette.chatre@intel.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, "shameerali.kolothum.thodi@huawei.com"
-	<shameerali.kolothum.thodi@huawei.com>, D Scott Phillips OS
-	<scott@os.amperecomputing.com>, "carl@os.amperecomputing.com"
-	<carl@os.amperecomputing.com>, "lcherian@marvell.com" <lcherian@marvell.com>,
-	"bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
-	"tan.shaopeng@fujitsu.com" <tan.shaopeng@fujitsu.com>,
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	"peternewman@google.com" <peternewman@google.com>, "dfustini@baylibre.com"
-	<dfustini@baylibre.com>, "amitsinght@marvell.com" <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>, Dave
- Martin <dave.martin@arm.com>, "Ko, Koba" <kobak@nvidia.com>, "Shanker
- Donthineni" <sdonthineni@nvidia.com>, "fenghuay@nvidia.com"
-	<fenghuay@nvidia.com>
-Subject: RE: [PATCH v8 08/21] x86/resctrl: Expand the width of dom_id by
- replacing mon_data_bits
-Thread-Topic: [PATCH v8 08/21] x86/resctrl: Expand the width of dom_id by
- replacing mon_data_bits
-Thread-Index: AQHbqwDpCJPCUxJEkkqlOWfnOq4757Ov+7AAgAAAndA=
-Date: Tue, 22 Apr 2025 17:14:40 +0000
-Message-ID: <DS7PR11MB6077A729E4338E6C62939005FCBB2@DS7PR11MB6077.namprd11.prod.outlook.com>
-References: <20250411164229.23413-1-james.morse@arm.com>
- <20250411164229.23413-9-james.morse@arm.com>
- <70403b1c-d81f-4c5f-936e-f3cf3308822f@amd.com>
-In-Reply-To: <70403b1c-d81f-4c5f-936e-f3cf3308822f@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR11MB6077:EE_|PH7PR11MB8569:EE_
-x-ms-office365-filtering-correlation-id: 231e7861-e473-4474-cb58-08dd81c12aef
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?ZUx5dEkrVHh3a1hxT0pRN0dVdnRxOHJGTStCcTZGZkdZaUZBY2JQZG9vaFBl?=
- =?utf-8?B?ckQ1TFpsZk5zdkw0N2xyVkl6N1FlR2lxZk5oY1A5NjBPdFFmT05vaTgxNUZ2?=
- =?utf-8?B?dmpnakhtdkFNNlc0Yi90cjd0Zlh3U0NORFhRVGg1RzVaeHhLTnU0R3UwSWxo?=
- =?utf-8?B?SS9XKytrSWtkT2psNVNVejBCYk5tbk1uSEduRysrMkdHdy9BWW44Z3piUkI1?=
- =?utf-8?B?OW9hMnNGeFEvbFhNamZRaEZFZEw0YXdrKzlkenZSdTM4QWdGRmMvUGVieTha?=
- =?utf-8?B?Rm14c3VBcFl3YmFnQWt6SmI1U0VZT3Mxb0FZWWo4NGtSMFZvdVQrM0tLSy9W?=
- =?utf-8?B?WHIyanZYMW1TOHdKRlVpdURLVXM0citxa290OTgwL2JkOUNCK1JqVkZNOVVp?=
- =?utf-8?B?aHQ1akVhZ1RBZ0IxaTFBNllyRER6K2hHMS9XVlh1azREZXpFcmYzeVF3ZzNK?=
- =?utf-8?B?MzBVb094QjNrTkYvd3QwQTJGbS9zeU01M0g1eFRvVGxDWDB4cHJFZE96OG9I?=
- =?utf-8?B?ZzYzTFhBQkdMeEVzYVRiOUVkWkhMZnNjUkNKeXhJK2NNSFltallIVW03ek9z?=
- =?utf-8?B?NGxyWkNSbnpDako5dVU5SklDV2t3UWkwMTNrbDBhcW56T3JBUmVBQ3JHcElu?=
- =?utf-8?B?NysrTmJrL0FzNkxLNlpKK2R5UThnVTBvZlBpeno3WkpENjdHS2hOU3RjMGtM?=
- =?utf-8?B?OW1ZYmxZR29wRm5rY3gvT3VKUTQ0N2JOTDhiRWZtaG5JRXl3b1VYbHF4enhH?=
- =?utf-8?B?NGM2amRBK0Z6aE5wSHZDdG0zckp6VzBvcEFDS3hTajlST0psMmw3MzNLQytE?=
- =?utf-8?B?TWUvWmVVcWY0bjNsUDRPYk82dExSdk1PbDFyUjJOeENoMW1QRlBiMmNhYmZp?=
- =?utf-8?B?b0p1SUxNd0J3dlRWOE1WQTk0QzdWaStNYjVkMnZnQlZvd1hZRGFvQndkT0hT?=
- =?utf-8?B?WFZscWovUU5Gb3lOQ1J1WGdQU1Nkci8vSHI1UmdoYjc4SE41L0s3dXJnbzhL?=
- =?utf-8?B?eGJ4U2RteG53cmo1S1JKSjR0TTdYdlltQ0VaSnRSenU1TWFDc01qSThhWEgw?=
- =?utf-8?B?YnI5V3lXL0FFdzh6YWYrS3JnSmROckdkM0VNVnZtTXdEQ2UwdVZ1akgybDBB?=
- =?utf-8?B?OXdVT1NTdUp3cUpkUGEvVFpQNVlLSVBlYUxBQVh3L3dENkVTQ1N3Rm1WM2w1?=
- =?utf-8?B?M1JybFlmVDUvamJEVzFDaWNVUEQzRGFVMVdOY3grcWV3UTAwNm9WUFI3ekhF?=
- =?utf-8?B?UkRkbEJxa1huc0krN1JaMk1rTVE1aVFrdVpTUzlwVkwzTmZ6UEZBVlhMT2gz?=
- =?utf-8?B?b25oWW9YNlpEYk9IMmhrWmtMMUNqcnNKRWxHdFV5UTE5NnV1eWtSai90aVFj?=
- =?utf-8?B?NmhQaEFTVTJvZ1JrQWlJb3hqa2NrZFI0SHMwTmNKNk13M3Q3KzUwNlJ3bkRz?=
- =?utf-8?B?dVVzcU82cEg2UGkxeVF0TW5BcDE3L1ZNeEVTL1d6YVRxcnI3VzFUZU5SY3Bp?=
- =?utf-8?B?S3FiSzFqLzBlMmh3SndYdklDRkRQenRSeW1Yb1dkZloxcVIrVXNROEN2OHdI?=
- =?utf-8?B?U1ZIU1g1UXY5MlFSN1BkYUx1YWVtNS9KZU9Ub0E3QnBUQWpGZFBkUGFpSnRE?=
- =?utf-8?B?dEZ1Y3hSekh3QVNCcFJMTTlGR3p6NDdwRVpGSzM5eE1UUW9Ha3F5ZmdyK3Vi?=
- =?utf-8?B?c0hPZTBzR3AzVUYwOUQ0Y0VDTkNrUlJoUlg1NXA3Q3JrZHdWSkJoT25CaXBt?=
- =?utf-8?B?Sk5wblJHeEJDem14SFE1b3FuL2xybVFWVXVGOW8yTDd3Ym9aTnc3MlU1T2pv?=
- =?utf-8?B?RXFvV1NiUFR5WUl0WVpvUjM0Qkw1eTJlZkg4MEZPcm5JcU1BYVZZZElaWEQ4?=
- =?utf-8?B?enZaYmZVcVUzcmhWNi9OMElrWjQ3czczTklXTkNSNTJlVUlSMzNNZkFBdmN5?=
- =?utf-8?B?aWhESFpvaEtwbzl2WVk3YlBQdG1DOHQvS2x5bUFYUEFhL2JDMi8wUXlQb2tF?=
- =?utf-8?B?c2o1Y2JpS3hRPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB6077.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?K3d0VFkxTFpoN3gxbjR4UmwwanI0cWI0TWpkL25MWnozYmY4ZWg0V0dDcE5J?=
- =?utf-8?B?cWFFbFFaeXY1aUROcUxCTHpqTFE4dmVBczNadTB4ZWdZN3JKOHdvSFBUT2dp?=
- =?utf-8?B?VXV0QXY5ditGRkxjQVl0dUxZWEIvdDUrTjN1elpDVUhqWlEwODlBeVpBekRJ?=
- =?utf-8?B?SWlDOFF1N3JobSt5ajlJeEJGbkhvNXpPNHVWSW4xTDBHWGhGbE9mTlBXcWtZ?=
- =?utf-8?B?eS96aG5kRGhJWnBPdjZ6b1ZmR3EweUJ2TVZadTdDbzRCRXRpbWxCOVdSMUgv?=
- =?utf-8?B?QlAwd3o1VTM2RFcwKytQVlIxeTJBUnJRM3E0SlJ6c2NScS9tVFAyQnFscEpr?=
- =?utf-8?B?TXVYN2Zoa0VpdG5kY3RnTG5DTllxczJ2ZTJVRFdLRzFsU3VNR2xRYjI5UEpU?=
- =?utf-8?B?WlVoK1duVXgvZXVsdUViZHUvR0lEZjZBcU1VbTBSRWFDd2VyMCtSTDEzOVNx?=
- =?utf-8?B?ZWJGK2RyRjB0WHM0aS9jV29uTlN6eUx2bC8vd1hCUVRqeVJvVTBHOE1QSUh2?=
- =?utf-8?B?N3ZBbS9ZRm5MMlJCSVQ5M0plMWNLc292djJpYlNpN3dOTnJvUGZFY0lKRGlW?=
- =?utf-8?B?RVFaSzh1RENWWVdBdWpTTmJMRk5GUVVhb1R2bStzQ1grdk15aXJBTjBBZ0hw?=
- =?utf-8?B?ZHhRUlJQMXlWaVFqMXBBWkNDd0xWWWRLUThmdENqcVpNcjhyT0wwVmJkQUk1?=
- =?utf-8?B?ejJhendCUXREUHI2ZGZDZUtiMXNmbG5wendjMkJQcjE1ejY2Um8veU1TNDYz?=
- =?utf-8?B?UWc2UlVFbE9oNDJRZ3NrcDBSbTEzVmN3UFpUZUFDT2dwV2VDWFhZY1FnaHBS?=
- =?utf-8?B?ZGgxeXdobWpvYTZ2MytlaVcvL1AvRkFnNm9oZThINjZ5ZmpqK0RVcS8zTnZM?=
- =?utf-8?B?d0xlNkd3NzIzS0NRaE9oZFRUQ0h2K1FtSkdNNXJUUUkzNGdTQ0cyd1hqcWlK?=
- =?utf-8?B?ekxScVJnR05NcHRaMGY4NEo0RGtqV09TUTkzcDJOSUxJNzcyd1RrU2ZmU3Q4?=
- =?utf-8?B?Tkw4cnhYeEtLV1FMMElHMkFmaC9VNTFzQU1PZzVIV2VxYXNGZzFqdmx2N3Fl?=
- =?utf-8?B?bTBGOWltLzV6UVBJeGFpUS9pbUVIRCtCOUQxRW51ZFZZWUJUczlYcUJISGhD?=
- =?utf-8?B?bXIzNVZ1b3hDWHJQYTU1YTIxQWtWT0JROE15QW9HeEcxUjZjSjdmeUwzWUNz?=
- =?utf-8?B?QlVDMUdBbndjbVk4eHJUZGZ3cjNBOGk1MlBOOTlqSDJKVS9iWEJuVDNadTcv?=
- =?utf-8?B?ZXNxSWlOZW94eVlUU3FvQ0RhVGwvKzBLR2l4dFNHWVQ2UzExRjdpQUphQnVR?=
- =?utf-8?B?Wko1SzBHZzQ2NjgxVzk2eXZEemQrMnNRQUt0dkM1c1R1TEUxeEN1eW1aWW41?=
- =?utf-8?B?a1RRNXRxWThmNFF4bThTQjVneUJkbTJRRmxwMWYzdVpTd3NiMkx0TkJsYnZo?=
- =?utf-8?B?R09GQVNqQkJpekg0YUovT285MWtaekFVVG1VaXpWYjFwQzZxbXMreGtHaHQy?=
- =?utf-8?B?T2hUL3Q3MFk0c09kUmd4TUN3Z3BwbVZtL091czdQZG9nUlhkL0hxaGcxeVFM?=
- =?utf-8?B?R3FjQWRFNWthTUlYb3dHcDFGUGhCQ2FVbUhjdDE2ZVR5ZWpXMU5pTGdObm5v?=
- =?utf-8?B?S0xRMXhtWmhkdlU2cnJHUmlkNC91SkZ6cHRpRzhVRlIrN1lxSnlNNXZ2d0pG?=
- =?utf-8?B?blY2YXljYStSdzFFZWs4WUVkZm5NTzlMWG9EdEJFbk16dEdDU2lYKzZrZHE1?=
- =?utf-8?B?Y3RUb3ZvQjNiWkdkYnF1NXo0MVlqbk5Ga2ZOdWozOHRnVC9od0Q2NGV3UjQ1?=
- =?utf-8?B?WFFUNmtUWndlcjRHY0JLc2VKV1h6VmFEYnVHWHlYdktTWUpZczR5UFdkZFh2?=
- =?utf-8?B?Q3VXZjJBVERBTjRoRWIrTlJtT1lrdVQvZE1ndDAvL1JNRTkrM1kyN096djdR?=
- =?utf-8?B?cUk1d0VGNHc0amdieDhyVElQejR4aHltek1KZitUUHhIRDFaQW9UY1JOUnYv?=
- =?utf-8?B?eWMxU0M3T2tKbWovblZkRGNQNnBUdk5CSlU5WC9JVGI1bzNwQ0VTZjNFL3ls?=
- =?utf-8?B?MjB4bW9SQ25HZWd1Rkc1ZFh5UmVvUSt1bWUrOCtQTjl2N1FWa01UUWNhM3hF?=
- =?utf-8?Q?jtdtXONtCG8PA8US0K3cJmAfF?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwM/9LTE"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so68928816d6.3;
+        Tue, 22 Apr 2025 10:15:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745342131; x=1745946931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=85/1EvSRoV5gtt2lvARiz/M8CiirJENcqGQROiVNFOQ=;
+        b=JwM/9LTEY3EknjCAjt+J4bx+1EY+tIkFLlhgJAHgOpJuSW1z5EXUKOo0bIjLK7oowA
+         tMT/65S3XYJiO8+d29tnTBDxEkF/W56v8UTJSfZnuBh/kGVVckDQfWpf00oupxIrc1Ks
+         QLtZhnLKUVN4TEplT9zp8VuT7yqBAe9YxwcqeTdhZp02nXxwpkoemxI9rI2puQUVNem0
+         K6zyleTKv8XNFKUcQS3WkgdjmVpKSwtSJFmls7a1h0gUwWL7wEGScS1gxpzeHmAh+YLU
+         tX190i2Uzh0QxnOqPyhQgs4GnBb2OrFM3l/6h900jLlGaSiuGk5Kn+xxEWiqOvJNqtHh
+         lntA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745342131; x=1745946931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=85/1EvSRoV5gtt2lvARiz/M8CiirJENcqGQROiVNFOQ=;
+        b=C6AmHg2Rci2KtZ4ADapQcgBeJOJeRRreS45OQBy80rAGJob2eAAIs2Memq4Enta0+n
+         aScSQJf7uB1Oh1rgF18+65y+nAopKCZQJZwvhxl7oQO7R+rri53NtJUzlayxfTjdy9/T
+         0Q6vfKNzczS3/P0D2rCA0pmW+UvxqrwH4ZiqeYx/QadJwOQLbwwAHtQYv4mz0lGI7Yqj
+         GChOdwVTQwYj8FhqW0A7TXF4U0WcYZ9Adp1R0p1ISIaIZy3GcscYB/AQlK1SdhnDHdBb
+         j4irNhvNUev7r3TbgSXbAfPQj2n9hhLJOcGHKWDm3dxCC9TZXDS7HtZutTE72zoZglvJ
+         ZI8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV859c0Ekix6/KO9amNAMExf0lEnhXkbSFBfIqDhTtyDtvBt7VFu18QPNLRKUgQe4SUpq1C3tvV@vger.kernel.org, AJvYcCVON2YhcpyUnoAtn9UOKyB/ihCpsO6CV3ptyTHvcSPQn3Cvc7Fm9fw+qoJEKR1YDg/o6X0QkktxmrY=@vger.kernel.org, AJvYcCXLvL1N7JO9mv/8Y2l/aCtf88F+E3k9ROm/DBSEb3ZwhkDKJd3QcG1SsBW3dcDMqbOdypTm33e1Kc9x3Be0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzJHuWo6CM9DB2B3sd8fXDJcNeq1OpHQVqUFrXOvQtNR+zimUA
+	iEbnR3Nypf1/93hgtWFSZOhSkfTd+xxW/kxoFl0ZMdPV3luL8qYQG5tBWcBfZyJGfbL96l4dQer
+	wR0UsU0Ds2pqBjB2Ihcg2R9lEDEE=
+X-Gm-Gg: ASbGncvLckYfD5AYmlzhmjVvkvTyYnnuB7bIGa38LXg0mbR2v1pAub4umAfuKZ1HIQm
+	SaPML2crxtqpQmOcypbHuy6n+Dk5kHo6lZTGTO9EfQ9Eyvq5HwwIbrxKOlVEieIb/uywPEEc+9N
+	BxwjtJL/NUbJBabxpPwF2nLRg=
+X-Google-Smtp-Source: AGHT+IGo+eSxVRUOu3QqLok37AdMjqEIohSYSHaKvkg9t6JIvgBwbb1f7LF7bwkm//1X8qTdfAmnGnHywRwkc52E/cA=
+X-Received: by 2002:ad4:5ba7:0:b0:6e8:fa7a:14ab with SMTP id
+ 6a1803df08f44-6f2c44e9628mr228741156d6.6.1745342131130; Tue, 22 Apr 2025
+ 10:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB6077.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 231e7861-e473-4474-cb58-08dd81c12aef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2025 17:14:40.5147
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XTpKqzk+c22oPvKZiBwDRLX+CfkJxPfcK4HmEpOQq3Uwrs+PUUSRGILvAolf5HuzPdwtV0/Z13COf+Bd1kqu8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8569
-X-OriginatorOrg: intel.com
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <6807afd0.a70a0220.2ae8b9.e07cSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <6807afd0.a70a0220.2ae8b9.e07cSMTPIN_ADDED_BROKEN@mx.google.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 22 Apr 2025 10:15:20 -0700
+X-Gm-Features: ATxdqUGb2dr8mL7L2aJ_YfQGOY7jhQk5kHb6sDOORE3CjnzUYetNdr2eOe0kjwM
+Message-ID: <CAKEwX=NQyDqNBoS2kPePZO1iTkt88MgrtEKexxu7uLhaeA6rsQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	hughd@google.com, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiBEbyB3ZSByZWFsbHkgbmVlZCB0byBtYWludGFpbiBhIHNlcGFyYXRlIGxpc3QgZm9yIGFsbCB0
-aGUgcHJpdmF0ZSBwb2ludGVycz8NCj4NCj4gSGVyZSdzIG15IHVuZGVyc3RhbmRpbmcgb2YgdGhl
-IHBhdGNo4oCUcGxlYXNlIGNvcnJlY3QgbWUgaWYgSeKAmW0gbWlzc2luZw0KPiBhbnl0aGluZzoN
-Cj4NCj4gUGF0Y2ggUmVxdWlyZW1lbnRzOg0KPg0KPiAxLiBFeHBhbmQgZG9tX2lkLg0KPg0KPiAy
-LiBQYWNrIGFsbCBuZWNlc3NhcnkgZGF0YSAoZG9tX2lkLCBldmVudF9pZCwgcmVzaWQpIGludG8g
-dGhlDQo+IG9mLT5rbi0+cHJpdiBwb2ludGVyIHdoZW4gY3JlYXRpbmcgZXZlbnQgZmlsZXMgaW4g
-dGhlIG1vbl9kYXRhDQo+IGRpcmVjdG9yeSBmb3IgZWFjaCBkb21haW4uDQoNClRoaXMgc3RlcCBp
-bmNsdWRlcyBzZWFyY2hpbmcgdGhlIGxpc3Qgb2YgcHJldmlvdXNseSBjcmVhdGVkIHByaXYgc3Ry
-dWN0dXJlcw0KdG8gZmluZCBhIG1hdGNoaW5nIG9uZSB0aGF0IGNhbiBiZSBzaGFyZWQuICBUaGlz
-IGhhcHBlbnMgYWxsIHRoZSB0aW1lDQpiZWNhdXNlIHRoZSBzYW1lIHNldCBvZiB2YWx1ZXMgaXMg
-cmUtdXNlZCBvdmVyIGFuZCBvdmVyLiBFc3NlbnRpYWxseQ0Kd2Ugb25seSBhbGxvY2F0ZSBhbnl0
-aGluZyB3aGlsZSBjcmVhdGluZyB0aGUgbW9uX2RhdGEgZGlyZWN0b3J5IGluIHRoZQ0Kcm9vdCBk
-aXJlY3Rvcnkgb2YgcmVzY3RybC4gSmFtZXMnIG9yaWdpbmFsIGltcGxlbWVudGF0aW9uIG1hZGUg
-dXNlIG9mDQp0aGlzIGJ5IHNwZWNpYWwgY2FzZSBhbGxvY2F0aW9uIGZvciB0aGUgZGVmYXVsdCBn
-cm91cCwgYW5kIHRoZW4gZG9pbmcNCmtlcm5mcyBsb29rdXBzIHdoaWxlIGNyZWF0aW5nIG5ldyBn
-cm91cHMgdG8gZmluZCB0aGUgbWF0Y2hpbmcgb25lDQphbmQgbGlua2luZyB0byB0aGUgc2FtZSAt
-PnByaXYgcG9pbnRlci4NCg0KLVRvbnkNCg==
+On Tue, Apr 22, 2025 at 8:03=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev>=
+ wrote:
+>
+> On Mon, Apr 07, 2025 at 04:42:01PM -0700, Nhat Pham wrote:
+> It's exciting to see this proposal materilizing :)
+>
+> I didn't get a chance to look too closely at the code, but I have a few
+> high-level comments.
+>
+> Do we need separate refcnt and swap_count? I am aware that there are
+> cases where we need to hold a reference to prevent the descriptor from
+> going away, without an extra page table entry referencing the swap
+> descriptor -- but I am wondering if we can get away by just incrementing
+> the swap count in these cases too? Would this mess things up?
+
+Actually, you're right - we might not even need a separate refcnt
+field at all :) Here's my original thought process:
+
+1. We need something that keeps the virtual swap slot and its metadata
+data structure (the swap descriptor) valid while we work with it.
+
+2. In the old design, this is all stored at the swap device, so we
+need to obtain a reference to the swap device itself.
+
+3. In the new design, this is no longer even possible. The backend
+might change under us even! So the refcnting needs to be done at the
+virtual swap level.
+
+3. The refcnting needs to be separate from the swap count field,
+because certain operations/optimizations do check for the actual swap
+count, and incrementing the swap count willy nilly like that might
+accidentally throw these off. Think readahead-induced swap reads, for
+example. So I need a separate refcnt field that takes into account 3
+sources: PTE references (swap count), swap cache, and "ephemeral" (i.e
+temporary) references, that replace the role of the swap device
+reference in the old design.
+
+However, I have thought more about it. I don't think I need to obtain
+any ephemeral reference. I do need a refcnting mechanism, but one
+atomic field (that stores both the swap count and swap cache pin)
+should suffice.
+
+Refcnt + RCU should already guarantee the existence of the swap
+descriptor while I work with it. So there won't be any UAF issue, as
+long as I am disciplined and check if the swap descriptor still exists
+etc. in the virtual swap implementation, which I already am doing
+anyway.
+
+This should be safe enough, even in the face of swapoff, because
+swapoff also relies on the same reference counting mechanism to free
+the virtual swap slot and its descriptor. It tries to swap_free() the
+virtual swap slot, as it unmaps the virtual swap slot from the page
+table entry, which will decrement the swap count. So we're all good on
+this front.
+
+We DO need to obtain a reference to the swap device in certain places
+though, if we want to use it down the line for some sort of
+optimizations (for example, to look at its swap device flags to check
+if it is a SWP_SYNCHRONOUS_IO device - see do_swap_page()). But this
+is a separate matter.
+
+The end result is I will reduce 4 fields:
+
+1. swp_entry_t vswap
+2. atomic_t in_swapcache
+3. atomic_t swap_count
+4. struct kref kref;
+
+Into a single swap_refs field.
+
+
+>
+> >
+> > This design allows us to:
+> > * Decouple zswap (and zeromapped swap entry) from backing swapfile:
+> >   simply associate the virtual swap slot with one of the supported
+> >   backends: a zswap entry, a zero-filled swap page, a slot on the
+> >   swapfile, or an in-memory page .
+> > * Simplify and optimize swapoff: we only have to fault the page in and
+> >   have the virtual swap slot points to the page instead of the on-disk
+> >   physical swap slot. No need to perform any page table walking.
+> >
+> > Please see the attached patches for implementation details.
+> >
+> > Note that I do not remove the old implementation for now. Users can
+> > select between the old and the new implementation via the
+> > CONFIG_VIRTUAL_SWAP build config. This will also allow us to land the
+> > new design, and iteratively optimize upon it (without having to include
+> > everything in an even more massive patch series).
+>
+> I know this is easier, but honestly I'd prefer if we do an incremental
+> replacement (if possible) rather than introducing a new implementation
+> and slowly deprecating the old one, which historically doesn't seem to
+> go well :P
+
+I know, I know :P
+
+>
+> Once the series is organized as Johannes suggested, and we have better
+> insights into how this will be integrated with Kairui's work, it should
+> be clearer whether it's possible to incrementally update the current
+> implemetation rather than add a parallel implementation.
+
+Will take a look at Kairui's work when it's available :)
+
+>
+> >
+> > III. Future Use Cases
+> >
+> > Other than decoupling swap backends and optimizing swapoff, this new
+> > design allows us to implement the following more easily and
+> > efficiently:
+> >
+> > * Multi-tier swapping (as mentioned in [5]), with transparent
+> >   transferring (promotion/demotion) of pages across tiers (see [8] and
+> >   [9]). Similar to swapoff, with the old design we would need to
+> >   perform the expensive page table walk.
+> > * Swapfile compaction to alleviate fragmentation (as proposed by Ying
+> >   Huang in [6]).
+> > * Mixed backing THP swapin (see [7]): Once you have pinned down the
+> >   backing store of THPs, then you can dispatch each range of subpages
+> >   to appropriate swapin handle.
+> > * Swapping a folio out with discontiguous physical swap slots (see [10]=
+)
+> >
+> >
+> > IV. Potential Issues
+> >
+> > Here is a couple of issues I can think of, along with some potential
+> > solutions:
+> >
+> > 1. Space overhead: we need one swap descriptor per swap entry.
+> > * Note that this overhead is dynamic, i.e only incurred when we actuall=
+y
+> >   need to swap a page out.
+> > * It can be further offset by the reduction of swap map and the
+> >   elimination of zeromapped bitmap.
+> >
+> > 2. Lock contention: since the virtual swap space is dynamic/unbounded,
+> > we cannot naively range partition it anymore. This can increase lock
+> > contention on swap-related data structures (swap cache, zswap=E2=80=99s=
+ xarray,
+> > etc.).
+> > * The problem is slightly alleviated by the lockless nature of the new
+> >   reference counting scheme, as well as the per-entry locking for
+> >   backing store information.
+> > * Johannes suggested that I can implement a dynamic partition scheme, i=
+n
+> >   which new partitions (along with associated data structures) are
+> >   allocated on demand. It is one extra layer of indirection, but global
+> >   locking will only be done only on partition allocation, rather than o=
+n
+> >   each access. All other accesses only take local (per-partition)
+> >   locks, or are completely lockless (such as partition lookup).
+> >
+> >
+> > V. Benchmarking
+> >
+> > As a proof of concept, I run the prototype through some simple
+> > benchmarks:
+> >
+> > 1. usemem: 16 threads, 2G each, memory.max =3D 16G
+> >
+> > I benchmarked the following usemem commands:
+> >
+> > time usemem --init-time -w -O -s 10 -n 16 2g
+> >
+> > Baseline:
+> > real: 33.96s
+> > user: 25.31s
+> > sys: 341.09s
+> > average throughput: 111295.45 KB/s
+> > average free time: 2079258.68 usecs
+> >
+> > New Design:
+> > real: 35.87s
+> > user: 25.15s
+> > sys: 373.01s
+> > average throughput: 106965.46 KB/s
+> > average free time: 3192465.62 usecs
+> >
+> > To root cause this regression, I ran perf on the usemem program, as
+> > well as on the following stress-ng program:
+> >
+> > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --pagesw=
+ap $(nproc) --pageswap-ops 100000
+> >
+> > and observed the (predicted) increase in lock contention on swap cache
+> > accesses. This regression is alleviated if I put together the
+> > following hack: limit the virtual swap space to a sufficient size for
+> > the benchmark, range partition the swap-related data structures (swap
+> > cache, zswap tree, etc.) based on the limit, and distribute the
+> > allocation of virtual swap slotss among these partitions (on a per-CPU
+> > basis):
+> >
+> > real: 34.94s
+> > user: 25.28s
+> > sys: 360.25s
+> > average throughput: 108181.15 KB/s
+> > average free time: 2680890.24 usecs
+> >
+> > As mentioned above, I will implement proper dynamic swap range
+> > partitioning in a follow up work.
+>
+> I thought there would be some improvements with the new design once the
+> lock contention is gone, due to the colocation of all swap metadata. Do
+> we know why this isn't the case?
+
+The lock contention is reduced on access, but increased on allocation
+and free step (because we have to go through a global lock now due to
+the loss of swap space partitioning).
+
+Virtual swap allocation optimization will be the next step, or it can
+be done concurrently, if we can figure out a way to make Kairui's work
+compatible with this.
+
+>
+> Also, one missing key metric in this cover letter is disk space savings.
+> It would be useful if you can give a realistic example about how much
+> disk space is being provisioned and wasted today to effictively use
+> zswap, and how much this can decrease with this design.
+>
+> I believe the disk space savings are one of the main motivations so
+> let's showcase that :)
+
+Will do - I'm more concerned about regressions, so I wanna throw it
+out there right away to get ideas/feedback.
+
+>
