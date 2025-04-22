@@ -1,70 +1,77 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF39F2F37;
-	Tue, 22 Apr 2025 14:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDBF285407;
+	Tue, 22 Apr 2025 14:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331388; cv=none; b=c+FrRheOZIjE1CI1KEOSFhWGL18Oa61wGlBqs0Ohg7MoPs0hL4hzRKxNEUjqK5eMss60LLHbctxiJAULHYth3w5+XTfRR5DjnQGfjaPuQKyFp2/SzlhXwO1gIhEs63GOEzPZpc1vAfKilO6NCgS8sw1vW33ysAO3AX0+mWCpprw=
+	t=1745331391; cv=none; b=KTyRAuK7xoLURv0KXmc9vxPqB2OQiNzv84wH9EhVH0MXEWTOc+UNLnukZqgwPzUU5TkAaeG/lYHQaBP+BZhVgb6KW+LWg8T/nCs9cJNj5sLJJ3/tc4isD2CuNTvCTjneDn/GPJDQFJX3S098iaih2xS6jN2uJhxxKyrUjkFEDgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331388; c=relaxed/simple;
-	bh=fTQYKsQu+QIX6vKu1CNgck+u+htNJM8BuxeBg9H3Ncw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNmi6v7odRtIUnwV92g3RB6yvG8MhlzUGJ1k2ALQUP+yymYfVek/PhMMCVyET9DaJkMTagEuroDKkyOYkG9Pc8chBbWBTkTQnfyBhE1q/hV18eRoBFxx/adNTl5vLHQ853fbWUsM/KchT2UUsle3kk3XYq94gZZVF3C1carXXnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=O9B3eU/X; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745331391; c=relaxed/simple;
+	bh=HtPzaRkRoi38/+/mEVnn1vewPf7Ei+7QHXpz/dJQu5Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gUBjPRJ2IvaVaNrrJLv4FIYj9UC1yoPD6ARluzsGMNhXdjO3IUTrcN1W6nsawwARkUJpT4EaqE9RZ8uc2KudCx0c2Ra+DqZPHhCJnjA4fT+O2CbM4B0DQ7Q3XMjKmLLjohKrOPEv2orpD93AIQo9lGxbWPTAsmbbAeBwJonJqHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=d4ftkFWB; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="O9B3eU/X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=X1iB3P09c3OCc6TeaNE/sjxKLRzl4DmSZont3k5A34E=; b=O9B3eU/XO44sQ/COW2TsYSFVeC
-	8HaxsYfeE4ViRZXzyJVKR1GhXZUYEorsPPknJO1tVFEcumPvQvbFxbcv5x7MhALrOUAxaGcbpTiKI
-	Czg+jvzOISJm4elGJBAT1MVzhJx0s9833QCqJTXPKS85fGA8z+4oSNKGdkl6hUwPfc+1jhMu/22oB
-	KYxn9Ovd/56p062KKoVz14R0zo2Av2V3xI5HiPMqWIElRqyw9QKAbs2cE3HnLNPsnTizxfWL9wI3A
-	8ooW19keW8XR9u18v+nhbDGVDtSSR/sMtm0SOJdHIVkCWIjMHW1KINe76S6O8IZQwu7wyr7JBJrwV
-	OHUeVnkA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u7EPx-00063n-2B;
-	Tue, 22 Apr 2025 22:16:10 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 22 Apr 2025 22:16:09 +0800
-Date: Tue, 22 Apr 2025 22:16:09 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Su Hui <suhui@nfschina.com>, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: using size_add() for kmalloc()
-Message-ID: <aAekqQH3yWk_GhMN@gondor.apana.org.au>
-References: <20250421055104.663552-1-suhui@nfschina.com>
- <aAY0lyWzsRVDge_f@gondor.apana.org.au>
- <2169828c-127c-4bf7-b953-2f1194b72830@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="d4ftkFWB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1745331387;
+	bh=HtPzaRkRoi38/+/mEVnn1vewPf7Ei+7QHXpz/dJQu5Q=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=d4ftkFWBwttQOLFp1Q5NZjbebk11aH83vDLVLT2OBVTBHF2QqL9i0t684uYUkdjL8
+	 pTkdy09eeZXQ2ka+taWknwS275HeFjmwGmD+Lb/f8C+o+V5dw8dSRdbgg5WfyTL1yf
+	 bSHOpDBbsj7kjHw4rDxZfsOlKjgc20fl7P1+1JV6z4d4WIgyAu5FGSh5gTyfDSHRJ2
+	 /RWAR6xKw3RXetfYXUbPz5oW3GhaBFvC+Bksw3d4FnUApJb+gUCQ2Jy80SHQLuelCY
+	 ypNkw3mobfsPiTLQcSOGpSibuGVdLsnpNmT0IGlVrn1+WFFvly4wru1nwmpk5roVYv
+	 fodaHHy8c9g2g==
+Received: from sparky.lan (unknown [159.196.93.152])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5CB0A7EB68;
+	Tue, 22 Apr 2025 22:16:27 +0800 (AWST)
+Message-ID: <cb1a24ef23523f01868127430dbbe48428ad5e0d.camel@codeconstruct.com.au>
+Subject: Re: [PATCH net-next v19 1/1] mctp pcc: Implement MCTP over PCC
+ Transport
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: admiyo@os.amperecomputing.com, Matt Johnston
+ <matt@codeconstruct.com.au>,  Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla
+	 <sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Huisong Li <lihuisong@huawei.com>
+Date: Tue, 22 Apr 2025 22:16:27 +0800
+In-Reply-To: <20250418221438.368203-5-admiyo@os.amperecomputing.com>
+References: <20250418221438.368203-1-admiyo@os.amperecomputing.com>
+	 <20250418221438.368203-5-admiyo@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2169828c-127c-4bf7-b953-2f1194b72830@stanley.mountain>
 
-On Tue, Apr 22, 2025 at 01:24:22PM +0300, Dan Carpenter wrote:
->
-> This is exactly what Kees did with the mass conversion to
-> struct_size().  I occasionally run across places where Kees's mass
-> conversion patches did fix real integer overflow bugs.
+SGkgQWRhbSwKCltyZXNlbmQsIHVuLUhUTUxlZC4gU29ycnkgZm9yIHRoZSBub2lzZSFdCgpPbmUg
+YnVnIGluIHRoZSBjb2RlLCBhbmQgYW5vdGhlciBjb3VwbGUgb2Ygbm90ZXMgc2luY2Ugd2UnbGwg
+bmVlZCBhIHJlLXJvbGw6Cgo+ICsjZGVmaW5lIE1DVFBfUEFZTE9BRF9MRU5HVEjCoMKgwqDCoCAy
+NTYKPiArI2RlZmluZSBNQ1RQX0NNRF9MRU5HVEjCoMKgwqDCoMKgwqDCoMKgIDQKPiArI2RlZmlu
+ZSBNQ1RQX1BDQ19WRVJTSU9OwqDCoMKgwqDCoMKgwqAgMHgxIC8qIERTUDAyNTMgZGVmaW5lcyBh
+IHNpbmdsZSB2ZXJzaW9uOiAxICovCgpNaXNtYXRjaGVkIERTUCByZWZlcmVuY2UgYWJvdmUgLSBE
+U1AwMjUzIGlzIHNlcmlhbC4KCj4gK3N0YXRpYyBuZXRkZXZfdHhfdCBtY3RwX3BjY190eChzdHJ1
+Y3Qgc2tfYnVmZiAqc2tiLCBzdHJ1Y3QgbmV0X2RldmljZSAqbmRldikKPiArewo+ICvCoMKgwqDC
+oMKgwqDCoHN0cnVjdCBtY3RwX3BjY19uZGV2ICptcG5kID0gbmV0ZGV2X3ByaXYobmRldik7Cj4g
+K8KgwqDCoMKgwqDCoMKgc3RydWN0IG1jdHBfcGNjX2hkcsKgICptY3RwX3BjY19oZWFkZXI7CgpB
+bm90aGVyIGRvdWJsZS1zcGFjZSBoYXMgY3JlcHQgaW4gaGVyZS4KCj4gK8KgwqDCoMKgwqDCoMKg
+dm9pZCBfX2lvbWVtICpidWZmZXI7Cj4gK8KgwqDCoMKgwqDCoMKgdW5zaWduZWQgbG9uZyBmbGFn
+czsKPiArwqDCoMKgwqDCoMKgwqBpbnQgbGVuID0gc2tiLT5sZW47Cj4gK8KgwqDCoMKgwqDCoMKg
+aW50IHJjOwo+ICsKPiArwqDCoMKgwqDCoMKgwqBkZXZfZHN0YXRzX3R4X2FkZChuZGV2LCBsZW4p
+Owo+ICsKPiArwqDCoMKgwqDCoMKgwqBzcGluX2xvY2tfaXJxc2F2ZSgmbXBuZC0+bG9jaywgZmxh
+Z3MpOwo+ICvCoMKgwqDCoMKgwqDCoHJjID0gc2tiX2Nvd19oZWFkKHNrYiwgc2l6ZW9mKHN0cnVj
+dCBtY3RwX3BjY19oZHIpKTsKPiArwqDCoMKgwqDCoMKgwqBpZiAocmMpCj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiByYzsKClRoaXMgd2lsbCByZXR1cm4gd2l0aCBtcGRu
+LT5sb2NrIHN0aWxsIGhlbGQuCgpBbmQgc2hvdWxkIHRoaXMgcmV0dXJuIHRoZSByYXcgcmMgdmFs
+dWU/IE9yIE5FVERFVl9UWF9PSz8KCkNoZWVycywKCgpKZXJlbXkKCg==
 
-The point is that the reqsize shouldn't even exceed a page in size,
-let alone be anywhere near 2^32.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
