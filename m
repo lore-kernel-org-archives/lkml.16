@@ -1,74 +1,37 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2582B2367AA
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909BB22D7AF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303793; cv=none; b=jVr8r6yGUO7Sfy81Wf73z3nK/oX8kpGHNcCaRmv1+PEDVUUCBv1bP6SYmr/CAWy7soKRFhkCEGkVTt4lhHUToCi+w43EKjDHV4Dyo68NMW8w0Cy4gAkQHhsC5k2TPBQaK27qT/lARvyxSa6gYvmA28bwzhb801jyJi4/hmfmfto=
+	t=1745303798; cv=none; b=qINPizfwak3L3DCC1zk8AkFBlWkNpkivkiacZs8eZ++nk8YTOPu22IxOZTqxxrVnKjr+UzgWuE1DobR5Bt+5xOwAQmpoVdx8NarKw9kjTFXVWLipqL4Xxp2LBE7fBLmg96RULoWE3Z09RcpbKSl3PEBHVWNIjUSKOEZlYWcNhyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303793; c=relaxed/simple;
-	bh=GiP/jlLbMozxOxUvrEms2VWQOoLHWMI7XjFly4V6b/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KSiJZj22AceCvFk50RvdBPLK47tMFfDX+UJhJ8rqj2BUPq9MfQiE17m0jk5SrNx22e3FI0jfhsxTM0pknHBktyGwXDsmsnQcxiciORKXzgwQIyOhj10XUrMOvIluJKC010ekQ6sP8ELAKQ8925fjp1jtm+Pl8d/Bqh61ljr4+EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQin1pY+; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQin1pY+"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d0782d787so33651855e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745303789; x=1745908589; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MuuIFzXKAKOtJ/juljvbLrxvScq2q/lihuCqoG9qgYs=;
-        b=jQin1pY+RUBpSOckThD/4Cxz17cwvJAHyvhaJy9LpLFMygyd1RjiIxiEno4Uzt7vEg
-         lCVW07f/Gyyy6bF5jaZb/rUOaOjXyicvKOET8Fh4ijj2XAn7gOwuYG8Q3u8uDcPGEkJI
-         IC6g67UrvSEEeSFYMq/8caHqaZMNYd3BVhBGYQrLXRByZ9WqJRob03fmdc2dhPG0KbrB
-         Kw34xmN0Od09X7XIYDGQ1FqmerXoe6+my4otXymdPHxRtAAOMjnN5XFFevzq4kevMAB+
-         DKkGUrUPJA501VFyTrui8MqO3Ir4eQpo7l1TUeKrHCNP8QCLJMmVZJ1Dj/Y4cgB61BCO
-         BWyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745303789; x=1745908589;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MuuIFzXKAKOtJ/juljvbLrxvScq2q/lihuCqoG9qgYs=;
-        b=guBwiKcR27UHgRqZxdz2lW4wZ5WNKB7aBpGRZ7Scg8Y5BgAndDpD0x+c/phKm7foia
-         MdmW/2zAq4sg1KfnH1llhVfeD4VQaxmejwsCsgYTPDoT6D8lQPANXB9Cw5tmXvV1bg/0
-         ojFDjVE1rR13U8MzF/x6vv03pLi9Nb716DzRjqSzgIi8CPHfrdOH2kIhAJLD9K0a09MG
-         CUc+Ve3hSQzA5J6vj/Wt4u9CyI/KweXyUlyvJQcgKAbUTYjHlZaSShzJWV7+oamnmKKD
-         3C/3Nv130tn4geWp2szA8uPdhJEd39dQzm82YmrOdpz7MYEvnsudDXnqxe2z9k1XLgJv
-         /F5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXTb9cQcxZpNV6sZHaTATVJ7kCV5G3DyWgzWtTYix3z1o0WW/Kxry3igrskPhmAjTQHKKFLTLRynMiBz6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqbGlpFUDSOGForfG9ZWki6JBbHHpB3W/WUNb1c4naHvFGd0gg
-	lhD4jsXV41aanqihEaeihO91i8dliP9FZEOiqjcw0NrdgjW9kIRmF4mCT3xXdeA=
-X-Gm-Gg: ASbGncv9x9TdH65ckNPjWK1DLFIVVEF+SnNMI+CxYS/MKvwSA2odMrUE3gJD9lMoaWq
-	srQrZc4kZ87dUAOorg5EkpPmjpp9xM54eb5iqTQJiXDK3tpXMcI+ZA9Q9DugjVDXhlMz1EWpCmI
-	4W90OI/vjEpQkMtvHEPalds2PnWYYjiiMVr7p0s0GNrNKstarsRkwl1YVeDSidEnd4kOp4v8qix
-	HuIuJpdhDwVNHV/XZIs943ZbzjlBn7ofRxAaYyUmPhNCVXsfeQkEhnSaNEjU7wUcPW2HyUEPbIS
-	1vm5Xb8zFrDXJsDcc2iI4TZogwTv1UTevT/qwwk3iRHQ5w==
-X-Google-Smtp-Source: AGHT+IG58ERkjB/D7cQnQR9ULR7mf0eJW0CrGoysFAmK0fVh9EIq2V04mHgq1He3cbNy5XZ0uVNl7A==
-X-Received: by 2002:a05:600c:1c12:b0:43e:ee80:c233 with SMTP id 5b1f17b1804b1-4406ac20146mr111342455e9.32.1745303789459;
-        Mon, 21 Apr 2025 23:36:29 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa433133sm13898825f8f.28.2025.04.21.23.36.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 23:36:29 -0700 (PDT)
-Date: Tue, 22 Apr 2025 09:36:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com,
-	sonic.zhang@analog.com, vapier@gentoo.org,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH 3/5] staging: iio: adc: ad7816: Introduce chip_info and
- use pointer matching
-Message-ID: <b17dc4de-9fd2-410e-8c5e-f27e550d3eca@stanley.mountain>
-References: <20250419135638.810070-1-gshahrouzi@gmail.com>
- <20250419135638.810070-4-gshahrouzi@gmail.com>
+	s=arc-20240116; t=1745303798; c=relaxed/simple;
+	bh=JTRo1MgH+jjhQRhwZCBUtkLwZhQKlyaAAyAu8hdfq9A=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gb5RF+dueyU00gYWinYS3ijwM/uK5B5nRXP5hI+m5D4wCQmxXXqinAjjcu1cKGadWcJMO/D/yfF8hz79rQq/ysGi2z9+YIzvcIp2u4KADaRjPnKk0Rzoi9vzkD0BIaOA361UEFbCHqJIivET47yEMtXLcXH0+8rgLfwdLhnZO80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 1f65a06d-1f44-11f0-8efd-005056bdfda7;
+	Tue, 22 Apr 2025 09:36:29 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 22 Apr 2025 09:36:29 +0300
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+Message-ID: <aAc47RW0yw97K5sZ@surfacebook.localdomain>
+References: <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com>
+ <20250418-iio-introduce-iio_declare_buffer_with_ts-v1-1-ee0c62a33a0f@baylibre.com>
+ <aAPQS9xY4603PJmU@smile.fi.intel.com>
+ <5df8aff0-2bb4-48e3-b1cf-9c09628ab467@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,46 +40,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250419135638.810070-4-gshahrouzi@gmail.com>
+In-Reply-To: <5df8aff0-2bb4-48e3-b1cf-9c09628ab467@baylibre.com>
 
-On Sat, Apr 19, 2025 at 09:56:36AM -0400, Gabriel Shahrouzi wrote:
-> @@ -84,7 +98,7 @@ static int ad7816_spi_read(struct ad7816_state *chip, u16 *data)
->  		gpiod_set_value(chip->convert_pin, 1);
->  	}
->  
-> -	if (chip->id == ID_AD7816 || chip->id == ID_AD7817) {
-> +	if (chip->chip_info == &ad7816_info_ad7816 || chip->chip_info == &ad7817_info_ad7817) {
->  		while (gpiod_get_value(chip->busy_pin))
->  			cpu_relax();
->  	}
-> @@ -353,6 +367,7 @@ static int ad7816_probe(struct spi_device *spi_dev)
->  {
->  	struct ad7816_state *chip;
->  	struct iio_dev *indio_dev;
-> +	const struct ad7816_chip_info *info;
->  	int i, ret;
->  
->  	indio_dev = devm_iio_device_alloc(&spi_dev->dev, sizeof(*chip));
-> @@ -362,11 +377,15 @@ static int ad7816_probe(struct spi_device *spi_dev)
->  	/* this is only used for device removal purposes */
->  	dev_set_drvdata(&spi_dev->dev, indio_dev);
->  
-> +	info = device_get_match_data(&spi_dev->dev);
-> +	if (!info)
-> +		return -ENODEV;
-> +	chip->chip_info = info;
-> +
->  	chip->spi_dev = spi_dev;
->  	for (i = 0; i <= AD7816_CS_MAX; i++)
->  		chip->oti_data[i] = 203;
->  
-> -	chip->id = spi_get_device_id(spi_dev)->driver_data;
+Mon, Apr 21, 2025 at 05:40:41PM -0500, David Lechner kirjoitti:
+> On 4/19/25 11:33 AM, Andy Shevchenko wrote:
+> > On Fri, Apr 18, 2025 at 05:58:32PM -0500, David Lechner wrote:
 
-Delete the struct ad7816_state ->id member since you are no longer setting
-or using it.
+...
 
-Btw, this patch didn't apply for me on linux-next.
+> >> +/**
+> >> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
+> >> + * @type: element type of the buffer
+> >> + * @name: identifier name of the buffer
+> >> + * @count: number of elements in the buffer
+> >> + *
+> >> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
+> >> + * addition to allocating enough space for @count elements of @type, it also
+> >> + * allocates space for a s64 timestamp at the end of the buffer and ensures
+> >> + * proper alignment of the timestamp.
+> >> + */
+> >> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> >> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) \
+> >> +		  + sizeof(s64)/ sizeof(type)] __aligned(sizeof(s64))
+> > 
+> > Missing space
+> 
+> Sorry, but my eyes can't find any missing space. Can you be more specific?
 
-regards,
-dan carpenter
+As far as I can see it's missed after sizeof(s64)
+Also I don't like to see the leading operators (like +, -, *, &).
+
+> > and I would rather to see [...] on the same line independently on> the size as it will give better impression on what's going on here.
+> 
+> As long as Jonathan doesn't mind the long line. :-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
