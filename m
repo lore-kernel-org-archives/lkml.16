@@ -1,93 +1,104 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BAEF50F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EB21AA7BF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312203; cv=none; b=jN8Hvm97Qe9QcNGNLpcllxreZ8RYm3Bc2xGk9OMjTouEw6G00hWGtzzjjaocoC/r1K9ZmaMeqpLoN/7NpadO4+otdQi7Ed3FCWgp+lKShOoDrjHoITyzsW/TtIr7Wmc+zxlaH7VqF9TezyE8LgUsNI3IPEArSLo1O5RlpKnIFWU=
+	t=1745312253; cv=none; b=msKH2OtRmFAuTSogLZZssoDMce/v1eaRo7eIVRKlvrmIVbEJbAH+YQot5W9ued62ok0Ys85AmpegfPl2AHr7iQHDArmyotfSxUYRO6j+AoSF8004xtiio84mngm23RstDwhD/Ruyz/F4XMiF4BM7Mwr+3GFcj7geEc7ceMp1zlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312203; c=relaxed/simple;
-	bh=ZM2QHmCHxjpjTF8fgV9Zq/GT5c/lcTIpTXWzGN/JTQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBXr5PKR40G/ibaAB0bTz3tlkMuapTtB4dRdeZlRAYridYcWg3wfhXXwG4AzZb42yMWWcGnpeFWDvr6rYBhKFgcMrIYEc9r7kkMi2JonveKT2Z0v6mBIAOIavv4LlqGM/lRbI8JchktPEd58XgO+wgkAmLH4EUTf4KORYAUbMfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kmK7solx; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kmK7solx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=B4tX8bJgVVMOicTlu3lXeGMvc2dsrzX97ajUJmxABAI=; b=kmK7solx9Qwfz/zrsQguIyKUqU
-	f1c8nJAeoKpiVB9T9cAR26DrlehKFcm5OxkG61LnKnfhNY50ge/CNBK7mQA28ym0lcB+PSaoHgjVO
-	bFW5ws1FHGQc9zgbesq/WpHLQlFSg1sjyNrXMvdbo5rxk8yJRjKqlbEh2UDendbRdyXcIE80fpsB1
-	rl5JIUwam5U9n7Xkj3a70xqYo86uPjALtiZy7U5uUMfmRT59wP+qXjqvfVLzk7Ql/b9N4oSjPLREF
-	jTFXUlwvLL9yuRNVK8hLJbbuzUUFm4/rX5FnZR0NbGZnBZ+jYn5PJUXkP7lGvvOkAF7Y4YWI+X3kZ
-	lqiYPTzw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u79Qb-00000004G4h-0CFW;
-	Tue, 22 Apr 2025 08:56:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 670BC3003C4; Tue, 22 Apr 2025 10:56:28 +0200 (CEST)
-Date: Tue, 22 Apr 2025 10:56:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com,
-	Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [RFC][PATCH] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-Message-ID: <20250422085628.GA14170@noisy.programming.kicks-ass.net>
-References: <20250422044355.390780-1-jstultz@google.com>
+	s=arc-20240116; t=1745312253; c=relaxed/simple;
+	bh=lTbHJ1/ZlZxy/0X5aGRTsmnSe0G1gRDQaLVCb3W0FPk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=s/cYAVKAQeGbMyD4JNSq6puL4knft28sZUD9UVzNpIpACIEF+D6nXhEJu00FtAfLMaQ5K0ZRcMVJNwcOQBIru++sLbVuicvTCap9RqNbgXUS/TpDHx8In8Dd+k6rfxHg41wW7mrcfImN3Irb+wxqjl18znaxRPCcC0Zbm39/68E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79RQ-0007Tz-3o; Tue, 22 Apr 2025 10:57:20 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79RO-001WRC-2n;
+	Tue, 22 Apr 2025 10:57:18 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79RO-00AvpD-2W;
+	Tue, 22 Apr 2025 10:57:18 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
+	Guenter Roeck <groeck@chromium.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	chrome-platform@lists.linux.dev
+Subject: [PATCH v9 1/7] power: Extend power_on_reason.h for upcoming PSCRR framework
+Date: Tue, 22 Apr 2025 10:57:11 +0200
+Message-Id: <20250422085717.2605520-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250422085717.2605520-1-o.rempel@pengutronix.de>
+References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422044355.390780-1-jstultz@google.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Apr 21, 2025 at 09:43:45PM -0700, John Stultz wrote:
-> It was reported that in 6.12, smpboot_create_threads() was
-> taking much longer then in 6.6.
-> 
-> I narrowed down the call path to:
->  smpboot_create_threads()
->  -> kthread_create_on_cpu()
->     -> kthread_bind()
->        -> __kthread_bind_mask()
->           ->wait_task_inactive()
-> 
-> Where in wait_task_inactive() we were regularly hitting the
-> queued case, which sets a 1 tick timeout, which when called
-> multiple times in a row, accumulates quickly into a long
-> delay.
+Prepare for the introduction of the Power State Change Reason Recorder
+(PSCRR)  framework by expanding the power_on_reason.h header. This
+extension includes new power-on reasons:
+- POWER_ON_REASON_OVER_CURRENT for over-current conditions.
+- POWER_ON_REASON_REGULATOR_FAILURE for regulator failures.
+- POWER_ON_REASON_OVER_TEMPERATURE for over temperature situations.
+- POWER_ON_REASON_EC_PANIC for EC panics
 
-Argh, this is all stupid :-(
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+changes v6:
+- add POWER_ON_REASON_EC_PANIC
+- s/POWER_ON_REASON_OVERTEMPERATURE/POWER_ON_REASON_OVER_TEMPERATURE
+---
+ include/linux/power/power_on_reason.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The whole __kthread_bind_*() thing is a bit weird, but fundamentally it
-tries to avoid a race vs current. Notably task_state::flags is only ever
-modified by current, except here.
+diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/power_on_reason.h
+index 95a1ec0c403c..bf9501792696 100644
+--- a/include/linux/power/power_on_reason.h
++++ b/include/linux/power/power_on_reason.h
+@@ -15,5 +15,9 @@
+ #define POWER_ON_REASON_XTAL_FAIL "crystal oscillator failure"
+ #define POWER_ON_REASON_BROWN_OUT "brown-out reset"
+ #define POWER_ON_REASON_UNKNOWN "unknown reason"
++#define POWER_ON_REASON_OVER_CURRENT "over current"
++#define POWER_ON_REASON_REGULATOR_FAILURE "regulator failure"
++#define POWER_ON_REASON_OVER_TEMPERATURE "over temperature"
++#define POWER_ON_REASON_EC_PANIC "EC panic"
+ 
+ #endif /* POWER_ON_REASON_H */
+-- 
+2.39.5
 
-delayed_dequeue is fine, except wait_task_inactive() hasn't been
-told about it (I hate that function, murder death kill etc.).
-
-But more fundamentally, we've put so much crap into struct kthread and
-kthread() itself by now, why not also pass down the whole per-cpu-ness
-thing and simply do it there. Heck, Frederic already made it do affinity
-crud.
-
-On that, Frederic, *why* do you do that after started=1, that seems like
-a weird place, should this not be done before complete() ?, like next to
-sched_setscheduler_nocheck() or so?
