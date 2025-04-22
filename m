@@ -1,148 +1,87 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29121A0BE1
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6386D18D63E;
+	Tue, 22 Apr 2025 04:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745294954; cv=none; b=ZoD7gSSNgK60/nfw7l577zDcnd/bFUTZFpflVPdZzAbdOjCSAO9OaaPDd7ALrDvRKnlsqYP/hMNoX3srvlyzaTbgVvo+Iefygc7SY8pHJw5V6EvBtzyHPVhwWTSYZj/Ge4RM+ACnE1SGKWND9l8B2T+5/T1A59PL8go+mjnLJDA=
+	t=1745294974; cv=none; b=Y7mELPwqlJfe4qgiRD2+tbhnkDLoHfmh5FO4tkFFw2CC99i8WPalrlrZzeR2PWLHFO/rMSeOSF4GM5khMyZWZ7XvzHa6AyREBX8dIa+3kzPZm9oM53z5QIyC3mXQ8JB539EjwDL6yaoCqIk+DjH3BvL4QQxmUzRvsYZkHOiyZWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745294954; c=relaxed/simple;
-	bh=qooPPh7Sc4jDHmLmciL2D/TBKbArEcvN1N6OKR0BkSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qn/2e53RlT7tk3kNbZE54Hc6sc4RF+Q061MKUvuMUfsaFEOyJBcLJrYJ7H9pyWnMb9RvHiVD5dbYeeM6QHF4we3PZ90xsuYS0s/BKsDuGqGKF4AqqR5n8lZ/QIrdAUrHFV9AK3YwdMpzfO697cJpxIm2ZeIzZNwKoApbEcfRhqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GULxeQfJ; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GULxeQfJ"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac7bd86f637so1036762266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745294951; x=1745899751; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=7UyT32oNdvI0B7CJmPYL80eqMQ3ZYwskCys7aLnpU8o=;
-        b=GULxeQfJzytvUxAApg2DyGMnjp+IvcvYz1UizmWEAjpixnvz6EDEanBecToO4URAHK
-         s4XbR67/ZxpGLOVyU1CZElEA6VV6EsaQqiB6AeyCT6yBM6tY5Fyv9OOkU/h6BLFo1lhu
-         bE6s21CFo5uhbn8sAliwoI21y/k1uPRPqyNIPsrcP7/jUQN3zlwCABOCzdYNNQgGAkHO
-         6jYcT9hvDUMTapdNzLLQua17ICruHm740JT0T5hkVDowUNpIdpe1LUcJcNmFi0kalKWP
-         mE5gBGk7h5u8UW1BKrCdkmrYJTSJeJtILuoCfhNhDiD6UW/GXm2imDs97zNOu7x/PhXc
-         P/JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745294951; x=1745899751;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7UyT32oNdvI0B7CJmPYL80eqMQ3ZYwskCys7aLnpU8o=;
-        b=eBt9KnCNSzzF4+aRJmBgKK5AzYN2xrdaJ6QvO5J6vGFi+OV+vnuTz7GY7SqmOJUKxW
-         30EZu0kclKmdhy4MwozK4FbsBg5XV5ctAJk1LvrtTG5v+QgCQ9/WurIEL2JqQaAS5Dh3
-         vSlSSuzH0iueTtnfEFgmZV/hMwfV+SQbRxyQl4M9iaat4z5rXAX5B5Rnwjw7el+KJ+JY
-         bL87L7ouZbwj+lOCEq7xLMy0fJRnRDuAujKp82wuucIb5bwn1GqQAvaiuoiz4zo2aIfs
-         Ks92PlT3AplSmY03TPRym0Nhrygx/Fr892G779JFcIhrP7mc+X/EgzZMS7PBaKpjWI5r
-         wtjg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+QUxkGPuCoJaYjf75latSsX77CN7MVJJ5ivrWGZbOtlnCzwnM9eK0zpnnl0VCorYyPrBBotRsReOSJk0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxrd5lYe4rxsxyG3+J9IdMxdX+FjJvMkDycgkSlzMxCyNlzPiZA
-	x9oJojjZlFxaxvkATRGQzeJgCj3NtZIo2E+iWkow0IFNGTZ41Kz1xYezNTueIYU=
-X-Gm-Gg: ASbGncvJfYoqSIiD9z6vcRDsvfid1Mp1UQ/HL97RBuRqz9vYk00Ec6Ninc4ElF1N+9X
-	ElBfgw1bBXn+Hg2yBRDK4ju7GDIp4W9PWRimrqvm2P2glUMJOD/6k6XHWmOW7CpL+qB1Q5Kjs6i
-	66DrM+O8LbXAgE8uzctbQBi0e5kNHJTEPuNici7sJiNjDv8+aLGaZNLUNxPlRDCBqQUYTCAK55u
-	G2z+ya4A6x5iaRB1y+I4Rv//z5TiTJ71YtmJgQMmkFurdwHpnpnHd32Ch2RGfi07vaSe/fhhJtt
-	umqquVbC1bXMH25QMFkSaV+9OQ/NoIUeAtgQtM2AHrpwff5ZOqgt6uI+uV4QYapfcySu
-X-Google-Smtp-Source: AGHT+IHW+g0qw3gBtPQ/2pE0/fL0ihaAK6vaQaOak5PgSUwLDfg0R/nPaOQqt4C7h1YtIBSkKRbolw==
-X-Received: by 2002:a17:907:3d9f:b0:aca:c67d:eac0 with SMTP id a640c23a62f3a-acb6e91e47fmr1536497866b.0.1745294950805;
-        Mon, 21 Apr 2025 21:09:10 -0700 (PDT)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa58754sm7806905b3a.107.2025.04.21.21.09.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 21:09:10 -0700 (PDT)
-Message-ID: <9f4851b9-b226-4639-abf3-a7fb650214d3@suse.com>
-Date: Tue, 22 Apr 2025 13:39:05 +0930
+	s=arc-20240116; t=1745294974; c=relaxed/simple;
+	bh=Af1+AkpqfX2f2V8L9uHzFX6RQOHRce6SCz0W2kXUOSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DMj9801eFWJq+ipZIFrbtgbohSbirMfqGvXmDJYyCknh0BfGC4LzOowi4eiiFk3n/qGLxXyHVzZSjyCj3e34hG5eVFspFu7CY8Xcq3rGXd2I5fUlsgd2ab1Hjj4AcaOSj6bMTCFhjbrHg42Zp3Fg1RprEm2Xyy/tsAmOkbvhKVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowABXjwd0FgdoOfIkCw--.63587S2;
+	Tue, 22 Apr 2025 12:09:25 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: obitton@habana.ai,
+	ogabbay@kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] habanalabs: Add error handling for hl_mmu_get_hop_pte_phys_addr()
+Date: Tue, 22 Apr 2025 12:09:02 +0800
+Message-ID: <20250422040903.2153-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] btrfs: fix the resource leak issue in btrfs_iget()
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <9e7babf0-310f-40cd-9935-36ef2cebb63f@gmx.com>
- <20250421154029.2399-1-superman.xpt@gmail.com>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <20250421154029.2399-1-superman.xpt@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABXjwd0FgdoOfIkCw--.63587S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4Uuw18JF4Duw15Kr47CFg_yoW8GryfpF
+	n3Kr4rXFy5Jr1UZayUtr1IvF1Yv39xWFy3K3ZFka9093s8X3s7u343W3WSvw4UArWkGan7
+	Zw1kAFs8CF18ZrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUUpuWJUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAAA2gG55bEmwAAsa
 
+In _hl_mmu_v2_hr_map(), If hl_mmu_get_hop_pte_phys_addr() fail to
+get physical address, the return address will be set as U64_MAX.
+Hence, the return value of hl_mmu_get_hop_pte_phys_addr() must
+be checked to prevent invalid address access. Add error handling
+and propagate return code to caller function to fix this issue.
 
+Fixes: 8aa1e1e60553 ("habanalabs: add gaudi2 MMU support")
+Cc: stable@vger.kernel.org # v6.0+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-在 2025/4/22 01:10, Penglei Jiang 写道:
-> When btrfs_iget() returns an error, it does not use iget_failed() to mark
-> and release the inode. Now, we add the missing iget_failed() call.
-> 
-> Fixes: 7c855e16ab72 ("btrfs: remove conditional path allocation in btrfs_read_locked_inode()")
-> Reported-by: Penglei Jiang <superman.xpt@gmail.com>
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
-
-Now pushed to for-next branch, with some updates on the commit message.
-
-https://github.com/btrfs/linux/commit/cfcd9ed0108925c8071e27e6d5a300adb74c1839
-
-Appreciate your bug report and fix. It would be even better if plan to 
-continue your contribution to btrfs.
-
-Thanks,
-Qu
-
-> ---
-> V1 -> V2: Fixed the issue with multiple calls to btrfs_iget()
-> 
->   fs/btrfs/inode.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index cc67d1a2d611..1cbf92ca748d 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -5681,8 +5681,10 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct btrfs_root *root)
->   		return inode;
->   
->   	path = btrfs_alloc_path();
-> -	if (!path)
-> +	if (!path) {
-> +		iget_failed(&inode->vfs_inode);
->   		return ERR_PTR(-ENOMEM);
-> +	}
->   
->   	ret = btrfs_read_locked_inode(inode, path);
->   	btrfs_free_path(path);
+diff --git a/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c b/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
+index 31507b2a431b..cdade07e22c5 100644
+--- a/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
++++ b/drivers/accel/habanalabs/common/mmu/mmu_v2_hr.c
+@@ -253,6 +253,11 @@ static int _hl_mmu_v2_hr_map(struct hl_ctx *ctx,
+ 		hop_pte_phys_addr[i] = hl_mmu_get_hop_pte_phys_addr(ctx, mmu_prop, i,
+ 									hops_pgt_info[i]->phys_addr,
+ 									scrambled_virt_addr);
++		if (hop_pte_phys_addr[i] == U64_MAX) {
++			rc = -EINVAL;
++			goto err;
++		}
++
+ 		curr_pte = *(u64 *) (uintptr_t) hl_mmu_hr_pte_phys_to_virt(ctx, hops_pgt_info[i],
+ 							hop_pte_phys_addr[i],
+ 							ctx->hdev->asic_prop.pmmu.hop_table_size);
+-- 
+2.42.0.windows.2
 
