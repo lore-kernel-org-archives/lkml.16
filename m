@@ -1,123 +1,184 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA99B27BF69
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEE727C86F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322490; cv=none; b=hYVX6NOCM0aC2+Hx1D2oDR2D8r07UIX9RRVvUisWrI01eJBpj1tZ4a8W/vJpZ1SOPTJIWlGJvFknL4z56xpopCFHTnWfcdaNctuPJWo2NJQO+mHvWgbPWyKTlGKGdrR3JuBv0Pdanc2/apz/Kx6Td/Pb2SFxocr74YC2LVO/+EI=
+	t=1745322497; cv=none; b=TgErUEUnf+WOI7vD1VL+WjJGqofRNbchUglyO8cz61G+K6BZ4/jFBLSFINTmIA5jyhPhpfIwqRnLHc8Pzj/Rw6qbqPNkDq4JjJy9jACeazyKn+pvA35i4swJw38WINwAkbz5E4nrOSDQGwN0+sMJOxOlO9y7w2a+LzDydm6Rgp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322490; c=relaxed/simple;
-	bh=vvbSXOpv2PWldlCkgMw68EbwtInhF3Q/a+9cSwsTqWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cWtcEEYny2CkVIV3qQFO3Bk/cBiiBaXkU9XizF3QjgF92BzUfjX0wdemAedOQuMny4ZNjY7ViowS9noi8PbMFeuihUcOEM4DdOxcRldql1x6btK4h5sXvLBsQsv77+n9DcpNBLIr1w8+DugEShlbxt4rtMb1CCSWYXCM5GhNZZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F95sxA5l; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F95sxA5l"
-Date: Tue, 22 Apr 2025 04:47:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745322485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DlOy5pgOMDLNOF17VOxP0jw2ph04ic2bIH7kzzlbOHI=;
-	b=F95sxA5lw7P8QmrrzD85lNvmnPmm9bJbaQFbZRyO8zsokGbePISBD4Zp2xa9m5HmyD4pZi
-	9InQKq9XKutv7roD05XGKcJvwpyyuBneY5YHZEVxT6DRVOviq6Q3intImd7OuS9jgn5B4l
-	YARCPhgTzAhhOduK1xEbRW0uCv5FvYk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
-	sj@kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, gourry@gourry.net,
-	ying.huang@linux.alibaba.com, jonathan.cameron@huawei.com,
-	dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-	minchan@kernel.org, senozhatsky@chromium.org
-Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
- compressed data
-Message-ID: <aAeBx9fJliZldLQO@Asmaa.>
-References: <20250402204416.3435994-1-nphamcs@gmail.com>
+	s=arc-20240116; t=1745322497; c=relaxed/simple;
+	bh=mfVE6V6xZdPQ5PVjy4OEKx90XteIh3s8VquUxI4cKgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cFrhj2TyOmkcxCT/weGGFUyU5qSGivew/eS1nvmpUyqvKxd9Zhjiw6pAuZE3wBlJVAZPVNPsdRojjrgTfc+0a8vPCj1UlMYAwByVYK2hZe2hwBgKdj4TqrRVNg7UrOQzp2XYwDJDXJ+IOU9b5DDYGOPUE/RSZq03O5SMDNTtuV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso37044455e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:48:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745322494; x=1745927294;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rd9mpww30KfCTr7fFwwzdbYpEpm9V77w7Sk1CvWbaAc=;
+        b=LBR56Mf+tjXjiuRnAlmFLZ4IOvbtW9Ax5gbMJeB7fwjlZZu6AUdY8ZnKc8iOitHyxt
+         0lf6OeYsGj1WeMqcQltyF7NG7qoU1qftZftve9EAPBrKoytE1NxmnEjuQtctzzLJYUk1
+         jOX0hWQ5YnOaxSDaWAmjgkSCJaLPRXFZWeqlsjpXNURVPeYsRe3MeAmaCgp/cWDiozDF
+         QV22bNJ5hwTh1io3kwaPDZBbC8FuJcyXWYlodx/NsPndWurJgOoz3VaIc4Q6WU7YNp9G
+         M1VKq0P/q9ta0+N0FYxRnmB9xddaGRfdUw3/5qNjazRNTdjgqWJ3NsT71xUSpicKALea
+         Pyeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU47c8a7n5OQg+VYLARFGTLc4oP44vY7/Im6i1RPjb2XuUKhks8t2Zz1kFt2cj6fMk3bwcylhqmHH/hd2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwelIC3K6XbvhMCwjtE+kj4xlIYFRc0cZspiIuFPW2UabqUSbqC
+	kQXVrcCw6O3iAujYqTjVIh4l/9hLVCC82yysyG8jDGvM08OGvC5y
+X-Gm-Gg: ASbGncvUfDn/X+9yr2uLRASv6CWslhHHLanMJ5db3f1V9aFeyIfvPUOtD01Ny4IYjeZ
+	HZwa4onNN+FBaGx9OW/36JL+p44YntygQGtwIVIZg4mPNqP7GkG37JQKwCGC0NrJbB6J02b4Hvl
+	TOzXtE/DuvBXVXT5Dy/yqMc2ejhuOoiYHxhkq9H2pbWxqHiqi+6ZB8d7i9W+hVTFFH0nM51WEMn
+	z5pbX3tjIbvV4NZuMFxq3mWUqlaCYVpiESHOjic7I7TjqY+yBpEVNTD3tq7uKQE2SgSc2NWKpHO
+	0iHmLXeOXvD8eSgkARIi5hk4atpgmh6zziz2zgTHlD7WOJ9M7dWPk7BFDS3xg9wKYGMcGk4lUjm
+	80Mw1tg==
+X-Google-Smtp-Source: AGHT+IEKsk0gnKO/XC4zScRVkpX1Ie7Ny5ViJQfVzCiVrieXqCEHQly9ujKORgiytv0YRGPXmAbOrg==
+X-Received: by 2002:a05:600c:1c8f:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-4406ab981c5mr135046415e9.14.1745322493645;
+        Tue, 22 Apr 2025 04:48:13 -0700 (PDT)
+Received: from [10.50.5.11] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6dfed6sm170150065e9.35.2025.04.22.04.48.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 04:48:13 -0700 (PDT)
+Message-ID: <4cf8af38-419e-4d7c-95f7-7248faf3c7bb@grimberg.me>
+Date: Tue, 22 Apr 2025 14:48:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] nvme/pci: make PRP list DMA pools per-NUMA-node
+To: Caleb Sander Mateos <csander@purestorage.com>,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>
+Cc: Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250421165525.1618434-1-csander@purestorage.com>
+ <20250421165525.1618434-3-csander@purestorage.com>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20250421165525.1618434-3-csander@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 01:44:16PM -0700, Nhat Pham wrote:
-> Currently, zsmalloc, zswap's and zram's backend memory allocator, does
-> not enforce any policy for the allocation of memory for the compressed
-> data, instead just adopting the memory policy of the task entering
-> reclaim, or the default policy (prefer local node) if no such policy is
-> specified. This can lead to several pathological behaviors in
-> multi-node NUMA systems:
-> 
-> 1. Systems with CXL-based memory tiering can encounter the following
->    inversion with zswap/zram: the coldest pages demoted to the CXL tier
->    can return to the high tier when they are reclaimed to compressed
->    swap, creating memory pressure on the high tier.
-> 
-> 2. Consider a direct reclaimer scanning nodes in order of allocation
->    preference. If it ventures into remote nodes, the memory it
->    compresses there should stay there. Trying to shift those contents
->    over to the reclaiming thread's preferred node further *increases*
->    its local pressure, and provoking more spills. The remote node is
->    also the most likely to refault this data again. This undesirable
->    behavior was pointed out by Johannes Weiner in [1].
-> 
-> 3. For zswap writeback, the zswap entries are organized in
->    node-specific LRUs, based on the node placement of the original
->    pages, allowing for targeted zswap writeback for specific nodes.
-> 
->    However, the compressed data of a zswap entry can be placed on a
->    different node from the LRU it is placed on. This means that reclaim
->    targeted at one node might not free up memory used for zswap entries
->    in that node, but instead reclaiming memory in a different node.
-> 
-> All of these issues will be resolved if the compressed data go to the
-> same node as the original page. This patch encourages this behavior by
-> having zswap and zram pass the node of the original page to zsmalloc,
-> and have zsmalloc prefer the specified node if we need to allocate new
-> (zs)pages for the compressed data.
-> 
-> Note that we are not strictly binding the allocation to the preferred
-> node. We still allow the allocation to fall back to other nodes when
-> the preferred node is full, or if we have zspages with slots available
-> on a different node. This is OK, and still a strict improvement over
-> the status quo:
-> 
-> 1. On a system with demotion enabled, we will generally prefer
->    demotions over compressed swapping, and only swap when pages have
->    already gone to the lowest tier. This patch should achieve the
->    desired effect for the most part.
-> 
-> 2. If the preferred node is out of memory, letting the compressed data
->    going to other nodes can be better than the alternative (OOMs,
->    keeping cold memory unreclaimed, disk swapping, etc.).
-> 
-> 3. If the allocation go to a separate node because we have a zspage
->    with slots available, at least we're not creating extra immediate
->    memory pressure (since the space is already allocated).
-> 
-> 3. While there can be mixings, we generally reclaim pages in
->    same-node batches, which encourage zspage grouping that is more
->    likely to go to the right node.
-> 
-> 4. A strict binding would require partitioning zsmalloc by node, which
->    is more complicated, and more prone to regression, since it reduces
->    the storage density of zsmalloc. We need to evaluate the tradeoff
->    and benchmark carefully before adopting such an involved solution.
-> 
-> [1]: https://lore.kernel.org/linux-mm/20250331165306.GC2110528@cmpxchg.org/
-> 
-> Suggested-by: Gregory Price <gourry@gourry.net>
-> Signed-off-by: Nhat Pham <nphamcs@gmail.com>
 
-For the zswap/zsamlloc bits:
-Acked-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+
+On 21/04/2025 19:55, Caleb Sander Mateos wrote:
+> NVMe commands with more than 4 KB of data allocate PRP list pages from
+> the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+> to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock.
+> These device-global spinlocks are a significant source of contention
+> when many CPUs are submitting to the same NVMe devices. On a workload
+> issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA nodes
+> to 23 NVMe devices, we observed 2.4% of CPU time spent in
+> _raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
+>
+> Ideally, the dma_pools would be per-hctx to minimize
+> contention. But that could impose considerable resource costs in a
+> system with many NVMe devices and CPUs.
+>
+> As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+> nvme_queue to the set of DMA pools corresponding to its device and its
+> hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+> about half, to 1.2%. Preventing the sharing of PRP list pages across
+> NUMA nodes also makes them cheaper to initialize.
+>
+> Link: https://lore.kernel.org/linux-nvme/CADUfDZqa=OOTtTTznXRDmBQo1WrFcDw1hBA7XwM7hzJ-hpckcA@mail.gmail.com/T/#u
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> ---
+>   drivers/nvme/host/pci.c | 144 +++++++++++++++++++++++-----------------
+>   1 file changed, 84 insertions(+), 60 deletions(-)
+>
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 642890ddada5..7d86d1ec989a 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -16,10 +16,11 @@
+>   #include <linux/kstrtox.h>
+>   #include <linux/memremap.h>
+>   #include <linux/mm.h>
+>   #include <linux/module.h>
+>   #include <linux/mutex.h>
+> +#include <linux/nodemask.h>
+>   #include <linux/once.h>
+>   #include <linux/pci.h>
+>   #include <linux/suspend.h>
+>   #include <linux/t10-pi.h>
+>   #include <linux/types.h>
+> @@ -110,21 +111,24 @@ struct nvme_queue;
+>   
+>   static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown);
+>   static void nvme_delete_io_queues(struct nvme_dev *dev);
+>   static void nvme_update_attrs(struct nvme_dev *dev);
+>   
+> +struct nvme_prp_dma_pools {
+> +	struct dma_pool *large;
+> +	struct dma_pool *small;
+> +};
+> +
+>   /*
+>    * Represents an NVM Express device.  Each nvme_dev is a PCI function.
+>    */
+>   struct nvme_dev {
+>   	struct nvme_queue *queues;
+>   	struct blk_mq_tag_set tagset;
+>   	struct blk_mq_tag_set admin_tagset;
+>   	u32 __iomem *dbs;
+>   	struct device *dev;
+> -	struct dma_pool *prp_page_pool;
+> -	struct dma_pool *prp_small_pool;
+>   	unsigned online_queues;
+>   	unsigned max_qid;
+>   	unsigned io_queues[HCTX_MAX_TYPES];
+>   	unsigned int num_vecs;
+>   	u32 q_depth;
+> @@ -160,10 +164,11 @@ struct nvme_dev {
+>   	struct nvme_host_mem_buf_desc *host_mem_descs;
+>   	void **host_mem_desc_bufs;
+>   	unsigned int nr_allocated_queues;
+>   	unsigned int nr_write_queues;
+>   	unsigned int nr_poll_queues;
+> +	struct nvme_prp_dma_pools prp_pools[];
+>   };
+>   
+>   static int io_queue_depth_set(const char *val, const struct kernel_param *kp)
+>   {
+>   	return param_set_uint_minmax(val, kp, NVME_PCI_MIN_QUEUE_SIZE,
+> @@ -189,10 +194,11 @@ static inline struct nvme_dev *to_nvme_dev(struct nvme_ctrl *ctrl)
+>    * An NVM Express queue.  Each device has at least two (one for admin
+>    * commands and one for I/O commands).
+>    */
+>   struct nvme_queue {
+>   	struct nvme_dev *dev;
+> +	struct nvme_prp_dma_pools prp_pools;
+>   	spinlock_t sq_lock;
+>   	void *sq_cmds;
+>   	 /* only used for poll queues: */
+>   	spinlock_t cq_poll_lock ____cacheline_aligned_in_smp;
+>   	struct nvme_completion *cqes;
+> @@ -395,18 +401,67 @@ static int nvme_pci_npages_prp(void)
+>   	unsigned max_bytes = (NVME_MAX_KB_SZ * 1024) + NVME_CTRL_PAGE_SIZE;
+>   	unsigned nprps = DIV_ROUND_UP(max_bytes, NVME_CTRL_PAGE_SIZE);
+>   	return DIV_ROUND_UP(8 * nprps, NVME_CTRL_PAGE_SIZE - 8);
+>   }
+>   
+> +static struct nvme_prp_dma_pools *
+> +nvme_setup_prp_pools(struct nvme_dev *dev, unsigned numa_node)
+> +{
+> +	struct nvme_prp_dma_pools *prp_pools;
+> +	size_t small_align = 256;
+> +
+> +	prp_pools = &dev->prp_pools[numa_node < nr_node_ids ? numa_node : 0];
+
+I'm assuming you are checking numa_node == NUMA_NO_NODE ?
+Perhaps it is better to check that explicitly?
+
+Otherwise, looks good
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+
