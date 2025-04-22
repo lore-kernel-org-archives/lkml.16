@@ -1,117 +1,250 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7411F09B3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F0827C848
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324343; cv=none; b=gpxoVxy6vMBE286v/3JVoRN0ZMYc/ouhXFb0zg5zCP51AyR9lLdhHbyLQ7y0KkJdo0+aXfHFJoNbXetDLXzahcQC64y4t11Bapf8JObYzlSfXN7yuGRiMQ1qHGGbeDnwJZszRUHAbW06MAJa/vZ2nkoMAtOMhzBY/KbheeqGa/Q=
+	t=1745324385; cv=none; b=dCuryTS8DQ1280XsLoFKL5LwWfxWBOiGYYsa6xV87BkKMuVAIFuJTrh+RHMlg0JQiX5tnVg6qvtKP+A7qX7us6p86PD3LK9bSlGKgHqSnS0L9RSm2LXPMA8uzLMQ0bM2Zn2szhu/F/9hPmmpfFahKx96I7ACahPNJqSrjFppqfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324343; c=relaxed/simple;
-	bh=FEb1vp9zsmFr2JcPIb0VWNcIkxax01MRvDIaLi1NWfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wjr/AKIcbhg0x7J6cn5MzITCLILpkavkF5BIzk9IlaVp1AhaCyCECgYYaJ1UK7xwfsR9XBS8PYz2EVTm9tF22irSZRggZhZthd5lxKMojsYWJyUI2vY9+3JYs5d6DGlrIFr5DzbyBaFHLnCkAcioLhXYT3b3YPzzFbbygexHo5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f6RPD7rZ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f6RPD7rZ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso779380066b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745324339; x=1745929139; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FEb1vp9zsmFr2JcPIb0VWNcIkxax01MRvDIaLi1NWfs=;
-        b=f6RPD7rZsrqWa0d3m5zGKyFjrT/Qv3Hx2VvG/aeUP/JRGP19hY2e53GaEjRSHPfJm5
-         e4E9F4Nj7ZMGqtF0dbA/iR2TVu5SNOL73HBv4yu/2WGc6ein9jUV/R26oKNMfMfKx+5a
-         OtuWdBQo2zysnD6BsfzVxvV2+rhDCdYDnAfolWhVorDt9Nq9BgQspro1Kw0zCTpotzbn
-         5lj05rxGkFcKZ9TO7rzDBgVlwOE0lg4cVyn+TIkF7jYQQMoMAu44iNsj7E9kVR44MvzH
-         LYh3QYCGG+7+A6AXX1/aTXHxVnrlVC5mfQxYQxQWH8vId0BZxkUZ58sbs31xcUA8c9A9
-         ssHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745324339; x=1745929139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FEb1vp9zsmFr2JcPIb0VWNcIkxax01MRvDIaLi1NWfs=;
-        b=ot/d3w7tqHvL4w+8kK+0waIUK32+UEQHEiZm9tcSlPyZ7aVeITNnqemJ7wzYSe0obB
-         x4bTw2X+agpC82Eb/k4T8GQvxL2dVr+OV/3+9AD8qHbPMmhEGgVT2zyEsXbr/g8On+Gy
-         cf99Xbx9O6JcW3HJdGmhVqrskP2f1drxyKEqF7UpCbK8oPagFysHiubw330swm8Aeg4K
-         qL5mYGWj95+kJwHm0IRZf9NipKu+WvH6PCyaPV6SAvEuakKgW050fR/9RSrtEqJXe42R
-         lVeUZMfK+u6czmfQu3j7rua9UIixYp8Ko/0Zr5XS+Y+GhBcjkMEiCLTLYaKhBajXcHMP
-         VrUw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+TkLmqKb2i0BTBsNMWLyiGxwddG3R/ApYQazc1Wi3HGw/ZAYQIjBKHlkOCILzrneERy5jwolvtiqeqmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx10VoHfOw0vS7gV8iHv99/viMwlr5o/zX9bZL3r4z8JM5Sff48
-	fGcalzGSyYDce+hYZ1zzNULCEH2Gr7aW2E9k8FTzzAZXK+74u0TLEX08+MmiSEI=
-X-Gm-Gg: ASbGncsOIzjqoIGnOuzGA/xsMDq9HKNxymJDbNP9ItKGpiyJomUP0faiP00E8fFCuNh
-	su3GTVn1H+uw3wAM4FsAVEeCMzCRMyOkxABSTF/ys3GybEDO9tCuF8sigj6D/XtUsPwE6URLI2K
-	GRNcmztrVGCeA8fPVdjyK+JwB8emENlCVnnA1D2awfQSalFpkrPPeoPyqf5bvcehtoWTyp+m1+h
-	U+iUBgXVGbRHdNIaME53IRgWvOiLRtLmPKZsRZxrtOy2c48pPSXRoH8KgMbgVAV+N5SWBPL1+bG
-	FYvjfSDWVu4K7Lg2E284vaxKlL2QAk5HmvNZSmWIcqA=
-X-Google-Smtp-Source: AGHT+IEvO4I0PXr3VK52/nbiHGb/HzcVEaKVg4zzxE5USQ7ElhY0GjljRx4O+2j+s6yFoHcQWu17EA==
-X-Received: by 2002:a17:907:9496:b0:ac3:446d:142 with SMTP id a640c23a62f3a-acb74ad9369mr1114924566b.2.1745324339474;
-        Tue, 22 Apr 2025 05:18:59 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc6f3sm655834266b.106.2025.04.22.05.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 05:18:58 -0700 (PDT)
-Date: Tue, 22 Apr 2025 14:18:40 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: tj@kernel.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, xnxc22xnxc22@qq.com
-Subject: Re: KASAN: slab-use-after-free Read in cgroup_rstat_flush
-Message-ID: <2eatfmps723vwbvqgqppswny73axxgbmmkaseqjkg2hxojpwvr@3fn36fsfed6x>
-References: <Z_1JBt3RMATxnDgL@slm.duckdns.org>
- <20250419153843.5035-1-superman.xpt@gmail.com>
+	s=arc-20240116; t=1745324385; c=relaxed/simple;
+	bh=UYc1eGDm674rDlkQnD76LWHSlX1JK2USIpGs3cMnGLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ObsQLszVw3aO0qd1Exb4pY5ZB763AJLPKUSIhMOxRXSKmwNZtm5k2IR2agNPW0oKbmhbnY6Q3IVFwsRE0ynXyHv8NYaKUS/c1JM7ufOKUYEhgBrCzEX7eXDJo5sgIrMd3eHyG6CEICXYFQBcxiV87/mvDg06lpvcw31LOOSvLZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D5CDA43B53;
+	Tue, 22 Apr 2025 12:19:37 +0000 (UTC)
+Message-ID: <8c6e4773-796b-47a2-97c4-e4504801ba48@ghiti.fr>
+Date: Tue, 22 Apr 2025 14:19:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hiej3wsm4kzjo3ca"
-Content-Disposition: inline
-In-Reply-To: <20250419153843.5035-1-superman.xpt@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/5] riscv: uaccess: use 'asm_goto_output' for
+ get_user()
+Content-Language: en-US
+To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
+ jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org
+References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
+ <20250410070526.3160847-6-cyrilbur@tenstorrent.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250410070526.3160847-6-cyrilbur@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetvdffkedvjeefkeegfefgteffleeltefggfdvheekfffhfeeghfeffffhtdelvdenucffohhmrghinhepghhnuhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhus
+ egvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepjhhrthgtvdejsehjrhhttgdvjedrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
+
+On 10/04/2025 09:05, Cyril Bur wrote:
+> From: Jisheng Zhang <jszhang@kernel.org>
+>
+> With 'asm goto' we don't need to test the error etc, the exception just
+> jumps to the error handling directly.
+>
+> Unlike put_user(), get_user() must work around GCC bugs [1] when using
+> output clobbers in an asm goto statement.
+>
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
+>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> [Cyril Bur: Rewritten commit message]
+> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+> ---
+>   arch/riscv/include/asm/uaccess.h | 95 +++++++++++++++++++++++---------
+>   1 file changed, 68 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> index 719c9179a751..87d01168f80a 100644
+> --- a/arch/riscv/include/asm/uaccess.h
+> +++ b/arch/riscv/include/asm/uaccess.h
+> @@ -96,27 +96,58 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm, unsigne
+>    * call.
+>    */
+>   
+> -#define __get_user_asm(insn, x, ptr, err)			\
+> +#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+> +#define __get_user_asm(insn, x, ptr, label)			\
+> +	asm_goto_output(					\
+> +		"1:\n"						\
+> +		"	" insn " %0, %1\n"			\
+> +		_ASM_EXTABLE_UACCESS_ERR(1b, %l2, %0)		\
+> +		: "=&r" (x)					\
+> +		: "m" (*(ptr)) : : label)
+> +#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
+> +#define __get_user_asm(insn, x, ptr, label)			\
+>   do {								\
+> -	__typeof__(x) __x;					\
+> +	long __gua_err = 0;					\
+>   	__asm__ __volatile__ (					\
+>   		"1:\n"						\
+>   		"	" insn " %1, %2\n"			\
+>   		"2:\n"						\
+>   		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)	\
+> -		: "+r" (err), "=&r" (__x)			\
+> +		: "+r" (__gua_err), "=&r" (x)			\
+>   		: "m" (*(ptr)));				\
+> -	(x) = __x;						\
+> +	if (__gua_err)						\
+> +		goto label;					\
+>   } while (0)
+> +#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
+>   
+>   #ifdef CONFIG_64BIT
+> -#define __get_user_8(x, ptr, err) \
+> -	__get_user_asm("ld", x, ptr, err)
+> +#define __get_user_8(x, ptr, label) \
+> +	__get_user_asm("ld", x, ptr, label)
+>   #else /* !CONFIG_64BIT */
+> -#define __get_user_8(x, ptr, err)				\
+> +
+> +#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+> +#define __get_user_8(x, ptr, label)				\
+> +	u32 __user *__ptr = (u32 __user *)(ptr);		\
+> +	u32 __lo, __hi;						\
+> +	asm_goto_output(					\
+> +		"1:\n"						\
+> +		"	lw %0, %2\n"				\
+> +		"2:\n"						\
+> +		"	lw %1, %3\n"				\
+> +		_ASM_EXTABLE_UACCESS_ERR(1b, %l4, %0)		\
+> +		_ASM_EXTABLE_UACCESS_ERR(2b, %l4, %0)		\
+> +		: "=&r" (__lo), "=r" (__hi)			\
+> +		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW])	\
+> +		: : label);                                     \
+> +	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
+> +		(((u64)__hi << 32) | __lo)));			\
+> +
+> +#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
+> +#define __get_user_8(x, ptr, label)				\
+>   do {								\
+>   	u32 __user *__ptr = (u32 __user *)(ptr);		\
+>   	u32 __lo, __hi;						\
+> +	long __gu8_err = 0;					\
+>   	__asm__ __volatile__ (					\
+>   		"1:\n"						\
+>   		"	lw %1, %3\n"				\
+> @@ -125,35 +156,51 @@ do {								\
+>   		"3:\n"						\
+>   		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 3b, %0, %1)	\
+>   		_ASM_EXTABLE_UACCESS_ERR_ZERO(2b, 3b, %0, %1)	\
+> -		: "+r" (err), "=&r" (__lo), "=r" (__hi)		\
+> +		: "+r" (__gu8_err), "=&r" (__lo), "=r" (__hi)	\
+>   		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW]));	\
+> -	if (err)						\
+> +	if (__gu8_err) {					\
+>   		__hi = 0;					\
+> -	(x) = (__typeof__(x))((__typeof__((x)-(x)))(		\
+> +		goto label;					\
+> +	}							\
+> +	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
+>   		(((u64)__hi << 32) | __lo)));			\
+>   } while (0)
+> +#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
+> +
+>   #endif /* CONFIG_64BIT */
+>   
+> -#define __get_user_nocheck(x, __gu_ptr, __gu_err)		\
+> +#define __get_user_nocheck(x, __gu_ptr, label)			\
+>   do {								\
+>   	switch (sizeof(*__gu_ptr)) {				\
+>   	case 1:							\
+> -		__get_user_asm("lb", (x), __gu_ptr, __gu_err);	\
+> +		__get_user_asm("lb", (x), __gu_ptr, label);	\
+>   		break;						\
+>   	case 2:							\
+> -		__get_user_asm("lh", (x), __gu_ptr, __gu_err);	\
+> +		__get_user_asm("lh", (x), __gu_ptr, label);	\
+>   		break;						\
+>   	case 4:							\
+> -		__get_user_asm("lw", (x), __gu_ptr, __gu_err);	\
+> +		__get_user_asm("lw", (x), __gu_ptr, label);	\
+>   		break;						\
+>   	case 8:							\
+> -		__get_user_8((x), __gu_ptr, __gu_err);	\
+> +		__get_user_8((x), __gu_ptr, label);		\
+>   		break;						\
+>   	default:						\
+>   		BUILD_BUG();					\
+>   	}							\
+>   } while (0)
+>   
+> +#define __get_user_error(x, ptr, err)					\
+> +do {									\
+> +	__label__ __gu_failed;						\
+> +									\
+> +	__get_user_nocheck(x, ptr, __gu_failed);			\
+> +		err = 0;						\
+> +		break;							\
+> +__gu_failed:								\
+> +		x = 0;							\
+> +		err = -EFAULT;						\
+> +} while (0)
+> +
+>   /**
+>    * __get_user: - Get a simple variable from user space, with less checking.
+>    * @x:   Variable to store result.
+> @@ -178,13 +225,16 @@ do {								\
+>   ({								\
+>   	const __typeof__(*(ptr)) __user *__gu_ptr = untagged_addr(ptr); \
+>   	long __gu_err = 0;					\
+> +	__typeof__(x) __gu_val;					\
+>   								\
+>   	__chk_user_ptr(__gu_ptr);				\
+>   								\
+>   	__enable_user_access();					\
+> -	__get_user_nocheck(x, __gu_ptr, __gu_err);		\
+> +	__get_user_error(__gu_val, __gu_ptr, __gu_err);		\
+>   	__disable_user_access();				\
+>   								\
+> +	(x) = __gu_val;						\
+> +								\
+>   	__gu_err;						\
+>   })
+>   
+> @@ -369,13 +419,7 @@ unsigned long __must_check clear_user(void __user *to, unsigned long n)
+>   }
+>   
+>   #define __get_kernel_nofault(dst, src, type, err_label)			\
+> -do {									\
+> -	long __kr_err = 0;						\
+> -									\
+> -	__get_user_nocheck(*((type *)(dst)), (type *)(src), __kr_err);	\
+> -	if (unlikely(__kr_err))						\
+> -		goto err_label;						\
+> -} while (0)
+> +	__get_user_nocheck(*((type *)(dst)), (type *)(src), err_label)
+>   
+>   #define __put_kernel_nofault(dst, src, type, err_label)			\
+>   	__put_user_nocheck(*((type *)(src)), (type *)(dst), err_label)
+> @@ -401,12 +445,9 @@ static inline void user_access_restore(unsigned long enabled) { }
+>   	__put_user_nocheck(x, (ptr), label)
+>   
+>   #define unsafe_get_user(x, ptr, label)	do {				\
+> -	long __err = 0;							\
+>   	__inttype(*(ptr)) __gu_val;					\
+> -	__get_user_nocheck(__gu_val, (ptr), __err);			\
+> +	__get_user_nocheck(__gu_val, (ptr), label);			\
+>   	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+> -	if (__err)							\
+> -		goto label;						\
+>   } while (0)
+>   
+>   #define unsafe_copy_loop(dst, src, len, type, op, label)		\
 
 
---hiej3wsm4kzjo3ca
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: KASAN: slab-use-after-free Read in cgroup_rstat_flush
-MIME-Version: 1.0
-
-On Sat, Apr 19, 2025 at 08:38:43AM -0700, Penglei Jiang <superman.xpt@gmail=
-=2Ecom> wrote:
-> On Mon, 14 Apr 2025 07:42:30 -1000, tj <tj@kernel.org> wrote:
->=20
-> > Maybe another casualty of the bug fixed by a22b3d54de94 ("cgroup/cpuset=
-: Fix
-> > race between newly created partition and dying one")?
->=20
-> This issue was maybe caused by commit 093c8812de2d3, and was later fixed
-> by commit 7d6c63c319142.
-
-Ah, I overlooked that the original report is not for v6.14 but
-f6e0150b2003 actually (correct?), so this is sensible in that context.
-
-Does it mean you cannot attain the KASAN report post 7d6c63c319142?
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
 Thanks,
-Michal
 
---hiej3wsm4kzjo3ca
-Content-Type: application/pgp-signature; name="signature.asc"
+Alex
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaAeJHgAKCRAt3Wney77B
-SVALAQCxpvY+YXDCaGceP86Ps37TAi1fztt+MjmyKf9IWzf4VQD+LGcIjiluUvvf
-3CDAaVURoOL8D/lTu6M3RIITuf41bQU=
-=V4iz
------END PGP SIGNATURE-----
-
---hiej3wsm4kzjo3ca--
