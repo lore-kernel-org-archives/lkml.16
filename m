@@ -1,146 +1,98 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C271A304A;
-	Tue, 22 Apr 2025 17:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EB4D1A304A;
+	Tue, 22 Apr 2025 17:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343587; cv=none; b=CW9SvBGLz0lAHBoER+Cg5eNbWc/pSsMXY+FjjzBSYRPiuNMZuEfJbmjGKR8OXvnyRj1sFSDgIEHsvMiGQneyma6Nm9qN6lrbUHOqWKYUhMVRZodAcEoaTp16Dbat9CyBw+JUhchzeWXw03rnnqIamidn6ZYvGXuJJE/8WqX04gE=
+	t=1745343596; cv=none; b=uddu8YKuIwuL1sR0SvAq0OIBdeC7TyrkOeHiPD3xwUwWgdDL4UJnGmgv/aW+zMiGbsWt7k7iSUjhCDF3SWaXugnbBKVJpP9kaRjMIcv9ns+lpp7DsF3WnnMCET+f9Z5zAwTuB9exqiQaPFuRSC3GVpuSF4etMEd1Vuw5PtBsTMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343587; c=relaxed/simple;
-	bh=3YZFzxOuKJTu8Q1FGxg6Bi9g2E5JnxHXdcJm8VS/K0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oL3vGEoXnFCQclDiEeZbiGgg01ULgua5kMAQHFOYM98Hr0dAEDDvOO8nCwhIZVhy1EYNoWxggz3Hd0yjRiFBZwk/vJrKma7IgqDvLRIiL9k9j1MKAF2cg2ItqYdExCZLOQNhcUCj3X0Sy74Y8uwI1Li6yzfYFkM+XieT9t8mr/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCdDxSRJ; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCdDxSRJ"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224019ad9edso77710115ad.1;
-        Tue, 22 Apr 2025 10:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745343584; x=1745948384; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=anhUaw1RW0p1uWHnHVQxnFlleHgiv10T6B9HOPoc5+k=;
-        b=RCdDxSRJSr9md71gMVp2kAFb/P4i1ikH0zRR3U7BHn3y9eID2w00J+Ic1jsRFOdseL
-         Fdodo/Jsf+Smgn4kWrBe1FfJSG0ZRydjMO6WrgxnEDrTb/eMdyUZ+1GjCfaDZ/1GBBVS
-         4emCTL8BqaY9heqak2B0teUurP4CGTNnEQ9GuNugK2yQoYNK+Y/LAD+Ri8Un+bpmQq0U
-         x8Ov/gtH9Npw8pOI01cPOh0IA7ik3aOo8nxQM/fwEjB7p9vqoYI29VkmH12C1iHQQWbv
-         hRR5cT+dTi6kAm+P9yNGs92SvlGIBlTznSkE0Wd9L9nIe8gX7tQnouBEeuY7qPmdh1Lz
-         aCjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745343584; x=1745948384;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=anhUaw1RW0p1uWHnHVQxnFlleHgiv10T6B9HOPoc5+k=;
-        b=e64JHEnTo8appmYeza7FIAbVhMNQ22ti+Rapj0Sg3PiRDtkEYr49AkjJR8MrEoCZYj
-         8CWrAx5iKUjP4NO9zKDhGfK5naoJi6YqC+BUfUrCI3hMUjtkYiANVDTOrr8inCw43kNO
-         djAGKcUYExQWzjhPhhuZR4yZxlJneBcuEwgSkTsa57+qJzpN/DI0ionrK5n+okrsYw+g
-         wBgscAA5LeODdwejdHcFb88S5+sPSANHln/pTWNdISbn8sL45mK0bktrV/DBNy7lHHdN
-         wgEMX7Qwa3VfX3ItZ1UQj/yAO8p3pFrg3C6fyoKgb8iZeUFwnFtwlGpOMsu9yK+F/WmL
-         iI/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU6/DP5YLDvEgNUDzVkx/hdgCY6WhbG7pQipGQHvhjhZttR30x6524zP57pGeZjZVZa/UKnhlyiqOkTx7a+@vger.kernel.org, AJvYcCVlhh5ZZNC1X30554KXUGMASnwZHjIGd/LVX/YXwg0MDNgUX5gDRiUlr9i33Pi6hLEY2dk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYUHEDuqdwVNzLtW3wNwRUd5KjYV8TDj8FLnGOizoOxDwxFUj6
-	ggbAy3woE5CghG8yElNeeTG/NUGiJeyf6JVDn7BELi0V0a1Jus4=
-X-Gm-Gg: ASbGncuwkYWaTTwa/wd3QFHXU4DG0P0fA+VgSOlMgx/XbjK09Iqf+0QaJ9NiKOGpb2U
-	Dda/z2mkYGIMiDaPyxC7Mm6rn91ZLiNVkh7TwGSjJ/uO3UNOZJZWWxldzVOT2l5+ZDZ+usme6qM
-	pSnZo66ch1Im7soZqO6Dx/wGK4NDF3krC0rz3tpzEB/sZIJsvFcdeQS4xTTc6m4f5nNUK06m72D
-	qNNssMTm0WN4cHOSJp0gdeorXaDPc44AelbrTZJ5uHddRlwaWNQnW7kaOZ8nZ/OzphoZaiEchY4
-	BDY2wKT5BJ9MugM3JE3VYL5WNe5bClJvW46FDi0N
-X-Google-Smtp-Source: AGHT+IHvr3CHGB3eDx2bTmct/OupIJFB9ySp0TkQI8A4cDHpuOWfg/rg1k0f3jpJcDBOwp937CEu/w==
-X-Received: by 2002:a17:902:d4cd:b0:21f:35fd:1b6c with SMTP id d9443c01a7336-22c5364235fmr207110085ad.45.1745343584621;
-        Tue, 22 Apr 2025 10:39:44 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50bdb34fsm88466805ad.31.2025.04.22.10.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 10:39:44 -0700 (PDT)
-Date: Tue, 22 Apr 2025 10:39:43 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Joshua Washington <joshwash@google.com>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
-	Mina Almasry <almasrymina@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	Praveen Kaligineedi <pkaligineedi@google.com>,
-	Shailend Chand <shailend@google.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Joe Damato <jdamato@fastly.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] xdp: create locked/unlocked instances of xdp
- redirect target setters
-Message-ID: <aAfUX_jDZpe4Vx_M@mini-arch>
-References: <20250422011643.3509287-1-joshwash@google.com>
+	s=arc-20240116; t=1745343596; c=relaxed/simple;
+	bh=8tUVVV01tcIGNH/0m7tdeQsLKQBE6i5+He7iePk0j4w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qhk9mR1sQrY15zkMIg3BrFWNCEVeC3f+sVysywiIFvKsHf4uw3tr8DYk8eVPby/kwAtU+OVofC/PnMnDE+8DdHDi6RIlpuvb7I4LPWBaefR6cL38k62Lq8SPAVOjvI7Eb8DVSqJr+4zplw32V35nuY/k0bMaIHtf5QO4ROIqtdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: mEY1gjZPS62smDfocteWvw==
+X-CSE-MsgGUID: fWVepJYYTVyoxYF5L7mLbw==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 23 Apr 2025 02:39:45 +0900
+Received: from mulinux.home (unknown [10.226.92.16])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4047740437A5;
+	Wed, 23 Apr 2025 02:39:40 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v6 0/6] Add DMAC support to the RZ/V2H(P)
+Date: Tue, 22 Apr 2025 18:39:31 +0100
+Message-Id: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250422011643.3509287-1-joshwash@google.com>
+Content-Transfer-Encoding: 8bit
 
-On 04/21, Joshua Washington wrote:
-> Commit 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with
-> netdev->lock") introduces the netdev lock to xdp_set_features_flag().
-> The change includes a _locked version of the method, as it is possible
-> for a driver to have already acquired the netdev lock before calling
-> this helper. However, the same applies to
-> xdp_features_(set|clear)_redirect_flags(), which ends up calling the
-> unlocked version of xdp_set_features_flags() leading to deadlocks in
-> GVE, which grabs the netdev lock as part of its suspend, reset, and
-> shutdown processes:
-> 
-> [  833.265543] WARNING: possible recursive locking detected
-> [  833.270949] 6.15.0-rc1 #6 Tainted: G            E
-> [  833.276271] --------------------------------------------
-> [  833.281681] systemd-shutdow/1 is trying to acquire lock:
-> [  833.287090] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: xdp_set_features_flag+0x29/0x90
-> [  833.295470]
-> [  833.295470] but task is already holding lock:
-> [  833.301400] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
-> [  833.309508]
-> [  833.309508] other info that might help us debug this:
-> [  833.316130]  Possible unsafe locking scenario:
-> [  833.316130]
-> [  833.322142]        CPU0
-> [  833.324681]        ----
-> [  833.327220]   lock(&dev->lock);
-> [  833.330455]   lock(&dev->lock);
-> [  833.333689]
-> [  833.333689]  *** DEADLOCK ***
-> [  833.333689]
-> [  833.339701]  May be due to missing lock nesting notation
-> [  833.339701]
-> [  833.346582] 5 locks held by systemd-shutdow/1:
-> [  833.351205]  #0: ffffffffa9c89130 (system_transition_mutex){+.+.}-{4:4}, at: __se_sys_reboot+0xe6/0x210
-> [  833.360695]  #1: ffff93b399e5c1b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xb4/0x1f0
-> [  833.369144]  #2: ffff949d19a471b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xc2/0x1f0
-> [  833.377603]  #3: ffffffffa9eca050 (rtnl_mutex){+.+.}-{4:4}, at: gve_shutdown+0x33/0x90 [gve]
-> [  833.386138]  #4: ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
-> 
-> Introduce xdp_features_(set|clear)_redirect_target_locked() versions
-> which assume that the netdev lock has already been acquired before
-> setting the XDP feature flag and update GVE to use the locked version.
-> 
-> Cc: bpf@vger.kernel.org
-> Fixes: 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with netdev->lock")
-> Tested-by: Mina Almasry <almasrymina@google.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-> Signed-off-by: Joshua Washington <joshwash@google.com>
+Dear All,
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+This series adds DMAC support for the Renesas RZ/V2H(P) SoC.
+
+Cheers,
+Fab
+
+v5->v6:
+* Reworked the RZ/V2H specific dt-bindings patch as per Geert's
+  comments.
+* Collected tags throughout.
+v4->v5:
+* Clock patch queued up for v6.15, therefore dropped from this
+  version of the series
+* Adjusted the dmac cell specification according to Geert's
+  comments
+* Removed registration of ACK No. throughout
+* Reworked DMAC driver as per Geert's comments
+v3->v4:
+* Fixed an issue with mid_rid/req_no/ack_no initialization
+v2->v3:
+* Replaced rzv2h_icu_register_dma_req_ack with
+  rzv2h_icu_register_dma_req_ack() in ICU patch changelog
+* Added dummy for rzv2h_icu_register_dma_req_ack()
+* Reworked DMAC driver as per Geert's suggestions.
+v1->v2:
+* Improved macros in ICU driver
+* Shared new macros between ICU driver and DMAC driver
+* Improved dt-bindings
+
+Fabrizio Castro (6):
+  dt-bindings: dma: rz-dmac: Restrict properties for RZ/A1H
+  dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
+  irqchip/renesas-rzv2h: Add rzv2h_icu_register_dma_req()
+  dmaengine: sh: rz-dmac: Allow for multiple DMACs
+  dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
+  arm64: dts: renesas: r9a09g057: Add DMAC nodes
+
+ .../bindings/dma/renesas,rz-dmac.yaml         | 107 ++++++++++--
+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi    | 165 ++++++++++++++++++
+ drivers/dma/sh/rz-dmac.c                      |  84 ++++++++-
+ drivers/irqchip/irq-renesas-rzv2h.c           |  35 ++++
+ include/linux/irqchip/irq-renesas-rzv2h.h     |  23 +++
+ 5 files changed, 388 insertions(+), 26 deletions(-)
+ create mode 100644 include/linux/irqchip/irq-renesas-rzv2h.h
+
+-- 
+2.34.1
+
