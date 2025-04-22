@@ -1,64 +1,48 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7457C28FFDC;
-	Tue, 22 Apr 2025 16:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C7E28CF6A;
+	Tue, 22 Apr 2025 16:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338787; cv=none; b=tifsRdSVbbGFuFHsWUO9j6Ghv8M4rmIXMEueCQYsjgOhMJB8rkhomXM4rwu2VzvZG4vvCVk1PMgdOspCYvZyKS6uDp2zQzoKrk8z5m7ETuNU1nHg010X8eNVTYh1EieLOhq9ZPXViFfjFxe1hUPwybr7p7XlzIe/WWSdLSs51fw=
+	t=1745338813; cv=none; b=YnCa3Sf0Q/03bChXshXADAZER0x0XDtGXN7qV/kzalpdKXWRrfDUnhUUl5/3uhzQMtIn3fhyysAZcRaLbCNdMlnbzrcLPAuh/MchfBnneKKz0FSd/jLSN87rzsPxwPBTfn0RW0vDK/Y7UbHiXid/9zZF3LdmfG72yoyCz5H+MEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338787; c=relaxed/simple;
-	bh=dN7Mt5TorzVoMYGZdVetUiCkAl6mNCbac79NSHf0Em8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dLL7qhtqLs31i263TA1+OVOzPlK/OdKOGwRMuGLokGvKJplCFRa5G4s44/mQ7djwOKrS/qRgDogxKEKg4cSsu6rycAUnfurF85sy9Q8N5cdNWLVtdtl2IMho5w9ExircKpiyFMZxFzP5jDcZhNZlkQIOtsgIND8+87pNxnk1RrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mvMLU+UY; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745338813; c=relaxed/simple;
+	bh=AjR65iK/w82Yd0ONt9sy6wBZZcPLPWcTXlsg5w2lefk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=NlcxOzKXCGVJKfX2wN6uVf3QEJKu1ZIzTmSFz3gpGWYKMjm17HGz6JC7Vl2xeEHrN+KjeY6ut2EmFMUPy0ZN6jzwp3enJo1ZPqpTGiQEsF/nzXTFQMLxK7ocETJHbF3DUVnYawO+/XiEbK8hly7qf2deo0voCJ2LX/OeWA03gdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cSPvgvY3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvMLU+UY"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac25d2b2354so768375966b.1;
-        Tue, 22 Apr 2025 09:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745338784; x=1745943584; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ppOGdF97zWFtuKzRjRN98rOTHK/l63TFgXsLiYX1bs=;
-        b=mvMLU+UYiZwz77gtGCIVP7LXxFUHvcWfCvaQ35Ez3G/mpuVkat/tLGciy6ti8SXyzB
-         1T0Bzk8DNFRa25QqOMzJwLtot5UTLehUE1xknWwd3h+EdxZElqr/xcJuuKkApwQ7EMxG
-         6BsmJ2UV3LOOB/+j/P7jA5/ic1ABnE0XgnXWO/MTYuO7gZGa9f0M18sZ97W5j8HxuZBK
-         1mJu8HTarZkVnlY60n/ZMHYg2jixreGxp+8k3mkDXZaKLkGHqPKtv9IJrNzdKSzT2yUK
-         vfK98PZ5SVPo9E2QnxMCXenE3HK9MrFDdpUCb3Xsx6XeEGhVFVTEJH6KhgG5b3NodphQ
-         kf6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745338784; x=1745943584;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ppOGdF97zWFtuKzRjRN98rOTHK/l63TFgXsLiYX1bs=;
-        b=usrFFRVGCSuXTYXlvz+Ns4fwEBLNbqNjmN83AjSMX9PNayYsQ3RWE2Yb3YGe8YoQrS
-         nTOPCCeSXkljQycxvYrXZS0Wv6Hh+rWwBd3p9R9w6PPJoxh8KqVsLrjpm9DG3AeohyFG
-         kf8dOT391hlOpJiDmyGYJSsqB6s99jFRQRh7UpxDzzXuqj95KGwQJFgu6tBkQGo+Ynlk
-         S21Q/26K+f4nJa5SkFGGa5QudxyQr5by97rGfqGJvUfT2t6bHzG6iX6R9PrRMRBJ8Bjt
-         9g3Eb9czB6WkgZEgUT0bieOoQUW2FF1FzWkwJJlh+gjL+wRe7NWgPDwN5WByHQSginbW
-         udAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU98TOsLKAMrergpod8yuZh33U1ySqNq6XExKaUN3C4SIUWWPPo4Cs6ZdSbCCogiL1sZyd4E8bPvdP26rIU@vger.kernel.org, AJvYcCUe/pCcV5PcSQSMzihSbx/da/z1D43D97mO4yyKqPrUFfDQ0GCixhtPbiELoqpllv1OLjRQyXV1G+iqxOM=@vger.kernel.org, AJvYcCWMzujANzCz5BuLy1ZP91UyPbtMBgs0Ovgo93ulx3T1TcA3l0FfVUqM4Mkg/+5eERXO5B5sVLSfOLCK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK0YRsM1ELn1r2Sj913X7i9hpuGAUL6vpeD5Ovp5uZ0vC2N5Bi
-	Bl69UJ51fUlLIfP0COcyMC6LwCueHQKyKWTvr8s4Hq54Ub9HpNU257zA7eO1
-X-Gm-Gg: ASbGncvgovHEsMQW3IPvu/01gjeLcdJ6OigkcbW9eFgbXviuHnqGD/U1+8oae7vFc67
-	EfROSY3XGgAiFvhVc+HmNhJ34Fh49F24CZLczYfKAVR8BQHBUgDMPGs4OsbfXqq4VphiIWOCHDb
-	Tm1nynD76+rY0CQ2wP4kk1WEeKdYhqIVrEXR5LLjJv/GyJRFWvowBZI0uzw3nulWwMUkt7m0UQS
-	2H6rvaNRD43vOjzUIUXCaZOZP0MMY1EiaC5/N6XwCvP5yP6KkiEqL0asIBdUCSc8W+P/AatvJ1Q
-	Df922Q8jlYFhnwDMmFRDqsbh+QYIg4xw9PQ07fUS+Qs=
-X-Google-Smtp-Source: AGHT+IHfl2XQtnaSx2j3vKdBPOXuWNe5bCLhrTs+iNeH6kfcpMDx7j5jZN9MiDroQP8c35r7+KFODQ==
-X-Received: by 2002:a17:907:96a4:b0:abf:4708:8644 with SMTP id a640c23a62f3a-acb74d85693mr1305866766b.43.1745338783359;
-        Tue, 22 Apr 2025 09:19:43 -0700 (PDT)
-Received: from [192.168.1.101] ([212.106.161.104])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef475c1sm664932066b.126.2025.04.22.09.19.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 09:19:42 -0700 (PDT)
-Message-ID: <03de9272-dbcc-4473-a267-c3a32e3fd844@gmail.com>
-Date: Tue, 22 Apr 2025 18:19:41 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cSPvgvY3"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MCVMAT006547;
+	Tue, 22 Apr 2025 16:20:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AjR65iK/w82Yd0ONt9sy6wBZZcPLPWcTXlsg5w2lefk=; b=cSPvgvY3JBS5hOTL
+	n8U0oYMmblnF6dZ6nRdzhvC8Dq2XdjUPBo5pG9LhrRzwWKqFYiEwrkXK8TabPsL5
+	Mlge37M2ouYiL2ShTmeD3wYQ0vmWOiyf3Cnn6XV8AecbXdip+Lqg2Ui0rkea/fiA
+	wHKIu3IFlPEKKj3OtS24Nx/0YY1WRkwLHvmluGKSoqarhSEdmm1bipA7il/6tbOH
+	FWkv17nu5sfOynqJTj/ln6Q/BL4W3pCQe96myU4YpgVvVKIsmZfqzqAUyp59cy68
+	MfwdO+jQGVXbpMg3+BUhUCp+N0iEdDhfX0NGBiScxleFxSSRWBozrt/i3brRN5qC
+	ZGGFHQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 464426r6fs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 16:20:05 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53MGK4XT027719
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 16:20:04 GMT
+Received: from [10.216.4.61] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
+ 2025 09:19:59 -0700
+Message-ID: <9dba191e-90a9-4a86-bbe1-a31bd17d73af@quicinc.com>
+Date: Tue, 22 Apr 2025 21:49:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,161 +50,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: tegra: Enable PWM fan on the Jetson TX1 Devkit
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
- <d0da9dbd-7ea7-4047-bab3-22f416c45938@gmail.com>
- <CALHNRZ-1wY2D4FOauh7tD+2QKBfhtfdJcvpV_B9Y0tEpE1kTVA@mail.gmail.com>
-Content-Language: en-US, pl-PL
-From: Tomasz Maciej Nowak <tmn505@gmail.com>
-In-Reply-To: <CALHNRZ-1wY2D4FOauh7tD+2QKBfhtfdJcvpV_B9Y0tEpE1kTVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Subject: Re: [PATCH v1 1/8] arm64: dts: qcom: sc7280: Add gpr node
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+References: <20250317054151.6095-1-quic_pkumpatl@quicinc.com>
+ <99Kmw5-BXfX05ZwNUzOT9v3wiUXyJRCIyH_U5oOlBvz6-3i6cCbHAnDSD2431sH3adMtdNWeAwbc-05oPm405Q==@protonmail.internalid>
+ <20250317054151.6095-2-quic_pkumpatl@quicinc.com>
+ <bd73de09-bf5f-43af-bdfa-70b3c9d82698@linaro.org>
+Content-Language: en-US
+In-Reply-To: <bd73de09-bf5f-43af-bdfa-70b3c9d82698@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: GdvcIemxKx6bBALMlDO0jPt2ouIsEzA5
+X-Proofpoint-GUID: GdvcIemxKx6bBALMlDO0jPt2ouIsEzA5
+X-Authority-Analysis: v=2.4 cv=IP8CChvG c=1 sm=1 tr=0 ts=6807c1b5 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=nRkKSLIZbybYfZE8hccA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_08,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=573 spamscore=0
+ mlxscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220122
 
-W dniu 22.04.2025 o 17:58, Aaron Kling pisze:
-> On Tue, Apr 22, 2025 at 9:52 AM Tomasz Maciej Nowak <tmn505@gmail.com> wrote:
->>
->> Hi.
->>
->> W dniu 21.04.2025 o 00:42, Aaron Kling via B4 Relay pisze:
->>> From: Aaron Kling <webgeek1234@gmail.com>
->>>
->>> This is based on 6f78a94, which enabled added the fan and thermal zones
->>> for the Jetson Nano Devkit. The fan and thermal characteristics of the
->>> two devkits are similar, so usng the same configuration.
->>
->> Does this work on Your DevKit? Doesn't on mine, the fan won't budge. Maybe the
->> revision difference? What I'm using ATM is [1] and [2]. Because inverted polarity
->> of PWM, not submitted since that'll need the driver changes [3],[4].
-> 
-> I would have sworn I verified this before sending it in. I've had the
-> patches for some time. But you are correct, this does not work as-is.
-> Maybe I lost something cleaning up for submission or just plain
-> misremembered the verification. I will send a v2 once I've fixed and
-> verified. Apologies to the list for the bad submission.
-> 
-> For inverted polarity, listing them backwards already has precedence
-> in mainline, see the Banana Pi R3 dt. This makes me want to double
-> check the existing Nano pwm-fan entry in mainline, though. Cause I
-> thought all the t210 devices were the same in regards to pwm fan
-> inversion. And it doesn't have reversed entries.
 
-That Banana Pi R3 reverse levels look ugly, but if it's permitted I'm not against.
+On 3/27/2025 4:21 AM, Bryan O'Donoghue wrote:
+> On 17/03/2025 05:41, Prasad Kumpatla wrote:
+>> Add GPR node along with APM(Audio Process Manager) and PRM(Proxy
+>> resource Manager) audio services.
+>
+> Nitpick.
+>
+> You've defined APM and RPM but not GPR.
+>
+> Your triumvirate of TLAs is missing 1/3 !
+>
+> Please add.
 
-I would assume they fixed that in Nano, since PWM controller doesn't implement
-inverted polarity in hardware. Looking at Switch [5] it seems the TX1 DevKit was
-used for developing, since they replicated the issue.
+Ack, Will update in next patchset version.
 
-5. https://github.com/fail0verflow/switch-linux/commit/b23e8b89081415f2a63bc625db041c8092e2a8a2
-  > 
-> Sincerely,
-> Aaron Kling
-> 
->>
->> 1. https://github.com/tmn505/linux/commit/a78c520ec94aeab2c9dc8e1f46597c4174ff957d
->> 2. https://github.com/tmn505/linux/commit/99beee4f0cd5d3a6f30e1829d823c11cb8b54bac
->> 3. https://libera.irclog.whitequark.org/tegra/2024-07-19#36707118;
->> 4. https://libera.irclog.whitequark.org/tegra/2024-10-14#37145211;
->>
->> Regards
->>
->>>
->>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
->>> ---
->>>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 60 ++++++++++++++++++++++++++
->>>  1 file changed, 60 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->>> index 83ed6ac2a8d8f403fb588edce83dc401065c162f..bc02f2eb14bcbd99627c58b398bbf43061c8110b 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->>> @@ -1623,6 +1623,14 @@ key-volume-up {
->>>               };
->>>       };
->>>
->>> +     fan: pwm-fan {
->>> +             compatible = "pwm-fan";
->>> +             pwms = <&pwm 3 45334>;
->>> +
->>> +             cooling-levels = <0 64 128 255>;
->>> +             #cooling-cells = <2>;
->>> +     };
->>> +
->>>       vdd_sys_mux: regulator-vdd-sys-mux {
->>>               compatible = "regulator-fixed";
->>>               regulator-name = "VDD_SYS_MUX";
->>> @@ -1778,4 +1786,56 @@ vdd_usb_vbus_otg: regulator-vdd-usb-vbus-otg {
->>>               enable-active-high;
->>>               vin-supply = <&vdd_5v0_sys>;
->>>       };
->>> +
->>> +     thermal-zones {
->>> +             cpu-thermal {
->>> +                     trips {
->>> +                             cpu_trip_critical: critical {
->>> +                                     temperature = <96500>;
->>> +                                     hysteresis = <0>;
->>> +                                     type = "critical";
->>> +                             };
->>> +
->>> +                             cpu_trip_hot: hot {
->>> +                                     temperature = <70000>;
->>> +                                     hysteresis = <2000>;
->>> +                                     type = "hot";
->>> +                             };
->>> +
->>> +                             cpu_trip_active: active {
->>> +                                     temperature = <50000>;
->>> +                                     hysteresis = <2000>;
->>> +                                     type = "active";
->>> +                             };
->>> +
->>> +                             cpu_trip_passive: passive {
->>> +                                     temperature = <30000>;
->>> +                                     hysteresis = <2000>;
->>> +                                     type = "passive";
->>> +                             };
->>> +                     };
->>> +
->>> +                     cooling-maps {
->>> +                             cpu-critical {
->>> +                                     cooling-device = <&fan 3 3>;
->>> +                                     trip = <&cpu_trip_critical>;
->>> +                             };
->>> +
->>> +                             cpu-hot {
->>> +                                     cooling-device = <&fan 2 2>;
->>> +                                     trip = <&cpu_trip_hot>;
->>> +                             };
->>> +
->>> +                             cpu-active {
->>> +                                     cooling-device = <&fan 1 1>;
->>> +                                     trip = <&cpu_trip_active>;
->>> +                             };
->>> +
->>> +                             cpu-passive {
->>> +                                     cooling-device = <&fan 0 0>;
->>> +                                     trip = <&cpu_trip_passive>;
->>> +                             };
->>> +                     };
->>> +             };
->>> +     };
->>>  };
->>>
->>> ---
->>> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
->>> change-id: 20250420-tx1-therm-9fb3c30fa43f
->>>
->>> Best regards,
->> --
->> TMN
->>
+Thanks,
+Prasad
 
--- 
-TMN
-
+>
+> ---
+> bod
