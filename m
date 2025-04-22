@@ -1,83 +1,70 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072774A3C;
-	Tue, 22 Apr 2025 12:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560BB4A3C;
+	Tue, 22 Apr 2025 12:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324188; cv=none; b=r0O1bz4x2n3cmgpobSXJnfh3OPfs988g2uxYX1u/qrk1OQ/LeARWtLYim6+CP9rXKrb6th744BviEu8OfCGgZ0JxLqGgjlsg62rDlwasRv0kmyMtmvD8e5Sg30MiIvPjgQrIL+IRRykYvrU4MsslhrEvyysxucdi1za6Lkrl/jM=
+	t=1745324271; cv=none; b=C+8FeTyDu49wJn501mpfzDUtr+EOsxlffZqqjozmv3UqMtlP0ZDUrhsC079PMT7Xuscox7rttk4TP2///9QyFG/8i7tb+4RrbpM4h0vHxlInxFTPLwEQQ2iGJfPH6gB7fwvF6uEL/DkHdnY5/SNW7Xt63LPURDQHK2/6WkFW/Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324188; c=relaxed/simple;
-	bh=yU/rworGYWLUH02sbs7bbFRHcYRTKJEvHwwBIU0rynA=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=oznPxkBTVq4xdHCYaDYbh1nYBz12HyMeFfWz9uKlgd7EW6Auc9a0Day2ZiRArrCn6qms4IoIW8kxrdi4Hl9G0X7+oGR7pl5p6VaU8XuHVvI2zKUcvf4cGEn8Iu1C6q5LB8lD/zqCpqmo724TSOhRzxVYjv9O9LS0rSQnwnjpn2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ooVdr9cQ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745324271; c=relaxed/simple;
+	bh=BUfBS1olvnBAC5Sam459VRxNa4KZVnHDVMi1DErPxP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTC2VE/Reoyw5UDo469dLjZvg7c4fhd18cj48Wf/6Q7cfjPwfiKkIc2AmjjsFFrZsZKpsy8X74qhk9k01NLdjggzZBl5XLzpTipo7Xcn6/Dc9ElKWLDTVCoglfnwB444nLabtI6wrArovoQ1sXnQ/sks/sYoaBmh9/B9Dj2IU8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J/RSBhj/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ooVdr9cQ"
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BB84D250;
-	Tue, 22 Apr 2025 14:14:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745324056;
-	bh=yU/rworGYWLUH02sbs7bbFRHcYRTKJEvHwwBIU0rynA=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=ooVdr9cQP0vk2KzZ0fRo5K+mVPfQm9T/E1ChFpwEoK1GHUKh7+HKtq34wAmESjW0z
-	 0a1FTKqbp28A53Afh2uir/xPCOTgq7/X3WTqjTim27Nvk45KNgPYk9RopoZKulHuYa
-	 ny62nEc3XtstlmB8IK2+MyEMcN454ViBAMODZMIk=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J/RSBhj/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85109C4CEE9;
+	Tue, 22 Apr 2025 12:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745324270;
+	bh=BUfBS1olvnBAC5Sam459VRxNa4KZVnHDVMi1DErPxP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J/RSBhj/BUwxZsexAGiw70yijBy0GBgg+1XHXcbljmGFMO7g6kI4OSakpstczr2ID
+	 GRVqm6LvoKP96QL7jIz8bpnLt7DmLKahe2+aE488zOxyrXghU3G4QJP4/1Tn+uqCgV
+	 OabJukt2y3ONWQpTLfv1etzRVrN+HnOsT83DCDIU=
+Date: Tue, 22 Apr 2025 14:17:48 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Karol Wachowski <karol.wachowski@intel.com>
+Subject: Re: [PATCH] accel/ivpu: Add handling of
+ VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW
+Message-ID: <2025042227-crumb-rubble-7854@gregkh>
+References: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8411984d-2475-4d65-a66f-dc7076fa0ca0@ideasonboard.com>
-References: <20240830062639.72947-1-umang.jain@ideasonboard.com> <8411984d-2475-4d65-a66f-dc7076fa0ca0@ideasonboard.com>
-Subject: Re: [PATCH v2 0/2] media: imx335: Support vertical flip
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, open list <linux-kernel@vger.kernel.org>
-To: Umang Jain <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>,
-Date: Tue, 22 Apr 2025 13:16:20 +0100
-Message-ID: <174532418087.2882969.18298736657743021659@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
 
-Hi Sakari,
+On Tue, Apr 08, 2025 at 11:57:11AM +0200, Jacek Lawrynowicz wrote:
+> From: Karol Wachowski <karol.wachowski@intel.com>
+> 
+> commit dad945c27a42dfadddff1049cf5ae417209a8996 upstream.
+> 
+> Trigger recovery of the NPU upon receiving HW context violation from
+> the firmware. The context violation error is a fatal error that prevents
+> any subsequent jobs from being executed. Without this fix it is
+> necessary to reload the driver to restore the NPU operational state.
+> 
+> This is simplified version of upstream commit as the full implementation
+> would require all engine reset/resume logic to be backported.
 
-Quoting Umang Jain (2024-10-02 04:53:40)
-> Hello all,
->=20
-> Can this be collected ?
+We REALLY do not like taking patches that are not upstream.  Why not
+backport all of the needed patches instead, how many would that be?
+Taking one-off patches like this just makes it harder/impossible to
+maintain the code over time as further fixes in this same area will NOT
+apply properly at all.
 
-v2 was already just a resend.
+Think about what you want to be touching 5 years from now, a one-off
+change that doesn't match the rest of the kernel tree, or something that
+is the same?
 
-Would you like this to be resent again? Is there anything blocking
-collecting these patches?
+thanks,
 
---
-Kieran
-
-
->=20
-> Thank you!
->=20
-> On 30/08/24 11:56 am, Umang Jain wrote:
-> > Hi all,
-> >
-> > This work intends to supprt vertical flipping for IMX335 driver.
-> > 1/2 contains a small drive by fix, to rename the mode struct name
-> > 2/2 introduces the support for vertical flip for the mode.
-> >
-> > changes in v2:
-> > - None, just a resend over latest media-stage
-> >
-> > Umang Jain (2):
-> >    media: imx335: Rectify name of mode struct
-> >    media: imx335: Support vertical flip
-> >
-> >   drivers/media/i2c/imx335.c | 77 +++++++++++++++++++++++++++++++++++---
-> >   1 file changed, 72 insertions(+), 5 deletions(-)
-> >
->
+greg k-h
