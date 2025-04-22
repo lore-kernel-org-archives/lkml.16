@@ -1,112 +1,78 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52372A95E;
-	Tue, 22 Apr 2025 00:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743C015E90
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745281699; cv=none; b=GGG+urXNZONpZ1VndzIo2f/sJoTNtOWAJl8Mihs8u8aTviEhyBfFZdqysdyCZXnjR/ApGbFuvbxHsMNFpBCOfUQ1Ic34ZD4B4989UtjxQ41vlV1XklL1LxWKgZrbX2nyaXHD87ZXlgJAWx81h0WLuopwc+gPzfUOGBKmMW4nP8s=
+	t=1745281934; cv=none; b=sCrrGQD8oQlZPgvRbAmZMf9JJx4nwJ85sQ03wYCMNH9SnXsIKLFiP9o2mkjb6z4u3Fm0bgu6KZh4Pn7UYJA98m3WqmDQPLGCcTkejO7/7Chlv2ng8rgGcWhzLG4fXEmmzTCdsiwrcUcpG2uTasCoufoMWPGBqcANbeFq62ykjhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745281699; c=relaxed/simple;
-	bh=5bvGiubNrKBkPHJtUFc60qqhau+/z1pcrchovxujmlI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VmmCIEgfKHlbcDb96pPllE59rr7rPsfdj4CdESKmQAlSCFNToD08fAM7dlInjdHjt/KWvcab1eHznbA9/g1oZ4waon2EIi+R0Ph5gXMgLgdXtoowP5Ut1NkN19c5bzIIdPT/FweJ8L6YO2GRCStHAj5EIimBubvPoKitMS1szME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=pWsTRTri; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745281934; c=relaxed/simple;
+	bh=iCw6Dt3slKkxmbR6KL74m3SMvxMIomnJTYsCAq+YeBg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZT0SyBxMXnX5baKjGN5oLXLK328f2UOdK4Ek0nS9FRDGn8vezr7EVjW2topJgQGc8uUkBlVOJNwr3JR4iE36+nNt8B/7zOtxJXXC422H3FsdbyxYo27I+0FWeIibgnbythGZEleFmVsKpBRDm1riJtIsYE9KLnmhTSk3y+ZsAkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msHJv8oj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="pWsTRTri"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53M0RDHY03289616, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745281633; bh=5bvGiubNrKBkPHJtUFc60qqhau+/z1pcrchovxujmlI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=pWsTRTriz4bE2MlnbkJl9vg/ZSkXu/ZcdmzCfZickUesxEeUJt5zef/cg16fxR516
-	 BSrdmyDlL7hDETVfbW9soOxfVYRZlmhhb+RpQdgvlXGdAOTRik6PuEvgZCMCfFNzhJ
-	 OdXAdz0s22vPTZ0VQ9mnrxp7YR0nT+fMRhvZN4F0seZfmtbXm+pBvceicbq6JKn9MV
-	 2Dx2BDDlZRAcQ/yzOXX+5iqj1pawWMQwmxyW64qt/c1DlhTHcMJ91yzHcAZh5QDYbT
-	 4pAujwFc4zz4xhT3Sbkz2dfKZaJxi9KCMODiyK69GG3j/CMfysXeDVuBh2zJ8f5cis
-	 CZZuitVlb+uPw==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53M0RDHY03289616
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 08:27:13 +0800
-Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 22 Apr 2025 08:27:13 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 22 Apr 2025 08:27:13 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 22 Apr 2025 08:27:13 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Mingcong Bai <jeffbai@aosc.io>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: Kexy Biscuit <kexybiscuit@aosc.io>,
-        Liangliang Zou
-	<rawdiamondmc@outlook.com>,
-        "John W. Linville" <linville@tuxdriver.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-Subject: RE: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
-Thread-Topic: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with
- subsystem ID 11ad:1723
-Thread-Index: AQHbsQLzvT9MJD0RkUSfQMSmmYlilrOu11zA
-Date: Tue, 22 Apr 2025 00:27:13 +0000
-Message-ID: <4a7284bd703743959e709b9465dabf1d@realtek.com>
-References: <20250419081251.285987-1-jeffbai@aosc.io>
-In-Reply-To: <20250419081251.285987-1-jeffbai@aosc.io>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msHJv8oj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FBEC4CEED
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745281933;
+	bh=iCw6Dt3slKkxmbR6KL74m3SMvxMIomnJTYsCAq+YeBg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=msHJv8ojdvklSGKAN+h24sVK1+CKXsEjLe0nT/NMXSqc4ytGw95ks0WccZjBBaj+Q
+	 A+khtAeSICUYY83qGO+smNsp6O/lZZe7lshRfeknFfdiWv0HCCf/ataTspOl6BDJJx
+	 h4ysDE88Pq+QT1Re3rey8ZsGFcTAPAnTg6zomY7mw9sl8MWkr4L2k3kv9hxvBg7OIV
+	 Zl1d8wYhFcYsajdw+dweGScy7WzweCLkMo7a0O6qGXwxLRgKasG7w2faC5kNo41vj7
+	 bRCvLxN/ha3FBcg9hEq3mDZwZZhbaWVGvYD4LtDkj/ZGk/Ry0U/zhoNHGbWrXypfha
+	 BFvo1ypR8sn8g==
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-476a720e806so41466411cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 17:32:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVk6CEKd9xhVBhgqzHzEWHBmpiTYksp2rJTuB0RypUn2KygqQTgYjF1WkhSf7x0FfdDhGPFm4sfHFoV31Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtuIUnb1WDbaNHhOTzip6xVqeOx+oxyG5gp8rzQVzqgx13AVEm
+	NTPx1vy55CUqUgtGDsh5Wuh30AcHyDHq4hxzdZ1EPqHLWpFOgedH2fTjdcFl3Kzf9ACxXcrCSbx
+	OVcf6SMTFwsmLpmq0eaTZzikic0Q=
+X-Google-Smtp-Source: AGHT+IGaL+oVXQ+0FqVmw9bQumaSFF+4x9KoZGhd6tnMCmCAgtcpexZZgw6KB9L19Vn+Vxy54SDS7aSUKuKUDl3eZG8=
+X-Received: by 2002:a05:622a:13d1:b0:476:8288:955f with SMTP id
+ d75a77b69052e-47aec3541fdmr256753991cf.8.1745281933032; Mon, 21 Apr 2025
+ 17:32:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+References: <20250412010940.1686376-1-dylanbhatch@google.com> <20250412010940.1686376-2-dylanbhatch@google.com>
+In-Reply-To: <20250412010940.1686376-2-dylanbhatch@google.com>
+From: Song Liu <song@kernel.org>
+Date: Mon, 21 Apr 2025 17:32:01 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4=dr1Zq5to-JVqHsvaKcg4V2MbJf7i_C=erfAG1XuD6w@mail.gmail.com>
+X-Gm-Features: ATxdqUHiMCb3QBWfl3iq-hKAxCkLsWmEI2O_8MQLyC5Njubt0SDDzPTeNGE0enc
+Message-ID: <CAPhsuW4=dr1Zq5to-JVqHsvaKcg4V2MbJf7i_C=erfAG1XuD6w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] arm64: patching: Rename aarch64_insn_copy to text_poke.
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Mingcong Bai <jeffbai@aosc.io> wrote:
+On Fri, Apr 11, 2025 at 6:10=E2=80=AFPM Dylan Hatch <dylanbhatch@google.com=
+> wrote:
+>
+> Match the name and signature of the equivalent in the x86 text-poke API.
+> Making the src pointer const also allows this function to be
+> interchangeable with memcpy().
+>
+> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
 
-> RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
-> subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
-> errors during and after boot up, causing heavy lags and at times lock-ups=
-:
->=20
->   pcieport 0000:00:1c.5: AER: Correctable error message received from 000=
-0:00:1c.5
->   pcieport 0000:00:1c.5: PCIe Bus Error: severity=3DCorrectable, type=3DP=
-hysical Layer, (Receiver ID)
->   pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=3D0000000=
-1/00002000
->   pcieport 0000:00:1c.5:    [ 0] RxErr
->=20
-> Disable ASPM on this combo as a quirk.
->=20
-> This patch is a revision of a previous patch (linked below) which
-> attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lak=
-e
-> PCIe bridges. I take a more conservative approach as all known reports
-> point to ASUSTek laptops of these two generations with this particular
-> wireless card.
->=20
-> Please note, however, before the rtl8723be finishes probing, the AER
-> errors remained. After the module finishes probing, all AER errors would
-> indeed be eliminated, along with heavy lags, poor network throughput,
-> and/or occasional lock-ups.
-
-Let me clarify here means. Do you mean all work well after applying this
-patch? Or still lag, poor throughput or lock-ups?
-
-If all symptoms disappear, it would be worth to take this (quirk) patch.=20
-
+Acked-by: Song Liu <song@kernel.org>
