@@ -1,119 +1,192 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D021AF4C1;
-	Tue, 22 Apr 2025 17:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4545F1B0F19
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343202; cv=none; b=HGubgrhgUpZjOdPVavlQorpgbc87tJUs9BfDfPR7o8EZ4UWHvHY/KgQknRUJ7gvM+GFcEBs01lkBB3pAmv7El60cFLNOhMjLaK3FAnouGXFmZ7iZG0C/46p1KPmvMok4qs4+isQ9cut8iTcDchkH2VpvdPUQAEfGn9W8MQaIkkg=
+	t=1745343227; cv=none; b=PfkiFcIIUJL+fvBQAA8mir11Im2CS3kkMz7qpnVHe00oCdGWFux8QsGQmRKuxWz95dmbhADxUrsiY5fcuk+19O1OvdEm9KbuAhV1ElBqrGmTPFh6v8cG2I+FUqOqs2PcwLYsjltg9eUiW38xBPFiG2y6oq5fyMK23RrZYD9M8MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343202; c=relaxed/simple;
-	bh=nDE0j/GNP/64EOh5+qPkXXTTWN1VYjvGYw+ExO+NfDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K6/NDNeXErfFFz/F+SQeyMiT5oUnmPJWMa3fTPcL8OHvtuITzpF1On2GmP2y9yuuqNoQNlDnW0JQIJv3eULrULFfUOzfTM9BISVCx136EepENLdRTJ7TDm/zilgYhzABDW/Kf6KJ3QRSQabSFv9xTjWdHi+rS8Y1TR6658Rz4io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KderWG1s; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745343227; c=relaxed/simple;
+	bh=dSAcZbTWg2mRj31XtfxzRba5O5nw0iZOo2bmf99Ch34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VOiQIYBo70b4u69taDpOHTON9GI2Lna3mUgnQJtp0kZeX0wQsOzPhH3O57nRmg1ImYrX70f8kqI6fN/NWa/gYjtoXSRQH5NAahaS1LkHKFI/zbxVUyGwIHv5Lg6ewdhF9AqzBq0StXBfiqnLl3XnzKVNorNGqvKL5OlWtc+azpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=a0HK+wnK; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KderWG1s"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 37A7D40E01ED;
-	Tue, 22 Apr 2025 17:33:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id a0C3SPjvifPl; Tue, 22 Apr 2025 17:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745343193; bh=X8pD1Z4HEovvmoASmtZVAgGiq/rZgl9YBNbnIFcjgCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KderWG1sfdcYIovI6tf/tkMBix2EoXrvOPrS66C+BB6tv104jiJ4EX8U53mT5/n2H
-	 RxkrsD3AQZvTZwjadXR7kc83f/oQdi64KlWBDqF1qqWas+LR3jAcsNa2Ky+SErm9ri
-	 8hg8qSl4G1p/P4iFsUVyTtymdDt1/wkkC9ssm6CuH9STwaOpguUTV1CreWt1bs9Qqf
-	 sa1f6o1KHCzCPh7yUIoyplSRuTb7nWtsBnI1fAd5PfnIO0f07CV6u/OMSSc25ERDt0
-	 OLczxgE4UHhx/R4IYgmcnIgP1YIny2z5DM3i4m6YrSuCv2qz6CrFMAwhq9m0FbdtV1
-	 yD4ho1hMI+rgeCYLyiE0mTJ9WmLlrq1NbYTNicdQa7C3925oRVDllnPpcJlPdBs210
-	 FlWMTTNWMbaaVFFJjxo4oY86JU08jFsEK6HPMWo1OWhT4DUa03G3xZCaem1a0MO+sO
-	 MkuA6nxlLqHsMonmtv4rOvTn4ZvzQc2S/+7xBZaphIi68x9g86F0sUuBR8YYQnIYmP
-	 AvGiAq2yZPUq2pJUShvLpEOUX+dHlDz3oj5jpAefj9xO1c9wmhaRXSvTJ2x+q8fCA5
-	 Gh9iMra3AGExLXn4hmYYlYmvq/yxwJ8YuD8OPo+qHdqspDLp4oiH4Hk7ilkqreBxa4
-	 0MhVqt2eofDLjUkMffGJBgm4=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id C180640E01CF;
-	Tue, 22 Apr 2025 17:32:54 +0000 (UTC)
-Date: Tue, 22 Apr 2025 19:33:55 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Subject: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu:
- Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in
- a virtual machine)
-Message-ID: <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
-References: <20250331143710.1686600-1-sashal@kernel.org>
- <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz>
- <aAKJkrQxp5on46nC@google.com>
- <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
- <aAKaf1liTsIA81r_@google.com>
- <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
- <aAfQbiqp_yIV3OOC@google.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="a0HK+wnK"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85de3e8d0adso80820539f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745343223; x=1745948023; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9ScI1SXFOzSb57R/DfhDhjRTVd9dkpAdipPrsoDQFnA=;
+        b=a0HK+wnKDsWgUSGS5EgSMmrqpWhtllbXKV/XcpXEnajR68ndtFhDYP/whp/4Fz3cz+
+         ZB0mqhA5pMWjDo6L3wzcdIkIGq92zsIx4HpSa4BRGJoN/z9BiMfWc+LgmxQfoWhCy4Al
+         ffsP2l3J1YJNSScXt5C3WdP/z7Az2GYaJd3fzbx5ubxjcalj6KSUmluvpokXzNZKEUTN
+         lLDLI78GXrvZ+1pzLuhlWe5VQJyWjbAhuYwkz5TEEzlcCCkAWGYgplAom0C0Uk1K7CxG
+         DkVPYNk7PDVA/OgMUji+ljSPMBRsAbnBbcZJJXByfGMk/xujsUZbSE9SRqLw/cuhrhEj
+         mxwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745343223; x=1745948023;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ScI1SXFOzSb57R/DfhDhjRTVd9dkpAdipPrsoDQFnA=;
+        b=qiMTvMFjYsmg+4o+m1OIsKvPfneTahXR0swAqmZUJg+ZmO7ZCD4+phT8Ol2hhCQxV9
+         8ZqewBd7JofSWkJKaXRANSEXBRtMth9N9ybskyWzo6vk2URB7rlYhjuNCdq8tZHu0rM7
+         TdxCUZuJGUwcb2hL5njC4x4szKKJn42II3FhN+GD4hfFAfGhehG2m11rWGGeCbRVP1Va
+         snr+Tp5ALF4KC52Oof4aEzotlnpMmAVkhiQvNCbthYj7w5Ia8BapTcQIJckj0snNwZ0u
+         EexpXV8nhhdY1X09XaVQKEGM1UkEe1CZRX9AhjaXiduD4XO4sHovoG1FOuF+5UVBiApg
+         Kb2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVkOaIin1gvATPBiIisj4c3G7Aeqmy5zDHAJYR/mVqmjjpGUmqu18sTY7J656GbAj+peGc7KQQnsk0o6H8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymFriWzef7/c0MpkpcDE3Qr01fPQMS+3HKsFDQIYKkxRz48RZR
+	cjaUILU8yIrn3fQDF3hwM7jNPK/TN6Daph73F3MjbGlNStpATqYFXiNuRTjgRA8=
+X-Gm-Gg: ASbGncs4U5K3isUZSOHLONqH9ETL5hHtPRGsRAy3hL5gcF7cbN8Nt0ttS/WAstZ7JwB
+	o0CWp0i7MIu45iLaT72jA/n6318On44WpDMsVidrIHNsiR9DCo4DjwgTdmUhSafLE0uMcoFMEvN
+	vOB8f38N+EngaFo2v9qe0qjvhlCEkOIpmdiAbuXk8KBFch6n0Z3DCm2aG8zekuznCIAQ23yF5J3
+	rMN0UcMpTvmYEi8rlrz17rOSFrEINZPKO+YP3VUduC2snVIdQ9DQgBa8fQKeFFvpbCeq5/cYXC/
+	6w5CWY8phWXn0xz6PsrU4T35oCN9hBTX/jsAWA==
+X-Google-Smtp-Source: AGHT+IG8uGVTpBjrvsiqLLauHBgN8q79Pyq/8FjC5UurY/AC+NdKVjMzlDN4p2eRnVLt9F3CH6lp+g==
+X-Received: by 2002:a05:6602:3789:b0:85b:3885:159e with SMTP id ca18e2360f4ac-861dbdc71e1mr1900443339f.3.1745343223260;
+        Tue, 22 Apr 2025 10:33:43 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a380664dsm2413104173.47.2025.04.22.10.33.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 10:33:42 -0700 (PDT)
+Message-ID: <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
+Date: Tue, 22 Apr 2025 11:33:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aAfQbiqp_yIV3OOC@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
+ scenarios
+To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20250422162913.1242057-1-qq282012236@gmail.com>
+ <20250422162913.1242057-2-qq282012236@gmail.com>
+ <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
+ <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 10:22:54AM -0700, Sean Christopherson wrote:
-> > Because I really hate wagging the dog and "fixing" the kernel because something
-> > else can't be bothered. I didn't object stronger to that fix because it is
-> > meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
-> > apparently not that awful-ish...
+On 4/22/25 11:04 AM, ??? wrote:
+> On Wed, Apr 23, 2025 at 12:32?AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 4/22/25 10:29 AM, Zhiwei Jiang wrote:
+>>> diff --git a/io_uring/io-wq.h b/io_uring/io-wq.h
+>>> index d4fb2940e435..8567a9c819db 100644
+>>> --- a/io_uring/io-wq.h
+>>> +++ b/io_uring/io-wq.h
+>>> @@ -70,8 +70,10 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
+>>>                                       void *data, bool cancel_all);
+>>>
+>>>  #if defined(CONFIG_IO_WQ)
+>>> -extern void io_wq_worker_sleeping(struct task_struct *);
+>>> -extern void io_wq_worker_running(struct task_struct *);
+>>> +extern void io_wq_worker_sleeping(struct task_struct *tsk);
+>>> +extern void io_wq_worker_running(struct task_struct *tsk);
+>>> +extern void set_userfault_flag_for_ioworker(void);
+>>> +extern void clear_userfault_flag_for_ioworker(void);
+>>>  #else
+>>>  static inline void io_wq_worker_sleeping(struct task_struct *tsk)
+>>>  {
+>>> @@ -79,6 +81,12 @@ static inline void io_wq_worker_sleeping(struct task_struct *tsk)
+>>>  static inline void io_wq_worker_running(struct task_struct *tsk)
+>>>  {
+>>>  }
+>>> +static inline void set_userfault_flag_for_ioworker(void)
+>>> +{
+>>> +}
+>>> +static inline void clear_userfault_flag_for_ioworker(void)
+>>> +{
+>>> +}
+>>>  #endif
+>>>
+>>>  static inline bool io_wq_current_is_worker(void)
+>>
+>> This should go in include/linux/io_uring.h and then userfaultfd would
+>> not have to include io_uring private headers.
+>>
+>> But that's beside the point, like I said we still need to get to the
+>> bottom of what is going on here first, rather than try and paper around
+>> it. So please don't post more versions of this before we have that
+>> understanding.
+>>
+>> See previous emails on 6.8 and other kernel versions.
+>>
+>> --
+>> Jens Axboe
+> The issue did not involve creating new worker processes. Instead, the
+> existing IOU worker kernel threads (about a dozen) associated with the VM
+> process were fully utilizing CPU without writing data, caused by a fault
+> while reading user data pages in the fault_in_iov_iter_readable function
+> when pulling user memory into kernel space.
+
+OK that makes more sense, I can certainly reproduce a loop in this path:
+
+iou-wrk-726     729    36.910071:       9737 cycles:P: 
+        ffff800080456c44 handle_userfault+0x47c
+        ffff800080381fc0 hugetlb_fault+0xb68
+        ffff80008031fee4 handle_mm_fault+0x2fc
+        ffff8000812ada6c do_page_fault+0x1e4
+        ffff8000812ae024 do_translation_fault+0x9c
+        ffff800080049a9c do_mem_abort+0x44
+        ffff80008129bd78 el1_abort+0x38
+        ffff80008129ceb4 el1h_64_sync_handler+0xd4
+        ffff8000800112b4 el1h_64_sync+0x6c
+        ffff80008030984c fault_in_readable+0x74
+        ffff800080476f3c iomap_file_buffered_write+0x14c
+        ffff8000809b1230 blkdev_write_iter+0x1a8
+        ffff800080a1f378 io_write+0x188
+        ffff800080a14f30 io_issue_sqe+0x68
+        ffff800080a155d0 io_wq_submit_work+0xa8
+        ffff800080a32afc io_worker_handle_work+0x1f4
+        ffff800080a332b8 io_wq_worker+0x110
+        ffff80008002dd38 ret_from_fork+0x10
+
+which seems to be expected, we'd continually try and fault in the
+ranges, if the userfaultfd handler isn't filling them.
+
+I guess this is where I'm still confused, because I don't see how this
+is different from if you have a normal write(2) syscall doing the same
+thing - you'd get the same looping.
+
+??
+
+> This issue occurs like during VM snapshot loading (which uses
+> userfaultfd for on-demand memory loading), while the task in the guest is
+> writing data to disk.
 > 
-> FWIW, I think splattering X86_FEATURE_HYPERVISOR everywhere is quite awful.  There
-> are definitely cases where the kernel needs to know if it's running as a guest,
-> because the behavior of "hardware" fundamentally changes in ways that can't be
-> enumerated otherwise.  E.g. that things like the HPET are fully emulated and thus
-> will be prone to significant jitter.
+> Normally, the VM first triggers a user fault to fill the page table.
+> So in the IOU worker thread, the page tables are already filled,
+> fault no chance happens when faulting in memory pages
+> in fault_in_iov_iter_readable.
 > 
-> But when it comes to feature enumeration, IMO sprinkling HYPERVISOR everywhere is
-> unnecessary because it's the hypervisor/VMM's responsibility to present a sane
-> model.  And I also think it's outright dangerous, because everywhere the kernel
-> does X for bare metal and Y for guest results in reduced test coverage.
-> 
-> E.g. things like syzkaller and other bots will largely be testing the HYPERVISOR
-> code, while humans will largely be testing and using the bare metal code.
+> I suspect that during snapshot loading, a memory access in the
+> VM triggers an async page fault handled by the kernel thread,
+> while the IOU worker's async kernel thread is also running.
+> Maybe If the IOU worker's thread is scheduled first.
+> I?m going to bed now.
 
-All valid points...
-
-At least one case justifies the X86_FEATURE_HYPERVISOR check: microcode loading
-and we've chewed that topic back then with Xen ad nauseam.
-
-But I'd love to whack as many of such checks as possible.
-
-$ git grep X86_FEATURE_HYPERVISOR | wc -l
-60
-
-I think I should start whacking at those and CC you if I'm not sure.
-It'll be a long-term, low prio thing but it'll be a good cleanup.
-
-Thx.
+Ah ok, so what you're saying is that because we end up not sleeping
+(because a signal is pending, it seems), then the fault will never get
+filled and hence progress not made? And the signal is pending because
+someone tried to create a net worker, and this work is not getting
+processed.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Jens Axboe
