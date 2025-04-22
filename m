@@ -1,107 +1,97 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0BA2DA8E7;
-	Tue, 22 Apr 2025 20:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D38E244677;
+	Tue, 22 Apr 2025 21:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745355602; cv=none; b=qxfuS4h1fLLu60Mcm1mBrKrJfkNEyLoO/ycsNiT4cJTIJ/LmVJB7E82r6b9/2GoLpCD6EXBEWTip7MBEJzCa13zux6uzrncpO2pklVaG0/HOdBIYp1S9MtWZfaTSiwQVc6a000goOe5OG2GhTjqARC10fTojozdXOMwtDpsBhtY=
+	t=1745355821; cv=none; b=dwDvfNv+eglGj+FKVQsfFtpLBGpVEkInIRaTTsGVCGzOzdh454ehfy1353OIUnfPK4I3bykLxcOmZD7tyGDesQ5uzsdVEiJXqKW9fSP0yo4Jn9dbjPZ/eneVR8kKuz/A3/SlLyznKReVjEHA3N1u9nYmZgjWKsLg8ONPetCUshw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745355602; c=relaxed/simple;
-	bh=uam3gb5IbWJBT9+xbLlD9Gwv4AiCNpeJITFhF6gzeyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWGA7eT1kLxwp4drLZCBGvoGTadFU1g/NIsIc+TyRhfwCd+GrDVycd1Wn6jkdXTYgVcvg3RmQc0TsyZtTRJDM/UrE+caJl9eG2fuTEnEeT1+GBXUsIufIpBUj027mkIVJ5OEuLpo4PHBqOfE/L1FEF2+tRj0XVZxdT8mk60pco8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=oA1tUWXX; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745355821; c=relaxed/simple;
+	bh=aLAZefkdS1Yqhu3HlvfIlraeV4CC8+Sc3yfKnjjUre8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NVTrtSjSgWJsWRfl1QWxzZ8ghbuNvRTYWnJwfNv+nxtrvFoEOZlEB+S+fmCqiTwq6xDWbsDZm5mTvz9oCurANmikt24CrrpDyCrsm/67Wh6tOm8D5PcLAz2/0cSGj1hKfsepaaa1ot4LtkMqrlAT3JL6krcl5hIbgyZxkeklUxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dlb0u8Az; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="oA1tUWXX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=+FsFGnaVIo4H6AjpaQpT7Z75xpMCOgoIe2eqxjLwdv4=; b=oA1tUWXXGbOEP9pn
-	//RCDTN+bxWHlJuNofsOyGKv6c3K3Zh+l0vWVtOHfTjmd6IJe/nIcxWIljoU4/kUdP9auQXUUAFQu
-	7gLfXrvlI4SMFVF9V0WP1Gtp4s5HT97tBk2e39qzrGhWa7sBlEtQsSrQAJm3zHs8U/zpRC+co/Fz5
-	rkUUsllSsvisS5KvXyiAHoRDrYoVza/hQ46nre0oPB+Mgzj73SuZoznGEC+rrdbdF53fl0zm9WLSC
-	nVypVSnejAqdTTwaTkM+RrFx8KhJALRTYntJpeZ+cWruiTjBbJUJResYV5AP46A/E4QxYus12kQ2o
-	gZfxaqLBzccUKGqLCg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u7KiL-00DArE-06;
-	Tue, 22 Apr 2025 20:59:33 +0000
-Date: Tue, 22 Apr 2025 20:59:32 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Simon Horman <horms@kernel.org>
-Cc: dhowells@redhat.com, marc.dionne@auristor.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	corbet@lwn.net, linux-afs@lists.infradead.org,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] rxrpc: Remove deadcode
-Message-ID: <aAgDNMfgd6z3tKEb@gallifrey>
-References: <20250417153232.32139-1-linux@treblig.org>
- <20250422182229.GM2843373@horms.kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dlb0u8Az"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53ML3PC42106738
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 16:03:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745355805;
+	bh=ZKS0/gN4dBFreWXVuJOftMxAtj1ZsfyEUQwImitbTEw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=dlb0u8AzqAanDz5qn48rBJUOsXVrOrgjgQQ94APP52zCIRIP+tfCaAYtbfY08zrEz
+	 y2c4mwoUtstOgGuKDAQI32WetlAiB3gQiUnJx/q0CafAnvbz05KFYRaav5wqSV15wE
+	 mStvJ81TPu36jCYrnKAA8NmFBDj4plo3bZqH90/k=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53ML3PXX075601
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 16:03:25 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 16:03:25 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 16:03:25 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53ML3Ox6073564;
+	Tue, 22 Apr 2025 16:03:24 -0500
+Message-ID: <d271122d-fabb-482f-b5ac-35af56de32f8@ti.com>
+Date: Tue, 22 Apr 2025 16:03:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20250422182229.GM2843373@horms.kernel.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 20:59:06 up 349 days,  8:13,  1 user,  load average: 0.02, 0.01,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Add ti,suppress-v1p8-ena
+To: Ulf Hansson <ulf.hansson@linaro.org>, Nishanth Menon <nm@ti.com>,
+        Adrian
+ Hunter <adrian.hunter@intel.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Hiago De Franco
+	<hialgofranco@gmail.com>
+References: <20250422204413.272679-1-jm@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250422204413.272679-1-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-* Simon Horman (horms@kernel.org) wrote:
-> On Thu, Apr 17, 2025 at 04:32:32PM +0100, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > Remove three functions that are no longer used.
-> > 
-> > rxrpc_get_txbuf() last use was removed by 2020's
-> > commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
-> > local processor work")
-> > 
-> > rxrpc_kernel_get_epoch() last use was removed by 2020's
-> > commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
-> > ambiguous")
-> > 
-> > rxrpc_kernel_set_max_life() last use was removed by 2023's
-> > commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
-> > granted a channel")
-> > 
-> > Both of the rxrpc_kernel_* functions were documented.  Remove that
-> > documentation as well as the code.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Hi all,
+
+On 4/22/25 3:44 PM, Judith Mendez wrote:
+> There are MMC boot failures seen with V1P8_SIGNAL_ENA on Kingston eMMC
+> and Microcenter/Patriot SD cards on Sitara K3 boards due to the HS200
+> initialization sequence involving V1P8_SIGNAL_ENA. Since V1P8_SIGNAL_ENA
+> is optional for eMMC, do not set V1P8_SIGNAL_ENA by default for eMMC.
+> For SD cards we shall parse DT for ti,suppress-v1p8-ena property to
+> determine whether to suppress V1P8_SIGNAL_ENA. Add new ti,suppress-v1p8-ena
+> to am62x, am62ax, and am62px SoC dtsi files since there is no internal LDO
+> tied to sdhci1 interface so V1P8_SIGNAL_ENA only affects timing.
 > 
-> Hi David,
-
-Hi Simon,
-
-> This patch doesn't apply to net-next.  Probably because of commit
-> 23738cc80483 ("rxrpc: Pull out certain app callback funcs into an ops
-> table"). So please rebase and repost.
-
-Yeh no problem.
-
-> But other than that, this patch looks good to me.
-
-> Reviewed-by: Simon Horman <horms@kernel.org>
-
-Thanks!
-
-Dave
+> This fix was previously merged in the kernel, but was reverted due
+> to the "heuristics for enabling the quirk"[0]. This issue is adressed
+> in this patch series by adding optional ti,suppress-v1p8-ena DT property
+> which determines whether to apply the quirk for SD.
 > 
-> ...
-> 
-> -- 
-> pw-bot: changes-requested
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+
+Sorry for the noise. Please ignore this series, will be re-sending with
+fixed cc list.
+
+~ Judith
+
