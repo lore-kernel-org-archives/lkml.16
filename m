@@ -1,162 +1,149 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from send151.i.mail.ru (send151.i.mail.ru [89.221.237.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E950813BAF1;
-	Tue, 22 Apr 2025 20:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6807213BAF1;
+	Tue, 22 Apr 2025 20:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.221.237.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745353230; cv=none; b=hB9Cb43sOMQgEnO39+WybS1lcXlq9v6LzHfk/tRHefmP09scueafTR4HlDKIS8Ef3861JghRyh4bhE0n9aJStvLU6Lbc9hUIOjwIQ7HGCXZw4/+Fab7IhbE0+vOeAdKN1M186qBpmoX5VjR1a3nBReLPytsRgiV+p9saDh7T6ns=
+	t=1745353239; cv=none; b=sxpFHUfwKtDJ5EZFkgoKN7A52pMk1ULN4+GR+x6GVMWQ+5LZSFxKfQOXUj/9o/j61PwmeEdNqvrkZSHH9hpIE7fiZi6AiLyQPs6qInigMhXF8G3PB0HGv+9xhAvLdkHU+PxvAnk0WszoQcs8zsp6hfP72ATdMQLR7TapvvGOJb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745353230; c=relaxed/simple;
-	bh=c670OAK8cZdz7MarUyiLHa1dQF3aIkyIzYyzYke6glc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HX/8fLcRm+1ahbIMMUcCQ56LneJSUgEdoRgLpUBreAmLgonzdiMrOM6ezwt+xyQEDtnR+C7rai4JHYZelXd+EUW65SAvZcdDWGsaZNeO90c0MLC34pahsGZw8rr9C3F7k2kQOGIWlJJ1OB9u3jloXMBBS3JXvpNePV/tKsljsLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vdc4dsr2; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745353239; c=relaxed/simple;
+	bh=GVVzm+k2mSzlT9K+6A5BxlVf/ngo3bHSKMtACBC5c/A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Yrjvc9HWtNFHwoDhieIn0pi0EW0zPFa7MMFCn5ouCmm2QXhPxO1hHIaMROid/m1BOVGuzSLr8rSwBkfvp0u/xYiFQVyn3mVQqLX9y1PS+wiJKWb3wYm883WK034e96MaS8Z092mGrRdG8p5ZTyhtjnijkxeuATncmTGMty3Z6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=F7zT64ah; arc=none smtp.client-ip=89.221.237.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vdc4dsr2"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c14016868so5641883f8f.1;
-        Tue, 22 Apr 2025 13:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745353227; x=1745958027; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rO7p2Xz1WnscXWSSH5QPauUlR12Dd0rgVnR8sWH1ffU=;
-        b=Vdc4dsr2wZF0pou8ZYyLawxMBAyDqoxenZeSEGO2x5tLNIoRVHw3OqzOHGcks1PSc2
-         sl6AS33iHhBqSjNbvf5e5BgpfqCRCpCP3XhKuMGLwRBR4rwuN9gtJDK0SksrXPZquQDs
-         LJJdP9EJWWD2xpUPQeONbU1+iiXUueyv2qTmLBVRYPlW9NIvRvBmAEIYeIwsDGTmir7p
-         yoZgYReA2QOcgA55t1DArCFO8lUVWJpLVrqWupB/TtgYYpB+RAjwoLHLumNuHJdtlGYp
-         G/pWC6lVcI9jL+G36XMBmq0sZSW0+nrBEjmi0rON2fLyvjKGoHgENujNv6x04AZY8g21
-         12qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745353227; x=1745958027;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rO7p2Xz1WnscXWSSH5QPauUlR12Dd0rgVnR8sWH1ffU=;
-        b=DpgHkIqya6m8Fwph7pvlVem4SwcR1bWlXWK3E8HoWeh+a3CrLgQgpCyw+nz5AP283S
-         hbc7J7L8a4TYJ7/HHv9L0NogRhHkbJjOJDzIfsj11odSiHJpmSwl34jYE5cZGhW2iflx
-         e16cXE84la0YDWnnjMsvKTCBActZxqYDskUIKfo0D6fb7Eu7GbSBYAcx71B0lCatOhDA
-         Xmeg42iX+zyT6lxxtYFEn/CbZS0aAl8xw4McOkoU1niYR4dxIYf3YPS1mdVGBz8OiMCg
-         JQQUCYc576aEMYDWmPYsWcb63yJ7Cbwbar6RyUac+LB6zVHntFVXK2JYwnrYiBSjXB7u
-         Ma3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUP/K3hq2o9PQ3xL/su2p4W8M00ua298O7veMRV0H37ZX4ppTlwdk3vuFKsB2nbu2HxUdAi1/F2LPr67x8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAuzu/zrzU6FVMKe82Gl4LhJXzm7Az1TAvQWY5OY19kkDdeaM9
-	DYbIGXYjDIXLwq8stfU/qoooa1WtM6LLXgJcmpZdduu2QOJyPT5B
-X-Gm-Gg: ASbGncvFbxRtsPbrkfI+44fnYkuq8RDP1PSyWEm71LqkdNRNx5Z6F7i+QBuRoEhFK7u
-	SO54isBOxr0w01T8Mzu8w7DwMl5Q0TCsc0QyI3KfsFZmHr04TgPrIrZrLaLs9TRAJ7SzPD9WDNp
-	DkWgETdNWRzNU70y2kPuY2OeiRehU2MFO8wx52FgL2ztD1/MgkPFJoME80tKXPDV8asY/JzMvgM
-	fV2kRMiWMHiKSKKgcgUDcrQQ66/SBm8TVVNHPM3IK4N7BHv6m/gZnHNgcbD82og/GSbICKhvqx+
-	OcZB0voDTq8GUFckmO+INfLZkR2/3HleizlIzL7X8W+GqQ8vTEH0cgA8HbPu6EAjRd3htLsqSIx
-	hx5eIX9mRqVMIp+FWHpdKDXDrgw==
-X-Google-Smtp-Source: AGHT+IGmBmm3C/2jLNoVcpiFNaVQBfRpos13JsgNqrg+d7vr+5IZSCkCD3uFqGqFACXb0v+yv5GQTA==
-X-Received: by 2002:a05:6000:4029:b0:390:ee01:68fa with SMTP id ffacd0b85a97d-39efba454demr12515857f8f.24.1745353226923;
-        Tue, 22 Apr 2025 13:20:26 -0700 (PDT)
-Received: from ?IPV6:2a02:8010:6606:0:c8cf:b8a9:b26:a03f? ([2a02:8010:6606:0:c8cf:b8a9:b26:a03f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bef1sm16008927f8f.49.2025.04.22.13.20.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 13:20:26 -0700 (PDT)
-Message-ID: <1997854d-c501-493b-91d5-c3640137f7a6@gmail.com>
-Date: Tue, 22 Apr 2025 21:20:24 +0100
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="F7zT64ah"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:From:
+	Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=cnTWJxGqTEGpJxvIQTZysU+hFRUTHDoIoxR2rqPhypY=; t=1745353237; x=1745443237; 
+	b=F7zT64ahZaZXUIVq2qdqPEGUOEfa7UVqZbOqIgigtWwv5leo8qzvrRK8pZBX2L28f2BiOymDiDI
+	pilJd/mHTpA5xkZGELGb4aDpblf0lHIQsSJUV1WGHWKiW1jqbZ5nwSq6JWqf10qvi5w2QN6kUVGVL
+	XxZKbP5QtNEGoOdKmZM=;
+Received: by exim-smtp-77d8cdf77b-httmk with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1u7K6b-00000000Adc-1Rch; Tue, 22 Apr 2025 23:20:34 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+Date: Tue, 22 Apr 2025 23:17:05 +0300
+Subject: [PATCH 04/33] dt-bindings: mailbox: qcom: Add the SM7150 APCS
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: rockchip: rk3588-nanopc-t6: fix usb-c port
- functionality
-To: John Clark <inindev@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
- mjuszkiewicz@redhat.com, sebastian.reichel@collabora.com, jonas@kwiboo.se
-References: <20250419023715.16811-1-inindev@gmail.com>
- <bda07179-1ff4-46e4-9dda-ece9c63fd613@gmail.com>
- <20250422000748.59664-1-inindev@gmail.com>
-Content-Language: en-GB
-From: Hugh Cole-Baker <sigmaris@gmail.com>
-In-Reply-To: <20250422000748.59664-1-inindev@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-sm7150-upstream-v1-4-bf9a9081631d@jiaxyga.com>
+References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+In-Reply-To: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Rajendra Nayak <quic_rjendra@quicinc.com>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Amit Kucheria <amitk@kernel.org>, 
+ Thara Gopinath <thara.gopinath@gmail.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, 
+ Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+ Andy Gross <agross@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Georgi Djakov <djakov@kernel.org>, 
+ Loic Poulain <loic.poulain@oss.qualcomm.com>, 
+ Robert Foss <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
+ Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, 
+ Imran Shaik <quic_imrashai@quicinc.com>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+ David Wronek <david@mainlining.org>, Jens Reidel <adrian@mainlining.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-hardening@vger.kernel.org, linux@mainlining.org, 
+ ~postmarketos/upstreaming@lists.sr.ht, Danila Tikhonov <danila@jiaxyga.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745353049; l=1028;
+ i=danila@jiaxyga.com; s=20250422; h=from:subject:message-id;
+ bh=FU6xazSJzLR7XlrqjrPJFBfAVNHXBk5j6Y0b3fDmsVE=;
+ b=pJilMQMQfYaXC/LJGPuOKo4TNAmV+A9pYLwSTeFmkpKYXN/z+cQMOcw4v6abBLcPSBG2n8Pn/
+ l8MdmTI19CxBR1VSszJjca412JEm+HAIeLlLSEOlhVg1lJDsmZ6zheO
+X-Developer-Key: i=danila@jiaxyga.com; a=ed25519;
+ pk=kkU4G47tvpSEUdBQEkXuWvTk/3WmGrVrdzZiKAKjBJo=
+Authentication-Results: exim-smtp-77d8cdf77b-httmk; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD985535D2C87FE65BB5D73E3D950B0DD10C757DC83125CEFA200894C459B0CD1B95D46397279889D57C591814E25D11F9F83AC75C63EA5607EA32EEC6BB77F3E79224C9A2F61B97637
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7FBB2043146276655EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637F28F4AF03526AA8F8638F802B75D45FF914D58D5BE9E6BC1A93B80C6DEB9DEE97C6FB206A91F05B2EE60BA927579A7EA2E070BE324C7D3C4DF48F7C68FCB1443F6B57BC7E64490618DEB871D839B73339E8FC8737B5C2249A50BD5087FBFCDAACC7F00164DA146DAFE8445B8C89999729449624AB7ADAF37F6B57BC7E64490611E7FA7ABCAF51C92176DF2183F8FC7C015BBC38BE64FE4678941B15DA834481F9449624AB7ADAF37BA3038C0950A5D3613377AFFFEAFD269176DF2183F8FC7C02271980798FBD5E27B076A6E789B0E97A8DF7F3B2552694AD5FFEEA1DED7F25D49FD398EE364050F0AC5B80A05675ACD0A5971FBB7557E96B3661434B16C20ACC84D3B47A649675FE827F84554CEF5019E625A9149C048EE9ECD01F8117BC8BEE2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8BB07C9E286C61B7F975ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A5EF2F8D31387AC5785002B1117B3ED696A7D7E4DB8DB39AD38B25839F35DFE037823CB91A9FED034534781492E4B8EEAD85CCBA673D36D1A4C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF414D640B656F64468B08D0901815A2F2A4A7F3851EC60573416DA7A93861D4962DC0EA915DEF7D0C68A835CA8743990B343F9F9FDB0505F70E280A9F3BCC449B7BB8725C88F47357EFF8118B638B08AA02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+ObcCpyrx6l7KImUglyhkEat/+ysWwi0gdhEs0JGjl6ggRWTy1haxBpVdbIX1nthFXMZebaIdHP2ghjoIc/363UZI6Kf1ptIMVS+uSU+BUhgv/Fa6i0waMbc=
+X-Mailru-Sender: 9EB879F2C80682A0D0AE6A344B45275F2269F4137897263197B151A33FA7A9F8A35F51E26E469327E76D87DBBD3F212A2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
-On 22/04/2025 01:07, John Clark wrote:
-> On Tue, Apr 22, 2025 at 00:12:02 +0100, Hugh Cole-Baker <sigmaris@gmail.com> wrote:
->> Hi John,
->>
->> On 19/04/2025 03:37, John Clark wrote:
->>> The USB-C port on the NanoPC-T6 was not providing VBUS (vbus5v0_typec
->>> regulator disabled, gpio-58 out lo) due to misconfiguration. The
->>> original setup with regulator-always-on and regulator-boot-on forced
->>> the port on, masking the issue, but removing these properties revealed
->>> that the fusb302 driver was not enabling the regulator dynamically.
->>>
->>> Signed-off-by: John Clark <inindev@gmail.com>
->>> ---
->>>  .../boot/dts/rockchip/rk3588-nanopc-t6.dtsi   | 21 ++++++++++---------
->>>  1 file changed, 11 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
->>> index cecfb788bf9e..8f2bd30786d9 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi
->>> @@ -174,8 +174,6 @@ vbus5v0_typec: regulator-vbus5v0-typec {
->>>  		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
->>>  		pinctrl-names = "default";
->>>  		pinctrl-0 = <&typec5v_pwren>;
->>> -		regulator-always-on;
->>> -		regulator-boot-on;
->>>  		regulator-name = "vbus5v0_typec";
->>> @@ -465,24 +461,30 @@ regulator-state-mem {
->>>  &i2c6 {
->>> -	clock-frequency = <200000>;
->>>  	status = "okay";
->>>
->>> -	fusb302: typec-portc@22 {
->>> +	usbc0: usb-typec@22 {
->>>  		compatible = "fcs,fusb302";
->>>  		connector {
->>>  			compatible = "usb-c-connector";
->>>  			data-role = "dual";
->>>  			label = "USB-C";
->>> -			power-role = "source";
->>> +			/* fusb302 supports PD Rev 2.0 Ver 1.2 */
->>> +			pd-revision = /bits/ 8 <0x2 0x0 0x1 0x2>;
->>> +			power-role = "dual";
->>> +			op-sink-microwatt = <1000000>;
->>> +			sink-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
->>>  			source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
->>> +			try-power-role = "source";
->>> +			typec-power-opmode = "3.0A";
->>
->> According to the manufacturer wiki [1] "Power Output Capacity" table, the USB-C
->> port maximum output is 5V/2A. So I think "1.5A" would be a better value here.
->>
->> [1]: https://wiki.friendlyelec.com/wiki/index.php/NanoPC-T6
-> 
-> Hi Hugh,
-> 
-> Thank you for your feedback and for referencing the manufacturer’s wiki. To clarify, the line in question:
-> 
-> source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-> 
-> was not modified in my patch. This value, which sets the USB-C port’s source capability to 5V/2A, is unchanged from the existing device tree.
+From: David Wronek <david@mainlining.org>
 
-source-pdos is OK, I was referring to the typec-power-opmode = "3.0A" line just
-above where I commented. As I read it, that'd mean the board would advertise
-via the CC pins that it could source 5V/3A when USB PD is not in use.
-The wiki says it can only source up to 5V/2A.
+Add compatible for the Qualcomm SM7150 APCS block to the Qualcomm APCS
+binding.
 
-br, Hugh
+Signed-off-by: David Wronek <david@mainlining.org>
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> Furthermore, the schematic for the NanoPC-T6 and the vendor’s upstream Linux device tree (e.g., FriendlyARM’s kernel at https://github.com/friendlyarm/kernel-rockchip/blob/nanopi6-v6.1.y/arch/arm64/boot/dts/rockchip/rk3588-nanopi6-rev01.dts#L346) also specify the source capability as 5V/2A. Given this consistency across the schematic and vendor sources, I believe 2A is an appropriate value for this configuration.
-> 
-> Please let me know if you have further concerns or suggestions!
-> 
-> Best regards,
-> John Clark
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+index a58a018f3f7b9f8edd70d7c1bd137844ff2549df..da00858d3a463b43dab3d743de8e3a4b831292a3 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+@@ -49,6 +49,7 @@ properties:
+               - qcom,qcs615-apss-shared
+               - qcom,sc7180-apss-shared
+               - qcom,sc8180x-apss-shared
++              - qcom,sm7150-apss-shared
+               - qcom,sm8150-apss-shared
+           - const: qcom,sdm845-apss-shared
+       - items:
+
+-- 
+2.49.0
 
