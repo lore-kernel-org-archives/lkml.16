@@ -1,129 +1,400 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3133028936D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3BB1096F;
+	Tue, 22 Apr 2025 15:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745334579; cv=none; b=VOvT/KeLv/Bd4d6wOn0nLLPZjQ7qb9tbF4itu6b/obRRd32pVFjsts+KoBnnLdnZaIlOXGIXHaIkoY6WLIleUx3lPLJFtsC6xna9KizXliySlyN1LTlZI6Gw1D+Y6vVV+iZWjEPqm4gvjErRWfQFRhDGs6MnAyhRjOmYFYgeB98=
+	t=1745334688; cv=none; b=eWNZmncvXLXuJ7u8wh/Cb2fR9yUsQ2Mts9+USPbZr3ehodfTo0IMMXx+gQkvuOntQAJo4w9rKuId4ugQ5/Lo6qJwys3AqAs1YuTJ5YJFwZdZivVNzJDMViGpuEjp7H/wAJB1bFyJScTV2axMW7sp9RlvtiquHIaYyi2KpJ4aFds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745334579; c=relaxed/simple;
-	bh=u2pTJx0Ij+runOvsJmA0q5y9Kslc+OcE1AiOs4Q52gA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ULKWlViL6AdEWaerR/Zzsz3O9Q3jOIhQmIAgE3xws8VOJdnNjB8KgZQ7lPdgFV+vhG5bRnjLeOrq/WqpMjECs4a4cyYRSKIkO0Hjz/tfZFlweVed94LmjWuBed9RmV2wclNp5f1c5XTZc5fsfhPSP4uy0FAc+mhu1fbwyE+lI6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fWMaq0EX; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fWMaq0EX"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3085f5855c4so4816310a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745334576; x=1745939376; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rRXArVhux4Bsw70YvwQ+lh5zlccYMqH0xPXNTi9FZ8g=;
-        b=fWMaq0EXfAG3BHE7JfR6uLKMHALt98SwgbMx8tUXl5+HBynuzfsocxXtiedr9Nk8II
-         O2IRJqJLxz5EQQxVg4I5U0EF4K6A9UD9yItB8uDzjYWmdW7pRZE4b+C+d0eDcteWuTpT
-         qRTHOOZw+sLPzWAzpg1e59N/tkjSYjpUO7VmF2LUmUzRaj+9u/iMsNn61MV1QM+0O2cA
-         +jl56znNd4NO2Z/VFmDHQJ6sI8ulRX2TDsOE1N1Jg1pPm2TrAEcdGyJchvr1Z9ky8A4+
-         P6zW13gfUAmeZ/FippT/ZJ8EAHk2QpCPCHOmOphlhJ7oWdZ+X8ixc7Y/q7hVsdfIyuhJ
-         AxbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745334576; x=1745939376;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rRXArVhux4Bsw70YvwQ+lh5zlccYMqH0xPXNTi9FZ8g=;
-        b=hEUMld2e5Kir2l8i+paOyp/vs6z0qEbHHLb8UR/gnc17XsVqfqBCHXOffDdGXrvhOz
-         WNonSAnOc/cqzUsRPVEDz2cSCjaJYbpymY96BA5tsK3Hw02QaZ12sXlLTzcExY9sqKQ6
-         a1b96qraPp46Q+SLT3oqduAoGQKPMTf9cX66GQHaGHklns2l7FkdxNUvodXspjrfQu+8
-         OdXX/tMif5c9uPIhhpZb5SZPZzwoHr+6A7LMBDC9umQMmHMV8W5WHMK5CKY0jrcNaKJ9
-         JyxsebI9xE+s2fK2mXQGVMqpy2ke5rP2FVIzEg4muBf90YXI+ASMIJT+nN7hQqgRHowa
-         xAYw==
-X-Gm-Message-State: AOJu0YyUa341ctanW/RJszQEUyOsHKImkmAhTfbYiQXts0PxcFEcgmX6
-	g8S6DB+1S/XgHUKt8Kvk02eR4mvX8EpGL2HxXpqs5CCW4mMayX44bqn2fi7UVTPsdfW/V45nAgK
-	rgA==
-X-Google-Smtp-Source: AGHT+IHGR6YFubcBkAQrqhkjsdDwq21aLEhFyH8uteoXFGo84CYqI3Y4PMerNLsX7Qx/XFlRMipUTrfnrN0=
-X-Received: from pjbrr7.prod.google.com ([2002:a17:90b:2b47:b0:2fc:2c9c:880])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ecf:b0:2ff:692b:b15
- with SMTP id 98e67ed59e1d1-3087bbca3b0mr26039866a91.33.1745334576501; Tue, 22
- Apr 2025 08:09:36 -0700 (PDT)
-Date: Tue, 22 Apr 2025 08:09:34 -0700
-In-Reply-To: <20250422082216.1954310-11-xin@zytor.com>
+	s=arc-20240116; t=1745334688; c=relaxed/simple;
+	bh=xNXDzUTuTrUu2Dls8bhjT9zRT+jFoMj7N/0BCd4+A0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYk9Za/LSOw0Qw3cn//XtYC+/OW48awMbCRHJsNWzHvuS7JK3BzSrFvv0OPKA+MvHuzlkkhpe/DLRLt1smdiiOtCrxNX4JkIuIY+XU7zHdACtG8X9XjCtyvGSDkA/TUYbT9vInRFClwh3q7C3oLbCHHJLw0S14JA6Y8s+718LIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: aAtQHXbnSpK8/3wPQ9MHbQ==
+X-CSE-MsgGUID: l1zEvIScSAegCZY3NC68mg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46814642"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="46814642"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:11:27 -0700
+X-CSE-ConnectionGUID: uv3Az2R8TJezN6uZhN//HQ==
+X-CSE-MsgGUID: tcI+jmuUSIG13bJr+yuHMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="163001766"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:11:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u7FHM-0000000ElFV-2XCL;
+	Tue, 22 Apr 2025 18:11:20 +0300
+Date: Tue, 22 Apr 2025 18:11:20 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+Message-ID: <aAexmOU1e-7hXq6Y@smile.fi.intel.com>
+References: <20250421-togreg-v5-0-94341574240f@analog.com>
+ <20250421-togreg-v5-3-94341574240f@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
-Message-ID: <aAexLqjhKncFyw2V@google.com>
-Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
- native_rdmsrq() uses
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421-togreg-v5-3-94341574240f@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
-> __rdmsr() is the lowest level primitive MSR read API, and its direct
-> use is NOT preferred.
-
-Doesn't mean it's wrong.
-
-> Use its wrapper function native_rdmsrq() instead.
+On Mon, Apr 21, 2025 at 12:24:54PM +0800, Kim Seer Paller wrote:
+> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls, providing full-scale output spans of 2.5V or
+> 5V for reference voltages of 2.5V. These devices operate from a single
+> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> variants include a 2.5V, 5ppm/°C internal reference, which is disabled
+> by default.
+> 
+> Support for monitoring internal die temperature, output voltages, and
+> current of a selected channel via the MUXOUT pin using an external ADC
+> is currently not implemented.
 
 ...
 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 1547bfacd40f..e73c1d5ba6c4 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -380,7 +380,7 @@ static __always_inline void vmx_disable_fb_clear(struct vcpu_vmx *vmx)
->  	if (!vmx->disable_fb_clear)
->  		return;
->  
-> -	msr = __rdmsr(MSR_IA32_MCU_OPT_CTRL);
-> +	msr = native_rdmsrq(MSR_IA32_MCU_OPT_CTRL);
->  	msr |= FB_CLEAR_DIS;
->  	native_wrmsrq(MSR_IA32_MCU_OPT_CTRL, msr);
->  	/* Cache the MSR value to avoid reading it later */
-> @@ -7307,7 +7307,7 @@ void noinstr vmx_spec_ctrl_restore_host(struct vcpu_vmx *vmx,
->  		return;
->  
->  	if (flags & VMX_RUN_SAVE_SPEC_CTRL)
-> -		vmx->spec_ctrl = __rdmsr(MSR_IA32_SPEC_CTRL);
-> +		vmx->spec_ctrl = native_rdmsrq(MSR_IA32_SPEC_CTRL);
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/delay.h>
 
-And what guarantees that native_rdmsrq() won't have tracing?  Ugh, a later patch
-renames native_rdmsrq() => native_rdmsrq_no_trace().
+> +#include <linux/device.h>
 
-I really don't like this.  It makes simple and obvious code:
+I don't see how you use this. But
 
-	vmx->spec_ctrl = __rdmsr(MSR_IA32_SPEC_CTRL);
++ dev_printk.h
 
-so much harder to read:
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/mutex.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/spi/spi.h>
 
-	vmx->spec_ctrl = native_rdmsrq_no_trace(MSR_IA32_SPEC_CTRL);
+...
 
-and does so in a way that is difficult to review, e.g. I have to peek ahead to
-understand that this is even ok.
+> +#define AD3530R_SW_RESET			(BIT(7) | BIT(0))
 
-I strongly prefer that we find a way to not require such verbose APIs, especially
-if KVM ends up using native variants throughout.  Xen PV is supposed to be the
-odd one out, yet native code is what suffers.  Blech.
+> +#define AD3530R_MAX_CHANNELS			8
+> +#define AD3531R_MAX_CHANNELS			4
+
+Sounds to me that these two shouldn't be grouped with the rest here. Perhaps
+move them out to after the LDAC_PULSE?
+
+> +#define AD3530R_INTERNAL_VREF_MV		2500
+
+_mV (yes, with Volts and Amperes we use proper spelling).
+
+> +#define AD3530R_LDAC_PULSE_US			100
+
+...
+
+> +	int (*input_ch_reg)(unsigned int c);
+
+c? channel?
+
+...
+
+> +	int vref_mv;
+
+_mV
+
+...
+
+> +static int ad3530r_input_ch_reg(unsigned int c)
+> +{
+> +	return 2 * c + AD3530R_INPUT_CH;
+> +}
+> +
+> +static int ad3531r_input_ch_reg(unsigned int c)
+> +{
+> +	return 2 * c + AD3531R_INPUT_CH;
+> +}
+
+c --> channel
+
+...
+
+> +static const char * const ad3530r_powerdown_modes[] = {
+> +	"1kohm_to_gnd",
+
+kOhm
+
+> +	"7.7kohm_to_gnd",
+
+Ditto.
+
+> +	"32kohm_to_gnd",
+
+Ditto.
+
+> +};
+
+...
+
+> +static const struct iio_enum ad3530r_powerdown_mode_enum = {
+> +	.items = ad3530r_powerdown_modes,
+> +	.num_items = ARRAY_SIZE(ad3530r_powerdown_modes),
+
++ array_size.h
+
+> +	.get = ad3530r_get_powerdown_mode,
+> +	.set = ad3530r_set_powerdown_mode,
+> +};
+
+...
+
+> +static ssize_t ad3530r_get_dac_powerdown(struct iio_dev *indio_dev,
+> +					 uintptr_t private,
+> +					 const struct iio_chan_spec *chan,
+> +					 char *buf)
+> +{
+> +	struct ad3530r_state *st = iio_priv(indio_dev);
+> +
+> +	guard(mutex)(&st->lock);
+> +	return sysfs_emit(buf, "%d\n", st->chan[chan->channel].powerdown);
+
++ sysfs.h
+
+> +}
+
+...
+
+> +static ssize_t ad3530r_set_dac_powerdown(struct iio_dev *indio_dev,
+> +					 uintptr_t private,
+> +					 const struct iio_chan_spec *chan,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct ad3530r_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +	unsigned int mask, val, reg;
+> +	bool powerdown;
+> +
+> +	ret = kstrtobool(buf, &powerdown);
+
++ kstrtox.h
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +	mask = GENMASK(chan->address + 1, chan->address);
+> +	reg = chan->channel < AD3531R_MAX_CHANNELS ?
+> +	      AD3530R_OUTPUT_OPERATING_MODE_0 :
+> +	      AD3530R_OUTPUT_OPERATING_MODE_1;
+> +	val = (powerdown ? st->chan[chan->channel].powerdown_mode : 0)
+> +	       << chan->address;
+
+Please, move the operator to the previous line, Or even
+
+	... pdmode;
+
+	pdmode = powerdown ? st->chan[chan->channel].powerdown_mode : 0;
+	val = pdmode << ...;
+
+> +	ret = regmap_update_bits(st->regmap, reg, mask, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->chan[chan->channel].powerdown = powerdown;
+> +
+> +	return len;
+> +}
+
+...
+
+> +	struct ad3530r_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (val < 0 || val > U16_MAX)
+
+U16_MAX is an abstract type with this limit, do you have any predefined HW
+limit instead? Probably better to use that one as defined via BIT() / GENMASK().
+
+> +			return -EINVAL;
+> +
+> +		return ad3530r_dac_write(st, chan->channel, val);
+> +	default:
+> +		return -EINVAL;
+> +	}
+
+...
+
+> +static const struct iio_chan_spec_ext_info ad3530r_ext_info[] = {
+> +	{
+> +		.name = "powerdown",
+> +		.shared = IIO_SEPARATE,
+> +		.read = ad3530r_get_dac_powerdown,
+> +		.write = ad3530r_set_dac_powerdown,
+> +	},
+> +	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &ad3530r_powerdown_mode_enum),
+> +	IIO_ENUM_AVAILABLE("powerdown_mode", IIO_SHARED_BY_TYPE,
+> +			   &ad3530r_powerdown_mode_enum),
+> +	{ }
+> +};
+> +
+> +#define AD3530R_CHAN(_chan, _pos) {					\
+
+Slightly better to have the curly braces on the same column as it's easier to
+read.
+
+#define AD3530R_CHAN(_chan, _pos)				\
+{								\
+
+(and make it one TAB less for the backslash).
+
+> +	.type = IIO_VOLTAGE,						\
+> +	.indexed = 1,							\
+> +	.channel = _chan,						\
+> +	.address = _pos,						\
+> +	.output = 1,							\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |			\
+> +			      BIT(IIO_CHAN_INFO_SCALE),			\
+> +	.ext_info = ad3530r_ext_info,					\
+> +}
+
+...
+
+> +static int ad3530r_setup(struct ad3530r_state *st, int vref,
+> +			 bool has_external_vref)
+> +{
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	struct gpio_desc *reset_gpio;
+> +	int i, ret;
+> +	u8 range_multiplier;
+
++ types.h (and especially for boolean type along with true/false definitions.
+
+> +
+> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(reset_gpio),
+> +				     "Failed to get reset GPIO\n");
+
++ err.h
+
+> +	if (reset_gpio) {
+> +		/* Perform hardware reset */
+> +		fsleep(1000);
+
+(1 * USEC_PER_MSEC) ?
+
+> +		gpiod_set_value_cansleep(reset_gpio, 0);
+> +	} else {
+> +		/* Perform software reset */
+> +		ret = regmap_update_bits(st->regmap, AD3530R_INTERFACE_CONFIG_A,
+> +					 AD3530R_SW_RESET, AD3530R_SW_RESET);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+> +	fsleep(10000);
+
+10 * USEC_PER_MSEC
+
+With these constants it's less error prone (when 3 or more zeroes) and easier
+to get the units without looking into fsleep() implementation / documentation.
+
+> +	range_multiplier = 1;
+> +	if (device_property_read_bool(dev, "adi,range-double")) {
+> +		ret = regmap_set_bits(st->regmap, AD3530R_OUTPUT_CONTROL_0,
+> +				      AD3530R_OUTPUT_CONTROL_RANGE);
+> +		if (ret)
+> +			return ret;
+> +
+> +		range_multiplier = 2;
+> +	}
+> +
+> +	if (!has_external_vref && st->chip_info->internal_ref_support) {
+> +		ret = regmap_set_bits(st->regmap, AD3530R_REFERENCE_CONTROL_0,
+> +				      AD3530R_REFERENCE_CONTROL_SEL);
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->vref_mv = range_multiplier * AD3530R_INTERNAL_VREF_MV;
+> +	}
+> +
+> +	if (has_external_vref)
+> +		st->vref_mv = range_multiplier * vref / 1000;
+
+MILLI?
+
+
+> +	/* Set operating mode to normal operation. */
+> +	ret = regmap_write(st->regmap, AD3530R_OUTPUT_OPERATING_MODE_0,
+> +			   AD3530R_NORMAL_OPERATION);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (st->chip_info->num_channels > AD3531R_MAX_CHANNELS) {
+> +		ret = regmap_write(st->regmap, AD3530R_OUTPUT_OPERATING_MODE_1,
+> +				   AD3530R_NORMAL_OPERATION);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	for (i = 0; i < st->chip_info->num_channels; i++)
+> +		st->chan[i].powerdown_mode = AD3530R_POWERDOWN_32K;
+> +
+> +	st->ldac_gpio = devm_gpiod_get_optional(dev, "ldac", GPIOD_OUT_LOW);
+> +	if (IS_ERR(st->ldac_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
+> +				     "Failed to get ldac GPIO\n");
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	vref = devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (vref < 0 && vref != -ENODEV)
+> +		return vref;
+> +
+> +	has_external_vref = vref != -ENODEV;
+
+Wouldn't be better just make this 0 when it's == -ENODEV and check just the
+value without having this additional boolean variable (note, I haven't checked
+the meaning of Vref == 0 in case it's possible in real life and hardware
+behaves adequately)?
+
+> +	if (!st->chip_info->internal_ref_support && !has_external_vref)
+> +		return -ENODEV;
+
+> +	ret = ad3530r_setup(st, vref, has_external_vref);
+> +	if (ret)
+> +		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
