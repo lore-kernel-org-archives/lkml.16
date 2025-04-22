@@ -1,67 +1,80 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381E7230D08
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3E815B115
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305669; cv=none; b=ZfrkxrefKLqkFJoT9nM7WwQ0BKydbLSshzfuyeaRWnNWdpCH+GS5mpYFGYyoSQMNsaK918y1zNzb8S8Ow6aLEvgMI9H8LsPJplaLVp9wugWcvISMyGgukBF582AIuGnsK82ua7xKWs3dcmHqWUMt3JbZIaNBbSzQNqv4J2kwaZI=
+	t=1745305858; cv=none; b=Ok824a7omEROok5Q5VT8wIIm2gcso2ZihxLl1YOo5hyZ0ONATmpLiUi7HOpxI+RTgvA/XPfACsB5bCM5cC6D57lm/zJ8QMqkYrQPB9fNweEGTWKvdf/XejJg9vWXepH+9jhf2+24rqOFvSVkLrYs9Lb3j//CUAZo3MseVOwpW4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305669; c=relaxed/simple;
-	bh=HjhLzE9Y/Q52iV3cqMbiQuwB2APqQ9fAC4HSJMOmcWI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DkeqtKRz7sa4Fj2HCgVxA3PxYSoJoAYArY/o4AQKtjACz9xHKl2vBHDYx6RhgbhSvyI7KZIt/i+G+TxmEPqWOKkh6pBHo4Y5HikmXE8CZlQClxiE86fOQO7js4cC8JGj7yaiV4/OWD41s7IbhuuuAdATnHKo8cEd0LlQaeXAlWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tLCQbjNY; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745305858; c=relaxed/simple;
+	bh=wE0p8qL7EoSQb+6BZCxumSQY/14KqFPPb98hPDDwGA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bkb0Do1+pxhUSarLAS4isUItVNbYtfVtivZVchUSSBiFHH8ABkA9IJ8hq+lcL3K2Hnbi7CwfqhajhuZ/beAbqiPP1bPQ9NHxeJazV/xRZYwNG8uPxLm+hsXLwsGfzj4Ka3QOE2tqUoE/c6Rxbvt/zJa53OvWitqTYf/GJFdGkHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AIkR8bCZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcRyKQdJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AIkR8bCZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcRyKQdJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLCQbjNY"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so44066145e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745305665; x=1745910465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i6a3BQRbJn5uKf8xLcqr/agF+8C8ycJ/35awjwM1MZ8=;
-        b=tLCQbjNYU4vONWrULizgRgx4kXgG4Q+cT54FK6XVHT4ILwOMdxMbgeCeICWXS/hkDu
-         xktrtHLHx1QZG8oyFVwMHGoiH9h5tedIIpxP8Alg+hUBAw79IkCD5KgwMlaDCytkcPHN
-         hsAKlIu8PDT17/fCtO5AkQQ4XEx9RSqEuZiWkXHBpHXoFCCyQFlE9DtIpYCP+MwKL4JY
-         tNPtj1BP04TEtyentwGET2ojANmWkfZB9ts+IRH/Xv+j4hXgIq2ccjMSXicFj7WonRF4
-         A2EEJjtjjlmySMFz9iDN0yDQKSOUKgMuT/f7F4IECcZT3n8dRdnO6d0VYE4ZU86dJHBu
-         fVww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745305665; x=1745910465;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i6a3BQRbJn5uKf8xLcqr/agF+8C8ycJ/35awjwM1MZ8=;
-        b=Gp1j9HopKuWhFWtpK909YFrwEqq4m/WXM8rC1mclSwBC5ipt1BRdCFi3s9sNRqRkV9
-         JZDLfUBtzrjM26kjf/vLe5epJomX+MDwiX36X5u4wpdY5iwynmAdjmM8pODVhDhLbn29
-         +ED9LtHju2RAPyhuc6dpV+wf/40TY1bzpEzTz8Sm/xGK4xYIWvX5fmHkN7L3BQd/n8/C
-         7Akck9Df97uwoOp6XhsBCKVLz1AImKMFYhM73sYlHWNTAEc6e/iT6XXKsOP1rVLfectt
-         V5OsvodlCQWnx5bWSGi2//6Yo6QiNLRKBiK2nG1TcaUpd1xHMs/1MKF5xQwOJ2NW0JBq
-         WDSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6IGLWt07Xs69XPlqsYhJgZ3ZWO9bslOfDNRRMxIkRPmFfm6mZyvt1rqiPVFz2CDzKnZ+y+XQCCY19kEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAzL5mHh54CrBptw/ql/sIJTuJgatUsJWdEf8Q7IAk67KUEEUa
-	9clmyyZ6mkkLLyzEJ9wFsJsf1pQMf0WHT381gNGWV6MG4pViWZl0wDkXYjAYASI=
-X-Gm-Gg: ASbGncslreAfJ20G2kUZchmcWOCVgoHZTtr2YTJ4TaQR4oyG3LmjgAwajIJVxBIxlXW
-	vglpW7TZOLXoDWA/TdB+8UaImJ+kbhu1vWa6xIcWaGShWufFsWvhjiqJlj7ZUppQ68QMcGyO78J
-	6V8UJxIBzfDS6mfPtzgVkehC+goy0Xze83S4eOuJWnxTcBSpjZ3NsfwK8VKLJ+TPn3hrEaARnib
-	Dm2jWdGCxsZxJlkRQ6wu7fNVIa9xOWmNjJyTlZ3F6sffZTLLqbpBuHrAdEM/XsO0nRs9N/HtPCC
-	A8NFK/68N6Ub9Tdnz7XSFe5BuhLU42ifDaXYGUFookOGXBXBMmCCsN83+AgjVpzh0TMSFjuUyvw
-	sMx5tcFhoFkblQPTBow==
-X-Google-Smtp-Source: AGHT+IHoQqch/rixFWxT15tJy0SJvow1uQ/1aou3lnDMI0B3Bb0LfLM25ogmt9gQblE5yATucRyg5Q==
-X-Received: by 2002:a05:600c:1e0c:b0:43d:fa59:bcee with SMTP id 5b1f17b1804b1-4406ac1feebmr119671555e9.33.1745305665458;
-        Tue, 22 Apr 2025 00:07:45 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9e38sm165457015e9.2.2025.04.22.00.07.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:07:45 -0700 (PDT)
-Message-ID: <571b6484-d3ac-4aca-a055-c143f7e4a5dd@linaro.org>
-Date: Tue, 22 Apr 2025 09:07:41 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AIkR8bCZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcRyKQdJ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AIkR8bCZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcRyKQdJ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 88EA521180;
+	Tue, 22 Apr 2025 07:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745305854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
+	b=AIkR8bCZSArLLT7smXMgXeDqrq3vOuabF6Zh/oTjekbgCz51z5FgZLtXdMvfV8oRfeobke
+	vOefLn2+GcWOuq4ta+TenlQC6WpM1VPEcseHyRoPW2eF/Pv87LdZPanLsULFBQ1CEsL8SE
+	ITQaNeeyF41Nhb+ZiApG5B1FSbFfXos=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745305854;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
+	b=xcRyKQdJAeu+ZlD+07ouLrNQlIQ8X4OyuLh6/RodyWzd4Z7+bbRD2SjMzP961Y0k638Qmb
+	OBAABe87AoEOBTDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745305854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
+	b=AIkR8bCZSArLLT7smXMgXeDqrq3vOuabF6Zh/oTjekbgCz51z5FgZLtXdMvfV8oRfeobke
+	vOefLn2+GcWOuq4ta+TenlQC6WpM1VPEcseHyRoPW2eF/Pv87LdZPanLsULFBQ1CEsL8SE
+	ITQaNeeyF41Nhb+ZiApG5B1FSbFfXos=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745305854;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
+	b=xcRyKQdJAeu+ZlD+07ouLrNQlIQ8X4OyuLh6/RodyWzd4Z7+bbRD2SjMzP961Y0k638Qmb
+	OBAABe87AoEOBTDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6523C137CF;
+	Tue, 22 Apr 2025 07:10:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id W6FUGP5AB2jmNAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 22 Apr 2025 07:10:54 +0000
+Message-ID: <6a2b474c-764e-434c-be23-2f366b81c839@suse.cz>
+Date: Tue, 22 Apr 2025 09:10:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,125 +82,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] arm64: dts: qcom: sm8650: add iris DT node
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250418-topic-sm8x50-upstream-iris-8650-dt-v1-1-80a6ae50bf10@linaro.org>
- <asfwnyn5grm426vq5qatrxfffv3wmbuzx6266rblanzqepffzx@7773dcxfaqe4>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <asfwnyn5grm426vq5qatrxfffv3wmbuzx6266rblanzqepffzx@7773dcxfaqe4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] mm, slab: clean up slab->obj_exts always
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>,
+ Zhenhua Huang <quic_zhenhuah@quicinc.com>
+Cc: cl@linux.com, rientjes@google.com, roman.gushchin@linux.dev,
+ harry.yoo@oracle.com, pasha.tatashin@soleen.com, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, quic_tingweiz@quicinc.com,
+ stable@vger.kernel.org
+References: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
+ <CAJuCfpGwspnceQ5oq_ovViHnawcVCkM1pKawJGckfKsvK1s_Aw@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAJuCfpGwspnceQ5oq_ovViHnawcVCkM1pKawJGckfKsvK1s_Aw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[quicinc.com:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On 19/04/2025 01:05, Dmitry Baryshkov wrote:
-> On Fri, Apr 18, 2025 at 03:20:35PM +0200, Neil Armstrong wrote:
->> Add DT entries for the sm8650 iris decoder.
+On 4/21/25 18:02, Suren Baghdasaryan wrote:
+> On Mon, Apr 21, 2025 at 12:52 AM Zhenhua Huang
+> <quic_zhenhuah@quicinc.com> wrote:
 >>
->> Since the firmware is required to be signed, only enable
->> on Qualcomm development boards where the firmware is
->> available.
+>> When memory allocation profiling is disabled at runtime or due to an
+>> error, shutdown_mem_profiling() is called: slab->obj_exts which
+>> previously allocated remains.
+>> It won't be cleared by unaccount_slab() because of
+>> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
+>> should always be cleaned up in unaccount_slab() to avoid following error:
 >>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> [...]BUG: Bad page state in process...
+>> ..
+>> [...]page dumped because: page still charged to cgroup
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 21c690a349ba ("mm: introduce slabobj_ext to support slab object extensions")
+>> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
+>> Acked-by: David Rientjes <rientjes@google.com>
+>> Acked-by: Harry Yoo <harry.yoo@oracle.com>
+>> Tested-by: Harry Yoo <harry.yoo@oracle.com>
+> 
+> Acked-by: Suren Baghdasaryan <surenb@google.com>
+> 
 >> ---
->>   arch/arm64/boot/dts/qcom/sm8650-hdk.dts |  5 ++
->>   arch/arm64/boot/dts/qcom/sm8650-mtp.dts |  5 ++
->>   arch/arm64/boot/dts/qcom/sm8650-qrd.dts |  5 ++
-> 
-> I'd say that these are 4 commits.
-
-I could make 10 and still be coherent, but do we really need 4 here ?
-
-> 
->>   arch/arm64/boot/dts/qcom/sm8650.dtsi    | 94 +++++++++++++++++++++++++++++++++
->>   4 files changed, 109 insertions(+)
+>>  mm/slub.c | 12 ++++++++----
+>>  1 file changed, 8 insertions(+), 4 deletions(-)
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
->> index d0912735b54e5090f9f213c2c9341e03effbbbff..69db971d9d2d32cdee7bb1c3093c7849b94798a0 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm8650-hdk.dts
->> @@ -894,6 +894,11 @@ &ipa {
->>   	status = "okay";
->>   };
->>   
->> +&iris {
->> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index 566eb8b8282d..a98ce1426076 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -2028,8 +2028,8 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+>>         return 0;
+>>  }
+>>
+>> -/* Should be called only if mem_alloc_profiling_enabled() */
+>> -static noinline void free_slab_obj_exts(struct slab *slab)
+>> +/* Free only if slab_obj_exts(slab) */
 > 
-> You shouldn't need to specify this, it matches the default one.
+> nit: the above comment is unnecessary. It's quite obvious from the code.
 
-Hmm ok
+Agreed, I've removed it locally and added the patch to slab/for-next-fixes
+Thanks!
 
-> 
->> +	status = "okay";
->> +};
->> +
->>   &gpu {
->>   	status = "okay";
->>   
->> diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> index 76ef43c10f77d8329ccf0a05c9d590a46372315f..04108235d9bc6f977e9cf1b887b0c89537723387 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> @@ -585,6 +585,11 @@ vreg_l7n_3p3: ldo7 {
->>   	};
->>   };
->>   
->> +&iris {
->> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
->> +	status = "okay";
->> +};
->> +
->>   &lpass_tlmm {
->>   	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
->>   		pins = "gpio21";
->> diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
->> index 71033fba21b56bc63620dca3e453c14191739675..58bdc6619ac55eda122f3fe6e680e0e61967d019 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
->> @@ -824,6 +824,11 @@ &ipa {
->>   	status = "okay";
->>   };
->>   
->> +&iris {
->> +	firmware-name = "qcom/vpu/vpu33_p4.mbn";
->> +	status = "okay";
->> +};
->> +
->>   &gpu {
->>   	status = "okay";
->>   
-> 
-
-Thanks,
-Neil
+>> +static inline void free_slab_obj_exts(struct slab *slab)
+>>  {
+>>         struct slabobj_ext *obj_exts;
+>>
+>> @@ -2601,8 +2601,12 @@ static __always_inline void account_slab(struct slab *slab, int order,
+>>  static __always_inline void unaccount_slab(struct slab *slab, int order,
+>>                                            struct kmem_cache *s)
+>>  {
+>> -       if (memcg_kmem_online() || need_slab_obj_ext())
+>> -               free_slab_obj_exts(slab);
+>> +       /*
+>> +        * The slab object extensions should now be freed regardless of
+>> +        * whether mem_alloc_profiling_enabled() or not because profiling
+>> +        * might have been disabled after slab->obj_exts got allocated.
+>> +        */
+>> +       free_slab_obj_exts(slab);
+>>
+>>         mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
+>>                             -(PAGE_SIZE << order));
+>> --
+>> 2.34.1
+>>
 
