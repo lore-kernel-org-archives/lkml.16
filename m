@@ -1,149 +1,153 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4815D262FFB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848F1262FE5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356994; cv=none; b=CQ8bqKB1gBOjHxAwi/w/byRj0ju2ini3XrvcyH9Jjit5pJQqvNOb4tN3JxATjCP5+pxKB2d07V5F8XoFqmoAJcAt7q8JqP+n9DNo+Py7xcw4ReW9+Bf/ibBk5wwYbkblOSacB5nLro/y7tO/dFhrYofHOxbW/XusEDnbgXvO8F4=
+	t=1745357139; cv=none; b=EdIiR0ZKW7ZgODiP0+XmmCq36Y8c2TnhTJdZi+TU/yYwfq/FJB3N/RucTakCYTOXj600ADWXfKZJXQVeKmulhHKkqixh4gz4haudW5gl53gmsoMNFB+DFnbot1vMxRutyojlHyShZVjmnH6SoT43bqlAKyRjFbQXF+cERfFWZ0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356994; c=relaxed/simple;
-	bh=k2qWAoAh7FbrhsjzDqPPPK9Nre8fNKQvDQg7GZB2jQo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UhoQ/og9a1XkGTxVT68LyuwJAU/3DzdJGh+OJSBITOPL5zVbKQsYKUfHylhNqFQoxBqdTC+2LS3lmCdFfimhqofj50U0pEkEoJkbGfvEHsmrD2p14LBUbOjK4E77h0wf8ej6t1VPiMmmjgPNKxD6Usnpat0A3bQzysXM91JG1Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=xECsqvF/; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1745357139; c=relaxed/simple;
+	bh=Y/C/xhkbLzQ9rIJeiEicc0P0p8FiP6d4YyTqIyKHbYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFRJcq7eeKjRjMM6f895mDdpLCZeXAXMKEJhEy7zt9zL4ZimY6+nsI795T3AgKFe4K77FGkk3NFKuP9ZOyg7jf7e7omIu4Dft2O/5bYvXJVwqxaU6DtmTolUFRTDCv7pJxkuwygRIqfP6lsoOYw+60fcBT/hOPnbYc3xQ+Tqc+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9ewX3Iy; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="xECsqvF/"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-477282401b3so63088711cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:23:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9ewX3Iy"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2240b4de12bso84732915ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745356991; x=1745961791; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NGSbhZB8ag8p7jHY+v66knIF5zG8Lt6g7GJ9MoKueNI=;
-        b=xECsqvF/HPNeSF7xVSOlz2FSXmH9HfZ5y2r1sxnCUl3Wg9uwowOumIJyeS1qsubNhB
-         nTcZn4pSL0PfIOok4KqHrewsm6PDZPhNK1vcOzbqLNFp0Bsb0vap07+KV/NpYoweFsQr
-         k8Lo9ZF9pYudlLFfXmeBsjRgsYvqefe69IjLkelPFn14MVPWJ85cAreIryqCty0rg0ok
-         Yv25j+y8c6YYvxQ/6+ImlAitoq3zVo2F7CU29V2qn4BDG2OarJh5BsDc9Ol/lNKNnq6L
-         K+E9Zn4F5VRUad1/sSBh/O97EllqGEuBEotXhMOi2SOxxWPzAPdXAcw26jmMuCsvJE3z
-         XkEQ==
+        d=gmail.com; s=20230601; t=1745357138; x=1745961938; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2xkzyMG/T4Nc06X3h717slcVyxx+nHbaCSWe2w2AOU=;
+        b=M9ewX3IyYwCC5Hw/P/Qii6AzRGCqdnWHOahnh6sbA9/4u7Hl31AM+gDHUO+9ADkvLG
+         6gJnqeM8vL1gJncm+Ho3n1LdL8qWEFOgHdGF4jylW4TKTR6/iNByWZsWBaK+0cEQbM/o
+         esVHitXjg6NxF2PIGmYe2JmViRtlRI3ZzIgQQBoJte0jma5KQG8nWjUZ9tM1YBtsLBaa
+         H1CAkaS1hwZ/CDv+jXwVfDFiINMD9xs1sNgOE9DuzTDEdBK6f0q92Fwq1LwsjfPOOu99
+         +S9eECKY8DnPe1nxGre4uOEmmUwDeQxVk19dWVOC7ptL7r/3uKw8WCbEHfb9dz/eoYpj
+         dtMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745356991; x=1745961791;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NGSbhZB8ag8p7jHY+v66knIF5zG8Lt6g7GJ9MoKueNI=;
-        b=jbmaUPHp5el0y+3fuANTeSg/lYzkONaNs6s5mZx7vveBDmfVCgaMrIl4sZonfzznRk
-         HwYdylfwhmsWk/gMm576Sz1G62qhWtCBSWaVJEvOKoaDu6spb65L4KKgONjBXY3g1PFV
-         r6buCZrZiSwKY9asmfCSinRyf4NhChx02y7L1eAbVCckWSAdQX4DzWGZlmmAEAAwR7iU
-         tWGJCqYeD1RuqAG46Qju7+w6/qKLAqr8l8BdTUiJ6LnwcIqxnAmQfHMlvQMvxUXDwu28
-         4f3QVPzkbSAOo8r6xi3wkJqiodzxnNQ8UYFiF3iaEwbs93luO0ZxneqYwLSyrC4gfnYx
-         3zkw==
-X-Gm-Message-State: AOJu0YyioliUdHx/4S8954NflwyodSEY2ccH2wFuILI016mjqP2xan5H
-	TK/EJCprgo4CsmXx1fXh/OFwy2On+fVnF5uYrJFcwV0m/kLWz4R1oUQgVzlWWrHu5kDS8PXGgaj
-	vaOw=
-X-Gm-Gg: ASbGnctextWg3uSbVoQTZdODS73jHwmpiFjy74l86ESjEmnGya2cKGWErp/3RAWLpeZ
-	eE2382ZliqO5S33nMAlymGifOqewSOrcuDvUwk9nCmTLtaym6cmmAvPSQx4zMaxMZMXqd0Ka57b
-	Wgth763YkIxB0duwcJuWqfyMrsuQerrLgeq0nT2T9puJu8wRuKSG6dNrknS5GRd3QurmeAP1uXu
-	iMK8R55ZHARFrEXSKsbCVaFfsBp2cCApXrjVsFmkqv2xwTlfJ7gfIb8ubReR5iBjD06/jrMH58b
-	ok5MarYFjGGs714q0ANrWMmLGz5tjWn947mfbtj3PQ/keQ==
-X-Google-Smtp-Source: AGHT+IF9uypzaq3BBVcupNVm9phJf3EkFEPFQS60GcY07iGqTEuWHuBVOhzqczy1xvt1uMaSYNbYKQ==
-X-Received: by 2002:a05:6214:4008:b0:6e8:f166:b19e with SMTP id 6a1803df08f44-6f2c4546788mr247406366d6.17.1745356991131;
-        Tue, 22 Apr 2025 14:23:11 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfcfd0sm61986756d6.82.2025.04.22.14.23.10
+        d=1e100.net; s=20230601; t=1745357138; x=1745961938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c2xkzyMG/T4Nc06X3h717slcVyxx+nHbaCSWe2w2AOU=;
+        b=kfajszVEghNBTvZnFa4xBJ9sQxipPjUTn1inZ4ZMggxQUql9zC/uNObdM3/KsX4Cqr
+         qEY1o/AhNy4me+H5m5ilEUZnB6aotp8DZN6xe4Vy4BVREP4ASGHXOieKGkgwvck357w7
+         HX/z0UzdX3zACw22latGqvIWhJnJ5GBYjKccAWxbNvpsDo73veuIgCWAaj545dQPvHl+
+         aSwA0bhOyWl/61OeVl+7lL3H2YryjV+XK7JAt5BGbC8brU/rawiC8X8rZQkLjH1dk3+H
+         Y6qV6zCObdsC6GCp8RC6Q3U4zHPs8oSKi5ITNZe8s4biAOtikKy4W5mFGoqOdA1Eh5F/
+         YWRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2Muos3t75xJPTT37BDQXD3GQVI3ZYm36wzg8AJ+nL+tV/O3r9zya6FNsa1NnwgcJwlHV31o2mXG+VzI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZBqMSp/wWOB1CJ4ySNG4+0TJ1uJUJ8RXc93qNaNx6ROVOtkm8
+	2RzaCP7wfsb5/H43MsJhp1YD83XbumILpP0XJCKEioGlnkK5jN+JCn38etLnxoI=
+X-Gm-Gg: ASbGncv44MJ1LqWZDP57QeB6DDbmYD9L29/XnP0YDtECxkFp0QxHhf8C1umvqSZ0ULn
+	Yf97Oy169no2WnHjRB4LRjgBjOdRt3CGy5bl8JWsKxYvtErMTrWeIp1AfX+1+rH3wFbkcRZkhED
+	Ge/X+IkuFUubf1J6VFJI9P7w9QV1gtOKbh7UeuEfvkV7LzymwMV75S9nTWbYqYB3ncp+tghi5C/
+	bnHrrDOBGQmvIgBkZXjZcDKuc9yykxgnEcqBknCmASlKtDVLhQbbW5N1517LaHreBQPXHGv3NPb
+	9zVJxqXL5A8H1jDeYZbYog11ZevQiCikLMBeNA==
+X-Google-Smtp-Source: AGHT+IGITDdmHBEsMW6HJ5ldB4QFVVmfPzM2dBETcoNqBLkno8pe5V2JmNTWujeQ7uMADfwfWpxmsQ==
+X-Received: by 2002:a17:903:1a04:b0:224:c46:d166 with SMTP id d9443c01a7336-22c53604563mr288284045ad.40.1745357137754;
+        Tue, 22 Apr 2025 14:25:37 -0700 (PDT)
+Received: from archlinux.attlocal.net ([2600:1700:5a60:6f70::2f])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22c50bdae5dsm90389605ad.35.2025.04.22.14.25.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:23:10 -0700 (PDT)
-Message-ID: <99029039e6887b1660c897b25c3792253b477a52.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: amphion: Slightly simplify vpu_core_register()
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Ming Qian
-	 <ming.qian@nxp.com>, Zhou Peng <eagle.zhou@nxp.com>, Mauro Carvalho Chehab
-	 <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-media@vger.kernel.org
-Date: Tue, 22 Apr 2025 17:23:09 -0400
-In-Reply-To: <e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
-References: 
-	<e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+        Tue, 22 Apr 2025 14:25:37 -0700 (PDT)
+From: JJ Strnad <strnad.jj@gmail.com>
+To: 
+Cc: strnad.jj@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Philipp Hortmann <philipp.g.hortmann@gmail.com>,
+	Bryant Boatright <bryant.boatright@proton.me>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Manuel Quintero F <sakunix@yahoo.com>,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: remove multiple blank lines
+Date: Tue, 22 Apr 2025 14:23:16 -0700
+Message-ID: <20250422212332.23170-1-strnad.jj@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Le vendredi 18 avril 2025 =C3=A0 00:01 +0200, Christophe JAILLET a =C3=A9cr=
-it=C2=A0:
-> "vpu_core->msg_buffer_size" is unused out-side of vpu_core_register().
-> There is no need to save this value in struct vpu_core.
->=20
-> Remove it and use a local variable instead.
->=20
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Adhere to Linux kernel coding style.
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reported by checkpatch:
 
-thanks,
-Nicolas
+CHECK: Please don't use multiple blank lines
 
-> ---
-> =C2=A0drivers/media/platform/amphion/vpu.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-| 1 -
-> =C2=A0drivers/media/platform/amphion/vpu_core.c | 7 ++++---
-> =C2=A02 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/media/platform/amphion/vpu.h b/drivers/media/platfor=
-m/amphion/vpu.h
-> index 22f0da26ccec..1451549c9dd2 100644
-> --- a/drivers/media/platform/amphion/vpu.h
-> +++ b/drivers/media/platform/amphion/vpu.h
-> @@ -162,7 +162,6 @@ struct vpu_core {
-> =C2=A0	struct delayed_work msg_delayed_work;
-> =C2=A0	struct kfifo msg_fifo;
-> =C2=A0	void *msg_buffer;
-> -	unsigned int msg_buffer_size;
-> =C2=A0
-> =C2=A0	struct vpu_dev *vpu;
-> =C2=A0	void *iface;
-> diff --git a/drivers/media/platform/amphion/vpu_core.c b/drivers/media/pl=
-atform/amphion/vpu_core.c
-> index 8df85c14ab3f..da00f5fc0e5d 100644
-> --- a/drivers/media/platform/amphion/vpu_core.c
-> +++ b/drivers/media/platform/amphion/vpu_core.c
-> @@ -250,6 +250,7 @@ static void vpu_core_get_vpu(struct vpu_core *core)
-> =C2=A0static int vpu_core_register(struct device *dev, struct vpu_core *c=
-ore)
-> =C2=A0{
-> =C2=A0	struct vpu_dev *vpu =3D dev_get_drvdata(dev);
-> +	unsigned int buffer_size;
-> =C2=A0	int ret =3D 0;
-> =C2=A0
-> =C2=A0	dev_dbg(core->dev, "register core %s\n", vpu_core_type_desc(core->=
-type));
-> @@ -263,14 +264,14 @@ static int vpu_core_register(struct device *dev, st=
-ruct vpu_core *core)
-> =C2=A0	}
-> =C2=A0	INIT_WORK(&core->msg_work, vpu_msg_run_work);
-> =C2=A0	INIT_DELAYED_WORK(&core->msg_delayed_work, vpu_msg_delayed_work);
-> -	core->msg_buffer_size =3D roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
-> -	core->msg_buffer =3D vzalloc(core->msg_buffer_size);
-> +	buffer_size =3D roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
-> +	core->msg_buffer =3D vzalloc(buffer_size);
-> =C2=A0	if (!core->msg_buffer) {
-> =C2=A0		dev_err(core->dev, "failed allocate buffer for fifo\n");
-> =C2=A0		ret =3D -ENOMEM;
-> =C2=A0		goto error;
-> =C2=A0	}
-> -	ret =3D kfifo_init(&core->msg_fifo, core->msg_buffer, core->msg_buffer_=
-size);
-> +	ret =3D kfifo_init(&core->msg_fifo, core->msg_buffer, buffer_size);
-> =C2=A0	if (ret) {
-> =C2=A0		dev_err(core->dev, "failed init kfifo\n");
-> =C2=A0		goto error;
+Signed-off-by: JJ Strnad <strnad.jj@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_cmd.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 946511793c08..437934dd255e 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -695,7 +695,6 @@ u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
+ 	/* for ies is fix buf size */
+ 	t_len = sizeof(struct wlan_bssid_ex);
+ 
+-
+ 	/* for hidden ap to set fw_state here */
+ 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE|WIFI_ADHOC_STATE) != true) {
+ 		switch (ndis_network_mode) {
+@@ -738,7 +737,6 @@ u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
+ 
+ 	psecnetwork->ie_length = rtw_restruct_sec_ie(padapter, &pnetwork->network.ies[0], &psecnetwork->ies[0], pnetwork->network.ie_length);
+ 
+-
+ 	pqospriv->qos_option = 0;
+ 
+ 	if (pregistrypriv->wmm_enable) {
+@@ -1032,7 +1030,6 @@ u8 rtw_reset_securitypriv_cmd(struct adapter *padapter)
+ 
+ 	init_h2fwcmd_w_parm_no_rsp(ph2c, pdrvextra_cmd_parm, GEN_CMD_CODE(_Set_Drv_Extra));
+ 
+-
+ 	/* rtw_enqueue_cmd(pcmdpriv, ph2c); */
+ 	res = rtw_enqueue_cmd(pcmdpriv, ph2c);
+ exit:
+@@ -1099,7 +1096,6 @@ u8 rtw_dynamic_chk_wk_cmd(struct adapter *padapter)
+ 	pdrvextra_cmd_parm->pbuf = NULL;
+ 	init_h2fwcmd_w_parm_no_rsp(ph2c, pdrvextra_cmd_parm, GEN_CMD_CODE(_Set_Drv_Extra));
+ 
+-
+ 	/* rtw_enqueue_cmd(pcmdpriv, ph2c); */
+ 	res = rtw_enqueue_cmd(pcmdpriv, ph2c);
+ exit:
+@@ -1256,7 +1252,6 @@ static void dynamic_chk_wk_hdl(struct adapter *padapter)
+ 	/*  */
+ 	hal_btcoex_Handler(padapter);
+ 
+-
+ 	/* always call rtw_ps_processor() at last one. */
+ 	rtw_ps_processor(padapter);
+ }
+@@ -1367,7 +1362,6 @@ u8 rtw_dm_in_lps_wk_cmd(struct adapter *padapter)
+ 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
+ 	u8 res = _SUCCESS;
+ 
+-
+ 	ph2c = rtw_zmalloc(sizeof(struct cmd_obj));
+ 	if (!ph2c) {
+ 		res = _FAIL;
+@@ -1850,7 +1844,6 @@ void rtw_createbss_cmd_callback(struct adapter *padapter, struct cmd_obj *pcmd)
+ 
+ 	spin_lock_bh(&pmlmepriv->lock);
+ 
+-
+ 	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
+ 		psta = rtw_get_stainfo(&padapter->stapriv, pnetwork->mac_address);
+ 		if (!psta) {
+-- 
+2.49.0
+
