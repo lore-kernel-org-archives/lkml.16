@@ -1,114 +1,48 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A8E6F06B;
-	Tue, 22 Apr 2025 04:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993B763D;
+	Tue, 22 Apr 2025 04:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745297080; cv=none; b=SnBhZCVFLpG+29xBOXiOaxMc7UU4gvy9V7YmMU7brOO1SA1+vlSddKtzNzl5SSUDaFSdKxwrD4raGjY2pxhxQTJ4cxJnDWOcLJjBNTeoqoHgggUduuiT3b2Yfgfcj9E18IcEZmsotlt9AQgER6UI1E/jFyleN0075N5PeYI0QSQ=
+	t=1745297269; cv=none; b=JnIFtclhs2yaEO04yq/8t7uJS6G2N7dvz6SxkNK6OzA8cx0w0l2boFZDK4+evaGgZsF34RimgkoItdo3ib/5vIlaTHaHgJ8xLcqz5RA5gNoaTuIZunm+KESktRi0RfVkYBK1mKSSVsF1xAxSySjoih/yEa9CLH2f/PLc2KrzZzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745297080; c=relaxed/simple;
-	bh=G1HbJec2CYa7qlCoYB6f3Z1EWDQ/9s6GGaVBY0ycjkU=;
+	s=arc-20240116; t=1745297269; c=relaxed/simple;
+	bh=KVG9KWbN6/cnNR50GbGJYhUY3P3Piy5EguSCvW/S0co=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i0EO0aHVOLDkXoU4eOr+fBlTPq9rzeD3Hb0fXHsQrSF5/yyzvrSICDug4cvlS9h+jvQh+8qNvKhz21/is9K/TeZc2lqsAWJzX5S+097LBhtK2HmLdyTyZLg5UE93kkcdhFIyrOg1ireB/APBRPaXtnQ06uacgqTkTrrg00RCKY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+hEPHXc; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GFssScQt7ZY0KKIOinSClkVVUrU4g9VMfzLaW9wlkzMrmmIzIGuPgH17UYgjylKLAY9YNtXVjigBF4MLtz4WU0de6iMzoy/awmsYViyhmoOHkpKBTaxFbZOOdD4ZL87Is8oqPbxTRIk7iK3zYpBXkmN4UPiNnSB05MUWt4fduXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtlBnowg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+hEPHXc"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so53819286d6.1;
-        Mon, 21 Apr 2025 21:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745297078; x=1745901878; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kr+o+QYSOyR/ZVBsOETpPeX1MOvdWlbkKEIA2O8eIpI=;
-        b=Y+hEPHXcTz+uHqjD6DvOTToqK1ardTIn9eR1nVqfqlBloc4TXp9NatdcVUUXz5QkTu
-         odPlXWR02uFwJnph3Ea0KNLPcSDYAY3xsfkoBglgywm/j5ux4Jrvv+RMAUVqBEPBjoIA
-         2AjTr0KtNZ/Mwf54FzVRV7WJXC3RfRJbEJRBRK31Jm6wQZ1zZBT1CQw02Ph4QjnPFF+e
-         /PXe1x3KciMwefpDNaWIUPHjDOpQmJewkw9s87Tzm8eABL5NSjidd7wkDQXk0jKYjSpP
-         OHjJr2bMRU0udI0qYlrqhecRGgmevjJIG+NGXFp/Yzzg4aTsLVWu1jEuuR+cAzow3MFY
-         lWgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745297078; x=1745901878;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kr+o+QYSOyR/ZVBsOETpPeX1MOvdWlbkKEIA2O8eIpI=;
-        b=aPkdyv7n2+ArvbEVAdWtDbyNGFBe+haNjLfGeX/rPiuP2BbVICMRyxdOtaRhwjOT0E
-         tbGIMvLUF94WxuZAyhjNGBiz9ljkSejjCof8KGpsCcIpsTooCCy1EvzxlIiElzHdtxw2
-         /uxD8V9OFfU2V8NWvx8SN30jJbrTQlvI9YrtPp2bwPqRtK8ofz8FrDCrMCzpTFhmkcoC
-         iPxXKzBvgalEaiWoyArH8p1BfHwTC4vEvSDq0O7AWQRFfgqptoQp2iyionqxhf4X2KEu
-         OOMlI3Vq58KQ7VQlg4dn0yeG1xF6NdNKgYrO/q5/vrF6tI4uPfeG3zyziVIEPDcRFOMH
-         jlqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ1HFXUsGe4RHeS7wF+6iOy3SlDY/HQtj0xiCI33Cp1E1nOeQDn5bj5b/4msjLQavxBJfA0LRxopYGqDmwjbc=@vger.kernel.org, AJvYcCXeh3V3SiLMn+k84ziQCYFmkw1JZLg8UMc3rR8vvTOKvx77xOVIcyV+2FN2+IWO1wkclHgE1qriQyOlPpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHjROR5kRI6VHNCOQmkoQBV53QTPjSeYfGwTv2rca1P+MVpWqS
-	jy3EXzmwJbmnViyvLboTUbH9+Wa8DjcXJWJoMrpgt+8PXOqkysK+
-X-Gm-Gg: ASbGncun+aq/pxeoqBYaYmqg58pneFGkGi1opdGtLX016CLUI/e1SI/EbgfoXsVaX8a
-	vS1QzOv+reMQyJYwgvMpE8TXcKgPJe5lrVKFpQ53/73CFY0z1RVe3t9hSm+Pucwgv2E4WtCiq3y
-	TdyYPC2/j0S6m6ZFZ5xVgg72D9FxEFsT7eT8BsTsrPdrEjeKO51vEA5JclqtIAdXPfIKV/XampC
-	kyxrKUntneaV3UH0dx4wjxPs/whsmgn4ecK4DrER7VkiMRW5vfB2wEbO24YtiUOUmfmxrx/9gmO
-	/pnzmnDtvyBbQ0drchLvoZnSe1q7ePSPbj+1m8lKrEAp+W1wBEQF9u3MIMxa+VNUl2R3H7k55ju
-	C+iIqEehZf0LvxYx+hxM8x0NMYPQu3WI=
-X-Google-Smtp-Source: AGHT+IF9qY/lLx5IowQSskBGyrr3rjia+aw71anTJYS/Z88CO/wbFJyNLdZDn/Y0m0AQ0epo9ZuKZQ==
-X-Received: by 2002:a05:6214:4004:b0:6e8:f3af:ed59 with SMTP id 6a1803df08f44-6f2c4578776mr192447286d6.22.1745297077610;
-        Mon, 21 Apr 2025 21:44:37 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af14easm52864166d6.3.2025.04.21.21.44.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 21:44:37 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8C6D21200043;
-	Tue, 22 Apr 2025 00:44:36 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Tue, 22 Apr 2025 00:44:36 -0400
-X-ME-Sender: <xms:tB4HaJcOnRJZdgz33RtWtXvUoRbkJthT-l6vy9ekpGqhOaphaERoKw>
-    <xme:tB4HaHP8JLUKIhJx_5-55-CUJc9Cx0XaJ5cPj-03ECczP8bIxnniBfZOZnpSoQZvL
-    ZhUHarPDH5lQCiZ1w>
-X-ME-Received: <xmr:tB4HaCgn88Y3vxYoftfeQebtzlu8rPhrAM8WeeUlrR6lqlQq8ABYOJj0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgedvkedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeuueeiffefffeivdelieeigfeiieehieei
-    geejleevhfefgefggfdvveeuudevtdenucffohhmrghinhepghhithhhuhgsrdgtohhmpd
-    hruhhsthdqlhgrnhhgrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlih
-    hthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhm
-    rghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopedugedpmhhoug
-    gvpehsmhhtphhouhhtpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothho
-    nhdrmhgvpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhies
-    ghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonh
-    hmrghilhdrtghomhdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpth
-    htohepthhmghhrohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegurghkrheskhgv
-    rhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:tB4HaC8IeTivlCDA9UbiqkX3TmMrmmqfDoUda55fB_YjZadS_HKghA>
-    <xmx:tB4HaFt6elKxFaNo8rgb5HLyVfBfEQukpCZf1eLI_hcJVyuZlE91Qw>
-    <xmx:tB4HaBF33l7C8-d1eCvVxCSCq2lkVfQKDAfqr__QlSgZLAydaHEEWQ>
-    <xmx:tB4HaMOJ-zdEADbAMB-r7yF1uDYk-ltZEVbNdn8VhwLEx0b5Yu6kSA>
-    <xmx:tB4HaOOmU_ZGH9qIrtR9E5fVlE6lgWAe12-JznndahhRcjQuxvvc3QEw>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 22 Apr 2025 00:44:35 -0400 (EDT)
-Date: Mon, 21 Apr 2025 21:44:34 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>,
-	Christian Schrefl <chrisi.schrefl@gmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] rust: pin-init: Add the `Wrapper` trait.
-Message-ID: <aAcesqWolkxw4V8D@Mac.home>
-References: <20250421221728.528089-1-benno.lossin@proton.me>
- <20250421221728.528089-3-benno.lossin@proton.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtlBnowg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF59FC4CEE9;
+	Tue, 22 Apr 2025 04:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745297269;
+	bh=KVG9KWbN6/cnNR50GbGJYhUY3P3Piy5EguSCvW/S0co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GtlBnowgS5FbGtspKIR9H6/s5boiKbMt2wiWeyWtWXQKHnODDHU+l1+lOb5WGqD4k
+	 sVrGthObwZBirgAaR6jDiVw5c8uP1XZlbTWjnmurPhXgG3z88ArVwUCYYpx4rutuVM
+	 Vy7vKr8uGhWu08RVbyMN2HRFxHYUGmhqbtxAUJ2UbIizp03rJU+xDanBX5mJZwsfy6
+	 gd8dC+M/TuzuzdRLw+HHaOiCQeaXvYJQ26t8Djr7fIbnuQZynJLYzZtf4dzuJnpNEv
+	 h80H1phHIW3wyv47FiJ6i43B4+pk/eztYRTNUW2Fm3tlGKuPFRW+4qTXELGPT9v127
+	 2jnsGrNbCsrNw==
+Date: Tue, 22 Apr 2025 04:47:44 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Suleiman Souhlal <suleiman@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ssouhlal@freebsd.org
+Subject: Re: [PATCH v5 1/2] KVM: x86: Advance guest TSC after deep suspend.
+Message-ID: <aAcfcB8ZyBuz7t7J@google.com>
+References: <20250325041350.1728373-1-suleiman@google.com>
+ <20250325041350.1728373-2-suleiman@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -117,89 +51,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250421221728.528089-3-benno.lossin@proton.me>
+In-Reply-To: <20250325041350.1728373-2-suleiman@google.com>
 
-On Mon, Apr 21, 2025 at 10:17:59PM +0000, Benno Lossin wrote:
-> From: Christian Schrefl <chrisi.schrefl@gmail.com>
+On Tue, Mar 25, 2025 at 01:13:49PM +0900, Suleiman Souhlal wrote:
+> Advance guest TSC to current time after suspend when the host
+> TSCs went backwards.
 > 
-> This trait allows creating `PinInitializers` for wrapper or new-type
-> structs with the inner value structurally pinned, when given the
-> initializer for the inner value.
+> This makes the behavior consistent between suspends where host TSC
+> resets and suspends where it doesn't, such as suspend-to-idle, where
+> in the former case if the host TSC resets, the guests' would
+> previously be "frozen" due to KVM's backwards TSC prevention, while
+> in the latter case they would advance.
 > 
-> Implement this trait for `UnsafeCell` and `MaybeUninit`.
-> 
-> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/37/commits/3ab4db083bd7b41a1bc23d937224f975d7400e50
-> [ Reworded commit message into imperative mode, fixed typo and fixed
->   commit authorship. - Benno ]
-> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> ---
->  rust/pin-init/src/lib.rs | 44 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-> index a880c21d3f09..467ccc8bd616 100644
-> --- a/rust/pin-init/src/lib.rs
-> +++ b/rust/pin-init/src/lib.rs
-> @@ -1513,3 +1513,47 @@ unsafe impl<$first: Zeroable, $($t: Zeroable),*> Zeroable for ($first, $($t),*)
->  }
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
+
+Tested with comparing `date` before and after suspend-to-RAM[1]:
+  echo deep >/sys/power/mem_sleep
+  echo $(date '+%s' -d '+3 minutes') >/sys/class/rtc/rtc0/wakealarm
+  echo mem >/sys/power/state
+
+Without the patch, the guest's `date` is slower (~3 mins) than the host's
+after resuming.
+
+Tested-by: Tzung-Bi Shih <tzungbi@kernel.org>
+
+[1]: https://www.kernel.org/doc/Documentation/power/states.txt
+
+Some non-functional comments inline below.
+
+> @@ -4971,7 +4971,37 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 >  
->  impl_tuple_zeroable!(A, B, C, D, E, F, G, H, I, J);
+>  	/* Apply any externally detected TSC adjustments (due to suspend) */
+>  	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+> -		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
+> +		unsigned long flags;
+> +		struct kvm *kvm;
+> +		bool advance;
+> +		u64 kernel_ns, l1_tsc, offset, tsc_now;
 > +
-> +/// This trait allows creating an instance of `Self` which contains exactly one
-> +/// [structurally pinned value](https://doc.rust-lang.org/std/pin/index.html#projections-and-structural-pinning).
-> +///
-> +/// This is useful when using wrapper `struct`s like [`UnsafeCell`] or with new-type `struct`s.
-> +///
-> +/// # Examples
-> +///
-> +/// ```
-> +/// # use core::cell::UnsafeCell;
-> +/// # use pin_init::{pin_data, pin_init, Wrapper};
-> +///
-> +/// #[pin_data]
-> +/// struct Foo {}
-> +///
-> +/// #[pin_data]
-> +/// struct Bar {
-> +///     #[pin]
-> +///     content: UnsafeCell<Foo>
-> +/// };
-> +///
-> +/// let foo_initializer = pin_init!(Foo{});
-> +/// let initializer = pin_init!(Bar {
-> +///     content <- UnsafeCell::pin_init(foo_initializer)
-> +/// });
-> +/// ```
-> +pub trait Wrapper<T> {
-> +    /// Create an pin-initializer for a [`Self`] containing `T` form the `value_init` initializer.
+> +		kvm = vcpu->kvm;
 
-s/Create/Creates ?
+It will be more clear (at least to me) if moving the statement to its declaration:
+  struct kvm *kvm = vcpu->kvm;
 
-and 
+Other than that, the following code should better utilitize the local
+variable, e.g. s/vcpu->kvm/kvm/g.
 
-s/form/from ?
+> +		advance = kvm_get_time_and_clockread(&kernel_ns,
+> +		    &tsc_now);
+> +		raw_spin_lock_irqsave(&kvm->arch.tsc_write_lock, flags);
+> +		/*
+> +		 * Advance the guest's TSC to current time instead of only
+> +		 * preventing it from going backwards, while making sure
+> +		 * all the vCPUs use the same offset.
+> +		 */
+> +		if (kvm->arch.host_was_suspended && advance) {
+> +			l1_tsc = nsec_to_cycles(vcpu,
+> +			    vcpu->kvm->arch.kvmclock_offset +
+                            ^^^^^^^^^
+                            kvm
 
-Regards,
-Boqun
+> +			    kernel_ns);
+> +			offset = kvm_compute_l1_tsc_offset(vcpu,
+> +			    l1_tsc);
+> +			kvm->arch.cur_tsc_offset = offset;
+> +			kvm_vcpu_write_tsc_offset(vcpu, offset);
+> +		} else if (advance)
+> +			kvm_vcpu_write_tsc_offset(vcpu,
+> +			    vcpu->kvm->arch.cur_tsc_offset);
+                            ^^^^^^^^^
+			    kvm
 
-> +    fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E>;
-> +}
-> +
-> +impl<T> Wrapper<T> for UnsafeCell<T> {
-> +    fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
-> +        // SAFETY: `UnsafeCell<T>` has a compatible layout to `T`.
-> +        unsafe { cast_pin_init(value_init) }
-> +    }
-> +}
-> +
-> +impl<T> Wrapper<T> for MaybeUninit<T> {
-> +    fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
-> +        // SAFETY: `MaybeUninit<T>` has a compatible layout to `T`.
-> +        unsafe { cast_pin_init(value_init) }
-> +    }
-> +}
-> -- 
-> 2.48.1
-> 
-> 
+> +		else
+> +			adjust_tsc_offset_host(vcpu,
+> +			    vcpu->arch.tsc_offset_adjustment);
+
+Need braces in `else if` and `else` cases [2].
+
+[2]: https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
+
+
+> @@ -12640,6 +12670,7 @@ int kvm_arch_enable_virtualization_cpu(void)
+>  				kvm_make_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu);
+>  			}
+>  
+> +			kvm->arch.host_was_suspended = 1;
+
+Given that it is a bool, how about use `true`?
