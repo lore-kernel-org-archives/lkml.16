@@ -1,158 +1,198 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE56280CD2
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E594427C14B
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329103; cv=none; b=riHKmjodPf+1/51qKcPZCJYYb825vJRsQMRylrVVOr8D5q+tipPYqxnP+HFUNldfsInWycoCYjivAj6Pn8sXmdOEGhUdyIODjh0mbtXDOhdXEqEGKVcEXrkrCXC2HbhwjU4pT8QxMk5yhCJwEOcMqKqKaogizWP6L0PNl55/N88=
+	t=1745329125; cv=none; b=l1LLxK8w65K9N63hoeww5Zs0roN+yLpcvBivivTrf6Jx5ePg+eVGfq9T4+lDrLTt/iU4jkO9D209MknU8ilKjZlhfw5RunnySmEOATr4iiNYMflN5Q7e9T+htdUCRaf50K7GXNnadEbIxG7jLShSjtPG0Q1T4+9/JW7kOhbJuE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329103; c=relaxed/simple;
-	bh=Vo7LBJ4qSIokdM3rXBUtbQW8y1+BMQJz9X4whpI4Mdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I8MQ3VY4JzNs1Ie2CtSSYikce+BsVx6g/Ri5g4QXCgCHdz38Y6JR8Wo3wWUJbtkVepeHLZTdECkl6APv1GMZMTP8pAdUzmXhBKBTSWZnqbkTtJ5NL43ZyAYukd0vwLza/jkzp5L8EdqlNbMmsg6fwFpyJfY1uuOxwV6xK0M3cfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i+stn940; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745329125; c=relaxed/simple;
+	bh=dZpbEwZ2L5izo5f/sGMVoQGDs2QQAOEJmO5ii1SAKyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AOrzdvd9FLiCuVg/+ePh7XLz/i0PrlciQYBIGGt39xmhH5jYifVfounUtXbf/zvOytGkDh3QpGpCQ1KZHON83M+3k/QHtqxr1kKThQYb4YKMKm7yViiqi/6PTTPjMomaaCxsDMylzhk42GAzxksYzIul56sP/YHE3RnzaTNh7No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YSmAOLHX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Xw1kZpSo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YSmAOLHX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Xw1kZpSo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i+stn940"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MCoJBS021492
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:38:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ilHPkZ1uHxo7brGrnzMpOnSz1Ev4aJ+rhxk80FeLFKg=; b=i+stn940t91WbXDA
-	o5gYe7W82IjavkwiooQZ1/bma9l+Hv/5LvSTaO69FLB7g3K7YOjyGRS0OtBydMSD
-	oMbjG/ZUPIjeTqRE864tgzV7t5QKJlC6VUEy66apEuKkeyyK5nkuuUwDH8t6f9wK
-	NDNPnEQFQVhE7FiRmx5F7zdMbkOHB1wR4dcTddOs/umQKZ9exOYy4ksPAg60kNVX
-	pVnSEPxqnhBs2BFjFLusEhjBoE7f7JzxaQcDoO+N/lUZw1CFhZ0KTcKX37VrYSdd
-	tQzt40BXFCC5dN/8RHoJOoLVDNna+NMJyK7wvl+x8essW22rB8ggVrEXsu8iElbc
-	6G5rKQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642svfp3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:38:21 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f2c7056506so85592436d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:38:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329100; x=1745933900;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ilHPkZ1uHxo7brGrnzMpOnSz1Ev4aJ+rhxk80FeLFKg=;
-        b=ax0xU9wJXDEV+6oTCmjUInPSCeAzxyeBUN4W6/jvmWvYZ2JC4QrPH60JZC2uaOzPDK
-         N9o38F+S6xVWABuB3Pi+LXo1JlvdmLFx6VVUVGSS46H2BLwJhRSNAualDc1Y2rs1I6pT
-         vPtkzbH73tmrOVLPt47HWJ+KAUoR3svdA5Z4bTBUsyYQfvgQCDtD9toL8vBB4JLfyM5C
-         mZaFZ/5116IK1d4mAvV8xoUc2MaBQMeg6PQITA2CK0TBeZCfOiMNgtu+AU24bEk3yB+D
-         d6XOjqYyfd6MGp9oG6PnsrHAQv1VPrvYdsSp0gk+yrJjwVoSwhFyy6X05CZiPyRscDdO
-         +Saw==
-X-Gm-Message-State: AOJu0YyDS3wC2lbdLvXALzFxxsZpCyiUBbg+Db79jKz0VADZ7ZSzZTv3
-	DPuw227VKaMSmCR3gsc3XgLHpkk5rD8GRa4GrP6Bb40hWeFCOQRJXSSaqzoPaqq+1IflzE9vd+5
-	OA5X9ZL8IUB5OyR2Jueg5Qe6nCxviXLN/2EeKcnjRVrZd642d54WATe84vL+y2UyPgLo91pE=
-X-Gm-Gg: ASbGncuayrNuQq5Q9vzS6HER9Bb/jQbdSwZu3H8aZ1xg3f5aC15Ice0hxtAt8Df9yyA
-	aZ2f4TnmknjQF1tnhJSN3ud0/ku/qqIoUBrWeqdV8+MOj17eiNr0+2fMhOqKzbt9o474Ga8rAWj
-	pxWlp381h3Kq5aFCtowfvT7vTPzeBT2oGsuh2HMpld6FMJFmD8pTB5qDMXpyKpIR0oCxUNY1zIv
-	wpI9vYSIvwYJbDnjAzfi7xQGmAXDDtWZaMZP67/YYH8QfYyE1HSnHX/QaCI8QEKcHlfscfEogpl
-	8pLckYdUup5SH24CJQlFQWPURq7E9nff5MZKH3n2ak+aVAeSXAGUy+RwOGq5MPU2ZmhonSaua31
-	i6eRZcrK2SRmxKVQ8fEaX+UDeyx85szEz28hnsGVaqwDmyX5vsR35QFEBgh3S6hoU
-X-Received: by 2002:a05:6214:4004:b0:6e8:f3af:ed59 with SMTP id 6a1803df08f44-6f2c4578776mr209862576d6.22.1745329099946;
-        Tue, 22 Apr 2025 06:38:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg1jhTk3vOeJXRA+sWOMATxjA7QzH73/aaZLzAmeAZgcQaBJj9d8Zf2ioNUSQsH0+gO0UvEw==
-X-Received: by 2002:a05:6214:4004:b0:6e8:f3af:ed59 with SMTP id 6a1803df08f44-6f2c4578776mr209862156d6.22.1745329099609;
-        Tue, 22 Apr 2025 06:38:19 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:a2:9556:18c8:3d0b:b936:c848? (2001-14bb-a2-9556-18c8-3d0b-b936-c848.rev.dnainternet.fi. [2001:14bb:a2:9556:18c8:3d0b:b936:c848])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-310907a8655sm14444531fa.62.2025.04.22.06.38.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 06:38:18 -0700 (PDT)
-Message-ID: <6eeb7bca-6018-46de-a7db-7189d60c0942@oss.qualcomm.com>
-Date: Tue, 22 Apr 2025 16:38:17 +0300
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YSmAOLHX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Xw1kZpSo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YSmAOLHX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Xw1kZpSo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1B289211F8;
+	Tue, 22 Apr 2025 13:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745329122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q9BNnUwsfZwvAsN3E65m0jL6rnSPub8k+ssmpsS/XN0=;
+	b=YSmAOLHXrqk6/Raeh+g2fkZCuvOJ1FgyhMxTmCMHtYmg+9rBJ8+yWFPjiGrBdlIxRe0Afj
+	29YUuxTIPlQEt1EmLuqN8+LwkUcnVg7yoRQouO27LGYRRdDirO9hWq6Vnlpy1nts0n0czB
+	eoiEbd4ypXL+h/a+Aw9mcpKvbVnKft8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745329122;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q9BNnUwsfZwvAsN3E65m0jL6rnSPub8k+ssmpsS/XN0=;
+	b=Xw1kZpSoBb9H4h0LcZjazUGKiW30guwm26u2OnipTNh2+ECdTwLC5vCWTX+U4ln5opBNb8
+	kV5E9BucTGMJN/Bg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745329122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q9BNnUwsfZwvAsN3E65m0jL6rnSPub8k+ssmpsS/XN0=;
+	b=YSmAOLHXrqk6/Raeh+g2fkZCuvOJ1FgyhMxTmCMHtYmg+9rBJ8+yWFPjiGrBdlIxRe0Afj
+	29YUuxTIPlQEt1EmLuqN8+LwkUcnVg7yoRQouO27LGYRRdDirO9hWq6Vnlpy1nts0n0czB
+	eoiEbd4ypXL+h/a+Aw9mcpKvbVnKft8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745329122;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q9BNnUwsfZwvAsN3E65m0jL6rnSPub8k+ssmpsS/XN0=;
+	b=Xw1kZpSoBb9H4h0LcZjazUGKiW30guwm26u2OnipTNh2+ECdTwLC5vCWTX+U4ln5opBNb8
+	kV5E9BucTGMJN/Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 04EA2139D5;
+	Tue, 22 Apr 2025 13:38:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kC8sAeKbB2hhOwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 22 Apr 2025 13:38:42 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 90E42A0734; Tue, 22 Apr 2025 15:38:41 +0200 (CEST)
+Date: Tue, 22 Apr 2025 15:38:41 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH v2] fs: fall back to file_ref_put() for non-last reference
+Message-ID: <r6r5osn7darsuaqv7cjkonaq63zioo6kup7ds3wyeyxjyohiso@hb3ftogkuw6m>
+References: <20250418125756.59677-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] platform/chrome: cros_ec_typec: No pending status
- means attention
-To: Stephen Boyd <swboyd@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>,
-        chrome-platform@lists.linux.dev, Pin-yen Lin <treapking@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        =?UTF-8?Q?=C5=81ukasz_Bartosik?= <ukaszb@chromium.org>,
-        Jameson Thies <jthies@google.com>,
-        Andrei Kuchynski <akuchynski@chromium.org>
-References: <20250416000208.3568635-1-swboyd@chromium.org>
- <20250416000208.3568635-2-swboyd@chromium.org>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250416000208.3568635-2-swboyd@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2OiX1GguJprnKcGysazfNmszYKDHeany
-X-Proofpoint-ORIG-GUID: 2OiX1GguJprnKcGysazfNmszYKDHeany
-X-Authority-Analysis: v=2.4 cv=QLJoRhLL c=1 sm=1 tr=0 ts=68079bcd cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=o0b5XE3H0qlelF4PaLgA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_06,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- adultscore=0 phishscore=0 suspectscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504220103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418125756.59677-1-mjguzik@gmail.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo,intel.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 16/04/2025 03:02, Stephen Boyd wrote:
-> If we aren't expecting a status update when
-> cros_typec_displayport_status_update() is called then we're handling an
-> attention message, like HPD high/low or IRQ. Call
-> typec_altmode_attention() in this case so that HPD signaling works in
-> the DP altmode driver.
-
-Fixes?
-
+On Fri 18-04-25 14:57:56, Mateusz Guzik wrote:
+> This reduces the slowdown in face of multiple callers issuing close on
+> what turns out to not be the last reference.
 > 
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Tzung-Bi Shih <tzungbi@kernel.org>
-> Cc: <chrome-platform@lists.linux.dev>
-> Cc: Pin-yen Lin <treapking@chromium.org>
-> Cc: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Cc: Łukasz Bartosik <ukaszb@chromium.org>
-> Cc: Jameson Thies <jthies@google.com>
-> Cc: Andrei Kuchynski <akuchynski@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202504171513.6d6f8a16-lkp@intel.com
+
+Yeah, this looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->   drivers/platform/chrome/cros_typec_altmode.c | 7 ++-----
->   1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/platform/chrome/cros_typec_altmode.c b/drivers/platform/chrome/cros_typec_altmode.c
-> index 557340b53af0..c2d9c548b5e8 100644
-> --- a/drivers/platform/chrome/cros_typec_altmode.c
-> +++ b/drivers/platform/chrome/cros_typec_altmode.c
-> @@ -280,11 +280,8 @@ int cros_typec_displayport_status_update(struct typec_altmode *altmode,
->   		typec_altmode_get_drvdata(altmode);
->   	struct cros_typec_altmode_data *adata = &dp_data->adata;
->   
-> -	if (!dp_data->pending_status_update) {
-> -		dev_dbg(&altmode->dev,
-> -			"Got DPStatus without a pending request\n");
-> -		return 0;
-> -	}
-> +	if (!dp_data->pending_status_update)
-> +		return typec_altmode_attention(altmode, data->status);
->   
->   	if (dp_data->configured && dp_data->data.conf != data->conf)
->   		dev_dbg(&altmode->dev,
-
-
+> v2:
+> - fix a copy pasto with bad conditional
+> 
+>  fs/file.c                |  2 +-
+>  include/linux/file_ref.h | 19 ++++++-------------
+>  2 files changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/file.c b/fs/file.c
+> index dc3f7e120e3e..3a3146664cf3 100644
+> --- a/fs/file.c
+> +++ b/fs/file.c
+> @@ -26,7 +26,7 @@
+>  
+>  #include "internal.h"
+>  
+> -bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
+> +static noinline bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt)
+>  {
+>  	/*
+>  	 * If the reference count was already in the dead zone, then this
+> diff --git a/include/linux/file_ref.h b/include/linux/file_ref.h
+> index 7db62fbc0500..31551e4cb8f3 100644
+> --- a/include/linux/file_ref.h
+> +++ b/include/linux/file_ref.h
+> @@ -61,7 +61,6 @@ static inline void file_ref_init(file_ref_t *ref, unsigned long cnt)
+>  	atomic_long_set(&ref->refcnt, cnt - 1);
+>  }
+>  
+> -bool __file_ref_put_badval(file_ref_t *ref, unsigned long cnt);
+>  bool __file_ref_put(file_ref_t *ref, unsigned long cnt);
+>  
+>  /**
+> @@ -178,20 +177,14 @@ static __always_inline __must_check bool file_ref_put(file_ref_t *ref)
+>   */
+>  static __always_inline __must_check bool file_ref_put_close(file_ref_t *ref)
+>  {
+> -	long old, new;
+> +	long old;
+>  
+>  	old = atomic_long_read(&ref->refcnt);
+> -	do {
+> -		if (unlikely(old < 0))
+> -			return __file_ref_put_badval(ref, old);
+> -
+> -		if (old == FILE_REF_ONEREF)
+> -			new = FILE_REF_DEAD;
+> -		else
+> -			new = old - 1;
+> -	} while (!atomic_long_try_cmpxchg(&ref->refcnt, &old, new));
+> -
+> -	return new == FILE_REF_DEAD;
+> +	if (likely(old == FILE_REF_ONEREF)) {
+> +		if (likely(atomic_long_try_cmpxchg(&ref->refcnt, &old, FILE_REF_DEAD)))
+> +			return true;
+> +	}
+> +	return file_ref_put(ref);
+>  }
+>  
+>  /**
+> -- 
+> 2.48.1
+> 
 -- 
-With best wishes
-Dmitry
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
