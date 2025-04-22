@@ -1,50 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5409827EC9D;
-	Tue, 22 Apr 2025 12:55:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F2027CCF2;
+	Tue, 22 Apr 2025 12:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326526; cv=none; b=NZ4Lh58BgLEQNKgG6cRDqzrivOxdS0xwgCVGdRvTa7Y4qL54cLRbrOsDG050VyEXgtjsEdj3+gaqHZvjo3zV8qPbZ/KCDgkpNzA+kGlOzIML6E9VwDMSH79aeEg17xmfvhG2CyjPQbnajCjrysRplt4waDIurt+9jBan7U+C8A8=
+	t=1745326551; cv=none; b=IE/v6fgqk68gyn2jzL1yZKzcH+8oF8XZPtbOPti5RrBIi80MKZ2LpXXgkAUGUgeRC2BRafofjlA04k2mO0JJk0s1kYmwlWPU/dqpRI49RFGCZuI8RI7faOCqVnHdc3LKA8c3htfzSCpNJxGSbz8bBzKl2BmT1+meNlkgvkD05TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326526; c=relaxed/simple;
-	bh=5J5vS+tSTeC2z4T6bEh4qSkSbF4o4ICwzhXYHWtnIoc=;
+	s=arc-20240116; t=1745326551; c=relaxed/simple;
+	bh=23lGibbpCWsKFhyVf09PLpwkS/HoiLavqSRhsBIhO+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5/OmzFpSENIAeKsjViupHP4l8IdmbMfcbN9YRDSgDqrbGMpKvkVHrc0ikZArMD+fwNcIlVsD1yH6cQiUXeEU5Z34q7opnOAMaRWyZrZWg7a4B0zuVOE0/yMoTegBY1rZkstemloVjh92PswVPQzS/DXQHO5fpNMVIwIqOGDYo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c0MKeG0i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rh1dkFLVCr0Lk3F6jQtGaUpJyk76huLPy0bxR559AJchZgykrmlo8Cek9OZnw/hOB8syCE8m4TsjVfYv1RCzyz50NHmw1ojFOxdBtoCllcgLeU3Ixm/cJ2vRXXnTi55lqAuYXLIy7GHJztQsfCnYS66i1gJL9jlKPgmfLQXKEfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fC/4EfCn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c0MKeG0i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF79C4CEE9;
-	Tue, 22 Apr 2025 12:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fC/4EfCn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85DC0C4CEE9;
+	Tue, 22 Apr 2025 12:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745326525;
-	bh=5J5vS+tSTeC2z4T6bEh4qSkSbF4o4ICwzhXYHWtnIoc=;
+	s=k20201202; t=1745326550;
+	bh=23lGibbpCWsKFhyVf09PLpwkS/HoiLavqSRhsBIhO+w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c0MKeG0i9UB1rJMZhVnH1wFUcNcgQXUdMCCFUNcuFJzt85/QZH+ittf0htZg4cFSF
-	 zp8erxnPGi2pOrvKMLF5aBDtOGxqWr6/7ZsWv7igYe4rFDTJvoDfxvk8ixAMs4Auk7
-	 aCWet/lbt2351cFk8n1dg5LUfOO9ez7Mu/jsVCvRCGl7CgukrhN5EXWfVQYP7PipCA
-	 N/y53TKsuY11paq2Lz5R8KweS+rdnG+vSqmNwqw550FL8dG0vYTeGRZxRdMxexyPeC
-	 FonJtKBeOh2yKCTOU/DhfQhIB0fA9IvUuewD0tzPo1Gmmu4sxPEh6XeAxZlshg5RUu
-	 03dak/v+xBmeA==
-Date: Tue, 22 Apr 2025 07:55:23 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, imx@lists.linux.dev,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, devicetree@vger.kernel.org,
-	Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	Shawn Guo <shawnguo@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Simona Vetter <simona@ffwll.ch>, Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 1/1] dt-bindings: display: imx: convert ldb.txt to
- yaml format
-Message-ID: <174532652176.960722.2664945532929851168.robh@kernel.org>
-References: <20250417145742.3568572-1-Frank.Li@nxp.com>
+	b=fC/4EfCnRvTqvUqLczxKDzuKW7t+koIBTllhy5V7l7xpRZx7gzvgeZ7/89h/M379G
+	 db5jtNFkOdOHkgMaN0E0KIS1AXajLo/A2BfqkdZyGcfmQA6Upw7icf7kceS+x76IM2
+	 4FbyUk99N3HRTJNcWtelg9n7hvkNrK1Wp0Kh1ZctkhOKlw4rLm09z1Sn/rCyihyB1c
+	 yVqbMfqyUYGI479lqIJl489OqT4V5sMaliLz7LEjYL3UWzu3QB0eRkZej2Ns2uty0r
+	 njGykB5JduHMJ+9su3KUiif/3qEtNZpnYR2DqFN4aYRm1r+qN8w44ExPjEgGQv0T7E
+	 0FjkDfCCxl09A==
+Date: Tue, 22 Apr 2025 13:55:46 +0100
+From: Simon Horman <horms@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pkshih@realtek.com, larry.chiu@realtek.com,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH net v3 2/3] rtase: Increase the size of ivec->name
+Message-ID: <20250422125546.GF2843373@horms.kernel.org>
+References: <20250417085659.5740-1-justinlai0215@realtek.com>
+ <20250417085659.5740-3-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,32 +46,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417145742.3568572-1-Frank.Li@nxp.com>
+In-Reply-To: <20250417085659.5740-3-justinlai0215@realtek.com>
 
-
-On Thu, 17 Apr 2025 10:57:41 -0400, Frank Li wrote:
-> Convert ldb.txt to yaml format.
+On Thu, Apr 17, 2025 at 04:56:58PM +0800, Justin Lai wrote:
+> Fix the following compile warning reported by the kernel test robot by
+> increasing the size of ivec->name.
 > 
-> Additional changes
-> - fix clock-names order to match existed dts file.
-> - remove lvds-panel and iomuxc-gpr node in examples.
-> - fsl,imx6q-ldb fail back to fsl,imx53-ldb.
-> - add fsl,panel property to match existed dts.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v1 to v2
-> - use oneof in clock-names. imx6dl use imx6q-ldb comaptible string, but
-> the clock-names is the same as imx53. To reduce dts impact, use oneof to
-> allow two group clock-names list
-> - fix typo pannel
-> ---
->  .../bindings/display/imx/fsl,imx6q-ldb.yaml   | 194 ++++++++++++++++++
->  .../devicetree/bindings/display/imx/ldb.txt   | 146 -------------
->  2 files changed, 194 insertions(+), 146 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx6q-ldb.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/imx/ldb.txt
-> 
+> drivers/net/ethernet/realtek/rtase/rtase_main.c: In function 'rtase_open':
+> >> drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:52: warning:
+> '%i' directive output may be truncated writing between 1 and 10 bytes
+> into a region of size between 7 and 22 [-Wformat-truncation=]
+>      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
+>                                                      ^~
+>  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:45: note:
+>  directive argument in the range [0, 2147483647]
+>      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
+>                                               ^~~~~~~~~~
+>  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:4: note:
+>  'snprintf' output between 6 and 30 bytes into a destination of
+>  size 26
+>      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>        tp->dev->name, i);
+>        ~~~~~~~~~~~~~~~~~
 
-Applied, thanks!
+Hi Justin,
 
+Given that the type of i is u16, it's theoretical range of values is [0, 65536].
+(I expect that in practice the range is significantly smaller.)
+
+So the string representation of i should fit in the minumum of 7 bytes available
+(only a maximum of 5 are needed).
+
+And I do notice that newer compilers do not seem to warn about this.
+
+So I don't really think this needs updating.
+And if so, certainly not as a fix for 'net'.
+
+Also, as an aside, as i is unsigned, the format specifier really ought
+to be %u instead of %i. Not that it seems to make any difference here
+given the range of values discussed above.
+
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.com/
+> Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+
+-- 
+pw-bot: changes-requested
