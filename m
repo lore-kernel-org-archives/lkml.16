@@ -1,90 +1,77 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2EA186E40;
-	Tue, 22 Apr 2025 04:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8384C8828
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296806; cv=none; b=oc4JqcOKb3zNuf/eqzKihL5YU/6lXYPm2P5hB+AlIAT1mRT51q/5hq5fgk193cbOwLQ/mJ16NU2SSVXM1vO+rwSJ/HIK4vLfQeClPLQYH4XZQeFnMB/SY+f9QWmTbw4yLtRxU22wPAL5yDg6RakLUOmn4S11CZkGAwDv3UlJmwY=
+	t=1745296900; cv=none; b=jByhaTaCIddV7YM9paAwfjIH33m1QllEXhZ/EyySAblxxN2JsUjM+6uFCMRugCxPn+dw226krfAPZ8FpnVgS998mxm/0eMErUdVZ3aJ6dZIOC9MZvhxFzoyrI6Yqspm5L9J2XhTiRgg0E9iZ1KEzrfWS0ODl/mAonm4YWrIhv1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296806; c=relaxed/simple;
-	bh=CpQQRZuyWfvKRbSY9l+oYTtKKd/SUjT2q+YM4GZSr6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QELs/JkBS25XsACH7L6moom0efRANZONpE/sNyhs2g8WYIAem/geWK0P0z/QSO86zX1HjujNjxA9Bpf2dfa7JUc4wt+XcGWpOkgqCYBec/F8ulZF8KQzUxMtRntvxAP08gujIS/qsBeMG4bprh+U87mJGS8FJqu6kZEcVvaXv08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 89EBF68BFE; Tue, 22 Apr 2025 06:39:56 +0200 (CEST)
-Date: Tue, 22 Apr 2025 06:39:56 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Nitesh Shetty <nj.shetty@samsung.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
-Message-ID: <20250422043955.GA28077@lst.de>
-References: <cover.1744825142.git.leon@kernel.org> <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
+	s=arc-20240116; t=1745296900; c=relaxed/simple;
+	bh=am72mtWch1l3KVKLLgauCChlPFmJo0q7YZvvZg0tft0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oUX93tmSfRmj5dm6DdOVMa53o6EtNDO1CfXyn4UFDyzSOJTuav8+WSAU9WQ8Igw1kqw4VrPw0Z3DqAtOcklYr7Qp12G2Rd5mYwPQCQCI+9yNHybK7R2hBKCxbtQg3fLHXgYGpZGGss2A8MEUi40KA5TSfuRfQPxVPQ/fYrUcv/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=eAJWYuRO; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="eAJWYuRO"
+X-Forwarded-Encrypted: i=1; AJvYcCUAietndecHkkFE676MiIzPo3aVbO78TMiU9xZwZUbhOT8e/VcPrr0oJBWVJsFkEBHT/7Yj0Y8GWhdjd8D6@vger.kernel.org, AJvYcCX8e5lkx6emTA2borfuxb5jC1soxyqyvHudZ1hZb9i78v2n3OgGniTV9Xu9a1N52ajYNtNDlsa9@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745296886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=am72mtWch1l3KVKLLgauCChlPFmJo0q7YZvvZg0tft0=;
+	b=eAJWYuROTknq15uX62IPRJfArBDSJtUKvJkHYF2BM4uZsj4DCiLu95gGSBLrVkGKT1Q1VE
+	JpTmIdY0+NXXf0T55BqaTvCfknB4xMGUOO2HBcleuPIxKOUuQBLSrPvnt2AZJhMFSk3Nxd
+	ycsCkhlmqPWcbzU1yJj+zDuOlChCGzk=
+X-Gm-Message-State: AOJu0YzciYEDxeZHrA/8xzi/f+E0+XPr7I9sltII7tW3DBWRFovEecDt
+	/hO5jmsuyg1tadMs94T+Pcr81AeYZwkCsjeGavdpoA6NSiVju9ZhLDCQxlxy32OitvXkEivdUTx
+	Wz8hFLMNidmN2eTbg3c7/gOvR4hA=
+X-Google-Smtp-Source: AGHT+IEdtQUfZg9Nes25b1hvoET1MRak22sBTMYY44ZfX7B3F3+hxwiGJ7WVADpUZPirqQ+YnH3B+eKzeHX7EVmP3yI=
+X-Received: by 2002:a05:6102:468e:b0:4bb:dfd8:4195 with SMTP id
+ ada2fe7eead31-4cb81b60b49mr9621804137.3.1745296883958; Mon, 21 Apr 2025
+ 21:41:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20250422012616.1883287-3-gourry@gourry.net> <20250422043055.1932434-1-gourry@gourry.net>
+In-Reply-To: <20250422043055.1932434-1-gourry@gourry.net>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Mon, 21 Apr 2025 21:41:13 -0700
+X-Gmail-Original-Message-ID: <CAGj-7pXC0fDLWsuUh7PLNSyzCv-4LqKoOfE=hizUeOfoJqQ7Ag@mail.gmail.com>
+X-Gm-Features: ATxdqUHGnbKtYzS7_6xMY77prDcfzTNXx7RPZ1T_ZR4If9HzihBdR3-O4dlMnlA
+Message-ID: <CAGj-7pXC0fDLWsuUh7PLNSyzCv-4LqKoOfE=hizUeOfoJqQ7Ag@mail.gmail.com>
+Subject: Re: [PATCH] cpuset: relax locking on cpuset_node_allowed
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, longman@redhat.com, hannes@cmpxchg.org, 
+	mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev, 
+	tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 18, 2025 at 09:47:54AM +0300, Leon Romanovsky wrote:
-> From: Kanchan Joshi <joshi.k@samsung.com>
-> 
-> blk_rq_dma_map API is costly for single-segment requests.
-> Avoid using it and map the bio_vec directly.
+On Mon, Apr 21, 2025 at 9:30=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
+rote:
+>
+> The cgroup_get_e_css reference protects the css->effective_mems, and
+> calls of this interface would be subject to the same race conditions
+> associated with a non-atomic access to cs->effective_mems.
+>
+> So while this interface cannot make strong guarantees of correctness,
+> it can therefore avoid taking a global or rcu_read_lock for performance.
+>
+> Drop the rcu_read_lock from cpuset_node_allowed.
+>
+> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Suggested-by: Waiman Long <longman@redhat.com>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-This needs to be folded into the earlier patches or split prep patches
-instead of undoing work done earlier, preferably combined with a bit
-of code movement so that the new nvme_try_setup_prp_simple stays in
-the same place as before and the diff shows it reusing code.
-
-E.g. change
-
-"nvme-pci: use a better encoding for small prp pool allocations" to
-already use the flags instead of my boolean, and maybe include 
-abort in the flags instead of using a separate bool so that we
-don't increase hte iod size.
-
-Slot in a new patch after that that dropping the single SGL segment
-fastpath if we think we don't need that, although if we need the PRP
-one I suspect that one would still be very helpful as well.
-
-Add a patch if we want the try_ version of, although when keeping
-the optimization for SGLs as well that are will look a bit different.
-
-I'm happy to give away my patch authorship credits if that helps with
-the folding.
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
