@@ -1,147 +1,120 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565622980A5
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAA5A59;
+	Tue, 22 Apr 2025 18:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745345868; cv=none; b=XqhX+BJZHflcGtZGJFjFtGwZhNlFJsCdlVy295firOFv5FJ0TFfq+QzOUFFpRLfAe2MCQyEF+wSDeBKKRsKp2cCdJ634AG3qcuBQ2aOngYz/3OQCfkp32lwnGXSywzFUpmKgG3AzRv13JOTchAzrWEVCGOtR4sCHkHoEr0d3CUk=
+	t=1745345931; cv=none; b=Wn0jRA2AuAomTXkH4fEzkuxvJKa+9dB4gV0zM+35pLqzHt+Q0TDWt4cMKkfVJfsGMA39yF2KpQG2qs3f0yvFqqM3y8fCUB9PjWSCx1xSumaE/+0Jph5NyfC8H360XBu+Po6QRYzftNAeVw5HmC7I+04r1AqHLPcNU8kswbgK9fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745345868; c=relaxed/simple;
-	bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a+ZBLGm7rHCkk0pbajA0rNsI5v8IxY7Aq0HDaOZk3lB+odoK+JOtVk7sgSf+GDn0SFuQV5o7TCv0P5jzv1ODTpa1ee6WWk5LTZQPoM1AaO3fpQbR6ee4JZl1coyEM2pKlhGA3q4wt4Ej/ISWrQdBVc8f/IzJnR8UhT2E8lnmIOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=MR39QwKd; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="MR39QwKd"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso60669945e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1745345865; x=1745950665; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
-        b=MR39QwKdTZf97qUao1OOktR4IOOeezi9QcWxba8PDqj58jDSlESHAdFOIinEPlDxKb
-         64yGwcf4wcOdweJxyTsTaqU28ZWYhD3t0G9ruyz5wW7GuIkX8+3ia11Tsq9zGEx3lZmT
-         gnhXBQl/jsxKepnd5jpoGunwnTsZVt2aL8vvc=
+	s=arc-20240116; t=1745345931; c=relaxed/simple;
+	bh=TkG8zcBa7KfXe1GXRQCpN45740PFccsRwnCtPJ9YJlc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SYKA27/KSFEeXVXzSRYaluEEi1PVfyzerysdTRS5aytJPh9Pf/nWw2YRxn8sY8BeUJ2dpe4QJGQ9fsvdXaQ8mIps8pQ61OUivcTuqtoGbrbhUQhbtkAyoLaBFKWFXvQjO5uKLfa3itJROchDPSO3YL79xzo5WfS+LvZgAG23NiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-525b44b7720so2104441e0c.0;
+        Tue, 22 Apr 2025 11:18:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745345865; x=1745950665;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
-        b=mUUKLjIFXi2QCtGDTjQPIW4mVsbsCDLv0Sk1K9u1Epo/oJXiGhgGBePmyiftXz6kRD
-         19zuo2F9cnb8PghqgjVDKE2rN1ABiizinHOct+cytF+TibGwsLEXxZ2tzy8IlRTvuH6d
-         k3Y/YH8ac9jCQPKfXNz6lmnozAfis+QvAu3yHq+UAW5KKS177yGRxQ9vbmnrt3UExCe5
-         ZkDe7KJQ8x7WnjAhKyvi7FvOdwlb27Cdw9WkWP0Qqn5YjnPm4tBvENJn+c+pFBFE3v3w
-         E6EkkJ5odJI0iCA+m69cr7zsH076d0cR+vyo1zzgb2M0JR2FALUEUjxsxEA0684k4YZo
-         EDPg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2wgefE0rZr/LTgXUNO4ei9q7CWohjgmAYeD4yhL9PIGTEhpJlwwBcMqwrLGH24N04m9oeGtr/aqlCqj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJUpFeubekf4ZXONajJCvOkt2v+kl2Oqy8AanqNsLthezGhfNW
-	2CvL/3rUE/Wc1YRFiVhAad/nfpPcf8j3xTgAvbIRynoaKGQnvHjTXbUSkrN2xKk=
-X-Gm-Gg: ASbGncuXW2ioF9/YEF5E4F08BPn5qSLVmIemOXcEvJYL6F5Mjr2IDZDihb629LOBRjf
-	DPBzM83QZHHnCFFQIYlMcSR39+hAJ7amW8FqKzHmYMxUGdc7kE3L63baJjONrputiXfOr+ZH7yo
-	GwtFSG8wXh093oH8/TdsLVqJ2i4m4sLgh4hNuZkSnjJPznYVjWFD/NxbQBGN1WT/ez74E8x7ArX
-	0dQXvuuRupcT8xZV9GyDBu+gFU75NjuK1eWodoXUlIhNiqZHRd7LoDRYAHSAq5oN5Ok0CHVN8YR
-	n2FkQMrw67fxzx/v03vSNglO/TgV/u9nvTQ3gz024uV0xL3UstN18g==
-X-Google-Smtp-Source: AGHT+IGCIWX5BVPPocsuZVlCHJEPbcYq+xpC2dCnc+JUo1mNSZJLBXsvA5T5y7KuBkfqLGA1fxMXKA==
-X-Received: by 2002:a05:600c:4708:b0:43d:300f:fa4a with SMTP id 5b1f17b1804b1-4406ab97c6cmr143192845e9.12.1745345864518;
-        Tue, 22 Apr 2025 11:17:44 -0700 (PDT)
-Received: from [192.168.86.29] ([83.104.178.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbcfesm186100505e9.23.2025.04.22.11.17.43
+        d=1e100.net; s=20230601; t=1745345927; x=1745950727;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s9Uj7nSS8274bk83vAZdkd/UvrMtjHtOyVSltqRyvBo=;
+        b=vssXj0Y0gotZyrOS1HKclgo2uGGqLHBBg2D9oFTEtysjMRqTQzdg5lcdeTqArAaZOl
+         zpQm7LLNYSOToMA5tUtczCI/dPhTfx9pvt3pjO93z/boSpXez0HAoHKJmUipVBRNFoHE
+         jbq/DylRluBtOFMm13N2pks8cFPhx/TlfcqAVQqfjMMKUekXcHzI3OWmY6UPVU2quBOj
+         aCpI7Rrmhrtn2AKFjC96vpXhXVq0mlss0Shy++IErNZjjNbVgGDZM44HBnsLig/VLJhV
+         kcEfQf61nmhupL6nkf1fM9mNj2vLFZ8rMY5SKtA5P79VOuVXwDek1jqoQxjA7J4hGsMc
+         rsHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+dY1rLE8ea4yer5nBr8ANL+StDAGvjSm7jubqKmzE6st3dMkQsSRI0Dm4/FXdCKOg52K36mP4Skf+MhwS0dOC@vger.kernel.org, AJvYcCXIX6MwzGg4mJHEcCosPgZdDsXu4PEbgGkCDAeQmMLcCtfqQj4Frn+t2RZhIjFar605OP+Akq9qPS/7OdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGVwNTIPcRF8PxrdxcriV0UFrZp3uaTzX16JJKC1+a0SnjLlcz
+	ZQ2LOtWkQmk6P/fHAOo0oydXQzU904MxY8ZHxkinviqeUGp2/901PAsQWHwM
+X-Gm-Gg: ASbGncv70M+lvMnRxrDRVftgW4P8ZnGg6kFZ284oWgiQW8jWl57qfW/79VYgNuuQq7z
+	2l5vGHezcXKCNeL9QnRKIH8kRhHvAfnb73qXMgvLr/gw/YeB+2GP/w6030anLV4PPITEKkADn/h
+	pJkOJXn7wYUMB7fMoJweQt+u1AfXVgg+PhmIEEATR+Li+RsqxiLuvnHhZpU0//FF+Q+q2aTNju1
+	3DO8EWKdLnU8IANPm7Z7Wa6ZhOOJpYs+jshpUteD1mCoab+Zya/dOKYz1eZGe4v8eKFQ5aCS0LC
+	wkACU6Fm8GSjxsTs0MumuGH3ItRQYEkEWQC0mJNtg7CHcU1uDgwXCx/zZP1SefYfCNqTgHHnZao
+	FpGk=
+X-Google-Smtp-Source: AGHT+IHD5nyOEHlW7+Qg6RWb3fNazEajANp02OLIRp/F2N6JuPmLr/VTiEO4IGb/QPmEd72zU5zneA==
+X-Received: by 2002:a05:6122:2a13:b0:520:60c2:3fd with SMTP id 71dfb90a1353d-529253df487mr14224907e0c.3.1745345927456;
+        Tue, 22 Apr 2025 11:18:47 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52922bebf8fsm2009586e0c.3.2025.04.22.11.18.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 11:17:44 -0700 (PDT)
-Message-ID: <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
-Date: Tue, 22 Apr 2025 19:17:42 +0100
+        Tue, 22 Apr 2025 11:18:47 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso2063428241.2;
+        Tue, 22 Apr 2025 11:18:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXMQEGNi3kRfNHEhMIZvFDdTFLS+QBkaPAdeJ88SGdrUEL69lpRKjCwcLE91Y28jm5qdnuPHezRenih9g4=@vger.kernel.org, AJvYcCXkRUZB96cLTR9um7KuOXFLQxUn9DDrS9XhtjYhUALkjcuAYTC7QAGdwpY5+HfapfTpxbuuf741U+sWmOAnklcw@vger.kernel.org
+X-Received: by 2002:a05:6122:793:b0:526:19e6:fa34 with SMTP id
+ 71dfb90a1353d-529253b90d1mr12333603e0c.1.1745345927133; Tue, 22 Apr 2025
+ 11:18:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: Dave Hansen <dave.hansen@intel.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250422-lib-fix-prime-numbers-kunit-v1-1-4278c1d4a4ae@kernel.org>
+In-Reply-To: <20250422-lib-fix-prime-numbers-kunit-v1-1-4278c1d4a4ae@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 22 Apr 2025 20:18:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWj_bap0Lb3OXuLQBfLwTVVD0_-Jpm-VYf6fbFfK8MOUw@mail.gmail.com>
+X-Gm-Features: ATxdqUFX3oavo1tFI9SarX7EhH7m_kTLzABVcQKLqBnzcLzgWkOGb3ggZLd8XAI
+Message-ID: <CAMuHMdWj_bap0Lb3OXuLQBfLwTVVD0_-Jpm-VYf6fbFfK8MOUw@mail.gmail.com>
+Subject: Re: [PATCH] lib: Ensure prime numbers tests are included in KUnit
+ test runs
+To: Mark Brown <broonie@kernel.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Tamir Duberstein <tamird@gmail.com>, Kees Cook <kees@kernel.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 21/04/2025 9:52 pm, Dave Hansen wrote:
-> Purely from the amount of interest and review tags and the whole "v14"
-> thing, it doesn't look like this is very important to anyone. Not to be
-> to flippant about it, but if nobody else cares, why should I (or the
-> other x86 maintainers)?
+Hi Mark,
 
-There are several downstreams already using this as a part of their
-overall system security, one example being
-https://www.qubes-os.org/doc/anti-evil-maid/
+Thanks for your patch!
 
-It's all giant out-of-tree patch series (in multiple projects; Grub,
-Xen, iPXE too).  Ross and others are trying to be good open source
-citizen and put it upstream where yet-more downstreams can benefit too.
+On Tue, 22 Apr 2025 at 17:43, Mark Brown <broonie@kernel.org> wrote:
+> When the select of PRIME_MUMBERS was removed from it's KUnit test
+> Kconfig nothing was added to the KUnit configs, meaning that when run
+> via the KUnit runner the tests are neither built nor run.  Add
+> PRIME_NUMBERS to all_tests.config so they are enabled when the KUnit
+> runner builds the kernel.
+>
+> Fixes: 3f2925174f8b ("lib/prime_numbers: KUnit test should not select PRIME_NUMBERS")
 
-~Andrew
+Sorry, I wasn't aware there was yet another config file that needed
+an update...
+
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+
+> --- a/tools/testing/kunit/configs/all_tests.config
+> +++ b/tools/testing/kunit/configs/all_tests.config
+
+Given this is the sole file that contains CONFIG_REGMAP_BUILD=y,
+it must be the right one ;-)
+
+> @@ -43,6 +43,8 @@ CONFIG_REGMAP_BUILD=y
+>
+>  CONFIG_AUDIT=y
+>
+> +CONFIG_PRIME_NUMBERS=y
+> +
+>  CONFIG_SECURITY=y
+>  CONFIG_SECURITY_APPARMOR=y
+>  CONFIG_SECURITY_LANDLOCK=y
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
