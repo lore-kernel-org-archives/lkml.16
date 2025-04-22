@@ -1,247 +1,118 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F298E1E0E0B;
-	Tue, 22 Apr 2025 17:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B6A293B67
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343924; cv=none; b=K7FHkR3VlsFJ7cuEnV9XTE25VKoM5yPrqGu/Msa2Ap8Cd2U0eKN0s7VUMnteLK13gj5i/VkJhgaROHfzHMNWOuPcngF0qGmFnPiw0epxTwyZhbdLWOOGIZEBcjKxT91iJecUu2LHofMF0NEL9NdTeIA2qtpng089AJ3a8K6yb58=
+	t=1745344022; cv=none; b=PuYVXtMDzq6N7PEY/sM/azg4c1bvs3DAvO1gUOkS6tvEoAQz982mVjTdteh0bwCgzv8145ZdUydjNlhnlkyzHIoz8LGTWfZCHP5PNdEArRqUwNRuIUKqs1URj0zBLi+eXKBEQqBWv1r2iiVRZa6NzIBUoapRZfNA/4TM1xSywsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343924; c=relaxed/simple;
-	bh=TP92gUWGVkFzH3MKoN1aN8S/2F6S96syX8J46GyVAg0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ri7mibtGjC8a7uJsYk0IuNEnrNXo1usXUNSHMKuQJZy4yJxZyHSneUbzN2JfCXpfGiASHCQmJovNjbfNkaGQyZPTfP44csOoEMlLrfte0LbC/mdpt7k1FSf62vHag/a4WkwAwtcMPqZ8Cvy48hsx4etdVBTctoJfAMoZeCrHYRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: wfq5pVq0Qai6PcUL5g4+XQ==
-X-CSE-MsgGUID: sJkLmvwBSdCwTRIyHgaEQw==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 23 Apr 2025 02:40:08 +0900
-Received: from mulinux.home (unknown [10.226.92.16])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 800B34045852;
-	Wed, 23 Apr 2025 02:40:05 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v6 6/6] arm64: dts: renesas: r9a09g057: Add DMAC nodes
-Date: Tue, 22 Apr 2025 18:39:37 +0100
-Message-Id: <20250422173937.3722875-7-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
-References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+	s=arc-20240116; t=1745344022; c=relaxed/simple;
+	bh=wbD5RZ5SZDo3XaLXUPNWQ8D+urq+eTsm3HGrZa3mm8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PDBFTBf+jWMMeMA4x2mj+nKutGlgEcOdlsJMu4eyH3sY2QhvZTPCyPVLxSebhUf9LNO58CzzClXYhPzRN4CUncg2Iu2Q/VvITqvhgbSVU8cHVKiqH0B7K3djwgs6ESeSliVcRQXUnhnbyZQlHY2/L9LRTu8qZgyABmdbEWMPmvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=a+DbMgbC; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="a+DbMgbC"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ae781d21so57694001cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745344019; x=1745948819; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JpSUt/W7rzxG5ba1nOA8p416bP5hsdNLtoV24xeN0Vc=;
+        b=a+DbMgbCdjAASwE8rxE5jgtXkxTOXHutxrUP9+AoZPTxFS0ZzN48U13TDLHNeJEQ0A
+         FtY6JsQoeLK1WaMxE94VxrtSWUNhxXMcao6s4tP+hmbG+JqB2/XaORMl5PeCBIj/2TSW
+         i2rPKBcmOGCreIR3ZTtuDLaHuqXjS2IublcjzcxmenMLjUZuJIKdeYWNPKNWUNWgSE6y
+         cfEInbAhsA1Vg43MVWpWnCECRNxMdqb11zHCVqtcQlklMoOrUhfmEWzrRsIDvg9WtSiJ
+         Vm+LS6rByMYb8sVHLm1V36VZQX4CjVrKdsKmvZaQtggc7bhlwrQnSn3iGum4htEQvF4r
+         sUJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745344019; x=1745948819;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JpSUt/W7rzxG5ba1nOA8p416bP5hsdNLtoV24xeN0Vc=;
+        b=rObC+sl8s6TdcLoxzUp/vBYRriLgr7FfkbpVneNy9VmnSSaQfX66ViCrmGkw32lHL3
+         VDR0a0kXL1BlBYSLwCVPMJqEiPSg7UcD0XXYscjCfD3NrLigf30Acuc9CzJjE0tQzKBw
+         XOVR5NVJ62BbetB0ulQpHj2OezH6f0zXf6Jt5Vj+YlBmew1IrFciRRgLSsTzeD8Rq2EC
+         Hh0ZCeWNHjNi5MLDQiKe1gOTgVaY1CGbLF2w725Mh8vEay3I+EyoT7dpqkk/gEyYVW30
+         SKuHgylQJZA7sMDDTSHW6VfsolPqoqd6BLZRaGPaOwDkh45FXeqqGPxEJ6tFPLXlwYbN
+         MwRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdIn0/cBNjzES7yRaRdYjxB+LhQiCv64ttHFAV+Lz463Wg9eG9GgfmXqKW0fn045V+z+dYVIlybdrZKw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV3Qe8LBPaOAymlvthKzIex58SoJAat/V5c7/LmwoCQqyBcUe5
+	OmmmrE5YhL4fncSY6iapGVnQmFtkUr/60lufnTLoPhRJWX6c87flAmRLWoCQbU3wCbxKI682AE/
+	h7tc=
+X-Gm-Gg: ASbGncsIt2LEkz8cBVeHg2eSWo7cysWv9sb6+lplzo/TXm+V8BGkvSa1WCoBV0vZWxh
+	wOdpoRxyHhy3rzbATxyjclTPOYlcrgf0rjQx1xzZQ3DY5WMS02uVwXd3Bc/orSefqV4Sn18KR2E
+	fEZr/1IaiPakpvVAahrpynSWpTMIZVBA0bG8CDWf3hBejAYJ/H7PECNZSJlkITZe40FeB1/R5Eo
+	5lN0YgnxXFhZ9etsre3n+fmeFfxIbdYeqx0O2QPCvQxTJkPe0hwiKAkezHRTFA1JsvWUxGbcgYx
+	R0uS05JhTOdq38Kr/TRcp63mYZJiVuy8KuPZa5MkKwpOy26v5Q==
+X-Google-Smtp-Source: AGHT+IFDMianZxQRcH0bw5Lmh7bTgr34wYKo3F4wCNpAKa7ksVo4bSSqVBtt2MR3jcNS2ouH63sd8g==
+X-Received: by 2002:ac8:57ce:0:b0:476:6625:eed4 with SMTP id d75a77b69052e-47aec4c5881mr295092471cf.38.1745344019069;
+        Tue, 22 Apr 2025 10:46:59 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47ae9c16ba0sm57824681cf.4.2025.04.22.10.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 10:46:58 -0700 (PDT)
+Date: Tue, 22 Apr 2025 13:46:57 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, mhocko@kernel.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, muchun.song@linux.dev, tj@kernel.org,
+	mkoutny@suse.com, akpm@linux-foundation.org
+Subject: Re: [PATCH] cpuset: relax locking on cpuset_node_allowed
+Message-ID: <20250422174657.GD1853@cmpxchg.org>
+References: <20250422012616.1883287-3-gourry@gourry.net>
+ <20250422043055.1932434-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422043055.1932434-1-gourry@gourry.net>
 
-Add nodes for the DMAC IPs found on the Renesas RZ/V2H(P) SoC.
+On Tue, Apr 22, 2025 at 12:30:55AM -0400, Gregory Price wrote:
+> The cgroup_get_e_css reference protects the css->effective_mems, and
+> calls of this interface would be subject to the same race conditions
+> associated with a non-atomic access to cs->effective_mems.
+> 
+> So while this interface cannot make strong guarantees of correctness,
+> it can therefore avoid taking a global or rcu_read_lock for performance.
+> 
+> Drop the rcu_read_lock from cpuset_node_allowed.
+> 
+> Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Suggested-by: Waiman Long <longman@redhat.com>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
+>  kernel/cgroup/cpuset.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index c52348bfd5db..1dc41758c62c 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -4181,10 +4181,20 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+>  	if (!css)
+>  		return true;
+>  
+> +	/*
+> +	 * Normally, accessing effective_mems would require the cpuset_mutex
+> +	 * or RCU read lock - but node_isset is atomic and the reference
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v5->v6:
-* Rebased on top of the latest changes.
-* Added Prabhakar's Reviewed-by tag.
-v4->v5:
-* Collected tags.
-v3->v4:
-* No change.
-v2->v3:
-* No change.
-v1->v2:
-* No change.
----
- arch/arm64/boot/dts/renesas/r9a09g057.dtsi | 165 +++++++++++++++++++++
- 1 file changed, 165 insertions(+)
+              ^^^^^^^^^^^^^
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-index 18ab5639b301..0f3501951409 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
-@@ -280,6 +280,171 @@ sys: system-controller@10430000 {
- 			resets = <&cpg 0x30>;
- 		};
- 
-+		dmac0: dma-controller@11400000 {
-+			compatible = "renesas,r9a09g057-dmac";
-+			reg = <0 0x11400000 0 0x10000>;
-+			interrupts = <GIC_SPI 499 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 89  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 90  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 91  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 92  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 93  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 94  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 95  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 96  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 97  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 98  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 99  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 100 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 101 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 103 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 104 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 0x0>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg 0x31>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			renesas,icu = <&icu 4>;
-+		};
-+
-+		dmac1: dma-controller@14830000 {
-+			compatible = "renesas,r9a09g057-dmac";
-+			reg = <0 0x14830000 0 0x10000>;
-+			interrupts = <GIC_SPI 495 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 25  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 26  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 27  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 28  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 29  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 30  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 31  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 32  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 33  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 34  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 35  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 36  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 37  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 38  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 39  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 40  IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 0x1>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg 0x32>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			renesas,icu = <&icu 0>;
-+		};
-+
-+		dmac2: dma-controller@14840000 {
-+			compatible = "renesas,r9a09g057-dmac";
-+			reg = <0 0x14840000 0 0x10000>;
-+			interrupts = <GIC_SPI 496 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 41  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 42  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 43  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 44  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 45  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 46  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 47  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 48  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 49  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 50  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 51  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 52  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 53  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 54  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 55  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 56  IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 0x2>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg 0x33>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			renesas,icu = <&icu 1>;
-+		};
-+
-+		dmac3: dma-controller@12000000 {
-+			compatible = "renesas,r9a09g057-dmac";
-+			reg = <0 0x12000000 0 0x10000>;
-+			interrupts = <GIC_SPI 497 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 57  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 58  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 59  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 60  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 61  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 62  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 63  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 64  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 65  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 66  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 67  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 68  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 69  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 70  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 71  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 72  IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 0x3>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg 0x34>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			renesas,icu = <&icu 2>;
-+		};
-+
-+		dmac4: dma-controller@12010000 {
-+			compatible = "renesas,r9a09g057-dmac";
-+			reg = <0 0x12010000 0 0x10000>;
-+			interrupts = <GIC_SPI 498 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 73  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 74  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 75  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 76  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 77  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 78  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 79  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 80  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 81  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 82  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 83  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 84  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 85  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 86  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 87  IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 88  IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "error",
-+					  "ch0", "ch1", "ch2", "ch3",
-+					  "ch4", "ch5", "ch6", "ch7",
-+					  "ch8", "ch9", "ch10", "ch11",
-+					  "ch12", "ch13", "ch14", "ch15";
-+			clocks = <&cpg CPG_MOD 0x4>;
-+			power-domains = <&cpg>;
-+			resets = <&cpg 0x35>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			renesas,icu = <&icu 3>;
-+		};
-+
- 		ostm0: timer@11800000 {
- 			compatible = "renesas,r9a09g057-ostm", "renesas,ostm";
- 			reg = <0x0 0x11800000 0x0 0x1000>;
--- 
-2.34.1
+This should be callback_lock. rcu_read_lock() was intended for css
+lifetime - which is ensured by css_get_e_css() - not a stable mask.
 
+Otherwise looks good, makes sense to lampshade the lockless access.
+
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
