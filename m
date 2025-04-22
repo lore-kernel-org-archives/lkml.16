@@ -1,115 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1EF29CB50
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83729242D86
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745358726; cv=none; b=fXeI4wmOckmJTF/bOkd+FNM8gzNZCzaVMLcGWJjVf/sNLUrvAPcEuccq26dAB5ADujtMrUpa7dFY9bXxDvWexFKrKYzcJBv8R6iFiRABe2+HlsNRZ+O+gI7YsSN/1zBATwcMggeKAp7qOf9A+NuZVXa9zE04ldS5ao1stkInz3Y=
+	t=1745358935; cv=none; b=MFgOddSIVx0pKyJQHxvJ+l6M+rbcKuxaXmlGHIpqlVNUUF7cTvj4j0iYVjQ19iRLSMJsa2X1c1xvX/mhXZV+nvUtO6IsY6fs96rkigVCDNJYUYqvjWX7S++7eHnXlyLuFeth4EByMePuVwG0TwWEcEUgALtAb+vju5vtYA7Liw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745358726; c=relaxed/simple;
-	bh=3LybbdQW1iMI36n6qF6wDQCtqVvVWx7aMPmreP0uZNQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=skm0JZOdEjesEpeR3HJoAXXrQW0NvTazDMITFrnOvw9UbI3XFKldNjPGpkcog3l670vEVDvULrEIhP+c73UnUjOkShF3I0iWBC1hg9MZEEUsq6xA0QeojMZ8GBZguhnUVq4gRMvZQoM6gG7PXgVrP1BiycOjUgjHsvuNzbyMaUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PJvKQDhj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745358935; c=relaxed/simple;
+	bh=IBg6T/8bdZueoIIYbP2yfI78xemmRKXPfW+X6Epwyb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzCTyKjETKwsXwSxFH9W9kSs7Vy3xQ7998FmPB6aoXhc528U1eLFDVd99Yvq8hL+yKB4Pe5A1ropDK/5k67FMzcYmBczOYo7gFqAkFW7d20fWKAfmFCzPByqeBmgAdmGM7RI8jx7rJZHRfZFUnCuJh9RbDxGIXCeYRflQuya87E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mNtzwtl4; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PJvKQDhj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745358723;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joxllWRMo1gVbEqeWtbqHWjwqROo+sski2Q8YGooCfY=;
-	b=PJvKQDhjqrbMIicbOnZHuYhXeftkML3o8zTL0KP/7KOIG0q2cb+9aCnnenr5omyPeabiBO
-	eZP9/6nDv8FT/Yyrpqm/CbofI2cGjAw+kPzL4wS3sSHp8C0jp+DJ5tMjjFurFzAtsDmCps
-	XFJCDfH6wyUfLjagWAONUKjnoPux/2Q=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-YahIHoafMKKIL1keyPH-Ow-1; Tue, 22 Apr 2025 17:52:02 -0400
-X-MC-Unique: YahIHoafMKKIL1keyPH-Ow-1
-X-Mimecast-MFC-AGG-ID: YahIHoafMKKIL1keyPH-Ow_1745358721
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so26859805e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:52:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mNtzwtl4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33e5013aso66298375ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:55:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745358934; x=1745963734; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6asYMkdcVOCJg0CB/GTsjjXoi08Jnm+cXJbFRuu7HS8=;
+        b=mNtzwtl4JAHZuhoc2HzSch8z8+L0KSMRub2FADRi2yRKAXF5gqNmxiX/ASd3KPKCD0
+         dR35IalbwZ10/julJmkFHlwAQKQ7tgg6RX/DO+Gx/4eKhM6JAy4inXLZoj8uROrL4aor
+         +wPI+5xwsS7hzMmsz8OBtqDOfxx0U8r89/zHLM/8fFDgpPCxQsL5zg69c+iV9wv3kS9R
+         ENMqGwSN1FQFBW43oo63lGcQw4WI+zW1TLJYAiCMCUYEk2GBqpaq94KY0vU9IxUM2MAa
+         K0dWQ2IRNpeGZR4bCzbnS/Jnl3axCQmYsS2NOSx9hbxQntCnLAT35OLwdhJLswFRaKsi
+         g1dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745358721; x=1745963521;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=joxllWRMo1gVbEqeWtbqHWjwqROo+sski2Q8YGooCfY=;
-        b=sMxAOBrh/MNjsFjeqc+S5Rc4/qgaVglM5gF4ksGuKEc/N6OGJcVq+cTpz+I+5W0yQS
-         vnwZKodvXjoz6ao+T5DAPDK0rnXWN0sWzaEs9Byh+X9+mGMCLX1H9h/NgGBUQ/qqagmT
-         EIhNpH6XSvwJ7R6MZ+yQ0R5Q7wMv5WrgTgb6H2eDytIGltxlGUZGFH8lu+ocN/mIblm3
-         RUtMndgHwcM6FLEemiGupxkRRyPq3rm7oRqCOn7C36cCiYCcJczgBd8Fp0hlMIfHO1re
-         c9DE3swUJo0urI4gwFtZeZS5WM3msdMxW9fATYy17hEUyv0EAc1KEc83selB4RMQ39IH
-         hAuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWbCupSu9UEqMutmvpNLohkte/pG9gFYXyfh1ZMXjMVJHVDDdvjBJ4L5B5WARa5awxg3hM4DdW8CPRnvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNNLq8eFkB/YQ15x6GIZgjl0YtDCbXOEww9TKktShmy+cvzKbO
-	5WnJBW3ia9ZWEW/C4xtoX4OrPQFO0MeyBj5HNTy0PmhBaG3ohabVrfKobdQ+4uIIRTkQ+hd55Zc
-	RVEQjyitDeJh4gVy9oVhWtPHX9hAPKnGNJt8C/ML+z1zSM1+HrK1UKbgaJwvJaQ==
-X-Gm-Gg: ASbGncsPA8o4BTGBXixo5CrUt/SVIauZ+t0/X3mkEwgNepo8N+lReROg5wUViYKlkzx
-	ixJdESK2+1wwkYLaVhCrRpmZuvZ7+MRyqSUVNgr7yH+j8B0/ww6wQauMrGn5n9Z42NBSSSa/1NY
-	pHRfv9E+7j0EaPehpg60l+3KgbAfU7bFtr4paqZbwQjrNdmzyazAvDPW28t4euYBord7NCSyK1M
-	2SpIm8IOI/IAeX97IpjtuSI7a6SKtmwgBB2+YHG0K0LLZ00QpYWiyqOvwtpXiTgjNLaJBSqUgdJ
-	9iGu+ypGAUU5TaKzbnDl6nFenI6BATX/ycTUo4JrYnn8GGcr1aneMexwObJ7XXf1Gh/Dgw==
-X-Received: by 2002:a05:600c:154d:b0:43c:f4b3:b094 with SMTP id 5b1f17b1804b1-4406ab7a726mr134798685e9.6.1745358720934;
-        Tue, 22 Apr 2025 14:52:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGTLxTsyxpVT4t0zbtQAWUyHdf9Zx7V24YbCZxhwIqhnPj4RWkalHudFTrHtJPVsV+GXVwc/g==
-X-Received: by 2002:a05:600c:154d:b0:43c:f4b3:b094 with SMTP id 5b1f17b1804b1-4406ab7a726mr134798515e9.6.1745358720531;
-        Tue, 22 Apr 2025 14:52:00 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d37332sm2604005e9.30.2025.04.22.14.51.59
+        d=1e100.net; s=20230601; t=1745358934; x=1745963734;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6asYMkdcVOCJg0CB/GTsjjXoi08Jnm+cXJbFRuu7HS8=;
+        b=mgtYIUY9gc9/WnL+Lr6JTouAxYqiNdpJASkL8PKXJaJY652oDwCwISdV3LP0b7t/RV
+         P0no38L8wzEjLDr6pD3OrGNBaKvzD6A1REnye5p0M0QOHK2DDcrd0k4sDEkuhcJNatjG
+         HVSN53Zma7+pQ9GneIrDHqB66r06UOJZ5lEpCAZj/jfEGh2wJSuArc3QUIHfIdpxrZ/t
+         oinJUpe82KAswQWoZw1NwKenr6/vosRcqagGOKyjP2C1J2/6rQXe74MKAPnFFMxj/0mt
+         3jFvsid6N6uX8Lt0pPUYsEGDaGPOre8sMSB/PJCmp38Tiu5ANHOorOgf/SVCectFPU4n
+         dJlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQixkihhPKmwrKqINGuPXJHoX1Zcz9tyJxGOgN9GMgZV6tW7k9NzkHyMbP4z6jz8tx9bUcpZASS2+kbW0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyiHoaTOsnV2kDjG2upX4dyEAT3GQoJ3yGTxaYtxpM7njMtVSR
+	ezl+coEJKiHhcv8OoPOBo2ADxXmrYmciEpkAZo1keBxUj10GQ9P4fDOS3A2rDA==
+X-Gm-Gg: ASbGncsP/80qcnJRtSCvtGdtj6B+zJM1+FELefHBNNiEfJP0BmOMCRnBe5bQgUW98qu
+	enr3FT7Jz51KZPhehJg7NcO1Zalp92RbsTQKVBkQwT1mPYJAXppewQ1mt+pjSwTRZpiUXz3PhW9
+	zW6BN6pCD4SrMJYOHuS+AnOiM6QQityHNXsCUhigW1qD0yWxchla9OqyqAUJC33vhh/ctUws5FY
+	fIF1y1x8NenHeDMfzxxJXNgsa2vyLQhiCvElpM89iFXNwzkGZZ6jjI7ENutdOb0lzlFMwwX/sFG
+	YnU4Lioky08sT7NsFer2IqXE4iOPEgKVRcvKO3ZhgAzBioXzOTcXh9emipwTl05i0VkT3CF1/nb
+	rKmjNmg==
+X-Google-Smtp-Source: AGHT+IGj1WS3gCYuWNM31cHMqZpSCdXyw2eIzHGcK/aumOJ6NuA9dKBVMTjVtVR1uQU6qgyTGOQ+uQ==
+X-Received: by 2002:a17:902:ce82:b0:216:53fa:634f with SMTP id d9443c01a7336-22c536303e4mr222403105ad.48.1745358933312;
+        Tue, 22 Apr 2025 14:55:33 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf3eb1sm90943865ad.82.2025.04.22.14.55.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:52:00 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Philipp Stanner <phasta@kernel.org>, Dave Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>,
- Arnd Bergmann <arnd@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, Philipp Stanner <phasta@kernel.org>
-Cc: virtualization@lists.linux.dev, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/cirrus: Use non-hybrid PCI devres API
-In-Reply-To: <20250417094009.29297-2-phasta@kernel.org>
-References: <20250417094009.29297-2-phasta@kernel.org>
-Date: Tue, 22 Apr 2025 23:51:58 +0200
-Message-ID: <87frhzc1a9.fsf@minerva.mail-host-address-is-not-set>
+        Tue, 22 Apr 2025 14:55:32 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:55:28 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+Message-ID: <aAgQUMbsf0ADRRNc@google.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <aAa2Zx86yUfayPSG@google.com>
+ <20250422190036.GA1213339@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422190036.GA1213339@ziepe.ca>
 
-Philipp Stanner <phasta@kernel.org> writes:
+Hi Jason,
 
-Hello Philipp,
+On 04/22/2025, Jason Gunthorpe wrote:
+> On Mon, Apr 21, 2025 at 02:19:35PM -0700, William McVicker wrote:
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 1813cfd0c4bd..6d124447545c 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -1440,8 +1440,8 @@ static void platform_shutdown(struct device *_dev)
+> >  
+> >  static int platform_dma_configure(struct device *dev)
+> >  {
+> > -       struct platform_driver *drv = to_platform_driver(dev->driver);
+> >         struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > +       struct platform_driver *drv;
+> >         enum dev_dma_attr attr;
+> >         int ret = 0;
+> >  
+> > @@ -1451,8 +1451,12 @@ static int platform_dma_configure(struct device *dev)
+> >                 attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
+> >                 ret = acpi_dma_configure(dev, attr);
+> >         }
+> > -       /* @drv may not be valid when we're called from the IOMMU layer */
+> > -       if (ret || !dev->driver || drv->driver_managed_dma)
+> > +       /* @dev->driver may not be valid when we're called from the IOMMU layer */
+> > +       if (ret || !dev->driver)
+> > +               return ret;
+> > +
+> > +       drv = to_platform_driver(dev->driver);
+> > +       if (drv->driver_managed_dma)
+> >                 return ret;
+> >  
+> >         ret = iommu_device_use_default_domain(dev);
+> 
+> The diagnosis looks right to me, but pedantically I think it should
+> have a READ_ONCE():
+> 
+> struct driver *drv = READ_ONCE(dev->driver);
+> 
+> And then never touch dev->driver again in the function.
+> 
+> Send a proper patch?
+> 
+> Jason
 
-> cirrus enables its PCI device with pcim_enable_device(). This,
-> implicitly, switches the function pci_request_regions() into managed
-> mode, where it becomes a devres function.
->
-> The PCI subsystem wants to remove this hybrid nature from its
-> interfaces. To do so, users of the aforementioned combination of
-> functions must be ported to non-hybrid functions.
->
-> Replace the call to sometimes-managed pci_request_regions() with one to
-> the always-managed pcim_request_all_regions().
->
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
+Thanks for the response! Yes, that would work as well. I'll send a v2 revision
+once I get it tested.
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+On this note, I was looking through `of_dma_configure_id()` and am also
+wondering if we may hit other race conditions if the device is still being
+probed and the dma properties (like the coherent dma mask) haven't been fully
+populated? Just checking if the driver is bound, doesn't seem like enough to
+start configuring the DMA when async probing can happen.
 
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+Thanks,
+Will
