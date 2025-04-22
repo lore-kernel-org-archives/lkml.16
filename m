@@ -1,250 +1,115 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F0827C848
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF441FDA94
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324385; cv=none; b=dCuryTS8DQ1280XsLoFKL5LwWfxWBOiGYYsa6xV87BkKMuVAIFuJTrh+RHMlg0JQiX5tnVg6qvtKP+A7qX7us6p86PD3LK9bSlGKgHqSnS0L9RSm2LXPMA8uzLMQ0bM2Zn2szhu/F/9hPmmpfFahKx96I7ACahPNJqSrjFppqfo=
+	t=1745324444; cv=none; b=C2Gmh7wFVKR/Fh7JtGtT08AUY5D/BuFu2xEkTOzXBPmEL7EoTcIGv1QdVdFbW64KkAXMTPTMwTaTi4VHreGy89GuQ6h55+bPYYEjRp1dKdpndMfiPcfAEChaklqMzxlHkH60dyRh+U8TQmfNWFag5YhXW4MfcjJ28ZYHNFy1Mo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324385; c=relaxed/simple;
-	bh=UYc1eGDm674rDlkQnD76LWHSlX1JK2USIpGs3cMnGLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObsQLszVw3aO0qd1Exb4pY5ZB763AJLPKUSIhMOxRXSKmwNZtm5k2IR2agNPW0oKbmhbnY6Q3IVFwsRE0ynXyHv8NYaKUS/c1JM7ufOKUYEhgBrCzEX7eXDJo5sgIrMd3eHyG6CEICXYFQBcxiV87/mvDg06lpvcw31LOOSvLZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D5CDA43B53;
-	Tue, 22 Apr 2025 12:19:37 +0000 (UTC)
-Message-ID: <8c6e4773-796b-47a2-97c4-e4504801ba48@ghiti.fr>
-Date: Tue, 22 Apr 2025 14:19:37 +0200
+	s=arc-20240116; t=1745324444; c=relaxed/simple;
+	bh=0agyOukoGRm94VWNyqLFSBxmZlyVUx0kX7jQMQPjlZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MNOn0rGQPaMYgsMPNm6LUCxiGSiG9IVu7u5y2Rf3aP1v992EafK2w0uA+f9XWJZoe4eGEicvRuaKEb708IkJNMD6mXjB+g+27sMoa6NUHMwpmNeyKOy5QZyguT5ht0o39h7glnBAI9pr1EakRuNp/wj4oQXby6gxGH8ONT1NI2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YeERTYnr; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YeERTYnr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745324318;
+	bh=5SCNpT7fxknXxFl2jrf1TuKGByQegnZorIene7qFnoQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=YeERTYnr0iPBwxxu585clwjh6tne9u4UQOglhCHm7R0UmmJ/e2yRmV/kyLl0a+3/P
+	 pZ+pyWJvGsKBWJ5HykWHiiK18r+D20E3JiswMrxfcZmo+jHjyW3XO2p+aApJsfG5uI
+	 wJ1I6zDmaEUaaS8gFe1mCsyHRqoatyijJHKbnxXU=
+X-QQ-mid: zesmtpip4t1745324305t656bd8bb
+X-QQ-Originating-IP: hg4RPvjNFuLrioiProjFSc49eEpyxOtoEar038BepTs=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 20:18:23 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10097217200537655222
+EX-QQ-RecipientCnt: 10
+From: WangYuli <wangyuli@uniontech.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] drivers/nvme: Add quirks for device 126f:1001
+Date: Tue, 22 Apr 2025 20:17:25 +0800
+Message-ID: <5AE9DE3EEA7F8772+20250422121725.162229-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/5] riscv: uaccess: use 'asm_goto_output' for
- get_user()
-Content-Language: en-US
-To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
- jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- jszhang@kernel.org
-References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
- <20250410070526.3160847-6-cyrilbur@tenstorrent.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250410070526.3160847-6-cyrilbur@tenstorrent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefjedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetvdffkedvjeefkeegfefgteffleeltefggfdvheekfffhfeeghfeffffhtdelvdenucffohhmrghinhepghhnuhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhus
- egvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepjhhrthgtvdejsehjrhhttgdvjedrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NSFPwCZBl/JL32ntyGBy9Q3mW9UddCZTUV5t+1cCxs4qJ99NqCD2k8LO
+	tQADOJH/tTvmcQ9bi7Fi8Im9BJP4vYVLgoVYyZ20bgmm+Yqe+1zkD7+RxwpSQYReuzgkexZ
+	26ZUrue3/gyvmijbnakwcMlWVRPlNVY/KV4H3WF24oWLYkZDu5g+m1aOkRdbb5whsnYJE2C
+	Sp6zi3sfQTHtJ7TspJu3YuxsaeueLyuQNjyLWYykr/7CiKv2byJGW/3cFwEMyf5sSMQbS/X
+	KQBioXB3pSGRNQuXgXPas0wSg1a6cGwd77Zp0bWUDd5gxc62ppIBpkMUXx+KBenVK8cNK1R
+	4DvARuYhxvHbOBe34xV5v6U3E6fnSlfp68qT9J8kJDm+tgnkZ6x5CkjLBuO/M71G/aYVfmT
+	u8bz1DFh0ve6iSXv6lHAGnwpJlY/mQ3SgRAke9YIXOg4QJNvvdmBeYt6OeQlL2BzC10XZIO
+	9v7zpcdEjoB/F1O2duMgTDIugSLIDLSQgTpAWPyLN8nyAgB5VFLK7Y8cS7XPQzSmPX/PF5i
+	ecpSPC2yFJE+Hqf+qV4MGKVc+vlGtRkccwxt8EQMJLy+EEcrVIJo+qfkf3tr12BUjgK96DK
+	TNG5HYBM/JL2V6nhw+mqaKdkV0UHglQpMK2r3aBmG2nRv7L8aW70J36N0n41L8/kr5lX70u
+	WsP4bwef4Y2/Ni+symA0C5gQAFJPehsNkGuWgXAa8btFgoszNsQpXAp7wcdv+ZWEA8zDahl
+	DRZHq6jzaAt/Y65WiT+57Ocxu0slge342+m1oXAKisAQbY0y8Rj7dDYGFcqNhVigTCnujoW
+	W8B89CuiW7+IcUbQQUcyatOlwhIr5mmrEYDA90JbgcH5MPO3ldK6MSUH/sSgBhtq+Zm8EdT
+	RIKtkHTFSPjm2CZKRxKilmis3YMzQjYdjHiSX6jebxcfKvtu2oju5uPhfMoczJddT0nFVoV
+	1L6aI2h7akpCkKlGky492wk6WgyUUpkxBJ4qHq0UaWDmydIa1cyP++JbmHpK9lVB9gZX3x9
+	h0fC56/Jji/Ou/xocvch+8ZLZwwQqrOcmo0no+89vEnjrfGUQ28UyInYdgN98=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On 10/04/2025 09:05, Cyril Bur wrote:
-> From: Jisheng Zhang <jszhang@kernel.org>
->
-> With 'asm goto' we don't need to test the error etc, the exception just
-> jumps to the error handling directly.
->
-> Unlike put_user(), get_user() must work around GCC bugs [1] when using
-> output clobbers in an asm goto statement.
->
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> [Cyril Bur: Rewritten commit message]
-> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
-> ---
->   arch/riscv/include/asm/uaccess.h | 95 +++++++++++++++++++++++---------
->   1 file changed, 68 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index 719c9179a751..87d01168f80a 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -96,27 +96,58 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm, unsigne
->    * call.
->    */
->   
-> -#define __get_user_asm(insn, x, ptr, err)			\
-> +#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
-> +#define __get_user_asm(insn, x, ptr, label)			\
-> +	asm_goto_output(					\
-> +		"1:\n"						\
-> +		"	" insn " %0, %1\n"			\
-> +		_ASM_EXTABLE_UACCESS_ERR(1b, %l2, %0)		\
-> +		: "=&r" (x)					\
-> +		: "m" (*(ptr)) : : label)
-> +#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-> +#define __get_user_asm(insn, x, ptr, label)			\
->   do {								\
-> -	__typeof__(x) __x;					\
-> +	long __gua_err = 0;					\
->   	__asm__ __volatile__ (					\
->   		"1:\n"						\
->   		"	" insn " %1, %2\n"			\
->   		"2:\n"						\
->   		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)	\
-> -		: "+r" (err), "=&r" (__x)			\
-> +		: "+r" (__gua_err), "=&r" (x)			\
->   		: "m" (*(ptr)));				\
-> -	(x) = __x;						\
-> +	if (__gua_err)						\
-> +		goto label;					\
->   } while (0)
-> +#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
->   
->   #ifdef CONFIG_64BIT
-> -#define __get_user_8(x, ptr, err) \
-> -	__get_user_asm("ld", x, ptr, err)
-> +#define __get_user_8(x, ptr, label) \
-> +	__get_user_asm("ld", x, ptr, label)
->   #else /* !CONFIG_64BIT */
-> -#define __get_user_8(x, ptr, err)				\
-> +
-> +#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
-> +#define __get_user_8(x, ptr, label)				\
-> +	u32 __user *__ptr = (u32 __user *)(ptr);		\
-> +	u32 __lo, __hi;						\
-> +	asm_goto_output(					\
-> +		"1:\n"						\
-> +		"	lw %0, %2\n"				\
-> +		"2:\n"						\
-> +		"	lw %1, %3\n"				\
-> +		_ASM_EXTABLE_UACCESS_ERR(1b, %l4, %0)		\
-> +		_ASM_EXTABLE_UACCESS_ERR(2b, %l4, %0)		\
-> +		: "=&r" (__lo), "=r" (__hi)			\
-> +		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW])	\
-> +		: : label);                                     \
-> +	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
-> +		(((u64)__hi << 32) | __lo)));			\
-> +
-> +#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-> +#define __get_user_8(x, ptr, label)				\
->   do {								\
->   	u32 __user *__ptr = (u32 __user *)(ptr);		\
->   	u32 __lo, __hi;						\
-> +	long __gu8_err = 0;					\
->   	__asm__ __volatile__ (					\
->   		"1:\n"						\
->   		"	lw %1, %3\n"				\
-> @@ -125,35 +156,51 @@ do {								\
->   		"3:\n"						\
->   		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 3b, %0, %1)	\
->   		_ASM_EXTABLE_UACCESS_ERR_ZERO(2b, 3b, %0, %1)	\
-> -		: "+r" (err), "=&r" (__lo), "=r" (__hi)		\
-> +		: "+r" (__gu8_err), "=&r" (__lo), "=r" (__hi)	\
->   		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW]));	\
-> -	if (err)						\
-> +	if (__gu8_err) {					\
->   		__hi = 0;					\
-> -	(x) = (__typeof__(x))((__typeof__((x)-(x)))(		\
-> +		goto label;					\
-> +	}							\
-> +	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
->   		(((u64)__hi << 32) | __lo)));			\
->   } while (0)
-> +#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-> +
->   #endif /* CONFIG_64BIT */
->   
-> -#define __get_user_nocheck(x, __gu_ptr, __gu_err)		\
-> +#define __get_user_nocheck(x, __gu_ptr, label)			\
->   do {								\
->   	switch (sizeof(*__gu_ptr)) {				\
->   	case 1:							\
-> -		__get_user_asm("lb", (x), __gu_ptr, __gu_err);	\
-> +		__get_user_asm("lb", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 2:							\
-> -		__get_user_asm("lh", (x), __gu_ptr, __gu_err);	\
-> +		__get_user_asm("lh", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 4:							\
-> -		__get_user_asm("lw", (x), __gu_ptr, __gu_err);	\
-> +		__get_user_asm("lw", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 8:							\
-> -		__get_user_8((x), __gu_ptr, __gu_err);	\
-> +		__get_user_8((x), __gu_ptr, label);		\
->   		break;						\
->   	default:						\
->   		BUILD_BUG();					\
->   	}							\
->   } while (0)
->   
-> +#define __get_user_error(x, ptr, err)					\
-> +do {									\
-> +	__label__ __gu_failed;						\
-> +									\
-> +	__get_user_nocheck(x, ptr, __gu_failed);			\
-> +		err = 0;						\
-> +		break;							\
-> +__gu_failed:								\
-> +		x = 0;							\
-> +		err = -EFAULT;						\
-> +} while (0)
-> +
->   /**
->    * __get_user: - Get a simple variable from user space, with less checking.
->    * @x:   Variable to store result.
-> @@ -178,13 +225,16 @@ do {								\
->   ({								\
->   	const __typeof__(*(ptr)) __user *__gu_ptr = untagged_addr(ptr); \
->   	long __gu_err = 0;					\
-> +	__typeof__(x) __gu_val;					\
->   								\
->   	__chk_user_ptr(__gu_ptr);				\
->   								\
->   	__enable_user_access();					\
-> -	__get_user_nocheck(x, __gu_ptr, __gu_err);		\
-> +	__get_user_error(__gu_val, __gu_ptr, __gu_err);		\
->   	__disable_user_access();				\
->   								\
-> +	(x) = __gu_val;						\
-> +								\
->   	__gu_err;						\
->   })
->   
-> @@ -369,13 +419,7 @@ unsigned long __must_check clear_user(void __user *to, unsigned long n)
->   }
->   
->   #define __get_kernel_nofault(dst, src, type, err_label)			\
-> -do {									\
-> -	long __kr_err = 0;						\
-> -									\
-> -	__get_user_nocheck(*((type *)(dst)), (type *)(src), __kr_err);	\
-> -	if (unlikely(__kr_err))						\
-> -		goto err_label;						\
-> -} while (0)
-> +	__get_user_nocheck(*((type *)(dst)), (type *)(src), err_label)
->   
->   #define __put_kernel_nofault(dst, src, type, err_label)			\
->   	__put_user_nocheck(*((type *)(src)), (type *)(dst), err_label)
-> @@ -401,12 +445,9 @@ static inline void user_access_restore(unsigned long enabled) { }
->   	__put_user_nocheck(x, (ptr), label)
->   
->   #define unsafe_get_user(x, ptr, label)	do {				\
-> -	long __err = 0;							\
->   	__inttype(*(ptr)) __gu_val;					\
-> -	__get_user_nocheck(__gu_val, (ptr), __err);			\
-> +	__get_user_nocheck(__gu_val, (ptr), label);			\
->   	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-> -	if (__err)							\
-> -		goto label;						\
->   } while (0)
->   
->   #define unsafe_copy_loop(dst, src, len, type, op, label)		\
+From: Wentao Guan <guanwentao@uniontech.com>
 
+This commit adds NVME_QUIRK_NO_DEEPEST_PS and NVME_QUIRK_BOGUS_NID for
+device [126f:1001].
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+It is similar to commit e89086c43f05 ("drivers/nvme: Add quirks for
+device 126f:2262")
 
-Thanks,
+Diff is according the dmesg, use NVME_QUIRK_IGNORE_DEV_SUBNQN.
 
-Alex
+dmesg | grep -i nvme0:
+  nvme nvme0: pci function 0000:01:00.0
+  nvme nvme0: missing or invalid SUBNQN field.
+  nvme nvme0: 12/0/0 default/read/poll queues
+
+Link:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e89086c43f0500bc7c4ce225495b73b8ce234c1f
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/nvme/host/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index b178d52eac1b..de0ab1da99c8 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3623,6 +3623,9 @@ static const struct pci_device_id nvme_id_table[] = {
+ 		.driver_data = NVME_QUIRK_BOGUS_NID, },
+ 	{ PCI_DEVICE(0x1217, 0x8760), /* O2 Micro 64GB Steam Deck */
+ 		.driver_data = NVME_QUIRK_DMAPOOL_ALIGN_512, },
++	{ PCI_DEVICE(0x126f, 0x1001),	/* Silicon Motion generic */
++		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
++				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
+ 	{ PCI_DEVICE(0x126f, 0x2262),	/* Silicon Motion generic */
+ 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
+ 				NVME_QUIRK_BOGUS_NID, },
+-- 
+2.49.0
 
