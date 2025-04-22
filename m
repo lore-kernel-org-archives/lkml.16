@@ -1,133 +1,111 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C63E14C5B0;
-	Tue, 22 Apr 2025 17:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF85D14C5B0;
+	Tue, 22 Apr 2025 17:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745344347; cv=none; b=D5espHuydmKC7fQBZE5H9ozk0uj7XOZwBNxBPakq8CzTN3bXp3PuNlCDC2LUwqVjVptonbhpI/SPjAR5bom7Nai0TPWD5ZlQQrXQ91THTRnDumsgBKtlwgtOgpxwIHvkhhAvWniMsXWVninacUlfS4xGZ0Y1BpHkonKnJyeTjtw=
+	t=1745344353; cv=none; b=Tt/YrFzD/6zoeHJx0XodhWlb5fuN6GF0cYMv1bknIwcT2HWM2mOKFQidU30FZiFtmQxiBX2/FPG1V++jifDYXxfqaLQ1gcuSA9DwDDbTTMHxdoY0paM4bcJYD9P+/tzkDi+8Ql9bCwSIqgG1EDtPLWaq5oX2iUxf708VAY72R/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745344347; c=relaxed/simple;
-	bh=lEwSbyb06nJTnLm31QF4tJhYRxmwtJ9K8AwGP9871XI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kvYluPfxUJcJDVzm7bSQzM8Jms4Jnni5sxn9ZvTHfGcYe+ueSazEVKqW3JiyOrOH2Ll/gSRetr6UchpuRZj96Y9MzPFq6zkC8bf2kZzkFiM25Y7BF2Z9OLiB02bGoZw/WzedeB5OIg568FZbzKyMdXwFYAohodHx/cm3NhIZqP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YjZW6aKh; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745344353; c=relaxed/simple;
+	bh=IuS/9wOtEr5F/liI8jwdEQCfKDpWFZ83xDfbu0vahqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=imQQAxPKwanb1jFH2oQyMXvChotxW0RMekusqw2WC0qim3Q+8NY6b3vE7zGq582Tf828Fjf0WywpLEy7sQstXhNEJv+vMg8mWOZVfP2jXghKIkTqocZE4UTV+B0KQKd9Sp0XVJQTpVOC0EsnOqH1/OJJ4i+xRyWNUnadNKhdyak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kV9jgxZR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YjZW6aKh"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53MHpKcw2355011
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 22 Apr 2025 10:51:20 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53MHpKcw2355011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745344284;
-	bh=rFPFOxh07YQOPNQeOEZTdVhMGdZpRwExW7XWemhAAAc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YjZW6aKhRpgJytE5GhVir2qestF3DCS/CzYBraBrI1+eqedS8JuNCmk8lGP5yrGHU
-	 dKpFaNveGqqwaCiXgcxo+9E0aZZzenoVFKtrRsWfD3luxBjXmuGIkZwXQeOpiWbEd4
-	 dJnwZOCd0FF6QfjMgL7uT8gBwsvsLHXgdNXX/GJxaYqcDijsFlFCzEXz++8qUiHnA7
-	 atYwZogQ/qsUvEE3igWyPAnJs0nTs8Oxx060cbVOf1UhHUQyYdtlToEaACsVFrVteY
-	 H2tS1TUyjsJ6IH57pbBTkqnN9K8YArFEHolw9bITu9w/FVlIam8ZCPXGAxqspQwzYX
-	 P73L3Fc5KiJKA==
-Message-ID: <cb4e24a0-fdb7-46d2-9b0e-200f5e3e4c96@zytor.com>
-Date: Tue, 22 Apr 2025 10:51:19 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kV9jgxZR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6054BC4CEE9;
+	Tue, 22 Apr 2025 17:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745344352;
+	bh=IuS/9wOtEr5F/liI8jwdEQCfKDpWFZ83xDfbu0vahqA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kV9jgxZR31l8eqUE+d4YFZRiGEtRt0Y0lNxEtycZAkRS7ddlKEMurEyC4SPYWXuba
+	 D5cMd9Wlm8HEcyrpvuiMrPP64WVOp41A1gdTNIioujQqZkLk7b77Ze3yfdLulwk+rh
+	 PihytcSjcF06hR8ygSR3Oeym8Cu6q7ZD79lzYUja77oxU7vGKgBs9AIwimTkeJgG2a
+	 C2qmvy/c6fN2ocrt2U9pviAy01VQGCDad6pvulNwB96m2dLRQDvGstVZrZUrQBOYgb
+	 CPiFVCfgBiVojJMb536bcSpAXfrg3DYQwjxZM+nPAvDsoFMzsELUlHRCT5YfE9rVJV
+	 o66POSnBRCH/w==
+Date: Tue, 22 Apr 2025 10:52:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Borislav Petkov <bp@suse.de>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kunit-dev@googlegroups.com
+Subject: Re: [PATCH] configs/debug: Refresh debug config dependencies
+Message-ID: <202504221044.98A9CEFD2@keescook>
+References: <20250422165446.work.015-kees@kernel.org>
+ <a115518c-c21d-4e0f-8abf-a1732031a760@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions
- support
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org,
-        boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com,
-        decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <aAevpauKYWwObsB7@google.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aAevpauKYWwObsB7@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a115518c-c21d-4e0f-8abf-a1732031a760@kernel.org>
 
-On 4/22/2025 8:03 AM, Sean Christopherson wrote:
-> On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
->> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
+On Tue, Apr 22, 2025 at 07:15:44PM +0200, Matthieu Baerts wrote:
+> Hi Kees,
 > 
-> This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
-> apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
-> without being able to apply it is a wee bit difficult...
+> Thank you for sharing this patch!
 > 
+> On 22/04/2025 18:54, Kees Cook wrote:
+> > Many of the CONFIG_DEBUG* options need CONFIG_DEBUG_KERNEL=y to be set,
+> 
+> Good point! I guess it has not been seen before because it is usually
+> enabled in the different _defconfig files. So probably no need to
+> backport this I guess, right?
+> 
+> 
+> > so enable it explicitly. Similarly for CONFIG_NET* options, enable
+> > CONFIG_NET=y.
+> 
+> I'm not sure about that one: if I'm not mistaken, the net debugging
+> options have been added for CIs using network features, to find bugs in
+> this area. In other words, I don't think it is needed to add a
+> dependence to CONFIG_NET. If it is enabled, then some extra debugging
+> options should be enabled to get more debug. If not, no need to force
+> having CONFIG_NET, no?
+> 
+> (On the other hand, CONFIG_NET is very likely needed for a CI, and it is
+> typically enabled in the different _defconfig and kvm_guest.config. I
+> guess adding this dependence will very likely not annoy anybody, so up
+> to you :) )
 
-$ git show f30a0c0d2b08b355c01392538de8fc872387cb2b
-commit f30a0c0d2b08b355c01392538de8fc872387cb2b
-Merge: 49b517e68cf7 e396dd85172c
-Author: Ingo Molnar <mingo@kernel.org>
-Date:   Tue Apr 22 08:37:32 2025 +0200
+Thanks for making me double-check this... it seems what was missing was
+defconfig. :P
 
-     Merge branch into tip/master: 'x86/sev'
+I noticed all of these from trying to run kunit like this:
 
-      # New commits in x86/sev:
-         e396dd85172c ("x86/sev: Register tpm-svsm platform device")
-         93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
-         b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
-         770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command 
-functions")
+$ ./tools/testing/kunit/kunit.py run --arch=x86_64 \
+	--kunitconfig kernel/configs/debug.config \
+	fortify
 
-     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+But it seems I need something closer to:
 
+$ ./tools/testing/kunit/kunit.py run --arch=x86_64 \
+	--kunitconfig arch/x86/configs/x86_64_defconfig \
+	--kunitconfig kernel/configs/debug.config \
+	fortify
 
-You probably need to git pull from the tip tree :-)
+> > Finally, remove CONFIG_DEBUG_VM_VMACACHE, since it was
+> > removed in commit 7964cf8caa4d ("mm: remove vmacache").
+> 
+> Good catch!
+
+Thanks! I'll nail this down a bit more and send a v2.
+
+-- 
+Kees Cook
