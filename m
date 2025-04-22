@@ -1,157 +1,111 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E147227466;
-	Tue, 22 Apr 2025 14:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E2B1AA1F6;
+	Tue, 22 Apr 2025 14:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331060; cv=none; b=MEEq97joTn+JOoqHOmlUBhI2nDNTyoN2j5LsJKFxZKs3cm8MTmTgsaVal5gWp69JInKyxqsxK6DOdFH+c6pSr/uJdPMf5pTdTsJmvEhdOEhB0NdkiL0l7jYthaXLoRLj142Im0xhszGosX/fK7xZV3uolopKJl/EiMe+/PBPIyk=
+	t=1745331119; cv=none; b=Bo1Bje5D3J3KukDEbFw3CmSzcduTx14cXGOrXG0qezWhgFSKxF5D6vqgIRW14PFbi3qzG+8alevzTvRtlDT8ONxOHpeTifEfJwrqi5SckYXXFFRNXx1p0cBysJ5S2GXAiMs/+iHWD5PUshXrySVBCIy9yqxawdnVX9y6igZuscU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331060; c=relaxed/simple;
-	bh=7cq2RElW/yPZcpSilGEZH7dsfIfFz4V2MvZWxD/BDAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mi3UctOMcXloEAMFb4i9YWleG4kVRnactdZbFJ26SoBvfEpmOwXEl14tXZl0gRfpAwDSJzz+5kTk/IR31eOdqW5G21aBNXHzNQ0342rYKZ/j0jLbaWK5is21N1aObvKC38chSLNCdCmNUpAJY5jE/gHUNWjB7SKR6Nf03kz4XDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9qoYkFb; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745331119; c=relaxed/simple;
+	bh=FUabY5mwS7kzsV5hxeUPIJlBNWxqP+UBUAF3u28sMhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XuBqEGlER4haGvLrXNjvlfmkiRJWntEPmiCRNkFXrcXawU8fhitdYW1r6Ajl7BFQgbwibKuam/2eoLZrfcbYDPYTXZTGoNK+uwfz9AhfMhFzpevGC476WtEoCwCgOpUYWVyjgpbyq2Gxy4OU8d1MB4+IAoCkA0ZfwaRSUEMVuJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f754SAX9; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9qoYkFb"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7301c227512so1599282a34.2;
-        Tue, 22 Apr 2025 07:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331058; x=1745935858; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ENmNvcG+i4cA95dff7/W/R/4xtydjhp0oR96uzNkfLE=;
-        b=H9qoYkFbR29vSO/z5YunUmc3snClsR4MmH8Ktnk4QzwH9HcrSleL5wjdkLxqWMTsaT
-         9fvzH6FGtzdTkoMYX1ZN+OdyzptCpGnN3KLXEXXQnR3acf+YrxF2x3cCxsha6Wc1W0NL
-         k8clb5bywyRA5OObs91utdHYbHrS5iB7aN/ha97wf9pSbojMg9ma/cO/KjmPYPNf817m
-         zEJCXzhHzwH16iziaF2ByaUf+G4W/6gyHiB/ymDecAy6d4iLrv03a4Znce1rhs+1NY3v
-         Xm0JzgbJgGxHzLEmK1U8twOjJWf0272KAaRXaBLv9lsldcFWZzzly2SQIOtREBEkv1uC
-         OfJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331058; x=1745935858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ENmNvcG+i4cA95dff7/W/R/4xtydjhp0oR96uzNkfLE=;
-        b=qmVcTq5eDEO1Cz9Y+GAVwhgJBcr413VCv+AzZ/StcJBkWY07AUJXJpnutf4raQnfL0
-         pij1TtG31hmjVmEU/3Ai0luyaO3A2br/95nJXctbU4zcvfTz3e6N3466pOS26w3F8Vnl
-         3fyzt33UWQUULbTt8m3NJNdbqfG16X8nRqP0dcEipov2Y3pfTHmljNqj2zY0mqj/95mv
-         KuPHc7cO5fs5A5XrHFac95hvRqg5cdP+NCDV5p7hfOn9zvhnRV4GH1+VZ+cE0iE0VNEg
-         K6BrbUEWVoODs2RyEVW8UlmaLpCrB3VAtqP71TLo9CX4j5Y4+410D9oZKWXMmkxA0+2k
-         NMcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNfVJLhzNJNfYHOqasTmAPJXgojPT1BJkpLhhSSZWfscFnUhZlfTnyn0bteGVYtxP90MmNa7ECp0lZublb@vger.kernel.org, AJvYcCWHunBAZ47Oy5/gGHXUbbhUhhBqm0t8+DCH2cVELeHXt9K9V5ohLwy5IXR/13/dbPkAeAa/Qi6CyvYL2jFJHA==@vger.kernel.org, AJvYcCWmKLnLAXUeFsWxPiyjZqoUifmlHDvxyHSz6xX6lM/zgE/5NWxkhtqImdG4vK7v/jTl6Qwqo3KifA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuPzcE6iACvcE842v5zi/V1sCnxlmezn2spj4WrAS5qli78dFV
-	QrzpA8stCPkK2aBOpWwoYJsuvXqVhCuC4Db4bLG6/E1w2+iKQyuROvH8yAXYzYN5r0jdFl7672z
-	EGShs8FtEN+2eC7Lw9PPq/rpTRtc=
-X-Gm-Gg: ASbGncswBxMX7iZQNQquzh4WSs7ZTES4JLlHCKVaVO254PnB6iKJvQOY+yM3/+xnQC1
-	uOyknR7lGwCy4teWEw7zOPCSviwz4c0CEsmyBc3csMRw2pvFVDuS+vkTWOEFAlJ89K8lojj0+u2
-	MNQ6kta6it8ciTOjyTulkOMvE=
-X-Google-Smtp-Source: AGHT+IHs52QH1e1EcEp6l4JLqsVOeDSJ3Ng/TlhNfJ91v6SCzBDysQnzdm5i0GiYHIM+K+KBtAUyFHpvlpyYlRyyIQM=
-X-Received: by 2002:a05:6871:530d:b0:28c:8476:dd76 with SMTP id
- 586e51a60fabf-2d526ee4ad6mr11088969fac.29.1745331057649; Tue, 22 Apr 2025
- 07:10:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f754SAX9"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MEBoIB1983572
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 09:11:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745331110;
+	bh=lud/orpWCqDvSqvMG+PNDdoot4w51To9S3IfgDckrw4=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=f754SAX9JbOlRl9Zeyr3XxtKdM6x7L5PlBjoBK0OVXs1amsTlP2H6b9jZ/PGZjdSk
+	 tpBgGfI26yFVdRid5jfmWMMpJjreVhut2xHXVlrSxNWhtgD72i9+aTDIqQOXQMzsfv
+	 tuAYX0XxOs7tqqd+7QfZWphASZjTGTZ+YlsyrUmE=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MEBoVY024798
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 09:11:50 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 09:11:50 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 09:11:50 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MEBkKf122223;
+	Tue, 22 Apr 2025 09:11:47 -0500
+Message-ID: <cca0a53c-6ee9-4837-86c6-3e67b8ead5ed@ti.com>
+Date: Tue, 22 Apr 2025 19:41:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422104545.1199433-1-qq282012236@gmail.com> <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
-In-Reply-To: <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Tue, 22 Apr 2025 22:10:45 +0800
-X-Gm-Features: ATxdqUFY0D9ZhIoPAnO4wqwO_j8l65R--mu-PkgmPt3dkQ_eilqKjmLgt8z5KSc
-Message-ID: <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
-To: Jens Axboe <axboe@kernel.dk>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] arm64: dts: ti: k3-j721e: add ranges for PCIe0
+ DAT1 and PCIe1 DAT1
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <u-kumar1@ti.com>
+References: <20250422120042.3746004-1-s-vadapalli@ti.com>
+ <20250422120042.3746004-4-s-vadapalli@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20250422120042.3746004-4-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 22, 2025 at 9:35=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
+Thanks Siddharth
+
+On 4/22/2025 5:30 PM, Siddharth Vadapalli wrote:
+> The PCIe0 DAT1 and PCIe1 DAT1 are 4 GB address regions in the 64-bit
+> address space of the respective PCIe Controllers. Hence, update the
+> ranges to include them.
 >
-> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
-> > In the Firecracker VM scenario, sporadically encountered threads with
-> > the UN state in the following call stack:
-> > [<0>] io_wq_put_and_exit+0xa1/0x210
-> > [<0>] io_uring_clean_tctx+0x8e/0xd0
-> > [<0>] io_uring_cancel_generic+0x19f/0x370
-> > [<0>] __io_uring_cancel+0x14/0x20
-> > [<0>] do_exit+0x17f/0x510
-> > [<0>] do_group_exit+0x35/0x90
-> > [<0>] get_signal+0x963/0x970
-> > [<0>] arch_do_signal_or_restart+0x39/0x120
-> > [<0>] syscall_exit_to_user_mode+0x206/0x260
-> > [<0>] do_syscall_64+0x8d/0x170
-> > [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
-> > The cause is a large number of IOU kernel threads saturating the CPU
-> > and not exiting. When the issue occurs, CPU usage 100% and can only
-> > be resolved by rebooting. Each thread's appears as follows:
-> > iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
-> > iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_write
-> > iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
-> > iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
-> > iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
-> > iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
-> > iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
-> > iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
-> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
-> > iou-wrk-44588  [kernel.kallsyms]  [k] schedule
-> > iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
-> > iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
-> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
-> >
-> > I tracked the address that triggered the fault and the related function
-> > graph, as well as the wake-up side of the user fault, and discovered th=
-is
-> > : In the IOU worker, when fault in a user space page, this space is
-> > associated with a userfault but does not sleep. This is because during
-> > scheduling, the judgment in the IOU worker context leads to early retur=
-n.
-> > Meanwhile, the listener on the userfaultfd user side never performs a C=
-OPY
-> > to respond, causing the page table entry to remain empty. However, due =
-to
-> > the early return, it does not sleep and wait to be awakened as in a nor=
-mal
-> > user fault, thus continuously faulting at the same address,so CPU loop.
-> > Therefore, I believe it is necessary to specifically handle user faults=
- by
-> > setting a new flag to allow schedule function to continue in such cases=
-,
-> > make sure the thread to sleep.
-> >
-> > Patch 1  io_uring: Add new functions to handle user fault scenarios
-> > Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
-> >
-> >  fs/userfaultfd.c |  7 ++++++
-> >  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
-> >  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
-> >  3 files changed, 68 insertions(+), 41 deletions(-)
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
 >
-> Do you have a test case for this? I don't think the proposed solution is
-> very elegant, userfaultfd should not need to know about thread workers.
-> I'll ponder this a bit...
+> Link to v1 patch:
+> https://lore.kernel.org/r/20250417120407.2646929-4-s-vadapalli@ti.com/
+> Changes since v1:
+> - Fixed the 'ranges' to set the size as 4 GB instead of the incorrect
+>    value of 128 MB.
 >
-> --
-> Jens Axboe
-Sorry,The issue occurs very infrequently, and I can't manually
-reproduce it. It's not very elegant, but for corner cases, it seems
-necessary to make some compromises.
+> Regards,
+> Siddharth.
+>
+>   arch/arm64/boot/dts/ti/k3-j721e.dtsi | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+> index a7f2f52f42f7..b6e22c242951 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
+> @@ -126,6 +126,8 @@ cbass_main: bus@100000 {
+>   			 <0x00 0x10000000 0x00 0x10000000 0x00 0x10000000>, /* PCIe DAT */
+>   			 <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71 */
+>   			 <0x00 0x6f000000 0x00 0x6f000000 0x00 0x00310000>, /* A72 PERIPHBASE */
+> +			 <0x40 0x00000000 0x40 0x00000000 0x01 0x00000000>, /* PCIe0 DAT1 */
+> +			 <0x41 0x00000000 0x41 0x00000000 0x01 0x00000000>, /* PCIe1 DAT1 *
+
+
+Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+
+
+> /
+>   			 <0x44 0x00000000 0x44 0x00000000 0x00 0x08000000>, /* PCIe2 DAT */
+>   			 <0x44 0x10000000 0x44 0x10000000 0x00 0x08000000>, /* PCIe3 DAT */
+>   			 <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
