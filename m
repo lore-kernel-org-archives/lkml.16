@@ -1,219 +1,125 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814D27817A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E251F09A1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351328; cv=none; b=bJQcZQvUlfzUA23ZQKTBQrnnolD80u8ucG61s15/fDCoi0JezA1mWX6x8YWOwgG4Ebb2MP9BDfHWkd5BRevnuhVE/pOV17D04YWkBFKqhGP6LJQQxERbGT1CVEtfGmCN1x1e0liclERI39IO7Qj6Q2seVQm1IimCx6h7SAk6fGU=
+	t=1745351353; cv=none; b=ZTqdi3igdM1hgF64LFrbaYC7VQ0Y5zJn2Z5YU7t/Qd5CQpt1o+yElewHmGfIqep/3j7NilopEjwJHIEuElwRELsmxZDWNjH0nxu/qrKzLCtDd7QJfnGPzRoj97JVh7fTgzWmuX3UOp5xI/wazlV8rRMWFCI6L/ymogFW9dvLq8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351328; c=relaxed/simple;
-	bh=gxTbnWTJB50n3KzhRveyIpup2aByT+oX6qk2Z9xPy5A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=S17OH18HkCDodSNWJL7ewZFL+5NNKx6+VQYOGrg99omFsO/v6fTmo9V1edtA76NDhEugnz803+Kq4afcT4QnJLp4kPZWz6E7xg2MHqL5UJtAuzE4XRbOMFNGXX2bZQqSYU8NECGQumYZXGWuCtGo6EhVbT/P/SB1cXJzYmS4/yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YCpwsc0h; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745351353; c=relaxed/simple;
+	bh=tJe3zZeJkz1ognYUTOAEkdc0KXDK7yt84OVNkXdgXbw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fsbU2hmK8SqaJlpso8W9xktv1ZPPUaFAxq5LDyQ3bPrJqSK7r/QK/LM3kGfnOVEEBUFmyRCIroZE37Nvy0kbHxlA8wHuOU79an3ZOw0Kiu/3sCDBM+d1dNOkMO4tfRt4fMR8CpE1UbJh0fzvbUNeUFbxj8j5fKtxgLHxvd7z7e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWEd6TN6; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YCpwsc0h"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so4828240a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:48:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWEd6TN6"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c14138668so1372297a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745351326; x=1745956126; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYP8FWYioRIH49o2SbBA+hnHBHTmzAHRk/jhuz8dPh0=;
-        b=YCpwsc0h4QS3vP3MBV5hcuYFMjvfLFlWAsR2l9A+I19m9Z/0jG1uuW8jaywFiWGY50
-         NuQX32XyPvHjKm7Pm9GrWHddY4at3JrjK+KG1OJ890qPb0Dp1185mxQWmD9e6avP80R2
-         hMLAq4dVgQ1ZKClsyQna/00DUAK+CWfKzDSI9UHGqvLvLx/Hqo2flqtrtkIYYLSRuv1u
-         aOLyeJbDMSVLwzXRDivjXrdHLJw6vthnd4za6jvNkmaz+1/79XJIHftgScMjr70L9DD3
-         Lq0FlSPcoFag9ikg1prBoSdfO902ARI/Egm5pZv3Y5RzWFKRWcqswqzsUtH6XHDqtFdn
-         aYcg==
+        d=gmail.com; s=20230601; t=1745351351; x=1745956151; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hk7btU3vfMhpkAls6GN39173morDF5zAYw+1usHCHqs=;
+        b=UWEd6TN6WGJJzGk+J2HawrBxv4CJV2uWUU+cuGNX7N4pIJI+eH9/QVAvoM/rPbgjQW
+         AvM+CQ4+2XGzzAlugrbFu446mamtKEVOw65l1VVbdVHMkcnRxresn0SBs2JNX4xc1vPA
+         +yOLWUJF/p96shj5M1SHC3tPSQY5itvJ1sSWjGcoB+6N2TnTbKW7P7vlO+cxyPFENKlV
+         hOYGvoUkUDg3fSC3icY0uOKkAWdzQRk1eT2ZGp+iRuYugxgxkxUXuvT2biQx5WY2ZcqX
+         XDqb2lkca1lCaBpAkqKbet3z8fINuma4IxMi8nSzIt3KKf8n4rkuwG73hcNqhqmtHWvV
+         u4UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351326; x=1745956126;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TYP8FWYioRIH49o2SbBA+hnHBHTmzAHRk/jhuz8dPh0=;
-        b=a8i4R2ZJWLkkQLazS7XHdwyX8Q8XN27cOguNPrkLEzgVzEMuN/0WP1IIdHpzqTmyBP
-         Z/YhR21ihkrB5EXSTLQ0DBObUgb8biynuksHYBaYawOTbf/M0ve8NH7zaOm9JFrcBgFx
-         /1ucu62Tflq0AsB2Hd6duib+oRxTq2riCzpr9+D7rVOwJGswkSDKS0tmt25yMJn0pr1I
-         ArP+ARLHn72EvShVL24SM4FheKRBzzRanr+Wm1AiweOtyS9NglnNMvaTV5YMBret0Ehf
-         EzfJ0e2PhY4Jt7jOINa8iwUHWsSUoCNMz4cvZaRXSWUmqZVf8kbg8yfD6HET/ybF84p1
-         axQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUg9GIc3G13yYSlZPmCklp/Zv0PFNQatxjMJ5tV4dx8JJWUbicuLogz4QHS4tRtaNzdDVkIeTksITE6BqA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl02DWEaoGsFnQLodSvxuVwWVDw+OmQ/gPZ1uQJXq8F8md37EQ
-	M7BalcLYA9+gQLgCHqWuxKgUMS7iG4jGLVz/ErTVWFghHa3dc36DXne9JNLsp5JBWBG3HQOmUcU
-	nfg==
-X-Google-Smtp-Source: AGHT+IHwSsIYgf8vWT+jRC6Pvxw4AVQcEw1SpJ2dRt6hC00hrYnmArGpQ4+avg4Rfx1Mpw65htDaczncQaU=
-X-Received: from pjbdj15.prod.google.com ([2002:a17:90a:d2cf:b0:2ff:5752:a78f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ed0:b0:2ea:3f34:f18f
- with SMTP id 98e67ed59e1d1-3087bb69c30mr20376842a91.19.1745351326271; Tue, 22
- Apr 2025 12:48:46 -0700 (PDT)
-Date: Tue, 22 Apr 2025 12:48:44 -0700
-In-Reply-To: <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
+        d=1e100.net; s=20230601; t=1745351351; x=1745956151;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hk7btU3vfMhpkAls6GN39173morDF5zAYw+1usHCHqs=;
+        b=PIiYcg/NUKcaYxb6fbgJmnzaqSV9LzlkphALeonyep392BD8wJhKSd0/NReBmM24QO
+         9VKRKae04UdhvA9s+NYnP0nkyizeZHZp3j51VJHOejOK63/fou6ZpY745z5+HsbEDIkw
+         ana2DGT3dc5zj9YrXb/64QmUpwz6pQigaLP3lNy7haxBO/8tlGYIagVVhWFIIqiRdrgD
+         IKoe6t7E9ZR8lhXwcRcgrrpSPC8lYXBpsYwviPDpR3219YQrMJ3HBbFliAB7F8qgYuG8
+         2lVZ9BKcoINq60j6FRmaxv1KyM/Fmv98nRX+2XBkeT+tgJ6pTgDTrcUG9zO4KgQS9D89
+         NzBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzneFbEEQFf5tHxiO5uUR3q9XDzX3cY93+AuhWrycOTgGv3o1KZIMuTWAVrwXznOAC4r211Bpy3pJDGvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziERVHwyigKhk69h/Q+pqsCoHtRQz+WEgfuzAd94Q8JGTKm5//
+	Ynr7kKHHQymY/ZZpj3kfu9UAArD41wxQ9JZSKrNluesfoKDpXfvja6o7rA==
+X-Gm-Gg: ASbGncthabpBS60gN9dKEdQImh7AnBVOScSa1YaRPzb6l73i7XVIhFuNiqOJxTl7nB7
+	K8Sc3jP+d89JDtUBsrVBpglWkoOP9wNcQT1g6RTEVTUNno+LbU1coOlMas00CkJeMbM8jss8XUB
+	2C/s8YUkYMY67xpnJp+ZkGdnY6TUggWSdW7c5HJXvG4sfgzpLwMcjK2qEGcx8IdY0kygbzklgok
+	B22/vm6cFjX63u5GWkPRfn0GY853DeHVQ6tojCvVuywixQFqgmTtoBTiN/yij2aMWOMxPqEiSxy
+	cmDfpJj1yxstOv/GPGfQd73ETIaL4nwywKjw5d8QqN805XjY4KRH1xKnMJisYCtVIo1hJQricFa
+	d73AvF46D
+X-Google-Smtp-Source: AGHT+IGlvPHKCGNOwQ1P6yPygenHkdTgRPo04sKrGbz2FNZRR9FkxWlSrdnmCZ9+4q4YKdVQj1sojA==
+X-Received: by 2002:a05:6830:6307:b0:72b:7fc2:2f1 with SMTP id 46e09a7af769-73006218916mr10797420a34.12.1745351351185;
+        Tue, 22 Apr 2025 12:49:11 -0700 (PDT)
+Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047afafcsm2131187a34.17.2025.04.22.12.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:49:10 -0700 (PDT)
+From: Doug Berger <opendmb@gmail.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	linux-kernel@vger.kernel.org,
+	Doug Berger <opendmb@gmail.com>
+Subject: [PATCH] sched/topology: clear freecpu bit on detach
+Date: Tue, 22 Apr 2025 12:48:53 -0700
+Message-Id: <20250422194853.1636334-1-opendmb@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250331143710.1686600-1-sashal@kernel.org> <20250331143710.1686600-2-sashal@kernel.org>
- <aAKDyGpzNOCdGmN2@duo.ucw.cz> <aAKJkrQxp5on46nC@google.com>
- <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local> <aAKaf1liTsIA81r_@google.com>
- <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local> <aAfQbiqp_yIV3OOC@google.com>
- <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
-Message-ID: <aAfynEK3wcfQa1qQ@google.com>
-Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu:
- Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in
- a virtual machine)
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>, 
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com, 
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com, 
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025, Borislav Petkov wrote:
-> On Tue, Apr 22, 2025 at 10:22:54AM -0700, Sean Christopherson wrote:
-> > > Because I really hate wagging the dog and "fixing" the kernel because something
-> > > else can't be bothered. I didn't object stronger to that fix because it is
-> > > meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
-> > > apparently not that awful-ish...
-> > 
-> > FWIW, I think splattering X86_FEATURE_HYPERVISOR everywhere is quite awful.  There
-> > are definitely cases where the kernel needs to know if it's running as a guest,
-> > because the behavior of "hardware" fundamentally changes in ways that can't be
-> > enumerated otherwise.  E.g. that things like the HPET are fully emulated and thus
-> > will be prone to significant jitter.
-> > 
-> > But when it comes to feature enumeration, IMO sprinkling HYPERVISOR everywhere is
-> > unnecessary because it's the hypervisor/VMM's responsibility to present a sane
-> > model.  And I also think it's outright dangerous, because everywhere the kernel
-> > does X for bare metal and Y for guest results in reduced test coverage.
-> > 
-> > E.g. things like syzkaller and other bots will largely be testing the HYPERVISOR
-> > code, while humans will largely be testing and using the bare metal code.
-> 
-> All valid points...
-> 
-> At least one case justifies the X86_FEATURE_HYPERVISOR check: microcode loading
-> and we've chewed that topic back then with Xen ad nauseam.
+There is a hazard in the deadline scheduler where an offlined CPU
+can have its free_cpus bit left set in the def_root_domain when
+the schedutil cpufreq governor is used. This can allow a deadline
+thread to be pushed to the runqueue of a powered down CPU which
+breaks scheduling. The details can be found here:
+https://lore.kernel.org/lkml/20250110233010.2339521-1-opendmb@gmail.com
 
-Yeah, from my perspective, ucode loading falls into the "fundamentally different"
-bucket.
+The free_cpus mask is expected to be cleared by set_rq_offline();
+however, the hazard occurs before the root domain is made online
+during CPU hotplug so that function is not invoked for the CPU
+that is being made active.
 
-> 
-> But I'd love to whack as many of such checks as possible.
-> 
-> $ git grep X86_FEATURE_HYPERVISOR | wc -l
-> 60
-> 
-> I think I should start whacking at those and CC you if I'm not sure.
-> It'll be a long-term, low prio thing but it'll be a good cleanup.
+This commit works around the issue by ensuring the free_cpus bit
+for a CPU is always cleared when the CPU is removed from a
+root_domain. This likely makes the call of cpudl_clear_freecpu()
+in rq_offline_dl() fully redundant, but I have not removed it
+here because I am not certain of all flows.
 
-I did a quick pass.  Most of the usage is "fine".  E.g. explicit PV code, cases
-where checking for HYPERVISOR is the least awful option, etc.
+It seems likely that a better solution is possible from someone
+more familiar with the scheduler implementation, but this
+approach is minimally invasive from someone who is not.
 
-Looks sketchy, might be worth investigating?
---------------------------------------------
-  arch/x86/kernel/cpu/amd.c:              if (!cpu_has(c, X86_FEATURE_HYPERVISOR) &&
-  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_IBPB_BRTYPE)) {
-  arch/x86/kernel/cpu/amd.c:      if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/amd.c:      if (cpu_has(c, X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/topology_amd.c:             if (!boot_cpu_has(X86_FEATURE_HYPERVISOR) && tscan->c->x86_model <= 0x3) {
-  arch/x86/mm/init_64.c:  if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/mm/pat/set_memory.c:   return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
-  drivers/platform/x86/intel/pmc/pltdrv.c:        if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !xen_initial_domain())
-  drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c: if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
---------------------------------------
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+---
+ kernel/sched/topology.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index a2a38e1b6f18..c10c5385031f 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -496,6 +496,7 @@ void rq_attach_root(struct rq *rq, struct root_domain *rd)
+ 			set_rq_offline(rq);
+ 
+ 		cpumask_clear_cpu(rq->cpu, old_rd->span);
++		cpudl_clear_freecpu(&old_rd->cpudl, rq->cpu);
+ 
+ 		/*
+ 		 * If we don't want to free the old_rd yet then
+-- 
+2.34.1
 
-Could do with some love, but not horrible.
-------------------------------------------
-Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
-this up at some point, especially with things like SEV-ES with DebugSwap, where
-DR7 is never intercepted.
-  arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
-  arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
-
-This usage should be restricted to just the FMS matching, but unfortunately
-needs to be kept for that check.
-  arch/x86/kernel/cpu/bus_lock.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-
-Most of these look sane, e.g. are just being transparent about the state of
-mitigations when running in a VM.  The use in update_srbds_msr() is the only
-one that stands out as somewhat sketchy.
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/bugs.c:     else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-------------------------------------------
-
-
-Don't bother
-------------------------------------------
-Most of these look sane, e.g. are just being transparent about the state of
-mitigations when running in a VM.  The use in update_srbds_msr() is the only
-one that stands out as somewhat sketchy.
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/bugs.c:     else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-
-Perf, don't bother.  PMUs are notoriously virtualization-unfriendly, and perf
-has had to resort to detecting its running in a VM to avoid crashing the kernel,
-and I don't see this being fully solved any time soon.
-  arch/x86/events/core.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/events/intel/core.c:   if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/events/intel/core.c:           int assume = 3 * !boot_cpu_has(X86_FEATURE_HYPERVISOR);
-  arch/x86/events/intel/cstate.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/events/intel/uncore.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-
-PV code of one form or another.
-  arch/x86/include/asm/acrn.h:    if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/hyperv/ivm.c:  if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/mshyperv.c: if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/cpu/vmware.c: * If !boot_cpu_has(X86_FEATURE_HYPERVISOR), vmware_hypercall_mode
-  arch/x86/kernel/cpu/vmware.c:   if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
-  arch/x86/kernel/jailhouse.c:        !boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/kvm.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/paravirt.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-  arch/x86/kernel/tsc.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR) ||
-  arch/x86/kvm/vmx/vmx.c: if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
-  arch/x86/virt/svm/cmdline.c:                    if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR)) {
-
-Ugh.  Eliding WBINVD when running as a VM.  Probably the least awful option as
-there's no sane way to enumerate that WBINVD is a nop, and a "passthrough" setup
-can (and should) simply omit HYPERVISOR.
-  arch/x86/include/asm/acenv.h:   if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))       \
-
-Skip sanity check on TSC deadline timer.  Makes sense to keep; either the timer
-is emulated and thus not subject to hardware errata, or its passed through, in
-which case HYPERVSIOR arguably shouldn't be set.
-  arch/x86/kernel/apic/apic.c:    if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-
-This "feature" is awful, but getting rid of it may not be feasible.
-https://lore.kernel.org/all/20250201005048.657470-1-seanjc@google.com
-  arch/x86/kernel/cpu/mtrr/generic.c:     if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
-
-Exempting VMs from a gross workaround for old, buggy Intel chipsets.  Fine to keep.
-  drivers/acpi/processor_idle.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-
-More mitigation crud, probably not worth pursuing.
-  arch/x86/kernel/cpu/common.c:        boot_cpu_has(X86_FEATURE_HYPERVISOR)))
-  arch/x86/kernel/cpu/common.c:   if (cpu_has(c, X86_FEATURE_HYPERVISOR)) {
-
-LOL.  Skip ucode revision check when detecting bad Spectre mitigation.
-  arch/x86/kernel/cpu/intel.c:    if (cpu_has(c, X86_FEATURE_HYPERVISOR))
-------------------------------------------
