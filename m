@@ -1,170 +1,143 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A284690
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756AD174EF0;
+	Tue, 22 Apr 2025 01:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745285930; cv=none; b=Dc7cI10eKlXztqwsdOsYGNHgAhsGtOGolpoz9hLNnoxI7KDkqOi7dzAV1OL2JxmDGxCVNEWimYd0tcYKhrocCnuk5pvpW5E4z5KMEmdLp3+D5UiXnWq3VU5v6BHt9IrYsUSPWREI/4PAB8/MGiWa8Bq7p6Wo4bcZ7phB0FQoLbs=
+	t=1745285967; cv=none; b=AZyQeratiHt6w8xGoHkpKH4JZO1JrTHdLA80EhrMCLLyXynZ17Cj2GYl/HCNrT6zN42Ww20me3yqaCvKej+g2RJ8C8GFraC9cf5flQTDKAfMFgrUhxqgkMMqoY14ODBwVchq9zBl7Gca3ZRVOy88/H4eiRhaOntDDgowKmxhqZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745285930; c=relaxed/simple;
-	bh=VFK+/x9U9zWLUCWy1Ri7ZISj6kg56Jo3Ao9PF1aRSHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fvlaOZH+ydXKpmRn4Dk0Xz04ApSLQZn7whOpxcd9WhPp7jplgcyOT6eg6drbppxSTSFucDLFWu2b9BNmbIFSEVZPPiJSWeq3OEbc8PqbWleBJ9zrgI646fayj5CbQHRtdvfIT27E7Vy77v9ePxybLMGvWJZUOAW10yitiqvWtKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I7mCHgnn; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7mCHgnn"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225477548e1so44234775ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745285928; x=1745890728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pihn7LwUvtVfN0XhK8Z3OEivWDjRGoVE90mOrmOu+so=;
-        b=I7mCHgnn8/EMxIlqqs2rMupWixSHYGPLHu1rWsE6wxhn34Hz82XRs2X2naHYdXgYsR
-         s/1ME44uNMDKKcA/031mmNbn8UfD1vScgyOVr+FwrgMElHqxGhkG/bTguUboYhZOEX/I
-         idFslLWxhvOEyWu6iHeeh3tRacoxbj+ZPYDDKrZIkx7T62Iq3AECA4uMpNJNGNQLrDlL
-         v4ewv2Y+WWjpWsKCUEfPzDzoqySMsWdyFgdmIzsCf3YsbW3EKLmQAAiuiVMZB8izet4Z
-         s0AIk7BlIUn6IrIoTFbouHIFnI15jcyCxsTWLYRjYK92hS7b1WwiuOEGV8yOUu/nDBVZ
-         rzmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745285928; x=1745890728;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pihn7LwUvtVfN0XhK8Z3OEivWDjRGoVE90mOrmOu+so=;
-        b=PI/zmY7P0LE/ZhRJB1qJi+jZo73kDw8Hr0SCdgb1yG6lfj1WqSZmNwYCdFXiySPU1J
-         Uy5QEyQ1rynH0KmnMxF8NqmVaqxyzJ/Mhtg2eCRlYCt526CmpwfvcTwbcUUyWRB5rOYO
-         d3x9VTHeXGc8WA1TJiBKzDMJqqnV6G//YpOdxDWb7tNww3q55D9O43ElArRz0K0I6HP/
-         W2Vv8RtA0k8r9qi1bi4ozn+LNbHMXp5dYWOM6KW9mQcqYxCdWBFNUsvY9SLi3hONUfci
-         XC8nUFIonwlDUtx6Sezgi0p2mBj8frw0237ojFmL+gLJ9+Q0tI8yarH9Oy+6j8vxRUfc
-         QPLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKGT7IjNwfOHLr5v5FuJhXUD81noa/jJcp6MznnhJ1m72KfFlhfswJ0bnOikYbqaYgMsOGSJSDSbZLFYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN1Tp0/nMiu/RnDMdlEeovMwU28N7MVhZFuYOFkxW61xxgbCGD
-	ezDG5k9/Hsih6Ur2SNolOvY8feXvcrWvVXLuCeztMUPvMqL++hMw
-X-Gm-Gg: ASbGncumqJPkBLxmjy4x3cYHhC/4qFF00R6LATZpWdBQdrTHrLiEI1wJIjgzyXAfYce
-	mZQ3q4L0J5VW3HTK59SyJQxCnOQ6AnJu6qnghEfa7ZQXb2szC+7CF8P/8ubMgUg+Hv3AcqPCcSv
-	gWyVjVDQb1t4F3DKCmEosMejN/3PYgJNqSZicg1V307Q504kCip52Jn59yWnxb97In7++b9AFmw
-	f1KEVDzz4AZ73PKDAkUsjvXPffYQyRAxPnYEyZmOq+lerUKRB30O+4w6k9V3durd460I1sCR8yC
-	nWMnjYZ1Gm8gAWAKUiOR8W/v+15/E0Ke/v6hMMbR8H4PLN1NoYuVNRhW
-X-Google-Smtp-Source: AGHT+IFnOJAIOYBHLa4wObdFkR0uD9Ygi2NKzxRE1wPLcAvg5M8KaAp2Fh+vAO/hoWG+KYGbLiD78Q==
-X-Received: by 2002:a17:902:f60b:b0:224:826:277f with SMTP id d9443c01a7336-22c536041a9mr197018305ad.33.1745285928302;
-        Mon, 21 Apr 2025 18:38:48 -0700 (PDT)
-Received: from [192.168.98.254] ([104.28.254.46])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eceb74sm72112005ad.166.2025.04.21.18.38.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 18:38:47 -0700 (PDT)
-Message-ID: <c1e2d8ea-1b37-479d-8239-cb9bf0efdcaf@gmail.com>
-Date: Tue, 22 Apr 2025 09:38:26 +0800
+	s=arc-20240116; t=1745285967; c=relaxed/simple;
+	bh=CT5o7RpJXfCEEp6Sre0lq/6CJdxYt0AcbWSFF9CdX5U=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=L8ZPkdRAXPzzeX88NVq/01ca4E6heJ18X9MF05d3fGPQxOUCTCG3D8QvSv1cat47S1YDIX9nq4FO2rImKcNP5TTu7oE8werglmK3JBWNwCxhiZy7Wyvm+OQRMSjQSKCOZPdl0Ay4hNRBdG2cHzfaQ0oXGI2l9EroJMjPHs3fO2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZhPz44PvXz4f3jY8;
+	Tue, 22 Apr 2025 09:38:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 838F61A07BD;
+	Tue, 22 Apr 2025 09:39:20 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB3219F8wZo6szEKA--.19869S3;
+	Tue, 22 Apr 2025 09:39:18 +0800 (CST)
+Subject: Re: 10x I/O await times in 6.12
+To: Matt Fleming <mfleming@cloudflare.com>, Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
+ <aAZiwGy1A7J4spDk@kbusch-mbp.dhcp.thefacebook.com>
+ <CAGis_TXyPtFiE=pLrLRh1MV3meE4aETi6z36NWLrMkYKkcjGNQ@mail.gmail.com>
+ <aAaUKenXzkFPZaMb@kbusch-mbp.dhcp.thefacebook.com>
+ <CAGis_TU1V2_L227SP9Ut1gSTNx9-AT9nbwgJH6azzH8==35hBQ@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <ceefa848-082b-0153-e41d-26c0559f3666@huaweicloud.com>
+Date: Tue, 22 Apr 2025 09:39:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nand/next] mtd: nand: spi: Use write_cache first and then
- update_cache in write operation
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
- Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Daniel Golle <daniel@makrotopia.org>, Chia-Lin Kao
- <acelan.kao@canonical.com>, Cheng Ming Lin <chengminglin@mxic.com.tw>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Pratyush Yadav <pratyush@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Steven Liu <Steven.Liu@mediatek.com>
-References: <20241119093949.3014-1-SkyLake.Huang@mediatek.com>
- <871pymtab3.fsf@bootlin.com>
-From: Chuanhong Guo <gch981213@gmail.com>
-Content-Language: en-US
-In-Reply-To: <871pymtab3.fsf@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CAGis_TU1V2_L227SP9Ut1gSTNx9-AT9nbwgJH6azzH8==35hBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB3219F8wZo6szEKA--.19869S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1xWr45CFW5ZrWUGry3Jwb_yoW8try5pF
+	ZYgF4fKF4DG348Aw4Ivw4UZryak397Ga43Xa95J3WIvrn0gryft34I93yagFW7Ary0krWS
+	vw4Fgas3W3sFy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUot
+	CzDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hello!
-在 2024/12/5 23:32, Miquel Raynal 写道:
-> Hello,
-> 
-> On 19/11/2024 at 17:39:49 +08, Sky Huang <SkyLake.Huang@mediatek.com> wrote:
-> 
->> From: Sky Huang <skylake.huang@mediatek.com>
->>
->> According to discussion with Miquel Raynal <miquel.raynal@bootlin.com>
->> and Chuanhong Guo <gch981213@gmail.com> on FORESEE F35SQA002G patch,
->> Chuanhong recommmends that we can use the following sequence in
->> spinand_write_to_cache_op():
->>
->> x1 mode:
->> 02H(program data load) -> 84H(random program data load) -> 84H ...
->>
->> x4 mode:
->> 32H(program data load x4) -> 34H(random program data load x4) -> 34H ...
->>
->> 02H or 32H commands will clear cache buffer on SPI-NAND and load
->> data to it. For those SPI controllers which can't finish transmission
->> in single step, 84H or 34H will be triggered for the rest data.
->>
->> We observe that some current SPI-NANDs, including FORESEE F35SQA001G and
->> F35SQA002G, must use 02H or 32H to reset cache buffer in flash before
->> using 84H or 34H. Or users may encounter program failure issue. This issue
->> is not always reproducible, but it may occur and cause system instability.
->>
->> This sequence should work on all SPI-NANDs nowadays. I also check with
->> Foresee that the sequence can solve the above program failure issue.
->>
->> On my test platform (MT7988), SPI driver is drivers/spi/spi-mt65xx.c.
->> And I limit MTK_SPI_IPM_PACKET_SIZE to SZ_1K to simulate lightweight SPI
->> controller which can only transmit 1024 bytes.
->>
->> The test step is the following:
->> - mtd erase /dev/mtd2
->> - dd if=/dev/zero bs=2048 count=1 | tr '\0' '\xA5' > output.bin
->> - mtd write output.bin /dev/mtd2
->>
->> Before applying this patch, write operation uses only 34H(update_cache):
->> [78.937720] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st byte: 0xa5
->> [78.945297] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1st byte: 0xa5
->> [78.954251] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st byte: 0xa5
->> [78.962966] OP code: 0x10, addr val: 0x300
->> [78.968816] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st byte: 0xff
->> [78.977233] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1st byte: 0xff
->> [78.985124] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st byte: 0xff
->> [78.992527] OP code: 0x10, addr val: 0x301
->> [78.996981] OP code: 0x34, addr val: 0x0, data nbytes: 1020, data 1st byte: 0xff
->> [79.004416] OP code: 0x34, addr val: 0x3fc, data nbytes: 1020, data 1st byte: 0xff
->> [79.012031] OP code: 0x34, addr val: 0x7f8, data nbytes: 72, data 1st byte: 0xff
->> [79.019435] OP code: 0x10, addr val: 0x302
-> 
-> I am sorry but above you said that we should not perform:
-> 
->      0x32, 0x32, 0x32...
-> 
-> because the second time it would clear the cache again. And here
-> you tell us that actually the core already handles that by performing
-> instead:
-> 
->      0x34, 0x34, 0x34...
-> 
-> So what is the problem?
-> 
-> Or maybe I misunderstood the issue, but I think Chuanhong raised an
-> issue that is already solved? Isn't it?
-> 
+Hi,
 
-The issue is that the FORESEE NANDs require the first cache writing 
-instruction to be WRITE_CACHE instead of UPDATE_CACHE. i.e. it needs a 
-command sequence of:
-     0x32, 0x34, 0x34, 0x34...
-This patch does exactly that, making the first instruction issued 0x32.
-It should be applied to fix the issue above.
+在 2025/04/22 3:10, Matt Fleming 写道:
+> On Mon, 21 Apr 2025 at 19:53, Keith Busch <kbusch@kernel.org> wrote:
+>>
+>> Not sure. I'm also guessing cond_resched is the reason for your
+>> observation, so that might be worth confirming is happening in whatever
+>> IO paths you're workload is taking in case there's some other
+>> explanation.
+> 
+> Yep, you're spot on. We're hitting cond_resched() from various code
+> paths (xfs_buf_delwri_submit_buffers(), swap_writepage(),
+> rmap_walk_file(), etc, etc).
 
----
-Regards,
-Chuanhong Guo
+All pluged IO must be submited before scheduled out, there is no point
+for this direction. :(
+
+Please check the other mail that I replied to your original report,
+it'll make sense if a task keeps running on one cpu for milliseconds.
+
+Thanks,
+Kuai
+
+> 
+> sudo bpftrace -e 'k:psi_task_switch {        $prev = (struct
+> task_struct *)arg0;        if ($prev->plug != 0) {
+>                  if ($prev->plug->cur_ktime) {
+>                          @[kstack(3)] = count();
+>                  }
+>          }
+> }'
+> Attaching 1 probe...
+> ^C
+> 
+> @[
+>      psi_task_switch+5
+>      __schedule+2081
+>      __cond_resched+51
+> ]: 3044
+> 
+>> fs-writeback happens to work around it by unplugging if it knows
+>> cond_resched is going to schedule. The decision to unplug here wasn't
+>> necessarily because of the plug's ktime, but it gets the job done:
+>>
+>>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/fs-writeback.c?h=v6.15-rc3#n1984
+>>
+>> Doesn't really scale well to copy this for every caller of
+>> cond_resched(), though. An io specific helper implementation of
+>> cond_resched might help.
+>>
+>> Or if we don't want cond_resched to unplug (though I feel like you would
+>> normally want that), I think we could invalidate the ktime when
+>> scheduling to get the stats to read the current ktime after the process
+>> is scheduled back in.
+> 
+> Thanks. Makes sense to me. I'll try this out and report back.
+> 
+>> ---
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -6978,6 +6978,9 @@ static void __sched notrace preempt_schedule_common(void)
+>>                   * between schedule and now.
+>>                   */
+>>          } while (need_resched());
+>> +
+>> +       if (current->flags & PF_BLOCK_TS)
+>> +               blk_plug_invalidate_ts(current);
+>>   }
+>>
+>>   #ifdef CONFIG_PREEMPTION
+>> --
+> 
+> .
+> 
 
