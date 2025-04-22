@@ -1,120 +1,198 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC3C215160;
-	Tue, 22 Apr 2025 23:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D251EDA2A;
+	Tue, 22 Apr 2025 23:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745365978; cv=none; b=qQB3WXvn3gIkYP+LdHG5+KIbjVr7PTO1gRelhCA3+lfywzarcd8F8SJmO9rE0Bb14kINSFPabjOJNERozBoFa60lpKYcgihNgmnOaERQP81iVa3FClGbdSKuecXpraM6sdf3EOn7yL97Wg+uTkl2sK22NXtopTsvXMzqoHuxA9o=
+	t=1745366120; cv=none; b=BPT9Bthgyw4aQwMGirHn1zgaAT1uhHu/MsY4nvExQS2ANm/baZWOfe9xY1jIXGphPQnfxP1hnVErrn3oZ3DkbfjZglRjoIymRa8CbmH9WGXyKXsnW7jBvGO9SGbgxdZWc45w/UJZcNmt2EVh1BsJ/L5YpJJmRDKFOHVrF6du6JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745365978; c=relaxed/simple;
-	bh=poAB5gUqh8tzXC1P5DDkf9pwsWA1peC6ef8GdUAh1uE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0ibo0jlQKqBsTMBMuSQC1gHN73qHZ84jvV2Y7g+dAaVMYAP/ONApygfa3nwsxKaMr6647Wo7JJITQGJ0bMypYDaor8z+TqT+7jkes/ikeqOHePoxH3wVWKkrq/Ab4uEzqmzjmTvWdNvlIUxvS7c5ha3tIc280v6Ba1l8ho6yfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=r6GM2i8U; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1745366120; c=relaxed/simple;
+	bh=/xZOT/wI5uKTXB/Q0uxr9OLfSc9UE/L+joozHYy1pNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HgD7sM7RIZo3/43/xoEes2DWKjYFfFo3WRrKqMESLjM56U3QxsrIzZvDziUBN0njcB3yf7gwzMSxgufp/DMwc6yskQiDYrTMlnm/H7NNKf1yxqaoHb17KZ6nbfG5+D8Xu/HiijtchFdsqZOIgjVmR8r1qDYOyRPXW8Cg0LlRAU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=B3eSBniX; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="r6GM2i8U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=UXTBln1mekQhfNVo/rkMsBjEhYD7eu3mX9VBliaGAh0=; b=r6GM2i8Uy7V/wAw9
-	AUfqFnEOs5GEjdK/NlOQyX0Pu3oC+1zs2ylb01XSW2ielJ/VKXRziU2q0NJIlhUYZHVCk0S3aoYY1
-	Wob/ARj6nzL37DOiIk7yB26P8TBMF25LVNrD6cGcv7dtNOIJyMOIKt68eWc9yQRzAsisqvi621Vha
-	dDz2Y94u/7Skxrcw3gWZ1WXqYMwgv0w8rwICPiMLy4MSKBsmyoLX5u6h9DBB/wg+GKs3fWJ3A06sI
-	bbvUSbB10HEAaeU4cSr+ypy+Wx7yhpHYKC+Y2nDUaG9YqVCN5VMxPxZ6ABUPEhSEyaWaFCIyM6zDD
-	uKrk0NobkgM7hA3SjA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u7NPu-00DCTV-1e;
-	Tue, 22 Apr 2025 23:52:42 +0000
-Date: Tue, 22 Apr 2025 23:52:42 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Simon Horman <horms@kernel.org>
-Cc: dhowells@redhat.com, marc.dionne@auristor.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	corbet@lwn.net, linux-afs@lists.infradead.org,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] rxrpc: Remove deadcode
-Message-ID: <aAgrytcmlOGW-iv7@gallifrey>
-References: <20250417153232.32139-1-linux@treblig.org>
- <20250422182229.GM2843373@horms.kernel.org>
- <aAgDNMfgd6z3tKEb@gallifrey>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="B3eSBniX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745366103;
+	bh=Vmc9NHkz4RY/6taVVWGwEa9a1g7KMOwy7Ph0jl6f2lY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=B3eSBniXeCZmpq6ONJXT9RMfNXG5Cr8vbAI3zw6ApI0YUW2yrbUYVz2TeW/ZDIMBD
+	 ePl/QHtbraeUFCTu3YSsiRgmhhIC2/HXyBhdAx8sLDAigwIHX5LAOt0bCU7Lo6COdc
+	 1LiUGCIv4JXJgDpWjsvz1nv0RhxymvHy7T8PxAoRoKMih9rC7aCNuNyU+r1q2hqXg0
+	 YudR3T0O3iwvw/+tpJiGNtlJcVQY8qB2mkD0djn5SlAVZ3BuXmL32nvko6dHSkNpq3
+	 brBIXu+Ou/gpBVvRQOK07rqfyDe9PEuyibfmySM/klb6jUGXe7ISXv5WX674+e+ghd
+	 ynkUxWb20aP+g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhzcl5d00z4wcy;
+	Wed, 23 Apr 2025 09:55:03 +1000 (AEST)
+Date: Wed, 23 Apr 2025 09:55:03 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of Linus' tree
+Message-ID: <20250423095503.638eb761@canb.auug.org.au>
+In-Reply-To: <CAHk-=wjsMVpEvwq=+wAx20RWe_25LDoiMd34Msd4Mrww_-Z3Fw@mail.gmail.com>
+References: <20250422204718.0b4e3f81@canb.auug.org.au>
+	<CAHk-=wjsMVpEvwq=+wAx20RWe_25LDoiMd34Msd4Mrww_-Z3Fw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <aAgDNMfgd6z3tKEb@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 23:52:01 up 349 days, 11:06,  1 user,  load average: 0.05, 0.03,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: multipart/signed; boundary="Sig_/f90U5SWddWLgm2UOu+4dy17";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * Simon Horman (horms@kernel.org) wrote:
-> > On Thu, Apr 17, 2025 at 04:32:32PM +0100, linux@treblig.org wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > Remove three functions that are no longer used.
-> > > 
-> > > rxrpc_get_txbuf() last use was removed by 2020's
-> > > commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
-> > > local processor work")
-> > > 
-> > > rxrpc_kernel_get_epoch() last use was removed by 2020's
-> > > commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
-> > > ambiguous")
-> > > 
-> > > rxrpc_kernel_set_max_life() last use was removed by 2023's
-> > > commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
-> > > granted a channel")
-> > > 
-> > > Both of the rxrpc_kernel_* functions were documented.  Remove that
-> > > documentation as well as the code.
-> > > 
-> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > 
-> > Hi David,
-> 
-> Hi Simon,
-> 
-> > This patch doesn't apply to net-next.  Probably because of commit
-> > 23738cc80483 ("rxrpc: Pull out certain app callback funcs into an ops
-> > table"). So please rebase and repost.
-> 
-> Yeh no problem.
+--Sig_/f90U5SWddWLgm2UOu+4dy17
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-v2 sent, see message 20250422235147.146460-1-linux@treblig.org
-(I left off your Reviewed-by since it deserves a recheck!)
+Hi Linus,
 
-Dave
+On Tue, 22 Apr 2025 08:59:00 -0700 Linus Torvalds <torvalds@linux-foundatio=
+n.org> wrote:
+>
+> On Tue, 22 Apr 2025 at 03:47, Stephen Rothwell <sfr@canb.auug.org.au> wro=
+te:
+> >
+> > These builds were done with a gcc 11.1.0 cross compiler. =20
+>=20
+> That sounds like there might be some issue with the cross-compiler
+> logic somewhere, because the Makefile logic is using the standard
+>=20
+>     KBUILD_CFLAGS +=3D $(call cc-option, xyzzy)
+>=20
+> pattern.  We literally have seven other occurrences of that same logic
+> just in that same Makefile above it (and many more in other
+> makefiles).
+>=20
+> IOW, it's *supposed* to only actually use the flag if the compiler
+> supports it, so having the compiler then say "I don't recognize that
+> option" is kind of odd. We've explicitly tested that the compiler
+> supports it.
 
-> > But other than that, this patch looks good to me.
-> 
-> > Reviewed-by: Simon Horman <horms@kernel.org>
-> 
-> Thanks!
-> 
-> Dave
-> > 
-> > ...
-> > 
-> > -- 
-> > pw-bot: changes-requested
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Yeah, I thought it was strange.
+
+> Does the warning happen for all files that get built, or just some
+> specific ones? I wonder if we have some issue where we end up using
+> two different compilers (I'd assume native and cross-built), and we
+> use KBUILD_CFLAGS for the wrong compiler (or we use cc-option with the
+> wrong compiler, but I'd expect that to affect *everything* - that
+> 'cc-option' thing is not some kind of unusual pattern).
+
+It happens only for a couple of files.  Here is the full sparc64 build
+log:
+
+------------------------------------------------------------------------
+<stdin>:1519:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
+alization' may have been intended to silence earlier diagnostics
+/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:274:1: warning: no pre=
+vious prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
+  274 | __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec =
+*ts)
+      | ^~~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:302:1: warning: no pre=
+vious prototype for '__vdso_clock_gettime_stick' [-Wmissing-prototypes]
+  302 | __vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_tim=
+espec *ts)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:327:1: warning: no pre=
+vious prototype for '__vdso_gettimeofday' [-Wmissing-prototypes]
+  327 | __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezon=
+e *tz)
+      | ^~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vclock_gettime.c:363:1: warning: no pre=
+vious prototype for '__vdso_gettimeofday_stick' [-Wmissing-prototypes]
+  363 | __vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct t=
+imezone *tz)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
+alization' may have been intended to silence earlier diagnostics
+In file included from /home/sfr/next/next/arch/sparc/vdso/vdso32/vclock_get=
+time.c:22:
+/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:274:1: warni=
+ng: no previous prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
+  274 | __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec =
+*ts)
+      | ^~~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:302:1: warni=
+ng: no previous prototype for '__vdso_clock_gettime_stick' [-Wmissing-proto=
+types]
+  302 | __vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_tim=
+espec *ts)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:327:1: warni=
+ng: no previous prototype for '__vdso_gettimeofday' [-Wmissing-prototypes]
+  327 | __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezon=
+e *tz)
+      | ^~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/arch/sparc/vdso/vdso32/../vclock_gettime.c:363:1: warni=
+ng: no previous prototype for '__vdso_gettimeofday_stick' [-Wmissing-protot=
+ypes]
+  363 | __vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct t=
+imezone *tz)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~
+cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
+alization' may have been intended to silence earlier diagnostics
+/home/sfr/next/next/kernel/fork.c: In function '__do_sys_clone3':
+/home/sfr/next/next/kernel/fork.c:3150:2: warning: #warning clone3() entry =
+point is missing, please fix [-Wcpp]
+ 3150 | #warning clone3() entry point is missing, please fix
+      |  ^~~~~~~
+/home/sfr/next/next/kernel/fork.c: At top level:
+cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
+alization' may have been intended to silence earlier diagnostics
+/home/sfr/next/next/kernel/fork.c:3150:2: warning: #warning clone3() entry =
+point is missing, please fix [-Wcpp]
+ 3150 | #warning clone3() entry point is missing, please fix
+      |  ^~~~~~~
+cc1: note: unrecognized command-line option '-Wno-unterminated-string-initi=
+alization' may have been intended to silence earlier diagnostics
+WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation fail=
+ed, symbol will not be versioned.
+Is "_mcount" prototyped in <asm/asm-prototypes.h>?
+------------------------------------------------------------------------
+
+However:
+
+$ /opt/cross/gcc-11.1.0-nolibc/sparc64-linux/bin/sparc64-linux-gcc -Werror =
+-Wno-unterminated-string-initialization -c -x c /dev/null
+$ echo $?
+0
+$ /opt/cross/gcc-11.1.0-nolibc/sparc64-linux/bin/sparc64-linux-gcc -Werror =
+-Wunterminated-string-initialization -c -x c /dev/null
+sparc64-linux-gcc: error: unrecognized command-line option '-Wunterminated-=
+string-initialization'
+$ echo $?
+1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/f90U5SWddWLgm2UOu+4dy17
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgILFcACgkQAVBC80lX
+0GzeUwgAldqm2L0CmmCKA1wLqCFGkfnsZKM4pdUqSNlXEJtygGGE+ob/TULT2Az4
+dZPX6U2J/E4Js/1hkLFdiHsILwOurAqZKYzRUuX2t3MrorcS7ujUBJDIoBzh+oIa
+D12JN0luzalWIVpT07zBmGMklbX0s74n77tpTJP6R0/eyBPLsZExTMTddJO1TQNu
+wafOas2ktF9r+7/ZwP1AEDYIH/T+LdwhnMSexrQdh+k8fMXSgIQDdAXUxb6FxEMy
+p8398jdkDjaqPvc3DZNpQ+BylML4dB74YhAGEC5/PCA1ziJyCw2fQ/PKFR1R7Iuz
+F8mXuH/dKo1GTex+MeNOn3rnn0b0iA==
+=TmCE
+-----END PGP SIGNATURE-----
+
+--Sig_/f90U5SWddWLgm2UOu+4dy17--
