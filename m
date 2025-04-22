@@ -1,128 +1,60 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9100293B55
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A6E13C3F6;
+	Tue, 22 Apr 2025 16:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340807; cv=none; b=Pen4tU3OOCPAGxnLPQ0/dut5xcczQz24W+D/01jWDx/pcD8zAlEZyU63pglEceGbs+4duxcD6PZdaV4vT1gomcV6HfU222F777jUctWJ47+sHRbY2nDbGN3ZqHTizX9sdcfk5OkOvTW7mx0uexoGS+dlUMBbgbvCgmuh+CsNBOg=
+	t=1745340844; cv=none; b=ZfrooLxNMw3mrjUVztJuDUEChymCfEzddM8f2f8S3w69wykKhKoSVgA+HCG3YdeC+bepKBzEogKp4/DQo5G/r6UUFoRVAg+PYf3HHJnS1gWyhsoCMDcmtnQipGegbJiSMYvhWaISy9u43l+ucHpY2vGv1+ERIhTzQ3Bbn37Y/fY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340807; c=relaxed/simple;
-	bh=1VvrGlRC/Ba3kcGFKd5TjwKkEajuED8SBgZTYhd0zvc=;
+	s=arc-20240116; t=1745340844; c=relaxed/simple;
+	bh=P2Cwn0mIOA//S9MJQ9EVspSybWtsYxxbfjWoCZdfSP8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oU6glBO+qiRtCi4XO/p1SbsjI55Gsp+VsK0Cx1vTVd98JLwGehO7YzdidS3xtAdxx3xKBKL/crddW+NDiuIVOjm5Oneg6fH0ql+hehIqZFdpr15O011PGlhS4YuYItCatFEG/4/m2ozuP/KQFYUgEK8Q6J9lsFLGtoCceQj1BEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=YuLJS3M3; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	 Content-Type:Content-Disposition:In-Reply-To; b=UicUjVhr7qYzATBiOG5rDmrtfvxHDAqPe8YiSYqru3jbAcioNIJCVlyjK5obyg/kVFSKMiMdafr7iPJ0gOxcL4x1hKkC0W7lJGz5ATkfZBJkrThKphzqGoBMYoq+AN9y7yKhadviW3VnUzP3vTbuIdz5q5WSMp+auqCWIdhoycY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jv0b3A7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="YuLJS3M3"
-Date: Tue, 22 Apr 2025 12:52:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1745340791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YNBnrUig8d/7iyBpxwbIYcm/9fUV1xZh0qLhXZS0ujY=;
-	b=YuLJS3M3XrUeSddwGp+qWHk0nBrJudL0ed4BFYrYaqwLAUWE6hdV25uAM0gm+0cSsMpsMw
-	zDEcn3zcFy+R/l7JQFdFndmgFNE6j8LvJIwInTge/DyNgXf3DQLtzNuFw8i+QfkWHLkWL5
-	Mi/xhbT8kkRvBpQADeUjH8+xQhIC2nSQPOeAufkTjN7yAcYa9FalbQj6bhQgO5vyOvMofQ
-	gsKctrqm/1RBa05SNfFbh6Mq9PtBgQdYJYepwnjq72pE97xdmRHxoV9P+gLJDw3dqPzRaR
-	Ggh2f/GeF0J9lnmaIO3GtkFi3aVej1W4p8EL1nLrDI8pT41HJzQR6/heqDqBiA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>
-Subject: Re: [PATCH v2 1/2] rust: helpers: Add bindings/wrappers for dma_resv
-Message-ID: <aAfJadjG0RACO1-W@blossom>
-References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
- <20250422-gpuvm-v2-1-44d4fc25e411@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jv0b3A7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22726C4CEE9;
+	Tue, 22 Apr 2025 16:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745340843;
+	bh=P2Cwn0mIOA//S9MJQ9EVspSybWtsYxxbfjWoCZdfSP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jv0b3A7eixAfLOFmtbhzTtlj0A9zNqDP5eDF5XeL4ZVW0rO0sikXGgjhQYtJ0E2Rh
+	 RomgmmCSuzTp0TGIxIW4yS8z0BtYoWqx/BQ+bFRTEQAblTnFTHXrT7CpG+Cbs5aKEG
+	 VpAbxzujzisvidpetv70C/PcM3+zW/OQ/DOwnPGrAcnQT2czsllkoi31LvzpEBXWDn
+	 SuRInvTp6uLX9D7ld1F2wep/aQpdTdhu6vJaZ0S0nDjdajiNyysMTuoSOejkdZFB4P
+	 mpkiQmZRf92ROMKT3ld6LFV1J2ufylr3DYlxtN0h2kRJHOa0maR2spYiYLn0fVlamD
+	 Q4ND93qV3U7Fg==
+Date: Tue, 22 Apr 2025 17:53:58 +0100
+From: Simon Horman <horms@kernel.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: dsa: rzn1_a5psw: Make the read-only array
+ offsets static const
+Message-ID: <20250422165358.GJ2843373@horms.kernel.org>
+References: <20250417161106.490122-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422-gpuvm-v2-1-44d4fc25e411@collabora.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250417161106.490122-1-colin.i.king@gmail.com>
 
-This needs your Signed-off-by too as you are the submitter
+On Thu, Apr 17, 2025 at 05:11:06PM +0100, Colin Ian King wrote:
+> Don't populate the read-only array offsets and md5_init on the stack
+> at run time, instead make it static const.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-Le Tue, Apr 22, 2025 at 01:41:52PM -0300, Daniel Almeida a écrit :
-> From: Asahi Lina <lina@asahilina.net>
-> 
-> This is just for basic usage in the DRM shmem abstractions for implied
-> locking, not intended as a full DMA Reservation abstraction yet.
-> 
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> ---
->  rust/bindings/bindings_helper.h |  1 +
->  rust/helpers/dma-resv.c         | 13 +++++++++++++
->  rust/helpers/helpers.c          |  1 +
->  3 files changed, 15 insertions(+)
-> 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index e6020ba5b00237a08402fbd609c7fba27b970dd9..68d7be498a6d523797e54212d6c23ff4d8f2e92d 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -18,6 +18,7 @@
->  #include <linux/blkdev.h>
->  #include <linux/cred.h>
->  #include <linux/device/faux.h>
-> +#include <linux/dma-resv.h>
->  #include <linux/errname.h>
->  #include <linux/ethtool.h>
->  #include <linux/file.h>
-> diff --git a/rust/helpers/dma-resv.c b/rust/helpers/dma-resv.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..05501cb814513b483afd0b7f220230d867863c2f
-> --- /dev/null
-> +++ b/rust/helpers/dma-resv.c
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/dma-resv.h>
-> +
-> +int rust_helper_dma_resv_lock(struct dma_resv *obj, struct ww_acquire_ctx *ctx)
-> +{
-> +	return dma_resv_lock(obj, ctx);
-> +}
-> +
-> +void rust_helper_dma_resv_unlock(struct dma_resv *obj)
-> +{
-> +	dma_resv_unlock(obj);
-> +}
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 7a06d6bc48537248c8a3ec4243b37d8fb2b1cb26..c5e536d688bc35c7b348daa61e868c91a7bdbd23 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -14,6 +14,7 @@
->  #include "build_bug.c"
->  #include "cred.c"
->  #include "device.c"
-> +#include "dma-resv.c"
->  #include "drm.c"
->  #include "err.c"
->  #include "fs.c"
-> 
-> -- 
-> 2.49.0
-> 
+Reviewed-by: Simon Horman <horms@kernel.org>
+
