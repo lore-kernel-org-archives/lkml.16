@@ -1,74 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C01254673;
-	Tue, 22 Apr 2025 15:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1942154673;
+	Tue, 22 Apr 2025 15:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336549; cv=none; b=f3zNpItgERw5rdTHD4+QZ1VRT4HdCKiTwtsoQvzDSyA5M/vNxOF+FeQ577BNCbNVvJLtpOrbh96Nxcoj235sBRFx3M18M84PWTciQIJuUqN1L0EytpQdWzvkmmdeIuQSf+kOzStmxTc3ngMG4kS38b3IM0GZ1Pun6RgvLxi4qXc=
+	t=1745336611; cv=none; b=UA3AJXRoxGky24ra7KLK2n6akJxzp7mbmeLOuPyob2B7qg/kVyCVwfy/t07cHrGR68Ksm5GJViYdF0w2aNGFc0s15i8yrC6gQ5WgPMpLk6d1V3jV2DcE0gboux0hPIMSMyl/rmy3pS2okCtx0mtsH9XjMkHiIG2sedMVSfAmI94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336549; c=relaxed/simple;
-	bh=UjmE7mMRVfetjzx8FX9GEDrQFOSFL9/M99AxaPe/WFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ObXPwh0MP5D7QpjVMYRbUyESo0r8ROK4wO+CWhbT77BwS8IGtp2kBNSpw8BZO6lmVEpKvcrJN0uyKD1vxPWPev7frZAOwpzVXkSKE2PCHDY2h5sHVzCnC0ThouhDKo+5U5KYIPGcsKwhcNp4rRIyMclJHIjZOwFT9pRgalZG3MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWfY4YTC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745336611; c=relaxed/simple;
+	bh=r/B6J2mgkDa8SrCHLnMoTjcw/Sjl9UjHWq1AQia5Whk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r3DeFAdN1iRsDGSZ2M80Lf9LkxEvNdNY/QUScL8AVYQmjeej6hQ23TKmEvlLVfFkVSOqgHg5QG9wQA8SEE2ICdW74uZVqtXn/0QtBpXucBJikTP65XAB6khbUJwlmuGowChCbknVWJDZHTlnW10s+8UkLel9cBRdgFSZ+FDc9Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWaxg8Dy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWfY4YTC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18D7AC4CEE9;
-	Tue, 22 Apr 2025 15:42:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWaxg8Dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF93C4CEE9;
+	Tue, 22 Apr 2025 15:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336548;
-	bh=UjmE7mMRVfetjzx8FX9GEDrQFOSFL9/M99AxaPe/WFE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MWfY4YTCRapUqCdkB62dVPD6RevemNrraWnJYH65Xf7r+M38bYA8JIPmLHkCzOfmG
-	 nid7XWERxxlCWW+V4CZ9JcXQhU34Ydy33/ccYqR0ypw1/WnVzBH7xIKCjCyMsBlIHu
-	 xGLquvKZY89rnOg1ORTEByi87QdzFYaBh0zT+Zj8xBkpkgv0nDnZrREX3vd+41nQQO
-	 xZ8MfZAC5V9Ryql6HBOo8NhIImhmLjqZxYhr7Epi3Qgi8pwMYJ2IIOCAsbtS1ncv09
-	 FgKcFWNYm+qWL/qzwTrL9bOECh4VJtUEd4xHR2YxLbrr3B8LRmUEWpoEl2m5y2/EVz
-	 Kw/BHraf9u++Q==
-Message-ID: <7320995f-cd6d-4e65-b144-bd20151f9e5e@kernel.org>
-Date: Tue, 22 Apr 2025 17:42:24 +0200
+	s=k20201202; t=1745336610;
+	bh=r/B6J2mgkDa8SrCHLnMoTjcw/Sjl9UjHWq1AQia5Whk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QWaxg8DycJ7wZfAiyHZ3+VV+gKLolRB2aj85WbYo9skIgxfTv4A6fWbVGMDkTc/dT
+	 3j5Bsj0jgvizejE5KexMlONHTZxC4ST8vqNYrDmV1Ly1i1ZjnlREH2R31sEJC7Qpzl
+	 /MTdp4k9vGinuO9qOuzOpNKqdYTv5gjSO1U78DJmKtXqAFf0b+KEXp56vLIRkMEKnw
+	 0vrN9Npm8TxBaFRQd6nKdEGxdDbduKA35otzMK3SGARDDFL8dGoApcYSgSi+nPTZFV
+	 RAkPC6F+X26y+srhktu3gN5Ao1BIqMmFpXQaYSi9vgH2uMsFBq+k2lFGshHyjPgWt3
+	 Xbtgo3QvJ8qkQ==
+Date: Tue, 22 Apr 2025 17:43:25 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>, 
+	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu /
+ umount_tree
+Message-ID: <20250422-spurlos-energetisch-f7899b955c83@brauner>
+References: <6807876f.050a0220.8500a.000f.GAE@google.com>
+ <20250422-flogen-firmieren-105a92fbd796@brauner>
+ <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] rust: alloc: split `Vec::set_len` into
- `Vec::{inc,dec}_len`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Tamir Duberstein <tamird@gmail.com>,
- Andrew Ballance <andrewjballance@gmail.com>, Miguel Ojeda
- <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
- <Z_-wlwaiJNsSZbCC@google.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <Z_-wlwaiJNsSZbCC@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
 
-On 4/16/25 3:28 PM, Alice Ryhl wrote:
-> On Mon, Apr 07, 2025 at 10:52:30AM -0400, Tamir Duberstein wrote:
->> This series is the product of a discussion[0] on the safety requirements
->> of `set_len`.
->>
->> Link: https://lore.kernel.org/all/20250315154436.65065-1-dakr@kernel.org/ [0]
->> Link: https://lore.kernel.org/all/20250316111644.154602-2-andrewjballance@gmail.com/ [1]
->> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Tue, Apr 22, 2025 at 04:42:52PM +0200, Marco Elver wrote:
+> On Tue, 22 Apr 2025 at 15:43, 'Christian Brauner' via syzkaller-bugs
+> <syzkaller-bugs@googlegroups.com> wrote:
+> >
+> > On Tue, Apr 22, 2025 at 05:11:27AM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
+> > > compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+> > >
+> > > Unfortunately, I don't have any reproducer for this issue yet.
+> > >
+> > > Downloadable assets:
+> > > disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
+> > >
+> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
+> > >
+> > > ==================================================================
+> > > BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
+> >
+> > Benign, as this would be detected by the changed sequence count of
+> > @mount_lock. I hope we won't end up with endless reports about:w
+> > anything that we protect with a seqlock. That'll be very annoying.
 > 
-> I'm still wondering if the divergence from upstream alloc is worth it...
-> but the code is okay.
+> Seqlocks are generally supported, but have caused headaches in the
+> past, esp. if the reader-side seqlock critical section does not follow
+> the typical do-seqbegin-while-retry pattern, or the critical section
+> is too large. If I read this right, the
 > 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>   struct dentry *mountpoint = m->mnt_mountpoint;
+> 
+> is before the seqlock-reader beginning with "*seqp =
+> read_seqcount_begin(&mountpoint->d_seq);" ?
 
-Does this still apply to patch 1 in v4 [1]?
+choose_mountpoint_rcu() is always called within a context where the
+seqcount of the mount_lock is taken before it is called. IOW, there's
+the secount stored in a dentry like mountpoint->d_seq and then there's
+the seqcount of the mount_lock itself. For one callsite in
+choose_mountpoint() it's obvious:
 
-[1] 
-https://lore.kernel.org/rust-for-linux/20250416-vec-set-len-v4-1-112b222604cd@gmail.com/
+                unsigned seq, mseq = read_seqbegin(&mount_lock);
+
+                found = choose_mountpoint_rcu(m, root, path, &seq);
+		if (unlikely(!found)) {
+                        if (!read_seqretry(&mount_lock, mseq))
+                                break;
+
+but for follow_dotdot_rcu()
+
+                if (!choose_mountpoint_rcu(real_mount(nd->path.mnt),
+                                           &nd->root, &path, &seq))
+                if (read_seqretry(&mount_lock, nd->m_seq))
+                        return ERR_PTR(-ECHILD);
+
+nd->m_seq is setup in path_init() or in __legitimize_path() or
+__legitimize_mnt(). IOW, it can be a rather complex callchain.
