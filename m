@@ -1,147 +1,236 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8B41F03C5;
-	Tue, 22 Apr 2025 08:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714231F0E34;
+	Tue, 22 Apr 2025 08:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310189; cv=none; b=FoL9FDuaKzFBTaJ180NdsX4wO42d1C+Op58La3z656EJNdgF7z4FR5UyjhmikZPrDvjkm6JaupqsOJ16Qyw41LQgQB2sVc56IsTSY8aQmVMhWEHLwhSBeHxd0XWMTCs8OMgSF8yGTRT2otThehbyoWjrVtS0P0hgSP35DnT856I=
+	t=1745310229; cv=none; b=jjSiJLt6RKWUX9CgGl9r22Bjt6IKz8hcZQlbtbj4N/hPzm5T9PRzClkFFDnoq46OxwyIhCH00HyyBgA+2EoXuflUKLw90epnLmW1PfDA2lke/9dezhQhSx6qNk1CBwIHBLvNLN7IsdE94HExb87AiISFxYFwZK6G4tJLbojmWiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310189; c=relaxed/simple;
-	bh=2uP34/FeIpIk/Wcl1gOmNK8ZKfSeIZaiwifRRNPt/Ns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WqoLAH4Q9qu0uWb7fVl8AO4w1O5J0Stp48qXb4SNXmNuIG2ppuXevCti1Z5bxGd9sjsP044hEaYBndlL7Xy+6MTCXSermkm4jQX5uzJPjDPbqlVNIEFmurirndpDr+ZHNxKwq8b9kSV0zy9Q+kBuZVxpE+eNPBrJRoULkmPg3nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lBP/svYt; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745310229; c=relaxed/simple;
+	bh=5mnJXQbl6SEJYO4dMb/C/ZhC/prPzA9KgQK92fsGtwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hkUdQ0Y9B+b7/gOSi9OvkpJ40/x+l4npl3M/BMfIo7+t7AmSHo/R7A9pgJ6snEiT7WeI4fuau75S+CNXTakUuWvqWJwPlhqi2aFNqQVdKjFOmQMQ3qrIXK9M4jgUr0QzFJKDl54/XzqBp2USvuo161DQqRRJz/yT+ipWWWOD3a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hcEX0Oma; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBP/svYt"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-604f0d27c24so2216160eaf.2;
-        Tue, 22 Apr 2025 01:23:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745310186; x=1745914986; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eib6UYFi1fJr++H9on8mAKz/kr5wlL2zyWlhpLauZLc=;
-        b=lBP/svYtkb1z0ZLBuCJdxxpt8ndFmN6x0+Cm4nBos1hHoRw+EiNKFLsyR9VTvhjY7C
-         RCCte8Z6ycudUM4YV4+nPipC46V3ppWwBuZGLdZzy+4M8M06UQVMgObMulSNxiKA+9TY
-         bfm9lLbVqy0NiEw2AG0kGm/DdrEt/2apjOmrOVFgYr4GOkstawGbb2NYIypCH6nY020n
-         DVAc9zsfwUmz3egTJb4jMsUUWySuBnHC33vofYE/7GhU2b0ed8zAd+39v7hnrPpghYHG
-         +DmrSr1RynWr+/ANNuhDepSmctTBnhmBa72HSZgd8kme8iQKoOhwDBq5UpDZHCIzPppi
-         etHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745310186; x=1745914986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Eib6UYFi1fJr++H9on8mAKz/kr5wlL2zyWlhpLauZLc=;
-        b=YcHzqbWq6hoAjfwVx2GeD2JDpQF6GW8JZnbpcYAbrPMf8tRnx1uze2NbCeEfIU0DPU
-         W3ctGlTSSwIbFcKhAHYh2g9GpKOsRX5ekBwli2mWbR0VKkKGfq15Dq4Eral3L0USGNsX
-         FHfNDWCTMhNGjFk9Gm2fPPsJ4/b8oQ7t6/t6ocE/jz5njg5KZjwhjh/cOPQxMQC//6lR
-         qoceBwvWg2RyWregzxfdJ32qbD1gIGr7eqnWrnFMq7vQWGHHGvFTUms+aIBR8cdJwFA+
-         XUe3sj99CPBSCYNwtk4ApmkgEtRLs116m7Gvz76Yl1cpMvWyJwiZZUkyOEpJ7WlXsT2T
-         tTSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5h5a38pC79u3Uz7FUkS74T6iU+kgYOC+hEhwv0L8D8IAaQZ/n2xW+7hQPc1ioZFb7QH8y/SVipE1u79bw@vger.kernel.org, AJvYcCXeOJKwLU+Q25in9laTb4CyKcXFYKVIBkttSSjK6SqREQ9O4IXb292TEYI5rl2YfwUhnk3PrHVIeg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrUDDdGrlVnNYHgp77lLUp+fYhXmLXIhhiCm+rzfslF3fowH6U
-	k0I/KAPmTDot+8TjQ3xtB792nLxPomt60SAr8RncYz/lR7RiXO9XxCPVWXbkYrvEanvcwwti2y+
-	QjrdD6ITYL0LrtW0MUVzdIQ0z6uU=
-X-Gm-Gg: ASbGncu6wUbTiA9UTllz7iKz2qqxXUH7FAeOH6VCrxWzUqHxcvZDQkBtvIKy4Xrg5P2
-	5aEXvKnUOgLdoOzcCzLhUxia9Zc0YSF0GtC5X+NdQc+Uhr4GCJMtJXtd7S+p1wgaUbSwxbPFXjL
-	BKc3Kas4IJpREnPyVs7189R1M=
-X-Google-Smtp-Source: AGHT+IH73aeMXL7YPr7VbOhaDc7lZ6qCE8e7MFFs2JuKTrk1QSoj0Tr2ke5rvX4Jp7KqXTYvwKrnshZuvZZ1Nh9uScs=
-X-Received: by 2002:a05:6871:2109:b0:29e:74a0:e03f with SMTP id
- 586e51a60fabf-2d526d4efbcmr8286598fac.24.1745310186574; Tue, 22 Apr 2025
- 01:23:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hcEX0Oma"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M8MG9K1954391
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Tue, 22 Apr 2025 01:22:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M8MG9K1954391
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745310154;
+	bh=hH40dRMC8icMs0Kq/gRLpfnhusccGZZqYtPjziXUIq0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hcEX0Oma3CVnkwxqS8bKBIm18tqvV7335h9MWMF4E8wAMoT4z1itaFgVa2bu1H7Lv
+	 Ga+u823XXqz9EiWUYA9XlCQeHFfgScC5iggnF6WJwS4CQfGeYOy+x+oIvnckcTBzB6
+	 8V7NP2nGUmfkFx31xOhz6KwJe5WcJid/C9tfwl98yFuEFykSa3egLEr8WStBfP/6oh
+	 K8ADOv9Wdb6X6GRIlWoxPenpyB34mw1V1qvbQ8zIfGnVmMda21cc2+p+ghtOaC0a2V
+	 V8nAVloDomWCJYiVBeBOXpRIQBAsncCQrgBQ+uMQZJ1te/DZTdjVSMkiakmJECg5VO
+	 psDTTjszTfsAw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+Subject: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to read PMC
+Date: Tue, 22 Apr 2025 01:21:47 -0700
+Message-ID: <20250422082216.1954310-7-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422082216.1954310-1-xin@zytor.com>
+References: <20250422082216.1954310-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422030153.1166445-1-qq282012236@gmail.com> <1c141101-035f-4ff6-a260-f31dca39fdc8@gmail.com>
-In-Reply-To: <1c141101-035f-4ff6-a260-f31dca39fdc8@gmail.com>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Tue, 22 Apr 2025 16:22:52 +0800
-X-Gm-Features: ATxdqUHsW549CjADjQkeF24dIy0oIJ_3wSQeFdmFn0yYeM8PaYZjnYbeZYtkTzQ
-Message-ID: <CANHzP_tebha40yy=8rqeu9DMqfrS-veF3=rp76H8udDvs69rfA@mail.gmail.com>
-Subject: Re: [PATCH] io_uring: Add new functions to handle user fault scenarios
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: axboe@kernel.dk, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 3:59=E2=80=AFPM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
->
-> On 4/22/25 04:01, Zhiwei Jiang wrote:
-> ...
-> > I tracked the address that triggered the fault and the related function
-> > graph, as well as the wake-up side of the user fault, and discovered th=
-is
-> > : In the IOU worker, when fault in a user space page, this space is
-> > associated with a userfault but does not sleep. This is because during
-> > scheduling, the judgment in the IOU worker context leads to early retur=
-n.
-> > Meanwhile, the listener on the userfaultfd user side never performs a C=
-OPY
-> > to respond, causing the page table entry to remain empty. However, due =
-to
-> > the early return, it does not sleep and wait to be awakened as in a nor=
-mal
-> > user fault, thus continuously faulting at the same address,so CPU loop.
-> >
-> > Therefore, I believe it is necessary to specifically handle user faults=
- by
-> > setting a new flag to allow schedule function to continue in such cases=
-,
-> > make sure the thread to sleep.Export the relevant functions and struct =
-for
-> > user fault.
->
-> That's an interesting scenario. Not looking deeper into it, I don't see
-> any callers to set_userfault_flag_for_ioworker(), and so there is no one
-> to set IO_WORKER_F_FAULT. Is there a second patch patch I lost?
->
-> --
-> Pavel Begunkov
->
-Sorry, the following changes haven't been submitted yet. I was planning
-to submit them separately, thinking they belong to two different subsystems=
-.
-The other changes that haven't been submitted are as follows:
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index d80f94346199..74bead069e85 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -32,6 +32,7 @@
- #include <linux/swapops.h>
- #include <linux/miscdevice.h>
- #include <linux/uio.h>
-+#include "../io_uring/io-wq.h"
+To eliminate the indirect call overhead introduced by the pv_ops API,
+use the alternatives mechanism to read PMC:
 
- static int sysctl_unprivileged_userfaultfd __read_mostly;
+    1) When built with !CONFIG_XEN_PV, X86_FEATURE_XENPV becomes a
+       disabled feature, preventing the Xen PMC read code from being
+       built and ensuring the native code is executed unconditionally.
 
-@@ -369,7 +370,10 @@ vm_fault_t handle_userfault(struct vm_fault *vmf,
-unsigned long reason)
-        vm_fault_t ret =3D VM_FAULT_SIGBUS;
-        bool must_wait;
-        unsigned int blocking_state;
-+       struct io_worker *worker =3D current->worker_private;
+    2) When built with CONFIG_XEN_PV:
 
-+       if (worker)
-+               set_userfault_flag_for_ioworker(worker);
-        /*
-         * We don't do userfault handling for the final child pid update
-         * and when coredumping (faults triggered by get_dump_page()).
-@@ -506,6 +510,9 @@ vm_fault_t handle_userfault(struct vm_fault *vmf,
-unsigned long reason)
+       2.1) If not running on the Xen hypervisor (!X86_FEATURE_XENPV),
+            the kernel runtime binary is patched to unconditionally
+            jump to the native PMC read code.
 
-        __set_current_state(TASK_RUNNING);
+       2.2) If running on the Xen hypervisor (X86_FEATURE_XENPV), the
+            kernel runtime binary is patched to unconditionally jump
+            to the Xen PMC read code.
 
-+       if (worker)
-+               clear_userfault_flag_for_ioworker(worker);
+Consequently, remove the pv_ops PMC read API.
+
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
+ arch/x86/include/asm/msr.h            | 31 ++++++++++++++++++++-------
+ arch/x86/include/asm/paravirt.h       |  5 -----
+ arch/x86/include/asm/paravirt_types.h |  2 --
+ arch/x86/kernel/paravirt.c            |  1 -
+ arch/x86/xen/enlighten_pv.c           |  2 --
+ drivers/net/vmxnet3/vmxnet3_drv.c     |  2 +-
+ 6 files changed, 24 insertions(+), 19 deletions(-)
+
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 01dc8e61ef97..33cf506e2fd6 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -8,6 +8,7 @@
+ 
+ #include <asm/asm.h>
+ #include <asm/errno.h>
++#include <asm/cpufeature.h>
+ #include <asm/cpumask.h>
+ #include <uapi/asm/msr.h>
+ #include <asm/shared/msr.h>
+@@ -73,6 +74,10 @@ static inline void do_trace_read_msr(u32 msr, u64 val, int failed) {}
+ static inline void do_trace_rdpmc(u32 msr, u64 val, int failed) {}
+ #endif
+ 
++#ifdef CONFIG_XEN_PV
++extern u64 xen_read_pmc(int counter);
++#endif
 +
-        /*
-         * Here we race with the list_del; list_add in
-         * userfaultfd_ctx_read(), however because we don't ever run
+ /*
+  * __rdmsr() and __wrmsr() are the two primitives which are the bare minimum MSR
+  * accessors and should not have any tracing or other functionality piggybacking
+@@ -170,16 +175,32 @@ native_write_msr_safe(u32 msr, u32 low, u32 high)
+ extern int rdmsr_safe_regs(u32 regs[8]);
+ extern int wrmsr_safe_regs(u32 regs[8]);
+ 
+-static inline u64 native_read_pmc(int counter)
++static __always_inline u64 native_rdpmcq(int counter)
+ {
+ 	DECLARE_ARGS(val, low, high);
+ 
+-	asm volatile("rdpmc" : EAX_EDX_RET(val, low, high) : "c" (counter));
++	asm_inline volatile("rdpmc" : EAX_EDX_RET(val, low, high) : "c" (counter));
++
+ 	if (tracepoint_enabled(rdpmc))
+ 		do_trace_rdpmc(counter, EAX_EDX_VAL(val, low, high), 0);
++
+ 	return EAX_EDX_VAL(val, low, high);
+ }
+ 
++static __always_inline u64 rdpmcq(int counter)
++{
++#ifdef CONFIG_XEN_PV
++	if (cpu_feature_enabled(X86_FEATURE_XENPV))
++		return xen_read_pmc(counter);
++#endif
++
++	/*
++	 * 1) When built with !CONFIG_XEN_PV.
++	 * 2) When built with CONFIG_XEN_PV but not running on Xen hypervisor.
++	 */
++	return native_rdpmcq(counter);
++}
++
+ #ifdef CONFIG_PARAVIRT_XXL
+ #include <asm/paravirt.h>
+ #else
+@@ -233,12 +254,6 @@ static inline int rdmsrq_safe(u32 msr, u64 *p)
+ 	*p = native_read_msr_safe(msr, &err);
+ 	return err;
+ }
+-
+-static __always_inline u64 rdpmcq(int counter)
+-{
+-	return native_read_pmc(counter);
+-}
+-
+ #endif	/* !CONFIG_PARAVIRT_XXL */
+ 
+ /* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index 590824916394..c7689f5f70d6 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -239,11 +239,6 @@ static inline int rdmsrq_safe(unsigned msr, u64 *p)
+ 	return err;
+ }
+ 
+-static __always_inline u64 rdpmcq(int counter)
+-{
+-	return PVOP_CALL1(u64, cpu.read_pmc, counter);
+-}
+-
+ static inline void paravirt_alloc_ldt(struct desc_struct *ldt, unsigned entries)
+ {
+ 	PVOP_VCALL2(cpu.alloc_ldt, ldt, entries);
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index 631c306ce1ff..475f508531d6 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -101,8 +101,6 @@ struct pv_cpu_ops {
+ 	u64 (*read_msr_safe)(unsigned int msr, int *err);
+ 	int (*write_msr_safe)(unsigned int msr, unsigned low, unsigned high);
+ 
+-	u64 (*read_pmc)(int counter);
+-
+ 	void (*start_context_switch)(struct task_struct *prev);
+ 	void (*end_context_switch)(struct task_struct *next);
+ #endif
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 1ccd05d8999f..28d195ad7514 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -132,7 +132,6 @@ struct paravirt_patch_template pv_ops = {
+ 	.cpu.write_msr		= native_write_msr,
+ 	.cpu.read_msr_safe	= native_read_msr_safe,
+ 	.cpu.write_msr_safe	= native_write_msr_safe,
+-	.cpu.read_pmc		= native_read_pmc,
+ 	.cpu.load_tr_desc	= native_load_tr_desc,
+ 	.cpu.set_ldt		= native_set_ldt,
+ 	.cpu.load_gdt		= native_load_gdt,
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 846b5737d320..9fbe187aff00 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1236,8 +1236,6 @@ static const typeof(pv_ops) xen_cpu_ops __initconst = {
+ 		.read_msr_safe = xen_read_msr_safe,
+ 		.write_msr_safe = xen_write_msr_safe,
+ 
+-		.read_pmc = xen_read_pmc,
+-
+ 		.load_tr_desc = paravirt_nop,
+ 		.set_ldt = xen_set_ldt,
+ 		.load_gdt = xen_load_gdt,
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 7edd0b5e0e77..8af3b4d7ef4d 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -151,7 +151,7 @@ static u64
+ vmxnet3_get_cycles(int pmc)
+ {
+ #ifdef CONFIG_X86
+-	return native_read_pmc(pmc);
++	return native_rdpmcq(pmc);
+ #else
+ 	return 0;
+ #endif
+-- 
+2.49.0
+
