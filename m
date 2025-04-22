@@ -1,198 +1,378 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400926A092
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F941A5B95
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745352762; cv=none; b=T8VcjYdQ8XV51M5hjQs5DwAJWMswORMniqftUbNOR1EddUBTdJdobkfu78vuP7LTBOipxLrKfHCbXQKmKBP/A161fFGsL/kTX/MmlllGx0+VSSWcv6Hqw2mAhKLR5Hv5tXG46b1pQi/HHFo7VvqQaPBiMVZBvbX0Fb+P141po9k=
+	t=1745352931; cv=none; b=IgiCM7gzmSk5j44EkD+XB346FkSBXRfJbgx1K3Q0V4QRALIvYTPL2CgFSVnGYYUgWL3VKn/1Z9N8gJzqZTqbT1s8ngtowYEMNtOuzFVPkuUiBu3E5yyqBZqu8qaHaM8tc7cl2NB4m6jgo7oGCYntcE5JuPUhYW2Oh8Vv911/3Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745352762; c=relaxed/simple;
-	bh=Rz6kR9Nnog2Dl+IpQRCHKfLS4Sb3C6gyABe09uNcvrg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Od4xMNU8djhEsFZ1GFQAsdU6UJuyYoREDP5HxwsQ/jR1vv9piUP5ESIZducjPy2UPcpJQ5JJ1eccZrhQKBjpciYKIz/YG0LBOPVQrK1RaCK8p9v9gJVRkK1aOxCDo1pw36PjeF/PAOCPVaFdnnUwTCrbuCUiB3bz6XejGL4FaXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XDkhXdI0; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745352931; c=relaxed/simple;
+	bh=wNORhVYlgTJse9QfgWQWMbFqYMq1ZPqAa96KFCBdsj8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MAuruzcy57LlI4QBRSplDDOdq//eMyPAvxYFQ1Y4yEjKbVNhQqUXD4D9x/GaFq6TFHNzI4WVpjYofsCZZcDjLl6t458PZ9Vcxd/nd6UBt6JWbUuTChb+wun0MHmSrq2MajrXxQeZxj7QpcpaSIkL1r+KcG7DTNbg79cO9CSCnLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=Y3Ao1b+g; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XDkhXdI0"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-605fc797a2cso2534570eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:12:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="Y3Ao1b+g"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c59e7039eeso770650485a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745352758; x=1745957558; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ur+YYyDzv8PMEb5GegaWF1VkXF70WyZq1UmQDyR3DPQ=;
-        b=XDkhXdI09uwq8Szyg40GRnVspwH4nnZ0v0nmc/sk3ZhGRx7ukKgw61FsRdDhkviVcb
-         aMCLgU0fDn1Dn/3EM185NKmy74NmrZr8tHYLN6rQU9gyZBRVWFaqiiEspapve64nHAPe
-         styLhUh8wPR46s6WV+qjV1gdF5rCZkkS6QTnMr6rf6TQrweSsz3FyiLiICs3e8qkqjmi
-         wZPYXBeHM4kIVGQZhTI9MPobStO+yKV3JZbHFq6CrnZFR9nZvCzzmbyBxgph7E5H6SP5
-         v+BWFNoiR82ub1kRhhf6eizsJSuWk61dbV1ewvVClP9pntrntdP18YCgZEuUXBnH9/PG
-         MFGw==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745352928; x=1745957728; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FfIoYR2Hk8OscvFDt1woJsVwZTyVIxPWRqw5VTDHqxU=;
+        b=Y3Ao1b+g0tVDH2sqhlHaH72SAFtp9IFMxkZCHDQll6zowN2zaz0uVNbmdz8pDcrLHC
+         I/VWjCepH4mnOyzxQSqSVtNGcVwGki/MkSGtLehufiWAB5DSu8oZ5ZuFarpI9m1eERu+
+         ogK3vOqZUIxlvdGQIk65O8x7mlHLNTz4viXnd0xtu5ZbjoCp3cxZkyYBLhbAAFdDhJeG
+         orTl0kao911wG6lAdgVIBVa8yBn+0U3UvrnmuCwowzbZ2QMOXIYls9M8TjNkPuXtVOEM
+         svqAumiylHcS9cy7SrXa1O6N9wIbtD9FaXigsVzYhfpWS5vPvViFOLtGq0bEszmTf4F2
+         Ca1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745352758; x=1745957558;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ur+YYyDzv8PMEb5GegaWF1VkXF70WyZq1UmQDyR3DPQ=;
-        b=DqFoXtPbGd0k7SAKqgGAqlDHrmy4QOrj0skpFWVNGg7FOU9cqqQgrX/n/HqsNq0dfk
-         KIYl2VrzBsGQXUXEEhH5Mq0Nzf77uSjfERHfH2YpjNaIhkp2OqmHABOtAWIA9jtVsOLK
-         KGbbt3wi3ZD9mce4KWjOsCNjoomkn/d1cCl19Zcs4EvMP4qHRyNDdFadmQaHF80Wd5m1
-         Rukilov7PorpMoyN4o7Zkdqt4X7ur1I0SJLr4VYgKX5UBubn+ep/G6+a0os1COs0qj1/
-         41z6hA0fqbRcPfWvcfCxJ2xu71Xdd8ntKt8HDC+ZdC1ORxBuNXNxCGxE2gNY2mGMM4Bq
-         lyww==
-X-Forwarded-Encrypted: i=1; AJvYcCUKUBWrbsAEaL7eeDzdCABeTCv8V5ExXa0uCfe0SqifvOtn4cUSaZnMeu/TKC7R5Pk0GhZIK2ar/+1EoSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuQgouk3GUEsCtMYTTVfz2q1LhMqPrNmxH5PKa9uwkuuA/JdOf
-	pzzRPL6qgQqii0phjYLevwKvtYROMTZ53NEoadxlHuBjL8feG1nffmurQKAiyjQ=
-X-Gm-Gg: ASbGnctab1o4mCQQ9A296IOtFxp4XC0T92gaVH9slu+hDFF49lHylIGfDoLdpjkiEK4
-	DQmno83+pfYjBxRPvBIJ79Ffzm3UQzWU9wTcxEeQ4lKVYtsPfWXO9j9BHgowO1nG0LLmd2Ngb+h
-	eTicC7YX/baEGulmttRXgmmW3JmZsRfJDOB6gnbaeHUDUrHhFzulIu1dLN9ZZC8tbYsSMGhMYDC
-	GJALjiAUngNHEySkek+OJbWNKwGdvOuUQRUbXz5mXhPfKuPLAZ7TPvVN7WKU8wL9R7WNqSyCFAv
-	fERR8J5n4PKL57TBiRpDYNX1xx/KoTGgzX5QMQEf1+TgytY/4valegO/zg==
-X-Google-Smtp-Source: AGHT+IEdn21GBcQ67ZHTcgGKUqqECreerd2BpPdOoMxx5qbB0ls4vYksbilrdjkfFK3CXLjo6hN30A==
-X-Received: by 2002:a05:6820:2296:b0:603:f1b5:ca02 with SMTP id 006d021491bc7-606005c9a13mr10542921eaf.6.1745352758385;
-        Tue, 22 Apr 2025 13:12:38 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff5fcd49sm2304822eaf.24.2025.04.22.13.12.35
+        d=1e100.net; s=20230601; t=1745352928; x=1745957728;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FfIoYR2Hk8OscvFDt1woJsVwZTyVIxPWRqw5VTDHqxU=;
+        b=EzOJgsMlSf2phLuLvNtbcJzL3IQdF8peNkzz70NHqSavhRSUjsetGrmBgNQfs2C9JA
+         o+OYLeoS9qJXTghMiHY0vVsid8G6BvdIsDBguZyz1I62YYxLaNJQ2o68WHgBDyZWe24H
+         wwQKLdtnp+B9BEkMccSXWEGqB+ZWD+hmNSoij86Zk//kyCGgyMtFDPKgLeAR32FFkL2B
+         cF2DiopgqT9q2nvqNAvrQIAnG8yoS1iK/lDQ2WzCQR/d/ZIPCtaedTcR/lyLfiR1yxmc
+         +DJSnZLvrjLza9r6abKwY26n8QVxqmv/grnaBvwgLuZcm1kv0A2XljUaqMdWtFNmJri3
+         UXrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVR1f1WpykjUURtT5Ux2q2mfTnmp/A24fVJ8x/Sp2aQavgtKIDVRjqnSaNVWZqgUsnZ1uYd34xlDNuUKDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/rj/PvieSEdUKEf5mumh9YYmZFD33sr8LWiD+00OTl/+iXDyD
+	Ln4CD9j67ZCVcur08viCkHMFuIWGcvdA8N7Iv8GET6WmecDhZ0ybvVts2VZdm0o=
+X-Gm-Gg: ASbGncuJHB2dumuqA9mi1XxzNMqhrSMBOZKFItLKeW9phdK4fnrxSSEBuuDMLTr0Zno
+	DQC0Z171RNHDd93ByRMq6yrU6xAwo9NTaFX4cVOfuh7evw9Q165AOgqcPOQtGZqqru2+q0qas2c
+	tlHe/q4UTF71IECMgjVW1mtFgvoUelC0IneMWKRRu5b+b/jlFOOGZ3gz8VXJskpxHcKy7Rs9ITS
+	9QKE95TFnL/PHUFpLJReMnFRiDRL22WMsH9oUBlLBZlouYh7AElzAgPBM21vm1RREH7XfvYypqT
+	Wz7isOUWvaURPwNJmyGfOgLwXSAp9ubCB8j558cGPIE0ANCwYmlv+6k4
+X-Google-Smtp-Source: AGHT+IE5UyDb3sP+B1E0k8WlUIn5epHst96b+MCPIWCRdWJrnaIbCMq4o4Z31SsOW5ok7mHv5BAPog==
+X-Received: by 2002:a05:620a:1a07:b0:7c7:827b:46bf with SMTP id af79cd13be357-7c928015f8dmr2301315685a.39.1745352928409;
+        Tue, 22 Apr 2025 13:15:28 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b6e198sm590055985a.103.2025.04.22.13.15.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 13:12:37 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 22 Apr 2025 15:12:27 -0500
-Subject: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
+        Tue, 22 Apr 2025 13:15:27 -0700 (PDT)
+Message-ID: <74eb0589ae54855db1d2024591d501989e30027a.camel@ndufresne.ca>
+Subject: Re: [PATCH v2] media: amphion: Add H264 and HEVC profile and level
+ control
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Ming Qian <ming.qian@oss.nxp.com>, mchehab@kernel.org, 
+	hverkuil-cisco@xs4all.nl
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, 	eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
+ imx@lists.linux.dev, 	linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
+Date: Tue, 22 Apr 2025 16:15:25 -0400
+In-Reply-To: <20241210093337.3779686-1-ming.qian@oss.nxp.com>
+References: <20241210093337.3779686-1-ming.qian@oss.nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIACr4B2gC/x2NywqDMBBFf0Vm3QGdRoL9ldKFTaZ6wZqQ2AeI/
- 96hi7M4cLh3p6oFWunS7FT0jYq0mnSnhsI8rpMyojlJK33rRBhIPMZg+M6f+YEvh/TMWJQ/2Ob
- 02njKSAvu7GP0otK7YXBkg7mo5f+z6+04fuGVjBR8AAAA
-X-Change-ID: 20250422-iio-adc-ad7173-fix-compile-without-gpiolib-7dd72e254994
-To: Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Guillaume Ranquet <granquet@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel test robot <lkp@intel.com>, David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3711; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=Rz6kR9Nnog2Dl+IpQRCHKfLS4Sb3C6gyABe09uNcvrg=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoB/gsKmJ9TWYcTk4Yq7Lu7XbPbZYEWJzXA58Y2
- LYxaBw3sgmJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAf4LAAKCRDCzCAB/wGP
- wC8sCAChhldrSxne6/z/X9ZA+v8PBy2fxb/YSxo9xfQ1BhOxKg3yRgBqKi8CHSvcgnnEfXgtYLh
- ebrIvFEcVrhLg0xCkwZCsEhRCxpyX+UGIIKqu28X1Bzdy8ItyCE/MtqF3B6ijcUXXGvwVPCSlbj
- zQstIZGxgwOn6f5ukCVstD1fK5OxgCyY2ZP5QAot8sx4nn+VDcfJrenUKMJuWpCafG6bUAU7l66
- FpiuNZa7Wm6j+glRd+M8vF9zAJ2YBOK8DY7XRLuy85unLsQYFcJlS/9yTjpmiZMigaJIEnIGgOn
- RVtWIBh5XbvOS9p0gthQBYI9RjoX+MYiO3FSZsbiQqVpcjJT
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Fix compiling the ad7173 driver when CONFIG_GPIOLIB is not set by
-selecting GPIOLIB to be always enabled and remove the #if.
+Hi Ming,
 
-Commit 031bdc8aee01 ("iio: adc: ad7173: add calibration support") placed
-unrelated code in the middle of the #if IS_ENABLED(CONFIG_GPIOLIB) block
-which caused the reported compile error.
+Le mardi 10 d=C3=A9cembre 2024 =C3=A0 18:33 +0900, Ming Qian a =C3=A9crit=
+=C2=A0:
+> From: Ming Qian <ming.qian@nxp.com>
+>=20
+> For format H264 and HEVC, the firmware can report the parsed profile idc
+> and level idc to driver, the information may be useful.
+> Implement the H264 and HEVC profile and level control to report them.
+>=20
+> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+> ---
+> v2
+> -- add support for V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE
+>=20
+> =C2=A0drivers/media/platform/amphion/vdec.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 61 +++++++++++++
+> =C2=A0drivers/media/platform/amphion/vpu_defs.h=C2=A0=C2=A0=C2=A0 |=C2=A0=
+ 1 +
+> =C2=A0drivers/media/platform/amphion/vpu_helpers.c | 93 +++++++++++++++++=
++++
+> =C2=A0drivers/media/platform/amphion/vpu_helpers.h |=C2=A0 5 ++
+> =C2=A0drivers/media/platform/amphion/vpu_malone.c=C2=A0 |=C2=A0 3 +-
+> =C2=A05 files changed, 162 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/platform/amphion/vdec.c b/drivers/media/platfo=
+rm/amphion/vdec.c
+> index ca8f7319503a..61d5598ee6a1 100644
+> --- a/drivers/media/platform/amphion/vdec.c
+> +++ b/drivers/media/platform/amphion/vdec.c
+> @@ -232,6 +232,37 @@ static int vdec_ctrl_init(struct vpu_inst *inst)
+> =C2=A0			=C2=A0 V4L2_CID_MPEG_VIDEO_DEC_DISPLAY_DELAY_ENABLE,
+> =C2=A0			=C2=A0 0, 1, 1, 0);
+> =C2=A0
+> +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264_PROFILE=
+,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_MUL=
+TIVIEW_HIGH,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_H264_PRO=
+FILE_BASELINE) |
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE) |
 
-However, later commit 7530ed2aaa3f ("iio: adc: ad7173: add openwire
-detection support for single conversions") makes use of the gpio regmap
-even when we aren't providing gpio controller support. So it makes more
-sense to always enable GPIOLIB rather than trying to make it optional.
+You've added it here, but you will never report it, see my comment
+below.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504220824.HVrTVov1-lkp@intel.com/
-Fixes: 031bdc8aee01 ("iio: adc: ad7173: add calibration support")
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-Not related to the fix, but I also question the use of the regmap here.
-This is one of the ad_sigma_delta drivers that does funny things with
-the SPI bus, like keeping it locked during the entire time a buffer is
-enabled. So, if someone tried to use a GPIO during a buffered read, the
-GPIO call could block (waiting for the SPI bus mutex) until the buffer
-is disabled, which could be an indefinitely long time. And to make it
-even worse, this is not an interruptible wait, so the GPIO consumer
-would effectively be deadlocked.
----
- drivers/iio/adc/Kconfig  |  5 +++--
- drivers/iio/adc/ad7173.c | 15 +--------------
- 2 files changed, 4 insertions(+), 16 deletions(-)
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MAIN) |
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_HIGH) |
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH) |
+> +				 (1 << V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH)),
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index ad06cf5567851ee71f1211ec69d59fd5c1857ee5..4591c886ffea5519b374a28c7a0698eb19169c9f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -137,8 +137,9 @@ config AD7173
- 	tristate "Analog Devices AD7173 driver"
- 	depends on SPI_MASTER
- 	select AD_SIGMA_DELTA
--	select GPIO_REGMAP if GPIOLIB
--	select REGMAP_SPI if GPIOLIB
-+	select GPIOLIB
-+	select GPIO_REGMAP
-+	select REGMAP_SPI
- 	help
- 	  Say yes here to build support for Analog Devices AD7173 and similar ADC
- 	  Currently supported models:
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 69de5886474ce2f700bf277ce707b15637113564..b3e6bd2a55d717d5384616d9a8a160c57a8f1948 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -230,10 +230,8 @@ struct ad7173_state {
- 	unsigned long long *config_cnts;
- 	struct clk *ext_clk;
- 	struct clk_hw int_clk_hw;
--#if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct regmap *reg_gpiocon_regmap;
- 	struct gpio_regmap *gpio_regmap;
--#endif
- };
- 
- static unsigned int ad4115_sinc5_data_rates[] = {
-@@ -288,8 +286,6 @@ static const char *const ad7173_clk_sel[] = {
- 	"ext-clk", "xtal"
- };
- 
--#if IS_ENABLED(CONFIG_GPIOLIB)
--
- static const struct regmap_range ad7173_range_gpio[] = {
- 	regmap_reg_range(AD7173_REG_GPIO, AD7173_REG_GPIO),
- };
-@@ -543,12 +539,6 @@ static int ad7173_gpio_init(struct ad7173_state *st)
- 
- 	return 0;
- }
--#else
--static int ad7173_gpio_init(struct ad7173_state *st)
--{
--	return 0;
--}
--#endif /* CONFIG_GPIOLIB */
- 
- static struct ad7173_state *ad_sigma_delta_to_ad7173(struct ad_sigma_delta *sd)
- {
-@@ -1797,10 +1787,7 @@ static int ad7173_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	if (IS_ENABLED(CONFIG_GPIOLIB))
--		return ad7173_gpio_init(st);
--
--	return 0;
-+	return ad7173_gpio_init(st);
- }
- 
- static const struct of_device_id ad7173_of_match[] = {
+Shall we advertise multiview and stereo ? My impression is that we lack
+a mechanism to actually signal the stereo layout, or which view each
+buffers came from. I'm thinking, you can can't test it, we should just
+fail on these ?
 
----
-base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
-change-id: 20250422-iio-adc-ad7173-fix-compile-without-gpiolib-7dd72e254994
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_BAS=
+ELINE);
+> +
+> +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_2,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_0);
+> +
+> +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC_PROFILE=
+,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAI=
+N_10,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~((1 << V4L2_MPEG_VIDEO_HEVC_PRO=
+FILE_MAIN) |
+> +				 (1 << V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10)),
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAI=
+N);
+> +
+> +	v4l2_ctrl_new_std_menu(&inst->ctrl_handler, NULL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_CID_MPEG_VIDEO_HEVC_LEVEL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_4);
+> +
+> =C2=A0	ctrl =3D v4l2_ctrl_new_std(&inst->ctrl_handler, &vdec_ctrl_ops,
+> =C2=A0				 V4L2_CID_MIN_BUFFERS_FOR_CAPTURE, 1, 32, 1, 2);
+> =C2=A0	if (ctrl)
+> @@ -1166,6 +1197,35 @@ static void vdec_clear_slots(struct vpu_inst *inst=
+)
+> =C2=A0	}
+> =C2=A0}
+> =C2=A0
+> +static void vdec_update_v4l2_ctrl(struct vpu_inst *inst, u32 id, u32 val=
+)
+> +{
+> +	struct v4l2_ctrl *ctrl =3D v4l2_ctrl_find(&inst->ctrl_handler, id);
+> +
+> +	if (ctrl)
+> +		v4l2_ctrl_s_ctrl(ctrl, val);
+> +}
+> +
+> +static void vdec_update_v4l2_profile_level(struct vpu_inst *inst, struct=
+ vpu_dec_codec_info *hdr)
+> +{
+> +	switch (inst->out_format.pixfmt) {
+> +	case V4L2_PIX_FMT_H264:
+> +	case V4L2_PIX_FMT_H264_MVC:
+> +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_profile(hdr->profil=
+e_idc));
+> +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_H264_LEVEL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_h264_v4l2_level(hdr->level_id=
+c));
+> +		break;
+> +	case V4L2_PIX_FMT_HEVC:
+> +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_PROFILE,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_profile(hdr->profil=
+e_idc));
+> +		vdec_update_v4l2_ctrl(inst, V4L2_CID_MPEG_VIDEO_HEVC_LEVEL,
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vpu_get_hevc_v4l2_level(hdr->level_id=
+c));
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +}
+> +
+> =C2=A0static void vdec_event_seq_hdr(struct vpu_inst *inst, struct vpu_de=
+c_codec_info *hdr)
+> =C2=A0{
+> =C2=A0	struct vdec_t *vdec =3D inst->priv;
+> @@ -1189,6 +1249,7 @@ static void vdec_event_seq_hdr(struct vpu_inst *ins=
+t, struct vpu_dec_codec_info
+> =C2=A0	vdec_init_crop(inst);
+> =C2=A0	vdec_init_mbi(inst);
+> =C2=A0	vdec_init_dcp(inst);
+> +	vdec_update_v4l2_profile_level(inst, hdr);
+> =C2=A0	if (!vdec->seq_hdr_found) {
+> =C2=A0		vdec->seq_tag =3D vdec->codec_info.tag;
+> =C2=A0		if (vdec->is_source_changed) {
+> diff --git a/drivers/media/platform/amphion/vpu_defs.h b/drivers/media/pl=
+atform/amphion/vpu_defs.h
+> index 428d988cf2f7..606f9d61a265 100644
+> --- a/drivers/media/platform/amphion/vpu_defs.h
+> +++ b/drivers/media/platform/amphion/vpu_defs.h
+> @@ -134,6 +134,7 @@ struct vpu_dec_codec_info {
+> =C2=A0	u32 decoded_height;
+> =C2=A0	struct v4l2_fract frame_rate;
+> =C2=A0	u32 dsp_asp_ratio;
+> +	u32 profile_idc;
+> =C2=A0	u32 level_idc;
+> =C2=A0	u32 bit_depth_luma;
+> =C2=A0	u32 bit_depth_chroma;
+> diff --git a/drivers/media/platform/amphion/vpu_helpers.c b/drivers/media=
+/platform/amphion/vpu_helpers.c
+> index d12310af9ebc..108b75ceb4ae 100644
+> --- a/drivers/media/platform/amphion/vpu_helpers.c
+> +++ b/drivers/media/platform/amphion/vpu_helpers.c
+> @@ -509,3 +509,96 @@ const char *vpu_codec_state_name(enum vpu_codec_stat=
+e state)
+> =C2=A0	}
+> =C2=A0	return "<unknown>";
+> =C2=A0}
+> +
+> +struct codec_id_mapping {
+> +	u32 id;
+> +	u32 v4l2_id;
+> +};
+> +
+> +static struct codec_id_mapping h264_profiles[] =3D {
+> +	{66,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE},
+> +	{77,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_MAIN},
+> +	{88,=C2=A0 V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED},
+> +	{100, V4L2_MPEG_VIDEO_H264_PROFILE_HIGH},
+> +	{118, V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH},
+> +	{128, V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH}
+> +};
+> +
+> +static struct codec_id_mapping h264_levels[] =3D {
+> +	{10,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_0},
+> +	{9,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1B},
+> +	{11,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_1},
+> +	{12,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_2},
+> +	{13,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_1_3},
+> +	{20,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_0},
+> +	{21,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_1},
+> +	{22,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_2_2},
+> +	{30,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_0},
+> +	{31,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_1},
+> +	{32,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_3_2},
+> +	{40,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_0},
+> +	{41,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_1},
+> +	{42,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_4_2},
+> +	{50,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_0},
+> +	{51,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_1},
+> +	{52,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_5_2},
+> +	{60,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_0},
+> +	{61,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_1},
+> +	{62,=C2=A0 V4L2_MPEG_VIDEO_H264_LEVEL_6_2}
+> +};
+> +
+> +static struct codec_id_mapping hevc_profiles[] =3D {
+> +	{1,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN},
+> +	{2,=C2=A0=C2=A0 V4L2_MPEG_VIDEO_HEVC_PROFILE_MAIN_10}
+> +};
+> +
+> +static struct codec_id_mapping hevc_levels[] =3D {
+> +	{30,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_1},
+> +	{60,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2},
+> +	{63,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_2_1},
+> +	{90,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3},
+> +	{93,=C2=A0 V4L2_MPEG_VIDEO_HEVC_LEVEL_3_1},
+> +	{120, V4L2_MPEG_VIDEO_HEVC_LEVEL_4},
+> +	{123, V4L2_MPEG_VIDEO_HEVC_LEVEL_4_1},
+> +	{150, V4L2_MPEG_VIDEO_HEVC_LEVEL_5},
+> +	{153, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_1},
+> +	{156, V4L2_MPEG_VIDEO_HEVC_LEVEL_5_2},
+> +	{180, V4L2_MPEG_VIDEO_HEVC_LEVEL_6},
+> +	{183, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_1},
+> +	{186, V4L2_MPEG_VIDEO_HEVC_LEVEL_6_2}
+> +};
+> +
+> +static u32 vpu_find_v4l2_id(u32 id, struct codec_id_mapping *array, u32 =
+array_sz)
+> +{
+> +	u32 i;
+> +
+> +	if (!array || !array_sz)
+> +		return 0;
+> +
+> +	for (i =3D 0; i < array_sz; i++) {
+> +		if (id =3D=3D array[i].id)
+> +			return array[i].v4l2_id;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +u32 vpu_get_h264_v4l2_profile(u32 idc)
+> +{
+> +	return vpu_find_v4l2_id(idc, h264_profiles, ARRAY_SIZE(h264_profiles));
+> +}
+> +
+> +u32 vpu_get_h264_v4l2_level(u32 idc)
+> +{
+> +	return vpu_find_v4l2_id(idc, h264_levels, ARRAY_SIZE(h264_levels));
+> +}
+> +
+> +u32 vpu_get_hevc_v4l2_profile(u32 idc)
+> +{
+> +	return vpu_find_v4l2_id(idc, hevc_profiles, ARRAY_SIZE(hevc_profiles));
+> +}
+> +
+> +u32 vpu_get_hevc_v4l2_level(u32 idc)
+> +{
+> +	return vpu_find_v4l2_id(idc, hevc_levels, ARRAY_SIZE(hevc_levels));
+> +}
+> diff --git a/drivers/media/platform/amphion/vpu_helpers.h b/drivers/media=
+/platform/amphion/vpu_helpers.h
+> index 0eaddb07190d..dc5fb1ca2d33 100644
+> --- a/drivers/media/platform/amphion/vpu_helpers.h
+> +++ b/drivers/media/platform/amphion/vpu_helpers.h
+> @@ -70,4 +70,9 @@ int vpu_color_get_default(u32 primaries, u32 *ptransfer=
+s, u32 *pmatrix, u32 *pfu
+> =C2=A0
+> =C2=A0int vpu_find_dst_by_src(struct vpu_pair *pairs, u32 cnt, u32 src);
+> =C2=A0int vpu_find_src_by_dst(struct vpu_pair *pairs, u32 cnt, u32 dst);
+> +
+> +u32 vpu_get_h264_v4l2_profile(u32 idc);
+> +u32 vpu_get_h264_v4l2_level(u32 idc);
+> +u32 vpu_get_hevc_v4l2_profile(u32 idc);
+> +u32 vpu_get_hevc_v4l2_level(u32 idc);
+> =C2=A0#endif
+> diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/=
+platform/amphion/vpu_malone.c
+> index 4769c053c6c2..5c6b2a841b6f 100644
+> --- a/drivers/media/platform/amphion/vpu_malone.c
+> +++ b/drivers/media/platform/amphion/vpu_malone.c
+> @@ -889,7 +889,8 @@ static void vpu_malone_unpack_seq_hdr(struct vpu_rpc_=
+event *pkt,
+> =C2=A0	info->frame_rate.numerator =3D 1000;
+> =C2=A0	info->frame_rate.denominator =3D pkt->data[8];
+> =C2=A0	info->dsp_asp_ratio =3D pkt->data[9];
+> -	info->level_idc =3D pkt->data[10];
+> +	info->profile_idc =3D (pkt->data[10] >> 8) & 0xff;
 
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
+The data should normally also include the sps_constraint_set1_flag,
+which differentiate baseline from constrained-baseline. I would also be
+very surprised if the decoders supports ASO/FMO.
 
+Nicolas
+
+> +	info->level_idc =3D pkt->data[10] & 0xff;
+> =C2=A0	info->bit_depth_luma =3D pkt->data[13];
+> =C2=A0	info->bit_depth_chroma =3D pkt->data[14];
+> =C2=A0	info->chroma_fmt =3D pkt->data[15];
