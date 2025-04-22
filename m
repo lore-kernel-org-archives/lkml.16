@@ -1,247 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011033.outbound.protection.outlook.com [52.103.68.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EF2296158;
-	Tue, 22 Apr 2025 15:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335701; cv=none; b=WgEry9hTwH3hMWE3yDMo4RY2/eGBEscGHi4SxZ2LZ0ARRBg5H5e7zCPwyMZOM9JCN8XfOvt3Jy3MZiV2rXD4l+3L+5nuBoJRtWOgpWTxw/glhTKWqtUJikytYerqQvNHOg7/18Ptkq/FdzGFcx32GpS0SQHv+QHcNQK0Ds+WZLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335701; c=relaxed/simple;
-	bh=/KmscafjzVVui9ZfhF2V3SnpWNzO/mZrkUglchVeyKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nbxKqvcjq3NQy1/UUFofHhSRfitIc6is2b1aBuYXaH0bPxj6B52tBDVoCEW9CccDDqdXX1XKd5PbjSl4D3MK1aqieMQbK8gQk4cMuOFK9A5n7WUTv3AWLOtzTHFIo6q4PSQC/JmqjhhpYaiXHgNbbewzx7mWpHMKj4LWxUc8Hmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuNjZ/SJ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816B4290BC8;
+	Tue, 22 Apr 2025 15:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745335713; cv=fail; b=LOnn8pBMAqVQzwJS5iED70sDOtwLJfvZ9JHSgbxkTq9qEOUXfNG0buMlcwTRAHW4nj8DAuqwDigzPV+SkREzDw+2DsWn7YBMz7k19EEo/XR8igoPX+80vs2hUYQ8tgrIGsu03aZsgJJ01J1zK3kXDHAU3aXsshb6r13bysWjNas=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745335713; c=relaxed/simple;
+	bh=ynz4rPTX94/brRBECOsM+aeGZYEOqNxUsYBqawk/ibU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=o+Z1u/f70sT06VfJ0IW96F/fiql81tiQY2PrcqQlsIxQoIMxHvSd/f3enKydW3taxA+kEZJP7ftvq2jKsbjrqvtirzw5Oh6ZYfni57xMr8jHA4pEOgTKdjMXz8fiMPmiZo6kPXMHqyrZ2sR64EoQrmhpOCCMme6FUP1dijDrXuM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=WuTyJ6f1; arc=fail smtp.client-ip=52.103.68.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuNjZ/SJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0297C4CEEC;
-	Tue, 22 Apr 2025 15:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745335700;
-	bh=/KmscafjzVVui9ZfhF2V3SnpWNzO/mZrkUglchVeyKA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TuNjZ/SJrEzQtsB5ZEn+Yk2JTaA2nrQbL/H1czw0XJaW8aTEfRMfEWhAxoPC1Ta53
-	 lhvGkQgr5r2iGqLIT1t/I40hBfAjG3jEximHUObEJemAtwyB9JaWUj2STMJG7vAKSd
-	 jD8oyoPjpImTzR4sCm7icQMcg1YCa2D63b9Dv6AIfTmeF9iwTobfCvrXgQQgY8/h+6
-	 0bE3bYb+vQTvq2CQnMwq50TMtXNObtXXyDZ0RL0MildTJVYCrwCBi8cdV1zHKjtmUE
-	 DFCpeD8EAO1jExvckOxytr7efqi9TiKmOMdMuDRVOUT3DoW8p628+E6qMLvOJ8DNiM
-	 iG3CBdLj+sZTA==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	x86@kernel.org,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v3 12/13] crypto: lib/chacha - remove INTERNAL symbol and selection of CRYPTO
-Date: Tue, 22 Apr 2025 08:27:15 -0700
-Message-ID: <20250422152716.5923-13-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422152716.5923-1-ebiggers@kernel.org>
-References: <20250422152716.5923-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="WuTyJ6f1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FBuRDvJsdHCyZio9wfHhaUIgn1aIOyIVrjV2B2v9ZHMyBIFKPLcvkXpx+V0Sk1Xj+Er4y7K2fxaMYDgNQiBK8DMjFWXeOBEBb5tmb74/XlM4g0oX3OPmFpFdNzFy5MGJwpGI+XXmthn0/3q5OR9mmzudOc3bjEJsPAC5xQv/Ntq94jXlJ80JyUPtHzZ9tjgzJ/CWigLYCgLY/vImaD0LMb27EPt9KdRzgpqPBaKa3vbMt5EU1LP3F+mVdHqBMFXe4TfRJysFEgXc/tocQ6KwLJmW9OGGrmE8REj3AdniZ42DuKEXIzTruPVgB3+F4lP1fbsJlXxzi4youkkT4EiJHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CPTFtERnovtt18Wt92Gp3DEKmhZm46vwLzZ24LqM1Ps=;
+ b=quHHZLYeWGFb7/UprxxbLRslGM3WfwdLuSCX2ZOlcxJ/eDj5w/Hg0Y+nUWjllWssPEXolp+Hk9/f7cierXBWFEXDfQvlkMGRBCwNmBOmFL2y7RHkyqmAvgo1/Bt8npQ0F++EeCBW5T5RzK6wy8dAGQccGiZ0u0rPLjqOvbHkCTEFlHJvBs/nNpYPfX7/aya1C66V9vrxHzIPfnCw3ArkAQEClOf9QrW9QuPoLIjaZ7tVe3ySLtkNa4mV0RbYRpq4c6+aU09TzE0Kb3U7pAePwrb8wbvEEcSnma+d30pbUH+mRJwImqep9TucpsOQS9QrSjoeSdv6t4pD5EaR64rnRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CPTFtERnovtt18Wt92Gp3DEKmhZm46vwLzZ24LqM1Ps=;
+ b=WuTyJ6f1rT0rCgKmr3iO5vADlbisdJF++70L7AcMakvfq4VoLs0/beH2Lfd23d5FG7XObdHY/61J4NSuFznwM7YitKjf/umX34laOB0SWl7fuL8dKU0QLuhIH8/yBQdNgBlgKHDC4WqKVGZNDNZwp/T5a0+JS731gGEb4wj5NFxDG4HR6DKuBoazR+YpyAgMc0SJEY5p8JmCT3AAObgEFb0ZsU63zdEPGYMv2pbewSROAB7PVzO3C4dOWApamGTbaCr9/O0kduyfcNk/P+Jps++7vswgdBQ7I107d57ulxglS6W/jjsX3J70VT9hl3byX6SOAYy5d5+v10YI9fUAyw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN0PR01MB9381.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:10e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
+ 2025 15:28:21 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8655.031; Tue, 22 Apr 2025
+ 15:28:21 +0000
+Message-ID:
+ <PN3PR01MB9597F37026275E5CF1DC3353B8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 22 Apr 2025 20:58:17 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Hector Martin <marcan@marcan.st>, alyssa@rosenzweig.io,
+ Petr Mladek <pmladek@suse.com>, Sven Peter <sven@svenpeter.dev>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
+ Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>,
+ netdev <netdev@vger.kernel.org>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597B01823415CB7FCD3BC27B8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com>
+ <PN3PR01MB9597B3AE75E009857AA12D4DB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
+ <aAdsbgx53ZbdvB6p@smile.fi.intel.com>
+ <CAMuHMdXuM5wBoAeJXK+rTp5Ok8U87NguVGm+dng5WOWaP3O54w@mail.gmail.com>
+ <PN3PR01MB9597D8AE22D48C7A5D351ABBB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <aAe0O50RmUw3k0o9@smile.fi.intel.com>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <aAe0O50RmUw3k0o9@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0081.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::10) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <5d47d3a8-ab3f-46d5-bf80-5f150f118a0e@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB9381:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7ffae44-bc6d-4ba9-ce34-08dd81b2508a
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|19110799003|8060799006|7092599003|15080799006|6090799003|5072599009|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QU5aSTlkQWJFdUVnQWF4K244K0h1Um1URHg1YmhyZm8wZi9PMU5BT1pRWTM5?=
+ =?utf-8?B?cEc0eEFmdjl2UERaeVBUUENFUXBDeCtOcE9lUUp5d3A5U1dIREpYWjFDc2tG?=
+ =?utf-8?B?NUJ6NnBJelZueklnNmRFN3RNLzlsbm1XVEc3a3Jid0k3L21LRG5acTYvL2I3?=
+ =?utf-8?B?eFVFbjhkbkJoRWZlSXUwNVZxN3Vock9jQVhnMW93ZzFtZFJDN3JuOXd1cHhO?=
+ =?utf-8?B?TW93TXo4ekhhcEVhVXNYZHgzaldXaGxIMU1wWFlUYUNyMW9EQVFmQWVzSXA0?=
+ =?utf-8?B?a2lzaG9lRFI2aXdxaFhZTnZINVNzbHNWenA4Znp5S2luRzBHTXlkVUFVT3VR?=
+ =?utf-8?B?RjZJSnVCYm5rTVJjNi9ZMXBBNmwwZjl0OFBBNytVNkJaaVljWVZyQ2MwaUFz?=
+ =?utf-8?B?M0RIZlJuc3pWSjgyTmJMYU5weFFRZHE5ajVaTjBYcFMwejkycVVmMHBTUFJi?=
+ =?utf-8?B?Q2hKVkFZTmh6bnpSUXZCb29Ha29CSGhmYUxsblF6M2k3Z211YmhzdVpWQlY0?=
+ =?utf-8?B?eitTRFBTVjhwQzhCTFIydnhveEs2OHVOZzdoZkJ3ZUxCMmtUcjZNQWZMUjJU?=
+ =?utf-8?B?MEZVWkF5NjdZL21iL2lwSDZHS0NERGlCb3V3MDJPNDRQS0N6d0M2RDViS3pW?=
+ =?utf-8?B?ODQ3RFdNR3EyM0VjdnpqN3lDYnQrU0ZIbHhMOWVGb1NQejU1MTRBSXE1TUxI?=
+ =?utf-8?B?Zk9ISW9vNDZWZTVCM2xBbVk0ZzNBQTJCN2dEbGc1cDBIWkwrOGdpQ21NWWVY?=
+ =?utf-8?B?K0ZSbHFCWnQ5MW5ub0ZpcWdxOHh6VlV5Ymp4anhJV0xYQ3haWVdYV2U1ZXRt?=
+ =?utf-8?B?UkM0SVVPODkxeTVZR3AwNzg3aENsdzMrc1ZlNlk0SitPaHEyS3JndGV0bXJa?=
+ =?utf-8?B?UkJUSStzeTRmUXpjRTlkWFVSaTVmNm1TSC8wWUM3K1doV2xUN1Z4UFBoVmZC?=
+ =?utf-8?B?Rk9NSWlTNnNUblIrL3AwNzhjQzU2aFVHTjNJaUhXVS9mMkJQMmNKLzJOWFFn?=
+ =?utf-8?B?eEdWZEkrMkxENlg3V2o1ZEE2R0cxVjRIWDVSbkxGK25kRG1lZHdwbTlQc0NP?=
+ =?utf-8?B?QjkyMVNpRkJteWhlWmxzYmFFZ2V0RGw0dVgwZkNRMlprWGhwRnR0WkNLc3Jp?=
+ =?utf-8?B?K2h3bndtRFBZeWZjaUh0N09XS29yZWVwOStoZkpMeklJSXN1RWNtRXJqRFZn?=
+ =?utf-8?B?RElMc3JKN05hOVZTOGxndDlKeXBFSTNiYkhGOXUrbnZLd2NnVWtIODdSc0V6?=
+ =?utf-8?B?WmtDSi93Y0l0RndJV0NSWm9mNVZDZUNFdHh0Q3crcHkxTmdCVW45cnhKTTJL?=
+ =?utf-8?B?TW1mME52TWo1WHJDc1RhSVJoWWpwa2Q1MHZwRW01bTdtSVpJeEh2SmZTQTJG?=
+ =?utf-8?B?My9mM2NISHVGN2lRZUlkUCsrNmNHa2F5N0daU05GenBySWVEa0FYUmdwYnF1?=
+ =?utf-8?B?eTJyRm5EQndxMWdCaUVnSGhVMDV6TU81aW5kRzlvbDIwRWJxdmJ0dWNmcEox?=
+ =?utf-8?B?Q2FKTU5ONHZXdCtvTm54L05MQkdLUDBKU1hlNEI4eTJvUEkxRCtSWjloTVNV?=
+ =?utf-8?B?TCtUQT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SW1EVmpPMHhTOFZBUiswbUx3Q3ZzUG53RzNVYitzUUhnTm81dFoweUNjM1Q4?=
+ =?utf-8?B?V1hVZS9IZEdyVmExRUJJMS8xWGRpeTcwWFFsVmlQVGRtTkRvb0ljbThocVpF?=
+ =?utf-8?B?ZXFhN1lKL3ozeXNBd2krbVc5NTIvOTczYVN2enBQai9ZRDl5d1NnR3cvdVFY?=
+ =?utf-8?B?V2hJMTJlaHpnOHJDODFCZkZ6Yld3TnQ3bnl4djhUV3d4NFZYVFFDSWVTczZS?=
+ =?utf-8?B?dktWU1o2Z2tZb0JKcld0bWZMNGtKamVVSnpSY096TitJSzV1OFlaVUR3RDlB?=
+ =?utf-8?B?bEQ2NDRTdGNaNW1nZWltUStiYjl6WCtFQkJ2YkNFOXZQQUsySkhiZXpkWmRW?=
+ =?utf-8?B?WDJVTHAySFNHY1J2VzFkYkk1b3pEVmpkTm9wL0RmR1dzcTczZUF6RjFYRlUz?=
+ =?utf-8?B?K1YxbWY1WlZGb1JuQzlQV1hvWlN4eGFkY2NGbEdyOEdlSWFZeEpRaU5pYU1R?=
+ =?utf-8?B?WUNPaFlTRGNwSEhRcGNCN2tWbzJCWVlNOTRvZHdsYS91VTl5d09WTU0yQkQw?=
+ =?utf-8?B?WlhrNVZpL1o2TUNEc1p3RDBLTHVFcXFsMURuYndweG9hcjZYaHNEVHBuN3pV?=
+ =?utf-8?B?eHdkT3UvSXpaWk1wWWU2ZC9tOWxjZjNFTWdpVndZOEtFSnRTam90VkNodHdG?=
+ =?utf-8?B?SFdUQVJuQ0hTeXpoUGY2R1IyWFFMK3hOSG9FRlN1UGg3UnFzcGxpSFc3NlhE?=
+ =?utf-8?B?QXZjUFlRSnFYRHB3aW5waUl2emIrd1k0bmFacEx1ZU43QXRicGI4N2l5OGt3?=
+ =?utf-8?B?aDBMcEpmeDJwNEkxZWVIMTJ0Q25TUCtseHpWN3JBeXp3YjZYVU1CalJJM2h5?=
+ =?utf-8?B?REhwZVJWSDVaVlI1dlp6Z29sQ3hrc3JiME42dUc2eURmVm45Z3hPQlRGQmox?=
+ =?utf-8?B?amdTeUswYXhnNFU0ei9ad0lkVjAwbVZEcDEyd05QdVEyVTlkSzl3ck5RUHpp?=
+ =?utf-8?B?aEgzNjNBWkxiYnpMQ0x5aVBqbWtsWXJ6d0t1QW5ibGY3YzQwWk9iTjhIUldw?=
+ =?utf-8?B?cEFGRXJTZW81dHpHTEU0OTZwelExVmYvRVp5R0NuRW1vZS9WeUdNWmpybG00?=
+ =?utf-8?B?Z3hpWTBXN1hKZTFVVnRQRDJTN2R0ekxnMUxkQnVMenYzeFg3WFBNZzdwTTNU?=
+ =?utf-8?B?NkVtQThxTmRtTkF6TGF3Y2ZMS3c1bER5Wk1YaExVRm8wK3JMbjJEQnBnRTlR?=
+ =?utf-8?B?OThMQjdla2pOQ3FoZEFWUWl1V3lrejBkM0l2dHVqTE5HeXJCQnoxMG5mR25p?=
+ =?utf-8?B?bTlVMlpGWUlkTTJvU29BZDJ5UzlxdXlzU0szdW5jYTBHKzJRVEk0a0RLTkZX?=
+ =?utf-8?B?bzZrTUR6UmdjQ2x6QVdLcWVobitJbWFOL2liS0QzakhBYUxWZW5lN2lPdmZB?=
+ =?utf-8?B?ZWVZelVENEVSTy85UGVJczh1YUhjRjVTdkw5ZXVxUDI2aDQ2aVVLZnMrMXAr?=
+ =?utf-8?B?dmZlZ2FaSXdrSWYxUkxBZ054VTNILzVYT0FENkdWdmcvNG56TENMQ2w5UUEx?=
+ =?utf-8?B?aGVwVjNxMk1iSjN1OXZ5aGZ0MjZ6bWoxWlpHYklCOVVFM1hxVGh3RDRhLy9i?=
+ =?utf-8?B?MXNwUktpOXVRU0YwY24xMjFTelppSFZHK1FaKzhZRkNPNGZ1bmtRb2lPSkZR?=
+ =?utf-8?B?UDV2WEJjZ29ERlprVnRkL2E3U2Y1RWF5SXJaNnJlYk5SU2d1NkRjeVlKMDl0?=
+ =?utf-8?B?SVNFV01Vc1lMMlI4VEdrQm9BNFBLckg0THhxWHQrd0xQbFQyWkF3bk9XTWUw?=
+ =?utf-8?Q?QJCQbFZo2WD0ITboxE=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7ffae44-bc6d-4ba9-ce34-08dd81b2508a
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 15:28:21.3884
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB9381
 
-From: Eric Biggers <ebiggers@google.com>
 
-Now that the architecture-optimized ChaCha kconfig symbols are defined
-regardless of CRYPTO, there is no need for CRYPTO_LIB_CHACHA to select
-CRYPTO.  So, remove that.  This makes the indirection through the
-CRYPTO_LIB_CHACHA_INTERNAL symbol unnecessary, so get rid of that and
-just use CRYPTO_LIB_CHACHA directly.  Finally, make the fallback to the
-generic implementation use a default value instead of a select; this
-makes it consistent with how the arch-optimized code gets enabled and
-also with how CRYPTO_LIB_BLAKE2S_GENERIC gets enabled.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- arch/arm/lib/crypto/Kconfig     |  2 +-
- arch/arm64/lib/crypto/Kconfig   |  2 +-
- arch/mips/lib/crypto/Kconfig    |  2 +-
- arch/powerpc/lib/crypto/Kconfig |  2 +-
- arch/riscv/lib/crypto/Kconfig   |  2 +-
- arch/s390/lib/crypto/Kconfig    |  2 +-
- arch/x86/lib/crypto/Kconfig     |  2 +-
- crypto/Kconfig                  |  2 +-
- lib/crypto/Kconfig              | 16 +++++-----------
- 9 files changed, 13 insertions(+), 19 deletions(-)
+On 22-04-2025 08:52 pm, Andy Shevchenko wrote:
+> On Tue, Apr 22, 2025 at 08:45:31PM +0530, Aditya Garg wrote:
+>> On 22-04-2025 04:02 pm, Geert Uytterhoeven wrote:
+>>> On Tue, 22 Apr 2025 at 12:16, Andy Shevchenko
+>>> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> ...
+> 
+>>> I am not against h/n in se, but I am against bad/confusing naming.
+>>> The big question is: should it print
+>>>   (A) the value in network byte order, or
+>>>   (B) the reverse of host byte order?
+>>>
+>>> If the answer is (A), I see no real reason to have %p4n, as %p4b prints
+>>> the exact same thing.  Moreover, it leaves us without a portable
+>>> way to print values in reverse without the caller doing an explicit
+>>> __swab32() (which is not compatible with the %p pass-by-pointer
+>>> calling convention).
+>>>
+>>> If the answer is (B), "%p4n using network byte order" is bad/confusing
+>>> naming.
+>>
+>> The answer is definitely (B). As far as bad/confusing naming is concerned,
+>> I'll let vsprintf maintainers decide. As far as usage is concerned, %p4cl
+>> is used in appletbdrm and %p4ch is used in to be upstreamed soon smc driver
+>> by Asahi Linux.
+> 
+> Can it use %p4cb? Or in another word,
+> why does it require "host" representation?
 
-diff --git a/arch/arm/lib/crypto/Kconfig b/arch/arm/lib/crypto/Kconfig
-index 181f138d563b6..5d10bd13fc8df 100644
---- a/arch/arm/lib/crypto/Kconfig
-+++ b/arch/arm/lib/crypto/Kconfig
-@@ -13,11 +13,11 @@ config CRYPTO_BLAKE2S_ARM
- 	  There is no NEON implementation of BLAKE2s, since NEON doesn't
- 	  really help with it.
- 
- config CRYPTO_CHACHA20_NEON
- 	tristate
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 
- config CRYPTO_POLY1305_ARM
- 	tristate
- 	default CRYPTO_LIB_POLY1305_INTERNAL
-diff --git a/arch/arm64/lib/crypto/Kconfig b/arch/arm64/lib/crypto/Kconfig
-index 169311547efe3..2a8ff7cfc08d3 100644
---- a/arch/arm64/lib/crypto/Kconfig
-+++ b/arch/arm64/lib/crypto/Kconfig
-@@ -1,11 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config CRYPTO_CHACHA20_NEON
- 	tristate
- 	depends on KERNEL_MODE_NEON
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 
- config CRYPTO_POLY1305_NEON
- 	tristate
-diff --git a/arch/mips/lib/crypto/Kconfig b/arch/mips/lib/crypto/Kconfig
-index 5b82ba753c55c..454354e30d76c 100644
---- a/arch/mips/lib/crypto/Kconfig
-+++ b/arch/mips/lib/crypto/Kconfig
-@@ -1,11 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config CRYPTO_CHACHA_MIPS
- 	tristate
- 	depends on CPU_MIPS32_R2
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 
- config CRYPTO_POLY1305_MIPS
- 	tristate
- 	default CRYPTO_LIB_POLY1305_INTERNAL
-diff --git a/arch/powerpc/lib/crypto/Kconfig b/arch/powerpc/lib/crypto/Kconfig
-index 3f52610e45eb4..6627d28cd24e0 100644
---- a/arch/powerpc/lib/crypto/Kconfig
-+++ b/arch/powerpc/lib/crypto/Kconfig
-@@ -1,11 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config CRYPTO_CHACHA20_P10
- 	tristate
- 	depends on PPC64 && CPU_LITTLE_ENDIAN && VSX
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 
- config CRYPTO_POLY1305_P10
- 	tristate
-diff --git a/arch/riscv/lib/crypto/Kconfig b/arch/riscv/lib/crypto/Kconfig
-index 46ce2a7ac1f2c..bc7a43f33eb3a 100644
---- a/arch/riscv/lib/crypto/Kconfig
-+++ b/arch/riscv/lib/crypto/Kconfig
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config CRYPTO_CHACHA_RISCV64
- 	tristate
- 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
-diff --git a/arch/s390/lib/crypto/Kconfig b/arch/s390/lib/crypto/Kconfig
-index b79fd91af9fe1..069b355fe51aa 100644
---- a/arch/s390/lib/crypto/Kconfig
-+++ b/arch/s390/lib/crypto/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- config CRYPTO_CHACHA_S390
- 	tristate
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-diff --git a/arch/x86/lib/crypto/Kconfig b/arch/x86/lib/crypto/Kconfig
-index f83aa51dd9129..e44403d9677f5 100644
---- a/arch/x86/lib/crypto/Kconfig
-+++ b/arch/x86/lib/crypto/Kconfig
-@@ -13,11 +13,11 @@ config CRYPTO_BLAKE2S_X86
- 	  - AVX-512 (Advanced Vector Extensions-512)
- 
- config CRYPTO_CHACHA20_X86_64
- 	tristate
- 	depends on 64BIT
--	default CRYPTO_LIB_CHACHA_INTERNAL
-+	default CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
- 
- config CRYPTO_POLY1305_X86_64
- 	tristate
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 9322e42e562de..832af6363951f 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -632,12 +632,12 @@ config CRYPTO_ARC4
- 	  WEP, but it should not be for other purposes because of the
- 	  weakness of the algorithm.
- 
- config CRYPTO_CHACHA20
- 	tristate "ChaCha"
-+	select CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_CHACHA_GENERIC
--	select CRYPTO_LIB_CHACHA_INTERNAL
- 	select CRYPTO_SKCIPHER
- 	help
- 	  The ChaCha20, XChaCha20, and XChaCha12 stream cipher algorithms
- 
- 	  ChaCha20 is a 256-bit high-speed stream cipher designed by Daniel J.
-diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
-index f321fe1a8681b..c6ab724c1dbd9 100644
---- a/lib/crypto/Kconfig
-+++ b/lib/crypto/Kconfig
-@@ -48,26 +48,20 @@ config CRYPTO_ARCH_HAVE_LIB_CHACHA
- 	  accelerated implementation of the ChaCha library interface,
- 	  either builtin or as a module.
- 
- config CRYPTO_LIB_CHACHA_GENERIC
- 	tristate
-+	default CRYPTO_LIB_CHACHA if !CRYPTO_ARCH_HAVE_LIB_CHACHA
- 	select CRYPTO_LIB_UTILS
- 	help
--	  This symbol can be depended upon by arch implementations of the
--	  ChaCha library interface that require the generic code as a
--	  fallback, e.g., for SIMD implementations. If no arch specific
--	  implementation is enabled, this implementation serves the users
--	  of CRYPTO_LIB_CHACHA.
--
--config CRYPTO_LIB_CHACHA_INTERNAL
--	tristate
--	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
-+	  This symbol can be selected by arch implementations of the ChaCha
-+	  library interface that require the generic code as a fallback, e.g.,
-+	  for SIMD implementations. If no arch specific implementation is
-+	  enabled, this implementation serves the users of CRYPTO_LIB_CHACHA.
- 
- config CRYPTO_LIB_CHACHA
- 	tristate
--	select CRYPTO
--	select CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Enable the ChaCha library interface. This interface may be fulfilled
- 	  by either the generic implementation or an arch-specific one, if one
- 	  is available and enabled.
- 
--- 
-2.49.0
+Sven might know why. He is already CCed.
 
