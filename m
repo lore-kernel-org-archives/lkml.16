@@ -1,78 +1,47 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0FD202F79;
-	Tue, 22 Apr 2025 10:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B561F12FC;
+	Tue, 22 Apr 2025 10:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316520; cv=none; b=VvTMPgawnVTGyi0Xu/ipUzQ1C29d5jpV/JkdCBSLawsdrOSQXuC0OQxL1qG4iSFiJaDsINhETFQJl7newnR7YGkJnatHEgExudu+RjEaPXtbGSGTpMMPA9xKrCzbyu6z/rh4OyUBIsxtRGjDTzwLoVVkAkehdlGk9VUpWPqSRBc=
+	t=1745316530; cv=none; b=r4IJdu3IK66eWRR9O3egJAQCVR49SFj6uA20c4mgu4Tu5H+EkAP8Cs0EAXGsHyY93yolLsUqMcATCAapog0AbDS1MnvurA6ro2DTqqjyfzkuSO9IqVEiROy10SlS/SLTGfUck0SvKt//2oBRUs5vcU7bMR8X5/JSYa5NYRnnbWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316520; c=relaxed/simple;
-	bh=cmE8YOSD3nfPKU0R/K5fUCUrCwHtSNRvccoHPupB8EY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sq5tNB1JOqsk+LUuyab3g6JHGTuJtLeqQdG6nCLznK3mnjFfohUQuKRtY986XOMvbln/WhxlS2ZTO/BqimMSEL8LlWaPH0zYwdpfMj0P/LJM4BMeJAimcOVzmVa9r3MY39QvgfMgTsOESJ/m9xxbheFzzAZQ1COxBnglLbe9xVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgTjI+I2; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745316530; c=relaxed/simple;
+	bh=h4N7Dko8R6UGn+qNGPyVQVMY0w62iCT+zo+1WX5kD7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eWY2XsUi/FfD+gbkw9PRkF679a6OyvDp7ieIVdeSI+EC8P05u+w4GavMEJ2abhuk9a56+xCuvwISG9/mY1wJh9iRyqjq3nSb8l4OikiHBSEulcsbsL1p/72qPvxvD6WDf6a1dRrodZpv3Rlp54+/CHweTWaqamMRgVfS80Ym+ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b/bC3Usk; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgTjI+I2"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so849782366b.2;
-        Tue, 22 Apr 2025 03:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745316516; x=1745921316; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=02mF3Rq0/qOkVGAo4rt0MUzwR2m/OHZu+4wbFsIWOQg=;
-        b=JgTjI+I2c5CQ/HeRE58HjqBUZE+UIf8XeEYybuI22o6Q709E7c8SKPNTeCh4p6DGB6
-         yzc1KaObj5t/5SGC5V1qhtd0iIUY03xe/LBIQCriXHj31b0vbNg9oKguJS8QTlQ40nGT
-         8IOBoK0r4+jHHl091CaeVcFizyzEqwVEoZvP4RTBr/Rdp97tRXGZxONG6UA+kZ9HBE5E
-         qZGazvZ4M002KSs5n9QEN6LDZ0PixRmTfs7nO5dQI20dqCZdgJnK/6BSAr9S/ToqN++9
-         Op9uuBDPkNE+dDfgUzxXCNAANm67Eg1GNvbPf2l9pozAHVozzCpESptilEgzrJKs1rnd
-         XlSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745316516; x=1745921316;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=02mF3Rq0/qOkVGAo4rt0MUzwR2m/OHZu+4wbFsIWOQg=;
-        b=sTl1TmH4ikaRQqc9SFIKUw96ukp4FijtyOUGg9MKnGA8F+zhQqaa674WsowndCW0yX
-         A4UBUzGEDr9W9ZX8TPjTX3fQ6i3WF0XrJZ2TWfKYngCObSovhOO9RB89cxFV0/HVFPtv
-         PfUZaFQehbtAwRVsnJAalJyk8IJJ5skHbqDevtKxqBA84aCjG5Q/kAQFZZ0BF8Ji3pwt
-         0aVmaJ6rlsdE6AsFa/zLt6iwnjt45mnN6p0TJyUetrlm00qAX/yKPWbxrZfDuPVVbskF
-         nDUWI76VLrKO0UD4/dQDEZzY8fAcDP47iuYoBnU8MOPIAx6SeIUoo87aQci8CyzAsoNO
-         vOCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX04DPxssDrqmTvD4ks1FS/A/FBKcwTl8+G2Py45fGOvccA/tfocZHzXy1fVLVmdbJA0uw=@vger.kernel.org, AJvYcCXEsNqSsKnh5gSPOLZz7KA8QXSW02uS+5daL4GmI2op5P5ADOkLBLKLTMzHAXG7ZBSQIfLQT/wKG6XF56jC1SO+@vger.kernel.org, AJvYcCXdnK/GGv5QoCoZ0BOyw4syANCWya1jGpdgwrlxOBFvueEtAT3dWViRUkBcUXTi8fBUr07+a7YAAzelaatl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnhPQgmSR1+qv92teTbIFhhUXv6K2v0kvzzeR8t/lmKxXGlSlt
-	70u4LAwDWh9SRiaEMHoZExnCRVHjpIWtF5xgO3ipLAeg2I0xD1hw
-X-Gm-Gg: ASbGncsCCaZttHSVD00KHPftx3CviAfnFWuF0xBixAuXgDNpfByJQOqUdyjGG0qXC0L
-	Pg7ZZRba9p0opV/nHnxcRMqJKL3JWmCusM1voFWy1B/BKHUfrj91OJghnwdCbFJDkIW+Z2xRmec
-	OL/qqGftrt2FrBw5CTLstlSVbIcnruMvzfOb9FDhgtGpN8a9WjGeQ+X7gkQTNui7/tBhxOZADue
-	T1TOgnpHU3zEvbFDn5bEuLVJluABILXWySZf6W8gmNHSLUYS67TTOi6/3uA+RmuKQebQejt0jjF
-	9kkyhu/Q2oYPqd5ZTb2EqgPIlHk0fXwTyMF6qESDbRg7T4cu16pm37G2Dg==
-X-Google-Smtp-Source: AGHT+IFnCAYlkq3Gsut6BPvsW7FS9GPw2LCxU0ujmgViSKToqZ4BWTh8QSqWECU7TAzy9pEgX1rIiQ==
-X-Received: by 2002:a17:906:c113:b0:ac4:2ae:c970 with SMTP id a640c23a62f3a-acb74b38723mr1444597166b.21.1745316516183;
-        Tue, 22 Apr 2025 03:08:36 -0700 (PDT)
-Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc685sm644632266b.96.2025.04.22.03.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:08:35 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 22 Apr 2025 12:08:34 +0200
-To: KaFai Wan <mannkafai@gmail.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, horms@kernel.org, mykolal@fb.com,
-	shuah@kernel.org, memxor@gmail.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kafai.wan@hotmail.com, leon.hwang@linux.dev
-Subject: Re: [PATCH bpf-next v3 0/2] bpf: Allow access to const void pointer
- arguments in tracing programs
-Message-ID: <aAdqorjuW68ld6ps@krava>
-References: <20250417151548.1276279-1-kafai.wan@hotmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b/bC3Usk"
+Date: Tue, 22 Apr 2025 03:08:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745316525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dpgN1iCHtrzufW+DbgbyyyVHThOJ+H9TFWEBE9Mxrfs=;
+	b=b/bC3UskRDd9sIGVMmiTVXo06tx2uWcD/PMRYbCjerpzzJadyGWzd0yQkCRbXjiuz01oSu
+	nD+hOzLDSVIQ4PyP+kO7FDULeY6FfVFAVUmsQr8tKfK73/5jyC+b4P3w5733wPkXo338vz
+	I0qnErijkyvXTSqfVjIx2nBdZai/rFY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jim Mattson <jmattson@google.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Rik van Riel <riel@surriel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 11/24] KVM: nSVM: Use a separate ASID for nested
+ guests
+Message-ID: <aAdqpxHFZ2r1OkFW@Asmaa.>
+References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+ <20250326193619.3714986-12-yosry.ahmed@linux.dev>
+ <45e6e250e5bc51d2b0a8490f31e2144054990b82.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,46 +50,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417151548.1276279-1-kafai.wan@hotmail.com>
+In-Reply-To: <45e6e250e5bc51d2b0a8490f31e2144054990b82.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 17, 2025 at 11:15:46PM +0800, KaFai Wan wrote:
-> If we try to access argument which is pointer to const void, it's an 
-> UNKNOWN type, verifier will fail to load.
+On Thu, Apr 03, 2025 at 04:09:30PM -0400, Maxim Levitsky wrote:
+> On Wed, 2025-03-26 at 19:36 +0000, Yosry Ahmed wrote:
+> > The per-VM ASID is currently shared by both L1 and L2 guests. That ASID
+> > is currently flushed on every transition between L1 and L2.
+> > 
+> > Allocate and track a separate ASID per-VM for nested guests. This is in
+> > preparation for doing fine-grained TLB flushes on nested transitions
+> > instead of unconditional full flushes.
+> > 
+> > Nested ASIDs are still not fully maintained (e.g. a remote flush will
+> > only flush the current ASID), so keep the TLB flush on every transition
+> > until this is sorted out in following changes.
+> > 
+> > Add a helper to get the ASID associated with a specific VMCB and use it
+> > instead of directly reading the VM's ASID. This transparently uses L2's
+> > ASID when an L2 guest is being run.
+> > 
+> > L1's ASID is flushed on KVM_REQ_TLB_FLUSH_GUEST if it is the active
+> > context, so remove the TODO in nested_svm_transition_tlb_flush() about
+> > it.
+> > 
+> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > ---
+> >  arch/x86/kvm/svm/nested.c |  8 ++++++--
+> >  arch/x86/kvm/svm/svm.c    | 13 +++++++++++--
+> >  arch/x86/kvm/svm/svm.h    |  3 ++-
+> >  3 files changed, 19 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> > index 81184b2fb27fd..75223869aa8c6 100644
+> > --- a/arch/x86/kvm/svm/nested.c
+> > +++ b/arch/x86/kvm/svm/nested.c
+> > @@ -495,7 +495,6 @@ static void nested_svm_transition_tlb_flush(struct kvm_vcpu *vcpu)
+> >  	 *  - Honor L1's request to flush an ASID on nested VMRUN
+> >  	 *  - Sync nested NPT MMU on VMRUN that flushes L2's ASID[*]
+> >  	 *  - Don't crush a pending TLB flush in vmcb02 on nested VMRUN
+> > -	 *  - Flush L1's ASID on KVM_REQ_TLB_FLUSH_GUEST
+> >  	 *
+> >  	 * [*] Unlike nested EPT, SVM's ASID management can invalidate nested
+> >  	 *     NPT guest-physical mappings on VMRUN.
+> > @@ -677,7 +676,7 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
+> >  	vmcb02->control.nested_ctl = vmcb01->control.nested_ctl;
+> >  	vmcb02->control.iopm_base_pa = vmcb01->control.iopm_base_pa;
+> >  	vmcb02->control.msrpm_base_pa = vmcb01->control.msrpm_base_pa;
+> > -	vmcb02->control.asid = svm_asid(vcpu->kvm);
+> > +	vmcb02->control.asid = svm_nested_asid(vcpu->kvm);
+> >  
+> >  	/* Also overwritten later if necessary.  */
+> >  	vmcb_clr_flush_asid(vmcb02);
+> > @@ -1179,6 +1178,7 @@ static void nested_svm_triple_fault(struct kvm_vcpu *vcpu)
+> >  
+> >  int svm_allocate_nested(struct vcpu_svm *svm)
+> >  {
+> > +	struct kvm_svm *kvm_svm = to_kvm_svm(svm->vcpu.kvm);
+> >  	struct page *vmcb02_page;
+> >  
+> >  	if (svm->nested.initialized)
+> > @@ -1196,6 +1196,10 @@ int svm_allocate_nested(struct vcpu_svm *svm)
+> >  	svm_vcpu_init_msrpm(&svm->vcpu, svm->nested.msrpm);
+> >  
+> >  	svm->nested.initialized = true;
+> > +
+> > +	if (!kvm_svm->nested_asid)
+> > +		kvm_svm->nested_asid = kvm_svm->asid;
 > 
-> Use is_void_or_int_ptr to check if type is void or int pointer. 
-> Add a selftest to check it.
-> 
-> ---
-> KaFai Wan (2):
->   bpf: Allow access to const void pointer arguments in tracing programs
->   selftests/bpf: Add test to access const void pointer argument in
->     tracing program
-> 
->  kernel/bpf/btf.c                                    | 13 +++----------
->  net/bpf/test_run.c                                  |  8 +++++++-
->  .../selftests/bpf/progs/verifier_btf_ctx_access.c   | 12 ++++++++++++
->  3 files changed, 22 insertions(+), 11 deletions(-)
-> 
-> Changelog:
-> v2->v3: Addressed comments from jirka
-> - remove duplicate checks for void pointer
-> Details in here:
-> https://lore.kernel.org/bpf/20250416161756.1079178-1-kafai.wan@hotmail.com/
+> Nitpick: maybe put nested_asid into .nested struct as well?
+> I don't have a strong option on this, feel free to leave it where it is now.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
+I did this initially but I thought created a struct just for the purpose
+of holding the nested ASID would be an overkill, but I don't feel
+strongly.
 
 > 
-> v1->v2: Addressed comments from jirka
-> - use btf_type_is_void to check if type is void
-> - merge is_void_ptr and is_int_ptr to is_void_or_int_ptr
-> - fix selftests
-> Details in here:
-> https://lore.kernel.org/all/20250412170626.3638516-1-kafai.wan@hotmail.com/
 > 
-> -- 
-> 2.43.0
+> > +
+> >  	return 0;
+> >  
+> >  err_free_vmcb02:
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index f028d006f69dc..e664d8428c792 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -1225,17 +1225,26 @@ static inline void init_vmcb_after_set_cpuid(struct kvm_vcpu *vcpu)
+> >  	}
+> >  }
+> >  
+> > -unsigned int svm_asid(struct kvm *kvm)
+> > +unsigned int svm_nested_asid(struct kvm *kvm)
+> > +{
+> > +	return to_kvm_svm(kvm)->nested_asid;
+> > +}
+> 
+> It might also make sense to add WARN_ON_ONCE(!svm->nested.initialized) here, just in case.
+
+Yeah we can do that, but I will check the callers first to make sure
+there's no chance of false positives.
+
+> 
+> > +
+> > +static unsigned int svm_asid(struct kvm *kvm)
+> >  {
+> >  	return to_kvm_svm(kvm)->asid;
+> >  }
+> >  
+> >  static unsigned int svm_get_current_asid(struct vcpu_svm *svm)
+> >  {
+> > -	struct kvm *kvm = svm->vcpu.kvm;
+> > +	struct kvm_vcpu *vcpu = &svm->vcpu;
+> > +	struct kvm *kvm = vcpu->kvm;
+> >  
+> >  	if (sev_guest(kvm))
+> >  		return sev_get_asid(kvm);
+> > +	if (is_guest_mode(vcpu))
+> > +		return svm_nested_asid(kvm);
+> > +	WARN_ON_ONCE(svm->current_vmcb != &svm->vmcb01);
+> >  	return svm_asid(kvm);
+> >  }
+> >  
+> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> > index 436b7e83141b9..e67e3a64e92f7 100644
+> > --- a/arch/x86/kvm/svm/svm.h
+> > +++ b/arch/x86/kvm/svm/svm.h
+> > @@ -118,6 +118,7 @@ struct kvm_svm {
+> >  	struct kvm kvm;
+> >  
+> >  	unsigned int asid;
+> > +	unsigned int nested_asid;
+> >  
+> >  	/* Struct members for AVIC */
+> >  	u32 avic_vm_id;
+> > @@ -651,7 +652,7 @@ void svm_complete_interrupt_delivery(struct kvm_vcpu *vcpu, int delivery_mode,
+> >  				     int trig_mode, int vec);
+> >  bool svm_register_asid(unsigned int asid);
+> >  void svm_unregister_asid(unsigned int asid);
+> > -unsigned int svm_asid(struct kvm *kvm);
+> > +unsigned int svm_nested_asid(struct kvm *kvm);
+> >  
+> >  /* nested.c */
+> >  
+> 
+> 
+> Overall looks good,
+> 
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+
+Thanks!
+
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> 
 > 
