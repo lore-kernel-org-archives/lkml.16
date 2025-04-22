@@ -1,118 +1,201 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from gmmr-3.centrum.cz (gmmr-3.centrum.cz [46.255.225.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481EA2857D8;
-	Tue, 22 Apr 2025 14:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23CF2836A2;
+	Tue, 22 Apr 2025 14:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.225.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331903; cv=none; b=R7vbFHl5ZQTsW6SRidURo0j4ACEAPfr6aPRTRRusB3c1XrsTHQrWgEcEDrsS7S4Gm/w4Kd9andNCu7CADAsNX3HN6E6OQb14nhQRF1Bszjdsrc+70+YI1Fs5PB3eOupcXPlS42441xsyRgteuimnqTsoeqinZNwuK/F2tlSRk5U=
+	t=1745331936; cv=none; b=TWD6kHaYhR/4f6Lzh1yl5enGxnevv1g2tJYIpEoZQxa/2BLFee0FyY1AuFCd5hrD+LKJx22JNYe4EuH0F8cB/sP2Yo53gqre5as4gwoW3HN5AHTamuUO3g5M04nPboCEqk1APti8gSxsS24qktCI8sZ6B5yO09I4WrqbTJCae78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331903; c=relaxed/simple;
-	bh=VLWL9iT1FoHtVBgA51yvlSPckY27Polw6StAFJ/RMXA=;
+	s=arc-20240116; t=1745331936; c=relaxed/simple;
+	bh=ntkJe7TPmlittl3311QFLzS6pqgnTuAgm8M62fNllsI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cagOhPcFVqqwnwB4wu4dHv34+dE2fFEBPs/6baxvAiSxNTqGlTFAuvtgAALETBqBoQMa3TGATKkAN+1nk3OFOJH+3euSA0SgguSefzu1HTmyQsV4OB5C85j/VCfYuDCAHuqDdCms67vE/xiduWcCJ2p8pazTgaQLZ3fW1X4U/Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eQBYO1ai; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+dF0/tUyQypLibeT6QpoAW/PKWY6YbYLaQQa2PRUYq2z5YVKxuQfjVNY7y+9uZijHPeLv+OLp1500vg4iGIAQEtUAu6IXTYEcvbrgOmdac9Qx3wtuqNupNrHmsm+tvzzLln90EuHH8SKVFRuVTdL7yuK52bkkuf5aXhPxHw7hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=DDekHAzm; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=DDekHAzm; arc=none smtp.client-ip=46.255.225.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eQBYO1ai"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z2Y954V3Q5aJLR4hVrgeyT2X97uSAkp06ZXSuty2AG0=; b=eQBYO1aiZKRVyNL/De9i+KG+gT
-	kamKA9nznKv1KTqyhl6zvRSPukeATo85MycrHjM/bbiTnPIFmX95cCWcubn8WuCwFuTHfDn5IL24X
-	mb7N1cvSlaSMZttHtazhwvp1940r1BSaV1633Tz7vawc8btfN+H6cNFglItEYTcbKLTlNJYyr+Q2M
-	fFvFiyGz0cw/bRV3JMbdEz7pW5S1C8PDItmDPDB/ITkkah2ylofptEZUfzRv/VPxRp/7/4R/AVGOZ
-	u6uAg/IxTgFamT//T4JSyyXCWSwzRq82FkUCZoI0KgYcmrYqDgaBE/VSF9BXNaCEa7DqMerD89US7
-	G3MC6C9Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7EYH-0000000BF3O-1bBU;
-	Tue, 22 Apr 2025 14:24:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CDDA83003C4; Tue, 22 Apr 2025 16:24:44 +0200 (CEST)
-Date: Tue, 22 Apr 2025 16:24:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jianlin Lv <iecedge@gmail.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
-	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	jolsa@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, jianlv@ebay.com
-Subject: Re: [RFC PATCH  bpf-next 2/2] Export irq_time_read for BPF module
- usage
-Message-ID: <20250422142444.GB15651@noisy.programming.kicks-ass.net>
-References: <cover.1745250534.git.iecedge@gmail.com>
- <75aef5f2b9d9292ae919f2af9f82a8618f9b191e.1745250534.git.iecedge@gmail.com>
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="DDekHAzm";
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="DDekHAzm"
+Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
+	by gmmr-3.centrum.cz (Postfix) with ESMTP id 128AC20CD134;
+	Tue, 22 Apr 2025 16:24:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1745331849; bh=ntkJe7TPmlittl3311QFLzS6pqgnTuAgm8M62fNllsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DDekHAzmHg0jYfs8Qu1HZVjjHboVGbasYc9La0Yo7JD1vFfdT3oqGSnhb7oqz1IYb
+	 6ZRSj8RrHYECM+0YrvQg9bCXXaeWubUskaxB9xwcwVw2co/Bwps1dVZ6gRezk+HUB7
+	 /5e6klYMOkjWwCMt/WF3BlYtztnhWGlB+mD3pYZc=
+Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id 0F9381A4;
+	Tue, 22 Apr 2025 16:24:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1745331849; bh=ntkJe7TPmlittl3311QFLzS6pqgnTuAgm8M62fNllsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DDekHAzmHg0jYfs8Qu1HZVjjHboVGbasYc9La0Yo7JD1vFfdT3oqGSnhb7oqz1IYb
+	 6ZRSj8RrHYECM+0YrvQg9bCXXaeWubUskaxB9xwcwVw2co/Bwps1dVZ6gRezk+HUB7
+	 /5e6klYMOkjWwCMt/WF3BlYtztnhWGlB+mD3pYZc=
+Received: from antispam35.centrum.cz (antispam35.cent [10.30.208.35])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id 02D3539F;
+	Tue, 22 Apr 2025 16:24:09 +0200 (CEST)
+X-CSE-ConnectionGUID: W82gRpqDR4qZQmSA4Y3WeQ==
+X-CSE-MsgGUID: ngvzNfCjT6W0QtU5pwErLg==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2EHAAAGpQdo/0vj/y5aGQEBAQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?RIBAQEBAQEBAQEBAQFJgTgCAQEBAQELAQGDP4FkhFWRcQOSKYEgikqBfggHA?=
+ =?us-ascii?q?QEBAQEBAQEBBAU7CQQBAQMEOIRIAosuJzYHDgECBAEBAQEDAgMBAQEBAQEBA?=
+ =?us-ascii?q?QENAQEGAQEBAQEBBgYBAoEdhTVGDUkBEAGCBwGBJIEmAQEBAQEBAQEBAQEBH?=
+ =?us-ascii?q?QINfgEFI1YQCw0BCioCAlYGE4MCAYIvAQMxFAawLoEyGgJlg2xB2EMCSQVVY?=
+ =?us-ascii?q?4EaCgaBSQGBV4Z4AYFbhBGEd0KCDYQ/PoJKFwSFOYJpBIItgReTQYUCiRVSg?=
+ =?us-ascii?q?RcDWSwBVRMXCwcFgSlDA4EPI04FMB2BeoNuhTWCEYFcAwMiAYMTdxyEaIRSL?=
+ =?us-ascii?q?U+DL4IDaB1AAwttPTcUGwaWExImgSqBJYQUYAEHQRYCIIEtDZcxsAyDHIEJh?=
+ =?us-ascii?q?E6HS5VKM5dwA5JkLphQjA2BeZsvgVAeC4FxDAczIjCDIhIBPxmXQ7xodgIBO?=
+ =?us-ascii?q?QIHAQoBAQMJgjuLboFzgUsBAQ?=
+IronPort-PHdr: A9a23:sBEl3xRw47+gidhX6cRRcBfs59psosqZAWYlg6HPa5pwe6iut67vI
+ FbYra00ygOSB8ODs7ke17GH7+jJYi8p39WoiDg6aptCVhsI2409vjcLJ4qoL3O+B9PRKxIAI
+ cJZSVV+9Gu6O0UGUOz3ZlnVv2HgpWVKQka3OgV6PPn6FZDPhMqrye+y54fTYwJVjzahfL9+N
+ hq7oAvPusUMnYduNqk9xgXGr3ZGf+lbyn5jKE6OkRr7+sq/85lv/jhKtfk87cBAS6L6f6o5T
+ bxcEjsrNn0+6dPouxfeUwaB/2MQXGoOnBVHGgTI8h70UIrpviT1quRy1i+aPdbrTb8vQjSt8
+ 71rSB7zhygZMTMy7XzahdZxjKJfpxKhugB/zovJa4ybKPZyYqXQds4BSGFfQsheSTBOAoKkb
+ 4sOEeUBO/pYr5LgrFcKtBeyGBWgCP/qxjJOm3T437A10/45HA/I3AIuAcwDvmnXotX7O6gdT
+ f26w6vTwDXMc/9bwy3w5JTUfh0jp/yHQLJ+cdDWyUkqDw7LlEufqZD/PziI2esCqW6b6vRjV
+ emyjGMosRtxoju1yccpkIbJnJkYxUrY9SV92ok1Pse0R1J6YNO9FpZbqi6VOZdsTMw4X2Fop
+ Dg1yqcAuZOjfCYG1pQpygLcZvGGbYSF4BDuWfieLDtlhHxoeLyyiRiu/UWiyuDxSNS43VlJo
+ yZbjtXBsnAA2hLR58WIVvZw+kGs0iuB2QDU7+FLO0E0lazDJp4i3LEwjJwTvlrHHiPsn0X2l
+ qCWe0M58ear8+Tqerrrq56GO4NqigzzMr4iltKhDek6KAQDXWiW9fyi2LH+80D1WqtGguMqn
+ qXDrpzXKtgXqrS9DgJU1Iso9gyxAC280NsCmHkKNFdFeBWagIf3I1zOO/X4Deung1SrjTdr2
+ +jKPr3/DZXJKXjOiLjhfbNk505HzQoz0chf649JBr0bPP38REnxtMDCDh8kNgy42froCdRl2
+ oMfX2KAHLOZPbvdvFKJ/O4jPemBaY8PtDrjNfQo5eTigH05lFMFeKmmx5oXaHS2HvR8JEWZZ
+ GLhjc0bEWcJpAU+SfbliEeZXDFJe3ayW7gz5iohBI26DIbPXpqtj6CZ3CenAp1WYXhLBUuUE
+ XrzbYqEX/YMZzyUIsJiiDALSKauR5c71R6yrA/616ZnLu3M9y0Aq53jyMZ65/fSlBwp9Dx0C
+ cqd03uXQG5pgGwHXSI50Lp4oUxnxVePybJ4jOBAFdxP+/NJVR83OoTGz+NnEN//QQHBccmTS
+ FagXNqmBSs9TtUrw98Be0p9Acmtjgjf3yq2BL8Yj7iLBIEo8qLbxHXxJNhyy2zA1KY/i1kqW
+ MxPNXephqJn7QjcG5bJk1mFl6atbakd0y3A+WaYwGqNok5YSghwXrvBXXwFYUvWt9v56lvYT
+ 7CyEbQnLhdBycmaJ6tWZd3piVpHSeznONTfZWKxhnuwBQyPxrOKbYrrdH8R0zjDB0QciQAc4
+ W6GNRQiBiemu2/RESZhFUzxbE/28elxsnW7TlQqwAGMdEBh07u1+hgIhf2TUf8T37QEuDs/p
+ DVwBlqyw9XWC9+Yqwp7YKpcec894EtA1W/Bsgx9P5qgL69lhlMFaQR4oV7h1xVtBYVci8Qls
+ HQqzA8hYZ6fhXFceimX0Ja4FafQMXK6qBKgcanNwXnFzc2bvKwI7aJrhU/kuVSRG1Y4u0tu1
+ XpWmy+V/JbDCQMIeZvtVk8ssRNo8eKJKhIh7p/ZgCU/eZK/tSXPjpdwXLNN9w==
+IronPort-Data: A9a23:kWS9x6ozvBqOBz3JwWpjblZx6z5eBmIDZRIvgKrLsJaIsI4StFGz/
+ 9cnaN20SrzTNTykP5w0PZPnthk2DaWlyIcwQAZr/n9jFH8S8cTLXY3FIkysb3rCI5HKRx9us
+ 5RDN9fNJ8pqFS+Mqxn9Y+ftpnIjiqrZHOKiUeTNZXkhFWeIJMtZZTdLwobV1aY42oPR73qxh
+ O7PT+3j1H6N1TMkb2tLuvmP+Eo14v/85mtE5QQwa61CtQ+EzyVFXJs2KPDqJRMUYGX18s1W5
+ Qrn5Ovklo8M1051UrtJqp6iLwtXBOeUZVXT4pZvc/DKqgBYoSAv2boMOvMZaENG4x2EhNkZJ
+ O9l7PRcci93ePSR8Aghe0MASXwmYfccoOKvzUWX6KR/8WWXLhMA/N0xVCnaDaVAks5rDGdH8
+ +AvKTxlRnirm+KszbunffJnj8IlIdODFNt3VqZIkFk1pd5/KXzya/2iCe1whV/ctegSdRrqX
+ Pf1XBI0BPj2S0YWZgpIUsJWcNCA3RETexUAwL6cSDFeD2L7lGSd25C1WDbZl0DjqWy4US90q
+ 0qfl1kVDC32O/SgmWCKyGq1qtWThBHCXbk7SIzjyfNT1Qj7Kmw7UHX6VHO0pLyij1KmAosZI
+ EES5jAzqO455iRHTPGhAVvi/SPC5ERDHYUNewE5wFjlJq786hyaD20NVBZIdNgvr4k9V1TG0
+ 3fQxoi4W2Qx7uf9pXS18LiKvxW8Eiopc1BaXDM5EBMazsPHr9Rm5v7IZpM5eEKvtfX/ARn5x
+ zGHqnh4i7h7pdYGy6ih73jGhTy2r5TERwJz4R/YNkqs9A9zTI2ofYql7R7c9/koBIKEUl6pv
+ 3UencWaqucUAvmlhHzTaOYABrek47CCKjK0qUJgG4kJ8zWr5mK5eoZR8HdyKS9BPs8adHnpa
+ UnItAV54J5VIWvsbKlrbob3AMMvpYDlFNLqUdjOY9ZOa4Q3fwiClAlsalSXxHvFi1U3nOc0P
+ pLzWcKtC2sKTKlpzRKoSOoHl7wm3CYzwSXUX5+T5xCm16eOIX2YU7EINHOQYe0jqqCJugPY9
+ 5BYLcTi4w5DWef6bwHJ/oMJa1MHN342AdbxscM/Xu6bKyJ0CX0mEbnaxrZJRmB+t/gL0L2Vo
+ zfnABAelweXaWD7FDhmo0tLMNvHNauTZ1prVcDwFT5EA0QeXLs=
+IronPort-HdrOrdr: A9a23:S2q1QqAh9R+p9GXlHem755DYdb4zR+YMi2TDGXofdfVwSL38qy
+ nOpoV46faaslwssR0b9OxofZPwJU80lqQFgrX5X43CYOCOggLBR72Kr7GD/9SKIUPDH4BmuZ
+ tdTw==
+X-Talos-CUID: =?us-ascii?q?9a23=3AGqY2J2tb6gtzT0nJOTf7dSxr6IsaIifS9m/JD3X?=
+ =?us-ascii?q?kEFRQTYa8FW7Lx65dxp8=3D?=
+X-Talos-MUID: 9a23:Gs+txQu0CRSK/WPGg82ngj58JuFmyKaSVn9VqIk75tGbGDZUNGLI
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,231,1739833200"; 
+   d="asc'?scan'208";a="113960662"
+Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
+  by antispam35.centrum.cz with ESMTP; 22 Apr 2025 16:24:07 +0200
+Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id DFC70100AE2A3;
+	Tue, 22 Apr 2025 16:24:06 +0200 (CEST)
+Date: Tue, 22 Apr 2025 16:24:04 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-efi@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] x86/mm: fix _pgd_alloc() for Xen PV mode
+Message-ID: <202542214244-aAemhFXr07MuvPSN-arkamar@atlas.cz>
+References: <20250422131717.25724-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sgx7kSU8nAdjTHV/"
 Content-Disposition: inline
-In-Reply-To: <75aef5f2b9d9292ae919f2af9f82a8618f9b191e.1745250534.git.iecedge@gmail.com>
+In-Reply-To: <20250422131717.25724-1-jgross@suse.com>
 
-On Tue, Apr 22, 2025 at 09:47:27PM +0800, Jianlin Lv wrote:
-> From: Jianlin Lv <iecedge@gmail.com>
-> 
-> Move irq_time_read function to kernel/sched/core.c and export for
-> external use when CONFIG_IRQ_TIME_ACCOUNTING is enabled.
-> 
-> Signed-off-by: Jianlin Lv <iecedge@gmail.com>
+
+--sgx7kSU8nAdjTHV/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 22, 2025 at 03:17:17PM +0200, Juergen Gross wrote:
+> Recently _pgd_alloc() was switched from using __get_free_pages() to
+> pagetable_alloc_noprof(), which might return a compound page in case
+> the allocation order is larger than 0.
+>=20
+> On x86 this will be the case if CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+> is set, even if PTI has been disabled at runtime.
+>=20
+> When running as a Xen PV guest (this will always disable PTI), using
+> a compound page for a PGD will result in VM_BUG_ON_PGFLAGS being
+> triggered when the Xen code tries to pin the PGD.
+>=20
+> Fix the Xen issue together with the not needed 8k allocation for a
+> PGD with PTI disabled by replacing PGD_ALLOCATION_ORDER with an
+> inline helper returning the needed order for PGD allocations.
+>=20
+> Reported-by: Petr Van=C4=9Bk <arkamar@atlas.cz>
+> Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,=
+free}")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 > ---
->  include/linux/sched.h |  4 ++++
->  kernel/sched/core.c   | 22 ++++++++++++++++++++++
->  kernel/sched/sched.h  | 19 -------------------
->  3 files changed, 26 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index f96ac1982893..3b83ac99b533 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -2281,4 +2281,8 @@ static __always_inline void alloc_tag_restore(struct alloc_tag *tag, struct allo
->  #define alloc_tag_restore(_tag, _old)		do {} while (0)
->  #endif
->  
-> +#ifdef CONFIG_IRQ_TIME_ACCOUNTING
-> +extern inline u64 irq_time_read(int cpu);
-> +#endif
-> +
->  #endif
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index cfaca3040b2f..c840d1ffdaca 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -10747,3 +10747,25 @@ void sched_enq_and_set_task(struct sched_enq_and_set_ctx *ctx)
->  		set_next_task(rq, ctx->p);
->  }
->  #endif	/* CONFIG_SCHED_CLASS_EXT */
-> +
-> +#ifdef CONFIG_IRQ_TIME_ACCOUNTING
-> +/*
-> + * Returns the irqtime minus the softirq time computed by ksoftirqd.
-> + * Otherwise ksoftirqd's sum_exec_runtime is subtracted its own runtime
-> + * and never move forward.
-> + */
-> +inline u64 irq_time_read(int cpu)
-> +{
-> +	struct irqtime *irqtime = &per_cpu(cpu_irqtime, cpu);
-> +	unsigned int seq;
-> +	u64 total;
-> +
-> +	do {
-> +		seq = __u64_stats_fetch_begin(&irqtime->sync);
-> +		total = irqtime->total;
-> +	} while (__u64_stats_fetch_retry(&irqtime->sync, seq));
-> +
-> +	return total;
-> +}
-> +EXPORT_SYMBOL(irq_time_read);
+> V2:
+> - use pgd_allocation_order() instead of PGD_ALLOCATION_ORDER (Dave Hansen)
 
-_GPL(), but as I've argued in the earlier email, I don't think you want
-this. I think you want access to clock_task instead.
+The patch fixes the reported issue. The following trailers can be
+appended to the commit message (as per [1]):
+
+Closes: https://lore.kernel.org/lkml/202541612720-Z_-deOZTOztMXHBh-arkamar@=
+atlas.cz/
+Tested-by: Petr Van=C4=9Bk <arkamar@atlas.cz>
+
+Cheers,
+Petr
+
+[1] https://docs.kernel.org/process/5.Posting.html#patch-formatting-and-cha=
+ngelogs
+
+--sgx7kSU8nAdjTHV/
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIyBAABCAAdFiEEoDIFP/dmMcxNFBW7NR2RttffnlAFAmgHpoQACgkQNR2Rttff
+nlDEew/4yEcCR71HSRxIJ7TyGxMDt7CdIFdUbwnVZ/+Rc3rwRz8DV+MNxmMLO7n0
+6vKNXqBIn9sy57f1YM0DyS8X0n6bywVFcjYwPPlEA/iCG2bCZ1G4amMmd9vFoMNq
+MAR03chHi/s0kWLuY6MqtIQpvD0q6dXgWjtiuC5l7U2GbMo6WQkwmozB+UalK+oB
+/z067SzsGCg/3dx/+78B7EHheRBr0oQYSOteyD5+LmdbgJT0q+73Hz+jbvjodtku
+Bbf1NDijqkjbHE7mct5C4o1DLWRnqe0oHOj6xP4FxLg0nRd4vc4ts+E0JMfTifql
+e3BsEhbqyWSeLxPypM2d6tbV04yeUigLohaDVFbdSOJKM7Yf0PLP5QieaRYeQHt/
+3AL6TBM9kTtHoFlXELwKz8aXYe02zZ33R/xQLsND34gVB0YC1BgWRF/VCSq/NBDT
+qFXoZpf5XNm1xeUtnU4W0LM6wLodPbR7aFwsE5gGz2IMc/KHIBQvIzWottAeAf95
+cCLbNrIMqbP4aqN3K8kE6HjwjPqP/F0WjFK7VwbAM/UxfyGPQP2MIeVRLQi9/56g
+tKew1Ze6WKsDkUeKd5AdbFPkOvpKeg/4Q+RCmR/qLx5DwJVUurjDw72rePGP0D6c
+T9xIlZqLrLtfp9SiHAqpUVU8S4Fy92U7drx0TdyelvUVgAvWbw==
+=ZGj5
+-----END PGP SIGNATURE-----
+
+--sgx7kSU8nAdjTHV/--
