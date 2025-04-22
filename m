@@ -1,111 +1,83 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB452C3759;
-	Tue, 22 Apr 2025 22:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7B81EE7DD;
+	Tue, 22 Apr 2025 22:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362432; cv=none; b=RZLP3QTvkXT5SUgMcG4E4tjdyVCDx2QC63rIqdL8b2sZZVwtgTpNsWVH/NYmtu6e85n0n0kJvVRHZUTTFUacn2gw/BDyaFj7PmqE58t6f0C5ZWfggyN2hcFHMMhO5H3MFxO60Sno5aMGIMGy4KANg7ZfcoDGMYk0wHVs3i4kDiI=
+	t=1745362449; cv=none; b=RhPBGEK8lmj1i/atRR2GgNjZKUmSfj+FhIYo1k1cvDbXZo2Ae3biy8nuQXHJuJPVsUt3JLJHRULGJJLhzWENbdb/nEu5EV09mkyhHCiN+MHcE8DSmnaCRfwaFg5WIXdua35VvQaRTYbGUXEMBXCrEnn8UZonTd/llB1bqH3uIs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362432; c=relaxed/simple;
-	bh=R41URHuvizW8HQzTFTrec2A6inn8BZR/ujGfQSBTJq0=;
+	s=arc-20240116; t=1745362449; c=relaxed/simple;
+	bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MYQCybkID6La8lMXw8lSp5poTXBlVPosUL3M0WX3J+pzJUnj1c06bPza7szIypIOHEsuF5LnANYCAMmQqWHoZM1sbCT2A+KFSoulZrIJkiTynQT0AR2V3FNeK0JdB8iajN1vJ+mgbe0tX3oMbSHzMscFbhhUTeuUSmXFVF1dni8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COF+EbeI; arc=none smtp.client-ip=209.85.208.49
+	 To:Cc:Content-Type; b=WxxEFgMNXAvjyKy4Yl+hNY2fwG2PFb8E7P5BILlL8VPD8qIIug87wn8Y9Y/wK98Ke0gYJy2ApmlDAS7GJh8bVYeu6XCDzfCjulZzSlKcJjWs+JuhsB8HA+CRCsyug61PsAWSpp6IC5kvTta03MitD/es5Znz8y9cns/+08AVtpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fODXLTCz; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COF+EbeI"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so8554480a12.2;
-        Tue, 22 Apr 2025 15:53:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fODXLTCz"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47ae894e9b7so94357941cf.3;
+        Tue, 22 Apr 2025 15:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745362429; x=1745967229; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745362447; x=1745967247; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f+1Ngscj1sLQkaXbBjPeNhRnXqru6dzUdV9MGLQmLQU=;
-        b=COF+EbeIoFPip2u6Yk+2WgY/Lzd+5F3RLvCPgYg5u+Ac3APMn5CL84P3xbqFzG0eOp
-         y7VqOY1MDuaD3DD0fCs/H7+pSqyhEdCUtEwSnEdlqNpAVxSenNjo0Z2W9aHV1U7DGnv8
-         Vwr013EFIsgmASdIplEHkBRzQYkZnQn1iZCJzq24nPbNoZGt0dPybQp9UScYMXb7Msmf
-         CoqIwkgYIKeaz764PdZFMUai49w+Vml6ukl22oYSgV7CRJuATclJW2BiuNc5ckKvBwGT
-         yPKbS7fjIu+VLy+MXIZihKvmD7g24DtB5hxayhpPkxYkermHeoCoIuoniN1Xu0QuMej3
-         FT0A==
+        bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
+        b=fODXLTCzrfkwfEELzqKrNqFw6jplZhn7/KohShrczxXQm6rMJkxfK/C/4CMCHBldmi
+         gP+zcsyUCbfhD/8VCUCCOwCP/qi/cVhlgH9IhBSH3LLzS31Ia49EslgseNuc+WFGT/t9
+         4W37zVgHIpReBihEXFjS5pOAWSV2Q65FiMCMcXJC74lTDie4W+fWfPLTy62YaikQFRaQ
+         SLWSyatbGVYUs9XjdD01QrdfZaRuXOzf8vh4BLAMiyooVr+kkNj2ZbujNe2KsfCkeZ3U
+         D9ysp1t8LVZ2q2bOFAwHKdTh37ulEdxlZ2ZIc/u3zC6SX0uzwijSLCwz7AI9jrTKh/iV
+         K/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745362429; x=1745967229;
+        d=1e100.net; s=20230601; t=1745362447; x=1745967247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f+1Ngscj1sLQkaXbBjPeNhRnXqru6dzUdV9MGLQmLQU=;
-        b=D8viNnr0D1Nib6gw8+pnkWOqGnR4UOKMaqUt3vcsNz2qA9FC4ZtR2UvJH45JvlgvIy
-         Qk7iOVhe418253pFkjGLrjVVA3Ada/GbHjziuoKklNYRuTHYkwiIZQR2eZl1JZyzQzqG
-         nhyOtGKi0HYCliMPJvEZsGhhr4vK6Ay+xbS7uvRjmPCTTeMRMgOuuNxx9+Klz8ECxdbP
-         omwLKEoEKLlo0YcLH95dz2/XhJ8CjF5gnWC4Nt76+eRfRezhAQIBGKDrHK5uXdn2ushc
-         xR2bwFkz52lyYLmhOVRpVTO6DF+gx9fr0lZheERIbf9kOYfUZf2Rqmh32h2g21kx2US3
-         yQZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmIf0BRr66jImRfIfm0GhhhnxArOCA4sQx45+/lLAok5VFk926ySjvx3cXs0GLnT48HhtjGQSWYLbi2Z81@vger.kernel.org, AJvYcCWiZSdeNEQMRdeA+xWw/zrydAJWDGL3+z+Bjv5seVwB/S1pablCy5wXWavgmRIKWCrgWmCuMVkK82E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvhk0EwsbZ+bq2Wt30ujxBtPceknXRP09Jtlo8UuH154RWpVTi
-	2XHc2xH6QFq3ro9fXtV0puHIEFYUEUO3Qkt7wBb9icyeBenv9TGSJBIGTR8wez1aTX08XxTd5l5
-	7un99Riwg1nZYY9Z+/OAR2IfsA2A=
-X-Gm-Gg: ASbGncs87BAUwipf+muIBmSaTdaruo30F42EPe8Nt48xgdgkvDqf5vObNBR6TisvRH6
-	hG6aLtekKRk3Z3SwwkzBXeUsdQott4M4ZyVu+Kn1GWsLYEWChWCVUkuxR55JIFzs4jBziVZr+o4
-	eO9dD0A/TCvvxvBIxJbMd3TA==
-X-Google-Smtp-Source: AGHT+IHMPrXJqYYAB6pAgjxvZ17pVvfJXLHs9OfoWIoo18nkISokZoisDnXlemOEpRBjn1DUA8AriHhqSMFKfX2dk+I=
-X-Received: by 2002:a17:906:da81:b0:acb:ba0f:4b0f with SMTP id
- a640c23a62f3a-acbba0f4c70mr579009566b.31.1745362428662; Tue, 22 Apr 2025
- 15:53:48 -0700 (PDT)
+        bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
+        b=oh8/fHDmOD5CLthBTfDRCqQDPyO50dzpbBCpZYmTcRQxVZk4Qtaa65pl5pe94PUw/+
+         /Ty8IXYjhv7qv3KRo08/EffjKnAlh9vyWWvNoYttLzktM6GEXhaQfrrPoIsWHyIZjJ/e
+         burPGT8fYj9MOfp7dHTx78euXfbhhcPQXO6pCh2oqUppQEMwNPIy6CqItQV+HyKbRsdX
+         HT9iY5J9ZR51bOtKfrLth29x0wtHW2xLcJGSKIapT2C8KSpYRee9WzP1yXuFCDgQMrpN
+         +tN2NB54Ay8lK6B4yPK4BW7KNjYlHcD4GUss1J2yqn0pu/oeXkGTEqnraGdjIThEfRZG
+         21zw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIohRu11cA1za/ZMiBL1F9zBQTVK67XX/la7VSAn0DJ2dyv2N/g4jQLOTd822CKKn+sp3nfgySXTf/fvY=@vger.kernel.org, AJvYcCXz8iANg+L/0jTK00h6TwR8dsgaZJak0Loka6jutM2Gl9yI3Tzf3vHHiOl7p4Y6Id5PWqvJreBX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2TrSalcc3IBTXqFHyMqEF/ZiGWS6xkVrx/IU1kB3nKlohBGkX
+	bGnsEsaCKqkgF90SEWTgQZXHNKSkcNC/H1TlwRNHhHnicNfOxIT5hSMY7N+saRMe68TFeTGbLy4
+	Xb4q7TniP8jewN4+A7TKjP8e1Ids=
+X-Gm-Gg: ASbGnctPgdPftPsWUZpFXA1xFCm7JENLZcz3eiPrlSaAYPkQy2s5oYturrMFGtMgIqz
+	Jo7VNlpYi1q6ha6dexm/rsxAPs3XTIxgw7dmdko49KMmWKNMP7SkmVI0oeavNBsPIUmjkEGsHD8
+	tfIq0iFMio9wUMet/ZSFLXkg==
+X-Google-Smtp-Source: AGHT+IEORD8ojUEQHr3D1+QFtqDuA4YeBYr8q0gJ2sylYYifJPAFNBYqPX5iT0D6RZs5dgYijoTKWzusjQflOl1O/3Q=
+X-Received: by 2002:ad4:5bac:0:b0:6e8:f99c:7939 with SMTP id
+ 6a1803df08f44-6f2c4682637mr287665326d6.44.1745362446819; Tue, 22 Apr 2025
+ 15:54:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
- <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-4-3fd36475c706@baylibre.com>
- <CAHp75VdqanGpwB5raE8AmH-Tmb82N9yYmhB+k_rQtc2_Zb8HQw@mail.gmail.com> <55f8a997-77e7-4d07-aec2-8d20f56314d0@baylibre.com>
-In-Reply-To: <55f8a997-77e7-4d07-aec2-8d20f56314d0@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 23 Apr 2025 01:53:11 +0300
-X-Gm-Features: ATxdqUH1YUeTsEMT0CwtykvmoOSl52HrGojQPmTu1v6wjba29-5vfKptJFLiT2I
-Message-ID: <CAHp75VcoXwBNYmpNNCWbp1mOtJ6UJoKfxymRBRok91_NS8RcTA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] iio: adc: ad7380: use IIO_DECLARE_BUFFER_WITH_TS
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+References: <20250421191645.43526-2-yyyynoom@gmail.com> <a942be9e-2799-478d-b8c2-7a85f3a58f6c@intel.com>
+In-Reply-To: <a942be9e-2799-478d-b8c2-7a85f3a58f6c@intel.com>
+From: Moon Yeounsu <yyyynoom@gmail.com>
+Date: Wed, 23 Apr 2025 07:53:54 +0900
+X-Gm-Features: ATxdqUFMdUN5qqUUpfR8CyrJIO4o1Agasa3dB2Ji18X2Ej4SA9EEkzUF8SLUQY0
+Message-ID: <CAAjsZQwys95_bvKQDAd6aFeoL_LXfTKn2Pkwq=-F03uAuhVVXg@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: dlink: add synchronization for stats update
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 1:41=E2=80=AFAM David Lechner <dlechner@baylibre.co=
-m> wrote:
-> On 4/22/25 5:33 PM, Andy Shevchenko wrote:
-> > On Wed, Apr 23, 2025 at 1:08=E2=80=AFAM David Lechner <dlechner@baylibr=
-e.com> wrote:
+On Tue, Apr 22, 2025 at 8:24=E2=80=AFAM Jacob Keller <jacob.e.keller@intel.=
+com> wrote:
+> Thanks,
+> Jake
 
-...
-
-> >> +       IIO_DECLARE_BUFFER_WITH_TS(u8, scan_data, MAX_NUM_CHANNELS * s=
-izeof(u32))
-> >
-> > Btw, why not DECLARE_IIO_...() as other DECLARE_*() look like?
->
-> IMHO, namespace should always go first and people who write DECLARE_NS_..=
-. are
-> doing it wrong. :-)
-
-Not really. AFAICT it depends on the globality of the macro. Those,
-which are defined in types.h are all DECLARE_something(). Which makes
-sense. So the Q here is if the IIO macros like these ever go out for a
-wider audience. But in any case this can be amended later (with maybe
-a bit of additional churn).
-
-> There is not existing DECLARE_IIO_ to match anyway.
-
-True.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thank you for replying to the patch!
+I think this patch needs a bit more refinement.
+Would it be okay if I submit a v2 patch?
