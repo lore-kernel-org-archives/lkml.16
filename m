@@ -1,236 +1,344 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3A1155CB3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745301855; cv=fail; b=G04t1ZGiSGXBdFpe8wO952AAiq4oStATHSRzNOecMstq7cbifImxaBhWIaZqNiyzwW5ly4h0XksNEfvpvVRsO7m66JzrCXPySQAEvoCjVYLVWEE/6Y0UsY528sL3FtAfZvzbMPO7AtPJzjc27wxwcd1ffS0IwGRdoyi1zXZ2cuo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745301855; c=relaxed/simple;
-	bh=iCsxgezsI7b0KAsZnHygDE9CGJC3rYiI1hJOhVK+7VE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pVq45/Bap6laDN35VjA0B8J4Q7gtlSMvmbAmeIIDTCZavOs9R91W3p/U/GQVsZvxXfZP/OlmBViGuEAXzrGDK3CbCkNuEeva2grHcBCEeiRbjxxhcc6PZbkRbW/4iRFdYVVtcEm12EPk/kMXVDBhgqvPgfxIUpFZYRBWc7JuFP8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=BkjVe/bx; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=o2cwMpao; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1910B1624DF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745302022; cv=none; b=D0ov0HHXnKXbe9YyH/jSeu/S6ulq7QLRuKs2gGUsPsHJS93rGLSb1xwmj0qVSvv6zbnPMRpQCc3U8ZjZMj3Y6y8Yb7leI3jla/Zhh2+ipNc8tgY8fuDogNxxbtFUYjCTgrDd+z2RyNgazdA9U/YkJGIpTLCEelHnttM9T6LRIoo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745302022; c=relaxed/simple;
+	bh=DHBnOV05lZYuNiWvEgvoz9Y8rAp98JqFg78UQfAaAlc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l+dhQYOlGhM9GHaTvNHzLh31nfsZ8+y4iyj/+uefM2Ji2fPqcrqO5BrJr9cK2Ec0MxvVhrfYSal/AFiSCnvl6gJh71AExHlfxPa1/YkK45ficv/f4Vt/MJ4PtKPkZlv4pipbMUwrHpgdUWWIECMXclQdWOI1gW01XF9v4vNW7WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=l+I7zL3t; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BkjVe/bx";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="o2cwMpao"
-X-UUID: 9a96fa421f3f11f09b6713c7f6bde12e-20250422
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=iCsxgezsI7b0KAsZnHygDE9CGJC3rYiI1hJOhVK+7VE=;
-	b=BkjVe/bxGdxiOXc9hUGzRKyi7KdLuPCvsCuFSLW3BacOR+4vYBNBGvCl7mM9Si/6Er1jSkAZJSWZWxC//0a2Z9Bp9Vawo1pDfErkNdAdzAxRUw6Ty4Zo2xBLKdv8hTQRBfvfGXIU0qh+GCVk0xGaOrxQit1cq19EFA94huhmsbw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:773d434d-a531-4c13-9029-52d658703ba1,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:8ca95ba6-c619-47e3-a41b-90eedbf5b947,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
-	nt:0|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 9a96fa421f3f11f09b6713c7f6bde12e-20250422
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
-	(envelope-from <ck.hu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2083452257; Tue, 22 Apr 2025 14:04:08 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 22 Apr 2025 14:04:07 +0800
-Received: from HK3PR03CU002.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 22 Apr 2025 14:04:07 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h/1RNwls1eG55Q6iH1+gvYwqtz3VusPv15AQajULUPoY8sm0hdxQ+WNeGPNOohSj8HU7IMqLAVVvTsoRa34RcoUH5m/pOqZLLp+AclfdNddYPE5zITz6xd3dslY9wKN5D2Cp7aFvMte5Z6EWBgjDGD1Qli6lSZcd8NGRWHCIxScZv4Ib5fa1f+MWPzJVdYlqABOMpgmQjH8vUJzLCq8noeN93Lw5iQ3kLXDthggATyxtXV8EzekNJUOCZ94U2+F5G8Y6+w9dqtUJE5T8E0dYhoydId4rS8URyxApeLIWrtTadZ9DsXececB+w0x/hH9ALIXPBY+HZ+NeMfwJUqf0fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iCsxgezsI7b0KAsZnHygDE9CGJC3rYiI1hJOhVK+7VE=;
- b=Hzw6hzWxj2QkyvSXFFxZUj87al+W3tbNASX3XEOx4xsvMw7DgI4QKEGIsV+wAjGsQo7J4oyvdYl4qrCbJaHp47LWnBtx5EPONxQ3qJdOzjT2XvjtAETrJFDY2dmIs/sSa5O9EzjrBzLmX1lbH/QGles3quBKK2FZIX2O+m0PLGWMx8z0bF/J+JHXiwso/TtrL0TDdfQPtp+/mQAY8G6pAA3tFO0lziE+dhwA8BAagFS+4VunJc0uR9QDl+wgDhxhLaNIvBrET529ZiZib6iQrcjgSNv7ofoAuEQtXyXOIrRSwpIGFluVwtGtc6tEhsztZj2Jfaq+5aVt7YdELl4uoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iCsxgezsI7b0KAsZnHygDE9CGJC3rYiI1hJOhVK+7VE=;
- b=o2cwMpaoPlGyXGycwOaZxR/nSg/VXTHi2bZiAHY7udrVPyX7+X+tNgMJAP2lRA4VQoUkkzqzOuacC48lppPjpRbpC3+oHmXzNEdMlWwTIZiZJbC+NigaJokR+rDZNH7kgG66WmygiJ6CYUtraHRfMvhP8b4TLysaIyQVGK/cFRk=
-Received: from SEYPR03MB6626.apcprd03.prod.outlook.com (2603:1096:101:83::7)
- by JH0PR03MB7879.apcprd03.prod.outlook.com (2603:1096:990:32::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Tue, 22 Apr
- 2025 06:04:04 +0000
-Received: from SEYPR03MB6626.apcprd03.prod.outlook.com
- ([fe80::9fa0:ee98:d5ed:beba]) by SEYPR03MB6626.apcprd03.prod.outlook.com
- ([fe80::9fa0:ee98:d5ed:beba%3]) with mapi id 15.20.8632.035; Tue, 22 Apr 2025
- 06:04:03 +0000
-From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
-CC: =?utf-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
-	=?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
-	=?utf-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	=?utf-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"airlied@gmail.com" <airlied@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"kernel@collabora.com" <kernel@collabora.com>
-Subject: Re: [PATCH v1 5/5] drm/mediatek: mtk_dpi: Rename output fmts array
- for MT8195 DP_INTF
-Thread-Topic: [PATCH v1 5/5] drm/mediatek: mtk_dpi: Rename output fmts array
- for MT8195 DP_INTF
-Thread-Index: AQHbqVFfJzzFPsj1sEa9QZqUhVzS2rOvRg4A
-Date: Tue, 22 Apr 2025 06:04:03 +0000
-Message-ID: <17edb4bdca86ea79f89208567cc6e17778821b50.camel@mediatek.com>
-References: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
-	 <20250409131306.108635-6-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250409131306.108635-6-angelogioacchino.delregno@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.52.3-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEYPR03MB6626:EE_|JH0PR03MB7879:EE_
-x-ms-office365-filtering-correlation-id: 10603798-1eb9-4038-4bde-08dd81637bf2
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?QUJGeFQ4STVBclRKbndEZnhzdkh3VlcyUCtrd1NXVkJWK1RWdHA3YkxNakJG?=
- =?utf-8?B?MFlCYkZ3Ym5ZOTRrYWw4cmtvb1pnZ25Fek9IcnMySzRCMmN3Z09lNG1vVTJF?=
- =?utf-8?B?cnNUK0trbng3bEREekd1ZFFVK3c1V0ZPVDUzZXFocGNvSGhTbVNhSE1uZ0Np?=
- =?utf-8?B?ZXdqcEpmVGlobWxrM1FRZ095YmhUM3ZNMnh0MHgzSEYzZHhmMXJid1ZCbHVj?=
- =?utf-8?B?NG1FNHdWYlpUZTZEWFMxOFNmQjVrTVBhNTJmNTcweTdoRGo5QXI5aGNZdHB4?=
- =?utf-8?B?c1BXZlhLWVFHYS9TcERmMnJPejE2UXV5NUg1RG9mdmRQZVZxQXJRMWxLU2V6?=
- =?utf-8?B?Ujk3Wmk1TVRMaFJNV0Zjbm5VVk14S1dwb3VaOU16dlBqdUtPQy8xYzVjY0lh?=
- =?utf-8?B?VHRWUy8yU0RzRVpjNko0akhMdHZJWlFTWEZtcXlLc09rcW82U2FyMm5FUDRP?=
- =?utf-8?B?UTJXUzRBd0lHbE4yN093QzBpVndNdURJeFVkS0ZYdEdqVzBXOGxYZUl4ZTVl?=
- =?utf-8?B?cVVUSTFMK1hKWTdydkM4UDYxRDZGYlhJeDJuQmJJc1Q0cnBXYXlzNDEwNkhl?=
- =?utf-8?B?U3F5dHBCZnJvakpCTW9YOWc2VXNVTklIampMQ0lVa3JiWjJVM0g3SWNVTkk2?=
- =?utf-8?B?VTBJYzExVFVuVXQ4MWl2dTg3dkhNTGhNSVhmT0xva1hNZmZzMERyZW5wVzNn?=
- =?utf-8?B?Sk1WKzFSelZ2eVg5MWpSUUptMGNIVjcxUEtxcmhId0psVnBDL3dCUW5veFlM?=
- =?utf-8?B?YWxrTlIrWXg3UVJlVW9iQmNLSHhtUkcxbzFOTldYVXhZelR3OU9GcDdObWhj?=
- =?utf-8?B?TzR3cnFsbFlybmlpemV2dVFLSFpTdDBqTVJjRUdlbVcrL1ZjV2J6M0V5dVRD?=
- =?utf-8?B?TFpianlVYzdjWU5RN2UybVllN0xydkhLNmFHNDBLUFlvTXh4VlpZdnN4YjhW?=
- =?utf-8?B?TXJ5eWxTSWlzeUhpUUU2UDJSRjk1am1uQ0FQd3pVaWxUb1llL0NUSmFMSUVq?=
- =?utf-8?B?N1lud1hjN2NpZDJ2V2NVLzZPOHc5OUhaTXFzb2NKdUhXdGZQQlRueExnMGZs?=
- =?utf-8?B?N1J2VUFodE5TbEt2Y3JJTCtCcy9uMGljMjgvVUt2S2ZmNzNWUGUrNkt4UURU?=
- =?utf-8?B?NjNSTWV1eEZxaTdaR0h5eC9ZcG1XTmlnTU1CcU5CdG9EMFNiZlNGMWN5enp5?=
- =?utf-8?B?TlV5THhtR0lPVVZBblJnREhFTVhjV0NhZ1YySHRwNUk3Umh1b24rQ0l5alVT?=
- =?utf-8?B?U1d3alpiZUpKVnUrR3pFVTJEQ29rbXlkR3NrMkxhUlk2a1FWVTZyOElXWVNB?=
- =?utf-8?B?dGY2ai9YWSt0eEdZV01ROTZOcW1KYmlyWE13Z0dqSDl6dExPTndjTUw0K3hN?=
- =?utf-8?B?eDROR1Vtd0JvQ2RDelJmYjViVDg3bkFHdkFGV1JYdkdZTUJwMGZKL1dyVXB4?=
- =?utf-8?B?MGsvbVRLc2pNZndtL1FZS25XMEU2YWMyTXNBbnRvOGZUbXdIRVlRdnFGNlVD?=
- =?utf-8?B?eVE4dTc2enBVVDV6QVpHSCtPSE9LRkVVaGZ3N3VRTXRTMTVlRyt3VVlrOWFZ?=
- =?utf-8?B?U3Y1aGt5aW1WaUdqZWJQdFVwQ1hlS3hibTFvY2prNG9sU21EM0ZEMDNlWGtq?=
- =?utf-8?B?Yk5PaGhkUDhIVVBRWnhwZDNiSTRpVU9scDduSVpQU2FsVzZjeWtiTDdhc2dN?=
- =?utf-8?B?S3hpKzczZzZ6K3FKOFcraHM3WWI2dDk1eGVTcEREbWhCV0hqSHE4OVpuVk96?=
- =?utf-8?B?WXlqeHlFTisyRWZ6eXpLZi9JT25RNEhkdWgxYkpWSXhhZm1uWXVQWU9ERkZp?=
- =?utf-8?B?NUc0NzlKdXJaRUg5clp1dmZaaS9objd4KytISlNnSm5XSThNYU5ZVUNLUDU4?=
- =?utf-8?B?V0JVTlBUbUVJVWszdzZpODNZdmFEYkE0bldRT1dtRUxlNlJyc1F2Tjd6UnJT?=
- =?utf-8?B?TTZIb1BpeUdpZ1dLdmJjaHEvRVR4TVpRckZtV09MbFQ2K0pjTjBjVm9CL2ZQ?=
- =?utf-8?B?aWFHOSt1Uy9BPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB6626.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cEhsVHJWRkZ3VkxjUU9NRUJSVDFIVFM4ZFVwQTM4ejlKa1VrSDVEOHZWRlBz?=
- =?utf-8?B?WDRObjY4dEwxR3pDQVNuRFFHYUViY0J2RzgvdGMzRDdTTWhDMUo4N0pzeEMy?=
- =?utf-8?B?K3hZWURsQXZzN1ZGeGo3VnYraHc1dXhwSjhVNnVCVlIyeHovV3hRdWREQmd2?=
- =?utf-8?B?THhnZ1h4VW5URTdIdUJJaFhTclJvNjBMdHl0U0QydU1YRUN3SWdFUmFqQnRQ?=
- =?utf-8?B?d3hkU3NieWtQaGRONDlEREh1MmxtT0hBNkkvcnJ0TEtCdjVPNG1ibExZWURK?=
- =?utf-8?B?dHJWNCtMbUVudUxKZzU4TWJjYjZnNW5XSFlSZFhrMjFSSVdsMUNRR2RKekd2?=
- =?utf-8?B?S05SRlpqZERzaUdxWjUxRlRrRytaQ1FzMXJCWHlIWHZQSmsvOW5hSzlJbWhW?=
- =?utf-8?B?ZWVZRVFFNnFjYUc1dkNndEc4Tk9mTnBrWmVzeHNwK0t4ajg2ckx5cjBvdmtY?=
- =?utf-8?B?VDlLdlBLV2lQUitQdTJUNWpTYjFKV0ErN1BuWmVaeEhwRTMvSDFXOFBmWFhE?=
- =?utf-8?B?R1ppVlFSblAvR0IzclhiWWNkcGVVNk1VMHU4MlFveXhNWWozRmJHcjQ1MFZq?=
- =?utf-8?B?N2IwZkJWSXczT1JJRnJKWHhFcllWbTM5MHFxYU1rZHoxUzlHRHRXUllSayt1?=
- =?utf-8?B?MGJSOWQ4RjZHQXFkeUM2c2tBeDJxVTVka0kyVGVlZHF1VjVOZXRZVmNDak9s?=
- =?utf-8?B?OWZCUXg1L0pISjQ5Wm9IaWZxWUtXUVB3ZlV1MWl3aXlpUGEzKzlMYmJHRzFx?=
- =?utf-8?B?VzQ5blZJSjk4dThBdkpZOVN0ZXN6blphdlY2Z3l5WmpCc0dlemtvMzZSL0dR?=
- =?utf-8?B?RVA1N1pST1JENUtvbkdSam1xRWM5Qzh0QTNEaVNCRXFXNnVVS0Urb2p6d3FE?=
- =?utf-8?B?YnlsRWpjOTJGcy9aS3JTUEgwUXo5TURrNGhFWGh0VHA1RnRDNUEzbDNxZ3dX?=
- =?utf-8?B?dlFtYXhuTzN2QXZsU1ZjbEZwMlc2SnlEV2pObDliQlA2Nm1vdFBqa1ZyQUlu?=
- =?utf-8?B?dEEvRVp6ZzBtQWhRdmhTRXJQc2VZNUNTd05DV2daM0FKSy9TSGNLaVloOTc1?=
- =?utf-8?B?WFRWQXV2VzdndjRZNkFsTEVpeG9PVHQxYmhBdzhYZkIxTE1ma3ExcnUrcm9D?=
- =?utf-8?B?b1NUVXZiNVAydThkYUplMDlLMUNJUllHdStuVmxaOEVBSFJFTUZtd0Q3N3RV?=
- =?utf-8?B?aEpBaUd3dDYwV0VIZWlsbVJNUnVyV3E2RnBYNFdWdWE3cUVGcVlNbElJRWNv?=
- =?utf-8?B?cFpleDB0STU3UnhzQlFaK1I3azdnc3N4eUxVUVFWVTFGNXR5dC94N0dtaG1J?=
- =?utf-8?B?Ym1Pdk9yZ3dBbXNpeW1sTlhVcTBzbG8wdTYzd0xqZHZ4WmpzclNkUjlHUU1B?=
- =?utf-8?B?RjRnSGdOcmtZOGh0RU9xdkc3Rm9IRHFvaDB6d3l3SUR3V25MTWo5L1lBZ1d4?=
- =?utf-8?B?aGY1ejRlSVJGMnBTQUkxTmVGUExmRVhCa3BQcDRxeDA0ampPNUNTWDZNaHBq?=
- =?utf-8?B?ZFRMK3RhbEswY1dOd1dQa1Y1M0Z3K2t6Nm1iQ20raVJPRHBZMkFzY3VuWTVV?=
- =?utf-8?B?Qm9mWDE5MlVZKy9tVUN2alFsaDdZK3g1V2lsVkFNVS9Tc0VaVGdGUlAwVnB2?=
- =?utf-8?B?RHdodmFPSEtYcmdTOGJxTmFKYkp3SXNqTVJxSFdlMnRCRWh3UWVBRGxBMitN?=
- =?utf-8?B?WVVYUEpUallpRkZCWTg2SS8wNmV3aXcrWEk1MWMydGFuU3dsS05xZkdaQzNG?=
- =?utf-8?B?dW5PTFN4SDI5YXpFSGpLWlpCdWduVE43V1d4RzFPZllQWG1hdDdNbFhjS2ZI?=
- =?utf-8?B?d2NGcE1NeFdsU09vZjdsQWZxZGpjYlQxSlpqTGpnMmk4aytYREFxeUgyTnkr?=
- =?utf-8?B?dXhYWFhCcVRXSys2UnpBQ21maUQ0RzZ6bFRVY2Y4bWY1L1pGbHlWaGd4cG1x?=
- =?utf-8?B?bVd5L1RFam8waFBBOVBndUZ0UmYrU093UC9XbjdFZ1NIWUgrZ2k3SkNxelFE?=
- =?utf-8?B?RW0wYStXeTRyZXF2Z05UVTNOMDFGeGpqaWkxQkdkUWlubUVwUWdabUphRklQ?=
- =?utf-8?B?S2RwNWpZU3FMK2JRUm54ZnppMFBFSDBoNGFFRlZrY3B6WlErR29mTEpjVmN3?=
- =?utf-8?B?OHJ2bk8wS0dzcy9lTlhZaTFDL2JWbHBTZE9TeDRWVGJkdjcwUlEzYkFURDRt?=
- =?utf-8?B?TlE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <76FA11DD79232C40AC503FC4DA790213@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="l+I7zL3t"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZhWwB01d8z9tPV;
+	Tue, 22 Apr 2025 08:06:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1745302010; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P1jZD+v9jZ5SL+C90xvRLg9FRt965u7OFTZRywGcFbA=;
+	b=l+I7zL3twFrFfIGwtd8JTYCXEeKTzfRSEBubgvNdAg6Bva4cfNd4H6/ZaIyJlkC9qKpW5I
+	gE1NbYPrcFZ2F6IR/1+j1AloTnKDqW2iiRTEATYejSo15e2jo/AAjAIiRwwdThYIDjWp9b
+	QNzpjqTE8LI4lpelOuUsUAPw09eTBn3BaCob2gxgToBaJodznPdP2HJwGulNzWSuVud2jf
+	8SBMP+7uHb5P/UkglxgdD0np2pfg5nO+ghjHOKLSGvdL0lfpvI53DA9nMCM0T+3ywpQb1l
+	VMg5e2SkuaOgJo6DyLtgw0uP9jFGDTvUACQDHnyZdMGz2kIw1NM1c/u8T0fkUQ==
+Message-ID: <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Danilo Krummrich
+	 <dakr@kernel.org>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
+ <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org,  linux-kernel@vger.kernel.org
+Date: Tue, 22 Apr 2025 08:06:45 +0200
+In-Reply-To: <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
+References: <20250407152239.34429-2-phasta@kernel.org>
+	 <20250407152239.34429-5-phasta@kernel.org>
+	 <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+	 <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
+	 <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+	 <aAEUwjzZ9w9xlKRY@cassiopeiae>
+	 <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB6626.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10603798-1eb9-4038-4bde-08dd81637bf2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2025 06:04:03.7281
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 07XVam8WbVfVoBs0z+BjBZV7aw3FxrGmEAaDgWJDw1h4ZBWvtN6LTvOrcN+hmbNLhXmDjL1x1sjF2bmkd1Xg/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB7879
+X-MBO-RS-ID: 64e533af7fffcac7850
+X-MBO-RS-META: fdf3e1ef6pt6kftcik8dofmitmo8mc8j
 
-T24gV2VkLCAyMDI1LTA0LTA5IGF0IDE1OjEzICswMjAwLCBBbmdlbG9HaW9hY2NoaW5vIERlbCBS
-ZWdubyB3cm90ZToNCj4gRXh0ZXJuYWwgZW1haWwgOiBQbGVhc2UgZG8gbm90IGNsaWNrIGxpbmtz
-IG9yIG9wZW4gYXR0YWNobWVudHMgdW50aWwgeW91IGhhdmUgdmVyaWZpZWQgdGhlIHNlbmRlciBv
-ciB0aGUgY29udGVudC4NCj4gDQo+IA0KPiBGb3IgdGhlIHNha2Ugb2YgaW5jcmVhc2luZyBodW1h
-biByZWFkYWJpbGl0eSBhbmQgYXZvaWQgcG9zc2libGUNCj4gY29uZnVzaW9uIGJldHdlZW4gRFBJ
-IGFuZCBEUF9JTlRGIG91dHB1dCBmb3JtYXRzIChhcyB0aGUgdHdvIGFyZQ0KPiBldmVyIHNvIHNs
-aWdodGx5IGRpZmZlcmVudCksIHJlbmFtZSB0aGUgbXQ4MTk1X291dHB1dF9mbXRzIGFycmF5DQo+
-IHRvIG10ODE5NV9kcF9pbnRmX291dHB1dF9mbXRzLg0KPiANCj4gVGhpcyBjb21taXQgYnJpbmdz
-IG5vIGZ1bmN0aW9uYWwgY2hhbmdlcy4NCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRp
-YXRlay5jb20+DQoNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFuZ2Vsb0dpb2FjY2hpbm8gRGVsIFJl
-Z25vIDxhbmdlbG9naW9hY2NoaW5vLmRlbHJlZ25vQGNvbGxhYm9yYS5jb20+DQo+IC0tLQ0KPiAg
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcGkuYyB8IDYgKysrLS0tDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RwaS5jDQo+IGluZGV4IDlkZTUzN2E3NzQ5My4uMGI3ZjkxZmI1MTlmIDEw
-MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jDQo+ICsrKyBi
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBpLmMNCj4gQEAgLTExMDYsNyArMTEwNiw3
-IEBAIHN0YXRpYyBjb25zdCB1MzIgbXQ4MTk1X2RwaV9vdXRwdXRfZm10c1tdID0gew0KPiAgICAg
-ICAgIE1FRElBX0JVU19GTVRfWVVWMTBfMVgzMCwNCj4gIH07DQo+IA0KPiAtc3RhdGljIGNvbnN0
-IHUzMiBtdDgxOTVfb3V0cHV0X2ZtdHNbXSA9IHsNCj4gK3N0YXRpYyBjb25zdCB1MzIgbXQ4MTk1
-X2RwX2ludGZfb3V0cHV0X2ZtdHNbXSA9IHsNCj4gICAgICAgICBNRURJQV9CVVNfRk1UX1JHQjg4
-OF8xWDI0LA0KPiAgICAgICAgIE1FRElBX0JVU19GTVRfUkdCODg4XzJYMTJfTEUsDQo+ICAgICAg
-ICAgTUVESUFfQlVTX0ZNVF9SR0I4ODhfMlgxMl9CRSwNCj4gQEAgLTEyNDgsOCArMTI0OCw4IEBA
-IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RwaV9jb25mIG10ODE5NV9kcGludGZfY29uZiA9IHsN
-Cj4gICAgICAgICAuZHBpX2ZhY3RvciA9IGRwaV9mYWN0b3JfbXQ4MTk1X2RwX2ludGYsDQo+ICAg
-ICAgICAgLm51bV9kcGlfZmFjdG9yID0gQVJSQVlfU0laRShkcGlfZmFjdG9yX210ODE5NV9kcF9p
-bnRmKSwNCj4gICAgICAgICAubWF4X2Nsb2NrX2toeiA9IDYwMDAwMCwNCj4gLSAgICAgICAub3V0
-cHV0X2ZtdHMgPSBtdDgxOTVfb3V0cHV0X2ZtdHMsDQo+IC0gICAgICAgLm51bV9vdXRwdXRfZm10
-cyA9IEFSUkFZX1NJWkUobXQ4MTk1X291dHB1dF9mbXRzKSwNCj4gKyAgICAgICAub3V0cHV0X2Zt
-dHMgPSBtdDgxOTVfZHBfaW50Zl9vdXRwdXRfZm10cywNCj4gKyAgICAgICAubnVtX291dHB1dF9m
-bXRzID0gQVJSQVlfU0laRShtdDgxOTVfZHBfaW50Zl9vdXRwdXRfZm10cyksDQo+ICAgICAgICAg
-LnBpeGVsc19wZXJfaXRlciA9IDQsDQo+ICAgICAgICAgLmRpbWVuc2lvbl9tYXNrID0gRFBJTlRG
-X0hQV19NQVNLLA0KPiAgICAgICAgIC5odnNpemVfbWFzayA9IERQSU5URl9IU0laRV9NQVNLLA0K
-PiAtLQ0KPiAyLjQ5LjANCj4gDQoNCg==
+On Thu, 2025-04-17 at 17:08 +0100, Tvrtko Ursulin wrote:
+>=20
+> On 17/04/2025 15:48, Danilo Krummrich wrote:
+> > On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
+> > >=20
+> > > On 17/04/2025 13:11, Danilo Krummrich wrote:
+> > > > On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
+> > > > >=20
+> > > > > On 17/04/2025 08:45, Philipp Stanner wrote:
+> > > > > > On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
+> > > > >=20
+> > > > > Problem exactly is that jobs can outlive the entities and the
+> > > > > scheduler,
+> > > > > while some userspace may have a dma fence reference to the
+> > > > > job via sync
+> > > > > file. This new callback would not solve it for xe, but if
+> > > > > everything
+> > > > > required was reference counted it would.
+> > > >=20
+> > > > I think you're mixing up the job and the dma_fence here, if a
+> > > > job outlives the
+> > > > scheduler, it clearly is a bug, always has been.
+> > > >=20
+> > > > AFAIK, Xe reference counts it's driver specific job structures
+> > > > *and* the driver
+> > > > specific scheduler structure, such that drm_sched_fini() won't
+> > > > be called before
+> > > > all jobs have finished.
+> > >=20
+> > > Yes, sorry, dma fence. But it is not enough to postpone
+> > > drm_sched_fini until
+> > > the job is not finished. Problem is exported dma fence holds the
+> > > pointer to
+> > > drm_sched_fence (and so oopses in
+> > > drm_sched_fence_get_timeline_name on
+> > > fence->sched->name) *after* job had finished and driver was free
+> > > to tear
+> > > everything down.
+> >=20
+> > Well, that's a bug in drm_sched_fence then and independent from the
+> > other topic.
+> > Once the finished fence in a struct drm_sched_fence has been
+> > signaled it must
+> > live independent of the scheduler.
+> >=20
+> > The lifetime of the drm_sched_fence is entirely independent from
+> > the scheduler
+> > itself, as you correctly point out.
+>=20
+> Connection (re. independent or not) I made was *if* drm_sched would
+> be=20
+> reference counted, would that satisfy both the requirement to keep=20
+> working drm_sched_fence_get_timeline_name and to allow a different=20
+> flavour of the memory leak fix.
+>=20
+> I agree drm_sched_fence_get_timeline_name can also be fixed by
+> removing=20
+> the fence->sched dereference and losing the (pretty) name.
+> Historically=20
+> there has been a lot of trouble with those names so maybe that would
+> be=20
+> acceptable.
+>=20
+> Revoking s_fence->sched on job completion as an alternative does not=20
+> sound feasible.
+>=20
+> To further complicate matters, I suspect rmmod gpu-sched.ko is also=20
+> something which would break exported fences since that would remove
+> the=20
+> fence ops. But that is solvable by module_get/put().
+
+Is it a common kernel policy to be immune against crazy people just
+calling rmmod on central, shared kernel infrastructure?
+
+We cannot protect people from everything, especially from themselves.
+
+>=20
+> > Starting to reference count things to keep the whole scheduler etc.
+> > alive as
+> > long as the drm_sched_fence lives is not the correct solution.
+>=20
+> To catch up on why if you could dig out the links to past discussions
+> it=20
+> would be helpful.
+>=20
+> I repeat how there is a lot of attractiveness to reference counting.=20
+> Already mentioned memory leak, s_fence oops, and also not having to=20
+> clear job->entity could be useful for things like tracking per entity
+> submission stats (imagine CFS like scheduling, generic scheduling DRM
+> cgroup controller). So it would be good for me to hear what pitfalls=20
+> were identified in this space.
+
+Reference counting does _appear_ attractive, but our (mostly internal)
+attempts and discussions revealed that it's not feasable.
+
+There was an RFC by me about it last year, but it was incomplete and
+few people reacted:
+
+https://lore.kernel.org/dri-devel/20240903094531.29893-2-pstanner@redhat.co=
+m/
+
+When you try to implement refcounting, you quickly discover that it's
+not enough if submitted jobs refcount the scheduler.
+
+If the scheduler is refcounted, this means that it can now outlive the
+driver. This means that it can continue calling into the driver with
+run_job(), free_job(), timedout_job() and so on.
+
+Since this would fire 500 million UAFs, you, hence, now would have to
+guard *all* drivers' callbacks in some way against the driver being
+unloaded. You might even end up having to refcount thinks like entire
+modules, depending on the driver.
+
+
+So effectively, with refcounting, you would fix a problem in central
+infrastructure (the scheduler) in all users (the driver) =E2=80=93 therefor=
+e,
+you would not fix the problem at all, but just work around the
+scheduler being broken in the drivers. IOW, everything would be exactly
+as it is now, where everyone works around the problem in their own way.
+Nouveau uses its redundant pending list, Xe refcounts and amdgpu does=E2=80=
+=A6=E2=80=A6
+IDK, things.
+
+
+Another problem is the kernel workflow and kernel politics. The
+solution I propose here allows for phasing the problem out, first in
+Nouveau, then step by step others. It's the only minimalist backward-
+compatible solution I can see.
+
+
+That said, if you have the capacity to look deeper into a refcount
+solution, feel free to go for it. But you'd have to find a way to solve
+it in a centralized manner, otherwise we could just leave everything
+be.
+
+
+>=20
+> > > > Multiple solutions have been discussed already, e.g. just wait
+> > > > for the pending
+> > > > list to be empty, reference count the scheduler for every
+> > > > pending job. Those all
+> > > > had significant downsides, which I don't see with this
+> > > > proposal.
+> > > >=20
+> > > > I'm all for better ideas though -- what do you propose?
+> > >=20
+> > > I think we need to brainstorm both issues and see if there is a
+> > > solution
+> > > which solves them both, with bonus points for being elegant.
+> >=20
+> > The problems are not related. As mentioned above, once signaled a
+> > drm_sched_fence must not depend on the scheduler any longer.
+> >=20
+> > > > > > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > > > b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > > > index 6b72278c4b72..ae3152beca14 100644
+> > > > > > > --- a/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> > > > > > > @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct
+> > > > > > > drm_gpu_scheduler
+> > > > > > > *sched)
+> > > > > > > =C2=A0=C2=A0 =C2=A0 sched->ready =3D false;
+> > > > > > > =C2=A0=C2=A0 =C2=A0 kfree(sched->sched_rq);
+> > > > > > > =C2=A0=C2=A0 =C2=A0 sched->sched_rq =3D NULL;
+> > > > > > > +
+> > > > > > > + if (!list_empty(&sched->pending_list))
+> > > > > > > + dev_err(sched->dev, "%s: Tearing down scheduler
+> > > > > > > while jobs are pending!\n",
+> > > > > > > + __func__);
+> > > > >=20
+> > > > > It isn't fair to add this error since it would out of the
+> > > > > blue start firing
+> > > > > for everyone expect nouveau, no? Regardless if there is a
+> > > > > leak or not.
+> > > >=20
+> > > > I think it is pretty fair to warn when detecting a guaranteed
+> > > > bug, no?
+> > > >=20
+> > > > If drm_sched_fini() is call while jobs are still on the
+> > > > pending_list, they won't
+> > > > ever be freed, because all workqueues are stopped.
+> > >=20
+> > > Is it a guaranteed bug for drivers are aware of the
+> > > drm_sched_fini()
+> > > limitation and are cleaning up upon themselves?
+> >=20
+> > How could a driver clean up on itself (unless the driver holds its
+> > own list of
+> > pending jobs)?
+> >=20
+> > Once a job is in flight (i.e. it's on the pending_list) we must
+> > guarantee that
+> > free_job() is called by the scheduler, which it can't do if we call
+> > drm_sched_fini() before the pending_list is empty.
+> >=20
+> > > In other words if you apply the series up to here would it
+> > > trigger for
+> > > nouveau?
+> >=20
+> > No, because nouveau does something very stupid, i.e. replicate the
+> > pending_list.
+>=20
+> Ah okay I see it now, it waits for all jobs to finish before calling=20
+> drm_sched_fini(). For some reason I did not think it was doing that=20
+> given the cover letter starts with how that is a big no-no.
+>=20
+> > > Reportedly it triggers for the mock scheduler which also has no
+> > > leak.
+> >=20
+> > That sounds impossible. How do you ensure you do *not* leak memory
+> > when you tear
+> > down the scheduler while it still has pending jobs? Or in other
+> > words, who calls
+> > free_job() if not the scheduler itself?
+>=20
+> Well the cover letter says it triggers so it is possible. :)
+
+Where does it say that?
+
+I mean, the warning would trigger if a driver is leaking jobs, which is
+clearly a bug (and since a list is leaked, it might then even be a
+false-negative in kmemleak).
+
+It's actually quite simple:
+   1. jobs are being freed by free_job()
+   2. If you call drm_sched_fini(), the work item for free_job() gets
+      deactivated.
+   3. Depending on the load (race), you leak the jobs.
+
+That's not that much of a problem for hardware schedulers, but firmware
+schedulers who tear down scheduler instances all the time could leak
+quite some amount of memory over time.
+
+I can't see why a warning print would ever be bad there. Even Christian
+wants it.
+
+P.
+
+>=20
+> Mock scheduler also tracks the pending jobs itself, but different
+> from=20
+> nouveau it does not wait for jobs to finish and free worker to
+> process=20
+> them all, but having stopped the "hw" backend it cancels them and
+> calls=20
+> the free_job vfunc directly.
+>=20
+> Going back to the topic of this series, if we go with a solution
+> along=20
+> the lines of the proposed, I wonder if it would be doable without=20
+> mandating that drivers keep a list parallel to pending_list. Instead=20
+> have a vfunc DRM scheduler would call to cancel job at a time from
+> *its*=20
+> pending list. It would go nicely together with
+> prepare/run/timedout/free.
+>=20
+> Would it allow getting rid of the new state machinery and just=20
+> cancelling and freeing in one go directly from drm_sched_fini()?
+>=20
+> Regards,
+>=20
+> Tvrtko
+>=20
+> > > Also, I asked in my initial reply if we have a list of which of
+> > > the current
+> > > drivers suffer from memory leaks. Is it all or some etc.
+> >=20
+> > Not all, but quite some I think. The last time I looked (which is
+> > about a year
+> > ago) amdgpu for instance could leak memory when you unbind the
+> > driver while
+> > enough jobs are in flight.
+>=20
+
