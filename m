@@ -1,192 +1,92 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4545F1B0F19
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EB31A841E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343227; cv=none; b=PfkiFcIIUJL+fvBQAA8mir11Im2CS3kkMz7qpnVHe00oCdGWFux8QsGQmRKuxWz95dmbhADxUrsiY5fcuk+19O1OvdEm9KbuAhV1ElBqrGmTPFh6v8cG2I+FUqOqs2PcwLYsjltg9eUiW38xBPFiG2y6oq5fyMK23RrZYD9M8MQ=
+	t=1745343425; cv=none; b=Udtsg5J/KRaYR/3QtWEUjz+Vx7dv/zFjEFDgKDDkaHolP0l6ygVFtDPz+Whl2IKT/QiJ2DwNiGdavO1/Gp/W4hp0JNjjIWkV3ByN1qOAqkFKVMXSBFGfXnKBwW/cm0P7lFPzSmsondlx6ZjIyzNZvbHWcSroL5ugAOFnCYEL9Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343227; c=relaxed/simple;
-	bh=dSAcZbTWg2mRj31XtfxzRba5O5nw0iZOo2bmf99Ch34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VOiQIYBo70b4u69taDpOHTON9GI2Lna3mUgnQJtp0kZeX0wQsOzPhH3O57nRmg1ImYrX70f8kqI6fN/NWa/gYjtoXSRQH5NAahaS1LkHKFI/zbxVUyGwIHv5Lg6ewdhF9AqzBq0StXBfiqnLl3XnzKVNorNGqvKL5OlWtc+azpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=a0HK+wnK; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745343425; c=relaxed/simple;
+	bh=L1NuLC3M9iOVcIS/tnSiORX9C+uzimIbziX78n+Rcqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TQ13JaT2HsovBgQGbXHevhgneaSD/QlnfoohfwLbP5yUSUn9IQL5CwZcdEcvc/RB6I8nddmsoup8npZA3x6O/tQbiDIL67UFoEVM7lYLK30uxhZ7gdmDvNong82PjQ1UycfctQQtLK45GKasPaGhwiozEsagAOrx/qvh4G9GS9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=TKo/FiGH; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="a0HK+wnK"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85de3e8d0adso80820539f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:33:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="TKo/FiGH"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5e39d1e0eso534141885a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:37:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745343223; x=1745948023; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9ScI1SXFOzSb57R/DfhDhjRTVd9dkpAdipPrsoDQFnA=;
-        b=a0HK+wnKDsWgUSGS5EgSMmrqpWhtllbXKV/XcpXEnajR68ndtFhDYP/whp/4Fz3cz+
-         ZB0mqhA5pMWjDo6L3wzcdIkIGq92zsIx4HpSa4BRGJoN/z9BiMfWc+LgmxQfoWhCy4Al
-         ffsP2l3J1YJNSScXt5C3WdP/z7Az2GYaJd3fzbx5ubxjcalj6KSUmluvpokXzNZKEUTN
-         lLDLI78GXrvZ+1pzLuhlWe5VQJyWjbAhuYwkz5TEEzlcCCkAWGYgplAom0C0Uk1K7CxG
-         DkVPYNk7PDVA/OgMUji+ljSPMBRsAbnBbcZJJXByfGMk/xujsUZbSE9SRqLw/cuhrhEj
-         mxwQ==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745343422; x=1745948222; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hGlejZf1M4uB6/02tIygWhA14axEik3yrFkQW21it0I=;
+        b=TKo/FiGHh+AksseN8OCSZ0UA8zarshdWvPi95x11HTMY32Bw9mvzswkQ+oGPbxKUdz
+         fTLOPhgO7MnufSTmSjfa9bnay4iUX93V6U6Z+jbBtIg4p4rIdH1ZMp6UyswJt4r695GL
+         1QzLtZFwkSK9Q1ahMb3z0P9tJc0n465X2VZk4qlPPo6xFunWFJPBYhG1WyvRXodp+As6
+         HisrQ0wyFoopRI1Zy22LRJsdwpx8JHzzz9u9xr2nJleZ+IUUr37S04sO3vF9Tlr7RiYw
+         A+fRAP8BH99x8DW8dWBTrHT8yLP7Yto8QpIRlAFJmWLyx95zNaDXlaETfDANTsSb50ok
+         c58A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745343223; x=1745948023;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ScI1SXFOzSb57R/DfhDhjRTVd9dkpAdipPrsoDQFnA=;
-        b=qiMTvMFjYsmg+4o+m1OIsKvPfneTahXR0swAqmZUJg+ZmO7ZCD4+phT8Ol2hhCQxV9
-         8ZqewBd7JofSWkJKaXRANSEXBRtMth9N9ybskyWzo6vk2URB7rlYhjuNCdq8tZHu0rM7
-         TdxCUZuJGUwcb2hL5njC4x4szKKJn42II3FhN+GD4hfFAfGhehG2m11rWGGeCbRVP1Va
-         snr+Tp5ALF4KC52Oof4aEzotlnpMmAVkhiQvNCbthYj7w5Ia8BapTcQIJckj0snNwZ0u
-         EexpXV8nhhdY1X09XaVQKEGM1UkEe1CZRX9AhjaXiduD4XO4sHovoG1FOuF+5UVBiApg
-         Kb2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVkOaIin1gvATPBiIisj4c3G7Aeqmy5zDHAJYR/mVqmjjpGUmqu18sTY7J656GbAj+peGc7KQQnsk0o6H8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymFriWzef7/c0MpkpcDE3Qr01fPQMS+3HKsFDQIYKkxRz48RZR
-	cjaUILU8yIrn3fQDF3hwM7jNPK/TN6Daph73F3MjbGlNStpATqYFXiNuRTjgRA8=
-X-Gm-Gg: ASbGncs4U5K3isUZSOHLONqH9ETL5hHtPRGsRAy3hL5gcF7cbN8Nt0ttS/WAstZ7JwB
-	o0CWp0i7MIu45iLaT72jA/n6318On44WpDMsVidrIHNsiR9DCo4DjwgTdmUhSafLE0uMcoFMEvN
-	vOB8f38N+EngaFo2v9qe0qjvhlCEkOIpmdiAbuXk8KBFch6n0Z3DCm2aG8zekuznCIAQ23yF5J3
-	rMN0UcMpTvmYEi8rlrz17rOSFrEINZPKO+YP3VUduC2snVIdQ9DQgBa8fQKeFFvpbCeq5/cYXC/
-	6w5CWY8phWXn0xz6PsrU4T35oCN9hBTX/jsAWA==
-X-Google-Smtp-Source: AGHT+IG8uGVTpBjrvsiqLLauHBgN8q79Pyq/8FjC5UurY/AC+NdKVjMzlDN4p2eRnVLt9F3CH6lp+g==
-X-Received: by 2002:a05:6602:3789:b0:85b:3885:159e with SMTP id ca18e2360f4ac-861dbdc71e1mr1900443339f.3.1745343223260;
-        Tue, 22 Apr 2025 10:33:43 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a380664dsm2413104173.47.2025.04.22.10.33.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 10:33:42 -0700 (PDT)
-Message-ID: <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
-Date: Tue, 22 Apr 2025 11:33:41 -0600
+        d=1e100.net; s=20230601; t=1745343422; x=1745948222;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hGlejZf1M4uB6/02tIygWhA14axEik3yrFkQW21it0I=;
+        b=MKCWPmU+zyenk4AHE0/kyUIdCjdyGL3Ffaf+VVYX7gDT31MU7cX37vp1VTt6njDyXZ
+         zIPSaZD2mefc9VwQfL7ig4ETD6dFeRGqjCvk1AeDR17V+1YMZsrLOvdK3uWbgkahtxi5
+         IACKQ+tt1CL72m2iYCB69p3mMXpogojzGFldF4hV5w7I4geDG53kkznjcLmeIIiOeke7
+         DhMBJcGMao3eiXZ7wtMPCWhsQgbT243sQNSA8iFNQU0N/3zcfaGSp4hwQn0YZgOI67B4
+         Q6q6P8Y8Z39KkKMw32wOLxxXe9nqq2UdTT1DvQrNimJbxreQjRrz0xuorIUy1hInzdkh
+         JWBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9ZVOxdtUwJriLpNF34DbGGmQ0wjlkApdIUZjFL/zoaoBOKznwQdogKK2D6b4fwuvXHA4vr3MKhPT0tLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJrj29lpgPqPJ5IhG9h4YKxkjraG+Pph9ZsD88utbqB8uhvgQG
+	nyEXqy5fGtSrwBvqR3zakk5k90cpqPO4U2KV+jA25eh36QLB1BJmHCVN5q5RiEo=
+X-Gm-Gg: ASbGncsY7KwemWtZ2mJcUpZq6s1mgmwskuggYt+btwcZr4j9EmkyiMC6n4TlwjNvY9E
+	tM41oB0sFCjTAYZHcqb2ga0i2yc7wx1PZ8BJ/OmO/HOU+rOYLom/sXyy2OP9moobzQUmDbfbYKz
+	ccduN4YeCTNOfS332X9eaJkNck6pTo7hn/CKD5BG36D9m0o9ynvkCRnziOHLi9DGKLMfFRoXEYk
+	SlYeJZX8uL4JXCwHpMllsO2eUL7SrRA9Tc7LMKgPWlY7rNCDS5KWPDKXth6GyVPQElLemux9/QI
+	4Ep7SnFRCGLIhAXt1qxy8ARc6I5FZpx2JYYiz+M=
+X-Google-Smtp-Source: AGHT+IELDUlKcoCTHzBX8I9XSIjxg7eaS3ClKXEBzXDWD4aDyg2hvTE+Wb1eoZHRb6LlviHxQ+FBOw==
+X-Received: by 2002:a05:620a:c42:b0:7c5:54d7:d744 with SMTP id af79cd13be357-7c927f99feemr2428682185a.23.1745343422011;
+        Tue, 22 Apr 2025 10:37:02 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c9280de4adsm556929785a.114.2025.04.22.10.37.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 10:37:01 -0700 (PDT)
+Date: Tue, 22 Apr 2025 13:37:00 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, mhocko@kernel.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, muchun.song@linux.dev, tj@kernel.org,
+	mkoutny@suse.com, akpm@linux-foundation.org
+Subject: Re: [PATCH v4 1/2] cpuset: rename cpuset_node_allowed to
+ cpuset_current_node_allowed
+Message-ID: <20250422173700.GB1853@cmpxchg.org>
+References: <20250422012616.1883287-1-gourry@gourry.net>
+ <20250422012616.1883287-2-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
- scenarios
-To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com>
- <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422012616.1883287-2-gourry@gourry.net>
 
-On 4/22/25 11:04 AM, ??? wrote:
-> On Wed, Apr 23, 2025 at 12:32?AM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 4/22/25 10:29 AM, Zhiwei Jiang wrote:
->>> diff --git a/io_uring/io-wq.h b/io_uring/io-wq.h
->>> index d4fb2940e435..8567a9c819db 100644
->>> --- a/io_uring/io-wq.h
->>> +++ b/io_uring/io-wq.h
->>> @@ -70,8 +70,10 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
->>>                                       void *data, bool cancel_all);
->>>
->>>  #if defined(CONFIG_IO_WQ)
->>> -extern void io_wq_worker_sleeping(struct task_struct *);
->>> -extern void io_wq_worker_running(struct task_struct *);
->>> +extern void io_wq_worker_sleeping(struct task_struct *tsk);
->>> +extern void io_wq_worker_running(struct task_struct *tsk);
->>> +extern void set_userfault_flag_for_ioworker(void);
->>> +extern void clear_userfault_flag_for_ioworker(void);
->>>  #else
->>>  static inline void io_wq_worker_sleeping(struct task_struct *tsk)
->>>  {
->>> @@ -79,6 +81,12 @@ static inline void io_wq_worker_sleeping(struct task_struct *tsk)
->>>  static inline void io_wq_worker_running(struct task_struct *tsk)
->>>  {
->>>  }
->>> +static inline void set_userfault_flag_for_ioworker(void)
->>> +{
->>> +}
->>> +static inline void clear_userfault_flag_for_ioworker(void)
->>> +{
->>> +}
->>>  #endif
->>>
->>>  static inline bool io_wq_current_is_worker(void)
->>
->> This should go in include/linux/io_uring.h and then userfaultfd would
->> not have to include io_uring private headers.
->>
->> But that's beside the point, like I said we still need to get to the
->> bottom of what is going on here first, rather than try and paper around
->> it. So please don't post more versions of this before we have that
->> understanding.
->>
->> See previous emails on 6.8 and other kernel versions.
->>
->> --
->> Jens Axboe
-> The issue did not involve creating new worker processes. Instead, the
-> existing IOU worker kernel threads (about a dozen) associated with the VM
-> process were fully utilizing CPU without writing data, caused by a fault
-> while reading user data pages in the fault_in_iov_iter_readable function
-> when pulling user memory into kernel space.
-
-OK that makes more sense, I can certainly reproduce a loop in this path:
-
-iou-wrk-726     729    36.910071:       9737 cycles:P: 
-        ffff800080456c44 handle_userfault+0x47c
-        ffff800080381fc0 hugetlb_fault+0xb68
-        ffff80008031fee4 handle_mm_fault+0x2fc
-        ffff8000812ada6c do_page_fault+0x1e4
-        ffff8000812ae024 do_translation_fault+0x9c
-        ffff800080049a9c do_mem_abort+0x44
-        ffff80008129bd78 el1_abort+0x38
-        ffff80008129ceb4 el1h_64_sync_handler+0xd4
-        ffff8000800112b4 el1h_64_sync+0x6c
-        ffff80008030984c fault_in_readable+0x74
-        ffff800080476f3c iomap_file_buffered_write+0x14c
-        ffff8000809b1230 blkdev_write_iter+0x1a8
-        ffff800080a1f378 io_write+0x188
-        ffff800080a14f30 io_issue_sqe+0x68
-        ffff800080a155d0 io_wq_submit_work+0xa8
-        ffff800080a32afc io_worker_handle_work+0x1f4
-        ffff800080a332b8 io_wq_worker+0x110
-        ffff80008002dd38 ret_from_fork+0x10
-
-which seems to be expected, we'd continually try and fault in the
-ranges, if the userfaultfd handler isn't filling them.
-
-I guess this is where I'm still confused, because I don't see how this
-is different from if you have a normal write(2) syscall doing the same
-thing - you'd get the same looping.
-
-??
-
-> This issue occurs like during VM snapshot loading (which uses
-> userfaultfd for on-demand memory loading), while the task in the guest is
-> writing data to disk.
+On Mon, Apr 21, 2025 at 09:26:14PM -0400, Gregory Price wrote:
+> Rename cpuset_node_allowed to reflect that the function checks the
+> current task's cpuset.mems.  This allows us to make a new
+> cpuset_node_allowed function that checks a target cgroup's cpuset.mems.
 > 
-> Normally, the VM first triggers a user fault to fill the page table.
-> So in the IOU worker thread, the page tables are already filled,
-> fault no chance happens when faulting in memory pages
-> in fault_in_iov_iter_readable.
-> 
-> I suspect that during snapshot loading, a memory access in the
-> VM triggers an async page fault handled by the kernel thread,
-> while the IOU worker's async kernel thread is also running.
-> Maybe If the IOU worker's thread is scheduled first.
-> I?m going to bed now.
+> Acked-by: Waiman Long <longman@redhat.com>
+> Acked-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Ah ok, so what you're saying is that because we end up not sleeping
-(because a signal is pending, it seems), then the fault will never get
-filled and hence progress not made? And the signal is pending because
-someone tried to create a net worker, and this work is not getting
-processed.
-
--- 
-Jens Axboe
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
