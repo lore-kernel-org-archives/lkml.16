@@ -1,127 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF4290086;
-	Tue, 22 Apr 2025 15:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6B4290082;
+	Tue, 22 Apr 2025 15:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745337032; cv=none; b=b/hoQma2r28pJfbxBdYBtFv5nJx7GR24AYtl5dap5kROvt7G3WNlh5Q5eIrAKAQh10N0BQlPprfZoVCaDn0DyrEHJuPD8b3t7Ma6Y8ogdlL0hbXF0TlsZhjYVhATLnGWx5fiPruElwvu/MJEufRdZXpYaHZ++I38GioNx9PxhVU=
+	t=1745337060; cv=none; b=V5GGAAzXkuf6E0mIfBy5wx9UsAL9cuPvteAbf/Uok55PbsXVXHJyE2zW5UVHdjQsRwKa/vz6vILahYlvArLCqPC5bxxroIrvj9zjLcQQNmQAwppeOX0m0UiQtoDqGknG18Lf9O2V+YB6c4LtVCKQQE82LI8+Jkogln1WNlZSGWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745337032; c=relaxed/simple;
-	bh=X/Jm8EpGyPPW/TPBD8j9CgUl3gKs8re5bMeAjVZN3NQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7MjQjZg5ICV9FMPU9S3vADcZF7WQCnOCpHe9ijDIpVqwziksG9jXyhYcUMioxfFuMQjI4fQJMWjzFryObDAtnOrlj/3Qa63x6cIPCXU3+btISR35jzDq7tBT+Ynsb4h3G2FhskgjUg/KCHNRtlxHlG99YygvFRZG7Vjb4viMfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: nS2QrUHeQR6B1ayodn4d1Q==
-X-CSE-MsgGUID: 2AyZxiO7SkquyZ5YFhZK1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="58267022"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="58267022"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:50:31 -0700
-X-CSE-ConnectionGUID: jNzoMomCR2iiPXpLQhUytw==
-X-CSE-MsgGUID: qt0fV3ONStmkyAJZsMGD8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="132594964"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:50:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7Ft6-0000000EloN-0apC;
-	Tue, 22 Apr 2025 18:50:20 +0300
-Date: Tue, 22 Apr 2025 18:50:19 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] Documentation: ABI: add oversampling frequency in
- sysfs-bus-iio
-Message-ID: <aAe6u6NhAsgjaL5_@smile.fi.intel.com>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
- <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
+	s=arc-20240116; t=1745337060; c=relaxed/simple;
+	bh=/dt0p1OzuOjf3abs0q6cnVxY9+yEPKqJWonGL82r5pk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ESWIMXqdPPbwNbUwf7Km9e8ZhPtObmxwCRmC5ed4uxdeXcF5TfQ3mLuwrk8QYgx3jtV+fjMSqDbKeS7QsLZOvQdvSWSF26FFFIXBhZucf3b29eJTarqg+BCFPW2rPGzcs3SQ35S9cQujt49tjh+1rSml9iefm3VC2ZAycgJLdeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fmdIEcHy; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmdIEcHy"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f94c2698so25889706d6.0;
+        Tue, 22 Apr 2025 08:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745337057; x=1745941857; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7oowU4ubiAR+sY0xZ++0AHuDMpFQG52efmVb/Y2eNfo=;
+        b=fmdIEcHyU8tzsPPSCRp4mbY5iq3Z3PvFYhyHPKIJYeoCf8yn+mIy/ljxqhKQtpK8nQ
+         mcE9qRR0x6B8vC65eXjHIDiYS3m1x3W89FVqSAwHEWznjv1Tw+T0thnKYJ3aHTTuKyWA
+         McEfW36z7PBt7pBFkyn7puL13AStGRTJVzju5J7K/AG3XrfJFq9rK9kvdhI36W6oRbbQ
+         TsGC6Zo9WM5hti9H+nhQd/rHmLAqot3nRM5Xos6qwyTi4EORnDI4NU68HQfarrK/gLps
+         ufqhFpBP9F8AEYCvgt07KfiYGgkFj62P/BFCynauWaF/3UJihrzjQDqs8z9wnD0QksSK
+         iTbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745337057; x=1745941857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7oowU4ubiAR+sY0xZ++0AHuDMpFQG52efmVb/Y2eNfo=;
+        b=YGWjVebtefQMwm+39RHuPc7vQ06lqjnX5+JVZ+gHbq8JvxfMlfGvNauV8Gs8qosaNs
+         HH0tc8G+BRGc8JFTrdkAvybcr7mCzHpZigzS9aTkqomUr5RU3hSN153vj6+D5PXuo0/9
+         2jW07xGSrBhx1fVSi88vum7bzyfqY3FA0q/Vrv4reYWHNNtrueWhJCzrFiv2bWqeKJJk
+         VYLc+a66QUR3lclCoMvVDxv7qWQ2QYb5hG2NY32LclWZtWOwRGIzXe9uysRUNPJ6OeuK
+         ZLyrmvZMvk3WSmEgXlM2LVPRTxboQhySVYQPDTkRKHQyJLRBFK6d7miX/UHdi5ZduGOp
+         JKOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX1IppSegkLm6AA8D8w7BK6ItUYqhw65N1o4iaxvhGdTg7l6zKivwrQFJeuTJf1c2GrCGW1eknXgY=@vger.kernel.org, AJvYcCUY9RQG+HtvZG7ePvpVuFD4gv9B3ZaoVGAVn8j9DGMSveP8hG/arG1vijp+Szqyl90mbBz9tnNAfd3cyMkQ@vger.kernel.org, AJvYcCVuudZD7SAlmWaLAvmULwp/RLBEtm1kReLeYs0DYtuXOKudGTSEy5dw5ssv2U2FoaBZH96c8Q1X@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHIB5crUSt5XMmCdAYfnqpH5qYSMKlc/EF1fa08r/sueHLVzb2
+	a0aq/1NLHKZvZeDqzjj4OOa0fBMr2akbIrm+sA7PAcm3+R47RZBJpP9aLb9Tywk30p+swEKSIft
+	qyLGayNTwqDNs1npzWSqHtCaFF6c=
+X-Gm-Gg: ASbGnctHSwjsiSAfQxGJI8ak/HnsFHsKol7qWwKEAccU4Jp9bi6L4d+/JhxrQ2rROIf
+	xiRNRpswg8rGZ45gnveLAA1UVVKK0G/7EFxDkaTCDxcyeqtAljUral129mme21X2ecrEP80Fm5E
+	tVW5PtyhnvfT2Cx3PTQZKBmQ4=
+X-Google-Smtp-Source: AGHT+IFTQJvOfea+03HAmL9GIosZ3IA3k3+2rYzqUw2jPSNa10A/2r2nDWdPOvptn58dV5riuFvJ00P+D2mvRKAx7Is=
+X-Received: by 2002:a05:6214:262c:b0:6e6:5d61:4f01 with SMTP id
+ 6a1803df08f44-6f2c45125a4mr324053346d6.8.1745337056905; Tue, 22 Apr 2025
+ 08:50:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422-iio-driver-ad4052-v2-1-638af47e9eb3@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <20250407234223.1059191-4-nphamcs@gmail.com>
+ <20250408141555.GA816@cmpxchg.org> <6807ab09.670a0220.152ca3.502fSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <6807ab09.670a0220.152ca3.502fSMTPIN_ADDED_BROKEN@mx.google.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 22 Apr 2025 08:50:46 -0700
+X-Gm-Features: ATxdqUETwwP-bJUx8AP5nTAO6LFG9MhYiOS8p8tUjdEza2vLaCtWajTH1zIUKgY
+Message-ID: <CAKEwX=Mjx4LYe60ErJasFofkq-uH_R9R0TZD9ROdN1vn4V=Yjw@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical swap slots
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	hughd@google.com, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 01:34:46PM +0200, Jorge Marques wrote:
-> Some devices have an internal clock used to space out the conversion
-> trigger for the oversampling filter,
-> Consider an ADC with conversion and data ready pins topology:
-> 
->   Sampling trigger |       |       |       |       |
->   ADC conversion   ++++    ++++    ++++    ++++    ++++
->   ADC data ready      *       *       *       *       *
-> 
-> With the oversampling frequency, conversions are spaced:
-> 
->   Sampling trigger |       |       |       |       |
->   ADC conversion   + + + + + + + + + + + + + + + + + + + +
->   ADC data ready         *       *       *       *       *
-> 
-> In some devices and ranges, this internal clock can be used to evenly
-> space the conversions between the sampling edge.
-> In other devices the oversampling frequency is fixed or is computed
-> based on the sampling frequency parameter, and the parameter is
-> read only.
-> 
-> Devices with this feature are max1363, ad7606, ad799x, and ad4052.
-> The max1363 driver included the events/sampling_frequency in
-> commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
-> and ad799x in
-> commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
-> hysteresis")
-> but went undocumented so far.
+On Tue, Apr 22, 2025 at 7:43=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev>=
+ wrote:
+>
+> On Tue, Apr 08, 2025 at 10:15:55AM -0400, Johannes Weiner wrote:
+> > On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
+> > > In preparation for swap virtualization, add a new type to represent t=
+he
+> > > physical swap slots of swapfile. This allows us to separates:
+> > >
+> > > 1. The logical view of the swap entry (i.e what is stored in page tab=
+le
+> > >    entries and used to index into the swap cache), represented by the
+> > >    old swp_entry_t type.
+> > >
+> > > from:
+> > >
+> > > 2. Its physical backing state (i.e the actual backing slot on the swa=
+p
+> > >    device), represented by the new swp_slot_t type.
+> > >
+> > > The functions that operate at the physical level (i.e on the swp_slot=
+_t
+> > > types) are also renamed where appropriate (prefixed with swp_slot_* f=
+or
+> > > e.g). We also take this opportunity to re-arrange the header files
+> > > (include/linux/swap.h and swapops.h), grouping the swap API into the
+> > > following categories:
+> > >
+> > > 1. Virtual swap API (i.e functions on swp_entry_t type).
+> > >
+> > > 2. Swap cache API (mm/swap_state.c)
+> > >
+> > > 3. Swap slot cache API (mm/swap_slots.c)
+> > >
+> > > 4. Physical swap slots and device API (mm/swapfile.c).
+> >
+> > This all makes sense.
+> >
+> > However,
+> >
+> > > @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
+> > >     return atomic_long_read(&nr_swap_pages);
+> > >  }
+> > >
+> > > -extern void si_swapinfo(struct sysinfo *);
+> > > -swp_entry_t folio_alloc_swap(struct folio *folio);
+> > > -bool folio_free_swap(struct folio *folio);
+> > > -void put_swap_folio(struct folio *folio, swp_entry_t entry);
+> > > -extern swp_entry_t get_swap_page_of_type(int);
+> > > -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int orde=
+r);
+> > > -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+> > > -extern void swap_shmem_alloc(swp_entry_t, int);
+> > > -extern int swap_duplicate(swp_entry_t);
+> > > -extern int swapcache_prepare(swp_entry_t entry, int nr);
+> > > -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+> > > -extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> > > -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> > > +void si_swapinfo(struct sysinfo *);
+> > > +swp_slot_t swap_slot_alloc_of_type(int);
+> > > +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
+> > > +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
+> > > +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
+> > >  int swap_type_of(dev_t device, sector_t offset);
+> > > +sector_t swapdev_block(int, pgoff_t);
+> > >  int find_first_swap(dev_t *device);
+> > > -extern unsigned int count_swap_pages(int, int);
+> > > -extern sector_t swapdev_block(int, pgoff_t);
+> > > -extern int __swap_count(swp_entry_t entry);
+> > > -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t e=
+ntry);
+> > > -extern int swp_swapcount(swp_entry_t entry);
+> > > -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
+> > > +unsigned int count_swap_pages(int, int);
+> > > +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
+> > >  struct backing_dev_info;
+> > > -extern int init_swap_address_space(unsigned int type, unsigned long =
+nr_pages);
+> > > -extern void exit_swap_address_space(unsigned int type);
+> > > -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
+> > > +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot)=
+;
+> > >  sector_t swap_folio_sector(struct folio *folio);
+> >
+> > this is difficult to review.
+> >
+> > Can you please split out:
+> >
+> > 1. Code moves / cut-and-paste
+> >
+> > 2. Renames
+> >
+> > 3. New code
+> >
+> > into three separate steps
+>
+> +1, I agree with the fundamental change (and is something that I
+> attempted before), but it's really difficult to parse :)
+>
+> Also, weren't the swap slots scheduled for removal or is my brain making
+> stuff up again?
 
-So, it was no documentation for the nodes this change describes, right?
+You mean the swap slot cache? That's the one Kairui wants to remove (I
+think he removed a huge chunk of it already).
 
-...
+This "swap slot" is basically just a new type I introduced to separate
+the physical and virtual swap types.
 
-> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
-> +KernelVersion:	6.15
-
-Then why don't you put the real version of the first release that has it?
-
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Some devices have internal clocks for oversampling.
-> +		Sets the resulting frequency in Hz to trigger a conversion used by
-> +		the oversampling filter.
-> +		If the device has a fixed internal clock or is computed based on
-> +		the sampling frequency parameter, the parameter is read only.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
-> +KernelVersion:	6.15
-
-Ditto.
-
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Hardware dependent values supported by the oversampling
-> +		frequency.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
