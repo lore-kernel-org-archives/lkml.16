@@ -1,98 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFA928F951;
-	Tue, 22 Apr 2025 18:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77C128F951
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745345493; cv=none; b=hJQhRuCsZKIXUAoW9qlR3S7t11hQvtFAj9PnSl/tyuXGbdcnXiwUetyM1uzrzkCCVkdnIwzrRGAn37noZwVuRBlaadlc1R7O8jO31veu9EM33eb9hgmL0avLjRj1sK6ZdWCmbPgR/3dDW7BTuCZh3VmHwcULGqvIS+jUzdQ5FF8=
+	t=1745345546; cv=none; b=Kjf3UCRmdhUXpirPLufD4znqldQyke/lba02gmhP9UxapryPbHmrZnVNRDvltQYW1EltjNj06hsG6NakXSXU9mAOz2wGj01tZ3EmUv/S4lhI/eXHjUjEcwYPcXaLCgwwIHEmHGgJrGkKsDbKujVdJau1mVILeSQ9LQD+x9jgSBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745345493; c=relaxed/simple;
-	bh=SvIx++S80MJoaUoA5eJ5m1Ia0u1LVuwEpWYTiDTazoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O5fGS9GcLTk07uMc3RsCH/rVMS9kiMiV3un+G8bE15E3+z88uPpL0bLWH0jvYvSwWU+fYay5M4neEPnTZo6rtslms7OWnT8tXWN1laJ3CKOIxQ5Kr6K/2zDyHvhgbHP0VDv0QTJ8bDe0d3cgrHHUpLWlPjGmZANnlkyHGcD2dLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qg+meklA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745345546; c=relaxed/simple;
+	bh=clj/7NiCGcVOiMu1ySLcl7Hi0OIoaRSBMSxeFaLMzIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ioa5bwYN6aQaD8id1EaxjmnUSrK5AUEXEpyErO82wf+shB2Qmue5ftOpTH2A7z8M5KKFFCA5RwBgtgkN4PVdcSAPYu1mwD5eQZc8GKSeHKJfI10nXOVO5E/jWwePrgPutSAPcSTPD2B9NBjiqPEG9iAhGI4Rr5oE2bWyAUuKkFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=UHjNv6vB; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qg+meklA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5AC0C4CEE9;
-	Tue, 22 Apr 2025 18:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745345493;
-	bh=SvIx++S80MJoaUoA5eJ5m1Ia0u1LVuwEpWYTiDTazoQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qg+meklA55nJle1d4hOos2AcPWg5lPvSi7s7fzxNRS4iy0iHG9UMDijMRHc7eq9Z2
-	 4uFUaZfbTdC8UuKFJC0Hx2uPRGdCwvZ59+U9Bzgi+1Dzo0dUkrHsNDnxFRT5PJjC9Z
-	 kQv7XW288krqJBCx0+YeB710x4vj3d8jgEaRaQSm9kkPim1ujpQlBq3mwuzQjWWU0D
-	 7LizaJwIZfiwpw6wL76S43FyRsly6ZnJ6wbjEc7XINpQdAEMu5Vva/P/P2J8uJJW6a
-	 VYpHCfeFmr3ynaVC4Zengu5OsByeMdd7FmmQhheTikCy2c7SPsPn3G6wyyXEeoTQq0
-	 idM6hE2hZGhLg==
-Date: Tue, 22 Apr 2025 19:11:26 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lars-Peter Clausen
- <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: magnetometer: ak8974: Add __nonstring annotations
- for unterminated strings
-Message-ID: <20250422191126.53eb61ed@jic23-huawei>
-In-Reply-To: <202503151455.B8E9F6F1@keescook>
-References: <20250310222346.work.810-kees@kernel.org>
-	<CACRpkdbUk8bVWLPwVRq0qzaKRC80=bV1Wd01h+5xfH1O7-BVaQ@mail.gmail.com>
-	<20250315183125.40f9c566@jic23-huawei>
-	<202503151455.B8E9F6F1@keescook>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="UHjNv6vB"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47688ae873fso56998321cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745345542; x=1745950342; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s2MxjZUGMrKR2DMGYAmofr4Hh7XRlldZp9rSBjUPMDM=;
+        b=UHjNv6vBL1vwgTJDTKRqlmWZoaG/KudTlWwAW+vjAA13e1ntvBv4AL5E1DmgtaerOk
+         5S04BvfHmaB0RsOcMsZpsNbFXhLtEY7MBbfXtsDFvaxyPCP52iIahL0SC2FKGlLMoAGA
+         Kc9TUancnyx32eoRsBckLN+zWIIMZ9nwoaPLwUJBMwLFE/Qmj/Yc9cYLBF3V2ssgKPhg
+         xvyEBmOcuPWfZIPADVu3iFATWmOVNxcSFnQDtL9R86/4MCH8ZnzSbvma/1cf5uihIIkS
+         9KjLC+TIjQ4ZNfU0f8xL0sR5dovE3C5638ZxN4RJz0TO7Rj/EIJcawFsQdO2WZQcjYdk
+         8cOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745345542; x=1745950342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s2MxjZUGMrKR2DMGYAmofr4Hh7XRlldZp9rSBjUPMDM=;
+        b=KvAVY3KbZHF8WycKbHlcQD0RoUEK7iDlM+95eZjfYOoNh8oX2yJDyHkgGjqKvKZ3Zg
+         RKu9eeYY+RH+/LFsuyC3+4O8+LxUERqvnouqKVTyLZd+Yvxpsi0tLeXT1as07mlPWayQ
+         5G9ct45dj6sMe1BX/NidUFr9Q6js/menKVtHM09sTw9xIgvtEnJl0Fo4gPbNH0lJMqvo
+         CLJaMNl9KJnwFj+2j7oukbTZh+ngCi9qSwck5oqnxcaXgmsNc2De9RMXzjBosX8Ua9eK
+         WIHARIKvOFUkTiJrDxOMYHwsGedG79FiVeJkzMihCgB01JiCBWsnc87ytYs7qldTz+18
+         8LjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbmSicEduoWhDJo+D2q9MhJegClGlNbLp6ArrAMpKGxXaFebQGRocSfhEBqrgW0WmM8rOwEB53BkSvMvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCs0447My/bKrLSUev4OLsV5q29z9vC5aSCx7TBjJdtmc3spxI
+	d/P1vxJHxSEJsgtxDRr8aQW4gPP3q7rpQAhAZxNTOjQz/Ux+LN8/lnwXolirvCxFMYN0eTZFuJt
+	I10U=
+X-Gm-Gg: ASbGncvA9rIuayJX3yOcorrTXvfCnqgc0xJ7HK838XBCARUcj9xJ2YP5MpnqfosLZ62
+	XjyA7RIn0XqahlUWIOwffxc2YxF/S8Vsz8q9I4syV0KMsKQOcwpoB5tv/23KUIB4fCvRLQv5jS0
+	woT3X6m0VoGJ0jLvL/cjWnmImgubUwCFnPre8r+Udt0BtPwOJLvON680iQSwNHyxRMmYWYA7cNj
+	vgHCRcF1d/Yy69I4YlSWLuD/ZHIB6CJU8Dpni/J+WdQHB27IsyY/03dyObvqkkYPm/uRVjAYZBE
+	8XOu1sqaln05o3p69ZV+WPVvEj+3Hu0C6K6d5Rc=
+X-Google-Smtp-Source: AGHT+IFSl5Z1DP+LoH0/jj1kUp0S4uovmAA5DbtTz8uDb7qyAwSb2oRgO+qtT/+KNaCsFK0ZjmtCfw==
+X-Received: by 2002:ac8:5811:0:b0:477:1e85:1e1b with SMTP id d75a77b69052e-47aec35503amr265505431cf.8.1745345542401;
+        Tue, 22 Apr 2025 11:12:22 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47ae9ce293bsm58048581cf.56.2025.04.22.11.12.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 11:12:21 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:12:17 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
+Message-ID: <20250422181217.GE1853@cmpxchg.org>
+References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250419183545.1982187-1-shakeel.butt@linux.dev>
 
-On Sat, 15 Mar 2025 14:56:02 -0700
-Kees Cook <kees@kernel.org> wrote:
+On Sat, Apr 19, 2025 at 11:35:45AM -0700, Shakeel Butt wrote:
+> Setting the max and high limits can trigger synchronous reclaim and/or
+> oom-kill if the usage is higher than the given limit. This behavior is
+> fine for newly created cgroups but it can cause issues for the node
+> controller while setting limits for existing cgroups.
+> 
+> In our production multi-tenant and overcommitted environment, we are
+> seeing priority inversion when the node controller dynamically adjusts
+> the limits of running jobs of different priorities. Based on the system
+> situation, the node controller may reduce the limits of lower priority
+> jobs and increase the limits of higher priority jobs. However we are
+> seeing node controller getting stuck for long period of time while
+> reclaiming from lower priority jobs while setting their limits and also
+> spends a lot of its own CPU.
+> 
+> One of the workaround we are trying is to fork a new process which sets
+> the limit of the lower priority job along with setting an alarm to get
+> itself killed if it get stuck in the reclaim for lower priority job.
+> However we are finding it very unreliable and costly. Either we need a
+> good enough time buffer for the alarm to be delivered after setting
+> limit and potentialy spend a lot of CPU in the reclaim or be unreliable
+> in setting the limit for much shorter but cheaper (less reclaim) alarms.
+> 
+> Let's introduce new limit setting option which does not trigger
+> reclaim and/or oom-kill and let the processes in the target cgroup to
+> trigger reclaim and/or throttling and/or oom-kill in their next charge
+> request. This will make the node controller on multi-tenant
+> overcommitted environment much more reliable.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-> On Sat, Mar 15, 2025 at 06:31:25PM +0000, Jonathan Cameron wrote:
-> > On Fri, 14 Mar 2025 11:31:09 +0100
-> > Linus Walleij <linus.walleij@linaro.org> wrote:
-> >  =20
-> > > On Mon, Mar 10, 2025 at 11:23=E2=80=AFPM Kees Cook <kees@kernel.org> =
-wrote:
-> > >  =20
-> > > > When a character array without a terminating NUL character has a st=
-atic
-> > > > initializer, GCC 15's -Wunterminated-string-initialization will only
-> > > > warn if the array lacks the "nonstring" attribute[1]. Mark the arra=
-ys
-> > > > with __nonstring to and correctly identify the char array as "not a=
- C
-> > > > string" and thereby eliminate the warning.
-> > > >
-> > > > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
-> > > > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > > Cc: Jonathan Cameron <jic23@kernel.org>
-> > > > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > > > Cc: linux-iio@vger.kernel.org
-> > > > Signed-off-by: Kees Cook <kees@kernel.org>   =20
-> > >=20
-> > > Fair enough,
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > >  =20
-> > Kees,
-> >=20
-> > I've currently queued this for next cycle as it doesn't feel like a fix
-> > as such and I've already sent my pull request for the merge window.
-> >=20
-> > Is it worth rushing it in, or is a fully cycle delay an issue? (6.16)
-> >=20
-> > If slow is fine, applied to the testing branch of iio.git which gets
-> > 0-day bot exposure. =20
->=20
-> No rush needed at all. This is just for cleaning up warnings for the
-> coming releases of GCC 15 in couple months. Thanks for picking it up!
->=20
+It's usually the allocating tasks inside the group bearing the cost of
+limit enforcement and reclaim. This allows a (privileged) updater from
+outside the group to keep that cost in there - instead of having to
+help, from a context that doesn't necessarily make sense.
 
-Dropped because it clashes with:
+I suppose the tradeoff with that - and the reason why this was doing
+sync reclaim in the first place - is that, if the group is idle and
+not trying to allocate more, it can take indefinitely for the new
+limit to actually be met.
 
-  05e8d261a34e ("gcc-15: add '__nonstring' markers to byte arrays")
+It should be okay in most scenarios in practice. As the capacity is
+reallocated from group A to B, B will exert pressure on A once it
+tries to claim it and thereby shrink it down. If A is idle, that
+shouldn't be hard. If A is running, it's likely to fault/allocate
+soon-ish and then join the effort.
+
+It does leave a (malicious) corner case where A is just busy-hitting
+its memory to interfere with the clawback. This is comparable to
+reclaiming memory.low overage from the outside, though, which is an
+acceptable risk. Users of O_NONBLOCK just need to be aware.
+
+Maybe this and what Christian brought up deserves a mention in the
+changelog / docs though?
+
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
