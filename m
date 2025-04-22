@@ -1,265 +1,308 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747B0205AB9
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735A5214238
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316750; cv=none; b=f7f0i5d1QdRRXadm+mHt+0s5FOvVz8lOHdvJ6EQAPwZEi08yTEGyvd0yUe44FZ1+dEbDKXquEqrAk3ZByd2iJMv5d5AHICDUACpSzj2GWCE7HNwiYvUrw60S9+ZQwNHei7mcxN9iWqjaMLgZvTKAgnIVf8jVEUuLmy94VwnEgZ0=
+	t=1745316758; cv=none; b=rrzBbUw426Qp72XrZ/zVN7tJTmzceNSUggq+H3W5MvDF9RB0BpCj76jrWtpS6b2GfKpAjuAyhVYUGE9otI6YczrPvgTxjtXLHaraGUm3vEROkhTHBpUtcGu8FxiP2vnr3f9aEodUFD6uEx3xrnZbl4JgDNzK7o4nV6IXOU5Z00o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316750; c=relaxed/simple;
-	bh=iuw8mzz4D8FzSVR6md29ftPqG/nClczLoSlv6YIjciM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uvHFv8FCcYrkK5AnzGovMutCyxzBmzTGwwDqzhKwzIWGFwVBqHFfAHpQD7gY5SGen8OeZ+CSzSGAn3hRVj2Wtk7z6MlxNn0kVkSmQ4418U2fDWOW5cPxXDOu3RrdBzY9HtO7JhZyiHgED2oMH430tOZ54rS3ADGbUzNRamznuAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d90ba11afcso26798245ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:12:28 -0700 (PDT)
+	s=arc-20240116; t=1745316758; c=relaxed/simple;
+	bh=kerRl69mpojlIzzC/Rjmb8JW3z8eblWySJtOnHuiZcU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bpP036+ZBecAT6zuyPgLUa9GsOZafOxPtVRXmmMKm055Epzn3Ks+LIdzG1NmPqOU0CDZyIMeVrTYRvlDL4Sb8jCvAC9aTajeGhTHeqX+oJx/NfHDTtq8C8p2CU4wSTc7/Bw8BNty0dgRj+ySF0wwA63bv142olMZu+lhtloG73E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-528ce9730cfso1347210e0c.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:12:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745316747; x=1745921547;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2YAH1eGiSqMrL1f9zZlMYWKFkdmMtSRfpvjTHspDKEI=;
-        b=juFg9yDEQDSnYqsfkbExAyQ/zvLKbjYSVXRGWmlJ59I1Id7H2tKk8qqFQQKLR7dZAn
-         aaCMdVNvA2k56zoxzUZD3kS9zkGE+0UKxVc9D/8Dz4i1yxq26Ws5doa2N0jJmawhrM32
-         bmSsyCOYjTYnM5Z95KMI4yjHSL68VtYWkSPmmxan7FhFxpY87/KTtVWfL5BJyDZIWU5O
-         8UjIImWZHUkznKTqbPBkk7U5XZA164ptwIM19hYXcp2327+qurN9GuSnoBHqJ7rC5Pwu
-         SObc2JItsMV8/C2SwVHwVlG16yONMOl686QnamXyoVYqtsDOIffqHFNnp7UBue9D8x+Y
-         GiWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRF4gxwohFxt1LCG38QXNCxgXQ+dkYDJugRw77+jd8HWXDLfz67SQhpRBbBLLtKp2FsKi49KHBzm9weNs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfrketx2dmTPBEijP2iEdvBePKLI3lJ8IzfrTbZZEdD4hupMV4
-	BPfpne0pM272YTOcHpICtIuWWJIvtRyNY0e4aFHOt40aBb+xOA9j2mQAGrBvLASJcJp+Ry9PjDh
-	NfjkfkGkUYjlqpUGfToLLmPfsax8QgK/l99BVFRLkedvNJkQaaOvaGIE=
-X-Google-Smtp-Source: AGHT+IEmMWNLajQ/yZ4q/Mpz1u1sc8u058gxDVsx1FnIBf0/iMnGdmA+jGVROjYyPJKr0OiMEUBFtElNvrrCvDxbLfWQG/KEXLSJ
+        d=1e100.net; s=20230601; t=1745316754; x=1745921554;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=773iKDLuE6xq2Xro8wyS6G+hqdfsehF8d9eBVRBQ0BI=;
+        b=YcfZ8i4vEgfes5Exrcf3mvan9oarrqbn+yPMYeKSgM0yAu+/4cGIuowlKSrpD3Ee6n
+         YktnTvJzQPq/BWYUpJ7Nj3flrhGIpmskQjnhvYTbYbFjvWfyeBy1fd5b3btfbvg66+/U
+         HBTT1LVzprU4tSWUW34sjo5hoYTAtyytSSpYjsPlh6WWV0MauNNV1O4dInMqX1gRRczU
+         9cWVVO9kkgtpcebHt/Oj2UsSeSfPVK/kLbw0Xy9wY6tW/mjiSQ2Zn1p66KW2Vb4aZSO2
+         W41CIWQyzQOKFNLxRVZp8oX+igd1sICy2Q5CSbREpHiI5dFlilQZrTHS/HN0mO7Yg/Wc
+         G31Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVtlWADrKacOhb06GoxgMo89nMeMHIw/VXjIoqdr+y5dcYUhxbsS8uxO216IrtP/zIcWKK+uisAtonttHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz32VdcFBejed2+yANm+pDE+K7QZFLPFwYmOg4AZSlgKYKcTANW
+	7nnXUEHyx8b3+LQDOd04TZDdWWdy1sg/ZKnNVk/a9Pp/BRs4tsCZoupP2Knb
+X-Gm-Gg: ASbGnctH88OKa/HxkUy190ZfODk6Dces4xva6faPbTr0pETsNOQTU/hAPlVykU5++br
+	UhRJlj7+7H16ksmWyNQZzRByjEJVvxMuTQ6z/MEXXD8Ko920gVh7iP/aVPPuTxnKfx9VOfMxFJJ
+	+YzS8gyWt1W0dRBpRzhMERSu3JjqlFeDIc31sgVoGfo6jv0qAXvYJkII2Yx02v43z3Oa7bDcdQQ
+	Eo9MNy8gcXyWG1+Y3y21Vx1NI453os5vEWol4gTPcMGujnOTAfPZDQDac/M7/tBIzGdFdGptigQ
+	I2oHe9VnkQ8040zMUXGjkMhM9sLU0maFCKZ4CKh3jcrQ5rhXyfxEyVqib+5Kz7ghgcaL56MfFzF
+	WDHI=
+X-Google-Smtp-Source: AGHT+IHry6l4SwnjmS9PnQJOozKqaLqYHiBdGQfKzIRFUeb3BHAf4YlrlXJR8p23tU2ego3xn6h+uw==
+X-Received: by 2002:a05:6122:1d92:b0:526:1ddd:7603 with SMTP id 71dfb90a1353d-529252365dcmr8570516e0c.0.1745316753534;
+        Tue, 22 Apr 2025 03:12:33 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52922dbf176sm1881422e0c.40.2025.04.22.03.12.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 03:12:33 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso1895522241.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:12:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW77Nu+rZWLt5Xz79z3uc4Hks/ZfOYHiPIOwNwmQlhUc0UVMU3FrQEupsEkadh0N74bQuKPxkOB2lH5V/k=@vger.kernel.org
+X-Received: by 2002:a05:6102:5c0b:b0:4c4:fdb9:2ea with SMTP id
+ ada2fe7eead31-4cb80101085mr7871767137.7.1745316753101; Tue, 22 Apr 2025
+ 03:12:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:19c8:b0:3cf:bc71:94f5 with SMTP id
- e9e14a558f8ab-3d88ee51776mr142807415ab.22.1745316747558; Tue, 22 Apr 2025
- 03:12:27 -0700 (PDT)
-Date: Tue, 22 Apr 2025 03:12:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68076b8b.050a0220.380c13.0088.GAE@google.com>
-Subject: [syzbot] [net?] [bpf?] KASAN: slab-use-after-free Read in
- sk_psock_verdict_data_ready (3)
-From: syzbot <syzbot+c21c23281290bfafe8d5@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, jakub@cloudflare.com, john.fastabend@gmail.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+References: <20250327112009.6b4dc430@eldfell> <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+ <20250327175842.130c0386@eldfell> <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+ <20250331105446.098f0fbe@eldfell> <20250331082135.GB13690@pendragon.ideasonboard.com>
+ <20250331135337.61934003@eldfell> <20250401162732.731ef774@eldfell>
+ <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com> <20250417111315.62a749e5@eldfell>
+ <20250421145039.GA19213@pendragon.ideasonboard.com> <20250422121107.572cb7ad@eldfell>
+ <CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com> <20250422130137.2658c646@eldfell>
+In-Reply-To: <20250422130137.2658c646@eldfell>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 22 Apr 2025 12:12:21 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUcG_K=5RHMaq9vTpQo8dPpLAvXfxP8XuzGnx4Nte7++A@mail.gmail.com>
+X-Gm-Features: ATxdqUGZbs6BF5hsjehRUxuOo4erq-QyO5S15EM3odm4sDatdl_MdQHKARAHvpA
+Message-ID: <CAMuHMdUcG_K=5RHMaq9vTpQo8dPpLAvXfxP8XuzGnx4Nte7++A@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+To: Pekka Paalanen <ppaalanen@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>, 
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Pekka,
 
-syzbot found the following issue on:
+On Tue, 22 Apr 2025 at 12:01, Pekka Paalanen <ppaalanen@gmail.com> wrote:
+> On Tue, 22 Apr 2025 11:41:29 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, 22 Apr 2025 at 11:11, Pekka Paalanen
+> > <pekka.paalanen@haloniitty.fi> wrote:
+> > > On Mon, 21 Apr 2025 17:50:39 +0300
+> > > Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > > On Thu, Apr 17, 2025 at 11:13:15AM +0300, Pekka Paalanen wrote:
+> > > > > On Wed, 16 Apr 2025 11:59:43 +0300 Tomi Valkeinen wrote:
+> > > > > > On 01/04/2025 16:27, Pekka Paalanen wrote:
+> > > > > > > On Mon, 31 Mar 2025 13:53:37 +0300 Pekka Paalanen wrote:
+> > > > > > >> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote:
+> > > > > > >>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
+> > > > > > >>>> On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wrote:
+> > > > > > >>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote:
+> > > > > > >>>>>> On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrote:
+> > > > > > >>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote:
+> > > > > > >>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wrote:
+> > > > > > >>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+> > > > > > >>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote:
+> > > > > > >>>>>>>>>>> Add greyscale Y8 format.
+> > > > > > >>>>>>>>>>>
+> > > > > > >>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > >>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> > > > > > >>>>>>>>>>
+> > > > > > >>>>>>>>>> Thanks for your patch!
+> > > > > > >>>>>>>>>>
+> > > > > > >>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+> > > > > > >>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > > > > > >>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
+> > > > > > >>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+> > > > > > >>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+> > > > > > >>>>>>>>>>>
+> > > > > > >>>>>>>>>>> +/* Greyscale formats */
+> > > > > > >>>>>>>>>>> +
+> > > > > > >>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+> > > > > > >>>>>>>>>>
+> > > > > > >>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+> > > > > > >>>>>>>>>> the number of bits in the FOURCC format. What do you envision
+> > > > > > >>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
+> > > > > > >>>>>>>>>
+> > > > > > >>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
+> > > > > > >>>>>>>>> not required, but different fourccs for the same formats do confuse.
+> > > > > > >>>>>>>>>
+> > > > > > >>>>>>>>> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
+> > > > > > >>>>>>>>> possible, and if not, invent a new one.
+> > > > > > >>>>>>>>
+> > > > > > >>>>>>>> what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
+> > > > > > >>>>>>>>
+> > > > > > >>>>>>>> Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+> > > > > > >>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+> > > > > > >>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
+> > > > > > >>>>>>>>
+> > > > > > >>>>>>>> That would be my intuitive assumption following how YCbCr is handled.
+> > > > > > >>>>>>>> Is it obvious enough, or should there be a comment to that effect?
+> > > > > > >>>>>>>
+> > > > > > >>>>>>> You raise an interesting point. Is it defined how a display driver, that
+> > > > > > >>>>>>> supports R8 as a format, shows R8 on screen? I came into this in the
+> > > > > > >>>>>>> context of grayscale formats, so I thought R8 would be handled as (R, R,
+> > > > > > >>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sense.
+> > > > > > >>>>>>
+> > > > > > >>>>>> That is a good question too. I based my assumption on OpenGL behavior
+> > > > > > >>>>>> of R8.
+> > > > > > >>>>>>
+> > > > > > >>>>>> Single channel displays do exist I believe, but being single-channel,
+> > > > > > >>>>>> expansion on the other channels is likely meaningless. Hm, but for the
+> > > > > > >>>>>> KMS color pipeline, it would be meaningful, like with a CTM.
+> > > > > > >>>>>> Interesting.
+> > > > > > >>>>>>
+> > > > > > >>>>>> I don't know. Maybe Geert does?
+> > > > > > >>>>>
+> > > > > > >>>>> I did some digging, and was a bit surprised that it was you who told
+> > > > > > >>>>> me to use R8 instead of Y8?
+> > > > > > >>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
+> > > > > > >>>>
+> > > > > > >>>> Hi Geert,
+> > > > > > >>>>
+> > > > > > >>>> indeed I did. I never thought of the question of expansion to R,G,B
+> > > > > > >>>> before. Maybe that expansion is what spells R8 and Y8 apart?
+> > > > > > >>>>
+> > > > > > >>>> I do think that expansion needs to be specified, so that the KMS color
+> > > > > > >>>> pipeline computations are defined. There is a big difference between
+> > > > > > >>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
+> > > > > > >>>>
+> > > > > > >>>> - (R, 0, 0)
+> > > > > > >>>> - (R, R, R)
+> > > > > > >>>> - (c1 * Y, c2 * Y, c3 * Y)
+> > > > > > >>>
+> > > > > > >>> I'd be very surprised by an YUV to RGB conversion matrix where the first
+> > > > > > >>> column would contain different values. What we need to take into account
+> > > > > > >>> though is quantization (full vs. limited range).
+> > > > > > >
+> > > > > > > Quantization range is indeed good to note. R8 would be always full
+> > > > > > > range, but Y8 would follow COLOR_RANGE property.
+> > > > > > >
+> > > > > > >> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
+> > > > > > >> (R, 0, 0), so we have both variants.
+> > > > > > >>
+> > > > > > >> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
+> > > > > > >> in the KMS color processing?
+> > > > > > >
+> > > > > > > I think this 0.0 - 1.0 nominal range definition for the abstract KMS
+> > > > > > > color processing is necessary.
+> > > > > > >
+> > > > > > > It also means that limited range Y8 data, when containing values 0-15
+> > > > > > > or 240-255, would produce negative and greater than 1.0 values,
+> > > > > > > respectively. They might get immediately clamped to 0.0 - 1.0 with the
+> > > > > > > first color operation they face, though, but the concept seems
+> > > > > > > important and carrying over to the new color pipelines UAPI which might
+> > > > > > > choose not to clamp.
+> > > > > >
+> > > > > > Is the behavior of values outside the limited range something that needs
+> > > > > > to be defined? We can't know how each piece of HW behaves with
+> > > > > > "undefined" input, so should we not just define the behavior as platform
+> > > > > > specific?
+> > > > >
+> > > > > Hi Tomi,
+> > > > >
+> > > > > it's not undefined nor illegal input in general. The so-called
+> > > > > sub-black and super-white ranges exist for a reason, and they are
+> > > > > intended to be used in video processing to avoid clipping in
+> > > > > intermediate processing steps when a filter overshoots a bit. There are
+> > > > > also practices that depend on them, like PLUGE calibration with
+> > > > > traditional signals on a display: https://www.itu.int/rec/R-REC-BT.814
+> > > > >
+> > > > > I think it would be really good to have defined behaviour if at all
+> > > > > possible.
+> > > > >
+> > > > > > In any case: I can't say I fully understood all the discussions wrt.
+> > > > > > color spaces. But my immediate interest is, of course, this series =).
+> > > > > > So is there something that you think should be improved here?
+> > > > >
+> > > > > Right, the range discussion is a tangent and applies to all YUV
+> > > > > formats, so it's not a new question.
+> > > > >
+> > > > > > My understanding is that the Y-only pixel formats behave in a well
+> > > > > > defined way (or, as well defined as the YUV formats), and there's
+> > > > > > nothing more to add here. Is that right?
+> > > > >
+> > > > > There are two things:
+> > > > >
+> > > > > - Y8 follows COLOR_RANGE property, just like all other YUV formats.
+> > > > > - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values).
+> > > > >
+> > > > > I'd like these explicitly written down, so that they become obvious to
+> > > > > everyone. I suspect either one might be easy to forget when writing
+> > > > > code and taking shortcuts without thinking.
+> > > > >
+> > > > >
+> > > > > Laurent,
+> > > > >
+> > > > > I did find a case where (Y', neutral, neutral) does *not* seem to expand
+> > > > > to RGB=(Y, Y, Y): ICtCp. The conversion from ICtCp to L'M'S' does
+> > > > > produce (Y', Y', Y'), but the LMS-to-RGB matrix scrambles it.
+> > > > >
+> > > > > I didn't dig through BT.2020 constant-luminance Y'C'bcC'rc, but I
+> > > > > wouldn't be surprised if it scrambled too.
+> > > > >
+> > > > > Of course, both of the above are not just one matrix. They require two
+> > > > > matrices and the transfer characteristic each to compute. KMS color
+> > > > > operations cannot implement those today, but with the colorop pipelines
+> > > > > they will if the hardware does it.
+> > > > >
+> > > > > That's why I think it's important to document the assumption of Cb and
+> > > > > Cr when not part of the pixel format, and not write down a specific
+> > > > > expansion to RGB like (Y, Y, Y).
+> > > >
+> > > > Every time I discuss color spaces, the scopes of "RGB" and "YUV" seem to
+> > > > expand more and more. This makes me wonder how we define those two
+> > > > concepts. Taking the conversion from RGB to ICtCp as an example, would
+> > > > you consider LMS and L'M'S' as "RGB" formats, and ICtCp as a "YUV"
+> > > > format ?
+> > >
+> > > sorry for the confusion. In this specific context, my use of RGB and
+> > > YUV refers to the channels in DRM pixel formats. It might have been
+> > > better if all channels in all pixel formats were "anonymous" and merely
+> > > numbered because all formats can be used for any color model, but this
+> > > is what we have.
+> > >
+> > > There is some disambiguation in
+> > > https://gitlab.freedesktop.org/pq/color-and-hdr/-/blob/main/doc/pixels_color.md
+> > > The doc is some years old, so nowadays I might phrase things
+> > > differently, but maybe it's easier to read for those new to things as I
+> > > wrote it when I was just learning things.
+> > >
+> > > I would classify ICtCp in the YUV pixel format category, because the
+> > > CtCp plane can be sub-sampled (right?). I would classify LMS and L'M'S'
+> > > in the RGB pixel format category because they are not sub-sampled AFAIK
+> > > although they also do not actually appear as buffer contents, so the
+> > > relation to pixel formats is... theoretical.
+> > >
+> > > IOW, we have a completely artificial split of DRM pixel formats to RGB
+> > > and YUV where the only essential difference is that YUV formats can have
+> > > sub-sampled variants and RGB formats do not.
+> >
+> > RGB can be subsampled, too...
+> > https://en.wikipedia.org/wiki/Bayer_filter
+>
+> That's true. What difference are we left with, then?
 
-HEAD commit:    8582d9ab3efd libbpf: Verify section type in btf_find_elf_s..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13baba3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b209dc5439043d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=c21c23281290bfafe8d5
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+RGB contains three monochromatic color channels (which may differ from
+Red, Green, and Blue, cfr. truncated RGn and Rn formats).
+YUV contains one luminance and two chrominance channels.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> We have DRM pixel formats which imply some color model, but do not
+> define the variant of each color model (e.g. the Y'CbCr-to-RGB matrix).
+>
+> I guess the implied color model then implies which API, e.g. KMS plane
+> property, is responsible for defining the variant.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ee77ac023e33/disk-8582d9ab.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ebe52a30453e/vmlinux-8582d9ab.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6868f9db2e2e/bzImage-8582d9ab.xz
+Probably (IANADX --- I Am Not A Drm eXpert ;-)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c21c23281290bfafe8d5@syzkaller.appspotmail.com
+Gr{oetje,eeting}s,
 
-==================================================================
-BUG: KASAN: slab-use-after-free in sk_psock_verdict_data_ready+0x6d/0x390 net/core/skmsg.c:1239
-Read of size 8 at addr ffff888078595a20 by task syz.2.24/6005
+                        Geert
 
-CPU: 0 UID: 0 PID: 6005 Comm: syz.2.24 Not tainted 6.14.0-syzkaller-g8582d9ab3efd #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- sk_psock_verdict_data_ready+0x6d/0x390 net/core/skmsg.c:1239
- unix_stream_sendmsg+0x7a3/0x1000 net/unix/af_unix.c:2329
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:727
- ____sys_sendmsg+0x523/0x860 net/socket.c:2566
- ___sys_sendmsg net/socket.c:2620 [inline]
- __sys_sendmsg+0x271/0x360 net/socket.c:2652
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6d0d98e169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6d0e7fa038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f6d0dbb5fa0 RCX: 00007f6d0d98e169
-RDX: 0000000000000003 RSI: 0000200000000980 RDI: 0000000000000007
-RBP: 00007f6d0da10a68 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f6d0dbb5fa0 R15: 00007ffcf19f37c8
- </TASK>
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Allocated by task 6005:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4151 [inline]
- slab_alloc_node mm/slub.c:4200 [inline]
- kmem_cache_alloc_lru_noprof+0x1e5/0x390 mm/slub.c:4219
- sock_alloc_inode+0x28/0xc0 net/socket.c:309
- alloc_inode+0x69/0x1b0 fs/inode.c:346
- new_inode_pseudo include/linux/fs.h:3309 [inline]
- sock_alloc net/socket.c:622 [inline]
- __sock_create+0x127/0xa30 net/socket.c:1505
- sock_create net/socket.c:1599 [inline]
- __sys_socketpair+0x34f/0x720 net/socket.c:1750
- __do_sys_socketpair net/socket.c:1799 [inline]
- __se_sys_socketpair net/socket.c:1796 [inline]
- __x64_sys_socketpair+0x9b/0xb0 net/socket.c:1796
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 23:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2389 [inline]
- slab_free mm/slub.c:4646 [inline]
- kmem_cache_free+0x197/0x410 mm/slub.c:4748
- rcu_do_batch kernel/rcu/tree.c:2568 [inline]
- rcu_core+0xaac/0x17a0 kernel/rcu/tree.c:2824
- handle_softirqs+0x2d6/0x9b0 kernel/softirq.c:579
- run_ksoftirqd+0xcf/0x130 kernel/softirq.c:968
- smpboot_thread_fn+0x576/0xaa0 kernel/smpboot.c:164
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Last potentially related work creation:
- kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xbf/0xd0 mm/kasan/generic.c:548
- __call_rcu_common kernel/rcu/tree.c:3082 [inline]
- call_rcu+0x172/0xad0 kernel/rcu/tree.c:3202
- destroy_inode fs/inode.c:401 [inline]
- evict+0x837/0x9b0 fs/inode.c:834
- __dentry_kill+0x20d/0x630 fs/dcache.c:660
- dput+0x19f/0x2b0 fs/dcache.c:902
- __fput+0x60b/0x9f0 fs/file_table.c:473
- task_work_run+0x251/0x310 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x210 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888078595a00
- which belongs to the cache sock_inode_cache of size 1408
-The buggy address is located 32 bytes inside of
- freed 1408-byte region [ffff888078595a00, ffff888078595f80)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x78590
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-memcg:ffff888030557601
-anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff8881422b0dc0 0000000000000000 0000000000000001
-raw: 0000000000000000 0000000000150015 00000000f5000000 ffff888030557601
-head: 00fff00000000040 ffff8881422b0dc0 0000000000000000 0000000000000001
-head: 0000000000000000 0000000000150015 00000000f5000000 ffff888030557601
-head: 00fff00000000003 ffffea0001e16401 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Reclaimable, gfp_mask 0xd20d0(__GFP_RECLAIMABLE|__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5838, tgid 5838 (syz-executor), ts 91567346475, free_ts 30811401561
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
- prep_new_page mm/page_alloc.c:1725 [inline]
- get_page_from_freelist+0x352b/0x36c0 mm/page_alloc.c:3652
- __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
- alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2459 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2623
- new_slab mm/slub.c:2676 [inline]
- ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
- __slab_alloc+0x58/0xa0 mm/slub.c:3952
- __slab_alloc_node mm/slub.c:4027 [inline]
- slab_alloc_node mm/slub.c:4188 [inline]
- kmem_cache_alloc_lru_noprof+0x274/0x390 mm/slub.c:4219
- sock_alloc_inode+0x28/0xc0 net/socket.c:309
- alloc_inode+0x69/0x1b0 fs/inode.c:346
- new_inode_pseudo include/linux/fs.h:3309 [inline]
- sock_alloc net/socket.c:622 [inline]
- __sock_create+0x127/0xa30 net/socket.c:1505
- sock_create net/socket.c:1599 [inline]
- __sys_socket_create net/socket.c:1636 [inline]
- __sys_socket+0x14d/0x3c0 net/socket.c:1683
- __do_sys_socket net/socket.c:1697 [inline]
- __se_sys_socket net/socket.c:1695 [inline]
- __x64_sys_socket+0x7a/0x90 net/socket.c:1695
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 1 tgid 1 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_frozen_pages+0xde8/0x10a0 mm/page_alloc.c:2680
- __free_pages mm/page_alloc.c:5044 [inline]
- free_contig_range+0x154/0x430 mm/page_alloc.c:6900
- destroy_args+0x94/0x4b0 mm/debug_vm_pgtable.c:1017
- debug_vm_pgtable+0x555/0x590 mm/debug_vm_pgtable.c:1397
- do_one_initcall+0x24a/0x940 init/main.c:1257
- do_initcall_level+0x157/0x210 init/main.c:1319
- do_initcalls+0x71/0xd0 init/main.c:1335
- kernel_init_freeable+0x432/0x5d0 init/main.c:1567
- kernel_init+0x1d/0x2b0 init/main.c:1457
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Memory state around the buggy address:
- ffff888078595900: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888078595980: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff888078595a00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff888078595a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888078595b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
