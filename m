@@ -1,71 +1,72 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A583420127B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D388D1F09A8
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316591; cv=none; b=Sbw7c6kjuznmtCci8iN2RkDxfv7DFsw3DlBo380rEbR0rSy+3HXfsQnoZJw35oVpcktVB2JNooL8PKHvhghNGGZvYuBl68gqukikjOPSPp/AVwarX7XTup8l13pydntbCWuLogKzr9rNTYsveGcZY/FbtfGSrmOL204s2kkZH8o=
+	t=1745316658; cv=none; b=lme4FeHpUXNlmUQXRLlCZzcJdIVAF1oB9SCZOcPqrasDZbbi2TIMFEIzOwL+vae8/kpKips3cKz7ZuS4qMi8sk/qWd0UVAHxnXYl4LQ9Y3LZ6+d/v6C2prYoYcbi3BNuSeAoyW/8UUC1t/b/00PBJl4v+jy73I7Ylnl9ZecNQhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316591; c=relaxed/simple;
-	bh=gJ51U3OqINc8COkxIxukVEYOMtp81jpnzGm7X1OCfvo=;
+	s=arc-20240116; t=1745316658; c=relaxed/simple;
+	bh=Cjd17WZaONmrhVw68jD6Qssqs4daHsX5Hz8FTe6t92s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lDom+iWlETcn6XgU2ZO5z2H+5COh+XZmygGwHWE/WC7AXpgxes9MJY1IUxNeFROXj+Fm1vaCqmbNnvVmQfxvk9xNeNfiW/x1p/FL6/sGPD57Y6gTi0G26Wt5QdCJ+ZidecVQcNgwX8PGIXwDliHFjyVX8yWr6I29aAGsxjL+fr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zmgkONSZ; arc=none smtp.client-ip=209.85.221.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vtj2iBI7Q2wXuN2R/pciml4U1qrnd1gEZCz/Vo+gIlkc18dXxB2e2O2lf/ZNbzF3nYQtuKN4SZeZuvyM0D9HrUeYaZE/ScqDJ5OI95iWmHHcxpcLMkPj+fH4014cZ3LFV9FLXRbD+GDGD0+K6+mG+DkGBU/EJbvQ4G/oqFCMmA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aVyXQnha; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zmgkONSZ"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c1efc457bso2977696f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:09:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVyXQnha"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2254e0b4b79so73746215ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745316588; x=1745921388; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745316656; x=1745921456; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dp1ZZcaQjMA4BnCcS6OmQTLRZmI/Eud1+9lMtliZJGM=;
-        b=zmgkONSZM1kY/CQ6n4fXRH2iMXVs98zqQcBa9XplNh0MDuSZStpWNZa56A1OapjMb3
-         9idb0Pk8xscrePdddUq4+5f5j/nK5mGr2UqUuAowGboPlgdmpzYNkZBlhPmObrXyF0x1
-         EFFzWxWwaNcvSHB5R3Fff6SBZLoOLkaP/+pRz5yPHjDlNBuC084OPd09P/6OGtc4H3Qp
-         jX99bsB83Cu5IxpaMvh3koFscSWROKNx5OOyhtAEG2lO/CpOI9MkFh4z9PDx+s79glBZ
-         ecdPiEKzKEAyRu5ngJ3Mdp0nFxTtj3+IaJ7ArsnIhsfMRDsU9anFr51GnLVrONwH4Bfz
-         YwEQ==
+        bh=t95g/lR8j0dWt1fCMqN6PrwRyQPmObNHmaTJOEuO6uc=;
+        b=aVyXQnhaqVhH3PtOucaprdub1ikDAdigUlH7ixSEnwQFlYvdoK4v1Mg/3O6cBkKJgj
+         p961DjeUbiHqJC+Net8qOOt/ftkt1YgBZXeMDOSUaeipipf0TSc4r2R2vfgUDr66VU/N
+         fKCBIYx7TBd2VG3IQ9VCFsnYvbqqjLIlf6uawAtw7CZqJpQbxKzQbGdl4rIwlUz8XqCq
+         E4p60bWpKKWb89KvAWUGvOKh9ioue5UsiwDs1rw01zAGP1NgOw+Kx3cjmEnWBcZ7Cbrw
+         PJ4UHH0F1i4sm7akyk60oqXpIe4v6PpDJ2W1LNcnENnu+SE03FEQeeb4itdrq2d4Iey1
+         3qvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745316588; x=1745921388;
+        d=1e100.net; s=20230601; t=1745316656; x=1745921456;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dp1ZZcaQjMA4BnCcS6OmQTLRZmI/Eud1+9lMtliZJGM=;
-        b=ZlLrcZNcHLF9XWKHNPHZ1wYdUimJBU52z4foPSLzNpyFnKuwFaHqo1XK+DNC2cyy83
-         nlGK+WZvVoqmqe8gHV5EI1uRjsEEldwCMgJyPRV76J1wqCQVRuMz0lfnrGnA1xl47tTC
-         n+RcWa7JM9i6lJhnpi0vjl1AarjUdDRZ/hDBuf+DIyFrg5Or/k9uITyV5zmB1spnxfu6
-         49XBnkPLzPDMXLSw0A42NVPsqITvzliFqj6q0zA6ozxx88pXrsRiqxMaIb4u8ZRWqvKV
-         G6e2GytgpPLf8O5DbuSsaChzrB7l8hx2B8mwLQ7xjZunm4eEirRUu3vfdKb8jZ5R4IuY
-         3Mrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFSqx3XO+PELpG8nW04JW9P9xaFB7/dxtA6MwWsymfyFKj9BzWoWI63yjVNC5ksR/VoD5Z4gJkiygIoAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyevQHV2UKbH7S8PVOFJeNZWGGHsVfp+Cct45txt17p+jJ27oQ
-	O3fLhU9qpB53NN0lnGfT6b84QRnRHBLw3UHWZIEGmlsV/T8E7hgPIuVCJ2JvHjI=
-X-Gm-Gg: ASbGncsEvKwNGdHs66TFF8UILE96yrNR1rnRZHI0aACPu4/21XtFRGdCajZQ3SaDXok
-	eWY823cTqCQq01vGMKxcvnWHQbRyiS63YCMc40JwC9yItKaLj3caThGNefiRhwbeEC1pEq0nOh6
-	hXWDUnL7jnwsKw/8YTk/iFFj0fvRTMWzp6BaFD5xATCFt4OtBrd1obl6BurUOjGjtRvM/5yfYDY
-	4VaIWmL9lKma1RyseVIYsS2XgZVI+ZmXHHbTP1VgU8lhceR4fsU54lyGU2rUARanpwsZCiTiP0f
-	Nz6gwHV6iVf2pYC/tKLC9wb7MVbG1i0B08E6clPenakffGxRLB28Z6ef
-X-Google-Smtp-Source: AGHT+IEmHLJOQlOcSRcmVdEtr0KqjHjjJr7duO4pcXYqbZwwqR76CD1k4A3+rfbNuIehIKutY/tmZA==
-X-Received: by 2002:a5d:59ac:0:b0:39c:1404:312f with SMTP id ffacd0b85a97d-39efba2cb94mr11712313f8f.1.1745316587993;
-        Tue, 22 Apr 2025 03:09:47 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43ce2esm14951548f8f.57.2025.04.22.03.09.47
+        bh=t95g/lR8j0dWt1fCMqN6PrwRyQPmObNHmaTJOEuO6uc=;
+        b=rI+yYVQnZQNymOaDMqx9jvdxr4KsNnydHm9wgzbf8XoQ7I6zioP0bqm4L6lVEc8dJ2
+         +HCMn6BddXFJkfLDWvdCYeH345AKmNoHF2U6PV6U1SnSdFt/dY9PrDzjFUvqkECSKRdi
+         WmZuCFa4uav0tZeHAp3vjrp8TzywjwrxMxL4XMox/VltrjhfUTqdbdTi5QH8se87SKgH
+         Qk7tAZ8yVs73bRloCFmtsBhNqvd3y/6UHCjQ6IZ+2MzcfMCO7itf/0N+hk5oFxhvy2h1
+         SlmwKppA+/mfbA6IKQy7zyCdPuJbDEeJ77zoqIT6t+KUpdtiSIHfsxX7bVCC7AQ95BuR
+         P4Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBMTBbLZUur4MiLkL6WZyrzMuNVQjsZoV7fPrFMqUzy05yNJbBwDIyFURuDeLSs37GPHpPSQ6iUvpchnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQeU1Ai+weWyzzsNfstuFRxdmHgupYvI2C66KaUk24Btt1OQeP
+	vkgdHfH0piJPS+uzf+z+YvgDoH3PS9DeHG2Kr1FAmLxmCLDh9zzn7An1ZrrLiGI=
+X-Gm-Gg: ASbGncuZtcXOhJEwY0u3zeuApgxGruWMsm1wH4I2gYRHxe5mNWATYCT8nBX5bAOhjtS
+	zPT5l0QtvrE/+IHdWw32QJHj4+m9dm7xOla/pdoay5qSPYMDqsVsImvEPcWyXJLpyS1VlQDanyV
+	dANUY5MtPrf7d9Y/tr/OnMZfQCZmx4qegPejN9zFir/8SsWtg5zaChfqktcxgnInShG0caTlNKo
+	44qLeq/WP3Jczmy7I/Qr8hoQvTp63hOA5RPpcnFZI+PS1Oo+PBAgYQd1dmM07KnS8uNwXg2in1u
+	+Wkec3fmICUB2Fc8AzrGww/J08jqSB47ZDGufcZaZw==
+X-Google-Smtp-Source: AGHT+IHx3LxCoR15j6pU7YV6La/DWIC9xool04WI58xGPvEE97FATAcHmmOW/Bqbgnnhga/h2+yG3g==
+X-Received: by 2002:a17:903:22c9:b0:220:e5be:29c7 with SMTP id d9443c01a7336-22c53607de7mr229581345ad.39.1745316656093;
+        Tue, 22 Apr 2025 03:10:56 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ecec0esm80925705ad.163.2025.04.22.03.10.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:09:47 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:09:44 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: gregkh@linuxfoundation.org, jic23@kernel.org, lars@metafoo.de,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, Michael.Hennerich@analog.com,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v3 0/3] Fix and refactor output disable logic
-Message-ID: <72fd8919-8413-45f4-94fe-277719192536@stanley.mountain>
-References: <20250420175419.889544-1-gshahrouzi@gmail.com>
+        Tue, 22 Apr 2025 03:10:55 -0700 (PDT)
+Date: Tue, 22 Apr 2025 15:40:53 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: webgeek1234@gmail.com
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] cpufreq: tegra124: Allow building as a module
+Message-ID: <20250422101053.kjg4dctendvcg3hv@vireshk-i7>
+References: <20250421-tegra124-cpufreq-v3-0-95eaba968467@gmail.com>
+ <20250421-tegra124-cpufreq-v3-2-95eaba968467@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,26 +75,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250420175419.889544-1-gshahrouzi@gmail.com>
+In-Reply-To: <20250421-tegra124-cpufreq-v3-2-95eaba968467@gmail.com>
 
-On Sun, Apr 20, 2025 at 01:54:16PM -0400, Gabriel Shahrouzi wrote:
-> Patch 1 includes the initial fix.
-> 
-> Patch 2 refactors the code to use the out_altvoltage_powerdown ABI.
-> 
-> Patch 3 adds small improvements by minimizing the size of types and
-> doing a redundancy check.
-> 
-> Not sure whether to include a read function for powerdown as well since
-> all the other attributes only had write permissions. I can also do this
-> for the other attributes to help modernize the driver.
-> 
-> Changes in v3:
-> 	- Include version log in cover letter.
+On 21-04-25, 12:33, Aaron Kling via B4 Relay wrote:
+> +static void __exit tegra_cpufreq_module_exit(void)
 
-Please don't resend patches the same day.  Give us a chance to review
-it otherwise it gets split across multiple threads.
+Shouldn't name be tegra_cpufreq_exit() ? Just like
+tegra_cpufreq_init().
 
-regards,
-dan carpenter
 
+> +{
+> +	struct tegra124_cpufreq_priv *priv;
+> +
+> +	if (platform_device && !IS_ERR(platform_device)) {
+> +		priv = dev_get_drvdata(&platform_device->dev);
+> +
+> +		clk_put(priv->pllp_clk);
+> +		clk_put(priv->pllx_clk);
+> +		clk_put(priv->dfll_clk);
+> +		clk_put(priv->cpu_clk);
+
+Shouldn't this be done from remove() as the resources were acquired in
+probe() ? tegra_cpufreq_exit() should only revert what's done
+by tegra_cpufreq_init().
+
+-- 
+viresh
