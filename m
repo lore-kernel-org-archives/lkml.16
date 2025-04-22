@@ -1,263 +1,444 @@
-Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D637238C16;
-	Tue, 22 Apr 2025 11:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319641; cv=fail; b=qwQPe8xE05SRBB3vNIUWlODvNM3Cct0goyWuhqDUMgYCfriDBoTLVPln44v617M8iRD8EBgR3HDsEQx2SjwT1y52bvtm6BkAZE2EXYf3lsPA9KE1KIca9sFICai6ivA0eHvEqF/f2DAlrkmQ3HIFYORG9TxyOhoSA9WC6OVX6+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745319641; c=relaxed/simple;
-	bh=hHAXQVFqPL5FbZmffuFVP71mdE9bSYVMmIFYCSVt5iU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=nsYyoWNSepuZZjzXh6PcGKIXYRmMet6CmWpv8BiA1HE95rfL3r1dwqZazaD24Bd/rqSwFLEwAGYa68t2yWed46FrEEW7o1Z2RaX+HL6lj8WY/CL5qsUhErB60cgZ69epYYPkt9YTup13e9SeDtZHMYvMCo0kyfVjGaDxMXB5bwg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=BDfZc8Qv; arc=fail smtp.client-ip=148.163.139.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6E1266EF1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745319666; cv=none; b=b47Fh1mMRq90shbuJSf6jt8VIbh8P9Hf3zecnMDEXFJzZ8ESv8aV4pruhKnw09KJwEhduVBcDYQnvXfPOFV6QIrI+TFoF3zYkdB14SfKlpIBj1hAn5/Epw8m/sVKDCSfpsZBYXqTxpm1pVNTyzjRc+DdNmsnN8N1CaNSKy2z8Vo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745319666; c=relaxed/simple;
+	bh=NSdF569dLqOyy91WLPZ7wYtdTLzRbNWztWhP+ZVEtr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fo9t7iKhczqxpglhfok5IZDcR3jWEnAssJ+kRLdqkQXFpeqsgKeROabf4HYTcxNxMwtwD9DF5FCo4Ig4Oop9IfGF+KhE98FebOdJ/2LrvGXqIhUNt/j9wx+0NUOBYsZBUJU9cwfR6kKcEzm060BD53QCljjMhcUm8/YVbpf7YbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FNBzcehE; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="BDfZc8Qv"
-Received: from pps.filterd (m0375854.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M80mjL030181;
-	Tue, 22 Apr 2025 06:09:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=hHAXQ
-	VFqPL5FbZmffuFVP71mdE9bSYVMmIFYCSVt5iU=; b=BDfZc8QvqRd4A/z/ipxYf
-	lEetUyLgSuv5sipOjENrfhIk4GL8fph11rFKK0aKuYeYYuyL1W8HeSIDmAwD1juz
-	ND9hSdHEILuTtFafj4/LVOSo5hFHRJHWVWysVbAdf0rdcctjAPNjM6WzV9DB3SM1
-	1wpHlnuSckqeQeePi/9cEQdA1K+mHJTsYMtYb1dkmYZvhCjsWSpdjHiD7KDeXAPZ
-	M4b3aXv9gscFpUM2450jno/6bVcUb2Y+hfg/L9+ZhRFA9kTseOPC8kj4/7e6IG1q
-	zKEEMdos+1Gi4AfzbqHQeRoHHC2oxTBKO7K0lGKFq4+Yu3Khe7eZ0wP6jWx4o20R
-	g==
-Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazlp17011027.outbound.protection.outlook.com [40.93.14.27])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 464wvh9rf7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 06:09:45 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LjfZsMECgmgpQc0UUqqrDNaR4IJx2ChHhjY/K6/e0ncnyboz67Q6hB5WErFgp/n964WKLRZs3CHDh9q0QxytJcNQa/mpIY2Wbezg8mjWZNthqb+7nIk93oMmdr31wF18f5/8ZOMMF2yQ0Hv3eEV9T6yPE35t3lOxi5TY097k7wBkvafa5VKtyLGlc7sPETLXYmqWdMMeH4+jxwnOl/QvHejmtEQ54CPj73yfsojwYxxTbZxBjhisB7n/DOo+PWv4zaLqyBlMvMRnS8N3Uec+BN0v9sWpD+NMoGhPtgOnGwGetyDRAAj01CtZPfms1VmXmBLZ2TV7pwlmVeD9emuLmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hHAXQVFqPL5FbZmffuFVP71mdE9bSYVMmIFYCSVt5iU=;
- b=TkDaITZiucCGBucrXZz6QxVE72Etnqqh7Sj3KdldbbBO+hv4zoyt462iPhjH/iYw+w9ERYbrNTozJ6pyRfjisrQpXfdPP6vIJQnR0Hr4/wh/CNGoW5cTSoVZqvkiNKdIsBsIoaWZnIMJd9xV++gLw2FCFNrSOWBIKBoaC9+QVgQJM+L/OVzkuRtTRKdsSXzK8KIH/CNOCGHABo99hIsArsvHzHWykTJzIBAadlDw/Mf0QyWJ5hdgjdwr92n6yrdO9iePqwP8+TbIFoxXPwBzFYa/KnO//81So0oOxtjmPGAIuMXTTpywvcIU6YHQrE8RxA8+A+PGryc44Sxdeh6NWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from PH0PR03MB6938.namprd03.prod.outlook.com (2603:10b6:510:16c::9)
- by SA1PR03MB6498.namprd03.prod.outlook.com (2603:10b6:806:1c5::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Tue, 22 Apr
- 2025 10:09:40 +0000
-Received: from PH0PR03MB6938.namprd03.prod.outlook.com
- ([fe80::966:43bd:a478:b446]) by PH0PR03MB6938.namprd03.prod.outlook.com
- ([fe80::966:43bd:a478:b446%4]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 10:09:40 +0000
-From: "Encarnacion, Cedric justine" <Cedricjustine.Encarnacion@analog.com>
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Delphine
- CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: RE: [PATCH v3 0/2] Add support for LT3074 low voltage linear
- regulator
-Thread-Topic: [PATCH v3 0/2] Add support for LT3074 low voltage linear
- regulator
-Thread-Index: AQHbsreFwPubPKdwPkGHRtHLo9U/WLOuG3aAgAFUs9A=
-Date: Tue, 22 Apr 2025 10:09:40 +0000
-Message-ID:
- <PH0PR03MB69384B9ADED36F0E0EC5C73C8EBB2@PH0PR03MB6938.namprd03.prod.outlook.com>
-References: <20250421-upstream-lt3074-v3-0-71636322f9fe@analog.com>
- <a10230ba-1ffd-4dc2-96ce-3aaee2e30015@roeck-us.net>
-In-Reply-To: <a10230ba-1ffd-4dc2-96ce-3aaee2e30015@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR03MB6938:EE_|SA1PR03MB6498:EE_
-x-ms-office365-filtering-correlation-id: 47c92987-6f09-40f6-055a-08dd8185cb75
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?MldEZGY0NlBRZG8xUTNmeUdvMy9pRWpocHhVcFdlN0Z1WTZhUU1CZzFqNW12?=
- =?utf-8?B?SGRrMkV6RklRcVZrbWYxVU0rbjYzb1hMM3QyL0RnY21TK2twdFlmWG5jUi9O?=
- =?utf-8?B?Rllrc1QraVBsUmNmYWJIM0hTVHlFakRST1lkek9ZSC9MQVo2ODVNek0rU0x3?=
- =?utf-8?B?MDJ2dUJYaHduVVpUWDRscVgrWklwNTZRRXlyZDZFak9WMkluZWI2dlBUWldz?=
- =?utf-8?B?NGxCK2hFVnFEeFhXNjNPUVJsRDV1QmlCS1M4L25VTTM1ZE1ITkJqZ1d1Wits?=
- =?utf-8?B?Tit0Rkx2L202Y1l6YzZNVFo2dWlwQVZwVlRIS2x1RmlHMlI0UmFhQXBhU1ln?=
- =?utf-8?B?aTFwRjB2cGF1R1JPdHRwR3poOUxpSHkvOUViUkJHV1l3TnNtU0NxWk9DN3d5?=
- =?utf-8?B?bzVxcFFld1NxRzBZUWJEV1M3Q0JKTTVUdXVrd2tlTXdwRXF5Y3ZyeUhTME14?=
- =?utf-8?B?SmhPQ2hVcHhyZ29HK3B0eFlzMkkrMGxiOVZYWHRWcEVwaEh0OHdOeUpiT1Zk?=
- =?utf-8?B?QVV2bVgxQnRqNkYvK1JKOWNtaHY5SHBtWUFvOXhzZ1lsZmhMalIzRlJ4SmlG?=
- =?utf-8?B?RjhYVmdsWDZvSTVTRDdVeWhZTEdzZHJxc3Q2bFlKU3Jpczd1RjVPQTRHZzdO?=
- =?utf-8?B?K0c1cVZCZTFEOXIyZkxjY0Y1M1FoSEpiWGdVMFVQR3IxR0JrL3FySG85ZHpM?=
- =?utf-8?B?ZFhKZDVkSUo3MGlSS2dUK24vTEZKSVAvcklIK2gra1I1MTQ5eWpjai9NRXZE?=
- =?utf-8?B?TVozSGxkVndFb2cyNzJ2S3ZZYk5McndteElicDRvNnNabUZzcllLTC9qWU1S?=
- =?utf-8?B?b3hpbDZSNmlaNnNqa0I2NXAzRzJTeElrYnF2TG9ZcXM5MFNnczRySWczQzdv?=
- =?utf-8?B?aVRoL0h2SFF4VTVlZ0J6T1VRa0lTU1FDMjBtOVFmRkx5VkkzL29UQ09SUVo3?=
- =?utf-8?B?WHJ2RHhOQkplZGJUQ3l2Rmo2aldNN2w1T3FPTjRJK1NUdkJRN08ya3NoK0hJ?=
- =?utf-8?B?RFR0VTB0REFNWnFGYlp2TU9ZekNEL2k1WjRrNzl1WVd0ZGNBS3RBcUlmR2JM?=
- =?utf-8?B?aG9PKzM3RktJQWtiQ2xkOWtxbFdpRUp3N1NGbTd5Ky8wS0xqM3BTRDlQYUph?=
- =?utf-8?B?NkFjSGtWRVUxekMxbHA1S3FLNWM3a2dsS3VwM082UXVQaVpDeWk5eWhIbHMz?=
- =?utf-8?B?dmJ2bHdSeWJZMit5K3FUeHdSY1ZvUE1CeEFvYlI2VmE0bXdhd016ZWprSG5x?=
- =?utf-8?B?amtQY0ptd2ZYZUdZYTdBZHUwR0IzTjcxSHRWbUl5Q3UxOFlOa0VhM2drQjVh?=
- =?utf-8?B?UkJHRHFGdmJBVE1vTGM3UDh6djUrSEpHSWNaOExZMGNWREc1bU1TYjNUR0Jk?=
- =?utf-8?B?M2pPMlZhK25NSG90ckk5WVZzZWpVN2k5WVphdUYwRmIxeWZXSi84R3ZxeHNu?=
- =?utf-8?B?cHJ2aEQ2RnY2NVNQZHBFa2xvOVh3TmRZK2xsSUFOS1JqQ0NOSTMrUWpoaFJX?=
- =?utf-8?B?Q25XeitvNFBqdGdYUzljMUdFNS91bWt0V1gwRTFhMVk2eFBPSENwQWcrdWo5?=
- =?utf-8?B?UVlsb05YcWJNekROVXhnRnRVL2F4eXpXZkxBSEE3OGtXWnhPSkZ3TjhuSGg2?=
- =?utf-8?B?YjJGc2hZQjE5TmJTN1c4amxzSWpVbnErRGE3ODhDNktwdkk5K3FRNHBnUFdT?=
- =?utf-8?B?WkFZR0J6eUJpb1BYbVNHVHJZNWFnN2hLQzk3bWJtL3ZkMnVnZG43UWFEVS91?=
- =?utf-8?B?N001Mm5sbXRmMXozZTY3dDFrMmYyZWxmYXRBaXRsRFlRTUJLUUFaSTA0dTc5?=
- =?utf-8?B?SlUrL0g2bXJtZC8yL2xmb2VCbmlRWHNpN2o0dWVsbEUrbmdJUDZsbDF3cjll?=
- =?utf-8?B?alAzbEY4S3pFMEV3aVdlZUJPQ2lCcHRXOVdtL0hFbWdWbSsxaWwxL3kzQnVk?=
- =?utf-8?Q?wNEjMVduFac=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR03MB6938.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WEpuWTRTVXJFSDJ1RXVZbWVscTlncXloWUFLaG1FUStKNG9lbXZvblFXU2Zl?=
- =?utf-8?B?QU5LS1hkaHk1K3hHWWF5ZlZnOVVJb0xhUDNEc2xvWXFnRmFTMnlvZC9lSTdJ?=
- =?utf-8?B?Tm1nZ2Q3dzJHd3hHeXRXMGtIVnY2b3FUdmpMK0VFT1JicTFVS21RMyt1eEJS?=
- =?utf-8?B?aElzVmtzT3dZTDBNRmpQcWRQZnFTYzdBVlp6V2YwTlgxUklJSWV6Q05zVWNq?=
- =?utf-8?B?MVpKNHNFOEl3QXZwSVVnWldPODQwN1VWSUQ3M3pUTHYvWFNHNE5IdzFvMlJs?=
- =?utf-8?B?WUhNeXNqY0YzNGZUOTN1dC9DNTdxSXZIVGxzK2RSMTdXQlNhNXFTd2hCSlBV?=
- =?utf-8?B?UW9MQ0pRWi94ek1SKzYxL1NVcDFiSUcyamttSGZpTm84NVRrVXhWUkdVLzdY?=
- =?utf-8?B?Z1pQKzdyZmwyakVrY1JVc1VMUEtaWDFSQkdCUXA2c01XOXpONVdxQ2xJVG41?=
- =?utf-8?B?d3JBS3duaG15UXpEeWdCbXJIT0RvZTE2YmNkeGZaMkRXOW1XaWQ3WDVEQklM?=
- =?utf-8?B?aGdqUm9GMVhVc0J1WGYrSGIxNStWbCtkUlJucGhqbWlReFBTTHhQc0k0a3Mx?=
- =?utf-8?B?bFF1Z3lpWjdSRVhseDk5cWVPRHQwN250czVyejhrb1VQd2JVQ01uYUlMZWgz?=
- =?utf-8?B?UEZHQmJ5dDExSHQxRDEyVGd3eDYvajdGRmNpUzhRRFZnZjQ0QXZRRkJMQ2M3?=
- =?utf-8?B?a2ppUWtpcjdEZEt1ekRSdytRbXFEZUtWWHlrUVFxMUN3OTY5UGpVUEZsdDV2?=
- =?utf-8?B?akZVZ2hqVW1GNXgyamhhY2pFYmgyOWU3OHgvUUxWYmhtZ1E5RUhPT1BOTkRz?=
- =?utf-8?B?K1d2UnBFVm5iaEVndjRXSTBWTmtLeEF3dmtCSTFneGpzQ2xSMFY1MGYvbFRT?=
- =?utf-8?B?T204SHdjaU8zSExnMmhhYmZncmplbHhNZFc0Yk14VG80cE9salhXeUNGUWZS?=
- =?utf-8?B?NlJDMGhtS1NiQ3F6MUNteVVMWkpHdGo3anlsM0lXSWZDNnhrd1BYRnNtZ2hB?=
- =?utf-8?B?bFFka3FhVCtmRzVRMGhmci8zMjRrQUJscER1Q3dhbnArc0NQTXhDNG03OWhD?=
- =?utf-8?B?ejYvQlNpNlp2M285TXZSUE1RT3JLWG5uUVg1WUdXaWNKUHNPb3hMYmgyaERj?=
- =?utf-8?B?cW54MW1aSk9uZmJBSU9EanZMZFRKTFhXZnU3a0F5OXJTZWhUQzlybi9WUWIw?=
- =?utf-8?B?RnFlV1AzOGUyYjFYYUJvckQ3MVQ0UnJrZTVFT2twMkdyZmJJaEk4YzNwSFBQ?=
- =?utf-8?B?TVZ6dHZ3dm5saVFkWGRqUGdDWWpxeDBBK1o0c3pucHpKS2ZReVZucFN1VnlU?=
- =?utf-8?B?UHpDSjV3bU4zUmpBdFcxRDFjblpNc1hVU2hXazRiQUo2NTlDMDBIeG93bUNE?=
- =?utf-8?B?ejhyQ3p0a0VWWGhZL1RYMWw5aW14REdmTmM5WUl0dWE1aXNzdWdtMStKM1No?=
- =?utf-8?B?eERkVHVHaWgxekxkTkYxU2wwc3RLcEdnTlpxeE5PNm1selVDdmN6L2NQdVRB?=
- =?utf-8?B?b3VyWkp6QW9aUkE4WHU0OUMzLzB4YlRiTXhRemFkcWxPeHZCNmFpaE1vaG42?=
- =?utf-8?B?RThKWENJUWNLMDVHbExMcG9OcUFIZm9wTzUyaXg4eG41YzZZK0RNNXZnUVhI?=
- =?utf-8?B?M0JTMk16RktzR0VITWxDZEFPdG05QWI5QzhKZUxsRVpHNk1qQ1VOYm85bmlP?=
- =?utf-8?B?dExnNjFGaTFBTUNKVW5uUnAyYTFKdS9oS0k3RkduSDZlZUhZbXlQcmRyOWY0?=
- =?utf-8?B?bTgxNWF3TlhZbTRsU0dObkVrWjk2L2RScE9ncWh6S2V3L0VUVE4rQmZXMDJN?=
- =?utf-8?B?eUg0cExyN0kwMTNBV3k1T1k4SFJ4RGE3R0t0MklUMVVDMzdZSXNqNzRlUCs0?=
- =?utf-8?B?SlZmaWxkK0hReVM0YnNHM2p4Q0xKVlVVSXdjcVhxVWVobm42UHUwOFNrcTRU?=
- =?utf-8?B?ck9xT2JGaHd1bUZoNUhwSWk4b1hrMExCOUxmS3praENSaHpsTTBwZEFzbjFD?=
- =?utf-8?B?Z2w5eStYd1RJRFh0TERvVkxqSkNNYW5HYTM2aWRYZGpFTXBRU1prNUtsUWpt?=
- =?utf-8?B?YVF2aUZSMmR3Y3dnSmRCYWJJbU5ZTTRYeVdJZ0l3dHdNcFNCdG9PSlJsZEg4?=
- =?utf-8?B?emFLbnI5NnVxdjRNQXJ5Y3RyYTRNempGWHdqMHVYeTB5bXJqaG4zWEwzWVJN?=
- =?utf-8?Q?SPxIRMA3Q9OCBLZaMACppkY=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNBzcehE"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54acc0cd458so5799690e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:01:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745319660; x=1745924460; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=adznCSzt6/ObIR64DLpghowThib8K3mkItVvxppG+i4=;
+        b=FNBzcehE3COGd5GaufjdgB7+kQSpRtOLi/brVZHY2Cgn6XrORuxDkMopCzMsBsNItU
+         70qNzUKJCRsZ5knbTTrcgFXBnPtulgogd64Hr5Cva08rEr/dNxCR3XKqHYPrA99bSO0B
+         xFSkYdpDiJfwc9GQavfiPFS9b5J+9YmL6ygHxW4uxAnOg9JBa+Q2cwMbA2s4iFYha9UU
+         B0yD22LIsNZCRBvYeQMLEwVkTCsHf7fM5U3RoNz/xyz/TjMoZyROhHwj15HQXy9nfZ00
+         qz46RO/BO7h8/hKWm8sefy3J7arF4NR2wiim6vggObtGMgLrqePadHLKyM/jBhE94Rm0
+         80SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745319660; x=1745924460;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=adznCSzt6/ObIR64DLpghowThib8K3mkItVvxppG+i4=;
+        b=SfaE88gDZKMhOApT8C/IdzPHDa492qIx23U1OzLZciXpl5on0nMAbwQzxyhEXcu8N+
+         BziFcVcqnfM3VlcmBBz9O/KuMBVMw2TDBiWrQitas2Qo3WEhc1zgR5GZNCyhjzMyN4n0
+         HcFRVp0huOa3NBtujOfus3GVyow5fVDYd/HgubkQFxinMjb6vv5U2JIE1Md4YcmbJmup
+         hrZUT6xMa1mGyj/K5jEg8yBALhKkOh+AZv1Im3wz1tizJt5gV/Ms1sdXm2Xd4XcaJLbg
+         FiWuHpjCaubccd4+cDcFuK+gB0b3JakTLMv6YugwuTUZPou9KW3cXagcrviU0lxe8cqm
+         2Y/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXyKM29IDDdTCdHEUpw+9hoalyNferDfnQhQGxlRUMWJMZ/U0trWMbuKEnDVZ4p3YavUOAr/43ytlgH/Fo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAEOlKhRasu1xhx2UF+JaFfkYZF8vEa1rxBaCdSBV/jO233hgI
+	K7Lt55h+lk6/QPNhMtv4GFeanPhyno6XuknhijmXYUA7jjBwpS46
+X-Gm-Gg: ASbGncv63QOS5H/fORl3+9F4Fz1lrohtIRw32ce6o84ahSaJgdQuUzwvY9jw3VkKIIn
+	Om67PbYa7031JCkLAgv/F9SyIefVXZ+40tXoGESyaDDwcUU2YwNXI6Yl+R9Rsloj328npqhSiHr
+	7m2Ff27WXpkgm8CRSsyex33D+jljN5r+saxOT2p5i3+6QHr+7lPBgZ60Ad3aLEma4HSpEOTH0VU
+	Pdq2KPF5pEdR/I9iuCoZ8Se+YJ9jDBqEdUMTsb2JMIjzD8fgYOmmo3oCloEibGlX18Rdys9C8Yl
+	z6HlJNWP3iqXLzYM/nI6nS7EbZKS9jtbtYE=
+X-Google-Smtp-Source: AGHT+IFH64vXs9Z5X8ld0XCbJzZBtq7/amrOMDyGpsZmNyKsL64xji9OCrx+VWMHCuN/8oW9/SI1qQ==
+X-Received: by 2002:a05:6512:a87:b0:549:6451:7e76 with SMTP id 2adb3069b0e04-54d6e636f1amr4372571e87.33.1745319659226;
+        Tue, 22 Apr 2025 04:00:59 -0700 (PDT)
+Received: from eldfell ([194.136.85.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e51a8sm1166450e87.178.2025.04.22.04.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 04:00:58 -0700 (PDT)
+Date: Tue, 22 Apr 2025 14:00:55 +0300
+From: Pekka Paalanen <ppaalanen@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250422140055.64b98cc1@eldfell>
+In-Reply-To: <CAMuHMdUcG_K=5RHMaq9vTpQo8dPpLAvXfxP8XuzGnx4Nte7++A@mail.gmail.com>
+References: <20250327112009.6b4dc430@eldfell>
+	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+	<20250327175842.130c0386@eldfell>
+	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+	<20250331105446.098f0fbe@eldfell>
+	<20250331082135.GB13690@pendragon.ideasonboard.com>
+	<20250331135337.61934003@eldfell>
+	<20250401162732.731ef774@eldfell>
+	<73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+	<20250417111315.62a749e5@eldfell>
+	<20250421145039.GA19213@pendragon.ideasonboard.com>
+	<20250422121107.572cb7ad@eldfell>
+	<CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com>
+	<20250422130137.2658c646@eldfell>
+	<CAMuHMdUcG_K=5RHMaq9vTpQo8dPpLAvXfxP8XuzGnx4Nte7++A@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR03MB6938.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47c92987-6f09-40f6-055a-08dd8185cb75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2025 10:09:40.0416
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Tw+NPvzRlFPsMdq/ZULIeAZ8lUUI+OJF+F9HBD5DnsPIY4j1b82WrWWxDTqOpqDTpkldIjGZzv18u5zr18cN1yp6D/TwqVqhC5urXwvArIC1NkwfAOXa8THUrbdZf4Yo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR03MB6498
-X-Proofpoint-GUID: YY5yYZMkr5r90N_ojIrXwapDOBABbNSW
-X-Proofpoint-ORIG-GUID: YY5yYZMkr5r90N_ojIrXwapDOBABbNSW
-X-Authority-Analysis: v=2.4 cv=FPIbx/os c=1 sm=1 tr=0 ts=68076ae9 cx=c_pps a=B/o3nIjBIeux7E2B8s4M4A==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=XR8D0OoHHMoA:10 a=uherdBYGAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=gAnH3GRIAAAA:8 a=iox4zFpeAAAA:8 a=07d9gI8wAAAA:8 a=cPYzWk29AAAA:8 a=D0LpErylu6cNY1i-q8QA:9 a=QEXdDO2ut3YA:10 a=WzC6qhA0u3u7Ye7llzcV:22 a=e2CUPOnPG4QKp8I52DXD:22
- a=oSR2DF9YFqZEN4IGatwP:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220076
+Content-Type: multipart/signed; boundary="Sig_/Kwn83vJATXbqj.Xg.12U9HC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-PiBGcm9tOiBHdWVudGVyIFJvZWNrIDxncm9lY2s3QGdtYWlsLmNvbT4gT24gQmVoYWxmIE9mIEd1
-ZW50ZXIgUm9lY2sNCj4gU2VudDogTW9uZGF5LCBBcHJpbCAyMSwgMjAyNSA5OjIzIFBNDQo+IFRv
-OiBFbmNhcm5hY2lvbiwgQ2VkcmljIGp1c3RpbmUgPENlZHJpY2p1c3RpbmUuRW5jYXJuYWNpb25A
-YW5hbG9nLmNvbT47IFJvYg0KPiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+OyBLcnp5c3p0b2Yg
-S296bG93c2tpIDxrcnprK2R0QGtlcm5lbC5vcmc+OyBDb25vcg0KPiBEb29sZXkgPGNvbm9yK2R0
-QGtlcm5lbC5vcmc+OyBKZWFuIERlbHZhcmUgPGpkZWx2YXJlQHN1c2UuY29tPjsgSm9uYXRoYW4N
-Cj4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD47IERlbHBoaW5lIENDIENoaXUgPERlbHBoaW5lX0ND
-X0NoaXVAV2l3eW5uLmNvbT4NCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gaHdtb25Admdlci5rZXJuZWwub3Jn
-OyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pMmNAdmdlci5rZXJuZWwub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC8yXSBBZGQgc3VwcG9ydCBmb3IgTFQzMDc0IGxvdyB2
-b2x0YWdlIGxpbmVhciByZWd1bGF0b3INCj4gDQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDQvMjEv
-MjUgMDU6MTgsIENlZHJpYyBFbmNhcm5hY2lvbiB3cm90ZToNCj4gPiBJbnRyb2R1Y2UgaGFyZHdh
-cmUgbW9uaXRvcmluZyBhbmQgcmVndWxhdG9yIHN1cHBvcnQgZm9yIExUMzA3NC4gVGhlDQo+ID4g
-Y29tcG9uZW50IGlzIGFuIHVsdHJhZmFzdCwgdWx0cmFsb3cgbm9pc2UgM0EsIDUuNVYgZHJvcG91
-dCBsaW5lYXINCj4gPiByZWd1bGF0b3Igd2l0aCBhIFBNQnVzIHNlcmlhbCBpbnRlcmZhY2UgdGhh
-dCBhbGxvd3MgdGVsZW1ldHJ5IGZvcg0KPiA+IGlucHV0L291dHB1dCB2b2x0YWdlLCBvdXRwdXQg
-Y3VycmVudCwgYW5kIGRpZSB0ZW1wZXJhdHVyZS4gSXQgaGFzIGENCj4gPiBzaW5nbGUgY2hhbm5l
-bCBhbmQgcmVxdWlyZXMgYSBiaWFzIHZvbHRhZ2Ugd2hpY2ggY2FuIGJlIG1vbml0b3JlZCB2aWEN
-Cj4gPiBtYW51ZmFjdHVyZXItc3BlY2lmaWMgcmVnaXN0ZXJzLg0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogQ2VkcmljIEVuY2FybmFjaW9uDQo+ID4gPGNlZHJpY2p1c3RpbmUuZW5jYXJuYWNpb25A
-YW5hbG9nLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGluIHYzOg0KPiA+IC0NCj4gPiAgICog
-Tm9uLW5lc3RlZCBkdC1iaW5kaW5nIHJlZ3VsYXRvciBzdXBwb3J0Lg0KPiA+ICAgKiBQTUJVU19S
-RUdVTEFUT1JfT05FKCJ2b3V0IikgLT4NCj4gUE1CVVNfUkVHVUxBVE9SX09ORSgicmVndWxhdG9y
-IikuDQo+ID4gICAgIE5ldyBtYWNybyBuZWVkcyBub2RlLW5hbWUgdG8gYmUgbWF0Y2hlZC4NCj4g
-Pg0KPiANCj4gRG9lcyB0aGF0IG1lYW4gd2UgY2FuIChhbmQgbWF5YmUgc2hvdWxkKSBkcm9wIHRo
-ZSBuYW1lIHBhcmFtZXRlciBvZiB0aGF0DQo+IG1hY3JvID8NCj4gDQo+IFRoaXMgaXNuJ3QgYWZm
-ZWN0aW5nIHRoaXMgcGF0Y2guIElmIG5lZWRlZCBJJ2xsIGRvIHRoYXQgc2VwYXJhdGVseS4NCj4g
-SnVzdCBhc2tpbmcuDQoNClRoaXMgaXMgdXNlZCBieSByZWd1bGF0b3JfZGVzYy0+b2ZfbWF0Y2gg
-dG8gbWF0Y2ggYSBub2RlIG5hbWUgaW4gZHQuIEJ5DQpkcm9wcGluZyB0aGUgbmFtZSwgZG9lcyB0
-aGlzIG1lYW4gdGhlIG9mX21hdGNoIHdvbid0IGJlIGFzc2lnbmVkLCBvcg0Kb2ZfbWF0Y2g9InNv
-bWUtZGVmYXVsdC1yZWd1bGF0b3ItbmFtZSI/IEkgZGlkIHNvbWUgdGVzdHMsIGFuZCBpdCBhcHBl
-YXJzDQp0aGUgcmVndWxhdG9ycyBkdCBwcm9wZXJ0aWVzIGNhbiBvbmx5IGJlIHBhcnNlZCB3aGVu
-IHRoZSBuYW1lIHBhcmFtZXRlcg0KZXhpc3RzLCBhbmQgbmFtZSBwYXJhbWV0ZXIgPT0gbm9kZS1u
-YW1lLiBJIGhhdmUgdHJpZWQgc2ltcGx5IHJlbW92aW5nIHRoZQ0Kb2ZfbWF0Y2ggYXNzaWdubWVu
-dCBmcm9tIHRoZSByZWd1bGF0b3JfZGVzYyBtYWNybywgYnV0IGl0IGRvZXMgbm90IHdvcmsgaW4N
-Cm15IGNhc2UuDQoNCkJlc3QgcmVnYXJkcywNCkNlZHJpYw0KDQo+ID4gLSBMaW5rIHRvIHYyOg0K
-PiA+IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xvcmUua2VybmVsLm9yZy9y
-LzIwMjUwMjI1LXVwc3RyZWENCj4gPiBtLWx0MzA3NC12Mi0wLQ0KPiAxOGFkMTBiYTU0MmVAYW5h
-bG9nLmNvbV9fOyEhQTNOaThDUzB5MlkhN2pYTkJPcXc3UDZkTm5qWg0KPiA+IFRLckRxZXprdjhC
-U2daZjlaRWVPZlR2dmJYRVAzSWZqTDhVQ2R6SVdqQUlNRnktLVVKS3NFX2J6dGRBcnpwWDVqb1p0
-MzUNCj4gPiBOc1BmMCQNCj4gPg0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gICAqIFNlcGFyYXRl
-ZCBkdC1iaW5kaW5nIGZvciBMVDMwNzQuDQo+ID4gICAqIEFkZGVkIF9fbWF5YmVfdW51c2VkIGF0
-dHJpYnV0ZSB0byBvZl9kZXZpY2VfaWQuIFRoaXMgYWRkcmVzc2VzIGtlcm5lbA0KPiA+ICAgICB0
-ZXN0IHJvYm90IHdhcm5pbmcuDQo+ID4gICAqIEFkZGVkIGVudHJ5IHRvIE1BSU5UQUlORVJTLg0K
-PiA+DQo+ID4gLSBMaW5rIHRvIHYxOg0KPiA+IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19o
-dHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjUwMTI0LXVwc3RyZWENCj4gPiBtLWx0MzA3NC12
-MS0wLQ0KPiA3NjAzZjM0NjQzM2VAYW5hbG9nLmNvbV9fOyEhQTNOaThDUzB5MlkhN2pYTkJPcXc3
-UDZkTm5qWg0KPiA+IFRLckRxZXprdjhCU2daZjlaRWVPZlR2dmJYRVAzSWZqTDhVQ2R6SVdqQUlN
-RnktLVVKS3NFX2J6dGRBcnpwWDVqb1p0MWgNCj4gPiBRX1Z1ayQNCj4gPg0KPiA+IC0tLQ0KPiA+
-IENlZHJpYyBFbmNhcm5hY2lvbiAoMik6DQo+ID4gICAgICAgIGR0LWJpbmRpbmdzOiBod21vbjog
-cG1idXM6IGFkZCBsdDMwNzQNCj4gPiAgICAgICAgaHdtb246IChwbWJ1cy9sdDMwNzQpOiBhZGQg
-c3VwcG9ydCBmb3IgbHQzMDc0DQo+ID4NCj4gPiAgIC4uLi9iaW5kaW5ncy9od21vbi9wbWJ1cy9h
-ZGksbHQzMDc0LnlhbWwgICAgICAgICAgIHwgIDUwICsrKysrKysrKw0KPiA+ICAgRG9jdW1lbnRh
-dGlvbi9od21vbi9pbmRleC5yc3QgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ICAg
-RG9jdW1lbnRhdGlvbi9od21vbi9sdDMwNzQucnN0ICAgICAgICAgICAgICAgICAgICAgfCAgNzIg
-KysrKysrKysrKysrDQo+ID4gICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgOSArKw0KPiA+ICAgZHJpdmVycy9od21vbi9wbWJ1cy9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTggKysrDQo+ID4gICBkcml2ZXJzL2h3bW9uL3Bt
-YnVzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ID4gICBkcml2ZXJz
-L2h3bW9uL3BtYnVzL2x0MzA3NC5jICAgICAgICAgICAgICAgICAgICAgICB8IDEyMiArKysrKysr
-KysrKysrKysrKysrKysNCj4gPiAgIDcgZmlsZXMgY2hhbmdlZCwgMjczIGluc2VydGlvbnMoKykN
-Cj4gPiAtLS0NCj4gPiBiYXNlLWNvbW1pdDogODZkMjY0YjY4MzA5ZDlmOTgwNGRiNDA3OTY0MmI5
-ODEwNGNhMTVkZg0KPiA+IGNoYW5nZS1pZDogMjAyNTAxMjQtdXBzdHJlYW0tbHQzMDc0LTEyMzM4
-NDI0NmUwYg0KPiA+DQo+ID4gQmVzdCByZWdhcmRzLA0KDQo=
+--Sig_/Kwn83vJATXbqj.Xg.12U9HC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 22 Apr 2025 12:12:21 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+
+> Hi Pekka,
+>=20
+> On Tue, 22 Apr 2025 at 12:01, Pekka Paalanen <ppaalanen@gmail.com> wrote:
+> > On Tue, 22 Apr 2025 11:41:29 +0200
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote: =20
+> > > On Tue, 22 Apr 2025 at 11:11, Pekka Paalanen
+> > > <pekka.paalanen@haloniitty.fi> wrote: =20
+> > > > On Mon, 21 Apr 2025 17:50:39 +0300
+> > > > Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote: =20
+> > > > > On Thu, Apr 17, 2025 at 11:13:15AM +0300, Pekka Paalanen wrote: =
+=20
+> > > > > > On Wed, 16 Apr 2025 11:59:43 +0300 Tomi Valkeinen wrote: =20
+> > > > > > > On 01/04/2025 16:27, Pekka Paalanen wrote: =20
+> > > > > > > > On Mon, 31 Mar 2025 13:53:37 +0300 Pekka Paalanen wrote: =20
+> > > > > > > >> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote:=
+ =20
+> > > > > > > >>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen =
+wrote: =20
+> > > > > > > >>>> On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wr=
+ote: =20
+> > > > > > > >>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote: =20
+> > > > > > > >>>>>> On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrot=
+e: =20
+> > > > > > > >>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote: =20
+> > > > > > > >>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wr=
+ote: =20
+> > > > > > > >>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote: =20
+> > > > > > > >>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote=
+: =20
+> > > > > > > >>>>>>>>>>> Add greyscale Y8 format.
+> > > > > > > >>>>>>>>>>>
+> > > > > > > >>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@lina=
+ro.org>
+> > > > > > > >>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ide=
+asonboard.com> =20
+> > > > > > > >>>>>>>>>>
+> > > > > > > >>>>>>>>>> Thanks for your patch!
+> > > > > > > >>>>>>>>>> =20
+> > > > > > > >>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+> > > > > > > >>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > > > > > > >>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
+> > > > > > > >>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y=
+', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+> > > > > > > >>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y=
+', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+> > > > > > > >>>>>>>>>>>
+> > > > > > > >>>>>>>>>>> +/* Greyscale formats */
+> > > > > > > >>>>>>>>>>> +
+> > > > > > > >>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', =
+'R', 'E', 'Y')  /* 8-bit Y-only */ =20
+> > > > > > > >>>>>>>>>>
+> > > > > > > >>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which=
+ encodes
+> > > > > > > >>>>>>>>>> the number of bits in the FOURCC format. What do y=
+ou envision
+> > > > > > > >>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1'=
+, '6')? =20
+> > > > > > > >>>>>>>>>
+> > > > > > > >>>>>>>>> I wanted to use the same fourcc as on V4L2 side. St=
+rictly speaking it's
+> > > > > > > >>>>>>>>> not required, but different fourccs for the same fo=
+rmats do confuse.
+> > > > > > > >>>>>>>>>
+> > > > > > > >>>>>>>>> So, generally speaking, I'd pick an existing fourcc=
+ from v4l2 side if
+> > > > > > > >>>>>>>>> possible, and if not, invent a new one. =20
+> > > > > > > >>>>>>>>
+> > > > > > > >>>>>>>> what's the actual difference between DRM_FORMAT_R8 a=
+nd DRM_FORMAT_Y8?
+> > > > > > > >>>>>>>>
+> > > > > > > >>>>>>>> Is the difference that when R8 gets expanded to RGB,=
+ it becomes (R, 0,
+> > > > > > > >>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y)=
+ where c1..c3 are
+> > > > > > > >>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
+> > > > > > > >>>>>>>>
+> > > > > > > >>>>>>>> That would be my intuitive assumption following how =
+YCbCr is handled.
+> > > > > > > >>>>>>>> Is it obvious enough, or should there be a comment t=
+o that effect? =20
+> > > > > > > >>>>>>>
+> > > > > > > >>>>>>> You raise an interesting point. Is it defined how a d=
+isplay driver, that
+> > > > > > > >>>>>>> supports R8 as a format, shows R8 on screen? I came i=
+nto this in the
+> > > > > > > >>>>>>> context of grayscale formats, so I thought R8 would b=
+e handled as (R, R,
+> > > > > > > >>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes=
+ sense. =20
+> > > > > > > >>>>>>
+> > > > > > > >>>>>> That is a good question too. I based my assumption on =
+OpenGL behavior
+> > > > > > > >>>>>> of R8.
+> > > > > > > >>>>>>
+> > > > > > > >>>>>> Single channel displays do exist I believe, but being =
+single-channel,
+> > > > > > > >>>>>> expansion on the other channels is likely meaningless.=
+ Hm, but for the
+> > > > > > > >>>>>> KMS color pipeline, it would be meaningful, like with =
+a CTM.
+> > > > > > > >>>>>> Interesting.
+> > > > > > > >>>>>>
+> > > > > > > >>>>>> I don't know. Maybe Geert does? =20
+> > > > > > > >>>>>
+> > > > > > > >>>>> I did some digging, and was a bit surprised that it was=
+ you who told
+> > > > > > > >>>>> me to use R8 instead of Y8?
+> > > > > > > >>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eld=
+fell =20
+> > > > > > > >>>>
+> > > > > > > >>>> Hi Geert,
+> > > > > > > >>>>
+> > > > > > > >>>> indeed I did. I never thought of the question of expansi=
+on to R,G,B
+> > > > > > > >>>> before. Maybe that expansion is what spells R8 and Y8 ap=
+art?
+> > > > > > > >>>>
+> > > > > > > >>>> I do think that expansion needs to be specified, so that=
+ the KMS color
+> > > > > > > >>>> pipeline computations are defined. There is a big differ=
+ence between
+> > > > > > > >>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM=
+):
+> > > > > > > >>>>
+> > > > > > > >>>> - (R, 0, 0)
+> > > > > > > >>>> - (R, R, R)
+> > > > > > > >>>> - (c1 * Y, c2 * Y, c3 * Y) =20
+> > > > > > > >>>
+> > > > > > > >>> I'd be very surprised by an YUV to RGB conversion matrix =
+where the first
+> > > > > > > >>> column would contain different values. What we need to ta=
+ke into account
+> > > > > > > >>> though is quantization (full vs. limited range). =20
+> > > > > > > >
+> > > > > > > > Quantization range is indeed good to note. R8 would be alwa=
+ys full
+> > > > > > > > range, but Y8 would follow COLOR_RANGE property.
+> > > > > > > > =20
+> > > > > > > >> That makes Y8 produce (Y, Y, Y), and we have our answer: R=
+8 should be
+> > > > > > > >> (R, 0, 0), so we have both variants.
+> > > > > > > >>
+> > > > > > > >> Can we specify Y, R, G and B be nominal values in the rang=
+e 0.0 - 1.0
+> > > > > > > >> in the KMS color processing? =20
+> > > > > > > >
+> > > > > > > > I think this 0.0 - 1.0 nominal range definition for the abs=
+tract KMS
+> > > > > > > > color processing is necessary.
+> > > > > > > >
+> > > > > > > > It also means that limited range Y8 data, when containing v=
+alues 0-15
+> > > > > > > > or 240-255, would produce negative and greater than 1.0 val=
+ues,
+> > > > > > > > respectively. They might get immediately clamped to 0.0 - 1=
+.0 with the
+> > > > > > > > first color operation they face, though, but the concept se=
+ems
+> > > > > > > > important and carrying over to the new color pipelines UAPI=
+ which might
+> > > > > > > > choose not to clamp. =20
+> > > > > > >
+> > > > > > > Is the behavior of values outside the limited range something=
+ that needs
+> > > > > > > to be defined? We can't know how each piece of HW behaves with
+> > > > > > > "undefined" input, so should we not just define the behavior =
+as platform
+> > > > > > > specific? =20
+> > > > > >
+> > > > > > Hi Tomi,
+> > > > > >
+> > > > > > it's not undefined nor illegal input in general. The so-called
+> > > > > > sub-black and super-white ranges exist for a reason, and they a=
+re
+> > > > > > intended to be used in video processing to avoid clipping in
+> > > > > > intermediate processing steps when a filter overshoots a bit. T=
+here are
+> > > > > > also practices that depend on them, like PLUGE calibration with
+> > > > > > traditional signals on a display: https://www.itu.int/rec/R-REC=
+-BT.814
+> > > > > >
+> > > > > > I think it would be really good to have defined behaviour if at=
+ all
+> > > > > > possible.
+> > > > > > =20
+> > > > > > > In any case: I can't say I fully understood all the discussio=
+ns wrt.
+> > > > > > > color spaces. But my immediate interest is, of course, this s=
+eries =3D).
+> > > > > > > So is there something that you think should be improved here?=
+ =20
+> > > > > >
+> > > > > > Right, the range discussion is a tangent and applies to all YUV
+> > > > > > formats, so it's not a new question.
+> > > > > > =20
+> > > > > > > My understanding is that the Y-only pixel formats behave in a=
+ well
+> > > > > > > defined way (or, as well defined as the YUV formats), and the=
+re's
+> > > > > > > nothing more to add here. Is that right? =20
+> > > > > >
+> > > > > > There are two things:
+> > > > > >
+> > > > > > - Y8 follows COLOR_RANGE property, just like all other YUV form=
+ats.
+> > > > > > - Y8 implies that Cb and Cr are both neutral (0.0 in nominal va=
+lues).
+> > > > > >
+> > > > > > I'd like these explicitly written down, so that they become obv=
+ious to
+> > > > > > everyone. I suspect either one might be easy to forget when wri=
+ting
+> > > > > > code and taking shortcuts without thinking.
+> > > > > >
+> > > > > >
+> > > > > > Laurent,
+> > > > > >
+> > > > > > I did find a case where (Y', neutral, neutral) does *not* seem =
+to expand
+> > > > > > to RGB=3D(Y, Y, Y): ICtCp. The conversion from ICtCp to L'M'S' =
+does
+> > > > > > produce (Y', Y', Y'), but the LMS-to-RGB matrix scrambles it.
+> > > > > >
+> > > > > > I didn't dig through BT.2020 constant-luminance Y'C'bcC'rc, but=
+ I
+> > > > > > wouldn't be surprised if it scrambled too.
+> > > > > >
+> > > > > > Of course, both of the above are not just one matrix. They requ=
+ire two
+> > > > > > matrices and the transfer characteristic each to compute. KMS c=
+olor
+> > > > > > operations cannot implement those today, but with the colorop p=
+ipelines
+> > > > > > they will if the hardware does it.
+> > > > > >
+> > > > > > That's why I think it's important to document the assumption of=
+ Cb and
+> > > > > > Cr when not part of the pixel format, and not write down a spec=
+ific
+> > > > > > expansion to RGB like (Y, Y, Y). =20
+> > > > >
+> > > > > Every time I discuss color spaces, the scopes of "RGB" and "YUV" =
+seem to
+> > > > > expand more and more. This makes me wonder how we define those two
+> > > > > concepts. Taking the conversion from RGB to ICtCp as an example, =
+would
+> > > > > you consider LMS and L'M'S' as "RGB" formats, and ICtCp as a "YUV"
+> > > > > format ? =20
+> > > >
+> > > > sorry for the confusion. In this specific context, my use of RGB and
+> > > > YUV refers to the channels in DRM pixel formats. It might have been
+> > > > better if all channels in all pixel formats were "anonymous" and me=
+rely
+> > > > numbered because all formats can be used for any color model, but t=
+his
+> > > > is what we have.
+> > > >
+> > > > There is some disambiguation in
+> > > > https://gitlab.freedesktop.org/pq/color-and-hdr/-/blob/main/doc/pix=
+els_color.md
+> > > > The doc is some years old, so nowadays I might phrase things
+> > > > differently, but maybe it's easier to read for those new to things =
+as I
+> > > > wrote it when I was just learning things.
+> > > >
+> > > > I would classify ICtCp in the YUV pixel format category, because the
+> > > > CtCp plane can be sub-sampled (right?). I would classify LMS and L'=
+M'S'
+> > > > in the RGB pixel format category because they are not sub-sampled A=
+FAIK
+> > > > although they also do not actually appear as buffer contents, so the
+> > > > relation to pixel formats is... theoretical.
+> > > >
+> > > > IOW, we have a completely artificial split of DRM pixel formats to =
+RGB
+> > > > and YUV where the only essential difference is that YUV formats can=
+ have
+> > > > sub-sampled variants and RGB formats do not. =20
+> > >
+> > > RGB can be subsampled, too...
+> > > https://en.wikipedia.org/wiki/Bayer_filter =20
+> >
+> > That's true. What difference are we left with, then? =20
+>=20
+> RGB contains three monochromatic color channels (which may differ from
+> Red, Green, and Blue, cfr. truncated RGn and Rn formats).
+> YUV contains one luminance and two chrominance channels.
+
+I think I get what you mean. RGB are directly related to the power of
+each of the primary emitters in a display. YUV OTOH carries the overall
+luma and the difference from neutral (chroma) signals. This difference
+is the difference between color models.
+
+Monochromatic is not the right word here, unless you explicitly refer
+to the primaries of BT.2020 which are laser-like. Most display
+primaries are far from monochromatic. The closer to monochromatic
+display primaries get, the more pronounced the differences between
+color vision in people become, even if the people were all classified
+as having normal color vision.
+
+
+Thanks,
+pq
+
+> > We have DRM pixel formats which imply some color model, but do not
+> > define the variant of each color model (e.g. the Y'CbCr-to-RGB matrix).
+> >
+> > I guess the implied color model then implies which API, e.g. KMS plane
+> > property, is responsible for defining the variant. =20
+>=20
+> Probably (IANADX --- I Am Not A Drm eXpert ;-)
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+
+
+--Sig_/Kwn83vJATXbqj.Xg.12U9HC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmgHducACgkQI1/ltBGq
+qqdsVw/+I1+c1XyKLq5zWTTprkIbh1pWtF3P+AXhaNHju8KEA5fQeIRTDfVryjxE
+wFXZpjE3UN2ubfYl2DTlcIiSlxfg81HsklTouM0v11gkqCMCtYzCKKQYI6Ntr51p
+CF0TnlC5oJzzWZmc5Yk641UhygE+ZeY6SiiLZqqVChcXndYz/Ga0q7pGsPXeIANV
+S+Kgz0m+o/kGKUgFIh+QCNsvhhCxA6kWKOKPsdjZVSfzD+IQ1S3hpcGYvSr7Jye6
+TPzMwsC43PZp7jmdhHLeDZVSKSQeva3eYvoO86hPOQ6vUegAcUjOGsABpgYtiBul
+cfL2ZDKDneJUsh51icIIAcUyWvb/8fyy85kXjKThm2ojGSwrq4QlRZXZ3xOTnTBE
+3tpouf0rrVv4Wi+kKzUVPmfbMCrNgjEO5/+RoCpCueLwbWhu/LqQzsdPZjkWrO1X
+tfdnDqhMRQnIJfHl5eg838HuVjNxn4gLp1YXBV5iku4IOA4v4UZXL1LDqubx+5fv
+3Eivrc1VvjjETuWuq4ZwKQjmlW3Ttsrnwtf0tQRmsl0gXSGaHLY3G/898pdbFif9
+lREZC9NPyV0/VYfPuToiwwZR8A/jd2XEt0DmA+tXN/+oie7fOM4PmIHA7Og037RD
+J9Bi/xgIFvmVxqleKn+u+tJftKPmJAoLyJnNHJ78lKiu1LVm4xE=
+=Ls/K
+-----END PGP SIGNATURE-----
+
+--Sig_/Kwn83vJATXbqj.Xg.12U9HC--
