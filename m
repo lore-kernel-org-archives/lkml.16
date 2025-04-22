@@ -1,116 +1,169 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3061F2382;
-	Tue, 22 Apr 2025 09:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 806751D515A;
+	Tue, 22 Apr 2025 09:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313933; cv=none; b=OEX6TqK6F/WbvBi0DIVbleXwz1hQAGrHrHTNX7bmEZx1kol0Jx5JbVt8kmdZaXOaN76wOuWMDwVG7UcvdM2Svgu/OiodAwlfRjM59ebCFHhXJZLt/PgCmdoHecPHQ9c50rfmBfTMpUrr/2e3PsQXW7t5P6/60kfyxguzjpit3ao=
+	t=1745313969; cv=none; b=JubxIxutJWOV9v132RbDArvLiicHmNCWPqkYlmhmlqUOudlGsrOnKe03OZjiGyOBGLFRtuGR/75qJmjW5rNbzMEOJqweCHxn+0ObSt+i3VRTs+bQuWQV2iKjOilLDstrF55hDTywgztx0gt7a84YGaYg5u+QmC9q6dMMI2TUR1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313933; c=relaxed/simple;
-	bh=5HXOfChdntgYLWeKK+lob+HMvx+eoXiews4WXrPNji0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uzi/+pxKzhMlxUMePJDIVEWYsZZlXHEmff7c46ufxllbQfnECKInJO181cAVionXpBP60kq3kK30E8DCPoiC7fFBYOZPe3gzWvu4BgywW2PQGvEWFXLkX3Pe8VAA43Q4tVHmZ6Q92w3jqp2L4neGAR34jGi2QoHdPe3PxKbqcss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WR1PNINK; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745313969; c=relaxed/simple;
+	bh=7MVnBhI5qCCN7PqdZru6boeV6jlWC5T5MzkC5xQYqOI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=nu09Byvsrq+Q7JtQNYAIS5ALOI1cMTkAxDCUnPYOX8h+O4az5GwdYQmQMAvd+vEYnd5rJf/qDqM4O3gH+B53/IyUId1V2MUn7UReYFMJAQKW2tDIdZeXHrouGV66hRtGU6mLfdPI2hlQnP48NrMBt2gxn2At8OKiZi45HxRfu3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=3CI0aNne; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HUuQOuaM; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WR1PNINK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745313878;
-	bh=OGDnSMArk/WrjO2UTNNnGOJJKTaitd2ENOoLaZYFrmo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=WR1PNINKFJ7G0lQVO2eczeXOsij7wKAbOWPlTPRpXzZA7PASGsGD04g0aTwJ0HEII
-	 9aAKzQP+iI6Z8wEkATXkXLBKJqrVTEV53lAj3PhicUPQtdixyW3hMsx5yw1pg+RhwL
-	 T5DQ8g6Fwlkz+lvCyBKJe05SpaVNE80AXYYC5xJ4=
-X-QQ-mid: zesmtpip4t1745313861t42375df0
-X-QQ-Originating-IP: rbmCeOYn6fTV13+abiw/rrLT1iX6vvePKYuombisU2k=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 17:24:19 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4302771691292400825
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: macro@orcam.me.uk,
-	tsbogend@alpha.franken.de,
-	wangyuli@uniontech.com,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5.4+] MIPS: ds1287: Match ds1287_set_base_clock() function types
-Date: Tue, 22 Apr 2025 17:24:15 +0800
-Message-ID: <418FF04C2B5B986B+20250422092415.120647-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="3CI0aNne";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HUuQOuaM"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 236CD254016E;
+	Tue, 22 Apr 2025 05:26:03 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 05:26:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745313962;
+	 x=1745400362; bh=1/+0YVTUvXTj7AvVeAYrj06s3CToZPPnPcHrNo0HQwA=; b=
+	3CI0aNneHYAVSeaMa04aK7khsdUCytYTXWMqLjXvptLWdEdiuhsngS3z+CyNSXs2
+	ShJC85FEH5QPTcCyKMD4bk6f9pLYhKZGcI0jbVMC1y7xVtH3EsP1QQaS+rsSRN6b
+	aNt742LCKcQBSJIQaj2wVfth2YVX5sPDKjflfSL6bEEfTeZc3sEzAxaXONjeDwxE
+	ESF5+NVzF1d9hCMkS0ABBnftJ1cEyez1ukbTc9FUsgwJlVGPNiHu9CiDtXdhKm3b
+	lspXRDl8NNdvmovyZaGirRYzc+y4GEcPbpHtkOkxeyR3ELUdB/U1l7NnjkYwZMnO
+	lbEmDiTjmQ5eWinETqn24g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745313962; x=
+	1745400362; bh=1/+0YVTUvXTj7AvVeAYrj06s3CToZPPnPcHrNo0HQwA=; b=H
+	UuQOuaMKbtJzpCIfZmWV+gYDfTnBHQJaYWXoVeNIFlFv70/kSMa/2Im0PbapCPrH
+	SnhdnVdW6aNl+aeqUGUI279NWzrQMdpwFeXgSxvn/8PbRdzvgzcIIKKcB73zRE/5
+	vq7//tvMEJtrCcqKIj/weV5wkGn360rJPGlMhsxFFOgbEKDrp/oDCUFi2hpcbWTx
+	YyrbgTixma8fhgLz48cy2gZgyhje0wGJYMZzqVKmpi7+AaXIfSUFCN8A7y1kc9mA
+	QZ4av96q62HpL//+AgPKnoug5dsqpKMDQkhDp+fl76yhHTOVotcStQQQMIMZoEY2
+	Lvqvgg/w/tiRkIGAnX+kQ==
+X-ME-Sender: <xms:qmAHaFNR0X0b4egu_tnuKLWqQgqv03-YG9SqHayrII8pRJaN5yIhUg>
+    <xme:qmAHaH9Oqtsi__sG5JpeZ12gpTVo6QIJ7HzQxf8jp36dFeK-Gl_O6SsP5lPUfr0My
+    dG97OOg1PjvcjTfyzk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeffeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggtohhllhhinhhssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhgpdhrtg
+    hpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopeiifiesiihhqdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:qmAHaETefQDELZAy3qwtvFTJy62gjJmNz063VTFsm8XqipYnX6fGAg>
+    <xmx:qmAHaBsn3G4ckJzKk-H_T0K65dQ-7sNKobWy0xyT6GQzrOPIypkgEg>
+    <xmx:qmAHaNesBrKIYh1wNpw1f1NaaFosHIIciyoHATzlgdDcqn0Loe5v6w>
+    <xmx:qmAHaN1dOxWES_oyUS2pwvAckyzrL4QX9KIdfZInhG7IuDJWNiL35w>
+    <xmx:qmAHaFaf_Cy045B3uzzvlC2Bc64HbuymKtz1TKHvS1k02Th8kYjPJ-yA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 92CE32220073; Tue, 22 Apr 2025 05:26:02 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Oah+0YjUCNSuh5RbwCP+5zcKnQdodoC5VcXnY5+8dpcUpUOEiDuLG1HS
-	Yv5+aZ7PCsUhuqpyKa7lL1VoHpjDX9KQar9ddnI3b3tDM+VDMnhc4SknWGmfyysswLw6/5L
-	9ExNFJANE2bOkI5gzS8AUjZmBqjgR2HsG7u8d2bkcWHAyRcFCUVJJaOd2ETEqmx+nfqSFYB
-	g86fOddrLdpYQ6OURCSsao31VhsdrxygvynxtkA8kS6KH2wl0BAkV56Z8xOYQ3urp1iYAwB
-	wpysMVzja6Mlp7aWuM3tvc0liKG5GT5pBW58sRJL9LoGBGs8PNvCl3/UN9KTG3VKwOgoFXP
-	rRstCpBXEYprCzfGmL6MRMIqQt7p3X19YqL7/4D7ZwFfJP/JYz6mSjvgJDhuo2Atq6oy4Zh
-	jmWsyo4KFavo9pbI4DtZ/UlOr/EfCPMS0gxELj0Gz7aavsROG1PJHh13QW1ggrgBk7qrFVQ
-	Hp73ppOJgwJlQ8f8DAJfyDnC3tmSBvA3sDfgykv24q2P34lgLkOtvMRU5mAGcWafFdxM/Ht
-	L/Q5ns9PzcWiuksOEJhVSsQ68zwenRmtkAxcXhMpw9G0vFMOrGKBxaTPRWv2+KzEcu33B2B
-	DsQZJG9zSk4Cq6kUGuFbIxT+4Mv9brYc1Yw2304UpspVVPwMoVyjX58/+OExarANpRMXOHY
-	2Idjx5GzjgBZZomsO1cZizJmWXbLdqBqoTgW6fpC6C66t65gDcBLx6FRGNm3wSueSSrZ/XR
-	npmE1HxmLyUOUISthvZ4OFun53gUavW/A+XhmBggBxZrtbXEn6PMk56dRTzdaHnMUmcZDhe
-	+XKeLo3v8N5gNQZYwIUI3higNRvc6yS1WVrcNUwamhRl8tCWGEFNYeEslyetXWbdwZTqmrR
-	3eW0zYb0ULcY09JpQmCaN7zuVeR5yu29A7amzI74cqMiTbj8IsLmsGyF0iGfOI+scgIdBgL
-	g2bG6HCu7iVt1aWim//K1s1WkAG3Rl0WzGlKGs39vpElqIR0GQsFlGSqYOqA25eIBUhHzHW
-	Bh/ACwiYtUULB+4xTr/Os771X+Unu8NrDveeDVkkDJVOJgc3m4B65W7HQHRQmD3NsHN2/qz
-	wY45oLl+G49t/hU/ZMuyJM=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+X-ThreadId: T8f64d9338f7a15a8
+Date: Tue, 22 Apr 2025 11:25:40 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ben Collins" <bcollins@kernel.org>
+Cc: dmaengine@vger.kernel.org, "Zhang Wei" <zw@zh-kernel.org>,
+ "Vinod Koul" <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
+In-Reply-To: <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+ <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+ <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
+ <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
+ <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-[ Upstream commit a759109b234385b74d2f5f4c86b5f59b3201ec12 ]
+On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
+> On Tue, Apr 22, 2025 at 09:59:42AM -0500, Arnd Bergmann wrote:
+>> 
+>> Right, but this could just mean that they end up using SWIOTLB
+>> to bounce the high DMA pages or use an IOMMU rather than actually
+>> translating the physical address to a dma address.
+>
+> There's a few things going on. The Local Address Window can shift
+> anywhere in the 64-bit address space and be as wide as the physical
+> address (40-bit on T4240, 36-bit on P4080). I think this is mainly for
+> IO to PCIe and RapidIO, though.
 
-Synchronize the declaration of ds1287_set_base_clock() between
-cevt-ds1287.c and ds1287.h.
+There are usually two sets of registers, not sure which one the Local
+Address Window refers to:
 
-Fix follow error with gcc-14 when -Werror:
+- Translation of MMIO addresses (PCI BAR and device registers) when
+  accessed from CPU and possibly from P2P DMA, these are represented
+  by the 'ranges' property in DT.
 
-arch/mips/kernel/cevt-ds1287.c:21:5: error: conflicting types for ‘ds1287_set_base_clock’; have ‘int(unsigned int)’
-   21 | int ds1287_set_base_clock(unsigned int hz)
-      |     ^~~~~~~~~~~~~~~~~~~~~
-In file included from arch/mips/kernel/cevt-ds1287.c:13:
-./arch/mips/include/asm/ds1287.h:11:13: note: previous declaration of ‘ds1287_set_base_clock’ with type ‘void(unsigned int)’
-   11 | extern void ds1287_set_base_clock(unsigned int clock);
-      |             ^~~~~~~~~~~~~~~~~~~~~
-make[7]: *** [scripts/Makefile.build:207: arch/mips/kernel/cevt-ds1287.o] Error 1
-make[6]: *** [scripts/Makefile.build:465: arch/mips/kernel] Error 2
-make[6]: *** Waiting for unfinished jobs....
+- Translation of physical memory when accessed from a DMA bus master,
+  represented by the 'dma-ranges' property.
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- arch/mips/include/asm/ds1287.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The latter is what the dma-mapping API needs. This code has changed
+a lot over the years, but in the current version the idea is that
+the limit enforced by the driver through dma_set_mask() is independent
+of the limit enforced by the platform bus based on the dma-ranges
+property. 
 
-diff --git a/arch/mips/include/asm/ds1287.h b/arch/mips/include/asm/ds1287.h
-index 46cfb01f9a14..51cb61fd4c03 100644
---- a/arch/mips/include/asm/ds1287.h
-+++ b/arch/mips/include/asm/ds1287.h
-@@ -8,7 +8,7 @@
- #define __ASM_DS1287_H
- 
- extern int ds1287_timer_state(void);
--extern void ds1287_set_base_clock(unsigned int clock);
-+extern int ds1287_set_base_clock(unsigned int hz);
- extern int ds1287_clockevent_init(int irq);
- 
- #endif
--- 
-2.49.0
+The bit that matters in the end is the intersection of both,
+so dma_map_single() etc only maps a page that is addressable
+by both the device and the bus.
 
+>> > I'll check on this, but I think it's a seperate issue. The main thing is
+>> > just to configure the dma hw correctly.
+>> 
+>> I think it's still important to check this before changing the
+>> driver: if the larger mask doesn't actually have any effect now
+>> because the DT caps the DMA at 4GB, then it might break later
+>> when someone adds the correct dma-ranges properties.
+>
+> I'm adding dma-ranges to my dt for testing.
+
+Ok. The other thing you can try is to printk() the dev->bus_dma_limit
+to see if it even tries to use >32bit addressing.
+
+>> > So a little research shows that these 3 compatible strings in
+>> > the fsldma are:
+>> >
+>> > fsl,elo3-dma:		40-bit
+>> > fsl,eloplus-dma:	36-bit
+>> > fsl,elo-dma:		32-bit
+>> >
+>> > I'll rework it so addressing is based on the compatible string.
+>> 
+>> Sounds good, yes. Just to clarify: where did you find those
+>> limits? Are you sure those are not just the maximum addressable
+>> amounts of physical RAM on the chips that use the respective
+>> controllers?
+>
+> This is where things might be more interesting. The P4080RM and T4240RM
+> is where I got this information. Register "cdar" in the fsldma code. This
+> makes up 0x08 and 0x0c registers.
+
+> In the RM 0x08 is the extended address register. On P4080 it says this
+> holds the top 4 bits of the 36-bit address, and on T4240 it says the top
+> 8 bits of the 40-bit address. So the asynx_tx physical address needs to
+> be masked to the 36-bit or 40-bit.
+
+Ok, makes sense.
+
+       Arnd
