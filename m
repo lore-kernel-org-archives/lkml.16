@@ -1,171 +1,169 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E607254764;
-	Tue, 22 Apr 2025 11:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7405F2777E1;
+	Tue, 22 Apr 2025 11:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320867; cv=none; b=CBtQogChUDuwOb3EPugMOcG93YoY8txKY3KgEE+jEcwCX7iUXDXdSfxqQkImX/XjzCzwBCXNSIwWWvuVPsnTtvobwX6umJUFlNZnSaHTzJCwziERwxvHL5DaLeGpPCMIe9/VvZ78VPn1I3qF+zr9CMTl+TP4HANB6xZhVpjzeas=
+	t=1745320886; cv=none; b=Bmo6wcqp4isXT9qYigbAdz0qJ/mNeVNWZ1y+XEG3u6lrul/fFvAwZolr2B3tQyMxhXanupBFd74gwY5ApLJ3h3ojP/W/IVJjanwW8o/56Ws6cvahinr8J1oBh248KHzLzofBKxoQ0PugqEtegkz23lcn13MeF4kCUIf31aoAbLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320867; c=relaxed/simple;
-	bh=IPqThohrNrb14qg7kK50tnIgh5tqBtPfuWv5BV6ZmqU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fNfTU9G+RhfT3ImNyFerhImKZ+W9sGyem7MrAjkVJRGQ5i4KGwuz9bXEXZ4H0A/hTiq2K+Z5qqHtvZUMMjfzsJ//3FSk91UlHvGEfzGkR7gHSu0vEANC0KOU0jp0vNWfyWFa/48drIgpwKLvMG4CURmH6xyvkR8GZuNaxEuUIYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mr4o2fv+; arc=none smtp.client-ip=209.85.215.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745320886; c=relaxed/simple;
+	bh=nmR4TdV4+M08iCOThs59/0QH8E7V51DggdtN2U37lq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=brB/rZfflCcGIt6rFdZkJVHjBgwdDOJZGoV7P3EiHrXdAZlqQgxjKwZMxwC+aJtXcOOw50K4fRvMH/JwMV5xLvf7GTXrpHZVRSYN2FW0KSXl3gNEOyyxz48+4H345kNEpRNadfPlRAGStplDqC28K9z3I5V/15hTvzNiNkJvyVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EOuKw/Og; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mr4o2fv+"
-Received: by mail-pg1-f196.google.com with SMTP id 41be03b00d2f7-af52a624283so4196552a12.0;
-        Tue, 22 Apr 2025 04:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745320865; x=1745925665; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wzVjEqH9gmBT7W+O25sQBmGvPMeq7/0Zax5Q2ZZ3sF0=;
-        b=mr4o2fv+bvukap8ejUIOif4ssW/pT86jeEmNb5IitHfbic2qydNR5DZM3eUNXx93yi
-         ZASw3kvhOjmamc8zoNjyiI57S1d7yvcvBq5L9T7jaUFpqYA9/YvNqMecifzrW5sROz3r
-         GL2vQtGHVLcZ1Ch9cL9i3v6ZV7sNJm4QVrQ/VWG+EgryxIVZahWykFMiq7niIhkhKCnl
-         F2W5nb5tnBqGoVYJtyD/CimUtSwmtYc1xh45KWU2+vAbwP9V3qXiTj7iSv5vKcPkSdt7
-         chof5NBrqkfVdzJgfejVAY8iRmSz5VoigJewlN288XLZxbZ3NKUFDk6Z/Rqq2bJhFQdE
-         96sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745320865; x=1745925665;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wzVjEqH9gmBT7W+O25sQBmGvPMeq7/0Zax5Q2ZZ3sF0=;
-        b=NXQHvmmLiu8K99mwKgcmLwT4A4n6DeFOqduE+nZvyNPwVwXggxa+ZcmeYDUDydbeRb
-         umNNYhKjvj8HY3Z5TVjL7TmcEVM0LT9lyWQHqg83tDInB9u3wROKEh+vrQO6iN4FRhxg
-         bHocprqK/NX8UKztJxntiJ9ua1vF+/1vthchsWsldCUUk34a0zUgFvBgLsf+S8TP1XAM
-         9wR0v03417wAgNz7SmHuXHcYE+KWJziGnVpJfdwp9xRzEB64IoRPk7C+0s2tEYLkCfcU
-         BNNToD1Ew1zrUCUrAs9pLXMxzgipi1ZmvhzOzFe5QX59R/ofgqtOHQU8HAHK45n+T2Ga
-         3e0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWwjZ/zi0P4G7kijUpfM39RcUQcFQmpgIVHakY0JYV0CGwUW+bDa5rrGmZ2r22MxZafA2PwHQLwENjXcjFV@vger.kernel.org, AJvYcCXtsCO7Lu9DbiF4cbp+wZ2KMI2XMdxrXAdWGIs9ArZ2AbcZj9sM3jit7J9bIsdwxJxu9twV78mm/+vM0NuM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo5gmmrT/jGxYNghdu7rD2Hcmcd1ZN3xkMkOo/YOuJexvLXXH2
-	6BXZHMgDwqRjqKxX4OaKkDxyNfno+m2MmEUEdrFvnZ5KkEdmLtwJkx4Hx7vi
-X-Gm-Gg: ASbGncsembfseCngOiHroz06ei9FGYSVeg4qGUi+L62iwwXw267qaqSFZay2MPmem5H
-	NCRZGHRQ69VFenogj+QDnrJlKbQA/cY5kwdnidcBa9hR2pFTW+zTQ+3nr6vivAtFFdwzK0aS0cr
-	XYf+R7i0HqAw2n2/XsYLyCdkLqh89O8fRkqMN56tk3T6YqkLmG29tvIwgqwVBMvqbCV0zhQl9x5
-	ICI30FyfyJOIcHDXfgUmlLj44AF6Jz4oqGKv2h9v6cD5oCMm/6dTkhAA6QRsRW1zRillXO+ruV4
-	FEceLCE5IVOFLkL/44Ryk4Rh6zB6UYjWaQBzEPWpOGMrOwZg41w/9w==
-X-Google-Smtp-Source: AGHT+IFcLvIZAAA93Q8p9CitaCdEdVo3WX3OoJg88nczIzlRYdY9yiCqeoEyVu9YUpb/6Y/8xaEHLg==
-X-Received: by 2002:a17:90b:1f89:b0:2fc:aaf:74d3 with SMTP id 98e67ed59e1d1-30879ab03f7mr22438054a91.4.1745320864970;
-        Tue, 22 Apr 2025 04:21:04 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4edesm81987245ad.123.2025.04.22.04.21.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 04:21:04 -0700 (PDT)
-From: xu xin <xu.xin.sc@gmail.com>
-X-Google-Original-From: xu xin <xu.xin16@zte.com.cn>
-To: xu.xin16@zte.com.cn
-Cc: akpm@linux-foundation.org,
-	david@redhat.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	wang.yaxin@zte.com.cn,
-	yang.yang29@zte.com.cn,
-	Haonan Chen <chen.haonan2@zte.com.cn>
-Subject: [PATCH RESEND 3/6] memcontrol-v1: introduce ksm_stat at cgroup level
-Date: Tue, 22 Apr 2025 11:21:00 +0000
-Message-Id: <20250422112100.3231419-1-xu.xin16@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
-References: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EOuKw/Og"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4OlZa006174;
+	Tue, 22 Apr 2025 11:21:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	M4nBCRh0WFy4RUD4NZmrTdHCdTJnYmLhpp2J6H/klno=; b=EOuKw/OgGQVVRJBt
+	lfBnVRBq/o/K4/CPggde60dMSZBY9jtHWTwI+1geBtVVPvXXF9O4MGTo7/JPb5ol
+	e2NfLwL0Z+KgcwkQh/QoTKKyBuhHie3LGntDNdS10THN9WVg7afaSMKoHnKpPdGb
+	rYQiWWLCkZCYzb/vvhZTdmQ8Jzw97XG48feOEa82HFmcHBE/SV/W95Hp11U1Gwxs
+	e759pkf2qsxRUDW4SfgA1aFBHR5AVByTmP/4/3wLrLPbXiVnbz59HG/1LJoUu45V
+	DtZPNpmbKmNHkv4QHdicaYfTgcsUFhw2DkyH2pFOfaCX3d7nYJQAlczu4UOKOS84
+	eAm4JQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46435jf8xc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 11:21:20 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53MBLJkr013888
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 11:21:19 GMT
+Received: from [10.50.21.133] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
+ 2025 04:21:15 -0700
+Message-ID: <ed284074-d12a-497d-b8c3-de913bcffb6a@quicinc.com>
+Date: Tue, 22 Apr 2025 16:51:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-With the enablement of container-level KSM (e.g., via prctl), there is a
-growing demand for container-level observability of KSM behavior. However,
-current cgroup implementations lack support for exposing KSM-related
-metrics.
-
-This patch introduces a new interface named ksm_stat
-at the cgroup hierarchy level, enabling users to monitor KSM merging
-statistics specifically for containers where this feature has been
-activated, eliminating the need to manually inspect KSM information for
-each individual process within the cgroup.
-
-Users can obtain the KSM information of a cgroup just by:
-
-        `cat /sys/fs/cgroup/memory.ksm_stat`
-
-Current implementation supports cgroup v1 temporarily; cgroup v2
-compatibility is planned for future versions.
-
-Co-developed-by: Haonan Chen <chen.haonan2@zte.com.cn>
-Signed-off-by: Haonan Chen <chen.haonan2@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
----
- mm/memcontrol-v1.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/mm/memcontrol-v1.c b/mm/memcontrol-v1.c
-index 4a9cf27a70af..fa57a5deb28c 100644
---- a/mm/memcontrol-v1.c
-+++ b/mm/memcontrol-v1.c
-@@ -1821,6 +1821,40 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
- }
- #endif /* CONFIG_NUMA */
- 
-+#ifdef CONFIG_KSM
-+struct memcg_ksm_stat {
-+	unsigned long ksm_rmap_items;
-+};
-+
-+static int evaluate_memcg_ksm_stat(struct task_struct *task, void *arg)
-+{
-+	struct mm_struct *mm;
-+	struct memcg_ksm_stat *ksm_stat = arg;
-+
-+	mm = get_task_mm(task);
-+	if (mm) {
-+		ksm_stat->ksm_rmap_items += mm->ksm_rmap_items;
-+		mmput(mm);
-+	}
-+
-+	return 0;
-+}
-+
-+static int memcg_ksm_stat_show(struct seq_file *m, void *v)
-+{
-+	struct memcg_ksm_stat ksm_stat;
-+	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-+
-+	/* Initialization */
-+	ksm_stat.ksm_rmap_items = 0;
-+	/* summing all processes'ksm statistic items of this cgroup hierarchy */
-+	mem_cgroup_scan_tasks(memcg, evaluate_memcg_ksm_stat, &ksm_stat);
-+	seq_printf(m, "ksm_rmap_items %lu\n", ksm_stat.ksm_rmap_items);
-+
-+	return 0;
-+}
-+#endif
-+
- static const unsigned int memcg1_stats[] = {
- 	NR_FILE_PAGES,
- 	NR_ANON_MAPPED,
-@@ -2079,6 +2113,12 @@ struct cftype mem_cgroup_legacy_files[] = {
- 		.name = "numa_stat",
- 		.seq_show = memcg_numa_stat_show,
- 	},
-+#endif
-+#ifdef CONFIG_KSM
-+	{
-+		.name = "ksm_stat",
-+		.seq_show = memcg_ksm_stat_show,
-+	},
- #endif
- 	{
- 		.name = "kmem.limit_in_bytes",
--- 
-2.39.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 RESEND] arm64: dts: qcom: sa8775p: Add default pin
+ configurations for QUP SEs
+To: Bjorn Andersson <andersson@kernel.org>
+CC: <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
+References: <20250416101411.1444248-1-quic_vdadhani@quicinc.com>
+ <pxywhhhtraaykx32z7aifyd63gxydwrf4byuanv4zbfeqhk2fx@h6lyn7btyrtz>
+Content-Language: en-US
+From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+In-Reply-To: <pxywhhhtraaykx32z7aifyd63gxydwrf4byuanv4zbfeqhk2fx@h6lyn7btyrtz>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=EOYG00ZC c=1 sm=1 tr=0 ts=68077bb0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=_55ISlHlL2tq_TlyrwIA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: vS9HXyPTtFfcn-WsfgnPcCH88VJzi26w
+X-Proofpoint-ORIG-GUID: vS9HXyPTtFfcn-WsfgnPcCH88VJzi26w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220086
 
 
+
+On 4/20/2025 10:40 PM, Bjorn Andersson wrote:
+> On Wed, Apr 16, 2025 at 03:44:11PM +0530, Viken Dadhaniya wrote:
+>> Default pinctrl configurations for all QUP (Qualcomm Universal Peripheral)
+>> Serial Engines (SEs) are missing in the SoC device tree. These
+>> configurations are required by client teams when enabling any SEs as I2C,
+>> SPI, or Serial protocols.
+>>
+>> Add default pin configurations for Serial Engines (SEs) for all supported
+>> protocols, including I2C, SPI, and UART, to the sa8775p device tree.  This
+>> change facilitates slave device driver clients to enable usecase with
+>> minimal modifications.
+>>
+>> Remove duplicate pin configurations from target-specific file as same pin
+>> configuration is included in the SoC device tree.
+>>
+>> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+>> ---
+>> v1 -> v2:
+>>
+>> - Drop drive-strength and bias property from soc dtsi.
+>> - Update commit log.
+>>
+>> v1 Link: https://lore.kernel.org/lkml/20250225154136.3052757-1-quic_vdadhani@quicinc.com/
+>> ---
+>> ---
+>>   arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi |   7 -
+>>   arch/arm64/boot/dts/qcom/sa8775p.dtsi      | 750 +++++++++++++++++++++
+>>   2 files changed, 750 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> index 967913169539..17c3f662d14b 100644
+>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> @@ -712,11 +712,6 @@ ethernet0_mdio: ethernet0-mdio-pins {
+>>   		};
+>>   	};
+>>   
+>> -	qup_uart10_default: qup-uart10-state {
+>> -		pins = "gpio46", "gpio47";
+>> -		function = "qup1_se3";
+>> -	};
+>> -
+>>   	qup_spi16_default: qup-spi16-state {
+>>   		pins = "gpio86", "gpio87", "gpio88", "gpio89";
+>>   		function = "qup2_se2";
+>> @@ -917,8 +912,6 @@ &remoteproc_gpdsp1 {
+>>   
+>>   &uart10 {
+>>   	compatible = "qcom,geni-debug-uart";
+>> -	pinctrl-0 = <&qup_uart10_default>;
+>> -	pinctrl-names = "default";
+>>   	status = "okay";
+>>   };
+>>   
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+> [..]
+>> +			qup_spi16_default: qup-spi16-state {
+>> +				pins = "gpio86", "gpio87", "gpio88", "gpio89";
+>> +				function = "qup2_se2";
+>> +			};
+> 
+> Now we have qup_spi16_default in both sa8775p-ride.dtsi and sa8775p.dtsi
+> 
+> I presume you forgot to clean that up?
+
+Sure will update in next patch.
+
+> 
+> 
+> PS. I don't know why the word "RESEND" is present in $subject. Why was
+> this resent?
+> 
+
+Hi Bjorn,
+
+I apologize, but I'm not entirely sure if there has been any approval or 
+if the patch will be accepted. Since it's been over three weeks, I 
+thought it might be a good idea to resend it.
+
+I apologize for any confusion caused by resending the patch.
+
+> Regards,
+> Bjorn
