@@ -1,172 +1,72 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F10A277035
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35EF1E9B12
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321066; cv=none; b=LxkBSvbqSc8u5ooe8LS+YnwEoXF5cyu3P/nQ/kZub6Y9a3I1VicyeLxhGn/MqIlX34EBseaKmqtI7tS2A/tweNgmodtNfAehJVqMJY08yH/zTc2jejOMYV8Qs/A63LnAiD2aBcFeNVR2uH28u4+xUL9bGKCixfLNKtwrFc/ixCQ=
+	t=1745321131; cv=none; b=OnJuhJCzizhtwrea7e91xLGl+YqNVT1QAxok9qlIJwa0GrhzNweh1ysYE4I4eFvIkqg2hR4Ff1NIdnq66Z4V72z///xE88GoDkpmqhClvNgV63zEg8s5OY4lKfpeQN/pzAVk5zXf5N0JaTzsyPOOTM/GbGhxhBOtNpjaQOSBgg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321066; c=relaxed/simple;
-	bh=pA/B4ZnrPUmnsbOKsAWHS0EypfAvsJS0RATGobZrhuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rxrign57FXYWaxqxJ/mgx8R+2OJ7nxGQU6zTfPx/t3n1dbeleyFhH5l/sx1dEfHeh0QSdkyYrKGaxWiyphQrPMQlNfOWsCiy8r6VQSlvm1mSDXk6ZGXXqlxdryS7RNpWNGRvRuywFvp9awmt77loj3mr+6QXd6vJquKMe1gvRN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m1HaMxpa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=95YmAc/S; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=m1HaMxpa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=95YmAc/S; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745321131; c=relaxed/simple;
+	bh=R9I9i/Zujv3k56HbqAZj1mwgzRySnfxVZYpxCOHucxI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ODNyVlkNR6xbM50Cj+7B513QGUQh763QSzDAQRkCGgH/1uyYUD2Ni5MwocZXQC2fRbxMcWluRS32OCxmHf+YVc2WehBMHLvAM6PSOljjU6mwcoARGjnB4zaNpXkqhevqd7ztsifjmO5KsoXGUcqZJ1E8GQcgRoQfhV7ma2da+wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lodewillems.com; spf=pass smtp.mailfrom=lodewillems.com; dkim=pass (2048-bit key) header.d=lodewillems.com header.i=@lodewillems.com header.b=cIstcjUN; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lodewillems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lodewillems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m1HaMxpa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="95YmAc/S";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="m1HaMxpa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="95YmAc/S"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=lodewillems.com header.i=@lodewillems.com header.b="cIstcjUN"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7891821192;
-	Tue, 22 Apr 2025 11:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745321062;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gYDdhs3taVFyAILO9qQlPWX+HJ9PZfnMXsFNTPjFSd8=;
-	b=m1HaMxpaq3m1ULVdgoWuQs2c5lp7yesc9wz8gcIDvxgbPmLzox8af/y5IH5pJpH2e3Cmdh
-	8qEramdgttdujsFYwy1/Rra/9dyh+dGwUh1hoXiFSzRdl34gprDS/JqP//LcxhN6/cJkCM
-	F2lbRR2ZND+pSpbu1SvBE47gzFpNJ+k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745321062;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gYDdhs3taVFyAILO9qQlPWX+HJ9PZfnMXsFNTPjFSd8=;
-	b=95YmAc/ScmRSmM+9D1m3ruRV0mAd7YT1f0HLv8RhHYdqgGwBCJI6+ZJD70wtz5wvGf+3Zp
-	v53IMKXznuTQ9wCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=m1HaMxpa;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="95YmAc/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745321062;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gYDdhs3taVFyAILO9qQlPWX+HJ9PZfnMXsFNTPjFSd8=;
-	b=m1HaMxpaq3m1ULVdgoWuQs2c5lp7yesc9wz8gcIDvxgbPmLzox8af/y5IH5pJpH2e3Cmdh
-	8qEramdgttdujsFYwy1/Rra/9dyh+dGwUh1hoXiFSzRdl34gprDS/JqP//LcxhN6/cJkCM
-	F2lbRR2ZND+pSpbu1SvBE47gzFpNJ+k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745321062;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gYDdhs3taVFyAILO9qQlPWX+HJ9PZfnMXsFNTPjFSd8=;
-	b=95YmAc/ScmRSmM+9D1m3ruRV0mAd7YT1f0HLv8RhHYdqgGwBCJI6+ZJD70wtz5wvGf+3Zp
-	v53IMKXznuTQ9wCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C7D6139D5;
-	Tue, 22 Apr 2025 11:24:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ub7yEWZ8B2jgCgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 22 Apr 2025 11:24:22 +0000
-Date: Tue, 22 Apr 2025 13:24:13 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/13] btrfs: update __btrfs_lookup_delayed_item to to
- use rb helper
-Message-ID: <20250422112413.GB3659@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250422081504.1998809-1-frank.li@vivo.com>
- <20250422081504.1998809-2-frank.li@vivo.com>
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zhfzh556kz9snt;
+	Tue, 22 Apr 2025 13:25:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lodewillems.com;
+	s=MBO0001; t=1745321120;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KGNyJeJF+IUDJSrb3/6OYClcKxuunuMKQjpVySTNflg=;
+	b=cIstcjUNoZngeQy9Sw36XC2gUOnH06hV4ygmnKplXL4u2Fd3HvnhRfCLSmcl4QWRTu3DhI
+	EsUqVFfQMtHZew66ejvdhqTvfjdNzHbh3kndFQd481CY+NMsJVjapk1YGxKQhSGTt9IkgF
+	ti8s9Lz+K5R7NNxnu0m1iQah6XW1o7TtU0lwIEZqsf6jWjGqNoNRDkJETdafxH4xiEj0Sn
+	YGweOxB1zGdsEWQ9TZp/4+42cJ4Br2bXxK64PDop9sscFlm1/k6oTmeMehCJpVj1hynpAv
+	NHF1BFs9PhTl8NSQaZ9qBOs3R7HZMcHmBDcRgM98fmtRORro65g19pFEECQTbA==
+From: Lode Willems <me@lodewillems.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Lode Willems <me@lodewillems.com>
+Subject: [PATCH] Input: xpad: Add support for 8BitDo Ultimate 2 Wireless Controller
+Date: Tue, 22 Apr 2025 13:24:27 +0200
+Message-ID: <20250422112457.6728-1-me@lodewillems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422081504.1998809-2-frank.li@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 7891821192
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.cz:replyto,suse.cz:dkim,suse.cz:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 02:14:53AM -0600, Yangtao Li wrote:
-> Update __btrfs_lookup_delayed_item() to use rb_find().
-> 
-> Suggested-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/delayed-inode.c | 39 ++++++++++++++++++---------------------
->  1 file changed, 18 insertions(+), 21 deletions(-)
-> 
-> diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-> index 3f1551d8a5c6..dbc1bc1cdf20 100644
-> --- a/fs/btrfs/delayed-inode.c
-> +++ b/fs/btrfs/delayed-inode.c
-> @@ -336,6 +336,20 @@ static struct btrfs_delayed_item *btrfs_alloc_delayed_item(u16 data_len,
->  	return item;
->  }
->  
-> +static int btrfs_delayed_item_key_cmp(const void *k, const struct rb_node *node)
+This patch adds support for the 8BitDo Ultimate 2 Wireless Controller.
+Tested using the wireless dongle and plugged in.
 
-Please don't use single letter variables, here you can use 'key'
+Signed-off-by: Lode Willems <me@lodewillems.com>
+---
+ drivers/input/joystick/xpad.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The function name should be something like 'delayed_item_index_cmp' so
-it's clear what object and what its member it compares. This applies to
-other patches too.
+diff --git a/drivers/input/joystick/xpad.c b/drivers/input/joystick/xpad.c
+index c33e6f33265b..c933e47173bd 100644
+--- a/drivers/input/joystick/xpad.c
++++ b/drivers/input/joystick/xpad.c
+@@ -387,6 +387,7 @@ static const struct xpad_device {
+ 	{ 0x2dc8, 0x3106, "8BitDo Ultimate Wireless / Pro 2 Wired Controller", 0, XTYPE_XBOX360 },
+ 	{ 0x2dc8, 0x3109, "8BitDo Ultimate Wireless Bluetooth", 0, XTYPE_XBOX360 },
+ 	{ 0x2dc8, 0x310a, "8BitDo Ultimate 2C Wireless Controller", 0, XTYPE_XBOX360 },
++	{ 0x2dc8, 0x310b, "8BitDo Ultimate 2 Wireless Controller", 0, XTYPE_XBOX360 },
+ 	{ 0x2dc8, 0x6001, "8BitDo SN30 Pro", 0, XTYPE_XBOX360 },
+ 	{ 0x2e24, 0x0652, "Hyperkin Duke X-Box One pad", 0, XTYPE_XBOXONE },
+ 	{ 0x2e24, 0x1688, "Hyperkin X91 X-Box One pad", 0, XTYPE_XBOXONE },
+-- 
+2.49.0
 
-> +{
-> +	const u64 *index = k;
-> +	const struct btrfs_delayed_item *delayed_item =
-> +		rb_entry(node, struct btrfs_delayed_item, rb_node);
-> +
-> +	if (delayed_item->index < *index)
-> +		return 1;
-> +	else if (delayed_item->index > *index)
-> +		return -1;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Look up the delayed item by key.
->   *
