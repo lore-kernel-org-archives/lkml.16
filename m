@@ -1,140 +1,130 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6866F28368B;
-	Tue, 22 Apr 2025 13:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84D227CCF2;
+	Tue, 22 Apr 2025 13:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329575; cv=none; b=tdAKx26Vd540yz1pSyKkoVCRRNdI8/Y0WEdpA7GF0jnBknbsXdx7GTbCUEeibNHCHcqvu6as6c4reidxisB4ptDxQzHu1X1gKTOm74bX2yXllQCvrnp86Z3G+TW79tASk09EPExABLupbIsqy35wenR+X+rP5i6lUlPXzGLaQp8=
+	t=1745329592; cv=none; b=pgCQAVdO7HeRl8ONYE/pySPwO5RtAlJNWLotxkoD1Bu/EqMZnCEPfJ+Baz/wk5CC7NKPdRweVbABxX/rU8ZSDM3Rg4gb0k8WxLqpBTsSn+/ypCK/sIMQ7OjGBWQbSZKmvBegf9oSqNr+ZvD6c7Tce/DGwx5pRkW6u+s5ufW3srk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329575; c=relaxed/simple;
-	bh=gV6qsAJ1S6JKoBepICJyfGolkQc+4oYM8bEBJtZZCxo=;
+	s=arc-20240116; t=1745329592; c=relaxed/simple;
+	bh=dMecEbaMU5nXf1Rjydxt+TbhsUOIhNDz3YslKq53vwc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hga7ZiKA9Mj/Rksd8r3Pg4NUG1op+bLpVEAVqKvtGenfHRnZ3foYICmbPcYnSbBHG/AkuENN4e2ZPWjvieVt4w2Cm6gR6+4clUh/Cw/K49IF8FZqLME5yZQmngUJCWAwa0ZGPhOLkWFc0WnTUFVqUgB92m/tHiGovt1eDXsMcYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbfQi0Ty; arc=none smtp.client-ip=209.85.216.46
+	 To:Cc:Content-Type; b=KgLZzyJBCAdVbzZj1WuOxe+g57KgGLOGVw9yW68dHTpuMPgvvM7lU6Gs33e7Gi402z2n9DJeFMU0MCymJabxh/9aGW5iZl6/to93llbATTEI9shuwe/ibrNAD744bqiq9X83LrvbRWh5s7tMtMZF0VQzI3xdUbI7m5M/RegJ57o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwGrTKmR; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbfQi0Ty"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301001bc6a8so620912a91.1;
-        Tue, 22 Apr 2025 06:46:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwGrTKmR"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso654335a91.1;
+        Tue, 22 Apr 2025 06:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745329572; x=1745934372; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745329590; x=1745934390; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zKAXYEa6/VLh0NZkKTBiPYID8+vaPzcEPkeHsNwXQDg=;
-        b=lbfQi0Ty03KFr3Osi3QHgqvQsJFtWRDBLwVhK0VfR3JNP4x0/VXb7FUfBtH0BuyfDF
-         yo6rSX5t3qN6JPU8z94bUiERq1C7nQX6w1NtMu7nZlxGQ5OdETQerF0czlevA7f140ZV
-         vdPBvbHUH0kKI0VDQslJSEKp6sc8Vb0yxVHhf+tZXklYKV0n9XrSSzc2wgKzPmGK2nQu
-         ZJjSHgYxiiLB0itx+SI7ISWowFvQtrYEucjpM6gD37pksH7VZOPWH9Pkvj4bLycOIhKx
-         eU0Z6P9Yn4CuB3npybfwfrnRqr3+DCy9V+lgwl4aygpIV56C/TA3jHuu5Tho0CqM9Lua
-         gytQ==
+        bh=awwFbDm7jflKQEqDpnbX53KjJNqGVg4jeRSb+a5lprA=;
+        b=UwGrTKmR2KdzMawTLDvMblMG8HGHXp6zJ4agURsC0fRq677VStowZlbY2Eci0dcSAO
+         3QkNpRbilqMRz6+2w3Ql7HXZDyfzfo3vtX4J3Qan2PAPXupuYd9JOjQIBaJStU81quIH
+         ZsrKmewdz1XG+tiVKGNr1AsRBH2OwL5UnUDdFZII7sAn5FzDyizrPaqMcLJQT8aggubF
+         DiBnubJojWC+dKnGPwFofiUk1Xqc+m3d9eGVmK/ybBla4KCMQcdytsnxCfp1JObw4UTg
+         04nOFBVBux7PM4lTg9se4/Qw5lJCVcNv5+oFRgXLCgQ/b4tTflQLxPSIqb19+heq59Ph
+         DpOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329572; x=1745934372;
+        d=1e100.net; s=20230601; t=1745329590; x=1745934390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zKAXYEa6/VLh0NZkKTBiPYID8+vaPzcEPkeHsNwXQDg=;
-        b=CiMntXR4hnWRgUx3+7Y4nQ/h4ylbFk8wALLI2sy6ezdmj+bfb5MjafknBZM0kCkc2x
-         0jTk2ynG+EksiaPo+qQImCIMDP3y2GyUi63rvKX0AV3Hq9RByY/gucmdZSMPALlPvLuP
-         pAGc8B0IDWAHyofq4cUtYwz4+EHUQG4xBKVeauIwsEopQYQX20S7YWQPyPAGOGo97zpM
-         1fX18+t62fr7nhFVFRIbDxOOnk9VtXaUb7W9C6rA+xdhpPcSyAy3GjUkXECBYBrCkVWh
-         gQ/wfPNXsBpsPcjcRmQCa2geu6ZjtuwSF1W5QNgcvel3cfpfWtd9mGtWvLLRwWGxBmO2
-         Aipw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgDZlLh/EM3gqwTmMv6kBomfOfFvFpv6Y/qZXVtkuOx0VA8BkA7A9bGM2JvLZzkYsx9aTqHlU7SBo/gQw=@vger.kernel.org, AJvYcCX4jDOAEVHkH8BjqPoqDibPNDcnsHPhtyug6ZXtzV35bUyTyn3pBNxlCo0XXnTMca7TbbpU3fKx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxANgDNX2RjBYKLtkG740kVp/S25o1a2B+2lMeplLpbfetWwLSm
-	+WH6TIdIlRDgdzhSVmYK3qGp/e82437DPqrF3uzICMEcQqkTTDhwHLEl5FYypOwN1c+hWl7SfjS
-	JzheqItP27W/7+hmDCZCTCxqKJOY=
-X-Gm-Gg: ASbGncvDfrudz6h7Bmdz2I9GTl/PgK92uRsIQ+In+vx2SIjLVDxGXX8nODMUdeMYIM0
-	L/zr8yc/aAOr2PBVACYZN+P/EEN8Ko+Axft4gxwI4UsUdV7XCHOh9+CI+KmrHFZtWl14FlNQq15
-	OR+2CdLmKXOFKuUvoMOafS0DsWl7WWQeA6
-X-Google-Smtp-Source: AGHT+IECnr/zJ2E6MF2usCsrGfyxjTBBW7hk5J/2Up1103fbS/c9RJz2TNwlZsPntlffsfti9rw7Z0c8MEnIm+0fhCM=
-X-Received: by 2002:a17:90b:1c83:b0:2fe:a747:935a with SMTP id
- 98e67ed59e1d1-3087bbc70efmr8381367a91.4.1745329572515; Tue, 22 Apr 2025
- 06:46:12 -0700 (PDT)
+        bh=awwFbDm7jflKQEqDpnbX53KjJNqGVg4jeRSb+a5lprA=;
+        b=XLtRhE3GBDwehjHF6YXas4p5pK76xyMsDWjB5pmVPIfADSeXBr0GJYnybPrUcX+QNZ
+         Qo5kACuTD+9Z3BIc5PfvX63Je5VtdaHjvcqXTArSTf7ZqSoVDyf0q6I49O312ZOr6na/
+         s9sKkZbcy6t3FnNFiUDL+w0ShiJpWTWSHAv3VOjyXD9IbLNn6J+COwsChlj43NlVUtjx
+         YQNks+SDMKdn5YR/4nrmZFSEw7jngC84T/4f8VJ86iWTCyN3g7vpkONey9M8V37UBjyg
+         url+eKixxqwIDdDRe7ct+cvu8gLWZI8kK8KhsONg7GEAJpsYNEIiHUWgCGgLfr9BY8tb
+         qpBA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8uPBOTca0phVXB9e1VizowUddcBUlRglPS/p4mxoTse4lrSg+8K8EJZlFm653FJdo5tCmU4/lO8F4u2RSvPc=@vger.kernel.org, AJvYcCWB/Z9X+3Bylo0ykIky7nXQzSr8gMZSmBRJMqkLEIH6ZShpyawSehmwL5OFzJNIM44dH4udcfp7Xr4oqwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvnTkfQ9Sfa0Biz/3fH41VvstCNUPRZQ8mt5ATBHER4p1yRJAE
+	xVVeErIxuGnTMDIIC+acZ6T49merZkIHVZ4xmugkVi2l5oBRUbiJLDXDhGBs1THYa+Zlfr374ZC
+	Z8Q9Da9F90LkwaO6an7tfrsiCsAg6qcstJXA=
+X-Gm-Gg: ASbGncsyECG+dFBHG9Gye3LgHV5SsBH+JW4CaVvRAcUvI3NXUDFxpacm0KMvDSskoaO
+	5/jbuhk9pa6kXTL12Whk/6RJzprAG4ywVJknhXr/jzJvtHAxJj3iw1pQ9NadAFcN/DTpIaSo1k+
+	dViWhrPy8Nt7VouNrV9WdNbQ==
+X-Google-Smtp-Source: AGHT+IEvD/7Oi1OXNnSpSvib9zBGTiZYtSa6KmXETml5Sc3wcLno9P6YnLmXGVY+d+60He3bpYpfTe9GXBlxik21cGA=
+X-Received: by 2002:a17:90b:1c91:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-3087ba5ccbamr8017716a91.0.1745329589855; Tue, 22 Apr 2025
+ 06:46:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418083129.9739-1-arefev@swemel.ru> <PH7PR12MB56852EECD78C11BD15157AF383BB2@PH7PR12MB5685.namprd12.prod.outlook.com>
-In-Reply-To: <PH7PR12MB56852EECD78C11BD15157AF383BB2@PH7PR12MB5685.namprd12.prod.outlook.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 22 Apr 2025 09:46:00 -0400
-X-Gm-Features: ATxdqUGU-CCMs4qZcsvRTip94orySY_8TgzWOPynOQ5mL61RjWPeZ4592c9uXKo
-Message-ID: <CADnq5_NLEUZget2naQm9bYH1EsrvbhJCGd7yPN+=9Z_kKmUOCw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/amdgpu: check a user-provided number of BOs in list
-To: "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc: Denis Arefev <arefev@swemel.ru>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrey Grodzovsky <andrey.grodzovsky@amd.com>, Chunming Zhou <david1.zhou@amd.com>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250422125633.30413-1-contact@arnaud-lcm.com> <20250422125824.30525-1-contact@arnaud-lcm.com>
+In-Reply-To: <20250422125824.30525-1-contact@arnaud-lcm.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 22 Apr 2025 15:46:16 +0200
+X-Gm-Features: ATxdqUFOX-8ZK9wTG68OV2QHGuhfwdNTtWKDYoDi6eyZlmEfBl_bLh2iur-YQGs
+Message-ID: <CANiq72n41Oj4K-yZCWbNXJQEEjTqjXHYgrkffAg_mUg8dKLWQg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] checkpatch.pl: warn about // comments on private
+ Rust items
+To: Arnaud Lecomte <contact@arnaud-lcm.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
+	skhan@linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Applied.  Thanks!
+On Tue, Apr 22, 2025 at 2:58=E2=80=AFPM Arnaud Lecomte <contact@arnaud-lcm.=
+com> wrote:
+>
+> The detection uses multiple heuristics to identify likely doc comments:
+>   - Comments containing markdown
 
-On Tue, Apr 22, 2025 at 5:13=E2=80=AFAM Koenig, Christian
-<Christian.Koenig@amd.com> wrote:
->
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> ________________________________________
-> Von: Denis Arefev <arefev@swemel.ru>
-> Gesendet: Freitag, 18. April 2025 10:31
-> An: Deucher, Alexander
-> Cc: Koenig, Christian; David Airlie; Simona Vetter; Andrey Grodzovsky; Ch=
-unming Zhou; amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org=
-; linux-kernel@vger.kernel.org; lvc-project@linuxtesting.org; stable@vger.k=
-ernel.org
-> Betreff: [PATCH v2] drm/amdgpu: check a user-provided number of BOs in li=
-st
->
-> The user can set any value to the variable =E2=80=98bo_number=E2=80=99, v=
-ia the ioctl
-> command DRM_IOCTL_AMDGPU_BO_LIST. This will affect the arithmetic
-> expression =E2=80=98in->bo_number * in->bo_info_size=E2=80=99, which is p=
-rone to
-> overflow. Add a valid value check.
->
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->
-> Fixes: 964d0fbf6301 ("drm/amdgpu: Allow to create BO lists in CS ioctl v3=
-")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Denis Arefev <arefev@swemel.ru>
-> ---
-> V1 -> V2:
-> Set a reasonable limit 'USHRT_MAX' for 'bo_number' it as Christian K=C3=
-=B6nig <christian.koenig@amd.com> suggested
->
->  drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/dr=
-m/amd/amdgpu/amdgpu_bo_list.c
-> index 702f6610d024..85f7ee1e085d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> @@ -189,6 +189,9 @@ int amdgpu_bo_create_list_entry_array(struct drm_amdg=
-pu_bo_list_in *in,
->         struct drm_amdgpu_bo_list_entry *info;
->         int r;
->
-> +       if (!in->bo_number || in->bo_number > USHRT_MAX)
-> +               return -EINVAL;
-> +
->         info =3D kvmalloc_array(in->bo_number, info_size, GFP_KERNEL);
->         if (!info)
->                 return -ENOMEM;
-> --
-> 2.43.0
->
+Markdown is required in both documentation and comments, so I don't
+think we can use some of those, e.g. inline code spans (i.e.
+backticks) are common (and actually expected) in comments. Something
+like a title (i.e. `#`) or intra-doc links are uncommon, though.
+
+>   - Comments starting with an imperative tone
+
+Some people document using the third-person, e.g. some functions say
+"Returns ..." like you have below. (It is not easy to enforce
+kernel-wide a single style here, thus so far we don't.)
+
+(Looking briefly at the code) Ah, I think you are covering both, good.
+
+>   - Comments with references: @see, @link, ...
+
+Do you mean Markdown references? Or javadoc-like ones?
+
+(Looking again at the code...) I think you are referring to actually
+strings like `@see`. Hmm... I don't think we have those -- the only
+`@` I would expect in a comment are thinks like emails or the
+`rustdoc` syntax to disambiguate the "kind" of item, e.g.
+`type@NotThreadSafe`. I do see a `@maxlen` somewhere, but that should
+have been an inline code span, and anyway it is not a `@see` or
+`@link`. But I may be confused here?
+
+> Comments are only flagged if they:
+>  - Appear above private items
+>  - Don't contain obvious non-doc patterns (TODO, FIXME)
+>  - Score sufficiently on heuristics
+
+Nice work! I wasn't expecting something with actual weighted scoring,
+but if the maintainers are OK with something as involved as that, then
+I guess it is fine. We may need to tweak the scoring in the future,
+but it may be a good experiment.
+
+Thanks!
+
+Cheers,
+Miguel
