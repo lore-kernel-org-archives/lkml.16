@@ -1,70 +1,91 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453B018A6AB;
-	Tue, 22 Apr 2025 04:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B056D19FA93;
+	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296056; cv=none; b=NkSp2DNtkljacUuEQ5F/9CqLtLoG3o1I+5ifzwIjzL3R5mRYyNICSfMsscG0eaAo7nAC9yh7S8vUDzzs45+Q8fXCq7/LiOD8zYgV6GF3rbLQgr0Ss9/o0A6lTg9u4Wbi73M7jRSKTrj0VNa2iWMXlQPIEIw4dMRXNYPBTVboPHI=
+	t=1745296055; cv=none; b=jFmE9ViVWN61qId8ETyNYhoDBNCySTom5RyW3GMAn+SudBOHbYwgnITpvue6c1UEjD+1j63B2j1Inq09j7eg8RXKTLjDXWJORlwdQoW3uB0ZS3vXcnnnnHF34bMCNR9EksWn6ZwjZjTX2mosjzR4XWckPVgANxrDg2+S9HIdHdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296056; c=relaxed/simple;
-	bh=PLSm/GNxIQKdFcbfEfmuNrKOANZViQEJeLI7/wm2bbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=odAZ6vvnoaqMVfJf2pP7VmfXat5tb9WCdjMFCM41gn1pQlIhClAQ8ib4CD3iadnheXobs1QHa2YlqEuxfG++4jTwnyfA95qvNyhqm7td28gSeMdamcbCj0nsjrpU7IVDdKNotvcsppPOwWqKyf5lq8kZEFv+P0DbFsFgsQwWJ1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 17A2568C4E; Tue, 22 Apr 2025 06:27:28 +0200 (CEST)
-Date: Tue, 22 Apr 2025 06:27:27 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v8 20/24] blk-mq: add scatterlist-less DMA mapping
- helpers
-Message-ID: <20250422042727.GC27723@lst.de>
-References: <cover.1744825142.git.leon@kernel.org> <87b151a3791d71e58ec6f1b42bcf5fe06304cf80.1744825142.git.leon@kernel.org>
+	s=arc-20240116; t=1745296055; c=relaxed/simple;
+	bh=vTaFEnXPtLBilZRMAVM2qU3oBb5SYIUsJMP83Xqz0Zc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R+P+oUo8Eaww9CsdimfkECp6g7muGfZkGPWqBiSxF2AbVSpqRVL4pgjbcO1WCVrtJt/9WIM1OX/OT5M46vn7jAqi0ZIb3WsKTSx/uGzRFRyl8PBTMZg3oqhC//LGa/Mj4R6+ysxg16dC1cNrlbL9Dpd5oe/MHHxn08M6Mmy3Dzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUYBj4np; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUYBj4np"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26954C4CEED;
+	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745296055;
+	bh=vTaFEnXPtLBilZRMAVM2qU3oBb5SYIUsJMP83Xqz0Zc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ZUYBj4npd8tKt5eXpXbfQ7gJnyJj8T8UfrB3aMvOgQ5LN65pAJH9MsxeZxvDQaCdA
+	 JgL9IuZq06wbZjD7MsMlIK/3XHVaWn6ggSeI8r0bJSqIhbpQszJvXkhogY8d0LJQHa
+	 Q197EEZEFL67kGCjTvIH/M7Ab0wC5wdD/osWA9j+sEpizb0vC5pJw/Qg2xOUmFo2Iu
+	 gcvcn76B4ZjzUXB/lbeW5iR9JVm0f2B/PVHVxZgAKbsB7snVrDckSGAV9meqfaPtEk
+	 w6WAeJghnnRTBOVIuFyq1jS/7SXgh068R8dHBVw4fgam/Bh3r/j2G6ULot58lfnS8G
+	 1WNoiS9iBoiow==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13700C369D8;
+	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Mon, 21 Apr 2025 23:27:33 -0500
+Subject: [PATCH 1/2] dt-bindings: power: supply: bq24190: Add BQ24193
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87b151a3791d71e58ec6f1b42bcf5fe06304cf80.1744825142.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250421-bq24193-v1-1-f125ef396d24@gmail.com>
+References: <20250421-bq24193-v1-0-f125ef396d24@gmail.com>
+In-Reply-To: <20250421-bq24193-v1-0-f125ef396d24@gmail.com>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745296054; l=840;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=qOjayHUiWoIVkR1SIJGiQLJodRWPSQpu8XYOp3kWbAY=;
+ b=ybZ6PARFeANCIx8hbvatk6BWSS9tEWyKaPgfm7I/uNQljR6DONKB9OJtyZx6eFUbNpaO/U28r
+ fsALrh2QtcAA1hPFAleWBrnaYJuQSsiImTNKviTBxRZ3z5mMzHVcAH6
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Fri, Apr 18, 2025 at 09:47:50AM +0300, Leon Romanovsky wrote:
-> +#define blk_phys_to_page(_paddr) \
-> + 	(pfn_to_page(__phys_to_pfn(_paddr)))
+From: Aaron Kling <webgeek1234@gmail.com>
 
-The code can use phys_to_page now that that is provided kernel-wide
-instead this temporary helper.
+The BQ24193 is most similar to the BQ24192. This is used in many Nvidia
+Tegra devices such as the SHIELD Portable.
+
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ Documentation/devicetree/bindings/power/supply/bq24190.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/bq24190.yaml b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
+index 07adf88997b4e3eaa4bd7c6245efdc31fddc9058..307c99c077217ab4b5fac30694a4a316dd51f8e4 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq24190.yaml
++++ b/Documentation/devicetree/bindings/power/supply/bq24190.yaml
+@@ -19,6 +19,7 @@ properties:
+       - ti,bq24190
+       - ti,bq24192
+       - ti,bq24192i
++      - ti,bq24193
+       - ti,bq24196
+       - ti,bq24296
+       - ti,bq24297
+
+-- 
+2.48.1
+
 
