@@ -1,110 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CEA14EC46;
-	Tue, 22 Apr 2025 14:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D5A28E5EF;
+	Tue, 22 Apr 2025 14:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333191; cv=none; b=q/pUFAAET1SqCK1Sm3+n2h24Fp8kCTrDPeTIawUGOyZHuc7LU0n30rQchaGS00kfkaFWUOe21oQM6yN2HdjMIWUXqLMY9bzJrCTQvxvx2rZ/6HyTztl5COs/LDLfIfhsfs8tJbrblo7B3eHJ/0uGK3Yc6XA3KLthOOcMQ9pe7F0=
+	t=1745333194; cv=none; b=Np8iaMhsnZ+v1PFE6nuv4QJ2FnkyYhyzA/jLQgiMkMiNxjqmHgcVgvAKozStoTVwRNxnRK1r4BL2lXYkfccNwFoXkcfv1nwKmKrHuc41MzmB9N1l7zdhvzCxlxJoys+iqhOIMIcTbXET2XoALY/69l5subcC7GdoINpvZ8inkD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333191; c=relaxed/simple;
-	bh=4ZOxOHGaYZ7XnNdBiJCPQxJUvP74KyPgI+gTEuJB1zQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oRYmGagqL3EWWDGGpktph8D+dVXzT05UC91meFgu/uscS4w2ZlKtoqibMp8SQYPdUQ9x3tL2/u2kaMjENYqDIKzyrCEVWawyCh02geEhq9oWVCCt229Vl9KlW+kLinCXLvhU8BVuUEYYip9O3s8bPG9mzZhnS9ELLyfPi+ekBh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K82VEGXY; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745333194; c=relaxed/simple;
+	bh=JgGqmEvB2i0l21vTcFZrdqY+M7OFwFjriQNygbR07Vo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TAtBghVuAhTi9MEChERbhQbtI4sdqroUB7QsNhFWIpYW7n58K+9koW7NUtvksEYUr+FG3Wle2mlY+91LMrZOeY92iCYxZNLgr0pz3h8zyK99YnzRH2FOHKqIEtLwFQ9AuSOn+8GNEMK7Qjw/5AZ7lh9pFv13a/BboFjOrMQl5Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdO2A0wN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K82VEGXY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745333190; x=1776869190;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4ZOxOHGaYZ7XnNdBiJCPQxJUvP74KyPgI+gTEuJB1zQ=;
-  b=K82VEGXYLxU3g8Q/vA9sqXdLhqOoivm7AnMnA3UPC6C1ARSEtNp3jMlB
-   VBJ40u4O1DBP9Q0Dn97kV1XbHWxgeTAbHGfTgkElUQRuNmHSWY/In4feh
-   5X3zLl9SSlbU84DW6+GyFslp0rzKSI21EmOIRht/TkyWZjZRwh7Z0b4c7
-   d+dj9rxz5yuXH0vuEuwm/fMC1s9hqLdVnyWCxSVm8a6mWsk4+cqJ7UOxO
-   8B1gcG/5nPlyPRwUE1LlpppIXBe24piNlmOvpHx8rETCJ6FupeIg3XU/s
-   5WvBMsnEtmZg2m1KIhESUwbvHVRUcUwnWFpUvZ/3JW0LGbeJZNmi3SPIZ
-   g==;
-X-CSE-ConnectionGUID: aCg9K9JsQXKgdiaYiwfqkA==
-X-CSE-MsgGUID: 8+52QV0wSAK03JCNNwxnoA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57086522"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="57086522"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 07:46:30 -0700
-X-CSE-ConnectionGUID: ZZQ3jrKsQ5akuS+ddnGxrA==
-X-CSE-MsgGUID: PtZkqb46R2eCWWoIkHHL0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="163085646"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.111.159]) ([10.125.111.159])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 07:46:28 -0700
-Message-ID: <9dda1860-2919-434b-9d85-71b79296f1f2@intel.com>
-Date: Tue, 22 Apr 2025 07:46:27 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdO2A0wN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32060C4CEE9;
+	Tue, 22 Apr 2025 14:46:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745333193;
+	bh=JgGqmEvB2i0l21vTcFZrdqY+M7OFwFjriQNygbR07Vo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pdO2A0wN1ZV8jA9qx0DrlTiJxaOVS4zcZW4dGeGCosQ19JsMt7rtnaEjwiKCgeS7i
+	 vZ2eW3ddFv0JWSH+RZahh3K6EFnlEpQbzI8FJFrAXoLM9Bb86WuUUBGi2w+EpA6zkY
+	 QhVcXfdEz6r7kuzVWIqxmA6ECVrjGpWs7PpkS1tblZRgd2BMjM9IkfeJFcZS/ZyFd+
+	 n8TlTi4qGz8cuGZWZpIh204QCPbKlf91YWxvaNixQcDjQs6ytwI24ic/qhJFLvmHBm
+	 RxVgBc1efGnlG8ZFaM43Ad+E9ITsOcws6ErqccMuctgqdh/vUqvZqUb3ULL04347mM
+	 FCaZiVsM+Ex7w==
+Date: Tue, 22 Apr 2025 16:46:26 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 12/16] gpu: nova-core: firmware: add ucode descriptor
+ used by FWSEC-FRTS
+Message-ID: <aAerwsnx5VRQr_bM@cassiopeiae>
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-12-ecd1cca23963@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] iommu/vt-d: Assign owner to the static identity
- domain
-To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Kevin Tian <kevin.tian@intel.com>, shangsong2@lenovo.com
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250422075422.2084548-1-baolu.lu@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250422075422.2084548-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420-nova-frts-v1-12-ecd1cca23963@nvidia.com>
 
-
-
-On 4/22/25 12:54 AM, Lu Baolu wrote:
-> The idxd driver attaches the default domain to a PASID of the device to
-> perform kernel DMA using that PASID. The domain is attached to the
-> device's PASID through iommu_attach_device_pasid(), which checks if the
-> domain->owner matches the iommu_ops retrieved from the device. If they
-> do not match, it returns a failure.
+On Sun, Apr 20, 2025 at 09:19:44PM +0900, Alexandre Courbot wrote:
+> FWSEC-FRTS is the first firmware we need to run on the GSP falcon in
+> order to initiate the GSP boot process. Introduce the structure that
+> describes it.
 > 
->         if (ops != domain->owner || pasid == IOMMU_NO_PASID)
->                 return -EINVAL;
-> 
-> The static identity domain implemented by the intel iommu driver doesn't
-> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
-> for the idxd driver if the device translation mode is set to passthrough.
-> 
-> Fix this by specifying the domain owner for the static identity domain.
-> 
-> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 > ---
->  drivers/iommu/intel/iommu.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpu/nova-core/firmware.rs | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index cb0b993bebb4..63c9c97ccf69 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -4385,6 +4385,7 @@ static struct iommu_domain identity_domain = {
->  		.attach_dev	= identity_domain_attach_dev,
->  		.set_dev_pasid	= identity_domain_set_dev_pasid,
->  	},
-> +	.owner = &intel_iommu_ops,
->  };
+> diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
+> index 9bad7a86382af7917b3dce7bf3087d0002bd5971..4ef5ba934b9d255635aa9a902e1d3a732d6e5568 100644
+> --- a/drivers/gpu/nova-core/firmware.rs
+> +++ b/drivers/gpu/nova-core/firmware.rs
+> @@ -43,6 +43,34 @@ pub(crate) fn new(
+>      }
+>  }
 >  
->  const struct iommu_ops intel_iommu_ops = {
+> +/// Structure used to describe some firmwares, notable fwsec-frts.
+> +#[allow(dead_code)]
 
+Please use 'expect'.
+
+> +#[repr(C)]
+> +#[derive(Debug, Clone)]
+> +pub(crate) struct FalconUCodeDescV3 {
+
+Can we get some more documentation on the fields please? :)
+
+> +    pub(crate) hdr: u32,
+> +    pub(crate) stored_size: u32,
+> +    pub(crate) pkc_data_offset: u32,
+> +    pub(crate) interface_offset: u32,
+> +    pub(crate) imem_phys_base: u32,
+> +    pub(crate) imem_load_size: u32,
+> +    pub(crate) imem_virt_base: u32,
+> +    pub(crate) dmem_phys_base: u32,
+> +    pub(crate) dmem_load_size: u32,
+> +    pub(crate) engine_id_mask: u16,
+> +    pub(crate) ucode_id: u8,
+> +    pub(crate) signature_count: u8,
+> +    pub(crate) signature_versions: u16,
+> +    _reserved: u16,
+> +}
+> +
+> +#[allow(dead_code)]
+> +impl FalconUCodeDescV3 {
+> +    pub(crate) fn size(&self) -> usize {
+> +        ((self.hdr & 0xffff0000) >> 16) as usize
+
+What's this magic number?
+
+> +    }
+> +}
+> +
+>  pub(crate) struct ModInfoBuilder<const N: usize>(firmware::ModInfoBuilder<N>);
+>  
+>  impl<const N: usize> ModInfoBuilder<N> {
+> 
+> -- 
+> 2.49.0
+> 
