@@ -1,83 +1,149 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62A61F1818
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE87F50F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315333; cv=none; b=tz//9LtmmL26ulLzjRUXbut+FJYXV0PR9IwBdtDWF2fmgA+Ni8PQwkDsavhb5Q7Umvof6wQq3tzZtEDBeaOKxcm3nAgRiADguumzNBaP/GrwCCCatY6RBOTjgZE3h60pq+PLCYGO8POl/klLrFJhUTqjS/2MFBAX9z519MQYoUg=
+	t=1745315427; cv=none; b=R4sRnpKZqMk5h3EHfiGP37uK8yrb1roJA+vBfRfPHNq3BS5OWvIbUeV7ITWQ81+vtjrwxY19ZWUUQUhO1zuaz/rA+NcCZQhA1+O4ID6+3b3qM8SjR7e4YyCNytvFDIRkR+IMTYfdTRVdBdnRSQlbFo9rjobuoyeGDCnaot7kMak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315333; c=relaxed/simple;
-	bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gYBMJUQ6EHTQj4pjjXC5r5/2Pncryy+Teas39TIW9n4BgbZgwlckynkuEphICyVv0NXeqcZ2SSTdxQLTxmQbSZ2NrK9Hm8ABzyvetf2RFCA2cMU+n4v0CfwhnuBJok7SskyK9hGWYuDNLjnOPZc/JdFT8onZqx1Snq8ctzowyZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LAQdd6ia; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745315427; c=relaxed/simple;
+	bh=zDV8OxNLQ8MhcmOT1G6Ea6ESv4kGJYgT3u5B/5/FiJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HMDISJrqIkHLxdn7n1ZnzIyf+L6/MWmvqSHtvQD4XN2sKjKs4BUh6OrIfHSICzvQ6KWUBZTJeB8hysUl/BbssMSvs/9pT3CFsMslDjOTGg2zatND8DCOylKlc0kNollg6lzsDJSO3yTTSbmxRrpN75ryBu9FWQw540qJHcME3HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qre4BV9t; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LAQdd6ia"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso23256105e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745315330; x=1745920130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
-        b=LAQdd6iauLwtGptgU3EaXluyARpqNNwEx0oriBBfFPUMlx+FETr1u9iUGn0FyvSRu0
-         7a7nVV52rLycwCipIfCy3TjnJGjxdWmr9BJrHdNTRuR7slyRVTb6lV2lu0qGkWqaC4ut
-         Kq5yamyH9LhgzSnZVd3VedBFQ1IWImF5HH6/a8suBiPqtOkz0LbcSzUmDjouzPw5VeiI
-         /z5Mu2XLOzHwDtaf91fiyQdjgon6xj5Y29VIDy6vhg57Gv8xWGYkEukhTkj6l7p1VLfU
-         sJtXvLwQceKsDlKB71W+sO1b5ybu+41b4VzC+HQ5oJvEk9UgsmpUxXuXvT6OXfS4vweA
-         HWrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315330; x=1745920130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
-        b=p6J59IMtWKRXbikODilhh/kjhvzuQlRjdiyqPenNCXa20eLJ4O604ut41L2uplnOKN
-         fIPzPbTXXgNDsw3L0YIiz9Vgb0LCV2aAjObvXEQ95htECE3gOyYAQAPzyRYnci+IRLoM
-         jtCEMyORi0CmFbwmwb23OK8IQn5TItaTCEiVCEjdv5IXrQuKnzxpx+ihkDBK8hIdmAWt
-         8E+coF1wYz4+64MWBqBMuQgsJ9G1cGbNf46swj4t7hismVWCha0/RTVORmZ+6iGRFO+r
-         AZ8QWhGNngtFzsjK89NBrbNQ8jGcHNdyCs+5u/xdXJSn0RJ50Z+zp88blpZkoMCFf4iU
-         f0DA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1K/TkHMJAJUPZMfgks3cPgADm2Ku8dlCCS2LyS9inObtZllbNmsaAuhQRfGSmiYqwx4Vgc+J0fJP9Z0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTPm6SBvTyt2uvSac+peH3zNxvQT72hAPYAOatfS+KFAkZQ+Y9
-	clL80kbxMu9JwRtQb7j6Fvpjzbl6PTK1EESy4XjFOadcEZNuXr/kJQIG2GEmQTSNmtElEdG9Aef
-	+cgR3lW+mZ3EaV/6G+m4Y66A8gPpe7mAYTsJx
-X-Gm-Gg: ASbGnctBVjY3+9laa6PfcBcoaVcOZsvNpJ5vKNvzga7YkJs6Vc/wCfq3AugppyGcC82
-	+vRKYVm6YFcnwMUOI73CLTyFXM6x2pH/rSFoXesKi4gqORId+gE0b4gQYMBo0teJVZ4X5I1fHG5
-	pdp5xvUHnGpGD1aFPQmsdxVxQ1frT2Ils+953cK2X/xUEqsK1ji+6r
-X-Google-Smtp-Source: AGHT+IEgzaZFAKrzkmmSeUf1lXEalL9tzKY7I1llBJA0Efnayt0Uc3PwpU5QMYlM6qieyM/pL0GWbg3KPU1y1RnS3Ro=
-X-Received: by 2002:a05:600c:4706:b0:43c:e9f7:d6a3 with SMTP id
- 5b1f17b1804b1-4406ab97d53mr125391395e9.13.1745315329911; Tue, 22 Apr 2025
- 02:48:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qre4BV9t"
+Date: Tue, 22 Apr 2025 02:50:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745315422;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5UdJAOdV/668zvHtmpZ0xxxMpckLQ1uAstFNlgQV1vw=;
+	b=qre4BV9tLsGeIf59kGU51ge7hOIju0IJVihA25NgW/o9nWdTridPvccoWQ7i1hqZKgJ8Qc
+	IgjYci9v/6p9X0DvxSyJbkLSrzJlNwcTZ5DKNBc82lfdP2SVrdsYNBjI5S+f0EShju4/o2
+	ZkU708BKkhJAnlZPjkMqWdDq8lzdCqA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jim Mattson <jmattson@google.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Rik van Riel <riel@surriel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 09/24] KVM: SEV: Generalize tracking ASID->vCPU with
+ xarrays
+Message-ID: <aAdmWtPWsS0tHf29@Asmaa.>
+References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+ <20250326193619.3714986-10-yosry.ahmed@linux.dev>
+ <de73e879d6775a9900789a64fcea0f90e557681f.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320-vec-methods-v1-0-7dff5cf25fe8@google.com>
- <20250320-vec-methods-v1-5-7dff5cf25fe8@google.com> <CAJ-ks9k=SxS_zAATadm8SZkfcY2OciYNaty3=WEs2iv5nFJRyA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9k=SxS_zAATadm8SZkfcY2OciYNaty3=WEs2iv5nFJRyA@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 22 Apr 2025 11:48:38 +0200
-X-Gm-Features: ATxdqUGsZpxo4hTBeVYFDjAT0FzOV2AQ03SSUmYtR0Xpk0I7nXbuFoofvKRGnJ4
-Message-ID: <CAH5fLggaw7itWuUCHG8KBE4epTdWy3y+wtVyUk9AffM+DOTOyA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] rust: alloc: add Vec::retain
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de73e879d6775a9900789a64fcea0f90e557681f.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Mar 21, 2025 at 4:25=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
-> Now that we have kunit in rust-next, should we make this into a test?
+On Thu, Apr 03, 2025 at 04:05:12PM -0400, Maxim Levitsky wrote:
+> On Wed, 2025-03-26 at 19:36 +0000, Yosry Ahmed wrote:
+> > Following changes will track ASID to vCPU mappings for all ASIDs, not
+> > just SEV ASIDs. Using per-CPU arrays with the maximum possible number of
+> > ASIDs would be too expensive.
+> 
+> Maybe add a word or two to explain that currently # of SEV ASIDS is small
+> but # of all ASIDS is relatively large (like 16 bit number or so)?
 
-Unfortunately, the test uses the Vec::retain from upstream alloc,
-which we can't call from a kunit test.
+Good idea.
 
-Alice
+> > @@ -1573,13 +1567,13 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >  	if (sev_guest(vcpu->kvm)) {
+> >  		/*
+> >  		 * Flush the TLB when a different vCPU using the same ASID is
+> > -		 * run on the same CPU.
+> > +		 * run on the same CPU. xa_store() should always succeed because
+> > +		 * the entry is reserved when the ASID is allocated.
+> >  		 */
+> >  		asid = sev_get_asid(vcpu->kvm);
+> > -		if (sd->sev_vcpus[asid] != vcpu) {
+> > -			sd->sev_vcpus[asid] = vcpu;
+> > +		prev = xa_store(&sd->asid_vcpu, asid, vcpu, GFP_ATOMIC);
+> > +		if (prev != vcpu || WARN_ON_ONCE(xa_err(prev)))
+> 
+> Tiny nitpick: I would have prefered to have WARN_ON_ONCE(xa_err(prev) first in the above condition,
+> because in theory we shouldn't use a value before we know its not an error,
+> but in practice this doesn't really matter.
+
+I think it's fine because we are just comparing 'prev' to the vCPU
+pointer we have, we are not dereferencing it. So it should be safe. I'd
+rather only check the error condition last because it shouldn't ever
+happen.
+
+> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> > index 3ab2a424992c1..4929b96d3d700 100644
+> > --- a/arch/x86/kvm/svm/svm.h
+> > +++ b/arch/x86/kvm/svm/svm.h
+> > @@ -340,8 +340,7 @@ struct svm_cpu_data {
+> >  
+> >  	struct vmcb *current_vmcb;
+> >  
+> > -	/* index = sev_asid, value = vcpu pointer */
+> Maybe keep the above comment?
+
+I think it's kinda pointless tbh because it's obvious from how the
+xarray is used, but I am fine with keeping it if others agree it's
+useful.
+
+> 
+> > -	struct kvm_vcpu **sev_vcpus;
+> > +	struct xarray asid_vcpu;
+> >  };
+> >  
+> >  DECLARE_PER_CPU(struct svm_cpu_data, svm_data);
+> > @@ -655,6 +654,8 @@ void set_msr_interception(struct kvm_vcpu *vcpu, u32 *msrpm, u32 msr,
+> >  void svm_set_x2apic_msr_interception(struct vcpu_svm *svm, bool disable);
+> >  void svm_complete_interrupt_delivery(struct kvm_vcpu *vcpu, int delivery_mode,
+> >  				     int trig_mode, int vec);
+> > +bool svm_register_asid(unsigned int asid);
+> > +void svm_unregister_asid(unsigned int asid);
+> >  
+> >  /* nested.c */
+> >  
+> > @@ -793,7 +794,6 @@ void sev_vm_destroy(struct kvm *kvm);
+> >  void __init sev_set_cpu_caps(void);
+> >  void __init sev_hardware_setup(void);
+> >  void sev_hardware_unsetup(void);
+> > -int sev_cpu_init(struct svm_cpu_data *sd);
+> >  int sev_dev_get_attr(u32 group, u64 attr, u64 *val);
+> >  extern unsigned int max_sev_asid;
+> >  void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code);
+> > @@ -817,7 +817,6 @@ static inline void sev_vm_destroy(struct kvm *kvm) {}
+> >  static inline void __init sev_set_cpu_caps(void) {}
+> >  static inline void __init sev_hardware_setup(void) {}
+> >  static inline void sev_hardware_unsetup(void) {}
+> > -static inline int sev_cpu_init(struct svm_cpu_data *sd) { return 0; }
+> >  static inline int sev_dev_get_attr(u32 group, u64 attr, u64 *val) { return -ENXIO; }
+> >  #define max_sev_asid 0
+> >  static inline void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code) {}
+> 
+> 
+> Overall looks good to me.
+> 
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+
+Thanks!
+
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> 
+> 
