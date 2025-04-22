@@ -1,119 +1,113 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F79127CCEF;
-	Tue, 22 Apr 2025 13:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E1C27602A;
+	Tue, 22 Apr 2025 13:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329429; cv=none; b=W9xVT8c4IL1TT0TisVPbO8OrsyV/oCsSeWFuXzWGte6NOaPyo0/707e/8gpYyFvr7Kxswov096+bWLNOM0Rc/8a8IBmgB1XFdvkVZpWSFu90OTg4O3OpmlG3+/ofTvLZswLZwnzxAr+o/zwR7IAePNUbDMo23SWYTb3LBvbGa6k=
+	t=1745329448; cv=none; b=boRwM/JzB4ckL3/ouKoHGkC3k+wPekVOlRj9wUfg6pZSHaDZmc0SG5qC3SGV9sN/r0hD6t0BSLx7k4AVyY67doqaKBdnvcNn0cmmPeTL0X6xZ7x3iFKv5AMH/iFMAxCKSguA0ww3bisJ4s5zy/s/ER6G/63rTdYLEq8iLpMcN8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329429; c=relaxed/simple;
-	bh=uZ2Q3BSmyxrkcTQQzx/xqj4AZF+9c/VelamhldB4ruY=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ByCcKIphfz1oGfcf8CdulndlgOQmL2XFf1TjmBED62lf5FDSx1kt4kcxyfg6WH47lZ7f0COHdOUqtgpGgaaR514a1DkzoJUqhBjLCkziV/XLZ7ilhnIVYe1AhvNOppnGTtmVYuStR2fP8yXWHpWH+a7XlqPZyoYRMdfQGgy6fTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeuNrF4j; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745329448; c=relaxed/simple;
+	bh=4DLjZ0GtZDfpf9Y+X2fCfeTSaPWs41kU9nP2/X/cyNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LvERvGE3KrotChR0Uso927GdwcOCo5JqpdzwCJBMuNVxYhIWL6L19g/I3HxZT049za1I3CEsaUhd4z+Ld3kTwWOHxkd46NpLFJYHwerLCPFFKSLYgy+DaWwupHpROg6RAx4PAnDbWFK/K4jwSoS9dNU5V548QFE43XuEKqnROMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=J1IHv8tU; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeuNrF4j"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f62d3ed994so6581825a12.2;
-        Tue, 22 Apr 2025 06:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745329426; x=1745934226; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gPh+Jq2Ed9hv9WRoSx2FsqzJMvYtffRf+L562svlF6w=;
-        b=jeuNrF4jnJfayb8YgPn5XJdkNkMFDnXFRRCL7r/ztWdtmhyRpw+ZJLRPynCqKMaZJQ
-         caTcjsCSk4PbS7tXtW7++flj0UrxRztI24EDiaTxICnINFJJ0EkvgHBjnyULWm0SAAsk
-         sNzeDJGy/SNuphRPHie+/zZsRA3EJUqg9WhVhE1woIQHALzannDtdPmftdUOGhxzos3E
-         V9tJbXDUstV0UV1XjFbK5r1kJ7lNUFYyMEEgazHbbfKvNh8y88Xns1oQF/jM4AU129s7
-         ogD35GGx+MDjMhaKO2xs/eFVrEIaZgMkF88jiSPKw/bsimjgbr76XDDNZyGUggJzwvZC
-         uAFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329426; x=1745934226;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gPh+Jq2Ed9hv9WRoSx2FsqzJMvYtffRf+L562svlF6w=;
-        b=oSOQ9H8uliyHUAjsttcv6O8116rVRRn77Yf7+QY1ZpCZJE4GKsVE1L3brUL+RrDtTA
-         ziVKfMRhC6yGc1OwqhdViTTwMrvg0QkGoY9RoqN3ctTwVKaTBYmkXnbwSRNxIUjT+lgI
-         NHuHq02sNzYb4HxTV2MNnPKsFssH2zDOQujddXzkP6oso0nYE0qn6GXOzlJiEJwX6kJQ
-         LYG49tHwlpZC+qMFCPbJSyZTAwPUm6ssOFBs8VymrBE9aeYbKtE78rYS5fFen7+1+/Di
-         31w9fVO4rtQ8Nh8MJvUOWvd1XSBiH5+JZMCKG5FoRIsCr0i8TYr2+nN8WFskAKK12YIz
-         bUsA==
-X-Forwarded-Encrypted: i=1; AJvYcCUb8clD1FvRVWZDSwyy0kI6KBv7bqHjsMuSf1fmYzF/p3HzgQs2YHtJ0a7D00+q3TWoifIOZgt9stmPHWmS@vger.kernel.org, AJvYcCWUqF+YsjzlETxNnHJ/TxxXIx4hRTUbVvj4z3EFNxxghjyCF1pRVx4IqZPHqFVM1enT4t0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf+5/U+L+JeB0mGM5Ye5ywbBX+sAYUnlyJgKvI/3FOSAUe3z77
-	wEpPTc4fqi/7XsB3HH+9+5+/Yw0HI6gVtKntPZpZzkwngX60RkMN
-X-Gm-Gg: ASbGnctquizshAtenExnfCTJqXFyS5vfjGZGwNDB17VjdbmwgvFxFqIHKJj+fAoS9DN
-	ncBFXcQ2DnsawkG9VfAF7rDxqghQIvsaKE8gwy3U42y+UqQlNDxK8L4GR50BYbHnoDFYU33bE8U
-	w8ZwEDBW83yHor2jztGK4XXkzNU4pzdQlFKTl/CeLscoKUtbRraNsWXgvh+VpltIBR2ajK6/Vpf
-	D5a7z0iKqYSynet5kFHSRNfS6KwXOiA7QqxyxvZDyYYCZPqDWp2vSvYY8hC0j53bb1ZC+V2xnAg
-	+FBYRusqSm03dGH0pTXATIyTsWE=
-X-Google-Smtp-Source: AGHT+IETzaBi2r+DApEGo3LSk3kyXl2a34FzYwVlS9+QlOduwg0hhVNboZbTpFT9+VgpALYAqDUk/g==
-X-Received: by 2002:a05:6402:51cb:b0:5f4:c20d:4984 with SMTP id 4fb4d7f45d1cf-5f6285d5426mr13704677a12.30.1745329425480;
-        Tue, 22 Apr 2025 06:43:45 -0700 (PDT)
-Received: from krava ([83.148.32.128])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f62594985bsm5966324a12.74.2025.04.22.06.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 06:43:45 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 22 Apr 2025 15:43:43 +0200
-To: Tao Chen <chen.dylane@linux.dev>, Namhyung Kim <namhyung@kernel.org>
-Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next] libbpf: remove sample_period init in
- perf_buffer
-Message-ID: <aAedDw7fWAF2ej1f@krava>
-References: <20250422091558.2834622-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="J1IHv8tU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745329444;
+	bh=4DLjZ0GtZDfpf9Y+X2fCfeTSaPWs41kU9nP2/X/cyNQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J1IHv8tU3VNYbRw81M3WLG61BspSVXRPAMqt1cHr7qQ7MUvmm1t7TdYn+ZzuOksJG
+	 quEMnv9lDyFzOvHLPVoDogC1M+3+SnkMNsTOhIY9vyzCST4ot8aYVcXpaMtl3hgTYR
+	 wf+Q6A9iFdOUMZyUFJgrzx7QvKzmouCx3iTT25yBOoMd2ci2Z6ws2dvbUSHv8sfqlp
+	 HdDHDiVcZkLxk/r0y7vAoh4KqXgtF+KCO2NW5cb0EWK5u8ctyTiatgHnRDGtDT7aeX
+	 zgOWyzkWJAGhFdB/OdYy8pG0axAzSBNr0d5uEMEOtXbeOxfVMDLaOQ9Vv7WoK6D7Br
+	 C5QmxkLJ/yANw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C1EAA17E0B9D;
+	Tue, 22 Apr 2025 15:44:03 +0200 (CEST)
+Message-ID: <4f4a1761-dbb3-4c95-8c68-359c7e9ae6b4@collabora.com>
+Date: Tue, 22 Apr 2025 15:44:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422091558.2834622-1-chen.dylane@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: mailbox: mediatek,gce-mailbox: Add support
+ for MT6893
+To: Rob Herring <robh@kernel.org>
+Cc: jassisinghbrar@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, houlong.wei@mediatek.com,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20250416120230.147844-1-angelogioacchino.delregno@collabora.com>
+ <20250421213833.GA2966253-robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250421213833.GA2966253-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 05:15:58PM +0800, Tao Chen wrote:
-> It seems that sample_period no used in perf buffer, actually only
-> wakeup_events valid about events aggregation for wakeup. So remove
-> it to avoid causing confusion.
-
-I don't see too much confusion in keeping it, but I think it
-should be safe to remove it
-
-PERF_COUNT_SW_BPF_OUTPUT is "trigered" by bpf_perf_event_output,
-AFAICS there's no path checking on sample_period for this event
-used in context of perf_buffer__new, Namhyung, thoughts?
-
-thanks,
-jirka
-
-
+Il 21/04/25 23:38, Rob Herring ha scritto:
+> On Wed, Apr 16, 2025 at 02:02:30PM +0200, AngeloGioacchino Del Regno wrote:
+>> Add a compatible string for the MediaTek Dimensity 1200 (MT6893)
+>> SoC using MT8195 as a fallback, and add a header for the GCE
+>> mailbox found in MT6893.
+>>
+>> Similarly to MT8195, this SoC has two GCE hardware instances, but
+>> the event values are different (hence requiring its own header).
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../mailbox/mediatek,gce-mailbox.yaml         |   4 +
+>>   include/dt-bindings/gce/mediatek,mt6893-gce.h | 312 ++++++++++++++++++
+>>   2 files changed, 316 insertions(+)
+>>   create mode 100644 include/dt-bindings/gce/mediatek,mt6893-gce.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
+>> index 73d6db34d64a..277d290d852b 100644
+>> --- a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
+>> +++ b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
+>> @@ -19,6 +19,7 @@ properties:
+>>       oneOf:
+>>         - enum:
+>>             - mediatek,mt6779-gce
+>> +          - mediatek,mt6893-gce
+>>             - mediatek,mt8173-gce
+>>             - mediatek,mt8183-gce
+>>             - mediatek,mt8186-gce
+>> @@ -29,6 +30,9 @@ properties:
+>>         - items:
+>>             - const: mediatek,mt6795-gce
+>>             - const: mediatek,mt8173-gce
+>> +      - items:
+>> +          - const: mediatek,mt6893-gce
+>> +          - const: mediatek,mt8195-gce
 > 
-> Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  tools/lib/bpf/libbpf.c | 1 -
->  1 file changed, 1 deletion(-)
+> You shouldn't have with and without a fallback.
 > 
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 194809da5172..1830e3c011a5 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
->  	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
->  	attr.type = PERF_TYPE_SOFTWARE;
->  	attr.sample_type = PERF_SAMPLE_RAW;
-> -	attr.sample_period = sample_period;
->  	attr.wakeup_events = sample_period;
->  
->  	p.attr = &attr;
-> -- 
-> 2.43.0
-> 
+
+OOOPS! Sorry, that wasn't intentional - I was meaning to add mt6893-gce to the
+enum only, without that mt8195 fallback.
+
+Will send a v2, thanks for pointing out!
+
+Cheers,
+Angelo
+
+>>   
+>>     "#mbox-cells":
+>>       const: 2
+
+
+
