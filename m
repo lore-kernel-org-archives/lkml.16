@@ -1,154 +1,151 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A2F284B4E;
-	Tue, 22 Apr 2025 13:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A88728136B;
+	Tue, 22 Apr 2025 13:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745330121; cv=none; b=h/cAtnk2Up4EsKoEmHewNWym1f7QvC5o0hGnHbDtLo1jt8el86O8gopyLboecaJM4YnPHVsCq511xagbA9Kbxx0yRECAfVmFEZv5Z624he8opfXUZrvACcHyAE736rO9oID+yVjw8e3wjLMc61Qu6ii3hw1iJo8PU7sfAroLSf8=
+	t=1745330182; cv=none; b=seBsvxQsji+29LANehbU6R2zJB4gf0Iqmek+anM4+K6PhZWepNFNt1qZgdaQsLzn3pFjiTaZGp7RFKQ6UQPbNUtDC5P/angV/+LkXxcQWZfAihX+lu42NVEnqTtPbMaB52WqW5igb50PrjqPsHSb1FJbRGTdqScrryAR9x4GkPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745330121; c=relaxed/simple;
-	bh=4ZdUq2tzBznByojYCi0WA8cKaEHmxfVFiiY35QjqGeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tSb1Thu7wkzW4jsrgFDFrJ+jAdkYcpRdLyGXfafrRsJhLwQsLB5hxGCK99dWPqbffj5HlHrnD1LGJgd5k7frRGESMU9rsQrfMOwquDziCYs19GeYF0NvN7EiOt9fzhChU93IobLbZZoTMvIT37uMBVX9TRkLWtCy2p2rebq6sD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M222v9/Y; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1745330182; c=relaxed/simple;
+	bh=8SEW95m+vZxiG981zwzLbOenIT1ihvqC1+XXm9Cjwy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uGXKsPZBpeTFoe0Erd1txJ+g2UyhXlU/ipO3GJ3VTjfcZPLvSurucSELCOZM6hlaP7ChmHyI7e/1z6yXrYVuovisz5KMrvYO681vEHOKnM3kxGJSmZr+TuOaBl7OA7lplYzrTci54GJZ+OnsN60QaX4Ke0gm5QPhAd6idwgtDf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g4bCbWXB; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M222v9/Y"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so5353479b3a.1;
-        Tue, 22 Apr 2025 06:55:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4bCbWXB"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5417362b3a.0;
+        Tue, 22 Apr 2025 06:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745330119; x=1745934919; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iBIIB+/ZmIi8Tc2LcqXAgRSWZd60kP7sw7lnOaM4f9M=;
-        b=M222v9/YpypTSDx+YuemhRKLRo9D2AHuFFgZjpLUa1HrdzBkw4w+CvEFUlmSZr7pzT
-         ePKldol6KHxXZhAEQD17RrhIUlaqfvQ+pViITiUDodiB+zXz1UmE9HLu5OjxBixCwWDZ
-         oBOqx4xiZ3tesjTr1pPTpZt3QG8Lms8Lpdy6NepUPwz3zIXL+c+jNFg4FqErLokDv6XN
-         yIyC5qWGPUiWtnSXWqDm/nNiV32Heg/zNJqnIty3QMr6tDOShvhQswM0A94xVd7+iXky
-         s+pvz4LzWIHNl1F+qv1n22bmw5134/sMuDcnl/H11mwVcSeMJM5Mc2SXmzTQCX5qWA6b
-         33YQ==
+        d=gmail.com; s=20230601; t=1745330180; x=1745934980; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=7KaKEEvu0UJyVW+Z2ph1QObcx2UHRtosoFsRJXZoV64=;
+        b=g4bCbWXBREtrl3kn5A/2+1hZ7KsBXOgnULG5ZqdCo/9gxqtZWh8Ead7TetzHiozc9W
+         M31k1FUHkfNptzfuRVmlTmcMvq3pSLjrLoUOo0XfX2S2UG2CAv9vjcZxGRHLn/w1DNpI
+         9O5NPCDTwsbODwFwGdrnkM7s2hinBgFTrG4zYrpKE2FaEiDY87hrQ0kZUVTrdMSuNf2u
+         v3vlBSWaRDrVBtkRL2salM+ckQBq4ouUTZqCSeXBjoi7LgIoxhDrhcQw9hR9YFHubgrn
+         I2lhQ6fCnRjk+zPXJ8FReNJqKzdsns7NwD8AdwFq40pqbQZcbjoZqeXa6uaYVIN5irJ1
+         PwZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745330119; x=1745934919;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iBIIB+/ZmIi8Tc2LcqXAgRSWZd60kP7sw7lnOaM4f9M=;
-        b=pXOKS9EmFaa9u9NX5+PNa8C/8PIUgG36fSftaQOdNJHgMQZOviA+iD+gXllX37iISh
-         k5rdLrm0oUq7QCpMwCLAzYqrnr0Te7Mo5262T020gKJ9/JUzzkiArHDytozOEvwtDc6B
-         4Q2Mmbs1m3f/I4BMsAEc/r7ld0IfAfj6W0VMB+CJquBzrV5O5ughpy9kdRKqeBo63Mv4
-         aN4Pkqma2BBZrdXi2DsId0PxX9AX1XFDK1tTuRzAw0KwFCMGtO07OjjE0NRUmSUakXCb
-         Z6Sh9ZBQv2ErEZqamsmWgS7Zi4HdvUFAEJy4M7/Z3dqtNguwiZ2ukypd6lP5vSh1aP/l
-         osZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyOSkC6ui/JizXwXiZ0Vh0cK6vgB9/dLq8lImAwqyxGk/wJCyHUFU4P5sxAC7Yd3hLPpzpFm5Iy/Vz/OA=@vger.kernel.org, AJvYcCX22kE82LHbewROMtwiebOOfJPVUUU2xwl4GJFHsLkxFvpswLCshHG2o89j8nBHx+C5o3jvBYTu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz32TsW0NxgI9Vh49AO2saZbS+bslOOo+02W1A+cOiv6L8E/zgV
-	cEGnRnQbXgqYtm2b6HjPzCxw0sgSLf1M+wgifeqJOOidQPQ+2XaQ0UgQksQ3
-X-Gm-Gg: ASbGncup8nqUVu2NpRgD2yIbIuZ/J8Fx8sYW49a7MTTKnK2phtEaeIe8v2PObSqj52H
-	t4E9Zd3JxP7lNZMF2jtA3tTQNvPfjxFzrkisyfasmJvVOBVKR7F6j/hQVHgc9Ndvz3hPmjq+m//
-	cRa7X78fJQYHp/YzWCG/leYkTo4XKK5lcAJAR/FRWWE/5i/OSLDPEzfUWSVhcf8uoWsJryxNIw3
-	5gPfyaHjKJguAjkR7nRukSgyI8PGk5hscJ4TJQU7X+3XxOZ549LKO8qHQXbOAJCPg1Ey/jor/t0
-	zXppzVSzbJWb/vHmq6aGtUnftsgwF8grIcP3WuJQ8l04rHYmtlY+w8TgOSjBSTM5bNt1mdFaTHZ
-	kjIGiDNUWBmbn/pt/h/Ex6t83eoeQ
-X-Google-Smtp-Source: AGHT+IFXRrARe8B8erEVjY0bsIsDRjykaQmH3G9PNmeJ+0cdtHJdHSfeGFZ8jml40/4gPtVqgjgFug==
-X-Received: by 2002:a05:6a00:1305:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-73dc14ccd73mr20406967b3a.11.1745330119578;
-        Tue, 22 Apr 2025 06:55:19 -0700 (PDT)
-Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaaba76sm8869650b3a.143.2025.04.22.06.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 06:55:19 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: rust-for-linux@vger.kernel.org
-Cc: John Stultz <jstultz@google.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	tmgross@umich.edu,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	aliceryhl@google.com,
-	anna-maria@linutronix.de,
-	frederic@kernel.org,
-	tglx@linutronix.de,
-	arnd@arndb.de,
-	sboyd@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	tgunders@redhat.com,
-	me@kloenk.dev,
-	david.laight.linux@gmail.com
-Subject: [PATCH v14 6/6] MAINTAINERS: rust: Add a new section for all of the time stuff
-Date: Tue, 22 Apr 2025 22:53:35 +0900
-Message-ID: <20250422135336.194579-7-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250422135336.194579-1-fujita.tomonori@gmail.com>
-References: <20250422135336.194579-1-fujita.tomonori@gmail.com>
+        d=1e100.net; s=20230601; t=1745330180; x=1745934980;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7KaKEEvu0UJyVW+Z2ph1QObcx2UHRtosoFsRJXZoV64=;
+        b=Bmz4abIJ6vmPUFptdjX4tYt4Gc+Q/k/aDcRXIoB9rdrgc8xF3lhgY+u5bHEb6MI5FW
+         byW3YFjqKixkqfXEC6BJ/2EH2LA1Bjxkmksq6UOZJsXRoX8P8khUkKG3HcdY4j/sfUjI
+         g29tNIMBaBEd8Vb1JHQqN7XT79CXHJC19sC1KrhiKzjmFVwamzlWa0bCnDHBQMjGElKg
+         dAw91IcDwSEu57I6HvsdYFMbMU/Lc5B12KH2n9i0zDVDR3F3/ibzw783K3haX8Wb2Sn3
+         +doRGuwQ7N9w9Azi3swTYC3z9fLnzy4gqNakN/2BoPoxOjj7ip6qUfJBS7156mZW2r9z
+         Aq+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVI3cgFcG4efMc+rvutlZyY8TjfdN19OWDNOyUPfUngDvrM7/D9eNXq0lrZxfW6BFRUkDHUhCqzzEfi@vger.kernel.org, AJvYcCWZqwVNrSHgwsT/ue2IXCxTenXMGcikbIBO8TOxQoNiJNH1OI/FkU83YyDSA19az8NhTHw9axDZl1lqdJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8cxIpyjWOS1PM0tzp7gPxJjfwKgiSxTzOUmId1g4mQQZy312C
+	6cXUcjZizneHUrIn9tQjNLhRf5+s8KIvYncC1OgmjihwnVQyuJoo
+X-Gm-Gg: ASbGnctrycn3f40sf1E1LRyAt79inhnW4ZK6k/Zd3H42yeXfT6vHgNSea82hLGsjOLv
+	NUXCO37eYgKEwTJQAV50J99+0G7Kz9cTJnerWJ6v/JkK2zFIC7pZYM3DJkMd/91MtC9FF6MIbTG
+	BXBzB+vEfvhKU5/JbY9kN9r6LbhwW5BTHf++kA7imljWgSQajLW0UwNPg7KfS1AaOvPxdmGA30b
+	EBkibacFBzRe5GE+40xx0NPaMNIhuyrj8UqHmYJGU+U9hyvxz4gIalit57tW0aTZMwyZeTO+7/g
+	xIaPDv5iLY0EWr715OQfKrNTVng+OVoZiqS6xrkX5w5X6taSW9OKJfmCbR/vH0u8gO/ssgYnU3X
+	BfbQXrUy6wYSrKw==
+X-Google-Smtp-Source: AGHT+IGc5WnybySe4c344IiNQHqU74ZHT8nMbhNCRflaKFjYTzoM71nNXEx81AqRoVn08p7q/qXtTQ==
+X-Received: by 2002:a05:6a00:4b03:b0:725:4a1b:38ec with SMTP id d2e1a72fcca58-73dbe4e6458mr24353404b3a.3.1745330180144;
+        Tue, 22 Apr 2025 06:56:20 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaaf900sm8536318b3a.154.2025.04.22.06.56.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 06:56:19 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <fb2ddf20-d978-4aab-bbb4-0a3e86fb28df@roeck-us.net>
+Date: Tue, 22 Apr 2025 06:56:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] XFS: fix zoned gc threshold math for 32-bit arches
+To: cem@kernel.org, linux-xfs@vger.kernel.org
+Cc: hch@lst.de, Hans.Holmberg@wdc.com, linux-kernel@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev
+References: <20250422125501.1016384-1-cem@kernel.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250422125501.1016384-1-cem@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a new section for all of the time stuff to MAINTAINERS file, with
-the existing hrtimer entry fold.
+On 4/22/25 05:54, cem@kernel.org wrote:
+> From: Carlos Maiolino <cem@kernel.org>
+> 
+> xfs_zoned_need_gc makes use of mult_frac() to calculate the threshold
+> for triggering the zoned garbage collector, but, turns out mult_frac()
+> doesn't properly work with 64-bit data types and this caused build
+> failures on some 32-bit architectures.
+> 
+> Fix this by essentially open coding mult_frac() in a 64-bit friendly
+> way.
+> 
+> Notice we don't need to bother with counters underflow here because
+> xfs_estimate_freecounter() will always return a positive value, as it
+> leverages percpu_counter_read_positive to read such counters.
+> 
+> Fixes: 845abeb1f06a ("xfs: add tunable threshold parameter for triggering zone GC")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
+> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-Acked-by: John Stultz <jstultz@google.com>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- MAINTAINERS | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Succesfully built openrisc:allmodconfig and parisc:allmodconfig with gcc 13.3.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c59316109e3f..3072c0f8ec0e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10585,20 +10585,23 @@ F:	kernel/time/timer_list.c
- F:	kernel/time/timer_migration.*
- F:	tools/testing/selftests/timers/
- 
--HIGH-RESOLUTION TIMERS [RUST]
-+DELAY, SLEEP, TIMEKEEPING, TIMERS [RUST]
- M:	Andreas Hindborg <a.hindborg@kernel.org>
- R:	Boqun Feng <boqun.feng@gmail.com>
-+R:	FUJITA Tomonori <fujita.tomonori@gmail.com>
- R:	Frederic Weisbecker <frederic@kernel.org>
- R:	Lyude Paul <lyude@redhat.com>
- R:	Thomas Gleixner <tglx@linutronix.de>
- R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
-+R:	John Stultz <jstultz@google.com>
-+R:	Stephen Boyd <sboyd@kernel.org>
- L:	rust-for-linux@vger.kernel.org
- S:	Supported
- W:	https://rust-for-linux.com
- B:	https://github.com/Rust-for-Linux/linux/issues
--T:	git https://github.com/Rust-for-Linux/linux.git hrtimer-next
--F:	rust/kernel/time/hrtimer.rs
--F:	rust/kernel/time/hrtimer/
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-timekeeping-next
-+F:	rust/kernel/time.rs
-+F:	rust/kernel/time/
- 
- HIGH-SPEED SCC DRIVER FOR AX.25
- L:	linux-hams@vger.kernel.org
--- 
-2.43.0
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
 
