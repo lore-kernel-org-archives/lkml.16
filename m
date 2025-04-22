@@ -1,38 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C97F2561AC;
-	Tue, 22 Apr 2025 21:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14952561AC;
+	Tue, 22 Apr 2025 21:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356027; cv=none; b=gB2ra4qi179iowzYfqvIHWZc0Y9ZIK4cf4zpRVIQASqEzl6iFIjrODJF/7BaiBPEYpI9qaM0CUqIWVsLjT+P1vC4ZaSW1GDqbHYsDJq6tOXbOwndVDO4vuFMK/tWCb7owMbWwCSDF9PRtu8T0Zo5oEjrl4suwIhQj/DjiuOuMJc=
+	t=1745356065; cv=none; b=bVFzR/N2cu/BwCfjexo909L1Tu/JoV+A8OmvFEAegvFBUegC/euOaHfCHVHhIGlyhfD9l5scEQetAMRe2ZGnbBVsGb+sX+MzWLTKWavxAfrLbLAsBplYZS2p7FGfKXG+AWlM4cTlELqJZJ7Q8eWXSXaMmWtQxoFNWhRZ+TK9BAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356027; c=relaxed/simple;
-	bh=uqukdnY8PqmQkUxEKFuIv/luw1k925DyIN7ppE2OqgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oNwGNw2Rj9WRpuqG0dXmIoz5oGeoiw0Xbc5Oxo9wieXmVVOpYmuFcGipmv0wXufV+phtBPO4vV8x2g73Bdqs7JRWca7JjifvZkigMBdYDEMbDSMf/upOHuM602ZRZE7o8r4lCJw5L1Y8kLkiBuMcZyI7URE/L2+GIGO91+tnWLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcMbH3tm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745356065; c=relaxed/simple;
+	bh=9JSlKwjDOZWbObZH/GEonA6F4eOl4NiGxW9Zajz1h8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/bB+L062eWOPHiwiZ1k0hYs3pl7WxYSLsfxfc1rFLYHrxf5N1fbRBErs7MjgYyoecywjqe5wPTT6GHHAsiPqcNsFQvq23QQbhbHErDF0YOxK3wIngUt4YRJmM2MEldefZI/gq4GsYf3KdvAUndMBT1h73zjoC5BO5oNSriA/z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/N8gWSM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcMbH3tm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A2AC4CEE9;
-	Tue, 22 Apr 2025 21:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/N8gWSM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3B7C4CEE9;
+	Tue, 22 Apr 2025 21:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745356027;
-	bh=uqukdnY8PqmQkUxEKFuIv/luw1k925DyIN7ppE2OqgE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AcMbH3tm3L4XU3n7hfmwHlCdPBVgbUuKIvM/MWa2wtQK/YnbyTP4o2zttihlhu959
-	 5yqBEAK3rOsAaG124RDJmZ42GNoXomL3tO27dio6pikcYmId1lsNy3jkBuUMnM4hgy
-	 ZrB8qrAHgEbYhH1w2oUsJU7dPeXChvPAUoOze8A3v/fsTcvBxRNgCK8Aov7Lkj2TMd
-	 5sa0Z8pMv9mHx0UOK9rwn3VDcCDY7I665DSmxbdyeH9SEQ/r5vWFIXOAK3nUVA3Q8j
-	 LIayJV2F2C5kzxN+FrhFhrInDpPBT/pyXjldiWBWCbtl4Tpontkvc/2v7/Alc71ZuY
-	 rQqGJoXYGKaJg==
-Date: Tue, 22 Apr 2025 16:07:05 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: IRQ domain logging?
-Message-ID: <20250422210705.GA382841@bhelgaas>
+	s=k20201202; t=1745356065;
+	bh=9JSlKwjDOZWbObZH/GEonA6F4eOl4NiGxW9Zajz1h8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U/N8gWSM3DNP6z4j6+0fsmMKv8+7IxNVWZ7aiQXxC8UopH08GW1Ia/DGGjCQsD4We
+	 8/OQYWd5fY6VYTRZ8GV6lCDx6fDdkOZ1RGtSS1N1zKsFiKF/iJ93MMDli8gWJSQh9L
+	 g3ubutNwMzrddEmkhucvYhX48jvGIGpCDOzEL1KJM3ol252hSbiWmF9NUoOiNSC8Rd
+	 3cR7qfMq65znnQfZ8QfHGiNW/ynuHi3oQYGw9KukXffbmO5wq6k02hXCAhqr6scaly
+	 cSdc8m4izQ/yE024qiL9CNqSBaqVALgKa47PQdKeg+v2iIznL+Qf9jv3HiBh2Z5NHW
+	 3L04gku7pwL3g==
+Date: Tue, 22 Apr 2025 15:07:41 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2][next] kunit/overflow: Add tests for
+ STACK_FLEX_ARRAY_SIZE() helper
+Message-ID: <c127631a03cdd7f59bfa091b9666a93bf69d0322.1745355442.git.gustavoars@kernel.org>
+References: <cover.1745355442.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,47 +43,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1745355442.git.gustavoars@kernel.org>
 
-Hi Thomas,
+Add a couple of tests for new STACK_FLEX_ARRAY_SIZE() helper.
 
-IRQ domains and IRQs are critical infrastructure, but we don't really
-log anything when we discover controllers or set them up.  Do you
-think there would be any value in exposing some of this structure in
-dmesg to help people (like me!) understand how these are connected to
-devices and drivers?
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes v2:
+ - Add 0 test for `empty` instance.
 
-For example, in a simple qemu system:
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/8cf48c3f9d8ef9b999d87cc0a822ffe539bf7a64.1745342381.git.gustavoars@kernel.org/
 
-  IOAPIC[0]: apic_id 0, version 32, address 0xfec00000, GSI 0-23
-  ACPI: Using IOAPIC for interrupt routing
-  ACPI: PCI: Interrupt link LNKA configured for IRQ 10
-  ACPI: PCI: Interrupt link GSIA configured for IRQ 16
-  hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
-  ACPI: \_SB_.GSIA: Enabled at IRQ 16
-  pcieport 0000:00:1c.0: PME: Signaling with IRQ 24
-  00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-  ata1: SATA max UDMA/133 abar m4096@0xfeadb000 port 0xfeadb100 irq 28 lpm-pol 0
+ lib/tests/overflow_kunit.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I think these are all wired interrupts, and maybe IRQ==GSI (?), and I
-think the ACPI link devices are configurable connections between an
-INTx and the IOAPIC, but it's kind of hard to connect them all
-together.
+diff --git a/lib/tests/overflow_kunit.c b/lib/tests/overflow_kunit.c
+index 894691b4411a..19cb03b25dc5 100644
+--- a/lib/tests/overflow_kunit.c
++++ b/lib/tests/overflow_kunit.c
+@@ -1210,6 +1210,10 @@ static void DEFINE_FLEX_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, __struct_size(empty->array), 0);
+ 	KUNIT_EXPECT_EQ(test, __member_size(empty->array), 0);
+ 
++	KUNIT_EXPECT_EQ(test, STACK_FLEX_ARRAY_SIZE(two, array), 2);
++	KUNIT_EXPECT_EQ(test, STACK_FLEX_ARRAY_SIZE(eight, array), 8);
++	KUNIT_EXPECT_EQ(test, STACK_FLEX_ARRAY_SIZE(empty, array), 0);
++
+ 	/* If __counted_by is not being used, array size will have the on-stack size. */
+ 	if (!IS_ENABLED(CONFIG_CC_HAS_COUNTED_BY))
+ 		array_size_override = 2 * sizeof(s16);
+-- 
+2.43.0
 
-This from an arm64 system is even more obscure to me:
-
-  NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-  GICv3: 256 SPIs implemented
-  Root IRQ handler: gic_handle_irq
-  GICv3: GICv3 features: 16 PPIs
-  kvm [1]: vgic interrupt IRQ18
-  xhci-hcd xhci-hcd.0.auto: irq 67, io mem 0xfe800000
-
-I have no clue where irq 67 goes.
-
-Maybe there's no useful way to log anything here, I dunno; it just
-occurred to me when looking at Jiri's series to reduce the number of
-irqdomain interfaces.  PCI controller drivers do a lot of interrupt
-domain setup, and if that were more visible/concrete in dmesg, I think
-I might understand it better.
-
-Bjorn
