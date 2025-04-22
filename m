@@ -1,155 +1,115 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CB8199252;
-	Tue, 22 Apr 2025 16:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0EC199252
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745341095; cv=none; b=PX7wvr1MvJ5B9ALfK5VwlvBYL+H3HwkjIrvjvZ9PZYikcV2atiAFYaF+TAMrvhlBjokEN8k9dIpGq8pc/hP2CIm6anoBfCd6eRy6lNC5HXGToL9XH4Bb6va00ZQMU7/IWqthSKEd8/g8zNQFaWdS5sf+x1ye4RjJs+Z8dgkSHwk=
+	t=1745341148; cv=none; b=pTMk71dJXayyRc6JrTvmA0uyRZyyoowe0iyjgPpQOxJZ+NxjHHmdCzo9Vg/RhbGpnSvABOotgkaTms13tJjrCof77tv4qFcmX6aC/drrBJQ55R+6jwFUfE2n7pXY2j/33E7k6r07sR3UOt3Hz4ZZvBI5uS18r0Kn/qGFpkBurPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745341095; c=relaxed/simple;
-	bh=MuvQcvSlnU7agw/bUMjmKpAtXZ7ze4XGy/lS5CtGSlw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
-	 MIME-Version; b=l7vgIstATMrYlD7SZtD/HyWF8kPrsnc03UihozwWoMaNo3yol248Hy7IFwWdKdLcNJ2w4/afSfRj8q/BPlcm1wwhvtk3Bv9maBOu9uuXCIvvRt3I4TdwMJXVKrhdyatUkR57Dgqjk8UEH69FFrJP2ZLdEiKysZj8b9IcprF6lIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ItTTByQZ; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745341148; c=relaxed/simple;
+	bh=XtM19fp6llQW0I7FSfQu/I/iDTjKjadmXVKD8lRQnqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dkH1IPAiwrcPMR2fddM6gAdrwVuKOUX7v8kd6UkwSAD3VLS5DSCB3WObvmcncAgsp9r5CX9Ze0CBoMlT1pRV3Fx3FgDfW4VpMd/tYRcpCI9txZpw+UfGTo+OdR6JXa7qPsduc8TTF73poPE9FulY39zGFAmjlSHTK2VxXNKF3qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=He1CgaJi; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ItTTByQZ"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so54988425e9.3;
-        Tue, 22 Apr 2025 09:58:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="He1CgaJi"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d46ef71b6cso45634905ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:59:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745341092; x=1745945892; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tU9oZ884evBT7E6EQ/eFqXnt47vbNQSdohv2MRLF06o=;
-        b=ItTTByQZ8xdOClh3TozpmYb9u6/H9nKoPc9CygV39BTzypQxoirbqtAdEUhFxRiOJV
-         Of0+AZxJovA7pqZAOXn8s3w8kSWRS3LuBBjAibDI23I0GEk2QTGiseg52ByXIQ7sPMg+
-         ayu71oUCFKA6z6M3Z0pP1vY6rqpo3fs41JIk4fZDQEFIa/8TDYGWb5JcQH6krGQYXwgj
-         MmLqDXnv3WVS9P0aIgvbajgE9/bVv9J8P+4zfNhJ7UYehDF9lYv7UqJtuadLQYCD+IqP
-         X93vEOmYfCn6gbNrCrsAeUhncgRHf69+VvrQHEWLHkln/JYOwDggaumEPJs1orGTsQHw
-         U8TQ==
+        d=linuxfoundation.org; s=google; t=1745341145; x=1745945945; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jy5TPkMpiqRKsqQU6VOgWl7+8BuUE5e/MNZHqkVmKvk=;
+        b=He1CgaJiwOmbHxvK0q/o+gua1ALmOGVg8Bd49bIDyzzDI0widbOzOja0JmfQX8K75S
+         u/BsIoVycC00owUKLjCumkPdlRwFIiJYquERs+2CBRXuWQXzN6avgcHI3MV8DsGo5gpI
+         2ebh42wrnNY1V0ve1kvtyUq4tfMIUbug+7/cY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745341092; x=1745945892;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tU9oZ884evBT7E6EQ/eFqXnt47vbNQSdohv2MRLF06o=;
-        b=GSyqT5V8L0Sc6I5CsN86rEY+Hsjk+bNRdAMPFugqRM40VkGJXZw8zs2AMsCd8qZDKf
-         RgPO5G2ztqJFi7EjTcCEx+xPA0v3zdLHJmU8CZ9MUb2xSs26OF/uEEmvvvJhgIzDF5ae
-         PgOFxqf2Ixjr1MWRNGUTbx5sj9fCLfHfh72WffnWzEqCpSh885yTmiGMIGLP2uAGuNG7
-         Zxbqn2vk703dJr0eyh7MA7hT4qcGnFsxcwxZrASOKpmsOrdLJVZ7ev49qIgVQzcw4AKO
-         Mb3y0h/LC3OETh6oBxHQm5MzhqeEjVBecokqr4BlKWlarYJQsB61Bp6ckN/b3/YkHLIe
-         uUkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfbavWqbHHmhWWB4kt4RT3+l8abKow2TutbWYG8eExLbMiB5iakdVT/FFWZaKaEu0ylk9uXJlw/MEGSDOk@vger.kernel.org, AJvYcCXzDt8rgngrszuqBd94uHx2ViJACp4aK7ppXOV990qWRgvo+Cb+AsFRvWIKbTpP5dSOw5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbJ/Y2WLvrcykC+iofDdeAWQMk1vvSP4Whr8SR2aruDTm8/lwB
-	KhBruHprBOAfkE/y5xTf4e6tLS/lS7M2QBRdjMJJGNbRHvPyrMxx
-X-Gm-Gg: ASbGncvFhRlT03h659G8H4laALZBIxgrG9ErEGY4u0NmJP2TJSvc619AvPvi6KIhsLz
-	hljV6/cLgKQXL082cH6W1a22EH1W24vltMG4Dibk48+GfyoSwgBzPT+9YUPv+01CHNsLGoyA1BA
-	ycNichWq+jR57Cyzc0/neI/b6zo8S79I+QzyczpaFhpz1GDYPzQe7uIrKHe3y1a/VYBt65Be1BA
-	MMDQL4sUiop1VDpTFGwK68jTS9IeGarUZ6v2Jxv0iyBUFgHbMiHH43le8mQVP1u6GjHmjY7FDHb
-	KWmNMhzShgPGHZUmNO/yKMHPYLhUO+/uHvcRZRKv3TOXnNd2kG9ljZkuVMTPFMtN2EmzF6z6w61
-	x/2YWKa7hF/ApykdJ
-X-Google-Smtp-Source: AGHT+IHVBaYXCX7qFfXSGkqr4QiGl5ketILWsNr5eJOqEJhns7Naep0WKAvAocMkHFiNSrbYcxY5BA==
-X-Received: by 2002:a05:600c:5491:b0:43c:fbe2:df3c with SMTP id 5b1f17b1804b1-4406abf9a9amr132717295e9.26.1745341091991;
-        Tue, 22 Apr 2025 09:58:11 -0700 (PDT)
-Received: from ?IPv6:2001:b07:5d29:f42d:c9a:5c6:9f25:55f5? ([2001:b07:5d29:f42d:c9a:5c6:9f25:55f5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5cf3a7sm181855015e9.32.2025.04.22.09.58.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 09:58:11 -0700 (PDT)
-Message-ID: <75aa80eeecb66050d80c2c6a793c6c20fab22a0f.camel@gmail.com>
-Subject: Re: [PATCH v2 1/5] KVM: x86: Centralize KVM's VMware code
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-To: zack.rusin@broadcom.com
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, doug.covelli@broadcom.com, 
- hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- mingo@redhat.com,  pbonzini@redhat.com, seanjc@google.com,
- tglx@linutronix.de, x86@kernel.org
-Date: Tue, 22 Apr 2025 18:58:10 +0200
-In-Reply-To: <20250422161304.579394-2-zack.rusin@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=1e100.net; s=20230601; t=1745341145; x=1745945945;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jy5TPkMpiqRKsqQU6VOgWl7+8BuUE5e/MNZHqkVmKvk=;
+        b=QkhlKF5kmT0OR8N6DzDQBboPh7U9flX3R2EzwuecaAc0t1HqqurLDGXVkKhf7GNKkI
+         7TDKowQ1kkpSZtqlsES28X3ihHpWeJ2p79fUpc6yHa3z+JonDq6TV/8beQp4CIwhuZ3E
+         nxzQ8175QcZR6sIJ8LyXPfhrz12H77y/8ohdZPrCaWjPZYZt9RyPqG1XBYMYzK5Nw3gI
+         +/DWnxQVrbIVOVDxq7gWG+X+U+vmYI2LSGlFV1kerWITbjtXyXkXk98AHCKa9F2ex/3J
+         gsehv74K59sDCkBwswNpTD+VxKVnKb/+0zkNzJ830JQQq1Zv14kXIRkH2OWdotWNLNFP
+         iGGA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6KwFQEPfc7G++MUh/DoEqPjWA00k8pgWQe98yBMqPe8GvB9qzbcG2sQUvNgf6kr3EOVP37vvAwDpeGBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVYbEs9zXHsFApDIGYQmVhXwHsn5yYKxu/TodDTUjhmg5ape9O
+	up/uYhccv0EK40SDX1kN1WVVwe7kH+6BxhIuLj2kcBtc+9p4yMY4kG/nuMG3uiPeszYp8pqVnNR
+	/
+X-Gm-Gg: ASbGnctHr1ZJODIGRRcBrCm2uMODRRSPlJ//oJDketjN/QvSSARnVAcSVKy9kQxo4Qs
+	WC/1c7Y4UGPXF4J5nfogL6onXj7I+S6oDUrDI5kpHmgne1mpt8nmSYrBshkkT0WHXu3MPF1g4uc
+	sjva/yISVimPot8E/F4ropNmVkPSl4WnNRJ9QL/IF5AuyMDtRp2xEMQsBsD0cqQ6TRqi5dCStZp
+	X2CIDyfnuM7Ailwe+4td5sVgWRpxanuOjaJ+4wDgT0nyZ/15Y9p581dcB01sA996EDHayBM2i9B
+	zQF9DObnBlGYFmkkoNvcC9s187uoQVkrb5hc2W46WrBmBVaKjeA=
+X-Google-Smtp-Source: AGHT+IEWkZs6CedJNt2KE1miQGjqJBAptodtv2M35SklMJZz7zNwT8QqCf/45+jwRTedwK7cIsTwaw==
+X-Received: by 2002:a92:c24f:0:b0:3d0:19c6:c9e1 with SMTP id e9e14a558f8ab-3d88ee00454mr153841585ab.13.1745341144724;
+        Tue, 22 Apr 2025 09:59:04 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3957613sm2412786173.120.2025.04.22.09.59.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 09:59:04 -0700 (PDT)
+Message-ID: <de2a5e52-8061-4907-bd48-0d6d28b83b75@linuxfoundation.org>
+Date: Tue, 22 Apr 2025 10:59:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tracing: selftests: Add testing a user string to
+ filters
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250418101208.38dc81f5@gandalf.local.home>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250418101208.38dc81f5@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-22 at 16:12, Zack Rusin wrote:
-> Centralize KVM's VMware specific code and introduce CONFIG_KVM_VMWARE
-> to
-> isolate all of it.
->=20
-> Code used to support VMware backdoor has been scattered around the
-> KVM
-> codebase making it difficult to reason about, maintain it and change
-> it. Introduce CONFIG_KVM_VMWARE which, much like CONFIG_KVM_XEN and
-> CONFIG_KVM_VMWARE for Xen and Hyper-V, abstracts away VMware specific
+On 4/18/25 08:12, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Running the following commands was broken:
+> 
+>    # cd /sys/kernel/tracing
+>    # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
+>    # echo 1 > events/syscalls/sys_enter_openat/enable
+>    # ls /proc/$$/maps
+>    # cat trace
+> 
+> And would produce nothing when it should have produced something like:
+> 
+>        ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
+> 
+> Add a test to check this case so that it will be caught if it breaks
+> again.
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20250417183003.505835fb@gandalf.local.home/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v1: https://lore.kernel.org/20250417223323.3edb4f6c@batman.local.home
+> 
+> - Use $TMPDIR instead of $TESTDIR as test file (Masami Hiramatsu)
+> 
 
-s/CONFIG_KVM_VMWARE/CONFIG_KVM_HYPERV/
+Steve, Masami
 
-> +static inline bool kvm_vmware_is_backdoor_opcode(u8 opcode_len, u8
-> b)
-> +{
-> +	switch (opcode_len) {
-> +	case 1:
-> +		switch (b) {
-> +		case 0xe4:	/* IN */
-> +		case 0xe5:
-> +		case 0xec:
-> +		case 0xed:
-> +		case 0xe6:	/* OUT */
-> +		case 0xe7:
-> +		case 0xee:
-> +		case 0xef:
-> +		case 0x6c:	/* INS */
-> +		case 0x6d:
-> +		case 0x6e:	/* OUTS */
-> +		case 0x6f:
-> +			return true;
-> +		}
-> +		break;
-> +	case 2:
-> +		switch (b) {
-> +		case 0x33:	/* RDPMC */
-> +			return true;
-> +		}
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +#else /* !CONFIG_KVM_VMWARE */
-> +
-> +static inline bool kvm_vmware_backdoor_enabled(struct kvm_vcpu
-> *vcpu)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool kvm_vmware_is_backdoor_pmc(u32 pmc_idx)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool kvm_vmware_io_port_allowed(u16 port)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline int kvm_vmware_pmu_rdpmc(struct kvm_vcpu *vcpu, u32
-> idx, u64 *data)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline bool kvm_vmware_is_backdoor_opcode(u8 opcode_len, u8
-> len)
+Do you want me to take this for rc4?
 
-Nit: even though this is just a dummy function, its second parameter
-`len` appears misnamed and for consistency should be named the same as
-in the CONFIG_KVM_VMWARE function, i.e. `b`.
+thanks,
+-- Shuah
