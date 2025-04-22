@@ -1,236 +1,93 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA2E290BAE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9899288C88
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338660; cv=none; b=RLndQaXkYFdUURGvFJNb8n5IxTNEs2TrT9onzUoj+cHIlMDlU8A7FepgabTOz9K2m7OgkQv37u2SfGfuN5tlsem0ER2xRrj7f2meTLGl+BBwlvFs8G0Lena4x+dKm0l1enT27a7NzjpGk6n/LXEt6CCH67YqBU1lwaW03/b5I+8=
+	t=1745338781; cv=none; b=LojXN4c0mH/wUtKkb3f2FKVwdDoPvCWYKZVsDRX655UhYKRXJN/of/DivXdShTB9bp+5k577i4WwnBg3tHYwZhdI9hCNKOFkmX9biue5duLef9FVGpo0TSAvaVxiN+95RP388yfwdScB8GBNUQpHdIyY1AEQQJhwxcdwjRpA4f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338660; c=relaxed/simple;
-	bh=PsselFC7U3wOuPzOdrlcRuBXUrj4nJSPxGm2aehJSuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fJIxOEQ6plAS9yPEy+67I+WaJVt1a+c6p1f6ab8dL9mSYZFU/KsldvsE+Jilfdm6va0eEkZL5dlmxZfJA/MEjfnvLnQv419xSwrA3wZ6EP/gtet9N+CEGlmCFP4TK/4TD7I+XSUYcOlhV8NUe7mmGkn17rrwG28YbdaSaRBkSSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IFU5+xoH; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745338781; c=relaxed/simple;
+	bh=4/RzQ1LIVvZG3U85Dpg80Q2UbbVOrbHAeO2QxKYyG44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LxoGfWMzhgGlkS7wVy6g2AZqaC13KNUlIjxkyHvVnKvr//GfSqErGn2c1pTWk/Iq4AreELxlNB4ZyUPw5KTGr8qaAGYjMg+63pmC3JaMVJli/QizfOuAaQmyKkassSuJjPjwNRzQYyd6eqpU+51B0PspwyJ55DBBYNXBpFX9MQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=unCQKiFU; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IFU5+xoH"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf3192d8bso58275e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:17:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="unCQKiFU"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-603f54a6cb5so2695833eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745338657; x=1745943457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7+VlTv/hTKrlRvm1O4sYCipzPw4t9W4hk+Rbsc7ns3M=;
-        b=IFU5+xoHO3rYwGSc97U7Ha9uCbOegw6LVXjfujYgup1lg1vGnTTmHMzPY8lmSEJRke
-         cu7CGbFZNq42BVZkIN5uDwht92Ht/L6D80Q59Fu1m62ryfY8cCT+qw1PJ+Dy0q6HUo07
-         TGCX3EiFBWvVWqkAKZo5xYx4cfIfaOLbY2cZ6vcVrHbBYuroZtK9Qh94NrNeEAq1l2UM
-         1wUNqzqbPRUXV+uCjV9cddpMl0+YNpMmg+w/nyRDasjxBMDFkcDeAvzXLMCND9Tf/rHh
-         OYN7sgnBB7bM8BcLXJYMGb5PKpcnU5Qniudas1vys3ibRMfyxBNGeoxiy6uSEJXHnZIb
-         R9Aw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745338778; x=1745943578; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Tfn9NtUR+iFG2oeEiO9AF3LZGUmoabJt4G/s63Re//E=;
+        b=unCQKiFU67U1YgVGh5ia8HRmopDtqcoPY8TP4Nx00VtVlkIxKA+F6ERqynYjVeJMv9
+         V8IX6YtNYDx1lYWjrH/tC3k04mNz/N71muXTpZqPAwUjCNi/atXNyKimLRSmytlhqOKQ
+         eaoar5JZapR6BKpB+3hC1f50yYJdw8exresIjz2T54DnVw3sTTcXbyRKTzVZ/NM6Iue5
+         r9ThZ5upz4Q9O+YOH1fnrW7gwGHP3PcovrEzLFuTdCzGgNnLffF9+EJ+hRepVR41HviA
+         CNjuGj3y0iRCnISzrK4yXAbgfXMBpiHS46jmVc6Bw+brQVZaGhNvSaR+5Mhrw+d+9Idi
+         OoVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745338657; x=1745943457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7+VlTv/hTKrlRvm1O4sYCipzPw4t9W4hk+Rbsc7ns3M=;
-        b=pGSnaROMNjdv9E04t1/LAvKNgqogH2KSHSO7VOCEiG7oYfa+xItRaqZzu7VZoqgrsk
-         N0W8baMe48wbAPhycXj+zbzGlZhJZ9qoC0NlKlXSFL0J71IfdZN9zD0D8OacJXOfGsc6
-         wH7vNwpuKGHA3gJH5cvt9q/pqXhA94UxydJfvCSAazee4ILLVD+Crqhj86qveo2dQeaM
-         HMK/L3np7o/tV/oCV470nDJfU3piLbVoG425c1kZkhMyXofTsrWnNMwuUQSmE3V1joZm
-         QygW2IOXzJDCBsRyoFN7uCcOvwSvL9BuOaLfVaTeqrrfZoG0teqBuv1m6VRD7Z6YBuSd
-         EGCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXi3QMvHjCBhCKz+ievg2Wf/eu03fTqYDhtz2QWSr7vSE+67T5gDMKebhPyiDMnRZ9c+95er/z3NieQwk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNHYXHHXwEc7t8eD9asCZ9gi9aYAV2M+rOgOF7QR+gRWxLhzF0
-	gRQm+UA4k4e7n5nIk00DC+gONv7VCE350MZ/svx43NMwNDlB0RuyGpXqryATVkW1FEFVHMRhs4q
-	cfAh4V2xOGyYnlqmiZHYl4JCuCU84vESnrrSn
-X-Gm-Gg: ASbGncvbC9dJwyjoEs1HBV86wGKxlVwYfxEbJikKMmUoKlU54/pbdJ9Fyf8b/SnC/Se
-	Q6nSU5CAZ1XijmxhGVD4RwxhAPUImq0a2ZpndM9J9Znkat1IZD0mAm6hefQDfhbR3jLG7+5HWPs
-	a4Q226UrljQymhsGcUsND+ggWz5lyBj1R2E4lLF10/8Nqxtt/mTln4
-X-Google-Smtp-Source: AGHT+IENoY5KLCLbGnv0xSGeh3ak7+yd+up6SvbsAMQAdxs3P8pPk6x9+6wqqUTe/UoTwxZddmChRUUCohE67dhja5o=
-X-Received: by 2002:a05:600c:5809:b0:43d:5b3a:18cc with SMTP id
- 5b1f17b1804b1-4406a439719mr5397465e9.2.1745338656623; Tue, 22 Apr 2025
- 09:17:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745338778; x=1745943578;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tfn9NtUR+iFG2oeEiO9AF3LZGUmoabJt4G/s63Re//E=;
+        b=v3reLTK9cda4IEUZUaqkQGm0RQGeEPuPh+WIiAQRvn34Q96ti2opkLzprGMJX0C/fN
+         pBo9kdeHmpldU5inDQxKdy86XDcB+mCs9OB2oNRY/nhH/8zWpxfESzxMMloEcIcFzsel
+         60Q6JjCFKb63te+qpgVqadzOt+fsKb1G02j1RheN9/JrpmiVT5m5Xs0VtWP28F5/cAIP
+         C2udLoaK5ct+y8fN8VTpfIGZj4CgOxEDDP1xPRspAVxdbZzu3tI5/SsN7wTweaiCQkOG
+         SIZZwdEwueZRa54T7De6umDotbVnlez2KJ8U/TCAdZLLjnRvzBlP+lzNa0BuISJiUDkm
+         l5GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHvM8f4n1Q92vDkc4Go/fqt61UPIJ1RuKdfe2dmXIwJEfKOXb98LxM5+aDjvdDOBej2IGau3NhWwPOGsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRqf0U43TwXdf+kYGRhM+nu4YGLOLbYUMzWYgMeudX83sBx994
+	GoKfbsP+BOT8R9PAsRvBvk2ewl3kHYIXHQbFCrQ8CSnDQwxyY3LoWb1QOWpnzuU=
+X-Gm-Gg: ASbGncsRKGLhJqKZOSq3ZzNC0OpP7eQkTpARlXxFJtVA+i74Y30VrcURHrU8qYimnqf
+	/MNzbNnaJgqemuUAQWENz61LXnhD6puEIfYS9x88rbFh2qHSN6WnKnhfkgdr4OLChNyQt46587h
+	y0efb/03jblVFx3LzX/9iDYXMI6gpN65tHAnH/iRD9+bRTNrxOKUQ8jXqVK/rfLZgUsRsYF7hJd
+	0Ibxbl+e8RoI5dI6/VR0Xky1oYVEHwUoQSk5E0+hzxgOiCsUg4R4eY4GRZX4r5BGcHsuyoqroQU
+	XKcyMb6qHLhIGh3saEqosb8+Ps1fliMaXl4o48tww973GcyS2p7IQy4MMVmJ13lwRn8rXmk492P
+	xx4FB0u2qvfEj76/RpA==
+X-Google-Smtp-Source: AGHT+IHnHLF/MJmsCEVOMpIEMAi20+FfoYD+9h/aOe4dW6zU9BD2Q0se95enPxwOaKkNpTjn8U+TfQ==
+X-Received: by 2002:a05:6870:e06:b0:29e:2da3:3f7b with SMTP id 586e51a60fabf-2d52696fa41mr9068798fac.7.1745338778018;
+        Tue, 22 Apr 2025 09:19:38 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3? ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d5212c97adsm2615604fac.1.2025.04.22.09.19.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 09:19:37 -0700 (PDT)
+Message-ID: <e43442a3-d36a-46f3-ab13-7c1b56d2993e@baylibre.com>
+Date: Tue, 22 Apr 2025 11:19:36 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417180943.1559755-1-tjmercier@google.com> <a4f72149-70a0-4bbe-bdcc-70384c152f83@amd.com>
-In-Reply-To: <a4f72149-70a0-4bbe-bdcc-70384c152f83@amd.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Tue, 22 Apr 2025 09:17:24 -0700
-X-Gm-Features: ATxdqUFWtfUd0V2lIDMC14HVW9RJdQPpnjsioC_15uNznFDm7wn85ZdVHvIBgZU
-Message-ID: <CABdmKX2-innZC65Fut6wc2MFUNwO2g6w=_iLv9EBkDn+6LQs5w@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: system_heap: No separate allocation for
- attachment sg_tables
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+To: Jorge Marques <gastmaier@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Jorge Marques <jorge.marques@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250408-abi-oversampling-events-frequency-v2-1-4059272b7364@analog.com>
+ <6rgtuq2mtk3a63d3tlzbgjhauslkztgemn7566qyi3mzwywprq@lxhsvwofnvg2>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <6rgtuq2mtk3a63d3tlzbgjhauslkztgemn7566qyi3mzwywprq@lxhsvwofnvg2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 1:24=E2=80=AFAM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> Am 17.04.25 um 20:09 schrieb T.J. Mercier:
-> > struct dma_heap_attachment is a separate allocation from the struct
-> > sg_table it contains, but there is no reason for this. Let's use the
-> > slab allocator just once instead of twice for dma_heap_attachment.
-> >
-> > Signed-off-by: T.J. Mercier <tjmercier@google.com>
->
-> I'm not *that* expert for this code, but looks totally reasonable to me.
+On 4/22/25 2:30 AM, Jorge Marques wrote:
+> Hi Jonathan, David
+> 
+> Should this patch be submitted differently, such as under the AD4052 V2
+> series? Or are further modifications needed?
+> 
+Jonathan already replied that this should be included in the series with the
+first user, whatever that happens to be.
 
-I noticed this while reviewing Maxime Ripard's recent carveout heap
-patches, where I was confused about sg_free_table() until I realized
-it doesn't free the underlying allocation. Then I started looking at
-other heaps and found that most of them do it this way (including the
-cma heap), and figured it was a nice cleanup here.
-
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> Let me know if I should push that to drm-misc-next.
->
-> Regards,
-> Christian.
-
-Thanks, yes please!
-
-
-
-
-> > ---
-> >  drivers/dma-buf/heaps/system_heap.c | 43 ++++++++++++-----------------
-> >  1 file changed, 17 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heap=
-s/system_heap.c
-> > index 26d5dc89ea16..bee10c400cf0 100644
-> > --- a/drivers/dma-buf/heaps/system_heap.c
-> > +++ b/drivers/dma-buf/heaps/system_heap.c
-> > @@ -35,7 +35,7 @@ struct system_heap_buffer {
-> >
-> >  struct dma_heap_attachment {
-> >       struct device *dev;
-> > -     struct sg_table *table;
-> > +     struct sg_table table;
-> >       struct list_head list;
-> >       bool mapped;
-> >  };
-> > @@ -54,29 +54,22 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, HIG=
-H_ORDER_GFP, LOW_ORDER_GFP};
-> >  static const unsigned int orders[] =3D {8, 4, 0};
-> >  #define NUM_ORDERS ARRAY_SIZE(orders)
-> >
-> > -static struct sg_table *dup_sg_table(struct sg_table *table)
-> > +static int dup_sg_table(struct sg_table *from, struct sg_table *to)
-> >  {
-> > -     struct sg_table *new_table;
-> > -     int ret, i;
-> >       struct scatterlist *sg, *new_sg;
-> > +     int ret, i;
-> >
-> > -     new_table =3D kzalloc(sizeof(*new_table), GFP_KERNEL);
-> > -     if (!new_table)
-> > -             return ERR_PTR(-ENOMEM);
-> > -
-> > -     ret =3D sg_alloc_table(new_table, table->orig_nents, GFP_KERNEL);
-> > -     if (ret) {
-> > -             kfree(new_table);
-> > -             return ERR_PTR(-ENOMEM);
-> > -     }
-> > +     ret =3D sg_alloc_table(to, from->orig_nents, GFP_KERNEL);
-> > +     if (ret)
-> > +             return ret;
-> >
-> > -     new_sg =3D new_table->sgl;
-> > -     for_each_sgtable_sg(table, sg, i) {
-> > +     new_sg =3D to->sgl;
-> > +     for_each_sgtable_sg(from, sg, i) {
-> >               sg_set_page(new_sg, sg_page(sg), sg->length, sg->offset);
-> >               new_sg =3D sg_next(new_sg);
-> >       }
-> >
-> > -     return new_table;
-> > +     return 0;
-> >  }
-> >
-> >  static int system_heap_attach(struct dma_buf *dmabuf,
-> > @@ -84,19 +77,18 @@ static int system_heap_attach(struct dma_buf *dmabu=
-f,
-> >  {
-> >       struct system_heap_buffer *buffer =3D dmabuf->priv;
-> >       struct dma_heap_attachment *a;
-> > -     struct sg_table *table;
-> > +     int ret;
-> >
-> >       a =3D kzalloc(sizeof(*a), GFP_KERNEL);
-> >       if (!a)
-> >               return -ENOMEM;
-> >
-> > -     table =3D dup_sg_table(&buffer->sg_table);
-> > -     if (IS_ERR(table)) {
-> > +     ret =3D dup_sg_table(&buffer->sg_table, &a->table);
-> > +     if (ret) {
-> >               kfree(a);
-> > -             return -ENOMEM;
-> > +             return ret;
-> >       }
-> >
-> > -     a->table =3D table;
-> >       a->dev =3D attachment->dev;
-> >       INIT_LIST_HEAD(&a->list);
-> >       a->mapped =3D false;
-> > @@ -120,8 +112,7 @@ static void system_heap_detach(struct dma_buf *dmab=
-uf,
-> >       list_del(&a->list);
-> >       mutex_unlock(&buffer->lock);
-> >
-> > -     sg_free_table(a->table);
-> > -     kfree(a->table);
-> > +     sg_free_table(&a->table);
-> >       kfree(a);
-> >  }
-> >
-> > @@ -129,7 +120,7 @@ static struct sg_table *system_heap_map_dma_buf(str=
-uct dma_buf_attachment *attac
-> >                                               enum dma_data_direction d=
-irection)
-> >  {
-> >       struct dma_heap_attachment *a =3D attachment->priv;
-> > -     struct sg_table *table =3D a->table;
-> > +     struct sg_table *table =3D &a->table;
-> >       int ret;
-> >
-> >       ret =3D dma_map_sgtable(attachment->dev, table, direction, 0);
-> > @@ -164,7 +155,7 @@ static int system_heap_dma_buf_begin_cpu_access(str=
-uct dma_buf *dmabuf,
-> >       list_for_each_entry(a, &buffer->attachments, list) {
-> >               if (!a->mapped)
-> >                       continue;
-> > -             dma_sync_sgtable_for_cpu(a->dev, a->table, direction);
-> > +             dma_sync_sgtable_for_cpu(a->dev, &a->table, direction);
-> >       }
-> >       mutex_unlock(&buffer->lock);
-> >
-> > @@ -185,7 +176,7 @@ static int system_heap_dma_buf_end_cpu_access(struc=
-t dma_buf *dmabuf,
-> >       list_for_each_entry(a, &buffer->attachments, list) {
-> >               if (!a->mapped)
-> >                       continue;
-> > -             dma_sync_sgtable_for_device(a->dev, a->table, direction);
-> > +             dma_sync_sgtable_for_device(a->dev, &a->table, direction)=
-;
-> >       }
-> >       mutex_unlock(&buffer->lock);
-> >
-> >
-> > base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
->
+https://lore.kernel.org/linux-iio/20250413103110.572de81e@jic23-huawei/
