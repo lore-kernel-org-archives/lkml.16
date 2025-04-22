@@ -1,117 +1,158 @@
-Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26832BCF52;
-	Tue, 22 Apr 2025 22:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE251F4625
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745359643; cv=none; b=XAB9Vw17iC9mIlspBLZ2nqsWA0+1MT3O4KB3m3EXYYVFkDCO9zOwEaRPrFULwoEACwq/yuywHcLvxPw/vq+5vvxHHG0uQTW9qPUjIJcCA4K1FveYyHxmvvKRyU0kOAgWTIZRHNUkEvIxbxQaRxQg8A1pyNBJwUaFCHe9DBk+kd8=
+	t=1745359726; cv=none; b=H8G8qDgbTu+vpJhshE2YGl5Mm/4yzu9hNOZwlut7f0FnP64YpXOHVDkwj6vkPc+XJG064hjFuKECWNNIn3tvJktkpVQ11Pm4xMiPmqo4XKX+c/VD9XQkS0eOtQnc/GX2kfzRXUiCyHTVYU3VepegvrWVF8uUXlKS63aogcM0okg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745359643; c=relaxed/simple;
-	bh=HHAqqniu+70PkZcui0L6q6BNnIsbNpEmqB6CAF2ooZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ufc+2Pyw4senbsog8fF/XdV/me0C+CyriWirFpP9Zxal+SJOt3CidW+YbJUgjQUyDssthwENe7/mE6jo6j4t7Fyw6QydBwJBvWeiQbTRBZCZniaEtKnGF/BUZnCjgxLvaryd0bQOiKF9qkWG39o5KWN/aCeQ0DF/BVF+KDnzNK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aYPUA556; arc=none smtp.client-ip=5.75.144.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1745359726; c=relaxed/simple;
+	bh=rhogGrbvpIiVq0G4TvM3WJ17ekGEtgtcDKvgCl8/7Do=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sQg/LMQ7tBXtC8LfQcYHo+A71vu9+oHCUswUDRIsSobBu+kKZni7eieNrbWBxgPuItSCRyIZ+bFKd1w5e45LU8XmWmPAflIUAG6oSLy4vXTLs1Y4PFOBA6sNDceXrhp77B6cZ6uaMv6Y4tFT5MKMt8dYzVfibdaocNSf3USDcO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mGqrO/P6; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aYPUA556"
-Received: from [172.20.123.187] (xdsl-87-78-95-159.nc.de [87.78.95.159])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 1EF7FBBAD3;
-	Tue, 22 Apr 2025 22:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1745359633;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YLEEL3ypzQdRJMrQunu4Ob1ubXvJsyBO7YBIDjBB4wU=;
-	b=aYPUA5566zjczjEjArLW66jjsriNlPgp6SQiT7uVTqwQqgamaiz0k45Auni253BVuHh16S
-	CqN2J4LtKXDGNhiHn3aed4fwkpI/vF+kMaqu4W8lbpkHJ47QdpLuVvtZh1oGE3yhGDRpvI
-	y074nW8X0DpRne03mB1m14dzH0yLP6k+rz/P7sF4XAX6JaZKpFXkvQEWWZaxdfdnuG/uB9
-	gBYioNo9HrCW8TdQY0XNx9EKFK7Zqzkvlu30mbbob+Jr3EeG+gdVSt4GayedAsE76Ln3qb
-	NDsUpLVqYKEobnpwuKMddQcCCUlTjcTQlHXpjGu07eWz2p3SmoB2VlLjKF1s7Q==
-Message-ID: <2ca2b774-fd7f-4612-b38d-f60e32ff6f9a@mainlining.org>
-Date: Wed, 23 Apr 2025 00:07:11 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mGqrO/P6"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c27166ab3so3728811a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745359723; x=1745964523; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UK8PbiajcOpYvYW0ar2JlHmkS0MuupsIJbGCtAbGkUM=;
+        b=mGqrO/P6zbAkR9kT9VFlePYCou9iwZbZ1iyQeO8y9y4Eelw78qw8RjdmIX0ZAmn4ln
+         i0dEBB/toxgjA4gtyyFYaKNK2kiYMmrH9BMpQykbIaEvddhnUHoEKIA8LDVKyg1W8fqj
+         NbJewL5/YItyuq2KYk60LZfEjdV0ib7XrpuFJyhTDMNmuW6eZ1bJwPHCJl8Yxl/PCcfy
+         THEgZEbogHdoI6vRiUo9aMG7E6sqmp76nmwVt94MukKQ6SPJ3EF4WrtZ8iwEzgcI/YM0
+         /B+9zeBfo0ZOOPCloqT5Se+SvE9xz73Q2epOTo0izHjARhHS0wtrrqz7nEGhAxZ+d1rJ
+         HbeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745359723; x=1745964523;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UK8PbiajcOpYvYW0ar2JlHmkS0MuupsIJbGCtAbGkUM=;
+        b=CpQZf09E3YZQBYNxMPyrYbiMx5hicURCYU1Njp7pTQCy0YhRe3Uiev7wmmUjEnqj/i
+         xihSgLuO1k5Sl9GQlDvqLojdcq1sgoZtjEUEbFql1d6C5cK7puB2lFWuBCppbfUtExEc
+         I20prSfTzEEnz62EuxIJljxwTliO9ZD5ku7FogCnDHvO3SIuXZS2TFkSDfqICM9LPOiG
+         KFfre1ezJlgm9E08D3B/BjnCU0yU+foBNAjpJBXMB9iQthLoC6vg/gpvfBtm2wEzUOXy
+         ceBxA4K/GKh0SD5cRBEyvk50jB96IBX+ye1LlwRzRm4244keGk/07U5O0GqLHk9bQNUW
+         ut0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsBr6WMWZJmNeX6LiXzIhMG7LKbz1ct38rPwePy5pWc0snAgJUp9n0lfEIZrE1mihGQtV+pxhZme4Gang=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywblmtd9RGzDFgvNvSRpMsJpT3IdglcvIBS7AYTFcRJPGUvE/hQ
+	4k0aD7VwDeFw1q2Ux06MR42YW6AdsI+aia94BhiL2dsFZz0bvaQCPzsGyuBb0Dg=
+X-Gm-Gg: ASbGncuHGPAGa9xpTV4VO7yIMpLDHccejTIUIJnXRKnu1L/YRjVUjsS9/fwVw6vB8rY
+	vphAl88HJF8Y924KmIeOjJ5nrR38ZheyXa2BsqChSa6XhxCnAaQGMzPuNud/vwKwlf3FdQhWS5j
+	vaVRSFmVUAx1fNZQ4b6I4tY5MmhQWDAQMzh2nHLI8nGr6+2A5PNVK1l2waixkaIAx3DH2EOrLGb
+	vwPj8VpVC7LkMisamvTbmVOBzIBkQzpXYT4fCQajTzkQgxntA4VGWaswCTy4mvnMMqX7lbvGDv4
+	uiSPwn2976F3aw1MfmjnWXo/sFPKRpIxkFwzwel3x0XlHwQ=
+X-Google-Smtp-Source: AGHT+IF49b6dl42zzEhPE+viwqBoREWaATjZV9raTcKU0/tbe0AdVa7W21BaShLy+/F/vIG+5DzRQw==
+X-Received: by 2002:a05:6830:6992:b0:727:3664:ca30 with SMTP id 46e09a7af769-7300622d4e5mr10916324a34.16.1745359723490;
+        Tue, 22 Apr 2025 15:08:43 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730048848dfsm2265938a34.52.2025.04.22.15.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 15:08:42 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v2 0/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS
+Date: Tue, 22 Apr 2025 17:07:45 -0500
+Message-Id: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
- Google Pixel 4a
-To: Danila Tikhonov <danila@jiaxyga.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Rajendra Nayak <quic_rjendra@quicinc.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
- Andy Gross <agross@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Georgi Djakov <djakov@kernel.org>,
- Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss
- <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
- Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Imran Shaik <quic_imrashai@quicinc.com>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- David Wronek <david@mainlining.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org, linux@mainlining.org,
- ~postmarketos/upstreaming@lists.sr.ht, Connor Mitchell <c.dog29@hotmail.com>
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
-Content-Language: en-US
-From: Jens Reidel <adrian@mainlining.org>
-In-Reply-To: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADETCGgC/53NQQ6CMBCF4auQrq0pRYG48h6GNKWdyiRIzbRUC
+ eHuFo7g8nuL968sACEEditWRpAwoJ8y5KlgZtDTEzjabCaFvIpL2XJEz3GK5O1sYJeyYEZNoPr
+ ZOSD1wTioGLh0bdNUrrHa1izfvQkcfo/Uo8seMERPy1FO5b7+EUklFxxAmFrqqtLC3Xu9jNgTn
+ I1/sW7bth/SVdcs4wAAAA==
+X-Change-ID: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
+To: Jonathan Cameron <jic23@kernel.org>, 
+ David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Eugen Hristev <eugen.hristev@linaro.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2594; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=rhogGrbvpIiVq0G4TvM3WJ17ekGEtgtcDKvgCl8/7Do=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoCBM2U32J0Jom2quf2SqcjIS6bRq0JB/NvJ21a
+ sjueXDvijeJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAgTNgAKCRDCzCAB/wGP
+ wGnrB/wNsBqRI2GZ9sOzr0F4p8FofM7AG5l+PtGc3eJ1OqI670Ap3vo+QuNdo5NP1N4cp2XTEnf
+ vrSMI+T5OOcpEDI5EvUIIJeqzkDURnbIaYATNqIua5DDdR7RPCVxScPimhS0oHfl7XgXjYgIS3B
+ YOiz9DEJvfXOaZd8msPCY+850eajcBbewH9veDYi5F8r26N15b7jWQuNkOpwC1okEKfcUbuzwSi
+ VcL9rHzUWeDvJIG/OsRF1zZmcImQ3jz6G9DvUTQvFRlGRHlcCvz7jrK8405szLLrqE6q4QF1Oct
+ x0SyyvAisTtFTbZrbQdMfOpf0cKscRMTzyziDyFzR4kVIsC+
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Hi everyone,
+Creating a buffer of the proper size and correct alignment for use with
+iio_push_to_buffers_with_ts() is commonly used and not easy to get
+right (as seen by a number of recent fixes on the mailing list).
 
-apologies for the mess this created. Danila's mail provider ratelimited 
-him halfway through sending the series and the attempt to re-try sending 
-the second half an hour later ended up with a new message ID (I think 
-due to not using --in-reply-to).
-He asked me to let you know that this will be resolved later and the 
-whole series will be re-sent once the problems are resolved.
+In general, we prefer to use this pattern for creating such buffers:
+
+struct {
+    u16 data[2];
+    aligned_s64 timestamp;
+} buffer;
+
+However, there are many cases where a driver may have a large number of
+channels that can be optionally enabled or disabled in a scan or the
+driver might support a range of chips that have different numbers of
+channels or different storage sizes for the data. In these cases, the
+timestamp may not always be at the same place relative to the data. To
+handle these, we allocate a buffer large enough for the largest possible
+case and don't care exactly where the timestamp ends up in the buffer.
+
+For these cases, we propose to introduce new macros to make it easier
+it easier for both the authors to get it right and for readers of the
+code to not have to do all of the math to verify that it is correct.
+
+I have just included a few examples of drivers that can make use of this
+new macro, but there are dozens more.
+
+---
+Changes in v2:
+- Add 2nd macro for case where we need DMA alignment.
+- Add new patch for ad4695 to convert buffer from u8 to u16 before
+  making use of the new macro.
+- Drop the bmp280 patch since it was determined to have a better
+  alternative not using these macros.
+- Add a few more examples to show the non-DMA case, both in a struct and
+  stack allocated.
+- Link to v1: https://lore.kernel.org/r/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-0-ee0c62a33a0f@baylibre.com
+
+---
+David Lechner (6):
+      iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+      iio: adc: ad4695: use u16 for buffer elements
+      iio: adc: ad4695: use IIO_DECLARE_BUFFER_WITH_TS
+      iio: adc: ad7380: use IIO_DECLARE_BUFFER_WITH_TS
+      iio: accel: sca3300: use IIO_DECLARE_BUFFER_WITH_TS
+      iio: adc: at91-sama5d2: use IIO_DECLARE_BUFFER_WITH_TS
+
+ drivers/iio/accel/sca3300.c        | 18 ++----------------
+ drivers/iio/adc/ad4695.c           |  8 ++------
+ drivers/iio/adc/ad7380.c           |  4 ++--
+ drivers/iio/adc/at91-sama5d2_adc.c | 13 ++-----------
+ include/linux/iio/iio.h            | 36 ++++++++++++++++++++++++++++++++++++
+ 5 files changed, 44 insertions(+), 35 deletions(-)
+---
+base-commit: aff301f37e220970c2f301b5c65a8bfedf52058e
+change-id: 20250418-iio-introduce-iio_declare_buffer_with_ts-2f8773f7dad6
 
 Best regards,
-Jens
+-- 
+David Lechner <dlechner@baylibre.com>
+
