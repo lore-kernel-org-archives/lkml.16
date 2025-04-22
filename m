@@ -1,128 +1,205 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FBA27BF6C
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EF12BCF72;
+	Tue, 22 Apr 2025 21:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357386; cv=none; b=n2vHILlFFG8UB5zP0yEMnw4jxEvjQNHChLqQVWKO0zM0MtKm3CA4jpze7F8+scITD5neRofFk1hn9IkQGWY33nircXHM+6L4VahtDioj5QgM1s+DU06ha4LHx3WHBZl0RDs6EjnZKqZetVJZ2gEDlYiQicclYiVkVmCGDK4Xebg=
+	t=1745357399; cv=none; b=W0A2JRyBVKBxithJ0+g9oPHUbGsaC6z22HNswgj8dCGiRputHs32IOH7ufU7PEuFqh1X6OpGFsaIUa2Un/GW8UzHBTAOFb57J9W4lfsAXHWYEf7KMFjURJVn2Yf4XU1ZSnQ+jxIzo4GEUKfULcstBHugMngc0TtNz2p9TJT9ub0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357386; c=relaxed/simple;
-	bh=EKtCtAuhLcs4sGX+RF26ap3SrjbSFFY5SSfTUUZu/ek=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kIGHtxGMjPvDjxgKZLiblO1wY5sDJTY/x+w7feTft84CXc8/1SPV1rw/tTjoxGnXl33lYKmmrkm9WwrahpjUSztZkHhnAgIMQ+EszFD0Vi9O1uh0fl0duG+M4mSbTHxeotlOsCMHJknI260J8Okc1YZKNkSC/x8Layw8uie6ZyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=Zj90dd+H; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1745357399; c=relaxed/simple;
+	bh=wi1Vil8SnJaYMa9h0eFuXCHbGVeBFLu5MRGCP/dmpIc=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gE0kxwd0sAMFg1sxPyWx1wi0g8A3nfZgpS2Ry5OheN8uDoUqRDFOri/n/hruoXUcGzOhl4BbwUavHQSogtQxuLr4vE8phKkgJ/Fr7U90XCiuV0xRlzQYOv3tQlQF3g8584G+BAS+jMBsjxb15OY3PivYZ8heYtyol/D0un254Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mMMQRaBF; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="Zj90dd+H"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c54b651310so781417585a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:29:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMMQRaBF"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c922169051so238927685a.0;
+        Tue, 22 Apr 2025 14:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745357384; x=1745962184; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bQ7hnAfM9mT8cvOTYYkSndmUDqaTFrAy5uSIolG4TJ8=;
-        b=Zj90dd+H+e+sogdtpZsAG7IVmpbyXFndkwAiq/Y0J5yq4w20J2oYrAcCZq6JxbCmRv
-         AfAQdevlDrhX1vXEXPaC2mGmgzsgT3ZXh9/HwCxSsFLTR+/NA1brpRI5m7S/kS06xjG+
-         ZuuBd6Lnv/N6BGSB6NSPXRLaM0Rl3KdJMEB5KiAykt2XSozRtkpwGr4v5B+CDbgNpiM+
-         bbXR8nloCl0Ad4hO0JMgUaGENI1pOOD2Vc6bZGz1r8CB8tYyDR4Qt1P1SquuWFKg+seg
-         mbVcC9z8DfIEVtnS53GKABOViDNFR/pgpkwMCF0N9bHilfmskOzT2yVMgY3cpi3B9daS
-         8dXw==
+        d=gmail.com; s=20230601; t=1745357396; x=1745962196; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kfCCpV5yGpw+yXlwBosH+v8yoeaVUArIv11TpYTddyA=;
+        b=mMMQRaBFtszj/GN/KPyVb5GRWfN2+RmH9uF9kf9xamok/IecAljJWnKL3zEdz7pbJX
+         GW9XBqKShyIld2n1oexh92z8cBK3u/nbXmmr4n//namWly7ckci0WmM2lY9wflvM13ff
+         Xxj6eIdOZXa03sRMGWQ6XTk8JADG8+0KPhcHy6NYkmS1Ots2UsKz+D63hcw9hets/upW
+         wbh6upcyR1RW69WtxXXXLuV58P2rDRz2aaTh+EwdDD1JalXfxUcsVP9AarJUkW33jj33
+         00mD05yBxH1uDcf7SxLULbnLblp/RAKEIhbwUmvZjYOqYAZsu+7Eb8r8suJ8dTrHOrzZ
+         A1Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745357384; x=1745962184;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bQ7hnAfM9mT8cvOTYYkSndmUDqaTFrAy5uSIolG4TJ8=;
-        b=pJA7VuBZP70dmmWIqoc8iq0a5FSleRu3eSDB6JB9yV8HB7H1hGIZwHQef/hyoE4MAx
-         1lPiGUcuDl6wPkvDwx43mMxyzcN44dHdGAFwDMjdiqIC+aT1NKy7VGkYZcjKKtJbDoiq
-         GYFyiQf2EnLlPKloQtCHdEEq87Cr9iOy+D5d0cxYZqsry6N+hoF5TKxkowMo9RtqCrGB
-         ONA9H7f7dh3Jr2i95Tovz2jdbwu4Qh//AMHWONJYgDHh/JoNGSve7Pzso9DxTh4CXG9P
-         Ck8S2t0RSUAGr64YRLGL8pRKVjdMjAWOExNRlQJIY8WH4SA1YhLw5WmmUZZiNDQrqKU+
-         IJEg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0AUgTmKa3fpKXFynhzi0UKUZJ5Xg2Kp9YKpbLCur+IDp2QDi3JUFPliWxaXt58lkxIdAxN0I/RPbufAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBGiIUgk4tbLV7kIY1sTjRt5t+mlh1UvPUxVSRMvmAlIel+d/q
-	4EbUYdkhECzqvlMgU8hx4w/YwT6vJtq2vocZyvdBnF1GPtxjuQrcdTRFK7gXRUY=
-X-Gm-Gg: ASbGncvuoN13WLdEThWxcCHZWtWseV+mQbJp6GgaJFmRC8nGRazbBzYlhoED6At8SwB
-	oZyIyFhSH2TD0Rd1YUpSsLbNaJYCg5vIdo26/nTKZSxvqLc24+dyemCE5RmRT6eCKq+p+0iHNVu
-	1igJwNnD+objG4wiu/STgiNHuw6e3yN3OqrK0fpdtXxtXXlowUn/gOH2bzwCZGqvkxDQdsImFqh
-	HxjJlRKVNhztiyR5I+z4LIj2i8emqcEJt5nLY78XkIHcnnplbOiJFDzCBWJSvg8snPEaWwCDPPf
-	+zrUKoPU/8/mx+FO+uBg+NnfqafzLemxNK7ewScvaTOk/w==
-X-Google-Smtp-Source: AGHT+IG+GFwZZxv704jjuJ+UMxKBzXxKfdBa96OxMVcUIavMW/wfmnEA6eFn6KpitkGT6G9+BB2t0g==
-X-Received: by 2002:a05:620a:f15:b0:7c5:97ca:3ea0 with SMTP id af79cd13be357-7c927e365bamr2195214385a.0.1745357384440;
-        Tue, 22 Apr 2025 14:29:44 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b778c0sm601921985a.112.2025.04.22.14.29.43
+        d=1e100.net; s=20230601; t=1745357396; x=1745962196;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kfCCpV5yGpw+yXlwBosH+v8yoeaVUArIv11TpYTddyA=;
+        b=evIdcpOzCsBKQ/chBqaIgP3ycFbrkWA/+icWmaoFXrEaJZIPB8itV4MLhZNy2tbtNa
+         IQ5/gOrl3MxcyvVr0pFQ9bvlJmtkeYJXqKh01/XzF1GLWuXIBqtF/glUhHFUEvx6srSC
+         0kUFFhzhF6tEL47WqZKznEVMLKC2Cwtz27OEZcnHsuyutyTSY5LtsVJTzBDkcMiSXg8b
+         hqAmKiGQ7FbePZwrXRmC++geVRDeWsozMiVku09f6nmuiZ6ptn7kJZ3IGTnUOpxtm+PW
+         0eC2gpRjUf6ptgsLR4dmL/KKWHFwyHHgbrKDegWUbQO5ObNUsnIwJGB0449cmhnLvyls
+         ixLg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTdF3VZOSrfwOBZuUus58PNaeFlasXjYs+ZHIIJYomZm5NDLGjTEk4j4RLzcByuh23OsfpAZDKQplVJd0=@vger.kernel.org, AJvYcCX2R1ewGheziMnzOw+Fi+7guz1m1qGsoE13T0Wb2LB2Km5fQU+SbUgWrREP9ze4RJEaCJB4qyf2dDN3RpkJbyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAvZ6MzWSEbg1d/YneWqkY6F62mqzQdeYtO0dZQaiTWBoM4v4a
+	/BIXjL1GCoTIyYgJMyJ9LjHB1TTUOmlGCkSv7ewdP+Ex9B90siKL
+X-Gm-Gg: ASbGncuN972oKQgLWtcSi0raqO4h76QK1ONRezU3ENhLzZulsCYi+Iw6W9fE5iD74s4
+	nCZ4GqBu2sfzH5s8Cn8ychcADGKiIlHP0o5CDA6G+TefN+ZUWmhxRQFs7PcRUK8pt2X5BjjgSet
+	RmtoKegtAZdFfb3qVaVG86HAEy5khYfjhW94soBeGk7F+2SwS9Y0abSQLCb6jSGrzm0HateVdyR
+	cE85pCPU+xyZSDryFA9cTD4xHnfDY9AHQaq0mJfrhOX1BZbwTPowjjZ4w7EVvqQuZqdtCai8TdQ
+	QMSDleBGtLXssGfqJI9r2Yrobfs3vyY66e6rfCQNJVKEXmwxgvQs1CY1x3bPixruVP3dJ2eStg8
+	kreZca7My0xWhsMscLZikZCQBVnlJho832cMX5OO5Mw==
+X-Google-Smtp-Source: AGHT+IGyTHIaOoMU3SJhWrAULCjm/h9QlttGGRb4sE9gkC38/e0cK5gFrKqdBgNaw7tXCm8JIvP2hQ==
+X-Received: by 2002:ad4:5f8f:0:b0:6e8:fe60:fdeb with SMTP id 6a1803df08f44-6f2c4553c77mr255271916d6.17.1745357396385;
+        Tue, 22 Apr 2025 14:29:56 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21c61sm62073476d6.109.2025.04.22.14.29.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:29:44 -0700 (PDT)
-Message-ID: <ac48df7034ce695363daae2e5d87e00d6d41b038.camel@ndufresne.ca>
-Subject: Re: [PATCH] media: imagination: fix a potential memory leak in
- e5010_probe()
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Haoxiang Li <haoxiang_li2024@163.com>, devarsht@ti.com,
- mchehab@kernel.org, 	hverkuil@xs4all.nl, d-huang@ti.com,
- benjamin.gaignard@collabora.com, 	sebastian.fricke@collabora.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Date: Tue, 22 Apr 2025 17:29:42 -0400
-In-Reply-To: <20250226124922.3601755-1-haoxiang_li2024@163.com>
-References: <20250226124922.3601755-1-haoxiang_li2024@163.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+        Tue, 22 Apr 2025 14:29:55 -0700 (PDT)
+Message-ID: <68080a53.050a0220.c2cd7.6290@mx.google.com>
+X-Google-Original-Message-ID: <aAgKUTDiiH8xaUk0@winterfell.>
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id A20F81200079;
+	Tue, 22 Apr 2025 17:29:55 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Tue, 22 Apr 2025 17:29:55 -0400
+X-ME-Sender: <xms:UwoIaMOp2IkE8Ar4S6hnJstcxpoF3qBUhmC1exkmku2_miJEW7W9HA>
+    <xme:UwoIaC-Wfzt44nYK_3EQM1ehzFD8sZAQ7ugD8OZ2La_PIaYPzg1MJbzA30aid4__a
+    y53CmR_7E_th2mf-g>
+X-ME-Received: <xmr:UwoIaDSE9SK53gRi7Z9oyW-Iw1q7MKCPo3q2nXjmA31YOUefzCBFt6C7sNsb9Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegkeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepiedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehm
+    mhgruhhrvghrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlh
+    hinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhk
+    vghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnse
+    hfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:UwoIaEtuI7RZ_X0FGQ2Wz6YkoC8onkbp1pixLiAWHFnBAQpKI6Yqsw>
+    <xmx:UwoIaEcclXvbIz35_ZATHx-1wzKYvzwl_n_0Gja7kQLUk6ppl8tpEw>
+    <xmx:UwoIaI1wP7oyqxumF5YkSIuFKKl25Fu2WMMJ8COIUCH9VNVUSQyYeA>
+    <xmx:UwoIaI8ru8a8X8-ZmRdHJQ1tWkg_hbZ2RlOsP58baz32K9PQQg19TQ>
+    <xmx:UwoIaL_SWPmQ2xrNpOq6SEWq6uNeyVxmEiwtrD-_newXoBHKDB38_C7v>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 22 Apr 2025 17:29:55 -0400 (EDT)
+Date: Tue, 22 Apr 2025 14:29:53 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] rust: alloc: add Vec::push_within_capacity
+References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
+ <20250422-vec-methods-v3-3-deff5eea568a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-vec-methods-v3-3-deff5eea568a@google.com>
 
-Hi,
-
-Le mercredi 26 f=C3=A9vrier 2025 =C3=A0 20:49 +0800, Haoxiang Li a =C3=A9cr=
-it=C2=A0:
-> Add video_device_release() to release the memory allocated by
-> video_device_alloc() if something goes wrong.
->=20
-> Fixes: a1e294045885 ("media: imagination: Add E5010 JPEG Encoder driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
+On Tue, Apr 22, 2025 at 09:52:18AM +0000, Alice Ryhl wrote:
+> This introduces a new method called `push_within_capacity` for appending
+> to a vector without attempting to allocate if the capacity is full. Rust
+> Binder will use this in various places to safely push to a vector while
+> holding a spinlock.
+> 
+> The implementation is moved to a push_within_capacity_unchecked method.
+> This is preferred over having push() call push_within_capacity()
+> followed by an unwrap_unchecked() for simpler unsafe.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
-> =C2=A0drivers/media/platform/imagination/e5010-jpeg-enc.c | 9 +++++++--
-> =C2=A01 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/driver=
-s/media/platform/imagination/e5010-jpeg-enc.c
-> index c194f830577f..53e501b5ac0a 100644
-> --- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
-> +++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-> @@ -1057,8 +1057,11 @@ static int e5010_probe(struct platform_device *pde=
-v)
-> =C2=A0	e5010->vdev->lock =3D &e5010->mutex;
-> =C2=A0
-> =C2=A0	ret =3D v4l2_device_register(dev, &e5010->v4l2_dev);
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "failed to register v4l2 device\n");
-> +	if (ret) {
-> +		dev_err_probe(dev, ret, "failed to register v4l2 device\n");
-> +		goto fail_after_video_device_alloc;
-> +	}
+>  rust/kernel/alloc/kvec.rs | 41 ++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> index ebca0cfd31c67f3ce13c4825d7039e34bb54f4d4..a005a295262cb1e8b7c118125ffa07ae252e257c 100644
+> --- a/rust/kernel/alloc/kvec.rs
+> +++ b/rust/kernel/alloc/kvec.rs
+> @@ -307,17 +307,52 @@ pub fn spare_capacity_mut(&mut self) -> &mut [MaybeUninit<T>] {
+>      /// ```
+>      pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
+>          self.reserve(1, flags)?;
+> +        // SAFETY: The call to `reserve` was successful, so the capacity is at least one greater
+> +        // than the length.
+> +        unsafe { self.push_within_capacity_unchecked(v) };
+> +        Ok(())
+> +    }
 > +
-> =C2=A0
-> =C2=A0	e5010->m2m_dev =3D v4l2_m2m_init(&e5010_m2m_ops);
-> =C2=A0	if (IS_ERR(e5010->m2m_dev)) {
-> @@ -1118,6 +1121,8 @@ static int e5010_probe(struct platform_device *pdev=
-)
-> =C2=A0	v4l2_m2m_release(e5010->m2m_dev);
-> =C2=A0fail_after_v4l2_register:
-> =C2=A0	v4l2_device_unregister(&e5010->v4l2_dev);
-> +fail_after_video_device_alloc:
-> +	video_device_release(e5010->vdev);
-> =C2=A0	return ret;
-> =C2=A0}
-> =C2=A0
+> +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> +    ///
+> +    /// Fails if the vector does not have capacity for the new element.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// let mut v = KVec::with_capacity(10, GFP_KERNEL);
+
+Should be:
+
+    /// let mut v = KVec::with_capacity(10, GFP_KERNEL)?;
+
+, right? I.e. a question mark is missing.
+
+The rest looks good to me.
+
+Regards,
+Boqun
+
+> +    /// for i in 0..10 {
+> +    ///     v.push_within_capacity(i).unwrap();
+> +    /// }
+> +    ///
+> +    /// assert!(v.push_within_capacity(10).is_err());
+> +    /// # Ok::<(), Error>(())
+> +    /// ```
+> +    pub fn push_within_capacity(&mut self, v: T) -> Result<(), T> {
+> +        if self.len() < self.capacity() {
+> +            // SAFETY: The length is less than the capacity.
+> +            unsafe { self.push_within_capacity_unchecked(v) };
+> +            Ok(())
+> +        } else {
+> +            Err(v)
+> +        }
+> +    }
+>  
+> +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The length must be less than the capacity.
+> +    pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
+>          let spare = self.spare_capacity_mut();
+>  
+>          // SAFETY: The call to `reserve` was successful so the spare capacity is at least 1.
+>          unsafe { spare.get_unchecked_mut(0) }.write(v);
+>  
+>          // SAFETY: We just initialised the first spare entry, so it is safe to increase the length
+> -        // by 1. We also know that the new length is <= capacity because of the previous call to
+> -        // `reserve` above.
+> +        // by 1. We also know that the new length is <= capacity because the caller guarantees that
+> +        // the length is less than the capacity at the beginning of this function.
+>          unsafe { self.inc_len(1) };
+> -        Ok(())
+>      }
+>  
+>      /// Removes the last element from a vector and returns it, or `None` if it is empty.
+> 
+> -- 
+> 2.49.0.805.g082f7c87e0-goog
+> 
+> 
