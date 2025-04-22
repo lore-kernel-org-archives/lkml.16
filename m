@@ -1,128 +1,124 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B90914BFA2;
-	Tue, 22 Apr 2025 16:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CFB28EA79
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745339383; cv=none; b=FxOb2XK+ASt2gYQP4SaqOlILxyCiY1a5bYO/jGPGdmpxXEdALMmxsEgynpnwTInDAFqFaY06bZMSHselzhmQgWQw0k9/jDMdcQXMEvE3JtQr8O0nQzZK88oJu4arC5eLrzUT2JaoPSR5JwWNqcF8id2H8OEXNv63oPSeufzHSK0=
+	t=1745339415; cv=none; b=s21h5DX6cXuzigP4ZHlx5BQ/DdzxpuXIh7KkWViyFmfzrxwYPrNskTkrjgWdPR+syCk42/uUv3BBXj+NeF4rzb4cE4qMSNWA0ibtLnMURX7Bf4PaeQExR7fLeoAf21puxYq+bouQG+RTNia6elTw6CUXbap/ao+tAyAg6m2dQi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745339383; c=relaxed/simple;
-	bh=ddCiYB7gNQK8k+99evwMXCTTghD704AYlq43WJ6LR38=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Uy5skDOes89gYoyT+vTzU5U6HwBHj+i4ZRdC2++4IlZyWlejYexGYTZjhIvUAoOvrO+Q9VoazaFjIgm97dbpYgeKrpQiTfc6rCP7i4sOJ7LdqLYN68T6YcOXggF2FnRIri/7pgkcndTJxR9DsFlymW6uOeBjnSIJm9sW+UkDTRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGc7O/S2; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745339415; c=relaxed/simple;
+	bh=qHub41/86u9WEWcM1Mg22cJ6Zhr0Fexc5QzjsIThwPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SkRI6ow+OAOjIySnV/nXqIReNY6mbnTQp7cgu7+CU8p8dAeOnhFlHarqCIJ9r0K6lYRRtn6M/7jf2VqisRNZZkUZYbTgahxCr9BUvx6wyndJs+AXJfjfbqs5yAlz3rsNYAyjECka2KIhO4w6NrCletJQXorBs5l+EtYRBUpHQSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=b7+I0bwy; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGc7O/S2"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224171d6826so76205905ad.3;
-        Tue, 22 Apr 2025 09:29:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="b7+I0bwy"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ff07872097so50483317b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745339382; x=1745944182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1745339413; x=1745944213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6fclcTeuF/G5gshbnsn1Bq04Z22JuyFFMaX5b6YaqYk=;
-        b=ZGc7O/S2ONg75FMOPBiBWr7CitaDQwXVFm59a64CayRnKjiHYDVcI0spg/c2TZa9TR
-         1ErhRHXkRHeOle5D4CGZt5VxR/o6RB9RL68A3NvsxjbhrAj2g+thJ+Jtp3a5GRYQRQQt
-         wiFWZD6XOEWjDOdTuPxRrEW1DRviVRD0zoNTXNFNt144KM7AxBdv7og6GvcU6g1YunXl
-         RHw+t8omVhUjOlWxZ/z254hPkTO61oihbL+xZt5WCAsZGfnLGcG+u7MLTkpGcFkLq+pQ
-         W8vadyb2MU3PIJgEn/cHl9HZb+0/wKRN7S3I70o2Ch3cP9lPtkOUS5hhOzuWVeP28SBb
-         XiTA==
+        bh=CqKEbNLGhzwV9XEBdGBE6+HUfiIb/xIBVlRNIZDoITo=;
+        b=b7+I0bwyl8jcr+29KLfzHBM+aT64dMM3tc8M9mILCm4UcHXW1iMQzva70UIdv2H4Vb
+         0LQNs40lOtD93ddir8RMZXG9FDcwN2o5Rx0pGnmjSD2D2ZimKVN7VPNpdr/liWRPu93U
+         vJHyEZw6BX3TP+bWM1F3zxDgxD0qhkxi9eDUCnA6dunU8iVwMK9IL4oNNClUje5FamV4
+         j+OORHD9GyshjBBvmyTqh8iY7mqSV1xjS0bsdHYhGmtj0WD+w3ihmf1V9O8eMHkczmjv
+         p/SNnod4xkWdiQzGoh/EW/Kc4vP6SOQOzPtKDBkvYeTkuVh7kPywXcsdbkZN/zA+hLe4
+         /DiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745339382; x=1745944182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745339413; x=1745944213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6fclcTeuF/G5gshbnsn1Bq04Z22JuyFFMaX5b6YaqYk=;
-        b=IF5WSqvWXWn0UhupcV/cjioWc5oVbHoZ3p9U4zzBFXHcbfHhYiOzNC+AOmjtjRCNIE
-         GZ3uzBbYUYiVoNr21Sw0oo4h/aO6upNa7n3LcweW6f7bM/VMoeESZ+hZLilmy+5N0rFN
-         hCn+uqbJQZEBL6IOaJ8PkeRoiUAhMIRUNEOHf0lkAlZ0xCkT6csK0XPjTYTq0YBgRGrQ
-         HBudSuGla5t2NXCe0ETU0p0god1FLrSzKUxT4LZWc7p3FVYoOQ21IILhuKcARj+O0XBZ
-         R4l3nTVJMm+EtiZQUGt8z7x/4JrPUh6kqcxa64Pbnu+Y8sx+on6Ow4mZ7c3LK6j7ehSs
-         RPew==
-X-Forwarded-Encrypted: i=1; AJvYcCV3DsDNVvbrh8WSJnpbGIPz7CwpMmRzSkWlMCmgWzszQqm3JZtzPk029o3KGQ617mi1xc8YJWdRdqltMI6g@vger.kernel.org, AJvYcCVh1noE+seYqXRXg8doDvVZyHZzoFqQAe+xc/HEs6404cZYHlSbhyMrOXug+9sxxfMn0gA0jbM4KpkNXM2x3g==@vger.kernel.org, AJvYcCXX4j3DoXEwEg7LXyHQsdKvsWFgopfDlKEIOYifCgYFbkzxDYK7GVJFFSc7VNYKP3bP1/JlgYH/cQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd34vkBAWVUPEmXiyP4OMK952wFzBNpvg40GK4EnvG+3fnX19s
-	r3hV5L5sPRk4P8I5QjR0I56qPGrblkRQPEluFeiuC69psaiiH0bN
-X-Gm-Gg: ASbGncuuA9rLqGGdtrolpLaktyQSOG14ch2JfvjmcH/EgnmRiUVIrOVFezgS1I2ibM1
-	skoYSN9u0zz0/B0RTalEKKlakMPrvtxB6be/tFNR2P0k8Oha/RZrIBlD59EUvA83dCH8ap4vQbX
-	LfW7JBPxXUhT9rn9Jh8nwFf5b/LE02sX9XkRVPqXd1GE6GLFISTkJtIHbO2RWcnrvVfOBBqz80P
-	wsnaFZ8ivZoKmV5HFz8HA7pDBP9KGTydQiQ+AJh0W/+wZ7ldtGWkiAstRlch3tJJIxd4GHsbN24
-	gYnEfRXE+jja8ymP3SHh12bq31Roe5mHSoDfPYO9jpAgMQMKZ2MG9C6p84zAd1jIgUZzaaTWP/z
-	veMPZmx9N7ueTV//GpeFYzEZ0RSDxeN7eBjCK3H/w9YgHuBx/rXmFJtWiM4GYUDa81e4aqOA3xs
-	VwgrWx
-X-Google-Smtp-Source: AGHT+IFiIijqJvOxKv2Msh4VSOmr1gEPN+Aj6QW0h2lKI4XTAhql2QMIiQNZ8aasNX99rOtVkVOm6w==
-X-Received: by 2002:a17:902:d50e:b0:224:1ce1:a3f4 with SMTP id d9443c01a7336-22c532858cdmr240559175ad.1.1745339381610;
-        Tue, 22 Apr 2025 09:29:41 -0700 (PDT)
-Received: from linux-devops-jiangzhiwei-1.asia-southeast1-a.c.monica-ops.internal (92.206.124.34.bc.googleusercontent.com. [34.124.206.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe20b0sm87481695ad.243.2025.04.22.09.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 09:29:41 -0700 (PDT)
-From: Zhiwei Jiang <qq282012236@gmail.com>
-To: viro@zeniv.linux.org.uk
-Cc: brauner@kernel.org,
-	jack@suse.cz,
-	akpm@linux-foundation.org,
-	peterx@redhat.com,
-	axboe@kernel.dk,
-	asml.silence@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org,
-	Zhiwei Jiang <qq282012236@gmail.com>
-Subject: [PATCH v2 2/2] userfaultfd: Set the corresponding flag in IOU worker context
-Date: Tue, 22 Apr 2025 16:29:13 +0000
-Message-Id: <20250422162913.1242057-3-qq282012236@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422162913.1242057-1-qq282012236@gmail.com>
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
+        bh=CqKEbNLGhzwV9XEBdGBE6+HUfiIb/xIBVlRNIZDoITo=;
+        b=UA0xar3zYKmBrsKQwOrGEykoPJXjum+3ezQ+d++wcp76uMHlfGXttOvXdfXTlE+BQ3
+         51hLZy1MN5a7MW/5J9uG4QyrP9U5zEu0czyQnAU5vHBToVpO0qd9QtQVBFFGEP2RVT2S
+         mV1fyI9Tjm5trhtAnOw8MTAr1VdV0bkFJqu/jscTuDcdveShqrIYO6rL0Xd/PqSj1ih1
+         lyJGluwyyjL/Izwpaegw19U2tTq73MepSNdomnPJIGbjpdspLKhB2/+9WMPhp5VA3PtU
+         WKXdeA0BqK86Iae0e0pv5Mol6Qoomtfl5VuJmfoHfaJxSi+o0nDk/a+9SkUn2LeOo9Sf
+         K46g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0yjwlpXESM9gvdV7N+N3ylhhtVyyL0uXJ5B8QBmpW1RJvuBRjF4PnOyLukHEY/yEzF/wfq52Hb288sU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVz8s3+358texTyyLA9tVRMtTmrU4I0wAEuLFdvewKWoWBvPSM
+	y7ItV5ikaMMagbEDTgS9aMB0HttjcJ+ce4dCTd8Tn0ItruYqE4sDPDq2N3yM4apieWjTMK63LzZ
+	gW0+90oXWn06qrLuXnlMVKFBdqtECXuDN0k/j62MxosB8X1I=
+X-Gm-Gg: ASbGncuQ9eh5Hnbsho4hpXeKaiC7eZb7alPOCc+UBNmmeO0m2Ejiyzc++P2GnS36pww
+	0Lqx8IlnWbK4r7vi3XRey7c99uFa07UkbYEcNCdBxT3AuGVZJ0i9r6Et2U3bjVxYYoTP2IECmdu
+	EjSPXHjJ/ZlO6+G+NRVeZV9Q==
+X-Google-Smtp-Source: AGHT+IFV+Fl/M43pQ5C4mwjWmtEQVn4Q/KMbbjlHzVR5N2ztbMJY3fq7yDfY3/zkm5NX/tHqeSoyi5mBSi4LDPN1oo0=
+X-Received: by 2002:a05:690c:7209:b0:6fe:c75a:4309 with SMTP id
+ 00721157ae682-706cce44e78mr218124297b3.38.1745339412762; Tue, 22 Apr 2025
+ 09:30:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
+ <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com> <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
+In-Reply-To: <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 22 Apr 2025 12:30:01 -0400
+X-Gm-Features: ATxdqUEOFVSyq2d1v00GrCvVvc8dU83XbSJlmQt5G4oKG4Csn74EEhOQKDYLcUk
+Message-ID: <CAHC9VhRhr0GMQB59DZ4-xJ788yEgAsUMBLNdYFL2UxioBUPhGQ@mail.gmail.com>
+Subject: Re: [PATCH v2] audit,module: restore audit logging in load failure case
+To: Richard Guy Briggs <rgb@redhat.com>
+Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org, 
+	Linux Kernel Audit Mailing List <audit@vger.kernel.org>, Eric Paris <eparis@parisplace.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Set this to avoid premature return from schedule in IOU worker threads,
-ensuring it sleeps and waits to be woken up as in normal cases.
+On Tue, Apr 22, 2025 at 11:37=E2=80=AFAM Richard Guy Briggs <rgb@redhat.com=
+> wrote:
+> On 2025-04-11 14:23, Paul Moore wrote:
+> > On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
 
-Signed-off-by: Zhiwei Jiang <qq282012236@gmail.com>
----
- fs/userfaultfd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+...
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index d80f94346199..972eb10925a9 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -32,6 +32,7 @@
- #include <linux/swapops.h>
- #include <linux/miscdevice.h>
- #include <linux/uio.h>
-+#include "../io_uring/io-wq.h"
- 
- static int sysctl_unprivileged_userfaultfd __read_mostly;
- 
-@@ -370,6 +371,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	bool must_wait;
- 	unsigned int blocking_state;
- 
-+	set_userfault_flag_for_ioworker();
- 	/*
- 	 * We don't do userfault handling for the final child pid update
- 	 * and when coredumping (faults triggered by get_dump_page()).
-@@ -506,6 +508,8 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 
- 	__set_current_state(TASK_RUNNING);
- 
-+	clear_userfault_flag_for_ioworker();
-+
- 	/*
- 	 * Here we race with the list_del; list_add in
- 	 * userfaultfd_ctx_read(), however because we don't ever run
--- 
-2.34.1
+> > > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > > index 1fb9ad289a6f..efa62ace1b23 100644
+> > > --- a/kernel/module/main.c
+> > > +++ b/kernel/module/main.c
+> > > @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info, =
+const char __user *uargs,
+> > >
+> > >     module_allocated =3D true;
+> > >
+> > > -   audit_log_kern_module(mod->name);
+> > > +   audit_log_kern_module(info->name);
+> > >
+> > >     /* Reserve our place in the list. */
+> > >     err =3D add_unformed_module(mod);
+> > > @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *info,=
+ const char __user *uargs,
+> > >      * failures once the proper module was allocated and
+> > >      * before that.
+> > >      */
+> > > -   if (!module_allocated)
+> > > +   if (!module_allocated) {
+> > > +           audit_log_kern_module(info->name ? info->name : "(unavail=
+able)");
+> >
+> > In keeping with audit tradition, wouldn't we want this to be "?" instea=
+d
+> > of "(unavailable)"?
 
+Any comment on the above?  This is more important than the non-public link =
+...
+
+> > >             mod_stat_bump_becoming(info, flags);
+> > > +   }
+> > >     free_copy(info, flags);
+> > >     return err;
+> > >  }
+> > > --
+> > > 2.43.5
+
+--=20
+paul-moore.com
