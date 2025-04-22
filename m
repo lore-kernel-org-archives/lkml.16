@@ -1,204 +1,145 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D8E288CA7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1301E87B
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745337003; cv=none; b=LnzxrPah+n8DqAv6kJsXp4v8C4m9t3yXbHTBc2wU8mWVjKE0JuG77p9mVidlYlokSjT6YSq1jG2MvHwr9Rpn0cW75Tm2t/FtQWL2aK03avuWLjyrfa2NesNgUUMSEZFS5L1GJ1BHEygANSdGqtGppWUFI5HqqEYW5KRQ71P3Kuw=
+	t=1745337027; cv=none; b=s10RXTRaDck/fVCsF1Np3ug2wIYoTMwH1OM19m8RQPEmnaeNMAsr32dn99p5GpXVdePUFy3OZq6sMnjbessvT/XiWtUqbE59fWaS34dRxl+B4JrnymjBafPMnUyhwUjPJRrwL+ESux153KqtSufUvyiIS2nkt2DnXwfFvXbGROU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745337003; c=relaxed/simple;
-	bh=VR2wSZLLUzPL+4k8PCQs4hb25e/cLPSyEI4SSh424OQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZpJBwQCdbsJHq8UBhgON9PJE+0Z5yC3bj1tGSji6qhTn+rgrareAznMghXY5d/WE5yIl1nhMbL/1V0JnwCHSrkXYm/YGSs8q211dPfA0uy6X89HJ1oci8/bIstisJOosj5jkjM36zwbhp3eje/XkD3ZLWsMCF//V5nssCeDth7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=YspOb0Vy; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745337027; c=relaxed/simple;
+	bh=mIhBxYbG+pmDSE5aCrley4crIb2diwH7C1G03e2Hk6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQWkCfv2rvHcnPfvZFIebgi79ZP+/VVaAIVtYM1NK09NppcEy+bfCqvcDK1gu/qOrHOawCza5WHi7tGB1ILE+4ncWrfHRl9NUonSmr5abdqv+K5dFNOSOCjsvGWt59AhsQL9XICDS3kyUiuFf02RnuFX81kjEzq4LKLk/5QTDeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZeW46uI9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="YspOb0Vy"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so4943745ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745337000; x=1745941800; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PWtCOErAPdviJAPXqAg1WYEhucNuXZisNIO11WL+WKM=;
-        b=YspOb0VyuVey+MJy+Spdgbf7qfo+NGvaUjU/P3hTqoa2DGUucfQ68atqUg9DaaGKlB
-         Xu8VWxouAIHPjdBUoGdeQWZBepuaF5KT6rMgpxBAqYRsXH0PubDj3gsfclg2SmEHozg9
-         mmbV2wl8AKiau1eUSDpTLEGjYNz/l92dIXbl8sH7uE9ALKKFyIFLgvEKSk/hwh9XGr0X
-         3EoX+QoWwk7vTkPhTfPJlDBCLKJXA2OqB5RmqTSIkWzDHnFOOBl1Ynu9EdUPzSLcI8v6
-         4Wvhv7A7gybW3cWOCRrhUnpLfyDKnScegKOtqSipIp7J1DbtCI62YTP6RPoxsNrzQHmY
-         tARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745337000; x=1745941800;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWtCOErAPdviJAPXqAg1WYEhucNuXZisNIO11WL+WKM=;
-        b=OM/Zkp2V1PKKD5QKwv+s7GWQC1Gsx4+6/P74d9/xw73iv+RfMoUIoLUMaeX/iurnWB
-         uXadmxN1ufZLtbpY8NFZHOlKOu5MUmPekL8qWBn7u7vLyJrqYzIo+i4INSHTQO95ppLu
-         DoyLKz3ApriRd15UYjYkBLReL19TsXuKO8IN+H/z+dUoky7B2G1rDZ6CjGy9TEqcHuBK
-         zHWRN0NzpRHIXwgSocrmCsyvM+5RZsKSo7lHEFhpyfanDyZ2SPy/nMY45dCVWNZv0kVx
-         mXg0TfgWZPZ0zpFPdvc5A1cq2N7R4AukcnTx7/URzKPOyyk8CD0ypgJ7KsnaeT6X4BzK
-         PF/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWf0BuTArkP4bfsvBOiNS/QsAQcgv+uv3vv8ZtqgYs6721Q2my1c8dH5yA25d9xzPgZRy8nFtvYJvbMNek=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy41eEVeilx8FPJqSD45de7kFlAvVScPa1zs7iVpzqcRJDNAihv
-	zmDE/BfcaI5fh9HGh/mBGuvkcfxWJt4kaNjN2s1AUzNnApnPXjIx+qhanA8vmpc=
-X-Gm-Gg: ASbGncspVPYTT8jVRtXfSFNSZmzysn1XLmaYzSy4IZfJwDzSjyyqLmc7FEVI63HOnDX
-	wYTKMxvJbgF6J55ij6Q4IhdHvTqpD5N6Dx91qvoGtsFVqr8p72948k+UlBDYnFrVGvozAO7L3m1
-	ypJmefgjGD9qkddEx5eE/ZMa1s0YS22tNb82ySPsKZJSDC5gXKBI4IPa1bLUJSSd44MwDpWVARD
-	ZAuBsMjftP+yBX4bgZaNvZxLzYTzz//pL1vNA6YAUSAEvmN/Q3cwGGwUMidYEn7woSx/O6chaAL
-	Pl9xY53vs1ALE36kafuqEUAEciFeLaAnpKNcBQ==
-X-Google-Smtp-Source: AGHT+IGAwwrMjNk9FpLKU7sspnSpBBOnFfhAwVWOfWP0g5H8a8AXj4k2N3R/0L2Z+lNpCM0/XNeMOw==
-X-Received: by 2002:a05:6e02:338f:b0:3d8:1e50:1d55 with SMTP id e9e14a558f8ab-3d88eda9aebmr146286335ab.11.1745336999867;
-        Tue, 22 Apr 2025 08:49:59 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d821ec204dsm23495105ab.53.2025.04.22.08.49.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 08:49:59 -0700 (PDT)
-Message-ID: <b5a8dbda-8555-4b43-9a46-190d4f1c7519@kernel.dk>
-Date: Tue, 22 Apr 2025 09:49:58 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZeW46uI9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745337024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L0OrTzSyXcOQ/sG0Ok5H6s6X1DlUx1r4W6qvigJ8iSw=;
+	b=ZeW46uI9IF8i6JIvF4UYIIfYTslxFhK5ICKAD6OVRgg9drBkreznS+SJBdxnjjdGSqRP6e
+	L3DNVk+SXklvb+TH7ahnh1cUEZskZ+hlnL0dRKtnAlAb5OSKdLLaMjxmZLJFfnnPfZT3zh
+	ZZv6ZfiMPkVfwkjPEeG/2yhSh6GL93M=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-g2ARZujmPqKh2thGUbLH4A-1; Tue,
+ 22 Apr 2025 11:50:20 -0400
+X-MC-Unique: g2ARZujmPqKh2thGUbLH4A-1
+X-Mimecast-MFC-AGG-ID: g2ARZujmPqKh2thGUbLH4A_1745337018
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0CE6180010A;
+	Tue, 22 Apr 2025 15:50:17 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.145])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E73D818001DD;
+	Tue, 22 Apr 2025 15:50:07 +0000 (UTC)
+Date: Tue, 22 Apr 2025 12:50:06 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, 
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, 
+	Crystal Wood <crwood@redhat.com>, linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Valentin Schneider <vschneid@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, lclaudio00@gmail.com
+Subject: Re: [PATCH v4] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <ucooiludwnen2gxm6pjypzloif23w4t37vrpml75egpkifbc4z@tmrs462ju7om>
+References: <Z_gLsK6rOjV3KElO@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
-From: Jens Axboe <axboe@kernel.dk>
-To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422104545.1199433-1-qq282012236@gmail.com>
- <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
- <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
- <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
- <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
- <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_gLsK6rOjV3KElO@uudg.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 4/22/25 8:29 AM, Jens Axboe wrote:
-> On 4/22/25 8:18 AM, ??? wrote:
->> On Tue, Apr 22, 2025 at 10:13?PM Jens Axboe <axboe@kernel.dk> wrote:
->>>
->>> On 4/22/25 8:10 AM, ??? wrote:
->>>> On Tue, Apr 22, 2025 at 9:35?PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>>
->>>>> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
->>>>>> In the Firecracker VM scenario, sporadically encountered threads with
->>>>>> the UN state in the following call stack:
->>>>>> [<0>] io_wq_put_and_exit+0xa1/0x210
->>>>>> [<0>] io_uring_clean_tctx+0x8e/0xd0
->>>>>> [<0>] io_uring_cancel_generic+0x19f/0x370
->>>>>> [<0>] __io_uring_cancel+0x14/0x20
->>>>>> [<0>] do_exit+0x17f/0x510
->>>>>> [<0>] do_group_exit+0x35/0x90
->>>>>> [<0>] get_signal+0x963/0x970
->>>>>> [<0>] arch_do_signal_or_restart+0x39/0x120
->>>>>> [<0>] syscall_exit_to_user_mode+0x206/0x260
->>>>>> [<0>] do_syscall_64+0x8d/0x170
->>>>>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
->>>>>> The cause is a large number of IOU kernel threads saturating the CPU
->>>>>> and not exiting. When the issue occurs, CPU usage 100% and can only
->>>>>> be resolved by rebooting. Each thread's appears as follows:
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
->>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
->>>>>>
->>>>>> I tracked the address that triggered the fault and the related function
->>>>>> graph, as well as the wake-up side of the user fault, and discovered this
->>>>>> : In the IOU worker, when fault in a user space page, this space is
->>>>>> associated with a userfault but does not sleep. This is because during
->>>>>> scheduling, the judgment in the IOU worker context leads to early return.
->>>>>> Meanwhile, the listener on the userfaultfd user side never performs a COPY
->>>>>> to respond, causing the page table entry to remain empty. However, due to
->>>>>> the early return, it does not sleep and wait to be awakened as in a normal
->>>>>> user fault, thus continuously faulting at the same address,so CPU loop.
->>>>>> Therefore, I believe it is necessary to specifically handle user faults by
->>>>>> setting a new flag to allow schedule function to continue in such cases,
->>>>>> make sure the thread to sleep.
->>>>>>
->>>>>> Patch 1  io_uring: Add new functions to handle user fault scenarios
->>>>>> Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
->>>>>>
->>>>>>  fs/userfaultfd.c |  7 ++++++
->>>>>>  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
->>>>>>  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
->>>>>>  3 files changed, 68 insertions(+), 41 deletions(-)
->>>>>
->>>>> Do you have a test case for this? I don't think the proposed solution is
->>>>> very elegant, userfaultfd should not need to know about thread workers.
->>>>> I'll ponder this a bit...
->>>>>
->>>>> --
->>>>> Jens Axboe
->>>> Sorry,The issue occurs very infrequently, and I can't manually
->>>> reproduce it. It's not very elegant, but for corner cases, it seems
->>>> necessary to make some compromises.
->>>
->>> I'm going to see if I can create one. Not sure I fully understand the
->>> issue yet, but I'd be surprised if there isn't a more appropriate and
->>> elegant solution rather than exposing the io-wq guts and having
->>> userfaultfd manipulate them. That really should not be necessary.
->>>
->>> --
->>> Jens Axboe
->> Thanks.I'm looking forward to your good news.
+On Thu, Apr 10, 2025 at 03:19:28PM -0300, Luis Claudio R. Goncalves wrote:
+> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+> with a mutex enqueued. That could lead to this sequence:
 > 
-> Well, let's hope there is! In any case, your patches could be
-> considerably improved if you did:
+>         rt_mutex_adjust_prio_chain()
+>           put_task_struct()
+>             __put_task_struct()
+>               sched_ext_free()
+>                 spin_lock_irqsave()
+>                   rtlock_lock() --->  TRIGGERS
+>                                       lockdep_assert(!current->pi_blocked_on);
 > 
-> void set_userfault_flag_for_ioworker(void)
-> {
-> 	struct io_worker *worker;
-> 	if (!(current->flags & PF_IO_WORKER))
-> 		return;
-> 	worker = current->worker_private;
-> 	set_bit(IO_WORKER_F_FAULT, &worker->flags);
-> }
+> Fix that by unconditionally resorting to the deferred call to
+> __put_task_struct() if PREEMPT_RT is enabled.
 > 
-> void clear_userfault_flag_for_ioworker(void)
-> {
-> 	struct io_worker *worker;
-> 	if (!(current->flags & PF_IO_WORKER))
-> 		return;
-> 	worker = current->worker_private;
-> 	clear_bit(IO_WORKER_F_FAULT, &worker->flags);
-> }
+> Suggested-by: Crystal Wood <crwood@redhat.com>
+> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> ---
 > 
-> and then userfaultfd would not need any odd checking, or needing io-wq
-> related structures public. That'd drastically cut down on the size of
-> them, and make it a bit more palatable.
+> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
+>     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
+> v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
+> v4: Fix the implementation of what was requested on v3.
+> 
+>  include/linux/sched/task.h |   17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 0f2aeb37bbb04..51678a541477a 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
+>  	if (!refcount_dec_and_test(&t->usage))
+>  		return;
+>  
+> -	/*
+> -	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> -	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> +	/* In !RT, it is always safe to call __put_task_struct(). */
+> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+>  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+>  
+>  		lock_map_acquire_try(&put_task_map);
+> @@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
+>  	}
+>  
+>  	/*
+> -	 * under PREEMPT_RT, we can't call put_task_struct
+> +	 * Under PREEMPT_RT, we can't call __put_task_struct
+>  	 * in atomic context because it will indirectly
+> -	 * acquire sleeping locks.
+> +	 * acquire sleeping locks. The same is true if the
+> +	 * current process has a mutex enqueued (blocked on
+> +	 * a PI chain).
+>  	 *
+> -	 * call_rcu() will schedule delayed_put_task_struct_rcu()
+> +	 * call_rcu() will schedule __put_task_struct_rcu_cb()
+>  	 * to be called in process context.
+>  	 *
+>  	 * __put_task_struct() is called when
+> @@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
+>  	 *
+>  	 * delayed_free_task() also uses ->rcu, but it is only called
+>  	 * when it fails to fork a process. Therefore, there is no
+> -	 * way it can conflict with put_task_struct().
+> +	 * way it can conflict with __put_task_struct().
+>  	 */
+>  	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
+>  }
+> 
 
-Forgot to ask, what kernel are you running on?
+Reviewed-by: Wander Lairson Costa <wander@redhat.com>
 
--- 
-Jens Axboe
