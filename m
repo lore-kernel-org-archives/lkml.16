@@ -1,396 +1,192 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649DE2989AD;
-	Tue, 22 Apr 2025 21:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27063262FF5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357311; cv=none; b=dFWMamI+2GoaM5baUkX5AkeGsB9W77mdkyA2d3wfbz81Kl+vuJmyN8MtNtD6mveCL3T2xrJrhoLRrK5HhIygRWPIQ3P8NOVBUJTKU//WVO1xOG9EP+C8/46qzj8HkIYCj/AZeY9FWXd05iE2x3OAzDPuwLSklBhvdZLvljjEBBw=
+	t=1745357360; cv=none; b=HoKTQSkmeHy824O+v9D/giByQdJSxejHYJnQgjyYt8pM4WELQ+A1GMCjZbuFbusxDLtcDtaEcmygIVJAm55sCOZ2Gcbkrhq6EDR7Bdd0wHSxwRiHSmb2QcoCF8tSGceHhVCJ2qMtnrtNDEPFnmwb4y2HNqbtWEMzQ5UOCnhcDao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357311; c=relaxed/simple;
-	bh=Pt+d2OB6y6KnV8YoFpG15PScJZHceb8lmSxfo80k9wQ=;
+	s=arc-20240116; t=1745357360; c=relaxed/simple;
+	bh=MKbUvh/RyU2Ya4ObtWJFDMOgYe7VZeRqrszwjJFa2cM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oAEhSNJJ25N6YWSmrCidhCe/x65jr9kvHYOO1Rj27eFK8hGZMmfaQYGAPTuU0yNu7DcLxdsbCTuF5hri69IJAOtBEpTaY3UKMfYHTtJHjhCG4MjDe2FMBtfGOWaRZ7IhwvaL15zeyj/OkVhR6l9jrbeGw6VBseOkZyukd/vWNCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Op/zgiNa; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=heCSJQ5i3DChf+5v8WwFLaK1t4Urn8KcgVuy6ZKHbGrxAFfiBAG/Fm62c6lMvJxfUDAkvhUx09OjZEW3jQ5ZRYdolhsYNtbfdM/amlKha2xkEUqsSTKiGHxt+slwvjvPl8srbr3XBZLwEKEqqNNGrbSrZW38B8oBXXnn5uTVlFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gBem73Ec; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Op/zgiNa"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4D69A2AC;
-	Tue, 22 Apr 2025 23:28:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745357306;
-	bh=Pt+d2OB6y6KnV8YoFpG15PScJZHceb8lmSxfo80k9wQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Op/zgiNazUeBWHVM9Nf3Viqktcp0WxcuODyKPpzMybHpCqbktS+i/nkBPysDotr5+
-	 sFv977ITNdSvsgcyYyinbNzkKFokd6UKyU9Aa8YO3+S0G9AUUtgfK2je2OSDYilYFb
-	 gX7DeCxpo8o5qb9IUEh3ppNZorcU3z9Qv88enrX4=
-Date: Wed, 23 Apr 2025 00:28:24 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 6/8] media: uvcvideo: Factor out gpio functions to its
- own file
-Message-ID: <20250422212824.GQ17813@pendragon.ideasonboard.com>
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-6-1a0cc595a62d@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gBem73Ec"
+Date: Tue, 22 Apr 2025 14:28:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745357355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mja1AZU1OxXrkjHbCIJIDiF0DQ5jyuf/4e39r203PXU=;
+	b=gBem73Ecuh0/unsaz3dOF7qOKgwwRL9mqWfxjWOT8enzBQcaVl3uy7KuCfLk8qeDISNsQc
+	aB0qRfO5QrDh+lJOy5fJlyiHF0EOzQLfbR/mdfZDcmXE2xnqtYJgQSuaXnGzBgyGBT5w1h
+	aTV0gtet7CvHeY6tzi2n7dH5Tc54Y/Q=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Message-ID: <aAgJ8g8Gbb06quSM@linux.dev>
+References: <Z-RGYO3QVj5JNjRB@google.com>
+ <20250331145643.GF10839@nvidia.com>
+ <Z_PtKWnMPzwPb4sp@google.com>
+ <20250407161540.GG1557073@nvidia.com>
+ <Z_QAxiEWEyMpfLgL@google.com>
+ <SA1PR12MB719976799AD7F9FC4407A5A9B0BD2@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <aAdKCGCuwlUeUXKY@linux.dev>
+ <20250422135452.GL823903@nvidia.com>
+ <aAfI2GR1__-1KQHn@arm.com>
+ <20250422170324.GB1645809@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403-uvc-orientation-v1-6-1a0cc595a62d@chromium.org>
+In-Reply-To: <20250422170324.GB1645809@nvidia.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Ricardo,
-
-Thank you for the patch.
-
-Hans raised an issue on "[PATCH v3 2/8] media: uvcvideo: Factor out gpio
-functions to its own file" (part of "[PATCH v3 0/8] media: uvcvideo:
-Implement the Privacy GPIO as a evdev"), asking if GPIO handling should
-still use a uvc_entity if it moves to a evdev. There are implications on
-this series too. Unless I'm mistaken, I haven't seen a reply from you to
-my last e-mail. Can we please first finish that discussion ?
-
-On Thu, Apr 03, 2025 at 07:16:17PM +0000, Ricardo Ribalda wrote:
-> This is just a refactor patch, no new functionality is added.
+On Tue, Apr 22, 2025 at 10:54:52AM -0300, Jason Gunthorpe wrote:
+> On Tue, Apr 22, 2025 at 12:49:28AM -0700, Oliver Upton wrote:
+> > The reality is that userspace is an equal participant in remaining coherent with
+> > the guest. Whether or not FWB is employed for a particular region of IPA
+> > space is useful information for userspace deciding what it needs to do to access guest
+> > memory. Ignoring the Nvidia widget for a second, userspace also needs to know this for
+> > 'normal', kernel-managed memory so it understands what CMOs may be necessary when (for
+> > example) doing live migration of the VM.
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/Makefile     |   3 +-
->  drivers/media/usb/uvc/uvc_driver.c | 121 +-----------------------------------
->  drivers/media/usb/uvc/uvc_gpio.c   | 123 +++++++++++++++++++++++++++++++++++++
->  drivers/media/usb/uvc/uvcvideo.h   |   6 ++
->  4 files changed, 133 insertions(+), 120 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/Makefile b/drivers/media/usb/uvc/Makefile
-> index 4f9eee4f81ab6436a8b90324a688a149b2c3bcd1..85514b6e538fbb8284e574ca14700f2d749e1a2e 100644
-> --- a/drivers/media/usb/uvc/Makefile
-> +++ b/drivers/media/usb/uvc/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  uvcvideo-objs  := uvc_driver.o uvc_queue.o uvc_v4l2.o uvc_video.o uvc_ctrl.o \
-> -		  uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o
-> +		  uvc_status.o uvc_isight.o uvc_debugfs.o uvc_metadata.o \
-> +		  uvc_gpio.o
->  ifeq ($(CONFIG_MEDIA_CONTROLLER),y)
->  uvcvideo-objs  += uvc_entity.o
->  endif
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index da24a655ab68cc0957762f2b67387677c22224d1..b52e1ff401e24f69b867b5e975cda4260463e760 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -8,7 +8,6 @@
->  
->  #include <linux/atomic.h>
->  #include <linux/bits.h>
-> -#include <linux/gpio/consumer.h>
->  #include <linux/kernel.h>
->  #include <linux/list.h>
->  #include <linux/module.h>
-> @@ -792,8 +791,8 @@ static const u8 uvc_media_transport_input_guid[16] =
->  	UVC_GUID_UVC_MEDIA_TRANSPORT_INPUT;
->  static const u8 uvc_processing_guid[16] = UVC_GUID_UVC_PROCESSING;
->  
-> -static struct uvc_entity *uvc_alloc_entity(u16 type, u16 id,
-> -		unsigned int num_pads, unsigned int extra_size)
-> +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> +				    unsigned int extra_size)
->  {
->  	struct uvc_entity *entity;
->  	unsigned int num_inputs;
-> @@ -1242,122 +1241,6 @@ static int uvc_parse_control(struct uvc_device *dev)
->  	return 0;
->  }
->  
-> -/* -----------------------------------------------------------------------------
-> - * Privacy GPIO
-> - */
-> -
-> -static void uvc_gpio_event(struct uvc_device *dev)
-> -{
-> -	struct uvc_entity *unit = dev->gpio_unit;
-> -	struct uvc_video_chain *chain;
-> -	u8 new_val;
-> -
-> -	if (!unit)
-> -		return;
-> -
-> -	new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
-> -
-> -	/* GPIO entities are always on the first chain. */
-> -	chain = list_first_entry(&dev->chains, struct uvc_video_chain, list);
-> -	uvc_ctrl_status_event(chain, unit->controls, &new_val);
-> -}
-> -
-> -static int uvc_gpio_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
-> -			    u8 cs, void *data, u16 size)
-> -{
-> -	if (cs != UVC_CT_PRIVACY_CONTROL || size < 1)
-> -		return -EINVAL;
-> -
-> -	*(u8 *)data = gpiod_get_value_cansleep(entity->gpio.gpio_privacy);
-> -
-> -	return 0;
-> -}
-> -
-> -static int uvc_gpio_get_info(struct uvc_device *dev, struct uvc_entity *entity,
-> -			     u8 cs, u8 *caps)
-> -{
-> -	if (cs != UVC_CT_PRIVACY_CONTROL)
-> -		return -EINVAL;
-> -
-> -	*caps = UVC_CONTROL_CAP_GET | UVC_CONTROL_CAP_AUTOUPDATE;
-> -	return 0;
-> -}
-> -
-> -static irqreturn_t uvc_gpio_irq(int irq, void *data)
-> -{
-> -	struct uvc_device *dev = data;
-> -
-> -	uvc_gpio_event(dev);
-> -	return IRQ_HANDLED;
-> -}
-> -
-> -static int uvc_gpio_parse(struct uvc_device *dev)
-> -{
-> -	struct uvc_entity *unit;
-> -	struct gpio_desc *gpio_privacy;
-> -	int irq;
-> -
-> -	gpio_privacy = devm_gpiod_get_optional(&dev->intf->dev, "privacy",
-> -					       GPIOD_IN);
-> -	if (!gpio_privacy)
-> -		return 0;
-> -
-> -	if (IS_ERR(gpio_privacy))
-> -		return dev_err_probe(&dev->intf->dev,
-> -				     PTR_ERR(gpio_privacy),
-> -				     "Can't get privacy GPIO\n");
-> -
-> -	irq = gpiod_to_irq(gpio_privacy);
-> -	if (irq < 0)
-> -		return dev_err_probe(&dev->intf->dev, irq,
-> -				     "No IRQ for privacy GPIO\n");
-> -
-> -	unit = uvc_alloc_entity(UVC_EXT_GPIO_UNIT, UVC_EXT_GPIO_UNIT_ID, 0, 1);
-> -	if (!unit)
-> -		return -ENOMEM;
-> -
-> -	unit->gpio.gpio_privacy = gpio_privacy;
-> -	unit->gpio.irq = irq;
-> -	unit->gpio.bControlSize = 1;
-> -	unit->gpio.bmControls = (u8 *)unit + sizeof(*unit);
-> -	unit->gpio.bmControls[0] = 1;
-> -	unit->get_cur = uvc_gpio_get_cur;
-> -	unit->get_info = uvc_gpio_get_info;
-> -	strscpy(unit->name, "GPIO", sizeof(unit->name));
-> -
-> -	list_add_tail(&unit->list, &dev->entities);
-> -
-> -	dev->gpio_unit = unit;
-> -
-> -	return 0;
-> -}
-> -
-> -static int uvc_gpio_init_irq(struct uvc_device *dev)
-> -{
-> -	struct uvc_entity *unit = dev->gpio_unit;
-> -	int ret;
-> -
-> -	if (!unit || unit->gpio.irq < 0)
-> -		return 0;
-> -
-> -	ret = request_threaded_irq(unit->gpio.irq, NULL, uvc_gpio_irq,
-> -				   IRQF_ONESHOT | IRQF_TRIGGER_FALLING |
-> -				   IRQF_TRIGGER_RISING,
-> -				   "uvc_privacy_gpio", dev);
-> -
-> -	unit->gpio.initialized = !ret;
-> -
-> -	return ret;
-> -}
-> -
-> -static void uvc_gpio_deinit(struct uvc_device *dev)
-> -{
-> -	if (!dev->gpio_unit || !dev->gpio_unit->gpio.initialized)
-> -		return;
-> -
-> -	free_irq(dev->gpio_unit->gpio.irq, dev);
-> -}
-> -
->  /* ------------------------------------------------------------------------
->   * UVC device scan
->   */
-> diff --git a/drivers/media/usb/uvc/uvc_gpio.c b/drivers/media/usb/uvc/uvc_gpio.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..30e3e6dd22cbc9cfee420dde7f7f64dbdce499b9
-> --- /dev/null
-> +++ b/drivers/media/usb/uvc/uvc_gpio.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *      uvc_gpio.c  --  USB Video Class driver
-> + *
-> + *      Copyright 2025 Google LLC
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/gpio/consumer.h>
-> +#include "uvcvideo.h"
-> +
-> +static void uvc_gpio_event(struct uvc_device *dev)
-> +{
-> +	struct uvc_entity *unit = dev->gpio_unit;
-> +	struct uvc_video_chain *chain;
-> +	u8 new_val;
-> +
-> +	if (!unit)
-> +		return;
-> +
-> +	new_val = gpiod_get_value_cansleep(unit->gpio.gpio_privacy);
-> +
-> +	/* GPIO entities are always on the first chain. */
-> +	chain = list_first_entry(&dev->chains, struct uvc_video_chain, list);
-> +	uvc_ctrl_status_event(chain, unit->controls, &new_val);
-> +}
-> +
-> +static int uvc_gpio_get_cur(struct uvc_device *dev, struct uvc_entity *entity,
-> +			    u8 cs, void *data, u16 size)
-> +{
-> +	if (cs != UVC_CT_PRIVACY_CONTROL || size < 1)
-> +		return -EINVAL;
-> +
-> +	*(u8 *)data = gpiod_get_value_cansleep(entity->gpio.gpio_privacy);
-> +
-> +	return 0;
-> +}
-> +
-> +static int uvc_gpio_get_info(struct uvc_device *dev, struct uvc_entity *entity,
-> +			     u8 cs, u8 *caps)
-> +{
-> +	if (cs != UVC_CT_PRIVACY_CONTROL)
-> +		return -EINVAL;
-> +
-> +	*caps = UVC_CONTROL_CAP_GET | UVC_CONTROL_CAP_AUTOUPDATE;
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t uvc_gpio_irq(int irq, void *data)
-> +{
-> +	struct uvc_device *dev = data;
-> +
-> +	uvc_gpio_event(dev);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +int uvc_gpio_parse(struct uvc_device *dev)
-> +{
-> +	struct uvc_entity *unit;
-> +	struct gpio_desc *gpio_privacy;
-> +	int irq;
-> +
-> +	gpio_privacy = devm_gpiod_get_optional(&dev->intf->dev, "privacy",
-> +					       GPIOD_IN);
-> +	if (!gpio_privacy)
-> +		return 0;
-> +
-> +	if (IS_ERR(gpio_privacy))
-> +		return dev_err_probe(&dev->intf->dev,
-> +				     PTR_ERR(gpio_privacy),
-> +				     "Can't get privacy GPIO\n");
-> +
-> +	irq = gpiod_to_irq(gpio_privacy);
-> +	if (irq < 0)
-> +		return dev_err_probe(&dev->intf->dev, irq,
-> +				     "No IRQ for privacy GPIO\n");
-> +
-> +	unit = uvc_alloc_entity(UVC_EXT_GPIO_UNIT, UVC_EXT_GPIO_UNIT_ID, 0, 1);
-> +	if (!unit)
-> +		return -ENOMEM;
-> +
-> +	unit->gpio.gpio_privacy = gpio_privacy;
-> +	unit->gpio.irq = irq;
-> +	unit->gpio.bControlSize = 1;
-> +	unit->gpio.bmControls = (u8 *)unit + sizeof(*unit);
-> +	unit->gpio.bmControls[0] = 1;
-> +	unit->get_cur = uvc_gpio_get_cur;
-> +	unit->get_info = uvc_gpio_get_info;
-> +	strscpy(unit->name, "GPIO", sizeof(unit->name));
-> +
-> +	list_add_tail(&unit->list, &dev->entities);
-> +
-> +	dev->gpio_unit = unit;
-> +
-> +	return 0;
-> +}
-> +
-> +int uvc_gpio_init_irq(struct uvc_device *dev)
-> +{
-> +	struct uvc_entity *unit = dev->gpio_unit;
-> +	int ret;
-> +
-> +	if (!unit || unit->gpio.irq < 0)
-> +		return 0;
-> +
-> +	ret = request_threaded_irq(unit->gpio.irq, NULL, uvc_gpio_irq,
-> +				   IRQF_ONESHOT | IRQF_TRIGGER_FALLING |
-> +				   IRQF_TRIGGER_RISING,
-> +				   "uvc_privacy_gpio", dev);
-> +
-> +	unit->gpio.initialized = !ret;
-> +
-> +	return ret;
-> +}
-> +
-> +void uvc_gpio_deinit(struct uvc_device *dev)
-> +{
-> +	if (!dev->gpio_unit || !dev->gpio_unit->gpio.initialized)
-> +		return;
-> +
-> +	free_irq(dev->gpio_unit->gpio.irq, dev);
-> +}
-> +
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index b4ee701835fc016474d2cd2a0b67b2aa915c1c60..aef96b96499ce09ffa286c51793482afd9832097 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -683,6 +683,8 @@ do {									\
->   */
->  
->  struct uvc_entity *uvc_entity_by_id(struct uvc_device *dev, int id);
-> +struct uvc_entity *uvc_alloc_entity(u16 type, u16 id, unsigned int num_pads,
-> +				    unsigned int extra_size);
->  
->  /* Video buffers queue management. */
->  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type);
-> @@ -829,4 +831,8 @@ void uvc_debugfs_cleanup_stream(struct uvc_streaming *stream);
->  size_t uvc_video_stats_dump(struct uvc_streaming *stream, char *buf,
->  			    size_t size);
->  
-> +/* gpio */
-> +int uvc_gpio_parse(struct uvc_device *dev);
-> +int uvc_gpio_init_irq(struct uvc_device *dev);
-> +void uvc_gpio_deinit(struct uvc_device *dev);
->  #endif
-> 
+> Really? How does it work today then? Is this another existing problem?
+> Userspace is doing CMOs during live migration that are not necessary?
 
--- 
-Regards,
+Yes, this is a pre-existing problem. I'm not aware of a live migration
+implementation that handles !S2FWB correctly, and assumes all guest
+accesses are done through a cacheable alias.
 
-Laurent Pinchart
+So, if a VMM wants to do migration of VMs on !S2FWB correctly, it'd
+probably want to know it can elide CMOs on something that actually bears
+the feature.
+
+> >  - The memslot flag says userspace expects a particular GFN range to guarantee
+> >    Write-Back semantics. This can be applied to 'normal', kernel-managed memory
+> >    and PFNMAP thingies that have cacheable attributes at host stage-1.
+> 
+> Userspace doesn't actaully know if it has a cachable mapping from VFIO
+> though :(
+
+That seems like a shortcoming on the VFIO side, not a KVM issue. What if
+userspace wants to do atomics on some VFIO mapping, doesn't it need to
+know that it has something with WB?
+
+> I don't really see a point in this. If the KVM has the cap then
+> userspace should assume the S2FWB behavior for all cachable memslots.
+
+Wait, so userspace simultaneously doesn't know the cacheability at host
+stage-1 but *does* for stage-2? This is why I contend that userspace
+needs a mechanism to discover the memory attributes on a given memslot.
+Without it there's no way of knowing what's a cacheable memslot.
+
+Along those lines, how is the VMM going to describe that cacheable
+PFNMAP region to the guest?
+
+> What should happen if you have S2FWB but don't pass the flag? For
+> normal kernel memory it should still use S2FWB. Thus for cachable
+> PFNMAP it makes sense that it should also still use S2FWB without the
+> flag?
+
+For kernel-managed memory, I agree. Accepting the flag for a memslot
+containing such memory would solely be for discoverability.
+
+OTOH, cacheable PFNMAP is a new feature and I see no issue compelling
+the use of a new bit with it.
+
+On Tue, Apr 22, 2025 at 02:03:24PM -0300, Jason Gunthorpe wrote:
+> On Tue, Apr 22, 2025 at 05:50:32PM +0100, Catalin Marinas wrote:
+> 
+> > So, for the above, the VMM needs to know that it somehow got into such
+> > situation. If it knows the device (VFIO) capabilities and that the user
+> > mapping is Cacheable, coupled with the new KVM CAP, it can infer that
+> > Stage 2 will be S2FWB, no need for a memory slot flag.
+> 
+> So long as the memslot creation fails for cachable PFNMAP without
+> S2FWB the VMM is fine. qemu will begin its first steps to startup the
+> migration destination and immediately fail. The migration will be
+> aborted before it even gets started on the source side.
+> 
+> As I said before, the present situation requires the site's
+> orchestration to manage compatibility for live migration of VFIO
+> devices. We only expect that the migration will abort early if the
+> site has made a configuration error.
+> 
+> > have such information, maybe a new memory slot flag can be used to probe
+> > what Stage 2 mapping is going to be: ask for KVM_MEM_PFNMAP_WB. If it
+> > fails, Stage 2 is Device/NC and can attempt again with the WB flag.
+> > It's a bit of a stretch for the KVM API but IIUC there's no option to
+> > query the properties of a memory slot.
+> 
+> I don't know of any use case for something like this. If VFIO gives
+> the VMM a cachable mapping there is no fallback to WB.
+> 
+> The operator could use a different VFIO device, one that doesn't need
+> cachable, but the VMM can't flip the VFIO device between modes on the
+> fly.
+
+I agree with you that in the context of a VFIO device userspace doesn't
+have any direct influence on the resulting memory attributes.
+
+The entire reason I'm dragging my feet about this is I'm concerned we've
+papered over the complexity of memory attributes (regardless of
+provenance) for way too long. KVM's done enough to make this dance 'work'
+in the context of kernel-managed memory, but adding more implicit KVM
+behavior for cacheable thingies makes the KVM UAPI even more
+unintelligible (as if it weren't already).
+
+So this flag isn't about giving userspace any degree of control over
+memory attributes. Just a way to know for things it _expects_ to be
+treated as cacheable can be guaranteed to use cacheable attributes in
+the VM.
+
+Thanks,
+Oliver
