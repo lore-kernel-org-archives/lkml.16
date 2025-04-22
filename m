@@ -1,45 +1,57 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9133E27E1CF;
-	Tue, 22 Apr 2025 12:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7CC27E1CF;
+	Tue, 22 Apr 2025 12:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325152; cv=none; b=bs1cPFUXdF1xoWfe7bFzGDisr9d81fsOph2a2RKHC4+UQ3kGQemwn2Au3fne93LhjxDhR1BrdbGJwneJsTNBPFiiZipQXy2BXThGhVdpd6sUsGIwh0DDTNjYcVhhhJSITk/MfiGWeuvjz8ZM9lzGNkD+H43w+NKm4ITsSLtakmk=
+	t=1745325156; cv=none; b=Q6q4Amq/6vAyO+ce5ZO15GHD2xnH5ZM5+Sm/TRsgQ1okFdS9c/K2QwBgyTN1OjM5X1fdKDLn1PTXdrwZuJb/DsBy24poafDTwLdSFiBqSVNa+Esw2Tvna5hwNz1NbqzgYtgxBZTav2jHjwmxnMzcePHuHKf5EgnAZ7ujmevrKLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325152; c=relaxed/simple;
-	bh=7ybQb+1fYQ9nDV2w2AqFUb1y78jzKoQw4hSaMH4Zke0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eV90CYJDNYT8Q24qF8HSmuVh1mn7Q2C89zXY3tRPfGW2kO0EiaQ4+0bqlo8pAbjQxj+aNZI2GhtPRhqAt84/BQrWlZIJunR0em+k5DWy38e4gXAeAtg2bUvKxoHfxY0YJ1NdOmRH5nKf21C/DI5YxzXPseTecztfQb2QIC4yrAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8Axz3NcjAdo7gbEAA--.61750S3;
-	Tue, 22 Apr 2025 20:32:28 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMAxTRszjAdoEPePAA--.4685S4;
-	Tue, 22 Apr 2025 20:32:26 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: Xuerui Wang <kernel@xen0n.name>,
-	stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 6.1&6.6 V4 2/3] sign-file,extract-cert: avoid using deprecated ERR_get_error_line()
-Date: Tue, 22 Apr 2025 20:31:34 +0800
-Message-ID: <20250422123135.1784083-3-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250422123135.1784083-1-chenhuacai@loongson.cn>
-References: <20250422123135.1784083-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1745325156; c=relaxed/simple;
+	bh=9sgP1GLrd8xWh1MYaLlSOFnxK1fP+qoNG+q8Zb9gZSw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t8DNTrXnF7/+ByXpBw368YKaZ6YFGQMJ/g54W9jXi2XedTz18nNM90Xnlx8NxkT5hCYuxjLzoRRcchzBqY2DRdLEw4Pw+uIupgXaxafr1641SLdI7N6M71Z9Fc50S25hWDRoT4nWo5LdjhMYcFnHijjzA0mpUoSlWyU1Kjm2+hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xtvuIKG1; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xtvuIKG1"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWNaD1209452
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 07:32:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745325144;
+	bh=VD3GYSIMc1uNyuCfaxWRQVAVN5cwNV7T99X8AnTXs+Y=;
+	h=From:To:CC:Subject:Date;
+	b=xtvuIKG1//K7fgM6BsFtji20vR+Auy99+my2CEufgqApdNrK7gksYNoJvJxR+cv3a
+	 N24i5Smyeg/JvqHvm4GQG0PEf5H+al8yqbOUCu3S3kN1WaFPsxn4HP3eIC5rILGui4
+	 /z+RKluueh2mv5X9fCtirOXl8cVYdt2YeyvseBDE=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWN0T017932
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 07:32:23 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 07:32:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 07:32:23 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MCWIKt117965;
+	Tue, 22 Apr 2025 07:32:19 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
+        <parth105105@gmail.com>, <parth.pancholi@toradex.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v3 0/2] J784S4/J742S2: Enable ACSPCIE0 output for PCIe1
+Date: Tue, 22 Apr 2025 18:02:16 +0530
+Message-ID: <20250422123218.3788223-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,142 +59,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxTRszjAdoEPePAA--.4685S4
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxGFyDGFW3Ar1kCr15Jw18JFc_yoW5KrWkpa
-	1xXwn7trykXFZ8Gr9rAFy0g3Wj9F4vkr4jvFnrG39xZF1DX3yIgw1Sq3Wa9348ZF95J3W3
-	AFn8X340kr48C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8pWlPUUUUU==
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Jan Stancek <jstancek@redhat.com>
+Hello,
 
-commit 467d60eddf55588add232feda325da7215ddaf30 upstream.
+This series enables the reference clock output from the ACSPCIE0 module
+to the PCIe Connector corresponding to the PCIe1 instance of PCIe on
+J784S4-EVM and J742S2-EVM.
 
-ERR_get_error_line() is deprecated since OpenSSL 3.0.
+Series is based on linux-next tagged next-20250417.
 
-Use ERR_peek_error_line() instead, and combine display_openssl_errors()
-and drain_openssl_errors() to a single function where parameter decides
-if it should consume errors silently.
+The previous versions of this series were a single patch. Based on the
+feedback received on previous versions, the SoC and Board support has
+been split in order to allow reuse for other Boards based on the same
+SoC.
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- certs/extract-cert.c |  4 ++--
- scripts/sign-file.c  |  6 +++---
- scripts/ssl-common.h | 23 ++++++++---------------
- 3 files changed, 13 insertions(+), 20 deletions(-)
+v2 patch:
+https://lore.kernel.org/r/20250411121307.793646-1-s-vadapalli@ti.com/
+Changes since v2 patch:
+- The SoC and board changes have been split across:
+  k3-j784s4-j742s2-main-common.dtsi and k3-j784s4-j742s2-evm-common.dtsi
+  respectively.
 
-diff --git a/certs/extract-cert.c b/certs/extract-cert.c
-index 8e7ba9974a1f..61bbe0085671 100644
---- a/certs/extract-cert.c
-+++ b/certs/extract-cert.c
-@@ -99,11 +99,11 @@ int main(int argc, char **argv)
- 		parms.cert = NULL;
- 
- 		ENGINE_load_builtin_engines();
--		drain_openssl_errors();
-+		drain_openssl_errors(__LINE__, 1);
- 		e = ENGINE_by_id("pkcs11");
- 		ERR(!e, "Load PKCS#11 ENGINE");
- 		if (ENGINE_init(e))
--			drain_openssl_errors();
-+			drain_openssl_errors(__LINE__, 1);
- 		else
- 			ERR(1, "ENGINE_init");
- 		if (key_pass)
-diff --git a/scripts/sign-file.c b/scripts/sign-file.c
-index 39ba58db5d4e..bb3fdf1a617c 100644
---- a/scripts/sign-file.c
-+++ b/scripts/sign-file.c
-@@ -114,11 +114,11 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
- 		ENGINE *e;
- 
- 		ENGINE_load_builtin_engines();
--		drain_openssl_errors();
-+		drain_openssl_errors(__LINE__, 1);
- 		e = ENGINE_by_id("pkcs11");
- 		ERR(!e, "Load PKCS#11 ENGINE");
- 		if (ENGINE_init(e))
--			drain_openssl_errors();
-+			drain_openssl_errors(__LINE__, 1);
- 		else
- 			ERR(1, "ENGINE_init");
- 		if (key_pass)
-@@ -273,7 +273,7 @@ int main(int argc, char **argv)
- 
- 		/* Digest the module data. */
- 		OpenSSL_add_all_digests();
--		display_openssl_errors(__LINE__);
-+		drain_openssl_errors(__LINE__, 0);
- 		digest_algo = EVP_get_digestbyname(hash_algo);
- 		ERR(!digest_algo, "EVP_get_digestbyname");
- 
-diff --git a/scripts/ssl-common.h b/scripts/ssl-common.h
-index e6711c75ed91..2db0e181143c 100644
---- a/scripts/ssl-common.h
-+++ b/scripts/ssl-common.h
-@@ -3,7 +3,7 @@
-  * SSL helper functions shared by sign-file and extract-cert.
-  */
- 
--static void display_openssl_errors(int l)
-+static void drain_openssl_errors(int l, int silent)
- {
- 	const char *file;
- 	char buf[120];
-@@ -11,28 +11,21 @@ static void display_openssl_errors(int l)
- 
- 	if (ERR_peek_error() == 0)
- 		return;
--	fprintf(stderr, "At main.c:%d:\n", l);
-+	if (!silent)
-+		fprintf(stderr, "At main.c:%d:\n", l);
- 
--	while ((e = ERR_get_error_line(&file, &line))) {
-+	while ((e = ERR_peek_error_line(&file, &line))) {
- 		ERR_error_string(e, buf);
--		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
-+		if (!silent)
-+			fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
-+		ERR_get_error();
- 	}
- }
- 
--static void drain_openssl_errors(void)
--{
--	const char *file;
--	int line;
--
--	if (ERR_peek_error() == 0)
--		return;
--	while (ERR_get_error_line(&file, &line)) {}
--}
--
- #define ERR(cond, fmt, ...)				\
- 	do {						\
- 		bool __cond = (cond);			\
--		display_openssl_errors(__LINE__);	\
-+		drain_openssl_errors(__LINE__, 0);	\
- 		if (__cond) {				\
- 			errx(1, fmt, ## __VA_ARGS__);	\
- 		}					\
+v1 patch:
+https://lore.kernel.org/r/20240715123301.1184833-1-s-vadapalli@ti.com/
+Changes since v1 patch:
+- Rebased patch on linux-next tagged next-20241209.
+- Moved changes from "k3-j784s4-main.dtsi" to its equivalent now which
+  is "k3-j784s4-j742s2-main-common.dtsi" since PCIe1 is common to both
+  J742S2 and J784S4.
+- Renamed "acspcie0-proxy-ctrl" to "clock-controller" to follow generic
+  node naming convention.
+- Added "ti,syscon-acspcie-proxy-ctrl" property at the end of the node
+  since vendor specific properties should be placed at the end.
+
+Logs validating that an NVMe SSD connected to the PCIe Connector on
+J784S4-EVM receives the reference clock from the ACSPCIE0 module and is
+therefore enumerated successfully:
+https://gist.github.com/Siddharth-Vadapalli-at-TI/905bceb2b6c0e1fc6b80cd2ddaf5bd0e
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (2):
+  arm64: dts: ti: k3-j784s4-j742s2-main-common: add ACSPCIE0 node
+  arm64: dts: ti: k3-j784s4-j742s2-evm-common: enable ACSPCIE0 output
+    for PCIe1
+
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi  | 6 ++++++
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 5 +++++
+ 2 files changed, 11 insertions(+)
+
 -- 
-2.47.1
+2.34.1
 
