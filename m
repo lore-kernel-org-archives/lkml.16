@@ -1,135 +1,193 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DA928E5EF
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DDD82AE68;
+	Tue, 22 Apr 2025 14:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333440; cv=none; b=IKMxSmB8yuiD45QmlpGofdxBPzxl3K9c6s2a73vogSpTQzVO1aNh/MarJzk6H/+7f5a5dSdNkXttMZpuCV3Vr8BNnvOks2vNCtuZZo98L+4bYfYjahXucOWazmszWad6JQu/vN5JnR/zc2TtsIA2BQhmJm3HsKJIIv2Fc9erExM=
+	t=1745333572; cv=none; b=uKmg6vzoK2jlpw1ptcMKwRjfl/Z8w37ZG+OH5DuQB+oQt+ZtsrBkCy5bO4qzWyQWHL2M3qh4E3YHQt7CE4fQsE2vryo5FUfoX+uMZ6S/DPgdETdP3Lr2bB3c6KJ4Wvmv2x7PGh5msWYUGa0Kxb8WunwezskPNdDUZ+3R1sC6g7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333440; c=relaxed/simple;
-	bh=iCimHhUd/mzUcFh965kaimeCxXedpyGd4dqO8foRRYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jddCEwDok/cpu86Qmj64XaZLHKJZHatIpCebywK/gtTtCFMbBMhJlqeia8JUn+xK8WutvPgkXXI+sGzlYqvwaSoapJTT67wpLFL3YCwhb+/5RQBZ4UYd+IxhiLmyvTk1S8635aqaJOfFtQ44VKVcQULMTPdSiMLifO9n3VUzyrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KSxPS/09; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745333572; c=relaxed/simple;
+	bh=QTtMhN+qUIN28sTfIHm6cAZpcMSYeG7RgKue75sEfOs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwUvlhZrCAxi9+Kw1Rn20dWVmsXMkt/nvfEFYBxPMWN3UWf47J+NHI9KhYjJBZjZRE1CcxaM3/cWSt5J8gGmC312KQvYaKwapnsfBkUxCtTyjba6SwHjV9SLWFaIQhWss8pmISrZB+Z/9CfGgB51oQIRMyv6o/Hoquoe57xmWdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eIVvTvYR; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KSxPS/09"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so39488465e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:50:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIVvTvYR"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-acb39c45b4eso772089466b.1;
+        Tue, 22 Apr 2025 07:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745333437; x=1745938237; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UShiax+LU8LwPMZnoww3ccqot70SLTgfbw+9kx2vTD0=;
-        b=KSxPS/09JDdvUfbFZYBRA1LFXygdmW/Gny7AiApXv5If/C09Y2OVjSZtjFTJEXlJmh
-         zvgmrwAgrwHo0TONz46E/loH+XjV33USKjllI2rzSNmMnOQ+sSrUUkG1mi/MZ6J6waGT
-         7xsM3apEaLtYPuNeZmRpOpCcLRm9u3Ln7QHH5Y4GmlmhwbaJ6bnDRF8/32RIYvS0JW9Y
-         XO2ASef0y0D9Aa9xZDeVY1Hv0uy6cmgP7e2cKZWkNLhEOiOfYjVQ/zIz15hhp1VPE24/
-         EiwiFtNNlLT69OqLQ1kC27RZwfhKXavYRwg6F2V1Q56Rl/ixQfmXguVTuUANZ+zqYbIK
-         mohQ==
+        d=gmail.com; s=20230601; t=1745333568; x=1745938368; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ne0UrOQ10ywUV4yIx/6vzg9wa/Lu7VvCl++7DoTSGgQ=;
+        b=eIVvTvYR6WD1RCVQqtvGuj3aVfMgu+pxrNPAJrbim6sr3NGF+hDbo89PhaQ3xx9Szf
+         rZD5MUTNTDjafQvSAm9kOdSj98dMTpx0Qmxw+z4KHIVQYgMCgU0CJzQSlZuhSy1Lm9ZY
+         AwnIlj0+eJxWkkQhBC8b5pPjObOcrDw9iwqB5ZrKRWNnwKi5SOI+QBXyyhCQ/ttn/ONA
+         T919e/nh+kKDy6vgY5huFISfe9GXSyE2KT8EV7VcCK+so+0YOt7jG9IZ1ZqHfAcH3TiT
+         vW+TmUdzFAdl4DYXT44WToqzqLosnXMJXTNGi5j+39oH9WZqTSETd/xLIHXhcBKC8AYW
+         FczA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745333437; x=1745938237;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UShiax+LU8LwPMZnoww3ccqot70SLTgfbw+9kx2vTD0=;
-        b=MKC83d+WQHOnZHX8TOjCaQ8iN74qfMCP6PMAzfhxp+ztpGWZW/+hMfrMwp6fOgs27t
-         3EjvSdJhsqFMK5MH1KevNcrRE1f0BAtdJrEuogcbLclOeDGUTm7y5AHfvY+jPM10C7cw
-         RHVBbPOMMQbS8jsouAgU88IAgfiN+0/1MuwanVMmdZY9jp3lweSTWRkbASQo9oNlS/Fn
-         /efM5BW2ZO4T4LvCraJmUtvUG8TTPPRmkR/nNVgBzaXB18tWzuwEFs2oAznGrsVhDj1R
-         LG/O56ovUSaw2L654HrrTFOZhYOrCfisUgOkP7Muj8ilquh+oSwEPRhmDer3Xt1n/prl
-         6bGw==
-X-Gm-Message-State: AOJu0YzQdLc/vJZrcI8mZJqgUsFOYFFHd2Qa0uMDPHS6KxOmFf8Movok
-	5DSpPCtDL/x2wAgDR6X9kTzENUpJToKMQb6hltMYS+/RghQb3APVxyWpyFJHTUw=
-X-Gm-Gg: ASbGnctfBda5Fv1uliuFS9KoSM2p3yskHYGYnTxF10Uj9AcA5Mo8lHSz7g9LqW7pEX3
-	XWzpvKg4YWcc3Ott47141oS2uyL5Wb8fXbHj7BK2Q0QZCqOAR54Gg0XsffTOQzOXTF9HxC2rqZz
-	RANjspJb3V1682WD+SaGy3142HtsiC3tDuWombJDny7jxtIOcrzya2UjbMg/BofufLh2pZCS+8X
-	wZ+Imc0FrhNR2H3xHSy7+6CMZGM9DxqCGPb246KeU9zbmKcitYckug9gApzdS/jfPWMcknhTNIw
-	Itlk/TdBwy+3vb5r5Fm4Tgt3CHaIE+TgAcu3PIcfkeU=
-X-Google-Smtp-Source: AGHT+IEEQI8X/bGEgYwYK6QKG0DoD1RsbG5CG6ST27j6gHp079g1myYN7p57MYNl+GNamCTUP7hJTg==
-X-Received: by 2002:a05:6000:188d:b0:39c:1424:2827 with SMTP id ffacd0b85a97d-39efba4657amr12604592f8f.15.1745333436928;
-        Tue, 22 Apr 2025 07:50:36 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aced6sm27597405e9.16.2025.04.22.07.50.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:50:36 -0700 (PDT)
-Date: Tue, 22 Apr 2025 16:50:34 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>
-Subject: Re: [PATCH RFC 0/9] Reduce ratelimit's false-positive misses
-Message-ID: <aAesultdR77oRaSI@pathway.suse.cz>
-References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
- <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
+        d=1e100.net; s=20230601; t=1745333568; x=1745938368;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ne0UrOQ10ywUV4yIx/6vzg9wa/Lu7VvCl++7DoTSGgQ=;
+        b=TOTP7gKmtyD4/FpChMfqgZ5sF4ZdPzMHMcNeLF8gsXdHWPN3+2wEWjybFbiRDZMMm7
+         wYMhrJLTgJiz4x9ZgLq79xcLPcQDdLmVLMvuB1m6J8yetrlNW8CLOKWQ5P6djX1PbO7N
+         7NlEnfok2JSyKTAzYPHoZc6IA9bBm3pErqWpBxQsGNR3p2sEZM/6Fr3Ks/yDjAwusZHA
+         VmOvCKPV2qVbnB1vmstMT/rIxtEiqaHcndwKsVT+Xdf7ONH0q5EzNy8Sx/YLdmULOuKz
+         8nvA/rzUpw5CvMvwTGeBX7kU+hnclJVR+nlrvsipfjw6Ne2htJzRF7OHGISf1DZ9tmXl
+         G2oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqTNQ2ctHFVnSwuP4/3Zk44NdfGleb7gxASu244IaQF8lTH2cIeGdNxNjPUG99FWVhPfpH1DJFwbeYyb0=@vger.kernel.org, AJvYcCXUvGonwvvhKL+Y69rJ6Zl6xjaeMhXlde31mXicyo9Y0xyE3wpxzeX9qQ5H935vZ/i5f778X4dHXBuF2UE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbNkdeCIfqMSKMTHvbhbh1fQuFrC0Fl9nD7has9U9qW/EGSyvP
+	U+b/5TM3BSWadXeno/UtTAomEjdjCTIM9EdiND2cars/10uyIxT3
+X-Gm-Gg: ASbGncuuk1uxxUP1PfgtulOerkI24LOEyPjsc32N0rUZc8niGtFrlTcdbfwKy6n9FsJ
+	1fCfT8sAeT9a1pokTEP2zR/779sU+BJ+8wfU5Ol9vmhCUHHIngjwbynf6ghFPtO6VPc6EW2oLoB
+	7uSo+jc3WWgalJMEbT/T6OZ3m3JbrRp1wy/EeVAER5i/geMYCRmy/tTzP8NFufTSU2lPI17wOrq
+	ZfHOzao/XT/cBLWbqy+i77PkZ5hwyIDIB2rg9/KJdV1YBYPtAtMZby6YqVfMnk3Zb8739IOC6gN
+	b+NjCGLw1wVzBFG+J3tQ8V/2wmZGIi/dsBdMO1rMvy8=
+X-Google-Smtp-Source: AGHT+IGb9MBfCkRoB/jqq7loWg9l+w4QKcOEEXBWwwBNICQDiX2ECXBkrt0pwz/SUpiy+0yG92zd4A==
+X-Received: by 2002:a17:906:6a1e:b0:aca:c924:c14 with SMTP id a640c23a62f3a-acb74b34dbemr1383647666b.17.1745333568369;
+        Tue, 22 Apr 2025 07:52:48 -0700 (PDT)
+Received: from [192.168.1.101] ([212.106.161.104])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef9e7e6sm657013966b.162.2025.04.22.07.52.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 07:52:47 -0700 (PDT)
+Message-ID: <d0da9dbd-7ea7-4047-bab3-22f416c45938@gmail.com>
+Date: Tue, 22 Apr 2025 16:52:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: tegra: Enable PWM fan on the Jetson TX1 Devkit
+To: webgeek1234@gmail.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
+Content-Language: en-US, pl-PL
+From: Tomasz Maciej Nowak <tmn505@gmail.com>
+In-Reply-To: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri 2025-04-18 10:13:49, Paul E. McKenney wrote:
-> Hello!
-> 
-> This v2 series replaces open-coded uses of the ratelimit_state structure
-> with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
-> case with a flag, provides a ___ratelimit() trylock-failure fastpath
-> to (almost) eliminate false-positive misses, and adds a simple test.
-> 
-> The key point of this series is the reduction of false-positive misses.
-> 
-> The individual patches are as follows:
-> 
-> 1.	Add trivial kunit test for ratelimit.
+Hi.
 
-I have suggested few cosmetic changes for the above patch.
+W dniu 21.04.2025 o 00:42, Aaron Kling via B4 Relay pisze:
+> From: Aaron Kling <webgeek1234@gmail.com>
+> 
+> This is based on 6f78a94, which enabled added the fan and thermal zones
+> for the Jetson Nano Devkit. The fan and thermal characteristics of the
+> two devkits are similar, so usng the same configuration.
 
-> 2.	Create functions to handle ratelimit_state internals.
-> 
-> 3.	Avoid open-coded use of ratelimit_state structure's ->missed
-> 	field.
-> 
-> 4.	Avoid open-coded use of ratelimit_state structure's ->missed
-> 	field.
-> 
-> 5.	Avoid open-coded use of ratelimit_state structure's internals.
-> 
-> 6.	Convert the ->missed field to atomic_t.
-> 
-> 7.	Count misses due to lock contention.
-> 
-> 8.	Avoid jiffies=0 special case.
-> 
-> 9.	Reduce ___ratelimit() false-positive rate limiting, courtesy of
-> 	Petr Mladek.
-> 
-> 10.	Allow zero ->burst to disable ratelimiting.
-> 
-> 11.	Force re-initialization when rate-limiting re-enabled.
-> 
-> 12.	Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE.
-> 
-> 13.	Avoid atomic decrement if already rate-limited.
-> 
-> 14.	Avoid atomic decrement under lock if already rate-limited.
+Does this work on Your DevKit? Doesn't on mine, the fan won't budge. Maybe the
+revision difference? What I'm using ATM is [1] and [2]. Because inverted polarity
+of PWM, not submitted since that'll need the driver changes [3],[4].
 
-The rest looks good. And I think that it is a great improvement.
-Feel free to use for the entire patchset:
+1. https://github.com/tmn505/linux/commit/a78c520ec94aeab2c9dc8e1f46597c4174ff957d
+2. https://github.com/tmn505/linux/commit/99beee4f0cd5d3a6f30e1829d823c11cb8b54bac
+3. https://libera.irclog.whitequark.org/tegra/2024-07-19#36707118;
+4. https://libera.irclog.whitequark.org/tegra/2024-10-14#37145211;
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Regards
 
-Best Regards,
-Petr
+> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 60 ++++++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> index 83ed6ac2a8d8f403fb588edce83dc401065c162f..bc02f2eb14bcbd99627c58b398bbf43061c8110b 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> @@ -1623,6 +1623,14 @@ key-volume-up {
+>  		};
+>  	};
+>  
+> +	fan: pwm-fan {
+> +		compatible = "pwm-fan";
+> +		pwms = <&pwm 3 45334>;
+> +
+> +		cooling-levels = <0 64 128 255>;
+> +		#cooling-cells = <2>;
+> +	};
+> +
+>  	vdd_sys_mux: regulator-vdd-sys-mux {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "VDD_SYS_MUX";
+> @@ -1778,4 +1786,56 @@ vdd_usb_vbus_otg: regulator-vdd-usb-vbus-otg {
+>  		enable-active-high;
+>  		vin-supply = <&vdd_5v0_sys>;
+>  	};
+> +
+> +	thermal-zones {
+> +		cpu-thermal {
+> +			trips {
+> +				cpu_trip_critical: critical {
+> +					temperature = <96500>;
+> +					hysteresis = <0>;
+> +					type = "critical";
+> +				};
+> +
+> +				cpu_trip_hot: hot {
+> +					temperature = <70000>;
+> +					hysteresis = <2000>;
+> +					type = "hot";
+> +				};
+> +
+> +				cpu_trip_active: active {
+> +					temperature = <50000>;
+> +					hysteresis = <2000>;
+> +					type = "active";
+> +				};
+> +
+> +				cpu_trip_passive: passive {
+> +					temperature = <30000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				cpu-critical {
+> +					cooling-device = <&fan 3 3>;
+> +					trip = <&cpu_trip_critical>;
+> +				};
+> +
+> +				cpu-hot {
+> +					cooling-device = <&fan 2 2>;
+> +					trip = <&cpu_trip_hot>;
+> +				};
+> +
+> +				cpu-active {
+> +					cooling-device = <&fan 1 1>;
+> +					trip = <&cpu_trip_active>;
+> +				};
+> +
+> +				cpu-passive {
+> +					cooling-device = <&fan 0 0>;
+> +					trip = <&cpu_trip_passive>;
+> +				};
+> +			};
+> +		};
+> +	};
+>  };
+> 
+> ---
+> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+> change-id: 20250420-tx1-therm-9fb3c30fa43f
+> 
+> Best regards,
+-- 
+TMN
+
