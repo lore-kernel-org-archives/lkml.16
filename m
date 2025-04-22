@@ -1,56 +1,72 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37169277805;
-	Tue, 22 Apr 2025 12:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929F1277805;
+	Tue, 22 Apr 2025 12:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326722; cv=none; b=GYyj4XYCTtOyj6mKfsfqYLhOLHtnEke63uiTEhGHoSNqMyTXSEx7xbRWUJwx/Idmm+RV/zlzT5Wi3QFZh5Te5Qn9MNlA+Qi/o3rs58+on5BoBIkQ6TVG9xFtQhWPNoKvQjherEOXKLsUq6GbL8Mtclcxb05/+Oax5teQjqKp/MY=
+	t=1745326727; cv=none; b=OZTgD6raCYFkP3YxDNPWo8sovmdVU6zyF0Omp7BxVqtiaiqKB7flUXAeC7kBFR1tpU0GaEutxDPKtT26GjMa4vgaxaiincfTPyRKmGpZOGC87a84aqPA+kGBXrobqwJOAhLmMKmnPKPf4COuATc1CbRgqRak5LRJWxVjETwNf0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326722; c=relaxed/simple;
-	bh=sLvmh0xXz03b1n8p3I3OjCJD1USIuRy6gtjcc3HKS68=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XpUGGkpZe3ZEdhzv7JNoyJm6uXEDymZZ94w9ZfdAw0dI1g1uAMa7ffI5gRWv4Q0ZvE25emSj+qe6Djx3Mu9o5EFynu8GuYLPV/qEJyG2LtXxMRsU/19uydrkSLTxuALdZW5O8j/ZnEh2M8H7zExcgbOkxyJbRKkkC/BDvmf9ifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id E4BCEC1A9B;
-	Tue, 22 Apr 2025 12:58:37 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev,
-	contact@arnaud-lcm.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v3 1/2] checkpatch.pl: warn about // comments on private Rust
- items
-Date: Tue, 22 Apr 2025 14:58:24 +0200
-Message-ID: <20250422125824.30525-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250422125633.30413-1-contact@arnaud-lcm.com>
-References: <20250422125633.30413-1-contact@arnaud-lcm.com>
+	s=arc-20240116; t=1745326727; c=relaxed/simple;
+	bh=Oz6qd+SEwDAy7DYeHq1XLrFuBfupLvBjneFgJ5xUVC4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j5dfkfSpb2uh3t1jw7WqFLE/TdFoV0veopx5NGbVD6ET5+ELZYAFy8VFCRkYRi2Gjr1683Licm797FfrSEm+ThAVLzxVScwOWHRRMC219cWzkZ1+dCa2Ea+lQaAMre+RpX7J74EdRsBRjWObBuRFjoj7QwcC2q2sctGqt1QzsZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSbu9uNW; arc=none smtp.client-ip=209.85.210.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSbu9uNW"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-73de145c639so166142b3a.1;
+        Tue, 22 Apr 2025 05:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745326724; x=1745931524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e1caaeNBE9fBOa9chq6ixADhTDWpp9vn4eSoKuPgQVQ=;
+        b=aSbu9uNWCz3jVa5wuY7g2Ldjit6vEKjJhNzlbX4GPERIgr6tmDteLaLlme8nXKSzrQ
+         cRjDTu/H5KcEJUSeaGC0hNf2MPFHPWpyBDHfM/1fSYhGD8czhamxu1hyBm13cesvXN80
+         ydKprOiWSvBy6ikCTq9ATcf7GUJ7JAyWSo9uq+6R/+dhV4kdhOnbGnH8ObnU7TgIRoH9
+         Ao2lbsB0Wg+lgq56Myms9Ufk3Vzz4execD3At3SmeIq26/ab5/33/VCCPe5edUYUfCEe
+         pVVAO/+v4HXoEYUqd3Aji6nYeLByybuNvePAi8jbO7VHLbaPCVkETiPD9XAYDMZudtrs
+         8fog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745326724; x=1745931524;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e1caaeNBE9fBOa9chq6ixADhTDWpp9vn4eSoKuPgQVQ=;
+        b=n9xfmA8OcJtI9+2gNSpPFmOhla9CGLPqRolI40/YTa8PGnIFKt5/TYPZ+A2Q4S8NOy
+         BmkA8lc2sK/L1QKLtjw2yS0ij/5K0YdhqQfaLeI6OURmQVMFth4RXdTaLmBiA/sCkZ/q
+         xrmyWk2FgxsHIJ0pUysZmgZnc60MEC+ec6fFPT4Tx/SllKBHO75EHAbwjBr5kL4X5cip
+         t8rTZK7MRBRbSqVJv04SOyVT4+N5PvoeDlyejJrpm2pUf4aILBFp4rMgmrvzNSUJyXwA
+         WG6jSWYzetdzHAQETlDd2ucoy2yUYgCsiCteTVSK7G5ikqhp6G6BYA6zBwZowaOWxLM/
+         LobQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViKA2r3/2IBf17dPOwjCMRJbt8HvdXorBynKYAiH+NkruQlDAAPKvUnhe5dVUfoi19Fy80yddq0+la/Uw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLXEh1Fshv4FlCpteuNPFNE7H2S9bxbSysMjPStHQUEhd6o6Zz
+	RZSxOpjEBZX+6a6fkPGar3/qpIjbJ02Je/k41LoiUeF8Rx6Hcgor9fReFQMXgDQbWA==
+X-Gm-Gg: ASbGncvFkVaeKAOKc/yIqgpOkVQGSGZKMDqxLdu4+DdqYMWmr7kTYAXLHZLET/B4GrY
+	DPfpjxyqx4f/fRAcR4lxsVsYZzoaGsVq2R0qyqH+Pp24S6HHQPLxOENNMJQszprOVcPfQW+v4cZ
+	HU32WEFEgQYZgtIOZhfGqwjquDpX9Ey65jbITOCAgCmt6dgS+TTvCYlEEIXll4LLnwglcCzSFk4
+	efuDWi1gpmfv/VtblaSn6C3D0Uc4Ro4/ShCFiwpbqP2CyHfJC30ukVGFYb1BR5mnhO8u1JnjgCs
+	3IL/WAcr4kHOuA/f/OdOvoBrORMUs7G4jJqTwMglqu00mdiqakBz19uN4n3CAmTUgmvB3U/XRu+
+	3vmY6s0NG
+X-Google-Smtp-Source: AGHT+IGc6Y7VzDrAEv0qKQ8NFZq/gV/HRdZUoZ63PHfgJaFoc5GY2ESiq4ndT4P7o34jwKl5M51fZA==
+X-Received: by 2002:a05:6a00:3901:b0:732:2923:b70e with SMTP id d2e1a72fcca58-73dc11819b8mr7902018b3a.0.1745326724459;
+        Tue, 22 Apr 2025 05:58:44 -0700 (PDT)
+Received: from SaltyKitkat.. (tk2-227-23497.vs.sakura.ne.jp. [160.16.103.251])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfacd6e5sm8432398b3a.120.2025.04.22.05.58.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 05:58:44 -0700 (PDT)
+From: Sun YangKai <sunk67188@gmail.com>
+To: linux-btrfs@vger.kernel.org
+Cc: Sun YangKai <sunk67188@gmail.com>,
+	Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] btrfs: fix nonzero lowest level handling in btrfs_search_forward()
+Date: Tue, 22 Apr 2025 20:56:42 +0800
+Message-ID: <20250422125807.30218-1-sunk67188@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,167 +74,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174532671854.21235.5865498379948025370@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
 
-Add a new checkpatch.pl warning to detect //-style comments above
-private Rust items that were likely intended to be doc comments (///).
-This helps catch documentation that won't appear in rustdoc output.
+Commit 323ac95bce44 ("Btrfs: don't read leaf blocks containing only
+checksums during truncate") changed the condition from `level == 0` to
+`level == path->lowest_level`, while its origional purpose is just to do
+some leaf nodes handling (calling btrfs_item_key_to_cpu()) and skip some
+code that doesn't fit leaf nodes.
 
-The detection uses multiple heuristics to identify likely doc comments:
-  - Comments containing markdown
-  - Comments starting with an imperative tone
-  - Comments with mention of params
-  - Comments with code block
-  - Comments with keywords: Returns, ...
-  - Block comments longer than 3 lines.
-  - Comments with references: @see, @link, ...
+After changing the condition, the code path
+1. also handle the non-leaf nodes when path->lowest_level is nonzero,
+   which is wrong. However, it seems that btrfs_search_forward() is never
+   called with a nonzero path->lowest_level, which makes this bug not
+   found before.
+2. makes the later if block with the same condition, which is origionally
+   used to handle non-leaf node (calling btrfs_node_key_to_cpu()) when
+   lowest_level is not zero, dead code.
 
-Comments are only flagged if they:
- - Appear above private items
- - Don't contain obvious non-doc patterns (TODO, FIXME)
- - Score sufficiently on heuristics
+So Use if conditions to skip the non-leaf handling code instead of using
+goto to make it more clear, and handle both leaf and non-leaf node in the
+lowest_level loop exit logic.
 
-The warning triggered then suggests to convert flagged comments to
-doc comments.
+This changes the behavior when btrfs_search_forward() is called with
+nonzero path->lowest_level. But this never happens in the current code
+base, and the previous behavior is wrong. So the change of behavior will
+not be a problem.
 
-Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+Fix: commit 323ac95bce44 ("Btrfs: don't read leaf blocks containing only checksums during truncate")
+Signed-off-by: Sun YangKai <sunk67188@gmail.com>
 ---
-Changes in v3:
-- Add heuristics to decide whether we should trigger the warning on comments
-- Link to v2: https://lore.kernel.org/all/20250420194806.54354-1-contact@arnaud-lcm.com/
----
- scripts/checkpatch.pl | 110 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+ fs/btrfs/ctree.c | 44 +++++++++++++++++++-------------------------
+ 1 file changed, 19 insertions(+), 25 deletions(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 3d22bf863eec..eb564a119d68 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -1987,6 +1987,97 @@ sub ctx_locate_comment {
- 	chomp($current_comment);
- 	return($current_comment);
- }
-+
-+sub ctx_detect_missing_doc_comment_behind_rust_private_item {
-+    my ($linenr) = @_;
-+    my $start_line = $linenr - 1;
-+    my $idx = $start_line;
-+
-+    # Skip if it's a public Rust item (starts with 'pub')
-+    return unless $rawlines[$start_line] !~ /^\+?\s*pub(\s|\([^)]*\)\s)/;
-+
-+    # Check if it's an empty line
-+    return unless $rawlines[$start_line] !~ /^\s*\+?\s*$/;
-+
-+    # Check if it's a comment
-+    return unless $rawlines[$start_line] !~ /^\+?\s*\/\/\/?\/?.*$/;
-+
-+    # Check if it is a private macro
-+    if ($rawlines[$start_line] =~ /^\+?\s*macro_rules!\s+([a-zA-Z_][a-zA-Z0-9_]*|#?[a-zA-Z_][a-zA-Z0-9_]*)\s*(?:\{|$)/ && $idx > 0) {
-+		return unless $rawlines[$idx -1] !~ /^\+?\s*#\s*\[\s*macro_export\s*\]\s*$/;
-+    } else {
-+		# Check if it's a Rust item
-+		return unless $rawlines[$start_line] =~ /^\+?\s*\b(fn|struct|const|enum|trait|type|mod|impl|use)\b/;
-+    }
-+
-+    # Walk backwards through non-empty lines
-+    $idx--;
-+    my @comment_lines;
-+    while ($idx >= 0 && $rawlines[$idx] !~ /^\s*\+?\s*$/) {
-+		# Stop if a doc comment is found
-+        last if $rawlines[$idx] =~ m@^\+?\s*///@;
-+		# Clean the line first (remove diff markers, trim spaces)
-+    	my $clean_line = $rawlines[$idx];
-+    	$clean_line =~ s/^\+?\s*//;
-+		$clean_line =~ s/\s*$//;
-+		if($clean_line =~ m@^\+?\s*//@) { # Only add comments
-+	    	unshift @comment_lines, $clean_line;
-+		}
-+		$idx--;
-+    }
-+
-+    # No comments to check
-+    return unless @comment_lines;
-+
-+    # Heuristic: Check for documentation keywords
-+    my $keywords = qr/Returns|Arguments|Examples?|Panics|Safety|Note|Errors|See\s+Also/i;
-+    my $has_keywords = grep { /\/\/\s*$keywords/ } @comment_lines;
-+
-+    # Heuristic: Markdown syntax
-+	my $markdown = qr{
-+		`[^`]+`               # Inline code
-+		| \*\*[^*]+\*\*       # Bold with proper boundaries
-+		| \b_[^_\s][^_]*_\b   # Italic with word boundaries
-+		| \#[^#\s]            # Headings like # Title
-+		| ^\s*```[\w]*\s*$    # Code block marker line (allow optional language)
-+	}x;
-+
-+    my $has_markdown = grep { /$markdown/ } @comment_lines;
-+
-+    # Heuristic: Parameter mentions
-+    my $item_line = $rawlines[$start_line];
-+    my @params = ($item_line =~ /(\b\w+)\s*:\s*\w+/g); # Extract param names
-+    my $param_mentions = 0;
-+    if (@params) {
-+        $param_mentions = grep { my $line = $_; grep { $line =~ /\b$_\b/ } @params } @comment_lines;
-+    }
-+
-+    # Heuristic: Start with imperative tones
-+    my $first_line = $comment_lines[0];
-+    my $imperative_tone = $first_line =~ /^\s*\/\/\s*(Returns?|Computes?|Checks?|Converts?|Creates?)\b/i;
-+
-+    # Heuristic: References
-+    my $has_refs = grep { /\[`\w+`\]|\@see|\@link/i } @comment_lines;
-+
-+    # Heuristic: Code block
-+    my $has_code_block = grep { /```|\buse\s+\w+::|^\s*\/\/\s*\w+\(.*\)/ } @comment_lines;
-+    # Combine heuristics
-+    my $score = 0;
-+    $score += 1 if $has_keywords;
-+    $score += 2 if $has_markdown;
-+    $score += 1 if $param_mentions;
-+    $score += 2 if $imperative_tone;
-+    $score += 2 if $has_refs;
-+    $score += 2 if scalar(@comment_lines) >= 3;
-+    $score += 2 if $has_code_block;
-+
-+    # Trigger if score meets threshold
-+    return unless $score >= 2;
-+
-+    return ($idx+1, $start_line);
-+}
-+
-+
- sub ctx_has_comment {
- 	my ($first_line, $end_line) = @_;
- 	my $cmt = ctx_locate_comment($first_line, $end_line);
-@@ -2950,6 +3041,25 @@ sub process {
- 			}
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index a2e7979372cc..3e69e705b5dc 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -4636,38 +4636,28 @@ int btrfs_search_forward(struct btrfs_root *root, struct btrfs_key *min_key,
+ 			goto out;
  		}
  
-+# check for incorrect use of `//` instead of `\\\` for doc comments in Rust
-+		if ($perl_version_ok && $realfile =~ /\.rs$/) {
-+			my ($start_l, $end_l) = ctx_detect_missing_doc_comment_behind_rust_private_item($linenr);
-+			if (defined($start_l) && defined($end_l)) {
-+				for (my $i = $start_l; $i <= $end_l; $i++) {
-+					my $comment_line = $rawlines[$i - 1];
-+					next unless $comment_line =~ m@^\+//([^/].*)$@;
-+					my $comment = $1;
-+					# Skip obvious non-doc comments
-+					next if $comment =~ m@^\s*(?:TODO|FIXME|XXX|NOTE|HACK|SAFETY):?@i;
-+					next if $comment =~ m@^\s*[[:punct:]]{2,}@;
-+					my $line_issue = $i - 3;
-+					WARN("POSSIBLE_MISSING_RUST_DOC",
-+						"Consider using `///` if the comment was intended as documentation (line $line_issue).\n" .
-+					"$here\n$comment_line");
-+				}
-+			}
-+		}
-+
- # Check the patch for a From:
- 		if (decode("MIME-Header", $line) =~ /^From:\s*(.*)/) {
- 			$author = $1;
+-		/* at the lowest level, we're done, setup the path and exit */
+-		if (level == path->lowest_level) {
+-			if (slot >= nritems)
+-				goto find_next_key;
+-			ret = 0;
+-			path->slots[level] = slot;
+-			/* Save our key for returning back. */
+-			btrfs_item_key_to_cpu(cur, min_key, slot);
+-			goto out;
+-		}
+-		if (sret && slot > 0)
++		/*
++		 * Not at the lowest level and not a perfect match,
++		 * go back a slot if possible to search lower level.
++		 */
++		if (sret && slot > 0 && level > path->lowest_level)
+ 			slot--;
+ 		/*
+-		 * check this node pointer against the min_trans parameters.
++		 * Check this node pointer against the min_trans parameters.
+ 		 * If it is too old, skip to the next one.
+ 		 */
+-		while (slot < nritems) {
+-			u64 gen;
+-
+-			gen = btrfs_node_ptr_generation(cur, slot);
+-			if (gen < min_trans) {
++		if (level > 0) {
++			while (slot < nritems) {
++				if (btrfs_node_ptr_generation(cur, slot) >= min_trans)
++					break;
+ 				slot++;
+-				continue;
+ 			}
+-			break;
+ 		}
+-find_next_key:
++		path->slots[level] = slot;
+ 		/*
+-		 * we didn't find a candidate key in this node, walk forward
+-		 * and find another one
++		 * We didn't find a candidate key in this node, walk forward
++		 * and find another one.
+ 		 */
+-		path->slots[level] = slot;
+ 		if (slot >= nritems) {
+ 			sret = btrfs_find_next_key(root, path, min_key, level,
+ 						  min_trans);
+@@ -4678,12 +4668,16 @@ int btrfs_search_forward(struct btrfs_root *root, struct btrfs_key *min_key,
+ 				goto out;
+ 			}
+ 		}
++		/* At the lowest level, we're done. Set the key and exit. */
+ 		if (level == path->lowest_level) {
+ 			ret = 0;
+-			/* Save our key for returning back. */
+-			btrfs_node_key_to_cpu(cur, min_key, slot);
++			if (level == 0)
++				btrfs_item_key_to_cpu(cur, min_key, slot);
++			else
++				btrfs_node_key_to_cpu(cur, min_key, slot);
+ 			goto out;
+ 		}
++		/* Search down to a lower level. */
+ 		cur = btrfs_read_node_slot(cur, slot);
+ 		if (IS_ERR(cur)) {
+ 			ret = PTR_ERR(cur);
 -- 
-2.43.0
+2.49.0
 
