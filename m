@@ -1,268 +1,191 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FB078C91;
-	Tue, 22 Apr 2025 00:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745281536; cv=fail; b=CFq/3EoA2qFqml+LW1SHagWV7mI7SjSiUTd9pKJXvCmPNiEQ6tf3gY64fu0MW6m86IwFvqDQDM1e0sCsncn4uWZOH1N4SvOQpDGUKKAvwbB5IZIlRU32IpvE7XbxtJPxY9qXBkzhKtFpexBvVoE4Y6DURltQAujKzjjioK9mKJw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745281536; c=relaxed/simple;
-	bh=vh39ONNVYu1qA9fZZzaPVguXl5scdhzV99zQM8WWZYU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fV0x3RGwaL9DbmM3EATikSagW9IawjKgwkBtGZUTn5oi8HAW9A5m2Pyh4PoniAq0ojAZPBPk22KRyCVG8lzgbby3fOYYafL+SFoCO3tYi3xY7q+wIuo8On+/hoHort6kuB7OVoXQhWQqX7/Uegl+sBldFVcj8OClitbdLaFWqv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wpvzcx2Y; arc=fail smtp.client-ip=40.107.223.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D925054764
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745281645; cv=none; b=GbBnzlDMaTGO8mig9jw+UCXNLwd69jEQ+uM2icnqSywamaqcdg5NAu53Iy26j4t4mKNQQSgMvBZ7TREywJOz6z+vJgkj5qcbnfV7IYpMDWtged6bG1KthYSULkYZ/LH5rw/pAAxvj4YhSlSut+ea5AsDMxxB1wspx+lkEkLSwgM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745281645; c=relaxed/simple;
+	bh=df1+JkILuRaZuOLIWwWbDdF/n5Dp5B+YyXfzRiTELuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NUIgKnfAHpMQYXViwf19ZHViSK8FMEkShpAyy9w3rEKdAq7r03SafvXdEPgxkieJxPmFiaHkV64xlu0g6+gcI+4+cb36SDQwM6d1HjrpAxds2TJxUy4QKaxZQy78n1SSuFAkewJxelCdbTzN3u1YVzHI0eYdy2tB39NibVzbdfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BYw6HZ7V; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wpvzcx2Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WmuNW6vwgIyKB9YqNKRoo1KZyerR2IixK8bwmXxUFj6UYKE5d44otWx9dvu18/NM3XXYwBPdlgNz0ZbajqFYPmgwW+YqcxCc/2J13gk6ROVKRkS20J3f4XyY7RD1NTcKMqUZ1ILQPmb0iBMN/QWAwALZbcqQzyilJ1IKt2E44orMYxTOl3n/wy5yc/JZonwisTG4mBWWCXxOhDFPhCRU9Hl063JpeCW5Z429bipwxcNDVzrY56dqT4QawR2ziz1ZZ6vYyA5c5vnRhYo5DMrm7JgiCYD0BkHpo0lHh3NN+zwNFBNkYltkEiX2GRo2dm/1bv1pMbwa/PPNf3FzoiOffg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HDEhbbL+pkSEqxULIZEOH/7Vt8ITkMTD40e0xID/3z8=;
- b=VHgy0Ebbm2eRVQELs8H7cLgIT6KXND7E4iBtVw2BbWXw99JmnF/GzBsuXHVAEWKFfQNmgWwANlTa+mI0daGY/A+TRVdbgUF4Xc2UpFdv7nC0mJGCJVYXRx3GUutrhuBLwX9UUPKf5T5PoMzNpd8IadIN8YCsZ9j1uzAKrE03DKB8SKH7oSoibjh0kphWUkf8kg+u0k/Hwp5UHXnOubS4K6UUtdtPMZ0RtsFTaV+qj4AGIeprJG7hgdkUWo0cmV+t2of3/u7k1URMtwK+zzBRgcRZ2qOqKUqpdvXrZeWSPF8F07ddvi7GGovVhSfZ+CNkHKmQgmRbLUYnwKGxuiVreQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HDEhbbL+pkSEqxULIZEOH/7Vt8ITkMTD40e0xID/3z8=;
- b=wpvzcx2YrGwgAKUyhzHjJERwfNbf3p8xDchQ4eSBLieZipwAUUU3HCvEH0m33Su7zJYE++UQyvy6Z47tkVUEP4vXA48611pCFodXd9d9412DE9gVjaoKCdCmBLWGQif8aerQxPlkGOlEe2O9Lg+AuZPKQpRoqs59l3a2VNROOvI=
-Received: from BN9PR03CA0206.namprd03.prod.outlook.com (2603:10b6:408:f9::31)
- by CY5PR12MB6455.namprd12.prod.outlook.com (2603:10b6:930:35::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
- 2025 00:25:31 +0000
-Received: from BN3PEPF0000B06D.namprd21.prod.outlook.com
- (2603:10b6:408:f9:cafe::46) by BN9PR03CA0206.outlook.office365.com
- (2603:10b6:408:f9::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
- 22 Apr 2025 00:25:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B06D.mail.protection.outlook.com (10.167.243.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.1 via Frontend Transport; Tue, 22 Apr 2025 00:25:31 +0000
-Received: from purico-ed09host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Apr
- 2025 19:25:29 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <herbert@gondor.apana.org.au>
-CC: <x86@kernel.org>, <john.allen@amd.com>, <davem@davemloft.net>,
-	<thomas.lendacky@amd.com>, <michael.roth@amd.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Subject: [PATCH v3 4/4] KVM: SVM: Add SEV-SNP CipherTextHiding support
-Date: Tue, 22 Apr 2025 00:25:17 +0000
-Message-ID: <b64d61cc81611addb88ca410c9374e10fe5c293a.1745279916.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1745279916.git.ashish.kalra@amd.com>
-References: <cover.1745279916.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BYw6HZ7V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745281644; x=1776817644;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=df1+JkILuRaZuOLIWwWbDdF/n5Dp5B+YyXfzRiTELuw=;
+  b=BYw6HZ7VcrkCkwimOjcP7pvrAqhH4b7gtuF0k26iSet+uJ2kSY2djz53
+   3EuqOjnSrf7Tv/keH38XnMf1w+DN8PfSnpNdSEhOhT23EOJsDUi5Y5eg9
+   IrSgpCSb6eWjBFugs1Y21iK0XsFRVl7Q4NjCUkdGQJSNsWfojwcDqqM4Y
+   lnvn+zXZkXlCo0agMMXwTX9/QchmPaGdAUmQ+QNgBfQ5clOxiS684jXh/
+   49jOEMi+XSD9UHB/TvtMqjBOEP9sas+gVEltkASdNr6qt8Y/yI6GhnEnK
+   LPsWG/n0J4GFsNlGANoWX4E5bRFJky3nqEmh04doRRkyvIcnX7+xMzAow
+   Q==;
+X-CSE-ConnectionGUID: PhZ4vW62RoCGLUYqiSh42Q==
+X-CSE-MsgGUID: PR+zdCcaR7O5YOS3ZpPzcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="50655770"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="50655770"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 17:27:23 -0700
+X-CSE-ConnectionGUID: 9QhbScxwQKivXFE1p5wKDA==
+X-CSE-MsgGUID: gL/J6Lo0SOuNC3xt1ty94A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132740242"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 21 Apr 2025 17:27:22 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u71Tr-0000Tr-21;
+	Tue, 22 Apr 2025 00:27:19 +0000
+Date: Tue, 22 Apr 2025 08:26:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Guillaume Ranquet <granquet@baylibre.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>
+Subject: drivers/iio/adc/ad7173.c:1091:10: error: implicit declaration of
+ function 'ad4111_openwire_event'; did you mean 'acpi_enable_event'?
+Message-ID: <202504220824.HVrTVov1-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06D:EE_|CY5PR12MB6455:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3f1376c-1e44-4afe-d292-08dd813430cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?N0bP+22qWoxaLDCYiEr+I2tukj3AufkrEPKeOWycsgChIUDkwNRE2Tk8mebs?=
- =?us-ascii?Q?6/ioxxpT+C4QPSoJZNexIMwdMak6nnmbQ/PCD5ofe5buVfI2hqLBTRHKDqni?=
- =?us-ascii?Q?xXFf+nbcmG6nITkXUj+a62oWNhAExZj1lyaJ8YW8C4QjHAYqYZVbsdeVfd1R?=
- =?us-ascii?Q?RQcxUNAKi6E5A4b4GvPSJiya4/nmkYWvhZ44j5kx40psf/RRxWyIW8F0JG7R?=
- =?us-ascii?Q?SsexbbdNGqFUw9xxtoLDFSzl1TheX91tnFxULHZUHW7Ysl+Ti8RMWS/qHMmW?=
- =?us-ascii?Q?byrYUPp9qRIyFClBjDNkS1R7xUAXTh+83vb4n6DoUf7ahwn55xbu694zy34S?=
- =?us-ascii?Q?+mtxNd9ba/pphzAqFIPvDG8dOjfheD0FYVofNwy+dA7Nk727mGAJSt24mSJm?=
- =?us-ascii?Q?PiE/WNcAWAWnceMP0hTfeNOou8yI5zzfQWMa5cXm3bUAE0WS/8kuA+FWh+U1?=
- =?us-ascii?Q?tOdxJ6NZblmkYWXW8ZMBnK+bwfjw0b8BCm83zZAi603OMyP/lN0kACK64qPM?=
- =?us-ascii?Q?X5vNlIu9IILt1JkC0VhuZLg9w2jrffz0H/VFsByLq7hQVvgjmqoBrn0qhjGj?=
- =?us-ascii?Q?DkLgAu6TwpECd+1cSdOrkrfxwcZqrZXrauNPVjqoj7CtXfJ0ywyYzk2hj4MJ?=
- =?us-ascii?Q?jqeQ7/1aPrLItPCrmHYssumPGaBxBdFkbheS8HNURcIgXK8D4ZR2YuQNlO7S?=
- =?us-ascii?Q?m1yvKT+mHQFscFa48SLC93tPqJoVdx/phuBxoWxGAynJg5WRrz9b+Wu1XMkS?=
- =?us-ascii?Q?SYzJE07K9E94Sn24YPneXeVBqmL5GyhKilZJFv3C9JDNrR7DD6rOwRyo1PE4?=
- =?us-ascii?Q?Y1kcrLlHNSQGNprXIsm/zIy74ALdbNaSnUoCMPYJqjoURvamgwdK3/aLPfH+?=
- =?us-ascii?Q?rHu2IecGuMbJlkQnVRifsi6jm6YGU8gdruwgqtnerujC2aJ1OiAdvdi5AoGL?=
- =?us-ascii?Q?Tgl/zNr9zXKHzL7HVbpQRWNpZ0ePUkJXIyWS4y/lcusofKbjtounC+XW8Fpf?=
- =?us-ascii?Q?gIdjvkaQxoJ1U7OdBUTAmh3lQVa1fInbzkm9WmC3L9Pgh5g7V05Z4Q6/EjVx?=
- =?us-ascii?Q?778zrwFceZk6PsA/ys4YybCQcaFkGvHslTJPOWx0o1FZ+7tZl32e5eKsrEAh?=
- =?us-ascii?Q?9lPDbrcqtngiNB5qIv3BBQtDd5iWGw9qhayh/eqmUvADS837AQKKfOO/bj4u?=
- =?us-ascii?Q?sko9e5K4+bmL5hN2riSPTXUm0id4n07ydAR3gwdMw3tR3yIiTk4v8gylB0H+?=
- =?us-ascii?Q?d8aJvRTD6LT9U5NlEWHwnojbBJFfobRggDegUeLZOI3Gkj7QkmFEZd64jkNy?=
- =?us-ascii?Q?M3lj+NA9nROadhAvGHgd7xc838QmQhHygc6/2YO6xYufgoO4TOcaOmP2B7ku?=
- =?us-ascii?Q?PFK4xkJ9LzuWMBjBX+STJJ2eYuoMyVlySSJNFzx6e/w8SNmdz2ZCYlSx8ShF?=
- =?us-ascii?Q?+Zu5tTE3sxw8/63zKgbQ/mwACI/2xcFU+QEOulpVn/9srLVpDD/dxVdCRIx5?=
- =?us-ascii?Q?t3tDcZeP/jBcQTzOrzsPEJKUiVie1UIgzNaJ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 00:25:31.3258
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3f1376c-1e44-4afe-d292-08dd813430cf
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B06D.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6455
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9d7a0577c9db35c4cc52db90bc415ea248446472
+commit: 7530ed2aaa3f49325cad3ca80aa245897ed10e32 iio: adc: ad7173: add openwire detection support for single conversions
+date:   2 months ago
+config: sh-randconfig-r051-20250422 (https://download.01.org/0day-ci/archive/20250422/202504220824.HVrTVov1-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250422/202504220824.HVrTVov1-lkp@intel.com/reproduce)
 
-Ciphertext hiding prevents host accesses from reading the ciphertext of
-SNP guest private memory. Instead of reading ciphertext, the host reads
-will see constant default values (0xff).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504220824.HVrTVov1-lkp@intel.com/
 
-Ciphertext hiding separates the ASID space into SNP guest ASIDs and host
-ASIDs. All SNP active guests must have an ASID less than or equal to
-MAX_SNP_ASID provided to the SNP_INIT_EX command. All SEV-legacy guests
-(SEV and SEV-ES) must be greater than MAX_SNP_ASID.
+All errors (new ones prefixed by >>):
 
-This patch-set adds two new module parameters to the KVM module, first
-to enable CipherTextHiding support and a user configurable MAX_SNP_ASID
-to define the system-wide maximum SNP ASID value. If this value is not set,
-then the ASID space is equally divided between SEV-SNP and SEV-ES guests.
+   drivers/iio/adc/ad7173.c: In function 'ad7173_setup':
+   drivers/iio/adc/ad7173.c:1034:8: error: implicit declaration of function 'ad7173_calibrate_all'; did you mean 'ad_sd_calibrate_all'? [-Werror=implicit-function-declaration]
+     ret = ad7173_calibrate_all(st, indio_dev);
+           ^~~~~~~~~~~~~~~~~~~~
+           ad_sd_calibrate_all
+   drivers/iio/adc/ad7173.c: In function 'ad7173_read_raw':
+>> drivers/iio/adc/ad7173.c:1091:10: error: implicit declaration of function 'ad4111_openwire_event'; did you mean 'acpi_enable_event'? [-Werror=implicit-function-declaration]
+       ret = ad4111_openwire_event(indio_dev, chan);
+             ^~~~~~~~~~~~~~~~~~~~~
+             acpi_enable_event
+   drivers/iio/adc/ad7173.c: At top level:
+   drivers/iio/adc/ad7173.c:1311:14: error: 'ad7173_calibsys_ext_info' undeclared here (not in a function); did you mean 'ad7173_device_info'?
+     .ext_info = ad7173_calibsys_ext_info,
+                 ^~~~~~~~~~~~~~~~~~~~~~~~
+                 ad7173_device_info
+   cc1: some warnings being treated as errors
 
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kvm/svm/sev.c | 50 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for LEDS_EXPRESSWIRE
+   Depends on [n]: GPIOLIB [=n] || NEW_LEDS [=y] && GPIOLIB [=n]
+   Selected by [m]:
+   - BACKLIGHT_KTD2801 [=m] && HAS_IOMEM [=y] && BACKLIGHT_CLASS_DEVICE [=m]
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 7a156ba07d1f..a905f755312a 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -58,6 +58,14 @@ static bool sev_es_debug_swap_enabled = true;
- module_param_named(debug_swap, sev_es_debug_swap_enabled, bool, 0444);
- static u64 sev_supported_vmsa_features;
- 
-+static bool cipher_text_hiding;
-+module_param(cipher_text_hiding, bool, 0444);
-+MODULE_PARM_DESC(cipher_text_hiding, "  if true, the PSP will enable Cipher Text Hiding");
-+
-+static int max_snp_asid;
-+module_param(max_snp_asid, int, 0444);
-+MODULE_PARM_DESC(max_snp_asid, "  override MAX_SNP_ASID for Cipher Text Hiding");
-+
- #define AP_RESET_HOLD_NONE		0
- #define AP_RESET_HOLD_NAE_EVENT		1
- #define AP_RESET_HOLD_MSR_PROTO		2
-@@ -85,6 +93,8 @@ static DEFINE_MUTEX(sev_bitmap_lock);
- unsigned int max_sev_asid;
- static unsigned int min_sev_asid;
- static unsigned long sev_me_mask;
-+static unsigned int snp_max_snp_asid;
-+static bool snp_cipher_text_hiding;
- static unsigned int nr_asids;
- static unsigned long *sev_asid_bitmap;
- static unsigned long *sev_reclaim_asid_bitmap;
-@@ -171,7 +181,7 @@ static void sev_misc_cg_uncharge(struct kvm_sev_info *sev)
- 	misc_cg_uncharge(type, sev->misc_cg, 1);
- }
- 
--static int sev_asid_new(struct kvm_sev_info *sev)
-+static int sev_asid_new(struct kvm_sev_info *sev, unsigned long vm_type)
- {
- 	/*
- 	 * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
-@@ -199,6 +209,18 @@ static int sev_asid_new(struct kvm_sev_info *sev)
- 
- 	mutex_lock(&sev_bitmap_lock);
- 
-+	/*
-+	 * When CipherTextHiding is enabled, all SNP guests must have an
-+	 * ASID less than or equal to MAX_SNP_ASID provided on the
-+	 * SNP_INIT_EX command and all the SEV-ES guests must have
-+	 * an ASID greater than MAX_SNP_ASID.
-+	 */
-+	if (snp_cipher_text_hiding && sev->es_active) {
-+		if (vm_type == KVM_X86_SNP_VM)
-+			max_asid = snp_max_snp_asid;
-+		else
-+			min_asid = snp_max_snp_asid + 1;
-+	}
- again:
- 	asid = find_next_zero_bit(sev_asid_bitmap, max_asid + 1, min_asid);
- 	if (asid > max_asid) {
-@@ -438,7 +460,7 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
- 	if (vm_type == KVM_X86_SNP_VM)
- 		sev->vmsa_features |= SVM_SEV_FEAT_SNP_ACTIVE;
- 
--	ret = sev_asid_new(sev);
-+	ret = sev_asid_new(sev, vm_type);
- 	if (ret)
- 		goto e_no_asid;
- 
-@@ -3005,6 +3027,18 @@ void __init sev_hardware_setup(void)
- 	if (!sev_es_enabled)
- 		goto out;
- 
-+	if (cipher_text_hiding && is_sev_snp_ciphertext_hiding_supported()) {
-+		/* Do sanity checks on user-defined MAX_SNP_ASID */
-+		if (max_snp_asid >= edx) {
-+			pr_info("max_snp_asid module parameter is not valid, limiting to %d\n",
-+				 edx - 1);
-+			max_snp_asid = edx - 1;
-+		}
-+		snp_max_snp_asid = max_snp_asid ? : (edx - 1) / 2;
-+		snp_cipher_text_hiding = true;
-+		pr_info("SEV-SNP CipherTextHiding feature support enabled\n");
-+	}
-+
- 	/*
- 	 * SEV-ES requires MMIO caching as KVM doesn't have access to the guest
- 	 * instruction stream, i.e. can't emulate in response to a #NPF and
-@@ -3040,14 +3074,18 @@ void __init sev_hardware_setup(void)
- 								       "unusable" :
- 								       "disabled",
- 			min_sev_asid, max_sev_asid);
--	if (boot_cpu_has(X86_FEATURE_SEV_ES))
-+	if (boot_cpu_has(X86_FEATURE_SEV_ES)) {
-+		if (snp_max_snp_asid >= (min_sev_asid - 1))
-+			sev_es_supported = false;
- 		pr_info("SEV-ES %s (ASIDs %u - %u)\n",
- 			str_enabled_disabled(sev_es_supported),
--			min_sev_asid > 1 ? 1 : 0, min_sev_asid - 1);
-+			min_sev_asid > 1 ? snp_max_snp_asid ? snp_max_snp_asid + 1 : 1 :
-+							      0, min_sev_asid - 1);
-+	}
- 	if (boot_cpu_has(X86_FEATURE_SEV_SNP))
- 		pr_info("SEV-SNP %s (ASIDs %u - %u)\n",
- 			str_enabled_disabled(sev_snp_supported),
--			min_sev_asid > 1 ? 1 : 0, min_sev_asid - 1);
-+			min_sev_asid > 1 ? 1 : 0, snp_max_snp_asid ? : min_sev_asid - 1);
- 
- 	sev_enabled = sev_supported;
- 	sev_es_enabled = sev_es_supported;
-@@ -3068,6 +3106,8 @@ void __init sev_hardware_setup(void)
- 	 * Do both SNP and SEV initialization at KVM module load.
- 	 */
- 	init_args.probe = true;
-+	init_args.cipher_text_hiding_en = snp_cipher_text_hiding;
-+	init_args.snp_max_snp_asid = snp_max_snp_asid;
- 	sev_platform_init(&init_args);
- }
- 
+
+vim +1091 drivers/iio/adc/ad7173.c
+
+  1073	
+  1074	static int ad7173_read_raw(struct iio_dev *indio_dev,
+  1075				   struct iio_chan_spec const *chan,
+  1076				   int *val, int *val2, long info)
+  1077	{
+  1078		struct ad7173_state *st = iio_priv(indio_dev);
+  1079		struct ad7173_channel *ch = &st->channels[chan->address];
+  1080		unsigned int reg;
+  1081		u64 temp;
+  1082		int ret;
+  1083	
+  1084		switch (info) {
+  1085		case IIO_CHAN_INFO_RAW:
+  1086			ret = ad_sigma_delta_single_conversion(indio_dev, chan, val);
+  1087			if (ret < 0)
+  1088				return ret;
+  1089	
+  1090			if (ch->openwire_det_en) {
+> 1091				ret = ad4111_openwire_event(indio_dev, chan);
+  1092				if (ret < 0)
+  1093					return ret;
+  1094			}
+  1095	
+  1096			return IIO_VAL_INT;
+  1097		case IIO_CHAN_INFO_SCALE:
+  1098	
+  1099			switch (chan->type) {
+  1100			case IIO_TEMP:
+  1101				temp = AD7173_VOLTAGE_INT_REF_uV * MILLI;
+  1102				temp /= AD7173_TEMP_SENSIIVITY_uV_per_C;
+  1103				*val = temp;
+  1104				*val2 = chan->scan_type.realbits;
+  1105				return IIO_VAL_FRACTIONAL_LOG2;
+  1106			case IIO_VOLTAGE:
+  1107				*val = ad7173_get_ref_voltage_milli(st, ch->cfg.ref_sel);
+  1108				*val2 = chan->scan_type.realbits - !!(ch->cfg.bipolar);
+  1109	
+  1110				if (chan->channel < st->info->num_voltage_in_div)
+  1111					*val *= AD4111_DIVIDER_RATIO;
+  1112				return IIO_VAL_FRACTIONAL_LOG2;
+  1113			case IIO_CURRENT:
+  1114				*val = ad7173_get_ref_voltage_milli(st, ch->cfg.ref_sel);
+  1115				*val /= AD4111_SHUNT_RESISTOR_OHM;
+  1116				*val2 = chan->scan_type.realbits - ch->cfg.bipolar;
+  1117				return IIO_VAL_FRACTIONAL_LOG2;
+  1118			default:
+  1119				return -EINVAL;
+  1120			}
+  1121		case IIO_CHAN_INFO_OFFSET:
+  1122	
+  1123			switch (chan->type) {
+  1124			case IIO_TEMP:
+  1125				/* 0 Kelvin -> raw sample */
+  1126				temp   = -ABSOLUTE_ZERO_MILLICELSIUS;
+  1127				temp  *= AD7173_TEMP_SENSIIVITY_uV_per_C;
+  1128				temp <<= chan->scan_type.realbits;
+  1129				temp   = DIV_U64_ROUND_CLOSEST(temp,
+  1130							       AD7173_VOLTAGE_INT_REF_uV *
+  1131							       MILLI);
+  1132				*val   = -temp;
+  1133				return IIO_VAL_INT;
+  1134			case IIO_VOLTAGE:
+  1135			case IIO_CURRENT:
+  1136				*val = -BIT(chan->scan_type.realbits - 1);
+  1137				return IIO_VAL_INT;
+  1138			default:
+  1139				return -EINVAL;
+  1140			}
+  1141		case IIO_CHAN_INFO_SAMP_FREQ:
+  1142			reg = st->channels[chan->address].cfg.odr;
+  1143	
+  1144			*val = st->info->sinc5_data_rates[reg] / MILLI;
+  1145			*val2 = (st->info->sinc5_data_rates[reg] % MILLI) * (MICRO / MILLI);
+  1146	
+  1147			return IIO_VAL_INT_PLUS_MICRO;
+  1148		default:
+  1149			return -EINVAL;
+  1150		}
+  1151	}
+  1152	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
