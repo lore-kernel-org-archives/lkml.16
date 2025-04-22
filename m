@@ -1,149 +1,295 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6621627700A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:35:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B14C27CCCD
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328903; cv=none; b=IviYnqQ5m3q/Kz4EXHteLgFSE+q1MHcgAL7Kh87QTsP0/8Ta1Rmumjwbvjhlmgmln1hg8m9XhJEOuKuHRjIVZJNrzpOfnd7oWsN1c3mr+PFlc6/KQjivk+ToP3OcDaC+Yb42+nWpgwU9TMlgkVpG4uiY4p5APbzK4xYXo/Hwe7E=
+	t=1745328973; cv=none; b=gx/NvXXGxwzNOLemfL2zHJsYdciaPZRwANUyBX7QqIKy+thg7fHEOeqhQ9zNILbnCfGEmSwk1/ypDRIoGmpau8oFJyMU2BMPyVAa9EXVbmUF4MI2jExzoQ6DY7V6rCPvEMfZZOggiYorH56mid4p6w6HP6PzBmWWFCUhLaBd/9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328903; c=relaxed/simple;
-	bh=13PpzOYn9VmZfCu3saU93/C13hq9QrBzpKO1hrXjejM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QO8AwsHyRcg1bw7XR0lMQXO2BZWPa4Q92FtRz9v2NIjWOoIvMflVHBuggN5KgGFf+IxePu9/5dSAT0eEZDXMm1loigGio3gBMaptuz9FQNy1wrks74zevImtnIGY6Xrd1GzcJn/5aFh1EPbZvs2Bs6YbPuhEMhlUfhsWbBhLof4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=y7naDXQ/; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745328973; c=relaxed/simple;
+	bh=MhJ6N+6JZAFe/JvD8yyHGfBmPBcTg8eAd1GjxfpVjew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W60Z5khTHGzoismMGMHNLnHRenrcq1EmjL0Z6c4xEzYiZ9dbhm9qEWVUfki3Zin5tnMIgXkxCN9EGyqbgWj3FWXZC5GmcIQx9uZ/TpRzaXzifgvRvQvOeXN0TbqRWm9Fg2wfYxImY0Z6hQYJizbFcZAFjKABfMh/f6K0L0FYna8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QghqXr2M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="y7naDXQ/"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-86142446f3fso109332639f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745328900; x=1745933700; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ng1AJph91LR1w58lbhVEsRYbLXwmFH+WlPGVdw4yh0A=;
-        b=y7naDXQ/uoszx7eAkju9qbUtDKPUY3xj+fMKQT9qZ/91bqkDKfZ+o4ywsI4rIYf/Id
-         lxcrfbYkvRyMq29A23ztLAKLKuCMQTwLmE7I8ccwXumvIUrco13T6vwarefPZIhMz5W6
-         kpyJiLBcNaxzt6QnF15205i7KaNsCpEWCZFlu4YVWicLt2yZ6irgi1hb3CzOyp3mpmtw
-         4JZbmpu5mb8eQ/AbPtNOgq3LzXeo9DmjyWuBtg42x28wpubOU4+T02eT7ajVBDA48QtJ
-         SZ3JOHP9ysrk/CQeFrL4NiItW55GzggoaMy6PUyuXYKycrMvjZers9td0zhmGGpVw+/c
-         ZW7g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QghqXr2M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745328970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y4IJdBYSNW9wdRnD2IO79uxHJEEzuWz9Azk+82pxLcg=;
+	b=QghqXr2MJ01TQ0IBMCc/4TnF+Yt4fBznU3XI2Jv1SXX8Gzz+nmtjC8piOzE7eKePfSixsi
+	HlpctzuJkbkuuX9tU9zxtCMIpeTzra+IaqdlmKFON5CZOLHC+Zzse+FgBU+Z/FJyH2JkJm
+	vy+DT4zmV6QYMgtxWdLyAy46/59tnds=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-OU849FLCPkSL5ILWt_IOAA-1; Tue, 22 Apr 2025 09:36:08 -0400
+X-MC-Unique: OU849FLCPkSL5ILWt_IOAA-1
+X-Mimecast-MFC-AGG-ID: OU849FLCPkSL5ILWt_IOAA_1745328967
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac2db121f95so389760566b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:36:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745328900; x=1745933700;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1745328967; x=1745933767;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ng1AJph91LR1w58lbhVEsRYbLXwmFH+WlPGVdw4yh0A=;
-        b=tLeVBPouY/1Pap4+z/rcxOmRKc+umI89l/i+qkEsB3l+C19JPZqDbqv0x13SjXSz/E
-         L0U4uCEIPpxP0wj44bq6hzhRF67po4aDsD1SpSqRkXohr+/8GkzMA1oSgAOVmvaQECHr
-         CVezyfPxOvRTcXNPvhoN7wKyAvprK9ZvLYpMrxx3sa0I1VPfXh3w7F0tUVlPQzB9CmQB
-         0iOoYNd3IuZztHn4Wcn8TeqmN32YfuFYn1wJ/OIx44KvjMgRn67mlULoIchBSV0PzC0w
-         ZVsLrfn6qtZuVLT+2dorE7PrzPT2G9jgSxmQxgTirxdXSz+B5MGCOuoKbYAA2LRN4dgb
-         eqgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMUk8+ShioXJRYwXpCRCQ3FY+4JiO45YEwEad+vtv97+yzURj9H/2DbgumGnJBjQfMAAF5aax9WaTqIak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3YMu5sQXRKFw33QFuXJzXw134N5whZEUlRi3D0osNjD/r4qii
-	gqhbTP/+dvfd0AJ5EkO9nfYoM36iOqHuTmYlDdIJCCWwL55wn6NCQbZvGyeoiSQ=
-X-Gm-Gg: ASbGncvNhksOSMgTDbaolX5rWntcfgAEaxJCCfncIzuk4LGhGw++sgFJPY6Lo7cvfcL
-	MyQu/ImUmJdbG+TB3M/On5qRLeaVdEithhbp4mHiW3NIRxeqravYaVkj2P4sOtNYu9LraYnIaEo
-	wj0O85Zl72xEZwAA01op1ukurXcSPakIxOevW2wQIadDS8HqxOczN0od8bM2JsSozis14ewuWWa
-	awpx4vrwl0vSLPbhtKrw+Wn1hIb2oXYLT81Czj+Cblq3tkF/JiJ34kTdFOtKD+dazHS44UakbiR
-	Ew4csLV2sp2dr11ZeFvTnjxS/TAI1DPMkU1rDy9losvbFB5E
-X-Google-Smtp-Source: AGHT+IHIKm2ycnI/f/1vykV7XxOgEYKLsp1CQzjQB79xzDp79m4CqVmAxO17uvtvLxPVOJiUh4ZBpg==
-X-Received: by 2002:a05:6e02:214f:b0:3d3:dcc4:a58e with SMTP id e9e14a558f8ab-3d88ed7c050mr142584975ab.8.1745328900022;
-        Tue, 22 Apr 2025 06:35:00 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3958e2esm2316031173.122.2025.04.22.06.34.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 06:34:59 -0700 (PDT)
-Message-ID: <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
-Date: Tue, 22 Apr 2025 07:34:57 -0600
+        bh=Y4IJdBYSNW9wdRnD2IO79uxHJEEzuWz9Azk+82pxLcg=;
+        b=BAJ+Kl/YACNyXmo6JRCzUgcAEwQfC7GRBhMFP7eVZVJ/Y3BUTlnlliX1t+weo8iMY2
+         KtO/W8rudQGLAvcZwas1pCyJdaSWNCyfweGHzB0w3gO66CNP3f5Xe3C1YAsVp92RBVxT
+         D1j+JRZdZvAP2lkikHKwrZ/wgF87OqF8XEbLIgNfbdkaBX7x2dLAfa6Tqfobb1vsnaiP
+         aQxDE1g6EWEYZCmWmZUwvVs9zB7iFsHgy1HOW/pFq9b2Tk9CjqLpc80B1PBFrcx4P6+3
+         k1QzrTvq5U15pkBT9ei7T2d1QixnHkGeVIhyhOGEGsDvc4n6GpRtLnt+roLOVn7SjxjN
+         dnLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPgRVwoeY2uqWbrqmdsXDMk/ilmXMdX8zmDqfPB2jyLJp5uguTqQdWR6gMGSKYS9ANoIZE9IlWkPgEoWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN/IhI1EQ13GRvNl5UqSNavn5ZnANif/JDjMvuvgatpYKnw4Nm
+	k1czwgZgbSPLGqAB+SP6YPcafnWU6rfLSq1KDQTYzqnxRcQt+bmIOg1T92BJl8rkyQt0eNVffIb
+	IghmXy+UkKJ3rZ46MN13d5rLcZW22DPKEzb6yLUgWFJomK2qDlI9dAza2XSBjvA==
+X-Gm-Gg: ASbGncvJjW9LEBks4w98MQrQAVc0+Z1T6M5a7BI2ZMOMIziQpbiWQ3SHq9OItvAMJVr
+	Ps7zakgNDR58USRhWgzy4qBd8QY+4gcY+4VDwizNb6pTCkGXn8PeGGBqhNUj9+f7voiNPO1BK/r
+	/ov9HwO6z/EysJbNlIJKHdaMhQPQ2Q3u30awhMSkd/YxkBJJddvwEZefBD2FAj7IEzLWLuT3YOA
+	E6FiORiuv+rKYd2CkPt5O/Lrb9OyjnWYcfGBYTqas5boqq4UBLByYSkYX4wN4mAyb4+kKayjEhX
+	AdjMQxuFCQ6XyZD6
+X-Received: by 2002:a17:906:794b:b0:acb:6401:1d78 with SMTP id a640c23a62f3a-acb74b3babbmr1327403966b.22.1745328967036;
+        Tue, 22 Apr 2025 06:36:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBkiqCdJcdh4nLSjqfuJ0gy11q1xiL79JrcHiQzXtTr8fDrs+JOgRZWCNY3kyY1iJGy5Dzng==
+X-Received: by 2002:a17:906:794b:b0:acb:6401:1d78 with SMTP id a640c23a62f3a-acb74b3babbmr1327397766b.22.1745328966303;
+        Tue, 22 Apr 2025 06:36:06 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.218.81])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b302sm654711166b.3.2025.04.22.06.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 06:36:05 -0700 (PDT)
+Date: Tue, 22 Apr 2025 15:35:57 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <shj5e5sweuvhk4onjbnwb3h7m6mx22nnm6kivtchjgbscisrr2@mvuowcp7c33p>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+ <Z-_ZHIqDsCtQ1zf6@redhat.com>
+ <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
-To: Zhiwei Jiang <qq282012236@gmail.com>, viro@zeniv.linux.org.uk
-Cc: brauner@kernel.org, jack@suse.cz, akpm@linux-foundation.org,
- peterx@redhat.com, asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422104545.1199433-1-qq282012236@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250422104545.1199433-1-qq282012236@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAKSoHQuycz24J5l@devvm6277.cco0.facebook.com>
 
-On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
-> In the Firecracker VM scenario, sporadically encountered threads with
-> the UN state in the following call stack:
-> [<0>] io_wq_put_and_exit+0xa1/0x210
-> [<0>] io_uring_clean_tctx+0x8e/0xd0
-> [<0>] io_uring_cancel_generic+0x19f/0x370
-> [<0>] __io_uring_cancel+0x14/0x20
-> [<0>] do_exit+0x17f/0x510
-> [<0>] do_group_exit+0x35/0x90
-> [<0>] get_signal+0x963/0x970
-> [<0>] arch_do_signal_or_restart+0x39/0x120
-> [<0>] syscall_exit_to_user_mode+0x206/0x260
-> [<0>] do_syscall_64+0x8d/0x170
-> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
-> The cause is a large number of IOU kernel threads saturating the CPU
-> and not exiting. When the issue occurs, CPU usage 100% and can only
-> be resolved by rebooting. Each thread's appears as follows:
-> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
-> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
-> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
-> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
-> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
-> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
-> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
-> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
-> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
-> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
-> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
-> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
-> 
-> I tracked the address that triggered the fault and the related function
-> graph, as well as the wake-up side of the user fault, and discovered this
-> : In the IOU worker, when fault in a user space page, this space is
-> associated with a userfault but does not sleep. This is because during
-> scheduling, the judgment in the IOU worker context leads to early return.
-> Meanwhile, the listener on the userfaultfd user side never performs a COPY
-> to respond, causing the page table entry to remain empty. However, due to
-> the early return, it does not sleep and wait to be awakened as in a normal
-> user fault, thus continuously faulting at the same address,so CPU loop.
-> Therefore, I believe it is necessary to specifically handle user faults by
-> setting a new flag to allow schedule function to continue in such cases,
-> make sure the thread to sleep.
-> 
-> Patch 1  io_uring: Add new functions to handle user fault scenarios
-> Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
-> 
->  fs/userfaultfd.c |  7 ++++++
->  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
->  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
->  3 files changed, 68 insertions(+), 41 deletions(-)
+On Fri, Apr 18, 2025 at 10:57:52AM -0700, Bobby Eshleman wrote:
+>On Fri, Apr 04, 2025 at 02:05:32PM +0100, Daniel P. Berrangé wrote:
+>> On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+>> > On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+>> > > It occured to me that the problem we face with the CID space usage is
+>> > > somewhat similar to the UID/GID space usage for user namespaces.
+>> > >
+>> > > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+>> > > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+>> > >
+>> > > At the risk of being overkill, is it worth trying a similar kind of
+>> > > approach for the vsock CID space ?
+>> > >
+>> > > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+>> > > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+>> > > created outside the namespace. Anything not listed would be exclusively
+>> > > referencing associations created inside the namespace.
+>> > >
+>> > > A more complex variant would be to allow a full remapping of CIDs as is
+>> > > done with userns, via a /proc/net/vsock_cid_map, which the same three
+>> > > parameters, so that CID=15 association outside the namespace could be
+>> > > remapped to CID=9015 inside the namespace, allow the inside namespace
+>> > > to define its out association for CID=15 without clashing.
+>> > >
+>> > > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+>> > > associations created outside namespace, while unmapped CIDs would be
+>> > > exclusively referencing /dev/vhost-vsock associations inside the
+>> > > namespace.
+>> > >
+>> > > A likely benefit of relying on a kernel defined mapping/partition of
+>> > > the CID space is that apps like QEMU don't need changing, as there's
+>> > > no need to invent a new /dev/vhost-vsock-netns device node.
+>> > >
+>> > > Both approaches give the desirable security protection whereby the
+>> > > inside namespace can be prevented from accessing certain CIDs that
+>> > > were associated outside the namespace.
+>> > >
+>> > > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+>> > > file as it is the security control mechanism. If it is write-once then
+>> > > if the container mgmt app initializes it, nothing later could change
+>> > > it.
+>> > >
+>> > > A key question is do we need the "first come, first served" behaviour
+>> > > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+>> > > according to whatever tries to associate a CID first ?
+>> >
+>> > I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+>> > from being used, this could be solved by disallowing remapping the CID
+>> > while in use?
+>> >
+>> > The thing I like about this is that users can check
+>> > /proc/net/vsock_cid_outside to figure out what might be going on,
+>> > instead of trying to check lsof or ps to figure out if the VMM processes
+>> > have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
+>> >
+>> > Just to check I am following... I suppose we would have a few typical
+>> > configurations for /proc/net/vsock_cid_outside. Following uid_map file
+>> > format of:
+>> > 	"<local cid start>		<global cid start>		<range size>"
+>> >
+>> > 	1. Identity mapping, current namespace CID is global CID (default
+>> > 	setting for new namespaces):
+>> >
+>> > 		# empty file
+>> >
+>> > 				OR
+>> >
+>> > 		0    0    4294967295
+>> >
+>> > 	2. Complete isolation from global space (initialized, but no mappings):
+>> >
+>> > 		0    0    0
+>> >
+>> > 	3. Mapping in ranges of global CIDs
+>> >
+>> > 	For example, global CID space starts at 7000, up to 32-bit max:
+>> >
+>> > 		7000    0    4294960295
+>> > 	
+>> > 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+>> > 	8000-8100) :
+>> >
+>> > 		7000    0       100
+>> > 		8000    1000    100
+>> >
+>> >
+>> > One thing I don't love is that option 3 seems to not be addressing a
+>> > known use case. It doesn't necessarily hurt to have, but it will add
+>> > complexity to CID handling that might never get used?
+>>
+>> Yeah, I have the same feeling that full remapping of CIDs is probably
+>> adding complexity without clear benefit, unless it somehow helps us
+>> with the nested-virt scenario to disambiguate L0/L1/L2 CID ranges ?
+>> I've not thought the latter through to any great level of detail
+>> though
+>>
+>> > Since options 1/2 could also be represented by a boolean (yes/no
+>> > "current ns shares CID with global"), I wonder if we could either A)
+>> > only support the first two options at first, or B) add just
+>> > /proc/net/vsock_ns_mode at first, which supports only "global" and
+>> > "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+>> > or the full mapping if the need arises?
+>>
+>> Two options is sufficient if you want to control AF_VSOCK usage
+>> and /dev/vhost-vsock usage as a pair. If you want to separately
+>> control them though, it would push for three options - global,
+>> local, and mixed. By mixed I mean AF_VSOCK in the NS can access
+>> the global CID from the NS, but the NS can't associate the global
+>> CID with a guest.
+>>
+>> IOW, this breaks down like:
+>>
+>>  * CID=N local - aka fully private
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can NOT associate outside CID=N with a guest
+>>                 Can associate inside CID=N with a guest
+>>                 AF_VSOCK forbidden to access outside CID=N
+>>                 AF_VSOCK permitted to access inside CID=N
+>>
+>>
+>>  * CID=N mixed - aka partially shared
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can NOT associate outside CID=N with a guest
+>>                 AF_VSOCK permitted to access outside CID=N
+>>                 No inside CID=N concept
+>>
+>>
+>>  * CID=N global - aka current historic behaviour
+>>
+>>      Outside NS: Can associate outside CID=N with a guest.
+>>                  AF_VSOCK permitted to access outside CID=N
+>>
+>>      Inside NS: Can associate outside CID=N with a guest
+>>                 AF_VSOCK permitted to access outside CID=N
+>>                 No inside CID=N concept
+>>
+>>
+>> I was thinking the 'mixed' mode might be useful if the outside NS wants
+>> to retain control over setting up the association, but delegate to
+>> processes in the inside NS for providing individual services to that
+>> guest.  This means if the outside NS needs to restart the VM, there is
+>> no race window in which the inside NS can grab the assocaition with the
+>> CID
+>>
+>> As for whether we need to control this per-CID, or a single setting
+>> applying to all CID.
+>>
+>> Consider that the host OS can be running one or more "service VMs" on
+>> well known CIDs that can be leveraged from other NS, while those other
+>> NS also run some  "end user VMs" that should be private to the NS.
+>>
+>> IOW, the CIDs for the service VMs would need to be using "mixed"
+>> policy, while the CIDs for the end user VMs would be "local".
+>>
+>
+>I think this sounds pretty flexible, and IMO adding the third mode
+>doesn't add much more additional complexity.
+>
+>Going this route, we have:
+>- three modes: local, global, mixed
+>- at first, no vsock_cid_map (local has no outside CIDs, global and mixed have no inside
+>	CIDs, so no cross-mapping needed)
+>- only later add a full mapped mode and vsock_cid_map if necessary.
+>
+>Stefano, any preferences on this vs starting with the restricted
+>vsock_cid_map (only supporting "0 0 0" and "0 0 <size>")?
 
-Do you have a test case for this? I don't think the proposed solution is
-very elegant, userfaultfd should not need to know about thread workers.
-I'll ponder this a bit...
+No preference, I also like this idea.
 
--- 
-Jens Axboe
+>
+>I'm leaning towards the modes because it covers more use cases and seems
+>like a clearer user interface?
+
+Sure, go head!
+
+>
+>To clarify another aspect... child namespaces must inherit the parent's
+>local. So if namespace P sets the mode to local, and then creates a
+>child process that then creates namespace C... then C's global and mixed
+>modes are implicitly restricted to P's local space?
+
+I think so, but it's still not clear to me if the mode can be selected 
+per namespace or it's a setting for the entire system, but I think we 
+can discuss this better on a proposal with some code :-)
+
+Thanks,
+Stefano
+
