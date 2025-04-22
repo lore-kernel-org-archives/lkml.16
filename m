@@ -1,184 +1,95 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9348020B806;
-	Tue, 22 Apr 2025 10:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A3D20B806
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317211; cv=none; b=JBz+VC26HuZ0NFagbyA/c8T9RZnDz8EreUChETiU1dkRxM8M8Frt3gfUCVszp70WAEzhrlKbft5GXZms4B+1o6sYRyzj3YSi63DIHDaMdRFXu+kYkdrHJT+tBXWppmZH7tJDtzmAWN9tW7c2LoK7iyd8OfLoU9AbdsUNk7qQr5E=
+	t=1745317227; cv=none; b=UFMPQ9M+OvuxNyjvoPmhFNJAsuzdp5zSbKqbWmO6UlDGSWt6MVBgF2iN4mIGQkeYhOfx2dvsq6WERFp0k1BH171XFE0EFq9OMxIjJ5KwMP1GRYPFCF5MiXIcWl1QGBw02f4wuzOs7yL6BfKiq+y8l55c5lZYVvIZM1ZRP7tNnR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317211; c=relaxed/simple;
-	bh=RVXbQFP/k6BTYPhBACJCbgHwwamun7Utb91ekU6Oprw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BkHw1Od9dDd8kpSalOSr5BLpHUrmjvu+2/s3lsKoqSg3nxJk9fRUX4/w5RE4Sen/GfRDnkTe38ibJjngymxKaxqskiqk3MTgLZoqQfCe59Cxg4XOcHd/NWsIuNOXCXS74GAcZ2x7bSY/8uKPeP8S2nLwSuoH8kSr2ufFlwTLRNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Rx9J7IKl; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745317227; c=relaxed/simple;
+	bh=YdbfQlGUGOXyKhbsXVQD8RS/6LOk2JpRZ6NF2vcjmBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AW+QasMqKwLJbRwqCbvfrQ1X8GexhtPlTl5ly2ER2ycGedj0M6IBTHXenn28bd31BNKBj6b6yN8xQWn0q0/kB1X15XVZB2yL4vKZ1IWbeOo7QAfCxZoy1sBCbmgm5gKUfkUoAj+Sdnhui18Y4eR+mYomnTvI9NrPolN/RMr9fYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B3UNRDiL; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Rx9J7IKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745317187;
-	bh=c4z1sB6OeKlyJmA+PFzyJ68O5M5fppZkHmyXCAllGaY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=Rx9J7IKlI6ysRhonm3BRa9dEI421V7qJGwpCmU+iMqyE/uaoxpM41hFBFnM6FymBZ
-	 dN/3zVOefKeU+AKomn+I94kga0L8Dh8Sc74/BLRs+qwXIJH14zyxi2j8qdgNpUh+iW
-	 6DbeV++J/cm+fzpChXIOcKczfu3tl2BCpPrmJhFI=
-X-QQ-mid: zesmtpip3t1745317146t25d683aa
-X-QQ-Originating-IP: cPdLxHsjcwUj+B/L9//t5P69bxfZ2goFPnBcw7Ee+XQ=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 18:19:05 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 2928040559611630836
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: tsbogend@alpha.franken.de,
-	macro@orcam.me.uk
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH v2 0/6] MIPS: Resolve build problems on decstation_64
-Date: Tue, 22 Apr 2025 18:18:55 +0800
-Message-ID: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3UNRDiL"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c14016868so4891393f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745317224; x=1745922024; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bj+0Q+EB1V2pPyRxQBEmN/DJlQu1UVnuS3zStM7Ud70=;
+        b=B3UNRDiL/vCQHPLqFZZQGksG8JMLq/5huJH9aKhaXZk47+BYBRo29l7XmERCF/cZak
+         nAZ6SDurrDgzqxirMEkoa3n2j0QIZ9WMBJmZrD1NoHZ/NDPxb4Un6H6IPN8M3mIgfX8Q
+         pTW3rU0YQ8AQZUG0V6RnwOAB8zcWmNJJEvY7luhINwQO0D1O1fqMj/YnO+THyl72875d
+         jhZvGTNQJ46h/hjHP/YyU/w3b2eziKMs34yzEUpzovYRxsIbVXHFRQ0APMh6anfJ5kh2
+         Nj8ORoQMDyocM8Q6Fuo0znL3qushiAOpqUfEFrbd6u7p3Z1SeB91ATeh5s1OPtPdAhnu
+         ZBbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317224; x=1745922024;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bj+0Q+EB1V2pPyRxQBEmN/DJlQu1UVnuS3zStM7Ud70=;
+        b=cvzr7ozDEpPfs1TiDgh01HsujF6ZR1HaWWQAlKITMktT+t/74B+wSEb8Ph2Te/XYF1
+         miHvsFdj0jadec1Oer3E73XBdX5xldYnq1SwNRnaZnL3bGIFnRuplEaTOOQkxe3Obi1x
+         IxdDxqFrBAPvxMjdIL+/FYsG9VcFfwXI84eDBiRs4tk0+3tboTObWsP4QiejtdMbE/dk
+         N+SzAPSPtw6SEvj0/szgfd1lywN2frpOIPYHAR4lm+1A67dsnals447Ku7fe0BjwOLul
+         udpIJan9hb0iWJxnahMAbEih0wcSfpPTm4rhy5qAfU69BBEQsBJS4HYoYvw/KzzCN32b
+         X3pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWuidNqTLNReDkWWiWFfwAyJE4KE1EAEVJGdAS67uo5ougZcFoZTxZ9ZwENQGi+h9HCrG0kGHvOAprGqSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzrbcoiZH3vChAEN38h2+TqkML52av5+4c61kBiYtANtKefKnh
+	3sqhpb7HruwKVqElqRfj4bCs3lqCH+d37aktij2Op44ynOOKuFl8XvAgCjDZ0CU=
+X-Gm-Gg: ASbGnct2xi0uBXXmnEX/2JIxXTtBoFsMZ0j0Yjrqxg4LjZx3MusNTvVTDI4oJu2t/a8
+	UZ3ocsA65p9Z2yiNi3codVvGbIOKv1KQUq1n8ifBjbP5Zw7UBeuj3AcYNtWMovIkBKUC4wiE7oU
+	v00aFobHtEZiuwwzRC469jLPW3t2Ur0zVTgiAp7svxIpKv62ykpwp4d/kbcNvO12ji1crQwJeMY
+	VFx2CaqAjyV970XnoxF7lq933xWAxQ9w6ikr3XB97RVj+Jkjl5HL1EomPKTGbUG7V1twfUJ1G1d
+	Pv/eWylkgPLzwuGFAF15ueJ6D9/ZnRyfO1tzoJGgGWotSccC+SUyHkYdi6ulTN2QJJGTgF0+f2g
+	yLOOoQ1qO
+X-Google-Smtp-Source: AGHT+IExxiC1/7BEDxlUOLO/mtxEuxbqvG4oZX6ER4Jw2XdzzKvzbDTjBvuvcHjBv9h1dlP2oFw8qQ==
+X-Received: by 2002:a5d:6d88:0:b0:39a:d20b:5c14 with SMTP id ffacd0b85a97d-39efbad3217mr11799503f8f.36.1745317224351;
+        Tue, 22 Apr 2025 03:20:24 -0700 (PDT)
+Received: from [192.168.69.169] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5acc5dsm171044195e9.9.2025.04.22.03.20.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 03:20:23 -0700 (PDT)
+Message-ID: <fff7f6f1-8fb6-4ff9-8f13-cf0e2a9ecb1a@linaro.org>
+Date: Tue, 22 Apr 2025 12:20:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] riscv: Fix typo EXRACT -> EXTRACT
+To: Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
+References: <20250422082545.450453-1-alexghiti@rivosinc.com>
+ <20250422082545.450453-2-alexghiti@rivosinc.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20250422082545.450453-2-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OFSY/93ODYnHRpIjh5XlspOd9KxnWNGQ811MH+Vbvl0dBs7q+jUkvmDM
-	7b8QXMURysVJibB230gIfg/uBwNezcMacKf7FdPk8ZoP/hXl2OzdppPPX4myB7ukRGMpWO2
-	A87HKc5aKN/IuL9+6+jP48p/jmFG5eVZAvsnj/CH5N61XhHpXBlIGtbxZi6Y5tz4jOmFeG3
-	MFeK55sSKu7kracjzQm9PKa6CcAm18U/el+wdND20AvcsdeCgHFxLxfWCYC0n3aCOejN4Hi
-	KELHtGvT7df2gOJWxgoHwlXtWDzp+q/++vZvdNoTR+mW1keBV7aCBuO9qqyN+1CV/F93a7r
-	J9e7xpBqVA2iscZG5p0331UUFfxNjhNgFnpYtjBC9OLNU/fCbL0ZxjsiDNdJ8/RyNr9MF85
-	6N0XG5jE9Q/q/iLelGTvGlJg9DeImU1BQ09U8nC/l93WKpXRTGfJA+FIioFE07ZRTiLasrJ
-	aZUhpK7oogr5XVWY54thbakOASL/+fLEVUuHu/P9gKmfwwGaWlgxFTQrOdv0qocJuxn535/
-	POJ+dKESuza/sUWy4RXTVGta9+UjiWk1mzaw8SAF0Xlvat0R8aLPiSW6piRloWco+KDAo71
-	1VD4xPfyvGMJpTgGeHbjMdAj2RmdboxoQFWTlp8E2BxeCnS4wrrvOZ3iaA7LvJiliTr5RC5
-	4tF2JxBHjoC8mLVjo1jhDMHTKaP/1tmkCsmHCMsPJE9DZ0uXc7SYQoN1+jcfdTMl3RW/z7G
-	C/I9AbdVN/HUIUmJ1mP+RpQaHG/XY7DPFzjDv+PIu3u6r1K2Yz8HGq2SCDXYZMfy03tstlE
-	p47mvHvyYaPPKSfoIH90X1CKDmPV90L+QwJD/1C4v0qzgLXp8ricUd47wdG9j0xxtOa2Bot
-	Ch9HwvAoSUuZf0MgIl0l/wyRBITY/T73g05s1r7hDkiO6+rqPJsnwt9fRIFnOIbh5aWs/pj
-	UOTo2bavHItbZ/O4X3R4YF2pf67YSmkf196sk753RFFtg0TIyJKan2m/nU7Ev0n+juBEJIn
-	him1PfpwIYcGsS/Zcr9xFVxJrxPggdcfmG7rK6Qck0xNbExcSd
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
 
-[ Part 1 ]: MIPS: dec: Only check -msym32 when need compiler
+On 22/4/25 10:25, Alexandre Ghiti wrote:
+> Simply fix a typo.
+> 
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>   arch/riscv/include/asm/insn.h | 2 +-
+>   arch/riscv/kernel/vector.c    | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 
-During 'make modules_install', the need-compiler variable becomes
-null, so Makefile.compiler isn't included.
-    
-This results in call cc-option-yn returning nothing.
-    
-For more technical details on why need-compiler is null during
-'make modules_install' and why no compiler invocation is actually
-needed at this point, please refer to commit 4fe4a6374c4d ("MIPS:
-Only fiddle with CHECKFLAGS if need-compiler") and commit
-805b2e1d427a ("kbuild: include Makefile.compiler only when compiler
-is needed").
-    
-Commit a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS
-`modules_install' regression") tried to fix the same issue but it
-caused a compile error on clang compiler because it doesn't support
-'-msym32'. Then, commit 18ca63a2e23c ("MIPS: Probe toolchain support
-of -msym32") fixed it but reintroduced the CONFIG_CPU_DADDI_WORKAROUNDS
-`modules_install' regression.
-
-Wrapping this entire code block with #ifdef need-compiler to avoid
-all issues is the best solution for now.
-    
-To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
-without -msym32" error.
-
-Moreover, I also identified an unnecessary check for KBUILD_SYM32
-in this Makefile section. Eliminate it for code simplification.
-
-NOTE:
-
-It is particularly important to note that this code fix does not
-imply that we have resolved the problem entirely.
-
-In fact, the entire application of cc-option and its auxiliary
-commands within the kernel codebase currently carries significant
-risk.
-
-When we execute make modules_install, the Makefile for the
-corresponding architecture under arch/subarches/Makefile is
-invariably included. Within these files, there are numerous
-usages of cc-option and its auxiliary commands, all of which will
-return empty strings. The reason other architectures can
-successfully complete compilation under these circumstances is
-purely because they do not, unlike MIPS, check the return values
-of cc-option and its auxiliary commands within their Makefiles
-and halt the compilation process when the expected results are
-not received.
-
-A feasible approach to remediation might be to encapsulate all
-usages of cc-option and its auxiliary commands within conditional
-statements across all architecture Makefiles, preventing their
-execution entirely during make modules_install.
-
-However, this would lead to a massive number of inelegant
-modifications, and these broader implications may require
-deliberation by Masahiro Yamada.
-
-Regardless, this does not preclude us from addressing the
-issue on MIPS first.
-
-Link: https://lore.kernel.org/all/41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com/
-Link: https://lore.kernel.org/all/F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com/
-Link: https://lore.kernel.org/all/8ABBF323414AEF93+20250217142541.48149-1-wangyuli@uniontech.com/
-
-
-[ Part 2 ]: MIPS: decstation_64_defconfig: Compile the kernel with warnings as errors
-
-Patch ("MIPS: dec: Only check -msym32 when need compiler") allows
-us to compile kernel image packages with decstation_64_defconfig.
-
-However, compilation warnings remain during the build.
-
-Address these warnings and enable CONFIG_WERROR for decstation_64_defconfig.
-
-Link: https://lore.kernel.org/all/487CE8AA937621E2+20250218125101.663980-1-wangyuli@uniontech.com/
-Link: https://lore.kernel.org/all/EA0AFB15DDCF65C1+20250227141949.1129536-1-wangyuli@uniontech.com/
-Link: https://lore.kernel.org/all/303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com/
-
-
-[ Changelog: ]
-
- *v1->v2: Add Philippe Mathieu-Daudé's "Reviewed-by" tag in patch3.
-Link: https://lore.kernel.org/all/11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com/
-Link: https://lore.kernel.org/all/8dcb5c6d-be4f-4891-a999-137d53edfc05@linaro.org/
-
-WangYuli (6):
-  MIPS: dec: Only check -msym32 when need compiler
-  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
-  MIPS: dec: Create reset.h
-  MIPS: dec: Remove dec_irq_dispatch()
-  MIPS: decstation_64_defconfig: Update configs dependencies
-  MIPS: decstation_64_defconfig: Compile the kernel with warnings as
-    errors
-
- arch/mips/Makefile                        |  6 ++--
- arch/mips/configs/decstation_64_defconfig | 43 +++++++++--------------
- arch/mips/dec/int-handler.S               |  2 +-
- arch/mips/dec/prom/init.c                 |  3 +-
- arch/mips/dec/reset.c                     |  2 ++
- arch/mips/dec/setup.c                     | 15 ++------
- arch/mips/include/asm/dec/reset.h         | 20 +++++++++++
- 7 files changed, 47 insertions(+), 44 deletions(-)
- create mode 100644 arch/mips/include/asm/dec/reset.h
-
--- 
-2.49.0
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
