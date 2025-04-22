@@ -1,40 +1,67 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AC920E703
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5801F280CE5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329332; cv=none; b=U7goJtDgwPAspkPkpgE75RWAzk3vb/kJp4RilRgFculymvP4eks5ITIesfG0AEPj1/mkr9IF2blArlswMg2B/N2TZXq4p92Oo+D3PTjQKuT9jDy+FKOgjrwAsyVP2dQGJtU/6bo4qdS7AUO4HLtSw1+0j+2TVnEUMLUaoW6wHBA=
+	t=1745329349; cv=none; b=cSD5FsPLeDVB1ohrYTaKskSVOimjDjfmRCpbuZ8zNQC2AoXNgtJhlfAEl9EwtibxfsDUICrIHi3cVPEqTvy7n4KbBZJt9tqzlcMpeuOhe0ot73w3Y2yc9AmnVw83g6R5Q6h91meMbQTwN61OCP7o0VTPte2+1XtKNp/lgZnxcGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329332; c=relaxed/simple;
-	bh=YNaemJenIfGTVf0p9VaES18mR2J/Nfm3GWA/YnugfoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q7qC7T6iiIwB7PEv8UfY0e1yMpr+DndHgZd7r19GT1zAokfmH6eLLdBNQBMoLHfnLhqiyWL/ragUdtVyoeKB/K/By7HooLn+kZEACTcfpj5vNWmRkCbBsWbjqeUZdIIzxEt9VVHigxTaNREEhQGz5HO8c2yzbc889pztfQIJOc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HTTVR17X; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745329349; c=relaxed/simple;
+	bh=hbOVvc/4B+kqOfiu9CA5f99hcrMg6nVlqUgzf4atONE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IAC9YSgwpKIy0HGoUQafZPq+9ZRh2yxRMzbMb+K3olMHjtux4lwsTz7YG9T8SYFn1uaLLBVI2Rg47At5O+4Q1Ls/m8j3nTrpBAl+BSNrnwmao6PCTHn/bF+PaF8+mnySXZxvURVgjhzyIJWJmTsV0SPPZwBTGTrXjWRaouABiI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GN4QwAtA; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HTTVR17X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745329328;
-	bh=YNaemJenIfGTVf0p9VaES18mR2J/Nfm3GWA/YnugfoQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HTTVR17XhX+/F2KAZSI8Cpfg0uWxw1EvyRZHnLgzNx1xDApfvatz6gLY4ujC5VKlu
-	 s2dFte56ef8paMWJZIkY2OfG0h5nN3HhJOjgp9WQAOjzWIlthM+WMtjJxXQuuW4yD6
-	 x36cLZvPOpPpI2yyT/4QB08f38OQmO4FvqRadnp6BkDzmCfTyVv/C57G40TW84tb//
-	 wcrIsiMQHEHUI38zsnUS/s0vaPolM9vmpomJUgf18rJNAhOjiwUBTEF4YEuM8jCTo0
-	 E4ziBIinGgyF2lb1xjThpZORo7hzFFb4Nab81ccJARuwtzZ4DYPcvrrEJCN2N8bvBQ
-	 IgUBOUlu5YUZQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9C65E17E0B9D;
-	Tue, 22 Apr 2025 15:42:07 +0200 (CEST)
-Message-ID: <17b19733-b203-40bd-ba14-07eb66f02d6c@collabora.com>
-Date: Tue, 22 Apr 2025 15:42:07 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GN4QwAtA"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a064a3e143so341953f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745329345; x=1745934145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ezS+UKTt7FTkEKz3yncsIXnl8e/3huKHv0TQIvewvRs=;
+        b=GN4QwAtA2XWVN/iEwvor+omBll2Ly5Ciy+NpM/h/sgJTZQ9W+KqSqdQSMzTkfHUIHT
+         hfBbWZ6/xjxcfuDBUQOhZ2DUJAYNtE3avWO+vOrxDT709V3U3pHA8QYVEvv2dhSzLP0i
+         sx92q2I8s+G6OzvB5kARzboBSNFMrAdm0vMv4xfJPB3DcLBPatxISE7TG0wvz9Oi5aiZ
+         IFKgeXxiv/iyLNa46xq0KwcLReZiOSMSGUj8eacPcVbexWu8Y+2lQkS7MZGKBeS4xbcH
+         Bii5KU6Dqy53ggkDUwFA1lfChNDC8J50Q5NM7NdYV70iMw3S97utHO3Lawqf0e4UJ6Mh
+         4MLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745329345; x=1745934145;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ezS+UKTt7FTkEKz3yncsIXnl8e/3huKHv0TQIvewvRs=;
+        b=uh1HdAq00JTy5uwBiCOrjWAJqg/oKknigODcNrJCMpLXEOnXaPi+cmKonSHVeswane
+         ThhCsB4JaGq8X81dq0ox106aRfLOpst/E8vG06um6hhfsYHvp/gVPQ+Uk5PlwKqVobEg
+         EXrEkNaoMsXhmPHVZ1ceMjL1NY6LR23cq9Y1dLkzqM4pLLCUg6y6J0+efuNZb02Qs2mu
+         cZfRfzLlVe9fe8/gr68YSNdUDPIaNrQioobjC2VisqEDE34riGYh5zAXKRY3RmFQx7IN
+         nQBcb//89WxKieln4nhP1FaTJmUwgJpuXP7QDUxXjDYgltCgC17MX4+FazPZFu0U8JNI
+         IKaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBkbFC5nHe8lClz4KDYADrasvM534xSlr+QyNnT5ohMCRbNSqFWv+arcd8xo8EK4uJzq0gHF9OfQNNuRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa7aiVa3hXczaI+S8RkxZU1avUI1qvoZdE2AfVrOJWuKH90FVl
+	k+RZuSFE7DPFXwwTGwxVDsCYyM8kgwxw/82CAad5zpeeUOz7pnN6IxL4fFPtY4Y=
+X-Gm-Gg: ASbGncsrhZ0YXePRklU6dWmhW6aIfjVSb1Q8sCuWKymGIDuht7b1pOMbGkkkyFk1ozF
+	7kHzatAGKrSOnbJOBSjudXW41FF58E+9LxCUjx6VC5vb5MeRmnZAeoFkDM1Cad+apIEWSC3PEan
+	slwMQKrqNwtK1V5GcsHLuefxzU+m/5oRJm3TxusVOkK4HaHatYoXdP6QNAnlSdI7mfGUH8n/4Uc
+	d36A1059CgFIjLMCJ8C9Uueq5ozHzBepdOjOg8SGOZfFDr37iC/0NIrxoUudXzrZpcDCK5uwKNG
+	OhAvu9S35Z7m2QVf/gJBTFszRR9AX5+YsrNkBBO4J6/XZAm5LoCHHpdE/Dubma9qSipXpw+D9UK
+	bBvFgp3b8cag0kq0J+Y3QUJRqUGw1
+X-Google-Smtp-Source: AGHT+IGMN+4BR6nL0mLP35BbAdCor169ALVsN+fLM5/TOgtQG6DoOCuPZ5euVFxSFq1TllouoAEn+g==
+X-Received: by 2002:a05:6000:186e:b0:39e:f9ca:4359 with SMTP id ffacd0b85a97d-39efba5c0e0mr11633936f8f.30.1745329345611;
+        Tue, 22 Apr 2025 06:42:25 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa5a2300sm15093185f8f.101.2025.04.22.06.42.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 06:42:25 -0700 (PDT)
+Message-ID: <feb106ef-b735-4b79-999e-0de033d82e3f@linaro.org>
+Date: Tue, 22 Apr 2025 15:42:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,132 +69,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] drm/mediatek: mtk_dpi: Allow additional output
- formats on MT8195/88
-To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
- "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
-Cc: =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
- =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
- =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
- "simona@ffwll.ch" <simona@ffwll.ch>,
- =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "kernel@collabora.com" <kernel@collabora.com>
-References: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
- <20250409131306.108635-5-angelogioacchino.delregno@collabora.com>
- <270828a4074dcb0d1017cee0c5ce0406991fbc8d.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <270828a4074dcb0d1017cee0c5ce0406991fbc8d.camel@mediatek.com>
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 3/7] drm/bridge: analogic_dp: drop panel_is_modeset
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250401-panel-return-void-v1-0-93e1be33dc8d@oss.qualcomm.com>
+ <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250401-panel-return-void-v1-3-93e1be33dc8d@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Il 22/04/25 08:01, CK Hu (胡俊光) ha scritto:
-> Hi, Angelo:
+On 01/04/2025 07:11, Dmitry Baryshkov wrote:
+> The dp->panel_is_modeset is now a write-only field. Drop it completely.
 > 
-> On Wed, 2025-04-09 at 15:13 +0200, AngeloGioacchino Del Regno wrote:
->> External email : Please do not click links or open attachments until you have verified the sender or the content.
->>
->>
->> Allow additional output formats in both DPI and DP_INTF blocks of
->> the MT8195 and MT8188 SoCs (as the latter is fully compatible with,
->> hence reuses, the former's platform data for both blocks) by adding:
->>
->> 1. New formats to the `mt8195_output_fmts` array for dp_intf,
->>     lacking YUV422 12-bits support, and adding RGB888 2X12_LE/BE
->>     (8-bits), BGR888 (8-bits) RGB101010 1x30 (10-bits), and YUV
->>     formats, including YUV422 8/10 bits, and YUV444 8/10 bits; and
->> 2. A new `mt8195_dpi_output_fmts` array for DPI only, with all of
->>     for formats added to dp_intf and with the addition of the
->>     YUYV12_1X24 (YUV422 12-bits) output format.
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   drivers/gpu/drm/mediatek/mtk_dpi.c | 24 ++++++++++++++++++++++--
->>   1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
->> index a9e8113a1618..9de537a77493 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
->> @@ -1093,9 +1093,29 @@ static const u32 mt8183_output_fmts[] = {
->>          MEDIA_BUS_FMT_RGB888_2X12_BE,
->>   };
->>
->> +static const u32 mt8195_dpi_output_fmts[] = {
->> +       MEDIA_BUS_FMT_RGB888_1X24,
->> +       MEDIA_BUS_FMT_RGB888_2X12_LE,
->> +       MEDIA_BUS_FMT_RGB888_2X12_BE,
->> +       MEDIA_BUS_FMT_RGB101010_1X30,
->> +       MEDIA_BUS_FMT_YUYV8_1X16,
->> +       MEDIA_BUS_FMT_YUYV10_1X20,
->> +       MEDIA_BUS_FMT_YUYV12_1X24,
->> +       MEDIA_BUS_FMT_BGR888_1X24,
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 11 +----------
+>   drivers/gpu/drm/bridge/analogix/analogix_dp_core.h |  1 -
+>   2 files changed, 1 insertion(+), 11 deletions(-)
 > 
-> What's the order you follow?
-> I would like RGB together and YUV together.
-> 
-
-Actually, BGR888_1X24 should come before RGB888_1X24 now that you make me notice..!
-
-Those are ordered by preference (and the order won't be respected in the actual
-code anyway).... as in:
-- For RGB 8-bits, RGB888_1X24 is the one that should be preferred
-- For RGB 10 bits there's only one so ...
-- For yuv modes - YUYV is preferred to YUV
-   - there's only one for each, so in that case it's alphabetical
-     meaning that yuyv8 comes before yuyv10
-
-If you want, you can reorder them as you wish anyway - there's no strong reason
-against any kind of ordering.
-
-Besides, if you can change to the order that you prefer while applying this commit
-that's great - otherwise just tell me what order you precisely want and I'll send
-a v2 for the entire series :-)
-
-Cheers,
-Angelo
-
-> Regards,
-> CK
-> 
->> +       MEDIA_BUS_FMT_YUV8_1X24,
->> +       MEDIA_BUS_FMT_YUV10_1X30,
->> +};
->> +
->>   static const u32 mt8195_output_fmts[] = {
->>          MEDIA_BUS_FMT_RGB888_1X24,
->> +       MEDIA_BUS_FMT_RGB888_2X12_LE,
->> +       MEDIA_BUS_FMT_RGB888_2X12_BE,
->> +       MEDIA_BUS_FMT_RGB101010_1X30,
->>          MEDIA_BUS_FMT_YUYV8_1X16,
->> +       MEDIA_BUS_FMT_YUYV10_1X20,
->> +       MEDIA_BUS_FMT_BGR888_1X24,
->> +       MEDIA_BUS_FMT_YUV8_1X24,
->> +       MEDIA_BUS_FMT_YUV10_1X30,
->>   };
->>
->>   static const struct mtk_dpi_factor dpi_factor_mt2701[] = {
->> @@ -1208,8 +1228,8 @@ static const struct mtk_dpi_conf mt8192_conf = {
->>
->>   static const struct mtk_dpi_conf mt8195_conf = {
->>          .max_clock_khz = 594000,
->> -       .output_fmts = mt8183_output_fmts,
->> -       .num_output_fmts = ARRAY_SIZE(mt8183_output_fmts),
->> +       .output_fmts = mt8195_dpi_output_fmts,
->> +       .num_output_fmts = ARRAY_SIZE(mt8195_dpi_output_fmts),
->>          .pixels_per_iter = 1,
->>          .is_ck_de_pol = true,
->>          .swap_input_support = true,
->> --
->> 2.49.0
->>
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> index 82dc4b01806f9728dc882b0128171838e81f21b0..704c6169116eb2601d2ad02dc7294455ceff5460 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+> @@ -964,9 +964,7 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
+>    * is false, the panel will be unprepared.
+>    *
+>    * The function will disregard the current state
+> - * of the panel and either prepare/unprepare the panel based on @prepare. Once
+> - * it finishes, it will update dp->panel_is_modeset to reflect the current state
+> - * of the panel.
+> + * of the panel and either prepare/unprepare the panel based on @prepare.
+>    */
+>   static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
+>   				     bool prepare)
+> @@ -983,12 +981,6 @@ static int analogix_dp_prepare_panel(struct analogix_dp_device *dp,
+>   	else
+>   		ret = drm_panel_unprepare(dp->plat_data->panel);
+>   
+> -	if (ret)
+> -		goto out;
+> -
+> -	dp->panel_is_modeset = prepare;
+> -
+> -out:
+>   	mutex_unlock(&dp->panel_lock);
+>   	return ret;
+>   }
+> @@ -1532,7 +1524,6 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+>   	dp->dpms_mode = DRM_MODE_DPMS_OFF;
+>   
+>   	mutex_init(&dp->panel_lock);
+> -	dp->panel_is_modeset = false;
+>   
+>   	/*
+>   	 * platform dp driver need containor_of the plat_data to get
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> index 774d11574b095b093ddf2818ad5b84be6605c9bf..b679d5b71d276f458d905c936160f107225bc6c5 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
+> @@ -170,7 +170,6 @@ struct analogix_dp_device {
+>   	bool			psr_supported;
+>   
+>   	struct mutex		panel_lock;
+> -	bool			panel_is_modeset;
+>   
+>   	struct analogix_dp_plat_data *plat_data;
+>   };
 > 
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
