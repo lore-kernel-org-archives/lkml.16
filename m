@@ -1,31 +1,36 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D35235BFB;
-	Tue, 22 Apr 2025 07:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3D262367B7
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308680; cv=none; b=ldnhvgxZ/eekpNzbsKKuPbBOR1G/ArXGoITBKnVljK1t/fJsStAnDMfpzcjKMZbiV2UCKAcdJy82KcORsri7IAADfZSWqhixS26VYOejm20B4P0FSf+wxPRRb5mXF8XBYE8E39D+HRx3tseDvqSCLzWvOTQYg6MRtN1okfp07RY=
+	t=1745308716; cv=none; b=RCd/B7+OIJ3DC/Pddy4nqwzyhnrpp6KzZXy0ixLBCDSdioju9SWNDS0IoXQZ6K65pztJcc08abQCDD5CzXbB7/fYRVbaDirsKfBHTcgibiqiX1vcNgV2OgfjK/LgUzcO9teZa7xZrdTB/QVArcG7lsjZMpq8N2EtsVEHn4bb2Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308680; c=relaxed/simple;
-	bh=4APg6yVz6kgCDi8Roxi56DKotyt2hsl1mO8Xu/bEAlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ex7ognpTomb4N+WTZ0cRe28sjkZjlY2bReBBuc9Ax15MY+4wK0ig1rh7Guoay4sudE6ioM4unH9PfDPM9qbB86k/iFWUZ1pqSA0N6s6A10ztVHHwK7gEYp5bM/wpEgzpzTbsvK7RGMZJM2owjRXLCMJe23ZQKV6IzZ5FJ8vwQyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 2585868C7B; Tue, 22 Apr 2025 09:57:52 +0200 (CEST)
-Date: Tue, 22 Apr 2025 09:57:51 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] nvme-loop: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <20250422075751.GA32494@lst.de>
-References: <Z-axRObjXYjIHGQC@kspp>
+	s=arc-20240116; t=1745308716; c=relaxed/simple;
+	bh=eDDGJ+jglbP09EosM6RIfoGJYGCs7gmdzWKgCV1xPO4=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQXFFA+HYp7XfibXXiNzsS0SyNhCIsp56aV9qMyVvVnowvmahGoKW12MdO6glC6j23ReG+wI/8r7VEGP4cE1P8iqopoCzGBL/J4iXzBnNAR7ybnxSHuqUoFneSnBfR57nmOsAL3Yp5Vuq45Nz49i5mzNuVi3a/YmBYxLAMf8QCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89C3B152B;
+	Tue, 22 Apr 2025 00:58:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59B8A3F66E;
+	Tue, 22 Apr 2025 00:58:28 -0700 (PDT)
+Date: Tue, 22 Apr 2025 08:58:26 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>, Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2] tools build: Use -fzero-init-padding-bits=all
+Message-ID: <20250422075826.GA28953@e132581.arm.com>
+References: <20250402173056.829400-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,10 +39,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-axRObjXYjIHGQC@kspp>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20250402173056.829400-1-leo.yan@arm.com>
+
+On Wed, Apr 02, 2025 at 06:30:56PM +0100, Leo Yan wrote:
+> GCC-15 release claims [1]:
+> 
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+>   restore old GCC behavior.
+> 
+> As a result, this new behaviour might cause unexpected data when we
+> initialize a union with using the '{ 0 }' initializer.
+> 
+> Since commit dce4aab8441d ("kbuild: Use -fzero-init-padding-bits=all"),
+> the kernel has enabled -fzero-init-padding-bits=all to zero padding bits
+> in unions and structures.  This commit applies the same option for tools
+> building.
+
+Gentle ping.
 
 Thanks,
-
-applied to nvme-6.16.
-
+Leo
