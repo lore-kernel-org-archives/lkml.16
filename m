@@ -1,81 +1,157 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63CC1D9A70;
-	Tue, 22 Apr 2025 07:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E24C238C31;
+	Tue, 22 Apr 2025 07:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745306161; cv=none; b=ZC7618TI0fYi4znBQR/m35UdTDiodnFCwBwfFjLd+IeMcl6DugYc6QFLSoQxHsu1ZyytpBCOUXRjKWhNsmhyC9cEQh3N9gqd+q3pkvakaq0Tb3UIsu6PqG7GOtKO5kdUJ/+rtuBmdz0io79LQ7LC9MFFi940UaafIsEShxQbnFE=
+	t=1745306410; cv=none; b=tAcpsXUSonF5R5zcYwgQ+IasAYVDPNHwmqEe9miW3dabVN1j4C2G/uUFCqfQ2Bhuu9uYKtSIaOydLAISo+m7Q79JmnyMcQirS8DIFXqpda0moYhWS5Bnd6wEihVu/Jsg1GQ9SIO5riLooipPJV+9RW7vvZyFfkynCxXq/Cqy5aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745306161; c=relaxed/simple;
-	bh=Uo57kmQSEs0NnxladP19sdAIEQXVG8c6++8pHMFxUog=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GEU4Yx8INERCEmceWZAXbcKIFwBNsYFF+fsmDeqrB22FH37dSeAsPp8VQQOe0a9xaaFok5mYR6KZSl4hBkkoyCCiAqbL7+DJ4q/ASd3QqyBcVWJt3Dip8ds3IbFHQplN/7KJ1Czkxt5BGg58iAtnan00SwNJu7+CI0SLArUccA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZhYMq1Pgcz2CdX1;
-	Tue, 22 Apr 2025 15:12:23 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11B3A1800B1;
-	Tue, 22 Apr 2025 15:15:52 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 22 Apr 2025 15:15:51 +0800
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add hisilicon pmu json events under
- its entry
-To: Junhao He <hejunhao3@huawei.com>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <james.clark@linaro.org>,
-	<leo.yan@arm.com>, <john.g.garry@oracle.com>, <will@kernel.org>,
-	<mike.leach@linaro.org>, <yangyicong@hisilicon.com>,
-	<jonathan.cameron@huawei.com>
-References: <20250418070812.3771441-1-hejunhao3@huawei.com>
- <20250418070812.3771441-4-hejunhao3@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <e5f55b03-8026-3042-6ce9-586b7f1dad2f@huawei.com>
-Date: Tue, 22 Apr 2025 15:15:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1745306410; c=relaxed/simple;
+	bh=qUBVDgrrLi3yE8NeOTL0RJBzce75/+0w26+iXhu5pbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mtvewn+Jtj3oMWTg/Zv/Chcms3eu33kea3OLskr4G0ZisnJ/jd7gnFbBxNanitoh/QnAcQ0y5sLzHM6ZMKb7lb06uINu3y5iqUtY3ei2GqENjYer/UuVZeBTs3ayMZCnAf8fXlc0RuX5eZfL7nEZUGfeh5+ltxkyJ+08yPFfYEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPJ89rt/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPJ89rt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235CBC4CEE9;
+	Tue, 22 Apr 2025 07:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745306410;
+	bh=qUBVDgrrLi3yE8NeOTL0RJBzce75/+0w26+iXhu5pbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tPJ89rt/qZ53eNF9sh7a5FPZUbugWhnhJOPiEadEE/g+syqi2HZWvsfq/eRhb94yM
+	 2lZ49vgZKGMVMXHYrmuxurqXM0gO2YKZjvmhpVRLXzl72KIISswe1fVpr01w0zHUjx
+	 OoPxkw/AI2XMjKCcHazNZK8nvlQaQcE4PZJhw4eC9rM77T7Dq0sjVELIhscDhQ7a9X
+	 FSIHPMPxvwTnELOvuz18v6Eq8oprRLVx307T7CNXfZboyJQRMfmRt77Mu+CT58s4qP
+	 2/mtKLrHgrd/2ufhicyw5EbotbtZrvuGpYlHpGZ+tRB/5K55t+GxmaUVSVLcd9XMQ/
+	 xQzNs8bj1cCRg==
+Date: Tue, 22 Apr 2025 09:19:58 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, aarcange@redhat.com, 
+	linux-man@vger.kernel.org, akpm@linux-foundation.org, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, shuah@kernel.org, lokeshgidra@google.com, peterx@redhat.com, 
+	david@redhat.com, ryan.roberts@arm.com, hughd@google.com, mhocko@suse.com, 
+	axelrasmussen@google.com, rppt@kernel.org, willy@infradead.org, Liam.Howlett@oracle.com, 
+	jannh@google.com, zhangpeng362@huawei.com, bgeffon@google.com, 
+	kaleshsingh@google.com, ngeoffray@google.com, jdduke@google.com, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com
+Subject: Re: [PATCH v6 2/5] userfaultfd: UFFDIO_MOVE uABI
+Message-ID: <cbppxyb7pe3yhmru226db5zt3v67sxsvfzjvg4jn62gzltutbl@vipuebrhjgpj>
+References: <20231206103702.3873743-1-surenb@google.com>
+ <20231206103702.3873743-3-surenb@google.com>
+ <8bcb7e5f-3c05-4d92-98f7-b62afa17e2fb@lucifer.local>
+ <rns3bplwlxhdkueowpehtrej6avjbmh6mauwl33pfvr4qptmlg@swctg52xpyya>
+ <CAJuCfpFjx2NB8X8zVSGyrcaOfwMApZRfGfuia3ERBKj0XaPgaw@mail.gmail.com>
+ <CAJuCfpHpdAn6yNVq1HXqO0qspj6DLb4qa_QufT+Z9RLTTa-N9Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250418070812.3771441-4-hejunhao3@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hwk5znj7d37gjxbi"
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpHpdAn6yNVq1HXqO0qspj6DLb4qa_QufT+Z9RLTTa-N9Q@mail.gmail.com>
 
-On 2025/4/18 15:08, Junhao He wrote:
-> The all hisilicon pmu json events were missing to be listed there.
-> 
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Reviewed-by: James Clark <james.clark@linaro.org>
 
-Acked-by: Yicong Yang <yangyicong@hisilicon.com>
+--hwk5znj7d37gjxbi
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, aarcange@redhat.com, 
+	linux-man@vger.kernel.org, akpm@linux-foundation.org, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, shuah@kernel.org, lokeshgidra@google.com, peterx@redhat.com, 
+	david@redhat.com, ryan.roberts@arm.com, hughd@google.com, mhocko@suse.com, 
+	axelrasmussen@google.com, rppt@kernel.org, willy@infradead.org, Liam.Howlett@oracle.com, 
+	jannh@google.com, zhangpeng362@huawei.com, bgeffon@google.com, 
+	kaleshsingh@google.com, ngeoffray@google.com, jdduke@google.com, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com
+Subject: Re: [PATCH v6 2/5] userfaultfd: UFFDIO_MOVE uABI
+References: <20231206103702.3873743-1-surenb@google.com>
+ <20231206103702.3873743-3-surenb@google.com>
+ <8bcb7e5f-3c05-4d92-98f7-b62afa17e2fb@lucifer.local>
+ <rns3bplwlxhdkueowpehtrej6avjbmh6mauwl33pfvr4qptmlg@swctg52xpyya>
+ <CAJuCfpFjx2NB8X8zVSGyrcaOfwMApZRfGfuia3ERBKj0XaPgaw@mail.gmail.com>
+ <CAJuCfpHpdAn6yNVq1HXqO0qspj6DLb4qa_QufT+Z9RLTTa-N9Q@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAJuCfpHpdAn6yNVq1HXqO0qspj6DLb4qa_QufT+Z9RLTTa-N9Q@mail.gmail.com>
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 00ff21b955bc..bf9588a94919 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10474,6 +10474,7 @@ W:	http://www.hisilicon.com
->  F:	Documentation/admin-guide/perf/hisi-pcie-pmu.rst
->  F:	Documentation/admin-guide/perf/hisi-pmu.rst
->  F:	drivers/perf/hisilicon
-> +F:	tools/perf/pmu-events/arch/arm64/hisilicon/
->  
->  HISILICON PTT DRIVER
->  M:	Yicong Yang <yangyicong@hisilicon.com>
-> 
+Hi Suren,
+
+On Mon, Apr 21, 2025 at 08:58:22PM -0700, Suren Baghdasaryan wrote:
+> > > Please re-send including linux-man@ in CC, as specified in
+> > > <https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/CON=
+TRIBUTING>
+> >
+> > Thanks for the reference. Will post the documentation update later toda=
+y.
+>=20
+> Was planning to post today but I'm a bit rusty with the syntax.
+> Will try to send it out tomorrow
+
+No problem.
+
+> after verifying the results.
+
+For verifying, you might want to try diffman-git(1).  It's provided in
+the man-pages repo.  If the version of the man-pages package provided by
+your distro is >=3D6.10, you may already have it in your system, and if
+not, you can find it as <src/bin/diffman-git> in the repo.
+It's documented in a manual page in the same repo, of course.
+
+I don't know if you know about the build system, which also checks a few
+common issues in the pages.  You can check <CONTRIBUTING.d/lint>.
+TL;DR:
+
+	$ make -R -j8 -k lint-man build-all check;
+
+(You can ignore anything that's not about the page you're modifying.  At
+ the moment, I see a few issues that I'll need to investigate in a few
+ pages.  For seeing a clean list of what's failing, you can ignore
+ stderr; see below.)
+
+	$ make -R -j24 -k lint-man build-all check 2>/dev/null
+	TROFF		.tmp/man/man2/statx.2.cat.set
+	TROFF		.tmp/man/man2const/KEYCTL_SETPERM.2const.html.set
+	TROFF		.tmp/man/man2const/KEYCTL_SETPERM.2const.pdf.set
+	TROFF		.tmp/man/man2const/KEYCTL_SETPERM.2const.ps.set
+	GREP		.tmp/man/man2/pipe.2.check-catman.touch
+	GREP		.tmp/man/man3/ctime.3.check-catman.touch
+	GREP		.tmp/man/man7/landlock.7.check-catman.touch
+	GREP		.tmp/man/man7/rtnetlink.7.check-catman.touch
+
+
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--hwk5znj7d37gjxbi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgHQxgACgkQ64mZXMKQ
+wqn5wQ//avin9I8qSE9aZyQnqceYjyYuR5Ao8l9niCBc84U36Ewo9nDvZTTPaRtj
+NMpX9Ze0BDiIGzidz3L7v0LenSCngGCbERA9ysyOAfEe6MpUO4EQHRhAd8/XIMvK
+k4uPZG0kWKAZ8Nvs6AfKTWwG4cNi6yMhHVKmO7EOCj8J911ofDXrvXCfdTqzVx0k
+3sbJSWjXIJtB9KVAwVJPAii4jdqZNTMeLwNWswA7OoqR0yxcMVM2V+j20O9BPCaJ
+gNwIL3mDqb3cSJ5xmKsS1p77RiiDBsMxQiy1O0yYEqoVvq22usQpH93OkpECBN3h
+MqyYJRx2qYmF6daNjiwhPh1N1iRmK2sX8ghFOzfIHSMAuZL7v49VHEbHOSmKQWkp
+HVUGOiky5IOGbwkVqE2dD1Dy3VP0KHlIVoZYhiURnxFtut4tLVw1Fn92GwYkyR9K
+lsd4VTmBeshvWXbcOGF+DRj658I7mf99AtM6Jxg55yX6iEqE4kJaR079hjQcnPBq
+CJyi0O+cxNtu8+AftF3V45CFj5GrkdjYD9d8FPjmDTO/OuImaZoTf7+/E6NO/Uyo
+QSiTGwOachDATwJqAL5JkJIk9L05NZSahppo4HlzHzz5snKC4jbGPUxpZdVMkrCk
+OfrS5/dVhGfG8SOYslhK3qbEdQnMZOh24I/Ju8qDlwTjQwc9jVE=
+=3fxc
+-----END PGP SIGNATURE-----
+
+--hwk5znj7d37gjxbi--
