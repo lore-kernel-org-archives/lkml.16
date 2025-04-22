@@ -1,80 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B4B298CBA;
-	Tue, 22 Apr 2025 19:45:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28559190696;
+	Tue, 22 Apr 2025 19:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351107; cv=none; b=aWUOSY0gZpPZ4j83ycbbgekCeXqHrLkd3Mq0G4RtarlN4HIWaSaDK10k0rFUlIrxSnMeffWsDH4/n021lGbOY7oTXUVKp882u/lwLKavH6DAIvbnqX55I4l+3tpOd0tCI6Em94qsfuaqrsQRSdq0xvuVoobjuYDt1IihmmWCbho=
+	t=1745351139; cv=none; b=Zl+OOkOUyCzXdMN0q4ACWjwsEZspATKGF3vskAI5RFH0vS+PW5bFT6Wna4vsQovfR6hKWFHuYkpJ/5rurGFRobYeQaZeXffYqiJUVmqZ8tOUvSCqSmVFlgs6iHkfEHIKrVae2WCzM/w26ni9TuxM/pkdQk6KVu814t07H8QSRyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351107; c=relaxed/simple;
-	bh=SM6p/VeZczxklqTLgYwK5TNBFJzXTVCYUxX3c44n8dY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lo21iLWexY+zRZp1CiPvurzbw0X0xfgl8o7AzkqCxrNGgWGrs5f/bqdpzXLH5FSFgVSNIWDM4WJcUQbHcORrMj+f9rU6mxhKYr8XM021vDXaOsYZmHjqmtY3ajQWS3vhly9I6hfCYliYmZ3a2fj0s3DUw1oLJuE0ObZEUQEHcgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vd9uFVut; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745351139; c=relaxed/simple;
+	bh=CYM/V6cFxtbhItJzQgn9R/ajKEcZx1GHgJCUs1VS2Hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OPyl8QTen1DtTbDk6AUP6R5u4SirVT0UcFLJGjeEoSEiSCPvhIVC+brCx/5b12CaibcVJ1bFb8zYkiGUrrQwdQyophDdYj2RowVpRkuuNtElbKhvznTGzv5Fx33hvCDRGJwyI93VRS6z7ODeu9ztU/K9QOB6jvllGricLMyPPoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Of56gwkV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vd9uFVut"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47763C4CEE9;
-	Tue, 22 Apr 2025 19:45:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Of56gwkV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7951BC4CEEB;
+	Tue, 22 Apr 2025 19:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745351107;
-	bh=SM6p/VeZczxklqTLgYwK5TNBFJzXTVCYUxX3c44n8dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vd9uFVutD/DiNg1ZxIBzrJdFL1jU2G6puZbnWNQs6i3n+kf4rc7vjxbWQL0R1Xh0o
-	 JPrl6gnfZMUUMuCJ+LVDo47kM2iYR+B7MWiVlw8xE3k2+6jJlOnMuWlpfzng1j0fuc
-	 eAe80vnHzBUZ/9P+E1w7FDylcBKZ7LPAR6dUi4s5hvfw4GYmiln7dnDRhkWFTZuLNC
-	 OAUF4DLx/eqv0HGxif/3d/pgrzjjX7T3fipHd75VA+jrtzIbVoN5ZCL9JUglMrUv//
-	 znxygIRCg4iMtIS6pOSxN31eRvCq5hhNGISN9GHZk2Q+nZkcDEYGreaG3shaMFEoS7
-	 b+FuRzJGQ+M5g==
-Date: Tue, 22 Apr 2025 21:44:57 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
-	"acme@kernel.org" <acme@kernel.org>,
-	"jgross@suse.com" <jgross@suse.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"ajay.kaher@broadcom.com" <ajay.kaher@broadcom.com>,
-	"bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>,
-	"luto@kernel.org" <luto@kernel.org>,
-	"Ostrovsky, Boris" <boris.ostrovsky@oracle.com>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"Cui, Dexuan" <decui@microsoft.com>
-Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions
- support
-Message-ID: <aAfxuby_0eZZTrj-@gmail.com>
-References: <20250422082216.1954310-1-xin@zytor.com>
- <aAevpauKYWwObsB7@google.com>
- <cb4e24a0-fdb7-46d2-9b0e-200f5e3e4c96@zytor.com>
- <DS7PR11MB6077B4D80EB7020C4D3FCD52FCBB2@DS7PR11MB6077.namprd11.prod.outlook.com>
+	s=k20201202; t=1745351138;
+	bh=CYM/V6cFxtbhItJzQgn9R/ajKEcZx1GHgJCUs1VS2Hg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Of56gwkVVsiCgNc8CA3SHKfVW92MJceLnSR1igUuJSp18YRTuirAnZ5FM/riQ+cXi
+	 0XhsrFi4z/ejDApAxG8Q0iwksx57rFT8HxRlWeIe7XaMWaRnxILB2O65+LsZHN4j2P
+	 UZhgYM7p8ztC/OAy5RFXxXZXfjedv1U3qlk7mDegOfowtNaLPQGLNKDdPeCD5mcYcb
+	 EM5GCSs+sqEsfHM8SV6HKHtDzqTaU/Jz7sFNG+fOy0Gbh4y3DVPzHFYqe48TFuHb9T
+	 KT7idG6YtnLXyb1gFoi/g9PspJ+XbRJPDfHfD3r7U7fyWUL4j4IV43X+JWIW6VbaIs
+	 YjojV+S3maNbQ==
+Date: Tue, 22 Apr 2025 14:45:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	lukas@wunner.de, aravind.iddamsetty@linux.intel.com
+Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
+Message-ID: <20250422194537.GA380850@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,57 +43,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DS7PR11MB6077B4D80EB7020C4D3FCD52FCBB2@DS7PR11MB6077.namprd11.prod.outlook.com>
+In-Reply-To: <20250422135341.2780925-1-raag.jadav@intel.com>
 
-
-* Luck, Tony <tony.luck@intel.com> wrote:
-
-> > >> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > >
-> > > This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
-> > > apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
-> > > without being able to apply it is a wee bit difficult...
-> > >
-> >
-> > $ git show f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > commit f30a0c0d2b08b355c01392538de8fc872387cb2b
-> > Merge: 49b517e68cf7 e396dd85172c
-> > Author: Ingo Molnar <mingo@kernel.org>
-> > Date:   Tue Apr 22 08:37:32 2025 +0200
-> >
-> >      Merge branch into tip/master: 'x86/sev'
-> >
-> >       # New commits in x86/sev:
-> >          e396dd85172c ("x86/sev: Register tpm-svsm platform device")
-> >          93b7c6b3ce91 ("tpm: Add SNP SVSM vTPM driver")
-> >          b2849b072366 ("svsm: Add header with SVSM_VTPM_CMD helpers")
-> >          770de678bc28 ("x86/sev: Add SVSM vTPM probe/send_command
-> > functions")
-> >
-> >      Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> >
-> >
-> > You probably need to git pull from the tip tree :-)
+On Tue, Apr 22, 2025 at 07:23:41PM +0530, Raag Jadav wrote:
+> If an error is triggered before or during system suspend, any bus level
+> power state transition will result in unpredictable behaviour by the
+> device with failed recovery. Avoid suspending such a device and leave
+> it in its existing power state.
 > 
-> If possible, you should avoid basing a series on tip/master as it 
-> gets recreated frequently by merging all the topic branches. The SHA1 
-> is here today, gone tomorrow.
+> This only covers the devices that rely on PCI core PM for their power
+> state transition.
+> 
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> ---
+> 
+> v2: Synchronize AER handling with PCI PM (Rafael)
+> 
+> More discussion on [1].
+> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
 
-Correct, although for x86 patch submissions via email it's not wrong: 
-what applies today will likely apply tomorrow as well, regardless of 
-the SHA1 change. :-)
+Thanks for the pointer, but the commit log for this patch needs to be
+complete in itself.  "Unpredictable behavior" is kind of hand-wavy and
+doesn't really help understand the problem.
 
-> If your changes only depend on one TIP topic branch, base on that and 
-> mention in the cover letter (as well as the SHA1 supplied from git 
-> format-patches --base=xxx).
+>  drivers/pci/pci-driver.c |  3 ++-
+>  drivers/pci/pcie/aer.c   | 11 +++++++++++
+>  include/linux/aer.h      |  2 ++
+>  3 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index f57ea36d125d..289a1fa7cb2d 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>  		}
+>  	}
+>  
+> -	if (!pci_dev->state_saved) {
+> +	/* Avoid suspending the device with errors */
+> +	if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
 
-Yeah, the main dependency this series has is tip:x86/msr I believe:
+This looks potentially racy, since hardware can set bits in
+PCI_EXP_DEVSTA at any time.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/msr
+The comment restates the C code, but doesn't say *why*.  The "why" is
+important for ongoing maintenance.
 
-Which SHA1's should be stable at this point.
-
-Thanks,
-
-	Ingo
-
+>  		pci_save_state(pci_dev);
+>  
+>  		/*
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 508474e17183..b70f5011d4f5 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -233,6 +233,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
+>  
+> +bool pci_aer_in_progress(struct pci_dev *dev)
+> +{
+> +	u16 reg16;
+> +
+> +	if (!pcie_aer_is_native(dev))
+> +		return false;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
+> +	return !!(reg16 & PCI_EXP_AER_FLAGS);
+> +}
+> +
+>  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>  {
+>  	int rc;
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 947b63091902..68ae5378256e 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -48,12 +48,14 @@ struct aer_capability_regs {
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> +bool pci_aer_in_progress(struct pci_dev *dev);
+>  #else
+>  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  {
+>  	return -EINVAL;
+>  }
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
+>  #endif
+>  
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -- 
+> 2.34.1
+> 
