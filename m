@@ -1,97 +1,76 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653E715B115;
-	Tue, 22 Apr 2025 07:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3A238B;
+	Tue, 22 Apr 2025 07:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307230; cv=none; b=db4KtxO5XdmZpbm8zfxkzOJLvZ56k11Dop9XzG6OTY0mY2BIHwllYnUNpu1W/o5M2EZyezlRFExUBHo5EQxNcIMZWDAEkxrxcjYFQHJ2bnP0EdpYUKVUWkYKZ1h8dJryxodOPeXF4Tk9q4G8Wp715eB9RHWTK27J+1LyuILEotg=
+	t=1745307283; cv=none; b=TKaunXAdCSCah9lUtvLvfDW+HwqD6wpjtUmDr00SibsR8My0sBiOvqOQR5buI0v4YCRRWOFnpdj3lCzC2U0eEGh9e/QG7YXsnRnOe1LR6g8TNPE2lq2Ccllx5x2TgKjiJh4/TM0HJWX/r+erRmAkrl6gEDqoCJj8EEPQD9Fii2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307230; c=relaxed/simple;
-	bh=ViXx4eONjGlhBzfMVmJsvt2CzOO/9DfBnFvVJXYr5No=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aDPK51YjYqsGx9MlEJan8R9I3YsDH42O1hNYdbmi7ZLn3p9bZXUMegZkD5w6vUKeXqA2OqgVbafWDq0kFkLGBQacNBnFdxJyywZWfoRWjCGhXE+a4G7jPgmlEWN9aSrZKzCZCAYkwMmVxddZ9xPkJTxTD+7V/r1e0w+8yaiOTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Zlc3r/SD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745307283; c=relaxed/simple;
+	bh=EcrMJXlfEzXYZ/K+nb8RjfTzZzqNZBhBSfjgZylcs2U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RvTC2GFG9VJqMaS+BpKSF46QcdkdLlUcJ+ImUnyEUDfyL6+oZXkui1jwQu7uBL+fbWBMslekPDEKvjd/VEX4yHZ9miGrCqWSeHHOyy+i/dDmjRDws/3fI8BvvBET4g3fS7st2wX0ZneJd7HvdVQfZyHGm3TZa7sSUWI8zhIz3zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=h/8EwQLs; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Zlc3r/SD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745307222;
-	bh=I9TVUx6c4BGgBvFzBgkb4c3HADW5EmiA9gvacOc8TdU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Zlc3r/SDgyQhzJOHNU0BK2C14izZy992cY9AcNPTja9Aof/QcXakRIe4MKZMsCAAA
-	 Jlo3a0LsotHrtrI9v7lrxMvHDGj9FuUE2ppprB/TCsawDxvR+FXmAalNnwGMfzh4+I
-	 OHBwnDLdQou7xb9G4YAiwIxCoUp3EbGSU4LygpW2xai2m/KJDypcAh1VhTYoi2rru6
-	 VVW972meNLKPZZTZX1DuKlwm+ifc23osgLvUSooGdC9aZ/clJVO6bTvCmI1z1l0cM4
-	 rnF0+TiZbH2lFujjiJE8dRevxWVHCrIQeOBB/Qu71Em5CxYKXPpv5oZ4pX/n/soChc
-	 /vIvfpK4UMdoQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhYrQ59Lvz4wbX;
-	Tue, 22 Apr 2025 17:33:42 +1000 (AEST)
-Date: Tue, 22 Apr 2025 17:33:41 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kvm-fixes tree
-Message-ID: <20250422173341.0901ebaf@canb.auug.org.au>
-In-Reply-To: <20250422124310.2e9aee0d@canb.auug.org.au>
-References: <20250422124310.2e9aee0d@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="h/8EwQLs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=EcrMJXlfEzXYZ/K+nb8RjfTzZzqNZBhBSfjgZylcs2U=;
+	t=1745307281; x=1746516881; b=h/8EwQLsEcwpeu0enTufXByTnSW7FWrPBCWay97uLHZA39Y
+	UBHygEMidrBDU7CFrgFGBKV8ethRtPePbyBxd1BsZhjT0HzXnIlczJ0E4Sx60OewYR3CZiSfI4Rq2
+	YCnw2sYbXI38Z6SkW9vw8kdVjSk3inwnKeUxtrLk5Y07p5YDZ6vAUqBhA+FiPSfg39Zdiziiw+6Xl
+	JPvLGF6CfpFcJmQOOvGIDfGDaEyz8LOkh3ssxxl+Z9nYpBFKy84r8mLxpjLmWX683VCiiul2Y3AGB
+	IjKG5F/shykfg0HULe/0RJnwSLhEpQmPART4Pu0ldFaTVKlJX8ztObtfKYVuqkWA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u789I-0000000BZl4-0mcl;
+	Tue, 22 Apr 2025 09:34:32 +0200
+Message-ID: <c254c3df09fd2c3318f614e76187781be88c6030.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 RESEND] wifi: iwlwifi: mvm: Add error logging for
+ iwl_finish_nic_init()
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Wentao Liang <vulab@iscas.ac.cn>, miriam.rachel.korenblit@intel.com, 
+	kvalo@kernel.org
+Cc: emmanuel.grumbach@intel.com, golan.ben.ami@intel.com, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 22 Apr 2025 09:34:31 +0200
+In-Reply-To: <20250422023234.1992-1-vulab@iscas.ac.cn>
+References: <20250422023234.1992-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JFLYtN+IoJsJtENQJJGvQN5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-malware-bazaar: not-scanned
 
---Sig_/JFLYtN+IoJsJtENQJJGvQN5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Tue, 22 Apr 2025 12:43:10 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the kvm-fixes tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+On Tue, 2025-04-22 at 10:32 +0800, Wentao Liang wrote:
+> The function iwl_pci_resume() calls the function iwl_finish_nic_init(),
+> but does not check their return values.
 >=20
-> ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko] undef=
-ined!
+> Log a detailed error message with the error code to aid in diagnosing
+> root causes if encountering irreparable errors. While this does not fix
+> the underlying problem, it assist debugging by making the failure
+> visible in logs.
 >=20
-> Caused by commit
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+> v2: Fix improper code.
 >=20
->   73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled")
->=20
-> I have used the kvm-fixes tree from next-20250417 for today.
 
-I also had to use the kvm tree from next-20250417.
+Did you though? Especially before _resending_ (whilst a lot of the world
+has holidays/vacations too...) you could check patchwork maybe?
 
---=20
-Cheers,
-Stephen Rothwell
+Actually, just don't resend unless you see that it's no longer handled
+in patchwork?
 
---Sig_/JFLYtN+IoJsJtENQJJGvQN5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHRlUACgkQAVBC80lX
-0GxTVQgAkBd8sPKtfGpF2GLbqxHFFlRWP21deua/52Uc4A0FDjDzIQo/xNvloVAk
-ZtMQoY3o8DH8OYPSC8CWKMOfVnfI+yOcnhksyLmP31f0GJbRvzgd3507lmOySg2v
-Md/c62aK8Qr8h9WVDxnQ9Xy0i4L/eLvIElxIEaMb0CMZEnwRU3yCVxknCDeMC3I4
-bPCTTU4g56NiNSkZANFRoW6J7KW4vZ0tP14hQ3h38bDP9LA1OcTHF+iNoGT0ELkE
-p/GCiub2Ja2OEjZAhpKDKmwT2rBtJMRfwPPlOkAvfWWRbAsnhljTIaR4XaKPAdMf
-pGdrlzFgGPoVZF0HA3uNJ63swszjdQ==
-=iUXD
------END PGP SIGNATURE-----
-
---Sig_/JFLYtN+IoJsJtENQJJGvQN5--
+johannes
