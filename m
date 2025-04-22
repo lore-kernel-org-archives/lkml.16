@@ -1,121 +1,100 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B658196
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F2C63CB;
+	Tue, 22 Apr 2025 02:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745289081; cv=none; b=l8hfXamjsaoXZKsVlVv6ZCSVYgpSL5CtGx6py2g5QA+UI4tQwD/aa6PJ0RcTQQhMKavtTAs2DL/vZ2ya2PytBKo6y3Ynvy0Dk6PPqu3AwX3OD7f0p4dypG1uORNGnKF1B5+TIW0Gvu0imMMzO9vUJdK/aXL/1+YXlDQ91w/qky8=
+	t=1745289193; cv=none; b=cCSJGSgs3D6sfA/TtRgeM18HTqR7jHO9yyAGnchvSBKtZip+/Vx1BBQicpLVpd70KxSFuPPFNcIsNGAn8xSn8gjxRZ+Z00YjsWeYRV8UFMuOIJtUyOIFPy78+gNG6zP5tVHPPZtfhoiM2VfIAzKsk4wXjGf3m1e6dwCW4aaLc3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745289081; c=relaxed/simple;
-	bh=H+0htWuNIIx+zznLpZyBE4j0vF7Y35Xn+8WkoVnrfMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lYSbW8s96i0r3x06rlP8p9+wRP/vZVsfrcz22bKXeN+SvVmckOpzeO5ErwobDkMmWtJoww0Yjx7QGrdmyIrtETgcpctWVP4R8QQWEfQC9xkp78R308oBBOq9hqlwBHV7o/oSdaZBI8MiqWIgckgPJ3yudOnu3JBdyxikbAlsWXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Mon, 21 Apr 2025 22:31:13 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH] powerpc/addnote: Fix overflow on 32-bit builds
-Message-ID: <2025042122-mustard-wrasse-694572@boujee-and-buff>
-Mail-Followup-To: linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>
+	s=arc-20240116; t=1745289193; c=relaxed/simple;
+	bh=3CMcARXpGUUmojvbSQDkeLpdlzz+J7hS6Fy6CnPgn8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qys7T6cDn9CAfhOiEn+ElB24meqqLsMX0YUk3N24NXWCtksnKSqmxquHZVjmBM+NNsARlHlXYmdM9m6pmVHdH3pLpGl3f707dSJ0hYDx0ZV62sqOLRnniXCLrsPoZB/uSqZvBsMMKmt1iDVmD+eJwkZ15ffm0o782vYJWPYlrvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowADXfP3h_wZoi3kBCw--.13238S2;
+	Tue, 22 Apr 2025 10:33:07 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: miriam.rachel.korenblit@intel.com,
+	kvalo@kernel.org
+Cc: johannes.berg@intel.com,
+	emmanuel.grumbach@intel.com,
+	golan.ben.ami@intel.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2 RESEND] wifi: iwlwifi: mvm: Add error logging for iwl_finish_nic_init()
+Date: Tue, 22 Apr 2025 10:32:34 +0800
+Message-ID: <20250422023234.1992-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7zvi5okcyrtudtse"
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADXfP3h_wZoi3kBCw--.13238S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7try7ur18tF48tw4kGw15Jwb_yoW8WFy3pF
+	4UGFW2krZ5K397Ca48Ja1IyF98ta1Fk3yDKF92kws5urs7Jr98tF95XFy5ta40g3yrXa4S
+	gF1jka4xGr1DZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYAA2gG6ExnCQAAst
 
+The function iwl_pci_resume() calls the function iwl_finish_nic_init(),
+but does not check their return values.
 
---7zvi5okcyrtudtse
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [PATCH] powerpc/addnote: Fix overflow on 32-bit builds
-MIME-Version: 1.0
+Log a detailed error message with the error code to aid in diagnosing
+root causes if encountering irreparable errors. While this does not fix
+the underlying problem, it assist debugging by making the failure
+visible in logs.
 
-The PUT_64[LB]E() macros need to cast the value to unsigned long long
-like the GET_64[LB]E() macros. Caused lots of warnings when compiled
-on 32-bit, and clobbered addresses (36-bit P4080).
-
-Signed-off-by: Ben Collins <bcollins@kernel.org>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
- arch/powerpc/boot/addnote.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+v2: Fix improper code.
 
-diff --git a/arch/powerpc/boot/addnote.c b/arch/powerpc/boot/addnote.c
-index 53b3b2621457d..78704927453aa 100644
---- a/arch/powerpc/boot/addnote.c
-+++ b/arch/powerpc/boot/addnote.c
-@@ -68,8 +68,8 @@ static int e_class =3D ELFCLASS32;
- #define PUT_16BE(off, v)(buf[off] =3D ((v) >> 8) & 0xff, \
- 			 buf[(off) + 1] =3D (v) & 0xff)
- #define PUT_32BE(off, v)(PUT_16BE((off), (v) >> 16L), PUT_16BE((off) + 2, =
-(v)))
--#define PUT_64BE(off, v)((PUT_32BE((off), (v) >> 32L), \
--			  PUT_32BE((off) + 4, (v))))
-+#define PUT_64BE(off, v)((PUT_32BE((off), (unsigned long long)(v) >> 32L),=
- \
-+			  PUT_32BE((off) + 4, (unsigned long long)(v))))
-=20
- #define GET_16LE(off)	((buf[off]) + (buf[(off)+1] << 8))
- #define GET_32LE(off)	(GET_16LE(off) + (GET_16LE((off)+2U) << 16U))
-@@ -78,7 +78,8 @@ static int e_class =3D ELFCLASS32;
- #define PUT_16LE(off, v) (buf[off] =3D (v) & 0xff, \
- 			  buf[(off) + 1] =3D ((v) >> 8) & 0xff)
- #define PUT_32LE(off, v) (PUT_16LE((off), (v)), PUT_16LE((off) + 2, (v) >>=
- 16L))
--#define PUT_64LE(off, v) (PUT_32LE((off), (v)), PUT_32LE((off) + 4, (v) >>=
- 32L))
-+#define PUT_64LE(off, v) (PUT_32LE((off), (unsigned long long)(v)), \
-+			  PUT_32LE((off) + 4, (unsigned long long)(v) >> 32L))
-=20
- #define GET_16(off)	(e_data =3D=3D ELFDATA2MSB ? GET_16BE(off) : GET_16LE(=
-off))
- #define GET_32(off)	(e_data =3D=3D ELFDATA2MSB ? GET_32BE(off) : GET_32LE(=
-off))
---=20
-2.49.0
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 8fb2aa282242..34a7a3e4f7c0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1616,6 +1616,7 @@ static int _iwl_pci_resume(struct device *device, bool restore)
+ 	struct iwl_trans *trans = pci_get_drvdata(pdev);
+ 	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
+ 	bool device_was_powered_off = false;
++	int err;
+ 
+ 	/* Before you put code here, think about WoWLAN. You cannot check here
+ 	 * whether WoWLAN is enabled or not, and your code will run even if
+@@ -1647,7 +1648,11 @@ static int _iwl_pci_resume(struct device *device, bool restore)
+ 		 * won't really know how to recover.
+ 		 */
+ 		iwl_pcie_prepare_card_hw(trans);
+-		iwl_finish_nic_init(trans);
++		err = iwl_finish_nic_init(trans);
++		if (err)
++			IWL_ERR(trans,
++				"NIC initialization failed after power-off (error %d).",
++				err);
+ 		iwl_op_mode_device_powered_off(trans->op_mode);
+ 	}
+ 
+-- 
+2.42.0.windows.2
 
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---7zvi5okcyrtudtse
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgG/3EACgkQXVpXxyQr
-Is/yBQ/+OH7WmDD0UgLyzSDN8gylSgSZxSBsTU1JQOVVCXY68ULJiqoJgAtpzboC
-wREgv6f8N6AzyklLxwlGDNfUSOespy9c76Z1/Hr0uoUwnUy1VA1ODKSQJIpgIDPZ
-40mj9Fa1nhMnFJ6bS+ljYzSn6MRzEs2HOv9vxsDUWoZW5mdLAzcVHVZ167e81l8M
-/31tWQOymIrS0Ink+HpXyYvsv6Pr40iRCCD5bWnsBHqrbF/dCJ/L7VAmPSJeB6F6
-FDAggldX4gvLDjApYkXV/CLX8zbCnXTQV6D68FSeMPuK6OnNsU2FVkTIsbb5g7lZ
-282OQYwc36fYizRxW/LXvMYCknE3BfXAzjwFS4DUzOXyauPgn+IXGZCkyOeCoLaA
-lqvKNZsPNQP98clLGkI9Bh0yoQbL8tLCd6/icdIoJuCCPX+58UeCcJcaEUMKzK8q
-SAkfB14xtiKgBG5xfinUBx4fKxrEefX2Cn+WJy1/gMvf4JpqBJeaMmccxh8QuWPP
-o0HdNi7uI+/+VbGkGbevcHsetrjIaf0cmxippf8l656OHAcAg2wfbts/M3ta+AgV
-UF5JlunaoEO3n9Ju56NlsQSllnch46F+oaUADF6rvhQtXkOPboECXEVOjVLBgBW2
-br+5nhZoYlGhc08lQ3zJ1+Jlyy53DUofCOO00BqRBtjdfACrljs=
-=Q31h
------END PGP SIGNATURE-----
-
---7zvi5okcyrtudtse--
