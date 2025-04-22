@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACEE5FB95;
-	Tue, 22 Apr 2025 10:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB21E1E06;
+	Tue, 22 Apr 2025 10:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319055; cv=none; b=IXldekTHh9B7eOJesM/n7qlDd63L9oseHkvCQd/C3aCGIQN961hy53D2H9UhqndOzId2rYj5+htWgevPOtsN/aQKdIgjoqykNMzu1wCyEdubwD2i7SfyQGCVm9ln3sXJ4lUARv7lYd6tV59cdvp4evamOyXrkoOZ2mWMMaaQ6KM=
+	t=1745319076; cv=none; b=fhiPV2/olFpm3ea46tsyOM7LSAthx6BsnSnZwUqj+e1zd681VX+UynUFolVc0KsqhS5s1vO+/ml9poIED7+z6QTRlHBJXK5ZH+CvuTFzR3w9yp9mkryeGeJFMkKaSh/WGWZgJ5N9tiFv7/HTPs0nMmzL7szlPMeV+Er9PSNA2w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745319055; c=relaxed/simple;
-	bh=MrCnwF7GdHkVudInO56SmjoTmH9xscxr0moc8/xmCsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJU0QSWr2WV+wdoOyGS8U4MNpjq6h1HEsHuQbx4jAkkmMLUtyoCRs/YsnCOtuh5hYHF/ALWOTHK/JGaBbIZNXxfuccgCzkHnqvmoNF+M1xv7+8PsZ96qIqd4NtnelpkU/bZhcdhtBpJOBn3ofNG8K6d0O4uI6yjIMusdWxAMPU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zjV3s0mQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745319076; c=relaxed/simple;
+	bh=nbBbF0Jg4cZ5Sn6fjGW6ZGEG+8/S6TbzRWXfA3yIJ2E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VhxkkMT3hkrd4N+Te8T/A2G3nRHOYH0GPYU2fZQLSYO+yfq2BHyrR5yQiyR7js5wUMJcxXWao0aukdIFU1NxBBUsDP7DlUOjAgQ0ifLsWPY6OgHlIMgRBAirwuSe1W6XpKzxGukYYKrfUW1bmthyOfaRIcbFcDNd3U0QMomPQEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=lWPThEFE; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zjV3s0mQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 883E8C4CEE9;
-	Tue, 22 Apr 2025 10:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745319055;
-	bh=MrCnwF7GdHkVudInO56SmjoTmH9xscxr0moc8/xmCsA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zjV3s0mQzAED2/N1v4BwcnaDaVYf7m9YLTrcC+oo27o1aTa76+Db7y1pihHuRAjRZ
-	 Fsa72hBqbtIH5G9TsKZkib6jncINU0cOVLSETRLjcJ2Eim/MkYUpigLT/L3130TG2h
-	 iKG9saWN93SIy2/VBCiWw7oo6GC1d9hQ3qmOEhWY=
-Date: Tue, 22 Apr 2025 12:50:52 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Ryo Takakura <ryotkkr98@gmail.com>, alex@ghiti.fr,
-	aou@eecs.berkeley.edu, bigeasy@linutronix.de,
-	conor.dooley@microchip.com, jirislaby@kernel.org,
-	john.ogness@linutronix.de, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, pmladek@suse.com,
-	samuel.holland@sifive.com, u.kleine-koenig@baylibre.com,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] serial: sifive: lock port in startup()/shutdown()
- callbacks
-Message-ID: <2025042202-compare-entrap-0089@gregkh>
-References: <20250405043833.397020-1-ryotkkr98@gmail.com>
- <20250405044338.397237-1-ryotkkr98@gmail.com>
- <2025040553-video-declared-7d54@gregkh>
- <397723b7-9f04-4cb1-b718-2396ea9d1b91@suse.cz>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="lWPThEFE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745319017;
+	bh=Exa51jfDHbvKVso57ILq4/BOFn87BMtt+Gf94W+Yzlk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lWPThEFE6S0tUoZCCbOc3LFdt/yEegN5FBYojMAlSN43cXeiIX9vuG3j6rN5MUZUI
+	 AM4TNMy39OWQk2nlPJ+PRmcrJMuEXJENaKfjphVbmtq9F6YVGzG7ORJGX2dVDpMiB2
+	 hrvBCr4xgLL3YGvuD7EUS7Y6jycN6lkbyJMZtki8=
+X-QQ-mid: zesmtpip4t1745318973t8805d772
+X-QQ-Originating-IP: 88cgF5eAqW2bJeVoCIsbNo9saB5M7Jx6BvND+lWGGVI=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 18:49:31 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2096148517215923259
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	samitolvanen@google.com,
+	petr.pavlu@suse.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH v3 0/2] kbuild: Support gendwarfksyms
+Date: Tue, 22 Apr 2025 18:49:27 +0800
+Message-ID: <79C925DCE2E963FF+20250422104927.144252-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <397723b7-9f04-4cb1-b718-2396ea9d1b91@suse.cz>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OJo/U4CJ+9g1zljg5EdhZRXMkwThYw6jHYTkXlFAAMkxtByQ+p1EnzxI
+	5Z9nzGYFLoEAVBhmCcAI8Lni1kdytgFEvwAmmbFV6d9PNCbFFjBDU91qUJ73mtmzrRsZ+fL
+	wyA4rRodFD0fsVMEe/nGj+xA6jnz/9h883gnUo9CrW4cP8b+ceLkqpymENb0++6KRgFfTQs
+	oPECSsJXUoEhX1ZAmERnJQF5wW2epMR12CqAiYaMP+oJvSlppBYQBksegSq7LOeILKaKch2
+	5pLBA1RZ6Ljg+iGq6esRYMuK998t/80OU0oqSHkf+NC9CD1NASmc/k5s4U75798Gz530jfK
+	uGO07AwS/SFcbsnkQl4eZ6/Uo3vtnbsHVD1sZJ7I02jlCSUGzeV+zLUUHvQzD1MacXGrL+/
+	W3jAvIYnFuZDuPxIa5J/GfS5Lwi5pRZZ8Y8/a819suLaSvhm075i7qL7HIe8+Iy5+Ib06uT
+	jvKfjlu/ImevlG5kmr7a4S8COVkyjQb7TDSec4mehrG3J3m133H6NTyJTmUKesIKauk+mTV
+	Iz+iBZkUadJ1znYyPT03a65lJm85mxM0QURdntR4/og97/6+1g+WksTX/Y1jovCHgTIR+1f
+	7lxBjNn5qlrL2LKFAipvQcVcNxk9CM5T1O0OE/QN4634NYvmer4pHhu9gI9b1Krk1Z42BJS
+	pLsTRaHHW0mHZMQyhPxiqe29OYgtuFRik3LdrRfDWb4lfedL5ZoTkfnOcFJxZ+DMBwurE7u
+	bkPzOTGdsJj2FacGHOdxdc6OhuMGFiFysfxMsrvaXodUYdJow5fSkogVgWuHFoDmnlZIKjf
+	aHWn3wQMf3hFdVS4BWJfJYJdTtXsp4IAbll/bBIi8Fs2Zpkk9g7Q0scWSZBAHIB+cfI5rmz
+	USu3zrYojQTS6A+9rKINXGQFvYJfp0Qr0uVB+RhlyvfXUALkxgkc0ogkWlEORITpEWw5oD8
+	haa4N2lDxhpYCtlNDJjvFbRwMT5O6QcF9J+wT6zKqGcNowuuotLd4JM27YIPspzQoBU/qkq
+	3ci4Ca3EEod+QrJ7Vhxp75x75C9dchk58oWTfA3fRblaCWQAXDmAT+H7tUloZ/wsFk8T9BN
+	KRUmTA//ZydXt+wYH2ULy4=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Apr 22, 2025 at 12:20:42PM +0200, Vlastimil Babka wrote:
-> On 4/5/25 09:35, Greg KH wrote:
-> > On Sat, Apr 05, 2025 at 01:43:38PM +0900, Ryo Takakura wrote:
-> >> startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
-> >> The register is also accessed from write() callback.
-> >> 
-> >> If console were printing and startup()/shutdown() callback
-> >> gets called, its access to the register could be overwritten.
-> >> 
-> >> Add port->lock to startup()/shutdown() callbacks to make sure
-> >> their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
-> >> write() callback.
-> >> 
-> >> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-> >> Cc: stable@vger.kernel.org
-> > 
-> > What commit id does this fix?
-> 
-> > Why does patch 1/2 need to go to stable, but patch 2/2 does not?  Please
-> > do not mix changes like this in the same series, otherwise we have to
-> > split them up manually when we apply them to the different branches,
-> > right?
-> 
-> I admit it's surprising to see such a request as AFAIK it's normally done to
-> mix stable fixes and new features in the same series (especially when the
-> patches depend on each other), and ordering the fixes first and marking only
-> them as stable should be sufficient. We do that all the time in -mm. I
-> thought that stable works with stable marked commits primarily, not series?
+Commit f28568841ae0 ("tools: Add gendwarfksyms") adds a
+gendwarfksyms tool but did not add build depends for kbuild.
 
-Yes, but when picking which "branch" to apply a series to, what would
-you do if you have some "fix some bugs, then add some new features" in a
-single patch series?  The one to go to -final or the one for the next
--rc1?
+Add the package who provides the dwarf.h header.
 
-I see a lot of bugfixes delayed until -rc1 because of this issue, and
-it's really not a good idea at all.
+NOTE:
+There is no need to alter scripts/package/PKGBUILD as the
+libelf package, which provides dwarf.h for Arch Linux, is
+already listed in makedepends.
 
-> Also since the patches are AFAIU dependent on each other, sending them
-> separately makes the mainline development process more difficult, as
-> evidenced by the later revisions having to add notes in the diffstat area
-> etc. This would go against the goal that stable process does not add extra
-> burden to the mainline process, no?
+WangYuli (2):
+  kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
+  kbuild: rpm-pkg: Add (elfutils-devel or libdw-devel) to BuildRequires
 
-If they are dependent on each other, that's the creator's issue, not the
-maintainer's issue, no?  :)
+ scripts/package/kernel.spec | 1 +
+ scripts/package/mkdebian    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Submit the bug fixes, get them merged, and then submit the new features.
+-- 
+2.49.0
 
-thanks,
-
-greg k-h
