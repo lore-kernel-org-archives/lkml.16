@@ -1,126 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2D7196;
-	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6374BEC5;
+	Tue, 22 Apr 2025 04:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296055; cv=none; b=muEo2PBg6HIk1QP+HjAww7V3lclnMCcTWTn4it3YT2IDMCW4y+3Vt9OUXn6j4MLpllAUFHqkTnmgbR7jX6MTOK7l6YWHjw8z4d1/49YlZ7eqeF+802JQ2fRaib/gO7qOFqgZeevtMPorPo14ay94b1uQUrlFusRHVvC7T+EgYuM=
+	t=1745296227; cv=none; b=SycdBLaNnHpeyS1CvDOS3dBFGDUBz5I+NvjtEhIgU/LwklTryL/ZBXKp49fm+7xDV/doMTFUTCeXOV8GV1IqduWu8Zqyp05qAmruGwD5KN7RaZzTD5Pj2hGPdVyCkVILZUNfESKOHX/8PKcqnH5o5etlOqryOfpP/nqvd2lrvsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296055; c=relaxed/simple;
-	bh=cVee4LUILXsvDSQHmDz/+cDq84rklpyfDtZScWy3/9A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DA+P9/StHPYawlR1DzJuhqaeNewgwDocKccuxZKG3kXjGE0rHO1BDGqT4QMIGW36icXigRK5+yv3EvQyDeWiDbD46mb6zTvX+2xz7YPePqA/khA2w5iqZTC2N3Iy0+TwQdMwQq2XQhB7z+ux/1nawpWP/pXnWovxTPH5b51UNdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCNYov93; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745296227; c=relaxed/simple;
+	bh=V4QB+xgTy8ClDZy7S3/vUXGI9Uxh9R5+J1mS5EEk/s8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QseDQvcfuBo3LZeMrGMg+W3Sd1BGhHeDerh8eHv/GJ7JPJlH0xLqmmyqnQLQOUhGj4Jr2rdj2LrdZyOkiof+DjYPT6vocpdLvHxCiGbF9pMB+h88ycyVfXMlDxCVdIE3r+Lqei/aBMTnpbrsc3VrNgSzodPMkX9vc0+JChS78hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RueXbjEm; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCNYov93"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3366BC4CEEA;
-	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745296055;
-	bh=cVee4LUILXsvDSQHmDz/+cDq84rklpyfDtZScWy3/9A=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=hCNYov93mbQwiwGq/v9EuebjO1gs3R4Argvzm2Eexn8mrLPpLJ9sTv0gxunegVUcn
-	 RfYVImigt2nEHU3EWZ5TQkJ7cZTp62r7qlvlPavnyiW0SinkJ4I7vajs+nfP30UFVT
-	 R5XYAXhjcKEweuWteBukTjmUf2wOQePXYgT4PBtInusq/7mTxnxgWIEnzq2YzDs/z3
-	 /b4oX1xE3RN3s0Nmytpk2bE3zawfKMY6iVtDXf3BKuLSbmoF8888M9/BJPoFxZvmXb
-	 EYSZxkBbHRSK81vAXmCx5I+vJcw/FuTPEe0NZG6svLSnrLzDO/39+shy8wBaAi3Sg+
-	 9rZ9l+G1HZADg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23125C369DC;
-	Tue, 22 Apr 2025 04:27:35 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 21 Apr 2025 23:27:34 -0500
-Subject: [PATCH 2/2] power: bq24190: Add BQ24193 support
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RueXbjEm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745296221;
+	bh=pOm/obCQ+A4qWgxrmcU73eoA6pKhDAmfoHxSQU9wufc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RueXbjEmXo1qtY/aHN+JRj9U6lc4TBRBt724HtE3r3lc0mKZKeplEqo1awdDdQmbi
+	 MUVckn9hV7QUmgYcPLvySl33jxKIYApPkJlYkcUg+SNmS5uinolK+jde4OeacgulkB
+	 VW+8ju1QP8HGTBZN6pC2QC3W+IPskBL0OQ2mRXdHR6a8NiMu5zfuOWI9mQvVZaDsp4
+	 jZBnR/ix2fDRyA3KSF9jnuDUohKgs6ToHHHJt0lKcOzn90nOihb7/+0cX4L2U8U5yM
+	 3rMCLbKNpzi9XhMJfSEkL9gD2+6imxLMPp38RHIKCyw1u1a8/yOWw+i9N6cr27yCf3
+	 D0cpP+3mbvVOA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhTmr4l5Nz4x1w;
+	Tue, 22 Apr 2025 14:30:20 +1000 (AEST)
+Date: Tue, 22 Apr 2025 14:30:19 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
+Cc: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>, Jason Gunthorpe
+ <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Li Zhijian
+ <lizhijian@fujitsu.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the rdma tree with Linus' tree
+Message-ID: <20250422143019.500201bd@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250421-bq24193-v1-2-f125ef396d24@gmail.com>
-References: <20250421-bq24193-v1-0-f125ef396d24@gmail.com>
-In-Reply-To: <20250421-bq24193-v1-0-f125ef396d24@gmail.com>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745296054; l=2741;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=KH4KqT7liHBctKmamnaT1uEJSQP5ipoPIY0y4ceij+8=;
- b=Srn+RTLP3md8VYiBjljZ37a3S1R0CduOg6wqznLn1iltRbI1KzYPK0p9LlysICu9NcpAxThg0
- EIUWqWUVeY2C9w2VxyUlgHILOtW2HxlJ50EBusLHtAZ/DkBKPS1O+2B
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+Content-Type: multipart/signed; boundary="Sig_/wcPNa1+QDp9RqpSUw=8EKgm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Aaron Kling <webgeek1234@gmail.com>
+--Sig_/wcPNa1+QDp9RqpSUw=8EKgm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The BQ24193 is most similar to the BQ24192. This is used in many Nvidia
-Tegra devices such as the SHIELD Portable. This variant works as-is with
-the existing BQ24192 code, but cannot be probed with a simple fallback
-compatible to ti,bq24192. So add it same as how BQ24196 is handled.
+Hi all,
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/power/supply/bq24190_charger.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Today's linux-next merge of the rdma tree got conflicts in:
 
-diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
-index f0d97ab45bd87f3baab20bb316eaebef77d99ae8..1867beadd7afff8273d6fc7770b470209e4845e2 100644
---- a/drivers/power/supply/bq24190_charger.c
-+++ b/drivers/power/supply/bq24190_charger.c
-@@ -207,6 +207,7 @@ enum bq24190_chip {
- 	BQ24190,
- 	BQ24192,
- 	BQ24192i,
-+	BQ24193,
- 	BQ24196,
- 	BQ24296,
- 	BQ24297,
-@@ -2014,6 +2015,17 @@ static const struct bq24190_chip_info bq24190_chip_info_tbl[] = {
- 		.ichg_array_size = ARRAY_SIZE(bq24190_ccc_ichg_values),
- #ifdef CONFIG_REGULATOR
- 		.vbus_desc = &bq24190_vbus_desc,
-+#endif
-+		.check_chip = bq24190_check_chip,
-+		.set_chg_config = bq24190_battery_set_chg_config,
-+		.ntc_fault_mask = BQ24190_REG_F_NTC_FAULT_MASK,
-+		.get_ntc_status = bq24190_charger_get_ntc_status,
-+		.set_otg_vbus = bq24190_set_otg_vbus,
-+	},
-+	[BQ24193] = {
-+		.ichg_array_size = ARRAY_SIZE(bq24190_ccc_ichg_values),
-+#ifdef CONFIG_REGULATOR
-+		.vbus_desc = &bq24190_vbus_desc,
- #endif
- 		.check_chip = bq24190_check_chip,
- 		.set_chg_config = bq24190_battery_set_chg_config,
-@@ -2308,6 +2320,7 @@ static const struct i2c_device_id bq24190_i2c_ids[] = {
- 	{ "bq24190", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24190] },
- 	{ "bq24192", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24192] },
- 	{ "bq24192i", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24192i] },
-+	{ "bq24193", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24193] },
- 	{ "bq24196", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24196] },
- 	{ "bq24296", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24296] },
- 	{ "bq24297", (kernel_ulong_t)&bq24190_chip_info_tbl[BQ24297] },
-@@ -2319,6 +2332,7 @@ static const struct of_device_id bq24190_of_match[] = {
- 	{ .compatible = "ti,bq24190", .data = &bq24190_chip_info_tbl[BQ24190] },
- 	{ .compatible = "ti,bq24192", .data = &bq24190_chip_info_tbl[BQ24192] },
- 	{ .compatible = "ti,bq24192i", .data = &bq24190_chip_info_tbl[BQ24192i] },
-+	{ .compatible = "ti,bq24193", .data = &bq24190_chip_info_tbl[BQ24193] },
- 	{ .compatible = "ti,bq24196", .data = &bq24190_chip_info_tbl[BQ24196] },
- 	{ .compatible = "ti,bq24296", .data = &bq24190_chip_info_tbl[BQ24296] },
- 	{ .compatible = "ti,bq24297", .data = &bq24190_chip_info_tbl[BQ24297] },
+  drivers/infiniband/sw/rxe/rxe_mr.c
+  drivers/infiniband/sw/rxe/rxe_resp.c
 
--- 
-2.48.1
+between commit:
 
+  1b2fe85f3cf1 ("RDMA/rxe: Fix null pointer dereference in ODP MR check")
 
+from Linus' tree and commits:
+
+  6703cb3dced0 ("RDMA/rxe: Enable ODP in RDMA FLUSH operation")
+  b84001ad0cee ("RDMA/rxe: Enable ODP in ATOMIC WRITE operation")
+
+from the rdma tree.
+
+I fixed it up (see below - and some changed code from the latter was
+removed in the former) and can carry the fix as necessary. This is now
+fixed as far as linux-next is concerned, but any non trivial conflicts
+should be mentioned to your upstream maintainer when your tree is
+submitted for merging.  You may also want to consider cooperating with
+the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/infiniband/sw/rxe/rxe_mr.c
+index 432d864c3ce9,1a74013a14ab..000000000000
+--- a/drivers/infiniband/sw/rxe/rxe_mr.c
++++ b/drivers/infiniband/sw/rxe/rxe_mr.c
+@@@ -468,6 -458,28 +458,28 @@@ static int rxe_mr_flush_pmem_iova(struc
+  	return 0;
+  }
+ =20
++ int rxe_flush_pmem_iova(struct rxe_mr *mr, u64 start, unsigned int length)
++ {
++ 	int err;
++=20
++ 	/* mr must be valid even if length is zero */
++ 	if (WARN_ON(!mr))
++ 		return -EINVAL;
++=20
++ 	if (length =3D=3D 0)
++ 		return 0;
++=20
++ 	if (mr->ibmr.type =3D=3D IB_MR_TYPE_DMA)
++ 		return -EFAULT;
++=20
+ -	if (mr->umem->is_odp)
+++	if (is_odp_mr(mr))
++ 		err =3D rxe_odp_flush_pmem_iova(mr, start, length);
++ 	else
++ 		err =3D rxe_mr_flush_pmem_iova(mr, start, length);
++=20
++ 	return err;
++ }
++=20
+  /* Guarantee atomicity of atomic operations at the machine level. */
+  DEFINE_SPINLOCK(atomic_ops_lock);
+ =20
+diff --cc drivers/infiniband/sw/rxe/rxe_resp.c
+index 5d9174e408db,fd7bac5bce18..000000000000
+--- a/drivers/infiniband/sw/rxe/rxe_resp.c
++++ b/drivers/infiniband/sw/rxe/rxe_resp.c
+@@@ -753,7 -749,16 +749,16 @@@ static enum resp_states atomic_write_re
+  	value =3D *(u64 *)payload_addr(pkt);
+  	iova =3D qp->resp.va + qp->resp.offset;
+ =20
+- 	err =3D rxe_mr_do_atomic_write(mr, iova, value);
++ 	/* See IBA oA19-28 */
++ 	if (unlikely(mr->state !=3D RXE_MR_STATE_VALID)) {
++ 		rxe_dbg_mr(mr, "mr not in valid state\n");
++ 		return RESPST_ERR_RKEY_VIOLATION;
++ 	}
++=20
+ -	if (mr->umem->is_odp)
+++	if (is_odp_mr(mr))
++ 		err =3D rxe_odp_do_atomic_write(mr, iova, value);
++ 	else
++ 		err =3D rxe_mr_do_atomic_write(mr, iova, value);
+  	if (err)
+  		return err;
+ =20
+
+--Sig_/wcPNa1+QDp9RqpSUw=8EKgm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHG1sACgkQAVBC80lX
+0GwJzwgAisvxjuDtFA4Xp+usEWHb43bzM2FYY2jA5IEswfWKks34WET8PELo1ax2
+HTtr2CZxREijFhthTFB6mwu+9y0uCWKEROqTB2Oa1pcp9DCf4FAb778dEgNdLhLb
+eL56kl8Oiup40ptqVNcsWCSF3gS1PRzDwmZ5yY1zhi+RgZdbXAlpk8dM69Gjbew2
+Cp3vDZOagcqBFx0QbQ/J+kTxtK4b0y7GraZ41sCv/3a9ias/sSVs/3ZNC6yQyvqK
+IFH1d1Ob5iMs5db89u1aeCjpKYcE6A33E0dNlXirKhKnyeWoBH5YvsOZ9PsoQWQW
+6Sd3g9EOZyIIH7gjcYCJWeVv6tGO/A==
+=uyE8
+-----END PGP SIGNATURE-----
+
+--Sig_/wcPNa1+QDp9RqpSUw=8EKgm--
