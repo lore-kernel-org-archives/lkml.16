@@ -1,111 +1,217 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B93335C7;
-	Tue, 22 Apr 2025 01:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C12A10957
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745284127; cv=none; b=H0Ge71X/RFLCgrC04P8tkp4rYpGMYQlHeX/Gq8yRec31wYw+4TeM9dYQmyVHGAYIlA2pHcED8xv2XNFOauXShfX6GbZxN3KIRYJR4WzRqyRF4whQSOeSJUhZtFxpIeSD8LCuUkkh80WSa+YVHzEWDVU4COMUv1OFirrg+UYl1N4=
+	t=1745284627; cv=none; b=JU9oHSpW3r4JQ9s9ITA0BKwZBsnvqCHqX8itiibQ3ZsGiOCMsqCuOGRkxbWh8X8+cpcoq+Odzx06HI+G0fA1GijmpugSWuYgKeGOsCiKVA0VOJRGfoXBIlmujZ5InhcSX2PXPG/VBEAKImJV7QNdnIbMaZdFFxYoGC57anF1fio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745284127; c=relaxed/simple;
-	bh=czEkA/zVOBS82zkx4p5INjnF9fJ8GCh884Sqbxam5dQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EDbHYQH5i9ZFBBSY7LPLw+leeOH7hHetE9lfYF98J37Bw6QiAAwtxDh5qYoz/AJzsHK32i3U1B92Y+XfQcAD8F8aj/cgtpJi5gcSsLAu2t+3ygxnBNnnTq1ZsOOFXOcHbDGbASUlAZnlvlikyOt6SQYpON+0VwQO+xsx/qZVD0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=d0DdIXeW; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1745284627; c=relaxed/simple;
+	bh=GfaMNTFMVfkspfV5xoMIfCbuTf2dYrYClHiO/wgBK0I=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dD+yUVl7fknml90YVZcdWQdq8MqDqerMNkgJI+IgrGoiWWiYgN3NQzo2g1HlCKWQakhK9fpVtwExxMogEaFb7jZDv29lceGKzRlQQFBgZVMOCd8KPUkethHOyr60WfMn9fGhTA1aeYzAwCs5ETYU8KBlNET7aRiukYJDanVc5bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lPwc9Lb5; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="d0DdIXeW"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 104F42618F;
-	Tue, 22 Apr 2025 01:08:43 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id D847F3E886;
-	Tue, 22 Apr 2025 01:08:34 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 6FC5B40009;
-	Tue, 22 Apr 2025 01:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1745284114; bh=czEkA/zVOBS82zkx4p5INjnF9fJ8GCh884Sqbxam5dQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d0DdIXeWM0oSk1Xq83ZlCb/7yRuqf67gi4IXHEpFXOZ8NMPMm/fEMSIr1FCfbW9kH
-	 /IMD+EdOqVzLorEXuJwL1o+1klNueqYwSBASbAWGvmnJ6BI+3WBVbY0sgoNzvmAcIU
-	 G8nFp9/EIYAxfDCgZ2SKKq5SzXVn03m47TDkYgz0=
-Received: from [198.18.0.1] (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id A7FFF407DA;
-	Tue, 22 Apr 2025 01:08:30 +0000 (UTC)
-Message-ID: <985175be-de04-4d1d-a859-fa740d87c9c3@aosc.io>
-Date: Tue, 22 Apr 2025 09:08:26 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPwc9Lb5"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3087a704c6bso3410777a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:17:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745284625; x=1745889425; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=j1MUyKQ9U/NG55RD5R2ZQj332SLYWQY3D73CQ+rdOK4=;
+        b=lPwc9Lb5p6CPNHeoZp4pLRJ6dKiUusAqb0CJ8ta09+fZCvViimkbyBQt7uXHz7GyFq
+         IEsWhEeY1MdbJaPfpYqAq+PUuP2hvoo1sPW2meaX8FuAsHLm1/Wqt+PvsmEtQxgUtCh7
+         ol7w+GUQdfQllqJwgkt+gqeDAfF3NSfg9V64axXEhOFtBKRXKZk+w3p2KwFRI4XoAiwe
+         1dHYZ2nKN99QRscfj16Pa7EWcZhBgtIehX8BEl+Aw4AvQSbHkNmsIGGH51WgialM3dLX
+         y6/cwExpKS66St2qt0T9PlRZ4T2qIgETrB4rzpfxU78EOOQWsoq7wq/s6h0eMON2YhaW
+         KHvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745284625; x=1745889425;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j1MUyKQ9U/NG55RD5R2ZQj332SLYWQY3D73CQ+rdOK4=;
+        b=nK6RZxuw0SKl8zdFtLSG89yL2jaHvRyjilQnECq77vADyJ/iZ42Lh+eJT82M5yfLpc
+         DQpcDE4n7r5581plzh/G6HvhudNgYDztiRl3PY0OguHO/po6Q22eiWHxjnZ9ZPWAynJN
+         BlcgoNWcRnJfMoU6t046OLYr8XEbd1RKSyhRbztaoZSqxv9jVx7aGlM2FAsdOs2IUte7
+         y+l8p7ab+MGQac4g+ALxEMk2M3Z1bftiqsWUtlzxF3tOQddbsA06Eresfu8Yyxlo7PIZ
+         kzzFfC7Cr1mZbxhIcCZ0Quy2HGNP97QDDoG+tXciVY0jLhsmcxKVFURkSqVy+ucZBPk9
+         vLGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXX+X+jvVLlXq2hNGGqMh5O4PNJ9lNsQikmZFSnrN8yvhUndsb84yeJ8ND/sePyyEwNb4FBnckWoW5VGEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOxhCytDkZ+9aa8Og9aP7KD5dQfu3am0R0MAzGyXO2jlLKBLiJ
+	FlRKsLzg5aE426pxcNw0S4BlZz3yqqHJGVVUHP+lsF8Zk5h0RxLd2GrAMrrOF2Xg8LvyUU776//
+	jYdTga6LxhQ==
+X-Google-Smtp-Source: AGHT+IHWBqFfEGYxXdqALuKh2tlP9SZ3mN9clBIIss7v0GCHLMwKyZJ9kxUd3+2F7t522UC+HRfXLj1RZ8Ulqg==
+X-Received: from pjbst13.prod.google.com ([2002:a17:90b:1fcd:b0:2fe:7f7a:74b2])
+ (user=joshwash job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5827:b0:2ee:f076:20f1 with SMTP id 98e67ed59e1d1-3087ba53cd7mr22984986a91.0.1745284624818;
+ Mon, 21 Apr 2025 18:17:04 -0700 (PDT)
+Date: Mon, 21 Apr 2025 18:16:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with
- subsystem ID 11ad:1723
-To: Ping-Ke Shih <pkshih@realtek.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
- Liangliang Zou <rawdiamondmc@outlook.com>,
- "John W. Linville" <linville@tuxdriver.com>,
- Larry Finger <Larry.Finger@lwfinger.net>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-References: <20250419081251.285987-1-jeffbai@aosc.io>
- <4a7284bd703743959e709b9465dabf1d@realtek.com>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <4a7284bd703743959e709b9465dabf1d@realtek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 6FC5B40009
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[aosc.io,outlook.com,tuxdriver.com,lwfinger.net,vger.kernel.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[]
-X-Rspamd-Action: no action
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250422011643.3509287-1-joshwash@google.com>
+Subject: [PATCH net-next] xdp: create locked/unlocked instances of xdp
+ redirect target setters
+From: Joshua Washington <joshwash@google.com>
+To: netdev@vger.kernel.org
+Cc: Joshua Washington <joshwash@google.com>, bpf@vger.kernel.org, 
+	Mina Almasry <almasrymina@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Simon Horman <horms@kernel.org>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Shailend Chand <shailend@google.com>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Joe Damato <jdamato@fastly.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ping-Ke,
+Commit 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with
+netdev->lock") introduces the netdev lock to xdp_set_features_flag().
+The change includes a _locked version of the method, as it is possible
+for a driver to have already acquired the netdev lock before calling
+this helper. However, the same applies to
+xdp_features_(set|clear)_redirect_flags(), which ends up calling the
+unlocked version of xdp_set_features_flags() leading to deadlocks in
+GVE, which grabs the netdev lock as part of its suspend, reset, and
+shutdown processes:
 
-在 2025/4/22 08:27, Ping-Ke Shih 写道:
-> Mingcong Bai <jeffbai@aosc.io> wrote:
-> 
+[  833.265543] WARNING: possible recursive locking detected
+[  833.270949] 6.15.0-rc1 #6 Tainted: G            E
+[  833.276271] --------------------------------------------
+[  833.281681] systemd-shutdow/1 is trying to acquire lock:
+[  833.287090] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: xdp_set_features_flag+0x29/0x90
+[  833.295470]
+[  833.295470] but task is already holding lock:
+[  833.301400] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
+[  833.309508]
+[  833.309508] other info that might help us debug this:
+[  833.316130]  Possible unsafe locking scenario:
+[  833.316130]
+[  833.322142]        CPU0
+[  833.324681]        ----
+[  833.327220]   lock(&dev->lock);
+[  833.330455]   lock(&dev->lock);
+[  833.333689]
+[  833.333689]  *** DEADLOCK ***
+[  833.333689]
+[  833.339701]  May be due to missing lock nesting notation
+[  833.339701]
+[  833.346582] 5 locks held by systemd-shutdow/1:
+[  833.351205]  #0: ffffffffa9c89130 (system_transition_mutex){+.+.}-{4:4}, at: __se_sys_reboot+0xe6/0x210
+[  833.360695]  #1: ffff93b399e5c1b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xb4/0x1f0
+[  833.369144]  #2: ffff949d19a471b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xc2/0x1f0
+[  833.377603]  #3: ffffffffa9eca050 (rtnl_mutex){+.+.}-{4:4}, at: gve_shutdown+0x33/0x90 [gve]
+[  833.386138]  #4: ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
 
-<snip>
+Introduce xdp_features_(set|clear)_redirect_target_locked() versions
+which assume that the netdev lock has already been acquired before
+setting the XDP feature flag and update GVE to use the locked version.
 
->>
->> Please note, however, before the rtl8723be finishes probing, the AER
->> errors remained. After the module finishes probing, all AER errors would
->> indeed be eliminated, along with heavy lags, poor network throughput,
->> and/or occasional lock-ups.
-> 
-> Let me clarify here means. Do you mean all work well after applying this
-> patch? Or still lag, poor throughput or lock-ups?
-> 
-> If all symptoms disappear, it would be worth to take this (quirk) patch.
+Cc: bpf@vger.kernel.org
+Fixes: 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with netdev->lock")
+Tested-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+Signed-off-by: Joshua Washington <joshwash@google.com>
+---
+ drivers/net/ethernet/google/gve/gve_main.c |  4 ++--
+ include/net/xdp.h                          |  3 +++
+ net/core/xdp.c                             | 25 ++++++++++++++++++----
+ 3 files changed, 26 insertions(+), 6 deletions(-)
 
-Indeed, everything works well after this patch, save for the remaining 
-AER errors during driver probing.
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 8aaac9101377..446e4b6fd3f1 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -1830,7 +1830,7 @@ static void gve_turndown(struct gve_priv *priv)
+ 	/* Stop tx queues */
+ 	netif_tx_disable(priv->dev);
+ 
+-	xdp_features_clear_redirect_target(priv->dev);
++	xdp_features_clear_redirect_target_locked(priv->dev);
+ 
+ 	gve_clear_napi_enabled(priv);
+ 	gve_clear_report_stats(priv);
+@@ -1902,7 +1902,7 @@ static void gve_turnup(struct gve_priv *priv)
+ 	}
+ 
+ 	if (priv->tx_cfg.num_xdp_queues && gve_supports_xdp_xmit(priv))
+-		xdp_features_set_redirect_target(priv->dev, false);
++		xdp_features_set_redirect_target_locked(priv->dev, false);
+ 
+ 	gve_set_napi_enabled(priv);
+ }
+diff --git a/include/net/xdp.h b/include/net/xdp.h
+index 20e41b5ff319..b40f1f96cb11 100644
+--- a/include/net/xdp.h
++++ b/include/net/xdp.h
+@@ -618,7 +618,10 @@ bool bpf_dev_bound_kfunc_id(u32 btf_id);
+ void xdp_set_features_flag(struct net_device *dev, xdp_features_t val);
+ void xdp_set_features_flag_locked(struct net_device *dev, xdp_features_t val);
+ void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg);
++void xdp_features_set_redirect_target_locked(struct net_device *dev,
++					     bool support_sg);
+ void xdp_features_clear_redirect_target(struct net_device *dev);
++void xdp_features_clear_redirect_target_locked(struct net_device *dev);
+ #else
+ static inline u32 bpf_xdp_metadata_kfunc_id(int id) { return 0; }
+ static inline bool bpf_dev_bound_kfunc_id(u32 btf_id) { return false; }
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index a014df88620c..ea819764ae39 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -1014,21 +1014,38 @@ void xdp_set_features_flag(struct net_device *dev, xdp_features_t val)
+ }
+ EXPORT_SYMBOL_GPL(xdp_set_features_flag);
+ 
+-void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg)
++void xdp_features_set_redirect_target_locked(struct net_device *dev,
++					     bool support_sg)
+ {
+ 	xdp_features_t val = (dev->xdp_features | NETDEV_XDP_ACT_NDO_XMIT);
+ 
+ 	if (support_sg)
+ 		val |= NETDEV_XDP_ACT_NDO_XMIT_SG;
+-	xdp_set_features_flag(dev, val);
++	xdp_set_features_flag_locked(dev, val);
++}
++EXPORT_SYMBOL_GPL(xdp_features_set_redirect_target_locked);
++
++void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg)
++{
++	netdev_lock(dev);
++	xdp_features_set_redirect_target_locked(dev, support_sg);
++	netdev_unlock(dev);
+ }
+ EXPORT_SYMBOL_GPL(xdp_features_set_redirect_target);
+ 
+-void xdp_features_clear_redirect_target(struct net_device *dev)
++void xdp_features_clear_redirect_target_locked(struct net_device *dev)
+ {
+ 	xdp_features_t val = dev->xdp_features;
+ 
+ 	val &= ~(NETDEV_XDP_ACT_NDO_XMIT | NETDEV_XDP_ACT_NDO_XMIT_SG);
+-	xdp_set_features_flag(dev, val);
++	xdp_set_features_flag_locked(dev, val);
++}
++EXPORT_SYMBOL_GPL(xdp_features_clear_redirect_target_locked);
++
++void xdp_features_clear_redirect_target(struct net_device *dev)
++{
++	netdev_lock(dev);
++	xdp_features_clear_redirect_target_locked(dev);
++	netdev_unlock(dev);
+ }
+ EXPORT_SYMBOL_GPL(xdp_features_clear_redirect_target);
+-- 
+2.49.0.805.g082f7c87e0-goog
 
-Best Regards,
-Mingcong Bai
