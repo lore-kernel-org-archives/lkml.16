@@ -1,61 +1,63 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E6E1A071C;
-	Tue, 22 Apr 2025 02:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60611362;
+	Tue, 22 Apr 2025 02:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288382; cv=none; b=e2CMF1jlIrVPkTEkksb/SOA0fR556CzJFCpmBinZ2VoYdVgsaHon2vxVEC/uoTgdkeh2FCk8vdS3V+4/DOlp8oWEHgqDzI3l7vunU2sbQUjbN0ehhyxxrWxkb8T9gVz97vAg4AyS5hv7y9FYx8jG4keSnRPc5cdLPe3LsdYFbPs=
+	t=1745288687; cv=none; b=iCaf99RzhT2ZoCQoOJA2p/REbDbVOzrVG8Gw3gdlp5GJStjgm5oFzySch2Ye70lWOxJzf1s31iB47nNBS9Ky15MLhWxez4O8a1NTrqWxud+cT9G/gNadNyDf5AzyEn2ZfpwKfyV1edC9Bi+A0CTPqizM/K+S97QHmqeNveAiaO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288382; c=relaxed/simple;
-	bh=kGFnUpUTsJMisKdKVeE9j+sNCS0a1HmuE29YmJa3HAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H+KxuuVYUGgFQAG0xv2f8gosEDBjQek0yJqxcb03rB15rArcSQ2HII37sGPC443VIGadik3dadCtcdFq8cVGAaAYXLhcm4kbKVti/U8LhaZyNTRrYO77Pv1Cx4f22azJWNU3A8J0A/csvpPpHH8drXtjE5puZqW8Md2JEoWjRhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=RKukL9Iz; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745288687; c=relaxed/simple;
+	bh=Ry1XJAK3k4mJafgMvVJWTOurYenX/jtTAnejZmCF7hg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JPVTLt5CrKKc1zAfw/otoMF7y0lZPY3Vn8ADwVHvBYKLlqWxDa9M6YV86z1kpMCy+MAbm5vaspaZLHTQE2ZWE/asUyTHp1IR9ya8nRJ8006Q7zR2O5F/Ahc/Wm405FRoD6PenOidb2MTfwWVoUtKxDEy2/pe24infwY7KwjqiIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppVKlXtl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="RKukL9Iz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=RRd/Mv2IK7FoRUzYMao2nZ0bIVcFKFyPzLBcuxvr7as=;
-	b=RKukL9IzXolSfcWHT/VQNZX015mSZ/RCEj3z9FuKbM9pvStmSTiHp2VHmSMMDW
-	NBL1zvflI5/YchYfQ0JmCG1P997+lf8Ys5YzjccWS0Bkg/7XtLw0CiZaC/k/Ladi
-	szDdIskegADB/l71A4fbymWtrtXR/asSeh5R78DG4CjEQ=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgDnptJK9QZoN72iAw--.10140S3;
-	Tue, 22 Apr 2025 09:47:56 +0800 (CST)
-Date: Tue, 22 Apr 2025 09:47:54 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, l.stach@pengutronix.de, lpieralisi@kernel.org,
-	kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-	s.hauer@pengutronix.de, festevam@gmail.com,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, kernel@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] arm64: dts: imx8mq: Add linux,pci-domain into
- pcie-ep node
-Message-ID: <aAb1SlxBsADlglrh@dragon>
-References: <20250226024256.1678103-1-hongxing.zhu@nxp.com>
- <20250226024256.1678103-2-hongxing.zhu@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppVKlXtl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3CCC4CEE4;
+	Tue, 22 Apr 2025 02:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745288686;
+	bh=Ry1XJAK3k4mJafgMvVJWTOurYenX/jtTAnejZmCF7hg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ppVKlXtlPjT+i+MY+UayfVGJQQwI66wxqKWhYUoqGR0aGckHxENcgaAAr5uG4Ktdg
+	 leshnDQGNY5coONJ6/rPjSbhG1Ul34GNEWLIFr9yGDuoVcoAKvjVMQL1JzLavKjHjA
+	 EFUEioDRt8AN4j7p9GdAWQFsENpeCG2awm1lIBknsRUtKdmL8TOJKJJ5jUakqIq5kY
+	 c8adwaTtHtLUhxrh+krHIzEaMoy022WKn5TEvSD5e469skmh8cOrjTHS1mbGwZ+SC+
+	 TPkiolfbbt5z9TFRJQXt3cldDz7JL2PrWwEjjpPbeUTX9x/nljJ4JIeF97XMhbbZen
+	 dLLaxaTj6tASw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB33B39D60B4;
+	Tue, 22 Apr 2025 02:25:25 +0000 (UTC)
+Subject: Re: [GIT PULL] cgroup: Fixes for v6.15-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <aAadRYdydJYibDwB@slm.duckdns.org>
+References: <aAadRYdydJYibDwB@slm.duckdns.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aAadRYdydJYibDwB@slm.duckdns.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.15-rc3-fixes
+X-PR-Tracked-Commit-Id: 1bf67c8fdbda21fadd564a12dbe2b13c1ea5eda7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a22509a4ee99e23c6bd8980b70dd78aade6baabd
+Message-Id: <174528872451.1361490.1714454429094600612.pr-tracker-bot@kernel.org>
+Date: Tue, 22 Apr 2025 02:25:24 +0000
+To: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226024256.1678103-2-hongxing.zhu@nxp.com>
-X-CM-TRANSID:M88vCgDnptJK9QZoN72iAw--.10140S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUVf-BDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRI3ZWgGsHT8JwABs5
 
-On Wed, Feb 26, 2025 at 10:42:55AM +0800, Richard Zhu wrote:
-> Add linux,pci-domain into pcie-ep node of i.MX8MQ.
-> 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+The pull request you sent on Mon, 21 Apr 2025 09:32:21 -1000:
 
-Applied, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.15-rc3-fixes
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a22509a4ee99e23c6bd8980b70dd78aade6baabd
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
