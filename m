@@ -1,49 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B84D13C3F6;
-	Tue, 22 Apr 2025 17:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6B41F099A;
+	Tue, 22 Apr 2025 17:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745341743; cv=none; b=JjU7y19Y/7IYNJLm0MhZl8wws/E8PcEf94mtg2Gm4jWjMoXDmssiScp+HKBjmQd984MJUgTOkI0BbRW5OKNs1+AlENVCCZ6DqjIMcfRiCLYQAQ13X5mLedWtgHnjFgGI1pHWPhnihaqwhJecjvwf6ujD/y0IjcoUM36yYUakqTk=
+	t=1745341962; cv=none; b=qNXVrYlLgMNUFqWGrZh1QAAifpQCEMiDck8+l/AFT2wtRsoVhxcan9cEcPDKxpmGICa9i+LDqufFHvsBEtXvIdMYhIlygnSmdjRVm1G9YgdvNMoxCqcH+NQ5YNsrmggaukuUmBteKrcxffioqfhhf8Pr5cWUlBnZ1gkMZ158lkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745341743; c=relaxed/simple;
-	bh=cfux6OpSEf4zIM34Xufn2UQbviRHWmsNHDSxigTjgfs=;
+	s=arc-20240116; t=1745341962; c=relaxed/simple;
+	bh=Xkc61/hu/mfyjY3t8KHb69WVra3i/jl1C3l0fK1t+Jc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKVCvy8DI5X1njR2iPYZwwtGwVx7ivZKRZpoK7uVguIqH0a12ijsqlDfP3dq1B1jGUpCpKZBWxul4JrFue0cXBXCOCBrz5WP6m2/6J1gU8z9Erv9VI7ZP7BC6+fPfd7IJhXq9vz3cqIKcTRxWTmdzD4/5fiGM4vz8gqH698mox4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AVGR+ToU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ae63M4hFkRRV1L+G20tidBHLXW/6WNeFiB32tG0f2vX0Zy0qZp3i6+sOPU6mx/J71b5IC01J0cWU5F6VOuedefcHRAw4jR1YJSW5XSV38lruGEpXUOk5/hzGf7omGRBy0S/2jZdjxAVbYOlolgXCf3CrStFz7YABhLlrum46fOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=O63QewTx; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AVGR+ToU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFF8C4CEE9;
-	Tue, 22 Apr 2025 17:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745341743;
-	bh=cfux6OpSEf4zIM34Xufn2UQbviRHWmsNHDSxigTjgfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AVGR+ToUEbLnB+Rua6EgtpsO3NkyuLn+KBKN8XJ9qpc9dxCRC7IwgCup001kf/Cmj
-	 wGX4AP1ayXq7enDHtfQ99453NJbjrW0egSCxfojqMoAXHgsjrbHjNSo9hLuHjz/c/2
-	 QOHb2IaZIs4SNebhYLjOexxFuqJrL1J9b5qWbbr6mgJ/bI0cH7P6VtpulaU+EVBDVW
-	 KOQHmfVBDcMhFhEfnd+YBooUDlrO189B8dsB+OJBzco7lNodlMT1koh4Bl1lt3LZ1H
-	 7dHgwaKUzim0ey6xP/DGFlZ2MhkG6v7yriZEHrpfHsLp+mRWMXRtV4LiNckFKOC6Xp
-	 iFymvNOcuvJUA==
-Date: Tue, 22 Apr 2025 18:08:58 +0100
-From: Simon Horman <horms@kernel.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next v3] net: ethernet: mtk_eth_soc: convert cap_bit
- in mtk_eth_muxc struct to u64
-Message-ID: <20250422170858.GL2843373@horms.kernel.org>
-References: <d6d3f9421baa85cdb7ff56cd06a9fc97ba0a77f9.1744907886.git.daniel@makrotopia.org>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="O63QewTx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=1aU0iiunrDPRYHbB9QsvReXnK1Fu3QC3DAfxgJKVpac=; b=O63QewTxjK8DVStwfL5aFzIL8E
+	uh3ayNse2Ic2OH+JV+W1A8WqoBAs3C7aYQ3onCpaOVO//zAOIlShRFs9mmEKc6t9fw2jPzGF0ZD+3
+	lyziMZGsuZFsbqkjM7s42pEaZOTXwYvNWZllwIdfsu3EHxgDLWeLXf5ViNhg/KF72MAetQZEz4fK6
+	QjfxSurIf6X9+6p+C1hxxagHo96DdUq6M+ZaRhVMU9py6HnVeEZ/OzYeI5qGEh59SWk7vYGUwqRgr
+	Pf86ZI4XJz3q0DQcKxG0mPsnjJ3RNDq2V81Ryrr26sYiMwtEjvIX5m85U2X3abuGE52Escnorng8o
+	y9mqylLw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7HAj-00000006mni-1kcb;
+	Tue, 22 Apr 2025 17:12:37 +0000
+Date: Tue, 22 Apr 2025 18:12:37 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Marco Elver <elver@google.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>,
+	jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu /
+ umount_tree
+Message-ID: <20250422171237.GA2023217@ZenIV>
+References: <6807876f.050a0220.8500a.000f.GAE@google.com>
+ <20250422-flogen-firmieren-105a92fbd796@brauner>
+ <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,61 +50,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d6d3f9421baa85cdb7ff56cd06a9fc97ba0a77f9.1744907886.git.daniel@makrotopia.org>
+In-Reply-To: <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Apr 17, 2025 at 05:42:16PM +0100, Daniel Golle wrote:
-> From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-> 
-> The capabilities bitfield was converted to a 64-bit value, but a cap_bit
-> in struct mtk_eth_muxc which is used to store a full bitfield (rather
-> than the bit number, as the name would suggest) still holds only a
-> 32-bit value.
-> 
-> Change the type of cap_bit to u64 in order to avoid truncating the
-> bitfield which results in path selection to not work with capabilities
-> above the 32-bit limit.
-> 
-> The values currently stored in the cap_bit field are
-> MTK_ETH_MUX_GDM1_TO_GMAC1_ESW:
->  BIT_ULL(18) | BIT_ULL(5)
-> 
-> MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY:
->  BIT_ULL(19) | BIT_ULL(5) | BIT_ULL(6)
-> 
-> MTK_ETH_MUX_U3_GMAC2_TO_QPHY:
->  BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(6)
-> 
-> MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII:
->  BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(7)
-> 
-> MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII:
->  BIT_ULL(21) | BIT_ULL(5)
-> 
-> While all those values are currently still within 32-bit boundaries,
-> the addition of new capabilities of MT7988 as well as future SoC's
-> like MT7987 will exceed them. Also, the use of a 32-bit 'int' type to
-> store the result of a BIT_ULL(...) is misleading.
-> 
-> Fixes: 51a4df60db5c2 ("net: ethernet: mtk_eth_soc: convert caps in mtk_soc_data struct to u64")
+On Tue, Apr 22, 2025 at 04:42:52PM +0200, Marco Elver wrote:
 
-As this is not a fix and not for net it should not have a Fixes tag.
+> Seqlocks are generally supported, but have caused headaches in the
+> past, esp. if the reader-side seqlock critical section does not follow
+> the typical do-seqbegin-while-retry pattern, or the critical section
+> is too large. If I read this right, the
+> 
+>   struct dentry *mountpoint = m->mnt_mountpoint;
+> 
+> is before the seqlock-reader beginning with "*seqp =
+> read_seqcount_begin(&mountpoint->d_seq);" ?
 
-If you wish to reference the commit you can do so using:
-
-commit ("net: ethernet: mtk_eth_soc: convert caps in mtk_soc_data struct to
-u64")
-
-E.g.:
-
-Introduced in commit ("net: ethernet: mtk_eth_soc: convert caps in
-mtk_soc_data struct to u64").
-
-Note this should be line wrapped. And should be in the "body" of the commit
-message. That is, if it comes at the end of the commit message then there
-should be at least one blank line between it and the Signed-off-by and
-other tags
-
-> Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
-> v3: improve commit message, target net-next instead of net tree
+Different seqlock - mount_lock protects mount tree and it's been sampled
+all way back in the beginning of RCU pathwalk...
