@@ -1,101 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C21128F921;
-	Tue, 22 Apr 2025 15:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9F428FFFC;
+	Tue, 22 Apr 2025 15:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335126; cv=none; b=gj6bVapaKqSzQdrXIlXMBcQO5Zwzk592ug+4FMQ2LKml2zU2/Ojo7ZsDNRK0WlMEjovk4GHKOWj+7vuMhA71N6frhBFRSPixecxZCxk79pRGW0vqK9SDv4VLly4Ql9o1rF26TWsMk0zDkCRXwlMcBNPYINoHJzKpdryg8yJq06k=
+	t=1745335128; cv=none; b=K14quZ/j2Wmyj9uphPahoBCTIOlF76g0Jp5lhiz0I12dXq/E7mJS1U7yaYNclT52odPxapc0hURgd5XY4EkoubxW8dTrJioPUcGx/UDdSUNnqJ8iVHOE7idFUZsjVq94EezChpVY/u558vXWrjkp51aXeKN4+NZfbESmqz3qgcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335126; c=relaxed/simple;
-	bh=fJHkOg9IwEJ5mae5qaFbTDQi3x77eIhoKz/zlvFifbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dwfGciAEWEu1coqfodEU8Z7/j1EIxBlBDtnzQ1srlHmgDt8XkuzGQcvgGKTamTuUjSylfY4vUAeiVEwfDWjFiAI4nizWiKHaGp02khWnbnPwLpkMpzwZfHZIsViKREWvp9vuzZoyQfkpuPIR32H/exGtY79VuRVW2djWj3hGfMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjAMYbs2; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745335128; c=relaxed/simple;
+	bh=+uhI1MTtLQzUsupFZmaVIdMRmJvOYO+hWinoKLHSAeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QKL2NTOsbMJxWq9KtP5YvLqU0XulOOR8UIy6mF+viuBW7dTR/jkdAwXxB0U5dv4Sl1BySROdgHPVfBCmafBcwEtodzYN5qGzONnyPOYXVJF5pkJD7hY/Af2NTFwOrZONrplDdadLb1SMjOqnYLyiDM4yeozD1cb9PtKK3Kk6BWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDJaqasw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjAMYbs2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745335125; x=1776871125;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fJHkOg9IwEJ5mae5qaFbTDQi3x77eIhoKz/zlvFifbk=;
-  b=hjAMYbs2EqH4Url77S/0sMLhb/lTbxxD9zn32p0z+1ymj+b5hofixtcj
-   xMvgpKmQRkTbY4wi4rYZuQujNfbdaz//Vgq1QobV3pu70nmznV8grXK/5
-   425H3a7HhG9HLmYq7CkzrRC/eAhVyln5j9WTFeVbfOZ57pm89cyS+ok4P
-   sw03saAwTLsPKx6D4DRL65Em7vhwQ7/O330u5PI9vRY4bBTYw6oBCBDVD
-   KXn5pZC75XetlFozxrazp/C3q2EbglpfvVPNrrNOzROf2fV9Lf8u0HL48
-   Zg4XKToaOGvknpB2PfldBRV34IdZWn82B1hGstbIXGXghbrxnKeuiKzam
-   A==;
-X-CSE-ConnectionGUID: 1FvPJUwrT8+lEN0SwRQ03g==
-X-CSE-MsgGUID: b2kfG5AQTw2fWxhNRU2j6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="34517617"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="34517617"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:18:44 -0700
-X-CSE-ConnectionGUID: WDqx3UnMQ0e2Jo4n8Gv+sQ==
-X-CSE-MsgGUID: HgCRN1wvRPy9SPZ1blJ4yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="137028123"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 08:18:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u7FOQ-0000000ElMe-2Om9;
-	Tue, 22 Apr 2025 18:18:38 +0300
-Date: Tue, 22 Apr 2025 18:18:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-hardening@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
- board_prom_init()
-Message-ID: <aAezTikHO5W1VHr8@smile.fi.intel.com>
-References: <20250422074257.544016-2-thorsten.blum@linux.dev>
- <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
- <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
- <aAdsvNKuPd-qPuE4@smile.fi.intel.com>
- <9FB72AC0-3FD6-4D9E-AE26-3EDC39A3025E@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDJaqasw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6987BC4CEE9;
+	Tue, 22 Apr 2025 15:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745335128;
+	bh=+uhI1MTtLQzUsupFZmaVIdMRmJvOYO+hWinoKLHSAeA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZDJaqaswFOATzSYmTY2+jeJM/TttKiNAJn6XqM0j3B7HFP3TwLdaCN9qEjI/IAA5X
+	 o6SYxbwNyvBdxf5dRJzCqt271rMfPNpscR+uvD0YR2mCsI4vSJNsJzNNZRtaXzxTuZ
+	 eosrxUii2do1MWy2bsgdCh4tnPQDeyqmmgBG5Br4OGp65HWbA7oL6OM+MxdR75o5V3
+	 54VqkKw5LEE+KOAODmC48nn+OkTDzN3QzCaSU8Ey9g6vlzkyl5xVoyp4p+lYAYc2qx
+	 cXkEa/UDdhhFKnXEszdJpPquMghOP94SQHwItQUqVjO+SrsdVLwZ49KegctBkOEh0c
+	 t/fFDdTiIva/w==
+Message-ID: <f95750db-a857-4ba3-9c2d-c48caa9ff16e@kernel.org>
+Date: Tue, 22 Apr 2025 10:18:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9FB72AC0-3FD6-4D9E-AE26-3EDC39A3025E@linux.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI/PM: Put devices to low power state on shutdown'
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ AceLan Kao <acelan.kao@canonical.com>, linux-pm@vger.kernel.org,
+ Kai-Heng Feng <kaihengf@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
+References: <20250219184646.GA226882@bhelgaas>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250219184646.GA226882@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 12:33:48PM +0200, Thorsten Blum wrote:
-> On 22. Apr 2025, at 12:17, Andy Shevchenko wrote:
-> > On Tue, Apr 22, 2025 at 10:27:33AM +0200, Thorsten Blum wrote:
-> >> On 22. Apr 2025, at 10:03, Andy Shevchenko wrote:
-> >>> Can you use --cc OR put this line...
-> >> 
-> >> Yes, will do next time.
-> >> 
-> >>> Have you compiled this with `make W=1` with recent GCCs?
-> >> 
-> >> Yes, I compile-tested it with W=1 and mips64-linux-gnu-gcc 14.2.1.
-> > 
-> > Cool, no warnings?
+On 2/19/2025 12:46 PM, Bjorn Helgaas wrote:
+> [+to Rafael, +cc linux-pm]
 > 
-> No warnings, at least none related to my change or compiling
-> board_bcm963xx.c
+> On Sun, Dec 08, 2024 at 03:41:47PM +0800, Kai-Heng Feng wrote:
+>> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
+>> connected.
+>>
+>> The following error message can be found during shutdown:
+>> pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
+>> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
+>> pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
+>> pcieport 0000:09:04.0:    [ 7] BadDLLP
+>>
+>> Calling aer_remove() during shutdown can quiesce the error message,
+>> however the spurious wakeup still happens.
+> 
+> aer_remove() disables AER interrupts, so I guess there must be a
+> non-AER interrupt being generated during shutdown?
+> 
+> If so, AER is a red herring and including the AER details above is a
+> distraction from whatever the real interrupt cause is.
+> 
+>> The issue won't happen if the device is in D3 before system shutdown, so
+>> putting device to low power state before shutdown to solve the issue.
+>>
+>> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
+>> compatible with the current Power Resource states. In other words, all
+>> devices are in the D3 state when the system state is S4."
+>>
+>> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
+>> state is similar to the S4 state except that OSPM does not save any
+>> context." so it's safe to assume devices should be at D3 for S5.
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
+>> Cc: AceLan Kao <acelan.kao@canonical.com>
+>> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+>> ---
+>>   drivers/pci/pci-driver.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>> index 35270172c833..248e0c9fd161 100644
+>> --- a/drivers/pci/pci-driver.c
+>> +++ b/drivers/pci/pci-driver.c
+>> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
+>>   	if (drv && drv->shutdown)
+>>   		drv->shutdown(pci_dev);
+>>   
+>> +	/*
+>> +	 * If driver already changed device's power state, it can mean the
+>> +	 * wakeup setting is in place, or a workaround is used. Hence keep it
+>> +	 * as is.
+>> +	 */
+>> +	if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
+>> +		pci_prepare_to_sleep(pci_dev);
+> 
+> 
+> I don't know enough to draw inferences about PCI_D0 meaning a wakeup
+> setting is in place or a workaround being used.  That doesn't seem
+> like enough to be useful for me to maintain this in the future.  But
+> my power management understanding is pretty meager.
+> 
+> Would like an ack from Rafael for this.
 
-Thanks for confirming!
+Rafael,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Can you take a look at this patch and provide your thoughts?
 
+Thanks!
+> 
+>>   	/*
+>>   	 * If this is a kexec reboot, turn off Bus Master bit on the
+>>   	 * device to tell it to not continue to do DMA. Don't touch
+>> -- 
+>> 2.47.0
+>>
+> 
 
