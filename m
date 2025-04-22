@@ -1,209 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D9027466;
-	Tue, 22 Apr 2025 13:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965D27CCE2;
+	Tue, 22 Apr 2025 13:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326943; cv=none; b=tQNK02M6LkwSeZRgUwYaFyDPVH62CXiqKZRPfBt+Aswwccw05Z1H7MfMsyAG6vsie1k0E/8FLIngFf5RFa3og/vQ9jbg3//1Q9hw6a1v7oldpko0l2KWl2MIk7mtm2YXDpMXienWE55/ENlu/LHB3qQdNXEm13HIlKsnnkigiAM=
+	t=1745326964; cv=none; b=bxPWri6H7L5xc+yprtGk+b9uo66x6+CAHkM78znfhMdUTowr0R41Z3a2oaD14PPKVCALuDvWNaYzrhRpUDG76sJXEE69TyZyL1PFA97yaB9PgJG8hYdi3OiAktbQuSay7HzenU3Pg66aLlXE2egCkp3m+tgAYQiwlY+j0eunTAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326943; c=relaxed/simple;
-	bh=XCj1nJ3OncyLNSZrpgZACHzBripTp/bT3l0dBJWMy5A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VFAPalwTYQd+mKNuidNdc/ccVeLWN/Yt78nEWn+Nmq237A9we0PZFE6trmJ4BKSNUFxYCn8CqoGSmh0GHx314TCSgdcx6W6DD9ahs4nXpVkLX0xt7nHpkMy/PM9V4sh5rptnRScqarjsXOf7c+DaaPQDb8Z9pvSJo9zg+EAS7QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IyJNqN6k; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IyJNqN6k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745326941; x=1776862941;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XCj1nJ3OncyLNSZrpgZACHzBripTp/bT3l0dBJWMy5A=;
-  b=IyJNqN6k1cXyuEiSIn2wk0gNTs/dSjsVhMLuLTa5cyYkC8dbsMebZm4v
-   FPbKo6U53sUHIW3ml4nlSWUrksPs9gOcj8ZNvPplnRflDefwH7W4SiBKL
-   1uoW4klmLKatNJFgjTuBYbF9I6/XQu7wg85Y4XJ+x8Egic9hlrYKR16Ki
-   MwU84+qqna5iKcHCGilqaImHtWmTYjCmSbXEH7bHuW1LxgW5oR582vRNi
-   LWGRSs5BzVipqwpQNBjiJR2TQ/K3dhNdXWRZN52lBUVf84gwuQZIkRAFH
-   ZqTdt6niVdmlpru5R9nNXjHCLVmHEXlAIZB6DhJUCR67fTjQP2UYRJO5v
-   w==;
-X-CSE-ConnectionGUID: LlQHuon/Q5GJdbzTj+QrFg==
-X-CSE-MsgGUID: nFeb5vtQT8ar0mqd6759ZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="47012381"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="47012381"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 06:02:20 -0700
-X-CSE-ConnectionGUID: odkkmjBNT1SISieZOSu+Xg==
-X-CSE-MsgGUID: uyldVBgeRpGvdyfHD8RS3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="132549094"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.148])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 06:02:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v2 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-Date: Tue, 22 Apr 2025 16:02:07 +0300
-Message-Id: <20250422130207.3124-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1745326964; c=relaxed/simple;
+	bh=v5G3qfsWjeK8GaLIWFfaG5GoaLyq3iNELLsIU4qdgBI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ef/yvG+0j0H2NDOdY/cUAJ8RGgOx5uq/ixRoBOC6b7a9ZYpIcVlGj7BmAdyXsuqFa8MKqymowBwI8F9phmN9CEiQyV73zF9/v5xyy6B7s58sNTLVu5TvPMqfWuTPuiKUs8s1f/zptq5wDSg84xEx6KsfA0ABgVkruUzdoSt2tUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
+Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2])
+	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 43EB828AFAB;
+	Tue, 22 Apr 2025 13:02:40 +0000 (UTC)
+Authentication-Results: Plesk;
+	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
+Received-SPF: pass (Plesk: connection is authenticated)
+From: Arnaud Lecomte <contact@arnaud-lcm.com>
+To: Andy Whitcroft <apw@canonical.com>,
+	Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	llvm@lists.linux.dev,
+	contact@arnaud-lcm.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH v3 2/2 resend] checkpatch.pl: --fix support for `//` comments
+ rust private items
+Date: Tue, 22 Apr 2025 15:02:33 +0200
+Message-ID: <20250422130233.30881-1-contact@arnaud-lcm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250422125633.30413-1-contact@arnaud-lcm.com>
+References: <20250422125633.30413-1-contact@arnaud-lcm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <174532696092.25082.15174238390085876202@Plesk>
+X-PPP-Vhost: arnaud-lcm.com
 
-When bifurcated to x2, Xeon 6 Root Port performance is sensitive to the
-configuration of Extended Tags, Max Read Request Size (MRRS), and 10-Bit
-Tag Requester (note: there is currently no 10-Bit Tag support in the
-kernel). While those can be configured to the recommended values by FW,
-kernel may decide to overwrite the initial values.
+Extend the Rust private item documentation checker (added in the previous
+patch) to support automatic fixes when the `--fix` option is enabled.
 
-Unfortunately, there is no mechanism for FW to indicate OS which parts
-of PCIe configuration should not be altered. Thus, the only option is
-to add such logic into the kernel as quirks.
-
-There is a pre-existing quirk flag to disable Extended Tags. Depending
-on CONFIG_PCIE_BUS_* setting, MRRS may be overwritten by what the
-kernel thinks is the best for performance (the largest supported
-value), resulting in performance degradation instead with these Root
-Ports. (There would have been a pre-existing quirk to disallow
-increasing MRRS but it is not identical to rejecting >128B MRRS.)
-
-Add a quirk that disallows enabling Extended Tags and setting MRRS
-larger than 128B for devices under Xeon 6 Root Ports if the Root Port is
-bifurcated to x2. Reject >128B MRRS only when it is going to be written
-by the kernel (this assumes FW configured a good initial value for MRRS
-in case the kernel is not touching MRRS at all).
-
-It was first attempted to always write MRRS when the quirk is needed
-(always overwrite the initial value). That turned out to be quite
-invasive change, however, given the complexity of the initial setup
-callchain and various stages returning early when they decide no changes
-are necessary, requiring override each. As such, the initial value for
-MRRS is now left into the hands of FW.
-
-Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250419222505.9009-1-contact@arnaud-lcm.com/
+Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
 ---
+ scripts/checkpatch.pl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-v2:
-- Explain in changelog why FW cannot solve this on its own
-- Moved the quirk under arch/x86/pci/
-- Don't NULL check value from pci_find_host_bridge()
-- Added comment above the quirk about the performance degradation
-- Removed all setup chain 128B quirk overrides expect for MRRS write
-  itself (assumes a sane initial value is set by FW)
-
- arch/x86/pci/fixup.c | 30 ++++++++++++++++++++++++++++++
- drivers/pci/pci.c    | 15 ++++++++-------
- include/linux/pci.h  |  1 +
- 3 files changed, 39 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index efefeb82ab61..aa9617bc4b55 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -294,6 +294,36 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PB1,	pcie_r
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC,	pcie_rootport_aspm_quirk);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_MCH_PC1,	pcie_rootport_aspm_quirk);
- 
-+/*
-+ * PCIe devices underneath Xeon6 PCIe Root Port bifurcated to 2x have slower
-+ * performance with Extended Tags and MRRS > 128B. Workaround the performance
-+ * problems by disabling Extended Tags and limiting MRRS to 128B.
-+ *
-+ * https://cdrdv2.intel.com/v1/dl/getContent/837176
-+ */
-+static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-+{
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-+	u32 linkcap;
-+
-+	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-+	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
-+		return;
-+
-+	bridge->no_ext_tags = 1;
-+	bridge->only_128b_mrrs = 1;
-+	pci_info(pdev, "Disabling Extended Tags and limiting MRRS to 128B (performance reasons due to 2x PCIe link)\n");
-+}
-+
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
-+
- /*
-  * Fixup to mark boot BIOS video selected by BIOS before it changes
-  *
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4d7c9f64ea24..2ca9cb30fbd3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5941,7 +5941,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
- int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
--	int ret;
-+	int ret, max_mrrs = 4096;
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-@@ -5961,13 +5961,14 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
- 
--	if (bridge->no_inc_mrrs) {
--		int max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->no_inc_mrrs)
-+		max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->only_128b_mrrs)
-+		max_mrrs = 128;
- 
--		if (rq > max_mrrs) {
--			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
--			return -EINVAL;
--		}
-+	if (rq > max_mrrs) {
-+		pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
-+		return -EINVAL;
- 	}
- 
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 0e8e3fd77e96..6dc7a05f4d4b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -603,6 +603,7 @@ struct pci_host_bridge {
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
- 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
-+	unsigned int	only_128b_mrrs:1;	/* Only 128B MRRS */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index eb564a119d68..ad3ae5fdd830 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3053,9 +3053,11 @@ sub process {
+ 					next if $comment =~ m@^\s*(?:TODO|FIXME|XXX|NOTE|HACK|SAFETY):?@i;
+ 					next if $comment =~ m@^\s*[[:punct:]]{2,}@;
+ 					my $line_issue = $i - 3;
+-					WARN("POSSIBLE_MISSING_RUST_DOC",
++					if (WARN("POSSIBLE_MISSING_RUST_DOC",
+ 						"Consider using `///` if the comment was intended as documentation (line $line_issue).\n" .
+-					"$here\n$comment_line");
++					"$here\n$comment_line") && $fix) {
++						$fixed[$i - 1] =~ s/^\+(\/\/)/+$1\//;
++					}
+ 				}
+ 			}
+ 		}
 -- 
-2.39.5
+2.43.0
 
