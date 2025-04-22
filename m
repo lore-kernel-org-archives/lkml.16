@@ -1,151 +1,573 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356BC290086;
-	Tue, 22 Apr 2025 17:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D190617A2ED;
+	Tue, 22 Apr 2025 17:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342262; cv=none; b=LpMcdAhwKAtKDrMpoZeoyFn73idjDYKfbh2T/J+M0lzD/mCjt81XJ6cO90hfBCxd5bj7zTBdiB9ltVLoFgx9/b50Y6At+/Nz42JQVtGHaUBJpVk9TzNSV+bQnN7LZKMtQydd7OUm6cTq6uP6YPyU89FTjdFKKZTpCfYrdz+JvaA=
+	t=1745342313; cv=none; b=qTnhQ9R836sHZoap4P84myUee4kPCpAJ8YByF4IoYDE1Alq5zM+f8vrKVJxQYDxrmy3jzarQd7sBh9m//6PGI7h81aQrCYHw2zjOCZl+vHRCNCwbBrSV9heKisRi4bYLX2vz8Nfje/M5lzuYPoHQCIfelorfNgayb+VltCZxf/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342262; c=relaxed/simple;
-	bh=8poqqm7vc2Ve000nDYf0GkZYrPmtHQzeCmimWoQulrs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FELh2V/8TJGZaKCaE3ZdvkGbiPrgUw91bgQ0Y/7x2MJQRRjtIHLtRnJ0TfpAoEpfozAIo0UukravCp5zFqoFUACJBgSla0PMsgiVd/G6wF/HNmZJ/s3TIYo5+3V4fKNmMFzYdRyuAzv1fjx5DSfE3MSgcMVjkoIesq0umP6h20s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VO1FPIiy; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745342313; c=relaxed/simple;
+	bh=TiHnklRHaI5Nn6C657v9VO8chrK1SPWryZVTduT7KXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Uj8MjsDVzdJLx1fyYkbgeelf524EvTtFnUyUjnygE/YFWHfscw+nafA4uxIX48vmWbG/DdsxMI5cOjoav2x34GxcFRAGse9ChkRbyOcdZzVC0eCkMsDyJ3K1wI23HkTihGPmG1A38hEOIDDQMtJCKFGogZSngafdeTIRqMq/B7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEkxkbYf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VO1FPIiy"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MHHUFF2042207
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 12:17:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745342250;
-	bh=QGUpihRZQBbTbpTIMhyUswxIu4pqCe+6Ya73/2AzMEI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=VO1FPIiyvT3vx2bdBFuGi1iL5A2vE6hMLlLBrYf/ri4LBw16yq11Sv+p9bWxZ3nCW
-	 x93awVF4NR5Kv7G/ICD+ta9jEWRyqX0sik4Dz48zeXH7Sy9S6b2oEcxIFaoeUeVSV0
-	 t5DYPvfRvqAFwEqUE6i43SfnchlQXFl9oB9Y+jV0=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MHHUlP024937
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 12:17:30 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Apr 2025 12:17:30 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Apr 2025 12:17:30 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MHHUH3077716;
-	Tue, 22 Apr 2025 12:17:30 -0500
-Message-ID: <9726c8c5-5702-4e03-94fc-eaa820f8cdf3@ti.com>
-Date: Tue, 22 Apr 2025 12:17:30 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEkxkbYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D4B5C4CEE9;
+	Tue, 22 Apr 2025 17:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745342312;
+	bh=TiHnklRHaI5Nn6C657v9VO8chrK1SPWryZVTduT7KXg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kEkxkbYf1dnxSGOITjgHt/l03NYAqVQR0mm4D0cWauvzRMjlqbt0brNj9ixW5SCz9
+	 7bfA3c71tKFLX/yiad9C71RrQrtXx6BFzgtoDOp3w/Xli4v5sjgdgMofK2K1xwzku8
+	 YXJ3qXa/O6Xwpw27yTTHb1Oq3tnq6j3eGYYKeEaV3siulEu+gFozqeh8gbsMNHsesZ
+	 Rt5dFlulyxl82WlVdyWHEoOmfZ2zll35dyS+A5k5CoX65hVIQzq88NG+q9mcwv8VeX
+	 m9TkIWHN+q5iwknuF1HO04ZDPZG402mNKK9sJqctPYcZIJd+0yewEittSuOQ3Br/Os
+	 Ghf73+qUTzOOA==
+Date: Tue, 22 Apr 2025 12:18:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.li@nxp.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
+Message-ID: <20250422171830.GA335614@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-am6*: Set eMMC clock parents to
- default
-To: "Kumar, Udit" <u-kumar1@ti.com>, Nishanth Menon <nm@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Moteen Shah
-	<m-shah@ti.com>
-References: <20250417233040.3658761-1-jm@ti.com>
- <20250417233040.3658761-2-jm@ti.com>
- <8f9aad2c-8e51-409e-be90-21230a53a4cf@ti.com>
- <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
- <20250422123748.ugkk2pzp54vzmyii@acorn>
- <12a748ff-2c33-44e7-b685-fa7d7d0138ca@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <12a748ff-2c33-44e7-b685-fa7d7d0138ca@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404221559.552201-1-robh@kernel.org>
 
-Hi Udit,
+[+cc Jean-Philippe for virtio dangling ref]
 
-On 4/22/25 9:08 AM, Kumar, Udit wrote:
+On Fri, Apr 04, 2025 at 05:15:57PM -0500, Rob Herring (Arm) wrote:
+> The content in these files has been moved to the schemas in dtschema.
+> pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
+> pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
+> msi-map property in pci-host-bridge.yaml.
+
+I guess "dtschema" refers to
+https://github.com/devicetree-org/dt-schema?
+
+I kinda wish there was some direct link from the Linux kernel source
+to dt-schema where all this information now lives (Requester ID
+format, iommu-map, msi-map, linux,pci-domain, reg (and reference to
+IEEE Std 1275-1994), interrupt mapping info, external-facing, etc).
+Being a DT neophyte, I need all the help I can get ;)
+
+There are a few dangling references to pci.txt:
+
+  Documentation/devicetree/bindings/pci/aardvark-pci.txt: - max-link-speed: see pci.txt
+  Documentation/devicetree/bindings/pci/aardvark-pci.txt: - reset-gpios: see pci.txt
+  Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:- bus-range: see pci.txt
+  Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:  1275-1994 (see pci.txt) with the following restriction:
+  Documentation/devicetree/bindings/virtio/pci-iommu.yaml:      zero. See Documentation/devicetree/bindings/pci/pci.txt
+
+> --- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> +++ /dev/null
+> @@ -1,171 +0,0 @@
+> -This document describes the generic device tree binding for describing the
+> -relationship between PCI(e) devices and IOMMU(s).
+> -
+> -Each PCI(e) device under a root complex is uniquely identified by its Requester
+> -ID (AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> -Function number.
+> -
+> -For the purpose of this document, when treated as a numeric value, a RID is
+> -formatted such that:
+> -
+> -* Bits [15:8] are the Bus number.
+> -* Bits [7:3] are the Device number.
+> -* Bits [2:0] are the Function number.
+> -* Any other bits required for padding must be zero.
+> -
+> -IOMMUs may distinguish PCI devices through sideband data derived from the
+> -Requester ID. While a given PCI device can only master through one IOMMU, a
+> -root complex may split masters across a set of IOMMUs (e.g. with one IOMMU per
+> -bus).
+> -
+> -The generic 'iommus' property is insufficient to describe this relationship,
+> -and a mechanism is required to map from a PCI device to its IOMMU and sideband
+> -data.
+> -
+> -For generic IOMMU bindings, see
+> -Documentation/devicetree/bindings/iommu/iommu.txt.
+> -
+> -
+> -PCI root complex
+> -================
+> -
+> -Optional properties
+> --------------------
+> -
+> -- iommu-map: Maps a Requester ID to an IOMMU and associated IOMMU specifier
+> -  data.
+> -
+> -  The property is an arbitrary number of tuples of
+> -  (rid-base,iommu,iommu-base,length).
+> -
+> -  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> -  the listed IOMMU, with the IOMMU specifier (r - rid-base + iommu-base).
+> -
+> -- iommu-map-mask: A mask to be applied to each Requester ID prior to being
+> -  mapped to an IOMMU specifier per the iommu-map property.
+> -
+> -
+> -Example (1)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	iommu: iommu@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the IOMMU is the RID,
+> -		 * identity-mapped.
+> -		 */
+> -		iommu-map = <0x0 &iommu 0x0 0x10000>;
+> -	};
+> -};
+> -
+> -
+> -Example (2)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	iommu: iommu@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the IOMMU is the RID with the
+> -		 * function bits masked out.
+> -		 */
+> -		iommu-map = <0x0 &iommu 0x0 0x10000>;
+> -		iommu-map-mask = <0xfff8>;
+> -	};
+> -};
+> -
+> -
+> -Example (3)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	iommu: iommu@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the IOMMU is the RID,
+> -		 * but the high bits of the bus number are flipped.
+> -		 */
+> -		iommu-map = <0x0000 &iommu 0x8000 0x8000>,
+> -			    <0x8000 &iommu 0x0000 0x8000>;
+> -	};
+> -};
+> -
+> -
+> -Example (4)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	iommu_a: iommu@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	iommu_b: iommu@b {
+> -		reg = <0xb 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	iommu_c: iommu@c {
+> -		reg = <0xc 0x1>;
+> -		compatible = "vendor,some-iommu";
+> -		#iommu-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * Devices with bus number 0-127 are mastered via IOMMU
+> -		 * a, with sideband data being RID[14:0].
+> -		 * Devices with bus number 128-255 are mastered via
+> -		 * IOMMU b, with sideband data being RID[14:0].
+> -		 * No devices master via IOMMU c.
+> -		 */
+> -		iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
+> -			    <0x8000 &iommu_b 0x0000 0x8000>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
+> deleted file mode 100644
+> index b73d839657b6..000000000000
+> --- a/Documentation/devicetree/bindings/pci/pci-msi.txt
+> +++ /dev/null
+> @@ -1,220 +0,0 @@
+> -This document describes the generic device tree binding for describing the
+> -relationship between PCI devices and MSI controllers.
+> -
+> -Each PCI device under a root complex is uniquely identified by its Requester ID
+> -(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
+> -Function number.
+> -
+> -For the purpose of this document, when treated as a numeric value, a RID is
+> -formatted such that:
+> -
+> -* Bits [15:8] are the Bus number.
+> -* Bits [7:3] are the Device number.
+> -* Bits [2:0] are the Function number.
+> -* Any other bits required for padding must be zero.
+> -
+> -MSIs may be distinguished in part through the use of sideband data accompanying
+> -writes. In the case of PCI devices, this sideband data may be derived from the
+> -Requester ID. A mechanism is required to associate a device with both the MSI
+> -controllers it can address, and the sideband data that will be associated with
+> -its writes to those controllers.
+> -
+> -For generic MSI bindings, see
+> -Documentation/devicetree/bindings/interrupt-controller/msi.txt.
+> -
+> -
+> -PCI root complex
+> -================
+> -
+> -Optional properties
+> --------------------
+> -
+> -- msi-map: Maps a Requester ID to an MSI controller and associated
+> -  msi-specifier data. The property is an arbitrary number of tuples of
+> -  (rid-base,msi-controller,msi-base,length), where:
+> -
+> -  * rid-base is a single cell describing the first RID matched by the entry.
+> -
+> -  * msi-controller is a single phandle to an MSI controller
+> -
+> -  * msi-base is an msi-specifier describing the msi-specifier produced for the
+> -    first RID matched by the entry.
+> -
+> -  * length is a single cell describing how many consecutive RIDs are matched
+> -    following the rid-base.
+> -
+> -  Any RID r in the interval [rid-base, rid-base + length) is associated with
+> -  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
+> -
+> -- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
+> -  to an msi-specifier per the msi-map property.
+> -
+> -- msi-parent: Describes the MSI parent of the root complex itself. Where
+> -  the root complex and MSI controller do not pass sideband data with MSI
+> -  writes, this property may be used to describe the MSI controller(s)
+> -  used by PCI devices under the root complex, if defined as such in the
+> -  binding for the root complex.
+> -
+> -
+> -Example (1)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	msi: msi-controller@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the MSI controller is
+> -		 * the RID, identity-mapped.
+> -		 */
+> -		msi-map = <0x0 &msi_a 0x0 0x10000>,
+> -	};
+> -};
+> -
+> -
+> -Example (2)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	msi: msi-controller@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the MSI controller is
+> -		 * the RID, masked to only the device and function bits.
+> -		 */
+> -		msi-map = <0x0 &msi_a 0x0 0x100>,
+> -		msi-map-mask = <0xff>
+> -	};
+> -};
+> -
+> -
+> -Example (3)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	msi: msi-controller@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the MSI controller is
+> -		 * the RID, but the high bit of the bus number is
+> -		 * ignored.
+> -		 */
+> -		msi-map = <0x0000 &msi 0x0000 0x8000>,
+> -			  <0x8000 &msi 0x0000 0x8000>;
+> -	};
+> -};
+> -
+> -
+> -Example (4)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	msi: msi-controller@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to the MSI controller is
+> -		 * the RID, but the high bit of the bus number is
+> -		 * negated.
+> -		 */
+> -		msi-map = <0x0000 &msi 0x8000 0x8000>,
+> -			  <0x8000 &msi 0x0000 0x8000>;
+> -	};
+> -};
+> -
+> -
+> -Example (5)
+> -===========
+> -
+> -/ {
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -
+> -	msi_a: msi-controller@a {
+> -		reg = <0xa 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	msi_b: msi-controller@b {
+> -		reg = <0xb 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	msi_c: msi-controller@c {
+> -		reg = <0xc 0x1>;
+> -		compatible = "vendor,some-controller";
+> -		msi-controller;
+> -		#msi-cells = <1>;
+> -	};
+> -
+> -	pci: pci@f {
+> -		reg = <0xf 0x1>;
+> -		compatible = "vendor,pcie-root-complex";
+> -		device_type = "pci";
+> -
+> -		/*
+> -		 * The sideband data provided to MSI controller a is the
+> -		 * RID, but the high bit of the bus number is negated.
+> -		 * The sideband data provided to MSI controller b is the
+> -		 * RID, identity-mapped.
+> -		 * MSI controller c is not addressable.
+> -		 */
+> -		msi-map = <0x0000 &msi_a 0x8000 0x08000>,
+> -			  <0x8000 &msi_a 0x0000 0x08000>,
+> -			  <0x0000 &msi_b 0x0000 0x10000>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> deleted file mode 100644
+> index 6a8f2874a24d..000000000000
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ /dev/null
+> @@ -1,84 +0,0 @@
+> -PCI bus bridges have standardized Device Tree bindings:
+> -
+> -PCI Bus Binding to: IEEE Std 1275-1994
+> -https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> -
+> -And for the interrupt mapping part:
+> -
+> -Open Firmware Recommended Practice: Interrupt Mapping
+> -https://www.devicetree.org/open-firmware/practice/imap/imap0_9d.pdf
+> -
+> -Additionally to the properties specified in the above standards a host bridge
+> -driver implementation may support the following properties:
+> -
+> -- linux,pci-domain:
+> -   If present this property assigns a fixed PCI domain number to a host bridge,
+> -   otherwise an unstable (across boots) unique number will be assigned.
+> -   It is required to either not set this property at all or set it for all
+> -   host bridges in the system, otherwise potentially conflicting domain numbers
+> -   may be assigned to root buses behind different host bridges.  The domain
+> -   number for each host bridge in the system must be unique.
+> -- max-link-speed:
+> -   If present this property specifies PCI gen for link capability.  Host
+> -   drivers could add this as a strategy to avoid unnecessary operation for
+> -   unsupported link speed, for instance, trying to do training for
+> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+> -   for gen2, and '1' for gen1. Any other values are invalid.
+> -- reset-gpios:
+> -   If present this property specifies PERST# GPIO. Host drivers can parse the
+> -   GPIO and apply fundamental reset to endpoints.
+> -- supports-clkreq:
+> -   If present this property specifies that CLKREQ signal routing exists from
+> -   root port to downstream device and host bridge drivers can do programming
+> -   which depends on CLKREQ signal existence. For example, programming root port
+> -   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
+> -
+> -PCI-PCI Bridge properties
+> --------------------------
+> -
+> -PCIe root ports and switch ports may be described explicitly in the device
+> -tree, as children of the host bridge node. Even though those devices are
+> -discoverable by probing, it might be necessary to describe properties that
+> -aren't provided by standard PCIe capabilities.
+> -
+> -Required properties:
+> -
+> -- reg:
+> -   Identifies the PCI-PCI bridge. As defined in the IEEE Std 1275-1994
+> -   document, it is a five-cell address encoded as (phys.hi phys.mid
+> -   phys.lo size.hi size.lo). phys.hi should contain the device's BDF as
+> -   0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
+> -
+> -   The bus number is defined by firmware, through the standard bridge
+> -   configuration mechanism. If this port is a switch port, then firmware
+> -   allocates the bus number and writes it into the Secondary Bus Number
+> -   register of the bridge directly above this port. Otherwise, the bus
+> -   number of a root port is the first number in the bus-range property,
+> -   defaulting to zero.
+> -
+> -   If firmware leaves the ARI Forwarding Enable bit set in the bridge
+> -   above this port, then phys.hi contains the 8-bit function number as
+> -   0b00000000 bbbbbbbb ffffffff 00000000. Note that the PCIe specification
+> -   recommends that firmware only leaves ARI enabled when it knows that the
+> -   OS is ARI-aware.
+> -
+> -Optional properties:
+> -
+> -- external-facing:
+> -   When present, the port is external-facing. All bridges and endpoints
+> -   downstream of this port are external to the machine. The OS can, for
+> -   example, use this information to identify devices that cannot be
+> -   trusted with relaxed DMA protection, as users could easily attach
+> -   malicious devices to this port.
+> -
+> -Example:
+> -
+> -pcie@10000000 {
+> -	compatible = "pci-host-ecam-generic";
+> -	...
+> -	pcie@0008 {
+> -		/* Root port 00:01.0 is external-facing */
+> -		reg = <0x00000800 0 0 0 0>;
+> -		external-facing;
+> -	};
+> -};
+> -- 
+> 2.47.2
 > 
-> On 4/22/2025 6:07 PM, Nishanth Menon wrote:
->> On 09:36-20250421, Judith Mendez wrote:
->>> Hi Udit,
->>>
->>> On 4/19/25 10:00 AM, Kumar, Udit wrote:
->>>> On 4/18/2025 5:00 AM, Judith Mendez wrote:
->>>>> Set eMMC clock parents to the defaults which is 
->>>>> MAIN_PLL0_HSDIV5_CLKOUT
->>>>> for eMMC. This change is necessary since DM is not implementing the
->>>>> correct procedure to switch PLL clock source for eMMC and we have a
->>>>> non-glich-free mux. To remove any potential issues, lets switch 
->>>>> back to
->>>>> the defaults.
->>>> IMO, we need to fix DM  if not then documentation [0] .
->>> DM cannot be fixed for only one IP and documentation says what clock
->>> parents are supported, it does not have to say what are the issues
->>> that come with using a specific clock parent.
->> As I understand the arasan IP requirement is that the IP must be held in
->> reset while the clock is switched, which is not reasonable to implement
->> given decoupled systems like DM and Linux OS.
-> 
-> 
-> Thanks , then fix should be extended to sdhci1 as well
-
-sdhci1 and sdhci2 should already be using the defaults: 
-https://gist.github.com/jmenti/e280232ae3d5bb5097df7b0f04c85e8a
-This change is only needed for eMMC.
-
-~ Judith
-
-> 
-> 
->>
->>>> Then only this patch is ok because as per document [0]
->>>>
->>>> removed clock by this patch is valid parent for eMMC.
->>> The clock parent currently set is a valid parent, but we have non-
->>> glitch-free muxes and to avoid any potential issues with these, we
->>> should switch back to the defaults. It seems like we randomly switched
->>> from the default for no good reason and it has been copy paste per
->>> platforms since then, so we are switching back to the defaults now.
->>>
->>> ~ Judith
->>>
->>>> [0] 
->>>> https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j722s/clocks.html
->>>>
->>>> Thanks
->>>>
->>>> Udit
->>>>
->>>>> Fixes: c37c58fdeb8a ("arm64: dts: ti: k3-am62: Add more peripheral
->>>>> nodes")
->>>>> Fixes: d3ae4e8d8b6a ("arm64: dts: ti: k3-am62a-main: Add sdhci0
->>>>> instance")
->>>>> Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more 
->>>>> IPs")
->> Please follow ./Documentation/process/stable-kernel-rules.rst - this is
->> easier to backport if these were to be split into 3 different patches.
->> Please do not forget to add Cc: stable@vger.kernel.org as per the rules
->> as well.
->>
->>>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>>> ---
->>>>>    arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
->>>>>    arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
->>>>>    arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
->>>>>    3 files changed, 6 deletions(-)
->>>>>
->>>>> [..]
-
