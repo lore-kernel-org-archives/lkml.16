@@ -1,132 +1,121 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E518278C91
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AF1A59;
+	Tue, 22 Apr 2025 05:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745300415; cv=none; b=TcZNreGYvll+TldbPJ2uE471x4KvVsT67GaKkTScK4jJJsxsGMTO68Z/Y/vGWIC11BsDLPLafaPx4oCk2SUx8tfBMIy6i+ybJBye1v0TVt96tBlKXF5ORyrNSjO12Mww3Y15Wdrhh9BjiqBdBwj6hvhbwIXbj3AWpBxe7vXeU9k=
+	t=1745300555; cv=none; b=dkm0bY/zPwyYuZrTBXjsK42+rEQrjEiP3ht12KYuKi9B69OzOeu0/teXcx4yDxQGN33RutDq2NSIKNdQYZIW3os7SD8kKHrsnicCZorksRmy2SwtBLcM83rMbDyIj97hxjj4EJXRkq1pCUTA1T52UlTiCeoVselLeh9pR63Z+x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745300415; c=relaxed/simple;
-	bh=0FF0MnoblAlH+QrhdarCtWTxtm4RN1C+Wo2vudhI1/E=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e3KXy2H3VYQFqGHvIO1QJn75laSimWpwm2lDUir8oxDsR6NF0MSI32/uQFX+fplXNkngzja72wpIrs/nw0v4tYDkV3AphqVutHF0riMywRBbCo5kcDnk24IUrWYjzBRqfCvTO7nce+LbQ1XzGk76LfHUHRJ0P7woSJyI5bZHh74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=Mo4T8ut3; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
+	s=arc-20240116; t=1745300555; c=relaxed/simple;
+	bh=I/eaYPiPD4/vR9fji1kZ2T1ODATHcon+1LC3SCxLVrQ=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=AvaeRfmvMagJr51/JeL/lERZUiReDESA21cB3sgNR1iWAFckmTLLVmssuER1w1g9/smU+wC8QeeUjP/SFIQIa9g2pHKz2nA0L/8887PpNksOlHQwQIxUuUcXd17pe3aB0NsVBzL0elmEA6LgBVEL500n0pguMI9t/s9gnagmtNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BoRHcvnu; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="Mo4T8ut3"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22928d629faso45106205ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 22:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=telus.net; s=google; t=1745300412; x=1745905212; darn=vger.kernel.org;
-        h=thread-index:content-language:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uo6jH9MRW4+23SObIwHcGhg568EV0nMnZUc44go4es=;
-        b=Mo4T8ut3S2huB7wz1YDIjdn/F9fEbE3sOKu2uPEKbHZX41LAHk0i3utkWf6gwLTfVu
-         0zmoAMAmbvDQDHtgEoLfWqOltdx0qZi4DKmD2DLxT/2G9IskL+jct6LbXp5SJQ8fFW9G
-         Pah0NnmrtZGEFfyi8sVPkAub/Gjg+gmdIYVcNVBbsLZCPbXV1VMQ3BX04HZ9UgV4t3qx
-         pO2CSTpxzxi9a1430/1m+vs8mDhsesbB8x8TIGkJy3C6MpoSYqEmrwY8m36Xgy0klF4m
-         9ySRh1np+JsPXeJhmz+clmK1SwgnRAN5yuF64Oir2IuhnK60gkYcI8E1CSIdIYCYaSzy
-         B7vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745300412; x=1745905212;
-        h=thread-index:content-language:content-transfer-encoding
-         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uo6jH9MRW4+23SObIwHcGhg568EV0nMnZUc44go4es=;
-        b=lpmLl7oHRYgc7cMFVMzcKfHWa52skg+KoE9fa9qoz1DTPwA5Tijd7SncYV6LAW1xLc
-         wFppMb9lzOdD0rqv6wf2o1PhrlQk86WqROJAcAuIrYISFLcS7vYfxQz84twxSnjxv67x
-         ZUCg6GsuoxkHjqV7NCGIDUrpjTJZ4x2QlTBNW805wGb/rOTAZMTnnhTNvp9lBC9IYiRF
-         SNs8MADDR7X1gfZee4P8nukVB/nVglMqCy7HrFchP2HLCu7jt3wyyhh7PNPAMGTwUKqm
-         9CHePo6sYyMDnwJsJ7ugHzMFVO7zHfvD0qgtFBw3062CzsXTIAomzULVCRXBZ5QOGdab
-         7stg==
-X-Gm-Message-State: AOJu0YzKYSLdxkGr8lzKIFxxNaktkylla9yV5J3odsPBFsS+AN61Z4SN
-	CIluAusp7uFZze/eRWCfHCfBgpFnEoIFuHrT3coOcNAlelgyES/BiyDEyPTBlpw=
-X-Gm-Gg: ASbGncsi189KLjNl1kQ0y8VBSQAkeNlxYf9gQOn/JV3bv4SLUUpQS+CETuGZaDOmJlw
-	ctXBpkv1VfrjWvso4An55jH3qGS5erzOwCrt7vR1ceR0EhfE57BShCIzstLmMEiZRP738qqhvHQ
-	0vzdxgmxC/PJYZqKPl3bRhim6DbSTfYM0TxIc0EXvNndBJR6wHmInX3CHQE5J6XR8X/0bctn9Vg
-	ODHiCld812aHvUKhFFjYct8Hm5lzVHARBXiLEtUbew68Z1IKTYHt7pYDsdTd8J+zyzK7JazfMkE
-	LyyYfHhTS04BzJlXNfV/7oJdRk5KUStgPsqLv2FJjqzlfsFu+pIPgDvtwQm6cnNIb5iioTaYIcQ
-	qXDJH3A==
-X-Google-Smtp-Source: AGHT+IHFX2iBVnmvm9k6HT7jUmhseocx+YIQDjG1S0GPD7eTxTZWeE62kX2r0hLx7uI6jupXCxyWgA==
-X-Received: by 2002:a17:902:ebc3:b0:220:e63c:5aff with SMTP id d9443c01a7336-22c5361b3e7mr198899305ad.47.1745300412145;
-        Mon, 21 Apr 2025 22:40:12 -0700 (PDT)
-Received: from DougS18 (s66-183-142-209.bc.hsia.telus.net. [66.183.142.209])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4bb1sm75763575ad.121.2025.04.21.22.40.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 21 Apr 2025 22:40:11 -0700 (PDT)
-From: "Doug Smythies" <dsmythies@telus.net>
-To: "'Alexander Egorenkov'" <egorenar@linux.ibm.com>,
-	<tip-bot2@linutronix.de>
-Cc: <linux-kernel@vger.kernel.org>,
-	<linux-tip-commits@vger.kernel.org>,
-	<mingo@kernel.org>,
-	<peterz@infradead.org>,
-	<x86@kernel.org>,
-	"Doug Smythies" <dsmythies@telus.net>
-References: <173642508376.399.1685643315759195867.tip-bot2@tip-bot2> <87zfgfi017.fsf@li-0ccc18cc-2c67-11b2-a85c-a193851e4c5d.ibm.com>
-In-Reply-To: <87zfgfi017.fsf@li-0ccc18cc-2c67-11b2-a85c-a193851e4c5d.ibm.com>
-Subject: ll"RE: [tip: sched/urgent] sched/fair: Fix EEVDF entity placement bug causing scheduling lag
-Date: Mon, 21 Apr 2025 22:40:10 -0700
-Message-ID: <002101dbb349$03e2c7a0$0ba856e0$@telus.net>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BoRHcvnu"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4OcVY019396;
+	Tue, 22 Apr 2025 05:42:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=VwTKnYwHVBUp8m+jvjJ/hJ
+	jElEfSxcZXInmyV6mUX70=; b=BoRHcvnuukEFH7cf+xjm81Hys1g4yCg+W96CYC
+	Mr5+WkPlCY5jFBILLQcv04lfWkQaFWBXq48vIOmZcgWeYrG6wGDGTV70Ba6dYfUk
+	mucUPMi7E1BAysQMFMPJIugQBR3tipUubRxY/O7xiuBvMmXXOzwtRmuVN1az7G6q
+	A3g5Z0cAwOAlvJdxyrYtOp2d1kfH/M+lx7BcHKvusC/k8WjvwcpfNYJqEGAcwkXv
+	KaUs5B+OqbqHci87j5JpUF34T0hGuHeZ6KhTIaK16jSkPcngGdbr9Bu1wUpJtY1I
+	mV+U4MTjzmGt0zrTu9ugSRoa4JgjpwUrTNzFA3RxvS1Mu7pA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46454bp693-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 05:42:30 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53M5gTOc000862
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 05:42:29 GMT
+Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 21 Apr 2025 22:42:24 -0700
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Subject: [PATCH 0/3] clk: qcom: Add camera clock controller support for
+ sc8180x
+Date: Tue, 22 Apr 2025 11:12:09 +0530
+Message-ID: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-ca
-Thread-Index: AduzR9bDkCJA9TKXSNW/Jr2cJXlNsw==
+X-B4-Tracking: v=1; b=H4sIADEsB2gC/x2MQQqDMBAAvyJ77kKyKsZ+pfQQ1rXdgzFkaxHEv
+ xs8DsPMASZFxeDZHFDkr6ZrquAfDfA3po+gTpWBHPWuI0Lj4IPbkePCjLblvJYfjjFUP0wU2xF
+ qm4vMut/f1/s8L/CkxutnAAAA
+X-Change-ID: 20250422-sc8180x-camcc-support-9a82507d2a39
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh
+ Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cdrSrmDM c=1 sm=1 tr=0 ts=68072c46 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=OrtqDbjkpIUBgnuzYQYA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: tHm99u_fWYB3Ex6tn6AFyGgPrjNvKe3D
+X-Proofpoint-GUID: tHm99u_fWYB3Ex6tn6AFyGgPrjNvKe3D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_03,2025-04-21_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 adultscore=0 mlxlogscore=801 malwarescore=0 clxscore=1011
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504220041
 
-On 2025.04.17 02:57 Alexander Egorenkov wrote:
+This series adds support for camera clock controller base driver,
+bindings and DT support on sc8180x platform.
 
-> Hi Peter,
->
-> after this change, we are seeing big latencies when trying to execute a
-> simple command per SSH on a Fedora 41 s390x remote system which is under
-> stress.
->
-> I was able to bisect the problem to this commit.
->
-> The problem is easy to reproduce with stress-ng executed on the remote
-> system which is otherwise unoccupied and concurrent SSH connect attempts
-> from a local system to the remote one.
->
-> stress-ng (on remote system)
-> ----------------------------
->
-> $ cpus=$(nproc)
-> $ stress-ng --cpu $((cpus * 2)) --matrix 50 --mq 50 --aggressive --brk 2
->            --stack 2 --bigheap 2 --userfaultfd 0 --perf -t 5m
+Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+---
+Satya Priya Kakitapalli (3):
+      dt-bindings: clock: Add Qualcomm SC8180X Camera clock controller
+      clk: qcom: camcc-sc8180x: Add SC8180X camera clock controller driver
+      arm64: dts: qcom: Add camera clock controller for sc8180x
 
-That is a very very stressful test. It crashes within a few seconds on my test computer,
-with a " Segmentation fault (core dumped)" message.
-If I back it off to this:
+ .../bindings/clock/qcom,sc8180x-camcc.yaml         |   65 +
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi              |   13 +
+ drivers/clk/qcom/Kconfig                           |   10 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/camcc-sc8180x.c                   | 2896 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,sc8180x-camcc.h     |  181 ++
+ 6 files changed, 3166 insertions(+)
+---
+base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
+change-id: 20250422-sc8180x-camcc-support-9a82507d2a39
 
-$ stress-ng --cpu 24 --matrix 50 --mq 50 --aggressive --brk 2 --stack 2 --bigheap 2 -t 300m
-
-It runs, but still makes a great many entries in /var/log/kern.log as the oom killer runs etc.
-I am suggesting it is not a reasonable test workload.
-
-Anyway, I used turbostat the same way I was using it back in January for this work, and did observe
-longer than requested intervals.
-I took 1427 samples and got 10 where the interval time was more than 1 second more than requested.
-The worst was 7.5 seconds longer than requested.
-
-I rechecked the 100% workload used in January (12X "yes > dev/null") and it was fine.
-3551 samples and the actual interval was never more than 10 milliseconds longer than requested.
-
-Kernel 6.15-rc2
-Turbostat version: 2025.04.06
-Turbostat sample interval: 2 seconds.
-Processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz (12 CPU, 6 cores)
-
-... Doug
-
+Best regards,
+-- 
+Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
 
