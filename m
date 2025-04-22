@@ -1,182 +1,154 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F065A2D4B46;
-	Tue, 22 Apr 2025 20:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 438712D8DC2
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745354690; cv=none; b=m3J1+mMuLtU5Su/mDR2AkNKjpHEtT0/PgAtW+gV7irZGecLO1aAj3U72lPdYuhJdvd3pPkAq2Onmj2D/f+p+I0cIoWeSLrk3enDQiM/Du+FNv64CVFVQzLUgEQF8Mw/aw6lfVhmArI4yIccVsN2uUhGuJBVrJEJejh/EIzEhoUE=
+	t=1745354695; cv=none; b=aOPmZWh64e208P4MhcTZ4m6R354bDZ8tyVGHLlsEkewEb72NdOxn6PQgzZTbnnv7pCov+TJSmBuspLsXIDW2rnhC+uWJ8iem4rbIENRPJm4sakTchKagURVWHYfvoW4zsQRA9s/g/u9uuvIDV/awUh7oH9L4HwSbWYmO00TlKII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745354690; c=relaxed/simple;
-	bh=3Qi1SJFUp6y7XTXy5XXlYHoR5sSOtMFid+Oyx/xVh+0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=um27X9bbb1Ajvh+Q+6aRjJQnmc4wkh7B+du7V63wyIPFUvDa7Zi27sv3Kx7HFhv/HQ6XE9qm1aJqenCq0Nt+AU8q3zipzBSwLwsP+1VDfJc1eI+k36t+vTYGdaRiCS9eTzIpE3mXBfZLGPElNi6gx0mOPlcuVWpN3GmYiNL4mqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HnPlzdI6; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745354695; c=relaxed/simple;
+	bh=7VhY4PjIf81EWoXWHrFKIc936ZjMX/5D5dOVZdis28A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kCNy7EBiA2ZqQLJGponD/v7uauxzYm2pHCuivahpXfngpR4VTWLmsNnfRr83H8FINDNyhSzybsS/Jh4R3HadQTBXJBQbtkAC7wizi5yjInzF/0eRdMtnR3tzdRptSJBXOAlgyFB4tzExk7EgO9IYb42WH5Rux4JTHJ4XM7NgNxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zn+E87G0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HnPlzdI6"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MKiJWY1321608
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 15:44:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745354659;
-	bh=MWhZ/sQSvs6nNVlGpTMyytO1fKmGOTNdCOI5T/Vvo1k=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=HnPlzdI6VW2jx84jfygB2+zjHtdhKLDTFov7FFv2ettYffR/PrdgaHVXl4BWoH/GP
-	 LPwWEFEEP7kqBxGQSqR0kv++zsbmMBYBzeU5R1cAGbdNehiUgYUOxIwdeIK+9lEQhg
-	 uFIyItAA2TeXn/4M7SMhSgkPxK5miGMJPHZMazgA=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MKiECX063391
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 15:44:14 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Apr 2025 15:44:13 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Apr 2025 15:44:13 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MKiDWj061619;
-	Tue, 22 Apr 2025 15:44:13 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth
- Menon <nm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Francesco Dolcini <francesco@dolcini.it>,
-        Hiago De Franco
-	<hialgofranco@gmail.com>
-Subject: [PATCH v3 2/3] mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch
-Date: Tue, 22 Apr 2025 15:44:12 -0500
-Message-ID: <20250422204413.272679-3-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422204413.272679-1-jm@ti.com>
-References: <20250422204413.272679-1-jm@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zn+E87G0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745354691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S+hOL6iZRO1BIU3i23We9soIGz6Aij367ODuBHv8NHI=;
+	b=Zn+E87G0ymOYM8s1UVFq1KA0xseS0Akz8ax+BzoAGZRx2Fji9Vu1wA9S1v2cGt9M87kUh7
+	61uRfrPSHdYDeC27z6Dr5L/+n1z+MwflWTGWo70+SuQWgWgJjozH0w9RXsuw0gMpLxwppX
+	PkBLEws/yDcoAuQZdOBMFUqYexCjKxc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-JcyJRqaQPXikpD9ghI48_Q-1; Tue,
+ 22 Apr 2025 16:44:47 -0400
+X-MC-Unique: JcyJRqaQPXikpD9ghI48_Q-1
+X-Mimecast-MFC-AGG-ID: JcyJRqaQPXikpD9ghI48_Q_1745354686
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D46541955DCC;
+	Tue, 22 Apr 2025 20:44:45 +0000 (UTC)
+Received: from x2.localnet (unknown [10.22.65.240])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D409D18001DA;
+	Tue, 22 Apr 2025 20:44:43 +0000 (UTC)
+From: Steve Grubb <sgrubb@redhat.com>
+To: Richard Guy Briggs <rgb@redhat.com>, linux-audit@lists.linux-audit.osci.io
+Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
+ LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org,
+ Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
+ Eric Paris <eparis@parisplace.org>, Paul Moore <paul@paul-moore.com>
+Subject:
+ Re: [PATCH v2] audit,module: restore audit logging in load failure case
+Date: Tue, 22 Apr 2025 16:44:41 -0400
+Message-ID: <2755922.lGaqSPkdTl@x2>
+Organization: Red Hat
+In-Reply-To:
+ <CAHC9VhRhr0GMQB59DZ4-xJ788yEgAsUMBLNdYFL2UxioBUPhGQ@mail.gmail.com>
+References:
+ <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
+ <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
+ <CAHC9VhRhr0GMQB59DZ4-xJ788yEgAsUMBLNdYFL2UxioBUPhGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The sdhci_start_signal_voltage_switch function sets
-V1P8_SIGNAL_ENA by default after switching to 1v8 signaling.
-V1P8_SIGNAL_ENA has a timing component where it determines
-whether to launch cmd/data on neg edge (half cycle timing)
-or pos edge (full cycle timing) of clock. V1P8_SIGNAL_ENA also
-has a voltage switch component where if there exists an internal
-LDO, for SD this bit is used to switch from 3.3V to 1.8V IO
-signal voltage.
+On Tuesday, April 22, 2025 12:30:01=E2=80=AFPM Eastern Daylight Time Paul M=
+oore=20
+wrote:
+> On Tue, Apr 22, 2025 at 11:37=E2=80=AFAM Richard Guy Briggs <rgb@redhat.c=
+om>
+> wrote:
+> > On 2025-04-11 14:23, Paul Moore wrote:
+> >=20
+> > > On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
+>=20
+>=20
+> ...
+>=20
+>=20
+> > > > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > > > index 1fb9ad289a6f..efa62ace1b23 100644
+> > > > --- a/kernel/module/main.c
+> > > > +++ b/kernel/module/main.c
+> > > > @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info,
+> > > > const char __user *uargs,
+> > >
+> > > >
+> > > >
+> > > >     module_allocated =3D true;
+> > > >
+> > > >
+> > > >
+> > > > -   audit_log_kern_module(mod->name);
+> > > > +   audit_log_kern_module(info->name);
+> > > >
+> > > >
+> > > >
+> > > >     /* Reserve our place in the list. */
+> > > >     err =3D add_unformed_module(mod);
+> > > >=20
+> > > > @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *inf=
+o,
+> > > > const char __user *uargs,
+> > >=20
+> > > >      * failures once the proper module was allocated and
+> > > >      * before that.
+> > > >      */
+> > > >=20
+> > > > -   if (!module_allocated)
+> > > > +   if (!module_allocated) {
+> > > > +           audit_log_kern_module(info->name ? info->name :
+> > > > "(unavailable)");
+> >
+> > > In keeping with audit tradition, wouldn't we want this to be "?"
+> > > instead of "(unavailable)"?
+>=20
+> Any comment on the above?  This is more important than the non-public link
+> ...
 
-The sequence is to switch to 1.8 IO voltage, set V1P8_SIGNAL_ENA,
-change bus width, then update HIGH_SPEED_ENA & UHS_MODE_SELECT.
-During bus width change is when eMMC failures are seen with
-Kingston eMMC and various types SD cards across Sitara K3 SoCs.
+It would save some disk space and stay similar to all other events. I also=
+=20
+think it should be "?".
 
-So, add a quirk to suppress V1P8_SIGNAL_ENA and do not enable by
-default for eMMC since it is anyways optional for this interface
-and parse DT property: ti,fails-without-test-cd to apply the quirk
-for SD cards.
+=2DSteve
 
-Signed-off-by: Judith Mendez <jm@ti.com>
-Suggested-by: Hiago De Franco <hiago.franco@toradex.com>
-Fixes: ac5a41b472b4 ("Revert "mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch"")
-Fixes: 941a7abd4666 ("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch")
-Cc: stable@vger.kernel.org
----
- drivers/mmc/host/sdhci_am654.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> > > >             mod_stat_bump_becoming(info, flags);
+> > > >=20
+> > > > +   }
+> > > >=20
+> > > >     free_copy(info, flags);
+> > > >     return err;
+> > > > =20
+> > > >  }
+> > > >=20
+> > > > --
+> > > > 2.43.5
+>=20
+>=20
+> --=20
+> paul-moore.com
+> _______________________________________________
+> Linux-audit mailing list -- linux-audit@lists.linux-audit.osci.io
+> To unsubscribe send an email to linux-audit-leave@lists.linux-audit.osci.=
+io
 
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index f75c31815ab0..d4cafc7af97d 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -87,6 +87,7 @@
- #define CLOCK_TOO_SLOW_HZ	50000000
- #define SDHCI_AM654_AUTOSUSPEND_DELAY	-1
- #define RETRY_TUNING_MAX	10
-+#define BUS_WIDTH_8		8
- 
- /* Command Queue Host Controller Interface Base address */
- #define SDHCI_AM654_CQE_BASE_ADDR 0x200
-@@ -155,6 +156,7 @@ struct sdhci_am654_data {
- 	u32 tuning_loop;
- 
- #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
-+#define SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA BIT(1)
- };
- 
- struct window {
-@@ -356,6 +358,29 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
- 	sdhci_set_clock(host, clock);
- }
- 
-+static int sdhci_am654_start_signal_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
-+	int ret;
-+
-+	if ((sdhci_am654->quirks & SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA) &&
-+	    ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
-+		if (!IS_ERR(mmc->supply.vqmmc)) {
-+			ret = mmc_regulator_set_vqmmc(mmc, ios);
-+			if (ret < 0) {
-+				pr_err("%s: Switching to 1.8V signalling voltage failed,\n",
-+				       mmc_hostname(mmc));
-+				return -EIO;
-+			}
-+		}
-+		return 0;
-+	}
-+
-+	return sdhci_start_signal_voltage_switch(mmc, ios);
-+}
-+
- static u8 sdhci_am654_write_power_on(struct sdhci_host *host, u8 val, int reg)
- {
- 	writeb(val, host->ioaddr + reg);
-@@ -802,6 +827,7 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
- {
- 	struct device *dev = &pdev->dev;
- 	int drv_strength;
-+	u32 bus_width;
- 	int ret;
- 
- 	if (sdhci_am654->flags & DLL_PRESENT) {
-@@ -844,6 +870,11 @@ static int sdhci_am654_get_of_property(struct platform_device *pdev,
- 	if (device_property_read_bool(dev, "ti,fails-without-test-cd"))
- 		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_FORCE_CDTEST;
- 
-+	/* Suppress V1P8_SIGNAL_ENA */
-+	device_property_read_u32(dev, "bus-width", &bus_width);
-+	if (bus_width == BUS_WIDTH_8 || device_property_read_bool(dev, "ti,suppress-v1p8-ena"))
-+		sdhci_am654->quirks |= SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA;
-+
- 	sdhci_get_of_property(pdev);
- 
- 	return 0;
-@@ -940,6 +971,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
- 		goto err_pltfm_free;
- 	}
- 
-+	host->mmc_host_ops.start_signal_voltage_switch = sdhci_am654_start_signal_voltage_switch;
- 	host->mmc_host_ops.execute_tuning = sdhci_am654_execute_tuning;
- 
- 	pm_runtime_get_noresume(dev);
--- 
-2.49.0
+
+
 
