@@ -1,154 +1,234 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012036.outbound.protection.outlook.com [52.101.66.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE0C524C;
-	Tue, 22 Apr 2025 07:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307686; cv=none; b=X/2nuMwAUz/QrfSbAkdTephUzvjqlBfHlQX+lBWG/Ngwfhsc0YnpDdfBRQCnzd+77cL4fmOcgZmubGBV8/XbDJZvaTu8CH2Uameax0r2fnIwoXwdE25iqa2RcIuBHER0wM3sI57wW2oFQeEgEBsx5APwwaZsZAHuIXBbb4+kBkE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307686; c=relaxed/simple;
-	bh=FxOW94RSk0PhfFr/bcRz1bIIkwQd1iZ7rYc2ls+gbhE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i5Cm1fsd9p6/kz/Ml9QpEInNhJRst2iKdiHPmR1FjxVOG+MofZgDtzwjibSFbisU7zUOdIXwWyNRuxuN9PYq0d4mOGl+e5A9YBzSsGQr3NG+yKWB5ncHiCVw1YhA5f8BlgM0Mr2YOrGgqpZ+4fm/JhC+KNTIDjeA4cKnjlsFDuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1547300241.1;
-        Tue, 22 Apr 2025 00:41:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745307681; x=1745912481;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CchbbGjqvUvjIqESIBqdCzQiBA7qsjtrrzbifnEpKqk=;
-        b=RSpSp0ajuVg8GxYgupymLh37kJzQ5mT+SurO5X6yEcW8Z05tg1/kfvIDmttooO2UoD
-         hndZIXQzDiNpgrBjKaNHecPIqh54FoXJePo2cSr+E+HEx1wTKnCO7tLEm/SBt++ddH4c
-         SLZi6Vp/Zk8/AieJmWvKKKi3Zbo301CrViWx1omRHGcUHIM5GobpOKaUXBGTX6B/Xdt2
-         1TVqqU8GuNZq3y0PjhWLoC/FuxWlmSnL5TTCLogm0ipGLFiry4Pf9w4tKlKaLQivZwUM
-         Qp5X/Jxca9daWsvKgRBKr/HW6srudhkxLlUCpam6gorThKgKUprJLH8ZunVXxYyWQ0gH
-         eMgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlveypS3bZXsmVdvk/Aw5mREHaVgTgcLzvy0BNJVsl70w2DywU695cpc3uZlXgXAq0mhDUFU9TGjzXDOxdyfixJr4=@vger.kernel.org, AJvYcCWVA5HU6Nl3eDfVHLqT5s0+dVGBlWDpI8F3J4vJh/fJCHtT1Coh8Blhwy78QyFTzw1CegmwTCmi0PA6@vger.kernel.org, AJvYcCWcFX856CQbuDRxYzuj8Dp/2G0lYZQjwZPLcN5QIeWsBrpVaOzt7WrcCdPpJQoJTOYp8NW/iWV+tECm@vger.kernel.org, AJvYcCXhyn6kSbnAbR7uToNZT4wfLs2qdaWkfwOSvhdp66h0ExV1xfpNRBRIQjYv0TcxH1BdiYek1z1phYB43+HY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx9OgzLamtQB4D0q2UdDWvKDaCzTNzkplsWWwivvTTtCwYreYn
-	R5XWq28Y1COOzDWt0lLqkp2P4o9Nsgkx9DDAo3dZqfzJitsAtupQeX9/U1Rz
-X-Gm-Gg: ASbGncshra5DV/QOdqUhQMDxsJ20tww6v9d8faOTHZdy6+FMjlRmFQr1h10ycN2KcQV
-	OgrLRlb7WcFB0v/W8xdLQgGiD8CeERput6+sIdV8k8d5KnIZvnfRykS7LRFIB4em+Xu7yKFw7if
-	JcuLIetyfBHdQhMqbCAhiNkvV9uANQ5NhqeyTLpqEcHIuhZfwpJI2iUJDeFCCxwwJVbEzhp2rM2
-	LtwxF8CQGvOXB9wvDmRx6nYGTNE5Nm4F1/LHCi7+pXUtuh1cfkJy0wtbc15aanFwUouj1sJciK2
-	EER77S4SIF6sLOF6Ly6QG93ZfvlNbxQPvOqf94d/rbKNU7wyhSAli8EOUzm2OQbgnrGdvaM37gc
-	oGkE=
-X-Google-Smtp-Source: AGHT+IHcUQZUEexCvSUT1zjP8LMLjqDuURWPRPRNEprBILwEitFTscx+/3xSURl2HwbOud5CUO8YzA==
-X-Received: by 2002:a05:6102:226f:b0:4c4:e415:6737 with SMTP id ada2fe7eead31-4cb802368f5mr7887164137.23.1745307681024;
-        Tue, 22 Apr 2025 00:41:21 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7dde4512sm1994847137.18.2025.04.22.00.41.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:41:20 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1547275241.1;
-        Tue, 22 Apr 2025 00:41:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVHSa7nRFESbfAVlwjFKqopdauUQIY6dwdykDEAPBepX8qrhBoKDauNC9Big0V1uLl5vvAcpJYZtIoO7/Lz@vger.kernel.org, AJvYcCVVazg+jfwaKjHpFhSaxhtLfEiqpSuTzLEoLSnsVg8hMxXZCBqh5qxEBbZE2UQcuE+wWT0mYQwvRJNS@vger.kernel.org, AJvYcCVsnCtQnnH1lkH5USOemUVUNwN/1kSnecR9elIh6MlxQSAkPj3WP9oIfm7kLdOG/+t3FG7YHHVj6oPiFYDbPenboWM=@vger.kernel.org, AJvYcCWUhfbeEjQL3DLelHoch8RWhE8xIKQTcPpeMkBCakGnE/cYAghM2vFd1wO7DE9+skVCJU7nphYthySp@vger.kernel.org
-X-Received: by 2002:a05:6102:3235:b0:4bb:cdc0:5dd7 with SMTP id
- ada2fe7eead31-4cb801fcb0emr7598638137.16.1745307679790; Tue, 22 Apr 2025
- 00:41:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19553524C;
+	Tue, 22 Apr 2025 07:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745307695; cv=fail; b=FJL6zHE2QBRPZgdkmwvRkOZvHJASSgOp/5C2/NbXAuauxr4LWjWR1Dd+6N1le2a0/sZlJWfNX3cmjDzu/wDcNJBdpmBp+jmuX3dRzZVrZpxfIKuXEbaApXiozJhjsudMSooMbvLYUVHsvI6YEPg0aCGO1d+jbMlG9QsMiY/90CM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745307695; c=relaxed/simple;
+	bh=T31Foo17mk0l71FLhthVYY54nZdbt/7qLblqcEKEmzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Z2kdzhg+JjnqW7W36WlaMzl+KrxXwud8Sz9D+PIno/xFQhWo0sRlYDT63YEsDdw8U+0m3JEwL4ldOCTYRdEEmOt1XUhbO0iylMxdM45X7TrHjw97q/+bWa9fx41vY4ZFi7P8EDhd6qO7y2XZhAqpEJDS9nt4I/Z0Cwel8Ulgh/8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=bjXnmejP; arc=fail smtp.client-ip=52.101.66.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="bjXnmejP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iW4DHLPBuqnrSN3hG9uwfS/DsIyjycpzCPdcG2J2ixygdg/Nr5DnqaeKUKBVD30ZB2+STxZ7FF4ZZuW0HRDprUXCPNU0+eHkEM00SnMqkeQehJWvi68Ni/WpNfUw1/nWHsxakTQ6lMBGrodRw7txi0bEKsFNKSVaiINrpLz+N/Pl0ip2nzLl5972uVwBgvVbpcCt1jahiN35lRtuphPjMxhNANor0qri/8SFXnetJUrvlxTwFSZDPZEgLg2nmijwB3OYa90iFunfhPJldQsdYXVQq7vnf/gS7JY0qb79o80ix4jcb/vyEicLM5+JZCZeSZOir1my2wCRbRnso6rN1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GtN1e0XsZDhFKhJsTSy3VjPTI+4ZocxmzftAek5pHuY=;
+ b=E6BtfLUNGQPCDSfti6pNqCxYtGY1JS/KM8Lj16RuXbVuClSv09Jr0BT6C87dbCulHxK8mR1a3211y9tv3kDj/zfUDN4YIeW7D9pWteEWOzLDvopiddi6Jq7AFm69wta0qTwal0Q3S5JpAu8HYC0/SrYjViRlk8KL3gUYyOqWm8WNdEcqQozfpBfbL4SpSitWKG7MViXy2zIxlybHJp8N0G2WWTrK+KXBifTnoD8gv6Vs4J2+1Il1wEuonJA1OM0+usU/oP+V4m75K01BAD7Nc5i39h4WhISBYiBJqNqbGKn7Zu+MGcpj+1mjks0fiQTzfQUqhzLL6jZyh5v+uJwchw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GtN1e0XsZDhFKhJsTSy3VjPTI+4ZocxmzftAek5pHuY=;
+ b=bjXnmejP9v/kcWoiI5FdjPwmXb6z+9vkRAnuI3jtAj2mHrcSyb7DRZ5ViaM4Vps82EY+HcHZjwXgLuF3gGx9d6ow7w/KuQzHHAP4MODh+ZKjMTpYoX7XMnQUs7r/j6ySIPle8ogky4j7Y51RZzlOq0G77rDVW9nsP363iCM6BkuZ6hj+uG9s5Sc2Vzm4kHjx4RYS3npjj834kGba7UlWRd2UjIqg4ccDZVMlzQXyARfJbzMgDR6G2B6WlQYFW4PKRDRa3DvmXEjOunpide7WnfimTOFIlAaP2DW9DKuDTHWTf3DMyrwYBhwA36aw48fysDu6pIBKq7TEQnU5/St3oA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PA4PR04MB7520.eurprd04.prod.outlook.com (2603:10a6:102:e9::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
+ 2025 07:41:30 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
+ 07:41:30 +0000
+Date: Tue, 22 Apr 2025 16:50:16 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Mike Tipton <quic_mdtipton@quicinc.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <20250422085016.GA10830@nxa18884-linux>
+References: <20250421195206.3736128-1-quic_mdtipton@quicinc.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421195206.3736128-1-quic_mdtipton@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR01CA0026.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418184658.456398-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250418184658.456398-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250418184658.456398-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 22 Apr 2025 09:41:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
-X-Gm-Features: ATxdqUFBeCs2oJ7izTqYxFnW1BxjoUqkEqYOurERQsS1p8loeCSNnydQw8JebiM
-Message-ID: <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/15] drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY
- frequency calculations
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA4PR04MB7520:EE_
+X-MS-Office365-Filtering-Correlation-Id: 265b8930-184a-420e-e317-08dd8171184f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZdBpJACaoCjrF8xKz3DrxAwWVEb6fxY80QEOfTqX9Swgy3Jt+wRZoeb+z+pA?=
+ =?us-ascii?Q?KdSyyxySoZql5+He5h1jItnUAGOAiYOGbF31W9TrR0zNMo/VKsz2Qb1Q8eI2?=
+ =?us-ascii?Q?u/uDolLglpLk3+sOg22lvshoHs++NXCaEXfDL+V/hCK7B7pRY+Bya++Xh/WI?=
+ =?us-ascii?Q?18Hl/KR71htgqsiqIups0sRAq6u6U9qv4PGayHQonDg///pFW7yc8UwwWcPL?=
+ =?us-ascii?Q?Q+4zh1zvR8dPb0qV67mgjDA3NWKv6qcGoP+HWGQ8gIz6AVua3PVOAkJ3kkzw?=
+ =?us-ascii?Q?BD0Qo4UPmMpvqhgqbdlvxeWmiSlIoV3Ut6/B8icFcE9/unvc/q+y5jeI94ra?=
+ =?us-ascii?Q?FNUjp85VtHN0QfPUA4A/qbw0m1T3zMqQ29ZncaTvWncuFIXG45jb6pFCY6QW?=
+ =?us-ascii?Q?hd2m3hLH82loZmyPLz3krjXEdbjoPpHDqj09Gf3CmiyCvg+yliRf1LEEdYnV?=
+ =?us-ascii?Q?lYTc8anfga/xwh0+jXwJGf34I/IopUfxXaKA1ZojPzfyE/TzfXFpIngaJ7ua?=
+ =?us-ascii?Q?Pqfq/ObY4mm0pdJyX56J3lNDjgMBOjz2tG6YLHoRdhdb7aQUEWUjYNtB+CGm?=
+ =?us-ascii?Q?R2byUE4h+jtTMg/KBLO63hbjF1K3beTI9MuZ+WEAb2E1vLG/exiKtWfL4jSO?=
+ =?us-ascii?Q?FV9o/VbNRRfV9vUHuqbeYf0+H1F6OFSBIdT9m/RLG08AgN36xQbGFnroIFqG?=
+ =?us-ascii?Q?wJX9BYS4paVZ94jy65E/5sRTTyj/Vx69HwOdxBMhoyX5cTJDz/ubt5bopIly?=
+ =?us-ascii?Q?YdRLXrmHrKDSckzHxwr6erkSMlm7binbuJiwcmRIOj2KOacs3WLIHgl1YgHg?=
+ =?us-ascii?Q?cP6207DS87KchWGfKXUW+2gBIHLM0M/dWdDIew72BxMwL1VsLL1qzwOut9L6?=
+ =?us-ascii?Q?XTCV9QWhGi9FkWKs1tcokhRqwZhQHSWwq4RTxzRRogQ7B6wN53lBatgmXt7q?=
+ =?us-ascii?Q?yDfZxWNX83TGxvCCAWUrySlvVCyyswAm9Y2Kdi5w0Vgo8s0qXqcg9p9iu/zp?=
+ =?us-ascii?Q?BXSzLtTgO1oD7GvVvUvu6jOEPfFPw5u/TzFDrmpkozMYcPo/5iK0MJRtJ+GI?=
+ =?us-ascii?Q?KPdj9+DVod9k9Y3orZ3xA8VdsMTNTW674cFTE9JPzYhcvKkjBvZ803EIk8wp?=
+ =?us-ascii?Q?gV6e4e69a6Sa4RK9hllUiebZgj14KF8txPrE9aS8GJqsS4fHkvMihKTcfGOH?=
+ =?us-ascii?Q?BLv6wRIP2IKFfccbWPiWE9ln2lh2Y0FOwnQe9neGehyxP2WVV9iwbAvAOVbl?=
+ =?us-ascii?Q?+ZSfI4gLg2JJQCgn9vq3AxMy5RNYHnhrcHNfmZo+fgwrm1PuHkRXpgz3IspD?=
+ =?us-ascii?Q?v10ynovBSBvBpdNJLy1tb3txioGrAsNvBPqthy896vPPKYRDzRK/Jx2xewGP?=
+ =?us-ascii?Q?x186cTYAkATKhg0XX5274nXJlfViB76y7951ElFBz3rvrgEW2ugzbbe2SAnX?=
+ =?us-ascii?Q?p6Sk+y2d4JtJsIF2PUghyQ4YCslVreDukAcavaWu3IjEaYZEfCjFTR9id7iG?=
+ =?us-ascii?Q?+gLoYt8eEZ8gCSs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?nGDPs2B2o0uw09vTw2cZ3WZiQGHbzTufb8DYi+o1FiaSNJUhno5pU+Kb5hzF?=
+ =?us-ascii?Q?YZw1wW0Dxw133sK7bj14k4cKoQ4LgDfhWZXHuHm8WJejE2Rc/5dylC07lO7E?=
+ =?us-ascii?Q?UOyP58gmJo8g6J9g3W6arcVRrp67pr3hOjPQ7QGLV+cXiKw8x6D0sqQgM3zk?=
+ =?us-ascii?Q?ka7Zy5y9EI6Pdi78RwHXK6eTXreQ16uilPOT32j+zlbC/ExUbgMoglAstCr7?=
+ =?us-ascii?Q?jHqja0bVeQ0v/ePYpS+o/nOMYvwhjgj64CLxbU0L+FJaeQMZ224sbAMe2ogR?=
+ =?us-ascii?Q?B9Yt29mqGlT9JkeUZfCuWJx1WzZrwyTz6BfCbcQOf/F11340yWyOkg2vJ+R3?=
+ =?us-ascii?Q?Jq3sBeXbgAc4j0Ab01p9upjiMa+AyB43hc1VDV9syEuVFSpBZuJowvdCMKqv?=
+ =?us-ascii?Q?46Cb4HJ/mRuUvhFTBCC6XpdQKlXplsFaAUOseJUv6ipHjrrPY91oesRnlYy4?=
+ =?us-ascii?Q?j1612IK2N+i4J3rBfuGis1wwJcpUHXKmLGK4C1fxa6Qm4CrTguQU+p+LyAnf?=
+ =?us-ascii?Q?hXj75pBx8HdUooeF37UNK2mDFG6aJZMmuOOFMQH9frMx4JOlRarZvtfbawsO?=
+ =?us-ascii?Q?PaMhQOea8IQWM6kX0xsBRUMyYgb/F02fBWF1JzWl+6D9Y9bai9kPJYqHcNpx?=
+ =?us-ascii?Q?4Y8lPVFAR1FjHzPheIfiS4tqlfB4kWC/FvbkLAKSzSjcYQXyRTDH5HEAEDKF?=
+ =?us-ascii?Q?gXh27XF8NvzkdrhYVhBko1HBbuYQFRQK59+iPqR85ccU6EMKu3s1BlqI6qtj?=
+ =?us-ascii?Q?kKfRVu3kv3AyWtvoiSchkqlVi6BjY1BoSwSissHekpMxpLvkgMAN27xzn0Mb?=
+ =?us-ascii?Q?N0NecVGndLjDW1wXWHsA9X/vh5ir/c3wMzp+JHndRr9FI+KTpjg/2fgwESWo?=
+ =?us-ascii?Q?oeovAedp5kSMFjiVlBS5dnKIqgLI+efqBqrPQip0QCore/+jvM8DKUOEl6KI?=
+ =?us-ascii?Q?/3cCcUqgWdi9oXVbwS92oYHCj3EdfARjJDBe89mVjBaaS3U3+23SE7DIWYje?=
+ =?us-ascii?Q?quiKxdbYLQsxt1QU+ppNbicuyqfWnqHCbvWM7ctYtUu5x5ZgKdpbBl3Hqfnz?=
+ =?us-ascii?Q?RyaDdnQrsRdWe8/LG9PPGC2u+QfkZqC5V//yEURkoj+F2RtIwMBcst7FJ5hu?=
+ =?us-ascii?Q?AgF76VEbW698T92fJx/KEFdQbmlSJCMnBFXj9bzqsc8YDGO3iMVrIFsLpLcq?=
+ =?us-ascii?Q?8joIRFjH9Y5zboixN2oR/0vkh8OQwnhTVeVqDm+CzppiC+WuFTBAQtL8ohjc?=
+ =?us-ascii?Q?rHWLwrAW/sYQyCAybBKUa6HWtwaLULeLFDZW0C31xK53hG7rCrSRutBTX5hI?=
+ =?us-ascii?Q?d0mX+3VFEDqOqCF4xy7m6lzvbRg18N6CsX9yYjbMAxynhH7/0fe/crtM2KfL?=
+ =?us-ascii?Q?YGlsyijRGhKw/GgX6l1VWrGBSdgtfy0YCspJWF9NRRX38qITad72XFwGOo/L?=
+ =?us-ascii?Q?3HDUdHztufUNb9xBWnmBJ4rbl37mRdP9EAGeI//hZwCKDLHtXKEO0hmyOnel?=
+ =?us-ascii?Q?SAb6ctjRQihx4qm1lDzkycjGI/nvcMK+6NCbwypxWfjAtwyZxHXFt/EX2nrp?=
+ =?us-ascii?Q?sZ8Iv7AOJuRtiOpHf8ndseIRc8DrHNMLdjqPIugb?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 265b8930-184a-420e-e317-08dd8171184f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 07:41:29.9576
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sygYAS6ZDdLaABmAMwTIB5K3Wnli9Sl1zVUrq8PnK1FUjj3wJJ9VNngP9peQdExczbBEOrORm2bTPdYMaG1ScQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7520
 
-Hi Prabhakar,
-
-On Fri, 18 Apr 2025 at 20:47, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, Apr 21, 2025 at 12:52:06PM -0700, Mike Tipton wrote:
+>Currently, all SCMI devices with performance domains attempt to register
+>a cpufreq driver, even if their performance domains aren't used to
+>control the CPUs. The cpufreq framework only supports registering a
+>single driver, so only the first device will succeed. And if that device
+>isn't used for the CPUs, then cpufreq will scale the wrong domains.
 >
-> Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
-> precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
-> high accuracy.
+>To avoid this, return early from scmi_cpufreq_probe() if the probing
+>SCMI device isn't referenced by the CPU device phandles.
 >
-> These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
+>This keeps the existing assumption that all CPUs are controlled by a
+>single SCMI device.
 >
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3:
-> - Replaced `unsigned long long` with `u64`
-> - Replaced *_mhz with *_millihz` in functions
-
-Thanks for the update!
-
-> @@ -203,8 +203,9 @@ static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
->   */
+>Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+>---
+>Changes in v2:
+>- Return -ENODEV instead of 0 for irrelevant devices.
+>- Link to v1: https://lore.kernel.org/all/20250411212941.1275572-1-quic_mdtipton@quicinc.com/
 >
->  static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
-> -                                   unsigned long hsfreq)
-> +                                   u64 hsfreq_millihz)
->  {
-> +       unsigned long hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, KILO);
+> drivers/cpufreq/scmi-cpufreq.c | 28 +++++++++++++++++++++++++++-
+> 1 file changed, 27 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+>index 944e899eb1be..b558f210c342 100644
+>--- a/drivers/cpufreq/scmi-cpufreq.c
+>+++ b/drivers/cpufreq/scmi-cpufreq.c
+>@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+> 	.set_boost	= cpufreq_boost_set_sw,
+> };
+> 
+>+static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
+>+{
+>+	struct device_node *scmi_np = scmi_dev->of_node;
 
-MILLI (everywhere)
+Nitpick: dev_of_node(scmi_dev->of_node) ?
 
-It's a strange world where KILO == MILLI ;-)
+>+	struct device_node *np;
+>+	struct device *cpu_dev;
+>+	int cpu, idx;
 
-    include/linux/units.h:#define KILO      1000UL
-    include/linux/units.h-#define MILLI     1000UL
 
->         const struct rzg2l_mipi_dsi_timings *dphy_timings;
->         unsigned int i;
->         u32 dphyctrl0;
-> @@ -277,6 +278,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->                                   const struct drm_display_mode *mode)
->  {
->         unsigned long hsfreq, vclk_rate;
-> +       u64 hsfreq_millihz;
->         unsigned int bpp;
->         u32 txsetr;
->         u32 clstptsetr;
-> @@ -305,9 +307,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->          */
->         bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
->         vclk_rate = clk_get_rate(dsi->vclk);
-> -       hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
-> +       hsfreq_millihz = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp * KILO * 1ULL, dsi->lanes);
+if (!scmi_np)
+	return false;
 
-The "* 1ULL" only makes the last factor unsigned long long.
-"vclk_rate * bpp" is still unsigned long, causing overflow on 32-bit.
-As there is no rounding variant of mul_u64_u32_div(), you probably
-want to use mul_u32_u32() instead.
+>+
+>+	for_each_possible_cpu(cpu) {
+>+		cpu_dev = get_cpu_device(cpu);
+>+		if (!cpu_dev)
+>+			continue;
+>+
+>+		np = cpu_dev->of_node;
 
-Gr{oetje,eeting}s,
+dev_of_node(cpu_dev);
 
-                        Geert
+>+
+>+		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+>+			return true;
+>+
+>+		idx = of_property_match_string(np, "power-domain-names", "perf");
+>+
+>+		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
+>+			return true;
+>+	}
+>+
+>+	return false;
+>+}
+>+
+> static int scmi_cpufreq_probe(struct scmi_device *sdev)
+> {
+> 	int ret;
+>@@ -401,7 +427,7 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+> 
+> 	handle = sdev->handle;
+> 
+>-	if (!handle)
+>+	if (!handle || !scmi_dev_used_by_cpus(dev))
+> 		return -ENODEV;
+> 
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With the minor comments addressed, LGTM:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+
+Regards,
+Peng
