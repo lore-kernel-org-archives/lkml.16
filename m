@@ -1,85 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3545A1F09A1
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400926A092
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 20:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745352713; cv=none; b=o+xwJobPFsSb1jqLu7BZVlcUJ8rnNmG2b194oPPBRaxETwM5Qx6Tp1Yimi62H62YasWYk/lfAmF30RcTNj3TZSoYwqPuQWv8DpeDAB8OUaMhndsIWbCFUrOWt2eRaqU94USeaHIIHWG0JKjRmEDNEryXJBYKd0FWjNlA0y2v3b8=
+	t=1745352762; cv=none; b=T8VcjYdQ8XV51M5hjQs5DwAJWMswORMniqftUbNOR1EddUBTdJdobkfu78vuP7LTBOipxLrKfHCbXQKmKBP/A161fFGsL/kTX/MmlllGx0+VSSWcv6Hqw2mAhKLR5Hv5tXG46b1pQi/HHFo7VvqQaPBiMVZBvbX0Fb+P141po9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745352713; c=relaxed/simple;
-	bh=I8sz60M1M9oOtCtN2+sZHYaUApjCHjfAGo/MZt8Q9L4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hu+INwY+VQm5VU+t8Ug66DtQmhDR3srsXVdFsqJaMVCp1lAIddbt2v9hMMgVmg2MBJ71kN8m5P4R3Z9oLU8tWwGDWKp9/KR7oPKhmxO/Hl2r2sqE6Ld1LD7YX9qEoscX9iPOuYUGAP+ocFdAzz1XtfGEbzfA1weVK6ej9pP6eW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhQAXMPL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745352762; c=relaxed/simple;
+	bh=Rz6kR9Nnog2Dl+IpQRCHKfLS4Sb3C6gyABe09uNcvrg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Od4xMNU8djhEsFZ1GFQAsdU6UJuyYoREDP5HxwsQ/jR1vv9piUP5ESIZducjPy2UPcpJQ5JJ1eccZrhQKBjpciYKIz/YG0LBOPVQrK1RaCK8p9v9gJVRkK1aOxCDo1pw36PjeF/PAOCPVaFdnnUwTCrbuCUiB3bz6XejGL4FaXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XDkhXdI0; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhQAXMPL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B0CC4CEE9;
-	Tue, 22 Apr 2025 20:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745352712;
-	bh=I8sz60M1M9oOtCtN2+sZHYaUApjCHjfAGo/MZt8Q9L4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jhQAXMPLP+RtYthK1b6dB9VvR30R1xQmmkhPNGs6KvhQrUc2yIFxPk0OynGUz9FRi
-	 KHaOqJqHg6DG9vdsr4flkSJd42KzCpBO3BIn4Gv9l8s+42+HifPUm1vr0C6ajPYobi
-	 fxXBzl/Jp4boqLiTRVd5GLYCL9x/92c+1EJykftTYqykpyyLmLLnDBxHBuJnocALpG
-	 ozNQYVtCzL0f7IlxClL3nEPoM+6OV75U33uk0QaeYOas8SnQrxYsh88BiRpTsMXMt2
-	 3DMlcjySeebtAq79+0THV4XDWKXiThtpwvLEfW8d2gX+Rx/qufPRenGLEJa3Bpt7ph
-	 zxhPxvFF9ktTg==
-Date: Tue, 22 Apr 2025 22:11:48 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Dave Hansen <dave@sr71.net>, Brian Gerst <brgerst@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Chang S . Bae" <chang.seok.bae@intel.com>
-Subject: Re: question about switch_fpu_prepare/switch_fpu_finish
-Message-ID: <aAf4BNLmpMV7I_My@gmail.com>
-References: <20250409211127.3544993-1-mingo@kernel.org>
- <20250422170059.GB1676@redhat.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XDkhXdI0"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-605fc797a2cso2534570eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745352758; x=1745957558; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ur+YYyDzv8PMEb5GegaWF1VkXF70WyZq1UmQDyR3DPQ=;
+        b=XDkhXdI09uwq8Szyg40GRnVspwH4nnZ0v0nmc/sk3ZhGRx7ukKgw61FsRdDhkviVcb
+         aMCLgU0fDn1Dn/3EM185NKmy74NmrZr8tHYLN6rQU9gyZBRVWFaqiiEspapve64nHAPe
+         styLhUh8wPR46s6WV+qjV1gdF5rCZkkS6QTnMr6rf6TQrweSsz3FyiLiICs3e8qkqjmi
+         wZPYXBeHM4kIVGQZhTI9MPobStO+yKV3JZbHFq6CrnZFR9nZvCzzmbyBxgph7E5H6SP5
+         v+BWFNoiR82ub1kRhhf6eizsJSuWk61dbV1ewvVClP9pntrntdP18YCgZEuUXBnH9/PG
+         MFGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745352758; x=1745957558;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ur+YYyDzv8PMEb5GegaWF1VkXF70WyZq1UmQDyR3DPQ=;
+        b=DqFoXtPbGd0k7SAKqgGAqlDHrmy4QOrj0skpFWVNGg7FOU9cqqQgrX/n/HqsNq0dfk
+         KIYl2VrzBsGQXUXEEhH5Mq0Nzf77uSjfERHfH2YpjNaIhkp2OqmHABOtAWIA9jtVsOLK
+         KGbbt3wi3ZD9mce4KWjOsCNjoomkn/d1cCl19Zcs4EvMP4qHRyNDdFadmQaHF80Wd5m1
+         Rukilov7PorpMoyN4o7Zkdqt4X7ur1I0SJLr4VYgKX5UBubn+ep/G6+a0os1COs0qj1/
+         41z6hA0fqbRcPfWvcfCxJ2xu71Xdd8ntKt8HDC+ZdC1ORxBuNXNxCGxE2gNY2mGMM4Bq
+         lyww==
+X-Forwarded-Encrypted: i=1; AJvYcCUKUBWrbsAEaL7eeDzdCABeTCv8V5ExXa0uCfe0SqifvOtn4cUSaZnMeu/TKC7R5Pk0GhZIK2ar/+1EoSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuQgouk3GUEsCtMYTTVfz2q1LhMqPrNmxH5PKa9uwkuuA/JdOf
+	pzzRPL6qgQqii0phjYLevwKvtYROMTZ53NEoadxlHuBjL8feG1nffmurQKAiyjQ=
+X-Gm-Gg: ASbGnctab1o4mCQQ9A296IOtFxp4XC0T92gaVH9slu+hDFF49lHylIGfDoLdpjkiEK4
+	DQmno83+pfYjBxRPvBIJ79Ffzm3UQzWU9wTcxEeQ4lKVYtsPfWXO9j9BHgowO1nG0LLmd2Ngb+h
+	eTicC7YX/baEGulmttRXgmmW3JmZsRfJDOB6gnbaeHUDUrHhFzulIu1dLN9ZZC8tbYsSMGhMYDC
+	GJALjiAUngNHEySkek+OJbWNKwGdvOuUQRUbXz5mXhPfKuPLAZ7TPvVN7WKU8wL9R7WNqSyCFAv
+	fERR8J5n4PKL57TBiRpDYNX1xx/KoTGgzX5QMQEf1+TgytY/4valegO/zg==
+X-Google-Smtp-Source: AGHT+IEdn21GBcQ67ZHTcgGKUqqECreerd2BpPdOoMxx5qbB0ls4vYksbilrdjkfFK3CXLjo6hN30A==
+X-Received: by 2002:a05:6820:2296:b0:603:f1b5:ca02 with SMTP id 006d021491bc7-606005c9a13mr10542921eaf.6.1745352758385;
+        Tue, 22 Apr 2025 13:12:38 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-605ff5fcd49sm2304822eaf.24.2025.04.22.13.12.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 13:12:37 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Tue, 22 Apr 2025 15:12:27 -0500
+Subject: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422170059.GB1676@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIACr4B2gC/x2NywqDMBBFf0Vm3QGdRoL9ldKFTaZ6wZqQ2AeI/
+ 96hi7M4cLh3p6oFWunS7FT0jYq0mnSnhsI8rpMyojlJK33rRBhIPMZg+M6f+YEvh/TMWJQ/2Ob
+ 02njKSAvu7GP0otK7YXBkg7mo5f+z6+04fuGVjBR8AAAA
+X-Change-ID: 20250422-iio-adc-ad7173-fix-compile-without-gpiolib-7dd72e254994
+To: Jonathan Cameron <jic23@kernel.org>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Guillaume Ranquet <granquet@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel test robot <lkp@intel.com>, David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3711; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=Rz6kR9Nnog2Dl+IpQRCHKfLS4Sb3C6gyABe09uNcvrg=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoB/gsKmJ9TWYcTk4Yq7Lu7XbPbZYEWJzXA58Y2
+ LYxaBw3sgmJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAf4LAAKCRDCzCAB/wGP
+ wC8sCAChhldrSxne6/z/X9ZA+v8PBy2fxb/YSxo9xfQ1BhOxKg3yRgBqKi8CHSvcgnnEfXgtYLh
+ ebrIvFEcVrhLg0xCkwZCsEhRCxpyX+UGIIKqu28X1Bzdy8ItyCE/MtqF3B6ijcUXXGvwVPCSlbj
+ zQstIZGxgwOn6f5ukCVstD1fK5OxgCyY2ZP5QAot8sx4nn+VDcfJrenUKMJuWpCafG6bUAU7l66
+ FpiuNZa7Wm6j+glRd+M8vF9zAJ2YBOK8DY7XRLuy85unLsQYFcJlS/9yTjpmiZMigaJIEnIGgOn
+ RVtWIBh5XbvOS9p0gthQBYI9RjoX+MYiO3FSZsbiQqVpcjJT
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
+Fix compiling the ad7173 driver when CONFIG_GPIOLIB is not set by
+selecting GPIOLIB to be always enabled and remove the #if.
 
-* Oleg Nesterov <oleg@redhat.com> wrote:
+Commit 031bdc8aee01 ("iio: adc: ad7173: add calibration support") placed
+unrelated code in the middle of the #if IS_ENABLED(CONFIG_GPIOLIB) block
+which caused the reported compile error.
 
-> I must have missed something, but I can't understand this logic, it
-> seems unnecessarily complicated today.
-> 
-> 1. Now that switch_fpu_finish() doesn't load the FPU state, I think it
->    can be folded into switch_fpu_prepare().
+However, later commit 7530ed2aaa3f ("iio: adc: ad7173: add openwire
+detection support for single conversions") makes use of the gpio regmap
+even when we aren't providing gpio controller support. So it makes more
+sense to always enable GPIOLIB rather than trying to make it optional.
 
-Agreed.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504220824.HVrTVov1-lkp@intel.com/
+Fixes: 031bdc8aee01 ("iio: adc: ad7173: add calibration support")
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+Not related to the fix, but I also question the use of the regmap here.
+This is one of the ad_sigma_delta drivers that does funny things with
+the SPI bus, like keeping it locked during the entire time a buffer is
+enabled. So, if someone tried to use a GPIO during a buffered read, the
+GPIO call could block (waiting for the SPI bus mutex) until the buffer
+is disabled, which could be an indefinitely long time. And to make it
+even worse, this is not an interruptible wait, so the GPIO consumer
+would effectively be deadlocked.
+---
+ drivers/iio/adc/Kconfig  |  5 +++--
+ drivers/iio/adc/ad7173.c | 15 +--------------
+ 2 files changed, 4 insertions(+), 16 deletions(-)
 
-> 2. But the main question is that I fail to understand why
->    __switch_to() -> switch_fpu_finish() uses the "next" task to set
->    TIF_NEED_FPU_LOAD.
-> 
->    I think that set_tsk_thread_flag(prev_p, TIF_NEED_FPU_LOAD) makes
->    more sense.
-> 
->    Just in case, note that fpu_clone() sets TIF_NEED_FPU_LOAD, so
->    we should not worry about the 1st __switch_to(next_p).
-> 
-> IOW, can you explain why the (untested) patch below could be wrong?
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index ad06cf5567851ee71f1211ec69d59fd5c1857ee5..4591c886ffea5519b374a28c7a0698eb19169c9f 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -137,8 +137,9 @@ config AD7173
+ 	tristate "Analog Devices AD7173 driver"
+ 	depends on SPI_MASTER
+ 	select AD_SIGMA_DELTA
+-	select GPIO_REGMAP if GPIOLIB
+-	select REGMAP_SPI if GPIOLIB
++	select GPIOLIB
++	select GPIO_REGMAP
++	select REGMAP_SPI
+ 	help
+ 	  Say yes here to build support for Analog Devices AD7173 and similar ADC
+ 	  Currently supported models:
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 69de5886474ce2f700bf277ce707b15637113564..b3e6bd2a55d717d5384616d9a8a160c57a8f1948 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -230,10 +230,8 @@ struct ad7173_state {
+ 	unsigned long long *config_cnts;
+ 	struct clk *ext_clk;
+ 	struct clk_hw int_clk_hw;
+-#if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct regmap *reg_gpiocon_regmap;
+ 	struct gpio_regmap *gpio_regmap;
+-#endif
+ };
+ 
+ static unsigned int ad4115_sinc5_data_rates[] = {
+@@ -288,8 +286,6 @@ static const char *const ad7173_clk_sel[] = {
+ 	"ext-clk", "xtal"
+ };
+ 
+-#if IS_ENABLED(CONFIG_GPIOLIB)
+-
+ static const struct regmap_range ad7173_range_gpio[] = {
+ 	regmap_reg_range(AD7173_REG_GPIO, AD7173_REG_GPIO),
+ };
+@@ -543,12 +539,6 @@ static int ad7173_gpio_init(struct ad7173_state *st)
+ 
+ 	return 0;
+ }
+-#else
+-static int ad7173_gpio_init(struct ad7173_state *st)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_GPIOLIB */
+ 
+ static struct ad7173_state *ad_sigma_delta_to_ad7173(struct ad_sigma_delta *sd)
+ {
+@@ -1797,10 +1787,7 @@ static int ad7173_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (IS_ENABLED(CONFIG_GPIOLIB))
+-		return ad7173_gpio_init(st);
+-
+-	return 0;
++	return ad7173_gpio_init(st);
+ }
+ 
+ static const struct of_device_id ad7173_of_match[] = {
 
-I think your patch should work.
+---
+base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
+change-id: 20250422-iio-adc-ad7173-fix-compile-without-gpiolib-7dd72e254994
 
-> We can even remove the PF_KTHREAD check in switch_fpu_prepare(), kthreads
-> should never clear TIF_NEED_FPU_LOAD...
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
 
-Agreed.
-
-Thanks,
-
-	Ingo
