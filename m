@@ -1,67 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70F293B70
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF194293B70
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340129; cv=none; b=KIaCCF0y4JZiBFLcbjYPAzKHtmALtatR2sAhT7w3tvBz6APaoDrTuT4C/z+R8coEgj3SqIP0fGw8WEXSzqQ6EHgl+aHXhnZSmtNDk/jblP2QrumIwdAXKUcEGSPyzcTNR4SwRMBvUY9gCBaJOKymHlKE9gWVgKSpHbOKHpqb4uI=
+	t=1745340141; cv=none; b=C8sfFGTDfZQiV2x+UYucBF3rCHAScC8ThkG1KjvNjt7BzWC+JJ3kzznlxdVgAtSct+XyThjXPvdLZT2EpygdH8oX24Htl+pDxduOgMJB826or19ptJTK6gZEl9kPUQLaIFUEwPC8naa97D3SsqySEBG2SYuHWI/xOe6mzQhnjrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340129; c=relaxed/simple;
-	bh=UQBX8x4rTC1R9wFJI5Tf5/gNMsjeHaRLmt9zIWXzchg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NE77oBgR/pDSgKVDykghQYRboK8L8Gug3MJmxRWArNDbwth3Oa2V+D0wEjRADJJwCgyP7iloNsYqZ7Ol3GASWSlTfCUmdLqTnj/JjErsbI+4otZtoY5SPmucnObHDSlyPWdYTTsUnjbYWLPrLhZEnwqaFURmUDS2871ekNbMxWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IQc/UWLj; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1745340141; c=relaxed/simple;
+	bh=sfBmd1OBbJI2abcZpauJWCnwwx49LFyiSAV6mfejFhE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o5YHOXTtHsWAR+/c6Pxi0ebIHZcCaqG91ZRM2Ivwue+l8ZuNYOi9zgI7AZiwWuWwxwXsYDL1xRoh9NApE9f//gO7GCujKJy5E6PjcPkVbIdWZ2cCmPHN0l5Vnh2IwZ8aHtKU9FLODOd+25WmcuMRgpbn0XGAmyASvedOZfjFLcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nk+llupu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQc/UWLj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nk+llupu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745340126;
+	s=mimecast20190719; t=1745340138;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KK4TWsLp0PtMCarQy+1TyJOWeXbWvyau46qeTqoxrRM=;
-	b=IQc/UWLjuNm7ZXho0avBVw0bofte8s+fFwclZii8+UINy5z63/e4UK5qdUTl1N1FyLEfeO
-	xG91lOdhyvGPhTfFJqyLnlzXYZLCcFCifxYwxYnatFKeyP7T0Ouenh+fq8jtPAyHb7WKfg
-	5oM/QwW2CRru/63hewNK5DSOv6SfS0c=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DslNlnyYeBMO8E0a4QEwSeg6EwzYfoV0u5u9NaRMXyQ=;
+	b=Nk+llupuYE2/Z1iEn+78im+9pJrLVjjxMlHiF4JtQUme0HNKPgdiNFQNLKiNo7IGN+0ZBu
+	yRdOyI33BP5h2ODWmer/z4uKPQ4my/JLFo+It7Len+QeBJsWJ31TmBHy0reEUy1Uz0Gfkz
+	Av1drl8YwhQ5xCV60u5wGIMII1zYR9o=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-bOAdl9cUN7mZJQajCIKa0Q-1; Tue, 22 Apr 2025 12:42:05 -0400
-X-MC-Unique: bOAdl9cUN7mZJQajCIKa0Q-1
-X-Mimecast-MFC-AGG-ID: bOAdl9cUN7mZJQajCIKa0Q_1745340125
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f2b50a75d8so70160146d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:42:05 -0700 (PDT)
+ us-mta-648-_pBNP3nLN5yBXssSVsDG5A-1; Tue, 22 Apr 2025 12:42:17 -0400
+X-MC-Unique: _pBNP3nLN5yBXssSVsDG5A-1
+X-Mimecast-MFC-AGG-ID: _pBNP3nLN5yBXssSVsDG5A_1745340136
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6ecfbdaaee3so95522156d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:42:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745340125; x=1745944925;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KK4TWsLp0PtMCarQy+1TyJOWeXbWvyau46qeTqoxrRM=;
-        b=Zobteoq0fagByYJcgAz6cpYk102d8A/71smEPVlBi0GI2O8ANhcMfgWJgZJOqhKpNH
-         KvwPx2Q0nlCuSJEpN5UVZclH4fmiZVEJ0s98nGCHkfK77/PO3CTfCJux1Sk0qfBbYdBy
-         IwjYwlQ96A8PcJ1a743ZgqFqA/qci0XcxpT3ZG8LZ2IQ7U91S8ieD7ablm84Zvux6yrB
-         yunv7+t4zoBgU407j4oy+H+GhDoWRfBP547dZXjBIuXqnMOzmUf1qh68+SR1c+WU4vZ3
-         /c5A0zCQA8gghSSPo1GJuXgjCM6GI9G46wgsBuGu6xnykx3c3ZuQuE73LrUtmxlc299k
-         1Erw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYgYUtQHesXRs7hEY+N0H/FCNbcL/rlVv74NkQgCfwdn2foI9C0RvEJPVXSYLPPm4XFHmQ6LDnE9MTzJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyODGwbBSDCv51nG5CDG2LjeeC/jObegmmISqrK3RAq/rS54mz1
-	VwbjvaAL48jTDoLRWevz57sJ4hPoa1qW4mQbPK5VZtcsqGNtOikjzwG8/IDLs2xXN1Bi6s9d9fE
-	SOwRxQ0bYdyZyNxtSBwJRNbIyM30nRljNN+AkmHqNudwfuQ7J/mIDsyoIGRJfCA==
-X-Gm-Gg: ASbGncsmg8THRN42WEp7m75ZIhc/KKNYvLIxDN+OeVTunCjeCZKjMEs75bf9G+aKNbj
-	pXCc/E5zZnRA4Vahb76er1UgMHJeH/LN/VItgYzWXS1SFHmKuC+D0ELETSA4EQZ42WrQN3MTGJ3
-	7xPKcg/dtJhNrowcbd+ac5GB5Ps6Rw8seGJ3IKqop/ioe8PA7fkEeUKVvCHWftkQvdYSPxjjn5I
-	+hcXfYSfjWuNNOuEtYf44hi+YhwZmqEFsiV1RMF1mTZRklrQkTkWjSw/V90kotpg6NcgKd75hWP
-	5tRgEU7KfQL1KUuYdZtEtV0sWyt9aDr+u8yqevUoFUE=
-X-Received: by 2002:a05:6214:c64:b0:6f2:c10b:db13 with SMTP id 6a1803df08f44-6f2c44ea415mr295054686d6.5.1745340124691;
-        Tue, 22 Apr 2025 09:42:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHDj03Kvoy5X2geaEJFNrce1J9/+WUYtjeTgPtoN7cjkmOT88E1rMHseJK37Trf6aqqKx0kw==
-X-Received: by 2002:a05:6214:c64:b0:6f2:c10b:db13 with SMTP id 6a1803df08f44-6f2c44ea415mr295054326d6.5.1745340124403;
-        Tue, 22 Apr 2025 09:42:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745340136; x=1745944936;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DslNlnyYeBMO8E0a4QEwSeg6EwzYfoV0u5u9NaRMXyQ=;
+        b=J/eZ35rs98pl5GCSA7lnoXae5ig+f2REuava4c+jlU2OhHrkjEeNeTum3BlXIvpeHR
+         Db+o/VkDjH9vOIcqQwkdP/g1VizlN7K1x/NBKZcuznijqqsoZj1OwhXULYucm4euhU1Y
+         dqcq9bB8l9VOkuIMvXxS7TPGU/IWIm8fM3eImm0uHH0vnhLlnjchUpSgUB/W/LQXVn02
+         0qp2fy/N2g81an7ufe/DhDadiFG8hApoBJ1g6DAqbdqMtL3pb0I2zwRegXxZcPvWCXCd
+         vIEYF8rq1CqcsJ+r10ttJubcO9FwxYLsydY+xJBwgI+zKVTCgpNbQBwjpF+kvx4vl6v1
+         s4SA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFvNRbNC1CVgp1H+U/o3xWvggg3HCMiXf7B/yHqZlwwv5XttLc/WYDlUpLAA4G/AQeOK3Vmt9D97HzaCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNXmdSNVXYq9pYP0lHy7Hz080x0ZGnccstc2ZHBBCKluMDUuHg
+	QfeFdTSzxmkH4gWGc23TAI/z/f/G23uD8yWuChjk3uxcVAda75o8z1i70qUd0+orX2/MLH1YFFx
+	KIv7JcViM33suyX5LArJ11SOhoKsilcTMIMtoXb+e2yWxmuCz/C4Fl0N909n5Ig==
+X-Gm-Gg: ASbGncuu+nVDmGH6juDSlAWOeFsAMAoiOtlUWcqG4BX/bb7UW4xFi4q8TTuXBCfG0fR
+	6/lAu0nZa6renu8SENoiZ1BLaaQhuWRv6MzQVOSql3huL/Szv9+fPE+LgkTlsOvZrqAYqs8ylaG
+	RtTEM2OrFM8xjM7By2BdICQYAPqY0tmlSIRrglXDM8DM9DPfyti1MHXUL3xkdaYLgihd6+toqNM
+	Zsbd6HGsxc2JEIPM7k5lIb4FInUM50ai8HyC01OVXFA7z2o8o9RW6eGU/wgxF6H4r/gc9yz6rFb
+	Rwv9fl1uHJYu9YOH6vJiOc0VcQVIsIj41/NM6oeh0H4=
+X-Received: by 2002:ad4:5b83:0:b0:6e6:5f28:9874 with SMTP id 6a1803df08f44-6f2c45020bbmr281212096d6.2.1745340136438;
+        Tue, 22 Apr 2025 09:42:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhkxVwuhOpuvq8AHrvgiI5QWqG6hL6givDMi15YOYCGirBK6AgyVMwswxh5i/TmbGi6XhlcQ==
+X-Received: by 2002:ad4:5b83:0:b0:6e6:5f28:9874 with SMTP id 6a1803df08f44-6f2c45020bbmr281211806d6.2.1745340136156;
+        Tue, 22 Apr 2025 09:42:16 -0700 (PDT)
 Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd182sm59451376d6.80.2025.04.22.09.42.02
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd182sm59451376d6.80.2025.04.22.09.42.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 09:42:04 -0700 (PDT)
+        Tue, 22 Apr 2025 09:42:15 -0700 (PDT)
 From: Jared Kangas <jkangas@redhat.com>
 To: sumit.semwal@linaro.org,
 	benjamin.gaignard@collabora.com,
@@ -75,10 +77,12 @@ Cc: mripard@kernel.org,
 	linaro-mm-sig@lists.linaro.org,
 	linux-kernel@vger.kernel.org,
 	Jared Kangas <jkangas@redhat.com>
-Subject: [PATCH 0/2] dma-buf: heaps: Use constant name for CMA heap
-Date: Tue, 22 Apr 2025 09:41:46 -0700
-Message-ID: <20250422164148.547798-1-jkangas@redhat.com>
+Subject: [PATCH 1/2] dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+Date: Tue, 22 Apr 2025 09:41:47 -0700
+Message-ID: <20250422164148.547798-2-jkangas@redhat.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422164148.547798-1-jkangas@redhat.com>
+References: <20250422164148.547798-1-jkangas@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,41 +91,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Prepare for the introduction of a fixed-name CMA heap by replacing the
+unused void pointer parameter in __add_cma_heap() with the heap name.
 
-This patch series is based on a previous discussion around CMA heap
-naming. [1] The heap's name depends on the device name, which is
-generally "reserved", "linux,cma", or "default-pool", but could be any
-arbitrary name given to the default CMA area in the devicetree. For a
-consistent userspace interface, the series introduces a constant name
-for the CMA heap, and for backwards compatibility, an additional Kconfig
-that controls the creation of a legacy-named heap with the same CMA
-backing.
+Signed-off-by: Jared Kangas <jkangas@redhat.com>
+---
+ drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-The ideas to handle backwards compatibility in [1] are to either use a
-symlink or add a heap node with a duplicate minor. However, I assume
-that we don't want to create symlinks in /dev from module initcalls, and
-attempting to duplicate minors would cause device_create() to fail.
-Because of these drawbacks, after brainstorming with Maxime Ripard, I
-went with creating a new node in devtmpfs with its own minor. This
-admittedly makes it a little unclear that the old and new nodes are
-backed by the same heap when both are present. The only approach that I
-think would provide total clarity on this in userspace is symlinking,
-which seemed like a fairly involved solution for devtmpfs, but if I'm
-wrong on this, please let me know.
-
-Thanks,
-Jared
-
-Jared Kangas (2):
-  dma-buf: heaps: Parameterize heap name in __add_cma_heap()
-  dma-buf: heaps: Give default CMA heap a fixed name
-
- Documentation/userspace-api/dma-buf-heaps.rst | 11 ++++---
- drivers/dma-buf/heaps/Kconfig                 | 10 +++++++
- drivers/dma-buf/heaps/cma_heap.c              | 30 ++++++++++++++-----
- 3 files changed, 40 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+index 9512d050563a9..e998d8ccd1dc6 100644
+--- a/drivers/dma-buf/heaps/cma_heap.c
++++ b/drivers/dma-buf/heaps/cma_heap.c
+@@ -366,17 +366,17 @@ static const struct dma_heap_ops cma_heap_ops = {
+ 	.allocate = cma_heap_allocate,
+ };
+ 
+-static int __init __add_cma_heap(struct cma *cma, void *data)
++static int __init __add_cma_heap(struct cma *cma, const char *name)
+ {
+-	struct cma_heap *cma_heap;
+ 	struct dma_heap_export_info exp_info;
++	struct cma_heap *cma_heap;
+ 
+ 	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
+ 	if (!cma_heap)
+ 		return -ENOMEM;
+ 	cma_heap->cma = cma;
+ 
+-	exp_info.name = cma_get_name(cma);
++	exp_info.name = name;
+ 	exp_info.ops = &cma_heap_ops;
+ 	exp_info.priv = cma_heap;
+ 
+@@ -394,12 +394,16 @@ static int __init __add_cma_heap(struct cma *cma, void *data)
+ static int __init add_default_cma_heap(void)
+ {
+ 	struct cma *default_cma = dev_get_cma_area(NULL);
+-	int ret = 0;
++	int ret;
+ 
+-	if (default_cma)
+-		ret = __add_cma_heap(default_cma, NULL);
++	if (!default_cma)
++		return 0;
+ 
+-	return ret;
++	ret = __add_cma_heap(default_cma, cma_get_name(default_cma));
++	if (ret)
++		return ret;
++
++	return 0;
+ }
+ module_init(add_default_cma_heap);
+ MODULE_DESCRIPTION("DMA-BUF CMA Heap");
 -- 
 2.49.0
 
