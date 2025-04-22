@@ -1,94 +1,109 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B087B27F4E7;
-	Tue, 22 Apr 2025 13:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868162135DE
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326897; cv=none; b=bK2fstjg2Aoti3SD9PiRNRD2Z+FqN7ONo6gvKz8Jd1KKbW6viKbgU7XZlJgydZsCq9UjZivVwb1bC/3AxzTmRq84/KnYh+MM9T+zeI+4a3zUZbSwIEhOW/yjO3dbqR8RDOmrk5DrlwGpVOArhyn5FSWZtRntevB2afljy+4PeLc=
+	t=1745326914; cv=none; b=cEWCcI9biv7Cn5mtKgBIUJFJitWy2lzPcabnwwUgQPGYk7F/57VTKpSuKpKSASMpJr5bSd9Omqz1LPUUEMeNGtHc+pUuDbxSMySJFPS/w4y0+iqYx2FKPlyCHw+pKkUtnSu0IX4+DNIDMbi7gACvunGLLZDSwWydq96uHbdire4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326897; c=relaxed/simple;
-	bh=5LMGE4ZovaTauFyhzyyvbLqIw01XMG3sYlgkOB3VihQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLUe3Dv17eE9FHMK2dJb8Vn/sZJG+2GglqVTTAwb+EmVso0YE0SyUtN8I9mbgQD6wKDcl4h0AH5JyZo/jgx21FgYvmh+TSDzInMSwZKhT/a+BSP5kP8PMJXl7xn82PkDsSxJgqC59mEXpxIjtKoOMJ9lYewwo+eiYVsY4BycoBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=C4zXWLtl; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="C4zXWLtl"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 072081F99E;
-	Tue, 22 Apr 2025 15:01:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745326891;
-	bh=vjca4SS0LDQaoBRT4ZcgCIXZFJwOWWihMEoq+jbhB/o=; h=From:To:Subject;
-	b=C4zXWLtlL3y67SU1zoapsx4icmhYWhMeUCN1+Dr/K5iofMbMRwqEtYbmtBr/diRVo
-	 WBE7GTpJmG2QiK0IiWCQR+sBO95Wu/XMZqT6cVREWWdTfiKoaOMx18iYPMhkBEHHJh
-	 j4EgkGVlI2GS962j1yky/mfJsEYSkOjKlwNp6MyiEGtnt5ZhHoJ2zRBSjvcWpbb9JG
-	 OYeoQ+x1QMIDpEt8MJb2319XF5JN675YzWIgbL19PiUSvUrMpLYcZo6bZPPhLBakhf
-	 NHWnuz9c5a50LpziXXGaZCwd8NrQzZRH8U6dodWuS92/Rqfvem54ZP788P3RdrB76K
-	 vbkzG8mEnNLhg==
-Date: Tue, 22 Apr 2025 15:01:27 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Philippe Schenker <philippe.schenker@impulsing.ch>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
- usdhc2
-Message-ID: <20250422130127.GA238494@francesco-nb>
-References: <20250422124619.713235-1-Wojciech.Dubowik@mt.com>
+	s=arc-20240116; t=1745326914; c=relaxed/simple;
+	bh=9RbKJiTqHj1K7Ly0QGY1qk4MpGVxJWCwdsvhyrRs0HY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iCvhzuSjBbHAl65XUOj8qLLAxIcvfQwIezp/5dhVdNpRkePesZMlhd2O1MjZZmMz6tz4IeNAi7fn5X5gEVfyigTVeWfAGg/rSV1FnYkI/UdA3zzsiXmNVH7g+arkj2iL6G6/Uv5+eRwdNVQRwRmnDnekUeJCG0V6c9nBor0ZsdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A3AA143AED;
+	Tue, 22 Apr 2025 13:01:48 +0000 (UTC)
+Message-ID: <9d4b7987-40e9-4bed-8869-a514e6c96697@ghiti.fr>
+Date: Tue, 22 Apr 2025 15:01:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422124619.713235-1-Wojciech.Dubowik@mt.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RISC-V: Kconfig: Fix help text of CMDLINE_EXTEND
+Content-Language: en-US
+To: Yeking@Red54.com
+Cc: aou@eecs.berkeley.edu, dmaliotaki@gmail.com,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ mick@ics.forth.gr, palmer@dabbelt.com, paul.walmsley@sifive.com
+References: <4b2a6bf1-3642-431b-bb74-3aeae79d17d3@ghiti.fr>
+ <tencent_0E5DE0122D64CFAD35F51FC3B3433BE94F06@qq.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <tencent_0E5DE0122D64CFAD35F51FC3B3433BE94F06@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: 0
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefjeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepjeekuefgtdehhfevleffvdegteegleetieejkeehheefvedtuddvgfetvefgheffnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepjggvkhhinhhgseftvgguheegrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegumhgrlhhiohhtrghkihesg
+ hhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhitghksehitghsrdhfohhrthhhrdhgrhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-Hello Wojciech,
+Hi,
 
-On Tue, Apr 22, 2025 at 02:46:15PM +0200, Wojciech Dubowik wrote:
-> Define vqmmc regulator-gpio for usdhc2 with vin-supply
-> coming from LDO5.
-> 
-> Without this definition LDO5 will be powered down, disabling
-> SD card after bootup. This has been introduced in commit
-> f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
-> 
-> Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
-> ---
-> v1 -> v2: https://lore.kernel.org/all/20250417112012.785420-1-Wojciech.Dubowik@mt.com/
->  - define gpio regulator for LDO5 vin controlled by vselect signal
-> ---
->  .../boot/dts/freescale/imx8mm-verdin.dtsi     | 23 +++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> index 7251ad3a0017..9b56a36c5f77 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> @@ -1206,13 +1220,17 @@ pinctrl_usdhc2_pwr_en: usdhc2pwrengrp {
->  			<MX8MM_IOMUXC_NAND_CLE_GPIO3_IO5		0x6>;	/* SODIMM 76 */
->  	};
->  
-> +	pinctrl_usdhc2_vsel: usdhc2vselgrp {
-> +		fsl,pins =
-> +			<MX8MM_IOMUXC_GPIO1_IO04_USDHC2_VSELECT	0x10>; /* PMIC_USDHC_VSELECT */
+On 21/04/2025 12:16, Yeking@Red54.com wrote:
+> LoongArch (merged):
+> https://lore.kernel.org/all/tencent_7FAF68BF7A2EAD9BFE869ECFDB837F980309@qq.com/
+>
+> RISC-V:
+> https://lore.kernel.org/all/tencent_A93C7FB46BFD20054AD2FEF4645913FF550A@qq.com/
+>
+> PowerPC:
+> https://lore.kernel.org/all/tencent_6E57A00F6D56CF8475CF9FD13370FBC1CF06@qq.com/
+>
+> SH:
+> https://lore.kernel.org/all/tencent_40B6A6E7C79AEEEFEC79A07DE00724909A05@qq.com/
+>
+> ARM (rejected):
+> https://lore.kernel.org/all/tencent_3E8155B4A33D48D6637F16CFE5ED293F0E08@qq.com/
+>
+> ARM64 (rejected):
+> https://lore.kernel.org/all/tencent_1873443BEECF45E0336D4C4F8C35C19FEB06@qq.com/
+>
+> Russell King (Oracle) wrote:
+> "
+> ARM gained support for CMDLINE_EXTEND in commit 4394c1244249 ("ARM:
+> 6893/1: Allow for kernel command line concatenation") dated 4 May
+> 2011. In this commit, CONFIG_CMDLINE _prefixes_ the boot loader
+> supplied arguments.
+>
+> In commit 34b82026a507 ("fdt: fix extend of cmd line") dated 13
+> April 2016, which _post_ _dates_ the introduction on ARM, and the
+> commit even states that it's fixing the lack of appending compared
+> to ARM, this adds code to drivers/of to _append_ CONFIG_CMDLINE
+> to the FDT arguments which come from the boot loader.
+>
+> It is DT that implemented this wrongly.
+>
+> No, we are not going to change arch/arm to conform to something
+> that was implemented in a broken way. drivers/of needs fixing
+> to actually implement it as it was *originally* intended - and
+> there is five years of arch/arm doing this *before* DT started
+> to do it.
+>
+> If drivers/of maintainers also don't want to change, then I'm
+> sorry, but you have to then put up with the fact that it got
+> wrongly implemented by drivers/of and thus has a different
+> behaviour there.
+> "
 
-This needs to be muxed as GPIO, MX8MM_IOMUXC_GPIO1_IO04_GPIO1_IO4
 
-Francesco
+Thanks for the follow-up.
 
+Since riscv always had the behaviour you describe in your patch, I'll 
+take your patch.
+
+Thanks,
+
+Alex
+
+
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
