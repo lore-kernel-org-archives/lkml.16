@@ -1,130 +1,149 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550C7262FC5
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4815D262FFB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356970; cv=none; b=LB8XQzn9Gs+rb0Nm+sKaVJTcloUgtOCxw2LLXKEVmfdS/7HRWRD3mdrwFSXXnTrMyLikrRczmuWDPlh+LfLugpUBZQ2CEZXirhc7RjBwyNlP0AKRP1cjUOw16vroscQMmt3rJHqm48NJUCiR1JueCYMa3A/q7sIyZtIogeGKsi8=
+	t=1745356994; cv=none; b=CQ8bqKB1gBOjHxAwi/w/byRj0ju2ini3XrvcyH9Jjit5pJQqvNOb4tN3JxATjCP5+pxKB2d07V5F8XoFqmoAJcAt7q8JqP+n9DNo+Py7xcw4ReW9+Bf/ibBk5wwYbkblOSacB5nLro/y7tO/dFhrYofHOxbW/XusEDnbgXvO8F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356970; c=relaxed/simple;
-	bh=W841TAzS9Pgf+kaExtU6OALsXMJdOqew/TQJAigKTzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ElNXnWwXXjBPKBQ6SK2FMetUUZXxAi2MP8otbEvCCVhO3RZhDMbPXEDU/p8gqfGhxpkUuo2Rx6fwPiV8RizSA4u99cOtbmNveVqitpQdJ0zCiQ810mklm6wXd/5HgTjUoZ85zyf+2E7ii8BmroOHh0max1f4OE/sOs7sqt2XPaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cgN0kn2/; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745356994; c=relaxed/simple;
+	bh=k2qWAoAh7FbrhsjzDqPPPK9Nre8fNKQvDQg7GZB2jQo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UhoQ/og9a1XkGTxVT68LyuwJAU/3DzdJGh+OJSBITOPL5zVbKQsYKUfHylhNqFQoxBqdTC+2LS3lmCdFfimhqofj50U0pEkEoJkbGfvEHsmrD2p14LBUbOjK4E77h0wf8ej6t1VPiMmmjgPNKxD6Usnpat0A3bQzysXM91JG1Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=xECsqvF/; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cgN0kn2/"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3fa6c54cc1aso3384192b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:22:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="xECsqvF/"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-477282401b3so63088711cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745356966; x=1745961766; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y7TT6AktatuR9V4aotE2WsOxNczSAdd4gkXQfpRGYa4=;
-        b=cgN0kn2/Y0SlXLbBNCrK2u/+sE9ntT3AzzTeHW3Jx3qtbofInUNhU2hwTIYOp4YKwO
-         qdkeGiM8lTknRXoR3rHUzT5RYR9g23DiDLFg7tWEnAYq1r7Ilxyzi+guXa3LExyHQlq4
-         UWqbUXbp93PyHmdj9s02fQCIaAKm9pZc83R/rTmfp4aMSsYS5743nwudjt754E5YSSsQ
-         LdEbRvPZwToU4hjM2iN5cnu+uhlIk7ni0/tHjSzvsm0NADAsCAvlIvBNLdmCt7rdly9n
-         Sf15jJFCBnitwe1RF0wA1IK/b5LBSmDEk6PEqEn8W7d0UoRmzW7dODPIEdxMo/PY0TQD
-         3cFA==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745356991; x=1745961791; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NGSbhZB8ag8p7jHY+v66knIF5zG8Lt6g7GJ9MoKueNI=;
+        b=xECsqvF/HPNeSF7xVSOlz2FSXmH9HfZ5y2r1sxnCUl3Wg9uwowOumIJyeS1qsubNhB
+         nTcZn4pSL0PfIOok4KqHrewsm6PDZPhNK1vcOzbqLNFp0Bsb0vap07+KV/NpYoweFsQr
+         k8Lo9ZF9pYudlLFfXmeBsjRgsYvqefe69IjLkelPFn14MVPWJ85cAreIryqCty0rg0ok
+         Yv25j+y8c6YYvxQ/6+ImlAitoq3zVo2F7CU29V2qn4BDG2OarJh5BsDc9Ol/lNKNnq6L
+         K+E9Zn4F5VRUad1/sSBh/O97EllqGEuBEotXhMOi2SOxxWPzAPdXAcw26jmMuCsvJE3z
+         XkEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745356966; x=1745961766;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y7TT6AktatuR9V4aotE2WsOxNczSAdd4gkXQfpRGYa4=;
-        b=DBx9rhAP1d0XaFh6VHbZCCNNGWmP0mQ+5ooNXCJiAkwjuuI+5LkU+EoX3KqRyUd9ht
-         B82NEOzzhKKXuAI6IuVxM+9z68iqMwF2zvMfP3J1LfTGPsBRM5CVcqBWRyBcFXJa2LRE
-         gwHj1edgpiKIjIF6IVf1vBVYnka111Hu3BZBJP44LPI2FwU5WaHcLcSdRPZ6Dfz8bz81
-         VzWXEJ10ubbgiEu/souOVjA4vfpU4zt/8O/gREVD9udWVxWRJkme6nAjEkYuP+yRr/h1
-         N3sWkhEcNUaEUm8TM3ZbsXX3zW08jKSK449cXhwe4uX5zyPSo0l6l1YzZI3WQslxMKGW
-         wpIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBr6lPoPsW/uzA0f/iKoSg0gsKUDB2tQCOCu+SjTSVP8CVdG7UuFfwX0WDr78ie4VurmZit/zFpjHru5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1eDQ2SOlcYPfFAjIg4g8iiyfZrIC+pOlvirvrltnGLlHYEkUu
-	BA0qG5nb9zFDPPTcjgVVQ9jHnX2jYsd2tEj/lWUHnf7aKV91GMAJJ5AS6PKiPjA=
-X-Gm-Gg: ASbGnctj223tDTsJwXVsXovEGo077bGp7Rx3JkVVGgrLlkfh+SQbdrqZNv8V031fH80
-	uM1w1iZTngaQ8g3N0WQcdvC9hDZqSD2Ch86jFQseKvEyN0Q4sGj8Hkri5VGd0iBDvqgKIHAxpxX
-	pqlLLFsrHQXEbrHoPRECy0UGbO5VGgkm7K8KPsTdlSYFpCnTMdLMxqt3bzPDlytXNAmWDNNbobO
-	XTejsDZYcjNOrW4FjMK5vGr2H8aYNWeYgFiDdGX9Aajffej3JXO8r6zBFDsDunKdF1M0sQmfEcE
-	XNDYoSqA8h7YHCPimJcxfkvBy+ItxvFiR40shezBtgH2NBeueO6aUWB4obl6K0Hg4MYcP4xDQDl
-	7ZNRXPKcWK47YGLYyx57vasyGYzcl
-X-Google-Smtp-Source: AGHT+IHhf/Du65w2gsf8LB0BSIGka1F4nn2MvgiOYXQWe8VfxLVecdKEmWU3SxNZhCRA5bkBDDkDrg==
-X-Received: by 2002:a05:6808:8214:b0:3fa:8bfd:773f with SMTP id 5614622812f47-401c0a5bf36mr9644378b6e.2.1745356966369;
-        Tue, 22 Apr 2025 14:22:46 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3? ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beeaf8f2sm2265760b6e.10.2025.04.22.14.22.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 14:22:46 -0700 (PDT)
-Message-ID: <12dac98d-3e6b-4c2b-8ac0-d526bdb5efd4@baylibre.com>
-Date: Tue, 22 Apr 2025 16:22:45 -0500
+        d=1e100.net; s=20230601; t=1745356991; x=1745961791;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NGSbhZB8ag8p7jHY+v66knIF5zG8Lt6g7GJ9MoKueNI=;
+        b=jbmaUPHp5el0y+3fuANTeSg/lYzkONaNs6s5mZx7vveBDmfVCgaMrIl4sZonfzznRk
+         HwYdylfwhmsWk/gMm576Sz1G62qhWtCBSWaVJEvOKoaDu6spb65L4KKgONjBXY3g1PFV
+         r6buCZrZiSwKY9asmfCSinRyf4NhChx02y7L1eAbVCckWSAdQX4DzWGZlmmAEAAwR7iU
+         tWGJCqYeD1RuqAG46Qju7+w6/qKLAqr8l8BdTUiJ6LnwcIqxnAmQfHMlvQMvxUXDwu28
+         4f3QVPzkbSAOo8r6xi3wkJqiodzxnNQ8UYFiF3iaEwbs93luO0ZxneqYwLSyrC4gfnYx
+         3zkw==
+X-Gm-Message-State: AOJu0YyioliUdHx/4S8954NflwyodSEY2ccH2wFuILI016mjqP2xan5H
+	TK/EJCprgo4CsmXx1fXh/OFwy2On+fVnF5uYrJFcwV0m/kLWz4R1oUQgVzlWWrHu5kDS8PXGgaj
+	vaOw=
+X-Gm-Gg: ASbGnctextWg3uSbVoQTZdODS73jHwmpiFjy74l86ESjEmnGya2cKGWErp/3RAWLpeZ
+	eE2382ZliqO5S33nMAlymGifOqewSOrcuDvUwk9nCmTLtaym6cmmAvPSQx4zMaxMZMXqd0Ka57b
+	Wgth763YkIxB0duwcJuWqfyMrsuQerrLgeq0nT2T9puJu8wRuKSG6dNrknS5GRd3QurmeAP1uXu
+	iMK8R55ZHARFrEXSKsbCVaFfsBp2cCApXrjVsFmkqv2xwTlfJ7gfIb8ubReR5iBjD06/jrMH58b
+	ok5MarYFjGGs714q0ANrWMmLGz5tjWn947mfbtj3PQ/keQ==
+X-Google-Smtp-Source: AGHT+IF9uypzaq3BBVcupNVm9phJf3EkFEPFQS60GcY07iGqTEuWHuBVOhzqczy1xvt1uMaSYNbYKQ==
+X-Received: by 2002:a05:6214:4008:b0:6e8:f166:b19e with SMTP id 6a1803df08f44-6f2c4546788mr247406366d6.17.1745356991131;
+        Tue, 22 Apr 2025 14:23:11 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfcfd0sm61986756d6.82.2025.04.22.14.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 14:23:10 -0700 (PDT)
+Message-ID: <99029039e6887b1660c897b25c3792253b477a52.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: amphion: Slightly simplify vpu_core_register()
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Ming Qian
+	 <ming.qian@nxp.com>, Zhou Peng <eagle.zhou@nxp.com>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-media@vger.kernel.org
+Date: Tue, 22 Apr 2025 17:23:09 -0400
+In-Reply-To: <e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
+References: 
+	<e59b3387479fcdaa4ae0faf9fe30eb92a8f6034b.1744927294.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: pressure: bmp280: drop sensor_data array
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
- <CAHp75Ve_C6BXo75xy4+xZ5b1O9-TT5TGGQDgTR_F1s3TFK3p6Q@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <CAHp75Ve_C6BXo75xy4+xZ5b1O9-TT5TGGQDgTR_F1s3TFK3p6Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 4/22/25 3:57 PM, Andy Shevchenko wrote:
-> On Tue, Apr 22, 2025 at 10:28 PM David Lechner <dlechner@baylibre.com> wrote:
->>
->> Drop the sensor_data array from struct bmp280_data and replace it using
->> local structs in each interrupt handler.
->>
->> The sensor_data array in struct bmp280_data is not used to share data
->> between functions and isn't used for DMA, so there isn't really a need
->> to have it in the struct. Instead, we can use the struct pattern for
->> scan data in each interrupt handler. This has the advantage of allowing
->> us to see the actual layout of each scan buffer for each different type
->> of supported sensor. It also avoid juggling values between local
-> 
-> of the supported
+Le vendredi 18 avril 2025 =C3=A0 00:01 +0200, Christophe JAILLET a =C3=A9cr=
+it=C2=A0:
+> "vpu_core->msg_buffer_size" is unused out-side of vpu_core_register().
+> There is no need to save this value in struct vpu_core.
+>=20
+> Remove it and use a local variable instead.
+>=20
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-I think what I wrote is correct grammar. Same as if I would have written
-"each type of sensor". I would not write "each type of the sensor".
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-> 
->> variables and the array which makes the code a bit simpler by avoiding
->> some extra assignments.
->>
->> We can also drop the BME280_NUM_MAX_CHANNELS macro as it is no longer
->> used.
-> 
-> I like this change so much, thanks!
-> But one comment below.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> 
-> ...
-> 
->>         /* Pressure calculations */
->> -       memcpy(&data->sensor_data[offset], &data->buf[3], 3);
->> -
->> -       offset += sizeof(s32);
->> +       memcpy(&buffer.comp_press, &data->buf[3], 3);
->>
->>         /* Temperature calculations */
->> -       memcpy(&data->sensor_data[offset], &data->buf[0], 3);
->> +       memcpy(&buffer.comp_temp, &data->buf[0], 3);
-> 
-> Shouldn't these memcpy():s be get_unaligned_be24()/get_unaligned_le24()?
-> 
+thanks,
+Nicolas
 
-The scan_type.endianness is already defined as IIO_LE, so we must preserve the
-the little-endian order, even on big-endian systems.
-
+> ---
+> =C2=A0drivers/media/platform/amphion/vpu.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+| 1 -
+> =C2=A0drivers/media/platform/amphion/vpu_core.c | 7 ++++---
+> =C2=A02 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/amphion/vpu.h b/drivers/media/platfor=
+m/amphion/vpu.h
+> index 22f0da26ccec..1451549c9dd2 100644
+> --- a/drivers/media/platform/amphion/vpu.h
+> +++ b/drivers/media/platform/amphion/vpu.h
+> @@ -162,7 +162,6 @@ struct vpu_core {
+> =C2=A0	struct delayed_work msg_delayed_work;
+> =C2=A0	struct kfifo msg_fifo;
+> =C2=A0	void *msg_buffer;
+> -	unsigned int msg_buffer_size;
+> =C2=A0
+> =C2=A0	struct vpu_dev *vpu;
+> =C2=A0	void *iface;
+> diff --git a/drivers/media/platform/amphion/vpu_core.c b/drivers/media/pl=
+atform/amphion/vpu_core.c
+> index 8df85c14ab3f..da00f5fc0e5d 100644
+> --- a/drivers/media/platform/amphion/vpu_core.c
+> +++ b/drivers/media/platform/amphion/vpu_core.c
+> @@ -250,6 +250,7 @@ static void vpu_core_get_vpu(struct vpu_core *core)
+> =C2=A0static int vpu_core_register(struct device *dev, struct vpu_core *c=
+ore)
+> =C2=A0{
+> =C2=A0	struct vpu_dev *vpu =3D dev_get_drvdata(dev);
+> +	unsigned int buffer_size;
+> =C2=A0	int ret =3D 0;
+> =C2=A0
+> =C2=A0	dev_dbg(core->dev, "register core %s\n", vpu_core_type_desc(core->=
+type));
+> @@ -263,14 +264,14 @@ static int vpu_core_register(struct device *dev, st=
+ruct vpu_core *core)
+> =C2=A0	}
+> =C2=A0	INIT_WORK(&core->msg_work, vpu_msg_run_work);
+> =C2=A0	INIT_DELAYED_WORK(&core->msg_delayed_work, vpu_msg_delayed_work);
+> -	core->msg_buffer_size =3D roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
+> -	core->msg_buffer =3D vzalloc(core->msg_buffer_size);
+> +	buffer_size =3D roundup_pow_of_two(VPU_MSG_BUFFER_SIZE);
+> +	core->msg_buffer =3D vzalloc(buffer_size);
+> =C2=A0	if (!core->msg_buffer) {
+> =C2=A0		dev_err(core->dev, "failed allocate buffer for fifo\n");
+> =C2=A0		ret =3D -ENOMEM;
+> =C2=A0		goto error;
+> =C2=A0	}
+> -	ret =3D kfifo_init(&core->msg_fifo, core->msg_buffer, core->msg_buffer_=
+size);
+> +	ret =3D kfifo_init(&core->msg_fifo, core->msg_buffer, buffer_size);
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(core->dev, "failed init kfifo\n");
+> =C2=A0		goto error;
