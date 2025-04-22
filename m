@@ -1,162 +1,148 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B59277819;
-	Tue, 22 Apr 2025 12:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77951A239B;
+	Tue, 22 Apr 2025 12:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745323238; cv=none; b=J66aHpPUFHi3PdCHTkvRu4qvPH/GUAm6/t0ZFxGGKkyNSNvyYSf0kaLLA3dWa2QwnnBdAliMjhzsemgJljcRWpRVtv2FJkBJfuSI3+mmoEYZeJq7TUeSYUNgybE3SGctqn5FF5Nd+AzD+CnAIEaRd//GbcC51SZWxtXOATSZWWA=
+	t=1745323261; cv=none; b=rFqrFMuBzPRx1iz20r5/vWesA+J5PJIOoTkxw6tw5rNyP63+eq7pDFRTuEzu7dds9A3VCO2DVrtP0d2z/idJ8PgDZYxPxfhWyzyZUKKll11lcwT7Jr0dMzwDSEwECWbaHAydD3zDcqewGVlf795e2Ul4mO9CvvhiFoVDc2hTNk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745323238; c=relaxed/simple;
-	bh=PE32aOICxpf9Il971tWVYUOauqB5/VNm8nNUXdWIFZU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=bX6IB1r32ke51NUX5qyW0628CAdH6F+Z9i9Opw8eaQ9793xFlAp/keRrTvm1YmmZTIN1YDkrsLAJjs2Lh8sBIQ4vgeczMmjt0e+iF+728enAuHNnoUO/a8sXa6aZ4dMxcLuDi0/peGsXuEAefDDrC6L9P6U10ndQBcfUHIk7Zxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=FCtdW4K7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=mWK2dk0L; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745323261; c=relaxed/simple;
+	bh=5ivSXriZlZX1VPtg5ep58Ir0zv9w9p5ggzXXUi3h5lM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QEKPeYaz2JkJtnV+0HNR8fzC8fHUE+iyHrOQYRUFIjGAJomVq4ODg3B1qcERQWpQvZ4gSEMZJxoHX/h5aTUWEQMKk6x4EB0S8YgFmZeByoBvqtJwsEEvQsQU2xrREuROyxnkmvI2J98S6rLz5QzktrjmJSOKOJYWYKkm9XN+V9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LYsVvu2n; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="FCtdW4K7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mWK2dk0L"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CD0161140251;
-	Tue, 22 Apr 2025 08:00:34 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 08:00:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745323234;
-	 x=1745409634; bh=8nthwYMKR4aOFINu9xZgH8QRFGdfF9jUoUvoZlCSYU4=; b=
-	FCtdW4K7I5zRyUQp1mclIzfaXPPDcsgT0G2XsPEkSGSS8BJ40XFJNF2l/bzcVak8
-	PJLftEKTePKlehKHr+AnSvI7TJIxO7SmiCXgJsU8scKoUhwtBOBCWVCKyZ2jO5Dl
-	rBxjlwr3fQORHFVrP9KtM8XvSwYXecX888kwoZr3ZjMZWPbq5U+GcaDO9fA15UkU
-	mmCcRxJwJkrWzHG54q5ElF+wJVS2G3JqYc3Jw0U2WG7ocF+5lNFPTeG9rvmuWCsi
-	njglbjyrOiOLj2cIiTM3373DP7mgJGa16rLBBiZx6hT1WzvvUHLFcDBFtrF6P71X
-	yXIm2hKpVmQmddjLM2RTVA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745323234; x=
-	1745409634; bh=8nthwYMKR4aOFINu9xZgH8QRFGdfF9jUoUvoZlCSYU4=; b=m
-	WK2dk0L1aVa94+bunBhLx17FVJznnvK/AdKm8nEPfZUUS7IgF0ziI7PzIWNBofEQ
-	8CZP7gBY7bFYlNyj5QRhlUrNMvKSkF1nUwZOM7WaUPvrmIdCKqTGDpIZ9FJRrMrs
-	rY0dJK3JYP7Dr0c16X1Bp+SqDKHx6gHlSLl7FwmrAry9AEdQl7UZOnjQKjYZj+B6
-	vvrboj+7geoKTlI3tPb17BOxBo5pSKE6uOpB5ryVL8Hvhcip4IQ4CnrOLRyuJokn
-	nRUzuu1LC2c51effPU6RF18xX6fkizjG8VKovi8vuJXpvIaMldvoBAgALUzx2XUW
-	Fu8/l8WsLkMTIO1/RIRvQ==
-X-ME-Sender: <xms:4IQHaIwwAg2ARtGf3jGlqMBsIagJvBoGj0v_BftaGeTLZUA9fgBI2A>
-    <xme:4IQHaMSPkvJvmtb0CK21vKbtTwBPmE5CK5CbIBK6vPn0gPn4v1aYB4jF5XJoOGGAX
-    T6MbIL_0gzIP5Ud60k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefieejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedv
-    vdegjedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    gedtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrg
-    hnsegrmhgurdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdr
-    tghomhdprhgtphhtthhopehpvggurgesrgigvghnthhirgdrshgvpdhrtghpthhtohepmh
-    htuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehhvghrvhgv
-    rdgtohguihhnrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrh
-    gvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvght
-    rgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepghgvvghrthdorhgvnh
-    gvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegujhhrshgtrghllhihsehgmhgr
-    ihhlrdgtohhm
-X-ME-Proxy: <xmx:4IQHaKWmoW2di_TlBk_3LC0bIqSqcvphy6ets2e-rndyOqir4PbyCA>
-    <xmx:4IQHaGiei-Ql0GRpXERiVlv65LxFK-7j6r-KkvhG1fj3vn-8NEFwVQ>
-    <xmx:4IQHaKCm5zPJpibs-8kVLkqGWNg8UD2hn4Z8TqFJIGHP--QssqYrRg>
-    <xmx:4IQHaHJOvBUka2beZuMcFi1smo_KB-gJx9FuTpNKCqV5ylIZza69NQ>
-    <xmx:4oQHaJYK6LHO-f8uu6Lf4HNT_VDikvi48Yp8jo6RBxgTdQ2SDj7VOZ4o>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id D0CBA2220073; Tue, 22 Apr 2025 08:00:32 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LYsVvu2n"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MC0lVf1206356
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 07:00:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745323247;
+	bh=2Qm4Y02Y6jma5aQSjcKIxPmnEE1BWVaqEOZGF7JM4c4=;
+	h=From:To:CC:Subject:Date;
+	b=LYsVvu2nE815Ymd7jzTW+NNXvOrMIBDGTa/gtYPo4OJd72JdgsFJvDL5r9pza4bb+
+	 QDOUD4NbAgapZ1Ve3hv6yT0R0j482Kf0ep45isttg7Rz74pQxPVv5c0/2YelrLv9Fd
+	 Q5UM/wjA1M3TXQwWzcttv5XNB+PI3uIJVt9lTXy4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MC0lsd128010
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 07:00:47 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 07:00:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 07:00:47 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MC0hVv094623;
+	Tue, 22 Apr 2025 07:00:43 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v2 0/7] AM64 and J7X DT: Enable PCIe 64-bit Address Space
+Date: Tue, 22 Apr 2025 17:30:35 +0530
+Message-ID: <20250422120042.3746004-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T51aa6c607dc631ce
-Date: Tue, 22 Apr 2025 14:00:12 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Herve Codina" <herve.codina@bootlin.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Fabio Estevam" <festevam@gmail.com>,
- "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Andi Shyti" <andi.shyti@kernel.org>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
- "Peter Rosin" <peda@axentia.se>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Rob Herring" <robh@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>,
- "Bjorn Helgaas" <bhelgaas@google.com>, "Mark Brown" <broonie@kernel.org>,
- "Len Brown" <lenb@kernel.org>, "Daniel Scally" <djrscally@gmail.com>,
- "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
- "Sakari Ailus" <sakari.ailus@linux.intel.com>,
- "Wolfram Sang" <wsa@kernel.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
- linux-acpi@vger.kernel.org,
- "Allan Nielsen" <allan.nielsen@microchip.com>,
- "Horatiu Vultur" <horatiu.vultur@microchip.com>,
- "Steen Hegelund" <steen.hegelund@microchip.com>,
- "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
-Message-Id: <68b23799-29c2-4309-b55a-87d83dc6fbe9@app.fastmail.com>
-In-Reply-To: <20250408154925.5653d506@bootlin.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-12-herve.codina@bootlin.com>
- <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com> <20250408154925.5653d506@bootlin.com>
-Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support for x86
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 8, 2025, at 15:49, Herve Codina wrote:
-> On Mon, 7 Apr 2025 18:36:28 +0300
->> On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
->>=20
->> This is incorrect, they never had ACPI to begin with. Also there is t=
-hird
->> platform that are using DT on x86 core =E2=80=94 SpreadTrum based pho=
-nes.
->
-> I will rework the commit log to avoid 'mixing ACPI and device-tree'
->
-> For "SpreadTrum based phones", do you have an idea about the Kconfig s=
-ymbol
-> I could use to filter our this x86 systems?
->
-> Anything I find upstream related to SpreadTrum seems base on ARM cpus.
-> I probably miss something.
+Hello,
 
-This is the Intel SOFIA platform with chips from both Spreadtrum (now
-Unisoc) and Rockchips, using a port of the arch/arm/ code DT on x86,
-about 10 years ago.
+The Cadence PCIe Controllers in TI's K3 SoCs namely:
+AM64, J7200, J721E, J721S2 (AM68), J722S, J742S2 and J784S4 (AM69)
+support two address regions:
+1. 128 MB address region in the 32-bit address space
+2. 4 GB address region in the 64-bit address space
 
-That code was never upstreamed, and is long abandoned by everyone.
+Currently, the 128 MB region in the 32-bit address space is enabled in
+the device-tree. This might be suitable for most of the use-cases, but
+for those use-cases requiring larger address regions than 128 MB it is
+necessary to switch to the 64-bit address space with the 4 GB address
+region. This series implements the corresponding device-tree changes to
+support the 4 GB address region as the default configuration. Existing
+use-cases should continue to work without any regression.
 
->> And not sure about AMD stuff (Geode?).
->
-> Same here, if some AMD devices need to be filtered out, is there a spe=
-cific
-> Kconfig symbol I can use ?
+Series is based on linux-next tagged next-20250417.
 
-The only one I can think of is CONFIG_OLPC, the XO-1 was a Geode LX,
-while XO-1.5 used a VIA C7, both with actual open firmware (not just
-fdt).
+Link to v1 series:
+https://lore.kernel.org/r/20250417120407.2646929-1-s-vadapalli@ti.com/
 
-       Arnd
+Changes since v1 series:
+- Fixed the 'ranges' in k3-j721e.dtsi which is the third patch of the
+  series to set the size as 4 GB instead of the incorrect value of 128 MB.
+- Based on Udit's feedback and offline discussion as described at:
+  https://lore.kernel.org/r/7f6ea98c-df6d-4c94-8f42-76cc8306b6c4@ti.com/
+  the address region of 4 GB is split as:
+  0. 4 KB ECAM
+  1. 1 MB IO
+  2. (4 GB - 1 MB - 4 KB) 32-bit Non-Prefetchable MEM
+  instead of the previous split of:
+  0. 4 KB ECAM
+  1. 1 MB IO
+  2. 128 MB 32-bit Non-Prefetchable MEM
+  3. (4 GB - 129 MB - 4 KB) 64-bit Prefetchable MEM
+
+Series has been tested on AM642-EVM, J7200-EVM, J721E-EVM, J721S2-EVM,
+J722S-EVM and J784S4-EVM using an NVMe SSD connected to the PCIe
+Connector on the EVMs.
+
+Test Logs:
+1. AM642-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/5d1814ee2e0857dac0ac08a6cf8759da
+2. J7200-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/9927faab7615b9c1c101854a213f30f5
+3. J721E-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/e6545e31f45077fe59c896f8875bf1b9
+4. J721E-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/5c0b64f339f89139797d8346c40b1ee9
+5. J721S2-EVM PCIe1
+https://gist.github.com/Siddharth-Vadapalli-at-TI/67b03c441d53ef0d27837e615371efbd
+6. J722S-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/7625f47b57d45aada4c125ac4f60ebd6
+7. J784S4-EVM PCIe0
+https://gist.github.com/Siddharth-Vadapalli-at-TI/edf2af424fc7d5905832d536a1171a1a
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (7):
+  arm64: dts: ti: k3-am64-main: switch to 64-bit address space for PCIe0
+  arm64: dts: ti: k3-j7200-main: switch to 64-bit address space for
+    PCIe1
+  arm64: dts: ti: k3-j721e: add ranges for PCIe0 DAT1 and PCIe1 DAT1
+  arm64: dts: ti: k3-j721e-main: switch to 64-bit address space for
+    PCIe0 and PCIe1
+  arm64: dts: ti: k3-j721s2-main: switch to 64-bit address space for
+    PCIe1
+  arm64: dts: ti: k3-j722s-main: switch to 64-bit address space for
+    PCIe0
+  arm64: dts: ti: k3-j784s4-j742s2-main-common: switch to 64-bit address
+    space for PCIe0 and PCIe1
+
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi             |  6 +++---
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi            |  6 +++---
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi            | 12 ++++++------
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi                 |  2 ++
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi           |  6 +++---
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi            |  6 +++---
+ .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi    | 12 ++++++------
+ 7 files changed, 26 insertions(+), 24 deletions(-)
+
+-- 
+2.34.1
+
