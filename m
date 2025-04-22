@@ -1,161 +1,134 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6374BEC5;
-	Tue, 22 Apr 2025 04:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3218828
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296227; cv=none; b=SycdBLaNnHpeyS1CvDOS3dBFGDUBz5I+NvjtEhIgU/LwklTryL/ZBXKp49fm+7xDV/doMTFUTCeXOV8GV1IqduWu8Zqyp05qAmruGwD5KN7RaZzTD5Pj2hGPdVyCkVILZUNfESKOHX/8PKcqnH5o5etlOqryOfpP/nqvd2lrvsc=
+	t=1745296271; cv=none; b=a1hPAY/GHASUcgTPzYguEUi85K4h4NbJj+0Eb77tHLxMlnPemG3R3YgmL4dss+xNHru47srkCGasKBhNfnMV4O3F1O6sldattjeMr6fMmf/awQcmmWxasrMlmIVwSdfBRlIG62Abvl7KdhG7UH+zO9MhXOVFcqJUvgkyR7fVAnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296227; c=relaxed/simple;
-	bh=V4QB+xgTy8ClDZy7S3/vUXGI9Uxh9R5+J1mS5EEk/s8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QseDQvcfuBo3LZeMrGMg+W3Sd1BGhHeDerh8eHv/GJ7JPJlH0xLqmmyqnQLQOUhGj4Jr2rdj2LrdZyOkiof+DjYPT6vocpdLvHxCiGbF9pMB+h88ycyVfXMlDxCVdIE3r+Lqei/aBMTnpbrsc3VrNgSzodPMkX9vc0+JChS78hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RueXbjEm; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745296271; c=relaxed/simple;
+	bh=bI3gDzhCKMAkJw2iXZ9rkFzBnMcyw7cj4GHPEtHSj2g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AuHzfYQUT4eXImTAHBmz4DhFBujgblrJUzsWEB1jukKW74ehIoCMRiOah75I7gNtMC4nkMkpSGhEw0CGG6Sqg+47AHosVoNoreRVVbVdi/iivyGGVapa7kqgAPQzzdqtbLGyA8AISWc5jswH3fa+qBPzgdiTFaK9mMb4Y1/hb2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RRfGWmmY; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RueXbjEm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745296221;
-	bh=pOm/obCQ+A4qWgxrmcU73eoA6pKhDAmfoHxSQU9wufc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=RueXbjEmXo1qtY/aHN+JRj9U6lc4TBRBt724HtE3r3lc0mKZKeplEqo1awdDdQmbi
-	 MUVckn9hV7QUmgYcPLvySl33jxKIYApPkJlYkcUg+SNmS5uinolK+jde4OeacgulkB
-	 VW+8ju1QP8HGTBZN6pC2QC3W+IPskBL0OQ2mRXdHR6a8NiMu5zfuOWI9mQvVZaDsp4
-	 jZBnR/ix2fDRyA3KSF9jnuDUohKgs6ToHHHJt0lKcOzn90nOihb7/+0cX4L2U8U5yM
-	 3rMCLbKNpzi9XhMJfSEkL9gD2+6imxLMPp38RHIKCyw1u1a8/yOWw+i9N6cr27yCf3
-	 D0cpP+3mbvVOA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhTmr4l5Nz4x1w;
-	Tue, 22 Apr 2025 14:30:20 +1000 (AEST)
-Date: Tue, 22 Apr 2025 14:30:19 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jason Gunthorpe <jgg@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>
-Cc: Daisuke Matsuda <matsuda-daisuke@fujitsu.com>, Jason Gunthorpe
- <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Li Zhijian
- <lizhijian@fujitsu.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the rdma tree with Linus' tree
-Message-ID: <20250422143019.500201bd@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RRfGWmmY"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso53719416d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:31:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745296267; x=1745901067; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRSMksXpsf52yOD4IubO1aFNXvg4s4nX378ktXQqSPw=;
+        b=RRfGWmmYkQL51c3ajNplCbuV2Gd3ETXRduN0H7YYuBC0JJGQKqyckamwphLJQjbrOL
+         kdt71fG/uJV3CNZ2UcYQYevv9KMmL4D3ELLcwVgJyERTuDnby68fx7LisaAd0K/Nlv4c
+         HrtiIRPC1ZHT6KrQsQVfRU2VglfK0mgBcRf7iGg8YyfG9ElR2yhHravoYjCIMCjvOj4S
+         Waf79LFDnBnu2BijZKcpsIsEkqqNRz7pW5qbBi/6Dvb9sIjN7FWnnPsLUHEgovu2j0w9
+         6PL6kpADCBj5JxRYggUPZeasEuc0uoSVDPh2vXZ+9o1rn/hFthyeGGNfhE4zOTOtl/t1
+         BtGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745296267; x=1745901067;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRSMksXpsf52yOD4IubO1aFNXvg4s4nX378ktXQqSPw=;
+        b=osA1y/c8iEVkQTjb7UZwNZ+QpDgsUAE2VOzbmJ4fuT5pim+BGzUgcnSlaWegkUIQGp
+         1NQyQB9oaRMxWY+0k+/6m17r9WIrL6C2o31uiRQ+3hTmkJrh2dZF0P64m9w3LCyezU3k
+         xuXQndAqdYX8JGC965rILe+m2Bdgpf/TYqs+3b8od1UxzK8qpE5b00Sp44ewiBJGUVuB
+         G+M1YToJQ/wWuCok4Z9GwJ7Yq0HGcgcWt7fJODVvplmLBPf7P4wK+Vc0b6cxrYGBL4SZ
+         n/+Xr0fv/wjsTL7a9x3Ptcetyq0ofSk0frFXixkdViytICDiugCXapjwgLVWQueygjA6
+         ZOOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHFomZPTQVNEI9o/0//jkXlvjxeVFjpLBvpTUte6InrE9jLpU2MskjQwbs0l4ORhTCbEw3uMNQJuecM4s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEBJdCJWXyMpM12XiAwhBHc2nIS95yLU3QdJbbPAosoydspvap
+	5r90qPSCHwvo1qEOJTc+leVmHfS5jwKmh3Z2ygDOsqVP3OMX+jM4AULzc2ukNjo=
+X-Gm-Gg: ASbGncvxmoSlbU/jKHtCIt1wU9YRo8MXc94nP8UscJDe9sz9JeSvT83bXbgRVrQxdin
+	xM3I+6uTXgOPP0jhCIWwwlzpKrTdds8Dt5WHsuSb3BR/G40du7AMRCmbvbEK7UF4Ii2Xbuq5o2B
+	ddPiCo/1Q4rS0/8DLZ+25Gu9BZ4dFkPzQC2ycmhHWgcBz3qJs1xyzeTVS+OtEVyRT7XV6L2Y+Nb
+	5tjAg1+OYtWphQK8QUmnFmELF3qdVLEBs4cliOkPSnzNRd+/0/nzyR0G26WzeJXPCOKC4mAcP4V
+	NwCdrhhb8vlR1mUsQjpC2H+cLANlBeBo8uWvc1OAxAr0AZq9or4sEcjmhsBIOeRfdhmXvAaavL3
+	bV+1VcvhAWn+dvF8GC7MwmiqZ0ipv
+X-Google-Smtp-Source: AGHT+IEzQ3PXHur4luJ4jcRF7GRw/fek8cyUhcS6YWFUPEnKas0lDo2Hf0ec4S5N4vxVbonxlQQHOw==
+X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr267147396d6.34.1745296267519;
+        Mon, 21 Apr 2025 21:31:07 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af14easm52745336d6.3.2025.04.21.21.31.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Apr 2025 21:31:07 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	longman@redhat.com,
+	hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	akpm@linux-foundation.org
+Subject: [PATCH] cpuset: relax locking on cpuset_node_allowed
+Date: Tue, 22 Apr 2025 00:30:55 -0400
+Message-ID: <20250422043055.1932434-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422012616.1883287-3-gourry@gourry.net>
+References: <20250422012616.1883287-3-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wcPNa1+QDp9RqpSUw=8EKgm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/wcPNa1+QDp9RqpSUw=8EKgm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The cgroup_get_e_css reference protects the css->effective_mems, and
+calls of this interface would be subject to the same race conditions
+associated with a non-atomic access to cs->effective_mems.
 
-Hi all,
+So while this interface cannot make strong guarantees of correctness,
+it can therefore avoid taking a global or rcu_read_lock for performance.
 
-Today's linux-next merge of the rdma tree got conflicts in:
+Drop the rcu_read_lock from cpuset_node_allowed.
 
-  drivers/infiniband/sw/rxe/rxe_mr.c
-  drivers/infiniband/sw/rxe/rxe_resp.c
+Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
+Suggested-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ kernel/cgroup/cpuset.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-between commit:
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index c52348bfd5db..1dc41758c62c 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -4181,10 +4181,20 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
+ 	if (!css)
+ 		return true;
+ 
++	/*
++	 * Normally, accessing effective_mems would require the cpuset_mutex
++	 * or RCU read lock - but node_isset is atomic and the reference
++	 * taken via cgroup_get_e_css is sufficient to protect css.
++	 *
++	 * Since this interface is intended for use by migration paths, we
++	 * relax locking here to avoid taking global locks - while accepting
++	 * there may be rare scenarios where the result may be innaccurate.
++	 *
++	 * Reclaim and migration are subject to these same race conditions, and
++	 * cannot make strong isolation guarantees, so this is acceptable.
++	 */
+ 	cs = container_of(css, struct cpuset, css);
+-	rcu_read_lock();
+ 	allowed = node_isset(nid, cs->effective_mems);
+-	rcu_read_unlock();
+ 	css_put(css);
+ 	return allowed;
+ }
+-- 
+2.49.0
 
-  1b2fe85f3cf1 ("RDMA/rxe: Fix null pointer dereference in ODP MR check")
-
-from Linus' tree and commits:
-
-  6703cb3dced0 ("RDMA/rxe: Enable ODP in RDMA FLUSH operation")
-  b84001ad0cee ("RDMA/rxe: Enable ODP in ATOMIC WRITE operation")
-
-from the rdma tree.
-
-I fixed it up (see below - and some changed code from the latter was
-removed in the former) and can carry the fix as necessary. This is now
-fixed as far as linux-next is concerned, but any non trivial conflicts
-should be mentioned to your upstream maintainer when your tree is
-submitted for merging.  You may also want to consider cooperating with
-the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/infiniband/sw/rxe/rxe_mr.c
-index 432d864c3ce9,1a74013a14ab..000000000000
---- a/drivers/infiniband/sw/rxe/rxe_mr.c
-+++ b/drivers/infiniband/sw/rxe/rxe_mr.c
-@@@ -468,6 -458,28 +458,28 @@@ static int rxe_mr_flush_pmem_iova(struc
-  	return 0;
-  }
- =20
-+ int rxe_flush_pmem_iova(struct rxe_mr *mr, u64 start, unsigned int length)
-+ {
-+ 	int err;
-+=20
-+ 	/* mr must be valid even if length is zero */
-+ 	if (WARN_ON(!mr))
-+ 		return -EINVAL;
-+=20
-+ 	if (length =3D=3D 0)
-+ 		return 0;
-+=20
-+ 	if (mr->ibmr.type =3D=3D IB_MR_TYPE_DMA)
-+ 		return -EFAULT;
-+=20
- -	if (mr->umem->is_odp)
-++	if (is_odp_mr(mr))
-+ 		err =3D rxe_odp_flush_pmem_iova(mr, start, length);
-+ 	else
-+ 		err =3D rxe_mr_flush_pmem_iova(mr, start, length);
-+=20
-+ 	return err;
-+ }
-+=20
-  /* Guarantee atomicity of atomic operations at the machine level. */
-  DEFINE_SPINLOCK(atomic_ops_lock);
- =20
-diff --cc drivers/infiniband/sw/rxe/rxe_resp.c
-index 5d9174e408db,fd7bac5bce18..000000000000
---- a/drivers/infiniband/sw/rxe/rxe_resp.c
-+++ b/drivers/infiniband/sw/rxe/rxe_resp.c
-@@@ -753,7 -749,16 +749,16 @@@ static enum resp_states atomic_write_re
-  	value =3D *(u64 *)payload_addr(pkt);
-  	iova =3D qp->resp.va + qp->resp.offset;
- =20
-- 	err =3D rxe_mr_do_atomic_write(mr, iova, value);
-+ 	/* See IBA oA19-28 */
-+ 	if (unlikely(mr->state !=3D RXE_MR_STATE_VALID)) {
-+ 		rxe_dbg_mr(mr, "mr not in valid state\n");
-+ 		return RESPST_ERR_RKEY_VIOLATION;
-+ 	}
-+=20
- -	if (mr->umem->is_odp)
-++	if (is_odp_mr(mr))
-+ 		err =3D rxe_odp_do_atomic_write(mr, iova, value);
-+ 	else
-+ 		err =3D rxe_mr_do_atomic_write(mr, iova, value);
-  	if (err)
-  		return err;
- =20
-
---Sig_/wcPNa1+QDp9RqpSUw=8EKgm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHG1sACgkQAVBC80lX
-0GwJzwgAisvxjuDtFA4Xp+usEWHb43bzM2FYY2jA5IEswfWKks34WET8PELo1ax2
-HTtr2CZxREijFhthTFB6mwu+9y0uCWKEROqTB2Oa1pcp9DCf4FAb778dEgNdLhLb
-eL56kl8Oiup40ptqVNcsWCSF3gS1PRzDwmZ5yY1zhi+RgZdbXAlpk8dM69Gjbew2
-Cp3vDZOagcqBFx0QbQ/J+kTxtK4b0y7GraZ41sCv/3a9ias/sSVs/3ZNC6yQyvqK
-IFH1d1Ob5iMs5db89u1aeCjpKYcE6A33E0dNlXirKhKnyeWoBH5YvsOZ9PsoQWQW
-6Sd3g9EOZyIIH7gjcYCJWeVv6tGO/A==
-=uyE8
------END PGP SIGNATURE-----
-
---Sig_/wcPNa1+QDp9RqpSUw=8EKgm--
