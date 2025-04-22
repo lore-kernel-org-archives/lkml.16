@@ -1,79 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6F01DA63D;
-	Tue, 22 Apr 2025 17:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F3C1A841E;
+	Tue, 22 Apr 2025 17:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343734; cv=none; b=O1ujKiJnm/u8Xy+XNVvlGtwyvNQGPyQoLMVXVIrhs5vUIz0CdEj5boN8LaooytkH/yW5PUKsJhVg5wwccF2rhG0K27ehv3hYXODuFk4yrBwRR3tsFwx+nUO8wAHQ+oPn+nSOOdbrbxhGuwL2K1zd0Q8vMp+NhoAHV0AOK2x3nIQ=
+	t=1745343784; cv=none; b=i8qqJFKxehaUyrYdzI35IZz8u2pcDuDjtdp4W0/RlwEItmuqtTulND0wsM3oj1IcfQhW+pTPe2fiNV2RRxdGQ7jAs1+gJTyzi9pAlDJZtQCk3yIjh7cucTrRy3XrcQsu8yT81jJ7mppB6+j+LWSBcbYqmTygBAOdauWLAgJtus4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343734; c=relaxed/simple;
-	bh=QaEXmCGSZOW0nPSYRQqYZLcN6XSKT+AUR8R/rRFsWb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TjOaooRCjnHo//LPBwnu/EeUsuQZPmDu1l4/o6C8p5C9yyupWUksLQ+Ouz07d845aoEpdN/SDt+zLyTN9mPBTSPWgtpuARSNjPW9GTdMu3I8I0XI8vZpHXF2SOAM+yVh8jEXFibdlqdhPQztZgXK9cwpofvXQx/WUQ6GyuCHkbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AC0C4CEE9;
-	Tue, 22 Apr 2025 17:42:11 +0000 (UTC)
-Date: Tue, 22 Apr 2025 13:44:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
- <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
- Lutomirski <luto@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 09/39] x86/vdso: Enable sframe generation in VDSO
-Message-ID: <20250422134401.55178c36@gandalf.local.home>
-In-Reply-To: <20250124164332.gqgzimfix3vk4bsw@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
-	<c93fbd53f01c2c86f747af27040ac11f16dee032.1737511963.git.jpoimboe@kernel.org>
-	<cde90a82-6bdd-4a12-872a-7b39edf3eac8@linux.ibm.com>
-	<20250124164332.gqgzimfix3vk4bsw@jpoimboe>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745343784; c=relaxed/simple;
+	bh=F1mdJasUstpDuUqPhDFuWV/JlMqr9iPpRTPmyLpZmw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hy/Pz10sQo1gpamQHooZpqgs1kuFDEsCu+ERsL18ebjvX7h1s3jbTI+R59v8nScELAPHMO8NzyqyYAfirKhTMt6IzxVEh8HEPowwf1LMYWUTvX9tGMkUAQU3/3PfT5SQTmXzI6Y/nTZeycDsrUBHjUX/7Z+J2s1Kpf3P3bYWirQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=freslzEy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="freslzEy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD7FC4CEE9;
+	Tue, 22 Apr 2025 17:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745343784;
+	bh=F1mdJasUstpDuUqPhDFuWV/JlMqr9iPpRTPmyLpZmw8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=freslzEyg2R+LAGEbk8BZGGzb9DIft+3ss845IPqNqeLhDqmbjHwNe+I4+MlZxgBW
+	 Q8Lf3MeY/kWfMrowLEWNWQgm7LKcH4+SU13cKTCP1j/5GNampA0q7rh6dwstIfl6dp
+	 cWiavI13Yw0IopUiUlu3b/GzY+VGuZHnIxdJC/lkvGIB+5tTmLCvtjen3lWzs/vqXb
+	 dPjqFkXJjQoSVAufUo5MQQx1Siz/tTXN0umfAVHS/ODn6QrW5Qzzq3jcMUvMFhyO4w
+	 W8WgXSos51k9TJ9fqhmUB4BxKHyJAwMV/FctAAnWq0Q9/plH4Bd1vomS4IweIZRhYh
+	 atxHrByRHIqJw==
+From: SeongJae Park <sj@kernel.org>
+To: zuoze <zuoze1@huawei.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	wangkefeng.wang@huawei.com
+Subject: Re: [RFC PATCH] mm/damon: add full LPAE support for memory monitoring above 4GB
+Date: Tue, 22 Apr 2025 10:43:01 -0700
+Message-Id: <20250422174301.58953-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <68043882-1878-4cca-a8fc-5e6cb9a88395@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 24 Jan 2025 08:43:32 -0800
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Tue, 22 Apr 2025 19:50:11 +0800 zuoze <zuoze1@huawei.com> wrote:
 
-> On Fri, Jan 24, 2025 at 05:00:27PM +0100, Jens Remus wrote:
-> > On 22.01.2025 03:31, Josh Poimboeuf wrote:  
-> > > diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-> > > index b195b3c8677e..1c354f648505 100644
-> > > --- a/arch/x86/include/asm/dwarf2.h
-> > > +++ b/arch/x86/include/asm/dwarf2.h
-> > > @@ -12,8 +12,11 @@
-> > >   	 * For the vDSO, emit both runtime unwind information and debug
-> > >   	 * symbols for the .dbg file.
-> > >   	 */
-> > > -  
-> > 
-> > Nit: Deleted blank line you introduced in "[PATCH v4 05/39] x86/asm:
-> > Avoid emitting DWARF CFI for non-VDSO".  
-> 
-> Indeed.
+[...]
+> Thanks for the patches - I’ve noted the RFC series and user-space
+> updates. Apologies for the delay; I’ll prioritize reviewing these soon
+> to verify they meet the intended tracking goals. Appreciate your
+> patience.
 
-Note, I'm getting ready to send out an update of Josh's patches.
+No worry.  Please take your time and let me know if there is anything I can
+help.
 
-This particular nit isn't really an issue, as #ifdef's do sometimes replace
-blank lines.
+I think we can improve the user-space tool support better for usability.  For
+example, it could find LPAE case, set addr_unit parameter, and convert
+user-input and output address ranges on its own.  But hopefully the current
+support allows simple tests of the kernel side change, and we could do such
+improvement after the kernel side change is made.
 
-Just mentioning this so you don't think I'm ignoring it, when I post patches.
 
--- Steve
+Thanks,
+SJ
+
+[...]
