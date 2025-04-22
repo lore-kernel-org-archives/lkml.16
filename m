@@ -1,82 +1,83 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270527BF74;
-	Tue, 22 Apr 2025 13:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4640C284B5F;
+	Tue, 22 Apr 2025 13:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328593; cv=none; b=gxMJccTWxf3Zf4luEDpzM4cNgMHFLtAHnvByVch2JzBoPIn3/Gjl1VzPVKTspiSR1KBvenJhe524E9SqK1PVXDTdRrN3TWGzLsoT9CgT4rpx3+CC08COn3qR8ApbeoeWX+6+IOj4fEDc4ei4d+/VXeEeA/qAOBMZteM4Q2FJmdg=
+	t=1745328597; cv=none; b=oJfsO68k16/6ebvfbGMCoxpBR1Ec766/9EUyHd+V0qyr+cEGKDvEAPoo4U7+OOeEkMc0uEWhRzYd3dZGsfIQSMyWbGp/GMIZT5BGMJpKudRShHZFOI85yIUCh5c121Qs9NuEiv6gN1iNGnePGu9Jq2bxGL7e7F0fzfvNrHPnR2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328593; c=relaxed/simple;
-	bh=PS9A2so4Ht/r0sk6C7KPxy+lOlrbJ9bDV6SgknfZNy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MvrLocn5SrBlJV6Dk7m/K0pDnIgZKenrxWIND0h1w6GOc7uxAv5ccTxm/Dca+abH8JLbihRjaANcVqLbbucsejEeF7cyDLkz3V9+mNCdq7J9YptauNGTh3BdQfqXdeN+h3sT0Bw8h1g85kE+cwlKdVpkSZCclcBsid4zGy9eyt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IvYnRjFW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745328597; c=relaxed/simple;
+	bh=CL2ckKdWyQEF03LN3BXjBPax5VKKfrOO3/dC6q0A6Wc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=nDZKVAbaPZsN8E+zT8EwVMefxq7j4sy3nFnVnw/oj+K92sscVFj6miU2Oq64Z6UCUTRtocfmBeGcn5vvPMfog2fZ2VIu27oyfu1VkB8q41lGwVuAtaJ1F/B5zMFJYtwVWm9/UN5MvcBgI4AWCqE2AiXlFfl9XUl84CRGjImLNgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qgVoomws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IvYnRjFW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745328589;
-	bh=PS9A2so4Ht/r0sk6C7KPxy+lOlrbJ9bDV6SgknfZNy0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IvYnRjFWbSZamcdfKDfe1bpuO1ZOxCPLlQu1QNggSf2YBfYRvA4xgyl1IOTF104Pq
-	 w/9lGvG8Dr214i+diVRHUuAkif3NeDHkW8IEx+qn1fxAPW1xLpbwhf64P5GfrahQvC
-	 i+w484vblnIJYfIPSGcJ0VQGfVGyyWqVI3Z58EtVjkhgg2g6iU4m0vamPmSiw9Ptqd
-	 4PKOpySmYTH0S7FR9KuOWONk1pgL32WY5W+3ntdhfFnfOVQ7oRf7ioG6o91Lv51/ct
-	 E6QvUxNp+C5KXgHUJEaiVNYQeDID0IaixsrU1pn1bnW5zpnwSYfyzO0UCAr6DbsUiD
-	 /OYX/TgNmfrdA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CBA9D17E0B9D;
-	Tue, 22 Apr 2025 15:29:48 +0200 (CEST)
-Message-ID: <e086c8aa-944d-42db-b163-023571dcc740@collabora.com>
-Date: Tue, 22 Apr 2025 15:29:48 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qgVoomws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12137C4CEE9;
+	Tue, 22 Apr 2025 13:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745328597;
+	bh=CL2ckKdWyQEF03LN3BXjBPax5VKKfrOO3/dC6q0A6Wc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=qgVoomws5FoccIq04RK627QjiVSuWooOhRpAh4HGP9GEm7ab8JFMOtKPZ11j55qdV
+	 zO7iYO69Hg1OLxv8oTf7+dxdDEZu7XVgspN1qSwi91elD9garjcQ0xfa9v0kBbSXEj
+	 ceJxhYaO7L7CKXug1zS2xTads/zg6RtA/yZqrXfx4qYEhstwt/5imF6h1kRu9CzPsS
+	 d0sLlmFPifC7Z+0u/w4x4za1zM5TMIRSpnEjJ4o0MYjnyvznvX/ew0ddnrkGzrQURJ
+	 rAgwvcPN9OnC1nR0Y4Ts8QvMkdtBzlWZoqkvKD4E7K+Zbjm4kLk+8vu/gslanveD0f
+	 0/qg8JeDG08GA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDB0380CEF4;
+	Tue, 22 Apr 2025 13:30:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] arm64: dts: mediatek: mt7988a-bpi-r4: allow hw
- variants of bpi-r4
-To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
- Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
- =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
- Daniel Golle <daniel@makrotopia.org>, Sean Wang <sean.wang@mediatek.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-phy@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250422132438.15735-1-linux@fw-web.de>
- <20250422132438.15735-3-linux@fw-web.de>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250422132438.15735-3-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/2] Bluetooth: btmtksdio: ensure btmtksdio_close is
+ executed before btmtksdio_remove
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174532863556.1909182.13691276348024740432.git-patchwork-notify@kernel.org>
+Date: Tue, 22 Apr 2025 13:30:35 +0000
+References: <20250422012156.586600-1-chris.lu@mediatek.com>
+In-Reply-To: <20250422012156.586600-1-chris.lu@mediatek.com>
+To: Chris Lu <chris.lu@mediatek.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ sean.wang@mediatek.com, jiande.lu@mediatek.com, will-cy.lee@mediatek.com,
+ ss.wu@mediatek.com, steve.lee@mediatek.com, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 
-Il 22/04/25 15:24, Frank Wunderlich ha scritto:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Sinovoip has released other variants of Bananapi-R4 board.
-> The known changes affecting only the LAN SFP+ slot which is replaced
-> by a 2.5G phy with optional PoE.
-> 
-> Just move the common parts to a new dtsi and keep differences (only
-> i2c for lan-sfp) in dts.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hello:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogiaocchino.delregno@collabora.com>
+This series was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+
+On Tue, 22 Apr 2025 09:21:54 +0800 you wrote:
+> If Bluetooth SDIO card is unexpectedly removed due to hardware removal
+> or SDIO issue, it is possible for remove to be called before close.
+> If an interrupt occurs during this process, it may cause kernel panic.
+> Therefore, it is necessary to ensure that close is executed before
+> remove to stop interrupts and cancel txrx workqueue.
+> 
+> Chris Lu (2):
+>   Bluetooth: btmtksdio: Check function enabled before doing close
+>   Bluetooth: btmtksdio: Do close if SDIO card removed without close
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,1/2] Bluetooth: btmtksdio: Check function enabled before doing close
+    https://git.kernel.org/bluetooth/bluetooth-next/c/04c96a7ace25
+  - [v2,2/2] Bluetooth: btmtksdio: Do close if SDIO card removed without close
+    https://git.kernel.org/bluetooth/bluetooth-next/c/e0af21b30c82
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
