@@ -1,142 +1,152 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A65238C34
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA47B1F4E59
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303868; cv=none; b=sG8tPMekECCtaETFUyn+1uAFT3FMVVDfVRsUcYSmYdhb4kNj9msMVU2FiinzixdMTXddd6wk2pejYLWhYActMGENFsDUij+jH83jrJUCV82ntj5gHkgdgmnjvpWkV9lvXOBl+6NHYX5iHuzKupuaW5I6zfEyimlz48qFWI+6qOM=
+	t=1745303903; cv=none; b=Fb0j/wjlVPoJisnd4pbZyWkIwaPmQy5xpdgIjTzP8zpxwd34FHrYr3k3ZBqw74j3DnXCIVMyaO2kEqXLqdmIheI/N1TVOdLdZkH1kKr92Isl3U0aYeIV919kIenKGYtLzlMpxHtIGxdz8oSKbmtnC6qgpVreKjbr95Ry3vyvSUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303868; c=relaxed/simple;
-	bh=Y+3EIHN0NZoW1VUAItK2o8y7NOX8Iz9LJIK8BuOKzM4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=X1eU3CLL3IGHomOFcpurmDf5nMMTNZeItz3tDc2NnLveuSqjs88wx54CNRmXLh96XVsUzljCWTv/2LU6uYIG4AivLMSxLU5r37sWw0lKO/ZVzA4Kqwl/dbiEFXaxlot/iihJCj+ZyjREstUZ5iyDIOJHWjWVqEazkg6RXCWtdbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Lo2DLVmM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g1nYH05H; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Lo2DLVmM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g1nYH05H"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id AD7232540212;
-	Tue, 22 Apr 2025 02:37:44 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 02:37:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745303864;
-	 x=1745390264; bh=ovzNnQXCxxPbw+iTp1IpdqpMxWWHjLCLwy0mzBZVN9g=; b=
-	Lo2DLVmMK/FtFkrSOVOysOqzREOMr1h2WXPm4bq+fWBNsszfH5CVV3hK5FsUM7y0
-	Jno5uxNT+SSWuKZJP2FWiBV/8kMGJ3O3QVAaWZcdi8sJrSoy7THRPgQV2FW6iruK
-	dJpkMrWNEqzguuS5C1WWzNBkBnslFWTRnKKCGO4tT7Wd3U5ZadcjZehT/WbXCubW
-	PFgwjHyEdMS3KaFqfIzKc7EMlbRECOnPVg8S5hB5cuvKzrvLpfC9Pms2qIUJ7ffS
-	UEQHKiyivKKuf7RjtBg9g6ctMy6gkzCK9z+h27WQAHrtbutW/RwgpkNN0RNuHjKq
-	+4/zXZ+OKzK0zr6iNeZ5ww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745303864; x=
-	1745390264; bh=ovzNnQXCxxPbw+iTp1IpdqpMxWWHjLCLwy0mzBZVN9g=; b=g
-	1nYH05H51oIjk5R46oG9LPhrm5/wrbrkIQ2e/aa89VV95tBytMie7c78UkoSrT2b
-	vuH+KNrnSq3TKXyM72a9/LOb4EmMtIHero0M8ApBOETcizLgt3HtRC383YsCQt2z
-	8n8vrmeOGh2mCM2S5tjf5HnNUuEbXDu72ZG6CuxBCJdYR0JGkgg4SE2GZoFp5r9e
-	Liurn/iFMuagnGh0e+oR7Q7pbBe1R8HckMAWsFSPq46y8l9Yv6ixMkbKgzWpb4qa
-	+riOFr5h8o+/gXIVqTVH0e8q8D6pCchyv9R4e5of/13/HJeW9G3yB5p8S8domFar
-	BRqwTq+eFhS/BJr9xN57A==
-X-ME-Sender: <xms:ODkHaKc5Fv0UiaINKioA9VyP6u4bpXr5qgk38A2XyI6djMVF1YEMow>
-    <xme:ODkHaEOyLPpD1P9G_w7K2zaHnZpHWkot7ZH6ylyJjwgPfIlRGY6QRc9-Y7HQV0grm
-    Bd_glq3mI5taejNigU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeftddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrih
-    hnrghssegrrhhmrdgtohhmpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhl
-    ihguvghrrdgsvgdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriiihshiithho
-    fhdrkhhoiihlohifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugi
-    dqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghp
-    thhtohepsghjohhrnhdrrghnuggvrhhsshhonhesohhsshdrqhhurghltghomhhmrdgtoh
-    hmpdhrtghpthhtohepjhhmsehtihdrtghomhdprhgtphhtthhopehnmhesthhirdgtohhm
-X-ME-Proxy: <xmx:ODkHaLhwVBRyJg07EZNHIbYq1Hyah8xspwb4rCxMzi08lBp5X8oYVw>
-    <xmx:ODkHaH-6vEO2sMoYo-SBySjBGbRCZkUDi0M7vFg4X3y96a-u6yKicA>
-    <xmx:ODkHaGtGQbJu5EFY65_D40pBavmmADt_MFKkHZYcTSJiwULxGeyInA>
-    <xmx:ODkHaOG5mcC0M8V9A0ROFAISTXUbN-PVUcFLy0TZ5wfHhmdYps7j4A>
-    <xmx:ODkHaMkuJDzim2xw0GUFaQ4xjheGeuaDujDwZcaQ96ZVu59Na6ePsXSL>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F1FC72220073; Tue, 22 Apr 2025 02:37:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1745303903; c=relaxed/simple;
+	bh=7usx94h/DwkKANbRL3I4CcV2ppwSaJp7Xo547IrqQns=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cV16EKFi7KV006VWJGiaL8rJi7GjcyK1EOusZ9ZfL1WDdvqB+Xwq/aMiTGVlIlblqv/JsdhkL85PxpxtfvfXAfFm1bzWm7XPRyPhm8XQuZ+w1psBvwMl/2ETL8nva0G6OAl0oFjWq4uliBXBLM4gzGyvFQWpTTix17Jq7x+YwS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 607958c7-1f44-11f0-8efd-005056bdfda7;
+	Tue, 22 Apr 2025 09:38:18 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 22 Apr 2025 09:38:18 +0300
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 07/29] x86/boot/e820: Print out sizes of E820 memory
+ ranges
+Message-ID: <aAc5Wlwj4gaBApIy@surfacebook.localdomain>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-8-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tafab3bbc3080752d
-Date: Tue, 22 Apr 2025 08:37:23 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Judith Mendez" <jm@ti.com>, "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>
-Cc: "Bjorn Andersson" <bjorn.andersson@oss.qualcomm.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Dmitry Baryshkov" <lumag@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, "Nishanth Menon" <nm@ti.com>,
- "Vignesh Raghavendra" <vigneshr@ti.com>
-Message-Id: <55d306d4-c9cd-4119-8798-b65a6956f4df@app.fastmail.com>
-In-Reply-To: <20250421201055.3889680-1-jm@ti.com>
-References: <20250421201055.3889680-1-jm@ti.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable hwspinlock and eQEP for K3
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421185210.3372306-8-mingo@kernel.org>
 
-On Mon, Apr 21, 2025, at 22:10, Judith Mendez wrote:
-> Enable CONFIG_HWSPINLOCK_OMAP to allow usage of these devices
-> across K3 SoC's. Also enable CONFIG_TI_EQEP which is enabled by
-> default on am64x SK board.
->
-> Signed-off-by: Judith Mendez <jm@ti.com>
+Mon, Apr 21, 2025 at 08:51:47PM +0200, Ingo Molnar kirjoitti:
+> Before:
+> 
+>         BIOS-provided physical RAM map:
+>         BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+>         BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+>         BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+>         BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
+>         BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
+>         BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+>         BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
+>         BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+>         BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+>         BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+> 
+> After:
+> 
+> 	BIOS-provided physical RAM map:
+> 	BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
+> 	BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB reserved
+> 	BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
+> 	BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB reserved
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
+> 	BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB reserved
+> 	BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
+> 	BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB reserved
+> 	BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
+> 	BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB reserved
+> 	BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
+> 	BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB reserved
+> 	BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
+> 	BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB reserved
+> 	BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
+> 	BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB reserved
+> 
+> Note how a 1-digit precision field is printed out if a range is
+> fractional in its largest-enclosing natural size unit.
+> 
+> So the "256 MB" and "12 GB" fields above denote exactly 256 MB and
+> 12 GB regions, while "1.9 GB" signals the region's fractional nature
+> and it being just below 2GB.
+> 
+> Printing E820 maps with such details visualizes 'weird' ranges
+> at a glance, and gives users a better understanding of how
+> large the various ranges are, without having to perform hexadecimal
+> subtraction in their minds.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+...
 
-The patch seems fine to me, but you should address it at the 
-TI K3 maintainers, so they know they should apply it and forward
-it to the SoC tree. You have Nishanth and Vignesh in Cc already,
-so I assume they will pick it up from here, just put them in
-'To' instead next time and move Catalin and Will to 'Cc' or
-leave them off entirely.
+> +/*
+> + * Print out the size of a E820 region, in human-readable
+> + * fashion, going from KB, MB, GB to TB units.
+> + *
+> + * Print out fractional sizes with a single digit of precision.
+> + */
+> +static void e820_print_size(u64 size)
+> +{
+> +	if (size < SZ_1M) {
+> +		if (size & (SZ_1K-1))
+> +			pr_cont(" %4llu.%01llu KB", size/SZ_1K, 10*(size & (SZ_1K-1))/SZ_1K);
+> +		else
+> +			pr_cont(" %4llu   KB", size/SZ_1K);
 
-> ---
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 9e16b494ab0e2..1f7b97ff46a7e 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1415,6 +1415,7 @@ CONFIG_CLK_GFM_LPASS_SM8250=m
->  CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
->  CONFIG_CLK_RENESAS_VBATTB=m
->  CONFIG_HWSPINLOCK=y
-> +CONFIG_HWSPINLOCK_OMAP=m
->  CONFIG_HWSPINLOCK_QCOM=y
->  CONFIG_TEGRA186_TIMER=y
->  CONFIG_RENESAS_OSTM=y
-> @@ -1676,6 +1677,7 @@ CONFIG_INTERCONNECT_QCOM_SM8650=y
->  CONFIG_INTERCONNECT_QCOM_SM8750=y
->  CONFIG_INTERCONNECT_QCOM_X1E80100=y
->  CONFIG_COUNTER=m
-> +CONFIG_TI_EQEP=m
->  CONFIG_RZ_MTU3_CNT=m
->  CONFIG_HTE=y
->  CONFIG_HTE_TEGRA194=y
-> -- 
-> 2.49.0
+I would add some spaces here and there for the sake of readability.
+
+
+> +		return;
+> +	}
+> +	if (size < SZ_1G) {
+
+Can be written in one line as
+
+	} else if (...) {
+
+
+Ditto for the rest.
+
+> +		if (size & (SZ_1M-1))
+> +			pr_cont(" %4llu.%01llu MB", size/SZ_1M, 10*(size & (SZ_1M-1))/SZ_1M);
+> +		else
+> +			pr_cont(" %4llu   MB", size/SZ_1M);
+> +		return;
+> +	}
+> +	if (size < SZ_1T) {
+> +		if (size & (SZ_1G-1))
+> +			pr_cont(" %4llu.%01llu GB", size/SZ_1G, 10*(size & (SZ_1G-1))/SZ_1G);
+> +		else
+> +			pr_cont(" %4llu   GB", size/SZ_1G);
+> +		return;
+> +	}
+> +	if (size & (SZ_1T-1))
+> +		pr_cont(" %4llu.%01llu TB", size/SZ_1T, 10*(size & (SZ_1T-1))/SZ_1T);
+> +	else
+> +		pr_cont(" %4llu   TB", size/SZ_1T);
+> +}
+
+Don't you want to use string_helpers.h provided API? 
+string_get_size().
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
