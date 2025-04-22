@@ -1,119 +1,177 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PUWP216CU001.outbound.protection.outlook.com (mail-koreasouthazon11020072.outbound.protection.outlook.com [52.101.156.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178161EA7C6
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745314289; cv=none; b=IYZ85Yjk3YGHHH7Eo5510MA+8Dlamqo8JzdveZVDD/7/Vc/RpGNb4+/BVWqL6U1T2AokgBjK49QLML8BFtZuE8dSUpiO7p/DPqwx4rVNDNP7PQqG6WhcwTH7oZV8eOtxvLWxkNpiRh2dv0FRcLktWAUtRt7IEelXh8rnqE5+6m0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745314289; c=relaxed/simple;
-	bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVqJ3ex4oqMRx+ALpdU7dWmLZ6O2VWilv/1twoP3BTvL4hSQmGkBK6PY5pJilLB6x/NdlfP9F3rVeWwsuYVpnUs7p1pZAfh5Rz0FnaUrlFL2NbUJ7sFi8+voKSONPTCknhiB35T7UURyedc6xoUaFLvxn319zbFQZR8Mt4JJIBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V4TTI9/S; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7321FDA94;
+	Tue, 22 Apr 2025 09:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.156.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745314301; cv=fail; b=opjVrEGAfjzU1eeyWaN3gxCPJpv6Do4zs+FasWN0gFMmzS61N89NCnlqwORSJX3+Ol7gmD3iCL/25ruFzbWjnOhcAb2x1e8RRNlOpVO0uqtsAdVLL1Imm+XjmHxjuyu+X6OmldovxgONy8leRVwfUcwclx1qa30U6cwMZeI6610=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745314301; c=relaxed/simple;
+	bh=AX+cRdpE1OPMFzVXBGxkiD+opH5g7/jEzkoYiFmqWiQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RWFIFw4Eh3bhyIGqUZeDEHCCfz+PUuhjFRMyTAErq6m1aiPu3NMi5FWeipA6Hq30PUp0ehnva8hzR1wCiHbShJTyQg2FOyI6zmDMEmN+yt/XGngXm61FVDPpSJxvvxBBQSyBw+DcVGycasd5e5EVWrX0MpSpt46zIFrMjU+iO0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com; spf=fail smtp.mailfrom=chipsnmedia.com; dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b=f/fIAqnh; arc=fail smtp.client-ip=52.101.156.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chipsnmedia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=chipsnmedia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V4TTI9/S"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so562733266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745314285; x=1745919085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
-        b=V4TTI9/SL+GBdIKfahDSV+IppAdIg4zLJh4lCkiJ3R8knSo0uMqtT+ltpF+9zbW31F
-         wHg62cDtDTaAd1ub7NP/N+g9VyEOUb/Jlg35KJT1H1AwZDeO3Q9tfGzRFma4jyauMzxo
-         A2zzE5PfpsXOd8VwrKRjUkhX3d3aDdvhsbRYtATTRJBXDM5k4vWoCKdtxnRlnB3r6C3A
-         Fg/PI/Kh7HR0NLMtFK/lWo7qbcpY44p93kJ0snAy3VGoAgeT9/s0nycnB+0bB2H228BE
-         tUZXezmu2rcrH9mZ6Ad8tWzZx50+cU7cOHCsqflnVyOR30SbhXdH7r+aeg/N2ER4VtMb
-         fqFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745314285; x=1745919085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
-        b=UBnXsdh/rjO6cfueJohnp4HZ+eaWMZ8wY0OaXwCKDgogtMgqCadYnijUCSyReC60b5
-         jG5PTWQCuPvtZk6aAsrwDCSmlk8wiQ8Lvd2pfHxvHfk/FlqjEeo/s76aD+6jtl9Oslto
-         kiJrGoGpCALC2nrhKMyPT0v9SBOGKn9+fpd9BxAL5qX+2POmnF7ldfCdLkDrEknT3lg7
-         AGvTTVGbOHOskge7kRLG1rGmy83iQ8lxYyFsk8z4b9Na99j48NPvSfsK3fzBNdbgRQM0
-         wRv6JIIF1GRzjlXTi7h+haAV9xW2HA7mmda2vz0dZFWvdfnL5IfgsF8D101m+Tx1YrbW
-         5ekQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVKJaqqmABNZKgGuTTYTw1bOLWOqftyFo8Pu10QlC/VR3BPeJxhQ6+J+TGqTh6qAqNciOw4jAUdNimzqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAZ+JJ5wHg+awfoRZFec2i6JejKdwIzD1Yuncs1mzUW2Vfzc86
-	kLI6/ua60JpaQvlfrib+BZJw+DADuAjN6qiyrfQRacAuG3deDAYwm0KmddAy8QI=
-X-Gm-Gg: ASbGncsoFBY2wYpZo8N/pM0VKpS2uMfZ7hmp1gKbQdgzV7dS5UT9ukyUn6B9V7H8T4a
-	BKNWXCGt4G+SV/wofCOS4XLcEkMxpxtC1uO1A1D4kVl/BhvGl0h/v3Te5L592bwDiV2RP6oMqzy
-	oVimpvIH/3Q6TncArhWoqkedDKcz6s7gzt85HH/VwlopGmJFSKsgDXPJg8xrBegwQIJu8xgMeyH
-	dzVqlsGYOPlZ7JfLeF4yBl7TdDatnl+WaViQPAHTEjYOrNgt8MoiitzZFfSMcDZG+HQhu9xKq8Y
-	6VjkVDXQEb01WmXtE08Ua7GMJF8hKvtambdy1VrwbD8=
-X-Google-Smtp-Source: AGHT+IEVRJF5sF7x1XS+lNM+Im1WgkH5x+/F/q2jlZU7fETD+EEwteY/YCeGUBJhZQKnxR2YU7TZDw==
-X-Received: by 2002:a17:906:5d5:b0:acb:8a2c:fcdb with SMTP id a640c23a62f3a-acb8a2d110cmr880090566b.38.1745314285271;
-        Tue, 22 Apr 2025 02:31:25 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6efa5c5asm627390666b.166.2025.04.22.02.31.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 02:31:24 -0700 (PDT)
-Date: Tue, 22 Apr 2025 11:31:23 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>, 
-	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-Message-ID: <jqlq7y3bco4r3jpth23ymf7ghrtxbvc2kthvbqjahlkzsl4mik@euvvqaygeafd>
-References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
- <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
+	dkim=pass (1024-bit key) header.d=chipsnmedia.com header.i=@chipsnmedia.com header.b="f/fIAqnh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LK8CACAknWiGG0GclnvbhnBcLCEa+PQk1/1HcTTpbjedFSukL+fIcfskbAEyhks/cBMpKiUk/tTbqSD3LL2HIVJxr1KRMaqo17NimEL4ND+eepTA6stBRvSXQFRf7FFy1Kh0wQ9O2BqgeOpI3z12CRWHfAx8H7xJfnhj1qnDJeKwBxMDzRNBpMWd/RSMZatb1fhloWamBn5Ino7jPjsa2sWWfE3gTjdV7rssGEEiB/QuyO9HAsv54VdajJfgqqBFH3FfhVX91MwNNYhutuDD9wmEQfFxFSycdFZE0wpYjQC7F+7BFmM5xnVGksCDxV8idDCPIYR8H3yH3BqSMJRGgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HJu7p5qw+zcW9C4CqwCppj80pM+rhk8jH+C9euM1+QI=;
+ b=s7NTwx6iK+j3Cc6DqSRvGu30hA1pJ2kix8dDIh074rOkHjrbUJ4JBuEm906CZ4NhU87rGNrOYa9i3ZkmGiWdRiokBjabB7eKYzpQXbcXvBVqPTiyKkp/216V6foBNUItu6yjvJRChyfVCjzX2vZK09IGvKywccy7MgKOSZJnws4DXt3d+Hee/yTLCg70cBGgs+tpYfF9nGukH6xAGZjA0a8NOZk/IBgz0OkoYj0ECwPp3h85V8itsUeIaoxb72ixLlJ99woQv8hhUwfAw3QyCfGbaKL+r0OmMf4h+mvCPf2qijaUt4aQ8wDv+zGosDdPSpIYnEYdYikl1U4ASKa+3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=chipsnmedia.com; dmarc=pass action=none
+ header.from=chipsnmedia.com; dkim=pass header.d=chipsnmedia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chipsnmedia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HJu7p5qw+zcW9C4CqwCppj80pM+rhk8jH+C9euM1+QI=;
+ b=f/fIAqnh9BkVH4uHT35KFrea/78PmM4jsLiaYnO3BpFm/0LYZAin+Yv/iNk10sf1EcFWiT/bkQlaC21vcGMyddOCbBxuo++ALLwzAXXBX1fhhZrd6P2f5eIsDHYcp/1sGftlycUjk61xj9zdzPwEqAtyq+tfZQldR2rsCFr1nWc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=chipsnmedia.com;
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM (2603:1096:101:a::9) by
+ SE2P216MB1521.KORP216.PROD.OUTLOOK.COM (2603:1096:101:1e::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.34; Tue, 22 Apr 2025 09:31:36 +0000
+Received: from SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07]) by SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ ([fe80::9e3d:ee20:8cc7:3c07%3]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
+ 09:31:35 +0000
+From: Nas Chung <nas.chung@chipsnmedia.com>
+To: mchehab@kernel.org,
+	hverkuil@xs4all.nl,
+	sebastian.fricke@collabora.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-imx@nxp.com,
+	marex@denx.de,
+	jackson.lee@chipsnmedia.com,
+	lafley.kim@chipsnmedia.com,
+	Nas Chung <nas.chung@chipsnmedia.com>
+Subject: [PATCH v2 1/8] media: v4l2-common: Add YUV24 format info
+Date: Tue, 22 Apr 2025 18:31:12 +0900
+Message-Id: <20250422093119.595-2-nas.chung@chipsnmedia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250422093119.595-1-nas.chung@chipsnmedia.com>
+References: <20250422093119.595-1-nas.chung@chipsnmedia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SE2P216CA0120.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:2c9::7) To SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:a::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i2qhcekndg5mr4b5"
-Content-Disposition: inline
-In-Reply-To: <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SL2P216MB1246:EE_|SE2P216MB1521:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f20e2ae-c2e9-4376-4628-08dd818079df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?7aHDX7XRusfuD3kcFaqlrvEu8hfuFoq1bXLw4ubmsj2CF1y1DUpZpJttHXfI?=
+ =?us-ascii?Q?kzmoKWuOv2qbTV4qI6BECx6NxBamIVwIW2EY3Xe+GNdOUf7EGInFYIVUJwZe?=
+ =?us-ascii?Q?R1orNukTRGjM7vB4ykbHcZKkLHEt9Mt+RVli0dHp75nazcwtBN6KW74wAgKl?=
+ =?us-ascii?Q?i/W9mPp5dlIRjARckJ39NfJd+FJ58qYRl1Yywt8IV87qnnK+c1yWMsYEXibS?=
+ =?us-ascii?Q?xIXU11gPiLXcv6QOLSj6ZwrB5YicRtUfB3Zd3YzNj0Eujx1oxaIQjZTuR7hw?=
+ =?us-ascii?Q?0mFeG3Z+DZ6NbLfCOI5c4IZ0SdoTPmt9PSSD1w24M+LoRIT0cbjJECVH4mFA?=
+ =?us-ascii?Q?AP2cf2FCu+U0Ke4lMLS+qvziywztEL14MRsPV4bUKbwil7gASPuVaJyWkRbg?=
+ =?us-ascii?Q?8zKAUs6eSgz1TA1nT8LWXd0sdLa55Lrx2ASX2sowP+4qeKR1xbl7u6an7mK4?=
+ =?us-ascii?Q?AVZ8nG/2zwEkF43+l0ZDJfxucOFaC3zsp5rr6fyUMgIAs1u3bgUypF0+25ro?=
+ =?us-ascii?Q?g3xjXohYqlwTYPFNk5YPblwX6Ua6IcGks4UwP+d4O9LVr6DdAvwkFtDUuBhl?=
+ =?us-ascii?Q?eZAj/ErQsAILe02/5krnBc/WRZjdkwrk1e+X6MiFEWAghslqalE7DOIZVNZ8?=
+ =?us-ascii?Q?01QkyOV5CUBwHv2XSYpK+D7bZ4G2M6h1nB6Cs0ekanUEBZSSXMSLDgsdIZg6?=
+ =?us-ascii?Q?d/9Lm/zyZ9Bw7pwXJUJDeWpgj6XoiST1flPmM1AMsvQ11jqab2XhTRoR/FkF?=
+ =?us-ascii?Q?PgN1I1/qkUewTSm30c7IXMozWEWB3c59+YWi8K54275zZeNE6oZJiqQkV1fO?=
+ =?us-ascii?Q?EryG8qdRJgEiU7s25y2OHLOOcuMymsg4Xo80fLUecIq6Je44Ef+4tRS+PbUc?=
+ =?us-ascii?Q?bLnnrTfw9XZwPnO1EtEv+DfmtbFOYolfn6l1eiA1KWXGVs260NnZZdSxhyDo?=
+ =?us-ascii?Q?ATaU7jhTk7wwdAOeKbvYkZiZj8w9H/rb77xKMAVglIhBUCErhhls3jyEx+jG?=
+ =?us-ascii?Q?a7XTEsyIbUBgPnBlqdCvkHVq6TVZcq8b5IJwUY1AB/R2nsjiSXresv1gD378?=
+ =?us-ascii?Q?/aUyipjpEnpzRi/vpqZHrY7a+h/CiN7tBOhik0cgfVTdFyQw0AnJ+d99/oyF?=
+ =?us-ascii?Q?RqMmx3e4/SqS7I/hir/Pn7My+9B2w5LJi5AZ2LSczr1sbSdd0NIvdPQyQP21?=
+ =?us-ascii?Q?WzwD4pFBDexRXsAG/HWPR0RdRZdPBOICeg98oHGXoifxty/Wsw024KbtiLLK?=
+ =?us-ascii?Q?AHgfpZL6qzjnGmwtG2TlLGtX7oRqDApWHpfPzU8tV1ruSbPBiSdA4p6UCTee?=
+ =?us-ascii?Q?EDtyHoNWlPXZ77xJ9y9SKH96+EY4MjSplWuZ0MLBXbWq9kn+SlV9N821eEU+?=
+ =?us-ascii?Q?M6KnamiIFRMsP7VmS43NlGxWDA1L0UqP4C6Z6y4I5H6C1NEvQAJVDGSg1bkW?=
+ =?us-ascii?Q?d06oR1d2ZZzJ7gFcMhvhcuoP5tqBj3CRN5S5Dh66kg1hbKLST25TRg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SL2P216MB1246.KORP216.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RVU5xhhUeERERcTdNsPRjShYcJZfrjqra1h1Z/v0ZUHN00teM55QGnc/i75J?=
+ =?us-ascii?Q?WTyT1AhgiDfc3QQK35lDnMQ4vsRNHTo18h06ghl+nFn1ih1Rdh5+HyjhrHun?=
+ =?us-ascii?Q?C6Xj88wLumPnLK/jJINVGf9uzyOefoiI32NIFVFArs42JGGD7ReJhdvnKSrr?=
+ =?us-ascii?Q?UQD2luHBhWpTdwNeTgF+P/hQbi7JzQpme/8SFIZoM3HjkRXq7C5kAyMNSA9g?=
+ =?us-ascii?Q?shEk4uuD+csF2y1lwaVPENaAK4OJYIBSUgLDEPUHK9ZsWJVavt+0qXLavQNg?=
+ =?us-ascii?Q?4h9VY5h10pjzm/m8J/AodCaSiDuBWTdli1IfMTR/8+nakm+OnWD9PY5CK3cR?=
+ =?us-ascii?Q?JX2smCd+yMKLQuVSbbWtQzLBdSrHMWoWMn3dENm35SamtosfuzX+3iTw9T87?=
+ =?us-ascii?Q?/o+Rc8ZCuhQ8S2lfOTWwM2sdKdPG+wdWm9c5HHfX5Wtx2n5Ibq0mkZ88kRqZ?=
+ =?us-ascii?Q?xE9AjVj12CrPMAl1X0BJnQsRC2NjbUTdF62jVSVuQt6wfFvKdhB1AYSB8hO2?=
+ =?us-ascii?Q?Nr+xZKzVIJfHiGSMA88UDyjaw9XVngw2Hgdst8bVTpVsETnzIddFvdl+QpxZ?=
+ =?us-ascii?Q?/8cmITPrBtyn1SouPyL5sR/5qcGGM1uGs/14m9emRZYARLzrUp2mqmuqNJre?=
+ =?us-ascii?Q?OCIg+6FadY9ZDk9qPiuCYCsHLV4Kas6+w6bcUisyeWn3F5/r4LEvrQorDLRC?=
+ =?us-ascii?Q?cjU68WzqlQeO7Mktt6K77A3v8kDVgEy47udhVnTDFKRmjCdhTvvjYxc2AqWZ?=
+ =?us-ascii?Q?3jUEAxhypzpOyHXYrpktH8f0LBO9FCeZsUHy8GwjBSPTdMaMWGRYIzvRb4Hx?=
+ =?us-ascii?Q?QoI7ybnTXbL2hgrWIo3l29ZbLAtTPG+COe7t5SCoWLDjFGIU03YppRCJkpR2?=
+ =?us-ascii?Q?y+kcYUpCPTaOpwltndfgZ1KvxDEU2ojy+M77rJoakhUhek16A0AMx/VaXusT?=
+ =?us-ascii?Q?qWMbSnUqwRpT/USirG1I38jmogwydJf5bM5Si4QRDfiaPcKKyhC1r01/nlLF?=
+ =?us-ascii?Q?+OH5l4UvikyjdNGLdLnd1csW1gRTC1lfySD1Bf5Hnit21o+SIdenM5iSXVj9?=
+ =?us-ascii?Q?FmAKphQpVgwkfAoo9PeUQyi4Y+ALiCRIYgl8TpW7DLkbuytSbVuyIOl/xT5b?=
+ =?us-ascii?Q?NwiV9QTaCkNr+C2fMVqC7sY7oyYcFuQUL08dgVx46JuEun0Veu4yzcBlT2N6?=
+ =?us-ascii?Q?sbNYXVlDmhMoupwfTfF1dCzGZFxpJOXr14EStX5RFtrem5N+35CX7GNL3vpQ?=
+ =?us-ascii?Q?clKCxclzA7KfyOhR44+CjFlAUnSYb6dLksjPXQfoRSPYSEZewVu71UNxtuzW?=
+ =?us-ascii?Q?p7GCIPBN8RESpDvEd2eoN2iZTpOaCPenIfNj0bExasFcpFCMu1fnNT9wsMjU?=
+ =?us-ascii?Q?Ge8qp9CX3XX6CUs8JtUrNxwM081S+G6B8SV6WsChL8nPw0mOVQ6RVQ9HvIKK?=
+ =?us-ascii?Q?yiGKWdWCxu4JuajEo9QqlDaNhXfYwQhZPhTiCYm18GaP+zpbNFmRGvQOd2tR?=
+ =?us-ascii?Q?GrmszYJPw55SRq5896VgNueyVeH6q6KJlcppSjf/aQ3JjV+GAN83pbqvZ8hk?=
+ =?us-ascii?Q?1TfGAo0B36v2qNTgNU2fsgOFjJRLwTzn62KwQSZLVvQfGZeQ5I300zUntbFb?=
+ =?us-ascii?Q?FA=3D=3D?=
+X-OriginatorOrg: chipsnmedia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f20e2ae-c2e9-4376-4628-08dd818079df
+X-MS-Exchange-CrossTenant-AuthSource: SL2P216MB1246.KORP216.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 09:31:35.8410
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4d70c8e9-142b-4389-b7f2-fa8a3c68c467
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ISoD6dbwl9GsD1xC3yT4AIzLyXAB7fMjuNcIe1hnKFmijV8sNpER7Bt0v9E15p7DwoDwhdMLi/EqXJjZ14v32Nb2wKkmxgVqzMk/FboVces=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SE2P216MB1521
 
+The YUV24 format is missing an entry in the v4l2_format_info().
+The YUV24 format is the packed YUV 4:4:4 formats with 8 bits
+per component.
 
---i2qhcekndg5mr4b5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-MIME-Version: 1.0
+Fixes: 0376a51fbe5e ("media: v4l: Add packed YUV444 24bpp pixel format")
+Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+---
+ drivers/media/v4l2-core/v4l2-common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Tue, Apr 22, 2025 at 11:23:17AM +0200, Christian Brauner <brauner@kernel=
-=2Eorg> wrote:
-> As written this isn't restricted to admin processes though, no? So any
-> unprivileged container can open that file O_NONBLOCK and avoid
-> synchronous reclaim?
->=20
-> Which might be fine I have no idea but it's something to explicitly
-> point out=20
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index 0a2f4f0d0a07..de3636f1cdf1 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -269,6 +269,7 @@ const struct v4l2_format_info *v4l2_format_info(u32 format)
+ 		{ .format = V4L2_PIX_FMT_Y212,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 1 },
+ 		{ .format = V4L2_PIX_FMT_Y216,    .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 4, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 2, .vdiv = 1 },
+ 		{ .format = V4L2_PIX_FMT_YUV48_12, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 6, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 1, .vdiv = 1 },
++		{ .format = V4L2_PIX_FMT_YUV24,   .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 1, .comp_planes = 1, .bpp = { 3, 0, 0, 0 }, .bpp_div = { 1, 1, 1, 1 }, .hdiv = 1, .vdiv = 1 },
+ 		{ .format = V4L2_PIX_FMT_MT2110T, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 5, 10, 0, 0 }, .bpp_div = { 4, 4, 1, 1 }, .hdiv = 2, .vdiv = 2,
+ 		  .block_w = { 16, 8, 0, 0 }, .block_h = { 32, 16, 0, 0 }},
+ 		{ .format = V4L2_PIX_FMT_MT2110R, .pixel_enc = V4L2_PIXEL_ENC_YUV, .mem_planes = 2, .comp_planes = 2, .bpp = { 5, 10, 0, 0 }, .bpp_div = { 4, 4, 1, 1 }, .hdiv = 2, .vdiv = 2,
+-- 
+2.31.1
 
-It occurred to me as well but I think this is fine -- changing the
-limits of a container is (should be) a privileged operation already
-(ensured by file permissions at opening).
-IOW, this doesn't allow bypassing the limits to anyone who couldn't have
-been able to change them already.
-
-Michal
-
---i2qhcekndg5mr4b5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaAdh2wAKCRAt3Wney77B
-SV5jAQDVSm6Ja4jGC2yTv6E/hAxyTENttqmaX3cnbiAR/btTsAD+NHYf2vRtgkRC
-wioHPKWvbJ4uZJ+rnc/qtRcKN2hyhgo=
-=b8xl
------END PGP SIGNATURE-----
-
---i2qhcekndg5mr4b5--
