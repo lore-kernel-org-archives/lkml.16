@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41403290BB2;
-	Tue, 22 Apr 2025 14:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D944629290B;
+	Tue, 22 Apr 2025 14:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333834; cv=none; b=BjtXjGu4prinADBp5l5mGLMnxE1pZdjlWwDtk6vQPACNqiiRreuBMzKgfJXEeR1e4bn/Ih+8y/MEpOQMH+8NqjyMfyT62NsbG2Kbsl8uq9faBdx37I+ncYvhsixE6OjG8z5WIsSLKx4VM3gXI4N6iIlM32KUCvCBiqpg0MF3NJ0=
+	t=1745333837; cv=none; b=B7I+Cr/V4eCR9pb2jsVdPPHIPDZ8o1s/nTxiUV+tHqzJqYlZstHygVYlQ2d0UxLEfhbRUQHHMr/jlFq6Mn8QvFexZDvwpZccWWBhWOXA+reC6vIH4u8zn4hHGaXZmD7XbnutQbQWxTLb6qZml72AX3WtxUn91DTwPxI3pLE6e6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333834; c=relaxed/simple;
-	bh=Y7m8saQAp/VXwyiHBPBI9Fe92GszEzxl7i9PLrKs/Xo=;
+	s=arc-20240116; t=1745333837; c=relaxed/simple;
+	bh=wNTtWuZ9PIAV8L0JaDxmIfUDLFDb5Mvkk9jscQoWQgY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dvpofbtr4AbD9XmzjdArdybZRJAByJScIgi2BaH3ylTG+YZS+/hgZhqxji4789dspBWVl57osvW/Z0+ZWGRYWIxVW0iI5yBQ86ykBA49FgRVndKJtR2yLFI46HSo0fCBkz4JUdXdwupephn0JAqqYOIy5qMTBoe6mlvabymwrEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xpw/61eT; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=se3K9vhYo6C3I4rnfTFSEdFBow74pNtdY2XUlXnIgGm14iU7MGuStsvLZHh/xdGp5emEqFEOJPF5zuJCkBBWtFBk3JArNskuvCft2/hVrMvyKkwqpdFo2ecEqmYjvzrYZfTwfQ/QmJIIRHP7nanS/y/hywPBoF0nz2dJM4xsfTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WzEwcpUi; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xpw/61eT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4DC08439A2;
-	Tue, 22 Apr 2025 14:57:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WzEwcpUi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EC3794399D;
+	Tue, 22 Apr 2025 14:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745333830;
+	t=1745333833;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cT3rywvIPqbXhWyv0pTvhWwCd/PnNMQj99TOLMGQ6D0=;
-	b=Xpw/61eT3kWdwY9vWw2EJ6atoe8OJXXjDX0tSdxvphqSTtBCDi2BPdS/E1FpfLIYKxQ8Cu
-	qx7gs3nSHjxb6ntiyLW1DX0sgRCy4BHVldO5Kf0E7zK8WMafdNPnzItyU3jDuyjWQ9zb0W
-	C0nBzLGQqGlDq21hHWTjqvjK3yZYnKPKeY9u3x6h06N9Za7a6wd0lzMPtDv43JViH0NJRS
-	KPApnBiyOFpQ/1RwuKVGNkH7mXqXmli4JqQlri2R4kf9eKYeJECk2kWjIl4JnvcLuNU3op
-	Tf3Sed+1e3q225FwjBzbeIuQzy3aRCAFHxYjB7KEsWpelBLWrPNjQFXqOUh4Pg==
+	bh=NPml4V67ie+1RR8+CcYuG+2+P+ykgMxIiLJ27l5t7D0=;
+	b=WzEwcpUiig5WOeFQtYvOV7tLys1rXFYlUOgKwH55nsuQBNGxbtzo3LUWSMG9PjQlCerKF9
+	9H/gcVc5H3Ujk1uiUxaH0za4bHjsAOxAZdRigllDsEnE063AXFWhxFcguho2Ht5i4xnXrY
+	0CztAjt9vwU4wtDYApqtdnWkQjv3UiizFBEeX4FEAZn1xsiM9ETBgLAuKw0iwHSccGxArZ
+	hgNbwlVIgyRBKErrbMLEEBPekqcB5y+EL057GM5gZ3j4bxUPxu3676zReDuCuVwoM6K7TE
+	C0po9rG4M49CJ4JZApsJa5/qcQ5uoIjlOrMyKHlHsuycKcxq3KUH4HfdwKUA2Q==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 22 Apr 2025 16:56:41 +0200
-Subject: [PATCH net-next v9 08/13] net: ethtool: Add PSE port priority
- support feature
+Date: Tue, 22 Apr 2025 16:56:43 +0200
+Subject: [PATCH net-next v9 10/13] net: pse-pd: pd692x0: Add support for
+ controller and manager power supplies
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-feature_poe_port_prio-v9-8-417fc007572d@bootlin.com>
+Message-Id: <20250422-feature_poe_port_prio-v9-10-417fc007572d@bootlin.com>
 References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
 In-Reply-To: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
@@ -70,191 +70,74 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This patch expands the status information provided by ethtool for PSE c33
-with current port priority and max port priority. It also adds a call to
-pse_ethtool_set_prio() to configure the PSE port priority.
+Add support for managing the VDD and VDDA power supplies for the PD692x0
+PSE controller, as well as the VAUX5 and VAUX3P3 power supplies for the
+PD6920x PSE managers.
 
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-Change in v6:
-- Remove c33 standard reference from new netlink field in documentation.
-- Remove report of budget evaluation strategy.
 
-Change in v4:
-- Remove disconnection policy features.
-- Rename port priority to budget evaluation strategy.
-
-Change in v3:
-- Add disconnection policy.
-
-Change in v2:
-- Improve port priority documentation.
-- Add port priority modes.
+Changes in v5:
+- New patch
 ---
- Documentation/netlink/specs/ethtool.yaml       | 11 +++++++++++
- Documentation/networking/ethtool-netlink.rst   | 26 ++++++++++++++++++++++++++
- include/uapi/linux/ethtool_netlink_generated.h |  2 ++
- net/ethtool/pse-pd.c                           | 18 ++++++++++++++++++
- 4 files changed, 57 insertions(+)
+ drivers/net/pse-pd/pd692x0.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 93e470895dc1..814aa54b35b5 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -1379,6 +1379,14 @@ attribute-sets:
-         name: pse-pw-d-id
-         type: u32
-         name-prefix: ethtool-a-
-+      -
-+        name: pse-prio-max
-+        type: u32
-+        name-prefix: ethtool-a-
-+      -
-+        name: pse-prio
-+        type: u32
-+        name-prefix: ethtool-a-
-   -
-     name: rss
-     attr-cnt-name: __ethtool-a-rss-cnt
-@@ -2200,6 +2208,8 @@ operations:
-             - c33-pse-avail-pw-limit
-             - c33-pse-pw-limit-ranges
-             - pse-pw-d-id
-+            - pse-prio-max
-+            - pse-prio
-       dump: *pse-get-op
-     -
-       name: pse-set
-@@ -2214,6 +2224,7 @@ operations:
-             - podl-pse-admin-control
-             - c33-pse-admin-control
-             - c33-pse-avail-pw-limit
-+            - pse-prio
-     -
-       name: rss-get
-       doc: Get RSS params.
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 49c9a0e79af5..efc410ae26c8 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -1790,6 +1790,10 @@ Kernel response contents:
-   ``ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES``       nested  Supported power limit
-                                                       configuration ranges.
-   ``ETHTOOL_A_PSE_PW_D_ID``                      u32  Index of the PSE power domain
-+  ``ETHTOOL_A_PSE_PRIO_MAX``                     u32  Priority maximum configurable
-+                                                      on the PoE PSE
-+  ``ETHTOOL_A_PSE_PRIO``                         u32  Priority of the PoE PSE
-+                                                      currently configured
-   ==========================================  ======  =============================
+diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
+index a4766c18f333..4de004813560 100644
+--- a/drivers/net/pse-pd/pd692x0.c
++++ b/drivers/net/pse-pd/pd692x0.c
+@@ -976,8 +976,10 @@ pd692x0_register_managers_regulator(struct pd692x0_priv *priv,
+ 	reg_name_len = strlen(dev_name(dev)) + 23;
  
- When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` attribute identifies
-@@ -1866,6 +1870,12 @@ equal.
- The ``ETHTOOL_A_PSE_PW_D_ID`` attribute identifies the index of PSE power
- domain.
+ 	for (i = 0; i < nmanagers; i++) {
++		static const char * const regulators[] = { "vaux5", "vaux3p3" };
+ 		struct regulator_dev *rdev;
+ 		char *reg_name;
++		int ret;
  
-+When set, the optional ``ETHTOOL_A_PSE_PRIO_MAX`` attribute identifies
-+the PSE maximum priority value.
-+When set, the optional ``ETHTOOL_A_PSE_PRIO`` attributes is used to
-+identifies the currently configured PSE priority.
-+For a description of PSE priority attributes, see ``PSE_SET``.
-+
- PSE_SET
- =======
+ 		reg_name = devm_kzalloc(dev, reg_name_len, GFP_KERNEL);
+ 		if (!reg_name)
+@@ -988,6 +990,17 @@ pd692x0_register_managers_regulator(struct pd692x0_priv *priv,
+ 		if (IS_ERR(rdev))
+ 			return PTR_ERR(rdev);
  
-@@ -1879,6 +1889,8 @@ Request contents:
-   ``ETHTOOL_A_C33_PSE_ADMIN_CONTROL``        u32  Control PSE Admin state
-   ``ETHTOOL_A_C33_PSE_AVAIL_PWR_LIMIT``      u32  Control PoE PSE available
-                                                   power limit
-+  ``ETHTOOL_A_PSE_PRIO``                     u32  Control priority of the
-+                                                  PoE PSE
-   ======================================  ======  =============================
- 
- When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_CONTROL`` attribute is used
-@@ -1901,6 +1913,20 @@ various existing products that document power consumption in watts rather than
- classes. If power limit configuration based on classes is needed, the
- conversion can be done in user space, for example by ethtool.
- 
-+When set, the optional ``ETHTOOL_A_PSE_PRIO`` attributes is used to
-+control the PSE priority. Allowed priority value are between zero and
-+the value of ``ETHTOOL_A_PSE_PRIO_MAX`` attribute.
-+
-+A lower value indicates a higher priority, meaning that a priority value
-+of 0 corresponds to the highest port priority.
-+Port priority serves two functions:
-+
-+ - Power-up Order: After a reset, ports are powered up in order of their
-+   priority from highest to lowest. Ports with higher priority
-+   (lower values) power up first.
-+ - Shutdown Order: When the power budget is exceeded, ports with lower
-+   priority (higher values) are turned off first.
-+
- PSE_NTF
- =======
- 
-diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
-index ccd7ab3bf1b1..0220cd83728a 100644
---- a/include/uapi/linux/ethtool_netlink_generated.h
-+++ b/include/uapi/linux/ethtool_netlink_generated.h
-@@ -634,6 +634,8 @@ enum {
- 	ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT,
- 	ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES,
- 	ETHTOOL_A_PSE_PW_D_ID,
-+	ETHTOOL_A_PSE_PRIO_MAX,
-+	ETHTOOL_A_PSE_PRIO,
- 
- 	__ETHTOOL_A_PSE_CNT,
- 	ETHTOOL_A_PSE_MAX = (__ETHTOOL_A_PSE_CNT - 1)
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index 949bf294824c..39abb27f247d 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -112,6 +112,9 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
- 		len += st->c33_pw_limit_nb_ranges *
- 		       (nla_total_size(0) +
- 			nla_total_size(sizeof(u32)) * 2);
-+	if (st->prio_max)
-+		/* _PSE_PRIO_MAX + _PSE_PRIO */
-+		len += nla_total_size(sizeof(u32)) * 2;
- 
- 	return len;
- }
-@@ -206,6 +209,11 @@ static int pse_fill_reply(struct sk_buff *skb,
- 	    pse_put_pw_limit_ranges(skb, st))
- 		return -EMSGSIZE;
- 
-+	if (st->prio_max > 0 &&
-+	    (nla_put_u32(skb, ETHTOOL_A_PSE_PRIO_MAX, st->prio_max) ||
-+	     nla_put_u32(skb, ETHTOOL_A_PSE_PRIO, st->prio)))
-+		return -EMSGSIZE;
-+
- 	return 0;
- }
- 
-@@ -227,6 +235,7 @@ const struct nla_policy ethnl_pse_set_policy[ETHTOOL_A_PSE_MAX + 1] = {
- 		NLA_POLICY_RANGE(NLA_U32, ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
- 				 ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED),
- 	[ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT] = { .type = NLA_U32 },
-+	[ETHTOOL_A_PSE_PRIO] = { .type = NLA_U32 },
- };
- 
- static int
-@@ -275,6 +284,15 @@ ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
- 	if (ret)
- 		return ret;
- 
-+	if (tb[ETHTOOL_A_PSE_PRIO]) {
-+		unsigned int prio;
-+
-+		prio = nla_get_u32(tb[ETHTOOL_A_PSE_PRIO]);
-+		ret = pse_ethtool_set_prio(phydev->psec, info->extack, prio);
++		/* VMAIN is described as main supply for the manager.
++		 * Add other VAUX power supplies and link them to the
++		 * virtual device rdev->dev.
++		 */
++		ret = devm_regulator_bulk_get_enable(&rdev->dev,
++						     ARRAY_SIZE(regulators),
++						     regulators);
 +		if (ret)
-+			return ret;
-+	}
++			return dev_err_probe(&rdev->dev, ret,
++					     "Failed to enable regulators\n");
 +
- 	if (tb[ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT]) {
- 		unsigned int pw_limit;
+ 		priv->manager_reg[i] = rdev;
+ 	}
  
+@@ -1640,6 +1653,7 @@ static const struct fw_upload_ops pd692x0_fw_ops = {
+ 
+ static int pd692x0_i2c_probe(struct i2c_client *client)
+ {
++	static const char * const regulators[] = { "vdd", "vdda" };
+ 	struct pd692x0_msg msg, buf = {0}, zero = {0};
+ 	struct device *dev = &client->dev;
+ 	struct pd692x0_msg_ver ver;
+@@ -1647,6 +1661,12 @@ static int pd692x0_i2c_probe(struct i2c_client *client)
+ 	struct fw_upload *fwl;
+ 	int ret;
+ 
++	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators),
++					     regulators);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "Failed to enable regulators\n");
++
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+ 		dev_err(dev, "i2c check functionality failed\n");
+ 		return -ENXIO;
 
 -- 
 2.34.1
