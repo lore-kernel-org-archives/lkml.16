@@ -1,38 +1,38 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FC320E00C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10340210F58;
 	Tue, 22 Apr 2025 10:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319415; cv=none; b=eGL+3wofgWPJ4LbQblGct1JeLK4WpA2BNgEi2e5oED3JtsljHknbhq4yupZMGGEzqKksx59b9nTYAYBea+/bgHMy8tbyQPembU+IyA+3YWa+yQpVHorR9oPCnN0EKX1XdtayVQZDHZYzn71J+J/nIgKnUn9fmbxyovsndhzXX6Y=
+	t=1745319415; cv=none; b=GsprGjnn5HwQqmvrQPPL6zcUXTvoL2PkOZzSesz/6Bg7qouZNfw8ASj3zjP9JwcZnY0wrkaiyOiuGHMrzY1n2Z+fCFqs8PxqYFOy5gsnEC7x4TViI0Ur/4AbEZ0u8Cm9KqI3ISI2nzHzASgHaIscsZNNG1nIOvhI4shytrhsYus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745319415; c=relaxed/simple;
-	bh=hZqAWnmv9trSKrK6YSrvy2KF9xVBjfVaGt4X1eQ9B4Y=;
+	bh=7dNi4yaE2vZu+NT3me9hRD03+wiMLK7okioOpq/8xzg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S77ossSHfjl1qO9/ZIihKJQ+X3WVfz96fG+BiJjrkHoKtchA7XoViRaf4u937NtAMnLtA08F+RFhTkb1vOvK3r8CFICtncghI4nNFEWjH/LbXivegd+3JJ1acTaBEGFAyHu951R9KIAG30mTzh97qtqpl/RAI1+0eqX9hGdBK/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=hgEL5rIt; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=NGwvYVIE1kJQ9xRHiTjXHMDyDni3I+F6y4F1hEpOf7rAVzKDwsrFklx5/yIHrCPrzhq5ZPS2u0iqoiNT4gM5VbHRAAq2iHI2oL6xB7z1HnpW1s5v+0ZF+fMT4tzN1fThN6hfjICiFmBVOCmzMWC3OEdteZR20jzHMja8imiWIlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=ADXypFDZ; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="hgEL5rIt"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="ADXypFDZ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=b+RLE+QbtrojyuFOH3H/N0y+Q06PtGj8xi0CyHbnODQ=; b=hgEL5rItj5VkOxUIwHqmG6vkYv
-	+7SQ0Hy/1la61LSn29x8a4bMfS72V0nGICub9j0zyaRbBa8Dxfb4wJaWYPlB1PFSOFvAeGYh6FR+T
-	KcNmnpYOZbOyyegm0AxAgcfYySvhVvgIbnX6rIi8QoG4wSOB9EId0yw0mlbwG0Mby9KoG8yvPZm+Q
-	4jSM5JWkDfUB/5ciPpdS3x9tFz8vYtT6IqML46/WUK5/gJROLY0nT2viFWdTqVbhcWB4WyleutkYr
-	qtmNXeM+rfa1/iNSjV47WFTdoBiCJHDGPnvu2D6YcNtUlwkXU0eV/a4YDKjtS+uLy8uzu2xLPDatw
-	iaq2dkgQ==;
+	bh=y4EAGj8J/OPfCu3FA7uzowZgFMJ6Fv3iSV5Sq1MEBIk=; b=ADXypFDZXhEAfy+zl1MRSpjDu+
+	9NX1+bxB7aa4OHdbxvnV0cWjXIJ7CZkEhq/37WasBLmd1dQjQ2+O2jhlz2pFhmTw9dR0l/79nMuN3
+	WQqPxgX9HsT8lsb/pdAU3+rWmmtI3gkRj6VM5HG0GwZDMgDtfYqfygsBE59pswZn4iueDdR1rzLC6
+	MM5Hj4CJH1Y3t7Y5TBLZ4fKQ8sKhZgA2JCm4y87vJR/ifnJ4thPYyZ6yVHB9XoUXlds/bcL33HSyb
+	g1P2hSrytChJtnrZ+AmtWH76CM2Ej07QoqjNApBDWSvd9zg/vlzAwTG5fIYnGkjWP7lwgwonBX/um
+	FvEQkXRg==;
 Received: from [89.212.21.243] (port=36562 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u7BJ5-008kyr-0T;
+	id 1u7BJ5-008kyr-11;
 	Tue, 22 Apr 2025 12:56:51 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v4 04/15] arm64: dts: freescale: imx93-phycore-som: Enhance eMMC pinctrl
-Date: Tue, 22 Apr 2025 12:56:33 +0200
-Message-Id: <20250422105644.2725168-5-primoz.fiser@norik.com>
+Subject: [PATCH v4 06/15] arm64: dts: freescale: imx93-phyboard-segin: Drop eMMC no-1-8-v flag
+Date: Tue, 22 Apr 2025 12:56:35 +0200
+Message-Id: <20250422105644.2725168-7-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250422105644.2725168-1-primoz.fiser@norik.com>
 References: <20250422105644.2725168-1-primoz.fiser@norik.com>
@@ -71,98 +71,34 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Improve eMMC on phyCORE-i.MX93 SOM by adding 100MHz and 200MHz pinctrl
-modes. This enables to use eMMC at enhanced data rates (e.g. HS400).
-
-While at it, apply a workaround for the i.MX93 chip errata ERR052021.
+Drop redundant 'no-1-8-v' flag from usdhc1 (eMMC) node. Flag is now set
+by default in the SOM include file (imx93-phycore-som.dtsi).
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
 Changes in v4:
 - no changes
 
- .../boot/dts/freescale/imx93-phycore-som.dtsi | 57 +++++++++++++++----
- 1 file changed, 47 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 06a9e674e338..663530a7e2bb 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -166,8 +166,10 @@ eeprom@50 {
- 
- /* eMMC */
- &usdhc1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
- 	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
- 	bus-width = <8>;
- 	non-removable;
+diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+index 85fb188b057f..902b523fc92c 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
++++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+@@ -40,11 +40,6 @@ &lpuart1 {
  	status = "okay";
-@@ -213,18 +215,53 @@ MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
- 		>;
- 	};
+ };
  
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
- 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
--			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
--			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
--			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
--			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
--			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
--			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
--			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
--			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
--			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x40001386
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x40001386
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x4000138e
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x40001386
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x40001386
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x40001386
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x40001386
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x40001386
-+			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-+		>;
-+	};
-+
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x4000139e
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x4000139e
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x4000139e
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x4000139e
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x4000139e
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x4000139e
-+			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-+		>;
-+	};
-+
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000139e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x400013be
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x400013be
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x400013be
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x400013be
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x400013be
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x400013be
- 			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
- 		>;
- 	};
+-/* eMMC */
+-&usdhc1 {
+-	no-1-8-v;
+-};
+-
+ /* SD-Card */
+ &usdhc2 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 -- 
 2.34.1
 
