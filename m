@@ -1,45 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E3C265619;
-	Tue, 22 Apr 2025 11:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7826627CB15
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322482; cv=none; b=ZcDnGa+evi7aNGTG9r/iKoxvZADp9lOZicXOhWSdTOaKXW7d8nL84CnPJ/MUNcGwi1VneJB/C+2GJ8kSXkfpVqAF6aeS4fzWp9W7e+kcX2Qb+vJed9GjTAjhKdjjJbCfAUvNJMtyBwhNDsgdNh2xvJOWcu4cVM2XoCGYjxIbLBY=
+	t=1745322488; cv=none; b=kb/MIVnnEEOZndRP+rgAbiLryar2QeqpJOZeZTRWeQjr9vpo2HmoIHeaLXei9dlU0HC2ENeqNV011mfN3qzXHKZL/KE39sU1B2+uL+dCmQiRFNCehp2f+0aqI/b4gDv11sjmQXJNnxCRlZCXGZCAcJ8NsX94eq61xEmEY2v/aqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322482; c=relaxed/simple;
-	bh=SZ8P4ntOmJ6xAh7cT6ZK7CKYPq0r/WrQHbODqpRB9eE=;
+	s=arc-20240116; t=1745322488; c=relaxed/simple;
+	bh=mLZAKTqsts6ksQsJg0bZxf24qseksmOq76jaz9P1iSk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrNH2iIb/dy+/E1qR+73R6T9ZkI5R4Utmk5KR2lquA+gWgtZQEZPdEZE0G+Sbc7zyz4jW/SXCxJdIpeQQvW5bzSy/ep4K920ILSSAgOHeMqqmOGa9SopXSk8BJclNRr85et6gxrkmD16PiO45o9mWS3ZT9x5JBj9MT1dLVIm6xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRDzEyMl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhB2mEz408USdPPRL8WIsIUXk05JvagiB0Wxt0JTPCqNcB47lyP2mDzuYc1HM0LXHQCtfTNmlaJhwIQZ/vdU5f+d5W5W/bbwhBhv1e7T54x4uq1HQgXbTk19vRCKnWnMU4CPPnqlM73LiccJycw3KiQtb/mF/Qh/EPBwiZ8WSoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zdWqEfYl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sIm8ITGf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zdWqEfYl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sIm8ITGf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QRDzEyMl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B256EC4CEEA;
-	Tue, 22 Apr 2025 11:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745322482;
-	bh=SZ8P4ntOmJ6xAh7cT6ZK7CKYPq0r/WrQHbODqpRB9eE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QRDzEyMldtGbO5SWm1dZjfG4oaLyAwAmKGNnHOMl4KG2HzB6lvgFr/K2m7vOIVyuU
-	 wsM5aivTeQLj++TyDw2WdAzw1sjWypyPaJl/fhyjOl+H9qsN//D0jKpLvpLvagmEgo
-	 bvY6KJdUkCMl9g2fqD4QcfPxC/kdv0yuNR3ODOFn142YIIvpdSTwu+TMqhhEjexl/4
-	 PyNVgwAgxP3TBEFhRA1P6MhW/RL+oeTdUmRp51YAMwD8TLiZcDWpZcluYrqsDH1477
-	 Ons0Wmxl1vK8y4gMrmELPRZ/iiPFfyi1DKOSJ6BqsOeH+h5MbcWJq67E6VcBYHe/gw
-	 69UKzeXakmmEQ==
-Date: Tue, 22 Apr 2025 13:47:57 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, shawn.lin@rock-chips.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 2/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-Message-ID: <aAeB7fO_LCzi-xCh@ryzen>
-References: <20250422112830.204374-1-18255117159@163.com>
- <20250422112830.204374-3-18255117159@163.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zdWqEfYl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sIm8ITGf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zdWqEfYl";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sIm8ITGf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A35911F444;
+	Tue, 22 Apr 2025 11:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745322484;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
+	b=zdWqEfYlVoTC3aAZu2dAi+TfzxCki3KwIlKaMyDFb38rCk+G275ZTOhTFpcQcAZymYmfBU
+	UwIWEGproE1zY22GPLGg40kewOS4epddjYfIGl/CZbHZlGtHeGj7BoIQM62f7NHWOJOpmu
+	RBNM8Fhpi+gtZrtu75g4ghaL7b4UDBw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745322484;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
+	b=sIm8ITGfyw1GQ5IKjWInxDZvKUoOB46M+WgQ1SniYHWp8/zTxVVE3efe7NNFEj+jqjc72R
+	aX03dX10wG7pKIBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745322484;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
+	b=zdWqEfYlVoTC3aAZu2dAi+TfzxCki3KwIlKaMyDFb38rCk+G275ZTOhTFpcQcAZymYmfBU
+	UwIWEGproE1zY22GPLGg40kewOS4epddjYfIGl/CZbHZlGtHeGj7BoIQM62f7NHWOJOpmu
+	RBNM8Fhpi+gtZrtu75g4ghaL7b4UDBw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745322484;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UfksERo9eAsGQoLVLLr8XDEAn6ivMS9N1uZBVtsk3s4=;
+	b=sIm8ITGfyw1GQ5IKjWInxDZvKUoOB46M+WgQ1SniYHWp8/zTxVVE3efe7NNFEj+jqjc72R
+	aX03dX10wG7pKIBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8ECCA139D5;
+	Tue, 22 Apr 2025 11:48:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NBemIvSBB2iIEwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 22 Apr 2025 11:48:04 +0000
+Date: Tue, 22 Apr 2025 13:48:03 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
+Message-ID: <20250422114803.GD3659@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250417142655.1284388-1-frank.li@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,89 +88,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422112830.204374-3-18255117159@163.com>
+In-Reply-To: <20250417142655.1284388-1-frank.li@vivo.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vivo.com:email,suse.cz:replyto];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Apr 22, 2025 at 07:28:29PM +0800, Hans Zhang wrote:
-> Register definitions were scattered with ambiguous names (e.g.,
-> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
-> hierarchical grouping. Magic values for bit operations reduced code
-> clarity.
+On Thu, Apr 17, 2025 at 08:26:49AM -0600, Yangtao Li wrote:
+> Commit b28b1f0ce44c ("btrfs: delayed-ref: Introduce better documented
+> delayed ref structures") introduced BTRFS_REF_LAST, which can be used
+> for sanity checking.
 > 
-> Group registers and their associated bitfields logically. This improves
-> maintainability and aligns the code with hardware documentation.
+> In btrfs_ref_type() there was an assertion
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 42 +++++++++++--------
->  1 file changed, 24 insertions(+), 18 deletions(-)
+> ASSERT(ref->type == BTRFS_REF_DATA || ref->type == BTRFS_REF_METADATA);
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index fd5827bbfae3..cdc8afc6cfc1 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -8,6 +8,7 @@
->   * Author: Simon Xue <xxm@rock-chips.com>
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/irqchip/chained_irq.h>
-> @@ -34,30 +35,35 @@
->  
->  #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
->  
-> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
-> -#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
-> +#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
-> +
-> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
-> +#define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-> +
->  #define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
-> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
-> +
-> +#define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
->  #define PCIE_CLIENT_INTR_MASK_MISC	0x24
-> +
->  #define PCIE_CLIENT_POWER		0x2c
-> +#define  PME_READY_ENTER_L23		BIT(3)
-> +
->  #define PCIE_CLIENT_MSG_GEN		0x34
-> -#define PME_READY_ENTER_L23		BIT(3)
-> -#define PME_TURN_OFF			(BIT(4) | BIT(20))
-> -#define PME_TO_ACK			(BIT(9) | BIT(25))
-> -#define PCIE_SMLH_LINKUP		BIT(16)
-> -#define PCIE_RDLH_LINKUP		BIT(17)
-> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
-> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
-> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-> -#define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-> -#define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
-> +#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
-> +#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
-> +
->  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-> +
->  #define PCIE_CLIENT_LTSSM_STATUS	0x300
-> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
-> +#define  PCIE_LINKUP_MASK		GENMASK(17, 16)
+> to validate the value. 
+> 
+> And there is currently no enum or switch to use the upper limit,
+> so let's remove it.
+> 
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 
-Here you are adding a macro (PCIE_LINKUP_MASK) that is not used.
-
-I suggest that you move the addition to the patch where it is actually used.
-
-
-Kind regards,
-Niklas
+Added to for-next, thanks.
