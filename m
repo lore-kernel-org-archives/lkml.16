@@ -1,183 +1,282 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33B028EA59
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE8E28CF45
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333701; cv=none; b=ARtHXL77RIvr8l3PrZAZ8hTVkQkeN88DhedVCSwIDRVHwibSU1J4rMFA2fFuecqeqA/y1xm9sRM3Q+aJR31MkfdczoP+19W0EJBnQWy05tsqgBFcvAxVyoRgo+lQ2syLZHbdBoIEZrrzWmvtp4Zq+MYdgZXxeALDXal61XuNKko=
+	t=1745333776; cv=none; b=ud0iuVZbmTXeQ4MiaNbk8UIEw1VdIRNfin3NZVZ1wbsGcfALuWL/Q6dwt1AQ62WP2pTS2JTiGNlprY9huJmyQ2lGhPq0UpFHPGeTRHveKFBxCmgzUwLf84qAqNbRc6vEHIUqpoCTzJe/+riqVVHQpYj//evlz9yjI4HdeFtddMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333701; c=relaxed/simple;
-	bh=Zm9oCDIcst4iG1Sdv0EzgN7tQUykHQ/Qo3PQjfMAcus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JKVGrNpJHcNkuKle6rkSFBGl4g7AQlCPnPHvz9GDqO7y4wcvVf7XEepRQk4AePqMholV0rWJqmQmuT3ZsMTCEXWH4XN3EeSJvS6dTSkn82o8FcYZzMBInUVi/pOtA8qrfPwOsfaefVXBLyZxlUkDyRqFjq3lP9kPstfWvI5aMr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PkkpUNx3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745333776; c=relaxed/simple;
+	bh=+J4Ot2uYoqhdMcBpWYJQgmCyvNBmIFihGBbEt1D3Hr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzuAXY4zyIxskhzAMflRlo0cJuNIovECjJ9qlMhTLTLOip89sQoY6+f1IIAnMWgfJi0wNsDU7w2bil98qWcqJbp4hOjxwUq/tHj9Eye6iEY63cvUVWebEagsmIJ3M2gGjmSCv9L5fh6cMMid2G1KQZDJadFCQiMouWogRgsSCNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XVIYRkeR; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PkkpUNx3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745333698;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XVIYRkeR"
+Date: Tue, 22 Apr 2025 07:56:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745333772;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=V9n4xCS++5NLC2SIIwS5+2KTMa8y7w2A9E/HfXPsNqQ=;
-	b=PkkpUNx3hE4fTBV1+NXyd1sfculW+/SxcpEMWfI/ESF3xQTD0HOFyD1sV7Q2FgsKzPbB3m
-	tccUaEStMI1qNI74IT4PqmypTb8fIVDzGvbTKj1RD3X+lCROG/BusZuksd3VCvPA7hsrLG
-	hKRsquhhqbGlgTDfUa0LeszppmlXlHk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-512-OSZQE-bFMzuMnQuYQCqWew-1; Tue, 22 Apr 2025 10:54:57 -0400
-X-MC-Unique: OSZQE-bFMzuMnQuYQCqWew-1
-X-Mimecast-MFC-AGG-ID: OSZQE-bFMzuMnQuYQCqWew_1745333696
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so30559595e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:54:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745333696; x=1745938496;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=V9n4xCS++5NLC2SIIwS5+2KTMa8y7w2A9E/HfXPsNqQ=;
-        b=ek69/6jNogqaOb+1yB4LkeU65z3d2ak/q1XYKsBP6wvQETS99Dqs1s94DlEMe92UMO
-         yWRa3NF0S8aIe5d+B5S1ZYtqiNpZR46s104wJY7ZeWI0sY8ICi25Q8V2hK/vpHoL01Du
-         RdjoBDO0ZL0kV95USJohA5x0/KxsRxPKRj1L7tWHNINnipznfDV+dFHO+Aw6Iagd6Yl+
-         VYTjOjREZoRjTam7SUMUd5GT8WO7LU5dcXdJnwf54UKxOY9DBpPvHs6T9CSmQOAm3fNS
-         4FpwijBMBOVq+qDC5E42yDJkGYqyoHnqKZmaY67XE9da3UxrPU72UNEJHCxlu8ewUXim
-         zwWw==
-X-Gm-Message-State: AOJu0YxiyPI/mRV+EbpbcQfpv6/gX/iiC6zXmZFBbT6LFazMJhEMo2hZ
-	uafl7IsnO7ayG/IIZ9SFpbdY7kPIlJ+W2LlTpYGaHvVes92yQMVGzT9vPHrE2lQvMQeviNi0KLS
-	i2aiI6s0wrgy1n19ev0uuSdixt3up6raWFwUkdDfcb2pj1fGh4w2NXmSn24GW6qmZNzNJVgxiHD
-	10CEqCHy81qlKEzIeHHtfhHYgtVpdkss5N0x7roqHXJb0L
-X-Gm-Gg: ASbGncuaUb2JffNQYC1N/rSBdHFKFW/Ocvc9Fvga7T9v5ZwHzIg+Of0ialQ1/PqYzei
-	5j8tf91rYOxEZqn9P5abdX9arQow/zssz6Rabo76o6Mv7PLTOUVSlRNJEzfyxIhplWD7MNCfMsB
-	d5wJiJkRnD7f5us6y4OU58I6T0/N/iTLV0zn4dpGgcLu97JjOw52GKvL2vfNWi1tSB1iHHxCBmN
-	PE5iD9SK65tii4weHw5+pYBYa8iMSuCFU9is0vQAWF6DygCQJ8XnIybHBaSb/nb2QVXg5rraZ6D
-	1HfzCG5XY0CvTIFZWtMzO2yILQuSvCY6L9dW5USrHmnVEXjuHtPbjUoBOFLVTKcWW1Zpgb1sl7o
-	SWBe8Je8FRSiD/wsboPQMu/dukSGnKNHGPhDp
-X-Received: by 2002:a05:6000:420b:b0:38f:2678:d790 with SMTP id ffacd0b85a97d-39efba5c43amr12631803f8f.33.1745333695950;
-        Tue, 22 Apr 2025 07:54:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHRuEwbBYMQsCCDWda6wGIiHy+7hTwpx+J9K/WMvz6TrXnSpkhfkHpSi71bO195mNjMxFxiMw==
-X-Received: by 2002:a05:6000:420b:b0:38f:2678:d790 with SMTP id ffacd0b85a97d-39efba5c43amr12631769f8f.33.1745333695581;
-        Tue, 22 Apr 2025 07:54:55 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c731:8700:3969:7786:322:9641? (p200300cbc73187003969778603229641.dip0.t-ipconnect.de. [2003:cb:c731:8700:3969:7786:322:9641])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d22esm15688875f8f.52.2025.04.22.07.54.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 07:54:55 -0700 (PDT)
-Message-ID: <9b83ba9c-ca6b-4dd8-8f00-1384c22f5c80@redhat.com>
-Date: Tue, 22 Apr 2025 16:54:54 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=HukUGfyVGRy6pXjxhQLdvDYNG7dXUnK5NwUPnqbXZdk=;
+	b=XVIYRkeRx8+VmylNMxOePvCyqQdMzBfHYja7PaFFS3wuw9UcFScKSi7LXEeu9Lm2wWVz90
+	+S0xDqDiokxHZ49HmXk3Ikz1Trqe/HedTEaB3D35h3W4LsGwYZ9ZhM2nXY7dkE1MoaRnyt
+	qhiuL6n3aS3LqiOR6zDlRtjPIThXkIM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+	hughd@google.com, mhocko@kernel.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com,
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
+	pavel@kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+Message-ID: <aAeuAwlST1sNifBs@Asmaa.>
+References: <20250407234223.1059191-1-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] kernel/fork: only call untrack_pfn_clear() on VMAs
- duplicated for fork()
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, x86@kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Ingo Molnar
- <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-References: <20250422144942.2871395-1-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250422144942.2871395-1-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407234223.1059191-1-nphamcs@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 22.04.25 16:49, David Hildenbrand wrote:
-> Not intuitive, but vm_area_dup() located in kernel/fork.c is not only
-> used for duplicating VMAs during fork(), but also for duplicating VMAs
-> when splitting VMAs or when mremap()'ing them.
+On Mon, Apr 07, 2025 at 04:42:01PM -0700, Nhat Pham wrote:
+> This RFC implements the virtual swap space idea, based on Yosry's
+> proposals at LSFMMBPF 2023 (see [1], [2], [3]), as well as valuable
+> inputs from Johannes Weiner. The same idea (with different
+> implementation details) has been floated by Rik van Riel since at least
+> 2011 (see [8]).
 > 
-> VM_PFNMAP mappings can at least get ordinarily mremap()'ed (no change in
-> size) and apparently also shrunk during mremap(), which implies
-> duplicating the VMA in __split_vma() first.
+> The code attached to this RFC is purely a prototype. It is not 100%
+> merge-ready (see section VI for future work). I do, however, want to show
+> people this prototype/RFC, including all the bells and whistles and a
+> couple of actual use cases, so that folks can see what the end results
+> will look like, and give me early feedback :)
 > 
-> In case of ordinary mremap() (no change in size), we first duplicate the
-> VMA in copy_vma_and_data()->copy_vma() to then call untrack_pfn_clear() on
-> the old VMA: we effectively move the VM_PAT reservation. So the
-> untrack_pfn_clear() call on the new VMA duplicating is wrong in that
-> context.
+> I. Motivation
 > 
-> Splitting of VMAs seems problematic, because we don't duplicate/adjust the
-> reservation when splitting the VMA. Instead, in memtype_erase() -- called
-> during zapping/munmap -- we shrink a reservation in case only the end
-> address matches: Assume we split a VMA into A and B, both would share a
-> reservation until B is unmapped.
+> Currently, when an anon page is swapped out, a slot in a backing swap
+> device is allocated and stored in the page table entries that refer to
+> the original page. This slot is also used as the "key" to find the
+> swapped out content, as well as the index to swap data structures, such
+> as the swap cache, or the swap cgroup mapping. Tying a swap entry to its
+> backing slot in this way is performant and efficient when swap is purely
+> just disk space, and swapoff is rare.
 > 
-> So when unmapping B, the reservation would be updated to cover only A. When
-> unmapping A, we would properly remove the now-shrunk reservation. That
-> scenario describes the mremap() shrinking (old_size > new_size), where
-> we split + unmap B, and the untrack_pfn_clear() on the new VMA when
-> is wrong.
+> However, the advent of many swap optimizations has exposed major
+> drawbacks of this design. The first problem is that we occupy a physical
+> slot in the swap space, even for pages that are NEVER expected to hit
+> the disk: pages compressed and stored in the zswap pool, zero-filled
+> pages, or pages rejected by both of these optimizations when zswap
+> writeback is disabled. This is the arguably central shortcoming of
+> zswap:
+> * In deployments when no disk space can be afforded for swap (such as
+>   mobile and embedded devices), users cannot adopt zswap, and are forced
+>   to use zram. This is confusing for users, and creates extra burdens
+>   for developers, having to develop and maintain similar features for
+>   two separate swap backends (writeback, cgroup charging, THP support,
+>   etc.). For instance, see the discussion in [4].
+> * Resource-wise, it is hugely wasteful in terms of disk usage, and
+>   limits the memory saving potentials of these optimizations by the
+>   static size of the swapfile, especially in high memory systems that
+>   can have up to terabytes worth of memory. It also creates significant
+>   challenges for users who rely on swap utilization as an early OOM
+>   signal.
 > 
-> What if we manage to split a VM_PFNMAP VMA into A and B and unmap A
-> first? It would be broken because we would never free the reservation.
-> Likely, there are ways to trigger such a VMA split outside of mremap().
+> Another motivation for a swap redesign is to simplify swapoff, which
+> is complicated and expensive in the current design. Tight coupling
+> between a swap entry and its backing storage means that it requires a
+> whole page table walk to update all the page table entries that refer to
+> this swap entry, as well as updating all the associated swap data
+> structures (swap cache, etc.).
+> 
+> 
+> II. High Level Design Overview
+> 
+> To fix the aforementioned issues, we need an abstraction that separates
+> a swap entry from its physical backing storage. IOW, we need to
+> “virtualize” the swap space: swap clients will work with a dynamically
+> allocated virtual swap slot, storing it in page table entries, and
+> using it to index into various swap-related data structures. The
+> backing storage is decoupled from the virtual swap slot, and the newly
+> introduced layer will “resolve” the virtual swap slot to the actual
+> storage. This layer also manages other metadata of the swap entry, such
+> as its lifetime information (swap count), via a dynamically allocated
+> per-swap-entry descriptor:
+> 
+> struct swp_desc {
+> 	swp_entry_t vswap;
+> 	union {
+> 		swp_slot_t slot;
+> 		struct folio *folio;
+> 		struct zswap_entry *zswap_entry;
+> 	};
+> 	struct rcu_head rcu;
+> 
+> 	rwlock_t lock;
+> 	enum swap_type type;
+> 
+> 	atomic_t memcgid;
+> 
+> 	atomic_t in_swapcache;
+> 	struct kref refcnt;
+> 	atomic_t swap_count;
+> };
 
-As expected ... with a simple reproducer that uses mprotect() to split 
-such a VMA I can trigger
+It's exciting to see this proposal materilizing :)
 
-x86/PAT: pat_mremap:26448 freeing invalid memtype [mem 
-0x00000000-0x00000fff]
+I didn't get a chance to look too closely at the code, but I have a few
+high-level comments.
 
+Do we need separate refcnt and swap_count? I am aware that there are
+cases where we need to hold a reference to prevent the descriptor from
+going away, without an extra page table entry referencing the swap
+descriptor -- but I am wondering if we can get away by just incrementing
+the swap count in these cases too? Would this mess things up?
 
--- 
-Cheers,
+> 
+> This design allows us to:
+> * Decouple zswap (and zeromapped swap entry) from backing swapfile:
+>   simply associate the virtual swap slot with one of the supported
+>   backends: a zswap entry, a zero-filled swap page, a slot on the
+>   swapfile, or an in-memory page .
+> * Simplify and optimize swapoff: we only have to fault the page in and
+>   have the virtual swap slot points to the page instead of the on-disk
+>   physical swap slot. No need to perform any page table walking.
+> 
+> Please see the attached patches for implementation details.
+> 
+> Note that I do not remove the old implementation for now. Users can
+> select between the old and the new implementation via the
+> CONFIG_VIRTUAL_SWAP build config. This will also allow us to land the
+> new design, and iteratively optimize upon it (without having to include
+> everything in an even more massive patch series).
 
-David / dhildenb
+I know this is easier, but honestly I'd prefer if we do an incremental
+replacement (if possible) rather than introducing a new implementation
+and slowly deprecating the old one, which historically doesn't seem to
+go well :P
 
+Once the series is organized as Johannes suggested, and we have better
+insights into how this will be integrated with Kairui's work, it should
+be clearer whether it's possible to incrementally update the current
+implemetation rather than add a parallel implementation.
+
+> 
+> III. Future Use Cases
+> 
+> Other than decoupling swap backends and optimizing swapoff, this new
+> design allows us to implement the following more easily and
+> efficiently:
+> 
+> * Multi-tier swapping (as mentioned in [5]), with transparent
+>   transferring (promotion/demotion) of pages across tiers (see [8] and
+>   [9]). Similar to swapoff, with the old design we would need to
+>   perform the expensive page table walk.
+> * Swapfile compaction to alleviate fragmentation (as proposed by Ying
+>   Huang in [6]).
+> * Mixed backing THP swapin (see [7]): Once you have pinned down the
+>   backing store of THPs, then you can dispatch each range of subpages
+>   to appropriate swapin handle.
+> * Swapping a folio out with discontiguous physical swap slots (see [10])
+> 
+> 
+> IV. Potential Issues
+> 
+> Here is a couple of issues I can think of, along with some potential
+> solutions:
+> 
+> 1. Space overhead: we need one swap descriptor per swap entry.
+> * Note that this overhead is dynamic, i.e only incurred when we actually
+>   need to swap a page out.
+> * It can be further offset by the reduction of swap map and the
+>   elimination of zeromapped bitmap.
+> 
+> 2. Lock contention: since the virtual swap space is dynamic/unbounded,
+> we cannot naively range partition it anymore. This can increase lock
+> contention on swap-related data structures (swap cache, zswap’s xarray,
+> etc.).
+> * The problem is slightly alleviated by the lockless nature of the new
+>   reference counting scheme, as well as the per-entry locking for
+>   backing store information.
+> * Johannes suggested that I can implement a dynamic partition scheme, in
+>   which new partitions (along with associated data structures) are
+>   allocated on demand. It is one extra layer of indirection, but global
+>   locking will only be done only on partition allocation, rather than on
+>   each access. All other accesses only take local (per-partition)
+>   locks, or are completely lockless (such as partition lookup).
+> 
+> 
+> V. Benchmarking
+> 
+> As a proof of concept, I run the prototype through some simple
+> benchmarks:
+> 
+> 1. usemem: 16 threads, 2G each, memory.max = 16G
+> 
+> I benchmarked the following usemem commands:
+> 
+> time usemem --init-time -w -O -s 10 -n 16 2g
+> 
+> Baseline:
+> real: 33.96s
+> user: 25.31s
+> sys: 341.09s
+> average throughput: 111295.45 KB/s
+> average free time: 2079258.68 usecs
+> 
+> New Design:
+> real: 35.87s
+> user: 25.15s
+> sys: 373.01s
+> average throughput: 106965.46 KB/s
+> average free time: 3192465.62 usecs
+> 
+> To root cause this regression, I ran perf on the usemem program, as
+> well as on the following stress-ng program:
+> 
+> perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --pageswap $(nproc) --pageswap-ops 100000
+> 
+> and observed the (predicted) increase in lock contention on swap cache
+> accesses. This regression is alleviated if I put together the
+> following hack: limit the virtual swap space to a sufficient size for
+> the benchmark, range partition the swap-related data structures (swap
+> cache, zswap tree, etc.) based on the limit, and distribute the
+> allocation of virtual swap slotss among these partitions (on a per-CPU
+> basis):
+> 
+> real: 34.94s
+> user: 25.28s
+> sys: 360.25s
+> average throughput: 108181.15 KB/s
+> average free time: 2680890.24 usecs
+> 
+> As mentioned above, I will implement proper dynamic swap range
+> partitioning in a follow up work.
+
+I thought there would be some improvements with the new design once the
+lock contention is gone, due to the colocation of all swap metadata. Do
+we know why this isn't the case?
+
+Also, one missing key metric in this cover letter is disk space savings.
+It would be useful if you can give a realistic example about how much
+disk space is being provisioned and wasted today to effictively use
+zswap, and how much this can decrease with this design.
+
+I believe the disk space savings are one of the main motivations so
+let's showcase that :)
