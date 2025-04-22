@@ -1,201 +1,197 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A691B201271;
-	Tue, 22 Apr 2025 14:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD5E27C158;
+	Tue, 22 Apr 2025 14:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745330453; cv=none; b=CmEPjkSHw60XVkN3i4nGy08l2Lc2RZ1EXsNoasDta1Hhic4HMmMYLuOB/4yMk7vkEn4lkcRCWFgXISxoTTVgE0eodgmvX6mA2Ci4b684Y/TxPYflMHEQV+4rc3Na8uWtEuozZQLwhIPZJyZaJKjYg2bOdDTYMxhafkjRmo+AuKU=
+	t=1745330478; cv=none; b=NSfCP9MoYaReBQmdl8PD3odlS4CYS6o53MWcityCCLwlVUZTyGS0xdezR0ldg+kiQEChpSil2uUY8vmYijHydHnnDxPXIJAttX9+SFrQgc2mjQr6pM7HcL55mY3k2TYRq2qWwE0+ujcJkC1THACY3WGYwQjQwdKYpP0cAOVLBnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745330453; c=relaxed/simple;
-	bh=y9K5KER5IuQLzh5nwL4+Rt33mfTaJJi1XfUMw3a1O9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fZCbgSwAOT98DT1Yz4rIXCpGd153AlqrJ+F/Eey1YiPxcbB21OUC8dhSNe5spXZM3dMLzakxNMjqJDOuNbF2QFBmDzaaR+IwVmppfhhRbhUy/5H7k1HvXgiH5d5KljHE7uBeDqnGTSghQrEMbukXKZg6wsgs6gEdGQwPoRRii+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D/iYA3tl; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745330478; c=relaxed/simple;
+	bh=mnUHJ7LCfaTAF2I8l+Dp10j68EBqtPd67K/CShdnreo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C8FUWpzHTMBDDv6wHAfqDGNWbpsarRyhjrkQcMKxGRRDHsfinYt7PBMvFtAU2zfygZr5C9Ks7DmfWSPiga57l6MYBvEnebQ8krF4BhT8j9moud6mmeO23f/HN/Ur8MXngeOI9RH/Vyj5mCFdv3GwQoJPMRkNATK0sl1Q6ORvH84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ixik0TrY; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D/iYA3tl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 703CE1FD49;
-	Tue, 22 Apr 2025 14:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745330449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=weXN4IQwhPqB9cEpvD0ds3Xd1d/HGeU1/wCq5TjQLSw=;
-	b=D/iYA3tlYeAcV2qo72QQQOulGZa0PhsLCGGvS2XtBrOpw9eF8L2L4D9/s5tHpodwvgqhjl
-	kmBrBYJIQ9O+w0G7V/e/s4rTEx8ePugOcsOi/axI+3tvbIrj8BoJ2EHiUuVUAfyCCTQ1Z7
-	rHAPcZtVSBvSeXGSXhzHxxW8GBHGBR7+3gXQTL9TnRkvDXOWr2Siu5T35DUTEHp+LW3JXS
-	hmoxGmVBlDWPqoTeH8thQsfugxGpqtB24ZOdsuZS9I+BxpLnADoo13MVbLXOi795wH2MfT
-	QbOwyI/TRn12q6AFSlFhYeLjVZ99b5PZtg/S9/lbG60a2hZrhVf9WlN3G6wNNQ==
-Date: Tue, 22 Apr 2025 16:00:46 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Biao
- Huang <biao.huang@mediatek.com>, Yinghua Pan <ot_yinghua.pan@mediatek.com>,
- kernel@collabora.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/2] net: ethernet: mtk-star-emac: fix spinlock
- recursion issues on rx/tx poll
-Message-ID: <20250422160046.73aa854a@fedora.home>
-In-Reply-To: <20250422-mtk_star_emac-fix-spinlock-recursion-issue-v1-1-1e94ea430360@collabora.com>
-References: <20250422-mtk_star_emac-fix-spinlock-recursion-issue-v1-0-1e94ea430360@collabora.com>
-	<20250422-mtk_star_emac-fix-spinlock-recursion-issue-v1-1-1e94ea430360@collabora.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ixik0TrY"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso60766745ad.2;
+        Tue, 22 Apr 2025 07:01:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745330476; x=1745935276; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=xVeVIDLb4nSV/1ca9okGdJgvrdB9ejLBULGxgaJz4Ws=;
+        b=Ixik0TrYV5rYBj1I8A1PO8OeqkqcX5bsStI+G3nq+fteakeat9M6vDU8Z0qSl3WhiY
+         uDGJ4W2K1E66ntPjnUZddeyDa5zB9Mhu7QbSGFf6/8cI++ogCWe2jCluymdqGB2nxhh4
+         /SNG3Dy8DFgb+kayMnO2FpVvh1Su1hbmIaHPD3WEcJdsMSUlPRXkl6na5qQ5QKD9W3VH
+         hv1a8EQzxjIXXQ+EfGCsXjJfvL0dD8VItGxNEwZdBnhu7X9noX+kThqs2jjk8LihInXD
+         VUP518d4haE9y7YS2xDSMDkkjtDKeHNy6NWIqU+QG1rie0c2OvdEwTiJM6s3RBwBU4XX
+         tgPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745330476; x=1745935276;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xVeVIDLb4nSV/1ca9okGdJgvrdB9ejLBULGxgaJz4Ws=;
+        b=mWfL4+ChR1QpzAKwxHlMNp3uF7fExvhk2Ne+g8O9GKdiAJfz7AE9hG6MZo3V4Zz35s
+         gphLcyaEGcxYaeb9ZPAvIsmJaUfAFxuWzelRzw+H4kIjMtyYUCJsXOab9lo48/gfv/XJ
+         BP52v7BpDEV9aNTPCzPX7uLxGc/SLVwcL/UDzT7Iv4jOfC1SI/GT2ULHy7Fk55x9sS2K
+         ZYUiTDNvnlgbN6uzDgSStp7XiBo1xRjSu1zpQF/PgY1nF0HO9bTXm9P8ahmDocgJBLwm
+         HUYYCy+6SwUd6KLR2Z6LAlNndmAgSREp1RsyVXtsT/Fje5Iu4APjKyOHtBDTvXz15JoR
+         8WQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPTE8oSihfsRPGL0IE5r7QGLxIGfnXM12ML/50wVWBjYwGsoVYPBX0BZGsdWSvzk5Jh/wNh3lkkOzOHEka@vger.kernel.org, AJvYcCX+bVMSAFZiSXV5PCT2A6DJAKADSfbIl8FNugsxw3r+Q9Js0UDLiN2yHxYVogP7bngn3/2Ofx7CM0XA1Y8=@vger.kernel.org, AJvYcCXB+YyZZYgsqZsAva55iIkTFJvBFmYP2pzdMg1Ki/U9MGk61e4wTj21GI4jNvnBafL5SeNDVTb3G2EIyu2ZScQ=@vger.kernel.org, AJvYcCXniY6Iqmqx8fNzNLex8xdMsQ1lYR6DCa53XiO4wTSEusI3n0/Xho3IBJftEiu54xujhdOSWyDe2LA4MJUrR9BeyDF6K9g/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdSdinjw6a7jJOgJ4xx1TJ1veL7mukBxKWG19G9F848VW+XEiz
+	gQFQ4KeKf2TcsRZorVVFadP4a39I1+KhT6mjR1pxc5MD4cksRqaD
+X-Gm-Gg: ASbGncso07T9NQ5Ediu3ig6CNyUBc2zz+8QFlpG2u708ixVDAUS+c+MNEniWxPJCbeH
+	c7MI0B9P3AxvId2yArtMfX8CCMYVJbZJu3ra8FlzBCtBHBELERgmTPTwa6wJUeE28cu3wbof9v5
+	sGo59wK6UrlFAkJtEXlTC8i0lT9FlmJOtmHqN9KHdvsMAN9h/huWZdEixurf/XaL0NyFnqBpTAg
+	ytLiAepv8a9J4R0QDB1OyqpnSbCCa2fr6ty0Q8t7OVJ36oZe0m9scnak5X+fN35IvtjYLGprRbf
+	6W+MAegl1uUlIMzjOXSq+YEIxIw677HKc+vmRGO0/FVZceXiCVQUfdv+lRMDZIwsVzDRf5uM94C
+	1BzjgZhocXhJ2Sw==
+X-Google-Smtp-Source: AGHT+IGDzMgQgqZS95KgBrawfW7xI/N5kBWPEFQvaOuv2aM8Hr6Yk76vG48SVBNto8mC9a706/z2rw==
+X-Received: by 2002:a17:902:e742:b0:224:721:ed9 with SMTP id d9443c01a7336-22c53619d9cmr231590965ad.44.1745330475575;
+        Tue, 22 Apr 2025 07:01:15 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaac832sm8885157b3a.135.2025.04.22.07.01.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 07:01:14 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <6b4645c4-4343-49ca-bfab-ad38443727be@roeck-us.net>
+Date: Tue, 22 Apr 2025 07:01:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] hwmon: (pmbus/tps53679) Add support for TPS53685
+To: Chiang Brian <chiang.brian@inventec.com>
+Cc: gnoack@google.com, gpiccoli@igalia.com, jdelvare@suse.com,
+ kees@kernel.org, linux-hardening@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, mic@digikod.net, tony.luck@intel.com
+References: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
+ <20250422102057.2846899-1-chiang.brian@inventec.corp-partner.google.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250422102057.2846899-1-chiang.brian@inventec.corp-partner.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefleduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtoheplhhouhhishgrlhgvgihishdrvgihrhgruhgusegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepnhgsugesnhgsugdrnhgrmhgvpdhrtghpthhtohepshgvrghnrdifrghnghesmhgvughir
- ghtvghkrdgtohhmpdhrtghpthhtoheplhhorhgvnhiioheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Louis-Alexis :)
-
-On Tue, 22 Apr 2025 15:03:38 +0200
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> wrote:
-
-> Use spin_lock_irqsave and spin_unlock_irqrestore instead of spin_lock
-> and spin_unlock in mtk_star_emac driver to avoid spinlock recursion
-> occurrence that can happen when enabling the DMA interrupts again in
-> rx/tx poll.
+On 4/22/25 03:20, Chiang Brian wrote:
+> On 3/14/25 10:44, Guenter Roeck wrote:
+>> On 3/13/25 20:30, Chiang Brian wrote:
+>>> The TPS53685 is a fully AMD SVI3 compliant step down
+>>> controller with trans-inductor voltage regulator
+>>> (TLVR) topology support, dual channels, built-in
+>>> non-volatile memory (NVM), PMBus interface, and
+>>> full compatible with TI NexFET smart power
+>>> stages.
+>>> Add support for it to the tps53679 driver.
+>>>
+>>> Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
+>>> ---
+>>> v4 -> V5:
+>>>       1. document the compatible of tps53685 into dt-bindings
+>>> 	2. add the buffer length as argument for %*ph
+>>> 	3. Add Changelog
+>>> v3 -> V4:
+>>>       1. Add length comparison into the comparison of "id",or it may be true when
+>>> 	   the substring of "id" matches device id.
+>>> 	2. Restore `return 0;` in `tps53679_identify_chip()`
+>>> V2 -> V3:
+>>>       1. Remove the length comparsion in the comparison of "id".
+>>> V1 -> V2:
+>>> 	1. Modify subject and description to meet requirements
+>>> 	2. Add "tps53685" into enum chips with numeric order
+>>> 	3. Modify the content of marco "TPS53681_DEVICE_ID" from 0x81 to "\x81"
+>>> 	   Add marco "TPS53685_DEVICE_ID" with content "TIShP"
+>>> 	4. Modify the type of "id" from u16 to char* in `tps53679_identify_chip()`
+>>> 	5. Modify the comparison of "id". It will be true if the string "id" matches
+>>> 	   device ID and compare with type char*,
+>>> 	6. Add the length comparsion into the comparison of "id".
+>>> 	7. Modify "len" as return code in `tps53679_identify_chip()`
+>>> 	8. Output device error log with %*ph, instead of 0x%x\n"
+>>>       9. Use existing tps53679_identify_multiphase() with argument
+>>> 	   "TPS53685_DEVICE_ID" in tps53685_identify() rather than creating one
+>>> 	   tps53685_identify_multiphase()
+>>>
+>>> boot-log:
+>>
+>> This is completely useless noise.
 > 
-> ```
-> BUG: spinlock recursion on CPU#0, swapper/0/0
->  lock: 0xffff00000db9cf20, .magic: dead4ead, .owner: swapper/0/0,
->     .owner_cpu: 0
-> CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
->     6.15.0-rc2-next-20250417-00001-gf6a27738686c-dirty #28 PREEMPT
-> Hardware name: MediaTek MT8365 Open Platform EVK (DT)
-> Call trace:
->  show_stack+0x18/0x24 (C)
->  dump_stack_lvl+0x60/0x80
->  dump_stack+0x18/0x24
->  spin_dump+0x78/0x88
->  do_raw_spin_lock+0x11c/0x120
->  _raw_spin_lock+0x20/0x2c
->  mtk_star_handle_irq+0xc0/0x22c [mtk_star_emac]
->  __handle_irq_event_percpu+0x48/0x140
->  handle_irq_event+0x4c/0xb0
->  handle_fasteoi_irq+0xa0/0x1bc
->  handle_irq_desc+0x34/0x58
->  generic_handle_domain_irq+0x1c/0x28
->  gic_handle_irq+0x4c/0x120
->  do_interrupt_handler+0x50/0x84
->  el1_interrupt+0x34/0x68
->  el1h_64_irq_handler+0x18/0x24
->  el1h_64_irq+0x6c/0x70
->  regmap_mmio_read32le+0xc/0x20 (P)
->  _regmap_bus_reg_read+0x6c/0xac
->  _regmap_read+0x60/0xdc
->  regmap_read+0x4c/0x80
->  mtk_star_rx_poll+0x2f4/0x39c [mtk_star_emac]
->  __napi_poll+0x38/0x188
->  net_rx_action+0x164/0x2c0
->  handle_softirqs+0x100/0x244
->  __do_softirq+0x14/0x20
->  ____do_softirq+0x10/0x20
->  call_on_irq_stack+0x24/0x64
->  do_softirq_own_stack+0x1c/0x40
->  __irq_exit_rcu+0xd4/0x10c
->  irq_exit_rcu+0x10/0x1c
->  el1_interrupt+0x38/0x68
->  el1h_64_irq_handler+0x18/0x24
->  el1h_64_irq+0x6c/0x70
->  cpuidle_enter_state+0xac/0x320 (P)
->  cpuidle_enter+0x38/0x50
->  do_idle+0x1e4/0x260
->  cpu_startup_entry+0x34/0x3c
->  rest_init+0xdc/0xe0
->  console_on_rootfs+0x0/0x6c
->  __primary_switched+0x88/0x90
-> ```
+> Sorry for the delay, I've got the approval for posting the boot-log from our
+> customer. I was afraid that there's any confidential information in the boot-log
+
+It still does not belong into the commit log. If you absolutely want to,
+at least add it after "---".
+
+> of our project. So, I decided to post a boot-log with my laptop then, and I'll
+> append a new one once new patch has been finished and uploaded.
 > 
-> Fixes: 0a8bd81fd6aa ("net: ethernet: mtk-star-emac: separate tx/rx handling with two NAPIs")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-
-As this is a fix, you need to indicate in your subject that you're
-targetting the "net" tree, something like :
-
-[PATCH net 1/2] net: ethernet: mtk-star-emac: fix spinlock recursion issues on rx/tx poll
-
-> ---
->  drivers/net/ethernet/mediatek/mtk_star_emac.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+> And thanks for the suggestion of adding a buffer length for %*ph.
+> The kernel crashes and keeps rebooting without adding that.
 > 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> index 76f202d7f05537642ec294811ace2ad4a7eae383..41d6af31027f4d827dbfdfecdb7de44326bb3de1 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> @@ -1163,6 +1163,7 @@ static int mtk_star_tx_poll(struct napi_struct *napi, int budget)
->  	struct net_device *ndev = priv->ndev;
->  	unsigned int head = ring->head;
->  	unsigned int entry = ring->tail;
-> +	unsigned long flags = 0;
-
-You don't need to init flags to 0
-
->  
->  	while (entry != head && count < (MTK_STAR_RING_NUM_DESCS - 1)) {
->  		ret = mtk_star_tx_complete_one(priv);
-> @@ -1182,9 +1183,9 @@ static int mtk_star_tx_poll(struct napi_struct *napi, int budget)
->  		netif_wake_queue(ndev);
->  
->  	if (napi_complete(napi)) {
-> -		spin_lock(&priv->lock);
-> +		spin_lock_irqsave(&priv->lock, flags);
->  		mtk_star_enable_dma_irq(priv, false, true);
-> -		spin_unlock(&priv->lock);
-> +		spin_unlock_irqrestore(&priv->lock, flags);
->  	}
->  
->  	return 0;
-> @@ -1342,15 +1343,16 @@ static int mtk_star_rx_poll(struct napi_struct *napi, int budget)
->  {
->  	struct mtk_star_priv *priv;
->  	int work_done = 0;
-> +	unsigned long flags = 0;
-
-There's a rule in netdev that definitions must be ordered from longest
-to shortest lines (reverse xmas tree, or RCT), so you should have in
-the end :
-
-struct mtk_star_priv *priv;
-unsigned long flags;
-int work_done = 0;
-
->  
->  	priv = container_of(napi, struct mtk_star_priv, rx_napi);
->  
->  	work_done = mtk_star_rx(priv, budget);
->  	if (work_done < budget) {
->  		napi_complete_done(napi, work_done);
-> -		spin_lock(&priv->lock);
-> +		spin_lock_irqsave(&priv->lock, flags);
->  		mtk_star_enable_dma_irq(priv, true, false);
-> -		spin_unlock(&priv->lock);
-> +		spin_unlock_irqrestore(&priv->lock, flags);
->  	}
->  
->  	return work_done;
+> In addition, should I in-reply-to the existing thread or create a new one
+> since the dt-bindings should be included in the same thread as well?
 > 
 
-Besides these small comments, the patch looks correct to me :)
+You mean for v6 ? Documentation/process/submitting-patches.rst says:
 
-Regards,
+"... However, for a multi-patch series, it is generally
+best to avoid using In-Reply-To: to link to older versions of the
+series.  This way multiple versions of the patch don't become an
+unmanageable forest of references in email clients.  If a link is
+helpful, you can use the https://lore.kernel.org/ redirector (e.g., in
+the cover email text) to link to an earlier version of the patch series."
 
-Maxime
+Guenter
+
