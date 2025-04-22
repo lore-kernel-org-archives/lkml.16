@@ -1,146 +1,190 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE52214A9B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614281F1524;
+	Tue, 22 Apr 2025 09:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315576; cv=none; b=uSGKyokjunS8KvLcKVPUzJFnpIOrTA2WPVDp/wvyITE1jBvk9erBC3yrYUI73WAS1XYetCUEFiLg9mof5DDkosBf5vqZRZRckYdrGedJFrFhLSiJKvdLAigSavfdggUUM234kieY3TTpXgg8+Y50uM7SY2qjEI1mu/CjaK4INGw=
+	t=1745315599; cv=none; b=HTljRKHcadpgs8qravi/JqNhdlNun6URUF4NhEwb0raVJO3kJWwDiguE4/VB6JLdMYrNLVjnHRLXZPvnmvayqtLARMppS3XWnQTQemvoEDoH8HFS9sTDjEi5aQDu/yw3MEX+g31jpwxUFKfVc1Itcc+lOJehiPvCRa540Q2PP9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315576; c=relaxed/simple;
-	bh=KAoN/I1B9bjZf9yqrwjjTVg4XFhQinQf/p7dHQd7M6I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J+gv+Bg97uRYqf9SuzGUhBzrUzTeinpRzsOAd61Tx1G5z6ASJx2QRL0Md1xmq/0vcYFAnvWSx69vGoUthq5Mc59SNEIl3ou5GhOImFV5/DqsSpgcInSIT+8dHVFKvHcb28DH6wvt0DHclnAaAVHGEymonXe6jxAsT1hsWnpzIkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z4r2FX/4; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745315599; c=relaxed/simple;
+	bh=nQfvSQTk3q5Ln1Mb1BzF5AhQYYL5+U7RCTpig9HFDe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wri/u2Xlu1nqFF+AtNNs8NVfv9dz423lmw2XdLJZLqoF0zqXt/zlQZRNnZsvxWNbdIjifbmZWnXjptyjxgeOaSRUqZOZRON+yifM20CEnhs/JweU2diI5vbR9hU7skoTkAKm+xfwkHydJMdrxRrjpRWzmADFXI4J/6JTWHMmrWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C17oggqg; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z4r2FX/4"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-391492acb59so2291458f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:52:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C17oggqg"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8fce04655so46446166d6.3;
+        Tue, 22 Apr 2025 02:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745315571; x=1745920371; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKQLzqoWG+gLW7RSIJ9nPWEIDBNLgsckjy8Twrs/QCY=;
-        b=Z4r2FX/4FZlIbgq/UpjIN1noeVta/fXs6gUJqRj/Hyv0WvVWO114sq9QXLPqCrhOZm
-         1vsv2G98VDq4WovgMOVuwVGI+S3flf5UX/o6bCWxiAF5iN5+QsUWh8YBtO2y07z3zVY3
-         rCitTgO9cX/+4/qjwf4x2Rp+UzQUal4Yg0L/DnhCFyNHrd/T6H464HvSVaQ9zq63VYtP
-         xrWbvgDg0OTnG2zRLHYWlNw+Kyj4jUrrhTaCaeNCkSDBpXf1g1Srs3qhpzn6kTpiDRPy
-         b7zApMGPNCF3nQ5KK+AMzkna6Yi4gP5EVm6t9fg2lpG01N6pkL0egSMRl2UmdB4AYEs7
-         rIhA==
+        d=gmail.com; s=20230601; t=1745315595; x=1745920395; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yETBkW1U88nCu/gylpzqjgQQTBz7Y8uKO9OA9A9LFVE=;
+        b=C17oggqgFLQ+fFdy6yfDZlFLz3j+lMmYFGFZ14TdOEB5nWHjbdK5AWHTBmENeIdBYN
+         LU1I1pRKKQRfkhiuGHmBMzMa5+/8MW8fltu/Gig00rKE9pKDXCs5j8rHKhB+ksnQ5dLv
+         TNhpTyt5NOO6rKp82vnfvdx0v/mjdKT/NwGGPJ6htCdVZlqpH9HQIgdcaFTW9x0wJeZn
+         UD1Xd7BO+Het3UZIe41VAb0diPw+CDs6zelfzyPgwkzXIBWaCymqmAWgc6a0HmTHhN5j
+         0cb9LgeYvpv2hZeyVtR4gWDnG6/gAESXK+/6vLaayZrCXXv6axxSVTxYexbl+2Y9lddI
+         3pbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315571; x=1745920371;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKQLzqoWG+gLW7RSIJ9nPWEIDBNLgsckjy8Twrs/QCY=;
-        b=taC5hvW23GsyfIBOdZopmuzZmEPzSTxPGIP0vrJvWvNP1BCsfPSAAq48Ir3d7req2q
-         P/xlKOHsODehcLx4e5JfB/E6p4im3U9W630P6Mn67ZPdp1RgcDOhiPAvV9TVUnd1xnAa
-         lXVgWW9A3GjtW+WPG+BC/jB18c1eI3CsxBPvVdFwNRsCFBXZfrJRcpY9QFjd04HTZ0ZX
-         tk/34x1uMLwvgLTSREsBQQtZaVy9+FGGyGSEX6ClRwcMBCTxBsOsooLUiAeTImtQFZ+t
-         BfiAoQ5IRjXcFbFFLxBqdMgCj9BAOVcd8SH5BOKFm+bN8kllN6z+ssuI/sBMGEb+8TJi
-         dlUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXa/4uUsxwABGGfEW3/+ZKCiB53RoP4b53j/OHHYkDk4IozjZyCeupHHCa6+pc+kJS/h7M/ZhhDPfdqaKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAhXh5F+mF/KSclcYpJpLmK2B6cC9BhTIXjdAuPgs6MnY9d0Bx
-	xdIZdqBsHSiK1v0uKYY2vXUebWttRReHCZIx+gnRDYRS5o0mpi8zis5nyYh3uQmzphViTxdbzwj
-	cU5e8aX1EtfNLmg==
-X-Google-Smtp-Source: AGHT+IETKvRlhl6S7D4rhT2//lenejgCFrwc+s7AWMxUPkZSc8kEy7dq6FlkwpzrlC+tj63W1tyRhUWyh2QVE5A=
-X-Received: from wrpx7.prod.google.com ([2002:adf:f647:0:b0:39a:bf11:dab0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2403:b0:39b:f12c:385e with SMTP id ffacd0b85a97d-39efba460f4mr11318079f8f.20.1745315571701;
- Tue, 22 Apr 2025 02:52:51 -0700 (PDT)
-Date: Tue, 22 Apr 2025 09:52:22 +0000
-In-Reply-To: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
+        d=1e100.net; s=20230601; t=1745315595; x=1745920395;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yETBkW1U88nCu/gylpzqjgQQTBz7Y8uKO9OA9A9LFVE=;
+        b=CaMqHSbgdzefVnnZNExwzYJ6BMVAI3mZElpXP8Ch/tgYxnuqT/Vu2VF2OWN9G/y55F
+         Oa9F0dkYHDkj5ymOM10j1W7L2muP/wr31CNDGB0DEvwLTaoyL7uVtKa3U37DtYcCX2jL
+         IElvFxnvAGWOaQ1fT+BJ5vU6OMy9ZwBisCuJHxkbzRGvhs/Pq7Shdi5QA4+om+0jr0yR
+         FpOPTBCl7lZaGZ6wziIT2kpi9iBQLIZTKH3S+L1H2dXd6BF/NyFMSUO7niNdVrPHF258
+         eKidCn9X0Y8bos/Det+Kdiu5GcUuuZgUmzvr3u0MLkkXRS7/n6SMBXyunIk4KkefRGbo
+         3iLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIQm/3rFEIFM23Kh2jEvvmMv6j3lfRANyp2BmfrMmp8rmP/Vk4tX+bk2CMLdZf5OEljyaUukk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3u4eHSy7d+4i59QgiRWWVT26TP2cBxN284kP8U+cSjMj2Fbnc
+	KDXTFhLCjLhRFxH3ySY7c6ymfKU/dCMqfcdGPpewlyxfArD9lKGZMC8OboRKc/eumNz13B6zyIz
+	mU4Y760B04O8z6eZYf5MQjY31wDvTa3mhYRs=
+X-Gm-Gg: ASbGncupYb1kuneh6gj4/KFtvQzvHQCMPN7ydpRDE14zGQ63RReFzHNLFhvK98VowwM
+	BxS5M5fFdRCsvohGzVLK9RB5pe82Zpx8/xi6HllgkIwvPpvPbfAGPgQ1fbP1Lqb8fFNv045zEdK
+	Hqc0bJsHJQhvYw3v95jTqrNpde
+X-Google-Smtp-Source: AGHT+IG9EHPlaIkF6blMPd0BV9rfzA8PqWZ82hTSrVfZVaEAW3ZDFSX1gMGce2uY0p5zhrx5tpnS3xIvOwd//eopcMQ=
+X-Received: by 2002:ad4:5b83:0:b0:6e6:5f28:9874 with SMTP id
+ 6a1803df08f44-6f2c45020bbmr259686826d6.2.1745315595118; Tue, 22 Apr 2025
+ 02:53:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2513; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=KAoN/I1B9bjZf9yqrwjjTVg4XFhQinQf/p7dHQd7M6I=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoB2bgQFTDW6gduDB24/nGr91rXw4Ewq8GZMpj1
- TzIpatOEumJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaAdm4AAKCRAEWL7uWMY5
- RrUuD/9A/S/Mp/5agMCAikeUZWTvoBaF9+18NvkiRTIbKjj1Jj7PBuHnkEyn6sKV0fkRjtMcDM4
- CRzFQhs7OM//DFERlSkjdyD4vO8ljqHqjqFMWwnCL25KYzqvrPAG4nTLi9SgrHgEAbqB4rEaPt/
- qJcuFkQvEocGFWYcz6UK73YA7903o28HCXiJ9jup0inWoUgdvHhbI+WwcGRwZJmYqJreJofQuhf
- ne3BwQs2E0xPcbXsdrdDTdzGc4AmuksU1ixwP0Im8kO51kJmg9QUwCktq17/7iYEKQtQFflEMfI
- pcetvKnSgOOryPW0rFveq/tfFPX4NG/towOh3HU5tpX0Qayht364XXJdJKy74ved3XJtw8jppyr
- A+ssVjm0GBYgzTSoon7le4EQ1uInYLO8Q+zfTWgvS2ZoYvmm70PgQT90rOMS7EvlATxftNZnsrv
- 9jv9njRe9IARXIa+iq5e3m6JJqarICQqyNGw9hNv3Ksp9MGOXKHn7Q/n3PDkDGHUlIvV1r8uyO/
- nEBkEaObMTCU6X9GS8tHr8X4K7qOA6njkuCvJDR+o7iDinmkAO3Wumr0lP7cxX8SljtzPBLdj4h
- g9w8GjhvG3ms2tSUeUcV2UL0o2FNiDOTgn32Xkj8LB5FU9ddYHm6DA0z6DXgsCn0AMPEaHjA/4A zN7zNFtTre0R1Jg==
-X-Mailer: b4 0.14.2
-Message-ID: <20250422-vec-methods-v3-7-deff5eea568a@google.com>
-Subject: [PATCH v3 7/7] rust: alloc: add Vec::insert_within_capacity
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <CGME20250416101926eucas1p193c52e72b20321605905f1c465c8ac06@eucas1p1.samsung.com>
+ <20250416101908.10919-1-e.kubanski@partner.samsung.com>
+In-Reply-To: <20250416101908.10919-1-e.kubanski@partner.samsung.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Tue, 22 Apr 2025 11:53:04 +0200
+X-Gm-Features: ATxdqUHbkAm8vm6z4FQF1hB3H-7aTHmuQlu_qulyA9dIL7lUpgWW_6X-1Tw_jEc
+Message-ID: <CAJ8uoz0Tap7JtQdoHFrXeE96XxUhJroZTPbCKhUeR3u3jzOWjA@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf] xsk: Fix race condition in AF_XDP generic RX path
+To: "e.kubanski" <e.kubanski@partner.samsung.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bjorn@kernel.org, 
+	magnus.karlsson@intel.com, maciej.fijalkowski@intel.com, 
+	jonathan.lemon@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-This adds a variant of Vec::insert that does not allocate memory. This
-makes it safe to use this function while holding a spinlock. Rust Binder
-uses it for the range allocator fast path.
+On Wed, 16 Apr 2025 at 12:19, e.kubanski <e.kubanski@partner.samsung.com> wrote:
+>
+> Move rx_lock from xsk_socket to xsk_buff_pool.
+> Fix synchronization for shared umem mode in
+> generic RX path where multiple sockets share
+> single xsk_buff_pool.
+>
+> RX queue is exclusive to xsk_socket, while FILL
+> queue can be shared between multiple sockets.
+> This could result in race condition where two
+> CPU cores access RX path of two different sockets
+> sharing the same umem.
+>
+> Protect both queues by acquiring spinlock in shared
+> xsk_buff_pool.
+>
+> Lock contention may be minimized in the future by some
+> per-thread FQ buffering.
+>
+> It's safe and necessary to move spin_lock_bh(rx_lock)
+> after xsk_rcv_check():
+> * xs->pool and spinlock_init is synchronized by
+>   xsk_bind() -> xsk_is_bound() memory barriers.
+> * xsk_rcv_check() may return true at the moment
+>   of xsk_release() or xsk_unbind_dev(),
+>   however this will not cause any data races or
+>   race conditions. xsk_unbind_dev() removes xdp
+>   socket from all maps and waits for completion
+>   of all outstanding rx operations. Packets in
+>   RX path will either complete safely or drop.
 
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Thanks Eryk.
 
-diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index 2f28fda793e13841b59e83f34681e71ac815aff2..d96de01a7ab3c808f5aded067ad6f1e3ba8029ce 100644
---- a/rust/kernel/alloc/kvec.rs
-+++ b/rust/kernel/alloc/kvec.rs
-@@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
-         unsafe { self.inc_len(1) };
-     }
- 
-+    /// Inserts an element at the given index in the [`Vec`] instance.
-+    ///
-+    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
-+    /// of bounds.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// let mut v = KVec::with_capacity(10, GFP_KERNEL);
-+    /// for i in 0..10 {
-+    ///     v.push_within_capacity(i).unwrap();
-+    /// }
-+    ///
-+    /// assert!(v.push_within_capacity(10).is_err());
-+    /// # Ok::<(), Error>(())
-+    /// ```
-+    pub fn insert_within_capacity(&mut self, index: usize, element: T) -> Result<(), T> {
-+        let len = self.len();
-+        assert!(index <= len);
-+
-+        if len >= self.capacity() {
-+            return Err(element);
-+        }
-+
-+        // SAFETY: This is in bounds since `index <= len < capacity`.
-+        let p = unsafe { self.as_mut_ptr().add(index) };
-+        // INVARIANT: This breaks the Vec invariants by making `index` contain an invalid element,
-+        // but we restore the invariants below.
-+        // SAFETY: Both the src and dst ranges end no later than one element after the length.
-+        // Since the length is less than the capacity, both ranges are in bounds of the allocation.
-+        unsafe { ptr::copy(p, p.add(1), len - index) };
-+        // INVARIANT: This restores the Vec invariants.
-+        // SAFETY: The pointer is in-bounds of the allocation.
-+        unsafe { ptr::write(p, element) };
-+        // SAFETY: Index `len` contains a valid element due to the above copy and write.
-+        unsafe { self.inc_len(1) };
-+        Ok(())
-+    }
-+
-     /// Removes the last element from a vector and returns it, or `None` if it is empty.
-     ///
-     /// # Examples
+Acked-by: Magnus Karlsson <magnus.karlsson@intel.com>
 
--- 
-2.49.0.805.g082f7c87e0-goog
-
+> Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
+> Fixes: bf0bdd1343efb ("xdp: fix race on generic receive path")
+> ---
+>  include/net/xdp_sock.h      | 3 ---
+>  include/net/xsk_buff_pool.h | 2 ++
+>  net/xdp/xsk.c               | 6 +++---
+>  net/xdp/xsk_buff_pool.c     | 1 +
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+> index bfe625b55d55..df3f5f07bc7c 100644
+> --- a/include/net/xdp_sock.h
+> +++ b/include/net/xdp_sock.h
+> @@ -71,9 +71,6 @@ struct xdp_sock {
+>          */
+>         u32 tx_budget_spent;
+>
+> -       /* Protects generic receive. */
+> -       spinlock_t rx_lock;
+> -
+>         /* Statistics */
+>         u64 rx_dropped;
+>         u64 rx_queue_full;
+> diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
+> index 50779406bc2d..7f0a75d6563d 100644
+> --- a/include/net/xsk_buff_pool.h
+> +++ b/include/net/xsk_buff_pool.h
+> @@ -53,6 +53,8 @@ struct xsk_buff_pool {
+>         refcount_t users;
+>         struct xdp_umem *umem;
+>         struct work_struct work;
+> +       /* Protects generic receive in shared and non-shared umem mode. */
+> +       spinlock_t rx_lock;
+>         struct list_head free_list;
+>         struct list_head xskb_list;
+>         u32 heads_cnt;
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index 89d2bef96469..e2a75f3be237 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -337,13 +337,14 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>         u32 len = xdp_get_buff_len(xdp);
+>         int err;
+>
+> -       spin_lock_bh(&xs->rx_lock);
+>         err = xsk_rcv_check(xs, xdp, len);
+>         if (!err) {
+> +               spin_lock_bh(&xs->pool->rx_lock);
+>                 err = __xsk_rcv(xs, xdp, len);
+>                 xsk_flush(xs);
+> +               spin_unlock_bh(&xs->pool->rx_lock);
+>         }
+> -       spin_unlock_bh(&xs->rx_lock);
+> +
+>         return err;
+>  }
+>
+> @@ -1724,7 +1725,6 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+>         xs = xdp_sk(sk);
+>         xs->state = XSK_READY;
+>         mutex_init(&xs->mutex);
+> -       spin_lock_init(&xs->rx_lock);
+>
+>         INIT_LIST_HEAD(&xs->map_list);
+>         spin_lock_init(&xs->map_list_lock);
+> diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+> index 1f7975b49657..3a5f16f53178 100644
+> --- a/net/xdp/xsk_buff_pool.c
+> +++ b/net/xdp/xsk_buff_pool.c
+> @@ -87,6 +87,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
+>         pool->addrs = umem->addrs;
+>         pool->tx_metadata_len = umem->tx_metadata_len;
+>         pool->tx_sw_csum = umem->flags & XDP_UMEM_TX_SW_CSUM;
+> +       spin_lock_init(&pool->rx_lock);
+>         INIT_LIST_HEAD(&pool->free_list);
+>         INIT_LIST_HEAD(&pool->xskb_list);
+>         INIT_LIST_HEAD(&pool->xsk_tx_list);
+> --
+> 2.34.1
+>
+>
