@@ -1,39 +1,39 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11B7221FBB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B37E21D00D;
 	Tue, 22 Apr 2025 10:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319427; cv=none; b=uG/cldNGImFQG7Vf6pdK2cmpxD3TYwIkINagThTrN9ACntoLSy9+Yk9qRKqUHFtD20bhDdUKNL4SE1cvn6ImwqAPelcU9S6Z9LElA2gzdWkh158BpnjPGNo4lE0md7dafNIrejqcDKpttU8rLyNsrJ1VZhjkewPomYdYOAcdlKQ=
+	t=1745319427; cv=none; b=sTSNTR39vW7hq/Ibevc0nznDOm5iN9MElp0RAwHuFylQyhosOaxHHax55OGQrDwekashHC32wgzVAO+NIpDhJcgvnintHszQqmUef6eeVw5CP3qSLp2sVa4dL9SIw1oZuBURmn/JMv/OjuCOk2/AHFKWpzJfauyN9iBK+zqiCjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745319427; c=relaxed/simple;
-	bh=/nCWiOCHCBSMpuXJb0ljVOQl0FscBo/8xHnj+FDqiHg=;
+	bh=wtiMc4Tm9dYz2cnN7DXp5buNVR+ck7DtpAKgUAa6iCY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YQcoirRsOu4c8YX2dfHHZlTiYs8pk20pRJA9aLQOHkYiMivj1oyzTkl6+UhIBmPSdmjLQsSZTXKi7DIDbt35Q31VWh7Rne53xcqTnrDrKGOcLMmwmS8ZWVULLsSgaL3F2ZL192KtWudQIFYsFc+JH3kgZ81hwNcY0qkmIq38kbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=Vmdp5mRI; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=ZtCmvZii0XP44njMTIAOr6foTEC/0/sEe+XzsSmugcrFEaE5cH/iJIiYPuVy+JKZ6RMJ6R19eMdDI9iMo66U8PpcRcD2lVYDVNdHLhA0mJ+OG8WocR5D/q0ZZ+6KgeHuGuAjsS2gt6NCy+EIwXBN2tu3Ok/7bmOioN43I412qyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=H0DcErfm; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="Vmdp5mRI"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="H0DcErfm"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=z39k5StkgZpWKfAv/m3DaB8YF2wfPhSFpVTQwdDrqm8=; b=Vmdp5mRId5yujxF6BM86RGPbgw
-	u90WLug++aVeKKJk+it3ja08xhzqOWe4F1INPygr2gd5Np+d1rzFjfqlvEOJRyoLrAsYZPoVmli4K
-	rYUFNOEF3XJpaX57Y/0KgEoxMPExCn5p2Mxq2D+Qem9t0YKZXuFiGGWZqbAHPbaAaS92YRVe4dIps
-	finwZj4bpTaj+hTVtlBTbO2EJQKYlV0qRxg0sho/2OQksjJeqCmhBvvBpWWkfEb2FZCPKHfmdU/z7
-	4Op8nYZ1VHIf7xb5/NrWC5NLMfPJ7KYJoYk1BsrFJPIEWzSEt27LoEQGaaZeozRJavjpNbgpk3DRS
-	o8gK03Fg==;
+	bh=ydYFm/FUsFx5X9T7/U5z2I68LQJOkf4oPfk8ZkMTUdE=; b=H0DcErfmkzi63zHbzFn7LE1CrN
+	BqJzK0jntvcuh7f8NILx61Bthlyx68PiyKtSzzyB+U6nCwnlcHNPmq/hZZ2PB6tzIFQSj+SHfR4VD
+	mG83HTTht7Dgrtq1t9yiaG4KoHszMQJrTTaiB1x7GsjBm49v7Iv2oV+VSTSMnHr6OZIv3vSCD2j61
+	iWqjbTLqj81xMGbsQcCiyKKRR1gRZFxU/U2MgwIB6Z+p4vUNoryvyz1ZXtGRtzhFsIqlerhXdU6pG
+	aDLh7y/5qDJPyh3QMYaHGoVKm4XQyDY5d9szHTDTaLEGERpdzPecYscSytrjWzWStx2aqz2k0Zj3F
+	v/iZ8pnw==;
 Received: from [89.212.21.243] (port=36562 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u7BJI-008kyr-1I;
-	Tue, 22 Apr 2025 12:57:04 +0200
+	id 1u7BJD-008kyr-0E;
+	Tue, 22 Apr 2025 12:56:59 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v4 15/15] arm64: dts: freescale: imx93-phyboard-segin: Order node alphabetically
-Date: Tue, 22 Apr 2025 12:56:44 +0200
-Message-Id: <20250422105644.2725168-16-primoz.fiser@norik.com>
+Subject: [PATCH v4 12/15] arm64: dts: freescale: imx93-phyboard-segin: Add USB support
+Date: Tue, 22 Apr 2025 12:56:41 +0200
+Message-Id: <20250422105644.2725168-13-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250422105644.2725168-1-primoz.fiser@norik.com>
 References: <20250422105644.2725168-1-primoz.fiser@norik.com>
@@ -71,8 +71,9 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Move pinctrl_uart1 to keep nodes in alphabetical order. No functional
-changes.
+Add support for both USB controllers. Set first controller in OTG mode
+(USB micro-AB connector X8) and the second one in host mode (USB type A
+connector X7) by default.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
@@ -80,41 +81,33 @@ Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Changes in v4:
 - no changes
 
- .../boot/dts/freescale/imx93-phyboard-segin.dts    | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ .../boot/dts/freescale/imx93-phyboard-segin.dts     | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index c62cc06fad4b..0c55b749c834 100644
+index be9c0a436734..e4f959f665b2 100644
 --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
 +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -228,13 +228,6 @@ MX93_PAD_I2C2_SDA__LPI2C2_SDA		0x40000b9e
- 		>;
- 	};
+@@ -80,6 +80,19 @@ &lpuart1 {
+ 	status = "okay";
+ };
  
--	pinctrl_uart1: uart1grp {
--		fsl,pins = <
--			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
--			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
--		>;
--	};
--
- 	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
- 		fsl,pins = <
- 			MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
-@@ -257,6 +250,13 @@ MX93_PAD_SAI1_RXD0__SAI1_RX_DATA00	0x1402
- 		>;
- 	};
- 
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-+			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
-+		>;
-+	};
++/* USB  */
++&usbotg1 {
++	disable-over-current;
++	dr_mode = "otg";
++	status = "okay";
++};
 +
- 	pinctrl_usdhc2_cd: usdhc2cdgrp {
- 		fsl,pins = <
- 			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
++&usbotg2 {
++	disable-over-current;
++	dr_mode = "host";
++	status = "okay";
++};
++
+ /* SD-Card */
+ &usdhc2 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
 -- 
 2.34.1
 
