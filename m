@@ -1,375 +1,321 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1FD28FFC7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE88B666;
+	Tue, 22 Apr 2025 19:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745350127; cv=none; b=e8Fwh4tHiusBcCcDl8zHmma2gocMk9coj/XE+3Xn93Cx+Ox7snRsQZ9H5rHhwNsIUo82YZ77zooijHacvJKsFM/lsVgfqW4ZXc8oP5FOsWTTNHMRyYRLb0SyqEXUTPiXVnOOHSeJbtrfTRJigUhrkVEtoxOMFJVeN9evHDj7oNs=
+	t=1745350163; cv=none; b=ufmv8/gIYYLDOY6ktI5T6aURo976gFBFy4BUPLI/wymRImdNVFqPpxiUTwKC8/3U+jmyXZ7IszzpfKORURvYozs0zEwv/435lx9yKnFF31W0ZKEqJSlVwehQMPHBS9U6sgbOaT0SH6uCB0CLLVSVBHXImzanKxlxATq49V428/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745350127; c=relaxed/simple;
-	bh=Aoo24VDkLJ9Fvyx9uF18E+0I92xixFzfbVJacPGEagc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YJRHUkQnuIMV7dMWwo1ZnIX5BOJhvFEhpmC1Xu9AnnmZEC+P0HzqQh8+t4vgLFzaerIWx8zODReZKVNs5sorCk68J8CMWL2Dyfh0GNK9+0zDXZ9SFZVdfEBtF0xXrMd+yTGn/ZK3WBU7CStGtYo3CrAVSMfshNyaKN45mkamm6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KJ8S+i7j; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745350163; c=relaxed/simple;
+	bh=p0kdsvYEYrbvxL3gSgxSwf0Fq5IQ06R5Wh+VNVLqTpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ds2Zmjq4AgqLEtZ0PTscKHjjXffOasrXzbTz1c5caqusrGkgDH2ONih6OOH8SxB5nhOETny5oKqnEu9rvznt2tmre2pS1aE26f7+50OGyegFtzcnwKW7SOhgXd+qgAP5J62wX8Qndn7pHEt1lPOkGzTvC8yBfvHe1G3SCKMZE7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/Dai9It; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KJ8S+i7j"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-72c09f8369cso1777566a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:28:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/Dai9It"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8efefec89so51631086d6.3;
+        Tue, 22 Apr 2025 12:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745350124; x=1745954924; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLi+B3MTVPFx0AsESTkz2z+6nVaBF7LP0N10jEwchIU=;
-        b=KJ8S+i7jH9AQv76qTVOW0h7hIkYfGoTnE/+aPiyE45BmiDCbGNz1ANT8Q6Z9y1Mxzt
-         P2ExpSWT4aClWnILEmD7yw+fpM7wj4BUbXuhPGREY2erAGlBRVVf826UkMm4+uUfZVH+
-         q3q+oJnRVx5yw2MoBPvDWzWZ9/KNSd/BLG6HVYqZMsqozh78vTeJYuvg64Zn5ShfLqRG
-         V/KNnH/4Q0XXVOXSfWzyS0rl+6wtf0WpuMUni5GO+JglujBmPsBSJ1BvcqMUfa0g8NdM
-         ytg7QpA1W6kHBgAujaS+X7mF0f8xHqNk5WNQKIgVdzu22xxVEdRkcihtwN0V3yIeCK+0
-         vquQ==
+        d=gmail.com; s=20230601; t=1745350160; x=1745954960; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ndpKGQSvZ0aqLqjETeu44ATYoM5vYBNDUrHip9UxeY=;
+        b=i/Dai9ItEWTvWa218QAfvIO/MTOGC1R1Nm89p2ZmX5t/QeCY2nqkfwRUZo8Kzm/M2q
+         X0onE5zW/f0RW03Fxg0yr/yhGYFsxYT9VElZdFTbC11cHFYWchqDmTq3wahbZKrJ5BoY
+         HiMLCDnJc7xFdEfA0vCtgNGRpPHVASXZeqVdkHzm8jbC2K5rY/Wq3u+vknIKaYBuHZYN
+         KS0dL1qzTVMk9FVGrYQU4W7Ud+PPhyP3+EkGvu+RAdR7YRuvyVlh9JR7vT/PmpP4eX08
+         SoAridXEFAWxE4XQe/pzlzwqTdAERJ3mJneZ4uAgaMm1K7XuURLuHDuynjXLVXwSgh60
+         ArEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745350124; x=1745954924;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iLi+B3MTVPFx0AsESTkz2z+6nVaBF7LP0N10jEwchIU=;
-        b=UI/iLYPh5pn7FmhUJITlFIYGcd2eAH6FgD3+q8tzIVEfGhH3E2YpUDEv41oCneBou9
-         yjt1iCJrxBz2PCZf2RTubBHGz79ckzsjeThXsGUNLbALdk5KFgO0fxf6sXgGAwxJ+Ct9
-         s173PuZgw5HFrmBKnvObITi6iwlqVNhmVzyHUrOLaseCt0YL1V/h8OVjIkH6jsaYZZSy
-         MTrHHL5kSn490EbcRMQBkzw2c61MkrWki+TtJm5NE679Jequ1Hvs/Un9c0G93PKplb1k
-         Qq37scApzgyanGAz/a3JoimZLBHFBavdnRDZpTZ3JMGqdH9f++k2XUYpAzfh//q4kBuj
-         wXBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCAg6TUdWur9BV87Zy0NogtBt5+Okcwc3jYeTmio6o5qPgP/k1qjMAMVUVhSOwS3A3QYwsMowJnR3jKUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAOahze2GmKD2FAm+/ZoEhJfyjoTFtqwn69rd9fyKNPXCQm3G
-	3vWDzvZy1kNf4moS8o1Yp65nRv7W4Yr2/XSwDDf01o8xqzmfWojXuav3jDXb31M=
-X-Gm-Gg: ASbGncu8q3/Slj72Adv5bkroRiI6XSGu1yQb6Dwea/NTF7Ds08A7ensSkwbxlxk/huQ
-	Mf8Xxiv6MF9pTp3Mme3XG3V+dRj24to1Ea6W/UBS7ZBIyCxe5wU59zxPwbZSqBd2OYSRJs2VAVK
-	MhOa1wgld3Y4sqAwRd8KlKAXdFQrCoOknHOUC5YzFPiw7I9Md5mr1Shq4zeZn7e7uAWE4z0KDEs
-	G08gnv/r9ovfKPpXZHejNPbcyVIofPHZsfz54WYz53wd0POgQWu+4klRxGIOMQBJWNKmA6d+Ps0
-	uvKDPXxSEis1p8+ogsRAkppjP310vNsSvQcC02nkFKk+HBc=
-X-Google-Smtp-Source: AGHT+IEoiLlkG8CuDq3sxtWZySPM8V1hr1BrdzVkkZxxU8PgD1mHd8w2+yO6D2bCGRL6IKQMfgmgaA==
-X-Received: by 2002:a05:6871:547:b0:2c7:6150:fff7 with SMTP id 586e51a60fabf-2d526e24d2bmr10859675fac.35.1745350123696;
-        Tue, 22 Apr 2025 12:28:43 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d5212c95ebsm2732646fac.5.2025.04.22.12.28.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 12:28:43 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 22 Apr 2025 14:28:36 -0500
-Subject: [PATCH] iio: pressure: bmp280: drop sensor_data array
+        d=1e100.net; s=20230601; t=1745350160; x=1745954960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ndpKGQSvZ0aqLqjETeu44ATYoM5vYBNDUrHip9UxeY=;
+        b=xL7/nq1rlX590S6sLJjPFbuKlgy+3QaE7eiC/5FunWixUMjahpOnUQa9wQ8t6+et0c
+         rbKLu1igDok1cUSGunzr8vJnprY9+oZuoDCIYTvZYB4pHjvrGVJ3qZ/DlcW8exnbRaoo
+         D4X7oIvCslFdhxxZnh7jo3yppr9DPAk6n+ND9YCF4P21eeLkfx/tBDl8zj5X1rVzFggS
+         hv3ztQO6io4/lanROFX4d9TKFy9+gTLYqlnSmZkbebU6KZox+0VBLBnOqy/fdc5m778B
+         tMA/XBgAUEdjWCAF1ZkcGthC3Cq3GPv0cX8FjW1x6cTHrqtKTv+aWVwIndrI0G1ra2/O
+         26iA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3p95974t8iVvyx7Om6sdw0vORW03A4KwQGDgYB7UmAE9OihKvVNMvplbcuKQ/a+AOPG4qZPfYBp0=@vger.kernel.org, AJvYcCWQelW82YL4HmTzye9cxLk71H8spWoggzdqI9t6VgnV1D9X5wxhlNqbcfnk7OagzH8yjwxR6qJd@vger.kernel.org, AJvYcCWmaz7sOtyJkwIQWKQRq3qQurqtWfHrOtU6DNvVL3okDqGO8uCU/BxUvOrItyvLSDlZnocFauRYgkeNgDpC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQTwOfiRWCPCgGi3h7i4EXaSeU6WS/ijgc9GxjiBP0Z9Ab0lnB
+	/saSa/BnjFgRFSAoUPQYqCjU3ZvTQ89YpZwz/omn3QSWiKbJwkMwR8EEtw1wk20sm84JNPhyptS
+	BsRAqfelsl+koI/ObqvpZARuh5o0=
+X-Gm-Gg: ASbGncvexMajBw/62BIU3so/ApmH/aJk0wPoJtmM6KBbqRypT1VgC3qNBE4Z7tlTCli
+	mjZ6BcKa/ibrsmAV8SChiTMlUoJT88drQbGtYKlUxaNDXul9m9ZyPFBlH6FGPfObs70rn2KqF8n
+	wXjdyqkRG24T9F1P6zbYeUTps=
+X-Google-Smtp-Source: AGHT+IGkSPCMeFkbaE7r9rhzr8WggAH+kF6OiQcpyNCNspqhZ0ybhXGaBNOVK+jQ3HgCZRgPGQgp1f3RLPGlBD4qBuk=
+X-Received: by 2002:a05:6214:20a3:b0:6e4:4484:f354 with SMTP id
+ 6a1803df08f44-6f2c4671b1cmr334524676d6.38.1745350160485; Tue, 22 Apr 2025
+ 12:29:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAOPtB2gC/x2NwQrCQAwFf6XkbGCNSlt/RTy09q0NYndJXBVK/
- 93F4xxmZiWHKZzOzUqGt7qmpcJ+19BtHpY7WKfKJEFO4SjCqomzwb0YeHxm6QIbPskenIvP/Eo
- 8lhhhzqHtpiGg79sDqAarFvX7n12u2/YDK2ONbHwAAAA=
-X-Change-ID: 20250422-iio-pressure-bmp280-rework-push-to-buffers-078da0e9973e
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9506; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=Aoo24VDkLJ9Fvyx9uF18E+0I92xixFzfbVJacPGEagc=;
- b=owEBbAGT/pANAwAKAcLMIAH/AY/AAcsmYgBoB+3k4EQIfqFSijVG3Jw6BOowCU4UxQi0VZBOx
- KaQmDM+JQKJATIEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAft5AAKCRDCzCAB/wGP
- wLV+B/YtbUFMSdQ3hQHgJ/gpIqZ8vguOPfP1ibSygeA14fM0bbzq9k1f3IJ2kjxSz7lg9xR21hN
- OFl+a5WWATRi48yO/ob+jjXVK8KA4CepKct8yPYs9H3q2r32CEo1mNmjWPAVNX4VMtHKMANfLk0
- K69HcJSx6okaU0KefmEtjB1n/T/P0UXSg/pL69e3ddl4pXBvAeOZy01qZUBXHLA0ssRpUsWfIpA
- 6cmpJiNqQ0PpoX8iziip5AujmfusJGlUMT6ADqvkfc/BGYhMJBJ9Gv/ksCxWJMSb7JGhKpqZe9g
- DrhaGQKSndqos463s+3YSVxKXkLFBntR1mSWYtAc7GL0DV8=
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <6807afd0.a70a0220.2ae8b9.e07cSMTPIN_ADDED_BROKEN@mx.google.com>
+ <CAKEwX=NQyDqNBoS2kPePZO1iTkt88MgrtEKexxu7uLhaeA6rsQ@mail.gmail.com>
+In-Reply-To: <CAKEwX=NQyDqNBoS2kPePZO1iTkt88MgrtEKexxu7uLhaeA6rsQ@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 22 Apr 2025 12:29:08 -0700
+X-Gm-Features: ATxdqUF5O_YtzRFDfeJ1JbJJt-RugNOBNDCB-M-afZovyBAPOYL5Iv1Eurn4SUU
+Message-ID: <CAKEwX=OBC3n-+hPXGnpoZChCqjtQUt-nbBrjj0kRqsCdTcqghA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	hughd@google.com, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Drop the sensor_data array from struct bmp280_data and replace it using
-local structs in each interrupt handler.
+On Tue, Apr 22, 2025 at 10:15=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrot=
+e:
+>
+> On Tue, Apr 22, 2025 at 8:03=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.de=
+v> wrote:
+> >
+> > On Mon, Apr 07, 2025 at 04:42:01PM -0700, Nhat Pham wrote:
+> > It's exciting to see this proposal materilizing :)
+> >
+> > I didn't get a chance to look too closely at the code, but I have a few
+> > high-level comments.
+> >
+> > Do we need separate refcnt and swap_count? I am aware that there are
+> > cases where we need to hold a reference to prevent the descriptor from
+> > going away, without an extra page table entry referencing the swap
+> > descriptor -- but I am wondering if we can get away by just incrementin=
+g
+> > the swap count in these cases too? Would this mess things up?
+>
+> Actually, you're right - we might not even need a separate refcnt
+> field at all :) Here's my original thought process:
+>
+> 1. We need something that keeps the virtual swap slot and its metadata
+> data structure (the swap descriptor) valid while we work with it.
+>
+> 2. In the old design, this is all stored at the swap device, so we
+> need to obtain a reference to the swap device itself.
+>
+> 3. In the new design, this is no longer even possible. The backend
+> might change under us even! So the refcnting needs to be done at the
+> virtual swap level.
+>
+> 3. The refcnting needs to be separate from the swap count field,
+> because certain operations/optimizations do check for the actual swap
+> count, and incrementing the swap count willy nilly like that might
+> accidentally throw these off. Think readahead-induced swap reads, for
+> example. So I need a separate refcnt field that takes into account 3
+> sources: PTE references (swap count), swap cache, and "ephemeral" (i.e
+> temporary) references, that replace the role of the swap device
+> reference in the old design.
+>
+> However, I have thought more about it. I don't think I need to obtain
+> any ephemeral reference. I do need a refcnting mechanism, but one
+> atomic field (that stores both the swap count and swap cache pin)
+> should suffice.
+>
+> Refcnt + RCU should already guarantee the existence of the swap
+> descriptor while I work with it. So there won't be any UAF issue, as
+> long as I am disciplined and check if the swap descriptor still exists
+> etc. in the virtual swap implementation, which I already am doing
+> anyway.
+>
+> This should be safe enough, even in the face of swapoff, because
+> swapoff also relies on the same reference counting mechanism to free
+> the virtual swap slot and its descriptor. It tries to swap_free() the
+> virtual swap slot, as it unmaps the virtual swap slot from the page
+> table entry, which will decrement the swap count. So we're all good on
+> this front.
+>
+> We DO need to obtain a reference to the swap device in certain places
+> though, if we want to use it down the line for some sort of
+> optimizations (for example, to look at its swap device flags to check
+> if it is a SWP_SYNCHRONOUS_IO device - see do_swap_page()). But this
+> is a separate matter.
+>
+> The end result is I will reduce 4 fields:
+>
+> 1. swp_entry_t vswap
+> 2. atomic_t in_swapcache
+> 3. atomic_t swap_count
+> 4. struct kref kref;
+>
+> Into a single swap_refs field.
+>
+>
+> >
+> > >
+> > > This design allows us to:
+> > > * Decouple zswap (and zeromapped swap entry) from backing swapfile:
+> > >   simply associate the virtual swap slot with one of the supported
+> > >   backends: a zswap entry, a zero-filled swap page, a slot on the
+> > >   swapfile, or an in-memory page .
+> > > * Simplify and optimize swapoff: we only have to fault the page in an=
+d
+> > >   have the virtual swap slot points to the page instead of the on-dis=
+k
+> > >   physical swap slot. No need to perform any page table walking.
+> > >
+> > > Please see the attached patches for implementation details.
+> > >
+> > > Note that I do not remove the old implementation for now. Users can
+> > > select between the old and the new implementation via the
+> > > CONFIG_VIRTUAL_SWAP build config. This will also allow us to land the
+> > > new design, and iteratively optimize upon it (without having to inclu=
+de
+> > > everything in an even more massive patch series).
+> >
+> > I know this is easier, but honestly I'd prefer if we do an incremental
+> > replacement (if possible) rather than introducing a new implementation
+> > and slowly deprecating the old one, which historically doesn't seem to
+> > go well :P
+>
+> I know, I know :P
+>
+> >
+> > Once the series is organized as Johannes suggested, and we have better
+> > insights into how this will be integrated with Kairui's work, it should
+> > be clearer whether it's possible to incrementally update the current
+> > implemetation rather than add a parallel implementation.
+>
+> Will take a look at Kairui's work when it's available :)
+>
+> >
+> > >
+> > > III. Future Use Cases
+> > >
+> > > Other than decoupling swap backends and optimizing swapoff, this new
+> > > design allows us to implement the following more easily and
+> > > efficiently:
+> > >
+> > > * Multi-tier swapping (as mentioned in [5]), with transparent
+> > >   transferring (promotion/demotion) of pages across tiers (see [8] an=
+d
+> > >   [9]). Similar to swapoff, with the old design we would need to
+> > >   perform the expensive page table walk.
+> > > * Swapfile compaction to alleviate fragmentation (as proposed by Ying
+> > >   Huang in [6]).
+> > > * Mixed backing THP swapin (see [7]): Once you have pinned down the
+> > >   backing store of THPs, then you can dispatch each range of subpages
+> > >   to appropriate swapin handle.
+> > > * Swapping a folio out with discontiguous physical swap slots (see [1=
+0])
+> > >
+> > >
+> > > IV. Potential Issues
+> > >
+> > > Here is a couple of issues I can think of, along with some potential
+> > > solutions:
+> > >
+> > > 1. Space overhead: we need one swap descriptor per swap entry.
+> > > * Note that this overhead is dynamic, i.e only incurred when we actua=
+lly
+> > >   need to swap a page out.
+> > > * It can be further offset by the reduction of swap map and the
+> > >   elimination of zeromapped bitmap.
+> > >
+> > > 2. Lock contention: since the virtual swap space is dynamic/unbounded=
+,
+> > > we cannot naively range partition it anymore. This can increase lock
+> > > contention on swap-related data structures (swap cache, zswap=E2=80=
+=99s xarray,
+> > > etc.).
+> > > * The problem is slightly alleviated by the lockless nature of the ne=
+w
+> > >   reference counting scheme, as well as the per-entry locking for
+> > >   backing store information.
+> > > * Johannes suggested that I can implement a dynamic partition scheme,=
+ in
+> > >   which new partitions (along with associated data structures) are
+> > >   allocated on demand. It is one extra layer of indirection, but glob=
+al
+> > >   locking will only be done only on partition allocation, rather than=
+ on
+> > >   each access. All other accesses only take local (per-partition)
+> > >   locks, or are completely lockless (such as partition lookup).
+> > >
+> > >
+> > > V. Benchmarking
+> > >
+> > > As a proof of concept, I run the prototype through some simple
+> > > benchmarks:
+> > >
+> > > 1. usemem: 16 threads, 2G each, memory.max =3D 16G
+> > >
+> > > I benchmarked the following usemem commands:
+> > >
+> > > time usemem --init-time -w -O -s 10 -n 16 2g
+> > >
+> > > Baseline:
+> > > real: 33.96s
+> > > user: 25.31s
+> > > sys: 341.09s
+> > > average throughput: 111295.45 KB/s
+> > > average free time: 2079258.68 usecs
+> > >
+> > > New Design:
+> > > real: 35.87s
+> > > user: 25.15s
+> > > sys: 373.01s
+> > > average throughput: 106965.46 KB/s
+> > > average free time: 3192465.62 usecs
+> > >
+> > > To root cause this regression, I ran perf on the usemem program, as
+> > > well as on the following stress-ng program:
+> > >
+> > > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --page=
+swap $(nproc) --pageswap-ops 100000
+> > >
+> > > and observed the (predicted) increase in lock contention on swap cach=
+e
+> > > accesses. This regression is alleviated if I put together the
+> > > following hack: limit the virtual swap space to a sufficient size for
+> > > the benchmark, range partition the swap-related data structures (swap
+> > > cache, zswap tree, etc.) based on the limit, and distribute the
+> > > allocation of virtual swap slotss among these partitions (on a per-CP=
+U
+> > > basis):
+> > >
+> > > real: 34.94s
+> > > user: 25.28s
+> > > sys: 360.25s
+> > > average throughput: 108181.15 KB/s
+> > > average free time: 2680890.24 usecs
+> > >
+> > > As mentioned above, I will implement proper dynamic swap range
+> > > partitioning in a follow up work.
+> >
+> > I thought there would be some improvements with the new design once the
+> > lock contention is gone, due to the colocation of all swap metadata. Do
+> > we know why this isn't the case?
+>
+> The lock contention is reduced on access, but increased on allocation
+> and free step (because we have to go through a global lock now due to
+> the loss of swap space partitioning).
+>
+> Virtual swap allocation optimization will be the next step, or it can
+> be done concurrently, if we can figure out a way to make Kairui's work
+> compatible with this.
 
-The sensor_data array in struct bmp280_data is not used to share data
-between functions and isn't used for DMA, so there isn't really a need
-to have it in the struct. Instead, we can use the struct pattern for
-scan data in each interrupt handler. This has the advantage of allowing
-us to see the actual layout of each scan buffer for each different type
-of supported sensor. It also avoid juggling values between local
-variables and the array which makes the code a bit simpler by avoiding
-some extra assignments.
+To clarify a bit - what Kairui's proposal gives us (IIUC) is a dynamic
+clustered approach on swap slot allocation. It's already done at the
+physical level.
 
-We can also drop the BME280_NUM_MAX_CHANNELS macro as it is no longer
-used.
+This is precisely what this RFC is missing. So if there is a way to
+combine the work, I think it will go a long way in reducing the
+regression.
 
-Suggested-by: Jonathan Cameron <jic23@kernel.org>
-Link: https://lore.kernel.org/linux-iio/20250421135540.1a667221@jic23-huawei/
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-This is an alternative to [1] that takes a different approach to avoid
-the messy one-size-fits-all buffer used with iio_push_to_buffers_with_ts().
-
-[1]: https://lore.kernel.org/linux-iio/20250418-iio-introduce-iio_declare_buffer_with_ts-v1-4-ee0c62a33a0f@baylibre.com/
----
- drivers/iio/pressure/bmp280-core.c | 102 +++++++++++++++++++------------------
- drivers/iio/pressure/bmp280.h      |   8 ---
- 2 files changed, 52 insertions(+), 58 deletions(-)
-
-diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index c20cc4a98c9c494a9c8843518ba2f17b41be18a9..5728cc18cced223284a2c41dc6dec6f47169c797 100644
---- a/drivers/iio/pressure/bmp280-core.c
-+++ b/drivers/iio/pressure/bmp280-core.c
-@@ -46,6 +46,7 @@
- #include <linux/random.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/types.h>
- 
- #include <linux/iio/buffer.h>
- #include <linux/iio/iio.h>
-@@ -1105,9 +1106,13 @@ static irqreturn_t bmp280_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	u32 adc_temp, adc_press, comp_press;
--	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	u32 adc_temp, adc_press;
-+	s32 t_fine;
-+	struct {
-+		u32 comp_press;
-+		s32 comp_temp;
-+		aligned_s64 timestamp;
-+	} buffer;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -1127,7 +1132,7 @@ static irqreturn_t bmp280_trigger_handler(int irq, void *p)
- 		goto out;
- 	}
- 
--	comp_temp = bmp280_compensate_temp(data, adc_temp);
-+	buffer.comp_temp = bmp280_compensate_temp(data, adc_temp);
- 
- 	/* Pressure calculations */
- 	adc_press = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(&data->buf[0]));
-@@ -1137,13 +1142,9 @@ static irqreturn_t bmp280_trigger_handler(int irq, void *p)
- 	}
- 
- 	t_fine = bmp280_calc_t_fine(data, adc_temp);
--	comp_press = bmp280_compensate_press(data, adc_press, t_fine);
--
--	chans[0] = comp_press;
--	chans[1] = comp_temp;
-+	buffer.comp_press = bmp280_compensate_press(data, adc_press, t_fine);
- 
--	iio_push_to_buffers_with_ts(indio_dev, data->sensor_data,
--				    sizeof(data->sensor_data),
-+	iio_push_to_buffers_with_ts(indio_dev, &buffer, sizeof(buffer),
- 				    iio_get_time_ns(indio_dev));
- 
- out:
-@@ -1226,9 +1227,14 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	u32 adc_temp, adc_press, adc_humidity, comp_press, comp_humidity;
--	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	u32 adc_temp, adc_press, adc_humidity;
-+	s32 t_fine;
-+	struct {
-+		u32 comp_press;
-+		s32 comp_temp;
-+		u32 comp_humidity;
-+		aligned_s64 timestamp;
-+	} buffer;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -1248,7 +1254,7 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
- 		goto out;
- 	}
- 
--	comp_temp = bmp280_compensate_temp(data, adc_temp);
-+	buffer.comp_temp = bmp280_compensate_temp(data, adc_temp);
- 
- 	/* Pressure calculations */
- 	adc_press = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(&data->buf[0]));
-@@ -1258,7 +1264,7 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
- 	}
- 
- 	t_fine = bmp280_calc_t_fine(data, adc_temp);
--	comp_press = bmp280_compensate_press(data, adc_press, t_fine);
-+	buffer.comp_press = bmp280_compensate_press(data, adc_press, t_fine);
- 
- 	/* Humidity calculations */
- 	adc_humidity = get_unaligned_be16(&data->buf[6]);
-@@ -1268,14 +1274,10 @@ static irqreturn_t bme280_trigger_handler(int irq, void *p)
- 		goto out;
- 	}
- 
--	comp_humidity = bme280_compensate_humidity(data, adc_humidity, t_fine);
-+	buffer.comp_humidity = bme280_compensate_humidity(data, adc_humidity,
-+							  t_fine);
- 
--	chans[0] = comp_press;
--	chans[1] = comp_temp;
--	chans[2] = comp_humidity;
--
--	iio_push_to_buffers_with_ts(indio_dev, data->sensor_data,
--				    sizeof(data->sensor_data),
-+	iio_push_to_buffers_with_ts(indio_dev, &buffer, sizeof(buffer),
- 				    iio_get_time_ns(indio_dev));
- 
- out:
-@@ -1901,9 +1903,13 @@ static irqreturn_t bmp380_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	u32 adc_temp, adc_press, comp_press;
--	s32 t_fine, comp_temp;
--	s32 *chans = (s32 *)data->sensor_data;
-+	u32 adc_temp, adc_press;
-+	s32 t_fine;
-+	struct {
-+		u32 comp_press;
-+		s32 comp_temp;
-+		aligned_s64 timestamp;
-+	} buffer;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
-@@ -1923,7 +1929,7 @@ static irqreturn_t bmp380_trigger_handler(int irq, void *p)
- 		goto out;
- 	}
- 
--	comp_temp = bmp380_compensate_temp(data, adc_temp);
-+	buffer.comp_temp = bmp380_compensate_temp(data, adc_temp);
- 
- 	/* Pressure calculations */
- 	adc_press = get_unaligned_le24(&data->buf[0]);
-@@ -1933,13 +1939,9 @@ static irqreturn_t bmp380_trigger_handler(int irq, void *p)
- 	}
- 
- 	t_fine = bmp380_calc_t_fine(data, adc_temp);
--	comp_press = bmp380_compensate_press(data, adc_press, t_fine);
--
--	chans[0] = comp_press;
--	chans[1] = comp_temp;
-+	buffer.comp_press = bmp380_compensate_press(data, adc_press, t_fine);
- 
--	iio_push_to_buffers_with_ts(indio_dev, data->sensor_data,
--				    sizeof(data->sensor_data),
-+	iio_push_to_buffers_with_ts(indio_dev, &buffer, sizeof(buffer),
- 				    iio_get_time_ns(indio_dev));
- 
- out:
-@@ -2611,7 +2613,12 @@ static irqreturn_t bmp580_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	int ret, offset;
-+	struct {
-+		__le32 comp_temp;
-+		__le32 comp_press;
-+		aligned_s64 timestamp;
-+	} buffer;
-+	int ret;
- 
- 	guard(mutex)(&data->lock);
- 
-@@ -2623,18 +2630,13 @@ static irqreturn_t bmp580_trigger_handler(int irq, void *p)
- 		goto out;
- 	}
- 
--	offset = 0;
--
- 	/* Pressure calculations */
--	memcpy(&data->sensor_data[offset], &data->buf[3], 3);
--
--	offset += sizeof(s32);
-+	memcpy(&buffer.comp_press, &data->buf[3], 3);
- 
- 	/* Temperature calculations */
--	memcpy(&data->sensor_data[offset], &data->buf[0], 3);
-+	memcpy(&buffer.comp_temp, &data->buf[0], 3);
- 
--	iio_push_to_buffers_with_ts(indio_dev, data->sensor_data,
--				    sizeof(data->sensor_data),
-+	iio_push_to_buffers_with_ts(indio_dev, &buffer, sizeof(buffer),
- 				    iio_get_time_ns(indio_dev));
- 
- out:
-@@ -2956,25 +2958,25 @@ static irqreturn_t bmp180_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct bmp280_data *data = iio_priv(indio_dev);
--	int ret, comp_temp, comp_press;
--	s32 *chans = (s32 *)data->sensor_data;
-+	struct {
-+		u32 comp_press;
-+		s32 comp_temp;
-+		aligned_s64 timestamp;
-+	} buffer;
-+	int ret;
- 
- 	guard(mutex)(&data->lock);
- 
--	ret = bmp180_read_temp(data, &comp_temp);
-+	ret = bmp180_read_temp(data, &buffer.comp_temp);
- 	if (ret)
- 		goto out;
- 
- 
--	ret = bmp180_read_press(data, &comp_press);
-+	ret = bmp180_read_press(data, &buffer.comp_press);
- 	if (ret)
- 		goto out;
- 
--	chans[0] = comp_press;
--	chans[1] = comp_temp;
--
--	iio_push_to_buffers_with_ts(indio_dev, data->sensor_data,
--				    sizeof(data->sensor_data),
-+	iio_push_to_buffers_with_ts(indio_dev, &buffer, sizeof(buffer),
- 				    iio_get_time_ns(indio_dev));
- 
- out:
-diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index 5b2ee1d0ee464797d1d9993a014d8f84c37d5596..25bb9c743a05a19c5d2396969f0f4e0fef6ddcd0 100644
---- a/drivers/iio/pressure/bmp280.h
-+++ b/drivers/iio/pressure/bmp280.h
-@@ -349,7 +349,6 @@
- 					 BMP280_NUM_TEMP_BYTES + \
- 					 BME280_NUM_HUMIDITY_BYTES)
- 
--#define BME280_NUM_MAX_CHANNELS		3
- /* Core exported structs */
- 
- static const char *const bmp280_supply_names[] = {
-@@ -452,13 +451,6 @@ struct bmp280_data {
- 	 */
- 	int sampling_freq;
- 
--	/*
--	 * Data to push to userspace triggered buffer. Up to 3 channels and
--	 * s64 timestamp, aligned.
--	 */
--	u8 sensor_data[ALIGN(sizeof(s32) * BME280_NUM_MAX_CHANNELS, sizeof(s64))
--		       + sizeof(s64)] __aligned(sizeof(s64));
--
- 	/* Value to hold the current operation mode of the device */
- 	enum bmp280_op_mode op_mode;
- 
-
----
-base-commit: b475195fecc79a1a6e7fb0846aaaab0a1a4cb2e6
-change-id: 20250422-iio-pressure-bmp280-rework-push-to-buffers-078da0e9973e
-
-Best regards,
--- 
-David Lechner <dlechner@baylibre.com>
-
+That said, I haven't looked closely at his code yet, so I don't know
+how easy/hard it is to combine the efforts :)
