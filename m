@@ -1,115 +1,139 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01E225E806;
-	Tue, 22 Apr 2025 08:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE02238C15;
+	Tue, 22 Apr 2025 08:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311432; cv=none; b=t/a/gMpN6s2P1GBqTs24228QdfApwU2qFU6+d/PcFidoGAsX8UM220HjWVL/4bKrwxIEAYGwNvqXPtVd3/Xk6g5vEM4eIcsMKJrmOhZ6MLm+4yOMwIPvZsxTAKlAo8wL02te1Tmu5+Dj9FXyGSF1IS017ojXhqJXNWQIKPjxk/I=
+	t=1745311443; cv=none; b=ipxqiadY1fTQ8vOQtfPt7TTQ8YkFFF8nPK9E+FdeSYlN60mKFrUCEbkk5HAZaQplrPMh3wuoCWOZnKpFWi1kadAAXHh5GuXwnfrK15ZWEt2p6cZPww+oDH80VisrKesXSJ5M5Oq4QpafgkeLAXTKq2qkVkFvhZwINMJI3tArrnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311432; c=relaxed/simple;
-	bh=lqD7m89r2sQrsEOmBfAzRt8RKN827E6V2hOjWrQC4mY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lS4SUd4wqfue1F6+zrJ7DJXNYSbWCcggKJatgVlD/s8Y8R6fyPEMkNd29d+yLhIKihfNH5VBAOsYKnZ9YHN8UndOENlqCn5jJZnVuvU2Wgz3pviQiLlFpLh+C1rgOToN08sKJOkF7fSyX0wvLZtP2NZLebL2DTeFpv8c/ZUsRaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JoNMZ1/g; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745311443; c=relaxed/simple;
+	bh=fE6e3T0ztqihdFOemjtdTl+BdpIf6JYZqyHpceFLW1Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O68+0jhUC6WT62B0ZwDvA4Zj6l2NpJwORSmUPpDobvRMfNPO4bQvs56r9JYsOh3ULuX87r3jVLwNQopyfMr3pm1Zayzxek5kGgQnXrbbD2tj7j+JcyfmKn5ZqE3yfaAopkdTpCJj3vGBBWGY5wvB8QRzxzg+unkHdbvpIORjIuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=VKc3UsUF; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JoNMZ1/g"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso7483682a12.0;
-        Tue, 22 Apr 2025 01:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745311429; x=1745916229; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=03SE0QEScorD8X63ZKpeNL8JKETFXurDVO26PPtrnKM=;
-        b=JoNMZ1/gyxMannbt9i/1J5HgS+tzX6kFPLD2sL5PYwbHo3yIPeqp5LBG6Y9YiZbNEU
-         jb1RjSnjeCI2L70B16dp2zcgF9+uifk94Q9I+a5ltkqiWr66/n6y/ygqLMzvwPOzSdzr
-         pEo8aYtmSlaHG4oTi8RGB6jXrpU5WFo5y70SJ5/0K3zt9BmHvNH3qgGWdldRbitMF72A
-         Wo4YrAVMe+I8e7uz5YBdO6kLXJQbVd0Ch3pnoDyKV0WHDVfQnEPKEgRLrxEC11uJ/Qlt
-         NiG8obCWAt5o+mhExOrKPXppbGqFwWHsm82XyJsE6w2X8wKQkpQXk/kSmVqv9GLVsIFB
-         rEvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745311429; x=1745916229;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=03SE0QEScorD8X63ZKpeNL8JKETFXurDVO26PPtrnKM=;
-        b=VT7arvIDRfkpfquvs5JisdzgIBGVu1yu3iii6c7T7my9RMzVYEIkGz2BMQiE6Wskon
-         vs7XBZ6h7x0d9iJVY6lxAVAiX8ZRw3XZO4jB/NTQMNCzIogoMapWYOblkwrz1mQgi0Q6
-         oyYZeeXnHb290iVzgfSoiLf+YLvNCojKS0ccHhgbcaIqaZStecVe0RNc8ykJBP1wzv0Y
-         mKAA/ridEiN7lGw+WmtxDf6SHUSpJI/JY9UulRo0On1VgUHZaHZEyUy9hgLkS/aB1zBE
-         Dfc3AWKyQAbqgQ5fnphbw/NoHO80Ky9SAJdzaK60VvSRVH8tmnDS82lW5Gpwdjk8kSlP
-         9/4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUsQccODKIh6v81KYPAo8qCQAswkDnkbzFg5oOSRaVREzbTb4OJenc0img0Y3gVz2hP68edN4Rt@vger.kernel.org, AJvYcCVGyOfJGNaKImMFHUByDvcxvvxUK88N4cDLcx34I8aS+mFcKt+Terd7cVBf0d5/UQegrMkeQ4i+B0Uz@vger.kernel.org, AJvYcCW6fuFzWHhsfK0LtXIo8V3NUkvM675eG+BneXg+sEr5PMRvxHSEeZL5NiYlYxf1zcL5lkrv4r1XEA==@vger.kernel.org, AJvYcCWFr6zCvy+X0dwcTSWOxe8nKgh6iknO8rOauaRS9PmcMU2ZW+at7gNEYGvKkPmf5qR3tkYDdCqYIh2vvCbJCJOh@vger.kernel.org, AJvYcCWuX1tIyLmm8WC8WH/EedAnhFUGckwP3h50F3/B8NPovpH2yEMO+3UeL1bv29w4h/4V4Z1n@vger.kernel.org, AJvYcCX7H4ZZcsZ1DgwCJFknaFPXVOj2wWErha/hYHvnD1CQx8yYu7IlrkVYnmPFp9nY6swymRikZfnYgBIGMQfe@vger.kernel.org
-X-Gm-Message-State: AOJu0YwChA7nRNMqYUmZ/d8UsxnwsT74ykiUv+pgWFT/dVY2jXlXzO07
-	rPuGZb97KwgDz084HOmWdNUxQAd7kCNDZDGdEATlqd5QdNucDn3B
-X-Gm-Gg: ASbGncs6fiXetxak4xhs/qqU3vDfUqmphGQikL479W1KSU5jBrdH1ePn/EyVCWtcWal
-	eIiZlWYCdEoS50ujMPAMO9rmG8yM/syKX5aTo0vjKnnKsJzneAk5AZevNkT9Jzlk7fh38M3wI1j
-	ZJPBJ2N81Fwp2VuknMbUB6DKSnYxJ/ljiDb0mBUWxDm33vzewxdwdVQG2Qr/XJnn4Pfd2IkR6N0
-	ZpRWwKxCy/n/Nq21HWCdJZmR1ASSI1uU2/JqGqU8Kh3pWCOgflvWqrqwBuEYqrTOtGdW7K9+uws
-	cWEEsBl1OMuwZSbgNGbmECLdL4SW1ayhUANaA0Y/AOWpSy/zTBT6v/37KqboHy9G
-X-Google-Smtp-Source: AGHT+IHwRLxRlfj/B+cZPJBkcYi+NC7m90ZU8vBSpXmplNdykziG156hWUX5aB76mCTOP3JqMinJQg==
-X-Received: by 2002:a17:906:ef05:b0:aca:db46:8170 with SMTP id a640c23a62f3a-acb74e79d11mr1252517166b.60.1745311429050;
-        Tue, 22 Apr 2025 01:43:49 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::158? ([2620:10d:c092:600::1:558d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec42af6sm623375166b.43.2025.04.22.01.43.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 01:43:48 -0700 (PDT)
-Message-ID: <484ecaad-56de-4c0d-b7fa-a3337557b0bf@gmail.com>
-Date: Tue, 22 Apr 2025 09:45:04 +0100
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="VKc3UsUF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745311358;
+	bh=ta9c7PBfYNJdA/EddRHHdw/PT5n6zrxUu0kZcu8S4yI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=VKc3UsUFJ4dkJhG5s3Qpr5aVx5K5scUwzl5lNPG23iu42gG9VfaHXWOpX5+GX9cas
+	 Yg/4K/SLT/NB9O6Bnc3N3Gm4BfKA4L428Sg5Rw0phcmPZ6EV5F5b5o21N5F5moOKb4
+	 lAtASLe8xwwSOivSi0Y2NKzdz0Xj++Jy3+5q4LBQ=
+X-QQ-mid: zesmtpip4t1745311352tbc6f2798
+X-QQ-Originating-IP: D8iucQ4g6QfgRn6AdF4rdReU2rpnTyIVkPf9B1N4tYU=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 16:42:30 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6722607593758922458
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: james.smart@broadcom.com,
+	hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.15/6.1/6.6] nvmet-fc: Remove unused functions
+Date: Tue, 22 Apr 2025 16:40:47 +0800
+Message-ID: <85E64841B89AA153+20250422084047.100708-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 2/9] net: add get_netmem/put_netmem support
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- io-uring@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
- David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-References: <20250417231540.2780723-1-almasrymina@google.com>
- <20250417231540.2780723-3-almasrymina@google.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250417231540.2780723-3-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Macl0gWiWu4eRuOOyk37VxCKREBShQeCnU1W3GYww67YWdfrfBicqJUW
+	CXKHT17TFozzMO9ShqUyqkhflZP4klbot6zzUoXae2EVnzorSMbBIsLqob2Bofyrev+aVMQ
+	lUeJiVEq5eBtlxEKRLyNbZ2r9zAWeWG4jRBN1fEpRr/rm3hUNr9bN9b92Z0G3r8hAAQ2ulR
+	wFCEgIKq1PN1hPd1MOHhTJ0tIML5AW0puC80eD8xoFNSujMB04gFzw8uxDxwrfahd0P4Hl6
+	5YzMxN6CN/Hg7ulJQYP5ajYrViJ7zyM/12NZny9AJK9Zh7PRn5Rp4OigGiLu64C+2dSFaUE
+	J/olxGNow8bJ6sSxJ8w89wNJ/Wnk2PJdzP2FKSCcd4IqK9jeLGAmQwvXBuUfFfnr4KgVlXv
+	XIWE1J0L3z9N46MDjwLtlwSeKJQw7GOmrMtH437rYoZ0jzIcnp2Pxn5Pvdp+gIWA2I6bli+
+	9J8Lt27zrIlh6eNlKxp0GY3F3Q9DxvVo1/Ov0AF4IF22ZYCWi2IzE1JNKWxsChBrs6I8kBv
+	TkC0BbPny4GMxHs1QmCoXKuaLU6r57MAyjjg5PFhD3lqbAha/859YpRni+1dAo5qFSL3z7U
+	W0YbPIw4tACgwu86KAb7gygENy0/JJc/Eb+Vk6I/IDVb9E5WBfin8stPYq6utagHhMYiRN9
+	Ae8j74AeHx+JGCjqQPNLUZttZCZPFQH0Ak6dQgQLul4sOsQ9tvdwhytM0whbFjI1axC+A4M
+	AXS+nKs+vV4CZjHeCs7fNVdMToE4zBrBfejTIHuRxvhMftTqYSEovSaIlmZI/Jfmx8WXJGI
+	hKOeb8LzCNmVHBOZZJiEIrX/aOEKG+3ymjbZ/lK/igAU3UY+YCj1IUD/lQonDSDTVEIF9aD
+	mvuuuTsnPW8i87SONr4KIPHqEWzUCUQUgjXU1xPfGnUzvuLD1VM2kwzOPSbkU6nHNDmKwQU
+	LqZKJtkx2++LU1HnyTzdjwDwl5Mygk5xFgzwbpaGJpHRuObV3PixqEMxMaVculKxZEbYjf0
+	tMdkbnZM1YdfZSk6SgWhJgbC+0bt1GR/kgoIQzv5KnTUiAr9ZvGNjKlTAJddsOGinX4NSTB
+	ktwoRIVmwcQ
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On 4/18/25 00:15, Mina Almasry wrote:
-> Currently net_iovs support only pp ref counts, and do not support a
-> page ref equivalent.
+[ Upstream commit 1b304c006b0fb4f0517a8c4ba8c46e88f48a069c ]
 
-Makes me wonder why it's needed. In theory, nobody should ever be
-taking page references without going through struct ubuf_info
-handling first, all in kernel users of these pages should always
-be paired with ubuf_info, as it's user memory, it's not stable,
-and without ubuf_info the user is allowed to overwrite it.
+The functions nvmet_fc_iodnum() and nvmet_fc_fodnum() are currently
+unutilized.
 
-Maybe there are some gray area cases like packet inspection or
-tracing? However in this case, after the ubuf_info is dropped, the
-user can overwrite the memory with its secrets. Definitely iffy
-in security terms.
+Following commit c53432030d86 ("nvme-fabrics: Add target support for FC
+transport"), which introduced these two functions, they have not been
+used at all in practice.
 
+Remove them to resolve the compiler warnings.
+
+Fix follow errors with clang-19 when W=1e:
+  drivers/nvme/target/fc.c:177:1: error: unused function 'nvmet_fc_iodnum' [-Werror,-Wunused-function]
+    177 | nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
+        | ^~~~~~~~~~~~~~~
+  drivers/nvme/target/fc.c:183:1: error: unused function 'nvmet_fc_fodnum' [-Werror,-Wunused-function]
+    183 | nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
+        | ^~~~~~~~~~~~~~~
+  2 errors generated.
+  make[8]: *** [scripts/Makefile.build:207: drivers/nvme/target/fc.o] Error 1
+  make[7]: *** [scripts/Makefile.build:465: drivers/nvme/target] Error 2
+  make[6]: *** [scripts/Makefile.build:465: drivers/nvme] Error 2
+  make[6]: *** Waiting for unfinished jobs....
+
+Fixes: c53432030d86 ("nvme-fabrics: Add target support for FC transport")
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ drivers/nvme/target/fc.c | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index d3ca59ae4c7a..88893e78661c 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -173,20 +173,6 @@ struct nvmet_fc_tgt_assoc {
+ 	struct rcu_head			rcu;
+ };
+ 
+-
+-static inline int
+-nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
+-{
+-	return (iodptr - iodptr->tgtport->iod);
+-}
+-
+-static inline int
+-nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
+-{
+-	return (fodptr - fodptr->queue->fod);
+-}
+-
+-
+ /*
+  * Association and Connection IDs:
+  *
 -- 
-Pavel Begunkov
+2.49.0
 
