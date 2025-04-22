@@ -1,153 +1,108 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848F1262FE5
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5900E27BF6C;
+	Tue, 22 Apr 2025 21:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745357139; cv=none; b=EdIiR0ZKW7ZgODiP0+XmmCq36Y8c2TnhTJdZi+TU/yYwfq/FJB3N/RucTakCYTOXj600ADWXfKZJXQVeKmulhHKkqixh4gz4haudW5gl53gmsoMNFB+DFnbot1vMxRutyojlHyShZVjmnH6SoT43bqlAKyRjFbQXF+cERfFWZ0w=
+	t=1745357208; cv=none; b=AhnwQtnhlYIiIu0f+LDAmcOZP/c9z+jZh1kH3iXl0YQqiOAILkMmujo9LUdQhI4mDSzL46uwdIv2o0tP1cCRoYLS4gHvGumG+4+/DWV9XG+kgjXxAPZ+DYA2rZNXiVbZNfXb8gLU8eVmNay3MhbVLVHZ16hro1W3N0f0mT432+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745357139; c=relaxed/simple;
-	bh=Y/C/xhkbLzQ9rIJeiEicc0P0p8FiP6d4YyTqIyKHbYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFRJcq7eeKjRjMM6f895mDdpLCZeXAXMKEJhEy7zt9zL4ZimY6+nsI795T3AgKFe4K77FGkk3NFKuP9ZOyg7jf7e7omIu4Dft2O/5bYvXJVwqxaU6DtmTolUFRTDCv7pJxkuwygRIqfP6lsoOYw+60fcBT/hOPnbYc3xQ+Tqc+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M9ewX3Iy; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745357208; c=relaxed/simple;
+	bh=9Hc5x03Xt6Q8VLLhD3mCqz80+X90ssoJI+f+CleuBKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CWULsCDlsA6NjI6l15OKCCNWfvEzxZtYfwUcSg44X/hE+IDYSWO1u10Ug6UH07RR93Mje0vFqb7morL0SfBRrtAB6289RUVc2UH3TV0g42kDHlNORFdF/WQ5jbLIHvN+q3jq8VyDX1Bhcrx5zbSkxVsGYwN34rsl76JJXtxIFHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/D7yWRx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9ewX3Iy"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2240b4de12bso84732915ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:25:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745357138; x=1745961938; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c2xkzyMG/T4Nc06X3h717slcVyxx+nHbaCSWe2w2AOU=;
-        b=M9ewX3IyYwCC5Hw/P/Qii6AzRGCqdnWHOahnh6sbA9/4u7Hl31AM+gDHUO+9ADkvLG
-         6gJnqeM8vL1gJncm+Ho3n1LdL8qWEFOgHdGF4jylW4TKTR6/iNByWZsWBaK+0cEQbM/o
-         esVHitXjg6NxF2PIGmYe2JmViRtlRI3ZzIgQQBoJte0jma5KQG8nWjUZ9tM1YBtsLBaa
-         H1CAkaS1hwZ/CDv+jXwVfDFiINMD9xs1sNgOE9DuzTDEdBK6f0q92Fwq1LwsjfPOOu99
-         +S9eECKY8DnPe1nxGre4uOEmmUwDeQxVk19dWVOC7ptL7r/3uKw8WCbEHfb9dz/eoYpj
-         dtMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745357138; x=1745961938;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c2xkzyMG/T4Nc06X3h717slcVyxx+nHbaCSWe2w2AOU=;
-        b=kfajszVEghNBTvZnFa4xBJ9sQxipPjUTn1inZ4ZMggxQUql9zC/uNObdM3/KsX4Cqr
-         qEY1o/AhNy4me+H5m5ilEUZnB6aotp8DZN6xe4Vy4BVREP4ASGHXOieKGkgwvck357w7
-         HX/z0UzdX3zACw22latGqvIWhJnJ5GBYjKccAWxbNvpsDo73veuIgCWAaj545dQPvHl+
-         aSwA0bhOyWl/61OeVl+7lL3H2YryjV+XK7JAt5BGbC8brU/rawiC8X8rZQkLjH1dk3+H
-         Y6qV6zCObdsC6GCp8RC6Q3U4zHPs8oSKi5ITNZe8s4biAOtikKy4W5mFGoqOdA1Eh5F/
-         YWRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Muos3t75xJPTT37BDQXD3GQVI3ZYm36wzg8AJ+nL+tV/O3r9zya6FNsa1NnwgcJwlHV31o2mXG+VzI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZBqMSp/wWOB1CJ4ySNG4+0TJ1uJUJ8RXc93qNaNx6ROVOtkm8
-	2RzaCP7wfsb5/H43MsJhp1YD83XbumILpP0XJCKEioGlnkK5jN+JCn38etLnxoI=
-X-Gm-Gg: ASbGncv44MJ1LqWZDP57QeB6DDbmYD9L29/XnP0YDtECxkFp0QxHhf8C1umvqSZ0ULn
-	Yf97Oy169no2WnHjRB4LRjgBjOdRt3CGy5bl8JWsKxYvtErMTrWeIp1AfX+1+rH3wFbkcRZkhED
-	Ge/X+IkuFUubf1J6VFJI9P7w9QV1gtOKbh7UeuEfvkV7LzymwMV75S9nTWbYqYB3ncp+tghi5C/
-	bnHrrDOBGQmvIgBkZXjZcDKuc9yykxgnEcqBknCmASlKtDVLhQbbW5N1517LaHreBQPXHGv3NPb
-	9zVJxqXL5A8H1jDeYZbYog11ZevQiCikLMBeNA==
-X-Google-Smtp-Source: AGHT+IGITDdmHBEsMW6HJ5ldB4QFVVmfPzM2dBETcoNqBLkno8pe5V2JmNTWujeQ7uMADfwfWpxmsQ==
-X-Received: by 2002:a17:903:1a04:b0:224:c46:d166 with SMTP id d9443c01a7336-22c53604563mr288284045ad.40.1745357137754;
-        Tue, 22 Apr 2025 14:25:37 -0700 (PDT)
-Received: from archlinux.attlocal.net ([2600:1700:5a60:6f70::2f])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22c50bdae5dsm90389605ad.35.2025.04.22.14.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 14:25:37 -0700 (PDT)
-From: JJ Strnad <strnad.jj@gmail.com>
-To: 
-Cc: strnad.jj@gmail.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Philipp Hortmann <philipp.g.hortmann@gmail.com>,
-	Bryant Boatright <bryant.boatright@proton.me>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Manuel Quintero F <sakunix@yahoo.com>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: remove multiple blank lines
-Date: Tue, 22 Apr 2025 14:23:16 -0700
-Message-ID: <20250422212332.23170-1-strnad.jj@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/D7yWRx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B45C4CEEE;
+	Tue, 22 Apr 2025 21:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745357207;
+	bh=9Hc5x03Xt6Q8VLLhD3mCqz80+X90ssoJI+f+CleuBKQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h/D7yWRxhbT0Tokd9yCp1wg9xCgigqp3o/yVm8u9b06tDs17VYlkXgDU2aKW+tBEW
+	 yCFBWgaWcd9omhGXkDuPp7Lt9n5PqXhp+tTGMo9ams2ktewBPqhsq1gZcpvy0FHL19
+	 Kzfr1/T+J+vS0tqDyftCuRmUR5Qdukw/vc+WnDWc8OJCiw4ChzEg9UgCLeqUobbDHt
+	 fT9OYOrU03U/lBXrwh75XJJ+nGMz7uFFqrzPHi4ccGmIRSkGGIoHkpoDTdGy1jf0zq
+	 7UYuaRvxExEQ/uuuaiRPfMFtyeRRyXUuO5bVqNWk3tNUQfdJkgjjHHwRz4FIW7A464
+	 Gfm/LQFCLpQ5w==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30beedb99c9so50351021fa.3;
+        Tue, 22 Apr 2025 14:26:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWDUcVVNRQnN2IT6VWNi4mXWG9DG3NwDWkL3fzCUiM8mxQZ9Y8ccXmqKio+OGwWcEr1pwdDRB3n5BFNEbboTY3E@vger.kernel.org, AJvYcCXfx3pDb2VjpVHaNRMIN73R3z9zeaAPpn731wi0CBpnVcijy1OcKQQFlzhvz1ofGjP1cFDl8WaGbeuh@vger.kernel.org, AJvYcCXguiuURkAiuUi5TsxwbleVbpC/BORoTWk8EZlPHxFqa3qN7+EgqbsIcgA64nN/15bC3/X1DgC7rYfT@vger.kernel.org, AJvYcCXr7xnIpX+TISLPgVyUcYwNxC2hLHgCRFp1vpOpoM6ISlYukdYGVcfvqRQLQ7Ok5R7cy7eum11+4JI2CV0=@vger.kernel.org, AJvYcCXtckLoJHtP0/8PhTSLP2vuLkvTE+HOqEftGH7eRZXJldmtA47l0eBGpOG7DzqsvAyQtHkAyxnsxlhvvPfQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyopMAqU9lSHwq2Egq0c8g65s3lnz9zXd2VF4SbTELY3tMLgycz
+	NKLv2oj0dWyPitlipHC1K3pEU2+dXUzgdUSQekLFbHnaILFO/aeougusmeJyRa3drg/lDv/w54w
+	8B1gN+MZ4KnL/mbULwGWMub1+vaw=
+X-Google-Smtp-Source: AGHT+IHNjwddJlnhR8ziXrRYCvaKzZHBeDFB7aTS+2S6/Juebmx60PYYbz8oxxdYeTQFH7iZZN2OhK0zcRmnc7XV21k=
+X-Received: by 2002:a2e:9586:0:b0:310:749c:f8da with SMTP id
+ 38308e7fff4ca-310905bac8fmr43410821fa.22.1745357206245; Tue, 22 Apr 2025
+ 14:26:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com> <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
+In-Reply-To: <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 22 Apr 2025 23:26:35 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHNpxTqm5hOcxdKRnE58WLmhJo0Rk5pvVGyAtkkki6bvg@mail.gmail.com>
+X-Gm-Features: ATxdqUE-wCQ698lYIM2xY-XaLjiHODMSR6r5gfRYGnF_Ynuwr3onsuyDzkvTRu8
+Message-ID: <CAMj1kXHNpxTqm5hOcxdKRnE58WLmhJo0Rk5pvVGyAtkkki6bvg@mail.gmail.com>
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Ross Philipson <ross.philipson@oracle.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-integrity@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Adhere to Linux kernel coding style.
+On Tue, 22 Apr 2025 at 20:17, Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+>
+> On 21/04/2025 9:52 pm, Dave Hansen wrote:
+> > Purely from the amount of interest and review tags and the whole "v14"
+> > thing, it doesn't look like this is very important to anyone. Not to be
+> > to flippant about it, but if nobody else cares, why should I (or the
+> > other x86 maintainers)?
+>
+> There are several downstreams already using this as a part of their
+> overall system security, one example being
+> https://www.qubes-os.org/doc/anti-evil-maid/
+>
+> It's all giant out-of-tree patch series (in multiple projects; Grub,
+> Xen, iPXE too).
 
-Reported by checkpatch:
+... and this is the main problem: All the existing protocols and
+layering go straight out the window, and are replaced with bespoke
+alternatives, for booting but also for secondary bringup, etc etc
 
-CHECK: Please don't use multiple blank lines
+Conceptually, the secure launch could be performed under the hood,
+e.g., during ExitBootServices() when doing EFI boot, and the OS would
+have to be none the wiser (or at least, not need 100s of additional
+lines of opaque assembly to be able to operate in this mode).
 
-Signed-off-by: JJ Strnad <strnad.jj@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c | 7 -------
- 1 file changed, 7 deletions(-)
+The fact that all these components need such intrusive changes in
+order to orchestrate this pivot to the reduced TCB constitutes a
+spectacular failure in design IMO, but AIUI, the software side is not
+really at fault here: the layering violations are intrinsic to the
+hardware support in the CPU. I'm sure Andy or others on cc can
+elaborate on this, as they have done many times already.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index 946511793c08..437934dd255e 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -695,7 +695,6 @@ u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
- 	/* for ies is fix buf size */
- 	t_len = sizeof(struct wlan_bssid_ex);
- 
--
- 	/* for hidden ap to set fw_state here */
- 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE|WIFI_ADHOC_STATE) != true) {
- 		switch (ndis_network_mode) {
-@@ -738,7 +737,6 @@ u8 rtw_joinbss_cmd(struct adapter  *padapter, struct wlan_network *pnetwork)
- 
- 	psecnetwork->ie_length = rtw_restruct_sec_ie(padapter, &pnetwork->network.ies[0], &psecnetwork->ies[0], pnetwork->network.ie_length);
- 
--
- 	pqospriv->qos_option = 0;
- 
- 	if (pregistrypriv->wmm_enable) {
-@@ -1032,7 +1030,6 @@ u8 rtw_reset_securitypriv_cmd(struct adapter *padapter)
- 
- 	init_h2fwcmd_w_parm_no_rsp(ph2c, pdrvextra_cmd_parm, GEN_CMD_CODE(_Set_Drv_Extra));
- 
--
- 	/* rtw_enqueue_cmd(pcmdpriv, ph2c); */
- 	res = rtw_enqueue_cmd(pcmdpriv, ph2c);
- exit:
-@@ -1099,7 +1096,6 @@ u8 rtw_dynamic_chk_wk_cmd(struct adapter *padapter)
- 	pdrvextra_cmd_parm->pbuf = NULL;
- 	init_h2fwcmd_w_parm_no_rsp(ph2c, pdrvextra_cmd_parm, GEN_CMD_CODE(_Set_Drv_Extra));
- 
--
- 	/* rtw_enqueue_cmd(pcmdpriv, ph2c); */
- 	res = rtw_enqueue_cmd(pcmdpriv, ph2c);
- exit:
-@@ -1256,7 +1252,6 @@ static void dynamic_chk_wk_hdl(struct adapter *padapter)
- 	/*  */
- 	hal_btcoex_Handler(padapter);
- 
--
- 	/* always call rtw_ps_processor() at last one. */
- 	rtw_ps_processor(padapter);
- }
-@@ -1367,7 +1362,6 @@ u8 rtw_dm_in_lps_wk_cmd(struct adapter *padapter)
- 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
- 	u8 res = _SUCCESS;
- 
--
- 	ph2c = rtw_zmalloc(sizeof(struct cmd_obj));
- 	if (!ph2c) {
- 		res = _FAIL;
-@@ -1850,7 +1844,6 @@ void rtw_createbss_cmd_callback(struct adapter *padapter, struct cmd_obj *pcmd)
- 
- 	spin_lock_bh(&pmlmepriv->lock);
- 
--
- 	if (check_fwstate(pmlmepriv, WIFI_AP_STATE)) {
- 		psta = rtw_get_stainfo(&padapter->stapriv, pnetwork->mac_address);
- 		if (!psta) {
--- 
-2.49.0
+So if that is true (I'm not a x86 uarch expert by any measure), then
+pushing back on this series on the basis that it is ugly and intrusive
+is not really reasonable. From security pov, I think D-RTM is an
+important feature and it deserves to be upstream if it is used widely
+in the field.
 
+OTOH, if the arm64 implementation (which is still on the drawing
+board) bears any resemblance at all to the x86 version, it can be
+considered NACKed already.
