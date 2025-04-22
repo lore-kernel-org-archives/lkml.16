@@ -1,55 +1,58 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F20E1EDA2C;
-	Tue, 22 Apr 2025 10:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF3A20D51F;
+	Tue, 22 Apr 2025 10:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319351; cv=none; b=BoMcys/oc9iIXLtTjypUdMyX2005fLGvjTY1ZBUTRZWM3fEQrpqdl9RtL+5dUJBUc4T2r2bnTloxay+uUn99P7+f8i45/SzV78juUZ/9rQqI1V42QBLOkaRXketsf+T9JC868239AS2inYhBHgsstZCh/fRe0eMbwSDIs+63DWU=
+	t=1745319414; cv=none; b=TES++eeu5qf0qRGnm29BpXK4wVCqbaFe5HecjKvAB055s3SENOJFSmjo6Pd7rzqtkxUB3yenp65izJWky7Eg7K+W9HSU8oxikt7qLoJOXyuj+dL6GxvX/24+5dRPq/vm9B0tH9kqdB36XwdDTKHCKOsjR0hzu2e6n5tGGsS1cAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745319351; c=relaxed/simple;
-	bh=TpJezaEHIMJ4QhxH7cUkgrBdkRbBbxNDsO9RFYdxrqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u9NXOMKd0aLhqkvCnpS+yeF6VDkwDtWKXWEz0z58nakHSKX6QHz3cegNeAt3T9PDCqathVCwximc6YEjGMF0wcP9D1MF/Shfg0MHu1v5GHy8sxV6PG2SuHGTgGEG+UaqHBPLwsYkbDuKjv1UMxSrLaAKVfxD/e6UkDu2QDhW2g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=K2CBQKPS; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745319414; c=relaxed/simple;
+	bh=v6e6oS/nMhFLB7pHXxBcsuZHxq8PKqPIBKZP9xLGgjM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QBROfaIw7GkFOwd5ofUnBRlkW7F+gfIpNddL2PSPo/6dEZ1x68qtFeWXCCIEvRrl/zg+8BYxkGjv5y8OQk+8UaGwoRpHTQUUmhhZHdnoD9g5DTBYjaksh8TxHOojnUoIiOQX1mVJ/LP+Ksz1W0QV2AJWkJZeZ+kftWVA3wrJ+wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=FTDJ0Hi4; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="K2CBQKPS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745319299;
-	bh=i7KxMIuwFbJWsdFvTV8UOjQME+V6zLnzu0Zhv73ogN0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=K2CBQKPSaIg69KbL238McAsDx/Xka/WwYCxu4u2e2HFDk9I4zFDXPvALURH+NE1XJ
-	 V8UIdJ6nxU+cWKSDsix7XL3VKaZaUFRzX+eY5nQZuTyRuZ0NsTAbjWB2/FPoeRsima
-	 j0DRICCZl7xtlDJbD8p/8aL5Zf4d3gg9TfuFpntc=
-X-QQ-mid: zesmtpip2t1745319254te37e0179
-X-QQ-Originating-IP: cMmpMeRkw7TPS/DJrTwXfzksKKGdseNrPV9pgrjl/I4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 18:54:11 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 18080512183500850100
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: guanwentao@uniontech.com,
-	linux-kbuild@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="FTDJ0Hi4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=k/fyz2yaJz0xzEAmSoE0Y6ROcbmBH4Qm7psFQ48hLAY=; b=FTDJ0Hi4Xv9XLHxDnRjW05RDWB
+	+jy2cg1nOJfAAzQyzLEjjPZkEwmfq1wGVGFNoae5BI2O7bGZy2LoZ6V0hQ9xGea7f5GVukDPxO0nP
+	hQcPjWSDDQlGxza6aomUrZMtA9Qh37YLc2taEbPMLad3nmcwD+h1k3EfbTnBAE/ZzuwIq8F/0kg1/
+	0mXD5rIuqzK/EcRAfESV4Y9GHSwIOIF9D8CCpl/7/CUOsgJxSdlY37HU/W+Xc/5Yy55B0KWAIy8r5
+	P9lM72DfkHNPGD/Ne8Zi2Ir6aua1T9cVz14FfuUA15sQNN7Kq76QvY0klPm+fZBMDjLdBjtFto8q0
+	LzyWItzQ==;
+Received: from [89.212.21.243] (port=36562 helo=localhost.localdomain)
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1u7BIz-008kyr-2e;
+	Tue, 22 Apr 2025 12:56:45 +0200
+From: Primoz Fiser <primoz.fiser@norik.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev,
-	niecheng1@uniontech.com,
-	petr.pavlu@suse.com,
-	samitolvanen@google.com,
-	zhanjun@uniontech.com
-Subject: [PATCH v3 2/2] kbuild: rpm-pkg: Add (elfutils-devel or libdw-devel) to BuildRequires
-Date: Tue, 22 Apr 2025 18:54:02 +0800
-Message-ID: <D62AECCF56C6EEFC+20250422105402.145635-2-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <79C925DCE2E963FF+20250422104927.144252-1-wangyuli@uniontech.com>
-References: <79C925DCE2E963FF+20250422104927.144252-1-wangyuli@uniontech.com>
+	upstream@lists.phytec.de
+Subject: [PATCH v4 03/15] arm64: dts: freescale: imx93-phycore-som: Disable LED pull-up
+Date: Tue, 22 Apr 2025 12:56:32 +0200
+Message-Id: <20250422105644.2725168-4-primoz.fiser@norik.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250422105644.2725168-1-primoz.fiser@norik.com>
+References: <20250422105644.2725168-1-primoz.fiser@norik.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,64 +60,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NqQl/VK9LQMfLljVJv3lAZzIyrgdbMqNig5KOtL6KyAKIsN5QfIE4+SG
-	2RHmoBRs9HDGEByOTDuKzqEilFz7chXizGRS6gT+MlTGcJoCsa28ECtbYs1ekH8B2yxdf1G
-	yEZvMNQLux/zxUntTLaQ8m+RxYTeePcQyAG3JYtBBO3xrCkLPSCg0G4MtILalJFK7EzUqXJ
-	+4HxtYN3H4ZZzTGrqC2fPnE/7K21kmE+6mmbYiNWg70xqb8S4J078x3EzIIRhyJoJ81GQ9l
-	GgeQ2sbNf3TmRPMx4cLt078GLzyCNsGCizGnThc2VkKFmh1CDL1Ks5nmAjdYMPP1zp4dQVa
-	aU+TfujP7sXqI5ecrzxecb2cmsBeVDJ1btyZQPgy0NWp6fNVt1IKTfsegcwC+rz/yDp97yu
-	3RMfzkO1v78nMZ80pLnJFe/tatG6ij8u0NJ+zqnpJIRjYLGRssw9m3iPG1WElFEGp2DKQeP
-	wqhdDOK4JxNLP/zNKLLv00l0Z/xt14x9Zf65gi6gu8K4Pzxc2vKA5Zhgt8MkB/yPbtPizbr
-	B/Pzc3xjqHdWqJ81gCdKdXK9MTEeSzJDPLyQzypOld7klMfcEd1lidiZR+I3Xfk4fQiiKLi
-	QU7Ln3KfwZynXoWgWPuxaWd2eBTCD6CxExltclpdYG0CUICJcENFFxI5cOn2heyLh2MY68U
-	pWLVysDwewdwbEFeZSfgkLRKt0jUqvmFzpbZHT1vALo8JMmc+W1PgtNgdxHtXBq0aVTDklj
-	nRLtAAhvdMFGwfvjZjOsCRCm98hNNjMjKs23V4moQnhgWpVky01Ev2vGi7yijI2MepugOai
-	4bO4t/yazFG0flE+sP07sUesy/6A677xgx+5y/PQXJbRvWlFxT0cXbjwDjFGRFWq1Kbcvgh
-	43ptEhua5ZknBUFD0DTefwjpktA1rEcgNh0sxKGBuOymm8hp8kDwbO2BMb7H6AoU+Rwx5LV
-	M7fyI175H2h2hfP3kpCgt4ZZXCYTKnjhFKizMe+xWM4F8xneuFWgQ+ThOP848oQqRmi5/n6
-	KXXmmBia4ScrqUGwScByOnocQ9BEjlKMaGA3h6rAyQu0Mu3TWUgZ4Md//klBAgpFzKjI7At
-	yVohYWZrVg6qwiIheYBl4ixKrHdbmqF9A==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-The dwarf.h header, which is included by
-scripts/gendwarfksyms/gendwarfksyms.h, resides within elfutils-devel
-or libdw-devel package.
+There is already an external pull-down resistor on the LED output line.
+It makes no sense to have both pull-down and pull-up resistors enabled
+at the same time. Thus disable the internal pull-up.
 
-This portion of the code is compiled under the condition that
-CONFIG_GENDWARFKSYMS is enabled.
-
-Consequently, add (elfutils-devel or libdw-devel) to BuildRequires to
-prevent unforeseen compilation failures.
-
-Fix follow possible error:
-  In file included from scripts/gendwarfksyms/cache.c:6:
-  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
-      6 | #include <dwarf.h>
-        |          ^~~~~~~~~
-
-Link: https://lore.kernel.org/all/3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com/
-Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
-Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
- scripts/package/kernel.spec | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v4:
+- fix commit message (pull-up/pull-down)
 
-diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-index 726f34e11960..98f206cb7c60 100644
---- a/scripts/package/kernel.spec
-+++ b/scripts/package/kernel.spec
-@@ -16,6 +16,7 @@ Source1: config
- Source2: diff.patch
- Provides: kernel-%{KERNELRELEASE}
- BuildRequires: bc binutils bison dwarves
-+BuildRequires: (elfutils-devel or libdw-devel)
- BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
- BuildRequires: gcc make openssl openssl-devel perl python3 rsync
+ arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+index 0528e293c03d..06a9e674e338 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+@@ -196,7 +196,7 @@ MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
+ 
+ 	pinctrl_leds: ledsgrp {
+ 		fsl,pins = <
+-			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
++			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x11e
+ 		>;
+ 	};
  
 -- 
-2.49.0
+2.34.1
 
