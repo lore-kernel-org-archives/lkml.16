@@ -1,249 +1,127 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE5720C03F;
-	Tue, 22 Apr 2025 10:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A06DF510;
+	Tue, 22 Apr 2025 10:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316807; cv=none; b=cJuKeHB6/m14Fb4AOEAjnR3z+d/ahpsY1v+k8rHzf0H/bih77TdijzeDsUErLUdP/IR7XqyhHi6t//mGeorwryDGIVRcVSeGfqesztG3NPlHHfS0pWq/Yia6rg/D5zBD5cC57bWI95d6ZmU3tcRvfsdG70VMRFG/PaTi0xQ/Jbw=
+	t=1745316987; cv=none; b=q2XAkkTSvKg3RxoBWrSqoVcbZztP/fgGtJQa+MCySmnFes1KIFI7rsXpJrxCyJwj0HA8p7o9uFhgqewWA+0Elh7SmWVBT/Jy61RyyYF8TDF4o4wrnyBWgOdU3uX5PMXBs/rr8si6hnzg8y/rRcf6C+6ocWISejli454ALKcxY3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316807; c=relaxed/simple;
-	bh=rrmozzNxumnGfR9XKl/Tk4HoyfrHtNJ6j/pS/lYfCG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lqaDcc8jEvrmEtKzJV7yYaxFZ0rM3NMzJGWDRnlGfnapIUHos8ZleY5NIkkbRD47r10xvE0fA1hqWeihorrIlwMV19RWhG1iXzy+jLKklMT9D3dDOwcNmSl+qZxalQs9zBkTvFl8pXN1/UeK27cd8THdk48raz81zaVQbemBcjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Ny5G3pbi; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=jh5PkcDA reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1745316987; c=relaxed/simple;
+	bh=wWjKBX2zeekrjYxCeQgtVm5V/GoHtzZQlT8JVvJNDWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pINYpaGxRCybjPRASnierEmuA539BLEP1o46+a4bjErG6gGeVN7iES2A4x1csWaUbbm3BJ029dJK/n7603ABy9JELTCB/RUf6NVR+kkdwFdF9WFtmBtbuWzGsGTIAA7+NCKUGcOLrAIvHt9/UkA8SZznxkP2M3fdb8MK84CQQbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PJmtq8bG; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Ny5G3pbi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="jh5PkcDA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1745316802; x=1776852802;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GTgyBYM0atbB7o8tyo96ALPdwLqQ7fnnytL7AnbCemc=;
-  b=Ny5G3pbi6964mSBk9xceTVUd8b7J8SJK1m9+rl+5FgBiWAFVjbF9BVgD
-   lupwHqmUXwbHBgwJyFKlLAM3zPW2XkqnOX7K9BLJD/p6L669egqi0crZl
-   GgREhn43soZ7rAjB2sRxhGpnaTzd/0UdVU2vBoDpM0XM5by/esgg9LKYd
-   nSve7kcUFsUdBoqquKOo5gPZJAvwDkre4iKojnBAkrbYxRQcwn0IE6uX7
-   bb8UAsgbhtJJ5rp0aX6vDqpPhOtsGbwOQADzq9VSr7PP+ubKf7EnUGM7X
-   pPQe4Z4ePeXPOCNN7U10FZ69lRkgJkEGL/YCjwIDbhLM6tW/r4lwiKCL1
-   g==;
-X-CSE-ConnectionGUID: aFnZ/5SfRwmMZma6TXZltg==
-X-CSE-MsgGUID: zm9SyFfMT+ynQMFBCmSLdA==
-X-IronPort-AV: E=Sophos;i="6.15,230,1739833200"; 
-   d="scan'208";a="43643392"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 22 Apr 2025 12:13:13 +0200
-X-CheckPoint: {68076BB9-D-DC4DC9A0-F4F29281}
-X-MAIL-CPID: E85EBD5DCC334B9006B24DBC4B5A8702_0
-X-Control-Analysis: str=0001.0A006368.68076BC7.004D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4392516157F;
-	Tue, 22 Apr 2025 12:13:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1745316787;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GTgyBYM0atbB7o8tyo96ALPdwLqQ7fnnytL7AnbCemc=;
-	b=jh5PkcDACdr42zBpglMQlTtHe2GsSeBycBax5AeNrIxoKMDEJi7pZOJGlvzcbqZPXoEuQW
-	itX8TLKWSVXdsogH8yaE3qZS5OuU1HYtmNkf2FX4wEkhC/kWqwImVYs+TJAapW5oJYdJs1
-	89o/8/ZpbhEe5nLHs9mSAI6iZLeSl9p2sxmMCWrCo2sr/bfNrYq7stmyIWZwc6hcLLrj7Y
-	BLaiAxio5vEP2Ka1JGJJNPal5ZJBBH8IuYQc37TxJwWtH9Hw5TKQ8ZTCblhwH2Qwq+3Zfw
-	jERP+NMjT+g1hrYcyTSSkzKjWX1+FZAGQs7slMKzOq6v31gpOcqFoqlTN+LlvQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Stefan Agner <stefan@agner.ch>,
- Alison Wang <alison.wang@nxp.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 1/1] dt-bindings: display: imx: convert fsl,
- dcu.txt to yaml format
-Date: Tue, 22 Apr 2025 12:13:04 +0200
-Message-ID: <2782645.mvXUDI8C0e@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250417151934.3570681-1-Frank.Li@nxp.com>
-References: <20250417151934.3570681-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PJmtq8bG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745316986; x=1776852986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wWjKBX2zeekrjYxCeQgtVm5V/GoHtzZQlT8JVvJNDWk=;
+  b=PJmtq8bGCja3G5VPd96LQFIi1PAaj5jo6fd+DVKjchWYEBeSNLpE7lc3
+   z5ME8ba/PWvTg6ijdAJ4ojZfASnPU55VsvwTEnI6zpmmgm0k6tUjVUTP1
+   hFhRCbr+mPtRbMAVIqaIBmtaKjMiv9bf4VS1ITpMPX+bh/edk3mdBaYqE
+   UfWAaxU3JEu/ZAUJgWslZacj4kQ+ksLNvhqz+SYsND6RNVTm+QkbfX9RG
+   yZS6oPgd4OvhTVvLraHZ4QRhKUA8eXWZ+/GQ2T7XUkcE6TIQtZexOJ41G
+   fX86OB6KRKsZPUk6Ie3tuYjZYdOjw2u81z9DfonABeVcrEwuBxzzhqOaw
+   Q==;
+X-CSE-ConnectionGUID: hm8sOjwMQpCcczQqFgITYg==
+X-CSE-MsgGUID: 0oc2Us8NR2CYrP5W/mN0cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="58244146"
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="58244146"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:16:25 -0700
+X-CSE-ConnectionGUID: wGdjKXAeT1SkyB2PVG1zzA==
+X-CSE-MsgGUID: 97t2Opq9TX+hchHBw8+i/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
+   d="scan'208";a="132513185"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:16:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u7Afm-0000000EhIi-3puL;
+	Tue, 22 Apr 2025 13:16:14 +0300
+Date: Tue, 22 Apr 2025 13:16:14 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Aditya Garg <gargaditya08@live.com>, Hector Martin <marcan@marcan.st>,
+	alyssa@rosenzweig.io, Petr Mladek <pmladek@suse.com>,
+	Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
+	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+	Kees Cook <kees@kernel.org>, tamird@gmail.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>,
+	netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 1/3] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+Message-ID: <aAdsbgx53ZbdvB6p@smile.fi.intel.com>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597B01823415CB7FCD3BC27B8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com>
+ <PN3PR01MB9597B3AE75E009857AA12D4DB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Am Donnerstag, 17. April 2025, 17:19:33 CEST schrieb Frank Li:
-> Convert fsl,dcu.txt to yaml format.
->=20
-> Additional changes:
-> - remove label in example.
-> - change node to display-controller in example.
-> - use 32bit address in example.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/display/fsl,dcu.txt   | 34 ----------
->  .../bindings/display/fsl,ls1021a-dcu.yaml     | 68 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 69 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/fsl,dcu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/fsl,ls1021a=
-=2Ddcu.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Docu=
-mentation/devicetree/bindings/display/fsl,dcu.txt
-> deleted file mode 100644
-> index 63ec2a624aa94..0000000000000
-> --- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> +++ /dev/null
-> @@ -1,34 +0,0 @@
-> -Device Tree bindings for Freescale DCU DRM Driver
-> -
-> -Required properties:
-> -- compatible:		Should be one of
-> -	* "fsl,ls1021a-dcu".
-> -	* "fsl,vf610-dcu".
-> -
-> -- reg:			Address and length of the register set for dcu.
-> -- clocks:		Handle to "dcu" and "pix" clock (in the order below)
-> -			This can be the same clock (e.g. LS1021a)
-> -			See ../clocks/clock-bindings.txt for details.
-> -- clock-names:		Should be "dcu" and "pix"
-> -			See ../clocks/clock-bindings.txt for details.
-> -- big-endian		Boolean property, LS1021A DCU registers are big-endian.
-> -- port			Video port for the panel output
-> -
-> -Optional properties:
-> -- fsl,tcon:		The phandle to the timing controller node.
-> -
-> -Examples:
-> -dcu: dcu@2ce0000 {
-> -	compatible =3D "fsl,ls1021a-dcu";
-> -	reg =3D <0x0 0x2ce0000 0x0 0x10000>;
-> -	clocks =3D <&platform_clk 0>, <&platform_clk 0>;
-> -	clock-names =3D "dcu", "pix";
-> -	big-endian;
-> -	fsl,tcon =3D <&tcon>;
-> -
-> -	port {
-> -		dcu_out: endpoint {
-> -			remote-endpoint =3D <&panel_out>;
-> -	     };
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.ya=
-ml b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
-> new file mode 100644
-> index 0000000000000..7246c89271a8d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/fsl,ls1021a-dcu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale DCU DRM Driver
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - fsl,ls1021a-dcu
-> +      - fsl,vf610-dcu
-> +
-> +  reg:
-> +    maxItems: 1
+On Tue, Apr 22, 2025 at 10:43:59AM +0200, Geert Uytterhoeven wrote:
+> On Tue, 22 Apr 2025 at 10:30, Aditya Garg <gargaditya08@live.com> wrote:
+> > On 22-04-2025 01:37 pm, Geert Uytterhoeven wrote:
+> > > On Tue, 8 Apr 2025 at 08:48, Aditya Garg <gargaditya08@live.com> wrote:
 
-interrupts:
-  maxItems: 1
+...
 
-2D-ACE (DCU) has a single interrupt (204 in RM)
+> > Originally, it was %p4cr (reverse-endian), but on the request of the
+> > maintainers, it was changed to %p4cn.
+> 
+> Ah, I found it[1]:
+> 
+> | so, it needs more information that this mimics htonl() / ntohl() for
+> networking.
+> 
+> IMHO this does not mimic htonl(), as htonl() is a no-op on big-endian.
+> while %p4ch and %p4cl yield different results on big-endian.
+> 
+> > So here network means reverse of host, not strictly big-endian.
+> 
+> Please don't call it "network byte order" if that does not have the same
+> meaning as in the network subsystem.
+> 
+> Personally, I like "%p4r" (reverse) more...
+> (and "%p4ch" might mean human-readable ;-)
 
-Best regards,
-Alexander
+It will confuse the reader. h/r is not very established pair. If you really
+wont see h/n, better to drop them completely for now then. Because I'm against
+h/r pair.
 
-> +
-> +  clocks:
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: dcu
-> +      - const: pix
-> +
-> +  big-endian: true
-> +
-> +  port:
-> +    $ref: /schemas/graph.yaml#/$defs/port-base
-> +    unevaluatedProperties: false
-> +    description: Video port for the panel output
-> +
-> +    properties:
-> +      endpoint:
-> +        $ref: /schemas/media/video-interfaces.yaml#
-> +        unevaluatedProperties: false
-> +
-> +  fsl,tcon:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: The phandle to the timing controller node.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    display-controller@2ce0000 {
-> +        compatible =3D "fsl,ls1021a-dcu";
-> +        reg =3D <0x2ce0000 0x10000>;
-> +        clocks =3D <&platform_clk 0>, <&platform_clk 0>;
-> +        clock-names =3D "dcu", "pix";
-> +        big-endian;
-> +        fsl,tcon =3D <&tcon>;
-> +
-> +        port {
-> +            endpoint {
-> +                remote-endpoint =3D <&panel_out>;
-> +            };
-> +        };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 65e0716554203..02504134e1f5d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7894,7 +7894,7 @@ M:	Alison Wang <alison.wang@nxp.com>
->  L:	dri-devel@lists.freedesktop.org
->  S:	Supported
->  T:	git https://gitlab.freedesktop.org/drm/misc/kernel.git
-> -F:	Documentation/devicetree/bindings/display/fsl,dcu.txt
-> +F:	Documentation/devicetree/bindings/display/fsl,ls1021a-dcu.yaml
->  F:	Documentation/devicetree/bindings/display/fsl,tcon.txt
->  F:	drivers/gpu/drm/fsl-dcu/
-> =20
->=20
+> [1] https://lore.kernel.org/all/Z8B6DwcRbV-8D8GB@smile.fi.intel.com
 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
