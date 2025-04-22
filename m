@@ -1,75 +1,87 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6B020B1FC
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9483F20B803
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316697; cv=none; b=SP18TCRToZsiSNO/zzlyatyUviseHvMWTXSAWKuwdOQjuzH72TT2L/7c9a1Zf5ickIQxHZQMUcJtgkqDG7lXBIdBXr+QAkIF4eGQJHNM4gitvi7EvKrvMxtMt4DjjfI1YVRn/iewVSQtl9h3DjtKn/TgQLVBRZ4YbnU5pcz1Mhs=
+	t=1745316697; cv=none; b=I0/b1Gje0OZmf7yFDifFfxUqHG6RK0sVJmZHQ7eSMu+YuGIDD1QTbVwCGNkSjiocgRisG6e53Lkj8ceLLVrDeKDZy+JezIz4mf1LzaMr8T0HvoILdsOxG7Gn4iKl1pb7v9VFDjQQ1c2ZHYs8PFYV/f+J7s1R0Jl0s+pSnuzas8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745316697; c=relaxed/simple;
-	bh=MyddPXEqkT/ccEpbWGrSBV3tL1l6iZYEwssAfmCAvZU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lOkIKbfYQXbnPlrKHuMpB5xpGcJO5UvraUW4n1ZJEUsy2whrE+RvDhZcOc/Rfz9t9h4x4mGKislS/hjp5CCOuwECMDSZ7+Ou7y9WWwXT41TxeQfWoOBXYlhssfz5vNdYC2mW5x1ChcPEbx401PFfcHrAda2tJraM3UNaYU17fIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+	bh=nFlFrczH7SYbc4gLt8togwXX4y0Q9zM0fQldIlPydUA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZqCnrGBIfO1zvdWocw5y3xwKcubheBMMfU1NvbRrjZS/fQy+fcnXL9IOKH6s7hyY6qXTOgFwzgRjhJXLpMXXaCYL45yMAVbeBbCsFTtoh3pHYJYL2VIsKRWQ0qTBqKS50nvj3jXfRCaONQV6Vd2qie/x6lWKoxceyQBrHecBtj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d9099f9056so56729495ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:11:34 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86186c58c41so445232339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:11:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1745316694; x=1745921494;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fJWypGmhAyE0A0ZD6qLvLINF6ckB8EvT9cNMNlbIZ24=;
-        b=awSjuLg/efocPym8vYZ+YFWTcddch25QT3PabZ+mbeeITo++aQRbRtLkD9qHPpLS8S
-         VuqoMKiXACd93XkX8VS8CNnZ1mT4AmP1c5zeB5NTYRd1XTRjeJLExUDtGKksdx4eyLdU
-         uCBYjvLJsPgDb2n28FaVaNFg7p4S7705Apy3XiuDC9VP4AP71JrMSpnImsQgt5ex6Vru
-         SuE/1M6jo7qhh4DEP1Iqxq01XyJxwDtYj37j6tJfObTc0loJe4/4J4YE/ZCiasyKoe2s
-         6+CFLGxiGnvdmyNSWrtzAIv7KApSLtYjHzuKlR1C/D21sPmtz5UVgA1IslPUj76DDF12
-         /ntg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsCrzUoqMuintKnM2x0thxEakoBuCqo/lcyPj9WCewUXMnbiJwK3rUQcZ3DgLygX+rUCjvocAXbDEsBMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvBZRqi3yrx86PJfYqR5oQAbVtCKRf0TTIczHL3ViBWwbRZohu
-	BWKbg10KpKe0sFtJOGhkVcPppbYoD4xy3qPMsnPisGGo3XPD0BqSj5dfkxyIA+U6Gyee+8vaG3B
-	sitvGZSkU8sWl9Btgdeu8RsPprc2tRB5mBhSBJRlhSEh00olOV0ZJZDo=
-X-Google-Smtp-Source: AGHT+IF3Pzr6mNNm3jKbTEmt/tdnyT6K4L/LfgukilGYn+EG5iVlnNcj8TwE+lTNnTv55J0AwtB55Iq05Bdjfx8vUwv8lcpJaQDX
+        bh=FADM+Vy3LutHRpNz0gFtPgLujcJmoJ8oLUzcU/ytsmY=;
+        b=fsJbKGs3gaE0u9qJBwRIbNtjHGrrgNY3WyIjpACaecWmrIBDZlbFqZC5F2Cd0DIDw0
+         ozPISJ+qyqggcRV8dKQo8mV32KZ8IH9Mg1/uBIK3omv/4aNPen67TutwFJv+Cdod8TzF
+         VY/vFIFyuEZXhO6RROQuVsFgHzLloRqCtZC+cs8hRHFmRPje7SfLGTbNeMlyKKnugmc5
+         i172HuBX75irebR07kKEy3Qe7vACqESCtJ8slM7nHsEvQZ0F4KOKfxD5pc015RGbl32k
+         H0jef5rlSHds/j2DKjjDe6769N68B7R9Llp1Ae7yMXH4cIigAyAw/gnKbIn/aqhq+qTj
+         LlTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW87F0zmNO8ru0ztfOSbPZ0VRXja6pJGB8DXRv7grGg86XobRfV7ZGL+DM/Ms42m5P5FpxE7CMBvvrt0TE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXktL9WaGF9qtXmqvG9Ie/8TYL3PyFjdVNzp1ZYanLamJp4bhP
+	1WkhHITNQCayNg0Wk91OyA7mqKCl2TiOby8CA5zd69dh1D+Wk72fzLiWCQU/DsXbQro9lBUyAFk
+	AAhLu6XQwjnVIs1fe8YSsf151tLeEc850gfn3DAEBAw2kOdCWprZ9x0g=
+X-Google-Smtp-Source: AGHT+IFNm9cGi4tsJsanVXLkVKg+U7t9k53jRGjSUrv2cpc+P/Ea+iEJRcRvu3Ao1HEcqHpoLcLcGYj6H/j6aFCUn6py+CHxL+v/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18c6:b0:3d5:8923:faa5 with SMTP id
- e9e14a558f8ab-3d88edc18eamr129416475ab.10.1745316694304; Tue, 22 Apr 2025
+X-Received: by 2002:a05:6e02:1d8d:b0:3d8:1ed0:e167 with SMTP id
+ e9e14a558f8ab-3d88fccbc02mr132124355ab.14.1745316694529; Tue, 22 Apr 2025
  03:11:34 -0700 (PDT)
 Date: Tue, 22 Apr 2025 03:11:34 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68076b56.050a0220.8500a.0005.GAE@google.com>
-Subject: [syzbot] Monthly hams report (Apr 2025)
-From: syzbot <syzbot+list7d5d7954b33bdb027232@syzkaller.appspotmail.com>
-To: linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <68076b56.050a0220.8500a.0006.GAE@google.com>
+Subject: [syzbot] Monthly jfs report (Apr 2025)
+From: syzbot <syzbot+list1b5f7ff719cd6cb71b9f@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello hams maintainers/developers,
+Hello jfs maintainers/developers,
 
-This is a 31-day syzbot report for the hams subsystem.
+This is a 31-day syzbot report for the jfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/hams
+https://syzkaller.appspot.com/upstream/s/jfs
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 5 issues are still open and 40 have already been fixed.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 49 issues are still open and 58 have already been fixed.
 
 Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 3688    Yes   possible deadlock in nr_rt_device_down (3)
-                  https://syzkaller.appspot.com/bug?extid=ccdfb85a561b973219c7
-<2> 303     Yes   KASAN: slab-use-after-free Read in rose_get_neigh
-                  https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
-<3> 256     Yes   possible deadlock in nr_remove_neigh (2)
-                  https://syzkaller.appspot.com/bug?extid=8863ad36d31449b4dc17
-<4> 90      No    possible deadlock in serial8250_handle_irq
-                  https://syzkaller.appspot.com/bug?extid=5fd749c74105b0e1b302
+Ref  Crashes Repro Title
+<1>  42836   Yes   kernel BUG in jfs_evict_inode
+                   https://syzkaller.appspot.com/bug?extid=9c0c58ea2e4887ab502e
+<2>  22019   Yes   kernel BUG in txUnlock
+                   https://syzkaller.appspot.com/bug?extid=a63afa301d1258d09267
+<3>  18817   Yes   WARNING in dbAdjTree
+                   https://syzkaller.appspot.com/bug?extid=ab18fa9c959320611727
+<4>  6017    Yes   general protection fault in lmLogSync (2)
+                   https://syzkaller.appspot.com/bug?extid=e14b1036481911ae4d77
+<5>  3510    Yes   kernel BUG in dbFindLeaf
+                   https://syzkaller.appspot.com/bug?extid=dcea2548c903300a400e
+<6>  3155    Yes   INFO: task hung in lock_metapage
+                   https://syzkaller.appspot.com/bug?extid=1d84a1682e4673d5c4fb
+<7>  3134    Yes   KASAN: user-memory-access Write in __destroy_inode
+                   https://syzkaller.appspot.com/bug?extid=dcc068159182a4c31ca3
+<8>  2294    Yes   general protection fault in write_special_inodes
+                   https://syzkaller.appspot.com/bug?extid=c732e285f8fc38d15916
+<9>  1903    Yes   INFO: trying to register non-static key in txEnd (2)
+                   https://syzkaller.appspot.com/bug?extid=5b27962d84feb4acb5c1
+<10> 1831    Yes   general protection fault in jfs_flush_journal
+                   https://syzkaller.appspot.com/bug?extid=194bfe3476f96782c0b6
 
 ---
 This report is generated by a bot. It may contain errors.
