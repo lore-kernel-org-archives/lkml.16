@@ -1,80 +1,46 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A222B2820D7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F9D127466;
+	Tue, 22 Apr 2025 14:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331023; cv=none; b=WsAlYvt316kcFwbDkz8rK7rl43XwgVZTUqCHbFeSbastgJU4fZ7jwnQ52NKo1ac6QJfmBDLAl/YB+gKUcoRhJCynea9KWurjMmiDqKxP9PRrTfU2B1bZ/i3Y3OgN6IAvzGcTGU6T3ncMwaIw3lnUmXZApxwDTVkgmw1JFo/ItHQ=
+	t=1745331033; cv=none; b=Ha9RsK4/DQbHv43LmErLEnZ+NPYe6JFLMu3XbcUfVKD5fT9UYUBvBUuVDklzvIZT9eVPD1WgxO5OrxTPwS7/IAhrWfLXZd4yipmMHVlqzVFE33gPUxo3wXO1HefJIdyfdaZoWHL/gRKYZJOplBljIkkwVENB2LaEmsBVtF1r/EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331023; c=relaxed/simple;
-	bh=ARspZ2ykOpo5aRuFY/beHaoHmbHtJMxGB/pUuZ2VOOw=;
+	s=arc-20240116; t=1745331033; c=relaxed/simple;
+	bh=yDwVPeSL5vw/XBQ/Mqxz+U25iJhOC81+UGwFUpORofs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJqwNSveJplFih6dMs1pSHn5fiOWhMtrAuaR0LQt+jOfxRN2nXcUAroX3KLZyqwRs6sn+sjZjWEXDfrmSq9zbFNI6L1QffUvmw0U+x1TGsd6MRXeeMOWyXD5Jk1cj/6K1eiixzPSl+mY6Ss86onEuhTQ+3KjwzgaL0c4Kyp6ZZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qd1Cfzkr; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qd1Cfzkr"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb1eso5774855a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745331020; x=1745935820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bs/aE9VBUtWkbTYcRJAW9cr2FVba/GqgJ4VTSr8qjZw=;
-        b=Qd1Cfzkr+u4N2V+dZFXxgQFHDf4ZU8d/q1KOL00OMJ1vqfz01XeokNqYUfifd0+lJr
-         ADP5wP3BGU6SvzbxnVvxsoOKsGyyz9HhFRfzyHGN+mYc9kloVoEQQCoftxMEYve/p8kH
-         M25lxBiRnNXR+0MpcGl+UUrDSMThzKNiHfe0rqHObJR/ZKLNnEIqrXkVikV86bpPZmtq
-         B9wRFyw2KNqZcjgs++mLy4U7PyDJs8sLS3YnbZBvOTTbAvhu8L4JmsjEYtwz+mbHLtiv
-         9liRVZgHZ+8r/vy2aBd7Li4TtM+GonpBoktsy9alVBOrtf4RJGBrfKEAZoSoR7LTrkMj
-         Yr3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331020; x=1745935820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bs/aE9VBUtWkbTYcRJAW9cr2FVba/GqgJ4VTSr8qjZw=;
-        b=Y2OTjpsIQJyGc+hkICpllZY3McYItJvEYjuonTXJe5e6L6lQtqQ1Z2hkzqwanCCzfR
-         XQxrw4WrMf9LY0HtOA2qeE2Wppp9GM50mj7fpjUxwSCqh9ztTlOws2SzsluJfgfbgMhE
-         6etG2bneHCRuKZ5Kgqxs4RMfGiOm3YAxL4bEZE64vXY3OoW9xkEv6+2Vku+Wo1yB7epC
-         oyn4KVjQ5ieP8WKql/jcPqoUoWIf5CFY+iRu0Wh6/t9OUAyhOLakMrqSyVcOERRHiKuF
-         CcSfXDVkVYzXC87c80db8iIsIjLvgOC+F2sWxAMhCLL2rDwY2HCdXoBByvSyLH2rOS3s
-         8znA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqFJrK6kaXuH279AWXcaYcT75q5suJ8h7+uQ9TGLsfKwXgHlfFxQFLMFkbYbsFXT+LaNHYaN/wu9PNGuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrwO3d3KrHS4ybl4ZFDraWqwDwCV1J1e0A0ViM+wKCfArDSlN2
-	tlUvEX2D7oLXokg6HX7AzqVW0WHxRrKdTGDIWmlBPUPWWRxPvceZr3FtHawkQMk=
-X-Gm-Gg: ASbGncsbmVUXlr8/JPyiWeBM6vJWbqG/RxSFLJhY4SbLSuQz+fbgrzPG+1m6Yb88IOf
-	MfLNAvn0hHuj35qvkwrs1fbOSF03sZjWYQwfZi9Y13xI3/0V6QF04L64LrMuLly6mUCaP/47Bje
-	9t80Ndov4a3NFxsTG3LKxkD2lRuvmGHeK6dupmyW5bYoCdiGSllwU6qtOaKUlZYAJ+wgkhNH6yz
-	LF8GQe1vxfVsznCzXUa6NJ5tdZzhVxp5eNKUHlBKuH15QB/NXVViVqY65jCWoD5MJHTIFde2tf5
-	ngo9YSW9/tHG3eHTJ37essGcdVpQjipghWtkOg==
-X-Google-Smtp-Source: AGHT+IGSxDHn1oc0UD2CkTcdu1FzGaJupZaMzOQ7CTorW8aiy1O1jrh0PHmOMnjcVt95Ys7UnKelxA==
-X-Received: by 2002:a05:6402:1d4c:b0:5f4:c7b5:fd16 with SMTP id 4fb4d7f45d1cf-5f6239dd7b5mr15160699a12.6.1745331019689;
-        Tue, 22 Apr 2025 07:10:19 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625592cffsm5911761a12.35.2025.04.22.07.10.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:10:18 -0700 (PDT)
-Date: Tue, 22 Apr 2025 17:10:17 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Johan Hovold <johan@kernel.org>,
-	Maulik Shah <maulik.shah@oss.qualcomm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/11] pmdomain: core: Export a common ->sync_state()
- helper for genpd providers
-Message-ID: <aAejSTtrgufWInZk@linaro.org>
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
- <20250417142513.312939-8-ulf.hansson@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=INYzHonA9F2emRBWPk1v6GjjWncTwPE5H4AexmtYxIUBFheI04IU3ABx/81q6ZGQlu44e+R929n8VFIDyMa36XsvAhdoabMqI4pjdnUQkwQleSCSWJTqD/FxbiLI3L6pmskKkT9do6z4pTiP5IGQef6DUsDGX5V9mOm7hlFSg08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E38D6152B;
+	Tue, 22 Apr 2025 07:10:26 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1D853F66E;
+	Tue, 22 Apr 2025 07:10:30 -0700 (PDT)
+Date: Tue, 22 Apr 2025 15:10:26 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: James Clark <james.clark@linaro.org>, Yabin Cui <yabinc@google.com>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Mike Leach <mike.leach@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>
+Subject: Re: [PATCH 1/2] perf: Allow non-contiguous AUX buffer pages via PMU
+ capability
+Message-ID: <20250422141026.GH28953@e132581.arm.com>
+References: <20250421215818.3800081-1-yabinc@google.com>
+ <20250421215818.3800081-2-yabinc@google.com>
+ <48640298-effa-42d4-9137-a18a51637f03@linaro.org>
+ <aAeQcgmL-iqGbG_g@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,17 +49,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417142513.312939-8-ulf.hansson@linaro.org>
+In-Reply-To: <aAeQcgmL-iqGbG_g@gmail.com>
 
-On 25-04-17 16:25:05, Ulf Hansson wrote:
-> In some cases the typical platform driver that act as genpd provider, may
-> need its own ->sync_state() callback to manage various things. In this
-> regards, the provider most likely wants to allow its corresponding genpds
-> to be powered-off.
-> 
-> For this reason, let's introduce a new genpd helper function,
-> of_genpd_sync_state() that helps genpd provider drivers to achieve this.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+On Tue, Apr 22, 2025 at 02:49:54PM +0200, Ingo Molnar wrote:
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+[...]
+
+> > Hi Yabin,
+> > 
+> > I was wondering if this is just the opposite of 
+> > PERF_PMU_CAP_AUX_NO_SG, and that order 0 should be used by default 
+> > for all devices to solve the issue you describe. Because we already 
+> > have PERF_PMU_CAP_AUX_NO_SG for devices that need contiguous pages. 
+> > Then I found commit 5768402fd9c6 ("perf/ring_buffer: Use high order 
+> > allocations for AUX buffers optimistically") that explains that the 
+> > current allocation strategy is an optimization.
+> > 
+> > Your change seems to decide that for certain devices we want to 
+> > optimize for fragmentation rather than performance. If these are 
+> > rarely used features specifically when looking at performance should 
+> > we not continue to optimize for performance? Or at least make it user 
+> > configurable?
+> 
+> So there seems to be 3 categories:
+> 
+>  - 1) Must have physically contiguous AUX buffers, it's a hardware ABI. 
+>       (PERF_PMU_CAP_AUX_NO_SG for Intel BTS and PT.)
+> 
+>  - 2) Would be nice to have continguous AUX buffers, for a bit more 
+>       performance.
+> 
+>  - 3) Doesn't really care.
+> 
+> So we do have #1, and it appears Yabin's usecase is #3?
+
+In Yabin's case, the AUX buffer work as a bounce buffer.  The hardware
+trace data is copied by a driver from low level's contiguous buffer to
+the AUX buffer.
+
+In this case we cannot benefit much from continguous AUX buffers.
+
+Thanks,
+Leo
