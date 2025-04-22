@@ -1,49 +1,65 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000871946BC;
-	Tue, 22 Apr 2025 04:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29121A0BE1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745294951; cv=none; b=Z9Y5dTJARkdHEytl6NHC0VkHv7/VJJnRop/am/hO5AqF+arpkf8Kk3U05vTF9K2ds4unWEqrrKisP4NIgMDn3IufTAc5Z9AJIu5aigLo7E++a4JWtCs9Ql1gT8HHwV5cWG4fMdgm+X1WmX0TkdGXxAfdxGl0b4DiW+YfFfCfYXI=
+	t=1745294954; cv=none; b=ZoD7gSSNgK60/nfw7l577zDcnd/bFUTZFpflVPdZzAbdOjCSAO9OaaPDd7ALrDvRKnlsqYP/hMNoX3srvlyzaTbgVvo+Iefygc7SY8pHJw5V6EvBtzyHPVhwWTSYZj/Ge4RM+ACnE1SGKWND9l8B2T+5/T1A59PL8go+mjnLJDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745294951; c=relaxed/simple;
-	bh=oGXyR1DBKZUps0EBd6i0V1Gw2kgYtzNBYJVMJvOvhkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=K9HTGrYqkAw3S++oJkykT2A7uOW+CZjaEtSBWHN4y7LtyEIQ70XuPQumYRMvOmjgDNdR2X5H+4oUUD5eUvc0CXeIta773lZqgmqvNRUz9/vuoxZpDKMZs0ZRwIndmYgS1TelO5Q9oSFQMjUozqL4dljLfWedNvF47VCggb8KlTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BnM8LZde; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745294954; c=relaxed/simple;
+	bh=qooPPh7Sc4jDHmLmciL2D/TBKbArEcvN1N6OKR0BkSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qn/2e53RlT7tk3kNbZE54Hc6sc4RF+Q061MKUvuMUfsaFEOyJBcLJrYJ7H9pyWnMb9RvHiVD5dbYeeM6QHF4we3PZ90xsuYS0s/BKsDuGqGKF4AqqR5n8lZ/QIrdAUrHFV9AK3YwdMpzfO697cJpxIm2ZeIzZNwKoApbEcfRhqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GULxeQfJ; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BnM8LZde"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53M490q01109644
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 21 Apr 2025 23:09:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745294940;
-	bh=TCR9027wx+fa73a2CKan1hN/qQLJy2DiiVy5PdCfoiA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BnM8LZdeBhUvDtAJfzRmKJQzxmgTosYauVK1tXkeBXgkmLgDJ+IcgNZv9NgPYJcuv
-	 VF73WhOTjixI19/obkdmQ0C8UbErGX3CuMEz1VE70CogcA/WDkr3hl5dJZgsERA4Tx
-	 k7svP7MPvz2hM9Mle51oD7gTH2q7/iFfn4W4fkd4=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53M490lB006551
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 21 Apr 2025 23:09:00 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
- Apr 2025 23:09:00 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 21 Apr 2025 23:09:00 -0500
-Received: from [172.24.18.98] (lt5cd2489kgj.dhcp.ti.com [172.24.18.98])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53M48udu066347;
-	Mon, 21 Apr 2025 23:08:57 -0500
-Message-ID: <6ae233c8-6401-4aba-b0f2-55468d375721@ti.com>
-Date: Tue, 22 Apr 2025 09:38:56 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GULxeQfJ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac7bd86f637so1036762266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:09:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745294951; x=1745899751; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7UyT32oNdvI0B7CJmPYL80eqMQ3ZYwskCys7aLnpU8o=;
+        b=GULxeQfJzytvUxAApg2DyGMnjp+IvcvYz1UizmWEAjpixnvz6EDEanBecToO4URAHK
+         s4XbR67/ZxpGLOVyU1CZElEA6VV6EsaQqiB6AeyCT6yBM6tY5Fyv9OOkU/h6BLFo1lhu
+         bE6s21CFo5uhbn8sAliwoI21y/k1uPRPqyNIPsrcP7/jUQN3zlwCABOCzdYNNQgGAkHO
+         6jYcT9hvDUMTapdNzLLQua17ICruHm740JT0T5hkVDowUNpIdpe1LUcJcNmFi0kalKWP
+         mE5gBGk7h5u8UW1BKrCdkmrYJTSJeJtILuoCfhNhDiD6UW/GXm2imDs97zNOu7x/PhXc
+         P/JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745294951; x=1745899751;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UyT32oNdvI0B7CJmPYL80eqMQ3ZYwskCys7aLnpU8o=;
+        b=eBt9KnCNSzzF4+aRJmBgKK5AzYN2xrdaJ6QvO5J6vGFi+OV+vnuTz7GY7SqmOJUKxW
+         30EZu0kclKmdhy4MwozK4FbsBg5XV5ctAJk1LvrtTG5v+QgCQ9/WurIEL2JqQaAS5Dh3
+         vSlSSuzH0iueTtnfEFgmZV/hMwfV+SQbRxyQl4M9iaat4z5rXAX5B5Rnwjw7el+KJ+JY
+         bL87L7ouZbwj+lOCEq7xLMy0fJRnRDuAujKp82wuucIb5bwn1GqQAvaiuoiz4zo2aIfs
+         Ks92PlT3AplSmY03TPRym0Nhrygx/Fr892G779JFcIhrP7mc+X/EgzZMS7PBaKpjWI5r
+         wtjg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+QUxkGPuCoJaYjf75latSsX77CN7MVJJ5ivrWGZbOtlnCzwnM9eK0zpnnl0VCorYyPrBBotRsReOSJk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrd5lYe4rxsxyG3+J9IdMxdX+FjJvMkDycgkSlzMxCyNlzPiZA
+	x9oJojjZlFxaxvkATRGQzeJgCj3NtZIo2E+iWkow0IFNGTZ41Kz1xYezNTueIYU=
+X-Gm-Gg: ASbGncvJfYoqSIiD9z6vcRDsvfid1Mp1UQ/HL97RBuRqz9vYk00Ec6Ninc4ElF1N+9X
+	ElBfgw1bBXn+Hg2yBRDK4ju7GDIp4W9PWRimrqvm2P2glUMJOD/6k6XHWmOW7CpL+qB1Q5Kjs6i
+	66DrM+O8LbXAgE8uzctbQBi0e5kNHJTEPuNici7sJiNjDv8+aLGaZNLUNxPlRDCBqQUYTCAK55u
+	G2z+ya4A6x5iaRB1y+I4Rv//z5TiTJ71YtmJgQMmkFurdwHpnpnHd32Ch2RGfi07vaSe/fhhJtt
+	umqquVbC1bXMH25QMFkSaV+9OQ/NoIUeAtgQtM2AHrpwff5ZOqgt6uI+uV4QYapfcySu
+X-Google-Smtp-Source: AGHT+IHW+g0qw3gBtPQ/2pE0/fL0ihaAK6vaQaOak5PgSUwLDfg0R/nPaOQqt4C7h1YtIBSkKRbolw==
+X-Received: by 2002:a17:907:3d9f:b0:aca:c67d:eac0 with SMTP id a640c23a62f3a-acb6e91e47fmr1536497866b.0.1745294950805;
+        Mon, 21 Apr 2025 21:09:10 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa58754sm7806905b3a.107.2025.04.21.21.09.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Apr 2025 21:09:10 -0700 (PDT)
+Message-ID: <9f4851b9-b226-4639-abf3-a7fb650214d3@suse.com>
+Date: Tue, 22 Apr 2025 13:39:05 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,92 +67,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-am6*: Set eMMC clock parents to
- default
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>,
-        <u-kumar1@ti.com>
-References: <20250417233040.3658761-1-jm@ti.com>
- <20250417233040.3658761-2-jm@ti.com>
- <8f9aad2c-8e51-409e-be90-21230a53a4cf@ti.com>
- <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
+Subject: Re: [PATCH v2] btrfs: fix the resource leak issue in btrfs_iget()
+To: Penglei Jiang <superman.xpt@gmail.com>
+Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <9e7babf0-310f-40cd-9935-36ef2cebb63f@gmx.com>
+ <20250421154029.2399-1-superman.xpt@gmail.com>
 Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <20250421154029.2399-1-superman.xpt@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Thanks Judith
 
-On 4/21/2025 8:06 PM, Judith Mendez wrote:
-> Hi Udit,
->
-> On 4/19/25 10:00 AM, Kumar, Udit wrote:
->>
->> On 4/18/2025 5:00 AM, Judith Mendez wrote:
->>> Set eMMC clock parents to the defaults which is MAIN_PLL0_HSDIV5_CLKOUT
->>> for eMMC. This change is necessary since DM is not implementing the
->>> correct procedure to switch PLL clock source for eMMC and we have a
->>> non-glich-free mux. To remove any potential issues, lets switch back to
->>> the defaults.
->>
->> IMO, we need to fix DM  if not then documentation [0] .
->
-> DM cannot be fixed for only one IP and documentation says what clock
-> parents are supported, it does not have to say what are the issues
-> that come with using a specific clock parent.
->
->>
->> Then only this patch is ok because as per document [0]
->>
->> removed clock by this patch is valid parent for eMMC.
->
-> The clock parent currently set is a valid parent, but we have non-
-> glitch-free muxes and to avoid any potential issues with these, we
-> should switch back to the defaults. It seems like we randomly switched
-> from the default for no good reason and it has been copy paste per
-> platforms since then, so we are switching back to the defaults now.
->
-So, if you are saying parent 
-3(DEV_MMCSD0_EMMCSS_XIN_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT5_CLK)
-and 
-4(DEV_MMCSD0_EMMCSS_XIN_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT2_CLK) 
-can produce a glitch while
-clock selection then we should document that in clocking section,
-and with note, what care to be taken when above are selected as parent.
-Thanks
-Udit
-> ~ Judith
->
->>
->> [0] 
->> https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j722s/clocks.html
->>
->> Thanks
->>
->> Udit
->>
->>>
->>> Fixes: c37c58fdeb8a ("arm64: dts: ti: k3-am62: Add more peripheral 
->>> nodes")
->>> Fixes: d3ae4e8d8b6a ("arm64: dts: ti: k3-am62a-main: Add sdhci0 
->>> instance")
->>> Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more 
->>> IPs")
->>> Signed-off-by: Judith Mendez <jm@ti.com>
->>> ---
->>>   arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
->>>   arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
->>>   arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
->>>   3 files changed, 6 deletions(-)
->>>
->>> [..]
->
+
+在 2025/4/22 01:10, Penglei Jiang 写道:
+> When btrfs_iget() returns an error, it does not use iget_failed() to mark
+> and release the inode. Now, we add the missing iget_failed() call.
+> 
+> Fixes: 7c855e16ab72 ("btrfs: remove conditional path allocation in btrfs_read_locked_inode()")
+> Reported-by: Penglei Jiang <superman.xpt@gmail.com>
+> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+
+Now pushed to for-next branch, with some updates on the commit message.
+
+https://github.com/btrfs/linux/commit/cfcd9ed0108925c8071e27e6d5a300adb74c1839
+
+Appreciate your bug report and fix. It would be even better if plan to 
+continue your contribution to btrfs.
+
+Thanks,
+Qu
+
+> ---
+> V1 -> V2: Fixed the issue with multiple calls to btrfs_iget()
+> 
+>   fs/btrfs/inode.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index cc67d1a2d611..1cbf92ca748d 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -5681,8 +5681,10 @@ struct btrfs_inode *btrfs_iget(u64 ino, struct btrfs_root *root)
+>   		return inode;
+>   
+>   	path = btrfs_alloc_path();
+> -	if (!path)
+> +	if (!path) {
+> +		iget_failed(&inode->vfs_inode);
+>   		return ERR_PTR(-ENOMEM);
+> +	}
+>   
+>   	ret = btrfs_read_locked_inode(inode, path);
+>   	btrfs_free_path(path);
+
