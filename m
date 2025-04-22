@@ -1,195 +1,192 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9567B1F2B88
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4AF1A76BB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745349075; cv=none; b=SHs4TAyaJsb023n7o/t2AAB/JKq7tST4ahi3eZ/7ZZBZmGEQj5YgKyPjq5idij/yIVfJWjgIFkOITV7JLtGKj+sVZWvO8v+Us9LZsj4W9BnSrGXtTVSDj0x4Ga6P/DgtCWfJ0/gIGpb2vFyJICuWA/j/Q0HM4elz9jIB5WDy5Zw=
+	t=1745349097; cv=none; b=s2g5ZCoZLXv0N2NgUD38SYrvtJcu8oxW2fP2FtFpbUvmuZL4+MaCQ974HbZykpLOXy7PVURcAvpKl6SgfNzDmKVO9hp882nAu1bAvOK6AQsKTqc7iL0kkXiw61oI/IYahVzRO3tSYc+ukIQgeTiw5FAn3pYXy+Xi/kHwp4v5BrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745349075; c=relaxed/simple;
-	bh=j8nV+sHe/LHXmCHF6buyEIZmeUIhiJdQKHRmx4AZIWk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pR2yRxHy3VRmdP1GBpqiR9ihB32QKfkZFwFcnEf+f/bQ+E2xVThnW1eT3AeK8zOCWP4x6HDqwAoSJrlFrOWbcCIpxQgJLuYEe10RPrLGuqTuL3gOAuWZol0bhGC39/8y6Mbw+Z0aXOrp3FNi+2QLZ9nJNizMOZr4xUkK/8onRjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xP9B24Fe; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745349097; c=relaxed/simple;
+	bh=5XPctuWNebdP84Ia6t9RRx9Mez7WNt3sIk55SG+PIA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fjDi3kXb8zrHhMK/6E2h/CAT2/+2uPFLMUpspNRdeIu+bjg6LF8OFk7WitUWlSadKs1txBrKimIQcRPfI6pkVlsiGkT7hPmZ1AVYrWNvCay81+bZWW3R1nGbywIQ26Ddzh7/IF1KdrmtW7zE2BmSBPZVdLFg+dc5epkKYl/Ha0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8NaYJJ5; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xP9B24Fe"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3105ef2a071so57011141fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:11:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8NaYJJ5"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b98acaadso5336394b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745349072; x=1745953872; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BpbEfbM3UtW7vg1mNRw00lE2jDVYFZq31LN0I6w3KDY=;
-        b=xP9B24Fei32Bppvd63aIo1AHNZhT3c3oLlQb53pL5ZA78ZKrG3Sa/Cp6PQmUaunR+9
-         RrGePKLkPNol73JkPj011YqvdzkHVJKnV43eUjqXRbZKfsc22vxkbZoZHhnBzJ6VpS+o
-         mRku8vlct6+Z5DaYs+FqOPGt+tK0xDg9TpwMYIFks07VwGB8w+cq+5xQR34N0SC62BME
-         FUA00JZX7Bss0C96xpY3sq5VpBtT7r8p3Sj5VwpC/tHj9G1QAnelTof8nakqJsi0nLl9
-         NJTQAyEns8p9cH+V/loriQ3kPJfO+Qoo9g7XWKDVcovVng7Zgo6F2ooKfa5GWvwAYi4m
-         D9WQ==
+        d=gmail.com; s=20230601; t=1745349095; x=1745953895; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wKTihN516LJ0PJ64bQu6hhA9LAhCer0ZXXVQAo8No4Q=;
+        b=I8NaYJJ5J0ve37FEcHFc3kNrPdMr5BAj4U4LMqKAgIEYJFRJG79bH5AETOjBcxtSyI
+         dPVXE+IwRKGL4cpI1nvVZ0kg2Lrr6EEImZvbvHtrDnztgyD+9IW3Gt/fSQBOE+x9p4YK
+         PeL+uRZCy1HrOqkaymUtHrMae4AyLF2QZntHDE++O9apW4aFlk0KbA+h0RC4Ks3S10no
+         ZGJ0CrfPJ9LUaCMKArp1e1ynOEgay0/4WiOb04TKF8dVn6xhtLVjsG6XQz7uuLhVXieY
+         wzcDdSin9rDh3ZFD5/opJgetU5oSYYr73FLKxQQVrLjLNeV4LGC+vRTeahfq2+weJvsX
+         28fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745349072; x=1745953872;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745349095; x=1745953895;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BpbEfbM3UtW7vg1mNRw00lE2jDVYFZq31LN0I6w3KDY=;
-        b=Ead3iZWYRpJH7mLcWxNqWwD3PleSePeY1tCdBtWQ427kE8ILMcscJGAudNB0aQDkdD
-         RbeEj1kJtpc3rEKX65CrX5GO5j3duktjkgFgmISHB+xGcD1BykqsDqIW2K0dEVMSXmHQ
-         3I7rJpcqIcC46tEdtYsF8IdPv/4Jyyfq40Fg8798NqFpWkLZBolYMOgNdeO+H6//YyNu
-         fRIfFj8Lhe1H8+loeO2UAw8Yme7qriloHyTA+mIvInOV9fol9x3OUnXrIAG1i2YTXqJ9
-         3JROEyycAH/0wBNHiwfUD0Qu8lTF9Aqw7g2rTIlPhKy3RQ6v8jnRJuGv/GWBS53jdk+L
-         +csg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ24ETqDNe79pgxhL/mku8VS21MgNfqkBmOnbn9/WaJfa7V+nF2LwBR0+a2CryzuprLEXNSiNMyWrpb7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi5BEYlVbgMphVkK88EKXz83XgYembkRjo8PlFJC/8qBKeMArr
-	fIws5del+tdo3SpxYXQhVjHDy96i3kcJ+V/s13KU+FPCdLNMQkNHbJ+TpCpSg6NHsgCGcLC/IiW
-	93/hpQuueayXexnPZDxGkD9cdowKKdlumkn55SA==
-X-Gm-Gg: ASbGncsV4gcyUSZAM0f445E6I8AGMkiwWfeewqBqht73LbCbA0zq/qW5T7R7OMICd4Q
-	poyUw3bKoJZllGrLUFhP7/xWYHbaG2P8QwH2xURBqt+omLFNQCHOBn0fNZQyt1NtUx/bd8teRmY
-	Gecq5OVqink4vxYzKnE/Rrryj/AON+pOqgGPqtPQv9625l0RGOAPMEVGtL
-X-Google-Smtp-Source: AGHT+IFWMrTFZSA5fWLkuZhF2Ql7ye8cedAlejpw7QNWx/pxL4ApNEY1VYb955HYcUjFvYPrSBxPD4zJWMo2+Xxw+gg=
-X-Received: by 2002:a2e:bc1d:0:b0:30c:3099:13d0 with SMTP id
- 38308e7fff4ca-310904f1f0cmr53078741fa.21.1745349071548; Tue, 22 Apr 2025
- 12:11:11 -0700 (PDT)
+        bh=wKTihN516LJ0PJ64bQu6hhA9LAhCer0ZXXVQAo8No4Q=;
+        b=B8M1TT1/UvomJJugRqSOvv1FYaSgqWdXVTLR9wnARQEo5PAj0dKIKSIPKRDviztXX2
+         kxbcluJRuibxB4MDevfSvWmRqhARxbKs516v40xDBFYxfoHYSUmQKe6EUuRv2jMRjS8U
+         WbOFeYvyt8gVKPb8LcpWQhNHB0a8fCeqHTeJZ0RX4ZTnIdiqFz6EJj8WJTQdBnVNUryt
+         kkYtonpS2OSHCf4ODqzwCAuwnn41rOw5Wxp8K8dD/yPbaVCNRNti8VvWBqzPjmDju8ab
+         0tbAixxWwO10X7i6w0zjK8sJGh2tKIGbPNqFAI3gQFQPXpfxnkz69eLEj34R3z3q7M/P
+         v6TQ==
+X-Gm-Message-State: AOJu0YzxOY6fDQxamjMQRIf/Fxi7W/70TdDyqYXWEg8k22pVqfUAaaW5
+	MaV6kzp+XfUchbGTw3cIPjjc9nhhawzWTQKzeaNgInzh166M0mI8NhDgOw==
+X-Gm-Gg: ASbGncs2RrriVNAMMgFa3qS1tTxdowPGPag4yBjzKKN+mWkeCHC3k3MbicJfb7Pn/c6
+	lB/bqaa1IGbB6kflKJPC7nNHFOstjPA4HR33MWDn3CsgpYcl0QPukzV9kZwcLwNH1TnD7WGMBA8
+	uMGn433t+iVCmsmkf7jk9OIBzPfwwi0jtrOVEUBG9xiDBVqjBQQfhrlStuF60rjpRW9s1Pjbeuk
+	Cyltd+lvr7MyfQGOlECumZVKc7sWFW+TqRt6gRpuTTaIjRAF4iDnvlBSRKGJiYOa7Obny4ZOsGh
+	3AfLgxpAPnZTDX8Mar6T9xpxoozN6SQrt4Cc6yaXl4WwV8gknQ0XLmc8U9G4Zntj9qhGqSCIK0H
+	vYv9ENrIlTqg3A6Yx1yRBPRfENkhNeiqAKnlF9Vae
+X-Google-Smtp-Source: AGHT+IELeYCox8pUMEvgPe7KvcZ5qh9tJ4MSDEqFRxHZRuMrXgnFrTLQ5vsxj1wEndQsJ2TPwFBM5A==
+X-Received: by 2002:a05:6a00:e05:b0:736:8c0f:774f with SMTP id d2e1a72fcca58-73dc15d6751mr20881055b3a.22.1745349094784;
+        Tue, 22 Apr 2025 12:11:34 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:d927:9b9c:264:e35])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13c1c40sm6150317a12.33.2025.04.22.12.11.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:11:34 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: handle error cases of memory donation
+Date: Tue, 22 Apr 2025 12:11:28 -0700
+Message-ID: <20250422191128.1346260-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414184600.1166727-1-tanmay.shah@amd.com> <aAe80OlwWENHI2I9@p14s>
- <072f2139-a860-406b-96b8-aa59a83950ee@amd.com> <CANLsYkzDCy1QWY23uwVz_35tjdUdATqc66QA=sp5=gSY2vUnRQ@mail.gmail.com>
- <7dba1e4c-a7b8-4e18-82a3-db2a7f4fbe5c@amd.com>
-In-Reply-To: <7dba1e4c-a7b8-4e18-82a3-db2a7f4fbe5c@amd.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Tue, 22 Apr 2025 13:10:57 -0600
-X-Gm-Features: ATxdqUGTytN2MVaoed89zzbIWCdTFa1yxr9BjrcvC6ivhwLTIPi8WceCJoFHAC0
-Message-ID: <CANLsYkwadvmNiADUoMLM2rfoeKhLxJUtr-pY_6CvER1eSzd-UA@mail.gmail.com>
-Subject: Re: [PATCH] remoteproc: xlnx: avoid RPU force power down
-To: tanmay.shah@amd.com
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Apr 2025 at 12:30, Tanmay Shah <tanmay.shah@amd.com> wrote:
->
->
->
-> On 4/22/25 12:49 PM, Mathieu Poirier wrote:
-> > On Tue, 22 Apr 2025 at 10:10, Tanmay Shah <tanmay.shah@amd.com> wrote:
-> >>
-> >>
-> >>
-> >> On 4/22/25 10:59 AM, Mathieu Poirier wrote:
-> >>> Good morning,
-> >>>
-> >>> On Mon, Apr 14, 2025 at 11:46:01AM -0700, Tanmay Shah wrote:
-> >>>> Powering off RPU using force_pwrdwn call results in system failure
-> >>>> if there are multiple users of that RPU node. Better mechanism is to use
-> >>>> request_node and release_node EEMI calls. With use of these EEMI calls,
-> >>>> platform management controller will take-care of powering off RPU
-> >>>> when there is no user.
-> >>>>
-> >>>> Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
-> >>>> ---
-> >>>>    drivers/remoteproc/xlnx_r5_remoteproc.c | 29 ++++++++++++++++++++++++-
-> >>>>    1 file changed, 28 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-> >>>> index 5aeedeaf3c41..3597359c0fc8 100644
-> >>>> --- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-> >>>> +++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-> >>>> @@ -380,6 +380,18 @@ static int zynqmp_r5_rproc_start(struct rproc *rproc)
-> >>>>       dev_dbg(r5_core->dev, "RPU boot addr 0x%llx from %s.", rproc->bootaddr,
-> >>>>               bootmem == PM_RPU_BOOTMEM_HIVEC ? "OCM" : "TCM");
-> >>>>
-> >>>> +    /* Request node before starting RPU core if new version of API is supported */
-> >>>> +    if (zynqmp_pm_feature(PM_REQUEST_NODE) > 1) {
-> >>>> +            ret = zynqmp_pm_request_node(r5_core->pm_domain_id,
-> >>>> +                                         ZYNQMP_PM_CAPABILITY_ACCESS, 0,
-> >>>> +                                         ZYNQMP_PM_REQUEST_ACK_BLOCKING);
-> >>>> +            if (ret < 0) {
-> >>>> +                    dev_err(r5_core->dev, "failed to request 0x%x",
-> >>>> +                            r5_core->pm_domain_id);
-> >>>> +                    return ret;
-> >>>> +            }
-> >>>> +    }
-> >>>> +
-> >>>>       ret = zynqmp_pm_request_wake(r5_core->pm_domain_id, 1,
-> >>>>                                    bootmem, ZYNQMP_PM_REQUEST_ACK_NO);
-> >>>>       if (ret)
-> >>>> @@ -401,10 +413,25 @@ static int zynqmp_r5_rproc_stop(struct rproc *rproc)
-> >>>>       struct zynqmp_r5_core *r5_core = rproc->priv;
-> >>>>       int ret;
-> >>>>
-> >>>> +    /* Use release node API to stop core if new version of API is supported */
-> >>>> +    if (zynqmp_pm_feature(PM_RELEASE_NODE) > 1) {
-> >>>> +            ret = zynqmp_pm_release_node(r5_core->pm_domain_id);
-> >>>> +            if (ret)
-> >>>> +                    dev_err(r5_core->dev, "failed to stop remoteproc RPU %d\n", ret);
-> >>>> +            return ret;
-> >>>> +    }
-> >>>> +
-> >>>> +    if (zynqmp_pm_feature(PM_FORCE_POWERDOWN) < 1) {
-> >>>> +            dev_dbg(r5_core->dev, "EEMI interface %d not supported\n",
-> >>>> +                    PM_FORCE_POWERDOWN);
-> >>>> +            return -EOPNOTSUPP;
-> >>>> +    }
-> >>>
-> >>> Here I have to guess, because it is not documented, that it is the check to see
-> >>> if zynqmp_pm_force_pwrdwn() is available.  I'm not sure why it is needed because
-> >>> zynqmp_pm_force_pwrdwn() returns and error code.
-> >>>
-> >> Hello,
-> >>
-> >> Thanks for reviews. Yes you are correct. Actually instead, the check
-> >> should be for version 1 of PM_FORCE_POWER_DOWN. If version 1 is
-> >> supported, only then execute the call otherwise print the error.
-> >> Hence, the check should be something like:
-> >>
-> >> if (zynqmp_pm_feature(PM_FORCE_POWERDOWN) != 1) {
-> >>          error out.
-> >> }
-> >>
-> >
-> > The above still doesn't answer my question, i.e _why_ is a check
-> > needed when zynqmp_pm_force_pwrdwn() returns an error code?  To me, if
-> > something happens in zynqmp_pm_force_pwrdwn() then an error code is
-> > reported and the current implementation is able to deal with it.
-> >
->
-> PM_FORCE_POWERDOWN will print redundant error messages from firmware if
-> called for feature that is not supported. By doing above version check,
-> we are avoiding those unnecessary error/warning messages. Other than
-> that, you are correct we don't need to do version check as
-> PM_FORCE_POWERDOWN will send respective error code and we will fail
-> here. But version check helps to differentiate between actual error log
-> from firmware when call is expected to work.
->
+From: Daeho Jeong <daehojeong@google.com>
 
-That is the kind of information that would be useful as comments in
-the code.  Otherwise there is simply no way to tell...
+In cases of removing memory donation, we need to handle some error cases
+like ENOENT and EACCES (indicating the range already has been donated).
 
-> >> I will fix and add comment as well.
-> >>
-> >>> Thanks,
-> >>> Mathieu
-> >>>
-> >>>> +
-> >>>> +    /* maintain force pwr down for backward compatibility */
-> >>>>       ret = zynqmp_pm_force_pwrdwn(r5_core->pm_domain_id,
-> >>>>                                    ZYNQMP_PM_REQUEST_ACK_BLOCKING);
-> >>>>       if (ret)
-> >>>> -            dev_err(r5_core->dev, "failed to stop remoteproc RPU %d\n", ret);
-> >>>> +            dev_err(r5_core->dev, "core force power down failed\n");
-> >>>>
-> >>>>       return ret;
-> >>>>    }
-> >>>>
-> >>>> base-commit: 8532691d0a85ab2a826808207e904f7d62a9d804
-> >>>> --
-> >>>> 2.34.1
-> >>>>
-> >>
->
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/f2fs.h     |  1 +
+ fs/f2fs/file.c     | 21 ++++++++++++++-------
+ fs/f2fs/shrinker.c |  5 +++++
+ 3 files changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index f1576dc6ec67..e4b39550f380 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -821,6 +821,7 @@ enum {
+ 	FI_ATOMIC_DIRTIED,	/* indicate atomic file is dirtied */
+ 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
+ 	FI_OPENED_FILE,		/* indicate file has been opened */
++	FI_PAGE_DONATED,	/* indicate pages of file has been donated */
+ 	FI_MAX,			/* max flag, never be used */
+ };
+ 
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index abbcbb5865a3..0807f8e97492 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2464,19 +2464,20 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
+ 	return ret;
+ }
+ 
+-static void f2fs_keep_noreuse_range(struct inode *inode,
++static int f2fs_keep_noreuse_range(struct inode *inode,
+ 				loff_t offset, loff_t len)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	u64 max_bytes = F2FS_BLK_TO_BYTES(max_file_blocks(inode));
+ 	u64 start, end;
++	int ret = 0;
+ 
+ 	if (!S_ISREG(inode->i_mode))
+-		return;
++		return 0;
+ 
+ 	if (offset >= max_bytes || len > max_bytes ||
+ 	    (offset + len) > max_bytes)
+-		return;
++		return 0;
+ 
+ 	start = offset >> PAGE_SHIFT;
+ 	end = DIV_ROUND_UP(offset + len, PAGE_SIZE);
+@@ -2484,7 +2485,7 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
+ 	inode_lock(inode);
+ 	if (f2fs_is_atomic_file(inode)) {
+ 		inode_unlock(inode);
+-		return;
++		return 0;
+ 	}
+ 
+ 	spin_lock(&sbi->inode_lock[DONATE_INODE]);
+@@ -2493,7 +2494,10 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
+ 		if (!list_empty(&F2FS_I(inode)->gdonate_list)) {
+ 			list_del_init(&F2FS_I(inode)->gdonate_list);
+ 			sbi->donate_files--;
+-		}
++			if (is_inode_flag_set(inode, FI_PAGE_DONATED))
++				ret = -EACCES;
++		} else
++			ret = -ENOENT;
+ 	} else {
+ 		if (list_empty(&F2FS_I(inode)->gdonate_list)) {
+ 			list_add_tail(&F2FS_I(inode)->gdonate_list,
+@@ -2505,9 +2509,12 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
+ 		}
+ 		F2FS_I(inode)->donate_start = start;
+ 		F2FS_I(inode)->donate_end = end - 1;
++		clear_inode_flag(inode, FI_PAGE_DONATED);
+ 	}
+ 	spin_unlock(&sbi->inode_lock[DONATE_INODE]);
+ 	inode_unlock(inode);
++
++	return ret;
+ }
+ 
+ static int f2fs_ioc_fitrim(struct file *filp, unsigned long arg)
+@@ -5236,8 +5243,8 @@ static int f2fs_file_fadvise(struct file *filp, loff_t offset, loff_t len,
+ 	     f2fs_compressed_file(inode)))
+ 		f2fs_invalidate_compress_pages(F2FS_I_SB(inode), inode->i_ino);
+ 	else if (advice == POSIX_FADV_NOREUSE)
+-		f2fs_keep_noreuse_range(inode, offset, len);
+-	return 0;
++		err = f2fs_keep_noreuse_range(inode, offset, len);
++	return err;
+ }
+ 
+ #ifdef CONFIG_COMPAT
+diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
+index 9c8d3aee89af..1fa6619db40f 100644
+--- a/fs/f2fs/shrinker.c
++++ b/fs/f2fs/shrinker.c
+@@ -186,8 +186,13 @@ static unsigned int do_reclaim_caches(struct f2fs_sb_info *sbi,
+ 
+ 		len = fi->donate_end - fi->donate_start + 1;
+ 		npages = npages < len ? 0 : npages - len;
++
++		inode_lock(inode);
+ 		invalidate_inode_pages2_range(inode->i_mapping,
+ 					fi->donate_start, fi->donate_end);
++		set_inode_flag(inode, FI_PAGE_DONATED);
++		inode_unlock(inode);
++
+ 		iput(inode);
+ 		cond_resched();
+ 	}
+-- 
+2.49.0.805.g082f7c87e0-goog
+
