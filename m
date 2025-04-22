@@ -1,204 +1,138 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37502DA0F5
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:10:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD0D25C806
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 21:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356223; cv=none; b=N4GCkTsxNiPTxHzS8f0D6yQYuq4BzWwCUORpifJAnw3hZzXvkCGxr4thPSLsjSWy537PWl1dbyvBaCNA2IzvFCfq+Wy5fZ0NE7H/bTLCO2d/H7yLe2QQ7x6xmDGjjoBMdc3M4AGRHKzJ8c+MJ6tFu67r1cWZpBfyZTyVcnHw3tw=
+	t=1745356242; cv=none; b=q1WVQBPtJiIdmyFBmsHBJci4oHL8CEpT+v5gMI184LlPsV4JBXe/YHoQsopMhdsymmwmbbThjGytcvb6ZUgvGaIEJmsO8o0wKUBftQevZy3ablzcoWY6P4mYTYGFa5Jjn/gFvlglOIAMvOM85yqmsF+wP/dC3tPsi0QqfmwPE7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356223; c=relaxed/simple;
-	bh=DGei0lrNYocjpAo+fluDzi6pCQENfL0ofHkr/7MyVCc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lWCd8pd328B72uYWBqe102bMP1KLlEzzfi0IGMCzeRjcP7cwCq5Vg9xnAiyF1TNt9VlymA8EiMXO+bZujF9/LEQ/e6S9OxjYNwNj+LR6EmzMENiSZFxjB0KqScesnfpow+QBNpJKSZaFP8Ls/6vigR0ZlXsgMcL4nzVDsFhah4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gkTb8zm2; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gkTb8zm2"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2240aad70f2so75155ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745356221; x=1745961021; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P7kxTjGBKB0aUEv3DpjjmftGzp6kA+GSoHXFlnyGsDM=;
-        b=gkTb8zm2CyA7ntRa3aTsez52qSIVwAk3fZlk5npkOMuMl51y0eVARx8qiSvxtMEn82
-         TVg4ZYJ4reXvPRkKGdNuGaRk743KSKz1dktQR2WK7rG6eraQAAUgppCC369xSh1K63af
-         9EWLflP0rxE52O0+ZV9atxXuNaEixcDtl6KOu6qtj+ztvrLw31xKL+BW1+8F8Yz6BWt5
-         4/PTlbLiWwgERn/DgY7aeRB5v9qFVwwTg8DK7/0CKQrZ/pmLi0Rxv4pS1Aq0aBvRGyta
-         TTp1vFaYcuqn3xN0Lt9DeYtk+iK32vwyDB4/pPgKhrXnpUGHcnZAiY83sV815qp+ow0R
-         E//A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745356221; x=1745961021;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P7kxTjGBKB0aUEv3DpjjmftGzp6kA+GSoHXFlnyGsDM=;
-        b=IrHoTnpwy21lP8EItct33UblDpaS9OHbb/DVfUeGJ7u5OOFrS63JvprDR+m0Y9Gf1p
-         o18WwdzN+pc4mDS4G20keKnQhQnRoGB9kJaM3nto+NnPTuyyzIsGpdpZvqliYbQuCW6n
-         s10pserahX4PGdYg6IVU6A5JlWHZJ4QE+cyV3FdyoNyE1AI7EJxmEJGFY5ZiwozqUCdP
-         DyLA0sqQeXGZ+9ADTi6zfULJwZIVXM7Vbz+Bzfnm617iM8sXSnjGXm9tvnsVzN06jw0l
-         NWoyKi/hBuMycIuOl1zS91GyXKyOaJfDcboptSvsdvg3StkBkiLBzcDGBthatSDay2Z6
-         5Qcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUA76mlAIRzaEmKyK9XUmPgYCVzsmPz8Brj/vI5ThjPM5Gdp9Gnldu0ll32oKCQ5lQK1zSkT+J16Uepkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGKI6qHV5wIOzwm7bOCBIkHk7qhFW6q0/19PYyeAyuJmfQ8PVC
-	IT7XLZ0/2qUGUYuTt0+vHxSb8tBnDFtVv7LArEILX0XJRRrMFJeOZ66oJVmitTpF9+DgRruHMHU
-	sFNoUrJgVnskzHS0WGQzUbe6Yk6jEqZ/foWVf
-X-Gm-Gg: ASbGncu8dGVNwOiVh0ujqZNfX5s1N+ST832IforQUxkMU7e0R52s56XTRxNzdwyBnQ+
-	q4y9+iiZKHOlOhY5MTQdwbNafQR6ZrNwpFtm68lClx1UmxRxmZnEEboe6EoK/46/AtSV4Vc/8Wv
-	dpn2/pDtCBQ19Q7q7JKV2AbUFoyVTRMJLGctFQrKxA5h/pG/+rtCEO
-X-Google-Smtp-Source: AGHT+IH158SP9GigskzwrjsRVwtmkJmUMnK2yFgK5B4j6Q7h/21qQMUx52O/Zx9vaqWSN5WxUUUx40w0l4D2Gn/nHjY=
-X-Received: by 2002:a17:903:440b:b0:21f:465d:c588 with SMTP id
- d9443c01a7336-22da2b93ca8mr912615ad.14.1745356220781; Tue, 22 Apr 2025
- 14:10:20 -0700 (PDT)
+	s=arc-20240116; t=1745356242; c=relaxed/simple;
+	bh=nHLAmBP6RNdP/EyjW2eqnHDPzOUXOLr826wf78n7bZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLN1TJ3850OqMwwGFzvF7w9zv3wSm1iFFFqed6wh/lgk7yAd2WVHzS16u8zb9kHYI6mJGqnj54DrgaalJcffYOMUdDBD2HMtZ8oo+TjD1iottVrrPjMO5VnIcW0jcifQS+jy/uqL1aJ5LiCF+cTpF+hMWBgKiudF/Y9xcSV8dCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Tue, 22 Apr 2025 17:10:32 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Message-ID: <2025042216-hungry-hound-77ecae@boujee-and-buff>
+Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
+	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+ <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+ <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
+ <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
+ <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
+ <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417231540.2780723-1-almasrymina@google.com>
- <20250417231540.2780723-3-almasrymina@google.com> <484ecaad-56de-4c0d-b7fa-a3337557b0bf@gmail.com>
- <CAHS8izPw9maOMqLALTLc22eOKnutyLK9azOs4FzO1pfaY8xE6g@mail.gmail.com>
- <957b74ed-f29c-4bb8-b819-af4e1168d6c1@gmail.com> <CAHS8izM8+zG6KOhV7ysTsCj_PEty5eL+P+uUxTZhdsOSZTwmow@mail.gmail.com>
- <c0bd45f7-0325-4e4b-b0ea-ccae24a1eabd@gmail.com> <8c1c6405-1e60-4512-a675-4c00b00d400a@gmail.com>
-In-Reply-To: <8c1c6405-1e60-4512-a675-4c00b00d400a@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 22 Apr 2025 14:10:07 -0700
-X-Gm-Features: ATxdqUGGcVSR15YZdMmTAEwjNhzjDLr5MPRZuyqszCuepKJwAh2SaRe-PxHXBXc
-Message-ID: <CAHS8izPGuF1PxfdmXUC1XJHpmRqotXh=vUY_a-AEHdAgPmLQ1g@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 2/9] net: add get_netmem/put_netmem support
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Victor Nogueira <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, 
-	Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ttjcfkvyttnwvorf"
+Content-Disposition: inline
+In-Reply-To: <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
+
+
+--ttjcfkvyttnwvorf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+MIME-Version: 1.0
 
-On Tue, Apr 22, 2025 at 1:03=E2=80=AFPM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
->
-> On 4/22/25 20:47, Pavel Begunkov wrote:
-> > On 4/22/25 19:30, Mina Almasry wrote:
-> >> On Tue, Apr 22, 2025 at 11:19=E2=80=AFAM Pavel Begunkov <asml.silence@=
-gmail.com> wrote:
-> >>>
-> >>> On 4/22/25 14:56, Mina Almasry wrote:
-> >>>> On Tue, Apr 22, 2025 at 1:43=E2=80=AFAM Pavel Begunkov <asml.silence=
-@gmail.com> wrote:
-> >>>>>
-> >>>>> On 4/18/25 00:15, Mina Almasry wrote:
-> >>>>>> Currently net_iovs support only pp ref counts, and do not support =
-a
-> >>>>>> page ref equivalent.
-> >>>>>
-> >>>>> Makes me wonder why it's needed. In theory, nobody should ever be
-> >>>>> taking page references without going through struct ubuf_info
-> >>>>> handling first, all in kernel users of these pages should always
-> >>>>> be paired with ubuf_info, as it's user memory, it's not stable,
-> >>>>> and without ubuf_info the user is allowed to overwrite it.
-> >>>>>
-> >>>>
-> >>>> The concern about the stability of the from-userspace data is alread=
-y
-> >>>> called out in the MSG_ZEROCOPY documentation that we're piggybacking
-> >>>> devmem TX onto:
-> >>>
-> >>> Sure, I didn't object that. There is no problem as long as the
-> >>> ubuf_info semantics is followed, which by extension mean that
-> >>> any ref manipulation should already be gated on ubuf_info, and
-> >>> there should be no need in changing generic paths.
-> >>>
-> >>
-> >> I'm sorry I'm not following. skb_frag_ref is how the net stack obtains
-> >> references on an skb_frag, regardless on whether the frag is a
-> >> MSG_ZEROCOPY one with ubuf info, or a regular tx frag without a
-> >> ubuf_info, or even an io_uring frag which I think have the
+On Tue, Apr 22, 2025 at 11:25:40AM -0500, Arnd Bergmann wrote:
+> On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
+> > On Tue, Apr 22, 2025 at 09:59:42AM -0500, Arnd Bergmann wrote:
+> >>=20
+> >> Right, but this could just mean that they end up using SWIOTLB
+> >> to bounce the high DMA pages or use an IOMMU rather than actually
+> >> translating the physical address to a dma address.
 > >
-> > Yep
+> > There's a few things going on. The Local Address Window can shift
+> > anywhere in the 64-bit address space and be as wide as the physical
+> > address (40-bit on T4240, 36-bit on P4080). I think this is mainly for
+> > IO to PCIe and RapidIO, though.
+>=20
+> There are usually two sets of registers, not sure which one the Local
+> Address Window refers to:
+>=20
+> - Translation of MMIO addresses (PCI BAR and device registers) when
+>   accessed from CPU and possibly from P2P DMA, these are represented
+>   by the 'ranges' property in DT.
+>=20
+> - Translation of physical memory when accessed from a DMA bus master,
+>   represented by the 'dma-ranges' property.
+>=20
+> The latter is what the dma-mapping API needs. This code has changed
+> a lot over the years, but in the current version the idea is that
+> the limit enforced by the driver through dma_set_mask() is independent
+> of the limit enforced by the platform bus based on the dma-ranges
+> property.=20
+
+LAWs translate physical addresses to IOVA (PCIe/RapidIO/SoC resources)
+and are used for all master level translations (CPU, DMA, PCIe, DDR,
+RapidIO). This is at the interconnect level.
+
+I believe LAWs cover both of these cases.
+
+> >> > I'll check on this, but I think it's a seperate issue. The main thin=
+g is
+> >> > just to configure the dma hw correctly.
+> >>=20
+> >> I think it's still important to check this before changing the
+> >> driver: if the larger mask doesn't actually have any effect now
+> >> because the DT caps the DMA at 4GB, then it might break later
+> >> when someone adds the correct dma-ranges properties.
 > >
-> >> msg->ubuf_info like we discussed previously. I don't see the net stack
-> >> in the current code special casing how it obtains refs on frags, and I
-> >> don't see the need to add special casing. Can you elaborate in more
-> >
-> > You'll be special casing it either way, it's probably unavoidable,
-> > just here it is in put/get_netmem.
-> >
-> >> detail what is the gating you expect, and why? Are you asking that I
-> >> check the skb has a ubuf_info before allowing to grab the reference on
-> >> the dmabuf binding? Or something else?
-> >
-> > get_page() already shouldn't be a valid operation for ubuf backed frags
-> > apart from few cases where frags are copied/moved together with ubuf.
+> > I'm adding dma-ranges to my dt for testing.
+>=20
+> Ok. The other thing you can try is to printk() the dev->bus_dma_limit
+> to see if it even tries to use >32bit addressing.
 
-This is where I'm not following. Per the v5 changelog of this commit,
-all these skb_helpers hit skb_frag_ref (which is just get_page
-underneath):
+Did that. Every combination of IOMMU on/off and dma-ranges in my dt always
+showed bus_dma_limit as 0x0.
 
-tcp_grow_skb, __skb_zcopy_downgrade_managed, __pskb_copy_fclone,
-  pskb_expand_head, skb_zerocopy, skb_split, pksb_carve_inside_header,
-  pskb_care_inside_nonlinear, tcp_clone_payload, skb_segment, skb_shift,
-  skb_try_coalesce.
+As an aside, if you could give this a quick check, I can send the revised
+patch. Appreciate the feedback.
 
-I don't see many of them opt-out of skb_frag_ref if the skb is
-unreadable or has ubuf_info. Are you saying all/most/some of these
-callers are invalid?  I tend to assume merged code is the correct one
-unless I have ample expertise to say otherwise.
-
-> > The frags are essentially bundled with ubuf and shouldn't exist without
-> > it, because otherwise user can overwrite memory with all the following
-> > nastiness. If there are some spots violating that, I'd rather say they
-> > should be addressed.
-> >
-> > Instead of adding net_iov / devmem handling in generic paths affecting
-> > everyone, you could change those functions where it's get_page() are
-> > called legitimately. The niov/devmem part of get/put_netmem doesn't
-> > even have the same semantics as the page counterparts as it cannot
-> > prevent from reallocation. That might be fine, but it's not clear
->
-> Actually, maybe it's not that exclusive to netiov, same reallocation
-> argument is true for user pages, even though they're reffed
-> separately.
->
-> It might be fine to leave this approach, while suboptimal it should
-> be easier for you. Depends on how folks feel about the extra
-> overhead in the normal tx path.
->
-
-Right, I think there is only 2 ways to handle all the code paths in
-the tcp stack that hit skb_frag_ref:
-
-1. We go over all of them and make sure they're unreachable for unreadable =
-skbs:
-
-if (!skb_frags_readable()) return; // or something
-
-2. or, we just add net_iov support in skb_frag_ref.
-
-This patch series does the latter, which IMO is much preferred.
-
-FWIW I'm surprised that adding net_iov support to skb_frag_ref/unref
-is facing uncertainty. I've added net_iov support for many skb helpers
-in commit 65249feb6b3df ("net: add support for skbs with unreadable
-frags") and commit 9f6b619edf2e8 ("net: support non paged skb frags").
-skb_frag_ref/unref is just 1 helper I "missed" because it's mostly
-(but not entirely) used by the TX path.
+https://github.com/benmcollins/linux/commit/2f2946b33294ebff2fdaae6d1eadc97=
+6147470d6
 
 --=20
-Thanks,
-Mina
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
+
+--ttjcfkvyttnwvorf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgIBcgACgkQXVpXxyQr
+Is/arg//YUK1btd32Isj+g5BizDLDVu8sjSPgzzwW/6/50sCuEOFLFR+mnfwytO4
+2ksisWOIXnb+riN+JwOqEiRmtskhQCkoHsCQzjGMcLqByME5xOr6GaEpvc7ap6tY
+TlSyTyVLbruwfOH1JufT0/PI8EQVkhyDiD0ypwuzWAxD8yy/M2LG2RfvAZa2YX1o
+TcXsmxTii3vC3ksM0VhUBjjgJ3Hm3MzmAXZmKPrJnY1+CS5bI/IsI+HPftKK44gH
+E7xLgLjSd8oAUDtL+SWyP7RjBOu194HeupXAjW7oEwlRoCLqwu3L/NIqoqvmJvJO
+rqU3bnRxt74BF46FwA1O5N1Vq6AD5MSFZsNcmt9UYB3bNTaOk2BsEnmqnNaf+QAb
+bC3OC85mWUlBwBoTs3ijE1JcNanEZXVHDrBNGda2KEUrk2LQ9Kir00Cj2Q+RCuMj
+/CBg4wCdhNUeRf2B/qeClRTUdoT8mQn26Np8eLSpD5+9EW9s5tmKKAtZsEmSHWd8
+Mww8lkO1UmdnoxOBdmX4IlOw+UaeeazdAxMG42bpzwzaCtAidDSETXEwxQir5E6U
+OpJwLFJZhrtHx1G8G4i7SXUmWnEMgkqbqCmFcGfxi+/K9ybirouKLniqqa+Xnoc6
+OhqYd25DsSaia04tpWYvmaPJ0oDz5/RoIHJlhutHdxeYXayYcuo=
+=L2gn
+-----END PGP SIGNATURE-----
+
+--ttjcfkvyttnwvorf--
