@@ -1,97 +1,153 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71BC253F35
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F92417C3
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312170; cv=none; b=O8x/Q8OLECE2Lii4DPtqFdcce2zgw6pyNUY6D04tR2nGupdvPqyInuNntQA6EbEEgEwDUNHGev9grpzAUrhGg5WOpHfKQZnMtU4mJVqrrYujt9Jg3bLZKSZOglaGFHpSxtTljNMRA+vZ29suCWojCwGs6PvzNTTfnyXrzQ9XQa0=
+	t=1745312179; cv=none; b=JxjgWLm9iR8wibqRfJ5slj8Uf1+VtUIpOdF44lAYINhSXSXdA2YFlJyc1v/0m4G2WCW8KQfL1OYyl+sx35bNskXhwd3ZY/sghb4En9wGd+6dVO7/z5I4biNweKhI1/ua7RvzpQJXc+U7phKrHb0zgzvRhK4AwpZzX8th62Rxvko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312170; c=relaxed/simple;
-	bh=qXI2HAsvQf2w1MSbA7K9uGxTvVYRPO2tahW3Jx9mG3Q=;
+	s=arc-20240116; t=1745312179; c=relaxed/simple;
+	bh=KfrcJp90mLH/oPioQRdtTME45LSOkSzp3PFEGOdY9Co=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k2KNTI+weemhKwb+LjzoV4w5rLC8se+MOKV+E8Yy31u+31SdDDRnb6H375/my5elIEpWkyn/xBu9uyefZlNDg01dBBrdQhVyrjlowa5FSrxBfU2mB/QWnU0zZe2B76xjTF/nsyiI6iiW91QTU1W/FCq6ZVZwu6/GATabStDlOAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jFsfhbpV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jFsfhbpV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4537940E01FA;
-	Tue, 22 Apr 2025 08:56:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id juvRHB7T_svc; Tue, 22 Apr 2025 08:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745312156; bh=rFDFhcg8aeoqfceJP/IDVW6dcvhJCDAYgx/s5YA2aL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jFsfhbpVOsJZPJdNLautem6k/UOl3CTiXdmmoxM425+hhCF5PYO1tHyTfRL7KuTme
-	 HxV11eXLUrWPhRjPL8ENUzlEHaXGU6EnwC4/Yi9GyOZxDwnqPSG/tHSOyMWBksQpGI
-	 vKGS34Flc1RATmaGHwce4g5We9VHpy+Ri8vxXGJDa3IiNzSCElBme59E6qmhumkbfl
-	 MkuAJdRQFnbJf593p7LZsvVXx+M0LbCxVPr3rbTVc/NU3dKJ1xZKNPgWubyElMIxsw
-	 AWQXP/FFuQmZHzu8625AJ+fnI6Hr1ny9Ipkndmu7zAVQLF6rQqvJ0m1cdk1ReO2h0g
-	 nBjEMPn7Pqz81oCBv8cmlwGzf4Z4iCT3OFcFZIv/BywxY9c2gXr3RAbeW66FylN3fa
-	 6AaWjNpxVxiRnzrRQPAY1ga8Z33JNRAC8W9fzvcCm5BCBci1BPr9VRpO9A9fRrLQtr
-	 aGSdH1UUKiiieYDfqoAZzDzpWjjjJBrYYVIdBe/lU7fWNF5NIJl0OKf7mBXk0E8NIE
-	 MZF4rcxz1QR1VlknKo90l9+cGxPuGl25Gbmuy5Zlr621moN4I4a5qdL6ThUbEX9jUo
-	 Pmejh0v7ggSWAwZ2nw6Rci5toYkdkSiaWmMcOmXEj9kFp+sBOXzuiFu/O68kT/dc53
-	 893kZJCgr3PVvQL36CfKJgkE=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 5E5D540E01F6;
-	Tue, 22 Apr 2025 08:55:45 +0000 (UTC)
-Date: Tue, 22 Apr 2025 10:56:46 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 02/16] x86/bugs: Restructure TAA mitigation
-Message-ID: <20250422085646.GBaAdZzlRuyJmo4Tct@renoirsky.local>
-References: <20250418161721.1855190-1-david.kaplan@amd.com>
- <20250418161721.1855190-3-david.kaplan@amd.com>
- <20250419123655.GRaAOY5yCyIz6TYcCC@fat_crate.local>
- <LV3PR12MB92651777DD5C8A010E010A8794B92@LV3PR12MB9265.namprd12.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3KimO7kSa0R725lXTUhGx7+PkETguld5gOR7We3dIQz9RL/2Q6ih7IXAzdJv0Hganp6CjrCQtQCrgePkwizsrhf0yPhUnn4YW2T6zAgIryod7UyyFu0F4R+OeOa+0kG3tucUBjzOe00pcmI17iOFvCzVeMGgZIz1oC/0FSEhNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Tue, 22 Apr 2025 04:56:01 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Message-ID: <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
+Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
+	Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+ <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+ <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
+ <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wop522mmefnoma4a"
 Content-Disposition: inline
-In-Reply-To: <LV3PR12MB92651777DD5C8A010E010A8794B92@LV3PR12MB9265.namprd12.prod.outlook.com>
+In-Reply-To: <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Apr 20, 2025 at 09:03:25PM +0000, Kaplan, David wrote:
-> No, because taa_vulnerable() requires both X86_BUG_TAA and X86_FEATURE_RTM.
-> 
-> In taa_select_mitigation() there is a difference depending on which of these doesn't exist which sets the mitigation to either OFF (if unaffected) or TSX_DISABLED (if no RTM).
-> 
 
-Yah, another mis-designed thing from back then. If RTM is disabled, then
-TAA is mitigated. Period.
+--wop522mmefnoma4a
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+MIME-Version: 1.0
 
-And us making how a vuln is mitigated into a separate thing is
-unnecessary complication IMO. IOW, TAA_MITIGATION_TSX_DISABLED shouldn've
-been done, in hindsight.
+On Tue, Apr 22, 2025 at 09:59:42AM -0500, Arnd Bergmann wrote:
+> On Tue, Apr 22, 2025, at 09:12, Ben Collins wrote:
+> > On Tue, Apr 22, 2025 at 08:34:55AM -0500, Arnd Bergmann wrote:
+> >>=20
+> >> - SoCs that don't set a dma-ranges property in the parent bus
+> >>   are normally still capped to 32 bit DMA. I don't see those
+> >>   properties, so unless there is a special hack on those chips,
+> >>   you get 32 bit DMA regardless of what DMA mask the driver
+> >>   requests
+> >
+> > I've yet to see a dma-ranges property in any of the Freescale PowerPC
+> > device trees.
+>=20
+> Right, but this could just mean that they end up using SWIOTLB
+> to bounce the high DMA pages or use an IOMMU rather than actually
+> translating the physical address to a dma address.
 
-But whatever, another topic.
+There's a few things going on. The Local Address Window can shift
+anywhere in the 64-bit address space and be as wide as the physical
+address (40-bit on T4240, 36-bit on P4080). I think this is mainly for
+IO to PCIe and RapidIO, though.
 
-Thx.
+> The only special case I see for freescale powerpc chips is the
+> PCI dma_set_mask() handler that does
+>=20
+> static void fsl_pci_dma_set_mask(struct device *dev, u64 dma_mask)
+> {
+>         /*
+>          * Fix up PCI devices that are able to DMA to the large inbound
+>          * mapping that allows addressing any RAM address from across PCI.
+>          */
+>         if (dev_is_pci(dev) && dma_mask >=3D pci64_dma_offset * 2 - 1) {
+>                 dev->bus_dma_limit =3D 0;
+>                 dev->archdata.dma_offset =3D pci64_dma_offset;
+>         }
+> }
+>=20
+> but that should not apply here because this is not a PCI device.
 
--- 
-Regards/Gruss,
-    Boris.
+Right.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > I'll check on this, but I think it's a seperate issue. The main thing is
+> > just to configure the dma hw correctly.
+>=20
+> I think it's still important to check this before changing the
+> driver: if the larger mask doesn't actually have any effect now
+> because the DT caps the DMA at 4GB, then it might break later
+> when someone adds the correct dma-ranges properties.
+
+I'm adding dma-ranges to my dt for testing.
+
+> > So a little research shows that these 3 compatible strings in
+> > the fsldma are:
+> >
+> > fsl,elo3-dma:		40-bit
+> > fsl,eloplus-dma:	36-bit
+> > fsl,elo-dma:		32-bit
+> >
+> > I'll rework it so addressing is based on the compatible string.
+>=20
+> Sounds good, yes. Just to clarify: where did you find those
+> limits? Are you sure those are not just the maximum addressable
+> amounts of physical RAM on the chips that use the respective
+> controllers?
+
+This is where things might be more interesting. The P4080RM and T4240RM
+is where I got this information. Register "cdar" in the fsldma code. This
+makes up 0x08 and 0x0c registers.
+
+In the RM 0x08 is the extended address register. On P4080 it says this
+holds the top 4 bits of the 36-bit address, and on T4240 it says the top
+8 bits of the 40-bit address. So the asynx_tx physical address needs to
+be masked to the 36-bit or 40-bit.
+
+--=20
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
+
+--wop522mmefnoma4a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHWaEACgkQXVpXxyQr
+Is+YXA//ZCVfP2Vcf2wN9DmzGexCKVQoLJGySna4HgS0fL7x+pMQusccWOqf4rUs
+eLipGkYQXlTr5X+iW0SU7x6xWaHjXbaqXNgvypoGEdI/SGCd4rP5JbDmCgGcl197
+L3L3aSkaC7Ofo2ACXQKAubuhtoC7g9R29+0QEyxCOk5nX8BVKHk0lq/IxpVxNzGo
+2P72w9dVpryukut3bjsrvyVxJVwow49W/v2K9nzB+YIyEy+1XApkd2pnMgeeLLwV
+PqobZumgvDp/sDFFl2eUsNR+vjJxw2Z4d799D8df5s6YhvUEkRcZWNnNr4iLLGg4
+IikePsfOFFRPPIElGi4JCVlRfvxm4rElJh1dR0OyK6JvzNvBbEEQWm0afaE/oCmi
+7uuH1hbCMr/6Ynfdvw4Br7HzMN4A2uK9v/gui/7rM3JcXUOSHClEZIcKxOKoINsh
+qe7cRXa7ZYVa14c+DLhl5rbmc3/PHZUzyeYA1V1hL3eITH7iOo+ud3AXzXLnM+ZT
+BGhf1OGz+QRXV6bCx8q5onrMggRPOD+J4/nh4eYgAI34Tn5rNSbarh9kqx5U7NqY
+7BPd8k6q9DTTiApN9imyOhoyksIHl14kCmvDQLGalFX/KtGmsElgyxtujEjLR9Mu
+s7vMBCzPu6G2TIe0f9xyWhu8iHVvrry+JiYOszwFEMjFlLmFr6o=
+=IUWG
+-----END PGP SIGNATURE-----
+
+--wop522mmefnoma4a--
