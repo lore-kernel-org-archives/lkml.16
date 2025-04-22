@@ -1,159 +1,137 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2DA84037;
-	Tue, 22 Apr 2025 04:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554D8136988
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745297009; cv=none; b=JeZmnkKfpevIp7n1Ps50FfwQLrf92O8+bhZMTvw2fm+uuLBAcumBVTkH+tU+xRzgpgEc4eYDGjJ+eQOMR1bPxNb4kCUs97fq9T0kYuFMbsa/Qc6BR2wMc5M+78uOuCMu3vMWINqGk2b+QFXc+5624AjNwO9HIZSpJr4nhoBBXDw=
+	t=1745297040; cv=none; b=k1AJyIFfrqQKJsDSov9S8WykrkYvYD7lnxCY3mVqWDU9vDucgv1QODkeO4NkCnPlkuF2KVsj0gVr54AR5HiYPzDL8vmTNWEuEZxuzbSf1/oeRXKorl33Yh4jV5vzjeLEwsjpQfn8hNu63AG65pUxP41NVSlS/KaYHYfs5c2ycwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745297009; c=relaxed/simple;
-	bh=cIJNzMEIDKoryJ+eYDRjEgaB0KWn13DZftu4jSYcsDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dLpTat/fMCWAGwMKGgmOmuCIsUFYmg/Wb9F0GNsURJ01DxiAhrHAoZ8BTaeirk9ZpIHjrDOA00ZJuD4Iz/+LX9Jdkbi1nIINnfCumZ4nLmHTsMPAP4WaX55lr9RXuNLFvTMeq4s2fsxzKiv/iBvmUmdKEy/6532gCJoDZzJzdrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=caMLxa+y; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745297040; c=relaxed/simple;
+	bh=i+D2YEf/4fhpjjD1fZ+3R3wPVV39LN2fijYTdWl+sYc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dZAhjGbUDx2AFnlN0b3ESTYg60tIoiFLwB2E9AlrWqWRSoSpRWeI+KSoODYd+brKcxVF40ujalMbxF3BMmH6+VS7CY1EKNnGMpaTwzdzfWBx6U4FV3JtDXkLUUypJ9IyPCaKG8//+aoekZYftY+9t8yf5jnEQH4KOiPwNAKDz2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnwVKfBm; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="caMLxa+y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745297004;
-	bh=x/V8mgLMaM86zSbH6IOCdZUmXJC7Sa7oNTQpygjxKR0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=caMLxa+yEYNWUGis7sS8V+sue03q5/EPhxJiiQEUYFQTjJs+VPo5wLmf08qPP8FzL
-	 gfilNZYZ7UwVoCbC40CcpW28Y0TYd8OWDiAemRO8daKuwWZFt06mEl1z4wOjEaPJs6
-	 DHVAaL9RbgonQ28D0ezdTlwILj/wm3WVQCmwn7uwKdmzdSutImIC2qJBbQb7YT5C/J
-	 NlPoL03J94JpNQLQF0ysIgxjm4KMU+sDTIdEBXPI3f9oAhwJUtLO1XLmZ6aJSA8Jjf
-	 15AQzyHFt8ZeTedcLrpe/9ej1ZFrymeUjpWfkRhPGJLQEXzB8b74sdkvJU0VUpBMpq
-	 7zzjFP2fsLrBg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhV3t5LRTz4wbv;
-	Tue, 22 Apr 2025 14:43:22 +1000 (AEST)
-Date: Tue, 22 Apr 2025 14:43:21 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Steffen Klassert <steffen.klassert@secunet.com>, David Miller
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
- Jedrzej Jagielski <jedrzej.jagielski@intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Przemek Kitszel
- <przemyslaw.kitszel@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: linux-next: manual merge of the ipsec-next tree with the net-next
- tree
-Message-ID: <20250422144321.3879d891@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnwVKfBm"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-896c1845cb9so4275798a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745297038; x=1745901838; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OMmFR27feHohiG2lQNR6bQsxIcQsMWncMxBCrcKvZNc=;
+        b=cnwVKfBmIJp8TUFzrdq0hn3s74iwO4k0kNUg2UPiTvBK97CeTdmzGsjDI4Abi+upS3
+         ELCxEqBh+Xx2PZNolU46agi/ZJAWYUPIIe1Pr/H+HgUZjQQ4us8o3WIjYAVV7K85j7OT
+         1wB06+qEcSZvT6RuoTyHSjbZ8XZnbZnunCkbAYaj/dxiiuUv7jqSdu6GxOtf9+xdD/IP
+         9tEpNOOG2TMGWwZQl8OFD7hwT6A/FVkFjeB9CULBBnFSntZK9GxVb/UQn8J0whgSerW5
+         8tkVvDRa3IRWcmxim+sCibCrqOEV+wdok7EHAI6VKgSwv2XpvtF/bdkxThFiRSMVYgW7
+         PRWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745297038; x=1745901838;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OMmFR27feHohiG2lQNR6bQsxIcQsMWncMxBCrcKvZNc=;
+        b=qSsDGR5p0hXctf/K6zw4Mgy5wZfNEpGSnBQ5W94jzVxu6JusyaXkUjc5DbYyeABMJF
+         MvLtRLWPLGIq+zK5/Hm/UAdMO/GGsR29OnaXHNYNo8lnCR8daMK921J9gYenToiC7H2A
+         qly6hMnelrrRnfg8YcWcLL9Ck4S/RuKFhUi3D76ENY4RhDIZUWz1BSoIC0p5ZSjCLO3i
+         gTATGJd2xHEQptnzJNPE87QRRK2OwLunDCD0bjsGDtkkt/JWP/SQWY4+rprxgcwTvsRO
+         AIMXvpdZ1pJHmvAdPRtVEeoNISlVQGMZdjSe7AqWdxmE+WnNJlabMKucfhg7J9PZNsnB
+         IHCA==
+X-Gm-Message-State: AOJu0YyFW6A/7ucIGiG6H5tWMpXYVg9+69frgbVf0telvu1cxnJ5zG9E
+	qk4spWxUhHMmFtuaf90xZlDgbR8BMW7E8JNARf2+nrdw8I0CPFAsQDIgDnZuop9BxRcfBc6Deel
+	OpG94fZgujcZxTrkWK6yDzKop+0uKmMjUjQeh5YYsLhXx68llBFwNbcyhGcJAjhKc00F6zJJUKX
+	QH2XyrHDG3xC1j+ntN4P82RY2freDwzPvbTcL/nr+37/Kt
+X-Google-Smtp-Source: AGHT+IF4a68nX6HkGf5QzDN5LJNE72LkorYborqQLUSbjAymqaQbDl+KAheVo/MycLLz2s798H+JIw0BOnBo
+X-Received: from pgbf37.prod.google.com ([2002:a63:5125:0:b0:af2:3b16:9767])
+ (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2d07:b0:1f3:323e:3743
+ with SMTP id adf61e73a8af0-203cc60d6bdmr19705780637.12.1745297038495; Mon, 21
+ Apr 2025 21:43:58 -0700 (PDT)
+Date: Mon, 21 Apr 2025 21:43:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KAlLMN++vdMLUAeZRmSCexe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250422044355.390780-1-jstultz@google.com>
+Subject: [RFC][PATCH] sched/core: Tweak wait_task_inactive() to force dequeue
+ sched_delayed tasks
+From: John Stultz <jstultz@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/KAlLMN++vdMLUAeZRmSCexe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+It was reported that in 6.12, smpboot_create_threads() was
+taking much longer then in 6.6.
 
-Hi all,
+I narrowed down the call path to:
+ smpboot_create_threads()
+ -> kthread_create_on_cpu()
+    -> kthread_bind()
+       -> __kthread_bind_mask()
+          ->wait_task_inactive()
 
-Today's linux-next merge of the ipsec-next tree got a conflict in:
+Where in wait_task_inactive() we were regularly hitting the
+queued case, which sets a 1 tick timeout, which when called
+multiple times in a row, accumulates quickly into a long
+delay.
 
-  drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+I noticed disabling the DELAY_DEQUEUE sched feature recovered
+the performance, and it seems the newly create tasks are usually
+sched_delayed and left on the runqueue.
 
-between commit:
+So in wait_task_inactive() when we see the task
+task_on_rq_queued(p) and p->se.sched_delayed, manually dequeue
+the sched_delayed task with DEQUEUE_DELAYED, so we don't have to
+constantly wait a tick.
 
-  fd5ef5203ce6 ("ixgbe: wrap netdev_priv() usage")
+This seems to work, but I've only lightly tested it, so I'd love
+close review and feedback in case I've missed something in
+wait_task_inactive(), or if there is a simpler alternative
+approach.
 
-from the net-next tree and commit:
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: kernel-team@android.com
+Signed-off-by: John Stultz <jstultz@google.com>
+---
+ kernel/sched/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-  43eca05b6a3b ("xfrm: Add explicit dev to .xdo_dev_state_{add,delete,free}=
-")
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index c81cf642dba05..43f0931a3cd8a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2287,6 +2287,14 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
+ 		running = task_on_cpu(rq, p);
+ 		queued = task_on_rq_queued(p);
+ 		ncsw = 0;
++		/*
++		 * If task is sched_delayed, force dequeue it, to avoid always
++		 * hitting the tick timeout in the queued case
++		 */
++		if (!running && queued && p->se.sched_delayed) {
++			dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
++			queued = task_on_rq_queued(p);
++		}
+ 		if ((match = __task_state_match(p, match_state))) {
+ 			/*
+ 			 * When matching on p->saved_state, consider this task
+-- 
+2.49.0.805.g082f7c87e0-goog
 
-from the ipsec-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index 648a7c618cd1,796e90d741f0..000000000000
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@@ -473,12 -474,13 +474,13 @@@ static int ixgbe_ipsec_parse_proto_keys
- =20
-  /**
-   * ixgbe_ipsec_check_mgmt_ip - make sure there is no clash with mgmt IP f=
-ilters
-+  * @dev: pointer to net device
-   * @xs: pointer to transformer state struct
-   **/
-- static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_state *xs)
-+ static int ixgbe_ipsec_check_mgmt_ip(struct net_device *dev,
-+ 				     struct xfrm_state *xs)
-  {
-- 	struct net_device *dev =3D xs->xso.real_dev;
- -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
- +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
-  	struct ixgbe_hw *hw =3D &adapter->hw;
-  	u32 mfval, manc, reg;
-  	int num_filters =3D 4;
-@@@ -559,11 -562,11 +562,11 @@@
-   * @xs: pointer to transformer state struct
-   * @extack: extack point to fill failure reason
-   **/
-- static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
-+ static int ixgbe_ipsec_add_sa(struct net_device *dev,
-+ 			      struct xfrm_state *xs,
-  			      struct netlink_ext_ack *extack)
-  {
-- 	struct net_device *dev =3D xs->xso.real_dev;
- -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
- +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
-  	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
-  	struct ixgbe_hw *hw =3D &adapter->hw;
-  	int checked, match, first;
-@@@ -752,12 -755,12 +755,12 @@@
- =20
-  /**
-   * ixgbe_ipsec_del_sa - clear out this specific SA
-+  * @dev: pointer to device to program
-   * @xs: pointer to transformer state struct
-   **/
-- static void ixgbe_ipsec_del_sa(struct xfrm_state *xs)
-+ static void ixgbe_ipsec_del_sa(struct net_device *dev, struct xfrm_state =
-*xs)
-  {
-- 	struct net_device *dev =3D xs->xso.real_dev;
- -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
- +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
-  	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
-  	struct ixgbe_hw *hw =3D &adapter->hw;
-  	u32 zerobuf[4] =3D {0, 0, 0, 0};
-
---Sig_/KAlLMN++vdMLUAeZRmSCexe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHHmkACgkQAVBC80lX
-0GxfTwf/Tp5JFrCRD3u1I2Gxi6078i2u9lI6bwoUeDXv990pGj636CulyOfb5LAt
-ybQbM8HvehnLlEYBb9bydE8jvtXqwilQTO3bcV1GtsS+rfS7ZrEGkA9npTu3my/A
-u5GulN8s1pLZy5zdkp58+QYRT8lWblGVFmcdgUx/sbD24dZyNxDkkScJXHsPun0n
-DUV0aOVbwXZYP+6r7TBFC0zj1Onmk4I4w61D3HKcQOMtztmLzVZq74uQB5MIbcFS
-nbn76ScwIqro5UP/Zse6OH/+14h34UVWulqc7lDJw+FmqjGQ3VWz+WnkL/rR1yWZ
-ua1JJL9D8z2zl2LH5/uKh+zqHa8TbQ==
-=BrvK
------END PGP SIGNATURE-----
-
---Sig_/KAlLMN++vdMLUAeZRmSCexe--
