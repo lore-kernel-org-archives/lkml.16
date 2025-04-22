@@ -1,153 +1,137 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F92417C3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F43256C8D;
+	Tue, 22 Apr 2025 08:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312179; cv=none; b=JxjgWLm9iR8wibqRfJ5slj8Uf1+VtUIpOdF44lAYINhSXSXdA2YFlJyc1v/0m4G2WCW8KQfL1OYyl+sx35bNskXhwd3ZY/sghb4En9wGd+6dVO7/z5I4biNweKhI1/ua7RvzpQJXc+U7phKrHb0zgzvRhK4AwpZzX8th62Rxvko=
+	t=1745312180; cv=none; b=GBFq3yM83B/4dH8ULcjsXQpa6l4CDdhrSCiM8a6sOGA9CizhwmyaPZlcc7H+2k4bOdEDFWgABJ4JxHUZ78dwyJw50jJ2QAgDtASvNT+3EXMyFp1ndwLl5q2nEsdoLrDylGXn1z6RmOJ4uYNFfkPi3VN+Hqm1cwI/TbIpJEDd+B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312179; c=relaxed/simple;
-	bh=KfrcJp90mLH/oPioQRdtTME45LSOkSzp3PFEGOdY9Co=;
+	s=arc-20240116; t=1745312180; c=relaxed/simple;
+	bh=TpKXeLZ7Fi+2qay5P5RV1UBl1jpJkvwlMTQnMA8coUs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R3KimO7kSa0R725lXTUhGx7+PkETguld5gOR7We3dIQz9RL/2Q6ih7IXAzdJv0Hganp6CjrCQtQCrgePkwizsrhf0yPhUnn4YW2T6zAgIryod7UyyFu0F4R+OeOa+0kG3tucUBjzOe00pcmI17iOFvCzVeMGgZIz1oC/0FSEhNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Tue, 22 Apr 2025 04:56:01 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Message-ID: <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
-	Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
- <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
- <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bh3kzWzrYxH5X0UCFf5CFAsIRDvdni2qJPxDNqI37TQjq+8ZtGoj6WI4DjLjfkrfXHSoy+e/YkEGXSCBn9G8tpC5OtLJtbKlCghcAEd5CJ3R16lZFztSc76fGtJT2KLcCYfRna7glF5n8HHbEG03G0nPoAm0VIaAcPSSW3ANkPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=dhUS5N9/; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dhUS5N9/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EoAqUPC7IVwxmkA7v4AtUYOCTo2JDd0ZDzX1gHoE3Oo=; b=dhUS5N9/CZazvrG6bBoCPIiULc
+	RP+iML0Sv+6n2QvgRsCZEBAzY10DbxiZboYDTZg+prGbs17egcc8U61xixAmlp3HPmhhTdzP70Y4K
+	gxPwb3ynSQGCwepoG0/FfSmUlObNynI4+jq+O9GpuNCSVrfxqwkTo+ckrpydKAHSjx/yvE5xY5eCe
+	A6xVEI97qgYY8XMclRHmTmMocOgiE2iJvzO8kGfMfN6s6b+mYNlv/q37/Kx9wcxtq169tSCONMK/c
+	HHyIZADGB/5CJPmiQtaFkzXiOATDTJftaHvDkn7I7lxDxsn7AMvagAVqFzcY2SBAPCwTmSal4nXcj
+	K4E0b1iQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39526)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u79QC-00044U-0b;
+	Tue, 22 Apr 2025 09:56:04 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u79Q8-0007Ll-1n;
+	Tue, 22 Apr 2025 09:56:00 +0100
+Date: Tue, 22 Apr 2025 09:56:00 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <aAdZoMge_CKtqokU@shell.armlinux.org.uk>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+ <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
+ <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
+ <b53fba84c8435859a40288f3a12db40685b8863a.camel@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wop522mmefnoma4a"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <b53fba84c8435859a40288f3a12db40685b8863a.camel@ew.tq-group.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Wed, Apr 16, 2025 at 09:41:57AM +0200, Matthias Schiffer wrote:
+> Also note that (as I understand it) I'm not changing anything, I'm updating the
+> documentation to reflect what has been the intended behavior already. Please see
+> the previous discussion with Andrew that I linked, where he convinced me that
+> this is the correct approach.
 
---wop522mmefnoma4a
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-MIME-Version: 1.0
+I think you are as I stated in my email yesterday. The use of "MAC or
+PHY" in your new descriptions opens avenues for confusion such as the
+scenarios that I described in yesterday's email.
 
-On Tue, Apr 22, 2025 at 09:59:42AM -0500, Arnd Bergmann wrote:
-> On Tue, Apr 22, 2025, at 09:12, Ben Collins wrote:
-> > On Tue, Apr 22, 2025 at 08:34:55AM -0500, Arnd Bergmann wrote:
-> >>=20
-> >> - SoCs that don't set a dma-ranges property in the parent bus
-> >>   are normally still capped to 32 bit DMA. I don't see those
-> >>   properties, so unless there is a special hack on those chips,
-> >>   you get 32 bit DMA regardless of what DMA mask the driver
-> >>   requests
-> >
-> > I've yet to see a dma-ranges property in any of the Freescale PowerPC
-> > device trees.
->=20
-> Right, but this could just mean that they end up using SWIOTLB
-> to bounce the high DMA pages or use an IOMMU rather than actually
-> translating the physical address to a dma address.
+> Andrew specifically asked to leave it open in the DT bindings whether MAC
+> or PHY add the delay, and it might differ between drivers (and different
+> operating systems using the same Device Tree).
 
-There's a few things going on. The Local Address Window can shift
-anywhere in the 64-bit address space and be as wide as the physical
-address (40-bit on T4240, 36-bit on P4080). I think this is mainly for
-IO to PCIe and RapidIO, though.
+I'm hoping that Andrew will read my email form yesterday and reconsider
+because to me this is a backwards step - it doesn't solve the problem
+with unclear documentation. I believe it makes the problem worse, and
+will lead to more bugs and misunderstandings in this area.
 
-> The only special case I see for freescale powerpc chips is the
-> PCI dma_set_mask() handler that does
->=20
-> static void fsl_pci_dma_set_mask(struct device *dev, u64 dma_mask)
-> {
->         /*
->          * Fix up PCI devices that are able to DMA to the large inbound
->          * mapping that allows addressing any RAM address from across PCI.
->          */
->         if (dev_is_pci(dev) && dma_mask >=3D pci64_dma_offset * 2 - 1) {
->                 dev->bus_dma_limit =3D 0;
->                 dev->archdata.dma_offset =3D pci64_dma_offset;
->         }
-> }
->=20
-> but that should not apply here because this is not a PCI device.
+> Whether the MAC should add a required delay in cases where it's configurable
+> is an interesting question - not one of the Device Tree bindings, but of
+> driver implementation.
 
-Right.
+Where Andrew gets this from are MAC drivers that detect the rgmii-*id
+modes, apply the delay at the MAC, and then convert the value passed to
+phylib to PHY_INTERFACE_MODE_RGMII. This is a load of additional special
+handling in the MAC driver, and I'd say it's "advanced" usage and takes
+more time to review. It's open to mistakes without review by those who
+know this "trick", and the chances of phylib maintainers being Cc'd on
+MAC drivers is pretty low.
 
-> > I'll check on this, but I think it's a seperate issue. The main thing is
-> > just to configure the dma hw correctly.
->=20
-> I think it's still important to check this before changing the
-> driver: if the larger mask doesn't actually have any effect now
-> because the DT caps the DMA at 4GB, then it might break later
-> when someone adds the correct dma-ranges properties.
+So, I don't think it's something we want to be generally encouraging,
+but instead the more normal "phy-mode describes the phy_interface_mode_t
+that is passed to phylib" and only allow the "advanced" case in
+exceptional cases.
 
-I'm adding dma-ranges to my dt for testing.
+> On Linux, there currently isn't a way for the MAC driver to query from the PHY
+> whether it could include the delays itself. My assumption is that most PHYs
+> either don't have internal delays, or the delays are configurable.
 
-> > So a little research shows that these 3 compatible strings in
-> > the fsldma are:
-> >
-> > fsl,elo3-dma:		40-bit
-> > fsl,eloplus-dma:	36-bit
-> > fsl,elo-dma:		32-bit
-> >
-> > I'll rework it so addressing is based on the compatible string.
->=20
-> Sounds good, yes. Just to clarify: where did you find those
-> limits? Are you sure those are not just the maximum addressable
-> amounts of physical RAM on the chips that use the respective
-> controllers?
+motorcomm, dp83tg720, icplus, marvell, dp 838678, adin, micrel, tja11xx,
+vitesse, dp83822, mscc, at803x, microchip_t1, broadcom, dp83869,
+intel-xway, realtek all do handle internal delays. I haven't checked
+whether there are PHYs that don't - that's harder because we don't know
+whether PHYs that don't mention RGMII in the driver actually support
+RGMII or not.
 
-This is where things might be more interesting. The P4080RM and T4240RM
-is where I got this information. Register "cdar" in the fsldma code. This
-makes up 0x08 and 0x0c registers.
+> If this is
+> the case, having the MAC add them in internal-delay modes and not adding them on
+> the PHY side would be the best default (also for PHY-less/fixed-link setups,
+> which should be handled like a PHY without internal delay capabilities.)
 
-In the RM 0x08 is the extended address register. On P4080 it says this
-holds the top 4 bits of the 36-bit address, and on T4240 it says the top
-8 bits of the 40-bit address. So the asynx_tx physical address needs to
-be masked to the 36-bit or 40-bit.
+See my "advanced" use case above. We do have drivers doing that.
 
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---wop522mmefnoma4a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHWaEACgkQXVpXxyQr
-Is+YXA//ZCVfP2Vcf2wN9DmzGexCKVQoLJGySna4HgS0fL7x+pMQusccWOqf4rUs
-eLipGkYQXlTr5X+iW0SU7x6xWaHjXbaqXNgvypoGEdI/SGCd4rP5JbDmCgGcl197
-L3L3aSkaC7Ofo2ACXQKAubuhtoC7g9R29+0QEyxCOk5nX8BVKHk0lq/IxpVxNzGo
-2P72w9dVpryukut3bjsrvyVxJVwow49W/v2K9nzB+YIyEy+1XApkd2pnMgeeLLwV
-PqobZumgvDp/sDFFl2eUsNR+vjJxw2Z4d799D8df5s6YhvUEkRcZWNnNr4iLLGg4
-IikePsfOFFRPPIElGi4JCVlRfvxm4rElJh1dR0OyK6JvzNvBbEEQWm0afaE/oCmi
-7uuH1hbCMr/6Ynfdvw4Br7HzMN4A2uK9v/gui/7rM3JcXUOSHClEZIcKxOKoINsh
-qe7cRXa7ZYVa14c+DLhl5rbmc3/PHZUzyeYA1V1hL3eITH7iOo+ud3AXzXLnM+ZT
-BGhf1OGz+QRXV6bCx8q5onrMggRPOD+J4/nh4eYgAI34Tn5rNSbarh9kqx5U7NqY
-7BPd8k6q9DTTiApN9imyOhoyksIHl14kCmvDQLGalFX/KtGmsElgyxtujEjLR9Mu
-s7vMBCzPu6G2TIe0f9xyWhu8iHVvrry+JiYOszwFEMjFlLmFr6o=
-=IUWG
------END PGP SIGNATURE-----
-
---wop522mmefnoma4a--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
