@@ -1,84 +1,88 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2820A25CC4F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973D72BF3C2
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745360558; cv=none; b=Z039ZT1XXfD9dvcByROp9OqGJZrzWOx9oY5Wd4pXtArZf1qisYtHsbhERbU7iLxrkkQNz5mm6MmPZ+Xv8h3WdZnQVCU0mJ6/8pryVDvhbdQLUdeNneXRczy3K/fB4y+hIfPX/a7QRMbfx2EUe715X3JXinQwtok1v4as5k3xGxg=
+	t=1745360586; cv=none; b=aZTNAgvHwFL5IoCRRxECPaA6eL6RzfgoYEKKuAenfZWLo8XS9TJ37KcxTAQsaQnbmIgh+N+WlLvW5Q2FS2julHFmjkyD6urVUC82QLTITtD9ErF547vaHKiHN5EZ7+UPSPJ6Pdhx4VfCuJUjy7W8wvTCR+v5iKV83mDYOvyIT0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745360558; c=relaxed/simple;
-	bh=8+W3ZgMU+QoYs4p0b2TU3n98HQ9zhovyAb7htKt2BxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Seo1lsGTieVi2stv2hVe+UpgTW4Gx0e2nxaofgwTvNRPgrpuCp07loy4WxdZvxkSEHGpMwP3SBz/HxziXiiEeFzkR9sHqz82XTrSCSfQduwNWV5cqhGC+/9yi0z17p1ncbN/2H+85w6SQC3jkWxTaTE2cDxqV9QWSrzVfhOJEn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org ([204.26.30.8])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 53MMMFeS008792
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 18:22:16 -0400
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 28C693463B2; Tue, 22 Apr 2025 17:21:31 -0500 (CDT)
-Date: Tue, 22 Apr 2025 17:21:31 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-man@vger.kernel.org
-Subject: Re: newlines in filenames; POSIX.1-2024
-Message-ID: <20250422222131.GE569616@mit.edu>
-References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
+	s=arc-20240116; t=1745360586; c=relaxed/simple;
+	bh=e2uRwWrb8ebhkycf61ed5XHbka2o5yaZh1hlxBkjDhc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m3+/ZU6C0ZPP7Nkd4Ft8mbCZiCFoou897zQlJQFkEQecCTiJBtJey7wGWXG6j4Ooi/z1PGFmxz5GAzZ7+QjSaFEJjNj4iOjchSSl1ecRZ7brcovQ34Dxvdq8kzVijozmjtKawnnKT5opBKmnd9uKIzFdoLSvJK5dVceeqG5LN5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jEO23b0W; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jEO23b0W"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30db1bc464dso55321911fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745360583; x=1745965383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e2uRwWrb8ebhkycf61ed5XHbka2o5yaZh1hlxBkjDhc=;
+        b=jEO23b0WVqe76hU2A4ZzLru2kUgZ4k45WEDovoqlJUD5tIrmxp3QiCpwCamYoVMlEq
+         H9nTEB54qEtTaGx7KmAPCTRBeVNhTq6ANRPZ6W2v7wKK06A9fe4+oZGzEzgK/JcjrXS+
+         T3tkPEnsuVbq7CcrM0dZM6bU/jTM8xY258VC+8wLuGZMSuJqGYuHBN09MSYdGj2P+WMM
+         svvUe+I99pYmKxXLRDDTCkxf+eIN2k2mfSo1zVZneoMwXIQYuezHR+ZkCsefxOMhK7FR
+         TzwNZf5oBDO2Kt4bDf7ydjqkfLJP8vK60exG/EnSYsLY2J7pAWIvWIqGpByUOgb/CuD9
+         7Yuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745360583; x=1745965383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e2uRwWrb8ebhkycf61ed5XHbka2o5yaZh1hlxBkjDhc=;
+        b=Dq9dc6DpunGsgUYxGCouQrk4M6YAnsD8xFDiQZXujTMK790xL4kk2Aw748p7mxvs4L
+         frSuUmkr5BR5pCHImd+iP//oCOvGIR+EoTtl4HrJ3YWAP77ttUw/W6kLlr02du4u+gVa
+         A8Ijg7DalCF5kQAbK/kbwj/uceVb5EiehjqcJSdUj5drg87A0ATsM/NV2rEttMP0z1a1
+         D3y405/lh45CCt8OzGNeTx4cc558oGBkZH0fK+9QLimaX7ZXyj9Ivl9YTOzzso0GTPOo
+         yyTjoSSP5/f4EggA36JuAVG3qPrfrOQOUg0L1oH+5d5NKMlQ/sA6dHssbKtuIu8dXjTk
+         T6Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNK75i6i+vBFYt88LNOW5GSeFJAAcL2AmwA8pPceXGUn2h3fLp/aI/p1FOwAsYRi95t0+WNWFBVBZTIjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2UpGzfu41P4z0NVdrqTj88zMsS7ItFo9SzPdVG6zztwVwFdi0
+	F785YOoxldgRiITe8W22naCiJZBm+Ly7m+kNdJ388BwaLmRo5xHK+7uoP+H3qCFNYO1DWhYkZtv
+	BSkyCXfPrUOAO2xG5mmuMqQm5A4/jiXj3jco=
+X-Gm-Gg: ASbGncveLq/BhgWsQp8QFyhafudWEq43lr5L8ANXU5Mj4mVUT33gr+8mw+wSKqui98p
+	uDtfFz2LTQ4XxVDJCDIzmc4uQ9kyrWnsIeVzw+adG7nRdtnqTMb/fZ2Z+oajsXtfD7t6LNpZmQZ
+	lTiUGi/oCGL1ZrbtNI6uMCi3qejtY+ZqqwxZDiR0nWYAY+N8qPoHcsySUreWgw
+X-Google-Smtp-Source: AGHT+IGrB/MiyfMTsIh+vYbWS/FNQhnUERjXD1nH9PAly6Ako+aVzVIOOf/PQlHpqWj+hJ7n2hzR9xaSmnbnValKnS0=
+X-Received: by 2002:a2e:bea1:0:b0:30b:f24a:651a with SMTP id
+ 38308e7fff4ca-310904c626dmr45311251fa.5.1745360582583; Tue, 22 Apr 2025
+ 15:23:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
+References: <20250422191939.555963-1-jkangas@redhat.com> <20250422191939.555963-2-jkangas@redhat.com>
+In-Reply-To: <20250422191939.555963-2-jkangas@redhat.com>
+From: John Stultz <jstultz@google.com>
+Date: Tue, 22 Apr 2025 15:22:50 -0700
+X-Gm-Features: ATxdqUFD0eE26rdQ7w42uNdNNlbQHNUlvuTnoRS4o--E4bvf8dH1hzjOR3S0oaE
+Message-ID: <CANDhNCpqSeSUkV2QvgLW3JY+Tsf_UOBjBrn4vBkYf+dvbtq2wQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+To: Jared Kangas <jkangas@redhat.com>
+Cc: sumit.semwal@linaro.org, benjamin.gaignard@collabora.com, 
+	Brian.Starkey@arm.com, tjmercier@google.com, christian.koenig@amd.com, 
+	mripard@kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 06:50:00PM +0200, Alejandro Colomar wrote:
-> 
-> I'm updating the manual pages for POSIX.1-2024.  One of the changes
-> in this revision is that POSIX now encourages implementations to
-> disallow using new-line characters in file names.
-> 
-> Historically, Linux (and maybe all existing POSIX systems?) has
-> allowed new-line characters in file names.
+On Tue, Apr 22, 2025 at 12:19=E2=80=AFPM Jared Kangas <jkangas@redhat.com> =
+wrote:
+>
+> Prepare for the introduction of a fixed-name CMA heap by replacing the
+> unused void pointer parameter in __add_cma_heap() with the heap name.
+>
+> Signed-off-by: Jared Kangas <jkangas@redhat.com>
 
-Do we have any information of which implementations (if any) might
-decide to disallow new-line characters?
+Thanks so much for taking this effort on. Looks good to me!
 
-If the Austin Group is going to add these sorts of "encouragements"
-without engaging with us dirctly, it seems to be much like King Canute
-commanding that the tide not come in....
-
-Personally, I'm not convinced a newline is any different from any
-number of weird-sh*t characters, such as zero-width space Unicode
-characters, ASCII ETX or EOF characters, etc.
-
-I suppose we could add a new mount option which disallows the
-weird-sh*t characters, but I bet it will break some userspace
-programs, and it also begs the question of *which* weird-sh*t
-characters should be disallowed by the kernel.
-
-> I guess there's no intention to change that behavior.  But I should
-> ask.  I thought of adding this paragraph to all pages that create
-> file names:
-> 
-> 	+.SH CAVEATS
-> 	+POSIX.1-2024 encourages implementations to
-> 	+disallow creation of filenames containing new-line characters.
-> 	+Linux doesn't follow this,
-> 	+and allows using new-line characters.
-> 
-> Are there any comments?
-
-I think this is giving the Austin Group way more attention/respect
-than they deserve, especially when it's an optional "encourage", but
-whatever...
-
-						- Ted
+Acked-by: John Stultz <jstultz@google.com>
