@@ -1,83 +1,166 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5F2201269;
-	Tue, 22 Apr 2025 10:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8831215783
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317607; cv=none; b=L7/6hLnUCz/aLZLEnmOoL+C4H4tECKlFxEKaTM7ACJC8F4Jmw11lYsSjQyyCdQFrqp33e6QWio8/ZiPgbje05YEwbZ/h+j+0TKTh/xJclbPIiHO2ZTquejV1Xcu31HgHSifSBTWEaA0JIKbB0+qAkCbqKrx5p0yu+jJaXaJtqg0=
+	t=1745317613; cv=none; b=S3yiwKQvKYSKM2QyRwZrcHRfdbtd/5nnSBrY2KcIGta8OQB/oYare5RJuZu0ZTJ+6Zy3N1zjlZMsxzZNmXypsKB0rhImsV5H6JhIreSW3G1GtHKTPKg9gZPtmuQwXYMWH59atb1wERFHFyoeCgSYaB0QmFj/io8Yboh0o5HenHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317607; c=relaxed/simple;
-	bh=tsT7/Vbp/ii+NEg4JvuVurAGlG/LhXs3Ua6xAPXKgPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XN4gPNrKmaxjqigCkOi7pWHj2Os1Uk/v8LP+IuoIGOWb1RoZf5Y+U92NISX/pa19ocDg5eYQW6jTXKDeG/9OfB/5bEGgP+iRfWLfTyNprBPw9yRNTgNx7p/Sn87E4wCWnifaA7Jty4fugGA0BMTMCkVfcTrJ1hcb19npDjfJAYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yBHj99j4; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yBHj99j4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=a9dTCY3Nlp7h9AK5R2DiWnTdza2u2KFojRHvK65dh+I=; b=yBHj99j4Coe1EfxIyA/tbYMttZ
-	pmxe6tjJqp646nbhlnmY7uK+i8zegBk2v8gZdp+mRsbhstkt2WpMTmKr3X937lZRkGm2U1PRJKLMw
-	ggLCFxrSlh/PqlaEhXsQyqtJhhwArsADhViNEC4Il6v5UtGLBybaY1nD3OKvedHqAV3pawpGv1U+N
-	cBgQQb3A7EsYz0AMsNeQ5J2uNna2WQFc5EB0aU+Q94UujO7RVe28TlbRtlXWIE/3m52La8RjF+cac
-	OoDEgKrmzrkHXw+ZWgWlw1lOiV5zszuRRIjegY/Lx7hQGPwbjGILB7L+OCPaInKhMk0fiBx0cCmUq
-	huZMrIKg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34152)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7Apt-0004Cz-2s;
-	Tue, 22 Apr 2025 11:26:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7Aps-0007PU-2R;
-	Tue, 22 Apr 2025 11:26:40 +0100
-Date: Tue, 22 Apr 2025 11:26:40 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>,
-	Alexis =?iso-8859-1?Q?Lothor=E9?= <alexis.lothore@bootlin.com>
-Subject: Re: [PATCH net 3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev
- field
-Message-ID: <aAdu4EGoVMMUzsXb@shell.armlinux.org.uk>
-References: <20250422094701.49798-1-maxime.chevallier@bootlin.com>
- <20250422094701.49798-4-maxime.chevallier@bootlin.com>
+	s=arc-20240116; t=1745317613; c=relaxed/simple;
+	bh=XyET5h5hjYz++3+OG72+DRdzzXlIPOpG891VI92YSRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GbHLHLNsVYw2TCZrkTL4NyP+CFcarmWY0asisMeZGuiFeHB2y5AD4wSHCB+kBcEuKpYZVlNUzsoJEzw1WCWnQx/ufobmVABggevCXyAml/+BD3+d8GlS99IAWGp0EG8SRCuc9Xhc9OMoLMymnLbyZvzku6MjlGXsFPzscv0xGe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 859C2433EB;
+	Tue, 22 Apr 2025 10:26:47 +0000 (UTC)
+Message-ID: <48151446-1ffd-484a-ac21-511b14fa1511@ghiti.fr>
+Date: Tue, 22 Apr 2025 12:26:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422094701.49798-4-maxime.chevallier@bootlin.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/5] riscv: implement user_access_begin() and families
+Content-Language: en-US
+To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
+ jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org
+References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
+ <20250410070526.3160847-3-cyrilbur@tenstorrent.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250410070526.3160847-3-cyrilbur@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefgeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvu
+ ghupdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepjhhrthgtvdejsehjrhhttgdvjedrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Tue, Apr 22, 2025 at 11:46:57AM +0200, Maxime Chevallier wrote:
-> When dwmac-socfpga was converted to using the Lynx PCS (previously
-> referred to in the driver as the Altera TSE PCS), the
-> lynx_pcs_create_mdiodev() was used to create the pcs instance.
-> 
-> As this function didn't exist in the early versions of the series, a
-> local mdiodev object was stored for PCS creation. It was never used, but
-> still made it into the driver, so remove it.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+On 10/04/2025 09:05, Cyril Bur wrote:
+> From: Jisheng Zhang <jszhang@kernel.org>
+>
+> Currently, when a function like strncpy_from_user() is called,
+> the userspace access protection is disabled and enabled
+> for every word read.
+>
+> By implementing user_access_begin() and families, the protection
+> is disabled at the beginning of the copy and enabled at the end.
+>
+> The __inttype macro is borrowed from x86 implementation.
+>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+> ---
+>   arch/riscv/include/asm/uaccess.h | 76 ++++++++++++++++++++++++++++++++
+>   1 file changed, 76 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> index fee56b0c8058..c9a461467bf4 100644
+> --- a/arch/riscv/include/asm/uaccess.h
+> +++ b/arch/riscv/include/asm/uaccess.h
+> @@ -61,6 +61,19 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm, unsigne
+>   #define __disable_user_access()							\
+>   	__asm__ __volatile__ ("csrc sstatus, %0" : : "r" (SR_SUM) : "memory")
+>   
+> +/*
+> + * This is the smallest unsigned integer type that can fit a value
+> + * (up to 'long long')
+> + */
+> +#define __inttype(x) __typeof__(		\
+> +	__typefits(x, char,			\
+> +	  __typefits(x, short,			\
+> +	    __typefits(x, int,			\
+> +	      __typefits(x, long, 0ULL)))))
+> +
+> +#define __typefits(x, type, not) \
+> +	__builtin_choose_expr(sizeof(x) <= sizeof(type), (unsigned type)0, not)
+> +
+>   /*
+>    * The exception table consists of pairs of addresses: the first is the
+>    * address of an instruction that is allowed to fault, and the second is
+> @@ -368,6 +381,69 @@ do {									\
+>   		goto err_label;						\
+>   } while (0)
+>   
+> +static __must_check __always_inline bool user_access_begin(const void __user *ptr, size_t len)
+> +{
+> +	if (unlikely(!access_ok(ptr, len)))
+> +		return 0;
+> +	__enable_user_access();
+> +	return 1;
+> +}
+> +#define user_access_begin user_access_begin
+> +#define user_access_end __disable_user_access
+> +
+> +static inline unsigned long user_access_save(void) { return 0UL; }
+> +static inline void user_access_restore(unsigned long enabled) { }
+> +
+> +/*
+> + * We want the unsafe accessors to always be inlined and use
+> + * the error labels - thus the macro games.
+> + */
+> +#define unsafe_put_user(x, ptr, label)	do {				\
+> +	long __err = 0;							\
+> +	__put_user_nocheck(x, (ptr), __err);				\
+> +	if (__err)							\
+> +		goto label;						\
+> +} while (0)
+> +
+> +#define unsafe_get_user(x, ptr, label)	do {				\
+> +	long __err = 0;							\
+> +	__inttype(*(ptr)) __gu_val;					\
+> +	__get_user_nocheck(__gu_val, (ptr), __err);			\
+> +	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+> +	if (__err)							\
+> +		goto label;						\
+> +} while (0)
+> +
+> +#define unsafe_copy_loop(dst, src, len, type, op, label)		\
+> +	while (len >= sizeof(type)) {					\
+> +		op(*(type *)(src), (type __user *)(dst), label);	\
+> +		dst += sizeof(type);					\
+> +		src += sizeof(type);					\
+> +		len -= sizeof(type);					\
+> +	}
+> +
+> +#define unsafe_copy_to_user(_dst, _src, _len, label)			\
+> +do {									\
+> +	char __user *__ucu_dst = (_dst);				\
+> +	const char *__ucu_src = (_src);					\
+> +	size_t __ucu_len = (_len);					\
+> +	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, unsafe_put_user, label);	\
+> +	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, unsafe_put_user, label);	\
+> +	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, unsafe_put_user, label);	\
+> +	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, unsafe_put_user, label);	\
+> +} while (0)
+> +
+> +#define unsafe_copy_from_user(_dst, _src, _len, label)			\
+> +do {									\
+> +	char *__ucu_dst = (_dst);					\
+> +	const char __user *__ucu_src = (_src);				\
+> +	size_t __ucu_len = (_len);					\
+> +	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u64, unsafe_get_user, label);	\
+> +	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u32, unsafe_get_user, label);	\
+> +	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u16, unsafe_get_user, label);	\
+> +	unsafe_copy_loop(__ucu_src, __ucu_dst, __ucu_len, u8, unsafe_get_user, label);	\
+> +} while (0)
+> +
+>   #else /* CONFIG_MMU */
+>   #include <asm-generic/uaccess.h>
+>   #endif /* CONFIG_MMU */
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Thanks!
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Thanks,
+
+Alex
+
