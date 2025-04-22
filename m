@@ -1,183 +1,116 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5118B19D8B7;
-	Tue, 22 Apr 2025 09:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6513119D8B7
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312508; cv=none; b=L2OOGawpefzP0Qm0GynVdAp4r7OE57GdCJHTGJ1xcz9VSvWbuRrBmcC7OOfFXZpU1k/Usv69eLL8fbbzx2I3Mki5x9puxtYHaSJbFM8Oouc6CHbi4pbR6gHY2RSoCO+rihPDGJd9wYyDavajxoQgNbMA4h0UnbjTsfli/3Bpzv4=
+	t=1745312535; cv=none; b=dkLqHYFEYNXgb1cLej258mxtFqGsOwz44QqinAa5y7L0Kj30J9rwen8/yJ5mATo6RJvpAORT1BkWJd0Ns55mrwAmTkXLkaDzVJgd6iZ9MHryvFQPJvzEyjISMgaTvkoiPaB86QQuIIDKQUFTCq521PNJo7ndD19hXDiaK39/FSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312508; c=relaxed/simple;
-	bh=xwAiim+BzPpGaX7BSuXBzGYxP0hQVbNoyy/nha9lMnc=;
+	s=arc-20240116; t=1745312535; c=relaxed/simple;
+	bh=dc4xZ3axdxlBmzoeUihfiSwNKtoX4SuR4oNDF5k5NTc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z+NqTKpPAzkpvI30tkVd27xA/IZAcQSvTlRdV2TPRw3Z8DBgBJqFCgovPhqEIok7XsYz0kAuhKISvTvSWSnTuX4xpcFXHQjt+mapB/K+ldnkZk1rjpJSkgjesj53u2oQFMhvLP3XAMWik9sjm8avtMt0Kps0SnjEgs7vDuJgsiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3y1EiME; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=mJjzEuTZFmENMtzdUN7NhYuYn+4gAEiddFGUUBnoYgRUCaSpn1E8+xv1SjX80iFS+308KXFglJVqvoDFrB3guhTNQhGgRRZ7N+oMtwwiiRT9P23zhPyhjWjvrUrFMiddowBqnUMMVEv2q1fkEXBKTwJjFXdgITTbZ4Ih6v9OZtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=027B8Z6j; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3y1EiME"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5675dec99so458005385a.0;
-        Tue, 22 Apr 2025 02:01:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="027B8Z6j"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so45842491fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745312506; x=1745917306; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745312531; x=1745917331; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bI4tM5u6hlOmKAY3jmb6sm9muPDkxLfs7d3SJ5djx70=;
-        b=X3y1EiMEt9UYslUa1kg5GJxLXlxZpahsIz669QuQ2XdeSS4dNRHLZQ83L1nWko8U7o
-         7JI/5YdkZimREjEp6iqnAANmGoo0BAcviaA7NpTwrLkc7BOgyqE6K3VZdzQNw6gc+Q4m
-         G3uAV4aVaQd3fV6oM6CjaJGiv44Tzx4mOxjwcAHJ8mkZ7X9lraJC2+BasBmMOw42nw8R
-         LWnhLhssrJg1bcRBepDEASf4jKVpWacjs6Bv0IH0S4irfRNjf4Y1u951Y3QKMwwZuQsT
-         /v7KpGYu51cNBk7d5dvhWVKFFYGYVqdAeQGOsmkdcoajri/4Leul3Ejmpk7d0keANkzZ
-         rkMw==
+        bh=dc4xZ3axdxlBmzoeUihfiSwNKtoX4SuR4oNDF5k5NTc=;
+        b=027B8Z6jYlj4S+ujHVi12BHBpykJkHuSDloRBE6V5FhH8FQhOdPxTp+ucpj9IuVIkv
+         DpcSTQbGIAYL+Lfo6zWNX3n75lSD95HF571XLTnDyX/2kH8J7uiMbHLI6c4oP3jiN8dq
+         vGujJdt12N8Mik+ZdyAalwD1jgtzH6O+xS/0Xwj7PgIt7rx+EZCfrbMjG33kXD82SZPi
+         ekY1k9itD53wLASNI4EdePI7psmcF8xeFUgH22qez2v0nOT4CXEPtEWbpXoUkiBcoE6r
+         9Kh+rg5B4qz1PwFyHpZqyOW2li2SqCYMMhh94+0kfNN6B6IE6zJiQdoYaSe/jFZpwDTL
+         /cwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745312506; x=1745917306;
+        d=1e100.net; s=20230601; t=1745312531; x=1745917331;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bI4tM5u6hlOmKAY3jmb6sm9muPDkxLfs7d3SJ5djx70=;
-        b=jQ+ZNiIYr1YmNIwXmZFyYnTRmNEd+huOCV6uf3L7Jwh0x722upnRmu2LR2cFlKusvJ
-         nulnu+LUh1/J8bi5Kki2isQXzgFEIPAeaTaF6deQYq3bvwqtYwoRHw84NZKqFj+A4dy5
-         imYMlRmI7dOqDqsS5ck9Mb3SGej0eedvec2lH5sz5y4RPeL9IwCBCPhElXcVDp3Xqkjo
-         YGJww1+oJMnGpxZ9wfD1hnAZUdhBjoTpJbGk+CdTjO1W9rsvLoqIK3AAMBB4wD390Tw+
-         S17AD4gUr5mv5HeQLeZ8tGKS/51OZtEuuIqVLJQngsXG4XpEr/U61YCoQkh1Vu3AkQZ7
-         zDAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUZfib64LKeYo/8C4gL9cBWF/i0zTtBI6GNaE6IE1CVb/9+qPDmoufvrnt6WC2EaE1b7PALO1x/B+N@vger.kernel.org, AJvYcCVIXf463i0d5xm5KvwvTnNA5RtvWDY3+XE+Xg8kSJ8zBXigDHJ1vsZMJVYXYpR2ETpeG83gpl8axfjJ@vger.kernel.org, AJvYcCW7pQJagTqNh3mjmn7isvA9qTTdoLiUTuMHlXFayuBQIe2O9t6cqn39SXi6SD7I6NO3cl/khslYxtek@vger.kernel.org, AJvYcCWgwa0UCnn1RTNUVeNhyW27K57DCJRX5ilpKAnOJdNgeovCNsHZWcsydck+RPdep5Fapm7GUt7W@vger.kernel.org, AJvYcCX5Suh7zeF+y3iMoq4xKPoyw5PWa1R2/HpsCxiWfxeqCLU5QdyQe0VDVzhezkzVGw2tIN500TQ2KqAJ@vger.kernel.org, AJvYcCXV/I+cAC3ybTHHn4h5rr7lzLIjVchDg6/i3jjOhX7pHfpRKoLj2MFu/nNEuQ23RNjFiCbu26TRXfmjPP5m@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeGm7eVLm6XUyFg2Zc3Wsi+kFcg2caP9nEkmiB3KaTOxmSx0Hr
-	zZI0n4WtO192hoR8JteG+16veYHKSo4uhmbW7wcaRY+D+qn/t+np7duE0Po9CyDCOUVy6Dn9+TQ
-	geZw4U4rnB8XaDD2TyBW7OxU83vM=
-X-Gm-Gg: ASbGncs0ARJqzrwVxfQVOA4fhvoo2W/pR1t5LgWpkKq+8bMgPBD+OdIIylN8QxAgS6K
-	1r20SvH1DZp36BDFbjyH5MPEchB2PmxX0IumiNEKrXwdI4Q2W0plpbVK9GWrZ2Eioyc9bM6/HvI
-	LUMDFNTo2PMzTfRGpArVCytCOaV32bO2lX+I1f7LvhbiCdzsAijZ82rQ==
-X-Google-Smtp-Source: AGHT+IHPgdQcr6+EJ2c2GBm62vKYoe1rNLruGx6vpyIyteGjKou1apc6OLDwP+NZ9T6S5hjDnfeJTmR8mETK+wK+bzs=
-X-Received: by 2002:a05:620a:2684:b0:7c5:5909:18e5 with SMTP id
- af79cd13be357-7c927f6f84fmr1960081385a.3.1745312506200; Tue, 22 Apr 2025
- 02:01:46 -0700 (PDT)
+        bh=dc4xZ3axdxlBmzoeUihfiSwNKtoX4SuR4oNDF5k5NTc=;
+        b=P0gDN9mKgdno1DEOUfeAmU/+RkhtJ2URL53OE5Ebl8161TXpFNS/ylkfTS3aeTJIou
+         4MTodGKB4+p4TSF7Wl3Tz1ZK9oVKHX8e+riEXoeD18ZpocbFSr0Y2ieZNXR41CSRb0z2
+         SNO7KEI+Z845rtIxIHIfOkXduCQAJTzm1LABx70otYyrHc3DQEnPSoBxtbNKYOwbW0MR
+         ISZAMfG9wLJ+nfwVG0WRl+XHG+c0GezyLZlQt6OJZ50wUuNEN+adY9pEg1TedzyVocRe
+         2jnbCiZkLpr2xX1y62XPDbWNROTgCGAwhlf8r5r5cKbDaob8LxyAahP0HA/B8ENRMUI8
+         POLg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6gYbs7yE89j7yZKoCY1DY3K777TzhDgz5+depqrCb6Mm8mbK4BRNV5JDRyRQLYrkx4oXXzhgKcorEHqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVR9t3uYRYt9SP/0AsLW41nVgaTIhMPGmQavKk+l05kGokVe0N
+	SqP97hLMrPIFA6u518JB3pCwKNun/wR5MTiq+8A721wjFZgl6u5n7APwSStjvXzvyCiMJFbE9Q9
+	AknvtDU5SBhE6EMoDGCv6k1WCPdsue/5YWngYPg==
+X-Gm-Gg: ASbGncvvEO35kz+kUOSbhtOHChOWf0ZrM37jPzVY3iz+j9Iudk/vpNlXE0tJSrX4RFo
+	nryBT9FOmmjIG5CSnKnLQA8cqEq8pXO97unY3cx5kg3tWVSh3RqU/r19+RwOAKkXbXd4TVBD7hc
+	ltMSGwGqEbex+JAmTR2cDQhXSCUFJM/fGGVRN9WBcwqnWJPXZl9YbCqw==
+X-Google-Smtp-Source: AGHT+IHXSN/8gRyaTry5GtiHwesoyr/kZzwfBfVcH37VqAhFNMUYYlznpyD7bdjOzOI5Q3wO1WKwnhzNohwl7Ztd4W8=
+X-Received: by 2002:a2e:8e8c:0:b0:30b:f469:47ef with SMTP id
+ 38308e7fff4ca-310905bacd4mr38362531fa.23.1745312531271; Tue, 22 Apr 2025
+ 02:02:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
- <20250416-wmt-updates-v1-3-f9af689cdfc2@gmail.com> <20250416201407.GC3811555-robh@kernel.org>
- <CABjd4YyTKquLcYC+DVg_koi3p7AhqwBNiazCiC713DQKjCaBSA@mail.gmail.com>
- <CABjd4Yxi4SLqsAk_fb9C=1BW6XjnZ8LQ_JKYu6KZ3TtMS0fnhg@mail.gmail.com> <14de236b-e2a7-4bde-986d-1e5ffddd01b4@kernel.org>
-In-Reply-To: <14de236b-e2a7-4bde-986d-1e5ffddd01b4@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Tue, 22 Apr 2025 13:01:44 +0400
-X-Gm-Features: ATxdqUGmp6GiWAgqNWbO-0WSin1O6yJxUf9gHQTl5ZTyEce7EbX-dkQTVJBozo4
-Message-ID: <CABjd4YwpKYr3q06E7H3upFxyUT6uGg-Jzt2_FiyfS8R=j0ye8w@mail.gmail.com>
-Subject: Re: [PATCH 03/13] dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20250407-gpiochip-set-rv-input-v1-0-a8b45b18e79c@linaro.org>
+ <20250407-gpiochip-set-rv-input-v1-3-a8b45b18e79c@linaro.org>
+ <4cd7b1ea029f7cdb6312f61b1008116b58b85efe.camel@gmail.com> <CAMRc=Mcd=6tgk-NwqrSxes96tkV1PmxKFNwDV==XAUkLtDKj-Q@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcd=6tgk-NwqrSxes96tkV1PmxKFNwDV==XAUkLtDKj-Q@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 22 Apr 2025 11:01:59 +0200
+X-Gm-Features: ATxdqUHl6k-99FjEYSZJEDU0K_B9nBaJmH013ky1sQlNl-LzWnGU-Cxp14xGbos
+Message-ID: <CAMRc=MfBsyovZ6dVLZcDC37aTG1XeGvTMaUTRGfUcEhkVXHyng@mail.gmail.com>
+Subject: Re: [PATCH 3/3] Input: adp5589 - use new GPIO line value setter callbacks
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 12:08=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
+On Thu, Apr 17, 2025 at 2:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> On 18/04/2025 14:38, Alexey Charkov wrote:
-> >>
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  clocks:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  interrupts:
-> >>>> +    items:
-> >>>> +      - description: SDMMC controller interrupt
-> >>>> +      - description: SDMMC controller DMA interrupt
-> >>>> +
-> >>>> +  sdon-inverted:
-> >>>> +    type: boolean
-> >>>> +    description: SD_ON bit is inverted on the controller
-> >>>
-> >>> This implies I know what the non-inverted state is. If you know, plea=
-se
-> >>> state that here.
-> >>
-> >> This is a tricky one. The only answer I have is "it's inverted in
-> >> later versions vs. the first version I saw in the wild, and I'm not
-> >> sure if it's board related or IP version related - nor if the original
-> >> was active low or high". No docs, no schematics, no vendor left around
-> >> to chase for answers.
-> >>
-> >> Will dig around some more and update the description if I succeed in
-> >> uncovering any further clues :)
+> On Tue, Apr 15, 2025 at 11:06=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.=
+com> wrote:
 > >
-> > I've found some extra clues and would like to consult on the best way f=
-orward.
+> > On Mon, 2025-04-07 at 09:19 +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > struct gpio_chip now has callbacks for setting line values that retur=
+n
+> > > an integer, allowing to indicate failures. Convert the driver to usin=
+g
+> > > them.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
 > >
-> > It turns out (if my understanding of the decompiled binary-only WM8505
-> > vendor driver is correct) that all chips before (not including) WM8505
-> > rev. A2 treated their "clock stop" bit (register offset 0x08 a.k.a.
-> > SDMMC_BUSMODE, bit 0x10 a.k.a. BM_CST in vendor sources, BM_SD_OFF in
-> > mainline) as "set 1 to disable SD clock", while all the later versions
-> > treated it as "set 0 to disable SD clock". Which means that there are
-> > WM8505 based systems that rely on either of those behaviours, while
-> > any later chips need "set 0 to disable". This is not a board related
-> > quirk but an on-chip SDMMC controller revision related quirk.
+> > Let's maybe drop this one? I'll send a new version of this [1] that wil=
+l drop
+> > this driver...
 > >
-> > I'd love to switch to a compatible-based logic and drop the
-> > "sdon-inverted" flag altogether from the binding I'm writing, but here
-> > are my doubts where I'd love to consult.
+> > BTW, I can already change my v2 and use .set_rv()...
 > >
-> > * Looks like WM8505 rev. A2 needs a separate compatible string vs.
-> > prior WM8505. Can we have something like "wm,wm8505a2-sdhc" and
-> > "wm,wm8505-sdhc" respectively? WM8505a2 not being an actual chip name,
-> > but something discoverable by reading its hardware ID from a system
-> > configuration register at runtime
+> > [1]: https://lore.kernel.org/linux-input/20250313-dev-adp5589-fw-v1-13-=
+20e80d4bd4ea@analog.com/
+> >
 >
-> Then maybe it can be fully detected runtime? E.g. via soc_id driver (see
-> drivers/soc/)?
-
-Thanks for pointing this out! Yes, it should work. A separate
-mini-driver to identify the SoC based on the system configuration
-register readings and a match table on soc_device_attribute inside the
-wmt-sdmmc driver to differentiate between different controller
-versions which are all identified as "wm,wm8505-sdhc" in current
-device trees.
-
-> > * If I introduce new compatible strings for "wm,wm8650-sdhc",
-> > "wm,wm8750-sdhc", "wm,wm8850-sdhc" and "wm,wm8880-sdhc" in bindings,
-> > DTS and driver code, then the new driver and new DTB should work fine,
-> > and the DTS should pass schema checks. New driver code won't work with
-> > older DTB unless I keep the logic to parse "sdon-inverted" which
-> > wouldn't be part of the binding. Old driver code would not work with
-> > newer DTB except for pre-A2 versions of WM8505. Is that acceptable?
-> > * Existing DTS doesn't differentiate between pre-A2 vs. post-A2
-> > revisions of WM8505 and is bound to fail on the latter
+> Sure, as long as the new variant is used, I don't care.
 >
-> That's an old platform, so we should not break the ABI, thus drivers
-> must fully support old DTBs.
+> Bart
 
-Noted, thanks.
+Dmitry,
 
-> > I realize that breaking backward/forward compatibility is undesirable,
-> > but frankly these systems seem to have few mainline users, and those
-> > people who do run mainline on them ought to be compiling the kernel
-> > and its DTB at the same time, because the firmware doesn't know
->
-> There might be other users of DTS and anyway what would be exactly the
-> benefit? This hardware aspect is already documented via sdon-inverted
-> property.
+Can you still pick up patches 1 and 2 please?
 
-The benefit is rather cosmetic (to properly describe different
-versions of this controller using SoC-specific compatible strings, and
-to avoid defining bindings for random vendor-specific properties such
-as sdon-inverted).
-
-Best regards,
-Alexey
+Bartosz
