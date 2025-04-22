@@ -1,194 +1,85 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965A817A2F6;
-	Tue, 22 Apr 2025 02:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D297B29CE8;
+	Tue, 22 Apr 2025 02:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745287969; cv=none; b=nqMXkjz5n6Wd68sTMb3IBcHBShFL7f92DV68SosU0YOR6P7LM/46E4zi6dhlYfZSkINFPdd+qX7DHcMUaTEb5z5dolyl7VQyLoM7gLHnX1vQSoPMpqu/DqVMYmkWOUhdyK827eOyOUBIG84J16KHJiLS7PIzNiGBjGippuzl5bM=
+	t=1745288084; cv=none; b=bIVsEcGf7MeU9CRZXWMnP3W6TN0sHezBLYQoEUSpXuyfsyo9I1WpoiHKCZtPU45+WSwH2DEj5MN6aP/ut7PQQIzi5hwMt8yZMApDTn4rDHvh8BJiEiWByO+WqozgANu/497qxcJLSL1QCDsHJ6FFZo8sWgasFUQN92UtK0WBu4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745287969; c=relaxed/simple;
-	bh=yEJ886LT/vO8/ZoQLLdlXxwV0nBH2cLO3gCdar/nAnc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mNjEvkMjkEylDUTtTnmevsjDAhpT70Fn0aOWV/eClzpdFI3v70mwL85JtlO3Yftq9fvqQJxu8dptgVKrS2PG2Tixql0Ax6SGJsbn2w7Eer54Ay8J4BNlTCzkm7pWC4VhkFXjHfDelcSjHqJKf0vIRSPC4xfkVOPzQ+S+9g8aCu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MuprIwlX; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MuprIwlX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=wyZ/GIFXWPHTuL2Tu+Fi0aXA2J/TiF9Y2weWF8VNT4I=; b=MuprIwlXMMmaf9/2/jcapMA7I5
-	ZopGYeyHm1xekgwyCCVIwo15p8o3Vc2N3rfSMbYziBUV0OIVTUk7JZ9DUOkV2DdTdK+eAHObnhO5N
-	oJztEsqs/nDdkQhmM+6dqnSQwO0Dzo5cjaEYcNXkjroNX5zbNqwvLDzxVCDC+SCNjmi5iTJ0VvWok
-	hyovOAFrrtw9qAIU9ehansmLxnqXPCIqI9rW9rKSIu9wlmKiK4mWjVlUoBXjmOx3KKTSxmaE13qdB
-	hX6odUkTTeh8IYaExLm3N/r3hZtFbBrpkCJ5qk+Xh4SNRNpk6fooMZtYEKbauD1Z47lFYA/GpnldE
-	bNoxvSOA==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7361-0000000B7zG-0Q3i;
-	Tue, 22 Apr 2025 02:12:17 +0000
-Message-ID: <db2415e3-0ee7-4b72-ac6b-4c7cda875dd3@infradead.org>
-Date: Mon, 21 Apr 2025 19:10:40 -0700
+	s=arc-20240116; t=1745288084; c=relaxed/simple;
+	bh=khWE9cX70xPph8s7rn9jBXuJtbTTleSYbDejswZO7ds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kzgtsQls4MmTMjb1EsJoA7s7RR4UYpvzeW9hXUrxpAZv10gqaGtq9GaWjs8/2jfIcwwK1gRRSCZunh5BkwO2GyIuptcxsOucUd+kHdh8l/H8iiloGGytYXwXdEpBgXyynPfJNbkIONhri04O5yzoOZ+7b8q3tCC06jwkhMbb820=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowABH8gKG+wZo6rIACw--.6724S2;
+	Tue, 22 Apr 2025 10:14:34 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: s.nawrocki@samsung.com,
+	mchehab@kernel.org,
+	krzk@kernel.org,
+	alim.akhtar@samsung.com
+Cc: linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH RESEND] media: platform: Add hardware sync wait to fimc_is_hw_change_mode()
+Date: Tue, 22 Apr 2025 10:13:45 +0800
+Message-ID: <20250422021345.1940-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 18/19] famfs_fuse: Add documentation
-To: John Groves <John@Groves.net>, Dan Williams <dan.j.williams@intel.com>,
- Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, "Darrick J . Wong"
- <djwong@kernel.org>, Luis Henriques <luis@igalia.com>,
- Jeff Layton <jlayton@kernel.org>, Kent Overstreet
- <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>,
- Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Amir Goldstein <amir73il@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
- <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-19-john@groves.net>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250421013346.32530-19-john@groves.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowABH8gKG+wZo6rIACw--.6724S2
+X-Coremail-Antispam: 1UD129KBjvPXoW8tF43KF17AFyUtr4rWr45p5X_Gr13JoW8JF
+	yaka1xtr4UXwnIgrnru3yfAwsrurW3KrWF9FZ0gryqq3W3A3W5W393Xr4agF1YkFn5Xry5
+	Gw13AF4xJa4xn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3AaLa
+	J3UjIYCTnIWjp_UUUYa7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_
+	Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M2
+	8EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_
+	Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r1q
+	6r43MxkIecxEwVAFwVW8JwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43
+	ZEXa7VU1IeHPUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ4AA2gGfIH+HgABs2
 
+In fimc_is_hw_change_mode(), the function changes camera modes without
+waiting for hardware completion, risking corrupted data or system hangs
+if subsequent operations proceed before the hardware is ready.
 
+Add fimc_is_hw_wait_intmsr0_intmsd0() after mode configuration, ensuring
+hardware state synchronization and stable interrupt handling.
 
-On 4/20/25 6:33 PM, John Groves wrote:
-> Add Documentation/filesystems/famfs.rst and update MAINTAINERS
-> 
-> Signed-off-by: John Groves <john@groves.net>
-> ---
->  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
->  Documentation/filesystems/index.rst |   1 +
->  MAINTAINERS                         |   1 +
->  3 files changed, 144 insertions(+)
->  create mode 100644 Documentation/filesystems/famfs.rst
-> 
-> diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
-> new file mode 100644
-> index 000000000000..b6b3500b6905
-> --- /dev/null
-> +++ b/Documentation/filesystems/famfs.rst
-> @@ -0,0 +1,142 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +.. _famfs_index:
-> +
-> +==================================================================
-> +famfs: The fabric-attached memory file system
-> +==================================================================
-> +
-> +- Copyright (C) 2024-2025 Micron Technology, Inc.
-> +
-> +Introduction
-> +============
-> +Compute Express Link (CXL) provides a mechanism for disaggregated or
-> +fabric-attached memory (FAM). This creates opportunities for data sharing;
-> +clustered apps that would otherwise have to shard or replicate data can
-> +share one copy in disaggregated memory.
-> +
-> +Famfs, which is not CXL-specific in any way, provides a mechanism for
-> +multiple hosts to concurrently access data in shared memory, by giving it
-> +a file system interface. With famfs, any app that understands files can
-> +access data sets in shared memory. Although famfs supports read and write,
-> +the real point is to support mmap, which provides direct (dax) access to
-> +the memory - either writable or read-only.
-> +
-> +Shared memory can pose complex coherency and synchronization issues, but
-> +there are also simple cases. Two simple and eminently useful patterns that
-> +occur frequently in data analytics and AI are:
-> +
-> +* Serial Sharing - Only one host or process at a time has access to a file
-> +* Read-only Sharing - Multiple hosts or processes share read-only access
-> +  to a file
-> +
-> +The famfs fuse file system is part of the famfs framework; User space
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-                                                              user
-
-> +components [1] handle metadata allocation and distribution, and provide a
-> +low-level fuse server to expose files that map directly to [presumably
-> +shared] memory.
-> +
-> +The famfs framework manages coherency of its own metadata and structures,
-> +but does not attempt to manage coherency for applications.
-> +
-> +Famfs also provides data isolation between files. That is, even though
-> +the host has access to an entire memory "device" (as a devdax device), apps
-> +cannot write to memory for which the file is read-only, and mapping one
-> +file provides isolation from the memory of all other files. This is pretty
-> +basic, but some experimental shared memory usage patterns provide no such
-> +isolation.
-> +
-> +Principles of Operation
-> +=======================
-> +
-> +Famfs is a file system with one or more devdax devices as a first-class
-> +backing device(s). Metadata maintenance and query operations happen
-> +entirely in user space.
-> +
-> +The famfs low-level fuse server daemon provides file maps (fmaps) and
-> +devdax device info to the fuse/famfs kernel component so that
-> +read/write/mapping faults can be handled without up-calls for all active
-> +files.
-> +
-> +The famfs user space is responsible for maintaining and distributing
-> +consistent metadata. This is currently handled via an append-only
-> +metadata log within the memory, but this is orthogonal to the fuse/famfs
-> +kernel code.
-> +
-> +Once instantiated, "the same file" on each host points to the same shared
-> +memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-> +that has a famfs instance mounted. Use cases are free to allow or not
-> +allow mutations to data on a file-by-file basis.
-> +
-> +When an app accesses a data object in a famfs file, there is no page cache
-> +involvement. The CPU cache is loaded directly from the shared memory. In
-> +some use cases, this is an enormous reduction read amplification compared
-> +to loading an entire page into the page cache.
-> +
-> +
-> +Famfs is Not a Conventional File System
-> +---------------------------------------
-> +
-> +Famfs files can be accessed by conventional means, but there are
-> +limitations. The kernel component of fuse/famfs is not involved in the
-> +allocation of backing memory for files at all; the famfs user space
-> +creates files and responds as a low-level fuse server with fmaps and
-> +devdax device info upon request.
-> +
-> +Famfs differs in some important ways from conventional file systems:
-> +
-> +* Files must be pre-allocated by the famfs framework; Allocation is never
-
-                                                         allocation
-
-> +  performed on (or after) write.
-> +* Any operation that changes a file's size is considered to put the file
-> +  in an invalid state, disabling access to the data. It may be possible to
-> +  revisit this in the future. (Typically the famfs user space can restore
-> +  files to a valid state by replaying the famfs metadata log.)
-> +
-> +Famfs exists to apply the existing file system abstractions to shared
-> +memory so applications and workflows can more easily adapt to an
-> +environment with disaggregated shared memory.
-
-
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+index 366e6393817d..5f9c44e825a5 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-is-regs.c
+@@ -164,6 +164,7 @@ int fimc_is_hw_change_mode(struct fimc_is *is)
+ 	if (WARN_ON(is->config_index >= ARRAY_SIZE(cmd)))
+ 		return -EINVAL;
+ 
++	fimc_is_hw_wait_intmsr0_intmsd0(is);
+ 	mcuctl_write(cmd[is->config_index], is, MCUCTL_REG_ISSR(0));
+ 	mcuctl_write(is->sensor_index, is, MCUCTL_REG_ISSR(1));
+ 	mcuctl_write(is->setfile.sub_index, is, MCUCTL_REG_ISSR(2));
 -- 
-~Randy
+2.42.0.windows.2
 
