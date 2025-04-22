@@ -1,226 +1,206 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54EC1F09B1;
-	Tue, 22 Apr 2025 22:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA348634F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362147; cv=none; b=NQbka/QPKek0aDXTfom+aaQOk0p2SfGtee26ECeY+eL6Rww8If6NT16Zv6Jiqors+2zrA1axF8qDnS1ayGkOgDR5yGPXOvHheccimszCS9q1eVO8S+1MNXSccVR4Rp06b5fMPaIFG3piZfFzRcJOykJgbevK2fNkuodrkuUDwYQ=
+	t=1745362230; cv=none; b=kRKtM0vl4/fUHdoZ/rmQBzMXvrDH1kM1iM+oOHv54XFb67ko63AFjFfEmkllNfQGELEa4izXCyDBEQ0PB/DTxKcwtMsnE7/ROYXxsG8FUoJddgG//EA8s13fLnteertelpiSyRRtxVyMhNmuoKHOZtnimVLlmNYOfR1DNoj4JpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362147; c=relaxed/simple;
-	bh=BTr87Fgzo1JalzQRSpB9bFJSGNfR8KB/0vLhjYFtx24=;
+	s=arc-20240116; t=1745362230; c=relaxed/simple;
+	bh=a4EcOav03n+HBGzNSNuTxKZNDu09J/N3p9II0SkD8xQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EHfFV5D1B3cD6K2MjsQf5eZ31P4mRYGRUUl8BfO27PCgCa6tB0spzxu3SZhk2UYchQ5Twc8v2SrsbdIYj4RIuRFdzm4IdLipY5a3vFaGZjbmQLNIPSHBr3wvaKpvlIvwVpAxw0VH/D9scxa/OlxLAz7m+I/sfFShwPhld6ZXi5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PR6vj2B/; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=DfazYyLWpEgRKI/cMjDi+cyo7eAVm1VFYP2EUSpi8JXnKBa12zlChNam1h2F4cn8BQQ+JZ+jcZxaL/I0Xkss5/zq6nhG9dbuZFl+UxWS+FP6nO8oV1UJYefAZ6dqNecyfD5bBO/7t9F+U573WtORXxSRIUuMa3HXvz8iz4Zf4yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VkRbpU87; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR6vj2B/"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b03bc416962so4170962a12.0;
-        Tue, 22 Apr 2025 15:49:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VkRbpU87"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso56293831fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745362145; x=1745966945; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b87Z6hdoHcNORRcYRXz71HmcfEiLW2krrwaT/icFFxI=;
-        b=PR6vj2B/HibkDrY0vvArdNEecpcEJv0Qc6WnJWq5Y4J0Mnzz1LjRSRUMLJwPXNFETd
-         Yt/HtBGsEx+T4SDnPuf9yZoVoNhrXi2bMJv0gE/hSV4aW3Fkct6Px0AWBbrNpBsCXPUk
-         hjvQD7HdmHMyCWCfDPaklL+dUGDyXi4ATMfBZrhMVxaR1Bs4MqTA1Qm/Ng53N2cHXm4t
-         0UBD9RvKxmy5lBd8FBnQUhD6brd7qyXl7AKku02GejOmEMLtz9csxRk8H4Mu6SeQoYnM
-         pzNtDprzlJ+QZnS0N5sRIEykkhZbCtTcBIMp9VPhj/HWzZR985e/fyClQVOIUpMLoT8T
-         hOdw==
+        d=chromium.org; s=google; t=1745362226; x=1745967026; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oZCFkPT9VQDSYU37yasnvmuyi6JQuptLSL8TbX1/xkM=;
+        b=VkRbpU87IB2WUGmVLF6WAabnc3Ak9eNMrbJuNyMMR+8nRfcAqx+YXAKMYN1cZZXzBo
+         W3HlkC02O9167AJjF4zLhr3Pq/Xpgd0heanHwuPh/HXhZvNN9zrXazgNFrkfPnnfk6A0
+         Cru87A0Y4r9vlXNb0iPercg1N+A/vsq85IFLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745362145; x=1745966945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b87Z6hdoHcNORRcYRXz71HmcfEiLW2krrwaT/icFFxI=;
-        b=wq0dl2zphv9cnteOWp002XJy0DgcLnxKpF88tUHxCFWSoYk366agi5WY0mUYwdzeOE
-         F+6nWgYryee7+icxgRUhnfvKnBQAtQP/rPCb+q7UHfFBQRbJMtL3bcUVndSh9XSngawy
-         KEKuQ7TtyqGUKQ2zufGxf4dm5h3awPwg9zMCU5RcOBiVkNpLTv3gk/TjQNDvBJlj+9ss
-         zwsZz1QBxWshXY8dxFoX9FP9eu9VmqNgYL05Q9IpWgsN+d8ov3/pYCZccnX3bYLRoXnB
-         MH4dY3c/Iy+fOvWdCzhQ1LpAAlteNrAubMlCqrD1PTibalFG4xdsmv6CMxMagY2ZOYuw
-         ookQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHq6epSRXTOAC2Bu2zpAmOmQ7agaBTXjujR49/vtCXUaAT7+PSlFZPrbIyLRe3XxF+ODpe8Wyv/sNo9EehwL/w@vger.kernel.org, AJvYcCUJul5zE+yct07rsNZZmijEhIWdqDFIykimyIn0ak2UeVtDkB9NFNa2uf6vvxBJWtYWvsk39/k6zRt1U+c6@vger.kernel.org, AJvYcCV6EJ3BMgY15k4DPd6ivPPX+qumyJIq1An2dUqkt+Tjs0HsLMXSre6t88qrSv4xkAN59kKuTaJAK+qRLzVH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdbddjwI9xczcODCPVkHoaKFUtF7U6WPKoVu6FpFvmbqn27OXn
-	UbqHQyP3qzurBMxIoID6Mqh1upMmr41VxW89s/zLPApAPkr8JM01QvubpGhkVTpnXUCEdp1Au3Q
-	Lf97c3Fvj+2ldwYruTIoRdUa/JJY=
-X-Gm-Gg: ASbGncsTLN80StHLujhydEDDuKlXAYaFk9fpd+fE5ODM7VNrOgr9PAhK1FCZcPJo6e3
-	wNl9lmi9yupvY7UMPQmX2ei6vwGl/krZw5dctluAeklaFExXwpsuRQjWbHyodNta3c33wWdvIZ6
-	isMnLaKgbOeKldAMAj9WqAHvvVvXYkkXszKmUp4A==
-X-Google-Smtp-Source: AGHT+IEaXVqyjeo1USfmvtnc/v5tnImw/+t4sFUD76JPWeBRBPX+uZBJiLyql0KdJsA4I9vGgTzuEP00QGXPqvZHShw=
-X-Received: by 2002:a17:90b:4ecf:b0:2ee:693e:ed7a with SMTP id
- 98e67ed59e1d1-3087bccc3a5mr24129038a91.35.1745362144838; Tue, 22 Apr 2025
- 15:49:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745362226; x=1745967026;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oZCFkPT9VQDSYU37yasnvmuyi6JQuptLSL8TbX1/xkM=;
+        b=iUZNnr+digB/qEqYxf7VDA/6Rf6Xi5NYeVL4JpiwxggVlESZ0Ndi4O/sHR6eA9Fpe8
+         8wkFGNDeR/k9wn6nFpjscqAj3H4c0kgEPcSYBdooco82hCxjQuu5mkrB6LatlK3aFIZs
+         i9gGoBrUq7p98EVJbMPTXph+L1QiNUpnsgrrdvIP2cnDjCX29Y6U+6MqPgQAKKjnpAjT
+         P89Iq/yVnvAJ0DHjjupcdbATaERiMoY2snrEKERRZThTeJ5/AbaIVDIaCEC5FUDpXWoo
+         XWnQQsuhf9XlySP5k7oE47LNIStgrg8E6xCiiCN8vP0lf8Wzua9zwkyIIIgBhg03oNc0
+         k+Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCWejszhHNSErzjEzC5AMjMVD58hRthfWUld08kHGNCOPxdTwtkn8bLiihCpxfuoLSdOaLuByuWWohwdx2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI4WActGTpFriB3jGpUjQ4A+u4J5IZysjljUCQEZXVFw5YgFtT
+	WaWKbAUhtWHnLm/BZRJPPosGeMIzTiCqRkC40xhc9nTiQoFLdXYseDpzeUeMKNCjvUCIPPZwTgC
+	quw==
+X-Gm-Gg: ASbGncvcRePHVYN7ZckTRQn7MjKPDIT/AIRxjrGSjSaYlr7UveJiZ+itDf9OeIydYdY
+	FFnanOfoA1jjX44t8lgvborm5vg9LYp0pFW8tppYvg4PbZUgafDS91jsLULeNUxUrWTitYtFRnN
+	Ep28KfE9u1fGXbiPGz3q8GsM4w6TyVHWKWqSMztwmw/2UePu5F7FjEaj4bHVGq55UlEJRFXmhr9
+	tUZ8wJD4LARLarRFCSwO7s51HC5fFfK2gkZkyFggTj0yLXy8/EN13RZFkmQNveqim2zLx7LjXu3
+	JPQtUB9VD5RYB6PKu7fZbNHn89KeUiaBA4RlOSVuSzJbB3vQW16fHDzhUvnB/g6R4D689JjOkpU
+	mGnhWDhs=
+X-Google-Smtp-Source: AGHT+IHXnN3J5wzvGOEHLLsyuXVgbaQ+0Nkg3SKsAVx+qGdI2ALjsuPABqlSZIEAx7imJP8nBAZ6yw==
+X-Received: by 2002:a05:651c:1511:b0:30b:bdb0:f09d with SMTP id 38308e7fff4ca-31090553ee1mr60553171fa.32.1745362225951;
+        Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109084d4aasm16312991fa.90.2025.04.22.15.50.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso56293571fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:50:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxwVcTEeLKDaj0KrGTX9JLSU1cgrALbnd9qd4KcneHpwZEkpC1JJOdgpMr8BKbUtaR885exiTJwmgd8J0=@vger.kernel.org
+X-Received: by 2002:a05:651c:220e:b0:30d:e104:b594 with SMTP id
+ 38308e7fff4ca-31090579a68mr48817081fa.40.1745362224964; Tue, 22 Apr 2025
+ 15:50:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
-In-Reply-To: <20250418174959.1431962-8-surenb@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 22 Apr 2025 15:48:52 -0700
-X-Gm-Features: ATxdqUG4dz3OGN13sHC4CHKb-O7jfQGss6KMOy-5UBi2V9AZVLsJCVhdcja1Qzc
-Message-ID: <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
-	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <20250313-uvc-eprobedefer-v3-0-a1d312708eef@chromium.org>
+ <20250313-uvc-eprobedefer-v3-1-a1d312708eef@chromium.org> <20250422180630.GJ17813@pendragon.ideasonboard.com>
+In-Reply-To: <20250422180630.GJ17813@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 23 Apr 2025 06:50:10 +0800
+X-Gmail-Original-Message-ID: <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHelesrjtdLbpQ4wqs-_HLIDR_oOasDUe41GrOFPkA28vVRIy-nBpD1INE
+Message-ID: <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] media: uvcvideo: Fix deferred probing error
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Douglas Anderson <dianders@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
-com> wrote:
+On Wed, 23 Apr 2025 at 02:06, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> With maple_tree supporting vma tree traversal under RCU and vma and
-> its important members being RCU-safe, /proc/pid/maps can be read under
-> RCU and without the need to read-lock mmap_lock. However vma content
-> can change from under us, therefore we make a copy of the vma and we
-> pin pointer fields used when generating the output (currently only
-> vm_file and anon_name). Afterwards we check for concurrent address
-> space modifications, wait for them to end and retry. While we take
-> the mmap_lock for reading during such contention, we do that momentarily
-> only to record new mm_wr_seq counter. This change is designed to reduce
-
-This is probably a stupid question, but why do we need to take a lock
-just to record this counter? uprobes get away without taking mmap_lock
-even for reads, and still record this seq counter. And then detect
-whether there were any modifications in between. Why does this change
-need more heavy-weight mmap_read_lock to do speculative reads?
-
-> mmap_lock contention and prevent a process reading /proc/pid/maps files
-> (often a low priority task, such as monitoring/data collection services)
-> from blocking address space updates.
-> Note that this change has a userspace visible disadvantage: it allows
-> for sub-page data tearing as opposed to the previous mechanism where
-> data tearing could happen only between pages of generated output data.
-> Since current userspace considers data tearing between pages to be
-> acceptable, we assume is will be able to handle sub-page data tearing
-> as well.
+> Hi Ricardo,
 >
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> ---
->  fs/proc/internal.h        |   6 ++
->  fs/proc/task_mmu.c        | 170 ++++++++++++++++++++++++++++++++++----
->  include/linux/mm_inline.h |  18 ++++
->  3 files changed, 177 insertions(+), 17 deletions(-)
+> Thank you for the patch.
 >
-> diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-> index 96122e91c645..6e1169c1f4df 100644
-> --- a/fs/proc/internal.h
-> +++ b/fs/proc/internal.h
-> @@ -379,6 +379,12 @@ struct proc_maps_private {
->         struct task_struct *task;
->         struct mm_struct *mm;
->         struct vma_iterator iter;
-> +       bool mmap_locked;
-> +       loff_t last_pos;
-> +#ifdef CONFIG_PER_VMA_LOCK
-> +       unsigned int mm_wr_seq;
-> +       struct vm_area_struct vma_copy;
-> +#endif
->  #ifdef CONFIG_NUMA
->         struct mempolicy *task_mempolicy;
->  #endif
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index b9e4fbbdf6e6..f9d50a61167c 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -127,13 +127,130 @@ static void release_task_mempolicy(struct proc_map=
-s_private *priv)
->  }
->  #endif
+> On Thu, Mar 13, 2025 at 12:20:39PM +0000, Ricardo Ribalda wrote:
+> > uvc_gpio_parse() can return -EPROBE_DEFER when the GPIOs it depends on
+> > have not yet been probed. This return code should be propagated to the
+> > caller of uvc_probe() to ensure that probing is retried when the required
+> > GPIOs become available.
+> >
+> > Currently, this error code is incorrectly converted to -ENODEV,
+> > causing some internal cameras to be ignored.
+> >
+> > This commit fixes this issue by propagating the -EPROBE_DEFER error.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 2886477ff987 ("media: uvcvideo: Implement UVC_EXT_GPIO_UNIT")
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_driver.c | 27 +++++++++++++++++++--------
+> >  1 file changed, 19 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > index deadbcea5e227c832976fd176c7cdbfd7809c608..e966bdb9239f345fd157588ebdad2b3ebe45168d 100644
+> > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > @@ -2231,13 +2231,16 @@ static int uvc_probe(struct usb_interface *intf,
+> >  #endif
+> >
+> >       /* Parse the Video Class control descriptor. */
+> > -     if (uvc_parse_control(dev) < 0) {
+> > +     ret = uvc_parse_control(dev);
+> > +     if (ret < 0) {
+> > +             ret = -ENODEV;
 >
-> -static struct vm_area_struct *proc_get_vma(struct proc_maps_private *pri=
-v,
-> -                                               loff_t *ppos)
-> +#ifdef CONFIG_PER_VMA_LOCK
-> +
-> +static const struct seq_operations proc_pid_maps_op;
-> +
-> +/*
-> + * Take VMA snapshot and pin vm_file and anon_name as they are used by
-> + * show_map_vma.
-> + */
-> +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_ar=
-ea_struct *vma)
-> +{
-> +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> +       int ret =3D -EAGAIN;
-> +
-> +       memcpy(copy, vma, sizeof(*vma));
-> +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> +               goto out;
-> +
-> +       if (!anon_vma_name_get_if_valid(copy))
-> +               goto put_file;
+> Why do you set ret to -ENODEV here...
+>
+> >               uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
+> >               goto error;
+> >       }
+> >
+> >       /* Parse the associated GPIOs. */
+> > -     if (uvc_gpio_parse(dev) < 0) {
+> > +     ret = uvc_gpio_parse(dev);
+> > +     if (ret < 0) {
+> >               uvc_dbg(dev, PROBE, "Unable to parse UVC GPIOs\n");
+> >               goto error;
+> >       }
+> > @@ -2263,24 +2266,32 @@ static int uvc_probe(struct usb_interface *intf,
+> >       }
+> >
+> >       /* Register the V4L2 device. */
+> > -     if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
+> > +     ret = v4l2_device_register(&intf->dev, &dev->vdev);
+> > +     if (ret < 0)
+>
+> ... but not here ? The code below is also not very consistant.
 
-Given vm_file and anon_vma_name are both RCU-protected, if we take
-rcu_read_lock() at m_start/m_next before fetching VMA, we shouldn't
-even need getting/putting them, no?
+For all the "external" functions I was looking into populating their
+error code to probe(). Other drivers (check vivid for example) do
+exactly this.
 
-I feel like I'm missing some important limitations, but I don't think
-they are spelled out explicitly...
+There is more value in returning the real cause of the error (ENOMEM,
+EINVAL) that the plain ENODEV.
 
-> +
-> +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
-> +               return 0;
-> +
-> +       /* Address space got modified, vma might be stale. Re-lock and re=
-try. */
-> +       rcu_read_unlock();
+>
+> >               goto error;
+> >
+> >       /* Scan the device for video chains. */
+> > -     if (uvc_scan_device(dev) < 0)
+> > +     if (uvc_scan_device(dev) < 0) {
+> > +             ret = -ENODEV;
+> >               goto error;
+> > +     }
+> >
+> >       /* Initialize controls. */
+> > -     if (uvc_ctrl_init_device(dev) < 0)
+> > +     if (uvc_ctrl_init_device(dev) < 0) {
+> > +             ret = -ENODEV;
+> >               goto error;
+> > +     }
+> >
+> >       /* Register video device nodes. */
+> > -     if (uvc_register_chains(dev) < 0)
+> > +     if (uvc_register_chains(dev) < 0) {
+> > +             ret = -ENODEV;
+> >               goto error;
+> > +     }
+> >
+> >  #ifdef CONFIG_MEDIA_CONTROLLER
+> >       /* Register the media device node */
+> > -     if (media_device_register(&dev->mdev) < 0)
+> > +     ret = media_device_register(&dev->mdev);
+> > +     if (ret < 0)
+> >               goto error;
+> >  #endif
+> >       /* Save our data pointer in the interface data. */
+> > @@ -2314,7 +2325,7 @@ static int uvc_probe(struct usb_interface *intf,
+> >  error:
+> >       uvc_unregister_video(dev);
+> >       kref_put(&dev->ref, uvc_delete);
+> > -     return -ENODEV;
+> > +     return ret;
+> >  }
+> >
+> >  static void uvc_disconnect(struct usb_interface *intf)
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
 
-Another question I have is whether we really need to copy vma into
-priv->vma_copy to have a stable snapshot? Can't we just speculate like
-with uprobes under assumption that data doesn't change. And once we
-are done producing text output, confirm that speculation was
-successful, and if not - retry?
-
-We'd need an API for seq_file to rollback to previous good known
-location for that, but that seems straightforward enough to do, no?
-Just remember buffer position before speculation, write data, check
-for no mm modifications, and if something changed, rollback seq file
-to last position.
 
 
-> +       ret =3D mmap_read_lock_killable(priv->mm);
-> +       if (!ret) {
-> +               /* mmap_lock_speculate_try_begin() succeeds when holding =
-mmap_read_lock */
-> +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_seq)=
-;
-> +               mmap_read_unlock(priv->mm);
-> +               ret =3D -EAGAIN;
-> +       }
-> +
-> +       rcu_read_lock();
-> +
-> +       anon_vma_name_put_if_valid(copy);
-> +put_file:
-> +       if (copy->vm_file)
-> +               fput(copy->vm_file);
-> +out:
-> +       return ret;
-> +}
-> +
-> +static void put_vma_snapshot(struct proc_maps_private *priv)
-> +{
-> +       struct vm_area_struct *vma =3D &priv->vma_copy;
-> +
-> +       anon_vma_name_put_if_valid(vma);
-> +       if (vma->vm_file)
-> +               fput(vma->vm_file);
-> +}
-> +
-
-[...]
+-- 
+Ricardo Ribalda
