@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137052561A6;
-	Tue, 22 Apr 2025 02:17:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F97256C6F;
+	Tue, 22 Apr 2025 02:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288222; cv=none; b=khcRiPtPS/UoSEL1BUxKYnvIfZd8fS1ROszfIH3wseBUJEE4ixDLzTr5icEve5Nv5jjfEc/hGJKrbNku+AlKZY92K0CyJ28ofmQvDOOaISFKVNIss/lxQcgS6UPd8icbb5hG9qUhHm4n4SZuEE6SqneMiV71lbBzXRGKPOS3rek=
+	t=1745288223; cv=none; b=LkJANN7Ke91/OyZemvVK6AlfYyg2L25tyyQFhu+30brY4tilIJsHG5lyCe7pCcTzUQGUbv5XMXVWM09Y/MlWXrXR0Ebt4BRmZWjsIyVLesXUgqB1BUaKxpwhYK4rNZCB7fSRJb/vEwFTCfoUGtCukrptpJmq9AJMN0i4eS9AYNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288222; c=relaxed/simple;
-	bh=BKA1MVDM/vMZ2AYHLBeHtOtEbqYd2oJfJ3npMfZteUo=;
+	s=arc-20240116; t=1745288223; c=relaxed/simple;
+	bh=W3fZc4RzShLZ39KaAzu286VLtoVz1a2Yr3M6iIQtwzM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E+TKXu3msRESIH43EBfg9kiTX92U3L1nFLLilW5Bnsou+fDLYUhn5I42hP3AIRuS7I+y/+3GHYAOknF7H+cexgOFdtZoXBobeaHcTWfKovDGCWBODtGAQcIM95waSyxX6ua/3eflZGAknUl+vOeoC736qF4o5M1CtUf7ZquZC1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8xWYilY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KItfCJ3N4MQ58tcEyXp5Fqh0hA/LE4oli/A6MhbgdDWbloB9reimzQjjSxh/9WQF4Pi3KywRb56rzgYwYzfWfK6mC25WPeYKvlFdCRZ3+hRzjSGPseTgMjOjKCMp0Z5AZLMBHB4dYIZoHYNZQTbr8KhamrvY+A+/+trshn6YqG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2kEEuqw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8xWYilY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FF6C4CEEE;
-	Tue, 22 Apr 2025 02:17:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2kEEuqw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C88C4CEF5;
+	Tue, 22 Apr 2025 02:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288221;
-	bh=BKA1MVDM/vMZ2AYHLBeHtOtEbqYd2oJfJ3npMfZteUo=;
+	s=k20201202; t=1745288223;
+	bh=W3fZc4RzShLZ39KaAzu286VLtoVz1a2Yr3M6iIQtwzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D8xWYilY/Jj4uLDAc36nGaf8UBvOGhOVi3HW5x/KzGzQXaZAYBDdRjc0xwdMGA4Yl
-	 xenYXuVo2JAADD8U9ppYhHcZrWVZeA9zzfp777LEqYwcU7kVh8o3MMcnuITm8NAAkG
-	 2mDvmQROSI84fxw5edR8oHZRwToXal51+3oWjv7mpming85DQm1Lpvqzq/yv1iPY0q
-	 EsHrfqlevqRXi6xV+g3G8+01A/f7PjSlp2X/BaVUNhxfeTutLJvzMOfbNBKpeqCYUZ
-	 dUjxM0VtirISDLzikT7/hFYbCB0kAPqiTtNfTJXNMkxf9LLy33A9djLg0xb2lEN/aY
-	 7yYlFwE0klVeg==
+	b=b2kEEuqw0EYCb71IziG55jcTwbR2NH6j5jCUzucOjKLrpavoRrI+jWBIKzSLMWKap
+	 sIj7mAT8pLhj4TE9lIoFPuZ4+ue8kERvsULisBp8v+FxRteJBTpTaWRABMRaE3+WJ9
+	 Ja7nORCSjo5F6dgKKSSa5NpGpttfWHqCqbzHPy0fEBVsNLBUXQFpUXTO+DrJWxCCW9
+	 9fFuncwNrjSZL5DPg2DpXrbILxpSc1WRpX3LKI/1AEjNoFr2+dtitN9JKsiAtQh3kg
+	 hYErq4V43UoF78oFdpUuBA9sW3uRNGy0lqJHruK//Jq5cqoWGhxfqKdCmGyUBUQ7Nz
+	 ajVQT9/eicbmg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Uday Shankar <ushankar@purestorage.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Tamura Dai <kirinode0@gmail.com>,
+	Carlos Song <carlos.song@nxp.com>,
+	Mark Brown <broonie@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 29/30] ublk: rely on ->canceling for dealing with ublk_nosrv_dev_should_queue_io
-Date: Mon, 21 Apr 2025 22:15:49 -0400
-Message-Id: <20250422021550.1940809-29-sashal@kernel.org>
+	shawnguo@kernel.org,
+	linux-spi@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.14 30/30] spi: spi-imx: Add check for spi_imx_setupxfer()
+Date: Mon, 21 Apr 2025 22:15:50 -0400
+Message-Id: <20250422021550.1940809-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
 References: <20250422021550.1940809-1-sashal@kernel.org>
@@ -51,101 +54,51 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.3
 Content-Transfer-Encoding: 8bit
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Tamura Dai <kirinode0@gmail.com>
 
-[ Upstream commit 7e26cb69c5e62152a6f05a2ae23605a983a8ef31 ]
+[ Upstream commit 951a04ab3a2db4029debfa48d380ef834b93207e ]
 
-Now ublk deals with ublk_nosrv_dev_should_queue_io() by keeping request
-queue as quiesced. This way is fragile because queue quiesce crosses syscalls
-or process contexts.
+Add check for the return value of spi_imx_setupxfer().
+spi_imx->rx and spi_imx->tx function pointer can be NULL when
+spi_imx_setupxfer() return error, and make NULL pointer dereference.
 
-Switch to rely on ubq->canceling for dealing with
-ublk_nosrv_dev_should_queue_io(), because it has been used for this purpose
-during io_uring context exiting, and it can be reused before recovering too.
-In ublk_queue_rq(), the request will be added to requeue list without
-kicking off requeue in case of ubq->canceling, and finally requests added in
-requeue list will be dispatched from either ublk_stop_dev() or
-ublk_ctrl_end_recovery().
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+ Call trace:
+  0x0
+  spi_imx_pio_transfer+0x50/0xd8
+  spi_imx_transfer_one+0x18c/0x858
+  spi_transfer_one_message+0x43c/0x790
+  __spi_pump_transfer_message+0x238/0x5d4
+  __spi_sync+0x2b0/0x454
+  spi_write_then_read+0x11c/0x200
 
-Meantime we have to move reset of ubq->canceling from ublk_ctrl_start_recovery()
-to ublk_ctrl_end_recovery(), when IO handling can be recovered completely.
-
-Then blk_mq_quiesce_queue() and blk_mq_unquiesce_queue() are always used
-in same context.
-
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Uday Shankar <ushankar@purestorage.com>
-Link: https://lore.kernel.org/r/20250416035444.99569-4-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tamura Dai <kirinode0@gmail.com>
+Reviewed-by: Carlos Song <carlos.song@nxp.com>
+Link: https://patch.msgid.link/20250417011700.14436-1-kirinode0@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/ublk_drv.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ drivers/spi/spi-imx.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 611a4b2afbbf3..264b332a5faaf 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1629,13 +1629,19 @@ static void ublk_wait_tagset_rqs_idle(struct ublk_device *ub)
- 
- static void __ublk_quiesce_dev(struct ublk_device *ub)
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index eeb7d082c2472..c43fb496da956 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -1695,9 +1695,12 @@ static int spi_imx_transfer_one(struct spi_controller *controller,
+ 				struct spi_device *spi,
+ 				struct spi_transfer *transfer)
  {
-+	int i;
-+
- 	pr_devel("%s: quiesce ub: dev_id %d state %s\n",
- 			__func__, ub->dev_info.dev_id,
- 			ub->dev_info.state == UBLK_S_DEV_LIVE ?
- 			"LIVE" : "QUIESCED");
- 	blk_mq_quiesce_queue(ub->ub_disk->queue);
-+	/* mark every queue as canceling */
-+	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-+		ublk_get_queue(ub, i)->canceling = true;
- 	ublk_wait_tagset_rqs_idle(ub);
- 	ub->dev_info.state = UBLK_S_DEV_QUIESCED;
-+	blk_mq_unquiesce_queue(ub->ub_disk->queue);
- }
++	int ret;
+ 	struct spi_imx_data *spi_imx = spi_controller_get_devdata(spi->controller);
  
- static void ublk_force_abort_dev(struct ublk_device *ub)
-@@ -2785,7 +2791,6 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
- 	/* We have to reset it to NULL, otherwise ub won't accept new FETCH_REQ */
- 	ubq->ubq_daemon = NULL;
- 	ubq->timeout = false;
--	ubq->canceling = false;
+-	spi_imx_setupxfer(spi, transfer);
++	ret = spi_imx_setupxfer(spi, transfer);
++	if (ret < 0)
++		return ret;
+ 	transfer->effective_speed_hz = spi_imx->spi_bus_clk;
  
- 	for (i = 0; i < ubq->q_depth; i++) {
- 		struct ublk_io *io = &ubq->ios[i];
-@@ -2874,20 +2879,18 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
- 	pr_devel("%s: new ublksrv_pid %d, dev id %d\n",
- 			__func__, ublksrv_pid, header->dev_id);
- 
--	if (ublk_nosrv_dev_should_queue_io(ub)) {
--		ub->dev_info.state = UBLK_S_DEV_LIVE;
--		blk_mq_unquiesce_queue(ub->ub_disk->queue);
--		pr_devel("%s: queue unquiesced, dev id %d.\n",
--				__func__, header->dev_id);
--		blk_mq_kick_requeue_list(ub->ub_disk->queue);
--	} else {
--		blk_mq_quiesce_queue(ub->ub_disk->queue);
--		ub->dev_info.state = UBLK_S_DEV_LIVE;
--		for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
--			ublk_get_queue(ub, i)->fail_io = false;
--		}
--		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	blk_mq_quiesce_queue(ub->ub_disk->queue);
-+	ub->dev_info.state = UBLK_S_DEV_LIVE;
-+	for (i = 0; i < ub->dev_info.nr_hw_queues; i++) {
-+		struct ublk_queue *ubq = ublk_get_queue(ub, i);
-+
-+		ubq->canceling = false;
-+		ubq->fail_io = false;
- 	}
-+	blk_mq_unquiesce_queue(ub->ub_disk->queue);
-+	pr_devel("%s: queue unquiesced, dev id %d.\n",
-+			__func__, header->dev_id);
-+	blk_mq_kick_requeue_list(ub->ub_disk->queue);
- 
- 	ret = 0;
-  out_unlock:
+ 	/* flush rxfifo before transfer */
 -- 
 2.39.5
 
