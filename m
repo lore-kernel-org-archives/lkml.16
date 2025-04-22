@@ -1,133 +1,73 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B08F1F92A;
-	Tue, 22 Apr 2025 07:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D79230274
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305228; cv=none; b=t2c+CVrfq9eAF4qLZybl5KA2id2vSsrONGxZZws3ZS9BeC77fR4oSBQxP29luwz3q8uGPYIyH90hwrgMAsEb0DPfVOXF0lxzBR+P5xUBF8ldt4oe9ec8jrhPvWns8zifBHYjp9IPhFwtrsbyJLlQ1oXP8fhdLRVg/r5ODaxCCX0=
+	t=1745305228; cv=none; b=gVhZQIiVKnc3Y+TizU+Pf0R0JvUj8F4ghlLq+quNNJJEIGig6iSxSqF07GmM8uMW+9oCWkgGUp3bkmUHc/r+3aI4GoDHoAv15zPRsnOMvWBdbDIozR+tg73d28uTQcZ/cFjIKB6WqNCqugeDhEt/gNx7W69DY5o9N3SpezMsQSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745305228; c=relaxed/simple;
-	bh=pMLtKo1GLVRJoMOK4cWV+nK9vCwPPRwTpuCuCCkS+ME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bSOEBwk1vr+5SBE/qr3A0+vbgtyZfbtb1yBBiZ3nErFlT4UEas6lhJEqt8/6Nnow74Zm5HGbAM/VTK56jlBQGa4IuEvcMZyPop52azQJJPOfQXuSO5q5ix72Fjpi/8yKMNCF1NQ1MP48whQPklDX9VqEgqnr16TmSxA7Zb/dPIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowABXBUJ3PgdoefoUCw--.50317S2;
-	Tue, 22 Apr 2025 15:00:09 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: arend.vanspriel@broadcom.com,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v5] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
-Date: Tue, 22 Apr 2025 14:59:38 +0800
-Message-ID: <20250422065938.2345-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	bh=OnhJem8wDKvYG1wfpXkdizyH5nqV/7CdTNEKjrvFSyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OizGogCCZj/mW4F1XRf7cWT1JuE3i8RfhF5ar0r5KTL7Byg4Cs1wHHxzOT+QKZa1bbkdVBPEpRKF55my2geALSLuWb8mBowue5IE0JfnNGAzS6G6o54AyshUzRHgvRUeBnRzpKxRJScYHiSCNS/30DazIU6l/pG4B1HuaZUEbiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlPWqp8T; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlPWqp8T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79463C4CEEC;
+	Tue, 22 Apr 2025 07:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745305227;
+	bh=OnhJem8wDKvYG1wfpXkdizyH5nqV/7CdTNEKjrvFSyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KlPWqp8TQgFETfYLAvudfzAo7tRlCJKuVJztUkGKxB913aXlP2eZIu/uwDP4Sg5qn
+	 Z7mMx9mvvQ2b2UUBL9xJ2QqF5YPKkMyXlzBDP4T0Si0OMbFOvDnl4bvcKDvBbpdLPV
+	 c5aiWyTulfQ6gIC2Ml6AMKbiMjmWLc9DnfY9goggczhCzx8QVPDjHvshOgFIKxsvv6
+	 Xn5Joic+Q42SUbNMr/8PImInI2GYnwX6swtzAvWFWo89Y8dWYddDfyh35saCkbHcdK
+	 3Ej8F0wnxyOgS94Wbhlf7+iURYOx1ol6XAOu1KcNdndlafKK9ltH6Ay6oZESRqm+L1
+	 P7LM7iaqRIWYQ==
+Date: Tue, 22 Apr 2025 09:00:23 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dave Hansen <dave.hansen@intel.com>, x86-ml <x86@kernel.org>
+Subject: Re: Kernel 6.15-rc2 unable to boot on 32bit x86 with PAE
+Message-ID: <aAc-h1TJV7do7JXa@gmail.com>
+References: <4599013d-bc74-4f81-9db7-070806ea9162@gmx.com>
+ <20250418160515.GAaAJ4O2HnktVgmZ1v@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXBUJ3PgdoefoUCw--.50317S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4kuFWkAw1UCFWrJryUGFg_yoW8uw4fpF
-	4xXayjyFW8Wr4Fgan3trsrJ3Wak3WkJayvkF47u3s7Xr48Cw1rWw1rKFyF9w4kCr4xC347
-	JFWDtFn8Wr17GFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUejjgDU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8AA2gHJ35aWQAAsw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418160515.GAaAJ4O2HnktVgmZ1v@fat_crate.local>
 
-In brcmf_usb_dl_cmd(), the error logging is not enough to describe
-the error state. And some caller of the brcmf_usb_dl_cmd() does not
-handle its error. An error log in brcmf_usb_dl_cmd() is needed to
-prevent silent failure.
 
-Add error handling in brcmf_usb_dl_cmd() to log the command id and
-error code in the brcmf_usb_dl_cmd() fails. In this way, every
-invocation of the function logs a message upon failure.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v5: Remove finalize label.
-v4: Fix spelling problem.
-v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
-v2: Remove redundant bailing out code.
+> On Fri, Apr 18, 2025 at 08:31:23PM +0930, Qu Wenruo wrote:
+> > Hi,
+> > 
+> > Recently I'm testing a situation where highmem is involved, thus I'm
+> > building the latest 32bit x86 with HIGHMEM and PAE, and run it inside a qemu
+> > VM.
+> 
+> Does that fix it:
+> 
+> https://git.kernel.org/tip/1e07b9fad022e0e02215150ca1e20912e78e8ec1
+> 
+> ?
 
- .../broadcom/brcm80211/brcmfmac/usb.c         | 23 +++++++++++++------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+That commit caused other problems - the best fix we have right now is:
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index d06c724f63d9..b056336d5da6 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -741,15 +741,19 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- 			    void *buffer, int buflen)
- {
- 	int ret;
--	char *tmpbuf;
-+	char *tmpbuf = NULL;
- 	u16 size;
- 
--	if ((!devinfo) || (devinfo->ctl_urb == NULL))
--		return -EINVAL;
-+	if (!devinfo || !devinfo->ctl_urb) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	tmpbuf = kmalloc(buflen, GFP_ATOMIC);
--	if (!tmpbuf)
--		return -ENOMEM;
-+	if (!tmpbuf) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
- 
- 	size = buflen;
- 	devinfo->ctl_urb->transfer_buffer_length = size;
-@@ -770,18 +774,23 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- 	ret = usb_submit_urb(devinfo->ctl_urb, GFP_ATOMIC);
- 	if (ret < 0) {
- 		brcmf_err("usb_submit_urb failed %d\n", ret);
--		goto finalize;
-+		goto err;
- 	}
- 
- 	if (!brcmf_usb_ioctl_resp_wait(devinfo)) {
- 		usb_kill_urb(devinfo->ctl_urb);
- 		ret = -ETIMEDOUT;
-+		goto err;
- 	} else {
- 		memcpy(buffer, tmpbuf, buflen);
- 	}
- 
--finalize:
- 	kfree(tmpbuf);
-+	return 0;
-+
-+err:
-+	kfree(tmpbuf);
-+	brcmf_err("dl cmd %u failed: err=%d\n", cmd, ret);
- 	return ret;
- }
- 
--- 
-2.42.0.windows.2
+	https://git.kernel.org/tip/83b2d345e1786fdab96fc2b52942eebde125e7cd
 
+Thanks,
+
+	Ingo
