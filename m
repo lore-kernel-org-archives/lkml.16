@@ -1,73 +1,78 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217F82066DB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A92213E7A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315646; cv=none; b=CdwggdR78qRoKsKXuupsdSDHWfvVU/UectkugfFutQbv+mZ6ahZ8TCjhjEQL7dO8uQv0GSd4ZGt2qa/zIvXs+a/EvHX1DXQadTubA3KVzL66I3rqS7b+R+1tNzpwb6eQcfWWyqQuVvXchRDyMOP+VlwHZSKdVeopX9hg41POKyQ=
+	t=1745315650; cv=none; b=VHzanGWtdQEqWgVtLiB/wwEAMXI8/WyAZFjkMLZL1a1uJUn86N7PELUkTBNvMkdElJ4noE4ft4AKyIklAxOp6/nVzng1Xaw6bC+GIfbVJhNXFe4oLNc0F/i5dd8E4sh7O3GpA3PimJKZTto5ZpnoSJeAlLH+HTybM1HVxtZgcZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315646; c=relaxed/simple;
-	bh=egRR99i9nHWRLJSkLdIOmqIX1zLBqzvayXnVEdpZ92s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ifyArlwAOCK/VZj3M1PJgObSk4b+x3+kS7NrP7YWdWKTwsQLcpSdt16yEnVeo61SpanBj/W1IgjDsN9pg/fTgENLPizRCpp4rvCYBPCqaGHlkWsQfpWcS3DR2NXym5eiKM7Rfrr3MVCrCl7kJhbH9JCg4+M8cSZ3n1Hw0eJ9b9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l9a9vsHB; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1745315650; c=relaxed/simple;
+	bh=L2eTTuTa1eQwii4P70WWj60+AqgdSCjTwbfYuCR+exI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WpQESr9AJBlf8iV2y/9TqPcchr2JNGexagkzIEHzWKGA9BLv844qUl+g1MIaHQgMp12Wk7OywkEH/a5x9V0yDkkdO9rAmwUh4o6fpaEp5wPGV6XHuGeuNSBsizyfLe2BDnnxFIcj4V4qZyqlfQSjN/6ZWE0QBQHtvcaRzIjl/ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=El46f7pB; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9a9vsHB"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223f4c06e9fso41594335ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:54:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="El46f7pB"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736e52948ebso5562126b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745315644; x=1745920444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iPZNfcaggW8uG4XfjMHFTZr4Y8+XA41YuZRRPWh0lH0=;
-        b=l9a9vsHBElBpk7f9N47KZ/b8UBTiLIrRttfW4lCISTz02sXkE0vrYFxRtkVKCzZte1
-         7xUdMB1oJQGzbtFY9bIhhB9p2wRwlwDi393ec03iqfkdJLWM67RRjxszDk0zo7WHeu1m
-         +d3Of0ugO7UULMP1sxfvKoKvEzJehKUfS2HhXKxs37SdEnhjpJ9HOhUymvsajY5ocXBI
-         smqppvIO9ErQjHRlZFwClTFYs9PPyNaq4rDm6Ja8uaaS+i3cx1wYG4x+PbV7rHyBspdO
-         5Bv9xLp3wU7Gu2WUUCJlGnq8b5CTiAxJOEhQkLmOkmPDBuVNkJKU9eGUxoKqkFGIxPrt
-         nxaQ==
+        d=linaro.org; s=google; t=1745315648; x=1745920448; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6gXRQ3l/ZDI7m3p/8+vMXIVMOdLVmbzl70e5WfDPUXI=;
+        b=El46f7pBW5AY3T/pW8ccCde9pT8HEfOL4tJyCzbKl4MObmTKgcLTI3hWJDEVHyq35p
+         IXBrshZIgp2r7zZN7anakE12qwwBa4l0yGwwYxgLdCj5xfjHjFC4bSyXF9SGexGX+34o
+         zvtHDcnU2rFmfMccd1wW7PWWCFzD511w2Jm/+L6WFGema53B5XdoGTi6vK3al6rfrWLx
+         fxUOOtPxpwN4byRtSq9vC8KnhYJ5lsA3jzKkDO2EOuPk7JLJp6vzRAkRuSS9hXSJZdut
+         gLSDg3NeqkCIpAtxcFtzRADZoqNCWLR0JgMdOwmlyNQea/3zivp6nQI0Q4/RwZuuTmTU
+         HEGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315644; x=1745920444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iPZNfcaggW8uG4XfjMHFTZr4Y8+XA41YuZRRPWh0lH0=;
-        b=L7TYBD/Fyh6uiwOKslQcyA6angvxF4F8ubRFfy/Fjfn3julUyFjwSnik1CF78eBVfp
-         z9+xW6DHUP5xfFQrIJmvRWnTym4e5pyyTpei2IqXhreKv9CMyCnEMbqnt6IPkj4KLVMX
-         896K0MYgwbo9Gtz+AbmypJxcK/LFPvqvhzf//xT451HNDFIbYuWQ0T/Xiz0ZNY947T/S
-         ccu90fpm7gF75SUiVCABywOQJyF7jI/OzaRXyuziDTyRUTEhRezGXVX57ZMreAGzhz75
-         Fs5NIdvffyNe3ZfkdIXNRQ66IsAWpbK8Ra9KO3YFp+DbO9mQLKBI9yYrapCHQMzd1lIC
-         HcuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWE0EyZ0yLimXdxHR/HbjuWshOVnT3n2NMwnvZU+2k3PfIVnkmxdWmIp+qOPHKeMsfZz+CKGN06ORXVcXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz8HaY6cVmUP4Mkpzbmp1pKwpVZcqZKkBpcCjdZk+TWyv1KTWY
-	6HhZzA821aW4qn1GY5CDwCQVYSE3BsC8yVJuyT8iaxB+CaYx2yohxApxawu9P6g=
-X-Gm-Gg: ASbGnctbkk825ka0nZpUucT2Ao3JWfCq3omOewS5hDXsTeakECPU54jJrJMjeteGvOL
-	wUmTLc6zRn3lfMBf2qKERzL7ooTs8Sxm6x0SCmBky47AI0lTK+MLkLGSS0n2NlF06JlyqK2spoY
-	ltJoOOpI1lcZ4bo/diPIrKIdaFhdNZg1y/Fvip2C5xB8bd8a8mrso07nDOp7TnxXX+NmenJ9dJp
-	0wCI54WzYVkT/cYX0AU3pkbRtyX+oxKB5mhQRe5iMJQvMFnGKOm0yHQYdjibX2fsEtaX86kkIku
-	Aa3Yf13p3JS2nqawRer58sFjWAfAtO/mVA0Xc6KP9g==
-X-Google-Smtp-Source: AGHT+IHKou40qiS7674aCZgsNbYQ3NjPMMj46gtqN3TSMH1ZrnQNn1nfjehtyZw5rtQa72SBcl4KYg==
-X-Received: by 2002:a17:903:3c6e:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-22c53e1a157mr219276895ad.2.1745315644374;
-        Tue, 22 Apr 2025 02:54:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745315648; x=1745920448;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6gXRQ3l/ZDI7m3p/8+vMXIVMOdLVmbzl70e5WfDPUXI=;
+        b=QUy8ht5CAcWE4tgEdEfxG31GUaImqPBMlRBwnpH0yG6fp1MP51vYbJzPzMU3tnXacZ
+         ZMJ7QNHwUD13ejzSWxyV9iHhKnh+v3cISWsKPuJyLOMqJVU6DvfDsX3P9E3sKEB4rkhh
+         SisS1I8Rvk/WE9ZFJWEH5Gwmz0UcKizjGUCemVfaC/59tBMBSMvs3/rlxEW/d8OTMz0I
+         10ZGc20NK3VnFV9b3Yl+y1K7XbZoNG3L7gSUCFzaqw4/IuFhncwOb9OT6bMXO+wFdOj0
+         c5orjCvN/EydK9JymBu5XhSEujaRUfFRptujSS49XX1lLIjonmgh8cqvx2mE2mZcpxhE
+         WvEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWz/XzSGNbGXpPbu2/QZfuhVQ1tCjt4x7NM32LtRfFzr+OAmorRDidLb4gSFrJBr4jrOmLMoSB3tgLcOTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjNVt0oZRCD9trxxsiuevdrOvzRqwc3A2704YQptdRMpWRhUH+
+	6N05/8eUwSZjHNQ9nTCeh0rI6pXZGFaVmrfcf4d7IRdQC2UMoeKgHO27o5AODhpFHKslTZItBJw
+	U
+X-Gm-Gg: ASbGncsEB50j3vCAJZXuRFrvcsjBWE2C++A2VQWDB5aAl5kRWKopT23BvVRaakD5RDi
+	FR7Mso5I1K6q4dl2g6gna74nrPnZcoiq/Kf+bSho8Ro1XiN6FIcpMqwZC+TQyVwgwobJoqoSGD9
+	DPklFjYi+i/nWlm1Ofq5/+eaPT52gKLfwqHvP5dXj9BWz87RUbWKbV0lirXkTIYRf7xG1bP0G+Z
+	pSYWxmn2O/IKJ9C+Ag9f3YB8mad2y1vFoEM9LwwPCPwsVSNbNSS0Wx9ifD6HJ2QQWG4fWYujMwP
+	2vz8xVPbnS2iX6tHvpS66aJ9wJqm9cFTTHv+ILqN6y03BIXUwOVP
+X-Google-Smtp-Source: AGHT+IE/wvqq9gqVFeBQZ9f+2ocmH5VwKgVfi/GMhqbq95+Km5GimJ+CgXmeQp3d6qdUw6qoPnp7hQ==
+X-Received: by 2002:a17:90b:544c:b0:2fe:6942:3710 with SMTP id 98e67ed59e1d1-3087bb3978cmr17322956a91.3.1745315647911;
+        Tue, 22 Apr 2025 02:54:07 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eced75sm80823325ad.173.2025.04.22.02.54.03
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087df1e5bbsm8138605a91.24.2025.04.22.02.54.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 02:54:03 -0700 (PDT)
+        Tue, 22 Apr 2025 02:54:07 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Lifeng Zheng <zhenglifeng1@huawei.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lifeng Zheng <zhenglifeng1@huawei.com>
 Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Nicholas Chin <nic.c3.14@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 0/6] cpufreq: Boost related cleanups / fixes
-Date: Tue, 22 Apr 2025 15:23:50 +0530
-Message-Id: <cover.1745315548.git.viresh.kumar@linaro.org>
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
+Date: Tue, 22 Apr 2025 15:23:51 +0530
+Message-Id: <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+In-Reply-To: <cover.1745315548.git.viresh.kumar@linaro.org>
+References: <cover.1745315548.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,32 +82,99 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The boost-related code in cpufreq has undergone several changes over the
+years, but this particular piece remained unchanged and is now outdated.
 
-This series tries to fix boost related issues found recently.
+The cpufreq core currently manages boost settings during initialization,
+and only when necessary. As such, there's no longer a need to enable
+boost explicitly when entering system suspend.
 
-The first two patches (hopefully) fixes the boost related breakage
-introduced recently. These should be applied for v6.15-rc4. Nicholas,
-please give the first two patches a try.
+Previously, this wasn’t causing issues because boost settings were
+force-updated during policy initialization. However, commit 2b16c631832d
+("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
+that behavior—correctly—by avoiding unnecessary updates.
 
-The other four patches are general optimizations and fixes for boost
-handling in general. These can be applied to -rc or next merge window.
+As a result of this change, if boost was disabled prior to suspend, it
+remains disabled on resume as expected. But due to the current code
+forcibly enabling boost at suspend time, the system ends up with boost
+frequencies enabled after resume, even if the global boost flag was
+disabled. This contradicts the intended behavior.
 
---
-Viresh
+Don't enable boost on policy exit.
 
-Viresh Kumar (6):
-  cpufreq: acpi: Don't enable boost on policy exit
-  cpufreq: acpi: Re-sync CPU boost state on system resume
-  cpufreq: Don't unnecessarily call set_boost()
-  cpufreq: Introduce policy_set_boost()
-  cpufreq: Preserve policy's boost state after resume
-  cpufreq: Force sync policy boost with global boost on sysfs update
+Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
+Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220013
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+This was sent separately earlier. No changes from that.
 
- drivers/cpufreq/acpi-cpufreq.c | 38 ++++++++++------------
- drivers/cpufreq/cpufreq.c      | 58 ++++++++++++++++++++--------------
- 2 files changed, 50 insertions(+), 46 deletions(-)
+ drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index 924314cdeebc..7002e8de8098 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
+ 	return false;
+ }
+ 
+-static int boost_set_msr(bool enable)
++static void boost_set_msr_each(void *p_en)
+ {
++	bool enable = (bool)p_en;
+ 	u32 msr_addr;
+ 	u64 msr_mask, val;
+ 
+@@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
+ 		msr_mask = MSR_K7_HWCR_CPB_DIS;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return;
+ 	}
+ 
+ 	rdmsrl(msr_addr, val);
+@@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
+ 		val |= msr_mask;
+ 
+ 	wrmsrl(msr_addr, val);
+-	return 0;
+-}
+-
+-static void boost_set_msr_each(void *p_en)
+-{
+-	bool enable = (bool) p_en;
+-
+-	boost_set_msr(enable);
+ }
+ 
+ static int set_boost(struct cpufreq_policy *policy, int val)
+@@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
+ 	free_percpu(acpi_perf_data);
+ }
+ 
+-static int cpufreq_boost_down_prep(unsigned int cpu)
+-{
+-	/*
+-	 * Clear the boost-disable bit on the CPU_DOWN path so that
+-	 * this cpu cannot block the remaining ones from boosting.
+-	 */
+-	return boost_set_msr(1);
+-}
+-
+ /*
+  * acpi_cpufreq_early_init - initialize ACPI P-States library
+  *
+@@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+ 
+ 	pr_debug("%s\n", __func__);
+ 
+-	cpufreq_boost_down_prep(policy->cpu);
+ 	policy->fast_switch_possible = false;
+ 	policy->driver_data = NULL;
+ 	acpi_processor_unregister_performance(data->acpi_perf_cpu);
 -- 
 2.31.1.272.g89b43f80a514
 
