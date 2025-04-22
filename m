@@ -1,37 +1,37 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9319F510;
-	Tue, 22 Apr 2025 10:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D6E2116EB;
+	Tue, 22 Apr 2025 10:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317446; cv=none; b=Qn+PO1I8tSCoc6LXTjukJiFsArBXq5A13fMt4IcZKgpyGcf0rvsyr4Q00OpaHCoa00YesYDBo757YEVQOQo362entLTl/or+ssO28ltmvhqQu8H5ySDJKAxaWqcAI5B2UYR4xcz9RCtFoRwLqbMdpGZ1np6Q39/E3xmLxMHfh5s=
+	t=1745317456; cv=none; b=g8feHiCcGKK7Iz0oZxINvlJFH31CqXPjPXCsHv6hn/wnfKfBPeoY5+XpdjZdS/sK/qQemmZS5cyr1F/OxXe8FsMJUl8g0KgGfBNRmKL8VMjQ2susGxgmuIYJgGuu0SfCjXkCX38FID1oY1jjnWzYfbDeSBR8MUAPU1SbfY4JGTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317446; c=relaxed/simple;
-	bh=QwylYaArHciXtrOfCdsCAGn0Ril2BBTKFUXlFhVuIeU=;
+	s=arc-20240116; t=1745317456; c=relaxed/simple;
+	bh=DwnHJKjSRTcNroFg/p73E0l/JHIa6S8hPby+gFI9qpQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tRoUwXUHJXzaReHLq0b3sP6aO+hDvOBJzgU19tQLdXkAyuU2rqiM5fxuqBCIaHAUWOfD4TGO05iqXXqfUwuYbqvU3h9NqLxUvjdgPFGoR+tUEdgzD9CfhLfMX98+Ll0N5CamDPLWetKrS+9PC6LJSV+3ofAEccYeOQXBWwxZXxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dF6E9pqh; arc=none smtp.client-ip=52.59.177.22
+	 MIME-Version; b=alHPgJB2icgzaj2LUenpe4xQf9ODNk9fLMSTXlbug1Pa+7cE1VP0yUuFa0KawqbCUHVR4SmhvWZE9sp8wzIOoJr2FiT1M6osxuJeee+rkevO0mwao1XpDot2cd2ubD28ONHd0OJLrdDg6KEZje1XehNAsH1PhOAa5fG2BzKcv5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Vq+IwI1+; arc=none smtp.client-ip=54.206.34.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dF6E9pqh"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Vq+IwI1+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745317427;
-	bh=WlmB1lqRNxFbFMYPeJr4njtQ9mNImQJWs4aHfijngHw=;
+	s=onoh2408; t=1745317443;
+	bh=/kCJEwIi51vpS2czRIPch3YPYBe5K2hVZT8aTmupNNc=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=dF6E9pqhaG9bHpdcJOM0lqVFCn5WstacrdMGBx5UtVbSG0mR3uxySrdxgzcuawbsg
-	 G/Jx9/RQyZH33e88TjmdkiLrZexRmDCMB/c0+apfYG7IZlgnkddnPvmHWrmmtH1bkk
-	 XJLidj+5g9mvpajBWxa0M400uL/sgC1uWH8LWUMc=
-X-QQ-mid: zesmtpip4t1745317380te5bc3dce
-X-QQ-Originating-IP: WcYi1NZqqtZuTN8yyNwmSTGUPHkECqFH8z/doLuEEKY=
+	b=Vq+IwI1+QZnq4aI3jWuCzmCbbb0chMcG+Kc5FSX/WdIFq3+Xo1lCqshdEb+rATwt+
+	 fko10VuHRcCjATiEuePR+pIMjUlsL3S3Okn7lipPoj0bz9ucPYRzO0gwTcWbZws44r
+	 QcePHnS6APk6zyvuHjxTZbfhVXeFJp3nkV3OR1gM=
+X-QQ-mid: zesmtpip4t1745317404t5b5a4381
+X-QQ-Originating-IP: S0t1emq2KGXtxj+2JIdNqT7E9gubmHp4di/k3CSucoY=
 Received: from localhost.localdomain ( [localhost])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 18:22:58 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
+	id ; Tue, 22 Apr 2025 18:23:22 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8748779318587994258
-EX-QQ-RecipientCnt: 9
+X-BIZMAIL-ID: 8795362617588376660
+EX-QQ-RecipientCnt: 8
 From: WangYuli <wangyuli@uniontech.com>
 To: wangyuli@uniontech.com
 Cc: guanwentao@uniontech.com,
@@ -40,11 +40,10 @@ Cc: guanwentao@uniontech.com,
 	macro@orcam.me.uk,
 	niecheng1@uniontech.com,
 	tsbogend@alpha.franken.de,
-	zhanjun@uniontech.com,
-	Chen Linxuan <chenlinxuan@uniontech.com>
-Subject: [PATCH v2 1/6] MIPS: dec: Only check -msym32 when need compiler
-Date: Tue, 22 Apr 2025 18:22:48 +0800
-Message-ID: <C7DB555D3895DE54+20250422102253.137944-1-wangyuli@uniontech.com>
+	zhanjun@uniontech.com
+Subject: [PATCH v2 5/6] MIPS: decstation_64_defconfig: Update configs dependencies
+Date: Tue, 22 Apr 2025 18:22:52 +0800
+Message-ID: <566F2D64350C960C+20250422102253.137944-5-wangyuli@uniontech.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
 References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
@@ -54,89 +53,151 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MYha8DeKTomkKz7ip5AbqtPm+f55dSHKOIkcSp5YTMmmWUNKYykEQDSR
-	009n2svWpFISYgXSwVF12JPOOvgtRHQlN7R5YsRayrYImq6BfLTzXS3e1faehVAS+SQ6b9R
-	ZiLHigdEIa71eOj5NGCrh9Mxec9QLFjEOYFx12+gEhRYZi/wxZAOoCqh/xUey4ZtA0+rH3L
-	l7XVzOI5wIjUOq2fFhYp20bcUyedzQRcdLdRMi1mjPbTHufClT2qievbJhP4nNVXIZm+1QW
-	QC6fmIvHQosoE2KkVDB87TVdCpO0+6M5hR1oEtJAkxt1okXAK2tvsSvyanJEx7eO3yas8st
-	sRL3TE75U2zPbRgrfF5c0rRgwfoG+eFQILCmngt8lzmCOXYDFljaigQ8D1/hohhjHuPkJE+
-	tfUG78d4MZTFWdY5qqzCEcMziycEFpGbbqczvua0oXshYL9eSp8uDWQExDlhzVzz/pf2unD
-	9CpOkEDko9e4jsy3yjybcgb7ujRIVRIfqi2SjGNMA3IwuA07tb6jk4gNTm77uC1pdQbTJ3Q
-	F2UrTwtBML+ipzJpphJFZn08B35P0YscOJGauGCjFCeF01kutz4yxGTaBeQ0PTR9ZOIXLSt
-	tUhHryV91dfTR5Po2GDkL657xWcXKX1hnLC8aheVMO0aEVhhZaurtCSR/ns8qkow3qHfhO8
-	06sRWgXUdbF5pIALqx1kMOYux6t/w5eBkA9XEFCZ/N23Aeh/La/X/ZzzVHYsUMl4i4XoTqK
-	43LrDndHHGeJe5pMm0eDKwEnvakOEE7SinrA0F0qKCEWyOatV/zMHSC8ziUaYz0KpSYoKN9
-	2mI7WI6MGiHJG/RXW0jolAMDjPAuKHMLeZFZ+cv7tQONj11cPiBqOYwEcgkIqQbWhiXsCha
-	XAqeLMwufYXJjhkcFyA4uHPKbX9JLY7lPYZwkU/X8lwgcYCw76wkLAGkltuYqvckfQh9FI/
-	aXhA5bOOxxjVz7W4dO3lXouJu5h0QBDn/HiN3r27ETzi/5bYZRfnwzCvEboDZpR1hmt9W/o
-	pWYg1v8Ry/xPYfYTs8gDfaU45vfeV+Ox0hHaE5jY0LVGe41a4V156iQ5F/V0sCdVhMWtgns
-	IXKFGy7+t9lPTMPwF5BQlM=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-XMAILINFO: MvUCj+jJbjsSURhWTNu2YlJFciUNDpBoc1mQEO9goJzhtElPaBVqfmG4
+	uf/U4rzgizlgPh0E27qM97ob4qIUcshhtW6V/0I1GN+rxHnj40alBVhUSa+Oj7szuymcVpn
+	LMIQNlVRZG/230cPM4m2vkLe6iNLSDz6Vp2pIL/2RnEAHzklcwMlVzCHuDBQxNbBUa3jioA
+	Z88qMVW0gsmXoGkEY4DLUMkJbHP080UCpC4GH9djt4d7ZM238Tr/fGoAoo13QwOe6yyO3F1
+	IRHhVcflyiCMxtaR6gGjgGh1hQP+jbiP6HnC/vWqjpHOg1Lid1/+3+yYpTs3RJn3Gpme48v
+	ZJBqXmtO8re3KVsOlYPBYT/wB0mCLJjaH1GG8KwJQ8xlgAKRHkxiLJ6gQx4Q2IbkTGObEhm
+	gG83BaqdOkJSd5rkSf3872wutl+3hm9rjhx1BbruloEIUxys8phP5mh9cYQRAHV/pLzbTIm
+	d0Ngj+WFVx8is+7vYKakXdquQZXgHvGY/VDf1Sv3YDNXJs2vvveV5w0P8TXI5qjxN54iJUh
+	QTRUVvstI3e/1viIiiD8QMqsKKwVqSlzIs9PkKmQN/dRL5J9Ku4cYwBzuoUg13m+YdISozP
+	m4IYERequYXbkZCqULj8InZFccBwsynA/0AWsAF2sivWci8JSs3oi61NySdeRFvqaYJ9Fvb
+	BjvNmyaRSe0qpKRB3cRg0KdeT3xKhUq2GEcOSYM+tp1SvkFDWFEyxpOC+hrv+cGUBDbYU8x
+	6dS6q++gZjSrN3FFwLxQBgLtMed5iOEy9sjgY24xp1ppFJJi9/Jx/PcxFXeX+O3Vhul8JR/
+	/TmjhIqrfRKCUwCatWgq9U7oe8rA5UfQb6wOmLCksVvvfq/UT8qbEmYj/NVzmWxS5ebs0dp
+	e7P+Zg57BRaNzV2n2g/gcEK0eLsUe5i25+rIHorwW7E0h2tmCdtJjE7rhGXRb8Bz+Yd8c3n
+	4YUzrj3aj0K2JFMSobsQzoS8PbXiVJS1UxjKqUezUWRHmlRWhqFJi88iq/QalyafBoB8zrs
+	JHLsW6wNx3OGb2UTLj+X2ZQKe3H6pepw0guxTH4VPxCH2hXlEWpCMm511cF2U=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 X-QQ-RECHKSPAM: 0
 
-During 'make modules_install', the need-compiler variable becomes
-null, so Makefile.compiler isn't included.
+Due to long-term changes in kernel build configurations,
+run 'make savedefconfig' to update the build configuration
+dependencies.
 
-This results in call cc-option-yn returning nothing.
+This commit does not affect the actual .config file content,
+in preparation for future modifications to decstation_64_defconfig.
 
-For more technical details on why need-compiler is null during
-‘make modules_install’ and why no compiler invocation is actually
-needed at this point, please refer to commit 4fe4a6374c4d ("MIPS:
-Only fiddle with CHECKFLAGS if need-compiler") and commit
-805b2e1d427a ("kbuild: include Makefile.compiler only when compiler
-is needed").
-
-Commit a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS
-`modules_install' regression") tried to fix the same issue but it
-caused a compile error on clang compiler because it doesn't support
-'-msym32'. Then, commit 18ca63a2e23c ("MIPS: Probe toolchain support
-of -msym32") fixed it but reintroduced the CONFIG_CPU_DADDI_WORKAROUNDS
-`modules_install' regression.
-
-Wrapping this entire code block with #ifdef need-compiler to avoid
-all issues is the best solution for now.
-
-To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
-without -msym32" error.
-
-Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502120612000.65342@angie.orcam.me.uk/
-Link: https://lore.kernel.org/all/alpine.DEB.2.21.2307180025120.62448@angie.orcam.me.uk/
-Fixes: a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS `modules_install' regression")
-Reported-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Closes: https://lore.kernel.org/all/alpine.DEB.2.21.2501030535080.49841@angie.orcam.me.uk/
-Co-developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
 Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
- arch/mips/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/configs/decstation_64_defconfig | 42 +++++++++--------------
+ 1 file changed, 16 insertions(+), 26 deletions(-)
 
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index d9057e29bc62..1fffc6cf8b52 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -284,6 +284,7 @@ entry-y				= $(shell $(objtree)/arch/mips/tools/elf-entry vmlinux)
- cflags-y			+= -I$(srctree)/arch/mips/include/asm/mach-generic
- drivers-$(CONFIG_PCI)		+= arch/mips/pci/
- 
-+ifdef need-compiler
- #
- # Automatically detect the build format. By default we choose
- # the elf format according to the load address.
-@@ -304,7 +305,8 @@ ifdef CONFIG_64BIT
-       $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
-     endif
-   endif
--endif
-+endif # CONFIG_64BIT
-+endif # need-compiler
- 
- # When linking a 32-bit executable the LLVM linker cannot cope with a
- # 32-bit load address that has been sign-extended to 64 bits.  Simply
+diff --git a/arch/mips/configs/decstation_64_defconfig b/arch/mips/configs/decstation_64_defconfig
+index 9655567614aa..bf579866cf4b 100644
+--- a/arch/mips/configs/decstation_64_defconfig
++++ b/arch/mips/configs/decstation_64_defconfig
+@@ -1,27 +1,27 @@
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+ CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BPF_SYSCALL=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_BSD_PROCESS_ACCT_V3=y
+ CONFIG_LOG_BUF_SHIFT=15
+ CONFIG_EXPERT=y
+ # CONFIG_SGETMASK_SYSCALL is not set
+ # CONFIG_SYSFS_SYSCALL is not set
+-CONFIG_BPF_SYSCALL=y
+-# CONFIG_COMPAT_BRK is not set
+ CONFIG_MACH_DECSTATION=y
+ CONFIG_64BIT=y
+-CONFIG_PAGE_SIZE_16KB=y
+ CONFIG_TC=y
+ CONFIG_MIPS32_O32=y
+ CONFIG_MIPS32_N32=y
+ # CONFIG_SUSPEND is not set
++CONFIG_PAGE_SIZE_16KB=y
+ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_SRCVERSION_ALL=y
+ CONFIG_PARTITION_ADVANCED=y
+ CONFIG_OSF_PARTITION=y
+ # CONFIG_EFI_PARTITION is not set
++# CONFIG_COMPAT_BRK is not set
+ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+@@ -49,7 +49,6 @@ CONFIG_NETWORK_SECMARK=y
+ CONFIG_IP_SCTP=m
+ CONFIG_VLAN_8021Q=m
+ # CONFIG_WIRELESS is not set
+-# CONFIG_UEVENT_HELPER is not set
+ # CONFIG_FW_LOADER is not set
+ # CONFIG_ALLOW_DEV_COREDUMP is not set
+ CONFIG_MTD=m
+@@ -83,9 +82,9 @@ CONFIG_DECLANCE=y
+ # CONFIG_NET_VENDOR_MICREL is not set
+ # CONFIG_NET_VENDOR_MICROCHIP is not set
+ # CONFIG_NET_VENDOR_MICROSEMI is not set
++# CONFIG_NET_VENDOR_NI is not set
+ # CONFIG_NET_VENDOR_NATSEMI is not set
+ # CONFIG_NET_VENDOR_NETRONOME is not set
+-# CONFIG_NET_VENDOR_NI is not set
+ # CONFIG_NET_VENDOR_QUALCOMM is not set
+ # CONFIG_NET_VENDOR_RENESAS is not set
+ # CONFIG_NET_VENDOR_ROCKER is not set
+@@ -114,7 +113,6 @@ CONFIG_FB_TGA=y
+ CONFIG_FB_PMAG_AA=y
+ CONFIG_FB_PMAG_BA=y
+ CONFIG_FB_PMAGB_B=y
+-# CONFIG_VGA_CONSOLE is not set
+ CONFIG_DUMMY_CONSOLE_COLUMNS=160
+ CONFIG_DUMMY_CONSOLE_ROWS=64
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+@@ -167,36 +165,28 @@ CONFIG_NLS_ISO8859_13=m
+ CONFIG_NLS_ISO8859_14=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
+-CONFIG_CRYPTO_RSA=m
+ CONFIG_CRYPTO_MANAGER=y
+-CONFIG_CRYPTO_CCM=m
+-CONFIG_CRYPTO_GCM=m
+-CONFIG_CRYPTO_CHACHA20POLY1305=m
++CONFIG_CRYPTO_RSA=m
++CONFIG_CRYPTO_BLOWFISH=m
++CONFIG_CRYPTO_CAMELLIA=m
++CONFIG_CRYPTO_CAST5=m
++CONFIG_CRYPTO_CAST6=m
++CONFIG_CRYPTO_FCRYPT=m
++CONFIG_CRYPTO_SERPENT=m
++CONFIG_CRYPTO_TWOFISH=m
+ CONFIG_CRYPTO_CTS=m
+ CONFIG_CRYPTO_LRW=m
+-CONFIG_CRYPTO_OFB=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_XTS=m
++CONFIG_CRYPTO_CHACHA20POLY1305=m
++CONFIG_CRYPTO_CCM=m
+ CONFIG_CRYPTO_CMAC=m
+-CONFIG_CRYPTO_XCBC=m
+-CONFIG_CRYPTO_CRC32=m
+ CONFIG_CRYPTO_MD4=m
+ CONFIG_CRYPTO_MICHAEL_MIC=m
+ CONFIG_CRYPTO_RMD160=m
+-CONFIG_CRYPTO_SHA512=m
+ CONFIG_CRYPTO_WP512=m
+-CONFIG_CRYPTO_ANUBIS=m
+-CONFIG_CRYPTO_ARC4=m
+-CONFIG_CRYPTO_BLOWFISH=m
+-CONFIG_CRYPTO_CAMELLIA=m
+-CONFIG_CRYPTO_CAST5=m
+-CONFIG_CRYPTO_CAST6=m
+-CONFIG_CRYPTO_FCRYPT=m
+-CONFIG_CRYPTO_KHAZAD=m
+-CONFIG_CRYPTO_SEED=m
+-CONFIG_CRYPTO_SERPENT=m
+-CONFIG_CRYPTO_TEA=m
+-CONFIG_CRYPTO_TWOFISH=m
++CONFIG_CRYPTO_XCBC=m
++CONFIG_CRYPTO_CRC32=m
+ CONFIG_CRYPTO_LZO=m
+ CONFIG_CRYPTO_842=m
+ CONFIG_CRYPTO_LZ4=m
 -- 
 2.49.0
 
