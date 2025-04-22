@@ -1,283 +1,143 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E52627BF9E;
-	Tue, 22 Apr 2025 11:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4432A276056
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321956; cv=none; b=R+mg9R80kRVhdNyNn8tThspsqeuDP9TxFBQHw1/M74AC7z06BYxh8DONut+XRl98Q1xNx9kot6LopoTVQCDuVmvVQbRgfNdmj1AsfgCwPTJBgsbtmhghle0307iKUZiVZHhtyX/7DLFOZnEt7O99WoG0IbUYrsY74BN1ZRjIYmU=
+	t=1745321974; cv=none; b=HqZ+3fTtMnbx2sLa5qXimKAvaxtbhW8CTO+xOanJwnvY/CXHnbF7Ox/H725ye8ylkj8Ln4saokSpafandHAnUHOrSvBI00vS2Ak2GPp7rT1xeERSBi50r548H0Qlv5ZRk6IS6c4gZlxvaSge440NS3pSdBrYKUw1K0CSPykJaLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321956; c=relaxed/simple;
-	bh=V0fiBlJiMhecwbrp2gzKMAwZZAcXyq3WcYQRSyXq/8w=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MvSqDp7DSOYRKZ66XCke7VSCJjxlt6maDjayUzeMb+O3FRQ+7PNzmiiHiMxXwIbidWTD+iuEo5oTeXb444FeeP+BjtzDF0++7lmAHAewaTJSylRPzak8jfzt7vzV/BA0wfzAqeIsRUlCjkZ9GQhRSPdr0MTVKEYhbtmGBCV5DXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXsYaron; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745321974; c=relaxed/simple;
+	bh=gE+ihbtz5g3vP0Vibg5Xj0k7tkkJTIZuoEK+y6CIP1k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q9BLG0Lm6wHQ+reoloRjPEQ0Y73H0wA+sMv+Os5hYeXi85XbpPU8967X6Mjpvwn5E9ANRcSmmXSTMc7HuKUU+c7GfARYwbov5gkVma4NO70vdEEgbABFqFX84IytO7A6hIJMS/4/9tXz9pu9jje8CTUx9PN/v9C20Yy52rwTRto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=HCEOPFyg; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXsYaron"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39129fc51f8so4309638f8f.0;
-        Tue, 22 Apr 2025 04:39:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="HCEOPFyg"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2279915e06eso50906855ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745321952; x=1745926752; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QcQU91gLit/RYTgtNMl88tWmoApG6AJcqQ2H3jwM7wg=;
-        b=gXsYaronmFxpnY1mTICg5iNRNfqMdxaKQIGY10J3QwMiW1J7kgU7KPEm79wesa6ByW
-         sLX1VYFDw7pFi1PsZV+joQQs/g3cydoc1uMR0tnwGhlz8SnxktCn0WNvIDeLhfyLJcvP
-         aBzOHoc82KpZc0MDTjuaLD2mN/0WJ07yPrsgzjuvYglG4TyyBPR82TixFBtZ4mcNmuUD
-         PJNPdCYZxGWniPxff2XzJQwRFE0CqL2nVHervPzGxKvECmoTtdy+2wJGS1oEPI0GSi08
-         JG2Xoo1Fx2/6oN8QB1PwpQghJjpavxD9Jn3a0yWBRCwioo53O87BVSRZd7sVSTxift3o
-         hezQ==
+        d=broadcom.com; s=google; t=1745321972; x=1745926772; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=aEq6bOVOJtLkZttL9T4pxEaQVgSJPvJbn2Yk/YAOwz0=;
+        b=HCEOPFygLaeD9/pCKZixHw0HZXxpRTBrQKaDPML2t7Qdv4hldnGIzhOHZf0CZl9Vhm
+         ISyz/pvMx/5EBn4Hds/Ada8yjuGYLtDnfHdVI2RIF0F4VJFLjyhyMNtFrEFDNpmzNK6C
+         j6HpdUoWfgdk0QQMAVt4VRG2msNjloKDjbWk8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745321952; x=1745926752;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=QcQU91gLit/RYTgtNMl88tWmoApG6AJcqQ2H3jwM7wg=;
-        b=SMR5Y9Msp+6wtsaOMz/0poCLU1t9MjvusufVYnGOXbtBQ1SzM/8izh1xPYUHO8TxLY
-         86BD9K7da3p7paV35d3T/uPNBIHwOs1WXLbekRFW4ObhBxA5sVbagw7uPhUReL456wvb
-         BaSuDdpx5tg991pj4pDi+vP4xo+Js0wrFg2uWEHbndDaLz/fFYidTXDv045y65LEMN/E
-         zj+h/Y8fz9vNJ7jhaDKUbLNU8t3WoW23uK5quSgY/pfsTEzxrZnbrj+VHyhul9b1+h2P
-         XFLzPi+BTLs3WHwhnH6TskuSPSLa1JMQJfAHbejpqr0L1S5qk+Xlb7YM7eDqyarZ6yN/
-         x9NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtWPgbpQ2XnhagjKjbQarSO4QnSk4ytQ7uWrQPTqsxJEmUiAZ8Pm5ilX0o4WyqnQ7IvpRjd67yo0eB@vger.kernel.org, AJvYcCW7E4aOqdm3dchLKvI0k+/KN0MFJ986xxdpAbi0F805RV4EOUIcczPYr/QKzQotuEW96uAB5N8l5IKU@vger.kernel.org, AJvYcCXZ6kETroBjO3o/GYu0JJCss9K97Jem7NS0FuX8RkUL6+pL4DbajItCSMFali6TFJgLtrBhQNb/OhMMiToJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLOF/jEEdiX+7VIk1AmgUgdhyCkbAntAA2h6w+F/85U/vKCoXP
-	keQtrZ4jIqwymCHQUw8KeHrOxe2eELZBemLwQeaRO13jiSxf6w8T61ngKQQ/
-X-Gm-Gg: ASbGncvr1weBzW4cxjioJcsou9937oXrwlQ6DGcQTmLj2oO0qMnobKjIFS2c9wP4m0p
-	l3gRO/je+lo+Doy7juqQx6eDmAgQXPmDnwkXM7HOlocablHUhK9F+835iohimJ37n24c8rvuxD/
-	NpxCtNs0EyGhi5Rat9WLz3WCbTE6zTHW9m+I2XjvWgFTm8t8NOKr8mBriVuiW6GjvD8zMU60A+Y
-	o0et69n8T8sJlkLdSNV1Hz26YjGXUVcFGyKLRRLCKBCVkSY2Eb1h40adHNLZEPyXbstBrYibPNp
-	eLgT9wPNwezLBt8weT7DL04IxBlscD9cRwaDrFXS13R4xR8LeHVcbB77cDYg87bx0oAeswcamQn
-	enQ7oj0udPrPM6oKQY/MDO94=
-X-Google-Smtp-Source: AGHT+IEB1HFfaiHetaJlonxbc3U/9mRR65mPIsN+O2wz1rUtZ6/yXit/VZEBJhRk+eROXOOpDdyRAg==
-X-Received: by 2002:a05:6000:2287:b0:391:466f:314e with SMTP id ffacd0b85a97d-39efba461c4mr12189523f8f.16.1745321952371;
-        Tue, 22 Apr 2025 04:39:12 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43c079sm15191114f8f.50.2025.04.22.04.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 04:39:11 -0700 (PDT)
-Message-ID: <f2f0ef05a738a16083d686a246499788b6d353d2.camel@gmail.com>
-Subject: Re: [PATCH v2 13/13] iio: adc: ad4080: add driver support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Miclaus, Antoniu" <Antoniu.Miclaus@analog.com>, "jic23@kernel.org"	
- <jic23@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "conor+dt@kernel.org"	 <conor+dt@kernel.org>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>,  "devicetree@vger.kernel.org"	
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"	
- <linux-kernel@vger.kernel.org>
-Date: Tue, 22 Apr 2025 12:39:15 +0100
-In-Reply-To: <CY4PR03MB3399B23673D9C3210C8CE9B99BBB2@CY4PR03MB3399.namprd03.prod.outlook.com>
-References: <20250411123627.6114-1-antoniu.miclaus@analog.com>
-		 <20250411123627.6114-14-antoniu.miclaus@analog.com>
-	 <4e7100b945e542f675c6a506bc6431ad46cf6d84.camel@gmail.com>
-	 <CY4PR03MB3399B23673D9C3210C8CE9B99BBB2@CY4PR03MB3399.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+        d=1e100.net; s=20230601; t=1745321972; x=1745926772;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aEq6bOVOJtLkZttL9T4pxEaQVgSJPvJbn2Yk/YAOwz0=;
+        b=dsJiC5cgdlog1/D+7GAfxoyXQIc62nUTdExu/Q55gsIJcbpNYlUYz4zJjdZ/mUr09t
+         iwlhhlAIvb/h2HvHU6Jxb6lC/pOuTCqOZLFXQ41puYyeAMpH+O8VMQlTIExptfYt1hBK
+         Q6C0TFTRgbaQMaSoQbh4+UMCR9svKo6HCu5fRrWmakFOJejcN34XHXJiyxP892dsjFfW
+         /rDAjDnOK+uj3q6kyAdQKHgI+Z4frxmYmoD5A/WfAXfl2xlB1iXGytYGwCF2+til5enF
+         BLHxnXndL8f7eH29VveTUAX+z1T6X6zmb/hA/3S/6MEvxK8sPr/wHpZZrwz5wRRz7d3h
+         G27Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRkDgVuyc7L0Kh74YU0Rfe6NKoL9A2+TZF+Y03Z3Z1zK0aNFXab8qh+p70ivMLFHaUon92jMe1yLhlBDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF6pgZhaqr3A/j1DShJ3D/QhC0uN0Nh05HiXAyv7mWspx6KSPC
+	PwtcxZj2gyO7aU7DioYlkMRrkG5WcqSrWhNFQVYWNDULubmtofu349HgKScuk5R0TpUmMZJxUFx
+	YTA==
+X-Gm-Gg: ASbGncuxQbxu35mVuAXf/IA979YIWr56G2a5QhFEoFKK4+H9JCP2w4DrUdkVifcZ90e
+	Uq6uplqpkVkl6cRRPhcW3ev8hpDPKOD53QEa/cpYFbHpbhNABTPX0acfL66z44899G7V+yptDBq
+	ooWslLIjRFoDSVKljj5rH3EYyK4pYcKxhBxqbaBGlCcYJVVJ+jnjYLe3PqsLVGJ5SKcUWt+1L3L
+	t10DScDbdMQ5tBOWsbu9jwjuiUethvJzygQ6oM2wjHiHetR+9nGM02mUZGTjqET8ytxWkW/Fgeh
+	Lkx+2DhXsola9KpLakcpy4LqWDpfaJCh0xEPdtaZkllHhzsw42QfsSlDXQr1iW/vWEzG
+X-Google-Smtp-Source: AGHT+IFKojdUh0sNb4Ebb1JmWK12MQdXSOdAiqRFGDE22Idk5RsvtjW5M/GTepe3dep46IbCS2UQwg==
+X-Received: by 2002:a17:903:22d0:b0:223:66bc:f1de with SMTP id d9443c01a7336-22c5359e919mr226215295ad.21.1745321972509;
+        Tue, 22 Apr 2025 04:39:32 -0700 (PDT)
+Received: from [10.176.68.112] ([192.19.176.227])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf3391sm82639865ad.60.2025.04.22.04.39.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 04:39:32 -0700 (PDT)
+Message-ID: <15f43f65-2f2f-4fc6-8210-60afdd9be004@broadcom.com>
+Date: Tue, 22 Apr 2025 13:39:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
+To: Wentao Liang <vulab@iscas.ac.cn>, kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org
+References: <20250422065938.2345-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
+ 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
+In-Reply-To: <20250422065938.2345-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-04-22 at 08:12 +0000, Miclaus, Antoniu wrote:
-> > > +	int ret;
-> > > +
-> > > +	guard(mutex)(&st->lock);
-> > > +	if (st->num_lanes =3D=3D 1)
-> > > +		ret =3D regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +				=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
-> > > +				=C2=A0=C2=A0 AD4080_INTF_CHK_EN_MSK);
-> > > +	else
-> > > +		ret =3D regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +				=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
-> > > +				=C2=A0=C2=A0 AD4080_INTF_CHK_EN_MSK |
-> > > +				=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	ret =3D iio_backend_data_alignment_enable(st->back);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	do {
-> > > +		ret =3D iio_backend_sync_status_get(st->back, &sync_en);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		if (!sync_en)
-> > > +			dev_dbg(&st->spi->dev, "Not Locked: Running Bit
-> > > Slip\n");
-> > > +	} while (--timeout && !sync_en);
-> > > +
-> > > +	if (timeout) {
-> > > +		dev_info(&st->spi->dev, "Success: Pattern correct and
-> > > Locked!\n");
-> > > +		if (st->num_lanes =3D=3D 1)
-> > > +			return regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +
-> > 	=C2=A0=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK);
-> > > +		else
-> > > +			return regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +
-> > 	=C2=A0=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
-> > > +					=C2=A0=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
-> > > +	} else {
-> > > +		dev_info(&st->spi->dev, "LVDS Sync Timeout.\n");
-> > > +		if (st->num_lanes =3D=3D 1) {
-> > > +			ret =3D regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +
-> > 	=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK);
-> > > +			if (ret)
-> > > +				return ret;
-> > > +		} else {
-> > > +			ret =3D regmap_write(st->regmap,
-> > > AD4080_REG_ADC_DATA_INTF_CONFIG_A,
-> > > +
-> > 	=C2=A0=C2=A0 AD4080_RESERVED_CONFIG_A_MSK |
-> > > +					=C2=A0=C2=A0 AD4080_SPI_LVDS_LANES_MSK);
-> > > +			if (ret)
-> > > +				return ret;
-> > > +		}
-> > > +
-> > > +		return -ETIMEDOUT;
-> >=20
-> > So, first the things that I don't really get (also the hdl docs need to=
- be
-> > improved FWIW):
-> >=20
-> > * It seems that we can have data alignment or data capture synchronizat=
-ion
-> > through an internal AMD FPGA technique called bit-slip or an external
-> > signal,
-> > right? In here, it seems that we only use bit-slip and never disable it=
-. Is
-> > that
-> > really the goal?
-> >=20
-> > * This whole process seems to be some kind of calibration at the interf=
-ace
-> > level, right?
-> >=20
-> > * What's the point of the conv clock? Is it only used to get the sample
-> > rate? If
-> > so, the hdl docs are misleading as it seems that it can be used instead=
- of
-> > bit-
-> > slip for data capture alignment?
-> >=20
-> > Now, speaking about the backend API's, it looks like that
-> > iio_backend_self_sync_enable() and iio_backend_data_alignment_enable()
-> > could be
-> > merged into one API. From what I can tell,
-> > iio_backend_data_alignment_enable()
-> > just enables the bit-slip process but that likely does nothing unless t=
-he
-> > SELF_SYNC bit is also set to bit-slip, right? In fact, we could think a=
-bout
-> > a
-> > more generic (less flexible though) API like:
-> >=20
-> > * iio_backend_intf_data_align(back, timeout_us), or
-> > * iio_backend_intf_calib(back, timeout_us), or
-> > * iio_backend_intf_data_capture_sync(back, timeout_us)
-> >=20
-> > On the backend side, you could then enable bit-slip and do the status r=
-ead
-> > (with
-> > timeout) and return success or an error code.
-> >=20
-> > The above seems to be pretty much what you're doing but in just one API=
- that
-> > makes sense to me.
-> >=20
-> > Of course that the following questions still come to mind:
-> >=20
-> > * Do we need to disable bit-slip after we're done (still fits into the =
-one
-> > API
-> > model)?
-> > * Do we need a meaningful API to change between the syncing/alignment
-> > methods?
-> > External signal vs bit-slip?
-> >=20
-> > The above is key to better think of an API. Right now it feels that you=
-'re
-> > just
-> > adding an API for every bit you want to control in this process...
-> >=20
-> > If we end up needing more flexibility for this, we can also consider th=
-e
-> > existing iio_backend_data_sample_trigger() API. I know is abusing a bit=
- and
-> > a
-> > stretch but in the end of the day the whole thing is related with align=
-ing,
-> > syncing, calibrating the interface for properly sampling data. Even bit=
--slip
-> > (while not a traditional external trigger) looks like some kind of self=
--
-> > adjusting, data-driven trigger mechanism to establish the correct start=
-ing
-> > point
-> > for capturing data. So having two new enums like:
-> >=20
-> > IIO_BACKEND_SAMPLE_TRIGGER_EXT_SIGNAL,
-> > IIO_BACKEND_SAMPLE_TRIGGER_BIT_SLIP // or maybe a more generic name
-> > like
-> > s/BIT_SLIP/INTERNAL
-> >=20
-> > I do not think the above is that horrible :P... But I would really like=
- to
-> > get
-> > more opinions about this.
->=20
-> There've been some update on the HDL side changing a bit the behavior:
-> - bitslip_enable is removed, instead the `sync` bit is used which is alre=
-ady
-> part
-> =C2=A0 of the adc common core.
-> =C2=A0SYNC:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This bit enables capture synchroniza=
-tion. When activated, it initiates
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 an HDL process that aligns the sampl=
-e's most significant bit (MSB)
-> based
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 solely on the captured data, without=
- considering the AD4080's CNV
-> signal.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This bit is self-clearing and should=
- be toggled whenever
-> synchronization
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is needed (e.g., at boot or after up=
-dating the sampling rate).
->=20
-> The SELF_SYNC bit was removed.
->=20
-> SYNC_STATUS bit (which is also part of the common core) has the following
-> behavior:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This bit indicates whether the sample's MS=
-B alignment has been correctly
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 performed and the capture is synchronized.=
- If successful, this bit will
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 be set to 1.
 
-So this looks like it would fir in first approach of just one new backend A=
-PI
-right?
 
-What about the CNV signal? Is that something we can fully control on the
-frontend driver (though it also seems that signal is an output of the backe=
-nd
-device)?
+On 4/22/2025 8:59 AM, Wentao Liang wrote:
+> In brcmf_usb_dl_cmd(), the error logging is not enough to describe
+> the error state. And some caller of the brcmf_usb_dl_cmd() does not
+> handle its error. An error log in brcmf_usb_dl_cmd() is needed to
+> prevent silent failure.
+> 
+> Add error handling in brcmf_usb_dl_cmd() to log the command id and
+> error code in the brcmf_usb_dl_cmd() fails. In this way, every
+> invocation of the function logs a message upon failure.
 
-Thx!
-- Nuno S=C3=A1
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+> v5: Remove finalize label.
+> v4: Fix spelling problem.
+> v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
+> v2: Remove redundant bailing out code.
+> 
+>   .../broadcom/brcm80211/brcmfmac/usb.c         | 23 +++++++++++++------
+>   1 file changed, 16 insertions(+), 7 deletions(-)
