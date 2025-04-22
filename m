@@ -1,90 +1,95 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089991922C4;
-	Tue, 22 Apr 2025 03:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F5510A1F;
+	Tue, 22 Apr 2025 03:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745291296; cv=none; b=p8S8odKd7erPFI+OaIoTQK+46KkgoDwfdWS80vDDu4wKslQe2X9Is65cKh10+8akG/hmtzAT+G9lCD+W/vLuiq/N2cZtH3biSCpy/z0HTPk5Xsqx/BBPkwVJHHaemA8MJhQIkXueMRjWdNaTEcPkWb1pQehtu5YtETGQ4S9s5gU=
+	t=1745291456; cv=none; b=YBhg/ZplWLhSe1rscMm+EcRRdjZdjosq7FDDUuQPpLSNuVEkELwL70MgyESo14/ZTqaLYqdVE+h5BVU+2ymfmrQRoxSOL3uCbkjpvgm686Rq4M7fVvOe3tsr89Zcj+DEqCPJ67GqdGihSHT01y1P5AUJI3SWTIcvGdEhc9iNZoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745291296; c=relaxed/simple;
-	bh=7tPfO4YljEpw7kJklhNj2drCqG4KDq+vh0zUeK403dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VGA+dYrJgGVTjI0Ffa9aZ/CT869Nc8hKrg1hf5KKJvXwSi3r5DhupeBtDMF/Hzg0UEssl8xKmIA+LMmEs4nuFWDgatHOhNC7qohn467tcHbKAK3xq6woPhDIhp5yoXd3iF5ygw7C3Wn7/Rld8pAxhlCq8SnUiOhB0e5/219Fg2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAAXvv4ZCAdoFtICCw--.13305S2;
-	Tue, 22 Apr 2025 11:08:10 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: hverkuil@xs4all.nl,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] media: gspca: Add error handling for stv06xx_read_sensor()
-Date: Tue, 22 Apr 2025 11:07:39 +0800
-Message-ID: <20250422030739.2042-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1745291456; c=relaxed/simple;
+	bh=GYsg3nDDsxCC5f/WHunIiWZ82w5GH9824GyCufi9os4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=u7yhKz7/jLwNkVddMH++iPjR3s+od9zN5lruR/MenzCyMBzesv8nA6r9y+9vcKudTKzSg3fF/XNWfk9xD+kUr5Lq0dWNCV/jnAMYks8Y+uMskkopaykQ/a+qWsMpv3nm3WaKqNt9x2VRiNxfgNkb1pwRW+tOrRZdlG1BHhn0OJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.98.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1u73zC-000000005M0-0aoj;
+	Tue, 22 Apr 2025 03:10:28 +0000
+Date: Tue, 22 Apr 2025 04:10:20 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: "Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>, Neal Yen <neal.yen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net] net: dsa: mt7530: sync driver-specific behavior of
+ MT7531 variants
+Message-ID: <89ed7ec6d4fa0395ac53ad2809742bb1ce61ed12.1745290867.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAXvv4ZCAdoFtICCw--.13305S2
-X-Coremail-Antispam: 1UD129KBjvJXoWrtw4xKrykGFy5tFW8AF18Krg_yoW8JF4rpF
-	WfWryFv3yjya17WF1UJw1v93W5t3ySyFW5Cr9Fqwn5Zw17JrsFvFyFy3W0vws7GF9xC3Wf
-	trn5KayUWas7AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU8miiUU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYAA2gG6EyMVAAAsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In hdcs_init(), the return value of stv06xx_read_sensor() needs to be
-checked. A proper implementation can be found in vv6410_dump(). Add a
-check in loop condition and propergate error code to fix this issue.
+MT7531 standalone and MMIO variants found in MT7988 and EN7581 share
+most basic properties. Despite that, assisted_learning_on_cpu_port and
+mtu_enforcement_ingress were only applied for MT7531 but not for MT7988
+or EN7581, causing the expected issues on MMIO devices.
 
-Fixes: 4c98834addfe ("V4L/DVB (10048): gspca - stv06xx: New subdriver.")
-Cc: stable@vger.kernel.org # v2.6+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Apply both settings equally also for MT7988 and EN7581 by moving both
+assignments form mt7531_setup() to mt7531_setup_common().
+
+This fixes unwanted flooding of packets due to unknown unicast
+during DA lookup, as well as issues with heterogenous MTU settings.
+
+Fixes: 7f54cc9772ce ("net: dsa: mt7530: split-off common parts from mt7531_setup")
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 ---
- drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+See also https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/b4204fb062d60ac57791c90a11d05cf75269dcbd
 
-diff --git a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
-index 5a47dcbf1c8e..303b055fefea 100644
---- a/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
-+++ b/drivers/media/usb/gspca/stv06xx/stv06xx_hdcs.c
-@@ -520,12 +520,13 @@ static int hdcs_init(struct sd *sd)
- static int hdcs_dump(struct sd *sd)
- {
- 	u16 reg, val;
-+	int err = 0;
+ drivers/net/dsa/mt7530.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index d70399bce5b9..c5d6628d7980 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2419,6 +2419,9 @@ mt7531_setup_common(struct dsa_switch *ds)
+ 	struct mt7530_priv *priv = ds->priv;
+ 	int ret, i;
  
- 	pr_info("Dumping sensor registers:\n");
++	ds->assisted_learning_on_cpu_port = true;
++	ds->mtu_enforcement_ingress = true;
++
+ 	mt753x_trap_frames(priv);
  
--	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH; reg++) {
--		stv06xx_read_sensor(sd, reg, &val);
-+	for (reg = HDCS_IDENT; reg <= HDCS_ROWEXPH && !err; reg++) {
-+		err = stv06xx_read_sensor(sd, reg, &val);
- 		pr_info("reg 0x%02x = 0x%02x\n", reg, val);
- 	}
--	return 0;
-+	return (err < 0) ? err : 0;
+ 	/* Enable and reset MIB counters */
+@@ -2571,9 +2574,6 @@ mt7531_setup(struct dsa_switch *ds)
+ 	if (ret)
+ 		return ret;
+ 
+-	ds->assisted_learning_on_cpu_port = true;
+-	ds->mtu_enforcement_ingress = true;
+-
+ 	return 0;
  }
+ 
 -- 
-2.42.0.windows.2
+2.49.0
 
