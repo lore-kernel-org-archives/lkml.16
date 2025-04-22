@@ -1,133 +1,100 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25061F0E2D;
-	Tue, 22 Apr 2025 09:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37E41F098A;
+	Tue, 22 Apr 2025 09:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315222; cv=none; b=Sf5Nlnmpx0ICBU76y1aoK1RVdB2vGMmvDLMi4QqdahMsoPwIIAKM00El0pLccoh40Nat2CqRQTkc0AqzsEDpFdKWfYJ3S8/KY4Mo8rQqY84Yc1gaXpAcOeSfXqaqExB6SjZqFBenA/ifHilQXs58thglkXn3pRxYBlqk8SaL3lY=
+	t=1745315224; cv=none; b=alujKP/OokuxLmkCqz+ttnVruQnxGdI3NzaiFscGnKN1AHEu/2v7bA77X8lhgzvrDV7Byk5MWiz4fFXiCzPE22KrJ06nWvkNn+52lTldnkto6AEqhG80mZvtvPuniSVrfL482a9m/cTrF8g/YAkDbpVgaZqbzasDvezG+X9llbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315222; c=relaxed/simple;
-	bh=uR4c7TVXy6cIFrfSyaKbGAwXsLX03FHagsh1jUPtnb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CzVCFPCNoV46U7r8SNF3dN5+rsY5NDkoGtt6k2ke8pn30n4HOCw8OLIud273urYsRDLejwoaqA7GJkoaQ6JJiwlb2Z/IUMf2IUFTEN3lHfDGdlHUE55gu996qgFJiyRH9tmpxMxnZ4+BX6xtCaABfoDx2dQrGtf44dCOhiyxzmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j9VE6XQh; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745315224; c=relaxed/simple;
+	bh=5tP7GL/IdOQE/eER9qp64t/bQCThmlFi+8PGX5utZRc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bwJ1/Mp/Z2vIf2z8ieCe05GUq8WfDjL596Tj0JWA16M/0MKp55ebQrtzKnNvqDhm+aKv9VNn1nZVLZKB2hThRiChNEWFnI5A6/EZRmHO2YZg4k2as8ORUwxlKLzxesfCV5a4O2zmfeMLlQsi+CeVDkw3tFj66tb0Y3aAbz4mF20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pgmQYRpV; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9VE6XQh"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3437769f8f.2;
-        Tue, 22 Apr 2025 02:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745315219; x=1745920019; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=f+aH8Vkp+uMKgYBEzeWu9ULP2uz2ukYCauu+HrKitUU=;
-        b=j9VE6XQhmVUO6Vhm/qVkP4iDNHWpjm95tV9M0DlH44P6NGyzvyt7E+6YKZaCc0Rq1F
-         yzq+F/CsJO9Z2fUvxqUqj0y76kIeMA72HtvUvKbsdfsBvlNoxCRSPbSqCovmQo8fI24W
-         pAykjA0xQm/zer/EseAv+vrs7LMn2Nf2NluOPDhu4R/Y4jv+zHW+8TR2LgFmYBHjsTFm
-         chwDt8DTc2vICe5V8+HHyzZ8jnlug1yAbgp/wjdUZVVQpBrfn3B10wqbBJqcxK487WpA
-         iEVXVvlhi3SK2LNgwTPAE+/e/8lOKkofJQ48xZtpEaOAJFDdHfJXGkR6gQ0Qgv8CfDZ+
-         XeGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315219; x=1745920019;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f+aH8Vkp+uMKgYBEzeWu9ULP2uz2ukYCauu+HrKitUU=;
-        b=k7jgztKCqZWZArsYpe3b+UGL5xJtCOWmXccuHD7rovPX2CO/NLFwr17JcXlEbyoIHg
-         srfs+BPM5MRDd1LUFtDEa9uwv94vNrZeMZdnG7LHy58h4eYCX83jvosc7aiibvdC51oP
-         BAwnUjJ99awwv6tkRk3rL6+OFKjOCwOUWCeghvuM1aSxfNCt99qcTddkkaL0S6NlW4II
-         DjnuA3Y0uuUKKSjFHB7YQsCfn9I5UqEswSgYlytWU9xGBL4ikKX9XF+kz1jSXAZ7/0NL
-         heMCESebLXvblt0xZb25tP1cwusXWVpkfqq6s3TV9e57NfPDIhRzo7fKc1TpHpR61kIX
-         8NGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuVLuZkvy6FBNBfJ/CZWtjy4fx+sN2Y8TF8E0eBn+TZ0iKrOtzHtBL0vXAkFSgnl5chQ6HC7JLS0Y=@vger.kernel.org, AJvYcCVPuA2NFixD/Iuws2U3njSBDTOApYywxO16QVBCJSgq+SH99fdgvxZQ3rQtuMQaJTORwfhj78p7MmIi@vger.kernel.org, AJvYcCWizeJympk1vlqEdRQ7VQywHjNd/XPF0TPEbg32+9S9OswcygL+JxUX1kbtB4GWsmvysv9o9l1D5Bpfcxb/@vger.kernel.org, AJvYcCWniOcrpRz6XapyvHvHfhNrp6/2ZYUkWxU+JIxurb/2nFsbYUjWBKHx2tsrKVoOGU5T3l2YUiPfiQjl3Z/Zymfb5DE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzew+owd3nu0gV4vyvnt2AIDuy0tDWFfnORfv2YdrrOp0H3MgSW
-	pJBXHb/tMWeUDi7QrKzkIWu+nV20eL4OT3hpChzGw5522xirsiKm
-X-Gm-Gg: ASbGncvEW/7TrvpEDDycutJ8iuvTCEHpNZYvjoKZ6ke0W0mKjtFpmi65OnC/RSyTwCN
-	KFftbmrA50H4f2dkGt5FRYFLLrLqfWjQCw/qmOus15ywhLOGvqKI4EqfMz1D0nUa0FE6W5Qcjas
-	TDO3h471/KNXq46dW9SMKFlbDGDmxn5ersu2jCx4WvbG10BAN9qxZogImBS8IqnBNpLOsW5702M
-	WHcJgqVx5/49xOzJNy5iIB5IfQyE5oIHIRVv9nVShVLhG+MAupLMQUdRc4bp6cDEA5NobsGT4Nl
-	zjQoGBubDM8tnQeq4YApTwjPMCjC2U/G6ZtJd4A=
-X-Google-Smtp-Source: AGHT+IEMUuvM8SEPdC7enDvmj1KSIpM8sQDJOmbbZ30nkYK0bXnH8XlvLfXljQ4jhhwjqFCSy8BcVA==
-X-Received: by 2002:a5d:5f93:0:b0:39c:30d8:3290 with SMTP id ffacd0b85a97d-39efba37cebmr12005512f8f.7.1745315218520;
-        Tue, 22 Apr 2025 02:46:58 -0700 (PDT)
-Received: from legfed1 ([2a00:79c0:6a3:c300:22ea:3d6a:5919:85f8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d22esm14785563f8f.52.2025.04.22.02.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 02:46:58 -0700 (PDT)
-Date: Tue, 22 Apr 2025 11:46:56 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: t.antoine@uclouvain.be
-Cc: Rob Herring <robh@kernel.org>, Peter Griffin <peter.griffin@linaro.org>,
-	=?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] power: supply: correct capacity computation
-Message-ID: <20250422094656.GA159257@legfed1>
-References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
- <20250421-b4-gs101_max77759_fg-v3-1-50cd8caf9017@uclouvain.be>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pgmQYRpV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745315220;
+	bh=U++yr4JqDmISolfx4CZtEflT/0RwTwSY9q6ujoOSo7M=;
+	h=Date:From:To:Cc:Subject:From;
+	b=pgmQYRpV0mNZ2Yb5x+ok/QZZ86jaUw3LmmqFp2L8RD/Dzct3DgPGeZGcGXppQj6FK
+	 UvzDk7qbf45OXAJ75SBUreueoB84VnQ/UjvMupIq2fl4zm6vy3Jdxp+WTqaOyEu5If
+	 rXtfODaaMhEmmmpF9BKn/vzUPmMgldtgsd9GBjWHkUPRKusw207vMASjgRlImpchbA
+	 afBMgt+1D1YUpnkzVHSrVsXqmNfk2xM1hyjfmCzaxIxWfotf7IhWjT6VZkHUKeXwpM
+	 uM3G2jSsW6fB5283s8oZW/fgMDvJlKmBt8LRuBNTcvGa2txonrX0spOuZXVQJxAzDW
+	 2RdamlbzFOsOw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhcpC65Xzz4wbr;
+	Tue, 22 Apr 2025 19:46:59 +1000 (AEST)
+Date: Tue, 22 Apr 2025 19:46:58 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Kees Cook <kees@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the iio tree with Linus' tree
+Message-ID: <20250422194658.0325f6d0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250421-b4-gs101_max77759_fg-v3-1-50cd8caf9017@uclouvain.be>
+Content-Type: multipart/signed; boundary="Sig_/F5L0+UHM_L823ERNd+uCwr9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Thomas,
+--Sig_/F5L0+UHM_L823ERNd+uCwr9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 08:13:32PM +0200, Thomas Antoine via B4 Relay wrote:
-> From: Thomas Antoine <t.antoine@uclouvain.be>
-> 
-> From the datasheet of the MAX17201/17205, the LSB should be
-> "5.0μVh/RSENSE". The current computation sets it at 0.5mAh=5.0μVh/10mOhm
-> which does not take into account the value of rsense which can be
-> different from 10mOhm.
-> 
-> Change the computation to fit the specs.
-> 
-> Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
-> ---
->  drivers/power/supply/max1720x_battery.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/power/supply/max1720x_battery.c b/drivers/power/supply/max1720x_battery.c
-> index ea3912fd1de8bfd0d029c16f276316d06e1b105c..cca5f8b5071fb731f9b60420239ea03d46cb1bf3 100644
-> --- a/drivers/power/supply/max1720x_battery.c
-> +++ b/drivers/power/supply/max1720x_battery.c
-> @@ -288,9 +288,10 @@ static int max172xx_voltage_to_ps(unsigned int reg)
->  	return reg * 1250;	/* in uV */
->  }
->  
-> -static int max172xx_capacity_to_ps(unsigned int reg)
-> +static int max172xx_capacity_to_ps(unsigned int reg,
-> +				   struct max1720x_device_info *info)
->  {
-> -	return reg * 500;	/* in uAh */
-> +	return reg * (500000 / info->rsense);	/* in uAh */
->  }
->  
->  /*
-> 
-> -- 
-> 2.49.0
-> 
-> 
-thanks for finding this.
+Hi all,
 
-Reviewed-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Today's linux-next merge of the iio tree got a conflict in:
 
-Best regards,
-Dimitri Fedrau
+  drivers/iio/magnetometer/ak8974.c
+
+between commit:
+
+  05e8d261a34e ("gcc-15: add '__nonstring' markers to byte arrays")
+
+from Linus' tree and commit:
+
+  aa83447daa04 ("iio: magnetometer: ak8974: Add __nonstring annotations for=
+ unterminated strings")
+
+from the iio tree.
+
+I fixed it up (I just used Linus' version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/F5L0+UHM_L823ERNd+uCwr9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHZZIACgkQAVBC80lX
+0GxCewf+NF+FnuTsoOFERefm54k9q5JyX4wJ9zI7E5TmLiWtIYXKsBsrHArBU9qy
+frS/rM4yxk4thBXbrtR5yM9bj0lbGQm3hScleCCDhHvUAAwgQC7p4KIePfNnOhMr
+vNDf8kcsCOLBJp1de4wHdd5sSdw0rKMk2fCk7iwc1dXh7f5DEDMwNY3EpiaWg0r5
+C1cAtRDO0d+8tNLi71SFl+yc5gtMckK65ysS2zrslHvwjMSy/0lmsgmy+IF1kvv9
+BN7U+GMkMUBsi3XjKZf8ICGK2PrmYK/WqcwQGpU4B/G9BPoKXRMCa8/eJjzObt2p
+qPGv/xID33xB6q7VXqZuSq3/d0OppA==
+=Nxny
+-----END PGP SIGNATURE-----
+
+--Sig_/F5L0+UHM_L823ERNd+uCwr9--
