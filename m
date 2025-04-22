@@ -1,323 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD50296179
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D9E28C5A6;
+	Tue, 22 Apr 2025 17:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342721; cv=none; b=IFhMfGUNg9TRmanz9Z+H1HJqDADOJgI5ZsjaDxhxUXQL8GIpgYW2OZjUxJaQqCRDbmHreASFWpZ2/mUqfIv+wdmRV2Oa8vKvp7Mg0r9wcEToqe+RckUsZmG5hGC4aFKzWCvHLitiLnEFd/45aNxAQXcvlrTOfgPMwuPrmN9enl0=
+	t=1745342936; cv=none; b=NtWXFA4EfROrQIyxb/FB+BzP8wKKDskmEXp+NqnS/1KzKzbI7YHA43qwicj168r7fy3jl3eQclDYPbCjtMhlcHkG7jJS1tC+039h8rWWvkXVJJXqMV/V03lZyA22zJE/eWSxuj9SjDt+z1zS4nu8tu9JEzkILO2YXDD6niaSthE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342721; c=relaxed/simple;
-	bh=4eFT+ddUgf/MynCnAqV2xPC+DUEYZuUSd9SxFogWjGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gZga452ZHEabvH02c26ZcGWbEOO87rzvNqTxXA2PzEBzrG0bs83drjQ4LkGiu8ptbk34/AWr44f9RJfrM8szyVkn8oUuMxL/k+4RzzVLsnGF9pkdW6epx9uq8FRZyYNHo1KgqwHq+CPCpdvayqj1OGcYhG+Dipto+iQL4tuoZB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sup2C2og; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745342936; c=relaxed/simple;
+	bh=eFcP2GiIfYlz5vX4x81qW5td0rrszSQH+tjWOMNxdFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tPxnXV6XrSI3oZ2jwFjYCiX2NGmHH56AOB3No4kWhzkAdsVPAVFE6ovX8F34ma9BUzj5ZC9+hdR6POm+IWLykiLwr6J1WObu5tqu1+4wgH2q4nxd43+p7kttiD6szkz08JR6Z+wwAgDtrnGvHrOuVDUa6vD3if7OYdywrvoT1HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFIJLaqt; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sup2C2og"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745342717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AlsF8bB7mLO6h5yOJV7f9wu/vSQAYRdULalqxfc/a/E=;
-	b=Sup2C2og87+iqD0+y0opeUh2Yzb3RhtRGcg3IvheVsvbPC3jdxkXElhijTP7dif3KUoqKC
-	P4SNrXyv24mdqG5GWx5y/AlBR1GT/yJe3R6DVJHswM5eCpwSG8YJqW48CNbOtBiTI5vtss
-	Vt4BDObBJ7R8+JJyc5VbloPioqV+4eg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-dkyV-I2VPJWhO-118fsn4A-1; Tue, 22 Apr 2025 13:25:16 -0400
-X-MC-Unique: dkyV-I2VPJWhO-118fsn4A-1
-X-Mimecast-MFC-AGG-ID: dkyV-I2VPJWhO-118fsn4A_1745342715
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d08915f61so30136225e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFIJLaqt"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso64287595e9.3;
+        Tue, 22 Apr 2025 10:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745342933; x=1745947733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3dwRtx2MWi5keXq5RhARdEN3lNKJTVMlJXLO8mAzi0I=;
+        b=fFIJLaqtjNGd1XCKem+bodEEo5anzRD/PqTg53eS+lTS7mmnEsi6MzH8oRhIlP9x4L
+         Tx7Z4YiD+4vfRFw8rFKmPkmqo5UsnsuXFimCUmGQasgmwYwz7uPeRpxGw+WzExkukGPd
+         KbkINsw/QSQvwTP5HWS8qTXJZK2+O7qFpTXSTeVeJtZUcoCvtm8aM0fN7PaTD0Dm2ODa
+         tPGIEjAggOynWHPqeNx95+q9IPDLuJ43w4Q+nCI+GEFTVWesHphN45RxHNhf2eh/DicQ
+         paiqSxb3sp0CkJ5kaYPnVlaKriFI8TxBHd+QDVFx2mF2Q5nglLaD0NlZ6+kmIgVcgEoQ
+         YKmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745342715; x=1745947515;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AlsF8bB7mLO6h5yOJV7f9wu/vSQAYRdULalqxfc/a/E=;
-        b=csx2klgisQiuiP6T+rTWdJXB13tZM5lrpxGI2BcDRabbJw+cJiCEXfWXxUOiHY9oUI
-         9VVqihsaqGBPH1D7p2U5ILZtOH25g4J///Gv9AYH4680SqfiN5/1BclTEpR5y+H61DWw
-         j+4JmqUK2nuMwIX9/vCpYZaiEPI5zQwZ0rc4Xdd4CGR01rq5H3VUEuHVgvG0hpzgJRGP
-         NulJE1tD0sDyZiOqIrPdXFD8sE/iZ7isSbdXvCXSP4Mc3N3RLNx6pCp+73O568tXatVF
-         r6R5xtdJmUtF25nSBWcCBOrkwkX7/KHgVOgkx/3IImwHQGCid5JOToO2HgjpZEmzP37+
-         pYiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZnyDi1SjtzKOYk8vzEU8mexuK558GiawFd7jI9Gk7lzjDv19JW+bkESTPn1hzzl/Ps2F4U70lQ1Ha9Cw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3BbKoeegoPXK/9hsEanp/9wxSf/ikGksFFVwaTTPM9cCKb2nw
-	ewaWfgJgfbc+VslnLUVK3E+uLBwXU6dwBketkxht+ro7J0mvYHVH4GXfA9Q+ksG/x7toBxdvvqH
-	QiaZT5BBQqkqvaTIHC2Rt3aQsZarCln8m0N80IpiL8oTUrHUj6VujAJrIbMPacw==
-X-Gm-Gg: ASbGnctCBrsfUtmTxM8Beu6Aiy6QacrfEYK/0qU2txgJUpb87HqhEiv7eNLnoR4dwe6
-	fZ+BYTHwL7KjWKM4sdX9jxzjZ9lLjA4aBgf285H9S8AJO1PXhM0JjEzBpr0JGPnfqGJJBLUWQez
-	AQBx1OYDiBRkGxXSMylFnJjNwxJNStxrV4ze2btDkasNwexuSL0tYtljDOrIVYAat+7Rpy2wGOF
-	fD7a8yxHmxekFBFWJW/JnhymeeEVzNtfoH+TE+G7faCFsSb7bAKQpmgTGf4nY3X+meQo5gQyA9O
-	sqUl9Jk3exsDXpki3wdV1rg9ox7AuCpDn671LPPRhd/geu99hqPKfkn4zg7hZlfLGPo4e8gjXIs
-	S8RsuTcDcigiGKIfOtlvVIKQwPD1wkcSqx5uo
-X-Received: by 2002:a05:600c:3154:b0:43d:36c:f24 with SMTP id 5b1f17b1804b1-4406ab97d6amr138565925e9.13.1745342715347;
-        Tue, 22 Apr 2025 10:25:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFktvjOJw9MtQ957iwKCDYuBMP9s5b2E7h4EADLtf2ryrYEiq0M4Q5bYb99jVnuXjG8D4LoA==
-X-Received: by 2002:a05:600c:3154:b0:43d:36c:f24 with SMTP id 5b1f17b1804b1-4406ab97d6amr138565515e9.13.1745342714950;
-        Tue, 22 Apr 2025 10:25:14 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c731:8700:3969:7786:322:9641? (p200300cbc73187003969778603229641.dip0.t-ipconnect.de. [2003:cb:c731:8700:3969:7786:322:9641])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db10csm180519755e9.27.2025.04.22.10.25.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 10:25:14 -0700 (PDT)
-Message-ID: <b9e5fa41-62fd-4b3d-bb2d-24ae9d3c33da@redhat.com>
-Date: Tue, 22 Apr 2025 19:25:12 +0200
+        d=1e100.net; s=20230601; t=1745342933; x=1745947733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3dwRtx2MWi5keXq5RhARdEN3lNKJTVMlJXLO8mAzi0I=;
+        b=H+iYnxupjh0yRGQq5GRp8qZ647nAuceUtUiUDKvHaffre/B7Ov/k5ORCu1qCqmpwEd
+         FBxdvr5saD1XS8TGcX+8ME3D0T7uRYAyGJyYv57wA/jLpsZKU3Ca0bTIohBILrhd3cfu
+         DQA6M3Q1EsbL1dxOfeomo8ccAK9mzbEY+tJO35XMcl1m5Bk/OQOPTW6+cWozM3RirEt+
+         JkwWD9+SAkJVfWOSVSUFWVs8QiKTYpFUMsANfQpow9ZqtpF0wr6UVyant6KeeTtHvl6A
+         JJanX3mWNmED7XOmNtw+6TuaHnj8kUoz44Cb/QpvSPATz1ZES5X7OrjpQM5vNxyE5Qel
+         hwAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBbnGNwaBgMhyVvflhLtgZBbt46m4j6mjVdHllrOrL45Ps/S5iCXtzd4eHN8jEIq52dm625cj5ai6ZRGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws6So01wl9ZUSfh20+8nE0xjZz3JevM6tKOSvoRqj8Vsc1wcck
+	zpOg/ybvMpOBFWp/6pkR/ZlGCPPWW/5ZDWKVfbLWwY5TgkTDjaysY9EVMtu31TQaxXVzRVHJYbl
+	3I8L02UgSW2O4NKtAXAYGyrzdBWs=
+X-Gm-Gg: ASbGncvZbv+gmIJoRWr16/knMjn4JtGbe/wNcJMgrINMofJJ/o1yst+2vqsWxePeLXT
+	afyjSwiNVFX9/i5ENGdVpwvySssh6FyZK1udG9bSG0hHbUlmkJJpj5I/wjKGWV5jEUk1QJd0LZZ
+	8Z2ky0LKmsFBdYGYL7zvCvWfourk1u+cOjc7O5DWkQ78yEXBP4
+X-Google-Smtp-Source: AGHT+IHX+RLtkAyFXfCCwJvsB7FXqs2T++5aqezs/ZM9C6DcovLr8jbPDrc0RmXaKbeQjrVGqP5+hsJV4ddEhccdJyc=
+X-Received: by 2002:a5d:47aa:0:b0:39c:cd5:4bc0 with SMTP id
+ ffacd0b85a97d-39efbaf70bfmr13250986f8f.52.1745342933260; Tue, 22 Apr 2025
+ 10:28:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v7 3/8] security: Export
- security_inode_init_security_anon for KVM guest_memfd
-To: Christoph Hellwig <hch@infradead.org>, Shivank Garg <shivankg@amd.com>
-Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
- akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
- ackerleytng@google.com, paul@paul-moore.com, jmorris@namei.org,
- serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, tabba@google.com,
- vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com,
- michael.day@amd.com, yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com,
- thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com, jgg@nvidia.com,
- kalyazin@amazon.com, peterx@redhat.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-coco@lists.linux.dev,
- =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
- Paul Moore <paul@paul-moore.com>
-References: <20250408112402.181574-1-shivankg@amd.com>
- <20250408112402.181574-4-shivankg@amd.com> <Z_eEUrkyq1NApL1U@infradead.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z_eEUrkyq1NApL1U@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <cover.1745250534.git.iecedge@gmail.com> <73fdbbf9aafd3e24e12bb58f89c70959fb3a37f1.1745250534.git.iecedge@gmail.com>
+In-Reply-To: <73fdbbf9aafd3e24e12bb58f89c70959fb3a37f1.1745250534.git.iecedge@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 22 Apr 2025 10:28:42 -0700
+X-Gm-Features: ATxdqUFNF7npKiSkLt4UNdkUZRCVdnqqXcfQWuiSBdYWZe7QzjVRWlvmeYgHCog
+Message-ID: <CAADnVQ+m8F0BsJr_T1ePpB_zQ2vS+3OD2h+Wrfv1x+an9fSLkw@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 1/2] Enhance BPF execution timing by
+ excluding IRQ time
+To: Jianlin Lv <iecedge@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, LKML <linux-kernel@vger.kernel.org>, jianlv@ebay.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10.04.25 10:41, Christoph Hellwig wrote:
-> On Tue, Apr 08, 2025 at 11:23:57AM +0000, Shivank Garg wrote:
->> KVM guest_memfd is implementing its own inodes to store metadata for
->> backing memory using a custom filesystem. This requires the ability to
->> initialize anonymous inode using security_inode_init_security_anon().
->>
->> As guest_memfd currently resides in the KVM module, we need to export this
->> symbol for use outside the core kernel. In the future, guest_memfd might be
->> moved to core-mm, at which point the symbols no longer would have to be
->> exported. When/if that happens is still unclear.
-> 
-> This really should be a EXPORT_SYMBOL_GPL, if at all.
-> 
-> But you really should look into a new interface in anon_inode.c that
-> can be reused instead of duplicating anonymouns inode logic in kvm.ko.
+On Tue, Apr 22, 2025 at 6:47=E2=80=AFAM Jianlin Lv <iecedge@gmail.com> wrot=
+e:
+>
+> From: Jianlin Lv <iecedge@gmail.com>
+>
+> This commit excludes IRQ time from the total execution duration of BPF
+> programs. When CONFIG_IRQ_TIME_ACCOUNTING is enabled, IRQ time is
+> accounted for separately, offering a more accurate assessment of CPU
+> usage for BPF programs.
+>
+> Signed-off-by: Jianlin Lv <iecedge@gmail.com>
+> ---
+>  include/linux/filter.h | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/filter.h b/include/linux/filter.h
+> index f5cf4d35d83e..3e0f975176a6 100644
+> --- a/include/linux/filter.h
+> +++ b/include/linux/filter.h
+> @@ -703,12 +703,32 @@ static __always_inline u32 __bpf_prog_run(const str=
+uct bpf_prog *prog,
+>         cant_migrate();
+>         if (static_branch_unlikely(&bpf_stats_enabled_key)) {
+>                 struct bpf_prog_stats *stats;
+> -               u64 duration, start =3D sched_clock();
+> +               u64 duration, start, start_time, end_time, irq_delta;
+>                 unsigned long flags;
+> +               unsigned int cpu;
+>
+> -               ret =3D dfunc(ctx, prog->insnsi, prog->bpf_func);
+> +               #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+> +               if (in_task()) {
+> +                       cpu =3D get_cpu();
+> +                       put_cpu();
+> +                       start_time =3D irq_time_read(cpu);
+> +               }
+> +               #endif
+>
+> +               start =3D sched_clock();
+> +               ret =3D dfunc(ctx, prog->insnsi, prog->bpf_func);
+>                 duration =3D sched_clock() - start;
+> +
+> +               #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+> +               if (in_task()) {
+> +                       end_time =3D irq_time_read(cpu);
+> +                       if (end_time > start_time) {
+> +                               irq_delta =3D end_time - start_time;
+> +                               duration -=3D irq_delta;
+> +                       }
+> +               }
+> +               #endif
+> +
 
-I assume you mean combining the alloc_anon_inode()+
-security_inode_init_security_anon(), correct?
-
-I can see mm/secretmem.c doing the same thing, so agreed that
-we're duplicating it.
-
-
-Regarding your other mail, I am also starting to wonder where/why
-we want security_inode_init_security_anon(). At least for
-mm/secretmem.c, it was introduced by:
-
-commit 2bfe15c5261212130f1a71f32a300bcf426443d4
-Author: Christian Göttsche <cgzones@googlemail.com>
-Date:   Tue Jan 25 15:33:04 2022 +0100
-
-     mm: create security context for memfd_secret inodes
-     
-     Create a security context for the inodes created by memfd_secret(2) via
-     the LSM hook inode_init_security_anon to allow a fine grained control.
-     As secret memory areas can affect hibernation and have a global shared
-     limit access control might be desirable.
-     
-     Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-     Signed-off-by: Paul Moore <paul@paul-moore.com>
-
-
-In combination with Paul's review comment [1]
-
-"
-This seems reasonable to me, and I like the idea of labeling the anon
-inode as opposed to creating a new set of LSM hooks.  If we want to
-apply access control policy to the memfd_secret() fds we are going to
-need to attach some sort of LSM state to the inode, we might as well
-use the mechanism we already have instead of inventing another one.
-"
-
-
-IIUC, we really only want security_inode_init_security_anon() when there
-might be interest to have global access control.
-
-
-Given that guest_memfd already shares many similarities with guest_memfd
-(e.g., pages not swappable/migratable) and might share even more in the future
-(e.g., directmap removal), I assume that we want the same thing for guest_memfd.
-
-
-Would something like the following seem reasonable? We should be adding some
-documentation for the new function, and I wonder if S_PRIVATE should actually
-be cleared for secretmem + guest_memfd (I have no idea what this "fs-internal" flag
-affects).
-
- From 782a6053268d8a2bddf90ba18c008495b0791710 Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Tue, 22 Apr 2025 19:22:00 +0200
-Subject: [PATCH] tmp
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-  fs/anon_inodes.c   | 20 ++++++++++++++------
-  include/linux/fs.h |  1 +
-  mm/secretmem.c     |  9 +--------
-  3 files changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-index 583ac81669c24..ea51fd582deb4 100644
---- a/fs/anon_inodes.c
-+++ b/fs/anon_inodes.c
-@@ -55,17 +55,18 @@ static struct file_system_type anon_inode_fs_type = {
-  	.kill_sb	= kill_anon_super,
-  };
-  
--static struct inode *anon_inode_make_secure_inode(
--	const char *name,
--	const struct inode *context_inode)
-+static struct inode *anon_inode_make_secure_inode(struct super_block *s,
-+		const char *name, const struct inode *context_inode,
-+		bool fs_internal)
-  {
-  	struct inode *inode;
-  	int error;
-  
--	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-+	inode = alloc_anon_inode(s);
-  	if (IS_ERR(inode))
-  		return inode;
--	inode->i_flags &= ~S_PRIVATE;
-+	if (!fs_internal)
-+		inode->i_flags &= ~S_PRIVATE;
-  	error =	security_inode_init_security_anon(inode, &QSTR(name),
-  						  context_inode);
-  	if (error) {
-@@ -75,6 +76,12 @@ static struct inode *anon_inode_make_secure_inode(
-  	return inode;
-  }
-  
-+struct inode *alloc_anon_secure_inode(struct super_block *s, const char *name)
-+{
-+	return anon_inode_make_secure_inode(s, name, NULL, true);
-+}
-+EXPORT_SYMBOL_GPL(alloc_anon_secure_inode);
-+
-  static struct file *__anon_inode_getfile(const char *name,
-  					 const struct file_operations *fops,
-  					 void *priv, int flags,
-@@ -88,7 +95,8 @@ static struct file *__anon_inode_getfile(const char *name,
-  		return ERR_PTR(-ENOENT);
-  
-  	if (make_inode) {
--		inode =	anon_inode_make_secure_inode(name, context_inode);
-+		inode =	anon_inode_make_secure_inode(anon_inode_mnt->mnt_sb,
-+						     name, context_inode, false);
-  		if (IS_ERR(inode)) {
-  			file = ERR_CAST(inode);
-  			goto err;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e3..0fded2e3c661a 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3550,6 +3550,7 @@ extern int simple_write_begin(struct file *file, struct address_space *mapping,
-  extern const struct address_space_operations ram_aops;
-  extern int always_delete_dentry(const struct dentry *);
-  extern struct inode *alloc_anon_inode(struct super_block *);
-+extern struct inode *alloc_anon_secure_inode(struct super_block *, const char *);
-  extern int simple_nosetlease(struct file *, int, struct file_lease **, void **);
-  extern const struct dentry_operations simple_dentry_operations;
-  
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index 1b0a214ee5580..c0e459e58cb65 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -195,18 +195,11 @@ static struct file *secretmem_file_create(unsigned long flags)
-  	struct file *file;
-  	struct inode *inode;
-  	const char *anon_name = "[secretmem]";
--	int err;
-  
--	inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-+	inode = alloc_anon_secure_inode(secretmem_mnt->mnt_sb, anon_name);
-  	if (IS_ERR(inode))
-  		return ERR_CAST(inode);
-  
--	err = security_inode_init_security_anon(inode, &QSTR(anon_name), NULL);
--	if (err) {
--		file = ERR_PTR(err);
--		goto err_free_inode;
--	}
--
-  	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
-  				 O_RDWR, &secretmem_fops);
-  	if (IS_ERR(file))
--- 
-2.49.0
-
-
-[1] https://lore.kernel.org/lkml/CAHC9VhSdGeZ9x-0Hvk9mE=YMXbpk-tC5Ek+uGFGq5U+51qjChw@mail.gmail.com/
-
--- 
-Cheers,
-
-David / dhildenb
-
+This is way too much overhead.
+This timing loop is optimized to measure bpf prog runtime.
+See commit ce09cbdd9888 ("bpf: Improve program stats run-time calculation")
+IRQ can happen and distort the numbers, but you shouldn't
+be running with bpf_stats_enabled for a long time.
+You need to sample it instead.
+Every couple minutes turn it on for a second, capture the stats
+and aggregate over time. Filter out outliers due to IRQ or whatever.
