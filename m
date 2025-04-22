@@ -1,130 +1,285 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84D227CCF2;
-	Tue, 22 Apr 2025 13:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA764281345
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329592; cv=none; b=pgCQAVdO7HeRl8ONYE/pySPwO5RtAlJNWLotxkoD1Bu/EqMZnCEPfJ+Baz/wk5CC7NKPdRweVbABxX/rU8ZSDM3Rg4gb0k8WxLqpBTsSn+/ypCK/sIMQ7OjGBWQbSZKmvBegf9oSqNr+ZvD6c7Tce/DGwx5pRkW6u+s5ufW3srk=
+	t=1745329591; cv=none; b=SGFgVwOa7U5GxMP3V3rhQ/f0WnKMgKGqN35FuP/4w9LSb0FzEE6Lbw0DI6cDBkVdSECytdR3OYCExtO8tEuMPPp7uiV2csQnzlEPjrI6tAPhaH7n/BqOe7ncluAhHHjgz12a1KuIF+Jvq5SMRIOM59MMlRrdkFLGysc8HE05n8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329592; c=relaxed/simple;
-	bh=dMecEbaMU5nXf1Rjydxt+TbhsUOIhNDz3YslKq53vwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KgLZzyJBCAdVbzZj1WuOxe+g57KgGLOGVw9yW68dHTpuMPgvvM7lU6Gs33e7Gi402z2n9DJeFMU0MCymJabxh/9aGW5iZl6/to93llbATTEI9shuwe/ibrNAD744bqiq9X83LrvbRWh5s7tMtMZF0VQzI3xdUbI7m5M/RegJ57o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwGrTKmR; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745329591; c=relaxed/simple;
+	bh=X4UNsOaOx56cRcgj+HnW0PnHBzc2Fijk7TfEsF4nX2A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uAOHM5a2ldcGiajYO62bkxSNS7gNMCzQES6jzMDdXlA+yG5axwtwv2bO4CIInlG3cC+JyfDl8Mj1V5AcNIM3Z+BQTcs3sQaOx5Bi7WlA1WjcnijjlJUCp8f6kiDnlEKjqy2/HM9XVfUzRVblpaZtF4JsELeSOIeUAE6R9RO3Qv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=qYnrR6L4; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwGrTKmR"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso654335a91.1;
-        Tue, 22 Apr 2025 06:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745329590; x=1745934390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awwFbDm7jflKQEqDpnbX53KjJNqGVg4jeRSb+a5lprA=;
-        b=UwGrTKmR2KdzMawTLDvMblMG8HGHXp6zJ4agURsC0fRq677VStowZlbY2Eci0dcSAO
-         3QkNpRbilqMRz6+2w3Ql7HXZDyfzfo3vtX4J3Qan2PAPXupuYd9JOjQIBaJStU81quIH
-         ZsrKmewdz1XG+tiVKGNr1AsRBH2OwL5UnUDdFZII7sAn5FzDyizrPaqMcLJQT8aggubF
-         DiBnubJojWC+dKnGPwFofiUk1Xqc+m3d9eGVmK/ybBla4KCMQcdytsnxCfp1JObw4UTg
-         04nOFBVBux7PM4lTg9se4/Qw5lJCVcNv5+oFRgXLCgQ/b4tTflQLxPSIqb19+heq59Ph
-         DpOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329590; x=1745934390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awwFbDm7jflKQEqDpnbX53KjJNqGVg4jeRSb+a5lprA=;
-        b=XLtRhE3GBDwehjHF6YXas4p5pK76xyMsDWjB5pmVPIfADSeXBr0GJYnybPrUcX+QNZ
-         Qo5kACuTD+9Z3BIc5PfvX63Je5VtdaHjvcqXTArSTf7ZqSoVDyf0q6I49O312ZOr6na/
-         s9sKkZbcy6t3FnNFiUDL+w0ShiJpWTWSHAv3VOjyXD9IbLNn6J+COwsChlj43NlVUtjx
-         YQNks+SDMKdn5YR/4nrmZFSEw7jngC84T/4f8VJ86iWTCyN3g7vpkONey9M8V37UBjyg
-         url+eKixxqwIDdDRe7ct+cvu8gLWZI8kK8KhsONg7GEAJpsYNEIiHUWgCGgLfr9BY8tb
-         qpBA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8uPBOTca0phVXB9e1VizowUddcBUlRglPS/p4mxoTse4lrSg+8K8EJZlFm653FJdo5tCmU4/lO8F4u2RSvPc=@vger.kernel.org, AJvYcCWB/Z9X+3Bylo0ykIky7nXQzSr8gMZSmBRJMqkLEIH6ZShpyawSehmwL5OFzJNIM44dH4udcfp7Xr4oqwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvnTkfQ9Sfa0Biz/3fH41VvstCNUPRZQ8mt5ATBHER4p1yRJAE
-	xVVeErIxuGnTMDIIC+acZ6T49merZkIHVZ4xmugkVi2l5oBRUbiJLDXDhGBs1THYa+Zlfr374ZC
-	Z8Q9Da9F90LkwaO6an7tfrsiCsAg6qcstJXA=
-X-Gm-Gg: ASbGncsyECG+dFBHG9Gye3LgHV5SsBH+JW4CaVvRAcUvI3NXUDFxpacm0KMvDSskoaO
-	5/jbuhk9pa6kXTL12Whk/6RJzprAG4ywVJknhXr/jzJvtHAxJj3iw1pQ9NadAFcN/DTpIaSo1k+
-	dViWhrPy8Nt7VouNrV9WdNbQ==
-X-Google-Smtp-Source: AGHT+IEvD/7Oi1OXNnSpSvib9zBGTiZYtSa6KmXETml5Sc3wcLno9P6YnLmXGVY+d+60He3bpYpfTe9GXBlxik21cGA=
-X-Received: by 2002:a17:90b:1c91:b0:2ee:f59a:94d3 with SMTP id
- 98e67ed59e1d1-3087ba5ccbamr8017716a91.0.1745329589855; Tue, 22 Apr 2025
- 06:46:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="qYnrR6L4"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zhk6V0g4dz9slY;
+	Tue, 22 Apr 2025 15:46:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1745329586; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X4UNsOaOx56cRcgj+HnW0PnHBzc2Fijk7TfEsF4nX2A=;
+	b=qYnrR6L44OXGqvGRGYAoFmZyiltnTXOjXAfwE3MP2Suqkco5KJtUV0HS3c0mRYg5QCy3c7
+	kDqLTx5qZnLXx+h1PCpRmRkkm4O5gMwIkjlJnkli1tRUqy7zGmlepPxffJBw+81rJqRfjf
+	7hNngGEHokvrSeksYNMoX0HEjqM9MCmt30sX2oj368wmfQ4eyAb6eWFVh9VCrlCyMnTN9c
+	s+UETjdHirJu9gKjQMdUYwj4mdkGM727o+FKUd8Vv2kv/rJu0YK9fGR8LUuYReWKjgCbOz
+	SN6REaOd9kkaJnYakziWjzDZm1yC7HbxkOYAY/xyk5rBRt2BuUNvtcGqR9fyoA==
+Message-ID: <e8459da01e0c76242544b88768fd3a58e75073d5.camel@mailbox.org>
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Danilo Krummrich
+	 <dakr@kernel.org>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
+ <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org,  linux-kernel@vger.kernel.org
+Date: Tue, 22 Apr 2025 15:46:21 +0200
+In-Reply-To: <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
+References: <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
+	 <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
+	 <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
+	 <aAEUwjzZ9w9xlKRY@cassiopeiae>
+	 <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
+	 <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
+	 <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
+	 <aAd54jUwBwgc-_g2@cassiopeiae>
+	 <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
+	 <aAeMVtdkrAoMrmVk@cassiopeiae>
+	 <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422125633.30413-1-contact@arnaud-lcm.com> <20250422125824.30525-1-contact@arnaud-lcm.com>
-In-Reply-To: <20250422125824.30525-1-contact@arnaud-lcm.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 22 Apr 2025 15:46:16 +0200
-X-Gm-Features: ATxdqUFOX-8ZK9wTG68OV2QHGuhfwdNTtWKDYoDi6eyZlmEfBl_bLh2iur-YQGs
-Message-ID: <CANiq72n41Oj4K-yZCWbNXJQEEjTqjXHYgrkffAg_mUg8dKLWQg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] checkpatch.pl: warn about // comments on private
- Rust items
-To: Arnaud Lecomte <contact@arnaud-lcm.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MBO-RS-ID: a0e588faec0dee86da0
+X-MBO-RS-META: qbfize4p6ohzmmp9m5gy8daaugrp4pek
 
-On Tue, Apr 22, 2025 at 2:58=E2=80=AFPM Arnaud Lecomte <contact@arnaud-lcm.=
-com> wrote:
->
-> The detection uses multiple heuristics to identify likely doc comments:
->   - Comments containing markdown
+On Tue, 2025-04-22 at 14:39 +0100, Tvrtko Ursulin wrote:
+>=20
+> On 22/04/2025 13:32, Danilo Krummrich wrote:
+> > On Tue, Apr 22, 2025 at 01:07:47PM +0100, Tvrtko Ursulin wrote:
+> > >=20
+> > > On 22/04/2025 12:13, Danilo Krummrich wrote:
+> > > > On Tue, Apr 22, 2025 at 11:39:11AM +0100, Tvrtko Ursulin wrote:
+> > > > > Question I raised is if there are other drivers which manage
+> > > > > to clean up
+> > > > > everything correctly (like the mock scheduler does), but
+> > > > > trigger that
+> > > > > warning. Maybe there are not and maybe mock scheduler is the
+> > > > > only false
+> > > > > positive.
+> > > >=20
+> > > > So far the scheduler simply does not give any guideline on how
+> > > > to address the
+> > > > problem, hence every driver simply does something (or nothing,
+> > > > effectively
+> > > > ignoring the problem). This is what we want to fix.
+> > > >=20
+> > > > The mock scheduler keeps it's own list of pending jobs and on
+> > > > tear down stops
+> > > > the scheduler's workqueues, traverses it's own list and
+> > > > eventually frees the
+> > > > pending jobs without updating the scheduler's internal pending
+> > > > list.
+> > > >=20
+> > > > So yes, it does avoid memory leaks, but it also leaves the
+> > > > schedulers internal
+> > > > structures with an invalid state, i.e. the pending list of the
+> > > > scheduler has
+> > > > pointers to already freed memory.
+> > > >=20
+> > > > What if the drm_sched_fini() starts touching the pending list?
+> > > > Then you'd end up
+> > > > with UAF bugs with this implementation. We cannot invalidate
+> > > > the schedulers
+> > > > internal structures and yet call scheduler functions - e.g.
+> > > > drm_sched_fini() -
+> > > > subsequently.
+> > > >=20
+> > > > Hence, the current implementation of the mock scheduler is
+> > > > fundamentally flawed.
+> > > > And so would be *every* driver that still has entries within
+> > > > the scheduler's
+> > > > pending list.
+> > > >=20
+> > > > This is not a false positive, it already caught a real bug --
+> > > > in the mock
+> > > > scheduler.
+> > >=20
+> > > To avoid furher splitting hairs on whether real bugs need to be
+> > > able to
+> > > manifest or not, lets move past this with a conclusion that there
+> > > are two
+> > > potential things to do here:
+> >=20
+> > This is not about splitting hairs, it is about understanding that
+> > abusing
+> > knowledge about internals of a component to clean things up is
+> > *never* valid.
+> >=20
+> > > First one is to either send separately or include in this series
+> > > something
+> > > like:
+> > >=20
+> > > diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > index f999c8859cf7..7c4df0e890ac 100644
+> > > --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> > > @@ -300,6 +300,8 @@ void drm_mock_sched_fini(struct
+> > > drm_mock_scheduler
+> > > *sched)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_mock_sched_job_complete(job);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irqresto=
+re(&sched->lock, flags);
+> > >=20
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
+> > > +
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Free complet=
+ed jobs and jobs not yet processed by the
+> > > DRM
+> > > scheduler
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * free worker.
+> > > @@ -311,8 +313,6 @@ void drm_mock_sched_fini(struct
+> > > drm_mock_scheduler
+> > > *sched)
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_each_entry_=
+safe(job, next, &list, link)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 mock_sched_free_job(&job->base);
+> > > -
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
+> > > =C2=A0 }
+> > >=20
+> > > =C2=A0 /**
+> > >=20
+> > > That should satisfy the requirement to "clear" memory about to be
+> > > freed and
+> > > be 100% compliant with drm_sched_fini() kerneldoc (guideline b).
+> > >=20
+> > > But the new warning from 3/5 here will still be there AFAICT and
+> > > would you
+> > > then agree it is a false positive?
+> >=20
+> > No, I do not agree.
+> >=20
+> > Even if a driver does what you describe it is not the correct thing
+> > to do and
+> > having a warning call it out makes sense.
+> >=20
+> > This way of cleaning things up entirely relies on knowing specific
+> > scheduler
+> > internals, which if changed, may fall apart.
+> >=20
+> > > Secondly, the series should modify all drivers (including the
+> > > unit tests)
+> > > which are known to trigger this false positive.
+> >=20
+> > Again, there are no false positives. It is the scheduler that needs
+> > to call
+> > free_job() and other potential cleanups. You can't just stop the
+> > scheduler,
+> > leave it in an intermediate state and try to clean it up by hand
+> > relying on
+> > knowledge about internals.
+>=20
+> Sorry I don't see the argument for the claim it is relying on the=20
+> internals with the re-positioned drm_sched_fini call. In that case it
+> is=20
+> fully compliant with:
+>=20
+> /**
+> =C2=A0 * drm_sched_fini - Destroy a gpu scheduler
+> =C2=A0 *
+> =C2=A0 * @sched: scheduler instance
+> =C2=A0 *
+> =C2=A0 * Tears down and cleans up the scheduler.
+> =C2=A0 *
+> =C2=A0 * This stops submission of new jobs to the hardware through
+> =C2=A0 * drm_sched_backend_ops.run_job(). Consequently,=20
+> drm_sched_backend_ops.free_job()
+> =C2=A0 * will not be called for all jobs still in
+> drm_gpu_scheduler.pending_list.
+> =C2=A0 * There is no solution for this currently. Thus, it is up to the=
+=20
+> driver to make
+> =C2=A0 * sure that:
+> =C2=A0 *
+> =C2=A0 *=C2=A0 a) drm_sched_fini() is only called after for all submitted=
+ jobs
+> =C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_backend_ops.free_job() has bee=
+n called or that
+> =C2=A0 *=C2=A0 b) the jobs for which drm_sched_backend_ops.free_job() has=
+ not
+> been=20
+> called
+> =C2=A0 *
+> =C2=A0 * FIXME: Take care of the above problem and prevent this function
+> from=20
+> leaking
+> =C2=A0 * the jobs in drm_gpu_scheduler.pending_list under any
+> circumstances.
+>=20
+> ^^^ recommended solution b).
+>=20
+> > Consequently, when the pending list isn't empty when
+> > drm_sched_fini() is called,
+> > it *always* is a bug.
+>=20
+> I am simply arguing that a quick audit of the drivers should be done
+> to=20
+> see that the dev_err is not added for drivers which clean up in=20
+> compliance with drm_sched_fini() kerneldoc.
+>=20
+> Starting to log errors from those would be adding work for many
+> people=20
+> in the bug handling chain. Sure you can say lets add the dev_err and=20
+> then we don't have to look into the code base, just wait for bug
+> reports=20
+> to come our way. That works too (on some level) but lets please state
+> the intent clearly and explicitly.
 
-Markdown is required in both documentation and comments, so I don't
-think we can use some of those, e.g. inline code spans (i.e.
-backticks) are common (and actually expected) in comments. Something
-like a title (i.e. `#`) or intra-doc links are uncommon, though.
+Well, yes, that exactly is my intention.
 
->   - Comments starting with an imperative tone
+All driver's must currently ensure in some custom way that a) all
+fences get signaled and b) that the scheduler had time to call
+free_job() for all jobs in pending_list.
 
-Some people document using the third-person, e.g. some functions say
-"Returns ..." like you have below. (It is not easy to enforce
-kernel-wide a single style here, thus so far we don't.)
+If there is anyone in-tree currently who has len(pending_list) > 0
+after drm_sched_fini() ran that are clearly memory leaks that need to
+be fixed.
 
-(Looking briefly at the code) Ah, I think you are covering both, good.
+And, thus, firing the warning for all those drivers is appropriate.
 
->   - Comments with references: @see, @link, ...
+I think it's unlikely to happen though. The hardware schedulers rarely
+call drm_sched_fini(), and the firmware schedulers would have memory
+leaks so large that they are likely to have been discovered by now.
 
-Do you mean Markdown references? Or javadoc-like ones?
+P.
 
-(Looking again at the code...) I think you are referring to actually
-strings like `@see`. Hmm... I don't think we have those -- the only
-`@` I would expect in a comment are thinks like emails or the
-`rustdoc` syntax to disambiguate the "kind" of item, e.g.
-`type@NotThreadSafe`. I do see a `@maxlen` somewhere, but that should
-have been an inline code span, and anyway it is not a `@see` or
-`@link`. But I may be confused here?
+>=20
+> Regards,
+>=20
+> Tvrtko
+>=20
 
-> Comments are only flagged if they:
->  - Appear above private items
->  - Don't contain obvious non-doc patterns (TODO, FIXME)
->  - Score sufficiently on heuristics
-
-Nice work! I wasn't expecting something with actual weighted scoring,
-but if the maintainers are OK with something as involved as that, then
-I guess it is fine. We may need to tweak the scoring in the future,
-but it may be a good experiment.
-
-Thanks!
-
-Cheers,
-Miguel
