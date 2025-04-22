@@ -1,103 +1,83 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4691527CCF3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D970D1F2B83
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325904; cv=none; b=Gkv6Ynh4RedSCeuGYLpecvbYcBYRSSfr0I6s7yMa9pq7+Pg+Gki0SV7eFcHcoLk43NIamXHc2Z8WnASqjd4bw2Qp1F5WIoZUdnt7fN3nXTJ+bKReY61i9+31227fwU4LI8505uDYFO396yLYz5cEyOMwueiCqb8zOgvmcq2KRLM=
+	t=1745325923; cv=none; b=AJK1AoxqhNXeRL6awhGK0t6TBqASTKJm8gJmSQlz270asX4GiBK2B51awh+4BBqfIWNP/axwGhslgXykDPtRyzG53h3trURaLIWBPlnZxAsJ1TY/D6u/Uq4aM8hIhg6+jyV4Wa1FoTF2riSuzwj1SVmNQ3yYt/NgbzszvnHTa1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325904; c=relaxed/simple;
-	bh=lvVUs2e8qcPQTdzhT6lkVZyLMX8afuB3KeEklSE+EdY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HjdZOBq3L5ZYeMgiVWTMY1wHJW6ZdX2Ux1HuDcboq9dbmtsVkN/UySyZQyhta5xwFldLZt+cIEj9M1b/1Sfkqw29JGV02UiFynJuRtO79WOHSZFvu52nScA3pEnfcprhsc1ZLVBsGjsGKZajjAXqCaSPe67dCvpCVSGN5GwG15U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fWmZqBKf; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWmZqBKf"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af50f56b862so3593461a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745325902; x=1745930702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qmv/eppcSNS/FFA0D45HtnI0orFklOBEuu+IeQXnzag=;
-        b=fWmZqBKfcVm9Zp/MwvaHYhnjmMUouOb8b5QDbOFiozNH+mQhQ4y4BETQeLOhDm7r0E
-         8JtBR3nouN+YzHSlPTm8oieEOqQPmz4rlC9747rrPqviTxNHW3tU1sHepxysWshSxpef
-         h9oz+YKITS0SAxIKKAP+mfn3wckbMuYRZZDEE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745325902; x=1745930702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qmv/eppcSNS/FFA0D45HtnI0orFklOBEuu+IeQXnzag=;
-        b=gIRYqGZoSpVzxwupN9lPlrf/bfPWBbBH0NO8NSTOzcBkLzBAkIKvROkcIjPZ7Hi45d
-         I+mAOz+mSzWWnwTKhtinNHg1J/PL4zTisXz+zVOHpVnDxWZaACK+AymUbeROmGqR1SBJ
-         9iQVtkrP7LFfCf4Pl+tvdLB0xdxQP4vb4LsxkGXuQ/gD6nil1tDSkqHYdswoXg2FTykJ
-         EnXd9XK7IdOUWBu3w9Jq8Vs3DcQb4ESiy7WI/tHVp5cMm9W4NXOaI5uf9AqiT2D/rxiV
-         qrA+xmWxZUhWoNKl1ofNTaLzulH6IWDxqWzMQXbtN20eFnYLCmoe8ruPdPuzZwj0yZNy
-         BJtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbhfdpd80pgPl8CqAhceYN32w50yn1/NCaAgGS2g3dDg4zUdYlkAet3K1IzZdO0Av23UPGwL0n+oZa2yI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQUenEDR7TAwqoWVg2gb3vlaL+p5fcB33LVWGjc3/euJuKJy+s
-	mEy0s/IpHodMpXVOpF6S1kuCgFJ7IW2vBnm3O+ofBu8H6nxVorsrU9Dqq/gJ0thrvuZmf9wvTvz
-	AOW+iQ55+OVOW5lFA4bGsv1fO/GpNxQ2H1RxF
-X-Gm-Gg: ASbGncuH1XR3wZHQUibkfMVlGr3r/w3P9374cii8ZHWTbnNxmqh/f2gcWwAHpt+lKNk
-	SE50vyYiqWijOQDwfa9X1JU9GNn7mWtlFajx93w8mBsfQGtxhUIYF6wlAJViQrSb7/wJk6XgE6y
-	/I1LsxrV552E+bmxY9fVumQ36PfFWHHcGAKQ4bC4N7kJgq2L88
-X-Google-Smtp-Source: AGHT+IHdTmSx9iS8EFu6hmVr5iQxagekadUQmWy2iPg8Fc4WAFCXivKqI/RbGAfgFTHhUvSFDjFlF3H8NSEt9mNdC88=
-X-Received: by 2002:a17:90b:57e6:b0:301:1bce:c252 with SMTP id
- 98e67ed59e1d1-3087bbbccb6mr20807109a91.27.1745325902515; Tue, 22 Apr 2025
- 05:45:02 -0700 (PDT)
+	s=arc-20240116; t=1745325923; c=relaxed/simple;
+	bh=wWEDt570HygBwpRK15+thk9Cpqh2/1oMStxh91ZqZTY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Fq0CbVkGogCpDxi0jh8WaXVLe3h2YFWsDXZ3OF7uaOIiSEdEDxryPU0+lCE8oD5t0N9/nX/KCT52tONGJCYyvDpujTtBzRw3pTaslkmJVeiPyMuajiOrXzXzBXhTdZxs3esXtM3VaGKcog66kPh8nAoRKIKW3iifcwN182W4cG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Zhhlg3S2Tz1j5wk;
+	Tue, 22 Apr 2025 20:45:03 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 69CA11402CE;
+	Tue, 22 Apr 2025 20:45:18 +0800 (CST)
+Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
+ (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 22 Apr
+ 2025 20:45:17 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<lihongbo22@huawei.com>
+Subject: [PATCH RFC 0/4] erofs-utils: Add --meta_fix and --meta_only format options
+Date: Tue, 22 Apr 2025 12:36:08 +0000
+Message-ID: <20250422123612.261764-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.22.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z_44tOtmml89wQcM@stanley.mountain>
-In-Reply-To: <Z_44tOtmml89wQcM@stanley.mountain>
-From: Andrei Kuchynski <akuchynski@chromium.org>
-Date: Tue, 22 Apr 2025 14:44:51 +0200
-X-Gm-Features: ATxdqUHpL8I3vcFgpkU4A33HaV238Xv7lz1t0Ca9ja9K4i3LKe-c37qpW_-DVJY
-Message-ID: <CAMMMRMf0DtXaG4-qkUfAUNEB8sM-oV2Qg5E_3cPr=yjL3fLo4w@mail.gmail.com>
-Subject: Re: [PATCH next] usb: typec: class: Unlocked on error in typec_register_partner()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benson Leung <bleung@chromium.org>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-On Tue, Apr 15, 2025 at 12:45=E2=80=AFPM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
-> We recently added some locking to this function but this error path
-> was accidentally missed.  Unlock before returning.
->
-> Fixes: ec27386de23a ("usb: typec: class: Fix NULL pointer access")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+In this patchset, we have added two formatting options --meta_fix and
+--meta_only to extend the ability of EROFS. In the case of using OBS,
+we can convert the directory tree structure from OBS into the erofs
+image and implement on-demand loading logic based on this. Since OBS
+objects are often large, we need to separate the metadata area from
+the data area, which is the reason we introduce the --meta_fix option.
+To accelerate the formatting process, we can skip the formatting of
+the raw data by adding --meta_only option.
 
-Reviewed-by: Andrei Kuchynski <akuchynski@chromium.org>
-> ---
->  drivers/usb/typec/class.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 3df3e3736916..67a533e35150 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1056,6 +1056,7 @@ struct typec_partner *typec_register_partner(struct=
- typec_port *port,
->         ret =3D device_register(&partner->dev);
->         if (ret) {
->                 dev_err(&port->dev, "failed to register partner (%d)\n", =
-ret);
-> +               mutex_unlock(&port->partner_link_lock);
->                 put_device(&partner->dev);
->                 return ERR_PTR(ret);
->         }
-> --
-> 2.47.2
->
+A simple usage example is as follows:
+  1. Build one xattr with OBS key in s3fs.
+  2. mkfs.erofs --meta_fix --meta_only data.img /mnt/s3fs to format
+  3. Implement the loading logic in kernel or userspace.
+
+Based on the above logic, we can easily expose the directory tree
+from OBS to users in the form of the EROFS file system and implement
+on-demand data loading for large OBS objects.
+
+Hongbo Li (4):
+  erofs-utils: lib: introduce --meta_fix format option
+  erofs-utils: lib: Implement the main logic for --meta_fix option
+  erofs-utils: lib: add --meta_only format option
+  erofs-utils: lib: remove the compile warning
+
+ include/erofs/blobraw.h |  29 +++++++++
+ include/erofs/config.h  |   2 +
+ lib/Makefile.am         |   3 +-
+ lib/blobraw.c           | 129 ++++++++++++++++++++++++++++++++++++++++
+ lib/decompress.c        |   3 +
+ lib/inode.c             |   6 ++
+ mkfs/main.c             |  49 +++++++++++++++
+ 7 files changed, 220 insertions(+), 1 deletion(-)
+ create mode 100755 include/erofs/blobraw.h
+ create mode 100755 lib/blobraw.c
+
+-- 
+2.22.0
+
