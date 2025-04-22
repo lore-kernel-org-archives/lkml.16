@@ -1,327 +1,452 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6611F5822
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A9C1F1500
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745314097; cv=none; b=ZtmIwURw79MHH5JEZlq9gHQTNTW1CY8q44PCapo6jnhKOmQOyhaQkXGyTXzrkZHNjL2vBIVsKrUxoz9d3ObCjJFnVKDsg2w5NXW+mqcfKfuy9/KuV+fCw0+nV9w70ofqQU25Vu0K4+p21fwG2UbRF+WzfJa4aj3t+czdVCU3N2k=
+	t=1745314181; cv=none; b=XjVgzSphsNs2JaJLPNjC/VzPjrlKALET/uCPvTXUX0V35OodYB999KMMmeFL/rrJwxpLdm7w7qP56aUX6WDT6ikqWvJwA/8V78KatRnS9XORmjaMGyMNTXzRAZwgEv1fI3kOIB8xQfDV47U5GpYTRZ981OrBUInwU3hGj01ljiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745314097; c=relaxed/simple;
-	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O8zos5RpC6HZ1jolnrjDC7hC4HCqRkXDbG3SC0POoyhgzo/nicSO1vypnpUqet8a6i92oIc+pj+/FsU6gRpBFJLvokcpGxW6Re15x2Tkq9NwfRcP73kbeshjl+UAVlHv74N1Qp0Ih6ux9l8UUcZFs4t0nf/Nwx8lNEcgQn1Nfug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WJO0WAx6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WJO0WAx6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745314181; c=relaxed/simple;
+	bh=ZhRKxWVZotA7rF404rmOp8nS2zG/8IhwI+xXb4MWRSE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=idc7DbAW4KbgkR55W3gMUfUapTB7BZYX8YV08q4zoUCaZRV9hB0w5QFSTNMMGtdITiTfzapFGjC0JxfHpAB4ZdywBqybLdoa9xaSk3sqrHjrh3BkR/Zyam/zYeeCnzkqhbdDHvIixrzmuZLJFCmCeEP4SQGz/9rsrKvIFlNI7to=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tZbz0M2z; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WJO0WAx6";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WJO0WAx6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 18940211CA;
-	Tue, 22 Apr 2025 09:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745314093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
-	b=WJO0WAx6oCF3ikUvqpE4aCyYMLdmUQGcz2z4dJKnd9XzpuTcugFdktpSDAkX9XAgwweCu2
-	Uz4plux39lNKV1A6iGt+Rjw4539GkLf1LJ2wDjvMINRyE67AEDK9IAEhWyUWlP3zxkw9Va
-	z2oIqPwTDf76wchMhgotmuTVBPWyaNs=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=WJO0WAx6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745314093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
-	b=WJO0WAx6oCF3ikUvqpE4aCyYMLdmUQGcz2z4dJKnd9XzpuTcugFdktpSDAkX9XAgwweCu2
-	Uz4plux39lNKV1A6iGt+Rjw4539GkLf1LJ2wDjvMINRyE67AEDK9IAEhWyUWlP3zxkw9Va
-	z2oIqPwTDf76wchMhgotmuTVBPWyaNs=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B4C20139D5;
-	Tue, 22 Apr 2025 09:28:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mOqAKithB2hIYwAAD6G6ig
-	(envelope-from <jgross@suse.com>); Tue, 22 Apr 2025 09:28:11 +0000
-Message-ID: <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
-Date: Tue, 22 Apr 2025 11:28:10 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tZbz0M2z"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b06e9bcc986so3416696a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745314178; x=1745918978; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2Xf4pmHwFxMcvAGykvpxOXuajpaq44nsmGp86t0OmA=;
+        b=tZbz0M2z2SlHDORKpvNNOcv/8y/Xk05YVUGSnJB/N3oHnRGM2TENMA0+uMsMXT4aKW
+         ThQYLkR90ru+J37RW0doBCFrCmx1vhCppqoVXUtsu5EMOAoVgajkto4RB55u6i1/MV9V
+         NMFPCCrXFe4RW34s08uXZUPZGXaO7wwMGRMo0bIH7gEboyMdsXocLFqQqAxo7D7Lq8T/
+         GOSau2mRc8IGTZpn9ocMMtgBMU9ZRmDb6nVo8EUblExbi62HAHkjUQK/DOlViOIUr8dx
+         FTbJixTVF2pC5ZDue7Z3sfbI+8jksOAEW2GapDYYIeU0gSm0D/2V2NZYrL05c4uEOyP9
+         WoVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745314179; x=1745918979;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C2Xf4pmHwFxMcvAGykvpxOXuajpaq44nsmGp86t0OmA=;
+        b=u8maXe8MsKghT1qqrMRpucx7C1nDdrF4vuUYx3F9Uvx+mMPcz2dt3CHTvcDHVkC3PJ
+         f1Y3EQGnya1bL0j//WZOrPQXIDHVwtQK7KvbQjgGkLdlthtKK8mrG560YmU29WYy8Wm5
+         ubBitdOO6B8acshfGfCOAX0AO6icX5NyH9mfCg6nbGJX8ILjvzcDVfjSjXlfEflq8YSZ
+         3ZrCDFdfxCJolknZ9iiU9kmSL546TiuheGCJs5eSInWXHuf9HcJO/k8/C7UlR37Lg76t
+         W1hf9G9rZeuDg+8ow/ThyX4BIDWbk+JzksBpg9H7dK6Lm79JP632d6hcm+yZa4nSzhY7
+         d6rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXj/wDCSEhQNqGgDpXsKRX9uhRHGT8gDjV606X49fxvwuN8D1Zl37gS19wSHq/mCztyQ9JO64laTpp0lxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIXDVqrzCGlU2s2YQ8EkWV4P4wGG62cGyQxPuRKvMaAJ3d59Ah
+	7hgN5WjwG7ES7jUd4hNHv9Rwk3ePfC/GED3cTVuwNTJDlF48DuJJsfrHSD+Xmcdilsa5ROBHCT8
+	m3Xltq1BXUqM5XOZBRFqxLNJJO/G1pHS2t+9w
+X-Gm-Gg: ASbGncve6frTSmqt0S0GFCaOYHQTYzQmNilqjLM8zdM53UUc2+49NggxfF0JwSC0Wtm
+	VMlrUffIjaTGtgmudrEfSLGUdrJ9HQcivW23HXixEhnB5ydRSpl5aMfrWvgmfBh3Qw4XI4lHoYt
+	RzdrZ72lOux9B4Ld55nxSfCUOGyWRZnBnL00gUgfxVAKB1NJKYpdOM2w==
+X-Google-Smtp-Source: AGHT+IGNYwm6QY298LxZHJDmNr/Lyjf/vhfbEMNi4EDIrEmHT+uzsq+GnfVP/5P7dK+JG2d1G/A8AyUv0x30iLve4lg=
+X-Received: by 2002:a17:90b:5646:b0:2ee:f80c:6889 with SMTP id
+ 98e67ed59e1d1-3087bcc8a9dmr24296447a91.33.1745314178289; Tue, 22 Apr 2025
+ 02:29:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
- read PMC
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-7-xin@zytor.com>
- <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
- <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------i1ufDKWM9txfyXVXpiWBIZPH"
-X-Rspamd-Queue-Id: 18940211CA
-X-Spam-Level: 
-X-Spamd-Result: default: False [-6.41 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[41];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_ATTACHMENT(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -6.41
-X-Spam-Flag: NO
+References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-6-glider@google.com>
+In-Reply-To: <20250416085446.480069-6-glider@google.com>
+From: Marco Elver <elver@google.com>
+Date: Tue, 22 Apr 2025 11:29:01 +0200
+X-Gm-Features: ATxdqUHRzEwfGkMe4bHdQJyW3hQZgIGBenSuXDct-VznZp1AxsAqbX5joH81qQw
+Message-ID: <CANpmjNM=AAtiXeDHgG+ec48=xwBTzphG3rpJZ3krpG2Hd1FixQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] kcov: add ioctl(KCOV_UNIQUE_ENABLE)
+To: Alexander Potapenko <glider@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------i1ufDKWM9txfyXVXpiWBIZPH
-Content-Type: multipart/mixed; boundary="------------t79jkH1vw0nTqZ7sc29K922g";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
-Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
- read PMC
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-7-xin@zytor.com>
- <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
- <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
-In-Reply-To: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+On Wed, 16 Apr 2025 at 10:55, Alexander Potapenko <glider@google.com> wrote:
+>
+> ioctl(KCOV_UNIQUE_ENABLE) enables collection of deduplicated coverage
+> in the presence of CONFIG_KCOV_ENABLE_GUARDS.
+>
+> The buffer shared with the userspace is divided in two parts, one holding
+> a bitmap, and the other one being the trace. The single parameter of
+> ioctl(KCOV_UNIQUE_ENABLE) determines the number of words used for the
+> bitmap.
+>
+> Each __sanitizer_cov_trace_pc_guard() instrumentation hook receives a
+> pointer to a unique guard variable. Upon the first call of each hook,
+> the guard variable is initialized with a unique integer, which is used to
+> map those hooks to bits in the bitmap. In the new coverage collection mode,
+> the kernel first checks whether the bit corresponding to a particular hook
+> is set, and then, if it is not, the PC is written into the trace buffer,
+> and the bit is set.
+>
+> Note: when CONFIG_KCOV_ENABLE_GUARDS is disabled, ioctl(KCOV_UNIQUE_ENABLE)
+> returns -ENOTSUPP, which is consistent with the existing kcov code.
+>
+> Also update the documentation.
 
---------------t79jkH1vw0nTqZ7sc29K922g
-Content-Type: multipart/mixed; boundary="------------k2rhN54GrX7NriGRI3BHxg0x"
+Do you have performance measurements (old vs. new mode) that can be
+included in this commit description?
 
---------------k2rhN54GrX7NriGRI3BHxg0x
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> Signed-off-by: Alexander Potapenko <glider@google.com>
+> ---
+>  Documentation/dev-tools/kcov.rst |  43 +++++++++++
+>  include/linux/kcov-state.h       |   8 ++
+>  include/linux/kcov.h             |   2 +
+>  include/uapi/linux/kcov.h        |   1 +
+>  kernel/kcov.c                    | 129 +++++++++++++++++++++++++++----
+>  5 files changed, 170 insertions(+), 13 deletions(-)
+>
+> diff --git a/Documentation/dev-tools/kcov.rst b/Documentation/dev-tools/kcov.rst
+> index 6611434e2dd24..271260642d1a6 100644
+> --- a/Documentation/dev-tools/kcov.rst
+> +++ b/Documentation/dev-tools/kcov.rst
+> @@ -137,6 +137,49 @@ mmaps coverage buffer, and then forks child processes in a loop. The child
+>  processes only need to enable coverage (it gets disabled automatically when
+>  a thread exits).
+>
+> +Unique coverage collection
+> +---------------------------
+> +
+> +Instead of collecting raw PCs, KCOV can deduplicate them on the fly.
+> +This mode is enabled by the ``KCOV_UNIQUE_ENABLE`` ioctl (only available if
+> +``CONFIG_KCOV_ENABLE_GUARDS`` is on).
+> +
+> +.. code-block:: c
+> +
+> +       /* Same includes and defines as above. */
+> +       #define KCOV_UNIQUE_ENABLE              _IOW('c', 103, unsigned long)
 
-T24gMjIuMDQuMjUgMTE6MTIsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDE6Mzgg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAyMi4wNC4yNSAxMDoyMSwgWGluIExp
-IChJbnRlbCkgd3JvdGU6DQo+Pj4gVG8gZWxpbWluYXRlIHRoZSBpbmRpcmVjdCBjYWxsIG92
-ZXJoZWFkIGludHJvZHVjZWQgYnkgdGhlIHB2X29wcyBBUEksDQo+Pj4gdXNlIHRoZSBhbHRl
-cm5hdGl2ZXMgbWVjaGFuaXNtIHRvIHJlYWQgUE1DOg0KPj4NCj4+IFdoaWNoIGluZGlyZWN0
-IGNhbGwgb3ZlcmhlYWQ/IFRoZSBpbmRpcmVjdCBjYWxsIGlzIHBhdGNoZWQgdmlhIHRoZQ0K
-Pj4gYWx0ZXJuYXRpdmUgbWVjaGFuaXNtIHRvIGEgZGlyZWN0IG9uZS4NCj4+DQo+IA0KPiBT
-ZWUgYmVsb3cuDQo+IA0KPiANCj4+Pg0KPj4+IMKgwqDCoMKgIDEpIFdoZW4gYnVpbHQgd2l0
-aCAhQ09ORklHX1hFTl9QViwgWDg2X0ZFQVRVUkVfWEVOUFYgYmVjb21lcyBhDQo+Pj4gwqDC
-oMKgwqDCoMKgwqAgZGlzYWJsZWQgZmVhdHVyZSwgcHJldmVudGluZyB0aGUgWGVuIFBNQyBy
-ZWFkIGNvZGUgZnJvbSBiZWluZw0KPj4+IMKgwqDCoMKgwqDCoMKgIGJ1aWx0IGFuZCBlbnN1
-cmluZyB0aGUgbmF0aXZlIGNvZGUgaXMgZXhlY3V0ZWQgdW5jb25kaXRpb25hbGx5Lg0KPj4N
-Cj4+IFdpdGhvdXQgQ09ORklHX1hFTl9QViBDT05GSUdfUEFSQVZJUlRfWFhMIGlzIG5vdCBz
-ZWxlY3RlZCwgcmVzdWx0aW5nIGluDQo+PiBuYXRpdmUgY29kZSBhbnl3YXkuDQo+IA0KPiBZ
-ZXMsIHRoaXMgaXMga2VwdCBpbiB0aGlzIHBhdGNoLCBidXQgaW4gYSBsaXR0bGUgZGlmZmVy
-ZW50IHdheS4NCj4gDQo+Pg0KPj4+DQo+Pj4gwqDCoMKgwqAgMikgV2hlbiBidWlsdCB3aXRo
-IENPTkZJR19YRU5fUFY6DQo+Pj4NCj4+PiDCoMKgwqDCoMKgwqDCoCAyLjEpIElmIG5vdCBy
-dW5uaW5nIG9uIHRoZSBYZW4gaHlwZXJ2aXNvciAoIVg4Nl9GRUFUVVJFX1hFTlBWKSwNCj4+
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGhlIGtlcm5lbCBydW50aW1lIGJpbmFyeSBp
-cyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseQ0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBqdW1wIHRvIHRoZSBuYXRpdmUgUE1DIHJlYWQgY29kZS4NCj4+Pg0KPj4+IMKgwqDC
-oMKgwqDCoMKgIDIuMikgSWYgcnVubmluZyBvbiB0aGUgWGVuIGh5cGVydmlzb3IgKFg4Nl9G
-RUFUVVJFX1hFTlBWKSwgdGhlDQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlcm5l
-bCBydW50aW1lIGJpbmFyeSBpcyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseSBqdW1wDQo+
-Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRvIHRoZSBYZW4gUE1DIHJlYWQgY29kZS4N
-Cj4+Pg0KPj4+IENvbnNlcXVlbnRseSwgcmVtb3ZlIHRoZSBwdl9vcHMgUE1DIHJlYWQgQVBJ
-Lg0KPj4NCj4+IEkgZG9uJ3Qgc2VlIHRoZSB2YWx1ZSBvZiB0aGlzIHBhdGNoLg0KPj4NCj4+
-IEl0IGFkZHMgbW9yZSAjaWZkZWYgYW5kIGNvZGUgbGluZXMgd2l0aG91dCBhbnkgcmVhbCBn
-YWluLg0KPj4NCj4+IEluIGNhc2UgdGhlIHg4NiBtYWludGFpbmVycyB0aGluayBpdCBpcyBz
-dGlsbCB3b3J0aCBpdCwgSSB3b24ndCBvYmplY3QuDQo+IA0KPiBJIHRoaW5rIHdlIHdhbnQg
-dG8gdG90YWxseSBieXBhc3MgcHZfb3BzIGluIHRoZSBjYXNlIDIuMSkuDQo+IA0KPiBEbyB5
-b3UgbWVhbiB0aGUgaW5kaXJlY3QgY2FsbCBpcyBwYXRjaGVkIHRvIGNhbGwgbmF0aXZlIGNv
-ZGUgKmRpcmVjdGx5Kg0KPiBmb3IgMi4xP8KgIEkgZG9uJ3Qga25vdyBpdCwgY2FuIHlvdSBw
-bGVhc2UgZWxhYm9yYXRlPw0KDQpBbGwgcGFyYXZpcnQgaW5kaXJlY3QgY2FsbHMgYXJlIHBh
-dGNoZWQgdG8gZGlyZWN0IGNhbGxzIHZpYSB0aGUgbm9ybWFsDQphbHRlcm5hdGl2ZSBwYXRj
-aCBtZWNoYW5pc20uDQoNCkhhdmUgYSBsb29rIGF0IGFsdF9yZXBsYWNlX2NhbGwoKSBpbiBh
-cmNoL3g4Ni9rZXJuZWwvYWx0ZXJuYXRpdmUuYw0KDQo+IEFGQUlLLCBYZW4gUFYgaGFzIGJl
-ZW4gdGhlIHNvbGUgdXNlciBvZiBwdl9vcHMgZm9yIG5lYXJseSAyMCB5ZWFycy4gVGhpcw0K
-DQpOb3QgcXVpdGUuIFRoZXJlIHdhcyBsZ3Vlc3QgdW50aWwgSSByaXBwZWQgaXQgb3V0LiA6
-LSkNCg0KQW5kIHNvbWUgdXNlIGNhc2VzIGFyZSBsZWZ0IGZvciBLVk0gYW5kIEh5cGVyLVYg
-Z3Vlc3RzIChJIGhhdmUga2VwdCB0aG9zZQ0KYmVoaW5kIENPTkZJR19QQVJBVklSVCwgd2hp
-bGUgdGhlIFhlbi1zcGVjaWZpYyBwYXJ0cyBhcmUgYmVoaW5kDQpDT05GSUdfUEFSQVZJUlRf
-WFhMIG5vdykuDQoNCj4gcmFpc2VzIHNpZ25pZmljYW50IGRvdWJ0cyBhYm91dCB3aGV0aGVy
-IHB2X29wcyBwcm92aWRlcyBMaW51eCB3aXRoIHRoZQ0KPiB2YWx1ZSBvZiBiZWluZyBhIHdl
-bGwtYWJzdHJhY3RlZCAiQ1BVIiBvciAiUGxhdGZvcm0iLsKgIEFuZCB0aGUgeDg2DQo+IG1h
-aW50YWluZXJzIGhhdmUgc2FpZCB0aGF0IGl0J3MgYSBtYWludGVuYW5jZSBuaWdodG1hcmUu
-DQoNCkkgaGF2ZSB3b3JrZWQgcmF0aGVyIGhhcmQgdG8gbWFrZSBpdCBsZXNzIGludHJ1c2l2
-ZSwgZXNwZWNpYWxseSBieSByZW1vdmluZw0KdGhlIHBhcmF2aXJ0IHNwZWNpZmljIGNvZGUg
-cGF0Y2hpbmcgKG5vdyBhbGwgZG9uZSB2aWEgYWx0ZXJuYXRpdmUgcGF0Y2hpbmcpDQphbmQg
-YnkgcmVtb3ZpbmcgMzItYml0IFhlbiBQViBtb2RlLg0KDQoNCkp1ZXJnZW4NCg==
---------------k2rhN54GrX7NriGRI3BHxg0x
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Here it's _IOW.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> +       #define BITMAP_SIZE                     (4<<10)
+> +
+> +       /* Instead of KCOV_ENABLE, enable unique coverage collection. */
+> +       if (ioctl(fd, KCOV_UNIQUE_ENABLE, BITMAP_SIZE))
+> +               perror("ioctl"), exit(1);
+> +       /* Reset the coverage from the tail of the ioctl() call. */
+> +       __atomic_store_n(&cover[BITMAP_SIZE], 0, __ATOMIC_RELAXED);
+> +       memset(cover, 0, BITMAP_SIZE * sizeof(unsigned long));
+> +
+> +       /* Call the target syscall call. */
+> +       /* ... */
+> +
+> +       /* Read the number of collected PCs. */
+> +       n = __atomic_load_n(&cover[BITMAP_SIZE], __ATOMIC_RELAXED);
+> +       /* Disable the coverage collection. */
+> +       if (ioctl(fd, KCOV_DISABLE, 0))
+> +               perror("ioctl"), exit(1);
+> +
+> +Calling ``ioctl(fd, KCOV_UNIQUE_ENABLE, bitmap_size)`` carves out ``bitmap_size``
+> +words from those allocated by ``KCOV_INIT_TRACE`` to keep an opaque bitmap that
+> +prevents the kernel from storing the same PC twice. The remaining part of the
+> +trace is used to collect PCs, like in other modes (this part must contain at
+> +least two words, like when collecting non-unique PCs).
+> +
+> +The mapping between a PC and its position in the bitmap is persistent during the
+> +kernel lifetime, so it is possible for the callers to directly use the bitmap
+> +contents as a coverage signal (like when fuzzing userspace with AFL).
+> +
+> +In order to reset the coverage between the runs, the user needs to rewind the
+> +trace (by writing 0 into the first word past ``bitmap_size``) and wipe the whole
+> +bitmap.
+> +
+>  Comparison operands collection
+>  ------------------------------
+>
+> diff --git a/include/linux/kcov-state.h b/include/linux/kcov-state.h
+> index 6e576173fd442..26e275fe90684 100644
+> --- a/include/linux/kcov-state.h
+> +++ b/include/linux/kcov-state.h
+> @@ -26,6 +26,14 @@ struct kcov_state {
+>                 /* Buffer for coverage collection, shared with the userspace. */
+>                 unsigned long *trace;
+>
+> +               /* Size of the bitmap (in bits). */
+> +               unsigned int bitmap_size;
+> +               /*
+> +                * Bitmap for coverage deduplication, shared with the
+> +                * userspace.
+> +                */
+> +               unsigned long *bitmap;
+> +
+>                 /*
+>                  * KCOV sequence number: incremented each time kcov is
+>                  * reenabled, used by kcov_remote_stop(), see the comment there.
+> diff --git a/include/linux/kcov.h b/include/linux/kcov.h
+> index 7ec2669362fd1..41eebcd3ab335 100644
+> --- a/include/linux/kcov.h
+> +++ b/include/linux/kcov.h
+> @@ -10,6 +10,7 @@ struct task_struct;
+>  #ifdef CONFIG_KCOV
+>
+>  enum kcov_mode {
+> +       KCOV_MODE_INVALID = -1,
+>         /* Coverage collection is not enabled yet. */
+>         KCOV_MODE_DISABLED = 0,
+>         /* KCOV was initialized, but tracing mode hasn't been chosen yet. */
+> @@ -23,6 +24,7 @@ enum kcov_mode {
+>         KCOV_MODE_TRACE_CMP = 3,
+>         /* The process owns a KCOV remote reference. */
+>         KCOV_MODE_REMOTE = 4,
+> +       KCOV_MODE_TRACE_UNIQUE_PC = 5,
+>  };
+>
+>  #define KCOV_IN_CTXSW (1 << 30)
+> diff --git a/include/uapi/linux/kcov.h b/include/uapi/linux/kcov.h
+> index ed95dba9fa37e..fe1695ddf8a06 100644
+> --- a/include/uapi/linux/kcov.h
+> +++ b/include/uapi/linux/kcov.h
+> @@ -22,6 +22,7 @@ struct kcov_remote_arg {
+>  #define KCOV_ENABLE                    _IO('c', 100)
+>  #define KCOV_DISABLE                   _IO('c', 101)
+>  #define KCOV_REMOTE_ENABLE             _IOW('c', 102, struct kcov_remote_arg)
+> +#define KCOV_UNIQUE_ENABLE             _IOR('c', 103, unsigned long)
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+_IOR? The unsigned long arg is copied to the kernel, so this should be
+_IOW, right?
 
---------------k2rhN54GrX7NriGRI3BHxg0x--
+>  enum {
+>         /*
+> diff --git a/kernel/kcov.c b/kernel/kcov.c
+> index 7b726fd761c1b..dea25c8a53b52 100644
+> --- a/kernel/kcov.c
+> +++ b/kernel/kcov.c
+> @@ -29,6 +29,10 @@
+>
+>  #include <asm/setup.h>
+>
+> +#ifdef CONFIG_KCOV_ENABLE_GUARDS
+> +atomic_t kcov_guard_max_index = ATOMIC_INIT(1);
+> +#endif
+> +
+>  #define kcov_debug(fmt, ...) pr_debug("%s: " fmt, __func__, ##__VA_ARGS__)
+>
+>  /* Number of 64-bit words written per one comparison: */
+> @@ -161,8 +165,7 @@ static __always_inline bool in_softirq_really(void)
+>         return in_serving_softirq() && !in_hardirq() && !in_nmi();
+>  }
+>
+> -static notrace bool check_kcov_mode(enum kcov_mode needed_mode,
+> -                                   struct task_struct *t)
+> +static notrace enum kcov_mode get_kcov_mode(struct task_struct *t)
+>  {
+>         unsigned int mode;
+>
+> @@ -172,7 +175,7 @@ static notrace bool check_kcov_mode(enum kcov_mode needed_mode,
+>          * coverage collection section in a softirq.
+>          */
+>         if (!in_task() && !(in_softirq_really() && t->kcov_softirq))
+> -               return false;
+> +               return KCOV_MODE_INVALID;
+>         mode = READ_ONCE(t->kcov_state.mode);
+>         /*
+>          * There is some code that runs in interrupts but for which
+> @@ -182,7 +185,7 @@ static notrace bool check_kcov_mode(enum kcov_mode needed_mode,
+>          * kcov_start().
+>          */
+>         barrier();
+> -       return mode == needed_mode;
+> +       return mode;
+>  }
+>
+>  static notrace unsigned long canonicalize_ip(unsigned long ip)
+> @@ -201,7 +204,7 @@ static void sanitizer_cov_write_subsequent(unsigned long *trace, int size,
+>
+>         if (likely(pos < size)) {
+>                 /*
+> -                * Some early interrupt code could bypass check_kcov_mode() check
+> +                * Some early interrupt code could bypass get_kcov_mode() check
+>                  * and invoke __sanitizer_cov_trace_pc(). If such interrupt is
+>                  * raised between writing pc and updating pos, the pc could be
+>                  * overitten by the recursive __sanitizer_cov_trace_pc().
+> @@ -220,7 +223,7 @@ static void sanitizer_cov_write_subsequent(unsigned long *trace, int size,
+>  #ifndef CONFIG_KCOV_ENABLE_GUARDS
+>  void notrace __sanitizer_cov_trace_pc(void)
+>  {
+> -       if (!check_kcov_mode(KCOV_MODE_TRACE_PC, current))
+> +       if (get_kcov_mode(current) != KCOV_MODE_TRACE_PC)
+>                 return;
+>
+>         sanitizer_cov_write_subsequent(current->kcov_state.s.trace,
+> @@ -229,14 +232,73 @@ void notrace __sanitizer_cov_trace_pc(void)
+>  }
+>  EXPORT_SYMBOL(__sanitizer_cov_trace_pc);
+>  #else
+> +
+> +DEFINE_PER_CPU(u32, saved_index);
+> +/*
+> + * Assign an index to a guard variable that does not have one yet.
+> + * For an unlikely case of a race with another task executing the same basic
+> + * block, we store the unused index in a per-cpu variable.
+> + * In an even less likely case the current task may lose a race and get
+> + * rescheduled onto a CPU that already has a saved index, discarding that index.
+> + * This will result in an unused hole in the bitmap, but such events should have
+> + * minor impact on the overall memory consumption.
+> + */
+> +static __always_inline u32 init_pc_guard(u32 *guard)
+> +{
+> +       /* If the current CPU has a saved free index, use it. */
+> +       u32 index = this_cpu_xchg(saved_index, 0);
+> +       u32 old_guard;
+> +
+> +       if (likely(!index))
+> +               /*
+> +                * Allocate a new index. No overflow is possible, because 2**32
+> +                * unique basic blocks will take more space than the max size
+> +                * of the kernel text segment.
+> +                */
+> +               index = atomic_inc_return(&kcov_guard_max_index) - 1;
+> +
+> +       /*
+> +        * Make sure another task is not initializing the same guard
+> +        * concurrently.
+> +        */
+> +       old_guard = cmpxchg(guard, 0, index);
+> +       if (unlikely(old_guard)) {
+> +               /* We lost the race, save the index for future use. */
+> +               this_cpu_write(saved_index, index);
+> +               return old_guard;
+> +       }
+> +       return index;
+> +}
+> +
+>  void notrace __sanitizer_cov_trace_pc_guard(u32 *guard)
+>  {
+> -       if (!check_kcov_mode(KCOV_MODE_TRACE_PC, current))
+> -               return;
+> +       u32 pc_index;
+> +       enum kcov_mode mode = get_kcov_mode(current);
+>
+> -       sanitizer_cov_write_subsequent(current->kcov_state.s.trace,
+> -                                      current->kcov_state.s.trace_size,
+> -                                      canonicalize_ip(_RET_IP_));
+> +       switch (mode) {
+> +       case KCOV_MODE_TRACE_UNIQUE_PC:
+> +               pc_index = READ_ONCE(*guard);
+> +               if (unlikely(!pc_index))
+> +                       pc_index = init_pc_guard(guard);
 
---------------t79jkH1vw0nTqZ7sc29K922g--
+This is an unlikely branch, yet init_pc_guard is __always_inline. Can
+we somehow make it noinline? I know objtool will complain, but besides
+the cosmetic issues, doing noinline and just giving it a better name
+("kcov_init_pc_guard") and adding that to objtool whilelist will be
+better for codegen.
 
---------------i1ufDKWM9txfyXVXpiWBIZPH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHYSsFAwAAAAAACgkQsN6d1ii/Ey8t
-BAf/Xay1uGeOD69VQbulD5vOfWkJTcR0Set2Ks1eR2Vni6kcV54vp/BhiSm/odLCaeK6XO/CupIM
-hmeYc1rLkQuUKoS3D8zYmb2d6lilx6lmkEPIw2C1bz6ceEcYRgHk/nu0soK05iUQK4x4SoFUXJMu
-oQ498RSAV8OhVpgYalYwt5h6l5sjqCeuOPeTqEokiLUB544rVfx21WTI6djKReonnep9/DZd9YC0
-DYfrmMpBev4bopMQyF1Ac0JO7EOyMxKcVaBT+odf3yFSpeLuLk6Lnnbi2pNL9YXscx7PvHn7hr/h
-qDUjlLIdezwa3/1AX1203eHNZvMLMJ8jag9r/EO1dg==
-=N5ER
------END PGP SIGNATURE-----
-
---------------i1ufDKWM9txfyXVXpiWBIZPH--
+> +
+> +               /*
+> +                * Use the bitmap for coverage deduplication. We assume both
+> +                * s.bitmap and s.trace are non-NULL.
+> +                */
+> +               if (likely(pc_index < current->kcov_state.s.bitmap_size))
+> +                       if (test_and_set_bit(pc_index,
+> +                                            current->kcov_state.s.bitmap))
+> +                               return;
+> +               /* If the PC is new, write it to the trace. */
+> +               fallthrough;
+> +       case KCOV_MODE_TRACE_PC:
+> +               sanitizer_cov_write_subsequent(current->kcov_state.s.trace,
+> +                                              current->kcov_state.s.trace_size,
+> +                                              canonicalize_ip(_RET_IP_));
+> +               break;
+> +       default:
+> +               return;
+> +       }
+>  }
+>  EXPORT_SYMBOL(__sanitizer_cov_trace_pc_guard);
+>
+> @@ -255,7 +317,7 @@ static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
+>         u64 *trace;
+>
+>         t = current;
+> -       if (!check_kcov_mode(KCOV_MODE_TRACE_CMP, t))
+> +       if (get_kcov_mode(t) != KCOV_MODE_TRACE_CMP)
+>                 return;
+>
+>         ip = canonicalize_ip(ip);
+> @@ -374,7 +436,7 @@ static void kcov_start(struct task_struct *t, struct kcov *kcov,
+>         /* Cache in task struct for performance. */
+>         t->kcov_state.s = state->s;
+>         barrier();
+> -       /* See comment in check_kcov_mode(). */
+> +       /* See comment in get_kcov_mode(). */
+>         WRITE_ONCE(t->kcov_state.mode, state->mode);
+>  }
+>
+> @@ -408,6 +470,10 @@ static void kcov_reset(struct kcov *kcov)
+>         kcov->state.mode = KCOV_MODE_INIT;
+>         kcov->remote = false;
+>         kcov->remote_size = 0;
+> +       kcov->state.s.trace = kcov->state.s.area;
+> +       kcov->state.s.trace_size = kcov->state.s.size;
+> +       kcov->state.s.bitmap = NULL;
+> +       kcov->state.s.bitmap_size = 0;
+>         kcov->state.s.sequence++;
+>  }
+>
+> @@ -594,6 +660,41 @@ static inline bool kcov_check_handle(u64 handle, bool common_valid,
+>         return false;
+>  }
+>
+> +static long kcov_handle_unique_enable(struct kcov *kcov,
+> +                                     unsigned long bitmap_words)
+> +{
+> +       struct task_struct *t = current;
+> +
+> +       if (!IS_ENABLED(CONFIG_KCOV_ENABLE_GUARDS))
+> +               return -ENOTSUPP;
+> +       if (kcov->state.mode != KCOV_MODE_INIT || !kcov->state.s.area)
+> +               return -EINVAL;
+> +       if (kcov->t != NULL || t->kcov != NULL)
+> +               return -EBUSY;
+> +
+> +       /*
+> +        * Cannot use zero-sized bitmap, also the bitmap must leave at least two
+> +        * words for the trace.
+> +        */
+> +       if ((!bitmap_words) || (bitmap_words >= (kcov->state.s.size - 1)))
+> +               return -EINVAL;
+> +
+> +       kcov->state.s.bitmap_size = bitmap_words * sizeof(unsigned long) * 8;
+> +       kcov->state.s.bitmap = kcov->state.s.area;
+> +       kcov->state.s.trace_size = kcov->state.s.size - bitmap_words;
+> +       kcov->state.s.trace =
+> +               ((unsigned long *)kcov->state.s.area + bitmap_words);
+> +
+> +       kcov_fault_in_area(kcov);
+> +       kcov->state.mode = KCOV_MODE_TRACE_UNIQUE_PC;
+> +       kcov_start(t, kcov, &kcov->state);
+> +       kcov->t = t;
+> +       /* Put either in kcov_task_exit() or in KCOV_DISABLE. */
+> +       kcov_get(kcov);
+> +
+> +       return 0;
+> +}
+> +
+>  static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+>                              unsigned long arg)
+>  {
+> @@ -627,6 +728,8 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+>                 /* Put either in kcov_task_exit() or in KCOV_DISABLE. */
+>                 kcov_get(kcov);
+>                 return 0;
+> +       case KCOV_UNIQUE_ENABLE:
+> +               return kcov_handle_unique_enable(kcov, arg);
+>         case KCOV_DISABLE:
+>                 /* Disable coverage for the current task. */
+>                 unused = arg;
+> --
+> 2.49.0.604.gff1f9ca942-goog
+>
