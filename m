@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA11B2F3E
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:18:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DABD91EBA16
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309924; cv=none; b=nxBaWhMjHAlWRG5aUl8qK3cJ78/FKCkAR3qAE3yY6FlwGXLfQV5dndo8qPUVBiDE2sbCu0iydxu0WCL74vuKdCyAoXZrxYHrHvP1QQRgG2gMkTgag3XQpQOQEEeF3TtGO45A6czdLtQrDTrJzEm6jjso6JVsKFopW03mF0otGwc=
+	t=1745309925; cv=none; b=ZLLx0/wNc912U0ZkoX4nP0IYEeAFtqfPD5TAMlXOWbVObeYFbaxoq3iQLWDqDIcIR2fxEm4lrdUA6SBXk+9gaKkL9cVPXExK4slDzehPFZHoVKjayXdJ5Chk81qL+1Pi5RZPlDzcsE4iVeuDGlO6pYaaWNoXz6qwNW7rwPFkO2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309924; c=relaxed/simple;
-	bh=1dWXmnh5Y8s1KRLizRe4CqYLRFc6iAOrGBwk0R0bFnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=diR5NHRnPFQTEZEBBVkwiu2DTgY2cgePW33N1Ecotkl4Dke2MK7Ukxmcu8NllujTRrAVz0g6F4/WH9EiZq8EZcSv7g1c/NxyfYVblcnn6mGRfrGc7NR5lK7yHm/3hTzEZhhgRV7AnEgFCd0ypB/pfpg60LaCwn5DJeT6hicZGNM=
+	s=arc-20240116; t=1745309925; c=relaxed/simple;
+	bh=E8D3cSLQeYoyZ/dgADsYWqeVLa+kpZ+5c5Oicqh2HQ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JNct7OUIDY9WFPeRjSbY+zqDPfVpvMCrhnf37WK76iEaiP5P40M8yemIvPfRDqcgK19D5yqYJoHOWe+fuUy/0TLmiztxeHCOQyqa9TsSagwGzIgqTZkmc4XTdkJhg6j0tRhin7DLdbI9gh9U0G6ifIDqOtOw5MbQpK/7aw/rqb4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1D47152B;
-	Tue, 22 Apr 2025 01:18:36 -0700 (PDT)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17CCD3F66E;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D9F176A;
 	Tue, 22 Apr 2025 01:18:38 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F1B13F66E;
+	Tue, 22 Apr 2025 01:18:41 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -34,10 +35,12 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/11] Perf improvements for hugetlb and vmalloc on arm64
-Date: Tue, 22 Apr 2025 09:18:08 +0100
-Message-ID: <20250422081822.1836315-1-ryan.roberts@arm.com>
+Subject: [PATCH v4 01/11] arm64: hugetlb: Cleanup huge_pte size discovery mechanisms
+Date: Tue, 22 Apr 2025 09:18:09 +0100
+Message-ID: <20250422081822.1836315-2-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250422081822.1836315-1-ryan.roberts@arm.com>
+References: <20250422081822.1836315-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,135 +49,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi All,
+Not all huge_pte helper APIs explicitly provide the size of the
+huge_pte. So the helpers have to depend on various methods to determine
+the size of the huge_pte. Some of these methods are dubious.
 
-This is v4 of a series to improve performance for hugetlb and vmalloc on arm64.
-Although some of these patches are core-mm, advice from Andrew was to go via the
-arm64 tree. All patches are now acked/reviewed by relevant maintainers so I
-believe this should be good-to-go.
+Let's clean up the code to use preferred methods and retire the dubious
+ones. The options in order of preference:
 
-The 2 key performance improvements are 1) enabling the use of contpte-mapped
-blocks in the vmalloc space when appropriate (which reduces TLB pressure). There
-were already hooks for this (used by powerpc) but they required some tidying and
-extending for arm64. And 2) batching up barriers when modifying the vmalloc
-address space for upto 30% reduction in time taken in vmalloc().
+ - If size is provided as parameter, use it together with
+   num_contig_ptes(). This is explicit and works for both present and
+   non-present ptes.
 
-vmalloc() performance was measured using the test_vmalloc.ko module. Tested on
-Apple M2 and Ampere Altra. Each test had loop count set to 500000 and the whole
-test was repeated 10 times.
+ - If vma is provided as a parameter, retrieve size via
+   huge_page_size(hstate_vma(vma)) and use it together with
+   num_contig_ptes(). This is explicit and works for both present and
+   non-present ptes.
 
-legend:
-  - p: nr_pages (pages to allocate)
-  - h: use_huge (vmalloc() vs vmalloc_huge())
-  - (I): statistically significant improvement (95% CI does not overlap)
-  - (R): statistically significant regression (95% CI does not overlap)
-  - measurements are times; smaller is better
+ - If the pte is present and contiguous, use find_num_contig() to walk
+   the pgtable to find the level and infer the number of ptes from
+   level. Only works for *present* ptes.
 
-+--------------------------------------------------+-------------+-------------+
-| Benchmark                                        |             |             |
-|   Result Class                                   |    Apple M2 | Ampere Alta |
-+==================================================+=============+=============+
-| micromm/vmalloc                                  |             |             |
-|   fix_align_alloc_test: p:1, h:0 (usec)          | (I) -11.53% |      -2.57% |
-|   fix_size_alloc_test: p:1, h:0 (usec)           |       2.14% |       1.79% |
-|   fix_size_alloc_test: p:4, h:0 (usec)           |  (I) -9.93% |  (I) -4.80% |
-|   fix_size_alloc_test: p:16, h:0 (usec)          | (I) -25.07% | (I) -14.24% |
-|   fix_size_alloc_test: p:16, h:1 (usec)          | (I) -14.07% |   (R) 7.93% |
-|   fix_size_alloc_test: p:64, h:0 (usec)          | (I) -29.43% | (I) -19.30% |
-|   fix_size_alloc_test: p:64, h:1 (usec)          | (I) -16.39% |   (R) 6.71% |
-|   fix_size_alloc_test: p:256, h:0 (usec)         | (I) -31.46% | (I) -20.60% |
-|   fix_size_alloc_test: p:256, h:1 (usec)         | (I) -16.58% |   (R) 6.70% |
-|   fix_size_alloc_test: p:512, h:0 (usec)         | (I) -31.96% | (I) -20.04% |
-|   fix_size_alloc_test: p:512, h:1 (usec)         |       2.30% |       0.71% |
-|   full_fit_alloc_test: p:1, h:0 (usec)           |      -2.94% |       1.77% |
-|   kvfree_rcu_1_arg_vmalloc_test: p:1, h:0 (usec) |      -7.75% |       1.71% |
-|   kvfree_rcu_2_arg_vmalloc_test: p:1, h:0 (usec) |      -9.07% |   (R) 2.34% |
-|   long_busy_list_alloc_test: p:1, h:0 (usec)     | (I) -29.18% | (I) -17.91% |
-|   pcpu_alloc_test: p:1, h:0 (usec)               |     -14.71% |      -3.14% |
-|   random_size_align_alloc_test: p:1, h:0 (usec)  | (I) -11.08% |  (I) -4.62% |
-|   random_size_alloc_test: p:1, h:0 (usec)        | (I) -30.25% | (I) -17.95% |
-|   vm_map_ram_test: p:1, h:0 (usec)               |       5.06% |   (R) 6.63% |
-+--------------------------------------------------+-------------+-------------+
+ - If the pte is present and not contiguous and you can infer from this
+   that only 1 pte needs to be operated on. This is ok if you don't care
+   about the absolute size, and just want to know the number of ptes.
 
-So there are some nice improvements but also some regressions to explain:
+ - NEVER rely on resolving the PFN of a present pte to a folio and
+   getting the folio's size. This is fragile at best, because there is
+   nothing to stop the core-mm from allocating a folio twice as big as
+   the huge_pte then mapping it across 2 consecutive huge_ptes. Or just
+   partially mapping it.
 
-fix_size_alloc_test with h:1 and p:16,64,256 regress by ~6% on Altra. The
-regression is actually introduced by enabling contpte-mapped 64K blocks in these
-tests, and that regression is reduced (from about 8% if memory serves) by doing
-the barrier batching. I don't have a definite conclusion on the root cause, but
-I've ruled out the differences in the mapping paths in vmalloc. I strongly
-believe this is likely due to the difference in the allocation path; 64K blocks
-are not cached per-cpu so we have to go all the way to the buddy. I'm not sure
-why this doesn't show up on M2 though. Regardless, I'm going to assert that it's
-better to choose 16x reduction in TLB pressure vs 6% on the vmalloc allocation
-call duration.
+Where we require that the pte is present, add warnings if not-present.
 
-Changes since v3 [3]
-====================
-- Applied R-bs (thanks all!)
-- Renamed set_ptes_anysz() -> __set_ptes_anysz() (Catalin)
-- Renamed ptep_get_and_clear_anysz() -> __ptep_get_and_clear_anysz() (Catalin)
-- Only set TIF_LAZY_MMU_PENDING if not already set to avoid atomic ops (Catalin)
-- Fix commet typos (Anshuman)
-- Fix build warnings when PMD is folded (buildbot)
-- Reverse xmas tree for variables in __page_table_check_p[mu]ds_set() (Pasha)
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+ arch/arm64/mm/hugetlbpage.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-Changes since v2 [2]
-====================
-- Removed the new arch_update_kernel_mappings_[begin|end]() API
-- Switches to arch_[enter|leave]_lazy_mmu_mode() instead for barrier batching
-- Removed clean up to avoid barriers for invalid or user mappings
-
-Changes since v1 [1]
-====================
-- Split out the fixes into their own series
-- Added Rbs from Anshuman - Thanks!
-- Added patch to clean up the methods by which huge_pte size is determined
-- Added "#ifndef __PAGETABLE_PMD_FOLDED" around PUD_SIZE in
-  flush_hugetlb_tlb_range()
-- Renamed ___set_ptes() -> set_ptes_anysz()
-- Renamed ___ptep_get_and_clear() -> ptep_get_and_clear_anysz()
-- Fixed typos in commit logs
-- Refactored pXd_valid_not_user() for better reuse
-- Removed TIF_KMAP_UPDATE_PENDING after concluding that single flag is sufficent
-- Concluded the extra isb() in __switch_to() is not required
-- Only call arch_update_kernel_mappings_[begin|end]() for kernel mappings
-
-Applies on top of v6.15-rc3. All mm selftests run and no regressions observed.
-
-[1] https://lore.kernel.org/all/20250205151003.88959-1-ryan.roberts@arm.com/
-[2] https://lore.kernel.org/all/20250217140809.1702789-1-ryan.roberts@arm.com/
-[3] https://lore.kernel.org/all/20250304150444.3788920-1-ryan.roberts@arm.com/
-
-Thanks,
-Ryan
-
-Ryan Roberts (11):
-  arm64: hugetlb: Cleanup huge_pte size discovery mechanisms
-  arm64: hugetlb: Refine tlb maintenance scope
-  mm/page_table_check: Batch-check pmds/puds just like ptes
-  arm64/mm: Refactor __set_ptes() and __ptep_get_and_clear()
-  arm64: hugetlb: Use __set_ptes_anysz() and
-    __ptep_get_and_clear_anysz()
-  arm64/mm: Hoist barriers out of set_ptes_anysz() loop
-  mm/vmalloc: Warn on improper use of vunmap_range()
-  mm/vmalloc: Gracefully unmap huge ptes
-  arm64/mm: Support huge pte-mapped pages in vmap
-  mm/vmalloc: Enter lazy mmu mode while manipulating vmalloc ptes
-  arm64/mm: Batch barriers when updating kernel mappings
-
- arch/arm64/include/asm/hugetlb.h     |  29 ++--
- arch/arm64/include/asm/pgtable.h     | 209 +++++++++++++++++++--------
- arch/arm64/include/asm/thread_info.h |   2 +
- arch/arm64/include/asm/vmalloc.h     |  45 ++++++
- arch/arm64/kernel/process.c          |   9 +-
- arch/arm64/mm/hugetlbpage.c          |  73 ++++------
- include/linux/page_table_check.h     |  30 ++--
- include/linux/vmalloc.h              |   8 +
- mm/page_table_check.c                |  34 +++--
- mm/vmalloc.c                         |  40 ++++-
- 10 files changed, 329 insertions(+), 150 deletions(-)
-
---
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index cfe8cb8ba1cc..701394aa7734 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -129,7 +129,7 @@ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ 	if (!pte_present(orig_pte) || !pte_cont(orig_pte))
+ 		return orig_pte;
+ 
+-	ncontig = num_contig_ptes(page_size(pte_page(orig_pte)), &pgsize);
++	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+ 	for (i = 0; i < ncontig; i++, ptep++) {
+ 		pte_t pte = __ptep_get(ptep);
+ 
+@@ -438,16 +438,19 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	pgprot_t hugeprot;
+ 	pte_t orig_pte;
+ 
++	VM_WARN_ON(!pte_present(pte));
++
+ 	if (!pte_cont(pte))
+ 		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+ 
+-	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
++	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
+ 	dpfn = pgsize >> PAGE_SHIFT;
+ 
+ 	if (!__cont_access_flags_changed(ptep, pte, ncontig))
+ 		return 0;
+ 
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
++	VM_WARN_ON(!pte_present(orig_pte));
+ 
+ 	/* Make sure we don't lose the dirty or young state */
+ 	if (pte_dirty(orig_pte))
+@@ -472,7 +475,10 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 	size_t pgsize;
+ 	pte_t pte;
+ 
+-	if (!pte_cont(__ptep_get(ptep))) {
++	pte = __ptep_get(ptep);
++	VM_WARN_ON(!pte_present(pte));
++
++	if (!pte_cont(pte)) {
+ 		__ptep_set_wrprotect(mm, addr, ptep);
+ 		return;
+ 	}
+@@ -496,11 +502,15 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	size_t pgsize;
+ 	int ncontig;
++	pte_t pte;
++
++	pte = __ptep_get(ptep);
++	VM_WARN_ON(!pte_present(pte));
+ 
+-	if (!pte_cont(__ptep_get(ptep)))
++	if (!pte_cont(pte))
+ 		return ptep_clear_flush(vma, addr, ptep);
+ 
+-	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
++	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
+ 	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+ }
+ 
+-- 
 2.43.0
 
