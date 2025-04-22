@@ -1,119 +1,122 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD7418A6AB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC521EF37A;
+	Tue, 22 Apr 2025 08:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310086; cv=none; b=lSyfm/v0Nsl/HCNI3T4qSiZqd9+FqXmE2DhW2O2jeBmz0BAOEaT2hrNVTe3OC8fbgFRRgPOR+NwdmBw1BJDWQ0ofvenctD1RjXCV9WRIsI9i1wxLaUGVgbakIezjbJbdpeZ2/1XcdV66KF1mk+fUKIBIzvKBTykTDFfCSjwSLis=
+	t=1745310117; cv=none; b=lwBR1jXPPWiu3jOnrJ3hiVIHue/gKmi9pqoNelPFyzqTl8dFOTkPo3QmhvOba3iFScRuj6IWqAtpsNA4cU/y9tyDrxE6pBmDUiXqEUzPwTHTVcm+/7evfe+4Hbrn2pvwa0CJR0B/TgR7IkF08yiV8jz6afftA/Kv//YtBYeQGv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310086; c=relaxed/simple;
-	bh=jpRL4uJSEdZLr7FL6t1JTRk0auYOuocwYz9sSV+moUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GX60Y6l8o5GQdABkgNl1Qn8493RFfhAE6pZ780VU9d142mgFdWTHS+G/i3//n2ha+PBsT63EYj3vvBD1Q9U3te0xVWrBGkUXG9NVziMBDIUp4eIcLMMJ85VKUmqeb2WTFESX3buxRMadZX4a7FfQEuY0mO8V+L16eVAC/NJwb5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TivrMAQL; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745310117; c=relaxed/simple;
+	bh=7hcHPGUjHgIqJWh8JfloOCfacNCsHEB3EZKSoBFwgoQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iw07yDGF9KhgOWCACIm4ooNU/6dTexPddo7mzO7sexegBAB5fNASTjl8jhIj50vJ86hL5CrRDQp4/CgupM59V33ada/NU60M69/++ow3rhdvssuNaLdCcMAoQlkKbdCdQFiGn0Kd/7I4ZhMLJL+3K6oMEH5i1hsZM1kWihVAEo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=W/8gag7Z; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TivrMAQL"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso3781628f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745310083; x=1745914883; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TuoukROcO2ElaqlkQLbNy3B557q2zcJ5qBkhA4bvFAU=;
-        b=TivrMAQLFWx6Cn73WaO66dKGfJsdzVnoy/zPOVAbwif/nja7cHH2iQhRQ1fcfbAXpb
-         wop0ifOeniF1JI+ruIVNGylpVpsdWc+4t79QO5ObGLhlmCeiRpihu+iPRGGbDyLKQSaG
-         8mSopqRwueuI3Bj/uA2gSgodpZ264A/FlOrduEWWjgo952bQRqS5b3xBqny41kUeLXLz
-         SaqvnbGrrJc2jJPTgYgpqV3PLR24XJ1i1xDn0tNPjY+wGP+f+t6Yn3C4+8Yu6PU/csJL
-         6p2kuAM7vqpaAuf+6R/BE7mhy/Tp3z94xPlBPxku2EDGZrd1xrTpIWm88bZ36rFnXS1r
-         kT/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745310083; x=1745914883;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TuoukROcO2ElaqlkQLbNy3B557q2zcJ5qBkhA4bvFAU=;
-        b=CtMLMBYpiNJcXkHJIerjAsFeKA0+0mn9+w1onDAQ91ZJ1U055fQtqkJ/ClcNqs1mAV
-         vkQ1YGePMY9agERw7I7s7c0qUxqw+mkPB/3wNnLnlDPuLZ+3sqSw0qbVqRFuYptF7Xe7
-         giI99i6fzkR/uKsV0LAdQbptqUrWL8Pv7snVDAqycW2uA2jqixwCLTV39VfNU2I/fi4F
-         Is7p7yCug60dMKdBGMh2820UbZtg2dZ1CTyOkWhd5DpPcYsK56pe3rMgE+BTl+UVlbWv
-         KbXOqdIYB4gnwCJWfZuzWp2StOmKbnigN6+acNrlC/+mzTcmj6B/1iqV6npu2POsm1pC
-         OTwg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8mCmvYz1YaWIR5kDfzfq6IUKPe+UA0pQkzt1V2UADuCtvgqHtRT36MeFDAUC/axQpztYBIX9i0Maxim4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzujJ+K06oxNI2EflVr0Bo1wfTLjkBYhCS5wK8eWYpQviglP+oe
-	1kl4UXG2g8dTFS/2QCScie48qa6WU5x4JMKiPX2ZtXFg11iEYEvufSQ2ufhxlHU=
-X-Gm-Gg: ASbGncuBhBuNubKtGIqSQB/PrIk3deSYyh98k8cqdFlO27gbU6kl0VUzVG9zi443+Rz
-	hFOmUUYX5mlJKnNtwd/FsIHm50JmDEuEBpYIkfGUxZ2/1vnurIHtxJSUyjtF0WJykIi44iJuTe/
-	h3HLikygttRmk6umUplvrfT13hbjadkUnweBRla9gqgd8qP0oAZ4kVkSc7HZv0UvynF18H5tlGG
-	ajfmD+qjny4XGhshpTopekMrmUZrvXCT+scgicrmKhL3RLDjXFXPpRFXFOiw7ymJKyGydobc1rM
-	Ic9jan3J6ug4CBgDkCfsA55oSrrbNz6M2MGVJRqfDp0rAOcT2gRAqEQS4X47Lc8=
-X-Google-Smtp-Source: AGHT+IH9tuae0RqMiAjlvkLAuiChQYIp6/1WIla4R14zZPg7A3cy3CyoOen4tg78+umwpPgStlkyhw==
-X-Received: by 2002:a05:6000:40db:b0:39c:1efb:eec9 with SMTP id ffacd0b85a97d-39efbd68416mr11766494f8f.13.1745310083047;
-        Tue, 22 Apr 2025 01:21:23 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff21:ef30:28ea:ef8d:b4cb:c00c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4331a9sm14597808f8f.36.2025.04.22.01.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:21:22 -0700 (PDT)
-Date: Tue, 22 Apr 2025 10:21:18 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: =?iso-8859-1?B?QmFybmFi4XMgQ3rpbeFu?= <barnabas.czeman@mainlining.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
-Subject: Re: [PATCH 0/2] Fix fallback qcom,ipc parse
-Message-ID: <aAdRfirB9AnAOlH8@linaro.org>
-References: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="W/8gag7Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745310052;
+	bh=JdsM9Qm5wZLMP/iGrG0PmmBZq7+rJ6WyAgG/IfufPuA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=W/8gag7ZfpcG9PrbC0TExEa6hiLwOqegZlBlXkWFuUTuCtMojjcH60oYNu910IMEE
+	 FIY6/nl+peraUQc0sNSyUmjIGN953yk1vhU7NN7LPw5zhJSOObSihvQlDQyZy1V3z/
+	 +CQQrl9fR8Hu/w7S/YgtjbcEjgBT+6VizNzGUXW0=
+X-QQ-mid: zesmtpip2t1745310034t45cb9d0f
+X-QQ-Originating-IP: /StdUmGbCyVKdK8oWoJJaynvgvySgpQ6RdugyU4ivcI=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 16:20:32 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 17761032627602379019
+EX-QQ-RecipientCnt: 10
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wangyuli@uniontech.com,
+	maobibo@loongson.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1/6.6/6.12] LoongArch: Eliminate superfluous get_numa_distances_cnt()
+Date: Tue, 22 Apr 2025 16:20:06 +0800
+Message-ID: <BE39E39147C04E96+20250422082006.89643-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MyhNtuNETreeP8VLAhGlnYq1zn/+boQYvT84hWcM1khhfMesoKoJHeay
+	OoO08Sb1a/D4O9Cs7+mbXPr7C+34RT56ZGSONcryEpk5cegxBcVFzsm/IDGJ0q+zTOzuNgF
+	AKYtgj+2KYq1AKIsCTBKZqMryak2wmnZlIOtUpQ0P/iT3Cl1fa6EmGMnfCLMIYW+SlvOrjG
+	knxLiRI+0PDc92XtqheOhUldK3Uj5GJIwrL4wmx67rHI+abrSVdUPX0E9r2DEv9TfKHODzq
+	0x/YCbrAI1AHI02lztDRB3pMSFLwzjQhhC/CfDr9vJ4/zYQiC+VY0hw8Ab6iJqwiuKHYdyg
+	bAxamuoxxznYvJV5EOeKVfJOyKtoZdL7oIHOYQ3ZRaSiDLlYMw80NsWjrvMqypAZrjxBIj8
+	aX/bj5ATd44GPNIzFZLcc3+5huLj7hUIecPg6IDhr7faV7STBTz9C2oiTrqXlWJIgsF3NpY
+	BhFeH5zEK+eZ34QbuMF9dfo7qZFLhSTtflYEx4DfXSkM3HjgxCy0w36y7hJP++HovIvbdAM
+	qQoH6PtsdB8JK3DMhIE8Jr1dT57z3hRaIN8axYhNU7f/t8rThWifRFPCA3toSVqIHGGCKIf
+	2QTLjh8sjVio6yaeMvg8ZewVbc1hMN5hC7HuVUb/j+PesLqCphTNbOazEWLZxzIeprauUzk
+	DmyBdwpeIPXdAC1oUMh1C/5PAdTtij1ZJgaNl8Wt5WmDCvaxepcgEzUbixQaKWkwYKHYaMI
+	EyktMf8vjOLyEFugOVIUUTL8ZxAEWwN+vUx5h+TBD2vTtznO3VxBJAlT+eaMArAJrIn9kgp
+	GRG0/vtbO1fra6H5vHTBr1qwBJhMkEAaNMzTAsAF0rLOLfDbVQQfU+69BWQ5TXbyYs+eGhZ
+	v6sl7og5poAFNc46HK7JQzGeCD5Klpu+PNlyQt8Evq12Z+Z8KEkpTWKhbkiyf6cY4Nj//ZA
+	eo0NufC4zCzWJMLiXHix3AYUBTFj/WyFt43IuQLowhR30bvP/iunqakXPjEJb9jpKzxY=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 21, 2025 at 04:04:15AM +0200, Barnabás Czémán wrote:
-> mbox_request_channel() returning value was changed in case of error.
-> It uses returning value of of_parse_phandle_with_args().
-> It is returning with -ENOENT instead of -ENODEV when no mboxes property
-> exists.
-> 
-> ENODEV was checked before fallback to parse qcom,ipc property.
-> 
+From: Yuli Wang <wangyuli@uniontech.com>
 
-Thanks for the fix!
+[ Upstream commit a0d3c8bcb9206ac207c7ad3182027c6b0a1319bb ]
 
-Would be good to mention clearly that this fixes booting 6.15-rc on SoCs
-that still use qcom,ipc (e.g. MSM8917, MSM8939).
+In LoongArch, get_numa_distances_cnt() isn't in use, resulting in a
+compiler warning.
 
-Anyway, for both patches:
+Fix follow errors with clang-18 when W=1e:
 
-Reviewed-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-Tested-by: Stephan Gerhold <stephan.gerhold@linaro.org> # msm8939
+arch/loongarch/kernel/acpi.c:259:28: error: unused function 'get_numa_distances_cnt' [-Werror,-Wunused-function]
+  259 | static inline unsigned int get_numa_distances_cnt(struct acpi_table_slit *slit)
+      |                            ^~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
 
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
-> Barnabás Czémán (2):
->       rpmsg: qcom_smd: Fix fallback to qcom,ipc parse
->       soc: qcom: smp2p: Fix fallback to qcom,ipc parse
-> 
->  drivers/rpmsg/qcom_smd.c | 2 +-
->  drivers/soc/qcom/smp2p.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> ---
-> base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
-> change-id: 20250421-fix-qcom-smd-76f7c414a11a
-> 
-> Best regards,
-> -- 
-> Barnabás Czémán <barnabas.czeman@mainlining.org>
-> 
+Link: https://lore.kernel.org/all/Z7bHPVUH4lAezk0E@kernel.org/
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ arch/loongarch/kernel/acpi.c | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/arch/loongarch/kernel/acpi.c b/arch/loongarch/kernel/acpi.c
+index 382a09a7152c..1120ac2824f6 100644
+--- a/arch/loongarch/kernel/acpi.c
++++ b/arch/loongarch/kernel/acpi.c
+@@ -249,18 +249,6 @@ static __init int setup_node(int pxm)
+ 	return acpi_map_pxm_to_node(pxm);
+ }
+ 
+-/*
+- * Callback for SLIT parsing.  pxm_to_node() returns NUMA_NO_NODE for
+- * I/O localities since SRAT does not list them.  I/O localities are
+- * not supported at this point.
+- */
+-unsigned int numa_distance_cnt;
+-
+-static inline unsigned int get_numa_distances_cnt(struct acpi_table_slit *slit)
+-{
+-	return slit->locality_count;
+-}
+-
+ void __init numa_set_distance(int from, int to, int distance)
+ {
+ 	if ((u8)distance != distance || (from == to && distance != LOCAL_DISTANCE)) {
+-- 
+2.49.0
+
