@@ -1,241 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400DD25C813;
-	Tue, 22 Apr 2025 21:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA6225C806;
+	Tue, 22 Apr 2025 21:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745356321; cv=none; b=TFxEhYQmH9HczIFEAAWapLq/Z5KrMRtfG5YN/Pk1MOwQP/hKcxmRCb2Ge6NPSjiulkCso1nIVZpRwj7sQewd92cu2Lvuu4FE1CZP54b0DVfUkXT3M7Pk/5WL+lR/uAoR6NuLCYVpltXDOEeOnFr4MaOebz26mpTLRas0t/HLqco=
+	t=1745356404; cv=none; b=I3W7lQE5OWiKAE6nlXyYeAKeltGGAEplYcu8N/FCU7PgkFNxXWRIpjgzqS1OB6/oJSI1PZDbmbTAmz1BIamcm6uMAqdJVeKjzHNRK4CY1FCWx+6QXLI3ffVqQNz3/ezcl1lEzPnD4cGRg3QrmQWMc4f1cDkFcCnzd3YyP/AfYFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745356321; c=relaxed/simple;
-	bh=a+iAjVW0IeMpjbQu7NwvRRZqrycZH5ENMpNaHgWMREQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tdvJNtPT5ugisbBEbbpp9xZ0bLO9nLsX2E0wIoWLeGzUT8qQmB9dNzEXCcSAKBXktbsYW9Hpil3o8Z3yY8LMbh4yn2fQjIG7KgJsSt6KFWuZKtZQxSGt0wad1qTNIFC0GvILldfa4FrcfohEFHowryrNLMVYz50ma1ETqRJg620=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEgv911C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745356404; c=relaxed/simple;
+	bh=62l8ycsRy5TYmENNU4ufXWIzRBqbCxMUi99ufS0ft7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVJng+9TqJavxzhS5uirLV/Yesk/YscNgCXjakyu5698+rrY1DknSkg2Jn05g55M+9WO+76VcbDNpxMKzUlwUAWKpzwOp+FEFFihrQ+r8lBU9aXKLfDeUNPJDFhlIkX+HbxZswcW5ERDlcQUssTFBHi92cU8SRuFGp1M5jl5bxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hJctLjgp; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEgv911C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF2CC4CEE9;
-	Tue, 22 Apr 2025 21:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745356321;
-	bh=a+iAjVW0IeMpjbQu7NwvRRZqrycZH5ENMpNaHgWMREQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=AEgv911C02EigsNMoUp6NufGhvVYQs2I8IsOtoL3aTkV4KABy3QiLI2nY6xD0hu7V
-	 ziURLSP0nden4hAZXKh2BzEf4vlbITBySkTQfHxsODihbZy9/MXrk9705OCXWslwVe
-	 paMSYmgycvG462rFvzJwL7OcRH69Cuc7xoPxwbOqE/5IlTO5mXFcRI231kh84izXNm
-	 TGI/d+sW3OQdJOu+RpbABYiE++YwRCisV1WcifmPbbv6DGjj8Qf2netIIYe8XXkodC
-	 xCs1xXn32nqV/bq6la6Ya3vRuP8ribwJiwuZI8yyFEeiG5ZK2irTgz4eyhgRk2MXo2
-	 soRzaa0wJ/PVg==
-Date: Tue, 22 Apr 2025 16:11:59 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hJctLjgp"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D515D2AC;
+	Tue, 22 Apr 2025 23:13:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745356400;
+	bh=62l8ycsRy5TYmENNU4ufXWIzRBqbCxMUi99ufS0ft7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hJctLjgpt3hJjYiiucC0Fh0I0oC3ifSeojAzS3e8IqpyVwbHpsHnwbYtJZ8qITdu3
+	 +l0XgoQX7/iXeUXpJJtjw+HH/L9jnYp34MUFXT4EE01Ojlu1gzz1+pcv8W0S6VczOv
+	 1w8FETFNWPhWuT6IbDjLSrtXtaqPhY5n4Vl4SGGU=
+Date: Wed, 23 Apr 2025 00:13:18 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@kernel.org
+Subject: Re: [PATCH v2 3/3] media: uvcvideo: Rollback non processed entities
+ on error
+Message-ID: <20250422211318.GO17813@pendragon.ideasonboard.com>
+References: <20250224-uvc-data-backup-v2-0-de993ed9823b@chromium.org>
+ <20250224-uvc-data-backup-v2-3-de993ed9823b@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, Conor Dooley <conor+dt@kernel.org>, 
- Luigi Santivetti <luigi.santivetti@imgtec.com>, 
- Darren Etheridge <detheridge@ti.com>, linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Randolph Sapp <rs@ti.com>, 
- devicetree@vger.kernel.org, Tero Kristo <kristo@kernel.org>, 
- Frank Binns <frank.binns@imgtec.com>, 
- Alessio Belle <alessio.belle@imgtec.com>, 
- Alexandru Dadu <alexandru.dadu@imgtec.com>, linux-kernel@vger.kernel.org, 
- Vignesh Raghavendra <vigneshr@ti.com>
-To: Matt Coster <matt.coster@imgtec.com>
-In-Reply-To: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
-References: <20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com>
-Message-Id: <174535612207.2161287.6739865639684623809.robh@kernel.org>
-Subject: Re: [PATCH v3 0/2] Imagination BXS-4-64 MC1 GPU support (DTS
- changes)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250224-uvc-data-backup-v2-3-de993ed9823b@chromium.org>
 
+Hi Ricardo,
 
-On Tue, 22 Apr 2025 16:26:40 +0100, Matt Coster wrote:
-> Now that the binding and driver changes to support the Imagination
-> BXS-4-64 [1] have landed in a DRM tree, here are the corresponding DTS
-> changes without the [DO NOT MERGE] tag.
+Thank you for the patch.
+
+On Mon, Feb 24, 2025 at 10:34:55AM +0000, Ricardo Ribalda wrote:
+> If we wail to commit an entity, we need to restore the
+> UVC_CTRL_DATA_BACKUP for the other uncommitted entities. Otherwise the
+> control cache and the device would be out of sync.
 > 
-> This GPU is found in the TI AM68 family of SoCs, with initial support
-> added to the k3-j721s2 devicetree and tested on a TI SK-AM68 board.
-> 
-> [1]: https://lore.kernel.org/r/20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com
-> 
-> Reviewed-by: Randolph Sapp <rs@ti.com>
-> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-> 
+> Cc: stable@kernel.org
+> Fixes: b4012002f3a3 ("[media] uvcvideo: Add support for control events")
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Closes: https://lore.kernel.org/linux-media/fe845e04-9fde-46ee-9763-a6f00867929a@redhat.com/
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > ---
-> Changes in v3:
-> - Use assigned-clocks to pre-load the frequency of the core clock (P2)
-> - Link to v2: https://lore.kernel.org/r/20250417-bxs-4-64-dts-v2-0-9f8c09233114@imgtec.com
+>  drivers/media/usb/uvc/uvc_ctrl.c | 32 ++++++++++++++++++++++----------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
 > 
-> Changes in v2:
-> - Add details of the source of the interrupt index (P2)
-> - Add Randolph's Rb
-> - Link to v1: https://lore.kernel.org/r/20250415-bxs-4-64-dts-v1-0-f7d3fa06625d@imgtec.com
-> 
-> ---
-> Matt Coster (2):
->       arm64: dts: ti: k3-am62: New GPU binding details
->       arm64: dts: ti: k3-j721s2: Add GPU node
-> 
->  arch/arm64/boot/dts/ti/k3-am62-main.dtsi   |  4 +++-
->  arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 14 ++++++++++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> ---
-> base-commit: dcbd5dcc956e2331414fd7020b4655df08deeb87
-> change-id: 20250415-bxs-4-64-dts-c984d0876556
-> 
-> 
-> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 7d074686eef4..89b946151b16 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1864,7 +1864,7 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+>  	unsigned int processed_ctrls = 0;
+>  	struct uvc_control *ctrl;
+>  	unsigned int i;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	if (entity == NULL)
+>  		return 0;
+> @@ -1893,8 +1893,6 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+>  				dev->intfnum, ctrl->info.selector,
+>  				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_CURRENT),
+>  				ctrl->info.size);
+> -		else
+> -			ret = 0;
+>  
+>  		if (!ret)
+>  			processed_ctrls++;
+> @@ -1906,10 +1904,14 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+>  
+>  		ctrl->dirty = 0;
+>  
+> -		if (ret < 0) {
+> +		if (ret < 0 && !rollback) {
+>  			if (err_ctrl)
+>  				*err_ctrl = ctrl;
+> -			return ret;
+> +			/*
+> +			 * If we fail to set a control, we need to rollback
+> +			 * the next ones.
+> +			 */
+> +			rollback = 1;
+>  		}
+>  
+>  		if (!rollback && handle &&
+> @@ -1917,6 +1919,9 @@ static int uvc_ctrl_commit_entity(struct uvc_device *dev,
+>  			uvc_ctrl_set_handle(handle, ctrl, handle);
+>  	}
+>  
+> +	if (ret)
+> +		return ret;
+> +
+>  	return processed_ctrls;
+>  }
+>  
+> @@ -1947,7 +1952,8 @@ int __uvc_ctrl_commit(struct uvc_fh *handle, int rollback,
+>  	struct uvc_video_chain *chain = handle->chain;
+>  	struct uvc_control *err_ctrl;
+>  	struct uvc_entity *entity;
+> -	int ret = 0;
+> +	int ret_out = 0;
+> +	int ret;
+>  
+>  	/* Find the control. */
+>  	list_for_each_entry(entity, &chain->entities, chain) {
+> @@ -1958,17 +1964,23 @@ int __uvc_ctrl_commit(struct uvc_fh *handle, int rollback,
+>  				ctrls->error_idx =
+>  					uvc_ctrl_find_ctrl_idx(entity, ctrls,
+>  							       err_ctrl);
+> -			goto done;
+> +			/*
+> +			 * When we fail to commit an entity, we need to
+> +			 * restore the UVC_CTRL_DATA_BACKUP for all the
+> +			 * controls in the other entities, otherwise our cache
+> +			 * and the hardware will be out of sync.
 
+The text can be reflowed to 80 columns.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+> +			 */
+> +			rollback = 1;
+> +
+> +			ret_out = ret;
+>  		} else if (ret > 0 && !rollback) {
+>  			uvc_ctrl_send_events(handle, entity,
+>  					     ctrls->controls, ctrls->count);
+>  		}
+>  	}
+>  
+> -	ret = 0;
+> -done:
+>  	mutex_unlock(&chain->ctrl_mutex);
+> -	return ret;
+> +	return ret_out;
+>  }
+>  
+>  int uvc_ctrl_get(struct uvc_video_chain *chain,
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+-- 
+Regards,
 
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: base-commit dcbd5dcc956e2331414fd7020b4655df08deeb87 not known, ignoring
- Base: attempting to guess base-commit...
- Base: tags/v6.15-rc1-15-g1f326fb84a60 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/ti/' for 20250422-bxs-4-64-dts-v3-0-ec6657bde135@imgtec.com:
-
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-beagleplay.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dahlia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dahlia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-dev.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-mallow.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-yavia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-ivy.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am68-sk-base-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am62-lp-sk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-dev.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-wifi-yavia.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-sk.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-mallow.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): 'power-domain-names' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): compatible:1: 'img,img-axe' was expected
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: gpu@fd00000 (ti,am62-gpu): compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue'] is too long
-	from schema $id: http://devicetree.org/schemas/gpu/img,powervr-rogue.yaml#
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-am625-verdin-nonwifi-ivy.dtb: /bus@f0000/gpu@fd00000: failed to match any schema with compatible: ['ti,am62-gpu', 'img,img-axe-1-16m', 'img,img-axe', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dtb: /bus@100000/gpu@4e20000000: failed to match any schema with compatible: ['ti,j721s2-gpu', 'img,img-bxs-4-64', 'img,img-rogue']
-
-
-
-
-
+Laurent Pinchart
