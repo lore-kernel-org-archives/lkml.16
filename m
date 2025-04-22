@@ -1,75 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9463620E703;
-	Tue, 22 Apr 2025 13:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F79127CCEF;
+	Tue, 22 Apr 2025 13:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329406; cv=none; b=W0HbOi49nLL0M4i0lNRPll3V3g045PoM4fbtLtiH6bN89x1VI5hwhQ3qtQ/SAjNmysvO1hbO69isxxxpcTsEvc/dZhcLUS7Zjn5AvNZHqDoBDINTc950aKsqN4zAshHpFZ/ceA6V7Cu71HilmPw5E7I1NaqIQ0Z7uS2Ijr/kemI=
+	t=1745329429; cv=none; b=W9xVT8c4IL1TT0TisVPbO8OrsyV/oCsSeWFuXzWGte6NOaPyo0/707e/8gpYyFvr7Kxswov096+bWLNOM0Rc/8a8IBmgB1XFdvkVZpWSFu90OTg4O3OpmlG3+/ofTvLZswLZwnzxAr+o/zwR7IAePNUbDMo23SWYTb3LBvbGa6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329406; c=relaxed/simple;
-	bh=hKcxeqKWyeTCuzTpSV6W+TujKp1txyIh90uOBj/0X2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsv1u1MKc0bSEkmOcr7D2eBtllqRy/FngKDUGz4clEoNqu+kNVCugUVuWC5AfGF+ybbNA8VeHuBpsKfdwnr6Y0qPc28LLsCVZWt/gMZry8akjfKZA/9wDRzjgpnKTgJkMXgav+CqR3vdsBYaNYwTdY8OPcC5DGW7oWKejv7Wkhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJ5qC8hY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745329429; c=relaxed/simple;
+	bh=uZ2Q3BSmyxrkcTQQzx/xqj4AZF+9c/VelamhldB4ruY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByCcKIphfz1oGfcf8CdulndlgOQmL2XFf1TjmBED62lf5FDSx1kt4kcxyfg6WH47lZ7f0COHdOUqtgpGgaaR514a1DkzoJUqhBjLCkziV/XLZ7ilhnIVYe1AhvNOppnGTtmVYuStR2fP8yXWHpWH+a7XlqPZyoYRMdfQGgy6fTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeuNrF4j; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJ5qC8hY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD99DC4CEE9;
-	Tue, 22 Apr 2025 13:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745329406;
-	bh=hKcxeqKWyeTCuzTpSV6W+TujKp1txyIh90uOBj/0X2Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uJ5qC8hYUjPN43zLgUGZ5XClaaVcm8Q/98qY5BTGWezjg3dGuQ8tnEFbw73f8tUym
-	 k45c5Wn66BN5JUMOIR+RhHId6sYP+RrQ/oqg8FDCTzNHD1kfLhTcE2x1FlARHwfdXE
-	 EqhrRwPgTgGK2NLo96duzn+Hl4R0BUIbXFpjqiIIR+dIkEPDv+7FwklxW3IGQAQ1zM
-	 jOS84gZVH9Ch3Mh59V0Vw0mVUvlfqEbcR8JaEyxCNlyMp8bu2FjlCyhlBRDYCPcQvI
-	 hDm0G7Oncmw8QT7JyJbJjHS6zTSYNFUPcC3DvTa596lgF0MKanJHJQprPqwZEIc2Ca
-	 qXzT9ATmy7Ozg==
-Date: Tue, 22 Apr 2025 15:43:21 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>
-Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu /
- umount_tree
-Message-ID: <20250422-flogen-firmieren-105a92fbd796@brauner>
-References: <6807876f.050a0220.8500a.000f.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeuNrF4j"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f62d3ed994so6581825a12.2;
+        Tue, 22 Apr 2025 06:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745329426; x=1745934226; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gPh+Jq2Ed9hv9WRoSx2FsqzJMvYtffRf+L562svlF6w=;
+        b=jeuNrF4jnJfayb8YgPn5XJdkNkMFDnXFRRCL7r/ztWdtmhyRpw+ZJLRPynCqKMaZJQ
+         caTcjsCSk4PbS7tXtW7++flj0UrxRztI24EDiaTxICnINFJJ0EkvgHBjnyULWm0SAAsk
+         sNzeDJGy/SNuphRPHie+/zZsRA3EJUqg9WhVhE1woIQHALzannDtdPmftdUOGhxzos3E
+         V9tJbXDUstV0UV1XjFbK5r1kJ7lNUFYyMEEgazHbbfKvNh8y88Xns1oQF/jM4AU129s7
+         ogD35GGx+MDjMhaKO2xs/eFVrEIaZgMkF88jiSPKw/bsimjgbr76XDDNZyGUggJzwvZC
+         uAFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745329426; x=1745934226;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gPh+Jq2Ed9hv9WRoSx2FsqzJMvYtffRf+L562svlF6w=;
+        b=oSOQ9H8uliyHUAjsttcv6O8116rVRRn77Yf7+QY1ZpCZJE4GKsVE1L3brUL+RrDtTA
+         ziVKfMRhC6yGc1OwqhdViTTwMrvg0QkGoY9RoqN3ctTwVKaTBYmkXnbwSRNxIUjT+lgI
+         NHuHq02sNzYb4HxTV2MNnPKsFssH2zDOQujddXzkP6oso0nYE0qn6GXOzlJiEJwX6kJQ
+         LYG49tHwlpZC+qMFCPbJSyZTAwPUm6ssOFBs8VymrBE9aeYbKtE78rYS5fFen7+1+/Di
+         31w9fVO4rtQ8Nh8MJvUOWvd1XSBiH5+JZMCKG5FoRIsCr0i8TYr2+nN8WFskAKK12YIz
+         bUsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUb8clD1FvRVWZDSwyy0kI6KBv7bqHjsMuSf1fmYzF/p3HzgQs2YHtJ0a7D00+q3TWoifIOZgt9stmPHWmS@vger.kernel.org, AJvYcCWUqF+YsjzlETxNnHJ/TxxXIx4hRTUbVvj4z3EFNxxghjyCF1pRVx4IqZPHqFVM1enT4t0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf+5/U+L+JeB0mGM5Ye5ywbBX+sAYUnlyJgKvI/3FOSAUe3z77
+	wEpPTc4fqi/7XsB3HH+9+5+/Yw0HI6gVtKntPZpZzkwngX60RkMN
+X-Gm-Gg: ASbGnctquizshAtenExnfCTJqXFyS5vfjGZGwNDB17VjdbmwgvFxFqIHKJj+fAoS9DN
+	ncBFXcQ2DnsawkG9VfAF7rDxqghQIvsaKE8gwy3U42y+UqQlNDxK8L4GR50BYbHnoDFYU33bE8U
+	w8ZwEDBW83yHor2jztGK4XXkzNU4pzdQlFKTl/CeLscoKUtbRraNsWXgvh+VpltIBR2ajK6/Vpf
+	D5a7z0iKqYSynet5kFHSRNfS6KwXOiA7QqxyxvZDyYYCZPqDWp2vSvYY8hC0j53bb1ZC+V2xnAg
+	+FBYRusqSm03dGH0pTXATIyTsWE=
+X-Google-Smtp-Source: AGHT+IETzaBi2r+DApEGo3LSk3kyXl2a34FzYwVlS9+QlOduwg0hhVNboZbTpFT9+VgpALYAqDUk/g==
+X-Received: by 2002:a05:6402:51cb:b0:5f4:c20d:4984 with SMTP id 4fb4d7f45d1cf-5f6285d5426mr13704677a12.30.1745329425480;
+        Tue, 22 Apr 2025 06:43:45 -0700 (PDT)
+Received: from krava ([83.148.32.128])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f62594985bsm5966324a12.74.2025.04.22.06.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 06:43:45 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 22 Apr 2025 15:43:43 +0200
+To: Tao Chen <chen.dylane@linux.dev>, Namhyung Kim <namhyung@kernel.org>
+Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next] libbpf: remove sample_period init in
+ perf_buffer
+Message-ID: <aAedDw7fWAF2ej1f@krava>
+References: <20250422091558.2834622-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6807876f.050a0220.8500a.000f.GAE@google.com>
+In-Reply-To: <20250422091558.2834622-1-chen.dylane@linux.dev>
 
-On Tue, Apr 22, 2025 at 05:11:27AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
-> compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
+On Tue, Apr 22, 2025 at 05:15:58PM +0800, Tao Chen wrote:
+> It seems that sample_period no used in perf buffer, actually only
+> wakeup_events valid about events aggregation for wakeup. So remove
+> it to avoid causing confusion.
 
-Benign, as this would be detected by the changed sequence count of
-@mount_lock. I hope we won't end up with endless reports about:w
-anything that we protect with a seqlock. That'll be very annoying.
+I don't see too much confusion in keeping it, but I think it
+should be safe to remove it
+
+PERF_COUNT_SW_BPF_OUTPUT is "trigered" by bpf_perf_event_output,
+AFAICS there's no path checking on sample_period for this event
+used in context of perf_buffer__new, Namhyung, thoughts?
+
+thanks,
+jirka
+
+
+> 
+> Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  tools/lib/bpf/libbpf.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 194809da5172..1830e3c011a5 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
+>  	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
+>  	attr.type = PERF_TYPE_SOFTWARE;
+>  	attr.sample_type = PERF_SAMPLE_RAW;
+> -	attr.sample_period = sample_period;
+>  	attr.wakeup_events = sample_period;
+>  
+>  	p.attr = &attr;
+> -- 
+> 2.43.0
+> 
