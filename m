@@ -1,93 +1,149 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656CF14A4DB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212E01E231E;
+	Tue, 22 Apr 2025 10:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745318720; cv=none; b=EYV+pDFlUaX9R/P2mutKbydlAndCoAEqAzK40P1Qq6qRs94LbmbH9X9VC2gCPZOLfwdNENzyctafPOjt58zYFcHCrEZpQB48zrmrZiUgsbxo0bGrUi/bnpl7gpj8nnLY9WX/fxBon0tT+LcY6eyjKMKmgdUaw1BOXCrIeTh+DrE=
+	t=1745318760; cv=none; b=mHWks+kTAJ6m8x/UVrcqy9Mg8Qaghvny6mRlybTYejIdiWDU8/mcZ3vQHdSpzeXs4+2rjAPAUXhj0eGzDdfF9VY412HswGrnJR/3cjpr3sWYERBMYND8U77a1eH62Kx8upbPZdQN5CiuqTRgjvmwniXHUlHwLphuJPEL4cNPUUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745318720; c=relaxed/simple;
-	bh=m2RHOwNehHpqHHo8iTUQFAX2G1uH1oLG9AUA3ukXizo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lL2a0AMYM4+WVy+1Pfzqg44peuy9ySx2LsDVoIiLGIRlGo1Fv1Z9P+p9eTrNuD4R3FhmC/PCZcAmSf6Dlhp10I5FRTHcR/vfFJ4fIdMFLhPQjNu4dqFiwWV4vf2Ri8V9lx+3MG8g29fWvKUapQekNzGbqDADXurOXOWcUHSn9Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=FlwJgQ+0; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1745318760; c=relaxed/simple;
+	bh=Ek5IBzxkpX634z6QTNzqEVMVth1EXW0Rz7zi0ayFyuk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FuNlmwJeIO3PTWncwoCcaXRgllp+Y4/IzKvRlpl/WGK8Z2k1qMTD2jMMo2xhAjnzRLRUa4qPuJ+O/86MsgDzKKWpPeGva5Nefp8cRxP2oj1fY4j0ZzbxF5wdJ6X4Rtgx3v+4kzXHLUyeK5CzC81i4ceVjb5VZy/J7UA8HsRqYSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BRG7NHA5; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="FlwJgQ+0"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acb5ec407b1so672615366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRG7NHA5"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so4680582a91.2;
+        Tue, 22 Apr 2025 03:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1745318716; x=1745923516; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2RHOwNehHpqHHo8iTUQFAX2G1uH1oLG9AUA3ukXizo=;
-        b=FlwJgQ+0d/7BWCpfHKy7fLb0o1MzFwHJoEWXh75Llt05G3TuYuwBqX7fPEXuW1Qq3U
-         o2+LTyZ+MoXlXX+gsdLtraRKo3YOd7q/c4MmZ9QAsTE8Cafs7aj+B7jhZPDZZ98Jk2bO
-         DJtamS589LLghamNAtzB3I0mg0+SLFdP0C/1kR6idJaU9I4ryI4870Xj7q8BEmcNvlRh
-         kdcZgP+p68rnbeo1w4dRN27BvMFKufQpNnYTPIM46f7lFOZA6NVXDGWqS/uidotmkgDa
-         ozq755AnwZeUBOuLwXG/zwT0J6C1/sHsr9PxSQmFvL3VUvlaYrexXX6pQ7DsV4SEm8kk
-         CAXw==
+        d=gmail.com; s=20230601; t=1745318758; x=1745923558; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oAk3LSdkuszAv8KpcrFbr7se8m7uepNgIQTOnUvP5nA=;
+        b=BRG7NHA5XZAPxMjOyOqaabGo/XnAfeLzi4ofbLAO5w4HEFeSBl1xF8TliRWdj0KyNv
+         iDKBnNtrIbHd6A6lGdo59yGC0z8DZXynKtR7YfMTwEm//DyPfZDl1KS2xQBE2xgOuEow
+         Yu1RbI2IPHxv2duksyjprtsJZmX1p9JfpLBcnsWleWhKn912pnUANyUZNrcxVaDG3JF8
+         dyOTWQzGexBDTY4eTXVJW7heW5JtUn0/Y3UegBqTeICJ4CfRp/D/tyqXOK42HlQGxEY7
+         dVLk5wK2VELto3dpTiehzM3XrGeMUQGXxJehppwk5fPnDXl3GOoHlOLBgIqCQxKNSH8g
+         +Z1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745318716; x=1745923516;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745318758; x=1745923558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m2RHOwNehHpqHHo8iTUQFAX2G1uH1oLG9AUA3ukXizo=;
-        b=IwSx3wjPRhD04kjADMJBamhgSUkFarpvXwWsn8fEozpk+RSzBt/1UbNWbymsyJALtu
-         l3Es/1UPTo6hQfG06Z0K7ggABWSV9hRiXML2UD3dVgBukl1SaHWPMCNO2kY4VQUaC1/5
-         4rpdYzDjmjMxEqk7+MxkBLE5Yp7Mp/ON6MzKrFdqFYS2EOWRiiBrVq3U0O7f5xiGS4A2
-         VAhlXxCsT1XmybLpu/KzKYPd1KzBM2oI29332DWbk5zFkicclVEQpO3U8DgP1DB1eiNK
-         oYk5pifsVa9YwlTChRNCMt4VTVGeJKDswFqHZMV3jVeZUC8UHwo/J6bD3t63/OILQZz+
-         DxUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPbqTcW1ITl4eMcgIBcucYDIUfgbelQp2NjGdYa02A3zVnCcBMQPZ3t8Xtms00FN9WmTMaPhXQX/8J6SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJgcrxrd0r/dDre0aiV47eyxN+hRmFHIrzOKOqWiTCjpNxQ9Nl
-	bYdSl4FaBnvkDhwwA537jJtmRy18FpPUxKaCBxbot8uwTPWXYzKWUDrRK6dcjyO8AxgSJH/1qmG
-	FJwFy2PQZQzq5ROadXJFmXFjQX2uMG06k/4o49w==
-X-Gm-Gg: ASbGnct9yO8lzgSR+ZapXPrFtOwtcwB9ucZ9pygB9f0EF6S3mGG9OnVdVPGfN0OhNRy
-	O2IJJFNkY6W8ziandhEOksA/zPNEGViVz/TSkLRJydI3f9YiI+RK838exlq5lsMblci2CQfncuI
-	Pv24JDuN8Y3hlExkCUroeuWw52F8s77RJvQKRuLA==
-X-Google-Smtp-Source: AGHT+IHx+3eNU+W1xgJPDHKdP9KuoPOiU85NmVMn/OQC3c3TyiEnbo5rA2WMCiD1pOnvJZdMuo/65psXoAv60jJaYi4=
-X-Received: by 2002:a17:907:9450:b0:ac2:9c7d:e144 with SMTP id
- a640c23a62f3a-acb74dd546dmr1353350066b.40.1745318715647; Tue, 22 Apr 2025
- 03:45:15 -0700 (PDT)
+        bh=oAk3LSdkuszAv8KpcrFbr7se8m7uepNgIQTOnUvP5nA=;
+        b=YLrVlFQq8qWv37krV8S/NI9aPokS+Dt6w8by4VELtvEBgHDFlI8fH8ifJsR/3+CSWD
+         dhSAv4AL4QxYVtjYh63JLEtiM5LT8WKfr9dQSdYfXikFsXZ1rPpndoN//mmvD+07tpTf
+         qTz1J9aFQ9U5zguKHNqkbgPSanR5dRI5nWtx7HG1ZU88pohbxUbVOAi41RPncg61kYD7
+         NaaZ1DJSKXtcnSD9sJJ0GAZ2WLBv/zcj/0+fUUc9QJiiTLZrnybOwH+Z7Ia8ppHXNMq/
+         eZGVeYCEiqDPCPR12dHigfA6SoG8kk4KrprsVWMrcyovwzCAwlrTP5BDaA63ooCZ7wW1
+         OiUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAyp6j7kX8+mMU0sEmeYWjCihd1g9zdzJ1lQ5U3xvhqZbjgLfyxw0S6vvN9j3J4WWqKcQ3PSyOIT/8Du/SuQ==@vger.kernel.org, AJvYcCVVdAvpgSPk9BmVPloVJ+UXfswciuvVqYPf5hdXPm1j/9fudBNLSSeBXj87ChUtczBgkfahAd0WVQ==@vger.kernel.org, AJvYcCWAahnWW41pwZlKuiWdOIGgvwlZBoeG1z9v1WgOdkw4GzYgaVCQCcZjZrKFpweK+35qkP2kAJc1SdOZr3qr@vger.kernel.org
+X-Gm-Message-State: AOJu0YziPf3O50cvTg385vvSRTh8dOXCBP84NgDha4OcLscX0FrdfRd0
+	RXwsOiYks40XHqkc3lIdH05PR5Ecba+kV85jwNkblQyjIgiXaXBI
+X-Gm-Gg: ASbGncv3fNfG8XwyV1t41+X1JEj0IHRBCY+zw4ppykySeFw9HeUokCgUEqTVD/tZyTO
+	P50JK6QorI5Z0tEfa0EBOXN4nUSp0DpX3nJ0Lav8trk5H9LBFJ5SxttrA1J8Z6HeAQBsVZriu7L
+	Xg0Gf/bDdoESRog2vpwNBEtV9gJC16hCpwEdVZdCPna/Eve+9jIjoXLoL5QqcGA+/QG/CYiNmMQ
+	ASolZgzrHRbMl9quIHOze2Rwz1rV2oAkDwrt5u6+kzGE/n64KvZ5sdcPYS+f8K+qWZphUs7zJCX
+	z13EEquogaXXrGDpm8nL8wRdCWW1wnp6pjXRSejuGfTfcQMf2/FwfZcgqt2vrDbHOTtS7o9XpoE
+	nnzmTmhsF/EVLMRiCzPh7ekE60TucDVC0CB8FXYP4Bxrb20JVIn6lC4nC684VTf+FuXT7aA+5eX
+	dRObvM
+X-Google-Smtp-Source: AGHT+IHYsEH7ZWnfGGAiKUP5TBoIGiQKr5vc56YtEizByy5efF79/BYuvg4SY9GW30gzJXTY6WVbhg==
+X-Received: by 2002:a17:90b:3a0c:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-3087bb56439mr24551509a91.14.1745318758002;
+        Tue, 22 Apr 2025 03:45:58 -0700 (PDT)
+Received: from linux-devops-jiangzhiwei-1.asia-southeast1-a.c.monica-ops.internal (92.206.124.34.bc.googleusercontent.com. [34.124.206.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e05e90bsm8276853a91.45.2025.04.22.03.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 03:45:57 -0700 (PDT)
+From: Zhiwei Jiang <qq282012236@gmail.com>
+To: viro@zeniv.linux.org.uk
+Cc: brauner@kernel.org,
+	jack@suse.cz,
+	akpm@linux-foundation.org,
+	peterx@redhat.com,
+	axboe@kernel.dk,
+	asml.silence@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org,
+	Zhiwei Jiang <qq282012236@gmail.com>
+Subject: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
+Date: Tue, 22 Apr 2025 10:45:43 +0000
+Message-Id: <20250422104545.1199433-1-qq282012236@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
- <aAZiwGy1A7J4spDk@kbusch-mbp.dhcp.thefacebook.com> <ad67b397-9483-d3c3-203e-687cefb9e481@huaweicloud.com>
- <aAbzW1POQP9z5BWS@kbusch-mbp.dhcp.thefacebook.com> <98915ccf-4fe8-5d96-0b59-b3f3d5a66f81@huaweicloud.com>
-In-Reply-To: <98915ccf-4fe8-5d96-0b59-b3f3d5a66f81@huaweicloud.com>
-From: Matt Fleming <mfleming@cloudflare.com>
-Date: Tue, 22 Apr 2025 11:45:04 +0100
-X-Gm-Features: ATxdqUEU6a1Z9Pu86iXO3XxDIu9CG7yYHsljL0Nlj0AZhY84eugrTgGJsExwkc0
-Message-ID: <CAGis_TV7gq1fHM0YFz798G91poeKQWYo2cZq0eEo7ydT1Qen+A@mail.gmail.com>
-Subject: Re: 10x I/O await times in 6.12
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Apr 2025 at 04:03, Yu Kuai <yukuai1@huaweicloud.com> wrote:
->
-> So, either preempt takes a long time, or generate lots of bio to plug
-> takes a long time can both results in larger iostat IO latency. I still
-> think delay setting request start_time to blk_mq_flush_plug_list() might
-> be a reasonable fix.
+In the Firecracker VM scenario, sporadically encountered threads with
+the UN state in the following call stack:
+[<0>] io_wq_put_and_exit+0xa1/0x210
+[<0>] io_uring_clean_tctx+0x8e/0xd0
+[<0>] io_uring_cancel_generic+0x19f/0x370
+[<0>] __io_uring_cancel+0x14/0x20
+[<0>] do_exit+0x17f/0x510
+[<0>] do_group_exit+0x35/0x90
+[<0>] get_signal+0x963/0x970
+[<0>] arch_do_signal_or_restart+0x39/0x120
+[<0>] syscall_exit_to_user_mode+0x206/0x260
+[<0>] do_syscall_64+0x8d/0x170
+[<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
+The cause is a large number of IOU kernel threads saturating the CPU
+and not exiting. When the issue occurs, CPU usage 100% and can only
+be resolved by rebooting. Each thread's appears as follows:
+iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
+iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
+iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
+iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
+iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
+iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
+iou-wrk-44588  [kernel.kallsyms]  [k] io_write
+iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
+iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
+iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
+iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
+iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
+iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
+iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
+iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
+iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
+iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
+iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
+iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
+iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
+iou-wrk-44588  [kernel.kallsyms]  [k] schedule
+iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
+iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
+iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
 
-I'll try out your proposed fix also. Is it not possible for a task to
-be preempted during a blk_mq_flush_plug_list() call, e.g. in the
-driver layer?
+I tracked the address that triggered the fault and the related function
+graph, as well as the wake-up side of the user fault, and discovered this
+: In the IOU worker, when fault in a user space page, this space is
+associated with a userfault but does not sleep. This is because during
+scheduling, the judgment in the IOU worker context leads to early return.
+Meanwhile, the listener on the userfaultfd user side never performs a COPY
+to respond, causing the page table entry to remain empty. However, due to
+the early return, it does not sleep and wait to be awakened as in a normal
+user fault, thus continuously faulting at the same address,so CPU loop.
+Therefore, I believe it is necessary to specifically handle user faults by
+setting a new flag to allow schedule function to continue in such cases,
+make sure the thread to sleep.
 
-I understand that you might not want to issue I/O on preempt, but
-that's a distinct problem from clearing the cached ktime no? There is
-no upper bound on the amount of time a task might be scheduled out due
-to preempt which means there is no limit to the staleness of that
-value. I would assume the only safe thing to do (like is done for
-various other timestamps) is reset it when the task gets scheduled
-out.
+Patch 1  io_uring: Add new functions to handle user fault scenarios
+Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
+
+ fs/userfaultfd.c |  7 ++++++
+ io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
+ io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 68 insertions(+), 41 deletions(-)
+
+-- 
+2.34.1
+
