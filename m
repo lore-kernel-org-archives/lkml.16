@@ -1,344 +1,220 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1910B1624DF
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C017A2F7;
+	Tue, 22 Apr 2025 06:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302022; cv=none; b=D0ov0HHXnKXbe9YyH/jSeu/S6ulq7QLRuKs2gGUsPsHJS93rGLSb1xwmj0qVSvv6zbnPMRpQCc3U8ZjZMj3Y6y8Yb7leI3jla/Zhh2+ipNc8tgY8fuDogNxxbtFUYjCTgrDd+z2RyNgazdA9U/YkJGIpTLCEelHnttM9T6LRIoo=
+	t=1745302121; cv=none; b=mhOvYl589urkXAyob+h7sQJVmO0Cop59R3WSg2N/Ii7jC6ObEonDWbOlf5miLgfkYmWhdUssChna63KiG2U0Fzw7efmvobgb9MZEuiVgse1qmP3QGVUh6+0fEbhOpK9pgMVJ9uW25jEJn8M0TSVQlnFNfFBc6DBLmqTXGGlOjmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302022; c=relaxed/simple;
-	bh=DHBnOV05lZYuNiWvEgvoz9Y8rAp98JqFg78UQfAaAlc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l+dhQYOlGhM9GHaTvNHzLh31nfsZ8+y4iyj/+uefM2Ji2fPqcrqO5BrJr9cK2Ec0MxvVhrfYSal/AFiSCnvl6gJh71AExHlfxPa1/YkK45ficv/f4Vt/MJ4PtKPkZlv4pipbMUwrHpgdUWWIECMXclQdWOI1gW01XF9v4vNW7WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=l+I7zL3t; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1745302121; c=relaxed/simple;
+	bh=HzOvjB8XO2abUfCAqfGw89h21PCmAox6b3umEE5vDXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nFTk0wUmxXcU0PIL5R5vt11G+qj9BHdPFroT97UV81AQhRBfSCTx7zpNrYqXSs/2pJncjT+ZWP6wWZ4PeLzvBqL2X0YB/uQSy7Kfr8DhCXI/PiSsUkcEffoQriPRJzjZ4oTZ7F/xOIIa0d89U1b7O1S4gohlFqviwTLwTeMY9oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fXFGrW7u; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="l+I7zL3t"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZhWwB01d8z9tPV;
-	Tue, 22 Apr 2025 08:06:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1745302010; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P1jZD+v9jZ5SL+C90xvRLg9FRt965u7OFTZRywGcFbA=;
-	b=l+I7zL3twFrFfIGwtd8JTYCXEeKTzfRSEBubgvNdAg6Bva4cfNd4H6/ZaIyJlkC9qKpW5I
-	gE1NbYPrcFZ2F6IR/1+j1AloTnKDqW2iiRTEATYejSo15e2jo/AAjAIiRwwdThYIDjWp9b
-	QNzpjqTE8LI4lpelOuUsUAPw09eTBn3BaCob2gxgToBaJodznPdP2HJwGulNzWSuVud2jf
-	8SBMP+7uHb5P/UkglxgdD0np2pfg5nO+ghjHOKLSGvdL0lfpvI53DA9nMCM0T+3ywpQb1l
-	VMg5e2SkuaOgJo6DyLtgw0uP9jFGDTvUACQDHnyZdMGz2kIw1NM1c/u8T0fkUQ==
-Message-ID: <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Danilo Krummrich
-	 <dakr@kernel.org>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
- <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org,  linux-kernel@vger.kernel.org
-Date: Tue, 22 Apr 2025 08:06:45 +0200
-In-Reply-To: <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
-References: <20250407152239.34429-2-phasta@kernel.org>
-	 <20250407152239.34429-5-phasta@kernel.org>
-	 <9607e5a54b8c5041dc7fc134425cc36c0c70b5f3.camel@mailbox.org>
-	 <3ac34c84-fd84-4598-96e1-239418b7109f@igalia.com> <aADv4ivXZoJpEA7k@pollux>
-	 <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
-	 <aAEUwjzZ9w9xlKRY@cassiopeiae>
-	 <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fXFGrW7u"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53M68XfU1129767
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 01:08:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745302113;
+	bh=w9qLPUa0pQ7DHVJGyZGL8TIS8cBp+Sv4lk0aGXs4h/M=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=fXFGrW7usX6CmJZpLZ9IHYl8IOSrrjJuSw5vBNKdn9NP6Eu1DAbkwM5rG17Hx4mzA
+	 uuKVJjjNNuThIZEy45i4B72J7t6qPv9UzOICKcCBoghHwe3WYnGIf6hZDgEQvvdPSQ
+	 LwJvGPkPVLpDx7NF0/wJU/XtKzfOSpqym68OwSws=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53M68X2O066367
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 01:08:33 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 01:08:32 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 01:08:32 -0500
+Received: from [172.24.227.136] (moteen-ubuntu-desk.dhcp.ti.com [172.24.227.136])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53M68Trp065458;
+	Tue, 22 Apr 2025 01:08:29 -0500
+Message-ID: <f28134bc-9994-441b-b901-b65632d7ca6b@ti.com>
+Date: Tue, 22 Apr 2025 11:38:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 64e533af7fffcac7850
-X-MBO-RS-META: fdf3e1ef6pt6kftcik8dofmitmo8mc8j
-
-On Thu, 2025-04-17 at 17:08 +0100, Tvrtko Ursulin wrote:
->=20
-> On 17/04/2025 15:48, Danilo Krummrich wrote:
-> > On Thu, Apr 17, 2025 at 03:20:44PM +0100, Tvrtko Ursulin wrote:
-> > >=20
-> > > On 17/04/2025 13:11, Danilo Krummrich wrote:
-> > > > On Thu, Apr 17, 2025 at 12:27:29PM +0100, Tvrtko Ursulin wrote:
-> > > > >=20
-> > > > > On 17/04/2025 08:45, Philipp Stanner wrote:
-> > > > > > On Mon, 2025-04-07 at 17:22 +0200, Philipp Stanner wrote:
-> > > > >=20
-> > > > > Problem exactly is that jobs can outlive the entities and the
-> > > > > scheduler,
-> > > > > while some userspace may have a dma fence reference to the
-> > > > > job via sync
-> > > > > file. This new callback would not solve it for xe, but if
-> > > > > everything
-> > > > > required was reference counted it would.
-> > > >=20
-> > > > I think you're mixing up the job and the dma_fence here, if a
-> > > > job outlives the
-> > > > scheduler, it clearly is a bug, always has been.
-> > > >=20
-> > > > AFAIK, Xe reference counts it's driver specific job structures
-> > > > *and* the driver
-> > > > specific scheduler structure, such that drm_sched_fini() won't
-> > > > be called before
-> > > > all jobs have finished.
-> > >=20
-> > > Yes, sorry, dma fence. But it is not enough to postpone
-> > > drm_sched_fini until
-> > > the job is not finished. Problem is exported dma fence holds the
-> > > pointer to
-> > > drm_sched_fence (and so oopses in
-> > > drm_sched_fence_get_timeline_name on
-> > > fence->sched->name) *after* job had finished and driver was free
-> > > to tear
-> > > everything down.
-> >=20
-> > Well, that's a bug in drm_sched_fence then and independent from the
-> > other topic.
-> > Once the finished fence in a struct drm_sched_fence has been
-> > signaled it must
-> > live independent of the scheduler.
-> >=20
-> > The lifetime of the drm_sched_fence is entirely independent from
-> > the scheduler
-> > itself, as you correctly point out.
->=20
-> Connection (re. independent or not) I made was *if* drm_sched would
-> be=20
-> reference counted, would that satisfy both the requirement to keep=20
-> working drm_sched_fence_get_timeline_name and to allow a different=20
-> flavour of the memory leak fix.
->=20
-> I agree drm_sched_fence_get_timeline_name can also be fixed by
-> removing=20
-> the fence->sched dereference and losing the (pretty) name.
-> Historically=20
-> there has been a lot of trouble with those names so maybe that would
-> be=20
-> acceptable.
->=20
-> Revoking s_fence->sched on job completion as an alternative does not=20
-> sound feasible.
->=20
-> To further complicate matters, I suspect rmmod gpu-sched.ko is also=20
-> something which would break exported fences since that would remove
-> the=20
-> fence ops. But that is solvable by module_get/put().
-
-Is it a common kernel policy to be immune against crazy people just
-calling rmmod on central, shared kernel infrastructure?
-
-We cannot protect people from everything, especially from themselves.
-
->=20
-> > Starting to reference count things to keep the whole scheduler etc.
-> > alive as
-> > long as the drm_sched_fence lives is not the correct solution.
->=20
-> To catch up on why if you could dig out the links to past discussions
-> it=20
-> would be helpful.
->=20
-> I repeat how there is a lot of attractiveness to reference counting.=20
-> Already mentioned memory leak, s_fence oops, and also not having to=20
-> clear job->entity could be useful for things like tracking per entity
-> submission stats (imagine CFS like scheduling, generic scheduling DRM
-> cgroup controller). So it would be good for me to hear what pitfalls=20
-> were identified in this space.
-
-Reference counting does _appear_ attractive, but our (mostly internal)
-attempts and discussions revealed that it's not feasable.
-
-There was an RFC by me about it last year, but it was incomplete and
-few people reacted:
-
-https://lore.kernel.org/dri-devel/20240903094531.29893-2-pstanner@redhat.co=
-m/
-
-When you try to implement refcounting, you quickly discover that it's
-not enough if submitted jobs refcount the scheduler.
-
-If the scheduler is refcounted, this means that it can now outlive the
-driver. This means that it can continue calling into the driver with
-run_job(), free_job(), timedout_job() and so on.
-
-Since this would fire 500 million UAFs, you, hence, now would have to
-guard *all* drivers' callbacks in some way against the driver being
-unloaded. You might even end up having to refcount thinks like entire
-modules, depending on the driver.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] arm64: dts: ti: k3-am6*: Remove disable-wp for
+ eMMC
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250417233040.3658761-1-jm@ti.com>
+ <20250417233040.3658761-6-jm@ti.com>
+Content-Language: en-US
+From: Moteen Shah <m-shah@ti.com>
+In-Reply-To: <20250417233040.3658761-6-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
-So effectively, with refcounting, you would fix a problem in central
-infrastructure (the scheduler) in all users (the driver) =E2=80=93 therefor=
-e,
-you would not fix the problem at all, but just work around the
-scheduler being broken in the drivers. IOW, everything would be exactly
-as it is now, where everyone works around the problem in their own way.
-Nouveau uses its redundant pending list, Xe refcounts and amdgpu does=E2=80=
-=A6=E2=80=A6
-IDK, things.
+On 18/04/25 05:00, Judith Mendez wrote:
+> Remove disable-wp flag for eMMC nodes since this flag is
+> only applicable to SD according to the binding doc
+> (mmc/mmc-controller-common.yaml).
+>
+> For eMMC, this flag should be ignored but lets remove
+> anyways to cleanup sdhci nodes.
+>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi               | 1 -
+>   arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts                | 1 -
+>   arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi              | 1 -
+>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts                       | 1 -
+>   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts                       | 1 -
+>   arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi                | 1 -
+>   arch/arm64/boot/dts/ti/k3-am642-evm.dts                       | 1 -
+>   arch/arm64/boot/dts/ti/k3-am654-base-board.dts                | 1 -
+>   arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi | 1 -
+>   arch/arm64/boot/dts/ti/k3-am69-sk.dts                         | 1 -
+>   10 files changed, 10 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+> index 55ed418c023bc..e5be92aa12189 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
+> @@ -381,7 +381,6 @@ serial_flash: flash@0 {
+>   &sdhci0 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&main_mmc0_pins_default>;
+> -	disable-wp;
+>   	non-removable;
+>   	bootph-all;
+>   	status = "okay";
+> diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> index 1c8b4d13fb491..72b09f9c69d8c 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+> @@ -835,7 +835,6 @@ &sdhci0 {
+>   	non-removable;
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&emmc_pins_default>;
+> -	disable-wp;
+>   	status = "okay";
+>   };
+>   
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
+> index 147d56b879843..0d4115590b9c3 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
+> @@ -338,7 +338,6 @@ serial_flash: flash@0 {
+>   &sdhci0 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&main_mmc0_pins_default>;
+> -	disable-wp;
+>   	non-removable;
+>   	bootph-all;
+>   	status = "okay";
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> index 7de4a9f139ad4..625ce8f8958b7 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> @@ -615,7 +615,6 @@ &sdhci0 {
+>   	non-removable;
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&main_mmc0_pins_default>;
+> -	disable-wp;
+>   	bootph-all;
+>   };
+>   
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> index 43fcb57b34ebf..1025062c77d57 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+> @@ -456,7 +456,6 @@ &sdhci0 {
+>   	status = "okay";
+>   	non-removable;
+>   	ti,driver-strength-ohm = <50>;
+> -	disable-wp;
+>   	bootph-all;
+>   };
+>   
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> index 561916c6e151c..9d933e837dd4b 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
+> @@ -437,7 +437,6 @@ &sdhci0 {
+>   	non-removable;
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&main_mmc0_pins_default>;
+> -	disable-wp;
+>   };
+>   
+>   &sdhci1 {
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> index f8ec40523254b..5c6197ba842e4 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
+> @@ -597,7 +597,6 @@ &sdhci0 {
+>   	status = "okay";
+>   	non-removable;
+>   	ti,driver-strength-ohm = <50>;
+> -	disable-wp;
+>   	bootph-all;
+>   };
+>   
+> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> index aa7139cc8a92b..c30425960398e 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+> @@ -456,7 +456,6 @@ &sdhci0 {
+>   	bus-width = <8>;
+>   	non-removable;
+>   	ti,driver-strength-ohm = <50>;
+> -	disable-wp;
+>   };
+>   
+>   /*
+> diff --git a/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi
+> index ae842b85b70de..12af6cb7f65cf 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am6548-iot2050-advanced-common.dtsi
+> @@ -50,5 +50,4 @@ &sdhci0 {
+>   	bus-width = <8>;
+>   	non-removable;
+>   	ti,driver-strength-ohm = <50>;
+> -	disable-wp;
+>   };
+> diff --git a/arch/arm64/boot/dts/ti/k3-am69-sk.dts b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> index b85227052f97e..f28375629739c 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am69-sk.dts
+> @@ -940,7 +940,6 @@ &main_sdhci0 {
+>   	status = "okay";
+>   	non-removable;
+>   	ti,driver-strength-ohm = <50>;
+> -	disable-wp;
+>   };
 
+Reviewed-by: Moteen Shah <m-shah@ti.com>
 
-Another problem is the kernel workflow and kernel politics. The
-solution I propose here allows for phasing the problem out, first in
-Nouveau, then step by step others. It's the only minimalist backward-
-compatible solution I can see.
+Regards,
+Moteen Shah
 
-
-That said, if you have the capacity to look deeper into a refcount
-solution, feel free to go for it. But you'd have to find a way to solve
-it in a centralized manner, otherwise we could just leave everything
-be.
-
-
->=20
-> > > > Multiple solutions have been discussed already, e.g. just wait
-> > > > for the pending
-> > > > list to be empty, reference count the scheduler for every
-> > > > pending job. Those all
-> > > > had significant downsides, which I don't see with this
-> > > > proposal.
-> > > >=20
-> > > > I'm all for better ideas though -- what do you propose?
-> > >=20
-> > > I think we need to brainstorm both issues and see if there is a
-> > > solution
-> > > which solves them both, with bonus points for being elegant.
-> >=20
-> > The problems are not related. As mentioned above, once signaled a
-> > drm_sched_fence must not depend on the scheduler any longer.
-> >=20
-> > > > > > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > > > b/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > > > index 6b72278c4b72..ae3152beca14 100644
-> > > > > > > --- a/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> > > > > > > @@ -1465,6 +1465,10 @@ void drm_sched_fini(struct
-> > > > > > > drm_gpu_scheduler
-> > > > > > > *sched)
-> > > > > > > =C2=A0=C2=A0 =C2=A0 sched->ready =3D false;
-> > > > > > > =C2=A0=C2=A0 =C2=A0 kfree(sched->sched_rq);
-> > > > > > > =C2=A0=C2=A0 =C2=A0 sched->sched_rq =3D NULL;
-> > > > > > > +
-> > > > > > > + if (!list_empty(&sched->pending_list))
-> > > > > > > + dev_err(sched->dev, "%s: Tearing down scheduler
-> > > > > > > while jobs are pending!\n",
-> > > > > > > + __func__);
-> > > > >=20
-> > > > > It isn't fair to add this error since it would out of the
-> > > > > blue start firing
-> > > > > for everyone expect nouveau, no? Regardless if there is a
-> > > > > leak or not.
-> > > >=20
-> > > > I think it is pretty fair to warn when detecting a guaranteed
-> > > > bug, no?
-> > > >=20
-> > > > If drm_sched_fini() is call while jobs are still on the
-> > > > pending_list, they won't
-> > > > ever be freed, because all workqueues are stopped.
-> > >=20
-> > > Is it a guaranteed bug for drivers are aware of the
-> > > drm_sched_fini()
-> > > limitation and are cleaning up upon themselves?
-> >=20
-> > How could a driver clean up on itself (unless the driver holds its
-> > own list of
-> > pending jobs)?
-> >=20
-> > Once a job is in flight (i.e. it's on the pending_list) we must
-> > guarantee that
-> > free_job() is called by the scheduler, which it can't do if we call
-> > drm_sched_fini() before the pending_list is empty.
-> >=20
-> > > In other words if you apply the series up to here would it
-> > > trigger for
-> > > nouveau?
-> >=20
-> > No, because nouveau does something very stupid, i.e. replicate the
-> > pending_list.
->=20
-> Ah okay I see it now, it waits for all jobs to finish before calling=20
-> drm_sched_fini(). For some reason I did not think it was doing that=20
-> given the cover letter starts with how that is a big no-no.
->=20
-> > > Reportedly it triggers for the mock scheduler which also has no
-> > > leak.
-> >=20
-> > That sounds impossible. How do you ensure you do *not* leak memory
-> > when you tear
-> > down the scheduler while it still has pending jobs? Or in other
-> > words, who calls
-> > free_job() if not the scheduler itself?
->=20
-> Well the cover letter says it triggers so it is possible. :)
-
-Where does it say that?
-
-I mean, the warning would trigger if a driver is leaking jobs, which is
-clearly a bug (and since a list is leaked, it might then even be a
-false-negative in kmemleak).
-
-It's actually quite simple:
-   1. jobs are being freed by free_job()
-   2. If you call drm_sched_fini(), the work item for free_job() gets
-      deactivated.
-   3. Depending on the load (race), you leak the jobs.
-
-That's not that much of a problem for hardware schedulers, but firmware
-schedulers who tear down scheduler instances all the time could leak
-quite some amount of memory over time.
-
-I can't see why a warning print would ever be bad there. Even Christian
-wants it.
-
-P.
-
->=20
-> Mock scheduler also tracks the pending jobs itself, but different
-> from=20
-> nouveau it does not wait for jobs to finish and free worker to
-> process=20
-> them all, but having stopped the "hw" backend it cancels them and
-> calls=20
-> the free_job vfunc directly.
->=20
-> Going back to the topic of this series, if we go with a solution
-> along=20
-> the lines of the proposed, I wonder if it would be doable without=20
-> mandating that drivers keep a list parallel to pending_list. Instead=20
-> have a vfunc DRM scheduler would call to cancel job at a time from
-> *its*=20
-> pending list. It would go nicely together with
-> prepare/run/timedout/free.
->=20
-> Would it allow getting rid of the new state machinery and just=20
-> cancelling and freeing in one go directly from drm_sched_fini()?
->=20
-> Regards,
->=20
-> Tvrtko
->=20
-> > > Also, I asked in my initial reply if we have a list of which of
-> > > the current
-> > > drivers suffer from memory leaks. Is it all or some etc.
-> >=20
-> > Not all, but quite some I think. The last time I looked (which is
-> > about a year
-> > ago) amdgpu for instance could leak memory when you unbind the
-> > driver while
-> > enough jobs are in flight.
->=20
-
+>   
+>   &main_sdhci1 {
