@@ -1,111 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D7F2116EB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9319F510;
+	Tue, 22 Apr 2025 10:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317395; cv=none; b=QLbefDtegLLs98yLEXmOROT8Wi2eFfLn9riKSxRwULs10zbAWhLG9NlFIjyOXrfYYtNyV9Kaqp0Ic9sv+nYzTXlyELT60cDzk5zPvqPwlpvrLaFXJHvMqU80Bto6movcuNq+wxx0QcTDcIW36jLdgS+jg1lvMEQYNerY98wXVYs=
+	t=1745317446; cv=none; b=Qn+PO1I8tSCoc6LXTjukJiFsArBXq5A13fMt4IcZKgpyGcf0rvsyr4Q00OpaHCoa00YesYDBo757YEVQOQo362entLTl/or+ssO28ltmvhqQu8H5ySDJKAxaWqcAI5B2UYR4xcz9RCtFoRwLqbMdpGZ1np6Q39/E3xmLxMHfh5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317395; c=relaxed/simple;
-	bh=zJBJ7aJsAxX1ZlswMDtzHTY+A2puc4ukvLpuVEeKiug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HJMlPtw6XaCc1iYbOJPedwy7UFu7FUwVTROYw/3XeA0e8nTkulsargAqfoDiHTfvlf4raBOKcW9pE25yNZtNyno+dHr/03FL6gRBhho5//3aAR11nQbz5BV7Abv+aZDyLqv5y+Jyrt3zB63jm1zNOX/gZF1GYMRRVW7hMs8K8fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: SHkWhYr7QU+55hVE1wjuiQ==
-X-CSE-MsgGUID: UIQAMEggTUeymUcDH7HBKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="64281282"
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="64281282"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:23:14 -0700
-X-CSE-ConnectionGUID: DEFVBRhHR5iGwXOhvkJqCQ==
-X-CSE-MsgGUID: Md2VmPXSTKq3AvVoZFAxCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,230,1739865600"; 
-   d="scan'208";a="132926817"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 03:23:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7AmQ-0000000EhOw-3F8d;
-	Tue, 22 Apr 2025 13:23:06 +0300
-Date: Tue, 22 Apr 2025 13:23:06 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 17/29] x86/boot/e820: Standardize e820 table index
- variable names under 'idx'
-Message-ID: <aAduCoINHUkFwIzR@smile.fi.intel.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-18-mingo@kernel.org>
+	s=arc-20240116; t=1745317446; c=relaxed/simple;
+	bh=QwylYaArHciXtrOfCdsCAGn0Ril2BBTKFUXlFhVuIeU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tRoUwXUHJXzaReHLq0b3sP6aO+hDvOBJzgU19tQLdXkAyuU2rqiM5fxuqBCIaHAUWOfD4TGO05iqXXqfUwuYbqvU3h9NqLxUvjdgPFGoR+tUEdgzD9CfhLfMX98+Ll0N5CamDPLWetKrS+9PC6LJSV+3ofAEccYeOQXBWwxZXxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dF6E9pqh; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dF6E9pqh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745317427;
+	bh=WlmB1lqRNxFbFMYPeJr4njtQ9mNImQJWs4aHfijngHw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=dF6E9pqhaG9bHpdcJOM0lqVFCn5WstacrdMGBx5UtVbSG0mR3uxySrdxgzcuawbsg
+	 G/Jx9/RQyZH33e88TjmdkiLrZexRmDCMB/c0+apfYG7IZlgnkddnPvmHWrmmtH1bkk
+	 XJLidj+5g9mvpajBWxa0M400uL/sgC1uWH8LWUMc=
+X-QQ-mid: zesmtpip4t1745317380te5bc3dce
+X-QQ-Originating-IP: WcYi1NZqqtZuTN8yyNwmSTGUPHkECqFH8z/doLuEEKY=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 18:22:58 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 8748779318587994258
+EX-QQ-RecipientCnt: 9
+From: WangYuli <wangyuli@uniontech.com>
+To: wangyuli@uniontech.com
+Cc: guanwentao@uniontech.com,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	macro@orcam.me.uk,
+	niecheng1@uniontech.com,
+	tsbogend@alpha.franken.de,
+	zhanjun@uniontech.com,
+	Chen Linxuan <chenlinxuan@uniontech.com>
+Subject: [PATCH v2 1/6] MIPS: dec: Only check -msym32 when need compiler
+Date: Tue, 22 Apr 2025 18:22:48 +0800
+Message-ID: <C7DB555D3895DE54+20250422102253.137944-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
+References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421185210.3372306-18-mingo@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MYha8DeKTomkKz7ip5AbqtPm+f55dSHKOIkcSp5YTMmmWUNKYykEQDSR
+	009n2svWpFISYgXSwVF12JPOOvgtRHQlN7R5YsRayrYImq6BfLTzXS3e1faehVAS+SQ6b9R
+	ZiLHigdEIa71eOj5NGCrh9Mxec9QLFjEOYFx12+gEhRYZi/wxZAOoCqh/xUey4ZtA0+rH3L
+	l7XVzOI5wIjUOq2fFhYp20bcUyedzQRcdLdRMi1mjPbTHufClT2qievbJhP4nNVXIZm+1QW
+	QC6fmIvHQosoE2KkVDB87TVdCpO0+6M5hR1oEtJAkxt1okXAK2tvsSvyanJEx7eO3yas8st
+	sRL3TE75U2zPbRgrfF5c0rRgwfoG+eFQILCmngt8lzmCOXYDFljaigQ8D1/hohhjHuPkJE+
+	tfUG78d4MZTFWdY5qqzCEcMziycEFpGbbqczvua0oXshYL9eSp8uDWQExDlhzVzz/pf2unD
+	9CpOkEDko9e4jsy3yjybcgb7ujRIVRIfqi2SjGNMA3IwuA07tb6jk4gNTm77uC1pdQbTJ3Q
+	F2UrTwtBML+ipzJpphJFZn08B35P0YscOJGauGCjFCeF01kutz4yxGTaBeQ0PTR9ZOIXLSt
+	tUhHryV91dfTR5Po2GDkL657xWcXKX1hnLC8aheVMO0aEVhhZaurtCSR/ns8qkow3qHfhO8
+	06sRWgXUdbF5pIALqx1kMOYux6t/w5eBkA9XEFCZ/N23Aeh/La/X/ZzzVHYsUMl4i4XoTqK
+	43LrDndHHGeJe5pMm0eDKwEnvakOEE7SinrA0F0qKCEWyOatV/zMHSC8ziUaYz0KpSYoKN9
+	2mI7WI6MGiHJG/RXW0jolAMDjPAuKHMLeZFZ+cv7tQONj11cPiBqOYwEcgkIqQbWhiXsCha
+	XAqeLMwufYXJjhkcFyA4uHPKbX9JLY7lPYZwkU/X8lwgcYCw76wkLAGkltuYqvckfQh9FI/
+	aXhA5bOOxxjVz7W4dO3lXouJu5h0QBDn/HiN3r27ETzi/5bYZRfnwzCvEboDZpR1hmt9W/o
+	pWYg1v8Ry/xPYfYTs8gDfaU45vfeV+Ox0hHaE5jY0LVGe41a4V156iQ5F/V0sCdVhMWtgns
+	IXKFGy7+t9lPTMPwF5BQlM=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 21, 2025 at 08:51:57PM +0200, Ingo Molnar wrote:
+During 'make modules_install', the need-compiler variable becomes
+null, so Makefile.compiler isn't included.
 
-...
+This results in call cc-option-yn returning nothing.
 
-> +	int idx;
+For more technical details on why need-compiler is null during
+‘make modules_install’ and why no compiler invocation is actually
+needed at this point, please refer to commit 4fe4a6374c4d ("MIPS:
+Only fiddle with CHECKFLAGS if need-compiler") and commit
+805b2e1d427a ("kbuild: include Makefile.compiler only when compiler
+is needed").
 
-> +	u32 idx, chg_idx, chg_nr;
+Commit a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression") tried to fix the same issue but it
+caused a compile error on clang compiler because it doesn't support
+'-msym32'. Then, commit 18ca63a2e23c ("MIPS: Probe toolchain support
+of -msym32") fixed it but reintroduced the CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression.
 
-What about sanitizing the type as well to be let's say unsigned int idx in all cases?
+Wrapping this entire code block with #ifdef need-compiler to avoid
+all issues is the best solution for now.
 
-...
+To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
+without -msym32" error.
 
-> +			change_point[chg_idx]->addr	= entries[idx].addr;
-> +			change_point[chg_idx++]->entry	= &entries[idx];
-> +			change_point[chg_idx]->addr	= entries[idx].addr + entries[idx].size;
-> +			change_point[chg_idx++]->entry	= &entries[idx];
+Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502120612000.65342@angie.orcam.me.uk/
+Link: https://lore.kernel.org/all/alpine.DEB.2.21.2307180025120.62448@angie.orcam.me.uk/
+Fixes: a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS `modules_install' regression")
+Reported-by: Maciej W. Rozycki <macro@orcam.me.uk>
+Closes: https://lore.kernel.org/all/alpine.DEB.2.21.2501030535080.49841@angie.orcam.me.uk/
+Co-developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/mips/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Does GCC 15 not produce any warnings here? Linus recently complain on some code
-with index increment inside the accessor. Perhaps just
-
-			change_point[chg_idx]->entry	= &entries[idx];
-			chg_idx++;
-
-?
-
-...
-
-> +			for (idx = 0; idx < overlap_entries; idx++) {
-> +				if (overlap_list[idx] == change_point[chg_idx]->entry)
-> +					overlap_list[idx] = overlap_list[overlap_entries-1];
-
-overlap_entries - 1 ?
-
->  			}
-
-...
-
-> +	while (--idx >= 0) {
-
-	while (idx--) {
-
-should work as well, no?
-
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index d9057e29bc62..1fffc6cf8b52 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -284,6 +284,7 @@ entry-y				= $(shell $(objtree)/arch/mips/tools/elf-entry vmlinux)
+ cflags-y			+= -I$(srctree)/arch/mips/include/asm/mach-generic
+ drivers-$(CONFIG_PCI)		+= arch/mips/pci/
+ 
++ifdef need-compiler
+ #
+ # Automatically detect the build format. By default we choose
+ # the elf format according to the load address.
+@@ -304,7 +305,8 @@ ifdef CONFIG_64BIT
+       $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
+     endif
+   endif
+-endif
++endif # CONFIG_64BIT
++endif # need-compiler
+ 
+ # When linking a 32-bit executable the LLVM linker cannot cope with a
+ # 32-bit load address that has been sign-extended to 64 bits.  Simply
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
