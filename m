@@ -1,67 +1,112 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.19])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24CCC134BD;
-	Tue, 22 Apr 2025 01:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.19
+Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B58E27702;
+	Tue, 22 Apr 2025 01:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.182.119.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745285782; cv=none; b=qOxAKMLjsMMigJg+vQ4nuz/S35gieIXa5iY19H5ll3VPSFzS3epA6nAa4W6SNuqgMFDoTq+VniVggA6G/MMGgP/V+3bzSkbLl8MXJWD7kKECqBLwk97E69sk1c3h0ZqeHg9NfGNsuxdRStGG8TJhbhoeHpTNXlC2XkJsOwmxt4Q=
+	t=1745285846; cv=none; b=VfxNeL4mKX3FXHj9DAaRLzwYTuva76e5VouOqd8KhiYy4gWAiNxst+MJOZrx5cIU5dYawdNmh96e+vhhCcW89Z2bOejU43NJHWzMXw9VLF7xT/hetyGX6QP5swf6QeRhbHfd6zIPjNMTHN87TF4DmwLRsBORQnQ8KUQodRPy8LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745285782; c=relaxed/simple;
-	bh=UK16GNtJjRoAnRpT2SiUt6xwvtv6lMuhrmao9m8+gSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgaxPGqJ2fpdXo0u4h/hcwq7aNDDbBYyKNfcyLsKaIq1jWcRqYkfOxf2PZr569PWN43m2H6ExbBfoXX0RkA3RhCrp/enDgEaiJkxHspZHrYlNXVbgHZn4PXhpym2weKlJNXKWCBq6uxYaMVkdQhlpom4ydD5qZfsL/ymQJifwr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=ccggECoI; arc=none smtp.client-ip=220.197.32.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745285846; c=relaxed/simple;
+	bh=9JbPWgTtaRUcud7VIMMQhF/8YKR2qN0SN4ekG60jgZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jJhjjrW6+QqEK5zJHI2Qkr0VDFsG0ULoegjEiqoT3cMOmw0lW06HUy1UUErdOnIQMwsmLELp/NUQVLYFam4tTbNW+L/EDXPz6vDx+BWdRrFfDvr7p4ZRXY2nbfmYaUEBVoaAnstFn67q4AjyqkwnupqjuPJhOqqlbQAL4TjT1Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=FT9M9jGr; arc=none smtp.client-ip=217.182.119.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="ccggECoI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=sgqQbcC4Ac0v2YdyZ7o/7PpW2o0/Jn3QFWS121gTOFM=;
-	b=ccggECoIV5cjU/T7WXevp9cZmZ2ebAt/jWpnx2F7PCBHiz0MlPgvTLRPf+JRMj
-	e2nQVZFfsvKxaG4mYNBWi5c5rSU1jjqptuZ/UbgjinMSXg5qKGSczsBVgmgfkrdt
-	gWdYZlVA9U2i4iedmoBpO9qjSvak3/kuD7TtP5oJO6zUM=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgB3b06h7wZoBuypAw--.471S3;
-	Tue, 22 Apr 2025 09:23:48 +0800 (CST)
-Date: Tue, 22 Apr 2025 09:23:45 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Andrej Picej <andrej.picej@norik.com>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, airlied@gmail.com, simona@ffwll.ch,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, upstream@lists.phytec.de
-Subject: Re: [PATCH v7 3/3] arm64: dts: imx8mm-phyboard-polis-peb-av-10: Set
- lvds-vod-swing
-Message-ID: <aAbvobSqxSLt+uFC@dragon>
-References: <20241216085410.1968634-1-andrej.picej@norik.com>
- <20241216085410.1968634-4-andrej.picej@norik.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="FT9M9jGr"
+Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
+	by relay3.mymailcheap.com (Postfix) with ESMTPS id 9408B3E928;
+	Tue, 22 Apr 2025 01:37:16 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf2.mymailcheap.com (Postfix) with ESMTPSA id A838B400AD;
+	Tue, 22 Apr 2025 01:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1745285834; bh=9JbPWgTtaRUcud7VIMMQhF/8YKR2qN0SN4ekG60jgZo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FT9M9jGrry8af/5uW3xSDINGCp9SyvfsncPX/7sjj3zWTpyP7ZZp+o/73M/dkgZGr
+	 asbLS7uY9/sapBZjtlyR3MMQDgtIQGsdMj5i4qYGmSp64MWxkjnVj4FAG2N9B1TPKw
+	 AmG6Ms6lDpe/ICm91YpycpaRx4xZIO7sy0Un2Ywc=
+Received: from [198.18.0.1] (unknown [203.175.14.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 58B31404EC;
+	Tue, 22 Apr 2025 01:37:11 +0000 (UTC)
+Message-ID: <0dc30d64-d520-4d54-ae84-43ee6f40b18e@aosc.io>
+Date: Tue, 22 Apr 2025 09:37:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241216085410.1968634-4-andrej.picej@norik.com>
-X-CM-TRANSID:Mc8vCgB3b06h7wZoBuypAw--.471S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUcTmhUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRI3ZWgGsHT8JwAAs4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with
+ subsystem ID 11ad:1723
+To: Ping-Ke Shih <pkshih@realtek.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+ Liangliang Zou <rawdiamondmc@outlook.com>,
+ "John W. Linville" <linville@tuxdriver.com>,
+ Larry Finger <Larry.Finger@lwfinger.net>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <20250419081251.285987-1-jeffbai@aosc.io>
+ <4a7284bd703743959e709b9465dabf1d@realtek.com>
+ <985175be-de04-4d1d-a859-fa740d87c9c3@aosc.io>
+ <6f0234bc99094b3d84959afd4eea55d7@realtek.com>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <6f0234bc99094b3d84959afd4eea55d7@realtek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: A838B400AD
+X-Rspamd-Server: nf2.mymailcheap.com
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FREEMAIL_CC(0.00)[aosc.io,outlook.com,tuxdriver.com,lwfinger.net,vger.kernel.org];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[]
+X-Rspamd-Action: no action
 
-On Mon, Dec 16, 2024 at 09:54:10AM +0100, Andrej Picej wrote:
-> Set custom differential output voltage for LVDS, to fulfill requirements
-> of the connected display. LVDS differential voltage for data-lanes and
-> clock output has to be between 200 mV and 600 mV.
-> Driver sets 200 Ohm near-end termination by default.
+Hi Ping-Ke,
+
+在 2025/4/22 09:21, Ping-Ke Shih 写道:
+>>>> Please note, however, before the rtl8723be finishes probing, the AER
+>>>> errors remained. After the module finishes probing, all AER errors would
+>>>> indeed be eliminated, along with heavy lags, poor network throughput,
+>>>> and/or occasional lock-ups.
+>>>
+>>> Let me clarify here means. Do you mean all work well after applying this
+>>> patch? Or still lag, poor throughput or lock-ups?
+>>>
+>>> If all symptoms disappear, it would be worth to take this (quirk) patch.
+>>
+>> Indeed, everything works well after this patch, save for the remaining
+>> AER errors during driver probing.
 > 
-> Signed-off-by: Andrej Picej <andrej.picej@norik.com>
+> Good. Then make a formal patch.
+> 
+> By the way, currently wireless tree runs build testing with NIPA, so please
+> specify rtw-next tree this patch is going to.
+> i.e. "[PATCH rtw-next] wifi: rtlwifi: ..."
+> 
 
-Applied, thanks!
+Understood, sending one right away.
 
+Best Regards,
+Mingcong Bai
