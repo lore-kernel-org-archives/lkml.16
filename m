@@ -1,63 +1,51 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B728C5C5;
-	Tue, 22 Apr 2025 14:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60438284B5C
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745332846; cv=none; b=VmoetwgB6NtQHn7EH/9oG08jp+TFRE2NKLewYTyfa/Z1MO7+d4I+CpEQwH3nzebgHE3QJjl59mGWBvi+YBXcKS53iPP2ryLL2AbYDFJK1mAZ4lWW9gHAFkGFjrglk8dAId/o7GygeAfJ8bn+uft7dKCLKvNNG5wiEcjcb2I+mmM=
+	t=1745332911; cv=none; b=nkEeCruTZiupXPgCOtBZ64YAgNWJvFvjd5plWu32/wEaFTKI3XeJ119tfmzVovbhlNOpAbHkZo19bFIg1PtQKc5sf8Sc9Z4LCoMZy7RFuj7JUguyfsyfRQlSJQWYXmfj8QkDssjhgc2wgR/5G95npyqas9YTCyuoPLBkaHRzT7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745332846; c=relaxed/simple;
-	bh=M9Zr7hxLPheS12ZSZNWK5qMbOtisljKEvNuI/iEukEk=;
+	s=arc-20240116; t=1745332911; c=relaxed/simple;
+	bh=zHWh4uSIApkmGP5MhyX7KcUm0obTMv71a5TDLmbBQ2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nlIEiEMb9l14rdR/cwvLq9yosAgSfbmVz/9v8x4ekioyMGmh2ZznPzGPRYmybkBHrfBN9I2kPygN7ZANGjjGFz6EKJG1LbVjBzbfOIeSuEXgQh4rDJ2D3CGoQuWeo71FTLugIU0dy1VvgjdbaErz/HJEb8FoHy2yWQEP/BASIZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=LNDMR9KG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=VpQ+/gkUDpyU3vvEXMvL6IRnPo5gUxW3ZtSgrFq0Y77PuVNpWS5MljtGvYrJOH4oVl22Xhy2Cdh5KPUgvReGgSVK0NOJ8HaGeBvYe++gJp2So2I/l4M3FDVgRgnIMNUp2vK/T7huqWPuoysjV38H3bhKa67Y+1TPlp3UaE96Ys0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KkmYdZRA; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LNDMR9KG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=W0S8t/6FGxg47c0LEtOaE/CH+Zrp13P24zwNFo5jGGw=; b=LNDMR9KGZUOWw2nq8JndcvNeF/
-	UlrAChAS6n9brfhMKUvxfErkEiAKWZfUakTgo1Kkbz1sy/lTjGFy4FUuQ/j1f6howOfcfwKPT3E3w
-	xIqAYCKilAfznPhLUM091UBTLzpjpG4jgH+P8NwnhBhr/88g68aCbnmxfY71+QOETvkc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u7EnR-00ADBy-Ka; Tue, 22 Apr 2025 16:40:25 +0200
-Date: Tue, 22 Apr 2025 16:40:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <d79ed229-f0b7-441a-b075-31fd2b2f8fe6@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
- <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
- <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
- <b53fba84c8435859a40288f3a12db40685b8863a.camel@ew.tq-group.com>
- <aAdZoMge_CKtqokU@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KkmYdZRA"
+Date: Tue, 22 Apr 2025 07:41:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745332896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vyd+N7ix2s2qiHf7u+8PYPa1V/Nz2f9Sgk8z0rzIogw=;
+	b=KkmYdZRAY57gqhIHaTcv3T4asZSyWxp+41awkJRHBMwHupZ+Ny0P8O25Uj98mqp2/XNb5v
+	zgkEyJxfgTh7/dSUqRKZapHjKrUx8FURAEQcPkl1WQ4KndYhUNMmqHi1i1JsRoKRF6YSs7
+	hQ6pA4setMf7aM/il45tyGApQfXsNCY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, hughd@google.com, mhocko@kernel.org,
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	muchun.song@linux.dev, len.brown@intel.com,
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
+	pavel@kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical
+ swap slots
+Message-ID: <aAeqlE95yQA16HT3@Asmaa.>
+References: <20250407234223.1059191-1-nphamcs@gmail.com>
+ <20250407234223.1059191-4-nphamcs@gmail.com>
+ <20250408141555.GA816@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,50 +54,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAdZoMge_CKtqokU@shell.armlinux.org.uk>
+In-Reply-To: <20250408141555.GA816@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-> I'm hoping that Andrew will read my email form yesterday and reconsider
-> because to me this is a backwards step
-
-I will get back to that in a minute.
-
-> > On Linux, there currently isn't a way for the MAC driver to query from the PHY
-> > whether it could include the delays itself. My assumption is that most PHYs
-> > either don't have internal delays, or the delays are configurable.
+On Tue, Apr 08, 2025 at 10:15:55AM -0400, Johannes Weiner wrote:
+> On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
+> > In preparation for swap virtualization, add a new type to represent the
+> > physical swap slots of swapfile. This allows us to separates:
+> > 
+> > 1. The logical view of the swap entry (i.e what is stored in page table
+> >    entries and used to index into the swap cache), represented by the
+> >    old swp_entry_t type.
+> > 
+> > from:
+> > 
+> > 2. Its physical backing state (i.e the actual backing slot on the swap
+> >    device), represented by the new swp_slot_t type.
+> > 
+> > The functions that operate at the physical level (i.e on the swp_slot_t
+> > types) are also renamed where appropriate (prefixed with swp_slot_* for
+> > e.g). We also take this opportunity to re-arrange the header files
+> > (include/linux/swap.h and swapops.h), grouping the swap API into the
+> > following categories:
+> > 
+> > 1. Virtual swap API (i.e functions on swp_entry_t type).
+> > 
+> > 2. Swap cache API (mm/swap_state.c)
+> > 
+> > 3. Swap slot cache API (mm/swap_slots.c)
+> > 
+> > 4. Physical swap slots and device API (mm/swapfile.c).
 > 
-> motorcomm, dp83tg720, icplus, marvell, dp 838678, adin, micrel, tja11xx,
-> vitesse, dp83822, mscc, at803x, microchip_t1, broadcom, dp83869,
-> intel-xway, realtek all do handle internal delays. I haven't checked
-> whether there are PHYs that don't - that's harder because we don't know
-> whether PHYs that don't mention RGMII in the driver actually support
-> RGMII or not.
-
-I did look through this once. There are no PHYs with Linux drivers
-which support any of the RGMII without supporting all 4 RGMII
-modes. So we should just assume all RGMII PHYs can add the delays.
-
-If i remember the history correctly, Renesas built an RDK with a PHY
-which did not support RGMII delays. So they where forced to do the
-delays in the MAC. But it seems like mainline support for that PHY
-never happened.
-
+> This all makes sense.
 > 
-> > If this is
-> > the case, having the MAC add them in internal-delay modes and not adding them on
-> > the PHY side would be the best default (also for PHY-less/fixed-link setups,
-> > which should be handled like a PHY without internal delay capabilities.)
+> However,
 > 
-> See my "advanced" use case above. We do have drivers doing that.
+> > @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
+> >  	return atomic_long_read(&nr_swap_pages);
+> >  }
+> >  
+> > -extern void si_swapinfo(struct sysinfo *);
+> > -swp_entry_t folio_alloc_swap(struct folio *folio);
+> > -bool folio_free_swap(struct folio *folio);
+> > -void put_swap_folio(struct folio *folio, swp_entry_t entry);
+> > -extern swp_entry_t get_swap_page_of_type(int);
+> > -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
+> > -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+> > -extern void swap_shmem_alloc(swp_entry_t, int);
+> > -extern int swap_duplicate(swp_entry_t);
+> > -extern int swapcache_prepare(swp_entry_t entry, int nr);
+> > -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+> > -extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> > -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> > +void si_swapinfo(struct sysinfo *);
+> > +swp_slot_t swap_slot_alloc_of_type(int);
+> > +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
+> > +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
+> > +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
+> >  int swap_type_of(dev_t device, sector_t offset);
+> > +sector_t swapdev_block(int, pgoff_t);
+> >  int find_first_swap(dev_t *device);
+> > -extern unsigned int count_swap_pages(int, int);
+> > -extern sector_t swapdev_block(int, pgoff_t);
+> > -extern int __swap_count(swp_entry_t entry);
+> > -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t entry);
+> > -extern int swp_swapcount(swp_entry_t entry);
+> > -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
+> > +unsigned int count_swap_pages(int, int);
+> > +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
+> >  struct backing_dev_info;
+> > -extern int init_swap_address_space(unsigned int type, unsigned long nr_pages);
+> > -extern void exit_swap_address_space(unsigned int type);
+> > -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
+> > +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot);
+> >  sector_t swap_folio_sector(struct folio *folio);
+> 
+> this is difficult to review.
+> 
+> Can you please split out:
+> 
+> 1. Code moves / cut-and-paste
+> 
+> 2. Renames
+> 
+> 3. New code
+> 
+> into three separate steps
 
-I agree with Russell here, it is the worse default, not the best
-default. It makes it different to nearly every other MAC driver. It
-needs extra work in the MAC, which most MAC drivers get wrong. They
-also tend not to call out they have done it different to every other
-MAC driver in Linux, and so it does not get the needed extra review,
-and so is broken. I also think there is some 'vendor SDK' mentality
-here. Our MAC can do this, our SDK allows it, the Linux driver must
-have it and use it. Pretty much all hardware has features which never
-get used, but vendors sometimes have issues with just leaving it
-unused.
++1, I agree with the fundamental change (and is something that I
+attempted before), but it's really difficult to parse :)
 
-	Andrew
+Also, weren't the swap slots scheduled for removal or is my brain making
+stuff up again?
