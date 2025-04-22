@@ -1,293 +1,287 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F9B2144B6
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745364826; cv=none; b=csiC7Wx9UW22sIFVI5+mDY96DsQAF08IZpu3ntbi5w2PrYFu0tLJ46SbfQ/KjQIzv0R//coP//rot03dPwlohIYkAmO1JfaVJwUnrTpGt5yiXC3bCt7oS7mfv3wBnwmZJ2WIqcu4c5A1+qNcp0hiZkgxb71P1B1dH8I9ih0gtcI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745364826; c=relaxed/simple;
-	bh=Zm+0Vnd04bLna0H1tU+JPRUhjZEpd+vXGIhlF4JkvBM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZHw0GvmZ02maiC1aBtgQDwpF/06fUO+Fl1nnHKoDklt7sYzeCxJazo4A3T1DJ2sPk5LgJT4gXD9rEQ1+lBt8BP8ZKpVAKxEsO1HVgH/sRLzCE1tJ5YhuzA8GxzyIA22Ovg2HKH6g8nc1s3BQtaTHD3WAayns1fQ6oRBUdtwZEeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d948haJQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C7823A9
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745364966; cv=fail; b=BIxolRUt3M0m02x9yDP412sU0Sy4Ltj0zCKNI/B2hhnMhOxmN2zUibSzahq9rtVuUrWpLXxgVut+1pv6+Yn3lO4Ief0VJTGzRtCiCNFW8JCfmjceLyKrj94+7/mw8ixGBv+5dDjob+0RrwRrW/cWB5tX2SiC6SH89LWPY+uWdIk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745364966; c=relaxed/simple;
+	bh=40RDSTmnKNdi+97Sw4ZGlW43Z2kFkX9fuinbhv8wR8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AfUeoScGgCcogH80/6Yzo+iVXWGAoulwCd1GmVfuHycHNmEym3M85Ktoa2+je5eTSd5q8RDFISsHTyQckWVMoGupQH8e7JN3XyHzu3kHeqFXGn6aE/EK2LfBf2lAlD+9GvEQJP11C/NC6okWHS+9H/o1I8+eFRucG8NZ5XpVQk8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YwV+Ee9J; arc=fail smtp.client-ip=40.107.94.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d948haJQ"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MKpuD2000896
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:33:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=LbEEYSNZmbsDZ9eY95aJ2Y
-	EJLr23jK+dOe3rnqzLKQY=; b=d948haJQ7yEQwbLXrdRPF4bymMnHcUv76kwe0g
-	cGt9Uv7lIi/U4ED4A1PYv6qUMDAicVjSexJIyKjV3McTqeiH30tciF34f9Pmy9qE
-	AwpMGmXNixLYJPqaHrPA8H5F+S0r66SRHMl+EnBAY463R57OZFHOxua3Rms5OQD2
-	Gjp59jGpoaH8eRLMUJdux6oxaw1IoH/Mji38fDB6ZiBtsWwMo24w0p48LW5SPWhA
-	qKihHzahJJTfH7EQONjSCEvyExefWH3dOqjMS9OgHU+0Pg5eEg9n3SccSPXgBxc5
-	snpF65EMHHf9PhXQWxbXsVYT4zRQPGTV102nwXe7m7t6xJxw==
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com [209.85.210.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2898s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:33:43 +0000 (GMT)
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-72ab21098efso267567a34.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:33:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745364822; x=1745969622;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LbEEYSNZmbsDZ9eY95aJ2YEJLr23jK+dOe3rnqzLKQY=;
-        b=C1poQWyqH9JCPgBGX4ER2Kkg3AUHcwv95A6Nc4JfbLgeCFIC118SjMEdledgAcs00L
-         PJgPU6yrAM5s0kCiRzKEVj3EFAMBqZu0/fW3SjGM4Hr6Kdk67yPSWkI3MO7CjcX4WNK+
-         860vla6kQ+we9Le3xHVUizL2NIKLIglVq7Tc+9heaMWi9nOi6V72saQtsNf4urESXNVb
-         Xn5XSOiYJYW0RSM85A2MC4zp4PTFtNRiNN8LonYPmNJgsuJLXcowQipz4do9Svh4Igpo
-         koZZMFYR/v+IEk00+EzPWjOuK+ywV3/WZfTmBQ//CWD3Kdi+lSdDZadkemggmOHwGwvO
-         6Fxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUD2xQOEC7teWmi6kLdbSJoYDXervPmB7gxR9xbdThYeN8oPtKgVAoW2ktICzOaWMWCzI8vy6dM5xoLKJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1hcvr7BY5BXIvd3sYQBbAFNasPf0gmkqTLehgV97hG3kKcYQ5
-	qOd9eVu8zc9U8T7NMUlV8SC/2QzziqQJFq2L4W8NHDieaF5PkY1FGzt21baH5YSF5BPdS8w09X8
-	IdMSVPY+Cz3uJoDNwK1X+GHBFznn/1nrzWFtpTWccG9WY0uB6p67AcIQ5vdkFQS53ZKsSb2A=
-X-Gm-Gg: ASbGncvh1SCQEVZG/LvAd2UwjlNmpKoxvV77FXGZHksAcRWoE/K9MXeftQnWHP9OKDs
-	TpKo926LsDQYkqVnZfcm30sMJBHP1IY1HVRt7aHUf7tPxzNAip0N5o9BJ4tjf3Q3PpI655o2YyB
-	CDIlwluaJlVL+GD0AKueipeLCujB21a/8JVIEygYVFbX30jr/IAefdT0KQYawijxTcT/eyKH4fJ
-	++nA3rv6iXKG0a+7UKqJ7UtijB+nPU6FjrtKQQW2BDSlZjcAWQYq8NJtikEvgrzhwn2h0C50U6l
-	W2khBUitVklhCL9VXY2bpbfGXlZuKspesR6m0NHi5ApvV38v5gDr4+hOGfsuysWgjIzqLfe7v/E
-	s8n0dpzNE7Q0=
-X-Received: by 2002:a05:6830:12d2:b0:72b:8d2e:4825 with SMTP id 46e09a7af769-73041e9de56mr467630a34.11.1745364822403;
-        Tue, 22 Apr 2025 16:33:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0t6cxJkJp59NTohJ5oLCCnmhskYwY9IBHFLPZrEh+ri7nRRRAj7gkP0LsYg//gp0mJqrbeg==
-X-Received: by 2002:a05:6830:12d2:b0:72b:8d2e:4825 with SMTP id 46e09a7af769-73041e9de56mr467615a34.11.1745364822037;
-        Tue, 22 Apr 2025 16:33:42 -0700 (PDT)
-Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047afc11sm2231478a34.25.2025.04.22.16.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 16:33:41 -0700 (PDT)
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Date: Tue, 22 Apr 2025 18:33:31 -0500
-Subject: [PATCH] usb: dwc3: qcom: Use bulk clock API and devres
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YwV+Ee9J"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b00a+D2U6U0ku1AMpbcitEQLoseK1+PbZmztu6hLOFjLQ1cnS+h9C6zH8a2h5n0/S4wJrjyHRgLNbw7JWoUADo5u7pI+Lmshj9h0L6KQ/qNjuqHOX5G2Vw7i2XKeGsLCACwu/9HA4pfreQ1iujlOwTxSMTmgcdIC+WI+NJFDiAyqYLzuxwMAIUkdGUrU1GhxqriG4nl7kkO1U11o3vJZiFSL+hrqy5NcEboVjCwn1CEIHxIouQkdWErJkkfXHMYLsJhpIa6+BSbWPyUww9BRh+4FPbhk7jDsJlA6gbVSnqL8nzi6WFJ2ncTPt8YP4XH6KUBTgVdz/EYiMNif0+90cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HlygJG8kSWtI1KaCbzDPKc6kOHVZQjMz3VIqH+Xkceg=;
+ b=MDSEacMHReG23dRn+7SXCBzLFOiJOvdSVc/Afghs1ESKch+HUGreF+2yD5Mx+zIywxQ2DzeMUTPl5eSedKqfBJ3PTTEYaYgqF2s3/xn55Zw7xABq1czH43i1z5qTil5/33lEbZLbYzRHnkNS0qXS7kjDKHa7bCgBOfoxiOOjEF8/MquiB8yogyuIM65t2jSkE71LMjGVGKyb0ZUfzmK80Kt/6qxyU320CWB2khZdiFZnMZC1YymwMsvX8tmir8txIT3KTt+BrwfVmPKJmWATj5OY4wMldVYs9UjVwT8GBXNJO7k1H2FEDHYMR5JsO88QzbR1ntoCQdvJRz1fQ0/Mww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HlygJG8kSWtI1KaCbzDPKc6kOHVZQjMz3VIqH+Xkceg=;
+ b=YwV+Ee9J31HEhhIFtiXCk2Q9FjKBa0bWL54iXRIXaPtNluGBkarqSQq6Bow9q+Bcz+XTai53BFQYAhbmKF2yVi6EG3WyZdTfDSOTHqSTy6tlD6WS4nWrtWVzj18MLERVlkIdw7PunAECWMtnP4ADGYF9Flt1M9pWVGO7eI9ZLeNbQiiE2xiyKixZhDEkvjTIQo1QcK8HyfmX1hD95h15cDR5YxYpffkXRyz57umwrqxXqwO2+RLPNRs9FoiYrx9POdEzTdtv8plw5xARq3KnLKubwDr7gqMQlzkYgBdQHMt4peEuWitdqtoiuHZ8NxdYtmlanOmug9FsS8kuP6m78Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by IA1PR12MB8407.namprd12.prod.outlook.com (2603:10b6:208:3d9::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Tue, 22 Apr
+ 2025 23:35:58 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8632.030; Tue, 22 Apr 2025
+ 23:35:58 +0000
+Date: Tue, 22 Apr 2025 20:35:56 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Message-ID: <20250422233556.GB1648741@nvidia.com>
+References: <20250331145643.GF10839@nvidia.com>
+ <Z_PtKWnMPzwPb4sp@google.com>
+ <20250407161540.GG1557073@nvidia.com>
+ <Z_QAxiEWEyMpfLgL@google.com>
+ <SA1PR12MB719976799AD7F9FC4407A5A9B0BD2@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <aAdKCGCuwlUeUXKY@linux.dev>
+ <20250422135452.GL823903@nvidia.com>
+ <aAfI2GR1__-1KQHn@arm.com>
+ <20250422170324.GB1645809@nvidia.com>
+ <aAgJ8g8Gbb06quSM@linux.dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAgJ8g8Gbb06quSM@linux.dev>
+X-ClientProxiedBy: MN0PR02CA0027.namprd02.prod.outlook.com
+ (2603:10b6:208:530::30) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-dwc3-clk-bulk-v1-1-37c7c941330f@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAEonCGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyMj3ZTyZGPd5Jxs3aRSIGFpZpBoaZiaYpKYZKEE1FNQlJqWWQE2Lzq
- 2thYAD+r1Xl8AAAA=
-X-Change-ID: 20250422-dwc3-clk-bulk-960a91ed4ab8
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4868;
- i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
- bh=Zm+0Vnd04bLna0H1tU+JPRUhjZEpd+vXGIhlF4JkvBM=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBoCCdVQtcnmQyH3hay44RXu8crJ1kkuop6qwCU/
- 06dKNBFf0iJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCaAgnVRUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcXyFQ//SZgCOv1ZJhibE8+OWqjEcDnZuaUCksK3oO1NdX0
- W9uy8oT7Xr+kfR2FLIvZ3aWQIIdZhUsCjDD+yASja4fZmfk9f0Egbj6ENzhJrMRFoEYiBaSseSJ
- N/ZkDrUCOHOLJiZXdlmzJeztbylNtSYxpe7e6BDRa57V/YDPytwOT5wQKwfQuzp3eEBFgFNgIz2
- qb9Ug7JLhmmHgBrrZleWGD1CLsnhLvqqf7B8Ht/mLH/g6qYawz0DE5pcs+yBeKlDNyYOSVW8dDR
- mLbi27iU6qLrmrlWYjXaQtb5P03YHC3orhNDKDEkxKh/shTncgD461cN8h7y5sWlH6h6BRJZ+cH
- u4MwZj6i8IZjSpM5nIXfAtUZQtC2dkrR1EeQss7fQnjeexeIxNnDyLAp3jWz8pjhuC5ID6kbWY4
- 84gUy8KmekqeQrbuaxquX2nJ4Cy9i2EYdt43eU8yICxtzS0bGeuZ5lP4mcqjB3auU/yOaz9Oydv
- vlx4dcMVSYI2v3IrdN4X3KSto+HVJMv+j57HgfqT/F+qDZAilGD6wHh9sjP+qLZcis2elJmUxLj
- FX4XpNitCrdA1Lf3GmVTj2+nXgNNQlOqpe7nfGTCU7xFEVvmiHQEvB1kqqkQNuovi8uJMO3AAn/
- vIDy1GzxZtKbNh4jfsU+TLiFpxuNGD911FTtktyzarVA=
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
- fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Proofpoint-GUID: 9NYhFsX3krURMuRxmWxlkZr9clEz-GA0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDE3NiBTYWx0ZWRfX/MiRVSwVdk1C z1oQWafp9FlaDx3Su/YYYjk3PTlNPxoNIFYQUmL1zhlVhq/vD4cWOBw/dfop9U9BhLGfWYlMZov KUznzmV+7cDlXPcP5Pt+cnBm2YpQDQTbuqED5kW7VGZ28RWrQa4fjAo1xsmu8PiopdWkpjkK5O0
- 0Yv7qOGRS2/rDk/VRbd7jIFCLJSdR6Ke7yk9c727hfY2p7K3ESgb0ITlueYEFVIb36uuCk+Ygmn FOQBFEdMr0lq7FOmU/HtAwHyNMivRCJy4WQhQ4LItZYiiT6XTuqef3AQPc82UmoGYTtvAoXo+HU WUEg7U7gwXfe+IltADgYNTn64LGlkR6OD60l5BQ8D6cL4+IyESSR80Pc+pAPpYS7iebC3gjKuAH
- OpaHM0BrN0G6iLYPtoU2IfLhtB23VFV5odi6X92lvTxAXbpt0uBNJFgWNtSMUCzeb3OQH5nx
-X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=68082757 cx=c_pps a=z9lCQkyTxNhZyzAvolXo/A==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=gJd3tMjwVXm2S4jxaKMA:9 a=QEXdDO2ut3YA:10
- a=EyFUmsFV_t8cxB2kMr4A:22
-X-Proofpoint-ORIG-GUID: 9NYhFsX3krURMuRxmWxlkZr9clEz-GA0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_11,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504220176
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|IA1PR12MB8407:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2deeafad-6380-42f3-4b09-08dd81f66ef3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wFUOLerbKKVxL/ebfLnMIv/ADXb2Q9JEHWyNMLqOuNWyXYsLJrut7FeSSPs2?=
+ =?us-ascii?Q?rtKh8vqJDvxJLAQAljT0wnJZAJYL4jxC5QYJX9PuDJGebca0olxTQjwWTPvF?=
+ =?us-ascii?Q?9e1weMlZAa1C3blEo4/1qkVAWpDZsQtkFF6IN+ttJEGdn/4CX9jt9HPSOfog?=
+ =?us-ascii?Q?Ahcd+588Qt7pHey1sxcdMOj2B60ZRX1i8lESVx56zoll7lbu7r+LqFVmEAF+?=
+ =?us-ascii?Q?emFR0lfs5J8UBbxkIqn8OJH/T9VaN8GdQMj5quDpA97pLgtz5Z8DhuvR4ujk?=
+ =?us-ascii?Q?LGy3PBxVWY1LqdyblleYeqJy2rrAPZgaDNWGb1RQofeelPylkACPatCeaxvY?=
+ =?us-ascii?Q?kOPrSYRd9yslzOs5rNU8SCZcXHIOjLwLUnSo0uWMEtEA8faOdHWj8LjQ/wUt?=
+ =?us-ascii?Q?vc2HZAySTLuBdfVV9ciXp4xjrBriXS83oHdluXdYIG200Z+dyjk/r2LZRhGE?=
+ =?us-ascii?Q?geUNlXKGcXefNKlAtyQSWdhyuH7iyB6DN2Pfkp+7sTm1TMlsHITxXvZQwc4c?=
+ =?us-ascii?Q?gzEVH0YeAVIURqaTy1XD4VlFLqPZkIrq5AvcLuyWbJg2eMQWsaRxoqHYeWXe?=
+ =?us-ascii?Q?i0oGL5Zk5KjjWfWhivV4EfK0fxq8JX76lOpg8nLOy3dBs8eGKTdJhGee+4KY?=
+ =?us-ascii?Q?YoGqQCbbOs8qHWD13qhjR7fp8s2joimiTYxxOx43pjehBRpZq/eJMHjSSDKX?=
+ =?us-ascii?Q?JL5BDDa5Zvw84JQKxS18yAbzI0WNefFmGJQApELy0o2xP0VP74kj2tg44Vc3?=
+ =?us-ascii?Q?oyH2A1ThZJwcoNCa36g9k6r6WWKKxjsezApFlcHFSzUCPKdJN99rNXoZi1V/?=
+ =?us-ascii?Q?aMBGfkEwiEW+8WitxuA35wWd7dAWwvQfQzD+jpBBQpz8rxcJels2tyv8ZZ+Q?=
+ =?us-ascii?Q?Cm9s0wajI1zu14M5p7MOMKDcCWJmgRKJJIuAVA7PxegLCznr1axM5SYO21zu?=
+ =?us-ascii?Q?bHe7hboPqwYKDe8J1IHz5yaukACmdseDHUTapwoVJ+wqnaTM6610TkMHWYeZ?=
+ =?us-ascii?Q?xOpguhWIh/mBfvnuOqwjE/cuhUXHzAz9XkMXHuvVAgQn1Xr9s7S5QuzApjqB?=
+ =?us-ascii?Q?0ea9EXdARLakmYYnUwQS89X7miisrkZ0OSAm0niTk6xaQPegelWgCWQn4Gdc?=
+ =?us-ascii?Q?h/EOXV1iNB006VENw08jyBxO0xOCTXMc6+Tfr64wX43CDJWXuXKshg9nV9U5?=
+ =?us-ascii?Q?VOSF80qqlrfvpsHcwP/8Nu2sxWD3iCmtarPqNOLp774FiRzFIr6uo4aa8bdY?=
+ =?us-ascii?Q?n0DLVKlLMmhGhzbArW1oqjGfQzTbfT2lACmbroH18akz2DuRiBmYRBf9GqmM?=
+ =?us-ascii?Q?2Tpt0EyJ/1lP1j21b4srleVRONX6rxJVq3RW+EZxfTTl0iraiIUlJPpWpslD?=
+ =?us-ascii?Q?KuqfhaJymBo+NQgSf0iKuXU76hOuS044nM6QG0C7AI+BTO27G0DfwrZToooi?=
+ =?us-ascii?Q?h8fyc3nXsvg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?PeQq2H1WXdzKei0NZbjUlczjYgjj0+oZcnMXV7XtmBglzwMeUnNVYt4mCxhQ?=
+ =?us-ascii?Q?qNqdyCOH7E9h2Diab7KArKbB9jWztxrXf/OfMo5ncdunKnB1kZ2fldfP3eKI?=
+ =?us-ascii?Q?+uDFo2Eb6Be97Z/4ZeTXDQoSgvW/gfFUWXd3kYPYsk1MdCKWDXoqmL4wBveJ?=
+ =?us-ascii?Q?Za8yUgpPCvC9wxek2H/hP2fRcXAr+cigWjl/1D3HbL2zhIuT5G2/a4HYiadv?=
+ =?us-ascii?Q?r3Kq+sc13Ht7VIKSdPMsta3q7Sx0Pg6iU4WBARh5EJyiah9IFWJlvO4cDSCj?=
+ =?us-ascii?Q?BmmxaZkEQumUQTr1Ucxd+8UBSGHrGTo4g4PGQAJtrMgm7B9hCAxOyAcvGEVz?=
+ =?us-ascii?Q?BJIWRd5rEXUYDPnjysu3WKj7F/CGsahYrsDNk5qLuaXZD3Zxw/OUoTmXSjR1?=
+ =?us-ascii?Q?ZkuG2SUuFjyiGdM4iJXY731YGXa/xPpQrBr8OmOnkmgAt9IqcHgKW2YNRPG4?=
+ =?us-ascii?Q?xelYePc9gs/OnY2n/ObC3z2epqqVqFZsCxKk1O/MxnaRoeCNYa7vqRql4ex6?=
+ =?us-ascii?Q?WIj7LM5YEunUgySqXNNz9mQMjKhDwaVyT2gm7IfvbAdjvMXv5ESViJFi07b9?=
+ =?us-ascii?Q?t7rekYC6iO8bCZj8rnOfWcLn1hQH2iLo97nq01sNnFMtgGXhNpadu/lYx+ZD?=
+ =?us-ascii?Q?eAYcUzOPK2G8wKXzl+MX4KHnErKWCwXN6w3kCvOhIKC6FmEJPRikeKY2wC7w?=
+ =?us-ascii?Q?6v4Tj5+mY/VoAIFb4QLCO86aCcK9kwO3JC3EJ/jRDObyzBO4xY/Lzcnl5fev?=
+ =?us-ascii?Q?CHxyGEtx9yb9/GUtariWEjrkZVp175WgWMwYI2aDm5Otn6ILxP58J65y6zMk?=
+ =?us-ascii?Q?yKbmQFVo4XbN3awuamPEgHixzFQ3B8fyDKW2MuZtpq5QcJTr/oSUrhee6xz7?=
+ =?us-ascii?Q?4gjU63Zu3v+n0ypVbwPYJXtxj8alzDaRk8LvfNvYBGW1mk4MhfY80ib82RaM?=
+ =?us-ascii?Q?U4hYxmXWi/lR8PIe9frtvfrng/EQfH4FnTrMPxX5gK41lyN3DMhJPE+3WTtI?=
+ =?us-ascii?Q?sl3QyfV9xlA45Svmm/4phbvwU8/eY2fpOE2pWynhg6FBNYUvl1ibihpNOyf9?=
+ =?us-ascii?Q?bEPu7hRnQowSemVPAFW7R+UOCzn5pGfLmc48hNQPV3NnjrWNrgX5vfvz9Lb+?=
+ =?us-ascii?Q?DVcCXxm+fEzablZnf9Bcsz9b7Tg/dtAVpIcPuimPBOAwE61KcUdEy6bo6QJy?=
+ =?us-ascii?Q?Xg9TTdsIAWVgTqqvkoXliEeLUrpqhFoC7IGHCENgd87skcuLEP5yUR3xPhrS?=
+ =?us-ascii?Q?sr4TN/1FgGXNF2NfyERHRa02r2m4Pp8hY5Sos8oG5estud4xdGC8qaNOXr3C?=
+ =?us-ascii?Q?l2R6Y8ngHqTZh05wQPAB7V7SYo4L4SsQN+VHqVFm52lhikUS9UdvGmUE2iYd?=
+ =?us-ascii?Q?anW2UT9pG18op1MYm2IQKY/p/BSdO1t7tgjxhdjOAFD1TdhHinyK0l70xgNQ?=
+ =?us-ascii?Q?+DNzlBJUh9nGrTAym3B3srSG3Y0vkr4mHsMF0dVUfEaOeCfHjLjphlpBK4YV?=
+ =?us-ascii?Q?YPKJYqLtyRHUqq7uuZ4exGOUQj23xrJoIKaHfz1wB6UwSjOsXpqlnQOfLhVu?=
+ =?us-ascii?Q?B+tJjnNQCDSpr9lI+202M75JhO5lLzCkJmm7AG6Y?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2deeafad-6380-42f3-4b09-08dd81f66ef3
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 23:35:58.2902
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j6NmobJ1rYOVoncfNDFAKdbJioU7o5hnr4FrB0wvIzH2/xrKcIF3YrMuFU/t89MI
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8407
 
-The Qualcomm DWC3 glue driver duplicates the logic of the bulk clock
-API to acquire, prepare, and unprepare the controller's clocks. It also
-manages the life cycle of these handled explicitly.
+On Tue, Apr 22, 2025 at 02:28:18PM -0700, Oliver Upton wrote:
+> So, if a VMM wants to do migration of VMs on !S2FWB correctly, it'd
+> probably want to know it can elide CMOs on something that actually bears
+> the feature.
 
-Transition to the bulk clock API and manage the resources using devres,
-to clean up the code.
+OK
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
----
- drivers/usb/dwc3/dwc3-qcom.c | 84 ++++++--------------------------------------
- 1 file changed, 11 insertions(+), 73 deletions(-)
+> > >  - The memslot flag says userspace expects a particular GFN range to guarantee
+> > >    Write-Back semantics. This can be applied to 'normal', kernel-managed memory
+> > >    and PFNMAP thingies that have cacheable attributes at host stage-1.
+> > 
+> > Userspace doesn't actaully know if it has a cachable mapping from VFIO
+> > though :(
+> 
+> That seems like a shortcoming on the VFIO side, not a KVM issue. What if
+> userspace wants to do atomics on some VFIO mapping, doesn't it need to
+> know that it has something with WB?
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index d512002e1e88da9523ff82454e653bac55c1409d..ec6e197cfc32abf5ab8f9b23ba590bd1a126b500 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -73,7 +73,7 @@ struct dwc3_qcom {
- 	struct device		*dev;
- 	void __iomem		*qscratch_base;
- 	struct dwc3		dwc;
--	struct clk		**clks;
-+	struct clk_bulk_data	*clks;
- 	int			num_clocks;
- 	struct reset_control	*resets;
- 	struct dwc3_qcom_port	ports[DWC3_QCOM_MAX_PORTS];
-@@ -431,9 +431,7 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
- 		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
- 			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
- 	}
--
--	for (i = qcom->num_clocks - 1; i >= 0; i--)
--		clk_disable_unprepare(qcom->clks[i]);
-+	clk_bulk_disable_unprepare(qcom->num_clocks, qcom->clks);
- 
- 	ret = dwc3_qcom_interconnect_disable(qcom);
- 	if (ret)
-@@ -465,14 +463,9 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
- 	if (dwc3_qcom_is_host(qcom) && wakeup)
- 		dwc3_qcom_disable_interrupts(qcom);
- 
--	for (i = 0; i < qcom->num_clocks; i++) {
--		ret = clk_prepare_enable(qcom->clks[i]);
--		if (ret < 0) {
--			while (--i >= 0)
--				clk_disable_unprepare(qcom->clks[i]);
--			return ret;
--		}
--	}
-+	ret = clk_bulk_prepare_enable(qcom->num_clocks, qcom->clks);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = dwc3_qcom_interconnect_enable(qcom);
- 	if (ret)
-@@ -648,62 +641,14 @@ static int dwc3_qcom_setup_irq(struct dwc3_qcom *qcom, struct platform_device *p
- 	return 0;
- }
- 
--static int dwc3_qcom_clk_init(struct dwc3_qcom *qcom, int count)
--{
--	struct device		*dev = qcom->dev;
--	struct device_node	*np = dev->of_node;
--	int			i;
--
--	if (!np || !count)
--		return 0;
--
--	if (count < 0)
--		return count;
--
--	qcom->num_clocks = count;
--
--	qcom->clks = devm_kcalloc(dev, qcom->num_clocks,
--				  sizeof(struct clk *), GFP_KERNEL);
--	if (!qcom->clks)
--		return -ENOMEM;
--
--	for (i = 0; i < qcom->num_clocks; i++) {
--		struct clk	*clk;
--		int		ret;
--
--		clk = of_clk_get(np, i);
--		if (IS_ERR(clk)) {
--			while (--i >= 0)
--				clk_put(qcom->clks[i]);
--			return PTR_ERR(clk);
--		}
--
--		ret = clk_prepare_enable(clk);
--		if (ret < 0) {
--			while (--i >= 0) {
--				clk_disable_unprepare(qcom->clks[i]);
--				clk_put(qcom->clks[i]);
--			}
--			clk_put(clk);
--
--			return ret;
--		}
--
--		qcom->clks[i] = clk;
--	}
--
--	return 0;
--}
--
- static int dwc3_qcom_probe(struct platform_device *pdev)
- {
- 	struct dwc3_probe_data	probe_data = {};
--	struct device_node	*np = pdev->dev.of_node;
- 	struct device		*dev = &pdev->dev;
- 	struct dwc3_qcom	*qcom;
- 	struct resource		res;
- 	struct resource		*r;
--	int			ret, i;
-+	int			ret;
- 	bool			ignore_pipe_clk;
- 	bool			wakeup_source;
- 
-@@ -733,11 +678,12 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 		goto reset_assert;
- 	}
- 
--	ret = dwc3_qcom_clk_init(qcom, of_clk_get_parent_count(np));
--	if (ret) {
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &qcom->clks);
-+	if (ret < 0) {
- 		dev_err_probe(dev, ret, "failed to get clocks\n");
- 		goto reset_assert;
- 	}
-+	qcom->num_clocks = ret;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!r)
-@@ -804,10 +750,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- remove_core:
- 	dwc3_core_remove(&qcom->dwc);
- clk_disable:
--	for (i = qcom->num_clocks - 1; i >= 0; i--) {
--		clk_disable_unprepare(qcom->clks[i]);
--		clk_put(qcom->clks[i]);
--	}
-+	clk_bulk_disable_unprepare(qcom->num_clocks, qcom->clks);
- reset_assert:
- 	reset_control_assert(qcom->resets);
- 
-@@ -818,15 +761,10 @@ static void dwc3_qcom_remove(struct platform_device *pdev)
- {
- 	struct dwc3 *dwc = platform_get_drvdata(pdev);
- 	struct dwc3_qcom *qcom = to_dwc3_qcom(dwc);
--	int i;
- 
- 	dwc3_core_remove(&qcom->dwc);
- 
--	for (i = qcom->num_clocks - 1; i >= 0; i--) {
--		clk_disable_unprepare(qcom->clks[i]);
--		clk_put(qcom->clks[i]);
--	}
--	qcom->num_clocks = 0;
-+	clk_bulk_disable_unprepare(qcom->num_clocks, qcom->clks);
- 
- 	dwc3_qcom_interconnect_exit(qcom);
- 	reset_control_assert(qcom->resets);
+VFIO is almost always un cachable. So far there is only one device
+merged, and CXL is coming, that would even support/require cachable.
 
----
-base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
-change-id: 20250422-dwc3-clk-bulk-960a91ed4ab8
+VFIO always had this sort of programming model where the userspace
+needs to know details about the device it is using so it hasn't really
+been an issue so far that the kernel doesn't tell the userspace what
+cachability it got.. We could add it but now we are adding new kernel
+code, qemu code and kvm code that is actually pretty pointless.
 
-Best regards,
--- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> > I don't really see a point in this. If the KVM has the cap then
+> > userspace should assume the S2FWB behavior for all cachable memslots.
+> 
+> Wait, so userspace simultaneously doesn't know the cacheability at host
+> stage-1 but *does* for stage-2? 
 
+No, it doesn't know either. The point is the VMM doesn't care about
+any of this. It just wants to connect KVM to VFIO and have the kernel
+internally negotiate the details of how that works.
+
+There is zero value in the VMM being aware that KVM/VFIO is using
+cachable or non-cachable mappings because it will never touch this
+memory anyhow, and arguably it would be happier if it wasn't even in a
+VMA in the first place.
+
+> This is why I contend that userspace needs a mechanism to discover
+> the memory attributes on a given memslot.  Without it there's no way
+> of knowing what's a cacheable memslot.
+
+If it cares about this then it should know by virtue of having put a
+cachable VMA into the memslot.
+
+> Along those lines, how is the VMM going to describe that cacheable
+> PFNMAP region to the guest?
+
+Heh. It creates a virtual PCI device in the guest and the space is
+mapped to a virtual BAR. When the guest driver binds to this device it
+will map the virtual BAR as cachable instead of as IO because it knows
+to do that based on the vPCI device ID.
+
+If something goes weird and the guest tries to use UC instead of
+cachable the S2FWB will block it and the guest will probably
+malfunction.
+
+CXL will probably have the VMM understand things a bit more and will
+generate the various ACPI tables CXL uses.
+
+> > What should happen if you have S2FWB but don't pass the flag? For
+> > normal kernel memory it should still use S2FWB. Thus for cachable
+> > PFNMAP it makes sense that it should also still use S2FWB without the
+> > flag?
+> 
+> For kernel-managed memory, I agree. Accepting the flag for a memslot
+> containing such memory would solely be for discoverability.
+> 
+> OTOH, cacheable PFNMAP is a new feature and I see no issue compelling
+> the use of a new bit with it.
+
+Feels weird to me. Now the VMM has to discover if the KVM supports the
+new flag and only use it on new KVM versions just to accomplish..
+nothing?
+
+> The entire reason I'm dragging my feet about this is I'm concerned we've
+> papered over the complexity of memory attributes (regardless of
+> provenance) for way too long. KVM's done enough to make this dance 'work'
+> in the context of kernel-managed memory, but adding more implicit KVM
+> behavior for cacheable thingies makes the KVM UAPI even more
+> unintelligible (as if it weren't already).
+
+It is very complex.. I'm not sure adding a flag in this case is making
+it any simpler though.
+
+If you had a flag from day 0 that said 'this is a MMIO mapping do MMIO
+stuff' that would be alot clearer about how it should be used.
+
+But here we have a flag that doesn't seem well defined. When should
+the VMM set this flag?
+
+> So this flag isn't about giving userspace any degree of control over
+> memory attributes. Just a way to know for things it _expects_ to be
+> treated as cacheable can be guaranteed to use cacheable attributes in
+> the VM.
+
+Can you get some agreement with Sean? He seems very strongly opposed to
+this direction. 
+
+Jason
