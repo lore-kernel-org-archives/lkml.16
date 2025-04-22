@@ -1,42 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E401B3950;
-	Tue, 22 Apr 2025 02:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4A510957;
+	Tue, 22 Apr 2025 02:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288220; cv=none; b=eRCaxboCDsQf/AjHmnG9P+2wrt1c76CWT64momTDbdU8SSDQDaR2qC2KNSiZ4XFl7Yajnm8wXNLcnda430NdAvR4giGuKPWupGFa0vEP63mSZNob9oocrDYRujRNWeYQ9yl10eaWNxzBouht66iLtu4wd2Ld63Nqhv8HBDOGnB8=
+	t=1745288219; cv=none; b=JBosHH33GQWR1IjiQ/qxU5f4dYBIaC9Ql8jqvFEGzwABmHhPIRkvMfGZbZ1k3LpXjKcOk+5reBRnZVBUS6ZebHZjsAkNFkUxtMKv54EG9cVOmiTEaKVPg1Qe7lqUZTjkQGDjfExEKouTebGxplkCYTpp/v+vpRxQlOh92+v8ihw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288220; c=relaxed/simple;
-	bh=evr6wmvZmoWl9BNqiGKI3+LkDOEuI22eTDlcAMeN4L4=;
+	s=arc-20240116; t=1745288219; c=relaxed/simple;
+	bh=LymZTNAyldxPiXrdIgnTZA/Km+WVyq/FRxVXZaBUn4U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YGaT7yePsvYNqUIA9PZOzHx/BjUjUr0WMc3T0Y9YEWyj0jJLS0MfbG555ZOMEp7Zrij0p9ZL+K8eFoxlERrZeqHGj5AMXagRn3tJ3aPYkyKn3GurApBzAohlIRGwelRTri5w7u/Ujs1Fz4AQLinTKkQgr/OuIzdCalah7GRfun0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrW5tdo0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OEYktacLxieK2UqsN0U5jojf4JhFi3S7UB9g3aXYLEetxA0RTqGq3yAQvruNYZDDAIjGqy/6tjQea4x8D7737HGDdGgmxacGvR2flH7DwI7qBvg1YsQfOGpVlyAy7Oiacbs0Pqg+MXX6hwZ9NlGiq44kMQiygqbrjSer4y4at/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdWHbnO0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrW5tdo0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF4EC4CEE4;
-	Tue, 22 Apr 2025 02:16:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdWHbnO0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9646BC4CEEC;
+	Tue, 22 Apr 2025 02:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288220;
-	bh=evr6wmvZmoWl9BNqiGKI3+LkDOEuI22eTDlcAMeN4L4=;
+	s=k20201202; t=1745288218;
+	bh=LymZTNAyldxPiXrdIgnTZA/Km+WVyq/FRxVXZaBUn4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HrW5tdo0b4vcSRDDfnB/j3laa90lC1xG9tiDOO9kw7iWpLzLqwhRenBJh7encG7m9
-	 MBniNU7HPqnktk9FrpWh6xY86xGm7+Lz1U2u+mIte6FLyBwvLBnXMR2H/ZjCcgrPif
-	 IPnmVwm9XgaLgZa+HLgxBNuUkc2rNHEFMvwqtTf39Pz76QputCDYhMsvQ7zIJZ841E
-	 KqZKzQKwuYQIU6hl1zSOaKPvn0XVqIcZXSQq4BB/SpQoXCsquvvmox75rvz1novH6R
-	 gxuRZA4YiFHuRNd4uU8+DmRTyqVSejx1rsrw3CB0puDcvZyQj5QKtLheNpkOC0flXG
-	 l6Y5jUVG6fqkA==
+	b=VdWHbnO0voNptAwekFyIrPqweIFRoHD98r9VwL9vkAxPiytBDQPs49wn0I4qdXGb/
+	 53HsjTlPI4s649Rky/YDPBemny3s455c2FOcw7vtdfvExlkiBQ/7LG7vKKVsdeuDs1
+	 RmGik8ID8LvkV3IwXAoNpYaEL4bh11QH+h7X/APzW1Qv+9Zuw5K2+RVZuNU9ztbgIT
+	 OrQgiEeJN9nq5i/HGrGJWOAoOLZSmFN5FVUHN/JH1zo9xbkJEEjGRUMuppNfc6W4Gz
+	 LN9cuVBciEGqLFE7cbW4ISQyd4Xctx4RFaf0871JQIWOvqbURVfT+bOoSHtF5w+3bn
+	 oFk+VAtS1xOrA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Ming Lei <ming.lei@redhat.com>,
-	Uday Shankar <ushankar@purestorage.com>,
-	Jens Axboe <axboe@kernel.dk>,
+Cc: Lijo Lazar <lijo.lazar@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 28/30] ublk: add ublk_force_abort_dev()
-Date: Mon, 21 Apr 2025 22:15:48 -0400
-Message-Id: <20250422021550.1940809-28-sashal@kernel.org>
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	sunil.khatri@amd.com,
+	vitaly.prosyak@amd.com,
+	srinivasan.shanmugam@amd.com,
+	Jesse.zhang@amd.com,
+	Jiadong.Zhu@amd.com,
+	Tim.Huang@amd.com,
+	Prike.Liang@amd.com,
+	Hawking.Zhang@amd.com,
+	Likun.Gao@amd.com,
+	kenneth.feng@amd.com,
+	Jack.Xiao@amd.com,
+	boyuan.zhang@amd.com,
+	xiaogang.chen@amd.com,
+	shane.xiao@amd.com,
+	kent.russell@amd.com,
+	yifan1.zhang@amd.com,
+	Frank.Min@amd.com,
+	david.belanger@amd.com,
+	natalie.vock@gmx.de,
+	alex.sierra@amd.com,
+	le.ma@amd.com,
+	yingli12@amd.com,
+	mario.limonciello@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.14 27/30] drm/amdgpu: Use the right function for hdp flush
+Date: Mon, 21 Apr 2025 22:15:47 -0400
+Message-Id: <20250422021550.1940809-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
 References: <20250422021550.1940809-1-sashal@kernel.org>
@@ -51,73 +77,279 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.3
 Content-Transfer-Encoding: 8bit
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Lijo Lazar <lijo.lazar@amd.com>
 
-[ Upstream commit 00b3b0d7cb454d614117c93f33351cdcd20b5b93 ]
+[ Upstream commit c235a7132258ac30bd43d228222986022d21f5de ]
 
-Add ublk_force_abort_dev() for handling ublk_nosrv_dev_should_queue_io()
-in ublk_stop_dev(). Then queue quiesce and unquiesce can be paired in
-single function.
+There are a few prechecks made before HDP flush like a flush is not
+required on APU bare metal. Using hdp callback directly bypasses those
+checks. Use amdgpu_device_flush_hdp which takes care of prechecks.
 
-Meantime not change device state to QUIESCED any more, since the disk is
-going to be removed soon.
-
-Reviewed-by: Uday Shankar <ushankar@purestorage.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Link: https://lore.kernel.org/r/20250416035444.99569-3-ming.lei@redhat.com
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Lijo Lazar <lijo.lazar@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+(cherry picked from commit 1d9bff4cf8c53d33ee2ff1b11574e5da739ce61c)
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/ublk_drv.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c |  8 ++++----
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c | 12 ++++++------
+ drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c |  6 +++---
+ drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c |  4 ++--
+ drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  |  2 +-
+ drivers/gpu/drm/amd/amdgpu/psp_v11_0.c |  2 +-
+ drivers/gpu/drm/amd/amdgpu/psp_v13_0.c |  2 +-
+ drivers/gpu/drm/amd/amdgpu/psp_v14_0.c |  2 +-
+ 10 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 971b793dedd03..611a4b2afbbf3 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -1638,22 +1638,20 @@ static void __ublk_quiesce_dev(struct ublk_device *ub)
- 	ub->dev_info.state = UBLK_S_DEV_QUIESCED;
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 5ba263fe55121..1f32c531f610e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -6044,7 +6044,7 @@ static int gfx_v10_0_cp_gfx_load_pfp_microcode(struct amdgpu_device *adev)
+ 	}
  
--static void ublk_unquiesce_dev(struct ublk_device *ub)
-+static void ublk_force_abort_dev(struct ublk_device *ub)
- {
- 	int i;
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
  
--	pr_devel("%s: unquiesce ub: dev_id %d state %s\n",
-+	pr_devel("%s: force abort ub: dev_id %d state %s\n",
- 			__func__, ub->dev_info.dev_id,
- 			ub->dev_info.state == UBLK_S_DEV_LIVE ?
- 			"LIVE" : "QUIESCED");
--	/* quiesce_work has run. We let requeued rqs be aborted
--	 * before running fallback_wq. "force_abort" must be seen
--	 * after request queue is unqiuesced. Then del_gendisk()
--	 * can move on.
--	 */
-+	blk_mq_quiesce_queue(ub->ub_disk->queue);
-+	if (ub->dev_info.state == UBLK_S_DEV_LIVE)
-+		ublk_wait_tagset_rqs_idle(ub);
-+
- 	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
- 		ublk_get_queue(ub, i)->force_abort = true;
--
- 	blk_mq_unquiesce_queue(ub->ub_disk->queue);
- 	/* We may have requeued some rqs in ublk_quiesce_queue() */
- 	blk_mq_kick_requeue_list(ub->ub_disk->queue);
-@@ -1681,11 +1679,8 @@ static void ublk_stop_dev(struct ublk_device *ub)
- 	mutex_lock(&ub->mutex);
- 	if (ub->dev_info.state == UBLK_S_DEV_DEAD)
- 		goto unlock;
--	if (ublk_nosrv_dev_should_queue_io(ub)) {
--		if (ub->dev_info.state == UBLK_S_DEV_LIVE)
--			__ublk_quiesce_dev(ub);
--		ublk_unquiesce_dev(ub);
--	}
-+	if (ublk_nosrv_dev_should_queue_io(ub))
-+		ublk_force_abort_dev(ub);
- 	del_gendisk(ub->ub_disk);
- 	disk = ublk_detach_disk(ub);
- 	put_disk(disk);
+ 	tmp = RREG32_SOC15(GC, 0, mmCP_PFP_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_PFP_IC_BASE_CNTL, VMID, 0);
+@@ -6122,7 +6122,7 @@ static int gfx_v10_0_cp_gfx_load_ce_microcode(struct amdgpu_device *adev)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, mmCP_CE_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_CE_IC_BASE_CNTL, VMID, 0);
+@@ -6199,7 +6199,7 @@ static int gfx_v10_0_cp_gfx_load_me_microcode(struct amdgpu_device *adev)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, mmCP_ME_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_ME_IC_BASE_CNTL, VMID, 0);
+@@ -6574,7 +6574,7 @@ static int gfx_v10_0_cp_compute_load_microcode(struct amdgpu_device *adev)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, mmCP_CPC_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_CPC_IC_BASE_CNTL, CACHE_POLICY, 0);
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+index cfb51baa581a1..f1f53c7687410 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+@@ -2391,7 +2391,7 @@ static int gfx_v11_0_config_me_cache(struct amdgpu_device *adev, uint64_t addr)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, regCP_ME_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_ME_IC_BASE_CNTL, VMID, 0);
+@@ -2435,7 +2435,7 @@ static int gfx_v11_0_config_pfp_cache(struct amdgpu_device *adev, uint64_t addr)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_PFP_IC_BASE_CNTL, VMID, 0);
+@@ -2480,7 +2480,7 @@ static int gfx_v11_0_config_mec_cache(struct amdgpu_device *adev, uint64_t addr)
+ 	}
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	tmp = RREG32_SOC15(GC, 0, regCP_CPC_IC_BASE_CNTL);
+ 	tmp = REG_SET_FIELD(tmp, CP_CPC_IC_BASE_CNTL, CACHE_POLICY, 0);
+@@ -3115,7 +3115,7 @@ static int gfx_v11_0_cp_gfx_load_pfp_microcode_rs64(struct amdgpu_device *adev)
+ 	amdgpu_bo_unreserve(adev->gfx.pfp.pfp_fw_data_obj);
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	WREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_LO,
+ 		lower_32_bits(adev->gfx.pfp.pfp_fw_gpu_addr));
+@@ -3333,7 +3333,7 @@ static int gfx_v11_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
+ 	amdgpu_bo_unreserve(adev->gfx.me.me_fw_data_obj);
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	WREG32_SOC15(GC, 0, regCP_ME_IC_BASE_LO,
+ 		lower_32_bits(adev->gfx.me.me_fw_gpu_addr));
+@@ -4549,7 +4549,7 @@ static int gfx_v11_0_gfxhub_enable(struct amdgpu_device *adev)
+ 	if (r)
+ 		return r;
+ 
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
+ 		false : true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
+index c21b168f75a75..0c08785099f32 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
+@@ -2306,7 +2306,7 @@ static int gfx_v12_0_cp_gfx_load_pfp_microcode_rs64(struct amdgpu_device *adev)
+ 	amdgpu_bo_unreserve(adev->gfx.pfp.pfp_fw_data_obj);
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	WREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_LO,
+ 		lower_32_bits(adev->gfx.pfp.pfp_fw_gpu_addr));
+@@ -2450,7 +2450,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
+ 	amdgpu_bo_unreserve(adev->gfx.me.me_fw_data_obj);
+ 
+ 	if (amdgpu_emu_mode == 1)
+-		adev->hdp.funcs->flush_hdp(adev, NULL);
++		amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	WREG32_SOC15(GC, 0, regCP_ME_IC_BASE_LO,
+ 		lower_32_bits(adev->gfx.me.me_fw_gpu_addr));
+@@ -3469,7 +3469,7 @@ static int gfx_v12_0_gfxhub_enable(struct amdgpu_device *adev)
+ 	if (r)
+ 		return r;
+ 
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
+ 		false : true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+index 9bedca9a79c63..a88ad9951d328 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
+@@ -268,7 +268,7 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
+ 	ack = hub->vm_inv_eng0_ack + hub->eng_distance * eng;
+ 
+ 	/* flush hdp cache */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	/* This is necessary for SRIOV as well as for GFXOFF to function
+ 	 * properly under bare metal
+@@ -969,7 +969,7 @@ static int gmc_v10_0_gart_enable(struct amdgpu_device *adev)
+ 	adev->hdp.funcs->init_registers(adev);
+ 
+ 	/* Flush HDP after it is initialized */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
+ 		false : true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
+index 72751ab4c766e..1eb97117fe7ae 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
+@@ -229,7 +229,7 @@ static void gmc_v11_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
+ 	ack = hub->vm_inv_eng0_ack + hub->eng_distance * eng;
+ 
+ 	/* flush hdp cache */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	/* This is necessary for SRIOV as well as for GFXOFF to function
+ 	 * properly under bare metal
+@@ -896,7 +896,7 @@ static int gmc_v11_0_gart_enable(struct amdgpu_device *adev)
+ 		return r;
+ 
+ 	/* Flush HDP after it is initialized */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
+ 		false : true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
+index c3c144a4f45eb..0f136d6bbdc9b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
+@@ -297,7 +297,7 @@ static void gmc_v12_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
+ 		return;
+ 
+ 	/* flush hdp cache */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	/* This is necessary for SRIOV as well as for GFXOFF to function
+ 	 * properly under bare metal
+@@ -881,7 +881,7 @@ static int gmc_v12_0_gart_enable(struct amdgpu_device *adev)
+ 		return r;
+ 
+ 	/* Flush HDP after it is initialized */
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
+ 		false : true;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+index 291549765c38c..5250b470e5ef3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+@@ -2434,7 +2434,7 @@ static int gmc_v9_0_hw_init(struct amdgpu_ip_block *ip_block)
+ 	adev->hdp.funcs->init_registers(adev);
+ 
+ 	/* After HDP is initialized, flush HDP.*/
+-	adev->hdp.funcs->flush_hdp(adev, NULL);
++	amdgpu_device_flush_hdp(adev, NULL);
+ 
+ 	if (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS)
+ 		value = false;
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+index 2395f1856962a..e77a467af7ac3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
+@@ -532,7 +532,7 @@ static int psp_v11_0_memory_training(struct psp_context *psp, uint32_t ops)
+ 			}
+ 
+ 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
+-			adev->hdp.funcs->flush_hdp(adev, NULL);
++			amdgpu_device_flush_hdp(adev, NULL);
+ 			vfree(buf);
+ 			drm_dev_exit(idx);
+ 		} else {
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
+index cc621064610f1..afdf8ce3b4c59 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
+@@ -610,7 +610,7 @@ static int psp_v13_0_memory_training(struct psp_context *psp, uint32_t ops)
+ 			}
+ 
+ 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
+-			adev->hdp.funcs->flush_hdp(adev, NULL);
++			amdgpu_device_flush_hdp(adev, NULL);
+ 			vfree(buf);
+ 			drm_dev_exit(idx);
+ 		} else {
+diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
+index 4d33c95a51163..89f6c06946c51 100644
+--- a/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
+@@ -488,7 +488,7 @@ static int psp_v14_0_memory_training(struct psp_context *psp, uint32_t ops)
+ 			}
+ 
+ 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
+-			adev->hdp.funcs->flush_hdp(adev, NULL);
++			amdgpu_device_flush_hdp(adev, NULL);
+ 			vfree(buf);
+ 			drm_dev_exit(idx);
+ 		} else {
 -- 
 2.39.5
 
