@@ -1,189 +1,124 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3E815B115
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A586F1990C4;
+	Tue, 22 Apr 2025 07:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305858; cv=none; b=Ok824a7omEROok5Q5VT8wIIm2gcso2ZihxLl1YOo5hyZ0ONATmpLiUi7HOpxI+RTgvA/XPfACsB5bCM5cC6D57lm/zJ8QMqkYrQPB9fNweEGTWKvdf/XejJg9vWXepH+9jhf2+24rqOFvSVkLrYs9Lb3j//CUAZo3MseVOwpW4I=
+	t=1745305972; cv=none; b=E065YXl0kyHBCV2fZgal/e41Hc2mcwtqI2LpJAtsNCkrqtJZrjlXQewq9cL7ZfvcXmbpRPeU8lVkydaL96Y5vAAFDJZujiOwhNRoyjF2JgM7ub38h5lUc1mZuwoJVykCFQwEz8tfZUVwbLKP+46WhYBfcoVre7Bmrsv2abaMfkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305858; c=relaxed/simple;
-	bh=wE0p8qL7EoSQb+6BZCxumSQY/14KqFPPb98hPDDwGA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bkb0Do1+pxhUSarLAS4isUItVNbYtfVtivZVchUSSBiFHH8ABkA9IJ8hq+lcL3K2Hnbi7CwfqhajhuZ/beAbqiPP1bPQ9NHxeJazV/xRZYwNG8uPxLm+hsXLwsGfzj4Ka3QOE2tqUoE/c6Rxbvt/zJa53OvWitqTYf/GJFdGkHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AIkR8bCZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcRyKQdJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AIkR8bCZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xcRyKQdJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AIkR8bCZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcRyKQdJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AIkR8bCZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xcRyKQdJ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 88EA521180;
-	Tue, 22 Apr 2025 07:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745305854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
-	b=AIkR8bCZSArLLT7smXMgXeDqrq3vOuabF6Zh/oTjekbgCz51z5FgZLtXdMvfV8oRfeobke
-	vOefLn2+GcWOuq4ta+TenlQC6WpM1VPEcseHyRoPW2eF/Pv87LdZPanLsULFBQ1CEsL8SE
-	ITQaNeeyF41Nhb+ZiApG5B1FSbFfXos=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745305854;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
-	b=xcRyKQdJAeu+ZlD+07ouLrNQlIQ8X4OyuLh6/RodyWzd4Z7+bbRD2SjMzP961Y0k638Qmb
-	OBAABe87AoEOBTDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745305854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
-	b=AIkR8bCZSArLLT7smXMgXeDqrq3vOuabF6Zh/oTjekbgCz51z5FgZLtXdMvfV8oRfeobke
-	vOefLn2+GcWOuq4ta+TenlQC6WpM1VPEcseHyRoPW2eF/Pv87LdZPanLsULFBQ1CEsL8SE
-	ITQaNeeyF41Nhb+ZiApG5B1FSbFfXos=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745305854;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G3Ak9TZl3KNC2bPW1og4esnB7Pyo179OZKtLkCOfiYE=;
-	b=xcRyKQdJAeu+ZlD+07ouLrNQlIQ8X4OyuLh6/RodyWzd4Z7+bbRD2SjMzP961Y0k638Qmb
-	OBAABe87AoEOBTDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6523C137CF;
-	Tue, 22 Apr 2025 07:10:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W6FUGP5AB2jmNAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 22 Apr 2025 07:10:54 +0000
-Message-ID: <6a2b474c-764e-434c-be23-2f366b81c839@suse.cz>
-Date: Tue, 22 Apr 2025 09:10:54 +0200
+	s=arc-20240116; t=1745305972; c=relaxed/simple;
+	bh=Clkahm9wy0a3lcKG7XWwyYkG7qsrEXbxWavI6+56VNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3PZKlB1BRdpnSwU2R9B6nNi7rOTg0qpmLc9F1vwtNzhcxOAIsZ386A4Hgg2BdJbBmyJVxIQpO2xi+DnnSN+BFDR7Q0QBYBpjJzMkxXX79nfHU3qb67F52QCiwJTcTsd/idRDeMf/mHja5uBk2ZCab9bT42X9HRtWUQiZwosI8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Tue, 22 Apr 2025 03:12:43 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Message-ID: <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
+Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
+	Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+ <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm, slab: clean up slab->obj_exts always
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>,
- Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: cl@linux.com, rientjes@google.com, roman.gushchin@linux.dev,
- harry.yoo@oracle.com, pasha.tatashin@soleen.com, akpm@linux-foundation.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, quic_tingweiz@quicinc.com,
- stable@vger.kernel.org
-References: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
- <CAJuCfpGwspnceQ5oq_ovViHnawcVCkM1pKawJGckfKsvK1s_Aw@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAJuCfpGwspnceQ5oq_ovViHnawcVCkM1pKawJGckfKsvK1s_Aw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[quicinc.com:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ibrmx66igfcorlg4"
+Content-Disposition: inline
+In-Reply-To: <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 4/21/25 18:02, Suren Baghdasaryan wrote:
-> On Mon, Apr 21, 2025 at 12:52 AM Zhenhua Huang
-> <quic_zhenhuah@quicinc.com> wrote:
->>
->> When memory allocation profiling is disabled at runtime or due to an
->> error, shutdown_mem_profiling() is called: slab->obj_exts which
->> previously allocated remains.
->> It won't be cleared by unaccount_slab() because of
->> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
->> should always be cleaned up in unaccount_slab() to avoid following error:
->>
->> [...]BUG: Bad page state in process...
->> ..
->> [...]page dumped because: page still charged to cgroup
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 21c690a349ba ("mm: introduce slabobj_ext to support slab object extensions")
->> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
->> Acked-by: David Rientjes <rientjes@google.com>
->> Acked-by: Harry Yoo <harry.yoo@oracle.com>
->> Tested-by: Harry Yoo <harry.yoo@oracle.com>
-> 
-> Acked-by: Suren Baghdasaryan <surenb@google.com>
-> 
->> ---
->>  mm/slub.c | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/slub.c b/mm/slub.c
->> index 566eb8b8282d..a98ce1426076 100644
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -2028,8 +2028,8 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
->>         return 0;
->>  }
->>
->> -/* Should be called only if mem_alloc_profiling_enabled() */
->> -static noinline void free_slab_obj_exts(struct slab *slab)
->> +/* Free only if slab_obj_exts(slab) */
-> 
-> nit: the above comment is unnecessary. It's quite obvious from the code.
 
-Agreed, I've removed it locally and added the patch to slab/for-next-fixes
-Thanks!
+--ibrmx66igfcorlg4
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+MIME-Version: 1.0
 
->> +static inline void free_slab_obj_exts(struct slab *slab)
->>  {
->>         struct slabobj_ext *obj_exts;
->>
->> @@ -2601,8 +2601,12 @@ static __always_inline void account_slab(struct slab *slab, int order,
->>  static __always_inline void unaccount_slab(struct slab *slab, int order,
->>                                            struct kmem_cache *s)
->>  {
->> -       if (memcg_kmem_online() || need_slab_obj_ext())
->> -               free_slab_obj_exts(slab);
->> +       /*
->> +        * The slab object extensions should now be freed regardless of
->> +        * whether mem_alloc_profiling_enabled() or not because profiling
->> +        * might have been disabled after slab->obj_exts got allocated.
->> +        */
->> +       free_slab_obj_exts(slab);
->>
->>         mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
->>                             -(PAGE_SIZE << order));
->> --
->> 2.34.1
->>
+On Tue, Apr 22, 2025 at 08:34:55AM -0500, Arnd Bergmann wrote:
+> On Tue, Apr 22, 2025, at 04:49, Ben Collins wrote:
+> > On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
+> > and memory configurations > 64GiB. The fsldma driver is limiting itself
+> > to only 64GiB in all Elo configurations.
+> >
+> > Setup fsldma driver to make use of the full 40-bit addressing space,
+> > specifically on the e5500 and e6500 CPUs.
+>
+=2E..
+>=20
+> - The driver just writes the DMA address as a 64-bit register,
+>   so most likely the DMA device can in fact do wider addressing,
+>   and any limitation is either in the bus or the available
+>   memory
+>=20
+> - SoCs that don't set a dma-ranges property in the parent bus
+>   are normally still capped to 32 bit DMA. I don't see those
+>   properties, so unless there is a special hack on those chips,
+>   you get 32 bit DMA regardless of what DMA mask the driver
+>   requests
 
+I've yet to see a dma-ranges property in any of the Freescale PowerPC
+device trees.
+
+I'll check on this, but I think it's a seperate issue. The main thing is
+just to configure the dma hw correctly.
+
+> - If there are chips that have more than 64GB of RAM installed
+>   but have a limitation in the way the DMA engine is wired
+>   up to 36 bits, that should be reflected in the dma-ranges
+>   property, not the device driver.
+>=20
+> - If the limitation is indeed specific to the version of the
+>   IP block, this would normally need to be detected based on
+>   the compatible string of the DMA engine itself, not a compile
+>   time setting.
+
+So a little research shows that these 3 compatible strings in
+the fsldma are:
+
+fsl,elo3-dma:		40-bit
+fsl,eloplus-dma:	36-bit
+fsl,elo-dma:		32-bit
+
+I'll rework it so addressing is based on the compatible string.
+
+--=20
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
+
+--ibrmx66igfcorlg4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHQWsACgkQXVpXxyQr
+Is9OBhAApnJBeKJ4ASuaAIAefdwxjwHiccr/SM7ZbzHesQxOQmonqT6U0//RHjJu
+aaHhcwOPfBnSvpdylugW67fLi5F96vE4RtVlrli55lm98XL3xnGdhJcDTGXALz2h
+omEHO+NlQYcaVj73HzeT7mlrMY5akw0pryfidJii+jx17JIV8eIyR3pjCPXfaDbT
+m6FB/n84fcuRhwhsCIC2NGV8sIe1jBw8gxY2Non1HG8j7tLHmOzRPblu8c31qbMC
+seeDW61e9JgH7r5Pj1Y9zvNVsJkXstyA+AWGz2TAB2n3jw4DgorQSFZt924Hwh4P
+rdVjqH+/AxqN8+xLDAIVvvH+JsIwC6GA8Z4E9N565ntR8knxfk+kLWoRCNiyGizK
+cl4ZTU6sXcyF7tR24hI4ma1ozwaoXf5W/vN6qx1gy2v/FQCD0m2BhzbfWxcwK3Cg
+QrFI3IXyzU7d1W6ZVMaCwz1AvN6ZJNxNSF4fzexMUKEDLYu5PnT8dnFDpTfJsWrB
+T8gskXv868OOIkaHkj5ujOgYUtLx9EURcG8Lc56kB9p4CL/J1Rzz/org8XYqClDL
+J0/aDQ8Fy8RmPaEgzbPaBtRztG5jaVc/PsDVsT0+jKOVWd1C62uxBC+9bIUlR7S+
+5rcwfAnkZF9T6Q0qs5inHlRyG6QeVZa14ZKeEejSQnDVc2oJ/70=
+=UA0A
+-----END PGP SIGNATURE-----
+
+--ibrmx66igfcorlg4--
