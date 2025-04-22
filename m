@@ -1,158 +1,207 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C264725B697
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39352258CF7;
+	Tue, 22 Apr 2025 08:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311349; cv=none; b=UccKausJL+S0ZbF9qSLvbqOzQvYtK2egg3J44Up6RQm8is1gwNpQexjI3ZlvO2OHYcTBYwavikyYg3zHqzBx4h0kU0yU/w+WPhgdjRfCaXcvq7wGKv0zS7GJwi97Azo5uT6vZDfO+6z4m/P+cwp6E73HpzNoMM9dJf4MXtRfqf0=
+	t=1745311355; cv=none; b=nUVqbKCQRtMpk78P/gJf8cwDmL0ytCt34+SMbVs+XbMlND508OuCLcrkw7QBIzGxNQRPZzbzFuPaCAkU4YJNTrRBDYcQ5Iq861UmNnTfsfsCRqUn6FsKAeCDyY5au5fpUxrHbw426jLkpX/fIGYeJ/SQmar5pkQKcJgGCjEMHjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311349; c=relaxed/simple;
-	bh=K6w2WFh9gMEo/5yGUkNlU3R7QRO5KBl4M7IcHSkIgaE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KhVqYLliKRa9ldErxKFaC/8f9YqJEE+4oKtwFC6pmPNs2/jpHMBZb3e0kIosYZTdEBEAzSLkMKqjOhF/USJ7IDqZz4XgdLas3uZcBXlCCfGrZa3cGGW82s9dj/sFuH5Qj77alW7+RzYOTto34PVzC+uzZwc/HXu72pD8WymgesM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Zdek5f3G; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1745311355; c=relaxed/simple;
+	bh=HllI2mmo1MTRNB7i4U5FUDBsGrO/lRgawXYhh1xch5M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=hippl9AYHEe2HV5L1B8NR7ms3K2SubV2GeEhFun/BmTed1uyDlOIVZMh7aYgitlL//J6K7ixx2xbl+2JEmlHARi6WaqIFrssOZ0aT63v+0HhBN/KE2tNFc0TfxsmHakZ2yX4JIZUxXmx0TrB+zabsiD+h+4OSMO1TfkpxldjSMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KdrXX7D9; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Zdek5f3G"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22928d629faso46171755ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1745311347; x=1745916147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=89q5KIPhl5BwNYn6HnfG+6c7PCM/cs0DxATEzoR1SG4=;
-        b=Zdek5f3G6DqW/cq90zlMNzu40I0wOZDSfg5rtDi+cMm1Ta/YYoyhg7e7s+hOxbtwf+
-         AgUcbLeui3dZP3qxNzYMQC8VfwDyXnDJVUrDAzgwrDXofydUPtbUOdpBbIi7kgRWA3cW
-         xqUxSqNstO5OfgmlY36cym1jGd5WOKOLUSVAc1IHTh8CoyoN1JPp+/5maQt20N7iqOO3
-         2pU0kH7NS/RHdnDtl0a/CLsGh6wJpmg+cNAJ2kLBJFNiaovCqK8zF82bAo8HfhA1OGL4
-         WnyHHz6LPMGMxROtKGDBs8j1JW6+QXDh07PRgt8jine9qGWWe0G2PjCxGOKvMxaUgl9a
-         1g6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745311347; x=1745916147;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=89q5KIPhl5BwNYn6HnfG+6c7PCM/cs0DxATEzoR1SG4=;
-        b=d7VFApAworeK6mu0gYa34OOTV7YCaG3gMagAOiI63eBmKu3i2mFHRc8k2RQJlSvW+h
-         Q5Fw/vwyCbKjMTxnJVDOFMiSXcqo5gaCS1S8dA7fMuSQKWlESK2OnVvy9Kbv/pF+vxLk
-         /YesGKdUneSO2IlBa3hb/uLIFYfhFwkSfiJRl3JHCgclFPKR0HuUEFvbgUKBkYyv3i8T
-         cVjiEMswg4Jl1hTRcLFVDNDVKT7An3irIFyztH9b9zMO+DZuo6cup2APwL/1fQTVjI7T
-         Z5nrlZ6G1jVF4GkoxFpyqYE664orI+3zbRTzcUupFfG1oarrpvkGlAz5rSlzpru91/Dl
-         NeKg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9+VNJWzf3Md8q4eyVTHU0yAFw+VjPKmpMcq8qOiSNuYj5yCwKSTEzk/DmEXN8ON7ZSMveqS0vTzuXzzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4HjkIYFtUzwR3rUIEBUELy9nJwQkrbZl4WXt8/2kJmFrtn5ls
-	6yRiu428728T2yh3vRWg/Lzan5EC753MLYne3xC249Cqjj8CTkyOnXsvSsyrVxKtWOEHTnRtpjY
-	b
-X-Gm-Gg: ASbGncu0ylZwaL57WNWEvKgZLWZpy20u826MvtU52NDpIUTlo36LYy5ll96r6FxYFzZ
-	heKqI120w6Qe9iC4wQIjUCpMR2TNjALbV9aSu0ppqfXO7qpr37bctcrL1EN7WYX2LNJnBBNSret
-	PAR8xfaXQaSKi/BcGJe49m/hErN4jF4+DDq61U+8tvAhoeogSfFKdNUoyCRLTedMNqoOlDn/Jfr
-	0Er4J8y+BgquCoYOR2Nnqjw7Nnv1OFe0FblqDKEirnw22UMz9lYfO58j3FQIa/EA9jDtWI0Sx5P
-	ylQwWmxAnfpwZ32Duzvj6KRBnmZ19FttRNhfMwtoTQkiQZczZK9zqeQoj3g67r380beF2RBWBlq
-	tMA==
-X-Google-Smtp-Source: AGHT+IG6i6LASvzQIRsj01arYQDJviqBEn/oP/EmdDE8D+TJPVgUwa41kw2BKL7zCVHOsNc3CK8D2g==
-X-Received: by 2002:a17:902:cf07:b0:220:f140:f7be with SMTP id d9443c01a7336-22c53601243mr243185875ad.41.1745311347173;
-        Tue, 22 Apr 2025 01:42:27 -0700 (PDT)
-Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf90d7f7sm8038343b3a.82.2025.04.22.01.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:42:26 -0700 (PDT)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>
-Subject: [PATCH v12 5/5] pwm: sifive: clarify inverted compare logic in comments
-Date: Tue, 22 Apr 2025 16:53:12 +0800
-Message-Id: <20250422085312.812877-6-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422085312.812877-1-nylon.chen@sifive.com>
-References: <20250422085312.812877-1-nylon.chen@sifive.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KdrXX7D9"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53M8gPit1164978
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 03:42:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745311345;
+	bh=UwJf0BaT/sEyp931/8IreL5XjG62aGTsxqkYlNz021s=;
+	h=Date:Subject:From:To:CC:References:In-Reply-To;
+	b=KdrXX7D9zqIiQ14yBd0rbXzb6qRSbY05SZ52sjo1xv+FiWHaTw809lo4EuvAvlzRi
+	 AmXCqOCMt86k0OACa0UdPHfMr/kaybxXlBiouqfinlr780bXhW/oRcLzbVA8CsyV2R
+	 GP4ZFX4SOkJE9OOADhHPDlaynAYPpaWqhbRm8avc=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53M8gPQw032312
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 03:42:25 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 03:42:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 03:42:25 -0500
+Received: from [172.24.227.220] (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53M8gL7d004161;
+	Tue, 22 Apr 2025 03:42:22 -0500
+Message-ID: <1ce1fc6b-fc16-4fb7-9f68-57b495aa5eae@ti.com>
+Date: Tue, 22 Apr 2025 14:12:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/2] devicetree: bindings: mux: reg-mux: Update
+ bindings for reg-mux for new property
+From: Chintan Vankar <c-vankar@ti.com>
+To: Rob Herring <robh@kernel.org>
+CC: Conor Dooley <conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Peter Rosin <peda@axentia.se>, <s-vadapalli@ti.com>,
+        <danishanwar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth
+ Menon <nm@ti.com>
+References: <20250304102306.2977836-1-c-vankar@ti.com>
+ <20250304102306.2977836-2-c-vankar@ti.com>
+ <20250304153959.GA2654372-robh@kernel.org>
+ <66283781-69d6-4d0a-ada4-3a6bf4744a37@ti.com>
+ <CAL_Jsq++DUv5_LHg7sPNXDJZ84JtS94Rwr-WAb9hDWp6rJqZLQ@mail.gmail.com>
+ <11982b12-a359-467a-a6fc-e39adccca413@ti.com>
+ <CAL_JsqLb5hrYD_-dqW5ELtbXohd8a1UL7nOuP2a9ZhE+3+f=eA@mail.gmail.com>
+ <b6fdfe6e-dbd3-4dc8-acf2-f2983f150df1@ti.com>
+Content-Language: en-US
+In-Reply-To: <b6fdfe6e-dbd3-4dc8-acf2-f2983f150df1@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The reference manual says "pwms >= pwmcmpX -> HIGH", but in Figure 29 pwmcmpXcenter
-is forced to 0 via an XOR, so hardware actually outputs HIGH when pwms < pwmcmpX.
-Thus pwmcmp holds the off-period count, and the driver must invert it
-to expose a normal active-high interface.
+Hello Rob,
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+The reason to introduce new bindings for mux-controller is to make use
+of it to implement Timesync Router. Timesync Router module provides a
+mechanism to mux M interrupt inputs to N interrupt outputs, where all M
+inputs are selectable to be driven per N ouput.
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 065d6d2b84bc..a1f13801bca4 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -4,11 +4,28 @@
-  * For SiFive's PWM IP block documentation please refer Chapter 14 of
-  * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-  *
-+ * PWM output inversion: According to the SiFive Reference manual
-+ * the output of each comparator is high whenever the value of pwms is
-+ * greater than or equal to the corresponding pwmcmpX[Reference Manual].
-+ *
-+ * Figure 29 in the same manual shows that the pwmcmpXcenter bit is
-+ * hard-tied to 0 (XNOR), which effectively inverts the comparison so that
-+ * the output goes HIGH when  `pwms < pwmcmpX`.
-+ *
-+ * In other words, each pwmcmp register actually defines the **inactive**
-+ * (low) period of the pulse, not the active time exactly opposite to what
-+ * the documentation text implies.
-+ *
-+ * To compensate, this driver always **inverts** the duty value when reading
-+ * or writing pwmcmp registers , so that users interact with a conventional
-+ * **active-high** PWM interface.
-+ *
-+ *
-  * Limitations:
-  * - When changing both duty cycle and period, we cannot prevent in
-  *   software that the output might produce a period with mixed
-  *   settings (new period length and old duty cycle).
-- * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware cannot generate a 0% duty cycle.
-  * - The hardware generates only inverted output.
-  */
- #include <linux/clk.h>
-@@ -113,6 +130,10 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u32 duty, val, inactive;
- 
- 	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	/*
-+	 * PWM hardware uses 'inactive' counts in pwmcmp, so invert to get actual duty.
-+	 * Here, 'inactive' is the low time and we compute duty as max_count - inactive.
-+	 */
- 	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
-@@ -161,6 +182,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	do_div(frac, state->period;
- 	/* The hardware cannot generate a 0% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+	/* pwmcmp register must be loaded with the inactive(invert the duty) */
- 	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 
- 	mutex_lock(&ddata->lock);
--- 
-2.34.1
+More details about Timesync Router can be found in section 11.3.2.1 of
+TRM at: https://www.ti.com/lit/ug/spruiu1d/spruiu1d.pdf
 
+Timesync Router is identical to mux-controller, but the issue to use
+mux-controller subsystem for it is it's current binding. As it is
+discussed in the series, drawback of this approach is, while configuring
+mux-controller one need to specify every register of memory space with
+offset and mask in "mux-reg-masks" and "idle-states" property, it would
+be complex for the devices with large memory space. To overcome this
+limitation, new bindings are introduced, which allows to define all
+these values in the same property, making it easy to define and extend
+the mux-controller node.
+
+We tried to implement Timesync Router by modeling it as an Interrupt
+Router. But that is not accepted, RFC series for that is at:
+https://lore.kernel.org/r/20250205160119.136639-1-c-vankar@ti.com/.
+
+Also we tried to implement it as a new driver in MUX subsystem, but that
+is almost identical to "mmio.c" driver, which I posted it as this
+series.
+
+I want your suggestion on whether a new bindings can be acceptable and
+we can use the same to implement Timesync Router, if not can you please
+advice me on how can I implement it ?
+
+Regards,
+Chintan.
+
+On 06/03/25 04:00, Vankar, Chintan wrote:
+> Hello Rob,
+> 
+> On 3/6/2025 3:44 AM, Rob Herring wrote:
+>> On Wed, Mar 5, 2025 at 3:43 PM Vankar, Chintan <c-vankar@ti.com> wrote:
+>>>
+>>> Hello Rob,
+>>>
+>>> On 3/5/2025 2:10 AM, Rob Herring wrote:
+>>>> On Tue, Mar 4, 2025 at 1:03 PM Vankar, Chintan <c-vankar@ti.com> wrote:
+>>>>>
+>>>>> Hello Rob,
+>>>>>
+>>>>> On 3/4/2025 9:09 PM, Rob Herring wrote:
+>>>>>> On Tue, Mar 04, 2025 at 03:53:05PM +0530, Chintan Vankar wrote:
+>>>>>>> DT-binding of reg-mux is defined in such a way that one need to 
+>>>>>>> provide
+>>>>>>> register offset and mask in a "mux-reg-masks" property and 
+>>>>>>> corresponding
+>>>>>>> register value in "idle-states" property. This constraint forces 
+>>>>>>> to define
+>>>>>>> these values in such a way that "mux-reg-masks" and "idle-states" 
+>>>>>>> must be
+>>>>>>> in sync with each other. This implementation would be more 
+>>>>>>> complex if
+>>>>>>> specific register or set of registers need to be configured which 
+>>>>>>> has
+>>>>>>> large memory space. Introduce a new property 
+>>>>>>> "mux-reg-masks-state" which
+>>>>>>> allow to specify offset, mask and value as a tuple in a single 
+>>>>>>> property.
+>>>>>>
+>>>>>> Maybe in hindsight that would have been better, but having 2 ways to
+>>>>>> specify the same thing that we have to maintain forever is not an
+>>>>>> improvement.
+>>>>>>
+>>>>>> No one is making you use this binding. If you have a large number of
+>>>>>> muxes, then maybe you should use a specific binding.
+>>>>>>
+>>>>>
+>>>>> Thank you for reviewing the patch. The reason behind choosing mux
+>>>>> subsystem is working and implementation of mmio driver. As we can see
+>>>>> that implementing this new property in mux-controller is almost
+>>>>> identical to mmio driver, and it would make it easier to define and
+>>>>> extend mux-controller's functionality. If we introduce the new driver
+>>>>> than that would be most likely a clone of mmio driver.
+>>>>
+>>>> I'm talking about the binding, not the driver. They are independent.
+>>>> Generic drivers are great. I love them. Generic bindings, not so much.
+>>>>
+>>>>> Let me know if implementation would be accepted by adding a new
+>>>>> compatible for it.
+>>>>
+>>>> Adding a new compatible to the mmio driver? Certainly. That happens
+>>>> all the time.
+>>>>
+>>>> I also didn't say don't use this binding as-is. That's fine too.
+>>>>
+>>>
+>>> Can you please review the following binding:
+>>>
+>>> oneOf:
+>>>     - required: [ mux-reg-masks ]
+>>>     - required: [ mux-reg-masks-state ]
+>>>
+>>> allOf:
+>>>     - if:
+>>>         required:
+>>>           - mux-reg-masks-state
+>>>       then:
+>>>         properties:
+>>>           idle-states: false
+>>>
+>>> required:
+>>>     - compatible
+>>>     - '#mux-control-cells'
+>>>
+>>> I think it won't disturb the current bindings and keep backward
+>>> compatibility with existing implementation.
+>>
+>> Wasn't that the case before? There's nothing really different here.
+>>
+> 
+> No, the binding before was not considering "mux-reg-masks" as required
+> property which was breaking actual dt-binding. In this binding, one of
+> the properties from "mux-reg-masks" or "mux-reg-masks-state" is required
+> which keeps the binding as it is unless someone wants to use
+> "mux-reg-masks-state".
+> 
+> Regards,
+> Chintan.
+> 
+>> Rob
