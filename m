@@ -1,117 +1,119 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831B328FFEF;
-	Tue, 22 Apr 2025 16:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD1D20102C
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338284; cv=none; b=WTfskOYipKKXnpuVENcvH/5wSUXswoVIYrIvD1p1Jlx/GBdHU/ZeVdLEe3pFg+U8cZyDy/21GKAkI4/unUkFadA/PLHt/ZF7/aYqflwcEqc47MMitnZUk54XVNhU2/DHp09R1dO2EoPCVgl5RcdotaqyMffkuyDei9igkI6YH7g=
+	t=1745338321; cv=none; b=puNd5gqmiFgtyaI44ZK7XXz4bz8KnSs0YVjrTPjcEu6wYbN1VuTEnmNoQAB510gPy10r31zcuXePsTlS54xTyqqVx72cv673xP8/LP6crUHuC3KTDdhmckNW0Zj6qW0MU83fcYxUOrGpewxwcb1YYcEDDLnY/klcnAHcT7FxGTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338284; c=relaxed/simple;
-	bh=RRoJLlC7A12/TR2Wz8V+c+670ziWaCSA92DtyIsQ39c=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=bVX6ycf0Of5VJtnebyoAzc0RC07xNAiyMv5pfI2GEJ2lbc+/IOti1h/LUhhyoy3S7na4ZNZUk7tDP+muma9ShnbbJPKBZFH037iQzyzYEgmIx1tzkyBrprQf+Xbw+28y6UYVNmuhSSuWfdw5CaMhMPtLrKo0F3MbVXgGPpIa5Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BL+N8Q5F; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745338321; c=relaxed/simple;
+	bh=Qq2UopazRhFE6V8aJNyetvUiu+LehXxSz3r5aR2nYJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sEgaLK29sYhZSrrHDf++eXUgHMQsqnflSizcCVtp2qGs6HA42ghxRof0u0YISexHHcz3VJY5Ak4whxSAitaIcqTI98gv3FtCkvzrx8RN4X8evDFLdNRxx6BhVE1ZL5CAR6dlqHd0JCXs8oIauFBgPQ8fHe7ykesu9A/Iu01u/jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b1ZDmZwp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BL+N8Q5F"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6506D43A46;
-	Tue, 22 Apr 2025 16:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745338279;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b1ZDmZwp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745338318;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RRoJLlC7A12/TR2Wz8V+c+670ziWaCSA92DtyIsQ39c=;
-	b=BL+N8Q5Fn6rdiqBn6OmTsxXoJ9Hmwb4+Cp9EPmNsArEyLxUBWFVxrjkUHAF0kIsavPM6XX
-	diCJtu+5Ly9c8KpN6G8x6k6lDFpyCYNdFdmJbLzqvILAA2E461zP6Vl5aQnWM52I1ZKFjb
-	URv4AQLYjPslN6FYm//6sL4cTinqbdZ0ozPAQ8e/3iB+TBYuQf2hdfFevjXWgqw3IDHG8/
-	uY3oRLwfCgKhdSGVb6x4CH2T0ogBE6yTmirNGCqLE14+OuS7xL/NOa3//AO+jRjVas+IZt
-	Do7zVrHIg0pSTNgvl5tNaYZYAfY7atWN0Xxx+Tu4ztV+/zEpRVIM3rCNf3Da9w==
+	bh=Y3fnl5PKf3oIQEvu1rlAoFXUntWQCP3O2jHl/b0iF64=;
+	b=b1ZDmZwp4RWaXSVH338HFAniQh/s1zuMmZCm501/0C8HKZ3NuQe95mCA/zMw62n75VAvlk
+	kaYpKLU/lhx4hmR7hwBsShxMey4zbZCOfKLozoK8H0AOjuzPSAqo/wbie2r0g0M7+syLEq
+	xmEd2wyQHUd2pRQnJlbadDne9a3JcrA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-V7FKQk43Nxu3MuZXku5I5g-1; Tue,
+ 22 Apr 2025 12:11:54 -0400
+X-MC-Unique: V7FKQk43Nxu3MuZXku5I5g-1
+X-Mimecast-MFC-AGG-ID: V7FKQk43Nxu3MuZXku5I5g_1745338312
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F30741800988;
+	Tue, 22 Apr 2025 16:11:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.24])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D17A41956095;
+	Tue, 22 Apr 2025 16:11:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 22 Apr 2025 18:11:14 +0200 (CEST)
+Date: Tue, 22 Apr 2025 18:11:08 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
+	Dave Hansen <dave@sr71.net>, Brian Gerst <brgerst@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Chang S . Bae" <chang.seok.bae@intel.com>
+Subject: Re: [PATCH -v5 0/8] sched: Make task_struct::thread constant size,
+ x86/fpu: Remove thread::fpu
+Message-ID: <20250422161108.GA1676@redhat.com>
+References: <20250409211127.3544993-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 22 Apr 2025 18:11:18 +0200
-Message-Id: <D9DAS80VMYAW.3JALOQIHS2B0W@bootlin.com>
-To: "Maxime Chevallier" <maxime.chevallier@bootlin.com>
-Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Richard Cochran"
- <richardcochran@gmail.com>, "Daniel Machon" <daniel.machon@microchip.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>
-Subject: Re: [PATCH net 1/2] net: stmmac: fix dwmac1000 ptp timestamp status
- offset
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250422-stmmac_ts-v1-0-b59c9f406041@bootlin.com>
- <20250422-stmmac_ts-v1-1-b59c9f406041@bootlin.com>
- <20250422174934.309a1309@fedora.home>
-In-Reply-To: <20250422174934.309a1309@fedora.home>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegudejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvfevuffhofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekgfffhfehhfefgeekhfffudfhheekveffleeuhfelgfefueevhedvkeduhfehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhto
- hepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409211127.3544993-1-mingo@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi Maxime,
+Ingo, sorry for delay.
 
-On Tue Apr 22, 2025 at 5:49 PM CEST, Maxime Chevallier wrote:
-> Hi Alexis,
->
-> On Tue, 22 Apr 2025 17:07:22 +0200
-> Alexis Lothore <alexis.lothore@bootlin.com> wrote:
->
->> When a PTP interrupt occurs, the driver accesses the wrong offset to
->> learn about the number of available snapshots in the FIFO for dwmac1000:
->> it should be accessing bits 29..25, while it is currently reading bits
->> 19..16 (those are bits about the auxiliary triggers which have generated
->> the timestamps). As a consequence, it does not compute correctly the
->> number of available snapshots, and so possibly do not generate the
->> corresponding clock events if the bogus value ends up being 0.
->>=20
->> Fix clock events generation by reading the correct bits in the timestamp
->> register for dwmac1000.
->>=20
->> Fixes: 19b93bbb20eb ("net: stmmac: Introduce dwmac1000 timestamping oper=
-ations")
->
-> Looks like the commit hash is wrong, should be :
->
-> 477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping operations")
+So just in case, the whole series looks good to me. I am going to send a
+couple of minor cleanups on top of it, but let me ask first if I missed
+something or not.
 
-Yes, you are absolutely right, I wrongly picked this hash from a custom
-branch rather than a stable branch -_- Thanks for spotting this, will be
-fixed in v2.
+- x86_init_fpu is not really used after 4/8, it can be killed
 
->
-> Other than that I agree with the change, these offset are the right
-> ones, thanks...
->
-> With the Fixes tag fixed,
->
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+- DEFINE_EVENT(x86_fpu, x86_fpu_copy_src) can be killed after 7/8
 
-Thanks,
+- arch_dup_task_struct() still does
 
-Alexis
+	/* init_task is not dynamically sized (incomplete FPU state) */
+	if (unlikely(src == &init_task))
+		memcpy_and_pad(dst, arch_task_struct_size, src, sizeof(init_task), 0);
+	else
+		memcpy(dst, src, arch_task_struct_size);
 
+  and I don't understand why do we need to check src == &init_task. It seems
+  that we can always do
 
+	memcpy_and_pad(dst, arch_task_struct_size, src, sizeof(struct task_struct), 0);
 
+  or even just
 
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+	memcpy(dst, src, sizeof(struct task_struct));
+
+  fpu_clone() will initialize the "dst_fpu" memory correctly.
+
+- fpu__drop() does
+
+	/* PF_KTHREAD tasks do not use the FPU context area: */
+	if (tsk->flags & (PF_KTHREAD | PF_USER_WORKER))
+		return;
+
+  and this is correct. But perhaps
+
+	if (test_tsk_thread_flag(tsk, TIF_NEED_FPU_LOAD))
+		return;
+
+  makes more sense? PF_KTHREAD's should never clear TIF_NEED_FPU_LOAD,
+  and this way we can avoid the unnecessary "fwait" if, say, the exiting
+  task does context_switch() at least once on its way to exit_thread().
+
+- Finally, with or without these changes, it seems that the
+  switch_fpu_prepare() + switch_fpu_finish() logic can be simplified,
+  I'll write another email.
 
