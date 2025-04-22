@@ -1,187 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3122949F0
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340147; cv=none; b=Izak0wXJ7dQmxB+/7GE0HVn7uC4nOPDCYmNYmULXyNNgiBU0Lb+udWK7/Ptaux2cZ/NeDxaWX4X1dLRxleDPPGVNg578eiwGYgfSFFk/qCSHqAf+UOOdpAd2fof3AG1J0AN8dbwjGRn6enO1Naa3tZkZxE9FMUrBG1YkGMu8+84=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340147; c=relaxed/simple;
-	bh=VM06un6R4IE2G9FmNC/1gf+872pzwD+CPRTaFlma6MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jmir101OFQYX3svZdmF7CSOBJukrGIxMnWM14LzYQyINLDEseiQzXk7g3AsPFVTRqhmltfM/rkBluJY50yLmOrwf/i8FzLx3s3Dzi2yCH5seu4j+piHIkUFNRryd7XGR7kVg3/PlwC/EKZkoH/3/XM6GRyV3LquWPeCRuCOJi9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MqbOsSas; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5167293B71;
+	Tue, 22 Apr 2025 16:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745340179; cv=pass; b=EO+vgZWP6xOmdPrpWPggtIdZOQofPT65FY75ObobxT+IujMxHDQSEMkUjig6ZZ2dfm1GSB8TJGiCvPCREWFa3WVfSm7amNYY9PbVNKj+nw5hUDJf2G3x+PgvTG5HmiyQPsPjAStz6qa3NHfHoacwJmpcEA4slWqoul9W5U9Dytw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745340179; c=relaxed/simple;
+	bh=J5ouDC0Gsmx0WlcN6oLSy44vs3al9Pki25fBSKjq8Kw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UNSUbD8p/YLw1oRIpwnHAL4ohZvlwAmIoirRjWESxYQmADkcdH4xNtp9yzfYO7+yYgRvxXI8/wVGDTNfPqtPBU/K1XPCDsjSvSl+7uisZLjL2C1eDER1znyrVkoVcpk1bHMd1Gjwm5K2TcNr1gtg+q3RiP1N1m+Nt0Ia3wQQNtc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Qv1F9bnt; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MqbOsSas"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745340144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Tmv3l4usOA2nic8/HFVk1c3fkYkDEF/+Vvfj6a/0Hk=;
-	b=MqbOsSasZQChmEmB5EmacxHSX+Ve2e4FbXS2jZeQGjbMT9e56quHKL1DxbVbTfZ52v1yR7
-	fDXX8hFA89UbMmga35XlG704TcA2RwqNExrrd9/2288ZCq7ec6kmPioGx16E+5gYVpb8Gc
-	zx8q2dbjnY6DMosmV9VvdqeHqNPaklU=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-218-N7oQWFarN1mF5KXVQ_C2FQ-1; Tue, 22 Apr 2025 12:42:23 -0400
-X-MC-Unique: N7oQWFarN1mF5KXVQ_C2FQ-1
-X-Mimecast-MFC-AGG-ID: N7oQWFarN1mF5KXVQ_C2FQ_1745340143
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c9abdbd3so488504685a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:42:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745340142; x=1745944942;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Tmv3l4usOA2nic8/HFVk1c3fkYkDEF/+Vvfj6a/0Hk=;
-        b=E2QU9L39m2bE8s5jhtkFldE2RUkoI6JkOEJi5VjkKkzKdQZG/P7dWq4r+Wq+dTQbs+
-         I9UYIotCkhAFvrn5XN7iMqpg2ml8td6HzZuuZGSgaaEt3vqxrcXrS4T8zN8P1ycj61es
-         KYe6EgT5x38kYES3HNPgJD/RuIEUn1Zp9clyplsTdYLQByjvnZ4NKntHjP+txo5WYqJO
-         NkSOVYPLv2i2YT3ClgUbLrrWm75s5pHj6To+4iKVJxTUd/IpfrjPPCg6GuNkgu4THT4F
-         mnh3TA+tF+GFCp5KoOV5dnElUF5J1DwesxR6ZVLqOUhpclMPDOym4J1j+MdEoJZHkO2j
-         B1ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVTeJhy/LqPXXVDYC3r6iTQP06A8KUVAeeh6S1yJ7R2paJizAEIWOqdC8BkHmTEtIpwWpvvuKi9KW5m/N8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlitL17c6D6oNrUATo1I/CNawo2ryJMgtesNksoPkTfThpS3Pc
-	v4ON+tj1vOTMfx2sRTiyQkULNlRivHQmUdyVjOtfr7LLK9Rs4Ae6idaiiINNUXSdC/JjyRvxin+
-	AuO3HuTqcbXFUijguhbqcwwWjZBCIJ6NWOspnh8hQKBmdsWrB+oLPpyAL++Vg/olgL8jqWg==
-X-Gm-Gg: ASbGncsYkwn3vIYKG1f9zpwk86iQcsztXh0TcBuoz8oO9BvwWtqHmGenmvF2x+6AOv7
-	+k5PuqWeQpMCJa6j7VctZM/jLH983ehszqu+eHrL8UfSX414FPgH8zMeFKdRPYViRSyDIKhW9K5
-	r/n4RYPIUa5dkRvHqsN3xITSU8NcSiFRYe40dO9NiKoiL0JR3tgOXC4m/0yB91ZPYacteSJGNTj
-	55rG2O27EP+n4FSddb9KLadosfgJ6ZGJ5t4hBsVyoWY5Fzcz8cKx4cWOxSniZvbdcGO5e7Y1WEa
-	Yee669lYzCBD4ccHAxbT+0Gbi7umnF8lFV4X6LDdTtE=
-X-Received: by 2002:a05:6214:c2f:b0:6ea:d604:9e49 with SMTP id 6a1803df08f44-6f2c464071amr310346406d6.34.1745340142534;
-        Tue, 22 Apr 2025 09:42:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+ZRP1lhsHeFU6VqIk73sz8A2RHJZCwagmzI5I0mu0qrXjlrLozmeOZJ/CtBIvPj+DfegBnA==
-X-Received: by 2002:a05:6214:c2f:b0:6ea:d604:9e49 with SMTP id 6a1803df08f44-6f2c464071amr310346026d6.34.1745340142119;
-        Tue, 22 Apr 2025 09:42:22 -0700 (PDT)
-Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfd182sm59451376d6.80.2025.04.22.09.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 09:42:21 -0700 (PDT)
-From: Jared Kangas <jkangas@redhat.com>
-To: sumit.semwal@linaro.org,
-	benjamin.gaignard@collabora.com,
-	Brian.Starkey@arm.com,
-	jstultz@google.com,
-	tjmercier@google.com,
-	christian.koenig@amd.com
-Cc: mripard@kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org,
-	Jared Kangas <jkangas@redhat.com>
-Subject: [PATCH 2/2] dma-buf: heaps: Give default CMA heap a fixed name
-Date: Tue, 22 Apr 2025 09:41:48 -0700
-Message-ID: <20250422164148.547798-3-jkangas@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422164148.547798-1-jkangas@redhat.com>
-References: <20250422164148.547798-1-jkangas@redhat.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Qv1F9bnt"
+ARC-Seal: i=1; a=rsa-sha256; t=1745340124; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=maHts2vpcW2tjJ8ka3XxMyy8VNz1eLmM0ImKB1vvNnhymMiYRqbghXqWc8NXFznyFMhcYuhWkZXHWVxkHIV2MCaliC0v4vlmBMz2xDzAU1oy/Umj5PaElqq4VaYbpf9C4FNgTVPFsOt4DWzaFMAaLODIwivN/4FVTjRfZYrQKV4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745340124; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vChu2eP17VcCVjPNfN1+BoXsYLLiBUzHEokfxyhGBSc=; 
+	b=V50ibU7/H5e83ZajSS2oDH9KfjXC92N5Etc8GONIoJI/19KTEzWAyR5bvV09CUOVzAbPRqxlCJHz0IhqClbSHEgxRPvejBKihovvBAOiSfCXM8KQ7GjGtzuqoFXe5sgU7spW/WSnCdp1yaT+EUn3sb8F5gSdrFFtfiAwkTaBD7A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745340124;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=vChu2eP17VcCVjPNfN1+BoXsYLLiBUzHEokfxyhGBSc=;
+	b=Qv1F9bntY7HRo2c+vHFeKcO1hjBLG9cAQkU4+6RQhLuTrlkFx/DYTWv2vULH7TEV
+	bJc3mQgTs72xUFHA49vOyzi17HnAzSFrmoIS/VEsgyLmUCBcj1kv1Yw9wLZ9RYHSgGU
+	9HLpAmz1xj+D5S7X9EW3witPwwYCN8oqS/5j86Oo=
+Received: by mx.zohomail.com with SMTPS id 1745340121608854.5907869786862;
+	Tue, 22 Apr 2025 09:42:01 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Subject: [PATCH v2 0/2] Add a Rust GPUVM abstraction
+Date: Tue, 22 Apr 2025 13:41:51 -0300
+Message-Id: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM/GB2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDYyMD3fSC0rJcXSPLFONUA3MjszRjEyWg2oKi1LTMCrA50bG1tQCiH0C
+ pVwAAAA==
+X-Change-ID: 20250320-gpuvm-29d3e0726f34
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Lyude Paul <lyude@redhat.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
-The CMA heap's name in devtmpfs can vary depending on how the heap is
-defined. Its name defaults to "reserved", but if a CMA area is defined
-in the devicetree, the heap takes on the devicetree node's name, such as
-"default-pool" or "linux,cma". To simplify naming, just name it
-"default_cma", and keep a legacy node in place backed by the same
-underlying structure for backwards compatibility.
+Changes from v1:
+- Added more people to cc.
+- Used Benno's suggestion to remove the #[allow] (thanks, Benno, that is
+  indeed better!)
+- Added markdown as applicable in the docs/comments (please let me know
+  whether I missed any)
+- Changed the order between docs and attributes to match the rest of the
+  code in the Rust crate.
+- Did *not* remove the # Arguments section from a few functions yet, let's
+  push this dicussion down the line, Miguel.
+- Changed the placement of OpRemap, i.e.: it was not next to its impl block by
+  mistake.
+- Misc doc fixes, i.e. missing periods, missing ///, lines that would
+  not render properly on the browser, etc (thanks, Miguel)
+- Removed spurious clang-format change from patch 1.
+- Added a return statement for find_bo/obtain_bo (thanks, Charalampos!)
 
-Signed-off-by: Jared Kangas <jkangas@redhat.com>
+Changes from v0:
+  This version changes how `LockedGpuVm` operates. The previous code assumed
+that the interval tree would be protected if all the associated GEM's resvs
+were locked, but this is completely unrelated. In fact, this initial version
+only aims to support the core VA range management feature of GPUVM, and not any
+of the "convenience" functions like "exec_lock()" and friends, so this function
+was removed accordingly.
+  
+  LockedGpuVm is now produced by a call to GpuVm::lock(). This takes a generic
+guard type to signal that the driver-specific locks have been acquired in order
+to protect the VMs tree, and hence its view of the address space. This approach
+is somewhat similar to CondVar, but also incurs in the same pitfall: it is up
+to the caller to give meaning to the guard by ensuring that it actually
+protects against concurrent access to the VM. Maybe this is a good candidate to
+the upcoming "Pitfall" docs section?
+
+  Note that LockedGpuVm::obj was removed. I'm not really sure why this field
+was there in the first place, but callers should indicate the object through
+the sm_map() and sm_unmap() APIs instead.
+
+  I am not sure why GpuVm::inner uses UnsafeCell, though. I did not touch this
+so that we can first discuss whether UnsafeCell is really needed.
+
+  The docs were also updated. Care was taken to reuse the C documentation as
+much as possible.
+
+  Itemized changes: 
+
+- Rebased on top of nova-drm
+  - Use `srctree` in the docs
+  - Add docs as appropriate and remove #[allow(missing_docs)]
+  - Remove `impl DriverGpuVa for ()`. Drivers can to that themselves, if they want.
+  - Added #[inline] to getters, as Rust cannot inline across crates otherwise (unless this changed recently?)
+  - Exposed `drm_gpuva_op_unmap::keep`.
+  - Removed `pub(super)` from unsafe fns meant to be called from the C code. 
+  - Added "# Safety" blocks to the above.
+  - Removed `exec_lock_gem_object()`.
+  - Removed `exec_lock()`
+  - Removed `LockedGpuVm::vm_exec`. This initial version does not support `exec` calls at all.
+  - By the same token, removed `LockedGpuVm::drop()`
+  - Removed `LockedGpuVm::obj`. This object has to be passed explicitly.
+
 ---
- Documentation/userspace-api/dma-buf-heaps.rst | 11 +++++++----
- drivers/dma-buf/heaps/Kconfig                 | 10 ++++++++++
- drivers/dma-buf/heaps/cma_heap.c              | 14 +++++++++++++-
- 3 files changed, 30 insertions(+), 5 deletions(-)
+Asahi Lina (2):
+      rust: helpers: Add bindings/wrappers for dma_resv
+      rust: drm: Add GPUVM abstraction
 
-diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
-index 535f49047ce64..577de813ba461 100644
---- a/Documentation/userspace-api/dma-buf-heaps.rst
-+++ b/Documentation/userspace-api/dma-buf-heaps.rst
-@@ -19,7 +19,10 @@ following heaps:
-  - The ``cma`` heap allocates physically contiguous, cacheable,
-    buffers. Only present if a CMA region is present. Such a region is
-    usually created either through the kernel commandline through the
--   `cma` parameter, a memory region Device-Tree node with the
--   `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
--   `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
--   might be called ``reserved``, ``linux,cma``, or ``default-pool``.
-+   ``cma`` parameter, a memory region Device-Tree node with the
-+   ``linux,cma-default`` property set, or through the ``CMA_SIZE_MBYTES`` or
-+   ``CMA_SIZE_PERCENTAGE`` Kconfig options. The heap's name in devtmpfs is
-+   ``default_cma``. For backwards compatibility, when the
-+   ``DMABUF_HEAPS_CMA_LEGACY`` Kconfig option is set, a duplicate node is
-+   created following legacy naming conventions; the legacy name might be
-+   ``reserved``, ``linux,cma``, or ``default-pool``.
-diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-index a5eef06c42264..83f3770fa820a 100644
---- a/drivers/dma-buf/heaps/Kconfig
-+++ b/drivers/dma-buf/heaps/Kconfig
-@@ -12,3 +12,13 @@ config DMABUF_HEAPS_CMA
- 	  Choose this option to enable dma-buf CMA heap. This heap is backed
- 	  by the Contiguous Memory Allocator (CMA). If your system has these
- 	  regions, you should say Y here.
-+
-+config DMABUF_HEAPS_CMA_LEGACY
-+	bool "DMA-BUF CMA Heap"
-+	default y
-+	depends on DMABUF_HEAPS_CMA
-+	help
-+	  Add a duplicate CMA-backed dma-buf heap with legacy naming derived
-+	  from the CMA area's devicetree node, or "reserved" if the area is not
-+	  defined in the devicetree. This uses the same underlying allocator as
-+	  CONFIG_DMABUF_HEAPS_CMA.
-diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-index e998d8ccd1dc6..5533420d566b0 100644
---- a/drivers/dma-buf/heaps/cma_heap.c
-+++ b/drivers/dma-buf/heaps/cma_heap.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- 
-+#define DEFAULT_CMA_NAME "default_cma"
- 
- struct cma_heap {
- 	struct dma_heap *heap;
-@@ -394,15 +395,26 @@ static int __init __add_cma_heap(struct cma *cma, const char *name)
- static int __init add_default_cma_heap(void)
- {
- 	struct cma *default_cma = dev_get_cma_area(NULL);
-+	const char *legacy_cma_name;
- 	int ret;
- 
- 	if (!default_cma)
- 		return 0;
- 
--	ret = __add_cma_heap(default_cma, cma_get_name(default_cma));
-+	ret = __add_cma_heap(default_cma, DEFAULT_CMA_NAME);
- 	if (ret)
- 		return ret;
- 
-+	legacy_cma_name = cma_get_name(default_cma);
-+
-+	if (IS_ENABLED(CONFIG_DMABUF_HEAPS_CMA_LEGACY) &&
-+	    strcmp(legacy_cma_name, DEFAULT_CMA_NAME)) {
-+		ret = __add_cma_heap(default_cma, legacy_cma_name);
-+		if (ret)
-+			pr_warn("cma_heap: failed to add legacy heap: %pe\n",
-+			        ERR_PTR(-ret));
-+	}
-+
- 	return 0;
- }
- module_init(add_default_cma_heap);
+ rust/bindings/bindings_helper.h |   2 +
+ rust/helpers/dma-resv.c         |  13 +
+ rust/helpers/drm_gpuvm.c        |  29 ++
+ rust/helpers/helpers.c          |   2 +
+ rust/kernel/drm/gpuvm.rs        | 807 ++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/drm/mod.rs          |   2 +
+ 6 files changed, 855 insertions(+)
+---
+base-commit: e7de41cc4b01dd5500a0c2533c64bdb3f5360567
+change-id: 20250320-gpuvm-29d3e0726f34
+
+Best regards,
 -- 
-2.49.0
+Daniel Almeida <daniel.almeida@collabora.com>
 
