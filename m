@@ -1,134 +1,141 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3218828
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBC98828
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296271; cv=none; b=a1hPAY/GHASUcgTPzYguEUi85K4h4NbJj+0Eb77tHLxMlnPemG3R3YgmL4dss+xNHru47srkCGasKBhNfnMV4O3F1O6sldattjeMr6fMmf/awQcmmWxasrMlmIVwSdfBRlIG62Abvl7KdhG7UH+zO9MhXOVFcqJUvgkyR7fVAnY=
+	t=1745296527; cv=none; b=n3BcpGgV3N2bR2Bi39N4MupvBEKOmXulvrbcp8PNywV0J8ReNeQMgTDghnWc7kbx81cibWRJpp9CpeWqO19IW6D17hnArP4PxVURGVWfDMZp5Rwas+vbHGbw9p8KqhxUeyVp24GIlWcXwODFlt6VFeSzrSmfsoolMfZIR/+CVkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296271; c=relaxed/simple;
-	bh=bI3gDzhCKMAkJw2iXZ9rkFzBnMcyw7cj4GHPEtHSj2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AuHzfYQUT4eXImTAHBmz4DhFBujgblrJUzsWEB1jukKW74ehIoCMRiOah75I7gNtMC4nkMkpSGhEw0CGG6Sqg+47AHosVoNoreRVVbVdi/iivyGGVapa7kqgAPQzzdqtbLGyA8AISWc5jswH3fa+qBPzgdiTFaK9mMb4Y1/hb2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=RRfGWmmY; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745296527; c=relaxed/simple;
+	bh=qLYJYeZ4EefTD1QL0PqRJShFjKw7T0uE0yUqE8upZWU=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=gMM1fRH86aU0d3bCdasM5bXeWZS5c7KM4zi4mSC0qNo8/8UVYQziJdiQkLm9H0B41QU/T5QkAVT2RBZZC19fh+4LF67vHsrx2jMFgdBrU6uNQvfQOFiZjOC6NoGiSN77USxSWFdmdG7d4iBkLQy1YnGUIxRS3L8oMvUYWXtYOeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oBfoJJdr; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="RRfGWmmY"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso53719416d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 21:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745296267; x=1745901067; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PRSMksXpsf52yOD4IubO1aFNXvg4s4nX378ktXQqSPw=;
-        b=RRfGWmmYkQL51c3ajNplCbuV2Gd3ETXRduN0H7YYuBC0JJGQKqyckamwphLJQjbrOL
-         kdt71fG/uJV3CNZ2UcYQYevv9KMmL4D3ELLcwVgJyERTuDnby68fx7LisaAd0K/Nlv4c
-         HrtiIRPC1ZHT6KrQsQVfRU2VglfK0mgBcRf7iGg8YyfG9ElR2yhHravoYjCIMCjvOj4S
-         Waf79LFDnBnu2BijZKcpsIsEkqqNRz7pW5qbBi/6Dvb9sIjN7FWnnPsLUHEgovu2j0w9
-         6PL6kpADCBj5JxRYggUPZeasEuc0uoSVDPh2vXZ+9o1rn/hFthyeGGNfhE4zOTOtl/t1
-         BtGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745296267; x=1745901067;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PRSMksXpsf52yOD4IubO1aFNXvg4s4nX378ktXQqSPw=;
-        b=osA1y/c8iEVkQTjb7UZwNZ+QpDgsUAE2VOzbmJ4fuT5pim+BGzUgcnSlaWegkUIQGp
-         1NQyQB9oaRMxWY+0k+/6m17r9WIrL6C2o31uiRQ+3hTmkJrh2dZF0P64m9w3LCyezU3k
-         xuXQndAqdYX8JGC965rILe+m2Bdgpf/TYqs+3b8od1UxzK8qpE5b00Sp44ewiBJGUVuB
-         G+M1YToJQ/wWuCok4Z9GwJ7Yq0HGcgcWt7fJODVvplmLBPf7P4wK+Vc0b6cxrYGBL4SZ
-         n/+Xr0fv/wjsTL7a9x3Ptcetyq0ofSk0frFXixkdViytICDiugCXapjwgLVWQueygjA6
-         ZOOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHFomZPTQVNEI9o/0//jkXlvjxeVFjpLBvpTUte6InrE9jLpU2MskjQwbs0l4ORhTCbEw3uMNQJuecM4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEBJdCJWXyMpM12XiAwhBHc2nIS95yLU3QdJbbPAosoydspvap
-	5r90qPSCHwvo1qEOJTc+leVmHfS5jwKmh3Z2ygDOsqVP3OMX+jM4AULzc2ukNjo=
-X-Gm-Gg: ASbGncvxmoSlbU/jKHtCIt1wU9YRo8MXc94nP8UscJDe9sz9JeSvT83bXbgRVrQxdin
-	xM3I+6uTXgOPP0jhCIWwwlzpKrTdds8Dt5WHsuSb3BR/G40du7AMRCmbvbEK7UF4Ii2Xbuq5o2B
-	ddPiCo/1Q4rS0/8DLZ+25Gu9BZ4dFkPzQC2ycmhHWgcBz3qJs1xyzeTVS+OtEVyRT7XV6L2Y+Nb
-	5tjAg1+OYtWphQK8QUmnFmELF3qdVLEBs4cliOkPSnzNRd+/0/nzyR0G26WzeJXPCOKC4mAcP4V
-	NwCdrhhb8vlR1mUsQjpC2H+cLANlBeBo8uWvc1OAxAr0AZq9or4sEcjmhsBIOeRfdhmXvAaavL3
-	bV+1VcvhAWn+dvF8GC7MwmiqZ0ipv
-X-Google-Smtp-Source: AGHT+IEzQ3PXHur4luJ4jcRF7GRw/fek8cyUhcS6YWFUPEnKas0lDo2Hf0ec4S5N4vxVbonxlQQHOw==
-X-Received: by 2002:a05:6214:29c1:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f2c4655ae9mr267147396d6.34.1745296267519;
-        Mon, 21 Apr 2025 21:31:07 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af14easm52745336d6.3.2025.04.21.21.31.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 21:31:07 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	longman@redhat.com,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	tj@kernel.org,
-	mkoutny@suse.com,
-	akpm@linux-foundation.org
-Subject: [PATCH] cpuset: relax locking on cpuset_node_allowed
-Date: Tue, 22 Apr 2025 00:30:55 -0400
-Message-ID: <20250422043055.1932434-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422012616.1883287-3-gourry@gourry.net>
-References: <20250422012616.1883287-3-gourry@gourry.net>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oBfoJJdr"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745296517;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qfm/xW4Ogh3To9+LnQW2Co4714wv98el26JPYuLacLQ=;
+	b=oBfoJJdrG69JOiyKYXNFzMQ5DjWWwY/TkWUu+bBv+LRMKgylBSodgjGIzhE+q++AuJApKo
+	NMuqQZdHIRc95gl8+McmerUrh0JidKUP7gCDhe4lUveJjm5imAUcwBOeEQ1svyFQiL5732
+	NqRJOLRSdgoSoZ+mt6JO7CfRoan7WgQ=
+Date: Tue, 22 Apr 2025 04:35:14 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Lance Yang" <lance.yang@linux.dev>
+Message-ID: <f091c3e4183e6d6384f645e609aeed926b320818@linux.dev>
+TLS-Required: No
+Subject: Re: [RESEND PATCH v2 1/1] mm/rmap: add CONFIG_MM_ID guard for
+ folio_test_large_maybe_mapped_shared()
+To: "Andrew Morton" <akpm@linux-foundation.org>, "David Hildenbrand"
+ <david@redhat.com>
+Cc: mingzhe.yang@ly.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ "Lance Yang" <ioworker0@gmail.com>
+In-Reply-To: <20250421122239.710f5d63487853556cb8f57e@linux-foundation.org>
+References: <20250418152228.20545-1-lance.yang@linux.dev>
+ <20250420162925.2c58c018defee9ee192be553@linux-foundation.org>
+ <641755b75b4ecb9c9822e15e707a0ebf1e250788@linux.dev>
+ <20250421122239.710f5d63487853556cb8f57e@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-The cgroup_get_e_css reference protects the css->effective_mems, and
-calls of this interface would be subject to the same race conditions
-associated with a non-atomic access to cs->effective_mems.
+April 22, 2025 at 3:22 AM, "Andrew Morton" <akpm@linux-foundation.org> wr=
+ote:
 
-So while this interface cannot make strong guarantees of correctness,
-it can therefore avoid taking a global or rcu_read_lock for performance.
 
-Drop the rcu_read_lock from cpuset_node_allowed.
 
-Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-Suggested-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- kernel/cgroup/cpuset.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+>=20
+>=20On Mon, 21 Apr 2025 05:13:03 +0000 "Lance Yang" <lance.yang@linux.dev=
+> wrote:
+>=20
+>=20>=20
+>=20> Can we just slap "#ifdef CONFIG_MM_ID" around the whole function? I=
+t
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  should have no callers, right? If the linker ends up complaining t=
+hen
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  something went wrong.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  The reason we can't simply add #ifdef CONFIG_MM_ID around folio_te=
+st_large_maybe_mapped_shared()
+> >=20
+>=20>  is because its caller folio_maybe_mapped_shared() relies on IS_ENA=
+BLED(CONFIG_MM_ID).
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  If we do, with CONFIG_TRANSPARENT_HUGEPAGE=3DN, we'll hit compilat=
+ion errors like:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ./include/linux/mm.h: In function =E2=80=98folio_maybe_mapped_shar=
+ed=E2=80=99:
+> >=20
+>=20>  ./include/linux/mm.h:2337:16: error: implicit declaration of funct=
+ion =E2=80=98folio_test_large_maybe_mapped_shared=E2=80=99; did you mean =
+=E2=80=98folio_maybe_mapped_shared=E2=80=99? [-Werror=3Dimplicit-function=
+-declaration]
+> >=20
+>=20>  2337 | return folio_test_large_maybe_mapped_shared(folio);
+> >=20
+>=20>  | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >=20
+>=20>  | folio_maybe_mapped_shared
+> >=20
+>=20>  cc1: some warnings being treated as errors
+> >=20
+>=20
+> That's OK - provide a declaration of folio_maybe_mapped_shared() but no
+>=20
+>=20definition. So the compiled-out code can be compiled and the linker
+>=20
+>=20will confirm that it's never actually called.
+>
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c52348bfd5db..1dc41758c62c 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4181,10 +4181,20 @@ bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
- 	if (!css)
- 		return true;
- 
-+	/*
-+	 * Normally, accessing effective_mems would require the cpuset_mutex
-+	 * or RCU read lock - but node_isset is atomic and the reference
-+	 * taken via cgroup_get_e_css is sufficient to protect css.
-+	 *
-+	 * Since this interface is intended for use by migration paths, we
-+	 * relax locking here to avoid taking global locks - while accepting
-+	 * there may be rare scenarios where the result may be innaccurate.
-+	 *
-+	 * Reclaim and migration are subject to these same race conditions, and
-+	 * cannot make strong isolation guarantees, so this is acceptable.
-+	 */
- 	cs = container_of(css, struct cpuset, css);
--	rcu_read_lock();
- 	allowed = node_isset(nid, cs->effective_mems);
--	rcu_read_unlock();
- 	css_put(css);
- 	return allowed;
+Got it, that works as well ;)
+
+So if David is cool with it, I'll send out the new version like this:
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index d3909cb1e576..a762e4b4eab4 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -1230,10 +1230,15 @@ static inline int folio_has_private(const struct =
+folio *folio)
+ 	return !!(folio->flags & PAGE_FLAGS_PRIVATE);
  }
--- 
-2.49.0
 
++#ifdef CONFIG_MM_ID
+ static inline bool folio_test_large_maybe_mapped_shared(const struct fol=
+io *folio)
+ {
+ 	return test_bit(FOLIO_MM_IDS_SHARED_BITNUM, &folio->_mm_ids);
+ }
++#else
++bool folio_test_large_maybe_mapped_shared(const struct folio *folio);
++#endif
++
+
+Thanks,
+Lance
