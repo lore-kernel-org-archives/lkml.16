@@ -1,128 +1,173 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C925AF50F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C781E5716;
+	Tue, 22 Apr 2025 07:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745306972; cv=none; b=gUXLc5FoBFbafO6NL7IqkWf+pdinHkBc6s4ChWv/ug6KlZrHc11KBPQcXY1FLfNFnspsOKjwFvd2wd6B3Ssq/3KAToLf8hENTraFaJ88OObqOO1eMG9R8KZt0CNPlESTxBG0mAwMa998HtqKojPjtn0a8t2UHLPrSbWrY+obJQs=
+	t=1745307040; cv=none; b=cA9rqyt0qOxfjQ7HrbiAT03ubpsOILP0QBjasogSxZnB6r16GJSwWbXZ3jI5QVXHnbht9FbAgddMKSZfeCsNEDTaBDCqwnpiRahz/aqYB6p6XWoHVvj1RLuxbeKMMUqetAUKmcKRoknwV/ixfajV8ChJZUI5ESov0MHskys93bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745306972; c=relaxed/simple;
-	bh=pxZi8zImTeMgi+8ymq7cCagNtW5K1bEPmu5ezKcUkSY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sGuW1pSzgQr3zCxqzWlxngp7S6lwwnE/G/TplITtZzEpMHQpVeS+UpNZravGe1UMXxs6TiKQTbo+eWO8DcumuSmpJ4ZSvxB2kPLdNWxlUZmLslN+J8K13sl07PBtxfaX166vqKLHx/c8vMWaRJ27WRQXEm8aEzKkJsd9mPssNLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gYpCy+NV; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745307040; c=relaxed/simple;
+	bh=pPkJ2UTy3GDrAFVJl5Jk/KG0cAq5qNEz0JxEE9mXplM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ixstUwKBJmwxB1iv4joRYwjDBoKeaa/nwe5jCcrv8I97Q5U7zMC5VSLeIOFkpxzyp2cKyqlGwKLtvJOZKoPqCc8cUzDEUfvWlWRC/9f/oUpiRNhDqjj6QKppxCMMEt8p/1yMf5anNBJSGr3kBkF45tIP76nr2QYZW7v3s8JtbN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kL8p8AEO; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gYpCy+NV"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43edb40f357so35549735e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:29:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kL8p8AEO"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso801806366b.3;
+        Tue, 22 Apr 2025 00:30:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745306969; x=1745911769; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7WE6B9+Jm7K2DIy4AwhiaVSJXeDjFiEqYGefV6SKsX4=;
-        b=gYpCy+NVUAWnyEt3Ye+NPqrME6+lWM1jxyRZk9lJ8mEAkHRfxAalXQCM51VxWY4K9U
-         Lf66zWVyDWtMQrecOl3kRQ9k0N+jc6qYgWCl+tyKW08ssix3v4jRKJYmGc5zAzjI9Zc6
-         jQsax30cmnroSrMRTstPfXN1PvPeZozBe45hTE2pSjo9QgU7qd5JzgTkgalzoYLUp2CW
-         Lo5K8srCI/ZdED3VXfeVzZpJ2fmNRAEseQdOGBttPvZmTDO10zr1Cm64ztWDb0GD9Iug
-         KgKLSdCRO8vyV9Rs80854mGyiyIu6Up7lgA9l1j0RbnGvZQMy44RIX3/l1JrsapGKWLk
-         /pbA==
+        d=gmail.com; s=20230601; t=1745307037; x=1745911837; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RAy9pBhdgknyNhYYMd1xC1L3axBJqlU74RKhr7quB0A=;
+        b=kL8p8AEOEv0+qgaBow6XRJz0YXM0m6+eJyVkuaRY2e356M00yAeVuvaMsFdPM1b4/q
+         dxQjlCQpHTVviIKwsYu6s5JtmZUqAUAvUWyMNNuy1o63F1iwPBvEFfain5712kHa1GIZ
+         FR5K8OxUzKoZ/Oi2e16uC3gK+CJeQQfFS4qrHQ+iBwMFAQHlqE9XOUdnOd0i5XC4Jd8j
+         XMFYRO+tSA0nVQf6zpMjBydexu2ERCgTAj8AuqJCNqrAYimXjHl2oVgeaQB15yu5aMoP
+         +j9lNr7ji6oePhQ4IHbULTlbaO3igwHyFYPZbvAn/DNDFxN+xnAS14JlDUs4OnH4vrH7
+         zWiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745306969; x=1745911769;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7WE6B9+Jm7K2DIy4AwhiaVSJXeDjFiEqYGefV6SKsX4=;
-        b=IKQ4ZbAB5bZY9ZaHw2oFbPEo44349myij6gzAOGg8AP9/VaZUrHzoEyAUrarZ+nXP0
-         THH9w5BlO7mb+5LxDRQxmxXgdZeYx5lxH0G9PYSRrTVdFWAvGnK4ovurEKtKM7Puf+JW
-         lPnEwtt7WbIN7VSNGt08CnX6Psq17O+QoEBa6uPwz0nWvWx2kul3ajzcVIHlhLgUyBCj
-         mfrvwB7mjIResuU1gdWZzbaod8+vsDOBwGOC8NbAGPUyu1Y8WJfITDw0BCE7JCOim6hx
-         gJJn9U2sDnbN41G9IdMSWvpC5RtAFxA5ouTghniGI+N2Y031dV0cULTDSgCh0VwY2mqW
-         q/hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGecZR8UJvt4lDlVD8P06dXQUYbn85ERzW1k8oMVX2HK2NTVedlmNOkao/FAzfK5O1/xUHA7ZNJtANbHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO5+VKPJfV0odUqDPVB1scdAWOnP51ndm8UcElWJe8XBw9a3Ek
-	C7x1huyIzgIc69quAOaD5/bWMEIvpiA/3wCMkpG42pEfH7/w7/OtCBGY+8Lb5aEFhgcjAqxnmBz
-	e
-X-Gm-Gg: ASbGncuYNiyIsUDsm8NKCSwXS73mG4mU23O4H1d1UEHGQPXAQ7hhFuw9oNLYwcdXxi8
-	eouw1YmnHxsb1bzHto8emLZKK2AK0U1elZLE9eaCjD1zdI+xfDaGP+WLVJTB5/+6bHaJcPcRoOB
-	AEL6RBlmghSr1RW/8mEIs7Ou1yza95CQRIc21T+yOdWhUk4/cYFoRgknZd9pxQuaVdgruVgtzq/
-	4mQQbX3yQv75GkXdMeYGJA7twRFpI06BqV/XbSiS3pOyA9QFEL4ja7QscvpWEWOVEsEsKCtoRv2
-	1G7MhG03g2K+FQNc08MzcwFT8fpPdt5CDIUH+nVd/nih9JxrXdd5RmySp475Lw==
-X-Google-Smtp-Source: AGHT+IFz4RTYks1mswTos9a1X656QS1hSeMVBYH7QIElbSw016nR7YtAIfOCTnGOtYvHrLhJYdnl0Q==
-X-Received: by 2002:a05:600c:3c9b:b0:43c:ec4c:25b1 with SMTP id 5b1f17b1804b1-4406abfbcd7mr111689315e9.23.1745306969235;
-        Tue, 22 Apr 2025 00:29:29 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbcc3sm163166975e9.19.2025.04.22.00.29.28
+        d=1e100.net; s=20230601; t=1745307037; x=1745911837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RAy9pBhdgknyNhYYMd1xC1L3axBJqlU74RKhr7quB0A=;
+        b=cjDLqPKMAWkYaYvso70fz5hjPyitURaNrBrylW/SdyMVuX1bverWr11KAnvsD/yJe0
+         t++xUFT1f+pqj5uRVI5UU1iwLw7rHTygoXYm2MUQWRfAJHq5Ez8B4ND6qCdCFGpyUzn2
+         oF5Iez+1XdEDhxd9rSCPkzDmTFavpZ/eMxtA2OGF1byicaP7O40zw+a+77DdW5ab6NDr
+         q6IxRYwfcAoTxHsQpd+5Qr/naXOqZYd0Fem4mSdhcimoNz3USN4BH5hkIo+0NZKpO/ha
+         JQbYIWbrVdhStrH4LtDxtBY6ZXuzCqd2IS0XTNUu0VGbUma6t6ynbmpjgzYvtaH8kbkr
+         Vmjw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8ovtebouRbW+t6XJ+oPjNTsaWwFlDO1DHtZcFs2/a4V77+lHc1HzbT1YA4czMAguRpW/1h5ZwlVk=@vger.kernel.org, AJvYcCXdSfMe94IvN71/lruN8pzwPTJv6//Pu65QieQ/QJdKYF0lepJczhm+trxJ6mvUzfybDzkgZ00QQ9v69fqj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfjQZnbLKYV5Vj+Crj1KogQqTMAM4jhEz9G8Tcxz7+tA1XqBM4
+	y0aRc+CHQh8Oh4C+e3TOEXi4gkXw+A4+cc+TRvnRj4xGGDEXwTli
+X-Gm-Gg: ASbGncsro5Lz5vyrRXETa9stkCzNuN41Id+bnSHOdmDMMRElOLCyXudGxnFrB8OerI7
+	0EyPqJsPUI9iK5f3vY1IyKxWr3lcBGFrTvwvRk88OhFyLpwgbM4thPTeJyzbEVDGzKhyZqYhliR
+	Cbp2ILsO1P6kYi/fnHPw+XJEUE81S8uRpYTZ5CRJnzM7TBYbV6u3DtwkiSS0dsGzmTjCy/1XD8u
+	euk/MpfAgFbOFzLu8sh3n5eeJhAn6iJz3O0LSy5fd2Lpimn9JI4sO1EiwHvlvq6fs60s6CHmYWd
+	w/W2lUNd4T2s5n4VE8WslZgo9PM4fHxBstP3OF7nJpsOn7etgPih8ChEt3/ojQ==
+X-Google-Smtp-Source: AGHT+IHrXC1x/a4uRViWvguC886vRxzfCqbfHOZEp6PE84oxoaS8TGNIpPYM0AFyGjDYGudTYJ0Y2w==
+X-Received: by 2002:a17:906:d554:b0:aca:d831:8fb1 with SMTP id a640c23a62f3a-acb74e09fe0mr1347246666b.51.1745307036759;
+        Tue, 22 Apr 2025 00:30:36 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec90950sm618245766b.75.2025.04.22.00.30.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 00:29:28 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chuan Liu <chuan.liu@amlogic.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20250415-clk-measure-v3-0-9b8551dd33b4@amlogic.com>
-References: <20250415-clk-measure-v3-0-9b8551dd33b4@amlogic.com>
-Subject: Re: (subset) [PATCH v3 0/7] soc: amlogic: clk-measure: Add
- clk-measure support for C3 and S4
-Message-Id: <174530696864.2791401.11812769907891409745.b4-ty@linaro.org>
-Date: Tue, 22 Apr 2025 09:29:28 +0200
+        Tue, 22 Apr 2025 00:30:36 -0700 (PDT)
+Date: Tue, 22 Apr 2025 09:30:33 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>, dlechner@baylibre.com
+Cc: Jorge Marques <jorge.marques@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+Message-ID: <6rgtuq2mtk3a63d3tlzbgjhauslkztgemn7566qyi3mzwywprq@lxhsvwofnvg2>
+References: <20250408-abi-oversampling-events-frequency-v2-1-4059272b7364@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408-abi-oversampling-events-frequency-v2-1-4059272b7364@analog.com>
 
-Hi,
+Hi Jonathan, David
 
-On Tue, 15 Apr 2025 10:45:23 +0800, Chuan Liu wrote:
-> Add clk-measure support for C3/S4 SoCs.
+Should this patch be submitted differently, such as under the AD4052 V2
+series? Or are further modifications needed?
+
+Regards,
+Jorge
+
+On Tue, Apr 08, 2025 at 10:20:29AM +0200, Jorge Marques wrote:
+> Some devices have an internal clock used to space out the conversion
+> trigger for the oversampling filter,
+> Consider an ADC with conversion and data ready pins topology:
 > 
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   ++++    ++++    ++++    ++++    ++++
+>   ADC data ready      *       *       *       *       *
 > 
-
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/drivers)
-
-[1/7] soc: amlogic: clk-measure: Define MSR_CLK's register offset separately
-      https://git.kernel.org/amlogic/c/ac2edb9b7bcc34de804d9c034d7387bdeda3fa3d
-[2/7] dt-bindings: soc: amlogic: C3 supports clk-measure
-      https://git.kernel.org/amlogic/c/e5635febb4f063fba40bcb4506c7fa5704ceeace
-[3/7] dt-bindings: soc: amlogic: S4 supports clk-measure
-      https://git.kernel.org/amlogic/c/97533fc48892716e5765b390b2f03a7ac633c55b
-[4/7] soc: amlogic: clk-measure: Add support for C3
-      https://git.kernel.org/amlogic/c/67c618a5852d9066ccb3b6833df8c44839bff5c1
-[5/7] soc: amlogic: clk-measure: Add support for S4
-      https://git.kernel.org/amlogic/c/bc93a99ba90b06e478a21505d07175a0f66849be
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.16/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
-
+> With the oversampling frequency, conversions are spaced:
+> 
+>   Sampling trigger |       |       |       |       |
+>   ADC conversion   + + + + + + + + + + + + + + + + + + + +
+>   ADC data ready         *       *       *       *       *
+> 
+> In some devices and ranges, this internal clock can be used to evenly
+> space the conversions between the sampling edge.
+> In other devices the oversampling frequency is fixed or is computed
+> based on the sampling frequency parameter, and the parameter is
+> read only.
+> 
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+> Some device families such as Analog Device's max1363, ad7606, ad799x, and
+> ad4052 contain internal clocks used by monitor modes and oversampling.
+> Devices' monitor modes are exposed as IIO events.
+> The max1363 driver included the events/sampling_frequency in
+> commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
+> and ad799x in
+> commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
+> hysteresis")
+> but went undocumented so far.
+> 
+> The oversampling sampling frequency is a planned feature to be patched
+> onto the ad7606 driver.
+> In this particular device, it is called oversampling padding.
+> The upcoming ad4052 linux driver will utilize both entries,
+> it is worth noting, however, there is a single register for both
+> options. Since the device is never concurrently in both modes, the
+> values will be safely cached on the device state.
+> ---
+> Changes in v2:
+> - Updated oversampling frequency description according to discussion 
+> - Don't include already applied
+>   commit 3a8fee68faf2 ("Documentation: ABI: add events sampling frequency in sysfs-bus-iio")
+> - Link to v1: https://lore.kernel.org/r/20250321-abi-oversampling-events-frequency-v1-0-794c1ab2f079@analog.com
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 722aa989baac43f694076074b307d134867b4533..6f5c4060704742ae5f5672a861271b88084ac8f8 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -138,6 +138,23 @@ Contact:	linux-iio@vger.kernel.org
+>  Description:
+>  		Hardware dependent values supported by the oversampling filter.
+>  
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency
+> +KernelVersion:	6.15
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Some devices have internal clocks for oversampling.
+> +		Sets the resulting frequency in Hz to trigger a conversion used by
+> +		the oversampling filter.
+> +		If the device has a fixed internal clock or is computed based on
+> +		the sampling frequency parameter, the parameter is read only.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/oversampling_frequency_available
+> +KernelVersion:	6.15
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Hardware dependent values supported by the oversampling
+> +		frequency.
+> +
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_raw
+> 
+> ---
+> base-commit: 9f36acefb2621d980734a5bb7d74e0e24e0af166
+> change-id: 20250321-abi-oversampling-events-frequency-436c64fcece0
+> 
+> Best regards,
+> -- 
+> Jorge Marques <jorge.marques@analog.com>
+> 
