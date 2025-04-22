@@ -1,182 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFF42857D1
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DA928E5EF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:50:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333390; cv=none; b=BjLRau2uuwZh9RhQKwNI+jOdGsbhDmiGhjS1DrpJ1k4gk7s/scG6wA/IDXiYwxctbtPVbg+mve+awm1vsyForP3C6J8A2s2/wcee/cSXz8b5XTmghMX5d9wET9saefSRtOE/MC28AY2+5S850LvhmofEYhMmjGASx6XczdtVzBs=
+	t=1745333440; cv=none; b=IKMxSmB8yuiD45QmlpGofdxBPzxl3K9c6s2a73vogSpTQzVO1aNh/MarJzk6H/+7f5a5dSdNkXttMZpuCV3Vr8BNnvOks2vNCtuZZo98L+4bYfYjahXucOWazmszWad6JQu/vN5JnR/zc2TtsIA2BQhmJm3HsKJIIv2Fc9erExM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333390; c=relaxed/simple;
-	bh=FJUgEG6WDQpKPERbsDn3dIuR5beZg6lAPTaxklsN8F0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SzqVLg0ulP63E8v6WCpr1e/nVFNNhN8t+VY0xELQdeDA05ELuHJcy/ohuMfJoGMV4ZEqq3DpPJtKqDlUWZd+wUJMHh2QjiDK8m6Ys5nIjZpoCgvJjVargtBJEMgD9lDtJNQvktYvUDdedXhuIdL6LfY/EZ7gnN4NXyXmGVN/2T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KCpbVnXU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745333440; c=relaxed/simple;
+	bh=iCimHhUd/mzUcFh965kaimeCxXedpyGd4dqO8foRRYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jddCEwDok/cpu86Qmj64XaZLHKJZHatIpCebywK/gtTtCFMbBMhJlqeia8JUn+xK8WutvPgkXXI+sGzlYqvwaSoapJTT67wpLFL3YCwhb+/5RQBZ4UYd+IxhiLmyvTk1S8635aqaJOfFtQ44VKVcQULMTPdSiMLifO9n3VUzyrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KSxPS/09; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KCpbVnXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745333387;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FL1h0upM6Rf3HUd8dipjWCj+SjWMZ+52iTEFTXr+muw=;
-	b=KCpbVnXUv7xq/AG9VqQZyjzjBDXgf6rHaUtxaQnRlLo49CAjjDqjR8t8P+8PoNXyWj6dIN
-	dKHMdcCZvCxefHpsXsqWkHQft1guXpSCfE1qlX/MqmS3maD4tRPQM9R8CuYOMekH0eme3q
-	HU8ao7UAMft/JhZqBwb+Fg7WVsrldSI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-146-CCn8UumzNFuGvTMinn9OGw-1; Tue, 22 Apr 2025 10:49:45 -0400
-X-MC-Unique: CCn8UumzNFuGvTMinn9OGw-1
-X-Mimecast-MFC-AGG-ID: CCn8UumzNFuGvTMinn9OGw_1745333384
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912b54611dso2636954f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:49:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KSxPS/09"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so39488465e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745333437; x=1745938237; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UShiax+LU8LwPMZnoww3ccqot70SLTgfbw+9kx2vTD0=;
+        b=KSxPS/09JDdvUfbFZYBRA1LFXygdmW/Gny7AiApXv5If/C09Y2OVjSZtjFTJEXlJmh
+         zvgmrwAgrwHo0TONz46E/loH+XjV33USKjllI2rzSNmMnOQ+sSrUUkG1mi/MZ6J6waGT
+         7xsM3apEaLtYPuNeZmRpOpCcLRm9u3Ln7QHH5Y4GmlmhwbaJ6bnDRF8/32RIYvS0JW9Y
+         XO2ASef0y0D9Aa9xZDeVY1Hv0uy6cmgP7e2cKZWkNLhEOiOfYjVQ/zIz15hhp1VPE24/
+         EiwiFtNNlLT69OqLQ1kC27RZwfhKXavYRwg6F2V1Q56Rl/ixQfmXguVTuUANZ+zqYbIK
+         mohQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745333384; x=1745938184;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FL1h0upM6Rf3HUd8dipjWCj+SjWMZ+52iTEFTXr+muw=;
-        b=Tqc64OjI6QCHfk7MJIPpB12hWMWOMu0Jq3SI1Os9crzgRVbM4gq/a/+1MO53HPBa6l
-         sz2q2r2b8HUzYSEJOPt500y2AL+Lb2oqEwTY5UtUjG/7vWV72kk3Rtf26RifuvboxoYP
-         5+9ZoUt8So8RGliZ+jnuXi8D2yYuhmfrv8k4dRLmk1acO/hMmrAxWLi3VKFDi1gIfX0s
-         USaPrQDlV+LR8ML6RdJcIX4hIq5tI9BBVDZeTAgME+J42hbcV6R1NVZZq8KbJ8FTfZuD
-         LjkccQuYWLDTUYJREFI/7I3oBqOEM5D5c9g+H8ALLaDuJId56RAVy/YWF7LPpbAo6UXi
-         MYsQ==
-X-Gm-Message-State: AOJu0YyMOT0t8Clq1YA2kO4/vbi69Fx8zgvSc13Gt5woxUHFwfocVlYl
-	YHXuHR6tIQfUv9S8/XbdNP6clf9BFGn1DRovvvi4IPVtiFKNEVbYNKx0CZsuRBNex0ESyHtJitQ
-	LAV8TzEjU03nCgLGeNbUNPnnOjP0xGJqy26iXRxq6b7FWFjlZLEpbunzUZjMCT3Ys+mcb+ZhRT8
-	hBadpvKr/jwjmM25UwOUWVPN4ycFND6YSaysM0n9EoOAP2
-X-Gm-Gg: ASbGnctKKUEGXSgFRrJCqCSMsgkHj11DQSu6RFkt4Mtofbu7rAsudNUHEI//WMV7W32
-	Mh40CdBDdXHvtsRwxhQPTyeIFrlQ0W9MshmiQ+Poicc80dQLxQFeRIA7sSALcv1CwilEjcFUQnG
-	/JY8d8q+nAx0lrMLYsmGrQ1qBIvbblx7lpe1DqWzYNFFMQpfVmGF1z3tstn5oUgjfJBlRPspZw1
-	W+JR+evYfBOOdbaXaNzgbbkWa0XFRbMpkThFjrV/sccD3YFQI9D4BNfn3c2BaSubjsoY35dfDT1
-	r5hrChAtCsNiVmyP5FGmluyPgm6dCIlo4uBBnZ6avCs0vmlr+MhW+5bdkPzjdg1DZkXU6Is=
-X-Received: by 2002:a05:6000:1888:b0:390:f358:85db with SMTP id ffacd0b85a97d-39efba5edf2mr12256988f8f.30.1745333384391;
-        Tue, 22 Apr 2025 07:49:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYU5QEpqjLlj2P54HTbHeGJnwmjYy5OLXepNOJz3GjZvVq3SaKK7+9M8tbDBxZ426uyeOY8w==
-X-Received: by 2002:a05:6000:1888:b0:390:f358:85db with SMTP id ffacd0b85a97d-39efba5edf2mr12256950f8f.30.1745333383882;
-        Tue, 22 Apr 2025 07:49:43 -0700 (PDT)
-Received: from localhost (p200300cbc73187003969778603229641.dip0.t-ipconnect.de. [2003:cb:c731:8700:3969:7786:322:9641])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4406d5a9e0esm181509965e9.5.2025.04.22.07.49.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 07:49:43 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	x86@kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Rik van Riel <riel@surriel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH v1] kernel/fork: only call untrack_pfn_clear() on VMAs duplicated for fork()
-Date: Tue, 22 Apr 2025 16:49:42 +0200
-Message-ID: <20250422144942.2871395-1-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745333437; x=1745938237;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UShiax+LU8LwPMZnoww3ccqot70SLTgfbw+9kx2vTD0=;
+        b=MKC83d+WQHOnZHX8TOjCaQ8iN74qfMCP6PMAzfhxp+ztpGWZW/+hMfrMwp6fOgs27t
+         3EjvSdJhsqFMK5MH1KevNcrRE1f0BAtdJrEuogcbLclOeDGUTm7y5AHfvY+jPM10C7cw
+         RHVBbPOMMQbS8jsouAgU88IAgfiN+0/1MuwanVMmdZY9jp3lweSTWRkbASQo9oNlS/Fn
+         /efM5BW2ZO4T4LvCraJmUtvUG8TTPPRmkR/nNVgBzaXB18tWzuwEFs2oAznGrsVhDj1R
+         LG/O56ovUSaw2L654HrrTFOZhYOrCfisUgOkP7Muj8ilquh+oSwEPRhmDer3Xt1n/prl
+         6bGw==
+X-Gm-Message-State: AOJu0YzQdLc/vJZrcI8mZJqgUsFOYFFHd2Qa0uMDPHS6KxOmFf8Movok
+	5DSpPCtDL/x2wAgDR6X9kTzENUpJToKMQb6hltMYS+/RghQb3APVxyWpyFJHTUw=
+X-Gm-Gg: ASbGnctfBda5Fv1uliuFS9KoSM2p3yskHYGYnTxF10Uj9AcA5Mo8lHSz7g9LqW7pEX3
+	XWzpvKg4YWcc3Ott47141oS2uyL5Wb8fXbHj7BK2Q0QZCqOAR54Gg0XsffTOQzOXTF9HxC2rqZz
+	RANjspJb3V1682WD+SaGy3142HtsiC3tDuWombJDny7jxtIOcrzya2UjbMg/BofufLh2pZCS+8X
+	wZ+Imc0FrhNR2H3xHSy7+6CMZGM9DxqCGPb246KeU9zbmKcitYckug9gApzdS/jfPWMcknhTNIw
+	Itlk/TdBwy+3vb5r5Fm4Tgt3CHaIE+TgAcu3PIcfkeU=
+X-Google-Smtp-Source: AGHT+IEEQI8X/bGEgYwYK6QKG0DoD1RsbG5CG6ST27j6gHp079g1myYN7p57MYNl+GNamCTUP7hJTg==
+X-Received: by 2002:a05:6000:188d:b0:39c:1424:2827 with SMTP id ffacd0b85a97d-39efba4657amr12604592f8f.15.1745333436928;
+        Tue, 22 Apr 2025 07:50:36 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5aced6sm27597405e9.16.2025.04.22.07.50.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:50:36 -0700 (PDT)
+Date: Tue, 22 Apr 2025 16:50:34 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: Re: [PATCH RFC 0/9] Reduce ratelimit's false-positive misses
+Message-ID: <aAesultdR77oRaSI@pathway.suse.cz>
+References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop>
+ <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
 
-Not intuitive, but vm_area_dup() located in kernel/fork.c is not only
-used for duplicating VMAs during fork(), but also for duplicating VMAs
-when splitting VMAs or when mremap()'ing them.
+On Fri 2025-04-18 10:13:49, Paul E. McKenney wrote:
+> Hello!
+> 
+> This v2 series replaces open-coded uses of the ratelimit_state structure
+> with formal APIs, counts all rate-limit misses, replaces jiffies=0 special
+> case with a flag, provides a ___ratelimit() trylock-failure fastpath
+> to (almost) eliminate false-positive misses, and adds a simple test.
+> 
+> The key point of this series is the reduction of false-positive misses.
+> 
+> The individual patches are as follows:
+> 
+> 1.	Add trivial kunit test for ratelimit.
 
-VM_PFNMAP mappings can at least get ordinarily mremap()'ed (no change in
-size) and apparently also shrunk during mremap(), which implies
-duplicating the VMA in __split_vma() first.
+I have suggested few cosmetic changes for the above patch.
 
-In case of ordinary mremap() (no change in size), we first duplicate the
-VMA in copy_vma_and_data()->copy_vma() to then call untrack_pfn_clear() on
-the old VMA: we effectively move the VM_PAT reservation. So the
-untrack_pfn_clear() call on the new VMA duplicating is wrong in that
-context.
+> 2.	Create functions to handle ratelimit_state internals.
+> 
+> 3.	Avoid open-coded use of ratelimit_state structure's ->missed
+> 	field.
+> 
+> 4.	Avoid open-coded use of ratelimit_state structure's ->missed
+> 	field.
+> 
+> 5.	Avoid open-coded use of ratelimit_state structure's internals.
+> 
+> 6.	Convert the ->missed field to atomic_t.
+> 
+> 7.	Count misses due to lock contention.
+> 
+> 8.	Avoid jiffies=0 special case.
+> 
+> 9.	Reduce ___ratelimit() false-positive rate limiting, courtesy of
+> 	Petr Mladek.
+> 
+> 10.	Allow zero ->burst to disable ratelimiting.
+> 
+> 11.	Force re-initialization when rate-limiting re-enabled.
+> 
+> 12.	Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE.
+> 
+> 13.	Avoid atomic decrement if already rate-limited.
+> 
+> 14.	Avoid atomic decrement under lock if already rate-limited.
 
-Splitting of VMAs seems problematic, because we don't duplicate/adjust the
-reservation when splitting the VMA. Instead, in memtype_erase() -- called
-during zapping/munmap -- we shrink a reservation in case only the end
-address matches: Assume we split a VMA into A and B, both would share a
-reservation until B is unmapped.
+The rest looks good. And I think that it is a great improvement.
+Feel free to use for the entire patchset:
 
-So when unmapping B, the reservation would be updated to cover only A. When
-unmapping A, we would properly remove the now-shrunk reservation. That
-scenario describes the mremap() shrinking (old_size > new_size), where
-we split + unmap B, and the untrack_pfn_clear() on the new VMA when
-is wrong.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-What if we manage to split a VM_PFNMAP VMA into A and B and unmap A
-first? It would be broken because we would never free the reservation.
-Likely, there are ways to trigger such a VMA split outside of mremap().
-
-Affecting other VMA duplication was not intended, vm_area_dup() being
-used outside of kernel/fork.c was an oversight. So let's fix that for;
-how to handle VMA splits better should be investigated separately.
-
-This was found by code inspection only, while staring at yet another
-VM_PAT problem.
-
-Fixes: dc84bc2aba85 ("x86/mm/pat: Fix VM_PAT handling when fork() fails in copy_page_range()")
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
-
-This VM_PAT code really wants me to scream at my computer. So far it didn't
-succeed, but I am close. Well, at least now I understand how it interacts
-with VMA splitting ...
-
----
- kernel/fork.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index c4b26cd8998b8..168681fc4b25a 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -498,10 +498,6 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
- 	vma_numab_state_init(new);
- 	dup_anon_vma_name(orig, new);
- 
--	/* track_pfn_copy() will later take care of copying internal state. */
--	if (unlikely(new->vm_flags & VM_PFNMAP))
--		untrack_pfn_clear(new);
--
- 	return new;
- }
- 
-@@ -672,6 +668,11 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
- 		tmp = vm_area_dup(mpnt);
- 		if (!tmp)
- 			goto fail_nomem;
-+
-+		/* track_pfn_copy() will later take care of copying internal state. */
-+		if (unlikely(tmp->vm_flags & VM_PFNMAP))
-+			untrack_pfn_clear(tmp);
-+
- 		retval = vma_dup_policy(mpnt, tmp);
- 		if (retval)
- 			goto fail_nomem_policy;
--- 
-2.49.0
-
+Best Regards,
+Petr
