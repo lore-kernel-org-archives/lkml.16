@@ -1,117 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13E3202F7B;
-	Tue, 22 Apr 2025 12:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6D727CB1F
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745323828; cv=none; b=NvqWqVhnxgrem5uMKrrC8QzbONRVgcw/v9kQyYXeXVlfsFOLaJtkcxqVdzBp1rT1pz+OA7u/E9dl2FYh8rHu2ufFs0dW31/Y2xgF7IKF2nb4DbtOlIEx+Wrb6z5Gxf0Oqe4YFGNkAnQZBnB0bmlVsnTeBJmf0CLdkMzRTHx0gaY=
+	t=1745323848; cv=none; b=rI7gtAMJuDT0rBFI56PtPAdmaCXcd1RhRk09m3Zzp4hp3jBs6I8ClWifhBZJ+bnZonnACgzEz6teP/+aPHJnzh6iG7ZzFPb7ZV2cPPZ7sG4Vt839SI15WQ1yB25DVlcBz41d9kff4IFL1pq5vueNihlz889hrhyPXcXyqv2jwho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745323828; c=relaxed/simple;
-	bh=gn8U39yE8fPjRVht2QyZ2B6L1GURwrgsQ9paV7eDdQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDFAecRMsnvOLd3JUmFUP+sCp8D1ej+JNUZWtZGJI2qx4qLW13d1phVb9hfmgnR1uh8VTnTuuPMqCxS3vVe9dd20HHX7q7kGAnQyBz1ma+9urwdrbrEstcqLQQ+1Mo4PSA0+8Hv0YPeN1E10mlRlJAsGD2ygFnjyvsfx9K66eiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZT4Cge2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZT4Cge2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B8BC4CEE9;
-	Tue, 22 Apr 2025 12:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745323827;
-	bh=gn8U39yE8fPjRVht2QyZ2B6L1GURwrgsQ9paV7eDdQ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aZT4Cge28FVq4lBf7Vgmk87GoOawUeOjQcs2I4YLEAoiTJX6hMegOF4kqJg93zQlF
-	 oFDhbX8eCzap/igxTecFcGgXle9spH1gIhecrCrWSRcVsXNakaAmYIdu49NX4d305+
-	 Ce8RTw0gEkRa4E/e9YOva7T83TIYDK8kCtJwH2bM/pacs5TN4Nwq7HJ9fK9SMkV2Qs
-	 1xuwQEnHC4KxDU0hcm9OfNEow3XPgvYFzZIRfumYlTQJZvl9y/n5zp0w3DgRSu/6qN
-	 BK7uQKVQfeGOIdpzdIFDdd1Vj+qmIblzYRIu457YI10Ae403Cjshhm9Qs18HK8V9SA
-	 yEStyec9WPZ5w==
-Date: Tue, 22 Apr 2025 14:10:23 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Hans Holmberg <Hans.Holmberg@wdc.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
-	"Darrick J . Wong" <djwong@kernel.org>, hch <hch@lst.de>, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: remove duplicate Zoned Filesystems sections in
- admin-guide
-Message-ID: <dhowchhm6zfb3hir76tmbmunadqobbkmgaa5uardswon2keggy@3bgfjikvj5sf>
-References: <_RxmFF7sLGc26Wr0UDPdK5Mxv9AicUnbJ2I5Cji6QZiiHz5pr9uYx7Zk8xOeDutTUsJvS143LlYYxoitgsEEGA==@protonmail.internalid>
- <20250422114854.14297-1-hans.holmberg@wdc.com>
+	s=arc-20240116; t=1745323848; c=relaxed/simple;
+	bh=7wGcjDU8PngIFhOxsrFzEFsCxKeIWbmcBClEWPF2xQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BLNcp2mOgdl2cIlHEMn908yfKQZEYXdRsDmgpWh0S8niVNdj5XCx5x2zk3JzEZBrp0Ow5JDzQbxBtTONMKBbVLrZCE1Q9AUBlQLvTVmMCzhJvMkB1K6q8txMO4GcoIYcOV5D+8JuYKyi5JIALj2XuZgaBlh0RBxyOJKvld5eaGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 43B7F43B4C;
+	Tue, 22 Apr 2025 12:10:41 +0000 (UTC)
+Message-ID: <6cefe9be-c103-4533-9f44-4666d3fba2f5@ghiti.fr>
+Date: Tue, 22 Apr 2025 14:10:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422114854.14297-1-hans.holmberg@wdc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/5] riscv: uaccess: use input constraints for ptr of
+ __put_user()
+Content-Language: en-US
+To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
+ jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org
+References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
+ <20250410070526.3160847-4-cyrilbur@tenstorrent.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250410070526.3160847-4-cyrilbur@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefjedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetvdffkedvjeefkeegfefgteffleeltefggfdvheekfffhfeeghfeffffhtdelvdenucffohhmrghinhepghhnuhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhus
+ egvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepjhhrthgtvdejsehjrhhttgdvjedrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Tue, Apr 22, 2025 at 11:50:07AM +0000, Hans Holmberg wrote:
-> Remove the duplicated section and while at it, turn spaces into tabs.
-> 
-> Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
 
-Sounds good.
-
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-
-Hans, I'm adding a Fixes tag before merging if you don't mind me editing the
-patch before applying.
-
-Fixes: c7b67ddc3c9 ("xfs: document zoned rt specifics in admin-guide")
-
-
+On 10/04/2025 09:05, Cyril Bur wrote:
+> From: Jisheng Zhang <jszhang@kernel.org>
+>
+> Putting ptr in the inputs as opposed to output may seem incorrect but
+> this is done for a few reasons:
+> - Not having it in the output permits the use of asm goto in a
+>    subsequent patch. There are bugs in gcc [1] which would otherwise
+>    prevent it.
+> - Since the output memory is userspace there isn't any real benefit from
+>    telling the compiler about the memory clobber.
+> - x86, arm and powerpc all use this technique.
+>
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
+>
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> [Cyril Bur: Rewritten commit message]
+> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
 > ---
-> 
-> This fixes up the warning reported by Stephen Rothwell for linux-next
-> 
->  Documentation/admin-guide/xfs.rst | 29 ++++++++---------------------
->  1 file changed, 8 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-> index 3e76276bd488..5becb441c3cb 100644
-> --- a/Documentation/admin-guide/xfs.rst
-> +++ b/Documentation/admin-guide/xfs.rst
-> @@ -562,7 +562,7 @@ The interesting knobs for XFS workqueues are as follows:
->  Zoned Filesystems
->  =================
-> 
-> -For zoned file systems, the following attribute is exposed in:
-> +For zoned file systems, the following attributes are exposed in:
-> 
->    /sys/fs/xfs/<dev>/zoned/
-> 
-> @@ -572,23 +572,10 @@ For zoned file systems, the following attribute is exposed in:
->  	is limited by the capabilities of the backing zoned device, file system
->  	size and the max_open_zones mount option.
-> 
-> -Zoned Filesystems
-> -=================
-> -
-> -For zoned file systems, the following attributes are exposed in:
-> -
-> - /sys/fs/xfs/<dev>/zoned/
-> -
-> - max_open_zones                 (Min:  1  Default:  Varies  Max:  UINTMAX)
-> -        This read-only attribute exposes the maximum number of open zones
-> -        available for data placement. The value is determined at mount time and
-> -        is limited by the capabilities of the backing zoned device, file system
-> -        size and the max_open_zones mount option.
-> -
-> - zonegc_low_space               (Min:  0  Default:  0  Max:  100)
-> -        Define a percentage for how much of the unused space that GC should keep
-> -        available for writing. A high value will reclaim more of the space
-> -        occupied by unused blocks, creating a larger buffer against write
-> -        bursts at the cost of increased write amplification.  Regardless
-> -        of this value, garbage collection will always aim to free a minimum
-> -        amount of blocks to keep max_open_zones open for data placement purposes.
-> +  zonegc_low_space		(Min:  0  Default:  0  Max:  100)
-> +	Define a percentage for how much of the unused space that GC should keep
-> +	available for writing. A high value will reclaim more of the space
-> +	occupied by unused blocks, creating a larger buffer against write
-> +	bursts at the cost of increased write amplification.  Regardless
-> +	of this value, garbage collection will always aim to free a minimum
-> +	amount of blocks to keep max_open_zones open for data placement purposes.
-> --
-> 2.34.1
+>   arch/riscv/include/asm/uaccess.h | 18 +++++++++---------
+>   1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> index c9a461467bf4..da36057847f0 100644
+> --- a/arch/riscv/include/asm/uaccess.h
+> +++ b/arch/riscv/include/asm/uaccess.h
+> @@ -219,11 +219,11 @@ do {								\
+>   	__typeof__(*(ptr)) __x = x;				\
+>   	__asm__ __volatile__ (					\
+>   		"1:\n"						\
+> -		"	" insn " %z2, %1\n"			\
+> +		"	" insn " %z1, %2\n"			\
+>   		"2:\n"						\
+>   		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
+> -		: "+r" (err), "=m" (*(ptr))			\
+> -		: "rJ" (__x));					\
+> +		: "+r" (err)					\
+> +		: "rJ" (__x), "m"(*(ptr)));			\
+>   } while (0)
+>   
+>   #ifdef CONFIG_64BIT
+> @@ -236,16 +236,16 @@ do {								\
+>   	u64 __x = (__typeof__((x)-(x)))(x);			\
+>   	__asm__ __volatile__ (					\
+>   		"1:\n"						\
+> -		"	sw %z3, %1\n"				\
+> +		"	sw %z1, %3\n"				\
+>   		"2:\n"						\
+> -		"	sw %z4, %2\n"				\
+> +		"	sw %z2, %4\n"				\
+>   		"3:\n"						\
+>   		_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0)		\
+>   		_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0)		\
+> -		: "+r" (err),					\
+> -			"=m" (__ptr[__LSW]),			\
+> -			"=m" (__ptr[__MSW])			\
+> -		: "rJ" (__x), "rJ" (__x >> 32));		\
+> +		: "+r" (err)					\
+> +		: "rJ" (__x), "rJ" (__x >> 32),			\
+> +			"m" (__ptr[__LSW]),			\
+> +			"m" (__ptr[__MSW]));			\
+>   } while (0)
+>   #endif /* CONFIG_64BIT */
+>   
+
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
