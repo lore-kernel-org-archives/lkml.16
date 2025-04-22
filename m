@@ -1,121 +1,123 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E22C199252
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35134293B70
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340035; cv=none; b=fO8rY1tCsylkvsLyZtkHXKwjOndcg/uUOv7Wp1vKqeSC/5VLP1JY9zPtotm2faxXS0x406eBJs8v3cxYRaK1YbQrZMN6g/oH7iyTxQ9rNiIPCQFa0begI4VKLrbyX2BfBzJAX7KOZ/Rqobm/Lyc8jtrcJuHLjV/c62COMa+jUKo=
+	t=1745340122; cv=none; b=eyoFZLU25T6T/57mmpKys9xkIqFOR4Ptu8ziafFj2W+Vjxy3w3aTpDkq051J9CBSEMpOmRD6W8SXV505MFzZE0H7hMoejyllCMe3EHvXtzzbZGKnMprP+CKc8w4EJIR6BAfrV4nEjyQYAnVrcN/yQnwx8he/RC1/SGYffM9taGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340035; c=relaxed/simple;
-	bh=KyHkgSB1LYkvBYuMzxh2ISkVy4IyurtuNG4vWCQZgwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z9FlXIt4Nt3T80paPbvDpFcqzkFpYcfdW3ygQ45vBVJVXI4ZDLDJsRTxWu1nSuNkM+FG2NqbC529Y9TWVnrFZRbXzNGuoZqjDnU33L/AMadaOuzhudOGGN3jqBfC05bnoijPQeVEXjU4P4ZaNUEZkjngl/LRXVLfVqyufIozC5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cpe8U2Hs; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cpe8U2Hs"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3995ff6b066so2942296f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745340032; x=1745944832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PheeiRc9EwICesMgU/m/AYGI+4mpx/+Fk50exrI0Vzo=;
-        b=Cpe8U2HssvGru79Ng7Bzez5SvbrVuVDtYnD+IC4UMl6GQHooV0C69H2EyRj2KH0a+G
-         SSxs9bbpYbv2xJyz3HPN7Sqepqe7OToyBq1Pc6DCXYGqIsNALFZ5H+XkE341pvPUiagM
-         bzfFMQ0nzWTLDdEavRp3727RjbTBeKLmA1kCfyGsISQjmWsJDGswuPYL0sqoRnJg4x3o
-         laI/GFkoxhsseH++zUmZiE0hU2QdfDpWyinyqSvghnQ9n28olYE/orfvYJ8eWB9aXeg6
-         bArVuD7A304F2+f4SZIZ7XfuryBw+wsmuwif4TCls0CwAXlpUEfFE+AOw3DqgDU+fKm5
-         U4Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745340032; x=1745944832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PheeiRc9EwICesMgU/m/AYGI+4mpx/+Fk50exrI0Vzo=;
-        b=LT3vucdw25QAWA9xuGiORddaNcQZUf/c+OASFNXSttxv2uEFm95gxncYfshv347kHn
-         7O4h0peLEFpxCgocy1IM/ZmkGav2b63yHvHoFXGX4c9jC8v6TEEupp6bilm+s0v3HvgL
-         lj466894oS6fyf7knVJjMfHkaNnJavKIG+RifpwgWkJMrLcI00EHZL4TM/oACH2HHnxz
-         co7HCjZP77/d+2RpuckFDvAytJ8BU52adKicpGX4Hd31xxUlI5Na0qx/Rub/X3KgndZg
-         c9+Jaj73QPyiU3oWHLJNErFL7kCRJoD5m9/h1LtcEwbXzeUDSDC3juihyBabpQrpUh1s
-         DKIg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRucOOSuaaUEfedVLky2huzxUkUHWn/OukOFNx+9t252IEPgZOAE4pDK+kT4GBn0tfa9i9d8JB+/b/mdc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDzFZL8NG736bdX/fkqR4rPEmbRm4qNVlkP4EQFyoAv7devJ9I
-	nseBa+4dRfKWsel/bdD+OzJJzPHzfQ544RBOHfvmwFR1pmO3BQ3aTxiNpvnQZ+FR2tElGoKBk/U
-	1+es2SCZO27aQ3fZDtup7NyADmTsd+mpo0PUE
-X-Gm-Gg: ASbGncuvlEiON1vTTZ32WwLY2YXdDfp8FZ8UuIIe59lij6v7qCNiw61QgpjBKaToMBj
-	yhBlgrIUCoYnOCsVE6BpBuOTa81H72buRWHi5HmuUVqps0+uxwHJLxaIt3Khd+dKET0SO/vz2g0
-	+SZWPdRgF5ogUwrojqsvF2
-X-Google-Smtp-Source: AGHT+IF5X0bjAqHneOs6yMl4knfwST8tHeBr7QuNJL0urvEF4LP3Q/vNR/07ibYC57qaiBHpyzqx79NitVgd2G+HP8I=
-X-Received: by 2002:a05:6000:2584:b0:39a:ca05:5232 with SMTP id
- ffacd0b85a97d-39efba399c5mr13636179f8f.5.1745340032310; Tue, 22 Apr 2025
- 09:40:32 -0700 (PDT)
+	s=arc-20240116; t=1745340122; c=relaxed/simple;
+	bh=e39cG3iCozvRfooGUgvY+i9PZWy2Mcw16xJrdjz4B6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MzP77M5n+x2VkWOI5LQ/09UKr8H5iq6XhIY/3u1NMVy6gjSzdGjJlXoNg8FGHEM/XfCr5Z167yIngsFYeuZZEBoTOi9juW1CiFxsxGNIKpy6hAsDzRdEKFJ4DqJanAm9udUn16jItjWIv/V7NCDV441L9dN6Rfd61x1wtjAjzhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: lfG6Pzo7R3CVXuYMJnaadQ==
+X-CSE-MsgGUID: FeESvbp4TdS0yHiH0AQFcA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="50738569"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="50738569"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:42:00 -0700
+X-CSE-ConnectionGUID: +vpR6mhLStOiHLhN+vPLTw==
+X-CSE-MsgGUID: ee9XAGb/RfKzzan751w3aQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="133014895"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:41:57 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u7Gh0-0000000EmVr-0ZPU;
+	Tue, 22 Apr 2025 19:41:54 +0300
+Date: Tue, 22 Apr 2025 19:41:53 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 27/29] x86/boot/e820: Simplify the e820__range_remove()
+ API
+Message-ID: <aAfG0fSVFVNciAqi@smile.fi.intel.com>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-28-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422100728.208479-7-ardb+git@google.com> <d00c9119-5e8b-2615-8e4b-2d25732ff71a@amd.com>
-In-Reply-To: <d00c9119-5e8b-2615-8e4b-2d25732ff71a@amd.com>
-From: Ard Biesheuvel <ardb@google.com>
-Date: Tue, 22 Apr 2025 18:40:20 +0200
-X-Gm-Features: ATxdqUGtloSl2U65kDIWm22AckUEPKARP-Mw8k30n0_GdyswPmmUC6qOSYNEPKM
-Message-ID: <CAGnOC3b2XBFw+xdMhTtpfDYG480BG-KwfkPMWOiOP+13XeHFfg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] efi: Don't initalize SEV-SNP from the EFI stub
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, mingo@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421185210.3372306-28-mingo@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 22, 2025 at 5:51=E2=80=AFPM Tom Lendacky <thomas.lendacky@amd.c=
-om> wrote:
->
-> On 4/22/25 05:07, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
->
-> Hi Ard,
->
-> I'll try to get to reviewing and testing this series very soon.
+On Mon, Apr 21, 2025 at 08:52:07PM +0200, Ingo Molnar wrote:
+> Right now e820__range_remove() has two parameters to control the
+> E820 type of the range removed:
+> 
+> 	extern void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
+> 
+> Since E820 types start at 1, zero has a natural meaning of 'no type.
+> 
+> Consolidate the (old_type,check_type) parameters into a single (filter_type)
+> parameter:
+> 
+> 	extern void e820__range_remove(u64 start, u64 size, enum e820_type filter_type);
+> 
+> Note that both e820__mapped_raw_any() and e820__mapped_any()
+> already have such semantics for their 'type' parameter, although
+> it's currently not used with '0' by in-kernel code.
+> 
+> Also, the __e820__mapped_all() internal helper already has such
+> semantics implemented as well, and the e820__get_entry_type() API
+> uses the '0' type to such effect.
+> 
+> This simplifies not just e820__range_remove(), and synchronizes its
+> use of type filters with other E820 API functions, but simplifies
+> usage sites as well, such as parse_memmap_one(), beyond the reduction
+> of the number of parameters:
+> 
+>   -               else if (from)
+>   -                       e820__range_remove(start_at, mem_size, from, 1);
+>                   else
+>   -                       e820__range_remove(start_at, mem_size, 0, 0);
+>   +                       e820__range_remove(start_at, mem_size, from);
+> 
+> The generated code gets smaller as well:
+> 
+> 	add/remove: 0/0 grow/shrink: 0/5 up/down: 0/-66 (-66)
+> 
+> 	Function                                     old     new   delta
+> 	parse_memopt                                 112     107      -5
+> 	efi_init                                    1048    1039      -9
+> 	setup_arch                                  2719    2709     -10
+> 	e820__range_remove                           283     273     -10
+> 	parse_memmap_opt                             559     527     -32
+> 
+> 	Total: Before=22,675,600, After=22,675,534, chg -0.00%
 
-Thanks.
+>  extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
+>  extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
+> -extern void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
+> +extern void e820__range_remove(u64 start, u64 size, enum e820_type filter_type);
+>  extern u64  e820__range_update_table(struct e820_table *t, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
+>  
+>  extern int  e820__update_table(struct e820_table *table);
 
-> But one
-> thing I can see is that we never set the snp_vmpl level anymore in the
-> EFI stub and so PVALIDATE will fail when running under an SVSM.
->
-> But I don't think this series is completely at fault. This goes back to
-> fixing memory acceptance before sev_enable() was called and I missed the
-> SVSM situation. So I don't think we can completely remove all SNP
-> initialization and might have to do svsm_setup_ca() which has a pre-req
-> on setup_cpuid_table()...  sigh.
->
+Wondering if are going to get rid of 'extern' for the functions...
 
-OK, so memory acceptance from the EFI stub is still broken even when
-using the MSR protocol, right?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-But SVSM is relatively recent, and so we probably have more leeway to
-fix it properly. And I assume the firmware itself can be expected to
-have its own working configuration to communicate with the VMM and/or
-the hypervisor?
 
-This hybrid mode of executing in the firmware execution context but
-taking control of everything under the hood is really a maintenance
-nightmare, and so I'd rather do less of that than more of that. If
-that implies that we need to re-engineer the early memory acceptance
-and the population of the unaccepted memory table, I still think we
-need to consider it. Ultimately, the memory acceptance in the stub is
-not fundamentally needed, it is only there because there is a mismatch
-between the table's granularity and the EFI memory map granularity. In
-fact, given that this appears to be a rare occurrence anyway, and
-ultimately under the control of the firmware (which we can also fix),
-we might simply decide to use an unaccepted memory table with 4k
-granularity unless all existing regions unaccepted memory regions are
-aligned to 2M.
