@@ -1,279 +1,389 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32F2204689
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F6138385
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315884; cv=none; b=H9jyiU+MRTYQ5ByoWZJDxaQypJH7LT7WbIvu0Hcb54cAIcTuC/WxNyoDk/kOD/8bY7wZFfkGIoSl2pxHNLX6ResaYQ8QtWF/93SzJAnInIxxaNo/ks8Hlqcyl6FoiRpUDtxj75k3gVo32UoIBiuXPIVSeyvhjcfaxJqxEzCOMFI=
+	t=1745316113; cv=none; b=GlpwX+4GIGPyBsKq/bGwIHqQAk97uP2Oka4EpjiyxeXc7IPKSC6gVGD22EIYn3Lha6egPAX7QkVjuNL8QQhnX+hj5SC/L2bDw5zgenzSsg8vpXB/afrAzEkzxYikxzfrs/ehAOyQdsUGxxM5yInFHJnErcnSzC2fUtSnW6qURg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315884; c=relaxed/simple;
-	bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CFCTz1Qx4TXlBrEG9bN8jo3FUvkpoj2aDslCwIjSLFnzpq8MzHCxH18fgwFiIEwZ+k74qLkUQ2wOgzyG3AzLPAn0I0Q45P8rdUZe9xkAcw58jDzOXCUWotHb/+hqSmbntRWHFjkC6PbdFiyYs6uxbu25eCyrBk1j4cpgj3n3jjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cHLsoNRU; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745316113; c=relaxed/simple;
+	bh=N4IdSuOrsUjGgi/lq7C8lnfWiTXPMcm+7e85ZBoR24M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PzHjgoWVt3bnZrCynJh8jaZFh/AeHuP4XhdHa4dLpHYdNjiIfn6Ivyn40myGOFER7OoquF5zsgl33r1PUDi9oA/ZOra2QKX5FZZq9D8NB7lT+VuglGLDFC/OqqBw1qeirNSwcMXLeOdzfUTDrvt2pOb0pU1zjJ9ENJ7KtBPQ+RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QT4xV4Y7; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cHLsoNRU"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a064a3e143so161484f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:58:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QT4xV4Y7"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54c090fc7adso5305036e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745315880; x=1745920680; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-        b=cHLsoNRUSrRFPsnxYTqdRoHuPRcHFk4bLYqf0exWuh8lozisJ35yit1T+TKlczWFHh
-         IUNN9jxzf11zubnS2xVRGAx0DSO77MjU9MnzfBc7UR41YiW6HHg5hX0M3yX5JeStHM9P
-         L4BaimxAt66DNfxkV62hl3NPBY7RVwOXu0QQ+BTHfCKFcDX4WpkzS1xc2DfaS1ldHoGb
-         QhHvThj9s1tgeehIosM4J8oWdrbBN8RmMgVYWMWAYzvN/QZUxt0qA1T5Oayq57yLKuQ/
-         1Df4QSJ7b7P57lCoheSjkW/dOQHbE8S/XSdYIoYqoXkEV0Z11hPNEibbNgZq1V4nUkjL
-         tmRA==
+        d=gmail.com; s=20230601; t=1745316109; x=1745920909; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lFg2E5TdC6tWZ0EmL0XbyzLDwFhRtVTh44iqbHEh8o4=;
+        b=QT4xV4Y7IDClZDdT8uQen+QGqxm/f1mluMNFA+UEeo50itSQEOvYir8dfWKgPFVFcT
+         Znh0vU0mQprzqwEYUb8e59QEyza/lNdXqPwg4cTezhzhLq/q3DfqnlK+6FfKeXKCkJIT
+         HvOXbiPP9jQOxGgfzDk9IjmqZ5NVfSeXrGX7e6yScTaQS80SC6BriHsYErDBApa/uyZx
+         O+NteEO2ARHUu6zLXJU7OIp9pFxK+5x/6WgiyjmYHacIOhxihSv5OdgTdS+Jxm/Dermx
+         CC0dYI05VI+LDBnolHfVg1ViBHgUDmMy/9LNBjL46jzfo69FVhXxpta878oWdbccZQZJ
+         GZ/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315880; x=1745920680;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tO6B4uusGXWb6S1d5vB39Y8e5rVhKy79xlXkhC2hD/8=;
-        b=d5E70hGzfiuiMyKvcAGh4WmucRRio5sUc8qSrwetCZS3OBoD5DSn7GaBdtUbxqSjBc
-         h1reihIbZLSqOT0KDm9LbeZgfqIlIcRw0Xbin6KkaDMiBq0prL5VDraNtvLPn+UkQ6w1
-         Go8f36NKglghq4ky+XxoLCw+4Ru8CbjKk9YMph6c51PnyziZKqGE/+et589law5mPOjO
-         n+38WpFomYJCHadTXUwBg5NkOFZbVwO5+Up+ez1j+aJv8d3Dm/oXRXA99bun1hZvfE4t
-         EODwyLq11R1YucpQMVcVhmsmP2XA5KxdMBRbj8aeYwzHH1BB13Acigv/qvIPlclUzqmx
-         V8JA==
-X-Forwarded-Encrypted: i=1; AJvYcCUipHmiDHxTaBGr5Y40D13XerAapl6lJU3zwC6aklzuiyP+4Fy0OBz6c/Kj/sJUFELx70aQRu8aArI+JaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys4/q8FK+T+7490Yb42hla7J5MMF5TPvo4uIp2VBXus/KKulBz
-	E4hocK7pUwpE6cYEgymbJFriCIQJEyGWU2PzHaUV/d30d8VY2h1VCHapdWwo180=
-X-Gm-Gg: ASbGncv1X+xWVHWB5GEHRqXgFBZAsgIALgP6h98IDmdJgb2OvVVk43wVQWHT+yP/NhS
-	U8DqLTpgEBmw/XHKmsB3VQojpYUksxsjuHEuvWxjy1uFeAdx95ty4Zjc/Kteh+2Wb7aaxA0yRnc
-	kPepkm/DweANv/qcUp/MlPmcpu7hU2hXjk1RNVyDs8L1VQ+HzXMYeYt1OC6tttfjDqw+zFuKi3T
-	ZYuV1tRGTM67rVcHptffm2IAco0+rYBc3X+vpKIbV8j2EMP7FviVOFsj7wBtSew7U+DIlSiy8gE
-	KdmWh+cJpPy5rOVgD2xiPdq+zui4FPqRwVjHe8uFVOd1iTV4yyRrqr4aPWa156HkCqN6OMDPJKV
-	tzYWGbdp9gWpXmr3BzQAkBqt0mYuighZe1198tbyeWqCss37a4MftqxTiB1MD5Q31Yw==
-X-Google-Smtp-Source: AGHT+IGwOEvoLsyGlKbLK2I7EO3CV112zbLo9AuOo2VfG3qa8/zautum4TxS9/Et7Lbmpeas2d4LEQ==
-X-Received: by 2002:a5d:584e:0:b0:39c:2264:43ea with SMTP id ffacd0b85a97d-39efba2a69bmr12519153f8f.3.1745315879983;
-        Tue, 22 Apr 2025 02:57:59 -0700 (PDT)
-Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207afsm14838749f8f.12.2025.04.22.02.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:57:59 -0700 (PDT)
-Message-ID: <6046a6d0-bae3-41bb-9960-82c403f62476@suse.com>
-Date: Tue, 22 Apr 2025 11:57:57 +0200
+        d=1e100.net; s=20230601; t=1745316109; x=1745920909;
+        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lFg2E5TdC6tWZ0EmL0XbyzLDwFhRtVTh44iqbHEh8o4=;
+        b=Z+ccJJ7FJUqieCR5pBz6TAp0C/4+Smtyjyre2G/SPynF9A+m5MzJeLAZTZzx7CCHGT
+         6CwMEcUbDmygVEDOgLRbR5TwV7y0Bv6pK/PIlzALTNXW3PZ8+3fKNlEXjpYo5wy4AwU1
+         vwpGp/5g8cM2uwGKmiJyhPQTfLDTJKn7irUFx6+lvXwcogKUI8ATFYAY6rGI4BTkTvnq
+         IdL5bJp4hsqGVy2TgBctUDUaHtoh3eDJkB4eLZV67yJ5Vbxvzfc5iwmaI6Aa6K8LiTw8
+         EpgumFA8SLmgqi84KT65f+8rNK3qXwWm2X1hQHHwjmmFsXx5NMFnH0dEPb0KDKy72chg
+         9yUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVx0U9MX0mKZf5uazueqLbbosUGlsb7g1ZFjlBcNA1yjA6JVVqnBvb2zKJkqd44fUn44qum7+c5/RWJiPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/UMDp6iTqVyeC2akJwXxcTE+seDoTvIPAGxo90vyTpSXpIlg4
+	uND9617KQPN+PvWYD99nud23yFfgdcUwJGBMKopkCX/thoCpzkGs
+X-Gm-Gg: ASbGncvdIlBd9zvvuMvvETSEfTVpgaHvHTCipV9n45ms2ojemMR9ELiXxgpiakpAWwa
+	Rbq+fp7oOiHoumOiQVxgI6Ic6jSXOsqvmM7nmhyIPfzFZKIYrh0oJhkyDJp6j5xBdTU9lacQlzy
+	3syfvEwyENMKVP3cxjYCX6rh/t2x1dlQ9Un73s2YDrERugBsjQVgioCmYUj3FXuSEp/y6uqSL/i
+	z8MBVLwxw8pFGNqzXtMH2shrSl7L4bM//s15lIs+xlhp3YprFQXRxy6IdMASGAZxPNgfp9b0JHP
+	a+Ybjw0RuC+CNvgkhxnlwYtwsQ52fiRk40E=
+X-Google-Smtp-Source: AGHT+IEsOulovSz/4gGmxLfCd8vEY2bWoVbyQ0FESQaD8DTImRBWAih16pup9gMc3XBh5tW+5f2BTg==
+X-Received: by 2002:a05:6512:2306:b0:54a:c835:cc58 with SMTP id 2adb3069b0e04-54d6e662998mr3748230e87.50.1745316108305;
+        Tue, 22 Apr 2025 03:01:48 -0700 (PDT)
+Received: from eldfell ([194.136.85.206])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540decsm1184659e87.73.2025.04.22.03.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 03:01:47 -0700 (PDT)
+Date: Tue, 22 Apr 2025 13:01:37 +0300
+From: Pekka Paalanen <ppaalanen@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250422130137.2658c646@eldfell>
+In-Reply-To: <CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com>
+References: <20250327112009.6b4dc430@eldfell>
+	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+	<20250327175842.130c0386@eldfell>
+	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+	<20250331105446.098f0fbe@eldfell>
+	<20250331082135.GB13690@pendragon.ideasonboard.com>
+	<20250331135337.61934003@eldfell>
+	<20250401162732.731ef774@eldfell>
+	<73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+	<20250417111315.62a749e5@eldfell>
+	<20250421145039.GA19213@pendragon.ideasonboard.com>
+	<20250422121107.572cb7ad@eldfell>
+	<CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
- <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------LRC1NKAgjBDvH3dBaZRyJS4G"
+Content-Type: multipart/signed; boundary="Sig_/_OlrXcyznLMA5OZ663uil/j";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------LRC1NKAgjBDvH3dBaZRyJS4G
-Content-Type: multipart/mixed; boundary="------------2vrbMGF8pPaZHLnA82JDRyos";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <6046a6d0-bae3-41bb-9960-82c403f62476@suse.com>
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <91f9217a-cc2d-4a6e-bada-290312f73d82@suse.com>
- <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-In-Reply-To: <7fea6158-9b7d-4bfb-b709-729266803c32@zytor.com>
-
---------------2vrbMGF8pPaZHLnA82JDRyos
-Content-Type: multipart/mixed; boundary="------------0gah4xKFvsHE00D3flXrnkz1"
-
---------------0gah4xKFvsHE00D3flXrnkz1
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjIuMDQuMjUgMTE6MjAsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDE6NTkg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAyMi4wNC4yNSAxMDoyMiwgWGluIExp
-IChJbnRlbCkgd3JvdGU6DQo+Pj4gVG8gZWxpbWluYXRlIHRoZSBpbmRpcmVjdCBjYWxsIG92
-ZXJoZWFkIGludHJvZHVjZWQgYnkgdGhlIHB2X29wcyBBUEksDQo+Pj4gdXRpbGl6ZSB0aGUg
-YWx0ZXJuYXRpdmVzIG1lY2hhbmlzbSB0byByZWFkIE1TUjoNCj4+Pg0KPj4+IMKgwqDCoMKg
-IDEpIFdoZW4gYnVpbHQgd2l0aCAhQ09ORklHX1hFTl9QViwgWDg2X0ZFQVRVUkVfWEVOUFYg
-YmVjb21lcyBhDQo+Pj4gwqDCoMKgwqDCoMKgwqAgZGlzYWJsZWQgZmVhdHVyZSwgcHJldmVu
-dGluZyB0aGUgWGVuIGNvZGUgZnJvbSBiZWluZyBidWlsdA0KPj4+IMKgwqDCoMKgwqDCoMKg
-IGFuZCBlbnN1cmluZyB0aGUgbmF0aXZlIGNvZGUgaXMgZXhlY3V0ZWQgdW5jb25kaXRpb25h
-bGx5Lg0KPj4+DQo+Pj4gwqDCoMKgwqAgMikgV2hlbiBidWlsdCB3aXRoIENPTkZJR19YRU5f
-UFY6DQo+Pj4NCj4+PiDCoMKgwqDCoMKgwqDCoCAyLjEpIElmIG5vdCBydW5uaW5nIG9uIHRo
-ZSBYZW4gaHlwZXJ2aXNvciAoIVg4Nl9GRUFUVVJFX1hFTlBWKSwNCj4+PiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgdGhlIGtlcm5lbCBydW50aW1lIGJpbmFyeSBpcyBwYXRjaGVkIHRv
-IHVuY29uZGl0aW9uYWxseQ0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqdW1wIHRv
-IHRoZSBuYXRpdmUgTVNSIHJlYWQgY29kZS4NCj4+Pg0KPj4+IMKgwqDCoMKgwqDCoMKgIDIu
-MikgSWYgcnVubmluZyBvbiB0aGUgWGVuIGh5cGVydmlzb3IgKFg4Nl9GRUFUVVJFX1hFTlBW
-KSwgdGhlDQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlcm5lbCBydW50aW1lIGJp
-bmFyeSBpcyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseSBqdW1wDQo+Pj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHRvIHRoZSBYZW4gTVNSIHJlYWQgY29kZS4NCj4+Pg0KPj4+IFRo
-ZSBhbHRlcm5hdGl2ZXMgbWVjaGFuaXNtIGlzIGFsc28gdXNlZCB0byBjaG9vc2UgdGhlIG5l
-dyBpbW1lZGlhdGUNCj4+PiBmb3JtIE1TUiByZWFkIGluc3RydWN0aW9uIHdoZW4gaXQncyBh
-dmFpbGFibGUuDQo+Pj4NCj4+PiBDb25zZXF1ZW50bHksIHJlbW92ZSB0aGUgcHZfb3BzIE1T
-UiByZWFkIEFQSXMgYW5kIHRoZSBYZW4gY2FsbGJhY2tzLg0KPj4NCj4+IFNhbWUgYXMgdGhl
-IGNvbW1lbnQgdG8gcGF0Y2ggNTogdGhlcmUgaXMgbm8gaW5kaXJlY3QgY2FsbCBvdmVyaGVh
-ZCBhZnRlcg0KPj4gdGhlIHN5c3RlbSBoYXMgY29tZSB1cC4NCj4+DQo+IA0KPiBQbGVhc2Ug
-Y2hlY2sgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC84N3kxaDgxaHQ0LmZmc0B0Z2x4
-Ly4NCj4gDQo+IEFuZCBpdCdzIHdhcyBhbHNvIG1lbnRpb25lZCBpbiB0aGUgcHJldmlvdXMg
-cGF0Y2g6DQo+IA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUwNDIyMDgy
-MjE2LjE5NTQzMTAtMjIteGluQHp5dG9yLmNvbS8NCj4gDQo+IFBsZWFzZSBsZXQgbWUga25v
-dyB3aGF0IEkgaGF2ZSBtaXNzZWQuDQoNClBsZWFzZSBzZWUgbXkgcmVzcG9uc2UgdG8gdGhl
-IHByZXZpb3VzIHBhdGNoLg0KDQoNCkp1ZXJnZW4NCg==
---------------0gah4xKFvsHE00D3flXrnkz1
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+--Sig_/_OlrXcyznLMA5OZ663uil/j
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On Tue, 22 Apr 2025 11:41:29 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+> Hi Pekka,
+>=20
+> On Tue, 22 Apr 2025 at 11:11, Pekka Paalanen
+> <pekka.paalanen@haloniitty.fi> wrote:
+> > On Mon, 21 Apr 2025 17:50:39 +0300
+> > Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote: =20
+> > > On Thu, Apr 17, 2025 at 11:13:15AM +0300, Pekka Paalanen wrote: =20
+> > > > On Wed, 16 Apr 2025 11:59:43 +0300 Tomi Valkeinen wrote: =20
+> > > > > On 01/04/2025 16:27, Pekka Paalanen wrote: =20
+> > > > > > On Mon, 31 Mar 2025 13:53:37 +0300 Pekka Paalanen wrote: =20
+> > > > > >> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote: =20
+> > > > > >>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrot=
+e: =20
+> > > > > >>>> On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wrote:=
+ =20
+> > > > > >>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote: =20
+> > > > > >>>>>> On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrote: =
+=20
+> > > > > >>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote: =20
+> > > > > >>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wrote:=
+ =20
+> > > > > >>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote: =20
+> > > > > >>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote: =20
+> > > > > >>>>>>>>>>> Add greyscale Y8 format.
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.o=
+rg>
+> > > > > >>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideason=
+board.com> =20
+> > > > > >>>>>>>>>>
+> > > > > >>>>>>>>>> Thanks for your patch!
+> > > > > >>>>>>>>>> =20
+> > > > > >>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+> > > > > >>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > > > > >>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
+> > > > > >>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', '=
+U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+> > > > > >>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', '=
+V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+> > > > > >>>>>>>>>>>
+> > > > > >>>>>>>>>>> +/* Greyscale formats */
+> > > > > >>>>>>>>>>> +
+> > > > > >>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R',=
+ 'E', 'Y')  /* 8-bit Y-only */ =20
+> > > > > >>>>>>>>>>
+> > > > > >>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which enc=
+odes
+> > > > > >>>>>>>>>> the number of bits in the FOURCC format. What do you e=
+nvision
+> > > > > >>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6=
+')? =20
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strict=
+ly speaking it's
+> > > > > >>>>>>>>> not required, but different fourccs for the same format=
+s do confuse.
+> > > > > >>>>>>>>>
+> > > > > >>>>>>>>> So, generally speaking, I'd pick an existing fourcc fro=
+m v4l2 side if
+> > > > > >>>>>>>>> possible, and if not, invent a new one. =20
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> what's the actual difference between DRM_FORMAT_R8 and D=
+RM_FORMAT_Y8?
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> Is the difference that when R8 gets expanded to RGB, it =
+becomes (R, 0,
+> > > > > >>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) whe=
+re c1..c3 are
+> > > > > >>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
+> > > > > >>>>>>>>
+> > > > > >>>>>>>> That would be my intuitive assumption following how YCbC=
+r is handled.
+> > > > > >>>>>>>> Is it obvious enough, or should there be a comment to th=
+at effect? =20
+> > > > > >>>>>>>
+> > > > > >>>>>>> You raise an interesting point. Is it defined how a displ=
+ay driver, that
+> > > > > >>>>>>> supports R8 as a format, shows R8 on screen? I came into =
+this in the
+> > > > > >>>>>>> context of grayscale formats, so I thought R8 would be ha=
+ndled as (R, R,
+> > > > > >>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sen=
+se. =20
+> > > > > >>>>>>
+> > > > > >>>>>> That is a good question too. I based my assumption on Open=
+GL behavior
+> > > > > >>>>>> of R8.
+> > > > > >>>>>>
+> > > > > >>>>>> Single channel displays do exist I believe, but being sing=
+le-channel,
+> > > > > >>>>>> expansion on the other channels is likely meaningless. Hm,=
+ but for the
+> > > > > >>>>>> KMS color pipeline, it would be meaningful, like with a CT=
+M.
+> > > > > >>>>>> Interesting.
+> > > > > >>>>>>
+> > > > > >>>>>> I don't know. Maybe Geert does? =20
+> > > > > >>>>>
+> > > > > >>>>> I did some digging, and was a bit surprised that it was you=
+ who told
+> > > > > >>>>> me to use R8 instead of Y8?
+> > > > > >>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell=
+ =20
+> > > > > >>>>
+> > > > > >>>> Hi Geert,
+> > > > > >>>>
+> > > > > >>>> indeed I did. I never thought of the question of expansion t=
+o R,G,B
+> > > > > >>>> before. Maybe that expansion is what spells R8 and Y8 apart?
+> > > > > >>>>
+> > > > > >>>> I do think that expansion needs to be specified, so that the=
+ KMS color
+> > > > > >>>> pipeline computations are defined. There is a big difference=
+ between
+> > > > > >>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
+> > > > > >>>>
+> > > > > >>>> - (R, 0, 0)
+> > > > > >>>> - (R, R, R)
+> > > > > >>>> - (c1 * Y, c2 * Y, c3 * Y) =20
+> > > > > >>>
+> > > > > >>> I'd be very surprised by an YUV to RGB conversion matrix wher=
+e the first
+> > > > > >>> column would contain different values. What we need to take i=
+nto account
+> > > > > >>> though is quantization (full vs. limited range). =20
+> > > > > >
+> > > > > > Quantization range is indeed good to note. R8 would be always f=
+ull
+> > > > > > range, but Y8 would follow COLOR_RANGE property.
+> > > > > > =20
+> > > > > >> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 sh=
+ould be
+> > > > > >> (R, 0, 0), so we have both variants.
+> > > > > >>
+> > > > > >> Can we specify Y, R, G and B be nominal values in the range 0.=
+0 - 1.0
+> > > > > >> in the KMS color processing? =20
+> > > > > >
+> > > > > > I think this 0.0 - 1.0 nominal range definition for the abstrac=
+t KMS
+> > > > > > color processing is necessary.
+> > > > > >
+> > > > > > It also means that limited range Y8 data, when containing value=
+s 0-15
+> > > > > > or 240-255, would produce negative and greater than 1.0 values,
+> > > > > > respectively. They might get immediately clamped to 0.0 - 1.0 w=
+ith the
+> > > > > > first color operation they face, though, but the concept seems
+> > > > > > important and carrying over to the new color pipelines UAPI whi=
+ch might
+> > > > > > choose not to clamp. =20
+> > > > >
+> > > > > Is the behavior of values outside the limited range something tha=
+t needs
+> > > > > to be defined? We can't know how each piece of HW behaves with
+> > > > > "undefined" input, so should we not just define the behavior as p=
+latform
+> > > > > specific? =20
+> > > >
+> > > > Hi Tomi,
+> > > >
+> > > > it's not undefined nor illegal input in general. The so-called
+> > > > sub-black and super-white ranges exist for a reason, and they are
+> > > > intended to be used in video processing to avoid clipping in
+> > > > intermediate processing steps when a filter overshoots a bit. There=
+ are
+> > > > also practices that depend on them, like PLUGE calibration with
+> > > > traditional signals on a display: https://www.itu.int/rec/R-REC-BT.=
+814
+> > > >
+> > > > I think it would be really good to have defined behaviour if at all
+> > > > possible.
+> > > > =20
+> > > > > In any case: I can't say I fully understood all the discussions w=
+rt.
+> > > > > color spaces. But my immediate interest is, of course, this serie=
+s =3D).
+> > > > > So is there something that you think should be improved here? =20
+> > > >
+> > > > Right, the range discussion is a tangent and applies to all YUV
+> > > > formats, so it's not a new question.
+> > > > =20
+> > > > > My understanding is that the Y-only pixel formats behave in a well
+> > > > > defined way (or, as well defined as the YUV formats), and there's
+> > > > > nothing more to add here. Is that right? =20
+> > > >
+> > > > There are two things:
+> > > >
+> > > > - Y8 follows COLOR_RANGE property, just like all other YUV formats.
+> > > > - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values=
+).
+> > > >
+> > > > I'd like these explicitly written down, so that they become obvious=
+ to
+> > > > everyone. I suspect either one might be easy to forget when writing
+> > > > code and taking shortcuts without thinking.
+> > > >
+> > > >
+> > > > Laurent,
+> > > >
+> > > > I did find a case where (Y', neutral, neutral) does *not* seem to e=
+xpand
+> > > > to RGB=3D(Y, Y, Y): ICtCp. The conversion from ICtCp to L'M'S' does
+> > > > produce (Y', Y', Y'), but the LMS-to-RGB matrix scrambles it.
+> > > >
+> > > > I didn't dig through BT.2020 constant-luminance Y'C'bcC'rc, but I
+> > > > wouldn't be surprised if it scrambled too.
+> > > >
+> > > > Of course, both of the above are not just one matrix. They require =
+two
+> > > > matrices and the transfer characteristic each to compute. KMS color
+> > > > operations cannot implement those today, but with the colorop pipel=
+ines
+> > > > they will if the hardware does it.
+> > > >
+> > > > That's why I think it's important to document the assumption of Cb =
+and
+> > > > Cr when not part of the pixel format, and not write down a specific
+> > > > expansion to RGB like (Y, Y, Y). =20
+> > >
+> > > Every time I discuss color spaces, the scopes of "RGB" and "YUV" seem=
+ to
+> > > expand more and more. This makes me wonder how we define those two
+> > > concepts. Taking the conversion from RGB to ICtCp as an example, would
+> > > you consider LMS and L'M'S' as "RGB" formats, and ICtCp as a "YUV"
+> > > format ? =20
+> >
+> > sorry for the confusion. In this specific context, my use of RGB and
+> > YUV refers to the channels in DRM pixel formats. It might have been
+> > better if all channels in all pixel formats were "anonymous" and merely
+> > numbered because all formats can be used for any color model, but this
+> > is what we have.
+> >
+> > There is some disambiguation in
+> > https://gitlab.freedesktop.org/pq/color-and-hdr/-/blob/main/doc/pixels_=
+color.md
+> > The doc is some years old, so nowadays I might phrase things
+> > differently, but maybe it's easier to read for those new to things as I
+> > wrote it when I was just learning things.
+> >
+> > I would classify ICtCp in the YUV pixel format category, because the
+> > CtCp plane can be sub-sampled (right?). I would classify LMS and L'M'S'
+> > in the RGB pixel format category because they are not sub-sampled AFAIK
+> > although they also do not actually appear as buffer contents, so the
+> > relation to pixel formats is... theoretical.
+> >
+> > IOW, we have a completely artificial split of DRM pixel formats to RGB
+> > and YUV where the only essential difference is that YUV formats can have
+> > sub-sampled variants and RGB formats do not. =20
+>=20
+> RGB can be subsampled, too...
+> https://en.wikipedia.org/wiki/Bayer_filter
 
---------------0gah4xKFvsHE00D3flXrnkz1--
+That's true. What difference are we left with, then?
 
---------------2vrbMGF8pPaZHLnA82JDRyos--
+We have DRM pixel formats which imply some color model, but do not
+define the variant of each color model (e.g. the Y'CbCr-to-RGB matrix).
 
---------------LRC1NKAgjBDvH3dBaZRyJS4G
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+I guess the implied color model then implies which API, e.g. KMS plane
+property, is responsible for defining the variant.
+
+
+Thanks,
+pq
+
+--Sig_/_OlrXcyznLMA5OZ663uil/j
+Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHaCYFAwAAAAAACgkQsN6d1ii/Ey88
-2gf9G2X7seedpgkuVi3Kr8ramS2kAPeIhTmk5YzYNI/baO7kJni9Bz3A8CJrjqPBQos1/m+ZHUnL
-HHqgoLhq+2kdhHVUY+nPYIPdebmYLTHvd3gC+R7swUzJf55bQGENKLO6WtuH5sksovruObmjap7C
-sbHKsWYiAx51NvcRCMZPJAmT8N/+KqAAPfqutdEhiGIfuSkyH9cA34H3Dg/y2hLs4SMppXznwBe7
-TXOOblqw8TxiQKwP05dQo56KdIc6ap06wnELQWlmjSZUSIkSyD4RvmANZE0jAxiFKQr00dtaGUxz
-eaA239uDGL6mfOq/W/cBOw0vspmUeBL6fc4RZErgyw==
-=mYH8
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmgHaQEACgkQI1/ltBGq
+qqfVcRAAoo5YV89aALpPpZvwZANVqT8pe4rqu50lnfJNoqRA9Z0RmU9TB2nGL9Dr
+BCQbqwstI0v/E9nngUvmu5Rzty0pf6o8YlqH+yV7bsA+SRxDUG71JGwuq0X/GX7Y
+ocnUcWdwMPVCGViPW/gjvCDk6B2C2Mso28o0E34eL2AuS4knZrHUD5/xSt4kiRw9
+lGLuRKnQp9ukN64gXbGqG8ymD68beQftgo5fQbkSxepdajwtGvhewM7gLrpnG6g6
+zF34803RvigPreDZlJVAY8oi/2GHe4FOlg5Qg4AC9aZ8fC633D6awpmKIQYkfuT3
+aVk9e28dxSWNTWakNK4uqZLMU1UySYJiCjWGK/NDuQYdWRQ6dvMs6+1lKFoKubND
+zPkVqf8kksc8XV+/z5Y15lRYzdYOpGfKqFt8wPiya8U/4Ka9VsYwfOj0BNXvP85I
+fd6V1Cfd48Wrv/bE1sULdHKEIlSwfBUMKF7+9Kpxx21H2GBUKdkF5GP7ElBmhygs
+eVx1tcrdDLC0VImhedciGoM3l2KGwFQ+z235G0hc5G6Nq0g+lRHS/ORIQL6E+rrY
+93qw3FHqtJ6WXBaqEqCfeKRQoSGdGH/aZQkPanTNMLkttH9lsB3vsriUEgrUT/Od
+JxHuk2uBmS8969t2KwGTXVVo6c+9uBjnftPvVzO4txxxUG6aXMk=
+=pGBv
 -----END PGP SIGNATURE-----
 
---------------LRC1NKAgjBDvH3dBaZRyJS4G--
+--Sig_/_OlrXcyznLMA5OZ663uil/j--
