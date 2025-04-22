@@ -1,71 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDE919CCFC;
-	Tue, 22 Apr 2025 02:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934B25F970;
+	Tue, 22 Apr 2025 02:18:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288278; cv=none; b=Ehw000sBy1prg0UfBrLFMxpT+JW2IvUbSacIsxXeddXNwIGhvHAHG7DQ37528Q4a2Fp9ZgT1bKgN7rSV5ePWqsQuSEr+YczKK923APPkkOIRZrn+HEGhORSMf02etCn4ytznwHFvcQezpEKLc2e5hpyLJecQk+jis3m8j/R/SOE=
+	t=1745288282; cv=none; b=LR3tl3FwoPzwp0fa+JMwTG5KmmEG/SDhzm5rmhAiHls5R9U2fOFTLR3PB3Wqo92Y1H9ZNacNHEzP2chbEW3QfuIzOoUG8QQ6c4qS+rZNnQfl2mDKITxgATxHPhUWN82rOoKSnrIQJ/sp/2r3CqOR+3qLfGYaMPA9XCkAvQBfDC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288278; c=relaxed/simple;
-	bh=vWqY35KnpFAJ7ZKHNCsglf8lfnRCqooU+WTC/YUBglQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JkYqpu6ENnH+2OsWlgZ7e1tXYia0vX0i2P0yz4bVRZFYbTBU7dJGa75YC5gmF1uGkDZNk+u2l4QUYcJq1FTxX1+HQuCOUXJUzfskdJu+Q6PCKcrV3OTcQcYkITp2FhrjJtQKBTeLC8rkMDR9TdM9k2YsUuSKxi3nUM/Tk5ZtZJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IOwMJw/a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745288282; c=relaxed/simple;
+	bh=ZCCyIm/fUNr9c1x5le0DTvZgHotQPLwHXcmL7UKeOZ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tcCquhVIMMapdCpBUq1/2D/3FwrStuzPSvMjxAniQY93zMA+MlTZ5Sn0GmNO96ar82znsDrjyAiNAXplXDYWu369bVaFpz3PTJxaaP/XOBbgmJSIUUHWSZCZfrWoJDdKQN3TKKl52aWKkZX4fb6UdAyhnBzAFIY7VVMTV4Oqrd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwzJ282/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IOwMJw/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DFA9C4CEE4;
-	Tue, 22 Apr 2025 02:17:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwzJ282/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51040C4CEE4;
+	Tue, 22 Apr 2025 02:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288278;
-	bh=vWqY35KnpFAJ7ZKHNCsglf8lfnRCqooU+WTC/YUBglQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IOwMJw/aJE5lCh8ByIWNhYcr8bEBkFtZqOGIb0HjBhGWN+ZSXRP3qL3XPy1rP9v3s
-	 MZZOedZU7qc27WP+kDm7p1RK6XlBkUeeHWcwaWkxgrdS5Usv+RaiHeJHmqxX7YwRUf
-	 BFXOgtQCDRGrRq3993IyRG2IstfJg90wCyP3DszwNtoQWU0kjLKO/3t2LhwjiiEaaq
-	 IiLmo2smwodyeEYgq9wHW6N7VN4P9jaGWgtNDDqYf6Eyzw9ZXx+eUCtmuSADgGqSAt
-	 i85+p8FLwiTrt3yC1YAtbAlSxmtRfmNwWYpus38ze8zI5sdSvX1YbqLxPpXtkQwnrG
-	 26HAuNw95DhJw==
+	s=k20201202; t=1745288282;
+	bh=ZCCyIm/fUNr9c1x5le0DTvZgHotQPLwHXcmL7UKeOZ4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CwzJ282/bJpRb/lLegJ6ZHa3cVaCihyQ4LL92mELMK/toZFjx6d7OqTEUrtfLnE0B
+	 PIQ82/JZo8HKKdaq2lkwEpX0VIy7cVH6tUOT0XPMS/itGoF8HEj6hbGuK9vU4Zy+o1
+	 xctpuwVj5M54dKDDSXdBXvRHk9Fi9CN8XFlWx+soF43eJqN566AwDPRvohOBV2sHde
+	 1Bna0bCMBJMorF5RnLtocSxuN+iZOsDxNe06fl61WjReMVZe1gj3ne2zq2+m2IvlSI
+	 P9+25djI3ey4pd2eCC6X0SnZ45bTTCHXWLWuNvBXKc9SU6uSaN3iKvUJCSHu/pY6Hf
+	 8zlUtQdHOEn4Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lijo Lazar <lijo.lazar@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Xingui Yang <yangxingui@huawei.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	sunil.khatri@amd.com,
-	vitaly.prosyak@amd.com,
-	srinivasan.shanmugam@amd.com,
-	Jesse.zhang@amd.com,
-	Jiadong.Zhu@amd.com,
-	Tim.Huang@amd.com,
-	Prike.Liang@amd.com,
-	Hawking.Zhang@amd.com,
-	Likun.Gao@amd.com,
-	kenneth.feng@amd.com,
-	Jack.Xiao@amd.com,
-	boyuan.zhang@amd.com,
-	kent.russell@amd.com,
-	shane.xiao@amd.com,
-	xiaogang.chen@amd.com,
-	yifan1.zhang@amd.com,
-	Frank.Min@amd.com,
-	david.belanger@amd.com,
-	natalie.vock@gmx.de,
-	alex.sierra@amd.com,
-	le.ma@amd.com,
-	mario.limonciello@amd.com,
-	yingli12@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.12 22/23] drm/amdgpu: Use the right function for hdp flush
-Date: Mon, 21 Apr 2025 22:17:02 -0400
-Message-Id: <20250422021703.1941244-22-sashal@kernel.org>
+	liyihang9@huawei.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/15] scsi: hisi_sas: Fix I/O errors caused by hardware port ID changes
+Date: Mon, 21 Apr 2025 22:17:45 -0400
+Message-Id: <20250422021759.1941570-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021703.1941244-1-sashal@kernel.org>
-References: <20250422021703.1941244-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,282 +46,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.24
+X-stable-base: Linux 6.6.87
 Content-Transfer-Encoding: 8bit
 
-From: Lijo Lazar <lijo.lazar@amd.com>
+From: Xingui Yang <yangxingui@huawei.com>
 
-[ Upstream commit c235a7132258ac30bd43d228222986022d21f5de ]
+[ Upstream commit daff37f00c7506ca322ccfce95d342022f06ec58 ]
 
-There are a few prechecks made before HDP flush like a flush is not
-required on APU bare metal. Using hdp callback directly bypasses those
-checks. Use amdgpu_device_flush_hdp which takes care of prechecks.
+The hw port ID of phy may change when inserting disks in batches, causing
+the port ID in hisi_sas_port and itct to be inconsistent with the hardware,
+resulting in I/O errors. The solution is to set the device state to gone to
+intercept I/O sent to the device, and then execute linkreset to discard and
+find the disk to re-update its information.
 
-Signed-off-by: Lijo Lazar <lijo.lazar@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-(cherry picked from commit 1d9bff4cf8c53d33ee2ff1b11574e5da739ce61c)
+Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+Link: https://lore.kernel.org/r/20250312095135.3048379-3-yangxingui@huawei.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c |  8 ++++----
- drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c | 12 ++++++------
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c |  6 +++---
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c |  4 ++--
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  |  2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v11_0.c |  2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v13_0.c |  2 +-
- drivers/gpu/drm/amd/amdgpu/psp_v14_0.c |  2 +-
- 10 files changed, 23 insertions(+), 23 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 45ed97038df0c..24d711b0e6346 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -5998,7 +5998,7 @@ static int gfx_v10_0_cp_gfx_load_pfp_microcode(struct amdgpu_device *adev)
- 	}
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index f78c5f8a49ffa..7e64661d215bd 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -911,8 +911,28 @@ static void hisi_sas_phyup_work_common(struct work_struct *work,
+ 		container_of(work, typeof(*phy), works[event]);
+ 	struct hisi_hba *hisi_hba = phy->hisi_hba;
+ 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
++	struct asd_sas_port *sas_port = sas_phy->port;
++	struct hisi_sas_port *port = phy->port;
++	struct device *dev = hisi_hba->dev;
++	struct domain_device *port_dev;
+ 	int phy_no = sas_phy->id;
  
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, mmCP_PFP_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_PFP_IC_BASE_CNTL, VMID, 0);
-@@ -6076,7 +6076,7 @@ static int gfx_v10_0_cp_gfx_load_ce_microcode(struct amdgpu_device *adev)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, mmCP_CE_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_CE_IC_BASE_CNTL, VMID, 0);
-@@ -6153,7 +6153,7 @@ static int gfx_v10_0_cp_gfx_load_me_microcode(struct amdgpu_device *adev)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, mmCP_ME_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_ME_IC_BASE_CNTL, VMID, 0);
-@@ -6528,7 +6528,7 @@ static int gfx_v10_0_cp_compute_load_microcode(struct amdgpu_device *adev)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, mmCP_CPC_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_CPC_IC_BASE_CNTL, CACHE_POLICY, 0);
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
-index 84cf5fd297b7f..0357fea8ae1df 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
-@@ -2327,7 +2327,7 @@ static int gfx_v11_0_config_me_cache(struct amdgpu_device *adev, uint64_t addr)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, regCP_ME_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_ME_IC_BASE_CNTL, VMID, 0);
-@@ -2371,7 +2371,7 @@ static int gfx_v11_0_config_pfp_cache(struct amdgpu_device *adev, uint64_t addr)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_PFP_IC_BASE_CNTL, VMID, 0);
-@@ -2416,7 +2416,7 @@ static int gfx_v11_0_config_mec_cache(struct amdgpu_device *adev, uint64_t addr)
- 	}
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	tmp = RREG32_SOC15(GC, 0, regCP_CPC_IC_BASE_CNTL);
- 	tmp = REG_SET_FIELD(tmp, CP_CPC_IC_BASE_CNTL, CACHE_POLICY, 0);
-@@ -3051,7 +3051,7 @@ static int gfx_v11_0_cp_gfx_load_pfp_microcode_rs64(struct amdgpu_device *adev)
- 	amdgpu_bo_unreserve(adev->gfx.pfp.pfp_fw_data_obj);
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	WREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_LO,
- 		lower_32_bits(adev->gfx.pfp.pfp_fw_gpu_addr));
-@@ -3269,7 +3269,7 @@ static int gfx_v11_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
- 	amdgpu_bo_unreserve(adev->gfx.me.me_fw_data_obj);
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	WREG32_SOC15(GC, 0, regCP_ME_IC_BASE_LO,
- 		lower_32_bits(adev->gfx.me.me_fw_gpu_addr));
-@@ -4487,7 +4487,7 @@ static int gfx_v11_0_gfxhub_enable(struct amdgpu_device *adev)
- 	if (r)
- 		return r;
- 
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
- 		false : true;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-index b259e217930c7..241619ee10e4b 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-@@ -2264,7 +2264,7 @@ static int gfx_v12_0_cp_gfx_load_pfp_microcode_rs64(struct amdgpu_device *adev)
- 	amdgpu_bo_unreserve(adev->gfx.pfp.pfp_fw_data_obj);
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	WREG32_SOC15(GC, 0, regCP_PFP_IC_BASE_LO,
- 		lower_32_bits(adev->gfx.pfp.pfp_fw_gpu_addr));
-@@ -2408,7 +2408,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
- 	amdgpu_bo_unreserve(adev->gfx.me.me_fw_data_obj);
- 
- 	if (amdgpu_emu_mode == 1)
--		adev->hdp.funcs->flush_hdp(adev, NULL);
-+		amdgpu_device_flush_hdp(adev, NULL);
- 
- 	WREG32_SOC15(GC, 0, regCP_ME_IC_BASE_LO,
- 		lower_32_bits(adev->gfx.me.me_fw_gpu_addr));
-@@ -3429,7 +3429,7 @@ static int gfx_v12_0_gfxhub_enable(struct amdgpu_device *adev)
- 	if (r)
- 		return r;
- 
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
- 		false : true;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-index 9784a28921853..c6e7429212827 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-@@ -265,7 +265,7 @@ static void gmc_v10_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- 	ack = hub->vm_inv_eng0_ack + hub->eng_distance * eng;
- 
- 	/* flush hdp cache */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	/* This is necessary for SRIOV as well as for GFXOFF to function
- 	 * properly under bare metal
-@@ -966,7 +966,7 @@ static int gmc_v10_0_gart_enable(struct amdgpu_device *adev)
- 	adev->hdp.funcs->init_registers(adev);
- 
- 	/* Flush HDP after it is initialized */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
- 		false : true;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-index 2797fd84432b2..4e9c23d65b02f 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-@@ -226,7 +226,7 @@ static void gmc_v11_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- 	ack = hub->vm_inv_eng0_ack + hub->eng_distance * eng;
- 
- 	/* flush hdp cache */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	/* This is necessary for SRIOV as well as for GFXOFF to function
- 	 * properly under bare metal
-@@ -893,7 +893,7 @@ static int gmc_v11_0_gart_enable(struct amdgpu_device *adev)
- 		return r;
- 
- 	/* Flush HDP after it is initialized */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
- 		false : true;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
-index 60acf676000b3..525e435ee22d8 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
-@@ -294,7 +294,7 @@ static void gmc_v12_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- 		return;
- 
- 	/* flush hdp cache */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	/* This is necessary for SRIOV as well as for GFXOFF to function
- 	 * properly under bare metal
-@@ -862,7 +862,7 @@ static int gmc_v12_0_gart_enable(struct amdgpu_device *adev)
- 		return r;
- 
- 	/* Flush HDP after it is initialized */
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	value = (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS) ?
- 		false : true;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index 7a45f3fdc7341..9a212413c6d3a 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -2351,7 +2351,7 @@ static int gmc_v9_0_hw_init(void *handle)
- 	adev->hdp.funcs->init_registers(adev);
- 
- 	/* After HDP is initialized, flush HDP.*/
--	adev->hdp.funcs->flush_hdp(adev, NULL);
-+	amdgpu_device_flush_hdp(adev, NULL);
- 
- 	if (amdgpu_vm_fault_stop == AMDGPU_VM_FAULT_STOP_ALWAYS)
- 		value = false;
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-index 2395f1856962a..e77a467af7ac3 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v11_0.c
-@@ -532,7 +532,7 @@ static int psp_v11_0_memory_training(struct psp_context *psp, uint32_t ops)
- 			}
- 
- 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
--			adev->hdp.funcs->flush_hdp(adev, NULL);
-+			amdgpu_device_flush_hdp(adev, NULL);
- 			vfree(buf);
- 			drm_dev_exit(idx);
- 		} else {
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-index 51e470e8d67d9..bf00de763acb0 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v13_0.c
-@@ -600,7 +600,7 @@ static int psp_v13_0_memory_training(struct psp_context *psp, uint32_t ops)
- 			}
- 
- 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
--			adev->hdp.funcs->flush_hdp(adev, NULL);
-+			amdgpu_device_flush_hdp(adev, NULL);
- 			vfree(buf);
- 			drm_dev_exit(idx);
- 		} else {
-diff --git a/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c b/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
-index 4d33c95a51163..89f6c06946c51 100644
---- a/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/psp_v14_0.c
-@@ -488,7 +488,7 @@ static int psp_v14_0_memory_training(struct psp_context *psp, uint32_t ops)
- 			}
- 
- 			memcpy_toio(adev->mman.aper_base_kaddr, buf, sz);
--			adev->hdp.funcs->flush_hdp(adev, NULL);
-+			amdgpu_device_flush_hdp(adev, NULL);
- 			vfree(buf);
- 			drm_dev_exit(idx);
- 		} else {
++	if (!test_bit(HISI_SAS_RESETTING_BIT, &hisi_hba->flags) &&
++	    sas_port && port && (port->id != phy->port_id)) {
++		dev_info(dev, "phy%d's hw port id changed from %d to %llu\n",
++				phy_no, port->id, phy->port_id);
++		port_dev = sas_port->port_dev;
++		if (port_dev && !dev_is_expander(port_dev->dev_type)) {
++			/*
++			 * Set the device state to gone to block
++			 * sending IO to the device.
++			 */
++			set_bit(SAS_DEV_GONE, &port_dev->state);
++			hisi_sas_notify_phy_event(phy, HISI_PHYE_LINK_RESET);
++			return;
++		}
++	}
++
+ 	phy->wait_phyup_cnt = 0;
+ 	if (phy->identify.target_port_protocols == SAS_PROTOCOL_SSP)
+ 		hisi_hba->hw->sl_notify_ssp(hisi_hba, phy_no);
 -- 
 2.39.5
 
