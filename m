@@ -1,208 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E0F27CCCF;
-	Tue, 22 Apr 2025 12:18:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F6727D771;
+	Tue, 22 Apr 2025 12:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324320; cv=none; b=AqUE9vEKei/gmQJsBt93BauW2rr9vOO8km3wuZ4Nqp7fFUM4aUa9rNA8R8QDICHoGQCp2HT1kpkx4DkGfCphIp9iJvSXKHewzwFi7Zs877tK6GCvf9S30kvpQMQIHRN4mTXTAOPXf8IO0i0OjYf14jjW2TyXIk98Rg2INPpZnWk=
+	t=1745324323; cv=none; b=PaAPEA9GEk1c2AI0rilhnTSabPoV+gugbJz7eofTzPp29XkRD8uxaByJwDy0oZ4G8zOJV/PemlT4xiAtAAXXOaKNn0u41K0jkq0txudt96FRXSE5h75zAMW2aBUsRpEtq/+oC9lsRdFcSVHfo7d4KDNceMGygZ4xW/Gh1yBmLuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324320; c=relaxed/simple;
-	bh=zGIA3giuG78kc+j93vXPJJvT30mzAC2qUyglKlcVYtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wg8z9UDn11CEQfnbQ1YKuZ0HyZo+wAnbfuES5XIbPVaoV58jsZarDc4tZr2s9nrK/SsRFK/vR8Yuv6rZ14UGMRAclNKT+TqS0bQ+hdp+VEviLvbdYVplfHxx2nLtON0R68WAG4O+RIsdssWHyx8g5tVEe9ujj/hWVlHRo5csnVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eo39yckB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745324323; c=relaxed/simple;
+	bh=b0Nhk3vAShab0d+vfPBjLrBPylBmRgabnM2I4Qf3Lak=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=D5yQy6rhknLG43oBDNWM6H0VRKP57d8YG9Jmv0giM8//tA1mwn1tPOWPnNmjVBpZgXe51kQwGX1VbKYsF5OuFZlQzDEdONxz6F/kExM3+X4SkXj5YMtEirYoiWzw503mgGyeQwA5i/ylUa9r4xn6N1dFgkCQN3/8Jwh+3iEHIwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXr0EX5w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eo39yckB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E36C4CEEA;
-	Tue, 22 Apr 2025 12:18:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXr0EX5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5552FC4CEEE;
+	Tue, 22 Apr 2025 12:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745324319;
-	bh=zGIA3giuG78kc+j93vXPJJvT30mzAC2qUyglKlcVYtw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Eo39yckBjPwIQKtznL+1UvdBuAwI3WYn9qkWSEGBzf/uOatdo1uzcddLl8R/KTPbu
-	 Hu6saBCpgnunIaquZiDtlofgwbJO3Rej8YmuzNHdcWMgdQIt0uFRM6lEQZcMK6+7SL
-	 n9RUYeOA8njFMuSbjvX8/STWX/1z7rC+xDwOaxxAZYxS1eF1yhs8WPX0CEDqpa2phe
-	 07mCC0N6FtdHcxrPQ0aPs3MNsp0EI8tmTOsMI4IB1vtDSAglnbtUVLui7coW4LBFVU
-	 UoNulww5GYTMdWOzoCO4AryDvq4s20kLwcqxpWQrnx2mMchmuJEbC8udqFL5D+eeaN
-	 iRTYyVO1wgTxQ==
-Date: Tue, 22 Apr 2025 07:18:37 -0500
-From: Rob Herring <robh@kernel.org>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	Pin-yen Lin <treapking@chromium.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Andrei Kuchynski <akuchynski@chromium.org>
-Subject: Re: [PATCH 5/7] dt-bindings: usb: google,cros-ec-typec: Add ports
- for DP altmode
-Message-ID: <20250422121837.GA734359-robh@kernel.org>
-References: <20250416000208.3568635-1-swboyd@chromium.org>
- <20250416000208.3568635-6-swboyd@chromium.org>
+	s=k20201202; t=1745324322;
+	bh=b0Nhk3vAShab0d+vfPBjLrBPylBmRgabnM2I4Qf3Lak=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DXr0EX5w71ACsiT9csgYRCmXKsuSAKCm/LE1feFp7ylMDqXMBmJ0DbIIuojP5c1jF
+	 J7JpAw0rUGdegetWspwrpAnP5/2bZhdgzdDX3r+vIz+gcxTWA+ms4twpj3vYWf0ESa
+	 Nhkh6aelhBJKYRzDDDPb9UcE6lIGSaHj/W8jmlNnH1HpQ4i/v5Eg8hxjCFad9fkiLq
+	 bgMc4BMWJ/w0CSD9YxnwiBTOUxPQtcfvToazQZ89TPIIoYqkGz/oBqJuCwAQ7ey9oE
+	 rgi7+XZIxHdwSFCrFhiqnblJV7O+nYGnrf2naogyWyfTUd7lr3gWhoDIYJ4V6fmr3C
+	 48cNgQ5q+B2bA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Konstantin Ryabitsev" <konstantin@linuxfoundation.org>,
+Cc: "Lyude Paul" <lyude@redhat.com>, <rust-for-linux@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,  "Boqun Feng" <boqun.feng@gmail.com>,
+	"FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+	"Frederic Weisbecker" <frederic@kernel.org>,
+	"Thomas Gleixner" <tglx@linutronix.de>,
+	"Anna-Maria Behnsen" <anna-maria@linutronix.de>,
+	"John Stultz" <jstultz@google.com>,  "Stephen Boyd" <sboyd@kernel.org>,
+	"Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,
+	"Gary Guo" <gary@garyguo.net>,
+	=?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	"Benno Lossin" <benno.lossin@proton.me>,
+	"Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+	"Danilo Krummrich" <dakr@kernel.org>, "Kernel.org Tools" <tools@kernel.org>
+Subject: Re: [PATCH v3] rust: hrtimer: Add forward_now() to HrTimer and
+ HrTimerCallbackContext
+In-Reply-To: <20250415201747.417825-1-lyude@redhat.com> (Lyude Paul's message
+	of "Tue, 15 Apr 2025 16:17:46 -0400")
+References: <20250415195020.413478-8-lyude@redhat.com>
+	<MqNEUgTO3ubRyR1tiumirBEhtJpQ7H2YmU4ba6qwwi5sEJLxHQkm-VG47aJvFOnSlKfW9NiAfebTIZM_JiHasw==@protonmail.internalid>
+	<20250415201747.417825-1-lyude@redhat.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Tue, 22 Apr 2025 14:18:28 +0200
+Message-ID: <871ptkbd9n.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416000208.3568635-6-swboyd@chromium.org>
+Content-Type: text/plain
 
-On Tue, Apr 15, 2025 at 05:02:05PM -0700, Stephen Boyd wrote:
-> Add a DT graph binding to google,cros-ec-typec so that it can combine
-> DisplayPort (DP) and USB SuperSpeed (SS) data into a USB type-c endpoint
-> that is connected to the usb-c-connector node's SS endpoint. Allow there
-> to be multiple 'typec' nodes underneath the EC node so that one DT graph
-> exists per DP bridge. The EC is actually controlling TCPCs and redrivers
-> that combine the DP and USB signals together so this more accurately
-> reflects the hardware design without introducing yet another DT node
-> underneath the EC for USB type-c "stuff".
-> 
-> If the type-c ports are being shared between a single DP controller then
-> the ports need to know about each other and determine a policy to drive
-> DP to one type-c port or the other. If the type-c ports each have their
-> own dedicated DP controller then they're able to operate independently
-> and enter/exit DP altmode independently as well. We can't connect the DP
-> controller's endpoint to one usb-c-connector port@1 endpoint and the USB
-> controller's endpoint to another usb-c-connector port@1 endpoint either
-> because the DP muxing case would have DP connected to two
-> usb-c-connector endpoints which the graph binding doesn't support.
-> 
-> Therefore, one typec node is required per the capabilities of the type-c
-> port(s) being managed. Add a port to the DisplayPort altmode as well, so
-> that we can show the connection between the DP controller and the DP
-> altmode. This lets us indicate which type-c ports the DP controller is
-> wired to. For example, if DP was connected to ports 0 and 2, while port
-> 1 was connected to another DP controller we wouldn't be able to
-> implement that without having some other DT property to indicate which
-> output ports are connected to the DP endpoint.
-> 
-> Furthermore, this supports ChromeOS designs like Corsola where a DP
-> controller/PHY is split with two lanes going to one connector and the
-> other two lanes going to another connector. In this case, we wouldn't
-> have the graph binding under the cros-ec-typec node, but we would have
-> the graph binding in the DP altmode directly connected to the DP
-> controller's two output endpoints.
-> 
-> Cc: Rob Herring (Arm) <robh@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> Cc: Conor Dooley <conor+dt@kernel.org>
-> Acked-by: Lee Jones <lee@kernel.org>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Tzung-Bi Shih <tzungbi@kernel.org>
-> Cc: <devicetree@vger.kernel.org>
-> Cc: <chrome-platform@lists.linux.dev>
-> Cc: Pin-yen Lin <treapking@chromium.org>
-> Cc: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> Cc: Łukasz Bartosik <ukaszb@chromium.org>
-> Cc: Jameson Thies <jthies@google.com>
-> Cc: Andrei Kuchynski <akuchynski@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  .../bindings/connector/usb-connector.yaml     |   6 +
->  .../bindings/mfd/google,cros-ec.yaml          |   7 +-
->  .../bindings/usb/google,cros-ec-typec.yaml    | 165 ++++++++++++++++++
->  3 files changed, 175 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> index 11e40d225b9f..e3d60997c03e 100644
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> @@ -179,6 +179,12 @@ properties:
->              $ref: /schemas/types.yaml#/definitions/uint32
->              description: VDO returned by Discover Modes USB PD command.
->  
-> +          port:
-> +            $ref: /schemas/graph.yaml#/properties/port
-> +            description: OF graph bindings modeling a data bus to the
-> +              DisplayPort altmode from the DisplayPort controller. Used when
-> +              the altmode switch is part of the port manager.
-> +
+Hi Konstantin,
 
-Why can't this connection be another endpoint on port@1 as that is the 
-port for the SS signals.
+"Lyude Paul" <lyude@redhat.com> writes:
 
->    port:
->      $ref: /schemas/graph.yaml#/properties/port
->      description: OF graph bindings modeling a data bus to the connector, e.g.
-> diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-> index ac89696fa649..63d506e88abb 100644
-> --- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-> @@ -98,9 +98,6 @@ properties:
->  
->    gpio-controller: true
->  
-> -  typec:
-> -    $ref: /schemas/usb/google,cros-ec-typec.yaml#
-> -
->    ec-pwm:
->      $ref: /schemas/pwm/google,cros-ec-pwm.yaml#
->      deprecated: true
-> @@ -163,6 +160,10 @@ patternProperties:
->      type: object
->      $ref: /schemas/extcon/extcon-usbc-cros-ec.yaml#
->  
-> +  "^typec(-[0-9])*$":
-> +    type: object
-> +    $ref: /schemas/usb/google,cros-ec-typec.yaml#
-> +
->  required:
->    - compatible
->  
-> diff --git a/Documentation/devicetree/bindings/usb/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/usb/google,cros-ec-typec.yaml
-> index 3272d0e01f7e..611345bbe884 100644
-> --- a/Documentation/devicetree/bindings/usb/google,cros-ec-typec.yaml
-> +++ b/Documentation/devicetree/bindings/usb/google,cros-ec-typec.yaml
-> @@ -26,6 +26,55 @@ properties:
->    '#size-cells':
->      const: 0
->  
-> +  mux-gpios:
-> +    description: GPIOs indicating which way the DisplayPort mux is steered
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  no-hpd:
-> +    description: Indicates this device doesn't signal HPD for DisplayPort
-> +    type: boolean
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description:
-> +          Port for DisplayPort (DP) data
-> +
-> +        properties:
-> +          endpoint@0:
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: Input DP port
-> +
-> +        patternProperties:
-> +          '^endpoint@[1-8]$':
-> +            $ref: /schemas/graph.yaml#/properties/endpoint
-> +            description: Output to the usb-c connector's DP altmode
+> Using the HrTimerClockBase::time() function, we can now add an equivalent
+> to hrtimer_forward_now() to both HrTimer and HrTimerCallbackContext.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
 
-This is odd. Generally (or always?) a port is 1 direction.
+This thread contains two patch series. That seems to confuse b4. It will only
+apply the v3 patch. I would expect to have all the patches in the thread
+applied on `b4 shazam 20250415195020.413478-1-lyude@redhat.com`. Do you
+think this is fixable?
 
-Other bindings IIRC have 3 ports in the device doing the muxing: 1 
-output for connector port@1, 1 USB SS input, and 1 DP input.
 
-Rob
+Best regards,
+Andreas Hindborg
+
+
+
