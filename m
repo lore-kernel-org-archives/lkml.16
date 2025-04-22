@@ -1,110 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wylie.me.uk (wylie.me.uk [82.68.155.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2F318D63A;
-	Tue, 22 Apr 2025 16:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF47918D63A;
+	Tue, 22 Apr 2025 16:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.68.155.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340643; cv=none; b=jwK5+PjwquL5KVg8QSwmqfJfwsr+Zm8MXlqHXsuwAlln6FPJmqltnmRnQtEElEFAeIrpOZWdKjJj/0GIQCCCqJ9wVvPyL13TBFLRM829OvNzQakuHA+6K7MS+hlTQCU7Cz2x8zlXzeCfnukTIo2tKY+5P7Q+EbRhjbbuqBjZFx8=
+	t=1745340727; cv=none; b=sTHoWtwU9McfdLkJEsrFnHsimlLZhi4sFJDHKt2xmQGaRPb/vnZ/2d3Qs0GNvNOch0VSmBaGyjE2tjpAyvJWKG1XcwLaKCdaZbm8TQBL8EvzWXThcHyni7v7httcRKXIiYVIN9vQlkyUX/9VYQCHRE0yFJCtVrLtncfVDKiEnQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340643; c=relaxed/simple;
-	bh=p34W68vr33YVTNMyvW/ckCaII9Sr9kH22loqQhoIvVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjFvRM0yheGtB1sR9QEtjoVfLc9AvK6YiYy5s8eKRtgBOujFmZL3Rjj4HqGpqt6i5mdPS6iCtWNAs+tt8KLuwcuGte0x3wlNAE4kaFHKwQcp9YCqUF/6MC8ItpkoF/znZa4aNhTjP8AAZASbnvKXz0GoSiZeDFHUsueNv8KCxUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325B1C4CEE9;
-	Tue, 22 Apr 2025 16:50:35 +0000 (UTC)
-Date: Tue, 22 Apr 2025 17:50:32 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Marc Zyngier <maz@kernel.org>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
-	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>,
-	"coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Message-ID: <aAfI2GR1__-1KQHn@arm.com>
-References: <Z-QnBcE1TKPChQay@google.com>
- <86wmcbllg2.wl-maz@kernel.org>
- <Z-RGYO3QVj5JNjRB@google.com>
- <20250331145643.GF10839@nvidia.com>
- <Z_PtKWnMPzwPb4sp@google.com>
- <20250407161540.GG1557073@nvidia.com>
- <Z_QAxiEWEyMpfLgL@google.com>
- <SA1PR12MB719976799AD7F9FC4407A5A9B0BD2@SA1PR12MB7199.namprd12.prod.outlook.com>
- <aAdKCGCuwlUeUXKY@linux.dev>
- <20250422135452.GL823903@nvidia.com>
+	s=arc-20240116; t=1745340727; c=relaxed/simple;
+	bh=T4Gei4noOURlngmAU8lLrsYIK9+KhrxsvVg1WHk+lhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s7oayU7aumGNciypbZLQutk7vxbelz90BggsiGXgBbqpHSeI0D0kpUJazZyTN4y0yOqbxLkm56sY7XPrq+ddpobdJqmgYyGRAHYcaS0ortkG5hvQcqmkMHZdTQxrbA85X/uaqw06k3dc6FX/UDGRiGceE6AWQcedMkaAGgpN7sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk; spf=pass smtp.mailfrom=wylie.me.uk; dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b=m0dTY7cZ; arc=none smtp.client-ip=82.68.155.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wylie.me.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wylie.me.uk header.i=@wylie.me.uk header.b="m0dTY7cZ"
+Received: from frodo.int.wylie.me.uk (frodo.int.wylie.me.uk [192.168.21.2])
+	by wylie.me.uk (Postfix) with ESMTP id 7F752120801;
+	Tue, 22 Apr 2025 17:51:46 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wylie.me.uk;
+	s=mydkim006; t=1745340706;
+	bh=T4Gei4noOURlngmAU8lLrsYIK9+KhrxsvVg1WHk+lhM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=m0dTY7cZIdpgs09MArNJseZM9Lw1jjQxBlMju7wpdrCdvSHzyugnQEKDEUSrYTsVl
+	 LrGsrMAhtLRUKd8t1JCOWlRl9aCQy6MQ7LWH/tlZ9M/FjP5wPyoQSpHsaHMF9lnr/E
+	 cKWdU6WBUwTCitYizkn9E2br5L3avHczeD97QMDqIOv0uER475/mh81WOw71ZvxIZO
+	 jEct0OPSGJbsIfCWItiAABrn51KCGASgG1rmUeAQejXxg0Hp8BL49wE19RM/0OV+TA
+	 tHwuaLK5zFDZbiwVILCzCX3VOHM3D4r77lFzIxLbNlE0wvdkbCUoTj21O1GnVUQVmS
+	 LUu6gOGFEkU4Q==
+Date: Tue, 22 Apr 2025 17:51:45 +0100
+From: "Alan J. Wylie" <alan@wylie.me.uk>
+To: Holger =?UTF-8?B?SG9mZnN0w6R0dGU=?= <holger@applied-asynchrony.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, regressions@lists.linux.dev, Cong
+ Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Octavian Purdila
+ <tavip@google.com>, Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?=
+ <toke@redhat.com>, stable@vger.kernel.org
+Subject: Re: [REGRESSION] 6.14.3 panic - kernel NULL pointer dereference in
+ htb_dequeue
+Message-ID: <20250422175145.1cb0bd98@frodo.int.wylie.me.uk>
+In-Reply-To: <20250421210927.50d6a355@frodo.int.wylie.me.uk>
+References: <20250421104019.7880108d@frodo.int.wylie.me.uk>
+	<6fa68b02-cf82-aeca-56e6-e3b8565b22f4@applied-asynchrony.com>
+	<20250421131000.6299a8e0@frodo.int.wylie.me.uk>
+	<20250421200601.5b2e28de@frodo.int.wylie.me.uk>
+	<89301960-1758-5b2e-6d91-81ef06843e14@applied-asynchrony.com>
+	<20250421210927.50d6a355@frodo.int.wylie.me.uk>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422135452.GL823903@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 10:54:52AM -0300, Jason Gunthorpe wrote:
-> On Tue, Apr 22, 2025 at 12:49:28AM -0700, Oliver Upton wrote:
-> >  - The memslot flag says userspace expects a particular GFN range to guarantee
-> >    Write-Back semantics. This can be applied to 'normal', kernel-managed memory
-> >    and PFNMAP thingies that have cacheable attributes at host stage-1.
-> 
-> Userspace doesn't actaully know if it has a cachable mapping from VFIO
-> though :(
+On Mon, 21 Apr 2025 21:09:27 +0100
+"Alan J. Wylie" <alan@wylie.me.uk> wrote:
 
-Yes, that's why I couldn't figure out how useful a memory slot flag
-would be.
+> On Mon, 21 Apr 2025 21:47:44 +0200
+> Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com> wrote:
+>=20
+> > > I'm afraid that didn't help. Same panic.   =20
+> >=20
+> > Bummer :-(
+> >=20
+> > Might be something else missing then - so for now the only other
+> > thing I'd suggest is to revert the removal of the qlen check in
+> > fq_codel. =20
+>=20
+> Like this?
+>=20
+> $ git diff  sch_fq_codel.c
+> diff --git a/net/sched/sch_fq_codel.c b/net/sched/sch_fq_codel.c
+> index 6c9029f71e88..4fdf317b82ec 100644
+> --- a/net/sched/sch_fq_codel.c
+> +++ b/net/sched/sch_fq_codel.c
+> @@ -316,7 +316,7 @@ static struct sk_buff *fq_codel_dequeue(struct
+> Qdisc *sch) qdisc_bstats_update(sch, skb);
+>         flow->deficit -=3D qdisc_pkt_len(skb);
+> =20
+> -       if (q->cstats.drop_count) {
+> +       if (q->cstats.drop_count && sch->q.qlen) {
+>                 qdisc_tree_reduce_backlog(sch, q->cstats.drop_count,
+>                                           q->cstats.drop_len);
+>                 q->cstats.drop_count =3D 0;
+> $=20
+>=20
 
-A CAP is definitely useful and some way of preventing migrating between
-hosts with different capabilities for VM_PFNMAP is needed. However, I
-think we only want to prevent migration _if_ there's a cacheable
-VM_PFNMAP, otherwise KVM handles coherency via CMOs already.
+It's been about 21 hours and no crash yet. I had an excellent day down
+a cave, so there's not been as much Internet traffic as usual, but
+there's a good chance the above patch as at least worked around, if not
+fixed the issue.
 
-So, for the above, the VMM needs to know that it somehow got into such
-situation. If it knows the device (VFIO) capabilities and that the user
-mapping is Cacheable, coupled with the new KVM CAP, it can infer that
-Stage 2 will be S2FWB, no need for a memory slot flag. If it doesn't
-have such information, maybe a new memory slot flag can be used to probe
-what Stage 2 mapping is going to be: ask for KVM_MEM_PFNMAP_WB. If it
-fails, Stage 2 is Device/NC and can attempt again with the WB flag.
-It's a bit of a stretch for the KVM API but IIUC there's no option to
-query the properties of a memory slot.
+Regards
+Alan
 
-FWIW, I don't think we need a memory slot flag for host kernel managed
-memory, its S2FWB already.
+--=20
+Alan J. Wylie     https://www.wylie.me.uk/     mailto:<alan@wylie.me.uk>
 
--- 
-Catalin
+Dance like no-one's watching. / Encrypt like everyone is.
+Security is inversely proportional to convenience
