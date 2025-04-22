@@ -1,74 +1,74 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BAE2144DF
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE9C21504E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315653; cv=none; b=hL1axLVpsx8holklN7CK6LmoVK+S/8kHd7cG/oMVArSZkdHDogUhdKPUQgCtDFwNzSV1qvqSvva9rtikUbVq7743Qme1FbG/xt82sS/Cq/GwAgIqdbdw/lo1SqXjF7VDjeUInyQFRcvg8OHH1dJKB10iZUX9uAyZjz0Y8GnWffA=
+	t=1745315656; cv=none; b=eSKOX+HRj3TZCoPtnf2uo7REBEdLp/KATXuT1frVkCmnwQUkhurYQvQpu4/Qm8La52VKg/Vz8ul1rfm5ALe88QxJtpRw9iz4IG0juAYcjTFmWfrl5XOMYlhXJUg01Jhne5rWHVTzBKn8ie8oSh9zhRNyrqjhVEEsrwsbhSp2Ad0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315653; c=relaxed/simple;
-	bh=eyplrmpjKFTUa1W5e9N6rta3lu/Fv+NYAacdGEUT+Oo=;
+	s=arc-20240116; t=1745315656; c=relaxed/simple;
+	bh=Hwb5Wg8id68V2WnDvFD72dDP1oue3BffEk4N4k7Vew0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Iw/LuOY81fFUxMbiD2moWMwemIPtm4XstNwyyXovHIdEINpZUBniBU/0YlG28j0AYJOsBN9FJe7qYHK6doqXhpMBhCTRxwVL6UljS0ngMBPRFgwckmFpWMnyIWILJuwX2URt5mvHbi3N7SbDMPLNJrTqoWPuaHuSpUpc0GMnVkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OR7w5rkM; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=s7pZzlIRZpRpwXZrpzxdII/Me/rF33b5LPIvh07tclqbzF9KZmOmOsAGcVQB9jFwLG4TMbCUdp3iMtEgGPzaOt6nAhqPz9GRO/XmXYbqLrWTm5pf1LuS1i8uewNILJPg3rbxKlQA8DXbwL0Q9wyTddRSefhPMlyNP5TEDEWwRww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YGlbdwNG; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OR7w5rkM"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2254e0b4b79so73527465ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:54:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YGlbdwNG"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so3780542a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745315651; x=1745920451; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745315654; x=1745920454; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8abPOzFQPY6uZ841DkjOq7rR24N5GWsR8imwcJtx7Uk=;
-        b=OR7w5rkM6Abf8NVSwca/9JCEU18uf3LmpX7M5NXLhCnFolnFWA8uy4ydQf+nFV8b7v
-         Sz8ckJU1Rhf1dDiCRTI5AmaicaUBERNEJfbcxIf7/UOhCkEV2Z7FCnUA6LEojK9rEn3A
-         izyXn/jeTx7Q9JiqyM/9N87C9hp4j05hyyz6j/0bclOdvWy280+dXypOiHltuNd3viq4
-         ePqm4OQgR2srZSzONmAWtnUV0rWdVEpI1gx3KjaPcv+ELvL0V/sO1DLbWH8NP7zuDfHO
-         mDthE1oly5GYP4vBjnBB6la8GHt66oMjuhm6ldDmmYscfzYwcIAc0rLWDc5ZGALzr0u3
-         dCig==
+        bh=N5Kzn75CoyUpVkgbkAVHgMpizfueeVqLotFm0lBfgI4=;
+        b=YGlbdwNGAPeOUUFTNkdOnb2i8AmfrcPvKDGsegtFj0tKWo1+jyL8iQQuqcqbjJ46Td
+         lW2Q89V+VxQfYOqxMakbQx22n438HMtL34Dkat/9mH9oDuI6A8/qgUn7Sk2B9NMTLFaT
+         Bv1Brw4dOX42c9hXunQhrHxK7FnDFTX1Ikkgo8nzT6pwsjTw6ahQTJTdQDPyDtWrbr+u
+         P4vpQZ/lWoAPKvtHZa6fcZA02u9z0BEA/buvFjT37C+egHqDnLC4gSq8mFw7tGQQA/6S
+         E6GKbicO/13MLlU9E02vJJSjjoGh/OQyqaI3bNqfts0EOYhDbXr0kfOcsgy2L+zs/YR1
+         pe+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745315651; x=1745920451;
+        d=1e100.net; s=20230601; t=1745315654; x=1745920454;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8abPOzFQPY6uZ841DkjOq7rR24N5GWsR8imwcJtx7Uk=;
-        b=aRpHboZKHSrLpHP2NhYdI02sKKxV/Nah8VbNNQ64LXxWWp3zpoMmF8qHXADaNPbCPm
-         g2hNYS2C2qXGeKfOKVJDW3qRIfERPez9l3ZnyVIi2JFQ0knaEG4CujNqelr1E39tJiju
-         nmNadHhRs7Yz5u4HVlMqNbxzLakiHYv6Fm08zO2XZJzb7VzDLPq9Eu2rsW2WCFrx4v72
-         6o7+tH/Aq8Sd2cXg/pr91OTMH0MC8+bm9g2/9RZrsD7T+k+D9DVro0x6XudUbkp5sWnj
-         t2e6EmdsBwYjg7g/ysjUwjkQU9WSWBwzFT3oppIBT1H03qTDauKT3laXOr71RyHI7BUc
-         7I2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWfFiac1mXP4xIi5thUfdR9laQyOPtDAddWyEK7ot+q8tWe6UbgAc2rjSOOLf7bRrckvrxdEbx0kHkYbDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMuQ9cZFbAww7uBOerBUbDNH++kqwAIx2tsdEh2VsRlnbqSJhI
-	C7noZ7VT6D8lJG6cLLNfXW07dt7vfejojCvmMQsAQjj1fbGLzBqdg3fk26w/TWA=
-X-Gm-Gg: ASbGncuo3NLEcD6LrW124rANjUZrd598gOxoyoqh0/wNh3liH/i9KOvv2bGk1eZU+nc
-	Okjvi1sh512rrWiocRIZWp81vLrVfl6xT/zKy6SK9HcqR8E3bGbJJJ9Lo+ZlHDhrN2q1fPDsa5A
-	plkwv9MhQkWnL0a549qfP5/5GvFrDxxUX+TCwDZrKaY3xEwC7cCRI2vmYclBQlLmb6mi3Vb2aYY
-	LQVQZn2Zh65Id0FJLHQHF4cK3cJO/+nnS+YGnu7FjvzvU+JoXhDEJHh0wPNsslG4+gYKY2Y8eLc
-	/0jajHVeG8OPaqAUmfSyci0+scaRIKvoipCC0BtGRw==
-X-Google-Smtp-Source: AGHT+IEmg8Z6gimIDf9VigivlpBZ67Mu4d5PLElT55+RwEMc1P1qEQb5nY9a+EPjX0zXw8UepdGUvw==
-X-Received: by 2002:a17:902:e806:b0:229:1cef:4c83 with SMTP id d9443c01a7336-22c5356797emr251125215ad.4.1745315651107;
-        Tue, 22 Apr 2025 02:54:11 -0700 (PDT)
+        bh=N5Kzn75CoyUpVkgbkAVHgMpizfueeVqLotFm0lBfgI4=;
+        b=MxQmNrBPxmp4NLx7R1wilFs89yneEBLu5Jo7Fvx1wPCSUwNhwXjMRRuTh2xnZjy0W0
+         az6XdBrIi/4hVYVV8nXdPCdiOX2+lgJG7qT96TZl9+2bmgTJGh51OC7P0cQMoU1wll/d
+         VmYMIMvPxjUZSlRGV0dbHxyzj3+RIlVruYKygYKWy2kICyGsO8KzR+8rI0+YAj2EoUcX
+         AV5qUazCvEzEinHtq+A+kXv89uDrjgjM4NXm+RUYQKONbS/GWw2W8F8A9jjTrrY5noOP
+         qu018OH+9yVSQxAKBtM5mgg7c+kLGSwkBen64l6DHoWPex2F02HbpBicc/I7n0aobYJr
+         0zTg==
+X-Forwarded-Encrypted: i=1; AJvYcCULo85cQzbMWxQCcf5DYVn/RytjueapSU8XKWD8OozP1X6tfNmP9Jc5Fa3Z4ivxiXI2e0Vdtr6lxdb9F/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzhrk2lkFr/8jzgobLJxibD+2DQTDcJf5AtDXYIvC5k8AfJbre2
+	Q6sPriuQcDdRqcrDpWtkb8Z/b56JOANdSdDchC/hgAFoYeEZR/UBcNx6B1abMusE3hpHSkKHKjc
+	I
+X-Gm-Gg: ASbGncuGzoUf0LO5tcRFdbHEfQlXLzp7TPAJBLTGaObsaMGuFuyYZjVOnOXSQQN1+AV
+	hTuXVW8Vn+r/zqfkWeUW1nx1YS0xxqXbWrIcytvX5FFfdtIaBqXaEfd0eQPD7LL2yijPpLQowDe
+	hUnTdYQ1op0YP1HqHKgT4ibqhKA25BTGzUCY7oj7dm4rVfdvtEuuvv6ze+nq6xIWpmdryhPr406
+	8NW2ZJXrpfBqXTWffngjWw4wg8FZlA146qNhZT5X9dNjo6zxp04U1sXP/uELHp9BlDrirbWRJVD
+	Jq/f5a+Nv82KZcQzLJx3OXAFwE3FZNygHWl1Hqy4UA==
+X-Google-Smtp-Source: AGHT+IErqjm03tFu5yST3yF0F1z9Zzqt2vjP0tGj95/hMaoPb1Uko0h1jfw4cKpAm3i77EYr44591g==
+X-Received: by 2002:a17:90a:d64f:b0:2fe:d766:ad95 with SMTP id 98e67ed59e1d1-3087bb47646mr23455072a91.9.1745315654223;
+        Tue, 22 Apr 2025 02:54:14 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf5549sm80701565ad.94.2025.04.22.02.54.10
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3087e12a154sm8221994a91.48.2025.04.22.02.54.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 02:54:10 -0700 (PDT)
+        Tue, 22 Apr 2025 02:54:13 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Lifeng Zheng <zhenglifeng1@huawei.com>
+	Viresh Kumar <viresh.kumar@linaro.org>
 Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
+	Lifeng Zheng <zhenglifeng1@huawei.com>,
 	Nicholas Chin <nic.c3.14@gmail.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] cpufreq: acpi: Re-sync CPU boost state on system resume
-Date: Tue, 22 Apr 2025 15:23:52 +0530
-Message-Id: <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
+Subject: [PATCH 3/6] cpufreq: Don't unnecessarily call set_boost()
+Date: Tue, 22 Apr 2025 15:23:53 +0530
+Message-Id: <1ec6ec55f8413b0387a19a531dff0c3194847f24.1745315548.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1745315548.git.viresh.kumar@linaro.org>
 References: <cover.1745315548.git.viresh.kumar@linaro.org>
@@ -78,54 +78,29 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-During suspend/resume cycles, platform firmware may alter the CPU boost
-state.
+The policy specific boost value may already be set correctly in
+cpufreq_boost_trigger_state(), don't update it again unnecessarily.
 
-If boost is disabled before suspend, it correctly remains off after
-resume. However, if firmware re-enables boost during suspend, the system
-may resume with boost frequencies enabled—even when the boost flag was
-originally disabled. This violates expected behavior.
-
-Ensure the boost state is re-synchronized with the kernel policy during
-system resume to maintain consistency.
-
-Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
-Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220013
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/cpufreq/acpi-cpufreq.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index 7002e8de8098..0ffabf740ff5 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -893,8 +893,19 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	if (perf->states[0].core_frequency * 1000 != freq_table[0].frequency)
- 		pr_warn(FW_WARN "P-state 0 is not max freq\n");
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 3841c9da6cac..e31891c7b500 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2861,7 +2861,7 @@ static int cpufreq_boost_trigger_state(int state)
  
--	if (acpi_cpufreq_driver.set_boost)
--		policy->boost_supported = true;
-+	if (acpi_cpufreq_driver.set_boost) {
-+		if (policy->boost_supported) {
-+			/*
-+			 * The firmware may have altered boost state while the
-+			 * CPU was offline (for example during a suspend-resume
-+			 * cycle).
-+			 */
-+			if (policy->boost_enabled != boost_state(cpu))
-+				set_boost(policy, policy->boost_enabled);
-+		} else {
-+			policy->boost_supported = true;
-+		}
-+	}
+ 	cpus_read_lock();
+ 	for_each_active_policy(policy) {
+-		if (!policy->boost_supported)
++		if (!policy->boost_supported || policy->boost_enabled == state)
+ 			continue;
  
- 	return result;
- 
+ 		policy->boost_enabled = state;
 -- 
 2.31.1.272.g89b43f80a514
 
