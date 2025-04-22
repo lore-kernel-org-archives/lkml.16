@@ -1,68 +1,70 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB51E1EEA4B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33526235BFB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309405; cv=fail; b=ny1MgRuw8wRViy8HpgcZfYyfDh2QgHLsBubafcd33pzGWgx8soPOTNkYVJOMaVoU1CrfupUpgdzbGfpCramUur/bqgxuOGn8cLYpGTCnmFWI7xloo3m6HApsmyhq6NS3YH0IU5AePFQm1RJUiZG9fgtKWW2lrRY8TZ1ptyIfUqA=
+	t=1745309410; cv=fail; b=VLa6YbEVes25cgNkmdP0Kd3e+lvvbV7rGuQWKO3c8BKpciIfoF9cS3WuwUupwqBwGlSYEzF9XOMOeQSH5eAS1duQp1undBhQ7vW7jG4vCihoBikyiitXNO0DSv7QoeQ9JmGOepke1lAtPpjW3pFsipkfsLPn9bFGrI0skSrTzFw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309405; c=relaxed/simple;
-	bh=xpB4JfXlAbnhRCWj8kFSKd6BmM4HASZAmtSp1KRYRJI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=C2ERVvKg0uuJDVzotqJc+yPMUkkQd8mGKzNjqEQ7CMSgAdcqA1yHvduOB9ieqC6G6yqrLr5oiTb5RafDwlLL/AkVtirS90eVctr5TabDIYWnia7RrQoG5wVYa4efe9iBCrkPKAbim+lUp1VG3eCRedBjlLuM+QrO5nnRdUQqA+U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Kj2LzpuE; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=XkzhWkVk; arc=fail smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1745309410; c=relaxed/simple;
+	bh=nM8iLHhHoiTxHlhxq14s8ICkzi3b6JYK1uUO+1SQ37s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Zd2LYmBoa0XboMw3KBStiN5ihy8ZtLGbuOyP/kK8ouL2ne/1yeKtIh2Ab2RGG6t+ETge9X8Knc4Awc1t+DKrWvbaOjc89xoIWQmw3ItkgGONdfq34lz7QoP+CKjEhkLaWgQ2rcnhNf33Emk6dwXdQB7EJZGQnIhOw91oiQLHJlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=JGkC2rmA; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Hd6ny0p3; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Kj2LzpuE";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="XkzhWkVk"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M7N7UB006880;
-	Tue, 22 Apr 2025 08:09:48 GMT
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JGkC2rmA";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Hd6ny0p3"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M7MwHg027820;
+	Tue, 22 Apr 2025 08:09:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2023-11-20; bh=qj1dFSyRyOc8zdpS
-	Pl3IO02oPi/tqiwFF7vOmu2BEHI=; b=Kj2LzpuEhff1pWI4I7glUKyDe4HckbZL
-	OFS55juMCGIaEmIFDeOUTtZpgRkRJC/M0wGEpf99djt3I4RhbB7JlKanrlP+/5mJ
-	bL3ljA7fLeRDJaZLPVRnMZ1Zy51Bi1M+cLW5Cgbca1bwqBqvvQISYxUKFuwOX8zR
-	9fi0ATOK9ksNwieYuiRkNclvoQN2WEis/6Fmgn98i7ByVybJ+fbLRgZCclMDU5Bx
-	EP9zJe0O1vDaf7KISSagOiNFPXdjWZ706t22hHkt3J22nZo5UjVpD4Wmhznws/tT
-	AwRj2Dj01WN2RZWhHwBGt2NnTWs8ibrjsydX9HyJRN+Vsj7OIgCqZg==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4643esbyxq-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=5Epj3fD5BItOHfYbhsNznU6UMM8xmdysyPv3YXYuscs=; b=
+	JGkC2rmADFdy222wdNzi7lD8PFH2J5h+ubTAmdW64SyQpIK76LAQWVikkJ9sq3LD
+	giiT0ieDtM/qabQ+dERa+e0hpsEwIg0I3zlb+L2T2br0LiO9O2KZ27/NA2kEHQem
+	z+8OarKSpJBif7Zm6PT+OoagpwjUTOWZYPmThEgsOQL3JyyXJMsoiDq7L34brdGi
+	5+rf/SLZM1PS4SRb+PpPWuMltyes2jJmbjMTt1RQ4uzffLtKxDdjQMBLcTZ62OxR
+	0ClZFYrWVVqx1IMdJpUR1kpHttwRQ6pfpoCr/HhivYctjRRvvyQD9SsnFwch6oDf
+	skI1h5Bh+C30BcmIHvfMsw==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4644csux0d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 08:09:47 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53M6lDHu003082;
-	Tue, 22 Apr 2025 08:09:46 GMT
-Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013074.outbound.protection.outlook.com [40.93.1.74])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4642991r0x-1
+	Tue, 22 Apr 2025 08:09:51 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53M7GZ4s021147;
+	Tue, 22 Apr 2025 08:09:50 GMT
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazlp17010006.outbound.protection.outlook.com [40.93.20.6])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46429fhse0-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 08:09:46 +0000
+	Tue, 22 Apr 2025 08:09:50 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qvuT1+b6AM1186ZIL6cJWr1whH6yudUK73JioSamnPVs41h9mtEkaGokzoGLsckvG1EnX9ApHQed3rpt4ZIZpdULVUAlgKYw9KRmR9MveGpT0WHv/NJ+XCHQO0m4GOPa7rhVL/6p5wu4TiUb0VPDNxCA2dKmoKLJscVaBJMfSkWwe3lQ/6gH1Eg6NBgSJGnPn5PqhJBh2m5pcPyKy8ENIgY0Zjas0OW/JwLev5yQ6IK+W1pnMPB3d2r86c3Erp8Mm38cYD6Ae2tbKB+5adX2pQ++NOamqzNOYu75MnFtklVh5Y9pOx4ve8A/LdJOVPitXjj6qqsfFL53bV1Yvw+eFQ==
+ b=Mf6PUt3IMueCFqjAbKpaZtmEBUGwp0a6x6ZwdA7+8obK9H401CyaayiUBvQPlVT7gEQmLlLdoh+n1vJlFrSNLDBYE42TxuFgFhpJiOkObsD5xklMIoIuP95Kh4jHur7DRDhVgGFbEFTOyl6kcJynAdYy8tc07T9YZhmcWfguS7YdqD/10Twra0rRjPPegSiuCWNA5KekRjcmzr8yJdXeKxhVNpnmZlDAlQ4Q8aKR+/SueqjLW7OB+aVnCsI9GzUdxtmjurqhoDRe9NrPWgsidIfLQHIEmMpmB8MYGxclXgQdtSkRwwdIaZVlm5RsflpcQMGT+AQi2u6BuMfFWi67bw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qj1dFSyRyOc8zdpSPl3IO02oPi/tqiwFF7vOmu2BEHI=;
- b=XueJlMXnnDdfd6xQdduMkCpVaHiALUBL4GPxxb5TmRCI1mI7HnOvT6BSyE2mgOVbGOeYRkhQOpWn2byV6VH4Xre+BentknvRm/Xn9HUQrCUMFPt9izvQgzKmtLLbv4KjuiFAkh/+n2MvBUAZBXoLn+kQnY7U35ZVhSaaIGxg/oiqNm00lhOlSpawU38uRRJuDczPpPUMhRkY0t2TYUzi1Eyn4VI14lHCDePiy+e1OZuvV4swn+FosKQL+o/pdPW9gM0UjsYcu7bnBC1+iW9fFbvL2fIp3d/WR1DRg0j9tqSo0OX0HSvv9DPZ0PUG42B4RB9QwR8ecU/21j1bl9TZZQ==
+ bh=5Epj3fD5BItOHfYbhsNznU6UMM8xmdysyPv3YXYuscs=;
+ b=hlUGajA4/ljbFbP3AJjizh0LnNjOKCFRvfOGDNtzb5Bhshm88vuReqT6rgrONUdoPzHBg6olMGurVZuFWymdr7Tki1TOk5g+o0FfDlq+Z5mzzeRmTzFIhSO4wRwz5XetARdH0hQCSEnGJZ8Ge9tBEKud5Z/YL2lv+iIwhS9PXii0iEPgE8Pw0WgOGZxrv3cMQcVK7Tkfl37o6aE4iymUtRJ0JtikFJHH7Q4kMPxwKRwY3lrXYcbN+rvynun7CwQ5sN6gCXem50l9kng0bcXL/Vn3/o579rFC0rf3ywjQIw1A8mp5YoPtbc5dvAME5QkWd7utdO35+P0S37+dj31G5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qj1dFSyRyOc8zdpSPl3IO02oPi/tqiwFF7vOmu2BEHI=;
- b=XkzhWkVkTDtVx2KxnShtLEqc2GoQGUkIhVYnQHeqQ7xCSn9VbgPlyIYSyv4/RgSRt+4U7WSyINJwO/huJZQPi5dXO67TsvgsTMrxL0bp85eluCEteSh0ZqhUv59jozgo/Y701RB0QoCtEG5ZUMXLfo+vIME1t+cAtH97JFnPxXw=
+ bh=5Epj3fD5BItOHfYbhsNznU6UMM8xmdysyPv3YXYuscs=;
+ b=Hd6ny0p3wz8YkdbeNJMIxNJ+Zjue6plE/sAmXUJrJSGT60MPocaAryzFTRMjojVWz/Y+6rBZ+yTySRh0ugRzqOBrq+PnGpRHMrU7GdlH9oGhaoPCKbupfTIu86sYx0fzCsKWYX2d5td230UOlmQB8ceeEXGbETWNMGU+cd06NDg=
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
  by SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.31; Tue, 22 Apr
- 2025 08:09:43 +0000
+ 2025 08:09:48 +0000
 Received: from DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
  ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8655.031; Tue, 22 Apr 2025
- 08:09:43 +0000
+ 08:09:48 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
@@ -71,14 +73,16 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
         Matthew Wilcox <willy@infradead.org>,
         David Hildenbrand <david@redhat.com>, Pedro Falcato <pfalcato@suse.de>,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 00/10] mm/mremap: introduce more mergeable mremap via MREMAP_RELOCATE_ANON
-Date: Tue, 22 Apr 2025 09:09:19 +0100
-Message-ID: <cover.1745307301.git.lorenzo.stoakes@oracle.com>
+Subject: [RFC PATCH v2 02/10] mm/mremap: add MREMAP_MUST_RELOCATE_ANON
+Date: Tue, 22 Apr 2025 09:09:21 +0100
+Message-ID: <fe928ea16377f1553e3ffcf01234aaaada531147.1745307301.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1745307301.git.lorenzo.stoakes@oracle.com>
+References: <cover.1745307301.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0110.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c3::14) To DM4PR10MB8218.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO2P265CA0217.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:b::13) To DM4PR10MB8218.namprd10.prod.outlook.com
  (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,304 +92,229 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SA2PR10MB4587:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62fd4d39-fac8-40ca-8ff6-08dd81750a04
+X-MS-Office365-Filtering-Correlation-Id: 8e4bdb4f-b3c1-4c3a-d131-08dd81750cc9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SZK7+fgWXJKeI7K36Lu9zqbU9k6hnf26wlRHs3/p30pnaHe2blscD1B7DeDd?=
- =?us-ascii?Q?VhvuxTLwMUssQyB7dpK47nJUNqBj3GMhQTGp2vLCA3a4xD/rOTVAFqJWSkRb?=
- =?us-ascii?Q?1wjGPBFC99nDQdbl5RSTFHSKye84ThIeGx1fsuErgU0mUDMfzYd/3QiYXTPb?=
- =?us-ascii?Q?/epJEqpW9tXB3DSjIWmNCYSLeylrACzwSJkWgqZmPoFj2/jgOYQnpZ/4FTdP?=
- =?us-ascii?Q?0ow9DYTKkoqBeznpg2l760Klg9CH+GvoGBao832uEdKSxKaErVVr0okzkG0N?=
- =?us-ascii?Q?qJUR8Ip5iPs452zoaposgPYjHjN2Jm3IEyjQhyK5ebyHRlEugSwAR/s7+wY8?=
- =?us-ascii?Q?TifHi31/fSx2vgvSrjxXvz3IyToRRpdDL+DXbJilPYboqvUshIFpNl80hbsG?=
- =?us-ascii?Q?1UwjXGIzOV6paRuP+QevG5MG5EFXGU7KBnRpaH3QMBUP4KAlp2044pLeex/P?=
- =?us-ascii?Q?Ev5HaJ2sXbYGGVRT0THrtrOz25eCMroMlpItzoNATr7wvVBFiTvRfmXFcsfh?=
- =?us-ascii?Q?++bZem0cq0B4ygwkEVaPVxr/pUNeX0UaGXbbomVv6T3rL0XVSla9Ea8mSq1o?=
- =?us-ascii?Q?AUJ3TORTrGktYZKWJ2aU0IvA/Jl/Vo1j80IEikETPgPUoPXEJw4yFWKkKMWC?=
- =?us-ascii?Q?tPnttM+EBy3e6NM5m7RtiKDdvWLCb9WDYVKsHyOpumMmSvJcBmipXItPtDaZ?=
- =?us-ascii?Q?wflUcbDK5WgkU8rxJuu7rYkEGTnLUpl13rvxqAHMBmYAct6uGDumKH8xZ8Qj?=
- =?us-ascii?Q?1POg+JALo6ZTXUn/z2laIUdVJ2Xt3j0XbpREHB3iIA3wO7GMxJSsZixxx0XR?=
- =?us-ascii?Q?/I1xfcnuZHEnl5u6aGmnFzpNe1LpxxXSpeon2H89libYTRedP0j9vR3wAnNq?=
- =?us-ascii?Q?8NguJcjpH5eQ5cTi0n6EPG2XwU9609C8pRla5QO7fnCmYWCZy8Z7TzWtxYo4?=
- =?us-ascii?Q?PkdCw9aSqujRvaFL3r3u1kNjNM8F3huS921hhyQDJarBklwnA5N6GjwLQtlf?=
- =?us-ascii?Q?uEWUoeo5Sl6uGoNlnzlCKR3z8TJKhdcA83fDsTMootAjG7lruwjKJsMD+1rJ?=
- =?us-ascii?Q?43IUzFPknA+NHX81Vin3BYZcHUWwObKnS5UhQXb8Yb1xEhC28BZiENFa7oAa?=
- =?us-ascii?Q?YniPI24NxIfYDKQ3TAucTRMoeyAOgStyL+2HIHujE6H6AnhqnZdHbbS7XdgE?=
- =?us-ascii?Q?N2E/3SJBivkF3Ml6THrfPklCvEdHOC3WSa7TxnTp13C07I7M7EbiHCSp+LbH?=
- =?us-ascii?Q?A8uqdju8DuD1lpI0EbqGuuA18yK87aZQTEGO+wz3TFNCo7Nd+zNew3Rqk29S?=
- =?us-ascii?Q?bgJBUWtLJ/Qdd2KuGsShiGB+LhsJbZErbUrRtcasyW20VAuhhIQ+zoaBWhm6?=
- =?us-ascii?Q?2fVBv6zFq2gXKrtwpFnIfpMu5b8xr4vIZQ66agUHKv47O4IEY68ys7cLthzV?=
- =?us-ascii?Q?ss4/+MoKO4g=3D?=
+	=?us-ascii?Q?nvF9jeYDy8yhYRgHZCxZZu5lSx/iVuLkv3MPOpfICWf2uMvBZ0XHtR+Ta+HW?=
+ =?us-ascii?Q?5xg7KqzlPMGmYAjrwxSFxKt4k7IlzSH641IYCfG0SIGvlLlmeRVzyMT8AFYX?=
+ =?us-ascii?Q?gSI5pzQC1xwgNcbA2KT6gDPJMOlbdbLC5RJss8xjrN3xP0z/6t26CPUZBSTu?=
+ =?us-ascii?Q?t6i23TFj99+e2rGIi4nKHvCRAH88YnT5XYfqBMpyxwC/loGOl1L5+Xv7Cn1+?=
+ =?us-ascii?Q?E4Twm/5u/LEdx2FszwJtoTXU+XZ4VuK6pw8wS8+9l2fYoz0FAYCVI+I9ktZ+?=
+ =?us-ascii?Q?5SimnN5paLqYPotq/KOuSP6i0DG24S7j99bP0gmZUwwj8JaznhRXUEf5uD+u?=
+ =?us-ascii?Q?vMfMD3MDph88cU9V+QVmR1pyKGVgjNh0M4SUckJwXqSjC+4qEakbhCBztNCb?=
+ =?us-ascii?Q?soSLrPAthkZNXAU36U1ITYp6iQqCx/3ar4lQM0hNLEPZz87Le+UYddusKoOF?=
+ =?us-ascii?Q?ARsg6eRKypRAG4aI8p2wCKvx+FZ6udWW05DcdJFB3/fmr/n0Q70Fm7XTszr6?=
+ =?us-ascii?Q?pWfR0p+OPuOa3ANyI85GdmVS4c+ccAU4d/qU0XvAGudZ03D7LRDu8nEDg6bE?=
+ =?us-ascii?Q?cETQpB/XpicRxujKVZT5ZpyRT0uYRgGn2cOh4AbaT+3JIMybHvYMSQuiVgKW?=
+ =?us-ascii?Q?dRoeh9omr4yVjUTSI4L+DCZ6SBjsZxyJRcnGwCxUFWSRqFvomVQcdEkjhrHc?=
+ =?us-ascii?Q?KcUHx9taQEUBEpiZKIy2f0XiaP02khZhGZ2sc3VeOdv9A103hfPuh4bC2VER?=
+ =?us-ascii?Q?aPgESKurHTV+w6hrgAtEfqCHZDyCvYpjdcSlPL9U97sXziCSb7K29WeF9cm2?=
+ =?us-ascii?Q?K6hWs3hkqRuI3/3yKZyNyZTBzgy29P1bkC/hsGTsVPI0AChzDpeVEzJE7ohw?=
+ =?us-ascii?Q?rsIpn5YFxQWw2iheEOPR+pjdcObt/MF3dy5mZfWK6irjZZ2WjaGtyH0s5v2d?=
+ =?us-ascii?Q?K8iZfn3/yv7jeqyR12XxMvTXLLB/tll72oGWb8/ZulxnVETVYWiVfONqNUij?=
+ =?us-ascii?Q?IfmCHFNtzUkWCtacqbyS6vbOhRSGQsMFOt49nnEN4dW98HvwyIfj/KNF5N6v?=
+ =?us-ascii?Q?qxdDmcHz+qYob4n5lM1t2v8yIC0KYZRtAF7PAy2SCh6H/K7Tu7rSjpYRVjKw?=
+ =?us-ascii?Q?QMlzaStPYDXgsHcQeL78Iom8B6hzBCF7d77KoK7dpnmZCd80YFLENf+qJGzi?=
+ =?us-ascii?Q?KnCrnXB4duTcT/WeBX1Uh4qGCMBwnaCZfjn66zvS9CfEB9ZiEmqjMWZt17Cx?=
+ =?us-ascii?Q?HNZ0h/fgQzn08ZXpDLWSEmYUp9vR0n2d6XSQ65a8fmD/8bxBLmsZAkPhhS2U?=
+ =?us-ascii?Q?ATtlWU0V957NW2pCfI/9cYdu8W/Osn6/+vKElKwixCsYQGgzyGwE5ECtAKzA?=
+ =?us-ascii?Q?k1q+A9VjrxbXVOgJokAZc/cNaUkyKLMOVaqsmhjgPua9oMFRAHXIbgYKJLXj?=
+ =?us-ascii?Q?3s6vhoHS5Yo=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Rtk1hPAgowkTV00dRzMmVzkBMb3aTDpca4zYACEfksJsfG5AqqTCdVBH34s4?=
- =?us-ascii?Q?RaxldR2fH4SLRlMSpSAOvig5mPlnK3GBaYfm/+0QbTRpe3ToW3chdQ74LPYS?=
- =?us-ascii?Q?+CPPdiMzs+LWVjQ0Mxwp2yAJUMaibDwZ4DzEBCbYHbEr/+4i83r+bfPaUp2d?=
- =?us-ascii?Q?dkWCtHiVdpUV/NAVGtNt1hNJUmEhyqteCo/wjcXsMjbGRLlrg5fgY+t/5ykD?=
- =?us-ascii?Q?8FGMCHvGcf71JWYSspxPxhalAUGGeZxpJftMNp4zKhi715nLJb8c5kBbWxcu?=
- =?us-ascii?Q?3xUISSplr7djbN5EK47VaPcd62d4VxjWPvhJzqTf7uUuVaQSJMl1QFu7KIvG?=
- =?us-ascii?Q?blcd8ozpdCCqbY1dU/k8yVKRd5e29EjN1/rG5XrdJURKVoatGnX440tBelTc?=
- =?us-ascii?Q?8rBK2w0dvDlFN2d6BavDlwsFjx0UOGU+GedXFf9Pj11vxUopXIpjSEfPKgDj?=
- =?us-ascii?Q?fvrracu+beOFHhI0dwE1XxQtCiC9lYwuk5pKsOEPeRWCTJgO2ZwEc1l1m6sr?=
- =?us-ascii?Q?q5z7kFQAuve54yDAOM5sqUwKFyOUOnz4ExfoEJzJoYC+PCeblryw17aNLEN9?=
- =?us-ascii?Q?sTCjk9C/xrBnF2U16/vRtWfaJWXn9eJpcUteduxwKlLeWSiH9ucU1Cr8Bway?=
- =?us-ascii?Q?R2q5Z5EQ5EEy1tsqCVpzQWY6Je6YpE3jU++yTHsWrFfafahgXkyT6qNtWVbk?=
- =?us-ascii?Q?pOL/4n5T1B6l3bnJpmTt4HF314I4c4zcfkpJfSljcrIXRiUfWpo0M1tR6OT9?=
- =?us-ascii?Q?oMBktaRyktrx32HgZeK+WlWuHpcdndzbrxJOZcf76GBgNGy6p+/CkUtG1M4U?=
- =?us-ascii?Q?4tU11D31dOdRsEiTx6H9EGlV9CMX0lNlUezPf5r+vSsTyleb33z5y/d3njoQ?=
- =?us-ascii?Q?eQM6HmS+HgfyEGao0I9OC+bMfPouj4jAMECloPyKcngqO1Am0/E3lfLeBxgd?=
- =?us-ascii?Q?/r6ysz6sHf7GUW0agYc/+nFpGSwF0JJy0dGtpfoHAD8drrw3hrD+BlbqhzY8?=
- =?us-ascii?Q?nqyxbjSc/6WDnRXzhuExac8+dyu36CSq8cMKVGM4WiDn19SB3xUK1kqykQ7k?=
- =?us-ascii?Q?9wGenx/e5VLIuzuBlZeraaGXRWQnvcTYJD662xJqaa7BdTX4+wD0kqOi2Atg?=
- =?us-ascii?Q?sYMGs7D15WHDNjAgEx2dBJc+6rppDYoZoPH1I6lbzupZnwsvMhhZonAbyXyU?=
- =?us-ascii?Q?gdIgWAlAKulk7Pr2E7DA4j+8REtFRmKw5hjj7Dp/9IgNGd95AQ8iUk2NgJJ2?=
- =?us-ascii?Q?fS4LeBRAB9QGB4WwXHOsw8X+vVG60k655WpWyUAElu8dm977anpLNlwwFlYN?=
- =?us-ascii?Q?cO/li9cmwHgJGzOeVXp1SJkagiY7asSNx1KCtLO95bRCBZiP8crsh4jZ3VCU?=
- =?us-ascii?Q?53l4B0nxsd1srbxcG2ryPlixhDLlvR1GVNIG2E0/1TL+tmChNoT1ke9g9W/L?=
- =?us-ascii?Q?QGbvvfl9q6i0+qPUkl/J5+VtiLQPsagIRicV/0DjIBYBrYiaXrNI4WoeZ5yj?=
- =?us-ascii?Q?T4PkVPklJOV0NiLnexHbkwyQYq6yKYy6T+/Q9Lb7GvYthqpI2wZn6s0NDIMH?=
- =?us-ascii?Q?hC1UZgdLqUxwSSL/JMlfEdFrS25m9PsFsF2OnzSDYVyrdir5qYv1+3FsgWos?=
- =?us-ascii?Q?Sw=3D=3D?=
+	=?us-ascii?Q?Pdc4xvuaz2YyCBpX/4+vSpeRsokUovAX7ICuAKE9qFezFtD6OYLiJd59Tvd/?=
+ =?us-ascii?Q?biBQmMd5qjvMw9DBysH+IrKO/qMWKGGWjiO49XfCZSKgsXfb1IY44B095M0g?=
+ =?us-ascii?Q?fCNdnpp/LUP+Q+VbBEZoOLi3DJnxf48YLqgNjLTr6G0o7ZxbIZRkB1ZbmHcD?=
+ =?us-ascii?Q?9/4zm8sV88DrGdNTYjbNrS2ajpuf1AskR+NRZHG1pEEYFRO5bjMjbr/+18OT?=
+ =?us-ascii?Q?btHA6DhDsfj9c20L0KQL4gDq3nP9eVehZWM41HyMf4Zfs9sY5RvVUSGG5YKo?=
+ =?us-ascii?Q?ADsKN/BhzYvl6ThLyi4zXSc66eOOap5vbGLEDDNzkq5WDPrW9x7DgiqXAKXg?=
+ =?us-ascii?Q?39mg0uDZlEwThYSp7DFmeaIK25c2bJcNDN2815YiuOYuTlPfFV7cOusArdO6?=
+ =?us-ascii?Q?QpGMSSTA/IlOPtcnGq3mfpqNEHskslOKhEPOqkfvSTXJ/Vm40JNtHrLvVmEr?=
+ =?us-ascii?Q?wo8uW5xDUYpVWrZT+zY+ZT55AGT4lz1gOuWEZpLisMRdc7AhBcXgNLD+KmSu?=
+ =?us-ascii?Q?5XwKWE8i0ZeaD7H9oV7FbUVVcKsnBfLzmrr95yL1fk8qFs9whxT+Yupbk7S9?=
+ =?us-ascii?Q?TWBXTwTPPT0JZEhbRIwYwMzh91j7JDaPAoxc0tqq9N3Sjn4VGON5Hip86eMI?=
+ =?us-ascii?Q?O1oscuavtFreehLLkEVTuHz87Tkd0iLvH2gcrpdFj8O1wg0P8iHoIC4jJNMa?=
+ =?us-ascii?Q?4uRhG3v6vPecwETxLV0bo1sEcYrnPMYnGdjKU7yDC5uveKM2HKmtqI9NzMS5?=
+ =?us-ascii?Q?qRKoM2bxHQ6hKnpun7X6EhgnDQTLWOXDdrp2MeQdaA/D0r5nNsJccjnlFg7b?=
+ =?us-ascii?Q?U08EurQk5Qg0E89mSjyqZPq4TnRpFne1qxYEFUPB8pIG0H12foEoWfNDLFwU?=
+ =?us-ascii?Q?xA39cLrWsYMAe/AGarnpJCS2xzent5US+RAFpZ1nKq1TSkyrVGnIPV9OTjZK?=
+ =?us-ascii?Q?N21Au/Lv8ILOUrmpYUkLbSHgsBiHgYjVBuZnh+YA/yJ//1pZyMrQJp7HOee1?=
+ =?us-ascii?Q?oZz58ZYljllTBA4GLjvfVqAklUF78VV/yYhaVUlb2qw3j+vb99EfWKfoB9ok?=
+ =?us-ascii?Q?k7wNcfLrr0cwOZjSltTcly4sM9fM+s8WSrlVdZN1uSzQikTXfxMAfqQanMiB?=
+ =?us-ascii?Q?1OR9lkVw7t2mozCTVEZLslkylgIJU5PGZLCdwGxfJyG58yPyoJuE+SUFpYnl?=
+ =?us-ascii?Q?xUJ3fzMB28/7FSMCTg35DTF41VXYAQSPTxmFMj+EpdmvMFMSdhVEUaIrwQOr?=
+ =?us-ascii?Q?NlT/hQADWfNXJ5GcVmGnvxbGTleVTm09kELoB9ZOGqLeU3lJGNFI5NmYyI3D?=
+ =?us-ascii?Q?9lVBLnEg5PpNN8WPXmOAC/9xnIuoAYwQKsu89v7cKiZiAfEw2W3MAWmMWN/b?=
+ =?us-ascii?Q?TxBfZXrf4M8v6ejKEGxfsgC4E+psPrndakyr0rPFacrAnB9InIWj8Qq/CU9C?=
+ =?us-ascii?Q?fIpq0nvPM3mOicL27PshnGGPSQRFBmlO+uvXO8bG2YzU228KeRxvpxCPWd+n?=
+ =?us-ascii?Q?y2kpUlQNdl0kK3pLOnJyFH+bwadZ0Z8QcZr6i+TVTD4NJ9u6h5HgTLb/2z6q?=
+ =?us-ascii?Q?paOMxBOkiKNWVMLMTxi/t2/IP6hQLzgEX4xJaUPXCUu0ZHQgWiTR+eBzW7bU?=
+ =?us-ascii?Q?Fg=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	O0L/B3eLhCzewSO1r0j+dYq9DGQzTVaz/Sz4gkjs5OTUWkf8ZslLQ7JP66vttnx577snjR5ooVwYZTnMFMI1FNeHDt0vMk3r+Y2712i5MdFr3aeR8mY2TfQ/swEf4QU0qpLBKbTqZUuZXfacNV+7MKciiHTzf3OiE7zp0KTT7ZRL5F2hzs5uZTUU+esJV20gQmbvebxpHup/PIvOS2FnM5dJ5CycZyCzLKMirHAPyaI62qqg6x/Bb5JviHFDSNxa0AfebM8Z0kNXfllESGXADrA0u/fzuA6lxQAKn0i5p+ntELuMZca9HHbAvbcPsVOOhsnQFOFCToQOEF9hIDhMzXndxoGd7u9uDQAbV8FQxsU7NyEzkk3q34Crc/lEDIQWvusMu/tXZ4w8gTbQrGBl7DAIRjZSVuDWSr4bH0yuhiXVv1hTDlqn7wBrboKUB8eYZizQ7daGAFYhonT/XgCN3r32VDfqOmQBdyl7Meq2EJcm/U1QLu3VJW0NWKeomwVp0BloI9vh6ampiANU0gdmQtwUULgKiit9B57vrAAe4fv8I/JYMTkIDIASWOCds/VwEwz8iCeoJvI9eHEYKfNBRPfnPYD/5qAl5VBGjzWcwss=
+	4EAJy1iYR4ryM3QrqOBWA7///begGsIFLTpe7BBDpSSbxgu6UVTIttxjD89/DZUBqW3C1spccP3nNt0tv/HIfl2NMd6gmRlujtVG5GEJO4Ms+j+TVrSAjspp7cG0lls1nEfcXVVxsqYwnt1iLAxVJFVAAPMdzU/hh0VjGa2zCkJ7tAF96Q/T4FjG8debRBiq8u8K/juiM0OM6Z8lHfr6s1HivAjPL1QpZevSk+ttG4u5XCWs+NE9YtL8bYciGAuLIUujxlKQWA9Girxd8ar3LhjRWk39Y6b3assYtzwZI4hHQMz1miObjCGkxJanzcSw9raMD1rA+xbihSd3I/Py6klG1lfz0LEJ626SRMAo4Xw/tPSH0+31a+rg1j56ugwWAwR0zG5EYIyjSkQed7xZtFTyk7UOtDWeVxbZbiClhItRppuqIlPmsUCC2JwEpocxFLBIO1nGCSKFoPCH8GPUK7n+YlxqhJBvtStw3UA6bI4lTITVwQcHM8YEtR8G4axSumlM8wtgGPL7o8WVDMBDEDf00EVsJsKEsR2X2qKxIEgf5ua7/jbNaCinDXSEuar8o3CCAXonbOjlw25uHYFjyeT243nY1xrjLpRtd7o0Yvk=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62fd4d39-fac8-40ca-8ff6-08dd81750a04
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e4bdb4f-b3c1-4c3a-d131-08dd81750cc9
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 08:09:43.7955
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 08:09:48.3007
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DiNXurt2fPtwIkJKAyOSavu0i6QFizpWqo837TkLEJebkgbvkkpQpLmUqClqqnGgTRSymzqiFd+C5aVMLemsQnIVRJBfLt9vexWu2MjJOq0=
+X-MS-Exchange-CrossTenant-UserPrincipalName: quZdGHqHyqGQs+ON7nIyBMgj2imt/tiz+QLOuoKogg05f1l/heAuhV4oL2Zik3BmtbozHuZhHwIJKg8+azeZh0AEWLGFqacDFFc2H4rDp1o=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4587
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2504220061
-X-Proofpoint-GUID: vlNXOLmej7dUkAM4U2xeizhosD5x8MGa
-X-Proofpoint-ORIG-GUID: vlNXOLmej7dUkAM4U2xeizhosD5x8MGa
+X-Proofpoint-ORIG-GUID: iU36dhlj7aw-4xCjAl2Zpt5qfduXprip
+X-Proofpoint-GUID: iU36dhlj7aw-4xCjAl2Zpt5qfduXprip
 
-A long standing issue with VMA merging of anonymous VMAs is the requirement
-to maintain both vma->vm_pgoff and anon_vma compatibility between merge
-candidates.
+This flag is the same as MREMAP_RELOCATE_ANON, however it returns an
+-EFAULT error should folios not be able to be relocated.
 
-For anonymous mappings, vma->vm_pgoff (and consequently, folio->index)
-refer to virtual page offsets, that is, va >> PAGE_SHIFT.
+The operation is undone when this occurs so the user can choose to proceed
+without setting this flag at this stage.
 
-However upon mremap() of an anonymous mapping that has been faulted (that
-is, where vma->anon_vma != NULL), we would then need to walk page tables to
-be able to access let alone manipulate folio->index, mapping fields to
-permit an update of this virtual page offset.
+This is useful for cases where a use case absolutely requires mergeability,
+or moreover a user needs to know whether it succeeded or not for internal
+bookkeeping purposes.
 
-Therefore in these instances, we do not do so, instead retaining the
-virtual page offset the VMA was first faulted in at as it's vma->vm_pgoff
-field, and of course consequently folio->index.
+If the move would be a no-op (could be merged, or folios in range are
+unmapped), then the operation proceeds normally.
 
-On each occasion we use linear_page_index() to determine the appropriate
-offset, cleverly offset the vma->vm_pgoff field by the difference between
-the virtual address and actual VMA start.
+It is only in instances where we would have fallen back to the usual
+mremap() logic if we were using MREMAP_RELOCATE_ANON that we return -EFAULT
+for MREMAP_MUST_RELOCATE_ANON.
 
-Doing so in effect fragments the virtual address space, meaning that we are
-no longer able to merge these VMAs with adjacent ones that could, at least
-theoretically, be merged.
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+---
+ include/uapi/linux/mman.h |  9 +++++----
+ mm/mremap.c               | 35 ++++++++++++++++++++++++++---------
+ 2 files changed, 31 insertions(+), 13 deletions(-)
 
-This also creates a difference in behaviour, often surprising to users,
-between mappings which are faulted and those which are not - as for the
-latter we adjust vma->vm_pgoff upon mremap() to aid mergeability.
-
-This is problematic firstly because this proliferates kernel allocations
-that are pure memory pressure - unreclaimable and unmovable -
-i.e. vm_area_struct, anon_vma, anon_vma_chain objects that need not exist.
-
-Secondly, mremap() exhibits an implicit uAPI in that it does not permit
-remaps which span multiple VMAs (though it does permit remaps that
-constitute a part of a single VMA).
-
-This means that a user must concern themselves with whether merges succeed
-or not should they wish to use mremap() in such a way which causes multiple
-mremap() calls to be performed upon mappings.
-
-This series provides users with an option to accept the overhead of
-actually updating the VMA and underlying folios via the
-MREMAP_RELOCATE_ANON flag.
-
-If MREMAP_RELOCATE_ANON is specified, but an ordinary merge would result in
-the mremap() succeeding, then no attempt is made at relocation of folios as
-this is not required.
-
-Even if no merge is possible upon moving of the region, vma->vm_pgoff and
-folio->index fields are appropriately updated in order that subsequent
-mremap() or mprotect() calls will succeed in merging.
-
-This flag falls back to the ordinary means of mremap() should the operation
-not be feasible. It also transparently undoes the operation, carefully
-holding rmap locks such that no racing rmap operation encounters incorrect
-or missing VMAs.
-
-In addition, the MREMAP_MUST_RELOCATE_ANON flag is supplied in case the
-user needs to know whether or not the operation succeeded - this flag is
-identical to MREMAP_RELOCATE_ANON, only if the operation cannot succeed,
-the mremap() fails with -EFAULT.
-
-Note that no-op mremap() operations (such as an unpopulated range, or a
-merge that would trivially succeed already) will succeed under
-MREMAP_MUST_RELOCATE_ANON.
-
-mremap() already walks page tables, so it isn't an order of magntitude
-increase in workload, but constitutes the need to walk to page table leaf
-level and manipulate folios.
-
-The operations all succeed under THP and in general are compatible with
-underlying large folios of any size. In fact, the larger the folio, the
-more efficient the operation is.
-
-Performance testing indicate that time taken using MREMAP_RELOCATE_ANON is
-on the same order of magnitude of ordinary mremap() operations, with both
-exhibiting time to the proportion of the mapping which is populated.
-
-Of course, mremap() operations that are entirely aligned are significantly
-faster as they need only move a VMA and a smaller number of higher order
-page tables, but this is unavoidable.
-
-Use-cases:
-
-* ZGC is a concurrent GC shipped with OpenJDK. A prototype is being worked
-  upon which makes use of extensive mremap() operations to perform
-  defragmentation of objects, taking advantage of the plentiful available
-  virtual address space in a 64-bit system.
-
-  In instances where one VMA is faulted in and another not, merging is not
-  possible, which leads to significant, unreclaimable, kernel metadata
-  overhead and contention on the vm.max_map_count limit.
-
-  This series eliminates the issue entirely.
-* It was indicated that Android similarly moves memory around and
-  encounters the very same issues as ZGC.
-* SUSE indicate they have encountered similar issues as pertains to an
-  internal client.
-
-Alternative approaches:
-
-In discussions at LSF/MM/BPF It was suggested that we could make this an
-madvise() operation, however at this point it will be too late to correctly
-perform the merge, requiring an unmap/remap which would be egregious.
-
-It was further suggested that we simply defer the operation to the point at
-which an mremap() is attempted on multiple immediately adjacent VMAs (that
-is - to allow VMA fragmentation up until the point where it might cause
-perceptible issues with uAPI).
-
-This is problematic in that in the first instance - you accrue
-fragmentation, and only if you were to try to move the fragmented objects
-again would you resolve it.
-
-Additionally you would not be able to handle the mprotect() case, and you'd
-have the same issue as the madvise() approach in that you'd need to
-essentially re-map each VMA.
-
-Additionally it would become non-trivial to correctly merge the VMAs - if
-there were more than 3, we would need to invent a new merging mechanism
-specifically for this, hold locks carefully over each to avoid them
-disappearing from beneath us and introduce a great deal of non-optional
-complexity.
-
-While imperfect, the mremap flag approach seems the least invasive most
-workable solution (until further rework of the anon_vma mechanism can be
-achieved!)
-
-Testing:
-
-* Significantly expanded self-tests, all of which are passing.
-* Ran all self tests with MREMAP_RELOCATE_ANON forced on for all anonymous
-  mremap()'s.
-* Ran heavy workloads with MREMAP_RELOCATE_ANON forced on on real hardware
-  (kernel compilation, etc.)
-* Ran stress-ng --mremap 32 for an hour with MREMAP_RELOCATE_ANON forced on
-  on real hardware.
-
-History:
-
-RFC v2:
-* Added folio_mapcount() check on relocate anon to assert exclusively
-  mapped as per Jann.
-* Added check for anon_vma->num_children > nr_pages in
-  should_relocate_anon() as per Jann.
-* Separated out vma_had_uncowed_parents() into shared helper function and
-  added vma_had_uncowed_children() to implement the above.
-* Add comment clarifying why we do not require an rmap lock on the old VMA
-  due to fork requiring an mmap write lock which we hold.
-* Corrected error path on __anon_vma_prepare() in copy_vma() as per Jann.
-* Checked for folio pinning and abort if in place. We do so, because this
-  implies the folio is being used by the kernel for a time longer than the
-  time over which an mmap lock is held (which will not be held at the time
-  of us manipulating the folio, as we hold the mmap write lock). We are
-  manipulating mapping, index fields and being conservative (additionally
-  mirroring what UFFDIO_MOVE does), we cannot assume that whoever holds the
-  pin isn't somehow relying on these not being manipulated. As per David.
-* Propagated mapcount, maybe DMA pinned checks to large folio logic.
-* Added folio splitting - on second thoughts, it would be a bit silly to
-  simply disallow the request because of large folio misalignment, work
-  around this by splitting the folio in this instance.
-* Added very careful handling around rmap lock, making use of
-  folio_anon_vma(), to ensure we do not deadlock on anon_vma.
-* Prefer vm_normal_folio() to vm_normal_page() & page_folio().
-* Introduced has_shared_anon_vma() to de-duplicate shared anon_vma check.
-* Provided sys_mremap() helper in vm_util.[ch] to be shared among test
-  callers and de-duplicate. This must be a raw system call, as glibc will
-  otherwise filter the flags.
-* Expanded the mm CoW self-tests to explicitly test with
-  MREMAP_RELOCATE_ANON for partial THP pages. This is useful as it
-  exercises split_folio() code paths explicitly. Additionally some cases
-  cannot succeed, so we also exercise undo paths.
-* Added explicit lockdep handling to teach it that we are handling two
-  distinct anon_vma locks so it doesn't spuriously report a deadlock.
-* Updated anon_vma deadlock checks to check anon_vma->root. Shouldn't
-  strictly be necessary as we explicitly limit ourselves to unforked
-  anon_vma's, but it is more correct to do so, as this is where the lock is
-  located.
-* Expanded the split_huge_page_test.c test to also test using the
-  MREMAP_RELOCATE_ANON flag, this is useful as it exercises the undo path.
-
-RFC v1:
-https://lore.kernel.org/all/cover.1742478846.git.lorenzo.stoakes@oracle.com/
-
-Lorenzo Stoakes (10):
-  mm/mremap: introduce more mergeable mremap via MREMAP_RELOCATE_ANON
-  mm/mremap: add MREMAP_MUST_RELOCATE_ANON
-  mm/mremap: add MREMAP[_MUST]_RELOCATE_ANON support for large folios
-  tools UAPI: Update copy of linux/mman.h from the kernel sources
-  tools/testing/selftests: add sys_mremap() helper to vm_util.h
-  tools/testing/selftests: add mremap() cases that merge normally
-  tools/testing/selftests: add MREMAP_RELOCATE_ANON merge test cases
-  tools/testing/selftests: expand mremap() tests for
-    MREMAP_RELOCATE_ANON
-  tools/testing/selftests: have CoW self test use MREMAP_RELOCATE_ANON
-  tools/testing/selftests: test relocate anon in split huge page test
-
- include/uapi/linux/mman.h                     |    8 +-
- mm/internal.h                                 |    1 +
- mm/mremap.c                                   |  726 ++++++++-
- mm/vma.c                                      |   78 +-
- mm/vma.h                                      |   28 +-
- tools/include/uapi/linux/mman.h               |    8 +-
- tools/testing/selftests/mm/cow.c              |   23 +-
- tools/testing/selftests/mm/merge.c            | 1329 ++++++++++++++++-
- tools/testing/selftests/mm/mremap_test.c      |  262 ++--
- .../selftests/mm/split_huge_page_test.c       |   25 +-
- tools/testing/selftests/mm/vm_util.c          |    8 +
- tools/testing/selftests/mm/vm_util.h          |    3 +
- tools/testing/vma/vma.c                       |    5 +-
- tools/testing/vma/vma_internal.h              |   33 +
- 14 files changed, 2363 insertions(+), 174 deletions(-)
-
---
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index d0542f872e0c..a61dbe1e8b2b 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -6,10 +6,11 @@
+ #include <asm-generic/hugetlb_encode.h>
+ #include <linux/types.h>
+ 
+-#define MREMAP_MAYMOVE		1
+-#define MREMAP_FIXED		2
+-#define MREMAP_DONTUNMAP	4
+-#define MREMAP_RELOCATE_ANON	8
++#define MREMAP_MAYMOVE			1
++#define MREMAP_FIXED			2
++#define MREMAP_DONTUNMAP		4
++#define MREMAP_RELOCATE_ANON		8
++#define MREMAP_MUST_RELOCATE_ANON	16
+ 
+ #define OVERCOMMIT_GUESS		0
+ #define OVERCOMMIT_ALWAYS		1
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 1d915445026f..883ff9499e8c 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -1383,14 +1383,18 @@ static void unmap_source_vma(struct vma_remap_struct *vrm)
+  * is being moved to by updating index and mapping fields accordingly?
+  */
+ static bool should_relocate_anon(struct vma_remap_struct *vrm,
+-	struct pagetable_move_control *pmc)
++	struct pagetable_move_control *pmc, int *errp)
+ {
+ 	struct vm_area_struct *old = vrm->vma;
+ 
+ 	/* Currently we only do this if requested. */
+-	if (!(vrm->flags & MREMAP_RELOCATE_ANON))
++	if (!(vrm->flags & (MREMAP_RELOCATE_ANON | MREMAP_MUST_RELOCATE_ANON)))
+ 		return false;
+ 
++	/* Failures are fatal in the 'must' case. */
++	if (vrm->flags & MREMAP_MUST_RELOCATE_ANON)
++		*errp = -EFAULT;
++
+ 	/* We can't deal with special or hugetlb mappings. */
+ 	if (old->vm_flags & (VM_SPECIAL | VM_HUGETLB))
+ 		return false;
+@@ -1399,10 +1403,6 @@ static bool should_relocate_anon(struct vma_remap_struct *vrm,
+ 	if (!vma_is_anonymous(old))
+ 		return false;
+ 
+-	/* If no folios are mapped, then no need to attempt this. */
+-	if (!old->anon_vma)
+-		return false;
+-
+ 	/*
+ 	 * If the VMA is referenced by a parent process (i.e. is the child of a
+ 	 * fork) or exists in a process which has been forked, then the folio
+@@ -1414,6 +1414,13 @@ static bool should_relocate_anon(struct vma_remap_struct *vrm,
+ 	if (vma_had_uncowed_parents(old) || vma_had_uncowed_children(old))
+ 		return false;
+ 
++	/* Below issues are non-fatal in 'must' case. */
++	*errp = 0;
++
++	/* If no folios are mapped, then no need to attempt this. */
++	if (!old->anon_vma)
++		return false;
++
+ 	/* Otherwise, we're good to go! */
+ 	return true;
+ }
+@@ -1465,7 +1472,10 @@ static int copy_vma_and_data(struct vma_remap_struct *vrm,
+ 	struct vm_area_struct *new_vma;
+ 	int err = 0;
+ 	PAGETABLE_MOVE(pmc, NULL, NULL, vrm->addr, vrm->new_addr, vrm->old_len);
+-	bool relocate_anon = should_relocate_anon(vrm, &pmc);
++	bool relocate_anon = should_relocate_anon(vrm, &pmc, &err);
++
++	if (err)
++		return err;
+ 
+ again:
+ 	new_vma = copy_vma(&vma, vrm->new_addr, vrm->new_len, new_pgoff,
+@@ -1496,6 +1506,12 @@ static int copy_vma_and_data(struct vma_remap_struct *vrm,
+ 
+ 			do_munmap(current->mm, start, size, NULL);
+ 			relocate_anon = false;
++			if (vrm->flags & MREMAP_MUST_RELOCATE_ANON) {
++				vrm_uncharge(vrm);
++				*new_vma_ptr = NULL;
++				return -EFAULT;
++			}
++
+ 			goto again;
+ 		}
+ 	}
+@@ -1850,7 +1866,7 @@ static unsigned long check_mremap_params(struct vma_remap_struct *vrm)
+ 
+ 	/* Ensure no unexpected flag values. */
+ 	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP |
+-		      MREMAP_RELOCATE_ANON))
++		      MREMAP_RELOCATE_ANON | MREMAP_MUST_RELOCATE_ANON))
+ 		return -EINVAL;
+ 
+ 	/* Start address must be page-aligned. */
+@@ -1866,7 +1882,8 @@ static unsigned long check_mremap_params(struct vma_remap_struct *vrm)
+ 		return -EINVAL;
+ 
+ 	/* We can't relocate without allowing a move. */
+-	if ((flags & MREMAP_RELOCATE_ANON) && !(flags & MREMAP_MAYMOVE))
++	if ((flags & (MREMAP_RELOCATE_ANON | MREMAP_MUST_RELOCATE_ANON)) &&
++	     !(flags & MREMAP_MAYMOVE))
+ 		return -EINVAL;
+ 
+ 	/* Remainder of checks are for cases with specific new_addr. */
+-- 
 2.49.0
+
