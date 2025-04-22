@@ -1,167 +1,95 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE6C25C6FE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A053C25A2C3;
+	Tue, 22 Apr 2025 08:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311320; cv=none; b=Wc1SVLO95+5dr9VaHfZKNpind9Yhvh9IIfK1buNXEfgdpGJiN5/Xukn16cuPKyRnnowbj9H4a/8UzZfSap4S5X7WMYz9sNp7yem34niL2VayOWomf87J3nrWG+QRvEYPUZTYoki9IkwSRIY2Ib8zfds/7vRgWq6CwMycvLqz6qg=
+	t=1745311332; cv=none; b=IyJGTXfhPp4b3KdDb38wiW1uAHG8CteY09LrLNZdPwBngPWPL2a5SRDwmiHrCO7oNVkF1f+0/TvD+jJPOhp5xiFYz2m/JsN7E5hyQwCBD37zjy9DtK8NC+/X1RSPjmbENC01tBQIcbPW6JnqpdoowZ7oCV6ZVXz8JlESbgpZDpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311320; c=relaxed/simple;
-	bh=AhRbnxt00FmE/WhEN1u8zVz8q5gXEKLj1JYmMYck0AA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X2n2BuPlIikC7Raf8E0m2miMdsl0yso//Gq/sTxNH75aVzW6tyW8lcctorpzoKLdkVmkGJ7SBJQxkuIETq8KVJDCjiMhe0euj9owGyDiySHeaf96CKp7JkZMb07h0cp3rRjQAalKFnjQZ0PbzCSZEGBDGhY0V8UYT5x+8+a3Yu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=I+r9HcGV; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1745311332; c=relaxed/simple;
+	bh=DMUEgWT1IONXSjjzWV9s6i78gMC3EiOES5rQkWX860w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfRrgh3HsOby5Cg6bqiNJHF6JnQ8MdcpOfWhqmWXeBOKc6jTCccoEBDugl/93VyUGa1gPj321FMpZ1Ij8Pa8ZtgmQbebfKJAHYz1mz0lDBt0UzWVl3nqs1z6ouoPjTmDntHwmgp7MXZWNqLiZ6MYhSkfpG9gU932LCv06tVcsE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yPUsWyuC; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="I+r9HcGV"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4311287b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1745311318; x=1745916118; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dTYlTOXj1U7VnsAmcUnx1eYdk5rL5ZGZ7LNT8Q6B11E=;
-        b=I+r9HcGV+iABKy4DaG0c045CG0YwQTWTa4bafq3dWTL3lYxp5PX6MkerrHE2icSFme
-         rcWWJLIhCk6qOz4yCqOF39nN/tcGIIRMP87r+mFEw9oVuT8VG5RPEMydKlsVcNgam7yK
-         baMQUSf2Bh6ZtrSToSuuRD/J4WSIywx+6jBwbw1wLYZNSR99A98rKDj0SBo07dkeASc2
-         9P9FWqg9TGKQ0hWkt6DRuH4EbynnoMGbR99FC0Pjxm0MWaozMEmsM9Hr5sprfSp1HHqC
-         BmaLSpl8nRv1LMqvPzqwVnF8FID813TxbMWeirNjX/Gp1eAM25iKVp1i84Kgi0S+ccV6
-         hrvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745311318; x=1745916118;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dTYlTOXj1U7VnsAmcUnx1eYdk5rL5ZGZ7LNT8Q6B11E=;
-        b=wR1q528iR7wLg6bSYmcJdsHPl+rwn6VhAu07HNQMXuwI0cPD7xNspk7UP/LNFeceky
-         xIc0/z8Hm6GhXGQKoNARCjKoKdALyJAWWN6o6JxThTEc7i1zNMBWhiA0+yOUkTqW7PB/
-         eUJSWsCCZsaGHp6YIa5nlH5FuBwuupiz3lhY2yio3ZEUA72O5TDZykHr1+r+tm4GIRJ3
-         8w7IJ2XJ4S2riNe/ci2L7PLAMjkqQcy6xsLBeYRObvr+xJFK9e0cm1GLk3WAIrtxPfNe
-         e9knmazCS53KoyVOJ/TceYTTgSfxHa2tZOB51VtumT13S7ByVRfmSLZ8Zwi/7N8TCwSb
-         BgUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPQhRJF06cNcUyr2onKFdCLpOSfa3XnPcnnUBJFw7+wTAop0dPsDCmprWylb41CiN6pL9htlc/SLWCV6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfw0TRbxG8KeYqW3oDitHxXW56SaoJvY+v0dUzR4zFInQH+iEG
-	7lLCCjSrugHxeUlZznNqdXGS9iFN2f65GC+Yr7pzfwjpRED2CjW/pnEku6j/fTw=
-X-Gm-Gg: ASbGncuGyKVru9wqj4XEHXmqKqqHPNIwt9PUNmS2s6OcGM1xEwudbUVvvdBAaMW7MJY
-	hEJTQkI7b7t5b1do5AtwIUHAfL/xc1iGLBC0Uduyj4WT/Lw5Su92l6QlLn8gur7xfJHWRwGX33b
-	ZiiwAIedeqR5qCOUo43uQFh7gsEl/U2CLRww2SMJuWCXXCql+9Fza0CJbtA+k335y9d6Wklocbb
-	mRT+voj0aAM743ShUIYOVLviMlA/DvebCED25VQ9UK8ptJ7EEM2oN/9OsuawjkkHPb00rw6+oKX
-	iANUTo5wODYQMOvGy3mMeebAOsL5lfQlsCi7NGy0iQIlmuJVLW5LCR2naK3GieWmoiyJoTHSUOF
-	Wvg==
-X-Google-Smtp-Source: AGHT+IGfbihuBEBc/pdNIJMJF4VwDXG6UwENQDwhbQ6dawvH9aE1MJPeh2yhFP9zSoJtskbZsJMTIQ==
-X-Received: by 2002:a05:6a00:21c5:b0:736:2a73:675b with SMTP id d2e1a72fcca58-73dc1568a74mr20805479b3a.19.1745311318480;
-        Tue, 22 Apr 2025 01:41:58 -0700 (PDT)
-Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf90d7f7sm8038343b3a.82.2025.04.22.01.41.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:41:58 -0700 (PDT)
-From: Nylon Chen <nylon.chen@sifive.com>
-To: Conor Dooley <conor@kernel.org>,
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yPUsWyuC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=S54P5rf09JI3kvunV4HEvrJrmrs+ZWs16gH9mbduXto=; b=yPUsWyuCuwXN3/Bg2nhooh3nNK
+	Svw04aOt11SnDpbJXWhhJW/TiAybsS/AlgHxMw+TE0x+HMZMr+ZWktRKxjylbtGDmPrxXt6v0lZWo
+	NNVnPkT8gm8MgrNEMjtiCMUS8+j3KzG2KaJuz9fs+IfqrPVP2A5+mFTw0i8Vz67D3fEetPgcAetU2
+	LAszEtD+NQW9nJfm4+pNzL6h+T/5D4hJL+GFjqNy87bp2rIUtbYjhZ8VEsinU8d2JFlFd8mnLqyyK
+	qX0nyycdC4zfwLtYU/k+15PyPQfe30gxP8yyjtciZ3/44LNGRqNr4MpZZTZCPot7BttLS8VRxhAno
+	dpNBcDfA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48000)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u79CX-00043D-1U;
+	Tue, 22 Apr 2025 09:41:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u79CV-0007LW-0t;
+	Tue, 22 Apr 2025 09:41:55 +0100
+Date: Tue, 22 Apr 2025 09:41:55 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>,
-	Vincent Chen <vincent.chen@sifive.com>
-Subject: [PATCH v12 2/5] pwm: sifive: change the PWM algorithm
-Date: Tue, 22 Apr 2025 16:53:09 +0800
-Message-Id: <20250422085312.812877-3-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422085312.812877-1-nylon.chen@sifive.com>
-References: <20250422085312.812877-1-nylon.chen@sifive.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <aAdWU4xPc2UOU5wu@shell.armlinux.org.uk>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+ <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
+ <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-The `frac` variable represents the pulse inactive time, and the result
-of this algorithm is the pulse active time. Therefore, we must reverse the result.
+On Tue, Apr 15, 2025 at 05:25:23PM +0530, Siddharth Vadapalli wrote:
+> For a fixed PHY,
 
-The reference is SiFive FU740-C000 Manual[0]
+No such thing in reality. The kernel has an obsolete idea of a fixed PHY
+which is a software-emulated PHY to represent a fixed link, but that is
+basically dead with phylink (there is now no PHY for fixed links under
+phylink).
 
-Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf [0]
+As I stated, "phy-mode" describes how the MAC needs to configure its
+PHY facing interface, whether there is or is not a PHY present. One can
+argue that it's misnamed, but it's buried in deep DT history going back
+decades, and there's a rule that we don't break backwards compatibility.
 
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index d5b647e6be78..bb9146267bc5 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -110,9 +110,10 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 				struct pwm_state *state)
- {
- 	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
--	u32 duty, val;
-+	u32 duty, val, inactive;
- 
--	duty = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
- 
-@@ -123,7 +124,7 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	state->period = ddata->real_period;
- 	state->duty_cycle =
- 		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
--	state->polarity = PWM_POLARITY_INVERSED;
-+	state->polarity = PWM_POLARITY_NORMAL;
- 
- 	return 0;
- }
-@@ -137,9 +138,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long num;
- 	bool enabled;
- 	int ret = 0;
--	u32 frac;
-+	u32 frac, inactive;
- 
--	if (state->polarity != PWM_POLARITY_INVERSED)
-+	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
- 
- 	cur_state = pwm->state;
-@@ -157,8 +158,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
- 	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
--	/* The hardware cannot generate a 100% duty cycle */
-+	/* The hardware cannot generate a 0% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 
- 	mutex_lock(&ddata->lock);
- 	if (state->period != ddata->approx_period) {
-@@ -190,7 +192,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		}
- 	}
- 
--	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	writel(inactive, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
- 
- 	if (!state->enabled)
- 		clk_disable(ddata->clk);
 -- 
-2.34.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
