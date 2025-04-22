@@ -1,82 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804A7254B02
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E401B3950;
+	Tue, 22 Apr 2025 02:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288204; cv=none; b=nKBcpDbaPwrZ9NNtetRUiJvhEE8D1zgwbNT067fNbd7mGfBZPyBrWX0cO2CklVZYWHpmMwOrlqy3oO5ytbmuCr3OmSBZQJIpugdUvKM2SqK0mDQs58PNo6ozDyHV66U+o+SiJ0fBuu4qdwC0Ae1MwzOk+vcYGn4PvJ8fMX7EMN8=
+	t=1745288220; cv=none; b=eRCaxboCDsQf/AjHmnG9P+2wrt1c76CWT64momTDbdU8SSDQDaR2qC2KNSiZ4XFl7Yajnm8wXNLcnda430NdAvR4giGuKPWupGFa0vEP63mSZNob9oocrDYRujRNWeYQ9yl10eaWNxzBouht66iLtu4wd2Ld63Nqhv8HBDOGnB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288204; c=relaxed/simple;
-	bh=m4SH1HDvHugwMTrd3sTk2tokzTcOFXyDZ2ZZ77+0jfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hvDfCP7j24NNcmYN3WLjeg0FFSHROHAE+kIiP9zY6t2ExQjj2iLe0Xb1Er5K1FzbjYmbC0hPK7wx4qsIF2feijySWd11pvinqzj904+LI/15vW73d+JKHQNrzgSZIMKFxpTAEFc2Ql69Atzbn9M52VTzy5QewnEcWfzjb/Vuu4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYAMtu1K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745288220; c=relaxed/simple;
+	bh=evr6wmvZmoWl9BNqiGKI3+LkDOEuI22eTDlcAMeN4L4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YGaT7yePsvYNqUIA9PZOzHx/BjUjUr0WMc3T0Y9YEWyj0jJLS0MfbG555ZOMEp7Zrij0p9ZL+K8eFoxlERrZeqHGj5AMXagRn3tJ3aPYkyKn3GurApBzAohlIRGwelRTri5w7u/Ujs1Fz4AQLinTKkQgr/OuIzdCalah7GRfun0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HrW5tdo0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYAMtu1K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745288201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7gdgW5eS93if/nqlNpCjp3rr+e7Hdfk5SuDUBkR/RYQ=;
-	b=QYAMtu1KRWV5QeR8xJK67KkSqiR8R6VTckkUcN+TyJs/5g6I4N1ivkpIdvexDq5iugSVbc
-	cXG6t3+P3hBIVi2CHC/8yiUobXb8VCPTe5Js+4wsgt6RTyegkQM/+B+7uicliV4ujHmJwx
-	gqmsZZ7u9Z6m0GpNAEDiuB/yXYoWS6E=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-sTJXc5RTNJG1oQ1umttCFg-1; Mon,
- 21 Apr 2025 22:16:35 -0400
-X-MC-Unique: sTJXc5RTNJG1oQ1umttCFg-1
-X-Mimecast-MFC-AGG-ID: sTJXc5RTNJG1oQ1umttCFg_1745288194
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 114141800264;
-	Tue, 22 Apr 2025 02:16:34 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.137])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47F4D195608F;
-	Tue, 22 Apr 2025 02:16:29 +0000 (UTC)
-Date: Tue, 22 Apr 2025 10:16:25 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: Re: [PATCH 1/4] ublk: factor out ublk_commit_and_fetch
-Message-ID: <aAb7-Wjj6xgymVve@fedora>
-References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
- <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HrW5tdo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CF4EC4CEE4;
+	Tue, 22 Apr 2025 02:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745288220;
+	bh=evr6wmvZmoWl9BNqiGKI3+LkDOEuI22eTDlcAMeN4L4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HrW5tdo0b4vcSRDDfnB/j3laa90lC1xG9tiDOO9kw7iWpLzLqwhRenBJh7encG7m9
+	 MBniNU7HPqnktk9FrpWh6xY86xGm7+Lz1U2u+mIte6FLyBwvLBnXMR2H/ZjCcgrPif
+	 IPnmVwm9XgaLgZa+HLgxBNuUkc2rNHEFMvwqtTf39Pz76QputCDYhMsvQ7zIJZ841E
+	 KqZKzQKwuYQIU6hl1zSOaKPvn0XVqIcZXSQq4BB/SpQoXCsquvvmox75rvz1novH6R
+	 gxuRZA4YiFHuRNd4uU8+DmRTyqVSejx1rsrw3CB0puDcvZyQj5QKtLheNpkOC0flXG
+	 l6Y5jUVG6fqkA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ming Lei <ming.lei@redhat.com>,
+	Uday Shankar <ushankar@purestorage.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 28/30] ublk: add ublk_force_abort_dev()
+Date: Mon, 21 Apr 2025 22:15:48 -0400
+Message-Id: <20250422021550.1940809-28-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
+References: <20250422021550.1940809-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.3
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 05:46:40PM -0600, Uday Shankar wrote:
-> Move the logic for the UBLK_IO_COMMIT_AND_FETCH_REQ opcode into its own
-> function. This also allows us to mark ublk_queue pointers as const for
-> that operation, which can help prevent data races since we may allow
-> concurrent operation on one ublk_queue in the future. Also open code
-> ublk_commit_completion in ublk_commit_and_fetch to reduce the number of
-> parameters/avoid a redundant lookup.
-> 
-> Suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+[ Upstream commit 00b3b0d7cb454d614117c93f33351cdcd20b5b93 ]
 
+Add ublk_force_abort_dev() for handling ublk_nosrv_dev_should_queue_io()
+in ublk_stop_dev(). Then queue quiesce and unquiesce can be paired in
+single function.
 
-Thanks,
-Ming
+Meantime not change device state to QUIESCED any more, since the disk is
+going to be removed soon.
+
+Reviewed-by: Uday Shankar <ushankar@purestorage.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Link: https://lore.kernel.org/r/20250416035444.99569-3-ming.lei@redhat.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/ublk_drv.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 971b793dedd03..611a4b2afbbf3 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1638,22 +1638,20 @@ static void __ublk_quiesce_dev(struct ublk_device *ub)
+ 	ub->dev_info.state = UBLK_S_DEV_QUIESCED;
+ }
+ 
+-static void ublk_unquiesce_dev(struct ublk_device *ub)
++static void ublk_force_abort_dev(struct ublk_device *ub)
+ {
+ 	int i;
+ 
+-	pr_devel("%s: unquiesce ub: dev_id %d state %s\n",
++	pr_devel("%s: force abort ub: dev_id %d state %s\n",
+ 			__func__, ub->dev_info.dev_id,
+ 			ub->dev_info.state == UBLK_S_DEV_LIVE ?
+ 			"LIVE" : "QUIESCED");
+-	/* quiesce_work has run. We let requeued rqs be aborted
+-	 * before running fallback_wq. "force_abort" must be seen
+-	 * after request queue is unqiuesced. Then del_gendisk()
+-	 * can move on.
+-	 */
++	blk_mq_quiesce_queue(ub->ub_disk->queue);
++	if (ub->dev_info.state == UBLK_S_DEV_LIVE)
++		ublk_wait_tagset_rqs_idle(ub);
++
+ 	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+ 		ublk_get_queue(ub, i)->force_abort = true;
+-
+ 	blk_mq_unquiesce_queue(ub->ub_disk->queue);
+ 	/* We may have requeued some rqs in ublk_quiesce_queue() */
+ 	blk_mq_kick_requeue_list(ub->ub_disk->queue);
+@@ -1681,11 +1679,8 @@ static void ublk_stop_dev(struct ublk_device *ub)
+ 	mutex_lock(&ub->mutex);
+ 	if (ub->dev_info.state == UBLK_S_DEV_DEAD)
+ 		goto unlock;
+-	if (ublk_nosrv_dev_should_queue_io(ub)) {
+-		if (ub->dev_info.state == UBLK_S_DEV_LIVE)
+-			__ublk_quiesce_dev(ub);
+-		ublk_unquiesce_dev(ub);
+-	}
++	if (ublk_nosrv_dev_should_queue_io(ub))
++		ublk_force_abort_dev(ub);
+ 	del_gendisk(ub->ub_disk);
+ 	disk = ublk_detach_disk(ub);
+ 	put_disk(disk);
+-- 
+2.39.5
 
