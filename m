@@ -1,68 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEBD33F7;
-	Tue, 22 Apr 2025 08:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E911EEA48;
+	Tue, 22 Apr 2025 08:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308891; cv=none; b=BW+M/lBJZLPJN0ZnBikWuKobSSK6pRL/AOrnsq61OIgkZ/OHui9ihOVJZKyBhi1l42YPan3NNBmxycTuPGrLb2PPiXEzlw5NQVwkET8xnoZ3TPFLzWEC8FlCepcGczw+0FXLCxQfqAOKa4mAWl1q7knMabhirKujuGyDElGHnkI=
+	t=1745308916; cv=none; b=mHZSv40IH4Rxl7fba+y83fZ6hVtHnXUJQ8YIkzbJ3kOPZH0wgfdQ9mmnmQP1u5TpQ4DtKhG0IrWjA/PhAZ+i1rLQys1UyT6fiEI2ShWSLiksYmvW6T3r+ZmYw5w2vjLou0UhnZL1L+TEZRSzzxTJf1ix49tbnpwWVN6HHHv2D3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308891; c=relaxed/simple;
-	bh=V/82unvtAxABgycm+y7kaJ+iuM4jIynRbg8g2O3qJX0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=e9BAQn5y2oDkABFQDzXJOMwxe31u4qZfhpcNThVQl4Cg31HaHIwKBnHcyUnIqAne0O6qyFz8GiEcIIohN+mznpG2EOf2j12MKG7ZYf1Q3VeNv3045azZBvK1WTFQm/NIXXJyhSFx1PKLbNEQgJFvDJGhkZlu7rNi/1FO3VzeCOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9HgzIVZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745308916; c=relaxed/simple;
+	bh=BcFJi0bulc2QinYsUNlk2EgoqAvQjtu7GHdQrOwYwi8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CUzxP0ctrHuGU7nu/DDya+XzZyUXjkMw43NGqiz/4mJkV/OUZ1s4Bo/+OjVar6Z2iGr37NpTZqFi9wZyDKVJrfhQdl5lwsKDWdA31Q2N9cuhvTOmGJxNrSSA6ZzdxEk2tV2HiR+J5WRAy7B4IuyJSF5C3cIA5242NYDQBXL8A9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=YDbgCm6+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bvuw//Zy; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9HgzIVZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C437C4CEE9;
-	Tue, 22 Apr 2025 08:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745308890;
-	bh=V/82unvtAxABgycm+y7kaJ+iuM4jIynRbg8g2O3qJX0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=D9HgzIVZFMRMC5jYYSGuBhwGezKPcaubMYQmrbAhxuMQT15dwqEXTT+D2cgZ4dwxi
-	 g3+YvqW+ErRynrnL9CaEwXNdkpA/0oNxywvcrqQaGCoM3pyOsTeRy/vzMZLhU/A5xJ
-	 rxi3Rs8uWTq7kKaNO3V4n9Vc5y6ae2ydf2xPVJs34mdpLvNNBCRlL8g+sK14Yjc+LP
-	 z3fCw7XrdwU+IEpsL0WMcpeZc2EhEa0C24/VYq79WRW7QeAeruCAwjGiMqPzc55kRx
-	 +A5WJak/9hLd/KRuZfkKQH4d2V/ulHofAQ0+6wQZfwrFVBDfxhRiXlIZ9h+/vlXFVX
-	 KeoHpYR5xYXUg==
-Message-ID: <aee8924a-d533-4d19-8064-9831e3616013@kernel.org>
-Date: Tue, 22 Apr 2025 10:01:24 +0200
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="YDbgCm6+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bvuw//Zy"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id E3C8725401F8;
+	Tue, 22 Apr 2025 04:01:51 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Tue, 22 Apr 2025 04:01:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1745308911; x=1745395311; bh=KqQ0xwRJH+
+	edSDFf5TaW+/HsSzh0Lt8XI37stcalce4=; b=YDbgCm6+wYECGRVGJlHR/44zQZ
+	3wPb2ql4zEMSiE80mMeMvw6EBNgyg8XXU9uxyN3O0udcSD0vfVIHy5LucRPv1MMS
+	qTNd1iar2jkAGJG4fJF+1spyVF0+Xab08BOlvtilbBWVvF4O28QRqn4y9GODJSHm
+	5bZvCr/uf2OQ0h3uEMWDo4vKt5zPMK4sMbhfCTTVDwJZDtsG1ysdvLxkTnLeQAwK
+	zF1jjipF+RBCCKjk+10XcdvTybdRT3Auq2DjaPF8HnuLRXvHpwnZN8QZhlhUi8Wg
+	odzYYBQp8aTwFVhgFY+JsA1pwTOBbcEweHLSARwlvsWcZdIUxpMRIebh2+wg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1745308911; x=1745395311; bh=KqQ0xwRJH+edSDFf5TaW+/HsSzh0Lt8XI37
+	stcalce4=; b=bvuw//ZyoSLI02TAQDKdocsbYfdRrMe+SRS0b9TbTTUusvmZvbD
+	g5F23TqJ4Qd3b/6Rzz6xJXIfWLDvxRyHpJjPPtWE1Z82diIrFKnyXWB1PaRPu3b1
+	9/fZWE91AiW0sH4aZ8HI9IRITtGvjpsHXMQbUIoU4NMcDizLXBiWqd7u/Ou9qJ7t
+	I4D3ZPsTfA9QPnMpYe/rWgy673tXNFCBvkx13oHRvecZqIF2MF5boTtziz+EDuEg
+	7WcSS59gF7KQBogNbTuWRpN6bhpcfMbuSxFzNnOaX+KqvRjCuL71oYb/TWaX/ezy
+	wCSLtAQMmIomYJetQLSNr1lu6gn3yAFh9uQ==
+X-ME-Sender: <xms:70wHaIBrk-yoglB8zLrecPQZw9YHViWCdTlSZp0Vc-hEkF2OM-z6eA>
+    <xme:70wHaKjhT4_dQOHDiEhkzD9yxroGWDMsiyw0WE_4WXqvNCSljJXbhKuPOS39zyqDb
+    nQU52HBTz4t_Q>
+X-ME-Received: <xmr:70wHaLlcAHgPiYhJ1tcgEddi8A0VEtYjfkQHRvMae1y194m7LbynarrN5umyOb2GnmJxh2RygTK2iOeFkrUeIM3bW9eAJos>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefudelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepgeehueehgfdtledutdelkeefgeejteegieekheefudeiffdvudef
+    feelvedttddvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtgho
+    mhdpnhgspghrtghpthhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    gtrghrnhhilhesuggvsghirghnrdhorhhgpdhrtghpthhtoheprghlvgigrdifihhllhhi
+    rghmshhonhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepghhmrgiihihlrghnugesgh
+    hmrghilhdrtghomhdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhmmheskhhvrggtkhdrohhrghdprhgtphht
+    thhopehsrghshhgrlheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:70wHaOwc5Zj8OcnsKwwibajW3dUL2Ldp7bjx-j_7UXvJrm-oQPTB3w>
+    <xmx:70wHaNQcXX95zzIKIPJ6yMx7_PNJVQoBeQED19dRld71fuaWfOXXdw>
+    <xmx:70wHaJZa4s5xqOrG_aM6NkWayhj2kBzDoft1HzgyZOgBjP55eNfDFA>
+    <xmx:70wHaGTnqHz14uJns2goNwcc_nD34kgnwkvyiAavL-zybaERytgfSQ>
+    <xmx:70wHaLZaIa6L1hiqoNmggrP1coulcEembmpGA4DEQGRInYGtd0dENZsq>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 22 Apr 2025 04:01:51 -0400 (EDT)
+Date: Tue, 22 Apr 2025 10:01:49 +0200
+From: Greg KH <greg@kroah.com>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH stable 6.1] mm: Fix is_zero_page() usage in
+ try_grab_page()
+Message-ID: <2025042243-glider-refurbish-c0d1@gregkh>
+References: <20250416202441.3911142-1-alex.williamson@redhat.com>
+ <aAAl5HdLYQl3nIjO@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] rust/revocable: add try_access_with() convenience
- method
-From: Danilo Krummrich <dakr@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250411-try_with-v4-0-f470ac79e2e2@nvidia.com>
- <Z_kV7U0IcebUfGps@cassiopeiae>
-Content-Language: en-US
-In-Reply-To: <Z_kV7U0IcebUfGps@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAAl5HdLYQl3nIjO@eldamar.lan>
 
-On 4/11/25 3:15 PM, Danilo Krummrich wrote:
-> On Fri, Apr 11, 2025 at 09:09:37PM +0900, Alexandre Courbot wrote:
->> This is a feature I found useful to have while writing Nova driver code
->> that accessed registers alongside other operations. I would find myself
->> quite confused about whether the guard was held or dropped at a given
->> point of the code, and it felt like walking through a minefield; this
->> pattern makes things safer and easier to read according to my experience
->> writing nova-core code.
+On Wed, Apr 16, 2025 at 11:49:24PM +0200, Salvatore Bonaccorso wrote:
+> Hi Alex,
 > 
-> Any concerns taking this through the nova tree?
+> On Wed, Apr 16, 2025 at 02:24:39PM -0600, Alex Williamson wrote:
+> > The backport of upstream commit c8070b787519 ("mm: Don't pin ZERO_PAGE
+> > in pin_user_pages()") into v6.1.130 noted below in Fixes does not
+> > account for commit 0f0892356fa1 ("mm: allow multiple error returns in
+> > try_grab_page()"), which changed the return value of try_grab_page()
+> > from bool to int.  Therefore returning 0, success in the upstream
+> > version, becomes an error here.  Fix the return value.
+> > 
+> > Fixes: 476c1dfefab8 ("mm: Don't pin ZERO_PAGE in pin_user_pages()")
+> > Link: https://lore.kernel.org/all/Z_6uhLQjJ7SSzI13@eldamar.lan
+> > Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+> > Reported-by: Milan Broz <gmazyland@gmail.com>
+> > Cc: stable@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: Sasha Levin <sashal@kernel.org>
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> >  mm/gup.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index b1daaa9d89aa..76a2b0943e2d 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -232,7 +232,7 @@ bool __must_check try_grab_page(struct page *page, unsigned int flags)
+> >  		 * and it is used in a *lot* of places.
+> >  		 */
+> >  		if (is_zero_page(page))
+> > -			return 0;
+> > +			return true;
+> >  
+> >  		/*
+> >  		 * Similar to try_grab_folio(): be sure to *also*
+> > -- 
+> > 2.48.1
+> 
+> Thank you, with your patch applied one test VM with a PCI passhtrough
+> configuration start again.
+> 
+> Tested-by: Salvatore Bonaccorso <carnil@debian.org>
 
-@Miguel: Can I get an ACK for taking it through the nova tree?
+Now queued up, thanks.
+
+greg k-h
