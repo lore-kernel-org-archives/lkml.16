@@ -1,198 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270C81096F;
-	Tue, 22 Apr 2025 11:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026E628F5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321796; cv=none; b=omlVoPj/sdpRQ/9EgMn94mrh17cFYY3HygucYq8uavT+aKbMk7S5gTZ0sV+J/8mGnGASU75IpoiCDlxeUH5dufcCdgPsyb+dpY2mIms4a+9VgJzkKt591VA8ixWGxzhzKZ88tjRpsa0UmF5+8n9SqqwIT/dn8v7sZ2w5bbNFcdA=
+	t=1745321799; cv=none; b=bUzTeOxKNivQT8eoPlCl/osxA/YnUu3nrFgi/JdNYu9PIk1Yg/lSxvsqzQtkNTREeSyrdeZ6+OFblmwn14ZZQmrREHYYUsH1VD/sjsBRfCB+wJPi9QqEaw73GKxdvv2d5ie3E3sutCYlMl3+tL2hp755tQqVzcj4vZIHE9bdfIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321796; c=relaxed/simple;
-	bh=OFp61Brk73190htdAxSLAvDHCTjmWH2uMYVj61vQuOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p0yoy54gZm1JL/4GfXvvtaXdDelrdenS1A/7Afhus0QjZvMA+O/ioTIDSgq8EhXNvAQygw4/rT8+IUXbcZVfHNspxKD+c2edcHAYIDFdIEJVy+SGzdpdBWyD9qV+C85dule6e/4+pFTTJsVT8/oE15FUlWu8A946SbiDMOTcWb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAfcjjF4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745321799; c=relaxed/simple;
+	bh=fh6Nszv1BvSWHtSmmPlNnETg8EzVK0+qzlbf/8KX71U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=OQXw7MNHAXKcgCLDnE2wdoPX+BrhRN6c8MLpQ4hEsIkqAehMU52mz2k/3A1JDarau+9uA5afGugtPsaORtH3jaOjxOGdTATMfbpBU/sKFPZuIh2EP1/RU4AxS4F10hpA+qSiT75OWzQiIOazTb3TNxHmbYsT+PuYOo/i4zaNlhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=JdYcO4fz; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAfcjjF4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65B9C4CEE9;
-	Tue, 22 Apr 2025 11:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745321795;
-	bh=OFp61Brk73190htdAxSLAvDHCTjmWH2uMYVj61vQuOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FAfcjjF4SXULbg1huHByX8jRpJl7IYpofDy1hhJBvBTc5e3kFIPiYe/MjeS1xx2+L
-	 Ev2cOfnFyYtPANDH8+v/oHUcEd5+UdPWmPZ5wcLZGIkBixWndagBPRd2gaG8SmtL3q
-	 H7I1iyN0MRXHiDNB+3H2TLUYvoOFz1vt7nH5OWR6Pw1l1A6+6SPA9aWjoehArIsn9A
-	 VFhyJPv3o0+pxbUjZlJgcfoUM9NYEUnGSWXX10IJsvlJbBuqC2PvfEXUiLPwd3LwJF
-	 3xY+UOB4Z2ji0SNZk1IY4MDyzITzaCgXphC6RskwRuP4D8CXmxm18rBwej2TTrDOMA
-	 i6lRCx9vGMcQQ==
-Date: Tue, 22 Apr 2025 13:36:28 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 08/16] gpu: nova-core: wait for GFW_BOOT completion
-Message-ID: <aAd_PBVB5S5pHeP0@cassiopeiae>
-References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
- <20250420-nova-frts-v1-8-ecd1cca23963@nvidia.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="JdYcO4fz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1745321485;
+	bh=e3ONj9DxlwmlOM6ClKZHrQDzeItquWjfJMyEdq14BHs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=JdYcO4fzMKDLDoHO0q+DzJYJ5nTz0ZHX0JabGqP/oaGLx1UBoQO6oiVAYx3AlEvXZ
+	 jIjoxLOzp4k1faJXx0adjsvyqoShF4cRiD6okwYR70TH3XcwzzTE1ADc8Oq35+U21E
+	 1kXkLeHrMcdbEniNT4urcclEk19tSPzKrMNFGW8g=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 7D785239; Tue, 22 Apr 2025 19:31:23 +0800
+X-QQ-mid: xmsmtpt1745321483toza199dr
+Message-ID: <tencent_29AE601199DC77543B902D5EA227CB730E08@qq.com>
+X-QQ-XMAILINFO: OEA2l6/AmyO4eOImuXSvsoYgfXsFpk+l/pUFkN+qnw/CMsIHGxmC9zo4ial4cv
+	 9emh0+iKTTz6OEbtDB9Lci/ZbcDaqIrDbAYspIo5qNhYBAbPN9eFlWe5nS1UDB3gvB6bmp4KgbQV
+	 DUgrez3KQ/uWVBcUzujNH3WyPcTTp+vzcG5T3uBXVkjetXp59uPSM9L8yz6xZS4kSWVsNpflawO9
+	 VcKuBvATmWbsVJUKBbZeBJ+PAQZvwwaBPvt5lk4z7vo/pd2u82KePItAqVGj0nUVyLwqYGAm1POE
+	 m/eq+5a89yNRs4yohl0l+KDMVlNSLCboQq8287S7+5VJed3j3hzrev0BUERaYB9HrZiF+hFFmVR1
+	 x8DvqPQjSpVCUPIRsVQ1bYXHKBxj4kKSVjtN/0J9P1oY/IGKFIbe8gDgefGGf9VSqNbey0lpxTnJ
+	 jSlxMbFiDL6+t24Xu2l+wL9TU5gkNCzXY+ymrjtSZ978tqjJzfPGvF9kCC1lK7WBkR0P1r4YTiur
+	 7uhQJoXUOMkDmSrP1aMZvWq2GnN2ajBrF2OIa81mPnr6AEF/UHodGucku+oRiRg8xn27eUJcfc+Q
+	 jRFE5tBU9udkxEjysAtTE/b7ZoFf5A+2Hk9j/byeTs28pCVSxZlpn+xINJS+yj9l+6JWUxLMPMrk
+	 LLT+GfjlHRR/Rd1YD3juFjAF1moXT4sCeW6+4bPWTQyF5vGc4lGyUdv+JgU1drT22xynD8X1E7Cv
+	 YRRhkHUFaDZ6wD8mxXPn44lNngKpyps22t8b7xMhK8gSXOx6APDtOf1q4+7R29ok+ksMxfLOKHL+
+	 /SKs7ZFiiJ62Zz3S/jIfbQKYXFKVdQCqZVkvEU5w4jkI/t7IDYLL0LBv8jr+yjDW+jCOt9CeJ446
+	 MOGFdjGsGU3gmJio8WFZ7QSx8ZV4/rWF2khZ/Mj2wihdIPftwRAZc9ky3783clwmTlfCOdTX6O/T
+	 TRAhFFbrdHW7lheA/4uO4mrzmfv6Q8WoaWN0Cw5uyCF1R+asvhcQKbmxMRzL7IF3ksP2a4rf5rik
+	 fpHEbeNeB4L5KdzpbXeth04v6HYAoFE5+BomNj3A==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: xiaopeitux@foxmail.com
+To: xiaopeitux@foxmail.com
+Cc: andriy.shevchenko@linux.intel.com,
+	john.g.garry@oracle.com,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	xiaopei01@kylinos.cn,
+	xuwei5@hisilicon.com
+Subject: [PATCH 1/3 V2] bus: hisi_lpc: remove unused head file in hisi_lpc.c
+Date: Tue, 22 Apr 2025 19:31:22 +0800
+X-OQ-MSGID: <8c954c6c1193e02342b92deb7a0865ce055bbe16.1745320689.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1745320689.git.xiaopei01@kylinos.cn>
+References: <cover.1745320689.git.xiaopei01@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250420-nova-frts-v1-8-ecd1cca23963@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Apr 20, 2025 at 09:19:40PM +0900, Alexandre Courbot wrote:
-> Upon reset, the GPU executes the GFW_BOOT firmware in order to
-> initialize its base parameters such as clocks. The driver must ensure
-> that this step is completed before using the hardware.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  drivers/gpu/nova-core/devinit.rs   | 40 ++++++++++++++++++++++++++++++++++++++
->  drivers/gpu/nova-core/driver.rs    |  2 +-
->  drivers/gpu/nova-core/gpu.rs       |  5 +++++
->  drivers/gpu/nova-core/nova_core.rs |  1 +
->  drivers/gpu/nova-core/regs.rs      | 11 +++++++++++
->  5 files changed, 58 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/nova-core/devinit.rs b/drivers/gpu/nova-core/devinit.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ee5685aff845aa97d6b0fbe9528df9a7ba274b2c
-> --- /dev/null
-> +++ b/drivers/gpu/nova-core/devinit.rs
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Methods for device initialization.
-> +
-> +use kernel::bindings;
-> +use kernel::devres::Devres;
-> +use kernel::prelude::*;
-> +
-> +use crate::driver::Bar0;
-> +use crate::regs;
-> +
-> +/// Wait for devinit FW completion.
-> +///
-> +/// Upon reset, the GPU runs some firmware code to setup its core parameters. Most of the GPU is
-> +/// considered unusable until this step is completed, so it must be waited on very early during
-> +/// driver initialization.
-> +pub(crate) fn wait_gfw_boot_completion(bar: &Devres<Bar0>) -> Result<()> {
-> +    let mut timeout = 2000;
-> +
-> +    loop {
-> +        let gfw_booted = with_bar!(
-> +            bar,
-> +            |b| regs::Pgc6AonSecureScratchGroup05PrivLevelMask::read(b)
-> +                .read_protection_level0_enabled()
-> +                && (regs::Pgc6AonSecureScratchGroup05::read(b).value() & 0xff) == 0xff
-> +        )?;
-> +
-> +        if gfw_booted {
-> +            return Ok(());
-> +        }
-> +
-> +        if timeout == 0 {
-> +            return Err(ETIMEDOUT);
-> +        }
-> +        timeout -= 1;
-> +
-> +        // SAFETY: msleep should be safe to call with any parameter.
-> +        unsafe { bindings::msleep(2) };
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-I assume this goes away with [1]? Can we please add a corresponding TODO? Also,
-do you mind preparing the follow-up patches for cases like this (there's also
-the transmute one), such that we can apply them, once the dependencies did land
-and such that we can verify that they suit our needs?
+linux/console.h,linux/pci.h,linux/slab.h
+are not used, removes it.
 
-[1] https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonori@gmail.com/
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+---
+changes in v2: fix build error in i386
+---
+ drivers/bus/hisi_lpc.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> +    }
-> +}
-> diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
-> index a08fb6599267a960f0e07b6efd0e3b6cdc296aa4..752ba4b0fcfe8d835d366570bb2f807840a196da 100644
-> --- a/drivers/gpu/nova-core/driver.rs
-> +++ b/drivers/gpu/nova-core/driver.rs
-> @@ -10,7 +10,7 @@ pub(crate) struct NovaCore {
->      pub(crate) gpu: Gpu,
->  }
->  
-> -const BAR0_SIZE: usize = 8;
-> +const BAR0_SIZE: usize = 0x1000000;
->  pub(crate) type Bar0 = pci::Bar<BAR0_SIZE>;
->  
->  kernel::pci_device_table!(
-> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-> index 866c5992b9eb27735975bb4948e522bc01fadaa2..1f7799692a0ab042f2540e01414f5ca347ae9ecc 100644
-> --- a/drivers/gpu/nova-core/gpu.rs
-> +++ b/drivers/gpu/nova-core/gpu.rs
-> @@ -2,6 +2,7 @@
->  
->  use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
->  
-> +use crate::devinit;
->  use crate::driver::Bar0;
->  use crate::firmware::Firmware;
->  use crate::regs;
-> @@ -168,6 +169,10 @@ pub(crate) fn new(
->              spec.revision
->          );
->  
-> +        // We must wait for GFW_BOOT completion before doing any significant setup on the GPU.
-> +        devinit::wait_gfw_boot_completion(&bar)
-> +            .inspect_err(|_| pr_err!("GFW boot did not complete"))?;
-> +
->          Ok(pin_init!(Self { spec, bar, fw }))
->      }
->  }
-> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
-> index 0eecd612e34efc046dad852e6239de6ffa5fdd62..878161e060f54da7738c656f6098936a62dcaa93 100644
-> --- a/drivers/gpu/nova-core/nova_core.rs
-> +++ b/drivers/gpu/nova-core/nova_core.rs
-> @@ -20,6 +20,7 @@ macro_rules! with_bar {
->      }
->  }
->  
-> +mod devinit;
->  mod driver;
->  mod firmware;
->  mod gpu;
-> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
-> index e315a3011660df7f18c0a3e0582b5845545b36e2..fd7096f0ddd4af90114dd1119d9715d2cd3aa2ac 100644
-> --- a/drivers/gpu/nova-core/regs.rs
-> +++ b/drivers/gpu/nova-core/regs.rs
-> @@ -13,3 +13,14 @@
->      7:4     major_rev => as u8, "major revision of the chip";
->      28:20   chipset => try_into Chipset, "chipset model"
->  );
-> +
-> +/* GC6 */
-> +
-> +register!(Pgc6AonSecureScratchGroup05PrivLevelMask@0x00118128;
-> +    0:0     read_protection_level0_enabled => as_bit bool
-> +);
-> +
-> +/* TODO: This is an array of registers. */
-> +register!(Pgc6AonSecureScratchGroup05@0x00118234;
-> +    31:0    value => as u32
-> +);
+diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+index 53dd1573e323..f0ef9680ad66 100644
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -7,17 +7,14 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/console.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
+ #include <linux/logic_pio.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+-#include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/serial_8250.h>
+-#include <linux/slab.h>
+ 
+ #define DRV_NAME "hisi-lpc"
+ 
+-- 
+2.25.1
 
-Please also document new register definitions.
