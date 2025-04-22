@@ -1,59 +1,59 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C742957DE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05C829617E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310614; cv=none; b=Q1husmkXmtPgBfUGqTfcxWix1LHmpO6E1MCh+Tyb/FsuBcXSDlL+2MjqvaM//goHSKdR3PqDcftP+kqyujdVt0WDgKqxvZSH9uZAJcSRd5Kn1XksNUOXC6AFBageA31ySg/ny+/itvKj/ZQXY8Dyv+Uug1GRWG/WeZFNSc6T490=
+	t=1745310616; cv=none; b=FyZg/gr71X3Kngnb8nk+FDGs/5vRwH+nk1cYQ6f/XVyIIbybXubI79qWN4kxRz8hBbJ/aFIKawGzmz8jce1pc+3h8rwmBh+Dv7XthB40/4o40xkn9o2Mn7GUPyqNpRqJ9m9LkJo3zJJU089DkcZL9jOXR7UpcgQW8uKUXWmhBXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310614; c=relaxed/simple;
-	bh=1T63O1OlCD9JKHcCQsup6IB7KusjwVZkSD/cwdn6G4Y=;
+	s=arc-20240116; t=1745310616; c=relaxed/simple;
+	bh=OLzKae4I998fNj/zk9Djh7y8ZWg4PpchrZAtCztxhu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iwW7tJC/H11bLuJN5aMc44MFnDiUhqbsKmze0RcfyW2DqdYvzau+sZOm9RLUAyCRPcvJgd+Cr3odvFBAZNb67aJNQMHATbQL06vWhUkwwZAc9iuc+yRuZheqXnp0chvKW0ap/MgEfo0JEhEhRSk6VjP7KAedkzrlNEUWmJu6N+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nFgCO6mJ; arc=none smtp.client-ip=209.85.210.173
+	 MIME-Version; b=U0dhQJ1f0VTwrBaMi1wibqjRDmrC0IDiPbzKn2rbSVcXViS7VyHg4Az54Xc2N0QB431cLP2OKdTaMZUrmv/G0cdvW9F2in9I2DFJPyt+eeYtTWK8fObI5ByTlMI5ey317f5MQWKCdZMaqKHiM4x3ybb16A/UL6xK8owyk/iYYPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CONSz473; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nFgCO6mJ"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso4176007b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:30:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CONSz473"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227a8cdd241so54456995ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745310611; x=1745915411; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1745310614; x=1745915414; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MfY1cqMOlZNgD6sYRBGuCkyMRj2zV1J4ZTJazFwtz0s=;
-        b=nFgCO6mJNRou2JyEHaI0dgJR+8f4zPcDFyNcmqxwtdNVJ6r5AwAOAn5fkivajbK3UA
-         eJ8gk0LjUpunDK11AOslJxhOn+8tpgyQGNx/ZM6OtTlK98S9RiiJywSJ6ixc4XopfSiQ
-         FO8FjHQjXvvLvs7kxecL3Vk8XoWTvznZWxSHs=
+        bh=HRLvv5HiEyH3iLEdmowlRjZc+EOHCnDKoYX5NsqMYbM=;
+        b=CONSz473HK+jFEPqoN/PAEmGGdoYliUcx604dVbz6E8IckXBgnUXeIvfmjbxHtLu4h
+         pMpdkfbF+z7s5eV56TlaKqOJLzfJsGt9vxeiSz7tMZ4qm4Nih3TeHoQRjQEPw817Qp2J
+         bKkn5oL8xMttlnTFSEnLsM9bdiBHb3iIR/ESU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745310611; x=1745915411;
+        d=1e100.net; s=20230601; t=1745310614; x=1745915414;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MfY1cqMOlZNgD6sYRBGuCkyMRj2zV1J4ZTJazFwtz0s=;
-        b=kfFHp7sIkGydgCCcuCNbxSeBvcpmhQYm2hy/5ozA7eQLquGhrU7jRv2z9QD6Otppi4
-         /LZtkoCss+wbyOiwqo3y5iuTEKQHd6qnXB/tYZbxHcV2K038SP5gAxDgNdtehJ7YX0JZ
-         xrrQYEevuT++YWMqD2YmWi1poqGrq1L7XrihzI4pZKgaDHHf4yrWpbCYCoOcp7lJAojh
-         ZUjAx3k+G0cLnIIxWYZK/KAwiQlBEvZ2qB+BzmRrul7+wdOqojIMH98tWnysWggAPrJd
-         2w6vqK9pfTKMtfuqe1SidIJwORGG6FXm0zFsJBDJNQkwlgPmDb7OuonFQYuow3Tj+Fmr
-         V+KA==
-X-Forwarded-Encrypted: i=1; AJvYcCUU7nZYyI66WW+DgYsa0jDXKmcip5UsclGxQBl6DqsKdNQGEyuWV50rFckawV9wuRWkb5JiA7IA7kICuj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVC0oQI6cY1nZGQJQhSskWbjGMoa8bnLIY+/lqPMRgV7QMW8WK
-	LcbBc3xFbiIBJcXxqQALIlhxvEkzoo/gYu7HOqd3Mq4YNxp8tKKAsLevIdHrbA==
-X-Gm-Gg: ASbGncvlNlW2Eo0Ko5WQs02EZ9LuRo/62zQBPCB6KgWdcuC8fC/2RX4Ux0HV8glIAk/
-	DzTAm7F5dH/HPgvtPZDDJTFBZYHr1V+9h41sYeKZXKkYJ7kbszeb6cnHdnZKk3zNywhk/tOavU1
-	EV8rw5wl9ONzbSSGuFqPYg7hW/6jFB7H1A8xPz5Q3bfxMs3VOWFcSiOb9IjA4+lzzwu+wEyRsyA
-	9PXuSLxp4Gn+xoXpTFxJyWwvyO25AeaWn5FzaAQKC7wOdqH0lyW97Vt8xAuUuuklWz5JBQgvmpn
-	4u1TRF+C7RNgjwHb/cwKBptYqec+nFBHI5U3j/Whe+fpBUj5vA/Zk+k5VMeFosrP
-X-Google-Smtp-Source: AGHT+IFrR0SjHePrcDyloZ0SNU3e0mpIkK38kOSsRhDb/AUvmUbpn+VO4MBvrhULKtBCtjCKg1/Cug==
-X-Received: by 2002:a05:6a00:2e1b:b0:725:96f2:9e63 with SMTP id d2e1a72fcca58-73dc1616d31mr21371230b3a.24.1745310611398;
-        Tue, 22 Apr 2025 01:30:11 -0700 (PDT)
+        bh=HRLvv5HiEyH3iLEdmowlRjZc+EOHCnDKoYX5NsqMYbM=;
+        b=m5t3PkAtYkztLrGF9oHnpm+8dvNim1Be6VahtRMa3pDVzLil4RuhM+XWtBNCoQcyj3
+         BI7zVRHM6eZIpsdthOdnxNhQImZsZL4c47J0GGTNp3/Zv2GELbYTVIdVCbLRkuyClX+5
+         H4SgWV8XUywv6avhHPnrs/JOnxIW5JM6Vq0NF7qOv9AeO+YKLjFatZIHx0ijIgWwFnTw
+         6VDPwG2GtqxijGi44gCQfA9A1Qal31UfTCtLd4ZTV8QIKPc7yRgZdh2oi6LeA9m4NHQK
+         h4Dnfe4/kZGLvdm4O3P21YWxXhTd5FH20veqgBGQVpokON9yhR4V8Y6Lz3PK+X8TLSY8
+         ajlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCYiLJ6xy9J5gWJS7fEXqt2sGOjVAk4mYK0qL2qYhZmKzjEWLkaNeAVLmyDhO7WOROzK+4i1/ej2DU2y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3lsqoNUMTw/YKP2b/DSh+IdcLoOjOWwrgk2Oa3i5HvbEI1bZq
+	+HtD1qYpp7RHvWJHyN4+PUDbLL4qZaeHnGZlzkcus0AH2dQx5/ZqM86TJf4OYw==
+X-Gm-Gg: ASbGncujU34nPeTttI1eI1qSCvE8mqXgc/0+qFjrftrJaobkQm2Pd6mTf1fib9duEAv
+	NlAJjjG9NOnMycIoT+WM/IXG6jwwwH7Y7O+Z4K1PJXXDdwG1ftcz2GjL270pzJcqetYytluDOXr
+	Owoa/lUe3HDIFhmC/nLpJZKVetHcHsRVZy39Q5J8bFZE2XUsk4bjtJ4Zc1OKNx3bLuKzpsEz1sT
+	9VQsqEhR47vlbwxPeBbIdFCHlqrZqjsumHHI5l9PsShwWeQJRJpHFLc6fXPJuJZL45zGK7xMrZE
+	UqgzvpBeYsruP1t1YQiUd4A8E5zYDEIRET3vW+yTze1gKwVp771FZmAzWS31Ed9e
+X-Google-Smtp-Source: AGHT+IGFVBZMSXezmJu45/qaFcB/uHZsgGdMKJG/2+9zUCCtVU6t3oJE9FXRAtpFbxEhMSdiz+OzHw==
+X-Received: by 2002:a17:902:e5cf:b0:220:d078:eb33 with SMTP id d9443c01a7336-22c536195bdmr221367945ad.36.1745310613817;
+        Tue, 22 Apr 2025 01:30:13 -0700 (PDT)
 Received: from treapking.tpe.corp.google.com ([2401:fa00:1:10:90d6:56e4:9d90:9df3])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e0be0sm7993576b3a.49.2025.04.22.01.30.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e0be0sm7993576b3a.49.2025.04.22.01.30.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:30:11 -0700 (PDT)
+        Tue, 22 Apr 2025 01:30:13 -0700 (PDT)
 From: Pin-yen Lin <treapking@chromium.org>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Rob Herring <robh@kernel.org>,
@@ -65,9 +65,9 @@ Cc: devicetree@vger.kernel.org,
 	Pin-yen Lin <treapking@chromium.org>,
 	Stephen Boyd <swboyd@chromium.org>,
 	linux-usb@vger.kernel.org
-Subject: [PATCH v3 1/4] dt-bindings: usb: Introduce usb-hub.yaml
-Date: Tue, 22 Apr 2025 16:28:27 +0800
-Message-ID: <20250422082957.2058229-2-treapking@chromium.org>
+Subject: [PATCH v3 2/4] dt-bindings: usb: Add binding for PS5511 hub controller
+Date: Tue, 22 Apr 2025 16:28:28 +0800
+Message-ID: <20250422082957.2058229-3-treapking@chromium.org>
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
 In-Reply-To: <20250422082957.2058229-1-treapking@chromium.org>
 References: <20250422082957.2058229-1-treapking@chromium.org>
@@ -79,8 +79,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce a general USB hub binding that describes downstream ports
-and hard wired USB devices for on-board USB hubs.
+Parade PS5511 is USB hub with 4 USB 3.2 compliant 5Gbps downstream(DS)
+ports, and 1 extra USB 2.0 downstream port. The hub has one reset pin
+control and two power supplies (3V3 and 1V1).
 
 Signed-off-by: Pin-yen Lin <treapking@chromium.org>
 
@@ -88,64 +89,91 @@ Signed-off-by: Pin-yen Lin <treapking@chromium.org>
 
 Changes in v3:
 - Remove redundant schemas
+- Update the schema for downstream ports and devices
 
 Changes in v2:
-- New in v2
+- Inherit usb-hub.yaml
+- Fix bindings to reject port@5/device@5 for 3.0 hub correctly
+- Minor string fixes
 
- .../devicetree/bindings/usb/usb-hub.yaml      | 84 +++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-hub.yaml
+ .../bindings/usb/parade,ps5511.yaml           | 108 ++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/parade,ps5511.yaml
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-hub.yaml b/Documentation/devicetree/bindings/usb/usb-hub.yaml
+diff --git a/Documentation/devicetree/bindings/usb/parade,ps5511.yaml b/Documentation/devicetree/bindings/usb/parade,ps5511.yaml
 new file mode 100644
-index 00000000000000..5238ab10576308
+index 00000000000000..10d002f09db8af
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb-hub.yaml
-@@ -0,0 +1,84 @@
++++ b/Documentation/devicetree/bindings/usb/parade,ps5511.yaml
+@@ -0,0 +1,108 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/usb/usb-hub.yaml#
++$id: http://devicetree.org/schemas/usb/parade,ps5511.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Generic USB Hub
++title: Parade PS5511 4+1 Port USB 3.2 Gen 1 Hub Controller
 +
 +maintainers:
 +  - Pin-yen Lin <treapking@chromium.org>
 +
-+allOf:
-+  - $ref: usb-device.yaml#
-+
 +properties:
-+  '#address-cells':
-+    const: 1
++  compatible:
++    enum:
++      - usb1da0,5511
++      - usb1da0,55a1
 +
-+  peer-hub:
-+    $ref: /schemas/types.yaml#/definitions/phandle
++  reset-gpios:
++    items:
++      - description: GPIO specifier for RESETB pin.
++
++  vddd11-supply:
 +    description:
-+      phandle to the peer hub on the controller.
++      1V1 power supply to the hub
++
++  vdd33-supply:
++    description:
++      3V3 power supply to the hub
++
++  peer-hub: true
 +
 +  ports:
 +    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      The downstream facing USB ports
 +
 +    patternProperties:
-+      "^port@[1-9a-f][0-9a-f]*$":
++      '^port@':
 +        $ref: /schemas/graph.yaml#/properties/port
 +
-+patternProperties:
-+  '^.*@[1-9a-f][0-9a-f]*$':
-+    description: The hard wired USB devices
-+    type: object
-+    $ref: /schemas/usb/usb-device.yaml
-+    additionalProperties: true
++        properties:
++          reg:
++            minimum: 1
++            maximum: 5
++
++additionalProperties:
++  properties:
++    reg:
++      minimum: 1
++      maximum: 5
 +
 +required:
-+  - compatible
-+  - reg
++  - peer-hub
 +
-+additionalProperties: true
++allOf:
++  - $ref: usb-hub.yaml#
++  - if:
++      not:
++        properties:
++          compatible:
++            enum:
++              - usb1da0,55a1
++    then:
++      properties:
++        ports:
++          properties:
++            port@5: false
++
++      patternProperties:
++        '^.*@5$': false
 +
 +examples:
 +  - |
@@ -155,7 +183,7 @@ index 00000000000000..5238ab10576308
 +
 +        /* 2.0 hub on port 1 */
 +        hub_2_0: hub@1 {
-+            compatible = "usb123,4567";
++            compatible = "usb1da0,55a1";
 +            reg = <1>;
 +            peer-hub = <&hub_3_0>;
 +            #address-cells = <1>;
@@ -163,13 +191,13 @@ index 00000000000000..5238ab10576308
 +            /* USB 2.0 device on port 5 */
 +            device@5 {
 +                reg = <5>;
-+                compatible = "usb765,4321";
++                compatible = "usb123,4567";
 +            };
 +        };
 +
 +        /* 3.0 hub on port 2 */
 +        hub_3_0: hub@2 {
-+            compatible = "usb123,abcd";
++            compatible = "usb1da0,5511";
 +            reg = <2>;
 +            peer-hub = <&hub_2_0>;
 +
