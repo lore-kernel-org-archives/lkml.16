@@ -1,462 +1,327 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F214F1D515A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6611F5822
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745314075; cv=none; b=DfQXX9+HXcp2Kn6ynRB3KcGS+wavrsE9vIujebuzhjTv7DFNweQl4wae2omzyHJd3GrJcslZfdDkd10Z88ACYBZ09zviprEB7dbw96DT6NKuyo7bmfcTiW3IHhMSQtpLUEzi6KeIvb0+o8T6PMTHd+cZoGcx73D7wm+q4L8J5MU=
+	t=1745314097; cv=none; b=ZtmIwURw79MHH5JEZlq9gHQTNTW1CY8q44PCapo6jnhKOmQOyhaQkXGyTXzrkZHNjL2vBIVsKrUxoz9d3ObCjJFnVKDsg2w5NXW+mqcfKfuy9/KuV+fCw0+nV9w70ofqQU25Vu0K4+p21fwG2UbRF+WzfJa4aj3t+czdVCU3N2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745314075; c=relaxed/simple;
-	bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=X8AYLPSz4LkhpIefwRc74VtVay9zuegpP25PZrVDgqx+Vt1XH9r4B4ewqNlDQ5ORC+YQo+eTtsyQ2b+o4iWk1rYmDPlnoJjQLwKICgxSkA3kof34i8VIS85fnkFngZ+Xd6mF3rKse0GeqMCek8Mk5iYT7C/krinqgkgOftcu0jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEbB3LV9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745314097; c=relaxed/simple;
+	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O8zos5RpC6HZ1jolnrjDC7hC4HCqRkXDbG3SC0POoyhgzo/nicSO1vypnpUqet8a6i92oIc+pj+/FsU6gRpBFJLvokcpGxW6Re15x2Tkq9NwfRcP73kbeshjl+UAVlHv74N1Qp0Ih6ux9l8UUcZFs4t0nf/Nwx8lNEcgQn1Nfug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WJO0WAx6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WJO0WAx6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEbB3LV9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745314071;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
-	b=iEbB3LV9o2YYQpg0OIbdjzLtxygTyL+IN58GrwlIAsgj4GW1rt22KiJNJSxrmansBiufX3
-	VDugD7sNUi6NBCG5vqqNRXxasv9WwIrk1zV0rwr80OTUSRo6gowmvy5d+JEx+47YtHD5h1
-	PGarY3j9DOICU1kbpFr7icdokWg7Pgg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-GnGYuPhbNPGoXSR0Sm4DOQ-1; Tue, 22 Apr 2025 05:27:47 -0400
-X-MC-Unique: GnGYuPhbNPGoXSR0Sm4DOQ-1
-X-Mimecast-MFC-AGG-ID: GnGYuPhbNPGoXSR0Sm4DOQ_1745314066
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39130f02631so1720522f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:27:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745314066; x=1745918866;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AgnyL3CdzJxV9y4WiJKtCdoUbN7Y2/PBXXey5alfkEE=;
-        b=wdQow/Y2PpxwXfCspgUpkmciMdmkbb8+Swhq1MQl46kmeEyXp4uo7OLFJ17X6hVoxz
-         +VI3kI8C//4XzkWfRiQXGecBiu15N78fpGhXWS8KlCEkKASxvDcuYSHv+pHcYw2jZ0te
-         B9gVtjhv7xTlVCkaXAkQdLKuRW2EKiENXnZF8HYpkFWdlymbp8NF3pSuOPPsmTB+P3Ag
-         yHm1gezIY+spu9ayp5N2dRNOl/3BQxl4ICrU8hMZzF3UWxI/YrooZiGqNu39TfrYxbkl
-         /Qvf2sgnGc7K/zZzB8BGaM2cmhkaRS8VKwCwzarted5pGBWhJAwWxKjYTXmKS6YGRPJF
-         iyLw==
-X-Gm-Message-State: AOJu0YwjOwOqnHbwQhY4xmP6DCU3sMQDw8MGmayXTlgb7UWRJXv6NfgL
-	Zmn+WvG9osSSJWMgdFr3dAboXt+W4m20yx+FE2MEri7SyA0Z7y2lHFPJsVrcYOdn5q5MqKpOeWd
-	rIC4bjuAacD2H3DBwUHOl3ZtjfVc+uzYe7XFFJx1oYtld1MyvyKvlDHwsEjhydg==
-X-Gm-Gg: ASbGncuP6bivmHnbGiTn7IHJYhHOFiSPayDnmtepvRvpyW96ZZKshW1gpDY8qHE7ISe
-	XuqxvTf8if4TS7IQc5el9uDnWpszR8lsJumpIGINAmpPOJprChFeOpjp3nP5kgT1ebN3HPyWEPL
-	kNEdOG+KnNR+a3tOcxC0DEr4gmkIYMcDMbTK4dm3i+plBTHa8gUNA0Qw38kF09N7f3W5N7DgO8A
-	fLEv30/Lpk7L14WCbcSs+YPb46S5Ar4tMCfmhi49/pXqcOFrKWqK7vlgivPoNz2u8eLxejiC+WD
-	trzT+tiH
-X-Received: by 2002:a05:6000:1889:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39efbb054b2mr11272983f8f.47.1745314065981;
-        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFlrO0/BemrlI+HwSI9V3QCIZZPBWjXZPma6UnqXroTYFqw4EQ3K2XsXGErxB2ITZyW7Q7wfQ==
-X-Received: by 2002:a05:6000:1889:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39efbb054b2mr11272949f8f.47.1745314065481;
-        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
-Received: from [127.0.0.1] ([195.174.135.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493145sm14454784f8f.71.2025.04.22.02.27.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:27:45 -0700 (PDT)
-Date: Tue, 22 Apr 2025 09:27:42 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Message-ID: <f5ded505-6df3-4a70-a41c-7333c50fed4e@redhat.com>
-In-Reply-To: <e53ac875-da6a-42ce-8714-d74f77775279@efficios.com>
-References: <20250414123630.177385-5-gmonaco@redhat.com> <20250414123630.177385-7-gmonaco@redhat.com> <e53ac875-da6a-42ce-8714-d74f77775279@efficios.com>
-Subject: Re: [PATCH v13 2/3] sched: Move task_mm_cid_work to mm work_struct
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WJO0WAx6";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WJO0WAx6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 18940211CA;
+	Tue, 22 Apr 2025 09:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745314093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
+	b=WJO0WAx6oCF3ikUvqpE4aCyYMLdmUQGcz2z4dJKnd9XzpuTcugFdktpSDAkX9XAgwweCu2
+	Uz4plux39lNKV1A6iGt+Rjw4539GkLf1LJ2wDjvMINRyE67AEDK9IAEhWyUWlP3zxkw9Va
+	z2oIqPwTDf76wchMhgotmuTVBPWyaNs=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=WJO0WAx6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745314093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Isqzsei5TyXRZ7Kh444KzkiTKqyDoqePoeCewqGXj1c=;
+	b=WJO0WAx6oCF3ikUvqpE4aCyYMLdmUQGcz2z4dJKnd9XzpuTcugFdktpSDAkX9XAgwweCu2
+	Uz4plux39lNKV1A6iGt+Rjw4539GkLf1LJ2wDjvMINRyE67AEDK9IAEhWyUWlP3zxkw9Va
+	z2oIqPwTDf76wchMhgotmuTVBPWyaNs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B4C20139D5;
+	Tue, 22 Apr 2025 09:28:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mOqAKithB2hIYwAAD6G6ig
+	(envelope-from <jgross@suse.com>); Tue, 22 Apr 2025 09:28:11 +0000
+Message-ID: <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
+Date: Tue, 22 Apr 2025 11:28:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
+ read PMC
+To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-7-xin@zytor.com>
+ <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
+ <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+Content-Language: en-US
+From: Juergen Gross <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------i1ufDKWM9txfyXVXpiWBIZPH"
+X-Rspamd-Queue-Id: 18940211CA
+X-Spam-Level: 
+X-Spamd-Result: default: False [-6.41 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	MIME_BASE64_TEXT(0.10)[];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[41];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	R_RATELIMIT(0.00)[to_ip_from(RLkdkdrsxe9hqhhs5ask8616i6)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	HAS_ATTACHMENT(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -6.41
+X-Spam-Flag: NO
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------i1ufDKWM9txfyXVXpiWBIZPH
+Content-Type: multipart/mixed; boundary="------------t79jkH1vw0nTqZ7sc29K922g";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+Message-ID: <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
+Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
+ read PMC
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-7-xin@zytor.com>
+ <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
+ <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+In-Reply-To: <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
+
+--------------t79jkH1vw0nTqZ7sc29K922g
+Content-Type: multipart/mixed; boundary="------------k2rhN54GrX7NriGRI3BHxg0x"
+
+--------------k2rhN54GrX7NriGRI3BHxg0x
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMjIuMDQuMjUgMTE6MTIsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDE6Mzgg
+QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAyMi4wNC4yNSAxMDoyMSwgWGluIExp
+IChJbnRlbCkgd3JvdGU6DQo+Pj4gVG8gZWxpbWluYXRlIHRoZSBpbmRpcmVjdCBjYWxsIG92
+ZXJoZWFkIGludHJvZHVjZWQgYnkgdGhlIHB2X29wcyBBUEksDQo+Pj4gdXNlIHRoZSBhbHRl
+cm5hdGl2ZXMgbWVjaGFuaXNtIHRvIHJlYWQgUE1DOg0KPj4NCj4+IFdoaWNoIGluZGlyZWN0
+IGNhbGwgb3ZlcmhlYWQ/IFRoZSBpbmRpcmVjdCBjYWxsIGlzIHBhdGNoZWQgdmlhIHRoZQ0K
+Pj4gYWx0ZXJuYXRpdmUgbWVjaGFuaXNtIHRvIGEgZGlyZWN0IG9uZS4NCj4+DQo+IA0KPiBT
+ZWUgYmVsb3cuDQo+IA0KPiANCj4+Pg0KPj4+IMKgwqDCoMKgIDEpIFdoZW4gYnVpbHQgd2l0
+aCAhQ09ORklHX1hFTl9QViwgWDg2X0ZFQVRVUkVfWEVOUFYgYmVjb21lcyBhDQo+Pj4gwqDC
+oMKgwqDCoMKgwqAgZGlzYWJsZWQgZmVhdHVyZSwgcHJldmVudGluZyB0aGUgWGVuIFBNQyBy
+ZWFkIGNvZGUgZnJvbSBiZWluZw0KPj4+IMKgwqDCoMKgwqDCoMKgIGJ1aWx0IGFuZCBlbnN1
+cmluZyB0aGUgbmF0aXZlIGNvZGUgaXMgZXhlY3V0ZWQgdW5jb25kaXRpb25hbGx5Lg0KPj4N
+Cj4+IFdpdGhvdXQgQ09ORklHX1hFTl9QViBDT05GSUdfUEFSQVZJUlRfWFhMIGlzIG5vdCBz
+ZWxlY3RlZCwgcmVzdWx0aW5nIGluDQo+PiBuYXRpdmUgY29kZSBhbnl3YXkuDQo+IA0KPiBZ
+ZXMsIHRoaXMgaXMga2VwdCBpbiB0aGlzIHBhdGNoLCBidXQgaW4gYSBsaXR0bGUgZGlmZmVy
+ZW50IHdheS4NCj4gDQo+Pg0KPj4+DQo+Pj4gwqDCoMKgwqAgMikgV2hlbiBidWlsdCB3aXRo
+IENPTkZJR19YRU5fUFY6DQo+Pj4NCj4+PiDCoMKgwqDCoMKgwqDCoCAyLjEpIElmIG5vdCBy
+dW5uaW5nIG9uIHRoZSBYZW4gaHlwZXJ2aXNvciAoIVg4Nl9GRUFUVVJFX1hFTlBWKSwNCj4+
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGhlIGtlcm5lbCBydW50aW1lIGJpbmFyeSBp
+cyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseQ0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBqdW1wIHRvIHRoZSBuYXRpdmUgUE1DIHJlYWQgY29kZS4NCj4+Pg0KPj4+IMKgwqDC
+oMKgwqDCoMKgIDIuMikgSWYgcnVubmluZyBvbiB0aGUgWGVuIGh5cGVydmlzb3IgKFg4Nl9G
+RUFUVVJFX1hFTlBWKSwgdGhlDQo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlcm5l
+bCBydW50aW1lIGJpbmFyeSBpcyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxseSBqdW1wDQo+
+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRvIHRoZSBYZW4gUE1DIHJlYWQgY29kZS4N
+Cj4+Pg0KPj4+IENvbnNlcXVlbnRseSwgcmVtb3ZlIHRoZSBwdl9vcHMgUE1DIHJlYWQgQVBJ
+Lg0KPj4NCj4+IEkgZG9uJ3Qgc2VlIHRoZSB2YWx1ZSBvZiB0aGlzIHBhdGNoLg0KPj4NCj4+
+IEl0IGFkZHMgbW9yZSAjaWZkZWYgYW5kIGNvZGUgbGluZXMgd2l0aG91dCBhbnkgcmVhbCBn
+YWluLg0KPj4NCj4+IEluIGNhc2UgdGhlIHg4NiBtYWludGFpbmVycyB0aGluayBpdCBpcyBz
+dGlsbCB3b3J0aCBpdCwgSSB3b24ndCBvYmplY3QuDQo+IA0KPiBJIHRoaW5rIHdlIHdhbnQg
+dG8gdG90YWxseSBieXBhc3MgcHZfb3BzIGluIHRoZSBjYXNlIDIuMSkuDQo+IA0KPiBEbyB5
+b3UgbWVhbiB0aGUgaW5kaXJlY3QgY2FsbCBpcyBwYXRjaGVkIHRvIGNhbGwgbmF0aXZlIGNv
+ZGUgKmRpcmVjdGx5Kg0KPiBmb3IgMi4xP8KgIEkgZG9uJ3Qga25vdyBpdCwgY2FuIHlvdSBw
+bGVhc2UgZWxhYm9yYXRlPw0KDQpBbGwgcGFyYXZpcnQgaW5kaXJlY3QgY2FsbHMgYXJlIHBh
+dGNoZWQgdG8gZGlyZWN0IGNhbGxzIHZpYSB0aGUgbm9ybWFsDQphbHRlcm5hdGl2ZSBwYXRj
+aCBtZWNoYW5pc20uDQoNCkhhdmUgYSBsb29rIGF0IGFsdF9yZXBsYWNlX2NhbGwoKSBpbiBh
+cmNoL3g4Ni9rZXJuZWwvYWx0ZXJuYXRpdmUuYw0KDQo+IEFGQUlLLCBYZW4gUFYgaGFzIGJl
+ZW4gdGhlIHNvbGUgdXNlciBvZiBwdl9vcHMgZm9yIG5lYXJseSAyMCB5ZWFycy4gVGhpcw0K
+DQpOb3QgcXVpdGUuIFRoZXJlIHdhcyBsZ3Vlc3QgdW50aWwgSSByaXBwZWQgaXQgb3V0LiA6
+LSkNCg0KQW5kIHNvbWUgdXNlIGNhc2VzIGFyZSBsZWZ0IGZvciBLVk0gYW5kIEh5cGVyLVYg
+Z3Vlc3RzIChJIGhhdmUga2VwdCB0aG9zZQ0KYmVoaW5kIENPTkZJR19QQVJBVklSVCwgd2hp
+bGUgdGhlIFhlbi1zcGVjaWZpYyBwYXJ0cyBhcmUgYmVoaW5kDQpDT05GSUdfUEFSQVZJUlRf
+WFhMIG5vdykuDQoNCj4gcmFpc2VzIHNpZ25pZmljYW50IGRvdWJ0cyBhYm91dCB3aGV0aGVy
+IHB2X29wcyBwcm92aWRlcyBMaW51eCB3aXRoIHRoZQ0KPiB2YWx1ZSBvZiBiZWluZyBhIHdl
+bGwtYWJzdHJhY3RlZCAiQ1BVIiBvciAiUGxhdGZvcm0iLsKgIEFuZCB0aGUgeDg2DQo+IG1h
+aW50YWluZXJzIGhhdmUgc2FpZCB0aGF0IGl0J3MgYSBtYWludGVuYW5jZSBuaWdodG1hcmUu
+DQoNCkkgaGF2ZSB3b3JrZWQgcmF0aGVyIGhhcmQgdG8gbWFrZSBpdCBsZXNzIGludHJ1c2l2
+ZSwgZXNwZWNpYWxseSBieSByZW1vdmluZw0KdGhlIHBhcmF2aXJ0IHNwZWNpZmljIGNvZGUg
+cGF0Y2hpbmcgKG5vdyBhbGwgZG9uZSB2aWEgYWx0ZXJuYXRpdmUgcGF0Y2hpbmcpDQphbmQg
+YnkgcmVtb3ZpbmcgMzItYml0IFhlbiBQViBtb2RlLg0KDQoNCkp1ZXJnZW4NCg==
+--------------k2rhN54GrX7NriGRI3BHxg0x
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <f5ded505-6df3-4a70-a41c-7333c50fed4e@redhat.com>
 
-2025-04-14T15:28:34Z Mathieu Desnoyers <mathieu.desnoyers@efficios.com>:
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-> On 2025-04-14 08:36, Gabriele Monaco wrote:
->> Currently, the task_mm_cid_work function is called in a task work
->> triggered by a scheduler tick to frequently compact the mm_cids of each
->> process. This can delay the execution of the corresponding thread for
->> the entire duration of the function, negatively affecting the response
->> in case of real time tasks. In practice, we observe task_mm_cid_work
->> increasing the latency of 30-35us on a 128 cores system, this order of
->> magnitude is meaningful under PREEMPT_RT.
->> Run the task_mm_cid_work in a new work_struct connected to the
->> mm_struct rather than in the task context before returning to
->> userspace.
->> This work_struct is initialised with the mm and disabled before freeing
->> it. The queuing of the work happens while returning to userspace in
->> __rseq_handle_notify_resume, maintaining the checks to avoid running
->> more frequently than MM_CID_SCAN_DELAY.
->> To make sure this happens predictably also on long running tasks, we
->> trigger a call to __rseq_handle_notify_resume also from the scheduler
->> tick if the runtime exceeded a 100ms threshold.
->> The main advantage of this change is that the function can be offloaded
->> to a different CPU and even preempted by RT tasks.
->> Moreover, this new behaviour is more predictable with periodic tasks
->> with short runtime, which may rarely run during a scheduler tick.
->> Now, the work is always scheduled when the task returns to userspace.
->> The work is disabled during mmdrop, since the function cannot sleep in
->> all kernel configurations, we cannot wait for possibly running work
->> items to terminate. We make sure the mm is valid in case the task is
->> terminating by reserving it with mmgrab/mmdrop, returning prematurely if
->> we are really the last user while the work gets to run.
->> This situation is unlikely since we don't schedule the work for exiting
->> tasks, but we cannot rule it out.
->
-> The implementation looks good to me. Peter, how does it look from your en=
-d ?
->
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
+oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
+kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
+1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
+BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
+N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
+PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
+FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
+UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
+vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
++6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
+qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
+tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
+Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
+CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
+RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
+8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
+BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
+SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
+nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
+AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
+Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
+hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
+w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
+VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
+OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
+/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
+c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
+F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
+k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
+wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
+5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
+TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
+N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
+AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
+0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
+Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
+we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
+v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
+Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
+534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
+b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
+yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
+suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
+jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
+KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
+gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
+bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
+aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
+7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
+RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
+g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
+4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Peter, what do you think about this version? Can we bring it in?
+--------------k2rhN54GrX7NriGRI3BHxg0x--
 
-Thanks,
-Gabriele
+--------------t79jkH1vw0nTqZ7sc29K922g--
 
-> Thanks,
->
-> Mathieu
->
->> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm=
-_cid")
->> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
->> ---
->> =C2=A0 include/linux/mm_types.h | 26 ++++++++++++++
->> =C2=A0 include/linux/sched.h=C2=A0=C2=A0=C2=A0 |=C2=A0 8 ++++-
->> =C2=A0 kernel/rseq.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 2 ++
->> =C2=A0 kernel/sched/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 75 ++++++++++=
-++++++++++++++++--------------
->> =C2=A0 kernel/sched/sched.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 ++--
->> =C2=A0 5 files changed, 89 insertions(+), 28 deletions(-)
->> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->> index 56d07edd01f91..e4ae9295508cf 100644
->> --- a/include/linux/mm_types.h
->> +++ b/include/linux/mm_types.h
->> @@ -982,6 +982,10 @@ struct mm_struct {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * mm nr_cpus_allowed up=
-dates.
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raw_spinlock_t cpus_allowed_l=
-ock;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * @cid_work: Work item to ru=
-n the mm_cid scan.
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct work_struct cid_work;
->> =C2=A0 #endif
->> =C2=A0 #ifdef CONFIG_MMU
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_long_t pgtables_bytes;=
-=C2=A0=C2=A0 /* size of all page tables */
->> @@ -1282,6 +1286,8 @@ enum mm_cid_state {
->> =C2=A0=C2=A0=C2=A0 MM_CID_LAZY_PUT =3D (1U << 31),
->> =C2=A0 };
->> =C2=A0 +extern void task_mm_cid_work(struct work_struct *work);
->> +
->> =C2=A0 static inline bool mm_cid_is_unset(int cid)
->> =C2=A0 {
->> =C2=A0=C2=A0=C2=A0 return cid =3D=3D MM_CID_UNSET;
->> @@ -1354,12 +1360,14 @@ static inline int mm_alloc_cid_noprof(struct mm_=
-struct *mm, struct task_struct *
->> =C2=A0=C2=A0=C2=A0 if (!mm->pcpu_cid)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
->> =C2=A0=C2=A0=C2=A0 mm_init_cid(mm, p);
->> +=C2=A0=C2=A0 INIT_WORK(&mm->cid_work, task_mm_cid_work);
->> =C2=A0=C2=A0=C2=A0 return 0;
->> =C2=A0 }
->> =C2=A0 #define mm_alloc_cid(...) alloc_hooks(mm_alloc_cid_noprof(__VA_AR=
-GS__))
->> =C2=A0=C2=A0=C2=A0 static inline void mm_destroy_cid(struct mm_struct *m=
-m)
->> =C2=A0 {
->> +=C2=A0=C2=A0 disable_work(&mm->cid_work);
->> =C2=A0=C2=A0=C2=A0 free_percpu(mm->pcpu_cid);
->> =C2=A0=C2=A0=C2=A0 mm->pcpu_cid =3D NULL;
->> =C2=A0 }
->> @@ -1381,6 +1389,16 @@ static inline void mm_set_cpus_allowed(struct mm_=
-struct *mm, const struct cpumas
->> =C2=A0=C2=A0=C2=A0 WRITE_ONCE(mm->nr_cpus_allowed, cpumask_weight(mm_all=
-owed));
->> =C2=A0=C2=A0=C2=A0 raw_spin_unlock(&mm->cpus_allowed_lock);
->> =C2=A0 }
->> +
->> +static inline bool mm_cid_needs_scan(struct mm_struct *mm)
->> +{
->> +=C2=A0=C2=A0 return mm && !time_before(jiffies, READ_ONCE(mm->mm_cid_ne=
-xt_scan));
->> +}
->> +
->> +static inline bool mm_cid_scan_pending(struct mm_struct *mm)
->> +{
->> +=C2=A0=C2=A0 return mm && work_pending(&mm->cid_work);
->> +}
->> =C2=A0 #else /* CONFIG_SCHED_MM_CID */
->> =C2=A0 static inline void mm_init_cid(struct mm_struct *mm, struct task_=
-struct *p) { }
->> =C2=A0 static inline int mm_alloc_cid(struct mm_struct *mm, struct task_=
-struct *p) { return 0; }
->> @@ -1391,6 +1409,14 @@ static inline unsigned int mm_cid_size(void)
->> =C2=A0=C2=A0=C2=A0 return 0;
->> =C2=A0 }
->> =C2=A0 static inline void mm_set_cpus_allowed(struct mm_struct *mm, cons=
-t struct cpumask *cpumask) { }
->> +static inline bool mm_cid_needs_scan(struct mm_struct *mm)
->> +{
->> +=C2=A0=C2=A0 return false;
->> +}
->> +static inline bool mm_cid_scan_pending(struct mm_struct *mm)
->> +{
->> +=C2=A0=C2=A0 return false;
->> +}
->> =C2=A0 #endif /* CONFIG_SCHED_MM_CID */
->> =C2=A0=C2=A0=C2=A0 struct mmu_gather;
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index f96ac19828934..3ffdb96ef6b0a 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1424,7 +1424,7 @@ struct task_struct {
->> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 last_mm_cid;=C2=A0=C2=A0=C2=A0 /* Most recent cid =
-in mm */
->> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 migrate_from_cpu;
->> =C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_active;=C2=A0 /* Whether cid bitmap is acti=
-ve */
->> -=C2=A0=C2=A0 struct callback_head=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 cid_work;
->> +=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 last_cid_reset; /* Time of last reset in jiffies */
->> =C2=A0 #endif
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tlbflush_unmap_batch t=
-lb_ubc;
->> @@ -2281,4 +2281,10 @@ static __always_inline void alloc_tag_restore(str=
-uct alloc_tag *tag, struct allo
->> =C2=A0 #define alloc_tag_restore(_tag, _old)=C2=A0=C2=A0=C2=A0=C2=A0 do =
-{} while (0)
->> =C2=A0 #endif
->> =C2=A0 +#ifdef CONFIG_SCHED_MM_CID
->> +extern void task_queue_mm_cid(struct task_struct *curr);
->> +#else
->> +static inline void task_queue_mm_cid(struct task_struct *curr) { }
->> +#endif
->> +
->> =C2=A0 #endif
->> diff --git a/kernel/rseq.c b/kernel/rseq.c
->> index b7a1ec327e811..383db2ccad4d0 100644
->> --- a/kernel/rseq.c
->> +++ b/kernel/rseq.c
->> @@ -441,6 +441,8 @@ void __rseq_handle_notify_resume(struct ksignal *ksi=
-g, struct pt_regs *regs)
->> =C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0 if (unlikely(rseq_update_cpu_node_id(t)))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto error;
->> +=C2=A0=C2=A0 if (mm_cid_needs_scan(t->mm))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 task_queue_mm_cid(t);
->> =C2=A0=C2=A0=C2=A0 return;
->> =C2=A0=C2=A0=C2=A0 error:
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index c81cf642dba05..02b18649e6a09 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -10566,22 +10566,16 @@ static void sched_mm_cid_remote_clear_weight(s=
-truct mm_struct *mm, int cpu,
->> =C2=A0=C2=A0=C2=A0 sched_mm_cid_remote_clear(mm, pcpu_cid, cpu);
->> =C2=A0 }
->> =C2=A0 -static void task_mm_cid_work(struct callback_head *work)
->> +void task_mm_cid_work(struct work_struct *work)
->> =C2=A0 {
->> =C2=A0=C2=A0=C2=A0 unsigned long now =3D jiffies, old_scan, next_scan;
->> -=C2=A0=C2=A0 struct task_struct *t =3D current;
->> =C2=A0=C2=A0=C2=A0 struct cpumask *cidmask;
->> -=C2=A0=C2=A0 struct mm_struct *mm;
->> +=C2=A0=C2=A0 struct mm_struct *mm =3D container_of(work, struct mm_stru=
-ct, cid_work);
->> =C2=A0=C2=A0=C2=A0 int weight, cpu;
->> =C2=A0 - WARN_ON_ONCE(t !=3D container_of(work, struct task_struct, cid_=
-work));
->> -
->> -=C2=A0=C2=A0 work->next =3D work;=C2=A0 /* Prevent double-add */
->> -=C2=A0=C2=A0 if (t->flags & PF_EXITING)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> -=C2=A0=C2=A0 mm =3D t->mm;
->> -=C2=A0=C2=A0 if (!mm)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> +=C2=A0=C2=A0 /* We are the last user, process already terminated. */
->> +=C2=A0=C2=A0 if (atomic_read(&mm->mm_count) =3D=3D 1)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
->> =C2=A0=C2=A0=C2=A0 old_scan =3D READ_ONCE(mm->mm_cid_next_scan);
->> =C2=A0=C2=A0=C2=A0 next_scan =3D now + msecs_to_jiffies(MM_CID_SCAN_DELA=
-Y);
->> =C2=A0=C2=A0=C2=A0 if (!old_scan) {
->> @@ -10594,9 +10588,9 @@ static void task_mm_cid_work(struct callback_hea=
-d *work)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 old_s=
-can =3D next_scan;
->> =C2=A0=C2=A0=C2=A0 }
->> =C2=A0=C2=A0=C2=A0 if (time_before(now, old_scan))
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
->> =C2=A0=C2=A0=C2=A0 if (!try_cmpxchg(&mm->mm_cid_next_scan, &old_scan, ne=
-xt_scan))
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_drop;
->> =C2=A0=C2=A0=C2=A0 cidmask =3D mm_cidmask(mm);
->> =C2=A0=C2=A0=C2=A0 /* Clear cids that were not recently used. */
->> =C2=A0=C2=A0=C2=A0 for_each_possible_cpu(cpu)
->> @@ -10608,6 +10602,8 @@ static void task_mm_cid_work(struct callback_hea=
-d *work)
->> =C2=A0=C2=A0=C2=A0=C2=A0 */
->> =C2=A0=C2=A0=C2=A0 for_each_possible_cpu(cpu)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sched_mm_cid_remote_clear_wei=
-ght(mm, cpu, weight);
->> +out_drop:
->> +=C2=A0=C2=A0 mmdrop(mm);
->> =C2=A0 }
->> =C2=A0=C2=A0=C2=A0 void init_sched_mm_cid(struct task_struct *t)
->> @@ -10620,23 +10616,52 @@ void init_sched_mm_cid(struct task_struct *t)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mm_users =3D=3D 1)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm->m=
-m_cid_next_scan =3D jiffies + msecs_to_jiffies(MM_CID_SCAN_DELAY);
->> =C2=A0=C2=A0=C2=A0 }
->> -=C2=A0=C2=A0 t->cid_work.next =3D &t->cid_work;=C2=A0=C2=A0=C2=A0 /* Pr=
-otect against double add */
->> -=C2=A0=C2=A0 init_task_work(&t->cid_work, task_mm_cid_work);
->> =C2=A0 }
->> =C2=A0 -void task_tick_mm_cid(struct rq *rq, struct task_struct *curr)
->> +void task_tick_mm_cid(struct rq *rq, struct task_struct *t)
->> =C2=A0 {
->> -=C2=A0=C2=A0 struct callback_head *work =3D &curr->cid_work;
->> -=C2=A0=C2=A0 unsigned long now =3D jiffies;
->> +=C2=A0=C2=A0 u64 rtime =3D t->se.sum_exec_runtime - t->se.prev_sum_exec=
-_runtime;
->> =C2=A0 - if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) ||
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 work->next !=3D work)
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> -=C2=A0=C2=A0 if (time_before(now, READ_ONCE(curr->mm->mm_cid_next_scan)=
-))
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->> +=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0 * If a task is running unpreempted for a long time, =
-it won't get its
->> +=C2=A0=C2=A0=C2=A0 * mm_cid compacted and won't update its mm_cid value=
- after a
->> +=C2=A0=C2=A0=C2=A0 * compaction occurs.
->> +=C2=A0=C2=A0=C2=A0 * For such a task, this function does two things:
->> +=C2=A0=C2=A0=C2=A0 * A) trigger the mm_cid recompaction,
->> +=C2=A0=C2=A0=C2=A0 * B) trigger an update of the task's rseq->mm_cid fi=
-eld at some point
->> +=C2=A0=C2=A0=C2=A0 * after recompaction, so it can get a mm_cid value c=
-loser to 0.
->> +=C2=A0=C2=A0=C2=A0 * A change in the mm_cid triggers an rseq_preempt.
->> +=C2=A0=C2=A0=C2=A0 *
->> +=C2=A0=C2=A0=C2=A0 * A occurs only once after the scan time elapsed, un=
-til the next scan
->> +=C2=A0=C2=A0=C2=A0 * expires as well.
->> +=C2=A0=C2=A0=C2=A0 * B occurs once after the compaction work completes,=
- that is when scan
->> +=C2=A0=C2=A0=C2=A0 * is no longer needed (it occurred for this mm) but =
-the last rseq
->> +=C2=A0=C2=A0=C2=A0 * preempt was done before the last mm_cid scan.
->> +=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0 if (t->mm && rtime > RSEQ_UNPREEMPTED_THRESHOLD) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (mm_cid_needs_scan(t->mm) && !m=
-m_cid_scan_pending(t->mm))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rseq_set_n=
-otify_resume(t);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else if (time_after(jiffies, t->la=
-st_cid_reset +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msecs_to_jiffies(MM_CID=
-_SCAN_DELAY))) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int old_ci=
-d =3D t->mm_cid;
->> +
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!t->mm=
-_cid_active)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_sna=
-pshot_time(rq, t->mm);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mm_cid_put=
-_lazy(t);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 t->last_mm=
-_cid =3D t->mm_cid =3D mm_cid_get(rq, t, t->mm);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (old_ci=
-d !=3D t->mm_cid)
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 rseq_preempt(t);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> +=C2=A0=C2=A0 }
->> +}
->> =C2=A0 - /* No page allocation under rq lock */
->> -=C2=A0=C2=A0 task_work_add(curr, work, TWA_RESUME);
->> +/* Call only when curr is a user thread. */
->> +void task_queue_mm_cid(struct task_struct *curr)
->> +{
->> +=C2=A0=C2=A0 /* Ensure the mm exists when we run. */
->> +=C2=A0=C2=A0 mmgrab(curr->mm);
->> +=C2=A0=C2=A0 queue_work(system_unbound_wq, &curr->mm->cid_work);
->> =C2=A0 }
->> =C2=A0=C2=A0=C2=A0 void sched_mm_cid_exit_signals(struct task_struct *t)
->> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
->> index 47972f34ea701..c0f8fd4c575c3 100644
->> --- a/kernel/sched/sched.h
->> +++ b/kernel/sched/sched.h
->> @@ -3582,13 +3582,14 @@ extern const char *preempt_modes[];
->> =C2=A0=C2=A0=C2=A0 #define SCHED_MM_CID_PERIOD_NS=C2=A0 (100ULL * 100000=
-0)=C2=A0 /* 100ms */
->> =C2=A0 #define MM_CID_SCAN_DELAY 100=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 /* 100ms */
->> +#define RSEQ_UNPREEMPTED_THRESHOLD SCHED_MM_CID_PERIOD_NS
->> =C2=A0=C2=A0=C2=A0 extern raw_spinlock_t cid_lock;
->> =C2=A0 extern int use_cid_lock;
->> =C2=A0=C2=A0=C2=A0 extern void sched_mm_cid_migrate_from(struct task_str=
-uct *t);
->> =C2=A0 extern void sched_mm_cid_migrate_to(struct rq *dst_rq, struct tas=
-k_struct *t);
->> -extern void task_tick_mm_cid(struct rq *rq, struct task_struct *curr);
->> +extern void task_tick_mm_cid(struct rq *rq, struct task_struct *t);
->> =C2=A0 extern void init_sched_mm_cid(struct task_struct *t);
->> =C2=A0=C2=A0=C2=A0 static inline void __mm_cid_put(struct mm_struct *mm,=
- int cid)
->> @@ -3798,6 +3799,7 @@ static inline int mm_cid_get(struct rq *rq, struct=
- task_struct *t,
->> =C2=A0=C2=A0=C2=A0 cid =3D __mm_cid_get(rq, t, mm);
->> =C2=A0=C2=A0=C2=A0 __this_cpu_write(pcpu_cid->cid, cid);
->> =C2=A0=C2=A0=C2=A0 __this_cpu_write(pcpu_cid->recent_cid, cid);
->> +=C2=A0=C2=A0 t->last_cid_reset =3D jiffies;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return cid;
->> =C2=A0 }
->> @@ -3857,7 +3859,7 @@ static inline void switch_mm_cid(struct rq *rq,
->> =C2=A0 static inline void switch_mm_cid(struct rq *rq, struct task_struc=
-t *prev, struct task_struct *next) { }
->> =C2=A0 static inline void sched_mm_cid_migrate_from(struct task_struct *=
-t) { }
->> =C2=A0 static inline void sched_mm_cid_migrate_to(struct rq *dst_rq, str=
-uct task_struct *t) { }
->> -static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *=
-curr) { }
->> +static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *=
-t) { }
->> =C2=A0 static inline void init_sched_mm_cid(struct task_struct *t) { }
->> =C2=A0 #endif /* !CONFIG_SCHED_MM_CID */
->> =C2=A0
->
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
+--------------i1ufDKWM9txfyXVXpiWBIZPH
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHYSsFAwAAAAAACgkQsN6d1ii/Ey8t
+BAf/Xay1uGeOD69VQbulD5vOfWkJTcR0Set2Ks1eR2Vni6kcV54vp/BhiSm/odLCaeK6XO/CupIM
+hmeYc1rLkQuUKoS3D8zYmb2d6lilx6lmkEPIw2C1bz6ceEcYRgHk/nu0soK05iUQK4x4SoFUXJMu
+oQ498RSAV8OhVpgYalYwt5h6l5sjqCeuOPeTqEokiLUB544rVfx21WTI6djKReonnep9/DZd9YC0
+DYfrmMpBev4bopMQyF1Ac0JO7EOyMxKcVaBT+odf3yFSpeLuLk6Lnnbi2pNL9YXscx7PvHn7hr/h
+qDUjlLIdezwa3/1AX1203eHNZvMLMJ8jag9r/EO1dg==
+=N5ER
+-----END PGP SIGNATURE-----
+
+--------------i1ufDKWM9txfyXVXpiWBIZPH--
