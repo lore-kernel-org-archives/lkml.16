@@ -1,79 +1,159 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A098186E40
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2DA84037;
+	Tue, 22 Apr 2025 04:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745296940; cv=none; b=C7VtoyAap+XCKhGnE8V61KdbW5Yixh6itmXp4M8jAyo0L7TRm1lmb3+2R9Nbi8kJpsbIkKpWdQ1zFPzsfllbBqMO2B7q9Ee78KzxRvGijU1kdl+1LBwfdSlA0L10wk7D91SWFySrj7RlhuzW+sI60fFsGhze1FYHJTdzZOSgReg=
+	t=1745297009; cv=none; b=JeZmnkKfpevIp7n1Ps50FfwQLrf92O8+bhZMTvw2fm+uuLBAcumBVTkH+tU+xRzgpgEc4eYDGjJ+eQOMR1bPxNb4kCUs97fq9T0kYuFMbsa/Qc6BR2wMc5M+78uOuCMu3vMWINqGk2b+QFXc+5624AjNwO9HIZSpJr4nhoBBXDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745296940; c=relaxed/simple;
-	bh=iyooen8boCSaKbfxukeTPsPg9uQLAeQUCRIfTaXgy+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V1AKPziJWnPg6fBzV2kpMEtDuCrKFvN4EsQEo7EeBZIPQQV0TJyvhr/CwHaoODim1t7+NwbnHcBYJvqMfO5ip/YRZ0ms7fz3NQXRGX7ky+z5BHDuPJiwsI/rGOqgS5YXuTWFcvajR/GIxTsPBvXWoMU/x593LiSgVik43K1R4JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=moIJ5rOU; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745297009; c=relaxed/simple;
+	bh=cIJNzMEIDKoryJ+eYDRjEgaB0KWn13DZftu4jSYcsDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dLpTat/fMCWAGwMKGgmOmuCIsUFYmg/Wb9F0GNsURJ01DxiAhrHAoZ8BTaeirk9ZpIHjrDOA00ZJuD4Iz/+LX9Jdkbi1nIINnfCumZ4nLmHTsMPAP4WaX55lr9RXuNLFvTMeq4s2fsxzKiv/iBvmUmdKEy/6532gCJoDZzJzdrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=caMLxa+y; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="moIJ5rOU"
-X-Forwarded-Encrypted: i=1; AJvYcCVKRN8g4vfFOZvJCHosuYmF1bjp2RuCiRzHAiGDfiejMvgudTT3+an3onqTBd7IFyQZGhmVSf1d@vger.kernel.org, AJvYcCXJ0rwwhc3YXJnXNIpQSpVHrUlBNGwEaA83Zls9WEFDz+7cdWDYzJpMjK75N+1pzn+1WpuBYKgS9ewG7OpS@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745296924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iyooen8boCSaKbfxukeTPsPg9uQLAeQUCRIfTaXgy+4=;
-	b=moIJ5rOUWG6mNjk6Dro+ehvATo5SOo1Oqw+3qD6l/06DikIwI11vr1QKlY4pcqNSHq6rmw
-	aqygsjLodh5ML5YVUP8Pg+oqIa0o7WLS9ytabtDFZn5JLnC7yr/G8sRq32uwoHb1DJ+kjC
-	g80PP2e3Z772K6Xt5h6f3WiZPJ4JG6U=
-X-Gm-Message-State: AOJu0YxTZfOiG2zg4ZDRzTsMeEGznsHFTHY5kmu4gJfp5cD79WGfTfKB
-	YPPhUpXSx5eILLzl34msisQ3fzIIYeOUl6SNIq2X1Qzow6MX8pNDmzdqDFsIdvDnc3TqONUmBN8
-	8yvsZiEQeUo5vUnHvyLynnJeFKlY=
-X-Google-Smtp-Source: AGHT+IGNezq9dDwQ4fj0vRAB4kg6+pZkZ+OFNz6cNbpDRMEpb1eYm6qs/qbG3uFRgeTlS5jVDyeW/MxOPOHE6HUWcLY=
-X-Received: by 2002:a05:6102:b15:b0:4c3:243:331a with SMTP id
- ada2fe7eead31-4cb7dd64326mr11996815137.6.1745296922129; Mon, 21 Apr 2025
- 21:42:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="caMLxa+y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745297004;
+	bh=x/V8mgLMaM86zSbH6IOCdZUmXJC7Sa7oNTQpygjxKR0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=caMLxa+yEYNWUGis7sS8V+sue03q5/EPhxJiiQEUYFQTjJs+VPo5wLmf08qPP8FzL
+	 gfilNZYZ7UwVoCbC40CcpW28Y0TYd8OWDiAemRO8daKuwWZFt06mEl1z4wOjEaPJs6
+	 DHVAaL9RbgonQ28D0ezdTlwILj/wm3WVQCmwn7uwKdmzdSutImIC2qJBbQb7YT5C/J
+	 NlPoL03J94JpNQLQF0ysIgxjm4KMU+sDTIdEBXPI3f9oAhwJUtLO1XLmZ6aJSA8Jjf
+	 15AQzyHFt8ZeTedcLrpe/9ej1ZFrymeUjpWfkRhPGJLQEXzB8b74sdkvJU0VUpBMpq
+	 7zzjFP2fsLrBg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhV3t5LRTz4wbv;
+	Tue, 22 Apr 2025 14:43:22 +1000 (AEST)
+Date: Tue, 22 Apr 2025 14:43:21 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steffen Klassert <steffen.klassert@secunet.com>, David Miller
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+ Jedrzej Jagielski <jedrzej.jagielski@intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>
+Subject: linux-next: manual merge of the ipsec-next tree with the net-next
+ tree
+Message-ID: <20250422144321.3879d891@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422012616.1883287-1-gourry@gourry.net> <20250422012616.1883287-3-gourry@gourry.net>
-In-Reply-To: <20250422012616.1883287-3-gourry@gourry.net>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-Date: Mon, 21 Apr 2025 21:41:51 -0700
-X-Gmail-Original-Message-ID: <CAGj-7pUvHY74cg=+KLAMYxUWQY5h1A=hhG1-ybS31FA6=UJNmg@mail.gmail.com>
-X-Gm-Features: ATxdqUFF5-_BnhOoHA-DjyvESYNTm8BqEQjiXQmCZxT5eeLxhIdTZoBPeVX9LSg
-Message-ID: <CAGj-7pUvHY74cg=+KLAMYxUWQY5h1A=hhG1-ybS31FA6=UJNmg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] vmscan,cgroup: apply mems_effective to reclaim
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, longman@redhat.com, hannes@cmpxchg.org, 
-	mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev, 
-	tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/KAlLMN++vdMLUAeZRmSCexe";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/KAlLMN++vdMLUAeZRmSCexe
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 21, 2025 at 6:26=E2=80=AFPM Gregory Price <gourry@gourry.net> w=
-rote:
->
-> It is possible for a reclaimer to cause demotions of an lruvec belonging
-> to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-> this limitation based on the lruvec's memcg and prevent demotion.
->
-> Notably, this may still allow demotion of shared libraries or any memory
-> first instantiated in another cgroup. This means cpusets still cannot
-> cannot guarantee complete isolation when demotion is enabled, and the
-> docs have been updated to reflect this.
->
-> This is useful for isolating workloads on a multi-tenant system from
-> certain classes of memory more consistently - with the noted exceptions.
->
-> Acked-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+Hi all,
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+Today's linux-next merge of the ipsec-next tree got a conflict in:
+
+  drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+
+between commit:
+
+  fd5ef5203ce6 ("ixgbe: wrap netdev_priv() usage")
+
+from the net-next tree and commit:
+
+  43eca05b6a3b ("xfrm: Add explicit dev to .xdo_dev_state_{add,delete,free}=
+")
+
+from the ipsec-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+index 648a7c618cd1,796e90d741f0..000000000000
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+@@@ -473,12 -474,13 +474,13 @@@ static int ixgbe_ipsec_parse_proto_keys
+ =20
+  /**
+   * ixgbe_ipsec_check_mgmt_ip - make sure there is no clash with mgmt IP f=
+ilters
++  * @dev: pointer to net device
+   * @xs: pointer to transformer state struct
+   **/
+- static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_state *xs)
++ static int ixgbe_ipsec_check_mgmt_ip(struct net_device *dev,
++ 				     struct xfrm_state *xs)
+  {
+- 	struct net_device *dev =3D xs->xso.real_dev;
+ -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
+ +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
+  	struct ixgbe_hw *hw =3D &adapter->hw;
+  	u32 mfval, manc, reg;
+  	int num_filters =3D 4;
+@@@ -559,11 -562,11 +562,11 @@@
+   * @xs: pointer to transformer state struct
+   * @extack: extack point to fill failure reason
+   **/
+- static int ixgbe_ipsec_add_sa(struct xfrm_state *xs,
++ static int ixgbe_ipsec_add_sa(struct net_device *dev,
++ 			      struct xfrm_state *xs,
+  			      struct netlink_ext_ack *extack)
+  {
+- 	struct net_device *dev =3D xs->xso.real_dev;
+ -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
+ +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
+  	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
+  	struct ixgbe_hw *hw =3D &adapter->hw;
+  	int checked, match, first;
+@@@ -752,12 -755,12 +755,12 @@@
+ =20
+  /**
+   * ixgbe_ipsec_del_sa - clear out this specific SA
++  * @dev: pointer to device to program
+   * @xs: pointer to transformer state struct
+   **/
+- static void ixgbe_ipsec_del_sa(struct xfrm_state *xs)
++ static void ixgbe_ipsec_del_sa(struct net_device *dev, struct xfrm_state =
+*xs)
+  {
+- 	struct net_device *dev =3D xs->xso.real_dev;
+ -	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
+ +	struct ixgbe_adapter *adapter =3D ixgbe_from_netdev(dev);
+  	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
+  	struct ixgbe_hw *hw =3D &adapter->hw;
+  	u32 zerobuf[4] =3D {0, 0, 0, 0};
+
+--Sig_/KAlLMN++vdMLUAeZRmSCexe
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHHmkACgkQAVBC80lX
+0GxfTwf/Tp5JFrCRD3u1I2Gxi6078i2u9lI6bwoUeDXv990pGj636CulyOfb5LAt
+ybQbM8HvehnLlEYBb9bydE8jvtXqwilQTO3bcV1GtsS+rfS7ZrEGkA9npTu3my/A
+u5GulN8s1pLZy5zdkp58+QYRT8lWblGVFmcdgUx/sbD24dZyNxDkkScJXHsPun0n
+DUV0aOVbwXZYP+6r7TBFC0zj1Onmk4I4w61D3HKcQOMtztmLzVZq74uQB5MIbcFS
+nbn76ScwIqro5UP/Zse6OH/+14h34UVWulqc7lDJw+FmqjGQ3VWz+WnkL/rR1yWZ
+ua1JJL9D8z2zl2LH5/uKh+zqHa8TbQ==
+=BrvK
+-----END PGP SIGNATURE-----
+
+--Sig_/KAlLMN++vdMLUAeZRmSCexe--
