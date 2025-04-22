@@ -1,131 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545A81AAA29;
-	Tue, 22 Apr 2025 02:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804A7254B02
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288201; cv=none; b=rQI/qL1UKak/VJUT2X2enwRaMoHmmAPpohv65KgU9BS1cOm6gHmRM23MTVuILg4v1iDsAjV6ipZ2Zc6bHInlCnDQJerS9CnKrUf94jK0A+DGpGvhGBun78LJ5KyZOrY/BqFQOdeYuLgjm+5cVT7Ab9VdAVLqDTiInLFq0kSZ9tI=
+	t=1745288204; cv=none; b=nKBcpDbaPwrZ9NNtetRUiJvhEE8D1zgwbNT067fNbd7mGfBZPyBrWX0cO2CklVZYWHpmMwOrlqy3oO5ytbmuCr3OmSBZQJIpugdUvKM2SqK0mDQs58PNo6ozDyHV66U+o+SiJ0fBuu4qdwC0Ae1MwzOk+vcYGn4PvJ8fMX7EMN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288201; c=relaxed/simple;
-	bh=XjK+fqyfu3sbCTr2fhtQxmZHWNvGXOO/Irtpev2JQZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aTOnTQzZkOIYPXPk0ReamXpfDVvxV6jH0ipbsRmqQMNgW4jveNXCBfNk3Zg9u9jAkSUGBhm3tejVY3aCVmnAkt0hSV1jKthQvREBu3diH8GXAGj82xlHZSByy+MFfBSEOpatZPHPCgAsM2aDp1tq8W2Dl21YcfeSEmgS6Lrzn2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owfgF3vp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745288204; c=relaxed/simple;
+	bh=m4SH1HDvHugwMTrd3sTk2tokzTcOFXyDZ2ZZ77+0jfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvDfCP7j24NNcmYN3WLjeg0FFSHROHAE+kIiP9zY6t2ExQjj2iLe0Xb1Er5K1FzbjYmbC0hPK7wx4qsIF2feijySWd11pvinqzj904+LI/15vW73d+JKHQNrzgSZIMKFxpTAEFc2Ql69Atzbn9M52VTzy5QewnEcWfzjb/Vuu4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYAMtu1K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owfgF3vp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F71C4CEE4;
-	Tue, 22 Apr 2025 02:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288201;
-	bh=XjK+fqyfu3sbCTr2fhtQxmZHWNvGXOO/Irtpev2JQZE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=owfgF3vpkmwnUk5tA+niskvwR8z2ZJXM0ORWKnNqiMYzheY3D59LyKXFS+oS86Mz/
-	 ndMOOGBKB4HIfI+6Ymvi8EHnzA4zvy5F4EsyxKR+RKj2CuXBbL0YUM22UJ483SHERU
-	 mczH5rFWY3HoDyHYm7BeNZwxnIzxY6jg052zKs8uS01aD9lYuJUzN+TAKQ3/pt4t7z
-	 Ame3mp+QF/XLO0GNr631aq5SHW6sn7l06Ir0ZlKbuA+SJvhFOUZLPGL4+f4cSqxnAb
-	 DIj++MFHd/V1L9m6Z4DNWnGJsYBCypBNp/i3nDDBNsPdji5ZZ7T1soang9Gk6HyMyg
-	 rJpA76fb/b5Xg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	lijo.lazar@amd.com,
-	Hawking.Zhang@amd.com,
-	sunil.khatri@amd.com,
-	Jesse.zhang@amd.com,
-	linux@treblig.org,
-	zhangzekun11@huawei.com,
-	victor.skvortsov@amd.com,
-	tzimmermann@suse.de,
-	Ramesh.Errabolu@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.14 26/30] drm/amd: Forbid suspending into non-default suspend states
-Date: Mon, 21 Apr 2025 22:15:46 -0400
-Message-Id: <20250422021550.1940809-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021550.1940809-1-sashal@kernel.org>
-References: <20250422021550.1940809-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYAMtu1K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745288201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7gdgW5eS93if/nqlNpCjp3rr+e7Hdfk5SuDUBkR/RYQ=;
+	b=QYAMtu1KRWV5QeR8xJK67KkSqiR8R6VTckkUcN+TyJs/5g6I4N1ivkpIdvexDq5iugSVbc
+	cXG6t3+P3hBIVi2CHC/8yiUobXb8VCPTe5Js+4wsgt6RTyegkQM/+B+7uicliV4ujHmJwx
+	gqmsZZ7u9Z6m0GpNAEDiuB/yXYoWS6E=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-sTJXc5RTNJG1oQ1umttCFg-1; Mon,
+ 21 Apr 2025 22:16:35 -0400
+X-MC-Unique: sTJXc5RTNJG1oQ1umttCFg-1
+X-Mimecast-MFC-AGG-ID: sTJXc5RTNJG1oQ1umttCFg_1745288194
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 114141800264;
+	Tue, 22 Apr 2025 02:16:34 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.137])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47F4D195608F;
+	Tue, 22 Apr 2025 02:16:29 +0000 (UTC)
+Date: Tue, 22 Apr 2025 10:16:25 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: Re: [PATCH 1/4] ublk: factor out ublk_commit_and_fetch
+Message-ID: <aAb7-Wjj6xgymVve@fedora>
+References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
+ <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-ublk_constify-v1-1-3371f9e9f73c@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Mon, Apr 21, 2025 at 05:46:40PM -0600, Uday Shankar wrote:
+> Move the logic for the UBLK_IO_COMMIT_AND_FETCH_REQ opcode into its own
+> function. This also allows us to mark ublk_queue pointers as const for
+> that operation, which can help prevent data races since we may allow
+> concurrent operation on one ublk_queue in the future. Also open code
+> ublk_commit_completion in ublk_commit_and_fetch to reduce the number of
+> parameters/avoid a redundant lookup.
+> 
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 
-[ Upstream commit 1657793def101dac7c9d3b2250391f6a3dd934ba ]
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-On systems that default to 'deep' some userspace software likes
-to try to suspend in 'deep' first.  If there is a failure for any
-reason (such as -ENOMEM) the failure is ignored and then it will
-try to use 's2idle' as a fallback. This fails, but more importantly
-it leads to graphical problems.
 
-Forbid this behavior and only allow suspending in the last state
-supported by the system.
-
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/4093
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://lore.kernel.org/r/20250408180957.4027643-1-superm1@kernel.org
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-(cherry picked from commit 2aabd44aa8a3c08da3d43264c168370f6da5e81d)
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu.h     |  1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 14 +++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu.h b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-index 69895fccb474a..bbfeba7816075 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu.h
-@@ -1119,6 +1119,7 @@ struct amdgpu_device {
- 	bool				in_s3;
- 	bool				in_s4;
- 	bool				in_s0ix;
-+	suspend_state_t			last_suspend_state;
- 
- 	enum pp_mp1_state               mp1_state;
- 	struct amdgpu_doorbell_index doorbell_index;
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index c0ddbe7d6f0bc..284cf70562907 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -2511,8 +2511,20 @@ static int amdgpu_pmops_suspend(struct device *dev)
- 		adev->in_s0ix = true;
- 	else if (amdgpu_acpi_is_s3_active(adev))
- 		adev->in_s3 = true;
--	if (!adev->in_s0ix && !adev->in_s3)
-+	if (!adev->in_s0ix && !adev->in_s3) {
-+		/* don't allow going deep first time followed by s2idle the next time */
-+		if (adev->last_suspend_state != PM_SUSPEND_ON &&
-+		    adev->last_suspend_state != pm_suspend_target_state) {
-+			drm_err_once(drm_dev, "Unsupported suspend state %d\n",
-+				     pm_suspend_target_state);
-+			return -EINVAL;
-+		}
- 		return 0;
-+	}
-+
-+	/* cache the state last used for suspend */
-+	adev->last_suspend_state = pm_suspend_target_state;
-+
- 	return amdgpu_device_suspend(drm_dev, true);
- }
- 
--- 
-2.39.5
+Thanks,
+Ming
 
