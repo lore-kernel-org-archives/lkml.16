@@ -1,213 +1,204 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E431C38B;
-	Tue, 22 Apr 2025 07:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457077DA6D
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307356; cv=none; b=uBe1TRCjYZUoB0WoxmFxvOprYA7GNvgIdR7dD1zFiO6ceNrPaeEWW0mgXlL6Witv+vNV7VCpEyFne4wq+esRu1MQyGD3X0si4tpSKiHRDwlQunAeTPEzOo4eTzmK+zNBXDG3WrXTAUrxxDsO205Mu0ABI/EokyAbDxxhq0XwPKQ=
+	t=1745307391; cv=none; b=k5VptTdmQnWA7cjmeBRGRCe58gePgGy5iycReLJOLDFrOL3NMI1iLYMSTCxlq6rkjw2lyLu1XcrCU6R3hRj471NJDH/pd2LFeJCwGkNzgWe2ZJLz5mJNNqauC9QNL9G4Vl7yOJ3eCa27jyMKyx4MSnnZHVmeRCsCA06GTO33vY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307356; c=relaxed/simple;
-	bh=Hjjh5CZxpHBr3a17is6d8bIBWnOgwJ0mtloGTX3Bkjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FFXesX3u83C9GChoJfd68n8f8U14xe6AowOI9BdQ+HlbKWFxP0iVem9LuEI2LDLVg6HRBfIFqo/aGEAoPIFj8V192k2IaLr9lesi8BOwV3KFeAN6mF0rb7aykRyhrxncNGpwf3JhuK3lWBamrK1r1+F50nYwWQDnOFFcxq4Sg50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAC3XTrRRgdog0EWCw--.49890S2;
-	Tue, 22 Apr 2025 15:35:46 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	YiPeng.Chai@amd.com,
-	tao.zhou1@amd.com
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] drm/amdgpu: Remove redundant return value checks for amdgpu_ras_error_data_init
-Date: Tue, 22 Apr 2025 15:35:05 +0800
-Message-ID: <20250422073505.2378-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1745307391; c=relaxed/simple;
+	bh=N7wOK8BDklVxjiMrgCSGhShbr36LFuZyh+DF513FDnM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=h0ewr8pHLqwAQdEsMWdubKXG6OVxmi4ic72QLKrz2OH8B6qNOL/jMjPU+NvjIjbdYIhMMeC4QdL1ALO9VLew7LqGLGFghPqm4YeFRqP4m+Lnp7O7XzUdQ3JQMfqpQ8O3cNxoqu+fLlu1QGOW9gpfdnSb0sgnOvLhdEr+/8Ylflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hoYjA2w5; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hoYjA2w5"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a064a3e143so69056f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745307387; x=1745912187; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BIWKsQ80F/yq5xwR2CPXUApKaQjUS7GC5G7PS4RGmt8=;
+        b=hoYjA2w5Tt7UlUekY1W7BvXfNR1OnJMdzL7Aa0fQi5Gp8znfllOr6zSRn1R49OF+yK
+         jVT1zaCvURolQY1lGF0d4VbfWwqfetKepwTJLnoLcA+6V4KY5YiJB9/i4CEoujpg0l/n
+         S3boI7tgDKhR3lyICc9NEetI6n0klvJMSQOQ1gnnVd4LagW+HtMnqIDEr2YSpreNnVYM
+         rRLaJVrz+s66Xnx0/gYuB3ublsdgOQP8gJzsatdn3wj1pxZoJWlwZG3SZpz9KCm2/VVu
+         L32NPxURnXDvUEhQQEwZ9yvmAcVobk61eGk01z4ZQhryymKyjdcDL/t7pLP3hG0WSmVD
+         6Fyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745307387; x=1745912187;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BIWKsQ80F/yq5xwR2CPXUApKaQjUS7GC5G7PS4RGmt8=;
+        b=pDzF09qLuRdZVteytnB8IqNPptf5innivWhCA96hTKU42t5IU1EnwiOlWgkWCS7N0y
+         QOS7NG9lITrgnJ/Kg9uWtKkHuzu3r/iLkX1gq2x0DGl4foFhbMOoacBvh56G7RZmgerc
+         /czoRqOax1lGFD+g64c2AxvTYrEe6Z6InwMi2311mZLlj+EHaT3QdEtWOmsFSeEDqayf
+         bRMXbc91D5Ua5Oex5MncNlOAqLY6bv21EPL6OPWWzLT1yZBHPgi9cVlpXcKbbxcWapXK
+         2L0jHzzeF48QdqFyu/0Qx+KsrhzR7sIrlAkFFXsPcEHb3hFj6hBLRSq9KaIoESgTt3Wx
+         JqFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfEIMsTzj0ysFsGzWpINTvCZLye5xzXG2n8rXi+bp7GCb2s9bOxmIize7jxbDugTNutoSvZOuwZJmCi40=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsx5icTXdXHIOWQ4/upUsuU2QtrxhG4DC6CXWhLovlOU9STwSc
+	tNQmcnmDnpoOl2RFr/IVEiGEIY+S1gjh5Iw6khejtHkaglqvxQC1NU8k+8ed02kj8BZEalT7ggW
+	Z
+X-Gm-Gg: ASbGnct/T9X0scL4hJN3LyyoRo94LoPrtQ00+zF8wnLLyz2oByozhs0UTsPa5STVpp/
+	oB2vHim+JXpY4XPnCxBzq0uofg6SwPJ9Ojx6yFV8gjC5FshUT6582G8CwoxOGLj0k1fKEHkY7rK
+	etWKw++eg0KRrdvFWIW2pOQLSzSJo4c0sgfO6mFEtfjQmoWn+q6U6/qp772/QJ3YwlcT48IGpBR
+	ajN3P55kMCuWaTHGr5ZvtihuKm/TmvdM6HGlwRPhky6pK1bwpWiUDQZd9t15unwhTG/NV1nNCq1
+	ZDi0D+1KlSwWzSsInDefiTkmuB2Cl5mPQ8bt83T05OraCqq6DC1saOhgadT9bUYh0hKaeuf9KUn
+	ZK1BkjjLaRaHET38w0Q==
+X-Google-Smtp-Source: AGHT+IGBiyxnqdWPs1pY5Sy/l7SAAXjfl/ohXEpklrpNTS8wZjvpyWQ0uuM/Ya60jgfRbbTOVXdCRg==
+X-Received: by 2002:a5d:64ae:0:b0:391:ba6:c066 with SMTP id ffacd0b85a97d-39efba5dba8mr12975977f8f.35.1745307387506;
+        Tue, 22 Apr 2025 00:36:27 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db131sm161836825e9.28.2025.04.22.00.36.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 00:36:27 -0700 (PDT)
+Message-ID: <890eda99-89e6-400b-8a0f-345ea0e171fe@linaro.org>
+Date: Tue, 22 Apr 2025 09:36:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAC3XTrRRgdog0EWCw--.49890S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuw17Xw4UZrW7Xw4fXrW3Awb_yoWxJrW7pF
-	WrJw1DZryUZFnrJrykAFyDuasIyw1SvFy8KF40ya4I93W5CrW5XF1rtw40q3ZrKr4DCwsI
-	vrWDW3yUWF1qvF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAcAA2gHKIV6OwABsK
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] drm/panel: samsung-sofef00: Drop s6e3fc2x01 support
+To: david@ixit.cz, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sam Ravnborg <sam@ravnborg.org>, Casey Connolly <casey@connolly.tech>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Casey Connolly <casey.connolly@linaro.org>
+References: <20250419-drop-s6e3fc2x01-support-v1-1-05edfe0d27aa@ixit.cz>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250419-drop-s6e3fc2x01-support-v1-1-05edfe0d27aa@ixit.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The function amdgpu_ras_error_data_init() always returns 0, making its
-return value checks redundant. This patch changes its return type to
-void and removes all unnecessary checks in the callers.
+On 19/04/2025 18:31, David Heidelberg via B4 Relay wrote:
+> From: Casey Connolly <casey.connolly@linaro.org>
+> 
+> We never properly supported this panel and always used the wrong init
+> sequence. Drop support so we can move it to it's own proper driver.
+> 
+> Fixes: 5933baa36e26 ("drm/panel/samsung-sofef00: Add panel for OnePlus 6/T devices")
+> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+>   drivers/gpu/drm/panel/panel-samsung-sofef00.c | 34 ++-------------------------
+>   1 file changed, 2 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-samsung-sofef00.c b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
+> index 04ce925b3d9dbd91841f4b4e4a12320eac8e03af..49cfa84b34f0ca75394b74b5765a0931d9fefba0 100644
+> --- a/drivers/gpu/drm/panel/panel-samsung-sofef00.c
+> +++ b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
+> @@ -22,7 +22,6 @@ struct sofef00_panel {
+>   	struct mipi_dsi_device *dsi;
+>   	struct regulator *supply;
+>   	struct gpio_desc *reset_gpio;
+> -	const struct drm_display_mode *mode;
+>   };
+>   
+>   static inline
+> @@ -159,26 +158,11 @@ static const struct drm_display_mode enchilada_panel_mode = {
+>   	.height_mm = 145,
+>   };
+>   
+> -static const struct drm_display_mode fajita_panel_mode = {
+> -	.clock = (1080 + 72 + 16 + 36) * (2340 + 32 + 4 + 18) * 60 / 1000,
+> -	.hdisplay = 1080,
+> -	.hsync_start = 1080 + 72,
+> -	.hsync_end = 1080 + 72 + 16,
+> -	.htotal = 1080 + 72 + 16 + 36,
+> -	.vdisplay = 2340,
+> -	.vsync_start = 2340 + 32,
+> -	.vsync_end = 2340 + 32 + 4,
+> -	.vtotal = 2340 + 32 + 4 + 18,
+> -	.width_mm = 68,
+> -	.height_mm = 145,
+> -};
+> -
+>   static int sofef00_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector)
+>   {
+>   	struct drm_display_mode *mode;
+> -	struct sofef00_panel *ctx = to_sofef00_panel(panel);
+>   
+> -	mode = drm_mode_duplicate(connector->dev, ctx->mode);
+> +	mode = drm_mode_duplicate(connector->dev, &enchilada_panel_mode);
+>   	if (!mode)
+>   		return -ENOMEM;
+>   
+> @@ -239,13 +223,6 @@ static int sofef00_panel_probe(struct mipi_dsi_device *dsi)
+>   	if (!ctx)
+>   		return -ENOMEM;
+>   
+> -	ctx->mode = of_device_get_match_data(dev);
+> -
+> -	if (!ctx->mode) {
+> -		dev_err(dev, "Missing device mode\n");
+> -		return -ENODEV;
+> -	}
+> -
+>   	ctx->supply = devm_regulator_get(dev, "vddio");
+>   	if (IS_ERR(ctx->supply))
+>   		return dev_err_probe(dev, PTR_ERR(ctx->supply),
+> @@ -295,14 +272,7 @@ static void sofef00_panel_remove(struct mipi_dsi_device *dsi)
+>   }
+>   
+>   static const struct of_device_id sofef00_panel_of_match[] = {
+> -	{ // OnePlus 6 / enchilada
+> -		.compatible = "samsung,sofef00",
+> -		.data = &enchilada_panel_mode,
+> -	},
+> -	{ // OnePlus 6T / fajita
+> -		.compatible = "samsung,s6e3fc2x01",
+> -		.data = &fajita_panel_mode,
+> -	},
+> +	{ .compatible = "samsung,sofef00" },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, sofef00_panel_of_match);
+> 
+> ---
+> base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
+> change-id: 20250419-drop-s6e3fc2x01-support-d060a14a4791
+> 
+> Best regards,
 
-This simplifies the code and avoids confusion about the function's
-behavior. Additionally, this change keeps the usage consistent with
-amdgpu_ras_do_page_retirement(), which also does not check the return
-value.
-
-Fixes: 5b1270beb380 ("drm/amdgpu: add ras_err_info to identify RAS error source")
-Cc: stable@vger.kernel.org # 6.7+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 19 +++++--------------
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h |  2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_umc.c |  8 ++------
- drivers/gpu/drm/amd/amdgpu/nbio_v7_4.c  |  3 +--
- drivers/gpu/drm/amd/amdgpu/nbio_v7_9.c  |  3 +--
- 5 files changed, 10 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-index 4c9fa24dd972..aef1b2b713a2 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
-@@ -182,9 +182,7 @@ static int amdgpu_reserve_page_direct(struct amdgpu_device *adev, uint64_t addre
- 		return 0;
- 	}
- 
--	ret = amdgpu_ras_error_data_init(&err_data);
--	if (ret)
--		return ret;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	memset(&err_rec, 0x0, sizeof(struct eeprom_table_record));
- 	err_data.err_addr = &err_rec;
-@@ -687,8 +685,7 @@ static struct ras_manager *amdgpu_ras_create_obj(struct amdgpu_device *adev,
- 	if (alive_obj(obj))
- 		return NULL;
- 
--	if (amdgpu_ras_error_data_init(&obj->err_data))
--		return NULL;
-+	amdgpu_ras_error_data_init(&obj->err_data)
- 
- 	obj->head = *head;
- 	obj->adev = adev;
-@@ -1428,9 +1425,7 @@ static int amdgpu_ras_query_error_status_with_event(struct amdgpu_device *adev,
- 	if (!obj)
- 		return -EINVAL;
- 
--	ret = amdgpu_ras_error_data_init(&err_data);
--	if (ret)
--		return ret;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	if (!amdgpu_ras_get_error_query_mode(adev, &error_query_mode))
- 		return -EINVAL;
-@@ -2255,9 +2250,7 @@ static void amdgpu_ras_interrupt_umc_handler(struct ras_manager *obj,
- 	if (!data->cb)
- 		return;
- 
--	ret = amdgpu_ras_error_data_init(&err_data);
--	if (ret)
--		return;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	/* Let IP handle its data, maybe we need get the output
- 	 * from the callback to update the error type/count, etc
-@@ -4623,13 +4616,11 @@ void amdgpu_ras_inst_reset_ras_error_count(struct amdgpu_device *adev,
- 	}
- }
- 
--int amdgpu_ras_error_data_init(struct ras_err_data *err_data)
-+void amdgpu_ras_error_data_init(struct ras_err_data *err_data)
- {
- 	memset(err_data, 0, sizeof(*err_data));
- 
- 	INIT_LIST_HEAD(&err_data->err_node_list);
--
--	return 0;
- }
- 
- static void amdgpu_ras_error_node_release(struct ras_err_node *err_node)
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-index 6db772ecfee4..5f88e70fbf5c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h
-@@ -931,7 +931,7 @@ void amdgpu_ras_inst_reset_ras_error_count(struct amdgpu_device *adev,
- 					   uint32_t reg_list_size,
- 					   uint32_t instance);
- 
--int amdgpu_ras_error_data_init(struct ras_err_data *err_data);
-+void amdgpu_ras_error_data_init(struct ras_err_data *err_data);
- void amdgpu_ras_error_data_fini(struct ras_err_data *err_data);
- int amdgpu_ras_error_statistic_ce_count(struct ras_err_data *err_data,
- 					struct amdgpu_smuio_mcm_config_info *mcm_info,
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_umc.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_umc.c
-index 896f3609b0ee..5de6e332c2cd 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_umc.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_umc.c
-@@ -52,9 +52,7 @@ int amdgpu_umc_page_retirement_mca(struct amdgpu_device *adev,
- 	struct ras_err_data err_data;
- 	int ret;
- 
--	ret = amdgpu_ras_error_data_init(&err_data);
--	if (ret)
--		return ret;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	err_data.err_addr =
- 		kcalloc(adev->umc.max_ras_err_cnt_per_query,
-@@ -230,9 +228,7 @@ int amdgpu_umc_pasid_poison_handler(struct amdgpu_device *adev,
- 			};
- 			struct ras_manager *obj = amdgpu_ras_find_obj(adev, &head);
- 
--			ret = amdgpu_ras_error_data_init(&err_data);
--			if (ret)
--				return ret;
-+			amdgpu_ras_error_data_init(&err_data);
- 
- 			ret = amdgpu_umc_do_page_retirement(adev, &err_data, NULL, reset);
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/nbio_v7_4.c b/drivers/gpu/drm/amd/amdgpu/nbio_v7_4.c
-index a26a9be58eac..d4bdfe280c88 100644
---- a/drivers/gpu/drm/amd/amdgpu/nbio_v7_4.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nbio_v7_4.c
-@@ -364,8 +364,7 @@ static void nbio_v7_4_handle_ras_controller_intr_no_bifring(struct amdgpu_device
- 	struct ras_err_data err_data;
- 	struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
- 
--	if (amdgpu_ras_error_data_init(&err_data))
--		return;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	if (adev->asic_type == CHIP_ALDEBARAN)
- 		bif_doorbell_intr_cntl = RREG32_SOC15(NBIO, 0, mmBIF_DOORBELL_INT_CNTL_ALDE);
-diff --git a/drivers/gpu/drm/amd/amdgpu/nbio_v7_9.c b/drivers/gpu/drm/amd/amdgpu/nbio_v7_9.c
-index 8a0a63ac88d2..c79ed1adf681 100644
---- a/drivers/gpu/drm/amd/amdgpu/nbio_v7_9.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nbio_v7_9.c
-@@ -537,8 +537,7 @@ static void nbio_v7_9_handle_ras_controller_intr_no_bifring(struct amdgpu_device
- 	struct ras_err_data err_data;
- 	struct amdgpu_ras *ras = amdgpu_ras_get_context(adev);
- 
--	if (amdgpu_ras_error_data_init(&err_data))
--		return;
-+	amdgpu_ras_error_data_init(&err_data);
- 
- 	bif_doorbell_intr_cntl = RREG32_SOC15(NBIO, 0, regBIF_BX0_BIF_DOORBELL_INT_CNTL);
- 
--- 
-2.42.0.windows.2
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
