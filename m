@@ -1,68 +1,67 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457077DA6D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467C819ABD1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307391; cv=none; b=k5VptTdmQnWA7cjmeBRGRCe58gePgGy5iycReLJOLDFrOL3NMI1iLYMSTCxlq6rkjw2lyLu1XcrCU6R3hRj471NJDH/pd2LFeJCwGkNzgWe2ZJLz5mJNNqauC9QNL9G4Vl7yOJ3eCa27jyMKyx4MSnnZHVmeRCsCA06GTO33vY8=
+	t=1745307428; cv=none; b=hF5N5fIaUaYv0Qcz6p1wrDjZ4thRbcDjP6GK0shtoOimvEJLc2NgSutHVnq1KmSs7aZgMQ0xzBZAaHm9D6Xm4Nl3eLZASzG1+Llk1ucUfK4GPP9+rbfcyrhHAi4Fsoj2HfxvtHx1XpNGE9xowkRq9+cF/fv7UdFH1z2LbCONTzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307391; c=relaxed/simple;
-	bh=N7wOK8BDklVxjiMrgCSGhShbr36LFuZyh+DF513FDnM=;
+	s=arc-20240116; t=1745307428; c=relaxed/simple;
+	bh=RJ6gkmS+PVpZXxWYDusdzBdcIIZesHMT9xB0oNYoxNQ=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=h0ewr8pHLqwAQdEsMWdubKXG6OVxmi4ic72QLKrz2OH8B6qNOL/jMjPU+NvjIjbdYIhMMeC4QdL1ALO9VLew7LqGLGFghPqm4YeFRqP4m+Lnp7O7XzUdQ3JQMfqpQ8O3cNxoqu+fLlu1QGOW9gpfdnSb0sgnOvLhdEr+/8Ylflo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hoYjA2w5; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:Content-Type; b=sR1lrE5RRbl7yEDCCgx92G3wvSZ/xyTalaPZY28kmdpJ3L+perL0GmBOf4zht6hKh7MbY+HM/qSshmQ5qiOGfspWYAqwcedmuaVhTfnKaScvIcVneTTCAiwYmlmexlxOvJy4pnHaWUdezetKSeHBLHDlseushBY3D1DxnE8wWnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M/UkN2eF; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hoYjA2w5"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a064a3e143so69056f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:36:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/UkN2eF"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso32721415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745307387; x=1745912187; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745307424; x=1745912224; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BIWKsQ80F/yq5xwR2CPXUApKaQjUS7GC5G7PS4RGmt8=;
-        b=hoYjA2w5Tt7UlUekY1W7BvXfNR1OnJMdzL7Aa0fQi5Gp8znfllOr6zSRn1R49OF+yK
-         jVT1zaCvURolQY1lGF0d4VbfWwqfetKepwTJLnoLcA+6V4KY5YiJB9/i4CEoujpg0l/n
-         S3boI7tgDKhR3lyICc9NEetI6n0klvJMSQOQ1gnnVd4LagW+HtMnqIDEr2YSpreNnVYM
-         rRLaJVrz+s66Xnx0/gYuB3ublsdgOQP8gJzsatdn3wj1pxZoJWlwZG3SZpz9KCm2/VVu
-         L32NPxURnXDvUEhQQEwZ9yvmAcVobk61eGk01z4ZQhryymKyjdcDL/t7pLP3hG0WSmVD
-         6Fyg==
+        bh=kUrrVHq/ZBK5ekax/PEJ1pXaon+z63IEgJE1VUWtPYI=;
+        b=M/UkN2eF2lCEsX6OgkcBKaWWaG9GC7T+GbFDfrbTk9U9TmkVoU+y4XgHwZdFxQNDef
+         2e16dS6i06MNs6BM7IfAe7eHa6eDqW8m23jx0tla/D6EQnABqY737QbXw3NCtaX+Efr2
+         plrxCpRGe7V5DMfLwOY82j3hDyaUKgK1T0UMjpN90x9xrxnons8+SFLj7NyAcS7tX4Ka
+         rCiRl5chS/BOoh7SWx/WIGKSCdzAQRGg2OcfiqWgNJkcCjhtopyhH26EoZUoBD4FB8pR
+         eTJzQfAwnjcCk2BbciBrAn9fFE7yS0Ro0AkI0pYYu+mmacFmzFL0mQJ/QmV1oPgX/ih0
+         Avkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745307387; x=1745912187;
+        d=1e100.net; s=20230601; t=1745307424; x=1745912224;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=BIWKsQ80F/yq5xwR2CPXUApKaQjUS7GC5G7PS4RGmt8=;
-        b=pDzF09qLuRdZVteytnB8IqNPptf5innivWhCA96hTKU42t5IU1EnwiOlWgkWCS7N0y
-         QOS7NG9lITrgnJ/Kg9uWtKkHuzu3r/iLkX1gq2x0DGl4foFhbMOoacBvh56G7RZmgerc
-         /czoRqOax1lGFD+g64c2AxvTYrEe6Z6InwMi2311mZLlj+EHaT3QdEtWOmsFSeEDqayf
-         bRMXbc91D5Ua5Oex5MncNlOAqLY6bv21EPL6OPWWzLT1yZBHPgi9cVlpXcKbbxcWapXK
-         2L0jHzzeF48QdqFyu/0Qx+KsrhzR7sIrlAkFFXsPcEHb3hFj6hBLRSq9KaIoESgTt3Wx
-         JqFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfEIMsTzj0ysFsGzWpINTvCZLye5xzXG2n8rXi+bp7GCb2s9bOxmIize7jxbDugTNutoSvZOuwZJmCi40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsx5icTXdXHIOWQ4/upUsuU2QtrxhG4DC6CXWhLovlOU9STwSc
-	tNQmcnmDnpoOl2RFr/IVEiGEIY+S1gjh5Iw6khejtHkaglqvxQC1NU8k+8ed02kj8BZEalT7ggW
-	Z
-X-Gm-Gg: ASbGnct/T9X0scL4hJN3LyyoRo94LoPrtQ00+zF8wnLLyz2oByozhs0UTsPa5STVpp/
-	oB2vHim+JXpY4XPnCxBzq0uofg6SwPJ9Ojx6yFV8gjC5FshUT6582G8CwoxOGLj0k1fKEHkY7rK
-	etWKw++eg0KRrdvFWIW2pOQLSzSJo4c0sgfO6mFEtfjQmoWn+q6U6/qp772/QJ3YwlcT48IGpBR
-	ajN3P55kMCuWaTHGr5ZvtihuKm/TmvdM6HGlwRPhky6pK1bwpWiUDQZd9t15unwhTG/NV1nNCq1
-	ZDi0D+1KlSwWzSsInDefiTkmuB2Cl5mPQ8bt83T05OraCqq6DC1saOhgadT9bUYh0hKaeuf9KUn
-	ZK1BkjjLaRaHET38w0Q==
-X-Google-Smtp-Source: AGHT+IGBiyxnqdWPs1pY5Sy/l7SAAXjfl/ohXEpklrpNTS8wZjvpyWQ0uuM/Ya60jgfRbbTOVXdCRg==
-X-Received: by 2002:a5d:64ae:0:b0:391:ba6:c066 with SMTP id ffacd0b85a97d-39efba5dba8mr12975977f8f.35.1745307387506;
-        Tue, 22 Apr 2025 00:36:27 -0700 (PDT)
+        bh=kUrrVHq/ZBK5ekax/PEJ1pXaon+z63IEgJE1VUWtPYI=;
+        b=I+CJomEPKGBW6svFKP+uBzSfNVoB/TGBlzsLv4xL1GcmZQLtUQnG2SuEpJVOZ6gndh
+         uSyLaMOzMZZyX/3LmUXNQeLDncncKkJUWetsJjdFpU1CGqIFP3tr9ctX9gBxuCnbdJbe
+         ak3lyy5dF4MoixEgvCamL+Vez03lU5ZcX7rbuh0L73qhVDwYE0tmDhnTFkrOxErCr7e2
+         D31S377LufWRY6whC0tfmQ4nDg8PPua2j+5MtZp8y3n10y0UfvrYev6H4LSBWcQVt+s5
+         YLbhCv1hUmP2MR7ipNkprlNo/D5s8/0Uv7oncC8YSh9opnW9eVR+vHrU2NBQZJGiWVQb
+         rlZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWBNLBe7IL5blSPxCHIiqX+mMsBao0OaqtDbqzkr7WM4SjgqidkqPXYJCHq/1UVkRKWu+3IT/ZPcNPYbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNfbAWC5Qk6J/2//g0q82BC1hBfI0oBE5RPEoyYqXJo2nrKE8J
+	FfeFP499/iUJTsEn8Hu3wO4vnpLVcDx588eATtBRkrNhPv6MlK6mWfQXHRtrc+E=
+X-Gm-Gg: ASbGncvmW28gyV7nzrER5ywsdB0b3HXsdmQRAfsR1O2WXOASdsHWloUoiNeHs+/CrRS
+	FJ89h5ROjzquMBikD/E2LwP4PhyjXtaYSuWWbGg364B4ups7DSnaDgC6I1ywnbK9fR4EfDuMCfY
+	BicYoqyim1N7cb02cjw1ZeOLmeJQl/oy0XBa098Cv1n9wsYhYripYnoH7lxyzW9w++hyAB12HY6
+	X8WlkCGp2E8u6kdhSKyDoWIW03z/+QfKjwTJxzBMORoctWLbZQUNhGbNYAQCiLpwsVoqOw7Vm5j
+	3YtNlov+hGG61/QVB9AwY+/qhdSaNdW2wHAXFqez7Q8xfUedmTBmUXDvTzrYEARDmQTHG5nyxc8
+	Kshj37qYiQ3iKfhq4tg==
+X-Google-Smtp-Source: AGHT+IGso4dABw4cs3fgHi8irDW9ZqoJpIBb6x5x5lb1dz6I2it3QInwrgMPc2vZyS0ImCdphiPnkg==
+X-Received: by 2002:a5d:64ae:0:b0:391:2d97:7d0e with SMTP id ffacd0b85a97d-39efbae0795mr10423116f8f.42.1745307424555;
+        Tue, 22 Apr 2025 00:37:04 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:b137:7670:8eb9:746f? ([2a01:e0a:3d9:2080:b137:7670:8eb9:746f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6db131sm161836825e9.28.2025.04.22.00.36.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c7cfcabsm7042405e9.0.2025.04.22.00.37.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:36:27 -0700 (PDT)
-Message-ID: <890eda99-89e6-400b-8a0f-345ea0e171fe@linaro.org>
-Date: Tue, 22 Apr 2025 09:36:26 +0200
+        Tue, 22 Apr 2025 00:37:04 -0700 (PDT)
+Message-ID: <664fc9fb-aeed-4f45-8e4a-20bbba791d1e@linaro.org>
+Date: Tue, 22 Apr 2025 09:37:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,15 +71,19 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] drm/panel: samsung-sofef00: Drop s6e3fc2x01 support
-To: david@ixit.cz, Jessica Zhang <quic_jesszhan@quicinc.com>,
+Subject: Re: [PATCH] drm: panel: jd9365da: fix reset signal polarity in
+ unprepare
+To: Hugo Villeneuve <hugo@hugovil.com>, Jagan Teki <jagan@edgeble.ai>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sam Ravnborg <sam@ravnborg.org>, Casey Connolly <casey@connolly.tech>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Casey Connolly <casey.connolly@linaro.org>
-References: <20250419-drop-s6e3fc2x01-support-v1-1-05edfe0d27aa@ixit.cz>
+ Linus Walleij <linus.walleij@linaro.org>,
+ Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Cc: stable@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250417195507.778731-1-hugo@hugovil.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -107,98 +110,53 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250419-drop-s6e3fc2x01-support-v1-1-05edfe0d27aa@ixit.cz>
+In-Reply-To: <20250417195507.778731-1-hugo@hugovil.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 19/04/2025 18:31, David Heidelberg via B4 Relay wrote:
-> From: Casey Connolly <casey.connolly@linaro.org>
+On 17/04/2025 21:55, Hugo Villeneuve wrote:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > 
-> We never properly supported this panel and always used the wrong init
-> sequence. Drop support so we can move it to it's own proper driver.
+> commit a8972d5a49b4 ("drm: panel: jd9365da-h3: fix reset signal polarity")
+> fixed reset signal polarity in jadard_dsi_probe() and jadard_prepare().
 > 
-> Fixes: 5933baa36e26 ("drm/panel/samsung-sofef00: Add panel for OnePlus 6/T devices")
-> Signed-off-by: Casey Connolly <casey.connolly@linaro.org>
-> Signed-off-by: David Heidelberg <david@ixit.cz>
+> It was not done in jadard_unprepare() because of an incorrect assumption
+> about reset line handling in power off mode. After looking into the
+> datasheet, it now appears that before disabling regulators, the reset line
+> is deasserted first, and if reset_before_power_off_vcioo is true, then the
+> reset line is asserted.
+> 
+> Fix reset polarity by inverting gpiod_set_value() second argument in
+> in jadard_unprepare().
+> 
+> Fixes: 6b818c533dd8 ("drm: panel: Add Jadard JD9365DA-H3 DSI panel")
+> Fixes: 2b976ad760dc ("drm/panel: jd9365da: Support for kd101ne3-40ti MIPI-DSI panel")
+> Fixes: a8972d5a49b4 ("drm: panel: jd9365da-h3: fix reset signal polarity")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 > ---
->   drivers/gpu/drm/panel/panel-samsung-sofef00.c | 34 ++-------------------------
->   1 file changed, 2 insertions(+), 32 deletions(-)
+>   drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-samsung-sofef00.c b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-> index 04ce925b3d9dbd91841f4b4e4a12320eac8e03af..49cfa84b34f0ca75394b74b5765a0931d9fefba0 100644
-> --- a/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-> +++ b/drivers/gpu/drm/panel/panel-samsung-sofef00.c
-> @@ -22,7 +22,6 @@ struct sofef00_panel {
->   	struct mipi_dsi_device *dsi;
->   	struct regulator *supply;
->   	struct gpio_desc *reset_gpio;
-> -	const struct drm_display_mode *mode;
->   };
->   
->   static inline
-> @@ -159,26 +158,11 @@ static const struct drm_display_mode enchilada_panel_mode = {
->   	.height_mm = 145,
->   };
->   
-> -static const struct drm_display_mode fajita_panel_mode = {
-> -	.clock = (1080 + 72 + 16 + 36) * (2340 + 32 + 4 + 18) * 60 / 1000,
-> -	.hdisplay = 1080,
-> -	.hsync_start = 1080 + 72,
-> -	.hsync_end = 1080 + 72 + 16,
-> -	.htotal = 1080 + 72 + 16 + 36,
-> -	.vdisplay = 2340,
-> -	.vsync_start = 2340 + 32,
-> -	.vsync_end = 2340 + 32 + 4,
-> -	.vtotal = 2340 + 32 + 4 + 18,
-> -	.width_mm = 68,
-> -	.height_mm = 145,
-> -};
-> -
->   static int sofef00_panel_get_modes(struct drm_panel *panel, struct drm_connector *connector)
+> diff --git a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> index 7d68a8acfe2ea..eb0f8373258c3 100644
+> --- a/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> +++ b/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+> @@ -129,11 +129,11 @@ static int jadard_unprepare(struct drm_panel *panel)
 >   {
->   	struct drm_display_mode *mode;
-> -	struct sofef00_panel *ctx = to_sofef00_panel(panel);
+>   	struct jadard *jadard = panel_to_jadard(panel);
 >   
-> -	mode = drm_mode_duplicate(connector->dev, ctx->mode);
-> +	mode = drm_mode_duplicate(connector->dev, &enchilada_panel_mode);
->   	if (!mode)
->   		return -ENOMEM;
+> -	gpiod_set_value(jadard->reset, 1);
+> +	gpiod_set_value(jadard->reset, 0);
+>   	msleep(120);
 >   
-> @@ -239,13 +223,6 @@ static int sofef00_panel_probe(struct mipi_dsi_device *dsi)
->   	if (!ctx)
->   		return -ENOMEM;
+>   	if (jadard->desc->reset_before_power_off_vcioo) {
+> -		gpiod_set_value(jadard->reset, 0);
+> +		gpiod_set_value(jadard->reset, 1);
 >   
-> -	ctx->mode = of_device_get_match_data(dev);
-> -
-> -	if (!ctx->mode) {
-> -		dev_err(dev, "Missing device mode\n");
-> -		return -ENODEV;
-> -	}
-> -
->   	ctx->supply = devm_regulator_get(dev, "vddio");
->   	if (IS_ERR(ctx->supply))
->   		return dev_err_probe(dev, PTR_ERR(ctx->supply),
-> @@ -295,14 +272,7 @@ static void sofef00_panel_remove(struct mipi_dsi_device *dsi)
->   }
->   
->   static const struct of_device_id sofef00_panel_of_match[] = {
-> -	{ // OnePlus 6 / enchilada
-> -		.compatible = "samsung,sofef00",
-> -		.data = &enchilada_panel_mode,
-> -	},
-> -	{ // OnePlus 6T / fajita
-> -		.compatible = "samsung,s6e3fc2x01",
-> -		.data = &fajita_panel_mode,
-> -	},
-> +	{ .compatible = "samsung,sofef00" },
->   	{ /* sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(of, sofef00_panel_of_match);
+>   		usleep_range(1000, 2000);
+>   	}
 > 
-> ---
-> base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
-> change-id: 20250419-drop-s6e3fc2x01-support-d060a14a4791
-> 
-> Best regards,
+> base-commit: 7adf8b1afc14832de099f9e178f08f91dc0dd6d0
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
