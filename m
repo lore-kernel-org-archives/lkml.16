@@ -1,122 +1,142 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B281F2365;
-	Tue, 22 Apr 2025 04:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000871946BC;
+	Tue, 22 Apr 2025 04:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745294850; cv=none; b=EQVJDffn0Vbnm70bzIxLTDjb+OyqwaST+169d15Tq691JsOOOOy0nzz/UoF9YfaXuilxo+RWhfGU/S1o4RAE2D48EFU3MaHydyTscF8HowR6RWFxHbWTr+qxCY68Pn9WEmp2ZFEFkHs90HLEw6Xep2YWYliGesQDSbohcBzqXX8=
+	t=1745294951; cv=none; b=Z9Y5dTJARkdHEytl6NHC0VkHv7/VJJnRop/am/hO5AqF+arpkf8Kk3U05vTF9K2ds4unWEqrrKisP4NIgMDn3IufTAc5Z9AJIu5aigLo7E++a4JWtCs9Ql1gT8HHwV5cWG4fMdgm+X1WmX0TkdGXxAfdxGl0b4DiW+YfFfCfYXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745294850; c=relaxed/simple;
-	bh=WcRU9ZEBKolFnretzZffT86Ip6dYByleNHe+D7oPXYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vCTNgwScTDIeo595sgY2T+KAPVhvqgRZ343sTJd9yHr71u4oI57LN5PTuY1zeQLB+6DYGzf/4mdS5qBxjr4M28ZEq6ZYQvQo5x9j49UzbmGFVQsg1+b8ZqDEfsc3uBHkTK1R/sFBlc8F9PcWzn8ZS+4j++gAyJVMeOH3VP+N2uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAA3dAz5FQdoRN8kCw--.63174S2;
-	Tue, 22 Apr 2025 12:07:23 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: mchehab@kernel.org
-Cc: yujiaoliang@vivo.com,
-	hverkuil@xs4all.nl,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] media: dvb: Add error handling for bcm3510_writeB()
-Date: Tue, 22 Apr 2025 12:06:56 +0800
-Message-ID: <20250422040656.2131-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1745294951; c=relaxed/simple;
+	bh=oGXyR1DBKZUps0EBd6i0V1Gw2kgYtzNBYJVMJvOvhkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K9HTGrYqkAw3S++oJkykT2A7uOW+CZjaEtSBWHN4y7LtyEIQ70XuPQumYRMvOmjgDNdR2X5H+4oUUD5eUvc0CXeIta773lZqgmqvNRUz9/vuoxZpDKMZs0ZRwIndmYgS1TelO5Q9oSFQMjUozqL4dljLfWedNvF47VCggb8KlTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BnM8LZde; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BnM8LZde"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53M490q01109644
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Apr 2025 23:09:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745294940;
+	bh=TCR9027wx+fa73a2CKan1hN/qQLJy2DiiVy5PdCfoiA=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=BnM8LZdeBhUvDtAJfzRmKJQzxmgTosYauVK1tXkeBXgkmLgDJ+IcgNZv9NgPYJcuv
+	 VF73WhOTjixI19/obkdmQ0C8UbErGX3CuMEz1VE70CogcA/WDkr3hl5dJZgsERA4Tx
+	 k7svP7MPvz2hM9Mle51oD7gTH2q7/iFfn4W4fkd4=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53M490lB006551
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 21 Apr 2025 23:09:00 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 21
+ Apr 2025 23:09:00 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 21 Apr 2025 23:09:00 -0500
+Received: from [172.24.18.98] (lt5cd2489kgj.dhcp.ti.com [172.24.18.98])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53M48udu066347;
+	Mon, 21 Apr 2025 23:08:57 -0500
+Message-ID: <6ae233c8-6401-4aba-b0f2-55468d375721@ti.com>
+Date: Tue, 22 Apr 2025 09:38:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] arm64: dts: ti: k3-am6*: Set eMMC clock parents to
+ default
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Moteen Shah <m-shah@ti.com>,
+        <u-kumar1@ti.com>
+References: <20250417233040.3658761-1-jm@ti.com>
+ <20250417233040.3658761-2-jm@ti.com>
+ <8f9aad2c-8e51-409e-be90-21230a53a4cf@ti.com>
+ <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <7bc92282-6ce3-4ae4-8eef-897df992487f@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3dAz5FQdoRN8kCw--.63174S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJryfCw45Xw1kXFyUGw1UAwb_yoW5Jry3pr
-	4jyFs5ZayUtw4rGFnxtw18KFyFkw1ft3y8GasakF1xAr15Way3Jrn0qa1aqF98AFW3Ja1r
-	Jw43JF1xCFyDtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUejjgDU
-	UUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAYAA2gG6Ey+5wAAsa
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-In bcm3510_bert_reset(), the function performed multiple writes
-without checking the return value of bcm3510_writeB(). Since almost
-all the bcm3510_writeB() in this driver have check their return
-value, it is necessary to add an error check for the bcm3510_writeB()
-in bcm3510_bert_reset().
+Thanks Judith
 
-And the returned error code of bcm3510_bert_reset() is ignored in
-bcm3510_set_frontend().
-
-Add error checking for each bcm3510_writeB() and propagate any
-errors immediately in bcm3510_bert_reset().
-
-Add error handling for bcm3510_bert_reset() in bcm3510_set_frontend().
-
-Fixes: 55f51efdb696 ("[PATCH] dvb: flexcop: add BCM3510 ATSC frontend support for Air2PC card")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/media/dvb-frontends/bcm3510.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/dvb-frontends/bcm3510.c b/drivers/media/dvb-frontends/bcm3510.c
-index d935fb10e620..fe89d46cca1d 100644
---- a/drivers/media/dvb-frontends/bcm3510.c
-+++ b/drivers/media/dvb-frontends/bcm3510.c
-@@ -270,10 +270,22 @@ static int bcm3510_bert_reset(struct bcm3510_state *st)
- 	if ((ret = bcm3510_readB(st,0xfa,&b)) < 0)
- 		return ret;
- 
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 1; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.RESYNC = 0; bcm3510_writeB(st,0xfa,b);
--	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1; bcm3510_writeB(st,0xfa,b);
-+	b.BERCTL_fa.RESYNC = 0;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.RESYNC = 1;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.RESYNC = 0;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
-+	b.BERCTL_fa.CNTCTL = 1; b.BERCTL_fa.BITCNT = 1;
-+	ret = bcm3510_writeB(st, 0xfa, b);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* clear residual bit counter TODO  */
- 	return 0;
-@@ -566,7 +578,9 @@ static int bcm3510_set_frontend(struct dvb_frontend *fe)
- 	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_CONTROL, (u8 *) &bert, sizeof(bert), NULL, 0);
- 	bcm3510_do_hab_cmd(st, CMD_STATE_CONTROL, MSGID_BERT_SET, (u8 *) &bert, sizeof(bert), NULL, 0);
- 
--	bcm3510_bert_reset(st);
-+	ret = bcm3510_bert_reset(st);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = bcm3510_set_freq(st, c->frequency);
- 	if (ret < 0)
--- 
-2.42.0.windows.2
-
+On 4/21/2025 8:06 PM, Judith Mendez wrote:
+> Hi Udit,
+>
+> On 4/19/25 10:00 AM, Kumar, Udit wrote:
+>>
+>> On 4/18/2025 5:00 AM, Judith Mendez wrote:
+>>> Set eMMC clock parents to the defaults which is MAIN_PLL0_HSDIV5_CLKOUT
+>>> for eMMC. This change is necessary since DM is not implementing the
+>>> correct procedure to switch PLL clock source for eMMC and we have a
+>>> non-glich-free mux. To remove any potential issues, lets switch back to
+>>> the defaults.
+>>
+>> IMO, we need to fix DM  if not then documentation [0] .
+>
+> DM cannot be fixed for only one IP and documentation says what clock
+> parents are supported, it does not have to say what are the issues
+> that come with using a specific clock parent.
+>
+>>
+>> Then only this patch is ok because as per document [0]
+>>
+>> removed clock by this patch is valid parent for eMMC.
+>
+> The clock parent currently set is a valid parent, but we have non-
+> glitch-free muxes and to avoid any potential issues with these, we
+> should switch back to the defaults. It seems like we randomly switched
+> from the default for no good reason and it has been copy paste per
+> platforms since then, so we are switching back to the defaults now.
+>
+So, if you are saying parent 
+3(DEV_MMCSD0_EMMCSS_XIN_CLK_PARENT_POSTDIV4_16FF_MAIN_0_HSDIVOUT5_CLK)
+and 
+4(DEV_MMCSD0_EMMCSS_XIN_CLK_PARENT_HSDIV4_16FFT_MAIN_2_HSDIVOUT2_CLK) 
+can produce a glitch while
+clock selection then we should document that in clocking section,
+and with note, what care to be taken when above are selected as parent.
+Thanks
+Udit
+> ~ Judith
+>
+>>
+>> [0] 
+>> https://software-dl.ti.com/tisci/esd/latest/5_soc_doc/j722s/clocks.html
+>>
+>> Thanks
+>>
+>> Udit
+>>
+>>>
+>>> Fixes: c37c58fdeb8a ("arm64: dts: ti: k3-am62: Add more peripheral 
+>>> nodes")
+>>> Fixes: d3ae4e8d8b6a ("arm64: dts: ti: k3-am62a-main: Add sdhci0 
+>>> instance")
+>>> Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more 
+>>> IPs")
+>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>> ---
+>>>   arch/arm64/boot/dts/ti/k3-am62-main.dtsi               | 2 --
+>>>   arch/arm64/boot/dts/ti/k3-am62a-main.dtsi              | 2 --
+>>>   arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 --
+>>>   3 files changed, 6 deletions(-)
+>>>
+>>> [..]
+>
