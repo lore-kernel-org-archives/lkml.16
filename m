@@ -1,78 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DA42853EE;
-	Tue, 22 Apr 2025 15:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBA928FFCD
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335110; cv=none; b=Wfafzv0iOW1Qujso5BxIAefOUOyt7QRBLYszP9wmhD140+pAra1GAIsAQ28r9pfDFCzmN44MXHPVj2SsAbXtic0uziTdt74mNJzNuX9qHr5WWTZAVtr+UIDrdFCm/h71xeq2gjxl3RErVql5kW8JxEYfJs66lTxY+agCRPQHW7o=
+	t=1745335115; cv=none; b=CsnkeL8zjllt/zf+wWFmMZM242mVUDDVcJJbQEB9gNR//k8Bhiu+LulEyOr1oN5voEU3J0AbfQ2Vyta3hk5u/PoiswBp295GkzmFr2g46CweJ/Jt8w3M7czrpUn+PYSRoH6A6JSssATTOdxr3zaM/MBW2QIZtO4wzhvnWidnTKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335110; c=relaxed/simple;
-	bh=WSMzleGFy5SmEw/j4q9eyuXjRU6ZVJnLQEIuew9yvVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RICT4Fm6slqY6SiOhOxY8wVFhB4mlfV1HjeBHgE9iwbtdQigFjQo2jmqmie099mdYre1GvQ8prEacOUESR/v99V0DizK5xHvIt6EZzKlPDxdqQIHEwV0OBa0J0+0elL7BvE508gUgwSV1O2gS6uxETvb0JtKB02Ei9XoSJXYt3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWBQ/H/2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745335115; c=relaxed/simple;
+	bh=O7O1HUOqXWtgi/7BbF6CmhXNu/pLf44I43COzKIOCAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jgb+HZ6PfHC66h4ByxfFazx1RBQGbJMoekbGtiDgWM7XnRBrjb6HzD6kXbwnSd35iSGQr5sN5C6g9Y5MSsEMoG005HjxInhT0y85k8M1Oul6gfYXIu+PnR9Tm862v8nrXCnbpGuqR/16T8o6EXXCU+XpZIorUyoaA0YiT7pwEdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Rb6QrEHD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F8BRKD89; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Rb6QrEHD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=F8BRKD89; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWBQ/H/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B8DC4CEE9;
-	Tue, 22 Apr 2025 15:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745335109;
-	bh=WSMzleGFy5SmEw/j4q9eyuXjRU6ZVJnLQEIuew9yvVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tWBQ/H/2TVFvh3OZ/Tt93sOb71VNku4po0HT1VsmH436FwKK6EliKkY3dzmRtHT0C
-	 dYvjZBMqmQpXXI6SE/44S8O2bl7XNZ/xg4cdnqK/zUpG6dhOecOCaeI+ImDp2jzEst
-	 aSEZs0N0wByyhsO/as/LKs7V9mi6qneEfFWXwoNkE0SMyI66/PmRcE7JghcHVQg2Ww
-	 3LJ1Mm/Nrm/sGNdFQtUFf0z9Wq5RbsXW69OKU1BzTe2qjobyOAdffcxmjmsYiOLfyE
-	 SdnlohYB4zqRKQTa6pfCZ+ChEbOVNA6gj01lgeDHY4bprH395RXB/sqCHaJrNyVYYd
-	 v6FOY3VqvP+mg==
-Date: Tue, 22 Apr 2025 16:18:24 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Cyan Yang <cyan.yang@sifive.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, samuel.holland@sifive.com,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] dt-bindings: riscv: Add xsfvfwmaccqqq ISA
- extension description
-Message-ID: <20250422-dictate-parade-3ad965f6c9c6@spud>
-References: <20250418053239.4351-1-cyan.yang@sifive.com>
- <20250418053239.4351-10-cyan.yang@sifive.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Rb6QrEHD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F8BRKD89";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Rb6QrEHD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="F8BRKD89"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7A5D91F444;
+	Tue, 22 Apr 2025 15:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745335112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qIowkUb8d5DnxERLcyZg+ki2dIcWLAGmwJky9ZSMEk=;
+	b=Rb6QrEHDZXXJzMyX0jUPTsHJrnOgwVBs0FCB64+ZABTOF+xN07wmkJUF/s2cEj/F73mNzb
+	jcBv18Pw3RBCzWU7pEsgZojjLHEMZYOMVEPaH9WmO7TYqXvOGkw7cIJ3JxgPnSQ/gp7ZmX
+	brQJ5HagErM/8FMZ3ZQ8gAcKI/FxeHM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745335112;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qIowkUb8d5DnxERLcyZg+ki2dIcWLAGmwJky9ZSMEk=;
+	b=F8BRKD89D6uSPLoxpKaRJzSU4yVPus4VOhZjJMzgTkKR61yPHtCmhahm7rwsaF5EQo2bDv
+	xHO1JHOSKdrJnPDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Rb6QrEHD;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=F8BRKD89
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745335112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qIowkUb8d5DnxERLcyZg+ki2dIcWLAGmwJky9ZSMEk=;
+	b=Rb6QrEHDZXXJzMyX0jUPTsHJrnOgwVBs0FCB64+ZABTOF+xN07wmkJUF/s2cEj/F73mNzb
+	jcBv18Pw3RBCzWU7pEsgZojjLHEMZYOMVEPaH9WmO7TYqXvOGkw7cIJ3JxgPnSQ/gp7ZmX
+	brQJ5HagErM/8FMZ3ZQ8gAcKI/FxeHM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745335112;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qIowkUb8d5DnxERLcyZg+ki2dIcWLAGmwJky9ZSMEk=;
+	b=F8BRKD89D6uSPLoxpKaRJzSU4yVPus4VOhZjJMzgTkKR61yPHtCmhahm7rwsaF5EQo2bDv
+	xHO1JHOSKdrJnPDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5EEC7137CF;
+	Tue, 22 Apr 2025 15:18:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zJ/TFkizB2hQXAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 22 Apr 2025 15:18:32 +0000
+Message-ID: <9073aa19-0f12-4dd7-8d10-2f159f3fd362@suse.cz>
+Date: Tue, 22 Apr 2025 17:18:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PSo2xE1X0sDiDPUV"
-Content-Disposition: inline
-In-Reply-To: <20250418053239.4351-10-cyan.yang@sifive.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 3/8] slab: add sheaf support for batching
+ kfree_rcu() operations
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+ <CAJuCfpGOcrTM3PCbdPpEjX--4BkQO=ErHJW_026osqex+LBSxg@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAJuCfpGOcrTM3PCbdPpEjX--4BkQO=ErHJW_026osqex+LBSxg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 7A5D91F444
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[oracle.com,linux.com,google.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On 4/10/25 22:24, Suren Baghdasaryan wrote:
+> On Mon, Mar 17, 2025 at 7:33 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>> +do_free:
+>> +
+>> +       rcu_sheaf = pcs->rcu_free;
+>> +
+>> +       rcu_sheaf->objects[rcu_sheaf->size++] = obj;
+>> +
+>> +       if (likely(rcu_sheaf->size < s->sheaf_capacity)) {
+>> +               localtry_unlock(&s->cpu_sheaves->lock);
+>> +               stat(s, FREE_RCU_SHEAF);
+>> +               return true;
+>> +       }
+>> +
+>> +       pcs->rcu_free = NULL;
+>> +       localtry_unlock(&s->cpu_sheaves->lock);
+>> +
+>> +       call_rcu(&rcu_sheaf->rcu_head, rcu_free_sheaf);
+>> +
+>> +       stat(s, FREE_RCU_SHEAF);
+>> +       return true;
+> 
+> nit: I think the above code could be simplified to:
+> 
+> do_free:
+>         rcu_sheaf = pcs->rcu_free;
+>         rcu_sheaf->objects[rcu_sheaf->size++] = obj;
+>         if (likely(rcu_sheaf->size < s->sheaf_capacity))
+>                 rcu_sheaf = NULL;
+>         else
+>                 pcs->rcu_free = NULL;
+> 
+>         localtry_unlock(&s->cpu_sheaves->lock);
+>         stat(s, FREE_RCU_SHEAF);
+>         if (rcu_sheaf)
+>                 call_rcu(&rcu_sheaf->rcu_head, rcu_free_sheaf);
+> 
+>         return true;
 
---PSo2xE1X0sDiDPUV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, done. Thanks.
 
-On Fri, Apr 18, 2025 at 01:32:36PM +0800, Cyan Yang wrote:
-> Add "xsfvfwmaccqqq" ISA extension which is provided by SiFive for
-> matrix multiply accumulate instructions support.
->=20
-> Signed-off-by: Cyan Yang <cyan.yang@sifive.com>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---PSo2xE1X0sDiDPUV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAezQAAKCRB4tDGHoIJi
-0lVhAQC6EzX10joPYVO8GsoAVGpEsRXt1kEptH5AAgI6JS9alwD/VqeWssBvDGY6
-G0Cp3nBek9TbCmYL+hYS2935WUSTbwA=
-=QwvL
------END PGP SIGNATURE-----
-
---PSo2xE1X0sDiDPUV--
