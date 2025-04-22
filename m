@@ -1,38 +1,38 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF3A20D51F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADD933062;
 	Tue, 22 Apr 2025 10:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319414; cv=none; b=TES++eeu5qf0qRGnm29BpXK4wVCqbaFe5HecjKvAB055s3SENOJFSmjo6Pd7rzqtkxUB3yenp65izJWky7Eg7K+W9HSU8oxikt7qLoJOXyuj+dL6GxvX/24+5dRPq/vm9B0tH9kqdB36XwdDTKHCKOsjR0hzu2e6n5tGGsS1cAY=
+	t=1745319415; cv=none; b=gtUjawfG1m1M53CouXy6Q7SAyLzkf8h+ub5njNxxK3L4M4Nri9iG+pH9As4BZFoT1uXUcuQHkPJOD4rUGUNdeRQPS0e/RpAUIl6/BOfsOcNqTD+xoufqgyegUsP0k/7WHS5bdqLDqioJjE1p1fq85Tm2Wm78RRSw/ekONWF0pX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745319414; c=relaxed/simple;
-	bh=v6e6oS/nMhFLB7pHXxBcsuZHxq8PKqPIBKZP9xLGgjM=;
+	s=arc-20240116; t=1745319415; c=relaxed/simple;
+	bh=juuwbAzhoDfMUjFcZxTM9xhk9k+m2ubHx6nqEeAYc4Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QBROfaIw7GkFOwd5ofUnBRlkW7F+gfIpNddL2PSPo/6dEZ1x68qtFeWXCCIEvRrl/zg+8BYxkGjv5y8OQk+8UaGwoRpHTQUUmhhZHdnoD9g5DTBYjaksh8TxHOojnUoIiOQX1mVJ/LP+Ksz1W0QV2AJWkJZeZ+kftWVA3wrJ+wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=FTDJ0Hi4; arc=none smtp.client-ip=46.19.9.99
+	 MIME-Version; b=aai080AXXdf480i09os3Zc6zpK/XlLY2C+7/NUdN+/wdOTElH/wxOFBj7vLzaukcYMKFyr85hERycX78/NJR7tqXHAyUyb0T3TB1DsbCrhB8bR+V+63bBolRzjTJsDKw0umrj3bs3xImz9zZ+SiXNlDicCozGZ1oz0PZI5SmuME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=EiBjB8yy; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="FTDJ0Hi4"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="EiBjB8yy"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
 	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=k/fyz2yaJz0xzEAmSoE0Y6ROcbmBH4Qm7psFQ48hLAY=; b=FTDJ0Hi4Xv9XLHxDnRjW05RDWB
-	+jy2cg1nOJfAAzQyzLEjjPZkEwmfq1wGVGFNoae5BI2O7bGZy2LoZ6V0hQ9xGea7f5GVukDPxO0nP
-	hQcPjWSDDQlGxza6aomUrZMtA9Qh37YLc2taEbPMLad3nmcwD+h1k3EfbTnBAE/ZzuwIq8F/0kg1/
-	0mXD5rIuqzK/EcRAfESV4Y9GHSwIOIF9D8CCpl/7/CUOsgJxSdlY37HU/W+Xc/5Yy55B0KWAIy8r5
-	P9lM72DfkHNPGD/Ne8Zi2Ir6aua1T9cVz14FfuUA15sQNN7Kq76QvY0klPm+fZBMDjLdBjtFto8q0
-	LzyWItzQ==;
+	bh=loNjfzD7XzJZlNyz06pFRAe4/by1nmcVqFTo0T/668M=; b=EiBjB8yyvkjbKlfy0T/WxsBpVH
+	P2fFIMONF6CER2gN2XsSPgmmsbSiEHzHA6/L2yH3Fzec93SSnctR0UKZxQEMXHKnbSv8jhHbgm3i/
+	khlUertmOOcxMSGWcUlsu+mqPhcwnLnl106BMSJqhn7FcdAReNRgss9qXclKZ2TQijQ13hy5QNR4c
+	/hUz1pOFslQFzkZ3DqWxRgQPZs/hqvuufI9i5SCT8jSp5WFrsJM/FYuzV+Nsp5Fa9AzAjutaPknbl
+	LinYcJgq2bOqtjiQiE0RWO1wg4Gdesg+dhSHokdKbjDPfX4nXB/Uur/kawBP07wCTidEe3nIfvPKZ
+	pFyWATOA==;
 Received: from [89.212.21.243] (port=36562 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u7BIz-008kyr-2e;
+	id 1u7BIz-008kyr-25;
 	Tue, 22 Apr 2025 12:56:45 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v4 03/15] arm64: dts: freescale: imx93-phycore-som: Disable LED pull-up
-Date: Tue, 22 Apr 2025 12:56:32 +0200
-Message-Id: <20250422105644.2725168-4-primoz.fiser@norik.com>
+Subject: [PATCH v4 01/15] arm64: dts: freescale: imx93-phycore-som: Add PMIC support
+Date: Tue, 22 Apr 2025 12:56:30 +0200
+Message-Id: <20250422105644.2725168-2-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250422105644.2725168-1-primoz.fiser@norik.com>
 References: <20250422105644.2725168-1-primoz.fiser@norik.com>
@@ -71,32 +71,134 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-There is already an external pull-down resistor on the LED output line.
-It makes no sense to have both pull-down and pull-up resistors enabled
-at the same time. Thus disable the internal pull-up.
+PMIC driver for PCA9451A used on phyCORE-i.MX93 SOM is available since
+commit 5edeb7d31262 ("regulator: pca9450: add pca9451a support"). Add
+support for it in the SOM device-tree.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
 Changes in v4:
-- fix commit message (pull-up/pull-down)
+- no changes
 
- arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../boot/dts/freescale/imx93-phycore-som.dtsi | 97 +++++++++++++++++++
+ 1 file changed, 97 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 0528e293c03d..06a9e674e338 100644
+index 88c2657b50e6..507a71f9294b 100644
 --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -196,7 +196,7 @@ MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
+@@ -72,6 +72,90 @@ ethphy1: ethernet-phy@1 {
+ 	};
+ };
  
- 	pinctrl_leds: ledsgrp {
- 		fsl,pins = <
--			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
-+			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x11e
++/* I2C3 */
++&lpi2c3 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lpi2c3>;
++	status = "okay";
++
++	pmic@25 {
++		compatible = "nxp,pca9451a";
++		reg = <0x25>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pmic>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
++
++		regulators {
++			buck1: BUCK1 {
++				regulator-name = "VDD_SOC";
++				regulator-min-microvolt = <610000>;
++				regulator-max-microvolt = <950000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <3125>;
++			};
++
++			buck2: BUCK2 {
++				regulator-name = "VDDQ_0V6";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <600000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck4: BUCK4 {
++				regulator-name = "VDD_3V3_BUCK";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck5: BUCK5 {
++				regulator-name = "VDD_1V8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck6: BUCK6 {
++				regulator-name = "VDD_1V1";
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1: LDO1 {
++				regulator-name = "PMIC_SNVS_1V8";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4: LDO4 {
++				regulator-name = "VDD_0V8";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo5: LDO5 {
++				regulator-name = "NVCC_SD2";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
+ /* eMMC */
+ &usdhc1 {
+ 	pinctrl-names = "default";
+@@ -108,6 +192,19 @@ MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
  		>;
  	};
  
++	pinctrl_lpi2c3: lpi2c3grp {
++		fsl,pins = <
++			MX93_PAD_GPIO_IO28__LPI2C3_SDA		0x40000b9e
++			MX93_PAD_GPIO_IO29__LPI2C3_SCL		0x40000b9e
++		>;
++	};
++
++	pinctrl_pmic: pmicgrp {
++		fsl,pins = <
++			MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
++		>;
++	};
++
+ 	pinctrl_usdhc1: usdhc1grp {
+ 		fsl,pins = <
+ 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
 -- 
 2.34.1
 
