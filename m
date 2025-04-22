@@ -1,83 +1,112 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7B81EE7DD;
-	Tue, 22 Apr 2025 22:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8071E8847;
+	Tue, 22 Apr 2025 22:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362449; cv=none; b=RhPBGEK8lmj1i/atRR2GgNjZKUmSfj+FhIYo1k1cvDbXZo2Ae3biy8nuQXHJuJPVsUt3JLJHRULGJJLhzWENbdb/nEu5EV09mkyhHCiN+MHcE8DSmnaCRfwaFg5WIXdua35VvQaRTYbGUXEMBXCrEnn8UZonTd/llB1bqH3uIs8=
+	t=1745362487; cv=none; b=L7nVuPWVWtHVBmTyqgenGuDFScV7/Rh/GvQGNPFjPXXa1DtzLQvX4Hvnh+67hGb9k0a4I8LkTwvqxPSAjlpETmGoKKqZqcSRv26Y9U+kBDsYdN9tUtNa6tzPdp7zc1OddboUIBiy16otzPaSg93PdIFzEPDbzbmWqNuGXDlGcIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362449; c=relaxed/simple;
-	bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
+	s=arc-20240116; t=1745362487; c=relaxed/simple;
+	bh=1vS36F8s1bsOVKwjeh6skWo0k4UqNnubrCGwaxc9Y74=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxxEFgMNXAvjyKy4Yl+hNY2fwG2PFb8E7P5BILlL8VPD8qIIug87wn8Y9Y/wK98Ke0gYJy2ApmlDAS7GJh8bVYeu6XCDzfCjulZzSlKcJjWs+JuhsB8HA+CRCsyug61PsAWSpp6IC5kvTta03MitD/es5Znz8y9cns/+08AVtpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fODXLTCz; arc=none smtp.client-ip=209.85.160.170
+	 To:Cc:Content-Type; b=iuinaU3eH9/oYB02ca4lmX6tYQ3Kg9+RCc4VbeWNZjYHYTfsiAIQriPEdNmFxRHtAy5ojmyHJQoIn1RcBFEdPh6AWaQzdJTJa2vDZoOgiRlbV56QUES/2J2oDyxwDYaBbgkTsFWAYrbua2uyiblbKzjKY7ZuJffi8QpbGFs6jAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUAOqGvR; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fODXLTCz"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47ae894e9b7so94357941cf.3;
-        Tue, 22 Apr 2025 15:54:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUAOqGvR"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301c4850194so4340781a91.2;
+        Tue, 22 Apr 2025 15:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745362447; x=1745967247; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745362485; x=1745967285; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
-        b=fODXLTCzrfkwfEELzqKrNqFw6jplZhn7/KohShrczxXQm6rMJkxfK/C/4CMCHBldmi
-         gP+zcsyUCbfhD/8VCUCCOwCP/qi/cVhlgH9IhBSH3LLzS31Ia49EslgseNuc+WFGT/t9
-         4W37zVgHIpReBihEXFjS5pOAWSV2Q65FiMCMcXJC74lTDie4W+fWfPLTy62YaikQFRaQ
-         SLWSyatbGVYUs9XjdD01QrdfZaRuXOzf8vh4BLAMiyooVr+kkNj2ZbujNe2KsfCkeZ3U
-         D9ysp1t8LVZ2q2bOFAwHKdTh37ulEdxlZ2ZIc/u3zC6SX0uzwijSLCwz7AI9jrTKh/iV
-         K/Bg==
+        bh=va7rv/YB9o98QrEUQSIKnbaS0ErDhKRmFDBMSbqCA5s=;
+        b=iUAOqGvR9JqtiiMs1+3YYWteKXi6RrdJ6UXPNJbDOCVA2DnniYgAfXakdagjx3yRPt
+         5mZP0bNXlLVpS7NrFoMsXClfHmxV5ZdG2Ave9pu3w19Pv+MqX/eo/zoIi29b1f0Z6vZ4
+         cZROLSnDylBV/4zQuEQS08sC+WKYR/hHjceFZiRXfrpmBlvUNNyIZPEm8lU+A4QHmThh
+         AGg0AJCkES/lamlg8vy6U3FHiffspW1OeshnbZkcnrHOFtyVMJDcjNGMYDYEKknxFs+G
+         fpcrLe6F6qD1mw/nTfaSaywqAK7e+KEnFTwPeN5jnFZddoMsmDgSZTbSKV5szjP8Ps5Y
+         NGzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745362447; x=1745967247;
+        d=1e100.net; s=20230601; t=1745362485; x=1745967285;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ph7VMkj/uhF6HzLcXhi5RdIwPE4nRmg0HHOAwOWM7ws=;
-        b=oh8/fHDmOD5CLthBTfDRCqQDPyO50dzpbBCpZYmTcRQxVZk4Qtaa65pl5pe94PUw/+
-         /Ty8IXYjhv7qv3KRo08/EffjKnAlh9vyWWvNoYttLzktM6GEXhaQfrrPoIsWHyIZjJ/e
-         burPGT8fYj9MOfp7dHTx78euXfbhhcPQXO6pCh2oqUppQEMwNPIy6CqItQV+HyKbRsdX
-         HT9iY5J9ZR51bOtKfrLth29x0wtHW2xLcJGSKIapT2C8KSpYRee9WzP1yXuFCDgQMrpN
-         +tN2NB54Ay8lK6B4yPK4BW7KNjYlHcD4GUss1J2yqn0pu/oeXkGTEqnraGdjIThEfRZG
-         21zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIohRu11cA1za/ZMiBL1F9zBQTVK67XX/la7VSAn0DJ2dyv2N/g4jQLOTd822CKKn+sp3nfgySXTf/fvY=@vger.kernel.org, AJvYcCXz8iANg+L/0jTK00h6TwR8dsgaZJak0Loka6jutM2Gl9yI3Tzf3vHHiOl7p4Y6Id5PWqvJreBX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2TrSalcc3IBTXqFHyMqEF/ZiGWS6xkVrx/IU1kB3nKlohBGkX
-	bGnsEsaCKqkgF90SEWTgQZXHNKSkcNC/H1TlwRNHhHnicNfOxIT5hSMY7N+saRMe68TFeTGbLy4
-	Xb4q7TniP8jewN4+A7TKjP8e1Ids=
-X-Gm-Gg: ASbGnctPgdPftPsWUZpFXA1xFCm7JENLZcz3eiPrlSaAYPkQy2s5oYturrMFGtMgIqz
-	Jo7VNlpYi1q6ha6dexm/rsxAPs3XTIxgw7dmdko49KMmWKNMP7SkmVI0oeavNBsPIUmjkEGsHD8
-	tfIq0iFMio9wUMet/ZSFLXkg==
-X-Google-Smtp-Source: AGHT+IEORD8ojUEQHr3D1+QFtqDuA4YeBYr8q0gJ2sylYYifJPAFNBYqPX5iT0D6RZs5dgYijoTKWzusjQflOl1O/3Q=
-X-Received: by 2002:ad4:5bac:0:b0:6e8:f99c:7939 with SMTP id
- 6a1803df08f44-6f2c4682637mr287665326d6.44.1745362446819; Tue, 22 Apr 2025
- 15:54:06 -0700 (PDT)
+        bh=va7rv/YB9o98QrEUQSIKnbaS0ErDhKRmFDBMSbqCA5s=;
+        b=b7btqNXM9QSSkrNCimbKzYZTRmC5nXhstrQrkvWcl1RCTN0YALZLAr4pwdcSviLwwr
+         qxAYcSwpcXATo3PBkbKcQhdIhsNOnAtSCcjzebvfdxCLfzF2u+jBkLXoJsfwbwujV9W+
+         5/mZOf973+IfZYEpwqtarR/joh9Ze9EKRcW4a17IqXWo86Xp9JvGoKgZsZABLp5pyv0b
+         MY2v/J01VoVV9AvUwcUEoLSa3Lg1HZvTbRwdcKLj4sm9JcWzmKb2wYB2Dc8ZM+pq5NzN
+         R5FAnRLnMhmdMUqMXGmiDsIuvCWA0fSOEXMQzNUPeIlDdKrOS5bbu7O/zphxjQJhUJN9
+         tkQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOMXpOnBJpbWg1cvnGyUR1n32flRj6ffsEEGH/ik8wtjAvHaWAVa6jYvC1W/BhWsjRpnK5A+0SwwN3eAOExOE@vger.kernel.org, AJvYcCVD2S97gVIdkkbS6Q43P4/vln4J6zcDSa3/Sdedn7/P3l5D/J+XP7Wl21QMdPI5OJGhbhtIYbApk4rlUvzT@vger.kernel.org, AJvYcCVZMXfAK6xhgYPqDlLIbP9MRVvYHrdY3OEY0LxnPn+tcZ9sB5DC7J0LotMDY49YgQl+k063POiuYSH1B9PN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx98p1zAsQx7cZjlR2JwYYCvdVTXs+MMngzJpF9avtuVMxZq8av
+	J4mup2SehIMKffZYlkqX/EW2pZGD+eX3M9W/GJ2krvUbcyz6154LR9aLnPL9M1wQ1a4X5e9rleq
+	pGsAN+UoFPEJ8ZNRTmBdbEVPRIBY=
+X-Gm-Gg: ASbGncuAoXxAXCd1of2FGnYfGcRGLLeQMfrGbN8BJjp1YWZJ4IHEiF4ljjZL3ziH4ua
+	YsMfhebRcASMhsEv+kLCMr49w2D0QSRCVDknxnVt2THGyXSLerLVxH5wVWlInPym3ZT83gkpZBG
+	MH9t1unBO96n9me9QI5T6JTu9D/NhNbyG58LcvmIoohXIORyPW
+X-Google-Smtp-Source: AGHT+IETSG5/UWEu1Au6ZJP1tumDHJssb0nzJI+R/63RTT9r6RWwr2jpaTisqXWgIO+NT0mOGqFrbExkdqDuKO9oosM=
+X-Received: by 2002:a17:90a:dfc5:b0:2fa:1a23:c01d with SMTP id
+ 98e67ed59e1d1-3087bb6bcaamr24335482a91.21.1745362485527; Tue, 22 Apr 2025
+ 15:54:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421191645.43526-2-yyyynoom@gmail.com> <a942be9e-2799-478d-b8c2-7a85f3a58f6c@intel.com>
-In-Reply-To: <a942be9e-2799-478d-b8c2-7a85f3a58f6c@intel.com>
-From: Moon Yeounsu <yyyynoom@gmail.com>
-Date: Wed, 23 Apr 2025 07:53:54 +0900
-X-Gm-Features: ATxdqUFMdUN5qqUUpfR8CyrJIO4o1Agasa3dB2Ji18X2Ej4SA9EEkzUF8SLUQY0
-Message-ID: <CAAjsZQwys95_bvKQDAd6aFeoL_LXfTKn2Pkwq=-F03uAuhVVXg@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: dlink: add synchronization for stats update
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-9-surenb@google.com>
+In-Reply-To: <20250418174959.1431962-9-surenb@google.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 22 Apr 2025 15:54:33 -0700
+X-Gm-Features: ATxdqUEvpJh0hlMQ-EDLD5Ec0LhTBj5XlTwZPc8jms5BGKO3PDMIjH7Os5YMtuo
+Message-ID: <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] mm/maps: execute PROCMAP_QUERY ioctl under RCU
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
+	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
+	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
+	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
+	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 8:24=E2=80=AFAM Jacob Keller <jacob.e.keller@intel.=
+On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
 com> wrote:
-> Thanks,
-> Jake
+>
+> Utilize speculative vma lookup to find and snapshot a vma without
+> taking mmap_lock during PROCMAP_QUERY ioctl execution. Concurrent
+> address space modifications are detected and the lookup is retried.
+> While we take the mmap_lock for reading during such contention, we
+> do that momentarily only to record new mm_wr_seq counter.
 
-Thank you for replying to the patch!
-I think this patch needs a bit more refinement.
-Would it be okay if I submit a v2 patch?
+PROCMAP_QUERY is an even more obvious candidate for fully lockless
+speculation, IMO (because it's more obvious that vma's use is
+localized to do_procmap_query(), instead of being spread across
+m_start/m_next and m_show as with seq_file approach). We do
+rcu_read_lock(), mmap_lock_speculate_try_begin(), query for VMA (no
+mmap_read_lock), use that VMA to produce (speculative) output, and
+then validate that VMA or mm_struct didn't change with
+mmap_lock_speculate_retry(). If it did - retry, if not - we are done.
+No need for vma_copy and any gets/puts, no?
+
+> This change is designed to reduce mmap_lock contention and prevent
+> PROCMAP_QUERY ioctl calls (often a low priority task, such as
+> monitoring/data collection services) from blocking address space
+> updates.
+>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  fs/proc/task_mmu.c | 63 ++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 55 insertions(+), 8 deletions(-)
+>
+
+[...]
