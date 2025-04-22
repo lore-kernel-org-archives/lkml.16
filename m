@@ -1,88 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AC926D4E3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3C01EBFE3;
+	Tue, 22 Apr 2025 22:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745361200; cv=none; b=CwHkW1+nP2kRDSGSPQfRUx/ccL7x+51IvQngFSuCt/3b+Aa26XDKoB82b5YduWnO3fADjnQzN+rGkk9kFHomxlUPr85qwek/iOlWgoJ7FfIB4uCTd4bvIRNte19VTZaob6pZUrjmCRUotXpaQ/ecZ15MT9eu9DKQKFnpQumhZzc=
+	t=1745361260; cv=none; b=mTbAReWHvFvmHgiEqlB4z9HVMv7qWbZPgmAPZfcanxb13FONSYtSYP5jrn8Rb8TJjtpjeYMaQYBHZcEuLpnyAqyenjbV2eI3n0i5TxvL0HnoT1pxGmbLWSaye8e++bpUC5psIhTe4XLD2OmqNbQffC1agGxHt5ZD8ZOYmFMqPts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745361200; c=relaxed/simple;
-	bh=mqlmQbDhzltj00xDTZJT5W9d4TpNe+QdmjfdKDNEefk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rx4ricx+2mMFjbAd8H+MdpgNJU+yjauXjDc1aw8zYNN89eIo6xseIaQSePFIFUNlmTk1VeF2vdBrB5Oxu+Yt7uub5NQMyPZYlwAWAYz8Jjn6CA2oSCD3FYWdMXJB1mIAUZ8xeqT7pZ2tj0GYJY7Gk7s7oLDahDRqIoDzjQbkZ68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+n88Fm0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745361260; c=relaxed/simple;
+	bh=voGoFxauiMHX3oaVnZBhPkQWEiSoeuVzpWebqxlf4NI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hGHcNnbmKpYv8ri6b6QDltgzcasHR93i26oQaZqULe+cGpvcoyNAW7L9yjN7nRYg/j8czv/cWyn/XlWi5YXopbVLeihsSpYINZoGRp8SjgqZix9iaWngW9YI+t4V03llNzyo9aQh9lML+7uAq70kfDtdKqx4aB8N10ZR5FIQAp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4zsuD7x; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+n88Fm0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59392C4CEE9;
-	Tue, 22 Apr 2025 22:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745361199;
-	bh=mqlmQbDhzltj00xDTZJT5W9d4TpNe+QdmjfdKDNEefk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=t+n88Fm02h27V8V8CU1cdNBTEKEsEcWjHedhmduFYF6S/aLOVve1PDZx4enEfxFWL
-	 V3BaH2M/6PV+tiPfWo1rLQA00nITmrwQjy3+FAMn9EnvlQ+67w8HVdw+tM7IRxuIOD
-	 Pl2QJw5cDHiLGUWR57VWHFJoowEf3whBWzWxSpSRFBsmGWFdbkRR9SEZkIcDTuPyN0
-	 F1k+tP99z7OsxwkQHxePMuR55SRlGOAK3ZEee0Kd5bv4S6AacXVxJE3j1Y0uz/K3A0
-	 BR9M53EkQrouaT7C1wF0Ny5zA9wlHxM+eYR7mLVC0A+TVCjSkSZ6fmuNstRSOP9Rs1
-	 T+d4Y9tjadQRQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Gabriel Marin <gmx@google.com>
-Subject: [RFC/PATCH for-perf-urgent] perf/core: Change to POLLERR for pinned events with error
-Date: Tue, 22 Apr 2025 15:33:18 -0700
-Message-ID: <20250422223318.180343-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4zsuD7x"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso7931594a12.1;
+        Tue, 22 Apr 2025 15:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745361256; x=1745966056; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hSwUO8B5vwdfcnexH40Nc2DnuOoNta8XhHEpoFTOGEs=;
+        b=b4zsuD7xLjV9xqZkw5j+ocBR9Fg0KvmddASfzY3feeVUJwuv/SqXc6LbQhWRGVW8vy
+         RtAI8aP1VNG+mZMHZaMPYRhGa9LuBrO8vFTbUeC2xFBiLOXc+8TVoFkJ45OiyCGlw4tz
+         k3RJ1N/SPIQrhqPXs6so4RXcyxtcp9dUukDpaOra9JWDgrU/KfnECWJagOXBqCuPGXDX
+         h35tIfKEXG1YqF5BJ6aMTtODrBhT3LXLc8XBkKLzOVOCR9WxYfi3HolyGZLrnuecbviS
+         pUFipz6Zc0wiLtK4OWtNOt0sZFGgT6jG7dfsLmcjlyWeXpjeeaAK3F9J1odUu1LoWo/X
+         lAiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745361256; x=1745966056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hSwUO8B5vwdfcnexH40Nc2DnuOoNta8XhHEpoFTOGEs=;
+        b=ZS7QihPJYOM86pAs85VdUyIPD0b/j/3hsGCAnTz1YVOLBdaPlVLhydJJw25qs6KXQb
+         QQCIUA8lg9N7L2w5UPflnP8C7jgbD3wHV/HHYtIvbC70/9Dt18fzzzpHbUEw5fWpgrVp
+         awugI5KDDwEloM0sGpu43w4H55RuWzIGokLIQkY/lswg0mN55x9JI3pVLs81y24I2+rv
+         4eFLHtIStgTiz+Ln3ngrQ2B7Y/TKBPukv2ehfrdOvF+l5hOsT9ftgn+XWJFfv8cknYQU
+         lxlmpkjEHbqHpYpGWg0l3BQorsbmXxRpyN9EljrAEqBaeRp948ZhXMEZIltCESspgJd/
+         72UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbq6fRXN+RxKC0kIjHN6crTs5vMOprtu6qxnIbr+eD7GAgxjemAAjV4+pSWbf4uJcLdqX50hOb/ztjzknD@vger.kernel.org, AJvYcCVf7tdTQnChCeJrH4eIcbNGFBceTVRro5vFXu4aZl5NMl9xLVrO1jwICkA6pW95th6uzQrqdDiwF5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpD1ehOIwT7JIfNGL0FCJzgcoWpBtfmugAo77fH9C2QTIHxN5L
+	rWIuR3cyuxEq+OHXGTt/qIUdUQiKjR5hfVCiCTRpQEkCMjGGmTCqDhJzaqWGDTyj5DDU7g+AJ54
+	f2cQxUdaUXr326B1jHhMhdwdICA4=
+X-Gm-Gg: ASbGncuiQ7rPVAglpZO5Gnv7JSb/k+WdJXJ2fqLIgJjXFruON0+XZnB+FtwOfwOMTwN
+	X5SA/tyBmh3f7eHWCnngwWMoHVPmAhFtqE//aag6vOIcyTlER+J+1Lo0arLFKQb5cJOXlNtlGh3
+	quz7PZEvVVt2I2AoYTm/o3PQ==
+X-Google-Smtp-Source: AGHT+IGEdEyDJ7eLl/WPHqEG6RPTd58T1qtwdpGHMY7GLLjHzgOyyUSyU3WSKL+Ol0SHi9HYxX2HTVhMhy2PuqK/6L8=
+X-Received: by 2002:a17:907:7288:b0:aca:d6fd:39a with SMTP id
+ a640c23a62f3a-acb74dd403dmr1341111566b.51.1745361255480; Tue, 22 Apr 2025
+ 15:34:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+ <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-4-3fd36475c706@baylibre.com>
+In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-4-3fd36475c706@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 23 Apr 2025 01:33:39 +0300
+X-Gm-Features: ATxdqUEloA-ZEhkwZ1BjOVJpOHMzDaj9rmKVF64izawsOdJZZCwOJujrDjEDXtU
+Message-ID: <CAHp75VdqanGpwB5raE8AmH-Tmb82N9yYmhB+k_rQtc2_Zb8HQw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] iio: adc: ad7380: use IIO_DECLARE_BUFFER_WITH_TS
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The commit f4b07fd62d4d11d5 ("perf/core: Use POLLHUP for pinned events
-in error") started to emit POLLHUP for pinned events in an error state.
+On Wed, Apr 23, 2025 at 1:08=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
+> iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
+> and understand.
 
-But the POLLHUP is also used to signal events that the attached task is
-terminated.  To distinguish pinned per-task events in the error state
-it would need to check if the task is live.
+...
 
-If we can change it to POLLERR it should be clear.
+> +       IIO_DECLARE_BUFFER_WITH_TS(u8, scan_data, MAX_NUM_CHANNELS * size=
+of(u32))
 
-Suggested-by: Gabriel Marin <gmx@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Btw, why not DECLARE_IIO_...() as other DECLARE_*() look like?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e93c195659140d30..95e703891b24f8fc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3943,7 +3943,7 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
- 
- 			if (*perf_event_fasync(event))
--				event->pending_kill = POLL_HUP;
-+				event->pending_kill = POLL_ERR;
- 
- 			perf_event_wakeup(event);
- 		} else {
-@@ -6075,7 +6075,7 @@ static __poll_t perf_poll(struct file *file, poll_table *wait)
- 
- 	if (unlikely(READ_ONCE(event->state) == PERF_EVENT_STATE_ERROR &&
- 		     event->attr.pinned))
--		return events;
-+		return EPOLLERR;
- 
- 	/*
- 	 * Pin the event->rb by taking event->mmap_mutex; otherwise
--- 
-2.49.0.805.g082f7c87e0-goog
+> +               __aligned(IIO_DMA_MINALIGN);
 
+Forgot to drop and use the DMA variant?
+
+--=20
+With Best Regards,
+Andy Shevchenko
