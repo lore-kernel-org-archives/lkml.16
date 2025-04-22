@@ -1,38 +1,37 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADD933062;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD95134AC;
 	Tue, 22 Apr 2025 10:56:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745319415; cv=none; b=gtUjawfG1m1M53CouXy6Q7SAyLzkf8h+ub5njNxxK3L4M4Nri9iG+pH9As4BZFoT1uXUcuQHkPJOD4rUGUNdeRQPS0e/RpAUIl6/BOfsOcNqTD+xoufqgyegUsP0k/7WHS5bdqLDqioJjE1p1fq85Tm2Wm78RRSw/ekONWF0pX8=
+	t=1745319415; cv=none; b=Lhab4AoP5hTVCUq7tP1wFQTcQiO2XsKoR9yQeiEeVGy5TGbuQWrZ2y9TZnXsSPrIJDwXBt/EvvKZ0kHsWPQoh541NUrX8dIrybZipIc/oYZMUwNgN/wqDL3t5FFHStoXkVyX0kwxg1INymB8hqqUkohKiDWJOgDqMHfmAHAaT6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745319415; c=relaxed/simple;
-	bh=juuwbAzhoDfMUjFcZxTM9xhk9k+m2ubHx6nqEeAYc4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aai080AXXdf480i09os3Zc6zpK/XlLY2C+7/NUdN+/wdOTElH/wxOFBj7vLzaukcYMKFyr85hERycX78/NJR7tqXHAyUyb0T3TB1DsbCrhB8bR+V+63bBolRzjTJsDKw0umrj3bs3xImz9zZ+SiXNlDicCozGZ1oz0PZI5SmuME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=EiBjB8yy; arc=none smtp.client-ip=46.19.9.99
+	bh=X7ob+1t7faJy0dtEZ5Ew2ZVx2nnmkT7BRI5h3x/SRpo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O81IUsCwjklUh2FNKObZvudZsdl56H20kM9I5qBWhroykBCIG3fFJ4ZAaxr8dae5eg7LX1dN9Y61RoIDDHfdUhbKkX58bZL1RM/Ud/A7YSwnAU4LOO+sawZ2vRb8nfcPjxtYhrHm8ezcZhRoQrsSMN/eXSw4d3oRXE8RvrpIh2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=aavujSDv; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="EiBjB8yy"
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="aavujSDv"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=loNjfzD7XzJZlNyz06pFRAe4/by1nmcVqFTo0T/668M=; b=EiBjB8yyvkjbKlfy0T/WxsBpVH
-	P2fFIMONF6CER2gN2XsSPgmmsbSiEHzHA6/L2yH3Fzec93SSnctR0UKZxQEMXHKnbSv8jhHbgm3i/
-	khlUertmOOcxMSGWcUlsu+mqPhcwnLnl106BMSJqhn7FcdAReNRgss9qXclKZ2TQijQ13hy5QNR4c
-	/hUz1pOFslQFzkZ3DqWxRgQPZs/hqvuufI9i5SCT8jSp5WFrsJM/FYuzV+Nsp5Fa9AzAjutaPknbl
-	LinYcJgq2bOqtjiQiE0RWO1wg4Gdesg+dhSHokdKbjDPfX4nXB/Uur/kawBP07wCTidEe3nIfvPKZ
-	pFyWATOA==;
+	bh=NcJGNvpYM/m232+NdkLo68s3KFMPsC8oEvT7xb+EEOU=; b=aavujSDvxMjZJu66LpLkd3ZZTc
+	1dUYrdjUPI0GOSgTqa2H47/ulT/23zfzJbxHEoeTt8b3ubYhAaePvzjFMi4yVyJ3cYJ1Q7hw20NLg
+	4wlYDmg0TFs84Ikox3/18Y1QuQdgdjpzWpgrqBPXeQtuJR530dnbNyPr5kzLT3QE+JOHMEzAtbB2e
+	Zvh5X/2Ka01+Mg+Bs9+P0N6DW+6kgF6V5p2+1zI45xTxKOnPxpq07BD3RM5pPe5qrp21J0y5+Oedf
+	XmWVai68a6LrjBMS9y5k+SN/x5dGghoLmLoRfxV2/zn6Ldzl+wiuhBSoEJVfP1QBpOZvW4th/rvBJ
+	aju25naQ==;
 Received: from [89.212.21.243] (port=36562 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u7BIz-008kyr-25;
+	id 1u7BIz-008kyr-1o;
 	Tue, 22 Apr 2025 12:56:45 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
@@ -47,12 +46,10 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v4 01/15] arm64: dts: freescale: imx93-phycore-som: Add PMIC support
-Date: Tue, 22 Apr 2025 12:56:30 +0200
-Message-Id: <20250422105644.2725168-2-primoz.fiser@norik.com>
+Subject: [PATCH v4 00/15] Update PHYTEC i.MX93 DTS
+Date: Tue, 22 Apr 2025 12:56:29 +0200
+Message-Id: <20250422105644.2725168-1-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422105644.2725168-1-primoz.fiser@norik.com>
-References: <20250422105644.2725168-1-primoz.fiser@norik.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,134 +68,97 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-PMIC driver for PCA9451A used on phyCORE-i.MX93 SOM is available since
-commit 5edeb7d31262 ("regulator: pca9450: add pca9451a support"). Add
-support for it in the SOM device-tree.
+Update i.MX93 device-tree sources in mainline for phyCORE-i.MX93 SoM and
+phyBOARD-Segin-i.MX93 board with changes from the downstream kernel.
 
-Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
+New SoM features:
+ - PMIC support
+ - EEPROM support
+ - enhanced eMMC support
+ - fix eMMC for ERR052021
+
+New board features:
+ - RTC support
+ - CAN support
+ - USB support
+ - I2S audio support
+ - 2nd Ethernet (EQOS interface)
+ - enhanced SD-card support
+ - fix SD-card for ERR052021
+
+Link to v3: https://lore.kernel.org/all/20250418063104.2202085-1-primoz.fiser@norik.com/
+
 Changes in v4:
+
+Patch #1:
 - no changes
 
- .../boot/dts/freescale/imx93-phycore-som.dtsi | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
+Patch #2:
+- no changes
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 88c2657b50e6..507a71f9294b 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -72,6 +72,90 @@ ethphy1: ethernet-phy@1 {
- 	};
- };
- 
-+/* I2C3 */
-+&lpi2c3 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpi2c3>;
-+	status = "okay";
-+
-+	pmic@25 {
-+		compatible = "nxp,pca9451a";
-+		reg = <0x25>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
-+
-+		regulators {
-+			buck1: BUCK1 {
-+				regulator-name = "VDD_SOC";
-+				regulator-min-microvolt = <610000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <3125>;
-+			};
-+
-+			buck2: BUCK2 {
-+				regulator-name = "VDDQ_0V6";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <600000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck4: BUCK4 {
-+				regulator-name = "VDD_3V3_BUCK";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck5: BUCK5 {
-+				regulator-name = "VDD_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck6: BUCK6 {
-+				regulator-name = "VDD_1V1";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo1: LDO1 {
-+				regulator-name = "PMIC_SNVS_1V8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo4: LDO4 {
-+				regulator-name = "VDD_0V8";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo5: LDO5 {
-+				regulator-name = "NVCC_SD2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- /* eMMC */
- &usdhc1 {
- 	pinctrl-names = "default";
-@@ -108,6 +192,19 @@ MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
- 		>;
- 	};
- 
-+	pinctrl_lpi2c3: lpi2c3grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO28__LPI2C3_SDA		0x40000b9e
-+			MX93_PAD_GPIO_IO29__LPI2C3_SCL		0x40000b9e
-+		>;
-+	};
-+
-+	pinctrl_pmic: pmicgrp {
-+		fsl,pins = <
-+			MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
-+		>;
-+	};
-+
- 	pinctrl_usdhc1: usdhc1grp {
- 		fsl,pins = <
- 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
+Patch #3:
+- fix commit message (s/pull-down/pull-up)
+
+Patch #4:
+- no changes
+
+Patch #5:
+- no changes
+
+Patch #6:
+- no changes
+
+Patch #7:
+- no changes
+
+Patch #8:
+- no changes
+
+Patch #9:
+- no changes
+
+Patch #10:
+- no changes
+
+Patch #11:
+- no changes
+
+Patch #12:
+- no changes
+
+Patch #13:
+- no changes
+
+Patch #14:
+- no changes
+
+Patch #15:
+- no changes
+
+
+Primoz Fiser (15):
+  arm64: dts: freescale: imx93-phycore-som: Add PMIC support
+  arm64: dts: freescale: imx93-phycore-som: Add EEPROM support
+  arm64: dts: freescale: imx93-phycore-som: Disable LED pull-up
+  arm64: dts: freescale: imx93-phycore-som: Enhance eMMC pinctrl
+  arm64: dts: freescale: imx93-phycore-som: Add eMMC no-1-8-v by default
+  arm64: dts: freescale: imx93-phyboard-segin: Drop eMMC no-1-8-v flag
+  arm64: dts: freescale: imx93-phyboard-segin: Disable SD-card
+    write-protect
+  arm64: dts: freescale: imx93-phyboard-segin: Fix SD-card pinctrl
+  arm64: dts: freescale: imx93-phyboard-segin: Set CMD/DATA SION bit to
+    fix ERR052021
+  arm64: dts: freescale: imx93-phyboard-segin: Add RTC support
+  arm64: dts: freescale: imx93-phyboard-segin: Add CAN support
+  arm64: dts: freescale: imx93-phyboard-segin: Add USB support
+  arm64: dts: freescale: imx93-phyboard-segin: Add I2S audio
+  arm64: dts: freescale: imx93-phyboard-segin: Add EQOS Ethernet
+  arm64: dts: freescale: imx93-phyboard-segin: Order node alphabetically
+
+ .../dts/freescale/imx93-phyboard-segin.dts    | 243 ++++++++++++++++--
+ .../boot/dts/freescale/imx93-phycore-som.dtsi | 165 +++++++++++-
+ 2 files changed, 369 insertions(+), 39 deletions(-)
+
 -- 
 2.34.1
 
