@@ -1,134 +1,115 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D257EC5;
-	Tue, 22 Apr 2025 16:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7B5EC5;
+	Tue, 22 Apr 2025 16:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340353; cv=none; b=scPePaC6B8wjp/xksPjPgjcDch23QFlw8opvBkRb/Mu4JiZCW8haErdyZbKBLBNThNMxhdzNPs9KQKezx5O2yBlmRtj7UI4WOSph4nzHihfNayW5k6/U4lEgJC1ow/jbXiGUveWdOBLH5ssOjc7WjTswyYY5xDR7y/Fvm9daxrc=
+	t=1745340398; cv=none; b=QtND8avdLlA1P0nVoidDBJ59orjbTVBhR5JWMjZ+mpI9cO0vm5twuq5e67g/qi8oQxiNrGo9sYm34vWqy+8j4SDOx43s9zvs256aqf95qWqXrQ/O4lcmO2OFmoEakCr8qCGbyplaZGMZkYnAs+2ycdAFIMxr47J0y/ME0oTJwdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340353; c=relaxed/simple;
-	bh=6hYFaE0m5yq67AEq3oB4W81H+aPi7P48NCUcd4RgVGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=G9dfPrajQt6p59ld5Nv2zHhF6QabgYyOcLnaIuf2twQu9RNV3IagSyGUtea+7HMT4jUyweM3e++HEVMyurp+vqijJnbWJXgucyb978zBV7Upz6EkmIfjyrsE9jC9YSTbPaBgItqJhGCOgnDUscwzJtMIUU5SUsFd5dsDLg2Pzs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yk++wuDg; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yk++wuDg"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MGjgEr1280827
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 11:45:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745340342;
-	bh=TR1wne2z6M0V0X3ccLc0XGsWg0Ga+NHut6t6xs/k11A=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=yk++wuDgc5NBWyPrVnhcZUtVuEVBFYBQlwWw3MNmpaKKwn2N7Zrv5O7vl7RlE6hr5
-	 /KIbE9x/daMdN/EJ0ixKVIpZ4qEnc5Lvq3l41PErThzBo2vO09/L+lBoLykzGBJ+de
-	 /zCu/wuGvbl6vP6GYaFZRBjPUelBK6u01vTSLoqI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MGjgWE078413
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 11:45:42 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Apr 2025 11:45:42 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Apr 2025 11:45:42 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MGjfx6051531;
-	Tue, 22 Apr 2025 11:45:41 -0500
-Message-ID: <39ead65c-0040-4a22-9cdc-081696b3d967@ti.com>
-Date: Tue, 22 Apr 2025 11:45:41 -0500
+	s=arc-20240116; t=1745340398; c=relaxed/simple;
+	bh=APY464O4qEktr3qLUXmra9T6Ngn9Z0W6MxO6bYmyA8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rCOi6u6qqIC6XsKXoAfE+JKiLZlphhoSG8lSfTyguLozAbyO76ZvIE2O0jFHRmEAYfN9iH0xQQtxriU1gh92qH24mK45bFZBabrkOMTIUYfd1b286kACmte71Yf01KwIEvsTD8CZf/uYbo51ASxYMqJi9Km2RatDhnbm3gJyCP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: lAR9fY7oTOewj91sitGvyg==
+X-CSE-MsgGUID: XqLKaA8dRNO0z+L7zLPLfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57569423"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="57569423"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:46:34 -0700
+X-CSE-ConnectionGUID: iR7O+dteTAO3FgIgZ51IbQ==
+X-CSE-MsgGUID: 9/cf9DuxSlit+M+ugccYJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="155266018"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:46:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u7GlQ-0000000EmZO-3qDQ;
+	Tue, 22 Apr 2025 19:46:28 +0300
+Date: Tue, 22 Apr 2025 19:46:28 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Kim Seer Paller <kimseer.paller@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+Message-ID: <aAfH5IiVBLLE95ct@smile.fi.intel.com>
+References: <20250421-togreg-v5-0-94341574240f@analog.com>
+ <20250421-togreg-v5-3-94341574240f@analog.com>
+ <aAexmOU1e-7hXq6Y@smile.fi.intel.com>
+ <efec7563-9591-4539-a154-bf486d35df0e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: syscon: Add ti,am62-ddr-pmctrl
-To: David Lechner <dlechner@baylibre.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Markus Schneider-Pargmann
-	<msp@baylibre.com>
-CC: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Siddharth
- Vadapalli <s-vadapalli@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20250122-topic-am62-dt-syscon-v6-13-v1-0-515d56edc35e@baylibre.com>
- <20250122-topic-am62-dt-syscon-v6-13-v1-2-515d56edc35e@baylibre.com>
- <20250124-heavy-jaybird-of-vitality-4cbe24@krzk-bin>
- <20250124-able-beagle-of-prowess-f5eb7a@krzk-bin>
- <mocfnpebc67xegcis6tx3ekhsjcsqnvhwtipufycrtq2be4nbh@pmxhir5gmkos>
- <639b4e3a-3f68-4fba-aa33-c46dcb6fc88f@linaro.org>
- <d6252b73-0bcc-4724-8144-d6a98c8980f8@ti.com>
- <74ee6d9b-fd78-4d8a-a94f-b2c4dc794b60@linaro.org>
- <ebsbaaxyatrcikoem75t2blkhhceuidq3wnj3r2hbezfcmtc3u@ptffexrigbff>
- <f9a2247e-e0eb-4e22-8626-80e87afa9386@linaro.org>
- <qjwlppsq4eorzepvjsgjjyyaddouo5w2rjguu5c2mqesd6luwp@f426xeghy2ht>
- <2130b439-74d0-475d-8429-1a1b4d9738aa@linaro.org>
- <b7f6570f-3b80-4fc1-8201-d44f5692867f@ti.com>
- <07bf9f93-deb8-48a1-aae9-a8a053680cc9@linaro.org>
- <6241ff00-27e6-45ab-808e-f04e39854753@ti.com>
- <8fe546e7-4fbc-4c63-ad0f-576ffb117508@baylibre.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <8fe546e7-4fbc-4c63-ad0f-576ffb117508@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <efec7563-9591-4539-a154-bf486d35df0e@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 4/22/25 11:12 AM, David Lechner wrote:
-> On 4/21/25 12:03 PM, Andrew Davis wrote:
+On Tue, Apr 22, 2025 at 11:37:06AM -0500, David Lechner wrote:
+> On 4/22/25 10:11 AM, Andy Shevchenko wrote:
+> > On Mon, Apr 21, 2025 at 12:24:54PM +0800, Kim Seer Paller wrote:
+
+...
+
+> >> +#define AD3530R_INTERNAL_VREF_MV		2500
+> > 
+> > _mV (yes, with Volts and Amperes we use proper spelling).
 > 
-> ...
+> When did we start doing that? No one asked me to do this in any of the new
+> drivers I did in the last year, so I didn't know this was a thing we should
+> be doing.
+
+I remember a discussion for one driver a year or so ago. But I can't find
+quickly a reference. The rationale is to be as closer as possible to real
+world (physics). And, for instance, regulator framework does that already.
+It's a pity not many people aware...
+
+...
+
+> >> +static const char * const ad3530r_powerdown_modes[] = {
+> >> +	"1kohm_to_gnd",
+> > 
+> > kOhm
+> > 
+> >> +	"7.7kohm_to_gnd",
+> > 
+> > Ditto.
+> > 
+> >> +	"32kohm_to_gnd",
+> > 
+> > Ditto.
 > 
->> Which parent device? That is my point, if the top level node for the
->> whole CTRL_MMR region is made into one big syscon, then a big regmap
->> is made that covers the whole region. All the child devices also make
->> regmaps covering their device range. Now these registers under the child
->> device belong to two different regmaps. No synchronization is done as
->> these are not the same regmap, regmap only handles this for multiple
->> access to registers within the same regmap.
->>
-> 
-> Why does the child device have to create a new/separate regmap? Can it not use
-> something like syscon_regmap_lookup_by_phandle_args() to get the regmap from
-> the "syscon" node along with 1 or more args specifying the one or few registers
-> out of the full range that are assigned to that specific child node? This way,
-> all child nodes would be using the same shared regmap.
-> 
-> (And yes, I know technically they don't need to be child nodes - just using that
-> terminology to be consistent with the previous discussion.)
+> These are defined by sysfs ABI, so can't be changed otherwise it would break
+> userspace.
 
-Yes, this can be done, and is done for a couple drivers today. The issue is most
-drivers do not expect to be a child node of a syscon nor fetch a regmap with
-syscon_regmap_lookup_*() functions. The vast majority drivers do the normal thing,
-which is platform_get_resource() and similar, that gets the memory from the standard
-"reg" property inside their own node.
+Ah, okay then.
 
-We have then two options, retrofit all the existing drivers we might use with
-support for fetching syscon regmaps (some drivers do not use regmap in the
-first place, so we would also have to add regmap support first). Or we do what
-we are doing here, which is to have these devices not use overlapping register
-regions (which has the minor side effect of sometimes causing some nodes to
-cover only small range of registers, which seems to be a problem?).
+> Comes from...
+> What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_powerdown_mode
 
-We went for the latter option, and it has been working fine for all our
-new devices. And we are fixing the same for some of our older devices, we
-are actually almost done with that too (if we could get this patch and maybe
-two others in we would be completely converted).
+> >> +};
 
-Andrew
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
