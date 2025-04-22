@@ -1,72 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A007227C875
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEE12900A9
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340554; cv=none; b=IzjMLrAdTmDv8Ck8Gwt8we3fqLxnbcBUzOnvdX883W0K8WpS+hpDTmVHsxURWzy6RAp+yashtXAk3rbMrAeYnfBo14LXoxbZFRroQ0RVl5vnlEbECb2FZ+dyKoXi/foirbMmAV1zlHsqjWj4w+omjpkhgF7W9nIlk+dO9iC1X/Y=
+	t=1745340562; cv=none; b=KKv/VWXzYdco1j+CUa9K7A4AAj1gDa2epuz8yo7OE1jnLdnPYG5kkf4BVd3HxXbj7R0MUrpSD3uNEUZwRAfjRy0ewlzWjbS/+0BmjjNoCtCC7n3PngFfmEfUe4tnOtOsLhpWVXeX3LJoeQ1xH5WOPxe5pv2rxAzeRqFqpkpZMOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340554; c=relaxed/simple;
-	bh=OnwSNDn64S8aCsL+BPdxyk1KPcCrvENt7q1PLD17rCQ=;
+	s=arc-20240116; t=1745340562; c=relaxed/simple;
+	bh=1zm/ifLFoyueirmbO4F+dQ+4rpCflNI54FJ6BvufTFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ny1QtYl4FP5/0U+EE3rinaAgblel4hXy4hbfhy59vRMjtAzQzVq/9Mwh+yJd1Z1yg06x4IOcBWYpSNcKtNEWt2PbyWswJqJrx4/bkCZNs5RBDTQ5gmJ9V+jKDdRKvZ+dNF0p2w2BQd1/7rVKSGfxTip/dNNcvzOKqzHXWRiVAwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FZD6OZhB; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=MRKM4K9wlM8ia7UKTbyTLhwdxV5rc74ZCifNcebJn4QqVycClSgciQCsFOSkSIar5nDIKxW93OzsUyuyv1O54mNecmmBCApaaPt3RJ+J/hCXL+bWgBabRi4KA4jGvX9Fg0NADSZ5ipQOBVJ4/8Wx2080NgfkNxqm5xhHX341tog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WmOnqjPG; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZD6OZhB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmOnqjPG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745340551;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	s=mimecast20190719; t=1745340560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zrsd/3p7dvdW/2Y1idz3MOxsrZjO4oXnRPdIb4aDyus=;
-	b=FZD6OZhB6PUKbnyJ8Sx/oQhiW4OJcg0RhWK3eQOao1iVUbGsj2hVgcoshj0ExRBOUNM5iQ
-	ocBZ58GRZNSXSnXhTamL2hhEF+769icgcV+0CPAPSxIkwKBvUpLiRfTaleagwe3H2UdDD9
-	NjnakHJ+x/5cjMoZJh+i49IaaqJo2co=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=lHSkROXmhzxaxiTJB2Sts+hoXg6Enh4N97MVVPj8jow=;
+	b=WmOnqjPGVzWbnJPowlkSPUgG6iyBsT77pl4jPU9QSdEHvrX2wSmvfejG11qdxsMvzm9tRL
+	1mSmTcECkPRpQc+nt+84YfnGem+Gdy7KcqR+sDvVZ97mmF8LvzpPhEjQmLrNdg/vkbJmoC
+	FpWbORfBy2vku7/bYfcj5/pnPqyMR0A=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-133-JQL8dQJKMAaCpkBTRa1VYg-1; Tue, 22 Apr 2025 12:49:09 -0400
-X-MC-Unique: JQL8dQJKMAaCpkBTRa1VYg-1
-X-Mimecast-MFC-AGG-ID: JQL8dQJKMAaCpkBTRa1VYg_1745340548
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43f405810b4so30110755e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:49:09 -0700 (PDT)
+ us-mta-418-z6nNMH2sOyaXRRNHOt8DpA-1; Tue, 22 Apr 2025 12:49:18 -0400
+X-MC-Unique: z6nNMH2sOyaXRRNHOt8DpA-1
+X-Mimecast-MFC-AGG-ID: z6nNMH2sOyaXRRNHOt8DpA_1745340557
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913aaf1e32so2442064f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:49:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745340548; x=1745945348;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zrsd/3p7dvdW/2Y1idz3MOxsrZjO4oXnRPdIb4aDyus=;
-        b=j++ulQDYdLee8+pfNTRd+cPedhfEb7UET7Ajjaa4+guSCRa+SixOVyX26lYUgkoJCN
-         W5J1x2EAH3sKplmTZAzYUm5nowo4WWGZqfU5snKmd2eO8VmbSO7ax6qmEFZQnERVwtz5
-         b8zz+WUynDS5lyne/N3+w37h9OI06Ig8/VrTzb/VFk85JhrG+m/p5iWZamPTtHQWTHWH
-         lDN/Jj8k82GJ8r2llYrpOloLRtyrlT7ozE2QOd/SgP5rg8SSftd54JXJ7CWdN2/hmGhi
-         qAgp+SdjoveJ3ECyFlII6cg700X94PcwG+LXjXmY/JF6jYPUbuDfyFwHRh2+5ebmOcbj
-         NOmg==
-X-Gm-Message-State: AOJu0YzzjIJPSjXSHgk8PK5s+dZlE/nW9ZaU3D4ppMAhNqu0rnu469/C
-	QGRifBp538oCV75tS82XQqQMFblHN84vr7qhaVMYdUQvWN563cWGC5m/3c9bOXShdPTMUEishTf
-	GU3jYuxtDPE210cbKWzqgp27Ox3WIB2//lzyJpYmqgxdGgE3rRrTlIA+i226avg==
-X-Gm-Gg: ASbGncsGfzHE5E4vj+N6dNtsWnqY3PFTCWhmYLSBV23ZrTihC7RQcLsyjfbqm7ITC84
-	0yRfeTL476lqpjMjVXij26IMg3Uo2ndD3pz4nshYjMtMQuesTf3Wr5ca3CNo8JGJRc5dJ9o62LU
-	9amF691I6vzBEjS7YYSIDY9fDmTOSJTVlMIwA7rOjEokfRLXRYFHg4GF/Wc5Okwpp8afo4cvb5u
-	dpLK0fV/YUQrfV0AkHMXD/tRBFv6z4WRBqOcWjSnlEoGqmhrJ996UDN1R59fHHya8ERe5qCReng
-	GYA+Qmi2JJto4kU2UYKQJpyjiWNVbH8z4AHl2aWHKH/PWunu9dhyWghu4bc=
-X-Received: by 2002:a05:600c:1906:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-4406ac11581mr132427895e9.33.1745340548367;
-        Tue, 22 Apr 2025 09:49:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEL0BTg1501d7TjC/8u5Gc8ZzZQofR/EdbhGN5AMF4Ozt8Ub8BwgAm98X6mqgEsGUZkPjE5Lw==
-X-Received: by 2002:a05:600c:1906:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-4406ac11581mr132427685e9.33.1745340547956;
-        Tue, 22 Apr 2025 09:49:07 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5ace47sm178502985e9.15.2025.04.22.09.49.06
+        d=1e100.net; s=20230601; t=1745340557; x=1745945357;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lHSkROXmhzxaxiTJB2Sts+hoXg6Enh4N97MVVPj8jow=;
+        b=voqKBPnHOT3TcfD0klFkhqtjdSPsO7IHAIheebBBJNJ3/XLs0+4l669xf01fumM08S
+         1V/N+ZBrwXE73HdxU5Ti4sYtRY/RQ7lLb1OatfT6W1K2CNxT6gqGMI09ckSbzIHY9jNw
+         8n24MhghU4gEFh4bPh5x/RqcGilD0k/p7qCVOrUy37pJ8W0sH1FWwVDIEgXGZiZTm5f5
+         5tXMPVtRmOgHBX5i7VbZO0JSxzzLQbnPQKkVK7fcol3mkU269BF/q4ISfvt4eQfybhIF
+         JeFQlroePogdv/yq6j/4uxq7jBFgRku35xn/3Qon0T+Jijyp5WM0Djxadjd6CDXYDJEA
+         q5CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVse6k+BHlkud8D7I2cwYsunlv7HncZmPZU7VdD76iWHvZPGE3T6VMxDUKmq9AJk/ijHfsROvpAEqfAPww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJmzZtOGatnyT4lbJBAX3t8+aJh+zXofq7fY6GfoeFozrR2gze
+	Xw8am9C3YwMFkOqn7S4YZjs1v+zumjhj+UhVqD+sy4qT0+ppLHitOPD4oBztDEgHBkywGcGUTAP
+	c4JJXqhGzbeL5fEOqCbzJQWL/DFba8Lj1zE8gu8vrNbhvUI008mQT0TpBQZ+BWQ==
+X-Gm-Gg: ASbGncsylyJvPIZqAErwOK5o1DQ7qDH1WjtjrilsQTcv6NpLagyIm9w4468uJwRY5jF
+	h6E8ezyN6WJK40uDfg4N/2gS4rqZMgBfzQenF8x7GIN9vfEs4uf0NslK5hv0KOuwfASGfSiX0ru
+	nxZImMo4gAswGnN47DnW3umZ2D1jOdxLnPyMXNthUC8wHSQuSyQE1PknCUHQi/edlq5m3oKjFkz
+	uXDCTIwOqudtK1biAE7w2cKSTvedcJs+nXnpMaxAjfNZhXSHFCGTGMbVYIr2QvKUdOzx83Isc5A
+	zedRs3pjAuzbiNM1uf59l1cG76T0Q6Teesk6qN1V
+X-Received: by 2002:a05:6000:381:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-39efbad7f42mr14397226f8f.47.1745340557497;
+        Tue, 22 Apr 2025 09:49:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDoEgp+mnqvCe0AHRP0Rn4FhZOt0+ug+zdFUDxNDueLDOx4k3ra4nj9Co+7VRKKBDx5ofTWw==
+X-Received: by 2002:a05:6000:381:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-39efbad7f42mr14397208f8f.47.1745340557066;
+        Tue, 22 Apr 2025 09:49:17 -0700 (PDT)
+Received: from [192.168.3.141] (p5b0c62cd.dip0.t-ipconnect.de. [91.12.98.205])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4330bfsm15769041f8f.23.2025.04.22.09.49.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 09:49:07 -0700 (PDT)
-Message-ID: <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
-Date: Tue, 22 Apr 2025 18:49:04 +0200
+        Tue, 22 Apr 2025 09:49:16 -0700 (PDT)
+Message-ID: <1bee5078-5cc4-43b7-993c-f1e57a9bf534@redhat.com>
+Date: Tue, 22 Apr 2025 18:49:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,97 +74,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: eric.auger@redhat.com
-Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
-To: Gerd Hoffmann <kraxel@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Eric Auger <eauger@redhat.com>,
- Jocelyn Falempe <jfalempe@redhat.com>, David Airlie <airlied@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, dri-devel@lists.freedesktop.org,
- virtualization@lists.linux.dev
-References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
- <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
- <20250415095922-mutt-send-email-mst@kernel.org>
- <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+Subject: Re: [PATCH RFC v7 3/8] security: Export
+ security_inode_init_security_anon for KVM guest_memfd
+To: Shivank Garg <shivankg@amd.com>, Paul Moore <paul@paul-moore.com>
+Cc: seanjc@google.com, vbabka@suse.cz, willy@infradead.org,
+ akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com,
+ ackerleytng@google.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz,
+ bfoster@redhat.com, tabba@google.com, vannapurve@google.com,
+ chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com,
+ yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
+ michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com,
+ peterx@redhat.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-coco@lists.linux.dev
+References: <20250408112402.181574-1-shivankg@amd.com>
+ <20250408112402.181574-4-shivankg@amd.com>
+ <CAHC9VhRFBOC=cZB+Dm00cshwBSBaK6amv+=XFLPF0Bub0gHN+Q@mail.gmail.com>
+ <b98f7b78-1834-4fa0-b79c-d5ac562e4809@amd.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Eric Auger <eric.auger@redhat.com>
-In-Reply-To: <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b98f7b78-1834-4fa0-b79c-d5ac562e4809@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Gerd, Michael,
-
-On 4/16/25 3:57 PM, Gerd Hoffmann wrote:
-> On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
->> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
->>>   Hi,
+On 11.04.25 08:07, Shivank Garg wrote:
+> Hi Paul,
+> 
+> On 4/10/2025 1:49 AM, Paul Moore wrote:
+>> On Tue, Apr 8, 2025 at 7:25 AM Shivank Garg <shivankg@amd.com> wrote:
 >>>
->>>> +static void virtio_gpu_shutdown(struct virtio_device *vdev)
->>>> +{
->>>> +	/*
->>>> +	 * drm does its own synchronization on shutdown.
->>>> +	 * Do nothing here, opt out of device reset.
->>>> +	 */
->>> I think a call to 'drm_dev_unplug()' is what you need here.
+>>> KVM guest_memfd is implementing its own inodes to store metadata for
+>>> backing memory using a custom filesystem. This requires the ability to
+>>> initialize anonymous inode using security_inode_init_security_anon().
 >>>
->>> take care,
->>>   Gerd
->> My patch reverts the behaviour back to what it was, so pls go
->> ahead and send a patch on top? I won't be able to explain
->> what it does and why it's needed.
-> See below.  Untested.
->
-> Eric, can you give this a spin?
->
-> thanks,
->   Gerd
->
-> ----------------------- cut here -------------------------------
-> From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
-> From: Gerd Hoffmann <kraxel@redhat.com>
-> Date: Wed, 16 Apr 2025 15:53:04 +0200
-> Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
->
-> Calling drm_dev_unplug() is the drm way to say the device
-> is gone and can not be accessed any more.
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> index e32e680c7197..71c6ccad4b99 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
->  
->  static void virtio_gpu_shutdown(struct virtio_device *vdev)
->  {
-> -	/*
-> -	 * drm does its own synchronization on shutdown.
-> -	 * Do nothing here, opt out of device reset.
-> -	 */
-> +	struct drm_device *dev = vdev->priv;
-> +
-> +	/* stop talking to the device */
-> +	drm_dev_unplug(dev);
-I have tested this patch on top of Michael's v2 and I don't see any
-splat on guest.
+>>> As guest_memfd currently resides in the KVM module, we need to export this
+>>> symbol for use outside the core kernel. In the future, guest_memfd might be
+>>> moved to core-mm, at which point the symbols no longer would have to be
+>>> exported. When/if that happens is still unclear.
+>>
+>> Can you help me understand the timing just a bit more ... do you
+>> expect the move to the core MM code to happen during the lifetime of
+>> this patchset, or is it just some hand-wavy "future date"?  No worries
+>> either way, just trying to understand things a bit better.
+> 
+> I am not sure about it, any ideas David?
 
-Feel free to add my
+Sorry for the late reply.
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Tested-by: Eric Auger <eric.auger@redhat.com>
+Hand-wavy future date after this series. Elliot was working on this, but 
+IIRC he now has a new job and might no longer be able to work on this.
 
-Thanks
+Ackerley+Patrick started looking into this, and will likely require it 
+for other guest_memfd features (hugetlb support, directmap removal).
 
-Eric
->  }
->  
->  static void virtio_gpu_config_changed(struct virtio_device *vdev)
+-- 
+Cheers,
+
+David / dhildenb
 
