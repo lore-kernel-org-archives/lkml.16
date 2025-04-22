@@ -1,78 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC4E239085;
-	Tue, 22 Apr 2025 08:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC88B25484B;
+	Tue, 22 Apr 2025 08:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745311418; cv=none; b=I8cA5HqzCOrt6qVY8Ib9m0ccMgVlp/axZix+oA3OZKNyRK63At25UjKpxhrXspKMqrTxYI7kJDe1mJBy1lPQklNYhsg6QAyBkCEosmkKgwvpSmW1YaPa69tuz+L7T0joZ3SaO/WPzzNsKltPauwez22+dUbMJRhpaPpUAw6kiYU=
+	t=1745311430; cv=none; b=J0XMcc5lF91/pdZ/p1ktccdc0ZW+Il3gilUwZd9g7qJY5j9RE6w/jB5J7Z6RQn4LtyR77mcWvGEnUJV/Y1ZYR+5RC99QOmd0RqraR7GDeCmw7trgUPmxv8DGDfi3zixlaFuFgd4NGTyExiNqgc8Hx8tB+Y6W0BnQ5tyOZOtV73g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745311418; c=relaxed/simple;
-	bh=trUwxgkbYocqWQI6MfdxJtzi88omtDraXrFFZ8EFGnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=onVwZqjSMcHeIckO16C2RX9oeApmG8+UzmUkwZWVQJ+SaPEYW4WwvafS9nXg0cc6/TZwwYuZie9C6SJEg3cDm2dlbsAtaXJAoAMVS04THrM701IdmZpb14g6opaWUV1F0ApYAsca5GWifZbNOFR5hZ0LIJWmSA3DCtkTA+IsNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChdFVkhz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChdFVkhz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5AA7C4CEE9;
-	Tue, 22 Apr 2025 08:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745311417;
-	bh=trUwxgkbYocqWQI6MfdxJtzi88omtDraXrFFZ8EFGnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ChdFVkhzjsXHdkBGYH4gMHe7OCaIptwGjHtQ3BjfZtrrvBmdk91tVrY0tjAxc120c
-	 B7NYiXVNUg6vHjy0Y5LpbI920NOG1XmK7QjkCdTPglkIDgHnDM4XjEBazVRdyHSe7T
-	 zB3NvgKudujC6wvkmgZsdLHTE6YUJqDSHacYqX7uwsvV8Z2X0UOoUQxPS9oyDIb5bu
-	 afpup07WhhdxQp86PDvOU/Ro4N6EQAJZFfTVzS3KsbuY91/xyY1OUgNwauevrYiRuy
-	 d/buaizv/dU77jat3O8Z470nSCkHm1lixgik2Coa5rYdHy5i0DE01DFqsFzmYxtMUY
-	 FjN/ZWIut0prw==
-Date: Tue, 22 Apr 2025 10:43:34 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Maya Matuszczyk <maccraft123mc@gmail.com>, 
-	Anthony Ruhier <aruhier@mailbox.org>, Dmitry Baryshkov <lumag@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 5/7] dt-bindings: opp: Add v2-qcom-adreno vendor
- bindings
-Message-ID: <20250422-beneficial-fractal-otter-ebd1d2@kuoka>
-References: <20250419-gpu-acd-v5-0-8dbab23569e0@quicinc.com>
- <20250419-gpu-acd-v5-5-8dbab23569e0@quicinc.com>
+	s=arc-20240116; t=1745311430; c=relaxed/simple;
+	bh=EPHAOCCWk1kaNOr2IaOVS495Z+fsXkQKa4h2obKYMEI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mBLOwz7DzL59UTfISMeVKlTerdVVO2rPF1eK5L/2e0trl03vMXq265i4nlMLMiz/tMN6RYzKMT6T1XI53r6t7SS4ZtUAJSDuanLnYgvWq+GTUbi7AxBz30BB/0CPOaK6dgsWUTwwClnYIHBA3bfEb3u9QS+8R2ydKRX6Kp1QHG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZhbMD41l0z6F9CR;
+	Tue, 22 Apr 2025 16:42:00 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 38866140518;
+	Tue, 22 Apr 2025 16:43:40 +0800 (CST)
+Received: from a2303103017.china.huawei.com (10.47.65.221) by
+ frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 22 Apr 2025 10:43:39 +0200
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: <devicetree-spec@vger.kernel.org>
+CC: <robh@kernel.org>, <mark.rutland@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<linuxarm@huawei.com>
+Subject: [PATCH v1 0/5] DT: Enable sharing resources for SMT threads
+Date: Tue, 22 Apr 2025 09:43:35 +0100
+Message-ID: <20250422084340.457-1-alireza.sanaee@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250419-gpu-acd-v5-5-8dbab23569e0@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-On Sat, Apr 19, 2025 at 08:21:34PM GMT, Akhil P Oommen wrote:
-> Add a new schema which extends opp-v2 to support a new vendor specific
-> property required for Adreno GPUs found in Qualcomm's SoCs. The new
-> property called "qcom,opp-acd-level" carries a u32 value recommended
-> for each opp needs to be shared to GMU during runtime.
-> 
-> Also, update MAINTAINERS file include the new opp-v2-qcom-adreno.yaml.
-> 
-> Cc: Rob Clark <robdclark@gmail.com>
-> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-> Tested-by: Maya Matuszczyk <maccraft123mc@gmail.com>
-> Tested-by: Anthony Ruhier <aruhier@mailbox.org>
-> ---
->  .../bindings/opp/opp-v2-qcom-adreno.yaml           | 96 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 97 insertions(+)
+This patchset allows for sharing resources between SMT threads in the
+device tree (DT).
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+WHY? Given the current use of the DT, it is not possible to share L1
+caches, as well as other resources such as clock among SMT threads.
+However, DT spec in section Section 3.8.1 [1], describes how SMT threads
+can be described in the reg array, this is how PowerPC describes SMT
+threads in DT.
 
-Best regards,
-Krzysztof
+CHALLENGE: Given discussions with the community [2], it was apparent
+that it is not straightforward to implement this, since cpu-maps must
+point to a particular CPU node in DT [3], Section 2.1. However, it is
+not only the cpu-map but also there other nodes that point to cpu nodes
+which indeed need care and changes.
+
+SOLUTION: This led to more discussions on what the solution should look
+like and based on recent converstations we ended up with the following
+approach [4].
+
+core0 {
+  thread0 {
+    cpu = <&cpu0 0>;
+  };
+  thread1 {
+    cpu = <&cpu0 1>;
+  };
+};
+
+In this layout, first parameter is the phandle to cpu-node and second
+index would be the local-thread index in the reg array available in the
+cpu-node reg property. Further, when reading the property in the cpu-map
+we must know how many parameters phandle has in cpu property. Therefore,
+we optionally introduced "#cpu-cells" property to indicate the number of
+cells.
+
+[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.4/devicetree-specification-v0.4.pdf
+[2] https://lore.kernel.org/linux-arm-kernel/Z4FJZPRg75YIUR2l@J2N7QTR9R3/
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/cpu/cpu-topology.txt
+[4] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=D8K++mXHq0Rmv=1i6DL_jXyZwXAw@mail.gmail.com/
+
+Alireza Sanaee (5):
+  DT: add infra for finding CPU id from phandle.
+  arm64: of: handle multiple threads in ARM cpu node
+  driver/base/arch_topology: update CPU map to use the new API.
+  driver/hwtracing/coresight: Use of_cpu_phandle_to_id for grabbing CPU
+    id.
+  DT: of_cpu_phandle_to_id to support SMT threads
+
+ arch/arm64/kernel/smp.c                       | 74 ++++++++++---------
+ drivers/base/arch_topology.c                  | 12 +--
+ .../coresight/coresight-cti-platform.c        | 15 +---
+ .../hwtracing/coresight/coresight-platform.c  | 14 +---
+ drivers/of/cpu.c                              | 45 +++++++++++
+ include/linux/of.h                            |  3 +
+ 6 files changed, 100 insertions(+), 63 deletions(-)
+
+-- 
+2.43.0
 
