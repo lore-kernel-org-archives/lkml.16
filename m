@@ -1,100 +1,105 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFC71EBFE3
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E222C2569
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745361422; cv=none; b=oLFkxkLnd2S4T55H3YmPYcmLKkiHvtRF/NSTfhKFKqAULA+IUlkDTXKVog8dK9dubfSoBUd/QRF+xgDZvNGYUhyff9fhby2QlCdmpT4IUklC2OYY3lSvuxkE278H1FCjMCuxxYmZzNSxOi+5qRFdO+yRTDPV6OlbTRJo8+z9xhY=
+	t=1745361425; cv=none; b=VZF62E3k++UWFDJvkOvBKnQ3v8rffEWchGU0w6A7HUOyp049AZaqk6aOF7ZqU/JRd+9oyHJgtsyMLxklD/+9JK9ud7eg0T4feQ1UtEsMNo+BpM1heHqLD9v8W+7/uDegpd408n7AYUn1XNolELpA3OOVm+N9jqH1dTjt2Dv8Fog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745361422; c=relaxed/simple;
-	bh=CYnsLlC0NFMYuF8GmCOmo6AutxjaiqbjJEuB9kEX76M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HvZPdMmNZ1KxL92RuNmHYb1Yy1b3D1iRU9LmDV1SVsjvObuOqVRUz10S21GQ7O6HrpHmr9QRriZPfWZoaxLSj6XMy/TPV8cGXyYGw9MBcJC8aLrduXuWDMtFMXnSdKWUszvgdMYRhJQMt2/RS605IffhH5/07SE1x2fcLKejCmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tmjlLrnI; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745361425; c=relaxed/simple;
+	bh=edrSoU/7ttYT1N9uHXGev19DEKDxe8wPMLxCuvyp7cI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i3vvCoRgNLL8D8D0TiMs5RKJdvRJnnOdv1plzMqhHbaZ++povz54KkORZpphQcWkhLggwi24Be9YyyqKkocfHp0vV+FTktmV5hVc2bch5os3BZXMb0UIyi5ke/2zh+Zwkk0yohdAyOPAQVaN4Mjjj5hyDtf7ucVgGWfxgwGz1BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=abEdhaKY; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tmjlLrnI"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so50343781fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:37:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="abEdhaKY"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7300069c447so2451165a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745361419; x=1745966219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CYnsLlC0NFMYuF8GmCOmo6AutxjaiqbjJEuB9kEX76M=;
-        b=tmjlLrnIq4uoKAkzniiAutP3VY7kSpH6FYvuLQdz7LKnqNjDk6Seva+JawvD/Jh63t
-         Pf09R8uaiZsFR/tcF9DnVOehag+2l28WTwZb13kIWz6Je0/BabTqE+wH7kHP0ZpQrGuM
-         88GqGw3tA5DwOeERO9+e5K4sSVbjxSPYVJAXnV4ZGo1xk+uw0tWebCEfXZ7mpS2LWYz+
-         0tMwU3t9h1GHg4QhIV+t3XOjFWn7QH31TrNIpbgVyOkVdo2SoeYdED1hEv8TcTYsEUAV
-         fvw3YaYRG9K7YjNUOw6on2gclmo9Z1F71osZ6LnAbfXbXRLNhYhvk0zwdDrqCAjUnf83
-         j7HA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745361422; x=1745966222; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GFEryJTJrYlbNEPG6EOeE5cZYQCM6sOwjcE6fp5zhZc=;
+        b=abEdhaKYN1x8l05/su0heXu8/eMrKo1Q51fubhImCPcjYNYKVCFlalQdgjg+S4crHJ
+         N+EoOKIw2pTkhIb1TahbQKje0Z2VAO9c+iUE2UcvgFIx0sNOgVQfVyifnWFNxL4SCWcs
+         sSLNe389pAbedh5oG91N5ix8/tClR8gX+ITyeldn9g0FnwlqjdpA5dXSXx6mVJ9dyR9I
+         LtkwXnsq2BGiuoWVQ8X+LLnIMHM+AT8n+ieAK6UUEUCOPMlZxvQFBvlYXluhiY6eG7Nu
+         0oc7T6g9mNoRq6rz7r8yMynMpANuWG6sZPV2gtOWTVbqLiCe/wNhDdhR79Cjc/fBzm3r
+         I0RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745361419; x=1745966219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CYnsLlC0NFMYuF8GmCOmo6AutxjaiqbjJEuB9kEX76M=;
-        b=wdDxWRyNfX/LSCCdGERNUnjpuEW0N85CSBme+dUIEMgsMFDJNyHfCQcOrTwyhCGLxr
-         xnFwyUshO3YNFSFJhpj6aHY3E80thSqj9B3BVu8DouGE94ZtOcn0Czo//wu53tq0yQWF
-         ueHQz9pYGCqtSTwpYBgD9gi1q99MJM7ii9RaDFdRNktV7mPK+8TTPmrQZfr8OybqFBjg
-         B9l1IBdPL43EkZOGMhgvljljzXwYJCy+2mRRXX3koZgJnmp+Co5E6gjfFhL8xl/J78+j
-         APQD9KGp1BjDgdnoxEIm1eabO7eKtdAedOVaa78jWtt6t3tMVfRstnzYlsWBiFv0dlY1
-         O4eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0SDvekSsfpL80YhJli1EQ6gdZ4ZgYjXzrjIo+SNUcCAnRDdtgrESCRe2Q+uU59SLTx276tIovytdDdAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrDrH+1Gak6TvuJijZNBCPtitTpc6f65Ez4WukmPelvjN4ZIY4
-	dI/8rgKbyCTxEah7Wr0jZug3LnT4MC8zJshwR3eLzCdZBsIxks54VF0iWTA7gjNgAnMUdoOBFf/
-	DvQoM9xif8QxBJqWtDsTkC8JuE/JCD2+lF5o=
-X-Gm-Gg: ASbGncuFRN/OiHiCrgp0RPszFzxS0J7ewoW30xxmEhJnm5QWNRnUI9R+UJXqCsGhwUY
-	H3vGnq7N5ygeWLoszdjQEDctZhPrAfW2BRQT+c84F/IHW8mp1Fr7T1CHm1ro5NNtJ2z4rCX7zFX
-	Zrv6QcnlUMG/7WrD+nO4Fuq9eJwc1I3l3OGLSNFqDKh7Yyv10fPw==
-X-Google-Smtp-Source: AGHT+IE3IEPCCgB0bt/uCVYonB/YsmX9MsBR2/QB63vrorCHbNSrdpM99e+NYH8FchPivlBNMzAKqKtWDNa/LnKLgF4=
-X-Received: by 2002:a05:651c:2226:b0:30d:c534:692 with SMTP id
- 38308e7fff4ca-31090554d22mr52580801fa.29.1745361418655; Tue, 22 Apr 2025
- 15:36:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745361422; x=1745966222;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GFEryJTJrYlbNEPG6EOeE5cZYQCM6sOwjcE6fp5zhZc=;
+        b=nogB4owyc5efngdSnLuJaSMTLCLJ2nE27uSxY3heMXzbQUy6LDxlBR+gENgy/pAQfh
+         Ew7Qqy0zKswvo14wviIdLBjJAzhlREo7bMGhsX9xncORGxCJNKqaoF7RYuDEHoqu7aIU
+         uaZjUOIJ495to2PUq8h4IkvZOAOI4q1fIatII/n/xu3PiC2PMuNFmkSQTmJ/sWrBfjKR
+         Z58/FCnJ6uM2o5QE4U8VrPkH7axV9+wVH/WHoGFzhE22XFagb1NdWhnQHiJXSoHFO+7H
+         JF5j/ndb31VlacVC+hucHm7/gk6SNC/ySaIUVfDnrWAQOuuOldSO2CcPdPUUd4LJxRDJ
+         +9XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGU81ktiTkc8FT2GWqm26OoeCOEPcocyINhAICTpbv7Zl+AhletJwLzmJV8AvsPVIMyfaMc4bmQbl5Q+Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxurkXiYb/nLScuVqq/HPzq2FR+T/7RhbzCTbQ6DZt8sj+QzC13
+	26/2uqwBrW3t2oBo5DAfeUPuqXaHVK6ovgyAJbxzLd0n/zXXWi36Lqv2jNxu2TY=
+X-Gm-Gg: ASbGncvLKeu0ujEN2DLew5YlNqhaqYD50azLPKKb3FgPGobcTxUxQ1+hA7A0J0MWhuy
+	toSRYR3W70qmuVqsrBSk/YpqfMMELZeP96prTtEKTWzp/uxLSedhRuCKur32yt1SGJIBeAf4lxm
+	QWE/1cmYzy07tiqQuqWEHOzADPvUuzf4EPpAlwCVbJcvY2PEdaB7QPUPuMuhm44iJWep0oO52Ep
+	EydbWguquicyv5O90fyargNWRly16Tt0PrAupANl7HCWifM9whj+fCQHbkK+yWPdSesK5rN+C2J
+	B7gaKvcXQbpMimWw3SsjQTsVhU+SppUnRqIKv3USjZfdyHOXpy3Ekv3f8H+M7RCwU3XaNZwPyzc
+	dSKEeRsUaEOan5ip6Ww==
+X-Google-Smtp-Source: AGHT+IGgff0HbnynsiGyzAMNRyImRsk0W8jB40NIbqdBsgqXBc+HF8ytnQSIYbKf3QzD5ZMhIHryIQ==
+X-Received: by 2002:a05:6830:601a:b0:72b:9d8d:5881 with SMTP id 46e09a7af769-73006336191mr12246352a34.28.1745361422741;
+        Tue, 22 Apr 2025 15:37:02 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3? ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730047afc11sm2208277a34.25.2025.04.22.15.37.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 15:37:02 -0700 (PDT)
+Message-ID: <f0948adc-8130-4417-8c59-f0b52a7a0e01@baylibre.com>
+Date: Tue, 22 Apr 2025 17:37:01 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422191939.555963-1-jkangas@redhat.com> <20250422191939.555963-3-jkangas@redhat.com>
-In-Reply-To: <20250422191939.555963-3-jkangas@redhat.com>
-From: John Stultz <jstultz@google.com>
-Date: Tue, 22 Apr 2025 15:36:45 -0700
-X-Gm-Features: ATxdqUHUf8NvYK-aLnI2B4TJfd1jaEQSDfLR3dMFnq6KQaAqiJ29RDdXxafUgSE
-Message-ID: <CANDhNCpbX1718t2gH3LULL=RDxfxh+uCJNF4jJH0sbpLMK=oWA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
-To: Jared Kangas <jkangas@redhat.com>
-Cc: sumit.semwal@linaro.org, benjamin.gaignard@collabora.com, 
-	Brian.Starkey@arm.com, tjmercier@google.com, christian.koenig@amd.com, 
-	mripard@kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+ <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+ <CAHp75VeuNhfJrNAZZwY2tEHte=UPHLOPNUz7y_J20xv2+_Zdeg@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75VeuNhfJrNAZZwY2tEHte=UPHLOPNUz7y_J20xv2+_Zdeg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 22, 2025 at 12:19=E2=80=AFPM Jared Kangas <jkangas@redhat.com> =
-wrote:
->
-> The CMA heap's name in devtmpfs can vary depending on how the heap is
-> defined. Its name defaults to "reserved", but if a CMA area is defined
-> in the devicetree, the heap takes on the devicetree node's name, such as
-> "default-pool" or "linux,cma". To simplify naming, just name it
-> "default_cma", and keep a legacy node in place backed by the same
-> underlying structure for backwards compatibility.
->
-> Signed-off-by: Jared Kangas <jkangas@redhat.com>
+On 4/22/25 5:30 PM, Andy Shevchenko wrote:
+> On Wed, Apr 23, 2025 at 1:08 AM David Lechner <dlechner@baylibre.com> wrote:
+>>
 
-Once again, thanks for working out how to improve the standard naming
-while keeping compatibility.
+...
 
-I do still hope we can get to the point where other cma regions can be
-registered as heaps with unique/purpose-specific names, but I can see
-having a standard name for the default region is a nice improvement.
+>> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+> 
+> Why not static_assert() ? Because of the message? But static_assert()
+> supports messages AFAICS.
+> 
+>> +       "macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
+> 
 
-Acked-by: John Stultz <jstultz@google.com>
-
-thanks
--john
+I just knew that was standard C. But I support BUILD_BUG_ON_MSG or static_assert
+would work just as well here.
