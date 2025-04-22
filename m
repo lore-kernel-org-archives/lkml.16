@@ -1,79 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7243625B687
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DED25D219;
+	Tue, 22 Apr 2025 02:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288243; cv=none; b=lXKndPA+YvxAMw6Q07yfBjp6Di0Vj42gsOOAcfMUcqXZToUOzSKi/mOiI+K1Fwj0ZvBxuyTtIXhjk8Q8PSLUC5lbkZAk7q2hSXbNUQ1hBJRRdS2qR6r+bKgT5ODvZ5I4nRo3crMl7JFTNtB3yKc/7s7sYskvsb2RuFNov63zEPE=
+	t=1745288243; cv=none; b=U4z8J8BOby/nSPuUsCBp/aIcNldMq+A6e28bKoF+j/a0+XdzvxQXoFL38j2lq7jHckBry+4PSdolIbLiN5Vyymzg4WygC0NjAe93FEkP+T+0Aw/tzVb35GCuYhKh6bbV9W+Zxn41FqYmr5w+zHMgULD7+frCq7mN1+Lz0JbcMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745288243; c=relaxed/simple;
-	bh=ZZHqkKq+49cIqgAl6qN3d5wawWQS8Uabq7s40p983kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1iY2/Eqhvs+45OLfFYJuD+4bpoRiQhg/TGX9+rZvTbg9RXcBfie9BAaxjCFOFtrNO9dCkkSfIN/raJmVxiKZs4uv80Cda1rZ7gJ/EC2PWLSrIpcfsNHoxfsW6w8BHInmXz3khWkk/wOTACqhUwYvoBJbfW+VqkpK6uxXog45OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TazcazY3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=k0CvyBXD/JneYEp1nm10fppRGqN6XZUKVHkWxBtVi+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IJfQhrAOaYlgHfs3NPHG37SVlJMbGxz/8LNOGTXXQgqjfHH2oPvHyeEUGRg1TGBkMfdfjrXo1PeOIu6wx1QNE3zzTa/X+Gz+kvWM7TEJXJQ8fUpRNqaAHXd3qLOrRqeBJu7H+FlseYyMFT1d3EH7CTcsehQeJLpIQGIfPAoak2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SB868pTE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TazcazY3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745288239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vPTnMwL4/AxLUZBgsDv5fiQPI73zQZ0VZKJSDjiN8Nk=;
-	b=TazcazY3LPDUoo4BuTnJGUYbbWZsVz6+1H1+/kVDbcZKKAlnsUplB5AW1Z+Bt2cJxA5ZZ8
-	3owG+7f92o7AFawtdKn+vleK438Ma0L2uFTPpFTmVkvV8OsOZQhoF6+rF+YSvcivr30cRt
-	J+7G9sfntWw4hezFOCcZ6hiaPuCsYqM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-XTG-6jzWMSWJA0fWr1fcAA-1; Mon,
- 21 Apr 2025 22:17:15 -0400
-X-MC-Unique: XTG-6jzWMSWJA0fWr1fcAA-1
-X-Mimecast-MFC-AGG-ID: XTG-6jzWMSWJA0fWr1fcAA_1745288234
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3A43180087F;
-	Tue, 22 Apr 2025 02:17:14 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.137])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D1A5180045C;
-	Tue, 22 Apr 2025 02:17:10 +0000 (UTC)
-Date: Tue, 22 Apr 2025 10:17:06 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: Re: [PATCH 3/4] ublk: factor out ublk_get_data
-Message-ID: <aAb8IgxW85Ncxv74@fedora>
-References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
- <20250421-ublk_constify-v1-3-3371f9e9f73c@purestorage.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SB868pTE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC80AC4CEEC;
+	Tue, 22 Apr 2025 02:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745288243;
+	bh=k0CvyBXD/JneYEp1nm10fppRGqN6XZUKVHkWxBtVi+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SB868pTE/GSZ5UHt2lm5hz8lFrsDgNPP6TQOrwnAuhTvarKB2onR4pe/QdZ35K+jf
+	 RQrexb3SLEWTX+7zbJ4kBWinU4OBq2e9l40G/L0KINp+UCHYQxpII3ntSb/JouYvo9
+	 KpYrEjbyqgNRLGyaGArru3CRDvuD1NxWrG35jqSYDUe5Q7QYwWaoNOLIh7Gsoxz3EB
+	 5oL38CKCn3fzI1b0kQ79PDZ2LCeDpSvKGkO2JALt95Xv01yIVrZ5lLxZzgybjtt1q6
+	 msfhXr2My2TQcuNPeCxhdnc5K8IzqbGoaJKyAzYzUrrnftPFSWC3jI+GKh+Avq+H6p
+	 hFl4DcVsyu5rw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Andrew Jones <ajones@ventanamicro.com>,
+	kernel test robot <lkp@intel.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Sasha Levin <sashal@kernel.org>,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 11/23] riscv: Provide all alternative macros all the time
+Date: Mon, 21 Apr 2025 22:16:51 -0400
+Message-Id: <20250422021703.1941244-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250422021703.1941244-1-sashal@kernel.org>
+References: <20250422021703.1941244-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421-ublk_constify-v1-3-3371f9e9f73c@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.24
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 05:46:42PM -0600, Uday Shankar wrote:
-> Move all the logic for the UBLK_IO_NEED_GET_DATA opcode into its own
-> function. This also allows us to mark ublk_queue pointers as const for
-> that operation, which can help prevent data races since we may allow
-> concurrent operation on one ublk_queue in the future.
-> 
-> Suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+From: Andrew Jones <ajones@ventanamicro.com>
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+[ Upstream commit fb53a9aa5f5b8bf302f3260a7f1f5a24345ce62a ]
 
-thanks,
-Ming
+We need to provide all six forms of the alternative macros
+(ALTERNATIVE, ALTERNATIVE_2, _ALTERNATIVE_CFG, _ALTERNATIVE_CFG_2,
+__ALTERNATIVE_CFG, __ALTERNATIVE_CFG_2) for all four cases derived
+from the two ifdefs (RISCV_ALTERNATIVE, __ASSEMBLY__) in order to
+ensure all configs can compile. Define this missing ones and ensure
+all are defined to consume all parameters passed.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504130710.3IKz6Ibs-lkp@intel.com/
+Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Link: https://lore.kernel.org/r/20250414120947.135173-2-ajones@ventanamicro.com
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/riscv/include/asm/alternative-macros.h | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
+
+diff --git a/arch/riscv/include/asm/alternative-macros.h b/arch/riscv/include/asm/alternative-macros.h
+index 721ec275ce57e..231d777d936c2 100644
+--- a/arch/riscv/include/asm/alternative-macros.h
++++ b/arch/riscv/include/asm/alternative-macros.h
+@@ -115,24 +115,19 @@
+ 	\old_c
+ .endm
+ 
+-#define _ALTERNATIVE_CFG(old_c, ...)	\
+-	ALTERNATIVE_CFG old_c
+-
+-#define _ALTERNATIVE_CFG_2(old_c, ...)	\
+-	ALTERNATIVE_CFG old_c
++#define __ALTERNATIVE_CFG(old_c, ...)		ALTERNATIVE_CFG old_c
++#define __ALTERNATIVE_CFG_2(old_c, ...)		ALTERNATIVE_CFG old_c
+ 
+ #else /* !__ASSEMBLY__ */
+ 
+-#define __ALTERNATIVE_CFG(old_c)	\
+-	old_c "\n"
++#define __ALTERNATIVE_CFG(old_c, ...)		old_c "\n"
++#define __ALTERNATIVE_CFG_2(old_c, ...)		old_c "\n"
+ 
+-#define _ALTERNATIVE_CFG(old_c, ...)	\
+-	__ALTERNATIVE_CFG(old_c)
++#endif /* __ASSEMBLY__ */
+ 
+-#define _ALTERNATIVE_CFG_2(old_c, ...)	\
+-	__ALTERNATIVE_CFG(old_c)
++#define _ALTERNATIVE_CFG(old_c, ...)		__ALTERNATIVE_CFG(old_c)
++#define _ALTERNATIVE_CFG_2(old_c, ...)		__ALTERNATIVE_CFG_2(old_c)
+ 
+-#endif /* __ASSEMBLY__ */
+ #endif /* CONFIG_RISCV_ALTERNATIVE */
+ 
+ /*
+-- 
+2.39.5
 
