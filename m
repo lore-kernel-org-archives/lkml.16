@@ -1,255 +1,127 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70781E0DDC
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7320BB666
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745349454; cv=none; b=bRveQIA6+q+SnlLG2vstX5Y5aOB+tWPB+4pnv+TzD/xGFZvK5AktD6f3giEuezHskzz8jd2uwnLjbrqBYDlXCHo1RJlN6/QTe01UKigZWpt7TK12t5LYCGPCtcezDlNEPtcSjnBUD4fHGvaYgx+tCJi+guwiqf0BuqaLIYZd6xo=
+	t=1745349590; cv=none; b=KKbtOpKbLHsxBzHArlpBMgxQSzN6pd5fgA3PjTEXX5wBmc6qNpdbui0gSyJqtab3KMtwlLObxUQ6aiF60TFGUQfd7BrDWeO3GJfX6L5KQzX9LUOYK0e2uCxhU8xGZSGjRrAO0o8lOFEYtxPt4key2JGhF+k5O6awhGdjEIGVkY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745349454; c=relaxed/simple;
-	bh=pnHd2Ycif+rX3H6FenVUfl3wWZDJjQd9f8Z2kbG9kdw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dnpA6Cg5oqoZHV8/pKQM3E8skrw0myHMjejDbMF1V25fzuhVokTMgVmWZKH2teFdX7VblA3optJ0PMDzp0ur2Z2pfYmyQxfidfPQkStpY5e84ihRKLOzSqoJuhD4RiboLM9rmX0g3V18AXvOU4RuxQDS0WgOjAkNyJ30/TuxD6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so104789385ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:17:31 -0700 (PDT)
+	s=arc-20240116; t=1745349590; c=relaxed/simple;
+	bh=kw5xSLwjdxLb5UzO93JefRlAfAqBFORrjIP38P6h/8M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T3CADOqQV3dZVwmUHUQ6wC+p06mPCtsDMfKbrO+kDlK97/wHFDt6NFGzCovMNgMdZiwWwGqNuyTV7OJKjmlIlvSzD/I4fqTtt8RLin1wb3CWFpjVyhfRh0/Dw8NIQizAkGRSs5iIiP/q2snotTUQ8T6QsYfbTe3DIORL3+39DqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MFg3U5St; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFg3U5St"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745349587;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=y+KK05zMW7c3LQIz7d14BdD80ooDf/JC+jFj6UdPYvQ=;
+	b=MFg3U5StAXWpciOG8PMrdO2c7ql8GB1Prw35u5jHLB9x5HSC2dYLZg+Iv03fB2ICeI5UGg
+	KBxiTDyLXe2Ibvn58a0ttrl9q9zBKs3CGYb/sXIISJ4Ka2JahMl24M4afurA1tfO35Uxj6
+	YSR/cRAl2u63LnVD/pK0RONthNg4iCA=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-67-uyy3w_bNMM-m4dPXdKgOxg-1; Tue, 22 Apr 2025 15:19:45 -0400
+X-MC-Unique: uyy3w_bNMM-m4dPXdKgOxg-1
+X-Mimecast-MFC-AGG-ID: uyy3w_bNMM-m4dPXdKgOxg_1745349585
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47b36edcdb1so48662891cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:19:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745349451; x=1745954251;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cyBDm2ZYj7cLn5Omsf047ecfidS0I0AxTIw8zpsgTPg=;
-        b=R0/g73u+VczgvEuPpbs473BgaWYjwHsOMPdeSj4Rzu01S9y+YrWYZJg3vWM8w74pkc
-         UHIiddparOnnoqUtEXRXAl8nqVvutkqs3a3KB5OgA0et+Vt3FI9arK/yQLEvTKQZcYCE
-         gZMM7mqpp2KiR8xGjhBap6cHrAl9U/qlczeNbRgA+Q0IfwBnQCEGVDo2fhj6Mj2W9P8x
-         CtHuDusJNxf2hyi5LMuJUJOVbd92KMEARwU2x4cZGpp3hmGja0DIkAdqLraJBkw3RZih
-         rcxP7P2WzXJ4w15KCfR2jZ7nEdZU07XIPhHU4w9nXYEG4eYkzi9rRfcqYHw12DoJian1
-         Mu0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXwj+w+KbG2ddbKAp0UHHDJU7KrLd1LHuOVak5AN9Ul6QPdJZnFRcvPOMVtw3Ee+V3Dmlr1D+wwp9+clKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4XTKzyWVSOuW1lw51OMeV9Jz2b2dv7zAWak9mE/RoraBSgD5a
-	HJmy4aPORdtoTXk8KFuOcZZ5zYo3LHGWe1bJBCuy1vXAQSdMXl0ynAifIv4u+wVdBVb8gzr8h1y
-	HK4rV0YpZFBNh6+5HWRKpykE4EHpG9zQOUQ6bOSCEGl6WahIiNYrvkcM=
-X-Google-Smtp-Source: AGHT+IHC1m62G5guSqyDDO0R9CXlhrXtqBEjq7z/HZTO5pgxQKAgDn5jhDJDMLKUWRQQ8rdAk2H7HuEK0FyOsX2khGMYyNeUpJvA
+        d=1e100.net; s=20230601; t=1745349585; x=1745954385;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y+KK05zMW7c3LQIz7d14BdD80ooDf/JC+jFj6UdPYvQ=;
+        b=k19g380r0QlivGE2tIeBLmxEyS9tz5xr7r0SrALicNmH8w+WUz4ViCoiW/r8b/pNAU
+         kiMQqxZbRl19RiKIFbqaW3Jrl2DI6c2vILhojLMQvYeyOQcaqbwr7hVJXXVV4P2CdnDJ
+         Qnp+tJOvfveHQkYYl4SCyy+iYXaCQB84VINLW6UExxJ/a4tmF4UOrEIkZT5GYuow6uC+
+         4gCyFqiJjKbeczCZhHnhimitLl2CqL81sVyDYabDqfq0eItu3C5V+7AFtS/mTjl5yUf1
+         0LEVrkV253JNsxCTHXcaW00Il2OAPJyo2pnR7VUmBZxL8zQzOWR//HkrDndYi6+OcTMK
+         uJxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWx9Wf/FC9PggkE/c0RMIdMeqMXPezmKJwL5kCZcC40zzxVvZnOhLAHGhlln+JFPAAmptgpJZgcaNC3EQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykJyblJ4aexrD00FW6VXlQ8Nm3hVgST08BXngzGdYLhX6QbIhN
+	XBe+YvWRZtHn5Wffu6mpp3a17tUWwAbJp3GKgm5NsMXVUPxnQT31Wf7Bmvss27Ag4Txrn5fVzgF
+	fdx4fZqp9Ha68wmvElKJlH0YiPoowqrs06z4ELhFYx97tTP1phL7ankWjgBoLmQ==
+X-Gm-Gg: ASbGncu4sCETXAJ0Kjdp82Ygx6MXPC6FgXVIPv2doghMUKih0ancE8ndI102gBRS6sp
+	eUsKM2r+vkxNKZO97HI28JyOeUf3qfwRlmxebcgRYG1n3oOdgfLUfCCD70kwBV7dhpmdkCWqx9D
+	RYdGCqo+Kh+0uMAHSH1oKbwyPhN+B3aVYxQ92chxObcCW9/gDbGyN9iqPSF6NOi52MYHqErDWnI
+	qW1X9NOuaYtYz50yvfeWPPyOS1FYP+loyZR/9ojMD1QKj6Cx6om52xCl+8LhMSFMPKCrH6MTw+i
+	uSip1rTxV/cZCiSXCwFrk9XblVEBl2aTXC7cTJtbT08=
+X-Received: by 2002:a05:622a:10a:b0:476:60a1:3115 with SMTP id d75a77b69052e-47aec49fe50mr306107561cf.33.1745349585343;
+        Tue, 22 Apr 2025 12:19:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFpIAsSnkkHHksne2RzJemve8iXpTk1ZF86CXiy9hxjUVtuSkEj08Rwo52JAcVf57qaA/nAwg==
+X-Received: by 2002:a05:622a:10a:b0:476:60a1:3115 with SMTP id d75a77b69052e-47aec49fe50mr306107231cf.33.1745349585034;
+        Tue, 22 Apr 2025 12:19:45 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47b01bef3ecsm40842141cf.55.2025.04.22.12.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:19:44 -0700 (PDT)
+From: Jared Kangas <jkangas@redhat.com>
+To: sumit.semwal@linaro.org,
+	benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com,
+	jstultz@google.com,
+	tjmercier@google.com,
+	christian.koenig@amd.com
+Cc: mripard@kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Jared Kangas <jkangas@redhat.com>
+Subject: [PATCH v2 0/2] dma-buf: heaps: Use constant name for CMA heap
+Date: Tue, 22 Apr 2025 12:19:37 -0700
+Message-ID: <20250422191939.555963-1-jkangas@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:240a:b0:3d3:d00c:3602 with SMTP id
- e9e14a558f8ab-3d88edfb6e6mr180204625ab.10.1745349450982; Tue, 22 Apr 2025
- 12:17:30 -0700 (PDT)
-Date: Tue, 22 Apr 2025 12:17:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6807eb4a.050a0220.36a438.0000.GAE@google.com>
-Subject: [syzbot] [fs?] [mm?] INFO: task hung in page_cache_ra_order
-From: syzbot <syzbot+f719dec20853d1563edc@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, arnd@arndb.de, hch@lst.de, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, thuth@redhat.com, 
-	willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi all,
 
-syzbot found the following issue on:
+This patch series is based on a previous discussion around CMA heap
+naming. [1] The heap's name depends on the device name, which is
+generally "reserved", "linux,cma", or "default-pool", but could be any
+arbitrary name given to the default CMA area in the devicetree. For a
+consistent userspace interface, the series introduces a constant name
+for the CMA heap, and for backwards compatibility, an additional Kconfig
+that controls the creation of a legacy-named heap with the same CMA
+backing.
 
-HEAD commit:    fc96b232f8e7 Merge tag 'pci-v6.15-fixes-2' of git://git.ke..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=146337cf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2a31f7155996562
-dashboard link: https://syzkaller.appspot.com/bug?extid=f719dec20853d1563edc
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f9d470580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17125fe4580000
+The ideas to handle backwards compatibility in [1] are to either use a
+symlink or add a heap node with a duplicate minor. However, I assume
+that we don't want to create symlinks in /dev from module initcalls, and
+attempting to duplicate minors would cause device_create() to fail.
+Because of these drawbacks, after brainstorming with Maxime Ripard, I
+went with creating a new node in devtmpfs with its own minor. This
+admittedly makes it a little unclear that the old and new nodes are
+backed by the same heap when both are present. The only approach that I
+think would provide total clarity on this in userspace is symlinking,
+which seemed like a fairly involved solution for devtmpfs, but if I'm
+wrong on this, please let me know.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c90d59ce6487/disk-fc96b232.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/78fd0e48c804/vmlinux-fc96b232.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/58353c4d5ca1/bzImage-fc96b232.xz
+Changelog:
+    v2: Use tabs instead of spaces for large vertical alignment.
 
-The issue was bisected to:
+Jared Kangas (2):
+  dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+  dma-buf: heaps: Give default CMA heap a fixed name
 
-commit 3e25d5a49f99b75be2c6cfb165e4f77dc6d739a2
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Wed Oct 23 05:36:37 2024 +0000
+ Documentation/userspace-api/dma-buf-heaps.rst | 11 ++++---
+ drivers/dma-buf/heaps/Kconfig                 | 10 +++++++
+ drivers/dma-buf/heaps/cma_heap.c              | 30 ++++++++++++++-----
+ 3 files changed, 40 insertions(+), 11 deletions(-)
 
-    asm-generic: add an optional pfn_valid check to page_to_phys
+-- 
+2.49.0
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166cb4cc580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=156cb4cc580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=116cb4cc580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f719dec20853d1563edc@syzkaller.appspotmail.com
-Fixes: 3e25d5a49f99 ("asm-generic: add an optional pfn_valid check to page_to_phys")
-
-INFO: task syz-executor690:5861 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor690 state:D stack:23400 pid:5861  tgid:5860  ppid:5859   task_flags:0x440040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x1b88/0x5240 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x163/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_read_slowpath kernel/locking/rwsem.c:1084 [inline]
- __down_read_common kernel/locking/rwsem.c:1248 [inline]
- __down_read kernel/locking/rwsem.c:1261 [inline]
- down_read+0x6ff/0xa50 kernel/locking/rwsem.c:1526
- filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
- page_cache_ra_order+0x45e/0xca0 mm/readahead.c:491
- filemap_readahead mm/filemap.c:2560 [inline]
- filemap_get_pages+0x9ec/0x1fc0 mm/filemap.c:2605
- filemap_splice_read+0x690/0xef0 mm/filemap.c:2981
- do_splice_read fs/splice.c:979 [inline]
- splice_direct_to_actor+0x4af/0xc90 fs/splice.c:1083
- do_splice_direct_actor fs/splice.c:1201 [inline]
- do_splice_direct+0x281/0x3d0 fs/splice.c:1227
- do_sendfile+0x582/0x8c0 fs/read_write.c:1368
- __do_sys_sendfile64 fs/read_write.c:1429 [inline]
- __se_sys_sendfile64+0x17e/0x1e0 fs/read_write.c:1415
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8463035369
-RSP: 002b:00007f8462fee228 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00007f84630bf328 RCX: 00007f8463035369
-RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
-RBP: 00007f84630bf320 R08: 00007f8462fee6c0 R09: 00007f8462fee6c0
-R10: 000400000000003f R11: 0000000000000246 R12: 00007f84630bf32c
-R13: 0000200000001000 R14: 6c756e2f7665642f R15: 00007ffd91caffd8
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180 kernel/locking/lockdep.c:6764
-1 lock held by klogd/5202:
-2 locks held by getty/5601:
- #0: ffff8880346d00a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000332e2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x5bb/0x1700 drivers/tty/n_tty.c:2222
-1 lock held by syz-executor690/5861:
- #0: ffff88802395b740 (mapping.invalidate_lock#2){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
- #0: ffff88802395b740 (mapping.invalidate_lock#2){++++}-{4:4}, at: page_cache_ra_order+0x45e/0xca0 mm/readahead.c:491
-3 locks held by syz-executor690/5862:
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x4ab/0x4e0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0x1058/0x10a0 kernel/hung_task.c:437
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 5862 Comm: syz-executor690 Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:lockdep_enabled kernel/locking/lockdep.c:124 [inline]
-RIP: 0010:lock_acquire+0xae/0x2f0 kernel/locking/lockdep.c:5842
-Code: e8 97 67 8e 00 83 3d f0 ae c1 0e 00 0f 84 ef 00 00 00 65 8b 05 c3 35 ca 11 85 c0 0f 85 e0 00 00 00 65 48 8b 04 25 08 60 68 93 <83> b8 ec 0a 00 00 00 0f 85 ca 00 00 00 48 c7 44 24 10 00 00 00 00
-RSP: 0018:ffffc9000408ee68 EFLAGS: 00000246
-RAX: ffff8880782ada00 RBX: ffffffff8ed3df20 RCX: 0000000000000002
-RDX: 0000000000000000 RSI: ffffffff816d9be5 RDI: 1ffffffff1da7be4
-RBP: ffffffff93686020 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc9000408f020 R11: fffff52000811e10 R12: 0000000000000000
-R13: 0000000000000002 R14: ffffffff816dc508 R15: 0000000000000000
-FS:  00007f8462fcd6c0(0000) GS:ffff88812509a000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005606e6d75600 CR3: 000000002f6f0000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- rcu_read_lock include/linux/rcupdate.h:841 [inline]
- class_rcu_constructor include/linux/rcupdate.h:1155 [inline]
- unwind_next_frame+0xd5/0x23b0 arch/x86/kernel/unwind_orc.c:479
- __unwind_start+0x59a/0x740 arch/x86/kernel/unwind_orc.c:758
- unwind_start arch/x86/include/asm/unwind.h:64 [inline]
- arch_stack_walk+0xe7/0x150 arch/x86/kernel/stacktrace.c:24
- stack_trace_save+0x11a/0x1d0 kernel/stacktrace.c:122
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4161 [inline]
- slab_alloc_node mm/slub.c:4210 [inline]
- kmem_cache_alloc_noprof+0x1e1/0x390 mm/slub.c:4217
- mempool_alloc_noprof+0x199/0x5a0 mm/mempool.c:402
- bio_alloc_bioset+0x26f/0x1130 block/bio.c:554
- bio_alloc_clone block/bio.c:864 [inline]
- bio_split+0x107/0x490 block/bio.c:1587
- bio_submit_split+0x98/0x600 block/blk-merge.c:116
- __bio_split_to_limits block/blk.h:390 [inline]
- blk_mq_submit_bio+0x18a6/0x25e0 block/blk-mq.c:3110
- __submit_bio+0x1d2/0x6d0 block/blk-core.c:635
- __submit_bio_noacct_mq block/blk-core.c:722 [inline]
- submit_bio_noacct_nocheck+0x57b/0xe30 block/blk-core.c:751
- bio_chain_and_submit+0xed/0x130 block/bio.c:361
- __blkdev_issue_zero_pages+0x218/0x290 block/blk-lib.c:222
- blkdev_issue_zero_pages block/blk-lib.c:238 [inline]
- blkdev_issue_zeroout+0x651/0x880 block/blk-lib.c:325
- blkdev_fallocate+0x3dd/0x490 block/fops.c:-1
- vfs_fallocate+0x627/0x7a0 fs/open.c:338
- ksys_fallocate fs/open.c:362 [inline]
- __do_sys_fallocate fs/open.c:367 [inline]
- __se_sys_fallocate fs/open.c:365 [inline]
- __x64_sys_fallocate+0xbc/0x110 fs/open.c:365
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8463035369
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f8462fcd228 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
-RAX: ffffffffffffffda RBX: 00007f84630bf338 RCX: 00007f8463035369
-RDX: 0000000008000000 RSI: 0000000000000011 RDI: 0000000000000004
-RBP: 00007f84630bf330 R08: 00007f8462fcd6c0 R09: 00007f8462fcd6c0
-R10: 0008004000000200 R11: 0000000000000246 R12: 00007f84630bf33c
-R13: 0000200000001000 R14: 6c756e2f7665642f R15: 00007ffd91caffd8
- </TASK>
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.578 msecs
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
