@@ -1,87 +1,94 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03E428F51B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A69928FFD8;
+	Tue, 22 Apr 2025 15:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745334185; cv=none; b=ZpXBGKLU09ATBwTHtGRGcxRLUivi4NTd+4AfQAILHQAhoDhWiM8GqxXnw31pJFNOMQi4brwPCvF3xqHWEyjuM49bT7J3qpVqAzpzmMKeo7jsLKDnSM1K9BvJB42ZSaoQ4jjmRJzSlNpzf7VrD0EHasezX4uXgpOzYdMD6GMukOA=
+	t=1745334194; cv=none; b=a++bjG9R7TzErI3mHQ12JF3r9dVwl15mUG1Nf/BffbJgYLhLbl4hJ72zUgcLjexydaSbRMu4SHwzD3Z0TMgNWrDt4bGV8p+i+C5LLuZ+IqDV98yj0m0VStosCg6oNA/XsI4fcJS8IHUqsuMwVGiMKdu/nBY5StTAhVHI0wevBdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745334185; c=relaxed/simple;
-	bh=a9oHiuIRd+Lat23wgyOLQVKu0davNOYNyV1lqgu94Hc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aPqEeTV4eLCudbxLMvU8No/l9810Z+FXTF9QYvvfHuyA7KEoOXi9wcBGzzmzR71S/1ncBcxe9A3hq1cNrFvCF631wvRaCYxVBLSDOO7lqpvAkn8PxRnt2ucoioaiN5IWsXxcjLSqSH8aiG3wwM/yjE2imnJvaDPHz4bYf460UoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I6IV+lrb; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745334194; c=relaxed/simple;
+	bh=SoyW7IHkfSefq7gBamKtXaT1/v+FeX2nJ+P8eHsySoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L5H4xh1N04TKxCz3EL8GNEkgUC6StMGfv9gtq3EIv1qB3Uc3GC7T2dnsLN+aS0n6cKykU/LZntZLv/TpSiojucJZww6bCA9OnpBl9lloxxdepefsNtruWkSuejdfzzkR5/mxCEGn74P3ik8IDJQH7afgGnx3NjTPcb7CCX24ZkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/RgXd7Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I6IV+lrb"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff798e8c3bso4464198a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745334183; x=1745938983; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZR743ev6ExzRYE8cINx+AM9cywgAmFfoIc+SqezuNJU=;
-        b=I6IV+lrbYv0t+bvIaiG0TbVyWJT40Lj0vRqcLzc3/x+0dcZml1AnFM8HQY5Ii0wkCK
-         EFI9GLLncA7Nf81PeY4qYgGpbEdk6GQtvjHUrP43uS7sYSItfs/Hp/W+equBtADhN9iR
-         H8kGG/d5XAZylKSAL++q+ioYsECrBM0IYZU7VUdqcrJGhPa3joqiDrIgBusCnfsOOjmZ
-         /a1Dr6t8bvSNSFRCHQvERf4r1hilrZRf/fX4p3Lkj5VzPiie0d1c69yQE2wP4ATTE3E/
-         J6p2quspRGpvtugOYU1sLARWmrmhAeltWiFl33W2BwncgY4q3qCNTdFwpdJXyCO/Kkkj
-         To3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745334183; x=1745938983;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZR743ev6ExzRYE8cINx+AM9cywgAmFfoIc+SqezuNJU=;
-        b=e2xBb4VvbwPN0WFgpmGGlUkMVoXT3TGMO0tJJEyhrCytep1bvNyZ6h/9KbT2+2gtHE
-         t5ZT4eUgOofnmWHvXL/kN+H6OZlqS6kWVS4mQHA8TnW/A1LcBEi29zGRJfZtSeBnF3jC
-         4iIzi/pG285xtlgix7R15lkjPQfKv0kcaKDFw5pnV6vmRrqJzb8+VTqjHlVtYXlnR5ef
-         1b99TGC0Sc50K4IYNA+9WaMO/7ZrZ1zGdtFVJHv/tlzdK5+QTJEAQRv/a+TdmOL3sNpo
-         GMnqRsvt4oAkuyzNrBaIC0NkKXaN0IEXGMXhxN0/Wz/gRxYTFvjvBTSGEpomfkvjRiYY
-         peJg==
-X-Gm-Message-State: AOJu0YxQ//wX4ay5DdgY6QMwzKArXlE9nJ6XpPSTbBRXFGAmxK0ZHVwh
-	UawzTj02e4e52NQ/qv0iK9eP53roHr4df7bPWZ7K0ag6ivOhjRd7V7A0ptcLBg/Dy71OKx21NgV
-	2Xw==
-X-Google-Smtp-Source: AGHT+IEIapJZJRM9UWSGs3HX5eEFDXXhucM1QTXJfnPOK/9YTrDfsNmQubNfg9xjcSY4LHTjaYmG0pXn5/g=
-X-Received: from pjbsn11.prod.google.com ([2002:a17:90b:2e8b:b0:308:861f:fddb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a0c:b0:2ef:31a9:95c6
- with SMTP id 98e67ed59e1d1-3087bb56439mr25794718a91.14.1745334182926; Tue, 22
- Apr 2025 08:03:02 -0700 (PDT)
-Date: Tue, 22 Apr 2025 08:03:01 -0700
-In-Reply-To: <20250422082216.1954310-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/RgXd7Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6111C4CEE9;
+	Tue, 22 Apr 2025 15:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745334193;
+	bh=SoyW7IHkfSefq7gBamKtXaT1/v+FeX2nJ+P8eHsySoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m/RgXd7QE4ZnfQuSwKgSYsFKvLchPs1sn5dKAanflsRJTH45wA76CuzSozzv6bFMT
+	 CYcONY1S5vmSZnw4uqqopOas6AuRiJDrnxUF+hgjpO8rypTG5diJY1VKsxD3rwxCht
+	 RQtMM428vjUoIZIq8HXL8X4P3HLZanAY/9B12qH/qong8wow71/Cgm4msmssuRUnXm
+	 C2lMFtS4qLqWT9Eakp50ooAGXx6k745C1xWVvRzDIoNw4R6DQAQNspgL4PqMAFKTWO
+	 Ojr1ehhk72+u/bTpNANNLVIsLGGYov+HbI1LOiLp4ssbIP7NnPW04gMPweVR18JCxg
+	 Yu6SVENDn1AVQ==
+Date: Tue, 22 Apr 2025 08:03:09 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] lib: PRIME_NUMBERS_KUNIT_TEST should not select
+ PRIME_NUMBERS
+Message-ID: <202504220759.67C0120FF@keescook>
+References: <40f8a40eef4930d3ac9febd205bc171eb04e171c.1744641237.git.geert@linux-m68k.org>
+ <f2a55a3f-6c56-43fa-bfda-25cc11fe5212@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com>
-Message-ID: <aAevpauKYWwObsB7@google.com>
-Subject: Re: [RFC PATCH v2 00/34] MSR refactor with new MSR instructions support
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2a55a3f-6c56-43fa-bfda-25cc11fe5212@sirena.org.uk>
 
-On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
-> base-commit: f30a0c0d2b08b355c01392538de8fc872387cb2b
+On Tue, Apr 22, 2025 at 01:10:47PM +0100, Mark Brown wrote:
+> On Mon, Apr 14, 2025 at 04:35:00PM +0200, Geert Uytterhoeven wrote:
+> > Enabling a (modular) test should not silently enable additional kernel
+> > functionality, as that may increase the attack vector of a product.
+> > 
+> > Fix this by making PRIME_NUMBERS_KUNIT_TEST depend on PRIME_NUMBERS
+> > instead of selecting it.
+> > 
+> > After this, one can safely enable CONFIG_KUNIT_ALL_TESTS=m to build
+> > modules for all appropriate tests for ones system, without pulling in
+> > extra unwanted functionality, while still allowing a tester to manually
+> > enable PRIME_NUMBERS and this test suite on a system where PRIME_NUMBERS
+> > is not enabled by default.  Resurrect CONFIG_PRIME_NUMBERS=m in
+> > tools/testing/selftests/lib/config for the latter use case.
+> 
+> This commit, which is now in mainline, causes the prime numbers test to
+> vanish from my CI which is a regression - the selftests config fragment
+> is obviously not picked up by the kunit runner when it builds the
+> kernel.  You should add any KUnit tests to one of the configs in
+> tools/testing/kunit/configs/ - generally all_tests.config.
 
-This commit doesn't exist in Linus' tree or the tip tree, and the series doesn't
-apply cleanly on any of the "obvious" choices.  Reviewing a 34 patches series
-without being able to apply it is a wee bit difficult...
+Ah! Thanks -- I forgot about these (apparently my memory horizon is at
+most 2 years, considering commit 4d9060981f88 ("kunit: tool: Enable
+CONFIG_FORTIFY_SOURCE under UML").
+
+Does this look like you're expecting?
+
+diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+index cdd9782f9646..554da9df02f2 100644
+--- a/tools/testing/kunit/configs/all_tests.config
++++ b/tools/testing/kunit/configs/all_tests.config
+@@ -51,3 +51,5 @@ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_TOPOLOGY_BUILD=y
++
++CONFIG_PRIME_NUMBERS=y
+
+
+-- 
+Kees Cook
