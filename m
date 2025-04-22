@@ -1,256 +1,99 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7062980C2;
-	Tue, 22 Apr 2025 17:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144ED1D7995
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343607; cv=none; b=J78MICaVLSAoidhdthHGkkXjDtka/zAfkAVx5FQzMHfT5bN0fW88ZyaGoDI/XaiGxFQO0+XoBch2uxAJoUanZ439NkVjlyHi4/tfEZF2IBwedbtd4VLwgqGFuYKz785CAskTHk1Idx/3Z4DpnsvhSSD06XC+1W+O1UEBhN4YT3I=
+	t=1745343667; cv=none; b=m+xSs0hPZNzaupEkMismUU1GeggN/s5Dw24aR4TBslY5ZJoXthrqJ8/JWERsEzWyNCa04TBKlFghGndxp9VgvTQcb1480mfAobiRGeKrQK2YpOdmXfnymbtEnPg0MIzjxHwkeKsFFF/MlHRfeM4azDSpWg3cp1WvGZj9yCI4Yf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343607; c=relaxed/simple;
-	bh=mhBcYuNZ2Ra7zROHPJeH98X8A2FqiAiddgszOSe3O+s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GDezULOcpYJcUiZs/FcssL61vafC5Q+KZ2kS8x8f6bsLjIy1IGLE0SwcAmJStLFVDZS3sPf8zEF7eRlqWhMV7HSW9nhvd9WMbOSvHI4H6wWEVdOuMa/NZAgv8W8sNnYVAt6KIEukJLd9gjOfpvD3RnUl6dvHhzJlguVlHpdNtf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: NVGXt/0bSC2RO8GoDYPWMg==
-X-CSE-MsgGUID: FU6Y9PO4SfmkKCxFZP1YYQ==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 23 Apr 2025 02:40:04 +0900
-Received: from mulinux.home (unknown [10.226.92.16])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id C4A164043788;
-	Wed, 23 Apr 2025 02:40:01 +0900 (JST)
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v6 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
-Date: Tue, 22 Apr 2025 18:39:36 +0100
-Message-Id: <20250422173937.3722875-6-fabrizio.castro.jz@renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
-References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+	s=arc-20240116; t=1745343667; c=relaxed/simple;
+	bh=sx+1yReHO+W8k5rUqkhkwfBciKZlCEEc04tBXhlIWQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PHcUPiA7+Egt3hg3e8Vr/KCLry9dmq/uDuEXttmTLwXl75+QhQwT/mjcC4eP7AJ7hLpSeXrfVa1mR7bVh7VpwylCSgJpIp6ZvhnCCgGEhST9PAT6/LlKeg7IqX7tn+lLtssvxG1q4ss5RBREQ8vvTzHdfIIOFbXscCNfX719pxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=gGi1je5z; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="gGi1je5z"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c54f67db99so12406585a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745343664; x=1745948464; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y86Jn/i/gOfC+tYxi13fILx4oUL1euxGqHwTbq1fZ+s=;
+        b=gGi1je5zuwUFkZ2oBYqu8RQpeXIYC3bs0CQsKHxgLv2ajeITLh3wuyS1t7HH5xdMbp
+         FZ8/QBgDrBuP3R8WnuXR6+4wNoHji9jZwQxZcKihCoFnkBwAlWHpQLnAAAVYhI4e7Ut3
+         h+qZZlkdNOViLbbevv9uYeusVydabeIO5jw/4LBgxd43FRt4Wt6fOLWRoy++MsK/AnTv
+         peiueoSFHw5plJvZgn7mfaqZ7ASCncdtldB5fZSt9I1DITDIHR24aSi0xZ0KvkhLTjIp
+         1Bm/DCVs6QtnFko9jdARufuSGtw/ZpzwZPCtWw7aR/6LTbE7yHYXVVMYrkUfnXsh2TaN
+         9vGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745343664; x=1745948464;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y86Jn/i/gOfC+tYxi13fILx4oUL1euxGqHwTbq1fZ+s=;
+        b=wuaNDKDeBwaH4dUPl1r8+hxz/VPmmwCxlCHQQN2aHwldZxNhWfY9n6cHHAbDQyckeI
+         58yVnhriMCovzxu9HL2BAaB7xdJvNbbBThreEqjQReQPkhB5KX+OVZfh1rg6BI7cUlnV
+         LrNyi3vrylaslauUmq60wyi2oKhU804NjiBdlon7jStvWV6b19h2LDus2Xymnlfp/Ybx
+         5afuOnB/SVYVnJ6Q5+6x+n3XXZLFY5MRZErysLWyW2U4GZJU0lOf4XXpFaGQJb5TmZF6
+         0JaT4KgcQzgIQbTLtmLABSXjID0s8N5g5wRovhyaGuCGMV4Tf3RMY2xFoAMwQBlHiUjB
+         dRiw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiKNqkfn4/nCSc5aXHe95sMfl78ZtYm7za7+LfdslhxXeBA5POUAy+0vAG/Q1S58GefdPoAnTXaJurYmc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNdPO57YCHJkbKmE64+0vaZOeN9lr4dkUzw46CnS/9DGUiKBRR
+	8ll7UitZPBXm8+W95HwVlc82ho9mwKnysIy2swbrW2232EgKROt+k6yBehhmCTc=
+X-Gm-Gg: ASbGncuLQN5XONNLYrgfjpYQxksmD3RPpMudniMvobTuHRt6bsY5nYKNAQZU4rL2I2y
+	NzTD8QikOle947bm20dg0nLL4Wq0UvsZm8RixFjtCdJMwvs1WwAtFca8iD4r19RdS7TufQ8SUlm
+	x9hO5BxjWmmDVcQAm4REKEOuUyD/wLipzfsEOfeXaNJclu1Q4HymXy9xIx2rPrTk9WTfwYDe1fq
+	Glapj6WUfCdHggb5V2TgxMIPZZObvEGjJkKUKovlxaLH44pZzhjwh0PzQrjsuF411YFWKr5T28K
+	NQEAXrDtU5cpZRXa+56K3b13WcMfxJ9ys37hOHI=
+X-Google-Smtp-Source: AGHT+IEN8+MrZpC1+kXZmyR3wN+NOc72lunYbPsIFQ9LMphGMyp510ZIpiR9wy3Isrz4BHUP8lx02w==
+X-Received: by 2002:a05:620a:4256:b0:7c4:c38a:ca24 with SMTP id af79cd13be357-7c92827487emr2492780485a.1.1745343663928;
+        Tue, 22 Apr 2025 10:41:03 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c925a8d484sm580566085a.31.2025.04.22.10.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 10:41:03 -0700 (PDT)
+Date: Tue, 22 Apr 2025 13:41:02 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	longman@redhat.com, mhocko@kernel.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, muchun.song@linux.dev, tj@kernel.org,
+	mkoutny@suse.com, akpm@linux-foundation.org
+Subject: Re: [PATCH v4 2/2] vmscan,cgroup: apply mems_effective to reclaim
+Message-ID: <20250422174102.GC1853@cmpxchg.org>
+References: <20250422012616.1883287-1-gourry@gourry.net>
+ <20250422012616.1883287-3-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422012616.1883287-3-gourry@gourry.net>
 
-The DMAC IP found on the Renesas RZ/V2H(P) family of SoCs is
-similar to the version found on the Renesas RZ/G2L family of
-SoCs, but there are some differences:
-* It only uses one register area
-* It only uses one clock
-* It only uses one reset
-* Instead of using MID/IRD it uses REQ No
-* It is connected to the Interrupt Control Unit (ICU)
-* On the RZ/G2L there is only 1 DMAC, on the RZ/V2H(P) there are 5
+On Mon, Apr 21, 2025 at 09:26:15PM -0400, Gregory Price wrote:
+> It is possible for a reclaimer to cause demotions of an lruvec belonging
+> to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
+> this limitation based on the lruvec's memcg and prevent demotion.
+> 
+> Notably, this may still allow demotion of shared libraries or any memory
+> first instantiated in another cgroup. This means cpusets still cannot
+> cannot guarantee complete isolation when demotion is enabled, and the
+> docs have been updated to reflect this.
+> 
+> This is useful for isolating workloads on a multi-tenant system from
+> certain classes of memory more consistently - with the noted exceptions.
+> 
+> Acked-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Add specific support for the Renesas RZ/V2H(P) family of SoC by
-tackling the aforementioned differences.
+With the rcu lock removal from the follow-up fixlet,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v5->v6:
-* Collected tags.
-v4->v5:
-* Reused RZ/G2L cell specification (with REQ No in place of MID/RID).
-* Dropped ACK No.
-* Removed mid_rid/req_no/ack_no union and reused mid_rid for REQ No.
-* Other small improvements.
-v3->v4:
-* Fixed an issue with mid_rid/req_no/ack_no initialization
-v2->v3:
-* Dropped change to Kconfig.
-* Replaced rz_dmac_type with has_icu flag.
-* Put req_no and ack_no in an anonymous struct, nested under an
-  anonymous union with mid_rid.
-* Dropped data field of_rz_dmac_match[], and added logic to determine
-  value of has_icu flag from DT parsing.
-v1->v2:
-* Switched to new macros for minimum values.
----
- drivers/dma/sh/rz-dmac.c | 81 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 74 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index d7a4ce28040b..1f687b08d6b8 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -14,6 +14,7 @@
- #include <linux/dmaengine.h>
- #include <linux/interrupt.h>
- #include <linux/iopoll.h>
-+#include <linux/irqchip/irq-renesas-rzv2h.h>
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -89,8 +90,14 @@ struct rz_dmac_chan {
- 
- #define to_rz_dmac_chan(c)	container_of(c, struct rz_dmac_chan, vc.chan)
- 
-+struct rz_dmac_icu {
-+	struct platform_device *pdev;
-+	u8 dmac_index;
-+};
-+
- struct rz_dmac {
- 	struct dma_device engine;
-+	struct rz_dmac_icu icu;
- 	struct device *dev;
- 	struct reset_control *rstc;
- 	void __iomem *base;
-@@ -99,6 +106,8 @@ struct rz_dmac {
- 	unsigned int n_channels;
- 	struct rz_dmac_chan *channels;
- 
-+	bool has_icu;
-+
- 	DECLARE_BITMAP(modules, 1024);
- };
- 
-@@ -167,6 +176,9 @@ struct rz_dmac {
- #define RZ_DMAC_MAX_CHANNELS		16
- #define DMAC_NR_LMDESC			64
- 
-+/* RZ/V2H ICU related */
-+#define RZV2H_MAX_DMAC_INDEX		4
-+
- /*
-  * -----------------------------------------------------------------------------
-  * Device access
-@@ -324,7 +336,13 @@ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
- 	lmdesc->chext = 0;
- 	lmdesc->header = HEADER_LV;
- 
--	rz_dmac_set_dmars_register(dmac, channel->index, 0);
-+	if (dmac->has_icu) {
-+		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
-+					   channel->index,
-+					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
-+	} else {
-+		rz_dmac_set_dmars_register(dmac, channel->index, 0);
-+	}
- 
- 	channel->chcfg = chcfg;
- 	channel->chctrl = CHCTRL_STG | CHCTRL_SETEN;
-@@ -375,7 +393,13 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 
- 	channel->lmdesc.tail = lmdesc;
- 
--	rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
-+	if (dmac->has_icu) {
-+		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
-+					   channel->index, channel->mid_rid);
-+	} else {
-+		rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
-+	}
-+
- 	channel->chctrl = CHCTRL_SETEN;
- }
- 
-@@ -647,7 +671,13 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 	if (ret < 0)
- 		dev_warn(dmac->dev, "DMA Timeout");
- 
--	rz_dmac_set_dmars_register(dmac, channel->index, 0);
-+	if (dmac->has_icu) {
-+		rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac_index,
-+					   channel->index,
-+					   RZV2H_ICU_DMAC_REQ_NO_DEFAULT);
-+	} else {
-+		rz_dmac_set_dmars_register(dmac, channel->index, 0);
-+	}
- }
- 
- /*
-@@ -824,6 +854,38 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
- 	return 0;
- }
- 
-+static int rz_dmac_parse_of_icu(struct device *dev, struct rz_dmac *dmac)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct of_phandle_args args;
-+	uint32_t dmac_index;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0, &args);
-+	if (ret == -ENOENT)
-+		return 0;
-+	if (ret)
-+		return ret;
-+
-+	dmac->has_icu = true;
-+
-+	dmac->icu.pdev = of_find_device_by_node(args.np);
-+	of_node_put(args.np);
-+	if (!dmac->icu.pdev) {
-+		dev_err(dev, "ICU device not found.\n");
-+		return -ENODEV;
-+	}
-+
-+	dmac_index = args.args[0];
-+	if (dmac_index > RZV2H_MAX_DMAC_INDEX) {
-+		dev_err(dev, "DMAC index %u invalid.\n", dmac_index);
-+		return -EINVAL;
-+	}
-+	dmac->icu.dmac_index = dmac_index;
-+
-+	return 0;
-+}
-+
- static int rz_dmac_parse_of(struct device *dev, struct rz_dmac *dmac)
- {
- 	struct device_node *np = dev->of_node;
-@@ -840,7 +902,7 @@ static int rz_dmac_parse_of(struct device *dev, struct rz_dmac *dmac)
- 		return -EINVAL;
- 	}
- 
--	return 0;
-+	return rz_dmac_parse_of_icu(dev, dmac);
- }
- 
- static int rz_dmac_probe(struct platform_device *pdev)
-@@ -874,9 +936,11 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(dmac->base))
- 		return PTR_ERR(dmac->base);
- 
--	dmac->ext_base = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(dmac->ext_base))
--		return PTR_ERR(dmac->ext_base);
-+	if (!dmac->has_icu) {
-+		dmac->ext_base = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(dmac->ext_base))
-+			return PTR_ERR(dmac->ext_base);
-+	}
- 
- 	/* Register interrupt handler for error */
- 	irq = platform_get_irq_byname(pdev, irqname);
-@@ -991,9 +1055,12 @@ static void rz_dmac_remove(struct platform_device *pdev)
- 	reset_control_assert(dmac->rstc);
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+
-+	platform_device_put(dmac->icu.pdev);
- }
- 
- static const struct of_device_id of_rz_dmac_match[] = {
-+	{ .compatible = "renesas,r9a09g057-dmac", },
- 	{ .compatible = "renesas,rz-dmac", },
- 	{ /* Sentinel */ }
- };
--- 
-2.34.1
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
