@@ -1,244 +1,361 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3097188A3A;
-	Tue, 22 Apr 2025 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C571188A3A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331571; cv=none; b=fogR1BzdOURLm9zQRUAjq4qaNEQ73zzy3XyN+zQFpHrK9KN4Y72TjF7uerxG7y6+3JQes6SCRpYlz4z9bL1WmPPm3mnnVo9YbW9+p5e9zoAtfiOLz6+EambWQ6Ak9T64tz6gW/lo5zvxALRq99oklsKYed2RRRrUQNQOtTeKiyc=
+	t=1745331649; cv=none; b=mn0NjL4+QhBqe0CJJJ7/HfEFmvgS2SUW3ROCOUMAdc2zFLf40SEnpWngh1iiUACZDCW9B0VFH8dXrYsMxs9yK6nsA7CUY/Z0lRbWEUowSo7rYGrRDPTjRPZOmAInmaFZpLwv85rN7/m3EFtgqmi8cJxCWJzcwDpJegloi40HV38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331571; c=relaxed/simple;
-	bh=sTvn2SNQ+ZpniSh/FDJBNpGSM6rarHUX5zKO2AGg8PE=;
+	s=arc-20240116; t=1745331649; c=relaxed/simple;
+	bh=hdT61DqesHTNiQPvvNSg4aOb3v3gKvFJhwAlQgTYuvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uCxD0YkJPigwt6IgDJFrsE5gK8kAHZ9LtUBQqDs7VRQ9ns8ea7I0zlVH2F04+Qfeje0OIZZH/AS68ZLHl0lbKbxrRNMvNDFxBhbokXccDSMKM8u1O8hoJM4W+M3I5qT9JPLM0n7JCKs+m8laYurQBm901I+XPRqLs9gbo+UvsnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrFHVoPx; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FOL0bEfUlUeg/fK8yV+iG/AZ6e9AfyK91WWKENDsot0/hxULMvAf4XWU4mVTsjBSKoq4zO6hWvbMTYkSHC7+wTO2TwUaRvgyOKXIxjjs91vhHNppREf6ZohmqNSwvZRIBLrd1OHUEPp26gaolWajQx6B3NaWfgOYRSdw9cS2BRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qVLT8s0N; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrFHVoPx"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecfc7fb2aaso47987966d6.0;
-        Tue, 22 Apr 2025 07:19:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331569; x=1745936369; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w5Wm7tWJGtPPpr9hk/vOfHw1mqCFRXfEN5VZTQ6ISoQ=;
-        b=lrFHVoPxYVbtDbJdS8K2L1bZ4mEZWdyl2HihfNiLOAQli4qWD4VswSNqZW/han81Vd
-         xU5SOuDgAcJDrPJMCJDWMGv9+110TCHNlTcNBlmP2T6Vbc07NPZdR1JKtU5JexydimDx
-         XKhsF2FdB7GSUrdSL48BHk3HHRbMFCYgBfYRaX0Lywg0kRULPHdLOvs4iN2HCf5uU0dt
-         DI9x1z8/4EabFbchCb6iE8DSj8Mfw3AU2npDvulqLqOFJN1xedK7yoA87bJwJChJ8A8v
-         SQYSrHpXfOhSBPa6rwkQzjWDe9qIzHGp+W3cYxV8XV/LHs+vWRANUmdjzLqeEoAKbm+l
-         GJSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331569; x=1745936369;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w5Wm7tWJGtPPpr9hk/vOfHw1mqCFRXfEN5VZTQ6ISoQ=;
-        b=cwaoNHzs1dyAPbri/F23la8bFQqnBBkKFk8PVtZ/igVW72wL9b3bx+kOgo5IAa0Zfu
-         Wn55Hc43ZEWPoHmr1XD/skh5ZmGofWTHVA60h7+lh7+3L3UmfPyKWHt5kcZvPYHBUrlg
-         s+ag+OgCPY+9MLkRD9fxWNHY8gj39bxXgBYFFXM070bw8bwFkMJcp0NJ7fFbxG5fH5t2
-         O9j4O0R9QmzhRRvkqvaAM8bruUuowLrQRVSA/cSX/BB/y3A+5KrRhr20ybV8fugRdiwT
-         9PiyCpi3YBcZmFZbKRYh0MSB+IItE6ew6Q+AtQe9Pfo1A3aOKiy0AoJirFWs1AtI/sq/
-         yRrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKsDfm7yzKhVYZOhMpi+hEcAquxjUUi3/qzC5BKBGQ4mU2cb8zFlO9M69v9ahztFq5ebwsxSrJ@vger.kernel.org, AJvYcCXOrT/WiDkPFqYyJm9ccoB4KOO/qqmkHmx8FeS+02rg6qmzwKg3Ld3DG8TPpGLfjnc+Ht3NBxgLgGsDHQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjAVpB1hkTWVj6MOApIVeqbyplerRD2M6q4p9W4F0khuLCdd/Y
-	BoBQ9XlWIu9frAAUKVF+3PPstqTi873Hls0l3DCFIgUtEv5rBl2X
-X-Gm-Gg: ASbGncvrvy+m1+CvyYYLmAC1PaOLW8akUJahXAKy80rvbEDQdmsmxx//R0adMQNNnI9
-	ios3O31Fx8+9PQ3iiK9HxpTRtZOS3+kQZ5yHwK2eOS0t4WoCtEOGaM0Ysi3EsinRnxZY/+vZTKv
-	7qXdNeTYgseCEL5f5RviahqSd1hF0maynwLWjVBLZ/qeA4ebDtSpN7MMTZ/DzFA3gQa/9It1VRG
-	i9dpEjGNTdBAEZwIfBQbbT5E8jO++Ug0/3fQa+Wat+rG3SQKRR8n8E/cOLWez7ZlKgQeWjIymzy
-	QqkXSmoHx0GdT4TSc4EQncMUmdORtqXt6qTjTGI0UUNXwzI2JnaBPWuAL+Y/di4njMyZN7g6dR5
-	F3M4vaOjLgk0Tf0OGXQ7cWR131VJ0dkdEsDHnnZAqTQ==
-X-Google-Smtp-Source: AGHT+IE73CW+oCiynw5eX4Psiy4DGeXeUQENMFdsM01Wevqr+m1bEw12kjylzjeOE7o9qLk2uljBkg==
-X-Received: by 2002:ad4:5ae8:0:b0:6e6:6964:ca77 with SMTP id 6a1803df08f44-6f2c4678e76mr304643956d6.28.1745331568633;
-        Tue, 22 Apr 2025 07:19:28 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfcdf9sm58271506d6.89.2025.04.22.07.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:19:28 -0700 (PDT)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 7800A1200069;
-	Tue, 22 Apr 2025 10:19:27 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 22 Apr 2025 10:19:27 -0400
-X-ME-Sender: <xms:b6UHaObS8bqCAF0eLA4xD4BzbVAGQ6MQTBHkmc596-F-dHt8EwR9dg>
-    <xme:b6UHaBaMbwQr7IfoV6GVz5lZFxXp_iq9kNC5rPQ8cZGngIMCDczNIxwyxdgWKnint
-    eeo3TAUE8cYVfaAUg>
-X-ME-Received: <xmr:b6UHaI_BAkvsonWwGyE7yCGjNqKf2UjdKHtThws7pTSqyiss1C-E34DJ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefleehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepfeefpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhise
-    hgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpth
-    htohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepthhmghhr
-    ohhsshesuhhmihgthhdrvgguuhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:b6UHaApQyiB_Ya9LCpQ59oyMydlELRDSsEp69_IimhPbED-C0xvvOQ>
-    <xmx:b6UHaJrUiGuNG2qMONQqxNzjsYZzoek52OFIPx7VrPy7v8G3NAT13Q>
-    <xmx:b6UHaOR9I8Pj80gQAKhaV6ICLu7MemOhKuwh_r2AdLHt_AAXvHBJsg>
-    <xmx:b6UHaJoDBTLBh3xeZJOuGelMRcjjmfwKEVC8wvljW0NrGFPwDDwGdg>
-    <xmx:b6UHaG6xB7R7gOguso5Eh6x2xGr04SuzEf6iM0oyQt7_YsqMPaydgjUT>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 22 Apr 2025 10:19:26 -0400 (EDT)
-Date: Tue, 22 Apr 2025 07:19:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
-	tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com,
-	anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de,
-	arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, tgunders@redhat.com, me@kloenk.dev,
-	david.laight.linux@gmail.com
-Subject: Re: [PATCH v14 1/6] rust: hrtimer: Add Ktime temporarily
-Message-ID: <aAelbeiWVZgL-kMh@Mac.home>
-References: <20250422135336.194579-1-fujita.tomonori@gmail.com>
- <20250422135336.194579-2-fujita.tomonori@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qVLT8s0N"
+Date: Tue, 22 Apr 2025 07:20:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745331634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rQ0FM7weLDvnn9IvSsmeRvdWmjV6LEguMdvEbOvN5L4=;
+	b=qVLT8s0NXGq6fYaG1pGxJg73rHPdCLdjp/BKQtvM0A35ADNI7T3c4zSN5ur4A3JrW/o1se
+	LOhfu/qbAzbiDvqjq8klyNryJ1NvAo5tInWZUOQtvV0jly2YUVIyv8kbjerCZEUo/sV3LY
+	aQStAg5QGlSAHAuAkI3//v6yCff/RCM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Muchun Song <songmuchun@bytedance.com>, hannes@cmpxchg.org,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	akpm@linux-foundation.org, david@fromorbit.com,
+	zhengqi.arch@bytedance.com, nphamcs@gmail.com,
+	chengming.zhou@linux.dev, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	hamzamahfooz@linux.microsoft.com, apais@linux.microsoft.com,
+	yuzhao@google.com
+Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
+Message-ID: <aAelq2ITcSbXwO5B@Asmaa.>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+ <CAMgjq7BAfh-op06++LEgXf4UM47Pp1=ER+1WvdOn3-6YYQHYmw@mail.gmail.com>
+ <F9BDE357-C7DA-4860-A167-201B01A274FC@linux.dev>
+ <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250422135336.194579-2-fujita.tomonori@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7D+GXce=nTzxPyR+t6YZSLWf-8eByo+0NpprQf61gXjPA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 22, 2025 at 10:53:30PM +0900, FUJITA Tomonori wrote:
-> Add Ktime temporarily until hrtimer is refactored to use Instant and
-> Duration types.
+On Fri, Apr 18, 2025 at 02:22:12AM +0800, Kairui Song wrote:
+> On Tue, Apr 15, 2025 at 4:02 PM Muchun Song <muchun.song@linux.dev> wrote:
+> >
+> >
+> >
+> > > On Apr 15, 2025, at 14:19, Kairui Song <ryncsn@gmail.com> wrote:
+> > >
+> > > On Tue, Apr 15, 2025 at 10:46 AM Muchun Song <songmuchun@bytedance.com> wrote:
+> > >>
+> > >> This patchset is based on v6.15-rc2. It functions correctly only when
+> > >> CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were encountered
+> > >> during rebasing onto the latest code. For more details and assistance, refer
+> > >> to the "Challenges" section. This is the reason for adding the RFC tag.
+> > >>
+> > >> ## Introduction
+> > >>
+> > >> This patchset is intended to transfer the LRU pages to the object cgroup
+> > >> without holding a reference to the original memory cgroup in order to
+> > >> address the issue of the dying memory cgroup. A consensus has already been
+> > >> reached regarding this approach recently [1].
+> > >>
+> > >> ## Background
+> > >>
+> > >> The issue of a dying memory cgroup refers to a situation where a memory
+> > >> cgroup is no longer being used by users, but memory (the metadata
+> > >> associated with memory cgroups) remains allocated to it. This situation
+> > >> may potentially result in memory leaks or inefficiencies in memory
+> > >> reclamation and has persisted as an issue for several years. Any memory
+> > >> allocation that endures longer than the lifespan (from the users'
+> > >> perspective) of a memory cgroup can lead to the issue of dying memory
+> > >> cgroup. We have exerted greater efforts to tackle this problem by
+> > >> introducing the infrastructure of object cgroup [2].
+> > >>
+> > >> Presently, numerous types of objects (slab objects, non-slab kernel
+> > >> allocations, per-CPU objects) are charged to the object cgroup without
+> > >> holding a reference to the original memory cgroup. The final allocations
+> > >> for LRU pages (anonymous pages and file pages) are charged at allocation
+> > >> time and continues to hold a reference to the original memory cgroup
+> > >> until reclaimed.
+> > >>
+> > >> File pages are more complex than anonymous pages as they can be shared
+> > >> among different memory cgroups and may persist beyond the lifespan of
+> > >> the memory cgroup. The long-term pinning of file pages to memory cgroups
+> > >> is a widespread issue that causes recurring problems in practical
+> > >> scenarios [3]. File pages remain unreclaimed for extended periods.
+> > >> Additionally, they are accessed by successive instances (second, third,
+> > >> fourth, etc.) of the same job, which is restarted into a new cgroup each
+> > >> time. As a result, unreclaimable dying memory cgroups accumulate,
+> > >> leading to memory wastage and significantly reducing the efficiency
+> > >> of page reclamation.
+> > >>
+> > >> ## Fundamentals
+> > >>
+> > >> A folio will no longer pin its corresponding memory cgroup. It is necessary
+> > >> to ensure that the memory cgroup or the lruvec associated with the memory
+> > >> cgroup is not released when a user obtains a pointer to the memory cgroup
+> > >> or lruvec returned by folio_memcg() or folio_lruvec(). Users are required
+> > >> to hold the RCU read lock or acquire a reference to the memory cgroup
+> > >> associated with the folio to prevent its release if they are not concerned
+> > >> about the binding stability between the folio and its corresponding memory
+> > >> cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
+> > >> desire a stable binding between the folio and its corresponding memory
+> > >> cgroup. An approach is needed to ensure the stability of the binding while
+> > >> the lruvec lock is held, and to detect the situation of holding the
+> > >> incorrect lruvec lock when there is a race condition during memory cgroup
+> > >> reparenting. The following four steps are taken to achieve these goals.
+> > >>
+> > >> 1. The first step  to be taken is to identify all users of both functions
+> > >>   (folio_memcg() and folio_lruvec()) who are not concerned about binding
+> > >>   stability and implement appropriate measures (such as holding a RCU read
+> > >>   lock or temporarily obtaining a reference to the memory cgroup for a
+> > >>   brief period) to prevent the release of the memory cgroup.
+> > >>
+> > >> 2. Secondly, the following refactoring of folio_lruvec_lock() demonstrates
+> > >>   how to ensure the binding stability from the user's perspective of
+> > >>   folio_lruvec().
+> > >>
+> > >>   struct lruvec *folio_lruvec_lock(struct folio *folio)
+> > >>   {
+> > >>           struct lruvec *lruvec;
+> > >>
+> > >>           rcu_read_lock();
+> > >>   retry:
+> > >>           lruvec = folio_lruvec(folio);
+> > >>           spin_lock(&lruvec->lru_lock);
+> > >>           if (unlikely(lruvec_memcg(lruvec) != folio_memcg(folio))) {
+> > >>                   spin_unlock(&lruvec->lru_lock);
+> > >>                   goto retry;
+> > >>           }
+> > >>
+> > >>           return lruvec;
+> > >>   }
+> > >>
+> > >>   From the perspective of memory cgroup removal, the entire reparenting
+> > >>   process (altering the binding relationship between folio and its memory
+> > >>   cgroup and moving the LRU lists to its parental memory cgroup) should be
+> > >>   carried out under both the lruvec lock of the memory cgroup being removed
+> > >>   and the lruvec lock of its parent.
+> > >>
+> > >> 3. Thirdly, another lock that requires the same approach is the split-queue
+> > >>   lock of THP.
+> > >>
+> > >> 4. Finally, transfer the LRU pages to the object cgroup without holding a
+> > >>   reference to the original memory cgroup.
+> > >>
+> > >
+> > > Hi, Muchun, thanks for the patch.
+> >
+> > Thanks for your reply and attention.
+> >
+> > >
+> > >> ## Challenges
+> > >>
+> > >> In a non-MGLRU scenario, each lruvec of every memory cgroup comprises four
+> > >> LRU lists (i.e., two active lists for anonymous and file folios, and two
+> > >> inactive lists for anonymous and file folios). Due to the symmetry of the
+> > >> LRU lists, it is feasible to transfer the LRU lists from a memory cgroup
+> > >> to its parent memory cgroup during the reparenting process.
+> > >
+> > > Symmetry of LRU lists doesn't mean symmetry 'hotness', it's totally
+> > > possible that a child's active LRU is colder and should be evicted
+> > > first before the parent's inactive LRU (might even be a common
+> > > scenario for certain workloads).
+> >
+> > Yes.
+> >
+> > > This only affects the performance not the correctness though, so not a
+> > > big problem.
+> > >
+> > > So will it be easier to just assume dying cgroup's folios are colder?
+> > > Simply move them to parent's LRU tail is OK. This will make the logic
+> > > appliable for both active/inactive LRU and MGLRU.
+> >
+> > I think you mean moving all child LRU list to the parent memcg's inactive
+> > list. It works well for your case. But sometimes, due to shared page cache
+> > pages, some pages in the child list may be accessed more frequently than
+> > those in the parent's. Still, it's okay as they can be promoted quickly
+> > later. So I am fine with this change.
+> >
+> > >
+> > >>
+> > >> In a MGLRU scenario, each lruvec of every memory cgroup comprises at least
+> > >> 2 (MIN_NR_GENS) generations and at most 4 (MAX_NR_GENS) generations.
+> > >>
+> > >> 1. The first question is how to move the LRU lists from a memory cgroup to
+> > >>   its parent memory cgroup during the reparenting process. This is due to
+> > >>   the fact that the quantity of LRU lists (aka generations) may differ
+> > >>   between a child memory cgroup and its parent memory cgroup.
+> > >>
+> > >> 2. The second question is how to make the process of reparenting more
+> > >>   efficient, since each folio charged to a memory cgroup stores its
+> > >>   generation counter into its ->flags. And the generation counter may
+> > >>   differ between a child memory cgroup and its parent memory cgroup because
+> > >>   the values of ->min_seq and ->max_seq are not identical. Should those
+> > >>   generation counters be updated correspondingly?
+> > >
+> > > I think you do have to iterate through the folios to set or clear
+> > > their generation flags if you want to put the folio in the right gen.
+> > >
+> > > MGLRU does similar thing in inc_min_seq. MGLRU uses the gen flags to
+> > > defer the actual LRU movement of folios, that's a very important
+> > > optimization per my test.
+> >
+> > I noticed that, which is why I asked the second question. It's
+> > inefficient when dealing with numerous pages related to a memory
+> > cgroup.
+> >
+> > >
+> > >>
+> > >> I am uncertain about how to handle them appropriately as I am not an
+> > >> expert at MGLRU. I would appreciate it if you could offer some suggestions.
+> > >> Moreover, if you are willing to directly provide your patches, I would be
+> > >> glad to incorporate them into this patchset.
+> > >
+> > > If we just follow the above idea (move them to parent's tail), we can
+> > > just keep the folio's tier info untouched here.
+> > >
+> > > For mapped file folios, they will still be promoted upon eviction if
+> > > their access bit are set (rmap walk), and MGLRU's table walker might
+> > > just promote them just fine.
+> > >
+> > > For unmapped file folios, if we just keep their tier info and add
+> > > child's MGLRU tier PID counter back to the parent. Workingset
+> > > protection of MGLRU should still work just fine.
+> > >
+> > >>
+> > >> ## Compositions
+> > >>
+> > >> Patches 1-8 involve code refactoring and cleanup with the aim of
+> > >> facilitating the transfer LRU folios to object cgroup infrastructures.
+> > >>
+> > >> Patches 9-10 aim to allocate the object cgroup for non-kmem scenarios,
+> > >> enabling the ability that LRU folios could be charged to it and aligning
+> > >> the behavior of object-cgroup-related APIs with that of the memory cgroup.
+> > >>
+> > >> Patches 11-19 aim to prevent memory cgroup returned by folio_memcg() from
+> > >> being released.
+> > >>
+> > >> Patches 20-23 aim to prevent lruvec returned by folio_lruvec() from being
+> > >> released.
+> > >>
+> > >> Patches 24-25 implement the core mechanism to guarantee binding stability
+> > >> between the folio and its corresponding memory cgroup while holding lruvec
+> > >> lock or split-queue lock of THP.
+> > >>
+> > >> Patches 26-27 are intended to transfer the LRU pages to the object cgroup
+> > >> without holding a reference to the original memory cgroup in order to
+> > >> address the issue of the dying memory cgroup.
+> > >>
+> > >> Patch 28 aims to add VM_WARN_ON_ONCE_FOLIO to LRU maintenance helpers to
+> > >> ensure correct folio operations in the future.
+> > >>
+> > >> ## Effect
+> > >>
+> > >> Finally, it can be observed that the quantity of dying memory cgroups will
+> > >> not experience a significant increase if the following test script is
+> > >> executed to reproduce the issue.
+> > >>
+> > >> ```bash
+> > >> #!/bin/bash
+> > >>
+> > >> # Create a temporary file 'temp' filled with zero bytes
+> > >> dd if=/dev/zero of=temp bs=4096 count=1
+> > >>
+> > >> # Display memory-cgroup info from /proc/cgroups
+> > >> cat /proc/cgroups | grep memory
+> > >>
+> > >> for i in {0..2000}
+> > >> do
+> > >>    mkdir /sys/fs/cgroup/memory/test$i
+> > >>    echo $$ > /sys/fs/cgroup/memory/test$i/cgroup.procs
+> > >>
+> > >>    # Append 'temp' file content to 'log'
+> > >>    cat temp >> log
+> > >>
+> > >>    echo $$ > /sys/fs/cgroup/memory/cgroup.procs
+> > >>
+> > >>    # Potentially create a dying memory cgroup
+> > >>    rmdir /sys/fs/cgroup/memory/test$i
+> > >> done
+> > >>
+> > >> # Display memory-cgroup info after test
+> > >> cat /proc/cgroups | grep memory
+> > >>
+> > >> rm -f temp log
+> > >> ```
+> > >>
+> > >> ## References
+> > >>
+> > >> [1] https://lore.kernel.org/linux-mm/Z6OkXXYDorPrBvEQ@hm-sls2/
+> > >> [2] https://lwn.net/Articles/895431/
+> > >> [3] https://github.com/systemd/systemd/pull/36827
+> > >
+> > > How much overhead will it be? Objcj has some extra overhead, and we
+> > > have some extra convention for retrieving memcg of a folio now, not
+> > > sure if this will have an observable slow down.
+> >
+> > I don't think there'll be an observable slowdown. I think objcg is
+> > more effective for slab objects as they're more sensitive than user
+> > pages. If it's acceptable for slab objects, it should be acceptable
+> > for user pages too.
+
+It would be nice if we can get some numbers to make sure there are no
+regressions in common workloads, especially those that trigger a lot of
+calls to folio_memcg() and friends.
+
 > 
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-
-(Tomo: seems you didn't add me Cced in a few patches, could you add me
-Cced for all the patches in the future, thanks!)
-
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-Boqun
-
-> ---
->  rust/kernel/time/hrtimer.rs         | 18 +++++++++++++++++-
->  rust/kernel/time/hrtimer/arc.rs     |  2 +-
->  rust/kernel/time/hrtimer/pin.rs     |  2 +-
->  rust/kernel/time/hrtimer/pin_mut.rs |  4 ++--
->  rust/kernel/time/hrtimer/tbox.rs    |  2 +-
->  5 files changed, 22 insertions(+), 6 deletions(-)
+> We currently have some workloads running with `nokmem` due to objcg
+> performance issues. I know there are efforts to improve them, but so
+> far it's still not painless to have. So I'm a bit worried about
+> this...
 > 
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index ce53f8579d18..9fd95f13e53b 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
-> @@ -68,10 +68,26 @@
->  //! `start` operation.
->  
->  use super::ClockId;
-> -use crate::{prelude::*, time::Ktime, types::Opaque};
-> +use crate::{prelude::*, types::Opaque};
->  use core::marker::PhantomData;
->  use pin_init::PinInit;
->  
-> +/// A Rust wrapper around a `ktime_t`.
-> +// NOTE: Ktime is going to be removed when hrtimer is converted to Instant/Duration.
-> +#[repr(transparent)]
-> +#[derive(Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
-> +pub struct Ktime {
-> +    inner: bindings::ktime_t,
-> +}
-> +
-> +impl Ktime {
-> +    /// Returns the number of nanoseconds.
-> +    #[inline]
-> +    pub fn to_ns(self) -> i64 {
-> +        self.inner
-> +    }
-> +}
-> +
->  /// A timer backed by a C `struct hrtimer`.
->  ///
->  /// # Invariants
-> diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
-> index 4a984d85b4a1..ccf1e66e5b2d 100644
-> --- a/rust/kernel/time/hrtimer/arc.rs
-> +++ b/rust/kernel/time/hrtimer/arc.rs
-> @@ -5,10 +5,10 @@
->  use super::HrTimerCallback;
->  use super::HrTimerHandle;
->  use super::HrTimerPointer;
-> +use super::Ktime;
->  use super::RawHrTimerCallback;
->  use crate::sync::Arc;
->  use crate::sync::ArcBorrow;
-> -use crate::time::Ktime;
->  
->  /// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
->  /// [`HrTimerPointer::start`].
-> diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
-> index f760db265c7b..293ca9cf058c 100644
-> --- a/rust/kernel/time/hrtimer/pin.rs
-> +++ b/rust/kernel/time/hrtimer/pin.rs
-> @@ -4,9 +4,9 @@
->  use super::HrTimer;
->  use super::HrTimerCallback;
->  use super::HrTimerHandle;
-> +use super::Ktime;
->  use super::RawHrTimerCallback;
->  use super::UnsafeHrTimerPointer;
-> -use crate::time::Ktime;
->  use core::pin::Pin;
->  
->  /// A handle for a `Pin<&HasHrTimer>`. When the handle exists, the timer might be
-> diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
-> index 90c0351d62e4..6033572d35ad 100644
-> --- a/rust/kernel/time/hrtimer/pin_mut.rs
-> +++ b/rust/kernel/time/hrtimer/pin_mut.rs
-> @@ -1,9 +1,9 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
->  use super::{
-> -    HasHrTimer, HrTimer, HrTimerCallback, HrTimerHandle, RawHrTimerCallback, UnsafeHrTimerPointer,
-> +    HasHrTimer, HrTimer, HrTimerCallback, HrTimerHandle, Ktime, RawHrTimerCallback,
-> +    UnsafeHrTimerPointer,
->  };
-> -use crate::time::Ktime;
->  use core::{marker::PhantomData, pin::Pin, ptr::NonNull};
->  
->  /// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the timer might
-> diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
-> index 2071cae07234..29526a5da203 100644
-> --- a/rust/kernel/time/hrtimer/tbox.rs
-> +++ b/rust/kernel/time/hrtimer/tbox.rs
-> @@ -5,9 +5,9 @@
->  use super::HrTimerCallback;
->  use super::HrTimerHandle;
->  use super::HrTimerPointer;
-> +use super::Ktime;
->  use super::RawHrTimerCallback;
->  use crate::prelude::*;
-> -use crate::time::Ktime;
->  use core::ptr::NonNull;
->  
->  /// A handle for a [`Box<HasHrTimer<T>>`] returned by a call to
-> -- 
-> 2.43.0
+> > >
+> > > I'm still thinking if it be more feasible to just migrate (NOT that
+> > > Cgroup V1 migrate, just set the folio's memcg to parent for dying
+> > > cgroup and update the memcg charge) and iterate the folios on
+> > > reparenting in a worker or something like that. There is already
+> > > things like destruction workqueue and offline waitqueue. That way
+> > > folios will still just point to a memcg, and seems would avoid a lot
+> > > of complexity.
+> >
+> > I didn't adopt this approach for two reasons then:
+> >
+> >   1) It's inefficient to change `->memcg_data` to the parent when
+> >      iterating through all pages associated with a memory cgroup.
 > 
+> This is a problem indeed, but isn't reparenting a rather rare
+> operation? So a slow async worker might be just fine?
 > 
+> >   2) During iteration, we might come across pages isolated by other
+> >      users. These pages aren't in any LRU list and will thus miss
+> >      being reparented to the parent memory cgroup.
+> 
+> Hmm, such pages will have to be returned at some point, adding
+> convention for isolate / return seems cleaner than adding convention
+> for all folio memcg retrieving?
+
+Apart from isolated folios, we may come across folios that are locked or
+have their refs frozen by someone else. I assume we wouldn't want to
+mess with those folios. Such indetermenistic behavior was the main
+reason my recharging approach was turned down:
+https://lore.kernel.org/lkml/20230720070825.992023-1-yosryahmed@google.com/
