@@ -1,60 +1,65 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923E1F12FC;
-	Tue, 22 Apr 2025 09:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD1320B7EA
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315821; cv=none; b=lxMFeyQTxTUJWmfff8gBUqU7lbEPK39oUZW4jXjPzSHAesvYXyFzECmJmifgVMXnclBXVy2AykRxvtfR5Tu+eCni7rEm4HBQepVVguE6tHdLFPlS4WERHgJaWCxELKSy8jpAkhhAFwyJTPW+omiiUM4Rz9HShCgm8S1GQp+XUjU=
+	t=1745315827; cv=none; b=jtAj7GxwjFE1CH6NBxTN/ieLDDfxo9CIOl4DdQcmmNVYRR9vj3lpVtAH7QLioKPchbqC1iPzFV5WTHnmok/ehSM9U/HgfeMOwNvpUvtblL0hNXAsK8BW3lp7f3iSNB3LaT5MXL+1LW6Ax15NggxnTguPWuXTcPmCroFDqgluiy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315821; c=relaxed/simple;
-	bh=Zztn9yufpD3kP2utW8PnprxttmHaUBZOSbSDjSbCFyA=;
+	s=arc-20240116; t=1745315827; c=relaxed/simple;
+	bh=ra2hUSK0u1Z8gUcixrox3gM8oCMvOjxq55/e3XVGs0c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MSB65bvfcq33ZQEp9OonUxA5p8qn/fFYm8jWFPnBh9vOpFlarYe8Yc8dkVEstB8Ytvx1HeFm3vQpBcRV3RwRBKsKJkdA7q3/A6Kv3tTok0ai8vOu+/0zIDIlgjf82aZKpTgzIyXCj9BLCtogKXo+5ghKt/TXTk2y379IFovrG/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C6S1uH5O; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=Ha05Q/ZOlUM+ELWR7HQpPKRx/2eGM/3MJ4+yB5gMHO9g62E+0pOM40iFCduzGo3N4f3Z23E9vdCONj0DUi1GKfSB+UaESaqnq9Hqn/eRc7LemBeN2KFHu+TWGb+3CTJoCM0Io1wbmzADCwNtWPzAQkTq+SiKedbiO+9tSNsU8gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dPvsgzst; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C6S1uH5O"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M47VIs016494;
-	Tue, 22 Apr 2025 09:56:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=C9cYA4
-	4bRPVIsUCoErKERnZrSNRErJ0/7ck7tcw0IQQ=; b=C6S1uH5OzZqAHJAesv7KwS
-	mIr/GMGFKMfM1m2ikVHUdMR/trIICyRkl1pJ2KX33QF7namtXRhwJ5sybXwpGUD9
-	oLanm1D9aDbMbms+leNru2H5ByZQ0DmUJ9HIbM/x6DZxCMnH26UeAdj760YA1SLw
-	EGzLYHwa2nDVYEzp7v3x9GmBTUb+P036Nh/18iwExTi4ftl8kSHKckOF632+1atq
-	YmgWphFydluvtat4Ml01FVY5vHEsfgiesQtNq6b6qJAW2yrYcM6vFisyg4iTOx6D
-	5xcGoGF6DiRW6FB6rS1ULq8hNs07HH5lyMlXgUaQII8zn8t6F47mbn8QX63uqR/w
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4663t61e4y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 09:56:44 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53M6CQVE012511;
-	Tue, 22 Apr 2025 09:56:43 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 464p5t2guq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 09:56:43 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53M9ufYw33882512
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 09:56:41 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 739212004B;
-	Tue, 22 Apr 2025 09:56:41 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EB8C020040;
-	Tue, 22 Apr 2025 09:56:39 +0000 (GMT)
-Received: from [9.39.25.76] (unknown [9.39.25.76])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 22 Apr 2025 09:56:39 +0000 (GMT)
-Message-ID: <bb1f2928-617f-4943-bdd0-dfa74904ffb3@linux.ibm.com>
-Date: Tue, 22 Apr 2025 15:26:39 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dPvsgzst"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso53917575e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745315824; x=1745920624; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ra2hUSK0u1Z8gUcixrox3gM8oCMvOjxq55/e3XVGs0c=;
+        b=dPvsgzstmKQEwnc4EJpIvqVl+k+qH9HoZpWdC5QDpatDl8oIVWHU63hWl1GUkPnmUX
+         kgXC29YG1EQIjY2GosRoBbXHjWHebFXGLaO3E9BE1eTBgGd1fJWdXVKMLYXvJaaEXm85
+         d1ji4J0Y9mXzmxMsZ6Ey/PTvt58XJ9JowebgLx1dRKc4Mtdi5nY8qm7MindShVx3og8q
+         2DJ0VsfvQSHY3tn+sqVl803vU4TMIfmdt0YiAsI7Z8VOVwsykI4NOZhjE4LRIN/vlzfb
+         Hd8Ct9yv0DjPEoQ7pZYYxOkivkwqLquE1Lo59iY2YByii/azz92ECzZ5DBI/uEWG5tl0
+         Kl/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745315824; x=1745920624;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ra2hUSK0u1Z8gUcixrox3gM8oCMvOjxq55/e3XVGs0c=;
+        b=XdDAJ9+yZddz+ehSmeE5aS74BMKiLbYSEH4K1EH9NkcIke29jpJV3AIuEDD4LaiQRK
+         dIy8qGy+g/knxA0IL18RBbCAs1lTmhW62RwZcl17TddMKkzkCk3V3g1dvj6wrN3N+x/m
+         G5ln/0xHE73JwWeopI7siTys0ByYrPgikrBOy668eb4+5PrTVPDMPoNWAOzhMU/pCmaB
+         S0lWwmLD79UKh0294OHEjTIlKMD9CruVgJDXu08OqrSJtP3z8R47emZi1FZwKRM7R48U
+         V9tCmhNJhiJrSiK84iu58k9WCgsbMTZSCFXhcjfKHE9thuUsk3ATpNA8dKitPD+KssN1
+         7H5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUGm23TXgAnC/ZPNMw4YBhkxFVcKAM6kkJUoF4lJ88Zqtdu7IAbJySRe0n9z3Verwc93sdjJg9ccxhXc9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBLLrnT70KHLy6tAbaFxXz91D7UplGvN6NmKa6jByMxs7aTXuy
+	odzZmmWPVGpkkUrlwerBRurAA3CWYPPMCc+mqECwlv4qvZxkA0p2ldlrXTiTsNk=
+X-Gm-Gg: ASbGncvqnJvKCHeTCC7HCyJMKDncz5Sr9USFqzECEEUtrea+31zs7p8LVmLOHZ+A7iK
+	T06k/48Rupy3XKADmhB6dEz11T7U7El0nIclqfPfOlqyz2S2BcPGA7ukS3gl2GQelrBZd5lWPDn
+	y+RtQm3GsWiB/J3T7ixlH/DC+SLm7dSJVs/0qdzYw30LfCC/Lr/02vbAaEcQ8Ll7Obu7si4kEmQ
+	6CW+lVOE9K8ZIKRCZf5cbrZtQhjt8Rxnk8oswlwmi+LERPJOIh0Nwmmao50gafoYYVtuDm0/Mky
+	hEyIhakOU8Czr4kExnOoHx6MU7wCX5fDUxSBTp0RrECfsD1gOLF/ndmX33vqzc1MBXazqQ9X7UU
+	1EJu+W6o1+0Ps7tyWYEdrEInOJur2/T1+u5xu+gPqfCHN5BE2hNZSZs/vhbUjy2LlFg==
+X-Google-Smtp-Source: AGHT+IEegHaHYzFVYqyqvV4s9CP9vHbxqmxDIAALjlbfcfnjkYigut/sITLzJii3S/SE6bsFdLLg+g==
+X-Received: by 2002:a05:600c:384b:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-4406aa872edmr146519085e9.0.1745315823722;
+        Tue, 22 Apr 2025 02:57:03 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9ed9sm170762645e9.3.2025.04.22.02.57.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 02:57:03 -0700 (PDT)
+Message-ID: <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+Date: Tue, 22 Apr 2025 11:57:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,90 +67,232 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the tip tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@redhat.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20250415133518.2c8d4325@canb.auug.org.au>
- <20250417134959.37204d48@canb.auug.org.au>
- <20250422163502.02ceeb0d@canb.auug.org.au>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
 Content-Language: en-US
-In-Reply-To: <20250422163502.02ceeb0d@canb.auug.org.au>
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20250422082216.1954310-22-xin@zytor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------8vGI03Dqxf6ImVX0xeh765vV"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------8vGI03Dqxf6ImVX0xeh765vV
+Content-Type: multipart/mixed; boundary="------------2IPlD0AsRlb1LDytrzf7MO1r";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+Message-ID: <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+In-Reply-To: <20250422082216.1954310-22-xin@zytor.com>
+
+--------------2IPlD0AsRlb1LDytrzf7MO1r
+Content-Type: multipart/mixed; boundary="------------TWjE0O8m3DPylu59JiT9iwph"
+
+--------------TWjE0O8m3DPylu59JiT9iwph
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1KQo-7-Qr7jRW6l78jyPcaS-yRJBnGJ1
-X-Proofpoint-GUID: 1KQo-7-Qr7jRW6l78jyPcaS-yRJBnGJ1
-X-Authority-Analysis: v=2.4 cv=GsRC+l1C c=1 sm=1 tr=0 ts=680767dc cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=rOUgymgbAAAA:8 a=tmFnoJMBK-0VPl4FSV0A:9 a=QEXdDO2ut3YA:10
- a=MP9ZtiD8KjrkvI0BhSjB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxlogscore=962 suspectscore=0 bulkscore=0 adultscore=0
- phishscore=0 impostorscore=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504220071
+Content-Transfer-Encoding: base64
 
+T24gMjIuMDQuMjUgMTA6MjIsIFhpbiBMaSAoSW50ZWwpIHdyb3RlOg0KPiBUaGUgc3Rvcnkg
+c3RhcnRlZCBmcm9tIHRnbHgncyByZXBseSBpbiBbMV06DQo+IA0KPiAgICBGb3IgYWN0dWFs
+IHBlcmZvcm1hbmNlIHJlbGV2YW50IGNvZGUgdGhlIGN1cnJlbnQgUFYgb3BzIG1lY2hhbmlj
+cw0KPiAgICBhcmUgYSBob3Jyb3JzaG93IHdoZW4gdGhlIG9wIGRlZmF1bHRzIHRvIHRoZSBu
+YXRpdmUgaW5zdHJ1Y3Rpb24uDQo+IA0KPiAgICBsb29rIGF0IHdybXNybCgpOg0KPiANCj4g
+ICAgd3Jtc3JsKG1zciwgdmFsDQo+ICAgICB3cm1zcihtc3IsICh1MzIpdmFsLCAodTMyKXZh
+bCA+PiAzMikpDQo+ICAgICAgcGFyYXZpcnRfd3JpdGVfbXNyKG1zciwgbG93LCBoaWdoKQ0K
+PiAgICAgICAgUFZPUF9WQ0FMTDMoY3B1LndyaXRlX21zciwgbXNyLCBsb3csIGhpZ2gpDQo+
+IA0KPiAgICBXaGljaCByZXN1bHRzIGluDQo+IA0KPiAJbW92CSRtc3IsICVlZGkNCj4gCW1v
+dgkkdmFsLCAlcmR4DQo+IAltb3YJJWVkeCwgJWVzaQ0KPiAJc2hyCSQweDIwLCAlcmR4DQo+
+IAljYWxsCW5hdGl2ZV93cml0ZV9tc3INCj4gDQo+ICAgIGFuZCBuYXRpdmVfd3JpdGVfbXNy
+KCkgZG9lcyBhdCBtaW5pbXVtOg0KPiANCj4gCW1vdiAgICAlZWRpLCVlY3gNCj4gCW1vdiAg
+ICAlZXNpLCVlYXgNCj4gCXdybXNyDQo+IAlyZXQNCj4gDQo+ICAgIEluIHRoZSB3b3JzdCBj
+YXNlICdyZXQnIGlzIGdvaW5nIHRocm91Z2ggdGhlIHJldHVybiB0aHVuay4gTm90IHRvDQo+
+ICAgIHRhbGsgYWJvdXQgZnVuY3Rpb24gcHJvbG9ndWVzIGFuZCB3aGF0ZXZlci4NCj4gDQo+
+ICAgIFRoaXMgYmVjb21lcyBldmVuIG1vcmUgc2lsbHkgZm9yIHRyaXZpYWwgaW5zdHJ1Y3Rp
+b25zIGxpa2UgU1RJL0NMSQ0KPiAgICBvciBpbiB0aGUgd29yc3QgY2FzZSBwYXJhdmlydF9u
+b3AoKS4NCg0KVGhpcyBpcyBub25zZW5zZS4NCg0KSW4gdGhlIG5vbi1YZW4gY2FzZSB0aGUg
+aW5pdGlhbCBpbmRpcmVjdCBjYWxsIGlzIGRpcmVjdGx5IHJlcGxhY2VkIHdpdGgNClNUSS9D
+TEkgdmlhIGFsdGVybmF0aXZlIHBhdGNoaW5nLCB3aGlsZSBmb3IgWGVuIGl0IGlzIHJlcGxh
+Y2VkIGJ5IGEgZGlyZWN0DQpjYWxsLg0KDQpUaGUgcGFyYXZpcnRfbm9wKCkgY2FzZSBpcyBo
+YW5kbGVkIGluIGFsdF9yZXBsYWNlX2NhbGwoKSBieSByZXBsYWNpbmcgdGhlDQppbmRpcmVj
+dCBjYWxsIHdpdGggYSBub3AgaW4gY2FzZSB0aGUgdGFyZ2V0IG9mIHRoZSBjYWxsIHdhcyBw
+YXJhdmlydF9ub3AoKQ0KKHdoaWNoIGlzIGluIGZhY3Qgbm9fZnVuYygpKS4NCg0KPiANCj4g
+ICAgVGhlIGNhbGwgbWFrZXMgb25seSBzZW5zZSwgd2hlbiB0aGUgbmF0aXZlIGRlZmF1bHQg
+aXMgYW4gYWN0dWFsDQo+ICAgIGZ1bmN0aW9uLCBidXQgZm9yIHRoZSB0cml2aWFsIGNhc2Vz
+IGl0J3MgYSBibGF0YW50IGVuZ2luZWVyaW5nDQo+ICAgIHRyYWlud3JlY2suDQoNClRoZSB0
+cml2aWFsIGNhc2VzIGFyZSBhbGwgaGFuZGxlZCBhcyBzdGF0ZWQgYWJvdmU6IGEgZGlyZWN0
+IHJlcGxhY2VtZW50DQppbnN0cnVjdGlvbiBpcyBwbGFjZWQgYXQgdGhlIGluZGlyZWN0IGNh
+bGwgcG9zaXRpb24uDQoNCj4gTGF0ZXIgYSBjb25zZW5zdXMgd2FzIHJlYWNoZWQgdG8gdXRp
+bGl6ZSB0aGUgYWx0ZXJuYXRpdmVzIG1lY2hhbmlzbSB0bw0KPiBlbGltaW5hdGUgdGhlIGlu
+ZGlyZWN0IGNhbGwgb3ZlcmhlYWQgaW50cm9kdWNlZCBieSB0aGUgcHZfb3BzIEFQSXM6DQo+
+IA0KPiAgICAgIDEpIFdoZW4gYnVpbHQgd2l0aCAhQ09ORklHX1hFTl9QViwgWDg2X0ZFQVRV
+UkVfWEVOUFYgYmVjb21lcyBhDQo+ICAgICAgICAgZGlzYWJsZWQgZmVhdHVyZSwgcHJldmVu
+dGluZyB0aGUgWGVuIGNvZGUgZnJvbSBiZWluZyBidWlsdA0KPiAgICAgICAgIGFuZCBlbnN1
+cmluZyB0aGUgbmF0aXZlIGNvZGUgaXMgZXhlY3V0ZWQgdW5jb25kaXRpb25hbGx5Lg0KDQpU
+aGlzIGlzIHRoZSBjYXNlIHRvZGF5IGFscmVhZHkuIFRoZXJlIGlzIG5vIG5lZWQgZm9yIGFu
+eSBjaGFuZ2UgdG8gaGF2ZQ0KdGhpcyBpbiBwbGFjZS4NCg0KPiANCj4gICAgICAyKSBXaGVu
+IGJ1aWx0IHdpdGggQ09ORklHX1hFTl9QVjoNCj4gDQo+ICAgICAgICAgMi4xKSBJZiBub3Qg
+cnVubmluZyBvbiB0aGUgWGVuIGh5cGVydmlzb3IgKCFYODZfRkVBVFVSRV9YRU5QViksDQo+
+ICAgICAgICAgICAgICB0aGUga2VybmVsIHJ1bnRpbWUgYmluYXJ5IGlzIHBhdGNoZWQgdG8g
+dW5jb25kaXRpb25hbGx5DQo+ICAgICAgICAgICAgICBqdW1wIHRvIHRoZSBuYXRpdmUgTVNS
+IHdyaXRlIGNvZGUuDQo+IA0KPiAgICAgICAgIDIuMikgSWYgcnVubmluZyBvbiB0aGUgWGVu
+IGh5cGVydmlzb3IgKFg4Nl9GRUFUVVJFX1hFTlBWKSwgdGhlDQo+ICAgICAgICAgICAgICBr
+ZXJuZWwgcnVudGltZSBiaW5hcnkgaXMgcGF0Y2hlZCB0byB1bmNvbmRpdGlvbmFsbHkganVt
+cA0KPiAgICAgICAgICAgICAgdG8gdGhlIFhlbiBNU1Igd3JpdGUgY29kZS4NCg0KSSBjYW4n
+dCBzZWUgd2hhdCBpcyBkaWZmZXJlbnQgaGVyZSBjb21wYXJlZCB0byB0b2RheSdzIHN0YXRl
+Lg0KDQo+IA0KPiBUaGUgYWx0ZXJuYXRpdmVzIG1lY2hhbmlzbSBpcyBhbHNvIHVzZWQgdG8g
+Y2hvb3NlIHRoZSBuZXcgaW1tZWRpYXRlDQo+IGZvcm0gTVNSIHdyaXRlIGluc3RydWN0aW9u
+IHdoZW4gaXQncyBhdmFpbGFibGUuDQoNClllcywgdGhpcyBuZWVkcyB0byBiZSBhZGRlZC4N
+Cg0KPiBDb25zZXF1ZW50bHksIHJlbW92ZSB0aGUgcHZfb3BzIE1TUiB3cml0ZSBBUElzIGFu
+ZCB0aGUgWGVuIGNhbGxiYWNrcy4NCg0KSSBzdGlsbCBkb24ndCBzZWUgYSBtYWpvciBkaWZm
+ZXJlbmNlIHRvIHRvZGF5J3Mgc29sdXRpb24uDQoNCk9ubHkgdGhlICJwYXJhdmlydCIgdGVy
+bSBoYXMgYmVlbiBlbGltaW5hdGVkLg0KDQoNCkp1ZXJnZW4NCg==
+--------------TWjE0O8m3DPylu59JiT9iwph
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-On 4/22/25 12:05, Stephen Rothwell wrote:
-> Hi all,
-> 
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Hi Ingo, Stephen.
+--------------TWjE0O8m3DPylu59JiT9iwph--
 
-> On Thu, 17 Apr 2025 13:49:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> On Tue, 15 Apr 2025 13:35:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>
->>> After merging the tip tree, today's linux-next build (native perf)
->>> failed like this:
->>>
->>> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
->>> In file included from util/amd-sample-raw.c:12:
->>> tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: asm/msr-index.h: No such file or directory
->>>     10 | #include <asm/msr-index.h>
->>>        |          ^~~~~~~~~~~~~~~~~
->>> compilation terminated.
->>>
->>> Maybe caused by commit
->>>
->>>    3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>")
->>> or associated commits?
->>>
+--------------2IPlD0AsRlb1LDytrzf7MO1r--
 
-Even i am running into this error when building tools/perf on ppc64le. perf build works in 6.15-rc3,
-but failed with tip/master.
+--------------8vGI03Dqxf6ImVX0xeh765vV
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-Did git bisect
-good: [9c32cda43eb78f78c73aee4aa344b777714e259b] Linux 6.15-rc3
-bad: [1a11b5b80f46e4dff0b21cb07efab43dee049d61] Merge branch into tip master: 'x86/sev'
-...
-# first bad commit: [3846389c03a8518884f09056611619bd1461ffc7] x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>
+-----BEGIN PGP SIGNATURE-----
 
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgHZ+0FAwAAAAAACgkQsN6d1ii/Ey9o
+Kwf+Ka8aDvktSdKOtwo3ZdG8CXGbhTVU/RFRiiCX+p/ja038CoQl+/SDzpsd9r4wApdxZeP3Kw5A
+w9rGmV/b+b6SjhX9aMR5V6/WtL+8fHF3ahX8pZQB436Zmltil3ORUWP2bUJ1XBDf0uuNEnS2orO8
+7i7LqV+E+lvJtjsS+Ml6iQQUwETDFQEfShG2bFqyCbaxEPKeZqdEiCUoVQ85jAksvE0UEujITh/K
+V8dUgromwUTsyo2GZkgjDh9ewmx+4xkMLCLChn6rFRGVOPjQ62XoTE0KqPecMkfV0JiDCiKgSmBZ
+/zmgOaF+fasyXqt62Tb/l2F9PvlX5TGvS5kMqcpYDQ==
+=zY3y
+-----END PGP SIGNATURE-----
 
-It isn't able to find the file after rename. I did the below hack so that ibs.h finds the msr-index.h
-Likely there is better way. for me, this helps to build tools/perf.
-
----
-
-diff --git a/arch/x86/include/asm/amd/ibs.h b/arch/x86/include/asm/amd/ibs.h
-index 3ee5903982c2..ac3a36fc08b1 100644
---- a/arch/x86/include/asm/amd/ibs.h
-+++ b/arch/x86/include/asm/amd/ibs.h
-@@ -7,7 +7,7 @@
-   * 55898 Rev 0.35 - Feb 5, 2021
-   */
-  
--#include <asm/msr-index.h>
-+#include "../../asm/msr-index.h"
-  
-  /* IBS_OP_DATA2 DataSrc */
-  #define IBS_DATA_SRC_LOC_CACHE                  2
-
-
+--------------8vGI03Dqxf6ImVX0xeh765vV--
