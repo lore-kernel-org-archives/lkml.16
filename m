@@ -1,61 +1,64 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A7342AB4
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552EC148838
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745285184; cv=none; b=OQi4mlDv9spJKYuLzcKNsfreM/WoVXfWimwIK0kHEYBjpueTyEkVqJmcxQRjbgWiNdospbJfAl9iBhofeFhBUtHV66G9hONrjsuFRhaPJzITcP95Va71Z9jobTSwHOWQqoGRrGQBciIAAddRXjcBvdZK2Lw8TY3bAXBkM/sam2M=
+	t=1745285184; cv=none; b=tWFJXTelCKjlFNJb7tvgQss2dPMjLTVfBHuUv73uCH0FN1qTt/YNtPb0ZlXnUpIZlrr2TzacLGqJjZJV4XDFq0XRTvqgixwmXwJhQwFXkWUu0wNo9xWlvSvRAWnzyEqyCk0XFELXF4ZPmpFZFfcMd8VLONK0JX0CYpJv9c9x3Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745285184; c=relaxed/simple;
-	bh=5B16rGU+2k+wStQl5NGI8RjKMaLbRadkXKi9vkJ/oho=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LHoS0SssIJ41lPhyQo6QPSsHIsiAsKxfU73KKA8tVzeWxFLa22jt0L1ZMxGpgVk7qgMP9FPcpFrqw0/C/o9srGu8iYBMBxaHlI/pFz6dsU+ZmDAT/u9FiqI0Mcw6UCUIqrZF+VfXD0KkcJDerZxvOwTd/gCZFyKDLQ9iICBFL9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=uz26Yi3V; arc=none smtp.client-ip=209.85.219.47
+	bh=WMwHDQ2As8i0+1SehyLYPLGiQfF/A9eDDNpHTGo5cBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G7a4xF6+scDpcMWK8B+JWn1boMgsbJcMyY6vFiiBoQrYYjgyAxUxBAd0/fhMM/YuHjlcObAbFm0jwNc/mBs7FXrqZmyfBtrITto9XxjL5cOqdaAEZS1Eh8z8sP5Fyt2AUYdtxeRm4sPnsnrLUGxDWCfo7zfxb0E8RsIdbKW7HVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fYJaxH4O; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="uz26Yi3V"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6f2b04a6169so49546066d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:26:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fYJaxH4O"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c559b3eb0bso247755885a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745285178; x=1745889978; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ShM+OPRo4tkARwcyIJhuiyqycqSNpimqPcyhrf6R0T8=;
-        b=uz26Yi3V8UGsVpLfIRcKlQeM62t2W/URAKwJzgrGIBm/jGqkwOaJBdFBmafqZjrx30
-         B3mpsmFF0rZnwW3/QhAkfUQG8QWGbz0n5TClwXfbq+IUbgnPMTldRUDCsrxw/HswJboi
-         xJECqFft7B5zsyTm6Uic1RCkKfc+R6TX1bcekr37mzAzO1HnrahEED+JBNrM9l/afqUf
-         gzfZ5ksYOherYK4d9OD0HiB2Sarf7teCwi+5pCP3ETkyC92trAAWByN02TH5l1oyusbz
-         LR5FlWZOuOElRRuEq5CWGa8aKGvZ/qbQnoRD2/m+nDvIDcRjIbMVVTV25lIJesBPMtm/
-         IhLg==
+        d=gourry.net; s=google; t=1745285181; x=1745889981; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Kle4Lqt4WBt6giVl/+yUtlyI+tb9qWSFjEQjFngXB0=;
+        b=fYJaxH4OUfRcMIgrrfxZWhupBG85LFePRuF87JxCs788tgPZTTQeJspEd/Hyuj7nBv
+         +vaTaM8vOvZmEC+ILsWisOzk+fxFS17KgBBk3vlAykIF2Uo8bKAPse5F3l1AZac11OC+
+         tu6LQ23gg88kHvi8D+21I8u6M/2OV8ljXkbC7yK8K+kCrrcD/0xey0REY2U2qWsBS+uy
+         0bU7eDDoCq4Wvmz/q2Wl5qa+PLGrQcxIMo6tWxAUa13VNEYvez0BIlX4Pv4A93gyNioW
+         zWsXQf7m8zH1EgeBsXBdECZIFLbluzACx3bBPlYc8C/jaG/2T9DnZm1Z5rzpc/NZd7aC
+         r2MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745285178; x=1745889978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ShM+OPRo4tkARwcyIJhuiyqycqSNpimqPcyhrf6R0T8=;
-        b=Ar+QLlJbibQlvhaGwGLyZEA0sC6htYdrImp+45NHhg1uy4sFZxnNjxfkpN1fmP8/Fb
-         jpV1reBCOeBoUna+PRKfo5IJWXNME3WtYx8mseTninJipku/Q2Cg28i/azohaC2gqVWJ
-         HDeb5eGk8x+DCVXDgEId4HjpFy7JBDesFkFTfQ/ENFvgrlJzwP55/GH/Dfj+Z5G4UOtN
-         k32mvDUZILXJbkcRp/Ne6kwQs6LBpjpS5L3Ndq+TD26T47U2XQtkFxoXSzeNEnbCbSUl
-         GRi1LtfFCt62J8q8Qvi8+bHflMH1Xx+k1RmLTBiGEGBsVR5hK2pEdCeoMP690vg22DNx
-         rBAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXoWt7aKRFY6nbjJ7dxT8ohCvW2JkytQBT3hX6+UcuG0dQB/11KFK2mq3YGCRvbSmXSyr4xuJyaNJ8WQLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1lFa3jnWRz1XNWR4gabLeqSJUIf4F6uS8DpBBB0/QbcGE3uN5
-	U3d1/bLoz9JVn/fSYqM8b0DZ6MVyhSaOZsSTnGGTYp7T/23liT5m+INBwoodh78=
-X-Gm-Gg: ASbGncugU3aW4+gs3vGjiRTKfzsmh+EWYc1du8Z1wKWnvvKVcb3pRffeKCJARfIFo9j
-	eSkklWlF6EL+B98X/jCNujr7mFTGI2Q805qDb26YvtSWXVvga2jwE2OqUva3w/1cx8AIL/13I6+
-	0XfHz37vwaxMAvPEAX4d9sqMfL6OT91CQxHVmCPIw8dsj3CFxdkLp0Ct5CEkU/TvgOnU2kr3t71
-	iZDI/44oU1RXbE5QKn+o/JuKp7sg38dP6My3I1T23E+A7N6iNuzl4xdedrbO1ugobRnum9o8qRu
-	/8DovsrIr2wQv6k+DcdqzOOU668jkqMa98HstxO8oWY5a9dLmIDTCG5S5ytlQOazkZKy356jbag
-	K1SJVgIq8rGd0UOeNPfJEdPQoh1V3
-X-Google-Smtp-Source: AGHT+IHA09oLgmb2N1FkvGXbNK6Ei2QvTetwNGSUKWYaIIAktisNIJsenYqDkUExZvqsSRrL/Qzp4w==
-X-Received: by 2002:a05:6214:248a:b0:6d1:7433:3670 with SMTP id 6a1803df08f44-6f2c44e963cmr251526376d6.4.1745285178136;
-        Mon, 21 Apr 2025 18:26:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745285181; x=1745889981;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Kle4Lqt4WBt6giVl/+yUtlyI+tb9qWSFjEQjFngXB0=;
+        b=cldaG4/k5GxNKUznzfjWCylascjK8VeSHa3IYTMaaQcEr2qoUkF/FHucLxVY1g1gEp
+         PPFbx5Mbp2KVg4ppdT3xTHMKfE5ES3Ea6/2XWQX6489S0ccakiQ6ooIuzZ9EdMkXLdeF
+         QVWxLsXnvolDN9tQ1MP2qEk/V6NEaV+2wn7t7mfdcTOIQ0NB5190li6+Rq/sUc+puDyL
+         jv9LC3IGUFTrBegZV45EOIIfSBMO4QjPk8xEOItr0Jf5txgck13lREQ/8qhcSsdGKdu6
+         x5C8+jUsYlFrZYyBeZsD+Yl5HL+elo8f2+58HEF2pbTu+JyD4v5Q/5pQZeyf8T9ykjHH
+         6qjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRK6P1uGCbvAUEy60VadYoUKbsv5S3FLMNmR3WhDDM/7920RiN5h8KO8hEtYwyI45WrMr1eZlmjmKxzmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ7SjM2YamRtMUh8oLK5bXvq31zVWviBc1KjtDg9gqwMybPzpJ
+	SBhlg+644uZO0IKevoMNYMwRT9zCqDbnupERuqOPzSQiHbsGySEAirbtlpuYtUmDlP6BKsK7+pr
+	5
+X-Gm-Gg: ASbGncvG5x5Fw/4C4bBO4qaj+GJ4PZYmz42wxO2FeISncSSnU0Lqf5cFchM/V2T/3X4
+	vzRSt94lNkun7/jfDWfJ5YBssTPJo6Me8wuRQy2fEUVgmbU7U2mgnAILjQsKWijs2icV+uSkaxh
+	TSZphRhPhqW1tZyvQLwFRzou3F2jnBvHPHCEYeLBLtthZqHfq7cjRQOYGCjYhYsmee+/yvX12T9
+	qk1QbTSf8SPTpboDK+SRtVqX5y9RNgn7GcBbq2FY6TSqfl7yPhMkUJlb7HeJMGbpfka8VpYv6BI
+	v1uxqGsLeI9vOMhzb69TtENC/8qrsYXeuijoycnEbTbDeN81SsL8pPqeZYDxqjePydd/Hti6RZe
+	SHybn8DINsqtw7Gl7awwgZrfFrVDDZkMnPfLOiNM=
+X-Google-Smtp-Source: AGHT+IG6HxcdwaS4DYHDMOqX5ZLpYXYsTbmi3+FGkCgYV4wxqXoEUZtvFG5cMXhmSwORfqHFe+7drA==
+X-Received: by 2002:a05:6214:2484:b0:6f2:b551:a65 with SMTP id 6a1803df08f44-6f2c4674ffcmr281778536d6.38.1745285181142;
+        Mon, 21 Apr 2025 18:26:21 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c00d78sm50985746d6.79.2025.04.21.18.26.17
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c00d78sm50985746d6.79.2025.04.21.18.26.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 18:26:17 -0700 (PDT)
+        Mon, 21 Apr 2025 18:26:20 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: cgroups@vger.kernel.org,
@@ -70,10 +73,12 @@ Cc: cgroups@vger.kernel.org,
 	tj@kernel.org,
 	mkoutny@suse.com,
 	akpm@linux-foundation.org
-Subject: [PATCH v4 0/2] vmscan: enforce mems_effective during demotion
-Date: Mon, 21 Apr 2025 21:26:13 -0400
-Message-ID: <20250422012616.1883287-1-gourry@gourry.net>
+Subject: [PATCH v4 2/2] vmscan,cgroup: apply mems_effective to reclaim
+Date: Mon, 21 Apr 2025 21:26:15 -0400
+Message-ID: <20250422012616.1883287-3-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422012616.1883287-1-gourry@gourry.net>
+References: <20250422012616.1883287-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,39 +87,303 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change reclaim to respect cpuset.mems_effective during demotion when
-possible. Presently, reclaim explicitly ignores cpuset.mems_effective
-when demoting, which may cause the cpuset settings to violated.
+It is possible for a reclaimer to cause demotions of an lruvec belonging
+to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
+this limitation based on the lruvec's memcg and prevent demotion.
 
-Implement cpuset_node_allowed() to check the cpuset.mems_effective
-associated wih the mem_cgroup of the lruvec being scanned. This only
-applies to cgroup/cpuset v2, as cpuset exists in a different hierarchy
-than mem_cgroup in v1.
+Notably, this may still allow demotion of shared libraries or any memory
+first instantiated in another cgroup. This means cpusets still cannot
+cannot guarantee complete isolation when demotion is enabled, and the
+docs have been updated to reflect this.
 
-This requires renaming the existing cpuset_node_allowed() to be
-cpuset_current_now_allowed() - which is more descriptive anyway - to
-implement the new cpuset_node_allowed() which takes a target cgroup.
+This is useful for isolating workloads on a multi-tenant system from
+certain classes of memory more consistently - with the noted exceptions.
 
-v4:
-- explicitly expect v1 instead of checking for empty effective_mems.
-  this was the case anyway since cpuset and mem_cgroup are in different
-  heirarchy in v1.
-- update docs to reflect this
-- rcu_read_lock instead of taking a global lock.
-- cpuset header fixup when compiled out.
-
-Gregory Price (2):
-  cpuset: rename cpuset_node_allowed to cpuset_current_node_allowed
-  vmscan,cgroup: apply mems_effective to reclaim
-
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
  .../ABI/testing/sysfs-kernel-mm-numa          | 16 +++++---
- include/linux/cpuset.h                        |  9 +++-
+ include/linux/cpuset.h                        |  5 +++
  include/linux/memcontrol.h                    |  6 +++
- kernel/cgroup/cpuset.c                        | 30 +++++++++++++-
+ kernel/cgroup/cpuset.c                        | 26 ++++++++++++
  mm/memcontrol.c                               |  6 +++
- mm/page_alloc.c                               |  4 +-
  mm/vmscan.c                                   | 41 +++++++++++--------
- 7 files changed, 84 insertions(+), 28 deletions(-)
+ 6 files changed, 78 insertions(+), 22 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
+index 77e559d4ed80..90e375ff54cb 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
++++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
+@@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
+ 		Allowing page migration during reclaim enables these
+ 		systems to migrate pages from fast tiers to slow tiers
+ 		when the fast tier is under pressure.  This migration
+-		is performed before swap.  It may move data to a NUMA
+-		node that does not fall into the cpuset of the
+-		allocating process which might be construed to violate
+-		the guarantees of cpusets.  This should not be enabled
+-		on systems which need strict cpuset location
+-		guarantees.
++		is performed before swap if an eligible numa node is
++		present in cpuset.mems for the cgroup (or if cpuset v1
++		is being used). If cpusets.mems changes at runtime, it
++		may move data to a NUMA node that does not fall into the
++		cpuset of the new cpusets.mems, which might be construed
++		to violate the guarantees of cpusets.  Shared memory,
++		such as libraries, owned by another cgroup may still be
++		demoted and result in memory use on a node not present
++		in cpusets.mem. This should not be enabled on systems
++		which need strict cpuset location guarantees.
+diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
+index 893a4c340d48..5255e3fdbf62 100644
+--- a/include/linux/cpuset.h
++++ b/include/linux/cpuset.h
+@@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
+ 	task_unlock(current);
+ }
+ 
++extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
+ #else /* !CONFIG_CPUSETS */
+ 
+ static inline bool cpusets_enabled(void) { return false; }
+@@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
+ 	return false;
+ }
+ 
++static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
++{
++	return true;
++}
+ #endif /* !CONFIG_CPUSETS */
+ 
+ #endif /* _LINUX_CPUSET_H */
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 53364526d877..a6c4e3faf721 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1736,6 +1736,8 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
+ 	rcu_read_unlock();
+ }
+ 
++bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid);
++
+ #else
+ static inline bool mem_cgroup_kmem_disabled(void)
+ {
+@@ -1793,6 +1795,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
+ {
+ }
+ 
++static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
++{
++	return true;
++}
+ #endif /* CONFIG_MEMCG */
+ 
+ #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index f8e6a9b642cb..c52348bfd5db 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -4163,6 +4163,32 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
+ 	return allowed;
+ }
+ 
++bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
++{
++	struct cgroup_subsys_state *css;
++	struct cpuset *cs;
++	bool allowed;
++
++	/*
++	 * In v1, mem_cgroup and cpuset are unlikely in the same hierarchy
++	 * and mems_allowed is likely to be empty even if we could get to it,
++	 * so return true to avoid taking a global lock on the empty check.
++	 */
++	if (!cpuset_v2())
++		return true;
++
++	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
++	if (!css)
++		return true;
++
++	cs = container_of(css, struct cpuset, css);
++	rcu_read_lock();
++	allowed = node_isset(nid, cs->effective_mems);
++	rcu_read_unlock();
++	css_put(css);
++	return allowed;
++}
++
+ /**
+  * cpuset_spread_node() - On which node to begin search for a page
+  * @rotor: round robin rotor
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 40c07b8699ae..2f61d0060fd1 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -29,6 +29,7 @@
+ #include <linux/page_counter.h>
+ #include <linux/memcontrol.h>
+ #include <linux/cgroup.h>
++#include <linux/cpuset.h>
+ #include <linux/sched/mm.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/hugetlb.h>
+@@ -5437,3 +5438,8 @@ static int __init mem_cgroup_swap_init(void)
+ subsys_initcall(mem_cgroup_swap_init);
+ 
+ #endif /* CONFIG_SWAP */
++
++bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
++{
++	return memcg ? cpuset_node_allowed(memcg->css.cgroup, nid) : true;
++}
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 2b2ab386cab5..32a7ce421e42 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -342,16 +342,22 @@ static void flush_reclaim_state(struct scan_control *sc)
+ 	}
+ }
+ 
+-static bool can_demote(int nid, struct scan_control *sc)
++static bool can_demote(int nid, struct scan_control *sc,
++		       struct mem_cgroup *memcg)
+ {
++	int demotion_nid;
++
+ 	if (!numa_demotion_enabled)
+ 		return false;
+ 	if (sc && sc->no_demotion)
+ 		return false;
+-	if (next_demotion_node(nid) == NUMA_NO_NODE)
++
++	demotion_nid = next_demotion_node(nid);
++	if (demotion_nid == NUMA_NO_NODE)
+ 		return false;
+ 
+-	return true;
++	/* If demotion node isn't in the cgroup's mems_allowed, fall back */
++	return mem_cgroup_node_allowed(memcg, demotion_nid);
+ }
+ 
+ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
+@@ -376,7 +382,7 @@ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
+ 	 *
+ 	 * Can it be reclaimed from this node via demotion?
+ 	 */
+-	return can_demote(nid, sc);
++	return can_demote(nid, sc, memcg);
+ }
+ 
+ /*
+@@ -1096,7 +1102,8 @@ static bool may_enter_fs(struct folio *folio, gfp_t gfp_mask)
+  */
+ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		struct pglist_data *pgdat, struct scan_control *sc,
+-		struct reclaim_stat *stat, bool ignore_references)
++		struct reclaim_stat *stat, bool ignore_references,
++		struct mem_cgroup *memcg)
+ {
+ 	struct folio_batch free_folios;
+ 	LIST_HEAD(ret_folios);
+@@ -1109,7 +1116,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 	folio_batch_init(&free_folios);
+ 	memset(stat, 0, sizeof(*stat));
+ 	cond_resched();
+-	do_demote_pass = can_demote(pgdat->node_id, sc);
++	do_demote_pass = can_demote(pgdat->node_id, sc, memcg);
+ 
+ retry:
+ 	while (!list_empty(folio_list)) {
+@@ -1658,7 +1665,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+ 	 */
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 	nr_reclaimed = shrink_folio_list(&clean_folios, zone->zone_pgdat, &sc,
+-					&stat, true);
++					&stat, true, NULL);
+ 	memalloc_noreclaim_restore(noreclaim_flag);
+ 
+ 	list_splice(&clean_folios, folio_list);
+@@ -2031,7 +2038,8 @@ static unsigned long shrink_inactive_list(unsigned long nr_to_scan,
+ 	if (nr_taken == 0)
+ 		return 0;
+ 
+-	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false);
++	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false,
++					 lruvec_memcg(lruvec));
+ 
+ 	spin_lock_irq(&lruvec->lru_lock);
+ 	move_folios_to_lru(lruvec, &folio_list);
+@@ -2214,7 +2222,7 @@ static unsigned int reclaim_folio_list(struct list_head *folio_list,
+ 		.no_demotion = 1,
+ 	};
+ 
+-	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true);
++	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true, NULL);
+ 	while (!list_empty(folio_list)) {
+ 		folio = lru_to_folio(folio_list);
+ 		list_del(&folio->lru);
+@@ -2646,7 +2654,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+  * Anonymous LRU management is a waste if there is
+  * ultimately no way to reclaim the memory.
+  */
+-static bool can_age_anon_pages(struct pglist_data *pgdat,
++static bool can_age_anon_pages(struct lruvec *lruvec,
+ 			       struct scan_control *sc)
+ {
+ 	/* Aging the anon LRU is valuable if swap is present: */
+@@ -2654,7 +2662,8 @@ static bool can_age_anon_pages(struct pglist_data *pgdat,
+ 		return true;
+ 
+ 	/* Also valuable if anon pages can be demoted: */
+-	return can_demote(pgdat->node_id, sc);
++	return can_demote(lruvec_pgdat(lruvec)->node_id, sc,
++			  lruvec_memcg(lruvec));
+ }
+ 
+ #ifdef CONFIG_LRU_GEN
+@@ -2732,7 +2741,7 @@ static int get_swappiness(struct lruvec *lruvec, struct scan_control *sc)
+ 	if (!sc->may_swap)
+ 		return 0;
+ 
+-	if (!can_demote(pgdat->node_id, sc) &&
++	if (!can_demote(pgdat->node_id, sc, memcg) &&
+ 	    mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
+ 		return 0;
+ 
+@@ -4695,7 +4704,7 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
+ 	if (list_empty(&list))
+ 		return scanned;
+ retry:
+-	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
++	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false, memcg);
+ 	sc->nr.unqueued_dirty += stat.nr_unqueued_dirty;
+ 	sc->nr_reclaimed += reclaimed;
+ 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
+@@ -5850,7 +5859,7 @@ static void shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
+ 	 * Even if we did not try to evict anon pages at all, we want to
+ 	 * rebalance the anon lru active/inactive ratio.
+ 	 */
+-	if (can_age_anon_pages(lruvec_pgdat(lruvec), sc) &&
++	if (can_age_anon_pages(lruvec, sc) &&
+ 	    inactive_is_low(lruvec, LRU_INACTIVE_ANON))
+ 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
+ 				   sc, LRU_ACTIVE_ANON);
+@@ -6681,10 +6690,10 @@ static void kswapd_age_node(struct pglist_data *pgdat, struct scan_control *sc)
+ 		return;
+ 	}
+ 
+-	if (!can_age_anon_pages(pgdat, sc))
++	lruvec = mem_cgroup_lruvec(NULL, pgdat);
++	if (!can_age_anon_pages(lruvec, sc))
+ 		return;
+ 
+-	lruvec = mem_cgroup_lruvec(NULL, pgdat);
+ 	if (!inactive_is_low(lruvec, LRU_INACTIVE_ANON))
+ 		return;
+ 
 -- 
 2.49.0
+
