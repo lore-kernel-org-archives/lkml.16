@@ -1,141 +1,161 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC1E6DCE1;
-	Tue, 22 Apr 2025 02:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67EBDF49
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745289848; cv=none; b=TUz+NgCM2jII5lVkerSQmFXyNSJuYwVrzAArRKB4YDx2TSyE9Xi2diYZns26qGz0R8rv/oo3wXe+foQcQnXV5e8Sdw5uQhYdMitv5DyRHideuLcoAWAcDFdbul91l+JLIO4nK6NVMJHeUR2pIjsA7Gnbstwxx9OFVDee8p61xpM=
+	t=1745289987; cv=none; b=OvttyGFOzbOX+6WdE6Al9aC7DdB/oE5XW8E8eiS6alrYDlywbDMyLXtbkSyB/NyRIe7y/XahQGFJNNjkKwZUYMjV3//m/SXtJivtF9F4buDX6elQuZAJUupTGpkYEH67LUJJqYGg196TxFUFRbpMlLJCrRPapQtGTdw0fRVuNFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745289848; c=relaxed/simple;
-	bh=s44alH5hPjK2Gefh1TQEn8UKPGMiG3Z9tG4G+qwTgfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=P+8bnXVtEKp1raSo3EeFUHP48V2gs+fj/Zp5aMjVS8zRBv/ULiKqeOZ7i9nWCOnXMQCiKrkGX7G5Gtvsq7gAN8cZuDKoaxmTIa3MbytZbsJduGRctiZ2mEGy5vnoHS81/rUUg8/l3WMnb3zjtD1xdoqMswiuVn8fsRGW/JGP0As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=klMqPDLF; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="klMqPDLF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745289843;
-	bh=/RE1MQNTvfKl06CaGtYl0HbZyTjcSdvmmrxQ2kVUrq4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=klMqPDLFcPjPsJ1u1O8DjTqJOFND61arOa/pOgaEqFbhim3bgVJql97jCdmnfJwgx
-	 ChdPzZLvaPSRDSs5VCs/X3xDjTV3xsxMNwtuyjZedQnnHm9zfl+6TZLahtlbTDkT8x
-	 vSPFfkByWKf8kcY33veOin9EDk/iTTi3aOco/P8clBIm0V/YDN5002Dl02iW3vL0va
-	 uRZGS2Ug4R6KjZjk6xwcV73Udi3iAiCIBng38JBG5RD/e94+kXowJsEqLN4IEywMyh
-	 om6xcOzjmsiX7r3V77yXSOR+10lCK2GacjrF4dGpOrPdrLEaIzIiIg+Mpyf1mULwRH
-	 tHdbXeilxI5+Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhRQC0mMdz4wnp;
-	Tue, 22 Apr 2025 12:44:02 +1000 (AEST)
-Date: Tue, 22 Apr 2025 12:44:02 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Alexander Graf <graf@amazon.com>, Changyuan Lyu <changyuanl@google.com>,
- Ingo Molnar <mingo@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Subject: linux-next: manual merge of the mm-unstable tree with the tip-fixes
- tree
-Message-ID: <20250422124402.4b891d14@canb.auug.org.au>
+	s=arc-20240116; t=1745289987; c=relaxed/simple;
+	bh=oyV2E9y+OsY8xzF21VfdHGmjmCo+H3UnvsnlU3rpA60=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lJmFrAgCwHbnIN5CHf6oxwWbHA8PLkLE1lAbd3bevBtZXVTewn1wy8OgdZHMSogKqyYXNTBmAjBVXYOO7/Ia8LpJyDZnDkWvnzYsbHuQ1VuA0Aad0qu+3mGdMcnu1wLb1Bm4s0wGLh0JfWhX72Gy6dHucRVCex9Lc4xriQfWsWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Mon, 21 Apr 2025 22:46:19 -0400
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ben Collins <bcollins@kernel.org>
+To: iommu@lists.linux.dev
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] fsl_pamu: Use 40-bits for addressing where appropriate
+Message-ID: <2025042122-prudent-dogfish-eac6bf@boujee-and-buff>
+Mail-Followup-To: iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qUc2LQFQGpw/usxMr3jV2Mj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pj6oaviibqdhrhkl"
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
---Sig_/qUc2LQFQGpw/usxMr3jV2Mj
-Content-Type: text/plain; charset=US-ASCII
+
+--pj6oaviibqdhrhkl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] fsl_pamu: Use 40-bits for addressing where appropriate
+MIME-Version: 1.0
 
-Hi all,
+On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
+and it's safe to move resources to the upper bounds of the 1TiB limit to
+make room for > 64GiB of memory. The PAMU driver does not account for
+this, however.
 
-Today's linux-next merge of the mm-unstable tree got a conflict in:
+Setup fsl,pamu driver to make use of the full 40-bit addressing space
+when configuring liodn's that may have been configured in this range.
+Specifically the e5500 and e6500 CPUs.
 
-  arch/x86/kernel/e820.c
+Signed-off-by: Ben Collins <bcollins@kernel.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+---
+ drivers/iommu/fsl_pamu.c        | 5 +++--
+ drivers/iommu/fsl_pamu.h        | 7 +++++++
+ drivers/iommu/fsl_pamu_domain.c | 5 +++--
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
-between commit:
+diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
+index f37d3b0441318..ceb352f824010 100644
+--- a/drivers/iommu/fsl_pamu.c
++++ b/drivers/iommu/fsl_pamu.c
+@@ -198,7 +198,7 @@ int pamu_config_ppaace(int liodn, u32 omi, u32 stashid,=
+ int prot)
+=20
+ 	/* window size is 2^(WSE+1) bytes */
+ 	set_bf(ppaace->addr_bitfields, PPAACE_AF_WSE,
+-	       map_addrspace_size_to_wse(1ULL << 36));
++	       map_addrspace_size_to_wse(1ULL << PAMU_MAX_PHYS_BITS));
+=20
+ 	pamu_init_ppaace(ppaace);
+=20
+@@ -475,7 +475,8 @@ static void setup_liodns(void)
+ 			ppaace =3D pamu_get_ppaace(liodn);
+ 			pamu_init_ppaace(ppaace);
+ 			/* window size is 2^(WSE+1) bytes */
+-			set_bf(ppaace->addr_bitfields, PPAACE_AF_WSE, 35);
++			set_bf(ppaace->addr_bitfields, PPAACE_AF_WSE,
++			       (PAMU_MAX_PHYS_BITS - 1));
+ 			ppaace->wbah =3D 0;
+ 			set_bf(ppaace->addr_bitfields, PPAACE_AF_WBAL, 0);
+ 			set_bf(ppaace->impl_attr, PAACE_IA_ATM,
+diff --git a/drivers/iommu/fsl_pamu.h b/drivers/iommu/fsl_pamu.h
+index 36df7975ff64d..5d88871610cfd 100644
+--- a/drivers/iommu/fsl_pamu.h
++++ b/drivers/iommu/fsl_pamu.h
+@@ -42,6 +42,13 @@ struct pamu_mmap_regs {
+ 	u32 olal;
+ };
+=20
++/* Physical addressing capability */
++#if defined(CONFIG_E6500_CPU) || defined(CONFIG_E5500_CPU)
++#define PAMU_MAX_PHYS_BITS	40
++#else
++#define PAMU_MAX_PHYS_BITS	36
++#endif
++
+ /* PAMU Error Registers */
+ #define PAMU_POES1 0x0040
+ #define PAMU_POES2 0x0044
+diff --git a/drivers/iommu/fsl_pamu_domain.c b/drivers/iommu/fsl_pamu_domai=
+n.c
+index 30be786bff11e..a4bc6482a00f7 100644
+--- a/drivers/iommu/fsl_pamu_domain.c
++++ b/drivers/iommu/fsl_pamu_domain.c
+@@ -214,9 +214,10 @@ static struct iommu_domain *fsl_pamu_domain_alloc(unsi=
+gned type)
+ 	INIT_LIST_HEAD(&dma_domain->devices);
+ 	spin_lock_init(&dma_domain->domain_lock);
+=20
+-	/* default geometry 64 GB i.e. maximum system address */
++	/* Set default geometry based on physical address limit. */
+ 	dma_domain->iommu_domain. geometry.aperture_start =3D 0;
+-	dma_domain->iommu_domain.geometry.aperture_end =3D (1ULL << 36) - 1;
++	dma_domain->iommu_domain.geometry.aperture_end =3D
++		(1ULL << PAMU_MAX_PHYS_BITS) - 1;
+ 	dma_domain->iommu_domain.geometry.force_aperture =3D true;
+=20
+ 	return &dma_domain->iommu_domain;
+--=20
+2.49.0
 
-  83b2d345e178 ("x86/e820: Discard high memory that can't be addressed by 3=
-2-bit systems")
-
-from the tip-fixes tree and commit:
-
-  5a64fe1a39e7 ("x86: add KHO support")
-
-from the mm-unstable tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
 
 --=20
-Cheers,
-Stephen Rothwell
+ Ben Collins
+ https://libjwt.io
+ https://github.com/benmcollins
+ --
+ 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
 
-diff --cc arch/x86/kernel/e820.c
-index 9920122018a0,7d1c74681c61..000000000000
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@@ -1299,14 -1299,24 +1299,32 @@@ void __init e820__memblock_setup(void
-  		memblock_add(entry->addr, entry->size);
-  	}
- =20
- +	/*
- +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
- +	 * to even less without it.
- +	 * Discard memory after max_pfn - the actual limit detected at runtime.
- +	 */
- +	if (IS_ENABLED(CONFIG_X86_32))
- +		memblock_remove(PFN_PHYS(max_pfn), -1);
- +
-+ 	/*
-+ 	 * At this point with KHO we only allocate from scratch memory.
-+ 	 * At the same time, we configure memblock to only allow
-+ 	 * allocations from memory below ISA_END_ADDRESS which is not
-+ 	 * a natural scratch region, because Linux ignores memory below
-+ 	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
-+ 	 * allocations, we must allocate real-mode trapoline below
-+ 	 * ISA_END_ADDRESS.
-+ 	 *
-+ 	 * To make sure that we can actually perform allocations during
-+ 	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
-+ 	 * so we can allocate from there in a scratch-only world.
-+ 	 *
-+ 	 * After real mode trampoline is allocated, we clear scratch
-+ 	 * marking from the memory below ISA_END_ADDRESS
-+ 	 */
-+ 	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
-+=20
-  	/* Throw away partial pages: */
-  	memblock_trim_memory(PAGE_SIZE);
- =20
-
---Sig_/qUc2LQFQGpw/usxMr3jV2Mj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--pj6oaviibqdhrhkl
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHAnIACgkQAVBC80lX
-0GzNggf/SK32T88vQ/qrbtWbPVWhsvrtJLvLPX4vBBXFiU4LZzVGWKGMuyeIbMKJ
-ea1686XIk7VkKH5EC6S+sN/CQHKX9qsKTAIewmOnF6OlTg8qax5RxkKWlaYJMcL9
-HeT6ciySSQJk0TLsnGgaJTs/+AA4nn4tqIwtm+ZqHasRRwQTJMbXWHivOlf0JMrg
-NETkknV9A745z3qyS+UpC9mMdQ8r0iTTh5c4FLpAFWfc+qWJjM0/Ca9xI8KADqIa
-pAwqMJbegJ5TKmIQqHfAQbmSJGv5fUG7QlffFHXdtQABKgGW75D1kTyap516YV7P
-fJxvvAvruARuCTF5+rEqz3b4w2c71Q==
-=aoOK
+iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHAvsACgkQXVpXxyQr
+Is/i3BAAgl5kSqFcIQKaB3suzOElgqN0+NBpccZSK6uwDAJHAkZr7dt3X/ODq2eb
+UirHWny6+Os+NVhMoUJPi1YfwrMEcJ9zBcmm555rG5yjdjVfvG6qbspOCr9lvJqa
+D/aKOcc9xDCzaRwcfCs3E4i4uQOp/LPIl7OTEnhMGDZ8SoV48KU5ZZsbO3WcqtZY
+C0PF1V1WosMfNq4L16CX3G2eVKtmdUye55UxZTDYIRaZq3XxeskEu45ajZ7QASCd
+rf/aNwEiQ0h/9OzDvODpVQETzDC2l0FX9zXz8D5SVNeMLZ7uJYM3ypjk+D88gI/z
+qox/idKCOMhA0ig8D0TPQzJvqxozqyQxLBAdeTdgpbK/GiMT2FTubwqf1ieLlcLX
+ETZrKQQZIGT8O2Kj+g6CHrqTrUoaqjhE5/UWvV5RAIUXz+JH4mD9zzQqvOZGK8g+
+m1JQ/EZbvB1ORIkKUPkuzoH7/T7E6/fmFtTOOyHl8WLejHTM/fxOgH1qdCN3Qi79
+9vUWnqCoqrzLSQdVzJiw46xe0F6hQxie5AkdhU6XvyclrC4mT3JM5oSNf8lNwXE6
+RNLCriQafnXDOgKvwXZEhSDzNQmvD4oigZU28u5zBK5LwX8t6oLa2cvq3YMrBMXc
+yF6DBrG74detuDsryoYJUG4wX8w6k0crgqv/+1JRNSUOiWD9jvE=
+=cGYA
 -----END PGP SIGNATURE-----
 
---Sig_/qUc2LQFQGpw/usxMr3jV2Mj--
+--pj6oaviibqdhrhkl--
