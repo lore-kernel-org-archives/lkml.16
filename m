@@ -1,23 +1,25 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6AA1D619D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D7D81E231E;
+	Tue, 22 Apr 2025 10:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745318202; cv=none; b=YVzbT4E+RE60HizCuySiXw3GjSlR+7wFoCt0qrRD7aUmDI86IbmQIpZaETRFAw81lRHE40fxrHcZZ1NsR+P4f2JxkmuTu+fw9F2Wk5NXDgiBcYxPH1Dpxf19utRIyE3VwEWZQQraI7oDuqFKQEfB4X9tSSvQk4w3YisqSuwpIEI=
+	t=1745318285; cv=none; b=thGqsbyCqG8aj6dC82G23oA7kpuhb2NewWnzMhXmj24aqncf2q4Ffyh/Cc5CtXJP9ajZzquslSJReuw0TqoPglItQZYCiSYPF6yKtHOjsNwxXxn6ikW9uqpqJ29chjxOI1h4LAcCFk/lavXRRfP7wmtvURfj40FCtS9A/V7AJIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745318202; c=relaxed/simple;
-	bh=vLJmUydte4hHRifvvJRLy2f6DVes26JddpFu0AW0mTY=;
+	s=arc-20240116; t=1745318285; c=relaxed/simple;
+	bh=/ht7hSMYanlp/5YVMRSsNwlIM8L9bICCrtQtmixvrXM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DmCJa6y2A4kPXInSd/6f0S4dF/SnxRx8jl1Qw3+wQIpwEQQ3ybWHK4ZS7xfWfSmR0VghQdaMIED0s5dG0ozCQYWbOA2430e5HTLTMF56iQGFVFv61fNvEwvJF/bPMWGrB6qQUqGXRi2lEq9KbY1/g6x8kYbODHZSK2Iu6prd0xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 55C421FCEC;
-	Tue, 22 Apr 2025 10:36:29 +0000 (UTC)
-Message-ID: <a1150501-d15c-4844-b5d9-39ded3979e2d@ghiti.fr>
-Date: Tue, 22 Apr 2025 12:36:28 +0200
+	 In-Reply-To:Content-Type; b=ZzKdGaEMqT0cwgs7bv8a31eTND8MJFSqHWHQal7zBgCk5EienzAKPuftbXXiFsx7mJr81xuN/f3yx3BBR8dz6ONJ1T5/V+FOW67L98wUTRgEb2HhejbaJ5RDLVuqXmHKdGQjDlJMtGAG8Zruv50VnjBizdGYLJOxhBeidzV4T3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34D4C152B;
+	Tue, 22 Apr 2025 03:37:58 -0700 (PDT)
+Received: from [10.57.90.106] (unknown [10.57.90.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC7BF3F66E;
+	Tue, 22 Apr 2025 03:37:59 -0700 (PDT)
+Message-ID: <a2d2766b-0ab4-437b-951a-8595a7506fe9@arm.com>
+Date: Tue, 22 Apr 2025 11:37:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,190 +27,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/5] riscv: uaccess: use 'asm goto' for put_user()
-Content-Language: en-US
-To: Cyril Bur <cyrilbur@tenstorrent.com>, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, paul.walmsley@sifive.com, charlie@rivosinc.com,
- jrtc27@jrtc27.com, ben.dooks@codethink.co.uk
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- jszhang@kernel.org
-References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
- <20250410070526.3160847-5-cyrilbur@tenstorrent.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250410070526.3160847-5-cyrilbur@tenstorrent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 3/4] tools/selftests: expand all guard region tests to
+ file-backed
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+ "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>,
+ David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
+ John Hubbard <jhubbard@nvidia.com>, Juan Yescas <jyescas@google.com>,
+ Kalesh Singh <kaleshsingh@google.com>
+References: <cover.1739469950.git.lorenzo.stoakes@oracle.com>
+ <ab42228d2bd9b8aa18e9faebcd5c88732a7e5820.1739469950.git.lorenzo.stoakes@oracle.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ab42228d2bd9b8aa18e9faebcd5c88732a7e5820.1739469950.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeetvdffkedvjeefkeegfefgteffleeltefggfdvheekfffhfeeghfeffffhtdelvdenucffohhmrghinhepghhnuhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeelfhgsvgemvddtvgefmedvfhgtfeemkeguudelngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedutddprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhus
- egvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepjhhrthgtvdejsehjrhhttgdvjedrtghomhdprhgtphhtthhopegsvghnrdguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: alex@ghiti.fr
 
+On 13/02/2025 18:17, Lorenzo Stoakes wrote:
+> Extend the guard region tests to allow for test fixture variants for anon,
+> shmem, and local file files.
+> 
+> This allows us to assert that each of the expected behaviours of anonymous
+> memory also applies correctly to file-backed (both shmem and an a file
+> created locally in the current working directory) and thus asserts the same
+> correctness guarantees as all the remaining tests do.
+> 
+> The fixture teardown is now performed in the parent process rather than
+> child forked ones, meaning cleanup is always performed, including unlinking
+> any generated temporary files.
+> 
+> Additionally the variant fixture data type now contains an enum value
+> indicating the type of backing store and the mmap() invocation is
+> abstracted to allow for the mapping of whichever backing store the variant
+> is testing.
+> 
+> We adjust tests as necessary to account for the fact they may now reference
+> files rather than anonymous memory.
 
-On 10/04/2025 09:05, Cyril Bur wrote:
-> From: Jisheng Zhang <jszhang@kernel.org>
->
-> With 'asm goto' we don't need to test the error etc, the exception just
-> jumps to the error handling directly.
->
-> Because there are no output clobbers which could trigger gcc bugs [1]
-> the use of asm_goto_output() macro is not necessary here. Not using
-> asm_goto_output() is desirable as the generated output asm will be
-> cleaner.
->
-> Use of the volatile keyword is redundant as per gcc 14.2.0 manual section
-> 6.48.2.7 Goto Labels:
->> Also note that an asm goto statement is always implicitly considered
->    volatile.
->
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> [Cyril Bur: Rewritten commit message]
-> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
-> ---
->   arch/riscv/include/asm/uaccess.h | 71 +++++++++++++++-----------------
->   1 file changed, 33 insertions(+), 38 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-> index da36057847f0..719c9179a751 100644
-> --- a/arch/riscv/include/asm/uaccess.h
-> +++ b/arch/riscv/include/asm/uaccess.h
-> @@ -214,61 +214,66 @@ do {								\
->   		((x) = (__force __typeof__(x))0, -EFAULT);	\
->   })
->   
-> -#define __put_user_asm(insn, x, ptr, err)			\
-> +#define __put_user_asm(insn, x, ptr, label)			\
->   do {								\
->   	__typeof__(*(ptr)) __x = x;				\
-> -	__asm__ __volatile__ (					\
-> +	asm goto(						\
->   		"1:\n"						\
-> -		"	" insn " %z1, %2\n"			\
-> -		"2:\n"						\
-> -		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %0)		\
-> -		: "+r" (err)					\
-> -		: "rJ" (__x), "m"(*(ptr)));			\
-> +		"	" insn " %z0, %1\n"			\
-> +		_ASM_EXTABLE(1b, %l2)				\
-> +		: : "rJ" (__x), "m"(*(ptr)) : : label);		\
->   } while (0)
->   
->   #ifdef CONFIG_64BIT
-> -#define __put_user_8(x, ptr, err) \
-> -	__put_user_asm("sd", x, ptr, err)
-> +#define __put_user_8(x, ptr, label) \
-> +	__put_user_asm("sd", x, ptr, label)
->   #else /* !CONFIG_64BIT */
-> -#define __put_user_8(x, ptr, err)				\
-> +#define __put_user_8(x, ptr, label)				\
->   do {								\
->   	u32 __user *__ptr = (u32 __user *)(ptr);		\
->   	u64 __x = (__typeof__((x)-(x)))(x);			\
-> -	__asm__ __volatile__ (					\
-> +	asm goto(						\
->   		"1:\n"						\
-> -		"	sw %z1, %3\n"				\
-> +		"	sw %z0, %2\n"				\
->   		"2:\n"						\
-> -		"	sw %z2, %4\n"				\
-> -		"3:\n"						\
-> -		_ASM_EXTABLE_UACCESS_ERR(1b, 3b, %0)		\
-> -		_ASM_EXTABLE_UACCESS_ERR(2b, 3b, %0)		\
-> -		: "+r" (err)					\
-> -		: "rJ" (__x), "rJ" (__x >> 32),			\
-> +		"	sw %z1, %3\n"				\
-> +		_ASM_EXTABLE(1b, %l4)				\
-> +		_ASM_EXTABLE(2b, %l4)				\
-> +		: : "rJ" (__x), "rJ" (__x >> 32),		\
->   			"m" (__ptr[__LSW]),			\
-> -			"m" (__ptr[__MSW]));			\
-> +			"m" (__ptr[__MSW]) : : label);		\
->   } while (0)
->   #endif /* CONFIG_64BIT */
->   
-> -#define __put_user_nocheck(x, __gu_ptr, __pu_err)					\
-> +#define __put_user_nocheck(x, __gu_ptr, label)			\
->   do {								\
->   	switch (sizeof(*__gu_ptr)) {				\
->   	case 1:							\
-> -		__put_user_asm("sb", (x), __gu_ptr, __pu_err);	\
-> +		__put_user_asm("sb", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 2:							\
-> -		__put_user_asm("sh", (x), __gu_ptr, __pu_err);	\
-> +		__put_user_asm("sh", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 4:							\
-> -		__put_user_asm("sw", (x), __gu_ptr, __pu_err);	\
-> +		__put_user_asm("sw", (x), __gu_ptr, label);	\
->   		break;						\
->   	case 8:							\
-> -		__put_user_8((x), __gu_ptr, __pu_err);	\
-> +		__put_user_8((x), __gu_ptr, label);		\
->   		break;						\
->   	default:						\
->   		BUILD_BUG();					\
->   	}							\
->   } while (0)
->   
-> +#define __put_user_error(x, ptr, err)				\
-> +do {								\
-> +	__label__ err_label;					\
-> +	__put_user_nocheck(x, ptr, err_label);			\
-> +	break;							\
-> +err_label:							\
-> +	(err) = -EFAULT;					\
-> +} while (0)
-> +
->   /**
->    * __put_user: - Write a simple value into user space, with less checking.
->    * @x:   Value to copy to user space.
-> @@ -299,7 +304,7 @@ do {								\
->   	__chk_user_ptr(__gu_ptr);				\
->   								\
->   	__enable_user_access();					\
-> -	__put_user_nocheck(__val, __gu_ptr, __pu_err);		\
-> +	__put_user_error(__val, __gu_ptr, __pu_err);		\
->   	__disable_user_access();				\
->   								\
->   	__pu_err;						\
-> @@ -373,13 +378,7 @@ do {									\
->   } while (0)
->   
->   #define __put_kernel_nofault(dst, src, type, err_label)			\
-> -do {									\
-> -	long __kr_err = 0;						\
-> -									\
-> -	__put_user_nocheck(*((type *)(src)), (type *)(dst), __kr_err);	\
-> -	if (unlikely(__kr_err))						\
-> -		goto err_label;						\
-> -} while (0)
-> +	__put_user_nocheck(*((type *)(src)), (type *)(dst), err_label)
->   
->   static __must_check __always_inline bool user_access_begin(const void __user *ptr, size_t len)
->   {
-> @@ -398,12 +397,8 @@ static inline void user_access_restore(unsigned long enabled) { }
->    * We want the unsafe accessors to always be inlined and use
->    * the error labels - thus the macro games.
->    */
-> -#define unsafe_put_user(x, ptr, label)	do {				\
-> -	long __err = 0;							\
-> -	__put_user_nocheck(x, (ptr), __err);				\
-> -	if (__err)							\
-> -		goto label;						\
-> -} while (0)
-> +#define unsafe_put_user(x, ptr, label)					\
-> +	__put_user_nocheck(x, (ptr), label)
->   
->   #define unsafe_get_user(x, ptr, label)	do {				\
->   	long __err = 0;							\
+Hi Lorenzo,
 
+I'm getting a test failure in v6.15-rc3 on arm64:
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+----8<----
+#  RUN           guard_regions.shmem.uffd ...
+# guard-regions.c:1467:uffd:Expected ioctl(uffd, UFFDIO_REGISTER, &reg) (-1) ==
+0 (0)
+# uffd: Test terminated by assertion
+#          FAIL  guard_regions.shmem.uffd
+not ok 45 guard_regions.shmem.uffd
+----8<----
+
+The ioctl is returning EINVAL.
+
+[...]
+
+> @@ -1281,6 +1398,9 @@ TEST_F(guard_regions, uffd)
+>  	struct uffdio_register reg;
+>  	struct uffdio_range range;
+>  
+> +	if (!is_anon_backed(variant))
+
+Perhaps this should be filtering out shmem too? Although the manual for
+userfaultfd implies that shmem is supported:
+
+"""
+Up to Linux 4.11, userfaultfd can be used only with anonymous private memory
+mappings.  Since Linux 4.11, userfaultfd can be also used with hugetlbfs and
+shared memory mappings.
+"""
+
+But I'm not sure if that's referring specifically to UFFDIO_REGISTER_MODE_MISSING?
+
+Any ideas before I start debugging further?
 
 Thanks,
+Ryan
 
-Alex
+> +		SKIP(return, "uffd only works on anon backing");
+> +
+>  	/* Set up uffd. */
+>  	uffd = userfaultfd(0);
+>  	if (uffd == -1 && errno == EPERM)
+> @@ -1290,8 +1410,8 @@ TEST_F(guard_regions, uffd)
+>  	ASSERT_EQ(ioctl(uffd, UFFDIO_API, &api), 0);
+>  
+>  	/* Map 10 pages. */
+> -	ptr = mmap(NULL, 10 * page_size, PROT_READ | PROT_WRITE,
+> -		   MAP_ANON | MAP_PRIVATE, -1, 0);
+> +	ptr = mmap_(self, variant, NULL, 10 * page_size,
+> +		    PROT_READ | PROT_WRITE, 0, 0);
+>  	ASSERT_NE(ptr, MAP_FAILED);
+>  
+>  	/* Register the range with uffd. */
 
