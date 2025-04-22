@@ -1,98 +1,91 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4116921C176;
-	Tue, 22 Apr 2025 23:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972C21C9EF;
+	Tue, 22 Apr 2025 23:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745365713; cv=none; b=q6arfVlodiloEvIse+21DvejKzrpvGfcCbb6w+tbxMXNj+LdQg23S9H9P6tjt++NepqWQXlocikbGp+SRZuVeb1KWsao9kBU2sa3vPZQKHGyDMl//3dXSEiV6sx3STdPn5Z2Kt+ljkaAIqypTmGwzeCUp3EQgycKUB3gY+amO4Y=
+	t=1745365717; cv=none; b=PvP/PypnF1QkdVQ4YEhZB9pbldjfvWwDxyI7y58I6AEQYzFzlCfygCN3qGxpMSE7P7lMeepNqllM4vGkh+lVFRftKGKMki0zl1ghAi5aZ26HTrIHs72a+CtoC/jnzzVl2XC8GzwUSqiVTM0Ah1YDOMFvzhzZG2wzA/NbCNY215Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745365713; c=relaxed/simple;
-	bh=O6mAv6ifp9X0QBL6dEs1CrXtSoPxPRuE19/CKtNagmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ftmLvbqHNWbd3fKe3E2S9iHPM1XKOwz42qlu/fUBR1XHWZTDQAacoXNgG/R89z2smq0SvC/EWeUlapNAF3U5pugYDLY9FhjG/mYPON40WJXDOZqNx8d2r0he2mpTGQTxdQfYGyIOLy/k1kqh1NKxnNath9H2tfp/gnER7b6q1Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DoWQVisN; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745365717; c=relaxed/simple;
+	bh=yhJoZqKamDM9YbH2t7wFeFCnHoO5y9lfY+ztHV+833k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=joAQecw7M+pQ819lqnVCUt8pKdgsx7tNnt2rJSwgoc8ADFae9Jhfuycoeo/jOzRzsfmY8SWMLxwi3qqucrSsTbGsShlJxgiFWZDk4IoaEtKBCtz2+ud5ijkuJsEuePMS0REspw/iLPhWbDjAWcpI2v7g4kugral58m7vdMAbuJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThSsRDHn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoWQVisN"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-306b78ae2d1so4637852a91.3;
-        Tue, 22 Apr 2025 16:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745365711; x=1745970511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/GyEww2Ss/PfF8uYlDoiHPB7h0OHExkiJN3If+wg1Bo=;
-        b=DoWQVisNXzg6HvohJO3mhaeWyCFZxtX8ckph0xmO167FRca/tdbFYLsTjepJufWViu
-         3vhfWpicyEZ1QvFAuUdWSzqO/TdHDUAn7FU32VGrBWb9UUpAjgh5iN4CnPONjdiKwAu8
-         Yu5EQNQAx9Q6EaJ5x8LtwCxzqeZ/zsdRV6CTyP+Df6luupb58gqXb6d/f/Igkb73GTYU
-         LQy/yrj1ejWKASuQ8+4zxd2V3bEAYIoMGNX7hATcyipT0DJAlGpipCbpY+8TQnQ0lwd3
-         IPa1/2BS3kMo8qJ1mMdMz7cAJIMBiRXf5RNxudvhkqTPsmRZEmfGQ2Odb3zXy676+hcA
-         QbpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745365711; x=1745970511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/GyEww2Ss/PfF8uYlDoiHPB7h0OHExkiJN3If+wg1Bo=;
-        b=LeVa0rtAaIwpwFEhFYVuXNj3ExxdSFxidsgj3tdl0Zaas9MEIj47tkT3oSXvM5nAVI
-         q2eToTPnkZtc4PBI8Wh3KNqG5AquW1If9vf1XUXN4eU/rBWxqIIMebmtus1uEECXW6hL
-         M+t04O4d7MpANVTpNHfJynvmUd4u3yH2eiTfAMv2/EDB1x3825jWyMzkvZDC0IViL6IN
-         gzermx2r7ZgTzbZaIbliqa1g2gfcnm/dOtOa30ZLBZhI5d1fuJnESoFltuc4SjefJ1Au
-         MAriBQwBrrZ8H8XWf/S8PurSWd3xcWmSnZqI0avLwdKm+6PbTVZTyUvjOlSd3MViyHwO
-         faWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgTYen7argvLF/8iSa6+5SzxoMCLkUcgrqidzTXEgsHKaRRfe1wA2xZAlf0YGNSSQtSlQ=@vger.kernel.org, AJvYcCWoNanordgkTXbQvSl9iiZmnmrgsO+O7Q9BcqQ/ya7swavI2FeCZEBZWp1ws6QJnfk2M8htl6qyeeZ2GiKs@vger.kernel.org, AJvYcCXLL1YbG+jITVgwDCVhsW43EJvhEPjMJZ3b2kOyhXY7VMVzPWPIoD3nlfheedwkgoYJW8nLykcO0+KrZgJ2p1LZOdEV@vger.kernel.org
-X-Gm-Message-State: AOJu0YywTMnagS9sDYQ/aagHKCLod59Cm1s+ZWcn2ux0u7rE5/6TXNYw
-	knZbXpFf1b2r2dqCLx2uv/Bfd2PHCtIAfHgKc3yW/kkVpqI8UMKCDxt/AVaZ75fDUiRhhhl9p6a
-	Z/WiiUsAfLsBcIGSk6/InMipvDFE=
-X-Gm-Gg: ASbGnctBSvNhcuzThgLHHSCmhG7ooqNAoDCQiyNDBPhTQgtVsih+Yr4WJolb/20dZW/
-	T2ILJjiS8XATxuOGe/OZyKecASHsKpvKPWqbnJf9uwOLT0+JhhGnQ5Tp4Bb03IeY4WsHdTV8YTQ
-	X8ssV+Z653rqEuLmRQJUTl81PFuLvDgfaJ9OKIGQ==
-X-Google-Smtp-Source: AGHT+IHURaMcxvopFeNZ1Zl/jsjQeK0UDSBJ+gPJZohjrjYJK1fbwtQ/dsNOUD7Z38+i/PMC27/6najHtrGxjm/FgBM=
-X-Received: by 2002:a17:90a:dfc5:b0:2fa:1a23:c01d with SMTP id
- 98e67ed59e1d1-3087bb6bcaamr24531723a91.21.1745365711458; Tue, 22 Apr 2025
- 16:48:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThSsRDHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9C3C4CEEC;
+	Tue, 22 Apr 2025 23:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745365717;
+	bh=yhJoZqKamDM9YbH2t7wFeFCnHoO5y9lfY+ztHV+833k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ThSsRDHnXz49Mao1Xb444ViRY71NWAzHVsLHgSkMrh8YrjdXxJyaeE9lBZD22zvTB
+	 LTFL8VNQL/sJveyglWi3dQemCzXcu4Ahfsz6eGukk4y7efNg1iJXDry2YBWCvJPbnN
+	 c08aM29WW9F0zvFj+HQ2WEpGkQ3u1Wp7EPTyVhTGBZ4Q+2ekOe0pkcHvd//6GN++XX
+	 LMKBW4PI7jb24QR6iYx4faM7KErRjnK/DuQEkBnZm906iNtMf+0y83ZqQ7rI6cqe6R
+	 ymog9ZaiszM5t0sKqkuvQ7KH+nYRGDnAJE1i4xyAGIcKKnxmjqrwXg0EntUA/D7hBD
+	 HaN/iyyiF2YEQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-i2c@vger.kernel.org (open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC),
+	platform-driver-x86@vger.kernel.org (open list:AMD PMC DRIVER)
+Subject: [PATCH v5 0/5] AMD Zen debugging documentation
+Date: Tue, 22 Apr 2025 18:48:25 -0500
+Message-ID: <20250422234830.2840784-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-6-jolsa@kernel.org>
-In-Reply-To: <20250421214423.393661-6-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 22 Apr 2025 16:48:14 -0700
-X-Gm-Features: ATxdqUEMo0_fA58o4v09I-sv2UgVEm5CJQx06RmTe1s2Rm3JMF3nLPbpEyU3xrk
-Message-ID: <CAEf4BzZxMxK3KO91jn5M--+=2QerNJZic8xFTYir04SGs6DZGQ@mail.gmail.com>
-Subject: Re: [PATCH perf/core 05/22] uprobes: Add nbytes argument to uprobe_write
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 2:45=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding nbytes argument to uprobe_write and related functions as
-> preparation for writing whole instructions in following changes.
->
-> Also renaming opcode arguments to insn, which seems to fit better.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  include/linux/uprobes.h |  6 +++---
->  kernel/events/uprobes.c | 27 ++++++++++++++-------------
->  2 files changed, 17 insertions(+), 16 deletions(-)
->
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Introduce documentation for debugging some issues on AMD zen hardware.
+As one of the debugging techniques read and add information for
+S5_RESET_STATUS register.
 
-[...]
+Mario Limonciello (4):
+  Documentation: Add AMD Zen debugging document
+  i2c: piix4: Depends on X86
+  i2c: piix4: Move SB800_PIIX4_FCH_PM_ADDR definition to amd/fch.h
+  platform/x86/amd: pmc: use FCH_PM_BASE definition
+
+Yazen Ghannam (1):
+  x86/CPU/AMD: Print the reason for the last reset
+
+ Documentation/arch/x86/amd-debugging.rst  | 362 ++++++++++++++++++++++
+ Documentation/arch/x86/index.rst          |   1 +
+ Documentation/arch/x86/resume.svg         |   4 +
+ Documentation/arch/x86/suspend.svg        |   4 +
+ arch/x86/include/asm/amd/fch.h            |  14 +
+ arch/x86/kernel/cpu/amd.c                 |  64 ++++
+ drivers/i2c/busses/Kconfig                |   2 +-
+ drivers/i2c/busses/i2c-piix4.c            |  18 +-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c |   3 +-
+ 9 files changed, 461 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/arch/x86/amd-debugging.rst
+ create mode 100644 Documentation/arch/x86/resume.svg
+ create mode 100644 Documentation/arch/x86/suspend.svg
+ create mode 100644 arch/x86/include/asm/amd/fch.h
+
+-- 
+2.43.0
+
