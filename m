@@ -1,48 +1,43 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B210E230273;
-	Tue, 22 Apr 2025 08:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308925; cv=none; b=foz74QEtdc5i9APtMADf9vPr9krdf/tSNwhyZYkLqRhvLsdID0AdYfzYIyrSnIM2kgpX6dK8iuOHb+V7zn5P/6XVpfYkidyKuXlur2xD2wRs9BsT9MoK3sl0VFUlzpObnSWJtdEXGjmpING2MKYifF/1US+ozMLAIL/FtiseGck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308925; c=relaxed/simple;
-	bh=62f+HM3BKRX8wxzWvdN59ZALCUZ2KQ0fsdvYeGqlztI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Hl4yvoQjShKPK+q1xzJDdA1YHp9M95Grq2rUkZkydqso57QM5knaFAomJRYDy+ojXgYrsod968nZMp+dMdkQWCBVh4Uard/eqx0EgpG0L25sQJoYS2wqEiH56o8yCW4EmCHSpABIWSWGysO4D/FBqT9YqThKVtAYb6Bv1maYe+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bRpaVvDL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83407230BE9;
+	Tue, 22 Apr 2025 08:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745308944; cv=pass; b=rlFw9duP8j1/MdisTVc7cp+FFKPMXkDFzOwz4VemJpqAPCNEBv5DqxCfd33Nbtec3S1Lk0CTedI6aImhFzk6SQpDBTEIeCoEuSFJaiZN8hVhc58GoyJbKjMEsO+4w0UaFFoovYwOfoo9uqjUInxVaUn7u3H0YcPP25BMAFKopt4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745308944; c=relaxed/simple;
+	bh=6mPBiVFnMBSLEQBiB7ejAYxBvNS+aTxOvfgPKqFlMvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bftU/SiiIKeWpA9Eak4E+QxujlTElBDuPopvyZhZTjaroKZl4FS/4KMizN8ZcHYB1g45xIhdlUmwRMNVc/2MsfJ6Woummr9x4KNZTeEFMNtbSEgyhMhSxCjjkqovVgS+6ZsS7NpTee5q29Ex1clrS6QbDAlyLV5ZqsLowy7yn4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=bAAhwzUC; arc=pass smtp.client-ip=136.143.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bRpaVvDL"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4OrMP011409;
-	Tue, 22 Apr 2025 08:01:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	q8kYuCu4DSKyBc/5Kb6zYROcKumgaRaR0Lku9VXPPCI=; b=bRpaVvDLaMb9R7yT
-	OODGzlz9ZQSSwF2dOMNFPs2mtOBvCULG1Wbo72VLOBCg15aliBsUsEulMQIRcAmB
-	wQ33e4vn95CCBgVdVz22ye5Th9BzESWBk+Q1rPMiMkbgLRMSOlTwp+C6tGGEypO/
-	1Yib8CMEi/6L9N3PmUIP5K5GB8utlBDQ1j3/F2Gc77fko80ID81EiN29cpUdWlmr
-	8Q2sEk1YsYoxHb0ROmEm7+D73jn+5JofWEpYDkucXrNqA7Z1oxBhaZkYFtG9YK+r
-	WdF0QoNK56jbdlDSv2zl4+gqd+6KgNj8mjq9YvdQtOyLivWT6TvQWR51lbNqK5el
-	dDJhxA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46450peg4q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 08:01:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53M81uMI013820
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 08:01:56 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 01:01:53 -0700
-Message-ID: <6c4ae1f8-a2ea-4ee3-b67d-4a379f097d9b@quicinc.com>
-Date: Tue, 22 Apr 2025 16:01:48 +0800
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="bAAhwzUC"
+ARC-Seal: i=1; a=rsa-sha256; t=1745308920; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=COJ29c36q0W9rJlZpPKQj/DM5ommXK3jkmPGEXwZfWocHngu8qwjUGt16P8ir46JVemDIpr1Lbjxmy+eIeM7CIdmlGMEKFXr/KIlix95yaBn1qo6AiODQk8ZuwL6UXoLsYF36ZfB3sWVeRM7Femx1dCyI38vGgR8Y8hPqFwO5Bk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745308920; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6mPBiVFnMBSLEQBiB7ejAYxBvNS+aTxOvfgPKqFlMvQ=; 
+	b=csEiTVOLb+B51Eb/koh/GCrHzP4hWM7pU1im/ycZcRHVXg6KjenYQbBN8nbRafd4EXLui04629P4nNO6d0bijFCfbk+AMgszzF8OvUzs/pvcRugZDcSvNfRfV4VkxM5yzGjAUUzzxiVjuugmHreGYt8gMrEgiofSriD3h/E3WRI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
+	dmarc=pass header.from=<kingxukai@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745308920;
+	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=6mPBiVFnMBSLEQBiB7ejAYxBvNS+aTxOvfgPKqFlMvQ=;
+	b=bAAhwzUCOjU5zWiE+U/WRrrtH+4sX6xxRjF038UmZy24ziE9e12NVYLB5gqqWYWD
+	EEQ48uT9lWjVzeJlV4ZA2unaKrkDoVvjostZArHrCO+znqBO8yq3XrcMLhzfbxPeXCL
+	7LXUgPBGSCQ5EhvxbC+qUU+3XLvmMZyziE6QEJRo=
+Received: by mx.zohomail.com with SMTPS id 1745308911207291.1539466317503;
+	Tue, 22 Apr 2025 01:01:51 -0700 (PDT)
+Message-ID: <1d8c27be-95f9-4cb8-8d41-9c00faefd360@zohomail.com>
+Date: Tue, 22 Apr 2025 16:01:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,174 +45,278 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: Fix memory reuse logic
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Anilkumar Kolli
-	<quic_akolli@quicinc.com>
-CC: <kernel@collabora.com>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250418120951.94021-1-usama.anjum@collabora.com>
- <5ae72a5c-798a-4c57-b344-02b231cb881c@quicinc.com>
- <b30bc7f6-845d-4f9d-967e-c04a2b5f13f5@collabora.com>
+Subject: Re: [PATCH v6 2/3] clk: canaan: Add clock driver for Canaan K230
+To: Chen Wang <unicorn_wang@outlook.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Troy Mitchell <TroyMitchell988@gmail.com>
+References: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
+ <20250415-b4-k230-clk-v6-2-7fd89f427250@zohomail.com>
+ <MA0P287MB2262F6D556E48A73E317553AFEB82@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+From: Xukai Wang <kingxukai@zohomail.com>
 Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <b30bc7f6-845d-4f9d-967e-c04a2b5f13f5@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Hd0UTjE8 c=1 sm=1 tr=0 ts=68074cf5 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=Jd9q7DufAxoOQdnjySsA:9 a=QEXdDO2ut3YA:10
- a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-GUID: C9foz-2M2pY1pPCJPyoF1Ii7njwVIT5f
-X-Proofpoint-ORIG-GUID: C9foz-2M2pY1pPCJPyoF1Ii7njwVIT5f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220059
+In-Reply-To: <MA0P287MB2262F6D556E48A73E317553AFEB82@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr080112274dea12ec6ccc6dd99bc91d060000aefd79844fe964c4984d1679e7173f7d196f2534217bb33510:zu08011227ec8748633bac8b6e036383a9000005aa264c0151e1b4879e61bae576b94698c7d7b38446c7e127:rf0801122cc70354a17cfc9059e30fc54c000038c09917e1da792909550f566c9586f59d82f8bcdf35497d22df2fedddb2:ZohoMail
+X-ZohoMailClient: External
 
 
-
-On 4/22/2025 3:46 PM, Muhammad Usama Anjum wrote:
-> Hi,
-> 
-> Thank you for excellent review.
-> 
-> On 4/22/25 7:15 AM, Baochen Qiang wrote:
+On 2025/4/21 18:43, Chen Wang wrote:
+> Hi, Xukai, I have some comments below.
+>
+> In general, my suggestion is that the code can be further optimized,
+> especially in terms of readability.
+>
+>
+> On 2025/4/15 22:25, Xukai Wang wrote:
+>> This patch provides basic support for the K230 clock, which does not
+>> cover all clocks.
 >>
+>> The clock tree of the K230 SoC consists of OSC24M, PLLs and sysclk.
 >>
->> On 4/18/2025 8:09 PM, Muhammad Usama Anjum wrote:
->>> Firmware requests 2 segments at first. 1st segment is of 6799360 whose
->>> allocation fails and we return success to firmware. Then firmware asks
+>> Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
+>> Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
+>> Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
+>> ---
+>>   drivers/clk/Kconfig    |    6 +
+>>   drivers/clk/Makefile   |    1 +
+>>   drivers/clk/clk-k230.c | 1710
+>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 1717 insertions(+)
 >>
->> Host won't fail in case DMA remapping is enabled. Better to rephrase to make it clear that
->> the big segment allocation fails in case DMA remapping is not working, usually due to
->> IOMMU not present or any necessary kernel config not enabled.
-> IOMMU is turned off. I'll make description better.
-> 
->>
->>> for 22 smaller segments. Those get allocated. At suspend/hibernation
->>> time, these segments aren't freed as they are reused by firmware.
->>>
->>> After resume the firmware asks for 2 segments again with first segment
->>> of 6799360 and with same vaddr of the first smaller segment which we had
->>
->> Not follow you here. What do you mean by 'same vaddr'? firmware does not care about vaddr
->> at all.
-> So we get request to allocate memory of size = 6799360 and vaddr =
-> 0xABC). We fail it. Then we get request to allocate memory of size =
-> 500000 and vaddr is same 0xABC which gets allocated successfully.
-> 
-> When we resume, firmware asks again for 6799360 with 0xABC vaddr even
-> though we had allocated memory of 500000 size at 0xABC. I'm referring to
-> this vaddr that its same.
-
-OK, get your point. But like I said, firmware doesn't case about vaddr, so it is not
-asking for a 'same vaddr'.
-
-IMO just mentioning vaddr is not NULL is sufficient.
-
-> 
->>
->>> allocated. Hence vaddr isn't NULL and we compare the type and size if it
->>> can be reused. Unfornately, we detect that we cannot reuse it and this
->>
->> s/Unfornately/Unfortunately/
->>
->>> first smaller segment is freed. Then we continue to allocate 6799360 size
->>> memory from dma which fails and we call ath11k_qmi_free_target_mem_chunk()
->>> which frees the second smaller segment as well. Later success is returned
->>> to firmware which asks for 22 smaller segments again. But as we had freed
->>> 2 segments already, we'll allocate the first 2 new segments again and
->>> reuse the remaining 20.
->>>
->>> This patch is correctiong the skip logic when vaddr is set, but size/type
->>
->> s/correctiong/correcting/
->>
->>> don't match. In this case, we should use the same skip and success logic
->>> as used when dma_alloc_coherent fails without freeing the memory area.
->>>
->>> We had got reports that memory allocation in this function failed at
->>
->> any public link to the report?
-> There's no public report. I've attached the logs. You'll find following
-> error logs in it:
-> 
-> ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B
-> type 1)
-> ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
-> 
-> 
->>
->>> resume which made us debug why the reuse logic is wrong. Those failures
->>> weren't because of the bigger chunk allocation failure as they are
->>> skipped. Rather these failures were because of smaller chunk allocation
->>> failures. This patch fixes freeing and allocation of 2 smaller chunks.
->>
->> any you saying kernels fail to alloc a smaller chunk? why? is system memory exhausted or
->> too fragmented?
-> Yes, the smaller chunk doesn't get allocated. I've not been able to
-> reproduce it on my setup. Both system memory exhaustion and
-> fragmentation are the suspects.
-
-so it is kernel failing to allocate the buffer, not any issue in ath12k leading to this.
-Please help make this clear to avoid confusion.
-
-> 
->>
->>>
->>> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
->>
->> QCNFA765 is not an official chip name. please use WCN6855.
-> Okay. I'll fix all of these mistakes.
-> 
->>
->>>
->>> Fixes: 5962f370ce41 ("ath11k: Reuse the available memory after firmware reload")
->>
->> I don't think a Fixes tag apply here. As IMO this is not really an issue, it is just not
->> doing well.
->>
->>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>> ---
->>>  drivers/net/wireless/ath/ath11k/qmi.c | 10 +++++++++-
->>>  1 file changed, 9 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
->>> index 47b9d4126d3a9..3c26f4dcf5d29 100644
->>> --- a/drivers/net/wireless/ath/ath11k/qmi.c
->>> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
->>> @@ -1990,8 +1990,16 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
->>>  		 */
->>>  		if (chunk->vaddr) {
->>>  			if (chunk->prev_type == chunk->type &&
->>> -			    chunk->prev_size == chunk->size)
->>> +			    chunk->prev_size == chunk->size) {
->>>  				continue;
->>> +			} else if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
->>> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
->>> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
->>> +					    chunk->size, chunk->type,
->>> +					    chunk->prev_size, chunk->prev_type);
->>> +				ab->qmi.target_mem_delayed = true;
->>> +				return 0;
->>> +			}
->>>  
->>>  			/* cannot reuse the existing chunk */
->>>  			dma_free_coherent(ab->dev, chunk->prev_size,
->>
->> actual code change LGTM.
->>
->>
-> 
-> 
-
+>> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+>> index
+>> 299bc678ed1b9fcd9110bb8c5937a1bd1ea60e23..1817b8883af9a3d00ac7af2cb88496274b591001
+>> 100644
+>> --- a/drivers/clk/Kconfig
+>> +++ b/drivers/clk/Kconfig
+>> @@ -464,6 +464,12 @@ config COMMON_CLK_K210
+>>       help
+>>         Support for the Canaan Kendryte K210 RISC-V SoC clocks.
+>>   +config COMMON_CLK_K230
+>> +    bool "Clock driver for the Canaan Kendryte K230 SoC"
+>> +    depends on ARCH_CANAAN || COMPILE_TEST
+>> +        help
+>> +          Support for the Canaan Kendryte K230 RISC-V SoC clocks.
+>> +
+>>   config COMMON_CLK_SP7021
+>>       tristate "Clock driver for Sunplus SP7021 SoC"
+>>       depends on SOC_SP7021 || COMPILE_TEST
+>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>> index
+>> fb8878a5d7d93da6bec487460cdf63f1f764a431..5df50b1e14c701ed38397bfb257db26e8dd278b8
+>> 100644
+>> --- a/drivers/clk/Makefile
+>> +++ b/drivers/clk/Makefile
+>> @@ -51,6 +51,7 @@ obj-$(CONFIG_MACH_ASPEED_G6)        += clk-ast2600.o
+>>   obj-$(CONFIG_ARCH_HIGHBANK)        += clk-highbank.o
+>>   obj-$(CONFIG_CLK_HSDK)            += clk-hsdk-pll.o
+>>   obj-$(CONFIG_COMMON_CLK_K210)        += clk-k210.o
+>> +obj-$(CONFIG_COMMON_CLK_K230)        += clk-k230.o
+>>   obj-$(CONFIG_LMK04832)            += clk-lmk04832.o
+>>   obj-$(CONFIG_COMMON_CLK_LAN966X)    += clk-lan966x.o
+>>   obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)    += clk-lochnagar.o
+>> diff --git a/drivers/clk/clk-k230.c b/drivers/clk/clk-k230.c
+>> new file mode 100644
+>> index
+>> 0000000000000000000000000000000000000000..84a4a2a293e5f278d21510d73888aee4ff9351df
+>> --- /dev/null
+>> +++ b/drivers/clk/clk-k230.c
+>> @@ -0,0 +1,1710 @@
+> [......]
+>> +
+>> +struct k230_pll {
+>> +    enum k230_pll_id id;
+>> +    struct k230_sysclk *ksc;
+>> +    void __iomem *div, *bypass, *gate, *lock;
+>
+> No need define these iomem address, just calculate them and use them
+> when use them. The clock reading and writing efficiency requirements
+> are not that high, so there is no need to waste memory for this.
+>
+I see, I'll drop these next version.
+>
+>> +    struct clk_hw hw;
+>> +};
+>> +
+>> +#define to_k230_pll(_hw)    container_of(_hw, struct k230_pll, hw)
+>> +
+>> +struct k230_pll_cfg {
+>> +    u32 reg;
+>> +    const char *name;
+>> +    struct k230_pll *pll;
+>> +};
+>
+> Can we combine k230_pll and k230_pll_cfg into one to simplfy the code?
+OK, and I think the role of k230_*_cfg is maybe some redundant, and I'm
+considering remove them.
+>
+>> +
+>> +struct k230_pll_div {
+>> +    struct k230_sysclk *ksc;
+>> +    struct clk_hw *hw;
+>
+> I see k230_clk use "struct clk_hw", but here we use "struct clk_hw*", 
+> can we unify these?
+The clk_hw in k230_pll_div is a pointer returned by
+`clk_hw_register_fixed_factor()`, whereas the clk_hw in the PLL and in
+regular clocks is the actual entity that gets populated by
+`clk_hw_register()`.
+>
+> Just use "struct clk_hw" and init it as static global var should be
+> enough, see drivers/clk/sophgo/clk-cv1800.c for example.
+>
+>> +};
+>> +
+>> +struct k230_pll_div_cfg {
+>> +    const char *parent_name, *name;
+>> +    int div;
+>> +    struct k230_pll_div *pll_div;
+>> +};
+>> +
+>> +enum k230_pll_div_id {
+>> +    K230_PLL0_DIV2,
+>> +    K230_PLL0_DIV3,
+>> +    K230_PLL0_DIV4,
+>> +    K230_PLL0_DIV16,
+>> +    K230_PLL1_DIV2,
+>> +    K230_PLL1_DIV3,
+>> +    K230_PLL1_DIV4,
+>> +    K230_PLL2_DIV2,
+>> +    K230_PLL2_DIV3,
+>> +    K230_PLL2_DIV4,
+>> +    K230_PLL3_DIV2,
+>> +    K230_PLL3_DIV3,
+>> +    K230_PLL3_DIV4,
+>> +    K230_PLL_DIV_NUM
+>> +};
+>> +
+>> +enum k230_clk_div_type {
+>> +    K230_MUL,
+>> +    K230_DIV,
+>> +    K230_MUL_DIV,
+>> +};
+> Please document what's meaning of MUL, DIV, and both? They are type
+> for what?
+OK, I'll add one to explain this.
+>> +
+>> +struct k230_clk {
+>> +    int id;
+>> +    struct k230_sysclk *ksc;
+>> +    struct clk_hw hw;
+>> +};
+>> +
+>> +#define to_k230_clk(_hw)    container_of(_hw, struct k230_clk, hw)
+>> +
+>> +struct k230_sysclk {
+>> +    struct platform_device *pdev;
+>> +    void __iomem           *pll_regs, *regs;
+>> +    spinlock_t           pll_lock, clk_lock;
+>> +    struct k230_pll           *plls;
+>> +    struct k230_clk           *clks;
+>> +    struct k230_pll_div    *dclks;
+>> +};
+>> +
+>> +struct k230_clk_rate_cfg {
+>> +    /* rate reg */
+>> +    u32 rate_reg_off;
+>> +    void __iomem *rate_reg;
+>> +    /* rate info*/
+>> +    u32 rate_write_enable_bit;
+>> +    enum k230_clk_div_type method;
+>> +    /* rate mul */
+>> +    u32 rate_mul_min;
+>> +    u32 rate_mul_max;
+>> +    u32 rate_mul_shift;
+>> +    u32 rate_mul_mask;
+>> +    /* rate div */
+>> +    u32 rate_div_min;
+>> +    u32 rate_div_max;
+>> +    u32 rate_div_shift;
+>> +    u32 rate_div_mask;
+>> +};
+>> +
+>> +struct k230_clk_rate_cfg_c {
+>> +    /* rate_c reg */
+>> +    u32 rate_reg_off_c;
+>> +    void __iomem *rate_reg_c;
+>> +
+>> +    /* rate_c info */
+>> +    u32 rate_write_enable_bit_c;
+>> +
+>> +    /* rate mul-changable */
+>> +    u32 rate_mul_min_c;
+>> +    u32 rate_mul_max_c;
+>> +    u32 rate_mul_shift_c;
+>> +    u32 rate_mul_mask_c;
+>> +};
+>> +
+>
+> What's "k230_clk_rate_cfg_c", and what's the difference against
+> "k230_clk_gate_cfg". Please document it and clarify this.
+>
+> It is recommended to add documentation comments to important structure
+> types and their members.
+>
+> Regarding how to document kernel code, see
+> https://docs.kernel.org/doc-guide/kernel-doc.html.
+OK, I'll try to clarify it next version.
+>
+> [......]
+>
+>
+> This structure definition looks a bit complicated, with nested
+> structure pointers. Can it be simplified, similar to struct
+> k210_clk_cfg in drivers/clk/clk-k210.c?
+>
+> And can we use composite clk here?
+I'm considering using clk_composite here.
+>
+> [......]
+>
+>> +static struct k230_clk_cfg k230_cpu0_src = {
+>> +    .name = "cpu0_src",
+>> +    .read_only = false,
+>> +    .flags = 0,
+>> +    .num_parent = 1,
+>> +    .parent[0] = {
+>> +        .type = K230_PLL_DIV,
+>> +        .pll_div_cfg = &k230_pll_div_cfgs[K230_PLL0_DIV2],
+>> +    },
+>> +    .rate_cfg = &k230_cpu0_src_rate,
+>> +    .rate_cfg_c = NULL,
+>> +    .gate_cfg = &k230_cpu0_src_gate,
+>> +    .mux_cfg = NULL,
+>> +};
+>> +
+>> +static struct k230_clk_cfg k230_cpu0_aclk = {
+>> +    .name = "cpu0_aclk",
+>> +    .read_only = false,
+>> +    .flags = 0,
+>> +    .num_parent = 1,
+>> +    .parent[0] = {
+>> +        .type = K230_CLK_COMPOSITE,
+>> +        .clk_cfg = &k230_cpu0_src,
+>> +    },
+>> +    .rate_cfg = &k230_cpu0_aclk_rate,
+>> +    .rate_cfg_c = NULL,
+>> +    .gate_cfg = NULL,
+>> +    .mux_cfg = NULL,
+>> +};
+>> +
+>
+> Suggest use Macro to simplify the code here, see
+> drivers/clk/sophgo/clk-cv1800.c for example.
+I see, I' ll replace these init code with macro instead.
+>
+> [......]
+>
+>
