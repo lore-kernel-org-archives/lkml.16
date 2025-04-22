@@ -1,144 +1,119 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D9E28C5A6;
-	Tue, 22 Apr 2025 17:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D021AF4C1;
+	Tue, 22 Apr 2025 17:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342936; cv=none; b=NtWXFA4EfROrQIyxb/FB+BzP8wKKDskmEXp+NqnS/1KzKzbI7YHA43qwicj168r7fy3jl3eQclDYPbCjtMhlcHkG7jJS1tC+039h8rWWvkXVJJXqMV/V03lZyA22zJE/eWSxuj9SjDt+z1zS4nu8tu9JEzkILO2YXDD6niaSthE=
+	t=1745343202; cv=none; b=HGubgrhgUpZjOdPVavlQorpgbc87tJUs9BfDfPR7o8EZ4UWHvHY/KgQknRUJ7gvM+GFcEBs01lkBB3pAmv7El60cFLNOhMjLaK3FAnouGXFmZ7iZG0C/46p1KPmvMok4qs4+isQ9cut8iTcDchkH2VpvdPUQAEfGn9W8MQaIkkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342936; c=relaxed/simple;
-	bh=eFcP2GiIfYlz5vX4x81qW5td0rrszSQH+tjWOMNxdFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tPxnXV6XrSI3oZ2jwFjYCiX2NGmHH56AOB3No4kWhzkAdsVPAVFE6ovX8F34ma9BUzj5ZC9+hdR6POm+IWLykiLwr6J1WObu5tqu1+4wgH2q4nxd43+p7kttiD6szkz08JR6Z+wwAgDtrnGvHrOuVDUa6vD3if7OYdywrvoT1HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFIJLaqt; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745343202; c=relaxed/simple;
+	bh=nDE0j/GNP/64EOh5+qPkXXTTWN1VYjvGYw+ExO+NfDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6/NDNeXErfFFz/F+SQeyMiT5oUnmPJWMa3fTPcL8OHvtuITzpF1On2GmP2y9yuuqNoQNlDnW0JQIJv3eULrULFfUOzfTM9BISVCx136EepENLdRTJ7TDm/zilgYhzABDW/Kf6KJ3QRSQabSFv9xTjWdHi+rS8Y1TR6658Rz4io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KderWG1s; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFIJLaqt"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso64287595e9.3;
-        Tue, 22 Apr 2025 10:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745342933; x=1745947733; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3dwRtx2MWi5keXq5RhARdEN3lNKJTVMlJXLO8mAzi0I=;
-        b=fFIJLaqtjNGd1XCKem+bodEEo5anzRD/PqTg53eS+lTS7mmnEsi6MzH8oRhIlP9x4L
-         Tx7Z4YiD+4vfRFw8rFKmPkmqo5UsnsuXFimCUmGQasgmwYwz7uPeRpxGw+WzExkukGPd
-         KbkINsw/QSQvwTP5HWS8qTXJZK2+O7qFpTXSTeVeJtZUcoCvtm8aM0fN7PaTD0Dm2ODa
-         tPGIEjAggOynWHPqeNx95+q9IPDLuJ43w4Q+nCI+GEFTVWesHphN45RxHNhf2eh/DicQ
-         paiqSxb3sp0CkJ5kaYPnVlaKriFI8TxBHd+QDVFx2mF2Q5nglLaD0NlZ6+kmIgVcgEoQ
-         YKmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745342933; x=1745947733;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3dwRtx2MWi5keXq5RhARdEN3lNKJTVMlJXLO8mAzi0I=;
-        b=H+iYnxupjh0yRGQq5GRp8qZ647nAuceUtUiUDKvHaffre/B7Ov/k5ORCu1qCqmpwEd
-         FBxdvr5saD1XS8TGcX+8ME3D0T7uRYAyGJyYv57wA/jLpsZKU3Ca0bTIohBILrhd3cfu
-         DQA6M3Q1EsbL1dxOfeomo8ccAK9mzbEY+tJO35XMcl1m5Bk/OQOPTW6+cWozM3RirEt+
-         JkwWD9+SAkJVfWOSVSUFWVs8QiKTYpFUMsANfQpow9ZqtpF0wr6UVyant6KeeTtHvl6A
-         JJanX3mWNmED7XOmNtw+6TuaHnj8kUoz44Cb/QpvSPATz1ZES5X7OrjpQM5vNxyE5Qel
-         hwAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBbnGNwaBgMhyVvflhLtgZBbt46m4j6mjVdHllrOrL45Ps/S5iCXtzd4eHN8jEIq52dm625cj5ai6ZRGQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws6So01wl9ZUSfh20+8nE0xjZz3JevM6tKOSvoRqj8Vsc1wcck
-	zpOg/ybvMpOBFWp/6pkR/ZlGCPPWW/5ZDWKVfbLWwY5TgkTDjaysY9EVMtu31TQaxXVzRVHJYbl
-	3I8L02UgSW2O4NKtAXAYGyrzdBWs=
-X-Gm-Gg: ASbGncvZbv+gmIJoRWr16/knMjn4JtGbe/wNcJMgrINMofJJ/o1yst+2vqsWxePeLXT
-	afyjSwiNVFX9/i5ENGdVpwvySssh6FyZK1udG9bSG0hHbUlmkJJpj5I/wjKGWV5jEUk1QJd0LZZ
-	8Z2ky0LKmsFBdYGYL7zvCvWfourk1u+cOjc7O5DWkQ78yEXBP4
-X-Google-Smtp-Source: AGHT+IHX+RLtkAyFXfCCwJvsB7FXqs2T++5aqezs/ZM9C6DcovLr8jbPDrc0RmXaKbeQjrVGqP5+hsJV4ddEhccdJyc=
-X-Received: by 2002:a5d:47aa:0:b0:39c:cd5:4bc0 with SMTP id
- ffacd0b85a97d-39efbaf70bfmr13250986f8f.52.1745342933260; Tue, 22 Apr 2025
- 10:28:53 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KderWG1s"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 37A7D40E01ED;
+	Tue, 22 Apr 2025 17:33:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id a0C3SPjvifPl; Tue, 22 Apr 2025 17:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745343193; bh=X8pD1Z4HEovvmoASmtZVAgGiq/rZgl9YBNbnIFcjgCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KderWG1sfdcYIovI6tf/tkMBix2EoXrvOPrS66C+BB6tv104jiJ4EX8U53mT5/n2H
+	 RxkrsD3AQZvTZwjadXR7kc83f/oQdi64KlWBDqF1qqWas+LR3jAcsNa2Ky+SErm9ri
+	 8hg8qSl4G1p/P4iFsUVyTtymdDt1/wkkC9ssm6CuH9STwaOpguUTV1CreWt1bs9Qqf
+	 sa1f6o1KHCzCPh7yUIoyplSRuTb7nWtsBnI1fAd5PfnIO0f07CV6u/OMSSc25ERDt0
+	 OLczxgE4UHhx/R4IYgmcnIgP1YIny2z5DM3i4m6YrSuCv2qz6CrFMAwhq9m0FbdtV1
+	 yD4ho1hMI+rgeCYLyiE0mTJ9WmLlrq1NbYTNicdQa7C3925oRVDllnPpcJlPdBs210
+	 FlWMTTNWMbaaVFFJjxo4oY86JU08jFsEK6HPMWo1OWhT4DUa03G3xZCaem1a0MO+sO
+	 MkuA6nxlLqHsMonmtv4rOvTn4ZvzQc2S/+7xBZaphIi68x9g86F0sUuBR8YYQnIYmP
+	 AvGiAq2yZPUq2pJUShvLpEOUX+dHlDz3oj5jpAefj9xO1c9wmhaRXSvTJ2x+q8fCA5
+	 Gh9iMra3AGExLXn4hmYYlYmvq/yxwJ8YuD8OPo+qHdqspDLp4oiH4Hk7ilkqreBxa4
+	 0MhVqt2eofDLjUkMffGJBgm4=
+Received: from rn.tnic (unknown [78.130.214.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id C180640E01CF;
+	Tue, 22 Apr 2025 17:32:54 +0000 (UTC)
+Date: Tue, 22 Apr 2025 19:33:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
+	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
+	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
+Subject: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu:
+ Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in
+ a virtual machine)
+Message-ID: <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
+References: <20250331143710.1686600-1-sashal@kernel.org>
+ <20250331143710.1686600-2-sashal@kernel.org>
+ <aAKDyGpzNOCdGmN2@duo.ucw.cz>
+ <aAKJkrQxp5on46nC@google.com>
+ <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
+ <aAKaf1liTsIA81r_@google.com>
+ <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
+ <aAfQbiqp_yIV3OOC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745250534.git.iecedge@gmail.com> <73fdbbf9aafd3e24e12bb58f89c70959fb3a37f1.1745250534.git.iecedge@gmail.com>
-In-Reply-To: <73fdbbf9aafd3e24e12bb58f89c70959fb3a37f1.1745250534.git.iecedge@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 22 Apr 2025 10:28:42 -0700
-X-Gm-Features: ATxdqUFNF7npKiSkLt4UNdkUZRCVdnqqXcfQWuiSBdYWZe7QzjVRWlvmeYgHCog
-Message-ID: <CAADnVQ+m8F0BsJr_T1ePpB_zQ2vS+3OD2h+Wrfv1x+an9fSLkw@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next 1/2] Enhance BPF execution timing by
- excluding IRQ time
-To: Jianlin Lv <iecedge@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Benjamin Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, LKML <linux-kernel@vger.kernel.org>, jianlv@ebay.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aAfQbiqp_yIV3OOC@google.com>
 
-On Tue, Apr 22, 2025 at 6:47=E2=80=AFAM Jianlin Lv <iecedge@gmail.com> wrot=
-e:
->
-> From: Jianlin Lv <iecedge@gmail.com>
->
-> This commit excludes IRQ time from the total execution duration of BPF
-> programs. When CONFIG_IRQ_TIME_ACCOUNTING is enabled, IRQ time is
-> accounted for separately, offering a more accurate assessment of CPU
-> usage for BPF programs.
->
-> Signed-off-by: Jianlin Lv <iecedge@gmail.com>
-> ---
->  include/linux/filter.h | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/filter.h b/include/linux/filter.h
-> index f5cf4d35d83e..3e0f975176a6 100644
-> --- a/include/linux/filter.h
-> +++ b/include/linux/filter.h
-> @@ -703,12 +703,32 @@ static __always_inline u32 __bpf_prog_run(const str=
-uct bpf_prog *prog,
->         cant_migrate();
->         if (static_branch_unlikely(&bpf_stats_enabled_key)) {
->                 struct bpf_prog_stats *stats;
-> -               u64 duration, start =3D sched_clock();
-> +               u64 duration, start, start_time, end_time, irq_delta;
->                 unsigned long flags;
-> +               unsigned int cpu;
->
-> -               ret =3D dfunc(ctx, prog->insnsi, prog->bpf_func);
-> +               #ifdef CONFIG_IRQ_TIME_ACCOUNTING
-> +               if (in_task()) {
-> +                       cpu =3D get_cpu();
-> +                       put_cpu();
-> +                       start_time =3D irq_time_read(cpu);
-> +               }
-> +               #endif
->
-> +               start =3D sched_clock();
-> +               ret =3D dfunc(ctx, prog->insnsi, prog->bpf_func);
->                 duration =3D sched_clock() - start;
-> +
-> +               #ifdef CONFIG_IRQ_TIME_ACCOUNTING
-> +               if (in_task()) {
-> +                       end_time =3D irq_time_read(cpu);
-> +                       if (end_time > start_time) {
-> +                               irq_delta =3D end_time - start_time;
-> +                               duration -=3D irq_delta;
-> +                       }
-> +               }
-> +               #endif
-> +
+On Tue, Apr 22, 2025 at 10:22:54AM -0700, Sean Christopherson wrote:
+> > Because I really hate wagging the dog and "fixing" the kernel because something
+> > else can't be bothered. I didn't object stronger to that fix because it is
+> > meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
+> > apparently not that awful-ish...
+> 
+> FWIW, I think splattering X86_FEATURE_HYPERVISOR everywhere is quite awful.  There
+> are definitely cases where the kernel needs to know if it's running as a guest,
+> because the behavior of "hardware" fundamentally changes in ways that can't be
+> enumerated otherwise.  E.g. that things like the HPET are fully emulated and thus
+> will be prone to significant jitter.
+> 
+> But when it comes to feature enumeration, IMO sprinkling HYPERVISOR everywhere is
+> unnecessary because it's the hypervisor/VMM's responsibility to present a sane
+> model.  And I also think it's outright dangerous, because everywhere the kernel
+> does X for bare metal and Y for guest results in reduced test coverage.
+> 
+> E.g. things like syzkaller and other bots will largely be testing the HYPERVISOR
+> code, while humans will largely be testing and using the bare metal code.
 
-This is way too much overhead.
-This timing loop is optimized to measure bpf prog runtime.
-See commit ce09cbdd9888 ("bpf: Improve program stats run-time calculation")
-IRQ can happen and distort the numbers, but you shouldn't
-be running with bpf_stats_enabled for a long time.
-You need to sample it instead.
-Every couple minutes turn it on for a second, capture the stats
-and aggregate over time. Filter out outliers due to IRQ or whatever.
+All valid points...
+
+At least one case justifies the X86_FEATURE_HYPERVISOR check: microcode loading
+and we've chewed that topic back then with Xen ad nauseam.
+
+But I'd love to whack as many of such checks as possible.
+
+$ git grep X86_FEATURE_HYPERVISOR | wc -l
+60
+
+I think I should start whacking at those and CC you if I'm not sure.
+It'll be a long-term, low prio thing but it'll be a good cleanup.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
