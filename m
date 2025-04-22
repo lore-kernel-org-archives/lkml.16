@@ -1,130 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D155283C97
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631092836A4
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328464; cv=none; b=c50PyReAui3nbbgNUybsgzR5VTln7jX4jJ6xPuKWoQaw2cR0vBvaH2zdIONgYx6NWbtKh5gGEHvYd6kXO9/d2lOMAGocvIQYheYDekeeJDHiYSHP2z5kxYrcxDb/8YZTI8XjeuvigKMu0kvV88aHCzw2fSMFYB7fggKZPm9DlPg=
+	t=1745328464; cv=none; b=EbavHy//0WbQulh5KJ4TDoprB801Vz4N3PaWvHNvzZbzy7y6wDJkFci1Z5sbDD+KzZZkGlvjAF+VRHh7wFQbcxUv0BFrd+KBJyZE4ZYLZNrLw8Z4X46OIEL3N4Ao4bX16eVeAyDMvAxN0P4JnSARA5kUBXkvWrGApdyLvFk4A5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745328464; c=relaxed/simple;
-	bh=EQCtPB6vig1BWXkhsUPFWKuYqQaajrFDU8o+69PjzzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eHk3hIr+Y8wdUNm2MF6N85CkXMKNggC7edvcB2ms6k4KSCgMD8JXVSVbMJsXB+sPCfJ+goFIffL5H5OI+ZmNNuy2PLe/Xrrl/njAR30fUeHuY6h6iPfUAPoTv5/q66YCEske6YQeY8DKKb4ct8Z/1eAlN4RrG5yWE1fl2dpD9bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Uu5Zj+eu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=ZKWee/DB1apt/bMfFT+x3nlRqQI8FcxvUaoQ2VvmCPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSAqb/M9okXteLak4+TOy1F0jfKS/6ER9qwQ0ZaN1vpWpzLVN6AVn/4k5S2lXCMprzVKFI4JkHUu/8MUU+RAUZat7Cq5qU8A9lxtuDc3GPovjtMXpUFnxN0Avd1AmEHinwscTnL9+mNuIWqTXxtqO4BJJjK2gRw+GGUoJOTvGbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k/XrGQto; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uu5Zj+eu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745328461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7UwdpGD0fRMaU1gXvakXekOim8TBkzbwWuAWNIFkxTA=;
-	b=Uu5Zj+eulTZlBU6Goh5gmFMxcnRylfhthbImI63FAgL1hjxjvimSmFxzEJKu/DMndGWrY4
-	dRMZPwdrZjdxrlG/9DoMKtcw9NlyW9hrvWOOp2pdR9EfOda3Dydsx0p1QauvkNQ/WD75zb
-	fS8bD+c3Fh6Xx2GDD5hf9EUtR2/Ib4s=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-175-5oLxEcLrPRSfMYCRnMmXvw-1; Tue, 22 Apr 2025 09:27:39 -0400
-X-MC-Unique: 5oLxEcLrPRSfMYCRnMmXvw-1
-X-Mimecast-MFC-AGG-ID: 5oLxEcLrPRSfMYCRnMmXvw_1745328458
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39d8e5ca9c2so3261699f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:27:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/XrGQto"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso538036466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:27:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745328461; x=1745933261; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzfHkHHg9aFgClvuNUEbYziAa2wcOAWz+w7IrA4na60=;
+        b=k/XrGQtoZBw1MLXzn8n/3WgCGXmxhLqI4UnzZCVVdfEQDIhHgOQVhge5kLA5FxzV0z
+         Grpu2S4asR/ikHeUXImqSWKh6D+fPyAH7CeAlzLE8MKnxZpH2Lv0UK5VmQ/CgzAbus41
+         8rorPlawNRjVE+MrpVC6yJQubGxs4d29L/zGaTtCvsuRuMiBm4oC4DfCXJ2zDfta0my5
+         b51InZynJwL7ddzZeIkhWFaApma1Q/1FLPhYjsIqwasJOYQqF+U5Ja8VErUWb5LThNiv
+         gA8JLgr5Mm7IxXYemEI81TrETPPllJ0DS4jGhMnWr8DehWHpjSb26SKcQAjs74DHnlNc
+         YC5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745328458; x=1745933258;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7UwdpGD0fRMaU1gXvakXekOim8TBkzbwWuAWNIFkxTA=;
-        b=otGvgybugNYsfJxEtGqj+4JqCzWg9+vhUl3/cUOy6z0H/tqIzOacO+C0ohn9LrixwE
-         mow75SB0URoPGD4SkFXvGPFEgycYqla+8i2EELUau6kewVN5qDp4dKJQXBPMSonTICBy
-         4iM5vRC3YDDn2b+XtfRzQPwUshqnOI4ffyV9l/ZTy6T1t/+4XsUkB1IdJ+U2qb/tBrvi
-         fYoCwVu8QZyf4GwkJGAeyPw3KXY2XGNnIplp3Yx5ao6qJYPcZCq2kSa6gWdu526LUhZ9
-         9z0W8U+cAsyy6G+Hd3rZNBFY2eQKI8FGNvQsqlWl1qqls2osTHRiNIwOg2SoPXjGtRil
-         2ujw==
-X-Forwarded-Encrypted: i=1; AJvYcCWY37dpHaDpKlQExSoCIsDg/ef7AStJISOGZviXtt+fWMn85tbbZ7r025n3fzgMQSOBLTwonuiGPUw8H04=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsL3cYIx6TfRYMu+tST6/AbLiv1CEcKMrj/DrfxCbP1bXK/xwr
-	KWKopM8NzfN3pzQumVuaDHmB0aRob5mfp6wOaGEa9I2MERig6q7qs6xFG1cCcegC79UnCTJN1cs
-	2FT99Unz56BXQEaZtY20LKA902fmgpedupU7bKT6KLNkgp+VnF1076RnZV49kPA==
-X-Gm-Gg: ASbGncueDjhHEsGvEDxxfp6H6h44BjkXLACtYD3B0Q36aY+DSjl4LRfxD5iObqARmRr
-	mZ+NojXWQb5qpnHXM018HNxadfoDN9CPcS67QT/BMqUqKRuAxFqnBJUJm0LBzJyPcavFMlgpLt5
-	FDAAjCdsTCCdKGMXGUyeisI0/jYNqjJTewT85jUs7mMlwbR0w29a9wRd0vjjeEqHV4bAV8KAY9a
-	VjQ+Chg492fnxK5UMvcGVlUF2iebMJb1pRwPhqVloe+ZmA1I+Ew2cTm2lP7rj7/3YMY7yi6QJZh
-	hyUugWpLoHzlh0ABr3njGe6Iz+qj+jOO1Zs9
-X-Received: by 2002:a05:6000:401f:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-39efba5c445mr11588023f8f.30.1745328458286;
-        Tue, 22 Apr 2025 06:27:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGMFkPqpRqcNuzcFnHj6Skl43ARpjqnMI6BNLMea1wY6RizjcHM5ktMU4nEoG/0S/ogkDjhNA==
-X-Received: by 2002:a05:6000:401f:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-39efba5c445mr11587993f8f.30.1745328457846;
-        Tue, 22 Apr 2025 06:27:37 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-86-8.dyn.eolo.it. [146.241.86.8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbc13sm172207495e9.17.2025.04.22.06.27.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 06:27:37 -0700 (PDT)
-Message-ID: <845bd2b4-a714-4ddd-8ace-a45dcdbd486c@redhat.com>
-Date: Tue, 22 Apr 2025 15:27:35 +0200
+        d=1e100.net; s=20230601; t=1745328461; x=1745933261;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PzfHkHHg9aFgClvuNUEbYziAa2wcOAWz+w7IrA4na60=;
+        b=KyPxYwSzuwOkr1dYgAK56VeyeIkaMDuNSBs2AXvdiD27KIPTAO48sTZ3ae3G9F+cGX
+         ySfdaZgURpB25/fDDGi+TTTBll2HIVfYuNbJHgAX175BHtPSmgMAPr5yzcqXsPUzJjA+
+         w1579JmmN9XXlhDVSxhIcIvFOYBIFy2/ufTPNycUCN7zDs8bLwAVPMb8d35ddqTMPLy8
+         haGE5gFVvr7RWbLZ626gaecPHkWNX12f4V6OUdBtuTNmXIJ3b9ja7pcKX3MT/CU8bGjT
+         ClE5QgCXjL+gGTLaIy5dJ1QzBKvH6+F58bLhXuZI/eMxwuuClrIjFx/u7jv8/vtUDNtw
+         M4ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVc/8eCAk7TO3lS9nqwB3RHzKrAnCdg5c+AtZZYda6JTvjJO9Ug1xnm0ZACRz5KgJm0yicqah0sPKKq3X0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ8e2TzYmgo7yl1fyEFMACI1MjypK9oKR8uxuJMs67/Oh76kg3
+	y4zz1lqfpp11EIKR/uEOqPv7vJukOJhDa33wL2ytChLk1YYjwDX5n959AMKR6IQ=
+X-Gm-Gg: ASbGncv77P+yB6e7VAE+9/M7U0YKcpxAMQ9+Tw/btiUXq7JFdGHZmmP4Ncdyvanbc+g
+	zI/FYvpGGFNAxLfi/36boIYWAlr9R11yhYL+9Lj1LHhgZJtCEKH1xg+dW7H4AekOsGJ0452tz0S
+	8LUrNKTno9omXFAEK9IPhaMVq5Ds0Jiafq2wxvBQp6U4qIxaJdEfuqtm9xLQqfbreEPRLkk0X7l
+	+RfGjdG6hUjS6p5pxBxk7N3pgSSSSE3EqS5v0U1jQZenqtxBcn2VW/IqIdi77zDgjzpGs4njWhb
+	fgKTinEDHoWyvzZ/yAJR8ifv4G7FyPb9shSCtg==
+X-Google-Smtp-Source: AGHT+IGPMYljpeD4pnIPV4e6hdEW1ZBRPTLVTE817N1JQkweURcQG3ISuVkVno8eIM9O75BdqoVnPg==
+X-Received: by 2002:a17:906:15d4:b0:ace:3105:afcd with SMTP id a640c23a62f3a-ace3105b6damr170970066b.4.1745328460550;
+        Tue, 22 Apr 2025 06:27:40 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec50607sm657364666b.71.2025.04.22.06.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 06:27:39 -0700 (PDT)
+Date: Tue, 22 Apr 2025 16:27:38 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Johan Hovold <johan@kernel.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] pmdomain: core: Convert genpd_power_off() to void
+Message-ID: <aAeZSmRtVyxEzqvC@linaro.org>
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-2-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next V2 2/3] net: stmmac: dwmac-loongson: Add new
- multi-chan IP core support
-To: Yanteng Si <si.yanteng@linux.dev>, Huacai Chen <chenhuacai@kernel.org>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>,
- Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250416144132.3857990-1-chenhuacai@loongson.cn>
- <20250416144132.3857990-3-chenhuacai@loongson.cn>
- <fe0a5e7a-6bb2-45ef-8172-c06684885b36@linux.dev>
- <CAAhV-H5ELoqM8n5A-DD7LOzjb2mkRDR+pM-CAOcfGwZYcVQQ-A@mail.gmail.com>
- <99ae096a-e14f-44bc-a520-a3198e7c0671@linux.dev>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <99ae096a-e14f-44bc-a520-a3198e7c0671@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417142513.312939-2-ulf.hansson@linaro.org>
 
-On 4/22/25 4:29 AM, Yanteng Si wrote:
-> 在 4/21/25 12:20 PM, Huacai Chen 写道:
->> On Mon, Apr 21, 2025 at 10:04 AM Yanteng Si <si.yanteng@linux.dev> wrote:
->>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>>> index 2fb7a137b312..57917f26ab4d 100644
->>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->>>> @@ -68,10 +68,11 @@
->>>>
->>>>    #define PCI_DEVICE_ID_LOONGSON_GMAC 0x7a03
->>>>    #define PCI_DEVICE_ID_LOONGSON_GNET 0x7a13
->>>> -#define DWMAC_CORE_LS_MULTICHAN      0x10    /* Loongson custom ID */
->>>> -#define CHANNEL_NUM                  8
->>>> +#define DWMAC_CORE_MULTICHAN_V1      0x10    /* Loongson custom ID 0x10 */
->>>> +#define DWMAC_CORE_MULTICHAN_V2      0x12    /* Loongson custom ID 0x12 */
->>>>
->>>>    struct loongson_data {
->>>> +     u32 multichan;
->>> In order to make the logic clearer, I suggest splitting this patch.：
->>>
->>>
->>> 2/4  Add multichan for loongson_data
->>>
->>> 3/4 Add new multi-chan IP core support
->> I don't think the patch is unclear now, the multichan flag is really a
->> combination of DWMAC_CORE_MULTICHAN_V1 and DWMAC_CORE_MULTICHAN_V2.
-> OK, please describe this code modification in the commit message.
+On 25-04-17 16:24:59, Ulf Hansson wrote:
+> At some point it made sense to have genpd_power_off() to return an error
+> code. That hasn't been the case for quite some time, so let's convert it
+> into a static void function and simplify some of the corresponding code.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-@Huacai, please extend the commit message, as per Yanteng's request.
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
 
-Thanks,
-
-Paolo
-
+> ---
+>  drivers/pmdomain/core.c | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> index 3523d0331cec..574a0de1696a 100644
+> --- a/drivers/pmdomain/core.c
+> +++ b/drivers/pmdomain/core.c
+> @@ -908,13 +908,12 @@ static void genpd_queue_power_off_work(struct generic_pm_domain *genpd)
+>   * If all of the @genpd's devices have been suspended and all of its subdomains
+>   * have been powered down, remove power from @genpd.
+>   */
+> -static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> -			   unsigned int depth)
+> +static void genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> +			    unsigned int depth)
+>  {
+>  	struct pm_domain_data *pdd;
+>  	struct gpd_link *link;
+>  	unsigned int not_suspended = 0;
+> -	int ret;
+>  
+>  	/*
+>  	 * Do not try to power off the domain in the following situations:
+> @@ -922,7 +921,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  	 * (2) System suspend is in progress.
+>  	 */
+>  	if (!genpd_status_on(genpd) || genpd->prepared_count > 0)
+> -		return 0;
+> +		return;
+>  
+>  	/*
+>  	 * Abort power off for the PM domain in the following situations:
+> @@ -932,7 +931,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  	if (genpd_is_always_on(genpd) ||
+>  			genpd_is_rpm_always_on(genpd) ||
+>  			atomic_read(&genpd->sd_count) > 0)
+> -		return -EBUSY;
+> +		return;
+>  
+>  	/*
+>  	 * The children must be in their deepest (powered-off) states to allow
+> @@ -943,7 +942,7 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  	list_for_each_entry(link, &genpd->parent_links, parent_node) {
+>  		struct generic_pm_domain *child = link->child;
+>  		if (child->state_idx < child->state_count - 1)
+> -			return -EBUSY;
+> +			return;
+>  	}
+>  
+>  	list_for_each_entry(pdd, &genpd->dev_list, list_node) {
+> @@ -957,15 +956,15 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  
+>  		/* The device may need its PM domain to stay powered on. */
+>  		if (to_gpd_data(pdd)->rpm_always_on)
+> -			return -EBUSY;
+> +			return;
+>  	}
+>  
+>  	if (not_suspended > 1 || (not_suspended == 1 && !one_dev_on))
+> -		return -EBUSY;
+> +		return;
+>  
+>  	if (genpd->gov && genpd->gov->power_down_ok) {
+>  		if (!genpd->gov->power_down_ok(&genpd->domain))
+> -			return -EAGAIN;
+> +			return;
+>  	}
+>  
+>  	/* Default to shallowest state. */
+> @@ -974,12 +973,11 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  
+>  	/* Don't power off, if a child domain is waiting to power on. */
+>  	if (atomic_read(&genpd->sd_count) > 0)
+> -		return -EBUSY;
+> +		return;
+>  
+> -	ret = _genpd_power_off(genpd, true);
+> -	if (ret) {
+> +	if (_genpd_power_off(genpd, true)) {
+>  		genpd->states[genpd->state_idx].rejected++;
+> -		return ret;
+> +		return;
+>  	}
+>  
+>  	genpd->status = GENPD_STATE_OFF;
+> @@ -992,8 +990,6 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+>  		genpd_power_off(link->parent, false, depth + 1);
+>  		genpd_unlock(link->parent);
+>  	}
+> -
+> -	return 0;
+>  }
+>  
+>  /**
+> -- 
+> 2.43.0
+> 
