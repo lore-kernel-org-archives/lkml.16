@@ -1,82 +1,135 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD28E1FDA6D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4652153F1;
+	Tue, 22 Apr 2025 23:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745365654; cv=none; b=oCsI2BcQLX7GJ2gAHKLkfFUVIBTHTe4D8qQILqaWwpCLiDWK1M/DbH/JQXv7hB3pkdIq8Q8paMbTevn/Yr5tgS1fmDYWTaKv7P43WalVhrd2Oh0KsrL4FyBLrgs1BdzifS221aDdOzNRHom49mvJViP2Fls75wOkbww6pn4FkaU=
+	t=1745365699; cv=none; b=lQtBKKUu5Yosv5e2mt0BKi0oBi+HOrcFTRCqsTqU42Zde+Z76Wpmf322xi3t9oEA/vPPAMafFA95uS5AoDCS5W6F0RHS7wRkPTVjB4CEUEA09gZxhwvHhf5bZXCnLhYDcvXBxkOLPhJIYn29KcpHk0F4ReMgK+TCacdIcIp+Swc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745365654; c=relaxed/simple;
-	bh=ukVNh6gkEjNNQE8ZcUfA6z++5Osp3iiUUXbBw5q6QYU=;
+	s=arc-20240116; t=1745365699; c=relaxed/simple;
+	bh=+40hAu3bUXUJIbm4+VNTCNA9aMW+tanXGfKUVrMO/Xk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gFOa1Ptc5h/4swv0GzWDC8IkGqbuoBE23oPNoizlF1DZ1CaKgxwP0yDqDMxH83/+6AivG5UL2agcwsdRgKMdTel/gVOIdqX8BGWEYdoozxocsLuUx3g9LSm2oDkFbJfvrS4qbPhW1WlxKZLOAbFTyFF8M+s+Vt4vP/bmC/UOsr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Apv2ySkr; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=dmWqROntsTyycKNH+sdcdS8g2ktLurmH5pXHuzhhdXlltBMULCAEyNBp3Y9fG/wJSTgj2CXh5JSkO1/jKVolSyQbd7XPJ4WDRD7DmHltmC990hErdOK7UvxHOQTlxncolXAsIZpuB+to7+Dtuk5CFs1Jxb+HtkH/moXAoC6N3/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5AKWUg7; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Apv2ySkr"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so9863255a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:47:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5AKWUg7"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so6058478b3a.1;
+        Tue, 22 Apr 2025 16:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745365651; x=1745970451; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ukVNh6gkEjNNQE8ZcUfA6z++5Osp3iiUUXbBw5q6QYU=;
-        b=Apv2ySkrCvoHftX9/G52GYEVPultDPFq8MLkB4/04+aR/1AEXrPv0viffLzkKvQ6J3
-         WqWfGeugvjHURtd67ckCRf+Tnr0eYaqHZCE8jM7OWnulFg66xFf/uYDvuOJypXVSpaQJ
-         6kgCAlV8kxde+VB3K5nCddFt+cCLqBmzeUcZtL6ARR30HY6SrO+BPwNV/b6wgE1JUsjs
-         zbAgw3yunVNnME8tgrqXfb9PDvUbBQXfiKbjhMXOzJHew1+z8UmSTE+Mz9lgO/vfmSJh
-         6HIxJWVYFwtOFhihmY7BUJ4H3SwwQ4/wZGj5D01Kcx6HNvPQxfWXp6Kb9vB0vTMcLcu7
-         PfJQ==
+        d=gmail.com; s=20230601; t=1745365697; x=1745970497; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eShSuHzF8zRgOXJ9h+TKKwhpFe0OJ/PDxiZ/WuLMR9g=;
+        b=g5AKWUg7aqKa5XXCFOFjdWm69yI2kTQuIXdKRV905AzQzzBghdRNBSnISF9Om9yf4H
+         FzuOvTbyZIgyGSmUGKtUuLbf5XQl65ICe9aP3jnHIm7GDArBt60qpegC0LlrfzSjtpsY
+         3w3d7FruKmrxfwJ2iXd3/kEy+QyQPyB61L+UVDwH0fFL5Thws2HQkDcSVYqIZ15etck/
+         bjZeHWxHChJ+ycCpTAbQ3iOODL1DOMaQ5noSVJ8AvaMu0qwcO4E3j7e7tsgHTmLUPpGZ
+         v93bhC9jCTon2V/4g6JOxlQxmnXApXn5Iqz0LzqeNxK9EO4DLCicbFO5ufqpdi2P+utr
+         GURw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745365651; x=1745970451;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ukVNh6gkEjNNQE8ZcUfA6z++5Osp3iiUUXbBw5q6QYU=;
-        b=LNYHkVI80ECw3P60q1uLu3UEK/QwNLUV3PTugeS83UexhCFYzpFvfRtZPqOZ/Bvx0Y
-         MXLIusWa4sPYKcIFK0WeMu9fynw2I/RMC1SgWN8qxunDmBb9Rp55gcEkhItFdfE/x4Q5
-         tzAGKtVgshyZWi0U/HIZ5iToCBeNMoeyqEYoIo/FM5MYcAKlbrom3Xx4x4JiWOuWrHv1
-         rcqeDPA19jpNQX5xHHLLqVxc9CN4YorvkriL9g1ZHvAMOs7Cj9goazsjeX5ZUldM8wmF
-         6S+hEP7JTruxmLqCF5tBEYshMUusNssGpHvQLY+UrTPLSPXXBiIedhkx50wKzz3j7SAR
-         +bgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWh12HwFibJR51IY32K9jI4LaZm6lWG+5qE0aYtsBkFk0gNDt6uZ/ZfD2Vjc7VI/VhB6506DEAfbHQB1wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+BUyiyBxKLjMgGAZ9wOP8hXjvp/OKFXX5Y1t5BQao2Uo/6QCM
-	qcAQDEZc6uZyfkJhLPrJMiO7T99hD8FL48wQnDS+DLArHIzGJd2mOMjgadUQ9wenhG8vGobZYao
-	Nw2HL69mD/fIUT2Aqe4YjZcXrTEz7AECvVL1V
-X-Gm-Gg: ASbGncskvJTMNdSNV0giKasGOW9ldFtxWGbGk17q7q9NyRvMc0u+DEUXqKmrwl8UrTe
-	5/sKdbcGcSH6/ywvoGF7uWDxKq1Qf4mERyksliWqqyQ+vASTAwo9E6ai5ULO0cXVfCR/P7yh2xN
-	+IWs5DlWsrxnK+Yp44G1L9/xVStQ0ee+VDsp/dqLXgaNADlksglLSO2JNmWAx3bQ==
-X-Google-Smtp-Source: AGHT+IHWX+cJR4ZByTaG9eqY/XIVp83KudSrONhKwKheK98JSHH08eIxFd1YyKl56X9x/D2Tx9dhhXu8we146gJD6uc=
-X-Received: by 2002:a17:907:d1b:b0:acb:34b2:851 with SMTP id
- a640c23a62f3a-acb74dbf387mr1661803466b.44.1745365650881; Tue, 22 Apr 2025
- 16:47:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745365697; x=1745970497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eShSuHzF8zRgOXJ9h+TKKwhpFe0OJ/PDxiZ/WuLMR9g=;
+        b=HRAYntO1n3GR8ElJ/v+L6lICSwbibOyO+LNaNxrFoBPwOPSZvX/nNqRqz8q3qZGdp7
+         TMaNY0yoOWwuxWa2HfM8EaBKxDqFQYPUV05tPRaOxSaDD4Qz+UB8u8U0jF5DnEijk0fS
+         mEug9mJMFtEirzck3le3I35UDxuGCX10UfYWl5UNZbrz1Mu6A4RoAnXuPxiGn7PbC2m2
+         kWpIR1rGiEi18HqVCHhq8XUAANastmX8nLgJ7JDJXDvg9yAwuUmuEhirJE2j1T4RytI3
+         tSsEb0EIcqVtdVVKvMFgrmGl00tMPUKFuY06wkmh3a0MxKmO+q0OMNAh5ETO9muKzHSb
+         EKJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUu2E3edlScLFc4cgEFEfHT37DVicrMduS/G+J7U4fZGZRnsbXrNc4XAcz4MQ7vVypdq6+J7Xl3tXGh5rdiPP0Vl3O9@vger.kernel.org, AJvYcCVKb7we+9tKKcyGeHDlxUERyOsjxhRGZ2aa9tF1jy6xE6m93NX3NK+uLrAwEf/5OTh8xoA=@vger.kernel.org, AJvYcCWP+lqvjh3XRmg4AzasIgZ+KATidq+5YYbzaTMvjAtzIx15+CE6nnMsceZxKZJryNo6OsggXaHBE1hfxFd+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFqK6SyyEWGSdUibCQdcwSSFF4rm/oBWCICisz+8cJLSs0hDG/
+	bcsmj7XhdUzBak1L2zijTb6GiVvA9UM9zDsYF5qRS3e7w51H7PMd/JkZ8xoP8qlseKew9JQwhuv
+	ldcvUo3lV/UBfKSfF/zmDMaWlj6A=
+X-Gm-Gg: ASbGnctOvRD7TaGnYdUIqc4UkuoE8BwzU4STiEwBK2dfmc94l/ErKiwSrbtIc2pF6id
+	9PKgXk1sDLK6IIAs0eDGpATWlqmj3AH/tl7Z1DXRld//ph6RMpSIXE8o6De4VFoiIL7Jh5aAIRp
+	Wo5GoI+EI3+V6cYHno0qSUlPNPq3h/3kOGB6dkwg==
+X-Google-Smtp-Source: AGHT+IEu0yYtokeCyy8Mo5SZuFzYNZEwB7ykdkZ1iVrZgv0wCrDda5aqI83NKuD++K7zVDpzIO0QFYdy19cyM8m7r1A=
+X-Received: by 2002:a05:6a20:9f46:b0:1f5:9d5d:bcdd with SMTP id
+ adf61e73a8af0-203cbc056f1mr29761096637.1.1745365697332; Tue, 22 Apr 2025
+ 16:48:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402202728.2157627-1-dhavale@google.com> <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
-In-Reply-To: <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Tue, 22 Apr 2025 16:47:18 -0700
-X-Gm-Features: ATxdqUGnLf9fwBXIbAT8B_UnhGBc9SGDdMO6_GxwRbOUIVqIOs2m2iQ6Lh6mWGY
-Message-ID: <CAB=BE-SbX0XyG42wLwfH69vKfBWXMw2NL9jnJisVviK00S7Vew@mail.gmail.com>
-Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
+References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-10-jolsa@kernel.org>
+In-Reply-To: <20250421214423.393661-10-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 22 Apr 2025 16:48:04 -0700
+X-Gm-Features: ATxdqUG6y22eK7OqIgrCK3eoJYN6m_lwL1AWftBr4wBZAjPZkXExZ4GLtq-CVoE
+Message-ID: <CAEf4Bzb9tTQMR2C+kpFxKqaXabTZN91LX-6hSyqknp4=aLcXtQ@mail.gmail.com>
+Subject: Re: [PATCH perf/core 09/22] uprobes/x86: Add uprobe syscall to speed
+ up uprobe
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Gao,
-Thanks for the review. I have addressed the comments and
-did further cleanup in v3 at
-https://lore.kernel.org/linux-erofs/20250422234546.2932092-1-dhavale@google.com/
+On Mon, Apr 21, 2025 at 2:46=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding new uprobe syscall that calls uprobe handlers for given
+> 'breakpoint' address.
+>
+> The idea is that the 'breakpoint' address calls the user space
+> trampoline which executes the uprobe syscall.
+>
+> The syscall handler reads the return address of the initial call
+> to retrieve the original 'breakpoint' address. With this address
+> we find the related uprobe object and call its consumers.
+>
+> Adding the arch_uprobe_trampoline_mapping function that provides
+> uprobe trampoline mapping. This mapping is backed with one global
+> page initialized at __init time and shared by the all the mapping
+> instances.
+>
+> We do not allow to execute uprobe syscall if the caller is not
+> from uprobe trampoline mapping.
+>
+> The uprobe syscall ensures the consumer (bpf program) sees registers
+> values in the state before the trampoline was called.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  arch/x86/kernel/uprobes.c              | 122 +++++++++++++++++++++++++
+>  include/linux/syscalls.h               |   2 +
+>  include/linux/uprobes.h                |   1 +
+>  kernel/events/uprobes.c                |  17 ++++
+>  kernel/sys_ni.c                        |   1 +
+>  6 files changed, 144 insertions(+)
+>
 
-Thanks,
-Sandeep.
+LGTM
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/sysc=
+alls/syscall_64.tbl
+> index cfb5ca41e30d..9fd1291e7bdf 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -345,6 +345,7 @@
+>  333    common  io_pgetevents           sys_io_pgetevents
+>  334    common  rseq                    sys_rseq
+>  335    common  uretprobe               sys_uretprobe
+> +336    common  uprobe                  sys_uprobe
+>  # don't use numbers 387 through 423, add new calls after the last
+>  # 'common' entry
+>  424    common  pidfd_send_signal       sys_pidfd_send_signal
+
+[...]
