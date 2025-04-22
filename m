@@ -1,90 +1,77 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEA213B59B;
-	Tue, 22 Apr 2025 10:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9160C1DDA24
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745318025; cv=none; b=WG91tqKFV1c8R1XBI5zA7ferw+BWUaQx4HPq+YL/A9jX0ZCSP9ILJWbJd28hVjGLI0Z8bmJ/kQzLN0csgfXxsFKo8yDXbwlGdD5+ja0AnCCHT9mw09XD0jnHbkX3v03bJisdIsJpekL4DxjRe3kNOn/3DW6s/aP+fK28tCEsC9g=
+	t=1745318048; cv=none; b=FyPeVrXu4PEMvy392zPcM/HMK1m7R6rrWaVRafe+wvjB2O/0SD+ioTltupWQB/fUaJlLZFwE2RI2xaXtSgeA4jvA0C++xEuP3Ani7pl9kLyyNbE5W8RjvVOKQXGRStKP2P9gOmDmziVQBZu1qXCV1QYIgEXmR+VQRxOb0TrMRyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745318025; c=relaxed/simple;
-	bh=RQmHOPXhl+cT1Q7qQmz5urJeUX82pkpUae6vl1eCtD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A/N4Y/iO18UFzjcX8snusay4kwQJ4W0Reokm8K6fJTjDcEvV3/wm087FQhx3AFHe6pLprZdvZSK/vyBAtZKJnJ+yk6G9HoQQ6UmVAGOBt3OEXrhZvsbIs1PeS9y4uf6jfGCGlC6mXFAZoLB/zd85NMJ3QSmiWK1LDcc2+XfKwoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cBIKsacz; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745318048; c=relaxed/simple;
+	bh=oeCuHoVz5QUTWJzf2zOJgkEhUJmKe2UCcI6Vt+o8aK8=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pJn4f1fEgi0tSi4aC9TXLBLTScykfdwy8HdIGTLzTsVibc71TQBJ7er0mfTQbeIWhccSg4gGwJHvbOJDSQRjej32KE+wcUYCytej6ks/XFdoNboN2raLSxI+VIToPceFrHVPIbFdjmV6LHAMVjn8XjLKADlJL1kbZ0qWBpS4krU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sgn8vt5j; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cBIKsacz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745318018;
-	bh=BkEo3n+Opvw7/TrpdnLeOc0N1MM2AlzwF5qEPUIc3Vo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cBIKsaczhUy5WE4yckx30jWv7D9+gBELiI26kcnAYjazVzRIjQAFuc1fBmRZWkjiA
-	 q2GrmFRcm6JfbPywk9X+dabLaCl2/0e3Oqs2HZoDgqDvS52E3k5BhL0aVg1L4y794C
-	 QtE/UP0ftHFnxpOJFICPxW7TzAtP66FVV1VUL8RjiVE/xnKK5WdMvklGZLn0qThW8O
-	 doF8UtEyhPNR+AWqrelyOvBAXVIbADEbvLyJM1Jdydoe7GukIt/kRTu9JyZ5afs+s9
-	 tiroHArBTq/XUp9WQysdRXau2NesKDsnzvIEREl6j8efROE1c0dubX1B4T7pnEPxtk
-	 mAuQSmxRSk80A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhdr262ydz4wbr;
-	Tue, 22 Apr 2025 20:33:38 +1000 (AEST)
-Date: Tue, 22 Apr 2025 20:33:38 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Yihan Zhu <Yihan.Zhu@amd.com>,
- Zaeem Mohamed <zaeem.mohamed@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20250422203338.3ff1ce14@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sgn8vt5j"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745318042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rjl1f5mubJGO7Tab81fhPjfe8rsa8zROJO6KvjoTdq4=;
+	b=sgn8vt5j/cfrLu/IXAzWpmCM/LfzuCXQQ9/2B67LwujPDHaENOPRYqmctAzJjeFY/bVASo
+	d0IoLn6amLaNwVzrl8hv/624m4H92s39XXDrJ/JMciLAFh8RCMBtuf6F0YOyoqtRyzkkKj
+	U0xfqlFRtrQwsWEh9AwhGwQQd4Dh3Ys=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pLuk+mNc049c71LOJZYoVKk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in
+ board_prom_init()
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <aAdsvNKuPd-qPuE4@smile.fi.intel.com>
+Date: Tue, 22 Apr 2025 12:33:48 +0200
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ linux-hardening@vger.kernel.org,
+ linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <9FB72AC0-3FD6-4D9E-AE26-3EDC39A3025E@linux.dev>
+References: <20250422074257.544016-2-thorsten.blum@linux.dev>
+ <aAdNVAzu0rmIfGGC@smile.fi.intel.com>
+ <86E5AC5D-11BC-4B4E-B08E-845F59AACF6C@linux.dev>
+ <aAdsvNKuPd-qPuE4@smile.fi.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
---Sig_/pLuk+mNc049c71LOJZYoVKk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 22. Apr 2025, at 12:17, Andy Shevchenko wrote:
+> On Tue, Apr 22, 2025 at 10:27:33AM +0200, Thorsten Blum wrote:
+>> On 22. Apr 2025, at 10:03, Andy Shevchenko wrote:
+>>> Can you use --cc OR put this line...
+>> 
+>> Yes, will do next time.
+>> 
+>>> Have you compiled this with `make W=1` with recent GCCs?
+>> 
+>> Yes, I compile-tested it with W=1 and mips64-linux-gnu-gcc 14.2.1.
+> 
+> Cool, no warnings?
 
-Hi all,
+No warnings, at least none related to my change or compiling
+board_bcm963xx.c
 
-After merging the amdgpu tree, today's linux-next build (htmldocs)
-produced this warning:
+Best,
+Thorsten
 
-WARNING: drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068 struct member 'mc=
-m' not described in 'mpc_funcs'
-WARNING: drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h:1068 struct member 'rm=
-cm' not described in 'mpc_funcs'
-
-Introduced by commit
-
-  652968d996d7 ("drm/amd/display: DCN42 RMCM and MCM 3DLUT support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pLuk+mNc049c71LOJZYoVKk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHcIIACgkQAVBC80lX
-0GyU4Qf9HcH7ui0rvZvy6V1pAIr52OJCa9srKR/B9BzPbwmw2azYfX2bPjqzBf1r
-/l91SnFQiDHumWMQYZD6cE1U646c0FL5KmUQrSeW9pcE6FX4VC1HnyYRBIqoVAc1
-+mzF8dF2ZjxrMwEsK+LD+3yqmOhE9KHJII2G7tZ5BYX9o0GsF1LcBXgehzfp3lvq
-BwxoVIz4CE7fDLdp5nA+Go5uBPFu1E9K7yyJlaZXl3sFNIQG7SqRYxueQQeIYGry
-XEI42+LvZvBgnRJaFHPJHATfjZEREqIpaWUSnvn2jq8GzF1RM02FJXg3j5qgTa7R
-3BVgxQ97m0+C2d20HOD1z1VjOg7vZw==
-=xOCo
------END PGP SIGNATURE-----
-
---Sig_/pLuk+mNc049c71LOJZYoVKk--
