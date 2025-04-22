@@ -1,142 +1,48 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8677149C7D;
-	Tue, 22 Apr 2025 08:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085361EF391;
+	Tue, 22 Apr 2025 08:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309090; cv=none; b=vBJUSWM8hs/iRXHDlP2fp5k4gv0AugQFoIOHfFwvI0n5JSlhduBvB+8ChKjTPu0kTfFyc46lNwqL3hhymUO4oG03sHi24YtuFrtqgJ9ZGiUnO3YRBvnEE55Vv7VxM7RJdYoAvva7oL2+qEP21X1Q7q7RopOod6pvyJJAJClwsxg=
+	t=1745309166; cv=none; b=Lq4Gb8tEJGkUV9NtcJ2jMiaAXCWxwzlKiFp9kUu6jgUkPG+9ecc3UEA0CaEKPrm99MzIg8w728YZxZ0ERcwGXwbYE+SkndFx3gPMNmNfD66D4Tw6nK2vEke0k8xid//AgLBGZilcfQoE8QCIQh+yWTHQCN8E/a7ofEzhuLQ1V30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309090; c=relaxed/simple;
-	bh=dKg2iMASpZKlpSKiCHccH+FM4Cc+jvpjBNHcnykSyl4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Cq5DtR9FpytH2os2GN9aO8J0FTVUgyOHx0RSHfykiDFB8K/v4aRyNWmwq5kZ5NW3GnNCoYSUqEbEBvCHX8FMZJWNDOyW6vouszxxjbg8KtYoRZDxlp91Pl4NUWWlAfxcFPc+bOvBg4bieUKTC9ZRtU+c+CEpfq83aqjE50b3Ftw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=enGmkuWH; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="enGmkuWH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=jhwxs
-	X7bT2boAjm5LCgWVLRdP11jribrR6xBUttHT2I=; b=enGmkuWHo4kn5hs42kTQo
-	RXk0rfNiJPybF1+3puHxHV6tKuyZhXVBJOFgaizbheuToAlnjR/f9e3If7KTZxnB
-	4q8aDBpZ705wabm6FBz5fKhjR864aN0lcUHkrqVxPMuYCMSayp9tYzHXOZ4cLclf
-	C7VZxQT8f94ZFDzMU0Ljck=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgAHGGuDTQdoB12hAg--.4613S2;
-	Tue, 22 Apr 2025 16:04:21 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: alexei.starovoitov@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	netdev@vger.kernel.org,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yangfeng@kylinos.cn,
-	yonghong.song@linux.dev
-Subject: 
-Date: Tue, 22 Apr 2025 16:04:19 +0800
-Message-Id: <20250422080419.322136-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAADnVQLnij-d3Hif1x8ocoYD=8sZG67qACXPZhK78cpYKczwkw@mail.gmail.com>
-References: <CAADnVQLnij-d3Hif1x8ocoYD=8sZG67qACXPZhK78cpYKczwkw@mail.gmail.com>
+	s=arc-20240116; t=1745309166; c=relaxed/simple;
+	bh=uSzKucUqknnILhytCX/G092t1KIOajjeDR3YeKyX2rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aoExjll6obKoHCRfrLT6qVUZMEmEIAuUQy9irbA6HSm+3kx/0oM1xatdSMGxZ/adupd5YoP318CS7v0ZcgvMBGjaT0zfRlvRANit+phDFgDYOKBttxFjggU+SQ2PmZPKGfP21Pc1oqhKCfaN3SIR9+ObnkwU46wN9DuE4El3rgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8246F68AA6; Tue, 22 Apr 2025 10:05:58 +0200 (CEST)
+Date: Tue, 22 Apr 2025 10:05:58 +0200
+From: hch <hch@lst.de>
+To: Carlos Maiolino <cem@kernel.org>
+Cc: hch <hch@lst.de>, Guenter Roeck <linux@roeck-us.net>,
+	Hans Holmberg <Hans.Holmberg@wdc.com>,
+	Dave Chinner <david@fromorbit.com>,
+	"Darrick J . Wong" <djwong@kernel.org>,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xfs: add tunable threshold parameter for triggering
+ zone GC
+Message-ID: <20250422080558.GA305@lst.de>
+References: <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net> <mt3tlttnxheypljdkyy6bpjfkb7n5pm2w35wuf7bsma3btwnua@a3zljdrqqaq7> <e5ccf0d5-a757-4d1b-84b9-36a5f02e117c@roeck-us.net> <20250421083128.GA20490@lst.de> <c432be87-827e-4ed7-87e9-3b56d4dbcf26@roeck-us.net> <20250422054851.GA29297@lst.de> <c575ab39-f118-4459-aaea-6d3c213819cb@roeck-us.net> <6Vk6jXI2DGWoxaC5fwn8iLCw5Bdelm4TDO1z8FiRamhu_v1yAbbQ-TB6I1p9OQZDcydN5LSY9Kgzb7vhsAaPkg==@protonmail.internalid> <20250422060137.GA29668@lst.de> <vtbzasrb6cx4ysofaeyjus75ptnqrydm24xw7btzeiokqueey3@qamjjgwyubml>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgAHGGuDTQdoB12hAg--.4613S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF4xurW8ZFyxAF4xZr1xuFg_yoW5tw1fpa
-	15AFy3Cr4kJF4aqwnrGr40vFW5Gw4Uu3yxCasrK34agr4qvF9rXr1UJr1S9F9Yvry2k34f
-	AayvqrZ8KrW0qa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVKZAUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRM3eGgG8cnG3QABsd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <vtbzasrb6cx4ysofaeyjus75ptnqrydm24xw7btzeiokqueey3@qamjjgwyubml>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Subject: Re: [PATCH bpf-next] bpf: Remove bpf_get_smp_processor_id_proto
+On Tue, Apr 22, 2025 at 09:59:52AM +0200, Carlos Maiolino wrote:
+> hch, do you want to write a patch for that or should I?
 
-On Mon, 21 Apr 2025 18:53:07 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-
-> On Thu, Apr 17, 2025 at 8:41 PM Feng Yang <yangfeng59949@163.com> wrote:
-> >
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> >
-> > All BPF programs either disable CPU preemption or CPU migration,
-> > so the bpf_get_smp_processor_id_proto can be safely removed,
-> > and the bpf_get_raw_smp_processor_id_proto in bpf_base_func_proto works perfectly.
-> >
-> > Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > ---
-> >  include/linux/bpf.h      |  1 -
-> >  kernel/bpf/core.c        |  1 -
-> >  kernel/bpf/helpers.c     | 12 ------------
-> >  kernel/trace/bpf_trace.c |  2 --
-> >  net/core/filter.c        |  6 ------
-> >  5 files changed, 22 deletions(-)
-> >
-> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > index 3f0cc89c0622..36e525141556 100644
-> > --- a/include/linux/bpf.h
-> > +++ b/include/linux/bpf.h
-> > @@ -3316,7 +3316,6 @@ extern const struct bpf_func_proto bpf_map_peek_elem_proto;
-> >  extern const struct bpf_func_proto bpf_map_lookup_percpu_elem_proto;
-> >
-> >  extern const struct bpf_func_proto bpf_get_prandom_u32_proto;
-> > -extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
-> >  extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
-> >  extern const struct bpf_func_proto bpf_tail_call_proto;
-> >  extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
-> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> > index ba6b6118cf50..1ad41a16b86e 100644
-> > --- a/kernel/bpf/core.c
-> > +++ b/kernel/bpf/core.c
-> > @@ -2943,7 +2943,6 @@ const struct bpf_func_proto bpf_spin_unlock_proto __weak;
-> >  const struct bpf_func_proto bpf_jiffies64_proto __weak;
-> >
-> >  const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
-> > -const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
-> >  const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
-> >  const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
-> >  const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index e3a2662f4e33..2d2bfb2911f8 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -149,18 +149,6 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto = {
-> >         .ret_type       = RET_INTEGER,
-> >  };
-> >
-> > -BPF_CALL_0(bpf_get_smp_processor_id)
-> > -{
-> > -       return smp_processor_id();
-> > -}
-> > -
-> > -const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
-> > -       .func           = bpf_get_smp_processor_id,
-> > -       .gpl_only       = false,
-> > -       .ret_type       = RET_INTEGER,
-> > -       .allow_fastcall = true,
-> > -};
-> > -
-> 
-> bpf_get_raw_smp_processor_id_proto doesn't have
-> allow_fastcall = true
-> 
-> so this breaks tests.
-> 
-> Instead of removing BPF_CALL_0(bpf_get_smp_processor_id)
-> we should probably remove BPF_CALL_0(bpf_get_raw_cpu_id)
-> and adjust SKF_AD_OFF + SKF_AD_CPU case.
-> I don't recall why raw_ version was used back in 2014.
-> 
-
-The following two seem to explain the reason:
-https://lore.kernel.org/all/7103e2085afa29c006cd5b94a6e4a2ac83efc30d.1467106475.git.daniel@iogearbox.net/
-https://lore.kernel.org/all/02fa71ebe1c560cad489967aa29c653b48932596.1474586162.git.daniel@iogearbox.net/
+If you have time today please do it.  Otherwise I'll try to get to it
+later today.
 
