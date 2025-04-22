@@ -1,135 +1,64 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748D218CBE1
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07DD27E1BA;
+	Tue, 22 Apr 2025 13:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326843; cv=none; b=E56k32R31Is+YIGEjJjgCt3E1v5BTirANSaxER3E/eWtaHJMm2AdN4ZwX0wZzNaQhHCuYMN5Efq6ScU49kZE6p6GwxRa5F5ihflrxaGJK+rVnxx2o7SEydDB8Pp/zX5SCcGEOc8SQdEtS0hMWPFKSSECrC1zEAvKeG8KHLPjmjg=
+	t=1745326896; cv=none; b=FMYKvpp1SEBBRmJC/AATdiux269Zn0J2wZSQnWVSAOEoZHooiv/iRISmkVwSl07HuyXhPgJ9GCrqTsURflsaAC00JbSBu7XKwFNHI2K9drjl2C+Ncf9uIMMZqCmKvxm/4I9bw55Qrx9wysN0YMbTfkN1gB7SlV4cEyvzssajVcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326843; c=relaxed/simple;
-	bh=v8rarTBnH88kBBOaIdRRR1GZuNP3zVXGE6MWo1DgdB4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RESJBfk3JkOewz6fjQgMe9HVWr5KcFA9/DOBHkBWD2Sfv5xTYxeb09frjS/j3bMYkJn4C8WtdeqOFRan5ljooQN+oOjsg1DeEMqPVm7G1oruyiVVeJXAD/aYtLzcCTesDXARDphdczI8fdhD3Uczi132XxLFCMD91h99LTTJF4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Gzpoavgt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2kSGLEhG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Gzpoavgt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2kSGLEhG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745326896; c=relaxed/simple;
+	bh=RRIWZyujwpn/9gYhBWQmbIspSVHn2nUMBWge3vwA/1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oemi1AimAsYyj3wWkiyVKHX2jVZsshbAmb296gEOQZjJplXHjFtmAHQ6iPo2rHq/zdxt4hkyFhOqi6+Xr2bMAZ/RZaWpdiZI32lijer3xvp4z5Blzwqxp3zAuSXWvRe40gS47h3V+C5PmHxqY0HQHlMPaPjUxTsJbPI6/kpSz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHrIVZuQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Gzpoavgt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2kSGLEhG";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Gzpoavgt";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2kSGLEhG"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9EDF1211CD;
-	Tue, 22 Apr 2025 13:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745326839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jKOzh1Sy9EUyITBcFi/dPVZRj55vyyBaFV0Vlnor+Mk=;
-	b=GzpoavgtGR6QDgBRDd5wmDNjveJ13cXS/P8KGmgIKeJnuV0snvWY5P8WLuu2h4eDLDD/xy
-	Hb1YdOBkoe2NBtYHUoytUmM+vLT331DbSYVOl55ApDQSpKpGUCbBGLhw6AjpoL8tSNIVfa
-	uTu/vt3KVjFhzcmnIO5F99Zxz+OhZXw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745326839;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jKOzh1Sy9EUyITBcFi/dPVZRj55vyyBaFV0Vlnor+Mk=;
-	b=2kSGLEhGImQ/5H+XxgZfNbQtmzi3b18q9ZUeCT9eIU1AWCkDULA3dnK78uPXzs/vNyGTn/
-	8SOK0J34mxd2E+Bg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745326839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jKOzh1Sy9EUyITBcFi/dPVZRj55vyyBaFV0Vlnor+Mk=;
-	b=GzpoavgtGR6QDgBRDd5wmDNjveJ13cXS/P8KGmgIKeJnuV0snvWY5P8WLuu2h4eDLDD/xy
-	Hb1YdOBkoe2NBtYHUoytUmM+vLT331DbSYVOl55ApDQSpKpGUCbBGLhw6AjpoL8tSNIVfa
-	uTu/vt3KVjFhzcmnIO5F99Zxz+OhZXw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745326839;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jKOzh1Sy9EUyITBcFi/dPVZRj55vyyBaFV0Vlnor+Mk=;
-	b=2kSGLEhGImQ/5H+XxgZfNbQtmzi3b18q9ZUeCT9eIU1AWCkDULA3dnK78uPXzs/vNyGTn/
-	8SOK0J34mxd2E+Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7540B137CF;
-	Tue, 22 Apr 2025 13:00:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CYNcG/eSB2gBLwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 22 Apr 2025 13:00:39 +0000
-Date: Tue, 22 Apr 2025 15:00:39 +0200
-Message-ID: <87msc8s64o.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: pcm: Make snd_pcm_lib_malloc_pages() debug message say "allocate"
-In-Reply-To: <20250421085244.377228-1-wenst@chromium.org>
-References: <20250421085244.377228-1-wenst@chromium.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHrIVZuQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EBC8C4CEEA;
+	Tue, 22 Apr 2025 13:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745326895;
+	bh=RRIWZyujwpn/9gYhBWQmbIspSVHn2nUMBWge3vwA/1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZHrIVZuQUvmzUNEIHzd7TOkPNb5sQP0KEfYQXjI1oACP5b8nJbnDTc3h4xJAK1+qh
+	 ExBKXTWe7MStmiI5yLWwJ41XFzBFB1MFEg67sFssIqSRr7fWd21oI1aVTI0BDgIh6u
+	 RLxX3jHSP7dcVrqZZmpW/FtPdYOCN/edhoqIRAINvvw1QYO6wwuGvv4ymjooI9BiDv
+	 EMyOZowTmY3tMxDGGDF7QSblHyr+Ohbil0D/vONFaVkJcfhe7atveyxC+eK4S8LcIE
+	 ADoZq823TzEBKta4M6GQLcMOXbx/rpHsXJCCco8PaFxYVpi2hlAjsZ6I1Sz6uBhDgs
+	 2X4dqibGldpwg==
+Date: Tue, 22 Apr 2025 08:01:33 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: fsl: convert fsl,vf610-mscm-ir.txt to
+ yaml format
+Message-ID: <20250422130133.GA964797-robh@kernel.org>
+References: <20250417151526.3570272-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[chromium.org:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417151526.3570272-1-Frank.Li@nxp.com>
 
-On Mon, 21 Apr 2025 10:52:42 +0200,
-Chen-Yu Tsai wrote:
+On Thu, Apr 17, 2025 at 11:15:22AM -0400, Frank Li wrote:
+> Convert fsl,vf610-mscm-ir.txt to yaml format.
 > 
-> snd_pcm_lib_malloc_pages() is commonly used for allocating buffers during
-> the hw_params callback, whereas preallocating buffers goes through
-> preallocate_pcm_pages().
+> Additional changes:
+> - remove label at example dts.
 > 
-> Having the same terminology in the failure debug messages in both
-> misleads developers.
-> 
-> Change the debug message in snd_pcm_lib_malloc_pages() to use the
-> term "allocate" to match its intended use.
-> 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> I found this small discrepancy in the ALSA PCM memory management debug
-> messages that made it a bit confusing for me to trace code.
+>  .../arm/freescale/fsl,vf610-mscm-ir.txt       | 30 ---------
+>  .../arm/freescale/fsl,vf610-mscm-ir.yaml      | 63 +++++++++++++++++++
+>  2 files changed, 63 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.yaml
 
-Thanks, applied now to for-next branch.
-
-
-Takashi
+Move this to bindings/interrupt-controller/
