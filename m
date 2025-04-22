@@ -1,228 +1,273 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BCB1362
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68A418B492
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745287352; cv=none; b=Gt4UbtpEOS3x73/oN4gujdZRt2j3/b2IM9HfeFWla6Kx3V1MrrYoPSyTifaw2gz7PsqqCf89xoLKWB9dKiOOQN2fxly+BmS2xa8HdFR1ivEoJ6wTUnyA6N4j8stX+smF4VlyeI3jGxyfEXIkxcfcrxwsi3Web38EJkryd7tjaOg=
+	t=1745287781; cv=none; b=qjs5rWNM2OPJv//dmGSEKLGqMrhobs4VqAnlIO0cXktvbwmdghq0ckE6OWtL/0bCeFpy1mqMalh//qLeHb90LXd5bZZ5+ZJS7H/XG6e2sjTaTXfOkWhoopbp0g3K7RRg7zrSpB+utaAJmxg9FZbuSJzDsmjB61Xu9E72171jxbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745287352; c=relaxed/simple;
-	bh=szMKRwJiwLsdV0adILb1Q27nFRzkAr38HS14FqDJhSU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kU3ySangC2pP/wJ8Z1Ziofk00zLJk5Qnk5qPSqwZ4xedRJIib8IPnIpmq3yFAnxnREA3E8zmCAAPWWiXGEiK8a+xjAM/6bJ1cBwFPGmHgmvXg2q9QjTMWaYPiJWS7Slm1px8tCbtcJLOgtNK0WPyNxPqZE62EEZDlivbv5+0oB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OnnGJgt5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745287781; c=relaxed/simple;
+	bh=3IPdSJ3I70j4LJHQ7iHlhoXeqRYAYXW3zl/zrWVJSrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0ag1h5cioS5JXLJ9vqJUbKGbC/lpwvccEMADBecwh/O8+R7Woamxk8EZD21szUf/hewXsctV8fnpjMKVhoCXmURmLu0i8qVdzu9rDjVICZPt/WYP3A8twRl/EHTjzhZknp3FGcqVcya8KZ1A2iCt0x8Ahx9C4LebKB1N+FKaHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3GbKhIw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OnnGJgt5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745287349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wVDUl4XVuutoa7W6ehuEIlOCIvIKUBN9QU/AW89gF3Q=;
-	b=OnnGJgt5/StjmY8ay6Eh2Zuq3uhO++qBHgMMgrq4Xss4lIVsR73qeKulpFW1ANfB/zxRG7
-	DGDkf521G+vyGc20iNLZjEd/l0MA8HuPaCQRRaYQrlSSoxGrhwDQW8G4E2ZeHApYG5HEoD
-	Dpl0wWjxeX9RVub8Y1ic0S37lf+yI2s=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-448-fw843XVBN96ZE2aFTwMMWA-1; Mon, 21 Apr 2025 22:02:27 -0400
-X-MC-Unique: fw843XVBN96ZE2aFTwMMWA-1
-X-Mimecast-MFC-AGG-ID: fw843XVBN96ZE2aFTwMMWA_1745287347
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c0c1025adbso853563085a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 19:02:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745287347; x=1745892147;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wVDUl4XVuutoa7W6ehuEIlOCIvIKUBN9QU/AW89gF3Q=;
-        b=QvbJaE5MFpdRKdJw91KvFWNK8xq2mXRJUjWul9WZFw2FnN/FxPHlb5vZPhYouwXV5g
-         NWhmGpd+LInvDCV74ndjzI+BqPfq799nIq0PWweoL4f6T8eREkyy5TzhYIfIjYgqLiBR
-         1E5UQlEOvdXsa2cALQw4A3grfKlUfkOwF0YoYHuXA9kIek6MUlCw44dtnLEuzsOWZ7Z2
-         76GpZU4kX7nK+7MpFuPHvtVJZqbjS5t3B5IcF4bFPPzo3hk04aErHzb9kNC36BdO0w2x
-         uuK0nFCOzx1Nvgd0zbKBrZWIoVnUvsexE0kepbjzUAHiMHYy1SPtblPQVRDFknjh9IhI
-         yDSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXO+iz0s8HdZSbLqGgXwX5w8UY3ElIYVHPcYukTOsiy8RuNDgEBdXXHT+PLSWwRJzDGwEIYnana/GWLjws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL9oj3j5d7WTm7uNY7YJ1k6Ini4G7HdBDjv5KLqhLgeEFBKwqs
-	YmsCY4VQyh5v3y/kgBTDysVVhB0VyniqYVLT/Z4GRWdX37AbDLcRg+Ddha59Euw21LGYrPJNrfs
-	rmVgzuOjlzxE9L3pAF9cO6VvfF4cC8yEKHZvtBbmOyGujwdSYIVI8b3o5pLoPDg==
-X-Gm-Gg: ASbGncspu8GFh0dlYIDk0yTv9713+D4W1bt2CFljvwRF0rkUdJlc4sUO/TARw67vUVS
-	1s8igyTKE9ve29ylP2lS8mV+muN2DeL/QMmBKVBuICLABYcrUB3QXmnZcEyGmCikWV/22urXScu
-	LAPmSr5H2uW032oKklndHIh1UdPM573RrCDKMoRk0h8zZO/2yJmfCcDBhYNe0NsSQbcesN6e0lr
-	roO4PRcXDTa8n9a2w0cKouJe2+JPxptBj9AMpVP+I6HZhuE6HyfzMM2qaoNJKev/a6683uhn1/f
-	hdAIWF4vltJKsO9rNUvbyp1MzFoQxaWGsRsyLMwExaFEerPDnKKTLFp37Q==
-X-Received: by 2002:a05:620a:394e:b0:7c5:e2fe:f431 with SMTP id af79cd13be357-7c928049fc1mr2423340485a.52.1745287346687;
-        Mon, 21 Apr 2025 19:02:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkvsVukE5sYNg24vtRwuD8ekLBV3eTy0mZIwunL0RQt6blOekbXA8+cDInRCyblxUVlgDdrw==
-X-Received: by 2002:a05:620a:394e:b0:7c5:e2fe:f431 with SMTP id af79cd13be357-7c928049fc1mr2423335585a.52.1745287346244;
-        Mon, 21 Apr 2025 19:02:26 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b78f0csm492272385a.105.2025.04.21.19.02.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Apr 2025 19:02:25 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <d7568176-6199-488f-b45a-c494c8baec25@redhat.com>
-Date: Mon, 21 Apr 2025 22:02:22 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3GbKhIw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745287780; x=1776823780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3IPdSJ3I70j4LJHQ7iHlhoXeqRYAYXW3zl/zrWVJSrE=;
+  b=W3GbKhIw7Q7iaTDIBCjIb7hZfIO3pc8N7LwgEqBd8DjSAhSc8rZY/2gO
+   Wjnv+VWlXVJbq9QgU+5I8LYV8DoYGDyq4Z0JmRilXFO63BZvomFkkGQEi
+   exVZDWuTks21g0Vvgd4sHsbc1A1uMz1Dk7M8+BrV/besisq0wLwsh8s7x
+   abN+vP+Gy02VPUSZ4hAj1F01WIlIrzY/2x5rMF2vaWiaee0hO5tCjJv5s
+   kkFQDmTLCQSTgcWvnaOJsyVuKzU+02s7FeRPcDAaaH7Ao8TAXEEC2TvDh
+   DNsTMldhH6WeXOM0V/HYUMj5LyguADZf7vQcfU4sii/E+OB5MqDnp2gIL
+   g==;
+X-CSE-ConnectionGUID: XeDy+Tu6RYuaMJdS1BgtYw==
+X-CSE-MsgGUID: MBMFpQBUSfuC3EucvpxjFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="72226427"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="72226427"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 19:09:37 -0700
+X-CSE-ConnectionGUID: xul+jjYbR/SaEE/EiQltpQ==
+X-CSE-MsgGUID: kTkGfurvTZ6A9/0cvpkiSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="132835551"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 21 Apr 2025 19:09:34 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u734l-0000WZ-29;
+	Tue, 22 Apr 2025 02:09:31 +0000
+Date: Tue, 22 Apr 2025 10:09:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marwin Hormiz <marwinhormiz@gmail.com>, dpenkler@gmail.com,
+	gregkh@linuxfoundation.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	dan.carpenter@linaro.org, matchstick@neverthere.org, arnd@arndb.de,
+	niharchaithanya@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Marwin Hormiz <marwinhormiz@gmail.com>
+Subject: Re: [PATCH 1/1] staging: gpib: gpio: Fix memory allocation style in
+ gpib_bitbang.c
+Message-ID: <202504220954.L1QvhSdD-lkp@intel.com>
+References: <20250421184144.220972-1-marwinhormiz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] vmscan,cgroup: apply mems_effective to reclaim
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, hannes@cmpxchg.org, mhocko@kernel.org,
- roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev,
- tj@kernel.org, mkoutny@suse.com, akpm@linux-foundation.org
-References: <20250422012616.1883287-1-gourry@gourry.net>
- <20250422012616.1883287-3-gourry@gourry.net>
-Content-Language: en-US
-In-Reply-To: <20250422012616.1883287-3-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421184144.220972-1-marwinhormiz@gmail.com>
 
-On 4/21/25 9:26 PM, Gregory Price wrote:
-> It is possible for a reclaimer to cause demotions of an lruvec belonging
-> to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-> this limitation based on the lruvec's memcg and prevent demotion.
->
-> Notably, this may still allow demotion of shared libraries or any memory
-> first instantiated in another cgroup. This means cpusets still cannot
-> cannot guarantee complete isolation when demotion is enabled, and the
-> docs have been updated to reflect this.
->
-> This is useful for isolating workloads on a multi-tenant system from
-> certain classes of memory more consistently - with the noted exceptions.
->
-> Acked-by: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   .../ABI/testing/sysfs-kernel-mm-numa          | 16 +++++---
->   include/linux/cpuset.h                        |  5 +++
->   include/linux/memcontrol.h                    |  6 +++
->   kernel/cgroup/cpuset.c                        | 26 ++++++++++++
->   mm/memcontrol.c                               |  6 +++
->   mm/vmscan.c                                   | 41 +++++++++++--------
->   6 files changed, 78 insertions(+), 22 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> index 77e559d4ed80..90e375ff54cb 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> @@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
->   		Allowing page migration during reclaim enables these
->   		systems to migrate pages from fast tiers to slow tiers
->   		when the fast tier is under pressure.  This migration
-> -		is performed before swap.  It may move data to a NUMA
-> -		node that does not fall into the cpuset of the
-> -		allocating process which might be construed to violate
-> -		the guarantees of cpusets.  This should not be enabled
-> -		on systems which need strict cpuset location
-> -		guarantees.
-> +		is performed before swap if an eligible numa node is
-> +		present in cpuset.mems for the cgroup (or if cpuset v1
-> +		is being used). If cpusets.mems changes at runtime, it
-> +		may move data to a NUMA node that does not fall into the
-> +		cpuset of the new cpusets.mems, which might be construed
-> +		to violate the guarantees of cpusets.  Shared memory,
-> +		such as libraries, owned by another cgroup may still be
-> +		demoted and result in memory use on a node not present
-> +		in cpusets.mem. This should not be enabled on systems
-> +		which need strict cpuset location guarantees.
-> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-> index 893a4c340d48..5255e3fdbf62 100644
-> --- a/include/linux/cpuset.h
-> +++ b/include/linux/cpuset.h
-> @@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
->   	task_unlock(current);
->   }
->   
-> +extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
->   #else /* !CONFIG_CPUSETS */
->   
->   static inline bool cpusets_enabled(void) { return false; }
-> @@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
->   	return false;
->   }
->   
-> +static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	return true;
-> +}
->   #endif /* !CONFIG_CPUSETS */
->   
->   #endif /* _LINUX_CPUSET_H */
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 53364526d877..a6c4e3faf721 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1736,6 +1736,8 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
->   	rcu_read_unlock();
->   }
->   
-> +bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid);
-> +
->   #else
->   static inline bool mem_cgroup_kmem_disabled(void)
->   {
-> @@ -1793,6 +1795,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
->   {
->   }
->   
-> +static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-> +{
-> +	return true;
-> +}
->   #endif /* CONFIG_MEMCG */
->   
->   #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index f8e6a9b642cb..c52348bfd5db 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4163,6 +4163,32 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
->   	return allowed;
->   }
->   
-> +bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-> +{
-> +	struct cgroup_subsys_state *css;
-> +	struct cpuset *cs;
-> +	bool allowed;
-> +
-> +	/*
-> +	 * In v1, mem_cgroup and cpuset are unlikely in the same hierarchy
-> +	 * and mems_allowed is likely to be empty even if we could get to it,
-> +	 * so return true to avoid taking a global lock on the empty check.
-> +	 */
-> +	if (!cpuset_v2())
-> +		return true;
-> +
-> +	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
-> +	if (!css)
-> +		return true;
-> +
-> +	cs = container_of(css, struct cpuset, css);
-> +	rcu_read_lock();
+Hi Marwin,
 
-Sorry, I missed the fact that cgroup_get_e_css() will take a reference 
-to the css and so it won't go away. In that case, rcu_read_lock() isn't 
-really needed. However, I do want a comment to say that accessing 
-effective_mems should normally requrie taking either a cpuset_mutex or 
-callback_lock, but is skipped in this case to avoid taking a global lock 
-in the reclaim path at the expense that the result may be inaccurate in 
-some rare cases.
+kernel test robot noticed the following build warnings:
 
-Cheers,
-Longman
+[auto build test WARNING on staging/staging-testing]
 
-Cheers,
-Longman
+url:    https://github.com/intel-lab-lkp/linux/commits/Marwin-Hormiz/staging-gpib-gpio-Fix-memory-allocation-style-in-gpib_bitbang-c/20250422-024547
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250421184144.220972-1-marwinhormiz%40gmail.com
+patch subject: [PATCH 1/1] staging: gpib: gpio: Fix memory allocation style in gpib_bitbang.c
+config: i386-buildonly-randconfig-001-20250422 (https://download.01.org/0day-ci/archive/20250422/202504220954.L1QvhSdD-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250422/202504220954.L1QvhSdD-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504220954.L1QvhSdD-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/staging/gpib/gpio/gpib_bitbang.c:380:29: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     380 |         dbg_printk(3, ".........." LINFMT "\n", LINVAL);
+         |                                    ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:32: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                               ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:28:41: note: expanded from macro 'pr_fmt'
+      28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |                                         ^~~
+   include/linux/dev_printk.h:139:28: note: expanded from macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:454:7: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     454 |                            LINFMT ".\n", val, priv->dav_rx, priv->w_cnt, priv->length,
+         |                            ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:32: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                               ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:28:41: note: expanded from macro 'pr_fmt'
+      28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |                                         ^~~
+   include/linux/dev_printk.h:139:28: note: expanded from macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:550:49: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     550 |                         dbg_printk(1, "timeout after %zu/%zu at %d " LINFMT " eoi: %d\n",
+         |                                                                      ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:42: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                                         ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:28:41: note: expanded from macro 'pr_fmt'
+      28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |                                         ^~~
+   include/linux/dev_printk.h:139:28: note: expanded from macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:610:70: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     610 |                 dbg_printk(1, "out of order interrupt after %zu/%zu at %d cmd %d " LINFMT ".\n",
+         |                                                                                    ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:32: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                               ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:28:41: note: expanded from macro 'pr_fmt'
+      28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |                                         ^~~
+   include/linux/dev_printk.h:139:28: note: expanded from macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:617:49: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     617 |                 dbg_printk(1, "DAV low after %zu/%zu cmd %d " LINFMT ". No action.\n",
+         |                                                               ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:32: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                               ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:28:41: note: expanded from macro 'pr_fmt'
+      28 | #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+         |                                         ^~~
+   include/linux/dev_printk.h:139:28: note: expanded from macro 'dev_no_printk'
+     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
+         |                                                 ^~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:687:50: warning: more '%' conversions than data arguments [-Wformat-insufficient-args]
+     687 |                 dbg_printk(1, "DAV high after %zu/%zu cmd %d " LINFMT ". No action.\n",
+         |                                                                ^~~~~~
+   drivers/staging/gpib/gpio/gpib_bitbang.c:54:32: note: expanded from macro 'LINFMT'
+      54 | #define LINFMT "DAV: %d  NRFD:%d  NDAC: %d SRQ: %d"
+         |                               ~^
+   drivers/staging/gpib/gpio/gpib_bitbang.c:47:29: note: expanded from macro 'dbg_printk'
+      47 |                         dev_dbg(board->gpib_dev, frm, ## __VA_ARGS__); } \
+         |                                                  ^~~
+   include/linux/dev_printk.h:171:41: note: expanded from macro 'dev_dbg'
+     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
+
+
+vim +380 drivers/staging/gpib/gpio/gpib_bitbang.c
+
+4cd654f847693c2 Dave Penkler  2024-09-18  350  
+4cd654f847693c2 Dave Penkler  2024-09-18  351  /***************************************************************************
+4cd654f847693c2 Dave Penkler  2024-09-18  352   *									   *
+4cd654f847693c2 Dave Penkler  2024-09-18  353   * READ									   *
+4cd654f847693c2 Dave Penkler  2024-09-18  354   *									   *
+4cd654f847693c2 Dave Penkler  2024-09-18  355   ***************************************************************************/
+4cd654f847693c2 Dave Penkler  2024-09-18  356  
+aa7f3b35ac16fd4 Michael Rubin 2025-04-17  357  static int bb_read(struct gpib_board *board, u8 *buffer, size_t length,
+4cd654f847693c2 Dave Penkler  2024-09-18  358  		   int *end, size_t *bytes_read)
+4cd654f847693c2 Dave Penkler  2024-09-18  359  {
+4cd654f847693c2 Dave Penkler  2024-09-18  360  	struct bb_priv *priv = board->private_data;
+4cd654f847693c2 Dave Penkler  2024-09-18  361  	unsigned long flags;
+4cd654f847693c2 Dave Penkler  2024-09-18  362  	int retval = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  363  
+4cd654f847693c2 Dave Penkler  2024-09-18  364  	ACT_LED_ON;
+4cd654f847693c2 Dave Penkler  2024-09-18  365  	SET_DIR_READ(priv);
+4cd654f847693c2 Dave Penkler  2024-09-18  366  
+4cd654f847693c2 Dave Penkler  2024-09-18  367  	dbg_printk(2, "board: %p  lock %d  length: %zu\n",
+4cd654f847693c2 Dave Penkler  2024-09-18  368  		   board, mutex_is_locked(&board->user_mutex), length);
+4cd654f847693c2 Dave Penkler  2024-09-18  369  
+4cd654f847693c2 Dave Penkler  2024-09-18  370  	priv->end = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  371  	priv->count = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  372  	priv->rbuf = buffer;
+4cd654f847693c2 Dave Penkler  2024-09-18  373  	if (length == 0)
+4cd654f847693c2 Dave Penkler  2024-09-18  374  		goto read_end;
+4cd654f847693c2 Dave Penkler  2024-09-18  375  	priv->request = length;
+4cd654f847693c2 Dave Penkler  2024-09-18  376  	priv->eos_check = (priv->eos_flags & REOS) == 0; /* do eos check */
+4cd654f847693c2 Dave Penkler  2024-09-18  377  	priv->eos_check_8 = priv->eos_flags & BIN;	 /* over 8 bits */
+4cd654f847693c2 Dave Penkler  2024-09-18  378  	priv->eos_mask_7 = priv->eos & 0x7f;		 /* with this 7 bit eos */
+4cd654f847693c2 Dave Penkler  2024-09-18  379  
+4cd654f847693c2 Dave Penkler  2024-09-18 @380  	dbg_printk(3, ".........." LINFMT "\n", LINVAL);
+4cd654f847693c2 Dave Penkler  2024-09-18  381  
+4cd654f847693c2 Dave Penkler  2024-09-18  382  	spin_lock_irqsave(&priv->rw_lock, flags);
+4cd654f847693c2 Dave Penkler  2024-09-18  383  	priv->dav_mode = 1;
+4cd654f847693c2 Dave Penkler  2024-09-18  384  	priv->dav_rx = 1;
+4cd654f847693c2 Dave Penkler  2024-09-18  385  	ENABLE_IRQ(priv->irq_DAV, IRQ_TYPE_LEVEL_LOW);
+4cd654f847693c2 Dave Penkler  2024-09-18  386  	priv->end_flag = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  387  	gpiod_set_value(NRFD, 1); // ready for data
+4cd654f847693c2 Dave Penkler  2024-09-18  388  	priv->r_busy = 1;
+4cd654f847693c2 Dave Penkler  2024-09-18  389  	priv->phase = 100;
+4cd654f847693c2 Dave Penkler  2024-09-18  390  	spin_unlock_irqrestore(&priv->rw_lock, flags);
+4cd654f847693c2 Dave Penkler  2024-09-18  391  
+4cd654f847693c2 Dave Penkler  2024-09-18  392  	/* wait for the interrupt routines finish their work */
+4cd654f847693c2 Dave Penkler  2024-09-18  393  
+4cd654f847693c2 Dave Penkler  2024-09-18  394  	retval = wait_event_interruptible(board->wait,
+4cd654f847693c2 Dave Penkler  2024-09-18  395  					  (priv->end_flag || board->status & TIMO));
+4cd654f847693c2 Dave Penkler  2024-09-18  396  
+4cd654f847693c2 Dave Penkler  2024-09-18  397  	dbg_printk(3, "awake from wait queue: %d\n", retval);
+4cd654f847693c2 Dave Penkler  2024-09-18  398  
+4cd654f847693c2 Dave Penkler  2024-09-18  399  	if (retval == 0 && board->status & TIMO) {
+4cd654f847693c2 Dave Penkler  2024-09-18  400  		retval = -ETIMEDOUT;
+4cd654f847693c2 Dave Penkler  2024-09-18  401  		dbg_printk(1, "timeout\n");
+4cd654f847693c2 Dave Penkler  2024-09-18  402  	} else if (retval) {
+4cd654f847693c2 Dave Penkler  2024-09-18  403  		retval = -ERESTARTSYS;
+4cd654f847693c2 Dave Penkler  2024-09-18  404  	}
+4cd654f847693c2 Dave Penkler  2024-09-18  405  
+4cd654f847693c2 Dave Penkler  2024-09-18  406  	DISABLE_IRQ(priv->irq_DAV);
+4cd654f847693c2 Dave Penkler  2024-09-18  407  	spin_lock_irqsave(&priv->rw_lock, flags);
+4cd654f847693c2 Dave Penkler  2024-09-18  408  	gpiod_set_value(NRFD, 0); // DIR_READ line state
+4cd654f847693c2 Dave Penkler  2024-09-18  409  	priv->r_busy = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  410  	spin_unlock_irqrestore(&priv->rw_lock, flags);
+4cd654f847693c2 Dave Penkler  2024-09-18  411  
+4cd654f847693c2 Dave Penkler  2024-09-18  412  read_end:
+4cd654f847693c2 Dave Penkler  2024-09-18  413  	ACT_LED_OFF;
+4cd654f847693c2 Dave Penkler  2024-09-18  414  	*bytes_read = priv->count;
+4cd654f847693c2 Dave Penkler  2024-09-18  415  	*end = priv->end;
+4cd654f847693c2 Dave Penkler  2024-09-18  416  	priv->r_busy = 0;
+4cd654f847693c2 Dave Penkler  2024-09-18  417  	dbg_printk(2, "return: %d  eoi|eos: %d count: %d\n\n", retval, priv->end, priv->count);
+4cd654f847693c2 Dave Penkler  2024-09-18  418  	return retval;
+4cd654f847693c2 Dave Penkler  2024-09-18  419  }
+4cd654f847693c2 Dave Penkler  2024-09-18  420  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
