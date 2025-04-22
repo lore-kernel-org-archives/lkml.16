@@ -1,242 +1,102 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6F11E3774
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322126; cv=fail; b=QV0Bfcz4W633YRIomPqO13uFPoym6nutLhph6Vk1fsRp82jZKHATpHHhmXc1sUyITN7VKQhFYY30XY2OieNDIsRF3DDSMWwqlZF8Om7whL1lnv5Px1j0ia4DaVYHvFviQUFZRDKb1O+bGYF0Cwlx49VBjaKLhfiWYS9j5py7jQE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322126; c=relaxed/simple;
-	bh=DFYf5EBNdUZE5IJ0bZ4UotOB/VkxFeXnkzt+IMlPT3U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A03nK3RCL4G0gn+lg5HLBM71BqBLHQqg9XOQ/2kZWdV4ClrgQuXWadaCNSS8MbESfTnM2XRu4/ilzpHGNPO4Jl/L5vHHM8zdR2fKJ3dCzM//k4cawqvqzYATP/nLUDS9z0SkbBx82AaH9cpWtaLgpDEbxDRiUy3RfXzSQjRzPZ0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MecoZ7XJ; arc=fail smtp.client-ip=40.107.244.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383181F09B3
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745322143; cv=none; b=dJoRVD/ERKnJ5dHFVxZ9GwjNfqv3H9wP0BVmHqwVb9H8Xx5PSHM1xy81iy0RO6q/0FA8jol32W+/jS3sXaP16rHge56ayW1T2uZ4AgYcobBZv7PTIcj5aCQHXXr2BX6kT3jHXwFSTRZkjDhFBVOBU1yh3COsBg+gC1nVEm8aY1U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745322143; c=relaxed/simple;
+	bh=JKE184lpOsbPrO/7aA0AY/dhX9Uo/v/klX5HLzOqM+8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PM9yqxgTzmJB9P+J2/VVjzs38RAMhMSCUBe831tmB6tyrARfq/0gKBc5phr05Wy5B8f1SMDsy19z7P3TTZ6lax0z4GPnmagbIAR6DMJ/8YXZXS5+QCKEHWpNKZiCqgGPsjqoxJPKQJilO7JVxIATcaHtvy+oSZObC+wg5zbqFh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c2xrWOo/; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MecoZ7XJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZCpP1NJKaUoOo3NKgu96Rj9vFZpaqXY+tuCdLzu+ZZmoK8Ia96Gm2aktdWkn0yke2WKpx/6DHO5VdPqf01P9NRHXrq6yGXT4p+e5W+rmZWmfD0ofIdNcmFn3hnsCp+8Ub0Q3WO2xPZHomACkh8MFOBaEEubLngx/Xby0vjhqgNvxhADCAXYRF2+VCFFDnSMP8O4NP5Eip04y0vokKKYGWZLK18DGHxLo8GrybypO9RdpZAs6r2TQ/9iGDPZQUETZUT24uluLjLlLvYbex2yZhdZ7uRXjY/ZK8p7B5bskQBzUbK09AfmDzFSnKJr4mABAYWIbOGx1AX8fkLblhJWrNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HWzgdUvOUbxWo4OQPGsZvYzJ3arlF3NrDj2ScVqvOnM=;
- b=KltJ64x5qnBwJsE8XSjgdFqnkTZ1IULzCSQdRu+oIdktMhzgctckGFFCsaDFaY2wsxmO8B2UgWm9GtZ7QiJrOyAa2XpenHeIINep18VvgzD3vES3wiP5yru7gIg8ACUaVv/mvOc/M0eP9KGQfcHJlTvvkep2GGgQ9vy/FfyVhINhE56apHHtkfRlDQC4yUQHOZ3wAkVjc5cW0xC7C2ikRNPyWNJrvexL1VBof+TJvtL55NvD4eO+o2I/u2p3qegFr5AkMnf5cwD1kg4DJZ9N6U/r61lX5eAXqt+3Oip8fd6v63wOO1HD8MhZIn2Y096OTvbRNxom/OGb5TxT95jJLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HWzgdUvOUbxWo4OQPGsZvYzJ3arlF3NrDj2ScVqvOnM=;
- b=MecoZ7XJ895JIyybZsCDPUbNocaqPFsVJ3LaG5dAQaVILSMnVGAkPLSYMBoyT+2zmKH3So+WHacX6POoLU6CUaDgSPERYJin+2aTWcIhl7oX8YMRGa9PTu8desw3E6O3TWU1lQuZ8Bz5ysdfAfDOe3ft+1O8vdTldMqn7cctFbg=
-Received: from BY3PR03CA0029.namprd03.prod.outlook.com (2603:10b6:a03:39a::34)
- by LV3PR12MB9142.namprd12.prod.outlook.com (2603:10b6:408:198::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Tue, 22 Apr
- 2025 11:42:00 +0000
-Received: from SJ1PEPF00001CDC.namprd05.prod.outlook.com
- (2603:10b6:a03:39a:cafe::8d) by BY3PR03CA0029.outlook.office365.com
- (2603:10b6:a03:39a::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.33 via Frontend Transport; Tue,
- 22 Apr 2025 11:42:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CDC.mail.protection.outlook.com (10.167.242.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Tue, 22 Apr 2025 11:42:00 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Apr
- 2025 06:41:55 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <shaggy@kernel.org>, <akpm@linux-foundation.org>
-CC: <willy@infradead.org>, <shivankg@amd.com>, <david@redhat.com>,
-	<wangkefeng.wang@huawei.com>, <jane.chu@oracle.com>, <ziy@nvidia.com>,
-	<donettom@linux.ibm.com>, <apopple@nvidia.com>,
-	<jfs-discussion@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com>
-Subject: [PATCH V4 1/2] mm: add folio_migration_expected_refs() as inline function
-Date: Tue, 22 Apr 2025 11:40:03 +0000
-Message-ID: <20250422114000.15003-2-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250422114000.15003-1-shivankg@amd.com>
-References: <20250422114000.15003-1-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2xrWOo/"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso47840091fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745322139; x=1745926939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JKE184lpOsbPrO/7aA0AY/dhX9Uo/v/klX5HLzOqM+8=;
+        b=c2xrWOo/pSPNDno9WPia3pw+yri4OVuu4Mmt2UISEaC+qgUKjrtmEtNPMiV3C388T3
+         vsMJ+46u+BQcnc+x/jxw73izecEyuqFdzYpijEaJJ2BZWR0n3/dVL3hRntJj8BM55n6w
+         frdfXVr9TnkoaCtmx8YZaqn97Rdak+bHbUzE6bOqSvIRe2gl/PeGAQjlmn82X8ANpH3W
+         ZB5JS+ZMvS8B0bJT9Q1nLc2ZcztoCmx2D3tGICINN6id4LbUkL3LmVFVvKVfUZNaSh+d
+         HGvHBkthtsW7GYqlO7LdAAgX7E3nfAL1IncfYjLy1j/2taiCMJAEh28vdOKN42ncWUkF
+         sxpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745322139; x=1745926939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JKE184lpOsbPrO/7aA0AY/dhX9Uo/v/klX5HLzOqM+8=;
+        b=eg0NSS+/G3oiPKGgLmZeBuP6ILIeehgvRnZFw8axckcxIdzRfof+RGFvoUoY5X7viZ
+         Qj9XDHjd9e9f/4F7Op869goS2mPEZxZ/i03SWm6sIbPIPN16UMEegZjK4Ui6eEm08zzZ
+         ltCLzP0CLA3sorxOFiRlIjwdikqBn6DedrqxZdAGSUthpdPbQSNWZWfsa138H54dR6CT
+         fZBndZaMSHnFLQ5dzOWAwdUCznRO8nBna/DNbm2gdXuEHI+/mCT1U6T75fe5sXWCYITs
+         7VM7X89HuQIAwNVXyZ5wAsrluMQXbYtWsvXq5iB3aoR1VH70Lc0AQM1WqdeLN6jIwDBe
+         h4Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXVHmchV7rSs3pENl4LanWp9CEZ/LK3/ymMKEfYoUSQTQQfD1BmDCBL1ba5ozb0pjTi5pvT+I4W09awqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYQ7BpHgKClKapWspZwe2AMgsE89oI1SpoQNPeduZOrc9IFp+y
+	lgTcDInL6ACPbX4PRTav7SEsKBBvY2J9j2pAfOw5BGcWgiew8dtyBtZTQkqDl8beX5yLCZ6OPQf
+	mwcq1HXy70tzTDnnEQ1alAMegTWj2ZiRkngRNjA==
+X-Gm-Gg: ASbGncsLJ/xVysF71wSgLSG3GHCCS7bSLmidFGnY9EKRzKufoWRlkxfJ3higO8Q7Lnb
+	MmMuxl5kTF7x8LY4aqvC8oVjUV9BH09GJ94AnoFoILe98fVF++2fcm3t/t42WA6a9Pyr1yEgW7U
+	JII3okK5YWqRqhVSyt5ix9Uw==
+X-Google-Smtp-Source: AGHT+IFm0QuF+MKzFVuJfeElIzDwo5DNp4RQe/j6WQIWdZRVRgiFC+4alaFtOW4po2uWD3T3nU+AwhkSj7DYWaP/Qtw=
+X-Received: by 2002:a2e:bc88:0:b0:30b:9813:b010 with SMTP id
+ 38308e7fff4ca-31090554278mr45541741fa.31.1745322139074; Tue, 22 Apr 2025
+ 04:42:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDC:EE_|LV3PR12MB9142:EE_
-X-MS-Office365-Filtering-Correlation-Id: 57385a36-b3ea-4794-4676-08dd8192b1e0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NjIifRqHkFn6Lg2SqtPAatU1CXGC134tRSNeEhCuF3wDpYeRVaH2EoOXpxb0?=
- =?us-ascii?Q?LBek2ScHpaAa4OfKC2/FwFwr7iFbGFVggtsrQqALNJjJdrSFheacoYxtX+zm?=
- =?us-ascii?Q?h7bUDKRu0duosWXLzYX74tXRuBeKIuU1+5okFy7ZsGm4416NkaO6Ldk73ICz?=
- =?us-ascii?Q?LYOTcFGci18anK8IiPTy0remPtDPLcDyUJbSiGwEoR8aVm6M/8v3P38pyw9l?=
- =?us-ascii?Q?eDtszQQC8rwTM7IIzqTq+TbLA0qh+S16oBaAp4Yffn+559TEEyagAu7JGShR?=
- =?us-ascii?Q?8FSpS+IexFz3aqgDaNs5AGItUbtDGl+g/6hye1PvWgX6DAY2EMmvhWwPKU9i?=
- =?us-ascii?Q?qRF3BZrVzMIZZGsMuESRY8TcxxsNIO2hxauy/YrkbIesmAW5Lc4L9e5emsqt?=
- =?us-ascii?Q?fDMbGIlqEOiCga1nqFpPfMcG2USoUV97ITPchpR0x+SbyjFZMcbfpXplwN+r?=
- =?us-ascii?Q?6M0TarFWK9BmeBa0vTiqB0s+ZODmePB8qOqe7ZJkCOTpMA62HcN7uZntBXfB?=
- =?us-ascii?Q?EFLycdEbVvn+bB5YJk4ad+qO7PJFeU9CFjoXeDjht5/Mwk8x/K33u4FoaLCQ?=
- =?us-ascii?Q?5puMbFZ18mYvwY6YrDTCQLfxhsAwEeJGzmEWA2XyWj9M7mhbNO9+Wvqs2INZ?=
- =?us-ascii?Q?DVvqYHXhprLVw+FHDm041s6nKf83QVkF3tSzHxliVJ93ucOAV6MkRRD1zf+P?=
- =?us-ascii?Q?CwTGViTNSavR+Ppg/C8lWNHDjULAtxSPMHX/hWbdlmS0/lUfc8/bLOxTPOWo?=
- =?us-ascii?Q?1prxd6ItvqcXGXLNh2Wy2K4JgtvmFRd1IlpA3o9OYkjKZ8kPJ/joEDjqOHbL?=
- =?us-ascii?Q?bV/ij8/LWlNvMFSO+vBVdH+bBTvWluqqQ7Tx1s/G08BTmqqg76g3LngtG/nr?=
- =?us-ascii?Q?knRKIeZ31oyD9ZNIDBAWinlGUsgCNFwhtXIvMli4z+rRgRopM5mMVJJw4rP6?=
- =?us-ascii?Q?0KQqtgP0JR3WcgSdyNo11fKrXppHTgOdc18AK+nEMe8P7Eckdh7QeFoRmqZp?=
- =?us-ascii?Q?npyK4tyqoVZbMLGkflsPVNTTUXNT9JKl3B5fYq0xEY57jo0N5nTlLIjhKw1A?=
- =?us-ascii?Q?O/VlSig92P6+0HhD9nFRWZmPn6mzNqjH7SmU8vXJtLYaGsX3Noko7ls55MKV?=
- =?us-ascii?Q?UF0cgOOBMCk2AcMC9oF7pJwlcPH+zeFYeis1NeirokBXslYWRvNlPu8q73hr?=
- =?us-ascii?Q?3h02SbJ1j0t8MssNLQYnkFF3p20pmJsHFZtp1RR5Eu3j8kiBrMdvCfcEnnKq?=
- =?us-ascii?Q?YqiO13qYht7dqKKwgAZa/hG4mHLJjDP+xIUMr4y7P12cZ7qLQ4h2LenJ8fJ8?=
- =?us-ascii?Q?kPME4nx5yRqhm0ugOs45NyhOj/wd8pGXNYYT9yV2Lo0Awa6dxU0ebpM7Htnw?=
- =?us-ascii?Q?4s4JUDTHSVBNjigm3PcIqeu1FLL+08U+hUACzKoyYakibaJQDXacywmG4TQv?=
- =?us-ascii?Q?coDDF1NWaHGt0atuTZwTf0h7Yx+Y+zppyXKc+Jka1dWvKStO0fXsRJjJoeFq?=
- =?us-ascii?Q?dMjd4spn6OWWsPe8eCeNL1YnPKpCs2QfuaLC?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 11:42:00.4545
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57385a36-b3ea-4794-4676-08dd8192b1e0
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CDC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9142
+References: <20250422095718.17360-1-kabel@kernel.org>
+In-Reply-To: <20250422095718.17360-1-kabel@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 22 Apr 2025 13:42:07 +0200
+X-Gm-Features: ATxdqUFgffJrkHBIiGCKHha-7JyV-dOWeH_lR9YCYT2CA8Voz9ZgL4-ux_Xly6Y
+Message-ID: <CACRpkdZ5EBiyEwEY68_bufnO-qFFH-XKzv5RmRn6=K+rN_NFBQ@mail.gmail.com>
+Subject: Re: [PATCH] crypto: atmel-sha204a - Set hwrng quality to lowest possible
+To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Cc: linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rename the previously static folio_expected_refs() to clarify its
-purpose and scope, making it an inline function
-folio_migration_expected_refs() to calculate expected folio references
-during migration. The function is only suitable for folios unmapped from
-page tables.
+On Tue, Apr 22, 2025 at 11:57=E2=80=AFAM Marek Beh=C3=BAn <kabel@kernel.org=
+> wrote:
 
-Signed-off-by: Shivank Garg <shivankg@amd.com>
----
- include/linux/migrate.h | 26 ++++++++++++++++++++++++++
- mm/migrate.c            | 22 ++++------------------
- 2 files changed, 30 insertions(+), 18 deletions(-)
+> According to the review by Bill Cox [1], the Atmel SHA204A random number
+> generator produces random numbers with very low entropy.
+>
+> Set the lowest possible entropy for this chip just to be safe.
+>
+> [1] https://www.metzdowd.com/pipermail/cryptography/2014-December/023858.=
+html
+>
+> Fixes: da001fb651b00e1d ("crypto: atmel-i2c - add support for SHA204A ran=
+dom number generator")
+> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index aaa2114498d6..083293a6d261 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -60,6 +60,32 @@ struct movable_operations {
- /* Defined in mm/debug.c: */
- extern const char *migrate_reason_names[MR_TYPES];
- 
-+/**
-+ * folio_migrate_expected_refs - Count expected references for an unmapped folio.
-+ * @mapping: The address space the folio belongs to.
-+ * @folio: The folio to check.
-+ *
-+ * Calculate the expected reference count for a folio during migration.
-+ * This function is only suitable for folios that are unmapped from page tables
-+ * (i.e., no references from page table mappings: !folio_mapped()).
-+ *
-+ * Return: The expected reference count
-+ */
-+static inline int folio_migration_expected_refs(struct address_space *mapping,
-+		struct folio *folio)
-+{
-+	int refs = 1;
-+
-+	if (!mapping)
-+		return refs;
-+
-+	refs += folio_nr_pages(folio);
-+	if (folio_test_private(folio))
-+		refs++;
-+
-+	return refs;
-+}
-+
- #ifdef CONFIG_MIGRATION
- 
- void putback_movable_pages(struct list_head *l);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 6e2488e5dbe4..6c785abce90e 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -445,20 +445,6 @@ void pmd_migration_entry_wait(struct mm_struct *mm, pmd_t *pmd)
- }
- #endif
- 
--static int folio_expected_refs(struct address_space *mapping,
--		struct folio *folio)
--{
--	int refs = 1;
--	if (!mapping)
--		return refs;
--
--	refs += folio_nr_pages(folio);
--	if (folio_test_private(folio))
--		refs++;
--
--	return refs;
--}
--
- /*
-  * Replace the folio in the mapping.
-  *
-@@ -601,7 +587,7 @@ static int __folio_migrate_mapping(struct address_space *mapping,
- int folio_migrate_mapping(struct address_space *mapping,
- 		struct folio *newfolio, struct folio *folio, int extra_count)
- {
--	int expected_count = folio_expected_refs(mapping, folio) + extra_count;
-+	int expected_count = folio_migration_expected_refs(mapping, folio) + extra_count;
- 
- 	if (folio_ref_count(folio) != expected_count)
- 		return -EAGAIN;
-@@ -618,7 +604,7 @@ int migrate_huge_page_move_mapping(struct address_space *mapping,
- 				   struct folio *dst, struct folio *src)
- {
- 	XA_STATE(xas, &mapping->i_pages, folio_index(src));
--	int rc, expected_count = folio_expected_refs(mapping, src);
-+	int rc, expected_count = folio_migration_expected_refs(mapping, src);
- 
- 	if (folio_ref_count(src) != expected_count)
- 		return -EAGAIN;
-@@ -749,7 +735,7 @@ static int __migrate_folio(struct address_space *mapping, struct folio *dst,
- 			   struct folio *src, void *src_private,
- 			   enum migrate_mode mode)
- {
--	int rc, expected_count = folio_expected_refs(mapping, src);
-+	int rc, expected_count = folio_migration_expected_refs(mapping, src);
- 
- 	/* Check whether src does not have extra refs before we do more work */
- 	if (folio_ref_count(src) != expected_count)
-@@ -837,7 +823,7 @@ static int __buffer_migrate_folio(struct address_space *mapping,
- 		return migrate_folio(mapping, dst, src, mode);
- 
- 	/* Check whether page does not have extra refs before we do more work */
--	expected_count = folio_expected_refs(mapping, src);
-+	expected_count = folio_migration_expected_refs(mapping, src);
- 	if (folio_ref_count(src) != expected_count)
- 		return -EAGAIN;
- 
--- 
-2.34.1
+Ugh
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+I would even tag:
+Cc: stable@vger.kernel.org
+
+on this, but it's up to Herbert.
+
+Yours,
+Linus Walleij
