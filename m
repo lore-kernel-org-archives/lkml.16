@@ -1,97 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383D41DE3C3;
-	Tue, 22 Apr 2025 18:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BACA38382;
+	Tue, 22 Apr 2025 18:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745348110; cv=none; b=BvEYitnp5dWzohYNkRV6aVWSfDceMvhhGFBFVuyCYykHsJHTBKW8mO/15wpusPcwZEWqCRo+N0RT7vGjuFIDCGaq8OsVVPH7Fdy7GT9t1pxXG5Wv8y5bUYeraKC03uLDV2sNeUqO/uGDd792DchUPI1bvjfxQ9mQcMAC3fD9AkA=
+	t=1745348219; cv=none; b=fqcrCwOZQ16XBY4LYEbEW/KmGmhqnSON0FTh3x01nkc61JrxsPVpbIzRwy9zB6QscVkFTw0BOM1GLl8sQ4ycGgwVBA+jjiUw9ly26jOWHNlOAnMb+X+naMkFxNSghvi2T0wxcUtIo8eQhD5w8YKR63I5Vh2AcB+WmlOxVbzdbUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745348110; c=relaxed/simple;
-	bh=CxS7ehfDRRrqQl0Wv9/+uU3ayMNpuNzblOq2YmeACaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOuvgAT9fDljYN8NcIqEvM5w7NmMuYxHE7zGvQi5TOSXLQdIgHGVojzKiWWh+COZp75H6MBvyRKNrzTMV4VlSBaN3A7bR07rWqhXyED3r5ORmgF8km3Q8vFL52xR2gwMTC9a28P/oHEFD8B8ExqxM17BJpPDDueX1GDr7fnM9ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODwmztY8; arc=none smtp.client-ip=192.198.163.7
+	s=arc-20240116; t=1745348219; c=relaxed/simple;
+	bh=C2hXjWBtaa/nrjNrelrqgjcarFDfmEvg+tIEbUCjG9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MAgS97YcHX5UCPftK3SKNr4CVIOpZ8Q4K8NhqeimLfg7ykFuEywbu1TT4XmnHnd5ULJw5GdFV8ZwuZCUXRNESdR5QeqAgeT6QpAuQozkhYrVp4WA1QaswaGsfkMLc1wnUdbNhAIFU1CK6i2VeW+Hvt+bt02M8IjmPf53yV+C/uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i5i+SX0V; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODwmztY8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i5i+SX0V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745348108; x=1776884108;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CxS7ehfDRRrqQl0Wv9/+uU3ayMNpuNzblOq2YmeACaM=;
-  b=ODwmztY8xMiwThvaWMUsArBfgR4zzMPLluxaZUnz2xgBcopZheNfYKTj
-   EpbzdI6Gpw87dtSUOHoSc7SRPhzmYkTR7hfOufcwOO+lb2ryGyzASJROT
-   EW31LYwOHgv11iWcFaH7M0R8BnTeFVPv61QvXdwgLKBd6ElQbxNJiMYBB
-   Veyo4IqJjFphepXi2E00OsuV8xFRWdJmcGX293R7mraMnwexzXE56mJZk
-   Kay4kE8QWxNfmLcZQ+yNO+TZ9EicQagwIud6FyTwc1uZweQ0dXdTxUUHr
-   48ym1gRYlXt09ZQM/WuIqoQ8b2u5MEJ9T2wHBck1YeZYAtbevpLeNYHCn
+  t=1745348219; x=1776884219;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=C2hXjWBtaa/nrjNrelrqgjcarFDfmEvg+tIEbUCjG9A=;
+  b=i5i+SX0V+8ntZfzqHdvw3SE7vi4S4UEl8yIh1gWqBJwFAx6EoxMwgjTf
+   7ae2HtPhBqYIlKsqxnXekdtT2fjdCT/4gwobu/pFE77yVKc8Qqh9FsuuY
+   xsFYK+BrJqxfahAGyNRgd9lM76OqLkBd2BFNeyZCeXwqQGO7xlLaaeyt4
+   Ot4iuAIY0uqdi3V4KLBWqhM63ejbY3sucF07Ta4H+LGT2FF5qD0FUxjX+
+   T8oKadyROIgTrDIId14nafzOmM7Ef3q8d3DTAk88akwh0ApzUH23GCIN2
+   DHRxdCgPh9LYjnckhXFkEwbzHSnZrNjlVuxESRraiVHgKfa4oyZRdvR9D
    A==;
-X-CSE-ConnectionGUID: TYkXAG9+SQCYMmzkpFOyFQ==
-X-CSE-MsgGUID: WCf31QMmQ+aTgNqjuQlBSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="72307510"
+X-CSE-ConnectionGUID: ahxsevKMRyqlEWW1MhYW9A==
+X-CSE-MsgGUID: 5ytr0GCcQIOFEHRRqAYcJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="47049468"
 X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="72307510"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 11:55:07 -0700
-X-CSE-ConnectionGUID: 1gJ+rKg4TYq9GEbA9DlR7g==
-X-CSE-MsgGUID: CiZpku3ZSb+cJx2+PVXr3A==
+   d="scan'208";a="47049468"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 11:56:57 -0700
+X-CSE-ConnectionGUID: aYcohfHZStekOEuQtU8paw==
+X-CSE-MsgGUID: SkzDp9X3RoGQtaMUNd+VwQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="136883444"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 11:55:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u7Ilq-0000000Eouz-1GrV;
-	Tue, 22 Apr 2025 21:55:02 +0300
-Date: Tue, 22 Apr 2025 21:55:02 +0300
+   d="scan'208";a="169308048"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 22 Apr 2025 11:56:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id B1C8E1E5; Tue, 22 Apr 2025 21:56:53 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/3] gpiolib: finish conversion to devm_*_action*()
- APIs
-Message-ID: <aAfmBlE3ZXU65PQR@smile.fi.intel.com>
-References: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] Input: ALPS - bail out when device path can't fit buffer
+Date: Tue, 22 Apr 2025 21:56:45 +0300
+Message-ID: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220162238.2738038-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 20, 2025 at 06:20:25PM +0200, Andy Shevchenko wrote:
-> GPIOLIB has some open coded stuff that can be folded to the devm_*_action*()
-> calls. This mini-series is for that. The necessary prerequisites are here
-> as well, namely:
-> 1) moving the respective APIs to the devres.h;
-> 2) adding a simple helper that GPIOLIB will rely on;
-> 3) finishing the GPIOLIB conversion to the device managed action APIs.
-> 
-> The series is based on another series that's available via immutable tag
-> devres-iio-input-pinctrl-v6.15 [1]. The idea is to route this via GPIOLIB
-> tree (or Intel GPIO for the starter) with an immutable tag for the device
-> core and others if needed. Please, review and acknowledge.
+When creating a physical device name in the driver the snprintf() takes
+an up to 32 characters argument along with the additional 8 characters
+and tries to pack this into 32 bytes array. GCC complains about that
+when build with `make W=1`:
 
-Greg, I know you are busy, but do you have a chance to look at this and give
-your Ack if you are okay with the idea? The route is assumed to be via GPIOLIB
-tree.
+drivers/input/mouse/alps.c:1411:9: note: ‘snprintf’ output between 8 and 39 bytes into a destination of size 32
+ 1411 |         snprintf(priv->phys3, sizeof(priv->phys3), "%s/%s",
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1412 |                  psmouse->ps2dev.serio->phys,
+      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1413 |                  (priv->dev2 ? "input2" : "input1"));
+      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+drivers/input/mouse/alps.c:3106:17: note: ‘snprintf’ output between 8 and 39 bytes into a destination of size 32
+ 3106 |                 snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 3107 |                          psmouse->ps2dev.serio->phys);
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fix these by checking for the potential overflow.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/input/mouse/alps.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
+index 0bd7b09b0aa3..e76dcb19fa72 100644
+--- a/drivers/input/mouse/alps.c
++++ b/drivers/input/mouse/alps.c
+@@ -1401,6 +1401,16 @@ static int alps_do_register_bare_ps2_mouse(struct alps_data *priv)
+ 	struct psmouse *psmouse = priv->psmouse;
+ 	struct input_dev *dev3;
+ 	int error;
++	int n;
++
++	n = snprintf(priv->phys3, sizeof(priv->phys3), "%s/%s",
++		     psmouse->ps2dev.serio->phys,
++		     priv->dev2 ? "input2" : "input1");
++	if (n >= sizeof(priv->phys3)) {
++		psmouse_err(psmouse,
++			    "failed to prepare path to the secondary device\n");
++		return -E2BIG;
++	}
+ 
+ 	dev3 = input_allocate_device();
+ 	if (!dev3) {
+@@ -1408,9 +1418,6 @@ static int alps_do_register_bare_ps2_mouse(struct alps_data *priv)
+ 		return -ENOMEM;
+ 	}
+ 
+-	snprintf(priv->phys3, sizeof(priv->phys3), "%s/%s",
+-		 psmouse->ps2dev.serio->phys,
+-		 (priv->dev2 ? "input2" : "input1"));
+ 	dev3->phys = priv->phys3;
+ 
+ 	/*
+@@ -3094,6 +3101,16 @@ int alps_init(struct psmouse *psmouse)
+ 
+ 	if (priv->flags & ALPS_DUALPOINT) {
+ 		struct input_dev *dev2;
++		int n;
++
++		n = snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
++			     psmouse->ps2dev.serio->phys);
++		if (n >= sizeof(priv->phys2)) {
++			psmouse_err(psmouse,
++				    "failed to prepare path to the trackstick device\n");
++			error = -E2BIG;
++			goto init_fail;
++		}
+ 
+ 		dev2 = input_allocate_device();
+ 		if (!dev2) {
+@@ -3103,8 +3120,6 @@ int alps_init(struct psmouse *psmouse)
+ 			goto init_fail;
+ 		}
+ 
+-		snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+-			 psmouse->ps2dev.serio->phys);
+ 		dev2->phys = priv->phys2;
+ 
+ 		/*
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.47.2
 
