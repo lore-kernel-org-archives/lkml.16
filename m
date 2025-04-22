@@ -1,89 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5691EB9FA;
-	Tue, 22 Apr 2025 08:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76E8280CE4;
+	Tue, 22 Apr 2025 08:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310951; cv=none; b=Bgbr5WlkdJud9sHX3QFzsSGnyXWlT0l42pyidHxuegle9WdKTUEXt9gw++BMHxS72Iz0nWdywp/XniSBTvNjGU3MjXC9tHZvxJdwAo0IjqLBzk58KlFf+xyB/CL14PX3CbqMju90C5t3OhWyZJ/ntiofUbZbH+4OD1TKUIYCcHE=
+	t=1745311023; cv=none; b=TatJ2sLYSYxQ3xF7P7BUiulN3rF6zo7mR38LWp2bhMS+5s8iiVaCqvg76GQ/17kEm2dJWK4h9KZ8sosjM1cg8LsNIxWtbjBsGHHKVcCcFsxXYjhmlURBZnSqanhQOpW2zZY1y9Wf2xlsbPPOc8uDYcCeQvAmqA8gauYsSu8R1yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310951; c=relaxed/simple;
-	bh=hKd3sovezTE4oI9gLuxz2U+vzWmyXW67MNxppVUKeTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWpdso2Vw+ffqZrRsH62vqJblXhRom8r2RCPE06bQqt6oVzGOSBkVG9R0HfnOGVyK7j2FJgutK0mYUST3+m8fKMHdMCRRKJ5sPXLUG3XrhUfMzcdIVqqtNIP1peYaBvJVF5Kk7XPpcfq2vemjTC6/k2Hy1nb6aXAdZ/NCl4EPaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jGHE5gk1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745311023; c=relaxed/simple;
+	bh=9nVtJDWo1D6O2kwPTFwcqfZG5VNM50pQxF6ze3uZES0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pB0P/7E2gydQAU1LtFPA+j4AC/hNh0kfLyOkvHRwNJg1ktWYQ2Z+sneuR6GhMaU+nmmnlpUpANzJgt5wkP6Zm9T0NVSiBmAz22qolu5vh3VGDHWC8IB8s4M6lf3ABxqjqNpYrzJ5UESn6sRA1QSlcw12EYna51V0LX4Krh1HMM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ZXpC/fPc; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jGHE5gk1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F3F0C4CEE9;
-	Tue, 22 Apr 2025 08:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745310950;
-	bh=hKd3sovezTE4oI9gLuxz2U+vzWmyXW67MNxppVUKeTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jGHE5gk19LSSenv+CK3/g90CC/FxG+lXLLqmuUeXoKymLlBKHH20LJXWpitIpXxnv
-	 S6bbslIxGT4Clf128FO4v1VXePcu2SWPBcrBzRge5/yih5HjeWYUFWGieuQcHiz/cM
-	 H+odr75lTSBDEpqRusyl01Kteu66O7zpzAbqcCfC3m2DLkzTWquq4qY2gTolVPhE6r
-	 F528iBFdnvQNkNwRqI1jWyLmi6OLj/9pRpD5XF2g5ub9ltfH9md1m4c0exnJdz1Nz9
-	 Gx1L8IJx2UoVXBwGAZBIe8CrARh3szphl4Pf8IICqI1sFFD2SMXri+pagoVBMwj3la
-	 5OrZAGuOe7egA==
-Date: Tue, 22 Apr 2025 10:35:46 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Nam Tran <trannamatk@gmail.com>
-Cc: pavel@kernel.org, lee@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
-	conor+dt@kernel.org, corbet@lwn.net, devicetree@vger.kernel.org, 
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: leds: add TI/National Semiconductor
- LP5812 LED Driver
-Message-ID: <20250422-winged-naughty-porpoise-645d0b@kuoka>
-References: <20250419184333.56617-1-trannamatk@gmail.com>
- <20250419184333.56617-2-trannamatk@gmail.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ZXpC/fPc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745310926;
+	bh=JU0RHM3LhfHpd/Z5hHY05Fgimq/QoxL5zXExBc+3S9E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ZXpC/fPctka+9qXUBdjclQbhACdJTYhapimN3OqCiTNs2F6lJDkRkxGLgdZBqVsbE
+	 0XOJQTSQM9Lrgx/TEx59K8DoxYUkLK5pFt8Cj/k5QfUhd2o+ModbkFkOuujd4oEIV5
+	 uy4HbmJI46RFo/Oeok3MrvdDA4WrG5ifrtwpnlVg=
+X-QQ-mid: zesmtpip3t1745310920t8b1bb162
+X-QQ-Originating-IP: xDaMskdxdpmttZVyDVx0vXx2WDh0zl++cOZsOP5r3rE=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 16:35:18 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7588482841693843882
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: james.smart@broadcom.com,
+	hch@lst.de,
+	sagi@grimberg.me,
+	kch@nvidia.com,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 6.12/6.14] nvmet-fc: Remove unused functions
+Date: Tue, 22 Apr 2025 16:34:31 +0800
+Message-ID: <56AA32057D5B8285+20250422083431.96652-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250419184333.56617-2-trannamatk@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MtJoEQFRGvIzFftxGMkZ/AEm+5UDCmqNmKwWbuiBZy2fJTtEfcgljhf3
+	OKuNR89Oir+i1EI7OSwRiki0hOAN48+UEaFqwYk7wcC4CjbAAo8zCi2yNkvsNGpPS+ZDT+M
+	j0NYmn8p8htVLqN5h6lSCnYB/U8Z7GfJnOVHS/Df4wUXfo1b3NukB2YlhD3xlbfPJdA+joD
+	jLX0NAcQm4bqN/wbc+31Lf8JTb3plKQMqITgdrJQy+a51bcrFTY8nTEr2YDLwJRHxgUWNVO
+	/ADPLKSiQi6DdIliBYWCVVWr9VAv9kWuUdMbp3flBNsnbI0wIkCPuN6EkrrVICz2GVtYlE4
+	8OAYGTfwu9pmtmuyNUsDYi/RXdTxYH6Bttaid7NE6DvSaJuOfnJnIuv45sVDvhTDpLKSYZI
+	l75wmR4cmgjX35mqL5cpOAUPjXwgwnJR66h/eX37/e1Mk7TzdBzxFOJlr2JPV42UDmtW7yB
+	Q2ph7EQZJKsV7NwHzTBdiCPTKM7PIi8GdYZoZYnKKoCcbiAMK0iQ+zhnj05uWhmtUGSgmEl
+	kBT7d0kTbfcM6K8AT89DvVRhmanjCakhKyc+VFdZD751tRkUI5BouYpWbIBqkyLWv3Or5uQ
+	em2VDnV8LZkHw5vjUzrajp5VHTEawrGaZNkoahZ7I9lqcupqPTH8ydpFsRswHwesyWbUUft
+	uniwveDjxAIzmMWjxDsFO13RWq0+ksiTsuqECQjR/R6kPzXU0rD5ktX3wud1x/y5RPDV7d0
+	6oDdoWPPjsSK/8FeEyfBQ8zYYNdSfzBClSlkXDOHpTdZus8xy+kX+3+CQ15LtOuq8ZvlN8+
+	UrVKgklOjr+k60lVaDkgOrIIXmnwqJwH4cjpcTc6cKdsVa21r+mkKtiRZEGPElDo0yH9X8c
+	StUW/FfP2/IFGDE1IIvYOzqGG1ZXH4j3dIYqdCNnSafVuiCYmHXf6NJ1w0joLXIVfHo3RT0
+	bb8vGfPSTH3QkiIMJqXWOPyxZfXBJlNdQsJ/97KgZ7sWVpS04QknHjfv8YSCUOGO7BKnhRD
+	u6gOFKdg==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Sun, Apr 20, 2025 at 01:43:29AM GMT, Nam Tran wrote:
-> The LP5812 is a 4=C3=973 RGB LED driver with an autonomous animation engi=
-ne
-> and time-cross-multiplexing (TCM) support for up to 12 LEDs.
-> It supports both analog (256 levels) and PWM (8-bit) dimming,
-> including exponential PWM for smooth brightness control.
->=20
-> Signed-off-by: Nam Tran <trannamatk@gmail.com>
-> ---
->  .../devicetree/bindings/leds/ti,lp5812.yaml   | 46 +++++++++++++++++++
->  MAINTAINERS                                   |  6 +++
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+[ Upstream commit 1b304c006b0fb4f0517a8c4ba8c46e88f48a069c ]
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The functions nvmet_fc_iodnum() and nvmet_fc_fodnum() are currently
+unutilized.
 
+Following commit c53432030d86 ("nvme-fabrics: Add target support for FC
+transport"), which introduced these two functions, they have not been
+used at all in practice.
+
+Remove them to resolve the compiler warnings.
+
+Fix follow errors with clang-19 when W=1e:
+  drivers/nvme/target/fc.c:177:1: error: unused function 'nvmet_fc_iodnum' [-Werror,-Wunused-function]
+    177 | nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
+        | ^~~~~~~~~~~~~~~
+  drivers/nvme/target/fc.c:183:1: error: unused function 'nvmet_fc_fodnum' [-Werror,-Wunused-function]
+    183 | nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
+        | ^~~~~~~~~~~~~~~
+  2 errors generated.
+  make[8]: *** [scripts/Makefile.build:207: drivers/nvme/target/fc.o] Error 1
+  make[7]: *** [scripts/Makefile.build:465: drivers/nvme/target] Error 2
+  make[6]: *** [scripts/Makefile.build:465: drivers/nvme] Error 2
+  make[6]: *** Waiting for unfinished jobs....
+
+Fixes: c53432030d86 ("nvme-fabrics: Add target support for FC transport")
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
+ drivers/nvme/target/fc.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
-
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/sub=
-mitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index 3ef4beacde32..7318b736d414 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -172,20 +172,6 @@ struct nvmet_fc_tgt_assoc {
+ 	struct work_struct		del_work;
+ };
+ 
+-
+-static inline int
+-nvmet_fc_iodnum(struct nvmet_fc_ls_iod *iodptr)
+-{
+-	return (iodptr - iodptr->tgtport->iod);
+-}
+-
+-static inline int
+-nvmet_fc_fodnum(struct nvmet_fc_fcp_iod *fodptr)
+-{
+-	return (fodptr - fodptr->queue->fod);
+-}
+-
+-
+ /*
+  * Association and Connection IDs:
+  *
+-- 
+2.49.0
 
