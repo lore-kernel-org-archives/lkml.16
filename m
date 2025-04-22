@@ -1,116 +1,79 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228171EB1A7;
-	Tue, 22 Apr 2025 14:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777722853FA
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331266; cv=none; b=eQhidfWEuTWYuC1Ks8sOJXPfhcL6abOdGxwx1Tw/GyDOaCAt9qIIWa+nc8TRHmdJIjwQD15uwxADyxXuAhSZyzeyB+KLT9y0N9F9etjlF3Jwk0RD6WfDCKSN2lGrydq6FRzq/KUk3FcB0YQV7hZSHxOGPEtJHKZSogw8+DM0B5s=
+	t=1745331308; cv=none; b=acUloo5joNgtktRQE6C0gRcJpCKKrDpcoYC8WpO+j8dONATgLlRHjncYBf/bNQC3WO7l00CX49t3cjOA5Cis5Ap67R6Q1WDxkN8GA9QrkQ1D/v3lyQtIAOqXP1Qx5H1uNMwW+D9IaFZZ+6MnYhfOpdFbxnoWziS3Hw7X7Cf3i3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331266; c=relaxed/simple;
-	bh=gUMVoxP1PW6j/I8kRltlqngD5Tz3sb5zUqOPutaff5Y=;
+	s=arc-20240116; t=1745331308; c=relaxed/simple;
+	bh=ht/b8hOowhBPrZFB3PRaz3GwnJG9WOhGtjQrBFTFXYE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQRZv/PZCdNelIkCA4oNngnzox6fDjbCa0hLblxfAh7laHOVs/oR2t3PUuBOtOmKckyZHbVwB/AD5uyn3WwvcJ74R+eO1WzPOwlO/GP7iDSVPFOWMaafZ0AYBJMU1BdgOTO8MiBWeOkwpTQLZnc8RSHYiNTgarfhSNpnY6ynAQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YxWEyWZi; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2bJvLf70YEyAchDxhw/P1VYPrRl7iJN/bg86X02Q1qew0hA98SmqH14ttEqfGpJJoo1djK/4/ZjOO8kO/ok/NWxFQFI9QOZZZmrkovUWNdyK9vjnOt1q4c576wDjf728SzpnfhqUtNOuz4v/BSTyFkiqobyl4xuVLcNNE4xjIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m1Y+XNDe; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxWEyWZi"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ecf0e07954so75745176d6.1;
-        Tue, 22 Apr 2025 07:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m1Y+XNDe"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso866838766b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331264; x=1745936064; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745331305; x=1745936105; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7AU8LYxryxrg2aje8ybNOhFsh0cyGVLb/levXOmOy3o=;
-        b=YxWEyWZiKGnOYOWU3WbswIsSUPUmDZT4Zp+K46oATAab2SVji9dlnQacVZMdvt8Ui/
-         EK2W0sjWJ3vXruS0WBTuiUxpnmMdMMDqaCYH5ck023enzNZBfWkqy4TNaYdfzwaWKSe2
-         4i9vq2tyjI6l7tIbUGI/r/a6lRv/PNv2BQ5GMUgy4Iay2J1a2UMz059MevNiQZ8u5NRT
-         vJvDalUuCOF57Y33weZzVzp5XRbk4jnQBClBGCnmlJlZRbT+T8cTD0OpWr9Ccmnf8Oe+
-         UT9uwd+mbgVaWHG5gGOXZ99PvOL3ko8tlBXc4wZ4EAj9/fGhO9p7/Da7wz4gUsYToQdE
-         HVeA==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VAPsYi7X25L/caX0EHEb02SNjtKsf53q45QaVhQBarc=;
+        b=m1Y+XNDe8DEWAKdnmGGi5vdj/XWB24Q9VWs3dHEEMRFgWk673wuNmOpidl2zs+5753
+         fYJAFFCocV0N2zoYS6NuaEw4gme1s2oFvtlKaMoeJ/2IM2O7Sp8dn0X1lrjdep2VgOiT
+         1xG1bhk1ZPV5eGIBo8rL79O/qcjL+tUhnuqGrHiutUK+xpVEUIMlQfRqZKCNAx4XUpSM
+         P31qxspVDp0qq7/AMfL/yN/9e/WOcz44li93JnhGmv2K+k8xbxcd0U8uOQWOgxlZlcie
+         r57f6lqdhqvyV+mSOaTGfnPtBrT4BlZj9n1fru9sCxIz4ww9F3DuuB0HZ4fgI9TvWPCE
+         eBbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331264; x=1745936064;
+        d=1e100.net; s=20230601; t=1745331305; x=1745936105;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7AU8LYxryxrg2aje8ybNOhFsh0cyGVLb/levXOmOy3o=;
-        b=GZ5ZZeSZLFJQE9AvxLXamcwBRYL2mNBlBS7vCwAcDTPP5ohBpqmJ9yd6HbZeJWlILU
-         ezIjSkwoZWwV4NhRWUcdaqA35QJs7yV6Kfw6ASOWjdKe2+QEi9rMEqez/dpYq5V9DYRn
-         kIr9nlpmpQjaBouIQQANxFQg/NFk/DaQgwhi5L18Lsay9MzAItntSVNhsN8Dn02g7SAR
-         KDh7wZ3oZ0x0yq6QYuu3RvvvLshxMeiw+fACpBLKTQPZVfqn1cOuDtD2DfEpgZJWPkU8
-         brSvyIzuLdyhB0LgP3OYJ3VPxgW5T7SSJ399wKQW0n6Jg+KPSa+cK9CkVNXosdDMHgjc
-         tbKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHUS06n258HtJDZFk8nf1pZJQLAibt6osgtcub2jSKQRtlGRwN9sd8RhiTHAKupJItMU1JuIQYkzySWGI=@vger.kernel.org, AJvYcCVl5ARGdlKWDC9v2/NWI3WCoWAtWD9puaUQiK+Ubp8AaSAFw9XDAf34lMEDPdwJBzQqCJLHLvmNra58luPSD7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx2FIrsEy2BSEQosvywipt0Ow3uhqBri0UsbbHo46lVF3OGhw+
-	hs58o7r+5vFye4B/ai9AJRoRo0ZBXenVofydoyVo3X+SiObIzOF9
-X-Gm-Gg: ASbGncuXlYorIcV4DEhMTbci+hc5F2YxkF9MpVGSW4f015L9eAeupEnsO4NnxEJrARB
-	16elb5pHSm8QHHqcFoWLObUKTaknCG1jXyHTLwqw0yxfqVU/ZPySgvg6gAWJlUPXroJJHOWl6Hz
-	GiPAFvP4hnyV6n+urK2/9wJQ/0dfsGTiI9T+2Lz4TsB94HyBsaWeXbYdwb9X9ivjZ2+tmjc6asO
-	oMjnJAC3W3BUaV45ZsZyuuDKDmdrJc8sTwuaq1LhTQTSSfUwGl5ve9/gyehEoO6hVeceIzP9BUF
-	J6wuCyq9574X82wsg6ckoAZaL9SXh7f4nyPALTpxNa/XdQ35pny5vsmKRPJcBMI16ZCix27AjH0
-	fVxCIAi0/ZAfgs7MkJWx47DimORdIAj8=
-X-Google-Smtp-Source: AGHT+IEYbxYNpY1Fsi+JNxeMSp7UkU6GptWQw2frJdvbeyOqWjoQZMt8BGy1LZAYXE9MEofS4Z4rhQ==
-X-Received: by 2002:ad4:5bca:0:b0:6e6:9c39:ae4b with SMTP id 6a1803df08f44-6f2c467235bmr262888116d6.42.1745331263931;
-        Tue, 22 Apr 2025 07:14:23 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af14easm58127366d6.3.2025.04.22.07.14.23
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VAPsYi7X25L/caX0EHEb02SNjtKsf53q45QaVhQBarc=;
+        b=tV75+njQBv6bmGlrcswOVuuLNlFwpoZwt1wbfQzoRSFVcaldpW7+VO++TovSy6duPu
+         7fC4BSZRa7RzSLe1Gpvg366Gq7iZx1zcM2rQ209rYbqi92IMCXQAu7YvvMopWZCIGNxu
+         4DtqrV613GzR4YqbX1t3XDbW425Pi8KR1f1xOuJhKST39cTqUqpYbathVNZWbPAa/emL
+         Jyeh/ZNqnE5oP+NwRTRb20Gxu5MJB+wlBU7ezHA7Ay1l9XdM2F7J5BjDwMT46zhuWM+b
+         yuQx10CAzboxa+eK+uyZPtdLbaDlY3yryJ6Zvjv/fSY4YpjV7+TDdKtE3l5LSDCUAk9s
+         kWUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVj/2q3qNTMWDqnwg9gFVwD+B+GSnu1jYN/38M65w8Hc7zc/JosO0PY0csW5RNZ7szW0zggiDZVxobYFgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd2ssJSFMkcPTCz2bpGeXnh8xtm+N/HhXxYbHkhsJud1sXjyoR
+	4n4zzzvLzEScrwC1rILUThp81QjWved8BuDe1Ue5lZ7PPsEwBeNNcN4AI3euOUk=
+X-Gm-Gg: ASbGncsWLfZXfQfO4BQMyg6jIWo7F1UK6h9FQb3nqQuY7pC2EOvS60bTDeYGJdFcbw5
+	oCKYpSzaOIHs7sUDrdKgPsHARNSnA9UnDjZKEmzOChlFqKRktsL0wJGXjlvP2hgB12nFFJT7wo9
+	oOxSiMHz7D3qZBoN3cTRyZVqfmIvBC+1Bl8DW+sczZwPITMiIbH2N4Ndp6cMXpO9ccKK/AuM/hq
+	F6sITC/l6374pXxHaUJUIMuCkRV+Fo8aiSxHVcRKZSt7RntF4mo9J0Eema5FoLsmGohSQ+KL5/C
+	RiDyoEl5/lF26S15I4Shv+alWk8279wXHrQWPQ==
+X-Google-Smtp-Source: AGHT+IFeSK5uLgbn1NZKQrylDdRtKmBHDZDXywYGuDfa4NwCwFDz1VJZvajnIXoXSg2frAfCpTf5uw==
+X-Received: by 2002:a17:907:3d8f:b0:acb:66ea:5786 with SMTP id a640c23a62f3a-acb74b88937mr1434632166b.31.1745331304772;
+        Tue, 22 Apr 2025 07:15:04 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef468dfsm658630766b.133.2025.04.22.07.15.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:14:23 -0700 (PDT)
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E2529120006C;
-	Tue, 22 Apr 2025 10:14:22 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 10:14:22 -0400
-X-ME-Sender: <xms:PqQHaBDp79iYVU1_VVZ92tZmLMA8OR61DI46uSi-QZYaoRuLtCN6Uw>
-    <xme:PqQHaPi3QOxYkfT_J5kTXhPcPLnd1NTgne8AFEQcrvN7wZH41xrtgwm2crxUhAq4q
-    n3HOBNYO3qYOErYzQ>
-X-ME-Received: <xmr:PqQHaMl811xM2bg-pecthYIuDxw3nkYc66s3rtuDB1tF9y-Mv4qfD9jf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefleehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefgieegkeelgfekheetudeiiedvlefghfef
-    fefffefgudejvefgtdfhhfethfegjeenucffohhmrghinhepghhithhhuhgsrdgtohhmne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgvpdhnsggprhgtphhtthhopeduhedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
-    htohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtohepohhj
-    vggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesgh
-    hmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgt
-    phhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtth
-    hopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgt
-    vghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhrohhsshesuhhmih
-    gthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:PqQHaLwjDL5na5xp5dQW21T_tK5vcdmRCQz8udIXm_Ha7NqM1qA6EA>
-    <xmx:PqQHaGTj2QgnnMZCUnbt8hLh19b94B1vcdgyAQO8ghT4SuG9W1MAJg>
-    <xmx:PqQHaOZFKGARGDIPWQn3wE8muzXVjV_ggD12UGHHx0dp58dQS0Ip2Q>
-    <xmx:PqQHaHT4l3Z5kmYEK25t_MNVn3mLQ9V4R-jwN4Vz02n1xXH0EZRitQ>
-    <xmx:PqQHaEDOjbPL5R5HsdJEY9qNkyDd6in3TYMLARNMV38YmTnsYyA4D6wG>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 22 Apr 2025 10:14:22 -0400 (EDT)
-Date: Tue, 22 Apr 2025 07:14:21 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>,
-	Alban Kurti <kurti@invicto.ai>, Michael Vetter <jubalh@iodoru.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] rust: pin-init: allow `pub` fields in
- `derive(Zeroable)`
-Message-ID: <aAekPSsKnQWJSBhQ@Mac.home>
-References: <20250421221728.528089-1-benno.lossin@proton.me>
- <20250421221728.528089-7-benno.lossin@proton.me>
- <aAchUjDJsukcCgKM@Mac.home>
- <D9D0ZHG5ZKGL.30GLJKI6X8TG7@proton.me>
+        Tue, 22 Apr 2025 07:15:04 -0700 (PDT)
+Date: Tue, 22 Apr 2025 17:15:02 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Johan Hovold <johan@kernel.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/11] driver core: Add dev_set_drv_sync_state()
+Message-ID: <aAekZizB9lR8E4Rw@linaro.org>
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-10-ulf.hansson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -119,43 +82,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9D0ZHG5ZKGL.30GLJKI6X8TG7@proton.me>
+In-Reply-To: <20250417142513.312939-10-ulf.hansson@linaro.org>
 
-On Tue, Apr 22, 2025 at 08:30:40AM +0000, Benno Lossin wrote:
-> On Tue Apr 22, 2025 at 6:55 AM CEST, Boqun Feng wrote:
-> > On Mon, Apr 21, 2025 at 10:18:33PM +0000, Benno Lossin wrote:
-> >> Add support for parsing `pub`, `pub(crate)` and `pub(super)` to the
-> >> derive macro `Zeroable`.
-> >> 
-> >> Link: https://github.com/Rust-for-Linux/pin-init/pull/42/commits/e8311e52ca57273e7ed6d099144384971677a0ba
-> >> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
-> >
-> > Kindly request tests/examples for this patch and the following one
-> > (patch #7) ;-)
+On 25-04-17 16:25:07, Ulf Hansson wrote:
+> From: Saravana Kannan <saravanak@google.com>
 > 
-> If you send a patch, I'll take it :)
+> This can be used by frameworks to set the sync_state() helper functions
+> for drivers that don't already have them set.
 > 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-First, I'm happy to help improve pin-init, *if* I fully understand the
-changes and have the cycle ;-)
-
-However, here we are at the review process, so I need these examples to
-close the gaps between the implementation and the usage to provide any
-meaningful review. There's no example/test in the commit log, the kernel
-code and (I've checked) the GitHub repo. Although I fully trust you, but
-there is no second source that could help me verify the changes easily.
-
-In this case, it may be special, because you're in fact syncing an
-external repo with the kernel part, i.e. the development is done, so if
-we trust the external repo and of course, if no obvious error is
-founded during review (from the people who can review), we should merge
-it in. If that's the case, this patchset is more of an "FYI" instead of
-a development process IMO. Is this the case here?
-
-Regards,
-Boqun
-
-> ---
-> Cheers,
-> Benno
-> 
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
