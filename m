@@ -1,74 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005411F0E2D;
-	Tue, 22 Apr 2025 09:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62A61F1818
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315309; cv=none; b=pXoXPyN3kpGo0tp/gU5Yl8fIGp0jeYLwNteT6B5GWk+Kh2RMCJOJYPkkO8M+mbuAPMuRVOOVmH2HwBYDsJkhauFZXYYkQHpEpWrhyiv4yfkz16lSxJzDw6aMUGAPbT4mB9G8gFetBT+YQEoKxjrguhuch80CP1d/u3jN4A/FYS8=
+	t=1745315333; cv=none; b=tz//9LtmmL26ulLzjRUXbut+FJYXV0PR9IwBdtDWF2fmgA+Ni8PQwkDsavhb5Q7Umvof6wQq3tzZtEDBeaOKxcm3nAgRiADguumzNBaP/GrwCCCatY6RBOTjgZE3h60pq+PLCYGO8POl/klLrFJhUTqjS/2MFBAX9z519MQYoUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315309; c=relaxed/simple;
-	bh=F/z8c26wHkzHaROXkny7shU6M6OS0DqFGLKEbifOWY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ER0oXFi7sAijsxy+xvJyNpTJPx31or/udw9ftwN43q+2kbesivHM1SaRvqqM/uCP8XXDe/y3eSLqegc2hRCI14MOldx8BGgk+TivSeipseYKDXsnTbImdjM1LW7+QYk3SXiokr1hgfi8c3HkArJGxHKcOqoCI95zOuc5yhN0zH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Us9FFHOQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745315333; c=relaxed/simple;
+	bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gYBMJUQ6EHTQj4pjjXC5r5/2Pncryy+Teas39TIW9n4BgbZgwlckynkuEphICyVv0NXeqcZ2SSTdxQLTxmQbSZ2NrK9Hm8ABzyvetf2RFCA2cMU+n4v0CfwhnuBJok7SskyK9hGWYuDNLjnOPZc/JdFT8onZqx1Snq8ctzowyZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LAQdd6ia; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Us9FFHOQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558CBC4CEE9;
-	Tue, 22 Apr 2025 09:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745315308;
-	bh=F/z8c26wHkzHaROXkny7shU6M6OS0DqFGLKEbifOWY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Us9FFHOQmjkpBlN5cn6xPNP+Qjsi1tmLPi/jlEzyQChYIvmiOaPHdtzBV7eFfWFr/
-	 +DMMbfAunIkFbDyqite2Q8uyHo6cE8FPt0jMpG9DpbJ6IM10UbpDqZEKBjqo7S9X05
-	 vxvCc35NNem4wJrB3JllSLj+1e8zuYP0vMNQ9KXF8wRqdnkgbUX+9R3GZxzLKjZuWP
-	 CRajPI9VHh+OEwC/FCbWOqldTphYl5rRUoBQCXkzx2rqKAr6aJz7haxDh30UpW8Pck
-	 lew8DA4NzX6AYIHDkOg+0COZacePRaH183p7oG2KHxN8nc652OLFJJdiWP6aKN448v
-	 8j6i8lk80aZkg==
-Date: Tue, 22 Apr 2025 11:48:23 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>, 
-	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-Message-ID: <20250422-synergie-bauabschnitt-5f724f1d9866@brauner>
-References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
- <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
- <jqlq7y3bco4r3jpth23ymf7ghrtxbvc2kthvbqjahlkzsl4mik@euvvqaygeafd>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LAQdd6ia"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso23256105e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745315330; x=1745920130; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
+        b=LAQdd6iauLwtGptgU3EaXluyARpqNNwEx0oriBBfFPUMlx+FETr1u9iUGn0FyvSRu0
+         7a7nVV52rLycwCipIfCy3TjnJGjxdWmr9BJrHdNTRuR7slyRVTb6lV2lu0qGkWqaC4ut
+         Kq5yamyH9LhgzSnZVd3VedBFQ1IWImF5HH6/a8suBiPqtOkz0LbcSzUmDjouzPw5VeiI
+         /z5Mu2XLOzHwDtaf91fiyQdjgon6xj5Y29VIDy6vhg57Gv8xWGYkEukhTkj6l7p1VLfU
+         sJtXvLwQceKsDlKB71W+sO1b5ybu+41b4VzC+HQ5oJvEk9UgsmpUxXuXvT6OXfS4vweA
+         HWrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745315330; x=1745920130;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WVQDv1v4dOOQG6+a+SR4K8DVpKda75Ekqgvdi556yzM=;
+        b=p6J59IMtWKRXbikODilhh/kjhvzuQlRjdiyqPenNCXa20eLJ4O604ut41L2uplnOKN
+         fIPzPbTXXgNDsw3L0YIiz9Vgb0LCV2aAjObvXEQ95htECE3gOyYAQAPzyRYnci+IRLoM
+         jtCEMyORi0CmFbwmwb23OK8IQn5TItaTCEiVCEjdv5IXrQuKnzxpx+ihkDBK8hIdmAWt
+         8E+coF1wYz4+64MWBqBMuQgsJ9G1cGbNf46swj4t7hismVWCha0/RTVORmZ+6iGRFO+r
+         AZ8QWhGNngtFzsjK89NBrbNQ8jGcHNdyCs+5u/xdXJSn0RJ50Z+zp88blpZkoMCFf4iU
+         f0DA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1K/TkHMJAJUPZMfgks3cPgADm2Ku8dlCCS2LyS9inObtZllbNmsaAuhQRfGSmiYqwx4Vgc+J0fJP9Z0A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTPm6SBvTyt2uvSac+peH3zNxvQT72hAPYAOatfS+KFAkZQ+Y9
+	clL80kbxMu9JwRtQb7j6Fvpjzbl6PTK1EESy4XjFOadcEZNuXr/kJQIG2GEmQTSNmtElEdG9Aef
+	+cgR3lW+mZ3EaV/6G+m4Y66A8gPpe7mAYTsJx
+X-Gm-Gg: ASbGnctBVjY3+9laa6PfcBcoaVcOZsvNpJ5vKNvzga7YkJs6Vc/wCfq3AugppyGcC82
+	+vRKYVm6YFcnwMUOI73CLTyFXM6x2pH/rSFoXesKi4gqORId+gE0b4gQYMBo0teJVZ4X5I1fHG5
+	pdp5xvUHnGpGD1aFPQmsdxVxQ1frT2Ils+953cK2X/xUEqsK1ji+6r
+X-Google-Smtp-Source: AGHT+IEgzaZFAKrzkmmSeUf1lXEalL9tzKY7I1llBJA0Efnayt0Uc3PwpU5QMYlM6qieyM/pL0GWbg3KPU1y1RnS3Ro=
+X-Received: by 2002:a05:600c:4706:b0:43c:e9f7:d6a3 with SMTP id
+ 5b1f17b1804b1-4406ab97d53mr125391395e9.13.1745315329911; Tue, 22 Apr 2025
+ 02:48:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <jqlq7y3bco4r3jpth23ymf7ghrtxbvc2kthvbqjahlkzsl4mik@euvvqaygeafd>
+References: <20250320-vec-methods-v1-0-7dff5cf25fe8@google.com>
+ <20250320-vec-methods-v1-5-7dff5cf25fe8@google.com> <CAJ-ks9k=SxS_zAATadm8SZkfcY2OciYNaty3=WEs2iv5nFJRyA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9k=SxS_zAATadm8SZkfcY2OciYNaty3=WEs2iv5nFJRyA@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 22 Apr 2025 11:48:38 +0200
+X-Gm-Features: ATxdqUGsZpxo4hTBeVYFDjAT0FzOV2AQ03SSUmYtR0Xpk0I7nXbuFoofvKRGnJ4
+Message-ID: <CAH5fLggaw7itWuUCHG8KBE4epTdWy3y+wtVyUk9AffM+DOTOyA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] rust: alloc: add Vec::retain
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 11:31:23AM +0200, Michal Koutný wrote:
-> On Tue, Apr 22, 2025 at 11:23:17AM +0200, Christian Brauner <brauner@kernel.org> wrote:
-> > As written this isn't restricted to admin processes though, no? So any
-> > unprivileged container can open that file O_NONBLOCK and avoid
-> > synchronous reclaim?
-> > 
-> > Which might be fine I have no idea but it's something to explicitly
-> > point out 
-> 
-> It occurred to me as well but I think this is fine -- changing the
-> limits of a container is (should be) a privileged operation already
-> (ensured by file permissions at opening).
-> IOW, this doesn't allow bypassing the limits to anyone who couldn't have
-> been able to change them already.
+On Fri, Mar 21, 2025 at 4:25=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+> Now that we have kunit in rust-next, should we make this into a test?
 
-Hm, can you explain what you mean by a privileged operation here? If I
-have nested containers with user namespaces with delegated cgroup tress,
-i.e., chowned to them and then some PID 1 or privileged container
-_within the user namespace_ lowers the limit and uses O_NONBLOCK then it
-won't trigger synchronous reclaim. Again, this might all be fine I'm
-just trying to understand.
+Unfortunately, the test uses the Vec::retain from upstream alloc,
+which we can't call from a kunit test.
+
+Alice
