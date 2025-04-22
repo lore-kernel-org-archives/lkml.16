@@ -1,154 +1,114 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B801F5402;
-	Tue, 22 Apr 2025 18:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DF21E5B93;
+	Tue, 22 Apr 2025 18:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745347771; cv=none; b=Oz8ii4jxsqfXFX7C3JtwMgQxHGfA2eLnEmBqJUZi3U5oG0Ipy93HaWbNdROOpK60EbN2AhaM9okWQDmYIXpzUUiX0jhYKHCkWlfB+1+z6qEgNJdVK8bRhydwXKNiNoDfR1tzWpkOUDXnuUCWIhliBY3WzzDjzAhMwBV2n9lBGJg=
+	t=1745347818; cv=none; b=hNoUiyyrd+urgsAu8W5VMVMt+AQy6IXCqZwKTtebxqH4C92OktEMTNejtAsRtN9bXRJgIF62AIzgThiuyuljfRlFOdGQAAAZYYky3+VjpLrJ+JH8uGTotk6txaEsqx4giuuIK+dbeGvX8vBLJNeO2d2/nA2qHmip9efUJoKhwKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745347771; c=relaxed/simple;
-	bh=gODZZTMpe+CjhAfxE4Q361fmYuKG0GKs6cPw9YWPx8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5+2PvOQoe5ix3is+b0zH0SJXjnHyZbHnxyh5eb+QO8wW4KPLgYOgM/LzvE2+zFUWPo5H1GIgEzHq7f7sn2FImE+QsRLYAK3wI1rAWiOCHMsxPBcwDe6KMsMLoSlQoYfASFvJdOImGk5CluxmT7Fw+FA/8LPXx8XOrqVQD6kHtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8in3aQZ; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745347818; c=relaxed/simple;
+	bh=A4sO/18hIGjg9K1tGmFo8LxqPuyukzVcZVbzcjXtRhk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h3CeU9jMbjWyn7EGqMVZ187LNcHpbyjDzQU+dzGQ2ke/4nLR/cITr3rVF036903pKQm24H2o6JHD03XZdErfGCdn3cZCGaJXyYdNVUAfoDYBMER4/DH1gg7MkO4Y6G9TEpisY//64wQYoLbFzuvMAlA9SqhzPCubBeJ6xugrIKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QEp5Cziq; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8in3aQZ"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso847101066b.1;
-        Tue, 22 Apr 2025 11:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745347767; x=1745952567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=73kd/N276bY7XGUBKNfuyf9YMgLVM7foEmenVT0F9cY=;
-        b=P8in3aQZ1XZ3S5mSttfYCXM8U+y8ntfghnK8h2qL7mFDPDD3POKy3H9Z65UA7Vq2Iw
-         /tgPP15sOeJmepU1pDaWtt6GnMiEdoviFXCbqR+eM1EJMKmTksEJH/t9QBIjAY9FM69k
-         vNXowGOqLT/sobNcqCJ7crD6yGBR+Xdqn1smOQIWJVjVcuCg7hjCL5OxFNmNYnq1Afix
-         KKoFKuoQcdXkL70eqkabyr2xYtEKruNQOMVXkPrZ1wESi1o8YfA5h+lg9n9DWkJlyyEn
-         lG4FRXuQPPIwgmW6gltsOb6ALXXPZ6tlF5SejBC4OqVtl07JPYC8z6L0zVsAKGpsNkji
-         FzqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745347767; x=1745952567;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=73kd/N276bY7XGUBKNfuyf9YMgLVM7foEmenVT0F9cY=;
-        b=KnOHOY0L836bV6CE4dNhKD27+f8F7F0ZkbYI+NEVJGM/+G0BN8G0ATFbpT7uNprw7M
-         Swddj8GKIs8qY+7kdhrXsPnjlXtkbioO+7ZizEz0A0y0lHLIno4C+VTGkdGXlKTDqsQb
-         L8PPSFztH8bcn6kNuPelozFVTOxM+HSNidL9Lmy6/uMQT9NB6l/SRLr6LGdmcdFk16nh
-         Ux7vcs5rJ9Ea0L+Gzs4JP9jAQi358886YxavFiLVwsBcc7xdXy8A9B7rUtIkAcJa7iU7
-         D3xCi2IhShAPaKX+EObAa3iTG4vxVd7Pa2m7W7H/Eul0NlzDRemIWX0i1AjswqUiMppm
-         uJng==
-X-Forwarded-Encrypted: i=1; AJvYcCU38RS5rml0SxN0e/J2Vuy6WLE4bd8h9spQVAR4f5WP+/7gulTl0udaAgkOY6fVH5FVyCoYDoeYiDxHDpo=@vger.kernel.org, AJvYcCV+i0YFgxzKnhr8EgcjgFnAwo2WzKzeUXOlq/gpypjTk5zMSAWNFwggxdkR3C2QP/WerEjvfAzP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOpru/+lw3o0RW3+xgreE6A7v/7CI2dYPlWf8SppyUoxpenX5G
-	X6CJGEOr1koqD2NYM+sg7HhHaZ1Ikx+bzedrnl+r/RtsoqjqC8zzOig60HFP
-X-Gm-Gg: ASbGncvKqxlL1inReBthX+fU9zGgFVC/EbxdbeJGuNuZWu7V0W/wnuZrE7c24wIET7h
-	kToijvkJepF55XimJ0jA2v2UHxDCqxsq5QcrA1AuWiCHPjC4Jo+XK5CntCRn58Px7BofErC/w/Z
-	TDmCOgjXDBTlFUNs08Y6szNRHWiJg1AT9T9CefTU7D4i2xDOvUxteK5CEyFH9hlYGR2cH3ftqZu
-	93BAGpstWMjqOy3iCYxjd7d3MnyZ989bT9v6LuKB8lrt72cxEy1m/oR4Wx2g/NhCn3Mfp7jn74C
-	XP5WL6+bg8ooLb3blCK7Pbr3sK2oIaQ1F3qhSl8K4SWVZROW7SfYdnOqiOxZddQYlfw9tdrfs7Z
-	dfSfZiihH/hFo2D+/xfg=
-X-Google-Smtp-Source: AGHT+IGJpwyG/KngNjSJgxbIuc/GT7ionsA5lBkqPCrJKG9MQVxIW/2t5/FvQMp2SRlUtvo5QcdNjg==
-X-Received: by 2002:a17:907:2d1f:b0:ac3:26ff:11a0 with SMTP id a640c23a62f3a-acb74dd05c6mr1576901266b.38.1745347767266;
-        Tue, 22 Apr 2025 11:49:27 -0700 (PDT)
-Received: from localhost (dslb-002-205-023-067.002.205.pools.vodafone-ip.de. [2.205.23.67])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0bfd9sm679807566b.29.2025.04.22.11.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 11:49:26 -0700 (PDT)
-From: Jonas Gorski <jonas.gorski@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling filtering
-Date: Tue, 22 Apr 2025 20:49:13 +0200
-Message-ID: <20250422184913.20155-1-jonas.gorski@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QEp5Cziq"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 7Igzu5oOQXKsE7Ih2uGtfj; Tue, 22 Apr 2025 20:50:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1745347807;
+	bh=S9Ycz3uF+XpWMAYTXkteVNEOxwIekKxbOCFlC0Tad3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=QEp5CziqpDekxPanV0xZmXw9JxlXGxulEa8w40PKTbNiK08ebxVFNMb32MQNYS2Lb
+	 xmdmZUGPnjCrV3xlmpuQaMGW9VCmaATGOVJXgvqtdVzYFnZRBkG1Y1GInSPArcEF3Z
+	 Xw3N4EZVkG1R+lmTAR5DmxdnsMLpMsEdzfzGtZ6dEqZVdoQxeFBLFeQvBCfqsRWOkS
+	 +FOQsHiLPTUris2bkXptt+5zU6lUA0jZbQIYSO2NfALnnSbbKKYmgO9K/bmo/5qrpq
+	 YFKDjlhohzapY6lzcXCnKtsOc0ysEOSoJ7uU/F8EmYfnwsPtcZFv7yVeniiBqzsPeR
+	 1UKKTt69eOsPg==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 22 Apr 2025 20:50:07 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <501ea9b1-017b-4517-8de4-7056803e7127@wanadoo.fr>
+Date: Tue, 22 Apr 2025 20:50:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and
+ size_add()
+To: SeongJae Park <sj@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Su Hui <suhui@nfschina.com>, akpm@linux-foundation.org,
+ damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <adbc06d8-1a6c-4279-9596-d743505d64dd@stanley.mountain>
+ <20250422182331.59651-1-sj@kernel.org>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250422182331.59651-1-sj@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-When a net device has NETIF_F_HW_VLAN_CTAG_FILTER set, the 8021q code
-will add VLAN 0 when enabling the device, and remove it on disabling it
-again.
+Le 22/04/2025 à 20:23, SeongJae Park a écrit :
+> On Tue, 22 Apr 2025 13:44:39 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> 
+>> On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
+>>> On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
+>>>> It's safer to using kmalloc_array() and size_add() because it can
+>>>> prevent possible overflow problem.
+>>>>
+>>>> Signed-off-by: Su Hui <suhui@nfschina.com>
+> [...]
+>>>> --- a/mm/damon/sysfs-schemes.c
+>>>> +++ b/mm/damon/sysfs-schemes.c
+>>>> @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject *kobj,
+>>>>   {
+>>>>   	struct damon_sysfs_scheme_filter *filter = container_of(kobj,
+>>>>   			struct damon_sysfs_scheme_filter, kobj);
+>>>> -	char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
+>>>> +	char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
+>>>> +				   GFP_KERNEL);
+>>>
+>>> Count is clamped in rw_verify_area().
+>>>
+>>> Smatch does a kind of ugly hack to handle rw_verify_area() which is that
+>>> it says neither the count nor the pos can be more than 1G.  And obviously
+>>> files which are larger than 2GB exist but pretending they don't silences
+>>> all these integer overflow warnings.
+>>>
+>>
+>> Actually rw_verify_area() ensures that "pos + count" can't overflow.  But
+>> here we are multiplying.  Fortunately, we are multiplying by 1 so that's
+>> safe and also count can't be larger than PAGE_SIZE here which is safe as
+>> well.
+> 
+> Thank you for adding these details, Dan.  I understand the size_add() change
+> can make warnings slience, though it is not really fixing a real bug.  So I
+> believe there is no action item to make a change to this patch.  Maybe making
+> the commit message more clarified can be helpful, though?
+> 
+> Please let me know if I'm misunderstanding your point and/or you want some
+> changes.
 
-But since we are changing NETIF_F_HW_VLAN_CTAG_FILTER during runtime in
-dsa_user_manage_vlan_filtering(), user ports that are already enabled
-may end up with no VLAN 0 configured, or VLAN 0 left configured.
+As sizeof(*path) = 1, maybe, just change it to:
+	char *path = kmalloc(count + 1, GFP_KERNEL);
 
-E.g.the following sequence would leave sw1p1 without VLAN 0 configured:
-
-$ ip link add br0 type bridge vlan_filtering 1
-$ ip link set br0 up
-$ ip link set sw1p1 up (filtering is 0, so no HW filter added)
-$ ip link set sw1p1 master br0 (filtering gets set to 1, but already up)
-
-while the following sequence would work:
-
-$ ip link add br0 type bridge vlan_filtering 1
-$ ip link set br0 up
-$ ip link set sw1p1 master br0 (filtering gets set to 1)
-$ ip link set sw1p1 up (filtering is 1, HW filter is added)
-
-Likewise, the following sequence would leave sw1p2 with a VLAN 0 filter
-enabled on a vlan_filtering_is_global dsa switch:
-
-$ ip link add br0 type bridge vlan_filtering 1
-$ ip link set br0 up
-$ ip link set sw1p1 master br0 (filtering set to 1 for all devices)
-$ ip link set sw1p2 up (filtering is 1, so VLAN 0 filter is added)
-$ ip link set sw1p1 nomaster (filtering is reset to 0 again)
-$ ip link set sw1p2 down (VLAN 0 filter is left configured)
-
-This even causes untagged traffic to break on b53 after undoing the
-bridge (though this is partially caused by b53's own doing).
-
-Fix this by emulating 8021q's vlan_device_event() behavior when changing
-the NETIF_F_HW_VLAN_CTAG_FILTER flag, including the printk, so that the
-absence of it doesn't become a red herring.
-
-While vlan_vid_add() has a return value, vlan_device_event() does not
-check its return value, so let us do the same.
-
-Fixes: 06cfb2df7eb0 ("net: dsa: don't advertise 'rx-vlan-filter' when not needed")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
----
- net/dsa/user.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/net/dsa/user.c b/net/dsa/user.c
-index 804dc7dac4f2..f7d62523da93 100644
---- a/net/dsa/user.c
-+++ b/net/dsa/user.c
-@@ -1993,7 +1993,16 @@ int dsa_user_manage_vlan_filtering(struct net_device *user,
- 			user->features &= ~NETIF_F_HW_VLAN_CTAG_FILTER;
- 			return err;
- 		}
-+
-+		if (user->flags & IFF_UP) {
-+			pr_info("dsa: adding VLAN 0 to HW filter on device %s\n",
-+				user->name);
-+			vlan_vid_add(user, htons(ETH_P_8021Q), 0);
-+		}
- 	} else {
-+		if (user->flags & IFF_UP)
-+			vlan_vid_del(user, htons(ETH_P_8021Q), 0);
-+
- 		err = vlan_for_each(user, dsa_user_clear_vlan, user);
- 		if (err)
- 			return err;
--- 
-2.43.0
+CJ
+> 
+> 
+> Thanks,
+> SJ
+> 
+>>
+>> regards,
+>> dan carpenter
+> 
+> 
 
