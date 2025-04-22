@@ -1,207 +1,94 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C94A27D762
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505AD2980A0;
+	Tue, 22 Apr 2025 17:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745342490; cv=none; b=AqgZV6nVPmzSu+YJHJEFSBHdtU82Mg79zn4Br5N38DtNJbnLOGb7rAnzK++rO1c2ntp8wQV2t6Ph7yUomkNdH6/3gTwRbg1JNXXSIIb7CyWIeAjKBHvSX/ERGYShoZ7yrKlUo7Q9uEtvjKztWL9pLw7blITPJqbmpcofQH6VEA0=
+	t=1745342499; cv=none; b=Il5M31Ru9m1ISW4DnRBJQFKW8tZPlsGKaUiMf47Q9uP46ssWgQ7aazIjqfOa5uqf7QEIA4fEIw4v49rdpKoYPHMxiR8xO9wY4CLTRar/EAqoUU/Xatpdlf3mpbO3bQDjxWrd0HsIW2/uyWJFKrmIZS7IP9rRxoeB4KKuFAfjMJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745342490; c=relaxed/simple;
-	bh=/X/KZQAWZc9lzWOW3EtF/+qFy7ljzzEYyLnsPc/EUdE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=PJ/iTuajpZOMbQxd3rxoImobaPjbfTkgyvbCbOcYyy1WToH/y7wFnQXX7B6Lji+AtemRyF68ee7/fdF65yHO42P13eZW2DlGmHTVyQvRXTPQTNh2qeCKx7jzJwO/xGWuCP6A9Ix2lJ7V5myT6MSnqdXPEgL+y/TDK9e0bG/ttN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ag6CNiuj; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
+	s=arc-20240116; t=1745342499; c=relaxed/simple;
+	bh=q6Iu6iCIREXhZUWduhe7aRN+4iwB309Pe4IIIyb+U2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pkth0cDVkQWZ6BePirjzhNU+Jb5HvpwBljLOBJ/BkDC1ue14tdbHEbYytstP40/SzKOt1AbEGs33wtpv+vNF0etOnh5FFgy4LnsMZbqLmkqi7S5mQT2r7EzKvn/ADhgK6aSgJqJIQnLMCc/4RNdoPowTghpkSlFDb+RzB7BiOzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AZYiddYw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ag6CNiuj"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227ed471999so49090405ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745342487; x=1745947287; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pHZApYLBDslBvQML3OtPuVw3MhXtPfkHp1YsT4Z2DZ4=;
-        b=ag6CNiujSQlB4qSeE5fRVSYKKBiv5Z2D/kzUFme0xaYQ3HmYedL2D2cOV1/3IYSbGo
-         YqEutDGYiW04TpZR4Z+ZFfBpQKRcVw9NkJd38j1aw2Br6pfjIU4x/LmUVcxXCxU5wNl3
-         umyVBs+J3QN0vN+BqWBCMTDKnGA9OluUag0Rhp03pEMFhMTgU21PEe/y51Jps7+baQ2s
-         uC4Q9IMw+9ivOZuj1OvBNgyfNAiTNlHgZqyhQsMDexVRbw9b+XWO/iHSW4faVzPj4sQN
-         CficwzIdM/2yZ1oUQBHbDmVnZ2+uOkxgtwPYEO0xAJUNkw7l0m4sbJYECoPy28GiwkMz
-         jnMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745342487; x=1745947287;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pHZApYLBDslBvQML3OtPuVw3MhXtPfkHp1YsT4Z2DZ4=;
-        b=qYXAsEGjGACsfYIafFOEU03D5BdQrBlQ4ksvIrVSkQXX9ZrbWtm/KgsXNZugPqFwMn
-         enLvFNiK+OE/Hxdl+VQE2A5KhBXz2ljcP8J58j/3oE8Cf/16In33fn0UYUK2u7x/mJQ8
-         H3vQHj+M+FIZ+w4RibTkKRxPYd1qbwLi3c9XMe3vPxO8Xup97PnEn+0n9OdXZY4Y0MCO
-         1t9wtI6AprxJgTxdWSbxLgC/NRylP2279NDGXovoBnKkYhcjxjir1ftzVd3PC05yImu/
-         sVUuMGVcvQEFHwrlaFr+Kz9Aaw+6zJVZx2YID5G7uKkdRkueTPuE+rDdrrdpuzLRw5ZH
-         0fHg==
-X-Forwarded-Encrypted: i=1; AJvYcCX56xq78pXypJDg7DppOvI9MYCaTuaN5fIv0jM4OU9VjzgFhuqfVFdmLye5dw2YU9VHGtTUW/3JD79KIpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKR3eaxRrgPNmv1wai6gWJaOYnKECWxLAvePwFInkRno+J7e+0
-	c8k/5NlhFXQQQ4PGPi3vI2YoHRLvYglMThXXVXPPB8AJhnudMCYFBoYvrICltVgWKMVL4ERgTuf
-	YNy+CQF/DDQ==
-X-Google-Smtp-Source: AGHT+IHP4tvdMttMOgmAEKu1kTpji4rqqt+XoPjS/E9okdw+miOCnuv5g6VfesskAI3nKmX0BLLf+K2YJvlrdw==
-X-Received: from plri5.prod.google.com ([2002:a17:903:32c5:b0:223:5693:a4e9])
- (user=ipylypiv job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:da89:b0:224:76f:9e4a with SMTP id d9443c01a7336-22c53583df9mr231659425ad.14.1745342487583;
- Tue, 22 Apr 2025 10:21:27 -0700 (PDT)
-Date: Tue, 22 Apr 2025 10:21:23 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AZYiddYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4256FC4CEE9;
+	Tue, 22 Apr 2025 17:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745342498;
+	bh=q6Iu6iCIREXhZUWduhe7aRN+4iwB309Pe4IIIyb+U2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZYiddYwQBvmjiZoyf7o74oTErBjdSsZU+n6RpG7t29mFi1heap6hLT80OA5DH9Ma
+	 S/q7evet8cs2lczVvTsyKu8ZVPLpRSdYToaFnlL3MdQIBjSuCGc18oEzuO4/Js1xX1
+	 W4s0rY0e6v3uXCZmSsSucUpgOiqy0v92e6WCQEGiAnUuCIXSy2pEjmv5AMa30y4cMZ
+	 l3WyGcuBbVHVpYsqa1xxDKLFUUR2nk26LsoGnm0h1YaC8yfS+V56KBKV6MmWbErl1X
+	 1lyTmB2THDLJ/ifheIwNf62v7OY9n/pTCuFKTNX+8V3iX9CG8P5QW/AkJ9YarwUveN
+	 +YJzP53IwN6Iw==
+Date: Tue, 22 Apr 2025 11:21:36 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2][next] overflow: Add STACK_FLEX_ARRAY_SIZE() helper
+Message-ID: <8f9ab8fcd26ce59c0e0e25e095b446a77849c08e.1745342381.git.gustavoars@kernel.org>
+References: <cover.1745342381.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
-Message-ID: <20250422172123.281387-1-ipylypiv@google.com>
-Subject: [PATCH v3] ata: libata-scsi: Do not set the INFORMATION field twice
- for ATA PT
-From: Igor Pylypiv <ipylypiv@google.com>
-To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Igor Pylypiv <ipylypiv@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1745342381.git.gustavoars@kernel.org>
 
-For ATA PASS-THROUGH + fixed format sense data + NCQ autosense
-the INFORMATION sense data field is being written twice:
+Add new STACK_FLEX_ARRAY_SIZE() helper to get the size of a
+flexible-array member defined using DEFINE_FLEX()/DEFINE_RAW_FLEX()
+at compile time.
 
-- 1st write: (redundant)
-scsi_set_sense_information() sets the INFORMATION field to ATA LBA.
-This is incorrect for ATA PASS-THROUGH.
+This is essentially the same as ARRAY_SIZE() but for on-stack
+flexible-array members.
 
-- 2nd write: (correct)
-ata_scsi_set_passthru_sense_fields() sets the INFORMATION field
-to ATA ERROR/STATUS/DEVICE/COUNT(7:0) as per SAT spec.
-
-There is no user-visible issue because second write overwrites
-the incorrect data from the first write.
-
-This patch eliminates the reduntant write by moving the INFORMATION
-sense data field population logic to ata_scsi_qc_complete().
-
-Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+ include/linux/overflow.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Changes in v3:
-- Rewrote the commit message to clearly point that this patch removes
-  a redundant write to the INFORMATION sense data field.
-
-Changes in v2:
-- Rephrased commit message to make it clearer.
-- Dropped kernel-doc comment for the ata_scsi_set_sense_information().
-
-
- drivers/ata/libata-sata.c |  2 --
- drivers/ata/libata-scsi.c | 31 ++++++++++++++-----------------
- drivers/ata/libata.h      |  3 ---
- 3 files changed, 14 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
-index 2e4463d3a356..74a0af2888fa 100644
---- a/drivers/ata/libata-sata.c
-+++ b/drivers/ata/libata-sata.c
-@@ -1659,8 +1659,6 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
- 		if (ata_scsi_sense_is_valid(sense_key, asc, ascq)) {
- 			ata_scsi_set_sense(dev, qc->scsicmd, sense_key, asc,
- 					   ascq);
--			ata_scsi_set_sense_information(dev, qc->scsicmd,
--						       &qc->result_tf);
- 			qc->flags |= ATA_QCFLAG_SENSE_VALID;
- 		}
- 	}
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index 2796c0da8257..ef117a0bc248 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -216,17 +216,21 @@ void ata_scsi_set_sense(struct ata_device *dev, struct scsi_cmnd *cmd,
- 	scsi_build_sense(cmd, d_sense, sk, asc, ascq);
- }
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index 6ee67c20b575..5b2e0cc9aba2 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -420,6 +420,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * flexible array member.
+  * Use __struct_size(@name) to get compile-time size of it afterwards.
+  * Use __member_size(@name->member) to get compile-time size of @name members.
++ * Use STACK_FLEX_ARRAY_SIZE(@name, @member) to get compile-time size of array @member.
+  */
+ #define DEFINE_RAW_FLEX(type, name, member, count)	\
+ 	_DEFINE_FLEX(type, name, member, count, = {})
+@@ -438,8 +439,20 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+  * flexible array member.
+  * Use __struct_size(@NAME) to get compile-time size of it afterwards.
+  * Use __member_size(@NAME->member) to get compile-time size of @NAME members.
++ * Use STACK_FLEX_ARRAY_SIZE(@name, @member) to get compile-time size of array @member.
+  */
+ #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
+ 	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
  
--void ata_scsi_set_sense_information(struct ata_device *dev,
--				    struct scsi_cmnd *cmd,
--				    const struct ata_taskfile *tf)
-+static void ata_scsi_set_sense_information(struct ata_queued_cmd *qc)
- {
- 	u64 information;
- 
--	information = ata_tf_read_block(tf, dev);
-+	if (!(qc->flags & ATA_QCFLAG_RTF_FILLED)) {
-+		ata_dev_dbg(qc->dev,
-+			    "missing result TF: can't set INFORMATION sense field\n");
-+		return;
-+	}
++/**
++ * STACK_FLEX_ARRAY_SIZE() - helper macro for DEFINE_FLEX() family.
++ * Returns the number of elements in @array.
++ *
++ * @name: Name for a variable defined in DEFINE_RAW_FLEX()/DEFINE_FLEX().
++ * @array: Name of the array member.
++ */
++#define STACK_FLEX_ARRAY_SIZE(name, array)						\
++	(__member_size((name)->array) / sizeof(*(name)->array) +			\
++						__must_be_array((name)->array))
 +
-+	information = ata_tf_read_block(&qc->result_tf, qc->dev);
- 	if (information == U64_MAX)
- 		return;
- 
--	scsi_set_sense_information(cmd->sense_buffer,
-+	scsi_set_sense_information(qc->scsicmd->sense_buffer,
- 				   SCSI_SENSE_BUFFERSIZE, information);
- }
- 
-@@ -971,8 +975,7 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
-  *	ata_gen_ata_sense - generate a SCSI fixed sense block
-  *	@qc: Command that we are erroring out
-  *
-- *	Generate sense block for a failed ATA command @qc.  Descriptor
-- *	format is used to accommodate LBA48 block address.
-+ *	Generate sense block for a failed ATA command @qc.
-  *
-  *	LOCKING:
-  *	None.
-@@ -982,8 +985,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
- 	struct ata_device *dev = qc->dev;
- 	struct scsi_cmnd *cmd = qc->scsicmd;
- 	struct ata_taskfile *tf = &qc->result_tf;
--	unsigned char *sb = cmd->sense_buffer;
--	u64 block;
- 	u8 sense_key, asc, ascq;
- 
- 	if (ata_dev_disabled(dev)) {
-@@ -1014,12 +1015,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
- 		ata_scsi_set_sense(dev, cmd, ABORTED_COMMAND, 0, 0);
- 		return;
- 	}
--
--	block = ata_tf_read_block(&qc->result_tf, dev);
--	if (block == U64_MAX)
--		return;
--
--	scsi_set_sense_information(sb, SCSI_SENSE_BUFFERSIZE, block);
- }
- 
- void ata_scsi_sdev_config(struct scsi_device *sdev)
-@@ -1679,8 +1674,10 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
- 		ata_scsi_set_passthru_sense_fields(qc);
- 		if (is_ck_cond_request)
- 			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
--	} else if (is_error && !have_sense) {
--		ata_gen_ata_sense(qc);
-+	} else if (is_error) {
-+		if (!have_sense)
-+			ata_gen_ata_sense(qc);
-+		ata_scsi_set_sense_information(qc);
- 	}
- 
- 	ata_qc_done(qc);
-diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
-index 0337be4faec7..ce5c628fa6fd 100644
---- a/drivers/ata/libata.h
-+++ b/drivers/ata/libata.h
-@@ -141,9 +141,6 @@ extern int ata_scsi_offline_dev(struct ata_device *dev);
- extern bool ata_scsi_sense_is_valid(u8 sk, u8 asc, u8 ascq);
- extern void ata_scsi_set_sense(struct ata_device *dev,
- 			       struct scsi_cmnd *cmd, u8 sk, u8 asc, u8 ascq);
--extern void ata_scsi_set_sense_information(struct ata_device *dev,
--					   struct scsi_cmnd *cmd,
--					   const struct ata_taskfile *tf);
- extern void ata_scsi_media_change_notify(struct ata_device *dev);
- extern void ata_scsi_hotplug(struct work_struct *work);
- extern void ata_scsi_dev_rescan(struct work_struct *work);
+ #endif /* __LINUX_OVERFLOW_H */
 -- 
-2.49.0.850.g28803427d3-goog
+2.43.0
 
