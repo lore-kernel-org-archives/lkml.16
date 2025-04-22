@@ -1,70 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2148F214238
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9502E2153F1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745365273; cv=none; b=lTQHTJAkZmOrn0T1snI/qefX+hi8pOx9ELkq5k4aplATRySC0CNaouimjMf6QlmmK3Z5eJi/EGoRpXzLmZC5elpFQPLMPnAT0IjSVFJHzZwgGS1Ez8nLfRMoxNOeP0ZYZVD9LV9HBY+ZdGHLUKFTY5l9H3Wtn9W8VC0WeBVJLVM=
+	t=1745365317; cv=none; b=sICS5K/Ab3IgIU1RTjL/uYZEasTj6q1IgP2ebWkAP7gH9JwOGqgTJ1pjkPhAXS75dp6XAtjfffZZZifFhXq6E0oNsEWAmsfLbfZy3G388JuHPTTy5xWIqVUbGhtT4g5im5eqzZ0fZd6WCtWEaSzQwQHg8J3V/SMvhj37hNigti8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745365273; c=relaxed/simple;
-	bh=Je+XbTDpM7XoCA2l6SPO6P6zZ4dfGXa2/Zffo3Wvq4w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=BwzocSENh2SpgqE3BPzVTGPzaYYX3WrFEOcrpAyio74LtE5w6cVsUB9CO8jfdQ2QL8myXtfFK59vqY0N8Kg5WBiyux6IycjR6FNsVZSsJ7RQ7G3ehsEH5Btx1bBXLSbIQj9LfPGbryovnJkOk2eQxJqZpUgao3boSxt2cny9l/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=phfaszqX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745365317; c=relaxed/simple;
+	bh=d7gFECswBR82rOuJZXYrMO6x34hzdB9wF7yn3yimsy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fPXU/QmZx8iu2tU0hUc1FMNtGM7x1lAztaN+UoooeKMtbBb3ACy/RXvJQfMGhPGkX5ozh/XqC8/qwDN84MfcZ4FM052IESXu0YCkPMEs+x8Esv8vo2VRhZ/sqxz+879Cf1n8EDzyC0kxQrRUjKExyDeLN1ASP4m4ifTN3aAllrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=KmI9jC2K; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="phfaszqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE33C4CEE9;
-	Tue, 22 Apr 2025 23:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745365272;
-	bh=Je+XbTDpM7XoCA2l6SPO6P6zZ4dfGXa2/Zffo3Wvq4w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=phfaszqXOfy+MdNxac3DKdmP1eHQIAZO+lIpb3jy7JpwOyA7AaqfWXkw7Pjous3Uo
-	 8FhqLlTt+/vVJ/3cQfPoCY1HAJTXxmdHkp1TnYOcE9K7fslPg0U6dFmtOm1uoABexm
-	 wNjrbaKaDrwJfRhdAWc3qJsQv/flhqcvVq+IJUUk=
-Date: Tue, 22 Apr 2025 16:41:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: <shaggy@kernel.org>, <willy@infradead.org>, <david@redhat.com>,
- <wangkefeng.wang@huawei.com>, <jane.chu@oracle.com>, <ziy@nvidia.com>,
- <donettom@linux.ibm.com>, <apopple@nvidia.com>,
- <jfs-discussion@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>,
- <syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com>
-Subject: Re: [PATCH V4 1/2] mm: add folio_migration_expected_refs() as
- inline function
-Message-Id: <20250422164111.f5d3f0756ad94d012180ece5@linux-foundation.org>
-In-Reply-To: <20250422114000.15003-2-shivankg@amd.com>
-References: <20250422114000.15003-1-shivankg@amd.com>
-	<20250422114000.15003-2-shivankg@amd.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="KmI9jC2K"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476ab588f32so83178561cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1745365314; x=1745970114; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d7gFECswBR82rOuJZXYrMO6x34hzdB9wF7yn3yimsy0=;
+        b=KmI9jC2K6mVfdrT/JKcCjRxSZJ34NfN1lwMtmTTY44LQxNRxO9tyaiY9fNSN16ZlJB
+         OAqZSYK/zAUkC3j8tMdVWOgc69xj+tLv033Wx+xJ/R/KHsKd1Ggu+r/gj3NeIdYInPe/
+         1qe6+yFI05Tn5uEvkWkZPvx2bPfnAlLFOfB/QzQHioHm1R2wJ3TDC7QHzhPkgUL6fEu7
+         3Dp5G4CJVtD2a0lNTloyLnSKKzlpOekSTE+xT1XT7v4PvhcppkGh5+7AJJzz3yr5pi7H
+         SrVgZBuGjseZvEgJ/QoLnHT7zPg+4QdLBXpJRIpwJjM0THel7Jb/EmOCIB7UB93nw3lp
+         pniQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745365314; x=1745970114;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d7gFECswBR82rOuJZXYrMO6x34hzdB9wF7yn3yimsy0=;
+        b=L/rjrBUqxL+t06xK9oazojKu8DNw9FB8eROWRLvUKVa+jCEiTuj0CMSHAzqn6RBcGx
+         5NM0q2B7j0OrU10Q0i8a1Lxng4kd0SQXewrsS1PnhZ83yTjy/TkGjx/h8HmPPF35iQ+k
+         5udcLAbSYY8QqWBoi152J7TZS7U6FwqfzYui6mAxWDuxcYwRkOSl2GuzhWRfLb4z5Qb9
+         Grc9rCtXbbNErkkaZ+xf2BQwkW2fTBQYTk5buon77ueZqUkCIRPt5u98ltUSGq9cTG3b
+         TprJMSITjbFiOTiOylnJnhEGW+s6WWomyQ5yqBkSg913F6IyMRqHeSMmyMswePkvKiuz
+         XYEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1qZFy3KxFdzE7yevDG1NbcvfFhR1MsTki6XkSbf7GvHZ8KV5hBDceyjIYz2RKcsIW7EReE+GIj0VtWns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7Qn8Mu18rpJLvXppZCMwLTsfbdWFz2hPoqoaUWMy9aO8ED3rq
+	lv5XCNOA2W/QYfJdoBh8SkLgCKXkllRTv4dGzEpXSp0GpUYKjtIGDwlQJ7TZ88s=
+X-Gm-Gg: ASbGnctTSoXlm6rHOubaWteIhsMhCANJq89h+pd9+6k0YOSw9BblkGA2yeOI/ppu080
+	s9zPZjVzYvLvRYkqu3TEfpX14rBzdCkk2bUpKIBqmVi0R7TotxfKDOv0ENBLa8Bn/OMfrqfSZ3b
+	bSia4gwFpoRFqydi9WWdPPjwhTZAU6RSaYuYA1guAS1pBqiaEhD0XwKRLZdqqXmV7M9MwO0ydEK
+	mlCXArl7lxyaVylHeo6dNCdCIaM2U3ERpfM/2s3nvxaLl4o7vYQ5dKFLWvwcEmwyEC3X1mT20+b
+	6Esih9mbdJghG5tj+NJg0SlQqRYKd2yFlmJ8Ilf4eBk9fulBUqIFKJAq/OYQ8JHKI+bcMDNfTxT
+	DBLc1RO1Cx6shcpkGPIY=
+X-Google-Smtp-Source: AGHT+IHMJVzBS9ofe/pFhoyhF1nSXR0nkPPB8mnB6Kmq2s/kk2ojN9lhj/BWknemUlGIDrPDFrdQpA==
+X-Received: by 2002:a05:622a:255:b0:476:6189:4f30 with SMTP id d75a77b69052e-47aec4b5239mr303709741cf.36.1745365314381;
+        Tue, 22 Apr 2025 16:41:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c4d68csm62754761cf.47.2025.04.22.16.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 16:41:53 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7NFR-00000006xuY-19ey;
+	Tue, 22 Apr 2025 20:41:53 -0300
+Date: Tue, 22 Apr 2025 20:41:53 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: William McVicker <willmcvicker@google.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+Message-ID: <20250422234153.GD1213339@ziepe.ca>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <aAa2Zx86yUfayPSG@google.com>
+ <20250422190036.GA1213339@ziepe.ca>
+ <aAgQUMbsf0ADRRNc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAgQUMbsf0ADRRNc@google.com>
 
-On Tue, 22 Apr 2025 11:40:03 +0000 Shivank Garg <shivankg@amd.com> wrote:
+On Tue, Apr 22, 2025 at 02:55:28PM -0700, William McVicker wrote:
 
-> Rename the previously static folio_expected_refs() to clarify its
-> purpose and scope, making it an inline function
-> folio_migration_expected_refs() to calculate expected folio references
-> during migration. The function is only suitable for folios unmapped from
-> page tables.
-> 
-> ...
->
-> +/**
-> + * folio_migrate_expected_refs - Count expected references for an unmapped folio.
+> On this note, I was looking through `of_dma_configure_id()` and am also
+> wondering if we may hit other race conditions if the device is still being
+> probed and the dma properties (like the coherent dma mask) haven't been fully
+> populated? Just checking if the driver is bound, doesn't seem like enough to
+> start configuring the DMA when async probing can happen.
 
-"folio_migration_expected_refs"
+I think the reasoning at work here is that the plugin path for a
+struct device should synchronously setup the iommu.
 
-It's concerning that one particular filesystem needs this - one
-suspects that it is doing something wrong, or that the present API
-offerings were misdesigned.  It would be helpful if the changelogs were
-to explain what is special about JFS.
+There is enough locking there that the iommu code won't allow the
+device plugin to continue until the iommu is fully setup under the
+global lock.
 
+The trick of using dev->driver is only a way to tell if this function
+is being called from the driver plugin path just before starting the
+driver, or from the iommu code just before configuring the iommu.
+
+Given that explanation can you see issues with of_dma_configure_id() ?
+
+Jason
