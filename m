@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50CB12550DA
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 549CA27463
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:18:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309934; cv=none; b=iS+/ljGADzSnKYXmOAIiVmP95rB5bThB9hTME0swNzvKG1NZBzdp0heruWD/cXW+fVX7LSCYdNGtuS3aBRD3o0HjaChQhLlKgLAJJ7/HnyZsHykHA5t1wmCPD3SuoBgF38GgzOp4PQY28cNEN/hltXPa9IqVE+nMmhVHSsUhWF8=
+	t=1745309937; cv=none; b=M3LhoiLufINoNPd+rY1mO2sI7Vjwhfih+CwhQHVtnHymeDkwO51OsoTqHsNP+bq/JVl0ybaJdqAnBDvtCvujSOpQiQqKbNaKxc56ZGjdJlXIy3j2xl9WBkJZymceT+GmVAjGejpAbk/cnmG737PgIZuxX0f/Oul0icxA/gdgP7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309934; c=relaxed/simple;
-	bh=9tnuHllDz0UN3u08MTXde6SQv886649kDGOS9XSyYH4=;
+	s=arc-20240116; t=1745309937; c=relaxed/simple;
+	bh=/SFsxDltu5ntJmXt+KaGKCcd7wB4xL2c7ePLhjMCpEk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XIvjJTgUpdQGErqpJT6r2MU6XYOSy7593xrrLiOS+b6TVZCvWi6OLY4hQwKaKxyy7+3UHaf83A2HfUn+yqJgAVRkYgQqJl8CfnXWIamjf1tGBiVQDl1g07ac6QOKU5eyhVxYhBsKyFZfi6RATQjrDKLOUaCAJ1Hr71w8+SHyt7c=
+	 MIME-Version; b=LIiYIaaeIXFY0jwbVQosozdlZ4TBlvqAoIoQWQf2o5aP8tk6zI3HsYA38xid7iqYWD0pm7l3WC/N5+FlREYdQIbzcDlQJuaNcocXXhEiU3FfLyGp48ighy2w3h/ygNeB8HKBiMp/0QrQl/NTRae7uPS4bzfBZKryaLhbrUSCAmc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73133176A;
-	Tue, 22 Apr 2025 01:18:47 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF62D176A;
+	Tue, 22 Apr 2025 01:18:51 -0700 (PDT)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7F853F66E;
-	Tue, 22 Apr 2025 01:18:49 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 184D83F66E;
+	Tue, 22 Apr 2025 01:18:53 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -35,9 +35,9 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/11] arm64: hugetlb: Use __set_ptes_anysz() and __ptep_get_and_clear_anysz()
-Date: Tue, 22 Apr 2025 09:18:13 +0100
-Message-ID: <20250422081822.1836315-6-ryan.roberts@arm.com>
+Subject: [PATCH v4 07/11] mm/vmalloc: Warn on improper use of vunmap_range()
+Date: Tue, 22 Apr 2025 09:18:15 +0100
+Message-ID: <20250422081822.1836315-8-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250422081822.1836315-1-ryan.roberts@arm.com>
 References: <20250422081822.1836315-1-ryan.roberts@arm.com>
@@ -49,172 +49,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor the huge_pte helpers to use the new common __set_ptes_anysz()
-and __ptep_get_and_clear_anysz() APIs.
+A call to vmalloc_huge() may cause memory blocks to be mapped at pmd or
+pud level. But it is possible to subsequently call vunmap_range() on a
+sub-range of the mapped memory, which partially overlaps a pmd or pud.
+In this case, vmalloc unmaps the entire pmd or pud so that the
+no-overlapping portion is also unmapped. Clearly that would have a bad
+outcome, but it's not something that any callers do today as far as I
+can tell. So I guess it's just expected that callers will not do this.
 
-This provides 2 benefits; First, when page_table_check=on, hugetlb is
-now properly/fully checked. Previously only the first page of a hugetlb
-folio was checked. Second, instead of having to call __set_ptes(nr=1)
-for each pte in a loop, the whole contiguous batch can now be set in one
-go, which enables some efficiencies and cleans up the code.
+However, it would be useful to know if this happened in future; let's
+add a warning to cover the eventuality.
 
-One detail to note is that huge_ptep_clear_flush() was previously
-calling ptep_clear_flush() for a non-contiguous pte (i.e. a pud or pmd
-block mapping). This has a couple of disadvantages; first
-ptep_clear_flush() calls ptep_get_and_clear() which transparently
-handles contpte. Given we only call for non-contiguous ptes, it would be
-safe, but a waste of effort. It's preferable to go straight to the layer
-below. However, more problematic is that ptep_get_and_clear() is for
-PAGE_SIZE entries so it calls page_table_check_pte_clear() and would not
-clear the whole hugetlb folio. So let's stop special-casing the non-cont
-case and just rely on get_clear_contig_flush() to do the right thing for
-non-cont entries.
-
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- arch/arm64/mm/hugetlbpage.c | 53 +++++++------------------------------
- 1 file changed, 10 insertions(+), 43 deletions(-)
+ mm/vmalloc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 087fc43381c6..d34703846ef4 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -159,12 +159,11 @@ static pte_t get_clear_contig(struct mm_struct *mm,
- 	pte_t pte, tmp_pte;
- 	bool present;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 3ed720a787ec..d60d3a29d149 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -374,8 +374,10 @@ static void vunmap_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+ 		if (cleared || pmd_bad(*pmd))
+ 			*mask |= PGTBL_PMD_MODIFIED;
  
--	pte = __ptep_get_and_clear(mm, addr, ptep);
-+	pte = __ptep_get_and_clear_anysz(mm, ptep, pgsize);
- 	present = pte_present(pte);
- 	while (--ncontig) {
- 		ptep++;
--		addr += pgsize;
--		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
-+		tmp_pte = __ptep_get_and_clear_anysz(mm, ptep, pgsize);
- 		if (present) {
- 			if (pte_dirty(tmp_pte))
- 				pte = pte_mkdirty(pte);
-@@ -208,7 +207,7 @@ static void clear_flush(struct mm_struct *mm,
- 	unsigned long i, saddr = addr;
+-		if (cleared)
++		if (cleared) {
++			WARN_ON(next - addr < PMD_SIZE);
+ 			continue;
++		}
+ 		if (pmd_none_or_clear_bad(pmd))
+ 			continue;
+ 		vunmap_pte_range(pmd, addr, next, mask);
+@@ -399,8 +401,10 @@ static void vunmap_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+ 		if (cleared || pud_bad(*pud))
+ 			*mask |= PGTBL_PUD_MODIFIED;
  
- 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
--		__ptep_get_and_clear(mm, addr, ptep);
-+		__ptep_get_and_clear_anysz(mm, ptep, pgsize);
- 
- 	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
- }
-@@ -219,32 +218,20 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
- 	size_t pgsize;
- 	int i;
- 	int ncontig;
--	unsigned long pfn, dpfn;
--	pgprot_t hugeprot;
- 
- 	ncontig = num_contig_ptes(sz, &pgsize);
- 
- 	if (!pte_present(pte)) {
- 		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
--			__set_ptes(mm, addr, ptep, pte, 1);
-+			__set_ptes_anysz(mm, ptep, pte, 1, pgsize);
- 		return;
- 	}
- 
--	if (!pte_cont(pte)) {
--		__set_ptes(mm, addr, ptep, pte, 1);
--		return;
--	}
--
--	pfn = pte_pfn(pte);
--	dpfn = pgsize >> PAGE_SHIFT;
--	hugeprot = pte_pgprot(pte);
--
- 	/* Only need to "break" if transitioning valid -> valid. */
--	if (pte_valid(__ptep_get(ptep)))
-+	if (pte_cont(pte) && pte_valid(__ptep_get(ptep)))
- 		clear_flush(mm, addr, ptep, pgsize, ncontig);
- 
--	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
--		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-+	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
- }
- 
- pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
-@@ -434,11 +421,9 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 			       unsigned long addr, pte_t *ptep,
- 			       pte_t pte, int dirty)
- {
--	int ncontig, i;
-+	int ncontig;
- 	size_t pgsize = 0;
--	unsigned long pfn = pte_pfn(pte), dpfn;
- 	struct mm_struct *mm = vma->vm_mm;
--	pgprot_t hugeprot;
- 	pte_t orig_pte;
- 
- 	VM_WARN_ON(!pte_present(pte));
-@@ -447,7 +432,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
- 
- 	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
--	dpfn = pgsize >> PAGE_SHIFT;
- 
- 	if (!__cont_access_flags_changed(ptep, pte, ncontig))
- 		return 0;
-@@ -462,19 +446,14 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 	if (pte_young(orig_pte))
- 		pte = pte_mkyoung(pte);
- 
--	hugeprot = pte_pgprot(pte);
--	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
--		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
--
-+	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
- 	return 1;
- }
- 
- void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 			     unsigned long addr, pte_t *ptep)
- {
--	unsigned long pfn, dpfn;
--	pgprot_t hugeprot;
--	int ncontig, i;
-+	int ncontig;
- 	size_t pgsize;
- 	pte_t pte;
- 
-@@ -487,16 +466,11 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 	}
- 
- 	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
--	dpfn = pgsize >> PAGE_SHIFT;
- 
- 	pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
- 	pte = pte_wrprotect(pte);
- 
--	hugeprot = pte_pgprot(pte);
--	pfn = pte_pfn(pte);
--
--	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
--		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-+	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
- }
- 
- pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-@@ -505,13 +479,6 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
- 	struct mm_struct *mm = vma->vm_mm;
- 	size_t pgsize;
- 	int ncontig;
--	pte_t pte;
--
--	pte = __ptep_get(ptep);
--	VM_WARN_ON(!pte_present(pte));
--
--	if (!pte_cont(pte))
--		return ptep_clear_flush(vma, addr, ptep);
- 
- 	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
- 	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+-		if (cleared)
++		if (cleared) {
++			WARN_ON(next - addr < PUD_SIZE);
+ 			continue;
++		}
+ 		if (pud_none_or_clear_bad(pud))
+ 			continue;
+ 		vunmap_pmd_range(pud, addr, next, mask);
 -- 
 2.43.0
 
