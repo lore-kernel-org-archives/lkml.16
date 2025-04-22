@@ -1,95 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D474262FE2
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0341FAC48;
+	Tue, 22 Apr 2025 23:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745363149; cv=none; b=YcWpB9IKxhiDZtxh1oa/+d23YcV6nAcvhcEN+wAO8o/6gf3Y4w2UNZTSLNIIcAKwXqaSfUUZPJgwVZCPoHCY0vpuALaCwlosZSitsZcj6/529F2DNdEsIoKA4u3be3XpA0C6JuMvZ5B2B5FRREZBAAFYGzdWadHoaRpEVNnYDUE=
+	t=1745363189; cv=none; b=PmIlH3X/vULKMJ60kTSPB2DxKk6o3T4422L+9ZngOfbk2yZQdneTc+hYrP7c9BrtDGq1UZgVDNmrwknf3riYU/Gn4/iS2KTT/3fuW7D1UzcJ2TYepl4VuGd2H/2HbMW3oC1hVZL+4oBlGS3l2fWZu1ftxnB9FnpJHBl14AjoXRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745363149; c=relaxed/simple;
-	bh=/3WEb+dygs+eWmYWF81aQ8qVlo9Y+tikEAZ8KqHjMzA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pjzw2wP/Dez8toflIRe/zalLw7lksr8B/t5d19n3uJu6KiM0YRKOlc4Eqvec29BHbiyyqy93V6/spNOeEN0H4JZAPF2puIT6LTJT0/RXlr/CfQwwGUGxVeDSbFoxxS69RfTsz4i/u7A8a4lD6752lpwQ4/MFY5p4m5LrR2azKYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xy4kB2rU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745363189; c=relaxed/simple;
+	bh=bwgCTZYImF7dMiY1Pe1Jqt9Q0rRWFEzVt9QQ4INAHVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tS+tHMBZ+2SlGKGZHVyc+33w5B4vQ4aMZhhAo1cflZhpRATFIC5Xm+rYby8yVa8AKyFd3eKfQGhIuYuistpLBm3+cX29HFbI5MLJt7zZzFfUC+2Jd1V1HtbVBJTbd1Hw7SMZKStvNChrgeLOECmfbX5clBNfcCJe0tVT8YT6D0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rxBbAKNA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xy4kB2rU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745363146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zkXnoeRkH2y5k80MjXEwQDOBw2xFVOkQ0IU4jNVrWtY=;
-	b=Xy4kB2rUaWQSDpJ5k6Z9Etd2Qkmsjr2C2CvEGO4kO484xC+6a7G9hcso1tj927m53Zg+kO
-	3JwQppR2ksvFsBAeqtCrkOQHJoXx8nj1tZAlX1rznb5En9E0+hvVl1tynXU7LHd+P9g6e5
-	VA7AtWSHRRhxE9i9oPBUJE+1oN8dFNQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-423-ZIHoqVFGOqKgNcgFLbFd5A-1; Tue,
- 22 Apr 2025 19:05:44 -0400
-X-MC-Unique: ZIHoqVFGOqKgNcgFLbFd5A-1
-X-Mimecast-MFC-AGG-ID: ZIHoqVFGOqKgNcgFLbFd5A_1745363143
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 369121800368;
-	Tue, 22 Apr 2025 23:05:43 +0000 (UTC)
-Received: from omen.home.shazbot.org (unknown [10.22.88.22])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EC0E518001D7;
-	Tue, 22 Apr 2025 23:05:41 +0000 (UTC)
-From: Alex Williamson <alex.williamson@redhat.com>
-To: bhelgaas@google.com,
-	rafael@kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PCI: Increment PM usage counter when probing reset methods
-Date: Tue, 22 Apr 2025 17:05:32 -0600
-Message-ID: <20250422230534.2295291-3-alex.williamson@redhat.com>
-In-Reply-To: <20250422230534.2295291-1-alex.williamson@redhat.com>
-References: <20250422230534.2295291-1-alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rxBbAKNA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034DBC4CEE9;
+	Tue, 22 Apr 2025 23:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745363189;
+	bh=bwgCTZYImF7dMiY1Pe1Jqt9Q0rRWFEzVt9QQ4INAHVU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=rxBbAKNAnitEV35sJjP5hOcIsaWa2vjiSqyIjzdHwQzII/UF9MVaqVII5OW/TJ4Or
+	 bbAWhY6aaNXe6pq8dNSR6aSEjw0ucWlhSb1jZYEUBK8Pc83rnXPi4r87SXJmaXi+Q6
+	 o0GFHI8HzNRk+c8y7Gqc8yKfZ3NvRWf1zpn4wiomMWEukOSQp3ciTtWKIHa+EaoxMA
+	 iic/gxcSsrqHXzTizezNXennLpRyg1e22rmB4WtcTlMbCgX8/6ebjWiLt4RI+/heJS
+	 C4DjW3zA1Zng2/XENlqFm6Hn7wsx+mkCsFTw2J4OdfYF4JLQAB9IBtBOBu2oES5BC7
+	 i1rKGFQoXW2/w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 94DE7CE0875; Tue, 22 Apr 2025 16:06:28 -0700 (PDT)
+Date: Tue, 22 Apr 2025 16:06:28 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH] tools/memory-model/Documentation: Fix SRCU section in
+ explanation.txt
+Message-ID: <130ce800-1bcd-47c0-9058-48e820738852@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250422173830.90647-1-urezki@gmail.com>
+ <1497ef3c-b1fc-4723-949b-28d92a3afb6b@paulmck-laptop>
+ <1a9388fb-83ff-4345-ab2b-6c1825913d71@nvidia.com>
+ <fd718b41-a812-43a3-973b-b07a1381f062@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd718b41-a812-43a3-973b-b07a1381f062@nvidia.com>
 
-We can get different results probing reset methods for a device
-depending on its power state.  For example, reading the PM control
-register of a device in D3cold will always indicate NoSoftRst+,
-preventing us from correctly probing PM reset support.
+On Tue, Apr 22, 2025 at 06:56:17PM -0400, Joel Fernandes wrote:
+> 
+> 
+> On 4/22/2025 6:55 PM, Joel Fernandes wrote:
+> > 
+> > 
+> > On 4/22/2025 1:56 PM, Paul E. McKenney wrote:
+> >> On Tue, Apr 22, 2025 at 07:38:30PM +0200, Uladzislau Rezki (Sony) wrote:
+> >>> The SRCU read-side critical sections describes the difference between
+> >>> srcu_down_read()/srcu_up_read() and srcu_read_lock()/srcu_read_unlock()
+> >>> in a way that a last pair must occur on the same CPU.
+> >>>
+> >>> This is not true, the srcu_read_unlock() can happen on any CPU, but it
+> >>> must be performed by the same task that invoked srcu_read_lock().
+> >>>
+> >>> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> >>
+> >> Good catch!
+> >>
+> >> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > Applied, thanks.
+> > 
+> 
+> Oops, though this is memory model and not RCU per-se. Paul do you want to take
+> it or should I? ;)
 
-Increment the PM usage counter before any probes and use the cleanup
-__free facility to automatically drop the usage counter out of scope.
+Heh!  I will take this one.  One of those days, I guess!
 
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/pci/pci-sysfs.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index c6cda56ca52c..71a36f57ef57 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1475,6 +1475,9 @@ static ssize_t reset_method_store(struct device *dev,
- 		return count;
- 	}
- 
-+	pm_runtime_get_sync(dev);
-+	struct device *pmdev __free(pm_runtime_put) = dev;
-+
- 	if (sysfs_streq(buf, "default")) {
- 		pci_init_reset_methods(pdev);
- 		return count;
--- 
-2.48.1
-
+						Thanx, Pau
