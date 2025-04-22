@@ -1,115 +1,62 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6E7223DE0;
-	Tue, 22 Apr 2025 21:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D578223DE0;
+	Tue, 22 Apr 2025 21:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745355859; cv=none; b=Cj8U42fI+NvYOOalK/DtcfVLtjR7nLc0HpfLN5uCqfTzuHSknl3pb4lw/X/8ieRn2m0bZGF4iYIZ22VDxx+pRmBHyOEgLBebrK4Nc9+mIrEQhsVUsUFUIu557Qj+c65dj50P6/ofXM0T/yOUrp2p8RNOXK/d8T6tvqoajhSmJ0Q=
+	t=1745355893; cv=none; b=QPKfbx5OsF3L4mMj+TZp5bEP1KECUWlcePdT7GNwIjOCs8or6oxMQwqEsbefXbnG+m16Ea5aSixZeyLnmtMfyjuP7Z7ePmpOZRepGENyeKUILEx1dcLesPCdaeNLRy+E50w1PQ/N1uW23wpchEJVTswooJV3HSPm0GUi2PcDUck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745355859; c=relaxed/simple;
-	bh=anKj+Knteg6KR1waU1JJYT4VF5OSNwAWooPMmoAz21k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qzh5+mjLsyfTGCcbxqCizs9zHiuYTb56W2bhtdKIy5NdnLfgGhgvmBfcWdasc9eAtNC4UvNk9b+Z3+7hQXirhBraw5KEm9U3H0SeerQvHDaiDHRM2H2fvp5hVJxEGs8EgtRFxTmvzFF+KsFMWPK7KS51MAeKq6LkrudgoEQdHyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8GcYro+; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745355893; c=relaxed/simple;
+	bh=OfMRn5cKPjqwkvIxOVvn4Ays7J1E2hH2e0sfXVPWnkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BDT1wpA4O2CGjt8xo2SEavBUvmcZUZaGGd8G5OxN81eRU0WPsWdq8wk7QrTFYz521PwMMg8486As5G6I7lrFb4MR9vegGsUn/pM46eOAOVTPph6Sf+QoR2llN5AIvgz5LsU2EUAKYn6VsTENdY86g+qmcEUUtIiYF0NF+bFBfcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SAg4NmgM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8GcYro+"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2aeada833so59374966b.0;
-        Tue, 22 Apr 2025 14:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745355854; x=1745960654; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=anKj+Knteg6KR1waU1JJYT4VF5OSNwAWooPMmoAz21k=;
-        b=E8GcYro+JgHwWE4KnmOdUMv95GKhggWjpS/Z84C2ndSqBWRRXwANxYAq/rXbGv9Pdy
-         nvWM7ubJSmaFZmCj/Ofx+H3LyQUw6N3EGF8uhZDGNYbcw/3wD2M2P1LHZ05afpcRwLHI
-         bS5k5MZGhx860YVpXA8ymg4SxhTe+AxOgHge552Ot1nCmKD0ZTQW06a/ycZe36x2P9Go
-         xx5R8ZkQwD5ep6Bwmdiwjy4v2dx/emrDUG1fIWWDn2hnMr6ok/EmgwcjbM7xjyinyYHZ
-         CyEQXgq7BCoPJDAgBorXguB/5CwNLDuXNBpCYUtw5qYjbhdegaZ6jOYdx2+3zzdJHt8y
-         HaCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745355854; x=1745960654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=anKj+Knteg6KR1waU1JJYT4VF5OSNwAWooPMmoAz21k=;
-        b=mJ99merX2W51VV0r0sISqv8/8JSZk232fPuZk+dzM7BYOlm0urnCfYl8fKAbFCHDoe
-         qC1TQbJlq27lxrR2OOTxBu+MkCemVsMwpfBpCV4FwgRrXhZq7vaA6IWvOciYPjXLt5S2
-         V1p5gQwWHyOJcg1/4AcDllCCdSsKneKQBK11xSEPWdvf6ZWoNyloJAkLCCGC6IbGqE1X
-         IblfRXrAyot/x7W58TdR/YJbew6Gm4rg26VezMXmuppNMQ5DZVa7fCF5zzfg/4pAQIAs
-         9Hc99yAsWnHkZ4FUpTPlclhjNRSfUvJpWBESiAjPtR1vfXMsWy/niRpY3+X9kBg8+1vp
-         ImPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGa1GoDFenZE9S2z0kivIou1PzBogKklaBlSodDZqsA7pSh0f8CkL0dP5wUNJcqMr4IQxfPr3DON0=@vger.kernel.org, AJvYcCXUZmN2LFJbhmPgJglqGkmEGEmqyOIQymJlYLpPSN/wbJOnfylj4mG7UEJ/3Vzi48UsQMjSxJ79wfL05nZD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOJ/bQY0pFEzGY+Az9+42u0sKrDgwE6IT9njdaW/H2cezS1pAK
-	vWB872fce00HHl6AeljU+kZ/p5b/RpDbyz6X8Vi4iu/eFrAIOqryQMLW6ftxplrW/m9GrcQ+Z/z
-	C/CODKGnzi79qxmtMjGyGcynWGG4=
-X-Gm-Gg: ASbGncsHi66HzJ1rn2u146hOe3m9lUzFXD9sgWeoh1xld6nvkKaqd9KeZkv4sU6OQzJ
-	01cOhgR90E/2bTQrOXC0DdC7x1EvcK0bYQ64QrsHDWF4LHPE8ho16cTPu3ldZrPy9ERvYH/8UhM
-	1kIGK8nUtaITbCt9uMWaLvuQ==
-X-Google-Smtp-Source: AGHT+IFiZwqj/ilaVmFd+6rfD6FBY8RqKG6AurTQ2dwX8U67r7lQa/1goPB7Zh08t+GGLri7WHVJZ11DDIWwo1sKcnw=
-X-Received: by 2002:a17:906:9fc8:b0:abf:742e:1fde with SMTP id
- a640c23a62f3a-ace3f4e87c1mr39726766b.14.1745355854290; Tue, 22 Apr 2025
- 14:04:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SAg4NmgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0CE3C4CEE9;
+	Tue, 22 Apr 2025 21:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745355892;
+	bh=OfMRn5cKPjqwkvIxOVvn4Ays7J1E2hH2e0sfXVPWnkw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=SAg4NmgMQrd4wuSXD6kwJqOqvBPSHoeL4cH+3n0Xv+A+wRdkpv0G68Pp/46eTtjHl
+	 hkWk5XUrM0h8BYqz31HcVL+tYGdweQG92e7CvqzjeNas1+tBJs4uIhRAnsTu7nBfGZ
+	 e4Bg2+q8iSuM0mrXSPmUEynshsqLAEzecJGzGOiKBEAKVUDbxP7vpN57OBHzbImaor
+	 pQEBoZxJbTZpmmREQSc9v1Vn6gNftPQIBuPrYkJtw302JvNXxDgsR7Ab6WEX4QpcJs
+	 NkGp7FfIkaJZHIOXBRHzNLZZang3c+xInqKdiUCRkpcK3UPV7oTGxcXdfTihIWhyb3
+	 Z1UeDR74kJYHg==
+Date: Tue, 22 Apr 2025 15:04:48 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2][next] Add STACK_FLEX_ARRAY_SIZE() helper
+Message-ID: <cover.1745355442.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
-In-Reply-To: <20250422-iio-adc-ad7173-fix-compile-without-gpiolib-v1-1-295f2c990754@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 23 Apr 2025 00:03:38 +0300
-X-Gm-Features: ATxdqUHmdzJyizCSkMvpXEfsHgU7NJCvEoyQfUXU_lgzjFeXBtZBBxwFtejceNI
-Message-ID: <CAHp75VfHkKC81EinO+oN1b0=NRkwmNBLPky=HkrvPJCmt4njDQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7173: fix compiling without gpiolib
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Guillaume Ranquet <granquet@baylibre.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Apr 22, 2025 at 11:12=E2=80=AFPM David Lechner <dlechner@baylibre.c=
-om> wrote:
->
-> Fix compiling the ad7173 driver when CONFIG_GPIOLIB is not set by
-> selecting GPIOLIB to be always enabled and remove the #if.
+Add new STACK_FLEX_ARRAY_SIZE() helper to get the size of a
+flexible-array member defined using DEFINE_FLEX()/DEFINE_RAW_FLEX()
+at compile time.
 
-I'm not sure we need to select GPIOLIB. If you want it, depend on it.
-GPIOLIB is not a hidden symbol, so why "select"?
+This is essentially the same as ARRAY_SIZE() but for on-stack
+flexible-array members.
 
-> Commit 031bdc8aee01 ("iio: adc: ad7173: add calibration support") placed
-> unrelated code in the middle of the #if IS_ENABLED(CONFIG_GPIOLIB) block
-> which caused the reported compile error.
->
-> However, later commit 7530ed2aaa3f ("iio: adc: ad7173: add openwire
-> detection support for single conversions") makes use of the gpio regmap
-> even when we aren't providing gpio controller support. So it makes more
-> sense to always enable GPIOLIB rather than trying to make it optional.
+Gustavo A. R. Silva (2):
+  overflow: Add STACK_FLEX_ARRAY_SIZE() helper
+  kunit/overflow: Add tests for STACK_FLEX_ARRAY_SIZE() helper
 
-...
+ include/linux/overflow.h   | 15 +++++++++++++++
+ lib/tests/overflow_kunit.c |  4 ++++
+ 2 files changed, 19 insertions(+)
 
-> Not related to the fix, but I also question the use of the regmap here.
-> This is one of the ad_sigma_delta drivers that does funny things with
-> the SPI bus, like keeping it locked during the entire time a buffer is
-> enabled. So, if someone tried to use a GPIO during a buffered read, the
-> GPIO call could block (waiting for the SPI bus mutex) until the buffer
-> is disabled, which could be an indefinitely long time. And to make it
-> even worse, this is not an interruptible wait, so the GPIO consumer
-> would effectively be deadlocked.
+-- 
+2.43.0
 
-I would say either the entire buffer mode is broken (in software), or
-hardware is broken and GPIO shouldn't be supported at all if the
-buffer mode is enabled. I think the best solution here is to remove
-the GPIO chip before enabling buffered mode. If GPIO is in use, fail
-the buffer mode.
-
---=20
-With Best Regards,
-Andy Shevchenko
