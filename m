@@ -1,93 +1,99 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B965D27CCE2;
-	Tue, 22 Apr 2025 13:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EF432AD2F;
+	Tue, 22 Apr 2025 13:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745326964; cv=none; b=bxPWri6H7L5xc+yprtGk+b9uo66x6+CAHkM78znfhMdUTowr0R41Z3a2oaD14PPKVCALuDvWNaYzrhRpUDG76sJXEE69TyZyL1PFA97yaB9PgJG8hYdi3OiAktbQuSay7HzenU3Pg66aLlXE2egCkp3m+tgAYQiwlY+j0eunTAI=
+	t=1745327078; cv=none; b=JSqiSlbJk6pZ+gpiQqBB5UvRSIhi5zI4tKHm29mvQfjPnkhzQhMdDOdKm6iHnsnIEZHwHjkFM6YsOCRz0EFaY5J3lN3excK3xwIP21e3aoO7H9Rel5+Q5zDjAcBoPPzdw/a0YdFaARI+eY45a4VEABjcMCkvF4LBRPewj+1vDI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745326964; c=relaxed/simple;
-	bh=v5G3qfsWjeK8GaLIWFfaG5GoaLyq3iNELLsIU4qdgBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ef/yvG+0j0H2NDOdY/cUAJ8RGgOx5uq/ixRoBOC6b7a9ZYpIcVlGj7BmAdyXsuqFa8MKqymowBwI8F9phmN9CEiQyV73zF9/v5xyy6B7s58sNTLVu5TvPMqfWuTPuiKUs8s1f/zptq5wDSg84xEx6KsfA0ABgVkruUzdoSt2tUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 43EB828AFAB;
-	Tue, 22 Apr 2025 13:02:40 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:c864:fba8:3048:a3c2) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev,
-	contact@arnaud-lcm.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH v3 2/2 resend] checkpatch.pl: --fix support for `//` comments
- rust private items
-Date: Tue, 22 Apr 2025 15:02:33 +0200
-Message-ID: <20250422130233.30881-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250422125633.30413-1-contact@arnaud-lcm.com>
-References: <20250422125633.30413-1-contact@arnaud-lcm.com>
+	s=arc-20240116; t=1745327078; c=relaxed/simple;
+	bh=vR1+n0qHKzUusRbN9MvRO32EAe1y0m5YRoTz2ag6oBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DmOBPSKzfaVtYlaA3Gvf94dZyOOu6E1RyMF5zz7ZSzigsrBg95PYyr9G9h2s4oYP9qmHljlsGhP8kbuRPTwm5n253caMJkP34xK3JK/nBFw3q5dr6R7frd0Ej8LTv5pD4z/uOXNrvhc72fCPigeJyfnwuNaVo8v74xRYHr0Bylw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PIC9fETO; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PIC9fETO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=28yq7Fdvn3I/oAFD8m2t4buzuiParf0VBMFOuBiHTKQ=;
+	b=PIC9fETObgp/7bQprdTgawAioYtSrwz631c9KjkhB1Xbz2pQYjbLPC+6pncdDf
+	0Bpe0KA6OTbjpqy27wGCz0SzsZw9FTPyTMsqv+YxZWJybXIaUQTWdoNz44hE0neF
+	2AFjHowkvmxLxn0Qa1YDhqS3p+UHVDvZDtaPPSgL8m8to=
+Received: from iZj6c3ewsy61ybpk7hrb16Z (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDnZSunkwdoESG1Bg--.15092S2;
+	Tue, 22 Apr 2025 21:03:37 +0800 (CST)
+Date: Tue, 22 Apr 2025 21:03:35 +0800
+From: Jiayuan Chen <mrpre@163.com>
+To: syzbot <syzbot+c21c23281290bfafe8d5@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jakub@cloudflare.com, john.fastabend@gmail.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] [bpf?] KASAN: slab-use-after-free Read in
+ sk_psock_verdict_data_ready (3)
+Message-ID: <iehdn772fdww4zj3cknkijb5zyfj44qvpec33zyc6h4jm6qyeh@ivak4n6ekjr4>
+References: <68076b8b.050a0220.380c13.0088.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174532696092.25082.15174238390085876202@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68076b8b.050a0220.380c13.0088.GAE@google.com>
+X-CM-TRANSID:_____wDnZSunkwdoESG1Bg--.15092S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF1DCrWDXFW5KFyDArWfuFg_yoW8uFW5pr
+	WDAryxCrn0yryFvFy8Kr1UJw10qrs8K3yUX3y0qr17uanrAF10kws2yr45GFZ0kr47CasI
+	qr15ua4Yq3s5Za7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRnXoxUUUUU=
+X-CM-SenderInfo: xpus2vi6rwjhhfrp/1tbiWx03p2gHjWTgOgAAsK
 
-Extend the Rust private item documentation checker (added in the previous
-patch) to support automatic fixes when the `--fix` option is enabled.
+On Tue, Apr 22, 2025 at 03:12:27AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    8582d9ab3efd libbpf: Verify section type in btf_find_elf_s..
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13baba3f980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3b209dc5439043d2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c21c23281290bfafe8d5
+> compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ee77ac023e33/disk-8582d9ab.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/ebe52a30453e/vmlinux-8582d9ab.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/6868f9db2e2e/bzImage-8582d9ab.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c21c23281290bfafe8d5@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in sk_psock_verdict_data_ready+0x6d/0x390 net/core/skmsg.c:1239
+> Read of size 8 at addr ffff888078595a20 by task syz.2.24/6005
+> 
+Same as the obsoleted one:
+https://syzkaller.appspot.com/bug?extid=dd90a702f518e0eac072
 
-Link: https://lore.kernel.org/all/20250419222505.9009-1-contact@arnaud-lcm.com/
-Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
----
- scripts/checkpatch.pl | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+I'd like to create the discussion here, so that others can find it and
+contribute to the topic.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index eb564a119d68..ad3ae5fdd830 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3053,9 +3053,11 @@ sub process {
- 					next if $comment =~ m@^\s*(?:TODO|FIXME|XXX|NOTE|HACK|SAFETY):?@i;
- 					next if $comment =~ m@^\s*[[:punct:]]{2,}@;
- 					my $line_issue = $i - 3;
--					WARN("POSSIBLE_MISSING_RUST_DOC",
-+					if (WARN("POSSIBLE_MISSING_RUST_DOC",
- 						"Consider using `///` if the comment was intended as documentation (line $line_issue).\n" .
--					"$here\n$comment_line");
-+					"$here\n$comment_line") && $fix) {
-+						$fixed[$i - 1] =~ s/^\+(\/\/)/+$1\//;
-+					}
- 				}
- 			}
- 		}
--- 
-2.43.0
+Sorry to forget replying this patch:
+https://lore.kernel.org/all/20250408073033.60377-1-jiayuan.chen@linux.dev/T/
+
+That patch obtains the ops from sk->sk_socket with RCU locked, preventing
+sk_socket from being freed by RCU. Since 'ops' is a const type data that's
+never freed, I can still use it even after sk_socket is freed.
+It's a trick way but lightweight.
+
+I also had a discussion with Michal Luczaj about fixing this issue using
+file references:
+https://lore.kernel.org/all/20250317092257.68760-1-jiayuan.chen@linux.dev/T/
+
+Welcome any better suggestions.
 
