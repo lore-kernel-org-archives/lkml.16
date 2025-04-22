@@ -1,67 +1,89 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2055433C9;
-	Tue, 22 Apr 2025 02:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2EA33C9;
+	Tue, 22 Apr 2025 02:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745289785; cv=none; b=tQeRBd4YJ1JJFyf7+Bknfz4Rua8wTSVFmRbhEXRW0vJ7vfbpdwstDbkUqlnq1ujBqzzaVbAGDQ2pqBgDOUO1gUwhKLMMzBfSbv7jam3gOO31PnOskJ3SvFoIGOlFWSU28pAcuy/FF4revfA5M4A3JNwfXMf0kKe9ew8ygy+94JA=
+	t=1745289798; cv=none; b=c2IuNHlXiEdi8rz49ye6Il9V06vjElV8cjRADDyce81XbSDl8Uyx0OexD0Ku3KmRyCTUufeHzH637M7oX5KI2Dr1Kx8QKQodg3RPPBf/f2Dzv/M4u1Ooy2DKiY4W03z76d06uGZQTvM1BFSEAWTNRjXnO80E0kr4igOmSyhjcjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745289785; c=relaxed/simple;
-	bh=xpHrAJAJFPedpOrzRaEiKA30G7AWT2p9S4LcTSMGqGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Clhm3mvqU8nKZuQyEpwuAuC0QrfmLeFzLjrPBIdXndFfDNIqSfL0Ibzuu6FaDSr1SqbGnyuJpb5qjN0zD7GMjLin/caFLapMu/S8En6iyfNmgGUaOJEmmsnwQggZAhepE+Q+cOpTh7T9wqsCsB4iWP3WTBRcsy04+cM63a6qoyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=WXAaQiA9; arc=none smtp.client-ip=1.95.21.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745289798; c=relaxed/simple;
+	bh=TJfQO+DshFOJkto2hWQcgDo93KVaWTH1PQ+Ax9cD2qg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PeNkGH9sHShYfzBFL1juU9L4i47liYTRHTaRMek9e5EsSkzEVYlI6Vi4UbSPff9Wx4owoMpmOjlXOo2EdJ4kV8tKSgPXb7uEqQZ7iZ1KHfZ7AnXKgGaP7y5ETVsxqGBHFm9lymZZvn7DasuxmEC2RYzYb61QJBQdurA1bBY6PiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=V2sBaJpa; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="WXAaQiA9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=cUmlgYxptIyCDT5PtD6XKTU21aZLoOCOFtmQ8g7a1dw=;
-	b=WXAaQiA9yyF3hY/Sa591LBbEdVNrTZYGNWOtMOtS+7dloeJ0DRJPcgdEruuLTz
-	itRwd2LcOwZyAL/rlc4/XZMju/yXtq8EF6mEBQvhbceuaSpn9gjUjHq7KXjgseIA
-	NOf+siWJ7LW/qnOFE/+QNVaM4HXlKoop7tJ6icBa/ZDhk=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgC3tUIWAgdouj+8Aw--.13044S3;
-	Tue, 22 Apr 2025 10:42:32 +0800 (CST)
-Date: Tue, 22 Apr 2025 10:42:30 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Julien Boibessot <julien.boibessot@armadeus.com>
-Subject: Re: [PATCH] ARM: dts: opos6ul: add ksz8081 phy properties
-Message-ID: <aAcCFtuktdDOXyoS@dragon>
-References: <20250314-opos6ul-fix-ethernet-v1-1-1c0172949b40@armadeus.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V2sBaJpa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745289790;
+	bh=DVluLmRCk8ERoH1K+KEao07gB+Gu6l/bbm5Re1+V0vk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=V2sBaJpa/Z367VwJB+LVFBysrES2uWyoK80qt0Tc8skiGt4EC0stXKihlyJrVYSG2
+	 NAYTNXZqvFM1gWzuic1FzbAbvRjkR1Pjl5IU6EeEByw3m/7HZP6zcvSoREUzlNpBXI
+	 QTNLUhodPwQtfjr4vaVL6HGrYRH4mN4sF3gcTomuO2TXOHowbSgiAnG7D5ns8aa/ik
+	 WEtj2UPPl7x6j6CN8awEOfJCg1qeiln9MZg3UG8bl30vBfB6oPo7zst1Fducrgz8lj
+	 tALbxeSgO74wn495NAMyDPXVIeELIL0IQRP5Q6PLEGkYrGirjPWg7FRpWd+/ll9bwh
+	 MMX6O5k+j5tJg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhRPB5HhYz4wnp;
+	Tue, 22 Apr 2025 12:43:10 +1000 (AEST)
+Date: Tue, 22 Apr 2025 12:43:10 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the kvm-fixes tree
+Message-ID: <20250422124310.2e9aee0d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250314-opos6ul-fix-ethernet-v1-1-1c0172949b40@armadeus.com>
-X-CM-TRANSID:Ms8vCgC3tUIWAgdouj+8Aw--.13044S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU4CD7UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCRs3ZWgG8J5SSAAAsa
+Content-Type: multipart/signed; boundary="Sig_/b+zvbcCTedLmAmzK9u=mk7I";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Mar 14, 2025 at 05:20:38PM +0100, Sébastien Szymanski wrote:
-> Commit c7e73b5051d6 ("ARM: imx: mach-imx6ul: remove 14x14 EVK specific
-> PHY fixup") removed a PHY fixup that setted the clock mode and the LED
-> mode.
-> Make the Ethernet interface work again by doing as advised in the
-> commit's log, set clock mode and the LED mode in the device tree.
-> 
-> Fixes: c7e73b5051d6 ("ARM: imx: mach-imx6ul: remove 14x14 EVK specific PHY fixup")
-> Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+--Sig_/b+zvbcCTedLmAmzK9u=mk7I
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+Hi all,
 
+After merging the kvm-fixes tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+ERROR: modpost: "kvm_arch_has_irq_bypass" [arch/x86/kvm/kvm-amd.ko] undefin=
+ed!
+
+Caused by commit
+
+  73e0c567c24a ("KVM: SVM: Don't update IRTEs if APICv/AVIC is disabled")
+
+I have used the kvm-fixes tree from next-20250417 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/b+zvbcCTedLmAmzK9u=mk7I
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHAj4ACgkQAVBC80lX
+0Gw7iAf8DDOhycy17JVB2w14DpVbtnmNG/Spy/e0AxaG1Sx3n1ILQh34MKfAmqOh
+eSNNIgwaZ89NYBDdN1DZy2MRpDN1PVkCR9L7KPaM1b2YbnohhLV1+d3eCIpYtm2L
+CZwMwgIpAdjgx7zs/8hte64pGJyoEv6Y7+0fXwsEsTl2Iz8P/4ybuS9LQ+GubDTu
+W9Yd/RCS1XgglC5hgyyVj4kjJub/u9EbzMmdRic74rqOcvkgQoLM8Nbz6oPYQeBP
+sCaeL8qP4wk5E2+sBWgktMl5mHTGVCclkEKTH66JHHyh1k+YfOn9mQIKWgPE3zoi
+K5t2kFmZQfFJ1LazKIWpPNc9Q1WR8Q==
+=B4eX
+-----END PGP SIGNATURE-----
+
+--Sig_/b+zvbcCTedLmAmzK9u=mk7I--
