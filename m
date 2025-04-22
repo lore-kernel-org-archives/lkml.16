@@ -1,119 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F828F51B;
-	Tue, 22 Apr 2025 15:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C1A2857C9
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335079; cv=none; b=NYyNazChVyVALsmopuI8kX21dy+xbhLDfRp9xTjhwvXzPQuEc8BbZlcrv5H6wjHnc6gpAGREWcpAh5Zva0uLY+WkmsE0gtC4LTOsVSNGQdKbj5F50ZYf0OHiCVTjUQZtb0IybFaVslj5KRn+C5nofWfLKxPIuE4Bhlhk36CvrJU=
+	t=1745335080; cv=none; b=mstOJ5AjxDZNxIixH5sHdwsBtZanIWixKfSaNE82crxFzRZx9KszSGbPi1i4ke8QZFidzlFr9HvGHzE3KD0Xn0jMF6MP1FXbBoJWzBLbYCQDmdKlqRfrg6Pc2RuZeYNC4EDefDX7Ogawn8MZHfpLh3xhljkgzWVGM7Z72zWrzF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335079; c=relaxed/simple;
-	bh=JkvPZdoTShYa8vDVe82Hn3R7KyYo0c/3vBiaqizB5ng=;
+	s=arc-20240116; t=1745335080; c=relaxed/simple;
+	bh=tZCRT3KRKbtaH5Y6xHCCiOdmQpzRItyz9G99gZqg9bA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZZIDBGWUjn74gIYcYiqeauakcgH9Z7S/OHt0N6YqomAPTBFOErwIHk2iQv76f/X39LKfUXJez3yU2vm7A1x038ZkurDmdPCA+iI00xeIDH6EbxNY09g3c4HHywV7JUbfP6c7miMNxiE+4Tp/AYVNOF0lhwnP6OeA0F8hvJLDUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hp+qvVRq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ChMBDEC3ORMY18ccAmTnwaGDukQ41xTzYnsioe9QqBbzk0t5X2p6G0u2VL93rcpLTTcEZ9tdpKYlR/adJ98wa1cGf3WIBF6SJBTCfZ4K82xAijIsCLJoB13t5Bf3pLLA3j2W5f+PX1todg4uVSc7TfIpOpQJbSzwjVLxE9W5/bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kuUyWOsx; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hp+qvVRq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75636C4CEE9;
-	Tue, 22 Apr 2025 15:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745335079;
-	bh=JkvPZdoTShYa8vDVe82Hn3R7KyYo0c/3vBiaqizB5ng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hp+qvVRqvpQdd3/dLE1zjIapr7/xCp57r+PZJY4J9+xoE8I+C/cVAzdcKa400IG6+
-	 5ciI5xalA1XEZevUxaHZHtGtSt6/XuxuZ4Y4ZprEWw7FXltbk+etoTyjUgfvBSooYn
-	 5mtTVZOoT5bFfrmdqz595hLnXsX5eR4CyUPfk4cSw5Ef8M0GkH5mJpJMgMdU+IvPAu
-	 UjxBUOlVJNcUxIOh9NQHcgCiDXbYA5/4kZel9vVrFMwsKjeM54BVQUClqlQ1ovtJYP
-	 QPMzGYLO6KGm/bJFhxVhHju5CNjTY7btBsqxupzk8UqwEwe90Uko2ZU5M4BnXZLJhK
-	 L+xZpktfPyLYQ==
-Date: Tue, 22 Apr 2025 16:17:54 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Cyan Yang <cyan.yang@sifive.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, alex@ghiti.fr, samuel.holland@sifive.com,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/12] dt-bindings: riscv: Add xsfvqmaccdod and
- xsfvqmaccqoq ISA extension description
-Message-ID: <20250422-poise-tighten-aed2c0aae830@spud>
-References: <20250418053239.4351-1-cyan.yang@sifive.com>
- <20250418053239.4351-2-cyan.yang@sifive.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kuUyWOsx"
+Date: Tue, 22 Apr 2025 08:17:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745335066;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LchZarW2A6kUutnNIDJO9ma1ViD3dQsg63NWCnCpkd8=;
+	b=kuUyWOsxd9hRF8MHPY8MLslDN6+7hW2eUdsBAjNgySpPbSVsXoIbvMv3CGm7HxPtOjCB1v
+	l48IzD8TD4q98Ksu7wnkVSgHQ9x2I+hFRwSQfc6ywONjTIGNaaHScZlAlsqrYsu1F4UuL2
+	jyb3bWBH0kLn+H5xF3nkBH4ZmTOO/u4=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: vmalloc: simplify MEMCG_VMALLOC updates
+Message-ID: <aAezFEm9FY3RZISI@Asmaa.>
+References: <20250403053326.26860-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hRIk/4PQozJORUcm"
-Content-Disposition: inline
-In-Reply-To: <20250418053239.4351-2-cyan.yang@sifive.com>
-
-
---hRIk/4PQozJORUcm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250403053326.26860-1-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 18, 2025 at 01:32:28PM +0800, Cyan Yang wrote:
-> Add "xsfvqmaccdod" and "xsfvqmaccqoq" ISA extensions which are provided by
-> SiFive for int8 matrix multiplication instructions support.
->=20
-> Signed-off-by: Cyan Yang <cyan.yang@sifive.com>
-
-If these have some dependencies, please look at how other extensions
-have made them required. Otherwise all three dt-binding patches look
-fine. I'll leave acks on them all, but with the condition that you
-should make dependencies required.
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
+On Wed, Apr 02, 2025 at 10:33:26PM -0700, Shakeel Butt wrote:
+> The vmalloc region can either be charged to a single memcg or none. At
+> the moment kernel traverses all the pages backing the vmalloc region to
+> update the MEMCG_VMALLOC stat. However there is no need to look at all
+> the pages as all those pages will be charged to a single memcg or none.
+> Simplify the MEMCG_VMALLOC update by just looking at the first page of
+> the vmalloc region.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > ---
->  .../devicetree/bindings/riscv/extensions.yaml       | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
-cumentation/devicetree/bindings/riscv/extensions.yaml
-> index bcab59e0cc2e..d36e7c68d69a 100644
-> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> @@ -662,6 +662,19 @@ properties:
->              Registers in the AX45MP datasheet.
->              https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-=
-5.0.0-Datasheet.pdf
-> =20
-> +        # SiFive
-> +        - const: xsfvqmaccdod
-> +          description:
-> +            SiFive Int8 Matrix Multiplication Extensions Specification.
-> +            See more details in
-> +            https://www.sifive.com/document-file/sifive-int8-matrix-mult=
-iplication-extensions-specification
-> +
-> +        - const: xsfvqmaccqoq
-> +          description:
-> +            SiFive Int8 Matrix Multiplication Extensions Specification.
-> +            See more details in
-> +            https://www.sifive.com/document-file/sifive-int8-matrix-mult=
-iplication-extensions-specification
-> +
->          # T-HEAD
->          - const: xtheadvector
->            description:
-> --=20
-> 2.39.5 (Apple Git-154)
->=20
+>  mm/vmalloc.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 3ed720a787ec..cdae76994488 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3370,12 +3370,12 @@ void vfree(const void *addr)
+>  
+>  	if (unlikely(vm->flags & VM_FLUSH_RESET_PERMS))
+>  		vm_reset_perms(vm);
+> +	if (vm->nr_pages && !(vm->flags & VM_MAP_PUT_PAGES))
+> +		mod_memcg_page_state(vm->pages[0], MEMCG_VMALLOC, -vm->nr_pages);
+>  	for (i = 0; i < vm->nr_pages; i++) {
+>  		struct page *page = vm->pages[i];
+>  
+>  		BUG_ON(!page);
+> -		if (!(vm->flags & VM_MAP_PUT_PAGES))
+> -			mod_memcg_page_state(page, MEMCG_VMALLOC, -1);
 
---hRIk/4PQozJORUcm
-Content-Type: application/pgp-signature; name="signature.asc"
+We can add a debug check here (and/or in the vmalloc path) to check that
+all pages are indeed charged to the same memcg.
 
------BEGIN PGP SIGNATURE-----
+Regardless, this change makes sense:
+Reviewed-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAezIQAKCRB4tDGHoIJi
-0jfcAQDrhx6DlkgKg6HVs+ukQJSLPErr2MbtDFPVK7i7rMFZXwEA/Y+WWXOz3uhT
-2ItvCrOzJaa5cV3cMf5gtgR9G0zRmAY=
-=7GKQ
------END PGP SIGNATURE-----
 
---hRIk/4PQozJORUcm--
+>  		/*
+>  		 * High-order allocs for huge vmallocs are split, so
+>  		 * can be freed as an array of order-0 allocations
+> @@ -3671,12 +3671,9 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+>  		node, page_order, nr_small_pages, area->pages);
+>  
+>  	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
+> -	if (gfp_mask & __GFP_ACCOUNT) {
+> -		int i;
+> -
+> -		for (i = 0; i < area->nr_pages; i++)
+> -			mod_memcg_page_state(area->pages[i], MEMCG_VMALLOC, 1);
+> -	}
+> +	if (gfp_mask & __GFP_ACCOUNT && area->nr_pages)
+> +		mod_memcg_page_state(area->pages[0], MEMCG_VMALLOC,
+> +				     area->nr_pages);
+>  
+>  	/*
+>  	 * If not enough pages were obtained to accomplish an
+> -- 
+> 2.47.1
+> 
+> 
