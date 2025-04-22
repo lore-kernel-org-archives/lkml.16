@@ -1,115 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1942154673;
-	Tue, 22 Apr 2025 15:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE0528C5C3;
+	Tue, 22 Apr 2025 15:43:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336611; cv=none; b=UA3AJXRoxGky24ra7KLK2n6akJxzp7mbmeLOuPyob2B7qg/kVyCVwfy/t07cHrGR68Ksm5GJViYdF0w2aNGFc0s15i8yrC6gQ5WgPMpLk6d1V3jV2DcE0gboux0hPIMSMyl/rmy3pS2okCtx0mtsH9XjMkHiIG2sedMVSfAmI94=
+	t=1745336616; cv=none; b=tbCSfU6aubtUWVXFyPIeRN+6J6hKfyD/bpxN2vuq/+uoaJgg+TVRVU+ktTE7qqx+1Bc4f9fJ3e0MYiscF4uS9znAA3tvvRQnqAJotUKPt5Swilhg/gXxQbmpucSH+AqvH0octA1IHZCCvpkkI9wQsaJ1vlLpBrp19WhsnEvf7+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336611; c=relaxed/simple;
-	bh=r/B6J2mgkDa8SrCHLnMoTjcw/Sjl9UjHWq1AQia5Whk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3DeFAdN1iRsDGSZ2M80Lf9LkxEvNdNY/QUScL8AVYQmjeej6hQ23TKmEvlLVfFkVSOqgHg5QG9wQA8SEE2ICdW74uZVqtXn/0QtBpXucBJikTP65XAB6khbUJwlmuGowChCbknVWJDZHTlnW10s+8UkLel9cBRdgFSZ+FDc9Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWaxg8Dy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745336616; c=relaxed/simple;
+	bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cE/+ILS98TJY5FS9h98M5+EN5Ea9TOe39qwMuhFAEgbyMSoAQfBtJZh7S5dmGpF5dVsBK5aiV033b6VTCRLJgs9mNTTUiSAppCW9acR9fXUf9qob/d9smwEFefygcpi+0tZmCsOTmFvHmd+HJ5/dBHSJPYcTSUf9KYzoLuTEBvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBnuiR+1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWaxg8Dy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF93C4CEE9;
-	Tue, 22 Apr 2025 15:43:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBnuiR+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2D36C4CEEC;
+	Tue, 22 Apr 2025 15:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336610;
-	bh=r/B6J2mgkDa8SrCHLnMoTjcw/Sjl9UjHWq1AQia5Whk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QWaxg8DycJ7wZfAiyHZ3+VV+gKLolRB2aj85WbYo9skIgxfTv4A6fWbVGMDkTc/dT
-	 3j5Bsj0jgvizejE5KexMlONHTZxC4ST8vqNYrDmV1Ly1i1ZjnlREH2R31sEJC7Qpzl
-	 /MTdp4k9vGinuO9qOuzOpNKqdYTv5gjSO1U78DJmKtXqAFf0b+KEXp56vLIRkMEKnw
-	 0vrN9Npm8TxBaFRQd6nKdEGxdDbduKA35otzMK3SGARDDFL8dGoApcYSgSi+nPTZFV
-	 RAkPC6F+X26y+srhktu3gN5Ao1BIqMmFpXQaYSi9vgH2uMsFBq+k2lFGshHyjPgWt3
-	 Xbtgo3QvJ8qkQ==
-Date: Tue, 22 Apr 2025 17:43:25 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: syzbot <syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com>, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [syzbot] [fs?] KCSAN: data-race in choose_mountpoint_rcu /
- umount_tree
-Message-ID: <20250422-spurlos-energetisch-f7899b955c83@brauner>
-References: <6807876f.050a0220.8500a.000f.GAE@google.com>
- <20250422-flogen-firmieren-105a92fbd796@brauner>
- <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
+	s=k20201202; t=1745336615;
+	bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
+	h=From:Date:Subject:To:Cc:From;
+	b=qBnuiR+1qVWakHKLRBmgCfgs0jQJWOrcAu6KAyUpFf9tdCd7idnL1qDf9+iFuxIo/
+	 enCBRDaANoVJM6L/O5moXNjuj3zRl8x+FNaUlWOthTqEAxOlqXIRU3lpjUtrsj5sPE
+	 n1nZmPh62sPtve4kMTOOonw6UaKdszBTGq8nRUP/t+3lQF2fewgm38A7Pk0dou0yil
+	 g56jxzXrOyShyVV6W9Y4+7ZHTPThNaJt8HKnwwaZlDUWicnX3qItyzgh+YPuNIqKOJ
+	 2Am7pnAdiIRAeezep+gKvWYiLCD2LMMs4Xwys8EAJ5wRxbS0emObz6bOxzghs0P+8D
+	 b4sYzPDf1ZDOQ==
+From: Mark Brown <broonie@kernel.org>
+Date: Tue, 22 Apr 2025 16:43:29 +0100
+Subject: [PATCH] lib: Ensure prime numbers tests are included in KUnit test
+ runs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPbVDaw8hzYRRe2_uZ45Dkc-rwqg9oUhoiMo2zg6D0XKw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-lib-fix-prime-numbers-kunit-v1-1-4278c1d4a4ae@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACC5B2gC/x3M3QpAQBBA4VfRXJti/BSvIheswYSlWSsl725z+
+ dXpPOBYhR3U0QPKlzjZbUAaR2Dmzk6MMgQDJVQkORGu0uMoNx4qG6P1W8/qcPFWTswoK4vKkBm
+ ZIBwO5ZD+96Z93w8JFAn2bQAAAA==
+X-Change-ID: 20250422-lib-fix-prime-numbers-kunit-323659c2cfe2
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Tamir Duberstein <tamird@gmail.com>, Kees Cook <kees@kernel.org>, 
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1131; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=93fA3MEqR7jQgGkc8H5+YGR3Hp1FrEIvcKzVpqo2Q/w=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoB7kkKPucI26n3DDxnJ6mefpWWgcg7tZBAr+FuiLY
+ 8pB21kiJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaAe5JAAKCRAk1otyXVSH0PFFB/
+ 9Mkc101Mi0MUX8nYqI0cZoQgQYFcTtvs3yNYhNHbJZMJW0awYebJvxsYjXbPzKYZQfMQQ0Xxhw1cqD
+ KJ4d+2Z6R7OJA6gJLKsOsSvZWwRehpFSPkFeYq+56AwEQGWsweKy8FHNqJyP2v8ck1VUEJLvUSXTTm
+ 6KNpP5sykVlpk6fbogmAqBPPPE293V/Tbb53VUxEIz3uqOW5Jp+K3yHbQctHdXcrvYS+qHQZEHE0px
+ tPQp3Gvxs7WnUVfZhj5Byv55uYv/KxdESHVF0/N9P5Wz6EvI4ofalSnxYeY7r8f/JZk53L5r5Mf24D
+ ETd5bEfBdenUaMMFSwSQf7xRdmx/9M
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Tue, Apr 22, 2025 at 04:42:52PM +0200, Marco Elver wrote:
-> On Tue, 22 Apr 2025 at 15:43, 'Christian Brauner' via syzkaller-bugs
-> <syzkaller-bugs@googlegroups.com> wrote:
-> >
-> > On Tue, Apr 22, 2025 at 05:11:27AM -0700, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    a33b5a08cbbd Merge tag 'sched_ext-for-6.15-rc3-fixes' of g..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1058f26f980000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=85dd0f8b81b9d41f
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=81fdaf0f522d5c5e41fb
-> > > compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-> > >
-> > > Unfortunately, I don't have any reproducer for this issue yet.
-> > >
-> > > Downloadable assets:
-> > > disk image: https://storage.googleapis.com/syzbot-assets/718e6f7bde0a/disk-a33b5a08.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/20f5e402fb15/vmlinux-a33b5a08.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/2dd06e277fc7/bzImage-a33b5a08.xz
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+81fdaf0f522d5c5e41fb@syzkaller.appspotmail.com
-> > >
-> > > ==================================================================
-> > > BUG: KCSAN: data-race in choose_mountpoint_rcu / umount_tree
-> >
-> > Benign, as this would be detected by the changed sequence count of
-> > @mount_lock. I hope we won't end up with endless reports about:w
-> > anything that we protect with a seqlock. That'll be very annoying.
-> 
-> Seqlocks are generally supported, but have caused headaches in the
-> past, esp. if the reader-side seqlock critical section does not follow
-> the typical do-seqbegin-while-retry pattern, or the critical section
-> is too large. If I read this right, the
-> 
->   struct dentry *mountpoint = m->mnt_mountpoint;
-> 
-> is before the seqlock-reader beginning with "*seqp =
-> read_seqcount_begin(&mountpoint->d_seq);" ?
+When the select of PRIME_MUMBERS was removed from it's KUnit test
+Kconfig nothing was added to the KUnit configs, meaning that when run
+via the KUnit runner the tests are neither built nor run.  Add
+PRIME_NUMBERS to all_tests.config so they are enabled when the KUnit
+runner builds the kernel.
 
-choose_mountpoint_rcu() is always called within a context where the
-seqcount of the mount_lock is taken before it is called. IOW, there's
-the secount stored in a dentry like mountpoint->d_seq and then there's
-the seqcount of the mount_lock itself. For one callsite in
-choose_mountpoint() it's obvious:
+Fixes: 3f2925174f8b ("lib/prime_numbers: KUnit test should not select PRIME_NUMBERS")
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/kunit/configs/all_tests.config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-                unsigned seq, mseq = read_seqbegin(&mount_lock);
+diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+index cdd9782f9646..7bb885b0c32d 100644
+--- a/tools/testing/kunit/configs/all_tests.config
++++ b/tools/testing/kunit/configs/all_tests.config
+@@ -43,6 +43,8 @@ CONFIG_REGMAP_BUILD=y
+ 
+ CONFIG_AUDIT=y
+ 
++CONFIG_PRIME_NUMBERS=y
++
+ CONFIG_SECURITY=y
+ CONFIG_SECURITY_APPARMOR=y
+ CONFIG_SECURITY_LANDLOCK=y
 
-                found = choose_mountpoint_rcu(m, root, path, &seq);
-		if (unlikely(!found)) {
-                        if (!read_seqretry(&mount_lock, mseq))
-                                break;
+---
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250422-lib-fix-prime-numbers-kunit-323659c2cfe2
 
-but for follow_dotdot_rcu()
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-                if (!choose_mountpoint_rcu(real_mount(nd->path.mnt),
-                                           &nd->root, &path, &seq))
-                if (read_seqretry(&mount_lock, nd->m_seq))
-                        return ERR_PTR(-ECHILD);
-
-nd->m_seq is setup in path_init() or in __legitimize_path() or
-__legitimize_mnt(). IOW, it can be a rather complex callchain.
