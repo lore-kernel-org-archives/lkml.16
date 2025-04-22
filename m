@@ -1,106 +1,146 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB0614C5B0;
-	Tue, 22 Apr 2025 17:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C271A304A;
+	Tue, 22 Apr 2025 17:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745343517; cv=none; b=m06QRKmXkXWWGEcfWlozMv0GJXIiAU4phoy+H/vuwLPAJO/0yZUfTGt5FDbAY40lzVeQW83FiYssHE5Auvryj2VRVDyf4+IVdTdte7euQLK6YPr8vbPdAbnTcXO8MC8kWa5zXqd1fcbVCRuXGbZQ8BIqUZIR4vEVD3EhzHcr2Dw=
+	t=1745343587; cv=none; b=CW9SvBGLz0lAHBoER+Cg5eNbWc/pSsMXY+FjjzBSYRPiuNMZuEfJbmjGKR8OXvnyRj1sFSDgIEHsvMiGQneyma6Nm9qN6lrbUHOqWKYUhMVRZodAcEoaTp16Dbat9CyBw+JUhchzeWXw03rnnqIamidn6ZYvGXuJJE/8WqX04gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745343517; c=relaxed/simple;
-	bh=HF24HNO95MNROtw0V39vSpb5wlUyjvQBx6UQxR4B4QQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N8/yXBTU8rn23oyeX1jHEHaVnkSYwr/qhjSmJDtCXR00OcLRsGV3I/7PAQJOFZg6OXx4vJye7y6jL8wQAg3ueMoEaxCe8L4nZMnDY9/EW2vmz//zFh17ezteTEe5dHowrJ1HJw8blcFr53nBRVy5ThGnHLwkiSp2KEtLKN5YgHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GV/0eJ3e; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1745343587; c=relaxed/simple;
+	bh=3YZFzxOuKJTu8Q1FGxg6Bi9g2E5JnxHXdcJm8VS/K0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oL3vGEoXnFCQclDiEeZbiGgg01ULgua5kMAQHFOYM98Hr0dAEDDvOO8nCwhIZVhy1EYNoWxggz3Hd0yjRiFBZwk/vJrKma7IgqDvLRIiL9k9j1MKAF2cg2ItqYdExCZLOQNhcUCj3X0Sy74Y8uwI1Li6yzfYFkM+XieT9t8mr/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RCdDxSRJ; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GV/0eJ3e"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54af20849adso106566e87.1;
-        Tue, 22 Apr 2025 10:38:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RCdDxSRJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224019ad9edso77710115ad.1;
+        Tue, 22 Apr 2025 10:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745343513; x=1745948313; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1+j+IdcksuK+qQNWIasP0Bg2j3cB09bwCOtDQN7Szo=;
-        b=GV/0eJ3eFLxBxxCHETk3XiUVg9CLwswuyrmijj0ySJWkoQxss9ZVuz7ejVDx5W5/1H
-         FSiIcFDeEXLO6vAXGI3slGu85j+Pb+vMpF1r08CXzWJ97pTeLNc3x8xPS6wR+RhGMgYd
-         i2zQn0PCbQvO1jmshRsvxRD7yClxKsWq+hZV7ufnxknbxLhhcm3ICQhzDjJiyPfAvZNU
-         zzzMFopc6Ge1QO1BbXch5r1dps6GwIOhW72WsrN2MElrYOrL+1j4yVxmCDkMa69/RqBy
-         1fZswJqQE6xLDXvbptl6Ho/5jaOSD6q+ReTNVUB0OMmYpPNuBGqqfG9tIKo4vOoQvXtY
-         6Sog==
+        d=gmail.com; s=20230601; t=1745343584; x=1745948384; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=anhUaw1RW0p1uWHnHVQxnFlleHgiv10T6B9HOPoc5+k=;
+        b=RCdDxSRJSr9md71gMVp2kAFb/P4i1ikH0zRR3U7BHn3y9eID2w00J+Ic1jsRFOdseL
+         Fdodo/Jsf+Smgn4kWrBe1FfJSG0ZRydjMO6WrgxnEDrTb/eMdyUZ+1GjCfaDZ/1GBBVS
+         4emCTL8BqaY9heqak2B0teUurP4CGTNnEQ9GuNugK2yQoYNK+Y/LAD+Ri8Un+bpmQq0U
+         x8Ov/gtH9Npw8pOI01cPOh0IA7ik3aOo8nxQM/fwEjB7p9vqoYI29VkmH12C1iHQQWbv
+         hRR5cT+dTi6kAm+P9yNGs92SvlGIBlTznSkE0Wd9L9nIe8gX7tQnouBEeuY7qPmdh1Lz
+         aCjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745343513; x=1745948313;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l1+j+IdcksuK+qQNWIasP0Bg2j3cB09bwCOtDQN7Szo=;
-        b=ghYYZ2UQyoy/3EltEN4SbNtXmw5sx8ycKTaEPUg4dWXCaCHd5d2XDdR/gBSjA45Plx
-         Jfjii/JFG/nNzTz9eDeak+Xuw9R9a+UOqwohIi5F1wPbfjS5kDU1yPN4mzTziVNwRk1Y
-         9h799FqdST1Uh9CDwtTxqNbm/ePSLDXZA6g/BMeVpMBAhCr9qFtTweEy0ch6ciW7kIQj
-         W6VQsJWh/8fX6UPJ3iFhW6S2AEH3Own2HptCTmETvKzJYV3E0/Uozx9lsIKTJF4kVqcQ
-         fHk8455IJiw/ScS7K9qAG/Mx9eAaTKMCj/q92E1AXpsGLOBvY3CARro5eL9svwDNRYjo
-         Li1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXUcmyGM4NOER+2ByT8pFra98JoV7KGq9lOE4CzJB6KF5+hXY2b6qL7o59HEebSliN8jWC908R8QbeGifE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6PPT209ipT8cei9slFrAUkDS1w2BEKFZQDO4+iGj1xcPn8nfT
-	gE/nNZw8BNBJ1idjXOSbbUXCB8kZHnJmrkdjqUFczFSu35v6eN2F
-X-Gm-Gg: ASbGnctUh3PHn55xkDkhyssvjfHLFAiZkGSU8Lz9qbajBDEA6/awaUjUVNV/JbIPwHJ
-	hF0+ap0MT5ktsCQcUvXIG4ZUAFbfe+plZSIYE1cHXu7S/kYZdGQUS754oBCMcNC5/wPuM/kZJXf
-	60qtIvpvw5Ze/8cj6g/mGcTJOYE+xLu+/0GA3qfery9UU/cQ3ThDeo4DX4YEwECICdlFp1rGtqk
-	PQFCBYOtKBrOzBxTtc/p3zmr4Lu7MYsQHhrRdYcBbt5GYy+YxBQzSAUC+gZmk1LuMcBYSgvmr0a
-	b7OjivlEmLAdYkk74r8YFPe/kLhcTKmIsh1n
-X-Google-Smtp-Source: AGHT+IH5mQqhUQdoRpL4pAHXMmRMqdhXweQ+XMI8zApEmHef+y5nMSokXhsgsSezIuFQsgT9XuwGVQ==
-X-Received: by 2002:a05:6512:2c85:b0:549:5769:6af6 with SMTP id 2adb3069b0e04-54d6e77ffa7mr5807141e87.9.1745343512976;
-        Tue, 22 Apr 2025 10:38:32 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540b79sm1300640e87.68.2025.04.22.10.38.31
+        d=1e100.net; s=20230601; t=1745343584; x=1745948384;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=anhUaw1RW0p1uWHnHVQxnFlleHgiv10T6B9HOPoc5+k=;
+        b=e64JHEnTo8appmYeza7FIAbVhMNQ22ti+Rapj0Sg3PiRDtkEYr49AkjJR8MrEoCZYj
+         8CWrAx5iKUjP4NO9zKDhGfK5naoJi6YqC+BUfUrCI3hMUjtkYiANVDTOrr8inCw43kNO
+         djAGKcUYExQWzjhPhhuZR4yZxlJneBcuEwgSkTsa57+qJzpN/DI0ionrK5n+okrsYw+g
+         wBgscAA5LeODdwejdHcFb88S5+sPSANHln/pTWNdISbn8sL45mK0bktrV/DBNy7lHHdN
+         wgEMX7Qwa3VfX3ItZ1UQj/yAO8p3pFrg3C6fyoKgb8iZeUFwnFtwlGpOMsu9yK+F/WmL
+         iI/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU6/DP5YLDvEgNUDzVkx/hdgCY6WhbG7pQipGQHvhjhZttR30x6524zP57pGeZjZVZa/UKnhlyiqOkTx7a+@vger.kernel.org, AJvYcCVlhh5ZZNC1X30554KXUGMASnwZHjIGd/LVX/YXwg0MDNgUX5gDRiUlr9i33Pi6hLEY2dk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYUHEDuqdwVNzLtW3wNwRUd5KjYV8TDj8FLnGOizoOxDwxFUj6
+	ggbAy3woE5CghG8yElNeeTG/NUGiJeyf6JVDn7BELi0V0a1Jus4=
+X-Gm-Gg: ASbGncuwkYWaTTwa/wd3QFHXU4DG0P0fA+VgSOlMgx/XbjK09Iqf+0QaJ9NiKOGpb2U
+	Dda/z2mkYGIMiDaPyxC7Mm6rn91ZLiNVkh7TwGSjJ/uO3UNOZJZWWxldzVOT2l5+ZDZ+usme6qM
+	pSnZo66ch1Im7soZqO6Dx/wGK4NDF3krC0rz3tpzEB/sZIJsvFcdeQS4xTTc6m4f5nNUK06m72D
+	qNNssMTm0WN4cHOSJp0gdeorXaDPc44AelbrTZJ5uHddRlwaWNQnW7kaOZ8nZ/OzphoZaiEchY4
+	BDY2wKT5BJ9MugM3JE3VYL5WNe5bClJvW46FDi0N
+X-Google-Smtp-Source: AGHT+IHvr3CHGB3eDx2bTmct/OupIJFB9ySp0TkQI8A4cDHpuOWfg/rg1k0f3jpJcDBOwp937CEu/w==
+X-Received: by 2002:a17:902:d4cd:b0:21f:35fd:1b6c with SMTP id d9443c01a7336-22c5364235fmr207110085ad.45.1745343584621;
+        Tue, 22 Apr 2025 10:39:44 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50bdb34fsm88466805ad.31.2025.04.22.10.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 10:38:31 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: "Paul E . McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>
-Cc: RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH] tools/memory-model/Documentation: Fix SRCU section in explanation.txt
-Date: Tue, 22 Apr 2025 19:38:30 +0200
-Message-Id: <20250422173830.90647-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Tue, 22 Apr 2025 10:39:44 -0700 (PDT)
+Date: Tue, 22 Apr 2025 10:39:43 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Joshua Washington <joshwash@google.com>
+Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
+	Mina Almasry <almasrymina@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Shailend Chand <shailend@google.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Joe Damato <jdamato@fastly.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] xdp: create locked/unlocked instances of xdp
+ redirect target setters
+Message-ID: <aAfUX_jDZpe4Vx_M@mini-arch>
+References: <20250422011643.3509287-1-joshwash@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250422011643.3509287-1-joshwash@google.com>
 
-The SRCU read-side critical sections describes the difference between
-srcu_down_read()/srcu_up_read() and srcu_read_lock()/srcu_read_unlock()
-in a way that a last pair must occur on the same CPU.
+On 04/21, Joshua Washington wrote:
+> Commit 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with
+> netdev->lock") introduces the netdev lock to xdp_set_features_flag().
+> The change includes a _locked version of the method, as it is possible
+> for a driver to have already acquired the netdev lock before calling
+> this helper. However, the same applies to
+> xdp_features_(set|clear)_redirect_flags(), which ends up calling the
+> unlocked version of xdp_set_features_flags() leading to deadlocks in
+> GVE, which grabs the netdev lock as part of its suspend, reset, and
+> shutdown processes:
+> 
+> [  833.265543] WARNING: possible recursive locking detected
+> [  833.270949] 6.15.0-rc1 #6 Tainted: G            E
+> [  833.276271] --------------------------------------------
+> [  833.281681] systemd-shutdow/1 is trying to acquire lock:
+> [  833.287090] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: xdp_set_features_flag+0x29/0x90
+> [  833.295470]
+> [  833.295470] but task is already holding lock:
+> [  833.301400] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
+> [  833.309508]
+> [  833.309508] other info that might help us debug this:
+> [  833.316130]  Possible unsafe locking scenario:
+> [  833.316130]
+> [  833.322142]        CPU0
+> [  833.324681]        ----
+> [  833.327220]   lock(&dev->lock);
+> [  833.330455]   lock(&dev->lock);
+> [  833.333689]
+> [  833.333689]  *** DEADLOCK ***
+> [  833.333689]
+> [  833.339701]  May be due to missing lock nesting notation
+> [  833.339701]
+> [  833.346582] 5 locks held by systemd-shutdow/1:
+> [  833.351205]  #0: ffffffffa9c89130 (system_transition_mutex){+.+.}-{4:4}, at: __se_sys_reboot+0xe6/0x210
+> [  833.360695]  #1: ffff93b399e5c1b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xb4/0x1f0
+> [  833.369144]  #2: ffff949d19a471b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xc2/0x1f0
+> [  833.377603]  #3: ffffffffa9eca050 (rtnl_mutex){+.+.}-{4:4}, at: gve_shutdown+0x33/0x90 [gve]
+> [  833.386138]  #4: ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
+> 
+> Introduce xdp_features_(set|clear)_redirect_target_locked() versions
+> which assume that the netdev lock has already been acquired before
+> setting the XDP feature flag and update GVE to use the locked version.
+> 
+> Cc: bpf@vger.kernel.org
+> Fixes: 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with netdev->lock")
+> Tested-by: Mina Almasry <almasrymina@google.com>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> Signed-off-by: Joshua Washington <joshwash@google.com>
 
-This is not true, the srcu_read_unlock() can happen on any CPU, but it
-must be performed by the same task that invoked srcu_read_lock().
-
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- tools/memory-model/Documentation/explanation.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/memory-model/Documentation/explanation.txt b/tools/memory-model/Documentation/explanation.txt
-index 6dc8b3642458..34aa3172071b 100644
---- a/tools/memory-model/Documentation/explanation.txt
-+++ b/tools/memory-model/Documentation/explanation.txt
-@@ -1896,7 +1896,7 @@ following respects:
- 
- 3.	The srcu_down_read() and srcu_up_read() primitives work
- 	exactly like srcu_read_lock() and srcu_read_unlock(), except
--	that matching calls don't have to execute on the same CPU.
-+	that matching calls don't have to execute within the same context.
- 	(The names are meant to be suggestive of operations on
- 	semaphores.)  Since the matching is determined by the domain
- 	pointer and index value, these primitives make it possible for
--- 
-2.39.5
-
+Acked-by: Stanislav Fomichev <sdf@fomichev.me>
