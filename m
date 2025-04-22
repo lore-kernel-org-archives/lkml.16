@@ -1,80 +1,118 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305092F872
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3C018E3F;
+	Tue, 22 Apr 2025 09:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313434; cv=none; b=ppfF6Bnbwg4Ey5+8IzvwnKd7K9DGmI+fnIfRVcE+pTUifxM9/FPAxJAGjsq9REZ72Rhwi/nCpGhD+55mAZILtFQhnBS/jPWcLvOaE+LeSobqjUfLgookcDNCv9WMKOfhGFWpWIAr7wmEj6rY5hP363QuaDCQxCWMr+685FGcP7s=
+	t=1745313501; cv=none; b=GY4WqioB5GH703ansIB9T73gdKUvBZmED1UBh0vTC+XGybU5smkjg/UmKDllAEekIjBVyxNI35adzN9pxxzQanrMnNDhfhdRGfXRfzZ3qVYowkTAzloxS/2xhyYyv3rEaGAiKHVsRePlPUR9VEZhZoRSqpUJga/kREMZPIH3VXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313434; c=relaxed/simple;
-	bh=2+Hg1j9TD+fECcZIFf3N8ABPxHsxjjhr6jbTTk9uqSQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CjfWnGDaUGyyp6mjM0/VRTp5emAuVUAUpF1YcgZxAXHhsvCDBpGUVMsQkK9MN12YXg1lz/uFurpO/X9xSMImX0P9l/8KKVfhXMCbzhNDgh27XD6V5uWGQsw8P0+cSFFstpUn858suvh1DJtZWSaA7ZxG7NJlPNNqptJlAUrE2r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VyKHW3Tj; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745313501; c=relaxed/simple;
+	bh=ahUrLKUy5cKBw3CCcbzKd4Qd4em2A+c8Vv02kzDIBzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V6JtccoJjDfV61TQFGT/wlncylv8Ccq70lRsHXrhW/b1gmCpyZYWvIsazxjcmYtvACdSxJyIZaELHo6uIpqRIOTOTejbHvrY7PfAhnlBe2Y3udv06PWuCM36XeicDs9tG0dMq5Ng6JC7xBekAV5od4C7LeiXY8yR5z7lxvJfe5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=aHdWa7rb; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VyKHW3Tj"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745313420;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jk0ZV1PxWMKLH6tS63dm99aZAvjsLyQLeAI6jWMBXRI=;
-	b=VyKHW3TjyVmLM1HOFsQmGUW393ChHWH8e/R2mxKxm6Ti7q9fu5+gZReh0gwdxtvMQy+dIM
-	8Hiv4O90SwBJHnf/FNfV3y+0KGqLrFEyipOSKiYkHpFmFWu7dk4nuWTQvYuN7ZiB3saQji
-	Y94qKK80YdSTu3wzqZX+BvK2CZKBCw4=
-From: Tao Chen <chen.dylane@linux.dev>
-To: andrii@kernel.org,
-	eddyz87@gmail.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [RFC PATCH bpf-next] libbpf: remove sample_period init in perf_buffer
-Date: Tue, 22 Apr 2025 17:15:58 +0800
-Message-Id: <20250422091558.2834622-1-chen.dylane@linux.dev>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="aHdWa7rb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745313433;
+	bh=iGkIVWXFOyVsd4uMO+SSpTfRM67ip4m1rYsko5Qs5AA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=aHdWa7rby8JmH/g6tVdSKt2CgjT4BpgsVgk1sv/CFWUI2mM0G/vMY7e2nGVBuhayy
+	 XAcpW0kfFx7KH/1o6pajPBt1SWkF1q0xzFndEYmHHSq1vdcFqVLCV0/iQ9ZUdNMoH4
+	 W3tuhp9Udle+nAIUJfBYU2eJtN5tMspEuXtR96Wo=
+X-QQ-mid: zesmtpip3t1745313415t3daaa261
+X-QQ-Originating-IP: j1RNao9pu3ZOoDyXZrFlPdWn5P6r/D0upx564EzC170=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 17:16:54 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4643946903979290159
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: macro@orcam.me.uk,
+	tsbogend@alpha.franken.de,
+	wangyuli@uniontech.com,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5.4+] MIPS: cevt-ds1287: Add missing ds1287.h include
+Date: Tue, 22 Apr 2025 17:16:48 +0800
+Message-ID: <CB3E3A9CEA5227BE+20250422091648.116984-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N34HGxtl3nZNGOKxccmAw5hb6+nu/qSRzx28mLLa0xo0l3x4TJObnebb
+	uc5Dii4gWRaCibxuC02o3LhUFTqLj1M6wY6T2D8FR6DYtiaDnjSkiIWfvjXVq2bDHhKLZ2e
+	UA3wEk1qlAt26kqmHJpvDJQp6lKmF6wCAT716pzW+/bC5uWPaRVVqLw1ge4YCWCsqZvd+XX
+	LwXUmXnNENSfMVBCXwF8zns7vIwu8EXde6K7LI+daTu9PexaEusNL1fawFPuMs8XZfm2i/U
+	jqJzaB0A5uonemKYsKJNVL8emtvi02aLViGVu9xb4LO3GK4vKpLkj8uEzFGxxFpebn0M310
+	LNq9ggnB+8z0sXDzIqMDCpxqS4j9twi8kyZaApaWhbxNoFrh9H/L23vCT0ikSfMO05+Z927
+	xPxvcWqrxHlsahsY57x5j3ceJoVfPAkRr/9B2vIQOabJV265EGTmWdnksvi3tZTq7C91RAX
+	dPCbrUhWc9qs0cgmjWOHVD9ivluuRrCPD9wT/sbb1TBdsvTe6Mbk0dSmxzuNtruO/7vXMZz
+	Agk5pMY+6MazjxmOIZLQhhwqzdCEThqguUCivWavmiIveWnjW7TNLsUDcvDkULoDa0/UFrP
+	FyrKRy605rxajAt5yNSQjJv5o9Za/z+XXAh2Per2nddp0LhxDcpG4kqcwXlcnsqk6BeBedn
+	l5d1MMF/JHJ4oGye4Dc8DApl0/IaTKeC8+GJcmkTz/gRA4plOCoXJwTwzlJHJKagS5LF7FI
+	5CPrW4ScOPHkwMQOt+uXJ9tKvc5doLGzJIPw3cboMaeaoNKuvpavRgFcj/C3cwquwZAJnXq
+	IsvhSg7G/hGhx4aOfgoCiktWpL9PUyu1AIo9mY17gli3QsWtqKAQJNl+4tW5cuqkY+czMXl
+	nrISiU5oknnU9mILfQILANK+FsmnJYiHVBUdsxQ9QRxOpOjAmCrpDPgGesUBDs5yNzGfhY+
+	66eAa1YCXUFdW510yvO9ApXy0qC722wgyfIAFCePVgg5L/HBFaZuuPia8MK9PTln6ekZcpf
+	t5CV5p1KFaOXd+rSkO7UipK1SxF7k=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-It seems that sample_period no used in perf buffer, actually only
-wakeup_events valid about events aggregation for wakeup. So remove
-it to avoid causing confusion.
+[ Upstream commit f3be225f338a578851a7b607a409f476354a8deb ]
 
-Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+Address the issue of cevt-ds1287.c not including the ds1287.h header
+file.
+
+Fix follow errors with gcc-14 when -Werror:
+
+arch/mips/kernel/cevt-ds1287.c:15:5: error: no previous prototype for ‘ds1287_timer_state’ [-Werror=missing-prototypes]
+   15 | int ds1287_timer_state(void)
+      |     ^~~~~~~~~~~~~~~~~~
+arch/mips/kernel/cevt-ds1287.c:20:5: error: no previous prototype for ‘ds1287_set_base_clock’ [-Werror=missing-prototypes]
+   20 | int ds1287_set_base_clock(unsigned int hz)
+      |     ^~~~~~~~~~~~~~~~~~~~~
+arch/mips/kernel/cevt-ds1287.c:103:12: error: no previous prototype for ‘ds1287_clockevent_init’ [-Werror=missing-prototypes]
+  103 | int __init ds1287_clockevent_init(int irq)
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+make[7]: *** [scripts/Makefile.build:207: arch/mips/kernel/cevt-ds1287.o] Error 1
+make[7]: *** Waiting for unfinished jobs....
+make[6]: *** [scripts/Makefile.build:465: arch/mips/kernel] Error 2
+make[6]: *** Waiting for unfinished jobs....
+
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- tools/lib/bpf/libbpf.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/mips/kernel/cevt-ds1287.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 194809da5172..1830e3c011a5 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
- 	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
- 	attr.type = PERF_TYPE_SOFTWARE;
- 	attr.sample_type = PERF_SAMPLE_RAW;
--	attr.sample_period = sample_period;
- 	attr.wakeup_events = sample_period;
+diff --git a/arch/mips/kernel/cevt-ds1287.c b/arch/mips/kernel/cevt-ds1287.c
+index 9a47fbcd4638..de64d6bb7ba3 100644
+--- a/arch/mips/kernel/cevt-ds1287.c
++++ b/arch/mips/kernel/cevt-ds1287.c
+@@ -10,6 +10,7 @@
+ #include <linux/mc146818rtc.h>
+ #include <linux/irq.h>
  
- 	p.attr = &attr;
++#include <asm/ds1287.h>
+ #include <asm/time.h>
+ 
+ int ds1287_timer_state(void)
 -- 
-2.43.0
+2.49.0
 
