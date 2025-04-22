@@ -1,144 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59FAF28F92E
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC0828F92D;
+	Tue, 22 Apr 2025 15:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336277; cv=none; b=CBdhjh0MWMMmO9neUmRDykYmq6gm4qTdXR3aaeLYOT1LtHa+iwEifJQI2GzhYr006GtRIGCxw6DpUVODWm7tQDtIxt5kZLDITXE9UqKK5viryBFS09jY2Nv1d7Rc33DBPpEm+qI0mu6n+8KzVq+5tnYedoQvmCz6aJFyLMfj6wc=
+	t=1745336279; cv=none; b=Mh2572ZZtzAk3tKIh0BZwl0/K8DuOlGrJRTAxcd1cU4zDRhXbuXAzVxYZqscYVGzNmvPe+ScJtCWekmaY5mQ7z8xzRcBPgIMlNDs0/UE2CuL8d02i9Jp2G2E90z8UXROit9lI+tBBXFhQ7JMP/mBNpj0HQCpsc+KrpQKNpahLqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336277; c=relaxed/simple;
-	bh=jFZ1V84giT+YUQdEZUVPilmzVULgCGOUEFQfGNQ4RSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrTsmwPnXIBUFfiSmk6MdvpYV0duB12aZ7QVRfDzbr8lLZPCRG38fdLDE0VkUsFksRJsNMNdKhxRzUndh+X/fRcgil+dEHfiRwM56UDH1YtbhmggUoCCgpLQlTOKIIG0yPMzY4sXxC6dmHJRSW/Ms1W11fBLo6eqwM30kHlop1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FmFlPWNH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745336279; c=relaxed/simple;
+	bh=wkljQJpf2uBwa/vHkF2k+MDlr9Ewo2RpAiy8uTu39Ks=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=vC34lXgj3cXWTCdqr1yFzczdTWWnWnCrtqvByelJfVrA6v8W1/fPc77a+EJUAYpjlLDLFfHZrRyANpjvjMlwbpz57M5D7AV9JyxnviH9sP88p8w9hL/zbhKgiGQxMW4VDY84t11rJMgytN4HkDFoudHBDVx5jMRWd0NkQooC8pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y1+LYod9; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmFlPWNH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745336274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kcu1mJHODKObLksxc4A59swiNVK6LroG71Dl9SlbtDA=;
-	b=FmFlPWNHWLDDPn+bdACWk8pKqo/u2NHHx2CwokoncvNHkdoV5nhaZlgq38srfOFtsPMEb2
-	btrgjbYAQaoDqnLcbrRfCpmP30rv5Fao8iqg99nT5jDSRubI6eSy/hBv7vOgoerjyQudkO
-	yLFnHsXwk/pznlL3ZrtgqAk7s7km+Ew=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-hp0aCYEXNbOBG2kQPca4kw-1; Tue,
- 22 Apr 2025 11:37:46 -0400
-X-MC-Unique: hp0aCYEXNbOBG2kQPca4kw-1
-X-Mimecast-MFC-AGG-ID: hp0aCYEXNbOBG2kQPca4kw_1745336265
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD11A1955DCC;
-	Tue, 22 Apr 2025 15:37:44 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.22.74.8])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B458B19560AB;
-	Tue, 22 Apr 2025 15:37:41 +0000 (UTC)
-Date: Tue, 22 Apr 2025 11:37:38 -0400
-From: Richard Guy Briggs <rgb@redhat.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
-	LKML <linux-kernel@vger.kernel.org>, linux-modules@vger.kernel.org,
-	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
-	Eric Paris <eparis@parisplace.org>
-Subject: Re: [PATCH v2] audit,module: restore audit logging in load failure
- case
-Message-ID: <aAe3wrAzD/7jBtHy@madcap2.tricolour.ca>
-References: <b96c64d522cf1c46dce1b8987e83f2f41ff2e5ee.1742231027.git.rgb@redhat.com>
- <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1+LYod9"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-440685d6afcso50331145e9.0;
+        Tue, 22 Apr 2025 08:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745336276; x=1745941076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t97VeSNUpG2hiAo6wIqYqqcOXTDfHHY6JtBldkkckaA=;
+        b=Y1+LYod9fGBPv/QsNGBXWuAXbkd42lEMh3Lw8Gs5XOye102XlQiwLTpNyffhF33jGr
+         jjGJByjUVerL9uHpvXuSqyXEbjOttGhHNK3uqe95iLPJXMVZHtQj+qh97vc2Hil9zqRG
+         thR533IvVj0n9YxX8n/QZHZFLsH0KddbbEIQh3kQYrb53gJKOKb5PBCPxDJJHNTLHRmi
+         L3vtMq/OnXswAhO5W8eGJqnEeT4hQIK+bfy4yZ8+IMMrtfkoADsas5/4ULMwNBCSzZOK
+         KPmumgAA/KDeN4UOC9+VNb7ln28ihkZXp2J/ip6aE6O1eCW0uozUdaCLchTqc/pE2NU3
+         jltA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745336276; x=1745941076;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t97VeSNUpG2hiAo6wIqYqqcOXTDfHHY6JtBldkkckaA=;
+        b=TrUxNpFwaidKWEFzjf3PZa8jaxmeNmBOBGNf2c3yrUKqMZ8REtmDJY9NenM8RfkoAx
+         mJcsa5gZjTfDoQe6tG4TasibvBUQVisEmjPfEgbwEiB6u/aqaHriOn0V3eACrvcAm5Nd
+         L6KFHxS/Noi0huoK4uEylSrruDzrOEBb5QOpD2acFIv0QE/W/oKPCyLUXHuTVzpnNDYO
+         LZ/uPfaVpRl1SGRYYYgjLjSH9BJKxpK/GcYd9Cwbt5gFM+1IsU5rIx16EtGaKbWCFWqB
+         hhhSvwtJqLIdol6qgeWTstLOh9f7K8bKP0eYX91Ig2nmFvuGPuWV7jMedjKXzXacpqVp
+         sWzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWC1aAkeLCsDokduoK0jzdyPsGuA9UiWMr3BT/W8PWpLhoubQk2TmWPoY7AGiix6jOdp7f0USXW5hs3deY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH6z4emUtZV4d+QQ87pg9bnKuYA/w/joHhSZI5J5g/uOevn2dZ
+	phTuwquT/vx0LHTB6ilY9LlYES0XJA5b+38SBzGfpUkcWDdJnglt
+X-Gm-Gg: ASbGncsk8eoAEpLfPRCJNBGLftXgDg3UkwfrZNHGXfvJTfHGyzLd/ehb1cnD8VObKQK
+	Q5IFidnIlT72xN1ASHBb0viJa9YErNKEGeyy1SxMV2O2VljXt/8GH+LTMBJ+tKfftsxU4NCrfHz
+	CRsOmr9h7uUyNtz0RBYDYqaP23yL6jkr0XwTZ6EU8auWiGgAotRree6Zgg/s0KA3aCL8KqILMP2
+	vmrGemDT26kifDnpaLOAVMp37IrNh0+4gLtqVEYmKKqnaDpBLHnUupQGenQBfvAxPbz9UpKuNGw
+	Aj1aKcYjOkQJSkGzZDuHt8OEpGX+NblznZVRSzH53w==
+X-Google-Smtp-Source: AGHT+IGLPpRDDlkDW7Yin3pzT8Q0kiZj2p4DTstyz2bK/H34CFnMgNZd4wZTj9aaX9SHeRN+skhNaQ==
+X-Received: by 2002:a05:600c:4e4a:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-4406aba7c2fmr148303565e9.15.1745336275381;
+        Tue, 22 Apr 2025 08:37:55 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:314a:dc00:e03f:5030])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbd7fsm177321085e9.21.2025.04.22.08.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 08:37:55 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: mdf@kernel.org,
+	hao.wu@intel.com,
+	yilun.xu@intel.com,
+	trix@redhat.com,
+	akpm@linux-foundation.org,
+	marpagan@redhat.com,
+	arnd@arndb.de
+Cc: linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Pagani <marco.pagani@linux.dev>
+Subject: [PATCH v2 RESEND] fpga: fix potential null pointer deref in fpga_mgr_test_img_load_sgt()
+Date: Tue, 22 Apr 2025 16:37:37 +0100
+Message-Id: <20250422153737.5264-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92e9622d6dd1bd3e59a36269275aa1fe@paul-moore.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
 
-On 2025-04-11 14:23, Paul Moore wrote:
-> On Mar 17, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
-> > 
-> > The move of the module sanity check to earlier skipped the audit logging
-> > call in the case of failure and to a place where the previously used
-> > context is unavailable.
-> > 
-> > Add an audit logging call for the module loading failure case and get
-> > the module name when possible.
-> > 
-> > Link: https://issues.redhat.com/browse/RHEL-52839
-> > Fixes: 02da2cbab452 ("module: move check_modinfo() early to early_mod_check()")
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> > Changelog:
-> > v2
-> > - use info->name for both audit_log_kern_module() calls and add const
-> > ---
-> >  include/linux/audit.h | 9 ++++-----
-> >  kernel/audit.h        | 2 +-
-> >  kernel/auditsc.c      | 2 +-
-> >  kernel/module/main.c  | 6 ++++--
-> >  4 files changed, 10 insertions(+), 9 deletions(-)
-> 
-> Agree with Petr's previous comment about the URL in the commit
-> description, if it isn't publicly accessible please don't include it in
-> the commit description; I'm going to remove it.
+fpga_mgr_test_img_load_sgt() allocates memory for sgt using
+kunit_kzalloc() however it does not check if the allocation failed. 
+It then passes sgt to sg_alloc_table(), which passes it to
+__sg_alloc_table(). This function calls memset() on sgt in an attempt to
+zero it out. If the allocation fails then sgt will be NULL and the
+memset will trigger a NULL pointer dereference.
 
-Sorry, I thought I had checked it more than once to make sure it was
-visible.  It should be now.  Please re-add the link.
+Fix this by checking the allocation with KUNIT_ASSERT_NOT_ERR_OR_NULL().
 
-> > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > index 1fb9ad289a6f..efa62ace1b23 100644
-> > --- a/kernel/module/main.c
-> > +++ b/kernel/module/main.c
-> > @@ -3346,7 +3346,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
-> >  
-> >  	module_allocated = true;
-> >  
-> > -	audit_log_kern_module(mod->name);
-> > +	audit_log_kern_module(info->name);
-> >  
-> >  	/* Reserve our place in the list. */
-> >  	err = add_unformed_module(mod);
-> > @@ -3506,8 +3506,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
-> >  	 * failures once the proper module was allocated and
-> >  	 * before that.
-> >  	 */
-> > -	if (!module_allocated)
-> > +	if (!module_allocated) {
-> > +		audit_log_kern_module(info->name ? info->name : "(unavailable)");
-> 
-> In keeping with audit tradition, wouldn't we want this to be "?" instead
-> of "(unavailable)"?
-> 
-> >  		mod_stat_bump_becoming(info, flags);
-> > +	}
-> >  	free_copy(info, flags);
-> >  	return err;
-> >  }
-> > -- 
-> > 2.43.5
-> 
-> --
-> paul-moore.com
-> _______________________________________________
-> Linux-audit mailing list -- linux-audit@lists.linux-audit.osci.io
-> To unsubscribe send an email to linux-audit-leave@lists.linux-audit.osci.io
+Reviewed-by: Marco Pagani <marco.pagani@linux.dev>
+Fixes: ccbc1c302115 ("fpga: add an initial KUnit suite for the FPGA Manager")
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+v2:
+- Remove stable CC tag since its just a kunit test
 
-- RGB
+ drivers/fpga/tests/fpga-mgr-test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-Upstream IRC: SunRaycer
-Voice: +1.613.860 2354 SMS: +1.613.518.6570
+diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
+index 9cb37aefbac4..1902ebf5a298 100644
+--- a/drivers/fpga/tests/fpga-mgr-test.c
++++ b/drivers/fpga/tests/fpga-mgr-test.c
+@@ -263,6 +263,7 @@ static void fpga_mgr_test_img_load_sgt(struct kunit *test)
+ 	img_buf = init_test_buffer(test, IMAGE_SIZE);
+ 
+ 	sgt = kunit_kzalloc(test, sizeof(*sgt), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, sgt);
+ 	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 	sg_init_one(sgt->sgl, img_buf, IMAGE_SIZE);
+-- 
+2.39.5
 
