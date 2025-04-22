@@ -1,216 +1,264 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011037.outbound.protection.outlook.com [52.103.68.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46125202978;
-	Tue, 22 Apr 2025 09:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B60A202979;
+	Tue, 22 Apr 2025 09:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745314912; cv=pass; b=q28cUzj573RP6p3s8beAfMSZhp2gNzAjvS99aZhMjVPipV/zc7epS7hWfsl656IMd9kQtQFdW4c/LW2aUMzHmwmQJbszmmlj/6sSYZGbUtsTggNqC0AclLOWsiAShCVFkXbLbQ1o0/u/+Mh1nBaXFWEkpahYIntT10XmJsh8Q0E=
+	t=1745314912; cv=fail; b=jwkqi/r6pyUuN93dUWxLLtf9QXHDPsN7fmV3Mjr5o6N7oTuz/7nom7o3mEFmT+zwl/BJ0RCLYhPiF+rJfN2qVqaU2pype68Tb/xAz2DdWsRn5tKRcmMaPLVgA9iFforZTLXB6MPyb2or7DGGo6S3a/rDr2aiQvVsa5/JQ+2JhV8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745314912; c=relaxed/simple;
-	bh=uTkwJ/WbfW8Z/8nTRxZWDGPgqfutEjIO92axs+CnfSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oxRMAbDlpAkIjwSC7K6xW2HRTWGMOeLekWqK1kNa//QdG2M/PDPTU/w7dCF8ng2BzrOZZSsRYCk9TwQiGduxnWbWNu74i1nZb4PIVcTfw2ULDP+FYLuhJwAukIIm8O9k2kqmNpbEDX860af+XaPemTnkzQtLVjcU0CGd1WUdXVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=qicOSTEy; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	bh=wWbRL8Of1nkF6K4HrIvyiaJclKGf9Zfl6vVnfhqSdJk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XcDpj5at4zlnW8SyDd59ZiuFgv7yEAHgBNpJ17ZpOpBpPPX+8V3YthMURICHCBa5j1jKLbup4tvO+DR8pAQ0EhntCvmZhWZPIip8JVEtP9nK2tB7kbJp9NgKddeMBMCQ8Ls3jqcC7nub3uKbOYzN5uJ1CJQvyCv7hasxmTeL+ww=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Ie9hT3DN; arc=fail smtp.client-ip=52.103.68.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="qicOSTEy"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4Zhch549X6z49PyD;
-	Tue, 22 Apr 2025 12:41:41 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1745314903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yzvWMTOgzf7if1kVHwP1oNPdQ8L2Mw7WSkfk2wPslAk=;
-	b=qicOSTEyYc7sA/QjKA1qVWdj64vEms6wfD9eCtL982tlFiPR5EfNDge0EsDD0Rm+jpge2j
-	CAfBkEmK6Fr0nftqByv8zbzMxbT3iRY1m1WKs18Ospo8cRMyduw3dS7CuOticjIkS2baE4
-	8JmElRG3BKbGjVghANskc/6HOyKY+guYKWVs0HTjHzk+CuDqWaD5/iKiQtKv4zDparrtRK
-	wQW/56Mz6EBBoqNDr5acYv8axo7BqQgOfgsfXDB1ydLX6TiS7nIg5F++nFep4rwU/fDcRQ
-	Uj0qPMzQb7ZLx47l8Y4V34EoyhzEsvg1vk4id1sKiiVVRJEvPyUNnTi4qYj2eA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1745314903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yzvWMTOgzf7if1kVHwP1oNPdQ8L2Mw7WSkfk2wPslAk=;
-	b=lzGE7zO0JUUMDNrHFh3uJsZQ+U4EdY7juQQiKLS1ywqDgnQNesDLA+T7RtBQssH3GsRmnM
-	gG0WBZWdTBQu1ayW6qRIjmLlmo1H6SlP/uin6YexU+vxjYTOjumRnFwii2Dw7CX+nsB30p
-	V8UodkZZ7BNy+7NRNbNuEWa7yB88l73FnynAb7itUYxmSZOX2cfTSf1mVdKSepRB7P1pQH
-	qWs2n4IZq5gq4R8jLdZyDPj3cBx5KYxuSlwh47UbO0mQpiyOX1epEew2YLsenqzB5eHD3/
-	9Pz/km3linE+lQDXQ1jr6RMf/nfHBRkFzCmMPssbG/xDNX4iGI2QjnQ1MKTgBA==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1745314903; a=rsa-sha256;
-	cv=none;
-	b=VK2WE+/pL6Dw/fkdQpef2bUsSxujW7pRl2Lj0yM4hRuPe4xSJu/1VGzys80G9u5b6wBaa/
-	QXFsEclTUUb6p1cHK3DRw7YaEcgkmkHbVFac109QVQFhU/H/ZpQpYwiJSOHN03C0939eLc
-	pXRVeK6lfE6Qs1lPQQafA/ynlHojsthOJZcYzJcDfTdhOwJgck6IqpOMBv2T+ZUUp2Jwjj
-	1Oneens2wkNC7UfVnPLQH16xryMz65H9DUclnBi+/qA4WBjK1avG6rrZZ3xgeGSGI4tsNJ
-	5lZ2kKzqVqjjlaWd+qr4GUnN01iOCkoGQNIwF1XELsw6VGjzOwqbw/KALqm8wQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 1AA02634C93;
-	Tue, 22 Apr 2025 12:41:39 +0300 (EEST)
-Date: Tue, 22 Apr 2025 09:41:39 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 3/8] media: v4l: fwnode: Support acpi devices for
- v4l2_fwnode_device_parse
-Message-ID: <aAdkU65ruBfyRjss@valkosipuli.retiisi.eu>
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-3-1a0cc595a62d@chromium.org>
- <Z_uIyEe4uU_BC5aY@valkosipuli.retiisi.eu>
- <CANiDSCvQC25ZrSZgUuFt6deCogFL6=GPsYYrsegK1NOK=uzRJA@mail.gmail.com>
- <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com>
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Ie9hT3DN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WUZAL+e+pYAtwGp4gk5cU1muZHRySM2q+j015f4XGiVQzdPUhifJ7iKPc4IfhDorwiNCB9HPyZ1Aty3636E2cFsGVIzZWh4/5G5QA4YWGyCYsW/gV5eKLHAdF8DRFQyPtmb2vNLNzX/EFKztBgVvUU5jA+MF+55YYjW2nwPd6VsxBolc/S7uhFd8CcNBk6K62kIzNTphZwZ+7uJtOZAlo4MKLnkY1+r3aw5B0+mlSVAhmYLkWonlsWevBT0HZtxvwc+JH/4GbCESMvrDCukzFa19RGkD1/tHVYWKd2PcXi8lcVlHxEfQdZ1W3depAvxdOKKa+FUfXgKTfquOW/EKGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/WgLkCcvrmsLz68Yl6o2DmT9ZAh53KP5K+/4Dt7jj5U=;
+ b=mreB6Kj68bQp43GASlVSStjYIwvjj/z4DZ5ZJb5f6iq9b+x7pqkPlPVA8EDD5g0Hc78B1BSVZz+uW0Y/1cbgEZH86+yr0wdjS9RiSTIR+WrSbxLNBKhY23/vSffCfgNrZrtU3NR9or4PxBM8uECw/GT9xouh0j2jHXgyuvZjIqBVqCoEJ12JRNZ14ljnkseb3/K/GXFUaOWnyHZdSFxxbTr4FwpuwIjd8YAONa1rBY//sJV6lzeNoqGS8B85dHBmPbe5qICnpewVCe9V1RQd1gZqBlQE+ED/kkCvsYpOHWIN4llLYs0HkzxKMzXr8svgAONdgQCv5orIfHwgPWmKHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/WgLkCcvrmsLz68Yl6o2DmT9ZAh53KP5K+/4Dt7jj5U=;
+ b=Ie9hT3DNfLAVGRII8dZWYOVkevwJcpakKe+VtFJriTU7UTg20Okb+t6aXj+jonY+doHyHmbRoEMjzm8uipL0rK2fDpuXw/Iy8VHqZmk1DJ2vHrxJiWufB+aULoNNa7awnJDoi/PvHR+24vmWuwjZfI2qe7ulqq7Lc95sdkOtJ+ZlexE7c9xEfv96c2Hl1wL5sh7m2mb4ijlGRCC+ZLValD9V38uk1WOuMI8C/AEUMEIC0Wsa3atJTXFeTgSCBaPrLlMAop3unRHbKHu+tYxUr2Bs58hqJdsvxbyxTyg9oSZy9rgSiFhtiPra5WDJK9DwSrjZBYGP57I8pmrGq7Ef8Q==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN2PR01MB9229.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:118::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Tue, 22 Apr
+ 2025 09:41:39 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8655.031; Tue, 22 Apr 2025
+ 09:41:39 +0000
+Message-ID:
+ <PN3PR01MB95971C60303914361CECEB06B8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 22 Apr 2025 15:11:35 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Hector Martin <marcan@marcan.st>, alyssa@rosenzweig.io,
+ Petr Mladek <pmladek@suse.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sven Peter <sven@svenpeter.dev>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Aun-Ali Zaidi <admin@kodeit.net>, Maxime Ripard <mripard@kernel.org>,
+ airlied@redhat.com, Simona Vetter <simona@ffwll.ch>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ apw@canonical.com, joe@perches.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, tamird@gmail.com,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>,
+ netdev <netdev@vger.kernel.org>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597B01823415CB7FCD3BC27B8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com>
+ <PN3PR01MB9597B3AE75E009857AA12D4DB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0131.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::16) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <f8de5cdc-edca-4a63-9794-207fe91a3edb@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd471b51-333b-4537-ac58-29ad2a10f1e2@redhat.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PR01MB9229:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9de0a7c1-56a9-4cfc-ffbf-08dd8181e15b
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|5072599009|8060799006|15080799006|7092599003|461199028|19110799003|3412199025|440099028|12091999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VlNQUC8zMyswblBwTlFKRGEvalZQUUdwRng1eFMvaE84REptMzVDcTNvU0xC?=
+ =?utf-8?B?dDJYbkp5V2JmZDJLa0o4bFhrVFJsQzl0V0FmcDIxS3dNTklPK1JhZ1J0WEdX?=
+ =?utf-8?B?ZmhIbHBJQkxiUzJEYkpnSTgzc1Fib1o5WmdnRzhFbGVRVGlqbkZlTE1LYjQ0?=
+ =?utf-8?B?VERJTjhWZlN3RDd2eXIzeGQvSFBFb1BTUytmK2pHWE1BK3VOQXF6SU82WE1Y?=
+ =?utf-8?B?WGtITTRKYVBlaHRDNHZmUm5wZVNIWThCUUZvZ1kwSnRQbXJFekxENkhaekJV?=
+ =?utf-8?B?Uk1rbVNuMDYwWFVYRG5JdFQ3QXM4d0pxZ0o1bWx6andCdHBFRVMvTXp3QThz?=
+ =?utf-8?B?aHMvZ3RXNkFSQzVyQUhmalY4WGl3bndSbnplWldzZ3hOMVl3VmMyQ1g0M281?=
+ =?utf-8?B?cmRFYm1BcGtraTNoSHdIMExCdFl2VEdRV3pUU2tkRnVCMDBNazYxSGJxdXVj?=
+ =?utf-8?B?ekZIUFJSUGorSEZ5MklXWTFibnFkNjlhMzhYZTFEVWpVcVdWSk5jUzdqRnYr?=
+ =?utf-8?B?U1ZaV0V2ZFdkWkdiTjQxa2R2OXlZRUUvUzFrRDV0UXovNFVlSDIzOUZCSDFW?=
+ =?utf-8?B?R3VlT1ByeGNYakdDNWFTb0d1ZjRuSHV3UTAyQTVscTZFaDVNRmZJS2dZNTYy?=
+ =?utf-8?B?dWhicFhzM20wYU5TR3ZqdnlURmZ0K2xTdkVub3g4d3lwYWNRRVZ3eUpqell5?=
+ =?utf-8?B?eEUveVYweWNJNjByN0xaTXp2UzA1QzRkUkordHJveTZwS0FZWW05WVYwUmg2?=
+ =?utf-8?B?RkVHNk8wYnZFUHp5MUpCZmxsb3Z6VHE1OGZCdUE3Q1pEWmdxcUpIWG1kQ1Yy?=
+ =?utf-8?B?U2ZOQ3RKOGNIbHV5dmtqbFlrMFk5c1JCS0prTkNUSWo5QXV3MHpwRmpqc1pD?=
+ =?utf-8?B?QSt5M0RNUWE4U1pkVlM2aEJxcm9qckErYzhOclQrWEVQd29iVkNDUmhQZUwr?=
+ =?utf-8?B?cnpxM2tub2VXcWdaUytpT2ttVTJvWVdzeWNIb2xvMGRRSTQ0UUpzeGxrVk1a?=
+ =?utf-8?B?TW9FaWhIbXpybkR0bHd2cHJxbVZIVzJCT2g2RGdscXZRbk9Ca1k3QWtOUVc3?=
+ =?utf-8?B?R01lY1JYVDNjSkhZbEQxU09RUStlektwTkFkS3lhQnEwcVJSdGdmMHlPSDNt?=
+ =?utf-8?B?TWF2UFhTaU5lUVNWejcxRUJLN21QdWlxaUtDSXZnMENjWmxMcWFhcW9PNysv?=
+ =?utf-8?B?bVRENFNTS091N3BXMnU4dG9OQnJBRklXb21qMWhQZ21mbGtwSkN3dEdVd1Jh?=
+ =?utf-8?B?Z3liWnNicE42RVRNZGhuSjlNc1p2aFdudGNQckIyMzMzNnU0RXpRUGlkUVJ4?=
+ =?utf-8?B?TkwzUmpnZkpWS1dFSHB5bGFtTFA5NE9NWGNRVUNEcy9sN0NUZnpYRmk5MnBJ?=
+ =?utf-8?B?c0l1bG1HQjM5TCtmMGkvSGFMRUt4MTArY1lic0VqQkdidVB0U0Y4TGhtUENB?=
+ =?utf-8?B?eG1hWmZ6UmhwWHlGQUlDN1VRR2cvd0RnOGtiYWQ2L3FQdlN5N1RlWjNOZHEy?=
+ =?utf-8?B?eFFsc0hjQW1jbVZsVTRlaWc4TDA4ZVZMS2xtOG5XREd0bFpIbGlGdXNTbkQw?=
+ =?utf-8?Q?3riNgA+WSwTJ0MqI8AjCs5DhQ=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZU5XKzc4dGgwYzR3aHU4Q3BUVzQwT1V1R0FJWVJ1S01iSWkrbzkyU2xWSEJu?=
+ =?utf-8?B?YUJSNklJTnBhLzZLNHN5NVlTbWg3ZFg0V3AzRnB0SGczZU5MMmhzVXZlWUhu?=
+ =?utf-8?B?eTI5QjdwNi9iakxZMENYNTFscnBiNS9kOGd3MnJmM0hTMTRRaGF1Q2o3YXBU?=
+ =?utf-8?B?YWFqMkRRL2ZxTER6Sktud25HLzA1WDlheWRHQWRvU3B2NWwreCtUUEtRMnps?=
+ =?utf-8?B?YnhBTTd5c3BDNFJFYTFLdEFWYXlxMk56SUEzZGUwTWJkR1Z4WFFLZWZoS2o3?=
+ =?utf-8?B?SktNZVhERktFbFlMRnpUVmd6Z3ZjTDhuU0dzQ2REZEF1SDhqcm9NUVpWclp6?=
+ =?utf-8?B?dE9FTzVTUHZub3g1Qzl3c1QxUmFnLzJ4N3V3QzFYMkwzdTBzdDFBbW45L3R3?=
+ =?utf-8?B?RXBQVWlVWFlxYTNNUEV2amRRNG0rd3Q2NkV3MXoyQTBkNitIYjZEdFl2dXhB?=
+ =?utf-8?B?Tjh6Z1dDM2VwWU5JTVpTWkpXTjBRUjBjTHQxMnlpdDBkblVEZnoyOVY0NUVl?=
+ =?utf-8?B?cGVWaXZodVJxMnQ5eXJxb2ZXSlNLaXNSaDUzejVDalFPT2prV0lXaUdHL0tQ?=
+ =?utf-8?B?ajVYUitJaXFVTmMzT210dGxzb2x2djVNMythSU9tT3BnUXdLczN6cldUSnQ5?=
+ =?utf-8?B?d25uck10Yy92WUpuMEZ2cElwZTVrY2txaFBzSzFnQ2l1aW1hSDVtVWdmQkVZ?=
+ =?utf-8?B?cnlwdHZ0UjBERTFHanFDMHJWQy9lY0JzeExrMEowaTRQOFRjZEU2ZlhIYThC?=
+ =?utf-8?B?NFY2MmM4RkppbzF3TDFYZWpjOUhxWS8za0d3WU5nRkk3VW9QNEE1cEUxdmJz?=
+ =?utf-8?B?VUloSllaSWpqVU9Xd3hwdVhnd3hJU1pYZkZpNHIydndDRi9sZXkwZWswT0JP?=
+ =?utf-8?B?MWhjWWJVamFEUGtyeEk0UHpwL2pDNms5bXFoQXYxQ2Uycm5GYldwTlNDNlk2?=
+ =?utf-8?B?KzRKT01kbTBPWVlFZWRyVVJxNkswTittZDVIU1haZ2xNdDQ0YTY4UDhGb3o4?=
+ =?utf-8?B?cUVTT1BsOTNlNWUwU0JzeGFVSUJ3eHVPNnNiSTdPZTU1NTViRTdsdkxXMXN6?=
+ =?utf-8?B?YmpENE9UdExDTThjSkRsdi91M0J6TnhXclNNc0hvUENCSXRGbmN3cU03b0cw?=
+ =?utf-8?B?L0RsSUl6Q1d4YUNkcjV3L09IbW9mTU5tamN5M1RxN2MvZjBHT0FYR0d0NW9j?=
+ =?utf-8?B?MmJOWnJwM0ZNN0FRYVBkcHUvR2h3U1p0d1ROeGRTWDVlMG52NHlWbHFLWTRq?=
+ =?utf-8?B?cTV3a1pDMng0YllJRUtSMXZmNmhqR21PWldnSnpzZlA5clVGVWpGRHo4NTZP?=
+ =?utf-8?B?TFUyZnRNcUpRZGVhRUNCVlVORE1ReU5wTldsZk56ZHVmVWJZVXhha3hwbFdL?=
+ =?utf-8?B?d0R2blNQb1lqTTVvQWlYdm00K1h6djdHSWs5V2IraEdZV0JGbzE5ZHQrVjMv?=
+ =?utf-8?B?ZGFZMlVBY2o3QlNNZjIzc2dtYWM0V0UzL1ZOd2pZYnFCa3N3ekVLT3BvZVQv?=
+ =?utf-8?B?ZU94MS9SY3ZKYUdPMmlMV1BuQysvbE5pVVpZMEVvSnRkS2lzZTFIUWpLcWhH?=
+ =?utf-8?B?VkhYaEp4Q1BHay9RZlhXVWpIUkNsMWdJdnc3ZVp0alN5RGFzTVJNWXdXWitV?=
+ =?utf-8?B?dEtIWXEvTVM3QWFlUWJVcGJCWGZzUG5ML2Y4bit3Ymd2WFNybjJYV012TzJu?=
+ =?utf-8?Q?Cy3lFykaTTk9P0mDfEpA?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9de0a7c1-56a9-4cfc-ffbf-08dd8181e15b
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 09:41:39.0288
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9229
 
-Hi Hans, Ricardo,
 
-On Tue, Apr 22, 2025 at 10:44:41AM +0200, Hans de Goede wrote:
-> Hi Ricardo,
-> 
-> On 22-Apr-25 2:23 AM, Ricardo Ribalda wrote:
-> > Hi Sakari
-> > 
-> > On Sun, 13 Apr 2025 at 17:50, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> >>
-> >> Hi Ricardo,
-> >>
-> >> Thanks for the patch.
-> >>
-> >> On Thu, Apr 03, 2025 at 07:16:14PM +0000, Ricardo Ribalda wrote:
-> >>> This patch modifies v4l2_fwnode_device_parse() to support ACPI devices.
-> >>>
-> >>> We initially add support only for orientation via the ACPI _PLD method.
-> >>>
-> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >>> ---
-> >>>  drivers/media/v4l2-core/v4l2-fwnode.c | 58 +++++++++++++++++++++++++++++++----
-> >>>  1 file changed, 52 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> index cb153ce42c45d69600a3ec4e59a5584d7e791a2a..81563c36b6436bb61e1c96f2a5ede3fa9d64dab3 100644
-> >>> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> >>> @@ -15,6 +15,7 @@
-> >>>   * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> >>>   */
-> >>>  #include <linux/acpi.h>
-> >>> +#include <acpi/acpi_bus.h>
-> >>>  #include <linux/kernel.h>
-> >>>  #include <linux/mm.h>
-> >>>  #include <linux/module.h>
-> >>> @@ -807,16 +808,47 @@ int v4l2_fwnode_connector_add_link(struct fwnode_handle *fwnode,
-> >>>  }
-> >>>  EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_add_link);
-> >>>
-> >>> -int v4l2_fwnode_device_parse(struct device *dev,
-> >>> -                          struct v4l2_fwnode_device_properties *props)
-> >>> +static int v4l2_fwnode_device_parse_acpi(struct device *dev,
-> >>> +                                      struct v4l2_fwnode_device_properties *props)
-> >>> +{
-> >>> +     struct acpi_pld_info *pld;
-> >>> +     int ret = 0;
-> >>> +
-> >>> +     if (!acpi_get_physical_device_location(ACPI_HANDLE(dev), &pld)) {
-> >>> +             dev_dbg(dev, "acpi _PLD call failed\n");
-> >>> +             return 0;
-> >>> +     }
-> >>
-> >> You could have software nodes in an ACPI system as well as DT-aligned
-> >> properties. They're not the primary means to convey this information still.
-> >>
-> >> How about returning e.g. -ENODATA here if _PLD doesn't exist for the device
-> >> and then proceeding to parse properties as in DT?
-> > 
-> > Do you mean that there can be devices with ACPI handles that can also
-> > have DT properties?
-> 
-> Yes it is possible to embed DT properties in ACPI, but I don't
-> think that is really applicable here.
 
-This is determined by
-Documentation/firmware-guide/acpi/DSD-properties-rules.rst . So rotation
-and orientation shouldn't come from _DSD properties on ACPI systems.
+On 22-04-2025 02:13 pm, Geert Uytterhoeven wrote:
+> Hi Aditya,
+> 
+> CC netdev
+> 
+> On Tue, 22 Apr 2025 at 10:30, Aditya Garg <gargaditya08@live.com> wrote:
+>> On 22-04-2025 01:37 pm, Geert Uytterhoeven wrote:
+>>> On Tue, 8 Apr 2025 at 08:48, Aditya Garg <gargaditya08@live.com> wrote:
+>>>> From: Hector Martin <marcan@marcan.st>
+>>>>
+>>>> %p4cc is designed for DRM/V4L2 FourCCs with their specific quirks, but
+>>>> it's useful to be able to print generic 4-character codes formatted as
+>>>> an integer. Extend it to add format specifiers for printing generic
+>>>> 32-bit FourCCs with various endian semantics:
+>>>>
+>>>> %p4ch   Host byte order
+>>>> %p4cn   Network byte order
+>>>> %p4cl   Little-endian
+>>>> %p4cb   Big-endian
+>>>>
+>>>> The endianness determines how bytes are interpreted as a u32, and the
+>>>> FourCC is then always printed MSByte-first (this is the opposite of
+>>>> V4L/DRM FourCCs). This covers most practical cases, e.g. %p4cn would
+>>>> allow printing LSByte-first FourCCs stored in host endian order
+>>>> (other than the hex form being in character order, not the integer
+>>>> value).
+>>>>
+>>>> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>>> Reviewed-by: Petr Mladek <pmladek@suse.com>
+>>>> Tested-by: Petr Mladek <pmladek@suse.com>
+>>>> Signed-off-by: Hector Martin <marcan@marcan.st>
+>>>> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+>>>
+>>> Thanks for your patch, which is now commit 1938479b2720ebc0
+>>> ("lib/vsprintf: Add support for generic FourCCs by extending %p4cc")
+>>> in drm-misc-next/
+>>>
+>>>> --- a/Documentation/core-api/printk-formats.rst
+>>>> +++ b/Documentation/core-api/printk-formats.rst
+>>>> @@ -648,6 +648,38 @@ Examples::
+>>>>         %p4cc   Y10  little-endian (0x20303159)
+>>>>         %p4cc   NV12 big-endian (0xb231564e)
+>>>>
+>>>> +Generic FourCC code
+>>>> +-------------------
+>>>> +
+>>>> +::
+>>>> +       %p4c[hnlb]      gP00 (0x67503030)
+>>>> +
+>>>> +Print a generic FourCC code, as both ASCII characters and its numerical
+>>>> +value as hexadecimal.
+>>>> +
+>>>> +The generic FourCC code is always printed in the big-endian format,
+>>>> +the most significant byte first. This is the opposite of V4L/DRM FourCCs.
+>>>> +
+>>>> +The additional ``h``, ``n``, ``l``, and ``b`` specifiers define what
+>>>> +endianness is used to load the stored bytes. The data might be interpreted
+>>>> +using the host byte order, network byte order, little-endian, or big-endian.
+>>>> +
+>>>> +Passed by reference.
+>>>> +
+>>>> +Examples for a little-endian machine, given &(u32)0x67503030::
+>>>> +
+>>>> +       %p4ch   gP00 (0x67503030)
+>>>> +       %p4cn   00Pg (0x30305067)
+>>>> +       %p4cl   gP00 (0x67503030)
+>>>> +       %p4cb   00Pg (0x30305067)
+>>>> +
+>>>> +Examples for a big-endian machine, given &(u32)0x67503030::
+>>>> +
+>>>> +       %p4ch   gP00 (0x67503030)
+>>>> +       %p4cn   00Pg (0x30305067)
+>>>
+>>> This doesn't look right to me, as network byte order is big endian?
+>>> Note that I didn't check the code.
+>>
+>> Originally, it was %p4cr (reverse-endian), but on the request of the maintainers, it was changed to %p4cn.
+> 
+> Ah, I found it[1]:
+> 
+> | so, it needs more information that this mimics htonl() / ntohl() for
+> networking.
+> 
+> IMHO this does not mimic htonl(), as htonl() is a no-op on big-endian.
+> while %p4ch and %p4cl yield different results on big-endian.
+> 
+>> So here network means reverse of host, not strictly big-endian.
+> 
+> Please don't call it "network byte order" if that does not have the same
+> meaning as in the network subsystem.
+> 
+> Personally, I like "%p4r" (reverse) more...
 
-> 
-> But we also have secondary software-fwnodes which are used
-> extensively on x86 to set device-properties on devices by
-> platform code to deal with ACPI tables sometimes having
-> incomplete information.
-> 
-> For example atm _PLD is already being parsed in:
-> 
-> drivers/media/pci/intel/ipu-bridge.c and that is then used to add
-> a standard "orientation" device-property on the sensor device.
-> 
-> This is actually something which I guess we can drop once your
-> patches are in, since those should then do the same in a more
-> generic manner.
+I share the same view about this. But, we have to respect the maintainers request as well xD.
 
-DisCo for Imaging support currently also digs this information from _PDL
-(see init_crs_csi2_swnodes() in drivers/acpi/mipi-disco-img.c), but this
-is only done if a _CRS CSI-2 descriptor is present. It could also be done
-for devices with the IPU Windows specific ACPI objects and it would be a
-natural location for handing quirks -- there are some
-unrelated Dell DSDT quirks already.
+Still, feel free to send a patch if you want to make this change.
 
-> 
-> > What shall we do if _PLD contradicts the DT property? What takes precedence?
-> 
-> As for priorities, at east for rotation it seems that we are going
-> to need some quirks, I already have a few Dell laptops where it seems
-> that the sensor is upside down and parsing the rotation field in
-> the IPU6 specific SSDB ACPI package does not yield a 180° rotation,
-> so we are going to need some quirks.
-> 
-> I expect these quirks to live in the bridge code, while your helper
-> will be called from sensor drivers, so in order to allow quirks to
-> override things, I think that first the "orientation" device-property
-> should be checked (which the ACPI glue code we have can set before
-> the sensor driver binds) and only then should _PLD be checked.
-> 
-> IOW _PLD should be seen as the fallback, because ACPI tables are
-> often a copy and paste job so it can very well contain wrong info
-> copy-pasted from some example ACPI code or from another hw model.
+Cheers
+Aditya
 
-Unfortunately that does happen. :-(
-
--- 
-Regards,
-
-Sakari Ailus
