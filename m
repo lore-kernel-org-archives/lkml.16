@@ -1,85 +1,68 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B2F25522B;
-	Tue, 22 Apr 2025 08:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEBD33F7;
+	Tue, 22 Apr 2025 08:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308832; cv=none; b=GSdT2tP1fqSrR3sLQ8/x2tij1/ryALn26BlaaWZyMtZVngccRSHxMVZ9uxqmQJcIXr6G4yjJg96YhqetcS0mbQc4cN6QmBhJ09vxu6p/9gwvhi6NRGitEDT4QqlFt3RQIMPniE06OeI/VaSNSHq9+hdC90cNYRjg+KeZFY1WMGo=
+	t=1745308891; cv=none; b=BW+M/lBJZLPJN0ZnBikWuKobSSK6pRL/AOrnsq61OIgkZ/OHui9ihOVJZKyBhi1l42YPan3NNBmxycTuPGrLb2PPiXEzlw5NQVwkET8xnoZ3TPFLzWEC8FlCepcGczw+0FXLCxQfqAOKa4mAWl1q7knMabhirKujuGyDElGHnkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308832; c=relaxed/simple;
-	bh=3CR+/f2NiMSAagT+V1OjsdLfNcuUb59reoY8+3eCTCo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=VpHTbgle8eUvkgJNFMMQiNCD0lvOKG5UxjF+G1uqZUeEB7e17dEX6dJfUgOCW/pntqZkwd86RGOsIIMwwvbKF1k/KKA8F1gKZlg6KFHHH7BeQM59A/pABJQx6lk/dirEGYnfJrtCwzQ2LT+m7VpFuJbu8vcajlL1Fx18g2W4o8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=psAeqVoP reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745308891; c=relaxed/simple;
+	bh=V/82unvtAxABgycm+y7kaJ+iuM4jIynRbg8g2O3qJX0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=e9BAQn5y2oDkABFQDzXJOMwxe31u4qZfhpcNThVQl4Cg31HaHIwKBnHcyUnIqAne0O6qyFz8GiEcIIohN+mznpG2EOf2j12MKG7ZYf1Q3VeNv3045azZBvK1WTFQm/NIXXJyhSFx1PKLbNEQgJFvDJGhkZlu7rNi/1FO3VzeCOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9HgzIVZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="psAeqVoP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=0/6nEFrgS1C04Ibd4G7cvNL9wRLiPUrNDF6gwaEK1B4=; b=p
-	sAeqVoPySESnzmUVTK4aza7vwvLgunqAAY/En8AQLpv1FFiqv+yOtXhPxWiYk3KI
-	iK98sKhWxw/jKvgpUCPlQMXDk/BeEe27ep2hzNPzjqlUlvrd1r9KjxBTPkQDm+30
-	AzaZYLUhnWPuCl5qXIBFqEoqI+RM10mV0MPkeobP5Q=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-102 (Coremail) ; Tue, 22 Apr 2025 15:59:27 +0800
- (CST)
-Date: Tue, 22 Apr 2025 15:59:27 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>,
-	"Maxime Ripard" <mripard@kernel.org>
-Cc: lumag@kernel.org, neil.armstrong@linaro.org,
-	dri-devel@lists.freedesktop.org, dianders@chromium.org,
-	jani.nikula@intel.com, lyude@redhat.com, jonathanh@nvidia.com,
-	p.zabel@pengutronix.de, simona@ffwll.ch, victor.liu@nxp.com,
-	rfoss@kernel.org, chunkuang.hu@kernel.org,
-	cristian.ciocaltea@collabora.com, Laurent.pinchart@ideasonboard.com,
-	linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org,
-	"Andy Yan" <andy.yan@rock-chips.com>
-Subject: Re:Re: [PATCH 1/1] drm/bridge: Pass down connector to drm bridge
- detect hook
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250321-optimistic-prompt-civet-bdcdba@houat>
-References: <20250321085345.136380-1-andyshrk@163.com>
- <20250321085345.136380-2-andyshrk@163.com>
- <20250321-optimistic-prompt-civet-bdcdba@houat>
-X-NTES-SC: AL_Qu2fB/+bt08t4SmeY+kfmkcVgOw9UcO5v/Qk3oZXOJF8jCzp8D4yf1JTEnDy1fCDKg+MkAiHYjpJ8Pt0f7d2fYwujCqEY09RcV7NnzuMedMx4g==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9HgzIVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C437C4CEE9;
+	Tue, 22 Apr 2025 08:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745308890;
+	bh=V/82unvtAxABgycm+y7kaJ+iuM4jIynRbg8g2O3qJX0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=D9HgzIVZFMRMC5jYYSGuBhwGezKPcaubMYQmrbAhxuMQT15dwqEXTT+D2cgZ4dwxi
+	 g3+YvqW+ErRynrnL9CaEwXNdkpA/0oNxywvcrqQaGCoM3pyOsTeRy/vzMZLhU/A5xJ
+	 rxi3Rs8uWTq7kKaNO3V4n9Vc5y6ae2ydf2xPVJs34mdpLvNNBCRlL8g+sK14Yjc+LP
+	 z3fCw7XrdwU+IEpsL0WMcpeZc2EhEa0C24/VYq79WRW7QeAeruCAwjGiMqPzc55kRx
+	 +A5WJak/9hLd/KRuZfkKQH4d2V/ulHofAQ0+6wQZfwrFVBDfxhRiXlIZ9h+/vlXFVX
+	 KeoHpYR5xYXUg==
+Message-ID: <aee8924a-d533-4d19-8064-9831e3616013@kernel.org>
+Date: Tue, 22 Apr 2025 10:01:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1bb549f4.746e.1965c8256e4.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZigvCgAnjYdgTAdoaPGbAA--.58451W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gA3XmgHRzC35wACsx
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] rust/revocable: add try_access_with() convenience
+ method
+From: Danilo Krummrich <dakr@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+References: <20250411-try_with-v4-0-f470ac79e2e2@nvidia.com>
+ <Z_kV7U0IcebUfGps@cassiopeiae>
+Content-Language: en-US
+In-Reply-To: <Z_kV7U0IcebUfGps@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-CkhpIGFsbCwKCkF0IDIwMjUtMDMtMjEgMTc6NDg6MDQsICJNYXhpbWUgUmlwYXJkIiA8bXJpcGFy
-ZEBrZXJuZWwub3JnPiB3cm90ZToKPk9uIEZyaSwgTWFyIDIxLCAyMDI1IGF0IDA0OjUzOjM4UE0g
-KzA4MDAsIEFuZHkgWWFuIHdyb3RlOgo+PiBGcm9tOiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1j
-aGlwcy5jb20+Cj4+IAo+PiBJbiBzb21lIGFwcGxpY2F0aW9uIHNjZW5hcmlvcywgd2UgaG9wZSB0
-byBnZXQgdGhlIGNvcnJlc3BvbmRpbmcKPj4gY29ubmVjdG9yIHdoZW4gdGhlIGJyaWRnZSdzIGRl
-dGVjdCBob29rIGlzIGludm9rZWQuCj4+IAo+PiBJbiBtb3N0IGNhc2VzLCB3ZSBjYW4gZ2V0IHRo
-ZSBjb25uZWN0b3IgYnkgZHJtX2F0b21pY19nZXRfY29ubmVjdG9yX2Zvcl9lbmNvZGVyCj4+IGlm
-IHRoZSBlbmNvZGVyIGF0dGFjaGVkIHRvIHRoZSBicmlkZ2UgaXMgZW5hYmxlZCwgaG93ZXZlciB0
-aGVyZSB3aWxsCj4+IHN0aWxsIGJlIHNvbWUgc2NlbmFyaW9zIHdoZXJlIHRoZSBkZXRlY3QgaG9v
-ayBvZiB0aGUgYnJpZGdlIGlzIGNhbGxlZAo+PiBidXQgdGhlIGNvcnJlc3BvbmRpbmcgZW5jb2Rl
-ciBoYXMgbm90IGJlZW4gZW5hYmxlZCB5ZXQuIEZvciBpbnN0YW5jZSwKPj4gdGhpcyBvY2N1cnMg
-d2hlbiB0aGUgZGV2aWNlIGlzIGhvdCBwbHVnIGluIGZvciB0aGUgZmlyc3QgdGltZS4KPj4gCj4+
-IFNpbmNlIHRoZSBjYWxsIHRvIGJyaWRnZSdzIGRldGVjdCBpcyBpbml0aWF0ZWQgYnkgdGhlIGNv
-bm5lY3RvciwgcGFzc2luZwo+PiBkb3duIHRoZSBjb3JyZXNwb25kaW5nIGNvbm5lY3RvciBkaXJl
-Y3RseSB3aWxsIG1ha2UgdGhpbmdzIHNpbXBsZXIuCj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBBbmR5
-IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cj4KPkZUUiwgSSdtIGFnYWluc3QgaXQgYW5k
-IHdvdWxkIGhhdmUgYXBwcmVjaWF0ZWQgdGhhdCB5b3Ugd2FpdCBmb3IgYQo+bWVhbmluZ2Z1bCBj
-bG9zdXJlIHRvIHRoZSBkaXNjdXNzaW9uIHdlJ3ZlIGhhZCBvbiB0aGlzLgoKQ2FuIHdlIHN0YXJ0
-IHRvIHJldmlldyB0aGlzIHBhdGNoPyBTaW5jZSBpdCdzIGJlZW4gYWxtb3N0IGEgbW9udGggbm93
-IGFuZApubyBvbmUgaGFzIHJhaXNlZCBhbnkgb2JqZWN0aW9uIHRvIERtaXRyeSdzIHN1Z2dlc3Rp
-b25bMV0uCgoKWzFdaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvZHJpLWRldmVsL3Z3Mm5jZG9teDNy
-d2x0YjJ4bG82bmYzcmFwZ2NkdGNqY29kb2ZnbWVjcnp6YWJmN2ppQHB5YnNmdjI3amtxMi8KCgo+
-Cj5NYXhpbWUK
+On 4/11/25 3:15 PM, Danilo Krummrich wrote:
+> On Fri, Apr 11, 2025 at 09:09:37PM +0900, Alexandre Courbot wrote:
+>> This is a feature I found useful to have while writing Nova driver code
+>> that accessed registers alongside other operations. I would find myself
+>> quite confused about whether the guard was held or dropped at a given
+>> point of the code, and it felt like walking through a minefield; this
+>> pattern makes things safer and easier to read according to my experience
+>> writing nova-core code.
+> 
+> Any concerns taking this through the nova tree?
+
+@Miguel: Can I get an ACK for taking it through the nova tree?
