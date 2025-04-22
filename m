@@ -1,113 +1,96 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E1C27602A;
-	Tue, 22 Apr 2025 13:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85288280A33;
+	Tue, 22 Apr 2025 13:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329448; cv=none; b=boRwM/JzB4ckL3/ouKoHGkC3k+wPekVOlRj9wUfg6pZSHaDZmc0SG5qC3SGV9sN/r0hD6t0BSLx7k4AVyY67doqaKBdnvcNn0cmmPeTL0X6xZ7x3iFKv5AMH/iFMAxCKSguA0ww3bisJ4s5zy/s/ER6G/63rTdYLEq8iLpMcN8I=
+	t=1745329464; cv=none; b=Ektx2xZAhAi7JWEDJpaqWjhc6N86Pxkp7shYml4UfnrcJZWyHxkrOTBECPZzB6eedMn0Q1EXg1ZK/OfflMjd6G516PrCPoyojmetb8d7kp2undcG8sbnQnF8GWiu+Zxg8ke4NZkAlrVYA+zp3DFMNGrosVkA42LLLRB5LlBBjrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329448; c=relaxed/simple;
-	bh=4DLjZ0GtZDfpf9Y+X2fCfeTSaPWs41kU9nP2/X/cyNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LvERvGE3KrotChR0Uso927GdwcOCo5JqpdzwCJBMuNVxYhIWL6L19g/I3HxZT049za1I3CEsaUhd4z+Ld3kTwWOHxkd46NpLFJYHwerLCPFFKSLYgy+DaWwupHpROg6RAx4PAnDbWFK/K4jwSoS9dNU5V548QFE43XuEKqnROMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=J1IHv8tU; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745329464; c=relaxed/simple;
+	bh=5ENscGsvk3ZZR1O8F9yAZWCSbYmjejJQgKz6FhofyIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U2SDV5jYV1K5rBb1INpsd+zx4MjiWqTBzzX94PnmF5113vGesFeIjh5McAMxbRTiSzvD6TGwflyTEGRdTHZd1uXce9qof/p4KZu9yw+UwOa6wwTL/ppAqqStjxmh/XYq1yU638w3Wms94W30px7f71abkakL2HIITMou+5NFMxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kh+R0cn5; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="J1IHv8tU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745329444;
-	bh=4DLjZ0GtZDfpf9Y+X2fCfeTSaPWs41kU9nP2/X/cyNQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J1IHv8tU3VNYbRw81M3WLG61BspSVXRPAMqt1cHr7qQ7MUvmm1t7TdYn+ZzuOksJG
-	 quEMnv9lDyFzOvHLPVoDogC1M+3+SnkMNsTOhIY9vyzCST4ot8aYVcXpaMtl3hgTYR
-	 wf+Q6A9iFdOUMZyUFJgrzx7QvKzmouCx3iTT25yBOoMd2ci2Z6ws2dvbUSHv8sfqlp
-	 HdDHDiVcZkLxk/r0y7vAoh4KqXgtF+KCO2NW5cb0EWK5u8ctyTiatgHnRDGtDT7aeX
-	 zgOWyzkWJAGhFdB/OdYy8pG0axAzSBNr0d5uEMEOtXbeOxfVMDLaOQ9Vv7WoK6D7Br
-	 C5QmxkLJ/yANw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C1EAA17E0B9D;
-	Tue, 22 Apr 2025 15:44:03 +0200 (CEST)
-Message-ID: <4f4a1761-dbb3-4c95-8c68-359c7e9ae6b4@collabora.com>
-Date: Tue, 22 Apr 2025 15:44:03 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kh+R0cn5"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-700b17551cdso39543067b3.0;
+        Tue, 22 Apr 2025 06:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745329461; x=1745934261; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=01iWsWRnKaXYUJ6i/NON00y6jMFX6UcPEC4jPm/g2hU=;
+        b=kh+R0cn599F3uY6LYDroJxCUaHPGB3Q3Mr51DcXyUlW9UypQi1V2rBZIf0egNOogQx
+         n1Pp9fBi3O+aWPeKITKWSXqvappSb9KaflaHzt7Nw87g8AybOgAgYwQBYpbk+f1wfecV
+         rchMJJEQG2JE0yG4JNi1VJZ+xVeCyHzq4p2aPSzbTbGZ2KxR9v0VAp1qKyOi5kdtWOoH
+         FBDGln3y1wZ165HyCrFR4uun+78gURbNpKrYUaevCMjALdA5mQ5OU99hvzI4oYct+xyg
+         9pOnX83oZjaQwcS+dGKFOW0ROWlbxa/ByeWJrLlGpNmbivyt6M+UGZ3iG0yHP3tusngQ
+         hAHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745329461; x=1745934261;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=01iWsWRnKaXYUJ6i/NON00y6jMFX6UcPEC4jPm/g2hU=;
+        b=sPYHEQh613gZzm2c0eawzzgVzPqnkc48cMaJZwwSGJXN2nuwNkgFaJLra3AZJSwPRz
+         1F/98Pam3dvZ8tus43WXJARMk912dO8YoVEzCYR2lVedc0eRQN12XDuhOIXnvjX1ktma
+         u7gyzYHSFWcHw+AYHkYagCSP6427sSaokISFcXcY+uQUGSnh2ruEXHtfvTNotFc7mQRH
+         l/gwHnDSwvMSsslARELDNV7cixapJj49gfkGqbUfsU2XI7VkNypq4GPMp4MBpTZ2+KnL
+         s4chLiZBm4s+McF0YdWLR64FeMx4ve3sXu31LkzMWgNWRfd3a4F3MZemFHbygIJS61Hg
+         S0zw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/fUMGgCYwiOsFU/q0UjDDC6Ul/ckYm71y68Z5HfjDdPBRkbS3Ipk2QTwqgmw2WtI1ys6R511IBV1+@vger.kernel.org, AJvYcCXwJG540ZYMEsFjT2mlr9ub5d+V4iN6aWh/Y/eLAvaGuKmmjPiL+oCRbZ/fq9aX80HmWX7NesHdzxjh6eC6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8omVRjiXAqRYjxvbJtoJKFdYr+v82brzdYXr/0hcvmnCRb0rq
+	3E3jApxe9Jid1BJ2t6cTWZzIOMdgFm9cGfABfUkW3+olNr73ZhErJgRBkePyW8mV+sONZWsyYLS
+	VIi4lKomg8ivEyNa7gWM6q01r4b0=
+X-Gm-Gg: ASbGncsZMSC+8bn8r4vT9KT7qay9OsK6tsQid0TfhFUAO2bGEqCRwy+2+tKXZXyCciq
+	1slx/UB2IljZ0G4wagVbrkqwEEfOHm3cCDcKUHm5Nodczf8F2CB3XhzGseeyldjvWRz2RusnNY9
+	tJieUahhcvEtY/hs//Q3ZI938=
+X-Google-Smtp-Source: AGHT+IFB0dsAITdx8kdX4E2ydKgnUeAe4cFVnylPhUhldLMfCcBI8Xtwn4NktwjCacq5FAj+GCAiAMlZsGz4uy29IlY=
+X-Received: by 2002:a05:690c:6f87:b0:700:b007:a33e with SMTP id
+ 00721157ae682-706ccd0a2dcmr235402417b3.16.1745329461380; Tue, 22 Apr 2025
+ 06:44:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: mailbox: mediatek,gce-mailbox: Add support
- for MT6893
+References: <20250417-spmi-nvmem-v2-0-b88851e34afb@gmail.com>
+ <20250417-spmi-nvmem-v2-1-b88851e34afb@gmail.com> <20250422133619.GA1095169-robh@kernel.org>
+In-Reply-To: <20250422133619.GA1095169-robh@kernel.org>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Tue, 22 Apr 2025 15:44:10 +0200
+X-Gm-Features: ATxdqUFsls2M4OH434tZGU5ecAW3B2mwbfmPhFEi7JO7p4M-mTLMLWRteEtCKs4
+Message-ID: <CAMT+MTTwY=z1-_94ws+Oi+wvE2PA_s57dPmpMABC26q=MPw1Mg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: spmi: Add generic SPMI NVMEM
 To: Rob Herring <robh@kernel.org>
-Cc: jassisinghbrar@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, houlong.wei@mediatek.com,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- kernel@collabora.com
-References: <20250416120230.147844-1-angelogioacchino.delregno@collabora.com>
- <20250421213833.GA2966253-robh@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250421213833.GA2966253-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Il 21/04/25 23:38, Rob Herring ha scritto:
-> On Wed, Apr 16, 2025 at 02:02:30PM +0200, AngeloGioacchino Del Regno wrote:
->> Add a compatible string for the MediaTek Dimensity 1200 (MT6893)
->> SoC using MT8195 as a fallback, and add a header for the GCE
->> mailbox found in MT6893.
->>
->> Similarly to MT8195, this SoC has two GCE hardware instances, but
->> the event values are different (hence requiring its own header).
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> ---
->>   .../mailbox/mediatek,gce-mailbox.yaml         |   4 +
->>   include/dt-bindings/gce/mediatek,mt6893-gce.h | 312 ++++++++++++++++++
->>   2 files changed, 316 insertions(+)
->>   create mode 100644 include/dt-bindings/gce/mediatek,mt6893-gce.h
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
->> index 73d6db34d64a..277d290d852b 100644
->> --- a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
->> +++ b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
->> @@ -19,6 +19,7 @@ properties:
->>       oneOf:
->>         - enum:
->>             - mediatek,mt6779-gce
->> +          - mediatek,mt6893-gce
->>             - mediatek,mt8173-gce
->>             - mediatek,mt8183-gce
->>             - mediatek,mt8186-gce
->> @@ -29,6 +30,9 @@ properties:
->>         - items:
->>             - const: mediatek,mt6795-gce
->>             - const: mediatek,mt8173-gce
->> +      - items:
->> +          - const: mediatek,mt6893-gce
->> +          - const: mediatek,mt8195-gce
-> 
-> You shouldn't have with and without a fallback.
-> 
+On Tue, 22 Apr 2025 at 15:36, Rob Herring <robh@kernel.org> wrote:
+> > +title: Generic SPMI NVMEM
+>
+> What makes this generic?
+>
+> A generic driver is great, but "generic" or "simple" bindings are
+> generally a mistake.
 
-OOOPS! Sorry, that wasn't intentional - I was meaning to add mt6893-gce to the
-enum only, without that mt8195 fallback.
+There is nothing apple-specific in that driver, just re-exporting
+several registers as cells. If you think that it is a mistake, I can
+rename it to apple-pmic, or something similar.
 
-Will send a v2, thanks for pointing out!
+> > +      - const: spmi-nvmem
+>
+> What happens when there's some other feature of the PMIC exposed that's
+> not nvmem?
 
-Cheers,
-Angelo
-
->>   
->>     "#mbox-cells":
->>       const: 2
-
-
-
+If you have a PMIC that needs more features exposed, then you'd have to
+use a different driver. Or am i not understanding the question correctly?
