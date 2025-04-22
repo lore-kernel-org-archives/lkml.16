@@ -1,53 +1,66 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1C3433A6;
-	Tue, 22 Apr 2025 11:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B997A1BD01F;
+	Tue, 22 Apr 2025 11:44:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322284; cv=none; b=sECR/uUbx8S7WiUaBpMLve/0Q66JhEBDeefhkvKi9TFaorlpn15sFVWpAHw3NrSq0ZEJS8Iz6oAxBPYIHylYQdE8IbYgPRoOO9qxN4n+fi7l6473lHaNa4GXCz28xOFndT0HfSa7lw4zsv+LraJshLDARWaJuS/CeKtAXi5lw+c=
+	t=1745322284; cv=none; b=NBENtm1cOW+kyDHE+CipR/Q/2PQpHwSxbWNQ+fdQ967YmKI06e2i/LBHlLT0L4yaq3iKb8sude44ap8//IDiK2qFCEQAdgBwwpnJ7xf+7KxqO62ZVRevFl8JH1+rIcQsf4J1YgYldCHudkWo5hMEinewrFWzVIw9dXhMtr0ut/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745322284; c=relaxed/simple;
-	bh=EdwYZFSFjLIu2qTKO0uo1rUfdkI6jb3DPa92uYe5N9Y=;
+	bh=4+6Uck1wuf+x9FJYWRqaAdpe6qhjv2gI1bnK9Nfhl5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a4k8bNYlx+u5j8roPVpfQLbDmBH651kYfxWNSh6KzPjfEB5EHY28BsWxCauxGGizbQ/S1RKxwFz6+DZcOMckMOxPzgc8QAuLcf/iwl0v2QiU8QpYTlkb5udiad55nLS8Oni1Ef4XDbwYb1irEF+bszZj3AdCQt3kRpTZnnwsDtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=L2hb+1eX; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=QpkfCiu1epJ5Uid4Kasp1BRCsJZy8vYUbqaU7DPMc/PPJ2Nunv8rlpUD87qD9RZWXcEjhmRM8pwxN7TunzKZacRTyVHMWvaHm83SiSK9UCokVSNEAFW/9TzFm1uFbzTiLv2MXGTXyJoeg7z5gSy1XOtb3ukdWnVyHvYLofDYHoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=1le15bX3; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="L2hb+1eX"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="1le15bX3"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=5ivL5Ti0Q3RhIMz3cs6p0pT2tGV00FkMsE3PCGA6DQc=; b=L2hb+1eXc4+jkulhn4CY7JiPMu
-	dv9x9FghMf2tSeBqEH85SPHARyjSF9XKCJA8JiXIYah9w0bTIIlvzvyZwZzSM/kwuzasuXY8O/0Dp
-	QzP7IrR9igpe+w/YeDWKiXAmU6Ofkm6f7EdEX4jNFtXMqEBDymsAbx4aWmcshTPa4ALGuIUEYY35i
-	V4p2YZF6JZZlxfqHXwVFORF/omyAugz7mv+B/0pssUNdlPtyAjZpGU3FoGmQrKyc2k0KAlXWQtDjU
-	Cw1K0WD1IP19Go2evvzV3L55EUCxQLU28zARhbgSC+lTZMmrtAdyjpnFElcZMRhRdoBnX1ch6aDyg
-	7MLaueIw==;
+	bh=7sB1dmuD3GoUpGEiENNK8mtmzVT+tPo02Qc2OEU6BSI=; b=1le15bX3kNYT4sUNY2Wrjt/GOy
+	ii2yyzYgWEbcGsSzMMBiQ+xE+hPzZwy8wUPqDMJEYntpikNZhzaXLFYecyMRHkQyjoPe8iIhrwKDE
+	Ec8uTlmACS5xjGK94UqaO/TiTKUepSRje0NVodc+Vag4d5CYTfdP9egLdQFqHPtxBncnLeHmb3+nG
+	qrhWQPKlZ63/m3gUBPMDeBv+glssWPXZHqLfJefm3WpMIUSzj7NH6BnmRZWd3D21X3381/PYvUJn1
+	MgImJGhPrbFMBsW6YI1N7d7GgP7FioNbCJauCmJ05CR4/YwFl/aksPkTXqz9tACb+JMoeNobg391G
+	fnzu0iwg==;
 Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1u7C3G-0002kK-9A; Tue, 22 Apr 2025 13:44:34 +0200
+	id 1u7C3I-0002kK-4j; Tue, 22 Apr 2025 13:44:36 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Andy Yan <andyshrk@163.com>
+To: Kever Yang <kever.yang@rock-chips.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	andersson@kernel.org,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-kernel@vger.kernel.org,
-	inux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Rename hdmi-con to hdmi0-con for Cool Pi CM5 EVB
-Date: Tue, 22 Apr 2025 13:44:22 +0200
-Message-ID: <174532226020.263993.13170766558495320938.b4-ty@sntech.de>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH v9 0/2] rockchip: Add rk3576 pcie dts nodes
+Date: Tue, 22 Apr 2025 13:44:24 +0200
+Message-ID: <174532226023.263993.13596887054519094900.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250419121326.388298-1-andyshrk@163.com>
-References: <20250419121326.388298-1-andyshrk@163.com>
+In-Reply-To: <20250414145110.11275-1-kever.yang@rock-chips.com>
+References: <20250414145110.11275-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,21 +71,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Sat, 19 Apr 2025 20:13:16 +0800, Andy Yan wrote:
-> There are two hdmi connector on Cool Pi CM5 EVB, the current supported
-> is hdmi0, assign corresponding index to it. It will be convenient for
-> us to add support for another one.
+On Mon, 14 Apr 2025 22:51:08 +0800, Kever Yang wrote:
+> This patch set adds support for rk3576 pcie by adding the dts node,
+> and this series is a re-base on v6.15-rc1 and collect tags without code
+> change.
 > 
+> Please help take the dt-binding to PCI tree if there is no more change request.
 > 
+> Thanks,
+> Kever
+> 
+> [...]
 
 Applied, thanks!
 
-[1/3] arm64: dts: rockchip: Rename hdmi-con to hdmi0-con for Cool Pi CM5 EVB
-      commit: 99685162462c2c70f9e2fbe06481a84a5d0220ca
-[2/3] arm64: dts: rockchip: Enable HDMI1 on Cool Pi CM5 EVB
-      commit: 85e3fd37204a79e0cd3105176081439ddefbd3b2
-[3/3] arm64: dts: rockchip: Enable HDMI audio outputs for Cool Pi CM5 EVB
-      commit: abfe411af85aa6ecde580b1f75b9c8145b635fa7
+[2/2] arm64: dts: rockchip: Add rk3576 pcie nodes
+      commit: d4b9fc2af45d2b91b1654c4aaa1edcb4dd8f4918
 
 Best regards,
 -- 
