@@ -1,149 +1,241 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2560E27C867
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473D618CBE1;
+	Tue, 22 Apr 2025 13:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745327479; cv=none; b=ueHHrkUS9nN1gscICa7pTw7t6MjxKwflYYuJCV4yPsFO4dMcxTLwE7NSK2eeRzGvkbAdfJNzI2EHQO1Bv1Ahmdnkdt/zP+Zlf2LROug14zrf6Ms1Tb5IuIFHOVdaIyGen9OeajY7jUZyytPzuFMSh/70+q6qRFpwxJx29zdsZ8I=
+	t=1745327518; cv=none; b=pXHB7nQGbjdt4hiWueJwKv03oRtQjHtb0RQVMyEcz9NC3bVm00u7Gg+gWP523n7vqqoamM90pwDU8QYfDE7BLfStvsJBPlQF6CqBakQJwUGODrv0Wwct7wraYb6nFPpaG2s7MAv3RWg8yApCqhnePFHRKSOHKeMH/3YYhT8RaU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745327479; c=relaxed/simple;
-	bh=5VUtM3MlpqncXQIwvD7wi3URCc9M4jwjzUC4MjA9r/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Me0Ya+EGl/yGDnHICPEOyDNHgUk7prOk6biF8aocLfDOyDFJpRZTajXVcMbuiiHd3C5RzMo6jbpB6gGdkciUWXsMNuFtk7cRSE1dL/q+WT7MAV92WQh03rtpUI4q6QHEiTOh4ShXmEYbLGVoWAxLBoQKUQv/MZdw7nkNRGgsZLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=Uh72IyAS; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1745327518; c=relaxed/simple;
+	bh=rRjktDJ0MUBAM/q9snEfNjjc72sE7/oAhMScX+HK/Jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k3USzz0GVM+qk3yqEF018f/GtnS9GHtl0pCw1Lq+d5vauhODF9cKR/c9ryXcqpRcs5dFXXKqULyueOFlP8k63fEYFbEXgXoRGDbvtLNeZWpLwG1E7GlAgme2qCNwgfx1P7v/F4WpYNJQt3qU05ncYEa9Sk8bN7sDH+bzNTwSQoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=n15q944H; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="Uh72IyAS"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4775ccf3e56so64524301cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1745327477; x=1745932277; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5VUtM3MlpqncXQIwvD7wi3URCc9M4jwjzUC4MjA9r/s=;
-        b=Uh72IyASRgdaf8QMQ+bh3cB49SM62BgjLio56IXrkB0nBwHCnkUzJAhDZxN8sTAMLB
-         mcZQwpRJ+v6rfI1XegbMvAgxHGGXjcb4wyItOFakUM271huw5cO5jne5EVfrrNJ1Sbcr
-         eMiw1FqHZbcvJD83jt+9X0mcpndbcdyBnpdo3vVSC+Wp1q3yUAuLLqZuU5dDgpbLmzvz
-         gfpMjh7xr28pGyY7NZ7xQV+2B+kIeTSZljlUeXXysk6U/3iChM3eqRwm0GGft6fGhuDY
-         /HbHrXdOt38R0mpvRoaQV6SYVlnAXJdkapQuVj2YXHaJHWzlWOM1jPD13b5wJdX7j1Ql
-         b/eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745327477; x=1745932277;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5VUtM3MlpqncXQIwvD7wi3URCc9M4jwjzUC4MjA9r/s=;
-        b=hodnZGy+n3WGnvyszn6UTJiBULsIn6lFbKnksYxGPP50rv+15ie7XFQzp6LzgPhkBb
-         dKWf+0wRIyxvR/8jyco3uwiHutFcjlRt8usj+Sqev3FeF4PmIK8tu7z4+SWcj6Peqgrt
-         jegUuvPsex7wBo9kNP9XZ0Mx7gFb2hPFVl5SOVYKud8qhHN+cFMNa3wo4O+AmXv3JaVc
-         HjhVOK4YDZl5/Cf0Fb8yxwbEPIvVlk2NMmuct2+xc/dcDOXC6GB3k4lNmyVl2nFaGclW
-         T4qf+GxklbYmhMzN/VkPjQAFb/83pRMXu4YV6wRglMowLfvwg3NGdJpv9Qw4uZ2FQDUG
-         TRPg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdLSJLsuz7Tz43eItILIQQUggtru1ukQhUp/kgr1hj7OR8oiuDeJtGWOUJrIGs7FrMBaQmgFaSlzQ4/Fc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7DYcXCW+JxXh7BtBkPMPIPFT0CGNc7XeC9oBVKZOheTHLK260
-	WYRE+sSqbCJX4s1uwucseF/DsXxuTK2BSg4WUCQzK/+iw0KFuepsOrgZtsvfTxlTCzgPQisQXif
-	Qlf605Jqfp+lXDUVvAZQXMStWl7MntFvzaQK2jA==
-X-Gm-Gg: ASbGncunHBPEaB8nINoxhb2yyvtKMOU7o102+w2TBirQeuS4RI+YLSJCIO9VhDIJT2n
-	eEadm60EHm1NkP777JO1F06BDA+JGRMSAj+brzP3ayRmpiD7Oik3NSKwQxLdH4KrzEWhaqjbODR
-	He3rUCNCEjZv2g2yMfz6Q=
-X-Google-Smtp-Source: AGHT+IEgeN5s3ZfRGLUDH5gOqfcD4s6TEi5D0C2g77HjKlzUHwkH9XonjRLYuHi/ar2d9oTr5N5VxEPTjm/oRIIx8No=
-X-Received: by 2002:a05:622a:1c19:b0:477:84f5:a0b with SMTP id
- d75a77b69052e-47ae96515c1mr280374181cf.2.1745327476964; Tue, 22 Apr 2025
- 06:11:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n15q944H"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 27961666;
+	Tue, 22 Apr 2025 15:09:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745327386;
+	bh=rRjktDJ0MUBAM/q9snEfNjjc72sE7/oAhMScX+HK/Jc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n15q944HIcA5QyAjmzJSVdftRaVtGEC7F6+mf7fB3FkKL4hDZDbnAe6j7io+0+q91
+	 tNaNqLfle9GtruOaJZlnjvCAs6pjNrCHib92f0H6NUF4MpZZE9ggRgsAiIcA2O+SQC
+	 KScLGn7kuOzSrSXDf60UpqtGz7v1+3BJYkd9SnDA=
+Date: Tue, 22 Apr 2025 16:11:51 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+Message-ID: <20250422131151.GA16823@pendragon.ideasonboard.com>
+References: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
+ <20250404-b4-vd55g1-v5-1-98f2f02eec59@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417142525.78088-1-mclapinski@google.com> <6806d2d6f2aed_71fe294ed@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <6806d2d6f2aed_71fe294ed@dwillia2-xfh.jf.intel.com.notmuch>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 22 Apr 2025 09:10:39 -0400
-X-Gm-Features: ATxdqUHTas6nxRBSgtwdGV4WIXumv0Kkcfrqb-O571C2uYrggyHxMo9DW-cOmcA
-Message-ID: <CA+CK2bD9QF-8dxd92UBoyvO0rBJ3uTN27pXzO2bALw4v_2D_8g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] libnvdimm/e820: Add a new parameter to configure
- many regions per e820 entry
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Michal Clapinski <mclapinski@google.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Jonathan Corbet <corbet@lwn.net>, nvdimm@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250404-b4-vd55g1-v5-1-98f2f02eec59@foss.st.com>
 
-On Mon, Apr 21, 2025 at 7:21=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
->
-> Michal Clapinski wrote:
-> > Currently, the user has to specify each memory region to be used with
-> > nvdimm via the memmap parameter. Due to the character limit of the
-> > command line, this makes it impossible to have a lot of pmem devices.
-> > This new parameter solves this issue by allowing users to divide
-> > one e820 entry into many nvdimm regions.
-> >
-> > This change is needed for the hypervisor live update. VMs' memory will
-> > be backed by those emulated pmem devices. To support various VM shapes
-> > I want to create devdax devices at 1GB granularity similar to hugetlb.
->
-> This looks fairly straightforward, but if this moves forward I would
-> explicitly call the parameter something like "split" instead of "pmem"
-> to align it better with its usage.
->
-> However, while this is expedient I wonder if you would be better
-> served with ACPI table injection to get more control and configuration
-> options...
->
-> > It's also possible to expand this parameter in the future,
-> > e.g. to specify the type of the device (fsdax/devdax).
->
-> ...for example, if you injected or customized your BIOS to supply an
-> ACPI NFIT table you could get to deeper degrees of customization without
-> wrestling with command lines. Supply an ACPI NFIT that carves up a large
-> memory-type range into an aribtrary number of regions. In the NFIT there
-> is a natural place to specify whether the range gets sent to PMEM. See
-> call to nvdimm_pmem_region_create() near NFIT_SPA_PM in
-> acpi_nfit_register_region()", and "simply" pick a new guid to signify
-> direct routing to device-dax. I say simply, but that implies new ACPI
-> NFIT driver plumbing for the new mode.
->
-> Another overlooked detail about NFIT is that there is an opportunity to
-> determine cases where the platform might have changed the physical
-> address map from one boot to the next. In other words, I cringe at the
-> fragility of memmap=3D, but I understand that it has the benefit of being
-> simple. See the "nd_set cookie" concept in
-> acpi_nfit_init_interleave_set().
+Hi Benjamin,
 
-I also dislike the potential fragility of the memmap=3D parameter;
-however, in our environment, kernel parameters are specifically
-crafted for target machine configurations and supplied separately from
-the kernel binary, giving us good control.
+Thank you for the patch.
 
-Regarding the ACPI NFIT suggestion: Our use case involves reusing the
-same physical machines (with unchanged firmware) for various
-configurations (similar to loaning them out). An advantage for us is
-that switching the machine's role only requires changing the kernel
-parameters. The ACPI approach, potentially requiring firmware changes,
-would break this dynamic reconfiguration.
+On Fri, Apr 04, 2025 at 04:50:51PM +0200, Benjamin Mugnier wrote:
+> Also update MAINTAINERS file accordingly.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> ---
+>  .../devicetree/bindings/media/i2c/st,vd55g1.yaml   | 132 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 ++
+>  2 files changed, 139 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..6b777f86790da4e5941ac1cad86dc1a5021f9f5b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2025 STMicroelectronics SA.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/st,vd55g1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics VD55G1 Global Shutter Image Sensor
+> +
+> +maintainers:
+> +  - Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> +  - Sylvain Petinot <sylvain.petinot@foss.st.com>
+> +
+> +description: |-
+> + The STMicroelectronics VD55G1 is a global shutter image sensor with an active
+> + array size of 804H x 704V. It is programmable through I2C interface. The I2C
+> + address is fixed to 0x10.
 
-As I understand, using ACPI injection instead of firmware change
-doesn't eliminate fragility concerns either. We would still need to
-carefully reserve the specific physical range for a particular machine
-configuration, and it also adds a dependency on managing and packaging
-an external NFIT injection file and process. We have a process for
-kernel parameters but doing this externally would complicate things
-for us.
+If you intend for this block of text to be split in two paragraphs, it's
+missing a blank line here. Otherwise, it should be reflowed as a single
+paragraph.
 
-Also, I might be missing something, but I haven't found a standard way
-to automatically create devdax devices using NFIT injection. Our
-current plan is to expand the proposed kernel parameter. We are
-working on making it default to creating either fsdax or devdax type
-regions, without requiring explicit labels, and ensuring these regions
-remain stable across kexec as long as the kernel parameter itself
-doesn't change (in a way kernel parameters take the role of the
-labels).
+> + Image data is sent through MIPI CSI-2, which is configured as only 1 data
+> + lane. The sensor provides 4 GPIOS that can be used for external LED signal
+> + (synchronized with sensor integration periods).
+> +
+> +allOf:
+> +  - $ref: /schemas/media/video-interface-devices.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: st,vd55g1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  vcore-supply:
+> +    description: Digital core power supply (1.15V)
+> +
+> +  vddio-supply:
+> +    description: Digital IO power supply (1.8V)
+> +
+> +  vana-supply:
+> +    description: Analog power supply (2.8V)
+> +
+> +  reset-gpios:
+> +    description: Sensor reset active low GPIO (XSHUTDOWN)
+> +    maxItems: 1
+> +
+> +  st,leds:
+> +    description:
+> +      List sensor's GPIOs used to control strobe light sources during exposure
+> +      time. The numbers identify the sensor pin on which the illumination
+> +      system is connected. GPIOs are active-high.
 
-Pasha
+If multiple GPIOs are specified, do they all serve the exact same
+purpose, or is there a need to differentiate them ?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 1
+> +    maxItems: 4
+> +    items:
+> +      minimum: 0
+> +      maximum: 3
+> +
+> +  port:
+> +    $ref: /schemas/graph.yaml#/$defs/port-base
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      endpoint:
+> +        $ref: /schemas/media/video-interfaces.yaml#
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          data-lanes:
+> +            items:
+> +              - const: 1
+> +
+> +          link-frequencies:
+> +            maxItems: 1
+> +            items:
+> +              minimum: 125000000
+> +              maximum: 600000000
+> +
+> +          lane-polarities:
+> +            minItems: 1
+> +            maxItems: 2
+
+Does the sensor support non-continuous D-PHY clock ?
+
+> +
+> +        required:
+> +          - data-lanes
+> +          - link-frequencies
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - vcore-supply
+> +  - vddio-supply
+> +  - vana-supply
+> +  - reset-gpios
+> +  - port
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera-sensor@10 {
+> +            compatible = "st,vd55g1";
+> +            reg = <0x10>;
+> +
+> +            clocks = <&camera_clk_12M>;
+> +
+> +            vcore-supply = <&camera_vcore_v1v15>;
+> +            vddio-supply = <&camera_vddio_v1v8>;
+> +            vana-supply = <&camera_vana_v2v8>;
+> +
+> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
+> +            st,leds = <2>;
+> +
+> +            orientation = <2>;
+> +            rotation = <0>;
+> +
+> +            port {
+> +                endpoint {
+> +                    data-lanes = <1>;
+> +                    link-frequencies = /bits/ 64 <600000000>;
+> +                    remote-endpoint = <&csiphy0_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2286200b355bde3604607be916ef09aa88feed0e..4f5e9005063a157de69e81b10f8def9da9e6c04c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22410,6 +22410,13 @@ S:	Maintained
+>  F:	Documentation/hwmon/stpddc60.rst
+>  F:	drivers/hwmon/pmbus/stpddc60.c
+>  
+> +ST VD55G1 DRIVER
+> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+> +L:	linux-media@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+> +
+>  ST VGXY61 DRIVER
+>  M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>  M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+
+-- 
+Regards,
+
+Laurent Pinchart
