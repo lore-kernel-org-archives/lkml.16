@@ -1,97 +1,124 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777722853FA
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADCDEEAB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331308; cv=none; b=acUloo5joNgtktRQE6C0gRcJpCKKrDpcoYC8WpO+j8dONATgLlRHjncYBf/bNQC3WO7l00CX49t3cjOA5Cis5Ap67R6Q1WDxkN8GA9QrkQ1D/v3lyQtIAOqXP1Qx5H1uNMwW+D9IaFZZ+6MnYhfOpdFbxnoWziS3Hw7X7Cf3i3M=
+	t=1745331348; cv=none; b=FrLZJEU1p0EEhiugM/BemXcMg1GHuj+GcR86LGrqrIeNQsG/ArEmWneq3vtMkz1fqw6NABhlPqdFkOpzftT6sTLwe4Tm4UDzodksk/i+04dYEWoN85o1wVggh7oUs+uHqTSEj/ZWqgK7AdgxF4xHH385/g3LYqUtIBU2+/hzQzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331308; c=relaxed/simple;
-	bh=ht/b8hOowhBPrZFB3PRaz3GwnJG9WOhGtjQrBFTFXYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2bJvLf70YEyAchDxhw/P1VYPrRl7iJN/bg86X02Q1qew0hA98SmqH14ttEqfGpJJoo1djK/4/ZjOO8kO/ok/NWxFQFI9QOZZZmrkovUWNdyK9vjnOt1q4c576wDjf728SzpnfhqUtNOuz4v/BSTyFkiqobyl4xuVLcNNE4xjIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m1Y+XNDe; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745331348; c=relaxed/simple;
+	bh=zu/h7yjGnqnYWOhUUyWPs9vnIxfLpKpkZcZNYjSoVvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bg59aPP+WQ5+xZrfor/JB8kpFn9d65XvRYtf5gBz6WRDWA7Fv2xB/u98hIBZBcNBrT6c4DUdID5Ee3hCs2VxktxJ7esIoEVsyZP/yVXoxExge2RDMG92/ngbCWA3jBWMaeMtuZb7liuq4sKQUFk9/TRqYr9OGVzlFG41aPhwe3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TvIJTVsq; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m1Y+XNDe"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso866838766b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:15:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745331305; x=1745936105; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VAPsYi7X25L/caX0EHEb02SNjtKsf53q45QaVhQBarc=;
-        b=m1Y+XNDe8DEWAKdnmGGi5vdj/XWB24Q9VWs3dHEEMRFgWk673wuNmOpidl2zs+5753
-         fYJAFFCocV0N2zoYS6NuaEw4gme1s2oFvtlKaMoeJ/2IM2O7Sp8dn0X1lrjdep2VgOiT
-         1xG1bhk1ZPV5eGIBo8rL79O/qcjL+tUhnuqGrHiutUK+xpVEUIMlQfRqZKCNAx4XUpSM
-         P31qxspVDp0qq7/AMfL/yN/9e/WOcz44li93JnhGmv2K+k8xbxcd0U8uOQWOgxlZlcie
-         r57f6lqdhqvyV+mSOaTGfnPtBrT4BlZj9n1fru9sCxIz4ww9F3DuuB0HZ4fgI9TvWPCE
-         eBbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331305; x=1745936105;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VAPsYi7X25L/caX0EHEb02SNjtKsf53q45QaVhQBarc=;
-        b=tV75+njQBv6bmGlrcswOVuuLNlFwpoZwt1wbfQzoRSFVcaldpW7+VO++TovSy6duPu
-         7fC4BSZRa7RzSLe1Gpvg366Gq7iZx1zcM2rQ209rYbqi92IMCXQAu7YvvMopWZCIGNxu
-         4DtqrV613GzR4YqbX1t3XDbW425Pi8KR1f1xOuJhKST39cTqUqpYbathVNZWbPAa/emL
-         Jyeh/ZNqnE5oP+NwRTRb20Gxu5MJB+wlBU7ezHA7Ay1l9XdM2F7J5BjDwMT46zhuWM+b
-         yuQx10CAzboxa+eK+uyZPtdLbaDlY3yryJ6Zvjv/fSY4YpjV7+TDdKtE3l5LSDCUAk9s
-         kWUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVj/2q3qNTMWDqnwg9gFVwD+B+GSnu1jYN/38M65w8Hc7zc/JosO0PY0csW5RNZ7szW0zggiDZVxobYFgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd2ssJSFMkcPTCz2bpGeXnh8xtm+N/HhXxYbHkhsJud1sXjyoR
-	4n4zzzvLzEScrwC1rILUThp81QjWved8BuDe1Ue5lZ7PPsEwBeNNcN4AI3euOUk=
-X-Gm-Gg: ASbGncsWLfZXfQfO4BQMyg6jIWo7F1UK6h9FQb3nqQuY7pC2EOvS60bTDeYGJdFcbw5
-	oCKYpSzaOIHs7sUDrdKgPsHARNSnA9UnDjZKEmzOChlFqKRktsL0wJGXjlvP2hgB12nFFJT7wo9
-	oOxSiMHz7D3qZBoN3cTRyZVqfmIvBC+1Bl8DW+sczZwPITMiIbH2N4Ndp6cMXpO9ccKK/AuM/hq
-	F6sITC/l6374pXxHaUJUIMuCkRV+Fo8aiSxHVcRKZSt7RntF4mo9J0Eema5FoLsmGohSQ+KL5/C
-	RiDyoEl5/lF26S15I4Shv+alWk8279wXHrQWPQ==
-X-Google-Smtp-Source: AGHT+IFeSK5uLgbn1NZKQrylDdRtKmBHDZDXywYGuDfa4NwCwFDz1VJZvajnIXoXSg2frAfCpTf5uw==
-X-Received: by 2002:a17:907:3d8f:b0:acb:66ea:5786 with SMTP id a640c23a62f3a-acb74b88937mr1434632166b.31.1745331304772;
-        Tue, 22 Apr 2025 07:15:04 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef468dfsm658630766b.133.2025.04.22.07.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:15:04 -0700 (PDT)
-Date: Tue, 22 Apr 2025 17:15:02 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Johan Hovold <johan@kernel.org>,
-	Maulik Shah <maulik.shah@oss.qualcomm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] driver core: Add dev_set_drv_sync_state()
-Message-ID: <aAekZizB9lR8E4Rw@linaro.org>
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
- <20250417142513.312939-10-ulf.hansson@linaro.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TvIJTVsq"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MEFKDv1228983
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 09:15:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745331320;
+	bh=j0SAnZAH2PKj7cb/0hXi/Kyprc2Be+WMsrPDKWn/x7A=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=TvIJTVsqkrkkNLj7//lyC8+vb40grO6v6HqLC5hvxhqBug8tqgS41uNe3Zdd+NE8l
+	 OjZ9OvUwCtFRTlpeJJ4LB/VNpiolKl7tGWNqTxRNbfyD8gcH2TxIcF/8F35XIm7U0R
+	 tqUiCVXi8yGLHETUbjFKPgF6+EJ812mB7GxOIfgI=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MEFJZu085202
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 09:15:19 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 09:15:18 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 09:15:18 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MEFIx0119691;
+	Tue, 22 Apr 2025 09:15:18 -0500
+Message-ID: <54b6880a-bf65-4a79-8f3e-9fa66b6c3550@ti.com>
+Date: Tue, 22 Apr 2025 09:15:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417142513.312939-10-ulf.hansson@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: defconfig: Enable hwspinlock and eQEP for K3
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Geert Uytterhoeven
+	<geert+renesas@glider.be>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20250421201055.3889680-1-jm@ti.com>
+ <55d306d4-c9cd-4119-8798-b65a6956f4df@app.fastmail.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <55d306d4-c9cd-4119-8798-b65a6956f4df@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 25-04-17 16:25:07, Ulf Hansson wrote:
-> From: Saravana Kannan <saravanak@google.com>
-> 
-> This can be used by frameworks to set the sync_state() helper functions
-> for drivers that don't already have them set.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Hi Arnd,
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+On 4/22/25 1:37 AM, Arnd Bergmann wrote:
+> On Mon, Apr 21, 2025, at 22:10, Judith Mendez wrote:
+>> Enable CONFIG_HWSPINLOCK_OMAP to allow usage of these devices
+>> across K3 SoC's. Also enable CONFIG_TI_EQEP which is enabled by
+>> default on am64x SK board.
+>>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> The patch seems fine to me, but you should address it at the
+> TI K3 maintainers, so they know they should apply it and forward
+> it to the SoC tree. You have Nishanth and Vignesh in Cc already,
+> so I assume they will pick it up from here, just put them in
+> 'To' instead next time and move Catalin and Will to 'Cc' or
+> leave them off entirely.
+> 
+
+Will re-spin and fix the to and cc lists, thanks for reviewing!
+
+~ Judith
+
+>> ---
+>>   arch/arm64/configs/defconfig | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 9e16b494ab0e2..1f7b97ff46a7e 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -1415,6 +1415,7 @@ CONFIG_CLK_GFM_LPASS_SM8250=m
+>>   CONFIG_CLK_RCAR_USB2_CLOCK_SEL=y
+>>   CONFIG_CLK_RENESAS_VBATTB=m
+>>   CONFIG_HWSPINLOCK=y
+>> +CONFIG_HWSPINLOCK_OMAP=m
+>>   CONFIG_HWSPINLOCK_QCOM=y
+>>   CONFIG_TEGRA186_TIMER=y
+>>   CONFIG_RENESAS_OSTM=y
+>> @@ -1676,6 +1677,7 @@ CONFIG_INTERCONNECT_QCOM_SM8650=y
+>>   CONFIG_INTERCONNECT_QCOM_SM8750=y
+>>   CONFIG_INTERCONNECT_QCOM_X1E80100=y
+>>   CONFIG_COUNTER=m
+>> +CONFIG_TI_EQEP=m
+>>   CONFIG_RZ_MTU3_CNT=m
+>>   CONFIG_HTE=y
+>>   CONFIG_HTE_TEGRA194=y
+>> -- 
+>> 2.49.0
+
