@@ -1,136 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861011A071C
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4041E3793;
+	Tue, 22 Apr 2025 18:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745347302; cv=none; b=o7ZFt70ZzW9d3fl44dnlLqx9LxYL5O/Qzngvc0+pJdtycd2L+YSYoGFqtopGiRwO4JKVomWZA5IxwetgYhTBjOh0452Ra3AZxPUt3Ft2EhYy+57FGJaqBV0oxtWbgWU3G0+8zUqnUiYBfVKeq3xWJLHJSoqyhFNLra+aMibKPgA=
+	t=1745347422; cv=none; b=I7+bdOUXd066BBg4SQsSyyGYy1N+RJaAplG+uYZRrmTiqC11Yo/Fq5xfsbBjGr64EOTFkEO4+XUoV8HvCtRHDOMQjWagu/rNPEk2swepGBj1hMqS3hgXFqFM7Ygn3THclkSF6eO82kRA0hiAhsy8ajuE+NtQjKYidhL4Ot6cw64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745347302; c=relaxed/simple;
-	bh=jIcPwdCVJ4oPl3FG8BiGvp9E06ch1KDrjP/gHM9Et0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJj3IWP4DEH9mDxfdowvU0Getyx84dgKcPG3hhyuYapX8avel57bzMSwwP3roMXWuayfcaY9nO8O2tXI2yv978ykHBzXfbKcxcNBd9thLXDksIxqFFs1f9P4UkdllsVn1nUPAsHfsiSAe5U0RzdqHBs47SeYEjg16O4pkDqn5Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gn7w95+m; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745347422; c=relaxed/simple;
+	bh=Jr7Q2cyZOe/JomFSDXsqaXxHxSTcdk3JVAvECSbQZOs=;
+	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=FgJeBQsE6uKgeDbVFAH1PzGMxAG36Jh+Z6iPw3Wyf/FqMuzjVjvkTvjSRWTh9TQozVnr6t8D/npi8w3N/ZBa7jbIHCSw243MqX9G1lubLYH9G2VhnYmc0ndYDGVfwmkwD/GiqJOuBQqjsryZ6dfSmORRphpO0nbEh1UATuJ5ruU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=xKFJqQ2K; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gn7w95+m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745347299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uQm82sFSaAR8XqBVikoka6Rm4k9SPi8HP+wCt/c07D8=;
-	b=Gn7w95+moJ04jliCQrOL6rla7Fj4wkXZpbnErVRHAe/9dDoa43bY8S6Q8VuJ9pIoVApAsa
-	6LRspSg5M6nTyPzsXjOPCKGjTs/FZJpFuiqLUqvS47FBgF9NtVPh8q/2lKF4j5Fij1ONxO
-	7Cip/IMDr02QJkpPArrhC+qktZ+cJ5A=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-9SWX8oGzNGCd6pL2zxiPJw-1; Tue,
- 22 Apr 2025 14:41:36 -0400
-X-MC-Unique: 9SWX8oGzNGCd6pL2zxiPJw-1
-X-Mimecast-MFC-AGG-ID: 9SWX8oGzNGCd6pL2zxiPJw_1745347295
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE9A0180087A;
-	Tue, 22 Apr 2025 18:41:34 +0000 (UTC)
-Received: from f39 (unknown [10.44.32.103])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82BF1180094C;
-	Tue, 22 Apr 2025 18:41:32 +0000 (UTC)
-Date: Tue, 22 Apr 2025 20:41:29 +0200
-From: Eder Zulian <ezulian@redhat.com>
-To: Nathan Lynch <nathan.lynch@amd.com>
-Cc: Basavaraj.Natikar@amd.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jsnitsel@redhat.com,
-	ddutile@redhat.com
-Subject: Re: [PATCH RFC 1/1] dmaengine: ptdma: use SLAB_TYPESAFE_BY_RCU for
- the DMA descriptor slab
-Message-ID: <aAfi2SeDqD8IybOJ@f39>
-References: <20250411194148.247361-1-ezulian@redhat.com>
- <20250411194148.247361-2-ezulian@redhat.com>
- <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="xKFJqQ2K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=MCD4Bjw6ygld9iM8pOQAa6sfQIFiXZamnUclPKNh28Y=; b=xKFJqQ2KBTSMX42HViVQQotMhq
+	6Qt0jIxBwKy8bw1dK32q6fsXiCjwY74D+7t0Q0tlrcG9R1Bk1guUKFbwnDwOSZ056uA0nBAUt2hQ0
+	8FS3BqjnWpvrSb7/v/RvckSZsoJiBK7PL+fNpT5x6jQ24KETnNrGA00U/LjUk6Znvv+4=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:44486 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1u7Iad-00031m-D9; Tue, 22 Apr 2025 14:43:27 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Maximilian Weigand <mweigand@mweigand.net>,
+	Alistair Francis <alistair@alistair23.me>
+Cc: hugo@hugovil.com,
+	Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>,
+	stable@vger.kernel.org,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Date: Tue, 22 Apr 2025 14:43:24 -0400
+Message-Id: <20250422184324.3181215-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+Subject: [PATCH] Input: cyttsp5 - fix power control issue on wakeup
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Hello Nathan,
+From: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
 
-On Thu, Apr 17, 2025 at 04:02:23PM -0500, Nathan Lynch wrote:
-> Eder Zulian <ezulian@redhat.com> writes:
-> > The SLAB_TYPESAFE_BY_RCU flag prevents a change of type for objects
-> > allocated from the slab cache (although the memory may be reallocated to
-> > a completetly different object of the same type.) Moreover, when the
-> > last reference to an object is dropped the finalization code must not
-> > run until all __rcu pointers referencing the object have been updated,
-> > and then a grace period has passed.
-> >
-> > Signed-off-by: Eder Zulian <ezulian@redhat.com>
-> > ---
-> >  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > index 715ac3ae067b..b70dd1b0b9fb 100644
-> > --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > @@ -597,7 +597,8 @@ int pt_dmaengine_register(struct pt_device *pt)
-> >  
-> >  	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
-> >  					       sizeof(struct pt_dma_desc), 0,
-> > -					       SLAB_HWCACHE_ALIGN, NULL);
-> > +					       SLAB_HWCACHE_ALIGN |
-> > +					       SLAB_TYPESAFE_BY_RCU, NULL);
-> 
-> No, this code wasn't written to exploit SLAB_TYPESAFE_BY_RCU and this
-> change can only obscure the problem. There's likely a data race in the
-> driver.
-> 
+The power control function ignores the "on" argument when setting the
+report ID, and thus is always sending HID_POWER_SLEEP. This causes a
+problem when trying to wakeup.
 
-Ack. Let's conclude my RFC and discard the proposed patch then.
-Thank you very much for your feedback. 
+Fix by sending the state variable, which contains the proper HID_POWER_ON or
+HID_POWER_SLEEP based on the "on" argument.
 
-> I suspect pt_cmd_callback_work() has a bug:
-> 
->         spin_lock_irqsave(&chan->vc.lock, flags);
->         if (desc) {
->                 if (desc->status != DMA_COMPLETE) {
->                         if (desc->status != DMA_ERROR)
->                                 desc->status = DMA_COMPLETE;
-> 
->                         dma_cookie_complete(tx_desc);
->                         dma_descriptor_unmap(tx_desc);
->                 } else {
->                         tx_desc = NULL;
->                 }
->         }
->         spin_unlock_irqrestore(&chan->vc.lock, flags);
-> 
->         if (tx_desc) {
->                 dmaengine_desc_get_callback_invoke(tx_desc, NULL);
->                 dma_run_dependencies(tx_desc);
-> >>>>            list_del(&desc->vd.node); <<< must be done under vc.lock
->                 vchan_vdesc_fini(vd);
->         }
-> 
-> But that's relatively new code that may not be in the kernel you're
-> running.
-> 
+Fixes: 3c98b8dbdced ("Input: cyttsp5 - implement proper sleep and wakeup procedures")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+---
+ drivers/input/touchscreen/cyttsp5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-True. pt_cmd_callback_work() wasn't in the kernel used for tests and it
-seems to be used only if 'pt->ver == AE4_DMA_VERSION'. In that kernel
-pt_cmd_callback() would call pt_handle_active_desc() which seemed to have
-the same bug.
+diff --git a/drivers/input/touchscreen/cyttsp5.c b/drivers/input/touchscreen/cyttsp5.c
+index eafe5a9b89648..86edcacb4ab3e 100644
+--- a/drivers/input/touchscreen/cyttsp5.c
++++ b/drivers/input/touchscreen/cyttsp5.c
+@@ -580,7 +580,7 @@ static int cyttsp5_power_control(struct cyttsp5 *ts, bool on)
+ 	int rc;
+ 
+ 	SET_CMD_REPORT_TYPE(cmd[0], 0);
+-	SET_CMD_REPORT_ID(cmd[0], HID_POWER_SLEEP);
++	SET_CMD_REPORT_ID(cmd[0], state);
+ 	SET_CMD_OPCODE(cmd[1], HID_CMD_SET_POWER);
+ 
+ 	rc = cyttsp5_write(ts, HID_COMMAND_REG, cmd, sizeof(cmd));
 
-Eder
+base-commit: 7adf8b1afc14832de099f9e178f08f91dc0dd6d0
+-- 
+2.39.5
 
