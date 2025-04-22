@@ -1,72 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4E55FB95;
-	Tue, 22 Apr 2025 14:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E720428D829;
+	Tue, 22 Apr 2025 14:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745332310; cv=none; b=VxTBmbEGjWDjcSDWje7RIlX5NXe0PIl8QCiwt7Fc18qE9+KV57d21qe13VvbnYb7RlE5uqFJqa11kFYqjJibOi3kllyAdHgc7yfids0jE3iwT8dqJytlHfAk08d4AoMxYA1OFlFkWFAihbc/GLsJ0GRl1IX979rEn5mc92ur/Us=
+	t=1745332313; cv=none; b=Xkl9bn1zby7IlXNAHll0WG4scVNswXuZCOSwp0BhLFJWUZCvzzjZdm/vWnGgd76UsRJVXhCksxU/KfymFuLb8GI6gnJHYMi+xOae47pnHk97A/RXg0Q9PUux0KLnM860UdiIvFAZHYtUp90gTI4wN1WRpCoHJ2HMBlTQTA6TjuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745332310; c=relaxed/simple;
-	bh=/ONe7k84QQs3Jfl6KyExISyHeaYbQCPgqi6g8xPg/b0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TSbLzf02PbGzR0/xZTif1hDrZDK/aLAkNp5Ew2Aog8Br0D5/thLMEK2v1vTmUaWxSoosLBY1WE5/BbzxqDpcm8JNBGa9yDmapHgMCw4hjk3idj5/28xeVYodkK7IQh5UnUn46dtqzfFUMYhuhVfj04UJHl64GRMneX3q9iVJHlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RC4uyzCu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745332313; c=relaxed/simple;
+	bh=I/3+wTmAf3FBNLCDu9mwvPy69eEH2veqCzLXfOX2FyM=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=u0SWDMDyUwaNfIxIoOLmTJN69ucjcGJpEXow45Tk2gL+Je+pNcpYK+Lx5BG56QVNGr+R19dQ3k1KUDVFZstw8K8Omhj2Wc0zi5EQQbEER5CtxBHBs/tke3xnbHWFSqJzExB0JRxalHg6/3nrubxCY0ei7Pu0AdkpmNmpCo0aHR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AIUrKvdl; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RC4uyzCu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A8B5C4CEE9;
-	Tue, 22 Apr 2025 14:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745332309;
-	bh=/ONe7k84QQs3Jfl6KyExISyHeaYbQCPgqi6g8xPg/b0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=RC4uyzCu9CbgI3t4BsB1lmtsqYVFk233JogzmcNrGLVQF6Esd4+VNqEJ8Q3xXTs/m
-	 Jc7tieWy3DC5DuUwuX8J0pdM2aVRBYplGGRQiYM+ovl4M8WlX9Zcr56ZaRYnhByy52
-	 ZLZxB+xzrlaO5MKe4y3dXuIaqhQH3lqCp1GtiJsKAcYDZfSt86LW0AjA4/vuQfoQBd
-	 nB8BXR0QzjxQRywV86vKo43cGmn2UWPLt3i5Ko3wie25SCqSceCJLnJbSLr0pvV3Rz
-	 UMP62K+8SHpbNZBRfaFJVHP7L8RibQMLDEy6qGa/oSSmttPPvdCUar8vxA4SwdTvrx
-	 /sUlYWftuA/Ng==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3AF63CE0875; Tue, 22 Apr 2025 07:31:49 -0700 (PDT)
-Date: Tue, 22 Apr 2025 07:31:49 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the paulmck tree
-Message-ID: <1eae5a76-9855-469b-969a-22eceb923795@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250422093834.57e9e9d0@canb.auug.org.au>
- <ef907eca-3a04-461a-9c75-404d65dbaf2b@paulmck-laptop>
- <aAdJ18rRHdi9y3S9@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIUrKvdl"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso61433995ad.2;
+        Tue, 22 Apr 2025 07:31:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745332311; x=1745937111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M7mFfhbdxHQKXHZiL5DhNfWu+e4LKYbHRFDcRBXeqUk=;
+        b=AIUrKvdlXKWnTG/KPFrs6hp8LvLp0PKzoacYDweecogwFrVDlkvcEQDJGrUnZQVggz
+         fnZJM1ogbC0ErRYPtAJRTGjx87fcLSCtGnemPKl4gHZdi53b91CtQDMvID2OYVL2UmZC
+         /jZ/+kYfsTj8XcS5EqmJuEOFtqYlluC5F9oz3sNNymTMEpnqj5IDGhU/NaLVsPc0//5c
+         cdYaZY8sLMSkhvZnG/7P4ZNc90d9Z9beA6YhkVHT3MW0hCakg2CA0PbxTdPyKNn68pgU
+         GUeSQVOZz6QVwFLq9/VUa+lGJUiOoAkkw+Zo4nccI2rS4/jQ1DcbMM0LMsEFji0NTCQT
+         gOlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745332311; x=1745937111;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M7mFfhbdxHQKXHZiL5DhNfWu+e4LKYbHRFDcRBXeqUk=;
+        b=bRYTuPF+tgUyKwcJNDxj7ns2KAhit7DNAigJxjIQB041pzhIOFoZfbXNCg60hvbGbn
+         /fK8TxE2SmRZwLVQkAEGOcBw4s+HpwvdKX4rk9SDWxKshBuPnMNTI3o8d+yFkieQFVVs
+         X3/29Re8VW9JsIKHELBfXi4XViPtfGlpOio3gCH598FWAU1hQ0x7fiY0qbAu465wkCMl
+         /RIU5HXaU7ktQ5GH1/wDcuDoAXNyrgSuShXpqbFEx5RoaOeb/E8Hw68u/wNWSchQBS50
+         BBkak7Wyr3GGNMwGfxaqzuc8UMQjmHwKr/k2LRvaDT7tW25hM8x/9oSegXJRyfl9z8rQ
+         KSsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYFRnEkjfu/G7DTsn6qq1itMhNSDUsN3uZJSQs96uQrYd/18ruCDj/QgtRvrcQf5FHD72EwUGCz1pEWhKQofs=@vger.kernel.org, AJvYcCWR7nrdEfVkFDKC9MBVt2vUfpw38ZVWlXMOhMR0TCk0p2PDuSsSluTzWcEPvyvljacfTGwW1iWPxUkDt5k=@vger.kernel.org, AJvYcCXVMXJxtEELTkZ6OMOVw/6kmlw5ynbLZD8kd5DAvQTVBddFL++1jB80kJOZ4MeTBQk/v6QPDXRA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxJa5IVRLWCU/DeJgBa6u3ZqnWt5IH8oUjg8qvf2f+F40CdMtl
+	D+ZfQi5YYBaXd7IAR0yz4CvJhj4U0Fk59ZPvQTv05enNCRz6KQMU
+X-Gm-Gg: ASbGnct9rEk9JNqYb6sDmBBFOSud3xufHOjb4yQtHJM7O4hz3ihlkWYXezKUcuf0ql6
+	MkxoJw0e39ye//AzEw3PSbBuvomL9OlvP1MNB+ORQec1sjMhnOrdGsjADSmLg4ol1+ulmXctEsP
+	Y0pzMiidCd2FI74jDRLnXvGu/urVyz7ZFB2SSqJKwjnsvPjRvDU8P+vL8RZH4UEMuIlEvn0unPW
+	F0fMfOk1nI5qDWsUuy01a4vOhMKbHo2XbuaBOSEYfDJZcR0xiP05jZDczKHu9dCmd9SzxxY64Sj
+	E/uteRPnPUx1fY7IBZrGVixpBOmEqunfJ6IqwRkLJwYcROaThww/uGzehJlqtqC9zb4EigWAj9r
+	9QFX+F4tQfqjr7c8vGyxhigyWsczrZhfAvQ==
+X-Google-Smtp-Source: AGHT+IHGLINwJNecuB+jZD/re/b6eY92fnTCBBDek8l8rDonYpDqTGoY0WP0YQIuxfMtCWhCDLyM2g==
+X-Received: by 2002:a17:902:f54f:b0:224:1781:a950 with SMTP id d9443c01a7336-22c5357eda2mr230766295ad.14.1745332311255;
+        Tue, 22 Apr 2025 07:31:51 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4edesm85427615ad.123.2025.04.22.07.31.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:31:50 -0700 (PDT)
+Date: Tue, 22 Apr 2025 23:31:32 +0900 (JST)
+Message-Id: <20250422.233132.892973714799206364.fujita.tomonori@gmail.com>
+To: boqun.feng@gmail.com, a.hindborg@samsung.com
+Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+ jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com, me@kloenk.dev,
+ david.laight.linux@gmail.com
+Subject: Re: [PATCH v14 1/6] rust: hrtimer: Add Ktime temporarily
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <aAelbeiWVZgL-kMh@Mac.home>
+References: <20250422135336.194579-1-fujita.tomonori@gmail.com>
+	<20250422135336.194579-2-fujita.tomonori@gmail.com>
+	<aAelbeiWVZgL-kMh@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAdJ18rRHdi9y3S9@pathway.suse.cz>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 09:48:39AM +0200, Petr Mladek wrote:
-> On Mon 2025-04-21 17:00:57, Paul E. McKenney wrote:
-> > On Tue, Apr 22, 2025 at 09:38:34AM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Commit
-> > > 
-> > >   9e13e90127fb ("ratelimit: Reduce ___ratelimit() false-positive rate limiting")
-> > > 
-> > > is missing a Signed-off-by from its author.
-> > 
-> > Ah, good catch!  I need to chase down that author!
-> > 
-> > Petr, you good with this one?
+On Tue, 22 Apr 2025 07:19:25 -0700
+Boqun Feng <boqun.feng@gmail.com> wrote:
+
+> On Tue, Apr 22, 2025 at 10:53:30PM +0900, FUJITA Tomonori wrote:
+>> Add Ktime temporarily until hrtimer is refactored to use Instant and
+>> Duration types.
+
+s/Duration/Delta/
+
+It would also be better to fix the comment on Ktime in the same way.
+
+Andreas, can you fix them when merging the patch? Or would you prefer
+that I send v15?
+
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 > 
-> Yes, it looks good. I have just approved it...
+> (Tomo: seems you didn't add me Cced in a few patches, could you add me
+> Cced for all the patches in the future, thanks!)
 
-Thank you very much, and I will apply it on my next rebase.
+Oops, of course I will.
 
-							Thanx, Paul
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+Thanks!
