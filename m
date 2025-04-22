@@ -1,229 +1,176 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BB419DFAB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145672857C9;
+	Tue, 22 Apr 2025 15:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745335565; cv=none; b=LDZZPalqgETX6yZ1HOK4Fe0JXPrid9naHoDH/tIBPHT1J25ofpCJaWHS2o1yIHk/M9NRfMhqtCmzV2rzYYCCEDof9IFlWguOwGS0VXaFwFoiDl5ONlg/5FCOyrnUSyhq48mT2mwhLhBTbdAm6gNOkXxNIFPiFGqbiwA8Z4RC0xA=
+	t=1745335575; cv=none; b=ArJ22RByhhK18O4eVKGNvMm13PmvfOhde/ervBvyyzY89DOyBXjhW01R3kBgFvulE6mgrIyvFXjWwGmKoBkmf0x3o60kZhJOpNn0jtL7hDVAJFwy3+MEl/t/ZTeWXyCMRmUybvLED5RazT7jxd+FE9xZU1nUQzlKzbb0TCKDlEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745335565; c=relaxed/simple;
-	bh=FUqhC2JI5AKpG+AsXkQaZzwfO0ZJzlVncxbO5FUbjdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uLLYCk3pHRiC5dNJjsFtd6ZWFP8F51ctXu/upNoxDF77od+/I00wGFHLj89bfD05Jpo3fkfYEmGx3Kxx6+SeqFVJbKKXbRMP4NNcgZZMyNMdmnXsBE77lUPlP0+obKuW0hGid6YJUxKKQqcnDETuDvduPrBuTQ4x1ULh0I/1IwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dVVz67i2; arc=none smtp.client-ip=209.85.221.179
+	s=arc-20240116; t=1745335575; c=relaxed/simple;
+	bh=V3EF+LAVoz+bP3kXGeKG/AH/Wx+8WltG6QBGmJY1phk=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YIyBehZsLoMJk/W2gGt/5Bg7Dh9Ab7S7jD9MXBzEMOyeKG9Z/tz0k0Mhu3t32/dvAjbWP4axlCubhvQ63qRaPYSornp+6QytU5AxOfveHN9c6DlN4j3QoLZcKAZ7bpUeB53atinqaxXVUevzU1r+dk6pyHD5yu1zxn47hLtoFbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UR1dT9vk; arc=none smtp.client-ip=209.85.214.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVVz67i2"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2068095e0c.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:26:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UR1dT9vk"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-224191d92e4so52369065ad.3;
+        Tue, 22 Apr 2025 08:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745335562; x=1745940362; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HzNfDmE6ryFy4nS3P9XDvD3y3RhYJvbmPTm1DAkC1kc=;
-        b=dVVz67i2iD4NK9OLhH4p7zUCK43IuELwnw7f+Vsxby6xROv9UNX3JF8lHfO5wLwEGR
-         rVwYzFxsDaORmsUFAZvxjXtug/1wxmHI5je8yiMVHqAeP7k29xLHw68yqfq8HyzwEqnH
-         hGZwNXYhoJZxsDdnhcZNalvrwf8lfmXYG/lPmUmSG3U6Fk5opvsAeVvqCBY7GTre73ei
-         0z3IJFTbzrK4VFO7Ll+QGypG4xRv31GODgIOC0SzXkuICFQ5e8OPjzm48UXqaOlOo/Wi
-         peI+957LeWGa1LcdXwsZfScMi9h3KtJq89uD3CA8xGuYz35E2RvFozcJ9K6hb1oaaf8C
-         RLBw==
+        d=gmail.com; s=20230601; t=1745335573; x=1745940373; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:cc:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ky0slvl2m0Skj+7SoImzSsZ0KF7nAf3DtsbkUIFEsgs=;
+        b=UR1dT9vkJo0+QbygmttEXYcBzfaY/ZKwF1vGB/KZxk9WeOUUEN1TvD8DXHvDxEzJP+
+         zk1IHJsObPESQ9LxWF/LGgwV40jmDhvPBh/+4IAhPAXnctLDoGxxE/z911KjRAn+yWrt
+         g34AAf3g7NTw0+20zia5rP4EgThUwrJakme80096oTsq2OQj8SKUoKvJsck2snyAr4qS
+         akRnmZnXQNvO8jNXkSbM3ZgLJ6Bf54c1Tr3ZX4otaj/4U1XwvZUpxqm4vhDaWRpOPKvS
+         UWQau12dy07fzUNHqHeTXoveiDjgfYQHcWZkI+sVdITSNV1Cac6tmoVqENFFJ9MUJwTF
+         Oczg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745335562; x=1745940362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HzNfDmE6ryFy4nS3P9XDvD3y3RhYJvbmPTm1DAkC1kc=;
-        b=TqjzYJpC0QMgS65aVt3qrRJfCaY1/OAK+oHZbj3GDsVdtNGm81KcHkNqn1x3p4e4Oc
-         MV9MsZeOQR5hN+u0NWplCgkuaQPbpZu+ukoc21ez4CJSlfYQarqGhwtnmEgkRIjEl/gw
-         QRJx1iTXlOdo4rl01dBHGOHYtrQYHP1IATSzvDj2EHfYVHHO6b3w6X5Rgi+86H/aW1Xn
-         v0MBKDpQRJet6BXRcB0U2fD+DW2l6OGkaeMvGEn/ZtFe11gec9k4a6bckeYSo2k/yqNx
-         LZ9G5yUwc5BJr9TEw5HZ5G53ScX7FnYjPt0YXIbdhKO33qExBqSlj1dCWlwJjbAjim0J
-         rj1A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8lI35G2ADfpUQwF+ySb5y/nMa2BWvyubtykdCe0nGSWxKVDQyRKwIfVWybm4vcAMYx38XpyG28ms7F0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwByAJTw05Hi4/OyuiHPRAuwImss1EbF4pJb2Rmq+KXUcB7IbSM
-	C8jij0fUTFX3HBG6Gqre5ckXkCRbKYpTEKHvgBukv1DxMlBHoyI+Hz3tWIojokYeOEklykS3Ljp
-	1RbpbvKqy+rEBKvz5a8thepsRsTY=
-X-Gm-Gg: ASbGncs/TRZfwyFHWGCdiTATTp2J4vKkC857V5/UhzIcaBYDFJbkqrwm/KhhH9o6pl8
-	vp8C+9xwogloPOIF5ZOn40e4Ff3ZnP+uVUWHUdN4c/Wx9rvbGq6ieZPJeCWRoKpG8TqUE5nUFMa
-	pw3gZ8KvmQs/t/05DyeWNz
-X-Google-Smtp-Source: AGHT+IEEm3+dIdGauwIjZW9S+BY/bSJwy2PMr1CcA6bB8azyzuwdyP9NjEB9/AeyMd0PEJdGUbkFKXhWDh6kNk4YrPs=
-X-Received: by 2002:a05:6122:d96:b0:50a:c70b:9453 with SMTP id
- 71dfb90a1353d-529254fb492mr10699729e0c.10.1745335562148; Tue, 22 Apr 2025
- 08:26:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745335573; x=1745940373;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:cc:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ky0slvl2m0Skj+7SoImzSsZ0KF7nAf3DtsbkUIFEsgs=;
+        b=gBwpu2l7ghc+siOtoq02uY3w7PmTfD04zcX6qJP16mU8FaMTysBjxQJl/avLPjPcdp
+         bSu2fjf0BCM5XRIoR4EUoKNXA/8aiVgQd+4oU5Ue8QfNqLXW0RaXQINY8B9h3yUlDfgb
+         1xgaagwCEWh0ZpgY833ef1yPPeDBZ34Fe7sgbMMn1Uww1nbHL2PV9RbS7/JkQj0/nwNn
+         Rou5mXf9K2dLNbIk212CQgkNE1X9IUb8LVy9LcgYwdNe+sYHHI8WGYPK4NUu49UfZVfV
+         Cv9o+8lzwk8TgYyyFty4poQBPDOJEvKrfWVS5Kckdqo9sz99yS4OC+hOzz8opDfufS2P
+         9HcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVm8wW3zj60xJ8Vk78KNgw2tR62MyXztLO9igtWzoVs2Im9jvxJbg0ciTxpg4CRVDa+qmwhqgxQJd+HvWCP@vger.kernel.org, AJvYcCWKw4KGIeCvwJTh7z1hgOTOMQahuVHUOBBPd84e9EGFVOPu33lyZgO+uI1lj5GYFwa2rR/SvXCBrlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm2nXv5wWwdv4MZtEMlf7L98say69Mdgz6atMMuhN/pmDRr5R8
+	2jk6SEA8JBJgJTZo02gfRC/oM7xPSoL1qcPjmpeiNnnlssTztZLL
+X-Gm-Gg: ASbGncuEeus7JaPbRRCUbFb1V5vcf74y9QAYuMow/jy1euFwTw3Bhyik0ZIeOVIvOE8
+	W6y2QmDJqEUgc3jDIDnpi58TVmMYSoKoi3gtn2uDyA3jYbA+QDE2lA3uViaGnLe/n/qlktn1f5X
+	eAnusGcPfpR+c2NHL7fBDl3w/O+w/cchXOBbXWJKXUNIAcCmGu3y90u7/dSewlHQ9MU1QqA4dkE
+	dIK178Vu1Wzk3LJ5UAJIsihoFwVLFEbw5odkOu4noZg3AYYkxbLbiFW5U47pD622H9EHkk0kY9U
+	OSzrLYuLK0i02/f8YIwkyO/g/oxHaQ==
+X-Google-Smtp-Source: AGHT+IHYPLeKGWL1fyxBzXyLrmUfwx8HCx9qyTTP5pFdjq3MaUZ0+J0RZxkXJTfIv6je3bWU3Fj+qQ==
+X-Received: by 2002:a17:903:228a:b0:21f:5638:2d8 with SMTP id d9443c01a7336-22c53620bdfmr218015115ad.53.1745335572548;
+        Tue, 22 Apr 2025 08:26:12 -0700 (PDT)
+Received: from [192.168.5.101] ([2602:f919:106::1b8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf16b1sm86663765ad.89.2025.04.22.08.26.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 08:26:12 -0700 (PDT)
+Message-ID: <918e0177-8e26-405c-93ad-8b0d2dfd3b3d@gmail.com>
+Date: Tue, 22 Apr 2025 23:26:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421085907.24972-1-jagathjog1996@gmail.com>
- <20250421085907.24972-2-jagathjog1996@gmail.com> <lhjibofycex36n23edeb6m7uc4n55nqg4y3qdzoe2wdpc5twrh@ytyvawvgdhuz>
-In-Reply-To: <lhjibofycex36n23edeb6m7uc4n55nqg4y3qdzoe2wdpc5twrh@ytyvawvgdhuz>
-From: Jagath Jog J <jagathjog1996@gmail.com>
-Date: Tue, 22 Apr 2025 20:55:50 +0530
-X-Gm-Features: ATxdqUF1D67yTmhQ6f3dP5eoLeuG5KOTyBgcSuwwE5qpUwgLzSwyutR9C3kgyMI
-Message-ID: <CAM+2EuJKPO0iGPK2uqPhdTpLvR0-+Vwh_K-FWTMJ96+AvzLO1A@mail.gmail.com>
-Subject: Re: [RFC 1/1] drm/mipi-dbi: Use drm_device for debugfs, drop
- drm_minor and .debugfs_init
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	simona@ffwll.ch, mcanal@igalia.com, maarten.lankhorst@linux.intel.com, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: troymitchell988@gmail.com, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ linux-i2c@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Yongchao Jia <jyc0019@gmail.com>
+Subject: Re: [PATCH 1/2] i2c: imx: use guard to take spinlock
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com>
+ <20250421-i2c-imx-update-v1-1-1137f1f353d5@gmail.com>
+ <20250422161213.0000597d@huawei.com>
+Content-Language: en-US
+From: Troy Mitchell <troymitchell988@gmail.com>
+In-Reply-To: <20250422161213.0000597d@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dmitry
+On 2025/4/22 23:12, Jonathan Cameron wrote:
+> On Mon, 21 Apr 2025 13:36:38 +0800
+> Troy Mitchell <troymitchell988@gmail.com> wrote:
+> 
+>> Use guard to automatically release the lock after going out of scope
+>> instead of calling it manually.
+> Drive by review, but this changes behavior in a subtle way so we
+> should have more commentary here...
 
-Thanks for the reply
+Thanks for your review!
 
-On Mon, Apr 21, 2025 at 3:59=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@oss.qualcomm.com> wrote:
->
-> On Mon, Apr 21, 2025 at 02:29:07PM +0530, Jagath Jog J wrote:
-> > Refactor to use drm_device.debugfs_root instead of drm_minor for
-> > debugfs file creation. The driver can now initialize debugfs directly
-> > in probe(), before drm_dev_register(). This also removes the use of
-> > .debugfs_init callback.
->
-> Why? The callback was designed to add debugfs files. Likewise most if
-> not all DRM drivers add files under the corresponding minor node.
+> 
+>> Co-developed-by: Yongchao Jia <jyc0019@gmail.com>
+>> Signed-off-by: Yongchao Jia <jyc0019@gmail.com>
+>> Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+>> ---
+>>  drivers/i2c/busses/i2c-imx.c | 22 ++++++++++------------
+>>  1 file changed, 10 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+>> index 9e5d454d8318..cb96a57df4a0 100644
+>> --- a/drivers/i2c/busses/i2c-imx.c
+>> +++ b/drivers/i2c/busses/i2c-imx.c
+>> @@ -23,6 +23,7 @@
+>>  
+>>  #include <linux/acpi.h>
+>>  #include <linux/clk.h>
+>> +#include <linux/cleanup.h>
+>>  #include <linux/completion.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/dma-mapping.h>
+>>  
+>> @@ -1125,30 +1126,27 @@ static irqreturn_t i2c_imx_isr(int irq, void *dev_id)
+>>  {
+>>  	struct imx_i2c_struct *i2c_imx = dev_id;
+>>  	unsigned int ctl, status;
+>> -	unsigned long flags;
+>>  
+>> -	spin_lock_irqsave(&i2c_imx->slave_lock, flags);
+>> +	guard(spinlock_irqsave)(&i2c_imx->slave_lock);
+>> +
+>>  	status = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2SR);
+>>  	ctl = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+>>  
+>>  	if (status & I2SR_IIF) {
+>>  		i2c_imx_clear_irq(i2c_imx, I2SR_IIF);
+>> +
+>>  		if (i2c_imx->slave) {
+>>  			if (!(ctl & I2CR_MSTA)) {
+>>  				irqreturn_t ret;
+>>  
+>> -				ret = i2c_imx_slave_handle(i2c_imx,
+>> -							   status, ctl);
+>> -				spin_unlock_irqrestore(&i2c_imx->slave_lock,
+>> -						       flags);
+>> -				return ret;
+>> +				return i2c_imx_slave_handle(i2c_imx,
+>> +							    status, ctl);
+>>  			}
+>>  			i2c_imx_slave_finish_op(i2c_imx);
+>>  		}
+>> -		spin_unlock_irqrestore(&i2c_imx->slave_lock, flags);
+> In this path the patch changes the lock release to occur after
+> i2c_imx_master_isr(i2c_imx, status);
+> 
+> That may well be safe; I have no idea!  You should talk about that
+> in the patch description if it is.
+You're correct that this change slightly alters the lock release timing.
 
-My intention here was to follow the direction suggested in the DRM TODO lis=
-t
-https://docs.kernel.org/gpu/todo.html#clean-up-the-debugfs-support
+However, both i2c_imx_slave_handle() and i2c_imx_master_isr() can safely be
+entered with the lock held — there's no requirement for the lock to be released
+before calling them.
 
-It recommends using drm_device instead of drm_minor, transitioning towards
-drm_device.debugfs_root, and avoiding .debugfs_init. The RFC patch was
-an initial
-step to gather feedback.
+Using guard(spinlock_irqsave) simplifies the control flow by ensuring consistent
+and automatic unlock, which improves readability without affecting correctness.
 
-Related to this todo, some drivers use drm_debugfs_add_files() instead of
-drm_debugfs_create_files(). For example
+I'll update the commit message to clarify this.
 
-hdlcd - https://patchwork.freedesktop.org/patch/msgid/20221226155029.244355=
--4-mcanal@igalia.com
-v3d - https://patchwork.freedesktop.org/patch/msgid/20221219120621.15086-6-=
-mcanal@igalia.com
-https://elixir.bootlin.com/linux/v6.14.3/source/include/drm/drm_device.h#L9=
-2
+> 
+>> +
+>>  		return i2c_imx_master_isr(i2c_imx, status);
+>>  	}
+>> -	spin_unlock_irqrestore(&i2c_imx->slave_lock, flags);
+>>  
+>>  	return IRQ_NONE;
+>>  }
 
-Please let me know your thoughts on this.
+-- 
+Troy Mitchell
 
-
-Regards
-Jagath
->
-> >
-> > Signed-off-by: Jagath Jog J <jagathjog1996@gmail.com>
-> > ---
-> >  drivers/gpu/drm/drm_mipi_dbi.c        | 8 ++++----
-> >  drivers/gpu/drm/tiny/ili9163.c        | 3 ++-
-> >  drivers/gpu/drm/tiny/panel-mipi-dbi.c | 3 ++-
-> >  include/drm/drm_mipi_dbi.h            | 4 ++--
-> >  4 files changed, 10 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_=
-dbi.c
-> > index 89e05a5bed1d..66f292c48a78 100644
-> > --- a/drivers/gpu/drm/drm_mipi_dbi.c
-> > +++ b/drivers/gpu/drm/drm_mipi_dbi.c
-> > @@ -1488,17 +1488,17 @@ static const struct file_operations mipi_dbi_de=
-bugfs_command_fops =3D {
-> >   *
-> >   * This function creates a 'command' debugfs file for sending commands=
- to the
-> >   * controller or getting the read command values.
-> > - * Drivers can use this as their &drm_driver->debugfs_init callback.
-> > + * Drivers can call this function before registering their device to d=
-rm.
-> >   *
-> >   */
-> > -void mipi_dbi_debugfs_init(struct drm_minor *minor)
-> > +void mipi_dbi_debugfs_init(struct mipi_dbi_dev *dbidev)
-> >  {
-> > -     struct mipi_dbi_dev *dbidev =3D drm_to_mipi_dbi_dev(minor->dev);
-> >       umode_t mode =3D S_IFREG | S_IWUSR;
-> >
-> >       if (dbidev->dbi.read_commands)
-> >               mode |=3D S_IRUGO;
-> > -     debugfs_create_file("command", mode, minor->debugfs_root, dbidev,
-> > +
-> > +     debugfs_create_file("command", mode, dbidev->drm.debugfs_root, db=
-idev,
-> >                           &mipi_dbi_debugfs_command_fops);
-> >  }
-> >  EXPORT_SYMBOL(mipi_dbi_debugfs_init);
-> > diff --git a/drivers/gpu/drm/tiny/ili9163.c b/drivers/gpu/drm/tiny/ili9=
-163.c
-> > index 62cadf5e033d..351d2a5b9f27 100644
-> > --- a/drivers/gpu/drm/tiny/ili9163.c
-> > +++ b/drivers/gpu/drm/tiny/ili9163.c
-> > @@ -115,7 +115,6 @@ static struct drm_driver ili9163_driver =3D {
-> >       .fops                   =3D &ili9163_fops,
-> >       DRM_GEM_DMA_DRIVER_OPS_VMAP,
-> >       DRM_FBDEV_DMA_DRIVER_OPS,
-> > -     .debugfs_init           =3D mipi_dbi_debugfs_init,
-> >       .name                   =3D "ili9163",
-> >       .desc                   =3D "Ilitek ILI9163",
-> >       .major                  =3D 1,
-> > @@ -182,6 +181,8 @@ static int ili9163_probe(struct spi_device *spi)
-> >
-> >       drm_mode_config_reset(drm);
-> >
-> > +     mipi_dbi_debugfs_init(dbidev);
-> > +
-> >       ret =3D drm_dev_register(drm, 0);
-> >       if (ret)
-> >               return ret;
-> > diff --git a/drivers/gpu/drm/tiny/panel-mipi-dbi.c b/drivers/gpu/drm/ti=
-ny/panel-mipi-dbi.c
-> > index 0460ecaef4bd..94466dd8db9f 100644
-> > --- a/drivers/gpu/drm/tiny/panel-mipi-dbi.c
-> > +++ b/drivers/gpu/drm/tiny/panel-mipi-dbi.c
-> > @@ -267,7 +267,6 @@ static const struct drm_driver panel_mipi_dbi_drive=
-r =3D {
-> >       .fops                   =3D &panel_mipi_dbi_fops,
-> >       DRM_GEM_DMA_DRIVER_OPS_VMAP,
-> >       DRM_FBDEV_DMA_DRIVER_OPS,
-> > -     .debugfs_init           =3D mipi_dbi_debugfs_init,
-> >       .name                   =3D "panel-mipi-dbi",
-> >       .desc                   =3D "MIPI DBI compatible display panel",
-> >       .major                  =3D 1,
-> > @@ -384,6 +383,8 @@ static int panel_mipi_dbi_spi_probe(struct spi_devi=
-ce *spi)
-> >
-> >       drm_mode_config_reset(drm);
-> >
-> > +     mipi_dbi_debugfs_init(dbidev);
-> > +
-> >       ret =3D drm_dev_register(drm, 0);
-> >       if (ret)
-> >               return ret;
-> > diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-> > index f45f9612c0bc..88a9c87a1e99 100644
-> > --- a/include/drm/drm_mipi_dbi.h
-> > +++ b/include/drm/drm_mipi_dbi.h
-> > @@ -230,9 +230,9 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *=
-src, struct drm_framebuffer *
-> >  })
-> >
-> >  #ifdef CONFIG_DEBUG_FS
-> > -void mipi_dbi_debugfs_init(struct drm_minor *minor);
-> > +void mipi_dbi_debugfs_init(struct mipi_dbi_dev *dbidev);
-> >  #else
-> > -static inline void mipi_dbi_debugfs_init(struct drm_minor *minor) {}
-> > +static inline void mipi_dbi_debugfs_init(struct mipi_dbi_dev *dbidev) =
-{}
-> >  #endif
-> >
-> >  /**
-> > --
-> > 2.20.1
-> >
->
-> --
-> With best wishes
-> Dmitry
