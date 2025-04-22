@@ -1,124 +1,117 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A586F1990C4;
-	Tue, 22 Apr 2025 07:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB82522B5A3
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305972; cv=none; b=E065YXl0kyHBCV2fZgal/e41Hc2mcwtqI2LpJAtsNCkrqtJZrjlXQewq9cL7ZfvcXmbpRPeU8lVkydaL96Y5vAAFDJZujiOwhNRoyjF2JgM7ub38h5lUc1mZuwoJVykCFQwEz8tfZUVwbLKP+46WhYBfcoVre7Bmrsv2abaMfkY=
+	t=1745305974; cv=none; b=ihcDh696VlRTI/Bi6grZLAbZSpo+n9Dqz2PRTpyYcS21JCgsV2+0phjyxV8nyMHMndYYN+Jnqrv/hzQb90gXYph0TadrpVu0UtkEf6AgOMoLJywzVPjh2iL5crh3XjVa6iIoPVS0TRpVsb/h7EOCAyeCJxVG4tVvi1ZtgJOn18o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305972; c=relaxed/simple;
-	bh=Clkahm9wy0a3lcKG7XWwyYkG7qsrEXbxWavI6+56VNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g3PZKlB1BRdpnSwU2R9B6nNi7rOTg0qpmLc9F1vwtNzhcxOAIsZ386A4Hgg2BdJbBmyJVxIQpO2xi+DnnSN+BFDR7Q0QBYBpjJzMkxXX79nfHU3qb67F52QCiwJTcTsd/idRDeMf/mHja5uBk2ZCab9bT42X9HRtWUQiZwosI8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Tue, 22 Apr 2025 03:12:43 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: dmaengine@vger.kernel.org, Zhang Wei <zw@zh-kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Message-ID: <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
-	Zhang Wei <zw@zh-kernel.org>, Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+	s=arc-20240116; t=1745305974; c=relaxed/simple;
+	bh=4NejS/YFsqMdyl6br68502mPfPaLMjz4bZByJd90VT4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mtYAGj9ZDDb/utYvNhITFA+A7IkcgfieEka0rvjGzAiOsdAE6e2+PN9vglJYEjFNTLbpYcsdh7GC3rD2YOYXfkZhHrLwBj2ik4Rs2REmPmcO6u9LowUFdzEIb3cuMElSeC+LrNkF3gZLjRHijHLVDJ2X50b5YWfOuZhTR0/isy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u77o8-0002Zv-NA; Tue, 22 Apr 2025 09:12:40 +0200
+Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u77o8-001Va5-1K;
+	Tue, 22 Apr 2025 09:12:40 +0200
+Received: from localhost ([::1] helo=dude05.red.stw.pengutronix.de)
+	by dude05.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u77o8-000iPF-16;
+	Tue, 22 Apr 2025 09:12:40 +0200
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Date: Tue, 22 Apr 2025 09:12:35 +0200
+Subject: [PATCH] arm64: dts: imx8mp: use 800MHz NoC OPP for nominal drive
+ mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ibrmx66igfcorlg4"
-Content-Disposition: inline
-In-Reply-To: <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250422-imx8m-nominal-noc-v1-1-889592ff65a5@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAGJBB2gC/x2MywqAIBAAfyX2nKCL0uNXooPVVgupoRBC+O9Jp
+ 2EOMy8kikwJxuaFSA8nDr6KahtYT+sPErxVB5RopEYU7HLvhA+Ovb0qV9GT2hYjcTCdhtrdkXb
+ O/3OaS/kAzJCKomMAAAA=
+X-Change-ID: 20250422-imx8m-nominal-noc-8e1db5029574
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, Fabio Estevam <festevam@gmail.com>, 
+ Ahmad Fatoum <a.fatoum@pengutronix.de>, Peng Fan <peng.fan@nxp.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+When running in nominal drive mode, the maximum allowed frequency for
+the NoC is 800MHz, but the OPP table for the i.MX8MP interconnect device
+listed the 1GHz operating point for the NoC, regardless of the active
+mode.
 
---ibrmx66igfcorlg4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-MIME-Version: 1.0
+The newly introduced imx8mp-nominal.dtsi header reconfigures the clock
+controller to observe nominal drive mode limits, so have it modify the
+maximum NoC OPP as well.
 
-On Tue, Apr 22, 2025 at 08:34:55AM -0500, Arnd Bergmann wrote:
-> On Tue, Apr 22, 2025, at 04:49, Ben Collins wrote:
-> > On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
-> > and memory configurations > 64GiB. The fsldma driver is limiting itself
-> > to only 64GiB in all Elo configurations.
-> >
-> > Setup fsldma driver to make use of the full 40-bit addressing space,
-> > specifically on the e5500 and e6500 CPUs.
->
-=2E..
->=20
-> - The driver just writes the DMA address as a 64-bit register,
->   so most likely the DMA device can in fact do wider addressing,
->   and any limitation is either in the bus or the available
->   memory
->=20
-> - SoCs that don't set a dma-ranges property in the parent bus
->   are normally still capped to 32 bit DMA. I don't see those
->   properties, so unless there is a special hack on those chips,
->   you get 32 bit DMA regardless of what DMA mask the driver
->   requests
+Fixes: 255fbd9eabe7 ("arm64: dts: imx8mp: Add optional nominal drive mode DTSI")
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+Support for &{label/node} syntax was first vendored into Linux with
+v6.2. It's useful here to avoid one-off labels while still ensuring
+that a compile error results when the original node disappears.
+---
+ arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi | 2 ++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi         | 6 ++++++
+ 2 files changed, 8 insertions(+)
 
-I've yet to see a dma-ranges property in any of the Freescale PowerPC
-device trees.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi
+index a1b75c9068b288a2fba73bbd96b1519a50df85a3..115a6da08643bc1b23731c146df9c9dc36b4e85c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi
+@@ -62,3 +62,5 @@ &media_blk_ctrl {
+ 			       <0>, <0>, <400000000>,
+ 			       <1039500000>;
+ };
++
++/delete-node/ &{noc_opp_table/opp-1000000000};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index ce6793b2d57eef9489645f498a89f4bd8f3388d5..7c1c87eab54cc632643f206bd80ce7b7b49505de 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -1645,6 +1645,12 @@ opp-200000000 {
+ 					opp-hz = /bits/ 64 <200000000>;
+ 				};
+ 
++				/* Nominal drive mode maximum */
++				opp-800000000 {
++					opp-hz = /bits/ 64 <800000000>;
++				};
++
++				/* Overdrive mode maximum */
+ 				opp-1000000000 {
+ 					opp-hz = /bits/ 64 <1000000000>;
+ 				};
 
-I'll check on this, but I think it's a seperate issue. The main thing is
-just to configure the dma hw correctly.
+---
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250422-imx8m-nominal-noc-8e1db5029574
 
-> - If there are chips that have more than 64GB of RAM installed
->   but have a limitation in the way the DMA engine is wired
->   up to 36 bits, that should be reflected in the dma-ranges
->   property, not the device driver.
->=20
-> - If the limitation is indeed specific to the version of the
->   IP block, this would normally need to be detected based on
->   the compatible string of the DMA engine itself, not a compile
->   time setting.
+Best regards,
+-- 
+Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-So a little research shows that these 3 compatible strings in
-the fsldma are:
-
-fsl,elo3-dma:		40-bit
-fsl,eloplus-dma:	36-bit
-fsl,elo-dma:		32-bit
-
-I'll rework it so addressing is based on the compatible string.
-
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---ibrmx66igfcorlg4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgHQWsACgkQXVpXxyQr
-Is9OBhAApnJBeKJ4ASuaAIAefdwxjwHiccr/SM7ZbzHesQxOQmonqT6U0//RHjJu
-aaHhcwOPfBnSvpdylugW67fLi5F96vE4RtVlrli55lm98XL3xnGdhJcDTGXALz2h
-omEHO+NlQYcaVj73HzeT7mlrMY5akw0pryfidJii+jx17JIV8eIyR3pjCPXfaDbT
-m6FB/n84fcuRhwhsCIC2NGV8sIe1jBw8gxY2Non1HG8j7tLHmOzRPblu8c31qbMC
-seeDW61e9JgH7r5Pj1Y9zvNVsJkXstyA+AWGz2TAB2n3jw4DgorQSFZt924Hwh4P
-rdVjqH+/AxqN8+xLDAIVvvH+JsIwC6GA8Z4E9N565ntR8knxfk+kLWoRCNiyGizK
-cl4ZTU6sXcyF7tR24hI4ma1ozwaoXf5W/vN6qx1gy2v/FQCD0m2BhzbfWxcwK3Cg
-QrFI3IXyzU7d1W6ZVMaCwz1AvN6ZJNxNSF4fzexMUKEDLYu5PnT8dnFDpTfJsWrB
-T8gskXv868OOIkaHkj5ujOgYUtLx9EURcG8Lc56kB9p4CL/J1Rzz/org8XYqClDL
-J0/aDQ8Fy8RmPaEgzbPaBtRztG5jaVc/PsDVsT0+jKOVWd1C62uxBC+9bIUlR7S+
-5rcwfAnkZF9T6Q0qs5inHlRyG6QeVZa14ZKeEejSQnDVc2oJ/70=
-=UA0A
------END PGP SIGNATURE-----
-
---ibrmx66igfcorlg4--
