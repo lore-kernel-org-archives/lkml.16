@@ -1,115 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7B5EC5;
-	Tue, 22 Apr 2025 16:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A007227C875
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340398; cv=none; b=QtND8avdLlA1P0nVoidDBJ59orjbTVBhR5JWMjZ+mpI9cO0vm5twuq5e67g/qi8oQxiNrGo9sYm34vWqy+8j4SDOx43s9zvs256aqf95qWqXrQ/O4lcmO2OFmoEakCr8qCGbyplaZGMZkYnAs+2ycdAFIMxr47J0y/ME0oTJwdg=
+	t=1745340554; cv=none; b=IzjMLrAdTmDv8Ck8Gwt8we3fqLxnbcBUzOnvdX883W0K8WpS+hpDTmVHsxURWzy6RAp+yashtXAk3rbMrAeYnfBo14LXoxbZFRroQ0RVl5vnlEbECb2FZ+dyKoXi/foirbMmAV1zlHsqjWj4w+omjpkhgF7W9nIlk+dO9iC1X/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340398; c=relaxed/simple;
-	bh=APY464O4qEktr3qLUXmra9T6Ngn9Z0W6MxO6bYmyA8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rCOi6u6qqIC6XsKXoAfE+JKiLZlphhoSG8lSfTyguLozAbyO76ZvIE2O0jFHRmEAYfN9iH0xQQtxriU1gh92qH24mK45bFZBabrkOMTIUYfd1b286kACmte71Yf01KwIEvsTD8CZf/uYbo51ASxYMqJi9Km2RatDhnbm3gJyCP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: lAR9fY7oTOewj91sitGvyg==
-X-CSE-MsgGUID: XqLKaA8dRNO0z+L7zLPLfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57569423"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="57569423"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:46:34 -0700
-X-CSE-ConnectionGUID: iR7O+dteTAO3FgIgZ51IbQ==
-X-CSE-MsgGUID: 9/cf9DuxSlit+M+ugccYJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="155266018"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:46:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7GlQ-0000000EmZO-3qDQ;
-	Tue, 22 Apr 2025 19:46:28 +0300
-Date: Tue, 22 Apr 2025 19:46:28 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Kim Seer Paller <kimseer.paller@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <aAfH5IiVBLLE95ct@smile.fi.intel.com>
-References: <20250421-togreg-v5-0-94341574240f@analog.com>
- <20250421-togreg-v5-3-94341574240f@analog.com>
- <aAexmOU1e-7hXq6Y@smile.fi.intel.com>
- <efec7563-9591-4539-a154-bf486d35df0e@baylibre.com>
+	s=arc-20240116; t=1745340554; c=relaxed/simple;
+	bh=OnwSNDn64S8aCsL+BPdxyk1KPcCrvENt7q1PLD17rCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ny1QtYl4FP5/0U+EE3rinaAgblel4hXy4hbfhy59vRMjtAzQzVq/9Mwh+yJd1Z1yg06x4IOcBWYpSNcKtNEWt2PbyWswJqJrx4/bkCZNs5RBDTQ5gmJ9V+jKDdRKvZ+dNF0p2w2BQd1/7rVKSGfxTip/dNNcvzOKqzHXWRiVAwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FZD6OZhB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FZD6OZhB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745340551;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zrsd/3p7dvdW/2Y1idz3MOxsrZjO4oXnRPdIb4aDyus=;
+	b=FZD6OZhB6PUKbnyJ8Sx/oQhiW4OJcg0RhWK3eQOao1iVUbGsj2hVgcoshj0ExRBOUNM5iQ
+	ocBZ58GRZNSXSnXhTamL2hhEF+769icgcV+0CPAPSxIkwKBvUpLiRfTaleagwe3H2UdDD9
+	NjnakHJ+x/5cjMoZJh+i49IaaqJo2co=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-JQL8dQJKMAaCpkBTRa1VYg-1; Tue, 22 Apr 2025 12:49:09 -0400
+X-MC-Unique: JQL8dQJKMAaCpkBTRa1VYg-1
+X-Mimecast-MFC-AGG-ID: JQL8dQJKMAaCpkBTRa1VYg_1745340548
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43f405810b4so30110755e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:49:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745340548; x=1745945348;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zrsd/3p7dvdW/2Y1idz3MOxsrZjO4oXnRPdIb4aDyus=;
+        b=j++ulQDYdLee8+pfNTRd+cPedhfEb7UET7Ajjaa4+guSCRa+SixOVyX26lYUgkoJCN
+         W5J1x2EAH3sKplmTZAzYUm5nowo4WWGZqfU5snKmd2eO8VmbSO7ax6qmEFZQnERVwtz5
+         b8zz+WUynDS5lyne/N3+w37h9OI06Ig8/VrTzb/VFk85JhrG+m/p5iWZamPTtHQWTHWH
+         lDN/Jj8k82GJ8r2llYrpOloLRtyrlT7ozE2QOd/SgP5rg8SSftd54JXJ7CWdN2/hmGhi
+         qAgp+SdjoveJ3ECyFlII6cg700X94PcwG+LXjXmY/JF6jYPUbuDfyFwHRh2+5ebmOcbj
+         NOmg==
+X-Gm-Message-State: AOJu0YzzjIJPSjXSHgk8PK5s+dZlE/nW9ZaU3D4ppMAhNqu0rnu469/C
+	QGRifBp538oCV75tS82XQqQMFblHN84vr7qhaVMYdUQvWN563cWGC5m/3c9bOXShdPTMUEishTf
+	GU3jYuxtDPE210cbKWzqgp27Ox3WIB2//lzyJpYmqgxdGgE3rRrTlIA+i226avg==
+X-Gm-Gg: ASbGncsGfzHE5E4vj+N6dNtsWnqY3PFTCWhmYLSBV23ZrTihC7RQcLsyjfbqm7ITC84
+	0yRfeTL476lqpjMjVXij26IMg3Uo2ndD3pz4nshYjMtMQuesTf3Wr5ca3CNo8JGJRc5dJ9o62LU
+	9amF691I6vzBEjS7YYSIDY9fDmTOSJTVlMIwA7rOjEokfRLXRYFHg4GF/Wc5Okwpp8afo4cvb5u
+	dpLK0fV/YUQrfV0AkHMXD/tRBFv6z4WRBqOcWjSnlEoGqmhrJ996UDN1R59fHHya8ERe5qCReng
+	GYA+Qmi2JJto4kU2UYKQJpyjiWNVbH8z4AHl2aWHKH/PWunu9dhyWghu4bc=
+X-Received: by 2002:a05:600c:1906:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-4406ac11581mr132427895e9.33.1745340548367;
+        Tue, 22 Apr 2025 09:49:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEL0BTg1501d7TjC/8u5Gc8ZzZQofR/EdbhGN5AMF4Ozt8Ub8BwgAm98X6mqgEsGUZkPjE5Lw==
+X-Received: by 2002:a05:600c:1906:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-4406ac11581mr132427685e9.33.1745340547956;
+        Tue, 22 Apr 2025 09:49:07 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5ace47sm178502985e9.15.2025.04.22.09.49.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 09:49:07 -0700 (PDT)
+Message-ID: <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
+Date: Tue, 22 Apr 2025 18:49:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <efec7563-9591-4539-a154-bf486d35df0e@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
+To: Gerd Hoffmann <kraxel@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Eric Auger <eauger@redhat.com>,
+ Jocelyn Falempe <jfalempe@redhat.com>, David Airlie <airlied@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, dri-devel@lists.freedesktop.org,
+ virtualization@lists.linux.dev
+References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
+ <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
+ <20250415095922-mutt-send-email-mst@kernel.org>
+ <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+Content-Language: en-US
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 11:37:06AM -0500, David Lechner wrote:
-> On 4/22/25 10:11 AM, Andy Shevchenko wrote:
-> > On Mon, Apr 21, 2025 at 12:24:54PM +0800, Kim Seer Paller wrote:
+Hi Gerd, Michael,
 
-...
+On 4/16/25 3:57 PM, Gerd Hoffmann wrote:
+> On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
+>> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
+>>>   Hi,
+>>>
+>>>> +static void virtio_gpu_shutdown(struct virtio_device *vdev)
+>>>> +{
+>>>> +	/*
+>>>> +	 * drm does its own synchronization on shutdown.
+>>>> +	 * Do nothing here, opt out of device reset.
+>>>> +	 */
+>>> I think a call to 'drm_dev_unplug()' is what you need here.
+>>>
+>>> take care,
+>>>   Gerd
+>> My patch reverts the behaviour back to what it was, so pls go
+>> ahead and send a patch on top? I won't be able to explain
+>> what it does and why it's needed.
+> See below.  Untested.
+>
+> Eric, can you give this a spin?
+>
+> thanks,
+>   Gerd
+>
+> ----------------------- cut here -------------------------------
+> From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
+> From: Gerd Hoffmann <kraxel@redhat.com>
+> Date: Wed, 16 Apr 2025 15:53:04 +0200
+> Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+>
+> Calling drm_dev_unplug() is the drm way to say the device
+> is gone and can not be accessed any more.
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index e32e680c7197..71c6ccad4b99 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+>  
+>  static void virtio_gpu_shutdown(struct virtio_device *vdev)
+>  {
+> -	/*
+> -	 * drm does its own synchronization on shutdown.
+> -	 * Do nothing here, opt out of device reset.
+> -	 */
+> +	struct drm_device *dev = vdev->priv;
+> +
+> +	/* stop talking to the device */
+> +	drm_dev_unplug(dev);
+I have tested this patch on top of Michael's v2 and I don't see any
+splat on guest.
 
-> >> +#define AD3530R_INTERNAL_VREF_MV		2500
-> > 
-> > _mV (yes, with Volts and Amperes we use proper spelling).
-> 
-> When did we start doing that? No one asked me to do this in any of the new
-> drivers I did in the last year, so I didn't know this was a thing we should
-> be doing.
+Feel free to add my
 
-I remember a discussion for one driver a year or so ago. But I can't find
-quickly a reference. The rationale is to be as closer as possible to real
-world (physics). And, for instance, regulator framework does that already.
-It's a pity not many people aware...
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Tested-by: Eric Auger <eric.auger@redhat.com>
 
-...
+Thanks
 
-> >> +static const char * const ad3530r_powerdown_modes[] = {
-> >> +	"1kohm_to_gnd",
-> > 
-> > kOhm
-> > 
-> >> +	"7.7kohm_to_gnd",
-> > 
-> > Ditto.
-> > 
-> >> +	"32kohm_to_gnd",
-> > 
-> > Ditto.
-> 
-> These are defined by sysfs ABI, so can't be changed otherwise it would break
-> userspace.
-
-Ah, okay then.
-
-> Comes from...
-> What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_powerdown_mode
-
-> >> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Eric
+>  }
+>  
+>  static void virtio_gpu_config_changed(struct virtio_device *vdev)
 
