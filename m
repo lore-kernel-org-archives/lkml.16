@@ -1,131 +1,92 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066731EFFAB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10021EEA56
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312707; cv=none; b=c0Ou/n2c8JYBjBjXQLFXg54GLjRqmoo1YjPcWRDYdU338bc3V48+9KzkZ3x8UYrQA9k6GcBqb0Cr0Q+qeEZatCaGfCcEX1r7QUyannmFU3W+X0Fd2e2YzWdouVD7ni/6lwuVOxhxheYOTMvkVStVsrgvvEVNj1jk6ZWWvnMHtFw=
+	t=1745312724; cv=none; b=kZmOsPniXUG2560ZrnkCYCj24jB4l+bYkcTPt6+jAYsHnTQQYCar61aAxDc5xYUdpM3qsjWShLBU6NHZ9tOZ7MV1C2DstrvhJQzDsu6cTPylv3xTnQea15GtE97iAVKPlK9C557mFQLCiE/t+VyoHWgexd2VvZkb6YlqXOqjWME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312707; c=relaxed/simple;
-	bh=kvFqZqPFPLrf+AXNRqtRi5kNmumBCHlZasr9Kaopxks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZaK2GGuMZoPzM9Bl5hWWcPyZSunj7dc4OGN+2qI2VrKQVMoF16Kmr1P7TMeh/thdZ01Ydaeb1RSHVSkOhAcknZnz6j2yTF0OtgkeWdW0Olt3RNlIQN4ofuFHdCCKeUG8GuALiV1P0TZbjgVvRt/OsZiMRy2bqr2M4OxyaZugNG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hYqdLi1c; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hYqdLi1c"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2279915e06eso49764335ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:05:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745312704; x=1745917504; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9sbWhyfY9HhbUloK/aOxoz84ZiMRz1BlzsEwnFKYVZM=;
-        b=hYqdLi1c8lDxS5uTWt4tnCVXPFoFVIQY1kGsubjceziBpk2Bl89e6Hv0R8FEYfpZkh
-         PtHIi6NrSMZGwohUreEjdtAHv9vtfdlGbqDmlVWxyTaM9GtEkVpZiRB9XPieWHuNf0Dq
-         7Xd4AWc5QUoUqTRH6rlXk4aucxcDX6att0ySmOhErD38SoNcibpFge2w3fligFP+sG19
-         n/QL9oDhrir6klD9V3xLQT5cPc1WTLACVYPBXrrFInz4DShJl89MlfKqonihpeES3QVf
-         mcWlfTnFaUyKukLTgnylLwdJYQSxxsq/bUCkmg2vzqDvB3EQLg5W9bS/8mUJLBnY3yi4
-         M/wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745312704; x=1745917504;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9sbWhyfY9HhbUloK/aOxoz84ZiMRz1BlzsEwnFKYVZM=;
-        b=T51CzoinzCykgDzlghw1k+C/gcb4WVdORPWr0MOHFOtO3mlEwP2Nf8UTbu9cbXt4Kb
-         TKdvsRxVy4pVMgGVtTfJ3FH+Jt9OtErEIwlH4/WWFV3s6s+bhsXmeEUe56Q1KA3uW9dU
-         ER/mfz/UOG7qrh3ToUSyEQ4Dg2BAH4FxHRmpqtzRAOTtLvFKKUGhOBPN7gVBlT7bYfTq
-         qgKAH0dUtFr5H8ZR9050PF4kuoD78tPZedwViTIITTDYpeQeQkeagqb5h4NYXWqsHBbi
-         TJ6LYqZ8zSIHXvxI/BqcCcPpr0Cnx9Gwxjpzq9yHBRUcD/lq0CHscnW9A+wsadwcjrAM
-         LG7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXFFmMvz8rOmKuv/hCOtup5lm+PQI4KMUO+Am1UsssGRukXBkypNfENb+Mvse204yaKihMl+nJefezVDuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxWYqCrAHGP9pC4SBFzDLLElnsqAeskE5BLullmcZJR5x6ibpH
-	TXa3rPYwjI7TWH5AJxjY6JPan0VfcRIhyqhvSY6C88hE5jwIHL4s/mW6RM8Nw3s=
-X-Gm-Gg: ASbGncsdjDn6cVdZEAv1nTbZkPy6/YcdTliSNto85Y5/JwmcNd03yLZBOXPlgSylvNV
-	1BEcW+NlfWG28nlmsspyrMRVwD+cKwE1iBWL+LyJ7yITXCYSvMMS/2I6bhJt/sNNvHKpc559HBT
-	KDssL8lPV2kZZyFCq9Rq7U+7+GGRqVbCOJtIfmD1fOoYtBxKampTGLU2vutZCSge/xyF6t5CTJt
-	aHFPMl9rq6xPwToYDgdFG9N4ESweTCo9nuuQogbTbBypixKfctMzXxBG7mDVHHwuY5GIo7ihJms
-	uk/5lnU/QF8ZfAnVgpZafjhKdrWtSWZMSxeNy6pzZrIH6O0E4E1aBHEcEJug4fskHPxynbq6vt5
-	b6+B1B2TzXQ==
-X-Google-Smtp-Source: AGHT+IFQAi0wfUdXECfqD6I8bX3VpVnKTNf9yhWhTBL6GpAb8S8NxnHQlFHw5TO7+BUIVct0khX/5A==
-X-Received: by 2002:a17:902:db03:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22c5360dc1emr185868245ad.37.1745312704167;
-        Tue, 22 Apr 2025 02:05:04 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdaad1sm79600495ad.28.2025.04.22.02.04.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 02:05:03 -0700 (PDT)
-Message-ID: <db59c652-c4ea-4ed9-abf3-75886924057a@rivosinc.com>
-Date: Tue, 22 Apr 2025 11:04:53 +0200
+	s=arc-20240116; t=1745312724; c=relaxed/simple;
+	bh=TZonv/6iYJ38tTawNSsaWLZKkPcyirYh0sJkKVflj2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XIuyEp4Q3laP9OmH5HeiVN5wm4Miw51aw7v7ettfl+YmjFwMij1S7UiFzK7X/HD4T4tKMpeAqHWapYvwDY+uXXaZdw3PgDBzVr/jQMb2G0ASsdUh2J+S/A4qwsRP1dLG62N3zmV0k27s6Xuo6xs1ukH0ZrPidWii5Kchi2UMUZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79Z3-0001P0-34; Tue, 22 Apr 2025 11:05:13 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79Z2-001WYe-0y;
+	Tue, 22 Apr 2025 11:05:12 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1u79Z2-00F5gw-0Z;
+	Tue, 22 Apr 2025 11:05:12 +0200
+Date: Tue, 22 Apr 2025 11:05:12 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
+	Guenter Roeck <groeck@chromium.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v9 1/7] power: Extend power_on_reason.h for upcoming
+ PSCRR framework
+Message-ID: <aAdbyEQT4mJ4BlRA@pengutronix.de>
+References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
+ <20250422085717.2605520-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] riscv: Fix typo EXRACT -> EXTRACT
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
-References: <20250422082545.450453-1-alexghiti@rivosinc.com>
- <20250422082545.450453-2-alexghiti@rivosinc.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250422082545.450453-2-alexghiti@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250422085717.2605520-2-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-
-
-On 22/04/2025 10:25, Alexandre Ghiti wrote:
-> Simply fix a typo.
+On Tue, Apr 22, 2025 at 10:57:11AM +0200, Oleksij Rempel wrote:
+> Prepare for the introduction of the Power State Change Reason Recorder
+> (PSCRR)  framework by expanding the power_on_reason.h header. This
+> extension includes new power-on reasons:
+> - POWER_ON_REASON_OVER_CURRENT for over-current conditions.
+> - POWER_ON_REASON_REGULATOR_FAILURE for regulator failures.
+> - POWER_ON_REASON_OVER_TEMPERATURE for over temperature situations.
+> - POWER_ON_REASON_EC_PANIC for EC panics
 > 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/insn.h | 2 +-
->  arch/riscv/kernel/vector.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-> index 09fde95a5e8f..2a589a58b291 100644
-> --- a/arch/riscv/include/asm/insn.h
-> +++ b/arch/riscv/include/asm/insn.h
-> @@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
->  	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
->  				   RVFDQ_FL_FS_WIDTH_MASK); })
->  
-> -#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
-> +#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
->  
->  /*
->   * Get the immediate from a J-type instruction.
-> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-> index 184f780c932d..901e67adf576 100644
-> --- a/arch/riscv/kernel/vector.c
-> +++ b/arch/riscv/kernel/vector.c
-> @@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
->  		return true;
->  	case RVV_OPCODE_VL:
->  	case RVV_OPCODE_VS:
-> -		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
-> +		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
->  		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
->  		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
->  			return true;
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Hi Alex,
+I forgot to add:
+Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
-Looks good to me,
-
-Reviewed-By: Clément Léger <cleger@rivosinc.com>
-
-Thanks,
-
-Clément
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
