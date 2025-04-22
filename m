@@ -1,33 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9111B1EB1A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBC71F1909;
 	Tue, 22 Apr 2025 09:47:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315243; cv=none; b=R3cHQQultgggH///Tq5Dv8dCGRX4rdCySGn1skE+0MjNHoTfyYXL0hCbn9ckgxTJNqp6gcRAaGHJKQ3mRGumHJAmJol2MUTTCK0d16Ds9ieY8gy605s+G8WJxK1d84H9tZ08zrNDBxuS9PTsIBoj+ZrTiYRbDJ8BO3mCosOoVaQ=
+	t=1745315244; cv=none; b=m9nAL5xkGSitKRzKKl7X1UKQTIyvmwwAOdHgpz1f2I71mhFdX2UNhDLwgE6/CGvIXxw6yjCzcLe+vifTzIogT/9NYslrvQR8pMCZcACEq2D+nO6qNL3hJunieWa7hlBq6zAWKyIRC67Rwx5jYbaqdvI32BKm/GA9SQR5UYMvMZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315243; c=relaxed/simple;
-	bh=LETj/ihRbceFgO7zekmM9Jci+dyLy0wKV2esC4XRAq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=azUbpWd8JdhdAsvpUwpVZmhGx7UQ6rOJ41oFSqmdxOlO3n0HjmJA3H3w7XdUnHgiNdOYzDvRl7+KEW3N7lmOsELjQ+9hwd/U+nq0ytYFb6lFk71EZIrzmw0q2xWNi3MTJNXxZSuPC+8Au5szNWtVSbYlpgrnutkzE7L0JqebggI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NCv/7+1a; arc=none smtp.client-ip=217.70.183.197
+	s=arc-20240116; t=1745315244; c=relaxed/simple;
+	bh=3lSdy8EzxVOmuuVCSV9qU2SdEBAnF/V1ykKqrIW2Cdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RpQS2l4V12VJUakbDMkppBUIc1UWKFqs/hWzfaFaTfYC0ffXnYsSj4v5arbJLhX+OgvLrwFf2t/uxuNKPZJguHpxGblc0L6UlYSaTnBXz3zIyHli7K0kBarvdJGkMO4VqtAop1ejPqWEgJeq9gFsgGMKen/3V2QNznU4ShoGz1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ERqujlM/; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NCv/7+1a"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4501C432F9;
-	Tue, 22 Apr 2025 09:47:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ERqujlM/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C260043305;
+	Tue, 22 Apr 2025 09:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745315232;
+	t=1745315239;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Uicg+PWgEa62Lbm/5RBrHSig7QCgYW+uliLkHIFRzEI=;
-	b=NCv/7+1an2DDckptxZ2tZfimTLdTIe5C1SVkaKXpFzLs2L0w/yyE33wUg25y/K4qfLWuFo
-	rbWjjF7YOSMfr0X6VNK+W0WoKeqVJGC/bY5TMZ+w9JT6IznjlfacTSh4Z1aMe6mZXbDaD/
-	tfbvBvtqrGq+RO40gRXl/cLouHeM07k+tzHUJVTgAGKFQ4lKc/KKccHuU354FPXbjR1qTF
-	uUCS0uBhPOJqvaOT4WBysbBVvLAiuBtvh0P7M1c6tiIl4efDIL/LKkQN7Wc6fr0JzVJgLI
-	D8UfyBU8cTgApKL72SZCJusxXgSf9KRBRsb8/CkI9hm2/TZ+S7ekor4n2UOi1A==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oMRZ/nAaAeNPv9wwBFEXUEGanmmzjiz1coElczHCTLU=;
+	b=ERqujlM/jg+ImxXcI66I7sXIW7x4rAHBIMW5bMjzKOnmPQB5jkcur7x2aW5Z4So2FYdES4
+	rMPqKSFYHNdLJC86u8h7n3WO1t0JFVK/3/QoAr7hG8HnejRThTREpewPPoi1ocmZ48OHdI
+	Mfrj/GjeJ+njc/x1O9tiJKEVFj7PjvfuumAxcY/KylFP/kYPzxwc0f7St4qqGE5mmG2Awk
+	TOe/mPemOSL0XaV/6hsjz/D1NHzEC9VwEhfQDN2cAp+C1lhzu4YQ2/Gcj2Pbs2U1btPvq0
+	u6AYMOhEJpDOrzcObWmVCGg4ZMnhgvhfgwSLPSJJl/RBOKZKskkEdhe1ctkQrQ==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -41,10 +43,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	thomas.petazzoni@bootlin.com,
 	Simon Horman <horms@kernel.org>,
 	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Subject: [PATCH net 0/3] net: stmmac: socfpga: 1000BaseX support and cleanups
-Date: Tue, 22 Apr 2025 11:46:54 +0200
-Message-ID: <20250422094701.49798-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net 3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev field
+Date: Tue, 22 Apr 2025 11:46:57 +0200
+Message-ID: <20250422094701.49798-4-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250422094701.49798-1-maxime.chevallier@bootlin.com>
+References: <20250422094701.49798-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,34 +58,35 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmegtkedufeemgeejtgeimeejudelrgemlegusghfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemtgekudefmeegjegtieemjedulegrmeeluggsfhdphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtt
- hhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmegtkedufeemgeejtgeimeejudelrgemlegusghfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemtgekudefmeegjegtieemjedulegrmeeluggsfhdphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtp
+ hhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hello everyone,
+When dwmac-socfpga was converted to using the Lynx PCS (previously
+referred to in the driver as the Altera TSE PCS), the
+lynx_pcs_create_mdiodev() was used to create the pcs instance.
 
-This small series sorts-out 1000BaseX support and does a bit of cleanup
-for the Lynx conversion.
+As this function didn't exist in the early versions of the series, a
+local mdiodev object was stored for PCS creation. It was never used, but
+still made it into the driver, so remove it.
 
-Patch 1 makes sure that we set the right phy_mode when working in
-1000BaseX mode, so that the internal GMII is configured correctly.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Patch 2 removes a check for phy_device upon calling fix_mac_speed(). As
-the SGMII adapter may be chained to a Lynx PCS, checking for a
-phy_device to be attached to the netdev before enabling the SGMII
-adapter doesn't make sense, as we won't have a downstream PHY when using
-1000BaseX.
-
-Patch 3 cleans an unused field from the PCS conversion.
-
-Maxime Chevallier (3):
-  net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
-  net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
-  net: stmmac: socfpga: Remove unused pcs-mdiodev field
-
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index cc9946b58236..cecfe77c8b72 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -59,7 +59,6 @@ struct socfpga_dwmac {
+ 	void __iomem *sgmii_adapter_base;
+ 	bool f2h_ptp_ref_clk;
+ 	const struct socfpga_dwmac_ops *ops;
+-	struct mdio_device *pcs_mdiodev;
+ };
+ 
+ static void socfpga_dwmac_fix_mac_speed(void *priv, int speed, unsigned int mode)
 -- 
 2.49.0
 
