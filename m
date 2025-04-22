@@ -1,359 +1,362 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2062.outbound.protection.outlook.com [40.107.100.62])
+Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8305D283CAC;
-	Tue, 22 Apr 2025 16:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00A7A95E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=91.207.212.86
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338029; cv=fail; b=cwLjdXIkbLwuyx/1/sSEkX5ZGPqnpGHLsVujRbRuKWWZo8YEiBTbPKPnh0tTAZknC/gSEqpQJXpuOsAwJ7vyPfmOmyvjLQp/FG3DPxJMNyfiD8SoNh1FqLNJY/bda966WDqDaxhqA2XcJ9okCPB6EpixPhO21ut0K3oiL0fYU3w=
+	t=1745338132; cv=fail; b=WRGM1QYE796ivCc0+JALE0/96pa3AkXAbCXAgCrq+50uhiVoVGGLJg3bTnacFSkqhmwGuhjRJUU27hQCSeIGWa8SlyVQQDRLEcCRtzqOMsoBqGAzVW0vNTcGzrOmb/wdSPJ2c9qkRYuvaLKnQf0mOM4k/DrzFwvViTSNWnJgMfw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338029; c=relaxed/simple;
-	bh=kPjWg8q2M5m14/FGeZhC5HtiTEaun8eAdD7etedE2Ak=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=d8MGLhIhsy2PgUc4EH+TmRO4UeRUwqvB6Ah76mt9w0sA9q4JikfNjVrNPXrNsWJj8yrN0cRaBv6/7rC2RhwTA5jMD2OYUV3iiB45/DCYM6E3CMdDlbH8WlmOl1r8N5EAe3uEuOliCOOg2liBof2fD/d4YdlR+FG21vUDDPeklB4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Um1nWsd1; arc=fail smtp.client-ip=40.107.100.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1745338132; c=relaxed/simple;
+	bh=ud1Vn9ooK7Cus8uH0ol26upLFBjzazGX8il2kRzHo7o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=n+QjpQJaqFSHScUFgWYbxYd4vjfSJl3tyZ6XkooQkiWEnjHD3Ha2LFr6r6s22245MxdEeaKAGBTGkQbratGodvocQG6S+Y2xPbQKnC/gFghwtSh3nPqXCQ103U7M61ygPP21J9F8cPFSMFYqxkEMdRheUewF3OOPTv7FqMZTmzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=vHbN2Cdx; dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b=T3S4N7ru; arc=fail smtp.client-ip=91.207.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Um1nWsd1"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="vHbN2Cdx";
+	dkim=pass (1024-bit key) header.d=IMGTecCRM.onmicrosoft.com header.i=@IMGTecCRM.onmicrosoft.com header.b="T3S4N7ru"
+Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M6v8Od015955;
+	Tue, 22 Apr 2025 17:08:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=dk201812; bh=AAsnpJ5/2P0j/+hvqdYYPgTom
+	bVRDMPZYk8sAl+BC2c=; b=vHbN2CdxtFDL5Fi5fLW0nVsJTxfVclMtNXCNus0ld
+	iEkqdreAsjs0A1RkctRB+FAokTLKIF/COPF46M+0WkMXwRM8+U33sonD1uOPHWl0
+	QlOrY8xTp/NRPAr+/cMtexibOgulcB11XWRtFo5KD/gY555z4UEWNPip2XTJhs2Z
+	tItGBCmG2lWU21toOmFAEM/lIArUtM/CN8lArG3vVe4hA1obnLM1LQEyqmwx46MD
+	Mbn+Ek1BQQi80koJ54shngXqvzmT6ZJogAU7l7YWXM9C4a6bWJ0OI78cOv3v7z6P
+	1ginm1A4/vPIjtHk1DtrGPMb+vRyjj1s7vIdzTjucwY9g==
+Received: from lo3p265cu004.outbound.protection.outlook.com (mail-uksouthazlp17010000.outbound.protection.outlook.com [40.93.67.0])
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 46423t1uqr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Apr 2025 17:08:22 +0100 (BST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h++it29Wn/Ykqdj1Iu6WDb6apZvBpCOVlZIhr0LqWEqG+AVmepC7y+zU1zj8yvtmob7PF4klG42gElGWIcOIjOzYODs5rVynwSANiyziSmvSLxzbRCU1aIQ+yidBzWfvWPJVdSxbVLpI8ZntUPGaQr83lUE2NxN5D0TubKeeDPwm7JsfsZ6BNXymNhhF1N1uxR5+EklGAfef39BKRpG9Q9xZc8LvECNsojbByeQmcz27R65lYlmsjG0ziuIiLbJWHVzy0JfAZxShM0+3JK0br/n8UirFKlpnxqnkjum2sxw6TSBR8/3z7vNq+utaraXnN2OuNmcIGUJD+BhKDCk0Tg==
+ b=enhtMDDdDwPHG/cla2G9TGp4bWT/dbL5Knaxl4QAkd9M/QmT7ar0kSCXvjAF66XJMbwzEOK9A1dm1vZ3F8avwaO8NBiddvWMaowDtbaUXxMmeefOOGIcwUu4Vu0JTBqYyH6mwIF42fL/sPA6TueGtctnExYjVFkikXYDFkpSlJgUq7q8J/w49xVAi53Z/uWqq6G0znySBysnNUYgE0ynxSlHfXcCEPqL6hYUYFKUVnPGBYa9YpeAg3s+7pUtJkOZ/pP11RBvAP39p3okjn+6cQ3qzeKqRK2pxEgKiqB/aZ9KLaxgKltvPdFxaAi0flndw+nG1a6OxkzMpMdwiBMarw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YC9W1DiFB+ojssbNDx8PLyksAqpOVCZDSrCIGpZ4mG0=;
- b=bZK/nxPGKPK31NDSYdGaZsSGa5azWqKXQoRU0zk2UOWgFcLBxml1aUNPwPA6u7MoSFpV7mHsXB9agDDUT7M0myCv4ta0K/etH8tOlljLuyFS5hhdUw0FmfS0v/BAgrFSCxEoyte7NCctbFNzrozHGcIFSYqpSvVb0ZZYryrwSUNT3YQJa/b11Ufx2EbGfWZi0E+cjiLlocJocFu56YBTAIR0q83sAZhmpAQgw5jtBpXWRYU1yI/8g3PMCrzKkhyDdu3+4rUSOfFSYJtwdXBp2vtg5HjsIGoZuXIzPQnZJDFTKy9XtW5gjP6MbdEcTyqc92CnzbpaJd8Hjlk+ia13Kg==
+ bh=AAsnpJ5/2P0j/+hvqdYYPgTombVRDMPZYk8sAl+BC2c=;
+ b=EDwQp8tN3pG1REJeQ1vtYND1gjZr5q6hS3fMIE7KZmtMW6IoyYCvENccmJmgE46rBvhZl3MH9yNwtXQO3C8uYTYbD5KqMCOFzjIf9PfrrYUbGdNzQYxn8iyluCE9JqEkehKfIDfJMjXnXqMJHpNAbqeYzlrAO8dlvJI+G4hnRl2xXQihufP02hEdeJpOz4Iof1+wvTLV15OlrpeXZJ5WorTf+YMmnnqFCaBc5Aar49zXPQ56njSff8hIvz5qjhyTOLyddsstz7dSOBKJklhE8B3+DnGaSzJ0obhXmO7RwQ+aC/kFwNW+2Rsc5LloHb8RzrQ8m0iKVs8r5l6UZnzc+Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=imgtec.com; dmarc=pass action=none header.from=imgtec.com;
+ dkim=pass header.d=imgtec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=IMGTecCRM.onmicrosoft.com; s=selector2-IMGTecCRM-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YC9W1DiFB+ojssbNDx8PLyksAqpOVCZDSrCIGpZ4mG0=;
- b=Um1nWsd1I+ze8XeTPyCl7g59kiUaZjoUfeghOIu79UREVgEhj+bUV3SBsCNFMC92SJXKPx1t3MRzLtEgMnoA/8dxyg70NnuuvGqvbogD/SfJ4eWbbAtn63c2mXIitUGwJSnTB6OkaL1+tzv6RoZCD9c6lHXPGrSm85ogDZZ0P00=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
- by IA1PR12MB8554.namprd12.prod.outlook.com (2603:10b6:208:450::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 22 Apr
- 2025 16:07:03 +0000
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8655.031; Tue, 22 Apr 2025
- 16:07:03 +0000
-Message-ID: <bd1c7964-8f53-4493-9abc-19d990b63d54@amd.com>
-Date: Tue, 22 Apr 2025 12:07:01 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] i2c: amd-isp: Add ISP i2c-designware driver
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, gjorgji.rosikopulos@amd.com,
- king.li@amd.com, dominic.antony@amd.com
-References: <20250228164519.3453927-1-pratap.nirujogi@amd.com>
- <0c714314-c5b0-4815-9e74-47d2402e8852@wanadoo.fr>
-Content-Language: en-GB
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <0c714314-c5b0-4815-9e74-47d2402e8852@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQXPR0101CA0014.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:15::27) To CY5PR12MB6429.namprd12.prod.outlook.com
- (2603:10b6:930:3b::16)
+ bh=AAsnpJ5/2P0j/+hvqdYYPgTombVRDMPZYk8sAl+BC2c=;
+ b=T3S4N7ruhLMQ7KAd41yrs4PuwqvpPtU0iaKQC9m2EX0S2kV1taDqqBSCYo4JT499i24DYfBXsN/67rdcGDBzfwQ6qr6lqHxnbMuilth99kOsYxFviJJSmgrWGHIiB91enJoOCSBJVyXs56xDkZVMJtcDT41bcV3ISgwiSRO5xg8=
+Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:e7::8) by
+ LO0P265MB2921.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:174::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.23; Tue, 22 Apr 2025 16:08:20 +0000
+Received: from CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::8e9d:6b2f:9881:1e15]) by CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::8e9d:6b2f:9881:1e15%3]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
+ 16:08:20 +0000
+From: Matt Coster <Matt.Coster@imgtec.com>
+To: Arnd Bergmann <arnd@kernel.org>
+CC: Frank Binns <Frank.Binns@imgtec.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrzej
+ Hajda <andrzej.hajda@intel.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Alex
+ Deucher <alexander.deucher@amd.com>,
+        Alessio Belle
+	<Alessio.Belle@imgtec.com>,
+        "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+Thread-Topic: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+Thread-Index: AQHbqUo2T639E3x4dkeZqiAhvvg4tbOv7vKA
+Date: Tue, 22 Apr 2025 16:08:19 +0000
+Message-ID: <04e72a15-627a-4ca0-824b-a40add7cd4de@imgtec.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CWXP265MB3397:EE_|LO0P265MB2921:EE_
+x-ms-office365-filtering-correlation-id: 92aa95d6-f265-49a4-4b25-08dd81b7e65f
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018|4053099003;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?NElyTEc5ZSsyb3pIMFUzTW9Cc3B4TWUvWDlpM3crTWd1MERNZDEwVFdRQlB3?=
+ =?utf-8?B?TVo0UGhvSE83WkNjQVBhTXREYVd0cU5ZL2oxQWtGSDlBZTdHRW9YQkZJb0RV?=
+ =?utf-8?B?eCttZkZlcmZaMW82UWp5WHJkaUN5WUxWdkRRR1JNNHhmdlBvdVh2RS9ubmlL?=
+ =?utf-8?B?WTdob1lkQithbGk5SzVHZzE3ZldNUXJVamE1QU44YTEyRncwcHRRRzlyWGlE?=
+ =?utf-8?B?UzkxbXFtQXYwU0ZPK204dnRINGpPZ0Z2K3UxaGZQTXhDY0doaWorOTFBK3RV?=
+ =?utf-8?B?WW80SElyUmFGZmVuT3VsVVJ0d1JIc0gxcTFaTTdSbDlXQXZZZTJ4UzBZZnVi?=
+ =?utf-8?B?M0tzaHNaUUZGWFBxRVNFNUFVKzVRTk05dVIzdGFHcCt4L3RUcHU0VE9BSEpN?=
+ =?utf-8?B?dHNaVDYvZGpqdHFiaHhEL2M0NzB5RHFPWWIwL3d1MjJ0bUNXLzlndDFxSGRY?=
+ =?utf-8?B?VVlXRXNPUmZDNTNTUDdxRnczU2pjcVRJMTczMWRobnFNblFNOWphSzZLNDJw?=
+ =?utf-8?B?L3dYdUhnb3NoVk5jb0kxVGdrQmpSc2JaZmF1MGQzT3h1MWdUazBnRlNWa0Y2?=
+ =?utf-8?B?eU1CQ2xPcEhRQmk3eTl1MjRhS3B1ZTJLcFBueHVuVHptUDlUWU5rMWhLRFdp?=
+ =?utf-8?B?VDZCU2Rjczd2VkFJR3Jyd2JVclJ0dVpKanhudC85V2JMKzU4ekZQYmdMeWtn?=
+ =?utf-8?B?eC9QSUI0WVZ5SW0rakxoVWI3TDFjTTEvZ2JvYks0T3lVdUZvT3c2RHU1Zy9S?=
+ =?utf-8?B?c0doRE5FWlcwbllqQ3F0cUFHV09jVk1oZGZ0ZkNqS2JkS2RWN25TREVtUklL?=
+ =?utf-8?B?SzdjNDVnM1Q2OXNneXl2aDIxaGRFUjNyaWNoWWtEbjc3eXpueE1HRHl3SDJU?=
+ =?utf-8?B?WmJnSzJ5Z29GWEp5aXh2Rmlkc2p5NXdCclhDVVFFR2poRjh1SGhhL1A4bm03?=
+ =?utf-8?B?TTMxMldjR0U3YTlkdzJHRnBXYTFKVGRIekl1NmNhcitrNUhpOHd2MkpkQVRU?=
+ =?utf-8?B?WkUrcDZDeVdmRUl0OGdCcnBQWkxKRFh6R2UyN0NyVC9uYXBJL013eDluQXJ2?=
+ =?utf-8?B?S0I1dTZwcTBWWUN5UlRoZUVjTlVjSWE0NUVQRkRwRXBZOUg4UmcxQytHT0JM?=
+ =?utf-8?B?OENpSmlhaHVnSXRBMWl6UkluOEx6cjFaQUtmY1VPcWRKaUxkcGE1VWtZRnJr?=
+ =?utf-8?B?MmFVUXdScVgwVlgycjFRejlYaVNkd1EvWjlpL0dvc2cxYU1ISjJqbVBUdUhO?=
+ =?utf-8?B?cEloMTVFcUU1clhjQ3doVWx5YURPK0trVG51MkYvYzBKajQ5V1dTOWt4bVN5?=
+ =?utf-8?B?ZVZuMVpQVS9iTG9pYU1jaFRybmxWVXZ5UkpJRHYvM1I2bTFmSko0MUYrSGNY?=
+ =?utf-8?B?bnNvUDNXbnkxZkYreHlDOFVzSjdsamo4ekN3d1VaVFNZUUxpKzlIQmdMOXhj?=
+ =?utf-8?B?aU5rbk1Ob290TzB0MzNkTk1SK0JRbVcxT2RaKzU5L3VoSmZxQTRBNjlaWmw1?=
+ =?utf-8?B?YUxveU11b0xiYm81MWJlR0lSSTJISkFnd0J0bjBKTzFNUmJ4MThtVExPOXBz?=
+ =?utf-8?B?U040Nm5aQWxra2ptREFiZnc4bGRFOEhQTFZEVXhGcDR6L2tIalpkM2pZaEd2?=
+ =?utf-8?B?M2NGUXlpUGFGOGpnMnltdUVnQ0ZaWllMNkRDQTcrNXdidW9CUFA1MWNCalo0?=
+ =?utf-8?B?WUR0bkZVUU1ZWTJsOWlueWhXKzJtNkt4aWo5eWN4WGFVcmVYNzVHcklFSGhq?=
+ =?utf-8?B?VnlWTmZtWVR1R1FYSldjRGx1TnJ3UHIwSjlYYUtXdWxIc3JncjBpeWN1NTF3?=
+ =?utf-8?B?V3lOTloxb0FGcXpZUlJXSE9YYzhxUGloY3NJNzExTmNkdklRTVdPZWlBM2t2?=
+ =?utf-8?B?SFlYaFovSjNaVGluSHN6cjROL1QvMVJLenQyU2s1b2RON1VrMkl4OGxtcllP?=
+ =?utf-8?B?WDFPZ1pJWkpUcmEycy8rQjdyMlRGNXMzR0orSHVTenliM3lhR2VGLy9iZXVk?=
+ =?utf-8?B?WVBTN2trY1l3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018)(4053099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?N0pYUk5MZml1clVkMUc2WWErcitteEllcjFiRW14bFdOWi9ZSkpidzF3d0dD?=
+ =?utf-8?B?SVFzQitYRHhVcFAzdVFxWDNLQ2I4empMYWNXbW9yYmZ3T1RLVm5kMklNUmh1?=
+ =?utf-8?B?M2VvQjErTnlEQk1rZnU5M2FCSEpNMVh6NXlpV1JPUEVuMHFxbTBJdkVaZDZP?=
+ =?utf-8?B?SG50aTZlSFdMWXVSd1F1VGxkRGtHcHBtV1B0eTdvYkhlQU0zT0lRaWFsc2tR?=
+ =?utf-8?B?VUdmbktoa0NTMkk5cEFBMGQ3T2hRcW9qWmZxL2FsQ1RrRi83cWN4RHloQnlp?=
+ =?utf-8?B?RU9BcEhTZkhVbXlGakd2TGdKWE5yQ0JSdWdoeTJDOEhiV1d0alRDMmxkdUZx?=
+ =?utf-8?B?VTM1ckhGaDZTU2xYbCtncUowQVI0MzIrQXFLN0VNS3ROc0FlSElpZXJ3SzZW?=
+ =?utf-8?B?ejRrN1lxZC9lSW9HUG9Zc3ArWEZLaVBHbndUcmxQQ2VPU1pYbEtFbVdvcSs2?=
+ =?utf-8?B?R3lUQmFQbUNRc2tGNVNCSW9WRDBoUGxudDFLZ0t6N3p5em1ZY0tZVnQ0dGl3?=
+ =?utf-8?B?Y1llNGFDaGpLVXhDTW1zY1BMS2lObWZ4VmEzRlpOY3NhSnJYSFNTbUFEdVhP?=
+ =?utf-8?B?SVhFdHNKSld6cGhIM2lkUE5mM0cwZWdWcFc3ZDN2eUNyeEFFQzNTZzBMQVU0?=
+ =?utf-8?B?a3crM0FhSHAzdjIxTENrQ0d5WStnZVl6UzFmSEJ4RDdTWkgydVB1Mm9Ddksx?=
+ =?utf-8?B?QTZ6NHIxdFRBK2VmT09VYzlGeTFOTFVrcTJCSFg2aGU3dDc4Umh0SklwbHkw?=
+ =?utf-8?B?elcyMEVOQ1dyV3gwazNCWGRnSHp2NE40aUdkMDc0a1BjM1JBaTgzdjVsVVlM?=
+ =?utf-8?B?R2UrbEZlQzR3Wk5FSGl1WGFwbXBydy9SUTEyaXhMMEVHaHVCMXJWWTV6L0sw?=
+ =?utf-8?B?TlB6SURBVUU4WjZtRVU0R1BkcDkrUFlzcXdBRm9vSjRaU3Q1V2J0NStKam5k?=
+ =?utf-8?B?ajVycEszYXQxb3JZSWNlS2Q4U0NXd2NzVmxkWVV4Yyt0bnUxVzdEZDcxSFdk?=
+ =?utf-8?B?QkV5SldScDVKeW41aFB2WXFRY25Pd2haYmZzanNTcG11U3hOMkNtYTUyVzAw?=
+ =?utf-8?B?QXZib2ZBMERCKy81ZTZ2N3BEUGJ1RnE0SnV4QkJiMDUwMlMyclFPMGZaczB1?=
+ =?utf-8?B?dWpuclBaT2pzUDg1SVVRUEp5aE82NFNESlZUU3k4b3pIeUNhMmZOOVRTQXBD?=
+ =?utf-8?B?YzNYSmxaT09rZUZjWEJycEFJdlFwcmQzck1ycFlYeTl6S2NZRGQ5WEYwZlZM?=
+ =?utf-8?B?U0Z1SnFLU0Vzb2d0UzB0dkRXa05HTHI1Z0U1UUpCSGIzeVB2ek9OSnFwR0Ju?=
+ =?utf-8?B?MVJJRUdORDNVbFVhM2hwVHlPc3MwNU53QnBiWnZpZWxQdy9TSVBHdDB4aFZa?=
+ =?utf-8?B?OEg5ZVNxL0lTWllMZXRRN25SUHlBcHdpYzA2T0d2S3hCdVU1KzZmc0dTQkM3?=
+ =?utf-8?B?MTNCNkt1T0RUS0ZIakpSNllpMTFVQnpMUjFyNHk5dS9nVDZmei9rQThvdVhN?=
+ =?utf-8?B?dk1EZXNRc050SjNuSGVERU1DL0xRaTBLZ252QW5wODZ6REc3Wk5Jajhjcitt?=
+ =?utf-8?B?R2ExLy9rd2VsbXJWRGloYW9OaU50bHZESXNMN1JTRE5PMFJjcUJ6Mk9RM3VH?=
+ =?utf-8?B?MVFYaG1teWF1enVBTUlWZTQ2QzhxcWc4b3NzL2lVNDl1MWsrZitZRElEbDU0?=
+ =?utf-8?B?QkMzT1Rld2dqQWtVd1FPdW1hZGpoeFBMT202TEhkRW44VXI5L0JnSlRQZTNP?=
+ =?utf-8?B?dWc3OVJFNW1CeGpXeXRJTGxyNHF4OGN1dHgzdTlqOHhhcWNjZks1cndqWEY4?=
+ =?utf-8?B?c2hPN1NpT1RaMlZ5dk9jQWRFVDFsNmNnVmJDWE5BczczTXpFTjlzU2MyRUoz?=
+ =?utf-8?B?TkRDMVhXNWFsYWNaTGFaOHpxRTJmK0svR2QveFBNMzI0dkRSNlNxTFpBK2VK?=
+ =?utf-8?B?K3YybnJDR1VRaUpSdWhqT3lOWkJxeURmVnQvZm1tNnJObS9TeWgxZHR0cGND?=
+ =?utf-8?B?amhWM3ZEMHZKOXIxNlNEWXlFTmkvQTludEZER0hVZ3VWMGhweGhkVlcySXQr?=
+ =?utf-8?B?Wlg4TGYvWmU4bEtIcDZvT0h4ZDI1RXd0Q3NmQ2dDRFl4UFFsNC95Rytvc1lU?=
+ =?utf-8?B?aUFYNDQzb2JGWkNvdStqMmR3VS8ySUgzZFI2N3RnNmdrOHd4OHV3czNQYTBP?=
+ =?utf-8?B?WkE9PQ==?=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="------------GI4OjDwxcLSZVMWglndskERE"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|IA1PR12MB8554:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3e8d2a5e-1737-4838-3cc3-08dd81b7b89a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TGJZT3pWSG40blJDYytVM2pBTG5uS3F1UERYcnU0aU9tM1RJY3BBY09lK3lR?=
- =?utf-8?B?elJpNmQ3RFlwdGVXWDR4c2o5VVpreUR3cEttTzNja1JIY0xyclhjaEJVSWpP?=
- =?utf-8?B?UUVMRHRDbWpVQVFkMExzd09zTXhlTW42K241djduYzhvMVBFOVA2eFJuTGxK?=
- =?utf-8?B?LzRYc2pPTlpDSEVLcWlqTWhNWmo0eFpvWit0TllMTTMranpTYXAxTHpjZFk2?=
- =?utf-8?B?bk5KczI5dTNwNGtHNXhtdTFNYTh3cDJyMDlLbGFRV2xZL3JiYUNZT3d0SDRG?=
- =?utf-8?B?bmpDSktEU3ZmakhkZ2prS0YrM3NqbENzb2JNN0tlcGd4czdRWThHUzJIUWNv?=
- =?utf-8?B?SWFmbkFCUjM0TFNCbFZBSnpLZTBld2dVTm9jbGNEQllWMnMybGdseWtzcjIw?=
- =?utf-8?B?d2E1VW1tZk9nellwMVUvMDRGVzFmQVAwVDkyMjBtWlpvY2doY1Z2STR2emFw?=
- =?utf-8?B?NC9EU0JYRm1rOGxBU0tvSmJzWlAxOGVZK2FHN2s1cnhhdER1RHUyejlzbEZu?=
- =?utf-8?B?dTFCcGd0anZIUmlUVm5nVWY5TDBnMDVPOWtGQjNDWExMdXE5NFYrcVp4YVI2?=
- =?utf-8?B?YWZHSEFsNzFIK3FmSFMreFFJWDNGbFFNN01EcGM3NCtJOFFVU2hjaGpWZ20z?=
- =?utf-8?B?Q2JRWnpDRVJIUTJ1ZWJKWDJrK3N2Ym82NFJ1dWZ4SUVVN1VKZ1d0NG1OcWF2?=
- =?utf-8?B?L0t4eGs3MDVFY2VKWWlaVUhrT2FyenU2N25oclFMaDBYVzI2K1BHZ3VpNS92?=
- =?utf-8?B?MzJMRnJMRmRZN1FxbVN6WUE5dzZlREx6WFMyWmRpbEtYWjgvVDdGdjRuR3Rl?=
- =?utf-8?B?QzNhQkdKb1QveWxGdXliR1F3eTV4b2h4ZEtxdGdsNTZxREV1TjFhL0cxVHEw?=
- =?utf-8?B?YXV2V0djZXJNdzhTSU5ENllpMmFxWFA2SXNKaG5MVTBBbGhuME12TzlGNm1S?=
- =?utf-8?B?NnY3aWR4QUI4dm1oTUZNU0poNDNlNkxUd2lmY282WEsrWmVvOTlZUUU3d1g3?=
- =?utf-8?B?V1QydFJ3UDMyM3RHdzNLZlNwZkdIbDRmQWl1NHRkdmhnZDY4ZjllaDBKR1k0?=
- =?utf-8?B?Q1BQYUpnM09GOFVkQ1dqZ01XVmVJWkdTbk15VWlIcWVITDFMWGliZWUwZkFT?=
- =?utf-8?B?YkQ2Q1o4TTRlN3RyeUFsUWJuZ2ZRdUYrMGI0UEE3enp2UlZuRTlib0kvT3Q4?=
- =?utf-8?B?Wk1JMXUzaS9aa0ZqcFQyZUhhbXJsQ3JrSWFpelFXWE1IOVlIS1laK0hiN1hY?=
- =?utf-8?B?NG9oaUFHY05ycnpWU05uSmVzTmxLeE9Ea3JDdnpqSE1OV3o1OXNqN25XdlQ2?=
- =?utf-8?B?QkxjR0NYWWpKcEMrMW10MWtoc2JPZ2FkU3pLcTZwekNMdTViOUFVdUxoalow?=
- =?utf-8?B?LzF4bXVndStqSGp6dlRUWmN1OTlMamd5d2gzbVRMbHZqQXhpcE5xV3RRaGty?=
- =?utf-8?B?eWhxdTQzWXRNVEVpeHA0Yytpa05rWmEwL0NqYnI4eGNGOU1YS3VSZENWRXNR?=
- =?utf-8?B?TGFXSk12bERwWWoyVW40dmhsZTBUU3hvQkkvRmFpVUEwSGVSanJXS1lCY25i?=
- =?utf-8?B?Y3JGTEhNWDdpSndERTFDUkIxSFl6OW5XSnpHNEpEcU5Ua2c2bzBOSzltNWla?=
- =?utf-8?B?M242dXdlN0NUWmprSkRIUCtNeEQzbXdZRS8wWk9ObUcxMDBWWmhuaWVNa0g3?=
- =?utf-8?B?Y0o3UTArUnpwcmZwNHpFeCtqYnZ1eE9MMkp2Vi9tZWpQQjNoTFdxalZWVERm?=
- =?utf-8?B?Z3lkNkRaZlJHcG5VVmIxazlXMlptRi80RnIwbVJHdTRuUXZBWktLTmVyK1ZR?=
- =?utf-8?B?VEk3bVM3STRod0Z6Y0NmWWNHdXo2YmM5d2JpdVNqdnRuNW9pYXU5QUlyWklC?=
- =?utf-8?B?SW1BSFQ2UE9YU2FlT1M2T1FaZUQ2NHE5eS9ySVhTRG1hK0U3SnQwWTdzODc3?=
- =?utf-8?Q?EwJ74PgM1rY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T0N3RWt2ZFNNU3lqa0gzUEpkcWFML04xT0E3Nlp4UHZPbXFxVTZEUHdYWFha?=
- =?utf-8?B?NVdxd3g0WHdBRXNJU3RxM3hSWWhDdXJoVlk1MTZ1WC9XMGtkelY4cDhwNUov?=
- =?utf-8?B?SUpWMTh4eXV6ZkEyUUczcVA1cVRmK2J1TytlR0ZEbU9hS1VTSmd5eDcwdGMv?=
- =?utf-8?B?TjZVMzBFazJvbUUxRnB4amxmcXJwamorWlZGMTlzUVkvZFVxcmphRmJnZUE2?=
- =?utf-8?B?M2hQQVdVRTlLUEJ2cDVLQ0pMdHFPb3VVVE1md3NueDdlc29mYjdwaTZGbVVY?=
- =?utf-8?B?emZ5aCtwLzlKRVdaN0JBWkdhZHhUN2s4MllXeUFoYU42bllBR2YvN0p3RFJF?=
- =?utf-8?B?NGxyL0FqZ3B6OHFic2FvVzA1SlhhOWRUWFRDZ0tsUW1Jc0FBd3d5Y3A4MWxn?=
- =?utf-8?B?NjlXNE02SjFNb0xmLytDRElORDVmdldqWXowNzhEL1R0WUJkd09zZHFLSko4?=
- =?utf-8?B?eGtzLys0UkNXUEg5ejZ0RHhLMCtDTEJaZEVZNlB3bEMxOVJBbnByRC94Wk9n?=
- =?utf-8?B?U3RML21EUmgxM1AxZmNNL0ZWUzVkdTBidVpQNm84WlB0SzNsbEJnVzlzcExy?=
- =?utf-8?B?TWN1cExNeVFTbldrcUVMalEyZnRERXo5cEttZUxRZVZSeUVOdkkweGpMblg2?=
- =?utf-8?B?U1dwRUhCc211aGd2TUw1dmVXYUFHN2o3eW93WmhtRTZoY2lpVjlWK1dBTUpM?=
- =?utf-8?B?OEJUY2R6bFZONmpkcytuQmo4Ny9jSGdxelYvTjlhZS9Qb0RxWFZYLytjeTcy?=
- =?utf-8?B?UWZCWThydjBkVk9HRVZ0M1R0OExaRzlmbnRnK0hGRmlaWXJlMjNOTnhsdkp1?=
- =?utf-8?B?YU5oWnI4Y0F3WWQ1anBOZ214QktaZmhvY2FvNzArNHZRRDE1VjhpZFdTK0hl?=
- =?utf-8?B?UjJsaUJVbmpydXcxN2ZObFJuc2FiTVpsZ1ZIMGpXa1Vkd3R6UUwwUmlya1ll?=
- =?utf-8?B?eE05RVkzTGVkaHZHSXR5TzA4ZHdoQnA0TVRaY2RsRWpRTVNEajR3YlVvSmI2?=
- =?utf-8?B?VEtjRUhTaGNwVmNsdUtSMUFsS1dvYmxKVFRFK2Iyb1M5RUdkd0tvUEhvTFF2?=
- =?utf-8?B?bEFUYy9hWW9IUTVtNmVWQUZFa1pVVkVtZ0Ztb0V2U0ZxSnJmSjRZMWN4N0Ji?=
- =?utf-8?B?VTRZOEpRY2JKcFVZclh5NlVIcWgxL1FXMVREaitkOFFnUHVRdExqMjdsbFlp?=
- =?utf-8?B?Ynk2VEFDTmx4ZThQYzlLN1JENno4VmtwUE56UTZyQndPTituVVBYcVlPYk1a?=
- =?utf-8?B?KzRiVVpmWDJrcHY4Z2J4amsxK2Y5Y3RMOTZTSVpoNHNiYm45Wi92T3IzbzQz?=
- =?utf-8?B?Rm5KQzZBWHFVbUtYZHR0c0lzeUFtWkVqVUdMMnlYNmRLWmdQL3hLZ1pxVWh4?=
- =?utf-8?B?b2kyNE1TWnkva3gxcjRBcjI5WFI5TmJkOVQxcVBjWXYrdzlRaW1SODlJZmRO?=
- =?utf-8?B?R0xPUm5jN21rMFVJTHdkeFpSZVNkOWFqbXh3UlVncVpLRzhLYkRNb0hFdFlM?=
- =?utf-8?B?bFRGMmxLTW5aQ25KQkRQdWw1U2M2ZmcxTjBXRWw4TjVkM083WkRtN2g0YjNZ?=
- =?utf-8?B?L3FUL05lZFl5SGw0djY3ZmhmV0d0clFqY3VYOU55L1lXOXhHZWhQNGkzV01x?=
- =?utf-8?B?VEt2TXFKdTg1SGxuaEtjVU1aTGtzRjZsT1pOU2hIZ0RzMzJkOEZ6eTA4dUFX?=
- =?utf-8?B?b2llOG0xZmRsREdXbnRQS3ROa2ljM0F5dUpDaVI5L3ZYcFRlYmFPYzE2dnVZ?=
- =?utf-8?B?alJLdnpUdHZ0dU9oMGNtYVdUejNKanJIbXVrTVc4S3JkbWd0K2FkaWdSL20y?=
- =?utf-8?B?bGUwa0xEZ05SQXJ3U0MwS1B1bitmeVd3SEphdmZnaTJzMWk4b0hXZy83dEE1?=
- =?utf-8?B?U1RRNUhvcnBobFl2RE1KTlJ4UjVyeVRiOW1vRU9HUkZOK0FsTytsMi85Y3ph?=
- =?utf-8?B?T1FwYTZzQjhHT3FXSHEwNFJTVFNRSkU0SzlGc1NnLzI0azRFYkp1elRtUk0v?=
- =?utf-8?B?RjhXM0V1enE3K1pHMmNTZTB5RlVvT1c1UlVqdW9NellYVHR2WG1LYTAyRHVj?=
- =?utf-8?B?NG56LzR6b3B1bFZFWWtGdE9yT05VV0VvT245U25BNXo0a3h4cEhETDFyV2U2?=
- =?utf-8?Q?vQigpfpa7qmvTk+gaNuce/WaN?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e8d2a5e-1737-4838-3cc3-08dd81b7b89a
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
+X-OriginatorOrg: imgtec.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 16:07:03.5103
+X-MS-Exchange-CrossTenant-AuthSource: CWXP265MB3397.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92aa95d6-f265-49a4-4b25-08dd81b7e65f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2025 16:08:19.9871
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HF9ES4cur1XFMyZ4KoMPRoJT1hRqex9U/8d8XZA32epA7CRjsyXZ85h5KmiAnrQ5vD0h/bRZPpeGhJ2B6nLpBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8554
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d5fd8bb-e8c2-4e0a-8dd5-2c264f7140fe
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zm8t2Rew8q4fSSymEjp1unxdz/4IJNIW+6mKyMsFa+q+PhZSqFes8K+ymw98Hk+5Jv35BM02E8LfFBHTwPrNkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB2921
+X-Authority-Analysis: v=2.4 cv=L60dQ/T8 c=1 sm=1 tr=0 ts=6807bef7 cx=c_pps a=8uRQujWAJeFmirxVo8X+Qw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=NgoYpvdbvlAA:10 a=r_1tXGB3AAAA:8 a=ChYgo5OsSTPg3kVoBV8A:9 a=QEXdDO2ut3YA:10 a=H224zZAz58H5Dt4Z_zQA:9 a=FfaGCDsud1wA:10 a=t8nPyN_e6usw4ciXM-Pk:22
+X-Proofpoint-ORIG-GUID: -0oIwHrNqXpY7qhTUCLdEq1_TWLXfNrs
+X-Proofpoint-GUID: -0oIwHrNqXpY7qhTUCLdEq1_TWLXfNrs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIyMDEyMSBTYWx0ZWRfX1TFrin3rLnWJ Us403F65aRDVemPeDiqzyMpsIz33kRw2rZdH/T0isKW8hRDXhjoEfpHjZ+uGzaBYt/5+6QmRbXI E6K8Mm538e3f7sB8/2O6+2rb9qoH/Lq6b496IOz1vs7d4QM0MtP5OjpdQLDvFgKy1rypIR2Y6Xh
+ 2K4+Pfh48mS4xifX8h5rNmQNW9vyyk4Js13RLBpxIij2SoY9SgJWFhjfIYgh+gmPCN6ZZhIRzn+ EwbjgzZL73eY/Owr8U18MJ5affAbopB4g+VKHTlxZ0F+BibjlHttUx6+YOfkkYhYp2uQAJTjPuS Fq1605tRahwCF4jtC+MgYq+Zlz5xbMHubhmlMLVLx0mLXeQqtHB00xPN0BzBPjllpyHa+rhbFtD
+ fs86NsJAbpQhrdq8MYrTUAXEUFC9fiQGMY0IMp68BW3L4xGaFOCqOQFMjm3C9+VUgOqOPjOh
 
-Hi CJ,
+--------------GI4OjDwxcLSZVMWglndskERE
+Content-Type: multipart/mixed; boundary="------------IIqlIQqRSvRcMtFZgBL0QDpb";
+ protected-headers="v1"
+From: Matt Coster <matt.coster@imgtec.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Frank Binns <frank.binns@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Arnd Bergmann <arnd@arndb.de>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Jani Nikula <jani.nikula@intel.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Alessio Belle <alessio.belle@imgtec.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-ID: <04e72a15-627a-4ca0-824b-a40add7cd4de@imgtec.com>
+Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable
+ warning
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
 
-Please accept my apologies for the delayed response to your review comments.
+--------------IIqlIQqRSvRcMtFZgBL0QDpb
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Pratap
+On 09/04/2025 13:22, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> When CONFIG_DEBUG_FS is disabled, the stid_fmts[] array is not referenc=
+ed
+> anywhere, causing a W=3D1 warning with gcc:
+>=20
+> In file included from drivers/gpu/drm/imagination/pvr_fw_trace.c:7:
+> drivers/gpu/drm/imagination/pvr_rogue_fwif_sf.h:75:39: error: 'stid_fmt=
+s' defined but not used [-Werror=3Dunused-const-variable=3D]
+>    75 | static const struct rogue_km_stid_fmt stid_fmts[] =3D {
+>       |                                       ^~~~~~~~~
+>=20
+> Rather than adding more #ifdef blocks, address this by changing the
+> existing #ifdef into equivalent IS_ENABLED() checks so gcc can see
+> where the symbol is used but still eliminate it from the object file.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On 3/1/2025 3:32 AM, Christophe JAILLET wrote:
-> Caution: This message originated from an External Source. Use proper 
-> caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Le 28/02/2025 à 17:45, Pratap Nirujogi a écrit :
->> The camera sensor is connected via ISP I2C bus in AMD SOC
->> architectures. Add new I2C designware driver to support
->> new camera sensors on AMD HW.
->>
->> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> 
-> ...
-> 
->> diff --git a/drivers/i2c/busses/i2c-designware-amdisp.c b/drivers/i2c/ 
->> busses/i2c-designware-amdisp.c
->> new file mode 100644
->> index 000000000000..dc90510a440b
->> --- /dev/null
->> +++ b/drivers/i2c/busses/i2c-designware-amdisp.c
->> @@ -0,0 +1,266 @@
->> +/* SPDX-License-Identifier: MIT */
-> 
-> I think that this should be // comment style for SPDX-License-Identifier
-> en c files.
-> 
-Thanks. Will update in V2.
+Hi Arnd,
 
->> +/*
->> + * Copyright 2024-2025 Advanced Micro Devices, Inc.
->> + *
-> 
-> ...
-> 
->> +static int amd_isp_dw_i2c_plat_probe(struct platform_device *pdev)
->> +{
->> +     struct i2c_adapter *adap;
->> +     struct amd_isp_i2c_dev *isp_i2c_dev;
->> +     struct dw_i2c_dev *dev;
->> +     int ret;
->> +
->> +     isp_i2c_dev = devm_kzalloc(&pdev->dev, sizeof(struct 
->> amd_isp_i2c_dev),
-> 
-> sizeof(*isp_i2c_dev) maybe?
-> 
-Thanks. Will update in V2.
+After sleeping revisiting this after being on holiday, it seems like
+enough of my concerns were due solely to my ignorance that I'd rather
+just take this patch as-is than spend time reworking it. (Thanks to Jani
+and Andi for filling gaps in my knowledge too!)
 
->> +                                GFP_KERNEL);
->> +     if (!isp_i2c_dev)
->> +             return -ENOMEM;
->> +
->> +     dev = &isp_i2c_dev->dw_dev;
->> +     dev->dev = &pdev->dev;
->> +
->> +     /**
-> 
-> Just /*
-> 
-Thanks. Will fix this in V2.
+To that end,
 
->> +      * Use the polling mode to send/receive the data, because
->> +      * no IRQ connection from ISP I2C
->> +      */
->> +     dev->flags |= ACCESS_POLLING;
->> +     platform_set_drvdata(pdev, dev);
->> +
->> +     dev->base = devm_platform_ioremap_resource(pdev, 0);
->> +     if (IS_ERR(dev->base))
->> +             return PTR_ERR(dev->base);
->> +
->> +     ret = isp_power_set(true);
->> +     if (ret) {
->> +             dev_err(dev->dev, "unable to turn on the amdisp i2c 
->> power:%d\n", ret);
-> 
-> return dev_err_probe() would make code slightly simpler.
-> 
-Thanks. Will update in V2.
+Reviewed-by: Matt Coster <matt.coster@imgtec.com>
 
->> +             return ret;
->> +     }
->> +
->> +     dev->get_clk_rate_khz = amd_isp_dw_i2c_get_clk_rate;
->> +     ret = i2c_dw_fw_parse_and_configure(dev);
->> +     if (ret)
->> +             goto exit;
->> +
->> +     i2c_dw_configure(dev);
->> +
->> +     adap = &dev->adapter;
->> +     adap->owner = THIS_MODULE;
->> +     ACPI_COMPANION_SET(&adap->dev, ACPI_COMPANION(&pdev->dev));
->> +     adap->dev.of_node = pdev->dev.of_node;
->> +     /* arbitrary large number to avoid any conflicts */
->> +     adap->nr = 99;
->> +
->> +     if (dev->flags & ACCESS_NO_IRQ_SUSPEND) {
->> +             dev_pm_set_driver_flags(&pdev->dev,
->> +                                     DPM_FLAG_SMART_PREPARE);
->> +     } else {
->> +             dev_pm_set_driver_flags(&pdev->dev,
->> +                                     DPM_FLAG_SMART_PREPARE |
->> +                                     DPM_FLAG_SMART_SUSPEND);
->> +     }
-> 
-> Unneeded { } in both branches.
-> 
-Thanks. Will remove them in V2.
+And I'll take this through drm-misc-next tomorrow if there are no
+objections.
 
->> +
->> +     device_enable_async_suspend(&pdev->dev);
->> +
->> +     /* The code below assumes runtime PM to be disabled. */
->> +     WARN_ON(pm_runtime_enabled(&pdev->dev));
->> +
->> +     pm_runtime_dont_use_autosuspend(&pdev->dev);
->> +     pm_runtime_set_active(&pdev->dev);
->> +
->> +     if (dev->shared_with_punit)
->> +             pm_runtime_get_noresume(&pdev->dev);
->> +
->> +     pm_runtime_enable(&pdev->dev);
->> +
->> +     ret = i2c_dw_probe(dev);
->> +     if (ret) {
->> +             dev_err(dev->dev, "i2c_dw_probe failed %d\n", ret);
-> 
-> dev_err_probe() would make code slightly simpler.
-> 
-Thanks. Will update in V2.
+Cheers,
+Matt
 
->> +             goto exit_probe;
->> +     }
->> +
->> +     isp_power_set(false);
->> +     return ret;
->> +
->> +exit_probe:
->> +     amd_isp_dw_i2c_plat_pm_cleanup(dev);
->> +     isp_power_set(false);
->> +exit:
->> +     isp_power_set(false);
->> +     return ret;
->> +}
->> +
->> +static void amd_isp_dw_i2c_plat_remove(struct platform_device *pdev)
->> +{
->> +     struct dw_i2c_dev *dev = platform_get_drvdata(pdev);
->> +
->> +     pm_runtime_get_sync(&pdev->dev);
->> +
->> +     i2c_del_adapter(&dev->adapter);
->> +
->> +     i2c_dw_disable(dev);
->> +
->> +     pm_runtime_dont_use_autosuspend(&pdev->dev);
->> +     pm_runtime_put_sync(&pdev->dev);
->> +     amd_isp_dw_i2c_plat_pm_cleanup(dev);
->> +
->> +     reset_control_assert(dev->rst);
-> 
-> Is it needed? (there is apparently no reset_control_deassert() in this
-> driver)
-> 
-Thanks. Its not needed, will remove it in V2.
+> ---
+>  drivers/gpu/drm/imagination/pvr_fw_trace.c | 8 ++++----
+>  drivers/gpu/drm/imagination/pvr_fw_trace.h | 2 --
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.c b/drivers/gpu/d=
+rm/imagination/pvr_fw_trace.c
+> index 5dbb636d7d4f..93269299d6a4 100644
+> --- a/drivers/gpu/drm/imagination/pvr_fw_trace.c
+> +++ b/drivers/gpu/drm/imagination/pvr_fw_trace.c
+> @@ -122,8 +122,6 @@ void pvr_fw_trace_fini(struct pvr_device *pvr_dev)
+>  	pvr_fw_object_unmap_and_destroy(fw_trace->tracebuf_ctrl_obj);
+>  }
+> =20
+> -#if defined(CONFIG_DEBUG_FS)
+> -
+>  /**
+>   * update_logtype() - Send KCCB command to trigger FW to update logtyp=
+e
+>   * @pvr_dev: Target PowerVR device
+> @@ -447,7 +445,7 @@ static const struct file_operations pvr_fw_trace_fo=
+ps =3D {
+>  void
+>  pvr_fw_trace_mask_update(struct pvr_device *pvr_dev, u32 old_mask, u32=
+ new_mask)
+>  {
+> -	if (old_mask !=3D new_mask)
+> +	if (IS_ENABLED(CONFIG_DEBUG_FS) && old_mask !=3D new_mask)
+>  		update_logtype(pvr_dev, new_mask);
+>  }
+> =20
+> @@ -457,6 +455,9 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_de=
+v, struct dentry *dir)
+>  	struct pvr_fw_trace *fw_trace =3D &pvr_dev->fw_dev.fw_trace;
+>  	u32 thread_nr;
+> =20
+> +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+> +		return;
+> +
+>  	static_assert(ARRAY_SIZE(fw_trace->buffers) <=3D 10,
+>  		      "The filename buffer is only large enough for a single-digit t=
+hread count");
+> =20
+> @@ -469,4 +470,3 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_de=
+v, struct dentry *dir)
+>  				    &pvr_fw_trace_fops);
+>  	}
+>  }
+> -#endif
+> diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.h b/drivers/gpu/d=
+rm/imagination/pvr_fw_trace.h
+> index 0074d2b18da0..1d0ef937427a 100644
+> --- a/drivers/gpu/drm/imagination/pvr_fw_trace.h
+> +++ b/drivers/gpu/drm/imagination/pvr_fw_trace.h
+> @@ -65,7 +65,6 @@ struct pvr_fw_trace {
+>  int pvr_fw_trace_init(struct pvr_device *pvr_dev);
+>  void pvr_fw_trace_fini(struct pvr_device *pvr_dev);
+> =20
+> -#if defined(CONFIG_DEBUG_FS)
+>  /* Forward declaration from <linux/dcache.h>. */
+>  struct dentry;
+> =20
+> @@ -73,6 +72,5 @@ void pvr_fw_trace_mask_update(struct pvr_device *pvr_=
+dev, u32 old_mask,
+>  			      u32 new_mask);
+> =20
+>  void pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dent=
+ry *dir);
+> -#endif /* defined(CONFIG_DEBUG_FS) */
+> =20
+>  #endif /* PVR_FW_TRACE_H */
 
->> +}
-> 
-> ...
-> 
->> +MODULE_AUTHOR("Venkata Narendra Kumar Gutta <vengutta@amd.com>");
->> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
->> +MODULE_DESCRIPTION("Synopsys DesignWare I2C bus adapter in AMD ISP");
->> +MODULE_LICENSE("GPL");
-> 
-> MIT is stated in SPDX-License-Identifier
-> 
-Thanks. Will update the license info.
 
->> +MODULE_IMPORT_NS("I2C_DW");
->> +MODULE_IMPORT_NS("I2C_DW_COMMON");
->> +MODULE_LICENSE("GPL and additional rights");
-> 
-> Is it allowed to have several MODULE_LICENSE?
-> 
-Thanks. Will use GPL alone in V2.
+--=20
+Matt Coster
+E: matt.coster@imgtec.com
 
-> ...
-> 
-> CJ
+--------------IIqlIQqRSvRcMtFZgBL0QDpb--
 
+--------------GI4OjDwxcLSZVMWglndskERE
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQS4qDmoJvwmKhjY+nN5vBnz2d5qsAUCaAe+8wUDAAAAAAAKCRB5vBnz2d5qsC6S
+AQC7etAvbHHlFsnj6wgwjrG/cGQJbHPRaZYf5vTEW+XaRgEA+XO6x/xdNkJzv7mnaKQDAdOVsl/6
+7iEQ2SSJ0b46xgM=
+=Iui0
+-----END PGP SIGNATURE-----
+
+--------------GI4OjDwxcLSZVMWglndskERE--
