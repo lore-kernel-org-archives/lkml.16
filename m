@@ -1,48 +1,64 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3242857C9;
-	Tue, 22 Apr 2025 14:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ED82857D8
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745332085; cv=none; b=EXCphxjlzF4UrarKZo7KO4j9IdWWqHqwPQWWzi7zoUO1efnswGbe5KabRZseBWTJCs5EU/VppWk0IOeUfMfhOMlkMGhptYHCw2rZlxSRyUbpds0Afv+Qeu44o8lqrGok4VxYZQxzFOPVtyWSvHs7CAj35OjHSVuDfb7MQiUW4NQ=
+	t=1745332159; cv=none; b=m+WZLVOKu/o0gUGmzVgCSvsclH3234DwRKB6E3uZ3E8jtCRCMsn3eC3YEd4tPyeE7kVJqsGR+uCJQ3iE+bxYlMljrvn0TEOhBcdmx+3w/46DMxcRJm5o45Ov/D4r7vfDzmnKIl4UmTgocdV4wVcpuNJvua8d+xkt+op08a2IqFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745332085; c=relaxed/simple;
-	bh=U/R0BsuQuORF/6oIhwZ9wDXys+niyTjDfgkmwQTJaA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=JTco2HBEc+TwpYvwgjueGzF7dHgX5EP29/Mru4dSLyb5EzTgkDRy3SRn1gvvNALiQru2DmjEsncRGW7E1UmbgAE28ZhCyaFsiDJX6gWvMdQjSkUzaaiyOxcjARodjgu0t3gR9n4ni39zuid1pA1ik+CYkIzoS3FmdtXZ8mcLIt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Rf1XlH3+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745332159; c=relaxed/simple;
+	bh=iqAyjkTe8FJmSe36CfbeiEm/MnwVbc4LIHA3sVC2aYE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YoxUKw3WqAua0Uf+5BuIWkJYlGx45CXEdxYb2Fraur8AqzEK31a6zGDb2URv6FESoDj3kfPLK6cpj8LfvsDVZVL5456XF5O/j/aCG1c3dBY4N2Og3F5tHtWEvXMNvgy6cf4VsfP6Wo0ENcct1aSBnb+sshShihpreeaW0L9MC0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=L3nxsg7G; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Rf1XlH3+"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MCx0J5003163;
-	Tue, 22 Apr 2025 14:27:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qoJ96jYkSgPaHptZsGWVbi3MtdmvdrbQa2LOZfnJDsM=; b=Rf1XlH3+CpsGHpLl
-	Jk04pw8Sok0pvspmS0UI4fuYDVP7y8hmyfLsj28Ph8BgaaYrtvARS4+UEENtoUDn
-	kdy9misYWgB5PFsmQ4lwt8fAYTaNYYhycfDaCPGps9FZCylBdTd6cjt7BckoPeGA
-	3U++e/e9S4Y/Ip8wo//JxRNYyfCTafKLL+Kc6EPXjuu/KSlz7evzJmkq9WTEnthx
-	oZOyNGVUrZfbgq5TeVgTdZhCzehGt1IWfSWu+Jyy3b4jnDjMaOh2f645O4U1LeCN
-	CCpLhBHDjj/3Jz1msPaYUZl7vktsLOa6okgXd2SgTDUjAK/hSzRD76bh3JTWhoqr
-	cIOm/g==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4642u9fwvj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 14:27:49 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53MERnbn019825
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 14:27:49 GMT
-Received: from [10.216.5.195] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 07:27:45 -0700
-Message-ID: <12156f1c-2dcd-49d8-9297-7bf249923832@quicinc.com>
-Date: Tue, 22 Apr 2025 19:57:41 +0530
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="L3nxsg7G"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b3f92c8dfso157798139f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745332155; x=1745936955; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZItchBs+om2xlqnvEPsN/ABV3TFl0Qstvr2y/+6RJl0=;
+        b=L3nxsg7G2u8mYYbtyhF8ENYr6QoVO3fQ/+KE32sLtod79XeY5nCRwonkvClFzBckfN
+         1tjV5cImzhpUbHbfaveYozjmXddvezVsKGQ0bwyUfU9i2Yw3OIuEeb+50ZCfgnUyrecw
+         ZSCcznsMBs9WsJ7cmM9/Ykddu/IwSs8Ll9gqW0M3s6z7IIpXvUgDdlJ9jtHPldDTFjmi
+         O0YpHssNY/25fLhLleu6k6/N9AgpY8WEzydWyEMulyRk75N+uPUtlbcL/aQVNFTcATL2
+         UXvapfLhgRPLmvxnnf68IHxkAn5n4CCTlJecMYTf+0detV/igYkK8g/BJ021ksrD1tUX
+         IDTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745332155; x=1745936955;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZItchBs+om2xlqnvEPsN/ABV3TFl0Qstvr2y/+6RJl0=;
+        b=rPOKh6sNyJKyhKlQ3TTNlaNUBQk96QYc3255JwNZvSQ72FSTq4IUm1+YWIXFRqNLy5
+         U4G2p5xrswKmzJCpqtkQ1u/Ve+uJQiWNDRhvN7yaDE29ZHB7VoQr15XsuSPlnjqxj6tv
+         1m6wz1Opla/KJmBGKu7UR+B0inHrYfPgRHeiFaxDNEqYSSZZEF0ayPaIxjsMbANqAlcb
+         bLPft3McVvSqYCOs/XQ5Iu58UPXdCpk1M+UJPNmr71yegVshhs3hv2lpZUucTgCvdaHd
+         vLp0P5EYKpr+tlQV0LkhXmkVkAFxLgoA2dlQUlk40tM8F+1ZaLapunRknikCtzGZwOgU
+         L9zA==
+X-Forwarded-Encrypted: i=1; AJvYcCVevEStjT2fRbovh7/4Cwqcwe8Hd/mce5t4nvy33ZYHXTI9EjSXmiLWsEDV37Cn+42T3+xyeDOcJ5u2amY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbWffjr7iZfZxTo8e9bO4fCHJDJUATDXrKyCecYpybAyT0D4FT
+	5aB3ypUs2n6IRB/izxqfm0JxFd4zopi6N+Izsjdj9ijszjKpU+TVoQjSrvuwX5M=
+X-Gm-Gg: ASbGncsCHMV6PzDuQO32NL3IVqHoh9QYkZfkQtRF5KtoRvsiB84EMmtcnBuTXIpp9Q0
+	1BLwV8gUrmLsLi8cxE/+DcGZWT5al7Ka0yaKfg4+3n0ttEy25ZGbwVMHf1xSt1x926kK1LNh6AD
+	97Nt7fh42Q6rE/QFl2xib/QUr3ea3i23jE9x/CbCHwLt8pSmCSzvziF02PMidYMhpXV4tgCy79l
+	PyiNg1L1K3i/53o/bBthATKMlW/gHwRazjHkkaWt3NPYLws/Vy0wBbUcb9Fy3n0HwBlGgGkeuGQ
+	CdMxmBZkyVL7U311M3jX55jU88VKfv3ETFNdIQ==
+X-Google-Smtp-Source: AGHT+IFLV/+m8b6shyscF+FGI9c1u3BTJL9q26JyzZDFvicZ/3ujqlTuYIRRvE5h3xowrMyrH1jWVw==
+X-Received: by 2002:a05:6602:360d:b0:85d:9e5d:efa9 with SMTP id ca18e2360f4ac-861dbeab815mr1478981639f.10.1745332154944;
+        Tue, 22 Apr 2025 07:29:14 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a39554d1sm2320394173.111.2025.04.22.07.29.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 07:29:14 -0700 (PDT)
+Message-ID: <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
+Date: Tue, 22 Apr 2025 08:29:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,55 +66,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 3/3] SPI: Add virtio SPI driver
-To: Mark Brown <broonie@kernel.org>
-CC: Haixu Cui <quic_haixcui@quicinc.com>, <virtio-dev@lists.oasis-open.org>,
-        <viresh.kumar@linaro.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <hdanton@sina.com>,
-        <qiang4.zhang@linux.intel.com>, <alex.bennee@linaro.org>,
-        <quic_ztu@quicinc.com>
-References: <20250401033621.1614194-1-quic_haixcui@quicinc.com>
- <20250401033621.1614194-4-quic_haixcui@quicinc.com>
- <74698d99-db5b-4ec7-a965-eea2a29e54b1@quicinc.com>
- <4ba22af1-fffc-46f4-bf42-675b5cda9ddc@sirena.org.uk>
+Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
+To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+ akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20250422104545.1199433-1-qq282012236@gmail.com>
+ <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
+ <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
+ <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
+ <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
 Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <4ba22af1-fffc-46f4-bf42-675b5cda9ddc@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=TYaWtQQh c=1 sm=1 tr=0 ts=6807a766 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=_tHetAC08h0EZe0waBoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: GpWn1YEVtKQVHSIDViissGDhS1p5v0UU
-X-Proofpoint-GUID: GpWn1YEVtKQVHSIDViissGDhS1p5v0UU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_07,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=833 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220109
 
+On 4/22/25 8:18 AM, ??? wrote:
+> On Tue, Apr 22, 2025 at 10:13?PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 4/22/25 8:10 AM, ??? wrote:
+>>> On Tue, Apr 22, 2025 at 9:35?PM Jens Axboe <axboe@kernel.dk> wrote:
+>>>>
+>>>> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
+>>>>> In the Firecracker VM scenario, sporadically encountered threads with
+>>>>> the UN state in the following call stack:
+>>>>> [<0>] io_wq_put_and_exit+0xa1/0x210
+>>>>> [<0>] io_uring_clean_tctx+0x8e/0xd0
+>>>>> [<0>] io_uring_cancel_generic+0x19f/0x370
+>>>>> [<0>] __io_uring_cancel+0x14/0x20
+>>>>> [<0>] do_exit+0x17f/0x510
+>>>>> [<0>] do_group_exit+0x35/0x90
+>>>>> [<0>] get_signal+0x963/0x970
+>>>>> [<0>] arch_do_signal_or_restart+0x39/0x120
+>>>>> [<0>] syscall_exit_to_user_mode+0x206/0x260
+>>>>> [<0>] do_syscall_64+0x8d/0x170
+>>>>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
+>>>>> The cause is a large number of IOU kernel threads saturating the CPU
+>>>>> and not exiting. When the issue occurs, CPU usage 100% and can only
+>>>>> be resolved by rebooting. Each thread's appears as follows:
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
+>>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
+>>>>>
+>>>>> I tracked the address that triggered the fault and the related function
+>>>>> graph, as well as the wake-up side of the user fault, and discovered this
+>>>>> : In the IOU worker, when fault in a user space page, this space is
+>>>>> associated with a userfault but does not sleep. This is because during
+>>>>> scheduling, the judgment in the IOU worker context leads to early return.
+>>>>> Meanwhile, the listener on the userfaultfd user side never performs a COPY
+>>>>> to respond, causing the page table entry to remain empty. However, due to
+>>>>> the early return, it does not sleep and wait to be awakened as in a normal
+>>>>> user fault, thus continuously faulting at the same address,so CPU loop.
+>>>>> Therefore, I believe it is necessary to specifically handle user faults by
+>>>>> setting a new flag to allow schedule function to continue in such cases,
+>>>>> make sure the thread to sleep.
+>>>>>
+>>>>> Patch 1  io_uring: Add new functions to handle user fault scenarios
+>>>>> Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
+>>>>>
+>>>>>  fs/userfaultfd.c |  7 ++++++
+>>>>>  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
+>>>>>  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
+>>>>>  3 files changed, 68 insertions(+), 41 deletions(-)
+>>>>
+>>>> Do you have a test case for this? I don't think the proposed solution is
+>>>> very elegant, userfaultfd should not need to know about thread workers.
+>>>> I'll ponder this a bit...
+>>>>
+>>>> --
+>>>> Jens Axboe
+>>> Sorry,The issue occurs very infrequently, and I can't manually
+>>> reproduce it. It's not very elegant, but for corner cases, it seems
+>>> necessary to make some compromises.
+>>
+>> I'm going to see if I can create one. Not sure I fully understand the
+>> issue yet, but I'd be surprised if there isn't a more appropriate and
+>> elegant solution rather than exposing the io-wq guts and having
+>> userfaultfd manipulate them. That really should not be necessary.
+>>
+>> --
+>> Jens Axboe
+> Thanks.I'm looking forward to your good news.
 
+Well, let's hope there is! In any case, your patches could be
+considerably improved if you did:
 
-On 4/22/2025 7:49 PM, Mark Brown wrote:
->> Please maintain reverse christmas tree alingment.
->> int cs_word_delay_xfer;
->> int cs_word_delay_spi;
->> int cs_change_delay;
->> int cs_inactive;
->> int cs_setup;
->> int cs_hold;
->> int delay;
-> That's not a requirement for the SPI subsystem at all.
-> 
-Thanks Mark for correcting me. I thought it was unique to Linux.
-> Please delete unneeded context from mails when replying.  Doing this
-> makes it much easier to find your reply in the message, helping ensure
-> it won't be missed by people scrolling through the irrelevant quoted
-> material.
-Sure, will take care !
+void set_userfault_flag_for_ioworker(void)
+{
+	struct io_worker *worker;
+	if (!(current->flags & PF_IO_WORKER))
+		return;
+	worker = current->worker_private;
+	set_bit(IO_WORKER_F_FAULT, &worker->flags);
+}
+
+void clear_userfault_flag_for_ioworker(void)
+{
+	struct io_worker *worker;
+	if (!(current->flags & PF_IO_WORKER))
+		return;
+	worker = current->worker_private;
+	clear_bit(IO_WORKER_F_FAULT, &worker->flags);
+}
+
+and then userfaultfd would not need any odd checking, or needing io-wq
+related structures public. That'd drastically cut down on the size of
+them, and make it a bit more palatable.
+
+-- 
+Jens Axboe
