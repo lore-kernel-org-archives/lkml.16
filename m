@@ -1,105 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155AC202F79
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41861F4736
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745315735; cv=none; b=fT3QzmM7JAfH7S7QY4GJ5N8FWlTGHxEC9UShZCGXzxJsDpKR53FSsRxjLN/QARypi/VTIiChw5sFvxlstnWYEFx15WRsJHmXvyf2fqTFCvqAA/sAl6GbDnArg/6+DNwV29GoHXdZHqMOUkfcPf7o7H2s8uRw2YJ4VTEK29S3TbA=
+	t=1745315777; cv=none; b=NKRLQiSExCRTxZvOHRTHf14JLWkgGabzMQ020BYv2j6L5mLCBKCH1oufD+hGO7i+2WxowtzpXGvIVXDtMJMViQjRr9//yP2GZ9xWwWg3QeMODjJuXnLaLuZOYHVe0HD0w+Xi3VYDf7GYfIirepXuPg5KI1xvgdK+3U190DkBmis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745315735; c=relaxed/simple;
-	bh=GVeCytkqBHTIFfuO/f3/wRrcO3CkD6UJCYhLUQrST38=;
+	s=arc-20240116; t=1745315777; c=relaxed/simple;
+	bh=OaDHdFMJReEzzMzGKjfztjktwikXKwV2jaClKSYlPh4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YaCAm7vJZreRr1rZcx7hzCUTOJuw+24wvUFu6xLiqIWfHzY6WXajKqKK4cDaJuLIMWQ0hnSMghTklHnsqsqAoMSX7uTpum90HjZSBNMJ893uIqLU8+RDxJSPfYUNbfjUkk7svSQnoxAdz0kPeUsgta6RFykrHChpq/nlL7X13zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxOXTgwv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2Q5PE/jhlTExX1zmzgSa64S6nkp7Kmk9NaJi3H+oCZdzspR5fXOjEF6ucgAQfE/KIlU32ETrCnxTqJxfRIHrFJu+o1+AI+80P6qUQ/z79W7wbu0PhTn7A1jVu1QeSRMrnpsarJKAFXmlGCpMHUMS/kqZ+T2wqfjQnlrjj6pQWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i2JDsKiK; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxOXTgwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36325C4CEE9;
-	Tue, 22 Apr 2025 09:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745315734;
-	bh=GVeCytkqBHTIFfuO/f3/wRrcO3CkD6UJCYhLUQrST38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CxOXTgwvIY/E9QTBVfF/DAMGXU7V/hqauHR3ktG2ziiuPSAsq1vsywKIeVMGC6rLl
-	 RsW7Z4y5rAHuAXBEAKh0Iv3QCxTzEoZ1aTwQY6XHF6GLor8JlT39gY8XAbG2Mxghu6
-	 WQYMVanONvS34Bdj6FwMq8NBUIuYp8vEWE126937SjnYYMi+cxSAoPcCJLuY1ihu9+
-	 S8vK2PphSOzordgNt9UxxCsY9mNvmIanzRb5QAyOj3LjrrcVIyxLtHfnTV+zurohgY
-	 5OccrkMTlRteTZl7wHZLYc9eOr2vGipqZdjhuVR88WwM2amwZvngNOyJGzMyqgM7ud
-	 GB6Ht1F2Rt20w==
-Date: Tue, 22 Apr 2025 11:55:31 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com,
-	Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [RFC][PATCH] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-Message-ID: <aAdnk0PH6H5q7nGz@pavilion.home>
-References: <20250422044355.390780-1-jstultz@google.com>
- <20250422085628.GA14170@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i2JDsKiK"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso58099955e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745315773; x=1745920573; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+QO98qmgj2ki6WgHqTR2cADuePWk5fgnSKgzFwIQUw=;
+        b=i2JDsKiKlp/3FNN3zYYFViavLCcYdiOEJuM8EZjtuYLIl045r9qZHnYxuDRQYMUfWI
+         xILYGLRoHSL9ced49fwx1vY2GrC6m+r4IiQL44YCHw11wYMz+iC7d7vGX8+pFqukmtF5
+         1KGW5frHX6jLRnLQYdOmKz/2Vk+1ybVUyYHkcvlrilCyFUuvFRuanoc/sFjv2Sv+9QKO
+         tuA+2FvZ9IAYTx16PoH2xEW6Wx7OchrS1BmjfVb/8vsFTCOev1cXNBZCOwJ3H9b+NRkw
+         ig+V2fhf3Un1Nk887PdoSvhFs4052OsMGWo+GLwWmH2EoUVYgo3d61NBO0GyYAIITC1F
+         HEJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745315773; x=1745920573;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+QO98qmgj2ki6WgHqTR2cADuePWk5fgnSKgzFwIQUw=;
+        b=qwTpmj95xkniiTWpjZkRLeW/M/shUBljZm7Kep9ATXDKBMKHhLN9BoPqzkpJx1zahu
+         eDkyEavxreHdmY1FFbgEZcTwgFVv25LWOqt8EtSY2Ss3A0XFjrr5NMJtuMpXGCzIO0oN
+         3ty5YGCY2ZxbN17h/tHKZ/WSpShDQBxgV2Dh9O16uXIiB4Ous5C1LlKsb4TovgjXLdDQ
+         VdMqh+Yb4J0241dSqXzdPDtpLVmS6g3KzT6zL3e85/g8AKHLvKXekq/605YuJCmeLrKm
+         NfMv4iu+lKNdcueE0S3S8PjdFNfeSkBochc1N2phvtJSARwcq6Fq0RKRv7vI+/hCTsC/
+         rENA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgDvaEZ+uR/eiZjkEsSbCYqODiV5JKU+wG9fwOcfudwikF1a+N4YiYgmBtRa3UQHKx91jmgnG0QuyTXvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIj2zoe9+QTDj6J2EmubUGt8nevPe1LNgvdwKIBVApAVDQnEfl
+	eLwIH9hLvMRWTmUMFRvgvbE3nIMw+JRwq3OPBbaUb1EzRLRN4FFSd13I0v/RZjlUpvxr2t6JVmo
+	b
+X-Gm-Gg: ASbGncsprcUt4x2Q0fMX6PQlmbqGnKT+x1bIObxOi6cYfEnr535KJSXWEkCq5ySp5KR
+	yDUsshb9SvVU+PSpXYcfbr04CCRWW/sIFJLbFyEfrOBWP+0uyGKF0PacFK6p1DQFd6XBCpnu+qV
+	7rZARYf3l05GixVe6Bxbr9wofAZti8VmpXCJI1ug8GIJt+MeDcpgMkhVtarruqebCf/MNHxwC8u
+	qSwr1HzDJZOG8sb728LnQJQMXf3bQ0HqOr2C0U7TaWNsrAbVj8F1z9F2XWkq5g5/pvVIdTAGxEA
+	DhiA22v++JPGNfCrDmGiF9DC6P8M5wBtVxe9nk1Yjt3S3w==
+X-Google-Smtp-Source: AGHT+IEsd7/SkNcLAUxED4n6XevcQYOpxf2v+BtFf+hSK1o6FW2FhCD6Cwbfwe4yTzK66M4PoWZ8mA==
+X-Received: by 2002:a05:600c:190d:b0:43c:ee3f:2c3 with SMTP id 5b1f17b1804b1-4406ab67e15mr128331075e9.7.1745315772926;
+        Tue, 22 Apr 2025 02:56:12 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4406d5bbc13sm165298515e9.17.2025.04.22.02.56.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 02:56:12 -0700 (PDT)
+Date: Tue, 22 Apr 2025 12:56:08 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: gregkh@linuxfoundation.org, jacobsfeder@gmail.com,
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	sergio.paracuellos@gmail.com, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] axis-fifo:  Remove hardware resets for user errors
+Message-ID: <1a34379e-4c41-40ec-99f9-87342c33b45c@stanley.mountain>
+References: <20250419004306.669605-1-gshahrouzi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422085628.GA14170@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250419004306.669605-1-gshahrouzi@gmail.com>
 
-Le Tue, Apr 22, 2025 at 10:56:28AM +0200, Peter Zijlstra a écrit :
-> On Mon, Apr 21, 2025 at 09:43:45PM -0700, John Stultz wrote:
-> > It was reported that in 6.12, smpboot_create_threads() was
-> > taking much longer then in 6.6.
-> > 
-> > I narrowed down the call path to:
-> >  smpboot_create_threads()
-> >  -> kthread_create_on_cpu()
-> >     -> kthread_bind()
-> >        -> __kthread_bind_mask()
-> >           ->wait_task_inactive()
-> > 
-> > Where in wait_task_inactive() we were regularly hitting the
-> > queued case, which sets a 1 tick timeout, which when called
-> > multiple times in a row, accumulates quickly into a long
-> > delay.
+On Fri, Apr 18, 2025 at 08:43:06PM -0400, Gabriel Shahrouzi wrote:
+> The axis-fifo driver performs a full hardware reset (via
+> reset_ip_core()) in several error paths within the read and write
+> functions. This reset flushes both TX and RX FIFOs and resets the
+> AXI-Stream links.
 > 
-> Argh, this is all stupid :-(
+> Allow the user to handle the error without causing hardware disruption
+> or data loss in other FIFO paths.
 > 
-> The whole __kthread_bind_*() thing is a bit weird, but fundamentally it
-> tries to avoid a race vs current. Notably task_state::flags is only ever
-> modified by current, except here.
-> 
-> delayed_dequeue is fine, except wait_task_inactive() hasn't been
-> told about it (I hate that function, murder death kill etc.).
-> 
-> But more fundamentally, we've put so much crap into struct kthread and
-> kthread() itself by now, why not also pass down the whole per-cpu-ness
-> thing and simply do it there. Heck, Frederic already made it do affinity
-> crud.
-> 
-> On that, Frederic, *why* do you do that after started=1, that seems like
-> a weird place, should this not be done before complete() ?, like next to
-> sched_setscheduler_nocheck() or so?
 
-You mean the call to kthread_affine_node() ? Because it is a default behaviour
-that only happens if no call to kthread_bind() or kthread_affine_preferred()
-has been issued before the first wake up to the kthread.
+I agree with the sentiment behind these changes, but they are basically
+impossible to review.  The reset_ip_core() does some magic stuff in the
+firmware and I don't have access to that.  How are you testing these
+changes?
 
-If kthread_affine_node() was called before everything by default instead
-then we would get its unconditional overhead for all started kthreads. Plus
-kthread_bind() and kthread_affine_preferred() would need to undo
-kthread_affine_node().
+> Fixes: 4a965c5f89de ("staging: add driver for Xilinx AXI-Stream FIFO v4.1 IP core")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  drivers/staging/axis-fifo/axis-fifo.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/staging/axis-fifo/axis-fifo.c b/drivers/staging/axis-fifo/axis-fifo.c
+> index 7540c20090c78..76db29e4d2828 100644
+> --- a/drivers/staging/axis-fifo/axis-fifo.c
+> +++ b/drivers/staging/axis-fifo/axis-fifo.c
+> @@ -393,16 +393,14 @@ static ssize_t axis_fifo_read(struct file *f, char __user *buf,
+>  
+>  	bytes_available = ioread32(fifo->base_addr + XLLF_RLR_OFFSET);
+>  	if (!bytes_available) {
+> -		dev_err(fifo->dt_device, "received a packet of length 0 - fifo core will be reset\n");
+> -		reset_ip_core(fifo);
+> +		dev_err(fifo->dt_device, "received a packet of length 0\n");
+>  		ret = -EIO;
+>  		goto end_unlock;
+>  	}
+>  
+>  	if (bytes_available > len) {
+> -		dev_err(fifo->dt_device, "user read buffer too small (available bytes=%zu user buffer bytes=%zu) - fifo core will be reset\n",
+> +		dev_err(fifo->dt_device, "user read buffer too small (available bytes=%zu user buffer bytes=%zu)\n",
+>  			bytes_available, len);
+> -		reset_ip_core(fifo);
+>  		ret = -EINVAL;
+>  		goto end_unlock;
+>  	}
+> @@ -411,8 +409,7 @@ static ssize_t axis_fifo_read(struct file *f, char __user *buf,
+>  		/* this probably can't happen unless IP
+>  		 * registers were previously mishandled
+>  		 */
+> -		dev_err(fifo->dt_device, "received a packet that isn't word-aligned - fifo core will be reset\n");
+> -		reset_ip_core(fifo);
+> +		dev_err(fifo->dt_device, "received a packet that isn't word-aligned\n");
 
-Thanks.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+The commit message talks about "user errors" but these aren't user
+errors so far as I can see.
+
+>  		ret = -EIO;
+>  		goto end_unlock;
+>  	}
+> @@ -433,7 +430,6 @@ static ssize_t axis_fifo_read(struct file *f, char __user *buf,
+>  
+>  		if (copy_to_user(buf + copied * sizeof(u32), tmp_buf,
+>  				 copy * sizeof(u32))) {
+> -			reset_ip_core(fifo);
+
+Yes.  Absolutely.  Delete this.
+
+>  			ret = -EFAULT;
+>  			goto end_unlock;
+>  		}
+> @@ -542,7 +538,6 @@ static ssize_t axis_fifo_write(struct file *f, const char __user *buf,
+>  
+>  		if (copy_from_user(tmp_buf, buf + copied * sizeof(u32),
+>  				   copy * sizeof(u32))) {
+> -			reset_ip_core(fifo);
+
+Same.  Delete.
+
+This type of code is often written for a reason.  Potentially as a hack
+to paper over a real bug.  And then people get carried away adding resets
+all over the place.  It's fine to delete the last two calls but I would
+be very careful to delete the others.  Even though the patch might be
+correct it needs to be tested very carefully.
+
+regards,
+dan carpenter
+
+>  			ret = -EFAULT;
+>  			goto end_unlock;
+>  		}
+> -- 
+> 2.43.0
+> 
