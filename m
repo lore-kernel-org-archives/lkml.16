@@ -1,140 +1,97 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FBB25486B;
-	Tue, 22 Apr 2025 08:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71BC253F35
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312170; cv=none; b=LqOahOU4ew5RxQwfqbMd/NAYovtGERRPnJ87E3lpsCJE5EYik0BBzqviSzR8aTrPeDkplH14q4GQ4VsqLB9FTT3qeG8RcQYJNFYHDBDnWbBWuSbpD++RT0rm3Phzpx3sB/1bZhKruPPkb2RuLNlczEgHBRMJgy/t+EiQNmtyRcE=
+	t=1745312170; cv=none; b=O8x/Q8OLECE2Lii4DPtqFdcce2zgw6pyNUY6D04tR2nGupdvPqyInuNntQA6EbEEgEwDUNHGev9grpzAUrhGg5WOpHfKQZnMtU4mJVqrrYujt9Jg3bLZKSZOglaGFHpSxtTljNMRA+vZ29suCWojCwGs6PvzNTTfnyXrzQ9XQa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745312170; c=relaxed/simple;
-	bh=47Fl3alaoy9MJ9oE1dW53liNawNp3fX4xzOoCfOY3nk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IVAyjW6UE1+/UEnRddd3Zlf8k+iyEB983dFFjVkLC+J7C1KTeWHHktzacwbfay/2tffUFgO3JA0ECqHQ0bUqTw/WXlmAbLJIoTs+1jF/roXyLLLXSJjMEflxbsFktNpnQdPCyrdfrhtfNtTlowVF+t80DOQYZLQig3vxQHV4J1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=OAKwebQs; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	bh=qXI2HAsvQf2w1MSbA7K9uGxTvVYRPO2tahW3Jx9mG3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2KNTI+weemhKwb+LjzoV4w5rLC8se+MOKV+E8Yy31u+31SdDDRnb6H375/my5elIEpWkyn/xBu9uyefZlNDg01dBBrdQhVyrjlowa5FSrxBfU2mB/QWnU0zZe2B76xjTF/nsyiI6iiW91QTU1W/FCq6ZVZwu6/GATabStDlOAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jFsfhbpV; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="OAKwebQs"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M7ciGP026127;
-	Tue, 22 Apr 2025 04:56:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=yOySj
-	TPHGjn1zF8roB5u3h3nRAAWfkKlV1XNNw9xY9E=; b=OAKwebQsZbJ306GUrWQOj
-	z/+P5KxV3iJBlE82ZE05sZTLv+ymxwplB48VY/zLgT9a7xpPy71e++nQVLwN7JH0
-	DjycVaWRP9DDILYs3uTglRa5TiOVWsFVhR3z4wHOcSipH8RCOyn9HLTwxFBRG5HG
-	z7O4sKciu6vlYqGNyvBx/vYW5oZl6ieFk/9JpgbnBz8wAGlvipqsMTEVMqvbELYw
-	7zOSK7XB9esgvmWn+98oYw+t/ImX/emgrB71YRwBTVlXzrWr8mAH5meS9Mp147Rc
-	uGePfZ6u1rWyrDFSYRmHeK1zG1KeGW9zFf3DyznaD4Iw+guTiG4K56inFrbWCDBs
-	A==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4648r6du0u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 04:56:02 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53M8tsba041701
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 04:55:54 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 22 Apr
- 2025 04:55:54 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 22 Apr 2025 04:55:54 -0400
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.211])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53M8tjRX016347;
-	Tue, 22 Apr 2025 04:55:51 -0400
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH 2/2] iio: dac: ad7293: add adc reference configuration
-Date: Tue, 22 Apr 2025 11:55:29 +0300
-Message-ID: <20250422085529.4407-2-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422085529.4407-1-antoniu.miclaus@analog.com>
-References: <20250422085529.4407-1-antoniu.miclaus@analog.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jFsfhbpV"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4537940E01FA;
+	Tue, 22 Apr 2025 08:56:05 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id juvRHB7T_svc; Tue, 22 Apr 2025 08:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745312156; bh=rFDFhcg8aeoqfceJP/IDVW6dcvhJCDAYgx/s5YA2aL4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jFsfhbpVOsJZPJdNLautem6k/UOl3CTiXdmmoxM425+hhCF5PYO1tHyTfRL7KuTme
+	 HxV11eXLUrWPhRjPL8ENUzlEHaXGU6EnwC4/Yi9GyOZxDwnqPSG/tHSOyMWBksQpGI
+	 vKGS34Flc1RATmaGHwce4g5We9VHpy+Ri8vxXGJDa3IiNzSCElBme59E6qmhumkbfl
+	 MkuAJdRQFnbJf593p7LZsvVXx+M0LbCxVPr3rbTVc/NU3dKJ1xZKNPgWubyElMIxsw
+	 AWQXP/FFuQmZHzu8625AJ+fnI6Hr1ny9Ipkndmu7zAVQLF6rQqvJ0m1cdk1ReO2h0g
+	 nBjEMPn7Pqz81oCBv8cmlwGzf4Z4iCT3OFcFZIv/BywxY9c2gXr3RAbeW66FylN3fa
+	 6AaWjNpxVxiRnzrRQPAY1ga8Z33JNRAC8W9fzvcCm5BCBci1BPr9VRpO9A9fRrLQtr
+	 aGSdH1UUKiiieYDfqoAZzDzpWjjjJBrYYVIdBe/lU7fWNF5NIJl0OKf7mBXk0E8NIE
+	 MZF4rcxz1QR1VlknKo90l9+cGxPuGl25Gbmuy5Zlr621moN4I4a5qdL6ThUbEX9jUo
+	 Pmejh0v7ggSWAwZ2nw6Rci5toYkdkSiaWmMcOmXEj9kFp+sBOXzuiFu/O68kT/dc53
+	 893kZJCgr3PVvQL36CfKJgkE=
+Received: from rn.tnic (unknown [78.130.214.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 5E5D540E01F6;
+	Tue, 22 Apr 2025 08:55:45 +0000 (UTC)
+Date: Tue, 22 Apr 2025 10:56:46 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 02/16] x86/bugs: Restructure TAA mitigation
+Message-ID: <20250422085646.GBaAdZzlRuyJmo4Tct@renoirsky.local>
+References: <20250418161721.1855190-1-david.kaplan@amd.com>
+ <20250418161721.1855190-3-david.kaplan@amd.com>
+ <20250419123655.GRaAOY5yCyIz6TYcCC@fat_crate.local>
+ <LV3PR12MB92651777DD5C8A010E010A8794B92@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: JarI4uqTEJxw_srIHaV9N1_Rxgb0aSwl
-X-Proofpoint-ORIG-GUID: JarI4uqTEJxw_srIHaV9N1_Rxgb0aSwl
-X-Authority-Analysis: v=2.4 cv=d6z1yQjE c=1 sm=1 tr=0 ts=680759a5 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=kyzOxrww9Jkk1N5gqB0A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 spamscore=0
- suspectscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504220066
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB92651777DD5C8A010E010A8794B92@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-Add support for configurating the ADC reference (internal/external).
+On Sun, Apr 20, 2025 at 09:03:25PM +0000, Kaplan, David wrote:
+> No, because taa_vulnerable() requires both X86_BUG_TAA and X86_FEATURE_RTM.
+> 
+> In taa_select_mitigation() there is a difference depending on which of these doesn't exist which sets the mitigation to either OFF (if unaffected) or TSX_DISABLED (if no RTM).
+> 
 
-According to the datasheet, the external reference is enabled by
-default.
+Yah, another mis-designed thing from back then. If RTM is disabled, then
+TAA is mitigated. Period.
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
- drivers/iio/dac/ad7293.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+And us making how a vuln is mitigated into a separate thing is
+unnecessary complication IMO. IOW, TAA_MITIGATION_TSX_DISABLED shouldn've
+been done, in hindsight.
 
-diff --git a/drivers/iio/dac/ad7293.c b/drivers/iio/dac/ad7293.c
-index 99fa2d1f8299..c3797e40cdd9 100644
---- a/drivers/iio/dac/ad7293.c
-+++ b/drivers/iio/dac/ad7293.c
-@@ -114,6 +114,7 @@
- #define AD7293_REG_DATA_RAW_MSK			GENMASK(15, 4)
- #define AD7293_REG_VINX_RANGE_GET_CH_MSK(x, ch)	(((x) >> (ch)) & 0x1)
- #define AD7293_REG_VINX_RANGE_SET_CH_MSK(x, ch)	(((x) & 0x1) << (ch))
-+#define AD7293_GENERAL_ADC_REF_MSK			BIT(7)
- #define AD7293_CHIP_ID				0x18
- 
- enum ad7293_ch_type {
-@@ -141,6 +142,7 @@ struct ad7293_state {
- 	/* Protect against concurrent accesses to the device, page selection and data content */
- 	struct mutex lock;
- 	struct gpio_desc *gpio_reset;
-+	bool vrefin_en;
- 	u8 page_select;
- 	u8 data[3] __aligned(IIO_DMA_MINALIGN);
- };
-@@ -785,6 +787,12 @@ static int ad7293_properties_parse(struct ad7293_state *st)
- 	if (ret)
- 		return dev_err_probe(&spi->dev, ret, "failed to enable VDRIVE\n");
- 
-+	ret = devm_regulator_get_enable_optional(&spi->dev, "vrefin");
-+	if (ret < 0 && ret != -ENODEV)
-+		return dev_err_probe(&spi->dev, ret, "failed to enable VREFIN\n");
-+
-+	st->vrefin_en = ret != -ENODEV;
-+
- 	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
- 						 GPIOD_OUT_HIGH);
- 	if (IS_ERR(st->gpio_reset))
-@@ -818,6 +826,11 @@ static int ad7293_init(struct ad7293_state *st)
- 		return -EINVAL;
- 	}
- 
-+	if (!st->vrefin_en)
-+		return __ad7293_spi_update_bits(st, AD7293_REG_GENERAL,
-+						AD7293_GENERAL_ADC_REF_MSK,
-+						AD7293_GENERAL_ADC_REF_MSK);
-+
- 	return 0;
- }
- 
+But whatever, another topic.
+
+Thx.
+
 -- 
-2.49.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
