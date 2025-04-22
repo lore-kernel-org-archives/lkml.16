@@ -1,229 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044E22836A7;
-	Tue, 22 Apr 2025 13:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EF7285402
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328239; cv=none; b=dzkt5gJt6oeG52/09LK8pynoT9Po7mvXtRe5YHjJimZ1zPwaQLFsdCh5wmm4EiI0gTRQC5MOj7fudAUVEbgcl4rYgX2tedQqxtctrnaQq4nNp8+Xfx40vd0WEbcAWP6XIIw4Ndrqvt/C6f35IkvzXTB0B17bwIUUuB85mm2bZ1g=
+	t=1745328255; cv=none; b=koqyRohvJwt9KC58Eko7NzLvoFKRDSnsp8a7CluOtZ88j3Mk4KVV2u/WT9KeQPhQxQWW2scPnN6E1MZjuuZ71VUPr+dY07VbWEnvUlHorJHndi1B2UuYGVpSoIR+zgFcZbWpIYRaAtvKyxdp8tg6e/g30jnzojty/Ly5w5Rbjjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328239; c=relaxed/simple;
-	bh=7jvbXJf9/t+v414lZ3iwh9ep3plTmpzsJ3he4aIzZkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HWHOHD+bS/BS3pJVThhHIztCK4l5jxFWKLiOwQito21csnSXJkYpLBukZ6m/tcvSrh5ziPw5kmtk6c47iEfch0JjRVYV5hcmMncULET+WiWVyfKGFQzoSxcksYomsYG6NxutUbdnNQL0TU0o0jHd+AzqYWMx2sww3KlNBolFO4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aF6uwfNx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745328255; c=relaxed/simple;
+	bh=ch74M5gwke3IpuxZFue4DFh7OqtxFpGswgMoOAIW8dQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K25f7Yp6BqVNSozOzPiw1hsU8Ml7jq5xtBRp8JJ69bPTVLsiIZWHmY4vDUasgRfRBm8yV9uRnfwmjEA4klvmJD9E+pLfK1cTyHClqurdBWHGka/g9EBHN5SbTznRNaK2y1G6mloPFWjuOunaXWJX6A3LZXOXjEKrhl9k8q0qD24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CwDZ4v20; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aF6uwfNx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E81C4CEE9;
-	Tue, 22 Apr 2025 13:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328238;
-	bh=7jvbXJf9/t+v414lZ3iwh9ep3plTmpzsJ3he4aIzZkM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aF6uwfNxGWQDz6B8QbEoAER2/1sdnU8HZ5zDVzkfOiEqd40uoKaWO1Su9RC9CNCcR
-	 RG83EWy1CRk1O944lIq0ILzvjeSSBl17q4nTvm4ig7jiCeVuCRVkDC9gqHk/Nl8jK2
-	 SwQpX/C6+/LLjze4+wthk5FgKtHU1PUZPzr+q0Gqnrnq1xG5Apg19SC8IL4jAZRk4M
-	 42tCreRu1IDJnp2EW9DelM07SGtCKjy/shUjiHhVUftv9YHGfCOzPDh62XYj+6O+M/
-	 WSAA+nbPTRdqDP6SkFhanwbsEW9ED8dHH16rP5IWY0ter3PMGzHJjjCXwMyvfGES9F
-	 xjWIAtjm3/RBQ==
-Date: Tue, 22 Apr 2025 08:23:56 -0500
-From: Rob Herring <robh@kernel.org>
-To: Matthew Gerlach <matthew.gerlach@altera.com>
-Cc: krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
-	dinguyen@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: clock: socfpga: convert to yaml
-Message-ID: <20250422132356.GA1020502-robh@kernel.org>
-References: <20250417160616.47558-1-matthew.gerlach@altera.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CwDZ4v20"
+Message-ID: <3b9a2b25-9476-4806-be91-254dda385f38@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745328241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yxPypqLDgGtdwJxcEcCayVfWENXwv6JuKnCdt8mdTtg=;
+	b=CwDZ4v203UYOq3NuBK0L4KWMa91rgo0fmLTpPArwhlNpGpfqnpv8yO5QB2X/6VxqeIzhOM
+	64ys++yDmVKOm4Xng7anf3Lmpl9IdDq3ILC/pSpd1EhChnIgIRrR00GzblmiUnJdBYqO2f
+	p0YwvnCFOnHwLHGta0eMi0EAxNYir7I=
+Date: Tue, 22 Apr 2025 21:23:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417160616.47558-1-matthew.gerlach@altera.com>
-
-On Thu, Apr 17, 2025 at 09:06:16AM -0700, Matthew Gerlach wrote:
-> Convert the clock device tree bindings to yaml for the Altera SoCFPGA
-> Cyclone5, Arria5, and Arria10 chip families. Since the clock nodes are
-> subnodes to Altera SOCFPGA Clock Manager, the yaml was added to
-> socfpga-clk-manager.yaml.
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> ---
->  .../arm/altera/socfpga-clk-manager.yaml       | 118 +++++++++++++++++-
->  .../bindings/clock/altr_socfpga.txt           |  30 -----
->  2 files changed, 117 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/altr_socfpga.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-> index 572381306681..4cda13259530 100644
-> --- a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-> @@ -9,17 +9,133 @@ title: Altera SOCFPGA Clock Manager
->  maintainers:
->    - Dinh Nguyen <dinguyen@kernel.org>
->  
-> -description: test
-> +description:
-> +  This binding describes the Altera SOCFGPA Clock Manager and its associated
-> +  tree of clocks, pll's, and clock gates for the Cyclone5, Arria5 and Arria10
-> +  chip families.
->  
->  properties:
->    compatible:
->      items:
->        - const: altr,clk-mgr
-> +
->    reg:
->      maxItems: 1
->  
-> +  clocks:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^osc[0-9]$":
-> +        type: object
-> +
-> +      "^[a-z0-9,_]+[clk,pll,clk_gate,clk_divided](@[a-f0-9]+)?$":
-
-This regex doesn't do what you think it does. You want:
-
-"^[a-z0-9,_]+(clk|pll|clk_gate|clk_divided)(@[a-f0-9]+)?$"
-
-However, I don't see clk_gate or clk_divided used anywhere, so I would 
-simplify to:
-
-"(clk|pll)(@[a-f0-9]+)?$"
+Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
+ Devices
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Dan Williams <dan.j.williams@intel.com>,
+ hch@lst.de, gregory.price@memverge.com, John@groves.net,
+ Jonathan.Cameron@huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com,
+ rdunlap@infradead.org, agk@redhat.com, snitzer@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
+ nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
+References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
+ <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
+ <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
+ <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev>
+ <d3231630-9445-4c17-9151-69fe5ae94a0d@kernel.dk>
+ <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
+ <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +
-> +          compatible:
-> +            enum:
-> +              - altr,socfpga-pll-clock
-> +              - altr,socfpga-perip-clk
-> +              - altr,socfpga-gate-clk
-> +              - altr,socfpga-a10-pll-clock
-> +              - altr,socfpga-a10-perip-clk
-> +              - altr,socfpga-a10-gate-clk
-> +              - fixed-clock
-> +
-> +          clocks:
-> +            $ref: /schemas/types.yaml#/definitions/phandle-array
+On 2025/4/22 18:29, Mikulas Patocka wrote:
+> Hi
+>
+>
+> On Thu, 17 Apr 2025, Dongsheng Yang wrote:
+>
+>> +ccing md-devel
+>>
+>> On 2025/4/16 23:10, Jens Axboe wrote:
+>>> On 4/16/25 12:08 AM, Dongsheng Yang wrote:
+>>>> On 2025/4/16 9:04, Jens Axboe wrote:
+>>>>> On 4/15/25 12:00 PM, Dan Williams wrote:
+>>>>>> Thanks for making the comparison chart. The immediate question this
+>>>>>> raises is why not add "multi-tree per backend", "log structured
+>>>>>> writeback", "readcache", and "CRC" support to dm-writecache?
+>>>>>> device-mapper is everywhere, has a long track record, and enhancing it
+>>>>>> immediately engages a community of folks in this space.
+>>>>> Strongly agree.
+>>>> Hi Dan and Jens,
+>>>> Thanks for your reply, that's a good question.
+>>>>
+>>>>       1. Why not optimize within dm-writecache?
+>>>>   From my perspective, the design goal of dm-writecache is to be a
+>>>> minimal write cache. It achieves caching by dividing the cache device
+>>>> into n blocks, each managed by a wc_entry, using a very simple
+>>>> management mechanism. On top of this design, it's quite difficult to
+>>>> implement features like multi-tree structures, CRC, or log-structured
+>>>> writeback. Moreover, adding such optimizations?especially a read
+>>>> cache?would deviate from the original semantics of dm-writecache. So,
+>>>> we didn't consider optimizing dm-writecache to meet our goals.
+>>>>
+>>>>       2. Why not optimize within bcache or dm-cache?
+>>>> As mentioned above, dm-writecache is essentially a minimal write
+>>>> cache. So, why not build on bcache or dm-cache, which are more
+>>>> complete caching systems? The truth is, it's also quite difficult.
+>>>> These systems were designed with traditional SSDs/NVMe in mind, and
+>>>> many of their design assumptions no longer hold true in the context of
+>>>> PMEM. Every design targets a specific scenario, which is why, even
+>>>> with dm-cache available, dm-writecache emerged to support DAX-capable
+>>>> PMEM devices.
+>>>>
+>>>>       3. Then why not implement a full PMEM cache within the dm framework?
+>>>> In high-performance IO scenarios?especially with PMEM hardware?adding
+>>>> an extra DM layer in the IO stack is often unnecessary. For example,
+>>>> DM performs a bio clone before calling __map_bio(clone) to invoke the
+>>>> target operation, which introduces overhead.
+> Device mapper performs (in the common fast case) one allocation per
+> incoming bio - the allocation contains the outgoing bio and a structure
+> that may be used for any purpose by the target driver. For interlocking,
+> it uses RCU, so there is no synchronizing instruction. So, DM overhead is
+> not big.
+>
+>>>> Thank you again for the suggestion. I absolutely agree that leveraging
+>>>> existing frameworks would be helpful in terms of code review, and
+>>>> merging. I, more than anyone, hope more people can help review the
+>>>> code or join in this work. However, I believe that in the long run,
+>>>> building a standalone pcache module is a better choice.
+>>> I think we'd need much stronger reasons for NOT adopting some kind of dm
+>>> approach for this, this is really the place to do it. If dm-writecache
+>>> etc aren't a good fit, add a dm-whatevercache for it? If dm is
+>>> unnecessarily cloning bios when it doesn't need to, then that seems like
+>>> something that would be worthwhile fixing in the first place, or at
+>>> least eliminate for cases that don't need it. That'd benefit everyone,
+>>> and we would not be stuck with a new stack to manage.
+>>>
+>>> Would certainly be worth exploring with the dm folks.
+>> well, introducing dm-pcache (assuming we use this name) could, on one hand,
+>> attract more users and developers from the device-mapper community to pay
+>> attention to this project, and on the other hand, serve as a way to validate
+>> or improve the dm framework’s performance in high-performance I/O scenarios.
+>> If necessary, we can enhance the dm framework instead of bypassing it
+>> entirely. This indeed sounds like something that would “benefit everyone.”
+>>
+>> Hmm, I will seriously consider this approach.
+>>
+>> Hi Alasdair, Mike, Mikulas,  Do you have any suggestions?
+>>
+>> Thanx
+> If you create a new self-contained target that doesn't need changes in the
+> generic dm or block code, it's OK and I would accept that.
 
-clocks already has a type.
 
-> +            description: one or more phandles to input clock
+I will try to port pcache into dm to be a new self-contained target.
 
-I assume there is some max, so make this constraints:
 
-minItems: 1
-maxItems: ?
+Thanx
 
-> +
-> +          "#address-cells":
-> +            const: 1
-> +
-> +          "#clock-cells":
-> +            const: 0
-> +
-> +          "#size-cells":
-> +            const: 0
-> +
-> +          clk-gate:
-> +            $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            items:
-> +              - description: gating register offset
-> +              - description: bit index
-> +
-> +          div-reg:
-> +            $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            items:
-> +              - description: divider register offset
-> +              - description: bit shift
-> +              - description: bit width
-> +
-> +          fixed-divider:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +          reg:
-> +            maxItems: 1
-> +
-> +        patternProperties:
-> +          "^[a-z0-9,_]+[clk,pll](@[a-f0-9]+)?$":
+Dongsheng
 
-Similar issues here.
-
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              compatible:
-> +                enum:
-> +                  - altr,socfpga-perip-clk
-> +                  - altr,socfpga-gate-clk
-> +                  - altr,socfpga-a10-perip-clk
-> +                  - altr,socfpga-a10-gate-clk
-> +
-> +              "#clock-cells":
-> +                const: 0
-> +
-> +              clocks:
-> +                $ref: /schemas/types.yaml#/definitions/phandle-array
-> +                description: one or more phandles to input clock
-> +
-> +              clk-gate:
-> +                $ref: /schemas/types.yaml#/definitions/uint32-array
-> +                items:
-> +                  - description: gating register offset
-> +                  - description: bit index
-> +
-> +              div-reg:
-> +                $ref: /schemas/types.yaml#/definitions/uint32-array
-> +                items:
-> +                  - description: divider register offset
-> +                  - description: bit shift
-> +                  - description: bit width
-> +
-> +              fixed-divider:
-> +                $ref: /schemas/types.yaml#/definitions/uint32
-
-As these properties are all just repeated, put them all under '$defs' 
-and reference that in both places.
-
-> +
-> +              reg:
-> +                maxItems: 1
-
-'reg' goes after compatible.
-
-> +
-> +            required:
-> +              - compatible
-> +              - clocks
-> +              - "#clock-cells"
-> +
-> +        required:
-> +          - compatible
-> +          - "#clock-cells"
-> +
->  required:
->    - compatible
-> +  - reg
->  
->  additionalProperties: false
->  
+>
+> Improving dm-writecache is also possible.
+>
+> Mikulas
