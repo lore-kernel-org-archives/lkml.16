@@ -1,170 +1,182 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBC3285414;
-	Tue, 22 Apr 2025 19:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21735219A91
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351160; cv=none; b=u+0qiwugFTagKorr5CTwfwfM3Ht2B9Z1bLeQ9fT/W9gnKqOnZENFQlzj/uQVQw00dgWy1nCtbvh1B4Ts4daDU0cRbuyV7WWbn882/VaLCWqy8NVEYHM2htdd1YiMg/iHhgRnbuWi7O/o+wD3+1BoqS5Vn3441qXI3qu8ZFMcApU=
+	t=1745351222; cv=none; b=j5YNKDo/Yw4uYlIXGDuFWXGOWlKFwBLm5YhsehRxjlaCRuh3+LVhljClcBHFUgQfuHPIl07s2PNZkBJj1QgoiJJ4RklTIqbrGolHLkhvZS1plm6OOW5VfBc3fEzg1gNZT+gJnWIH6NOoS4CFQytehUsQ53KDEsNPcE+0MHSCEcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351160; c=relaxed/simple;
-	bh=TuxclNuUfqcerA2pqrf6VxwnTOX21UT3Y4oqusyj6hQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBtuh+QTzY+8FwhUm7+Nr3cHMoOtbTwPem6hPfv6uIgOHHPJHorfSQ8wg57aVdQIcMUI6Bc2nZw7GOllNUtPCDlehP94lk6D49L7wdzqW4/4QRZ6tHCI5coHjlk6hK3fqmbauh0s8hzi8KhSnTkn+SVmTE0+7nlqZirtVyDtKQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MMhuhZIV; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745351222; c=relaxed/simple;
+	bh=t2fNCKroL9F7ZVN7zRq8ikEIYNQqgqm5OYQ+KBoNpnE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O5Wr2JZjncNLXq0cOeVyYWyVJGIO+mL5Rkfd/Lb3zgP4QUxl+MRJQvqMOgNPX9OnZotmWGkHBorMcmH3/nN0QSleD8/N5g0lu53yEUG717hjhHW9AqUTSzdLwlFEtY58vXFjOFMaX9dwtvtY0ZTXsSL3xvnGFTLzMHLqRff/PrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=WpHErqe1; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMhuhZIV"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso65630055e9.3;
-        Tue, 22 Apr 2025 12:45:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="WpHErqe1"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5e39d1db2so296967985a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:47:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745351157; x=1745955957; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ot+UV56+ds2L+x6seBu3bJVACsN/bCDZpbfhgi6yxHM=;
-        b=MMhuhZIVXQtJf+/q80ZnTPTsXLT8PeKiTBFtl1XyPRvTfIY8PVlcOMls/9RELVfmhz
-         aOzyomGIeHXhtKPTzS0CDn+a2qGlOVBXDCz1iuZJI3FXMvx12FO8twchWqZHh1Hopz8H
-         nFNpVO95i4xDvyl6Ub0k4yQ5UdqvyH0MgllQ27mNkFZmzK6/4n17UE6AFVzUnSFhHcsK
-         9zxa17ztuEh8hdz2hFRwAxux0BX3qmQxLAklktvWgkOmd2cwPQ1Z+02rm59AYsz2Ok5x
-         qFMHv09r2mYzJzYLJeIUr29QgWB7DpfRfUIyak06TSs9pMWdWPNradDJlu0xKihQ6G36
-         zbAw==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745351220; x=1745956020; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AZRNUBKg8hwCgXEyYs/1skOhVgOq5no2ClQkvRkjKGA=;
+        b=WpHErqe1jgOUWQLxbTmFlO5Q1Ic4DVTdW3nY9SBGuGF3mkBUGpYdF/NemLcm0PNtsN
+         xqud7RFnwpVH3/T5eHFxGYd6qoZQMOeeQhOct1XXSIUTlutrQiCwScwP1a5IjZnHeA/S
+         nxGnc8inSXDgzBJRex3SIXjbjdHvMz9bKks4CIJhCSonvKkXCYS1m7PUtwZAQnah9fsT
+         ncNhoQa6Gr3+el9SlU97//e6MO0OVEIHAg7qSMO0hzH3fFv3MymO2tlqBn5vN6QdZ0N+
+         bzg2YBUSpBueZPyedBpTHQLmyehYKB9g6v6pdWgoSqyv3xmJJfPhKjZiAg6A4RJ8sQ5G
+         R88g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351157; x=1745955957;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ot+UV56+ds2L+x6seBu3bJVACsN/bCDZpbfhgi6yxHM=;
-        b=bguDJeOayp01U8zPgS8oot9lo514opUdeDFUljb6w+Ty0bJ1yl9EFePcZJKmlSkYfT
-         ynVwwIxNjYKOvylcogRjdutz5RoEKUFkDgJxrpoywj+Ppbhcc7vY/7z38VelRkaA3sUr
-         tgUbmfWkYg3fVBNaQk58OYmt3tcQGpq3XRvxND5btTbUaiTR2FVbUHv4yvsSzu8PjbJA
-         uqGF2/y/dOrYiHVjQF88Ri4u38SLYtSK+sECNZp3T4qJUOetJ0P32KiKTesVSC2V8tWR
-         RuXyV1wGxgUPRf34wxeHlBLbZo3PtyG7LnAup9Wt5jM8bFbp59SjTdy/etD1FrYOj85o
-         UIlg==
-X-Forwarded-Encrypted: i=1; AJvYcCU36O4I+2Wtl80JiZMM4+Il7kATtkDd3VdzleYBS/FTyTgfAg5qAjx9yDhi80fRGstuFOCi1o9q6iLg82aMm23F@vger.kernel.org, AJvYcCUCWI2aofKRsWMdhBtJNICF6sGk1vULOTPBxcurpxbAQQ8OjIk7cd7wQ2IGP0vd5no0kzDXCAevNWMA@vger.kernel.org, AJvYcCUGmfarGBqLihLCSBN0pKi+8n1JB1bPJXYZe0RggIE8fFNwnTCnkZ0zXsi2olI2riVoVuyRpKzl9PVg3p7n@vger.kernel.org, AJvYcCVPy7MX+mJgrdrLJLoQi7A/0bx1dQtL0da4bwzQjjsLNpqjzrclcQMuoFS/Z2JlB5aFKCSkWXCE3A==@vger.kernel.org, AJvYcCWlrz2w1T0bVpSfIRjZahYv23xGgb5rB1NL4s/RfttgxPNymBsRteiDgRecHRQEikzpSF+M@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/aguU6CvXO2yJYtUy8eEi2ByUM05rVd+54p96c6zrKgQ9antd
-	m2LV9Y3NYkGNCdCcTksDH7ho1RCz9uTSq0P1rrm4qd2W9neL3JbW
-X-Gm-Gg: ASbGnctiiOkpYimr2YQ0u5Lq3gO6uuDXarbleoy/H5p/uHIM+4KbSbODyUYa2XuCJSF
-	Rkql9qzt4ERs6ZLOvAj0jCx9ATNxgdQcIPpdSLa7ACm1YB/pbFUAChvjhCN4OHOEk2X2p6PXzlF
-	YP53kBrutGiHDjBNcOfFEgkqILO/35R24OxoHHwxIFYS5BkgHKIi4HopxkGgIsNXlH5OXFwqbxI
-	D6Fu0AnlIoD16A/eSvgvJjx61yplwo1wlWtszHo1L4ziPfwfQRoA79cR22xRtrbsT5kgzfzhBSL
-	sZzrBNcVIIl6Ww0RP+9q5uq+FrhHqAtsXfYpdOlA9r9pcU4G
-X-Google-Smtp-Source: AGHT+IEZ6mFfkFKJXYFnWv0R6K2e+269K01WRtESaCqbhsKRKAntvkXBD22q88SDEn1QFhrdMRwIdA==
-X-Received: by 2002:a05:6000:1888:b0:390:f358:85db with SMTP id ffacd0b85a97d-39efba5edf2mr13171386f8f.30.1745351156437;
-        Tue, 22 Apr 2025 12:45:56 -0700 (PDT)
-Received: from [192.168.8.100] ([85.255.235.90])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4331a9sm16481640f8f.36.2025.04.22.12.45.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 12:45:55 -0700 (PDT)
-Message-ID: <c0bd45f7-0325-4e4b-b0ea-ccae24a1eabd@gmail.com>
-Date: Tue, 22 Apr 2025 20:47:09 +0100
+        d=1e100.net; s=20230601; t=1745351220; x=1745956020;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AZRNUBKg8hwCgXEyYs/1skOhVgOq5no2ClQkvRkjKGA=;
+        b=UNLOzZ5bq9unopkBhlPoNDGWbe6sDkK1JqVxvbYs8gcBwZ95d+SiwZltR3nKfodypw
+         C2zYfKN+bopW1sf0W2KKdlxf3aUNenu05VqHIJIAhzudHDhGV298HlTwqqd4xBroqMQx
+         RQKDlpLyIcAgXfflv3+hc62IKDRgMpRUQUNLC3nlVRIJjghW9t46uWUTJCwTj9misDXw
+         ArGRUdU0xka9NbvXUy14LsvFoIZ27kuyxSvKFbJaXUk3DHLJYyAnA4g5xVIVsWplsHFq
+         Ns9OKkr0gIJh3T9JnH1ZzGsmaCr75fg/GEyx7mnJC7kRR9+l6hG5FAB7u1m/ENUfav//
+         /XQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt9ibImiVFOj5rieegm+lhpArcWSYtZBhixazdID+iaWPWxftamZ+rtJDNH5rE3poiv60YqtZlsQJS6Hs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIUUvG/1Ska0SRdxmrMV3TiGxsAcQ/9q8mZod9DAi/KgCjARwO
+	HvpyTviuxB40d/jRCILpV5t+AUFznSI5UEFT0XVX4wmrYpsfNThGtcbDT8sbxpU=
+X-Gm-Gg: ASbGncvLWXa9WB3/kFnmWRWXYC03ONiEvHIG2fzEky2TxZe0NNGhivg02yCZMo8HnJV
+	y+v4ShCDbgd/fR7tsHLc7ZDmyNinTjT/YMW3/MFUSNqWP5g+VVWCtIspXwk6Pf6oao4WvisBpZm
+	pTgB54Q6HDkoKeLVWlq0paMnAnD4Nhwf/A53gG5Uj4hpgfRvKW1h5A73XHHeaYv9TrruEy25cDP
+	BCHFzh8uH5vJ4kDP0ZL8Quw5JBZ/4QGfyDlPHqsJ5BVCOr53yD2WSmqNEu43WfNF+wcRLM5FZW/
+	lpMUkNAn/Tpqi8Rw+/VrvRDdnBmQJUyioY7z55UJIqpxKZYWqkyA2xKt
+X-Google-Smtp-Source: AGHT+IFgS/Q0V6U15helS9ADvq78s/nB3ALXSasniZ8+SnkCEwwfFJHhc6L1EiB4G7ySAUTvyb76hA==
+X-Received: by 2002:a05:620a:4510:b0:7c5:54d8:3d43 with SMTP id af79cd13be357-7c928053ba5mr2594224685a.58.1745351219854;
+        Tue, 22 Apr 2025 12:46:59 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6e6absm593612885a.19.2025.04.22.12.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:46:59 -0700 (PDT)
+Message-ID: <39053a9e0767289cf822beb350819d366994dd0a.camel@ndufresne.ca>
+Subject: Re: [PATCH] media: amphion: Start decoding job when both queue are
+ on
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org,
+ hverkuil-cisco@xs4all.nl
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, 	eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
+ ming.qian@oss.nxp.com, 	imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
+Date: Tue, 22 Apr 2025 15:46:57 -0400
+In-Reply-To: <20240719075007.384342-1-ming.qian@nxp.com>
+References: <20240719075007.384342-1-ming.qian@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 2/9] net: add get_netmem/put_netmem support
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, io-uring@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
- David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-References: <20250417231540.2780723-1-almasrymina@google.com>
- <20250417231540.2780723-3-almasrymina@google.com>
- <484ecaad-56de-4c0d-b7fa-a3337557b0bf@gmail.com>
- <CAHS8izPw9maOMqLALTLc22eOKnutyLK9azOs4FzO1pfaY8xE6g@mail.gmail.com>
- <957b74ed-f29c-4bb8-b819-af4e1168d6c1@gmail.com>
- <CAHS8izM8+zG6KOhV7ysTsCj_PEty5eL+P+uUxTZhdsOSZTwmow@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izM8+zG6KOhV7ysTsCj_PEty5eL+P+uUxTZhdsOSZTwmow@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 4/22/25 19:30, Mina Almasry wrote:
-> On Tue, Apr 22, 2025 at 11:19 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 4/22/25 14:56, Mina Almasry wrote:
->>> On Tue, Apr 22, 2025 at 1:43 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>>>
->>>> On 4/18/25 00:15, Mina Almasry wrote:
->>>>> Currently net_iovs support only pp ref counts, and do not support a
->>>>> page ref equivalent.
->>>>
->>>> Makes me wonder why it's needed. In theory, nobody should ever be
->>>> taking page references without going through struct ubuf_info
->>>> handling first, all in kernel users of these pages should always
->>>> be paired with ubuf_info, as it's user memory, it's not stable,
->>>> and without ubuf_info the user is allowed to overwrite it.
->>>>
->>>
->>> The concern about the stability of the from-userspace data is already
->>> called out in the MSG_ZEROCOPY documentation that we're piggybacking
->>> devmem TX onto:
->>
->> Sure, I didn't object that. There is no problem as long as the
->> ubuf_info semantics is followed, which by extension mean that
->> any ref manipulation should already be gated on ubuf_info, and
->> there should be no need in changing generic paths.
->>
-> 
-> I'm sorry I'm not following. skb_frag_ref is how the net stack obtains
-> references on an skb_frag, regardless on whether the frag is a
-> MSG_ZEROCOPY one with ubuf info, or a regular tx frag without a
-> ubuf_info, or even an io_uring frag which I think have the
+Hi,
 
-Yep
+Le vendredi 19 juillet 2024 =C3=A0 16:50 +0900, Ming Qian a =C3=A9crit=C2=
+=A0:
+> Start the decoding job when both queue are on, except the for the
+> initialization sequence.
+>=20
+> Especially when seeking, the capture streamon may be called after output
+> streamon, driver will start to decode job immediately after output
+> streamo, if seek to a new resolution, then the source change flow may be
+> mixed with the seek, it will cause confusion, then may led to pipeline
+> hang.
+>=20
+> When both output and capture queue are on, it's ready to start the
+> decoding job, and it can avoid the above potential problem.
 
-> msg->ubuf_info like we discussed previously. I don't see the net stack
-> in the current code special casing how it obtains refs on frags, and I
-> don't see the need to add special casing. Can you elaborate in more
+This commit message needs some work and I'm unsure I understand its
+meaning. After reading the change, I am under the impression that you
+simply say that once the seq_hdr is found, the driver should keep
+delaying the processing of output buffer until the capture queue is
+ready ?
 
-You'll be special casing it either way, it's probably unavoidable,
-just here it is in put/get_netmem.
+>=20
+> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+> ---
+> =C2=A0drivers/media/platform/amphion/vdec.c | 18 +++++++++++++++++-
+> =C2=A01 file changed, 17 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/platform/amphion/vdec.c b/drivers/media/platfo=
+rm/amphion/vdec.c
+> index 6a38a0fa0e2d..ca8f7319503a 100644
+> --- a/drivers/media/platform/amphion/vdec.c
+> +++ b/drivers/media/platform/amphion/vdec.c
+> @@ -1363,6 +1363,12 @@ static int vdec_process_output(struct vpu_inst *in=
+st, struct vb2_buffer *vb)
+> =C2=A0	if (inst->state =3D=3D VPU_CODEC_STATE_STARTED)
+> =C2=A0		vdec_update_state(inst, VPU_CODEC_STATE_ACTIVE, 0);
+> =C2=A0
+> +	if (vdec->seq_hdr_found &&
+> +	=C2=A0=C2=A0=C2=A0 !vb2_start_streaming_called((v4l2_m2m_get_dst_vq(ins=
+t->fh.m2m_ctx)))) {
+> +		vpu_trace(inst->dev, "[%d] capture is not ready, pend input frame\n", =
+inst->id);
+> +		return -EINVAL;
 
-> detail what is the gating you expect, and why? Are you asking that I
-> check the skb has a ubuf_info before allowing to grab the reference on
-> the dmabuf binding? Or something else?
+I got really confused by this error return value. Its clearly not an
+error, but just a delay. I think before we add more on top, you should
+turn all these function for which the return value is unused to void.
+And use a plain "return;" here. That applies to all similar ops.
 
-get_page() already shouldn't be a valid operation for ubuf backed frags
-apart from few cases where frags are copied/moved together with ubuf.
-The frags are essentially bundled with ubuf and shouldn't exist without
-it, because otherwise user can overwrite memory with all the following
-nastiness. If there are some spots violating that, I'd rather say they
-should be addressed.
+> +	}
+> +
+> =C2=A0	ret =3D vpu_iface_get_stream_buffer_desc(inst, &desc);
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+> @@ -1555,6 +1561,16 @@ static int vdec_start(struct vpu_inst *inst)
+> =C2=A0	return ret;
+> =C2=A0}
+> =C2=A0
+> +static void vdec_enqueue_pending_frames(struct vpu_inst *inst)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < v4l2_m2m_num_src_bufs_ready(inst->fh.m2m_ctx); i++) {
+> +		if (vpu_process_output_buffer(inst))
+> +			break;
 
-Instead of adding net_iov / devmem handling in generic paths affecting
-everyone, you could change those functions where it's get_page() are
-called legitimately. The niov/devmem part of get/put_netmem doesn't
-even have the same semantics as the page counterparts as it cannot
-prevent from reallocation. That might be fine, but it's not clear
-why keep them together where they can't even follow the same behaviour.
+How well does this work ? Previous you made good care of interleaving
+the processing output and capture, which I could imaging prevents the
+hardware from starving ?
 
-Interestingly, you can even replace per frag referencing with taking
-one ref per ubuf_info and putting it in the ubuf release callback,
-in a way similar to how SKBFL_MANAGED_FRAG_REFS works.
+> +	}
+> +}
+> +
+> =C2=A0static int vdec_start_session(struct vpu_inst *inst, u32 type)
+> =C2=A0{
+> =C2=A0	struct vdec_t *vdec =3D inst->priv;
+> @@ -1573,10 +1589,10 @@ static int vdec_start_session(struct vpu_inst *in=
+st, u32 type)
+> =C2=A0	if (V4L2_TYPE_IS_OUTPUT(type)) {
+> =C2=A0		vdec_update_state(inst, vdec->state, 1);
+> =C2=A0		vdec->eos_received =3D 0;
+> -		vpu_process_output_buffer(inst);
+> =C2=A0	} else {
+> =C2=A0		vdec_cmd_start(inst);
+> =C2=A0	}
+> +	vdec_enqueue_pending_frames(inst);
 
-FWIW, I do like the idea of get/put_netmem, it's nice to be able to
-easily list all callers, but maybe it should just warn on net_iovs.
+Was this intentional to reverse the STREAMON(CAPTURE) call flow to:
 
--- 
-Pavel Begunkov
+  - process_capture() (inside vdec_cmd_start())
+  - proces_output() x n
+
+Nicolas
+
+> =C2=A0	if (inst->state =3D=3D VPU_CODEC_STATE_ACTIVE)
+> =C2=A0		vdec_response_fs_request(inst, false);
+> =C2=A0
 
