@@ -1,154 +1,128 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9E3296D1A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9100293B55
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745340759; cv=none; b=OycA5MN4z4BdQ1tKo44DVTq+0csCdtqnwFHJOCoeeI8DiFurCfVh15Jy/C/AjUEMzCTmIH4RT5TdtcDNddSgifHl/8j5CIwVj0m3hMs+1Nngz6LgRX86b0GAn63blJPPd/jebKnRJptx7sfkBZ5gAEylZs42uDvkal5//C0RISM=
+	t=1745340807; cv=none; b=Pen4tU3OOCPAGxnLPQ0/dut5xcczQz24W+D/01jWDx/pcD8zAlEZyU63pglEceGbs+4duxcD6PZdaV4vT1gomcV6HfU222F777jUctWJ47+sHRbY2nDbGN3ZqHTizX9sdcfk5OkOvTW7mx0uexoGS+dlUMBbgbvCgmuh+CsNBOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745340759; c=relaxed/simple;
-	bh=T36wXcZ7zCSmvsshp1K/S1XsS6E9Wrxp5490tr4Tru4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M6CdXOWpUkaw10kPbF6YeoF4L2FHhzqCpKiomzUDYM/EDGHMT8b2AIyVnBM3CL3zfGy1y/iyv6vQLyQRnJAKwDdeqsg0hDe/yWoEPbWg24Fc9RZipVint7E+hhuUOug4mXzkrSPoEhBYmy+FlG8U0bPlV2FXcUEkQuTXGzNG28M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nY/6wlCq; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=nY/6wlCq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745340807; c=relaxed/simple;
+	bh=1VvrGlRC/Ba3kcGFKd5TjwKkEajuED8SBgZTYhd0zvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oU6glBO+qiRtCi4XO/p1SbsjI55Gsp+VsK0Cx1vTVd98JLwGehO7YzdidS3xtAdxx3xKBKL/crddW+NDiuIVOjm5Oneg6fH0ql+hehIqZFdpr15O011PGlhS4YuYItCatFEG/4/m2ozuP/KQFYUgEK8Q6J9lsFLGtoCceQj1BEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=YuLJS3M3; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nY/6wlCq";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="nY/6wlCq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3D633211A1;
-	Tue, 22 Apr 2025 16:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745340754; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UcgHSw5qsTgMRgKyDw44V36OYO//MyDXvRLVjZf6X2s=;
-	b=nY/6wlCq9i4ZTv7/Lc9mKsL/KkFv28HkTo0vJCV6FdJPvnEr4GApqTrqoAjei81ZP/AVM6
-	nhGSl0C+vTWNH0EXPYtvcDyTWd5DmZn3k+pyLP783M/nQ0aqtvHQWiCZUtkJk7rcVfNPwh
-	55XX0WmSm8mRsdhctQ2Kz43hCI69ddc=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745340754; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UcgHSw5qsTgMRgKyDw44V36OYO//MyDXvRLVjZf6X2s=;
-	b=nY/6wlCq9i4ZTv7/Lc9mKsL/KkFv28HkTo0vJCV6FdJPvnEr4GApqTrqoAjei81ZP/AVM6
-	nhGSl0C+vTWNH0EXPYtvcDyTWd5DmZn3k+pyLP783M/nQ0aqtvHQWiCZUtkJk7rcVfNPwh
-	55XX0WmSm8mRsdhctQ2Kz43hCI69ddc=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D752137CF;
-	Tue, 22 Apr 2025 16:52:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zUr7CVLJB2iteAAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Tue, 22 Apr 2025 16:52:34 +0000
-From: David Sterba <dsterba@suse.com>
-To: linux-btrfs@vger.kernel.org,
-	torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.15-rc4
-Date: Tue, 22 Apr 2025 18:52:27 +0200
-Message-ID: <cover.1745339483.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="YuLJS3M3"
+Date: Tue, 22 Apr 2025 12:52:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1745340791;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YNBnrUig8d/7iyBpxwbIYcm/9fUV1xZh0qLhXZS0ujY=;
+	b=YuLJS3M3XrUeSddwGp+qWHk0nBrJudL0ed4BFYrYaqwLAUWE6hdV25uAM0gm+0cSsMpsMw
+	zDEcn3zcFy+R/l7JQFdFndmgFNE6j8LvJIwInTge/DyNgXf3DQLtzNuFw8i+QfkWHLkWL5
+	Mi/xhbT8kkRvBpQADeUjH8+xQhIC2nSQPOeAufkTjN7yAcYa9FalbQj6bhQgO5vyOvMofQ
+	gsKctrqm/1RBa05SNfFbh6Mq9PtBgQdYJYepwnjq72pE97xdmRHxoV9P+gLJDw3dqPzRaR
+	Ggh2f/GeF0J9lnmaIO3GtkFi3aVej1W4p8EL1nLrDI8pT41HJzQR6/heqDqBiA==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>
+Subject: Re: [PATCH v2 1/2] rust: helpers: Add bindings/wrappers for dma_resv
+Message-ID: <aAfJadjG0RACO1-W@blossom>
+References: <20250422-gpuvm-v2-0-44d4fc25e411@collabora.com>
+ <20250422-gpuvm-v2-1-44d4fc25e411@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+In-Reply-To: <20250422-gpuvm-v2-1-44d4fc25e411@collabora.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+This needs your Signed-off-by too as you are the submitter
 
-please pull the following short fixes. Most of them are one-liners,
-there's one preparatory patch in block layer moving some code around
-and adding a helper that's used in a fix. Thanks.
-
-- subpage mode fixes
-  - access correct object (folio) when looking up bit offset
-  - fix assertion condition for number of blocks per folio
-  - fix upper boundary of locking range in hole punch
-
-- zoned fixes
-  - fix potential deadlock caught by lockdep when zone reporting and
-    device freeze run in parallel
-  - fix zone write pointer mismatch and NULL pointer dereference when
-    metadata are converted from DUP to RAID1
-
-- fix error handling when reloc inode creation fails
-
-- in tree-checker, unify error code for header level check
-
-- block layer: add helpers to read zone capacity
-
-----------------------------------------------------------------
-The following changes since commit 65f2a3b2323edde7c5de3a44e67fec00873b4217:
-
-  btrfs: remove folio order ASSERT()s in super block writeback path (2025-04-01 01:02:42 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc3-tag
-
-for you to fetch changes up to 866bafae59ecffcf1840d846cd79740be29f21d6:
-
-  btrfs: zoned: skip reporting zone for new block group (2025-04-17 11:57:25 +0200)
-
-----------------------------------------------------------------
-David Sterba (1):
-      btrfs: tree-checker: adjust error code for header level check
-
-Filipe Manana (1):
-      btrfs: fix invalid inode pointer after failure to create reloc inode
-
-Johannes Thumshirn (1):
-      btrfs: zoned: return EIO on RAID1 block group write pointer mismatch
-
-Naohiro Aota (2):
-      block: introduce zone capacity helper
-      btrfs: zoned: skip reporting zone for new block group
-
-Qu Wenruo (3):
-      btrfs: subpage: access correct object when reading bitmap start in subpage_calc_start_bit()
-      btrfs: avoid page_lockend underflow in btrfs_punch_hole_lock_range()
-      btrfs: fix the ASSERT() inside GET_SUBPAGE_BITMAP()
-
- fs/btrfs/file.c         |  9 +++++--
- fs/btrfs/relocation.c   |  2 +-
- fs/btrfs/subpage.c      |  4 +--
- fs/btrfs/tree-checker.c |  2 +-
- fs/btrfs/zoned.c        | 19 +++++++++++---
- include/linux/blkdev.h  | 67 +++++++++++++++++++++++++++++++++----------------
- 6 files changed, 72 insertions(+), 31 deletions(-)
+Le Tue, Apr 22, 2025 at 01:41:52PM -0300, Daniel Almeida a écrit :
+> From: Asahi Lina <lina@asahilina.net>
+> 
+> This is just for basic usage in the DRM shmem abstractions for implied
+> locking, not intended as a full DMA Reservation abstraction yet.
+> 
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> ---
+>  rust/bindings/bindings_helper.h |  1 +
+>  rust/helpers/dma-resv.c         | 13 +++++++++++++
+>  rust/helpers/helpers.c          |  1 +
+>  3 files changed, 15 insertions(+)
+> 
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> index e6020ba5b00237a08402fbd609c7fba27b970dd9..68d7be498a6d523797e54212d6c23ff4d8f2e92d 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/blkdev.h>
+>  #include <linux/cred.h>
+>  #include <linux/device/faux.h>
+> +#include <linux/dma-resv.h>
+>  #include <linux/errname.h>
+>  #include <linux/ethtool.h>
+>  #include <linux/file.h>
+> diff --git a/rust/helpers/dma-resv.c b/rust/helpers/dma-resv.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..05501cb814513b483afd0b7f220230d867863c2f
+> --- /dev/null
+> +++ b/rust/helpers/dma-resv.c
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/dma-resv.h>
+> +
+> +int rust_helper_dma_resv_lock(struct dma_resv *obj, struct ww_acquire_ctx *ctx)
+> +{
+> +	return dma_resv_lock(obj, ctx);
+> +}
+> +
+> +void rust_helper_dma_resv_unlock(struct dma_resv *obj)
+> +{
+> +	dma_resv_unlock(obj);
+> +}
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 7a06d6bc48537248c8a3ec4243b37d8fb2b1cb26..c5e536d688bc35c7b348daa61e868c91a7bdbd23 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -14,6 +14,7 @@
+>  #include "build_bug.c"
+>  #include "cred.c"
+>  #include "device.c"
+> +#include "dma-resv.c"
+>  #include "drm.c"
+>  #include "err.c"
+>  #include "fs.c"
+> 
+> -- 
+> 2.49.0
+> 
