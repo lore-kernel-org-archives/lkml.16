@@ -1,104 +1,109 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E11B281359
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E40212F5A5;
+	Tue, 22 Apr 2025 13:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745329843; cv=none; b=a+ik/HSBjbyXfZYeG1YjE38n+qTz16aJNRdfVxQyq/oXt5pGSLAa27RsG6+hqdzKKUvBupdxOVxwA0uVuaG1SF5psCdwYry4B7Hs3zNAzfuJRi9wZ23pbeUL5ygWO0FlqLAwpT44+72ZxEgMWEbpxBZDVMNDLIlzapm4MygfCKY=
+	t=1745329872; cv=none; b=qMK7r0QyX1/8fvbdg4zNk/znsNOadasFP90DJKVF7LXF4WcGU2/O4S5WQKYMpVpMsTgOZ9d4KE6NSpkO0FVjbWkBUxEpR2/kWfEKUOKegAARIOS/ajfOsnjK947K5ZKywNULS8K9VcSrDkZLwP3bkcPZ6pDiEfCjrThPib0AKa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745329843; c=relaxed/simple;
-	bh=jeM82paYGpr1mwQCA8hN8JIjwhMYsSr79xhqenfpsCI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dfSm0Y9FBnDU1xb5rJvICUY+aHY8EnmLg6vZkMzubb3sX5ckfpCnFvj/hWXQToT6+o10n+pwpHPVlA33/3ZB8oXFlwQvC/of5auXM9DeAMgL5VpbBzxTxhOvR6SlJUGlRfaEOoWiFlicllu2WfsegJz3vfYER+Tzn+kvLqavJqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SDgeckK1; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1745329872; c=relaxed/simple;
+	bh=xKzrHeCadOGs+/42bx11CXiDm2ftgA8lhRuUSNQ3nWs=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZGq08aK/YxOCDGC5jVTo9lLUHe0efq3ep/oMyW651cQzB4xWta0tzKH2uOdIyjCY4ADI4U9kXZxNBYcOZH1E/KMJJwjD4s72KQiaRfJVC5sfrVeY+OOVetD4JkZQR6CqURHHJAReYwaBsTszorccRoU9C6n7K6oBeLhKuAdbK/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEOSDgKX; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDgeckK1"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3081f72c271so4436650a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:50:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEOSDgKX"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b0b2ce7cc81so4404677a12.3;
+        Tue, 22 Apr 2025 06:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745329842; x=1745934642; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ho+9Ni3KIpr+Bqz+GZX+bi8Cn1/EYRo+dzzVNPuOWFg=;
-        b=SDgeckK1DVKWAS7xZDTvKZnONjSkJYAt+eiz+KHRhZlGJ+0y+gUIjDMHn9Ftqxvbrb
-         lk5iCo3lij/AN0M1GwCMD6N3vt1ZHuiwZrbNC29Z7t2rLAa+X6s2dp50ca3T90LetGRT
-         NoyqYKwyoEVmB2KYhPhmelJlsntKBc9UxMpZXIpnfQ3GJPo7PRQAN9nYYV6M/Vk3y157
-         30R+2he00k2cocgpNPXDu5SMlMsfAy4LU0/2gl7x3amnUIsSeNo59ZpwDDWtIftIEf8v
-         Qi2PG0djiPW9sYdbwc+TcvUqDiQ5Wyv2bOiWxJEM+Eo/XIKVd9g8xAo16TPB8xApl7m0
-         ou+g==
+        d=gmail.com; s=20230601; t=1745329869; x=1745934669; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xKzrHeCadOGs+/42bx11CXiDm2ftgA8lhRuUSNQ3nWs=;
+        b=DEOSDgKXZTi8gpT/Y1ShHznsCeRX7Xl4rlMkkAVUwUKsn238UXDQgukZmbGAtozIrA
+         BWqna6o2dmz56NhuheXdjqmmKJILEtOVOIdotTJzaxECDL+lCiJ/2CYSXb22RU4DXVRQ
+         b0b03pqKamjYRbajg7pnoAg4hqR0ytd1D+Q5uf+tOlgWWqYrFzIhx+mTMYzjKjrX3cv5
+         uNImO8gwOYJiI6l07xSTlB1/dy2ZMvIVvMeJb5mXu6POGdUIplpuZEMigl2q0FiJEPue
+         lFXEouvWwA29k7vwjo2ZdAKoqrmjCnmw7mLzuzs00AO1vjunhTb/QDcifX/eFDxftZ0A
+         pJog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745329842; x=1745934642;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ho+9Ni3KIpr+Bqz+GZX+bi8Cn1/EYRo+dzzVNPuOWFg=;
-        b=LECGwFi9csMCBwqW+8iTxhiDJTuWTvuPMtTiAZSWnGlf45SyEyOw5qN1s4aAgKnce3
-         hdAv5SGiF7p9VYgKk9JXK/a42aUJDsrtVISOL/i6bDV9w+GlFiDpn4dSmO8vylA/OqgX
-         fjv0jYerIttJEuEaja33w4PxVFRng7dIT8qJkYBAXjDEWmLD+j3PtX9i9uRJ0FNYZs0W
-         yEY4JzS5+5O0PslenjCVGunaaSI0HfnMbjdh60FmGcMzrJi9bFsz7yACYcQfwDvdKwS1
-         nZOuBgn1ixLf78r4d2gIowJeyq1lQ3WY040TIMqlXVfzQXyV5WucXhRof6NN+ZnaMKjn
-         EUBg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+dPuJm4+FD9nnnhccP6vnLl9pFVlPihtnLW2keXQ2xw3acuFzqxno09diX7SOcYZEKqJ2D+7ZJetT+Cc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMyUHzJ9cLYoC9UHFLyLrC/n6QwsJFAOSIdSNSsCBXCvPO3SO3
-	Ob9aVhADLngkLmbm7OZ2ZLHvbdANB+5eQ1m0fzC+KPFw/nW0GGEp
-X-Gm-Gg: ASbGncvFAQFuDWC7loSLj2P6tDN4zZOunuAJ7xdngn8YGhzOLpyqw05weYdAUM6oVQy
-	6Mqh/qHwNup5aDf9And31m6wd4sggM+wOwz5DyDu0/ijvJOH8/P3dK/htTViYoU8T7ZAJYgnI9q
-	cHCA2bEAOlki71A8jdvYxPfFSSJA1nRV8i5S+TJW4Yd1tTPJyElhNZAUbfyzMTO73XYvDmtMyvO
-	dBUVNP/V9GA5TQIM8S605ZWjIFnpe3QyDJsYsbH0dopoH4Qk3aOMhtGUgp5sOIFSA9pSZeR1dM3
-	ZTJPQhwXKXqY+Bzsym9QQsGXl95i6GDTNhl/k2dQ
-X-Google-Smtp-Source: AGHT+IG1DbOB8X4ulpbu6hiPPKfp7TunDgc8zHxm8JUMBsnlFZhmgJP9BZfJN3wgVhReeFh7lLivlA==
-X-Received: by 2002:a17:90b:3d89:b0:2f4:4500:bb4d with SMTP id 98e67ed59e1d1-3087bb6ba88mr23112095a91.20.1745329841568;
-        Tue, 22 Apr 2025 06:50:41 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa588easm8872952b3a.105.2025.04.22.06.50.40
+        d=1e100.net; s=20230601; t=1745329869; x=1745934669;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xKzrHeCadOGs+/42bx11CXiDm2ftgA8lhRuUSNQ3nWs=;
+        b=TFDB5sZaMjyAFW4KKo3N3N3OSIngSigJHi5DoiYO3cGtT5A5u+Z0PW+8kYWsmJB8G5
+         EYZIAyklP+xqI9Qv3yrQ9IoBw5tfB2lzpb3aEl3QQkKXJ5Sy1N6pvZpdaWS2m4LAidXa
+         i4HjO0ZenTTHoaHX3Bm5y19scASYDM0nGzyg5Jo2J+//pg96672N8C5G99UMU5pAChRr
+         GPyTnWXEh9dJIsqFptt/J0JQ/dOapmWYVJPBjXaiR09h9KrEvwpDkGo5AI1UUk7/+odv
+         87RVO2nZ2QmFFhlVQi89w5yDwfYbDQWW6cKwo+unPUVlwLl9O/oncg30Gts3loiSrcLT
+         MiXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGydUFoiSCTpqwZG+CkEFUEU/lfkzaryOxzq57ChcpxQWRjmCL9Xxn3aCXfOYGmODuIYMfwUUrFveneSg=@vger.kernel.org, AJvYcCWgU2gf6FnbfFiSmqRA1tlNoZLlWjc43l3ejcG0Ok5PwEihe0t0hQhzFr/pmAUWS+f8ryk6gY5qIs71XMmqIQE=@vger.kernel.org, AJvYcCXNNu7Jvlh2iig/FLh8JBl8ZyZSHYIzu4RIML5PjESuSjhVtvnXibUlSGQYAj0Mk88ZqEIvQFXf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5kU46tcvt2wfDWxr+Ob+Go8UTuzeoxcHTyfuFpkkgVMBYHjf0
+	Cdx3KxQPVSCVpLBNHGU64zcWLrnqBqrv8UcX5gOGXQLWXm/fWgCD
+X-Gm-Gg: ASbGncsl7EMznaTmeWy2N/34HpqZynMqEtV/ropwvN81X/8/TgYyoeGCaP5PZBwbTXq
+	6kupl3bFwdJbeMJFTu7lg4WoeqkmfDLdFMxI5GVlqLz6sZBjE1A+0Ylon3UrPbtZfeqSsd5LvHw
+	53V0vDpJLlxbb8j2YbqJKkDsMNS8rb+b1q73FPE3y8cakuNc1C3/Wkzqhty/16xoV7opV3N7fde
+	trtCtuXvD8JbMKe9n5DHvwL1iU9/jzPDV4IxB7eWSLnfKrOwnY/wPl/yivtCFVryPFDyf8F5Eu4
+	ZU9Wp1qIlEIsuia354vh+tA3WdyYt/zTEWYR6nbfd2Kw2sUzwVPyqWPVxBhRVMmCewRQozRMByB
+	stLGN4JRQJEp3FBNt3ZKe9mU=
+X-Google-Smtp-Source: AGHT+IH7g7HLPrgrirUhH7WbBplTDpWsqEo7X6lZeHAH0gOqzVtZ9uaIxnUlmIFLZ8kuUyn8sEOMmA==
+X-Received: by 2002:a17:902:d4cd:b0:223:2aab:4626 with SMTP id d9443c01a7336-22c53567019mr209711955ad.11.1745329869356;
+        Tue, 22 Apr 2025 06:51:09 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ed12cdsm84956995ad.204.2025.04.22.06.51.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 06:50:40 -0700 (PDT)
-Date: Tue, 22 Apr 2025 09:50:38 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] cpumask: add missing API and simplify
- cpumask_any_housekeeping()
-Message-ID: <aAeerphfzpvBKjpA@yury>
-References: <20250407153856.133093-1-yury.norov@gmail.com>
+        Tue, 22 Apr 2025 06:51:08 -0700 (PDT)
+Date: Tue, 22 Apr 2025 22:50:48 +0900 (JST)
+Message-Id: <20250422.225048.2114914440124077525.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, boqun.feng@gmail.com,
+ rust-for-linux@vger.kernel.org, gary@garyguo.net, me@kloenk.dev,
+ daniel.almeida@collabora.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+ tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com,
+ aliceryhl@google.com, anna-maria@linutronix.de, frederic@kernel.org,
+ tglx@linutronix.de, arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ tgunders@redhat.com, david.laight.linux@gmail.com
+Subject: Re: [PATCH v13 3/5] rust: time: Introduce Instant type
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <87cyd4bjcp.fsf@kernel.org>
+References: <E9nr7KtdtfgTx8OzOOMM6dg3LRl1-BqtqXj6-tGosNOz6Gi2PvOpoyiiqPGv_9nL8hfBOcnCbGP-LfBKIjlV9A==@protonmail.internalid>
+	<20250416.124624.303652240226377083.fujita.tomonori@gmail.com>
+	<87cyd4bjcp.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407153856.133093-1-yury.norov@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Ping?
+On Tue, 22 Apr 2025 12:07:02 +0200
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-On Mon, Apr 07, 2025 at 11:38:51AM -0400, Yury Norov wrote:
-> From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> 
-> cpumask library missed some flavors of cpumask_any_but(), which makes
-> users to workaround it by using less efficient cpumask_nth() functions.
-> 
-> Yury Norov (4):
->   relax cpumask_any_but()
->   find: add find_first_andnot_bit()
->   cpumask_first_andnot
->   resctrl
-> 
->  arch/x86/kernel/cpu/resctrl/internal.h | 28 +++-------
->  include/linux/cpumask.h                | 71 +++++++++++++++++++++++++-
->  include/linux/find.h                   | 25 +++++++++
->  lib/find_bit.c                         | 11 ++++
->  4 files changed, 112 insertions(+), 23 deletions(-)
-> 
-> -- 
-> 2.43.0
+> OK, Let's keep Ktime for hrtimer for now. I am OK with you putting
+> `Ktime` in `hrtimer.rs` but you could also put it in time.rs. If you
+> don't want to modify the patches that already has reviews, you can add
+> it back in a separate patch.
+
+Understood.
+
+I added a separate patch that temporarily adds Ktime to hrtimer as the
+first patch in the patch set. Each patch can build and run correctly
+and there are no changes to the patches that have already been
+reviewed.
+
+> Either way we should add a `// NOTE: Ktime is going to be removed when
+> hrtimer is converted to Instant/Duration`.
+
+Added. Hopefully, I can finish it soon.
