@@ -1,99 +1,111 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768013D6A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B93335C7;
+	Tue, 22 Apr 2025 01:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745283654; cv=none; b=TyTgc515wLtossdtttg9abtlnou//LOqb8TTVx0c39eAZPZuJsOwyPsuuvDgz1Faqh3hDFhofttVcyCVfdstehnIcw0NGP6RLtCfTL7kMnGwPFOdKPR8v5V9b6gb6v3Wx5K7bQTYvR+0Hu2BQtRmF8iBrvoOu2ploAC03hCjEzM=
+	t=1745284127; cv=none; b=H0Ge71X/RFLCgrC04P8tkp4rYpGMYQlHeX/Gq8yRec31wYw+4TeM9dYQmyVHGAYIlA2pHcED8xv2XNFOauXShfX6GbZxN3KIRYJR4WzRqyRF4whQSOeSJUhZtFxpIeSD8LCuUkkh80WSa+YVHzEWDVU4COMUv1OFirrg+UYl1N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745283654; c=relaxed/simple;
-	bh=FN7ge8ZWEGnky0XQuK3P4oUFlqdduIuV6SgS3RSb5/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ql940Mgr9Gf+/w4rmnH62lhzeVGeaAGrwC0B2xh0ODvgHKcOnVj+1deVFLlXYZK8x47m0p+UJSxXpN4Z7j8SiDDOLDvUMZpfiXlN94VnV+dtUsh0lCIKSjNNKXc2ibOQyS81FUqBoH2QPRrH2MnC2Rg/9fB8A4LhR6NERKmmeI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=BEwDMatC; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745284127; c=relaxed/simple;
+	bh=czEkA/zVOBS82zkx4p5INjnF9fJ8GCh884Sqbxam5dQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EDbHYQH5i9ZFBBSY7LPLw+leeOH7hHetE9lfYF98J37Bw6QiAAwtxDh5qYoz/AJzsHK32i3U1B92Y+XfQcAD8F8aj/cgtpJi5gcSsLAu2t+3ygxnBNnnTq1ZsOOFXOcHbDGbASUlAZnlvlikyOt6SQYpON+0VwQO+xsx/qZVD0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=d0DdIXeW; arc=none smtp.client-ip=159.100.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="BEwDMatC"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c53b9d66fdso626199785a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745283652; x=1745888452; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=90WqYzTUohl7lOp7C5Tba3PcsVTn1W7MH0EIP3L7DLY=;
-        b=BEwDMatCYp2bbPf6cZNS5KBBKX5WFqRArTrgCZTzeBvVWNW2ChH7ux1EQsAdv0vNmD
-         sm/x5e3OJe2Ghxcr7rwbKN0DPa6eUAu4XBEv7bSGTOxlqQmeg0PPlDfANBmGxuEWIsTQ
-         9nQbukoHnhOUrymCHXiC3EAnHDIRPJUwXahdQaMfIdhPzmjwZkCqwkP6pxvK7bDRuaDG
-         xMASv/rYV+dmjr2NNnj+Vda7bBdSS149mW6SXnkfywY/YGLy8YsnS5u4zKTgnnEN5Yo8
-         i0htkLtx9RHs02c/NkTKgXhmngXUlOTIx9gXKPqCeInggE45vvvbOKGUgZVMMlSIMp6N
-         /fjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745283652; x=1745888452;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=90WqYzTUohl7lOp7C5Tba3PcsVTn1W7MH0EIP3L7DLY=;
-        b=UDeQ8C++60MbcyKeJz3OkoKg3mSRI6K22YKwU+3T/TVpAY+6AfNM5imLFp3QB8vJoT
-         9Mxmgg6jts7jR9wlSjfgd/wD1+EfwDArMjcDFBg1agUGcJ+o7m4o+Y4jXKgltUlO1KL3
-         IHnVmWYCOWl8A7cx+lZDJEGcbm7Uc8/i17DVKvE6leiouLw8/svWA8U5jVscfVms8gsy
-         LkOOdmVbYB+eHwW5tfoquFqkes6Eay1cCngS0+3SZKU1mIWX9XfweIRepZE9LDa1ggXv
-         74sGJaPgsOp14MfKzhY/WM3Ly3ehn0FIu/dm5h8wfyUnr3CSyRPV+0CbeqCcjVxzjStF
-         fEiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfAM/lrm46yAkwIuFP5eSDOa9h4VLBoW6DoQyVHQic0YV6EcuyIpHPrPXlq9lOFoLQSINmE9/ueJaT3Ok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEiDltTNE1DPQIwLB4BtunZiWdlemjL13aLYxPlWZOX4L5gCUj
-	sxNSaEMM2YBjfiBq9NuEx14DrsojNbPgRzYctraAUywL6NHkM1gPz0tOXyu+zMw=
-X-Gm-Gg: ASbGncvAEQ7G9OnGLa7enXZGoHNhDWmQ+LwTtGzG9sbtRx6mKLgzHrkh0ivC7raGv42
-	rj2jRPHSaT9vkdiAP3AONijfnG5w8KXshiAKggnNjUWAWBd6njcBaGBSa6lhA0zCC/4DJhOtcHX
-	rxgwXqxnIvS6Kl0Xe8ifGmTpPufxP0Mmr2acxrjG+oxHkNNOBRzvc6WBjHL+6kNSi1WMTyLnPws
-	Np5dN8wsp8mjBSZpLIrZL57IBHbGtDVsV7mp82fJJwuuv7U2jeYXevaGvg/qgZ7tnXgK2lxd0a1
-	bh/J3BQxJ3Jw9e3BVLHmM0aVbk9yYSY1BuXUegNi8QO9r/f2zuoBXKTc0rQ3OTNQMkuAG3orP1v
-	e5yjEnBbqTEbaS4ThCaora9c=
-X-Google-Smtp-Source: AGHT+IHiMCQ4CKaumf1ZfYJE8F7xvKHLhb4koX3kikt1CtQaYhbu+kCRWDD9oQA1oGd7re3S+fS3Og==
-X-Received: by 2002:a05:620a:2588:b0:7c3:ca9d:210b with SMTP id af79cd13be357-7c927f67bedmr2112823885a.6.1745283651624;
-        Mon, 21 Apr 2025 18:00:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6e7casm486458085a.10.2025.04.21.18.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Apr 2025 18:00:51 -0700 (PDT)
-Date: Mon, 21 Apr 2025 21:00:49 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Waiman Long <llong@redhat.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, hannes@cmpxchg.org, mhocko@kernel.org,
-	roman.gushchin@linux.dev, muchun.song@linux.dev, tj@kernel.org,
-	mkoutny@suse.com, akpm@linux-foundation.org
-Subject: Re: [PATCH v3 2/2] vmscan,cgroup: apply mems_effective to reclaim
-Message-ID: <aAbqQXJFCIb3Mscq@gourry-fedora-PF4VCD3F>
-References: <20250419053824.1601470-1-gourry@gourry.net>
- <20250419053824.1601470-3-gourry@gourry.net>
- <ro3uqeyri65voutamqttzipfk7yiya4zv5kdiudcmhacrm6tej@br7ebk2kanf4>
- <babdca88-1461-4d47-989a-c7a011ddc2bd@redhat.com>
- <7dtp6v5evpz5sdevwrexhwcdtl5enczssvuepkib2oiaexk3oo@ranij7pskrhe>
- <aAbNyJoi_H5koD-O@gourry-fedora-PF4VCD3F>
- <ekug3nktxwyppavk6tfrp6uxfk3djhqb36xfkb5cltjriqpq5l@qtuszfrnfvu6>
- <aAbbtNhnuleBZdPK@gourry-fedora-PF4VCD3F>
- <6e7806a7-9ffd-4c7c-b247-934b206088c7@redhat.com>
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="d0DdIXeW"
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 104F42618F;
+	Tue, 22 Apr 2025 01:08:43 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id D847F3E886;
+	Tue, 22 Apr 2025 01:08:34 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 6FC5B40009;
+	Tue, 22 Apr 2025 01:08:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1745284114; bh=czEkA/zVOBS82zkx4p5INjnF9fJ8GCh884Sqbxam5dQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d0DdIXeWM0oSk1Xq83ZlCb/7yRuqf67gi4IXHEpFXOZ8NMPMm/fEMSIr1FCfbW9kH
+	 /IMD+EdOqVzLorEXuJwL1o+1klNueqYwSBASbAWGvmnJ6BI+3WBVbY0sgoNzvmAcIU
+	 G8nFp9/EIYAxfDCgZ2SKKq5SzXVn03m47TDkYgz0=
+Received: from [198.18.0.1] (unknown [203.175.14.48])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id A7FFF407DA;
+	Tue, 22 Apr 2025 01:08:30 +0000 (UTC)
+Message-ID: <985175be-de04-4d1d-a859-fa740d87c9c3@aosc.io>
+Date: Tue, 22 Apr 2025 09:08:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e7806a7-9ffd-4c7c-b247-934b206088c7@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] wifi: rtlwifi: disable ASPM for RTL8723BE with
+ subsystem ID 11ad:1723
+To: Ping-Ke Shih <pkshih@realtek.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+ Liangliang Zou <rawdiamondmc@outlook.com>,
+ "John W. Linville" <linville@tuxdriver.com>,
+ Larry Finger <Larry.Finger@lwfinger.net>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <20250419081251.285987-1-jeffbai@aosc.io>
+ <4a7284bd703743959e709b9465dabf1d@realtek.com>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <4a7284bd703743959e709b9465dabf1d@realtek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 6FC5B40009
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[aosc.io,outlook.com,tuxdriver.com,lwfinger.net,vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[]
+X-Rspamd-Action: no action
 
-On Mon, Apr 21, 2025 at 08:35:15PM -0400, Waiman Long wrote:
+Hi Ping-Ke,
+
+在 2025/4/22 08:27, Ping-Ke Shih 写道:
+> Mingcong Bai <jeffbai@aosc.io> wrote:
 > 
-> Your current patch is ignoring v1 as css will be NULL. It only works for v2
-> with a unified hierarchy unless some users explicitly force cpuset and memcg
-> v1 to be in the same hierarchy. You can certainly ignore v1 by using
-> cpuset_v2() check.
+
+<snip>
+
+>>
+>> Please note, however, before the rtl8723be finishes probing, the AER
+>> errors remained. After the module finishes probing, all AER errors would
+>> indeed be eliminated, along with heavy lags, poor network throughput,
+>> and/or occasional lock-ups.
 > 
+> Let me clarify here means. Do you mean all work well after applying this
+> patch? Or still lag, poor throughput or lock-ups?
+> 
+> If all symptoms disappear, it would be worth to take this (quirk) patch.
 
-I'll whip this up and get it out this evening.
+Indeed, everything works well after this patch, save for the remaining 
+AER errors during driver probing.
 
-~Gregory
+Best Regards,
+Mingcong Bai
