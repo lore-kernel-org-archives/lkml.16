@@ -1,75 +1,75 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD82618CBE1
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 13:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9475A27466;
+	Tue, 22 Apr 2025 13:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745327323; cv=none; b=bkDqndUxG8Nzb24xfUf/JE+YVroCBUzecZEeC9VIX/XsUtaJiOHdhndgQsuF3UjCO1qk+B9PogKrhClqnBL6LotAwuJKdOlScBz5odrZsjf25w2kBR/Dbih0TGHPWWCtWluT0+49NZ8xm57PYbKOeT0qlBHUvePCc6BFm1nTvfo=
+	t=1745327390; cv=none; b=kSApXvsc0CVe+tdVjqTr0ChKe0WxgUkt7JUszLr1tv3Xd4vEJnHpjxQgOaoOwzCN6TiEaDm/ZMT06qgndCcJ7gMwdOVAkYnSI9dxpEnkoJsp/OSt2a/3dd60JSjnwx0ijGLwme5O7ea7oLlY8CO5ffuCj4H2UjROFTTcL/gBADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745327323; c=relaxed/simple;
-	bh=IQwy2SzLPzM+v4MDQXs7828lO5dmCas3qG4gF2jXqsg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g8Vba9FV+2uUpvEhjCOOTRI8B5UZ9ZlH6yfQ4HqHz5vmJ2Yfm3VZoGMFNUkWeQ5Q/vYopIVrqkXYwTozJc0j/u1vQZjY+y4sd1zO+yTg1QeLYlNEMttwLbEEuU8tidgne0IMloK3h5rdxLuX6icb7aRcF9ZgH8iewFyRPpSEoBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korsgaard.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 976291FD49;
-	Tue, 22 Apr 2025 13:08:36 +0000 (UTC)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.96)
-	(envelope-from <peko@dell.be.48ers.dk>)
-	id 1u7DMZ-009gwR-26;
-	Tue, 22 Apr 2025 15:08:35 +0200
-From: Peter Korsgaard <peter@korsgaard.com>
-To: Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>,
-	Kalyani Akula <kalyani.akula@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Peter Korsgaard <peter@korsgaard.com>,
-	Kalyani Akula <Kalyani.akula@amd.com>,
+	s=arc-20240116; t=1745327390; c=relaxed/simple;
+	bh=BEx2KaD/mS0zMAQs7LahMUkYPebN7yNtc+yXj3QXDNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FKWwheElKgcx9ZE/Wyxoi2TxWBkMK2S7ycexiEPpnW6k/0XhCZJjWTwF6IqM+sYBtygTl7MeevlLR/nx2/kJOLQguOBholEtR4USV5MLaykeVzS7kJMSY4lcPwDzTn9JP0ZZ8iCx09dOQJKqpP1tcL56hUI3dZaSpUb1Dtfen+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZpXQOku; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZpXQOku"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7313C4CEE9;
+	Tue, 22 Apr 2025 13:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745327390;
+	bh=BEx2KaD/mS0zMAQs7LahMUkYPebN7yNtc+yXj3QXDNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gZpXQOku0cTPUuOLSbem5KBzHMXQSFgGD8UvL8Bgola6TijHA8i8dI1fZdJa/SGrs
+	 rJNrQ5e04CMvgjkjAhWWs0ec2zqbALFifzOWPV95KK5wCr97J1BrTHtDofRONx4BsX
+	 /k2pnqBXqQdJ80q1fcKb1bnDtUITwsgQitg/KArtlIoxKMtp8Vu/QlFy2Stfo9Ft6G
+	 +EGu0N0A38sFznGSmrzYK96HsDFWEg1i1PZkzCbOM5H7DpblLsTeadhI5mVAWoIdSo
+	 eh42bm3b1zB0+lHI21J471ba+CWMHqvHQEerCjjuMc9OX7r8WwMJZb/285dET8PUwK
+	 FZAh94y2wi5eQ==
+Date: Tue, 22 Apr 2025 08:09:48 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: NXP S32 Linux Team <s32@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	imx@lists.linux.dev, Jacky Bai <ping.bai@nxp.com>,
+	linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	linux-gpio@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: zynqmp_nvmem: unbreak driver after cleanup
-Date: Tue, 22 Apr 2025 15:08:31 +0200
-Message-Id: <20250422130831.2309995-1-peter@korsgaard.com>
-X-Mailer: git-send-email 2.39.5
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: convert
+ fsl,imx7ulp-pinctrl.txt to yaml format
+Message-ID: <174532738787.1019688.10866076280609935749.robh@kernel.org>
+References: <20250417152158.3570936-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefkeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefrvghtvghrucfmohhrshhgrggrrhguuceophgvthgvrheskhhorhhsghgrrghrugdrtghomheqnecuggftrfgrthhtvghrnhepveeiveethfelteelueelvdffieevgfdvtdeivdetuefgffdtvdeuffevheegffdunecukfhppedujeekrdduudelrddurddufeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudejkedrudduledruddrudefjedphhgvlhhopeguvghllhdrsggvrdegkegvrhhsrdgukhdpmhgrihhlfhhrohhmpehpvghkoheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehsrhhinhhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehpvghtvghrsehkohhrshhgrggrrhgurdgtohhmpdhrtghpthhtohepphhrrghvvggvnhdrthgvjhgrrdhkuhhnuggrnhgrlhgrsegrmhgurdgtohhmpdhrtghpthhtohepkhgrlhihrghnihdrrghkuhhlrgesrghmugdrtghomhdprhgtphhtt
- hhopehmihgthhgrlhdrshhimhgvkhesrghmugdrtghomhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: peter@korsgaard.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250417152158.3570936-1-Frank.Li@nxp.com>
 
-Commit 29be47fcd6a0 ("nvmem: zynqmp_nvmem: zynqmp_nvmem_probe cleanup")
-changed the driver to expect the device pointer to be passed as the
-"context", but in nvmem the context parameter comes from nvmem_config.priv
-which is never set - Leading to null pointer exceptions when the device is
-accessed.
 
-Fixes: 29be47fcd6a0 ("nvmem: zynqmp_nvmem: zynqmp_nvmem_probe cleanup")
-Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
----
- drivers/nvmem/zynqmp_nvmem.c | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, 17 Apr 2025 11:21:57 -0400, Frank Li wrote:
+> Convert fsl,imx7ulp-pinctrl.txt to yaml format.
+> 
+> Additional changes:
+> - remove label in example
+> - fsl,pin direct use hex value instead of macro because macro define in
+> dts local directory.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/pinctrl/fsl,imx7ulp-iomuxc1.yaml | 99 +++++++++++++++++++
+>  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt  | 53 ----------
+>  2 files changed, 99 insertions(+), 53 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-iomuxc1.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+> 
 
-diff --git a/drivers/nvmem/zynqmp_nvmem.c b/drivers/nvmem/zynqmp_nvmem.c
-index 8682adaacd692..7da717d6c7faf 100644
---- a/drivers/nvmem/zynqmp_nvmem.c
-+++ b/drivers/nvmem/zynqmp_nvmem.c
-@@ -213,6 +213,7 @@ static int zynqmp_nvmem_probe(struct platform_device *pdev)
- 	econfig.word_size = 1;
- 	econfig.size = ZYNQMP_NVMEM_SIZE;
- 	econfig.dev = dev;
-+	econfig.priv = dev;
- 	econfig.add_legacy_fixed_of_cells = true;
- 	econfig.reg_read = zynqmp_nvmem_read;
- 	econfig.reg_write = zynqmp_nvmem_write;
--- 
-2.39.5
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
