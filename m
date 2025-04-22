@@ -1,169 +1,165 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E2B298CC7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E917C10A1F;
+	Tue, 22 Apr 2025 19:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351887; cv=none; b=bRjugdZuc5Sg9ydxI8iPCUtf+vDzohIjgSPj19H6ZEOSSD1kWd8ks16+Grka1I9dMknMJ9pQ81rIh+5ygtb0URgs1ArKIGMG37XtL+DqXTjVII6BHbegs+4+7jk0bsOynXkrsFy+JZS0AKb1SxSWrl6fKSG5U5/6MARbUWSKeao=
+	t=1745351951; cv=none; b=SLt7afrEG5uEqiaHhAmgauhuvKuZ6ad7bFmT1UIt6mnUR2wgiwjXKd9SiThNQK+lJqK2SHdqY6dfRR4zfzACp3UhTRF9Y4xYDbW5dQFjVAflP75p0iaI+2762QdusYpKHrxlEgXF8dmOeKrd611ORyQdNw+pPDitmG37uh3OSdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351887; c=relaxed/simple;
-	bh=UCc9IenOlRQt7veSnMNvgDmw1rTTzCVeI7tkZWg+g0g=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=td91mroZLiyvqImV6MSrd2sU7YnmHPJPrAK8lzJ03iw/SckM+aH0SfP6TcU1mFSFHyJv+aTAK6rPswrsc8r/nzEsGh0TrIEciUr7IpXMOcPvnKqKxsWsA7yQtjxsGOo3xu2hqU+QdRBy9d8MvfmvsgwRhl8Uy40WVpKlRgpk26k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=K62lC8az; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1745351951; c=relaxed/simple;
+	bh=BbMG5QXX3A39cVhl247co58pwl2VChmfMATYNdjNRIM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LSwnm5FTpUcTlWJmsGqGSgdAAVlxyrCEgNGhwwadrik4A+VM8NFrg8CbEJgPBYEHM3q/HnC+SvXU+mP2ZMn96/fi4kzFAvH1H7phDXaMGQauuJfyqNu6uAaPU97Cj4s0dAuwoyGMSTd4IIy4ZDC6iMo4ATPhYwUZOSGE6qVeFCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWKXe9qR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="K62lC8az"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4769bbc21b0so54426911cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745351885; x=1745956685; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wi0XCQ0wIgKNjQqJTUBlgswWdaLbIuH1pbfLDZVamA8=;
-        b=K62lC8azJ9dU8MYX4L1lNETjpRr6r9ikSRLWKInE8I+n/HDK/BfKvpSm+hB61EO+9b
-         ij89z9bQ6weItF5IFj1vYPdy+4u/lTQ5gl+7sBSsvrQG2XjPtCPhBQ1fr8c//U2E23re
-         7XjRc5/gfJnvQyZEJlrW9TVIwxgQwM4cNi8TUdxwppHon0RT+eI4UPtrc5LO0kxTZoeG
-         7ho4Qf3BiHuTVN7+ImE7o7XS8QflvyGmNlHiAqWMYL+IZaVIn+fRr95UQxJvSnTj2aYu
-         zGtXVzVepKsKezfq6duCTpFoFAEGUt61kH9pcbIGRbh90UBju/g/rkk6wrmzMQqC58LZ
-         vtlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351885; x=1745956685;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wi0XCQ0wIgKNjQqJTUBlgswWdaLbIuH1pbfLDZVamA8=;
-        b=I2b04zzXS2tBygo1GLfcbwTJIibdt/jeEnlnsO82Xfnx9SJ6XkAUkTbSNeEPg5U7KE
-         sbyqW7JQMnLjhSZR3UzqGHUMNHJpPiOPu7LR1Yd1tbjhwR6GcSd4C8YwjfGHZk7fDbEt
-         7E+02O1gi8BOHfxb1wHFkmsqIj4OpPO6oGtWZ2AF1C3byGytwpE1fQ8fCdHv1TEyIt+d
-         BRShSPH46xCdKwQzxf7A7Dfbv4MUoI1GYeiQNcxFXSWptB+ETFsm0X3Vnyb6widMxaNZ
-         NGKZWmmfXta3qwzOWqBbEPd3Bo+ack0/6tB9hPtNX3I6cPNd3zpw6hBjh178DjxZfqwR
-         RsUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWIUETAEZWMaj1lcyfH+xCXuN8EOWcYlmplb2LJM+Xk89cCIM+eodNLacSyOXURXx2rpsDZOMpkPThCbhs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkVZTVT4qmysn/6qV9eFOhe8qN9ZRk16UCqYFw8sDQBjhScx+M
-	qQb+YwhD5GD3TmBiMQE05mHArhRpXdMT5lRqQoOzx4e/WzJCP5JxMRaoIZWcX+E=
-X-Gm-Gg: ASbGncsfeNOeTG+qE62AgxBaYsp3mJEM7j2tHJ0ncXTiHK7uCJ/7+EXigOWuo4kifIg
-	RqRQAZeny5iTAdHIVAdNdfSEVMwPCifnbAtqoL7ueKsLwr1X/A0SGAgazvhfOVPJfJQDWA0wznG
-	XsRQp1Fuk9lt0ZzX5migYBzNL9dX1mveespqW6iSyF6nnU2fFIj2ViL4RFGeYjOu66Gumcz95MM
-	R6TiXtg8f5DekYpUA7kzO25ibjwIp/ClM8/zG6WF7VzONLXv/mMvyTW4zlUD49M3Y3CBWuropkO
-	xeu6owH6o6gW9gUYS+pq05kgvrZH2TD/JtQcmFZvOAPXpQ==
-X-Google-Smtp-Source: AGHT+IF7avo9uEX7A3mW4T8l6RGnGWjnOiUes3AEZlicK2QwGeYThk0IGDXmi5oRWeE+79xJPQKX3w==
-X-Received: by 2002:a05:6214:19c8:b0:6e8:fad9:c688 with SMTP id 6a1803df08f44-6f2c4552a03mr278764626d6.16.1745351884909;
-        Tue, 22 Apr 2025 12:58:04 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af1433sm61506056d6.19.2025.04.22.12.58.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 12:58:04 -0700 (PDT)
-Message-ID: <529a9804d5b14322b2be78ea6f98677db9c23c33.camel@ndufresne.ca>
-Subject: Re: [PATCH v3 3/3] media: verisilicon: postproc: 4K support
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Hugues Fruchet <hugues.fruchet@foss.st.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Sebastian Fricke	
- <sebastian.fricke@collabora.com>, Ricardo Ribalda <ribalda@chromium.org>, 
- Erling Ljunggren <hljunggr@cisco.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Sakari Ailus
- <sakari.ailus@linux.intel.com>,  Jacopo Mondi
- <jacopo.mondi@ideasonboard.com>, Jean-Michel Hautbois
- <jeanmichel.hautbois@ideasonboard.com>,  Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Date: Tue, 22 Apr 2025 15:58:02 -0400
-In-Reply-To: <20241121131904.261230-4-hugues.fruchet@foss.st.com>
-References: <20241121131904.261230-1-hugues.fruchet@foss.st.com>
-	 <20241121131904.261230-4-hugues.fruchet@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWKXe9qR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7116AC4CEE9;
+	Tue, 22 Apr 2025 19:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745351949;
+	bh=BbMG5QXX3A39cVhl247co58pwl2VChmfMATYNdjNRIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bWKXe9qRtol8AS5MA4WPNlI8aPoaa+MaA/RSvtwzglvNHD9Bbw+YySrGY68U4iOy9
+	 RLeTGpwnFwVF8RKpWjzrTsTv8UyUX1ww8mER9J4hDSiNj3gs4s4lUdvBDQzHzSacJ/
+	 lbPoPvqh15D3QknKr+peUAbO0sCC5HMxF/bQt/B5Q2qHfQF0d/7CNPpSVlTlqBjhOH
+	 Z/mCfV/Q0uq0774ec/Nq0OLQ70XfLwWViz00Egg6lbOk8B2AVypSNJPfKVlVvPh/aN
+	 NRtV3t5iJd7tTzPw9MS395ks0ZGM2Q/ffC+2iKv8PuHAD60A7r+74zxabdXRqaYhNN
+	 8IJUYakMo6gxg==
+Date: Tue, 22 Apr 2025 12:59:03 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	Daniel Gabay <daniel.gabay@intel.com>,
+	linux-wireless@vger.kernel.org,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: iwlwifi: mld: Work around Clang loop unrolling bug
+Message-ID: <20250422195903.GA3475704@ax162>
+References: <20250421204153.work.935-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421204153.work.935-kees@kernel.org>
 
-Hi,
-
-Le jeudi 21 novembre 2024 =C3=A0 14:19 +0100, Hugues Fruchet a =C3=A9crit=
-=C2=A0:
-> Support input larger than 4096x2048 using extended input width/height
-> fields of swreg92.
-> This is needed to decode large WebP or JPEG pictures.
->=20
-> Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
-
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
+On Mon, Apr 21, 2025 at 01:41:57PM -0700, Kees Cook wrote:
+> The nested loop in iwl_mld_send_proto_offload() confuses Clang into
+> thinking there could be final loop iteration past the end of the "nsc"
+> array (which is only 4 entries). The FORTIFY checking in memcmp()
+> (via ipv6_addr_cmp()) notices this (due to the available bytes in the
+> out-of-bounds position of &nsc[4] being 0), and errors out, failing
+> the build. For some reason (likely due to architectural loop unrolling
+> configurations), this is only exposed on ARM builds currently. Due to
+> Clang's lack of inline tracking[1], the warning is not very helpful:
+> 
+> include/linux/fortify-string.h:719:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
+>   719 |                         __read_overflow();
+>       |                         ^
+> 1 error generated.
+> 
+> But this was tracked down to iwl_mld_send_proto_offload()'s
+> ipv6_addr_cmp() call.
+> 
+> An upstream Clang bug has been filed[2] to track this, but for now.
+> Fix the build by explicitly bounding the inner loop by "n_nsc", which
+> is what "c" is already limited to.
+> 
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/2076
+> Link: https://github.com/llvm/llvm-project/pull/73552 [1]
+> Link: https://github.com/llvm/llvm-project/issues/136603 [2]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> =C2=A0drivers/media/platform/verisilicon/hantro.h=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 ++
-> =C2=A0drivers/media/platform/verisilicon/hantro_g1_regs.h=C2=A0 | 2 +-
-> =C2=A0drivers/media/platform/verisilicon/hantro_postproc.c | 6 +++++-
-> =C2=A03 files changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/media/platform/verisilicon/hantro.h b/drivers/media/=
-platform/verisilicon/hantro.h
-> index 811260dc3c77..d1337f7742e4 100644
-> --- a/drivers/media/platform/verisilicon/hantro.h
-> +++ b/drivers/media/platform/verisilicon/hantro.h
-> @@ -321,6 +321,8 @@ struct hantro_postproc_regs {
-> =C2=A0	struct hantro_reg output_fmt;
-> =C2=A0	struct hantro_reg orig_width;
-> =C2=A0	struct hantro_reg display_width;
-> +	struct hantro_reg input_width_ext;
-> +	struct hantro_reg input_height_ext;
-> =C2=A0};
-> =C2=A0
-> =C2=A0struct hantro_vp9_decoded_buffer_info {
-> diff --git a/drivers/media/platform/verisilicon/hantro_g1_regs.h b/driver=
-s/media/platform/verisilicon/hantro_g1_regs.h
-> index e7d4db788e57..f6e5bbeb1914 100644
-> --- a/drivers/media/platform/verisilicon/hantro_g1_regs.h
-> +++ b/drivers/media/platform/verisilicon/hantro_g1_regs.h
-> @@ -351,7 +351,7 @@
-> =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0 G1_REG_PP_CONTROL_OUT_WIDTH(v) (((v=
-) << 4) & GENMASK(14, 4))
-> =C2=A0#define G1_REG_PP_MASK1_ORIG_WIDTH	G1_SWREG(88)
-> =C2=A0#define=C2=A0=C2=A0=C2=A0=C2=A0 G1_REG_PP_ORIG_WIDTH(v)	(((v) << 23=
-) & GENMASK(31, 23))
-> -#define G1_REG_PP_DISPLAY_WIDTH		G1_SWREG(92)
-> +#define G1_REG_PP_DISPLAY_WIDTH_IN_EXT	G1_SWREG(92)
-> =C2=A0#define G1_REG_PP_FUSE			G1_SWREG(99)
-> =C2=A0
-> =C2=A0#endif /* HANTRO_G1_REGS_H_ */
-> diff --git a/drivers/media/platform/verisilicon/hantro_postproc.c b/drive=
-rs/media/platform/verisilicon/hantro_postproc.c
-> index 232c93eea7ee..84c8e287470d 100644
-> --- a/drivers/media/platform/verisilicon/hantro_postproc.c
-> +++ b/drivers/media/platform/verisilicon/hantro_postproc.c
-> @@ -49,7 +49,9 @@ static const struct hantro_postproc_regs hantro_g1_post=
-proc_regs =3D {
-> =C2=A0	.input_fmt =3D {G1_REG_PP_CONTROL, 29, 0x7},
-> =C2=A0	.output_fmt =3D {G1_REG_PP_CONTROL, 26, 0x7},
-> =C2=A0	.orig_width =3D {G1_REG_PP_MASK1_ORIG_WIDTH, 23, 0x1ff},
-> -	.display_width =3D {G1_REG_PP_DISPLAY_WIDTH, 0, 0xfff},
-> +	.display_width =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 0, 0xfff},
-> +	.input_width_ext =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 26, 0x7},
-> +	.input_height_ext =3D {G1_REG_PP_DISPLAY_WIDTH_IN_EXT, 29, 0x7},
-> =C2=A0};
-> =C2=A0
-> =C2=A0bool hantro_needs_postproc(const struct hantro_ctx *ctx,
-> @@ -103,6 +105,8 @@ static void hantro_postproc_g1_enable(struct hantro_c=
-tx *ctx)
-> =C2=A0	HANTRO_PP_REG_WRITE(vpu, output_height, ctx->dst_fmt.heighat);
-> =C2=A0	HANTRO_PP_REG_WRITE(vpu, orig_width, MB_WIDTH(ctx->dst_fmt.width))=
-;
-> =C2=A0	HANTRO_PP_REG_WRITE(vpu, display_width, ctx->dst_fmt.width);
-> +	HANTRO_PP_REG_WRITE(vpu, input_width_ext, MB_WIDTH(ctx->dst_fmt.width) =
->> 9);
-> +	HANTRO_PP_REG_WRITE(vpu, input_height_ext, MB_HEIGHT(ctx->dst_fmt.heigh=
-t >> 8));
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int down_scale_factor(struct hantro_ctx *ctx)
+> Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Yedidya Benshimol <yedidya.ben.shimol@intel.com>
+> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> Cc: Avraham Stern <avraham.stern@intel.com>
+> Cc: Daniel Gabay <daniel.gabay@intel.com>
+> Cc: <linux-wireless@vger.kernel.org>
+> ---
+>  drivers/net/wireless/intel/iwlwifi/mld/d3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mld/d3.c b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> index 2c6e8ecd93b7..1daca1ef02b2 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+> @@ -1754,7 +1754,7 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+>  
+>  		addrconf_addr_solict_mult(&wowlan_data->target_ipv6_addrs[i],
+>  					  &solicited_addr);
+> -		for (j = 0; j < c; j++)
+> +		for (j = 0; j < c && j < n_nsc; j++)
+>  			if (ipv6_addr_cmp(&nsc[j].dest_ipv6_addr,
+>  					  &solicited_addr) == 0)
+>  				break;
+> -- 
+> 2.34.1
+> 
+
+I might be going crazy but this does not appear to actually resolve the
+warning for me, at least with allmodconfig:
+
+  $ git cite
+  a33b5a08cbbd ("Merge tag 'sched_ext-for-6.15-rc3-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext")
+
+  $ make -skj"$(nproc)" ARCH=arm LLVM=1 clean allmodconfig drivers/net/wireless/intel/iwlwifi/mld/d3.o
+  In file included from drivers/net/wireless/intel/iwlwifi/mld/d3.c:5:
+  ...
+  In file included from include/linux/string.h:392:
+  include/linux/fortify-string.h:719:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
+    719 |                         __read_overflow();
+        |                         ^
+  1 error generated.
+
+  $ b4 -q shazam 20250421204153.work.935-kees@kernel.org
+  ...
+
+  $ make -skj"$(nproc)" ARCH=arm LLVM=1 clean allmodconfig drivers/net/wireless/intel/iwlwifi/mld/d3.o
+  In file included from drivers/net/wireless/intel/iwlwifi/mld/d3.c:5:
+  ...
+  In file included from include/linux/string.h:392:
+  include/linux/fortify-string.h:719:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
+    719 |                         __read_overflow();
+        |                         ^
+  1 error generated.
+
+However, if I apply the diff at the bottom of the message, it does...
+
+  $ git stash pop
+
+  $ make -skj"$(nproc)" ARCH=arm LLVM=1 clean allmodconfig drivers/net/wireless/intel/iwlwifi/mld/d3.o
+
+It is possible there is something else going on with allmodconfig like
+KASAN or GCOV that causes this but I did not look too closely yet
+
+Cheers,
+Nathan
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mld/d3.c b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+index fba6a7b1bb5c..7ce01ad3608e 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mld/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mld/d3.c
+@@ -1757,7 +1757,7 @@ iwl_mld_send_proto_offload(struct iwl_mld *mld,
+ 
+ 		addrconf_addr_solict_mult(&wowlan_data->target_ipv6_addrs[i],
+ 					  &solicited_addr);
+-		for (j = 0; j < c && j < n_nsc; j++)
++		for (j = 0; j < n_nsc && j < c; j++)
+ 			if (ipv6_addr_cmp(&nsc[j].dest_ipv6_addr,
+ 					  &solicited_addr) == 0)
+ 				break;
