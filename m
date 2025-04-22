@@ -1,169 +1,145 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A390D20B80D
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0129B1DDA1B;
+	Tue, 22 Apr 2025 11:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321267; cv=none; b=DFOI8BMlfyn7KVyvRexV7NqWv05GvZXq8j+X77IH2YbrhsN4xN8+fweGLQp+cLbn9yfIqU9px9CEFvyP9VwgzLN35TGkmaxVxmqf9iz8VoFNggc4krjq9evH7WO3Nuj8KIAmRuXrB+hE0f2yB8rTkdtSkrbur+PoQLXXiQ5z4lU=
+	t=1745321327; cv=none; b=HyMa9h2fraCsZe7087j4HV6I5QOrt625TWL6/JHjNUVQWS6LUYXAkkHmS139V+6pWjwNJ3BbUp7DVYRkBN+bf+sQTg5aWV5ABlIeIAE0xc40BsNV4BIc0sHEKgcg7OBaeIwF/C4ryVRuGH3DtHdwsSoLvwYyp3MekeWc8/5d200=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321267; c=relaxed/simple;
-	bh=HkvU5H5T+Vyi2pEdJQTZw0q2sFCXY/WSgVZ7OCFEvhQ=;
+	s=arc-20240116; t=1745321327; c=relaxed/simple;
+	bh=sFzvrcLNuo2PkNb1OMUX1HpBmhZB3SGh1ZQhHJUtacI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CAXw9imf2TtkWo0OupoIZnn6zqzyVxE1VVAPwA+/+yzk+OlKB/YJMTQR3xK3PHKR/cRMLZjfz6adZjEijn7I+lQSfQDtRlbM5uVxZ0M7+gAHmLuje7yIwzsep35fO0JAHbvidY7eAC0y6OlMK+lBt60uWN+/iIvyOh8PnPL7QGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=E7uLd2yC; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVa8n+Dx+TC/CN3VPVD5YrbUU9z4q+R8Br02QzEY6V3xnmrRtEROU/8WBSxB6v0sCirwBR7LqFP6z1H+1Pk6vUpXTDPRBhAnvn7BZtpmuLRNgVIkXGtjBrGTbp4zSQkp3VB7kwluOwj/d9WTsmtHUpi3c4f4hrJcAe/gjTzbMDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTpUjc9H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="E7uLd2yC"
-Date: Tue, 22 Apr 2025 04:27:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745321261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZSjzh21Er6zfYpYTz3VLBkYDxUNuBOsafE2+zPHwBA=;
-	b=E7uLd2yCclpmGAzh893lNm5cQKameJvnzPjKKJwvuaf8AXx89o9G9M1npI7pHn46ZNMlLn
-	CqYXdHpLMy5dmKVTckr84siM9y3hXO1cInmM9WNNEo5/x5ZVPVKhwjWHvX23lWuvz3xLNY
-	9oQw3PxF6TXoTd6aRabYweyEfx43PrQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
-	akpm@linux-foundation.org, hannes@cmpxchg.org,
-	cerasuolodomenico@gmail.com, sjenning@redhat.com, ddstreet@ieee.org,
-	vitaly.wool@konsulko.com, hughd@google.com, corbet@lwn.net,
-	konrad.wilk@oracle.com, senozhatsky@chromium.org, rppt@kernel.org,
-	linux-mm@kvack.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, david@ixit.cz
-Subject: Re: [PATCH 0/2] minimize swapping on zswap store failure
-Message-ID: <aAd9G_BYEcNwVuSd@Asmaa.>
-References: <CAJD7tka6XRyzYndRNEFZmi0Zj4DD2KnVzt=vMGhfF4iN2B4VKw@mail.gmail.com>
- <20250402200651.1224617-1-joshua.hahnjy@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTpUjc9H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD178C4CEE9;
+	Tue, 22 Apr 2025 11:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745321326;
+	bh=sFzvrcLNuo2PkNb1OMUX1HpBmhZB3SGh1ZQhHJUtacI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BTpUjc9H1QWj4hp6wPMZ8XNNWyzEfsUgBsdBWRqwo843W4B91lTmnPXkYv4n2qa+y
+	 tm36inBgiE3pc4vrGO9l3D59slLXY7H6zYd+L/vDpuN7jq8DZa2fTr+5q6piRCeTNO
+	 qXig1KcTCFbbcfDmwtEsHvYX3us/8wpYK1j8Eb2n8L7j/3ELRpLg+bpCKIWKXWX2zw
+	 7Uvn4SRDuQIGZ9bt3xfbp1140pf0pXbggRDsLlrnzapXcVZmj6pGKVXtdn2Cfbfjxe
+	 Vc0rf1bQdeLoIrTCLPkZEIKWSLwGcsJHLgyGWaWVa+67AEULSCeo6lDTQNh+23lFkj
+	 Mmh8ZSGShaN1A==
+Date: Tue, 22 Apr 2025 13:28:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 08/16] gpu: nova-core: wait for GFW_BOOT completion
+Message-ID: <aAd9ZlV5_qokiFYn@cassiopeiae>
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-8-ecd1cca23963@nvidia.com>
+ <64d869aa-587f-49c6-8626-d2085441bb3b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250402200651.1224617-1-joshua.hahnjy@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <64d869aa-587f-49c6-8626-d2085441bb3b@nvidia.com>
 
-On Wed, Apr 02, 2025 at 01:06:49PM -0700, Joshua Hahn wrote:
-> On Mon, 16 Oct 2023 17:57:31 -0700 Yosry Ahmed <yosryahmed@google.com> wrote:
+On Mon, Apr 21, 2025 at 05:45:33PM -0400, Joel Fernandes wrote:
+> On 4/20/2025 8:19 AM, Alexandre Courbot wrote:
+> > diff --git a/drivers/gpu/nova-core/devinit.rs b/drivers/gpu/nova-core/devinit.rs
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..ee5685aff845aa97d6b0fbe9528df9a7ba274b2c
+> > --- /dev/null
+> > +++ b/drivers/gpu/nova-core/devinit.rs
+> > @@ -0,0 +1,40 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +//! Methods for device initialization.
 > 
-> > On Mon, Oct 16, 2023 at 5:35 PM Nhat Pham <nphamcs@gmail.com> wrote:
+> Let us clarify what devinit means.
 > 
-> > I thought before about having a special list_head that allows us to
-> > use the lower bits of the pointers as markers, similar to the xarray.
-> > The markers can be used to place different objects on the same list.
-> > We can have a list that is a mixture of struct page and struct
-> > zswap_entry. I never pursued this idea, and I am sure someone will
-> > scream at me for suggesting it. Maybe there is a less convoluted way
-> > to keep the LRU ordering intact without allocating memory on the
-> > reclaim path.
+> devinit is a sequence of register read/writes after reset that performs tasks
+> such as:
+> 1. Programming VRAM memory controller timings.
+> 2. Power sequencing.
+> 3. Clock and PLL configuration.
+> 4. Thermal management.
+> 5. Performs VRAM memory scrubbing (ECC initialization) - on some GPUs, it scrubs
+> only part of memory and then kicks of 'async scrubbing'.
 > 
-> Hi Yosry,
+> devinit itself is a 'script' which is interpreted by the PMU microcontroller of
+> of the GPU by an interpreter program.
 > 
-> Apologies for reviving an old thread, but I wasn't sure whether opening an
-> entirely new thread was a better choice : -)
+> Note that devinit also needs to run during suspend/resume at runtime.
 
-This seems like the right choice to me :)
-
-> 
-> So I've implemented your idea, using the lower 2 bits of the list_head's prev
-> pointer (last bit indicates whether the list_head belongs to a page or a
-> zswap_entry, and the second to last bit was repurposed for the second chance
-> algorithm).
-
-Thanks a lot for spending time looking into this, and sorry for the
-delayed resposne (I am technically on leave right now).
-
-> 
-> For a very high level overview what I did in the patch:
-> - When a page fails to compress, I remove the page mapping and tag both the
->   xarray entry (tag == set lowest bit to 1) and the page's list_head prev ptr,
->   then store the page directly into the zswap LRU.
-
-What do you mean by 'remove the page mapping'? Do you mean
-__remove_mapping()?
-
-This is already called by reclaim, so I assume vmscan code hands over
-ownership of the page to zswap and doesn't call __remove_mapping(), so
-you end up doing that in zswap instead.
-
-> - In zswap_load, we take the entry out of the xarray and check if it's tagged.
->   - If it is tagged, then instead of decompressing, we just copy the page's
->     contents to the newly allocated page. 
-> - (More details about how to teach vmscan / page_io / list iterators how to
->   handle this, but we can gloss over those details for now)
-> 
-> I have a working version, but have been holding off because I have only been
-> seeing regressions. I wasn't really sure where they were coming from, but
-> after going through some perf traces with Nhat, found out that the regressions
-> come from the associated page faults that come from initially unmapping the
-> page, and then re-allocating it for every load. This causes (1) more memcg
-> flushing, and (2) extra allocations ==> more pressure ==> more reclaim, even
-> though we only temporarily keep the extra page.
-
-Hmm how is this worse than the status quo though? IIUC currently
-incompressible pages will skip zswap and go to the backing swapfile.
-Surely reading them from disk is slower than copying them?
-
-Unless of course, writeback is disabled, in which case these pages are
-not being reclaimed at all today. In this case, it makes sense that
-reclaiming them makes accessing them slower, even if we don't actually
-need to decompress them.
-
-I have a few thoughts in mind:
-
-- As Nhat said, if we can keep the pages in the swapcache, we can avoid
-  making a new allocation and copying the page. We'd need to move it
-  back from zswap LRUs to the reclaim LRUs though.
-
-- One advantage of keeping incompressible pages in zswap is preserving
-  LRU ordering. IOW, if some compressible pages go to zswap first (old),
-  then some incompressible pages (new), then the old compressible pages
-  should go to disk via writeback first. Otherwise, accessing the hotter
-  incompressible pages will be slower than accessing the colder
-  compressible pages. This happens today because incompressible pages go
-  straight to disk.
-
-  The above will only materialize for a workload that has writeback
-  enabled and a mixture of both incompressible and compressible
-  workingset.
-
-  The other advantage, as you mention below, is preventing repeatedly
-  sending incompressible pages to zswap when writeback is disabled, but
-  that could be offset by the extra cost of allocations/copying.
-
-- The above being said, we should not regress workloads that have
-  writeback disabled, so we either need to keep the pages in the
-  swapcache to avoid the extra allocations/copies -- or avoid storing
-  the pages in zswap completely if writeback is disabled. If writeback
-  is disabled and the page is incompressible, we could probably just put
-  it in the unevictable LRU because that's what it really is. We'd need
-  to make sure we remove it when it becomes compressible again. The
-  first approach is probably simpler.
+Thanks for writing this up. I fully agree that those things have to be
+documented.
 
 > 
-> Just wanted to put this here in case you were still thinking about this idea.
-> What do you think? Ideally, there would be a way to keep the page around in
-> the zswap LRU, but do not have to re-allocate a new page on a fault, but this
-> seems like a bigger task.
+> I talked with Alex and I could add a new patch on top of this patch to add these
+> clarifying 'doc' comments as well. I will commit them to my git branch and send
+> on top of this as needed, but Alex can feel free to decide to squash them as well.
+
+Fine with both, whatever you guys prefer.
+
 > 
-> Ultimately the goal is to prevent an incompressible page from hoarding the
-> compression algorithm on multiple reclaim attempts, but if we are spending
-> more time by allocating new pages... maybe this isn't the correct approach :(
+> > +
+> > +use kernel::bindings;
+> > +use kernel::devres::Devres;
+> > +use kernel::prelude::*;
+> > +
+> > +use crate::driver::Bar0;
+> > +use crate::regs;
+> > +
+> > +/// Wait for devinit FW completion.
+> > +///
+> > +/// Upon reset, the GPU runs some firmware code to setup its core parameters. Most of the GPU is
+> > +/// considered unusable until this step is completed, so it must be waited on very early during
+> > +/// driver initialization.
+> > +pub(crate) fn wait_gfw_boot_completion(bar: &Devres<Bar0>) -> Result<()> {
 > 
-> Please let me know if you have any thoughts on this : -)
-> Have a great day!
-> Joshua
+> To reduce acronym soup, we can clarify gfw means 'GPU firmware', it is a broad
+> term used for VBIOS ROM components several of which execute before the driver
+> loads. Perhaps that part of comment can be 'the GPU firmware (gfw) code'.
+
+Yes, we should absolutely explain acronyms as well as use consistent and defined
+terminology when referring to things.
+
+I think we should put both into Documentation/gpu/nova/ and add the
+corresponding pointers in the code.
+
+> I find this Rust convention for camel casing long constants very unreadable and
+> troubling: Pgc6AonSecureScratchGroup05. I think we should relax this requirement
+> for sake of readability. Could the Rust community / maintainers provide some input?
 > 
-> Sent using hkml (https://github.com/sjp38/hackermail)
+> Apart from readability, it also makes searching for the same register name a
+> nightmare with other code bases written in C.
 > 
+> Couple of ideas discussed:
 > 
+> 1. May be have a macro that converts
+> REG(NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK) ->
+> regs::Pgc6AonSecureScratchGroup05 ?
+> But not sure what it takes on the rust side to implement a macro like that.
+> 
+> 2. Adding doc comments both in regs.rs during defining the register, and
+> possibly at the caller site. This still does address the issue fully.
+
+If that addresses your concern, it sounds totally reasonable to me.
