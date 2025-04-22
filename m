@@ -1,152 +1,131 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42661253947;
-	Tue, 22 Apr 2025 08:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470A11E2606;
+	Tue, 22 Apr 2025 08:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308808; cv=none; b=HaojAsDnxduKQ3LoH9CgCd/4FPPbMZ1o7BfP+OHU9Efxz556pNZvczahYDFPs7N1ntopISKGK0juBY2H7PO/DxfLnjDjzzvP/A/Yt/LVN5GAsqlQis/7Gz5+iw5Zp1eF9uOaCNa78BFuT3sph5BqxApTPCIPeO0egzyo0D0JCmA=
+	t=1745308822; cv=none; b=c2BC+j40bIX8IuI2OKSeb5AHMSacZ48JCIkTkoWldj0vJ4PElRp4XQ969XH6gSFCysQuiGeWs4pO3El4QI8QIrCOjuRnn9pDv3ss3TUwR9LHEcmKI+V1SGf0yOB2eYlBVzdVXDm+h4KvkE+rPUuWzqFOyvMXn3v33y3q9FLyCZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308808; c=relaxed/simple;
-	bh=Qf3iMP91qjMOzKTEo5ynO1HGyr5XaiXF13O2Z7q71Kc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=DQHOOCYmPf2PhO36czwrGtiMSDX5vhd5YhujjiklfCRSF/vruspDyPeDJo9zsoFvbc6N/wMFiKeio+KjpOO2YPYAUu47kbklklee2ZsT0w28WAlZLf1FwAceMtZRfO9JV7TjvITr7YMjJ212sohjRHfU0tF92MSRWMmQPZvbqxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=H0BOx3y8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aA1rHceS; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745308822; c=relaxed/simple;
+	bh=jaxJK59OTML++sk4AtUDpd+IXlIfwL+WQMTTmzt9MSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ocq36PVIPWMYDl23ButG71EJWagjOCqJpSloMNr8ustM+CrLlhmrfkcyVyEa6fXkrA4nkG+nC7pigp6gGpLtG7Q9RKUo27mgm/Rv/3hx8qWgV/FmWH2shzgqSis0nJ9auu/VAi5t4Ujj87hbEAxilA/12PthUBRjv7K+Lw48vrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7TqoSEX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="H0BOx3y8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aA1rHceS"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id DA3A91140147;
-	Tue, 22 Apr 2025 04:00:04 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 04:00:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745308804;
-	 x=1745395204; bh=ldJajFBLjqVb0Mm/KvZ1u+i8MYKis6Iur/1ZBd7hm1U=; b=
-	H0BOx3y8yOz1UUcohk0x4MuuW14ZiOpnBnZh5BFZHapxkupyLTDW+HlsUZ2uaBAd
-	EplafPA32fiKbT91Y+0mm407TcgfFk+OoQAb2AZwbM3JbwZxSp9DDX3XWth+1Omy
-	6ghVU4DoFEKCkS0KirRyH8GRhe6ajVYzM7/ZuqHrRTBDp1sIFaiipkcuhDbIRMi3
-	2sJzNFfLejpEglhurZGsLg3/A8BEpozVQS5yZj6hzHlq7tzTBfVi15FKMpXwdPsw
-	xlWBKsIp4aAmYGA2wvbFbXfR5qbWXRWdj3Vre6mE1qPJ+cwi4lTdMhBIdSurRn8N
-	WAXng6W6P5tgEixCtJoanw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745308804; x=
-	1745395204; bh=ldJajFBLjqVb0Mm/KvZ1u+i8MYKis6Iur/1ZBd7hm1U=; b=a
-	A1rHceS/iX/2kSoEPN4k/SOB6PpsWzWqC9sDUtPRYCV9LEKS+HePLBH4sQhVHgXY
-	POhY0iGhAkbJpB0ASFqlYHdfM25LfkDmyfuBZ9/y8i1iOUd2tohU8JwKoFPlJcgM
-	sTVZgippB5z2mrho6W3besol7PtpqmFz2Xl4kivItaHyeXcTAgm02qA/SHX9DnYa
-	Y7mVh0aTMmae5Lfd0Ti/LCsruafbyUqfe7J6CRC0aOfJvnRnwLk6PhKunWB6ymXs
-	gdaxGlISINPhuV+lbz2B8NyAnGGkA/2kJTj/ysP1C3A+pWqAX7/QqkMrQ7i4sjtw
-	vLfKZrZUosIkmKsy3HeAg==
-X-ME-Sender: <xms:hEwHaBTmK-MDZAx_XAitRI9LFGNJ2mTxy-W3NKttzTie1aDdocfiBA>
-    <xme:hEwHaKwKzeQrfd8TMAQja6mgkVXt8kBeXh0ziojnGcVR4pPiBvNzqzfm2SrAGiAb_
-    ua1_1KN3d_54TDMB8o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefvddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggtohhllhhinhhssehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhgpdhrtg
-    hpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
-    htthhopeiifiesiihhqdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:hEwHaG1r1Jjz_VO77jJ-BKeYnVbqBWF89Q6_9-jIgB7Q9NBoYxFhOQ>
-    <xmx:hEwHaJAXVb4rAXj8556mf4MFzAppIHuEOytkkeGMA3frOabzx8sCMA>
-    <xmx:hEwHaKgsalIKHjjdtqnqowpgFTDDiqzrOW1DhzYmHgQn8ppb8Ixp_w>
-    <xmx:hEwHaNqPGtfJwFcRD0OscP1KjXDdcEWye8w_Y97C5nIPPeyuURupZA>
-    <xmx:hEwHaBOtX7h5MWFIpNhFiMYlR1OSNDNrqtVCIDBWTzJ7vX6-ZDud4LfA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2B03E2220074; Tue, 22 Apr 2025 04:00:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7TqoSEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C923C4CEE9;
+	Tue, 22 Apr 2025 08:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745308821;
+	bh=jaxJK59OTML++sk4AtUDpd+IXlIfwL+WQMTTmzt9MSU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t7TqoSEXJUjrvnV18qgufzw3xkIOI2Hu04y+KTBlwBmjxOIOWkkS1MnxSvJHuftUW
+	 suiFV1Gaz+1R4iBW8BSyzBsOnmBtTMyd+M7xOruZjEBUkEtWPY5MJtGTNzh1Mg3kCR
+	 4aQGJComuxot6I3e9nZMcMfih5JV/4AEHujVL6PadQlGvRf5bdrwmF6Pdf0IZc3E1a
+	 9sMmHAdKifbdki2ennJm3+p20TFuWRxTuo/wbaBXoW6TBWVWsqBgxRvLOsPL/Z56Qu
+	 IrgG/GIlsYAltwdZdOtlW4IhKRKvK+QgISYK9vd6uGsD9JWtJcDrhQ3eCUGyHLneQ6
+	 QitEE0jEvQerg==
+Message-ID: <bc7a33de-9c8c-4377-a813-562da18ab314@kernel.org>
+Date: Tue, 22 Apr 2025 10:00:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T8f64d9338f7a15a8
-Date: Tue, 22 Apr 2025 09:59:42 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ben Collins" <bcollins@kernel.org>
-Cc: dmaengine@vger.kernel.org, "Zhang Wei" <zw@zh-kernel.org>,
- "Vinod Koul" <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: exynosautov920: add cpucl0 clock DT nodes
+To: Shin Son <shin.son@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org
-Message-Id: <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
-In-Reply-To: <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
- <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Content-Type: text/plain
+References: <20250418061500.1629200-1-shin.son@samsung.com>
+ <CGME20250418061515epcas2p4b57102967b07d665051a6297ab451a3c@epcas2p4.samsung.com>
+ <20250418061500.1629200-4-shin.son@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250418061500.1629200-4-shin.son@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025, at 09:12, Ben Collins wrote:
-> On Tue, Apr 22, 2025 at 08:34:55AM -0500, Arnd Bergmann wrote:
->> 
->> - SoCs that don't set a dma-ranges property in the parent bus
->>   are normally still capped to 32 bit DMA. I don't see those
->>   properties, so unless there is a special hack on those chips,
->>   you get 32 bit DMA regardless of what DMA mask the driver
->>   requests
->
-> I've yet to see a dma-ranges property in any of the Freescale PowerPC
-> device trees.
+On 18/04/2025 08:15, Shin Son wrote:
+> Add cmu_cpucl0 clocks for switch, cluster, and dbg domains respectively.
+> 
+> Signed-off-by: Shin Son <shin.son@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynosautov920.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> index fc6ac531d597..d1528633adfe 100644
+> --- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> @@ -582,6 +582,21 @@ pinctrl_aud: pinctrl@1a460000 {
+>  			compatible = "samsung,exynosautov920-pinctrl";
+>  			reg = <0x1a460000 0x10000>;
+>  		};
+> +
+> +		cmu_cpucl0: clock-controller@1ec00000 {
+> +			compatible = "samsung,exynosautov920-cmu-cpucl0";
+> +			reg = <0x1EC00000 0x8000>;
 
-Right, but this could just mean that they end up using SWIOTLB
-to bounce the high DMA pages or use an IOMMU rather than actually
-translating the physical address to a dma address.
+Lowercase hex.
+> +			#clock-cells = <1>;
+> +
+> +			clocks = <&xtcxo>,
+> +				<&cmu_top DOUT_CLKCMU_CPUCL0_SWITCH>,
 
-The only special case I see for freescale powerpc chips is the
-PCI dma_set_mask() handler that does
+This looks misaligned.
 
-static void fsl_pci_dma_set_mask(struct device *dev, u64 dma_mask)
-{
-        /*
-         * Fix up PCI devices that are able to DMA to the large inbound
-         * mapping that allows addressing any RAM address from across PCI.
-         */
-        if (dev_is_pci(dev) && dma_mask >= pci64_dma_offset * 2 - 1) {
-                dev->bus_dma_limit = 0;
-                dev->archdata.dma_offset = pci64_dma_offset;
-        }
-}
 
-but that should not apply here because this is not a PCI device.
-
-> I'll check on this, but I think it's a seperate issue. The main thing is
-> just to configure the dma hw correctly.
-
-I think it's still important to check this before changing the
-driver: if the larger mask doesn't actually have any effect now
-because the DT caps the DMA at 4GB, then it might break later
-when someone adds the correct dma-ranges properties.
-
-> So a little research shows that these 3 compatible strings in
-> the fsldma are:
->
-> fsl,elo3-dma:		40-bit
-> fsl,eloplus-dma:	36-bit
-> fsl,elo-dma:		32-bit
->
-> I'll rework it so addressing is based on the compatible string.
-
-Sounds good, yes. Just to clarify: where did you find those
-limits? Are you sure those are not just the maximum addressable
-amounts of physical RAM on the chips that use the respective
-controllers?
-
-      Arnd
+Best regards,
+Krzysztof
