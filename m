@@ -1,57 +1,57 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E699C1EB1A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E147227466;
 	Tue, 22 Apr 2025 14:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331060; cv=none; b=oafs32YsWQ1a4reORKkojaqlmW2DHDrt6MSrcA0TJP8drPxAndK19dvXC9yz2QkdSeaae5WTHHRY1LkBKep7tqKGKFkas8va9ElnknfHqrL0vSwRbqqIXTdJFLEtorYHOSc5L0ZeQcj+Wslk97XV0QefAWdw4ZUpT9J4QbReRqE=
+	t=1745331060; cv=none; b=MEEq97joTn+JOoqHOmlUBhI2nDNTyoN2j5LsJKFxZKs3cm8MTmTgsaVal5gWp69JInKyxqsxK6DOdFH+c6pSr/uJdPMf5pTdTsJmvEhdOEhB0NdkiL0l7jYthaXLoRLj142Im0xhszGosX/fK7xZV3uolopKJl/EiMe+/PBPIyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745331060; c=relaxed/simple;
-	bh=2MM6fvdAAQzaNltoa3ZzC6OQFO8sSXRGY0+MhpYMgCY=;
+	bh=7cq2RElW/yPZcpSilGEZH7dsfIfFz4V2MvZWxD/BDAY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kJ4o1tVFBkmSUyr6Gog5e1iNFAd6GhBexubIpGJWInmccBcfKSikERT1w+nI1LDtoIDGzVjIxg86m8XgW9Kiiv+2hnh0V/VcaUzm3I+dh2qjkIf0HYaxx7zRsrr2MnDOyOlqgFupEHaIyo13WXDoSqkNDwGlL97EoaszxAs7gn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwbA0RsF; arc=none smtp.client-ip=209.85.216.45
+	 To:Cc:Content-Type; b=Mi3UctOMcXloEAMFb4i9YWleG4kVRnactdZbFJ26SoBvfEpmOwXEl14tXZl0gRfpAwDSJzz+5kTk/IR31eOdqW5G21aBNXHzNQ0342rYKZ/j0jLbaWK5is21N1aObvKC38chSLNCdCmNUpAJY5jE/gHUNWjB7SKR6Nf03kz4XDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9qoYkFb; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwbA0RsF"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so578524a91.2;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9qoYkFb"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7301c227512so1599282a34.2;
         Tue, 22 Apr 2025 07:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1745331058; x=1745935858; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2MM6fvdAAQzaNltoa3ZzC6OQFO8sSXRGY0+MhpYMgCY=;
-        b=RwbA0RsFb/SW0uq/MZFUTX7TQOZ0OhwqIVkysDj9e2g9kSWv3+BUlwvOagoCah6ppk
-         QhYtiHzCXrijewvceJPuG5mVKoZR0sIIzJvlR6yOHGaDSNtk2YrN4XJb00ovRV8dl9dH
-         MargF8cfO1Fc0AdYTdo8WEeQwYNvp5/0+16bunkB1GEgqkaUM7cY91u72C8/rnxR0t3N
-         D7f59RVMm4/EeCEXA0jOc0ZQH1zYjfEN8CFoJ2X8lIlQBEv2HA5/bKkfuzUcXb35DuCU
-         RtVRjMZlu3YWr7ETkau8FPAlGay5nzI3NRHK8WKraKz7JYUA2db50+4+cHKTwDmBsRg9
-         Hvkw==
+        bh=ENmNvcG+i4cA95dff7/W/R/4xtydjhp0oR96uzNkfLE=;
+        b=H9qoYkFbR29vSO/z5YunUmc3snClsR4MmH8Ktnk4QzwH9HcrSleL5wjdkLxqWMTsaT
+         9fvzH6FGtzdTkoMYX1ZN+OdyzptCpGnN3KLXEXXQnR3acf+YrxF2x3cCxsha6Wc1W0NL
+         k8clb5bywyRA5OObs91utdHYbHrS5iB7aN/ha97wf9pSbojMg9ma/cO/KjmPYPNf817m
+         zEJCXzhHzwH16iziaF2ByaUf+G4W/6gyHiB/ymDecAy6d4iLrv03a4Znce1rhs+1NY3v
+         Xm0JzgbJgGxHzLEmK1U8twOjJWf0272KAaRXaBLv9lsldcFWZzzly2SQIOtREBEkv1uC
+         OfJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1745331058; x=1745935858;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2MM6fvdAAQzaNltoa3ZzC6OQFO8sSXRGY0+MhpYMgCY=;
-        b=MbolMMcFtVnEUjFvF1AAgk9u34/lBn72MTR5dUjMMWZmlG/yXlvahe0V823ArOmhjW
-         +273qM5+GsudFqnw7DT/0DxZxLsEK+PFoN6UiAExklwVNmmKdToIvQMzbCZJbfA+5ZkY
-         5fX3UAtAhMRrq0wg0h6H+v9zUWuuQHStmRfsk4qBnkseW/VAoU8kNrRtL8LF85h4fWmP
-         QoPYuzZTw7sFgv/i9PIjmDljXRlMHbYjydwwREIEHoEpe1z4yqj5EqppVZsc0DGT/3Ao
-         LBwkz/gbnuPulHHzgHd/zj2ABHn6E/DsdQEFF24kllrGa09RG90qH07jaI6YNpvMfbD8
-         wd2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVifOxboGZHNbHZneIsht3PyCd26LIZLTHG6Wwn6teD9N2au2r4yLE3J/kaKdcdOsY2tZqbuXACZvuCNt8=@vger.kernel.org, AJvYcCXch8itUjyniiQ1+YgtJ6pTWX9QYZZ+rlHLHFWpXqrdHAslldC2btAAcEsj66czgPZSLhFdHDFwTHcDW2a64mY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwzAyiujTWsUqM/xPo1Kp7vfHC6/1ixNyvFSP7Xu4ek/0ydwuj
-	8kjCYtqpvWJpmHYLHqIk1rZdA/xDa88Wi5n9TsKZpkmfeFyVhjpfsPVT+dyGB+VNw5JrV794DEm
-	tzdVDGTV4+fG1c60BcwSchVRThBY=
-X-Gm-Gg: ASbGncuuz1ImO50CDyBAESp+Qs2vdWLudDxk07SzX8QQlWAM8OzK6ySQMqJaRNCaJcN
-	HNAcgFKH+NmdQjgPrs2GlM2dJqny17CLKYVCg+5UQ6wYRLLweJp3438iLrQH8m2MotAGYQqUdAr
-	Mn0MDkQ4u4w+3qgtApM3I4YV/YEUXCRmTZ
-X-Google-Smtp-Source: AGHT+IHNrZukhtHZqdbBi0rMLPXMhyRUwthSlOF6B/9nJ244nnrvPdxxYhxg5zPl9IwCLDR/Yn0OqTmVZ44CVdDTrRg=
-X-Received: by 2002:a17:90b:1c91:b0:2ee:f59a:94d3 with SMTP id
- 98e67ed59e1d1-3087ba5ccbamr8060310a91.0.1745331057902; Tue, 22 Apr 2025
+        bh=ENmNvcG+i4cA95dff7/W/R/4xtydjhp0oR96uzNkfLE=;
+        b=qmVcTq5eDEO1Cz9Y+GAVwhgJBcr413VCv+AzZ/StcJBkWY07AUJXJpnutf4raQnfL0
+         pij1TtG31hmjVmEU/3Ai0luyaO3A2br/95nJXctbU4zcvfTz3e6N3466pOS26w3F8Vnl
+         3fyzt33UWQUULbTt8m3NJNdbqfG16X8nRqP0dcEipov2Y3pfTHmljNqj2zY0mqj/95mv
+         KuPHc7cO5fs5A5XrHFac95hvRqg5cdP+NCDV5p7hfOn9zvhnRV4GH1+VZ+cE0iE0VNEg
+         K6BrbUEWVoODs2RyEVW8UlmaLpCrB3VAtqP71TLo9CX4j5Y4+410D9oZKWXMmkxA0+2k
+         NMcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNfVJLhzNJNfYHOqasTmAPJXgojPT1BJkpLhhSSZWfscFnUhZlfTnyn0bteGVYtxP90MmNa7ECp0lZublb@vger.kernel.org, AJvYcCWHunBAZ47Oy5/gGHXUbbhUhhBqm0t8+DCH2cVELeHXt9K9V5ohLwy5IXR/13/dbPkAeAa/Qi6CyvYL2jFJHA==@vger.kernel.org, AJvYcCWmKLnLAXUeFsWxPiyjZqoUifmlHDvxyHSz6xX6lM/zgE/5NWxkhtqImdG4vK7v/jTl6Qwqo3KifA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuPzcE6iACvcE842v5zi/V1sCnxlmezn2spj4WrAS5qli78dFV
+	QrzpA8stCPkK2aBOpWwoYJsuvXqVhCuC4Db4bLG6/E1w2+iKQyuROvH8yAXYzYN5r0jdFl7672z
+	EGShs8FtEN+2eC7Lw9PPq/rpTRtc=
+X-Gm-Gg: ASbGncswBxMX7iZQNQquzh4WSs7ZTES4JLlHCKVaVO254PnB6iKJvQOY+yM3/+xnQC1
+	uOyknR7lGwCy4teWEw7zOPCSviwz4c0CEsmyBc3csMRw2pvFVDuS+vkTWOEFAlJ89K8lojj0+u2
+	MNQ6kta6it8ciTOjyTulkOMvE=
+X-Google-Smtp-Source: AGHT+IHs52QH1e1EcEp6l4JLqsVOeDSJ3Ng/TlhNfJ91v6SCzBDysQnzdm5i0GiYHIM+K+KBtAUyFHpvlpyYlRyyIQM=
+X-Received: by 2002:a05:6871:530d:b0:28c:8476:dd76 with SMTP id
+ 586e51a60fabf-2d526ee4ad6mr11088969fac.29.1745331057649; Tue, 22 Apr 2025
  07:10:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,58 +59,99 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422125633.30413-1-contact@arnaud-lcm.com>
-In-Reply-To: <20250422125633.30413-1-contact@arnaud-lcm.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 22 Apr 2025 16:10:45 +0200
-X-Gm-Features: ATxdqUG-FAOW6e-i0WqSstuY50PV6UgDsUfeNCfXkoL6rqSF8GshcvdRIVq93BI
-Message-ID: <CANiq72mo+DSyFZ3gVWVhqH5LHa0hkJ6gyTN70=smhRYzpNMYWA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] checkpatch.pl: Add warning for // comments on
- private Rust items
-To: Arnaud Lecomte <contact@arnaud-lcm.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	skhan@linuxfoundation.org
+References: <20250422104545.1199433-1-qq282012236@gmail.com> <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
+In-Reply-To: <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
+From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Date: Tue, 22 Apr 2025 22:10:45 +0800
+X-Gm-Features: ATxdqUFY0D9ZhIoPAnO4wqwO_j8l65R--mu-PkgmPt3dkQ_eilqKjmLgt8z5KSc
+Message-ID: <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
+To: Jens Axboe <axboe@kernel.dk>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 2:56=E2=80=AFPM Arnaud Lecomte <contact@arnaud-lcm.=
-com> wrote:
+On Tue, Apr 22, 2025 at 9:35=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
 >
-> Background
-> ----------
+> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
+> > In the Firecracker VM scenario, sporadically encountered threads with
+> > the UN state in the following call stack:
+> > [<0>] io_wq_put_and_exit+0xa1/0x210
+> > [<0>] io_uring_clean_tctx+0x8e/0xd0
+> > [<0>] io_uring_cancel_generic+0x19f/0x370
+> > [<0>] __io_uring_cancel+0x14/0x20
+> > [<0>] do_exit+0x17f/0x510
+> > [<0>] do_group_exit+0x35/0x90
+> > [<0>] get_signal+0x963/0x970
+> > [<0>] arch_do_signal_or_restart+0x39/0x120
+> > [<0>] syscall_exit_to_user_mode+0x206/0x260
+> > [<0>] do_syscall_64+0x8d/0x170
+> > [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
+> > The cause is a large number of IOU kernel threads saturating the CPU
+> > and not exiting. When the issue occurs, CPU usage 100% and can only
+> > be resolved by rebooting. Each thread's appears as follows:
+> > iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
+> > iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_write
+> > iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
+> > iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
+> > iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
+> > iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
+> > iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
+> > iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
+> > iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
+> > iou-wrk-44588  [kernel.kallsyms]  [k] schedule
+> > iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
+> > iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
+> > iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
+> >
+> > I tracked the address that triggered the fault and the related function
+> > graph, as well as the wake-up side of the user fault, and discovered th=
+is
+> > : In the IOU worker, when fault in a user space page, this space is
+> > associated with a userfault but does not sleep. This is because during
+> > scheduling, the judgment in the IOU worker context leads to early retur=
+n.
+> > Meanwhile, the listener on the userfaultfd user side never performs a C=
+OPY
+> > to respond, causing the page table entry to remain empty. However, due =
+to
+> > the early return, it does not sleep and wait to be awakened as in a nor=
+mal
+> > user fault, thus continuously faulting at the same address,so CPU loop.
+> > Therefore, I believe it is necessary to specifically handle user faults=
+ by
+> > setting a new flag to allow schedule function to continue in such cases=
+,
+> > make sure the thread to sleep.
+> >
+> > Patch 1  io_uring: Add new functions to handle user fault scenarios
+> > Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
+> >
+> >  fs/userfaultfd.c |  7 ++++++
+> >  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
+> >  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
+> >  3 files changed, 68 insertions(+), 41 deletions(-)
 >
-> The Rust-for-Linux project currently lacks enforcement of documentation f=
-or private Rust items,
-> as highlighted in https://github.com/Rust-for-Linux/linux/issues/1157.
-> While rustc already lints missing documentation for public items, private=
- items remain unchecked.
-> This patch series aims to close that gap by ensuring proper documentation=
- practices
-> for private Rust items in the kernel.
-
-I think this background wasn't changed from the previous version --
-you can include a changelog in the cover letter too (some do that
-only, instead of per-patch), which may help to mention what changed in
-the cover letter itself, if any, since this is a good and long cover
-letter :)
-
-By the way, some of this cover letter (the "Results" section in
-particular with the examples) could be nice as part of the commit
-message on the first commit -- that will make it forever part of the
-Git repository, which can be useful to understand the commit itself
-and why you designed the heuristics like you did.
-
-Thanks!
-
-Cheers,
-Miguel
+> Do you have a test case for this? I don't think the proposed solution is
+> very elegant, userfaultfd should not need to know about thread workers.
+> I'll ponder this a bit...
+>
+> --
+> Jens Axboe
+Sorry,The issue occurs very infrequently, and I can't manually
+reproduce it. It's not very elegant, but for corner cases, it seems
+necessary to make some compromises.
