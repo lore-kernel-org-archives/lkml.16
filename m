@@ -1,112 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0D720102C;
-	Tue, 22 Apr 2025 16:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACF3290BB7;
+	Tue, 22 Apr 2025 16:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338167; cv=none; b=JdhOK2cufGqqifInAbboux/Bn/0HFE3WEntTljgHt/6tSaWB2CPtQHLdatxrF5w7eRRS/G5LUMVCrd29vEPfIca8zF27DyKb5uQuutKHygtMmBNJ4fb3AB+Yp9fdsMk7ZMieJ4wXpy2FcsU1CxQ356D1BrqVpvm9F3g/fMpmUOw=
+	t=1745338170; cv=none; b=dd+vUnNbyhFDvGzt3phZwnMsGBbsF1obFWHZuMhQmhlNwOAESqe0mmez4S6kuTvks+hmbzzxW5ZHMsXXLnB/w52AimS9iB4h/itReefH/5dBHD6Cuggl0swE+abjNHxwconxZF20/yiqs2Vj3Dhh0BfBsF5bpVIzlEnclgwDq7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338167; c=relaxed/simple;
-	bh=Qd8a4qsvk9G4mClmpO236TQ3jYEPXO158QQTn0cWxKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dGA5+b+cArV6dIFwPjDmNC/iTf0wyi+ocUCPKDxf2aYkJyseq/pW3G9ghCDVJQUu1OGuT+43q9/rQsr6ZRUeFtJiWEGA+mfK20mUlQ6AQMA1sLGf51D7jOpnhEmWN5RGKfoIsEdA/MSeca9VAA5+65ZmqSRTZroKZp90mNvdmr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX3Z65O5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745338170; c=relaxed/simple;
+	bh=C7P71zkwBaNY9uWlP0+qfCmkJrs2cKd4Jolmem8FPMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WyVNgee9V0FmFocIiUhPPTrcZRhDaPbHAVpiVsKU7lCOqTk2Auv66+5G9dPoHFrQPCuKXeBCx1Cp80zw1Z4TzmDg38Yvpry21/TN15OzwJqZOHd+VdwQV+38XP91kvgGkwAi5YJSg+IebgO+SKPT2wgNvse4wWMqfRjSD98gg8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMtzI6jS; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX3Z65O5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D83FCC4CEE9;
-	Tue, 22 Apr 2025 16:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745338167;
-	bh=Qd8a4qsvk9G4mClmpO236TQ3jYEPXO158QQTn0cWxKo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HX3Z65O5qlPLh9w2tzD5zgqTmEEUNEK6frdS/LWvlhyQODlex5+w4HSJdCbGoofuA
-	 0gQn+BMTfXd7XLr5lao+kMAgSu5Txq5IIBHoQq02UTsB1+yfusdHTZI/mXSP95k5IE
-	 JCqMtjnYl26+MirO5su+/S/djJo/B6kalqrlikwIdjb4Vu39zEDTDScyyECsjs7Fai
-	 xj3CMInF+87Vc5jbImMVngqirfWPFFY/EVDQg/io5f0AlQfwCXr3BL8xM6gBslPVaG
-	 2Q2/l3deREN+8U1BisoC7SipI13tcn9e/v9PO9fsuIMRuduBgAtTmFYvGLoD4BtpK9
-	 aTOM6KqJS8fLw==
-Date: Tue, 22 Apr 2025 11:09:25 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jonas Gorski <jonas.gorski@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org,
-	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
- symbols
-Message-ID: <20250422160925.GA331992@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMtzI6jS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745338168; x=1776874168;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=C7P71zkwBaNY9uWlP0+qfCmkJrs2cKd4Jolmem8FPMc=;
+  b=IMtzI6jSF5RDKhKviVKrIb2vx0QdfbXv+3dmAB5L9GMjuTzk340R2nXy
+   eTWeGbyd59i0HNnOkcmX0wKjdd7pw1ND61MLzwSDv87OoAJd7XWhcTGhX
+   W9wrZAaZ9m1xCJ2mh1+BJHC1jzSCTdG38sbZ8PsueWIC4ionBXdZLR0m6
+   zQzhf6yKIooxEae9duvj39u5ro1Xm7jnw6Gn+rnok3fed31qnn2uUMBqo
+   OJ6LQnHpDGjx9k5uTlUNXTAPiBvPiH7Do9zD2afZp2HT1T3w3I9cqP6/d
+   +u95BGl17+3hXP//+oFNgKD4mQZgZ66AG27gdcxS+W6iTRrJLvNf6Cs2H
+   w==;
+X-CSE-ConnectionGUID: moBUE26QTA2iAwU0tWFPng==
+X-CSE-MsgGUID: 4PM0ADaUR2uPRQ+4u9JjBA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57889250"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="57889250"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:09:28 -0700
+X-CSE-ConnectionGUID: 5/P/pHRyRZq4y9ard5ewPQ==
+X-CSE-MsgGUID: dAOLPTsTQmipMWxPU6GsJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="137039421"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.132])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:09:22 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v4 08/14] cxl/region: Factor out code to find the root decoder
+Date: Tue, 22 Apr 2025 18:09:18 +0200
+Message-ID: <18685083.PsWsQAL7t4@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-9-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-9-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402132634.18065-1-johan+linaro@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-[cc->to Catalin, Will: note the arm64 Kconfig change; my understanding
-is that this shouldn't break existing configs]
+On Thursday, March 6, 2025 5:44:42=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> In function cxl_add_to_region() there is code to determine the root
+> decoder associated to an endpoint decoder. Factor out that code for
+> later reuse. This has the benefit of reducing cxl_add_to_region()'s
+> function complexity.
+>=20
+> The reference of cxlrd_dev can be freed earlier. Since the root
+> decoder exists as long as the root port exists and the endpoint
+> already holds a reference to the root port, this additional reference
+> is not needed. Though it looks obvious to use __free() for the
+> reference of cxlrd_dev here too, this is done in a later rework. So
+> just move the code.
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+> ---
 
-On Wed, Apr 02, 2025 at 03:26:30PM +0200, Johan Hovold wrote:
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
-> 
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
-> 
-> Let's rename also the Kconfig symbols before this gets any worse.
-> 
-> The ath11k, ath12k and arm64 changes could go theoretically go through
-> the corresponding subsystem trees in turn once they have the new
-> symbols, but to avoid tracking dependencies over multiple cycles it is
-> much preferred to have all of these go in through the PCI tree.
-> 
-> The wifi patches have been acked by Jeff and I don't think Will or
-> Catalin will mind the single rename in arm64 if they don't see this
-> message in time.
-> 
-> Note that the patches could be squashed into one, but keeping them
-> separate highlights the changes done to other subsystems. I also find it
-> easier to review the changes this way.
-> 
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists, but the former should also go in through PCI anyway while we can
-> make sure that the defconfig update matches the new slot symbol.
-> 
-> Note that getting this rename into rc1 would be great as that way it
-> would end up in most subsystem trees soon as well.
-> 
-> Johan
-> 
-> 
-> Changes in v2:
->  - drop deprecated symbol for the new slot driver to avoid having to a
->    add a new user visible symbol (e.g. any early adopters will be asked
->    to enable the renamed option again)
-> 
->  - move arm64 patch last two avoid temporarily not having the pwrseq
->    driver selected (Jonas)
-> 
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
->   arm64: Kconfig: switch to HAVE_PWRCTRL
-> 
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 22 ++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 23 insertions(+), 13 deletions(-)
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-Applied to pci/pwrctrl for v6.16, thanks!
+>  drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++-------------
+>  1 file changed, 37 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 8244a27d0fd6..7d9d9b8f9eea 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3212,6 +3212,38 @@ static int match_root_decoder_by_range(struct devi=
+ce *dev,
+>  	return range_contains(r1, r2);
+>  }
+> =20
+> +static struct cxl_root_decoder *
+> +cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
+> +	struct cxl_port *port =3D cxled_to_port(cxled);
+> +	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
+> +	struct cxl_decoder *cxld =3D &cxled->cxld;
+> +	struct range *hpa =3D &cxld->hpa_range;
+> +	struct device *cxlrd_dev;
+> +
+> +	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, hpa,
+> +				      match_root_decoder_by_range);
+> +	if (!cxlrd_dev) {
+> +		dev_err(cxlmd->dev.parent,
+> +			"%s:%s no CXL window for range %#llx:%#llx\n",
+> +			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> +			cxld->hpa_range.start, cxld->hpa_range.end);
+> +		return NULL;
+> +	}
+> +
+> +	/*
+> +	 * device_find_child() created a reference to the root
+> +	 * decoder. Since the root decoder exists as long as the root
+> +	 * port exists and the endpoint already holds a reference to
+> +	 * the root port, this additional reference is not needed.
+> +	 * Free it here.
+> +	 */
+> +	put_device(cxlrd_dev);
+> +
+> +	return to_cxl_root_decoder(cxlrd_dev);
+> +}
+> +
+>  static int match_region_by_range(struct device *dev, const void *data)
+>  {
+>  	struct cxl_region_params *p;
+> @@ -3386,29 +3418,17 @@ static struct cxl_region *construct_region(struct=
+ cxl_root_decoder *cxlrd,
+> =20
+>  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
+> -	struct cxl_port *port =3D cxled_to_port(cxled);
+> -	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
+>  	struct range *hpa =3D &cxled->cxld.hpa_range;
+> -	struct cxl_decoder *cxld =3D &cxled->cxld;
+> -	struct device *cxlrd_dev, *region_dev;
+> +	struct device *region_dev;
+>  	struct cxl_root_decoder *cxlrd;
+>  	struct cxl_region_params *p;
+>  	struct cxl_region *cxlr;
+>  	bool attach =3D false;
+>  	int rc;
+> =20
+> -	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
+> -				      match_root_decoder_by_range);
+> -	if (!cxlrd_dev) {
+> -		dev_err(cxlmd->dev.parent,
+> -			"%s:%s no CXL window for range %#llx:%#llx\n",
+> -			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+> -			cxld->hpa_range.start, cxld->hpa_range.end);
+> +	cxlrd =3D cxl_find_root_decoder(cxled);
+> +	if (!cxlrd)
+>  		return -ENXIO;
+> -	}
+> -
+> -	cxlrd =3D to_cxl_root_decoder(cxlrd_dev);
+> =20
+>  	/*
+>  	 * Ensure that if multiple threads race to construct_region() for @hpa
+> @@ -3426,7 +3446,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *=
+cxled)
+> =20
+>  	rc =3D PTR_ERR_OR_ZERO(cxlr);
+>  	if (rc)
+> -		goto out;
+> +		return rc;
+> =20
+>  	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+> =20
+> @@ -3447,8 +3467,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *=
+cxled)
+>  	}
+> =20
+>  	put_device(region_dev);
+> -out:
+> -	put_device(cxlrd_dev);
+> +
+>  	return rc;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
+>=20
+
+
+
 
