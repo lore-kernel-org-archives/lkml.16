@@ -1,166 +1,89 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD3A9476;
-	Tue, 22 Apr 2025 23:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5BD25CC7C
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745363119; cv=none; b=ROdf0u4D7sl5HNxBPCWVeYH5jA7Bx4dRxZMModgL8oypGX3wWedhR0rUs0YDVDLrnMnhKuow7G/GGnjbMXoDgDuTBZeaPISmGF+IlCXPVZ2G96gy0XXe4Tktl9GE+Pu5Ss2pRxqEor+GrWS7WtTE0nZ5yO4VPJk9Y2dMb0gyZJI=
+	t=1745363148; cv=none; b=JHy8NmLO/Eq5VLnpGiudjuD60Pnpjjz/jW9HGMziSwxgpMfsWp8SPsjy4bGy9QewhCsFxQ1As14MosDRDD61rxaruOCL+sBblHEtle2SQ2QReSd0A8U09/gXV8tPvOpUqAKwleOr7ldi8eAnJ6eSxYh7VqTTSXrFDcEv+WrPeho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745363119; c=relaxed/simple;
-	bh=FL5En/dLy4zeOnwuuG6OIWOr8qeBBzE0k/ehSxsVGAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+amArNU6bnm1xjFNGJCxfWhV1//wi2oYmbS9HSL26zD6lBo0fR+3EPaDdDL/upBlnR/CTi7UUPhgS6XK1ziyelWT/kCMk2XB7f8SMxJVqUDnSz/9X/pZWvxEa0ugix6+tF4XHaNaWehcHxZM+M5sf8ERgJTw4cMkMfkzsi7Pfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eOPSGLbo; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745363148; c=relaxed/simple;
+	bh=0H0uKZ693mlpOCVqBXLPrlDdTN8NIHveQOdXj53aAW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YoQCoboc+Cb5FKSG4r1Sbs43NLXH5DJbbvmGTnRX48jzPL4usY/fVAb19anEsnkLJh0U9VwJfz4AxxnkTn1XmvdRdsah3bNTnA5o61y4a8UIUcSLEVdcbwFq+P/5lgd+03oBrrT002Xj57t9GcG4g4ImFYlTLKTwZaWwggfWLKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q0x+4bkH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eOPSGLbo"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2181816A;
-	Wed, 23 Apr 2025 01:05:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745363115;
-	bh=FL5En/dLy4zeOnwuuG6OIWOr8qeBBzE0k/ehSxsVGAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eOPSGLbo2IiCZaUTW4iE14SYcLgGCbtVbE6eBd95bNDqyMkXdifWW8omJ//X0hKfN
-	 ugUn6eauz8CSwpmwgXvklVds5CyZU6a/CWaU7K7JbzoHJamjaa+z8byJgkhmk+trvf
-	 G9j30riMdCE45dzR8gLgbOM+2fSlCYUcNY+OBOZQ=
-Date: Wed, 23 Apr 2025 02:05:13 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/2] media: uvcvideo: Fix deferred probing error
-Message-ID: <20250422230513.GX17813@pendragon.ideasonboard.com>
-References: <20250313-uvc-eprobedefer-v3-0-a1d312708eef@chromium.org>
- <20250313-uvc-eprobedefer-v3-1-a1d312708eef@chromium.org>
- <20250422180630.GJ17813@pendragon.ideasonboard.com>
- <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q0x+4bkH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745363145;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eA2dPJ7kUmIfz4lKYy/AXLtHSVSq2pKZ9vTXMKbDLTg=;
+	b=Q0x+4bkHKduoH7nmc94kLtJUWUZ/7UZINtjYWtG+CviDspvZADrc70CKarBTSik6Q37yNn
+	5IYqzZLMkBW13FnpzQhw1yf5tidvi4drSJBdHYHQ7HOmGJoWp/drC9+ZqYCZsaeTsRhxgS
+	YCK8bRz2FsjC+96HLHdHiakzDlg1mdo=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-342-zFzYHi_wNxSfo9fhPr4raw-1; Tue,
+ 22 Apr 2025 19:05:40 -0400
+X-MC-Unique: zFzYHi_wNxSfo9fhPr4raw-1
+X-Mimecast-MFC-AGG-ID: zFzYHi_wNxSfo9fhPr4raw_1745363139
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0C3C180048E;
+	Tue, 22 Apr 2025 23:05:39 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.88.22])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3381418001DD;
+	Tue, 22 Apr 2025 23:05:38 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: bhelgaas@google.com,
+	rafael@kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] PCI/PM: Elevate PM usage during reset probing
+Date: Tue, 22 Apr 2025 17:05:30 -0600
+Message-ID: <20250422230534.2295291-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiDSCuO+dHOBtW4yvy1n25QWEs-WdQ9H8Lh2rUtcPbUq3hBkQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Wed, Apr 23, 2025 at 06:50:10AM +0800, Ricardo Ribalda wrote:
-> On Wed, 23 Apr 2025 at 02:06, Laurent Pinchart wrote:
-> > On Thu, Mar 13, 2025 at 12:20:39PM +0000, Ricardo Ribalda wrote:
-> > > uvc_gpio_parse() can return -EPROBE_DEFER when the GPIOs it depends on
-> > > have not yet been probed. This return code should be propagated to the
-> > > caller of uvc_probe() to ensure that probing is retried when the required
-> > > GPIOs become available.
-> > >
-> > > Currently, this error code is incorrectly converted to -ENODEV,
-> > > causing some internal cameras to be ignored.
-> > >
-> > > This commit fixes this issue by propagating the -EPROBE_DEFER error.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 2886477ff987 ("media: uvcvideo: Implement UVC_EXT_GPIO_UNIT")
-> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_driver.c | 27 +++++++++++++++++++--------
-> > >  1 file changed, 19 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> > > index deadbcea5e227c832976fd176c7cdbfd7809c608..e966bdb9239f345fd157588ebdad2b3ebe45168d 100644
-> > > --- a/drivers/media/usb/uvc/uvc_driver.c
-> > > +++ b/drivers/media/usb/uvc/uvc_driver.c
-> > > @@ -2231,13 +2231,16 @@ static int uvc_probe(struct usb_interface *intf,
-> > >  #endif
-> > >
-> > >       /* Parse the Video Class control descriptor. */
-> > > -     if (uvc_parse_control(dev) < 0) {
-> > > +     ret = uvc_parse_control(dev);
-> > > +     if (ret < 0) {
-> > > +             ret = -ENODEV;
-> >
-> > Why do you set ret to -ENODEV here...
-> >
-> > >               uvc_dbg(dev, PROBE, "Unable to parse UVC descriptors\n");
-> > >               goto error;
-> > >       }
-> > >
-> > >       /* Parse the associated GPIOs. */
-> > > -     if (uvc_gpio_parse(dev) < 0) {
-> > > +     ret = uvc_gpio_parse(dev);
-> > > +     if (ret < 0) {
-> > >               uvc_dbg(dev, PROBE, "Unable to parse UVC GPIOs\n");
-> > >               goto error;
-> > >       }
-> > > @@ -2263,24 +2266,32 @@ static int uvc_probe(struct usb_interface *intf,
-> > >       }
-> > >
-> > >       /* Register the V4L2 device. */
-> > > -     if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
-> > > +     ret = v4l2_device_register(&intf->dev, &dev->vdev);
-> > > +     if (ret < 0)
-> >
-> > ... but not here ? The code below is also not very consistant.
-> 
-> For all the "external" functions I was looking into populating their
-> error code to probe(). Other drivers (check vivid for example) do
-> exactly this.
-> 
-> There is more value in returning the real cause of the error (ENOMEM,
-> EINVAL) that the plain ENODEV.
+I encountered a confusing scenario where a device reports NoSoftRst- and
+doesn't have any associated quirks to set PCI_DEV_FLAGS_NO_PM_RESET, but
+it refuses to probe for PM reset support using the sysfs reset_method
+attribute.  The reason turns out to be that we don't increment the usage
+count while probing, the driver has the device in D3, where this system
+seems to support D3cold, and the PM control register is read back as
+0xffff.
 
-Yes, I got that, my question was why you override the return value of
-e.g. uvc_parse_control() or uvc_scan_device() with -ENODEV, but not for
-e.g. uvc_gpio_parse() or v4l2_device_register(). There's no explanation
-in the commit message regarding why they're treated differently.
+The cleanup __free helper seems to be the cleanest solution here, versus
+refactoring to a common exit point or wrappers around reset_fn, but feel
+free to suggest otherwise.  I see a couple potential other use cases for
+this helper in the vfio code.
 
-> > >               goto error;
-> > >
-> > >       /* Scan the device for video chains. */
-> > > -     if (uvc_scan_device(dev) < 0)
-> > > +     if (uvc_scan_device(dev) < 0) {
-> > > +             ret = -ENODEV;
-> > >               goto error;
-> > > +     }
-> > >
-> > >       /* Initialize controls. */
-> > > -     if (uvc_ctrl_init_device(dev) < 0)
-> > > +     if (uvc_ctrl_init_device(dev) < 0) {
-> > > +             ret = -ENODEV;
-> > >               goto error;
-> > > +     }
-> > >
-> > >       /* Register video device nodes. */
-> > > -     if (uvc_register_chains(dev) < 0)
-> > > +     if (uvc_register_chains(dev) < 0) {
-> > > +             ret = -ENODEV;
-> > >               goto error;
-> > > +     }
-> > >
-> > >  #ifdef CONFIG_MEDIA_CONTROLLER
-> > >       /* Register the media device node */
-> > > -     if (media_device_register(&dev->mdev) < 0)
-> > > +     ret = media_device_register(&dev->mdev);
-> > > +     if (ret < 0)
-> > >               goto error;
-> > >  #endif
-> > >       /* Save our data pointer in the interface data. */
-> > > @@ -2314,7 +2325,7 @@ static int uvc_probe(struct usb_interface *intf,
-> > >  error:
-> > >       uvc_unregister_video(dev);
-> > >       kref_put(&dev->ref, uvc_delete);
-> > > -     return -ENODEV;
-> > > +     return ret;
-> > >  }
-> > >
-> > >  static void uvc_disconnect(struct usb_interface *intf)
+Please review.  Thanks,
+
+Alex
+
+Alex Williamson (2):
+  PM: runtime: Define pm_runtime_put cleanup helper
+  PCI: Increment PM usage counter when probing reset methods
+
+ drivers/pci/pci-sysfs.c    | 3 +++
+ include/linux/pm_runtime.h | 2 ++
+ 2 files changed, 5 insertions(+)
 
 -- 
-Regards,
+2.48.1
 
-Laurent Pinchart
