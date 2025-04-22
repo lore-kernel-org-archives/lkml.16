@@ -1,149 +1,129 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA7F28134E
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274BF27C159
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745330585; cv=none; b=vD6VKmEtC2O56ihRGZ6s+hEJrDEwYVxZHo2BWnh6p1a3OzyxI3qUIXpSrIip/W4+HJ3pg5P1aXPpL+Ib5Ifm67diAMqzt3V7fojMjrC3NHGI/hnTuVYLS1nZY6qeJE+PouWX3yamRpSw7gEKSFGg+QMc16kA2wxMViNzIXId+as=
+	t=1745330622; cv=none; b=fmIFzw6tpu2BMQ1O6k1YmnxdJoLrHODhyt21gf3WM3RKzYRhUMgaUhTcstuLh0QRCEHjQTgOeaimP2msdvyBUgscfs87/W0LC0I4/r56vsgrFqSRPgLLL9Brs22kM1gESOXzpOmVPlZMrqXaQhH02fBjMYhMxgEfMVuInLiqIXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745330585; c=relaxed/simple;
-	bh=pTCnnE0WvBlnr+Qj0FbjHqO/pnVNVLaBdILZogWqmAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wnxn3IiKurSmg0TblM6X1RvFEfMaxiirOsaw6GRjCE5VHkA/Q+eNZ4zlFuLHyDptbf1I5QPqw0TVXKiGBlB7nxwGQmJE9qDJqDGnbhrOobACI2Hmdm5q615fKGBQu+Fk5at1HBnkEsE27JPRB8v5K+TmMzT4RPmivTUmJaJA+OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q4Nl9lbf; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745330622; c=relaxed/simple;
+	bh=DI5wbiqZFhNjcg4g07wsE2rRpyR+Bg6kHqEcrbHze4Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iY4cBDbujO+Nes4MsZboMvTUdbOvh9Zmds2NldWNaozShYXrDh1kkGlpfTFO1dn2JB80MoH9zOv22qbuTgIdrHhbben9l5qxMwRF6E6S6WqK7Z5EVebbN7yCNqcElgyvAm827sQ4pSB35X+VCIJJyGMyS1GKPqIQ7aDLD5ZoC2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=diHRM3SS; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q4Nl9lbf"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso864618866b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:03:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="diHRM3SS"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240aad70f2so182695ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745330582; x=1745935382; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/KGkwbFW8mc6saMp1e+KcFytRng7jGJzpGVkRT08ylU=;
-        b=q4Nl9lbf6s0kTmZExW4LxTs9tPg9p2BwcXii+YbRetth2qIQfuvqCSj+oXQ3b9dkcq
-         q297wnmCcJEser5zebgKlEfGd6+ui7zhcx5HJjmTC1+GR5eJ9VeKSiPlZAHLtRrBQZVL
-         JvGY0z8JMeYeE1HcsZ1g3xwAAMWN/Tqsm4iI3Xrcpqvvb4W+DGgjlmySKIlxFxlGLdli
-         vr89s6NPxOUfpcCbOSj6WbOovLtYKKCpJYl/+tdsPTHv92EemM7fzBBhuqIj8Q63xGJi
-         e6Ocy7ENfriLmNiUbNhHeYGpC2kk//Zw5dZ0JpfjmcDvsxNPM48Mtn9EwqAv5xakcV7l
-         RzqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745330582; x=1745935382;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1745330620; x=1745935420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/KGkwbFW8mc6saMp1e+KcFytRng7jGJzpGVkRT08ylU=;
-        b=dwhWo9wVzEFqHNY2rPOIIAK6DHKjxcvsCvLRNb5gWUva8+I7e2WG23VPBPGuiFPOvT
-         PFrdhElLjN0WmVG7lXb4uIBBqaRGgM2JDNx0Fp2G0ih57x0VpWAmJfTDIDBtiaERILBo
-         Ir7OdUE0U49ECl+NzfYvYpcHmn0LrJ6a1MmlXNgw+mrJc3+5ztKpcn98jgflEISHVKMm
-         DxGkKDacMpg/iyMn1jz+Mw17q42I2RYy+Ymw6Tn47qkQ3rXGS9aEF9vncr8PSligWu5h
-         eHtn//3JQI1SWan0pkFHA9s/vP7bSPXh+ae4Xozub1BXzCgYRKts/fLQJo94Hypyuojn
-         U6NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX328ukiRQ/ltopMxMwn8XoPz+4sih14IHfKo/GI+RM/boPb95v59vbDUA7vlK68NZRjDKuTgs29jUL4iI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI3AEWfrpurc/Ix6OF+Xg9PfnLNaGdaJij38UGGLqvwHXLnwh5
-	rMgZvV5rFrG+H1SUKi2SvEWIMtMYcnrfkbw7NfjNy3+WokyRS8B23uY02odNYj8=
-X-Gm-Gg: ASbGncsKy3KsNpUkBdpnl0M3ylPNNbpQ92nNjifRC4YxILtWkYi7RzD4ohm9Kfm2mAt
-	IFzhmeB8xRmWKw9bLMMA/9rNgPC6zGzk+9iY2yTECxIE8/Er6eNjRuMzMXR9d52tbtY6Ee40yP7
-	okjCaUBoqg/VuX3G2XsATwEXz9mLhp0B2ufqah030a8VHC3/rOUPrD7klyriiOx2sgLCC/teRqo
-	/CcUvidEfnQq3TDufIYpY8tG6tTpmBBBF9EWZBUtNfKUaBdcRH4BTgxG4hqvTiEf206qFvPT8Iu
-	K3/vFlpRMxoolhGMDtNsXKJ3U6a0i27NcFpgfQ==
-X-Google-Smtp-Source: AGHT+IGXA0LtNrq/q99iH88FAI+tkMr5/gDahnmnJo4DPlV9/CFoB+qZ83sOLLUpScdf873PzsLhew==
-X-Received: by 2002:a17:907:c16:b0:abf:73ba:fd60 with SMTP id a640c23a62f3a-acb74b862famr1643280466b.29.1745330581391;
-        Tue, 22 Apr 2025 07:03:01 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef9e7e6sm651907066b.162.2025.04.22.07.02.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 07:03:00 -0700 (PDT)
-Date: Tue, 22 Apr 2025 17:02:58 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Michael Grzeschik <m.grzeschik@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>,
-	Peng Fan <peng.fan@oss.nxp.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Johan Hovold <johan@kernel.org>,
-	Maulik Shah <maulik.shah@oss.qualcomm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] pmdomain: core: Add a bus and a driver for genpd
- providers
-Message-ID: <aAehkpXAxh3bI0WT@linaro.org>
-References: <20250417142513.312939-1-ulf.hansson@linaro.org>
- <20250417142513.312939-5-ulf.hansson@linaro.org>
+        bh=wxtxQ2q5f2CesvMzHl2K/43Dvf+KKs8Sp+BtzyImVRI=;
+        b=diHRM3SSYX1rhVTrFh85dMgmHNY8sO2ecyPwPFFxn5sQbKf8uyHGCTCokaasiZyg6F
+         VKxRmeoGqd8z3gNfYfdYx9nRIt0sO2m4rZspMiU89vOTce8M36DF/iBjf+yUOw63OKP3
+         hITordz6p0dyt9ILX6PjDqmdftBpNagsZ2+9Q43sianlor0YDckrxv6UHr73LrRP40nl
+         0RhaPUqvIJhdfxVTKdVpFekbtxJ6p6mBz3v5CgPtgZJFLkFtAW0VeT+gmLV9s0iEgJ0l
+         8gyzbdup2vQ5J4dKQketbtzn+Miv5FOylJYS/7yQo/70s3oaoMk8nilN940PIjwG8SKq
+         /+mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745330620; x=1745935420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wxtxQ2q5f2CesvMzHl2K/43Dvf+KKs8Sp+BtzyImVRI=;
+        b=N1Cy40zAxoXDXCIu5+RwV0uME66HdDb/B1/RbFRt9BmCxa/XpLnncoPigbXxqlTd93
+         KMi7NeDzE6iMMte5PW3nG1dFvHSdayb1wmetkQSJHM/gNFQ55vJ9nrplfMOD3ghIRnha
+         dxsGioHOjW15vcghL/te/6IiE4x7rt0zsGoPMrqsNLYnAXWNg8XWTJJKHkKhlzfsCXK+
+         lUDbBKbKfLASuVa6x/w2u7vK32VldKSNJHgwPgvYfTo/1KT/K/Q0KzbcnklBPjDk+rXG
+         CeiGPf6NriEx0xCmGToYCYOFgWCCYf2UZp5dhCWspb27eiHa88BMI30tF/rPdaf+q0zc
+         Zlkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGMoBTY/fa6iyzPkIJdCWyuRNBjEBoo84NDQeNH98UvNhK2VV8FIA9JTZH1y+ol84qyQ4/eu1HLmK7paY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeiZunfmWnK8KZkvPfQmeXl/vI3WR0pa+JK8W/fbvsYRKTMYSY
+	zu0hhIGvx0Cre/JBXtJYqYt+uHC/U7mypRa5MefbDN9EoN5LNE92jMwBQyFPRvs6lysKs++zK9H
+	gi9xXl7KJtYgpfe22gacmDcg9av/Vi2dSDXZn
+X-Gm-Gg: ASbGncssEC+TmQowkc1GHk50+1DmxytUMv2EBwFUd1ir+4JcyWIMUEQ3nRL5mTfqsYc
+	nUkNxulDKlPM00UAgzcd1aj382BFHTfD3iZC/6youuzX6mIwmkxqTGx/PmkRYa58CJchabyZaDs
+	0YE1iPBOuucKX0DwhI02VcUKyfFwlQZTmPig==
+X-Google-Smtp-Source: AGHT+IG0i+651pdR53K0l/n7uIQCSuRiQEGLD3Fi7ND1TmWV2npssXiwnzzo30HBpgP42jyUy2IALw8wxWFt/Kz8RzE=
+X-Received: by 2002:a17:902:ebc3:b0:22c:33b4:c2ed with SMTP id
+ d9443c01a7336-22c52a93c28mr10089535ad.26.1745330619867; Tue, 22 Apr 2025
+ 07:03:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417142513.312939-5-ulf.hansson@linaro.org>
+References: <20250417231540.2780723-1-almasrymina@google.com>
+ <20250417231540.2780723-2-almasrymina@google.com> <f7a96367-1bb0-4ed2-8fbf-af7558fccc20@gmail.com>
+In-Reply-To: <f7a96367-1bb0-4ed2-8fbf-af7558fccc20@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 22 Apr 2025 07:03:26 -0700
+X-Gm-Features: ATxdqUHgiM0jEZwKYWOLJlVXJ7i1N-PNg4kE-n9ns-g62S6RZ7kqQTTDhmeVqPw
+Message-ID: <CAHS8izMFxDG5E07ZdqnDH_2D_g1fW8X0M7u3gGyV8efzxDNZbg@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 1/9] netmem: add niov->type attribute to
+ distinguish different net_iov types
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
+	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, 
+	Victor Nogueira <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, 
+	Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25-04-17 16:25:02, Ulf Hansson wrote:
-> When we create a genpd via pm_genpd_init() we are initializing a
-> corresponding struct device for it, but we don't add the device to any
-> bus_type. It has not really been needed as the device is used as cookie to
-> help us manage OPP tables.
-> 
-> However, to prepare to make better use of the device let's add a new genpd
-> provider bus_type and a corresponding genpd provider driver. Subsequent
-> changes will make use of this.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/pmdomain/core.c | 89 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 88 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index 035b65563947..da51a61a974c 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -27,6 +27,11 @@
->  /* Provides a unique ID for each genpd device */
->  static DEFINE_IDA(genpd_ida);
->  
-> +/* The parent for genpd_provider devices. */
-> +static struct device genpd_provider_bus = {
-> +	.init_name = "genpd_provider",
-> +};
-> +
->  #define GENPD_RETRY_MAX_MS	250		/* Approximate */
->  
->  #define GENPD_DEV_CALLBACK(genpd, type, callback, dev)		\
-> @@ -44,6 +49,14 @@ static DEFINE_IDA(genpd_ida);
->  static LIST_HEAD(gpd_list);
->  static DEFINE_MUTEX(gpd_list_lock);
->  
-> +#define to_genpd_provider_drv(d) container_of(d, struct genpd_provider_drv, drv)
-> +
-> +struct genpd_provider_drv {
+On Tue, Apr 22, 2025 at 1:16=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.=
+com> wrote:
+>
+> On 4/18/25 00:15, Mina Almasry wrote:
+> > Later patches in the series adds TX net_iovs where there is no pp
+> > associated, so we can't rely on niov->pp->mp_ops to tell what is the
+> > type of the net_iov.
+>
+> That's fine, but that needs a NULL pp check in io_uring as well,
+> specifically in io_zcrx_recv_frag().
+>
 
-I'd replace "provider" substring and expand drv to driver everywhere.
+I think you mean this update in the code:
 
-I think that's more in line with all other subsystems.
+if (!niov->pp || niov->pp->mp_ops !=3D &io_uring_pp_zc_ops ||
+    io_pp_to_ifq(niov->pp) !=3D ifq)
+return -EFAULT;
 
-> +	struct device_driver drv;
-> +	int (*probe)(struct device *dev);
-> +	void (*remove)(struct device *dev);
-> +};
-> +
->  struct genpd_lock_ops {
->  	void (*lock)(struct generic_pm_domain *genpd);
->  	void (*lock_nested)(struct generic_pm_domain *genpd, int depth);
-> @@ -2225,6 +2238,26 @@ static int genpd_set_default_power_state(struct generic_pm_domain *genpd)
->  	return 0;
->  }
->  
-> +static int genpd_provider_bus_probe(struct device *dev)
+Yes, thanks, will do.
 
-... and then here drop the "provider" as well.
+> You can also move it to struct net_iov_area and check niov->owner->type
+> instead. It's a safer choice than aliasing with struct page, there is
+> no cost as you're loading ->owner anyway (e.g. for
+> net_iov_virtual_addr()), and it's better in terms of normalisation /
+> not unnecessary duplicating it, assuming we'll never have niovs of
+> different types bound to the same struct net_iov_area.
+>
 
-Other than that, LGTM:
+Putting it in niov->owner->type is an alternative approach. I don't
+see a strong reason to go with one over the other. I'm thinking there
+will be fast code paths that want to know the type of the frag or skb
+and don't need the owner, so it will be good to save loading another
+cacheline. We have more space in struct net_iov than we know what to
+do with anyway.
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+
+--
+Thanks,
+Mina
