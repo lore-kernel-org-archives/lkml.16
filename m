@@ -1,200 +1,170 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ED82857D8
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4A1284B5B;
+	Tue, 22 Apr 2025 14:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745332159; cv=none; b=m+WZLVOKu/o0gUGmzVgCSvsclH3234DwRKB6E3uZ3E8jtCRCMsn3eC3YEd4tPyeE7kVJqsGR+uCJQ3iE+bxYlMljrvn0TEOhBcdmx+3w/46DMxcRJm5o45Ov/D4r7vfDzmnKIl4UmTgocdV4wVcpuNJvua8d+xkt+op08a2IqFo=
+	t=1745332212; cv=none; b=SccXn9ofAvOy2eJKUNy80kGGI6/Her3UF4tuIK583Ai6M0vFeZxNFML5RGQYD13i5Q+ijSum4G3G8arYX+W3UsEM4tZZAGA16ks8HoLljudi00ypOe57vnHGIh9Wl7uj3RYj0mh6Iw1uLL4Vmvt9CpRMCbphG9Eo5p4qcMn49qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745332159; c=relaxed/simple;
-	bh=iqAyjkTe8FJmSe36CfbeiEm/MnwVbc4LIHA3sVC2aYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YoxUKw3WqAua0Uf+5BuIWkJYlGx45CXEdxYb2Fraur8AqzEK31a6zGDb2URv6FESoDj3kfPLK6cpj8LfvsDVZVL5456XF5O/j/aCG1c3dBY4N2Og3F5tHtWEvXMNvgy6cf4VsfP6Wo0ENcct1aSBnb+sshShihpreeaW0L9MC0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=L3nxsg7G; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745332212; c=relaxed/simple;
+	bh=+y7IJ6oJ81inUlTVXWqiJFTsfRtk6YoOvQpBIitN+iE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLpb3s7zUo7M3LRXlH2wRo/swvUJkGoX062wcji98QjY+57lPrYdFiNl7BfJAjCBVL7vNMVJYvi2UIIK/QnT2U6MkhBaZx96N8fdnGHIiOX9NTNbpkRmyIrAhIKMM5caM9fIW4XBrnEQcflUaoqFw7XVHk6u9b1+EeCwbmBK8M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YgiE5/0z; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="L3nxsg7G"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b3f92c8dfso157798139f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:29:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgiE5/0z"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f05acc13so67850786d6.2;
+        Tue, 22 Apr 2025 07:30:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745332155; x=1745936955; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZItchBs+om2xlqnvEPsN/ABV3TFl0Qstvr2y/+6RJl0=;
-        b=L3nxsg7G2u8mYYbtyhF8ENYr6QoVO3fQ/+KE32sLtod79XeY5nCRwonkvClFzBckfN
-         1tjV5cImzhpUbHbfaveYozjmXddvezVsKGQ0bwyUfU9i2Yw3OIuEeb+50ZCfgnUyrecw
-         ZSCcznsMBs9WsJ7cmM9/Ykddu/IwSs8Ll9gqW0M3s6z7IIpXvUgDdlJ9jtHPldDTFjmi
-         O0YpHssNY/25fLhLleu6k6/N9AgpY8WEzydWyEMulyRk75N+uPUtlbcL/aQVNFTcATL2
-         UXvapfLhgRPLmvxnnf68IHxkAn5n4CCTlJecMYTf+0detV/igYkK8g/BJ021ksrD1tUX
-         IDTA==
+        d=gmail.com; s=20230601; t=1745332209; x=1745937009; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gkFPhMrpuv3o2hS9nuXgf57BGd6VBgXtGJLjxIp9TVM=;
+        b=YgiE5/0zYZL3aJr/YSkTUML1o6fP+8g0Hpm5YLmXSmSadWoNDzlrrn++3XP1JdvDsM
+         5qRh/c5ytHhLJQDixxeRCcG6BK2NjaO0HS9OCBhRwsWOhjNobSr4nY+3/T6SqgldhyYK
+         eIszFK7g9i6EQ67ySm+FbQadfoN3VB10vPiebKwcRah/rnSOktAigHR+vcD/JtuOBmg8
+         wDE1QtIXGztJkJztmTKcC7IvYutVJ1f+M/jgOd62I0lJOUFRmKHGRZJuyu2KdtRjvHXd
+         tKN36i0LXeQ6crB4wXNo/6g0cyJSxXp3v7qf5hwkimeGDw4w2KT/dxQIHjodIH1dAZuj
+         HUbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745332155; x=1745936955;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZItchBs+om2xlqnvEPsN/ABV3TFl0Qstvr2y/+6RJl0=;
-        b=rPOKh6sNyJKyhKlQ3TTNlaNUBQk96QYc3255JwNZvSQ72FSTq4IUm1+YWIXFRqNLy5
-         U4G2p5xrswKmzJCpqtkQ1u/Ve+uJQiWNDRhvN7yaDE29ZHB7VoQr15XsuSPlnjqxj6tv
-         1m6wz1Opla/KJmBGKu7UR+B0inHrYfPgRHeiFaxDNEqYSSZZEF0ayPaIxjsMbANqAlcb
-         bLPft3McVvSqYCOs/XQ5Iu58UPXdCpk1M+UJPNmr71yegVshhs3hv2lpZUucTgCvdaHd
-         vLp0P5EYKpr+tlQV0LkhXmkVkAFxLgoA2dlQUlk40tM8F+1ZaLapunRknikCtzGZwOgU
-         L9zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVevEStjT2fRbovh7/4Cwqcwe8Hd/mce5t4nvy33ZYHXTI9EjSXmiLWsEDV37Cn+42T3+xyeDOcJ5u2amY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbWffjr7iZfZxTo8e9bO4fCHJDJUATDXrKyCecYpybAyT0D4FT
-	5aB3ypUs2n6IRB/izxqfm0JxFd4zopi6N+Izsjdj9ijszjKpU+TVoQjSrvuwX5M=
-X-Gm-Gg: ASbGncsCHMV6PzDuQO32NL3IVqHoh9QYkZfkQtRF5KtoRvsiB84EMmtcnBuTXIpp9Q0
-	1BLwV8gUrmLsLi8cxE/+DcGZWT5al7Ka0yaKfg4+3n0ttEy25ZGbwVMHf1xSt1x926kK1LNh6AD
-	97Nt7fh42Q6rE/QFl2xib/QUr3ea3i23jE9x/CbCHwLt8pSmCSzvziF02PMidYMhpXV4tgCy79l
-	PyiNg1L1K3i/53o/bBthATKMlW/gHwRazjHkkaWt3NPYLws/Vy0wBbUcb9Fy3n0HwBlGgGkeuGQ
-	CdMxmBZkyVL7U311M3jX55jU88VKfv3ETFNdIQ==
-X-Google-Smtp-Source: AGHT+IFLV/+m8b6shyscF+FGI9c1u3BTJL9q26JyzZDFvicZ/3ujqlTuYIRRvE5h3xowrMyrH1jWVw==
-X-Received: by 2002:a05:6602:360d:b0:85d:9e5d:efa9 with SMTP id ca18e2360f4ac-861dbeab815mr1478981639f.10.1745332154944;
-        Tue, 22 Apr 2025 07:29:14 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a39554d1sm2320394173.111.2025.04.22.07.29.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 07:29:14 -0700 (PDT)
-Message-ID: <da279d0f-d450-49ef-a64e-e3b551127ef5@kernel.dk>
-Date: Tue, 22 Apr 2025 08:29:13 -0600
+        d=1e100.net; s=20230601; t=1745332209; x=1745937009;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gkFPhMrpuv3o2hS9nuXgf57BGd6VBgXtGJLjxIp9TVM=;
+        b=dfzS7JbkAqGWlnFjtWSXbqxtRihiBaRgD9rQ8v7jgI3u9a5Ub9VWzYj45+KLVmUltV
+         huOLyuRwCJgrwH5WfwKpCBMDsoUedlJngOKQAHMLFVOs7hchP6ScNFCKy93Dgqvu7pRy
+         XGunDu2796YwiLSqwdhjw0/cehzxUmwJheTR6rwzZGiORLR9na+jlLPshsI1hurQI8eZ
+         k5eQW/EKtudKkUK64oVoSaYqYqlC0QLQ2oTL+Jtq+kMpSvd3A7BCUFuqmTn8ZayfotKO
+         kv8B6y9Gy8IjNP3swJ15GCZ9SzH74pPJ2AfbJA5hv48r8Or46pVsGSBs6WjqrAIRTXAm
+         Ns2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV1bkfu5+kCmp273lAILsyO0cKDCcnHq1QPvpfNgEfzdiZzYIsvRcFYCKi5yqc1+S0zdt2bctoSW6zACHTAoA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNb04A+YOmAQW4dxmEn9lQAQMgvlSJzQIjqbBo7dJbbd4wEwOr
+	spSU99sTt/ESHeYHl0SA+0nOC09KH97t+KbD5kI0vbc/SvU/UECT
+X-Gm-Gg: ASbGncvdKVLGfyRqeWkcXnx2v2IMG3lM9LI6bOsQF6IU225rqWF/7VrJ6mJABxxyntH
+	chsZ0V53IGvifVA92gQWHjlPnRgUjyKj2FjZW4N4k779BCsz4OFbKEXm8la7fpMK7aD0/fvzcAB
+	IDNczj5Zxw7+BWFCUHLrIs93N2X7hFLfhMt3cT+4dTtLQaWbJZQYFZpruJOcWTx2O8j38uTsYxH
+	6FmgDYW/EeyVr2exIQjcFLWezU9vEHllM993iD7g4S0LTKIPIUHF1MASDDGl3vrXLOWZOw1tsAL
+	ZuG6BRE8zpTrlLr0ID1FbxJohj8FxnqCf/9Tp7xRQ/5oPYE3aalazjNtocyw9QMYo3jpQeqEtgr
+	HQXMFSytYMnuTKzy69yJwtELfbFeIrn7+6woi4StFqQ==
+X-Google-Smtp-Source: AGHT+IFeKuOCzqrVCylUiW+uyw+dYVv8u7uEQTSWqxoE9i0ERqh1jHT4cVXCN/moN4fKJWWK1NjTOw==
+X-Received: by 2002:a05:6214:daa:b0:6ea:d033:2855 with SMTP id 6a1803df08f44-6f2c4562e1bmr274050766d6.26.1745332208952;
+        Tue, 22 Apr 2025 07:30:08 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21c32sm58444886d6.110.2025.04.22.07.30.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:30:08 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 041381200066;
+	Tue, 22 Apr 2025 10:30:08 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 22 Apr 2025 10:30:08 -0400
+X-ME-Sender: <xms:76cHaDMpA5sIxYf0RIXX2tjKia38zYdq-N6WyIlCtAj_TgPjISXhAQ>
+    <xme:76cHaN94VlQCsMniT-usLup25lr3p3b_8HEASMNkajZH6tzj2nFgwSl4eSAYzZJjW
+    xcSXydRphzv8oigog>
+X-ME-Received: <xmr:76cHaCQpXmCscN8_QY9wT6m7ElLkeJgIpnoN6wVb0Vyxlht9KCpbR9dw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefleejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeffleejleehveelteeltedugffhhedvkefg
+    vdehfeeiffeihfeigfdvtdeuhfdtteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpd
+    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmhgrihhl
+    rdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehg
+    rghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprh
+    hothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhr
+    ohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggsohhrghesshgrmhhsuhhnghdrtg
+    homh
+X-ME-Proxy: <xmx:76cHaHtIIQukvMG4Qvz-GiPrmxfThcF_PaC75IkrlySHx-zzQIrWOQ>
+    <xmx:76cHaLci8ls9VLcKQjXL_oR6CmXcjuwbYwUFBC0jArEkGLul_0fFdQ>
+    <xmx:76cHaD3O4-RPopVdGjVFe6D8_KDQPdeaSBdyuX1p1VH2jtmlghaeYQ>
+    <xmx:76cHaH8vI5mT-d1FLt0g2_gMp64Q2P_vMpSMeyDECgkeewxqpTbN0g>
+    <xmx:76cHaO8fbMTUZpaomcAOzodT3a4sxN6fUrke8IVOG-3O4RqUCJ-jSvWI>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 22 Apr 2025 10:30:06 -0400 (EDT)
+Date: Tue, 22 Apr 2025 07:30:05 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com
+Subject: Re: [PATCH v2 0/2] add Rust version of might_sleep()
+Message-ID: <aAen7fQYciq2azi9@Mac.home>
+References: <20250410225623.152616-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
-To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422104545.1199433-1-qq282012236@gmail.com>
- <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk>
- <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
- <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
- <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410225623.152616-1-fujita.tomonori@gmail.com>
 
-On 4/22/25 8:18 AM, ??? wrote:
-> On Tue, Apr 22, 2025 at 10:13?PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 4/22/25 8:10 AM, ??? wrote:
->>> On Tue, Apr 22, 2025 at 9:35?PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
->>>>> In the Firecracker VM scenario, sporadically encountered threads with
->>>>> the UN state in the following call stack:
->>>>> [<0>] io_wq_put_and_exit+0xa1/0x210
->>>>> [<0>] io_uring_clean_tctx+0x8e/0xd0
->>>>> [<0>] io_uring_cancel_generic+0x19f/0x370
->>>>> [<0>] __io_uring_cancel+0x14/0x20
->>>>> [<0>] do_exit+0x17f/0x510
->>>>> [<0>] do_group_exit+0x35/0x90
->>>>> [<0>] get_signal+0x963/0x970
->>>>> [<0>] arch_do_signal_or_restart+0x39/0x120
->>>>> [<0>] syscall_exit_to_user_mode+0x206/0x260
->>>>> [<0>] do_syscall_64+0x8d/0x170
->>>>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
->>>>> The cause is a large number of IOU kernel threads saturating the CPU
->>>>> and not exiting. When the issue occurs, CPU usage 100% and can only
->>>>> be resolved by rebooting. Each thread's appears as follows:
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
->>>>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
->>>>>
->>>>> I tracked the address that triggered the fault and the related function
->>>>> graph, as well as the wake-up side of the user fault, and discovered this
->>>>> : In the IOU worker, when fault in a user space page, this space is
->>>>> associated with a userfault but does not sleep. This is because during
->>>>> scheduling, the judgment in the IOU worker context leads to early return.
->>>>> Meanwhile, the listener on the userfaultfd user side never performs a COPY
->>>>> to respond, causing the page table entry to remain empty. However, due to
->>>>> the early return, it does not sleep and wait to be awakened as in a normal
->>>>> user fault, thus continuously faulting at the same address,so CPU loop.
->>>>> Therefore, I believe it is necessary to specifically handle user faults by
->>>>> setting a new flag to allow schedule function to continue in such cases,
->>>>> make sure the thread to sleep.
->>>>>
->>>>> Patch 1  io_uring: Add new functions to handle user fault scenarios
->>>>> Patch 2  userfaultfd: Set the corresponding flag in IOU worker context
->>>>>
->>>>>  fs/userfaultfd.c |  7 ++++++
->>>>>  io_uring/io-wq.c | 57 +++++++++++++++---------------------------------
->>>>>  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
->>>>>  3 files changed, 68 insertions(+), 41 deletions(-)
->>>>
->>>> Do you have a test case for this? I don't think the proposed solution is
->>>> very elegant, userfaultfd should not need to know about thread workers.
->>>> I'll ponder this a bit...
->>>>
->>>> --
->>>> Jens Axboe
->>> Sorry,The issue occurs very infrequently, and I can't manually
->>> reproduce it. It's not very elegant, but for corner cases, it seems
->>> necessary to make some compromises.
->>
->> I'm going to see if I can create one. Not sure I fully understand the
->> issue yet, but I'd be surprised if there isn't a more appropriate and
->> elegant solution rather than exposing the io-wq guts and having
->> userfaultfd manipulate them. That really should not be necessary.
->>
->> --
->> Jens Axboe
-> Thanks.I'm looking forward to your good news.
+On Fri, Apr 11, 2025 at 07:56:21AM +0900, FUJITA Tomonori wrote:
+> This patchset adds Rust version of might_sleep().
+> 
+> These patches were previously part of the IO polling patchset [1], but
+> they were split out to make upstreaming easier.
+> 
+> The first patch is for sched/core, which adds
+> __might_sleep_precision(), rust friendly version of __might_sleep(),
+> which takes a pointer to a string with the length instead of a
+> null-terminated string. Rust's core::panic::Location::file(), which
+> gives the file name of a caller, doesn't provide a null-terminated
+> string. __might_sleep_precision() uses a precision specifier in the
+> printk format, which specifies the length of a string; a string
+> doesn't need to be a null-terminated. Providing a null-terminated
+> string for better C interoperability is under discussion [2].
+> 
+> The second patch adds a Rust implementation of might_sleep(), on top
+> of the changes in the first patch.
+> 
+> [1]: https://lore.kernel.org/lkml/20250220070611.214262-1-fujita.tomonori@gmail.com/
+> [2]: https://github.com/rust-lang/libs-team/issues/466
+> 
+> v2:
+> - improve SAFETY comment
+> v1: https://lore.kernel.org/lkml/20250406110718.126146-1-fujita.tomonori@gmail.com/
+> 
 
-Well, let's hope there is! In any case, your patches could be
-considerably improved if you did:
+@scheduler, if there is no objection, I'm going to take these two into a
+pull request to tip soon. Thanks!
 
-void set_userfault_flag_for_ioworker(void)
-{
-	struct io_worker *worker;
-	if (!(current->flags & PF_IO_WORKER))
-		return;
-	worker = current->worker_private;
-	set_bit(IO_WORKER_F_FAULT, &worker->flags);
-}
+Regards,
+Boqun
 
-void clear_userfault_flag_for_ioworker(void)
-{
-	struct io_worker *worker;
-	if (!(current->flags & PF_IO_WORKER))
-		return;
-	worker = current->worker_private;
-	clear_bit(IO_WORKER_F_FAULT, &worker->flags);
-}
-
-and then userfaultfd would not need any odd checking, or needing io-wq
-related structures public. That'd drastically cut down on the size of
-them, and make it a bit more palatable.
-
--- 
-Jens Axboe
+> FUJITA Tomonori (2):
+>   sched/core: Add __might_sleep_precision()
+>   rust: task: add Rust version of might_sleep()
+> 
+>  include/linux/kernel.h |  2 ++
+>  kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+>  rust/helpers/task.c    |  6 ++++
+>  rust/kernel/task.rs    | 28 +++++++++++++++++++
+>  4 files changed, 77 insertions(+), 21 deletions(-)
+> 
+> 
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> -- 
+> 2.43.0
+> 
+> 
