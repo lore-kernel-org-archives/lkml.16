@@ -1,138 +1,119 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FE0D530;
-	Tue, 22 Apr 2025 09:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178161EA7C6
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745314264; cv=none; b=U2juq03KupEkHl4ghTbaaLT12/HI3ZZQ/+M6aYBc4lUk4h3fS2bGlGgVzXmNT+PikBynR/tMAmP1ZNvUhmW6wKP3581ekBwwOB3Dx2ageHNdfN44O7LJ9CcA+Gm62ME1lUG7nRJh509A2+EtKV6ecarxDl5hG6olIovYUtqD6aw=
+	t=1745314289; cv=none; b=IYZ85Yjk3YGHHH7Eo5510MA+8Dlamqo8JzdveZVDD/7/Vc/RpGNb4+/BVWqL6U1T2AokgBjK49QLML8BFtZuE8dSUpiO7p/DPqwx4rVNDNP7PQqG6WhcwTH7oZV8eOtxvLWxkNpiRh2dv0FRcLktWAUtRt7IEelXh8rnqE5+6m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745314264; c=relaxed/simple;
-	bh=dVWut1y1uCXZbzkPySleeRDuQj+6ALhRGToeQfGQjww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ggO/QXhW88bQNq2m33oQ1lFo0wo/tcEb7KerLvY5ViKNAlUE5+lYgNFIk/kdEpHDufHDMcyz78mR7SL6Ij5thdne1hJ2XeWHAc1s6pElBCFO23VwIdY4gmWRCYxHbjZ5GIupP62GDU7MZDp8UkxAIC2+PWwJD43UhyqBkVhXvZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FevK4pVq; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745314289; c=relaxed/simple;
+	bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hVqJ3ex4oqMRx+ALpdU7dWmLZ6O2VWilv/1twoP3BTvL4hSQmGkBK6PY5pJilLB6x/NdlfP9F3rVeWwsuYVpnUs7p1pZAfh5Rz0FnaUrlFL2NbUJ7sFi8+voKSONPTCknhiB35T7UURyedc6xoUaFLvxn319zbFQZR8Mt4JJIBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=V4TTI9/S; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FevK4pVq"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M97GL3021363;
-	Tue, 22 Apr 2025 09:30:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qqmyx8
-	EsmhliMxc5DdpnjRqAisS7wFj6uL5Bcak4MB4=; b=FevK4pVq9N+zKYgWAHq13D
-	GfvivrRjJU8Cs5w8pefrtwFILbaykPU9P0f7t9t5og4Z1hNPd2lPjp2CYBarD1K7
-	z1wRLsMAYMLF8hOR3RmIgZlGRFLYDyk0EOTY7mFrYPg6ZoQa+LF4+eHod6Cg3O1Y
-	/iM2nJymSxOEEsS4RIdGttPSia2RuHlXA636XGRZOLzW5awosFWOzMbD+7Z2ssr2
-	68vlWueWctlCEnkX9ZGcAzSNHTZza/xdyoDhaneM0+GQndifP/JPX2r8JAfnWk7d
-	IHOTi7/OVyQssr2BxcOxz4xxJtbz5/6xKe0xUV9c2WgkeRdv+d0eUvc3rv2A9GtQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46686s831p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 09:30:58 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53M8kn8A028130;
-	Tue, 22 Apr 2025 09:30:32 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 464rv21vbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 09:30:31 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53M9USwN55247320
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 09:30:28 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D09320043;
-	Tue, 22 Apr 2025 09:30:28 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E3E920040;
-	Tue, 22 Apr 2025 09:30:28 +0000 (GMT)
-Received: from [9.152.212.229] (unknown [9.152.212.229])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 22 Apr 2025 09:30:27 +0000 (GMT)
-Message-ID: <4dc2211b-9a34-4b97-96d5-197445f75bad@linux.ibm.com>
-Date: Tue, 22 Apr 2025 11:30:27 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="V4TTI9/S"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so562733266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745314285; x=1745919085; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
+        b=V4TTI9/SL+GBdIKfahDSV+IppAdIg4zLJh4lCkiJ3R8knSo0uMqtT+ltpF+9zbW31F
+         wHg62cDtDTaAd1ub7NP/N+g9VyEOUb/Jlg35KJT1H1AwZDeO3Q9tfGzRFma4jyauMzxo
+         A2zzE5PfpsXOd8VwrKRjUkhX3d3aDdvhsbRYtATTRJBXDM5k4vWoCKdtxnRlnB3r6C3A
+         Fg/PI/Kh7HR0NLMtFK/lWo7qbcpY44p93kJ0snAy3VGoAgeT9/s0nycnB+0bB2H228BE
+         tUZXezmu2rcrH9mZ6Ad8tWzZx50+cU7cOHCsqflnVyOR30SbhXdH7r+aeg/N2ER4VtMb
+         fqFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745314285; x=1745919085;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5iZrie0NfoNEv+CbNmUGa6+0H1z0sLCiVg0dRInIfI=;
+        b=UBnXsdh/rjO6cfueJohnp4HZ+eaWMZ8wY0OaXwCKDgogtMgqCadYnijUCSyReC60b5
+         jG5PTWQCuPvtZk6aAsrwDCSmlk8wiQ8Lvd2pfHxvHfk/FlqjEeo/s76aD+6jtl9Oslto
+         kiJrGoGpCALC2nrhKMyPT0v9SBOGKn9+fpd9BxAL5qX+2POmnF7ldfCdLkDrEknT3lg7
+         AGvTTVGbOHOskge7kRLG1rGmy83iQ8lxYyFsk8z4b9Na99j48NPvSfsK3fzBNdbgRQM0
+         wRv6JIIF1GRzjlXTi7h+haAV9xW2HA7mmda2vz0dZFWvdfnL5IfgsF8D101m+Tx1YrbW
+         5ekQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVKJaqqmABNZKgGuTTYTw1bOLWOqftyFo8Pu10QlC/VR3BPeJxhQ6+J+TGqTh6qAqNciOw4jAUdNimzqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAZ+JJ5wHg+awfoRZFec2i6JejKdwIzD1Yuncs1mzUW2Vfzc86
+	kLI6/ua60JpaQvlfrib+BZJw+DADuAjN6qiyrfQRacAuG3deDAYwm0KmddAy8QI=
+X-Gm-Gg: ASbGncsoFBY2wYpZo8N/pM0VKpS2uMfZ7hmp1gKbQdgzV7dS5UT9ukyUn6B9V7H8T4a
+	BKNWXCGt4G+SV/wofCOS4XLcEkMxpxtC1uO1A1D4kVl/BhvGl0h/v3Te5L592bwDiV2RP6oMqzy
+	oVimpvIH/3Q6TncArhWoqkedDKcz6s7gzt85HH/VwlopGmJFSKsgDXPJg8xrBegwQIJu8xgMeyH
+	dzVqlsGYOPlZ7JfLeF4yBl7TdDatnl+WaViQPAHTEjYOrNgt8MoiitzZFfSMcDZG+HQhu9xKq8Y
+	6VjkVDXQEb01WmXtE08Ua7GMJF8hKvtambdy1VrwbD8=
+X-Google-Smtp-Source: AGHT+IEVRJF5sF7x1XS+lNM+Im1WgkH5x+/F/q2jlZU7fETD+EEwteY/YCeGUBJhZQKnxR2YU7TZDw==
+X-Received: by 2002:a17:906:5d5:b0:acb:8a2c:fcdb with SMTP id a640c23a62f3a-acb8a2d110cmr880090566b.38.1745314285271;
+        Tue, 22 Apr 2025 02:31:25 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6efa5c5asm627390666b.166.2025.04.22.02.31.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 02:31:24 -0700 (PDT)
+Date: Tue, 22 Apr 2025 11:31:23 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>, 
+	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
+Message-ID: <jqlq7y3bco4r3jpth23ymf7ghrtxbvc2kthvbqjahlkzsl4mik@euvvqaygeafd>
+References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+ <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/tests: Fix tests 84 and 86 Add --metric-only on s390
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com
-References: <20250415134553.3089594-1-tmricht@linux.ibm.com>
- <20250417115204.12521Ef5-hca@linux.ibm.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20250417115204.12521Ef5-hca@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=WP1/XmsR c=1 sm=1 tr=0 ts=680761d2 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=x4kxwI2lhZTCVj833_4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: ssXgtLYNmP5udv_rnM7wKvVWH2_2SKQI
-X-Proofpoint-GUID: ssXgtLYNmP5udv_rnM7wKvVWH2_2SKQI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- spamscore=0 malwarescore=0 adultscore=0 mlxscore=0 phishscore=0
- impostorscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220071
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i2qhcekndg5mr4b5"
+Content-Disposition: inline
+In-Reply-To: <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
 
-On 4/17/25 13:52, Heiko Carstens wrote:
-> On Tue, Apr 15, 2025 at 03:45:53PM +0200, Thomas Richter wrote:
->> On s390x z/VM machines the CPU Measurement Facility is not available.
->> Events cycles and instructions do not exist.
->> Running above tests on s390 z/VM always fails with this error:
->>
->>  # ./perf test 84 86
->>  84: perf stat JSON output linter          : FAILED!
->>  86: perf stat STD output linter           : FAILED!
->>  #
-> 
-> I would guess this fails also for KVM guests?
 
-Yes
-> 
->> diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
->> index 4d4aac547f01..a708dedf7d9d 100644
->> --- a/tools/perf/tests/shell/lib/stat_output.sh
->> +++ b/tools/perf/tests/shell/lib/stat_output.sh
->> @@ -151,6 +151,11 @@ check_per_socket()
->>  check_metric_only()
->>  {
->>  	echo -n "Checking $1 output: metric only "
->> +	if [ "$(uname -m)" = "s390x" ] && grep -q z/VM /proc/sysinfo
->> +	then
->> +		echo "[Skip] not supported on z/VM"
->> +		return
->> +	fi
-> 
-> Wouldn't it be better to test for the availability of the CPU-measurement
-> counter facility? That is: test if facility number 67 is present in the
-> facilities field of /proc/cpuinfo.
-> 
+--i2qhcekndg5mr4b5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
+MIME-Version: 1.0
 
-I can certains change the check and grep for facilities number 67.
-Will send v2.
+On Tue, Apr 22, 2025 at 11:23:17AM +0200, Christian Brauner <brauner@kernel=
+=2Eorg> wrote:
+> As written this isn't restricted to admin processes though, no? So any
+> unprivileged container can open that file O_NONBLOCK and avoid
+> synchronous reclaim?
+>=20
+> Which might be fine I have no idea but it's something to explicitly
+> point out=20
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+It occurred to me as well but I think this is fine -- changing the
+limits of a container is (should be) a privileged operation already
+(ensured by file permissions at opening).
+IOW, this doesn't allow bypassing the limits to anyone who couldn't have
+been able to change them already.
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+Michal
 
-Geschäftsführung: David Faller
+--i2qhcekndg5mr4b5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaAdh2wAKCRAt3Wney77B
+SV5jAQDVSm6Ja4jGC2yTv6E/hAxyTENttqmaX3cnbiAR/btTsAD+NHYf2vRtgkRC
+wioHPKWvbJ4uZJ+rnc/qtRcKN2hyhgo=
+=b8xl
+-----END PGP SIGNATURE-----
+
+--i2qhcekndg5mr4b5--
