@@ -1,66 +1,219 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28DF7219A91;
-	Tue, 22 Apr 2025 19:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0814D27817A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351319; cv=none; b=RQ7mCZMGyicm6jP5JgWDLM03GZ6eHBEdm0GRhwrKBWJNpkTdv1b7taeBa7RVnrber0F8nYT6y+uHE2VR2A/HcSMCukHoti8vmEtc6UULwhlmIMryAKDwtMQx0ax+7vTe8+t+ifHht++dcl1AdpIDrqAL/L7byACLHTiokmW+7Hs=
+	t=1745351328; cv=none; b=bJQcZQvUlfzUA23ZQKTBQrnnolD80u8ucG61s15/fDCoi0JezA1mWX6x8YWOwgG4Ebb2MP9BDfHWkd5BRevnuhVE/pOV17D04YWkBFKqhGP6LJQQxERbGT1CVEtfGmCN1x1e0liclERI39IO7Qj6Q2seVQm1IimCx6h7SAk6fGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351319; c=relaxed/simple;
-	bh=+Kc9qy0oOaQWfmBZYMJPtaNtRt9LORMvyFTwcxkuuwc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sNBkfGufu9VAyKXKmXjNV7fvefUGDfmGHY31y4U/iyuNsNaWNAV7/1hODbGew7aadxeuysJ5+LpOactHpLcdUmna7AYpuo+C7rVMx+a0ii6y6UKN5nlLAlz0UjFnq4HgLcqsAXLSPDm3WWfgRngv4aXh0ChvqNlB+zjoO7LktYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Af4OqbtN; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745351328; c=relaxed/simple;
+	bh=gxTbnWTJB50n3KzhRveyIpup2aByT+oX6qk2Z9xPy5A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=S17OH18HkCDodSNWJL7ewZFL+5NNKx6+VQYOGrg99omFsO/v6fTmo9V1edtA76NDhEugnz803+Kq4afcT4QnJLp4kPZWz6E7xg2MHqL5UJtAuzE4XRbOMFNGXX2bZQqSYU8NECGQumYZXGWuCtGo6EhVbT/P/SB1cXJzYmS4/yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YCpwsc0h; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Af4OqbtN"
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id E8851210C43D; Tue, 22 Apr 2025 12:48:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E8851210C43D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745351310;
-	bh=0Y0SCgk8WWvrPPxNLfgEcUoXF+2NFMMnEfNH2Dn2KVA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Af4OqbtNNYqiEt/07RHpJ+Yr6wO/I0+bXaU3VfkgEdR14jCWhDRBR81bAzJr1pXsV
-	 3VvF1ZU4RimHvw0zvEq4Uyz/kZNvE8LEAsDI+eRmjzpueQad+On2kIjDPknp3mJvhi
-	 HkjF5oWd800voUOFFA0NTEyVLh+E04mfbHxl91f0=
-Date: Tue, 22 Apr 2025 12:48:30 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
-	kotaranov@microsoft.com, horms@kernel.org, mhklinux@outlook.com,
-	pasha.tatashin@soleen.com, kent.overstreet@linux.dev,
-	brett.creeley@amd.com, schakrabarti@linux.microsoft.com,
-	shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
-	rosenp@gmail.com, paulros@microsoft.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] net: mana: Add sched HTB offload support
-Message-ID: <20250422194830.GA30207@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
- <1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
- <20250421170349.003861f2@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YCpwsc0h"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8119b436so4828240a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745351326; x=1745956126; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYP8FWYioRIH49o2SbBA+hnHBHTmzAHRk/jhuz8dPh0=;
+        b=YCpwsc0h4QS3vP3MBV5hcuYFMjvfLFlWAsR2l9A+I19m9Z/0jG1uuW8jaywFiWGY50
+         NuQX32XyPvHjKm7Pm9GrWHddY4at3JrjK+KG1OJ890qPb0Dp1185mxQWmD9e6avP80R2
+         hMLAq4dVgQ1ZKClsyQna/00DUAK+CWfKzDSI9UHGqvLvLx/Hqo2flqtrtkIYYLSRuv1u
+         aOLyeJbDMSVLwzXRDivjXrdHLJw6vthnd4za6jvNkmaz+1/79XJIHftgScMjr70L9DD3
+         Lq0FlSPcoFag9ikg1prBoSdfO902ARI/Egm5pZv3Y5RzWFKRWcqswqzsUtH6XHDqtFdn
+         aYcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745351326; x=1745956126;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TYP8FWYioRIH49o2SbBA+hnHBHTmzAHRk/jhuz8dPh0=;
+        b=a8i4R2ZJWLkkQLazS7XHdwyX8Q8XN27cOguNPrkLEzgVzEMuN/0WP1IIdHpzqTmyBP
+         Z/YhR21ihkrB5EXSTLQ0DBObUgb8biynuksHYBaYawOTbf/M0ve8NH7zaOm9JFrcBgFx
+         /1ucu62Tflq0AsB2Hd6duib+oRxTq2riCzpr9+D7rVOwJGswkSDKS0tmt25yMJn0pr1I
+         ArP+ARLHn72EvShVL24SM4FheKRBzzRanr+Wm1AiweOtyS9NglnNMvaTV5YMBret0Ehf
+         EzfJ0e2PhY4Jt7jOINa8iwUHWsSUoCNMz4cvZaRXSWUmqZVf8kbg8yfD6HET/ybF84p1
+         axQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUg9GIc3G13yYSlZPmCklp/Zv0PFNQatxjMJ5tV4dx8JJWUbicuLogz4QHS4tRtaNzdDVkIeTksITE6BqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl02DWEaoGsFnQLodSvxuVwWVDw+OmQ/gPZ1uQJXq8F8md37EQ
+	M7BalcLYA9+gQLgCHqWuxKgUMS7iG4jGLVz/ErTVWFghHa3dc36DXne9JNLsp5JBWBG3HQOmUcU
+	nfg==
+X-Google-Smtp-Source: AGHT+IHwSsIYgf8vWT+jRC6Pvxw4AVQcEw1SpJ2dRt6hC00hrYnmArGpQ4+avg4Rfx1Mpw65htDaczncQaU=
+X-Received: from pjbdj15.prod.google.com ([2002:a17:90a:d2cf:b0:2ff:5752:a78f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ed0:b0:2ea:3f34:f18f
+ with SMTP id 98e67ed59e1d1-3087bb69c30mr20376842a91.19.1745351326271; Tue, 22
+ Apr 2025 12:48:46 -0700 (PDT)
+Date: Tue, 22 Apr 2025 12:48:44 -0700
+In-Reply-To: <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421170349.003861f2@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Mime-Version: 1.0
+References: <20250331143710.1686600-1-sashal@kernel.org> <20250331143710.1686600-2-sashal@kernel.org>
+ <aAKDyGpzNOCdGmN2@duo.ucw.cz> <aAKJkrQxp5on46nC@google.com>
+ <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local> <aAKaf1liTsIA81r_@google.com>
+ <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local> <aAfQbiqp_yIV3OOC@google.com>
+ <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
+Message-ID: <aAfynEK3wcfQa1qQ@google.com>
+Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu:
+ Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in
+ a virtual machine)
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>, 
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
+	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com, 
+	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com, 
+	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Apr 21, 2025 at 05:03:49PM -0700, Jakub Kicinski wrote:
-> On Sun, 20 Apr 2025 23:33:39 -0700 Erni Sri Satya Vennela wrote:
-> > This controller can offload only one HTB leaf.
+On Tue, Apr 22, 2025, Borislav Petkov wrote:
+> On Tue, Apr 22, 2025 at 10:22:54AM -0700, Sean Christopherson wrote:
+> > > Because I really hate wagging the dog and "fixing" the kernel because something
+> > > else can't be bothered. I didn't object stronger to that fix because it is
+> > > meh, more of those "if I'm a guest" gunk which we sprinkle nowadays and that's
+> > > apparently not that awful-ish...
+> > 
+> > FWIW, I think splattering X86_FEATURE_HYPERVISOR everywhere is quite awful.  There
+> > are definitely cases where the kernel needs to know if it's running as a guest,
+> > because the behavior of "hardware" fundamentally changes in ways that can't be
+> > enumerated otherwise.  E.g. that things like the HPET are fully emulated and thus
+> > will be prone to significant jitter.
+> > 
+> > But when it comes to feature enumeration, IMO sprinkling HYPERVISOR everywhere is
+> > unnecessary because it's the hypervisor/VMM's responsibility to present a sane
+> > model.  And I also think it's outright dangerous, because everywhere the kernel
+> > does X for bare metal and Y for guest results in reduced test coverage.
+> > 
+> > E.g. things like syzkaller and other bots will largely be testing the HYPERVISOR
+> > code, while humans will largely be testing and using the bare metal code.
 > 
-We selected tc-htb for our current use case because we plan to support
-multiple speed classes in the future.
+> All valid points...
+> 
+> At least one case justifies the X86_FEATURE_HYPERVISOR check: microcode loading
+> and we've chewed that topic back then with Xen ad nauseam.
 
-> This is not a reasonable use case for HTB.
+Yeah, from my perspective, ucode loading falls into the "fundamentally different"
+bucket.
+
 > 
-> If your reason not to use the shaper API is that there is no CLI
-> for it perhaps you should add one to iproute2.
+> But I'd love to whack as many of such checks as possible.
+> 
+> $ git grep X86_FEATURE_HYPERVISOR | wc -l
+> 60
+> 
+> I think I should start whacking at those and CC you if I'm not sure.
+> It'll be a long-term, low prio thing but it'll be a good cleanup.
+
+I did a quick pass.  Most of the usage is "fine".  E.g. explicit PV code, cases
+where checking for HYPERVISOR is the least awful option, etc.
+
+Looks sketchy, might be worth investigating?
+--------------------------------------------
+  arch/x86/kernel/cpu/amd.c:              if (!cpu_has(c, X86_FEATURE_HYPERVISOR) &&
+  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_IBPB_BRTYPE)) {
+  arch/x86/kernel/cpu/amd.c:      if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/amd.c:      if (cpu_has(c, X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/topology_amd.c:             if (!boot_cpu_has(X86_FEATURE_HYPERVISOR) && tscan->c->x86_model <= 0x3) {
+  arch/x86/mm/init_64.c:  if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/mm/pat/set_memory.c:   return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
+  drivers/platform/x86/intel/pmc/pltdrv.c:        if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !xen_initial_domain())
+  drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c: if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+--------------------------------------
+
+
+Could do with some love, but not horrible.
+------------------------------------------
+Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
+this up at some point, especially with things like SEV-ES with DebugSwap, where
+DR7 is never intercepted.
+  arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+  arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+
+This usage should be restricted to just the FMS matching, but unfortunately
+needs to be kept for that check.
+  arch/x86/kernel/cpu/bus_lock.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+
+Most of these look sane, e.g. are just being transparent about the state of
+mitigations when running in a VM.  The use in update_srbds_msr() is the only
+one that stands out as somewhat sketchy.
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/bugs.c:     else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+------------------------------------------
+
+
+Don't bother
+------------------------------------------
+Most of these look sane, e.g. are just being transparent about the state of
+mitigations when running in a VM.  The use in update_srbds_msr() is the only
+one that stands out as somewhat sketchy.
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/bugs.c:     else if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/cpu/bugs.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+
+Perf, don't bother.  PMUs are notoriously virtualization-unfriendly, and perf
+has had to resort to detecting its running in a VM to avoid crashing the kernel,
+and I don't see this being fully solved any time soon.
+  arch/x86/events/core.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/events/intel/core.c:   if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/events/intel/core.c:           int assume = 3 * !boot_cpu_has(X86_FEATURE_HYPERVISOR);
+  arch/x86/events/intel/cstate.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/events/intel/uncore.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+
+PV code of one form or another.
+  arch/x86/include/asm/acrn.h:    if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/hyperv/ivm.c:  if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/mshyperv.c: if (!boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/cpu/vmware.c: * If !boot_cpu_has(X86_FEATURE_HYPERVISOR), vmware_hypercall_mode
+  arch/x86/kernel/cpu/vmware.c:   if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+  arch/x86/kernel/jailhouse.c:        !boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/kvm.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/paravirt.c:     if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+  arch/x86/kernel/tsc.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR) ||
+  arch/x86/kvm/vmx/vmx.c: if (!static_cpu_has(X86_FEATURE_HYPERVISOR) ||
+  arch/x86/virt/svm/cmdline.c:                    if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR)) {
+
+Ugh.  Eliding WBINVD when running as a VM.  Probably the least awful option as
+there's no sane way to enumerate that WBINVD is a nop, and a "passthrough" setup
+can (and should) simply omit HYPERVISOR.
+  arch/x86/include/asm/acenv.h:   if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))       \
+
+Skip sanity check on TSC deadline timer.  Makes sense to keep; either the timer
+is emulated and thus not subject to hardware errata, or its passed through, in
+which case HYPERVSIOR arguably shouldn't be set.
+  arch/x86/kernel/apic/apic.c:    if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+
+This "feature" is awful, but getting rid of it may not be feasible.
+https://lore.kernel.org/all/20250201005048.657470-1-seanjc@google.com
+  arch/x86/kernel/cpu/mtrr/generic.c:     if (!cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+
+Exempting VMs from a gross workaround for old, buggy Intel chipsets.  Fine to keep.
+  drivers/acpi/processor_idle.c:  if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+
+More mitigation crud, probably not worth pursuing.
+  arch/x86/kernel/cpu/common.c:        boot_cpu_has(X86_FEATURE_HYPERVISOR)))
+  arch/x86/kernel/cpu/common.c:   if (cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+
+LOL.  Skip ucode revision check when detecting bad Spectre mitigation.
+  arch/x86/kernel/cpu/intel.c:    if (cpu_has(c, X86_FEATURE_HYPERVISOR))
+------------------------------------------
