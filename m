@@ -1,93 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D56228469B;
-	Tue, 22 Apr 2025 14:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C24284B43;
+	Tue, 22 Apr 2025 14:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331670; cv=none; b=utzapWSOgnJC+MJYCcyGaujx4Ltmt5g1pTmCBz+vrjATDDNRgO6JSs/k1t02PreQQY6cMwxIQtDxIOe/k80FhKzMc1lbEbhhQNgXVMbFlS5jxv6HYvkcLhkzyEykbNdS+gxB0NeG82PpTCzAgUrlpC+9hkfor1VtlZ5KuLPtyI4=
+	t=1745331689; cv=none; b=IaerzN79a8KXUGKiE+XrgMyk/0qHd8nNoBHsMZ+YAMk2zidCasMFsGepNUTahYv1DJau3O7vWdHINEEIgzPeW8OAfWp8jIh/Y4gDtlgPq2BFN0gOV9y0l1xdNOE7xpHpXkhkCp5qNa51Z/eqJJRxbLKZZ7vPScWHE8v6aNlB9pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331670; c=relaxed/simple;
-	bh=bqIeIQeh4fLBXqUF5XbW0OIF6SuCLBF7zBYy0ok2Z80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLELRAz6PQ/98VyV0qUPNa4SQrRiY8zC9H1vqD6yRTl5M1So3nPpFYfJ+/3Hsk4mizwPfos4iuRR/pD9PPuYrE9h2vKVFIeDciEXYm5P6hzOMJWuFrwkFdLoF1JoZVCvM6pqNg3NQBTTTRJb34LEZKnRMOcIqakcscRj6FtXFUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56BF1152B;
-	Tue, 22 Apr 2025 07:21:03 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 485253F66E;
-	Tue, 22 Apr 2025 07:21:07 -0700 (PDT)
-Date: Tue, 22 Apr 2025 15:21:02 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yabin Cui <yabinc@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] coresight: etm-perf: Add AUX_NON_CONTIGUOUS_PAGES to
- cs_etm PMU
-Message-ID: <20250422142102.GI28953@e132581.arm.com>
-References: <20250421215818.3800081-1-yabinc@google.com>
- <20250421215818.3800081-3-yabinc@google.com>
+	s=arc-20240116; t=1745331689; c=relaxed/simple;
+	bh=CYBasdCQGC1UhaurgIOOeFA83OlbtSNsIf8wg9pr4O4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AVIs48tZ36avX6plC4pFxsbjg89FqOLpNE5kEqZWxC5/YJtVQKKFteg8Wf/U/lJL/51a19RCZVGuO3QYUghJvKwy26fZ6NgiBi6G3AGWzbQZ2Omf6BsV6gncSRj2ekmvX24L1kCdmLaM7urDIVmCC+vhnnnglbZeO6ZTTgUUVrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TG9KSP2x; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TG9KSP2x"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af90510be2eso516048a12.3;
+        Tue, 22 Apr 2025 07:21:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745331687; x=1745936487; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYBasdCQGC1UhaurgIOOeFA83OlbtSNsIf8wg9pr4O4=;
+        b=TG9KSP2xe6yxtmRQds4xK1OqwC7lsfjSqcZR3+VKWYbUyIjzfbK1nFl9y6LTzBCilH
+         LIODDmav6Nn9vyWYEmc4Q4YRQnnlm9t3eQgMnJpr5AeMItGPs0ND6RzKsThjiB/XX5Gi
+         u8p7wB1a3UpNqVwjVGpu64LP4C91wTZ++vkFc0ata4OeLBCQbI7vMojtJbX0CdZTJIzF
+         ERsxT8B1yGazk0aWfp6JwPgyIC1ELPVTHAvHXw9l1HtUj3IYc218HGoZICFBkQyUNSUD
+         L6BPYv5SuMJFepzAe+PNrvDfulma5LtUD3pnWWMvXsAXx941QCYYzdDrBHMhr9PLo1MB
+         tBjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745331687; x=1745936487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYBasdCQGC1UhaurgIOOeFA83OlbtSNsIf8wg9pr4O4=;
+        b=B4DGy/JuXUvVuGSbftluJRk9FSZYuvnA2pAqx+YgZVlD4XH3T+IYs7dSnxsckPUBQw
+         39b87KGLfv98oYxR2DgRqzUeFu7De+esuudDjzvE7ES9vTof8z/AHeVMAtbUg0/w3UFX
+         jFw0WMpXeS6ldB/PvQG80T7a1YDWVd3WhMqFWzefWXFfH/gXElf2yiGZKVTUAdEg9Ra+
+         Res5TybBaEbxewRGrpuHB+Y/GRn4f0YbXYkdcRf/emstuNYA75lbScwO7G7xHWCwtpRI
+         hRWwgKf9SYg98KbQWhatFsTqsJRuY/HgQpCLYOnMHCGp5an4fNl0bBbAZoj0cLC6R4ht
+         TtRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBSybyK/pMJgUduvyvykrTYDKX3t7J7tpZ3r/AFFf9iKdxfJpcYMCGjmp6j4JJSGgeqFbbG3NBkbzDN3Y=@vger.kernel.org, AJvYcCW1bxJA0Sy/n9FQyHEKArbbfv3kqOghTQnTmu2E/XaMEWF7HfG8HK+E+/m1gxBbn96Sya11wUpsmGinIpcT9NQ=@vger.kernel.org, AJvYcCWbCjtzJFPnbwMNTL6LEo6gm+As4/0B4tBJ4qyL+wBGp8jFWNvXmAOT9Tgs4Iw1HzwkauzYMhRJneYX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yypk7AGzzs2CxMPMWGPVpy1pWdzuBFDqmt5KdTc14dykjUDM5VQ
+	Ud7X99bBE+bUcckf0Frms3snQj4ABiMz47+KgYcfTNMbwassxPneviU7/bVftMeHPo/cH0wHQtF
+	ouscaDDAkyFoN+HS0+VmJhbjMXR8=
+X-Gm-Gg: ASbGncuz2+TQ6unRLej8bouzznKHBRO8fmWKHaVsJpgkNaGrRIGKNPBWHx3Ym58AZwu
+	sKNcYmcy6fNcUBsmMoiRBDB6LW/Iv1CHOFbE5PrzClV07xG2ddAgW1r0n7NqH96MSRlbB3ZT2kz
+	fQLRYBuvZEfFgRaMGz7aLU5x1QVl6NB2pF
+X-Google-Smtp-Source: AGHT+IFFGIzmDwG4q5vl7uqENSVklXtsE4ezZA/aMXaaMHZ1/VAuFnRd4HhuyVVV1HQjthGmdvoPglwRR1oJ0G6DAFg=
+X-Received: by 2002:a17:90b:3b82:b0:2ff:6bcf:5411 with SMTP id
+ 98e67ed59e1d1-3087bb313f0mr8921370a91.1.1745331687645; Tue, 22 Apr 2025
+ 07:21:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421215818.3800081-3-yabinc@google.com>
+References: <20250411-try_with-v4-0-f470ac79e2e2@nvidia.com>
+ <Z_kV7U0IcebUfGps@cassiopeiae> <aee8924a-d533-4d19-8064-9831e3616013@kernel.org>
+In-Reply-To: <aee8924a-d533-4d19-8064-9831e3616013@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 22 Apr 2025 16:21:15 +0200
+X-Gm-Features: ATxdqUE5xk3PM1uAf5hTOL0Q2XPafe__dGinAo84yDtIH92K-bUfLIHkt8mkCtw
+Message-ID: <CANiq72nRSzFMKa+XGTKP=nFTz1-JD0DVTDrBiXv9P9ri14ESEQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] rust/revocable: add try_access_with() convenience method
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 02:58:18PM -0700, Yabin Cui wrote:
-> The cs_etm PMU, regardless of the underlying trace sink (ETF, ETR or
-> TRBE), doesn't require contiguous pages for its AUX buffer.
+On Tue, Apr 22, 2025 at 10:01=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> @Miguel: Can I get an ACK for taking it through the nova tree?
 
-Though contiguous pages are not mandatory for TRBE, I would set the
-PERF_PMU_CAP_AUX_NO_SG flag for it.  This can potentially benefit
-performance.
+Sure, please go ahead:
 
-For non per CPU sinks, it is fine to allocate non-contiguous pages.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-Thanks,
-Leo
+(Sorry, I missed replying to the other one)
 
-> This patch adds the PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES capability
-> to the cs_etm PMU. This allows the kernel to allocate non-contiguous
-> pages for the AUX buffer, reducing memory fragmentation when using
-> cs_etm.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> ---
->  drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index f4cccd68e625..c98646eca7f8 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -899,7 +899,8 @@ int __init etm_perf_init(void)
->  	int ret;
->  
->  	etm_pmu.capabilities		= (PERF_PMU_CAP_EXCLUSIVE |
-> -					   PERF_PMU_CAP_ITRACE);
-> +					   PERF_PMU_CAP_ITRACE |
-> +					   PERF_PMU_CAP_AUX_NON_CONTIGUOUS_PAGES);
->  
->  	etm_pmu.attr_groups		= etm_pmu_attr_groups;
->  	etm_pmu.task_ctx_nr		= perf_sw_context;
-> -- 
-> 2.49.0.805.g082f7c87e0-goog
-> 
-> 
+Cheers,
+Miguel
