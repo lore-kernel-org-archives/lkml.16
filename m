@@ -1,134 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E50B8634F;
-	Tue, 22 Apr 2025 22:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B2D8634F;
+	Tue, 22 Apr 2025 22:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745362256; cv=none; b=S/ZpiEDKI9ETWNw7OrR+D+viR7+OEGv9hnyF6BvdwYryfQQ8SKa8jqyGjkjAtbr20vkIsiUcMKsnWq/aRvJ6qXo2Jt2gZ/NT2nBHPVV9mg9WQR6gxOQ+2WvTSQ6NH2unP5oCD76Ni+edVsYcTcYUlWowdE4G9j/pWgcMySvhxQk=
+	t=1745362267; cv=none; b=L9tptKNS414d1Z7DDFB3W7IjDzKS50VqxDcT9RKNkEOEWwLmMcCVaG8nqsY2SRTWhqA8ORasVUqwJW2i5jx0PJaJzHXGnz/NXijErF/tyCAIzy0JBldA8hm9E5psvxDJ637EWIhfz+94c3H7revRIVydXRvu+xoctS4atDc977Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745362256; c=relaxed/simple;
-	bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HsN5Rvhn9DiYfojHq7xEYtQmX8ONxr9dVoBASQNL/jMN74iiSnMQp/IhyfZHhxEyKBnCtehPEhUbtsJRulDSdncXQRIF5u/IH12sHaOxHzdvrzgmAFdSYMaV6ICl3M8P/EM/O7s/XeoqUlbAfZHkw9HqTZSrNMDPEEAWa+X0XOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gst9f3o0; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745362267; c=relaxed/simple;
+	bh=xKFeD+QaeLGzNUOYFH4M+KARAkjJY+Gn/GCxeecB5HA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GGTB4bCYKVM+mLx8O9Blf208mVQvMyjx36WMF6FlVNVzZ3CJxp4th9oIRGybnOWAoMzpK2Y8MAdhmSWoMTjqTHwXkGJ1wH1FAItym8O1jZcl98F03IOdO6PWi7pZmVOp2qSGKM2nzZM88+emn6geUcT/0DsiilXAsou4idaZRlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2pZ9Ltg; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gst9f3o0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745362255; x=1776898255;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qic8WDJnyOQBWYfyXO7/q90sRjGRhIGgxtQ3jdqmKoI=;
-  b=gst9f3o0e7JLwVHy+suQ6sVMjrWWR9qLbDanT7Yaa33kxnyfjV/OQx7p
-   TdvfrQ4Uvthl6z2Vy+FUKM79gTYjF/XIfQe9jm1CygFyQMJQYwcUIXBAQ
-   CAP7qJuTbU011dDLb6C6twFLaL189PMozPMDIO7E/6xB6bJyfjIN0q5Ed
-   FEEbllr+Eijlhhb+K8Y2+Sb48VwGzQ5gQXshfzXKoshpmp33CpOcjxMKH
-   lrOqwshZ6/k0LYTAln7mhapfzdVByiuKg7r1zdF0JWAUS93gkOCAdjbbU
-   IZ2JrV0dYFRcWzOLtAa/FKAm4sIdSKQRGwwt2u9UvfSRuB8eQr/xr0lSs
-   w==;
-X-CSE-ConnectionGUID: ltSHvNIJQ26d2PxBQAWWtw==
-X-CSE-MsgGUID: eRcrbDC8TcuVdE3KwSPiRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46816880"
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="46816880"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
-X-CSE-ConnectionGUID: n7TL10sURoCXgOxgB+IyBA==
-X-CSE-MsgGUID: WhMNARUHSzqW4R8DxoGfLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
-   d="scan'208";a="137006997"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 15:50:54 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0C69220B5736;
-	Tue, 22 Apr 2025 15:50:51 -0700 (PDT)
-Message-ID: <34bcfac9-86df-42d8-adef-9ccedc3a322a@linux.intel.com>
-Date: Tue, 22 Apr 2025 18:50:50 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2pZ9Ltg"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso876199166b.3;
+        Tue, 22 Apr 2025 15:51:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745362263; x=1745967063; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OtNg2abh49QsnTa1XSIwbO/eokylj5yxtKMHXP/aBRw=;
+        b=F2pZ9LtgqeukdZ34OTs7PuPZw7XxL8scdVNrOKNYJEYnBApVKAOrFwGuJljROCeRG2
+         I7DQpxnA3wEJavZFM1kYmNT9OTvf1rpWw1JQ1ygtxRPhajdFVrVIuvAKW/5yG5Fa9kNH
+         jFoW/ggSxsXxvbvxk+Mqcx2aiinTPTLAz7y8F/4gwcUZwrj59ECZ4SmAIx0/gE5sMckQ
+         zObcQbBSWr7s8ArDoVuOtkW0rGUIg0Gz8LQZx2wPN4mYs8E5uaMKQQfZrRieGtB4t+Qp
+         4hztktSz2wg6oYsdlHoG6OkEvomkdup2D0VX5vbBdL3/OKyA+F06b6HlsvD06+ucO2iI
+         ngPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745362263; x=1745967063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OtNg2abh49QsnTa1XSIwbO/eokylj5yxtKMHXP/aBRw=;
+        b=EKTAFGOBTa5788Ur14DD4sQbKG3DbEMbds/1ePFs37/q+l74aHCX0EVJt5KTGA4ijA
+         u45E9c48OR4K5Lwdw5EsEwAq8cBbkIhqh+1J4hnZA3IrNk46AbtzJzlhin88fTYHg+K8
+         H3ZOhjz+q332/jALz7PiiIJ7dZNeCFil7GBMGeK5hxcPlOG7vqPDY62IXntnrrpm1hHD
+         8ifQ9n+PDAq5/JthtG28PzvYTTuOKLtLJ5PyXr/+C+yc8i+H/Spava31DN4+FeT9+U/S
+         aMLA6D5nehqAscJIVV6gBDAvhgzWew8tuaQSOlmUmZbIVeacdqowr76oqL+cksWJvRa6
+         As3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUi0BelkG9Um4M13q4rzbfpWvJ4Eb+fTjFyN4FKw0/1k30+5bYCD3EsqlxWW61E/bjzMVux9vvGCWM=@vger.kernel.org, AJvYcCWunwSYC8TTAvViGGg+22xQaRg+jTnCQaNJ+J6Yr5FWP4QWuytXtrpRZL8md/BHjn11fLo83/yfPtci9fCv@vger.kernel.org
+X-Gm-Message-State: AOJu0YywCu8qtdGv7qsD4TiD+X7NaFfeVWq5dl9E2RFdBk7nXVnU1BLl
+	OZwSakz3fUOZEiJvKpD991DqOByhZL9cvkbozLQnVG3z4V87O7XGfd76AAu8gC47b9FOMNHz4gf
+	thvuMaOkz7qgAZI+RollVKduVkfU=
+X-Gm-Gg: ASbGncsR7ZGCMdFtwJcgmNFbzHgvFolOuICFB0yVsJTj4IDDR7S5Twhpv4gkr+ZAXCa
+	PnHyMDNi5kq6235wwz601JVsr3wbE6Ez5xbGsyDzaFTDV0bHURJLtUoVRoRK3eYxT1857jxdslB
+	z1q+kxHu569Ur8csywnXT8NQ==
+X-Google-Smtp-Source: AGHT+IE5r0MFZFYCu7PJn/lLZUKtD7zvLcloIWqKzgfm6B6oQoGOwioIpprZLoxLjQ81aU2yyIye6lqvTx9A4VFkpPo=
+X-Received: by 2002:a17:907:7b85:b0:ace:37d6:a5ce with SMTP id
+ a640c23a62f3a-ace37d6b029mr163304366b.19.1745362263600; Tue, 22 Apr 2025
+ 15:51:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
- <20250416153226.GC17910@noisy.programming.kicks-ass.net>
- <e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com>
- <20250416195610.GC38216@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250416195610.GC38216@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+ <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+ <CAHp75VeuNhfJrNAZZwY2tEHte=UPHLOPNUz7y_J20xv2+_Zdeg@mail.gmail.com> <f0948adc-8130-4417-8c59-f0b52a7a0e01@baylibre.com>
+In-Reply-To: <f0948adc-8130-4417-8c59-f0b52a7a0e01@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 23 Apr 2025 01:50:27 +0300
+X-Gm-Features: ATxdqUFWkS9PxNa71tt9rtag-1SYSUfDj-KjVRpIxd6xsGuKNSHNFIJoyiRJZ98
+Message-ID: <CAHp75Vde6BOmyc1UevU9EymVVzRD29w=KzkAdaAvsUb50UsrcA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 23, 2025 at 1:37=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+> On 4/22/25 5:30 PM, Andy Shevchenko wrote:
+> > On Wed, Apr 23, 2025 at 1:08=E2=80=AFAM David Lechner <dlechner@baylibr=
+e.com> wrote:
 
+...
 
-On 2025-04-16 3:56 p.m., Peter Zijlstra wrote:
-> On Wed, Apr 16, 2025 at 03:45:24PM -0400, Liang, Kan wrote:
-> 
->> I see. I think we can check the constraint table and update the overlap
->> bit accordingly. Similar to what we did in the
->> intel_pmu_check_event_constraints() for the fixed counters.
->>
->> I'm thinking something as below (Just a POC, not tested.)
-> 
-> I'll try and digest in more detail tomorrow, but having overlap it *not*
-> a good thing. Which is why I've always asked to make sure this
-> doesn't happen :/
+> >> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) =3D=3D 0,
+> >
+> > Why not static_assert() ? Because of the message? But static_assert()
+> > supports messages AFAICS.
+> >
+> >> +       "macros above assume that IIO_DMA_MINALIGN also ensures s64 ti=
+mestamp alignment");
 >
+> I just knew that was standard C. But I support BUILD_BUG_ON_MSG or static=
+_assert
+> would work just as well here.
 
-I've checked all the existing event_constraints[] tables and features,
-e.g., auto counter reload.
-On the Lion Cove core, the MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a
-constraint mask of 0x3fc. The counter mask for the auto counter reload
-feature is 0xfc. On the Golden Cove, the
-MEM_TRANS_RETIRED.LOAD_LATENCY_GT event has a constraint mask of 0xfe.
+In the kernel we use u8, for example, however in the standard it's
+uint8_t :-) Same with many compiler attributes and wrappers on top of
+the compiler things.
+According to v6.14 codebase the only one driver uses _Static_assert()
+for that (there are many in tools/ and more in BPF, with a few headers
+where it's fine (esp. in UAPI where no static_assert() available).
 
-Other constraints (except the one with weight 1) are 0x3, 0xf, 0xff, and
-0x3ff.
-
-But I don't think it can trigger the issue which mentioned in the commit
-bc1738f6ee83 ("perf, x86: Fix event scheduler for constraints with
-overlapping counters"). Because the scheduler always start from 0. The
-non-overlapping bits are always scheduled first.
-For example, 0xf and 0x3fc. The events with 0xf (has low weights) must
-be scheduled first, which occupy the non-overlapping counter 0 and
-counter 1. There is no scheduling problem for the events with 0x3fc then.
-
-I think we are good for the static constraints of the existing platforms.
-
-> At the very least we should WARN if we find the dynamic constraint gets
-> us there.
-> 
-So the problem is only with the dynamic constraint.
-
-It looks like only checking the weight and subset is not enough. (It may
-trigger false positive for the 0xf and 0x3fc case.)
-I think the last bit of the mask should be taken into account as well.
-
-WEIGHT(A) <= WEIGHT(B) &&
-A | B != B &&
-LAST_BIT(A) > LAST_BIT(B)
-
-Thanks,Kan
+--=20
+With Best Regards,
+Andy Shevchenko
