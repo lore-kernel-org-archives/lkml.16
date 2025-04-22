@@ -1,85 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05895A59;
-	Tue, 22 Apr 2025 18:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47096A59;
+	Tue, 22 Apr 2025 18:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745346155; cv=none; b=jHhYSuOR1z3SvEpIVWyo+R9MObz/2fuLVFQIQaHbWLMULC41NwsMG7dBAdY+AUcYBSNN9Kk4nfsvB/6VGbuTZacpAevGjwzR+1ZJalvNno6l5XrXUdXY2NqmZwQLlh4dfziRgHuBlOaSxwNsgHqm2mtU0cvfam0VqJMVrXdqB+Y=
+	t=1745346215; cv=none; b=BbwZ5ss0Bhv8RBHsYegmcisidDQWC/95IhWrhMrIN4Ny19/2k1nl77jvFMcxlmxpppUov8lQqeM2cnPwZRO1gxWnfC+HrdK0tqcodKtaMWQys3uat2+IP/rw1dlcQftZgESHnsjRSMZUjMykrk5ajlCnB86V/cinbu0SNDsOfRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745346155; c=relaxed/simple;
-	bh=/6sathbH+7Jnbu9E149HuRG6rgSEuyc64VSGjuU8MWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KDXz/eMddwrZpO/gweD1WwGHJ7rZi1BbS8H9Ev/LAEjlHCmVZwqJJ2CdaJP61rSxqMpJYkalqXXOkFrhOCD1ZmXq0JSNoI/i2ETN7SvLh+7fkMk5BPut3NNvclhWiDWtE27Q+hRehhUl7Y2+F48xQRrxnLGDhiuVukakArkhDHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8roIy1r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745346215; c=relaxed/simple;
+	bh=GGXktewUewz/nCPocxoFhsFF9bvV8KlcmNW4nrQWjcc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hBKlxxG6RKHzT1e641TNHRDsmzx+dmMuX5lCTZxXOD5KuoRqx4ewQGqTwaytLbwSBsrnzzHSt9lKn4tOHt62ZTZTEdy7rh9m/1SJ7WlFSTZmdrseVjQXcdDMb1pePauKJiYeMI69TrLh/kybXysfzwX5Lm3Bg+sr9VvHt/5IDBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVuGwvnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8roIy1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101F9C4CEE9;
-	Tue, 22 Apr 2025 18:22:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVuGwvnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DADDC4CEE9;
+	Tue, 22 Apr 2025 18:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745346154;
-	bh=/6sathbH+7Jnbu9E149HuRG6rgSEuyc64VSGjuU8MWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T8roIy1rX0xwCewCA2r4BONAjYm1LP5vatify1W7MnN3e4fWvB63tXJJWw6wcx7M/
-	 CNaIxICJ3oIZl0Wlfp1QDQzFdoejE9iF1g8CFUQanPVpmdsznhUgGaGXh2ycbp3e5N
-	 AkQEltIkUgrKXrvwmchbWbmekyA7NQla8eFl4OcP3cQg+cgwDFSpockBues3RX7xDs
-	 o0qWUZRYfNs6rj1gEmrkqhw+NDr+xDIRkyntJzjBN1J4w2lfIjqPw3E0rx03BLADCD
-	 B5HGcpahcylTXXaZeIsQ/3J3UQNex/zRwXlY4eyJN+U+T5Q5l98WOcSG2vtXpu8keN
-	 WKCVbg2vMLeXQ==
-Date: Tue, 22 Apr 2025 19:22:29 +0100
-From: Simon Horman <horms@kernel.org>
-To: linux@treblig.org
-Cc: dhowells@redhat.com, marc.dionne@auristor.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	corbet@lwn.net, linux-afs@lists.infradead.org,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] rxrpc: Remove deadcode
-Message-ID: <20250422182229.GM2843373@horms.kernel.org>
-References: <20250417153232.32139-1-linux@treblig.org>
+	s=k20201202; t=1745346214;
+	bh=GGXktewUewz/nCPocxoFhsFF9bvV8KlcmNW4nrQWjcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kVuGwvnMr+u4BSDFaJL/SXFU1tLN3/lIs8TFy9Cp/fEd2OvgyB5p7cFFlAuGwT25E
+	 RCpYhsm7RHsum7fe1q5P9CLJ/RUn2MgPSqJRHqsE0nmPv0mSCoigwSkkhUO+RVAVGR
+	 aQTEio9Jjves6Dw+qpggK2wB5EYeDL/+JRRkhw0HcEQq6gvG6of3aJfLld1Ew1coOI
+	 YKVJESESm9ImKsIRyq8zfK7nZh2HWi5nYuqiP0qmmX7MuMXRHENXmclpbP4K7WgtkI
+	 53CuTReAorBsHbfTiFf/4vGeATfOqDyDp3AJxxHYXnmy+T+EZ5nG3Hbti3T5XS4VEy
+	 oQUWAJEAfYjkA==
+From: SeongJae Park <sj@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Su Hui <suhui@nfschina.com>,
+	akpm@linux-foundation.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and size_add()
+Date: Tue, 22 Apr 2025 11:23:31 -0700
+Message-Id: <20250422182331.59651-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <adbc06d8-1a6c-4279-9596-d743505d64dd@stanley.mountain>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250417153232.32139-1-linux@treblig.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 04:32:32PM +0100, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, 22 Apr 2025 13:44:39 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
+
+> On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
+> > On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
+> > > It's safer to using kmalloc_array() and size_add() because it can
+> > > prevent possible overflow problem.
+> > > 
+> > > Signed-off-by: Su Hui <suhui@nfschina.com>
+[...]
+> > > --- a/mm/damon/sysfs-schemes.c
+> > > +++ b/mm/damon/sysfs-schemes.c
+> > > @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject *kobj,
+> > >  {
+> > >  	struct damon_sysfs_scheme_filter *filter = container_of(kobj,
+> > >  			struct damon_sysfs_scheme_filter, kobj);
+> > > -	char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
+> > > +	char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
+> > > +				   GFP_KERNEL);
+> > 
+> > Count is clamped in rw_verify_area().
+> > 
+> > Smatch does a kind of ugly hack to handle rw_verify_area() which is that
+> > it says neither the count nor the pos can be more than 1G.  And obviously
+> > files which are larger than 2GB exist but pretending they don't silences
+> > all these integer overflow warnings.
+> > 
 > 
-> Remove three functions that are no longer used.
+> Actually rw_verify_area() ensures that "pos + count" can't overflow.  But
+> here we are multiplying.  Fortunately, we are multiplying by 1 so that's
+> safe and also count can't be larger than PAGE_SIZE here which is safe as
+> well.
+
+Thank you for adding these details, Dan.  I understand the size_add() change
+can make warnings slience, though it is not really fixing a real bug.  So I
+believe there is no action item to make a change to this patch.  Maybe making
+the commit message more clarified can be helpful, though?
+
+Please let me know if I'm misunderstanding your point and/or you want some
+changes.
+
+
+Thanks,
+SJ
+
 > 
-> rxrpc_get_txbuf() last use was removed by 2020's
-> commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
-> local processor work")
-> 
-> rxrpc_kernel_get_epoch() last use was removed by 2020's
-> commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
-> ambiguous")
-> 
-> rxrpc_kernel_set_max_life() last use was removed by 2023's
-> commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
-> granted a channel")
-> 
-> Both of the rxrpc_kernel_* functions were documented.  Remove that
-> documentation as well as the code.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-
-Hi David,
-
-This patch doesn't apply to net-next.  Probably because of commit
-23738cc80483 ("rxrpc: Pull out certain app callback funcs into an ops
-table"). So please rebase and repost.
-
-But other than that, this patch looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-...
-
--- 
-pw-bot: changes-requested
+> regards,
+> dan carpenter
