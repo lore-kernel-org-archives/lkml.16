@@ -1,83 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7061EEA23;
-	Tue, 22 Apr 2025 07:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3CE1EB5E1
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308607; cv=none; b=M8qpaFCY5sQhFAuHoEF+bsdHPo0FnFp9o2kJeDR+DwXz6XDqgUEDgfJ7Jt+zX3yEBIuCnw6vM6YU5bnQAY46AfP8cisj2qLCwZgAdNZAe7UEMXIA0286goRbj797pQ6Sv1EuP2M0evAvuRfu37TAn8dYe++IbeVsvyrsdIBrtmI=
+	t=1745308638; cv=none; b=udzHyBwoFRDl30UmY4V4IPDPty0RI2Yo54ZmVSxY56w640d2QdZJ0Yasg9ZvaMRsphmPx75fb3OZhavavxoGvvkA5Ee8St+ovbIKpp5anxVsrZrfvQ1IXga8b4DHKZjrZB78FXyDVNqg/fOumlcstE7RaN5V6vE9G9aPIRKvfuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308607; c=relaxed/simple;
-	bh=Pj90EHE8r9vgVEqDG290oU8FvMy6AVbQAG7udI5RJeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q7sY7acbKI2m2vz90i53IW8hdXV6gyNYdGzBKXOHbOdfnsf26zh6W7chmoqAUSINV3zQY3H4Msnn7XtrUsls1AO0sSwasVrzAKXqPtuMHH51riufA5h1FgDdJdiqFDiSRNeWbyAWeo5kbf+xjSYncXJYq9LBon/0JAc7fkz4/IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COF1Kiw9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745308638; c=relaxed/simple;
+	bh=W6fiirVxDej/XyiK9p1ILMBMNLmS8HDMUagTWQuqTDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZtJkmwF6eFe9lzX/IdgVvlnBlu/Z5+fXaJRJQ/tqpjHXbBAq3GY+JyPsW/++tRBjiRl4rIOZc6l30iYy3txzdnIrMeWTq8eAmjEImi0Kn3erZG5c+fafEjKz0fM3iGj/SWYBPKE8ESB9GJMJx5igNbXontGCBqdYEj/YBGGscOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=M691sO3x; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COF1Kiw9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5120FC4CEE9;
-	Tue, 22 Apr 2025 07:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745308607;
-	bh=Pj90EHE8r9vgVEqDG290oU8FvMy6AVbQAG7udI5RJeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=COF1Kiw9v29UxuqZYFgaPhIYyS/fiMcJf+k1pwKcTITYX8+NYXZFMHQqg+ftINnfb
-	 BrkP1Ym+S/8XoY9Xi8HkwI1yMFUriKqOyecBLrWgX5Me4NmST4QJjiHW2p6IFy6uWK
-	 b4ejiGPAeXbas/4orgxcwVbZoMpi/ui+BRPABOr/LoZIFwxng8YwYY/zsQQgmJ6eDE
-	 9+LuhsjH4lluFZMqD0/HW5hL2YRQ8hAgBfqddgPUq9DgZfa1sX1CzH+SdrbkUrI+O2
-	 ShWCDmk4+wElE/qb69CzoSeWnga6s6mh64VVpRc257+2QoAFYF51ORwdptJEShvDlh
-	 hFdRdHuRjcTpQ==
-Date: Tue, 22 Apr 2025 09:56:41 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: hch <hch@lst.de>, Hans Holmberg <Hans.Holmberg@wdc.com>, 
-	Dave Chinner <david@fromorbit.com>, "Darrick J . Wong" <djwong@kernel.org>, 
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: add tunable threshold parameter for triggering zone
- GC
-Message-ID: <5on3efybz6wr35szabvvglypmyip6nocviftpr5bke3vuvth74@rso4ha4e263o>
-References: <476cf4b6-e3e6-4a64-a400-cc1f05ea44cc@roeck-us.net>
- <mt3tlttnxheypljdkyy6bpjfkb7n5pm2w35wuf7bsma3btwnua@a3zljdrqqaq7>
- <e5ccf0d5-a757-4d1b-84b9-36a5f02e117c@roeck-us.net>
- <20250421083128.GA20490@lst.de>
- <c432be87-827e-4ed7-87e9-3b56d4dbcf26@roeck-us.net>
- <20250422054851.GA29297@lst.de>
- <c575ab39-f118-4459-aaea-6d3c213819cb@roeck-us.net>
- <20250422060137.GA29668@lst.de>
- <ZAeaFwRAEUsKK0hGhDYwUXtlJlY7PfLM_VWVNpab3-t5iZRi0RBfhND7vC1DwgrzRXnvTwelETC2Vl635O8MjA==@protonmail.internalid>
- <9a3cd21b-5b51-4aae-9f04-2a63f3cc68d7@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="M691sO3x"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso47920335e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 00:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745308633; x=1745913433; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EqBOHlwj4256j3dBDjYtf6K6K4BniWJZiGKAMEj4vds=;
+        b=M691sO3xTi7Jzd+ly4D7LcCoHV3DDMjrtH4LCxW+4o468T5+onnhBbB/0t7nE88Fjv
+         YIezrgi+oDbDJ0qGOXd8Uf08hWaGOUWHhgxLR2KvH9Fy4tjAOq4emnwNYF0E80tMkjMX
+         VueV87n91mW0S2gweXv9hSCuWHZjmrJyUGjC+cb838W/D2/oepI56hLjvccrujsFpYTc
+         5rvILSSOiVexy1juMW5l1KsdVDOqGdbHo7sX0ladIEHYA5ZOsBbqHOndgfID5A0jueB0
+         kgc0ZvhtLncVrqp96LK3kOTaXbPBHywOQR/CISLODw81npnDGiOSuN3I/lYM5nVxS3Ft
+         ELmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745308633; x=1745913433;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EqBOHlwj4256j3dBDjYtf6K6K4BniWJZiGKAMEj4vds=;
+        b=L2ma0nYuBX29wuL33ag2pQexoE8/L1JGPnUwMxQE1Vx3p+ZfCBARaRwuS2xFErIKnO
+         cGYh4RiMZvkauy7NNJQQ3TK209L/WOtx/6bnSM398dkRnM2CkW85ny8GdhXgHSBaQiNF
+         I2cKzlc1R9ISdikIRyd/LLQOIgjyzbQv31SaMSXUGPxaFHQZtMAGy9fynknW9Ct2yRie
+         GacnKSUjDRNcp4WVyDxSru67SCHK8V2EXELn4nRWR3vXkxfmCczdpL15H7Jy75PaBXag
+         nGEmlMsF/aZVbxBKT9khty7IMSWIOvgyE5uGLFqZPyKWUaie4qftcfW2/2WcLv54K42J
+         8BBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPybdah/alG4Zqh212RN5hINAg3GB+CZC2mox2oY9gEiKeGgQlcyGunr17thF0IkokjtkMrLjUmfhJbAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCzUxtNcAWQMSGzhHyGTDQkFz+eB5F1WHaA8ZB8uGcmUEMkSJd
+	/rlazDyeRA3IiwsthwjSPpYipxEsyFRfG/Zuq+Ksq2HbOt9+7HAx5yli8rkXkvU=
+X-Gm-Gg: ASbGncvCWacrHZN+SxchmGHjzFwa9ZCX3avKw+VILBafZRT7vcMomHZBMu6dJUH6YIt
+	dzumipUnR3xcPFX4drS+I89zPYfGoH9vbxIs5VFqPUCfp5cIqMXdLlCrwVs6w3kFGJjlbUcjgEU
+	nVDy15Lm7pOq+eKwpZf+jjT8S6lOKCIHD4I4rVdq7i7v+hCNyu5pkZHx6fsYaeU5Cups+paSOH+
+	Nz4SlF4BoEeTbb03HPlOqx0uFf7qGzRLk1aK74jcYAjUr09S+BWq4fNft/YnFJwflIQPdj84rRd
+	ntQ1IKR0UlpcRS+KFmtZ1ywEATOBq9/r/nJehW+w9Ubwq8iAOzy/oLNryARK5xTfnKcmHsr4JYI
+	9zIFJ1B+88Q==
+X-Google-Smtp-Source: AGHT+IGhvdPbJvZOktQCBqw/2wUTXP1WKMQk4VP2N0DETPu5Pgx5Z2h8MnL3dE4kU4vPi/MEVPmpBQ==
+X-Received: by 2002:a05:600c:1547:b0:439:6118:c188 with SMTP id 5b1f17b1804b1-4406aba756emr107164305e9.19.1745308633516;
+        Tue, 22 Apr 2025 00:57:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5d7a3dsm160623495e9.38.2025.04.22.00.57.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 00:57:12 -0700 (PDT)
+Message-ID: <2c4f4422-d9c9-4d36-b0ef-f68779b91ee9@rivosinc.com>
+Date: Tue, 22 Apr 2025 09:57:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a3cd21b-5b51-4aae-9f04-2a63f3cc68d7@roeck-us.net>
-
-On Mon, Apr 21, 2025 at 11:22:47PM -0700, Guenter Roeck wrote:
-> On 4/21/25 23:01, hch wrote:
-> > On Mon, Apr 21, 2025 at 10:57:31PM -0700, Guenter Roeck wrote:
-> >>> free should be floored to zero, i.e.
-> >>>
-> >>> 	free = min(0, xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS));
-> >>>
-> >>
-> >> Do you mean max, maybe ?
-> >
-> > Yes, sorry.
-> >
-> > Also if you want the work taken off your hands I can prepare a patch
-> > as well, I just don't want to do that without approval from the
-> > original author.
-> 
-> I didn't actually plan to write a patch myself. I thought that either
-> Hans or Carlos would do that. Sorry if my replies caused a misunderstanding.
-
-I can do that, don't worry then. I'll craft something around this week.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] riscv: misaligned: factorize trap handling
+To: Alexandre Ghiti <alex@ghiti.fr>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Shuah Khan <shuah@kernel.org>,
+ Andrew Jones <ajones@ventanamicro.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Peter Zijlstra <peterz@infradead.org>
+References: <20250414123543.1615478-1-cleger@rivosinc.com>
+ <20250414123543.1615478-2-cleger@rivosinc.com>
+ <ba11b910-9959-4845-b3a3-dd9a52466823@ghiti.fr>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <ba11b910-9959-4845-b3a3-dd9a52466823@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
+
+On 21/04/2025 09:06, Alexandre Ghiti wrote:
+> Hi Clément,
 > 
-> Guenter
+> 
+> On 14/04/2025 14:34, Clément Léger wrote:
+>> misaligned accesses traps are not nmi and should be treated as normal
+>> one using irqentry_enter()/exit().
 > 
 > 
+> All the traps that come from kernel mode are treated as nmi as it was
+> suggested by Peter here: https://lore.kernel.org/linux-riscv/
+> Yyhv4UUXuSfvMOw+@hirez.programming.kicks-ass.net/
+> 
+> I don't know the differences between irq_nmi_entry/exit() and irq_entry/
+> exit(), so is that still correct to now treat the kernel traps as non-nmi?
+
+Hi Alex,
+
+Actually, this discussion was raised on a previous series [1] by Maciej
+which replied that we should actually reenable interrupt depending on
+the state that was interrupted. Looking at other architecture/code, it
+seems like treating misaligned accesses as NMI is probably not the right
+way. For instance, loongarch treats them as normal IRQ using a
+irqentry_enter()/exit() and reenabling IRQS if possible.
+
+Moreover, it looks like to me that misaligned access traps are similar
+(in the way they can be handled) to how the page fault are handled in
+RISC-V. It uses irqentry_enter()/exit() and reenables interrupts if
+needed. Additionally, the misaligned access handling does will not take
+any locks if handling a misaligned access taken while in kernel so even
+if we interrupt a kernel critical section that does not have interrupts
+disable, we are good to go. But my understanding might be wrong as well
+and I might be missing specific cases :)
+
+Thanks,
+
+Clément
+
+https://lore.kernel.org/lkml/alpine.DEB.2.21.2501070143250.18889@angie.orcam.me.uk/
+[1]
+
+> 
+> Thanks,
+> 
+> Alex
+> 
+> 
+>> Since both load/store and user/kernel
+>> should use almost the same path and that we are going to add some code
+>> around that, factorize it.
+>>
+>> Signed-off-by: Clément Léger<cleger@rivosinc.com>
+>> ---
+>>   arch/riscv/kernel/traps.c | 49 ++++++++++++++++-----------------------
+>>   1 file changed, 20 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+>> index 8ff8e8b36524..55d9f3450398 100644
+>> --- a/arch/riscv/kernel/traps.c
+>> +++ b/arch/riscv/kernel/traps.c
+>> @@ -198,47 +198,38 @@ asmlinkage __visible __trap_section void
+>> do_trap_insn_illegal(struct pt_regs *re
+>>   DO_ERROR_INFO(do_trap_load_fault,
+>>       SIGSEGV, SEGV_ACCERR, "load access fault");
+>>   -asmlinkage __visible __trap_section void
+>> do_trap_load_misaligned(struct pt_regs *regs)
+>> +enum misaligned_access_type {
+>> +    MISALIGNED_STORE,
+>> +    MISALIGNED_LOAD,
+>> +};
+>> +
+>> +static void do_trap_misaligned(struct pt_regs *regs, enum
+>> misaligned_access_type type)
+>>   {
+>> -    if (user_mode(regs)) {
+>> -        irqentry_enter_from_user_mode(regs);
+>> +    irqentry_state_t state = irqentry_enter(regs);
+>>   +    if (type ==  MISALIGNED_LOAD) {
+>>           if (handle_misaligned_load(regs))
+>>               do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+>> -                  "Oops - load address misaligned");
+>> -
+>> -        irqentry_exit_to_user_mode(regs);
+>> +                      "Oops - load address misaligned");
+>>       } else {
+>> -        irqentry_state_t state = irqentry_nmi_enter(regs);
+>> -
+>> -        if (handle_misaligned_load(regs))
+>> +        if (handle_misaligned_store(regs))
+>>               do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+>> -                  "Oops - load address misaligned");
+>> -
+>> -        irqentry_nmi_exit(regs, state);
+>> +                      "Oops - store (or AMO) address misaligned");
+>>       }
+>> +
+>> +    irqentry_exit(regs, state);
+>>   }
+>>   -asmlinkage __visible __trap_section void
+>> do_trap_store_misaligned(struct pt_regs *regs)
+>> +asmlinkage __visible __trap_section void
+>> do_trap_load_misaligned(struct pt_regs *regs)
+>>   {
+>> -    if (user_mode(regs)) {
+>> -        irqentry_enter_from_user_mode(regs);
+>> -
+>> -        if (handle_misaligned_store(regs))
+>> -            do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+>> -                "Oops - store (or AMO) address misaligned");
+>> -
+>> -        irqentry_exit_to_user_mode(regs);
+>> -    } else {
+>> -        irqentry_state_t state = irqentry_nmi_enter(regs);
+>> -
+>> -        if (handle_misaligned_store(regs))
+>> -            do_trap_error(regs, SIGBUS, BUS_ADRALN, regs->epc,
+>> -                "Oops - store (or AMO) address misaligned");
+>> +    do_trap_misaligned(regs, MISALIGNED_LOAD);
+>> +}
+>>   -        irqentry_nmi_exit(regs, state);
+>> -    }
+>> +asmlinkage __visible __trap_section void
+>> do_trap_store_misaligned(struct pt_regs *regs)
+>> +{
+>> +    do_trap_misaligned(regs, MISALIGNED_STORE);
+>>   }
+>> +
+>>   DO_ERROR_INFO(do_trap_store_fault,
+>>       SIGSEGV, SEGV_ACCERR, "store (or AMO) access fault");
+>>   DO_ERROR_INFO(do_trap_ecall_s,
+
