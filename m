@@ -1,217 +1,131 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C12A10957
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C97216CD33;
+	Tue, 22 Apr 2025 01:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745284627; cv=none; b=JU9oHSpW3r4JQ9s9ITA0BKwZBsnvqCHqX8itiibQ3ZsGiOCMsqCuOGRkxbWh8X8+cpcoq+Odzx06HI+G0fA1GijmpugSWuYgKeGOsCiKVA0VOJRGfoXBIlmujZ5InhcSX2PXPG/VBEAKImJV7QNdnIbMaZdFFxYoGC57anF1fio=
+	t=1745284733; cv=none; b=Ey3ylA2Hddc7q7D5kSW8e5nogKFys7jfStTyS/XjwB+m3Xf0g3laSTgSprByskB1N348mF1J2J8QVl7qlKGkv+bMJbTjuu5+6Wm7d3bUhPK/ufZP+X7SCY8THw3mOE/DhUaKyBUURLgqQJKy+haQoGHvJA/lAZWsWD4y6IuNN2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745284627; c=relaxed/simple;
-	bh=GfaMNTFMVfkspfV5xoMIfCbuTf2dYrYClHiO/wgBK0I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=dD+yUVl7fknml90YVZcdWQdq8MqDqerMNkgJI+IgrGoiWWiYgN3NQzo2g1HlCKWQakhK9fpVtwExxMogEaFb7jZDv29lceGKzRlQQFBgZVMOCd8KPUkethHOyr60WfMn9fGhTA1aeYzAwCs5ETYU8KBlNET7aRiukYJDanVc5bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lPwc9Lb5; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
+	s=arc-20240116; t=1745284733; c=relaxed/simple;
+	bh=0qrDinrGYYMpLHgQEt5+y0lxPzUYR186egeIjlsfTUs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tRwjIH68rYdjOwz1UR7AIkJJzzyn6XsYo2NAy2EfdCbmSSqGwgfMH+i4C9P92LxT/pJSDCmz6kq90Uy0KUUQ3f0a7gUEWgeLNee63FbLZ77uPizyeaa5rxj+IFPWacO8neCL1K8yeKBcr1VjxWxnTb+Q6j8V9SY/LDyBedf/w5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wo5jrs1m; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPwc9Lb5"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3087a704c6bso3410777a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 18:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745284625; x=1745889425; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=j1MUyKQ9U/NG55RD5R2ZQj332SLYWQY3D73CQ+rdOK4=;
-        b=lPwc9Lb5p6CPNHeoZp4pLRJ6dKiUusAqb0CJ8ta09+fZCvViimkbyBQt7uXHz7GyFq
-         IEsWhEeY1MdbJaPfpYqAq+PUuP2hvoo1sPW2meaX8FuAsHLm1/Wqt+PvsmEtQxgUtCh7
-         ol7w+GUQdfQllqJwgkt+gqeDAfF3NSfg9V64axXEhOFtBKRXKZk+w3p2KwFRI4XoAiwe
-         1dHYZ2nKN99QRscfj16Pa7EWcZhBgtIehX8BEl+Aw4AvQSbHkNmsIGGH51WgialM3dLX
-         y6/cwExpKS66St2qt0T9PlRZ4T2qIgETrB4rzpfxU78EOOQWsoq7wq/s6h0eMON2YhaW
-         KHvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745284625; x=1745889425;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j1MUyKQ9U/NG55RD5R2ZQj332SLYWQY3D73CQ+rdOK4=;
-        b=nK6RZxuw0SKl8zdFtLSG89yL2jaHvRyjilQnECq77vADyJ/iZ42Lh+eJT82M5yfLpc
-         DQpcDE4n7r5581plzh/G6HvhudNgYDztiRl3PY0OguHO/po6Q22eiWHxjnZ9ZPWAynJN
-         BlcgoNWcRnJfMoU6t046OLYr8XEbd1RKSyhRbztaoZSqxv9jVx7aGlM2FAsdOs2IUte7
-         y+l8p7ab+MGQac4g+ALxEMk2M3Z1bftiqsWUtlzxF3tOQddbsA06Eresfu8Yyxlo7PIZ
-         kzzFfC7Cr1mZbxhIcCZ0Quy2HGNP97QDDoG+tXciVY0jLhsmcxKVFURkSqVy+ucZBPk9
-         vLGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXX+X+jvVLlXq2hNGGqMh5O4PNJ9lNsQikmZFSnrN8yvhUndsb84yeJ8ND/sePyyEwNb4FBnckWoW5VGEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOxhCytDkZ+9aa8Og9aP7KD5dQfu3am0R0MAzGyXO2jlLKBLiJ
-	FlRKsLzg5aE426pxcNw0S4BlZz3yqqHJGVVUHP+lsF8Zk5h0RxLd2GrAMrrOF2Xg8LvyUU776//
-	jYdTga6LxhQ==
-X-Google-Smtp-Source: AGHT+IHWBqFfEGYxXdqALuKh2tlP9SZ3mN9clBIIss7v0GCHLMwKyZJ9kxUd3+2F7t522UC+HRfXLj1RZ8Ulqg==
-X-Received: from pjbst13.prod.google.com ([2002:a17:90b:1fcd:b0:2fe:7f7a:74b2])
- (user=joshwash job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5827:b0:2ee:f076:20f1 with SMTP id 98e67ed59e1d1-3087ba53cd7mr22984986a91.0.1745284624818;
- Mon, 21 Apr 2025 18:17:04 -0700 (PDT)
-Date: Mon, 21 Apr 2025 18:16:32 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wo5jrs1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745284731; x=1776820731;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0qrDinrGYYMpLHgQEt5+y0lxPzUYR186egeIjlsfTUs=;
+  b=Wo5jrs1mCBvDNNnSJHCKMXNrfiZTJFNaFP2KVBHz7M2DiPGCgv9IawYW
+   LgLQG3ItBTl044SVve6QFiaNxb9DhMLIX6lE/uJEKR+3fUFvDoBm3gMoG
+   pJkKSQPhWk7yxCCQHM1gXbaAvU4HzSvPzX4XH/+AO/JXtsPxmbVy9/lTQ
+   XIGhQoeE4BZMxzfjsT6XPdlwt+IR4l66srq/1oEVixqOejqMCo42zvHiJ
+   wNmtlfvAxzwi7kF59bG/r4Nr2IpRBOOlabv26xKm3WWI6wkQIubCzCesO
+   1LPB6gxQuHpr/Gj4hk6a5y2Er9ujxMjJ4IkcXHZo1rY3qaDY7QZE9HxST
+   g==;
+X-CSE-ConnectionGUID: 0mj/lpWfSQiHRLY6B4QaKQ==
+X-CSE-MsgGUID: iRyAbbhLRtCuvzMzLYj9Ug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="45949441"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="45949441"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 18:18:50 -0700
+X-CSE-ConnectionGUID: vNHeqBcvQcynHRk+eJuWEA==
+X-CSE-MsgGUID: bROkwlhdSuShbpsam8FOpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="131719748"
+Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.220.113]) ([10.124.220.113])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 18:18:49 -0700
+Message-ID: <07132e5a-d334-43b6-8905-4e1ca991b3fa@intel.com>
+Date: Mon, 21 Apr 2025 18:18:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250422011643.3509287-1-joshwash@google.com>
-Subject: [PATCH net-next] xdp: create locked/unlocked instances of xdp
- redirect target setters
-From: Joshua Washington <joshwash@google.com>
-To: netdev@vger.kernel.org
-Cc: Joshua Washington <joshwash@google.com>, bpf@vger.kernel.org, 
-	Mina Almasry <almasrymina@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Jeroen de Borst <jeroendb@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Simon Horman <horms@kernel.org>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Shailend Chand <shailend@google.com>, Stanislav Fomichev <sdf@fomichev.me>, 
-	Martin KaFai Lau <martin.lau@kernel.org>, Joe Damato <jdamato@fastly.com>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 09/19] x86: Secure Launch kernel early boot stub
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <20250421162712.77452-10-ross.philipson@oracle.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250421162712.77452-10-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with
-netdev->lock") introduces the netdev lock to xdp_set_features_flag().
-The change includes a _locked version of the method, as it is possible
-for a driver to have already acquired the netdev lock before calling
-this helper. However, the same applies to
-xdp_features_(set|clear)_redirect_flags(), which ends up calling the
-unlocked version of xdp_set_features_flags() leading to deadlocks in
-GVE, which grabs the netdev lock as part of its suspend, reset, and
-shutdown processes:
+On 4/21/25 09:27, Ross Philipson wrote:
+> +static u64 sl_rdmsr(u32 reg)
+> +{
+> +	u64 lo, hi;
+> +
+> +	asm volatile ("rdmsr" : "=a" (lo), "=d" (hi) : "c" (reg));
+> +
+> +	return (hi << 32) | lo;
+> +}
 
-[  833.265543] WARNING: possible recursive locking detected
-[  833.270949] 6.15.0-rc1 #6 Tainted: G            E
-[  833.276271] --------------------------------------------
-[  833.281681] systemd-shutdow/1 is trying to acquire lock:
-[  833.287090] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: xdp_set_features_flag+0x29/0x90
-[  833.295470]
-[  833.295470] but task is already holding lock:
-[  833.301400] ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
-[  833.309508]
-[  833.309508] other info that might help us debug this:
-[  833.316130]  Possible unsafe locking scenario:
-[  833.316130]
-[  833.322142]        CPU0
-[  833.324681]        ----
-[  833.327220]   lock(&dev->lock);
-[  833.330455]   lock(&dev->lock);
-[  833.333689]
-[  833.333689]  *** DEADLOCK ***
-[  833.333689]
-[  833.339701]  May be due to missing lock nesting notation
-[  833.339701]
-[  833.346582] 5 locks held by systemd-shutdow/1:
-[  833.351205]  #0: ffffffffa9c89130 (system_transition_mutex){+.+.}-{4:4}, at: __se_sys_reboot+0xe6/0x210
-[  833.360695]  #1: ffff93b399e5c1b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xb4/0x1f0
-[  833.369144]  #2: ffff949d19a471b8 (&dev->mutex){....}-{4:4}, at: device_shutdown+0xc2/0x1f0
-[  833.377603]  #3: ffffffffa9eca050 (rtnl_mutex){+.+.}-{4:4}, at: gve_shutdown+0x33/0x90 [gve]
-[  833.386138]  #4: ffff949d2b148c68 (&dev->lock){+.+.}-{4:4}, at: gve_shutdown+0x44/0x90 [gve]
+Is there a reason this code doesn't just use boot_rdmsr()?
 
-Introduce xdp_features_(set|clear)_redirect_target_locked() versions
-which assume that the netdev lock has already been acquired before
-setting the XDP feature flag and update GVE to use the locked version.
-
-Cc: bpf@vger.kernel.org
-Fixes: 03df156dd3a6 ("xdp: double protect netdev->xdp_flags with netdev->lock")
-Tested-by: Mina Almasry <almasrymina@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Signed-off-by: Joshua Washington <joshwash@google.com>
----
- drivers/net/ethernet/google/gve/gve_main.c |  4 ++--
- include/net/xdp.h                          |  3 +++
- net/core/xdp.c                             | 25 ++++++++++++++++++----
- 3 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
-index 8aaac9101377..446e4b6fd3f1 100644
---- a/drivers/net/ethernet/google/gve/gve_main.c
-+++ b/drivers/net/ethernet/google/gve/gve_main.c
-@@ -1830,7 +1830,7 @@ static void gve_turndown(struct gve_priv *priv)
- 	/* Stop tx queues */
- 	netif_tx_disable(priv->dev);
- 
--	xdp_features_clear_redirect_target(priv->dev);
-+	xdp_features_clear_redirect_target_locked(priv->dev);
- 
- 	gve_clear_napi_enabled(priv);
- 	gve_clear_report_stats(priv);
-@@ -1902,7 +1902,7 @@ static void gve_turnup(struct gve_priv *priv)
- 	}
- 
- 	if (priv->tx_cfg.num_xdp_queues && gve_supports_xdp_xmit(priv))
--		xdp_features_set_redirect_target(priv->dev, false);
-+		xdp_features_set_redirect_target_locked(priv->dev, false);
- 
- 	gve_set_napi_enabled(priv);
- }
-diff --git a/include/net/xdp.h b/include/net/xdp.h
-index 20e41b5ff319..b40f1f96cb11 100644
---- a/include/net/xdp.h
-+++ b/include/net/xdp.h
-@@ -618,7 +618,10 @@ bool bpf_dev_bound_kfunc_id(u32 btf_id);
- void xdp_set_features_flag(struct net_device *dev, xdp_features_t val);
- void xdp_set_features_flag_locked(struct net_device *dev, xdp_features_t val);
- void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg);
-+void xdp_features_set_redirect_target_locked(struct net_device *dev,
-+					     bool support_sg);
- void xdp_features_clear_redirect_target(struct net_device *dev);
-+void xdp_features_clear_redirect_target_locked(struct net_device *dev);
- #else
- static inline u32 bpf_xdp_metadata_kfunc_id(int id) { return 0; }
- static inline bool bpf_dev_bound_kfunc_id(u32 btf_id) { return false; }
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index a014df88620c..ea819764ae39 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -1014,21 +1014,38 @@ void xdp_set_features_flag(struct net_device *dev, xdp_features_t val)
- }
- EXPORT_SYMBOL_GPL(xdp_set_features_flag);
- 
--void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg)
-+void xdp_features_set_redirect_target_locked(struct net_device *dev,
-+					     bool support_sg)
- {
- 	xdp_features_t val = (dev->xdp_features | NETDEV_XDP_ACT_NDO_XMIT);
- 
- 	if (support_sg)
- 		val |= NETDEV_XDP_ACT_NDO_XMIT_SG;
--	xdp_set_features_flag(dev, val);
-+	xdp_set_features_flag_locked(dev, val);
-+}
-+EXPORT_SYMBOL_GPL(xdp_features_set_redirect_target_locked);
-+
-+void xdp_features_set_redirect_target(struct net_device *dev, bool support_sg)
-+{
-+	netdev_lock(dev);
-+	xdp_features_set_redirect_target_locked(dev, support_sg);
-+	netdev_unlock(dev);
- }
- EXPORT_SYMBOL_GPL(xdp_features_set_redirect_target);
- 
--void xdp_features_clear_redirect_target(struct net_device *dev)
-+void xdp_features_clear_redirect_target_locked(struct net_device *dev)
- {
- 	xdp_features_t val = dev->xdp_features;
- 
- 	val &= ~(NETDEV_XDP_ACT_NDO_XMIT | NETDEV_XDP_ACT_NDO_XMIT_SG);
--	xdp_set_features_flag(dev, val);
-+	xdp_set_features_flag_locked(dev, val);
-+}
-+EXPORT_SYMBOL_GPL(xdp_features_clear_redirect_target_locked);
-+
-+void xdp_features_clear_redirect_target(struct net_device *dev)
-+{
-+	netdev_lock(dev);
-+	xdp_features_clear_redirect_target_locked(dev);
-+	netdev_unlock(dev);
- }
- EXPORT_SYMBOL_GPL(xdp_features_clear_redirect_target);
--- 
-2.49.0.805.g082f7c87e0-goog
 
