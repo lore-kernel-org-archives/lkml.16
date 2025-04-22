@@ -1,179 +1,101 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10CF2147F9;
-	Tue, 22 Apr 2025 14:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE82627815A;
+	Tue, 22 Apr 2025 14:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331536; cv=none; b=ZOttWLBWioGfuSlRiYFvqQXsMHiPqM0cd2BSru9X5xvNG4YAIbumyv+C4VoMZRvZKZt7ZrhOYLwCeE+bCJsCFapMsaV6Ydcw0BwWAGWd93wAyIPSVrg5aZVqE1ZNr6A6mn623Yl3Bdbcz2RaBUklfIHetLIWqiVO19M2AUgTvU4=
+	t=1745331550; cv=none; b=skC5u1LnBPI1Z1QgOWpc6ChOYJwjzhznrDiOXsFdGS7axCZ5aO98w5ZYJpsmbP5LxWWDxdhiosvRgpEYn9Q/A9oo7zDg09V1Ln+WtJx1kHHrh1TmKihbIj0/9TmGs7KzubCCDwRDB7rgeQowg0fOJsqH7BmHTYepbFKexVnP7hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331536; c=relaxed/simple;
-	bh=p7cBAR716y73pklskD9H+ZxXq0DJTlQYOE6oG5jQ7No=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWVeEnKWzAzA6actimZfc6dMQF1BE4bm1Ebc4nnyhYAu4JfIz/vXF54BsruPZhdKTn81NNkjLs424x9yfGEan2IBVx9WdW59Y+ZFRjl0ma4SsHhtDwRe/X3gM4pu3eqYG1HgqrDcqhMRD2CnrPnBzPnJSm4OmUU/g6waFz2yhfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OcakFO2M; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745331550; c=relaxed/simple;
+	bh=w1GauKIh97EZDy9pa0MurZVUAga2xOVmbSmGutT8/R8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BQOgvPnz8pjKhNQOr3S7mToenf/TvQWI7NyjdbG8u86LLwtkgZz2Ef6cyVu5GTmAxxZBQi319TNAFXAjyU1z2iexqfU0Ewhwhg0/sGFYZp8qTdS/ZbCoJ5MsVi8D4NGgeKAIFfdvFx9rFf0ShOFSViLsnmcuCgtpO7KzlqQ6kkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nitWoKO2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcakFO2M"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso3203429fac.2;
-        Tue, 22 Apr 2025 07:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331532; x=1745936332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a0z3rTEDjmdssEPqfKkSM3v8YROVWuTNE2YICwop5N0=;
-        b=OcakFO2Md8Zs5RDUqR0XVYrAssUy7IC4nXfufkBHGlrZKYF9EwefR5z/aKWcSXBY2X
-         xvQMrzCl0WvxF9HI9QJhP0frzLmQiO/z4IhOoWufiNj7w9iJ92IMcad+q5Div0PeEXSY
-         nelgtTrP8TbOMkhiOnMS03sSZd/xU7yO2c6UaH9X5mcztuaTqd0SR07xvb0ukVeP1r42
-         TfZzANnk5rxHyAupazc6rTTPgimeO+i/ZCFIKup/g3OIFSIx85KcLhFlTJ9OoT4NBkc5
-         Qr5vuczIAO+OGG0yNzbsW4Cywmse1nJ8YR63rnnAoM4RjrUh3zaSVS0GZIjXF8wH4jbb
-         Zb3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331532; x=1745936332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a0z3rTEDjmdssEPqfKkSM3v8YROVWuTNE2YICwop5N0=;
-        b=l7mG2um/w7dy4/CMAOoJ/dc3+Wj1Y/yX+MGYPH+XO1jP3XB3BfSe/ct7Ka2PWR4+hH
-         Bj9rXCItmMt76o9U27RAc2gTMDps/jFeQTi3agcAMnjoq5yYZlSLq54T1FwNmyitjPA0
-         3XJUAP1iXi4EsHbunyMMBdsSwUuBBJkqgwHspLbxJRFU+1t14m/sNtepFvr58Ar5mXHq
-         CAjYDEJuLx+6HVZGqYG3oT475VQVjwKMLC3vQROIz/JYo+dToR3Xgh6+vYKcGdZQU35t
-         sVvH5nN5I0M5VNNKPho8yBZjbj81zLqlcwebN2rkNalz3nsMyN0aP/uu/6vBG1Ac35u5
-         7W0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFPPkSl4aK2KTRnXTDCxuWpHa0aakOv35xLn2RtvqI7ZaJeU6P1VrNelS0DkSmLEl89ieo+qfb3o43DcY9@vger.kernel.org, AJvYcCVlJOPJMcDkmgpXjJbUD3N0O0whQj8mohYKOkbveZ6pUvmnj7aymEtqRirom8bodaECbDzOGd1bvQ==@vger.kernel.org, AJvYcCXcZAGC0o9aBoNRoU2aL2LMmwOFQacJSnPt9Rl5LE4BuTLRI8jcx/2/Q/uG2XyMiuEVGjIbnCUUpgq9QVcANA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzGs59QKdXBH2lm/GqQ/wKY6m6JE+WSUtaWHDcmbV2oWg4+Vwf
-	Lm5zGrFrBR/XZH+xqFks5YlmpyBV7Z/dPhMs4+NHRLvXcQig+DNeqMjt7uc8/zaYzknBvCh20c+
-	bDmmB1Qaq7bdw90IQuJKKmolirmo=
-X-Gm-Gg: ASbGncuB1ckzDm2+QzL8z3/Rg6sM/2sikkxW290OcOqzZwp/0316COsL/NZMoO51PFt
-	RpWqmXeKVaEQ9Y9zrqyUC4r+RAdcLUOfgcqKfrD38slHq+HiYBJfZAVidFExBaG104bRnJZuHHK
-	VKDvpO7zPIdMHlFXEsls9FttI=
-X-Google-Smtp-Source: AGHT+IHQ4xRkVRcN+dzr3ufuvBRvI4pE0dfDWETlkfgu2xcgXTXaui9+1u79Gxg+7c7ROQye1I3Xpbr8DAJ1/N+3b7M=
-X-Received: by 2002:a05:6871:9d8a:b0:2a7:d345:c0bb with SMTP id
- 586e51a60fabf-2d526d4ef34mr8097846fac.27.1745331532557; Tue, 22 Apr 2025
- 07:18:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nitWoKO2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E99C4CEEC;
+	Tue, 22 Apr 2025 14:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745331549;
+	bh=w1GauKIh97EZDy9pa0MurZVUAga2xOVmbSmGutT8/R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nitWoKO2JTeUnaDdNDFfmbWVOSb2y7Jdm6/Fow+VvpcEVudm0YJhhvFXso1SGYt7a
+	 KkSIIHAqHReZh7I0CYZWDN0OVLXx5a24wQNhZCgu6NFMGtwFUmaOl1PUhxllm9KvJZ
+	 auXqKqwgD6Mc1M4g511BAX4Pd3W2WJuTjBoSsJcRjgjztPRJpymfqvozY3uuyDEhJl
+	 JPxHh+tnZ+/wsAFcoXmTyNZy9JdeZ3q8kz+wLKQpMWAxPguR6+fP/dwxjDu+OKQtzF
+	 NscSkFsjpEK5dnjosbMObKb4kwshO9Y2oK2yKgsA12FPtK/KswDyTu74XqXudByq4q
+	 fzZxqKAqwAT8g==
+Date: Tue, 22 Apr 2025 15:19:04 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: Haixu Cui <quic_haixcui@quicinc.com>, virtio-dev@lists.oasis-open.org,
+	viresh.kumar@linaro.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hdanton@sina.com,
+	qiang4.zhang@linux.intel.com, alex.bennee@linaro.org,
+	quic_ztu@quicinc.com
+Subject: Re: [RFC PATCH v4 3/3] SPI: Add virtio SPI driver
+Message-ID: <4ba22af1-fffc-46f4-bf42-675b5cda9ddc@sirena.org.uk>
+References: <20250401033621.1614194-1-quic_haixcui@quicinc.com>
+ <20250401033621.1614194-4-quic_haixcui@quicinc.com>
+ <74698d99-db5b-4ec7-a965-eea2a29e54b1@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422104545.1199433-1-qq282012236@gmail.com>
- <bc68ea08-4add-4304-b66b-376ec488da63@kernel.dk> <CANHzP_tpNwcL45wQTb6yFwsTU7jUEnrERv8LSc677hm7RQkPuw@mail.gmail.com>
- <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
-In-Reply-To: <028b4791-b6fc-47e3-9220-907180967d3a@kernel.dk>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Tue, 22 Apr 2025 22:18:39 +0800
-X-Gm-Features: ATxdqUE-XD9kMd6IVuQPAjJXuJd3l_VqxZe--va4HHnXWQk5T8vC8UEEME9Gv_U
-Message-ID: <CANHzP_vD2a8O1TqTuVNVBOofnQs6ot+tDJCWQkeSifVF9pYxGg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fix 100% CPU usage issue in IOU worker threads
-To: Jens Axboe <axboe@kernel.dk>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NLtFYHpFXQoiWzV4"
+Content-Disposition: inline
+In-Reply-To: <74698d99-db5b-4ec7-a965-eea2a29e54b1@quicinc.com>
+X-Cookie: Why are you so hard to ignore?
 
-On Tue, Apr 22, 2025 at 10:13=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote=
-:
->
-> On 4/22/25 8:10 AM, ??? wrote:
-> > On Tue, Apr 22, 2025 at 9:35?PM Jens Axboe <axboe@kernel.dk> wrote:
-> >>
-> >> On 4/22/25 4:45 AM, Zhiwei Jiang wrote:
-> >>> In the Firecracker VM scenario, sporadically encountered threads with
-> >>> the UN state in the following call stack:
-> >>> [<0>] io_wq_put_and_exit+0xa1/0x210
-> >>> [<0>] io_uring_clean_tctx+0x8e/0xd0
-> >>> [<0>] io_uring_cancel_generic+0x19f/0x370
-> >>> [<0>] __io_uring_cancel+0x14/0x20
-> >>> [<0>] do_exit+0x17f/0x510
-> >>> [<0>] do_group_exit+0x35/0x90
-> >>> [<0>] get_signal+0x963/0x970
-> >>> [<0>] arch_do_signal_or_restart+0x39/0x120
-> >>> [<0>] syscall_exit_to_user_mode+0x206/0x260
-> >>> [<0>] do_syscall_64+0x8d/0x170
-> >>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0x80
-> >>> The cause is a large number of IOU kernel threads saturating the CPU
-> >>> and not exiting. When the issue occurs, CPU usage 100% and can only
-> >>> be resolved by rebooting. Each thread's appears as follows:
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork_asm
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] ret_from_fork
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] schedule
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] __schedule
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] __raw_spin_unlock_irq
-> >>> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker_sleeping
-> >>>
-> >>> I tracked the address that triggered the fault and the related functi=
-on
-> >>> graph, as well as the wake-up side of the user fault, and discovered =
-this
-> >>> : In the IOU worker, when fault in a user space page, this space is
-> >>> associated with a userfault but does not sleep. This is because durin=
-g
-> >>> scheduling, the judgment in the IOU worker context leads to early ret=
-urn.
-> >>> Meanwhile, the listener on the userfaultfd user side never performs a=
- COPY
-> >>> to respond, causing the page table entry to remain empty. However, du=
-e to
-> >>> the early return, it does not sleep and wait to be awakened as in a n=
-ormal
-> >>> user fault, thus continuously faulting at the same address,so CPU loo=
-p.
-> >>> Therefore, I believe it is necessary to specifically handle user faul=
-ts by
-> >>> setting a new flag to allow schedule function to continue in such cas=
-es,
-> >>> make sure the thread to sleep.
-> >>>
-> >>> Patch 1  io_uring: Add new functions to handle user fault scenarios
-> >>> Patch 2  userfaultfd: Set the corresponding flag in IOU worker contex=
-t
-> >>>
-> >>>  fs/userfaultfd.c |  7 ++++++
-> >>>  io_uring/io-wq.c | 57 +++++++++++++++-------------------------------=
---
-> >>>  io_uring/io-wq.h | 45 ++++++++++++++++++++++++++++++++++++--
-> >>>  3 files changed, 68 insertions(+), 41 deletions(-)
-> >>
-> >> Do you have a test case for this? I don't think the proposed solution =
-is
-> >> very elegant, userfaultfd should not need to know about thread workers=
-.
-> >> I'll ponder this a bit...
-> >>
-> >> --
-> >> Jens Axboe
-> > Sorry,The issue occurs very infrequently, and I can't manually
-> > reproduce it. It's not very elegant, but for corner cases, it seems
-> > necessary to make some compromises.
->
-> I'm going to see if I can create one. Not sure I fully understand the
-> issue yet, but I'd be surprised if there isn't a more appropriate and
-> elegant solution rather than exposing the io-wq guts and having
-> userfaultfd manipulate them. That really should not be necessary.
->
-> --
-> Jens Axboe
-Thanks.I'm looking forward to your good news.
+
+--NLtFYHpFXQoiWzV4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Apr 22, 2025 at 11:33:09AM +0530, Mukesh Kumar Savaliya wrote:
+> On 4/1/2025 9:06 AM, Haixu Cui wrote:
+
+> > +{
+> > +	int cs_setup;
+> > +	int cs_word_delay_xfer;
+> > +	int cs_word_delay_spi;
+> > +	int delay;
+> > +	int cs_hold;
+> > +	int cs_inactive;
+> > +	int cs_change_delay;
+> Please maintain reverse christmas tree alingment.
+> int cs_word_delay_xfer;
+> int cs_word_delay_spi;
+> int cs_change_delay;
+> int cs_inactive;
+> int cs_setup;
+> int cs_hold;
+> int delay;
+
+That's not a requirement for the SPI subsystem at all.
+
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
+
+--NLtFYHpFXQoiWzV4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgHpVcACgkQJNaLcl1U
+h9A31gf9ECx7V2CDE4/WPOeFRSDtY4EyY8HBkyqJNJRWmdGZej7qBO1JPBZRsrmH
+I8eSRhosdtm0PjVx4CdXjPqAanQOU3YEfI+4KPGwxdXCPPQ6u2YWV/bd1XVFWEIb
+m2zpAE1YGB/rDl/wglmSymjDDXiF4hy0PaGqSkUGapeOFHSCy/jz9Pa30aBJbwkM
+YESOd22GK6cyI9olnVAhiUtaxSbsM+2N1WMj2llH7LcqPYf7lH0T4MJez3ZoKQzD
+ELSfgmpyGFi19ECl7HZqlA+J/Qc1SrnZzKXPAg0W00WI+OyQjNgZ4l65OIa6Ic6o
+eoKLeifOFmVdbWfnFNyj9Ws3u+187w==
+=V6yQ
+-----END PGP SIGNATURE-----
+
+--NLtFYHpFXQoiWzV4--
