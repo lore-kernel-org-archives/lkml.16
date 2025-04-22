@@ -1,140 +1,189 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2054.outbound.protection.outlook.com [40.107.92.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77C128F951
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745345546; cv=none; b=Kjf3UCRmdhUXpirPLufD4znqldQyke/lba02gmhP9UxapryPbHmrZnVNRDvltQYW1EltjNj06hsG6NakXSXU9mAOz2wGj01tZ3EmUv/S4lhI/eXHjUjEcwYPcXaLCgwwIHEmHGgJrGkKsDbKujVdJau1mVILeSQ9LQD+x9jgSBY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745345546; c=relaxed/simple;
-	bh=clj/7NiCGcVOiMu1ySLcl7Hi0OIoaRSBMSxeFaLMzIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ioa5bwYN6aQaD8id1EaxjmnUSrK5AUEXEpyErO82wf+shB2Qmue5ftOpTH2A7z8M5KKFFCA5RwBgtgkN4PVdcSAPYu1mwD5eQZc8GKSeHKJfI10nXOVO5E/jWwePrgPutSAPcSTPD2B9NBjiqPEG9iAhGI4Rr5oE2bWyAUuKkFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=UHjNv6vB; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2BFA59;
+	Tue, 22 Apr 2025 18:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745345788; cv=fail; b=pHnbEBFTO+bPy3t7EtjCeEA2vehhZiLUIXr8VR6N3UrUZsVo0ASVWi0kJw1HOjM+so1rpW8Qj39gImlKPpJ7Jfck93x0Z383lP6eOBPsZDhAnwDHtCsq2EK0Z8ERXZ95bqk0aT+TyCatRtpHUanKiz9ELlrN/Qj64qxhkgCAZsQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745345788; c=relaxed/simple;
+	bh=DL4pYfLCcRgeg4v8J0K/I/k8XeYPDqspLU/vVPzkhIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=r/JJ79fPi3j80k+LWloan8VC2cXPr7IX4LKQvbheqxymVrujWz5MKTkS9SIB66/GMJPKL9kGHpa9Pg/9i9eHKzFnUxgqEnmR2m/BGUxqJAl+IqMEt97n1DLimR73zsRvBfuvhEx7Rglw2Slg2uOFV0ZxHPfTqCWpoPa1Edl1POw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nCr08dv5; arc=fail smtp.client-ip=40.107.92.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="UHjNv6vB"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47688ae873fso56998321cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1745345542; x=1745950342; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2MxjZUGMrKR2DMGYAmofr4Hh7XRlldZp9rSBjUPMDM=;
-        b=UHjNv6vBL1vwgTJDTKRqlmWZoaG/KudTlWwAW+vjAA13e1ntvBv4AL5E1DmgtaerOk
-         5S04BvfHmaB0RsOcMsZpsNbFXhLtEY7MBbfXtsDFvaxyPCP52iIahL0SC2FKGlLMoAGA
-         Kc9TUancnyx32eoRsBckLN+zWIIMZ9nwoaPLwUJBMwLFE/Qmj/Yc9cYLBF3V2ssgKPhg
-         xvyEBmOcuPWfZIPADVu3iFATWmOVNxcSFnQDtL9R86/4MCH8ZnzSbvma/1cf5uihIIkS
-         9KjLC+TIjQ4ZNfU0f8xL0sR5dovE3C5638ZxN4RJz0TO7Rj/EIJcawFsQdO2WZQcjYdk
-         8cOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745345542; x=1745950342;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s2MxjZUGMrKR2DMGYAmofr4Hh7XRlldZp9rSBjUPMDM=;
-        b=KvAVY3KbZHF8WycKbHlcQD0RoUEK7iDlM+95eZjfYOoNh8oX2yJDyHkgGjqKvKZ3Zg
-         RKu9eeYY+RH+/LFsuyC3+4O8+LxUERqvnouqKVTyLZd+Yvxpsi0tLeXT1as07mlPWayQ
-         5G9ct45dj6sMe1BX/NidUFr9Q6js/menKVtHM09sTw9xIgvtEnJl0Fo4gPbNH0lJMqvo
-         CLJaMNl9KJnwFj+2j7oukbTZh+ngCi9qSwck5oqnxcaXgmsNc2De9RMXzjBosX8Ua9eK
-         WIHARIKvOFUkTiJrDxOMYHwsGedG79FiVeJkzMihCgB01JiCBWsnc87ytYs7qldTz+18
-         8LjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbmSicEduoWhDJo+D2q9MhJegClGlNbLp6ArrAMpKGxXaFebQGRocSfhEBqrgW0WmM8rOwEB53BkSvMvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCs0447My/bKrLSUev4OLsV5q29z9vC5aSCx7TBjJdtmc3spxI
-	d/P1vxJHxSEJsgtxDRr8aQW4gPP3q7rpQAhAZxNTOjQz/Ux+LN8/lnwXolirvCxFMYN0eTZFuJt
-	I10U=
-X-Gm-Gg: ASbGncvA9rIuayJX3yOcorrTXvfCnqgc0xJ7HK838XBCARUcj9xJ2YP5MpnqfosLZ62
-	XjyA7RIn0XqahlUWIOwffxc2YxF/S8Vsz8q9I4syV0KMsKQOcwpoB5tv/23KUIB4fCvRLQv5jS0
-	woT3X6m0VoGJ0jLvL/cjWnmImgubUwCFnPre8r+Udt0BtPwOJLvON680iQSwNHyxRMmYWYA7cNj
-	vgHCRcF1d/Yy69I4YlSWLuD/ZHIB6CJU8Dpni/J+WdQHB27IsyY/03dyObvqkkYPm/uRVjAYZBE
-	8XOu1sqaln05o3p69ZV+WPVvEj+3Hu0C6K6d5Rc=
-X-Google-Smtp-Source: AGHT+IFSl5Z1DP+LoH0/jj1kUp0S4uovmAA5DbtTz8uDb7qyAwSb2oRgO+qtT/+KNaCsFK0ZjmtCfw==
-X-Received: by 2002:ac8:5811:0:b0:477:1e85:1e1b with SMTP id d75a77b69052e-47aec35503amr265505431cf.8.1745345542401;
-        Tue, 22 Apr 2025 11:12:22 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47ae9ce293bsm58048581cf.56.2025.04.22.11.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 11:12:21 -0700 (PDT)
-Date: Tue, 22 Apr 2025 14:12:17 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Greg Thelen <gthelen@google.com>, linux-mm@kvack.org,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-Message-ID: <20250422181217.GE1853@cmpxchg.org>
-References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nCr08dv5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ysxq1ZOQYhoMeaPKsMG95UxGlxgopTXbiWjr9oOcoTSLNGdG6OHxmdyyDG3Kail9VVA0l+S3ISpTnqc3JIRAqY4yO8zD1EwgUd90EMswPkBX3sZJRFslY8a/Nlwoy18BmSKrZ14xuuJjjOivYuGO8Fn6+GJEtPkQXZusdw5hjQUJUWGKVPzWahVZOzqxmL3oPfuIskOCCq6PiTFa2Du76cX/F3opbwOm51mwkbg3RXycj0+pgFUZZfQMFj15DiG7TxZAP5PphTOfsqK66+YHq9/EKIoDBbo7o6uMGUC1twBwQoVMZb46uSYKWG8N4CUWqtw3iU9LyyJY+VrlTqphoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CBkCIzevkBjTZtpIkw4endoWkwvGHIIT+mHw3K7Pe6M=;
+ b=rcDRIumkaPt/EJbAkI+wK1oXVwr6THQDlNs5Coim+QzPcrKmFbpZC9ZzjMGmTTZ8xlWl5MVBxaLIK3K/yGBfnC4jH4FzPIht8JrgatwUqTkaz8/qXODFymvzZUgzpUUnSffnveNOca4AJ3T7LbW/svPTYtb1J2iskrYBULtNp5phyfD9vWUyj+C1ErksZFnf7U7gIsEtDrsx65Wzui7nGcpwpAF4gee3lEvoRxIecVefWqhxZvz66viqc9k9blqD6l3+krGATD/qHz0ZZaj8H1SXgQWnSvldz7HLasqzqX/ZaCjlSAQwlcSKXr6BvILwJ9DeQqn6Weawf4t6FzY1fA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CBkCIzevkBjTZtpIkw4endoWkwvGHIIT+mHw3K7Pe6M=;
+ b=nCr08dv5qOmONo4Bdmt3T6qo6Vo8ApPzjdJZylNgsxHWK2f6Z4wSwBLG2ww5Msp/rAXAABt2xlDIVLBZp2BDbfiYThTQyUXZRWyzrjVQap7mHuQkfAs9xmm9KE314Gd3PnoC64sDZqkzRD89VYAarIqr0n4pjJDRwEJEWVX5tqy6JsLUnZLA9h8VkicVo4ITguuicB7yLqrBBVwSlWjnhNr4vXWLPWfKSFWG0dvx7ohJTsNvCkoHwlBYvFO0Ot2r5XrHwhp2nls1ultufkcThqWrQIKJAPpm2Zs4QwHIFWr9BmXQuuxa92oICFNLgpshTo+yOpDrk1hCL8NfzdeilQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SJ2PR12MB9005.namprd12.prod.outlook.com (2603:10b6:a03:53d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Tue, 22 Apr
+ 2025 18:16:23 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8632.030; Tue, 22 Apr 2025
+ 18:16:23 +0000
+Date: Tue, 22 Apr 2025 15:16:22 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Andrew Davis <afd@ti.com>, Christoph Hellwig <hch@infradead.org>,
+	Bastien Curutchet <bastien.curutchet@bootlin.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA addresses.
+Message-ID: <20250422181622.GA1648391@nvidia.com>
+References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
+ <Z_yjNgY3dVnA5OVz@infradead.org>
+ <20250414102455.03331c0f@windsurf>
+ <Z_zwZYBO5Txz6lDF@infradead.org>
+ <20250414134831.20b04c77@windsurf>
+ <8f55367e-45c0-4280-b1ed-7ce9160c1fad@ti.com>
+ <20250414212125.4b3e6f33@windsurf>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414212125.4b3e6f33@windsurf>
+X-ClientProxiedBy: BN8PR15CA0017.namprd15.prod.outlook.com
+ (2603:10b6:408:c0::30) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ2PR12MB9005:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5f7cf494-b44a-4e7e-a3c4-08dd81c9ca10
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?l2Lud94ESAJxMiXagNTgzdyESYUIBtjoQ6cwxeRggnPFN4yLdDewoxgqIIf8?=
+ =?us-ascii?Q?pCNWrph5OQ/2Dc6ArAyLn4wUjoo+FwL0Z1t8Ax1UPUsi5gNMxd/zO8g9uJ2R?=
+ =?us-ascii?Q?SK/PEj0YwovJQFyBQK+Zuu8aOd4c3UxuEju0Hr2zSObMtFW+p6LiT7x3M56R?=
+ =?us-ascii?Q?GA2Z99Q10/QZo3W2EugJ+kISUcWR2LHJZGjyYA5hMWq+RkNqFCM89n5wpLai?=
+ =?us-ascii?Q?eqTmwRXwtiyoox2n6i/By0yZxF9iMEz7H8MeMMghKxe5W0oPehJwFndHrAr2?=
+ =?us-ascii?Q?yHDgesy4/OiPQBOS8IpHss+KRrjsy5HFX+erxPKG3Lp8ln/6VEmacR9ITMYG?=
+ =?us-ascii?Q?LTZfK7Jv4Iig76wOmg6FO1+5nlD0JiYIELiyN8/1Y8QM/WpDqUcIlHs3EcV6?=
+ =?us-ascii?Q?xut74uw9Tp0FhyrBAiKS+b0lR3ynrX0j23i1eEQwAkCtgL96vVy9qPL1+KsH?=
+ =?us-ascii?Q?i40lcSg7M2W326Mj5NT2TDS89O3fFHRqGqb5Uwrpb3yMOYKT0p1lG8I4LDD3?=
+ =?us-ascii?Q?PGCQOQuTgcdWeLvsVwQitUC7nf/kKyF/dFA7ieXxKTs2ia+hDWty0NxdLmF7?=
+ =?us-ascii?Q?EsKZjNXn9htnl7DHJ6zVB+2obkuOqmfmq6xn4dl2jOg28kO8krZ4Eld+cE8g?=
+ =?us-ascii?Q?VuiuIW+B6dSrNHSWheewNZuRUFN1oIooH1hFPlUiwpEPTyrbuyaoN5hY5rCw?=
+ =?us-ascii?Q?R84IIxY1HRHrsj96GPtWsdzDeU73/FFQhPUc+R1g3W8lOSMeqkVYarCTgCz5?=
+ =?us-ascii?Q?kGiHq8C3h5Yy6WXUGN2ND11HiFf0pfqrxu7N+QdQe14slQOFBko1RQ3cGDMA?=
+ =?us-ascii?Q?xHC8V8MLwfoRZfgTCEFvyOaTqjFmTbiX/xziQxBuk7gMHqe42wqFUzbCtcEq?=
+ =?us-ascii?Q?t/AtgJrpVenukyHdLlJKFzCb3FigdGtAdHAflXWMfNQpVafi6jsGaN5frTyG?=
+ =?us-ascii?Q?ZfdVQfJZBtPKtMoRMZWRHIxG44Bf4z763lQOlfhexXAsV/CgiEdozTxe+Xh3?=
+ =?us-ascii?Q?H3YjhQivkI3fOUSagw7SrhsU8Z5Ejhznj4+5EnfDnvaaIJkH5TZ5YaBhmDEG?=
+ =?us-ascii?Q?WV789JxdI6bt3jr8lHjW6JrA982iPFpJQvOaEJYcYbkodHl3md2KMYpUJH4+?=
+ =?us-ascii?Q?OMDB6iNOSeF8L4870mdxGlQC1IPiTl7AppvHPmaU8EjJ5PZqydZEiENiBgo9?=
+ =?us-ascii?Q?klWxzhFUyWgzJ+nUDbJsGrYJ24x+yrvDfSvEPuqZsNy5O6+QoMTTVEsbsSOk?=
+ =?us-ascii?Q?yNbTB/VX3bfNV5Tc8ykOBe+yxmF+zsa52RBcaiJblflMm3cNW2qnZB8Sq8m4?=
+ =?us-ascii?Q?rRy1+P9NSvFQmTbj5ZhUy0n2h+oPOXDEvj0kxGOkKJlLaLzJBz+J0tSBizuI?=
+ =?us-ascii?Q?f9MWeSFx7DCJDR0a3eGgaaixbRoZ7p1Q5acAIgwXR/O49TrDKlM+uRzN/J27?=
+ =?us-ascii?Q?YKuSiFNzUU0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FtCiHo3joPRXil0q3mo4g05bI4jDk2SnJPonZv6YmkpuxtDkAKx0ldVBGAaM?=
+ =?us-ascii?Q?Lpr7Bt47J3q8A/ges2UWVgqwog3IeJ51bnRrIruBD7R/zipaUR0yIu1uCsm2?=
+ =?us-ascii?Q?xkNMW9eASWcwjzpjqqX7EUkDV3EQKMijTKlomC18HSKxh904R1vW5iHOS5K8?=
+ =?us-ascii?Q?44Ck8cOzOlilhVN5Pvz9j8XDWnUxh7NhI0Jf8SwAbTPMRR/BHN2FJ49SaH5e?=
+ =?us-ascii?Q?V2HlX+SSYYiYsA+S+k8eC9RwWvg7VG5/fq1g2Xs6nTJfpfEPOFeOpzur2JzD?=
+ =?us-ascii?Q?lzthHj5IxTYIyMkpV/uIViWS+wsh6CNPnGa3Gydp8agWeAMZ/YT5KnOR16Gx?=
+ =?us-ascii?Q?tzHG0D22XpgzMIPr4+uy6bqqAlSauemfNzjlwTwEij32PSXIZ1fN4dDfbdgS?=
+ =?us-ascii?Q?coNVBTiIzI+1aZEi6myuQajuj0eN6KyMCH/218KDXK+/f7Xqm4xevnjFddfL?=
+ =?us-ascii?Q?Dece0ftuMVI7WEl/Z7n4kBPGCiQT4GumGABycytxXf3VZs02BVLpaGirhLN1?=
+ =?us-ascii?Q?L95R8PImoWBvqOBw049ipqABw+TQWBB7ndcG3IjWuP/U67S+96kzGjsHiRBK?=
+ =?us-ascii?Q?gHUatyftjW2jTEiMerEcBSkeJUqYgWEJTLR0Sq58ZcKcZsW1+qW0IGX9hVCX?=
+ =?us-ascii?Q?U4nhCgiZ1iDJYkpi4HsbuuCIoTzdwV79gKCRYXFpuRVhCVBjlt+Iyz4iK7kB?=
+ =?us-ascii?Q?b0qmNjmUV7Tpet5TgPGPiWqy1rE5PGzdItMRdRdZk1zZvbk6agtveXcT8UPX?=
+ =?us-ascii?Q?WZ2X927dRIGPxk4TwRV+m0eHKkD+kjhZjELwH7Zk6zYU/1Wo7VGLiBR7mpt6?=
+ =?us-ascii?Q?OKkoK8YQVsYBEtoZbhm2osNaeI1Z+bc1WVcEpxBdaRs7270qbdMzlmKO/h5Z?=
+ =?us-ascii?Q?0kfMxImqIQFj9kCboLcU/AIQxscRsMQL6aXvxDjxBie4APaI1UyWUtZdnEZz?=
+ =?us-ascii?Q?iYJGTgThGldXlm2lJdlgwY2qE5pSg4xce9/4gRin50NaV4P6il4j67d6QmUE?=
+ =?us-ascii?Q?TjAdKjKdFJzCQQsW9FPAUooWkagi/ZzzeEVFTzUwvspiTcXqI8KdpJYWndWK?=
+ =?us-ascii?Q?bXE7oL7RcgOA3+EU4TbxZZC6kJDMMhk7nAFIZt4uRhI/5exhf43t8FUlttEW?=
+ =?us-ascii?Q?aJMcySG19Onvc2tmz4mphy2O453oK9xhpOxIB94O3uVAY8L+7lLDEateRfAI?=
+ =?us-ascii?Q?TF734SfXtdPl0O2U149Ki11XDnMIiY0hd7BLEPndAdasras+/AuZ4Drembs7?=
+ =?us-ascii?Q?dLluOlhdr8+p2lptNcn7FHCqphGI5eH84mtR4R9OtT1Z2B62xDVNgnz5EIri?=
+ =?us-ascii?Q?Wuf+nQ0l9IirUmNY61SuAoQJk1bhiJ+YL8VB53v+uQ8FiAnfA3f+3psTp/yA?=
+ =?us-ascii?Q?For79XmRxZUlWBqvGnE/QAXO6G8lchVfk8bUVtSylDKsh4oMgxcYTd4Pbu/M?=
+ =?us-ascii?Q?Vaw9ICdpHd0Gwabyx8UaUSgsDoYjp9jD35fKlxu8bKDpLh6c7rWBX/is12yL?=
+ =?us-ascii?Q?vyyjzoVRAdFwydIbQhpoP56q8P6gzs0luBM5AQsJ9Rd6dpr33OOuDCg2HTyl?=
+ =?us-ascii?Q?cwaT/2qV//uGrJvbEBHJQt+kuhVRTXHfncHJotBw?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f7cf494-b44a-4e7e-a3c4-08dd81c9ca10
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 18:16:23.8185
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gA3tAjtEeGMYIfzTvGLvmRz6okCBQ8zTXWilotist8O1oYnPNZmY62OP42LlCbQg
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9005
 
-On Sat, Apr 19, 2025 at 11:35:45AM -0700, Shakeel Butt wrote:
-> Setting the max and high limits can trigger synchronous reclaim and/or
-> oom-kill if the usage is higher than the given limit. This behavior is
-> fine for newly created cgroups but it can cause issues for the node
-> controller while setting limits for existing cgroups.
+On Mon, Apr 14, 2025 at 09:21:25PM +0200, Thomas Petazzoni wrote:
+
+> > "UIO is a broken legacy mess, so let's add more broken things
+> > to it as broken + broken => still broken, so no harm done", am I
+> > getting that right?
 > 
-> In our production multi-tenant and overcommitted environment, we are
-> seeing priority inversion when the node controller dynamically adjusts
-> the limits of running jobs of different priorities. Based on the system
-> situation, the node controller may reduce the limits of lower priority
-> jobs and increase the limits of higher priority jobs. However we are
-> seeing node controller getting stuck for long period of time while
-> reclaiming from lower priority jobs while setting their limits and also
-> spends a lot of its own CPU.
-> 
-> One of the workaround we are trying is to fork a new process which sets
-> the limit of the lower priority job along with setting an alarm to get
-> itself killed if it get stuck in the reclaim for lower priority job.
-> However we are finding it very unreliable and costly. Either we need a
-> good enough time buffer for the alarm to be delivered after setting
-> limit and potentialy spend a lot of CPU in the reclaim or be unreliable
-> in setting the limit for much shorter but cheaper (less reclaim) alarms.
-> 
-> Let's introduce new limit setting option which does not trigger
-> reclaim and/or oom-kill and let the processes in the target cgroup to
-> trigger reclaim and/or throttling and/or oom-kill in their next charge
-> request. This will make the node controller on multi-tenant
-> overcommitted environment much more reliable.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Who says UIO is a "broken legacy mess"? Only you says so. I don't see
+> any indication anywhere in the kernel tree suggesting that UIO is
+> considered a broken legacy mess.
 
-It's usually the allocating tasks inside the group bearing the cost of
-limit enforcement and reclaim. This allows a (privileged) updater from
-outside the group to keep that cost in there - instead of having to
-help, from a context that doesn't necessarily make sense.
+Explain what the difference is between UIO and VFIO, especially VFIO
+no-iommu mode?
 
-I suppose the tradeoff with that - and the reason why this was doing
-sync reclaim in the first place - is that, if the group is idle and
-not trying to allocate more, it can take indefinitely for the new
-limit to actually be met.
+I've always understood that UIO is for very simple devices that cannot
+do DMA. So it's very simple operating model and simple security work
+fine.
 
-It should be okay in most scenarios in practice. As the capacity is
-reallocated from group A to B, B will exert pressure on A once it
-tries to claim it and thereby shrink it down. If A is idle, that
-shouldn't be hard. If A is running, it's likely to fault/allocate
-soon-ish and then join the effort.
+IMHO, if the can use DMA it should use VFIO. If you have no iommu then
+you should use the VFIO unsafe no-iommu path. It still provides a
+solid framework.
 
-It does leave a (malicious) corner case where A is just busy-hitting
-its memory to interfere with the clawback. This is comparable to
-reclaiming memory.low overage from the outside, though, which is an
-acceptable risk. Users of O_NONBLOCK just need to be aware.
+As to this series, I have seen a number of requests to improve the
+VFIO no-iommu path to allow working with the existing IOAS scheme to
+register memory but to allow the kernel the return the no-iommu
+DMAable address of the IOAS pinned memory. This would replace the
+hacky use of mlock and /proc/XX/pagemap that people use today.
 
-Maybe this and what Christian brought up deserves a mention in the
-changelog / docs though?
+If that were done, could you use VFIO no-iommu?
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Keep in mind that when you're running code as root, you can load a
+> kernel module, which can do anything on the system security-wise. So
+> letting UIO expose MMIO registers of devices to userspace applications
+> running as root is not any worse than that.
+
+That isn't fully true.. UIO isn't fitting into the security model by
+allowing DMA capable devices to be exposed without checking for
+CAP_SYS_RAW_IO first.
+
+Jason
