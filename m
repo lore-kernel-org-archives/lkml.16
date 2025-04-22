@@ -1,100 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACCE194C96;
-	Tue, 22 Apr 2025 01:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id EA6FC645;
+	Tue, 22 Apr 2025 01:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745286448; cv=none; b=Je9atFvmpW2X7kjmn0dhJMPWiJqJZhOdgrLL9C+n1tQtBuwpIEXrrYFLbvxbyqA9jXjVa64uwVmyaoDYCZqkAOcylupYW8S6UeXPj6QDu+TEgHcpsn7mYzn0FTqN46Oum5WkH3iRDduVvRWd7rOJ26AfWUXuFZaj3VdnvjbT014=
+	t=1745286725; cv=none; b=n8CQxVComo654F8fHuFPn5SkaR+zOBWzjfqQt6Zf4Vz2fwtLkb0oy23P++X0zKAOWDEZYdN95tvgyNqhh+Dv1Mpimn6k5woCWnmEVnLJyd+5yFOlJVDBMB2nsb5BONdDgPzaumPjxrLGp1g8Kr0OTsK3YLasdmkTh3ANvG7OHlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745286448; c=relaxed/simple;
-	bh=7SRN6yn1A+vHtNV/bso8eu+SnX4ltApo7aZ8u/vVW04=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rRi2xGTo40h4l3A99XehDHzbfJH2fWgPBTOdkQ4b1M7fvmk2DO+mspuSnyBbrZ18/U5NdJ1hErbMWnrp+IJEALrL9GAl2xQkrIOaBdo551eMCq6KZpYHFzRz6y9DlnIbSu9W3zooUH4pFWklrotyYDzxFoDgq6eOE3GHVTz5HuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=einY7QyZ; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="einY7QyZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745286441;
-	bh=jdZT00tIy/ppY9OQh/U5pq3X+9Kj7GiUuE/NV6FD27M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=einY7QyZR7hxI/FQZB71dSW066HKMmcpPhCwOrhZZ8qg1Cx03OWI67wgA6rT8ey1V
-	 4ZyGcq/yB+24KBUXRiVB12oVC+sA81y/KoPwsecueJ9Weum9uWAnGQbuKPcDebBLlV
-	 IUIuXIZF0h6xqHvG6rJTmX3L+MK9vob85DaWdg3GQucZyUlwEnqEFJ766lNlTgj8g0
-	 XiSk5Qo/PdAzBxbVy6JtW5vRFPImotutkvg4ZqxsHbeT5sw0QH9NVQdl/RddIvHR8o
-	 DZ+Za6LL432tBTgl2zZpYovoOOscg7HXIGC+yf2AOeQNMIv1dcvAXXUdTENr0hE88C
-	 DiKeY9VluhJeg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhQ8n3Svqz4wcy;
-	Tue, 22 Apr 2025 11:47:21 +1000 (AEST)
-Date: Tue, 22 Apr 2025 11:47:20 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
- <mpe@ellerman.id.au>, PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the powerpc-fixes tree
-Message-ID: <20250422114720.480cea29@canb.auug.org.au>
+	s=arc-20240116; t=1745286725; c=relaxed/simple;
+	bh=KkThogJ+xvK6ts7tnABOf/eyMBVU9iiJvxDuYDFFNV0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=RwPXqPDKneLRJGVqWfUS9xtbNxR846H2m/rECQ1R/JUW61aea1kMOhMU4RKOcnupLypqrPYFecAWmkx4lOv5SmyqJ1PZU3lxYZCiALCJh5a8Ph44rhUoO8XWZySDQTlcIYTE8/EMkjsljBQ21u+Lwgf8BwTGH43Is4aFHTf0vaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id B84836018789F;
+	Tue, 22 Apr 2025 09:51:57 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: dave@stgolabs.net,
+	paulmck@kernel.org,
+	josh@joshtriplett.org,
+	frederic@kernel.org,
+	neeraj.upadhyay@kernel.org,
+	joel@joelfernandes.org,
+	boqun.feng@gmail.com,
+	urezki@gmail.com,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	jiangshanlai@gmail.com,
+	qiang.zhang1211@gmail.com
+Cc: Su Hui <suhui@nfschina.com>,
+	linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] rcuscale: using kcalloc() to relpace kmalloc()
+Date: Tue, 22 Apr 2025 09:51:45 +0800
+Message-Id: <20250422015144.2012708-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20250421061508.718752-1-suhui@nfschina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eyciFYFZlkLIGhOs35UBWT7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/eyciFYFZlkLIGhOs35UBWT7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+It's safer to using kcalloc() because it can prevent overflow
+problem.
 
-Hi all,
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+v2: 
+ - using kcalloc rather than kmalloc_array().
+v1:
+ - https://lore.kernel.org/all/20250421061508.718752-1-suhui@nfschina.com/
 
-After merging the powerpc-fixes tree, today's linux-next build
-(powerpc_ppc64_defconfig) produced these warnings:
+ kernel/rcu/rcuscale.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-ld: warning: arch/powerpc/boot/zImage.epapr has a LOAD segment with RWX per=
-missions
-arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-ld: warning: arch/powerpc/boot/zImage.pseries has a LOAD segment with RWX p=
-ermissions
-arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-ld: warning: arch/powerpc/boot/zImage.pmac has a LOAD segment with RWX perm=
-issions
-arch/powerpc/boot/wrapper: 237: [: 0: unexpected operator
-ld: warning: arch/powerpc/boot/dtbImage.ps3 has a LOAD segment with RWX per=
-missions
+diff --git a/kernel/rcu/rcuscale.c b/kernel/rcu/rcuscale.c
+index 0f3059b1b80d..b521d0455992 100644
+--- a/kernel/rcu/rcuscale.c
++++ b/kernel/rcu/rcuscale.c
+@@ -762,7 +762,7 @@ kfree_scale_thread(void *arg)
+ 		}
+ 
+ 		for (i = 0; i < kfree_alloc_num; i++) {
+-			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
++			alloc_ptr = kcalloc(kfree_mult, sizeof(struct kfree_obj), GFP_KERNEL);
+ 			if (!alloc_ptr)
+ 				return -ENOMEM;
+ 
+-- 
+2.30.2
 
-Introduced by commit
-
-  b2accfe7ca5b ("powerpc/boot: Check for ld-option support")
-
-POSIX shell (in particular dash) does not recognise "&>" - you need to
-use ">/dev/null 2>&1".  (My /bin/sh is /bin/dash)
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/eyciFYFZlkLIGhOs35UBWT7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgG9SgACgkQAVBC80lX
-0GxbsQf+JRz/1CUUMq9xsdpOy6RYo8y3F1OTh+LJ90eo9Wza0FEC+N4YXuf8b9xB
-LzVIzz7zcjEK4Ca8x7npSY+7d6eeFdQK3uytDqxfQkClwc2/4rcGvZEqQRV2h6Ql
-yEbctEcYDjfI2k758CGIPKE8u6FhNhP86iJlQME7eg8npPhrO5W0/zVFX4Ou/3gy
-HwdEGy9DdoO/ebY08+aM/sEw3KKKuuuEgNreUNOA5/5HxLaLRKiqs9F9I6ojF1oX
-nIaOVdXGe2aM7KPjYyVt5VyGfnpRDIJuJubaUfxycNGWnZKqEr9rMFq8inG6vvHY
-zUyO/TF7f7ognDRVgxwtxB5MT4uiTw==
-=qq3W
------END PGP SIGNATURE-----
-
---Sig_/eyciFYFZlkLIGhOs35UBWT7--
