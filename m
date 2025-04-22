@@ -1,48 +1,41 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F741280CC8;
-	Tue, 22 Apr 2025 13:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF578283C9E;
+	Tue, 22 Apr 2025 13:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328642; cv=none; b=SPtg5P8GUviPu2uqPF4dFtAVi+Xx1OFU9FbsLqqeQG9Un2CSyHGL0BvhRhDdMco2IHwHopsseZ+q+OKDnz/tqce9jgKSwo6klEctjOT3sYnW89XAbvfsOzyCxCwQ0WEtHEYcbcNt4qL4/84hCzTCsywLR3nQazBO44FAkIKUuqE=
+	t=1745328687; cv=none; b=qWTZd7b/NAsemBPAa+7SEtoXaXN63E4gyLbQ95F0zc78IZUcwG8G3uOT5Hx8xdnZ1CiK0BkLCWjfW3c4B31rZqSDUPNXJcGL0j+ZgU0nGG9QVVD96ckh6uvqNW1bgZaGJSWzpZPN9yRgbcfusXqLRQRx0DpcbWcelw0UzrSaejc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328642; c=relaxed/simple;
-	bh=675nI73TK3yzWzYYdekYDaWI36QZ+fU5y2hIwCEJcK4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JjdON0N/eqFoZT3F32PebkysUm23CtHMg+FNh0z/gAXLBjbQirudiBKEbgOpDwDxFQtgnkOKpsT2Z8P4FJOY1uvoGcfxj8y8mTrpmZ0uEe7DLo3tsBkasqivBc46UYbSpoRyH7ZcmUCXLnlRCR3Uj3mK8MUJYcGrvvPV6Z0gjo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=OlZqMMca; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="OlZqMMca"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4561541058
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1745328640; bh=S8E9dCL2t2/JovDkCNE7YlquaFlBHiJ3Hvfqf4qvr2Y=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=OlZqMMcaBZWoHS3co3iNgHkdqedc880EqwruJ7CsAHqO1gPBMlJFb5gotxlXNgoDU
-	 itWmT8essp0GnlOKlYcDTXczvUhwVBVWIhlhMxQF2iutiCh3TfkLjiAnt5FXJZEfLp
-	 l+Cmg1AVY7x3+LWW0xN3TWxdKruVrrh22lt05Hpy/aZuxZ/9SoAa1nNivPwI1pihX1
-	 i2kBTfo6W33vhDO5Vmcuibdi8YWwtv0XCTvZ/6/Nzv8Syn6LFKPdNqgn9BK8hSvSSh
-	 knz23BcW+bddW1ryvL6njppZVsAioit6yPdKKe6G8QRKvYGx1ucaEkwHbcnVB3C4IK
-	 dun6ClhqSX/Og==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 4561541058;
-	Tue, 22 Apr 2025 13:30:40 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: I Hsin Cheng <richard120310@gmail.com>, tytso@mit.edu
-Cc: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, I Hsin
- Cheng <richard120310@gmail.com>
-Subject: Re: [PATCH] docs: ext4: Ammend white space
-In-Reply-To: <20250422055702.451729-1-richard120310@gmail.com>
-References: <20250422055702.451729-1-richard120310@gmail.com>
-Date: Tue, 22 Apr 2025 07:30:39 -0600
-Message-ID: <87zfg8uxvk.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1745328687; c=relaxed/simple;
+	bh=4frgR5/tnr8QJG6Tr4/8sDe5f2lbUd/nKC4g+AtXBcQ=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=i2pX38cVLB68rwcQxslhjnhhvNMeNrJYUqt04CeJoRRbVyfbJnSg96hx+Gd1E1GDr+tr7QltqPOmSVVkmkHggKAfeB3e4ZANQ8Jn8tYun4mYeVJL+fz5PdGw4ha/jvw7FaJ4GAfoMSYJC37QpIESLMkvFflFciNaJz6fvJODVCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korsgaard.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 02975438A4;
+	Tue, 22 Apr 2025 13:31:20 +0000 (UTC)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.96)
+	(envelope-from <peter@korsgaard.com>)
+	id 1u7Dia-009l2h-0m;
+	Tue, 22 Apr 2025 15:31:20 +0200
+From: Peter Korsgaard <peter@korsgaard.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>,  Guenter Roeck <linux@roeck-us.net>,
+  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  Krzysztof Kozlowski <krzk@kernel.org>,
+  linux-hwmon@vger.kernel.org,  devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ti,tmp102: document optional V+
+ supply property
+References: <20250417180426.3872314-1-peter@korsgaard.com>
+	<20250422132602.GA1092156-robh@kernel.org>
+Date: Tue, 22 Apr 2025 15:31:20 +0200
+In-Reply-To: <20250422132602.GA1092156-robh@kernel.org> (Rob Herring's message
+	of "Tue, 22 Apr 2025 08:26:02 -0500")
+Message-ID: <87a588b9w7.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,40 +43,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufhfffgjkfgfgggtsehttddttddtredtnecuhfhrohhmpefrvghtvghrucfmohhrshhgrggrrhguuceophgvthgvrheskhhorhhsghgrrghrugdrtghomheqnecuggftrfgrthhtvghrnhephfdvieejveevfffhvdetkeevveehgeegvddugeetudehvdekgeevheeufedvfedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudejkedrudduledruddrudefjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedujeekrdduudelrddurddufeejpdhhvghlohepuggvlhhlrdgsvgdrgeekvghrshdrughkpdhmrghilhhfrhhomhepphgvthgvrheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehjuggvlhhvrghrvgesshhushgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepk
+ hhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhhfihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: peter@korsgaard.com
 
-I Hsin Cheng <richard120310@gmail.com> writes:
+>>>>> "Rob" == Rob Herring <robh@kernel.org> writes:
 
-> There should be a white space between the words "block" and "size",
-> instead of writing them together as "blocksize". Ammend a white space
-> between them.
->
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->  Documentation/filesystems/ext4/blockgroup.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/filesystems/ext4/blockgroup.rst b/Documentation/filesystems/ext4/blockgroup.rst
-> index ed5a5cac6d40..32a66a956f31 100644
-> --- a/Documentation/filesystems/ext4/blockgroup.rst
-> +++ b/Documentation/filesystems/ext4/blockgroup.rst
-> @@ -108,7 +108,7 @@ block groups which can be described by a single block group descriptor
->  block. Since the size of the block group descriptor structure is 64
->  bytes, a meta-block group contains 16 block groups for filesystems with
->  a 1KB block size, and 64 block groups for filesystems with a 4KB
-> -blocksize. Filesystems can either be created using this new block group
-> +block size. Filesystems can either be created using this new block group
->  descriptor layout, or existing filesystems can be resized on-line, and
->  the field s_first_meta_bg in the superblock will indicate the first
->  block group using this new layout.
+ > On Thu, Apr 17, 2025 at 08:04:25PM +0200, Peter Korsgaard wrote:
+ >> TMP102 is powered by its V+ supply, document it. The property is called
+ >> "vcc-supply" since the plus sign (+) is not a valid property character.
 
-Thank you for working to improve the documentation!
+ > Wouldn't "vplus-supply" or "vp-supply" work?
 
-If you dig through our documentation, you will see that "blocksize" is
-fairly common usage.  Changing them all will result in a fair amount of
-churn without much in the way of benefit in either readability or
-accuracy.  May I politely suggest focusing on the many real problems our
-documentation has instead?
+It could, but gcc-supply is what we use for the very similar tmp108
+binding, so I think it makes sense to use that here for consistency as
+well:
 
-Thanks,
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=699383466851e3fb8284e1eefeed78ec30989b3b
 
-jon
+-- 
+Bye, Peter Korsgaard
