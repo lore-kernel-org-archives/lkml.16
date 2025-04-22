@@ -1,130 +1,152 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4821EF37A;
-	Tue, 22 Apr 2025 15:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DAD28F520;
+	Tue, 22 Apr 2025 15:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745334057; cv=none; b=UhC1yg62092+Js3HQtfYfzLefAQCzdYsZm89XDa7SGdn26kbqZKL6f5W6pFr300LadtwUVBZ1pLElHb5Syx9l6+OCsdtS1v6wIOgUziFEGDoHy6zIpLrBjKaNuezs333fyx6ocvXAX25dL4m9Uz9ac+/rzT/a+R5oEukzOud0tQ=
+	t=1745334059; cv=none; b=f2LM7ICMVR5bfxlZU5/tDVMwhTmc6BqE28pz0RqzGoKdWnkSA9aiWCSxpnnwcLyhGpfI8Xvg4AAzshDE9rwtlcdjz3hJ/aYV1mHHW6nww4lMWsEvffQlCp24ziTsu1kPmgH4Ar+3x4RJTOPy3xc8XJNAcJYvn/v8WHcchpJv7fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745334057; c=relaxed/simple;
-	bh=HZVHS4IPySnMn9xD+qPcIx/5bnoYe6A07DDfnd/Nzyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T839i1Jl5D8YicYHLTVzqp1UsJF31Nz2kk7Delp6ghyhnKj7sYISPwMwHYUrY08+9MpLY8NczDyB+dMjTavY2R5uuAYOM3MaHbcFTyxkrQJmaujZ5emIu36ugjQgg8coDmOH1TGZSciwwDbjOykztVgF5aT29FgXj8EajMXPhGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=rQ2mMiaz; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rQ2mMiaz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=29nqVClkVJOEOI67Hmj+Amifgccth5t3PZQd0ZpbUiQ=; b=rQ2mMiaztt3yrB/gN6a1Hhlc14
-	wKRbAfHk6NMJaaWizl24Qp43YxbsrgFfQPwFKEcAeO8ODDl+erqZ/nRkLahizuGzkkOxtoeiS0n/Z
-	6qtxNMMBzzTNUnzdqsqmzLhYFAtf4e731yy4HOunBwY0h0kyFPAMyFz+5dBSaChxqwSA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u7F6z-00ADQa-PK; Tue, 22 Apr 2025 17:00:37 +0200
-Date: Tue, 22 Apr 2025 17:00:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <a53b5f22-d603-4b7d-9765-a1fc8571614d@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
+	s=arc-20240116; t=1745334059; c=relaxed/simple;
+	bh=Yo2gLzQafcD8WiYwM9WhXEX8DLLO8XmKGQ/dY3GeMfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GwAE4AO/8TgR//cwGDCqLE2Y/9hAX9ZFXaBG98JRmIymS04pe3vhf2nGs971kh9tBtT0QAj76SGatj6Rg5LbxbGf7PQ+Q+7iMCqAWIoJeCFqYB+jDcOPtJFnKbegHAAOWefkKBnrgUtOrRYok+bBMKrus0a5s6t05gpXAgQatp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: esmtpsz18t1745333955t2a2a5492
+X-QQ-Originating-IP: slj1jKgfTwnqN+XMjwQqPHnengA/+l4/lWr8Zsj3Fts=
+Received: from [127.0.0.1] ( [116.234.26.236])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 22:59:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5860704546774926596
+Message-ID: <22F78335AF3DCDCB+3c44f925-88fc-438d-9482-ab39a1d70df8@radxa.com>
+Date: Tue, 22 Apr 2025 22:59:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAaafd8LZ3Ks-AoT@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Add static channel mapping between soundwire
+ master and slave
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
+ kernel@oss.qualcomm.com
+References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+From: Xilin Wu <sophon@radxa.com>
+Content-Language: en-US
+In-Reply-To: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NOnalZjVTVf0CJoUyorzo28YPlGmfqDe4Z9JM+5tIP5PAhgG8Kv5eyMx
+	d0VO+dH+ULZVphZHgISUGqEm9Yvy/is7nA6rr5Mx3KDFTOsP2MMJGKfbJo5ZL7tQmpV3oR4
+	Kraj/RSCVYlo5cHp5OR6PpzGcRS59ZswOQQXf1f6dAb1p8Ibei37ngiXd65HjSYxbhpjcsz
+	+b18tW6I5XCXJhYH/rVEyMhMs32ng8g2QTIBXZIZnYAN05BqjAOmnp2GfdavdVFhA1N+k1U
+	F0ni1iVN1e6wD9iQm99h+6H1JHAFjls+MHZfvShBNzMfiVJAHdMLP4f+8fxHJRctIqd6h2x
+	O268kFN35Ddw6/fYMwvwzhze6NWe7unK23B4ZIZszHIfbA1X58xl9If4nzwOe2khzrSNeth
+	7q2dnpO1jPVx8BTy3pxC9WcKxDrgR/2BQfq+7IZ3296v5IkvCMBV8NFZj1FSDYHBc+ffxn7
+	Tbe6r5VFGViv6xSfRc1RIiCgWKOfD/yAdohHt/Evj1kKlUYEiaxz658OhpvLau6+bh9RDmI
+	oOYd/1tCk+fv5inyT+U0Zk6aNaEW8iaIfxlQVHUXs6OGcSk8QDQ5hixPZwGUFfJWAoQ023u
+	Y2K5aZsVy//wSM5RTX+TYXtN5Yp8OY7z4RGgHE/0A8G2nW6d7Tp7GM3FvGZIxpmc5oiwMDs
+	YJxRf57EXvVGRZl5IS38IXOY53vMr3rx3VhXTk7KvO3hWR7J5egfjakOVKaNDMpf6AFs5bB
+	Q6B/ASdInng8W9i+q6fMVx2Jy7r/TNXSRKNVHBWllEzxLEaB45pEcpDEuy/eQx5/oNjGlya
+	iddax4xk5zTe+ZjLtHJjTI36FHgAw5mSmBPJGrjblb/u9eeV9nvTMqoI7HY+VRQXTUIQqKw
+	cijIKhNKeBSERzEt3BAjobug/bRor+68+nA7v3iFtCHUKXKur3JeqaIFZ8+aVGLK6xlcpJ7
+	8a1eVWoxpAcDY0tQ5rAng4cTz
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 21, 2025 at 08:20:29PM +0100, Russell King (Oracle) wrote:
-> On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
-> > diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > index 45819b2358002..2ddc1ce2439a6 100644
-> > --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > @@ -74,19 +74,21 @@ properties:
-> >        - rev-rmii
-> >        - moca
-> >  
-> > -      # RX and TX delays are added by the MAC when required
-> > +      # RX and TX delays are part of the board design (through PCB traces). MAC
-> > +      # and PHY must not add delays.
-> >        - rgmii
-> >  
-> > -      # RGMII with internal RX and TX delays provided by the PHY,
-> > -      # the MAC should not add the RX or TX delays in this case
-> > +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
-> > +      # delays are included in the board design; this is the most common case
-> > +      # in modern designs.
-> >        - rgmii-id
-> >  
-> > -      # RGMII with internal RX delay provided by the PHY, the MAC
-> > -      # should not add an RX delay in this case
-> > +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
-> > +      # part of the board design.
-> >        - rgmii-rxid
-> >  
-> > -      # RGMII with internal TX delay provided by the PHY, the MAC
-> > -      # should not add an TX delay in this case
-> > +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
-> > +      # part of the board design.
-> >        - rgmii-txid
-> >        - rtbi
-> >        - smii
+On 2025/2/6 19:22:21, Mohammad Rafi Shaik wrote:
+> Add static channel map support between soundwire master and slave.
 > 
-> Sorry, but I don't think this wording improves the situation - in fact,
-> I think it makes the whole thing way more confusing.
+> Currently, the channel value for each soundwire port is hardcoded in the
+> wcd937x-sdw driver and the same channel  value is configured in the
+> soundwire master.
 > 
-> Scenario 1: I'm a network device driver author. I read the above, Okay,
-> I have a RGMII interface, but I need delays to be added. I'll detect
-> when RGMII-ID is used, and cause the MAC driver to add the delays, but
-> still pass PHY_INTERFACE_MODE_RGMII_ID to phylib.
+> The Qualcomm board like the QCM6490-IDP require static channel map
+> settings for the soundwire master and slave ports.
 > 
-> Scenario 2: I'm writing a DT file for a board. Hmm, so if I specify
-> rgmii because the delays are implemented in the traces, but I need to
-> fine-tune them. However, the documentation says that delays must not
-> be added by the MAC or the PHY so how do I adjust them. I know, I'll
-> use rgmii-id because that allows delays!
+> If another boards which are using enable wcd937x, the channel mapping
+> index values between master and slave may be different depending on the
+> board hw design and requirements. If the above properties are not used
+> in a SoC specific device tree, the channel mapping index values are set
+> to default.
 > 
-> I suspect neither of these two are really want you mean, but given
-> this wording, that's exactly where it leads - which is more
-> confusion and less proper understanding.
+> With the introduction of the following channel mapping properties, it is
+> now possible to configure the master channel mapping directly from the
+> device tree.
+> 
+> Added qcom_swrm_set_channel_map api to set the master channel values
+> which allows more flexible to configure channel values in runtime for
+> specific active soundwire ports.
+> 
+> Add get and set channel maps support from codec to cpu dais in common
+> Qualcomm sdw driver.
+> 
+> Changes since v5:
+>   - Fixed build compile issue with v5-0003 patch, reported by Mark Brown.
+> 
+> Changes since v4:
+>   - Update the order of channel map index values in v4-0001 dt-bindings patch as suggested by Krzysztof.
+>   
+> Changes since v3:
+>   - Change the order of channel map index values in v3-0002 dt-bindings patch as suggested by Krzysztof.
+>   - Dropped V3-0001 patch which is not required.
+> 
+> Changes since v2:
+>   - Rephrase commit description v2-0001 dt-bindings patch as suggested by Krzysztof.
+> 
+> Changes since v1:
+>   - Modified the design and followed new approach to setting the master channel mask.
+>   - Used existing set_channel_map api as suggested by Pierre-Louis
+>   - Fixed the typo mistake in v1-0001 dt-bindings patch.
+>   - Rephrase the commit description for all v1 patches.
+> 
+> Mohammad Rafi Shaik (4):
+>    ASoC: dt-bindings: wcd937x-sdw: Add static channel mapping support
+>    ASoC: codecs: wcd937x: Add static channel mapping support in
+>      wcd937x-sdw
+>    soundwire: qcom: Add set_channel_map api support
+>    ASoC: qcom: sdw: Add get and set channel maps support from codec to
+>      cpu dais
+> 
+>   .../bindings/sound/qcom,wcd937x-sdw.yaml      | 36 +++++++++++++
+>   drivers/soundwire/qcom.c                      | 26 +++++++++
+>   sound/soc/codecs/wcd937x-sdw.c                | 39 ++++++++++++--
+>   sound/soc/codecs/wcd937x.c                    | 53 ++++++++++++++++++-
+>   sound/soc/codecs/wcd937x.h                    |  7 ++-
+>   sound/soc/qcom/sdw.c                          | 34 ++++++++++--
+>   6 files changed, 185 insertions(+), 10 deletions(-)
 
-These DT documents are supposed to be normative and OS agnostic. I
-wounder what the DT Maintainers will say if we add an Informative
-section afterwards giving a detailed description of how Linux actually
-implements these normative statements? It will need to open with a
-clear statement that it is describing Linux behaviour, and other OSes
-can implement the normative part in other ways and still be compliant,
-but that Linux has seen a lot of broken implementations and so wants
-to add Informative information to guide Linux developers.
+Hi Mohammad,
 
-   Andrew
+I'm working on a QCS6490 board with the WCD9380 codec. I wonder if a 
+similar patch is needed to enable headset audio? Currently, DisplayPort 
+audio and headset plug-in detection work, but no audio is coming from 
+the headset.
+
+Additionally, I noticed an unusual output in dmesg:
+
+qcom-soundwire 3210000.soundwire: qcom_swrm_irq_handler: SWR Port 
+collision detected
+
+Could this be related to the issue? Let me know if you need further details.
+
+-- 
+Best regards,
+Xilin Wu <sophon@radxa.com>
