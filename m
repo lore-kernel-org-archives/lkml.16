@@ -1,176 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9AE296179;
-	Tue, 22 Apr 2025 18:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861011A071C
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745346931; cv=none; b=vBtVksNV7+qou2mov1X5H8G1IdMlK7OtkLJRstmgp+ZrHUwnXe9YbYo7Yw04HyipwX4+R5e5+hcsbxyR0bUYD0iOOT/QvZSPK/9+Vx21TLheZ2RUjdcGHjPsg3/HO3/ASX7eFUU77cm2jw7o7csdDx4wwYvqQMjrjxPdl2GN60k=
+	t=1745347302; cv=none; b=o7ZFt70ZzW9d3fl44dnlLqx9LxYL5O/Qzngvc0+pJdtycd2L+YSYoGFqtopGiRwO4JKVomWZA5IxwetgYhTBjOh0452Ra3AZxPUt3Ft2EhYy+57FGJaqBV0oxtWbgWU3G0+8zUqnUiYBfVKeq3xWJLHJSoqyhFNLra+aMibKPgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745346931; c=relaxed/simple;
-	bh=qJMQ/YdxbpuMLffInkxJPnf55MoP0hvxW+wRtlvozRk=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=mgGTnsu6o20tAhr9bous8m8aMxWNa4QvTeqUYllRYmypqBlpdYv9eVLGxt4byqqttj01PZNWzkUiN3UzcsjA8XU3Hil+O7xb8M4rYe5vNLXxTWV724l+12VpgwuGM/k6MWurbK76HOR8mbAstdpagcTNBDD6W7bh1176rznUR2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8570BC4CEEB;
-	Tue, 22 Apr 2025 18:35:31 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1u7IUl-0000000Fw9r-0G3p;
-	Tue, 22 Apr 2025 14:37:23 -0400
-Message-ID: <20250422183722.919601983@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 22 Apr 2025 14:34:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Jens Remus <jremus@linux.ibm.com>,
- x86@kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v5 6/6] x86/vdso: Enable sframe generation in VDSO
-References: <20250422183439.895236512@goodmis.org>
+	s=arc-20240116; t=1745347302; c=relaxed/simple;
+	bh=jIcPwdCVJ4oPl3FG8BiGvp9E06ch1KDrjP/gHM9Et0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJj3IWP4DEH9mDxfdowvU0Getyx84dgKcPG3hhyuYapX8avel57bzMSwwP3roMXWuayfcaY9nO8O2tXI2yv978ykHBzXfbKcxcNBd9thLXDksIxqFFs1f9P4UkdllsVn1nUPAsHfsiSAe5U0RzdqHBs47SeYEjg16O4pkDqn5Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gn7w95+m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gn7w95+m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745347299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uQm82sFSaAR8XqBVikoka6Rm4k9SPi8HP+wCt/c07D8=;
+	b=Gn7w95+moJ04jliCQrOL6rla7Fj4wkXZpbnErVRHAe/9dDoa43bY8S6Q8VuJ9pIoVApAsa
+	6LRspSg5M6nTyPzsXjOPCKGjTs/FZJpFuiqLUqvS47FBgF9NtVPh8q/2lKF4j5Fij1ONxO
+	7Cip/IMDr02QJkpPArrhC+qktZ+cJ5A=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-9SWX8oGzNGCd6pL2zxiPJw-1; Tue,
+ 22 Apr 2025 14:41:36 -0400
+X-MC-Unique: 9SWX8oGzNGCd6pL2zxiPJw-1
+X-Mimecast-MFC-AGG-ID: 9SWX8oGzNGCd6pL2zxiPJw_1745347295
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE9A0180087A;
+	Tue, 22 Apr 2025 18:41:34 +0000 (UTC)
+Received: from f39 (unknown [10.44.32.103])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82BF1180094C;
+	Tue, 22 Apr 2025 18:41:32 +0000 (UTC)
+Date: Tue, 22 Apr 2025 20:41:29 +0200
+From: Eder Zulian <ezulian@redhat.com>
+To: Nathan Lynch <nathan.lynch@amd.com>
+Cc: Basavaraj.Natikar@amd.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jsnitsel@redhat.com,
+	ddutile@redhat.com
+Subject: Re: [PATCH RFC 1/1] dmaengine: ptdma: use SLAB_TYPESAFE_BY_RCU for
+ the DMA descriptor slab
+Message-ID: <aAfi2SeDqD8IybOJ@f39>
+References: <20250411194148.247361-1-ezulian@redhat.com>
+ <20250411194148.247361-2-ezulian@redhat.com>
+ <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ikn2lcww.fsf@AUSNATLYNCH.amd.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+Hello Nathan,
 
-Enable sframe generation in the VDSO library so kernel and user space
-can unwind through it.
+On Thu, Apr 17, 2025 at 04:02:23PM -0500, Nathan Lynch wrote:
+> Eder Zulian <ezulian@redhat.com> writes:
+> > The SLAB_TYPESAFE_BY_RCU flag prevents a change of type for objects
+> > allocated from the slab cache (although the memory may be reallocated to
+> > a completetly different object of the same type.) Moreover, when the
+> > last reference to an object is dropped the finalization code must not
+> > run until all __rcu pointers referencing the object have been updated,
+> > and then a grace period has passed.
+> >
+> > Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> > ---
+> >  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > index 715ac3ae067b..b70dd1b0b9fb 100644
+> > --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > @@ -597,7 +597,8 @@ int pt_dmaengine_register(struct pt_device *pt)
+> >  
+> >  	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
+> >  					       sizeof(struct pt_dma_desc), 0,
+> > -					       SLAB_HWCACHE_ALIGN, NULL);
+> > +					       SLAB_HWCACHE_ALIGN |
+> > +					       SLAB_TYPESAFE_BY_RCU, NULL);
+> 
+> No, this code wasn't written to exploit SLAB_TYPESAFE_BY_RCU and this
+> change can only obscure the problem. There's likely a data race in the
+> driver.
+> 
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v4: https://lore.kernel.org/all/c93fbd53f01c2c86f747af27040ac11f16dee032.1737511963.git.jpoimboe@kernel.org/
+Ack. Let's conclude my RFC and discard the proposed patch then.
+Thank you very much for your feedback. 
 
-- Changed #ifdef to include SFRAME config:
-  #if defined(__x86_64__) && defined(CONFIG_AS_SFRAME)
-  (Jens Remus)
+> I suspect pt_cmd_callback_work() has a bug:
+> 
+>         spin_lock_irqsave(&chan->vc.lock, flags);
+>         if (desc) {
+>                 if (desc->status != DMA_COMPLETE) {
+>                         if (desc->status != DMA_ERROR)
+>                                 desc->status = DMA_COMPLETE;
+> 
+>                         dma_cookie_complete(tx_desc);
+>                         dma_descriptor_unmap(tx_desc);
+>                 } else {
+>                         tx_desc = NULL;
+>                 }
+>         }
+>         spin_unlock_irqrestore(&chan->vc.lock, flags);
+> 
+>         if (tx_desc) {
+>                 dmaengine_desc_get_callback_invoke(tx_desc, NULL);
+>                 dma_run_dependencies(tx_desc);
+> >>>>            list_del(&desc->vd.node); <<< must be done under vc.lock
+>                 vchan_vdesc_fini(vd);
+>         }
+> 
+> But that's relatively new code that may not be in the kernel you're
+> running.
+> 
 
-- Fixed Makefile to use "ifeq" and not "#ifdef"
-  (Jens Remus)
+True. pt_cmd_callback_work() wasn't in the kernel used for tests and it
+seems to be used only if 'pt->ver == AE4_DMA_VERSION'. In that kernel
+pt_cmd_callback() would call pt_handle_active_desc() which seemed to have
+the same bug.
 
- arch/Kconfig                          |  3 +++
- arch/x86/entry/vdso/Makefile          | 10 +++++++---
- arch/x86/entry/vdso/vdso-layout.lds.S |  3 +++
- arch/x86/include/asm/dwarf2.h         |  5 ++++-
- 4 files changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index b0adb665041f..6e7d739e853b 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -435,6 +435,9 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	  It uses the same command line parameters, and sysctl interface,
- 	  as the generic hardlockup detectors.
- 
-+config AS_SFRAME
-+	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
-+
- config HAVE_PERF_REGS
- 	bool
- 	help
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 54d3e9774d62..3bab770337b3 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -47,13 +47,17 @@ quiet_cmd_vdso2c = VDSO2C  $@
- $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
- 	$(call if_changed,vdso2c)
- 
-+ifeq ($(CONFIG_AS_SFRAME),y)
-+  SFRAME_CFLAGS := -Wa$(comma)-gsframe
-+endif
-+
- #
- # Don't omit frame pointers for ease of userspace debugging, but do
- # optimize sibling calls.
- #
- CFL := $(PROFILING) -mcmodel=small -fPIC -O2 -fasynchronous-unwind-tables -m64 \
-        $(filter -g%,$(KBUILD_CFLAGS)) -fno-stack-protector \
--       -fno-omit-frame-pointer -foptimize-sibling-calls \
-+       -fno-omit-frame-pointer $(SFRAME_CFLAGS) -foptimize-sibling-calls \
-        -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO
- 
- ifdef CONFIG_MITIGATION_RETPOLINE
-@@ -63,7 +67,7 @@ endif
- endif
- 
- $(vobjs): KBUILD_CFLAGS := $(filter-out $(PADDING_CFLAGS) $(CC_FLAGS_LTO) $(CC_FLAGS_CFI) $(RANDSTRUCT_CFLAGS) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
--$(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO
-+$(vobjs): KBUILD_AFLAGS += -DBUILD_VDSO $(SFRAME_CFLAGS)
- 
- #
- # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
-@@ -104,7 +108,7 @@ $(obj)/%-x32.o: $(obj)/%.o FORCE
- 
- targets += vdsox32.lds $(vobjx32s-y)
- 
--$(obj)/%.so: OBJCOPYFLAGS := -S --remove-section __ex_table
-+$(obj)/%.so: OBJCOPYFLAGS := -g --remove-section __ex_table
- $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 	$(call if_changed,objcopy)
- 
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index 60747905de2b..24b92687597b 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -59,6 +59,7 @@ SECTIONS
- 	.eh_frame_hdr	: { *(.eh_frame_hdr) }		:text	:eh_frame_hdr
- 	.eh_frame	: { KEEP (*(.eh_frame)) }	:text
- 
-+	.sframe		: { *(.sframe) }		:text	:sframe
- 
- 	/*
- 	 * Text is well-separated from actual data: there's plenty of
-@@ -87,6 +88,7 @@ SECTIONS
-  * Very old versions of ld do not recognize this name token; use the constant.
-  */
- #define PT_GNU_EH_FRAME	0x6474e550
-+#define PT_GNU_SFRAME	0x6474e554
- 
- /*
-  * We must supply the ELF program headers explicitly to get just one
-@@ -98,4 +100,5 @@ PHDRS
- 	dynamic		PT_DYNAMIC	FLAGS(4);		/* PF_R */
- 	note		PT_NOTE		FLAGS(4);		/* PF_R */
- 	eh_frame_hdr	PT_GNU_EH_FRAME;
-+	sframe		PT_GNU_SFRAME;
- }
-diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-index 65d958ef1178..ce294e6c9017 100644
---- a/arch/x86/include/asm/dwarf2.h
-+++ b/arch/x86/include/asm/dwarf2.h
-@@ -12,8 +12,11 @@
- 	 * For the vDSO, emit both runtime unwind information and debug
- 	 * symbols for the .dbg file.
- 	 */
--
-+#if defined(__x86_64__) && defined(CONFIG_AS_SFRAME)
-+	.cfi_sections .eh_frame, .debug_frame, .sframe
-+#else
- 	.cfi_sections .eh_frame, .debug_frame
-+#endif
- 
- #define CFI_STARTPROC		.cfi_startproc
- #define CFI_ENDPROC		.cfi_endproc
--- 
-2.47.2
-
+Eder
 
