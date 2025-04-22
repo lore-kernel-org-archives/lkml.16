@@ -1,164 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0992139B6
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF421EEA5E;
+	Tue, 22 Apr 2025 10:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317791; cv=none; b=RKrFp1C5md1jUBQ+pyu5MyC+c/t5ViHZbAGpVGq8iLAdyLVA1RG7CYjFYniGNygJgJ2IQhg9QT3/RQOOsiJuSrHseHACw/HKZ6qav0fsq0K/yVC1XBkNl6RR/v4XzGyO3ey6z+Zq4S0S3W32fWzp2yp4fCK2EiRo9YLvtOIVgHQ=
+	t=1745317802; cv=none; b=JQUdKfDolOtFSyrMSQKXAia3AB15y8CAnL9gyZeNuXlI7Hobk/mNWkjr9yiK1BT6NXyK9TA5McCxuNSqJE2RRwB6svk2+UVd2/dsAA4ak5+W/QYF9nBlKxUlV9pSMawzd9jexsVaA9hYWaqOd+QhES3t0qC91F6EnBaG4o7GkTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317791; c=relaxed/simple;
-	bh=ySDR+naf00yDu9P1Ud7R7ThyQJxoS7alGqqWjN3bylU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZDEywScpfLXMU3SvmPfVlilTCl+HB2Ak8PtEdUDV9vCj++Tdz7fEHDr5l27ClwbcRkzaVc2+7i6E/c+3sGz60CDhR83GR6UYNsnyTCgDE7oW9i3Hmyo+FsbdJB+jOlool2YD5vjZwunuwOmyfCBb548lResRm7CeEH+KftMlqbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qi5PahEO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745317802; c=relaxed/simple;
+	bh=P0bCh9wtESgeLjsWQVExDsJtTBDzFI9nvThZPFF4jSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fvshKEsGaUWNNNXRnzi0vFXJl+a4adm2/ikNyB02ebCZz7tmDrG4tTx9sFzc30HPUzeEYJO7lDtlFUAVMY/zrVZ9/tcqcDxytZ37EZUzTsd/LDhWi5fLoGvcVONihlJQyHoIvr7LpsUFHWp9cr3dYBS3t612FjJhGoHLSLgtW9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Dc+CZMlZ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qi5PahEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745317788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=unMzrw2kDN7wNfld1j7GnlAT292MaQ581CLATXFODK0=;
-	b=Qi5PahEOsTm0L6uPRjAV8uRObyRHObzb4C2W2ChMnxLXcdquiThYYEbcXyNkBkD8UM7dhA
-	RveXcgMcssHJ6i4ELy3hJYLTggUzhtL2oi+81DELNSvU/Vyae8eu3sN4faOUOqRUeaJpp3
-	chPF84Wtc4ZMFWaU9sxtjmtgVX60AX0=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-2itJwe45P8u0rOjBPWqfaA-1; Tue,
- 22 Apr 2025 06:29:43 -0400
-X-MC-Unique: 2itJwe45P8u0rOjBPWqfaA-1
-X-Mimecast-MFC-AGG-ID: 2itJwe45P8u0rOjBPWqfaA_1745317781
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Dc+CZMlZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745317797;
+	bh=EMUT1paF30EBszmVtYpyKORouvmWGn9igjUanXXGWps=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Dc+CZMlZA1GOPnSq6MXPpiUoa9pzL5nIPhY7aI7n+mwUUQRi2mV1FMsZ3rcLpqX1T
+	 KYkLgT3hgmUS3b8TJm5fzrSjiLeZFzIh5fd2Km+6Me5TcnDvN2bZXizAHPBvmmk00P
+	 pvET6rpwMYDpCK8khZJ5v8OYgp2HuzVWi9FRSos542NAAOyLXhoSj2X4UxNliIobtL
+	 6QPYdoZS5JaY/03wFGhCp32YQ/j/jEpO4+XeBKud6gQnhHz/02zo1XGkZBG/OZBKpk
+	 122rU0bpL9Fo5DZDaQExa9UdXhCwXmz8TmrulStZqMHAPQrkkjZDLhEHkZw8m1QZx7
+	 V1eeM/tNX13ag==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D6AC180036D;
-	Tue, 22 Apr 2025 10:29:40 +0000 (UTC)
-Received: from [10.22.80.44] (unknown [10.22.80.44])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 358A7180094C;
-	Tue, 22 Apr 2025 10:29:33 +0000 (UTC)
-Date: Tue, 22 Apr 2025 12:29:27 +0200 (CEST)
-From: Mikulas Patocka <mpatocka@redhat.com>
-To: Dongsheng Yang <dongsheng.yang@linux.dev>
-cc: Jens Axboe <axboe@kernel.dk>, Dan Williams <dan.j.williams@intel.com>, 
-    hch@lst.de, gregory.price@memverge.com, John@groves.net, 
-    Jonathan.Cameron@huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com, 
-    rdunlap@infradead.org, agk@redhat.com, snitzer@kernel.org, 
-    linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org, 
-    nvdimm@lists.linux.dev, dm-devel@lists.linux.dev
-Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
- Devices
-In-Reply-To: <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
-Message-ID: <3bdad772-9710-2763-c9a3-fefb3723fdf6@redhat.com>
-References: <20250414014505.20477-1-dongsheng.yang@linux.dev> <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch> <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk> <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev> <d3231630-9445-4c17-9151-69fe5ae94a0d@kernel.dk>
- <235030ca-93a4-4666-93f8-93f8d81ff650@linux.dev>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zhdln0hJcz4wcj;
+	Tue, 22 Apr 2025 20:29:57 +1000 (AEST)
+Date: Tue, 22 Apr 2025 20:29:56 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the amdgpu tree
+Message-ID: <20250422202956.176fb590@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="-1463811712-2131032953-1745317780=:1888132"
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: multipart/signed; boundary="Sig_/xU/5VwGKUP2t23Zeb=qUI9i";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--Sig_/xU/5VwGKUP2t23Zeb=qUI9i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
----1463811712-2131032953-1745317780=:1888132
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Hi all,
 
-Hi
+After merging the amdgpu tree, today's linux-next build (htmldocs)
+produced this warning:
 
+Documentation/gpu/amdgpu/module-parameters:7: drivers/gpu/drm/amd/amdgpu/am=
+dgpu_drv.c:1119: ERROR: Unexpected indentation. [docutils]
 
-On Thu, 17 Apr 2025, Dongsheng Yang wrote:
+Introduced by commit
 
-> +ccing md-devel
-> 
-> On 2025/4/16 23:10, Jens Axboe wrote:
-> > On 4/16/25 12:08 AM, Dongsheng Yang wrote:
-> > > On 2025/4/16 9:04, Jens Axboe wrote:
-> > > > On 4/15/25 12:00 PM, Dan Williams wrote:
-> > > > > Thanks for making the comparison chart. The immediate question this
-> > > > > raises is why not add "multi-tree per backend", "log structured
-> > > > > writeback", "readcache", and "CRC" support to dm-writecache?
-> > > > > device-mapper is everywhere, has a long track record, and enhancing it
-> > > > > immediately engages a community of folks in this space.
-> > > > Strongly agree.
-> > > 
-> > > Hi Dan and Jens,
-> > > Thanks for your reply, that's a good question.
-> > > 
-> > >      1. Why not optimize within dm-writecache?
-> > >  From my perspective, the design goal of dm-writecache is to be a
-> > > minimal write cache. It achieves caching by dividing the cache device
-> > > into n blocks, each managed by a wc_entry, using a very simple
-> > > management mechanism. On top of this design, it's quite difficult to
-> > > implement features like multi-tree structures, CRC, or log-structured
-> > > writeback. Moreover, adding such optimizations?especially a read
-> > > cache?would deviate from the original semantics of dm-writecache. So,
-> > > we didn't consider optimizing dm-writecache to meet our goals.
-> > > 
-> > >      2. Why not optimize within bcache or dm-cache?
-> > > As mentioned above, dm-writecache is essentially a minimal write
-> > > cache. So, why not build on bcache or dm-cache, which are more
-> > > complete caching systems? The truth is, it's also quite difficult.
-> > > These systems were designed with traditional SSDs/NVMe in mind, and
-> > > many of their design assumptions no longer hold true in the context of
-> > > PMEM. Every design targets a specific scenario, which is why, even
-> > > with dm-cache available, dm-writecache emerged to support DAX-capable
-> > > PMEM devices.
-> > > 
-> > >      3. Then why not implement a full PMEM cache within the dm framework?
-> > > In high-performance IO scenarios?especially with PMEM hardware?adding
-> > > an extra DM layer in the IO stack is often unnecessary. For example,
-> > > DM performs a bio clone before calling __map_bio(clone) to invoke the
-> > > target operation, which introduces overhead.
+  fb20954c9717 ("drm/amdgpu/userq: rework driver parameter")
 
-Device mapper performs (in the common fast case) one allocation per 
-incoming bio - the allocation contains the outgoing bio and a structure 
-that may be used for any purpose by the target driver. For interlocking, 
-it uses RCU, so there is no synchronizing instruction. So, DM overhead is 
-not big.
+--=20
+Cheers,
+Stephen Rothwell
 
-> > > Thank you again for the suggestion. I absolutely agree that leveraging
-> > > existing frameworks would be helpful in terms of code review, and
-> > > merging. I, more than anyone, hope more people can help review the
-> > > code or join in this work. However, I believe that in the long run,
-> > > building a standalone pcache module is a better choice.
-> > I think we'd need much stronger reasons for NOT adopting some kind of dm
-> > approach for this, this is really the place to do it. If dm-writecache
-> > etc aren't a good fit, add a dm-whatevercache for it? If dm is
-> > unnecessarily cloning bios when it doesn't need to, then that seems like
-> > something that would be worthwhile fixing in the first place, or at
-> > least eliminate for cases that don't need it. That'd benefit everyone,
-> > and we would not be stuck with a new stack to manage.
-> > 
-> > Would certainly be worth exploring with the dm folks.
-> 
-> well, introducing dm-pcache (assuming we use this name) could, on one hand,
-> attract more users and developers from the device-mapper community to pay
-> attention to this project, and on the other hand, serve as a way to validate
-> or improve the dm framework’s performance in high-performance I/O scenarios.
-> If necessary, we can enhance the dm framework instead of bypassing it
-> entirely. This indeed sounds like something that would “benefit everyone.”
-> 
-> Hmm, I will seriously consider this approach.
-> 
-> Hi Alasdair, Mike, Mikulas,  Do you have any suggestions?
-> 
-> Thanx
+--Sig_/xU/5VwGKUP2t23Zeb=qUI9i
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-If you create a new self-contained target that doesn't need changes in the 
-generic dm or block code, it's OK and I would accept that.
+-----BEGIN PGP SIGNATURE-----
 
-Improving dm-writecache is also possible.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHb6QACgkQAVBC80lX
+0Gzvagf/di0T7gMO4BCVrLhuw+rBv2XZcji9BTXYwzF3ij4UToh0TdzcHOwUlOjz
+ivywHcZbVT2GfW+qQTg6/dzer77WtCI9yXD38uidlP/059orq6XY0itXI3YX/vf+
+PFybXdbQGi+2LXri5yKP9vjxuGJK+IeHfCjBQmPoLRKRkhVF+4sPuhiWFQOMvv6n
+IUlEHiImabWt+T4ndvUYB1cqlHUrRLTPbttpLXxawhgDJ9FRKU0QfZ8OKJb2P0+x
+s4DmZoGbsQt7Ps2rLicZGgsvGFlTFYA04NeagaV7iBbnUJ/jdKJP2rmkgEBRXvjS
+1rLf74D9QV2obZ4lf67KWMBv2sAd+g==
+=tSSX
+-----END PGP SIGNATURE-----
 
-Mikulas
----1463811712-2131032953-1745317780=:1888132--
-
+--Sig_/xU/5VwGKUP2t23Zeb=qUI9i--
