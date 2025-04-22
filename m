@@ -1,81 +1,109 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4601E3DEF;
-	Tue, 22 Apr 2025 10:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ACC1E0DEB;
+	Tue, 22 Apr 2025 10:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316167; cv=none; b=hR5+py3gV1ye+BMea7CtB9hMLF/FYnzNwIXjvOTbEs7NxlQy+uCfJ7cS62PcQuY482TfNUL7R1pP8+fAgnDv7Uk+cuakMtNZVCH1Y6JF35iG7T/gHQqNFoxgqPJb7lP8UFhE8g6nDFOHg7Ug5+FGKRotlFiUZVtIQ2Y3BYzEh5Q=
+	t=1745316181; cv=none; b=IeQQbaHecoP42TRcETTG20I9PbKpWreocHXO1xfXFnBXkYIq2ld0OfVFShBKO4CMxwXs4nplvBSMcvUXRHuUC9BQ3j+PWi6Ycjc6jEePubasCzetNrmmsgEjQeujYDR3CHFSonb3A+NcQ1s4B/A/BpKjOvJT3Nm9JKkO8/vOIfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316167; c=relaxed/simple;
-	bh=/i+M89FhVSXaTlMiWBGQb5ELGk5s8fZWdKUGGhl5vHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FNoFymmBiW4iE/+++VQqGbOD4cEMPhLQTAveOhGEB1kqD5eDr6owq/SRrgsB2HkPtrDZzdw4VTrC8T56yrshkEXWtnSRlrJ35efyjg+VPLcKFyPhUdKU+v1slc1vfZoru7L/8Mcc1ZBhiPm2VOkmEHYnVVMY5lzhfrVHa0lOoK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=VRpkuyDW; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1745316181; c=relaxed/simple;
+	bh=ToRg4CeRUOUVtP4ZSt1QrM8CjfKlNnOozBNBrYE2698=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kTUl7gmQzOVGXzTUKwvJibJLMwM7m5SSupEScRUHrKWPvXVmHPIoxwPQlcKEl1VQLBCMfPUzsU/p1APU3QF+Ed0CsyirMtJUQRndSVrdJsIanK6wGWkoPpxwUezKvG/O5vd4eyqZX0A4HhYCgI5Aagi97CL0wjdfpeCkNogFKSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMzGWhvn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="VRpkuyDW"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 45CFA1F92B;
-	Tue, 22 Apr 2025 12:02:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745316163;
-	bh=5MJcsDy2OhQnbeBMx1UynLRxiyBn3DMKWGrFzw5aL6E=; h=From:To:Subject;
-	b=VRpkuyDWG8e5xqejt1ao1ybkm89AggTICBQO7j4twnnOd5RQ57W1AqZQmVfgfCKh4
-	 v9Wayn4RAIeYnW21i/uXaMNSUsrsdE3imWiph1UoGH1eI5y1IIvPuynzUP50XwpKmD
-	 5q2SPiSK4WeOHzbr+6x+vrpKCjqjbgM4gI5eObpCJBthNLbfqVP9kYtKPk6d8noN3i
-	 gponeJVFa+9yUJOBAELyn6rq7OK3vLCs9LYGkl/qRywrlpyL/LFtZh0qntEaSyoKNj
-	 B0xB+Msvw19QM1ncTHOUG6pg3LdmqxTH5wQhJqY+lDYFBjswkHD6uyQwGBj0SlzMST
-	 c0Q4v6NRPi9zQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: imx8qm: add ethernet aliases
-Date: Tue, 22 Apr 2025 12:02:39 +0200
-Message-Id: <20250422100239.58799-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMzGWhvn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2F5C4AF0B;
+	Tue, 22 Apr 2025 10:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745316181;
+	bh=ToRg4CeRUOUVtP4ZSt1QrM8CjfKlNnOozBNBrYE2698=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LMzGWhvnQOus9OmqwM22LXNODp1pWEOmno+GVGLi4GVTojz0xsEUEQn8Ir0C8hy2N
+	 EWQ07HQk8p5OXTNN0ATsErSLCE0PDS2S3d1QFl6hDASCASrudDwQNwzUT/NYmipQdK
+	 MHnA9H6mz5YB4rxn6OXcjN3hlryh5oY4WZExT8cweH1dveJ66dHpUQoEN/aS9qE8Cx
+	 pGeB/Eo+IQkKZPQYE/6EmFIyofPfWnUtrJ97kHDx8bir5xY9itCRsde0siz1ABiqpn
+	 LKtFaNdCBKIUt4sauhV1f9M3EZOx6afknolOlBJnhKeW1P4sNGbgT2is9dkpMnx0eo
+	 cZG30LbEZ3udg==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6446027e87.3;
+        Tue, 22 Apr 2025 03:03:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV19kh4R5NRZl+S15WJvSX6p0/djkrh9byJtMaBvNZiqje7VghuOlaauAFSTy9/uGfSSYgbh6SCo8yvFGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBU7y5Jqo9dW49nxDhPfblg44D6r9EKqYP7a2FQE0+bs0HE+cz
+	IFkP92vtMLITK5FAbiOJE3H/JF1PQ24ogndM+zL6KHF8sNKNiP7dzqFVKTYWYma/WsRXVpPpTpJ
+	POsYNZMkwxkS2R3aLjIvHXMle8oU=
+X-Google-Smtp-Source: AGHT+IEyHKXRp4nAwbh4JgmSsEY+YxuekgICFOguGtsRj7qggKe6wA1CgUf+picRpfTOM44oWguOLA20ETib8MAK5Zo=
+X-Received: by 2002:a05:6512:1045:b0:54a:f6e9:2c04 with SMTP id
+ 2adb3069b0e04-54d6e635483mr2952442e87.26.1745316179390; Tue, 22 Apr 2025
+ 03:02:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250422095718.17360-1-kabel@kernel.org>
+In-Reply-To: <20250422095718.17360-1-kabel@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 22 Apr 2025 12:02:47 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFO3fxEcv5VPxtGnq-x0+iZnUHau2WKtiFHg1f6XQc_qg@mail.gmail.com>
+X-Gm-Features: ATxdqUEfv1VpLPveqLUDgYOhJXSwckyrQ-acm7s0JA2Maoz21Kx5GCvlcSz_xRA
+Message-ID: <CAMj1kXFO3fxEcv5VPxtGnq-x0+iZnUHau2WKtiFHg1f6XQc_qg@mail.gmail.com>
+Subject: Re: [PATCH] crypto: atmel-sha204a - Set hwrng quality to lowest possible
+To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Cc: linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, 
+	"David S. Miller" <davem@davemloft.net>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Tue, 22 Apr 2025 at 11:57, Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+>
+> According to the review by Bill Cox [1], the Atmel SHA204A random number
+> generator produces random numbers with very low entropy.
+>
+> Set the lowest possible entropy for this chip just to be safe.
+>
+> [1] https://www.metzdowd.com/pipermail/cryptography/2014-December/023858.=
+html
+>
+> Fixes: da001fb651b00e1d ("crypto: atmel-i2c - add support for SHA204A ran=
+dom number generator")
+> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
+> ---
+>  drivers/crypto/atmel-sha204a.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
 
-Add ethernet aliases, they are used by the firmware to set the MAC
-address and by systemd to rename network interfaces to predictable
-interface names, e.g. end0 and end1.
+Wow, that is terrible
 
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- arch/arm64/boot/dts/freescale/imx8qm.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-index 6fa31bc9ece8..eccd0087efa7 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-@@ -17,6 +17,8 @@ / {
- 	#size-cells = <2>;
- 
- 	aliases {
-+		ethernet0 = &fec1;
-+		ethernet1 = &fec2;
- 		mmc0 = &usdhc1;
- 		mmc1 = &usdhc2;
- 		mmc2 = &usdhc3;
--- 
-2.39.5
 
+> diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204=
+a.c
+> index 75bebec2c757..0fcf4a39de27 100644
+> --- a/drivers/crypto/atmel-sha204a.c
+> +++ b/drivers/crypto/atmel-sha204a.c
+> @@ -163,6 +163,12 @@ static int atmel_sha204a_probe(struct i2c_client *cl=
+ient)
+>         i2c_priv->hwrng.name =3D dev_name(&client->dev);
+>         i2c_priv->hwrng.read =3D atmel_sha204a_rng_read;
+>
+> +       /*
+> +        * According to review by Bill Cox [1], this HWRNG has very low e=
+ntropy.
+> +        * [1] https://www.metzdowd.com/pipermail/cryptography/2014-Decem=
+ber/023858.html
+> +        */
+> +       i2c_priv->hwrng.quality =3D 1;
+> +
+>         ret =3D devm_hwrng_register(&client->dev, &i2c_priv->hwrng);
+>         if (ret)
+>                 dev_warn(&client->dev, "failed to register RNG (%d)\n", r=
+et);
+> --
+> 2.49.0
+>
