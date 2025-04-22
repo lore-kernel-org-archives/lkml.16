@@ -1,84 +1,126 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3C420103A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1097927BF85;
+	Tue, 22 Apr 2025 11:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321981; cv=none; b=NH5UUOgTjtNJq0XS3EsqekoKGNsRokFwU6nLX0aykAEy8MS4L8b+uZqS9eA2FYxRR/juN5ZTTrCfgwPGAUdJz374fqaZl69dgrHh9dN+AwIvrnmumtRubbReBeyR5CIXu2YXfQoaBGcnHQ1n6QTTt1YjGIBkL4D1hCY5Dph1H4E=
+	t=1745321992; cv=none; b=JUtvd3EP8kvQGBWoWZ5xDlNkVyuUsnalOHpTaMTpjaGZWJnY+qdJ4iwbl7NEDH8yhNzpiXt/DjiqKLZXIvee0uUwa93q1IW+XUKq/e/p8tnPHE7dKv0YLKl+aOe7Ecom+I02JSTmJZziMsl86toyv6aGEiwke3fcuLY6TdNt8yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321981; c=relaxed/simple;
-	bh=JuS9LrdXRFa4vONOB2S8X765dkWQDfWn2EXLAI54SSM=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fFD8fT+uJmHf+/QYC2WtUb0AOw83GnDSZnjeUkfEP5SM9dr0IlJ75Rlrg0uqdbA1daJB2l+s+NfhawzdJCYUnrgzAQMowta148eSQoMv3A3G2+kJDdMl+oN65Pl6VrrcRU2FCVM4Xvd2inZsGov52ya4Onk+U2EB/HNX2U65Fhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w012.hihonor.com (unknown [10.68.27.189])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4ZhgGF0d7KzYr1F0;
-	Tue, 22 Apr 2025 19:37:57 +0800 (CST)
-Received: from a009.hihonor.com (10.68.30.244) by w012.hihonor.com
- (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 22 Apr
- 2025 19:39:31 +0800
-Received: from a007.hihonor.com (10.68.22.31) by a009.hihonor.com
- (10.68.30.244) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 22 Apr
- 2025 19:39:30 +0800
-Received: from a007.hihonor.com ([fe80::e866:83ac:f23b:c25c]) by
- a007.hihonor.com ([fe80::e866:83ac:f23b:c25c%10]) with mapi id
- 15.02.1544.011; Tue, 22 Apr 2025 19:39:30 +0800
-From: gaoxu <gaoxu2@honor.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou
-	<dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter
-	<cl@linux.com>
-CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "surenb@google.com" <surenb@google.com>,
-	yipengxiang <yipengxiang@honor.com>, gaoxu <gaoxu2@honor.com>
-Subject: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation
- failure
-Thread-Topic: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation
- failure
-Thread-Index: Aduzek2qZlvd+/bbQUCcTHfEW2xOUQ==
-Date: Tue, 22 Apr 2025 11:39:30 +0000
-Message-ID: <bcfb90b2cecf43d7a0760ebaddde10d8@honor.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1745321992; c=relaxed/simple;
+	bh=LvVe3mABaUW4+b16EtPFOLNobUI0Izc6wjH25SG4f3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTy46PFgxutH1x05RCFWd1hzn/Pr4+7VvzgZrXloqYElmc2FyuJYHpLNkF5WDIV80+6WhbyFyEhJx8idSf3l2YAXmC2ujQISzHTYDm9WvTVohcIVMaW8bjQqK7PwvX+x9rD+xu6jxCk4TySM++1h2azUruXc906LWrH5VxsD4ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxq+6wdb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lxq+6wdb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC25C4CEE9;
+	Tue, 22 Apr 2025 11:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745321991;
+	bh=LvVe3mABaUW4+b16EtPFOLNobUI0Izc6wjH25SG4f3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lxq+6wdbVCOSDSPGRxd2NJJi8at9gu0uT3YEYGZcGvaLp4Hkw7gqYT926bcNdFBsO
+	 ZJES5SwEOCu1cE7wHVqNq9FYZM96sUKQIZWHPX5lSMhCANM4jTX0gRBWfSdgv/WRaw
+	 0pEZaBS35Ja5OcQ2a8C4yq1wUziyx+T/MhrUJc6dgAVZq1/DUZFbyaC32dk93K588E
+	 4U/5ERv3zZbwRz0Z6wMQTCtuEulkVD1v06qHOubA3OrRYgcwBlVJPgCgg5U+bJM2hw
+	 tshbHzNrqMxBU4eeaUJMevxt9rpE7XqAz2JN8gpRzS2DEvqx6jedihlYxi/QkxS35t
+	 uoEB6B2JL+PDQ==
+Date: Tue, 22 Apr 2025 13:39:46 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 3/3] PCI: dw-rockchip: Unify link status checks with
+ FIELD_GET
+Message-ID: <aAeAAhb4R8ya_mBO@ryzen>
+References: <20250422112830.204374-1-18255117159@163.com>
+ <20250422112830.204374-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422112830.204374-4-18255117159@163.com>
 
-SW4gYW5kcm9pZDE2LTYuMTIsIGVuYWJsaW5nIENPTkZJR19NRU1fQUxMT0NfUFJPRklMSU5HIGNh
-dXNlcyBzb21lIG1vZHVsZXMNCnRvIGZhaWwgdG8gbG9hZCBkdXJpbmcgYm9vdCBiZWNhdXNlIG9m
-IGZhaWxlZCBwZXJjcHUgbWVtb3J5IGFsbG9jYXRpb24uDQoNCls4MTE6bW9kcHJvYmVdcGVyY3B1
-OiBhbGxvY2F0aW9uIGZhaWxlZCwgc2l6ZT01MjAwIGFsaWduPTggYXRvbWljPTAsIGFsbG9jDQpm
-cm9tIHJlc2VydmVkIGNodW5rIGZhaWxlZA0KWzgxMTptb2Rwcm9iZV1DYWxsIHRyYWNlOg0KWzgx
-MTptb2Rwcm9iZV0gZHVtcF9iYWNrdHJhY2UrMHhmYy8weDE3Yw0KWzgxMTptb2Rwcm9iZV0gc2hv
-d19zdGFjaysweDE4LzB4MjgNCls4MTE6bW9kcHJvYmVdIGR1bXBfc3RhY2tfbHZsKzB4NDAvMHhj
-MA0KWzgxMTptb2Rwcm9iZV0gZHVtcF9zdGFjaysweDE4LzB4MjQNCls4MTE6bW9kcHJvYmVdIHBj
-cHVfYWxsb2Nfbm9wcm9mKzB4OTZjLzB4YjU4DQpbODExOm1vZHByb2JlXSBwZXJjcHVfbW9kYWxs
-b2MrMHg1MC8weGVjDQpbODExOm1vZHByb2JlXSBsb2FkX21vZHVsZSsweDExNTgvMHgxNTNjDQpb
-ODExOm1vZHByb2JlXSBfX2FybTY0X3N5c19maW5pdF9tb2R1bGUrMHgyM2MvMHgzNDANCls4MTE6
-bW9kcHJvYmVdIGludm9rZV9zeXNjYWxsKzB4NTgvMHgxMGMNCls4MTE6bW9kcHJvYmVdIGVsMF9z
-dmNfY29tbW9uKzB4YTgvMHhkYw0KWzgxMTptb2Rwcm9iZV0gZG9fZWwwX3N2YysweDFjLzB4MjgN
-Cls4MTE6bW9kcHJvYmVdIGVsMF9zdmMrMHg0MC8weDkwDQpbODExOm1vZHByb2JlXSBlbDB0XzY0
-X3N5bmNfaGFuZGxlcisweDcwLzB4YmMNCls4MTE6bW9kcHJvYmVdIGVsMHRfNjRfc3luYysweDFh
-OC8weDFhYw0KWzgxMTptb2Rwcm9iZV1pcGFtOiBDb3VsZCBub3QgYWxsb2NhdGUgNTIwMCBieXRl
-cyBwZXJjcHUgZGF0YQ0KDQpJbmNyZWFzZSBQRVJDUFVfTU9EVUxFX1JFU0VSVkUgdG8gcmVzb2x2
-ZSB0aGlzIGlzc3VlLg0KDQpTaWduZWQtb2ZmLWJ5OiBnYW8geHUgPGdhb3h1MkBob25vci5jb20+
-DQotLS0NCiBpbmNsdWRlL2xpbnV4L3BlcmNwdS5oIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9wZXJjcHUuaCBiL2luY2x1ZGUvbGludXgvcGVyY3B1LmgNCmluZGV4IDUyYjVlYTY2My4uNzY1
-YzdmNTYyIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9wZXJjcHUuaA0KKysrIGIvaW5jbHVk
-ZS9saW51eC9wZXJjcHUuaA0KQEAgLTE2LDcgKzE2LDcgQEANCiAvKiBlbm91Z2ggdG8gY292ZXIg
-YWxsIERFRklORV9QRVJfQ1BVcyBpbiBtb2R1bGVzICovDQogI2lmZGVmIENPTkZJR19NT0RVTEVT
-DQogI2lmZGVmIENPTkZJR19NRU1fQUxMT0NfUFJPRklMSU5HDQotI2RlZmluZSBQRVJDUFVfTU9E
-VUxFX1JFU0VSVkUJCSg4IDw8IDEzKQ0KKyNkZWZpbmUgUEVSQ1BVX01PRFVMRV9SRVNFUlZFCQko
-OCA8PCAxNCkNCiAjZWxzZQ0KICNkZWZpbmUgUEVSQ1BVX01PRFVMRV9SRVNFUlZFCQkoOCA8PCAx
-MCkNCiAjZW5kaWYNCi0tIA0KMi4xNy4xDQo=
+On Tue, Apr 22, 2025 at 07:28:30PM +0800, Hans Zhang wrote:
+> Link-up detection manually checked PCIE_LINKUP bits across RC/EP modes,
+> leading to code duplication. Centralize the logic using FIELD_GET. This
+> removes redundancy and abstracts hardware-specific bit masking, ensuring
+> consistent link state handling.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index cdc8afc6cfc1..2b26060af5c2 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -196,10 +196,7 @@ static int rockchip_pcie_link_up(struct dw_pcie *pci)
+>  	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+>  	u32 val = rockchip_pcie_get_ltssm(rockchip);
+>  
+> -	if ((val & PCIE_LINKUP) == PCIE_LINKUP)
+> -		return 1;
+> -
+> -	return 0;
+> +	return FIELD_GET(PCIE_LINKUP_MASK, val) == 3;
+
+While I like the idea of your patch, here you are replacing something that
+is easy to read (PCIE_LINKUP) with a magic value, which IMO is a step in
+the wrong direction.
+
+
+>  }
+>  
+>  static void rockchip_pcie_enable_l0s(struct dw_pcie *pci)
+> @@ -499,7 +496,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>  	struct dw_pcie *pci = &rockchip->pci;
+>  	struct dw_pcie_rp *pp = &pci->pp;
+>  	struct device *dev = pci->dev;
+> -	u32 reg, val;
+> +	u32 reg;
+>  
+>  	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+>  	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+> @@ -508,8 +505,7 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>  	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
+>  
+>  	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+> -		val = rockchip_pcie_get_ltssm(rockchip);
+> -		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+> +		if (rockchip_pcie_link_up(pci)) {
+>  			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+>  			/* Rescan the bus to enumerate endpoint devices */
+>  			pci_lock_rescan_remove();
+> @@ -526,7 +522,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>  	struct rockchip_pcie *rockchip = arg;
+>  	struct dw_pcie *pci = &rockchip->pci;
+>  	struct device *dev = pci->dev;
+> -	u32 reg, val;
+> +	u32 reg;
+>  
+>  	reg = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_INTR_STATUS_MISC);
+>  	rockchip_pcie_writel_apb(rockchip, reg, PCIE_CLIENT_INTR_STATUS_MISC);
+> @@ -540,8 +536,7 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
+>  	}
+>  
+>  	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+> -		val = rockchip_pcie_get_ltssm(rockchip);
+> -		if ((val & PCIE_LINKUP) == PCIE_LINKUP) {
+> +		if (rockchip_pcie_link_up(pci)) {
+>  			dev_dbg(dev, "link up\n");
+>  			dw_pcie_ep_linkup(&pci->ep);
+>  		}
+> -- 
+> 2.25.1
+> 
