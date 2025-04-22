@@ -1,389 +1,153 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F6138385
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6BA201262
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745316113; cv=none; b=GlpwX+4GIGPyBsKq/bGwIHqQAk97uP2Oka4EpjiyxeXc7IPKSC6gVGD22EIYn3Lha6egPAX7QkVjuNL8QQhnX+hj5SC/L2bDw5zgenzSsg8vpXB/afrAzEkzxYikxzfrs/ehAOyQdsUGxxM5yInFHJnErcnSzC2fUtSnW6qURg4=
+	t=1745316135; cv=none; b=Y9bby946ecWTJWpD2HJYXFme3/ReUmQSDhtDg2577YIGmhhEc5u0JICeZ+xqdqWF7gZk+Q/G2Uup3lPqN0kYJw3Hf59t+qFzJlO16gN8b2C6vzTubmzbQZO5NYO6gsIpUGbOv4W4jmHyDwmoh8X/x7B88+/pIiQO2ZX/I8GO8gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745316113; c=relaxed/simple;
-	bh=N4IdSuOrsUjGgi/lq7C8lnfWiTXPMcm+7e85ZBoR24M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PzHjgoWVt3bnZrCynJh8jaZFh/AeHuP4XhdHa4dLpHYdNjiIfn6Ivyn40myGOFER7OoquF5zsgl33r1PUDi9oA/ZOra2QKX5FZZq9D8NB7lT+VuglGLDFC/OqqBw1qeirNSwcMXLeOdzfUTDrvt2pOb0pU1zjJ9ENJ7KtBPQ+RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QT4xV4Y7; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745316135; c=relaxed/simple;
+	bh=kxY6QvQV/uIU7XpsVKigY5EUFj2vydilh5LQQMcOVVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulbL5Fb8VvCnC/PhsrrZQ6xQK65kvEeMcoZkKM9MJSxYatt0S/HsRchVBszPkAzkB4reYpp4RAUNvhrsmIDMAr9O8pSLdFcMkuZ6PzXchWqj2VU/Z2e6otVPXM6eIcdc10EmR00geiDA74Yfy49XSsdbBeL0W0zMk/idN/GZvFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QDReBMql; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QT4xV4Y7"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54c090fc7adso5305036e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745316109; x=1745920909; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFg2E5TdC6tWZ0EmL0XbyzLDwFhRtVTh44iqbHEh8o4=;
-        b=QT4xV4Y7IDClZDdT8uQen+QGqxm/f1mluMNFA+UEeo50itSQEOvYir8dfWKgPFVFcT
-         Znh0vU0mQprzqwEYUb8e59QEyza/lNdXqPwg4cTezhzhLq/q3DfqnlK+6FfKeXKCkJIT
-         HvOXbiPP9jQOxGgfzDk9IjmqZ5NVfSeXrGX7e6yScTaQS80SC6BriHsYErDBApa/uyZx
-         O+NteEO2ARHUu6zLXJU7OIp9pFxK+5x/6WgiyjmYHacIOhxihSv5OdgTdS+Jxm/Dermx
-         CC0dYI05VI+LDBnolHfVg1ViBHgUDmMy/9LNBjL46jzfo69FVhXxpta878oWdbccZQZJ
-         GZ/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745316109; x=1745920909;
-        h=mime-version:references:in-reply-to:message-id:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFg2E5TdC6tWZ0EmL0XbyzLDwFhRtVTh44iqbHEh8o4=;
-        b=Z+ccJJ7FJUqieCR5pBz6TAp0C/4+Smtyjyre2G/SPynF9A+m5MzJeLAZTZzx7CCHGT
-         6CwMEcUbDmygVEDOgLRbR5TwV7y0Bv6pK/PIlzALTNXW3PZ8+3fKNlEXjpYo5wy4AwU1
-         vwpGp/5g8cM2uwGKmiJyhPQTfLDTJKn7irUFx6+lvXwcogKUI8ATFYAY6rGI4BTkTvnq
-         IdL5bJp4hsqGVy2TgBctUDUaHtoh3eDJkB4eLZV67yJ5Vbxvzfc5iwmaI6Aa6K8LiTw8
-         EpgumFA8SLmgqi84KT65f+8rNK3qXwWm2X1hQHHwjmmFsXx5NMFnH0dEPb0KDKy72chg
-         9yUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVx0U9MX0mKZf5uazueqLbbosUGlsb7g1ZFjlBcNA1yjA6JVVqnBvb2zKJkqd44fUn44qum7+c5/RWJiPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/UMDp6iTqVyeC2akJwXxcTE+seDoTvIPAGxo90vyTpSXpIlg4
-	uND9617KQPN+PvWYD99nud23yFfgdcUwJGBMKopkCX/thoCpzkGs
-X-Gm-Gg: ASbGncvdIlBd9zvvuMvvETSEfTVpgaHvHTCipV9n45ms2ojemMR9ELiXxgpiakpAWwa
-	Rbq+fp7oOiHoumOiQVxgI6Ic6jSXOsqvmM7nmhyIPfzFZKIYrh0oJhkyDJp6j5xBdTU9lacQlzy
-	3syfvEwyENMKVP3cxjYCX6rh/t2x1dlQ9Un73s2YDrERugBsjQVgioCmYUj3FXuSEp/y6uqSL/i
-	z8MBVLwxw8pFGNqzXtMH2shrSl7L4bM//s15lIs+xlhp3YprFQXRxy6IdMASGAZxPNgfp9b0JHP
-	a+Ybjw0RuC+CNvgkhxnlwYtwsQ52fiRk40E=
-X-Google-Smtp-Source: AGHT+IEsOulovSz/4gGmxLfCd8vEY2bWoVbyQ0FESQaD8DTImRBWAih16pup9gMc3XBh5tW+5f2BTg==
-X-Received: by 2002:a05:6512:2306:b0:54a:c835:cc58 with SMTP id 2adb3069b0e04-54d6e662998mr3748230e87.50.1745316108305;
-        Tue, 22 Apr 2025 03:01:48 -0700 (PDT)
-Received: from eldfell ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e540decsm1184659e87.73.2025.04.22.03.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 03:01:47 -0700 (PDT)
-Date: Tue, 22 Apr 2025 13:01:37 +0300
-From: Pekka Paalanen <ppaalanen@gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Michal Simek <michal.simek@amd.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
- <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-Message-ID: <20250422130137.2658c646@eldfell>
-In-Reply-To: <CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com>
-References: <20250327112009.6b4dc430@eldfell>
-	<b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
-	<20250327175842.130c0386@eldfell>
-	<CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
-	<20250331105446.098f0fbe@eldfell>
-	<20250331082135.GB13690@pendragon.ideasonboard.com>
-	<20250331135337.61934003@eldfell>
-	<20250401162732.731ef774@eldfell>
-	<73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
-	<20250417111315.62a749e5@eldfell>
-	<20250421145039.GA19213@pendragon.ideasonboard.com>
-	<20250422121107.572cb7ad@eldfell>
-	<CAMuHMdX+yaw_PYsM_N8Gzrt2hbn_5cRN375jLKpwE13ygTvwHA@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QDReBMql"
+Date: Tue, 22 Apr 2025 03:01:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745316121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9VXFK4typB7ym9opTXVD91a+Eyu7LKMaTOQWZkdez0Y=;
+	b=QDReBMqlWYe59Cdu6zZJZBZyxyL+QSbkui6RMLSPRA1L9SllCXvFOUalhtVrZXew1gtnPn
+	BypsisyzAy2XpXJpWUf//PBKDn/uk2Z4/uhb4ns1KmGsWs90Mhkc96/bXiRi0sPitlq2xd
+	zkrOlI43Uzx6T4VIYoqT7ph0MImTWpk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jim Mattson <jmattson@google.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Rik van Riel <riel@surriel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 23/24] KVM: nSVM: Allocate a new ASID for nested
+ guests
+Message-ID: <aAdpFYUmRynvgxvj@Asmaa.>
+References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+ <20250326194423.3717668-1-yosry.ahmed@linux.dev>
+ <20250326194423.3717668-4-yosry.ahmed@linux.dev>
+ <5f714d7fb68aef92f1bea58a10deb4de1a10a5b8.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_OlrXcyznLMA5OZ663uil/j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f714d7fb68aef92f1bea58a10deb4de1a10a5b8.camel@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
---Sig_/_OlrXcyznLMA5OZ663uil/j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 03, 2025 at 04:11:47PM -0400, Maxim Levitsky wrote:
+> On Wed, 2025-03-26 at 19:44 +0000, Yosry Ahmed wrote:
+> > Now that nested TLB flushes are properly tracked, start allocating a
+> > separate ASID for nested guests. This allows dropping the unconditional
+> > TLB flushes on nested transitions and doing finer grained TLB flushing
+> > when necessary.
+> > 
+> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > ---
+> >  arch/x86/kvm/svm/nested.c | 11 +++++++++--
+> >  arch/x86/kvm/svm/svm.c    |  5 +++--
+> >  arch/x86/kvm/svm/svm.h    |  3 +++
+> >  3 files changed, 15 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> > index 544913461693c..0c887c91bd50d 100644
+> > --- a/arch/x86/kvm/svm/nested.c
+> > +++ b/arch/x86/kvm/svm/nested.c
+> > @@ -1204,6 +1204,7 @@ int svm_allocate_nested(struct vcpu_svm *svm)
+> >  {
+> >  	struct kvm_svm *kvm_svm = to_kvm_svm(svm->vcpu.kvm);
+> >  	struct page *vmcb02_page;
+> > +	unsigned int asid;
+> >  
+> >  	if (svm->nested.initialized)
+> >  		return 0;
+> > @@ -1221,8 +1222,14 @@ int svm_allocate_nested(struct vcpu_svm *svm)
+> >  
+> >  	svm->nested.initialized = true;
+> >  
+> > -	if (!kvm_svm->nested_asid)
+> > -		kvm_svm->nested_asid = kvm_svm->asid;
+> > +	if (!kvm_svm->nested_asid) {
+> > +		asid = kvm_tlb_tags_alloc(&svm_asids);
+> > +		if (asid && !svm_register_asid(asid)) {
+> > +			kvm_tlb_tags_free(&svm_asids, asid);
+> > +			asid = 0;
+> > +		}
+> > +		kvm_svm->nested_asid = asid ?: fallback_asid;
+> > +	}
+> 
+> Nitpick: AFAIK at least nested KVM doesn't enable EFER.SVME,
+> unless it actually runs a guest thus most of the time we will waste a ASID on a VM
+> which once did run a VM nested and since then doesn't run anything else.
 
-On Tue, 22 Apr 2025 11:41:29 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Oh yeah, I missed that, thanks. Will do.
 
-> Hi Pekka,
->=20
-> On Tue, 22 Apr 2025 at 11:11, Pekka Paalanen
-> <pekka.paalanen@haloniitty.fi> wrote:
-> > On Mon, 21 Apr 2025 17:50:39 +0300
-> > Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote: =20
-> > > On Thu, Apr 17, 2025 at 11:13:15AM +0300, Pekka Paalanen wrote: =20
-> > > > On Wed, 16 Apr 2025 11:59:43 +0300 Tomi Valkeinen wrote: =20
-> > > > > On 01/04/2025 16:27, Pekka Paalanen wrote: =20
-> > > > > > On Mon, 31 Mar 2025 13:53:37 +0300 Pekka Paalanen wrote: =20
-> > > > > >> On Mon, 31 Mar 2025 11:21:35 +0300 Laurent Pinchart wrote: =20
-> > > > > >>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrot=
-e: =20
-> > > > > >>>> On Thu, 27 Mar 2025 17:35:39 +0100 Geert Uytterhoeven wrote:=
- =20
-> > > > > >>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen wrote: =20
-> > > > > >>>>>> On Thu, 27 Mar 2025 16:21:16 +0200 Tomi Valkeinen wrote: =
-=20
-> > > > > >>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote: =20
-> > > > > >>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200 Tomi Valkeinen wrote:=
- =20
-> > > > > >>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote: =20
-> > > > > >>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen wrote: =20
-> > > > > >>>>>>>>>>> Add greyscale Y8 format.
-> > > > > >>>>>>>>>>>
-> > > > > >>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.o=
-rg>
-> > > > > >>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideason=
-board.com> =20
-> > > > > >>>>>>>>>>
-> > > > > >>>>>>>>>> Thanks for your patch!
-> > > > > >>>>>>>>>> =20
-> > > > > >>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
-> > > > > >>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
-> > > > > >>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
-> > > > > >>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', '=
-U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
-> > > > > >>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', '=
-V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
-> > > > > >>>>>>>>>>>
-> > > > > >>>>>>>>>>> +/* Greyscale formats */
-> > > > > >>>>>>>>>>> +
-> > > > > >>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R',=
- 'E', 'Y')  /* 8-bit Y-only */ =20
-> > > > > >>>>>>>>>>
-> > > > > >>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which enc=
-odes
-> > > > > >>>>>>>>>> the number of bits in the FOURCC format. What do you e=
-nvision
-> > > > > >>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6=
-')? =20
-> > > > > >>>>>>>>>
-> > > > > >>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strict=
-ly speaking it's
-> > > > > >>>>>>>>> not required, but different fourccs for the same format=
-s do confuse.
-> > > > > >>>>>>>>>
-> > > > > >>>>>>>>> So, generally speaking, I'd pick an existing fourcc fro=
-m v4l2 side if
-> > > > > >>>>>>>>> possible, and if not, invent a new one. =20
-> > > > > >>>>>>>>
-> > > > > >>>>>>>> what's the actual difference between DRM_FORMAT_R8 and D=
-RM_FORMAT_Y8?
-> > > > > >>>>>>>>
-> > > > > >>>>>>>> Is the difference that when R8 gets expanded to RGB, it =
-becomes (R, 0,
-> > > > > >>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) whe=
-re c1..c3 are
-> > > > > >>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
-> > > > > >>>>>>>>
-> > > > > >>>>>>>> That would be my intuitive assumption following how YCbC=
-r is handled.
-> > > > > >>>>>>>> Is it obvious enough, or should there be a comment to th=
-at effect? =20
-> > > > > >>>>>>>
-> > > > > >>>>>>> You raise an interesting point. Is it defined how a displ=
-ay driver, that
-> > > > > >>>>>>> supports R8 as a format, shows R8 on screen? I came into =
-this in the
-> > > > > >>>>>>> context of grayscale formats, so I thought R8 would be ha=
-ndled as (R, R,
-> > > > > >>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sen=
-se. =20
-> > > > > >>>>>>
-> > > > > >>>>>> That is a good question too. I based my assumption on Open=
-GL behavior
-> > > > > >>>>>> of R8.
-> > > > > >>>>>>
-> > > > > >>>>>> Single channel displays do exist I believe, but being sing=
-le-channel,
-> > > > > >>>>>> expansion on the other channels is likely meaningless. Hm,=
- but for the
-> > > > > >>>>>> KMS color pipeline, it would be meaningful, like with a CT=
-M.
-> > > > > >>>>>> Interesting.
-> > > > > >>>>>>
-> > > > > >>>>>> I don't know. Maybe Geert does? =20
-> > > > > >>>>>
-> > > > > >>>>> I did some digging, and was a bit surprised that it was you=
- who told
-> > > > > >>>>> me to use R8 instead of Y8?
-> > > > > >>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell=
- =20
-> > > > > >>>>
-> > > > > >>>> Hi Geert,
-> > > > > >>>>
-> > > > > >>>> indeed I did. I never thought of the question of expansion t=
-o R,G,B
-> > > > > >>>> before. Maybe that expansion is what spells R8 and Y8 apart?
-> > > > > >>>>
-> > > > > >>>> I do think that expansion needs to be specified, so that the=
- KMS color
-> > > > > >>>> pipeline computations are defined. There is a big difference=
- between
-> > > > > >>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
-> > > > > >>>>
-> > > > > >>>> - (R, 0, 0)
-> > > > > >>>> - (R, R, R)
-> > > > > >>>> - (c1 * Y, c2 * Y, c3 * Y) =20
-> > > > > >>>
-> > > > > >>> I'd be very surprised by an YUV to RGB conversion matrix wher=
-e the first
-> > > > > >>> column would contain different values. What we need to take i=
-nto account
-> > > > > >>> though is quantization (full vs. limited range). =20
-> > > > > >
-> > > > > > Quantization range is indeed good to note. R8 would be always f=
-ull
-> > > > > > range, but Y8 would follow COLOR_RANGE property.
-> > > > > > =20
-> > > > > >> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 sh=
-ould be
-> > > > > >> (R, 0, 0), so we have both variants.
-> > > > > >>
-> > > > > >> Can we specify Y, R, G and B be nominal values in the range 0.=
-0 - 1.0
-> > > > > >> in the KMS color processing? =20
-> > > > > >
-> > > > > > I think this 0.0 - 1.0 nominal range definition for the abstrac=
-t KMS
-> > > > > > color processing is necessary.
-> > > > > >
-> > > > > > It also means that limited range Y8 data, when containing value=
-s 0-15
-> > > > > > or 240-255, would produce negative and greater than 1.0 values,
-> > > > > > respectively. They might get immediately clamped to 0.0 - 1.0 w=
-ith the
-> > > > > > first color operation they face, though, but the concept seems
-> > > > > > important and carrying over to the new color pipelines UAPI whi=
-ch might
-> > > > > > choose not to clamp. =20
-> > > > >
-> > > > > Is the behavior of values outside the limited range something tha=
-t needs
-> > > > > to be defined? We can't know how each piece of HW behaves with
-> > > > > "undefined" input, so should we not just define the behavior as p=
-latform
-> > > > > specific? =20
-> > > >
-> > > > Hi Tomi,
-> > > >
-> > > > it's not undefined nor illegal input in general. The so-called
-> > > > sub-black and super-white ranges exist for a reason, and they are
-> > > > intended to be used in video processing to avoid clipping in
-> > > > intermediate processing steps when a filter overshoots a bit. There=
- are
-> > > > also practices that depend on them, like PLUGE calibration with
-> > > > traditional signals on a display: https://www.itu.int/rec/R-REC-BT.=
-814
-> > > >
-> > > > I think it would be really good to have defined behaviour if at all
-> > > > possible.
-> > > > =20
-> > > > > In any case: I can't say I fully understood all the discussions w=
-rt.
-> > > > > color spaces. But my immediate interest is, of course, this serie=
-s =3D).
-> > > > > So is there something that you think should be improved here? =20
-> > > >
-> > > > Right, the range discussion is a tangent and applies to all YUV
-> > > > formats, so it's not a new question.
-> > > > =20
-> > > > > My understanding is that the Y-only pixel formats behave in a well
-> > > > > defined way (or, as well defined as the YUV formats), and there's
-> > > > > nothing more to add here. Is that right? =20
-> > > >
-> > > > There are two things:
-> > > >
-> > > > - Y8 follows COLOR_RANGE property, just like all other YUV formats.
-> > > > - Y8 implies that Cb and Cr are both neutral (0.0 in nominal values=
-).
-> > > >
-> > > > I'd like these explicitly written down, so that they become obvious=
- to
-> > > > everyone. I suspect either one might be easy to forget when writing
-> > > > code and taking shortcuts without thinking.
-> > > >
-> > > >
-> > > > Laurent,
-> > > >
-> > > > I did find a case where (Y', neutral, neutral) does *not* seem to e=
-xpand
-> > > > to RGB=3D(Y, Y, Y): ICtCp. The conversion from ICtCp to L'M'S' does
-> > > > produce (Y', Y', Y'), but the LMS-to-RGB matrix scrambles it.
-> > > >
-> > > > I didn't dig through BT.2020 constant-luminance Y'C'bcC'rc, but I
-> > > > wouldn't be surprised if it scrambled too.
-> > > >
-> > > > Of course, both of the above are not just one matrix. They require =
-two
-> > > > matrices and the transfer characteristic each to compute. KMS color
-> > > > operations cannot implement those today, but with the colorop pipel=
-ines
-> > > > they will if the hardware does it.
-> > > >
-> > > > That's why I think it's important to document the assumption of Cb =
-and
-> > > > Cr when not part of the pixel format, and not write down a specific
-> > > > expansion to RGB like (Y, Y, Y). =20
-> > >
-> > > Every time I discuss color spaces, the scopes of "RGB" and "YUV" seem=
- to
-> > > expand more and more. This makes me wonder how we define those two
-> > > concepts. Taking the conversion from RGB to ICtCp as an example, would
-> > > you consider LMS and L'M'S' as "RGB" formats, and ICtCp as a "YUV"
-> > > format ? =20
-> >
-> > sorry for the confusion. In this specific context, my use of RGB and
-> > YUV refers to the channels in DRM pixel formats. It might have been
-> > better if all channels in all pixel formats were "anonymous" and merely
-> > numbered because all formats can be used for any color model, but this
-> > is what we have.
-> >
-> > There is some disambiguation in
-> > https://gitlab.freedesktop.org/pq/color-and-hdr/-/blob/main/doc/pixels_=
-color.md
-> > The doc is some years old, so nowadays I might phrase things
-> > differently, but maybe it's easier to read for those new to things as I
-> > wrote it when I was just learning things.
-> >
-> > I would classify ICtCp in the YUV pixel format category, because the
-> > CtCp plane can be sub-sampled (right?). I would classify LMS and L'M'S'
-> > in the RGB pixel format category because they are not sub-sampled AFAIK
-> > although they also do not actually appear as buffer contents, so the
-> > relation to pixel formats is... theoretical.
-> >
-> > IOW, we have a completely artificial split of DRM pixel formats to RGB
-> > and YUV where the only essential difference is that YUV formats can have
-> > sub-sampled variants and RGB formats do not. =20
->=20
-> RGB can be subsampled, too...
-> https://en.wikipedia.org/wiki/Bayer_filter
-
-That's true. What difference are we left with, then?
-
-We have DRM pixel formats which imply some color model, but do not
-define the variant of each color model (e.g. the Y'CbCr-to-RGB matrix).
-
-I guess the implied color model then implies which API, e.g. KMS plane
-property, is responsible for defining the variant.
-
-
-Thanks,
-pq
-
---Sig_/_OlrXcyznLMA5OZ663uil/j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmgHaQEACgkQI1/ltBGq
-qqfVcRAAoo5YV89aALpPpZvwZANVqT8pe4rqu50lnfJNoqRA9Z0RmU9TB2nGL9Dr
-BCQbqwstI0v/E9nngUvmu5Rzty0pf6o8YlqH+yV7bsA+SRxDUG71JGwuq0X/GX7Y
-ocnUcWdwMPVCGViPW/gjvCDk6B2C2Mso28o0E34eL2AuS4knZrHUD5/xSt4kiRw9
-lGLuRKnQp9ukN64gXbGqG8ymD68beQftgo5fQbkSxepdajwtGvhewM7gLrpnG6g6
-zF34803RvigPreDZlJVAY8oi/2GHe4FOlg5Qg4AC9aZ8fC633D6awpmKIQYkfuT3
-aVk9e28dxSWNTWakNK4uqZLMU1UySYJiCjWGK/NDuQYdWRQ6dvMs6+1lKFoKubND
-zPkVqf8kksc8XV+/z5Y15lRYzdYOpGfKqFt8wPiya8U/4Ka9VsYwfOj0BNXvP85I
-fd6V1Cfd48Wrv/bE1sULdHKEIlSwfBUMKF7+9Kpxx21H2GBUKdkF5GP7ElBmhygs
-eVx1tcrdDLC0VImhedciGoM3l2KGwFQ+z235G0hc5G6Nq0g+lRHS/ORIQL6E+rrY
-93qw3FHqtJ6WXBaqEqCfeKRQoSGdGH/aZQkPanTNMLkttH9lsB3vsriUEgrUT/Od
-JxHuk2uBmS8969t2KwGTXVVo6c+9uBjnftPvVzO4txxxUG6aXMk=
-=pGBv
------END PGP SIGNATURE-----
-
---Sig_/_OlrXcyznLMA5OZ663uil/j--
+> 
+> So maybe we want to free the nested ASID in the svm_free_nested?
+> 
+> >  
+> >  	return 0;
+> >  
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index 4b95fd6b501e6..196f5bca57a0e 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -249,8 +249,8 @@ static unsigned long iopm_base;
+> >  
+> >  DEFINE_PER_CPU(struct svm_cpu_data, svm_data);
+> >  
+> > -static struct kvm_tlb_tags svm_asids;
+> > -static unsigned int fallback_asid;
+> > +struct kvm_tlb_tags svm_asids;
+> > +unsigned int fallback_asid;
+> >  
+> >  /*
+> >   * Only MSR_TSC_AUX is switched via the user return hook.  EFER is switched via
+> > @@ -5127,6 +5127,7 @@ static void svm_vm_destroy(struct kvm *kvm)
+> >  	avic_vm_destroy(kvm);
+> >  	sev_vm_destroy(kvm);
+> >  	kvm_tlb_tags_free(&svm_asids, kvm_svm->asid);
+> > +	kvm_tlb_tags_free(&svm_asids, kvm_svm->nested_asid);
+> >  }
+> >  
+> >  static int svm_vm_init(struct kvm *kvm)
+> > diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> > index 0c44133bc05ca..220d10d2b1a5c 100644
+> > --- a/arch/x86/kvm/svm/svm.h
+> > +++ b/arch/x86/kvm/svm/svm.h
+> > @@ -630,6 +630,9 @@ static inline void svm_vmgexit_no_action(struct vcpu_svm *svm, u64 data)
+> >  
+> >  extern bool dump_invalid_vmcb;
+> >  
+> > +extern struct kvm_tlb_tags svm_asids;
+> > +extern unsigned int fallback_asid;
+> > +
+> >  u32 svm_msrpm_offset(u32 msr);
+> >  u32 *svm_vcpu_alloc_msrpm(void);
+> >  void svm_vcpu_init_msrpm(struct kvm_vcpu *vcpu, u32 *msrpm);
+> 
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> 
+> 
