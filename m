@@ -1,114 +1,115 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A9E41C69;
-	Tue, 22 Apr 2025 22:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966C0242D60
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745361057; cv=none; b=fh4P7V2yNBXV62lqGGRvcn+uASAYYs6t506McAchYYcLTbztfOevpUvpPG11ZHvIJkYBio4VaZAg/qTAESgdOSi1p/rwm4TuzUxOEijwuYjfgVLRCT+nnXLeBuPZC8Mh5ZU0q8bkUz1ur2BQTLAC/nOPSiSSJu/LtM71UY7TM/E=
+	t=1745361177; cv=none; b=rTjKB+pubqpIn7PmMHqdUeEPtja2iXwDoR0YnXcHOfqwUablgOTbtNVf7f4mD3LOO00GxqY9UHQ0qbIbrhjh8w6crafpSjl28HDIoWOvEdN6kJ8xTLVRjUvxnlPqGZope5M3NvU8B3IV5uEZoNMqWoRlPI00EKSBfQfyfOYQtqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745361057; c=relaxed/simple;
-	bh=yqqf7SXgxooT45kd9Pexv9Aea9WDtDR0VWw7cmnYKUM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lbtV0M34Qt18wrvwyHcg1Sm6z+I4Fj2nRXEj6ZilCvZVgPbToRUqoiuGf1e7Hsi0352Taa1RX8E6cgAdxeZhXjpb95oQozdAisdanSwn8U/Ta2zYoeAjp5krV7KcE5hKsHtVEf6+Pwnxd1NIIGOLpqs6PxUm8Mpkj4+Sa+1EeAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jY2jFXu8; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745361177; c=relaxed/simple;
+	bh=aCS2cK9NMLOgdPJc2YMJuBdkvSB+hznw6VZLrT4/yrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=APU+EvMBT9mZunfqR0qL/xFtQ9zi0jrNYu2nZyP8LlONHPfm9cnLKW5mq2z7P90fNAD5keGvFRrCTvVBEV3doq06XsDZjQXeRjG+qlhGZNNc8z1PuYosTsTcu0H+CSy1MxPe3Pr5f2u857K8gt89V67u94gMgh9Lmb9EAn+N7aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=M0Ty1pmh; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jY2jFXu8"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so954603366b.1;
-        Tue, 22 Apr 2025 15:30:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="M0Ty1pmh"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-400fa6eafa9so3757910b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745361054; x=1745965854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TzNCI1euiML81T+O/Mxg+dH4/vZAirx+HsgT3Ub2AsQ=;
-        b=jY2jFXu82PAEBm4lpftNIEfSRehO9IJsvhN18a3UkIoWW0sE/QgzTUaPdRrZyBl6+h
-         UxLmzt9OV7KaSRHKrevxLuRthzbJMvKK5POUxCtClCPuLBg6qsi8J5L0PndutLdWFmRW
-         32F9YEqdRzeyWWv2yMHbuSpRLkDnAPxyNPfhIFTl6D/mmOzKsDarirWAn62+LjxPdAmV
-         0UVKeCUNYSfczcWIXTEbsc/ai+Yy2XOz6WLhkk3lCzmW4JHyIqqEGvhByuEEm5d7Dzlq
-         nHeslsP4UlI1tzSQl+ta74rWQtHoZM/YSB99zOEpd35CQLpQ+BBXCwB3evnkvHAPRI5k
-         Mcyw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745361174; x=1745965974; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0enfuZN8PYOZ9kUVWVSTuEglj88WTzbGk4XLCM/1V/4=;
+        b=M0Ty1pmhGgdurJfIRT4zGoaHK6YWNX4hfZH2DMElQwDpQt3NXuf5sTFHuFtktObCI7
+         hlKqk1YIbIL7Hl0k7tBiUeKdEK3VwRAxeQ4Q9xO1xJz5SCJ/ClZflqsdmJOZTB0L93rF
+         vegoXvsWvgMA/APQzB72HEKlGpsE0KIobRbibwI+monu0ZDNesieNw4rA4Z9w3JOehuL
+         xHRhS4maY4yCOomIm6q4QhfwHlKlOB+PyT+5WnTU7VX5etTtCtvtZSbYxL2CLiT9Hfrs
+         SI8pRHuhdlef+Lp+VbHUpLF7EcC/Utzp3NntfZiEG0hk8dvqkvVs5ob10w/IXQKldwq9
+         LI1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745361054; x=1745965854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TzNCI1euiML81T+O/Mxg+dH4/vZAirx+HsgT3Ub2AsQ=;
-        b=lZy5E/hQb+4HE9+hp705ATfs/LRqwZhKcAZY1kQAscyk5/f0BHlxKVKtlSXRnA4moh
-         OA9h24YNEFJdKgsQGAaYcu1e0Ttj++s7QxvuO1C81T9qQA+eKtezFlfHqJ9A0oO/FwIy
-         2sIhU+u+U6l8z71JLvE0xYMSAUHkpPSGgNeDEQiS4lKhSiw/4vNaZjDR5LhjLzT4cEAM
-         gRnXnHlsjZ/Esx8BhvF0t6Kc+l+5RFLzIjoEIIHpRHX5WAd1o75GN7kAeK9f0DsFhwrx
-         7j0s13JJJWkXrbUoD0LF/0DHxycb0nD9t8GEshifPtisu84VSbMW5OvxWW3WvyfsLTnP
-         HxYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVntsgSfjFWBhsJzbeXUgsVsuHk2br2PhzU3b4EADVIUW9mjysg2TVlxLLPtLJ78VX5QaqJ4ZLphk0O5l0k@vger.kernel.org, AJvYcCXE2pNc7+Z/DwJbVfaEUDVxYNg/waZQJLEsi4Z+QnPd8GKTbcV6iFkBpm/ZCpneyBCLjZXf4Bc/3vc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZA29b20O7aBQEw88/IcxiVzrgCuJ3f9JKO5ve7iTAdfxsndtT
-	gLa/hIm2fNwK4BdLM3DMlBO0u/BElh/z4coy5S3lfyHhRszvDIUwds0c03XnKA+lxgz29vnFSLF
-	EfLVECANoG2bEkHbUDdkDDpChhtU=
-X-Gm-Gg: ASbGncvzMg6OeX08QIEPjYsYCrtW6EhYVamcmObdcTSZwVrRS+6kijl3XhUWEiTenVz
-	qTlU7LmKhWWusnytQBX2ZC5MW6PvgyGW5BZyLE9XGQx1p7XxvQLq7myk8K6cflhq6hfvme8n424
-	pMcDwi8k4fmTqU6AFw/mvOZQ==
-X-Google-Smtp-Source: AGHT+IE3998SOoM5TQwHkEiv9/r4ac5IEpqWhP34QWkVmaptlSFgMZv97T7hlOYNeYrjUabrHKcmyKVktjZdI8yC4gE=
-X-Received: by 2002:a17:907:3fa1:b0:ac2:c1e:dff0 with SMTP id
- a640c23a62f3a-acb74b4ccd4mr1141325966b.19.1745361053675; Tue, 22 Apr 2025
- 15:30:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745361174; x=1745965974;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0enfuZN8PYOZ9kUVWVSTuEglj88WTzbGk4XLCM/1V/4=;
+        b=qrGs0uRChGcPQhaitfkXQKimahP5hWCU951j0SOO7ooueXk0P702GIihr9M4ecwI+1
+         twbf+2EDTuV8QJKohElbjpFP5CPGQ9q6KZyo14Pelb3MlxwTa4FZmsdBOomod1aaNSEo
+         3x0QFkvRroY8VSJ/hGYJEIGMH97QzeGPyvlSbWHkK8FWMMtO9szk5zkS+yBvwWOgJ/nO
+         sRS0Qdw3IQwmZmeB0fhwIy8Pe1eGeyiQF+I0Y80fF/12gh1Jz+yAOpCtoHY8lJJ/SZLT
+         WQ9VCXHTuXy2jIQAPwFdNL5qgNza82Bnqo+UWxqIRsZQCtBYG+Y5La7nqvT5GxJLeN9+
+         /y9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUsa7PwMZzV/SUI44c2JPF1l4matKgvJtkW7/HLbdlgdh0TgtZIQYx7L5aY5uye53byBLKpdbiuybRmYDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQqj89aF67BfwpIydbMCfjeJxY94TtT7t6VYk5CPfAcjSaLfpc
+	One9QP17w2m3uXI3NcyI4Od+Ud1qcrUrHddHeWhnQANccdLAbfzllxOr6PHJyfk9gfFgFLqWcFW
+	ooko=
+X-Gm-Gg: ASbGncuzV2hfmiNNvyF6sfqG66lUEz94TVWx+vf5/xCFELsY7fkyCNXjuRnf6NnScJI
+	nDFFxCAra7GjYUUdYyMOlnq3t+CQu/dzg4kxeXAW+cUgXGrnp9tl7pgT/qQcrLdcrlFtPI0aNRc
+	GE0G6GVXrOlUhC0B0zKSF7fKeVh7Q6WnfgLP6cJNa4bDZrxCwoAoQWKoa4jeIYxKwxTOaYUOMDl
+	hdGqtdVfqOqmuq0X3x251oj9y6dwFGSvWKbGUALV0E858KshyXO80Lop0WZveEj8P5qqMoVIvlv
+	nACJtswkQU9IfQE0Bj4bCAOwS2mr/+gyzIlO1rGIKgjlgPr9gGaDR0N9OmHbpcz/HU7nBgcknzK
+	5E58RTncFs2/spdpqSQ==
+X-Google-Smtp-Source: AGHT+IHvVrklhnSlyJTxpErpE/n72OpKh62nNWyp8cMVFUzxtrhvNrhnh0eu4ElUTBXm+gMfXgTvuw==
+X-Received: by 2002:a05:6808:4c07:b0:3f7:ff67:1d9a with SMTP id 5614622812f47-401c0c8bd38mr7958485b6e.36.1745361174563;
+        Tue, 22 Apr 2025 15:32:54 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3? ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beeaf3f4sm2331375b6e.6.2025.04.22.15.32.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 15:32:53 -0700 (PDT)
+Message-ID: <22e934cd-117f-40fb-a788-edcfc0f8b0ba@baylibre.com>
+Date: Tue, 22 Apr 2025 17:32:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
- <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
-In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 23 Apr 2025 01:30:17 +0300
-X-Gm-Features: ATxdqUF9L-QdkcRUaS4VEbEYroG2Kvz6r19047Y4gFd893gEmo8RVU6ynKAGZL8
-Message-ID: <CAHp75VeuNhfJrNAZZwY2tEHte=UPHLOPNUz7y_J20xv2+_Zdeg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev <eugen.hristev@linaro.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: pressure: bmp280: drop sensor_data array
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
+ <CAHp75Ve_C6BXo75xy4+xZ5b1O9-TT5TGGQDgTR_F1s3TFK3p6Q@mail.gmail.com>
+ <12dac98d-3e6b-4c2b-8ac0-d526bdb5efd4@baylibre.com>
+ <CAHp75VcHMTSGRrodixsLDS-xCi8KQJ0MtMSMi7tfATUgd3E5uA@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75VcHMTSGRrodixsLDS-xCi8KQJ0MtMSMi7tfATUgd3E5uA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 1:08=E2=80=AFAM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> Add new macros to help with the common case of declaring a buffer that
-> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
-> to do correctly because of the alignment requirements of the timestamp.
-> This will make it easier for both authors and reviewers.
->
-> To avoid double __align() attributes in cases where we also need DMA
-> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
+On 4/22/25 5:19 PM, Andy Shevchenko wrote:
+> On Wed, Apr 23, 2025 at 12:22 AM David Lechner <dlechner@baylibre.com> wrote:
+>>
+>> On 4/22/25 3:57 PM, Andy Shevchenko wrote:
+>>> On Tue, Apr 22, 2025 at 10:28 PM David Lechner <dlechner@baylibre.com> wrote:
+>>>>
+>>>> Drop the sensor_data array from struct bmp280_data and replace it using
+>>>> local structs in each interrupt handler.
+>>>>
+>>>> The sensor_data array in struct bmp280_data is not used to share data
+>>>> between functions and isn't used for DMA, so there isn't really a need
+>>>> to have it in the struct. Instead, we can use the struct pattern for
+>>>> scan data in each interrupt handler. This has the advantage of allowing
+>>>> us to see the actual layout of each scan buffer for each different type
+>>>> of supported sensor. It also avoid juggling values between local
+>>>
+>>> of the supported
+>>
+>> I think what I wrote is correct grammar. Same as if I would have written
+>> "each type of sensor". I would not write "each type of the sensor".
+> 
+> Ah, I meant the plural: of the supported sensors. Otherwise are you
+> talking only about one sensor?
+> 
+"each type of the sensors" doesn't sound right to me either.
 
-...
+I am talking about more than one type, not more than one sensor. Sensor just
+describes what types I am talking about.
 
-> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-> +       type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64=
-) / sizeof(type)]
-
-Single leading underscore seems to me not so usual, I saw people use
-double underscores to make sure that it will be visible that it's an
-internal one (kinda).
-
-...
-
-> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) =3D=3D 0,
-
-Why not static_assert() ? Because of the message? But static_assert()
-supports messages AFAICS.
-
-> +       "macros above assume that IIO_DMA_MINALIGN also ensures s64 times=
-tamp alignment");
-
---=20
-With Best Regards,
-Andy Shevchenko
+So perhaps we could just avoid it with "each different sensor type".
