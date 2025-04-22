@@ -1,106 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330CC1E990E
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2B4156C6F;
+	Tue, 22 Apr 2025 22:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745360746; cv=none; b=DUJxeNhSBQG1twcORTeLZ9z4BhPhSL684/w+D3ToVKcDbyECD1+O4CjOh7qh6Z7olUQUFz1oyy3f4VOUbgde2doVQq2HvZUCQW6oLLn4bpx1j34YL96PreHOnQsYsEikXobYh44XxmmSwycIziSv4OrktwsqPHWZi/w+7z86vVM=
+	t=1745360921; cv=none; b=ASnnF78/Hr51i7JKQOSUYKHqjle8n4+y7K/8Lk+ydKHtaoCsWaZtpQv+2qLkpWHK1lgCAh9QdphUoCE64V+vinvndbKvCKCXzTawy0jyoUWTaXDwmMJDBXl8YKjvmWOnBeIwLe80MpAvgGfSFNi2ulGDYmvcFe/u+j/db1JlQHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745360746; c=relaxed/simple;
-	bh=7HqP6IOThqTCj6+KwEK9pl+t3S1elMAtDPI4WqhbDrk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C6GQayL8jyg9obxnhZheJG9e73aNGk2jAmdTmdLAtq9O6P+f+QxcyXJeSqrg3hHbV+wWpuwVMS1tfTQYhFSSa4bO79wVzrL2U14uYwvy9RDFkbec7gjY7nF+5KiKgZ5sbbtieEFHgOCzNiydIk5dfjD/OCrtbLr/FPvoFHBWocg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FEt4no6J; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745360921; c=relaxed/simple;
+	bh=der7JpKJJmaUpxRSwhvx1Wmk0k4u10ch2sii9sVeMiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DxkuvoxU0w+Nw1F7lQzI4/nMnBialYLnUjfZhbugFYO5fSJ+lUxofbf4AGdGIQTx87PGEb1qFUlGQ1vw3mQY8/n/tklsTw9JRxX7IGAjHS1XAr1EkVrFETcZ/S7ENfcphFA8VSUA/RQet3SYlTxsaBkV12D+G2aRFCc2ktaYHCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O65t0fIJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FEt4no6J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745360743;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4vRslFe4cN0lEvwN7grLmrzlhqlPU6F80LH1oewlaaw=;
-	b=FEt4no6JUnZa6Fz1Alux0u3c9Dm6oQzwCVglUPDqDSIq0VSGUfuZ/OUfRBZStmF7DEi9j+
-	uuHOMAeENVKi3p3dgCRGD1grpqdE2G+Kuvir/ENrDJ6+b0gxquAz+fKf7nsbqA9AZiexjl
-	1OhxcPLzNvwaI2gOBoO5c1awi8L6tZo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-627-l23vhqtPNrytXuGj5M9fEw-1; Tue, 22 Apr 2025 18:25:41 -0400
-X-MC-Unique: l23vhqtPNrytXuGj5M9fEw-1
-X-Mimecast-MFC-AGG-ID: l23vhqtPNrytXuGj5M9fEw_1745360741
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so31158435e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:25:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745360740; x=1745965540;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4vRslFe4cN0lEvwN7grLmrzlhqlPU6F80LH1oewlaaw=;
-        b=XFzN/i8fjqa9VMtIId+O1ZcWQgkZFAAcVEhqIPuO6dUXc4b+4CGQeXmSssg/coUkAm
-         fVZ/XF9KRcozj2L7w6rJwx+o/ZvNEfKfsJu3R99rRq4sUfOBVquP8HT04CUKt4YVQDcZ
-         ImbhOVhh49D0We87ffEOHWa+HRLxVRgCP1fRWwpMOM67wjC1N4voin+jACUlHnOyZSUN
-         7dsW2SqwQQCbNM7GAx2m8TT4LrxPN/wTb8KnCM/QFiZlXnHwPY3Rc3E2zNgJ7K/GIUjl
-         NGA9ILnZq3z6sblOjPLk2sAIv3ietrJpJMybEixs9c3kdvvO6OOlOm5nESdA0tWAQoj8
-         ZHiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPkjbcid9BQOrDBclQoKRsr2nMphiC8gIUx58Fg57khogXZTcGVZt254OPTL/FRHHHxoC9yC24d4eiWkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeGT2NY8LVKceeHqMbjFsddNWJt9x1ObHbEhtiiAnhmQl6Uhti
-	i04UgPpt1DBc4+sdmGbatuJ5ycIfEtG7XWWW46Ec2SCM+g795GGM65tOI29VmUl6Pr9qNirluCJ
-	bQ4uiXLY0MCDgUEGOrupWIyeOrzAY+7DRHwabyiy+PvEPstbjVbS1q2q//M9LXg==
-X-Gm-Gg: ASbGncvF0+dGtYjYgcuj70xq6OkSle9d12EWk6nEHY5wcV3/+8n+z7RamG6DyjFgPiW
-	c8TFkUQPI1UpLruQkkCFOBeEJX1Kz1Uwn1CC7X7OnAUVZgeI327nqGFcMHXGLQYI06ilakqs5XC
-	mSvSuEB1Hfs7YFSc1Fwn+XZFC6ouO9c8MAF92eytxdvkueBaF3+wPYUBKMCr3AxRaw5YqFUjlN/
-	XjZyKIkEBSx03J0SHkNJVWFPxPZq0fs31pOQg169KA8X3NJ55e/jSBuT+OF4KE5XZ/AiaRsziL/
-	I6qgxKp74HLhxVNFgjL55Inv5cm5OXYVqIIRRTRN/sBzxWt7m7IMIlvtYo3H6lb6ZKfVQg==
-X-Received: by 2002:a05:600c:a363:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-4406ac0a8b4mr138387095e9.20.1745360740674;
-        Tue, 22 Apr 2025 15:25:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOs7XI0oTVw+DKb/7MP/FHJt4LRqW8okLBk6z7fJGL0tMZ+Jiu0PXC4iek8XZZs+XJeZ3sSQ==
-X-Received: by 2002:a05:600c:a363:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-4406ac0a8b4mr138386945e9.20.1745360740331;
-        Tue, 22 Apr 2025 15:25:40 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d17086sm3525365e9.4.2025.04.22.15.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 15:25:39 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Marcus Folkesson
- <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: display: Add Sitronix ST7571 LCD
- Controller
-In-Reply-To: <20250415-st7571-v4-1-8b5c9be8bae7@gmail.com>
-References: <20250415-st7571-v4-0-8b5c9be8bae7@gmail.com>
- <20250415-st7571-v4-1-8b5c9be8bae7@gmail.com>
-Date: Wed, 23 Apr 2025 00:25:38 +0200
-Message-ID: <874iyfbzq5.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O65t0fIJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=rG5awnvhV87WptheJdP0wXFl7KoJWhnrsJJsOy/MVCw=; b=O65t0fIJHg/1VTwzy6Iw+FNfpM
+	OG+zIysnk8qbNfcVEwfIp/Bp7xkzai72iqr7Bv47OMGmJ46tM8DhuGEE0hHm5nKagFE4jKxPs3NDV
+	kAEGsCxtFYWtaZehpsyTIkl60JoWURlZGEhvwFAWM/dAdwKzkR+Tkp6AkMij68i9dSHCTFejx020r
+	6XO56NFxn/fM1Lh8muJhG7d8ruvOD8CcC2d/JpVB5HXxwnG4WcS0Cy0t7l2XlIBjfBuhGbHD3GMAS
+	yrzm4Jg/xiBqaAOHBTW9hXprhKAhZlMczS99d40D5KBIvYZxoA5bl9SeJr8Frohtx7rKbo6JQ4jg1
+	GYOEnjwA==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7M6R-000000065o3-2aCK;
+	Tue, 22 Apr 2025 22:28:31 +0000
+Message-ID: <4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org>
+Date: Tue, 22 Apr 2025 15:28:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Apr 22 (drivers/eisa/)
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Kees Cook <keescook@chromium.org>
+References: <20250422210315.067239d3@canb.auug.org.au>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250422210315.067239d3@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Marcus Folkesson <marcus.folkesson@gmail.com> writes:
 
-> Sitronix ST7571 is a dot matrix LCD controller supporting
-> both 4bit grayscale and monochrome LCDs.
->
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
 
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+On 4/22/25 4:03 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> News: there will be no linux-next release this coming Friday.
+> 
+> Changes since 20250417:
+> 
+
+on i386:
+
+ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
+
+on any .config file with CONFIG_EISA=y
 
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+~Randy
 
