@@ -1,105 +1,142 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8C91EBFF7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8677149C7D;
+	Tue, 22 Apr 2025 08:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745309060; cv=none; b=ks+yNxOxTwxI7f1MHfreSSRGwyRlIMO2F76aD8+1K+p/YH2rppx2SLiuzFV70HYlubBfv8mpAShD9jpGnB9KpnDpLDBHXnwe+iTvCnQA0A55gApq7LXoZFzCBIP5P6+J/s2Vj5ubMJQZhAGfv1IpLncoO5gYXnjvqKr8xupRJw0=
+	t=1745309090; cv=none; b=vBJUSWM8hs/iRXHDlP2fp5k4gv0AugQFoIOHfFwvI0n5JSlhduBvB+8ChKjTPu0kTfFyc46lNwqL3hhymUO4oG03sHi24YtuFrtqgJ9ZGiUnO3YRBvnEE55Vv7VxM7RJdYoAvva7oL2+qEP21X1Q7q7RopOod6pvyJJAJClwsxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745309060; c=relaxed/simple;
-	bh=YJ5ust15cgiLPQ19Llb8Yxmg2OdhLgYoabERjHZpRUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAhfUUjRdllAQuzgcO1P9web6oTrDbrJBhxQe5qnVXdLpszKdQlGvYHajc4w39dhpoRObgkyCh3y6ZEMU0XicYqC9CV7V87DRg/CmjTmC/6u9YGosh9+gAUKf9EhRAkrQduj0vBhM3OnzyAQNvKrPjohBTEPEgQ4+P4cTXhKTdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RkC/CIuj; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745309090; c=relaxed/simple;
+	bh=dKg2iMASpZKlpSKiCHccH+FM4Cc+jvpjBNHcnykSyl4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Cq5DtR9FpytH2os2GN9aO8J0FTVUgyOHx0RSHfykiDFB8K/v4aRyNWmwq5kZ5NW3GnNCoYSUqEbEBvCHX8FMZJWNDOyW6vouszxxjbg8KtYoRZDxlp91Pl4NUWWlAfxcFPc+bOvBg4bieUKTC9ZRtU+c+CEpfq83aqjE50b3Ftw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=enGmkuWH; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RkC/CIuj"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3350492f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:04:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745309057; x=1745913857; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cIQ4PP9wG4Vz2xc0LFXVcoklKGB+kLgAg0ewlEvxW4M=;
-        b=RkC/CIujYW4393EfnO3k55cJA5rUvl4/+MzteaxfWSuioObBRrb9q4C0UNMcbFxGp4
-         ysC+Bty3n8U84UxlhJCNGZgMuR/J4kynaB9wWcGqYO2SkjsqPVJw11DKVtYAAU/jMGZW
-         hj+apzwbOHeTkOMH6koTYoh3IuiuGZWWOXCbZ+WYkqz0nf3VN8m+4lw9rzA7e0hzwJ94
-         RqVAjYJDv2FUfYQmOsTTNPVT8OZNBuFMg+OMHtZsI8SRcUOwJ8N7A1sduzd+QS6kACr4
-         9vPcsUUucwGsHW4CnF2+IzEpjM8aReyI4zkDRPi4LqR07jXTF6uTG3/vYqvegGuyB3tO
-         VDlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745309057; x=1745913857;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cIQ4PP9wG4Vz2xc0LFXVcoklKGB+kLgAg0ewlEvxW4M=;
-        b=MBXTwajZ7Ll09/SwwXGp74G6ZqTPd5vr/Fh8ns/vBuCZtvi2RE6styqdz01L+3xHQK
-         Qj4QI58x3ol9niDKMzMV1a1zSuD5IpELkJWXYEJwuWKX624fSh7wlrW7qZsDlA7tu2Xh
-         F6xeT8FzMBgUmiZE+kTgZ7a3MXJJGcfDQe2l+weAFGrMMfa7/GTgOXf+Uygrb0676ndP
-         n4PtNmOLSbB4GwSJs0ic98rfjttJniL6Nyoi1S4hC0lWTweeK8FXMk0x7jUbtxvA28Gh
-         HvqrGAYIv/EYa4VaG1ToGigtKeKtXQKqMbYe06RxhU6uQK6RJbZcGTtVgthp8XUdG3Ve
-         GKdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcD93TxmHYXk/PJqKCYY2AMCzoo7fGA9/ZkF53iBXwutkxk78XyRSh1WvKu0HYbWRwQCYAiBi/rprPcwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvWPCeqUW804ncU8poHgGVWWD/LOrm3fpcqx5VVBy3Dl1Y87/Y
-	5wF0dO0D5YqmT5F10SSArdG8/ygi8ItLqu0p0dz2FXSu/jg/IToPoaxnSDJnYfo=
-X-Gm-Gg: ASbGncs8OCsAvOpqSkE1kRLGfb+X10DoxFgJIOc6AOzQf0s+KB6bd17ad7m+TASUac4
-	V+oEtFfMFBSv6PS/49H17oqTGUkGlqRiGy/pyqnYLv9gQARBoTP3n3qmihDGN6y9T7g9DKJeY7u
-	y07EbFRA7w0pnpoAxErc7wGX5JJaw4WFpKapLNW5oD/3Yc863l/A4q6q39az1OFaxlQBiS/AkuR
-	SN3VyFkCj5qTDl2xc+qrDepxCBHX1q/BSxnLuJXmP/h8m5BlWDkKFLeJn/IL+8yxBGFPuvZrcdg
-	/6HtGMSMlw9TSmaWf1mWhLePk93A/0Q4FwTm/bJ2TwR6psZTppdhVv66
-X-Google-Smtp-Source: AGHT+IHr33bB7haku99h9x2iuyH51ldW8W+dBOIW1fajfkUYidpN0vXAbVL+B51YDs7qeUHWyJNcQg==
-X-Received: by 2002:a05:6000:188d:b0:390:ed04:a676 with SMTP id ffacd0b85a97d-39efba4b204mr10956448f8f.22.1745309057390;
-        Tue, 22 Apr 2025 01:04:17 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43315esm14111416f8f.26.2025.04.22.01.04.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:04:16 -0700 (PDT)
-Date: Tue, 22 Apr 2025 11:04:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>
-Cc: andy@kernel.org, sakari.ailus@linux.intel.com,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH 2/2] media: atomisp: Remove unused
- atomisp_compat_ioctl32() declaration
-Message-ID: <260a005d-a1bb-48d7-89ec-ed1b6b151b4a@stanley.mountain>
-References: <20250418071823.8756-1-hardevsinh.palaniya@siliconsignals.io>
- <20250418071823.8756-2-hardevsinh.palaniya@siliconsignals.io>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="enGmkuWH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=jhwxs
+	X7bT2boAjm5LCgWVLRdP11jribrR6xBUttHT2I=; b=enGmkuWHo4kn5hs42kTQo
+	RXk0rfNiJPybF1+3puHxHV6tKuyZhXVBJOFgaizbheuToAlnjR/f9e3If7KTZxnB
+	4q8aDBpZ705wabm6FBz5fKhjR864aN0lcUHkrqVxPMuYCMSayp9tYzHXOZ4cLclf
+	C7VZxQT8f94ZFDzMU0Ljck=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgAHGGuDTQdoB12hAg--.4613S2;
+	Tue, 22 Apr 2025 16:04:21 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: alexei.starovoitov@gmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	netdev@vger.kernel.org,
+	song@kernel.org,
+	yangfeng59949@163.com,
+	yangfeng@kylinos.cn,
+	yonghong.song@linux.dev
+Subject: 
+Date: Tue, 22 Apr 2025 16:04:19 +0800
+Message-Id: <20250422080419.322136-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAADnVQLnij-d3Hif1x8ocoYD=8sZG67qACXPZhK78cpYKczwkw@mail.gmail.com>
+References: <CAADnVQLnij-d3Hif1x8ocoYD=8sZG67qACXPZhK78cpYKczwkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418071823.8756-2-hardevsinh.palaniya@siliconsignals.io>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgAHGGuDTQdoB12hAg--.4613S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCF4xurW8ZFyxAF4xZr1xuFg_yoW5tw1fpa
+	15AFy3Cr4kJF4aqwnrGr40vFW5Gw4Uu3yxCasrK34agr4qvF9rXr1UJr1S9F9Yvry2k34f
+	AayvqrZ8KrW0qa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVKZAUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRM3eGgG8cnG3QABsd
 
-On Fri, Apr 18, 2025 at 12:48:18PM +0530, Hardevsinh Palaniya wrote:
-> Since its definition was deleted in a previous patch[1]
-> and there are no remaining users of this function in
-> the codebase.
+Subject: Re: [PATCH bpf-next] bpf: Remove bpf_get_smp_processor_id_proto
+
+On Mon, 21 Apr 2025 18:53:07 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+
+> On Thu, Apr 17, 2025 at 8:41 PM Feng Yang <yangfeng59949@163.com> wrote:
+> >
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> >
+> > All BPF programs either disable CPU preemption or CPU migration,
+> > so the bpf_get_smp_processor_id_proto can be safely removed,
+> > and the bpf_get_raw_smp_processor_id_proto in bpf_base_func_proto works perfectly.
+> >
+> > Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > ---
+> >  include/linux/bpf.h      |  1 -
+> >  kernel/bpf/core.c        |  1 -
+> >  kernel/bpf/helpers.c     | 12 ------------
+> >  kernel/trace/bpf_trace.c |  2 --
+> >  net/core/filter.c        |  6 ------
+> >  5 files changed, 22 deletions(-)
+> >
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 3f0cc89c0622..36e525141556 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -3316,7 +3316,6 @@ extern const struct bpf_func_proto bpf_map_peek_elem_proto;
+> >  extern const struct bpf_func_proto bpf_map_lookup_percpu_elem_proto;
+> >
+> >  extern const struct bpf_func_proto bpf_get_prandom_u32_proto;
+> > -extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
+> >  extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
+> >  extern const struct bpf_func_proto bpf_tail_call_proto;
+> >  extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index ba6b6118cf50..1ad41a16b86e 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -2943,7 +2943,6 @@ const struct bpf_func_proto bpf_spin_unlock_proto __weak;
+> >  const struct bpf_func_proto bpf_jiffies64_proto __weak;
+> >
+> >  const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
+> > -const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
+> >  const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
+> >  const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
+> >  const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
+> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > index e3a2662f4e33..2d2bfb2911f8 100644
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -149,18 +149,6 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto = {
+> >         .ret_type       = RET_INTEGER,
+> >  };
+> >
+> > -BPF_CALL_0(bpf_get_smp_processor_id)
+> > -{
+> > -       return smp_processor_id();
+> > -}
+> > -
+> > -const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
+> > -       .func           = bpf_get_smp_processor_id,
+> > -       .gpl_only       = false,
+> > -       .ret_type       = RET_INTEGER,
+> > -       .allow_fastcall = true,
+> > -};
+> > -
 > 
-> Link[1]:https://lore.kernel.org/linux-media/20210614103409.3154127-7-arnd@kernel.org/
+> bpf_get_raw_smp_processor_id_proto doesn't have
+> allow_fastcall = true
+> 
+> so this breaks tests.
+> 
+> Instead of removing BPF_CALL_0(bpf_get_smp_processor_id)
+> we should probably remove BPF_CALL_0(bpf_get_raw_cpu_id)
+> and adjust SKF_AD_OFF + SKF_AD_CPU case.
+> I don't recall why raw_ version was used back in 2014.
+> 
 
-Instead of a link to lore it should be:
-
-The atomisp_compat_ioctl32() function was deleted in commit b4c650f1af68
-("media: atomisp: remove compat_ioctl32 code") so delete the declaration
-from the header.
-
-Please don't say "it's" to refer to something mentioned in the subject.
-When people are writing commit messages they sometimes treat the subject
-as the first sentence of the commit message but the subject and the body
-of the commit message should make sense independently.  Look at the lore
-link you posted above.  Can you even find the subject?  Most of the time
-when people see a link to lore they'll just read the body of the email.
-
-regards,
-dan carpenter
+The following two seem to explain the reason:
+https://lore.kernel.org/all/7103e2085afa29c006cd5b94a6e4a2ac83efc30d.1467106475.git.daniel@iogearbox.net/
+https://lore.kernel.org/all/02fa71ebe1c560cad489967aa29c653b48932596.1474586162.git.daniel@iogearbox.net/
 
