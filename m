@@ -1,228 +1,82 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195AA27EC69;
-	Tue, 22 Apr 2025 11:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7448327BF8A;
+	Tue, 22 Apr 2025 11:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321744; cv=none; b=JNfjj6et6G6CDoSikXgLT07dkwIcqFwCM1+CZuwsp6UQCBztRPejjBhOCRgi0kSaMoosJuI8Ydhf7aLkivFHsHRvIzTaYoy3+aq1sbqsGHze8NAH30JQpqeQiEDTNeygH01mP9AliUWVipbQcsq/al+Iq4gcmTMW+38ZhJl4GU4=
+	t=1745321756; cv=none; b=pi8KzbbS8Az2J1E5ybsOQv6L9ubTVo/f/vv+fkzQx7AsRIwlAaagVa4UyVzUBRcnhbLxwBrWrQVGbBGWVfKvhgPYLi6H4qUOfEUIM+7Se4eoyM5jVpE4H3LXjem14N78uBiFTItGxd/xkHXPz4oJSi1SuFd7AYSWSfjLcBFoHoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321744; c=relaxed/simple;
-	bh=QtEocJy/CJth/1vVDY0oG1mV878r2tNjKt4aQLtRDb4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=RsMtvEJyQfaAtMFMri91rYK9G56xkT1N6uMWZ5nsSjq6gvqzZfnYGFbYPr/BtcfC4CkJZ58sFJC9AXNLqIXJwSUEDdKes9jM+0BsiZnDVbJeOF+QYb7JtBuav6yHUgbLsj99vONdJ0zP9tSoOqhUTna0j5Wd4dqzBalLK4Uc5bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=d7KVxezB; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1745321756; c=relaxed/simple;
+	bh=G8k1yESAkAoC2QiiUqKx2xBykLNl2jvAEMR/XX9MlZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OnaVGKzABBnIMmVKw5LxAxSIszGmhsdVSDQ8KkdQrbfziPAhgj6gACwlJ1PhwyzsWwLXKB4m0UzeK2WLBpHAolEK2RPZNokaFMOU0ogjxQuPwkl3kts2qshei9x8YTK8LeOy9n0kR0znh3ocBzwEe+YEIGz/ten9G7pw7mgFknI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amsbijQi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="d7KVxezB"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MAWq8W022389;
-	Tue, 22 Apr 2025 07:35:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=VGzu1
-	GLzxd8b4H7qPy2W9Zq0LtV9JQ9yF0J8aNtLXlM=; b=d7KVxezB4EkDzSlCkGDCJ
-	CWD1PUE31UVF36EGGRhN3lIG5TfaJI7Sz2lsZu8+ZdIzVGl8qN04FFAELjAOrP9B
-	VIijvG/klwKHaf3fZVG64fXn3vZT++snLs7ANFOWZtOVJo6OwxD4T19+89lWy4Sa
-	1ClJUdhkVppl7ZKiDFKqHTIqz7+PFO4Z0ndM1y0Hmg8VwSBa1ZfFstu+lJMISPER
-	AN+Em2nqYafjJ431NOWPtiyLffvFAp/BrNx+VaJicE5j6Aq/RNkxr13aB+uELTZg
-	anSxLybAHgGeK0QUT1ckWdxDXB4+HkEkkPk/9tTT+N+MQERnvQ7VN4eTj+l5odmC
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4645p7q8s7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 07:35:28 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53MBZR24050191
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 07:35:27 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 22 Apr
- 2025 07:35:27 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 22 Apr 2025 07:35:27 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.55])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53MBZ4Qr024350;
-	Tue, 22 Apr 2025 07:35:18 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Tue, 22 Apr 2025 13:34:49 +0200
-Subject: [PATCH v2 4/5] docs: iio: new docs for ad4052 driver
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amsbijQi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68025C4CEE9;
+	Tue, 22 Apr 2025 11:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745321755;
+	bh=G8k1yESAkAoC2QiiUqKx2xBykLNl2jvAEMR/XX9MlZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=amsbijQi5FkfMwBmTqZPiKls6kIoI2HsDOXFFmiGBsXTj1a76q6E+akpUOlIFc9ap
+	 42enWZHkH54MltECbR3/SsXKxa1Y3FBhkGE/eyTY5Q8VA/m+CRstiPD0XSEM4cBjWv
+	 t/EKOoEaUKKflSsJ+/hx4kfN/WHbonw7rs4SkPlpRYoRev9MkgNUDciApX5BiAmC7e
+	 zd4Ma6xmusV9ejKOM70Bt+GVk1MvvyNs3nTQf7pNAOW8IdxZT06+aV6TMh0kYvEiiX
+	 cUt4Ni+NeLFVbCa6Qgh52U033cy2Zog7gHbYZPjAgvQ5P2ZTUSD7HD9I2h03jzc5pO
+	 gpaGE98vrLEiA==
+Date: Tue, 22 Apr 2025 13:35:50 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/3] PCI: dw-rockchip: Remove unused
+ PCIE_CLIENT_GENERAL_DEBUG
+Message-ID: <aAd_FiWy5F-tK_2i@ryzen>
+References: <20250422112830.204374-1-18255117159@163.com>
+ <20250422112830.204374-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250422-iio-driver-ad4052-v2-4-638af47e9eb3@analog.com>
-References: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
-In-Reply-To: <20250422-iio-driver-ad4052-v2-0-638af47e9eb3@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        David Lechner
-	<dlechner@baylibre.com>,
-        =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        Andy
- Shevchenko <andy@kernel.org>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
-	<ukleinek@kernel.org>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, Jorge Marques <jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745321704; l=4091;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=QtEocJy/CJth/1vVDY0oG1mV878r2tNjKt4aQLtRDb4=;
- b=edCYEFEQRHzRG8szj7sKRBqMYYjAWY6eZHgvizquSjlrdVZFBbgBtLzEYWM1HUCEtL7Sjyb8e
- MeD8GkZvy3rA0dhYoh0hGomA25MthK5Dg26t3fvh19qGV+gj0gooBIb
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=D4VHKuRj c=1 sm=1 tr=0 ts=68077f00 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gAnH3GRIAAAA:8 a=wI1k2SEZAAAA:8 a=qLcM2r4-lCJhFG8HUqIA:9 a=QEXdDO2ut3YA:10
- a=6HWbV-4b7c7AdzY24d_u:22
-X-Proofpoint-GUID: sTDtT0KOgEK6r3YGHrK0QDGQU6FcCT_m
-X-Proofpoint-ORIG-GUID: sTDtT0KOgEK6r3YGHrK0QDGQU6FcCT_m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_05,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 suspectscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422112830.204374-2-18255117159@163.com>
 
-This adds a new page to document how to use the ad4052 ADC driver.
+On Tue, Apr 22, 2025 at 07:28:28PM +0800, Hans Zhang wrote:
+> The PCIE_CLIENT_GENERAL_DEBUG register offset is defined but never
+> used in the driver. Its presence adds noise to the register map and
+> may mislead future developers.
+> 
+> Remove this redundant definition to keep the register list minimal
+> and aligned with actual hardware usage.
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 0e0c09bafd63..fd5827bbfae3 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -54,7 +54,6 @@
+>  #define PCIE_CLIENT_GENERAL_CONTROL	0x0
+>  #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+>  #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+> -#define PCIE_CLIENT_GENERAL_DEBUG	0x104
+>  #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>  #define PCIE_CLIENT_LTSSM_STATUS	0x300
+>  #define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+> -- 
+> 2.25.1
+> 
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
- Documentation/iio/ad4052.rst | 95 ++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS                  |  1 +
- 2 files changed, 96 insertions(+)
-
-diff --git a/Documentation/iio/ad4052.rst b/Documentation/iio/ad4052.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..410aaa437ed5fea6a2924d374fa5f816f5754e22
---- /dev/null
-+++ b/Documentation/iio/ad4052.rst
-@@ -0,0 +1,95 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+=============
-+AD4052 driver
-+=============
-+
-+ADC driver for Analog Devices Inc. AD4052 and similar devices.
-+The module name is ``ad4052``.
-+
-+Supported devices
-+=================
-+
-+The following chips are supported by this driver:
-+
-+* `AD4050 <https://www.analog.com/AD4050>`_
-+* `AD4052 <https://www.analog.com/AD4052>`_
-+* `AD4056 <https://www.analog.com/AD4056>`_
-+* `AD4058 <https://www.analog.com/AD4058>`_
-+
-+Wiring modes
-+============
-+
-+The ADC uses SPI 4-wire mode, and contain two programmable GPIOs and
-+a CNV pin.
-+
-+The CNV pin is exposed as the ``cnv-gpios`` and triggers a ADC conversion.
-+GP1 is ADC conversion ready signal and GP0 Threshold event interrupt, both
-+exposed as interrupts.
-+
-+Omit ``cnv-gpios`` and tie CNV and CS together to use the rising edge
-+of the CS as the CNV signal.
-+
-+Device attributes
-+=================
-+
-+The ADC contain only one channels, and the following attributes:
-+
-+.. list-table:: Driver attributes
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Description
-+   * - ``in_voltage0_raw``
-+     - Raw ADC voltage value
-+   * - ``in_voltage0_oversampling_ratio``
-+     - Enable the device's burst averaging mode to over sample using
-+       the internal sample rate.
-+   * - ``in_voltage0_oversampling_ratio_available``
-+     - List of available oversampling values. Value 0 disable the burst
-+       averaging mode.
-+   * - ``conversion_frequency``
-+     - Device internal sample rate used in the burst averaging mode.
-+   * - ``conversion_frequency_available``
-+     - List of available sample rates.
-+
-+Threshold events
-+================
-+
-+The ADC supports a monitoring mode to raise threshold events.
-+The driver supports a single interrupt for both rising and falling
-+readings.
-+
-+The feature is enabled/disabled by setting ``thresh_either_en``.
-+During monitor mode, the device continuously operates in autonomous mode until
-+put back in configuration mode, due to this, the device returns busy until the
-+feature is disabled.
-+
-+Low-power mode
-+==============
-+
-+The device enters low-power mode on idle to save power.
-+Enabling an event puts the device out of the low-power since the ADC
-+autonomously samples to assert the event condition.
-+
-+SPI offload support
-+===================
-+
-+To be able to achieve the maximum sample rate, the driver can be used with the
-+`AXI SPI Engine`_ to provide SPI offload support.
-+
-+.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad4052_ardz/index.html
-+
-+When SPI offload is being used, additional attributes are present:
-+
-+.. list-table:: Additional attributes
-+   :header-rows: 1
-+
-+   * - Attribute
-+     - Description
-+   * - ``in_voltage0_sampling_frequency``
-+     - Set the sampling frequency.
-+   * - ``in_voltage0_sampling_frequency_available``
-+     - Get the sampling frequency range.
-+
-+The scan type is different when the buffer with offload support is enabled.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 81fbe7176475c48eae03ab04115d4ef5b6299fac..04aa8db44bee418382a2e74cb6b1d03a810bd781 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1334,6 +1334,7 @@ M:	Jorge Marques <jorge.marques@analog.com>
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad4052.yaml
-+F:	Documentation/iio/ad4052.rst
- 
- ANALOG DEVICES INC AD4130 DRIVER
- M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
-
--- 
-2.49.0
-
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
