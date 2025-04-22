@@ -1,58 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2985F7DA66;
-	Tue, 22 Apr 2025 15:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E0283C8D;
+	Tue, 22 Apr 2025 15:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745336974; cv=none; b=J9OL6qNXMFsxuXx5hxXDyZcfM3x6S2rz5dd0Z6uzN6mzAwUs30kiV7AWITIfHG4z79F4alvreUH/qzFxAaWsfdrkICipIU1EM+b5BZyFK6ykjSgAC7Ky/j3x2Ow9ET5CtHJWy6YuuhYeF/Z7DinhjfaVtMAlPzrc7rjctdpVRmA=
+	t=1745336991; cv=none; b=O1mZfputBR1IV+meNMBo8+auzz3kcRNZGNbJq48+6CvXKR0M9A7MDHOAKGbmW1E80uzy6pS+xOpg6hUZcrXQTOj1hUY9Ro3mbUdIs9cZenRsLLVdm6jnzV9k9argwZYKHneHn3dg2wwoMtspl1IFqvwUQhpSkT/VX2Kr7HuITrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745336974; c=relaxed/simple;
-	bh=5GOMuvIE+7EsbF04NswrnSuLp3VvDN4BQnu1VTgx080=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CTL99uygds3UD4Niw8I28CiSLXyJdz1fpVkBjZ30dBXXT/0SY7RHCa/bC6ZWQOkCQFekHirMEuH6SMFLGmhgjq7vtcQyJVl2u0NRd28oYCZgn6MwkFM25JaW2E8jJLVhdz2E5/CyPLy3F/vxj7u+So7yWkAYwNPoogHU9nDGSHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2ik30OE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745336991; c=relaxed/simple;
+	bh=RVXgkiRxKfMs3u9+YyC/xVKrAOVb5kTrbP3f1okq8e8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i0BcDVRcQ/kXFK/KgWhIcc1XodHz0f8lR/uiAFHWGhj6/oXgYGahtQ1/uNBnhgBtOHkkKen4wfTMEORhguDQZldlMCPMW9jL9PvdlbWJVDwj/Xmvac4Av3doGvAGyD8a4mPhUtwd/O4TuXvKAtK3Vt5PJ6gqn0g9RqQsZHsCUPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Gr4x62qV; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2ik30OE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DE8C4CEE9;
-	Tue, 22 Apr 2025 15:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745336974;
-	bh=5GOMuvIE+7EsbF04NswrnSuLp3VvDN4BQnu1VTgx080=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s2ik30OE2PgSyHjVZ3CA+slsyUMRhiQ9+E9aOz1/kSCVSB6csdlcpr9mBOgYB0hZb
-	 yVwFq9w6HexungrrST9nr19K+OfpXVQnWgzJWwEOs6rtjuxEacLWrRtus8JwTt5uUv
-	 Iyyuxue2n5aSttEbaXPhHlwVtPludc/m+AZTpU/efh8sWyJUY7XQnxLYMBbDu4Nk2v
-	 d+QYLUP/5q3bJ1oG37m5HUnQMMZ95LDmKuMYheRTgeQCOXf7L7NebwoHHFARngqYCs
-	 Oswv0/YpKwtrq6AXlBklXOew6xhfKnaKSvW54yLjrlI/cgAVdJmBvDVbnZBZldYS8N
-	 Cv5VCkGSxjOMg==
-Date: Tue, 22 Apr 2025 08:49:30 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] drm/nouveau: outp: Use __member_size() helper
-Message-ID: <202504220849.3BDE692@keescook>
-References: <aAe5o_-f5OYSTXjZ@kspp>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Gr4x62qV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 645A943B46;
+	Tue, 22 Apr 2025 15:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745336979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jh3TOfjfjJtUvON3fbrchsnqfDrRlyCdWG8ags+8rQM=;
+	b=Gr4x62qVWVJAZOqxoX06AnZysciGvSzFdSjOhSqxWDVbTqMV3wEPeM8pJOQb/10fNgs+si
+	0W7YhwBA4ilB5Sf0PRqfH9opH8lhnhU6wWYmn2qhGX/6tF0cGySV0BVYC4CVSULmXeiU6X
+	gIDGrw3ckqcCGZdlz08ChE5MRZkKGI3mpziwQvDZaQuXOl1fzQ3i/Yb1OVSlRxMxuvb9sp
+	vyQAyeSpZHSeJ7SndnFO7nQ06vCF3H+Xe3NSRPvmSE35nq1G3gtbQnEcWMdBAjmFOf8zUl
+	31ad9KcVgBAAppNYiHbTaJxPx48CMed1UcF9jPVYLKVvPQiE4rcXJublK+/SUA==
+Date: Tue, 22 Apr 2025 17:49:34 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Alexis Lothore <alexis.lothore@bootlin.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Richard Cochran <richardcochran@gmail.com>,
+ Daniel Machon <daniel.machon@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>
+Subject: Re: [PATCH net 1/2] net: stmmac: fix dwmac1000 ptp timestamp status
+ offset
+Message-ID: <20250422174934.309a1309@fedora.home>
+In-Reply-To: <20250422-stmmac_ts-v1-1-b59c9f406041@bootlin.com>
+References: <20250422-stmmac_ts-v1-0-b59c9f406041@bootlin.com>
+	<20250422-stmmac_ts-v1-1-b59c9f406041@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAe5o_-f5OYSTXjZ@kspp>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghml
+ hhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Apr 22, 2025 at 09:45:39AM -0600, Gustavo A. R. Silva wrote:
-> Use __member_size() to get the size of the flex-array member at compile
-> time, instead of the convoluted expression `__struct_size(p) - sizeof(*p)`
+Hi Alexis,
+
+On Tue, 22 Apr 2025 17:07:22 +0200
+Alexis Lothore <alexis.lothore@bootlin.com> wrote:
+
+> When a PTP interrupt occurs, the driver accesses the wrong offset to
+> learn about the number of available snapshots in the FIFO for dwmac1000:
+> it should be accessing bits 29..25, while it is currently reading bits
+> 19..16 (those are bits about the auxiliary triggers which have generated
+> the timestamps). As a consequence, it does not compute correctly the
+> number of available snapshots, and so possibly do not generate the
+> corresponding clock events if the bogus value ends up being 0.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Fix clock events generation by reading the correct bits in the timestamp
+> register for dwmac1000.
+> 
+> Fixes: 19b93bbb20eb ("net: stmmac: Introduce dwmac1000 timestamping operations")
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+Looks like the commit hash is wrong, should be :
 
--- 
-Kees Cook
+477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping operations")
+
+Other than that I agree with the change, these offset are the right
+ones, thanks...
+
+With the Fixes tag fixed,
+
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+
+Maxime
+
