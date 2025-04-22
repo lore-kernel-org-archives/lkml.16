@@ -1,111 +1,184 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652251E0DEB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9348020B806;
+	Tue, 22 Apr 2025 10:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317179; cv=none; b=GpRaiUbvCNtN9eWK4RftWy636cn8uiWIodzyojIcyQQ3Ffm/iWMZmpQ4wd5D1d4oGUpVdkOoGaApZBMV2J0Yu+5RTakY7f0QahSNCsUN3CJ6UCtJY+B+ThghgIySB6JBFWPHWVOro0O+tpR0D1h1Y/Ogsh8adw1P7XKps7LOYV8=
+	t=1745317211; cv=none; b=JBz+VC26HuZ0NFagbyA/c8T9RZnDz8EreUChETiU1dkRxM8M8Frt3gfUCVszp70WAEzhrlKbft5GXZms4B+1o6sYRyzj3YSi63DIHDaMdRFXu+kYkdrHJT+tBXWppmZH7tJDtzmAWN9tW7c2LoK7iyd8OfLoU9AbdsUNk7qQr5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317179; c=relaxed/simple;
-	bh=q186CXpJpZK5KCcEIenwV8pvsmgwT9Uqtsnxb5OhuSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MX1+ihO16Ltmj7qJdHjPb3j0Gk3uEl3L4KJDelc58H1RA/xA2yrRsVVB5Hc/cEdHZmwCJl72NyE6+Owj41lRyoYeD3dBTzviv9eRt3k7bQ2jY8ff8VcoOjK9qR5ppazbOdYiYIwjG9ikaJ3kP1o6/Kk9OqOodV0BcBZ1m/nXobc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XH1Laups; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745317211; c=relaxed/simple;
+	bh=RVXbQFP/k6BTYPhBACJCbgHwwamun7Utb91ekU6Oprw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BkHw1Od9dDd8kpSalOSr5BLpHUrmjvu+2/s3lsKoqSg3nxJk9fRUX4/w5RE4Sen/GfRDnkTe38ibJjngymxKaxqskiqk3MTgLZoqQfCe59Cxg4XOcHd/NWsIuNOXCXS74GAcZ2x7bSY/8uKPeP8S2nLwSuoH8kSr2ufFlwTLRNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Rx9J7IKl; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XH1Laups"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ijPf3w1S5wyMcW9ooODsE9PZ4X2jRX4aZ41tS2xylkw=; b=XH1Laupso4BZG2r5qyvQPkjau3
-	Of5Y4iafM+goBWMiNSb07g+k888TI5qUDYhbZgSTsgRVWeTfSN8aM3+kDR++I64CWqi/uOkxJQTb8
-	ttSSak6cSh2LN1dBwQy+XgVQH6GyYqGdDesBdR4b3Nop1FlMjqI71ngP1iepWga8p/Nc9kkumaidW
-	OUGxzy3igbtBom4WoH+eZ8oQwNVnSIEu3sN3Q5Z2D0QDe4x3aABI3MdvvDlaP/rwHrjLb4U/3mrG9
-	2T7tBBQL392fuBxySSJgzFzMBIi4zAC4UB3LwIi4Uj7xWd5FGDIIk44w12auBA9fUwh+oLLScOOFU
-	kDIkhZjQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7Aix-00000004NIx-0V5N;
-	Tue, 22 Apr 2025 10:19:31 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B2E573003C4; Tue, 22 Apr 2025 12:19:30 +0200 (CEST)
-Date: Tue, 22 Apr 2025 12:19:30 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com,
-	Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [RFC][PATCH] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-Message-ID: <20250422101930.GD14170@noisy.programming.kicks-ass.net>
-References: <20250422044355.390780-1-jstultz@google.com>
- <20250422085628.GA14170@noisy.programming.kicks-ass.net>
- <aAdnk0PH6H5q7nGz@pavilion.home>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Rx9J7IKl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745317187;
+	bh=c4z1sB6OeKlyJmA+PFzyJ68O5M5fppZkHmyXCAllGaY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Rx9J7IKlI6ysRhonm3BRa9dEI421V7qJGwpCmU+iMqyE/uaoxpM41hFBFnM6FymBZ
+	 dN/3zVOefKeU+AKomn+I94kga0L8Dh8Sc74/BLRs+qwXIJH14zyxi2j8qdgNpUh+iW
+	 6DbeV++J/cm+fzpChXIOcKczfu3tl2BCpPrmJhFI=
+X-QQ-mid: zesmtpip3t1745317146t25d683aa
+X-QQ-Originating-IP: cPdLxHsjcwUj+B/L9//t5P69bxfZ2goFPnBcw7Ee+XQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 18:19:05 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2928040559611630836
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: tsbogend@alpha.franken.de,
+	macro@orcam.me.uk
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH v2 0/6] MIPS: Resolve build problems on decstation_64
+Date: Tue, 22 Apr 2025 18:18:55 +0800
+Message-ID: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAdnk0PH6H5q7nGz@pavilion.home>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OFSY/93ODYnHRpIjh5XlspOd9KxnWNGQ811MH+Vbvl0dBs7q+jUkvmDM
+	7b8QXMURysVJibB230gIfg/uBwNezcMacKf7FdPk8ZoP/hXl2OzdppPPX4myB7ukRGMpWO2
+	A87HKc5aKN/IuL9+6+jP48p/jmFG5eVZAvsnj/CH5N61XhHpXBlIGtbxZi6Y5tz4jOmFeG3
+	MFeK55sSKu7kracjzQm9PKa6CcAm18U/el+wdND20AvcsdeCgHFxLxfWCYC0n3aCOejN4Hi
+	KELHtGvT7df2gOJWxgoHwlXtWDzp+q/++vZvdNoTR+mW1keBV7aCBuO9qqyN+1CV/F93a7r
+	J9e7xpBqVA2iscZG5p0331UUFfxNjhNgFnpYtjBC9OLNU/fCbL0ZxjsiDNdJ8/RyNr9MF85
+	6N0XG5jE9Q/q/iLelGTvGlJg9DeImU1BQ09U8nC/l93WKpXRTGfJA+FIioFE07ZRTiLasrJ
+	aZUhpK7oogr5XVWY54thbakOASL/+fLEVUuHu/P9gKmfwwGaWlgxFTQrOdv0qocJuxn535/
+	POJ+dKESuza/sUWy4RXTVGta9+UjiWk1mzaw8SAF0Xlvat0R8aLPiSW6piRloWco+KDAo71
+	1VD4xPfyvGMJpTgGeHbjMdAj2RmdboxoQFWTlp8E2BxeCnS4wrrvOZ3iaA7LvJiliTr5RC5
+	4tF2JxBHjoC8mLVjo1jhDMHTKaP/1tmkCsmHCMsPJE9DZ0uXc7SYQoN1+jcfdTMl3RW/z7G
+	C/I9AbdVN/HUIUmJ1mP+RpQaHG/XY7DPFzjDv+PIu3u6r1K2Yz8HGq2SCDXYZMfy03tstlE
+	p47mvHvyYaPPKSfoIH90X1CKDmPV90L+QwJD/1C4v0qzgLXp8ricUd47wdG9j0xxtOa2Bot
+	Ch9HwvAoSUuZf0MgIl0l/wyRBITY/T73g05s1r7hDkiO6+rqPJsnwt9fRIFnOIbh5aWs/pj
+	UOTo2bavHItbZ/O4X3R4YF2pf67YSmkf196sk753RFFtg0TIyJKan2m/nU7Ev0n+juBEJIn
+	him1PfpwIYcGsS/Zcr9xFVxJrxPggdcfmG7rK6Qck0xNbExcSd
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Apr 22, 2025 at 11:55:31AM +0200, Frederic Weisbecker wrote:
-> Le Tue, Apr 22, 2025 at 10:56:28AM +0200, Peter Zijlstra a Ècrit :
-> > On Mon, Apr 21, 2025 at 09:43:45PM -0700, John Stultz wrote:
-> > > It was reported that in 6.12, smpboot_create_threads() was
-> > > taking much longer then in 6.6.
-> > > 
-> > > I narrowed down the call path to:
-> > >  smpboot_create_threads()
-> > >  -> kthread_create_on_cpu()
-> > >     -> kthread_bind()
-> > >        -> __kthread_bind_mask()
-> > >           ->wait_task_inactive()
-> > > 
-> > > Where in wait_task_inactive() we were regularly hitting the
-> > > queued case, which sets a 1 tick timeout, which when called
-> > > multiple times in a row, accumulates quickly into a long
-> > > delay.
-> > 
-> > Argh, this is all stupid :-(
-> > 
-> > The whole __kthread_bind_*() thing is a bit weird, but fundamentally it
-> > tries to avoid a race vs current. Notably task_state::flags is only ever
-> > modified by current, except here.
-> > 
-> > delayed_dequeue is fine, except wait_task_inactive() hasn't been
-> > told about it (I hate that function, murder death kill etc.).
-> > 
-> > But more fundamentally, we've put so much crap into struct kthread and
-> > kthread() itself by now, why not also pass down the whole per-cpu-ness
-> > thing and simply do it there. Heck, Frederic already made it do affinity
-> > crud.
-> > 
-> > On that, Frederic, *why* do you do that after started=1, that seems like
-> > a weird place, should this not be done before complete() ?, like next to
-> > sched_setscheduler_nocheck() or so?
-> 
-> You mean the call to kthread_affine_node() ? Because it is a default behaviour
-> that only happens if no call to kthread_bind() or kthread_affine_preferred()
-> has been issued before the first wake up to the kthread.
-> 
-> If kthread_affine_node() was called before everything by default instead
-> then we would get its unconditional overhead for all started kthreads. Plus
-> kthread_bind() and kthread_affine_preferred() would need to undo
-> kthread_affine_node().
+[ Part 1 ]: MIPS: dec: Only check -msym32 when need compiler
 
-Urgh, I see. Perhaps we should put a comment on, because I'm sure I'll
-have this same question again next time (probably in another few years)
-when I look at this code.
+During 'make modules_install', the need-compiler variable becomes
+null, so Makefile.compiler isn't included.
+    
+This results in call cc-option-yn returning nothing.
+    
+For more technical details on why need-compiler is null during
+'make modules_install' and why no compiler invocation is actually
+needed at this point, please refer to commit 4fe4a6374c4d ("MIPS:
+Only fiddle with CHECKFLAGS if need-compiler") and commit
+805b2e1d427a ("kbuild: include Makefile.compiler only when compiler
+is needed").
+    
+Commit a79a404e6c22 ("MIPS: Fix CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression") tried to fix the same issue but it
+caused a compile error on clang compiler because it doesn't support
+'-msym32'. Then, commit 18ca63a2e23c ("MIPS: Probe toolchain support
+of -msym32") fixed it but reintroduced the CONFIG_CPU_DADDI_WORKAROUNDS
+`modules_install' regression.
+
+Wrapping this entire code block with #ifdef need-compiler to avoid
+all issues is the best solution for now.
+    
+To get rid of spurious "CONFIG_CPU_DADDI_WORKAROUNDS unsupported
+without -msym32" error.
+
+Moreover, I also identified an unnecessary check for KBUILD_SYM32
+in this Makefile section. Eliminate it for code simplification.
+
+NOTE:
+
+It is particularly important to note that this code fix does not
+imply that we have resolved the problem entirely.
+
+In fact, the entire application of cc-option and its auxiliary
+commands within the kernel codebase currently carries significant
+risk.
+
+When we execute make modules_install, the Makefile for the
+corresponding architecture under arch/subarches/Makefile is
+invariably included. Within these files, there are numerous
+usages of cc-option and its auxiliary commands, all of which will
+return empty strings. The reason other architectures can
+successfully complete compilation under these circumstances is
+purely because they do not, unlike MIPS, check the return values
+of cc-option and its auxiliary commands within their Makefiles
+and halt the compilation process when the expected results are
+not received.
+
+A feasible approach to remediation might be to encapsulate all
+usages of cc-option and its auxiliary commands within conditional
+statements across all architecture Makefiles, preventing their
+execution entirely during make modules_install.
+
+However, this would lead to a massive number of inelegant
+modifications, and these broader implications may require
+deliberation by Masahiro Yamada.
+
+Regardless, this does not preclude us from addressing the
+issue on MIPS first.
+
+Link: https://lore.kernel.org/all/41107E6D3A125047+20250211135616.1807966-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/F49F5EE9975F29EA+20250214094758.172055-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/8ABBF323414AEF93+20250217142541.48149-1-wangyuli@uniontech.com/
+
+
+[ Part 2 ]: MIPS: decstation_64_defconfig: Compile the kernel with warnings as errors
+
+Patch ("MIPS: dec: Only check -msym32 when need compiler") allows
+us to compile kernel image packages with decstation_64_defconfig.
+
+However, compilation warnings remain during the build.
+
+Address these warnings and enable CONFIG_WERROR for decstation_64_defconfig.
+
+Link: https://lore.kernel.org/all/487CE8AA937621E2+20250218125101.663980-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/EA0AFB15DDCF65C1+20250227141949.1129536-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/303EFD6BFBDAC7C8+20250305033436.31214-1-wangyuli@uniontech.com/
+
+
+[ Changelog: ]
+
+ *v1->v2: Add Philippe Mathieu-Daud√©'s "Reviewed-by" tag in patch3.
+Link: https://lore.kernel.org/all/11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/8dcb5c6d-be4f-4891-a999-137d53edfc05@linaro.org/
+
+WangYuli (6):
+  MIPS: dec: Only check -msym32 when need compiler
+  MIPS: Eliminate Redundant KBUILD_SYM32 Checks
+  MIPS: dec: Create reset.h
+  MIPS: dec: Remove dec_irq_dispatch()
+  MIPS: decstation_64_defconfig: Update configs dependencies
+  MIPS: decstation_64_defconfig: Compile the kernel with warnings as
+    errors
+
+ arch/mips/Makefile                        |  6 ++--
+ arch/mips/configs/decstation_64_defconfig | 43 +++++++++--------------
+ arch/mips/dec/int-handler.S               |  2 +-
+ arch/mips/dec/prom/init.c                 |  3 +-
+ arch/mips/dec/reset.c                     |  2 ++
+ arch/mips/dec/setup.c                     | 15 ++------
+ arch/mips/include/asm/dec/reset.h         | 20 +++++++++++
+ 7 files changed, 47 insertions(+), 44 deletions(-)
+ create mode 100644 arch/mips/include/asm/dec/reset.h
+
+-- 
+2.49.0
+
