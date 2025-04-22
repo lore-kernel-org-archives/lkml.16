@@ -1,76 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A03281352;
-	Tue, 22 Apr 2025 16:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD552900BB
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338388; cv=none; b=LAm83tlgQNkCYcwyeNIsZ+NG7vXEU8FvlDV9CxK+DKKNW2jPympj0ngWbWRpXCA9okKFyR956wyDMICiT7jmgxtAkNVxEpgq/R/lLdlfgW/P7k1vyOYVRDCw15Zkg4k9XAzgbizja8VnFAe30sBH2z+y9vkY6ieY50/oAON4jP8=
+	t=1745338400; cv=none; b=lLr62odFD1AkBpIinJfNRaX3vVYT4M97XM6S5Y84OZ9S4WQjF4DoLC1N/FzuuKob52o+Zq9zn6fInt/exzn4XbJIclX1xSoJs4jDnWRUyYY6NKwu3aeVCPtWrSYOIiWM7iGN1n9SqPydkY2bw+swthNBtz8EN4XGarvcVWb96H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338388; c=relaxed/simple;
-	bh=lkfHBQRCLbTLa8njSs4KJ85m1TEWJJ16k65UksbYCMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GWbUD0QjHYBykaucVCoScNmA8g+JyOq1un1i/7YmPlVpEd9bU+rj5qagxKem8Xjc02hzXoMGauyom0Kbpgjp3lqIqB33HjRAfAlMj9p8gSsibuHI2Sg/nLy1DIGnQU1QC/cLLuXs4LDN7HDhX9/kd9CXuqpjHpp6c29jFNjznis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963A1C4CEE9;
-	Tue, 22 Apr 2025 16:13:04 +0000 (UTC)
-Date: Tue, 22 Apr 2025 12:14:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, Ingo Molnar
- <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
- Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
- Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
- <jordalgo@meta.com>, Sam James <sam@gentoo.org>,
- linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer
- <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
-Message-ID: <20250422121454.523757af@gandalf.local.home>
-In-Reply-To: <20250122122821.GN7145@noisy.programming.kicks-ass.net>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
-	<b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
-	<20250122122821.GN7145@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745338400; c=relaxed/simple;
+	bh=pbLKhbB4JL8XJ7YdSiOmPWI9WMEe67/YSYPH4sMBOo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mmjv+QXQX3IEF4W3JLeOY1qQMusCife8YIEu8Pz3Z1JfZiNBl4tOV2IE8Lpd0To8mRbtDj8VpZ5oD85GX09Cs1U0WnNwQ6x1BWY3SQqr5fgZT/joyNpbdH0dc/3TD+r+6mscWTDXlnMhPV0shwnX0B0BlipqQ47OBPIHylc1HWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=astmXMRG; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="astmXMRG"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-226185948ffso61258395ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1745338397; x=1745943197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=600fD9G54NVOaVyktaguhJ2soOvTwp92HG4EGx1g2F4=;
+        b=astmXMRGSN7srM9usmq/Ds8srcQJJ3/04W8BYcEwPba3ePyqZOp146gVM/nLFP3I+W
+         vpRTKWynniIVBF5IrZqEp2VDczoajwyshDdGsldGB5zLOqGPNwOZ0AYCtzrT4OUR9ny2
+         /DpgxjMH54c/bE5PBNuiMDVXYARPJinSFeJzk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745338397; x=1745943197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=600fD9G54NVOaVyktaguhJ2soOvTwp92HG4EGx1g2F4=;
+        b=AyII76UQOxUgBU8dm30o2PLYFMa91nWkmtqWXIkRtWWWzFued7jqSz/drWcB9pkUN0
+         L4vRXWAC9rq5g67uWn9Qph+Gf7thycHDkJDKv4W/O3i4G5DYu9p+xoMnvjohRJ39MXF+
+         PAkugWR6r7rUemS7xwhhZyhDdxhG8Tnmi847ldbmmHK1Xi5QM+a74tD42ZdciHdelg4B
+         2yfkUFqm7qn+8CU4+pf1ZKJp8SqvYd3TF3TY9aDrH2/g6LyfURqoMFpfcGfYEwmVkqTR
+         iXCg9eIaNtTVnNRe8G67pqHOf9VUKR49KpwtIYWFcDEQiTSFmTzF95ZRfmkFnjGE0WJd
+         4W+A==
+X-Gm-Message-State: AOJu0YzEZEGD3doOarZK+FPlXNvoLQRY8yVrvfv4GqVGWcCU5Y+OVW1H
+	QruYgNwUh8DVWSfHYV42NL2Nh46uKfMdoBVSAIW7TLON+9xnrsR1Cky96PST/PmZMtXIONYQ5W7
+	oxuPAvU8RtG6u3mCRXHK3H+61w4+ZGcBKzSRIl1LLRo7HVFamJi2F7hekFBhQuiJZ3Fg0/4yp/s
+	ne4IYgctW2d4pEtg+MDKD/ciunkWpkYg4C+/DEokCXIR2idapC
+X-Gm-Gg: ASbGncuGfKCNkgYAJXIi0eMElq3O6EKl8fYGA4Xae3YH3tEfD+HyD7cYw6136KFGGm9
+	Cgrjb0yWKuN3jK/ffWjn5AN3FN8SN1+3NZ/SwArlgmNHwq1CsUfXlatarfGt98MrtO+PvmbsUJX
+	RwtSgrhVrB/DJwIx7JqOlMKqEtfiNfCl0zbEgSDnZVzg4PFR+Ea9l3aaKt/barfgPiHg/qqMTZw
+	JgTLR6yJZ4rsZZV5cZt2yRmTQyqmO02UI4ozs37S+22Yio1fhEC5Hp76nJz3W39I1zAJ+YmDrMi
+	i35PXjHnISIhS5iQ/lE+mo+gr6Hx7Ge+MRQb3a3D2A/hVic/K/T5EGoQ60MuasgPxpxONJCZxHa
+	b+cy1HcEcoGNVF9fyNVqDh54QBm6P21xM
+X-Google-Smtp-Source: AGHT+IG4yc4cb3WLCu0YV3tQuWd6qB+0bI0V9npN8A4vdqCFBhKVqwsTx1FIXsxdSH/WoeELa5WdxQ==
+X-Received: by 2002:a17:903:19ed:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22c53607f99mr272215925ad.40.1745338397363;
+        Tue, 22 Apr 2025 09:13:17 -0700 (PDT)
+Received: from localhost.localdomain (pool-173-49-113-140.phlapa.fios.verizon.net. [173.49.113.140])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb03d2sm87462375ad.142.2025.04.22.09.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 09:13:17 -0700 (PDT)
+From: Zack Rusin <zack.rusin@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: Zack Rusin <zack.rusin@broadcom.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Doug Covelli <doug.covelli@broadcom.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Joel Stanley <joel@jms.id.au>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	kvm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 0/5] KVM: Improve VMware guest support
+Date: Tue, 22 Apr 2025 12:12:19 -0400
+Message-ID: <20250422161304.579394-1-zack.rusin@broadcom.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+This is the second version of a series that lets us run VMware
+Workstation on Linux on top of KVM.
 
-/me is resurrecting the sframe work
+The most significant change in this series is the introduction of
+CONFIG_KVM_VMWARE which is, in general, a nice cleanup for various
+bits of VMware compatibility code that have been scattered around KVM.
+(first patch)
 
-On Wed, 22 Jan 2025 13:28:21 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+The rest of the series builds upon the VMware platform to implement
+features that are needed to run VMware guests without any
+modifications on top of KVM:
+- ability to turn on the VMware backdoor at runtime on a per-vm basis
+(used to be a kernel boot argument only)
+- support for VMware hypercalls - VMware products have a huge
+collection of hypercalls, all of which are handled in userspace,
+- support for handling legacy VMware backdoor in L0 in nested configs
+- in cases where we have WS running a Windows VBS guest, the L0 would
+be KVM, L1 Hyper-V so by default VMware Tools backdoor calls endup in
+Hyper-V which can not handle them, so introduce a cap to let L0 handle
+those.
 
-> > The error has to be checked before the write to task->task_works.  Also
-> > the try_cmpxchg() loop isn't needed in NMI context.  The TWA_NMI_CURRENT
-> > case really is special, keep things simple by keeping its code all
-> > together in one place.  
-> 
-> NMIs can nest, consider #DB (which is NMI like) doing task_work_add()
-> and getting interrupted with NMI doing the same.
-> 
+The final change in the series is a kselftest of the VMware hypercall
+functionality.
 
-I was looking at this patch and was thinking that the trycmpxchg() is still
-for the race against other CPUs.
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Doug Covelli <doug.covelli@broadcom.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: kvm@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
 
-Another CPU can add a task_work for this task, right?
+Zack Rusin (5):
+  KVM: x86: Centralize KVM's VMware code
+  KVM: x86: Allow enabling of the vmware backdoor via a cap
+  KVM: x86: Add support for VMware guest specific hypercalls
+  KVM: x86: Add support for legacy VMware backdoors in nested setups
+  KVM: selftests: x86: Add a test for KVM_CAP_X86_VMWARE_HYPERCALL
 
-If so, then even though the NMI adding the task work can't be interrupted
-(considering there's no #DB and such), it still can clobber an update done
-for this tasks task_work from another CPU.
+ Documentation/virt/kvm/api.rst                |  86 +++++++-
+ MAINTAINERS                                   |   9 +
+ arch/x86/include/asm/kvm_host.h               |  13 ++
+ arch/x86/kvm/Kconfig                          |  16 ++
+ arch/x86/kvm/Makefile                         |   1 +
+ arch/x86/kvm/emulate.c                        |  11 +-
+ arch/x86/kvm/kvm_vmware.c                     |  85 ++++++++
+ arch/x86/kvm/kvm_vmware.h                     | 189 ++++++++++++++++++
+ arch/x86/kvm/pmu.c                            |  39 +---
+ arch/x86/kvm/pmu.h                            |   4 -
+ arch/x86/kvm/svm/nested.c                     |   6 +
+ arch/x86/kvm/svm/svm.c                        |  10 +-
+ arch/x86/kvm/vmx/nested.c                     |   6 +
+ arch/x86/kvm/vmx/vmx.c                        |   5 +-
+ arch/x86/kvm/x86.c                            |  74 +++----
+ arch/x86/kvm/x86.h                            |   2 -
+ include/uapi/linux/kvm.h                      |  27 +++
+ tools/include/uapi/linux/kvm.h                |   3 +
+ tools/testing/selftests/kvm/Makefile.kvm      |   1 +
+ .../selftests/kvm/x86/vmware_hypercall_test.c | 121 +++++++++++
+ 20 files changed, 614 insertions(+), 94 deletions(-)
+ create mode 100644 arch/x86/kvm/kvm_vmware.c
+ create mode 100644 arch/x86/kvm/kvm_vmware.h
+ create mode 100644 tools/testing/selftests/kvm/x86/vmware_hypercall_test.c
 
-Is this patch still even needed?
+-- 
+2.48.1
 
--- Steve
