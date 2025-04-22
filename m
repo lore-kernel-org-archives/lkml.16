@@ -1,90 +1,82 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15752221287;
-	Tue, 22 Apr 2025 11:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6CD1EFF8E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320464; cv=none; b=R7ng4NikA/l6iy7jUxNIVQgr14O2cgzccOLQEZj20uUgTI1lYdsFzWDBdrlyV9xr4UYqpq/A5iTyjeJE0TDz+Dyux38Au5TsT/7Xj3NL+hG3fDzFPPAa2gzV/l1wHl9ELWTTdTLSSicCoNLZCpRotOyqY06h/1cwV4qErwSEfBw=
+	t=1745320716; cv=none; b=plpq/E+RKKMUAqCH5czEmUVcy+dxXcG8szTzmMe8M/OCHBsHJm6Q4w63W31iniHUOKGWVrGlCLSLho7rMt4PVFWJOpc2J9739hWYmMSmAzdOgLAUjUUoQAVyWzhfXMCiYv4wBtOKSjII/hUIvWdKci8H+bwUNiaeCx97f3OEiUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320464; c=relaxed/simple;
-	bh=/5lKOEIVjGel1cmwA5dz65NG853sDvO3RU57oww58bo=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=opy9HBBN5oA4sEaY88nHbFaX1vVzCXQMy39loZWtJwPBALkuIb9Op0VCHDSY7zlUJ47Hw3Kn4otSCVd/VSN5/JIHgv6F1/IP8oq8WV6C9O2AuZwdI1p7Qq6j6YF/O6mRB0smJuuoDss0G8t27iksE0pFOMBkeQb3H6uWvGZjSxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Zhfkr6NB8z5B1Gs;
-	Tue, 22 Apr 2025 19:14:12 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 53MBE4Yt057963;
-	Tue, 22 Apr 2025 19:14:04 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 22 Apr 2025 19:14:07 +0800 (CST)
-Date: Tue, 22 Apr 2025 19:14:07 +0800 (CST)
-X-Zmail-TransId: 2afa680779ff2ba-70fc4
-X-Mailer: Zmail v1.0
-Message-ID: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
+	s=arc-20240116; t=1745320716; c=relaxed/simple;
+	bh=RKrVrv4Eu+iHztmw8GCYatnp1w2aoaBJW99cfagCW+0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=o/n+fy7ihDM2KEv4/DqIFx4WQaQgHTdkiz3KAOFXc8v7SEm13t/XAD1we3i5qGjMmXNzyyh24vCVscaQMFjfS/kvFhZUjWb5S9eY2gNHNojXdmeunOOWSki2c8+mxhb0ENGVaGklRsIlsriNg79v1KfJivP8ySh8B10Wm6as8rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d90a7e86f7so64900975ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:18:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745320714; x=1745925514;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l/0mBeNeLfZnHsL0Tq11bZ+IRqMyT+i3mn7HuVjeeik=;
+        b=cBUvq3c+abUEYaqbBVzHmqxPSlPXcQcVp+Zla/hqyvgV6kxgAvxTVnLnsCG56znXcM
+         nNShJqVsdVraQHC11ul+kP3/tmckqS1ewIw16LQHBM3w/xzaL5/4FDaHKxffk1C+nZLh
+         jPm4vMVWYKxw3Gab4WuVlo0KlpNPJQmRyZl2BsHGPIDI+2bSzQnzLyw1JTKHUHJOgl7o
+         kD9t+DyOi2cbNnDUFoVgFYw5UCafitG1DwESJbJ27bmxwtsPmoS0yYb/O9FjCuporHLg
+         95KVQ4P3tkVMG2FRXYpjNt9szyY44KzUhPxOQjo2or8tkQGX2Rz5hiI7Ue9q621OrD+N
+         kUIg==
+X-Gm-Message-State: AOJu0YwVYXK1QEMxCm9p1UINSwd8YSxijg/Vk+sFbYQuu5NpZ8wORp3z
+	bbEp5929M5JeooruVwjiWZhG/YR4uvtUdoZjNYQad0o+KeooDoVad4ASwr8DnHnEYrzTkCv4h02
+	iAZ9yLA08B2JJ+k+IIB/zXxYrtqljcKWTLrNIIS4YaXfCpTizgusrm1Y=
+X-Google-Smtp-Source: AGHT+IG/LCz5hwX8EE1zvop26vCL0EztguM1Z0gT6uMRAGS4U5oROFF7iItsKiJn4eDaOEjab/7QFZ+lz6I/rWU8dMQs70RV+2m7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <akpm@linux-foundation.org>
-Cc: <david@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <wang.yaxin@zte.com.cn>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIFJFU0VORCAwLzZdIHN1cHBvcnQga3NtX3N0YXQgc2hvd2luZyBhdCBjZ3JvdXAgbGV2ZWw=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 53MBE4Yt057963
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68077A04.003/4Zhfkr6NB8z5B1Gs
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:2785:b0:3d8:1e96:1f0 with SMTP id
+ e9e14a558f8ab-3d88ee6540amr158629095ab.20.1745320714142; Tue, 22 Apr 2025
+ 04:18:34 -0700 (PDT)
+Date: Tue, 22 Apr 2025 04:18:34 -0700
+In-Reply-To: <000000000000f632ba05c3cb12c2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68077b0a.050a0220.8500a.000e.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] memory leak in cfg80211_inform_single_bss_frame_data
+From: syzbot <syzbot+7a942657a255a9d9b18a@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: xu xin <xu.xin16@zte.com.cn>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-With the enablement of container-level KSM (e.g., via prctl [1]), there is
-a growing demand for container-level observability of KSM behavior. However,
-current cgroup implementations lack support for exposing KSM-related
-metrics.
+***
 
-This patch introduces a new interface named ksm_stat
-at the cgroup hierarchy level, enabling users to monitor KSM merging
-statistics specifically for containers where this feature has been
-activated, eliminating the need to manually inspect KSM information for
-each individual process within the cgroup.
+Subject: Re: [syzbot] memory leak in cfg80211_inform_single_bss_frame_data
+Author: richard120310@gmail.com
 
-Users can obtain the KSM information of a cgroup just by:
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 2772d7df3c93
 
-# cat /sys/fs/cgroup/memory.ksm_stat
-ksm_rmap_items 76800
-ksm_zero_pages 0
-ksm_merging_pages 76800
-ksm_process_profit 309657600
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+---
+ net/wireless/scan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Current implementation supports cgroup v1 temporarily; cgroup v2
-compatibility is planned for future versions.
-
-
-xu xin (6):
-  memcontrol: rename mem_cgroup_scan_tasks()
-  memcontrol: introduce the new mem_cgroup_scan_tasks()
-  memcontrol-v1: introduce ksm_stat at cgroup level
-  memcontrol-v1: add ksm_zero_pages in cgroup/memory.ksm_stat
-  memcontrol-v1: add ksm_merging_pages in cgroup/memory.ksm_stat
-  memcontrol-v1: add ksm_profit in cgroup/memory.ksm_stat
-
- include/linux/memcontrol.h |  7 +++++
- mm/memcontrol-v1.c         | 55 ++++++++++++++++++++++++++++++++++++++
- mm/memcontrol.c            | 28 +++++++++++++++++--
- mm/oom_kill.c              |  6 ++---
- 4 files changed, 91 insertions(+), 5 deletions(-)
-
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index 8bf00caf5d29..d74215d3e3d2 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -2891,6 +2891,7 @@ cfg80211_inform_single_bss_frame_data(struct wiphy *wiphy,
+ 	return &res->pub;
+ 
+ drop:
++	kfree(ies);
+ 	spin_unlock_bh(&rdev->bss_lock);
+ 	return NULL;
+ }
 -- 
-2.39.3
+2.43.0
+
