@@ -1,189 +1,177 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5882116EB
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDB320D51E
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317065; cv=none; b=YhCOmHhfmZqmLtjpGN6MChBcZ9r+xPE+mfG/KAl4B6TOjuqjEdt9yWFFMFWEcUoEz2b4BTLZn/kmAhstZrdu6xKDpc5y6O55e2qSgrreIQLOuYo+iy7SSWVUEHJdeeuLUR3AWbUyAS+IdfRWyYgCXbpFtXBIF3dLPHxKp/TdG4k=
+	t=1745317073; cv=none; b=M4idQU4H4lH50CzMXAQiSrsGaRLnO+ersoR/GXFKeI/o6Vg/qUBSoGPnDv8EGalTNnZWTiNBdjAe/qDwMn3ad0P7Q1tOMeC6yGYDzj89NxnKlRxlEpFi9weYhZbGJT24e1i+xjeAdxAO6iTc7Tou33OJt3jiuRbQUhR++uP25O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317065; c=relaxed/simple;
-	bh=vbfued2uU3GT02rn8Jsz3N23RsRLimsTdInqGFiWRwY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=SNld9YIx5cvKRWvlmS1uY1Wa1sezlI+L3kMjrPunqWkcO7N30Tnpako9db0lDEmVMUUzge7Tihihx3KUconW05UGNamOw698x0SwIYxtRnRxTYQz8mznHyOAxQZtEtgQzaakyJ3fH2+zu+LekA36e8BQApUicPQiZ7cIvwbXLTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jUQA1QH5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=s3IzAOwM; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745317073; c=relaxed/simple;
+	bh=eEoQfmmABCHvojNLudV31VngPDmfK2fp9xWJpCXogBI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eQCNrA3QhfZk3e93IzxjvSVDwrbzUafS+uVAFPQtBx6jRg+qkGKy9+94hc+qfptxg8wgiBSMkW/b1d4AkfO8CzX5xAHn0gxA6qjOp/wNAyroWp5/yMNkllnrWlVn6r8ewQV1jsXMesZr0A98z77CO39Va5SyzO+Clu1UzhOmp5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=DR+rBiFT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jUQA1QH5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="s3IzAOwM"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 82AB125401D3;
-	Tue, 22 Apr 2025 06:17:41 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 06:17:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745317061;
-	 x=1745403461; bh=6iva4M18jqvPbqUQsfEmLC6SwTowYiuBTDLYua0J8Eg=; b=
-	jUQA1QH5M8T2MMgUeICA98D4v0hxkbLIrd3v1/YhAsrlEBy4A4OAxO/4eRDRKvnY
-	rbEc4jUk9JHQDm5+QFCcw8mBc1WjpPAGvnGIJhu2QDh9GDDeabTHSnd6T4Hp5qt9
-	8YzpZ0RQhEWm9qAAyXNC37AyLpffnZga8pihKnrSKgxqn1+HT5ODDxrfYDfTDCA3
-	yK+d+iqnZffaW1WD5byXuXrTNRVj3N5zg2PqiMEYrE4IAFqBiDRL07UdgmWeo6zP
-	MzFZg9kVe0/AB3OxJoEH3LammTSCtM/cdiZGGE0RvreH8QVKxZSudnWTvw9v17XA
-	38x/GZL8cfAoS8whgMiLtQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745317061; x=
-	1745403461; bh=6iva4M18jqvPbqUQsfEmLC6SwTowYiuBTDLYua0J8Eg=; b=s
-	3IzAOwMDJK/3tCzXq0BSl4o53pcm6apEVNWMmnVea+pRbKBPA/TJv8XloxfNqjGZ
-	ry0rAEiQ/uYi4RB5LGyTysxrTk67uDhoAd18UD2m5pGPDScUDMWz83bIdCOhv8OW
-	aBGaoupR36RJd/3n93h7SSsUQhcnfDyLemP0KbdtnqeTG+U2v8RlPTo0WiypSsyJ
-	mVDgP3aiqdA+k6TcSrIUpKcofng00S7Cm6UCIW4sp8+0AuPqhQrXVWU3AGYJhyi0
-	6A0pYvgn/WY3cHnhcwdA64eZHlTvC7mIbmCw/T4uM7lNwXrnQDd8eHvs0k2xhAUl
-	lUT2v/rcu3ONKDqFZ9WIg==
-X-ME-Sender: <xms:xWwHaLHckWPWFUj6mNfhGjM9P87HwRw5idbiCYetLDvA5DaAmeQI3A>
-    <xme:xWwHaIUZhKrWFL75lmCdVof_hmkO-m9aHT_RwyVw-eSjbnj9bhKVzNY0_7BTnN31G
-    k5qzVU8Q_kbOlCA1Sg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeefgeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomh
-    dprhgtphhtthhopeholhhivhgvrhdrshgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthht
-    ohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhorhhvrghlughsse
-    hlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehovgdqlhhkphes
-    lhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:xWwHaNKzKB1leyBRIX9T12vDerzlDT5iIesupnLLFB1NwOHIdzZcuw>
-    <xmx:xWwHaJGoXiJuMZKgqzvMzX46m0RMeEj8qeea5qI3gU-h_btNITf5Bg>
-    <xmx:xWwHaBXQrw3RDmamFOuOWS7AlIetVVK-CBDr46DZHdUDRGofd7yPNg>
-    <xmx:xWwHaEMTEVMfNQebUikiB0pvjZeDaAbcx4J2dTv_w5B69fgbQaYAAw>
-    <xmx:xWwHaE1uhaP4QXGNC3h__nhamlSpe1C15aU9IO3tGeiPjDS6t3PFST6w>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id F1E982220073; Tue, 22 Apr 2025 06:17:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="DR+rBiFT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22435603572so50859345ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745317071; x=1745921871; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X00I2bs07xTT0JGn+iRC8lIN0+rPW4VodnvME71Mc4w=;
+        b=DR+rBiFTDQ02CG5jgmqdbeQODyy5NqmoKx3UjfcPQVEHgHqvU+ieoB7Nru5mSGXIBe
+         58M1bC8WWpD3IOrY43N+M4mfglusQNWvU2YB57wDiRMqtfDb82bWDWofk/qWOETQaiSx
+         vHUNh1SNiTQk2Ni5CLTpr/hlX9aR2hG6whV0WhLDrl6AR+o5MKtbK4ZtCASvA75SzgYC
+         5qxCiCDva6vj1CmLOz0E0JniHPz/D66LujHGBoyq4iJxZ4tI6r/dTTlXcs+rJXVez8gi
+         w9V+wAQlrorEJ2ioyN4yao/DsBZj2XIMfyn/Emd+9u2LFZqFV6wRk4ylR9Bvb/mmo4Bg
+         FZnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317071; x=1745921871;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X00I2bs07xTT0JGn+iRC8lIN0+rPW4VodnvME71Mc4w=;
+        b=rnAUv+R5CIGZLHVYplfB/5UTooPgNX0N///nDSxJ25ewUZIHrqlzb/uxpb9POmJN3E
+         kuMD/oI3DzekupfkAh1N+/w+KC7R7kmj/eT/cIOq9poliTXJ6JWrJMa2TsfTBl03zJQs
+         7P3W2RrZeT/laN7ef/6eAS/6pgSko8SNnYMSxjh2Eajj/CSf8wW0KMmOakCktnOQ2LOW
+         O6h3nMldfdZaZ3kknYnUZXvr698wQemw7T1ktiDD9pdp9PfYi9hvtrP0z9x69tmHQDMA
+         F69ldsQHKbDVTfZWd//KANHNpyAz4GiFXNTMV4v8kUS+izULPqHFUSJUf9EfHQQArWt/
+         jLRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXfLwe2i3iqhUta9wO3LZJ3x8f9RcqthG1h1hlqVlOU+0LprasQabsi08TQZmFg5zFjI7JLfzGwWFltos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfRUwPKYlGVbkvMfNg1umSWknGrhShpzpA0aSTXbEFiSb1a0Lr
+	F+hZZu2xVec4HW0k8uhLEX7oOmQ51JJ/bry+UufEQ03l96666p+BrX9jUp7aBUQ=
+X-Gm-Gg: ASbGnctdF/zC7JA9doeZdczuqQQuDzz+ywyOzCL9gI0+Ul1ddgoOCceO6VErBHgHv06
+	LXYZtxkR/NuiM6xrwzMqI1QVbrY2IFNw4GlJGZ6jC27V6iOwpFCYwS3BJbu87zy/2VXJLEUHjRq
+	DdVx10yC/qEW9vsZulkcygCyPwzq5jQMgtYe5SDHwaddFJxNDrE+t92lTZiNbwSFjFXOllqUfoB
+	vlerYqgWvoNK+hv8d1oaH8rDvE4RQ8LWjElJYj6Cc45JcskuH1Lgmn+8qx7Xm/1vYZ1eAUUUbtX
+	V6BcHuIcS1gVGTbeSRk1g3QLnLaq+Fc5xPDPHc9cq6zHkJAOAluXCiEkm80CEIA/8fI12qlqXGt
+	UgH0X0m5GlA==
+X-Google-Smtp-Source: AGHT+IF66lPXUZ8d1HsX69+jyxVc1Jh9SjZT766uy6dI5gqKQ1najh//E0HYQ7PJOsBvmK715VAAPg==
+X-Received: by 2002:a17:902:d489:b0:224:e33:8896 with SMTP id d9443c01a7336-22c53285bbbmr210518825ad.11.1745317071386;
+        Tue, 22 Apr 2025 03:17:51 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8bf794sm8493042b3a.10.2025.04.22.03.17.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 03:17:50 -0700 (PDT)
+Message-ID: <6e2ed6a9-aed0-4727-b1e3-903d3a7751b5@rivosinc.com>
+Date: Tue, 22 Apr 2025 12:17:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T98d234c297665c71
-Date: Tue, 22 Apr 2025 12:16:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "kernel test robot" <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, "kernel test robot" <lkp@intel.com>,
- linux-kernel@vger.kernel.org, "Ingo Molnar" <mingo@kernel.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>
-Message-Id: <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
-In-Reply-To: <202504211553.3ba9400-lkp@intel.com>
-References: <202504211553.3ba9400-lkp@intel.com>
-Subject: Re: [linus:master] [x86/cpu]  f388f60ca9:
- BUG:soft_lockup-CPU##stuck_for#s![swapper:#]
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] riscv: misaligned: factorize trap handling
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexandre Ghiti <alex@ghiti.fr>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Shuah Khan <shuah@kernel.org>, Andrew Jones <ajones@ventanamicro.com>,
+ Samuel Holland <samuel.holland@sifive.com>
+References: <20250414123543.1615478-1-cleger@rivosinc.com>
+ <20250414123543.1615478-2-cleger@rivosinc.com>
+ <ba11b910-9959-4845-b3a3-dd9a52466823@ghiti.fr>
+ <2c4f4422-d9c9-4d36-b0ef-f68779b91ee9@rivosinc.com>
+ <20250422094419.GC14170@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250422094419.GC14170@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025, at 10:12, kernel test robot wrote:
-> Hello,
->
-> by this commit, we notice big config diff [1]
->
-> then in this rcutorture tests, parent runs quite clean, f388f60ca9 shows
-> various random issues.
 
-Thanks for the report!
 
-From my initial reading, my patch most likely caught a preexisting bug,
-but my patch itself is correct. It's worth investigating regardless,
-at the minimum we should perhaps prevent an invalid configuration from
-building or from booting.
+On 22/04/2025 11:44, Peter Zijlstra wrote:
+> On Tue, Apr 22, 2025 at 09:57:12AM +0200, Clément Léger wrote:
+>>
+>>
+>> On 21/04/2025 09:06, Alexandre Ghiti wrote:
+>>> Hi Clément,
+>>>
+>>>
+>>> On 14/04/2025 14:34, Clément Léger wrote:
+>>>> misaligned accesses traps are not nmi and should be treated as normal
+>>>> one using irqentry_enter()/exit().
+>>>
+>>>
+>>> All the traps that come from kernel mode are treated as nmi as it was
+>>> suggested by Peter here: https://lore.kernel.org/linux-riscv/
+>>> Yyhv4UUXuSfvMOw+@hirez.programming.kicks-ass.net/
+>>>
+>>> I don't know the differences between irq_nmi_entry/exit() and irq_entry/
+>>> exit(), so is that still correct to now treat the kernel traps as non-nmi?
+>>
+>> Hi Alex,
+>>
+>> Actually, this discussion was raised on a previous series [1] by Maciej
+>> which replied that we should actually reenable interrupt depending on
+>> the state that was interrupted. Looking at other architecture/code, it
+>> seems like treating misaligned accesses as NMI is probably not the right
+>> way. For instance, loongarch treats them as normal IRQ using a
+>> irqentry_enter()/exit() and reenabling IRQS if possible.
+> 
+> So, a trap that happens in kernel space while IRQs are disabled, SHOULD
+> really be NMI-like.
+> 
+> You then have a choice, make all such traps from kernel space NMI-like;
+> this makes it easy on the trap handler, since the context is always the
+> same. Mistakes are 'easy' to find.
+> 
+> Or,.. do funny stuff and only make it NMI like if IRQs were disabled.
+> Which gives inconsistent context for the handler and you'll find
+> yourself scratching your head at some point in the future wondering why
+> this one rare occasion goes BOOM.
 
-> config: i386-randconfig-r071-20250410
+Hi Peter,
 
-Generally, I would not expect 'randconfig' kernels to pass all tests,
-and what happened here is that removing the CONFIG_MK8 option made it
-pick some completely different CPU
+Yeah agreed, that might be hazardous.
 
-> compiler: gcc-12
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> x86 mostly does the first, any trap that can happen with IRQs disabled
+> is treated unconditionally as NMI like. The obvious exception is
+> page-fault, but that already has a from-non-preemptible-context branch
+> that is 'careful'.
+> 
+> As to unaligned traps from kernel space, I would imagine they mostly BUG
+> the kernel, except when there's an exception entry for that location, in
+> which case it might do a fixup?
 
-The most relevant options here are
+The misaligned access exception handling currently handles misaligned
+access for the kernel as well (except if explicitly disabled).
 
- -# CONFIG_M486SX is not set
- +CONFIG_M486SX=y
-  # CONFIG_SMP is not set
-  CONFIG_X86_GENERIC=y
+> 
+> 
+> Anyway, the reason these exceptions should be NMI like, is because
+> interrupts are not allowed to nest. Notably something like:
+> 
+> 
+>   raw_spin_lock_irqsave(&foo);
+>   <IRQ>
+>     raw_spin_lock_irqsave(&foo);
+>     ...
+> 
+> Is an obvious problem. Exceptions that can run while IRQs are disabled,
+> must not use locks -- treating them as NMI-like (they are non-maskable
+> after all), ensures this.
 
-In theory, setting X86_GENERIC should make a kernel built for an
-older CPU work on any newer one. In practice, I'm not surprised
-that this fails: While AMD K8 is ten years older than Intel Sandy
-Bridge, they are architecturally still very similar. The i486SX
-is another decade older, but its design is as far removed from
-both K8 and Sandy Bridge as it gets.
+As said in my previous reply, the misaligned handling code does not
+currently access any locks (when handling kernel misaligned accesses)
+and is self contained. That being said, that assumption might not be
+true in future so that might be better to take your approach and treat
+the misaligned access like an NMI.
 
-It would be nice to not have to support 486sx any more.
-We have discussed removing support for older CPUs without
-TSC, FPU and CX8 in the past, but so far always kept them
-around.
+Thanks,
 
-> [ 721.016779][ C0] hardirqs last disabled at (159506): 
-> sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049) 
-> [ 721.016779][ C0] softirqs last enabled at (159174): handle_softirqs 
-> (kernel/softirq.c:408 kernel/softirq.c:589) 
-> [ 721.016779][ C0] softirqs last disabled at (159159): __do_softirq 
-> (kernel/softirq.c:596) 
-> [  721.016779][    C0] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 
-> 6.14.0-rc3-00037-gf388f60ca904 #1
-> [  721.016779][    C0] Hardware name: QEMU Standard PC (i440FX + PIIX, 
-> 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [ 721.016779][ C0] EIP: timekeeping_notify 
-> (kernel/time/timekeeping.c:1522) 
+Clément
 
-Timekeeping code could be related, I see that CONFIG_X86_TSC
-is disabled for i486SX configurations, so even if a TSC is present
-in the emulated machine, it is not being used to measure time
-accurately.
 
-> -CONFIG_X86_CMPXCHG64=y
-
-This could be another issue, if there is code that relies on
-the cx8/cmpxchg8b feature to be used. Since this is a non-SMP
-kernel, this is less likely to be the cause of the problem.
-
-Can you try what happens when you enable the two options, either
-by changing CONFIG_M486SX to CONFIG_M586TSC, or with a patch
-like the one below? Note that CONFIG_X86_CMPXCHG64 recently
-got renamed to CONFIG_X86_CX8, but they are the exact same thing.
-
-diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index f928cf6e3252..ac6cc69060f1 100644
---- a/arch/x86/Kconfig.cpu
-+++ b/arch/x86/Kconfig.cpu
-@@ -317,7 +317,6 @@ config X86_USE_PPRO_CHECKSUM
- 
- config X86_TSC
-        def_bool y
--       depends on (MWINCHIP3D || MCRUSOE || MEFFICEON || MCYRIXIII || MK7 || MK6 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || MVIAC3_2 || MVIAC7 || MGEODEGX1 || MGEODE_LX || MATOM) || X86_64
- 
- config X86_HAVE_PAE
-        def_bool y
-@@ -325,7 +324,6 @@ config X86_HAVE_PAE
- 
- config X86_CX8
-        def_bool y
--       depends on X86_HAVE_PAE || M586TSC || M586MMX || MK6 || MK7 || MGEODEGX1 || MGEODE_LX
- 
- # this should be set for all -march=.. options where the compiler
- # generates cmov.
-
-      Arnd
