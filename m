@@ -1,139 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D571DDA1E;
-	Tue, 22 Apr 2025 19:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70781E0DDC
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745349422; cv=none; b=MH+5XG52MFMD+ekkx8OJdMOSl2V9n67aePSzogK3rDBiN0VR1jFUFpQmTWbVdlBp99pbge/7QRubQub6Ua2pjWHcMsot/+pjxFQME4lrTkcoStC+RwInixg1oZoIcZZJk0u1KDCGdaC8Sjx1lPYTk2fsz14/6hJXMr2ESg0603E=
+	t=1745349454; cv=none; b=bRveQIA6+q+SnlLG2vstX5Y5aOB+tWPB+4pnv+TzD/xGFZvK5AktD6f3giEuezHskzz8jd2uwnLjbrqBYDlXCHo1RJlN6/QTe01UKigZWpt7TK12t5LYCGPCtcezDlNEPtcSjnBUD4fHGvaYgx+tCJi+guwiqf0BuqaLIYZd6xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745349422; c=relaxed/simple;
-	bh=E4Ni34Na2o3km/eA4l2K2UpCxdY9M8GzQSSs3As9otk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ETl9wrj6Akss9sw8M/uda9dosVyktYjAUI9puijNuOslg8JVIFc5EytVrv2Tg1zftzdXyd65jVfownt9xmPLQS9gxYdQOZBEP+cd5CeW7GztTWa3GA54gq4YES2AhJ/p+joCEza05oyU+d9vT61NdJguASX/2GDBq91EI9+pRIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZN2LXvj2; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZN2LXvj2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745349421; x=1776885421;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E4Ni34Na2o3km/eA4l2K2UpCxdY9M8GzQSSs3As9otk=;
-  b=ZN2LXvj2BVvcD1ZfcQKcRt1si49S6AMlsz1OjSKqqIBLrVOnUaU3t3fE
-   HYUq11nboov0OjXy/3ItW5IreArxku1sswOs8TtgwHdY/M8qUbEpZf7Y5
-   zPmyV+8wDob4en49Gl+4soNmafHWAXgWmxRexrF1y2xdrxizgrwtFoFTW
-   LzvR+ANriIxxUGuU4irfFe6UJ8uTJIgR+AZ7y6bzImCREVmyKZH2wXd2X
-   nAfwmMP5A9ecI9MwHdj9Zw57/TWGATNWICtnJjfjBXhmcXtW+BqSfRRcc
-   22TMeUB+VBoNQ1dg8IAH+Iahu7nt0fK9aQo+6+8rbgQ2NPdWu4azOZfe7
-   A==;
-X-CSE-ConnectionGUID: gTrW3JKlQmqOwM1rBlVhrg==
-X-CSE-MsgGUID: Yl/FcbVXRvOdsFiNTEBTfA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="72309536"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="72309536"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 12:17:00 -0700
-X-CSE-ConnectionGUID: 2mpGFwQwRL2vbeH56GXr8A==
-X-CSE-MsgGUID: SjR69FADT5KkWuFWFRyhUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="136887755"
-Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.221.25]) ([10.124.221.25])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 12:16:58 -0700
-Message-ID: <f736128a-04d6-4f81-8aba-67b857e99e7d@intel.com>
-Date: Tue, 22 Apr 2025 12:16:57 -0700
+	s=arc-20240116; t=1745349454; c=relaxed/simple;
+	bh=pnHd2Ycif+rX3H6FenVUfl3wWZDJjQd9f8Z2kbG9kdw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dnpA6Cg5oqoZHV8/pKQM3E8skrw0myHMjejDbMF1V25fzuhVokTMgVmWZKH2teFdX7VblA3optJ0PMDzp0ur2Z2pfYmyQxfidfPQkStpY5e84ihRKLOzSqoJuhD4RiboLM9rmX0g3V18AXvOU4RuxQDS0WgOjAkNyJ30/TuxD6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so104789385ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:17:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745349451; x=1745954251;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cyBDm2ZYj7cLn5Omsf047ecfidS0I0AxTIw8zpsgTPg=;
+        b=R0/g73u+VczgvEuPpbs473BgaWYjwHsOMPdeSj4Rzu01S9y+YrWYZJg3vWM8w74pkc
+         UHIiddparOnnoqUtEXRXAl8nqVvutkqs3a3KB5OgA0et+Vt3FI9arK/yQLEvTKQZcYCE
+         gZMM7mqpp2KiR8xGjhBap6cHrAl9U/qlczeNbRgA+Q0IfwBnQCEGVDo2fhj6Mj2W9P8x
+         CtHuDusJNxf2hyi5LMuJUJOVbd92KMEARwU2x4cZGpp3hmGja0DIkAdqLraJBkw3RZih
+         rcxP7P2WzXJ4w15KCfR2jZ7nEdZU07XIPhHU4w9nXYEG4eYkzi9rRfcqYHw12DoJian1
+         Mu0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXwj+w+KbG2ddbKAp0UHHDJU7KrLd1LHuOVak5AN9Ul6QPdJZnFRcvPOMVtw3Ee+V3Dmlr1D+wwp9+clKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4XTKzyWVSOuW1lw51OMeV9Jz2b2dv7zAWak9mE/RoraBSgD5a
+	HJmy4aPORdtoTXk8KFuOcZZ5zYo3LHGWe1bJBCuy1vXAQSdMXl0ynAifIv4u+wVdBVb8gzr8h1y
+	HK4rV0YpZFBNh6+5HWRKpykE4EHpG9zQOUQ6bOSCEGl6WahIiNYrvkcM=
+X-Google-Smtp-Source: AGHT+IHC1m62G5guSqyDDO0R9CXlhrXtqBEjq7z/HZTO5pgxQKAgDn5jhDJDMLKUWRQQ8rdAk2H7HuEK0FyOsX2khGMYyNeUpJvA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
- kernel support
-To: Andrew Cooper <andrew.cooper3@citrix.com>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
- <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:240a:b0:3d3:d00c:3602 with SMTP id
+ e9e14a558f8ab-3d88edfb6e6mr180204625ab.10.1745349450982; Tue, 22 Apr 2025
+ 12:17:30 -0700 (PDT)
+Date: Tue, 22 Apr 2025 12:17:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6807eb4a.050a0220.36a438.0000.GAE@google.com>
+Subject: [syzbot] [fs?] [mm?] INFO: task hung in page_cache_ra_order
+From: syzbot <syzbot+f719dec20853d1563edc@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, arnd@arndb.de, hch@lst.de, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com, thuth@redhat.com, 
+	willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/22/25 11:17, Andrew Cooper wrote:
-> On 21/04/2025 9:52 pm, Dave Hansen wrote:
->> Purely from the amount of interest and review tags and the whole "v14"
->> thing, it doesn't look like this is very important to anyone. Not to be
->> to flippant about it, but if nobody else cares, why should I (or the
->> other x86 maintainers)?
-> There are several downstreams already using this as a part of their
-> overall system security, one example being
-> https://www.qubes-os.org/doc/anti-evil-maid/
+Hello,
 
-OK, but what problems are they solving by using this as opposed to
-existing trusted boot?
+syzbot found the following issue on:
 
-While I don't doubt that folks _can_ install and use Xen on their
-laptop, it's unclear to me how pervasive this is. Is this just folks
-tinkering around or is this something that has large deployments where
-folks really *CARE* about it?
+HEAD commit:    fc96b232f8e7 Merge tag 'pci-v6.15-fixes-2' of git://git.ke..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=146337cf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2a31f7155996562
+dashboard link: https://syzkaller.appspot.com/bug?extid=f719dec20853d1563edc
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10f9d470580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17125fe4580000
 
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c90d59ce6487/disk-fc96b232.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/78fd0e48c804/vmlinux-fc96b232.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/58353c4d5ca1/bzImage-fc96b232.xz
+
+The issue was bisected to:
+
+commit 3e25d5a49f99b75be2c6cfb165e4f77dc6d739a2
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Wed Oct 23 05:36:37 2024 +0000
+
+    asm-generic: add an optional pfn_valid check to page_to_phys
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166cb4cc580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=156cb4cc580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116cb4cc580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f719dec20853d1563edc@syzkaller.appspotmail.com
+Fixes: 3e25d5a49f99 ("asm-generic: add an optional pfn_valid check to page_to_phys")
+
+INFO: task syz-executor690:5861 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor690 state:D stack:23400 pid:5861  tgid:5860  ppid:5859   task_flags:0x440040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x1b88/0x5240 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x163/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1084 [inline]
+ __down_read_common kernel/locking/rwsem.c:1248 [inline]
+ __down_read kernel/locking/rwsem.c:1261 [inline]
+ down_read+0x6ff/0xa50 kernel/locking/rwsem.c:1526
+ filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
+ page_cache_ra_order+0x45e/0xca0 mm/readahead.c:491
+ filemap_readahead mm/filemap.c:2560 [inline]
+ filemap_get_pages+0x9ec/0x1fc0 mm/filemap.c:2605
+ filemap_splice_read+0x690/0xef0 mm/filemap.c:2981
+ do_splice_read fs/splice.c:979 [inline]
+ splice_direct_to_actor+0x4af/0xc90 fs/splice.c:1083
+ do_splice_direct_actor fs/splice.c:1201 [inline]
+ do_splice_direct+0x281/0x3d0 fs/splice.c:1227
+ do_sendfile+0x582/0x8c0 fs/read_write.c:1368
+ __do_sys_sendfile64 fs/read_write.c:1429 [inline]
+ __se_sys_sendfile64+0x17e/0x1e0 fs/read_write.c:1415
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8463035369
+RSP: 002b:00007f8462fee228 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007f84630bf328 RCX: 00007f8463035369
+RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 00007f84630bf320 R08: 00007f8462fee6c0 R09: 00007f8462fee6c0
+R10: 000400000000003f R11: 0000000000000246 R12: 00007f84630bf32c
+R13: 0000200000001000 R14: 6c756e2f7665642f R15: 00007ffd91caffd8
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180 kernel/locking/lockdep.c:6764
+1 lock held by klogd/5202:
+2 locks held by getty/5601:
+ #0: ffff8880346d00a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000332e2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x5bb/0x1700 drivers/tty/n_tty.c:2222
+1 lock held by syz-executor690/5861:
+ #0: ffff88802395b740 (mapping.invalidate_lock#2){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
+ #0: ffff88802395b740 (mapping.invalidate_lock#2){++++}-{4:4}, at: page_cache_ra_order+0x45e/0xca0 mm/readahead.c:491
+3 locks held by syz-executor690/5862:
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x4ab/0x4e0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0x1058/0x10a0 kernel/hung_task.c:437
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 5862 Comm: syz-executor690 Not tainted 6.15.0-rc2-syzkaller-00278-gfc96b232f8e7 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:lockdep_enabled kernel/locking/lockdep.c:124 [inline]
+RIP: 0010:lock_acquire+0xae/0x2f0 kernel/locking/lockdep.c:5842
+Code: e8 97 67 8e 00 83 3d f0 ae c1 0e 00 0f 84 ef 00 00 00 65 8b 05 c3 35 ca 11 85 c0 0f 85 e0 00 00 00 65 48 8b 04 25 08 60 68 93 <83> b8 ec 0a 00 00 00 0f 85 ca 00 00 00 48 c7 44 24 10 00 00 00 00
+RSP: 0018:ffffc9000408ee68 EFLAGS: 00000246
+RAX: ffff8880782ada00 RBX: ffffffff8ed3df20 RCX: 0000000000000002
+RDX: 0000000000000000 RSI: ffffffff816d9be5 RDI: 1ffffffff1da7be4
+RBP: ffffffff93686020 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc9000408f020 R11: fffff52000811e10 R12: 0000000000000000
+R13: 0000000000000002 R14: ffffffff816dc508 R15: 0000000000000000
+FS:  00007f8462fcd6c0(0000) GS:ffff88812509a000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005606e6d75600 CR3: 000000002f6f0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ class_rcu_constructor include/linux/rcupdate.h:1155 [inline]
+ unwind_next_frame+0xd5/0x23b0 arch/x86/kernel/unwind_orc.c:479
+ __unwind_start+0x59a/0x740 arch/x86/kernel/unwind_orc.c:758
+ unwind_start arch/x86/include/asm/unwind.h:64 [inline]
+ arch_stack_walk+0xe7/0x150 arch/x86/kernel/stacktrace.c:24
+ stack_trace_save+0x11a/0x1d0 kernel/stacktrace.c:122
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4161 [inline]
+ slab_alloc_node mm/slub.c:4210 [inline]
+ kmem_cache_alloc_noprof+0x1e1/0x390 mm/slub.c:4217
+ mempool_alloc_noprof+0x199/0x5a0 mm/mempool.c:402
+ bio_alloc_bioset+0x26f/0x1130 block/bio.c:554
+ bio_alloc_clone block/bio.c:864 [inline]
+ bio_split+0x107/0x490 block/bio.c:1587
+ bio_submit_split+0x98/0x600 block/blk-merge.c:116
+ __bio_split_to_limits block/blk.h:390 [inline]
+ blk_mq_submit_bio+0x18a6/0x25e0 block/blk-mq.c:3110
+ __submit_bio+0x1d2/0x6d0 block/blk-core.c:635
+ __submit_bio_noacct_mq block/blk-core.c:722 [inline]
+ submit_bio_noacct_nocheck+0x57b/0xe30 block/blk-core.c:751
+ bio_chain_and_submit+0xed/0x130 block/bio.c:361
+ __blkdev_issue_zero_pages+0x218/0x290 block/blk-lib.c:222
+ blkdev_issue_zero_pages block/blk-lib.c:238 [inline]
+ blkdev_issue_zeroout+0x651/0x880 block/blk-lib.c:325
+ blkdev_fallocate+0x3dd/0x490 block/fops.c:-1
+ vfs_fallocate+0x627/0x7a0 fs/open.c:338
+ ksys_fallocate fs/open.c:362 [inline]
+ __do_sys_fallocate fs/open.c:367 [inline]
+ __se_sys_fallocate fs/open.c:365 [inline]
+ __x64_sys_fallocate+0xbc/0x110 fs/open.c:365
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8463035369
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f8462fcd228 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
+RAX: ffffffffffffffda RBX: 00007f84630bf338 RCX: 00007f8463035369
+RDX: 0000000008000000 RSI: 0000000000000011 RDI: 0000000000000004
+RBP: 00007f84630bf330 R08: 00007f8462fcd6c0 R09: 00007f8462fcd6c0
+R10: 0008004000000200 R11: 0000000000000246 R12: 00007f84630bf33c
+R13: 0000200000001000 R14: 6c756e2f7665642f R15: 00007ffd91caffd8
+ </TASK>
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.578 msecs
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
