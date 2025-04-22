@@ -1,156 +1,157 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2121.outbound.protection.partner.outlook.cn [139.219.146.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1555720C03F
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317635; cv=fail; b=Dz4CB86CguZPdwBNES6vpveqqliDqICsVOhttZnds91GyVepVuVTMSbygSzLrDdmmhj0aSdJ3IvQKXLBtMaBZhvfXHM0F+eSOAc2XIvWascJiKAJ9kA3Wp6U+f3rqy1bsYkpJ3kVeHsD4tYBKbhmT8zrxvjm7V3ZeSxJbv+c+aI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317635; c=relaxed/simple;
-	bh=w5EGxkPRBvz7166tsFSZhJaNvLQcRE1LYf7KzRxE8X8=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=L28rPEQQpN0gX+NCmUApezCsKgm4ga4S1m8z7bBZWGYrO45xGheHw9YrNdX3RMT36uUoAG7Io3BN7/lIwRsdA/34LE1sbU24YD0XZ6TTnpyxTbn7uVddk4G5xlSGiX+99lU1Ry4jw0K0g47zk64ENSHzr3BnJjmueb9dPKDR9OI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fsQtQ0sT3usdM38843HRvpuRgakDALWbdL8xrUEVo5BkC+CPT18qYjDhV6NmE0z5z9I5EJ/4Q0x7qcooH+OsSsrzCoIansNdbhqyNlwVQFiC+DbLGL9y0ImwyMEMavIz4JVLkuqimSUfuQkUmwMHXWkMUymIUtm62kSCYGgy6D/gZmx6gHGmD+R7S17QspckSr8rPOAf+kWN7XczU/qC8C6ZJ/+p5AXq3RSqGggx1LicdFKvL2sYPoJZ2F3C/FGwCjO7rOlF6WOmJjhlzHDKjwFmkFItc8mpBfYjysQfjV+fM423ExK6c+zvpvVtggrzvbl/GlUVHErq8gDtalgXNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yeLpyXpKtOWjvFBC94p61QdYrj6+aJerJ5wpUcQsdHg=;
- b=QwEgi5Jm+hMG5Mgx0BrZoOOG0PbFyvei8K5F/+6GjHJp1sypbQVu47kdBjNEJ3MPc1U4a0UpfDQQAmGxSGs+JEgmvt4GT3CxOiyBtQnCgXDDkGCmBa64HOPoYzCqOXZoY5bwrH29+ilGoC0Bw3b4ntBMUb9s3xo2aZ+nrvumdkDbHL7vwfoBjFsM5tikhgv8Ny1GS+RoBaQ5pK3+Q2uFaliJ+BHoj4lHBCdzp1uTbciFdbpXM/DGBpxNvn3sy2GuozHiK013P2/lEXEoZDOxrxznyTEGA4xVZnJchKUXCnE/59INsFBwAON9eyP18cjU5WhzIFRf/JhgsC1N1i2sgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1241.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:6::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Tue, 22 Apr
- 2025 10:12:51 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::2595:ef4d:fae:37d7%4]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
- 10:12:51 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Minda Chen <minda.chen@starfivetech.com>
-Cc: Hal Feng <hal.feng@starfivetech.com>,
-	linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] phy: starfive: jh7110-usb: Fix USB 2.0 host occasional detection failure
-Date: Tue, 22 Apr 2025 18:12:44 +0800
-Message-ID: <20250422101244.51686-1-hal.feng@starfivetech.com>
-X-Mailer: git-send-email 2.43.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0014.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::19) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19331201269
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745317671; cv=none; b=iJj9a1052lcmqwKJoAp5rPRW+LBCkZJ5vyJg5AfDXy5/8/iR3SvVgYN4nRs2zXf0VuzK5SY6MYN9fY2CS2hdyrLfyxFQEup6LCOpZsFx/Po0//hlRbOchZImwm/XcQMHbfoqJgdnK19qt1FOLA4cznITuu916w9XUx8lZXKDJEs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745317671; c=relaxed/simple;
+	bh=hDWDlFvFbbmsA5BCq/XHGsuE162uckJtLdIWqrzFSBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GDfesqI34DXsIGUNAsw7dYioB53NeUclOMllT0dYRby6SY9TSRfYObXDWAJ9JZv+gcXGPYV9f/8iYcMRvHCpQq5UMPFbOhL6lspNU9ER49A7RhDKO+dxINbHEsZqgolKIxQOikjuxiX1bw9dNhIk+kQ69dlRcmH8IHa8BzUhK7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XM6R/h6k; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XM6R/h6k"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso43738595e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:27:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745317666; x=1745922466; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pYxOWxJLwzY0xVu+iAjYB5XwjaHAZDDl7p5bmvvzLHA=;
+        b=XM6R/h6kWMHBWyXpSe0lsl08NhGByYNknwcl+OsPwGVcuDwtsQgOg9Ah9IDaZMa0iN
+         TF7MjzaNkbdvHpyAWk8prXykzs7pppId2oON6quxgGL8xEYi3wkd4i9gjGDJPYs99aZQ
+         TdYbyV+qPEfBnDh7UqUQfvQlAtaeThX1M+NHecrjI+Pl+EIHZG+FL+MB63aDoU4t/E7E
+         DM3A7TgUlZz/Y8V7hljx542nqbIPwdnE9SUtHWFu5TLn5ATEp+dd0d3JIAtUwk1D/edm
+         tU9mc/XnC9LIKt2GTyk/1tBjGGI278exYzvNTiLqUrj6SdC1V8lDG1H9s07QI8M+KXq+
+         NTVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317666; x=1745922466;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pYxOWxJLwzY0xVu+iAjYB5XwjaHAZDDl7p5bmvvzLHA=;
+        b=mFPg55ZS0PULNTcHA/MozM/gdKuH85+Tu1L3KClahT6fjJ95wSAbMNkXeo/DRdNqdC
+         oHGZ6sPee2sLTYVpq4lOP3RhpuPqF+CPt/VR4sAj8O9A7mJfjI8PkQYEgf5iYMnqhAcd
+         /IDGw/g9iOIoWIlusb+S3PFt/6eorMMMUTI9N1t9DrR7mZG+LXDzCmzXmtP4qYnJBl7B
+         /wgFtT9lHSzhYYiZKlTD407W+OgNfMcU2o4EO4h+aMTiCaX/dxKFtpwvMhArjtXB/NLO
+         A4p1FLFxewMhEPeyQfATaf6xVIO4VRHTVPA/tFXf6YR4Z2BAxDZBpDo10T023BrDJh0W
+         xGJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwmoqZzTqc/fZHVUa2Qy8IQwAcGV0CVwFsGhkADG/oid8fOhr0qeEMF4WnCSEXfX1AyBLazj+6G5zeDoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA7ZzM4ggJUnCWF/NXBFrg6tR2pj5WKbh928KQz3mgEwDNjhim
+	bDAxfJWzG2W7Bpyjm5vIzxk5YKyOREIdMv/2y7faJ8qPbOjzdTCJEaVaB6fxRK0=
+X-Gm-Gg: ASbGncs48hgsqaRzNWoKKc8A8hofXqNIMJvr/yCPxLZVN3U6/WVIPMzOqeV2A5GKzxR
+	d18x8XftI1rLJ0nUd+HOt6ATAo7Na5pbnymgh4pRW4dfERPhSD4QpEYOINnZ/N6RLrIPDefoapJ
+	3BwKDMtjB9xfqoyCnvHXBlu35377PETckkV5f8EkqGw23QVyjcvmSkGjuFE+2Q8FrDSXakJFOV5
+	BZYfJDlgJYW92If2vDLlyDiFMb2/86K0q8/PDBzOBfkqiNrBzy/GBl3Ry8MZw06oSznvufnEvNT
+	ol/FjPjg8AFE8fRYyNBVmdCCv4x7KLTOez+QiTB+CIEmARpzjnUyyp9oKb8Cj0k36T3Nx8qAKQ0
+	auKNr3q1y
+X-Google-Smtp-Source: AGHT+IFP40idWKQeu7V3uTVBRBpYiXyFIGvknmwTjg4oJeTykFVpaDYIgP8LFyx6kWPloNrS6i30HQ==
+X-Received: by 2002:a05:600c:1e10:b0:43d:300f:fa1d with SMTP id 5b1f17b1804b1-4406ac62b75mr151933265e9.31.1745317666165;
+        Tue, 22 Apr 2025 03:27:46 -0700 (PDT)
+Received: from [192.168.69.169] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c8b0ea0sm8525555e9.2.2025.04.22.03.27.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 03:27:45 -0700 (PDT)
+Message-ID: <d8504829-45fd-4df8-a98d-599d0c8c602d@linaro.org>
+Date: Tue, 22 Apr 2025 12:27:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1241:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b35b912-6a60-49c2-5987-08dd81863d64
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|41320700013|366016|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	dCiqKbL2GShrf62vsS3PyeqtQxVYIn+dBLy4TNj9RiZ608I26wJurVzxfSmoJ6oJ/O37L5Ln5Vrgx6eiT5vTDOVCN+34su03JF1S54c+Y8kbpGgmBMRqLdkJro5dYwVevv4M7YyjYdIzgh9Uv4ek5P9UcAkxv033AUzH2iSEFM8TWCE5XQfViuGj9109h2aEaugX1eOyaVdqX7SdUmVLQphvA+V4ZBMG/Ta3KQ7mndwAuuBufQY/M+fsuyisEzBqRJJM5NhxVEAP6xxmELLm4Oh3zn6Vn3+XlwNPGdYF6RXUsLr1/4GkwzYt0LHOqDP2YbCQG6+iVm4wVOnHWyiACaP3sDyu2JT51z2klZMLQdL9263C8bcmocJWYYbMelmy4/lxaeWcA9lVQRBvgprB9odF2dPH339ksadb72URC6N3FKt6P7eorZ+Z3ibfmxw10fWXjdmWghy9fO9Ic5RZfqK2YmFuYkI02yNE/FRoXfLQWyYYkA3NM9UiGgp3nGLZdzizNU1Q+8Q1MACQ2b8zruhI/ZNf3rxwWHQwBKnjcTUYeB5ZfZjZfbwz3dCVwCpMEqT0CliTgeAzbFFJ6cILS18IhArKi+GmMZeKWT5dLWs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IPwKhXBSgnRb6PzEHARAgurt0ojzhefzIee/cpfI5rIPeLaLVZvBMdrBq+ze?=
- =?us-ascii?Q?eVcbSnZ+ajFvwqN0V/V9fNAzY4w27u2aZmCBDdTBPxKPGkcBgIEYRj8F4JQL?=
- =?us-ascii?Q?r31Ex8NOYhxAjrDdZ3+hHlFwGV5ff8JpyR2KXTj4eJeVuK+/jCxlIotG4Fs5?=
- =?us-ascii?Q?vPY5+tpdk7EblqknfweFLjnlRy2uZ+O+9BlWM71YfeW1EMQjUaQgOh4FodYd?=
- =?us-ascii?Q?ZwLV1PHNbrhuCdwqawLx1bRDgV4kLusid7n5nNYUMBE4PXE2+Uh45/mqZK/8?=
- =?us-ascii?Q?RUjqnY0gWuC02AZgzyK4oeZjBJAEESZZdg7QI53KvxAy1UMifvTO/rPefF2q?=
- =?us-ascii?Q?PDm6qzdg6F4GeuszmaPeYHTmHtys41eyGb59UjDe2A0soxlJyJEbbSfuqARd?=
- =?us-ascii?Q?0oG5Nl1+sP+tx0geUivYjFqrGrB0ihOw1BBYKAabrEUFMLX3n7lbvTmnN40C?=
- =?us-ascii?Q?Qz1r55yXozgZn4yEFxLksNrjm45kD81nUbgV4WXuKe7MT43HvblnkDBrGDSM?=
- =?us-ascii?Q?HjcIID68CooGidMwF6gXTA9oeSerQc01HL3lXFbzrjhFICxvTcaqAo2gBqnI?=
- =?us-ascii?Q?pKEjj/im6GulrkyL3AmY5zHvcV8+quum3P0CXVq1al+OTEd05ojJY0cQlrFQ?=
- =?us-ascii?Q?G5EX+QHDHfqrvpWFWdMFKuf3aMYRzFP5QoQVxervB5G/eQBf7ewVltwtUT9m?=
- =?us-ascii?Q?SAci1LoDpKXdq3+jfgwakUq19+Zt6SaKhqgcJvew67W2ZjeynzBKJ2br38OH?=
- =?us-ascii?Q?wsCh40gKSpKa//rccNwhZ26oXJibOapc+cGABIDXTBuNcRtK9oDdkAynzXbI?=
- =?us-ascii?Q?KEb0bxJnciHD3BhaKNBPF7CZ4kDLfVvCHEkPtpbJrzeI3KeM5ZlsFMpux8dS?=
- =?us-ascii?Q?04PvdtdHkWvak6FPvpsVd4/c489wOrIVwpUgLdEbr/kLpqhqYTpDQZdResru?=
- =?us-ascii?Q?0kZL/v1E3/NXQqZpte96q0UcvvXbYxzArWPEvNAGhGizgox5qRBnNseZ2gtO?=
- =?us-ascii?Q?PRSTtpV+H3weEu/S9ve1ERh10cnGznNcLyFKcrF0gPPi6L9GchOtPA06JDi7?=
- =?us-ascii?Q?5lFYm1neQhWAsOvgobVF9lIu14vOOmOaCFXuvrvim+Z1JFiWftanTO4i4ez4?=
- =?us-ascii?Q?uavtBkEwXZ7Leun5qB2VnJkSmUiKVzHtNw+vbTKNsQNSSwOGrKKwSuuF1lTq?=
- =?us-ascii?Q?3Cz8oRuYxGRhoYPrT+zoLbeJCH5XKrFgei5Ail+SeRgRqg7hvXyBa1/ZOwCZ?=
- =?us-ascii?Q?/U1JhZdUgKf6rmAgI1dxTnS9CxC6fJkuR5KYVADrNHEmq+blxGGNH4K6ZwwK?=
- =?us-ascii?Q?zVwRrNcs0aAQUSRloFpVkiXeSpyyUiJRsW40g/dP6WhSTfDqYwaevMARsFSR?=
- =?us-ascii?Q?qInUEx0sscr+/K8sOYgb+hXO4ozbYBItvwUeqg2mBxq3KMnNZymWkF6YoPoS?=
- =?us-ascii?Q?Y7o53NJmnr5wQyY5AVXXOdQdcyApXEDX7rhinZxI1cVgWQQVkFaaH5pbBhAY?=
- =?us-ascii?Q?3T2+Z30kL9k7OJlEj0V5tE3FtFxwSQ20k5w9QtL7yU7NEHCkh2asP0XdJXk2?=
- =?us-ascii?Q?fvAWfeGCcIgLECYBgb3JLSf2mwovv39oJSiD7pO32jMwmm1Ua811iX2LnOQ8?=
- =?us-ascii?Q?9A=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b35b912-6a60-49c2-5987-08dd81863d64
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 10:12:51.3298
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NEdIqW3p6XnuL6XaCgtTHiCQeTnml7WdZPCqLcdEL8QilIUWcF2j1yyjz2UJEV/zSMAdz+v970lSByldfNqZnHWgtfG4Ei0EfvtXkDeRY/Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1241
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] MIPS: dec: Remove dec_irq_dispatch()
+To: WangYuli <wangyuli@uniontech.com>, Wu Zhangjin <wuzhangjin@gmail.com>
+Cc: guanwentao@uniontech.com, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, macro@orcam.me.uk, niecheng1@uniontech.com,
+ tsbogend@alpha.franken.de, zhanjun@uniontech.com
+References: <24EC7D2CA58B25F5+20250422101855.136675-1-wangyuli@uniontech.com>
+ <093E43FBF9F4F005+20250422102253.137944-4-wangyuli@uniontech.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <093E43FBF9F4F005+20250422102253.137944-4-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-JH7110 USB 2.0 host fails to detect USB 2.0 devices occasionally. With a
-long time of debugging and testing, we found that setting Rx clock gating
-control signal to normal power consumption mode can solve this problem.
+On 22/4/25 12:22, WangYuli wrote:
+> Commit 187933f23679 ("[MIPS] do_IRQ cleanup") introduced dec_irq_dispatch()
+> function. But Subsequent to commit 8f99a1626535 ("MIPS: Tracing: Add
+> IRQENTRY_EXIT section for MIPS"), the dec_irq_dispatch() function is
+> rendered superfluous. Remove it to eradicate compilation warnings.
+> 
+> [ Quoting Maciej W. Rozycki: ]
+> 
+>      It always has been, since its inception, see commit 187933f23679
+>    ("[MIPS] do_IRQ cleanup").
+> 
+>      Up to commit 8f99a16265353 ("MIPS: Tracing: Add IRQENTRY_EXIT section
+>    for MIPS") `do_IRQ' used to be a macro, that's why.  At the time `do_IRQ'
+>    was converted to a macro `dec_irq_dispatch' was created and previously
+>    this place used to call `do_IRQ' too.
+> 
+>      This cleanup should have been made along with commit 8f99a16265353, so
+>    it's pretty old a technical debt being sorted here.
+> 
+> [ Fix follow error with gcc-14 when -Werror: ]
+> 
+> arch/mips/dec/setup.c:780:25: error: no previous prototype for ‘dec_irq_dispatch’ [-Werror=missing-prototypes]
+>    780 | asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
+>        |                         ^~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[7]: *** [scripts/Makefile.build:207: arch/mips/dec/setup.o] Error 1
+> make[6]: *** [scripts/Makefile.build:465: arch/mips/dec] Error 2
+> make[5]: *** [scripts/Makefile.build:465: arch/mips] Error 2
+> make[5]: *** Waiting for unfinished jobs....
+> make[4]: *** [Makefile:1992: .] Error 2
+> make[3]: *** [debian/rules:74: build-arch] Error 2
+> dpkg-buildpackage: error: make -f debian/rules binary subprocess returned exit status 2
+> make[2]: *** [scripts/Makefile.package:126: bindeb-pkg] Error 2
+> make[1]: *** [/mnt/83364c87-f5ee-4ae8-b862-930f1bd74feb/Projects/CommitUpstream/LinuxKernel/Temp/linux/Makefile:1625: bindeb-pkg] Error 2
+> make: *** [Makefile:251: __sub-make] Error 2
+> 
+> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=187933f23679c413706030aefad9e85e79164c44
+> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8f99a162653531ef25a3dd0f92bfb6332cd2b295
+> Link: https://lore.kernel.org/all/alpine.DEB.2.21.2502220019210.65342@angie.orcam.me.uk/
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>   arch/mips/dec/int-handler.S | 2 +-
+>   arch/mips/dec/setup.c       | 6 ------
+>   2 files changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/arch/mips/dec/int-handler.S b/arch/mips/dec/int-handler.S
+> index 011d1d678840..a0b439c90488 100644
+> --- a/arch/mips/dec/int-handler.S
+> +++ b/arch/mips/dec/int-handler.S
+> @@ -277,7 +277,7 @@
+>   		 srlv	t3,t1,t2
+>   
+>   handle_it:
+> -		j	dec_irq_dispatch
+> +		j	do_IRQ
+>   		 nop
+>   
+>   #if defined(CONFIG_32BIT) && defined(CONFIG_MIPS_FP_SUPPORT)
+> diff --git a/arch/mips/dec/setup.c b/arch/mips/dec/setup.c
+> index 6b100c7d0633..affae92f1918 100644
+> --- a/arch/mips/dec/setup.c
+> +++ b/arch/mips/dec/setup.c
+> @@ -771,9 +771,3 @@ void __init arch_init_irq(void)
+>   			pr_err("Failed to register halt interrupt\n");
+>   	}
+>   }
+> -
+> -asmlinkage unsigned int dec_irq_dispatch(unsigned int irq)
+> -{
+> -	do_IRQ(irq);
+> -	return 0;
+> -}
 
-Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
----
- drivers/phy/starfive/phy-jh7110-usb.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/phy/starfive/phy-jh7110-usb.c b/drivers/phy/starfive/phy-jh7110-usb.c
-index cb5454fbe2c8..b505d89860b4 100644
---- a/drivers/phy/starfive/phy-jh7110-usb.c
-+++ b/drivers/phy/starfive/phy-jh7110-usb.c
-@@ -18,6 +18,8 @@
- #include <linux/usb/of.h>
- 
- #define USB_125M_CLK_RATE		125000000
-+#define USB_CLK_MODE_OFF		0x0
-+#define USB_CLK_MODE_RX_NORMAL_PWR	BIT(1)
- #define USB_LS_KEEPALIVE_OFF		0x4
- #define USB_LS_KEEPALIVE_ENABLE		BIT(4)
- 
-@@ -78,6 +80,7 @@ static int jh7110_usb2_phy_init(struct phy *_phy)
- {
- 	struct jh7110_usb2_phy *phy = phy_get_drvdata(_phy);
- 	int ret;
-+	unsigned int val;
- 
- 	ret = clk_set_rate(phy->usb_125m_clk, USB_125M_CLK_RATE);
- 	if (ret)
-@@ -87,6 +90,10 @@ static int jh7110_usb2_phy_init(struct phy *_phy)
- 	if (ret)
- 		return ret;
- 
-+	val = readl(phy->regs + USB_CLK_MODE_OFF);
-+	val |= USB_CLK_MODE_RX_NORMAL_PWR;
-+	writel(val, phy->regs + USB_CLK_MODE_OFF);
-+
- 	return 0;
- }
- 
-
-base-commit: a33b5a08cbbdd7aadff95f40cbb45ab86841679e
--- 
-2.43.2
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
