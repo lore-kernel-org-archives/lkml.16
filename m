@@ -1,116 +1,165 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B204310A1F;
-	Tue, 22 Apr 2025 03:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C5F196;
+	Tue, 22 Apr 2025 03:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745290993; cv=none; b=RoRvZVPbq8HAlJ9WZqmvXfJqvW7Ocw9/UdYxNmZo9rniK0/p2qLe7LyVgyu8N9pluYnhdqCEINMHSotjYGi52nhaa8y+LoVqR4z0GZKuQivzDj1+FDIf6xaSi0zRuA5D58ur+DQQncGOvCY6edJaVxSCMr9XwNiAri81Ab0N8U8=
+	t=1745291122; cv=none; b=ifqk23xi15001B+I36g1gJkg2P0UYIR14OSJcapFiNR42XhsY7zFfnuMRhO+raimpVajIkO0DgvALR/VjDLQrI9rjaf6+YY9MnCT0lRzYiznC5gQZ46CpNqds+Pk11UY54H2aRkovqbKZtPeG9qfG8P2BYC5F8SNgsMY4bFB74o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745290993; c=relaxed/simple;
-	bh=Uq7MMe7AeeZt9Qok1hStV+tYZiwjOTGaEkdNt5tijCQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Woic1cBSsVJ7mODHhXzam60lcAl7vHvvqufVPmYnPal0+BJSW8jwnn5OH2/9peeueaToCYRI3PTdgosnbyWXHmA04RezchsDRy9tUHs8FbgPM3Wd1RzsyaGQ1ado4JLACluNduiqsS/UdYbghdvoVaM4pl5x1QH6VkzWfJ5GgNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZhRqZ2Y9Bz4f3jY9;
-	Tue, 22 Apr 2025 11:02:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 412921A01A5;
-	Tue, 22 Apr 2025 11:02:58 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_gBgdomaHKKA--.12010S3;
-	Tue, 22 Apr 2025 11:02:58 +0800 (CST)
-Subject: Re: 10x I/O await times in 6.12
-To: Keith Busch <kbusch@kernel.org>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Matt Fleming <mfleming@cloudflare.com>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team <kernel-team@cloudflare.com>, "yukuai (C)" <yukuai3@huawei.com>
-References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
- <aAZiwGy1A7J4spDk@kbusch-mbp.dhcp.thefacebook.com>
- <ad67b397-9483-d3c3-203e-687cefb9e481@huaweicloud.com>
- <aAbzW1POQP9z5BWS@kbusch-mbp.dhcp.thefacebook.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <98915ccf-4fe8-5d96-0b59-b3f3d5a66f81@huaweicloud.com>
-Date: Tue, 22 Apr 2025 11:02:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1745291122; c=relaxed/simple;
+	bh=If54DspNqfshq1hJDXNPcwFEPnFU21I2Wa6Wm2egSek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L0gDE1McBtDx6h9zViLMz8NHkTiIFKE7IIOzXovBJV8Lw5CdiLKjKBAAz91VwRwsTeHYhOwDn2ITjOy+cw0HMlfn0EvVbQjScfyHuIK8IAxxu+SCywIuub3yHBLKh+u2awxovZGx2x+Q6/1q2/h9jQLPcOgh5f+CoDFA6AJNUW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBVk/HsO; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBVk/HsO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745291121; x=1776827121;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=If54DspNqfshq1hJDXNPcwFEPnFU21I2Wa6Wm2egSek=;
+  b=hBVk/HsOSfJYL9MzL410DaLXfa1LDCjbGaSOM+M+Eq3Guh9b7zHF6aQG
+   eWkSqupLg0IEHjA43OlhdFq4Lau/+5Dtft4H8AJg+TXXo1G1fOAA9Ts85
+   FqqnBKEK2sCq3y2Yaym4Iu6wXds2yLciKrDTZuS/6dugI0sDONWrbHIKM
+   WcVZhrA4B91UnIea76SksoClcVt6+OQO0VrfoVGpgp1Cp5Uc80HDiVeUd
+   X92GhWpppmZ1Ugf3JiQdn1axJJkNfn+YgVx30opXlGbw5qfnoFri+rMzd
+   fBLfaUyUusIYBqnueWkWuJX1DaAUOnSE84RchvfWVVjOjmjG9y0C7CgbU
+   g==;
+X-CSE-ConnectionGUID: Zd1L23iISPSO4xA60e0V3A==
+X-CSE-MsgGUID: i4kqQ1VkSGmc8f+22fdFJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11410"; a="57021651"
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="57021651"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 20:05:18 -0700
+X-CSE-ConnectionGUID: oSSK54WRTuqYl6gRvBh3OQ==
+X-CSE-MsgGUID: isIWnMFgQbGktNJfHUUkiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,229,1739865600"; 
+   d="scan'208";a="135970525"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2025 20:05:14 -0700
+Message-ID: <5906dfa9-3fca-4e29-b6ab-abd2c02ae9fe@linux.intel.com>
+Date: Tue, 22 Apr 2025 11:05:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aAbzW1POQP9z5BWS@kbusch-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 16/22] perf/core: Support to capture higher width
+ vector registers
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-17-dapeng1.mi@linux.intel.com>
+ <20250415143626.GF4031@noisy.programming.kicks-ass.net>
+ <26799b7e-c3a6-4de2-afd1-7bda0639fa37@linux.intel.com>
+ <20250416155327.GD17910@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250416155327.GD17910@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl_gBgdomaHKKA--.12010S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF4fCFW7Xw4fJFW8Zr4DCFg_yoW8Aw4UpF
-	Z0qa1ftr4UAFy0yw4Ivrs7XryrK347Gry2vryrGryavryDKrnakrW2kws09a47ZF1rC3yI
-	yFWrK347X34jyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
-	IcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
-	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
-	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
-	IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
-	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUBVbkUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi,
 
-在 2025/04/22 9:39, Keith Busch 写道:
-> On Tue, Apr 22, 2025 at 09:28:02AM +0800, Yu Kuai wrote:
->> Hi,
+On 4/16/2025 11:53 PM, Peter Zijlstra wrote:
+> On Wed, Apr 16, 2025 at 02:42:12PM +0800, Mi, Dapeng wrote:
+>
+>> Just think twice, using bitmap to represent these extended registers indeed
+>> wastes bits and is hard to extend, there could be much much more vector
+>> registers if considering AMX.
+> *Groan* so AMX should never have been register state :-(
+>
+>
+>> Considering different arch/HW may support different number vector register,
+>> like platform A supports 8 XMM registers and 8 YMM registers, but platform
+>> B only supports 16 XMM registers, a better way to represent these vector
+>> registers may add two fields, one is a bitmap which represents which kinds
+>> of vector registers needs to be captures. The other field could be a u16
+>> array which represents the corresponding register length of each kind of
+>> vector register. It may look like this.
 >>
->> 在 2025/04/21 23:22, Keith Busch 写道:
->>> On Mon, Apr 21, 2025 at 09:53:10AM +0100, Matt Fleming wrote:
->>>> Hey there,
->>>>
->>>> We're moving to 6.12 at Cloudflare and noticed that write await times
->>>> in iostat are 10x what they were in 6.6. After a bit of bpftracing
->>>> (script to find all plug times above 10ms below), it seems like this
->>>> is an accounting error caused by the plug->cur_ktime optimisation
->>>> rather than anything more material.
->>>>
->>>> It appears as though a task can enter __submit_bio() with ->plug set
->>>> and a very stale cur_ktime value on the order of milliseconds. Is this
->>>> expected behaviour? It looks like it leads to inaccurate I/O times.
->>>
->>> There are places with a block plug that call cond_resched(), which
->>> doesn't invalidate the plug's cached ktime. You could end up with a
->>> stale ktime if your process is scheduled out.
+>> #define    PERF_SAMPLE_EXT_REGS_XMM    BIT(0)
+>> #define    PERF_SAMPLE_EXT_REGS_YMM    BIT(1)
+>> #define    PERF_SAMPLE_EXT_REGS_ZMM    BIT(2)
+>>     __u32    sample_regs_intr_ext;
+>>     __u16    sample_regs_intr_ext_len[4];
+>>     __u32    sample_regs_user_ext;
+>>     __u16    sample_regs_user_ext_len[4];
 >>
->> This is wrong, scheduled out will clear cached ktime. You can check
->> it easily since there are not much caller to clear ktime.
-> 
-> Huh? cond_resched() calls __schedule() directly via
-> preempt_schedule_common(), which most certainly does not clear the
-> plug's time.
+>>
+>> Peter, how do you think this? Thanks.
+> I'm not entirely sure I understand.
+>
+> How about something like:
+>
+> 	__u16 sample_simd_reg_words;
+> 	__u64 sample_simd_reg_intr;
+> 	__u64 sample_simd_reg_user;
+>
+> Then the simd_reg_words tell us how many (quad) words per register (8 for
+> 512) and simd_reg_{intr,user} are a simple bitmap, one bit per actual
+> simd reg.
+>
+> So then all of XMM would be:
+>
+>   words = 2;
+>   intr = user = 0xFFFF;
+>
+> (16 regs, 128 wide)
+>
+> Whereas ZMM would be:
+>
+>   words = 8
+>   intr = user = 0xFFFFFFFF;
+>
+> (32 regs, 512 wide)
+>
+>
+> Would this be sufficient? Possibly we can split the words thing into two
+> __u8, but does it make sense to ask for different vector width for
+> intr and user ?
 
-Yes, this is the preempt case, where pluged IO is not issued, this
-behaviour is already known. I thought you mean the normal case, like
-you said below. :(
-> 
-> The timestamp is only invalidated from schedule() or
-> rt_mutex_post_schedule(). You can check it ... "easily".
+Hi Peter,
 
-So, either preempt takes a long time, or generate lots of bio to plug
-takes a long time can both results in larger iostat IO latency. I still
-think delay setting request start_time to blk_mq_flush_plug_list() might
-be a reasonable fix.
+Discussed with Kan offline, it sounds to be a real requirement for user to
+sample multiple different kinds of SIMD registers, such as user may hope to
+sample OPMASK and ZMM registers simultaneously. So to meet the requirement
+and make the interface more flexible, we enhance the interface to this.
 
-Thanks,
-Kuai
-> 
-> .
-> 
+    /* Bitmap to represent SIMD regs. */
+    __u64 sample_simd_reg_intr;
+    __u64 sample_simd_reg_user;
+    /*
+     * Represent each kind of SIMD reg size (how many u64 words are needed)
+     * in above bitmap order, e.g., x86 YMM regs are 256 bits and occupy 4
+u64 words.
+     */
+    __u8 sample_simd_reg_size[4];
+
+sample_simd_reg_intr/sample_simd_reg_user represents SIMD regs bitmap, e.g.
+on x86 platform, bit[7:0] represents OPMASK[7:0], bit[23:8] represents
+YMM[15:0], bit[55:24] represents ZMM[31:0].
+
+sample_simd_reg_size[] represents how many u64 words are needed in above
+bitmap order for each kind of SIMD regs, e.g., sample_simd_reg_size[0] = 1,
+which represents each OPMASK occupies 1 u64 word, sample_simd_reg_size[1] =
+4, which represents YMM occupies 4 u64 words and ample_simd_reg_size[2] =
+8, which represents each ZMM occupies 8 u64 words.
+
+How do you think this interface? Thanks.
+
+Dapeng Mi
 
