@@ -1,107 +1,73 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E418F196;
-	Tue, 22 Apr 2025 04:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7AD18A6AB;
+	Tue, 22 Apr 2025 04:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745295765; cv=none; b=PAVyP+VTCE4YuP1u3AtznrKPJUNviK58XqP5YPMiNf84oqerbgDbgIst/27OzKt1sjmD2LYuNR25V5t5uSA5FSQV5IQGd9LMMfPDPmnaO+w7Did0dS56E9T7/H76NY0q/RzyiXvj8TVpaGmepzvg5J+VERxiSzG15A7scSpVAgY=
+	t=1745295819; cv=none; b=W8U4DKMbYI7kJPrTrF1DGgg98pnfL4m05E9q3QVfrWeEg9nfOTvFrJ7hXqO39sDZfr/3o9dDIFPbA/4+Cgo7Sjqek6wvv3f5v0mEB5yRpPdP2YG5Syp/XcV0VMprozE9Nu4yF1ou8oDgkB54qa99LAYngFkL9pQWxhIPFM55PRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745295765; c=relaxed/simple;
-	bh=2o6j5omeEkA4JCWhDM9N80NVkPESG6qQso4cQHUzBdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iZ56ghvVhLWAvqJC6YAMo1ym9z2Y6CA+LqMmsQdKHMYBv3kizAQ7o9e8ibNABFvnPp3vpeDbdeWysIrWqUZ9uW4CA8l0ObZwvjRgmgTNtt1BPEceh6LEHc4t9puYgP+snW8hVuWtGwbetMZi1vKIPY12DdjAnifbNMuXwMs6gEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowABnoQmCGQdobWslCw--.63320S2;
-	Tue, 22 Apr 2025 12:22:29 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: arend.vanspriel@broadcom.com,
-	kvalo@kernel.org
-Cc: jacobe.zang@wesion.com,
-	sebastian.reichel@collabora.com,
-	christophe.jaillet@wanadoo.fr,
-	erick.archer@outlook.com,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 RESEND] brcm80211: fmac: Add error handling for brcmf_usb_dl_writeimage()
-Date: Tue, 22 Apr 2025 12:22:02 +0800
-Message-ID: <20250422042203.2259-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1745295819; c=relaxed/simple;
+	bh=ZsL/pPv9Fie+gQQJKm5n3DFw8zPfnFLMFMmjcCsXAtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dl540kjUs74H43ype5hpehida0zKhqqhXqzFxW8fsStsQZvnJ9Vdxt2LIub3dRyZRU4ajnlq+eqeZTPf2GK1wGpz6aO+I72QKsoVVkX0tVEeGz0E5enCaXcoIWcbRKClUK0ubrh6WILn3uha+eSMNyZNSCFQN+6LCdQND4YHC9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id A64FD68BFE; Tue, 22 Apr 2025 06:23:30 +0200 (CEST)
+Date: Tue, 22 Apr 2025 06:23:30 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v8 04/24] iommu: add kernel-doc for iommu_unmap and
+ iommu_unmap_fast
+Message-ID: <20250422042330.GA27723@lst.de>
+References: <cover.1744825142.git.leon@kernel.org> <d3ad1e84d896aea97ebbd01c414fb1f07dc791d3.1744825142.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABnoQmCGQdobWslCw--.63320S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJryfCw43Aw4DWw43uF18Grg_yoW8Aw1fp3
-	Z7XasrurykW3yakw47JFs7AFykKa4rta4kCFW8ZwnxXF4kCw1vkrs8KFyFkw4DCFWxAa47
-	JFs8Ary7Jrs8KFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r45MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjwFxUUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsAA2gG6BfPZQAAs0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3ad1e84d896aea97ebbd01c414fb1f07dc791d3.1744825142.git.leon@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-The function brcmf_usb_dl_writeimage() calls the function
-brcmf_usb_dl_cmd() but dose not check its return value. The
-'state.state' and the 'state.bytes' are uninitialized if the
-function brcmf_usb_dl_cmd() fails. It is dangerous to use
-uninitialized variables in the conditions.
+On Fri, Apr 18, 2025 at 09:47:34AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Add kernel-doc section for iommu_unmap and iommu_unmap_fast to document
+> existing limitation of underlying functions which can't split individual
+> ranges.
 
-Add error handling for brcmf_usb_dl_cmd() to jump to error
-handling path if the brcmf_usb_dl_cmd() fails and the
-'state.state' and the 'state.bytes' are uninitialized.
-
-Improve the error message to report more detailed error
-information.
-
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: stable@vger.kernel.org # v3.4+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 2821c27f317e..d06c724f63d9 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -896,14 +896,16 @@ brcmf_usb_dl_writeimage(struct brcmf_usbdev_info *devinfo, u8 *fw, int fwlen)
- 	}
- 
- 	/* 1) Prepare USB boot loader for runtime image */
--	brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
-+	err = brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
-+	if (err)
-+		goto fail;
- 
- 	rdlstate = le32_to_cpu(state.state);
- 	rdlbytes = le32_to_cpu(state.bytes);
- 
- 	/* 2) Check we are in the Waiting state */
- 	if (rdlstate != DL_WAITING) {
--		brcmf_err("Failed to DL_START\n");
-+		brcmf_err("Invalid DL state: %u\n", rdlstate);
- 		err = -EINVAL;
- 		goto fail;
- 	}
--- 
-2.42.0.windows.2
+This actually only adds kerneldoc to iommu_unmap_fast.
 
