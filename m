@@ -1,176 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E418B1F3B98;
-	Tue, 22 Apr 2025 09:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3061F2382;
+	Tue, 22 Apr 2025 09:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313804; cv=none; b=pIuJyzhnzNPUNOcVqNfLv9w8BATsTH1s+a+EtE1sPiH3eq2sqFWGPu+5070xWEGZLeJCBC5xV6kGa0WV/ZKnYS6gZPN+wszqnjhMLjMmHfqj003eelOtgKV3Z9iNc511qmbeRXHY89YS0tScMYP3Ml4SueZYPRX7UVRGpY7SeE8=
+	t=1745313933; cv=none; b=OEX6TqK6F/WbvBi0DIVbleXwz1hQAGrHrHTNX7bmEZx1kol0Jx5JbVt8kmdZaXOaN76wOuWMDwVG7UcvdM2Svgu/OiodAwlfRjM59ebCFHhXJZLt/PgCmdoHecPHQ9c50rfmBfTMpUrr/2e3PsQXW7t5P6/60kfyxguzjpit3ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313804; c=relaxed/simple;
-	bh=1I31TMfaIyDHfwOWMX/uBcvIKjblAc3bvEHx9bVoZnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WnvgPe6gjsKzH5vo7OsybNw8xnWT00uXRdIgPWOX7sdekl3pcCFXaiGfVGj3pGmVBVsrRSQmSSzZ6tRQpWOeTbQbhR32Sm7ljelRPH/acPu9IpFPegbwpUOxP0I8MCxdLALxSDH3HcDBMsSHBBMz1s2izKrkhbJR6MK0xbjXHO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3H3Cwwa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745313933; c=relaxed/simple;
+	bh=5HXOfChdntgYLWeKK+lob+HMvx+eoXiews4WXrPNji0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Uzi/+pxKzhMlxUMePJDIVEWYsZZlXHEmff7c46ufxllbQfnECKInJO181cAVionXpBP60kq3kK30E8DCPoiC7fFBYOZPe3gzWvu4BgywW2PQGvEWFXLkX3Pe8VAA43Q4tVHmZ6Q92w3jqp2L4neGAR34jGi2QoHdPe3PxKbqcss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WR1PNINK; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3H3Cwwa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532E2C4CEE9;
-	Tue, 22 Apr 2025 09:23:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745313803;
-	bh=1I31TMfaIyDHfwOWMX/uBcvIKjblAc3bvEHx9bVoZnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s3H3CwwajuUi+FwVqkRsXIHP/6guw/UjoiZBWihMnWUqAhZ5efisYHogcBe0DHHTz
-	 w8Rogdmc9Uj2kAbYXHND5eHRPkIMkQ34/oa4ueMjdKo47+U8lhgDD0YlMQnWTWxj9Q
-	 ddC5VUOmdU9MI12RdnMcKWOSohEZnit7VmOCcpcepTAmyCPK2axv63dQbARtf0KfFJ
-	 8ekstAqpUgeIr+wcTLTr8r0Pmm5GcBgaHjzuaR88czqqXlWGwASSJSh6006FPJ4bML
-	 DRdXU4dcYLuWgUbfvQhnvgTN8UZYJmk+su4bfv8Wdx6yMXg5wvURqSNUJ9xpGK6QBZ
-	 BRAVusRcTwNCw==
-Date: Tue, 22 Apr 2025 11:23:17 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Tejun Heo <tj@kernel.org>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Greg Thelen <gthelen@google.com>, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH v2] memcg: introduce non-blocking limit setting option
-Message-ID: <20250422-daumen-ozonbelastung-93d90ca81dfa@brauner>
-References: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WR1PNINK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745313878;
+	bh=OGDnSMArk/WrjO2UTNNnGOJJKTaitd2ENOoLaZYFrmo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=WR1PNINKFJ7G0lQVO2eczeXOsij7wKAbOWPlTPRpXzZA7PASGsGD04g0aTwJ0HEII
+	 9aAKzQP+iI6Z8wEkATXkXLBKJqrVTEV53lAj3PhicUPQtdixyW3hMsx5yw1pg+RhwL
+	 T5DQ8g6Fwlkz+lvCyBKJe05SpaVNE80AXYYC5xJ4=
+X-QQ-mid: zesmtpip4t1745313861t42375df0
+X-QQ-Originating-IP: rbmCeOYn6fTV13+abiw/rrLT1iX6vvePKYuombisU2k=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 17:24:19 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4302771691292400825
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: macro@orcam.me.uk,
+	tsbogend@alpha.franken.de,
+	wangyuli@uniontech.com,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5.4+] MIPS: ds1287: Match ds1287_set_base_clock() function types
+Date: Tue, 22 Apr 2025 17:24:15 +0800
+Message-ID: <418FF04C2B5B986B+20250422092415.120647-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250419183545.1982187-1-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Oah+0YjUCNSuh5RbwCP+5zcKnQdodoC5VcXnY5+8dpcUpUOEiDuLG1HS
+	Yv5+aZ7PCsUhuqpyKa7lL1VoHpjDX9KQar9ddnI3b3tDM+VDMnhc4SknWGmfyysswLw6/5L
+	9ExNFJANE2bOkI5gzS8AUjZmBqjgR2HsG7u8d2bkcWHAyRcFCUVJJaOd2ETEqmx+nfqSFYB
+	g86fOddrLdpYQ6OURCSsao31VhsdrxygvynxtkA8kS6KH2wl0BAkV56Z8xOYQ3urp1iYAwB
+	wpysMVzja6Mlp7aWuM3tvc0liKG5GT5pBW58sRJL9LoGBGs8PNvCl3/UN9KTG3VKwOgoFXP
+	rRstCpBXEYprCzfGmL6MRMIqQt7p3X19YqL7/4D7ZwFfJP/JYz6mSjvgJDhuo2Atq6oy4Zh
+	jmWsyo4KFavo9pbI4DtZ/UlOr/EfCPMS0gxELj0Gz7aavsROG1PJHh13QW1ggrgBk7qrFVQ
+	Hp73ppOJgwJlQ8f8DAJfyDnC3tmSBvA3sDfgykv24q2P34lgLkOtvMRU5mAGcWafFdxM/Ht
+	L/Q5ns9PzcWiuksOEJhVSsQ68zwenRmtkAxcXhMpw9G0vFMOrGKBxaTPRWv2+KzEcu33B2B
+	DsQZJG9zSk4Cq6kUGuFbIxT+4Mv9brYc1Yw2304UpspVVPwMoVyjX58/+OExarANpRMXOHY
+	2Idjx5GzjgBZZomsO1cZizJmWXbLdqBqoTgW6fpC6C66t65gDcBLx6FRGNm3wSueSSrZ/XR
+	npmE1HxmLyUOUISthvZ4OFun53gUavW/A+XhmBggBxZrtbXEn6PMk56dRTzdaHnMUmcZDhe
+	+XKeLo3v8N5gNQZYwIUI3higNRvc6yS1WVrcNUwamhRl8tCWGEFNYeEslyetXWbdwZTqmrR
+	3eW0zYb0ULcY09JpQmCaN7zuVeR5yu29A7amzI74cqMiTbj8IsLmsGyF0iGfOI+scgIdBgL
+	g2bG6HCu7iVt1aWim//K1s1WkAG3Rl0WzGlKGs39vpElqIR0GQsFlGSqYOqA25eIBUhHzHW
+	Bh/ACwiYtUULB+4xTr/Os771X+Unu8NrDveeDVkkDJVOJgc3m4B65W7HQHRQmD3NsHN2/qz
+	wY45oLl+G49t/hU/ZMuyJM=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Sat, Apr 19, 2025 at 11:35:45AM -0700, Shakeel Butt wrote:
-> Setting the max and high limits can trigger synchronous reclaim and/or
-> oom-kill if the usage is higher than the given limit. This behavior is
-> fine for newly created cgroups but it can cause issues for the node
-> controller while setting limits for existing cgroups.
-> 
-> In our production multi-tenant and overcommitted environment, we are
-> seeing priority inversion when the node controller dynamically adjusts
-> the limits of running jobs of different priorities. Based on the system
-> situation, the node controller may reduce the limits of lower priority
-> jobs and increase the limits of higher priority jobs. However we are
-> seeing node controller getting stuck for long period of time while
-> reclaiming from lower priority jobs while setting their limits and also
-> spends a lot of its own CPU.
-> 
-> One of the workaround we are trying is to fork a new process which sets
-> the limit of the lower priority job along with setting an alarm to get
-> itself killed if it get stuck in the reclaim for lower priority job.
-> However we are finding it very unreliable and costly. Either we need a
-> good enough time buffer for the alarm to be delivered after setting
-> limit and potentialy spend a lot of CPU in the reclaim or be unreliable
-> in setting the limit for much shorter but cheaper (less reclaim) alarms.
-> 
-> Let's introduce new limit setting option which does not trigger
-> reclaim and/or oom-kill and let the processes in the target cgroup to
-> trigger reclaim and/or throttling and/or oom-kill in their next charge
-> request. This will make the node controller on multi-tenant
-> overcommitted environment much more reliable.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
-> Changes since v1:
-> - Instead of new interfaces use O_NONBLOCK flag (Greg, Roman & Tejun)
-> 
->  Documentation/admin-guide/cgroup-v2.rst | 14 ++++++++++++++
->  mm/memcontrol.c                         | 10 ++++++++--
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index 8fb14ffab7d1..c14514da4d9a 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1299,6 +1299,13 @@ PAGE_SIZE multiple when read back.
->  	monitors the limited cgroup to alleviate heavy reclaim
->  	pressure.
->  
-> +        If memory.high is opened with O_NONBLOCK then the synchronous
-> +        reclaim is bypassed. This is useful for admin processes that
+[ Upstream commit a759109b234385b74d2f5f4c86b5f59b3201ec12 ]
 
-As written this isn't restricted to admin processes though, no? So any
-unprivileged container can open that file O_NONBLOCK and avoid
-synchronous reclaim?
+Synchronize the declaration of ds1287_set_base_clock() between
+cevt-ds1287.c and ds1287.h.
 
-Which might be fine I have no idea but it's something to explicitly
-point out (The alternative is to restrict opening with O_NONBLOCK
-through a relevant capability check when the file is opened or use a
-write-time check.).
+Fix follow error with gcc-14 when -Werror:
 
-> +        need to dynamically adjust the job's memory limits without
-> +        expending their own CPU resources on memory reclamation. The
-> +        job will trigger the reclaim and/or get throttled on its
-> +        next charge request.
-> +
->    memory.max
->  	A read-write single value file which exists on non-root
->  	cgroups.  The default is "max".
-> @@ -1316,6 +1323,13 @@ PAGE_SIZE multiple when read back.
->  	Caller could retry them differently, return into userspace
->  	as -ENOMEM or silently ignore in cases like disk readahead.
->  
-> +        If memory.max is opened with O_NONBLOCK, then the synchronous
-> +        reclaim and oom-kill are bypassed. This is useful for admin
-> +        processes that need to dynamically adjust the job's memory limits
-> +        without expending their own CPU resources on memory reclamation.
-> +        The job will trigger the reclaim and/or oom-kill on its next
-> +        charge request.
-> +
->    memory.reclaim
->  	A write-only nested-keyed file which exists for all cgroups.
->  
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 5e2ea8b8a898..6f7362a7756a 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4252,6 +4252,9 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  
->  	page_counter_set_high(&memcg->memory, high);
->  
-> +	if (of->file->f_flags & O_NONBLOCK)
-> +		goto out;
-> +
->  	for (;;) {
->  		unsigned long nr_pages = page_counter_read(&memcg->memory);
->  		unsigned long reclaimed;
-> @@ -4274,7 +4277,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
->  		if (!reclaimed && !nr_retries--)
->  			break;
->  	}
-> -
-> +out:
->  	memcg_wb_domain_size_changed(memcg);
->  	return nbytes;
->  }
-> @@ -4301,6 +4304,9 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  
->  	xchg(&memcg->memory.max, max);
->  
-> +	if (of->file->f_flags & O_NONBLOCK)
-> +		goto out;
-> +
->  	for (;;) {
->  		unsigned long nr_pages = page_counter_read(&memcg->memory);
->  
-> @@ -4328,7 +4334,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
->  			break;
->  		cond_resched();
->  	}
-> -
-> +out:
->  	memcg_wb_domain_size_changed(memcg);
->  	return nbytes;
->  }
-> -- 
-> 2.47.1
-> 
+arch/mips/kernel/cevt-ds1287.c:21:5: error: conflicting types for ‘ds1287_set_base_clock’; have ‘int(unsigned int)’
+   21 | int ds1287_set_base_clock(unsigned int hz)
+      |     ^~~~~~~~~~~~~~~~~~~~~
+In file included from arch/mips/kernel/cevt-ds1287.c:13:
+./arch/mips/include/asm/ds1287.h:11:13: note: previous declaration of ‘ds1287_set_base_clock’ with type ‘void(unsigned int)’
+   11 | extern void ds1287_set_base_clock(unsigned int clock);
+      |             ^~~~~~~~~~~~~~~~~~~~~
+make[7]: *** [scripts/Makefile.build:207: arch/mips/kernel/cevt-ds1287.o] Error 1
+make[6]: *** [scripts/Makefile.build:465: arch/mips/kernel] Error 2
+make[6]: *** Waiting for unfinished jobs....
+
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/include/asm/ds1287.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/mips/include/asm/ds1287.h b/arch/mips/include/asm/ds1287.h
+index 46cfb01f9a14..51cb61fd4c03 100644
+--- a/arch/mips/include/asm/ds1287.h
++++ b/arch/mips/include/asm/ds1287.h
+@@ -8,7 +8,7 @@
+ #define __ASM_DS1287_H
+ 
+ extern int ds1287_timer_state(void);
+-extern void ds1287_set_base_clock(unsigned int clock);
++extern int ds1287_set_base_clock(unsigned int hz);
+ extern int ds1287_clockevent_init(int irq);
+ 
+ #endif
+-- 
+2.49.0
+
