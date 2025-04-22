@@ -1,31 +1,30 @@
 Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70099EAFA
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:14:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B012E273FE;
+	Tue, 22 Apr 2025 04:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745295288; cv=none; b=P3d5B8cqjf+9Nw6bQJ27uhHEZRnCApF4IGdbvj7AqcuYKLQLn3L6Ub0Mj7eNTNbABfVi4JdqvYPaQaOHKZYt9HIp2eIUE9Xly+efqtxNajM+YGb7qep3JJnwDSGPHutfR4Vmikce70ZKx1vMrbsLAebJTCDYuAcCRKHJK95M+QE=
+	t=1745295470; cv=none; b=oU+DZyxudG6EmsNu4qDl/dzE7LkiVchwogvc00ece+JayzLkcFNq1cN9IFLkTK5aPLF2b9yTB5aQ3HRutvaleTPAhE2/fBewAMPUGwFFPqznttUMj/I3B8GArjpHvZECGjqhw+R7sCTlmSMoQ5PUNWTCwcyxq94sAA6mkSrLs1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745295288; c=relaxed/simple;
-	bh=w8H0Yk/aiUBgp2kpAaBgGM3BJ2V7MPiQ8mvoAI/hWM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N81CrV75DcXzudWaat/7FhgVSsWsxhLbo/PuwjrtIL8FWowFMmW4lxGw/7ZT0fIh86ioxxc75Wbfzv7QDOUonl5l0zDlYNDjt+/T6gYcJRrGs/DQC35HHo8WnXgOwH5/RmScS+arTADabmuecLrIWSFYXQKvP6zKeop7raPAMlg=
+	s=arc-20240116; t=1745295470; c=relaxed/simple;
+	bh=ILfg5pyctVPHtkSPD5Gd/QGaqHzm5kjfCvQdn9D5FAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HBOmLVahYqkiJr3YcdjQrx2WB7kHkkR0IyPpe2II5Zqy1gYBjrw1a8NESHTqFMeexLKfSLQZXwkOYFYTkYVco7BMzvppUiJCylWyrIWBfz+Tb8T74P5a/IsRR3VWyiYlPHlFQgb/XYxD2wg+HYiFi7esNbkmIftUAXMmHlLVYwY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowADnIgupFwdoqiIlCw--.27997S2;
-	Tue, 22 Apr 2025 12:14:34 +0800 (CST)
+	by APP-05 (Coremail) with SMTP id zQCowADXEQpnGAdoZj4lCw--.30010S2;
+	Tue, 22 Apr 2025 12:17:45 +0800 (CST)
 From: Wentao Liang <vulab@iscas.ac.cn>
-To: miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com
-Cc: linux-mtd@lists.infradead.org,
+To: mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3 RESEND] mtd: bcm47xxnflash: Add error handling for bcm47xxnflash_ops_bcm4706_ctl_cmd()
-Date: Tue, 22 Apr 2025 12:14:16 +0800
-Message-ID: <20250422041416.2192-1-vulab@iscas.ac.cn>
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH RESEND] media: dst_ca: Add error handling for dst_comm_init()
+Date: Tue, 22 Apr 2025 12:17:21 +0800
+Message-ID: <20250422041721.2228-1-vulab@iscas.ac.cn>
 X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,10 +33,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowADnIgupFwdoqiIlCw--.27997S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tw18WF17uw47XFyUAr1UZFb_yoW8WFWUpr
-	47Xa45t3Z5X3WDtFyUWF18KF1Yv348KF4jg3yvva48ursavFWxGrZ3Ga4jq3y8Gw18Jw17
-	XF4F93WxWr9FkrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:zQCowADXEQpnGAdoZj4lCw--.30010S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7GryUJrykJF4kZr43GrWrGrg_yoW8Jr4Dpa
+	yqy39IkF98Jw4UX3srA348uFy5GanYka43Ka4Skw13Z3Z8JFsFvr4jq342gr4jgrW7Zay3
+	JF15WryUG3WkCw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
 	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
@@ -51,47 +50,38 @@ X-Coremail-Antispam: 1UD129KBjvJXoW7tw18WF17uw47XFyUAr1UZFb_yoW8WFWUpr
 	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
 	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
 	UI43ZEXa7VUUxwIDUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgsAA2gG5vDKhQAAs5
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUAA2gG6EzI+AAAsw
 
-The function bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls the function
-bcm47xxnflash_ops_bcm4706_ctl_cmd(), but does not check its return value.
-A proper implementation can be found in bcm47xxnflash_ops_bcm4706_write().
+The function dst_ci_command() calls the function dst_comm_init()
+but does not handle the error if the init fails. A proper implementation
+can be found in dst_command() in /source/drivers/media/pci/bt8xx/dst.c.
 
-Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() via pr_err()
-to prevent silent failure. The error Log funciton 'dev_err' is unsuitable
-in this situation for it is hard to get device pointer.
+Add error handling to the dst_comm_init(). Print an error message via
+dprintk(), and jump to the 'error' label if the function fails.
 
+Fixes: 50b215a05878 ("[PATCH] dvb: DST: reorganize Twinhan DST driver to support CI")
+Cc: stable@vger.kernel.org # v2.6+
 Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
-v3: Improve code for logging error.
-v2: Fix spelling problem.
-
- drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 5 ++++-
+ drivers/media/pci/bt8xx/dst_ca.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-index 6487dfc64258..e532c3535b16 100644
---- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-+++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
-@@ -171,6 +171,7 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
- {
- 	struct bcm47xxnflash *b47n = nand_get_controller_data(nand_chip);
- 	u32 code = 0;
-+	int rc;
+diff --git a/drivers/media/pci/bt8xx/dst_ca.c b/drivers/media/pci/bt8xx/dst_ca.c
+index a9cc6e7a57f9..a743f7653fdd 100644
+--- a/drivers/media/pci/bt8xx/dst_ca.c
++++ b/drivers/media/pci/bt8xx/dst_ca.c
+@@ -66,7 +66,10 @@ static int dst_ci_command(struct dst_state* state, u8 * data, u8 *ca_string, u8
+ 	u8 reply;
  
- 	if (cmd == NAND_CMD_NONE)
- 		return;
-@@ -182,7 +183,9 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
- 	if (cmd != NAND_CMD_RESET)
- 		code |= NCTL_CSA;
+ 	mutex_lock(&state->dst_mutex);
+-	dst_comm_init(state);
++	if (dst_comm_init(state) < 0) {
++		dprintk(verbose, DST_CA_ERROR, 1, "DST initialization failed.");
++		goto error;
++	}
+ 	msleep(65);
  
--	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
-+	rc = bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
-+	if (rc)
-+		pr_err("ctl_cmd didn't work with error %d\n", rc);
- }
- 
- /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706 */
+ 	if (write_dst(state, data, len)) {
 -- 
 2.42.0.windows.2
 
