@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BB822A7E9;
-	Tue, 22 Apr 2025 09:09:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225F5253947;
+	Tue, 22 Apr 2025 09:09:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312966; cv=none; b=oFBRlmBG8wtWsLGLwaZXT7RN+hw71961vW/Mx4NsI7mgNojObwBoEdwXHVaeLp59HCH8d+MCcq6asEFl5535BBpjplqPb+IF0C+KXqqiKhCsqh8Py6ZmK7iKlumHmXBFd10wlD1iNrZ3zt+dm+9aqs2K3rNVpc/MxddjTHMIutQ=
+	t=1745312970; cv=none; b=Za88ygVONqf3KFCucxAkT7GsHNaj7If95p43mnXgkM/7FcaQ+26oy22VVypk9dDuBAwrV8Vhk4gUnBNI1qVyilh0fDg6PrS060x9Sn83bRsievj7AmBbU3e/fp6PuWly1RAkiw6BcmmD6lv/S617ldlBEpnFlezpGXo2nH5Nje8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312966; c=relaxed/simple;
-	bh=mFSwkrwc/woqReWcRrFiToGptgj6JqGT5qUZ8w0yzC4=;
+	s=arc-20240116; t=1745312970; c=relaxed/simple;
+	bh=LWLwIWIREcnGHVr9V4bXSa6VdoUXdDgUQPuZFLtN2mE=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=j58kxJsbk9HroLgzEQfq6v5avm3Sz+5dzMajFpC2KWiWxeUABJ+aIVySjLc7ShXpa8Zwm4egY7N8TEoVEJXlidsxb9OrfIKybIP035QNxiwJuKbL/7rl4ze3IXdJ2WnLRTaTOExc13OX1GpBv+oqUrjGGZMLmXBlXfmWLbJFfMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G72da2Xe; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ToUW/S2DdlIKc8E6/BvSNsBMpdelbxTViDf2cDcAmkZnB4u7KtWOZHrKV0RpXcy6q6ur1fBL+CtFlwXQOEYgnEh/0D607qxz+Z3lj9qbRZiWs5ox8NKqC8HwI532UiOQhm8ZD/ywh2TFD94S0vYEy4By0BuOlKCr9hsPl2rivk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VqB6HV0a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G72da2Xe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839B6C4CEE9;
-	Tue, 22 Apr 2025 09:09:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VqB6HV0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F855C4CEE9;
+	Tue, 22 Apr 2025 09:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745312966;
-	bh=mFSwkrwc/woqReWcRrFiToGptgj6JqGT5qUZ8w0yzC4=;
+	s=k20201202; t=1745312969;
+	bh=LWLwIWIREcnGHVr9V4bXSa6VdoUXdDgUQPuZFLtN2mE=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G72da2XeldJj1UW6a12w3l89rBt7tfbC0GAHsKxGXq5cDoel8/3end4ShFVgDGk7F
-	 R7tui1x9mW/eg82FVn7oCpOUm0ubFuN3zWlMjXzuAykDXexnl25q9XA2bkFX5Faxj4
-	 UOXSS2jExqUda3NcBOYo3eUs0NLboTEMu5DiRcEbP2xUSkyXvPKRBQTpIcLGzjPiW8
-	 FTlSp7RK1PT1ZWJqou2Yuo9r2L0GR98AP1h7NLEgg+JMat4+oHejT86yefa//T9LEa
-	 WzivRLcXqyMI2db7VfjL5jOzYAc7sSOIZQqpjK2ADlkmk/3LdE3GZDTKi/Hm8VgDqx
-	 Vgo59FAFX7Qbw==
+	b=VqB6HV0aqc+RSvcoU9WUo8DWCxt0Ccdy0uBbJENx3iH5+9Ohg6YQZYiDLIMDsvl6e
+	 0n9oykz0PgHCuJlFYF2tO4l81reaL/2HXwylK01UIRrIKu+XzvVQcQRJk7qiiCjKbS
+	 uq7tpZTFlDL6xK18yWTvNTCHIPLXrhmYhytfVVqbIxpbMOIZ/VI4Cg7sUzLEB9Fs0k
+	 S7oumbvI+udWTuOvEAYiGSES0Z+QwpKadFnYnSByZMWFtuHTKd1fR2MI4w0vMhP7MN
+	 spwfxsr7GBoYOAjPHYrmpbvJNwoRhiNeG/c65fZvbjA//uAwubZtLgdlFjOvbrS6ZM
+	 3f99er/Ufla1g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DD739D6546;
-	Tue, 22 Apr 2025 09:10:06 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 342AA39D6546;
+	Tue, 22 Apr 2025 09:10:09 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,50 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] ENETC bug fixes for bpf_xdp_adjust_head() and
- bpf_xdp_adjust_tail()
+Subject: Re: [PATCH v7 0/2] net/mlx5: Fix NULL dereference and memory leak in
+ ttc_table creation
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174531300475.1477965.2995189751191314193.git-patchwork-notify@kernel.org>
-Date: Tue, 22 Apr 2025 09:10:04 +0000
-References: <20250417120005.3288549-1-vladimir.oltean@nxp.com>
-In-Reply-To: <20250417120005.3288549-1-vladimir.oltean@nxp.com>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: netdev@vger.kernel.org, claudiu.manoil@nxp.com, wei.fang@nxp.com,
- xiaoning.wang@nxp.com, vlatko.markovikj@etas.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, lorenzo@kernel.org, toke@redhat.com,
- aleksander.lobakin@intel.com, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+ <174531300776.1477965.14714402895095610167.git-patchwork-notify@kernel.org>
+Date: Tue, 22 Apr 2025 09:10:07 +0000
+References: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <20250418023814.71789-1-bsdhenrymartin@gmail.com>
+To: henry martin <bsdhenrymartin@gmail.com>
+Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, mbloch@nvidia.com, amirtz@nvidia.com,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 17 Apr 2025 15:00:02 +0300 you wrote:
-> It has been reported that on the ENETC driver, bpf_xdp_adjust_head()
-> and bpf_xdp_adjust_tail() are broken in combination with the XDP_PASS
-> verdict. I have constructed a series a simple XDP programs and tested
-> with various packet sizes and confirmed that this is the case.
+On Fri, 18 Apr 2025 10:38:12 +0800 you wrote:
+> This patch series addresses two issues in the
+> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() functions:
 > 
-> Patch 3/3 fixes the core issue, which is that the sk_buff created on
-> XDP_PASS is created by the driver as if XDP never ran, but in fact the
-> geometry needs to be adjusted according to the delta applied by the
-> program on the original xdp_buff. It depends on commit 539c1fba1ac7
-> ("xdp: add generic xdp_build_skb_from_buff()") which is not available in
-> "stable" but perhaps should be.
+> 1. A potential NULL pointer dereference if mlx5_get_flow_namespace()
+> returns NULL.
+> 
+> 2. A memory leak in the error path when ttc_type is invalid (default:
+> switch case).
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/3] net: enetc: register XDP RX queues with frag_size
-    https://git.kernel.org/netdev/net/c/2768b2e2f7d2
-  - [net,2/3] net: enetc: refactor bulk flipping of RX buffers to separate function
-    https://git.kernel.org/netdev/net/c/1d587faa5be7
-  - [net,3/3] net: enetc: fix frame corruption on bpf_xdp_adjust_head/tail() and XDP_PASS
-    https://git.kernel.org/netdev/net/c/020f0c8b3d39
+  - [v7,1/2] net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
+    https://git.kernel.org/netdev/net/c/91037037ee3d
+  - [v7,2/2] net/mlx5: Move ttc allocation after switch case to prevent leaks
+    https://git.kernel.org/netdev/net/c/fa8fd315127c
 
 You are awesome, thank you!
 -- 
