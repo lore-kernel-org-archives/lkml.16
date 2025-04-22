@@ -1,502 +1,147 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961602980C4
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565622980A5
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745345859; cv=none; b=o1laZB9ZrUDRxtz+LG67xoPgw7rbNnJM33jiG4CngvEIT7a2/X74eRao812T2sVnD/gnTgE/m/QTkudZNGHAIWhB6inHxZg7TQOwxD/ehs6yUJE3DiYM2YVQxShrWy6KGubkjjxhanX1U9LVris3mlmsgRgJ/1yPYmIY3QG24JY=
+	t=1745345868; cv=none; b=XqhX+BJZHflcGtZGJFjFtGwZhNlFJsCdlVy295firOFv5FJ0TFfq+QzOUFFpRLfAe2MCQyEF+wSDeBKKRsKp2cCdJ634AG3qcuBQ2aOngYz/3OQCfkp32lwnGXSywzFUpmKgG3AzRv13JOTchAzrWEVCGOtR4sCHkHoEr0d3CUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745345859; c=relaxed/simple;
-	bh=bHp9Kny3ewRpTLYzXBL8fgN5lC9P3VLGo+mqNKDUf50=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=L4M180MY1kKkrUWmWh6c1ysbR+n1GS6uJvQl/mKdymTvVmfwQjboOUNr6IEntpIpdS6YnU+ep0xbGh2LrZ/g+plMELKQE0NrsMOgeTRCYpCZSpKOcARFxdEpls7nmhbMQn8omHrUlQq22d1rkGJLsNT6V/BZQVCqd210r3GNJSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JvUvcOxN; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--salomondush.bounces.google.com
+	s=arc-20240116; t=1745345868; c=relaxed/simple;
+	bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a+ZBLGm7rHCkk0pbajA0rNsI5v8IxY7Aq0HDaOZk3lB+odoK+JOtVk7sgSf+GDn0SFuQV5o7TCv0P5jzv1ODTpa1ee6WWk5LTZQPoM1AaO3fpQbR6ee4JZl1coyEM2pKlhGA3q4wt4Ej/ISWrQdBVc8f/IzJnR8UhT2E8lnmIOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=MR39QwKd; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JvUvcOxN"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so4806016a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:17:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="MR39QwKd"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso60669945e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:17:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745345857; x=1745950657; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PBdoNuZNaH4pr2rowaqiMV0ON4Tg0iuLu7WB7J4ehb8=;
-        b=JvUvcOxNRL7NqDDmnPPMuzQ33paDaiVJo8u4+kNlj5HqE8TQNqntgIzU9OZiwAYBzU
-         Vn3I0gwySYbVrrOwxtZ8oyOltzSokmqhp8YEQWFeC6gRmC4CfOHcazJ5pOXgFT88I40/
-         RR8uHIgSKQ4gC7TOHfeV612eITM8Bx8KXMJS/8xjfiKQtFFo8LH3wYLeOioSxf3W+77b
-         PHtnEOfDzfOLvPjGN+Cl515AKF95LfKEixyWX4Q5HqSQVnWRLgcM5xPNfodqgc9GEZUk
-         l7p1926yXsqEpYvwKztIoqWBs1HmoKkM0sTRPEFVFL0TolPV15nlX8YMT7YRmH7y2QH3
-         Q1ag==
+        d=citrix.com; s=google; t=1745345865; x=1745950665; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
+        b=MR39QwKdTZf97qUao1OOktR4IOOeezi9QcWxba8PDqj58jDSlESHAdFOIinEPlDxKb
+         64yGwcf4wcOdweJxyTsTaqU28ZWYhD3t0G9ruyz5wW7GuIkX8+3ia11Tsq9zGEx3lZmT
+         gnhXBQl/jsxKepnd5jpoGunwnTsZVt2aL8vvc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745345857; x=1745950657;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PBdoNuZNaH4pr2rowaqiMV0ON4Tg0iuLu7WB7J4ehb8=;
-        b=g0SN0g9TCiITergAREcqZu0p0gnPD3b57w/yKtizMCVk+D7LCgiXjSLXLWwt2G+/UK
-         jaMV+ftSqbZ/uZLLSrD/gsaS1dIDBAHlj0KnIFxCBEkZqYzQsVHHhAm/VnRxDb1mi7yV
-         LBFnYO0K06b/QVqbVhQu1enxb6W0QHQpTP9jfBBVOcP/a/ndd/1dPU89ESxhj3gbCZIF
-         RQHO6HstfIEmFnPdVCwy1kHr+iYLFknhIzaeS2UHky36EFYMgGbxkYKyXASoBU1VzjEw
-         eiLowHbbO/nBx91DyV6eAvxY4MBVYc5fpwp4IXq1GZyEjRa+HW8y5Gigdi8ig2JdbhE5
-         F1Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjKIWAySmKJUnAhUvBDFHNRg1jkton8RfHr06bzSaelLmkCRaLyazeIFI8M4jQblUgOIULrrSRjPVG5M4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7vKgDbQNHE6t2bhDvrslDBEzTv3xKOAwreRFfPi2p0Y/ji4Ot
-	FenUZ9Oen6rlzJuJL4/59zoAQv8iqlOCAJpmGzC7+jTv3HLi5w9b8xMu8vZQFsD62N51NLnyxPF
-	QD/o7h6t3ikzKUgTOUPrb9A==
-X-Google-Smtp-Source: AGHT+IEgnjh5SLahWd3XPytmlvByFb6HnCrpXqV+gcSOGL34RZYASA5fnogNPp11jkB3hz+w0nqfNIwPv57s9NoeLA==
-X-Received: from pjbpb7.prod.google.com ([2002:a17:90b:3c07:b0:2e9:38ea:ca0f])
- (user=salomondush job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:d00f:b0:301:9f62:a944 with SMTP id 98e67ed59e1d1-3087bbbb7admr25802856a91.33.1745345856909;
- Tue, 22 Apr 2025 11:17:36 -0700 (PDT)
-Date: Tue, 22 Apr 2025 18:17:28 +0000
+        d=1e100.net; s=20230601; t=1745345865; x=1745950665;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IdFsdaUTDRdghsX8VxeZ/2CwFZKCgCoBXb6SP0DHe8w=;
+        b=mUUKLjIFXi2QCtGDTjQPIW4mVsbsCDLv0Sk1K9u1Epo/oJXiGhgGBePmyiftXz6kRD
+         19zuo2F9cnb8PghqgjVDKE2rN1ABiizinHOct+cytF+TibGwsLEXxZ2tzy8IlRTvuH6d
+         k3Y/YH8ac9jCQPKfXNz6lmnozAfis+QvAu3yHq+UAW5KKS177yGRxQ9vbmnrt3UExCe5
+         ZkDe7KJQ8x7WnjAhKyvi7FvOdwlb27Cdw9WkWP0Qqn5YjnPm4tBvENJn+c+pFBFE3v3w
+         E6EkkJ5odJI0iCA+m69cr7zsH076d0cR+vyo1zzgb2M0JR2FALUEUjxsxEA0684k4YZo
+         EDPg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2wgefE0rZr/LTgXUNO4ei9q7CWohjgmAYeD4yhL9PIGTEhpJlwwBcMqwrLGH24N04m9oeGtr/aqlCqj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJUpFeubekf4ZXONajJCvOkt2v+kl2Oqy8AanqNsLthezGhfNW
+	2CvL/3rUE/Wc1YRFiVhAad/nfpPcf8j3xTgAvbIRynoaKGQnvHjTXbUSkrN2xKk=
+X-Gm-Gg: ASbGncuXW2ioF9/YEF5E4F08BPn5qSLVmIemOXcEvJYL6F5Mjr2IDZDihb629LOBRjf
+	DPBzM83QZHHnCFFQIYlMcSR39+hAJ7amW8FqKzHmYMxUGdc7kE3L63baJjONrputiXfOr+ZH7yo
+	GwtFSG8wXh093oH8/TdsLVqJ2i4m4sLgh4hNuZkSnjJPznYVjWFD/NxbQBGN1WT/ez74E8x7ArX
+	0dQXvuuRupcT8xZV9GyDBu+gFU75NjuK1eWodoXUlIhNiqZHRd7LoDRYAHSAq5oN5Ok0CHVN8YR
+	n2FkQMrw67fxzx/v03vSNglO/TgV/u9nvTQ3gz024uV0xL3UstN18g==
+X-Google-Smtp-Source: AGHT+IGCIWX5BVPPocsuZVlCHJEPbcYq+xpC2dCnc+JUo1mNSZJLBXsvA5T5y7KuBkfqLGA1fxMXKA==
+X-Received: by 2002:a05:600c:4708:b0:43d:300f:fa4a with SMTP id 5b1f17b1804b1-4406ab97c6cmr143192845e9.12.1745345864518;
+        Tue, 22 Apr 2025 11:17:44 -0700 (PDT)
+Received: from [192.168.86.29] ([83.104.178.215])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbcfesm186100505e9.23.2025.04.22.11.17.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 11:17:44 -0700 (PDT)
+Message-ID: <c05731ae-bcf1-4747-b64c-0f4b79f3587f@citrix.com>
+Date: Tue, 22 Apr 2025 19:17:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250422181729.2792081-1-salomondush@google.com>
-Subject: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
-From: Salomon Dushimirimana <salomondush@google.com>
-To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, 
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Salomon Dushimirimana <salomondush@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 00/19] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+To: Dave Hansen <dave.hansen@intel.com>,
+ Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <d96f9c5e-64ed-4c28-a8ad-e22daea19742@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Adds a new function scsi_emit_error(), called when a command is placed
-back on the command queue for retry by the error handler, or when a
-command completes.
+On 21/04/2025 9:52 pm, Dave Hansen wrote:
+> Purely from the amount of interest and review tags and the whole "v14"
+> thing, it doesn't look like this is very important to anyone. Not to be
+> to flippant about it, but if nobody else cares, why should I (or the
+> other x86 maintainers)?
 
-The scsi_emit_error() function uses the kobject_uevent_env() mechanism
-to emit a KOBJ_CHANGE event with details about the SCSI error.
+There are several downstreams already using this as a part of their
+overall system security, one example being
+https://www.qubes-os.org/doc/anti-evil-maid/
 
-The event has the following key/value pairs set in the environment:
-- SDEV_ERROR: Always set to 1, to distinguish disk errors
-  from media change events, which have SDEV_MEDIA_CHANGE=1
-- SDEV_ERROR_RETRY: 0 if this is an error in the completion
-  path in scsi_io_completion(), 1 if the command is going to be
-  placed back on the queue
-- SDEV_ERROR_RESULT: Host byte of result code
-- SDEV_ERROR_SK: Sense key
-- SDEV_ERROR_ASC: Additional sense code
-- SDEV_ERROR_ASCQ: Additional sense code qualifier
+It's all giant out-of-tree patch series (in multiple projects; Grub,
+Xen, iPXE too).  Ross and others are trying to be good open source
+citizen and put it upstream where yet-more downstreams can benefit too.
 
-Error events are filtered under specific conditions:
-- DID_BAD_TARGET: Avoids uevent storms if a removed device is repeatedly
-  accessed and is not responding.
-- DID_IMM_RETRY: Avoids reporting temporary transport errors where the
-  command is immediately retried. This is a temporary error that should
-  not be forwarded to userspace.
-
-scsi_emit_error() can be invoked from vairous atomic contexts, where
-sleeping is not permitted, so GFP_ATOMIC is used to ensure allocations
-can safely occur in these contexts.
-
-A per-device ratelimiting mechanism is added to prevent flooding
-userspace during persistent error conditions. The ratelimit is checked
-before scheduling the event work.
-
-Signed-off-by: Salomon Dushimirimana <salomondush@google.com>
----
- drivers/scsi/Kconfig       |  17 +++++++
- drivers/scsi/scsi_error.c  |  66 ++++++++++++++++++++++++
- drivers/scsi/scsi_lib.c    | 100 ++++++++++++++++++++++++++++++++-----
- drivers/scsi/scsi_priv.h   |   1 +
- drivers/scsi/scsi_scan.c   |   4 ++
- drivers/scsi/scsi_sysfs.c  |   2 +
- include/scsi/scsi_device.h |  22 +++++++-
- 7 files changed, 199 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index 5a3c670aec27d..36a156ad6afd2 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -240,6 +240,23 @@ config SCSI_SCAN_ASYNC
- 	  Note that this setting also affects whether resuming from
- 	  system suspend will be performed asynchronously.
- 
-+config SCSI_ERROR_UEVENT
-+	bool "Enable SCSI error uevent reporting"
-+	depends on SCSI
-+	default n
-+	help
-+	  If enabled, the SCSI mid-layer will emit kobject uevents when
-+	  SCSI commands fail or are retried by the error handler. These
-+	  events provide details about the error, including the command
-+	  result (host byte), sense key (SK), additional sense code (ASC),
-+	  additional sense code qualifier (ASCQ), and whether the command
-+	  is being retried (SDEV_ERROR_RETRY=1) or finally failing because
-+	  of error in completion path (SDEV_ERROR_RETRY=0).
-+
-+	  Events are filtered for certain conditions (e.g., DID_BAD_TARGET,
-+	  DID_IMM_RETRY) and are also ratelimited per device to prevent
-+	  excessive noise.
-+
- config SCSI_PROTO_TEST
- 	tristate "scsi_proto.h unit tests" if !KUNIT_ALL_TESTS
- 	depends on SCSI && KUNIT
-diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
-index 376b8897ab90a..327a012f328ff 100644
---- a/drivers/scsi/scsi_error.c
-+++ b/drivers/scsi/scsi_error.c
-@@ -2227,6 +2227,9 @@ void scsi_eh_flush_done_q(struct list_head *done_q)
- 				scmd_printk(KERN_INFO, scmd,
- 					     "%s: flush retry cmd\n",
- 					     current->comm));
-+#ifdef CONFIG_SCSI_ERROR_UEVENT
-+				scsi_emit_error(scmd);
-+#endif
- 				scsi_queue_insert(scmd, SCSI_MLQUEUE_EH_RETRY);
- 				blk_mq_kick_requeue_list(sdev->request_queue);
- 		} else {
-@@ -2595,3 +2598,66 @@ bool scsi_get_sense_info_fld(const u8 *sense_buffer, int sb_len,
- 	}
- }
- EXPORT_SYMBOL(scsi_get_sense_info_fld);
-+
-+/**
-+ * scsi_emit_error - Emit an error event.
-+ *
-+ * May be called from scsi_softirq_done(). Cannot sleep.
-+ *
-+ * @cmd: the scsi command
-+ */
-+void scsi_emit_error(struct scsi_cmnd *cmd)
-+{
-+	struct scsi_sense_hdr sshdr;
-+	u8 result, sk, asc, ascq;
-+	int sense_valid;
-+	int retry;
-+
-+	if (unlikely(cmd->result)) {
-+		result = host_byte(cmd->result);
-+		if (result == DID_BAD_TARGET ||
-+		    result == DID_IMM_RETRY)
-+			/*
-+			 * Do not report an error upstream, the situation is
-+			 * not stable. Will report once the IO really fails.
-+			 */
-+			return;
-+		sk = 0;
-+		asc = 0;
-+		ascq = 0;
-+
-+		if (result == DID_OK) {
-+			sense_valid = scsi_command_normalize_sense(cmd, &sshdr);
-+			if (!sense_valid) {
-+				/*
-+				 * With libata, this happens when the error
-+				 * handler is called but the error causes are
-+				 * not identified yet.
-+				 */
-+				return;
-+			}
-+
-+			sk = sshdr.sense_key;
-+			asc = sshdr.asc;
-+			ascq = sshdr.ascq;
-+
-+			/*
-+			 * asc == 0 && ascq == 0x1D means "ATA pass through
-+			 * information available"; this is not an error, but
-+			 * rather the driver returning some data.
-+			 */
-+			if (sk == NO_SENSE ||
-+			    (sk == RECOVERED_ERROR &&
-+			     asc == 0x0 &&
-+			     ascq == 0x1D)) {
-+				return;
-+			}
-+		}
-+
-+		retry = (!scsi_noretry_cmd(cmd) &&
-+			 cmd->retries > 0 &&
-+			 cmd->retries <= cmd->allowed);
-+		sdev_evt_send_error(cmd->device, GFP_ATOMIC,
-+				    retry, result, sk, asc, ascq);
-+	}
-+}
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 0d29470e86b0b..2a2fae00e9f1c 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1029,6 +1029,9 @@ static int scsi_io_completion_nz_result(struct scsi_cmnd *cmd, int result,
- 		result = 0;
- 		*blk_statp = BLK_STS_OK;
- 	}
-+#ifdef CONFIG_SCSI_ERROR_UEVENT
-+	scsi_emit_error(cmd);
-+#endif
- 	return result;
- }
- 
-@@ -1544,6 +1547,9 @@ static void scsi_complete(struct request *rq)
- 		scsi_finish_command(cmd);
- 		break;
- 	case NEEDS_RETRY:
-+#ifdef CONFIG_SCSI_ERROR_UEVENT
-+		scsi_emit_error(cmd);
-+#endif
- 		scsi_queue_insert(cmd, SCSI_MLQUEUE_EH_RETRY);
- 		break;
- 	case ADD_TO_MLQUEUE:
-@@ -2559,43 +2565,77 @@ EXPORT_SYMBOL(scsi_device_set_state);
-  */
- static void scsi_evt_emit(struct scsi_device *sdev, struct scsi_event *evt)
- {
--	int idx = 0;
--	char *envp[3];
-+	struct kobj_uevent_env *env;
-+
-+	env = kzalloc(sizeof(struct kobj_uevent_env), GFP_KERNEL);
-+	if (!env)
-+		return;
- 
- 	switch (evt->evt_type) {
- 	case SDEV_EVT_MEDIA_CHANGE:
--		envp[idx++] = "SDEV_MEDIA_CHANGE=1";
-+		if (add_uevent_var(env, "SDEV_MEDIA_CHANGE=1"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_INQUIRY_CHANGE_REPORTED:
- 		scsi_rescan_device(sdev);
--		envp[idx++] = "SDEV_UA=INQUIRY_DATA_HAS_CHANGED";
-+		if (add_uevent_var(env,	"SDEV_UA=INQUIRY_DATA_HAS_CHANGED"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_CAPACITY_CHANGE_REPORTED:
--		envp[idx++] = "SDEV_UA=CAPACITY_DATA_HAS_CHANGED";
-+		if (add_uevent_var(env,	"SDEV_UA=CAPACITY_DATA_HAS_CHANGED"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED:
--	       envp[idx++] = "SDEV_UA=THIN_PROVISIONING_SOFT_THRESHOLD_REACHED";
-+		if (add_uevent_var(env,
-+			"SDEV_UA=THIN_PROVISIONING_SOFT_THRESHOLD_REACHED"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_MODE_PARAMETER_CHANGE_REPORTED:
--		envp[idx++] = "SDEV_UA=MODE_PARAMETERS_CHANGED";
-+		if (add_uevent_var(env, "SDEV_UA=MODE_PARAMETERS_CHANGED"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_LUN_CHANGE_REPORTED:
--		envp[idx++] = "SDEV_UA=REPORTED_LUNS_DATA_HAS_CHANGED";
-+		if (add_uevent_var(env,
-+			"SDEV_UA=REPORTED_LUNS_DATA_HAS_CHANGED"))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
--		envp[idx++] = "SDEV_UA=ASYMMETRIC_ACCESS_STATE_CHANGED";
-+		if (add_uevent_var(env,
-+			"SDEV_UA=ASYMMETRIC_ACCESS_STATE_CHANGED"))
-+			goto exit;
-+		break;
-+	case SDEV_EVT_ERROR:
-+		if (add_uevent_var(env, "SDEV_ERROR=1"))
-+			goto exit;
-+		if (add_uevent_var(env, "SDEV_ERROR_RETRY=%u",
-+					evt->error_evt.retry))
-+			goto exit;
-+		if (add_uevent_var(env, "SDEV_ERROR_RESULT=%u",
-+					evt->error_evt.result))
-+			goto exit;
-+		if (add_uevent_var(env, "SDEV_ERROR_SK=%u",
-+					evt->error_evt.sk))
-+			goto exit;
-+		if (add_uevent_var(env, "SDEV_ERROR_ASC=%u",
-+					evt->error_evt.asc))
-+			goto exit;
-+		if (add_uevent_var(env, "SDEV_ERROR_ASCQ=%u",
-+					evt->error_evt.ascq))
-+			goto exit;
- 		break;
- 	case SDEV_EVT_POWER_ON_RESET_OCCURRED:
--		envp[idx++] = "SDEV_UA=POWER_ON_RESET_OCCURRED";
-+		if (add_uevent_var(env, "SDEV_UA=POWER_ON_RESET_OCCURRED"))
-+			goto exit;
- 		break;
- 	default:
- 		/* do nothing */
- 		break;
- 	}
- 
--	envp[idx++] = NULL;
-+	kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, env->envp);
- 
--	kobject_uevent_env(&sdev->sdev_gendev.kobj, KOBJ_CHANGE, envp);
-+exit:
-+	kfree(env);
- }
- 
- /**
-@@ -2693,6 +2733,7 @@ struct scsi_event *sdev_evt_alloc(enum scsi_device_event evt_type,
- 	case SDEV_EVT_LUN_CHANGE_REPORTED:
- 	case SDEV_EVT_ALUA_STATE_CHANGE_REPORTED:
- 	case SDEV_EVT_POWER_ON_RESET_OCCURRED:
-+	case SDEV_EVT_ERROR:
- 	default:
- 		/* do nothing */
- 		break;
-@@ -2724,6 +2765,41 @@ void sdev_evt_send_simple(struct scsi_device *sdev,
- }
- EXPORT_SYMBOL_GPL(sdev_evt_send_simple);
- 
-+/**
-+ *	sdev_evt_send_error - send error event to uevent thread
-+ *	@sdev: scsi_device event occurred on
-+ *	@gfpflags: GFP flags for allocation
-+ *	@retry: if non-zero, command failed, will retry, otherwise final attempt
-+ *	@result: host byte of result
-+ *	@sk: sense key
-+ *	@asc: additional sense code
-+ *	@ascq: additional sense code qualifier
-+ *
-+ *	Assert scsi device error event asynchronously.
-+ */
-+void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags,
-+			 u8 retry, u8 result, u8 sk, u8 asc, u8 ascq)
-+{
-+	struct scsi_event *evt;
-+
-+	evt = sdev_evt_alloc(SDEV_EVT_ERROR, gfpflags);
-+	if (!evt) {
-+		sdev_printk(KERN_ERR, sdev, "error event eaten due to OOM: retry=%u result=%u sk=%u asc=%u ascq=%u\n",
-+			    retry, result, sk, asc, ascq);
-+		return;
-+	}
-+
-+	evt->error_evt.retry = retry;
-+	evt->error_evt.result = result;
-+	evt->error_evt.sk = sk;
-+	evt->error_evt.asc = asc;
-+	evt->error_evt.ascq = ascq;
-+
-+	if (___ratelimit(&sdev->error_ratelimit, "SCSI error"))
-+		sdev_evt_send(sdev, evt);
-+}
-+EXPORT_SYMBOL_GPL(sdev_evt_send_error);
-+
- /**
-  *	scsi_device_quiesce - Block all commands except power management.
-  *	@sdev:	scsi device to quiesce.
-diff --git a/drivers/scsi/scsi_priv.h b/drivers/scsi/scsi_priv.h
-index 9fc397a9ce7a4..8519b563e2feb 100644
---- a/drivers/scsi/scsi_priv.h
-+++ b/drivers/scsi/scsi_priv.h
-@@ -101,6 +101,7 @@ int scsi_eh_get_sense(struct list_head *work_q,
- 		      struct list_head *done_q);
- bool scsi_noretry_cmd(struct scsi_cmnd *scmd);
- void scsi_eh_done(struct scsi_cmnd *scmd);
-+extern void scsi_emit_error(struct scsi_cmnd *scmd);
- 
- /* scsi_lib.c */
- extern void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd);
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 4833b8fe251b8..5c311dfc501c3 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -310,6 +310,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	mutex_init(&sdev->inquiry_mutex);
- 	INIT_WORK(&sdev->event_work, scsi_evt_thread);
- 	INIT_WORK(&sdev->requeue_work, scsi_requeue_run_queue);
-+	ratelimit_state_init(&sdev->error_ratelimit, 5 * HZ, 10);
- 
- 	sdev->sdev_gendev.parent = get_device(&starget->dev);
- 	sdev->sdev_target = starget;
-@@ -363,6 +364,9 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 
- 	scsi_change_queue_depth(sdev, depth);
- 
-+	/* All devices support error events */
-+	set_bit(SDEV_EVT_ERROR, sdev->supported_events);
-+
- 	scsi_sysfs_device_initialize(sdev);
- 
- 	if (shost->hostt->sdev_init) {
-diff --git a/drivers/scsi/scsi_sysfs.c b/drivers/scsi/scsi_sysfs.c
-index d772258e29ad2..20a537490e9f2 100644
---- a/drivers/scsi/scsi_sysfs.c
-+++ b/drivers/scsi/scsi_sysfs.c
-@@ -1025,6 +1025,7 @@ DECLARE_EVT(capacity_change_reported, CAPACITY_CHANGE_REPORTED)
- DECLARE_EVT(soft_threshold_reached, SOFT_THRESHOLD_REACHED_REPORTED)
- DECLARE_EVT(mode_parameter_change_reported, MODE_PARAMETER_CHANGE_REPORTED)
- DECLARE_EVT(lun_change_reported, LUN_CHANGE_REPORTED)
-+DECLARE_EVT(error, ERROR)
- 
- static ssize_t
- sdev_store_queue_depth(struct device *dev, struct device_attribute *attr,
-@@ -1345,6 +1346,7 @@ static struct attribute *scsi_sdev_attrs[] = {
- 	REF_EVT(soft_threshold_reached),
- 	REF_EVT(mode_parameter_change_reported),
- 	REF_EVT(lun_change_reported),
-+	REF_EVT(error),
- 	NULL
- };
- 
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index 68dd49947d041..5485d3b5853e2 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -64,7 +64,8 @@ enum scsi_scan_mode {
- };
- 
- enum scsi_device_event {
--	SDEV_EVT_MEDIA_CHANGE	= 1,	/* media has changed */
-+	SDEV_EVT_MEDIA_CHANGE	= 0,	/* media has changed */
-+	SDEV_EVT_ERROR		= 1,	/* command failed */
- 	SDEV_EVT_INQUIRY_CHANGE_REPORTED,		/* 3F 03  UA reported */
- 	SDEV_EVT_CAPACITY_CHANGE_REPORTED,		/* 2A 09  UA reported */
- 	SDEV_EVT_SOFT_THRESHOLD_REACHED_REPORTED,	/* 38 07  UA reported */
-@@ -79,6 +80,19 @@ enum scsi_device_event {
- 	SDEV_EVT_MAXBITS	= SDEV_EVT_LAST + 1
- };
- 
-+struct scsi_error_event {
-+	/* A retry event */
-+	u8 retry;
-+	/* Host byte */
-+	u8 result;
-+	/* Sense key */
-+	u8 sk;
-+	/* Additional sense code */
-+	u8 asc;
-+	/* Additional sense code qualifier */
-+	u8 ascq;
-+};
-+
- struct scsi_event {
- 	enum scsi_device_event	evt_type;
- 	struct list_head	node;
-@@ -86,6 +100,9 @@ struct scsi_event {
- 	/* put union of data structures, for non-simple event types,
- 	 * here
- 	 */
-+	union {
-+		struct scsi_error_event error_evt;
-+	};
- };
- 
- /**
-@@ -269,6 +286,7 @@ struct scsi_device {
- 				sdev_dev;
- 
- 	struct work_struct	requeue_work;
-+	struct ratelimit_state	error_ratelimit;
- 
- 	struct scsi_device_handler *handler;
- 	void			*handler_data;
-@@ -474,6 +492,8 @@ extern struct scsi_event *sdev_evt_alloc(enum scsi_device_event evt_type,
- extern void sdev_evt_send(struct scsi_device *sdev, struct scsi_event *evt);
- extern void sdev_evt_send_simple(struct scsi_device *sdev,
- 			  enum scsi_device_event evt_type, gfp_t gfpflags);
-+extern void sdev_evt_send_error(struct scsi_device *sdev, gfp_t gfpflags,
-+	u8 retry, u8 result, u8 sk, u8 asc, u8 ascq);
- extern int scsi_device_quiesce(struct scsi_device *sdev);
- extern void scsi_device_resume(struct scsi_device *sdev);
- extern void scsi_target_quiesce(struct scsi_target *);
--- 
-2.49.0.805.g082f7c87e0-goog
-
+~Andrew
