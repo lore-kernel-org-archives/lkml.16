@@ -1,90 +1,113 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E45D238C2F;
-	Tue, 22 Apr 2025 09:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EA62561D9;
+	Tue, 22 Apr 2025 09:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313070; cv=none; b=NB/4e70bWlCOcvCf5wou8Ec5B9fEHx6h/Cc7NYdVyEhS9XweqZaUgE4gtfbGDSn8dCswrfYSXC7QJ8OJH9coJvnjJYwNTgVBA5mmXIWp0IMp7pEQEGcnvIoQ8zM3lIJsv+jFPKArQlo+2vB2xQ6hCOCrZqyOUEi3gIqDMQX1XS0=
+	t=1745313080; cv=none; b=Jh66YBe8RCNaRJ4+/QTwiFzWGjsIlSztp0Hfn1/sFnuJkzVK/ZHGuC7z2RcMHHS1EEuIWP1SzJ91LPaA/WBGEh+rwh3XfMQYK6e/Zh4sO2G3w0KHHH0wj+rdnoMSBqVB+nzdkqnvLI1CnLklh/vZFKJznIZUVIyDtCcQzQXKZ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313070; c=relaxed/simple;
-	bh=f9deQhR1Q1RCnOm2h2vN8BQsniXjGP3x0y8ywwgWRtk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dJAhQii1YMkz6PPVHpSGduZMXz5Tknvh/sxsypIlOZMKpObQegvCWswo4fSQ4IdeSFLu+nBpUehTJrfjlcut9ZIhzu5/gpIEOET2rq7MvG38qXG1JM0cWkFGapvlowDMStfgqY6JkjkA50m0Bgt6opnTdTkIgPTJivO8CCQIUrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b5c0a77c1f5911f0a216b1d71e6e1362-20250422
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:045f0ceb-7dcd-4879-9c5a-e6eb51568785,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:494d66d8953aae14750653e069c5005b,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b5c0a77c1f5911f0a216b1d71e6e1362-20250422
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1169028749; Tue, 22 Apr 2025 17:11:01 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id D5C54E000F3B;
-	Tue, 22 Apr 2025 17:11:00 +0800 (CST)
-X-ns-mid: postfix-68075D24-730977898
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 5BE65E000F3A;
-	Tue, 22 Apr 2025 17:11:00 +0800 (CST)
-From: zhangzihuan <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhangzihuan <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] ACPI: battery: Reduce unnecessary calls to acpi_battery_update()
-Date: Tue, 22 Apr 2025 17:10:56 +0800
-Message-Id: <20250422091056.972734-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1745313080; c=relaxed/simple;
+	bh=WBUuOWQpdrQOFEYaOQmzhp+l1UfStjkHFbt5cXHqFZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pv29DmMds3n0gXIrhMm37Iv6RKemNxNX4CfyVqXJAd+ONHiySGdBwghdGKlSCZ8lGEHSp1TQLFXVbCNOyuFniEYLf5Pbjv9QF2CrvI5a2jaxDaBTOdDckwbY2IJLWT9lCek2zdKofdiDOoh+EZJLgbhfL7etJOUQwY4vShsQRIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=PZk2DwvG; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="PZk2DwvG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1745313025;
+	bh=VGWZpF9dZHrPeszei/T2CQ20Hv6zpF5SOxVEFV93m3I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=PZk2DwvGYkpS0AnKVdURrYXzElCQKRjKLaBey04icBal/iGZSkpps5UzEfc2d9k+C
+	 B4p64dQ8lIfIoLTIHRLwKLFttobKaxlzT6by9B3Z25mqNTN/dx2Ig83s1NdB5gIBlG
+	 9SUlFQp39As531aFfx1Jwo1QwTfVBinX9bci0zBU=
+X-QQ-mid: zesmtpip4t1745313008t2c41e022
+X-QQ-Originating-IP: D2Ocb7vvYEe79UAEG9zEOt7ZAfusavGiBvAMgQLxemI=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 22 Apr 2025 17:10:06 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 9580230143236949142
+EX-QQ-RecipientCnt: 8
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: macro@orcam.me.uk,
+	tsbogend@alpha.franken.de,
+	wangyuli@uniontech.com,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 5.4+] MIPS: dec: Declare which_prom() as static
+Date: Tue, 22 Apr 2025 17:09:37 +0800
+Message-ID: <D1625EB772D42BA4+20250422090937.113109-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MlPHsU0QBEEv63P2klKLlNoevHRwHdgXgbrVu/2gjZAuqiL1iUprcBge
+	5qPKskzHRFOUJcO8WXTYbo5xrbNp7XbAh4Hvs/3HNbHNlrAJhFr7rDU/mZdZvdcDEtqHLNM
+	7zbegztOBn7zyM/7MOJtCFPLSoQ2dV3TX/ie7VwnXAWmvHVixKUieDKDcST9KdCreELiSfh
+	+XJ9B5XKY3iDNqgOCPmchShqdwyPP0kWR3HCzAGeqsVWYg2+rKdcvF15UbgCkUEum3Wl6Le
+	ySqNlrsQ7cX7PXdx141uzpTkgEKeExUgxClAmz/icDECBc3pFcNMYktlbBue1rqbknRWsUK
+	iLyvCzOAavsrNPx6/nVNM3XTEb+EdVQA1jkglzqHH8XJ/qJKNlHEUXISSC8vb7lCVx/DNjc
+	kAjp7n8LgXB1VknpSXFDbBDuGl26+tIzweDhfgUSsyKeNNwwVdvyYAh+FfWOsqrfyfzpD/0
+	w3f79n7gV5+7VB0trPDzJM00FjKeenyz1e0JpaO+XxfBRBibrmlOe2m/P8WP7MTUBMizeES
+	quTTCSw7TE/e2GOYdM8jTYhRIbh8F6tUC93j8TVOCEWAJOPexzqZI/aoWmd77a1AI2QprLl
+	ZeK9af303SC2DPVlg2YInhEqX1/K5j3HPNphzgICLmuIig0+wkalQ30U2kFIGpsWiC+mr57
+	3+JUu7E4Bg2ii5VgFqJvoUQr0ZzaWtSuPxHS1qObpdPw+FfNNXsQDpvp+GS1+x3yVQ93+Kh
+	JXJT5djAblntj+taU7dlZt0JS5JVQB7fMAnoH9Psb1Crwt3QsUyKSa/15IXILUPWXnr94LM
+	gaB/gSY7BEMy7YR6sLpPsz2+s0gt/C31AYt2qq8j1ARifd8ORKdffPti0xwJlnedVt+c+B8
+	E38vwRXw7XBlmvFfXTg3srYENOws3+6NQe1M71YkQMDasRPJLAQmQWnRDmKOXrlPGwX1eNj
+	eSyh5Ag4WPZiHWg1yujYXaBnNZ8g3ITTCEbw3lpVDTWDJzwnY2ld78PK7AT5otvbaCJfwJm
+	7D4+AzeB1/fV/7x54T4jI8/PzSFHM=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-When entering the acpi_mattery_notify function, no matter what the event
-is, acpi_mattery_update will definitely be called.
-Use the acpi_listen command to listen, sometimes the log looks like this:
+[ Upstream commit 55fa5868519bc48a7344a4c070efa2f4468f2167 ]
 
-battery xxx:00 00000081 00000001
-battery xxx:00 00000000 00000001
-battery xxx:00 00000080 00000001
+Declare which_prom() as static to suppress gcc compiler warning that
+'missing-prototypes'. This function is not intended to be called
+from other parts.
 
-Firmware manufacturers will customize some events like 0x0, so
-non-matching events will be ignored.
-Signed-off-by: zhangzihuan <zhangzihuan@kylinos.cn>
+Fix follow error with gcc-14 when -Werror:
+
+arch/mips/dec/prom/init.c:45:13: error: no previous prototype for ‘which_prom’ [-Werror=missing-prototypes]
+   45 | void __init which_prom(s32 magic, s32 *prom_vec)
+      |             ^~~~~~~~~~
+cc1: all warnings being treated as errors
+make[6]: *** [scripts/Makefile.build:207: arch/mips/dec/prom/init.o] Error 1
+make[5]: *** [scripts/Makefile.build:465: arch/mips/dec/prom] Error 2
+make[5]: *** Waiting for unfinished jobs....
+
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- drivers/acpi/battery.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/dec/prom/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 6760330a8af5..9446c57b77e7 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -1083,7 +1083,8 @@ static void acpi_battery_notify(acpi_handle handle,=
- u32 event, void *data)
- 		msleep(battery_notification_delay_ms);
- 	if (event =3D=3D ACPI_BATTERY_NOTIFY_INFO)
- 		acpi_battery_refresh(battery);
--	acpi_battery_update(battery, false);
-+	if (event =3D=3D ACPI_BATTERY_NOTIFY_STATUS)
-+		acpi_battery_update(battery, false);
- 	acpi_bus_generate_netlink_event(device->pnp.device_class,
- 					dev_name(&device->dev), event,
- 					acpi_battery_present(battery));
---=20
-2.25.1
+diff --git a/arch/mips/dec/prom/init.c b/arch/mips/dec/prom/init.c
+index cb12eb211a49..8d74d7d6c05b 100644
+--- a/arch/mips/dec/prom/init.c
++++ b/arch/mips/dec/prom/init.c
+@@ -42,7 +42,7 @@ int (*__pmax_close)(int);
+  * Detect which PROM the DECSTATION has, and set the callback vectors
+  * appropriately.
+  */
+-void __init which_prom(s32 magic, s32 *prom_vec)
++static void __init which_prom(s32 magic, s32 *prom_vec)
+ {
+ 	/*
+ 	 * No sign of the REX PROM's magic number means we assume a non-REX
+-- 
+2.49.0
 
