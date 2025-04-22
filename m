@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7731719CC3A;
-	Tue, 22 Apr 2025 14:57:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A875228EA7A;
+	Tue, 22 Apr 2025 14:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333826; cv=none; b=iaku5KIpXJmM9Zv0GGxJtUigrteOunElua6d0Ot7/tP1dDc4kEOJUHXKQtP+n+d6zurzVem0kY2n/B/rpTs3j9TjUJjjUlMlRa7tHxokbQVTpMqSribvbr0vekRp+1I4XUWxY4EH1En7pEV0xAlU/5WwUR63/U/7OgRHkFZ7d4E=
+	t=1745333828; cv=none; b=MlBXKcr636DORuZaoA/dZjacFwue0XSMRdnAk39wMWzz6x0H1UU6jCOZYYef6VkOh8z5j1GbUVJW75ZeJSmkHC3WpBOKDU6z4ondw8/7PhQsZVXLPbFap3/W6uBrHAqlAVYc0nL5/83QHTKIWYQALoWBn5buwiprkpAoexV7hto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333826; c=relaxed/simple;
-	bh=qBwgkCpHN9Q04YuSGhWuzK10Z5HEXbmT0E79Rvlfp+w=;
+	s=arc-20240116; t=1745333828; c=relaxed/simple;
+	bh=pN2NtjU6sCzECkdshJq12LdejS7k8+9ejuG+DCYZXk8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C1lZXbZbAEm2kMPLslaAcJogpCoKW79IpRiWOO3FFfOoPPoBu/zGXrzIkJ+RcNhq+nYbew4ZU0vs0sfu1bDJATtyQEQE2zy6hxuYHkJT+4i0ntrEn4y8vwr6ufkOFjuYw/xs6HwrAFCV/966qeC/7LV9kqpNv9oEoUuxgveRxHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GnA761gx; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=M1/XYhjet7NbxVtkAcxtgDj4i4AQ8VOU5cZZ6lg5p2lFYhguYMA3y7tpxivjuaVg3jvq24qM8o04p667lh3WXKHT6Z9pk6EWLTQcp7iO4F7jbpZErNcscqMW/Lm0Vh8zv0qg3fgr1f9ob/BWnuahHLUpWUxtzyLQDYR2A4wMIEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Vrjr+az7; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GnA761gx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E5F9F43999;
-	Tue, 22 Apr 2025 14:56:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Vrjr+az7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A5C8F439A9;
+	Tue, 22 Apr 2025 14:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745333821;
+	t=1745333823;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ql6bc9nNH1PttIfAUL8+OGVKCX015+qoAPz81pk3JPY=;
-	b=GnA761gx0E+uHn9bLn/gHmLYjCjPFyQuT4rNi+P0M1E9QLcZJoVVhJx3FOHWBPN1if+hcU
-	LiBHLcgg2lwFh4GvtPHpAQ7eFhqq3m70G4dF5wWPh9WHJcf6wEzpMsccUv1KIYnOKrxd+t
-	hYC+WJSXAl8TYJe5fA5G+rNBxMxIcVSoNe6Fo2XstT13kOAtbKHTIPJSAd9q5Yy3xVC5Bo
-	+e1UqBbqfzADKnU3f5ik4Y+Qt4KZNT1XHILxHPn+V99VDn8nToorp7CXjFkrOz6XnkF7A5
-	ZYJqOJrkZEBsbM4XJbEBGkLZZ4Jl6HK35AhO8PLJyfUImLp4w2egaJLYAywQYA==
+	bh=n6mZConOWUemBsWNtoM0trHxeWS3CRz/299F8nIyW8Y=;
+	b=Vrjr+az7Ssok1CXpfNCehAkgWt2PzM2krTZC3T/aPqjPRVf2yBzga3bCeqrzFE1I4oOv7s
+	O81gVdQEe6SIAF2phsmnagItcwVZUJzDqS2MB7V38QhrArG5S+w9Wh+TbYPIfcSGYEuGyQ
+	BCSV2gAXflzY9TeoXllVbsado6hILLifqAk4AwNOFAcKp/d2TybpEiKo9bLofXIoHYehxi
+	4bJqmVa5o4hXq9eQg7GrJp+SqU2ibEEWvwqA4993DsaoT00MCJM4EDIbIBYU+jBKc1nRVO
+	WXx3DEqz5VrcRCw2Hzvd7ywlKKOxSzqbuIn1nQvUYjUVwEoPbM3U42jWkAQOzg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 22 Apr 2025 16:56:34 +0200
-Subject: [PATCH net-next v9 01/13] net: ethtool: Add support for
- ethnl_info_init_ntf helper function
+Date: Tue, 22 Apr 2025 16:56:36 +0200
+Subject: [PATCH net-next v9 03/13] net: pse-pd: tps23881: Add support for
+ PSE events and interrupts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-feature_poe_port_prio-v9-1-417fc007572d@bootlin.com>
+Message-Id: <20250422-feature_poe_port_prio-v9-3-417fc007572d@bootlin.com>
 References: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
 In-Reply-To: <20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
@@ -64,67 +64,275 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegtdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvnhhtp
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeegtdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvnhhtp
  hhrohhjvggttheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Introduce support for the ethnl_info_init_ntf helper function to enable
-initialization of ethtool notifications outside of the netlink.c file.
-This change allows for more flexible notification handling.
+Add support for PSE event reporting through interrupts. Set up the newly
+introduced devm_pse_irq_helper helper to register the interrupt. Events are
+reported for over-current and over-temperature conditions.
 
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-Changes in v4:
-- Use the new helper in ethnl_default_notify function.
+Change in v7:
+- Add a max irq retry limit to avoid infinite loop in the interrupt
+  handler.
 
-Changes in v2:
-- new patch.
+Change in v4:
+- Small rename of a function.
+
+Change in v3:
+- Loop over interruption register to be sure the interruption pin is
+  freed before exiting the interrupt handler function.
+- Add exist variable to not report event for undescribed PIs.
+- Used helpers to convert the chan number to the PI port number.
+
+Change in v2:
+- Remove support for OSS pin and TPC23881 specific port priority management
 ---
- net/ethtool/netlink.c | 7 ++++++-
- net/ethtool/netlink.h | 2 ++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/pse-pd/tps23881.c | 190 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 188 insertions(+), 2 deletions(-)
 
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index 977beeaaa2f9..4e8cdc070291 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -770,7 +770,7 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- 	int reply_len;
- 	int ret;
+diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
+index 5e9dda2c0eac..69a3ede20b33 100644
+--- a/drivers/net/pse-pd/tps23881.c
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -16,7 +16,15 @@
+ #include <linux/pse-pd/pse.h>
  
--	genl_info_init_ntf(&info, &ethtool_genl_family, cmd);
-+	ethnl_info_init_ntf(&info, cmd);
+ #define TPS23881_MAX_CHANS 8
+-
++#define TPS23881_MAX_IRQ_RETRIES 10
++
++#define TPS23881_REG_IT		0x0
++#define TPS23881_REG_IT_MASK	0x1
++#define TPS23881_REG_IT_IFAULT	BIT(5)
++#define TPS23881_REG_IT_SUPF	BIT(7)
++#define TPS23881_REG_FAULT	0x7
++#define TPS23881_REG_SUPF_EVENT	0xb
++#define TPS23881_REG_TSD	BIT(7)
+ #define TPS23881_REG_PW_STATUS	0x10
+ #define TPS23881_REG_OP_MODE	0x12
+ #define TPS23881_OP_MODE_SEMIAUTO	0xaaaa
+@@ -24,6 +32,7 @@
+ #define TPS23881_REG_DET_CLA_EN	0x14
+ #define TPS23881_REG_GEN_MASK	0x17
+ #define TPS23881_REG_NBITACC	BIT(5)
++#define TPS23881_REG_INTEN	BIT(7)
+ #define TPS23881_REG_PW_EN	0x19
+ #define TPS23881_REG_2PAIR_POL1	0x1e
+ #define TPS23881_REG_PORT_MAP	0x26
+@@ -51,6 +60,7 @@ struct tps23881_port_desc {
+ 	u8 chan[2];
+ 	bool is_4p;
+ 	int pw_pol;
++	bool exist;
+ };
  
- 	if (WARN_ONCE(cmd > ETHTOOL_MSG_KERNEL_MAX ||
- 		      !ethnl_default_notify_ops[cmd],
-@@ -840,6 +840,11 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
- typedef void (*ethnl_notify_handler_t)(struct net_device *dev, unsigned int cmd,
- 				       const void *data);
+ struct tps23881_priv {
+@@ -782,8 +792,10 @@ tps23881_write_port_matrix(struct tps23881_priv *priv,
+ 		hw_chan = port_matrix[i].hw_chan[0] % 4;
  
-+void ethnl_info_init_ntf(struct genl_info *info, u8 cmd)
+ 		/* Set software port matrix for existing ports */
+-		if (port_matrix[i].exist)
++		if (port_matrix[i].exist) {
+ 			priv->port[pi_id].chan[0] = lgcl_chan;
++			priv->port[pi_id].exist = true;
++		}
+ 
+ 		/* Initialize power policy internal value */
+ 		priv->port[pi_id].pw_pol = -1;
+@@ -1017,6 +1029,174 @@ static int tps23881_flash_sram_fw(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++/* Convert interrupt events to 0xff to be aligned with the chan
++ * number.
++ */
++static u8 tps23881_irq_export_chans_helper(u16 reg_val, u8 field_offset)
 +{
-+	genl_info_init_ntf(info, &ethtool_genl_family, cmd);
++	u8 val;
++
++	val = (reg_val >> (4 + field_offset) & 0xf0) |
++	      (reg_val >> field_offset & 0x0f);
++
++	return val;
 +}
 +
- static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
- 	[ETHTOOL_MSG_LINKINFO_NTF]	= ethnl_default_notify,
- 	[ETHTOOL_MSG_LINKMODES_NTF]	= ethnl_default_notify,
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index ec6ab5443a6f..4d4ad3824bbb 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -323,6 +323,8 @@ struct ethnl_sock_priv {
- int ethnl_sock_priv_set(struct sk_buff *skb, struct net_device *dev, u32 portid,
- 			enum ethnl_sock_type type);
- 
-+void ethnl_info_init_ntf(struct genl_info *info, u8 cmd);
++/* Convert chan number to port number */
++static void tps23881_set_notifs_helper(struct tps23881_priv *priv,
++				       u8 chans,
++				       unsigned long *notifs,
++				       unsigned long *notifs_mask,
++				       enum ethtool_pse_events event)
++{
++	u8 chan;
++	int i;
 +
- /**
-  * struct ethnl_request_ops - unified handling of GET and SET requests
-  * @request_cmd:      command id for request (GET)
++	if (!chans)
++		return;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!priv->port[i].exist)
++			continue;
++		/* No need to look at the 2nd channel in case of PoE4 as
++		 * both registers are set.
++		 */
++		chan = priv->port[i].chan[0];
++
++		if (BIT(chan) & chans) {
++			*notifs_mask |= BIT(i);
++			notifs[i] |= event;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_temp(struct tps23881_priv *priv,
++					 u16 reg_val,
++					 unsigned long *notifs,
++					 unsigned long *notifs_mask)
++{
++	int i;
++
++	if (reg_val & TPS23881_REG_TSD) {
++		for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++			if (!priv->port[i].exist)
++				continue;
++
++			*notifs_mask |= BIT(i);
++			notifs[i] |= ETHTOOL_PSE_EVENT_OVER_TEMP;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_current(struct tps23881_priv *priv,
++					    u16 reg_val,
++					    unsigned long *notifs,
++					    unsigned long *notifs_mask)
++{
++	u8 chans;
++
++	chans = tps23881_irq_export_chans_helper(reg_val, 0);
++	if (chans)
++		tps23881_set_notifs_helper(priv, chans, notifs, notifs_mask,
++					   ETHTOOL_PSE_EVENT_OVER_CURRENT);
++}
++
++static int tps23881_irq_event_handler(struct tps23881_priv *priv, u16 reg,
++				      unsigned long *notifs,
++				      unsigned long *notifs_mask)
++{
++	struct i2c_client *client = priv->client;
++	int ret;
++
++	/* The Supply event bit is repeated twice so we only need to read
++	 * the one from the first byte.
++	 */
++	if (reg & TPS23881_REG_IT_SUPF) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_SUPF_EVENT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_temp(priv, ret, notifs, notifs_mask);
++	}
++
++	if (reg & (TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_IFAULT << 8)) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_FAULT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_current(priv, ret, notifs, notifs_mask);
++	}
++
++	return 0;
++}
++
++static int tps23881_irq_handler(int irq, struct pse_controller_dev *pcdev,
++				unsigned long *notifs,
++				unsigned long *notifs_mask)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	int ret, it_mask;
++
++	/* Get interruption mask */
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT_MASK);
++	if (ret < 0)
++		return ret;
++	it_mask = ret;
++
++	/* Read interrupt register until it frees the interruption pin. */
++	while (true) {
++		int retry = 0;
++
++		if (retry > TPS23881_MAX_IRQ_RETRIES) {
++			dev_err(&client->dev, "interrupt never freed");
++			return -ETIMEDOUT;
++		}
++
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT);
++		if (ret < 0)
++			return ret;
++
++		/* No more relevant interruption */
++		if (!(ret & it_mask))
++			return 0;
++
++		ret = tps23881_irq_event_handler(priv, (u16)ret, notifs,
++						 notifs_mask);
++		if (ret)
++			return ret;
++
++		retry++;
++	}
++	return 0;
++}
++
++static int tps23881_setup_irq(struct tps23881_priv *priv, int irq)
++{
++	struct i2c_client *client = priv->client;
++	struct pse_irq_desc irq_desc = {
++		.name = "tps23881-irq",
++		.map_event = tps23881_irq_handler,
++	};
++	int ret;
++	u16 val;
++
++	val = TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_SUPF;
++	val |= val << 8;
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_IT_MASK, val);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_GEN_MASK);
++	if (ret < 0)
++		return ret;
++
++	val = (u16)(ret | TPS23881_REG_INTEN | TPS23881_REG_INTEN << 8);
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_GEN_MASK, val);
++	if (ret < 0)
++		return ret;
++
++	return devm_pse_irq_helper(&priv->pcdev, irq, 0, &irq_desc);
++}
++
+ static int tps23881_i2c_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -1097,6 +1277,12 @@ static int tps23881_i2c_probe(struct i2c_client *client)
+ 				     "failed to register PSE controller\n");
+ 	}
+ 
++	if (client->irq) {
++		ret = tps23881_setup_irq(priv, client->irq);
++		if (ret)
++			return ret;
++	}
++
+ 	return ret;
+ }
+ 
 
 -- 
 2.34.1
