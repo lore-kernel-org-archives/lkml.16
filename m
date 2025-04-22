@@ -1,113 +1,131 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5623C224241;
-	Tue, 22 Apr 2025 06:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9806221FA7;
+	Tue, 22 Apr 2025 06:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745303710; cv=none; b=uJld8PyHbgztiAf+IJPC75M3kwKGZ/LCci2chu5O+Yh5g4b5RmhgkI8KvHt/V2uyz2F94sft6qZAx9OCxEhLUr6s4z9C8ElknFIjyhjrpXJlHvp7JTfflKCDAr6mbZ0EXRLEg+psZqJxSj0Bgunbb//SevmfBTNIgrwXUC3YDyI=
+	t=1745303729; cv=none; b=cIfbVEGpXjz7wwJ+MiYhP57CLTMsMLbhx1EGi5k/028h+aDQ3MCeJwU3eZdojjpRyMk3LvqqN3EGKF4nutJ1tHhr03gzS8ztlbK8N847JBmy6lSccLqjazGUChlAoanholnOy8E70eWafzWgl/Pv3OdbJEVwaAh+J/0ukXPVTyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745303710; c=relaxed/simple;
-	bh=3e8kWJ+5dYcF4w1Vgg7AQq6013hm2DLzY2/AT72WOWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jOZS3zULNVBoM17Gdjy97X4PcznjdxJCJMZr3RgJLVH+n8UEZ7nzA9ybl0xetexU9kXfwivOZp5AChwg8PvpblqxK9CCFE1xVVxF8abo/bdXJ96viPv2IzbvWMy1NVnyk498p8MheX3FyM1IvuznTUcif867rtFN+zx/UkqUlak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=f/uiAfNC; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1745303729; c=relaxed/simple;
+	bh=H9p6hvgQxAMugFl26NqAOx5UFw2lmOm7sVOIyMGXh50=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=aK/ZKkNgx1A0qJAJN+RDB4hR8lQcDVi/iALlI7TSS0TN/Au8o1tOrjscNkPDQhyJl991E7ydpt8kVpgelXvir7yri4VGAueAs8tvSv6/huDSWPgFNJLIWIpE98dttiAHWcM9het/bdEjo+j13m5I+0OkGYxip1UzmHBE4U2fKoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=tm96GUz/; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S15YVYNg; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f/uiAfNC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745303704;
-	bh=XbJhvKh4vtpmZn6LpMbjWDDn495LKD+EyiM3PUe3xpA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f/uiAfNCQkn1gNEyse41DZegt4Ff0c5hei8xuYCCFUsV3Pw4xGxpKdD2x9TPkY3FE
-	 gWx9B1iPaFPCDF4Wh0T2O2uch6NfPNMyYe88wQhwUT/DubjRR0SidziMqR5LEnxUgC
-	 HCbpGZ9JuU8vopmtaN/J0qCERLPJhRsUXjKYY9svlVdbJI2GUcUFfsUm/Q8SIt+BL4
-	 LLrd3NcbGrS4xUJeC/XI3ESI24z9+cT+drIVPym3yUmXJVjqhf7lxRno16psh5U3Xy
-	 lLdQkrzJva0RPjH/M4VElQT99HK5yeDeYCq4tmyZJdVHXlr5AQHHURDNdDdXckThha
-	 rIjRsqptKFoeA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZhXXl4hq7z4wcj;
-	Tue, 22 Apr 2025 16:35:02 +1000 (AEST)
-Date: Tue, 22 Apr 2025 16:35:02 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20250422163502.02ceeb0d@canb.auug.org.au>
-In-Reply-To: <20250417134959.37204d48@canb.auug.org.au>
-References: <20250415133518.2c8d4325@canb.auug.org.au>
-	<20250417134959.37204d48@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="tm96GUz/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S15YVYNg"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id A27AA11401A2;
+	Tue, 22 Apr 2025 02:35:26 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 22 Apr 2025 02:35:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745303726;
+	 x=1745390126; bh=CSbqA3bAQF15TSj2kU2AijUmnn5D8n+f1WrGXiMzIZc=; b=
+	tm96GUz/5laSpVdtqvT92jAn/qGy66m52ES4GFPViDC0RE+s7/JAca2z2jBmsFDQ
+	tb+28qUcHFs3qx0R+2c8CeddgRWIV/9h24rqr23EKUIVwGa4GPeuUrG0tmlgoVt+
+	ZHzn79ST+9I0goMv6y7eOFP1Aob1j4VDt2+5sE7rtuLB/Zyu8JY3KagvyAlC+uir
+	rPD9fI8V4/OHOin2f7bJbaudSREsZk0UkCOyZ72FVn9fVz6n0ZPaVfcXkbrUymZU
+	ouwPj1ZyoYsCGSohjo6H3xKXwjVezVgklx4GrPhsrNwmX/3tHp6p59fFeFvlcY+t
+	n1n6Hewxl/eZ7t4kVuIsaQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745303726; x=
+	1745390126; bh=CSbqA3bAQF15TSj2kU2AijUmnn5D8n+f1WrGXiMzIZc=; b=S
+	15YVYNgzRi5te+XpEAxt4na3Nt+HZmh0lSNmiT6bmHdemAiHDAbCzmFlZJnif8wp
+	yCdy4UgPdeNG1xrL/evW7VosMvkF/ejT2XX2AK5cdhSQqhHYKgmh8WkQDkaCNKQZ
+	gdXIRzwckAGICeIMDcBAtBBBxNhz7r2YJrNdpVAuRj4nCv/v2kBypQlTtjeAUY+m
+	7igWf2du+M/CD9uRKd+LIw+CprBFKq/cz8wsSwh+RM+may8pIwu3Qmhotlo8S3rf
+	G3u0RpmIuZwd5iHVjAU/+4Ewik3jRMzl70nih37gjyqwEQTCHmC3NNJ+V8M0Q1Ap
+	Xr7VnNo0wpayDOl4WUcxQ==
+X-ME-Sender: <xms:rjgHaCFqDcjmUeR6G11LG7Oqyq2Y-1euR6CcOwuJwp6vhdzD9MujAA>
+    <xme:rjgHaDXycfeQgfS-QA-mrGPXCnQqVcLRH66U2WTcFBaHi9yn-auW0sN55lCa81azh
+    mrSLfZ_axPLjcHTZG0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeftddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsggtohhllhhinhhssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigphhptgdquggvvheslhhishhtshdrohiilhgrsghsrdhorhhgpdhrtg
+    hpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtph
+    htthhopeiifiesiihhqdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rjgHaMIWXPEbidvdIojmW-kdRwy8zzfCt9WApBEWzFCXD-yt1uAIBg>
+    <xmx:rjgHaMFoY_wlw3acJWj1FJeo6mWISxD64I-MTmyUqcd_1wqL4GE8aQ>
+    <xmx:rjgHaIXEoPJ7GIiIDnVr0Fz4oezSwmkq6GD9_mZYSAC5_MmJ0LLwsQ>
+    <xmx:rjgHaPPGhcATyxbCYLHL0jhu-KvDKMNruOYPP8Ywi-NNbun1FpncCA>
+    <xmx:rjgHaOx8Ctd0-LE-TORyy1WlNtGQ4_XQ-zli77A2XR6VeO-24Y54Dtg5>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 29A312220073; Tue, 22 Apr 2025 02:35:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7A9xsA9gK5zCoW57Qija83n";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-ThreadId: T8f64d9338f7a15a8
+Date: Tue, 22 Apr 2025 08:34:55 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ben Collins" <bcollins@kernel.org>, dmaengine@vger.kernel.org
+Cc: "Zhang Wei" <zw@zh-kernel.org>, "Vinod Koul" <vkoul@kernel.org>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Message-Id: <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
+In-Reply-To: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
+Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
---Sig_/7A9xsA9gK5zCoW57Qija83n
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Thu, 17 Apr 2025 13:49:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Tue, Apr 22, 2025, at 04:49, Ben Collins wrote:
+> On 64-bit QorIQ platforms like T4240, the CPU supports 40-bit addressing
+> and memory configurations > 64GiB. The fsldma driver is limiting itself
+> to only 64GiB in all Elo configurations.
 >
-> On Tue, 15 Apr 2025 13:35:18 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > After merging the tip tree, today's linux-next build (native perf)
-> > failed like this:
-> >=20
-> > diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
-> > In file included from util/amd-sample-raw.c:12:
-> > tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: =
-asm/msr-index.h: No such file or directory
-> >    10 | #include <asm/msr-index.h>
-> >       |          ^~~~~~~~~~~~~~~~~
-> > compilation terminated.
-> >=20
-> > Maybe caused by commit
-> >=20
-> >   3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <=
-asm/amd/ibs.h>")
-> > or associated commits?
-> >=20
-> > This a native ppc build of perf.
-> >=20
-> > I have used the tip tree from next-20250414 for today. =20
->=20
-> I am still getting is failure.
+> Setup fsldma driver to make use of the full 40-bit addressing space,
+> specifically on the e5500 and e6500 CPUs.
 
-Anything happening with this?
+I don't think making the mask depend on a compile-time option is
+correct, e.g. when you build a combined 32-bit kernel for e500 and
+e5500, you set a different mask compared to an e500-only kernel.
 
-This is a ppc64el build of perf on a ppc64el host.
---=20
-Cheers,
-Stephen Rothwell
+The question here is whether the mask is a limitation of the
+IP block or the bus it's connected to, of if there is any
+limitation at all:
 
---Sig_/7A9xsA9gK5zCoW57Qija83n
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+- The driver just writes the DMA address as a 64-bit register,
+  so most likely the DMA device can in fact do wider addressing,
+  and any limitation is either in the bus or the available
+  memory
 
------BEGIN PGP SIGNATURE-----
+- SoCs that don't set a dma-ranges property in the parent bus
+  are normally still capped to 32 bit DMA. I don't see those
+  properties, so unless there is a special hack on those chips,
+  you get 32 bit DMA regardless of what DMA mask the driver
+  requests
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgHOJYACgkQAVBC80lX
-0GwSCAf8CA+g8bCYbGqEETq+zURtUdk8Gg1J19+lz6KBLpXbOwyorrV1cvoWdn36
-ipmU2g7kmyrnuOaEOVpyLrxH9gqlaCq8Sy+XeH9ShOXoon/KsXm54Hq82kFvhtag
-QC5YnTf+u9Wg6dUDAAxFOwTDai+dZQcfqCaA9xQ2mJvDgi0ErOtwcmBsK5ZK4Eqj
-8+Nd4O71zzNkOuJx7HMk90+JCSEyey3McTXgmDhS12lBFXFaIRZF/kOoR5yhQM0q
-10tdBefMVAQzSj9IEfh10fSOJU/Y2PlXeKHC0R98GVtHVuW1hz5VfMn22ajDJCfM
-PPbF7bDcYbzotdC+AMRn/DrToRasLA==
-=StO3
------END PGP SIGNATURE-----
+- If there are chips that have more than 64GB of RAM installed
+  but have a limitation in the way the DMA engine is wired
+  up to 36 bits, that should be reflected in the dma-ranges
+  property, not the device driver.
 
---Sig_/7A9xsA9gK5zCoW57Qija83n--
+- If the limitation is indeed specific to the version of the
+  IP block, this would normally need to be detected based on
+  the compatible string of the DMA engine itself, not a compile
+  time setting.
+
+     Arnd
